@@ -52,7 +52,7 @@ class TwilioSmsCommand extends Command {
 
         $this->line($text);
 
-        Twilio::message('18085551212', $text);
+        Twilio::message($this->argument('phone'), $text);
 
 
     }
