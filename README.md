@@ -1,4 +1,3 @@
-
 laravel4-twilio
 ===============
 Laravel 4 Twillio API Integration
@@ -12,7 +11,7 @@ Laravel 4 Twillio API Integration
 Begin by installing this package through Composer. Edit your project's `composer.json` file to require `travisjryan/twilio`.
 
     "require": {
-		"laravel/framework": "4.0.*",
+		"laravel/framework": "4.1.*",
 		"travisjryan/twilio": "dev-master"
 	},
 	"minimum-stability" : "dev"
