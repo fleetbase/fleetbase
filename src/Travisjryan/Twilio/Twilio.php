@@ -30,8 +30,21 @@ class Twilio {
             $options);
     }
 
+    public function twiml($callback)
+    {
+        $message = new \Services_Twilio_Twiml();
+
+        if( $callback instanceof \Closure ) {
+            call_user_func($callback, $message);
+        }
+
+        return $message->__toString();
+
+    }
+
     private function getTwilio()
     {
         return new \Services_Twilio($this->config['sid'], $this->config['token']);
     }
+    
 }

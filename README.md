@@ -40,12 +40,38 @@ Edit `config/packages/travisjryan/twilio` with your appropriate Twilio settings
 
 Sending a SMS Message
 
- `Twilio::message('+18085551212', 'Pink Elephants and Happy Rainbows');`
+```php
+<?php
+
+Twilio::message('+18085551212', 'Pink Elephants and Happy Rainbows');
+
+?>
+```
 
 Creating a Call
 
- `Twilio::call('+18085551212', 'http://foo.com/call.xml');`
+```php
+<?php
 
+Twilio::call('+18085551212', 'http://foo.com/call.xml');
+
+?>
+```
+
+Generating TwiML
+
+```php
+<?php
+
+$twiml = Twilio::twiml(function($message) {
+    $message->say('Hello');
+    $message->play('https://api.twilio.com/cowbell.mp3', array('loop' => 5));
+});
+
+print $twiml;
+
+?>
+```
 
 ### License
 
