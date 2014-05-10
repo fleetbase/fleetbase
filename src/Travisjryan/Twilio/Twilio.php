@@ -36,6 +36,8 @@ class Twilio {
 
         if( $callback instanceof \Closure ) {
             call_user_func($callback, $message);
+        } else {
+            throw new \InvalidArgumentException("Callback is not valid.");
         }
 
         return $message->__toString();
@@ -46,5 +48,5 @@ class Twilio {
     {
         return new \Services_Twilio($this->config['sid'], $this->config['token']);
     }
-    
+
 }
