@@ -16,7 +16,7 @@ class TwilioServiceProvider extends ServiceProvider {
      */
     public function boot()
     {
-        $this->package('travisjryan/twilio');
+        $this->package('aloha/twilio');
     }
 
     /**
