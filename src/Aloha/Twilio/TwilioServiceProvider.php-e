@@ -1,4 +1,4 @@
-<?php namespace Travisjryan\Twilio;
+<?php namespace Aloha\Twilio;
 
 use Illuminate\Support\ServiceProvider;
 

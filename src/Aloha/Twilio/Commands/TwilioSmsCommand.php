@@ -1,20 +1,20 @@
 <?php
 
-namespace Travisjryan\Twilio\Commands;
+namespace Aloha\Twilio\Commands;
 
 use Illuminate\Console\Command;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
-use Travisjryan\Twilio;
+use Aloha\Twilio;
 
-class TwilioCallCommand extends Command {
+class TwilioSmsCommand extends Command {
 
     /**
      * The console command name.
      *
      * @var string
      */
-    protected $name = 'twilio:call';
+    protected $name = 'twilio:sms';
 
     /**
      * The console command description.
@@ -40,18 +40,21 @@ class TwilioCallCommand extends Command {
      */
     public function fire()
     {
-        $this->line('Creating a call via Twilio to: '.$this->argument('phone'));
+        $this->line('Sending SMS via Twilio to: '.$this->argument('phone'));
 
-        // Grab options
-        $from = $this->option('from');
-        $url = $this->option('url');
+        // Grab the text option if specified
+        $text = $this->option('text');
 
-        // Set a default URL if we havent specified one since is mandatory.
-        if(is_null($url)) {
-            $url = 'http://demo.twilio.com/docs/voice.xml';
+        // If we havent specified a message, setup a default one
+        if(is_null($text)) {
+            $text = "This is a test message sent from the artisan console";
         }
 
-        \Twilio::call($this->argument('phone'), $url, array(), $from);
+        $this->line($text);
+
+        Twilio::message($this->argument('phone'), $text);
+
+
     }
 
     /**
@@ -74,8 +77,7 @@ class TwilioCallCommand extends Command {
     protected function getOptions()
     {
         return array(
-            array('url', null, InputOption::VALUE_OPTIONAL, 'Optional url that will be used to fetch xml for call.', null),
-            array('from', null, InputOption::VALUE_OPTIONAL, 'Optional from number that will be used.', null)
+            array('text', null, InputOption::VALUE_OPTIONAL, 'Optional message that will be sent.', null)
         );
     }
 
