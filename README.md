@@ -12,7 +12,7 @@ Begin by installing this package through Composer. Edit your project's `composer
 
     "require": {
 		"laravel/framework": "4.*",
-		"aloha/twilio": "dev-master"
+		"aloha/twilio": "1.0.*"
 	},
 	"minimum-stability" : "dev"
 
