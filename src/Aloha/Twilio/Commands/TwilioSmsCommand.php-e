@@ -1,11 +1,11 @@
 <?php
 
-namespace Travisjryan\Twilio\Commands;
+namespace Aloha\Twilio\Commands;
 
 use Illuminate\Console\Command;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
-use Travisjryan\Twilio;
+use Aloha\Twilio;
 
 class TwilioSmsCommand extends Command {
 

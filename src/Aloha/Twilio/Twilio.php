@@ -1,6 +1,6 @@
 <?php
 
-namespace Travisjryan\Twilio;
+namespace Aloha\Twilio;
 
 class Twilio {
 
