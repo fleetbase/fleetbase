@@ -33,6 +33,18 @@ return array(
     |
     */
 
-    'from' => ''
+    'from' => '',
+
+    /*
+    |--------------------------------------------------------------------------
+    | Verify Twilios SSL Certificates
+    |--------------------------------------------------------------------------
+    |
+    | Allows the client to bypass verifiying Twilios SSL certificates.
+    | It is STRONGLY advised to leave this set to true for production environments.
+    |
+    */
+
+    'ssl_verify' => true
 
 );
