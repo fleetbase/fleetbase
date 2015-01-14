@@ -21,17 +21,23 @@ Next, update Composer from the Terminal:
 
 Once composer is finished, you need to add the service provider. Open `app/config/app.php`, and add a new item to the providers array.
 
-    'Aloha\Twilio\TwilioServiceProvider',
+```php
+'Aloha\Twilio\TwilioServiceProvider',
+```
 
 Then, add a Facade for more convenient usage. In `app/config/app.php` add the following line to the `aliases` array:
 
-        'Twilio' => 'Aloha\Twilio\Facades\Twilio',
+```php
+'Twilio' => 'Aloha\Twilio\Facades\Twilio',
+```
 
 Publish config files from the Terminal
 
-        php artisan config:publish aloha/twilio
-        
-Edit `config/packages/aloha/twilio` with your appropriate Twilio settings        
+```bash
+php artisan config:publish aloha/twilio
+```
+
+Edit `config/packages/aloha/twilio` with your appropriate Twilio settings
 
 
 ## Usage
