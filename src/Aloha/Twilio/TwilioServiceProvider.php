@@ -1,9 +1,10 @@
-<?php namespace Aloha\Twilio;
+<?php
+namespace Aloha\Twilio;
 
 use Illuminate\Support\ServiceProvider;
 
-class TwilioServiceProvider extends ServiceProvider {
-
+class TwilioServiceProvider extends ServiceProvider
+{
 	/**
 	 * Indicates if loading of the provider is deferred.
 	 *
@@ -45,7 +46,6 @@ class TwilioServiceProvider extends ServiceProvider {
             'twilio.sms',
             'twilio.call'
         );
-
 	}
 
 	/**
@@ -57,5 +57,4 @@ class TwilioServiceProvider extends ServiceProvider {
 	{
 		return array('twilio');
 	}
-
 }
