@@ -1,10 +1,10 @@
 <?php
 namespace Aloha\Twilio\Commands;
 
+use Aloha\Twilio\Twilio;
 use Illuminate\Console\Command;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
-use Aloha\Twilio;
 
 class TwilioCallCommand extends Command
 {
@@ -21,6 +21,22 @@ class TwilioCallCommand extends Command
      * @var string
      */
     protected $description = 'Twilio command to test Twilio API Integration.';
+
+    /**
+     * @var Twilio
+     */
+    protected $twilio;
+
+    /**
+     * Create a new command instance.
+     *
+     * @param Twilio $twilio
+     */
+    public function __construct(Twilio $twilio)
+    {
+        parent::__construct();
+        $this->twilio = $twilio;
+    }
 
     /**
      * Execute the console command.
@@ -40,7 +56,7 @@ class TwilioCallCommand extends Command
             $url = 'http://demo.twilio.com/docs/voice.xml';
         }
 
-        \Twilio::call($this->argument('phone'), $url, array(), $from);
+        $this->twilio->call($this->argument('phone'), $url, array(), $from);
     }
 
     /**
