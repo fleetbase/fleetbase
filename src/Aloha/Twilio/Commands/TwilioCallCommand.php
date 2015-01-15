@@ -33,7 +33,7 @@ class TwilioCallCommand extends Command
 
         // Grab options
         $from = $this->option('from');
-        $url = $this->option('url');
+        $url  = $this->option('url');
 
         // Set a default URL if we havent specified one since is mandatory.
         if (is_null($url)) {
