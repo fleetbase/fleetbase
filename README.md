@@ -15,7 +15,9 @@ Laravel 4 Twillio API Integration
 ## Installation
 Begin by installing this package through Composer. Run this command from the Terminal:
 
+```bash
     composer require aloha/twilio
+```
 
 Once composer is finished, you need to add the service provider. Open `app/config/app.php`, and add a new item to the providers array.
 
@@ -37,7 +39,6 @@ php artisan config:publish aloha/twilio
 
 Edit `config/packages/aloha/twilio` with your appropriate Twilio settings
 
-
 ## Usage
 
 Sending a SMS Message
@@ -46,8 +47,6 @@ Sending a SMS Message
 <?php
 
 Twilio::message('+18085551212', 'Pink Elephants and Happy Rainbows');
-
-?>
 ```
 
 Creating a Call
@@ -56,8 +55,6 @@ Creating a Call
 <?php
 
 Twilio::call('+18085551212', 'http://foo.com/call.xml');
-
-?>
 ```
 
 Generating TwiML
@@ -71,8 +68,6 @@ $twiml = Twilio::twiml(function($message) {
 });
 
 print $twiml;
-
-?>
 ```
 
 ### License
