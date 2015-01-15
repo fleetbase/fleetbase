@@ -1,16 +1,17 @@
 <?php
-
 namespace Aloha\Twilio;
 
-class Twilio {
-
+class Twilio
+{
     private $config;
 
-    public function __construct($config) {
+    public function __construct($config)
+    {
         $this->config = $config;
     }
 
-    public function message($to, $message, $from=null) {
+    public function message($to, $message, $from=null)
+    {
         $twilio = $this->getTwilio();
         // Send SMS via Twilio SDK
         return $twilio->account->messages->sendMessage(
@@ -20,7 +21,8 @@ class Twilio {
         );
     }
 
-    public function call($to, $url, $options=array(), $from=null) {
+    public function call($to, $url, $options=array(), $from=null)
+    {
         $twilio = $this->getTwilio();
         // Create Call via Twilio SDK
         return $twilio->account->calls->create(
@@ -34,19 +36,17 @@ class Twilio {
     {
         $message = new \Services_Twilio_Twiml();
 
-        if( $callback instanceof \Closure ) {
+        if ($callback instanceof \Closure) {
             call_user_func($callback, $message);
         } else {
             throw new \InvalidArgumentException("Callback is not valid.");
         }
 
         return $message->__toString();
-
     }
 
     private function getTwilio()
     {
         return new \Services_Twilio($this->config['sid'], $this->config['token']);
     }
-
 }
