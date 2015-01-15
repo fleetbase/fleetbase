@@ -2,8 +2,11 @@ laravel4-twilio
 ===============
 Laravel 4 Twillio API Integration
 
-[![Build Status](https://travis-ci.org/aloha/laravel4-twilio.svg)](https://travis-ci.org/aloha/laravel4-twilio)
-
+[![Build Status](https://travis-ci.org/aloha/laravel4-twilio.svg)](https://travis-ci.org/laravel/framework)
+[![Total Downloads](https://poser.pugx.org/aloha/twilio/downloads.svg)](https://packagist.org/packages/aloha/twilio)
+[![Latest Stable Version](https://poser.pugx.org/aloha/twilio/v/stable.svg)](https://packagist.org/packages/aloha/twilio)
+[![Latest Unstable Version](https://poser.pugx.org/aloha/twilio/v/unstable.svg)](https://packagist.org/packages/aloha/twilio)
+[![License](https://poser.pugx.org/aloha/twilio/license.svg)](https://packagist.org/packages/aloha/twilio)
 
 - `twilio:sms`
 - `twilio:call`
