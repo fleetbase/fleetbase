@@ -2,6 +2,8 @@ laravel4-twilio
 ===============
 Laravel 4 Twillio API Integration
 
+[![Build Status](https://travis-ci.org/aloha/laravel4-twilio.svg)](https://travis-ci.org/aloha/laravel4-twilio)
+
 
 - `twilio:sms`
 - `twilio:call`
