@@ -5,8 +5,8 @@ use InvalidArgumentException;
 use Services_Twilio;
 use Services_Twilio_Twiml;
 
-class Twilio {
-
+class Twilio
+{
     /**
      * @var string
      */
