@@ -5,12 +5,12 @@ use Illuminate\Support\ServiceProvider;
 
 class TwilioServiceProvider extends ServiceProvider
 {
-	/**
-	 * Indicates if loading of the provider is deferred.
-	 *
-	 * @var bool
-	 */
-	protected $defer = false;
+    /**
+     * Indicates if loading of the provider is deferred.
+     *
+     * @var bool
+     */
+    protected $defer = false;
 
     /**
      * Boot Method
@@ -22,12 +22,12 @@ class TwilioServiceProvider extends ServiceProvider
     }
 
     /**
-	 * Register the service provider.
-	 *
-	 * @return void
-	 */
-	public function register()
-	{
+     * Register the service provider.
+     *
+     * @return void
+     */
+    public function register()
+    {
         $this->app->singleton('twilio', function ($app) {
             $config = $app->make('config')->get('twilio::twilio');
             return new Twilio($config['token'], $config['from'], $config['sid']);
@@ -40,15 +40,15 @@ class TwilioServiceProvider extends ServiceProvider
         $this->app->singleton('twilio.call', 'Aloha\Twilio\Commands\TwilioCallCommand');
 
         $this->commands('twilio.sms', 'twilio.call');
-	}
+    }
 
-	/**
-	 * Get the services provided by the provider.
-	 *
-	 * @return array
-	 */
-	public function provides()
-	{
-		return array('twilio');
-	}
+    /**
+     * Get the services provided by the provider.
+     *
+     * @return array
+     */
+    public function provides()
+    {
+        return array('twilio');
+    }
 }
