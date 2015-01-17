@@ -30,7 +30,7 @@ class TwilioServiceProvider extends ServiceProvider
     {
         $this->app->singleton('twilio', function ($app) {
             $config = $app->make('config')->get('twilio::twilio');
-            return new Twilio($config['token'], $config['from'], $config['sid']);
+            return new Twilio($config['token'], $config['from'], $config['sid'], $config['ssl_verify']);
         });
 
         // Register Twilio Test SMS Command

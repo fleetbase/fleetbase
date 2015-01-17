@@ -3,6 +3,7 @@ namespace Aloha\Twilio;
 
 use InvalidArgumentException;
 use Services_Twilio;
+use Services_Twilio_TinyHttp;
 use Services_Twilio_Twiml;
 
 class Twilio
@@ -23,15 +24,22 @@ class Twilio
     protected $sid;
 
     /**
+     * @var bool
+     */
+    protected $sslVerify;
+
+    /**
      * @param string $token
      * @param string $from
      * @param string $sid
+     * @param bool   $sslVerify
      */
-    public function __construct($token, $from, $sid)
+    public function __construct($token, $from, $sid, $sslVerify = true)
     {
         $this->token = $token;
         $this->from = $from;
         $this->sid = $sid;
+        $this->sslVerify = $sslVerify;
     }
 
     /**
@@ -82,6 +90,18 @@ class Twilio
      */
     private function getTwilio()
     {
-        return new Services_Twilio($this->sid, $this->token);
+        if (!$this->sslVerify) {
+            $http = new Services_Twilio_TinyHttp(
+                'https://api.twilio.com',
+                array('curlopts' =>
+                    array(
+                        CURLOPT_SSL_VERIFYPEER => false,
+                        CURLOPT_SSL_VERIFYHOST => 2,
+                    ),
+                )
+            );
+        }
+
+        return new Services_Twilio($this->sid, $this->token, null, $http ?: null);
     }
 }
