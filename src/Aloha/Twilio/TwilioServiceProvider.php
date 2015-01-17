@@ -17,7 +17,6 @@ class TwilioServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        $this->package('aloha/twilio');
     }
 
     /**
@@ -29,7 +28,8 @@ class TwilioServiceProvider extends ServiceProvider
     {
         $this->app['twilio'] = $this->app->share(function($app)
         {
-            return new Twilio(\Config::get('twilio::twilio'));
+            $config = $app['config']->get('services.twilio');
+            return new Manager($config['default'], $config['connections']);
         });
 
         // Register Twilio Test SMS Command

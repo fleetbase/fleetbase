@@ -1,7 +1,7 @@
 <?php
 namespace Aloha\Twilio;
 
-class Twilio
+class Twilio implements TwilioInterface
 {
     private $config;
 
