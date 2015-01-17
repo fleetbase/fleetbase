@@ -47,6 +47,27 @@ class Twilio
 
     private function getTwilio()
     {
+        if (array_key_exists('ssl_verify', $this->config) 
+            && false === $this->config['ssl_verify']) {
+
+            $http = new \Services_Twilio_TinyHttp(
+                'https://api.twilio.com',
+                array('curlopts' => 
+                    array(
+                        CURLOPT_SSL_VERIFYPEER => false,
+                        CURLOPT_SSL_VERIFYHOST => 2,
+                    )
+                )
+            );
+
+            return new \Services_Twilio(
+                $this->config['sid'], 
+                $this->config['token'], 
+                null, 
+                $http
+            );
+        }
+
         return new \Services_Twilio($this->config['sid'], $this->config['token']);
     }
 }
