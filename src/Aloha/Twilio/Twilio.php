@@ -6,7 +6,7 @@ use Services_Twilio;
 use Services_Twilio_TinyHttp;
 use Services_Twilio_Twiml;
 
-class Twilio
+class Twilio implements TwilioInterface
 {
     /**
      * @var string
@@ -46,6 +46,8 @@ class Twilio
      * @param string $to
      * @param string $message
      * @param string $from
+     *
+     * @return \Services_Twilio_Rest_Message
      */
     public function message($to, $message, $from = null)
     {
@@ -57,8 +59,10 @@ class Twilio
     /**
      * @param string $to
      * @param string $url
-     * @param array $options
+     * @param array  $options
      * @param string $from
+     *
+     * @return \Services_Twilio_Rest_Call
      */
     public function call($to, $url, array $options = array(), $from = null)
     {
@@ -86,7 +90,7 @@ class Twilio
     }
 
     /**
-     * @return Services_Twilio
+     * @return \Services_Twilio
      */
     private function getTwilio()
     {
@@ -102,6 +106,6 @@ class Twilio
             );
         }
 
-        return new Services_Twilio($this->sid, $this->token, null, $http ?: null);
+        return new Services_Twilio($this->sid, $this->token, null, isset($http) ? $http : null);
     }
 }

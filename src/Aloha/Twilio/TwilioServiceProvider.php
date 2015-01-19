@@ -6,49 +6,37 @@ use Illuminate\Support\ServiceProvider;
 class TwilioServiceProvider extends ServiceProvider
 {
     /**
-     * Indicates if loading of the provider is deferred.
-     *
-     * @var bool
-     */
-    protected $defer = false;
-
-    /**
      * Boot Method
      */
     public function boot()
     {
-        $this->package('aloha/twilio');
-        $this->app->alias('twilio', 'Aloha\Twilio\Twilio');
-    }
-
-    /**
-     * Register the service provider.
-     *
-     * @return void
-     */
-    public function register()
-    {
-        $this->app->singleton('twilio', function ($app) {
-            $config = $app->make('config')->get('twilio::twilio');
-            return new Twilio($config['token'], $config['from'], $config['sid'], $config['ssl_verify']);
-        });
-
-        // Register Twilio Test SMS Command
-        $this->app->singleton('twilio.call', 'Aloha\Twilio\Commands\TwilioSmsCommand');
-
-        // Register Twilio Test Call Command
-        $this->app->singleton('twilio.call', 'Aloha\Twilio\Commands\TwilioCallCommand');
-
+        // Register commands.
         $this->commands('twilio.sms', 'twilio.call');
     }
 
     /**
-     * Get the services provided by the provider.
-     *
-     * @return array
+     * Register the service provider.
      */
-    public function provides()
+    public function register()
     {
-        return array('twilio');
+        // Register manager for usage with the Facade.
+        $this->app->singleton('twilio', function ($app) {
+            $config = $app['config']->get('services.twilio');
+            return new Manager($config['default'], $config['connections']);
+        });
+
+        // Define an alias.
+        $this->app->alias('twilio', 'Aloha\Twilio\Manager');
+
+        // Register Twilio Test SMS Command.
+        $this->app->singleton('twilio.sms', 'Aloha\Twilio\Commands\TwilioSmsCommand');
+
+        // Register Twilio Test Call Command.
+        $this->app->singleton('twilio.call', 'Aloha\Twilio\Commands\TwilioCallCommand');
+
+        // Register TwilioInterface concretion.
+        $this->app->singleton('Aloha\Twilio\TwilioInterface', function ($app) {
+            return $app->make('twilio')->defaultConnection();
+        });
     }
 }

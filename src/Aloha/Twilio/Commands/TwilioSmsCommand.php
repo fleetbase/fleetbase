@@ -1,10 +1,10 @@
 <?php
 namespace Aloha\Twilio\Commands;
 
+use Aloha\Twilio\TwilioInterface;
 use Illuminate\Console\Command;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
-use Aloha\Twilio\Twilio;
 
 class TwilioSmsCommand extends Command
 {
@@ -23,16 +23,16 @@ class TwilioSmsCommand extends Command
     protected $description = 'Twilio command to test Twilio API Integration.';
 
     /**
-     * @var Twilio
+     * @var \Aloha\Twilio\TwilioInterface
      */
     protected $twilio;
 
     /**
      * Create a new command instance.
      *
-     * @param Twilio $twilio
+     * @param \Aloha\Twilio\TwilioInterface $twilio
      */
-    public function __construct(Twilio $twilio)
+    public function __construct(TwilioInterface $twilio)
     {
         parent::__construct();
         $this->twilio = $twilio;
