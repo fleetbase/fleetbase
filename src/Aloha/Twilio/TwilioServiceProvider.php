@@ -18,6 +18,7 @@ class TwilioServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->package('aloha/twilio');
+        $this->app->alias('twilio', 'Aloha\Twilio\Twilio');
     }
 
     /**
@@ -27,25 +28,18 @@ class TwilioServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app['twilio'] = $this->app->share(function($app)
-        {
-            return new Twilio(\Config::get('twilio::twilio'));
+        $this->app->singleton('twilio', function ($app) {
+            $config = $app->make('config')->get('twilio::twilio');
+            return new Twilio($config['token'], $config['from'], $config['sid'], $config['ssl_verify']);
         });
 
         // Register Twilio Test SMS Command
-        $this->app['twilio.sms'] = $this->app->share(function($app) {
-            return new Commands\TwilioSmsCommand();
-        });
+        $this->app->singleton('twilio.call', 'Aloha\Twilio\Commands\TwilioSmsCommand');
 
         // Register Twilio Test Call Command
-        $this->app['twilio.call'] = $this->app->share(function($app) {
-            return new Commands\TwilioCallCommand();
-        });
+        $this->app->singleton('twilio.call', 'Aloha\Twilio\Commands\TwilioCallCommand');
 
-        $this->commands(
-            'twilio.sms',
-            'twilio.call'
-        );
+        $this->commands('twilio.sms', 'twilio.call');
     }
 
     /**
