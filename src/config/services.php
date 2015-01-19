@@ -48,12 +48,12 @@ return array(
                 | Verify Twilio's SSL Certificates
                 |--------------------------------------------------------------------------
                 |
-                | Allows the client to bypass verifiying Twilios SSL certificates.
+                | Allows the client to bypass verifiying Twilio's SSL certificates.
                 | It is STRONGLY advised to leave this set to true for production environments.
                 |
                 */
 
-                'ssl_verify' => true,
+                //'ssl_verify' => true,
 
             ),
         ),

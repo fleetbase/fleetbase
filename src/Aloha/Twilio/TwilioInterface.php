@@ -1,9 +1,6 @@
 <?php
 namespace Aloha\Twilio;
 
-use Services_Twilio_Rest_Message;
-use Services_Twilio_Twiml;
-
 interface TwilioInterface
 {
     /**
@@ -11,7 +8,7 @@ interface TwilioInterface
      * @param string $message
      * @param string $from
      *
-     * @return Services_Twilio_Rest_Message
+     * @return \Services_Twilio_Rest_Message
      */
     public function message($to, $message, $from = null);
 
@@ -21,14 +18,14 @@ interface TwilioInterface
      * @param array $options
      * @param string $from
      *
-     * @return mixed
+     * @return \Services_Twilio_Rest_Call
      */
-    public function call($to, $url, $options = array(), $from = null);
+    public function call($to, $url, array $options = array(), $from = null);
 
     /**
      * @param callable $callback
      *
-     * @return Services_Twilio_Twiml
+     * @return \Services_Twilio_Twiml
      */
     public function twiml($callback);
 }

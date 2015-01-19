@@ -6,55 +6,37 @@ use Illuminate\Support\ServiceProvider;
 class TwilioServiceProvider extends ServiceProvider
 {
     /**
-     * Indicates if loading of the provider is deferred.
-     *
-     * @var bool
-     */
-    protected $defer = false;
-
-    /**
      * Boot Method
      */
     public function boot()
     {
+        // Register commands.
+        $this->commands('twilio.sms', 'twilio.call');
     }
 
     /**
      * Register the service provider.
-     *
-     * @return void
      */
     public function register()
     {
-        $this->app['twilio'] = $this->app->share(function($app)
-        {
+        // Register manager for usage with the Facade.
+        $this->app->singleton('twilio', function ($app) {
             $config = $app['config']->get('services.twilio');
             return new Manager($config['default'], $config['connections']);
         });
 
-        // Register Twilio Test SMS Command
-        $this->app['twilio.sms'] = $this->app->share(function($app) {
-            return new Commands\TwilioSmsCommand();
+        // Define an alias.
+        $this->app->alias('twilio', 'Aloha\Twilio\Manager');
+
+        // Register Twilio Test SMS Command.
+        $this->app->singleton('twilio.sms', 'Aloha\Twilio\Commands\TwilioSmsCommand');
+
+        // Register Twilio Test Call Command.
+        $this->app->singleton('twilio.call', 'Aloha\Twilio\Commands\TwilioCallCommand');
+
+        // Register TwilioInterface concretion.
+        $this->app->singleton('Aloha\Twilio\TwilioInterface', function ($app) {
+            return $app->make('twilio')->defaultConnection();
         });
-
-        // Register Twilio Test Call Command
-        $this->app['twilio.call'] = $this->app->share(function($app) {
-            return new Commands\TwilioCallCommand();
-        });
-
-        $this->commands(
-            'twilio.sms',
-            'twilio.call'
-        );
-    }
-
-    /**
-     * Get the services provided by the provider.
-     *
-     * @return array
-     */
-    public function provides()
-    {
-        return array('twilio');
     }
 }

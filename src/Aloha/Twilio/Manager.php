@@ -30,7 +30,7 @@ class Manager implements TwilioInterface
     /**
      * @param string $connection
      *
-     * @return Twilio
+     * @return \Aloha\Twilio\TwilioInterface
      */
     public function from($connection)
     {
@@ -38,7 +38,14 @@ class Manager implements TwilioInterface
             throw new InvalidArgumentException("Connection \"$connection\" is not configured.");
         }
 
-        return new Twilio($this->settings[$connection]);
+        $settings = $this->settings[$connection];
+
+        if (isset($settings['ssl_verify'])) {
+            return new Twilio($settings['token'], $settings['from'], $settings['sid'], $settings['ssl_verify']);
+        }
+
+        // Let the Twilio constructor decide the default value for ssl_verify
+        return new Twilio($settings['token'], $settings['from'], $settings['sid']);
     }
 
     /**
@@ -46,7 +53,7 @@ class Manager implements TwilioInterface
      * @param string $message
      * @param string $from
      *
-     * @return Services_Twilio_Rest_Message
+     * @return \Services_Twilio_Rest_Message
      */
     public function message($to, $message, $from = null)
     {
@@ -59,9 +66,9 @@ class Manager implements TwilioInterface
      * @param array  $options
      * @param string $from
      *
-     * @return mixed
+     * @return \Services_Twilio_Rest_Call
      */
-    public function call($to, $url, $options = array(), $from = null)
+    public function call($to, $url, array $options = array(), $from = null)
     {
         $this->defaultConnection()->call($to, $url, $options, $from);
     }
@@ -69,7 +76,7 @@ class Manager implements TwilioInterface
     /**
      * @param callable $callback
      *
-     * @return Services_Twilio_Twiml
+     * @return \Services_Twilio_Twiml
      */
     public function twiml($callback)
     {
@@ -77,9 +84,9 @@ class Manager implements TwilioInterface
     }
 
     /**
-     * @return Twilio
+     * @return \Aloha\Twilio\TwilioInterface
      */
-    protected function defaultConnection()
+    public function defaultConnection()
     {
         return $this->from($this->default);
     }
