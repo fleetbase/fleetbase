@@ -1,6 +1,6 @@
-laravel4-twilio
+laravel-twilio
 ===============
-Laravel 4 Twillio API Integration
+Laravel Twillio API Integration
 
 [![Build Status](https://travis-ci.org/aloha/laravel4-twilio.svg)](https://travis-ci.org/laravel/framework)
 [![Total Downloads](https://poser.pugx.org/aloha/twilio/downloads.svg)](https://packagist.org/packages/aloha/twilio)
@@ -11,18 +11,20 @@ Laravel 4 Twillio API Integration
 - `twilio:sms`
 - `twilio:call`
 
-
 ## Installation
+
 Begin by installing this package through Composer. Run this command from the Terminal:
 
 ```bash
     composer require aloha/twilio
 ```
 
-Once composer is finished, you need to add the service provider. Open `app/config/app.php`, and add a new item to the providers array.
+## Laravel integration
+
+To wire this up in your Laravel project, you need to add the service provider. Open `app/config/app.php`, and add a new item to the providers array.
 
 ```php
-'Aloha\Twilio\TwilioServiceProvider',
+'Aloha\Twilio\Support\Laravel\ServiceProvider',
 ```
 
 Then, add a Facade for more convenient usage. In `app/config/app.php` add the following line to the `aliases` array:
@@ -31,15 +33,9 @@ Then, add a Facade for more convenient usage. In `app/config/app.php` add the fo
 'Twilio' => 'Aloha\Twilio\Facades\Twilio',
 ```
 
-Publish config files from the Terminal
+Edit `services.php` in your config folder with your appropriate Twilio settings. Example config can be found in [this file](src/config/services.php).
 
-```bash
-php artisan config:publish aloha/twilio
-```
-
-Edit `config/packages/aloha/twilio` with your appropriate Twilio settings
-
-## Usage
+### Facade usage
 
 Sending a SMS Message
 
@@ -72,4 +68,4 @@ print $twiml;
 
 ### License
 
-laravel4-twilio is open-sourced software licensed under the [MIT license](http://opensource.org/licenses/MIT)
+laravel-twilio is open-sourced software licensed under the [MIT license](http://opensource.org/licenses/MIT)

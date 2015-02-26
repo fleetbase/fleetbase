@@ -19,8 +19,8 @@
         "illuminate/support": "4.*"
     },
     "autoload": {
-        "psr-0": {
-            "Aloha\\Twilio": "src/"
+        "psr-4": {
+            "Aloha\\Twilio\\": "src/"
         }
     },
     "minimum-stability": "stable"
