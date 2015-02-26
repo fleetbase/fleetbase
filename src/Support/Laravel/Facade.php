@@ -1,9 +1,9 @@
 <?php
-namespace Aloha\Twilio\Facades;
+namespace Aloha\Twilio\Support\Laravel\Facades;
 
-use Illuminate\Support\Facades\Facade;
+use Illuminate\Support\Facades\Facade as BaseFacade;
 
-class Twilio extends Facade
+class Facade extends BaseFacade
 {
     /**
      * Get the registered name of the component.
