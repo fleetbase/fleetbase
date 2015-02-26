@@ -1,6 +1,7 @@
 <?php
 namespace Aloha\Twilio\Support\Laravel;
 
+use Aloha\Twilio\Manager;
 use Illuminate\Support\ServiceProvider as BaseServiceProvider;
 
 class ServiceProvider extends BaseServiceProvider

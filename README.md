@@ -24,7 +24,7 @@ Begin by installing this package through Composer. Run this command from the Ter
 To wire this up in your Laravel project, you need to add the service provider. Open `app/config/app.php`, and add a new item to the providers array.
 
 ```php
-'Aloha\Twilio\TwilioServiceProvider',
+'Aloha\Twilio\Support\Laravel\ServiceProvider',
 ```
 
 Then, add a Facade for more convenient usage. In `app/config/app.php` add the following line to the `aliases` array:
