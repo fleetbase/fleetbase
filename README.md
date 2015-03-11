@@ -2,7 +2,7 @@ laravel-twilio
 ===============
 Laravel Twillio API Integration
 
-[![Build Status](https://travis-ci.org/aloha/laravel4-twilio.svg)](https://travis-ci.org/laravel/framework)
+[![Build Status](https://travis-ci.org/aloha/laravel-twilio.svg)](https://travis-ci.org/aloha/laravel-twilio)
 [![Total Downloads](https://poser.pugx.org/aloha/twilio/downloads.svg)](https://packagist.org/packages/aloha/twilio)
 [![Latest Stable Version](https://poser.pugx.org/aloha/twilio/v/stable.svg)](https://packagist.org/packages/aloha/twilio)
 [![Latest Unstable Version](https://poser.pugx.org/aloha/twilio/v/unstable.svg)](https://packagist.org/packages/aloha/twilio)
