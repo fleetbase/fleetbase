@@ -4,7 +4,7 @@ namespace Aloha\Twilio\Support\Laravel;
 use Aloha\Twilio\Manager;
 use Illuminate\Support\ServiceProvider as BaseServiceProvider;
 
-class ServiceProvider extends BaseServiceProvider
+class L4ServiceProvider extends BaseServiceProvider
 {
     /**
      * Boot Method
@@ -13,6 +13,7 @@ class ServiceProvider extends BaseServiceProvider
     {
         // Register commands.
         $this->commands('twilio.sms', 'twilio.call');
+        $this->package('aloha/twilio');
     }
 
     /**
