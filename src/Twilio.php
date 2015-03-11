@@ -57,18 +57,23 @@ class Twilio implements TwilioInterface
     }
 
     /**
-     * @param string $to
-     * @param string $url
-     * @param array  $options
-     * @param string $from
+     * @param string          $to
+     * @param string|callable $message
+     * @param array           $options
+     * @param string          $from
      *
      * @return \Services_Twilio_Rest_Call
      */
-    public function call($to, $url, array $options = array(), $from = null)
+    public function call($to, $message, array $options = array(), $from = null)
     {
         $twilio = $this->getTwilio();
 
-        return $twilio->account->calls->create($from ?: $this->from, $to, $url, $options);
+        if (is_callable($message)) {
+            $query = http_build_query(array('Twiml' => $this->twiml($message)));
+            $message = 'https://twimlets.com/echo?'.$query;
+        }
+
+        return $twilio->account->calls->create($from ?: $this->from, $to, $message, $options);
     }
 
     /**
