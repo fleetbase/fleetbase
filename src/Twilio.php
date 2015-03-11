@@ -34,11 +34,11 @@ class Twilio implements TwilioInterface
      * @param string $sid
      * @param bool   $sslVerify
      */
-    public function __construct($token, $from, $sid, $sslVerify = true)
+    public function __construct($sid, $token, $from, $sslVerify = true)
     {
+        $this->sid = $sid;
         $this->token = $token;
         $this->from = $from;
-        $this->sid = $sid;
         $this->sslVerify = $sslVerify;
     }
 
