@@ -33,7 +33,7 @@ Then, add a Facade for more convenient usage. In `app/config/app.php` add the fo
 'Twilio' => 'Aloha\Twilio\Facades\Twilio',
 ```
 
-Edit `services.php` in your config folder with your appropriate Twilio settings. Example config can be found in [this file](src/config/services.php).
+Edit `services.php` in your config folder with your appropriate Twilio settings. Example config can be found in [this file](src/config/config.php).
 
 ### Facade usage
 
