@@ -16,49 +16,72 @@ Laravel Twillio API Integration
 Begin by installing this package through Composer. Run this command from the Terminal:
 
 ```bash
-    composer require aloha/twilio 1.0.2
+    composer require aloha/twilio
 ```
 
 ## Laravel integration
 
-To wire this up in your Laravel project, you need to add the service provider. Open `app/config/app.php`, and add a new item to the providers array.
+To wire this up in your Laravel project, wether it's built in Laravel 4 or 5, you need to add the service provider. Open `app.php`, and add a new item to the providers array.
 
 ```php
 'Aloha\Twilio\Support\Laravel\ServiceProvider',
 ```
 
-Then, add a Facade for more convenient usage. In `app/config/app.php` add the following line to the `aliases` array:
+Then, add a Facade for more convenient usage. In your `app.php` config file add the following line to the `aliases` array:
 
 ```php
 'Twilio' => 'Aloha\Twilio\Support\Laravel\Facade',
 ```
 
-Edit `services.php` in your config folder with your appropriate Twilio settings. Example config can be found in [this file](src/config/services.php).
+In Laravel 4 you need to publish the default config file to `app/config/packages/aloha/twilio/config.php` with the artisan command `config:publish aloha/twilio`.
 
-### Facade usage
+In Laravel 5 you need to publish the default config file to `config/twilio.php` with the artisan command `vendor:publish`.
 
-Sending a SMS Message
+#### Facade
+
+The facade now has the exact same methods as the `Aloha\Twilio\TwilioInterface`.
+One extra feature is that you can define which settings (and which sender phone number) to use:
 
 ```php
-<?php
-
-Twilio::message('+18085551212', 'Pink Elephants and Happy Rainbows');
+Twilio::from('callcenter')->message($user->phone, $message);
+Twilio::from('board_room')->message($boss->phone, 'Hi there boss!');
 ```
 
-Creating a Call
+Define multiple entries in your `twilio` config to make use of this feature.
+
+### Usage
+
+Creating a Twilio object. This object implements the `Aloha\Twilio\TwilioInterface`.
 
 ```php
-<?php
-
-Twilio::call('+18085551212', 'http://foo.com/call.xml');
+$twilio = new Aloha\Twilio\Twilio($accountId, $token, $fromNumber);
 ```
 
-Generating TwiML
+Sending a text message:
 
 ```php
-<?php
+$twilio->message('+18085551212', 'Pink Elephants and Happy Rainbows');
+```
 
-$twiml = Twilio::twiml(function($message) {
+Creating a call:
+
+```php
+$twilio->call('+18085551212', 'http://foo.com/call.xml');
+```
+
+Generating a call and building the message in one go:
+
+```php
+$twilio->call('+18085551212', function ($message) {
+    $message->say('Hello');
+    $message->play('https://api.twilio.com/cowbell.mp3', ['loop' => 5]);
+});
+```
+
+Generating TwiML:
+
+```php
+$twiml = $twilio->twiml(function($message) {
     $message->say('Hello');
     $message->play('https://api.twilio.com/cowbell.mp3', array('loop' => 5));
 });
