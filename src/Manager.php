@@ -80,7 +80,7 @@ class Manager implements TwilioInterface
      */
     public function twiml($callback)
     {
-        $this->defaultConnection()->twiml($callback);
+        return $this->defaultConnection()->twiml($callback);
     }
 
     /**
