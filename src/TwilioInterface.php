@@ -13,14 +13,14 @@ interface TwilioInterface
     public function message($to, $message, $from = null);
 
     /**
-     * @param string $to
-     * @param string $url
-     * @param array $options
-     * @param string $from
+     * @param string          $to
+     * @param string|callable $message
+     * @param array           $options
+     * @param string          $from
      *
      * @return \Services_Twilio_Rest_Call
      */
-    public function call($to, $url, array $options = array(), $from = null);
+    public function call($to, $message, array $options = array(), $from = null);
 
     /**
      * @param callable $callback

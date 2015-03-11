@@ -61,16 +61,16 @@ class Manager implements TwilioInterface
     }
 
     /**
-     * @param string $to
-     * @param string $url
-     * @param array  $options
-     * @param string $from
+     * @param string          $to
+     * @param string|callable $message
+     * @param array           $options
+     * @param string          $from
      *
      * @return \Services_Twilio_Rest_Call
      */
-    public function call($to, $url, array $options = array(), $from = null)
+    public function call($to, $message, array $options = array(), $from = null)
     {
-        $this->defaultConnection()->call($to, $url, $options, $from);
+        $this->defaultConnection()->call($to, $message, $options, $from);
     }
 
     /**
@@ -80,7 +80,7 @@ class Manager implements TwilioInterface
      */
     public function twiml($callback)
     {
-        $this->defaultConnection()->twiml($callback);
+        return $this->defaultConnection()->twiml($callback);
     }
 
     /**

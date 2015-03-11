@@ -2,7 +2,7 @@ laravel-twilio
 ===============
 Laravel Twillio API Integration
 
-[![Build Status](https://travis-ci.org/aloha/laravel4-twilio.svg)](https://travis-ci.org/laravel/framework)
+[![Build Status](https://travis-ci.org/aloha/laravel-twilio.svg)](https://travis-ci.org/aloha/laravel-twilio)
 [![Total Downloads](https://poser.pugx.org/aloha/twilio/downloads.svg)](https://packagist.org/packages/aloha/twilio)
 [![Latest Stable Version](https://poser.pugx.org/aloha/twilio/v/stable.svg)](https://packagist.org/packages/aloha/twilio)
 [![Latest Unstable Version](https://poser.pugx.org/aloha/twilio/v/unstable.svg)](https://packagist.org/packages/aloha/twilio)
@@ -30,7 +30,7 @@ To wire this up in your Laravel project, you need to add the service provider. O
 Then, add a Facade for more convenient usage. In `app/config/app.php` add the following line to the `aliases` array:
 
 ```php
-'Twilio' => 'Aloha\Twilio\Facades\Twilio',
+'Twilio' => 'Aloha\Twilio\Support\Laravel\Facade',
 ```
 
 Edit `services.php` in your config folder with your appropriate Twilio settings. Example config can be found in [this file](src/config/config.php).
