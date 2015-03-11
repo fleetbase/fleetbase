@@ -16,4 +16,9 @@ class L4ServiceProvider extends LaravelServiceProvider
         $this->commands('twilio.sms', 'twilio.call');
         $this->package('aloha/twilio');
     }
+
+    protected function config()
+    {
+        return $this->app['config']->get('twilio::twilio');
+    }
 }

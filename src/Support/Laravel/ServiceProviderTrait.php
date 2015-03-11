@@ -11,8 +11,8 @@ trait ServiceProviderTrait
     public function register()
     {
         // Register manager for usage with the Facade.
-        $this->app->singleton('twilio', function ($app) {
-            $config = $app['config']->get('services.twilio');
+        $this->app->singleton('twilio', function () {
+            $config = $this->config();
             return new Manager($config['default'], $config['connections']);
         });
 
@@ -26,8 +26,8 @@ trait ServiceProviderTrait
         $this->app->singleton('twilio.call', 'Aloha\Twilio\Commands\TwilioCallCommand');
 
         // Register TwilioInterface concretion.
-        $this->app->singleton('Aloha\Twilio\TwilioInterface', function ($app) {
-            return $app->make('twilio')->defaultConnection();
+        $this->app->singleton('Aloha\Twilio\TwilioInterface', function () {
+            return $this->app->make('twilio')->defaultConnection();
         });
     }
 }

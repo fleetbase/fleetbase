@@ -6,4 +6,24 @@ use Illuminate\Support\ServiceProvider as LaravelServiceProvider;
 class L5ServiceProvider extends LaravelServiceProvider
 {
     use ServiceProviderTrait;
+
+    /**
+     * Boot method.
+     */
+    public function boot()
+    {
+        $this->publishes([
+            __DIR__.'/../../config/config.php' => config_path('twilio.php'),
+        ]);
+
+        $this->mergeConfigFrom(__DIR__.'/../../config/config.php', 'twilio');
+    }
+
+    /**
+     * @return array
+     */
+    protected function config()
+    {
+        return $this->app['config']->get('twilio.twilio');
+    }
 }
