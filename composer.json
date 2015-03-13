@@ -20,15 +20,22 @@
         "twilio/sdk":"~3.12"
     },
     "require-dev": {
-        "illuminate/support": "~4||~5"
+        "illuminate/support": "~4||~5",
+        "illuminate/console": "~4||~5",
+        "phpunit/phpunit": "~4.5"
     },
     "autoload": {
         "psr-4": {
             "Aloha\\Twilio\\": "src/"
         }
     },
+    "autoload-dev": {
+        "psr-4": {
+            "Aloha\\Twilio\\Tests\\": "tests/"
+        }
+    },
     "scripts": {
-        "test": "echo 'No tests yet, please help us out!'",
+        "test": "phpunit",
         "cs": "php-cs-fixer fix src/ --level=psr2"
     },
     "minimum-stability": "stable"
