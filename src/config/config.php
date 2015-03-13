@@ -1,14 +1,14 @@
 <?php
 
-return array(
+return [
 
-    'twilio' => array(
+    'twilio' => [
 
         'default' => 'twilio',
 
-        'connections' => array(
+        'connections' => [
 
-            'twilio' => array(
+            'twilio' => [
 
                 /*
                 |--------------------------------------------------------------------------
@@ -53,9 +53,9 @@ return array(
                 |
                 */
 
-                //'ssl_verify' => true,
+                'ssl_verify' => true,
 
-            ),
-        ),
-    ),
-);
+            ],
+        ],
+    ],
+];

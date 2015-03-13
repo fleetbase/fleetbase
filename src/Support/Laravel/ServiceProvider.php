@@ -1,43 +1,49 @@
 <?php
 namespace Aloha\Twilio\Support\Laravel;
 
-use Aloha\Twilio\Manager;
-use Illuminate\Support\ServiceProvider as BaseServiceProvider;
+use Illuminate\Foundation\Application;
+use Illuminate\Support\ServiceProvider as LaravelServiceProvider;
 
-class ServiceProvider extends BaseServiceProvider
+class ServiceProvider extends LaravelServiceProvider
 {
     /**
-     * Boot Method
+     * @var \Illuminate\Support\ServiceProvider
+     */
+    protected $provider;
+
+    /**
+     * Boot method.
      */
     public function boot()
     {
-        // Register commands.
-        $this->commands('twilio.sms', 'twilio.call');
+        return $this->provider()->boot();
     }
 
     /**
      * Register the service provider.
+     *
+     * @return void
      */
     public function register()
     {
-        // Register manager for usage with the Facade.
-        $this->app->singleton('twilio', function ($app) {
-            $config = $app['config']->get('services.twilio');
-            return new Manager($config['default'], $config['connections']);
-        });
+        return $this->provider()->register();
+    }
 
-        // Define an alias.
-        $this->app->alias('twilio', 'Aloha\Twilio\Manager');
+    /**
+     * @return \Illuminate\Support\ServiceProvider
+     */
+    protected function provider()
+    {
+        if ($this->provider) {
+            return $this->provider;
+        }
 
-        // Register Twilio Test SMS Command.
-        $this->app->singleton('twilio.sms', 'Aloha\Twilio\Commands\TwilioSmsCommand');
+        if (version_compare(Application::VERSION, '5.0', '<')) {
+            $this->provider = new L4ServiceProvider($this->app);
+        } else {
+            $this->provider = new L5ServiceProvider($this->app);
+        }
 
-        // Register Twilio Test Call Command.
-        $this->app->singleton('twilio.call', 'Aloha\Twilio\Commands\TwilioCallCommand');
-
-        // Register TwilioInterface concretion.
-        $this->app->singleton('Aloha\Twilio\TwilioInterface', function ($app) {
-            return $app->make('twilio')->defaultConnection();
-        });
+        return $this->provider;
     }
 }
