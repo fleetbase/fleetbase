@@ -41,11 +41,11 @@ class Manager implements TwilioInterface
         $settings = $this->settings[$connection];
 
         if (isset($settings['ssl_verify'])) {
-            return new Twilio($settings['token'], $settings['from'], $settings['sid'], $settings['ssl_verify']);
+            return new Twilio($settings['sid'], $settings['token'], $settings['from'], $settings['ssl_verify']);
         }
 
         // Let the Twilio constructor decide the default value for ssl_verify
-        return new Twilio($settings['token'], $settings['from'], $settings['sid']);
+        return new Twilio($settings['sid'], $settings['token'], $settings['from']);
     }
 
     /**
