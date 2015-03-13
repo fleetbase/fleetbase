@@ -8,9 +8,6 @@ Laravel Twillio API Integration
 [![Latest Unstable Version](https://poser.pugx.org/aloha/twilio/v/unstable.svg)](https://packagist.org/packages/aloha/twilio)
 [![License](https://poser.pugx.org/aloha/twilio/license.svg)](https://packagist.org/packages/aloha/twilio)
 
-- `twilio:sms`
-- `twilio:call`
-
 ## Installation
 
 Begin by installing this package through Composer. Run this command from the Terminal:
@@ -26,6 +23,11 @@ To wire this up in your Laravel project, wether it's built in Laravel 4 or 5, yo
 ```php
 'Aloha\Twilio\Support\Laravel\ServiceProvider',
 ```
+
+This will register two new artisan commands for you:
+
+- `twilio:sms`
+- `twilio:call`
 
 Then, add a Facade for more convenient usage. In your `app.php` config file add the following line to the `aliases` array:
 
