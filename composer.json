@@ -27,5 +27,9 @@
             "Aloha\\Twilio\\": "src/"
         }
     },
+    "scripts": {
+        "test": "echo 'No tests yet, please help us out!'",
+        "cs": "php-cs-fixer fix src/ --level=psr2"
+    },
     "minimum-stability": "stable"
 }
