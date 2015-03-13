@@ -9,6 +9,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Added a Manager class ([#34](https://github.com/aloha/laravel-twilio/pull/34)) to configure a Twilio object from an array of settings, depending on the requested from address.
 - Abstracted a TwilioInterface from the Twilio class ([#34](https://github.com/aloha/laravel-twilio/pull/34)).
 - Allowed second argument to be callable as message builder ([#36](https://github.com/aloha/laravel-twilio/pull/36)).
+- Made the Twilio class independent from the Laravel Framework, thus made the package framework agnostic.
 - Moved files around (Facade and Service Providers to Support subnamespace).
 - Dropped PHP 5.3 support (by accident, by using square array bracket syntax).
 - Autoloading from PSR-0 to PSR-4.
