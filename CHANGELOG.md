@@ -2,7 +2,7 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## [Unreleased](https://github.com/aloha/laravel-twilio/tree/master)
+## [2.0.0-RC1](https://github.com/aloha/laravel-twilio/releases/tag/2.0.0-RC1)
 
 ### Changed
 - Added a ServiceProvider for Laravel 5 and adapted the original Service Provider to proxy the L4 or L5 service provider depending on the Laravel version.
