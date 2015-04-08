@@ -2,7 +2,7 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## [Unreleased][unreleased]
+## [Unreleased](https://github.com/aloha/laravel-twilio/tree/master)
 
 ### Changed
 - Added a ServiceProvider for Laravel 5 and adapted the original Service Provider to proxy the L4 or L5 service provider depending on the Laravel version.
@@ -22,11 +22,11 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ### Fixed
 - Year in License file
 
-## [1.0.2] - 2014-09-04
+## [1.0.2](https://github.com/aloha/laravel-twilio/releases/tag/1.0.2) - 2014-09-04
 
 ### Changed
 - Support for all Laravel 4.x versions
 - Package renamed from travisjryan/twilio to aloha/twilio
 - Changed twilio/sdk dependency from volatile dev-master to 3.12.*
 
-## [1.0.1] - 2014-05-20
+## [1.0.1](https://github.com/aloha/laravel-twilio/releases/tag/1.0.1) - 2014-05-20
