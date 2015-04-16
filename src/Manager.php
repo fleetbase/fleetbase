@@ -57,7 +57,7 @@ class Manager implements TwilioInterface
      */
     public function message($to, $message, $from = null)
     {
-        $this->defaultConnection()->message($to, $message, $from);
+        return $this->defaultConnection()->message($to, $message, $from);
     }
 
     /**
@@ -70,7 +70,7 @@ class Manager implements TwilioInterface
      */
     public function call($to, $message, array $options = array(), $from = null)
     {
-        $this->defaultConnection()->call($to, $message, $options, $from);
+        return $this->defaultConnection()->call($to, $message, $options, $from);
     }
 
     /**
