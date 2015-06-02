@@ -14,7 +14,7 @@ Begin by installing this package through Composer. In Laravel 4, run this comman
 ```bash
 composer require aloha/twilio
 ```
-In Laravel 5, use 2.0.0 version:
+In Laravel 5, use 2.0.0 pre-release version:
 ```bash
 composer require 'aloha/twilio:2.0.0-RC2'
 ```
