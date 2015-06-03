@@ -2,6 +2,18 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2.0.0-RC3](https://github.com/aloha/laravel-twilio/releases/tag/2.0.0-RC3)
+
+### Changed
+
+* Allowed v4 of the twilio SDK as well.
+
+## [2.0.0-RC2](https://github.com/aloha/laravel-twilio/releases/tag/2.0.0-RC2)
+
+### Fixed
+
+* Return result of the `TwilioInterface::message` and `TwilioInterface::call` methods on the defaultConnection through the manager.
+
 ## [2.0.0-RC1](https://github.com/aloha/laravel-twilio/releases/tag/2.0.0-RC1)
 
 ### Changed
