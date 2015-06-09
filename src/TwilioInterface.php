@@ -15,12 +15,12 @@ interface TwilioInterface
     /**
      * @param string $to
      * @param string $message
-     * @param array	 $mediaUrls
+     * @param array  $mediaUrls
      * @param string $from
      *
      * @return \Services_Twilio_Rest_Message
      */
-    public function messageWithMedia($to, $message, $mediaUrls, $from = null);
+    public function messageWithMedia($to, $message, array $mediaUrls = null, $from = null);
 
     /**
      * @param string          $to
