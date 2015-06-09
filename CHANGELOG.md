@@ -2,6 +2,12 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2.0.0-RC4](https://github.com/aloha/laravel-twilio/releases/tag/2.0.0-RC4)
+
+### Added
+
+* New method messageWithMedia($to, $message, $media, $from) on ClientInterface, thanks to [@russmatney](https://github.com/russmatney).
+
 ## [2.0.0-RC3](https://github.com/aloha/laravel-twilio/releases/tag/2.0.0-RC3)
 
 ### Changed
