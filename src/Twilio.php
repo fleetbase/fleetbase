@@ -57,6 +57,22 @@ class Twilio implements TwilioInterface
     }
 
     /**
+     * @param string $to
+     * @param string $message
+     * @param array  $mediaUrls
+     * @param string $from
+     *
+     * @return \Services_Twilio_Rest_Message
+     */
+    public function messageWithMedia($to, $message, $mediaUrls, $from = null)
+    {
+        $twilio = $this->getTwilio();
+
+        return $twilio->account->messages->sendMessage($from ?: $this->from, $to, $message, $mediaUrls);
+    }
+
+
+    /**
      * @param string          $to
      * @param string|callable $message
      * @param array           $options
