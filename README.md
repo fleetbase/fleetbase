@@ -7,6 +7,7 @@ Laravel Twillio API Integration
 [![Latest Stable Version](https://poser.pugx.org/aloha/twilio/v/stable.svg)](https://packagist.org/packages/aloha/twilio)
 [![Latest Unstable Version](https://poser.pugx.org/aloha/twilio/v/unstable.svg)](https://packagist.org/packages/aloha/twilio)
 [![License](https://poser.pugx.org/aloha/twilio/license.svg)](https://packagist.org/packages/aloha/twilio)
+[![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/aloha/laravel-twilio?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 
 ## Installation
 
