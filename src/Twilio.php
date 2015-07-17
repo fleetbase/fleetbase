@@ -115,7 +115,7 @@ class Twilio implements TwilioInterface
      *
      * @return string
      */
-    private function twiml($callback)
+    private function twiml(callable $callback)
     {
         $message = new Services_Twilio_Twiml();
 
