@@ -8,7 +8,7 @@ class L4ServiceProvider extends LaravelServiceProvider
     use ServiceProviderTrait;
 
     /**
-     * Boot Method
+     * Boot Method.
      */
     public function boot()
     {

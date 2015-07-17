@@ -3,8 +3,8 @@ namespace Aloha\Twilio\Commands;
 
 use Aloha\Twilio\TwilioInterface;
 use Illuminate\Console\Command;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Console\Input\InputOption;
 
 class TwilioSmsCommand extends Command
 {
@@ -40,8 +40,6 @@ class TwilioSmsCommand extends Command
 
     /**
      * Execute the console command.
-     *
-     * @return void
      */
     public function fire()
     {
@@ -67,9 +65,9 @@ class TwilioSmsCommand extends Command
      */
     protected function getArguments()
     {
-        return array(
-            array('phone', InputArgument::REQUIRED, 'The phone number that will receive a test message.'),
-        );
+        return [
+            ['phone', InputArgument::REQUIRED, 'The phone number that will receive a test message.'],
+        ];
     }
 
     /**
@@ -79,8 +77,8 @@ class TwilioSmsCommand extends Command
      */
     protected function getOptions()
     {
-        return array(
-            array('text', null, InputOption::VALUE_OPTIONAL, 'Optional message that will be sent.', null),
-        );
+        return [
+            ['text', null, InputOption::VALUE_OPTIONAL, 'Optional message that will be sent.', null],
+        ];
     }
 }

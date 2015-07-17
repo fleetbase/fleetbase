@@ -13,6 +13,7 @@ trait ServiceProviderTrait
         // Register manager for usage with the Facade.
         $this->app->singleton('twilio', function () {
             $config = $this->config();
+
             return new Manager($config['default'], $config['connections']);
         });
 

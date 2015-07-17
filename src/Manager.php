@@ -2,8 +2,6 @@
 namespace Aloha\Twilio;
 
 use InvalidArgumentException;
-use Services_Twilio_Rest_Message;
-use Services_Twilio_Twiml;
 
 class Manager implements TwilioInterface
 {
@@ -19,7 +17,7 @@ class Manager implements TwilioInterface
 
     /**
      * @param string $default
-     * @param array $settings
+     * @param array  $settings
      */
     public function __construct($default, array $settings)
     {
@@ -81,7 +79,7 @@ class Manager implements TwilioInterface
      *
      * @return \Services_Twilio_Rest_Call
      */
-    public function call($to, $message, array $options = array(), $from = null)
+    public function call($to, $message, array $options = [], $from = null)
     {
         return $this->defaultConnection()->call($to, $message, $options, $from);
     }

@@ -30,7 +30,7 @@ interface TwilioInterface
      *
      * @return \Services_Twilio_Rest_Call
      */
-    public function call($to, $message, array $options = array(), $from = null);
+    public function call($to, $message, array $options = [], $from = null);
 
     /**
      * @param callable $callback

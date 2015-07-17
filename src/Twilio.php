@@ -71,7 +71,6 @@ class Twilio implements TwilioInterface
         return $twilio->account->messages->sendMessage($from ?: $this->from, $to, $message, $mediaUrls);
     }
 
-
     /**
      * @param string          $to
      * @param string|callable $message
@@ -80,12 +79,12 @@ class Twilio implements TwilioInterface
      *
      * @return \Services_Twilio_Rest_Call
      */
-    public function call($to, $message, array $options = array(), $from = null)
+    public function call($to, $message, array $options = [], $from = null)
     {
         $twilio = $this->getTwilio();
 
         if (is_callable($message)) {
-            $query = http_build_query(array('Twiml' => $this->twiml($message)));
+            $query = http_build_query(['Twiml' => $this->twiml($message)]);
             $message = 'https://twimlets.com/echo?'.$query;
         }
 
@@ -118,12 +117,11 @@ class Twilio implements TwilioInterface
         if (!$this->sslVerify) {
             $http = new Services_Twilio_TinyHttp(
                 'https://api.twilio.com',
-                array('curlopts' =>
-                    array(
+                ['curlopts' => [
                         CURLOPT_SSL_VERIFYPEER => false,
                         CURLOPT_SSL_VERIFYHOST => 2,
-                    ),
-                )
+                    ],
+                ]
             );
         }
 

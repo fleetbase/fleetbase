@@ -3,8 +3,8 @@ namespace Aloha\Twilio\Commands;
 
 use Aloha\Twilio\TwilioInterface;
 use Illuminate\Console\Command;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Console\Input\InputOption;
 
 class TwilioCallCommand extends Command
 {
@@ -40,8 +40,6 @@ class TwilioCallCommand extends Command
 
     /**
      * Execute the console command.
-     *
-     * @return void
      */
     public function fire()
     {
@@ -49,14 +47,14 @@ class TwilioCallCommand extends Command
 
         // Grab options
         $from = $this->option('from');
-        $url  = $this->option('url');
+        $url = $this->option('url');
 
         // Set a default URL if we havent specified one since is mandatory.
         if (is_null($url)) {
             $url = 'http://demo.twilio.com/docs/voice.xml';
         }
 
-        $this->twilio->call($this->argument('phone'), $url, array(), $from);
+        $this->twilio->call($this->argument('phone'), $url, [], $from);
     }
 
     /**
@@ -66,9 +64,9 @@ class TwilioCallCommand extends Command
      */
     protected function getArguments()
     {
-        return array(
-            array('phone', InputArgument::REQUIRED, 'The phone number that will receive a test message.'),
-        );
+        return [
+            ['phone', InputArgument::REQUIRED, 'The phone number that will receive a test message.'],
+        ];
     }
 
     /**
@@ -78,9 +76,9 @@ class TwilioCallCommand extends Command
      */
     protected function getOptions()
     {
-        return array(
-            array('url', null, InputOption::VALUE_OPTIONAL, 'Optional url that will be used to fetch xml for call.', null),
-            array('from', null, InputOption::VALUE_OPTIONAL, 'Optional from number that will be used.', null),
-        );
+        return [
+            ['url', null, InputOption::VALUE_OPTIONAL, 'Optional url that will be used to fetch xml for call.', null],
+            ['from', null, InputOption::VALUE_OPTIONAL, 'Optional from number that will be used.', null],
+        ];
     }
 }

@@ -21,8 +21,6 @@ class ServiceProvider extends LaravelServiceProvider
 
     /**
      * Register the service provider.
-     *
-     * @return void
      */
     public function register()
     {
