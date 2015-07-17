@@ -6,17 +6,17 @@ use Psr\Log\LoggerInterface;
 class LoggingDecorator implements TwilioInterface
 {
     /**
-     * @var LoggerInterface
+     * @var \Psr\Log\LoggerInterface
      */
     private $logger;
 
     /**
-     * @var TwilioInterface
+     * @var \Aloha\Twilio\TwilioInterface
      */
     private $wrapped;
 
     /**
-     * @param LoggerInterface               $logger
+     * @param \Psr\Log\LoggerInterface $logger
      * @param \Aloha\Twilio\TwilioInterface $wrapped
      */
     public function __construct(LoggerInterface $logger, TwilioInterface $wrapped)
