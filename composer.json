@@ -20,10 +20,10 @@
         "twilio/sdk":"~3.12||~4.0"
     },
     "require-dev": {
-        "illuminate/support": "~4||~5",
+        "fabpot/php-cs-fixer": "^1.9",
         "illuminate/console": "~4||~5",
-        "phpunit/phpunit": "~4.5",
-        "fabpot/php-cs-fixer": "^1.9"
+        "illuminate/support": "~4||~5",
+        "phpunit/phpunit": "~4.5"
     },
     "autoload": {
         "psr-4": {
