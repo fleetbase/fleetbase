@@ -17,6 +17,7 @@ return Config::create()
         'ordered_use',
         'php4_constructor',
         'phpdoc_order',
+        '-phpdoc_params',
         'short_array_syntax',
         'short_echo_tag',
         'strict',

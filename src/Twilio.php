@@ -32,7 +32,7 @@ class Twilio implements TwilioInterface
      * @param string $token
      * @param string $from
      * @param string $sid
-     * @param bool   $sslVerify
+     * @param bool $sslVerify
      */
     public function __construct($sid, $token, $from, $sslVerify = true)
     {
@@ -59,7 +59,7 @@ class Twilio implements TwilioInterface
     /**
      * @param string $to
      * @param string $message
-     * @param array  $mediaUrls
+     * @param array $mediaUrls
      * @param string $from
      *
      * @return \Services_Twilio_Rest_Message
@@ -72,10 +72,10 @@ class Twilio implements TwilioInterface
     }
 
     /**
-     * @param string          $to
+     * @param string $to
      * @param string|callable $message
-     * @param array           $options
-     * @param string          $from
+     * @param array $options
+     * @param string $from
      *
      * @return \Services_Twilio_Rest_Call
      */

@@ -42,7 +42,7 @@ class LoggingDecorator implements TwilioInterface
     /**
      * @param string $to
      * @param string $message
-     * @param array  $mediaUrls
+     * @param array $mediaUrls
      * @param string $from
      *
      * @return \Services_Twilio_Rest_Message
@@ -55,10 +55,10 @@ class LoggingDecorator implements TwilioInterface
     }
 
     /**
-     * @param string          $to
+     * @param string $to
      * @param string|callable $message
-     * @param array           $options
-     * @param string          $from
+     * @param array $options
+     * @param string $from
      *
      * @return \Services_Twilio_Rest_Call
      */
