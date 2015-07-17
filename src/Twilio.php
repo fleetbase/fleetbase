@@ -92,24 +92,6 @@ class Twilio implements TwilioInterface
     }
 
     /**
-     * @param callable $callback
-     *
-     * @return string
-     */
-    public function twiml($callback)
-    {
-        $message = new Services_Twilio_Twiml();
-
-        if (is_callable($callback)) {
-            call_user_func($callback, $message);
-        } else {
-            throw new InvalidArgumentException('Callback is not valid.');
-        }
-
-        return (string) $message;
-    }
-
-    /**
      * @return \Services_Twilio
      */
     private function getTwilio()
@@ -126,5 +108,23 @@ class Twilio implements TwilioInterface
         }
 
         return new Services_Twilio($this->sid, $this->token, null, isset($http) ? $http : null);
+    }
+
+    /**
+     * @param callable $callback
+     *
+     * @return string
+     */
+    private function twiml($callback)
+    {
+        $message = new Services_Twilio_Twiml();
+
+        if (is_callable($callback)) {
+            call_user_func($callback, $message);
+        } else {
+            throw new InvalidArgumentException('Callback is not valid.');
+        }
+
+        return (string) $message;
     }
 }

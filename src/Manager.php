@@ -85,16 +85,6 @@ class Manager implements TwilioInterface
     }
 
     /**
-     * @param callable $callback
-     *
-     * @return \Services_Twilio_Twiml
-     */
-    public function twiml($callback)
-    {
-        return $this->defaultConnection()->twiml($callback);
-    }
-
-    /**
      * @return \Aloha\Twilio\TwilioInterface
      */
     public function defaultConnection()
