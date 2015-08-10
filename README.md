@@ -19,7 +19,7 @@ composer require aloha/twilio
 
 ## Laravel integration
 
-To wire this up in your Laravel project, wether it's built in Laravel 4 or 5, you need to add the service provider.
+To wire this up in your Laravel project, whether it's built in Laravel 4 or 5, you need to add the service provider.
 Open `app.php`, and add a new item to the providers array.
 
 ```php
