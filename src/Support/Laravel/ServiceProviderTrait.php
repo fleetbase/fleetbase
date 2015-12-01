@@ -1,7 +1,10 @@
 <?php
 namespace Aloha\Twilio\Support\Laravel;
 
+use Aloha\Twilio\Commands\TwilioCallCommand;
+use Aloha\Twilio\Commands\TwilioSmsCommand;
 use Aloha\Twilio\Manager;
+use Aloha\Twilio\TwilioInterface;
 
 trait ServiceProviderTrait
 {
@@ -18,16 +21,16 @@ trait ServiceProviderTrait
         });
 
         // Define an alias.
-        $this->app->alias('twilio', \Aloha\Twilio\Manager::class);
+        $this->app->alias('twilio', Manager::class);
 
         // Register Twilio Test SMS Command.
-        $this->app->singleton('twilio.sms', \Aloha\Twilio\Commands\TwilioSmsCommand::class);
+        $this->app->singleton('twilio.sms', TwilioSmsCommand::class);
 
         // Register Twilio Test Call Command.
-        $this->app->singleton('twilio.call', \Aloha\Twilio\Commands\TwilioCallCommand::class);
+        $this->app->singleton('twilio.call', TwilioCallCommand::class);
 
         // Register TwilioInterface concretion.
-        $this->app->singleton(\Aloha\Twilio\TwilioInterface::class, function () {
+        $this->app->singleton(TwilioInterface::class, function () {
             return $this->app->make('twilio')->defaultConnection();
         });
     }

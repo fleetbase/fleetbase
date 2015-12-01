@@ -85,10 +85,10 @@ class Twilio implements TwilioInterface
 
         if (is_callable($message)) {
             $query = http_build_query([
-                'Twiml' => $this->twiml($message)
+                'Twiml' => $this->twiml($message),
             ]);
 
-            $message = 'https://twimlets.com/echo?' . $query;
+            $message = 'https://twimlets.com/echo?'.$query;
         }
 
         return $twilio->account->calls->create($from ?: $this->from, $to, $message, $options);
