@@ -18,16 +18,16 @@ trait ServiceProviderTrait
         });
 
         // Define an alias.
-        $this->app->alias('twilio', 'Aloha\Twilio\Manager');
+        $this->app->alias('twilio', \Aloha\Twilio\Manager::class);
 
         // Register Twilio Test SMS Command.
-        $this->app->singleton('twilio.sms', 'Aloha\Twilio\Commands\TwilioSmsCommand');
+        $this->app->singleton('twilio.sms', \Aloha\Twilio\Commands\TwilioSmsCommand::class);
 
         // Register Twilio Test Call Command.
-        $this->app->singleton('twilio.call', 'Aloha\Twilio\Commands\TwilioCallCommand');
+        $this->app->singleton('twilio.call', \Aloha\Twilio\Commands\TwilioCallCommand::class);
 
         // Register TwilioInterface concretion.
-        $this->app->singleton('Aloha\Twilio\TwilioInterface', function () {
+        $this->app->singleton(\Aloha\Twilio\TwilioInterface::class, function () {
             return $this->app->make('twilio')->defaultConnection();
         });
     }

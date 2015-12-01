@@ -35,6 +35,7 @@ class TwilioCallCommand extends Command
     public function __construct(TwilioInterface $twilio)
     {
         parent::__construct();
+
         $this->twilio = $twilio;
     }
 
