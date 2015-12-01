@@ -84,7 +84,10 @@ class Twilio implements TwilioInterface
         $twilio = $this->getTwilio();
 
         if (is_callable($message)) {
-            $query = http_build_query(['Twiml' => $this->twiml($message)]);
+            $query = http_build_query([
+                'Twiml' => $this->twiml($message),
+            ]);
+
             $message = 'https://twimlets.com/echo?'.$query;
         }
 
@@ -119,11 +122,11 @@ class Twilio implements TwilioInterface
     {
         $message = new Services_Twilio_Twiml();
 
-        if (is_callable($callback)) {
-            call_user_func($callback, $message);
-        } else {
+        if (!is_callable($callback)) {
             throw new InvalidArgumentException('Callback is not valid.');
         }
+
+        call_user_func($callback, $message);
 
         return (string) $message;
     }

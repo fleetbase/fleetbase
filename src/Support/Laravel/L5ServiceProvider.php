@@ -20,7 +20,10 @@ class L5ServiceProvider extends LaravelServiceProvider
 
         $this->mergeConfigFrom(__DIR__.'/../../config/config.php', 'twilio');
 
-        $this->commands([TwilioCallCommand::class, TwilioSmsCommand::class]);
+        $this->commands([
+            TwilioCallCommand::class,
+            TwilioSmsCommand::class,
+        ]);
     }
 
     /**
