@@ -49,7 +49,18 @@ In Laravel 5 you can publish the default config file to `config/twilio.php` with
 
 #### Facade
 
-The facade has the exact same methods as the `Aloha\Twilio\TwilioInterface`.
+The facade has the exact same methods as the `Aloha\Twilio\TwilioInterface`. First, include the `Facade` class at the top of your file:
+
+```php
+use Twilio;
+```
+
+To send a message using the default entry from your `twilio` [config file](src/config/config.php):
+
+```php
+Twilio::message($user->phone, $message);
+```
+
 One extra feature is that you can define which settings (and which sender phone number) to use:
 
 ```php
