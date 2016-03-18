@@ -99,6 +99,18 @@ $twilio->call('+18085551212', function ($message) {
 });
 ```
 
+Access the configured `\Services_Twilio` object:
+
+```php
+$sdk = $twilio->getTwilio();
+```
+
+You can also access this via the Facade as well:
+
+```php
+$sdk = Twilio::getTwilio();
+```
+
 #### Dummy class
 
 There is a dummy implementation of the `TwilioInterface` available: `Aloha\Twilio\Dummy`. This class
