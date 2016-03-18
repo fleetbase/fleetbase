@@ -146,7 +146,7 @@ $notifier = new Notifier($twilio);
 
 Sponsored by:
 
-![madewithlove](http://madewithlove.be/themes/madewithlove/assets/builds/img/social/opengraph.png)
+[![madewithlove](http://madewithlove.be/themes/madewithlove/assets/builds/img/social/opengraph.png)](http://mwl.be)
 
 ### License
 
