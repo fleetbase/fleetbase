@@ -10,17 +10,17 @@ class Twilio implements TwilioInterface
     /**
      * @var string
      */
+    protected $sid;
+
+    /**
+     * @var string
+     */
     protected $token;
 
     /**
      * @var string
      */
     protected $from;
-
-    /**
-     * @var string
-     */
-    protected $sid;
 
     /**
      * @var bool
@@ -49,41 +49,23 @@ class Twilio implements TwilioInterface
     /**
      * @param string $to
      * @param string $message
-     * @param string $from
      *
      * @return \Services_Twilio_Rest_Message
      */
-    public function message($to, $message, $from = null)
+    public function message($to, $message)
     {
         $twilio = $this->getTwilio();
 
-        return $twilio->account->messages->sendMessage($from ?: $this->from, $to, $message);
-    }
-
-    /**
-     * @param string $to
-     * @param string $message
-     * @param array $mediaUrls
-     * @param string $from
-     *
-     * @return \Services_Twilio_Rest_Message
-     */
-    public function messageWithMedia($to, $message, array $mediaUrls = null, $from = null)
-    {
-        $twilio = $this->getTwilio();
-
-        return $twilio->account->messages->sendMessage($from ?: $this->from, $to, $message, $mediaUrls);
+        return $twilio->account->messages->sendMessage($this->from, $to, $message);
     }
 
     /**
      * @param string $to
      * @param string|callable $message
-     * @param array $options
-     * @param string $from
      *
      * @return \Services_Twilio_Rest_Call
      */
-    public function call($to, $message, array $options = [], $from = null)
+    public function call($to, $message)
     {
         $twilio = $this->getTwilio();
 
@@ -95,7 +77,7 @@ class Twilio implements TwilioInterface
             $message = 'https://twimlets.com/echo?'.$query;
         }
 
-        return $twilio->account->calls->create($from ?: $this->from, $to, $message, $options);
+        return $twilio->account->calls->create($this->from, $to, $message);
     }
 
     /**
@@ -118,10 +100,8 @@ class Twilio implements TwilioInterface
                 ]
             );
         }
-        
-        $this->twilio = new Services_Twilio($this->sid, $this->token, null, isset($http) ? $http : null);
 
-        return $this->twilio;
+        return $this->twilio = new Services_Twilio($this->sid, $this->token, null, isset($http) ? $http : null);
     }
 
     /**

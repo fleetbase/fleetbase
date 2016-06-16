@@ -49,39 +49,23 @@ class Manager implements TwilioInterface
     /**
      * @param string $to
      * @param string $message
-     * @param string $from
      *
      * @return \Services_Twilio_Rest_Message
      */
-    public function message($to, $message, $from = null)
+    public function message($to, $message)
     {
-        return $this->defaultConnection()->message($to, $message, $from);
-    }
-
-    /**
-     * @param string $to
-     * @param string $message
-     * @param array $mediaUrls
-     * @param string $from
-     *
-     * @return \Services_Twilio_Rest_Message
-     */
-    public function messageWithMedia($to, $message, array $mediaUrls = null, $from = null)
-    {
-        return $this->defaultConnection()->messageWithMedia($to, $message, $mediaUrls, $from);
+        return $this->defaultConnection()->message($to, $message);
     }
 
     /**
      * @param string $to
      * @param string|callable $message
-     * @param array $options
-     * @param string $from
      *
      * @return \Services_Twilio_Rest_Call
      */
-    public function call($to, $message, array $options = [], $from = null)
+    public function call($to, $message)
     {
-        return $this->defaultConnection()->call($to, $message, $options, $from);
+        return $this->defaultConnection()->call($to, $message);
     }
 
     /**

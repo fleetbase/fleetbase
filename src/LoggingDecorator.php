@@ -28,44 +28,26 @@ class LoggingDecorator implements TwilioInterface
     /**
      * @param string $to
      * @param string $message
-     * @param string $from
      *
      * @return \Services_Twilio_Rest_Message
      */
-    public function message($to, $message, $from = null)
+    public function message($to, $message)
     {
         $this->logger->info(sprintf('Sending a message ["%s"] to %s', $message, $to));
 
-        return $this->wrapped->message($to, $message, $from);
-    }
-
-    /**
-     * @param string $to
-     * @param string $message
-     * @param array $mediaUrls
-     * @param string $from
-     *
-     * @return \Services_Twilio_Rest_Message
-     */
-    public function messageWithMedia($to, $message, array $mediaUrls = null, $from = null)
-    {
-        $this->logger->info(sprintf('Sending a media message ["%s"] to %s', $message, $to), $mediaUrls);
-
-        return $this->wrapped->messageWithMedia($to, $message, $from);
+        return $this->wrapped->message($to, $message);
     }
 
     /**
      * @param string $to
      * @param string|callable $message
-     * @param array $options
-     * @param string $from
      *
      * @return \Services_Twilio_Rest_Call
      */
-    public function call($to, $message, array $options = [], $from = null)
+    public function call($to, $message)
     {
-        $this->logger->info(sprintf('Calling %s', $to), $options);
+        $this->logger->info(sprintf('Calling %s', $to));
 
-        return $this->wrapped->call($to, $message, $options, $from);
+        return $this->wrapped->call($to, $message);
     }
 }
