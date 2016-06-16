@@ -1,7 +1,6 @@
 <?php
 namespace Aloha\Twilio;
 
-use InvalidArgumentException;
 use Services_Twilio;
 use Services_Twilio_TinyHttp;
 use Services_Twilio_Twiml;
