@@ -134,10 +134,6 @@ class Twilio implements TwilioInterface
     {
         $message = new Services_Twilio_Twiml();
 
-        if (!is_callable($callback)) {
-            throw new InvalidArgumentException('Callback is not valid.');
-        }
-
         call_user_func($callback, $message);
 
         return (string) $message;
