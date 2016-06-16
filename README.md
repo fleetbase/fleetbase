@@ -111,6 +111,23 @@ You can also access this via the Facade as well:
 $sdk = Twilio::getTwilio();
 ```
 
+##### Pass as many optional parameters as you want
+
+If you want to pass on extra optional parameters to the `messages->sendMessage(...)` method [from the Twilio SDK](https://twilio-php.readthedocs.io/en/latest/api/rest.html#Services_Twilio_Rest_Messages::sendMessage), you can do so
+by adding to the `message` method. All arguments are passed on, and the `from` field is prepended from configuration.
+
+```php
+$twilio->message($to, $message, $mediaUrls, $params);
+// passes all these arguments on.
+```
+
+The same is true for the [call method](https://twilio-php.readthedocs.io/en/latest/api/rest.html#Services_Twilio_Rest_Calls::create).
+
+```php
+$twilio->call($to, $message, $params);
+// passes all these arguments on.
+```
+
 #### Dummy class
 
 There is a dummy implementation of the `TwilioInterface` available: `Aloha\Twilio\Dummy`. This class
