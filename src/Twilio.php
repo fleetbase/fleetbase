@@ -54,9 +54,11 @@ class Twilio implements TwilioInterface
      */
     public function message($to, $message)
     {
-        $twilio = $this->getTwilio();
+        $arguments = func_get_args();
 
-        return $twilio->account->messages->sendMessage($this->from, $to, $message);
+        array_unshift($arguments, $this->from);
+
+        return call_user_func_array([$this->getTwilio()->account->messages, 'sendMessage'], $arguments);
     }
 
     /**
@@ -67,17 +69,19 @@ class Twilio implements TwilioInterface
      */
     public function call($to, $message)
     {
-        $twilio = $this->getTwilio();
+        $arguments = func_get_args();
+
+        array_unshift($arguments, $this->from);
 
         if (is_callable($message)) {
             $query = http_build_query([
                 'Twiml' => $this->twiml($message),
             ]);
 
-            $message = 'https://twimlets.com/echo?'.$query;
+            $arguments[2] = 'https://twimlets.com/echo?'.$query;
         }
 
-        return $twilio->account->calls->create($this->from, $to, $message);
+        return call_user_func_array([$this->getTwilio()->account->calls, 'create'], $arguments);
     }
 
     /**

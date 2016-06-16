@@ -35,7 +35,7 @@ class LoggingDecorator implements TwilioInterface
     {
         $this->logger->info(sprintf('Sending a message ["%s"] to %s', $message, $to));
 
-        return $this->wrapped->message($to, $message);
+        return call_user_func_array([$this->wrapped, 'message'], func_get_args());
     }
 
     /**
@@ -48,6 +48,6 @@ class LoggingDecorator implements TwilioInterface
     {
         $this->logger->info(sprintf('Calling %s', $to));
 
-        return $this->wrapped->call($to, $message);
+        return call_user_func_array([$this->wrapped, 'call'], func_get_args());
     }
 }
