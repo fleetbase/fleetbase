@@ -161,10 +161,6 @@ $notifier = new Notifier($twilio);
 - [Travis Ryan](https://twitter.com/nayrsivart)
 - [All Contributors](../../contributors)
 
-Sponsored by:
-
-[![madewithlove](http://madewithlove.be/themes/madewithlove/assets/builds/img/social/opengraph.png)](http://mwl.be)
-
 ### License
 
 laravel-twilio is open-sourced software licensed under the [MIT license](http://opensource.org/licenses/MIT)
