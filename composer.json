@@ -39,5 +39,15 @@
         "test": "phpunit",
         "cs": "php-cs-fixer fix src/ --level=psr2"
     },
-    "minimum-stability": "stable"
+    "minimum-stability": "stable",
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Aloha\\Twilio\\Support\\Laravel\\ServiceProvider"
+            ],
+            "aliases": {
+                "Twilio": "Aloha\\Twilio\\Support\\Laravel\\Facade"
+            }
+        }
+    }
 }
