@@ -76,7 +76,7 @@ class Twilio implements TwilioInterface
      *
      * @link https://www.twilio.com/docs/api/voice/making-calls Documentation
      *
-     * @return \Twilio\Rest\Api\V2010\Account\MessageInstance
+     * @return \Twilio\Rest\Api\V2010\Account\CallInstance
      */
     public function call($to, $message, array $params = [])
     {
