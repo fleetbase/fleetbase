@@ -1,9 +1,8 @@
 <?php
 namespace Aloha\Twilio;
 
-use Services_Twilio;
-use Services_Twilio_TinyHttp;
-use Services_Twilio_Twiml;
+use Twilio\Rest\Client;
+use Twilio\Twiml;
 
 class Twilio implements TwilioInterface
 {
@@ -26,9 +25,9 @@ class Twilio implements TwilioInterface
      * @var bool
      */
     protected $sslVerify;
-    
+
     /**
-     * @var \Services_Twilio
+     * @var \Twilio\Rest\Client
      */
      protected $twilio;
 
@@ -49,16 +48,24 @@ class Twilio implements TwilioInterface
     /**
      * @param string $to
      * @param string $message
+     * @param array|null $mediaUrls
+     * @param array $params
      *
      * @return \Services_Twilio_Rest_Message
      */
-    public function message($to, $message)
+    public function message($to, $message, $mediaUrls = null, array $params = [])
     {
-        $arguments = func_get_args();
+        $options['body'] = $message;
 
-        array_unshift($arguments, $this->from);
+        if (!isset($options['from'])) {
+            $options['from'] = $this->from;
+        }
 
-        return call_user_func_array([$this->getTwilio()->account->messages, 'sendMessage'], $arguments);
+        if (!empty($medialUrls)) {
+            $options['mediaUrl'] = $mediaUrls;
+        }
+
+        return $this->getTwilio->create($to, $options);
     }
 
     /**
@@ -67,45 +74,35 @@ class Twilio implements TwilioInterface
      *
      * @return \Services_Twilio_Rest_Call
      */
-    public function call($to, $message)
+    public function call($to, $message, array $params = [])
     {
-        $arguments = func_get_args();
-
-        array_unshift($arguments, $this->from);
-
         if (is_callable($message)) {
             $query = http_build_query([
                 'Twiml' => $this->twiml($message),
             ]);
 
-            $arguments[2] = 'https://twimlets.com/echo?'.$query;
+            $message = 'https://twimlets.com/echo?'.$query;
         }
 
-        return call_user_func_array([$this->getTwilio()->account->calls, 'create'], $arguments);
+        $params['url'] = $message;
+
+        return $this->getTwilio->calls->create(
+            $to,
+            $this->from,
+            $params
+        );
     }
 
     /**
-     * @return \Services_Twilio
+     * @return \Twilio\Rest\Client
      */
     public function getTwilio()
     {
         if ($this->twilio) {
             return $this->twilio;
         }
-        
-        if (!$this->sslVerify) {
-            $http = new Services_Twilio_TinyHttp(
-                'https://api.twilio.com',
-                [
-                    'curlopts' => [
-                        CURLOPT_SSL_VERIFYPEER => false,
-                        CURLOPT_SSL_VERIFYHOST => 2,
-                    ],
-                ]
-            );
-        }
 
-        return $this->twilio = new Services_Twilio($this->sid, $this->token, null, isset($http) ? $http : null);
+        return $this->twilio = new Client($this->sid, $this->token);
     }
 
     /**
@@ -115,7 +112,7 @@ class Twilio implements TwilioInterface
      */
     private function twiml(callable $callback)
     {
-        $message = new Services_Twilio_Twiml();
+        $message = new Twiml();
 
         call_user_func($callback, $message);
 
