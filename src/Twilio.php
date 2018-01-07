@@ -51,6 +51,8 @@ class Twilio implements TwilioInterface
      * @param array|null $mediaUrls
      * @param array $params
      *
+     * @link https://www.twilio.com/docs/api/messaging/send-messages Documentation
+     *
      * @return \Services_Twilio_Rest_Message
      */
     public function message($to, $message, $mediaUrls = null, array $params = [])
@@ -71,6 +73,8 @@ class Twilio implements TwilioInterface
     /**
      * @param string $to
      * @param string|callable $message
+     *
+     * @link https://www.twilio.com/docs/api/voice/making-calls Documentation
      *
      * @return \Services_Twilio_Rest_Call
      */
