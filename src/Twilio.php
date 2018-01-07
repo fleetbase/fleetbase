@@ -65,7 +65,7 @@ class Twilio implements TwilioInterface
             $options['mediaUrl'] = $mediaUrls;
         }
 
-        return $this->getTwilio->create($to, $options);
+        return $this->getTwilio()->create($to, $options);
     }
 
     /**
@@ -86,7 +86,7 @@ class Twilio implements TwilioInterface
 
         $params['url'] = $message;
 
-        return $this->getTwilio->calls->create(
+        return $this->getTwilio()->calls->create(
             $to,
             $this->from,
             $params
