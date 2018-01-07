@@ -53,7 +53,7 @@ class Twilio implements TwilioInterface
      *
      * @link https://www.twilio.com/docs/api/messaging/send-messages Documentation
      *
-     * @return \Services_Twilio_Rest_Message
+     * @return \Twilio\Rest\Api\V2010\Account\MessageInstance
      */
     public function message($to, $message, $mediaUrls = null, array $params = [])
     {
@@ -76,7 +76,7 @@ class Twilio implements TwilioInterface
      *
      * @link https://www.twilio.com/docs/api/voice/making-calls Documentation
      *
-     * @return \Services_Twilio_Rest_Call
+     * @return \Twilio\Rest\Api\V2010\Account\MessageInstance
      */
     public function call($to, $message, array $params = [])
     {
