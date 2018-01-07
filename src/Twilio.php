@@ -65,7 +65,7 @@ class Twilio implements TwilioInterface
             $options['mediaUrl'] = $mediaUrls;
         }
 
-        return $this->getTwilio()->create($to, $options);
+        return $this->getTwilio()->messages->create($to, $options);
     }
 
     /**
