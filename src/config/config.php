@@ -42,18 +42,6 @@ return [
                 */
 
                 'from' => getenv('TWILIO_FROM') ?: '',
-
-                /*
-                |--------------------------------------------------------------------------
-                | Verify Twilio's SSL Certificates
-                |--------------------------------------------------------------------------
-                |
-                | Allows the client to bypass verifying Twilio's SSL certificates.
-                | It is STRONGLY advised to leave this set to true for production environments.
-                |
-                */
-
-                'ssl_verify' => true,
             ],
         ],
     ],

@@ -102,7 +102,7 @@ $twilio->call('+18085551212', function ($message) {
 });
 ```
 
-Access the configured `\Services_Twilio` object:
+Access the configured `Twilio\Rest\Client` object:
 
 ```php
 $sdk = $twilio->getTwilio();
@@ -116,7 +116,7 @@ $sdk = Twilio::getTwilio();
 
 ##### Pass as many optional parameters as you want
 
-If you want to pass on extra optional parameters to the `messages->sendMessage(...)` method [from the Twilio SDK](https://twilio-php.readthedocs.io/en/latest/api/rest.html#Services_Twilio_Rest_Messages::sendMessage), you can do so
+If you want to pass on extra optional parameters to the `messages->sendMessage(...)` method [from the Twilio SDK](https://www.twilio.com/docs/api/messaging/send-messages), you can do so
 by adding to the `message` method. All arguments are passed on, and the `from` field is prepended from configuration.
 
 ```php
@@ -124,7 +124,7 @@ $twilio->message($to, $message, $mediaUrls, $params);
 // passes all these arguments on.
 ```
 
-The same is true for the [call method](https://twilio-php.readthedocs.io/en/latest/api/rest.html#Services_Twilio_Rest_Calls::create).
+The same is true for the [call method](https://www.twilio.com/docs/api/voice/call#post-parameters).
 
 ```php
 $twilio->call($to, $message, $params);
