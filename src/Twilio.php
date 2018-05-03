@@ -57,17 +57,17 @@ class Twilio implements TwilioInterface
      */
     public function message($to, $message, $mediaUrls = null, array $params = [])
     {
-        $options['body'] = $message;
+        $params['body'] = $message;
 
-        if (!isset($options['from'])) {
-            $options['from'] = $this->from;
+        if (!isset($params['from'])) {
+            $params['from'] = $this->from;
         }
 
         if (!empty($medialUrls)) {
-            $options['mediaUrl'] = $mediaUrls;
+            $params['mediaUrl'] = $mediaUrls;
         }
 
-        return $this->getTwilio()->messages->create($to, $options);
+        return $this->getTwilio()->messages->create($to, $params);
     }
 
     /**
