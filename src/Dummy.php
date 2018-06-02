@@ -7,7 +7,7 @@ class Dummy implements TwilioInterface
      * @param string $to
      * @param string $message
      *
-     * @return \Services_Twilio_Rest_Call|void
+     * @return \Twilio\Rest\Api\V2010\Account\MessageInstance|void
      */
     public function message($to, $message)
     {
@@ -17,7 +17,7 @@ class Dummy implements TwilioInterface
      * @param string $to
      * @param string|callable $message
      *
-     * @return \Services_Twilio_Rest_Call|void
+     * @return \Twilio\Rest\Api\V2010\Account\CallInstance|void
      */
     public function call($to, $message)
     {

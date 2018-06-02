@@ -2,7 +2,6 @@
 namespace Aloha\Twilio\Tests;
 
 use Aloha\Twilio\Commands\TwilioCallCommand;
-use Aloha\Twilio\Twilio;
 use PHPUnit_Framework_TestCase;
 
 class TwilioCallCommandTest extends PHPUnit_Framework_TestCase
