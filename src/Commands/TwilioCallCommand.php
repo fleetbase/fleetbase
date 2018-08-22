@@ -20,7 +20,7 @@ class TwilioCallCommand extends Command
      *
      * @var string
      */
-    protected $description = 'Twilio command to test Twilio API Integration.';
+    protected $description = 'Twilio command to test Twilio Call API Integration.';
 
     /**
      * @var TwilioInterface
