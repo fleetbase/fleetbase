@@ -29,7 +29,7 @@ class LoggingDecorator implements TwilioInterface
      * @param string $to
      * @param string $message
      *
-     * @return \Services_Twilio_Rest_Message
+     * @return \Twilio\Rest\Api\V2010\Account\MessageInstance
      */
     public function message($to, $message)
     {
@@ -42,7 +42,7 @@ class LoggingDecorator implements TwilioInterface
      * @param string $to
      * @param string|callable $message
      *
-     * @return \Services_Twilio_Rest_Call
+     * @return \Twilio\Rest\Api\V2010\Account\CallInstance
      */
     public function call($to, $message)
     {

@@ -73,6 +73,7 @@ class Twilio implements TwilioInterface
     /**
      * @param string $to
      * @param string|callable $message
+     * @param array $params
      *
      * @link https://www.twilio.com/docs/api/voice/making-calls Documentation
      *
