@@ -48,7 +48,12 @@ line to the `aliases` array if you want to use a short class name:
 
 In Laravel 4 you can publish the default config file to `app/config/packages/aloha/twilio/config.php` with the artisan command `config:publish aloha/twilio`.
 
-In Laravel 5 you can publish the default config file to `config/twilio.php` with the artisan command `vendor:publish`.
+In Laravel 5 you can publish the default config file to `config/twilio.php` with the artisan command `vendor:publish --tag=config`.
+Or to ensure you publish only this package's tag use
+```shell
+php artisan vendor:publish --tag=config --provider=Aloha\Twilio\Support\Laravel\ServiceProvider
+```
+
 
 #### Facade
 

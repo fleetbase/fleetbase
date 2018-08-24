@@ -16,7 +16,7 @@ class L5ServiceProvider extends LaravelServiceProvider
     {
         $this->publishes([
             __DIR__.'/../../config/config.php' => config_path('twilio.php'),
-        ]);
+        ], 'config');
 
         $this->mergeConfigFrom(__DIR__.'/../../config/config.php', 'twilio');
 
