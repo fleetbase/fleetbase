@@ -63,7 +63,7 @@ class Twilio implements TwilioInterface
             $params['from'] = $this->from;
         }
 
-        if (!empty($medialUrls)) {
+        if (!empty($mediaUrls)) {
             $params['mediaUrl'] = $mediaUrls;
         }
 
