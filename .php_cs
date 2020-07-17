@@ -1,27 +1,26 @@
 <?php
 
-use Symfony\CS\Config\Config;
-use Symfony\CS\Finder\DefaultFinder;
-use Symfony\CS\Fixer\Contrib\HeaderCommentFixer;
-use Symfony\CS\FixerInterface;
+$finder = PhpCsFixer\Finder::create()->in(['src', 'tests']);
 
-$finder = DefaultFinder::create()->in('src');
-
-return Config::create()
-    ->level(FixerInterface::SYMFONY_LEVEL)
-    ->fixers([
-        'ereg_to_preg',
-        'multiline_spaces_before_semicolon',
-        'newline_after_open_tag',
-        'no_blank_lines_before_namespace',
-        'ordered_use',
-        'php4_constructor',
-        'phpdoc_order',
-        '-phpdoc_params',
-        'short_array_syntax',
-        'short_echo_tag',
-        'strict',
-        'strict_param',
+return PhpCsFixer\Config::create()
+    ->setRules([
+        '@Symfony' => true,
+        '@PhpCsFixer' => true,
+        'ereg_to_preg' => true,
+        'no_php4_constructor' => true,
+        'strict_comparison' => true,
+        'strict_param' => true,
+        'php_unit_internal_class' => false,
+        'php_unit_test_class_requires_covers' => false,
+        'no_superfluous_phpdoc_tags' => false,
+        'function_declaration' => [
+            'closure_function_spacing' => 'none',
+        ],
+        'phpdoc_align' => [
+            'align' => 'left',
+        ],
+        'multiline_whitespace_before_semicolons' => [
+            'strategy' => 'no_multi_line',
+        ],
     ])
-    ->setUsingCache(true)
-    ->finder($finder);
+    ->setFinder($finder);

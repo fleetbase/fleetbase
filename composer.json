@@ -2,7 +2,7 @@
     "name": "aloha/twilio",
     "description": "Twilio API for Laravel",
     "type": "library",
-    "keywords": ["sms","ivr","laravel","twilio"],
+    "keywords": ["sms", "ivr", "laravel", "twilio"],
     "authors": [
         {
             "name": "Travis J Ryan",
@@ -17,13 +17,13 @@
     "license": "MIT",
     "require": {
         "php": ">=7.2.0",
-        "twilio/sdk": "6.*"
+        "twilio/sdk": "^6.0"
     },
     "require-dev": {
-        "friendsofphp/php-cs-fixer": "^1.9",
         "illuminate/console": "~4||~5",
         "illuminate/support": "~4||~5",
-        "phpunit/phpunit": "~4.5"
+        "friendsofphp/php-cs-fixer": "^2.16",
+        "phpunit/phpunit": "^8.0"
     },
     "autoload": {
         "psr-4": {
@@ -36,10 +36,9 @@
         }
     },
     "scripts": {
-        "test": "phpunit",
-        "cs": "php-cs-fixer fix src/ --level=psr2"
+        "tests": "phpunit",
+        "lint": "php-cs-fixer fix --allow-risky=yes"
     },
-    "minimum-stability": "stable",
     "extra": {
         "laravel": {
             "providers": [
