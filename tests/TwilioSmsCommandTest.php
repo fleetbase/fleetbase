@@ -2,9 +2,9 @@
 namespace Aloha\Twilio\Tests;
 
 use Aloha\Twilio\Commands\TwilioSmsCommand;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 
-class TwilioSmsCommandTest extends PHPUnit_Framework_TestCase
+class TwilioSmsCommandTest extends TestCase
 {
     /**
      * Test the name of the command
@@ -12,7 +12,7 @@ class TwilioSmsCommandTest extends PHPUnit_Framework_TestCase
     public function testName()
     {
         // Arrange
-        $stub = $this->getMock('Aloha\Twilio\TwilioInterface');
+        $stub = $this->createMock('Aloha\Twilio\TwilioInterface');
         $command = new TwilioSmsCommand($stub);
 
         // Act
