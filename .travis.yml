@@ -15,6 +15,6 @@ before_install:
 
 install:
   - travis_retry composer install --prefer-source --no-interaction
-  - travis_retry composer update $VERSIONS
+  - travis_retry composer update --root-reqs $VERSIONS
 
 script: vendor/bin/phpunit
