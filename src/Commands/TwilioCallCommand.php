@@ -43,7 +43,7 @@ class TwilioCallCommand extends Command
     /**
      * Execute the console command.
      */
-    public function fire()
+    public function handle()
     {
         $this->line('Creating a call via Twilio to: '.$this->argument('phone'));
 
@@ -51,20 +51,12 @@ class TwilioCallCommand extends Command
         $from = $this->option('from');
         $url = $this->option('url');
 
-        // Set a default URL if we havent specified one since is mandatory.
+        // Set a default URL if we haven't specified one since is mandatory.
         if (is_null($url)) {
             $url = 'http://demo.twilio.com/docs/voice.xml';
         }
 
         $this->twilio->call($this->argument('phone'), $url, [], $from);
-    }
-
-    /**
-     * Proxy method for Laravel 5.1+.
-     */
-    public function handle()
-    {
-        return $this->fire();
     }
 
     /**

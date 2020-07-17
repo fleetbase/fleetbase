@@ -3,7 +3,6 @@
 return [
     'twilio' => [
         'default' => 'twilio',
-
         'connections' => [
             'twilio' => [
                 /*
@@ -14,7 +13,6 @@ return [
                 | Your Twilio Account SID #
                 |
                 */
-
                 'sid' => env('TWILIO_SID', ''),
 
                 /*
@@ -25,7 +23,6 @@ return [
                 | Access token that can be found in your Twilio dashboard
                 |
                 */
-
                 'token' => env('TWILIO_TOKEN', ''),
 
                 /*
@@ -36,7 +33,6 @@ return [
                 | The Phone number registered with Twilio that your SMS & Calls will come from
                 |
                 */
-
                 'from' => env('TWILIO_FROM', ''),
             ],
         ],

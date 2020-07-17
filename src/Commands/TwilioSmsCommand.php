@@ -60,14 +60,6 @@ class TwilioSmsCommand extends Command
     }
 
     /**
-     * Proxy method for Laravel 5.1+.
-     */
-    public function handle()
-    {
-        return $this->fire();
-    }
-
-    /**
      * Get the console command arguments.
      *
      * @return array

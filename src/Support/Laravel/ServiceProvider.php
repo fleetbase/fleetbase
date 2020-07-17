@@ -2,47 +2,56 @@
 
 namespace Aloha\Twilio\Support\Laravel;
 
+use Aloha\Twilio\Commands\TwilioCallCommand;
+use Aloha\Twilio\Commands\TwilioSmsCommand;
+use Aloha\Twilio\Manager;
+use Aloha\Twilio\TwilioInterface;
 use Illuminate\Foundation\Application;
-use Illuminate\Support\ServiceProvider as LaravelServiceProvider;
+use Illuminate\Support\ServiceProvider as BaseServiceProvider;
 
-class ServiceProvider extends LaravelServiceProvider
+class ServiceProvider extends BaseServiceProvider
 {
     /**
-     * @var \Illuminate\Support\ServiceProvider
+     * Register the service provider.
      */
-    protected $provider;
+    public function register()
+    {
+        // Register manager for usage with the Facade.
+        $this->app->singleton('twilio', function() {
+            $config = $this->app['config']->get('twilio.twilio');
+
+            return new Manager($config['default'], $config['connections']);
+        });
+
+        // Define an alias.
+        $this->app->alias('twilio', Manager::class);
+
+        // Register Twilio Test SMS Command.
+        $this->app->singleton('twilio.sms', TwilioSmsCommand::class);
+
+        // Register Twilio Test Call Command.
+        $this->app->singleton('twilio.call', TwilioCallCommand::class);
+
+        // Register TwilioInterface concretion.
+        $this->app->singleton(TwilioInterface::class, function() {
+            return $this->app->make('twilio')->defaultConnection();
+        });
+    }
 
     /**
      * Boot method.
      */
     public function boot()
     {
-        return $this->provider()->boot();
-    }
+        $this->publishes([
+            __DIR__.'/../../config/config.php' => config_path('twilio.php'),
+        ], 'config');
 
-    /**
-     * Register the service provider.
-     */
-    public function register()
-    {
-        return $this->provider()->register();
-    }
+        $this->mergeConfigFrom(__DIR__.'/../../config/config.php', 'twilio');
 
-    /**
-     * @return \Illuminate\Support\ServiceProvider
-     */
-    protected function provider()
-    {
-        if ($this->provider) {
-            return $this->provider;
-        }
-
-        if (version_compare(Application::VERSION, '5.0', '<')) {
-            $this->provider = new L4ServiceProvider($this->app);
-        } else {
-            $this->provider = new L5ServiceProvider($this->app);
-        }
-
-        return $this->provider;
+        $this->commands([
+            TwilioCallCommand::class,
+            TwilioSmsCommand::class,
+        ]);
     }
 }
