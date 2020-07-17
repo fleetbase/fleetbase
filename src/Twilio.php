@@ -3,7 +3,8 @@
 namespace Aloha\Twilio;
 
 use Twilio\Rest\Client;
-use Twilio\Twiml;
+use Twilio\TwiML\TwiML;
+use Twilio\TwiML\VoiceResponse;
 
 class Twilio implements TwilioInterface
 {
@@ -73,7 +74,7 @@ class Twilio implements TwilioInterface
 
     /**
      * @param string $to
-     * @param callable|string $message
+     * @param callable|string|TwiML $message
      * @param array $params
      *
      * @see https://www.twilio.com/docs/api/voice/making-calls Documentation
@@ -82,15 +83,13 @@ class Twilio implements TwilioInterface
      */
     public function call($to, $message, array $params = [])
     {
-        if (is_callable($message)) {
-            $query = http_build_query([
-                'Twiml' => $this->twiml($message),
-            ]);
-
-            $message = 'https://twimlets.com/echo?'.$query;
+        if ($message instanceof TwiML) {
+            $params['twiml'] = $message->__toString();
+        } elseif (is_callable($message)) {
+            $params['twiml'] = $this->twiml($message);
+        } else {
+            $params['url'] = $message;
         }
-
-        $params['url'] = $message;
 
         return $this->getTwilio()->calls->create(
             $to,
@@ -118,7 +117,7 @@ class Twilio implements TwilioInterface
      */
     private function twiml(callable $callback)
     {
-        $message = new Twiml();
+        $message = new VoiceResponse();
 
         call_user_func($callback, $message);
 
