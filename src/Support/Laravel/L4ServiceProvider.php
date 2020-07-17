@@ -1,4 +1,5 @@
 <?php
+
 namespace Aloha\Twilio\Support\Laravel;
 
 use Illuminate\Support\ServiceProvider as LaravelServiceProvider;

@@ -1,4 +1,5 @@
 <?php
+
 namespace Aloha\Twilio;
 
 use Twilio\Rest\Client;
@@ -29,7 +30,7 @@ class Twilio implements TwilioInterface
     /**
      * @var \Twilio\Rest\Client
      */
-     protected $twilio;
+    protected $twilio;
 
     /**
      * @param string $token
@@ -48,10 +49,10 @@ class Twilio implements TwilioInterface
     /**
      * @param string $to
      * @param string $message
-     * @param array|null $mediaUrls
+     * @param null|array $mediaUrls
      * @param array $params
      *
-     * @link https://www.twilio.com/docs/api/messaging/send-messages Documentation
+     * @see https://www.twilio.com/docs/api/messaging/send-messages Documentation
      *
      * @return \Twilio\Rest\Api\V2010\Account\MessageInstance
      */
@@ -72,10 +73,10 @@ class Twilio implements TwilioInterface
 
     /**
      * @param string $to
-     * @param string|callable $message
+     * @param callable|string $message
      * @param array $params
      *
-     * @link https://www.twilio.com/docs/api/voice/making-calls Documentation
+     * @see https://www.twilio.com/docs/api/voice/making-calls Documentation
      *
      * @return \Twilio\Rest\Api\V2010\Account\CallInstance
      */

@@ -1,4 +1,5 @@
 <?php
+
 namespace Aloha\Twilio;
 
 class Dummy implements TwilioInterface
@@ -15,7 +16,7 @@ class Dummy implements TwilioInterface
 
     /**
      * @param string $to
-     * @param string|callable $message
+     * @param callable|string $message
      *
      * @return \Twilio\Rest\Api\V2010\Account\CallInstance|void
      */

@@ -1,4 +1,5 @@
 <?php
+
 namespace Aloha\Twilio;
 
 interface TwilioInterface
@@ -13,7 +14,7 @@ interface TwilioInterface
 
     /**
      * @param string $to
-     * @param string|callable $message
+     * @param callable|string $message
      *
      * @return \Twilio\Rest\Api\V2010\Account\CallInstance
      */

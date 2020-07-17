@@ -1,4 +1,5 @@
 <?php
+
 namespace Aloha\Twilio;
 
 use Psr\Log\LoggerInterface;
@@ -40,7 +41,7 @@ class LoggingDecorator implements TwilioInterface
 
     /**
      * @param string $to
-     * @param string|callable $message
+     * @param callable|string $message
      *
      * @return \Twilio\Rest\Api\V2010\Account\CallInstance
      */

@@ -1,4 +1,5 @@
 <?php
+
 namespace Aloha\Twilio;
 
 use InvalidArgumentException;
@@ -26,6 +27,17 @@ class Manager implements TwilioInterface
     }
 
     /**
+     * @param string $method
+     * @param array $arguments
+     *
+     * @return mixed
+     */
+    public function __call($method, $arguments)
+    {
+        return call_user_func_array([$this->defaultConnection(), $method], $arguments);
+    }
+
+    /**
      * @param string $connection
      *
      * @return \Aloha\Twilio\TwilioInterface
@@ -33,7 +45,7 @@ class Manager implements TwilioInterface
     public function from($connection)
     {
         if (!isset($this->settings[$connection])) {
-            throw new InvalidArgumentException("Connection \"$connection\" is not configured.");
+            throw new InvalidArgumentException("Connection \"{$connection}\" is not configured.");
         }
 
         $settings = $this->settings[$connection];
@@ -54,7 +66,7 @@ class Manager implements TwilioInterface
 
     /**
      * @param string $to
-     * @param string|callable $message
+     * @param callable|string $message
      *
      * @return \Twilio\Rest\Api\V2010\Account\CallInstance
      */
@@ -69,16 +81,5 @@ class Manager implements TwilioInterface
     public function defaultConnection()
     {
         return $this->from($this->default);
-    }
-
-    /**
-     * @param string $method
-     * @param array $arguments
-     *
-     * @return mixed
-     */
-    public function __call($method, $arguments)
-    {
-        return call_user_func_array([$this->defaultConnection(), $method], $arguments);
     }
 }

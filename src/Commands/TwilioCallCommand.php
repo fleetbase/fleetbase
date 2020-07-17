@@ -1,4 +1,5 @@
 <?php
+
 namespace Aloha\Twilio\Commands;
 
 use Aloha\Twilio\TwilioInterface;
@@ -59,7 +60,7 @@ class TwilioCallCommand extends Command
     }
 
     /**
-     * Proxy method for Laravel 5.1+
+     * Proxy method for Laravel 5.1+.
      */
     public function handle()
     {
