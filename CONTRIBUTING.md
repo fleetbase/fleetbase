@@ -6,7 +6,7 @@ We accept contributions via Pull Requests on [Github](https://github.com/aloha/l
 
 ## Pull Requests
 
-- **[PSR-2 Coding Standard](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-2-coding-style-guide.md)** - The easiest way to apply the conventions is to run `composer cs`.
+- **[PSR-2 Coding Standard](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-2-coding-style-guide.md)** - The easiest way to apply the conventions is to run `composer lint`.
 
 - **Add tests!** - Your patch won't be accepted if it doesn't have tests. First write a failing test that describes the bug, then write a fix.
 
@@ -21,7 +21,7 @@ We accept contributions via Pull Requests on [Github](https://github.com/aloha/l
 ## Running Tests
 
 ``` bash
-$ composer test
+$ composer tests
 ```
 
 **Happy coding**!
