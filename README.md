@@ -16,18 +16,6 @@ Begin by installing this package through Composer. Run this command from the Ter
 ```bash
 composer require aloha/twilio
 ```
-If you're using Laravel 5.5+, this is all there is to do.
-
-Should you still be on older versions of Laravel, the final steps for you are to add the service provider of the package and alias the package. To do this open your `config/app.php` file.
-
-## Integration for older versions of Laravel (5.5 -)
-
-To wire this up in your Laravel project, you need to add the service provider.
-Open `app.php`, and add a new item to the providers array.
-
-```php
-'Aloha\Twilio\Support\Laravel\ServiceProvider',
-```
 
 This will register two new artisan commands for you:
 
@@ -46,14 +34,11 @@ line to the `aliases` array if you want to use a short class name:
 'Twilio' => 'Aloha\Twilio\Support\Laravel\Facade',
 ```
 
-In Laravel 4 you can publish the default config file to `app/config/packages/aloha/twilio/config.php` with the artisan command `config:publish aloha/twilio`.
+You can publish the default config file to `config/twilio.php` with the artisan command
 
-In Laravel 5 you can publish the default config file to `config/twilio.php` with the artisan command `vendor:publish --tag=config`.
-Or to ensure you publish only this package's tag use
 ```shell
 php artisan vendor:publish --tag=config --provider=Aloha\Twilio\Support\Laravel\ServiceProvider
 ```
-
 
 #### Facade
 
@@ -101,10 +86,20 @@ $twilio->call('+18085551212', 'http://foo.com/call.xml');
 Generating a call and building the message in one go:
 
 ```php
-$twilio->call('+18085551212', function ($message) {
+$twilio->call('+18085551212', function (\Twilio\TwiML\VoiceResponse $message) {
     $message->say('Hello');
     $message->play('https://api.twilio.com/cowbell.mp3', ['loop' => 5]);
 });
+```
+
+or to make a call with _any_ Twiml description you can pass along any Twiml object:
+
+```php
+$message = new \Twilio\TwiML\VoiceResponse();
+$message->say('Hello');
+$message->play('https://api.twilio.com/cowbell.mp3', ['loop' => 5]);
+
+$twilio->call('+18085551212', $message);
 ```
 
 Access the configured `Twilio\Rest\Client` object:
@@ -126,14 +121,14 @@ by adding to the `message` method. All arguments are passed on, and the `from` f
 
 ```php
 $twilio->message($to, $message, $mediaUrls, $params);
-// passes all these arguments on.
+// passes all these params on.
 ```
 
 The same is true for the [call method](https://www.twilio.com/docs/api/voice/call#post-parameters).
 
 ```php
 $twilio->call($to, $message, $params);
-// passes all these arguments on.
+// passes all these params on.
 ```
 
 #### Dummy class
