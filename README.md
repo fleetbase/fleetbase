@@ -1,13 +1,11 @@
 laravel-twilio
 ===============
-Laravel Twillio API Integration
+Laravel Twilio API Integration
 
-[![Build Status](https://travis-ci.org/aloha/laravel-twilio.svg)](https://travis-ci.org/aloha/laravel-twilio)
-[![Total Downloads](https://poser.pugx.org/aloha/twilio/downloads.svg)](https://packagist.org/packages/aloha/twilio)
-[![Latest Stable Version](https://poser.pugx.org/aloha/twilio/v/stable.svg)](https://packagist.org/packages/aloha/twilio)
-[![Latest Unstable Version](https://poser.pugx.org/aloha/twilio/v/unstable.svg)](https://packagist.org/packages/aloha/twilio)
-[![License](https://poser.pugx.org/aloha/twilio/license.svg)](https://packagist.org/packages/aloha/twilio)
-[![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/aloha/laravel-twilio?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
+[![Build Status](https://img.shields.io/travis/aloha/laravel-twilio.svg?style=flat-square)](https://travis-ci.org/aloha/laravel-twilio)
+[![Total Downloads](https://img.shields.io/packagist/dt/aloha/twilio.svg?style=flat-square)](https://packagist.org/packages/aloha/twilio)
+[![Latest Stable Version](https://img.shields.io/packagist/v/aloha/twilio.svg?style=flat-square)](https://packagist.org/packages/aloha/twilio)
+[![License](https://img.shields.io/github/license/aloha/laravel-twilio?style=flat-square)](#license)
 
 ## Installation
 
