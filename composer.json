@@ -39,6 +39,9 @@
         "tests": "phpunit",
         "lint": "php-cs-fixer fix --allow-risky=yes"
     },
+    "config": {
+        "sort-packages": true
+    },
     "extra": {
         "laravel": {
             "providers": [
