@@ -2,21 +2,28 @@
 
 namespace Aloha\Twilio;
 
+use Twilio\Rest\Api\V2010\Account\CallInstance;
+use Twilio\Rest\Api\V2010\Account\MessageInstance;
+use Twilio\TwiML\TwiML;
+
 interface TwilioInterface
 {
     /**
      * @param string $to
      * @param string $message
+     * @param array $mediaUrls
+     * @param array $params
      *
-     * @return \Twilio\Rest\Api\V2010\Account\MessageInstance
+     * @return MessageInstance
      */
-    public function message($to, $message);
+    public function message(string $to, string $message, array $mediaUrls = [], array $params = []): MessageInstance;
 
     /**
      * @param string $to
-     * @param callable|string $message
+     * @param callable|string|TwiML $message
+     * @param array $params
      *
-     * @return \Twilio\Rest\Api\V2010\Account\CallInstance
+     * @return CallInstance
      */
-    public function call($to, $message);
+    public function call(string $to, $message, array $params): CallInstance;
 }

@@ -64,7 +64,7 @@ class TwilioCallCommand extends Command
      *
      * @return array
      */
-    protected function getArguments()
+    protected function getArguments(): array
     {
         return [
             ['phone', InputArgument::REQUIRED, 'The phone number that will receive a test message.'],
@@ -76,7 +76,7 @@ class TwilioCallCommand extends Command
      *
      * @return array
      */
-    protected function getOptions()
+    protected function getOptions(): array
     {
         return [
             ['url', null, InputOption::VALUE_OPTIONAL, 'Optional url that will be used to fetch xml for call.', null],

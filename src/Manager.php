@@ -3,6 +3,9 @@
 namespace Aloha\Twilio;
 
 use InvalidArgumentException;
+use Twilio\Rest\Api\V2010\Account\CallInstance;
+use Twilio\Rest\Api\V2010\Account\MessageInstance;
+use Twilio\TwiML\TwiML;
 
 class Manager implements TwilioInterface
 {
@@ -20,7 +23,7 @@ class Manager implements TwilioInterface
      * @param string $default
      * @param array $settings
      */
-    public function __construct($default, array $settings)
+    public function __construct(string $default, array $settings)
     {
         $this->default = $default;
         $this->settings = $settings;
@@ -32,7 +35,7 @@ class Manager implements TwilioInterface
      *
      * @return mixed
      */
-    public function __call($method, $arguments)
+    public function __call(string $method, array $arguments)
     {
         return call_user_func_array([$this->defaultConnection(), $method], $arguments);
     }
@@ -40,9 +43,9 @@ class Manager implements TwilioInterface
     /**
      * @param string $connection
      *
-     * @return \Aloha\Twilio\TwilioInterface
+     * @return TwilioInterface
      */
-    public function from($connection)
+    public function from(string $connection): TwilioInterface
     {
         if (!isset($this->settings[$connection])) {
             throw new InvalidArgumentException("Connection \"{$connection}\" is not configured.");
@@ -56,29 +59,32 @@ class Manager implements TwilioInterface
     /**
      * @param string $to
      * @param string $message
+     * @param array $mediaUrls
+     * @param array $params
      *
-     * @return \Twilio\Rest\Api\V2010\Account\MessageInstance
+     * @return MessageInstance
      */
-    public function message($to, $message)
+    public function message(string $to, string $message, array $mediaUrls = [], array $params = []): MessageInstance
     {
-        return call_user_func_array([$this->defaultConnection(), 'message'], func_get_args());
+        return $this->defaultConnection()->message($to, $message, $mediaUrls, $params);
     }
 
     /**
      * @param string $to
-     * @param callable|string $message
+     * @param callable|string|TwiML $message
+     * @param array $params
      *
-     * @return \Twilio\Rest\Api\V2010\Account\CallInstance
+     * @return CallInstance
      */
-    public function call($to, $message)
+    public function call(string $to, $message, array $params = []): CallInstance
     {
-        return call_user_func_array([$this->defaultConnection(), 'call'], func_get_args());
+        return $this->defaultConnection()->call($to, $message, $params);
     }
 
     /**
-     * @return \Aloha\Twilio\TwilioInterface
+     * @return TwilioInterface
      */
-    public function defaultConnection()
+    public function defaultConnection(): TwilioInterface
     {
         return $this->from($this->default);
     }

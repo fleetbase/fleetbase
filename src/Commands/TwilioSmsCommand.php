@@ -36,13 +36,14 @@ class TwilioSmsCommand extends Command
     public function __construct(TwilioInterface $twilio)
     {
         parent::__construct();
+
         $this->twilio = $twilio;
     }
 
     /**
      * Execute the console command.
      */
-    public function fire()
+    public function handle()
     {
         $this->line('Sending SMS via Twilio to: '.$this->argument('phone'));
 
@@ -64,7 +65,7 @@ class TwilioSmsCommand extends Command
      *
      * @return array
      */
-    protected function getArguments()
+    protected function getArguments(): array
     {
         return [
             ['phone', InputArgument::REQUIRED, 'The phone number that will receive a test message.'],
@@ -76,7 +77,7 @@ class TwilioSmsCommand extends Command
      *
      * @return array
      */
-    protected function getOptions()
+    protected function getOptions(): array
     {
         return [
             ['text', null, InputOption::VALUE_OPTIONAL, 'Optional message that will be sent.', null],
