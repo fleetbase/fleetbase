@@ -5,8 +5,9 @@ dist: xenial
 jobs:
   fast_finish: true
   include:
-    - php: 7.3
+    - php: 7.2
       env: VERSIONS=--prefer-lowest
+    - php: 7.3
     - php: 7.4
 
 before_install:
