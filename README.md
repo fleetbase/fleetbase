@@ -32,10 +32,10 @@ line to the `aliases` array if you want to use a short class name:
 'Twilio' => 'Aloha\Twilio\Support\Laravel\Facade',
 ```
 
-You can publish the default config file to `config/twilio.php` with the artisan command
+You can publish the default config file to `config/twilio.php` with the terminal command
 
 ```shell
-php artisan vendor:publish --tag=config --provider=Aloha\Twilio\Support\Laravel\ServiceProvider
+php -r "copy('vendor/aloha/twilio/src/config/config.php', 'config/twilio.php');"
 ```
 
 #### Facade
