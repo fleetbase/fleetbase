@@ -1,0 +1,43 @@
+version: "3.4"
+
+services:
+  cache:
+    image: redis:4-alpine
+
+  database:
+    image: mysql:8.0-oracle
+    ports: 
+      - "3306:3306"
+    volumes:
+      - "./docker/database/:/docker-entrypoint-initdb.d/"
+    environment:
+      MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
+      MYSQL_DATABASE: "fleetbase_os"
+
+  application:
+    volumes:
+        - '.:/var/www/html'
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+      target: app-dev
+      args:
+          ENVIRONMENT: development
+    environment:
+      DATABASE_URL: "mysql://root@database/fleetbase_os"
+      CACHE_DRIVER: redis
+      CACHE_URL: tcp://cache
+      REDIS_URL: tcp://cache
+      SESSION_DOMAIN: localhost
+    depends_on:
+      - database
+      - cache
+
+  httpd:
+    build:
+      context: .
+      dockerfile:  docker/httpd/Dockerfile
+    ports:
+      - "8000:80"
+    depends_on:
+      - application
