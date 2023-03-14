@@ -2,11 +2,35 @@
 sidebar_position: 3
 ---
 
-# 💵 Orders
+# 📍 Places
 
-### View Orders
+💡 Places can be created to schedule orders to. They are also automatically created if done through new orders and also through Storefront orders being created.
 
-💡 You can view all of your orders in 2 views.
+### View Places
+
+View all places by clicking on the places section under Resources
+Contacts can be assigned when creating an order or created automatically through your storefront application. 
+
+### Create Place
+
+You can create new place by clicking on the button on the top of the panel.
+
+1. **Create New Contact** - Enter the details to create the driver.
+    1. **Name** 
+    2. **Street** - Once you start to input the address in this field, the address will be auto populated. 
+
+### Export Places
+
+You can export your places in multiple formats by clicking the ‘Export’ pattern at the right of the panel.
+
+# Related articles  
+
+**Did we miss something?**
+Not to worry! Just email our support team at hello@fleetbase.io✌️
+
+<!-- ### View Orders
+
+You can view all of your orders in 2 views.
 
 1. **Map View** - This is a view of all of your current operations, you can view and manage live and historic orders. 
 2. **Table View** - A table view of all your orders.
@@ -93,4 +117,4 @@ Congratulations, you have made your first post!
 Feel free to play around and edit this post as much you like.
 ```
 
-A new blog post is now available at [http://localhost:3000/blog/greetings](http://localhost:3000/blog/greetings). -->
+A new blog post is now available at [http://localhost:3000/blog/greetings](http://localhost:3000/blog/greetings). --> -->

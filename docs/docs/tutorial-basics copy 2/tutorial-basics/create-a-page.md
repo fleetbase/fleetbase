@@ -2,42 +2,36 @@
 sidebar_position: 1
 ---
 
-# Vehicles
+#   🚚 Vehicles
 
-Add **Markdown or React** files to `src/pages` to create a **standalone page**:
+💡 Vehicles can be used to assign new orders, drivers and fleets to. 
 
-- `src/pages/index.js` → `localhost:3000/`
-- `src/pages/foo.md` → `localhost:3000/foo`
-- `src/pages/foo/bar.js` → `localhost:3000/foo/bar`
+### View Vehicles
 
-## Create your first React Page
+View all vehicles by clicking on the vehicles section under Resources
 
-Create a file at `src/pages/my-react-page.js`:
+### Create Vehicles
 
-```jsx title="src/pages/my-react-page.js"
-import React from 'react';
-import Layout from '@theme/Layout';
+You can create new vehicles by clicking on the button on the top of the panel.
 
-export default function MyReactPage() {
-  return (
-    <Layout>
-      <h1>My React page</h1>
-      <p>This is a React page</p>
-    </Layout>
-  );
-}
-```
+1. **Create New Driver** - Enter the details to create the driver. 
+    1. **Internal ID** - You can set your own internal ID for this driver
+    2. **Plate Number**
+    3. **Vin Number** 
+    4. **Make** 
+    5. **Model**
+    6. **Year**
+    7. **Driver Assigned** - Assign the vehicle to your driver
+    8. **Map Avatar**
+    9. **Model Information**
+    10. **Engine Information** 
+    11. **Fuel Information**
 
-A new page is now available at [http://localhost:3000/my-react-page](http://localhost:3000/my-react-page).
+### Export Vehicles
 
-## Create your first Markdown Page
+You can export your vehicles in multiple formats by clicking the ‘Export’ pattern at the right of the panel.
 
-Create a file at `src/pages/my-markdown-page.md`:
+# Related articles
 
-```mdx title="src/pages/my-markdown-page.md"
-# My Markdown page
-
-This is a Markdown page
-```
-
-A new page is now available at [http://localhost:3000/my-markdown-page](http://localhost:3000/my-markdown-page).
+**Did we miss something?**
+Not to worry! Just email our support team at hello@fleetbase.io

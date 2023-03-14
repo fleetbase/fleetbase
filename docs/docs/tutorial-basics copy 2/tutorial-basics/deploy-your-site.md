@@ -2,30 +2,28 @@
 sidebar_position: 5
 ---
 
-# Vendor
+# 🔀 Vendors
 
-Docusaurus is a **static-site-generator** (also called **[Jamstack](https://jamstack.org/)**).
+💡 Vendors can be created for vendors and additional 3rd party facilitators of yours. They can be assigned to specific orders. Vendors are automatically created through your Storefront if created. 
 
-It builds your site as simple **static HTML, JavaScript and CSS files**.
+### View Vendors
 
-## Build your site
+View all vendors by clicking on the vendor section under Resources
 
-Build your site **for production**:
+### Create Vendor
 
-```bash
-npm run build
-```
+You can create new vendors by clicking on the button on the top of the panel.
 
-The static files are generated in the `build` folder.
+1. **Create New Vendor** - You have the option to choose what type of vendor to create
+    1. **Integrated Vendor**
+        1. Integrated vendors are integrations to 3rd party facilitators which can be used to assign orders to.  
+    2. **Create Custom Vendor** - Enter the details to create your custom vendor. 
 
-## Deploy your site
+### Export Vendors
 
-Test your production build locally:
+You can export your vendors in multiple formats by clicking the ‘Export’ pattern at the right of the panel.
 
-```bash
-npm run serve
-```
+# Related articles
 
-The `build` folder is now served at [http://localhost:3000/](http://localhost:3000/).
-
-You can now deploy the `build` folder **almost anywhere** easily, **for free** or very small cost (read the **[Deployment Guide](https://docusaurus.io/docs/deployment)**).
+**Did we miss something?**
+Not to worry! Just email our support team at hello@fleetbase.io✌️

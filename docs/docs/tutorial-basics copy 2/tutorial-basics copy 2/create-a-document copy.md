@@ -2,9 +2,16 @@
 sidebar_position: 2
 ---
 
-# Events
+# 📺 Events
 
-Documents are **groups of pages** connected through:
+💡 View all of the events which happen in your account. 
+
+# Related articles
+
+**Did we miss something?**
+Not to worry! Just email our support team at hello@fleetbase.io✌️
+
+<!-- Documents are **groups of pages** connected through:
 
 - a **sidebar**
 - **previous/next navigation**
@@ -54,4 +61,4 @@ module.exports = {
     },
   ],
 };
-```
+``` -->

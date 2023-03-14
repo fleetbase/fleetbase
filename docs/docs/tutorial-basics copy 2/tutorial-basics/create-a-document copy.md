@@ -2,9 +2,16 @@
 sidebar_position: 2
 ---
 
-# Scheduler
+# 📅 Scheduler
 
-Documents are **groups of pages** connected through:
+💡 The scheduler is where you can view all of your orders that are pending for dispatch and schedule the time and place. 
+
+# Related articles
+
+**Did we miss something?**
+Not to worry! Just email our support team at hello@fleetbase.io✌️
+
+<!-- Documents are **groups of pages** connected through:
 
 - a **sidebar**
 - **previous/next navigation**
@@ -53,5 +60,5 @@ module.exports = {
       items: ['tutorial-basics/create-a-document'],
     },
   ],
-};
+}; -->
 ```

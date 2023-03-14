@@ -2,9 +2,25 @@
 sidebar_position: 6
 ---
 
-# API Keys
+# 🔑 API Keys
 
-You have just learned the **basics of Docusaurus** and made some changes to the **initial template**.
+💡 Generate API Keys to integrate and build with Fleetbase programatically. 
+
+Toggle ‘View Test Data’ to generate API keys in a test environment
+
+Create API Key
+
+1. **Name** - Add the name of the API Key 
+2. **Expiration** - Set the date that this API expires
+3. **Allowed Browser Origins** - Input domains that will dictate the CORS policy for browser request from this API key
+
+# Related articles
+
+**Did we miss something?**
+Not to worry! Just email our support team at hello@fleetbase.io✌️
+
+
+<!-- You have just learned the **basics of Docusaurus** and made some changes to the **initial template**.
 
 Docusaurus has **much more to offer**!
 
@@ -20,4 +36,4 @@ Anything **unclear** or **buggy** in this tutorial? [Please report it!](https://
 - Add a custom [Design and Layout](https://docusaurus.io/docs/styling-layout)
 - Add a [search bar](https://docusaurus.io/docs/search)
 - Find inspirations in the [Docusaurus showcase](https://docusaurus.io/showcase)
-- Get involved in the [Docusaurus Community](https://docusaurus.io/community/support)
+- Get involved in the [Docusaurus Community](https://docusaurus.io/community/support) -->

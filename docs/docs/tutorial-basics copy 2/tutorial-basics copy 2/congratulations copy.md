@@ -2,9 +2,21 @@
 sidebar_position: 6
 ---
 
-# Developer Console Dashboard
+# 👩‍💻 Developer Console
 
-You have just learned the **basics of Docusaurus** and made some changes to the **initial template**.
+💡 The Developers console allows you to have an overview of your activity, and create the API Keys and Webhooks you need to integrate and run Fleetbase programatically.
+
+1. **API Requests** - View your API requests 
+2. **API Error Distribution** - View your API errors and the distribution between GET, POST, PUT and DELETE 
+3. **Webhooks** - View your webhooks success and errors 
+4. **Webhooks** **Response Time** - View webhooks response times
+
+# Related articles
+
+**Did we miss something?**
+Not to worry! Just email our support team at hello@fleetbase.io✌️
+
+<!-- You have just learned the **basics of Docusaurus** and made some changes to the **initial template**.
 
 Docusaurus has **much more to offer**!
 
@@ -20,4 +32,4 @@ Anything **unclear** or **buggy** in this tutorial? [Please report it!](https://
 - Add a custom [Design and Layout](https://docusaurus.io/docs/styling-layout)
 - Add a [search bar](https://docusaurus.io/docs/search)
 - Find inspirations in the [Docusaurus showcase](https://docusaurus.io/showcase)
-- Get involved in the [Docusaurus Community](https://docusaurus.io/community/support)
+- Get involved in the [Docusaurus Community](https://docusaurus.io/community/support) -->

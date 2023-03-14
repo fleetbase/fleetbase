@@ -2,9 +2,33 @@
 sidebar_position: 2
 ---
 
-# Service Rates
+# 💰 Service Rates
 
-Documents are **groups of pages** connected through:
+💡 You can create custom service rates to assign to orders. 
+
+### Create Service Rate
+
+You can create new service rates by clicking on the button on the top of the panel.
+
+1. **Create Service Rate** 
+    1. **Service Name** - The display name for this service
+    2. **Service Order Type**  - Restrict this specific service to an order type
+    3. **Base Fee** - Set a standard fee for this particular service
+    4. **Rate Calculation Method** - This will be the process for calculating the rate when queried
+        1. Fixed Meter  
+        2. Per Meter 
+        3. Per - Drop-Off
+        4. Algorithm 
+    5. **Cash On Delivery** - You can add an additional fee for ‘cash on delivery orders’ 
+    6. **Peak Hours** - You can add an additional fee for ‘peak hours’ 
+    7. **Restrict Service** - You can restrict this service rate to any service areas that have been created previously
+
+# Related articles
+
+**Did we miss something?**
+Not to worry! Just email our support team at hello@fleetbase.io✌️
+
+<!-- Documents are **groups of pages** connected through:
 
 - a **sidebar**
 - **previous/next navigation**
@@ -54,4 +78,4 @@ module.exports = {
     },
   ],
 };
-```
+``` -->

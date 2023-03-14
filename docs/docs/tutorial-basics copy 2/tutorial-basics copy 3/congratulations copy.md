@@ -2,9 +2,32 @@
 sidebar_position: 6
 ---
 
-# Access Management
+# 🧑‍🤝‍🧑 Access Management
 
-You have just learned the **basics of Docusaurus** and made some changes to the **initial template**.
+### Dashboard
+
+💡 You can view all of your users, roles, groups and policies in the dashboard.
+
+### Users
+
+Add additional users to your organisation. You can then assign specific roles to these users or add them to groups.
+
+### Groups
+
+Add your existing users to groups to assign them to certain roles and policies.
+
+### Roles
+
+You can create specific roles which limit certain actions to Fleetbase features. Once you client New you can select which features are will be available for users or groups assigned to this role.
+
+### Policies
+
+# Related articles
+
+**Did we miss something?**
+Not to worry! Just email our support team at hello@fleetbase.io ✌️
+
+<!-- You have just learned the **basics of Docusaurus** and made some changes to the **initial template**.
 
 Docusaurus has **much more to offer**!
 
@@ -20,4 +43,4 @@ Anything **unclear** or **buggy** in this tutorial? [Please report it!](https://
 - Add a custom [Design and Layout](https://docusaurus.io/docs/styling-layout)
 - Add a [search bar](https://docusaurus.io/docs/search)
 - Find inspirations in the [Docusaurus showcase](https://docusaurus.io/showcase)
-- Get involved in the [Docusaurus Community](https://docusaurus.io/community/support)
+- Get involved in the [Docusaurus Community](https://docusaurus.io/community/support) -->
