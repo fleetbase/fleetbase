@@ -75,8 +75,8 @@ const config = {
                         position: 'left',
                         label: 'Documentation',
                     },
-                    { to: '/blog', label: 'API Reference', position: 'left' },
-                    { to: '/blog', label: 'Community', position: 'left' },
+                    { href: 'https://docs.fleetbase.dev/api', label: 'API Reference', position: 'left' },
+                    { href: 'https://discord.gg/V39d5X9z', label: 'Community', position: 'left' },
                     {
                         href: 'https://github.com/fleetbase/fleetbase',
                         label: 'GitHub',

@@ -2,24 +2,39 @@
 sidebar_position: 3
 ---
 
-# 🪝 Web Hooks
+# 🪝 Webhooks
 
-💡 You can create webhooks to simplify integration between applications and Fleetbase.
+💡 You can view all of your Storefront customers in this section
 
-Create Webhooks
+### View Customers
 
-1. **Endpoint URL** - Enter the endpoint URL that Fleetbase will send callbacks to
-2. **Description** - An optional description of what this webhook endpoint is used for
-3. **API Credential** - Restrict the webhook endpoint to receive callbacks from a specific API key.  
-4. **Version** - Select a specific API version to receive callbacks for
-5. **Events To Send** - Explicitly set which events to receive callbacks for
+View all customers by clicking on the customers section under Resources
+
+### Create Customer
+
+You can create new customers 2 ways:
+
+1. Customers are automatically created when customers order through your Storefront App
+2. You can also create Customers manually by clicking ‘New’ on the top right
+
+1. **Create New Customer** - Enter the details to create the customer.
+    1. **Name** 
+    2. Title
+    3. **Internal ID** - You can set your own internal ID for this customer
+    4. **Email** 
+    5. **Phone** 
+    6. **Type** - Select between your contact or customer for easy filtering
+
+### Export Customers
+
+You can export your customers in multiple formats by clicking the ‘Export’ pattern at the right of the panel.
 
 # Related articles
 
 **Did we miss something?**
 Not to worry! Just email our support team at hello@fleetbase.io✌️
-<!-- 
-Docusaurus creates a **page for each blog post**, but also a **blog index page**, a **tag system**, an **RSS** feed...
+
+<!-- Docusaurus creates a **page for each blog post**, but also a **blog index page**, a **tag system**, an **RSS** feed...
 
 ## Create your first Post
 

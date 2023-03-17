@@ -1,8 +1,8 @@
 ---
-sidebar_position: 6
+sidebar_position: 1
 ---
 
-# 👩‍💻 Developer Console
+# 👩‍💻 Developer Dashboard
 
 💡 The Developers console allows you to have an overview of your activity, and create the API Keys and Webhooks you need to integrate and run Fleetbase programatically.
 
@@ -14,7 +14,7 @@ sidebar_position: 6
 # Related articles
 
 **Did we miss something?**
-Not to worry! Just email our support team at hello@fleetbase.io✌️
+Not to worry! Just email our support team at hello@fleetbase.io
 
 <!-- You have just learned the **basics of Docusaurus** and made some changes to the **initial template**.
 
