@@ -1,3 +1,4 @@
 #!/bin/bash
 composer dump-autoload --working-dir /var/www/html/api
-composer dump-autoload --working-dir /var/www/html/fleetbase/core-api
+composer dump-autoload --working-dir /var/www/html/packages/core-api
+composer dump-autoload --working-dir /var/www/html/packages/fleetops-api

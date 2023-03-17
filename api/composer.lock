@@ -937,7 +937,7 @@
             "dist": {
                 "type": "path",
                 "url": "../packages/core-api",
-                "reference": "34fa8946a309dd561f10e9244980a6b5c9be8d9e"
+                "reference": "49e1c14866f71a4348c8bd96dc0cd26c96f72e62"
             },
             "require": {
                 "aws/aws-sdk-php-laravel": "^3.7",
@@ -955,6 +955,7 @@
                 "laravel/sanctum": "^2.15",
                 "php": "^7.4|^8.0",
                 "pragmarx/countries": "^0.8.2",
+                "ralouphie/mimey": "^1.0",
                 "spatie/laravel-activitylog": "^3.17",
                 "spatie/laravel-permission": "^5.5",
                 "spatie/laravel-responsecache": "^6.6",
@@ -1028,7 +1029,7 @@
             "dist": {
                 "type": "path",
                 "url": "../packages/fleetops-api",
-                "reference": "e7427c4f913de56ad7bc91c736e3c099adba6635"
+                "reference": "2f67fb71378d1e393c98460abade9bf1964cb1d9"
             },
             "require": {
                 "fleetbase/core-api": "*",
@@ -5527,6 +5528,50 @@
                 "source": "https://github.com/ralouphie/getallheaders/tree/develop"
             },
             "time": "2019-03-08T08:55:37+00:00"
+        },
+        {
+            "name": "ralouphie/mimey",
+            "version": "1.0.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/ralouphie/mimey.git",
+                "reference": "2a0e997c733b7c2f9f8b61cafb006fd5fb9fa15a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/ralouphie/mimey/zipball/2a0e997c733b7c2f9f8b61cafb006fd5fb9fa15a",
+                "reference": "2a0e997c733b7c2f9f8b61cafb006fd5fb9fa15a",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~3.7.0",
+                "satooshi/php-coveralls": ">=1.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Mimey\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Ralph Khattar",
+                    "email": "ralph.khattar@gmail.com"
+                }
+            ],
+            "description": "PHP package for converting file extensions to MIME types and vice versa.",
+            "support": {
+                "issues": "https://github.com/ralouphie/mimey/issues",
+                "source": "https://github.com/ralouphie/mimey/tree/master"
+            },
+            "time": "2016-09-28T03:36:23+00:00"
         },
         {
             "name": "ramsey/collection",
@@ -11414,5 +11459,5 @@
         "php": "^7.3|^8.0"
     },
     "platform-dev": [],
-    "plugin-api-version": "2.3.0"
+    "plugin-api-version": "2.2.0"
 }
