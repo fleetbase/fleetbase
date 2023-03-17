@@ -1,12 +1,12 @@
 ---
-sidebar_position: 6
+sidebar_position: 3
 ---
 
 # 🧑‍🤝‍🧑 Access Management
 
-### Dashboard
+💡 ### Dashboard
 
-💡 You can view all of your users, roles, groups and policies in the dashboard.
+You can view all of your users, roles, groups and policies in the dashboard.
 
 ### Users
 
@@ -20,12 +20,10 @@ Add your existing users to groups to assign them to certain roles and policies.
 
 You can create specific roles which limit certain actions to Fleetbase features. Once you client New you can select which features are will be available for users or groups assigned to this role.
 
-### Policies
-
 # Related articles
 
 **Did we miss something?**
-Not to worry! Just email our support team at hello@fleetbase.io ✌️
+Not to worry! Just email our support team at hello@fleetbase.io
 
 <!-- You have just learned the **basics of Docusaurus** and made some changes to the **initial template**.
 

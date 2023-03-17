@@ -1,8 +1,8 @@
 ---
-sidebar_position: 6
+sidebar_position: 3
 ---
 
-# ⚙️ Dashboard
+# ⚙️ Overview
 
 💡 When you create an extension it can be used privately or distributed through Fleetbase Extensions. 
 
@@ -12,16 +12,12 @@ Additionally you have the option to sell or create subscriptions you author.
 
 There is nearly no limited to the type of extension you can develop for the Fleetbase Console. 
 
-Read our [docs](https://github.com/fleetbase) for more info.
-
-### Install An Extension
-
-Install extensions directly to use Fleetbase console by clicking the install button in each extension.
+Read our docs for more info. 
 
 # Related articles
 
 **Did we miss something?**
-Not to worry! Just email our support team at hello@fleetbase.io✌️
+Not to worry! Just email our support team at hello@fleetbase.io
 
 <!-- You have just learned the **basics of Docusaurus** and made some changes to the **initial template**.
 
