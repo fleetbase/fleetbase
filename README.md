@@ -53,7 +53,19 @@
 <ol dir="auto">
     <li>Clone the Fleetbase repository using Git:<pre><code>git clone https://github.com/fleetbase/fleetbase.git</code></pre></li>
     <li>Navigate to the Fleetbase directory:<pre><code>cd fleetbase</code></pre></li>
+    <li>Install the necessary dependencies using either npm or Yarn:
+        <ol dir="auto">
+             <li>If you're using npm, run the following command:<pre><code>npm install</code></pre></li>
+             <li>If you're using Yarn, run the following command:<pre><code>yarn install</code></pre></li>
+        </ol>
+    </li>
     <li>Start the Fleetbase Docker containers:<pre><code>docker-compose up -d</code></pre></li>
+    <li>Launch the Fleetbase Console
+        <ol dir="auto">
+             <li>Navigate to the console directory:<pre><code>cd console</code></pre></li>
+             <li>Launch the console <pre><code>yarn start</code></pre></li>
+        </ol>
+    </li>
 </ol>
       
       
