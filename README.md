@@ -21,7 +21,7 @@
 <h2 dir="auto"><a id="user-content-table-of-contents" class="anchor" aria-hidden="true" href="#table-of-contents"><svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd"></path></svg></a>Table of contents</h2>
 <ul dir="auto">
 <li><a href="#whats-included">What's included</a></li>
-<li><a href="#quick-start">Quick start</a></li>
+<li><a href="#getting-started">Getting started</a></li>
 <li><a href="#status">Status</a></li>
 <li><a href="#bugs-and-feature-requests">Bugs and feature requests</a></li>
 <li><a href="#documentation">Documentation</a></li>
@@ -40,13 +40,22 @@
   <li>⚙️ Extensions - Build additional features and extensions right into the console. Offer extensions back to the community. </li>
 </ul>     
       
-<h2 dir="auto"><a id="user-content-quick-start" class="anchor" aria-hidden="true" href="#quick-start"><svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" ></path></svg></a>Quick start</h2>
-<p dir="auto">Several quick start options are available:</p>
+<h2 dir="auto"><a id="user-content-getting-started" class="anchor" aria-hidden="true" href="#getting-started"><svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" ></path></svg></a>Getting Started</h2>
+<p dir="auto">Before you can get started with Fleetbase, you'll need to make sure you have the following prerequisites:</p>
 <ul dir="auto">
-<li>Clone the repo: <code>git clone git@github.com:fleetbase</code></li>
-<li>Install with <a href="https://www.npmjs.com/" rel="nofollow">npm</a>:npm install</li>
-<li>Install with <a href="https://yarnpkg.com/" rel="nofollow">yarn</a>:yarn add</li>
+<li>A computer running Linux or macOS</li>
+<li>A Docker installed</li>
+<li>Git installed </li>
 </ul>
+    
+<h2 dir="auto"><a id="installation" class="anchor" aria-hidden="true" href="#installation"><svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" ></path></svg></a>Installation</h2>
+<p dir="auto">To install Fleetbase on your computer, follow these steps:</p>
+<ol dir="auto">
+    <li>Clone the Fleetbase repository using Git:<pre><code>git clone https://github.com/fleetbase/fleetbase.git</code></pre></li>
+    <li>Navigate to the Fleetbase directory:<pre><code>cd fleetbase</code></pre></li>
+    <li>Start the Fleetbase Docker containers:<pre><code>docker-compose up -d</code></pre></li>
+</ol>
+      
       
 <h2 dir="auto"><a id="user-content-status" class="anchor" aria-hidden="true" href="#status"><svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" ></path></svg></a>Status</h2>
 <p dir="auto"><a href="https://github.com/twbs/bootstrap/actions?query=workflow%3AJS+Tests+branch%3Amain"><img src="https://camo.githubusercontent.com/ff56eb05c4a67223422b1919742a73257486ace608094af52f83cf4f7549bc03/68747470733a2f2f696d672e736869656c64732e696f2f6769746875622f616374696f6e732f776f726b666c6f772f7374617475732f747762732f626f6f7473747261702f6a732e796d6c3f6272616e63683d6d61696e266c6162656c3d4a532532305465737473266c6f676f3d676974687562" alt="Build Status" data-canonical-src="https://img.shields.io/github/actions/workflow/status/twbs/bootstrap/js.yml?branch=main&amp;label=JS%20Tests&amp;logo=github" style="max-width: 100%;"></a>
