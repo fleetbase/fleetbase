@@ -50,6 +50,7 @@
 <li>A computer running Linux or macOS</li>
 <li>A Docker installed</li>
 <li>Git installed </li>
+<li>Want to try our <a href="https://console.fleetbase.io/onboard">cloud hosted version of Fleetbase?</a?</li>
 </ul>
     
 <h2 dir="auto"><a id="installation" class="anchor" aria-hidden="true" href="#installation"><svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" ></path></svg></a>💻 Installation</h2>
