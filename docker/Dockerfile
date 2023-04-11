@@ -79,4 +79,3 @@ CMD ["php", "api/artisan", "queue:work", "sqs"]
 FROM base as app
 ENTRYPOINT ["/sbin/ssm-parent", "-c", ".ssm-parent.yaml", "run", "--", "docker-php-entrypoint"]
 CMD ["php-fpm"]
-

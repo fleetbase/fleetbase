@@ -4,18 +4,23 @@
 [submodule "packages/core-api"]
 	path = packages/core-api
 	url = git@github.com:fleetbase/core-api.git
+	branch = dev-main
 [submodule "packages/fleetops-api"]
 	path = packages/fleetops-api
 	url = git@github.com:fleetbase/fleetops-api.git
+	branch = dev-main
 [submodule "packages/ember-core"]
 	path = packages/ember-core
 	url = git@github.com:fleetbase/ember-core.git
+	branch = dev-main
 [submodule "packages/ember-ui"]
 	path = packages/ember-ui
 	url = git@github.com:fleetbase/ember-ui.git
+	branch = dev-main
 [submodule "packages/storefront-engine"]
 	path = packages/storefront-engine
 	url = git@github.com:fleetbase/storefront-engine.git
+	branch = dev-main
 [submodule "packages/iam-engine"]
 	path = packages/iam-engine
 	url = git@github.com:fleetbase/iam-engine.git
@@ -28,6 +33,7 @@
 [submodule "packages/fleetops-engine"]
 	path = packages/fleetops-engine
 	url = git@github.com:fleetbase/fleetops-engine.git
+	branch = dev-main
 [submodule "docs/guides"]
 	path = docs/guides
 	url = git@github.com:fleetbase/guides.git
@@ -37,3 +43,8 @@
 [submodule "packages/storefront-api"]
 	path = packages/storefront-api
 	url = git@github.com:fleetbase/storefront-api.git
+	branch = dev-main
+[submodule "packages/fleetops-data"]
+	path = packages/fleetops-data
+	url = git@github.com:fleetbase/fleetops-data.git
+	branch = dev-main
