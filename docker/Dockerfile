@@ -29,20 +29,17 @@ RUN curl -L https://github.com/springload/ssm-parent/releases/download/v1.4.3/ss
 WORKDIR /var/www
 COPY docker/composer-install.sh ./
 RUN chmod +x ./composer-install.sh && ./composer-install.sh
-
-# WORKDIR /var/www/html
-# COPY  . .
-
+COPY packages /var/www/html/packages
 WORKDIR /var/www/html/api
 RUN chown www-data:www-data /var/www/html
 RUN chown www-data:www-data /var/www/html/api
 USER www-data
 RUN mkdir -p ./storage/logs/ && ln -sf /dev/stdout ./storage/logs/laravel.log
 # copy these first to not reinstall everything on a random file change
-# COPY api/composer.json api/composer.lock ./
+COPY api/composer.json api/composer.lock ./
 RUN composer install --no-dev --no-scripts --no-autoloader
 COPY --chown=www-data:nogroup . ./
-RUN composer dumpautoload
+# RUN composer dumpautoload
 
 USER root
 
