@@ -6,7 +6,7 @@ services:
 
   database:
     image: mysql:8.0-oracle
-    ports: 
+    ports:
       - "3306:3306"
     volumes:
       - "./docker/database/:/docker-entrypoint-initdb.d/"
@@ -16,16 +16,17 @@ services:
 
   application:
     volumes:
-        - '.:/var/www/html'
+      - .:/var/www/html
     build:
       context: .
       dockerfile: docker/Dockerfile
       target: app-dev
       args:
-          ENVIRONMENT: development
+        ENVIRONMENT: development
     environment:
       DATABASE_URL: "mysql://root@database/fleetbase_os"
       CACHE_DRIVER: redis
+      CACHE_PATH: /var/www/html/api/storage/framework/cache
       CACHE_URL: tcp://cache
       REDIS_URL: tcp://cache
       SESSION_DOMAIN: localhost
@@ -34,10 +35,15 @@ services:
       - cache
 
   httpd:
+    volumes:
+      - ./api/storage:/var/www/html/api/storage
     build:
       context: .
-      dockerfile:  docker/httpd/Dockerfile
+      dockerfile: docker/httpd/Dockerfile
     ports:
       - "8000:80"
     depends_on:
       - application
+
+volumes:
+  storage:
