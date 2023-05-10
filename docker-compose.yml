@@ -1,5 +1,5 @@
 version: "3.4"
-
+name: "fleetbase"
 services:
   cache:
     image: redis:4-alpine
@@ -12,7 +12,19 @@ services:
       - "./docker/database/:/docker-entrypoint-initdb.d/"
     environment:
       MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
-      MYSQL_DATABASE: "fleetbase_os"
+      MYSQL_DATABASE: "fleetbase"
+
+  socket:
+    build:
+      context: .
+      dockerfile: socket/Dockerfile
+      args:
+          ENVIRONMENT: dev
+    ports:
+      - "38000:8000"
+    environment:
+      SOCKETCLUSTER_WORKERS: 10
+      SOCKETCLUSTER_BROKERS: 10
 
   application:
     volumes:
@@ -24,12 +36,13 @@ services:
       args:
         ENVIRONMENT: development
     environment:
-      DATABASE_URL: "mysql://root@database/fleetbase_os"
+      DATABASE_URL: "mysql://root@database/fleetbase"
       CACHE_DRIVER: redis
       CACHE_PATH: /var/www/html/api/storage/framework/cache
       CACHE_URL: tcp://cache
       REDIS_URL: tcp://cache
       SESSION_DOMAIN: localhost
+      BROADCAST_DRIVER: socketcluster
     depends_on:
       - database
       - cache

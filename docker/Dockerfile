@@ -19,7 +19,7 @@ RUN apt-get update && apt-get install -y git unzip libzip-dev \
     && pecl install imagick \
     && docker-php-ext-enable imagick \
     && docker-php-ext-configure gd --with-external-gd && docker-php-ext-configure php-geos \
-    && docker-php-ext-install -j$(nproc) gmp php-geos gd zip pdo_mysql sockets intl && pecl install redis-4.3.0 memcached-3.1.3 && docker-php-ext-enable redis memcached opcache
+    && docker-php-ext-install -j$(nproc) gmp php-geos gd zip pdo_mysql sockets intl bcmath && pecl install redis-4.3.0 memcached-3.1.3 && docker-php-ext-enable redis memcached opcache bcmath
 
 RUN sed -e 's/^expose_php.*/expose_php = Off/' "$PHP_INI_DIR/php.ini-production" > "$PHP_INI_DIR/php.ini"
 RUN sed -i -e 's/^upload_max_filesize.*/upload_max_filesize = 600M/' -e 's/^post_max_size.*/post_max_size = 0/' -e 's/^memory_limit.*/memory_limit = 600M/' "$PHP_INI_DIR/php.ini"
