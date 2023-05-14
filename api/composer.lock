@@ -2029,7 +2029,7 @@
             "dist": {
                 "type": "path",
                 "url": "../packages/fleetops-api",
-                "reference": "5612bdf2a90cffa2f390497d8a6044f3749aa8c7"
+                "reference": "f6fd25b416fdf7f80736a9c18976bd85f6a303a4"
             },
             "require": {
                 "barryvdh/laravel-dompdf": "^2.0",
@@ -2056,7 +2056,8 @@
             "extra": {
                 "laravel": {
                     "providers": [
-                        "Fleetbase\\FleetOps\\Providers\\FleetOpsServiceProvider"
+                        "Fleetbase\\FleetOps\\Providers\\FleetOpsServiceProvider",
+                        "Fleetbase\\FleetOps\\Providers\\EventServiceProvider"
                     ]
                 }
             },
