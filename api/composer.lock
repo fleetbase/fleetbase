@@ -1932,7 +1932,7 @@
             "dist": {
                 "type": "path",
                 "url": "../packages/core-api",
-                "reference": "95daf8adb9759e6ac321da7681f045c5f5db4187"
+                "reference": "717be3c309dc3406b0c4b8bd87c0898f37d0d12d"
             },
             "require": {
                 "aws/aws-sdk-php-laravel": "^3.7",
@@ -1972,6 +1972,7 @@
                 "laravel": {
                     "providers": [
                         "Fleetbase\\Providers\\CoreServiceProvider",
+                        "Fleetbase\\Providers\\EventServiceProvider",
                         "Fleetbase\\Providers\\SocketClusterServiceProvider"
                     ]
                 }
@@ -2116,7 +2117,7 @@
             "dist": {
                 "type": "path",
                 "url": "../packages/storefront-api",
-                "reference": "6e0ddd960a00a70a5c97ce6b6ea57e24e6f6f8ca"
+                "reference": "acb2560238edda09a9d7b3970519c38ed7c938d8"
             },
             "require": {
                 "fleetbase/core-api": "*",
@@ -2141,7 +2142,8 @@
             "extra": {
                 "laravel": {
                     "providers": [
-                        "Fleetbase\\Storefront\\Providers\\StorefrontServiceProvider"
+                        "Fleetbase\\Storefront\\Providers\\StorefrontServiceProvider",
+                        "Fleetbase\\Storefront\\Providers\\EventServiceProvider"
                     ]
                 },
                 "fleetbase": {
