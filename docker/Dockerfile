@@ -50,11 +50,6 @@ RUN mkdir -p ./storage/logs/ \
 COPY api/composer.json api/composer.lock ./
 RUN composer install --no-dev --no-scripts --no-autoloader
 
-# Run Laravel migrations
-RUN php artisan mysql:createdb \
-    && php artisan migrate \
-    && php artisan sandbox:migrate
-
 # Copy application files
 COPY --chown=www-data:nogroup . ./
 
@@ -100,3 +95,8 @@ CMD ["php", "api/artisan", "queue:work", "sqs"]
 FROM base as app
 ENTRYPOINT ["/sbin/ssm-parent", "-c", ".ssm-parent.yaml", "run", "--", "docker-php-entrypoint"]
 CMD ["php-fpm"]
+
+# Migrations stage
+FROM base as migrations
+ENTRYPOINT ["/sbin/ssm-parent", "-c", ".ssm-parent.yaml", "run", "--", "docker-php-entrypoint"]
+CMD ["php", "api/artisan", "mysql:createdb", "&&", "php", "api/artisan", "migrate", "&&", "php", "api/artisan", "sandbox:migrate"]
