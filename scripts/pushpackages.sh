@@ -40,3 +40,7 @@ cd ../iam-engine
 git add .
 git commit -m 'latest'
 git push origin dev-main
+cd ../fleetbase-extensions-indexer
+git add .
+git commit -m 'latest'
+git push origin main
