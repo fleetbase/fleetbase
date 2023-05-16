@@ -66,6 +66,14 @@ RUN curl -L https://github.com/webdevops/go-crond/releases/download/0.6.1/go-cro
 COPY docker/crontab ./crontab
 RUN chmod 0600 ./crontab
 
+# Copy entrypoint.sh
+COPY docker/entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+
+# Copy entrypoint-app.sh
+COPY docker/entrypoint-app.sh /entrypoint-app.sh
+RUN chmod +x /entrypoint-app.sh
+
 # Scheduler dev stage
 FROM scheduler-base as scheduler-dev
 ENTRYPOINT []
@@ -78,7 +86,7 @@ CMD ["go-crond", "--verbose", "--no-auto", "root:./crontab"]
 
 # Application dev stage
 FROM base as app-dev
-ENTRYPOINT ["docker-php-entrypoint"] # the default
+ENTRYPOINT ["/entrypoint.sh"]
 CMD ["php-fpm"]
 
 # Events stage
@@ -93,10 +101,5 @@ CMD ["php", "api/artisan", "queue:work", "sqs"]
 
 # Application stage
 FROM base as app
-ENTRYPOINT ["/sbin/ssm-parent", "-c", ".ssm-parent.yaml", "run", "--", "docker-php-entrypoint"]
+ENTRYPOINT ["/entrypoint-app.sh"]
 CMD ["php-fpm"]
-
-# Migrations stage
-FROM base as migrations
-ENTRYPOINT ["/sbin/ssm-parent", "-c", ".ssm-parent.yaml", "run", "--", "docker-php-entrypoint"]
-CMD ["php", "api/artisan", "mysql:createdb", "&&", "php", "api/artisan", "migrate", "&&", "php", "api/artisan", "sandbox:migrate"]
