@@ -55,6 +55,15 @@ COPY --chown=www-data:nogroup . ./
 
 USER root
 
+# Copy entrypoint.sh
+COPY docker/entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+
+# Copy entrypoint-app.sh
+COPY docker/entrypoint-app.sh /entrypoint-app.sh
+RUN chmod +x /entrypoint-app.sh
+
+# Set environment
 ARG ENVIRONMENT=production
 ENV APP_ENV=$ENVIRONMENT
 
@@ -65,14 +74,6 @@ FROM base as scheduler-base
 RUN curl -L https://github.com/webdevops/go-crond/releases/download/0.6.1/go-crond-64-linux-dynamic > / usr/local/bin/go-crond && chmod +x /usr/local/bin/go-crond
 COPY docker/crontab ./crontab
 RUN chmod 0600 ./crontab
-
-# Copy entrypoint.sh
-COPY docker/entrypoint.sh /entrypoint.sh
-RUN chmod +x /entrypoint.sh
-
-# Copy entrypoint-app.sh
-COPY docker/entrypoint-app.sh /entrypoint-app.sh
-RUN chmod +x /entrypoint-app.sh
 
 # Scheduler dev stage
 FROM scheduler-base as scheduler-dev
@@ -92,12 +93,12 @@ CMD ["php-fpm"]
 # Events stage
 FROM base as events
 ENTRYPOINT ["/sbin/ssm-parent", "-c", ".ssm-parent.yaml", "run", "--", "docker-php-entrypoint"]
-CMD ["php", "api/artisan", "queue:work", "events"]
+CMD ["php", "artisan", "queue:work", "events"]
 
 # Jobs stage
 FROM base as jobs
 ENTRYPOINT ["/sbin/ssm-parent", "-c", ".ssm-parent.yaml", "run", "--", "docker-php-entrypoint"]
-CMD ["php", "api/artisan", "queue:work", "sqs"]
+CMD ["php", "artisan", "queue:work", "sqs"]
 
 # Application stage
 FROM base as app
