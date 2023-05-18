@@ -31,7 +31,6 @@ services:
       - "4200:4200"
     volumes:
       - ./console:/app/console
-      - ./packages:/app/packages
     build:
       context: .
       dockerfile: console/Dockerfile
