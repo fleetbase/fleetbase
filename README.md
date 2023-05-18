@@ -50,12 +50,13 @@
     </ul>
     <h2>What's included</h2>      
 <ul>
-  <li>FleetOps (Open Source TMS) - End to end transport management system for logistics operations management and overview.</li>
-  <li>Storefront (Open Source App) - Customer app, multi-vendor, multi-location. Ideal for any last-mile delivery or on-demand service.</li>
-  <li>Operations (Open Source Console) - Full console to manage all of your packages and custom systems.</li>
-  <li>Developer API & Console - Developer console which provides API usage metrics, event and request logs</li>
-  <li>Driver App (Open Source Integrated Driver App - Integrated to TMS. Drivers can manage jobs, tracking and electronic POD.</li>
-  <li>Extensions - Build additional features and extensions right into the console. Offer extensions back to the community. </li>
+  <li><a href="https://github.com/fleetbase/fleetops-api">FleetOps (Open Source TMS)</a> - End to end transport management system for logistics operations management and overview.</li>
+  <li><a href="https://github.com/fleetbase/storefront-app">Storefront (Open Source App)</a> - Customer app, multi-vendor, multi-location. Ideal for any last-mile delivery or on-demand service.</li>
+  <li><a href="https://github.com/fleetbase/console">Operations (Open Source Console)</a> - Full console to manage all of your packages and custom systems.</li>
+  <li><a href="https://github.com/fleetbase/dev-engine">Developer Console</a> - Developer console which provides API usage metrics, event and request logs</li>
+  <li><a href="https://github.com/fleetbase/core-api">Developer API</a> - Developer API for integration and development</li>
+  <li><a href="https://github.com/fleetbase/navigator-app">Driver App (Open Source Integrated Driver App<a/> - Integrated to TMS. Drivers can manage jobs, tracking and electronic POD.</li>
+  <li><a href="https://github.com/fleetbase/fleetbase-extensions-indexer">Extensions</a> - Build additional features and extensions right into the console. Offer extensions back to the community. </li>
 </ul>     
 <h2>Getting Started</h2>
 <p>Before you can get started with Fleetbase, you'll need to make sure you have the following prerequisites:</p>
