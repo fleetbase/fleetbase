@@ -27,6 +27,7 @@
 [submodule "packages/dev-engine"]
 	path = packages/dev-engine
 	url = git@github.com:fleetbase/dev-engine.git
+	branch = dev-main
 [submodule "packages/fleetbase-extensions-indexer"]
 	path = packages/fleetbase-extensions-indexer
 	url = git@github.com:fleetbase/fleetbase-extensions-indexer.git
@@ -47,4 +48,8 @@
 [submodule "packages/fleetops-data"]
 	path = packages/fleetops-data
 	url = git@github.com:fleetbase/fleetops-data.git
+	branch = dev-main
+[submodule "socket"]
+	path = socket
+	url = git@github.com:fleetbase/socket.git
 	branch = dev-main
