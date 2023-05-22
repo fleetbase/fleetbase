@@ -40,6 +40,7 @@ Every individual extension within Fleetbase is purposefully engineered to fulfil
   - [Use Cases](#-use-cases)
   - [Installation](#-installation)
   - [Extensions](#-extensions)
+  - [Apps](#-apps)
   - [Bugs and Feature Requests](#-bugs-and-feature-requests)
   - [Documentation](#-documentation)
   - [Contributing](#-contributing)
@@ -218,6 +219,15 @@ To create a Fleetbase extension, follow these steps:
 </ul>
 
 With Fleetbase's modular architecture, you can develop your extensions to solve unique problems, enhance existing functionality, or add entirely new capabilities to your Fleetbase instance. This extensibility allows Fleetbase to adapt and evolve with your growing business needs.
+
+# 📱 Apps
+
+Fleetbase offers a few open sourced apps which are built on Fleetbase which can be cloned and customized. Every app is built so that the Fleetbase instance can be switched out whether on-premise install or cloud hosted.
+
+<ul>
+  <li><a href="https://github.com/fleetbase/storefront-app">Storefront App</a>: Fleetbase based ecommerce/on-demand app for launching your very own shop or marketplace to Apple or Android playstore.</li>
+  <li><a href="https://github.com/fleetbase/navigator-app">Navigator App</a>: Fleetbase based driver app which can be used for drivers to manage and update order, additionally provides real time driver location which can be viewed in the Fleetbase Console.</li>
+</ul>
 
 # 🛣 Roadmap
 
