@@ -35,17 +35,17 @@ Every individual extension within Fleetbase is purposefully engineered to fulfil
 
 # 📖 Table of contents
 
-  - [What's Included](#📦-whats-included)
-  - [Getting Started](#🏁-getting-started)
-  - [Use Cases](#🚦-use-cases)
-  - [Installation](#💾-installation)
-  - [Extensions](#🧩-extensions)
-  - [Bugs and Feature Requests](#🪲-bugs-and-feature-requests)
-  - [Documentation](#📖-documentation)
-  - [Contributing](#contributing)
-  - [Community](#community)
-  - [Creators](#creators)
-  - [License & Copyright](#license-and-copyright)
+  - [What's Included](#-whats-included)
+  - [Getting Started](#-getting-started)
+  - [Use Cases](#-use-cases)
+  - [Installation](#-installation)
+  - [Extensions](#-extensions)
+  - [Bugs and Feature Requests](#-bugs-and-feature-requests)
+  - [Documentation](#-documentation)
+  - [Contributing](#-contributing)
+  - [Community](#-community)
+  - [Creators](#-creators)
+  - [License & Copyright](#-license-and-copyright)
 
 # 📦 What's Included
 
@@ -54,9 +54,6 @@ Fleetbase is more than just a platform; it's a versatile ecosystem carefully arc
 <ul>
   <li>
     <strong>Console</strong>: Fleetbase's frontend console is constructed using Ember.js and Ember Engines, providing a highly modular and extensible design. This not only enables the system to adapt and scale to your growing requirements but also simplifies the process of integrating new extensions. With the console's design, extensions can be easily installed using their respective package managers, thereby reducing complexity and time spent on integration.
-  </li>
-  <li>
-    <strong>Fleetbase API</strong>: Fleetbase's backend API and framework, developed using the reliable Laravel framework, is thoughtfully designed with extension development and integration in mind. This robust and flexible infrastructure not only manages intricate data structures and transactions with grace but also facilitates the easy incorporation of new extensions via package managers. We provide additional packages that allow developers to craft their unique extensions, further enhancing the flexibility and extensibility of the Fleetbase ecosystem.
   </li>
   <li>
     <strong>Fleetbase API</strong>: Fleetbase's backend API and framework, developed using the reliable Laravel framework, is thoughtfully designed with extension development and integration in mind. This robust and flexible infrastructure not only manages intricate data structures and transactions with grace but also facilitates the easy incorporation of new extensions via package managers. We provide additional packages that allow developers to craft their unique extensions, further enhancing the flexibility and extensibility of the Fleetbase ecosystem.
