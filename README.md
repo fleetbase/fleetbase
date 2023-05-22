@@ -29,14 +29,19 @@ Fleetbase is a comprehensive, open-source platform for the management and orches
 
 Every individual extension within Fleetbase is purposefully engineered to fulfill specific roles within the expansive ecosystem of supply chain and logistics. With inherent extensibility users have the freedom to craft their own extensions, thereby expanding the ecosystem and ensuring the platform's adaptability across a multitude of use cases. This extensible nature ensures that Fleetbase remains at the forefront of meeting diverse logistical and supply chain needs now and into the future.
 
+<p align="center" dir="auto">
+      <img src="https://flb-assets.s3.ap-southeast-1.amazonaws.com/github/dark-light-layered-screenshots.png" alt="Fleetbase Console" width="600" style="max-width: 100%;" />
+    </p>
+
 # 📖 Table of contents
 
-  - [What's Included](#whats-included)
-  - [Getting Started](#getting-started)
-  - [Installation](#installation)
-  - [Extensions](#extensions)
-  - [Bugs and Feature Requests](#bugs-and-feature-requests)
-  - [Documentation](#documentation)
+  - [What's Included](#📦-whats-included)
+  - [Getting Started](#🏁-getting-started)
+  - [Use Cases](#🚦-use-cases)
+  - [Installation](#💾-installation)
+  - [Extensions](#🧩-extensions)
+  - [Bugs and Feature Requests](#🪲-bugs-and-feature-requests)
+  - [Documentation](#📖-documentation)
   - [Contributing](#contributing)
   - [Community](#community)
   - [Creators](#creators)
