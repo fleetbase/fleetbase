@@ -41,7 +41,7 @@ Every individual extension within Fleetbase is purposefully engineered to fulfil
   - [Installation](#-installation)
   - [Extensions](#-extensions)
   - [Apps](#-apps)
-  - [Bugs and Feature Requests](#-bugs-and-feature-requests)
+  - [Bugs and Feature Requests](#-bugs-and-feature--requests)
   - [Documentation](#-documentation)
   - [Contributing](#-contributing)
   - [Community](#-community)
