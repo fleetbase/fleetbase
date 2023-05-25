@@ -1,0 +1,24 @@
+name: Fleetbase CI
+
+on:
+  push:
+    branches: [ master ]
+
+jobs:
+  build:
+    name: Build and Start Docker Services
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v2
+
+    - name: Install Docker Compose
+      run: |
+        sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+        sudo chmod +x /usr/local/bin/docker-compose
+        docker-compose --version
+
+    - name: Build and Start Docker Services
+      run: |
+        docker-compose up -d --build
