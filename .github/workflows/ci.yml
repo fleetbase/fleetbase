@@ -16,6 +16,8 @@ jobs:
     steps:
     - name: Checkout Code
       uses: actions/checkout@v2
+      with:
+        submodules: recursive
 
     - name: Install Docker Compose
       run: |
