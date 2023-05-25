@@ -1,8 +1,6 @@
 ---
-name: Bug
-about: Github is reserved for bug reports and feature requests; it is not the place
-  for general questions. If you have a question or an unconfirmed bug, please visit
-  our Discord.
+name: "\U0001FAB2Bug Report"
+about: Report a bug to help us improve.
 title: ''
 labels: ''
 assignees: ''

@@ -1,7 +1,6 @@
 ---
-name: Feature request
-about: Please first search existing issues for the feature you are requesting; it
-  may already exist, even as a closed issue.
+name: "\U0001F680 Feature request"
+about: Submit a proposal for a new feature
 title: ''
 labels: ''
 assignees: ''
