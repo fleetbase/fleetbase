@@ -16,6 +16,8 @@ jobs:
     steps:
     - name: Checkout Code
       uses: actions/checkout@v2
+      with:
+        submodules: recursive
 
     - name: Install Docker Compose
       run: |
@@ -25,4 +27,4 @@ jobs:
 
     - name: Build and Start Docker Services
       run: |
-        docker-compose -p fleetbase up -d --build
+        docker-compose up -d --build
