@@ -167,6 +167,10 @@ Getting Fleetbase up and running on your system using Docker and Docker-compose 
     Navigate to the cloned repository:
     <pre>cd fleetbase</pre>
   </li>
+  <li>
+    Initialize and pull submodules:
+    <pre>git submodule update --init --recursive</pre>
+  </li>
 </ul>
 
 ### Build and Run Fleetbase
