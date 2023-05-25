@@ -71,7 +71,7 @@ ENV APP_ENV=$ENVIRONMENT
 FROM base as scheduler-base
 
 # Install go-crond
-RUN curl -L https://github.com/webdevops/go-crond/releases/download/0.6.1/go-crond-64-linux-dynamic > / usr/local/bin/go-crond && chmod +x /usr/local/bin/go-crond
+RUN curl -L https://github.com/webdevops/go-crond/releases/download/0.6.1/go-crond-64-linux-dynamic > /usr/local/bin/go-crond && chmod +x /usr/local/bin/go-crond
 COPY docker/crontab ./crontab
 RUN chmod 0600 ./crontab
 
