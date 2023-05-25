@@ -248,7 +248,7 @@ View and contribute to our <a href="https://github.com/fleetbase/guides">Fleetba
 
 # 👨‍💻 Contributing
 
-Please read through our <a href="https://github.com/fleetbase/fleetbase/blob/main/.github/CONTRIBUTING.md">contributing guidelines</a>. Included are directions for opening issues, coding standards, and notes on development.
+Please read through our <a href="https://github.com/fleetbase/fleetbase/blob/main/CONTRIBUTING.md">contributing guidelines</a>. Included are directions for opening issues, coding standards, and notes on development.
 
 # 👥 Community
 
