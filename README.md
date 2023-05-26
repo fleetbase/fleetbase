@@ -7,14 +7,14 @@
     <p align="center" dir="auto">
       Open Source Logistics & Supply Chain Platform and Infrastructure
       <br>
-      <a href="https://docs.fleetbase.dev/api" rel="nofollow">Fleetbase Documentation →</a>
+      <a href="https://fleetbase.github.io/guides" rel="nofollow">Fleetbase Documentation →</a>
       <br>
       <br>
       <a href="https://github.com/fleetbase/fleetbase/issues">Report an Issue</a>
       ·
-      <a href="https://fleetbase.dev/api">API Reference</a>
+      <a href="https://fleetbase.github.io/api-reference">API Reference</a>
       ·
-      <a href="https://github.com/fleetbase/guides">Guides</a>
+      <a href="https://fleetbase.github.io/guides">Guides</a>
       ·
       <a href="https://github.com/fleetbase/fleetbase/issues">Request a Feature</a>
       ·
