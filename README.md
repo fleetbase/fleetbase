@@ -19,6 +19,8 @@
       <a href="https://github.com/fleetbase/fleetbase/issues">Request a Feature</a>
       ·
       <a href="https://www.fleetbase.io/blog-2" rel="nofollow">Blog</a>
+      ·
+      <a href="https://fleetbase.apichecker.com" target="_api_status" rel="nofollow">API Status</a>
     </p>
     <hr />
 </div>
