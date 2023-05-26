@@ -43,6 +43,7 @@ Every individual extension within Fleetbase is purposefully engineered to fulfil
   - [Installation](#-installation)
   - [Extensions](#-extensions)
   - [Apps](#-apps)
+  - [Roadmap](#-roadmap)
   - [Bugs and Feature Requests](#-bugs-and--feature-requests)
   - [Documentation](#-documentation)
   - [Contributing](#-contributing)
