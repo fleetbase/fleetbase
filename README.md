@@ -241,6 +241,7 @@ Fleetbase offers a few open sourced apps which are built on Fleetbase which can 
 <ol>
   <li>Install Flow & System Configuration from Console</li>
   <li>Open Source Extension Repository</li>
+  <li>🌎 Internationalize</li>
   <li>Inventory and Warehouse Management Extension</li>
   <li>Freight Forwarder Quote Parser/ System Extension</li>
 </ol>
