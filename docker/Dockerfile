@@ -52,14 +52,6 @@ COPY --chown=www-data:nogroup . ./
 
 USER root
 
-# Copy entrypoint.sh
-COPY docker/entrypoint.sh /entrypoint.sh
-RUN chmod +x /entrypoint.sh
-
-# Copy entrypoint-app.sh
-COPY docker/entrypoint-app.sh /entrypoint-app.sh
-RUN chmod +x /entrypoint-app.sh
-
 # Set environment
 ARG ENVIRONMENT=production
 ENV APP_ENV=$ENVIRONMENT
@@ -84,7 +76,7 @@ CMD ["go-crond", "--verbose", "--no-auto", "root:./crontab"]
 
 # Application dev stage
 FROM base as app-dev
-ENTRYPOINT ["/entrypoint.sh"]
+ENTRYPOINT ["docker-php-entrypoint"] 
 CMD ["php-fpm"]
 
 # Events stage
@@ -99,5 +91,5 @@ CMD ["php", "artisan", "queue:work", "sqs"]
 
 # Application stage
 FROM base as app
-ENTRYPOINT ["/entrypoint-app.sh"]
+ENTRYPOINT ["/sbin/ssm-parent", "-c", ".ssm-parent.yaml", "run", "--", "docker-php-entrypoint"]
 CMD ["php-fpm"]
