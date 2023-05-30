@@ -30,10 +30,7 @@ RUN curl -L https://github.com/springload/ssm-parent/releases/download/v1.4.3/ss
     && rm /tmp/ssm-parent.tar.gz
 
 # Install Composer
-WORKDIR /var/www
-COPY docker/composer-install.sh ./
-RUN chmod +x ./composer-install.sh \
-    && ./composer-install.sh
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
 # Copy packages
 COPY packages /var/www/html/packages
