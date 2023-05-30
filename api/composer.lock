@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "c2df0fb7e46996548ab3da4f346edf2b",
+    "content-hash": "27fac5aa8b562d942feffbf16cdc8923",
     "packages": [
         {
             "name": "aloha/twilio",
@@ -192,16 +192,16 @@
         },
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.271.2",
+            "version": "3.271.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "17d7df5b89bb06e915931a65f643cf3469f8994c"
+                "reference": "f481134d37b8303fa2e82ca7fe2a3124144057f6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/17d7df5b89bb06e915931a65f643cf3469f8994c",
-                "reference": "17d7df5b89bb06e915931a65f643cf3469f8994c",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/f481134d37b8303fa2e82ca7fe2a3124144057f6",
+                "reference": "f481134d37b8303fa2e82ca7fe2a3124144057f6",
                 "shasum": ""
             },
             "require": {
@@ -281,9 +281,9 @@
             "support": {
                 "forum": "https://forums.aws.amazon.com/forum.jspa?forumID=80",
                 "issues": "https://github.com/aws/aws-sdk-php/issues",
-                "source": "https://github.com/aws/aws-sdk-php/tree/3.271.2"
+                "source": "https://github.com/aws/aws-sdk-php/tree/3.271.3"
             },
-            "time": "2023-05-25T18:19:34+00:00"
+            "time": "2023-05-26T18:20:00+00:00"
         },
         {
             "name": "aws/aws-sdk-php-laravel",
@@ -2003,16 +2003,10 @@
         {
             "name": "fleetbase/core-api",
             "version": "1.0.1-alpha",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/fleetbase/core-api.git",
-                "reference": "705f5e8251c536e8452a384baac9f9eacfddc90e"
-            },
             "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/fleetbase/core-api/zipball/705f5e8251c536e8452a384baac9f9eacfddc90e",
-                "reference": "705f5e8251c536e8452a384baac9f9eacfddc90e",
-                "shasum": ""
+                "type": "path",
+                "url": "../packages/core-api",
+                "reference": "7818e5210daeeb44cab14c4fb58cdc2138316c2f"
             },
             "require": {
                 "aloha/twilio": "^5.0",
@@ -2064,7 +2058,30 @@
                     "Fleetbase\\Seeds\\": "seeds/"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
+            "autoload-dev": {
+                "psr-4": {
+                    "Fleetbase\\Tests\\": "tests/"
+                }
+            },
+            "scripts": {
+                "lint": [
+                    "php-cs-fixer fix -v"
+                ],
+                "test:lint": [
+                    "php-cs-fixer fix -v --dry-run"
+                ],
+                "test:types": [
+                    "phpstan analyse --ansi --memory-limit=0"
+                ],
+                "test:unit": [
+                    "pest --colors=always"
+                ],
+                "test": [
+                    "@test:lint",
+                    "@test:types",
+                    "@test:unit"
+                ]
+            },
             "license": [
                 "MIT"
             ],
@@ -2083,31 +2100,17 @@
                 "fleetbase",
                 "logistics platform"
             ],
-            "support": {
-                "issues": "https://github.com/fleetbase/core-api/issues",
-                "source": "https://github.com/fleetbase/core-api/tree/v1.0.1-alpha"
-            },
-            "funding": [
-                {
-                    "url": "https://github.com/fleetbase",
-                    "type": "github"
-                }
-            ],
-            "time": "2023-05-26T04:28:10+00:00"
+            "transport-options": {
+                "relative": true
+            }
         },
         {
             "name": "fleetbase/fleetops-api",
             "version": "1.0.1-alpha",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/fleetbase/fleetops-api.git",
-                "reference": "3bcce25a9cf2c9bc991aac26e873ac6eeacaac68"
-            },
             "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/fleetbase/fleetops-api/zipball/3bcce25a9cf2c9bc991aac26e873ac6eeacaac68",
-                "reference": "3bcce25a9cf2c9bc991aac26e873ac6eeacaac68",
-                "shasum": ""
+                "type": "path",
+                "url": "../packages/fleetops-api",
+                "reference": "c67d0c303cf1eb2ce163686b62bebcbb6a878f79"
             },
             "require": {
                 "barryvdh/laravel-dompdf": "^2.0",
@@ -2144,7 +2147,30 @@
                     "Fleetbase\\FleetOps\\": "src/"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
+            "autoload-dev": {
+                "psr-4": {
+                    "Fleetbase\\Tests\\": "tests/"
+                }
+            },
+            "scripts": {
+                "lint": [
+                    "php-cs-fixer fix -v"
+                ],
+                "test:lint": [
+                    "php-cs-fixer fix -v --dry-run"
+                ],
+                "test:types": [
+                    "phpstan analyse --ansi --memory-limit=0"
+                ],
+                "test:unit": [
+                    "pest --colors=always"
+                ],
+                "test": [
+                    "@test:lint",
+                    "@test:types",
+                    "@test:unit"
+                ]
+            },
             "license": [
                 "MIT"
             ],
@@ -2165,31 +2191,17 @@
                 "last-mile",
                 "tms"
             ],
-            "support": {
-                "issues": "https://github.com/fleetbase/fleetops-api/issues",
-                "source": "https://github.com/fleetbase/fleetops-api/tree/v1.0.1-alpha"
-            },
-            "funding": [
-                {
-                    "url": "https://github.com/fleetbase",
-                    "type": "github"
-                }
-            ],
-            "time": "2023-05-26T04:34:49+00:00"
+            "transport-options": {
+                "relative": true
+            }
         },
         {
             "name": "fleetbase/storefront-api",
             "version": "1.0.1-alpha",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/fleetbase/storefront-api.git",
-                "reference": "0d0dee2b8a173757e0f4e5c4e12c98d6d6dda37e"
-            },
             "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/fleetbase/storefront-api/zipball/0d0dee2b8a173757e0f4e5c4e12c98d6d6dda37e",
-                "reference": "0d0dee2b8a173757e0f4e5c4e12c98d6d6dda37e",
-                "shasum": ""
+                "type": "path",
+                "url": "../packages/storefront-api",
+                "reference": "53309bccf163314a8aced42c78f766118754fbb8"
             },
             "require": {
                 "fleetbase/core-api": "^1.0.0-alpha",
@@ -2228,7 +2240,30 @@
                     "Fleetbase\\Storefront\\": "src/"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
+            "autoload-dev": {
+                "psr-4": {
+                    "Fleetbase\\Storefront\\Tests\\": "tests/"
+                }
+            },
+            "scripts": {
+                "lint": [
+                    "php-cs-fixer fix -v"
+                ],
+                "test:lint": [
+                    "php-cs-fixer fix -v --dry-run"
+                ],
+                "test:types": [
+                    "phpstan analyse --ansi --memory-limit=0"
+                ],
+                "test:unit": [
+                    "pest --colors=always"
+                ],
+                "test": [
+                    "@test:lint",
+                    "@test:types",
+                    "@test:unit"
+                ]
+            },
             "license": [
                 "MIT"
             ],
@@ -2249,17 +2284,9 @@
                 "marketplace",
                 "storefront"
             ],
-            "support": {
-                "issues": "https://github.com/fleetbase/storefront-api/issues",
-                "source": "https://github.com/fleetbase/storefront-api/tree/v1.0.1-alpha"
-            },
-            "funding": [
-                {
-                    "url": "https://github.com/fleetbase",
-                    "type": "github"
-                }
-            ],
-            "time": "2023-05-26T04:39:13+00:00"
+            "transport-options": {
+                "relative": true
+            }
         },
         {
             "name": "fruitcake/laravel-cors",
@@ -6072,16 +6099,16 @@
         },
         {
             "name": "nesbot/carbon",
-            "version": "2.66.0",
+            "version": "2.67.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/briannesbitt/Carbon.git",
-                "reference": "496712849902241f04902033b0441b269effe001"
+                "reference": "c1001b3bc75039b07f38a79db5237c4c529e04c8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/briannesbitt/Carbon/zipball/496712849902241f04902033b0441b269effe001",
-                "reference": "496712849902241f04902033b0441b269effe001",
+                "url": "https://api.github.com/repos/briannesbitt/Carbon/zipball/c1001b3bc75039b07f38a79db5237c4c529e04c8",
+                "reference": "c1001b3bc75039b07f38a79db5237c4c529e04c8",
                 "shasum": ""
             },
             "require": {
@@ -6170,7 +6197,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2023-01-29T18:53:47+00:00"
+            "time": "2023-05-25T22:09:47+00:00"
         },
         {
             "name": "nette/caching",
@@ -9697,16 +9724,16 @@
         },
         {
             "name": "symfony/console",
-            "version": "v5.4.23",
+            "version": "v5.4.24",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/console.git",
-                "reference": "90f21e27d0d88ce38720556dd164d4a1e4c3934c"
+                "reference": "560fc3ed7a43e6d30ea94a07d77f9a60b8ed0fb8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/console/zipball/90f21e27d0d88ce38720556dd164d4a1e4c3934c",
-                "reference": "90f21e27d0d88ce38720556dd164d4a1e4c3934c",
+                "url": "https://api.github.com/repos/symfony/console/zipball/560fc3ed7a43e6d30ea94a07d77f9a60b8ed0fb8",
+                "reference": "560fc3ed7a43e6d30ea94a07d77f9a60b8ed0fb8",
                 "shasum": ""
             },
             "require": {
@@ -9776,7 +9803,7 @@
                 "terminal"
             ],
             "support": {
-                "source": "https://github.com/symfony/console/tree/v5.4.23"
+                "source": "https://github.com/symfony/console/tree/v5.4.24"
             },
             "funding": [
                 {
@@ -9792,7 +9819,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2023-04-24T18:47:29+00:00"
+            "time": "2023-05-26T05:13:16+00:00"
         },
         {
             "name": "symfony/css-selector",
@@ -9929,16 +9956,16 @@
         },
         {
             "name": "symfony/error-handler",
-            "version": "v5.4.23",
+            "version": "v5.4.24",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/error-handler.git",
-                "reference": "218206b4772d9f412d7d277980c020d06e9d8a4e"
+                "reference": "c1b9be3b8a6f60f720bec28c4ffb6fb5b00a8946"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/error-handler/zipball/218206b4772d9f412d7d277980c020d06e9d8a4e",
-                "reference": "218206b4772d9f412d7d277980c020d06e9d8a4e",
+                "url": "https://api.github.com/repos/symfony/error-handler/zipball/c1b9be3b8a6f60f720bec28c4ffb6fb5b00a8946",
+                "reference": "c1b9be3b8a6f60f720bec28c4ffb6fb5b00a8946",
                 "shasum": ""
             },
             "require": {
@@ -9980,7 +10007,7 @@
             "description": "Provides tools to manage errors and ease debugging PHP code",
             "homepage": "https://symfony.com",
             "support": {
-                "source": "https://github.com/symfony/error-handler/tree/v5.4.23"
+                "source": "https://github.com/symfony/error-handler/tree/v5.4.24"
             },
             "funding": [
                 {
@@ -9996,7 +10023,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2023-04-17T10:03:27+00:00"
+            "time": "2023-05-02T16:13:31+00:00"
         },
         {
             "name": "symfony/event-dispatcher",
@@ -10227,16 +10254,16 @@
         },
         {
             "name": "symfony/http-foundation",
-            "version": "v5.4.23",
+            "version": "v5.4.24",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/http-foundation.git",
-                "reference": "af9fbb378f5f956c8f29d4886644c84c193780ac"
+                "reference": "3c59f97f6249ce552a44f01b93bfcbd786a954f5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/http-foundation/zipball/af9fbb378f5f956c8f29d4886644c84c193780ac",
-                "reference": "af9fbb378f5f956c8f29d4886644c84c193780ac",
+                "url": "https://api.github.com/repos/symfony/http-foundation/zipball/3c59f97f6249ce552a44f01b93bfcbd786a954f5",
+                "reference": "3c59f97f6249ce552a44f01b93bfcbd786a954f5",
                 "shasum": ""
             },
             "require": {
@@ -10283,7 +10310,7 @@
             "description": "Defines an object-oriented layer for the HTTP specification",
             "homepage": "https://symfony.com",
             "support": {
-                "source": "https://github.com/symfony/http-foundation/tree/v5.4.23"
+                "source": "https://github.com/symfony/http-foundation/tree/v5.4.24"
             },
             "funding": [
                 {
@@ -10299,20 +10326,20 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2023-04-18T06:30:11+00:00"
+            "time": "2023-05-19T07:21:23+00:00"
         },
         {
             "name": "symfony/http-kernel",
-            "version": "v5.4.23",
+            "version": "v5.4.24",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/http-kernel.git",
-                "reference": "48ea17a7c65ef1ede0c3b2dbc35adace99071810"
+                "reference": "f38b722e1557eb3f487d351b48f5a1279b50e9d1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/http-kernel/zipball/48ea17a7c65ef1ede0c3b2dbc35adace99071810",
-                "reference": "48ea17a7c65ef1ede0c3b2dbc35adace99071810",
+                "url": "https://api.github.com/repos/symfony/http-kernel/zipball/f38b722e1557eb3f487d351b48f5a1279b50e9d1",
+                "reference": "f38b722e1557eb3f487d351b48f5a1279b50e9d1",
                 "shasum": ""
             },
             "require": {
@@ -10395,7 +10422,7 @@
             "description": "Provides a structured process for converting a Request into a Response",
             "homepage": "https://symfony.com",
             "support": {
-                "source": "https://github.com/symfony/http-kernel/tree/v5.4.23"
+                "source": "https://github.com/symfony/http-kernel/tree/v5.4.24"
             },
             "funding": [
                 {
@@ -10411,7 +10438,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2023-04-28T13:29:52+00:00"
+            "time": "2023-05-27T08:06:30+00:00"
         },
         {
             "name": "symfony/mime",
@@ -11472,16 +11499,16 @@
         },
         {
             "name": "symfony/process",
-            "version": "v5.4.23",
+            "version": "v5.4.24",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/process.git",
-                "reference": "4b842fc4b61609e0a155a114082bd94e31e98287"
+                "reference": "e3c46cc5689c8782944274bb30702106ecbe3b64"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/process/zipball/4b842fc4b61609e0a155a114082bd94e31e98287",
-                "reference": "4b842fc4b61609e0a155a114082bd94e31e98287",
+                "url": "https://api.github.com/repos/symfony/process/zipball/e3c46cc5689c8782944274bb30702106ecbe3b64",
+                "reference": "e3c46cc5689c8782944274bb30702106ecbe3b64",
                 "shasum": ""
             },
             "require": {
@@ -11514,7 +11541,7 @@
             "description": "Executes commands in sub-processes",
             "homepage": "https://symfony.com",
             "support": {
-                "source": "https://github.com/symfony/process/tree/v5.4.23"
+                "source": "https://github.com/symfony/process/tree/v5.4.24"
             },
             "funding": [
                 {
@@ -11530,7 +11557,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2023-04-18T13:50:24+00:00"
+            "time": "2023-05-17T11:26:05+00:00"
         },
         {
             "name": "symfony/property-access",
@@ -11615,16 +11642,16 @@
         },
         {
             "name": "symfony/property-info",
-            "version": "v5.4.23",
+            "version": "v5.4.24",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/property-info.git",
-                "reference": "ff45ebbfd781eab2571d9d4412d82a9a733fc2b3"
+                "reference": "d43b85b00699b4484964c297575b5c6f9dc5f6e1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/property-info/zipball/ff45ebbfd781eab2571d9d4412d82a9a733fc2b3",
-                "reference": "ff45ebbfd781eab2571d9d4412d82a9a733fc2b3",
+                "url": "https://api.github.com/repos/symfony/property-info/zipball/d43b85b00699b4484964c297575b5c6f9dc5f6e1",
+                "reference": "d43b85b00699b4484964c297575b5c6f9dc5f6e1",
                 "shasum": ""
             },
             "require": {
@@ -11686,7 +11713,7 @@
                 "validator"
             ],
             "support": {
-                "source": "https://github.com/symfony/property-info/tree/v5.4.23"
+                "source": "https://github.com/symfony/property-info/tree/v5.4.24"
             },
             "funding": [
                 {
@@ -11702,7 +11729,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2023-04-17T14:20:34+00:00"
+            "time": "2023-05-15T20:11:03+00:00"
         },
         {
             "name": "symfony/routing",
@@ -11796,16 +11823,16 @@
         },
         {
             "name": "symfony/serializer",
-            "version": "v5.4.23",
+            "version": "v5.4.24",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/serializer.git",
-                "reference": "545da11697153c24c274b9a68cab550b2c0a9860"
+                "reference": "12535bb7b1d3b53802bf18d61a98bb1145fabcdb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/serializer/zipball/545da11697153c24c274b9a68cab550b2c0a9860",
-                "reference": "545da11697153c24c274b9a68cab550b2c0a9860",
+                "url": "https://api.github.com/repos/symfony/serializer/zipball/12535bb7b1d3b53802bf18d61a98bb1145fabcdb",
+                "reference": "12535bb7b1d3b53802bf18d61a98bb1145fabcdb",
                 "shasum": ""
             },
             "require": {
@@ -11879,7 +11906,7 @@
             "description": "Handles serializing and deserializing data structures, including object graphs, into array structures or other formats like XML and JSON.",
             "homepage": "https://symfony.com",
             "support": {
-                "source": "https://github.com/symfony/serializer/tree/v5.4.23"
+                "source": "https://github.com/symfony/serializer/tree/v5.4.24"
             },
             "funding": [
                 {
@@ -11895,7 +11922,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2023-04-17T13:59:16+00:00"
+            "time": "2023-05-12T08:37:35+00:00"
         },
         {
             "name": "symfony/service-contracts",
@@ -12068,16 +12095,16 @@
         },
         {
             "name": "symfony/translation",
-            "version": "v5.4.22",
+            "version": "v5.4.24",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/translation.git",
-                "reference": "9a401392f01bc385aa42760eff481d213a0cc2ba"
+                "reference": "de237e59c5833422342be67402d487fbf50334ff"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/translation/zipball/9a401392f01bc385aa42760eff481d213a0cc2ba",
-                "reference": "9a401392f01bc385aa42760eff481d213a0cc2ba",
+                "url": "https://api.github.com/repos/symfony/translation/zipball/de237e59c5833422342be67402d487fbf50334ff",
+                "reference": "de237e59c5833422342be67402d487fbf50334ff",
                 "shasum": ""
             },
             "require": {
@@ -12145,7 +12172,7 @@
             "description": "Provides tools to internationalize your application",
             "homepage": "https://symfony.com",
             "support": {
-                "source": "https://github.com/symfony/translation/tree/v5.4.22"
+                "source": "https://github.com/symfony/translation/tree/v5.4.24"
             },
             "funding": [
                 {
@@ -12161,7 +12188,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2023-03-27T16:07:23+00:00"
+            "time": "2023-05-19T12:34:17+00:00"
         },
         {
             "name": "symfony/translation-contracts",
@@ -12243,16 +12270,16 @@
         },
         {
             "name": "symfony/var-dumper",
-            "version": "v5.4.23",
+            "version": "v5.4.24",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/var-dumper.git",
-                "reference": "9a8a5b6d6508928174ded2109e29328a55342a42"
+                "reference": "8e12706bf9c68a2da633f23bfdc15b4dce5970b3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/var-dumper/zipball/9a8a5b6d6508928174ded2109e29328a55342a42",
-                "reference": "9a8a5b6d6508928174ded2109e29328a55342a42",
+                "url": "https://api.github.com/repos/symfony/var-dumper/zipball/8e12706bf9c68a2da633f23bfdc15b4dce5970b3",
+                "reference": "8e12706bf9c68a2da633f23bfdc15b4dce5970b3",
                 "shasum": ""
             },
             "require": {
@@ -12261,7 +12288,6 @@
                 "symfony/polyfill-php80": "^1.16"
             },
             "conflict": {
-                "phpunit/phpunit": "<5.4.3",
                 "symfony/console": "<4.4"
             },
             "require-dev": {
@@ -12312,7 +12338,7 @@
                 "dump"
             ],
             "support": {
-                "source": "https://github.com/symfony/var-dumper/tree/v5.4.23"
+                "source": "https://github.com/symfony/var-dumper/tree/v5.4.24"
             },
             "funding": [
                 {
@@ -12328,7 +12354,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2023-04-18T09:26:27+00:00"
+            "time": "2023-05-25T13:05:00+00:00"
         },
         {
             "name": "symfony/var-exporter",
