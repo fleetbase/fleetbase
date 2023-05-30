@@ -27,9 +27,9 @@
 
 # ⭐️ Overview
 
-Fleetbase is a comprehensive, open-source platform for the management and orchestration of logistics and supply chain operations. This dual-natured platform serves not only as an efficient operational tool for companies within these industries but also as a robust foundational layer for developers. Its versatility emanates from its core, which is skillfully constructed around a series of "extensions," creating a flexible and customizable framework that accommodates a wide spectrum of supply chain and logistics requirements.
+Fleetbase is an open-source platform designed for the efficient management and orchestration of logistics and supply chain operations. It serves as both a powerful operational tool for businesses and a flexible foundation for developers. The platform's core is built around a collection of "extensions," which create a customizable framework capable of meeting a wide range of supply chain and logistics requirements.
 
-Every individual extension within Fleetbase is purposefully engineered to fulfill specific roles within the expansive ecosystem of supply chain and logistics. With inherent extensibility users have the freedom to craft their own extensions, thereby expanding the ecosystem and ensuring the platform's adaptability across a multitude of use cases. This extensible nature ensures that Fleetbase remains at the forefront of meeting diverse logistical and supply chain needs now and into the future.
+Each extension in Fleetbase is purposefully engineered to fulfill specific roles within the supply chain and logistics ecosystem. Users have the freedom to create their own extensions, expanding the platform's ecosystem and ensuring its adaptability to various use cases. This extensible nature keeps Fleetbase at the forefront of addressing diverse logistical and supply chain needs now and in the future.
 
 <p align="center" dir="auto">
       <img src="https://flb-assets.s3.ap-southeast-1.amazonaws.com/github/dark-light-layered-screenshots.png" alt="Fleetbase Console" width="600" style="max-width: 100%;" />
@@ -57,10 +57,10 @@ Fleetbase is more than just a platform; it's a versatile ecosystem carefully arc
 
 <ul>
   <li>
-    <strong>Console</strong>: Fleetbase's frontend console is constructed using Ember.js and Ember Engines, providing a highly modular and extensible design. This not only enables the system to adapt and scale to your growing requirements but also simplifies the process of integrating new extensions. With the console's design, extensions can be easily installed using their respective package managers, thereby reducing complexity and time spent on integration.
+    <strong>Console</strong>: Fleetbase's frontend console is built with Ember.js and Ember Engines, offering a modular and extensible design. This design allows the system to easily adapt and scale according to your evolving needs while simplifying the integration of new extensions. By leveraging the console's design, extensions can be seamlessly installed using their respective package managers, reducing complexity and integration time.
   </li>
   <li>
-    <strong>Fleetbase API</strong>: Fleetbase's backend API and framework, developed using the reliable Laravel framework, is thoughtfully designed with extension development and integration in mind. This robust and flexible infrastructure not only manages intricate data structures and transactions with grace but also facilitates the easy incorporation of new extensions via package managers. We provide additional packages that allow developers to craft their unique extensions, further enhancing the flexibility and extensibility of the Fleetbase ecosystem.
+    <strong>Fleetbase API</strong>: Fleetbase's backend API and framework are built with Laravel, providing a robust and flexible infrastructure for extension development and integration. The system efficiently manages complex data structures and transactions while seamlessly incorporating new extensions through package managers. We offer additional packages for developers to create custom extensions, enhancing the flexibility and extensibility of the Fleetbase ecosystem.
   </li>
   <li>
     <strong>Extensions</strong>: Fleetbase is designed to provide immediate utility out-of-the-box. It comes pre-installed with several key extensions
