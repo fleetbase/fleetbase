@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "8252fcfb2f37bf2b577ec262a8b9cc41",
+    "content-hash": "e39edfd17e56ba33f60f895cbad0f59a",
     "packages": [
         {
             "name": "aloha/twilio",
@@ -2003,10 +2003,16 @@
         {
             "name": "fleetbase/core-api",
             "version": "1.0.3-alpha",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/fleetbase/core-api.git",
+                "reference": "77bc9e7df79d9f4559d1633d1c86fe0af7f2a63e"
+            },
             "dist": {
-                "type": "path",
-                "url": "../packages/core-api",
-                "reference": "84562e0e429e120d6c1dcb8437bb907349ed40b7"
+                "type": "zip",
+                "url": "https://api.github.com/repos/fleetbase/core-api/zipball/77bc9e7df79d9f4559d1633d1c86fe0af7f2a63e",
+                "reference": "77bc9e7df79d9f4559d1633d1c86fe0af7f2a63e",
+                "shasum": ""
             },
             "require": {
                 "aloha/twilio": "^5.0",
@@ -2058,30 +2064,7 @@
                     "Fleetbase\\Seeds\\": "seeds/"
                 }
             },
-            "autoload-dev": {
-                "psr-4": {
-                    "Fleetbase\\Tests\\": "tests/"
-                }
-            },
-            "scripts": {
-                "lint": [
-                    "php-cs-fixer fix -v"
-                ],
-                "test:lint": [
-                    "php-cs-fixer fix -v --dry-run"
-                ],
-                "test:types": [
-                    "phpstan analyse --ansi --memory-limit=0"
-                ],
-                "test:unit": [
-                    "pest --colors=always"
-                ],
-                "test": [
-                    "@test:lint",
-                    "@test:types",
-                    "@test:unit"
-                ]
-            },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -2100,17 +2083,31 @@
                 "fleetbase",
                 "logistics platform"
             ],
-            "transport-options": {
-                "relative": true
-            }
+            "support": {
+                "issues": "https://github.com/fleetbase/core-api/issues",
+                "source": "https://github.com/fleetbase/core-api/tree/v1.0.3-alpha"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/fleetbase",
+                    "type": "github"
+                }
+            ],
+            "time": "2023-06-05T04:13:52+00:00"
         },
         {
             "name": "fleetbase/fleetops-api",
             "version": "1.0.1-alpha",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/fleetbase/fleetops-api.git",
+                "reference": "3bcce25a9cf2c9bc991aac26e873ac6eeacaac68"
+            },
             "dist": {
-                "type": "path",
-                "url": "../packages/fleetops-api",
-                "reference": "c67d0c303cf1eb2ce163686b62bebcbb6a878f79"
+                "type": "zip",
+                "url": "https://api.github.com/repos/fleetbase/fleetops-api/zipball/3bcce25a9cf2c9bc991aac26e873ac6eeacaac68",
+                "reference": "3bcce25a9cf2c9bc991aac26e873ac6eeacaac68",
+                "shasum": ""
             },
             "require": {
                 "barryvdh/laravel-dompdf": "^2.0",
@@ -2147,30 +2144,7 @@
                     "Fleetbase\\FleetOps\\": "src/"
                 }
             },
-            "autoload-dev": {
-                "psr-4": {
-                    "Fleetbase\\Tests\\": "tests/"
-                }
-            },
-            "scripts": {
-                "lint": [
-                    "php-cs-fixer fix -v"
-                ],
-                "test:lint": [
-                    "php-cs-fixer fix -v --dry-run"
-                ],
-                "test:types": [
-                    "phpstan analyse --ansi --memory-limit=0"
-                ],
-                "test:unit": [
-                    "pest --colors=always"
-                ],
-                "test": [
-                    "@test:lint",
-                    "@test:types",
-                    "@test:unit"
-                ]
-            },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -2191,17 +2165,31 @@
                 "last-mile",
                 "tms"
             ],
-            "transport-options": {
-                "relative": true
-            }
+            "support": {
+                "issues": "https://github.com/fleetbase/fleetops-api/issues",
+                "source": "https://github.com/fleetbase/fleetops-api/tree/v1.0.1-alpha"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/fleetbase",
+                    "type": "github"
+                }
+            ],
+            "time": "2023-05-26T04:34:49+00:00"
         },
         {
             "name": "fleetbase/storefront-api",
             "version": "1.0.1-alpha",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/fleetbase/storefront-api.git",
+                "reference": "0d0dee2b8a173757e0f4e5c4e12c98d6d6dda37e"
+            },
             "dist": {
-                "type": "path",
-                "url": "../packages/storefront-api",
-                "reference": "53309bccf163314a8aced42c78f766118754fbb8"
+                "type": "zip",
+                "url": "https://api.github.com/repos/fleetbase/storefront-api/zipball/0d0dee2b8a173757e0f4e5c4e12c98d6d6dda37e",
+                "reference": "0d0dee2b8a173757e0f4e5c4e12c98d6d6dda37e",
+                "shasum": ""
             },
             "require": {
                 "fleetbase/core-api": "^1.0.0-alpha",
@@ -2240,30 +2228,7 @@
                     "Fleetbase\\Storefront\\": "src/"
                 }
             },
-            "autoload-dev": {
-                "psr-4": {
-                    "Fleetbase\\Storefront\\Tests\\": "tests/"
-                }
-            },
-            "scripts": {
-                "lint": [
-                    "php-cs-fixer fix -v"
-                ],
-                "test:lint": [
-                    "php-cs-fixer fix -v --dry-run"
-                ],
-                "test:types": [
-                    "phpstan analyse --ansi --memory-limit=0"
-                ],
-                "test:unit": [
-                    "pest --colors=always"
-                ],
-                "test": [
-                    "@test:lint",
-                    "@test:types",
-                    "@test:unit"
-                ]
-            },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -2284,9 +2249,17 @@
                 "marketplace",
                 "storefront"
             ],
-            "transport-options": {
-                "relative": true
-            }
+            "support": {
+                "issues": "https://github.com/fleetbase/storefront-api/issues",
+                "source": "https://github.com/fleetbase/storefront-api/tree/v1.0.1-alpha"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/fleetbase",
+                    "type": "github"
+                }
+            ],
+            "time": "2023-05-26T04:39:13+00:00"
         },
         {
             "name": "fruitcake/laravel-cors",
