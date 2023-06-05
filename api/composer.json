@@ -6,7 +6,7 @@
     "license": "MIT",
     "require": {
         "php": "^7.3|^8.0",
-        "fleetbase/core-api": "^1.0.2-alpha",
+        "fleetbase/core-api": "^1.0.3-alpha",
         "fleetbase/fleetops-api": "^1.0.1-alpha",
         "fleetbase/storefront-api": "^1.0.1-alpha",
         "fruitcake/laravel-cors": "^2.0",
@@ -28,6 +28,20 @@
         "nunomaduro/collision": "^5.10",
         "phpunit/phpunit": "^9.5.10"
     },
+    "repositories": [
+        {
+            "type": "path",
+            "url": "../packages/core-api"
+        },
+        {
+            "type": "path",
+            "url": "../packages/fleetops-api"
+        },
+        {
+            "type": "path",
+            "url": "../packages/storefront-api"
+        }
+    ],
     "autoload": {
         "psr-4": {
             "App\\": "app/",
