@@ -38,14 +38,17 @@ WORKDIR /var/www/html/api
 
 # Set ownership and permissions
 RUN chown www-data:www-data /var/www/html \
-    && chown www-data:www-data /var/www/html/api
+    && chown www-data:www-data /var/www/html/api \
+    && chown -R www-data:www-data /var/www/html/api/storage \
+    && chown -R www-data:www-data /var/www/html/api/bootstrap
+
 USER www-data
 RUN mkdir -p ./storage/logs/ \
     && ln -sf /dev/stdout ./storage/logs/laravel.log
 
 # Install Composer dependencies
 COPY api/composer.json api/composer.lock ./
-RUN composer install --no-dev --no-scripts --no-autoloader
+RUN composer install
 
 # Copy application files
 COPY --chown=www-data:nogroup . ./
