@@ -34,14 +34,16 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 
 # Setup application
 WORKDIR /var/www/html/api
-USER www-data
 
 # Copy application files
 COPY --chown=www-data:www-data api ./
+RUN chown -R www-data:www-data /var/www/html/api
+USER www-data
 
 # Install Composer dependencies
 RUN composer install --no-dev --no-scripts --no-autoloader
 
+# Continue
 USER root
 
 # Set environment
