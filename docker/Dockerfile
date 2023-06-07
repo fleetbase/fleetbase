@@ -32,26 +32,15 @@ RUN curl -L https://github.com/springload/ssm-parent/releases/download/v1.4.3/ss
 # Install Composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
-# Copy packages
-COPY packages /var/www/html/packages
+# Setup application
 WORKDIR /var/www/html/api
-
-# Set ownership and permissions
-RUN chown www-data:www-data /var/www/html \
-    && chown www-data:www-data /var/www/html/api \
-    && chown -R www-data:www-data /var/www/html/api/storage \
-    && chown -R www-data:www-data /var/www/html/api/bootstrap
-
 USER www-data
-RUN mkdir -p ./storage/logs/ \
-    && ln -sf /dev/stdout ./storage/logs/laravel.log
-
-# Install Composer dependencies
-COPY api/composer.json api/composer.lock ./
-RUN composer install
 
 # Copy application files
-COPY --chown=www-data:nogroup . ./
+COPY --chown=www-data:www-data api ./
+
+# Install Composer dependencies
+RUN composer install --no-dev --no-scripts --no-autoloader
 
 USER root
 
