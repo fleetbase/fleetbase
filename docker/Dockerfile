@@ -38,6 +38,9 @@ WORKDIR /var/www/html/api
 # Copy application files
 COPY --chown=www-data:www-data api ./
 RUN chown -R www-data:www-data /var/www/html/api
+RUN chown -R www-data:www-data /var/www/html/api/bootstrap/cache
+RUN chmod -R 755 /var/www/html/api/storage
+RUN chmod -R 755 /var/www/html/api/bootstrap/cache
 USER www-data
 
 # Install Composer dependencies
