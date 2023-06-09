@@ -21,6 +21,8 @@
       <a href="https://www.fleetbase.io/blog-2" rel="nofollow">Blog</a>
       ·
       <a href="https://fleetbase.apichecker.com" target="_api_status" rel="nofollow">API Status</a>
+      ·
+      <a href="https://discord.gg/FSB4j3HAv" target="discord" rel="nofollow">Discord</a>
     </p>
     <hr />
 </div>
@@ -260,7 +262,7 @@ Please read through our <a href="https://github.com/fleetbase/fleetbase/blob/mai
 
 # 👥 Community
 
-Get updates on Fleetbase's development and chat with the project maintainers and community members.
+Get updates on Fleetbase's development and chat with the project maintainers and community members by joining our <a href="https://discord.gg/FSB4j3HAv">Discord</a>.
 
 <ul>
   <li>Follow <a href="https://twitter.com/fleetbase_io">@fleetbase_io on Twitter</a>.</li>
