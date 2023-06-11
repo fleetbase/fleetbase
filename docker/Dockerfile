@@ -8,9 +8,9 @@ RUN mkdir -p /usr/src/php/ext \
 
 # Install required packages and PHP extensions
 RUN apt-get update \
-    && apt-get install -y git unzip libzip-dev libgd-dev libfreetype6-dev libjpeg62-turbo-dev libpng-dev \
+    && apt-get install -y nano git unzip libzip-dev libgd-dev libfreetype6-dev libjpeg62-turbo-dev libpng-dev \
     imagemagick libmagickwand-dev --no-install-recommends libmemcached-dev libgeos-dev libgmp-dev \
-    default-mysql-client libicu-dev tmux \
+    default-mysql-client libicu-dev tmux nginx dnsutils \
     && pecl install imagick \
     && docker-php-ext-enable imagick \
     && docker-php-ext-configure gd --with-external-gd \
@@ -18,6 +18,9 @@ RUN apt-get update \
     && docker-php-ext-install -j$(nproc) gmp php-geos gd zip pdo_mysql sockets intl bcmath \
     && pecl install redis-4.3.0 memcached-3.1.3 \
     && docker-php-ext-enable redis memcached opcache bcmath
+
+# Clear cache
+RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Update PHP configurations
 RUN sed -e 's/^expose_php.*/expose_php = Off/' "$PHP_INI_DIR/php.ini-production" > "$PHP_INI_DIR/php.ini" \
@@ -30,24 +33,29 @@ RUN curl -L https://github.com/springload/ssm-parent/releases/download/v1.4.3/ss
     && rm /tmp/ssm-parent.tar.gz
 
 # Install Composer
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 # Setup application
 WORKDIR /var/www/html/api
-
-# Copy application files
-COPY --chown=www-data:www-data api ./
+COPY --chown=www-data:nogroup api ./
 RUN chown -R www-data:www-data /var/www/html/api
-RUN chown -R www-data:www-data /var/www/html/api/bootstrap/cache
-RUN chmod -R 755 /var/www/html/api/storage
-RUN chmod -R 755 /var/www/html/api/bootstrap/cache
+RUN mkdir -p ./storage/logs/ && ln -sf /dev/stdout ./storage/logs/laravel-$(date +'%Y-%m-%d').log
 USER www-data
-
-# Install Composer dependencies
-RUN composer install --no-dev --no-scripts --no-autoloader
+RUN composer install
+RUN composer dumpautoload
 
 # Continue
 USER root
+WORKDIR /
+
+# Copy nginx config
+COPY nginx.conf /etc/nginx/sites-enabled/default
+
+# Copy the startup script into the Docker image
+COPY startup.sh /startup.sh
+
+# Make sure the script is executable
+RUN chmod +x /startup.sh
 
 # Set environment
 ARG ENVIRONMENT=production
@@ -73,13 +81,14 @@ CMD ["go-crond", "--verbose", "--no-auto", "root:./crontab"]
 
 # Application dev stage
 FROM base as app-dev
-ENTRYPOINT ["docker-php-entrypoint"] 
-CMD ["php-fpm"]
+ENTRYPOINT ["docker-php-entrypoint"]
+EXPOSE 80
+CMD ["/startup.sh"]
 
 # Events stage
 FROM base as events
 ENTRYPOINT ["/sbin/ssm-parent", "-c", ".ssm-parent.yaml", "run", "--", "docker-php-entrypoint"]
-CMD ["php", "artisan", "queue:work", "events"]
+CMD ["php", "artisan", "queue:work", "events"]2
 
 # Jobs stage
 FROM base as jobs
@@ -89,4 +98,5 @@ CMD ["php", "artisan", "queue:work", "sqs"]
 # Application stage
 FROM base as app
 ENTRYPOINT ["/sbin/ssm-parent", "-c", ".ssm-parent.yaml", "run", "--", "docker-php-entrypoint"]
-CMD ["php-fpm"]
+EXPOSE 80
+CMD ["/startup.sh"]

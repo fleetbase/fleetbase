@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "0c48f488648424e57133c3479ecf9d2b",
+    "content-hash": "826dc512e204fa573464c081ccc63408",
     "packages": [
         {
             "name": "aloha/twilio",
@@ -192,16 +192,16 @@
         },
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.272.0",
+            "version": "3.272.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "2448f5c4ffd0125fa86df6aa12d0a41aa2de68da"
+                "reference": "a0accaf4a16565c0b4438109c978602f27dff3a0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/2448f5c4ffd0125fa86df6aa12d0a41aa2de68da",
-                "reference": "2448f5c4ffd0125fa86df6aa12d0a41aa2de68da",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/a0accaf4a16565c0b4438109c978602f27dff3a0",
+                "reference": "a0accaf4a16565c0b4438109c978602f27dff3a0",
                 "shasum": ""
             },
             "require": {
@@ -281,9 +281,9 @@
             "support": {
                 "forum": "https://forums.aws.amazon.com/forum.jspa?forumID=80",
                 "issues": "https://github.com/aws/aws-sdk-php/issues",
-                "source": "https://github.com/aws/aws-sdk-php/tree/3.272.0"
+                "source": "https://github.com/aws/aws-sdk-php/tree/3.272.1"
             },
-            "time": "2023-06-08T18:21:03+00:00"
+            "time": "2023-06-09T18:21:02+00:00"
         },
         {
             "name": "aws/aws-sdk-php-laravel",
@@ -2002,16 +2002,16 @@
         },
         {
             "name": "fleetbase/core-api",
-            "version": "1.0.6-alpha",
+            "version": "1.0.8-alpha",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fleetbase/core-api.git",
-                "reference": "20890b9623c0ea8aa416d711fb45c15738025b6f"
+                "reference": "04c9e13efb21fa352fa5d821ae316e1f2bfb9e45"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fleetbase/core-api/zipball/20890b9623c0ea8aa416d711fb45c15738025b6f",
-                "reference": "20890b9623c0ea8aa416d711fb45c15738025b6f",
+                "url": "https://api.github.com/repos/fleetbase/core-api/zipball/04c9e13efb21fa352fa5d821ae316e1f2bfb9e45",
+                "reference": "04c9e13efb21fa352fa5d821ae316e1f2bfb9e45",
                 "shasum": ""
             },
             "require": {
@@ -2085,7 +2085,7 @@
             ],
             "support": {
                 "issues": "https://github.com/fleetbase/core-api/issues",
-                "source": "https://github.com/fleetbase/core-api/tree/v1.0.6-alpha"
+                "source": "https://github.com/fleetbase/core-api/tree/v1.0.8-alpha"
             },
             "funding": [
                 {
@@ -2093,7 +2093,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2023-06-09T04:36:21+00:00"
+            "time": "2023-06-11T02:52:00+00:00"
         },
         {
             "name": "fleetbase/fleetops-api",
@@ -2179,21 +2179,21 @@
         },
         {
             "name": "fleetbase/storefront-api",
-            "version": "1.0.1-alpha",
+            "version": "1.0.2-alpha",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fleetbase/storefront-api.git",
-                "reference": "0d0dee2b8a173757e0f4e5c4e12c98d6d6dda37e"
+                "reference": "44cb6d4d91ee1ba0c76476ec9d6273bf887f8883"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fleetbase/storefront-api/zipball/0d0dee2b8a173757e0f4e5c4e12c98d6d6dda37e",
-                "reference": "0d0dee2b8a173757e0f4e5c4e12c98d6d6dda37e",
+                "url": "https://api.github.com/repos/fleetbase/storefront-api/zipball/44cb6d4d91ee1ba0c76476ec9d6273bf887f8883",
+                "reference": "44cb6d4d91ee1ba0c76476ec9d6273bf887f8883",
                 "shasum": ""
             },
             "require": {
-                "fleetbase/core-api": "^1.0.0-alpha",
-                "fleetbase/fleetops-api": "^1.0.0-alpha",
+                "fleetbase/core-api": "^1.0.7-alpha",
+                "fleetbase/fleetops-api": "^1.0.2-alpha",
                 "geocoder-php/google-maps-places-provider": "^1.4",
                 "laravel-notification-channels/apn": "^3.8",
                 "laravel-notification-channels/fcm": "^2.7",
@@ -2251,7 +2251,7 @@
             ],
             "support": {
                 "issues": "https://github.com/fleetbase/storefront-api/issues",
-                "source": "https://github.com/fleetbase/storefront-api/tree/v1.0.1-alpha"
+                "source": "https://github.com/fleetbase/storefront-api/tree/v1.0.2-alpha"
             },
             "funding": [
                 {
@@ -2259,7 +2259,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2023-05-26T04:39:13+00:00"
+            "time": "2023-06-09T08:00:56+00:00"
         },
         {
             "name": "fruitcake/laravel-cors",
@@ -3897,16 +3897,16 @@
         },
         {
             "name": "kreait/firebase-php",
-            "version": "6.9.5",
+            "version": "6.9.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/kreait/firebase-php.git",
-                "reference": "e64ce87a2d3be0acef91c33aea6269bbd528b12f"
+                "reference": "d6592be9b27a7c0b13f484f5af494e278901e441"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/kreait/firebase-php/zipball/e64ce87a2d3be0acef91c33aea6269bbd528b12f",
-                "reference": "e64ce87a2d3be0acef91c33aea6269bbd528b12f",
+                "url": "https://api.github.com/repos/kreait/firebase-php/zipball/d6592be9b27a7c0b13f484f5af494e278901e441",
+                "reference": "d6592be9b27a7c0b13f484f5af494e278901e441",
                 "shasum": ""
             },
             "require": {
@@ -3926,7 +3926,6 @@
                 "mtdowling/jmespath.php": "^2.6.1",
                 "php": "^7.4|^8.0",
                 "psr/cache": "^1.0.1|^2.0|^3.0",
-                "psr/http-message": "^1.0.1",
                 "psr/log": "^1.1|^2.0|^3.0",
                 "riverline/multipart-parser": "^2.0.8",
                 "symfony/polyfill-php80": "^1.23",
@@ -3987,7 +3986,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2023-01-27T09:30:40+00:00"
+            "time": "2023-06-10T06:44:56+00:00"
         },
         {
             "name": "kreait/firebase-tokens",
