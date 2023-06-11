@@ -19,7 +19,7 @@ services:
       context: .
       dockerfile: socket/Dockerfile
       args:
-          ENVIRONMENT: production
+          ENVIRONMENT: dev
     ports:
       - "38000:8000"
     environment:
@@ -35,7 +35,7 @@ services:
       context: .
       dockerfile: console/Dockerfile
       args:
-        ENVIRONMENT: production
+        ENVIRONMENT: development
 
   application:
     build:
@@ -43,7 +43,7 @@ services:
       dockerfile: docker/Dockerfile
       target: app-dev
       args:
-        ENVIRONMENT: production
+        ENVIRONMENT: development
     ports:
       - "8000:80"
     environment:
