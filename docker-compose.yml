@@ -41,7 +41,7 @@ services:
     build:
       context: .
       dockerfile: docker/Dockerfile
-      target: app
+      target: app-dev
       args:
         ENVIRONMENT: production
     ports:
