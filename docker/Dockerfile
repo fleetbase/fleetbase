@@ -35,6 +35,10 @@ RUN curl -L https://github.com/springload/ssm-parent/releases/download/v1.4.3/ss
 # Install Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
+# For development only
+WORKDIR /var/www/html
+COPY --chown=www-data:nogroup packages ./
+
 # Setup application
 WORKDIR /var/www/html/api
 COPY --chown=www-data:nogroup api ./
@@ -60,6 +64,9 @@ RUN chmod +x /startup.sh
 # Set environment
 ARG ENVIRONMENT=production
 ENV APP_ENV=$ENVIRONMENT
+
+# Set workdir to application
+WORKDIR /var/www/html/api
 
 # Scheduler base stage
 FROM base as scheduler-base
