@@ -166,7 +166,7 @@ Getting Fleetbase up and running on your system using Docker and Docker-compose 
   </li>
   <li>
     Clone the Fleetbase repository to your local machine:
-    <pre>bash git clone https://github.com/fleetbase/fleetbase.git</pre>
+    <pre>git clone git@github.com:fleetbase/fleetbase.git</pre>
   </li>
   <li>
     Navigate to the cloned repository:
@@ -184,12 +184,23 @@ Getting Fleetbase up and running on your system using Docker and Docker-compose 
   <li>
     <strong>Start the Docker daemon:</strong>
     Ensure the Docker daemon is running on your machine. You can either start Docker Desktop or either executed by running:
-    <pre>sudo systemctl start docker</pre>
+    <pre>service docker start</pre>
   </li>
   <li>
     <strong>Build the Docker containers:</strong>
 Use Docker Compose to build and run the necessary containers. In the root directory of the Fleetbase repository, run:
   <pre>docker-compose up -d</pre>
+  </li>
+</ol>
+
+### Additional Steps
+
+<ol>
+   <li>Fleetbase will try to find the current hostname or public IP address to whitelist in for CORS, but if this fails you will need to manually add your hostname or instance URL to `api/config/cors.php` in the `allowed_origins` array. This will whitelist the console for CORS access to your instance backend.
+  </li>
+  <li>🛣 Routing! By default Fleetbase currently will use it's own routing engine which is hosted at <a href="https://routing.fleetbase.io" target="_fleetbase_routing_machine">https://routing.fleetbase.io</a>, this routing engine only works for a few enabled countries which include USA, Canada, Belgium, Spain, Serbia, Taiwan, Malaysia, Singapore, Brunei, Mongolia, India, Ghana. We can enable more regions and countries upon request. There is a Roadmap item to allow users to easily change to any routing engine provider such as Mapbox, Google Maps, and other 3rd Party Routing services. Optionally, you can switch out Fleetase Routing engine with any OSRM compatible service such as OpenStreetMap by changing the console environment variable `OSRM_HOST` which can be found in `console/environments/*.env`.
+  </li>
+  <li>If you find any bugs or unexpected issues please <a href="https://github.com/fleetbase/fleetbase/issues/new/choose">post an issue</a> to the repo or join our <a href="https://discord.gg/MJQgxHwN" target="_discord" alt="Fleetbase Discord">Discord</a>.
   </li>
 </ol>
 
@@ -241,9 +252,10 @@ Fleetbase offers a few open sourced apps which are built on Fleetbase which can 
 # 🛣 Roadmap
 
 <ol>
-  <li>Install Flow & System Configuration from Console</li>
   <li>Open Source Extension Repository</li>
   <li>🌎 Internationalize</li>
+  <li>Multiple and Custom Routing Engine's in FleetOps</li>
+  <li>Identity & Access Management (IAM) Extension</li>
   <li>Inventory and Warehouse Management Extension</li>
   <li>Freight Forwarder Quote Parser/ System Extension</li>
 </ol>
