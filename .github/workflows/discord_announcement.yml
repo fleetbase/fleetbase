@@ -1,0 +1,27 @@
+name: Discord Announcement
+
+on:
+  push:
+    branches: [main]
+    tags:
+      - "v*"
+jobs:
+  discord_announcement:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0 # this is required to fetch all tags
+
+      - name: Get tag message
+        id: tag
+        run: echo "::set-output name=message::$(git for-each-ref refs/tags --format='%(contents)' ${{ github.ref }})"
+
+      - name: Send message to Discord
+        uses: tsickert/discord-webhook@v5.3.0
+        with:
+          webhook-url: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          content: "@everyone 📦 New Fleetbase Version ${{ steps.tag.outputs.tag }} Released! 🎉 \n ${{ steps.tag.outputs.message }} \n Version: ${{ steps.tag.outputs.tag }} \n [Release Notes](https://github.com/fleetbase/fleetbase/releases/tag/${{ steps.tag.outputs.tag }})"
+          username: Fleetbase
