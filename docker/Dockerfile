@@ -61,6 +61,9 @@ COPY startup.sh /startup.sh
 # Make sure the script is executable
 RUN chmod +x /startup.sh
 
+# Create unique instance ID
+RUN echo $(cat /proc/sys/kernel/random/uuid) > /.fleetbase
+
 # Set environment
 ARG ENVIRONMENT=production
 ENV APP_ENV=$ENVIRONMENT
