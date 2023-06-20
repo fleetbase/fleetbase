@@ -38,8 +38,9 @@ Each extension in Fleetbase is purposefully engineered to fulfill specific roles
 </p>
 
 <div align="center">
-  <a href="https://www.producthunt.com/posts/fleetbase-alpha" target="_producthunt">🚨 We've just announced our Alpha release on Product Hunt! 🚨</a>
+  <a href="https://www.producthunt.com/posts/fleetbase-alpha" target="_producthunt">🚀 We've just announced our Alpha release on Product Hunt! 🚀</a>
   <p>Check Fleetbase out on ProductHunt, and support with a Upvote!</p>
+  <a href="https://www.producthunt.com/posts/fleetbase-alpha?utm_source=badge-featured&utm_medium=badge&utm_souce=badge-fleetbase&#0045;alpha" target="_blank"><img src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=399731&theme=light" alt="Fleetbase&#0032;&#0040;Alpha&#0041; - The&#0032;open&#0032;source&#0032;OnFleet&#0032;alternative | Product Hunt" style="width: 250px; height: 54px;" width="250" height="54" /></a>
 </div>
   
 
