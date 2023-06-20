@@ -34,8 +34,14 @@ Fleetbase is an open-source platform designed for the efficient management and o
 Each extension in Fleetbase is purposefully engineered to fulfill specific roles within the supply chain and logistics ecosystem. Users have the freedom to create their own extensions, expanding the platform's ecosystem and ensuring its adaptability to various use cases. This extensible nature keeps Fleetbase at the forefront of addressing diverse logistical and supply chain needs now and in the future.
 
 <p align="center" dir="auto">
-      <img src="https://github.com/fleetbase/fleetbase/assets/816371/deef79fa-e30c-4ce9-8a04-0dee990ffd9d" alt="Fleetbase Console" width="600" style="max-width: 100%;" />
-    </p>
+  <img src="https://github.com/fleetbase/fleetbase/assets/816371/deef79fa-e30c-4ce9-8a04-0dee990ffd9d" alt="Fleetbase Console" width="600" style="max-width: 100%;" />
+</p>
+
+<div align="center">
+  <a href="https://www.producthunt.com/posts/fleetbase-alpha" target="_producthunt">🚨 We've just announced our Alpha release on Product Hunt! 🚨</a>
+  <p>Check Fleetbase out on ProductHunt, and support with a Upvote!</p>
+</div>
+  
 
 # 📖 Table of contents
 
