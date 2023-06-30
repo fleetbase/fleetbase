@@ -2,11 +2,14 @@
     "name": "laravel/laravel",
     "type": "project",
     "description": "The Laravel Framework.",
-    "keywords": ["framework", "laravel"],
+    "keywords": [
+        "framework",
+        "laravel"
+    ],
     "license": "MIT",
     "require": {
         "php": "^7.3|^8.0",
-        "fleetbase/core-api": "^1.1.0-alpha",
+        "fleetbase/core-api": "^1.1.1-alpha",
         "fleetbase/fleetops-api": "^1.0.5-alpha",
         "fleetbase/storefront-api": "^1.0.4-alpha",
         "fruitcake/laravel-cors": "^2.0",
