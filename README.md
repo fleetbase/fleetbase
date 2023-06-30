@@ -5,7 +5,7 @@
       </a>
     </p>
     <p align="center" dir="auto">
-      Open Source Logistics & Supply Chain Platform and Infrastructure
+      Open Source Modular Logistics Platform
       <br>
       <a href="https://fleetbase.github.io/guides" rel="nofollow">Fleetbase Documentation →</a>
       <br>
@@ -29,9 +29,9 @@
 
 # ⭐️ Overview
 
-Fleetbase is an open-source platform designed for the efficient management and orchestration of logistics and supply chain operations. It serves as both a powerful operational tool for businesses and a flexible foundation for developers. The platform's core is built around a collection of "extensions," which create a customizable framework capable of meeting a wide range of supply chain and logistics requirements.
+Fleetbase is an open-source modular platform designed for the efficient management and orchestration of logistics operations. It serves as both a powerful operational tool for businesses and a flexible foundation for developers. The platform's core is built around a collection of "extensions," which create a customizable framework capable of meeting a wide range of supply chain and logistics requirements.
 
-Each extension in Fleetbase is purposefully engineered to fulfill specific roles within the supply chain and logistics ecosystem. Users have the freedom to create their own extensions, expanding the platform's ecosystem and ensuring its adaptability to various use cases. This extensible nature keeps Fleetbase at the forefront of addressing diverse logistical and supply chain needs now and in the future.
+Each extension in Fleetbase is purposefully engineered to fulfill specific roles within the logistics ecosystem. Users have the freedom to create their own extensions, expanding the platform's ecosystem and ensuring its adaptability to various use cases. This extensible nature keeps Fleetbase at the forefront of addressing diverse logistical and supply chain needs now and in the future.
 
 <p align="center" dir="auto">
   <img src="https://github.com/fleetbase/fleetbase/assets/816371/deef79fa-e30c-4ce9-8a04-0dee990ffd9d" alt="Fleetbase Console" width="600" style="max-width: 100%;" />
@@ -210,6 +210,25 @@ Use Docker Compose to build and run the necessary containers. In the root direct
   <li>If you find any bugs or unexpected issues please <a href="https://github.com/fleetbase/fleetbase/issues/new/choose">post an issue</a> to the repo or join our <a href="https://discord.gg/MJQgxHwN" target="_discord" alt="Fleetbase Discord">Discord</a>.
   </li>
 </ol>
+
+### Troubleshoot
+
+Have an issue with the installation, try a few of these workarounds.
+
+<ul>
+  <li><strong>Installer not working?</strong> <br>If you encounter issues with the web based installer use this workaround to get going.
+  <ol>
+    <li>Login to the application container. 
+      <pre class="bash">docker exec -ti fleetbase-application-1 bash</pre>
+    </li>
+    <li>Manually run the database setup and migrations.
+      <pre class="bash">php artisan mysql:createdb
+php artisan migrate:refresh --seed</pre>
+      </li>
+    <li>After completing these steps you should be able to proceed with account creation.</li>
+  </ol>
+  </li>
+</ul>
 
 ### Access Fleetbase
 
