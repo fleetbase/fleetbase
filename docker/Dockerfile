@@ -28,9 +28,7 @@ RUN sed -e 's/^expose_php.*/expose_php = Off/' "$PHP_INI_DIR/php.ini-production"
     -e 's/^memory_limit.*/memory_limit = 600M/' "$PHP_INI_DIR/php.ini"
 
 # Install ssm-parent
-RUN curl -L https://github.com/springload/ssm-parent/releases/download/v1.4.3/ssm-parent_1.4.3_linux_amd64.tar.gz > /tmp/ssm-parent.tar.gz \
-    && tar -C /sbin -xvf /tmp/ssm-parent.tar.gz ssm-parent \
-    && rm /tmp/ssm-parent.tar.gz
+COPY --from=ghcr.io/springload/ssm-parent:1.8 /usr/bin/ssm-parent /sbin/ssm-parent
 
 # Install Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
