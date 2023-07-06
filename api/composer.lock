@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "632864030c6e1fc915538089dbdbaad5",
+    "content-hash": "856cd878eb92ddb0b3fb98d8e1069ce8",
     "packages": [
         {
             "name": "aloha/twilio",
@@ -192,16 +192,16 @@
         },
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.274.1",
+            "version": "3.275.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "92907084c3b71859672ef6399194ef9c1f772b1a"
+                "reference": "bbdf8e8d5df0b44ee83d5a751f316fc9f9dd2849"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/92907084c3b71859672ef6399194ef9c1f772b1a",
-                "reference": "92907084c3b71859672ef6399194ef9c1f772b1a",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/bbdf8e8d5df0b44ee83d5a751f316fc9f9dd2849",
+                "reference": "bbdf8e8d5df0b44ee83d5a751f316fc9f9dd2849",
                 "shasum": ""
             },
             "require": {
@@ -281,9 +281,9 @@
             "support": {
                 "forum": "https://forums.aws.amazon.com/forum.jspa?forumID=80",
                 "issues": "https://github.com/aws/aws-sdk-php/issues",
-                "source": "https://github.com/aws/aws-sdk-php/tree/3.274.1"
+                "source": "https://github.com/aws/aws-sdk-php/tree/3.275.3"
             },
-            "time": "2023-06-28T18:21:54+00:00"
+            "time": "2023-07-05T18:22:08+00:00"
         },
         {
             "name": "aws/aws-sdk-php-laravel",
@@ -2002,16 +2002,16 @@
         },
         {
             "name": "fleetbase/core-api",
-            "version": "1.1.1-alpha",
+            "version": "1.1.2-alpha",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fleetbase/core-api.git",
-                "reference": "72853c222d3b1e5fa2fdaffc094dab8eb5c2bd18"
+                "reference": "d0715ae4919bde139cf36714a20ee6bca164e61c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fleetbase/core-api/zipball/72853c222d3b1e5fa2fdaffc094dab8eb5c2bd18",
-                "reference": "72853c222d3b1e5fa2fdaffc094dab8eb5c2bd18",
+                "url": "https://api.github.com/repos/fleetbase/core-api/zipball/d0715ae4919bde139cf36714a20ee6bca164e61c",
+                "reference": "d0715ae4919bde139cf36714a20ee6bca164e61c",
                 "shasum": ""
             },
             "require": {
@@ -2085,22 +2085,22 @@
             ],
             "support": {
                 "issues": "https://github.com/fleetbase/core-api/issues",
-                "source": "https://github.com/fleetbase/core-api/tree/v1.1.1-alpha"
+                "source": "https://github.com/fleetbase/core-api/tree/v1.1.2-alpha"
             },
-            "time": "2023-06-29T07:56:38+00:00"
+            "time": "2023-07-06T13:57:49+00:00"
         },
         {
             "name": "fleetbase/fleetops-api",
-            "version": "1.0.5-alpha",
+            "version": "1.0.6-alpha",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fleetbase/fleetops-api.git",
-                "reference": "82deaeaa8f185dc4a9760e8de279ad0606c13c2a"
+                "reference": "02238ff3be00b0329b1cb99b1bea844b0936a523"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fleetbase/fleetops-api/zipball/82deaeaa8f185dc4a9760e8de279ad0606c13c2a",
-                "reference": "82deaeaa8f185dc4a9760e8de279ad0606c13c2a",
+                "url": "https://api.github.com/repos/fleetbase/fleetops-api/zipball/02238ff3be00b0329b1cb99b1bea844b0936a523",
+                "reference": "02238ff3be00b0329b1cb99b1bea844b0936a523",
                 "shasum": ""
             },
             "require": {
@@ -2155,28 +2155,29 @@
             "description": "FleetOps TMS and Last-Mile Operations System",
             "keywords": [
                 "delivery management",
+                "fleetbase-extension",
                 "fleetops",
                 "last-mile",
                 "tms"
             ],
             "support": {
                 "issues": "https://github.com/fleetbase/fleetops-api/issues",
-                "source": "https://github.com/fleetbase/fleetops-api/tree/v1.0.5-alpha"
+                "source": "https://github.com/fleetbase/fleetops-api/tree/v1.0.6-alpha"
             },
-            "time": "2023-06-19T09:18:30+00:00"
+            "time": "2023-07-06T13:58:31+00:00"
         },
         {
             "name": "fleetbase/storefront-api",
-            "version": "1.0.4-alpha",
+            "version": "1.0.5-alpha",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fleetbase/storefront-api.git",
-                "reference": "03e7a5bf751fadc9b2a8c2b12b23d65e1485074c"
+                "reference": "59ceacc658a919303c6d4092c5572f41fd131d54"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fleetbase/storefront-api/zipball/03e7a5bf751fadc9b2a8c2b12b23d65e1485074c",
-                "reference": "03e7a5bf751fadc9b2a8c2b12b23d65e1485074c",
+                "url": "https://api.github.com/repos/fleetbase/storefront-api/zipball/59ceacc658a919303c6d4092c5572f41fd131d54",
+                "reference": "59ceacc658a919303c6d4092c5572f41fd131d54",
                 "shasum": ""
             },
             "require": {
@@ -2233,15 +2234,16 @@
             "description": "Headless Commerce API for Storefront Fleetbase Extension.",
             "keywords": [
                 "e-commerce",
+                "fleetbase-extension",
                 "headless commerce",
                 "marketplace",
                 "storefront"
             ],
             "support": {
                 "issues": "https://github.com/fleetbase/storefront-api/issues",
-                "source": "https://github.com/fleetbase/storefront-api/tree/v1.0.4-alpha"
+                "source": "https://github.com/fleetbase/storefront-api/tree/v1.0.5-alpha"
             },
-            "time": "2023-06-14T08:24:27+00:00"
+            "time": "2023-07-06T14:02:36+00:00"
         },
         {
             "name": "fruitcake/laravel-cors",
@@ -6118,16 +6120,16 @@
         },
         {
             "name": "nesbot/carbon",
-            "version": "2.67.0",
+            "version": "2.68.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/briannesbitt/Carbon.git",
-                "reference": "c1001b3bc75039b07f38a79db5237c4c529e04c8"
+                "reference": "4f991ed2a403c85efbc4f23eb4030063fdbe01da"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/briannesbitt/Carbon/zipball/c1001b3bc75039b07f38a79db5237c4c529e04c8",
-                "reference": "c1001b3bc75039b07f38a79db5237c4c529e04c8",
+                "url": "https://api.github.com/repos/briannesbitt/Carbon/zipball/4f991ed2a403c85efbc4f23eb4030063fdbe01da",
+                "reference": "4f991ed2a403c85efbc4f23eb4030063fdbe01da",
                 "shasum": ""
             },
             "require": {
@@ -6216,7 +6218,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2023-05-25T22:09:47+00:00"
+            "time": "2023-06-20T18:29:04+00:00"
         },
         {
             "name": "nette/caching",
@@ -9156,16 +9158,16 @@
         },
         {
             "name": "spatie/laravel-permission",
-            "version": "5.10.1",
+            "version": "5.10.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spatie/laravel-permission.git",
-                "reference": "d08b3ffc5870cce4a47a39f22174947b33c191ae"
+                "reference": "671e46e079cbd4990a98427daaa09f4977b57ca9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spatie/laravel-permission/zipball/d08b3ffc5870cce4a47a39f22174947b33c191ae",
-                "reference": "d08b3ffc5870cce4a47a39f22174947b33c191ae",
+                "url": "https://api.github.com/repos/spatie/laravel-permission/zipball/671e46e079cbd4990a98427daaa09f4977b57ca9",
+                "reference": "671e46e079cbd4990a98427daaa09f4977b57ca9",
                 "shasum": ""
             },
             "require": {
@@ -9226,7 +9228,7 @@
             ],
             "support": {
                 "issues": "https://github.com/spatie/laravel-permission/issues",
-                "source": "https://github.com/spatie/laravel-permission/tree/5.10.1"
+                "source": "https://github.com/spatie/laravel-permission/tree/5.10.2"
             },
             "funding": [
                 {
@@ -9234,7 +9236,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2023-04-12T17:08:32+00:00"
+            "time": "2023-07-04T13:38:13+00:00"
         },
         {
             "name": "spatie/laravel-responsecache",
