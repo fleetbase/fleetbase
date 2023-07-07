@@ -7,24 +7,53 @@ on:
       - 'v*'
   pull_request:
     branches: [ main ]
+env:
+  REGISTRY: ghcr.io/fleetbase
 
 jobs:
   build:
     name: Build and Start Docker Services
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
 
     steps:
     - name: Checkout Code
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
       with:
         submodules: recursive
 
-    - name: Install Docker Compose
-      run: |
-        sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-        sudo chmod +x /usr/local/bin/docker-compose
-        docker-compose --version
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v2
 
-    - name: Build and Start Docker Services
-      run: |
-        docker-compose up -d --build
+    - name: Log in to the Container registry
+      uses: docker/login-action@v2
+      with:
+        registry: ${{ env.REGISTRY }}
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Extract metadata (tags, labels) for Docker
+      id: meta
+      uses: docker/metadata-action@v4
+      with:
+        # this will be replaced by docker buildx bake with an empty line
+        # to get just tags without the image name
+        images: |
+          willbereplaced
+        tags: |
+          type=semver,pattern={{version}}
+          type=semver,pattern={{major}}.{{minor}}
+
+    - name: Build and release
+      if: startsWith(github.ref, 'refs/tags/') && success()
+      env:
+        # get tags from the json object and pass as a string-encoded list
+        tags: "${{ toJSON(fromJSON(steps.meta.outputs.json).tags) }}"
+      uses: docker/bake-action@v2
+      with:
+        push: true
+        files: |
+          ./docker-bake.hcl
+          ${{ steps.meta.outputs.bake-file }}
