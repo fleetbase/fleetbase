@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "856cd878eb92ddb0b3fb98d8e1069ce8",
+    "content-hash": "68fc1b07830103e7db4c99e8b79b79f0",
     "packages": [
         {
             "name": "aloha/twilio",
@@ -192,16 +192,16 @@
         },
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.275.3",
+            "version": "3.275.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "bbdf8e8d5df0b44ee83d5a751f316fc9f9dd2849"
+                "reference": "d46961b82e857f77059c0c78160719ecb26f6cc6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/bbdf8e8d5df0b44ee83d5a751f316fc9f9dd2849",
-                "reference": "bbdf8e8d5df0b44ee83d5a751f316fc9f9dd2849",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/d46961b82e857f77059c0c78160719ecb26f6cc6",
+                "reference": "d46961b82e857f77059c0c78160719ecb26f6cc6",
                 "shasum": ""
             },
             "require": {
@@ -281,9 +281,9 @@
             "support": {
                 "forum": "https://forums.aws.amazon.com/forum.jspa?forumID=80",
                 "issues": "https://github.com/aws/aws-sdk-php/issues",
-                "source": "https://github.com/aws/aws-sdk-php/tree/3.275.3"
+                "source": "https://github.com/aws/aws-sdk-php/tree/3.275.5"
             },
-            "time": "2023-07-05T18:22:08+00:00"
+            "time": "2023-07-07T18:20:11+00:00"
         },
         {
             "name": "aws/aws-sdk-php-laravel",
@@ -2002,16 +2002,16 @@
         },
         {
             "name": "fleetbase/core-api",
-            "version": "1.1.2-alpha",
+            "version": "1.1.3-alpha",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fleetbase/core-api.git",
-                "reference": "d0715ae4919bde139cf36714a20ee6bca164e61c"
+                "reference": "6551b4aa6800af5c27ab48c490503ca7c3e367d1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fleetbase/core-api/zipball/d0715ae4919bde139cf36714a20ee6bca164e61c",
-                "reference": "d0715ae4919bde139cf36714a20ee6bca164e61c",
+                "url": "https://api.github.com/repos/fleetbase/core-api/zipball/6551b4aa6800af5c27ab48c490503ca7c3e367d1",
+                "reference": "6551b4aa6800af5c27ab48c490503ca7c3e367d1",
                 "shasum": ""
             },
             "require": {
@@ -2085,29 +2085,29 @@
             ],
             "support": {
                 "issues": "https://github.com/fleetbase/core-api/issues",
-                "source": "https://github.com/fleetbase/core-api/tree/v1.1.2-alpha"
+                "source": "https://github.com/fleetbase/core-api/tree/v1.1.3-alpha"
             },
-            "time": "2023-07-06T13:57:49+00:00"
+            "time": "2023-07-10T12:45:12+00:00"
         },
         {
             "name": "fleetbase/fleetops-api",
-            "version": "1.0.6-alpha",
+            "version": "1.0.7-alpha",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fleetbase/fleetops-api.git",
-                "reference": "02238ff3be00b0329b1cb99b1bea844b0936a523"
+                "reference": "0b5142bf9f32ba56b6d7c789c34ee3ba35021842"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fleetbase/fleetops-api/zipball/02238ff3be00b0329b1cb99b1bea844b0936a523",
-                "reference": "02238ff3be00b0329b1cb99b1bea844b0936a523",
+                "url": "https://api.github.com/repos/fleetbase/fleetops-api/zipball/0b5142bf9f32ba56b6d7c789c34ee3ba35021842",
+                "reference": "0b5142bf9f32ba56b6d7c789c34ee3ba35021842",
                 "shasum": ""
             },
             "require": {
                 "barryvdh/laravel-dompdf": "^2.0",
                 "brick/geo": "0.7.2",
                 "cknow/laravel-money": "^7.1",
-                "fleetbase/core-api": "^1.0.9-alpha",
+                "fleetbase/core-api": "^1.1.3-alpha",
                 "geocoder-php/google-maps-places-provider": "^1.4",
                 "giggsey/libphonenumber-for-php": "^8.13",
                 "league/geotools": "^1.1.0",
@@ -2162,27 +2162,27 @@
             ],
             "support": {
                 "issues": "https://github.com/fleetbase/fleetops-api/issues",
-                "source": "https://github.com/fleetbase/fleetops-api/tree/v1.0.6-alpha"
+                "source": "https://github.com/fleetbase/fleetops-api/tree/v1.0.7-alpha"
             },
-            "time": "2023-07-06T13:58:31+00:00"
+            "time": "2023-07-10T12:48:47+00:00"
         },
         {
             "name": "fleetbase/storefront-api",
-            "version": "1.0.5-alpha",
+            "version": "1.0.6-alpha",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fleetbase/storefront-api.git",
-                "reference": "59ceacc658a919303c6d4092c5572f41fd131d54"
+                "reference": "fd95411375f886871c8af1517493bcefb1116b05"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fleetbase/storefront-api/zipball/59ceacc658a919303c6d4092c5572f41fd131d54",
-                "reference": "59ceacc658a919303c6d4092c5572f41fd131d54",
+                "url": "https://api.github.com/repos/fleetbase/storefront-api/zipball/fd95411375f886871c8af1517493bcefb1116b05",
+                "reference": "fd95411375f886871c8af1517493bcefb1116b05",
                 "shasum": ""
             },
             "require": {
-                "fleetbase/core-api": "^1.1.0-alpha",
-                "fleetbase/fleetops-api": "^1.0.4-alpha",
+                "fleetbase/core-api": "^1.1.3-alpha",
+                "fleetbase/fleetops-api": "^1.0.7-alpha",
                 "geocoder-php/google-maps-places-provider": "^1.4",
                 "laravel-notification-channels/apn": "^3.8",
                 "laravel-notification-channels/fcm": "^2.7",
@@ -2241,9 +2241,9 @@
             ],
             "support": {
                 "issues": "https://github.com/fleetbase/storefront-api/issues",
-                "source": "https://github.com/fleetbase/storefront-api/tree/v1.0.5-alpha"
+                "source": "https://github.com/fleetbase/storefront-api/tree/v1.0.6-alpha"
             },
-            "time": "2023-07-06T14:02:36+00:00"
+            "time": "2023-07-10T12:50:48+00:00"
         },
         {
             "name": "fruitcake/laravel-cors",
@@ -2607,16 +2607,16 @@
         },
         {
             "name": "geocoder-php/google-maps-places-provider",
-            "version": "1.4.0",
+            "version": "1.4.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/geocoder-php/google-maps-places-provider.git",
-                "reference": "4d8b360119e924fb357f30d2e141621499e2c803"
+                "reference": "9ef702663c80c85bbb4b51bbf10566ced26ddb62"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/geocoder-php/google-maps-places-provider/zipball/4d8b360119e924fb357f30d2e141621499e2c803",
-                "reference": "4d8b360119e924fb357f30d2e141621499e2c803",
+                "url": "https://api.github.com/repos/geocoder-php/google-maps-places-provider/zipball/9ef702663c80c85bbb4b51bbf10566ced26ddb62",
+                "reference": "9ef702663c80c85bbb4b51bbf10566ced26ddb62",
                 "shasum": ""
             },
             "require": {
@@ -2660,9 +2660,9 @@
             "description": "Geocoder Google Maps Places adapter",
             "homepage": "http://geocoder-php.org/Geocoder/",
             "support": {
-                "source": "https://github.com/geocoder-php/google-maps-places-provider/tree/1.4.0"
+                "source": "https://github.com/geocoder-php/google-maps-places-provider/tree/1.4.1"
             },
-            "time": "2022-07-30T12:09:30+00:00"
+            "time": "2023-07-09T14:05:05+00:00"
         },
         {
             "name": "geocoder-php/google-maps-provider",
@@ -2909,16 +2909,16 @@
         },
         {
             "name": "google/cloud-core",
-            "version": "v1.52.0",
+            "version": "v1.52.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/googleapis/google-cloud-php-core.git",
-                "reference": "bd87e418923e0d836c7e754d82e66bc0b79964ab"
+                "reference": "8214910f79b5508d4cd1cd48f39d7970443071d5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/googleapis/google-cloud-php-core/zipball/bd87e418923e0d836c7e754d82e66bc0b79964ab",
-                "reference": "bd87e418923e0d836c7e754d82e66bc0b79964ab",
+                "url": "https://api.github.com/repos/googleapis/google-cloud-php-core/zipball/8214910f79b5508d4cd1cd48f39d7970443071d5",
+                "reference": "8214910f79b5508d4cd1cd48f39d7970443071d5",
                 "shasum": ""
             },
             "require": {
@@ -2934,7 +2934,7 @@
             "require-dev": {
                 "erusev/parsedown": "^1.6",
                 "google/cloud-common-protos": "^0.4",
-                "google/gax": "^1.9",
+                "google/gax": "^1.19.1",
                 "opis/closure": "^3",
                 "phpdocumentor/reflection": "^5.0",
                 "phpspec/prophecy-phpunit": "^2.0",
@@ -2968,22 +2968,22 @@
             ],
             "description": "Google Cloud PHP shared dependency, providing functionality useful to all components.",
             "support": {
-                "source": "https://github.com/googleapis/google-cloud-php-core/tree/v1.52.0"
+                "source": "https://github.com/googleapis/google-cloud-php-core/tree/v1.52.1"
             },
-            "time": "2023-06-21T21:05:25+00:00"
+            "time": "2023-07-07T20:46:38+00:00"
         },
         {
             "name": "google/cloud-storage",
-            "version": "v1.32.0",
+            "version": "v1.33.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/googleapis/google-cloud-php-storage.git",
-                "reference": "2dd5cee0da51e94bcf39c0af9cefd0ec6b931685"
+                "reference": "05ae33620feebe1107756b59fe0329cace3b5e13"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/googleapis/google-cloud-php-storage/zipball/2dd5cee0da51e94bcf39c0af9cefd0ec6b931685",
-                "reference": "2dd5cee0da51e94bcf39c0af9cefd0ec6b931685",
+                "url": "https://api.github.com/repos/googleapis/google-cloud-php-storage/zipball/05ae33620feebe1107756b59fe0329cace3b5e13",
+                "reference": "05ae33620feebe1107756b59fe0329cace3b5e13",
                 "shasum": ""
             },
             "require": {
@@ -3025,9 +3025,9 @@
             ],
             "description": "Cloud Storage Client for PHP",
             "support": {
-                "source": "https://github.com/googleapis/google-cloud-php-storage/tree/v1.32.0"
+                "source": "https://github.com/googleapis/google-cloud-php-storage/tree/v1.33.0"
             },
-            "time": "2023-06-21T21:05:25+00:00"
+            "time": "2023-07-07T20:46:38+00:00"
         },
         {
             "name": "google/crc32",
@@ -15073,16 +15073,16 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "9.6.9",
+            "version": "9.6.10",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "a9aceaf20a682aeacf28d582654a1670d8826778"
+                "reference": "a6d351645c3fe5a30f5e86be6577d946af65a328"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/a9aceaf20a682aeacf28d582654a1670d8826778",
-                "reference": "a9aceaf20a682aeacf28d582654a1670d8826778",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/a6d351645c3fe5a30f5e86be6577d946af65a328",
+                "reference": "a6d351645c3fe5a30f5e86be6577d946af65a328",
                 "shasum": ""
             },
             "require": {
@@ -15156,7 +15156,7 @@
             "support": {
                 "issues": "https://github.com/sebastianbergmann/phpunit/issues",
                 "security": "https://github.com/sebastianbergmann/phpunit/security/policy",
-                "source": "https://github.com/sebastianbergmann/phpunit/tree/9.6.9"
+                "source": "https://github.com/sebastianbergmann/phpunit/tree/9.6.10"
             },
             "funding": [
                 {
@@ -15172,7 +15172,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2023-06-11T06:13:56+00:00"
+            "time": "2023-07-10T04:04:23+00:00"
         },
         {
             "name": "sebastian/cli-parser",
