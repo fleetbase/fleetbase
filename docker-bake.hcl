@@ -4,7 +4,7 @@ variable "tags" { default = "[]" }
 target "docker-metadata-action" {}
 
 group "default" {
-  targets = ["app", "app-httpd", "socketcluster"]
+  targets = ["app", "app-httpd"]
 }
 
 target "app" {
@@ -51,20 +51,6 @@ target "app-httpd" {
 
   tags = notequal("", REGISTRY) ? formatlist(
     "${REGISTRY}/fleetbase-app-httpd:%s",
-    concat(["latest"], jsondecode(replace(tags, "willbereplaced:", "")))
-  ) : []
-}
-target "socketcluster" {
-  inherits = ["docker-metadata-action"]
-
-  context    = "./"
-  dockerfile = "socket/Dockerfile"
-  platforms = [
-    "linux/amd64",
-  ]
-
-  tags = notequal("", REGISTRY) ? formatlist(
-    "${REGISTRY}/fleetbase-socketcluster:%s",
     concat(["latest"], jsondecode(replace(tags, "willbereplaced:", "")))
   ) : []
 }
