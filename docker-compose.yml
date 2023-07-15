@@ -15,11 +15,7 @@ services:
       MYSQL_DATABASE: "fleetbase"
 
   socket:
-    build:
-      context: .
-      dockerfile: socket/Dockerfile
-      args:
-          ENVIRONMENT: dev
+    image: socketcluster/socketcluster:v17.4.0
     ports:
       - "38000:8000"
     environment:
