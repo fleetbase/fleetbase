@@ -96,11 +96,6 @@ CMD ["/startup.sh"]
 # Events stage
 FROM base as events
 ENTRYPOINT ["/sbin/ssm-parent", "-c", ".ssm-parent.yaml", "run", "--", "docker-php-entrypoint"]
-CMD ["php", "artisan", "queue:work", "events"]
-
-# Jobs stage
-FROM base as jobs
-ENTRYPOINT ["/sbin/ssm-parent", "-c", ".ssm-parent.yaml", "run", "--", "docker-php-entrypoint"]
 CMD ["php", "artisan", "queue:work", "sqs"]
 
 # Application stage
