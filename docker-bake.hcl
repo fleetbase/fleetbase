@@ -4,7 +4,7 @@ variable "tags" { default = "[]" }
 target "docker-metadata-action" {}
 
 group "default" {
-  targets = ["app"]
+  targets = ["app", "app-httpd", "socketcluster"]
 }
 
 target "app" {
@@ -36,6 +36,35 @@ target "app" {
     // So in the end we'll get something like ["latest". "1.0". "1.0.0"]
     // Then formatlist will prepend the registry and image name to each of
     // the tags
+    concat(["latest"], jsondecode(replace(tags, "willbereplaced:", "")))
+  ) : []
+}
+
+target "app-httpd" {
+  inherits = ["docker-metadata-action"]
+
+  context    = "./"
+  dockerfile = "docker/httpd/Dockerfile"
+  platforms = [
+    "linux/amd64",
+  ]
+
+  tags = notequal("", REGISTRY) ? formatlist(
+    "${REGISTRY}/fleetbase-app-httpd:%s",
+    concat(["latest"], jsondecode(replace(tags, "willbereplaced:", "")))
+  ) : []
+}
+target "socketcluster" {
+  inherits = ["docker-metadata-action"]
+
+  context    = "./"
+  dockerfile = "socket/Dockerfile"
+  platforms = [
+    "linux/amd64",
+  ]
+
+  tags = notequal("", REGISTRY) ? formatlist(
+    "${REGISTRY}/fleetbase-socketcluster:%s",
     concat(["latest"], jsondecode(replace(tags, "willbereplaced:", "")))
   ) : []
 }
