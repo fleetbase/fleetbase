@@ -1,5 +1,7 @@
 # alpine is more secure
 FROM nginx:stable-alpine
 
-COPY docker/httpd/vhost.conf /etc/nginx/conf.d/default.conf
+ENV NGINX_APPLICATION_HOSTNAME application
+
+COPY docker/httpd/vhost.conf /etc/nginx/templates/default.conf.template
 COPY api/public/ /var/www/html/api/public/
