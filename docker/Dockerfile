@@ -101,5 +101,4 @@ CMD ["php", "artisan", "queue:work", "sqs"]
 # Application stage
 FROM base as app
 ENTRYPOINT ["/sbin/ssm-parent", "-c", ".ssm-parent.yaml", "run", "--", "docker-php-entrypoint"]
-EXPOSE 80
-CMD ["/startup.sh"]
+CMD ["php-fpm"]
