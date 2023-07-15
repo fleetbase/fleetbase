@@ -17,7 +17,7 @@ target "app" {
 
   // use matrix strategy to build several targets at once
   matrix = {
-    tgt = ["app", "scheduler", "jobs", "events"]
+    tgt = ["app", "scheduler", "events"]
   }
   context = "./"
   // set the target from matrix
