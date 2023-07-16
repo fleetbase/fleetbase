@@ -90,8 +90,7 @@ CMD ["go-crond", "--verbose", "--no-auto", "root:./crontab"]
 # Application dev stage
 FROM base as app-dev
 ENTRYPOINT ["docker-php-entrypoint"]
-EXPOSE 80
-CMD ["/startup.sh"]
+CMD ["php-fpm"]
 
 # Events stage
 FROM base as events
