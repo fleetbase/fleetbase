@@ -50,15 +50,6 @@ RUN composer dumpautoload
 USER root
 WORKDIR /
 
-# Copy nginx config
-COPY nginx.conf /etc/nginx/sites-enabled/default
-
-# Copy the startup script into the Docker image
-COPY startup.sh /startup.sh
-
-# Make sure the script is executable
-RUN chmod +x /startup.sh
-
 # Create unique instance ID
 RUN echo $(cat /proc/sys/kernel/random/uuid) > /.fleetbase
 
