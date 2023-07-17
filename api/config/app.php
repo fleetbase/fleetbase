@@ -165,6 +165,7 @@ return [
         /*
          * Package Service Providers...
          */
+        Fleetbase\Providers\CoreServiceProvider::class,
 
         /*
          * Application Service Providers...
