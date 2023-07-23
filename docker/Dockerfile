@@ -50,17 +50,12 @@ RUN composer dumpautoload
 USER root
 WORKDIR /
 
-# Copy nginx config
-COPY nginx.conf /etc/nginx/sites-enabled/default
-
-# Copy the startup script into the Docker image
-COPY startup.sh /startup.sh
-
-# Make sure the script is executable
-RUN chmod +x /startup.sh
-
 # Create unique instance ID
 RUN echo $(cat /proc/sys/kernel/random/uuid) > /.fleetbase
+
+# Setup composer auth if applicable
+RUN mkdir -p ~/.composer
+COPY composer-auth.jso[n] ~/.composer/auth.json
 
 # Set environment
 ARG ENVIRONMENT=production
@@ -90,21 +85,14 @@ CMD ["go-crond", "--verbose", "--no-auto", "root:./crontab"]
 # Application dev stage
 FROM base as app-dev
 ENTRYPOINT ["docker-php-entrypoint"]
-EXPOSE 80
-CMD ["/startup.sh"]
+CMD ["php-fpm"]
 
 # Events stage
 FROM base as events
-ENTRYPOINT ["/sbin/ssm-parent", "-c", ".ssm-parent.yaml", "run", "--", "docker-php-entrypoint"]
-CMD ["php", "artisan", "queue:work", "events"]
-
-# Jobs stage
-FROM base as jobs
 ENTRYPOINT ["/sbin/ssm-parent", "-c", ".ssm-parent.yaml", "run", "--", "docker-php-entrypoint"]
 CMD ["php", "artisan", "queue:work", "sqs"]
 
 # Application stage
 FROM base as app
 ENTRYPOINT ["/sbin/ssm-parent", "-c", ".ssm-parent.yaml", "run", "--", "docker-php-entrypoint"]
-EXPOSE 80
-CMD ["/startup.sh"]
+CMD ["php-fpm"]

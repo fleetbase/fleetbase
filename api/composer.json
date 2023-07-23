@@ -2,14 +2,16 @@
     "name": "laravel/laravel",
     "type": "project",
     "description": "The Laravel Framework.",
-    "keywords": ["framework", "laravel"],
+    "keywords": [
+        "framework",
+        "laravel"
+    ],
     "license": "MIT",
     "require": {
         "php": "^7.3|^8.0",
-        "fleetbase/core-api": "^1.1.1-alpha",
-        "fleetbase/fleetops-api": "^1.0.5-alpha",
-        "fleetbase/storefront-api": "^1.0.4-alpha",
-        "fleetbase/billing-api": "^0.0.1",
+        "fleetbase/core-api": "^1.1.6-alpha",
+        "fleetbase/fleetops-api": "^1.0.9-alpha",
+        "fleetbase/storefront-api": "^1.0.8-alpha",
         "fruitcake/laravel-cors": "^2.0",
         "guzzlehttp/guzzle": "^7.0.1",
         "laravel/framework": "^8.75",
@@ -31,24 +33,6 @@
         "nunomaduro/collision": "^5.10",
         "phpunit/phpunit": "^9.5.10"
     },
-    "repositories": [
-        {
-            "type": "path",
-            "url": "../packages/core-api"
-        },
-        {
-            "type": "path",
-            "url": "../packages/fleetops-api"
-        },
-        {
-            "type": "path",
-            "url": "../packages/storefront-api"
-        },
-        {
-            "type": "path",
-            "url": "../packages/billing-api"
-        }
-    ],
     "autoload": {
         "psr-4": {
             "App\\": "app/",
@@ -62,15 +46,38 @@
         }
     },
     "scripts": {
-        "post-autoload-dump": ["Illuminate\\Foundation\\ComposerScripts::postAutoloadDump", "@php artisan package:discover --ansi"],
-        "post-update-cmd": ["@php artisan vendor:publish --tag=laravel-assets --ansi --force"],
-        "post-root-package-install": ["@php -r \"file_exists('.env') || copy('.env.example', '.env');\""],
-        "post-create-project-cmd": ["@php artisan key:generate --ansi"],
-        "clear-logs": ["rm -rf storage/logs/*.log", "composer dump-autoload", "chmod -R 777 storage", "chmod -R 777 bootstrap/cache", "chmod -R 777 resources"],
-        "clean-logs": ["composer run-script clear-logs"],
-        "dock": ["docker exec -it fleetbase_os_application_1 /usr/bin/tmux -u new"],
-        "dock-server": ["docker exec -it fleetbase_os_httpd_1 /bin/sh"],
-        "tunnel": ["ngrok http --region=ap --hostname=fleetbase.ap.ngrok.io 8000"]
+        "post-autoload-dump": [
+            "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
+            "@php artisan package:discover --ansi"
+        ],
+        "post-update-cmd": [
+            "@php artisan vendor:publish --tag=laravel-assets --ansi --force"
+        ],
+        "post-root-package-install": [
+            "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""
+        ],
+        "post-create-project-cmd": [
+            "@php artisan key:generate --ansi"
+        ],
+        "clear-logs": [
+            "rm -rf storage/logs/*.log",
+            "composer dump-autoload",
+            "chmod -R 777 storage",
+            "chmod -R 777 bootstrap/cache",
+            "chmod -R 777 resources"
+        ],
+        "clean-logs": [
+            "composer run-script clear-logs"
+        ],
+        "dock": [
+            "docker exec -it fleetbase_os_application_1 /usr/bin/tmux -u new"
+        ],
+        "dock-server": [
+            "docker exec -it fleetbase_os_httpd_1 /bin/sh"
+        ],
+        "tunnel": [
+            "ngrok http --region=ap --hostname=fleetbase.ap.ngrok.io 8000"
+        ]
     },
     "extra": {
         "laravel": {
