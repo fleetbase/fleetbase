@@ -1,0 +1,13 @@
+<EmberWormhole @to="sidebar-menu-items">
+    <Layout::Sidebar::Panel @open={{true}} @title="Access Management">
+        <Layout::Sidebar::Item @route="console.iam.home" @icon="home">Dashboard</Layout::Sidebar::Item>
+        <Layout::Sidebar::Item @route="console.iam.users" @icon="id-card">Users</Layout::Sidebar::Item>
+        <Layout::Sidebar::Item @route="console.iam.groups" @icon="building">Groups</Layout::Sidebar::Item>
+        <Layout::Sidebar::Item @route="console.iam.roles" @icon="tag">Roles</Layout::Sidebar::Item>
+        <Layout::Sidebar::Item @route="console.iam.policies" @icon="shield">Policies</Layout::Sidebar::Item>
+    </Layout::Sidebar::Panel>
+</EmberWormhole>
+
+<Layout::Section::Container>
+    {{outlet}}
+</Layout::Section::Container>

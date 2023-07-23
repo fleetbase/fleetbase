@@ -53,6 +53,10 @@ WORKDIR /
 # Create unique instance ID
 RUN echo $(cat /proc/sys/kernel/random/uuid) > /.fleetbase
 
+# Setup composer auth if applicable
+RUN mkdir -p ~/.composer
+COPY composer-auth.jso[n] ~/.composer/auth.json
+
 # Set environment
 ARG ENVIRONMENT=production
 ENV APP_ENV=$ENVIRONMENT
