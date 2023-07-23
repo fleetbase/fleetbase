@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "620f7df1fbbebc2614c57bf7c580c4a8",
+    "content-hash": "e3385c144f1b88363d861cef4eb001ca",
     "packages": [
         {
             "name": "aloha/twilio",
@@ -192,6 +192,18 @@
         },
         {
             "name": "aws/aws-sdk-php",
+<<<<<<< HEAD
+            "version": "3.276.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/aws/aws-sdk-php.git",
+                "reference": "c8b38cfab677a3ec98e3f40bccd1a2bf851a014f"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/c8b38cfab677a3ec98e3f40bccd1a2bf851a014f",
+                "reference": "c8b38cfab677a3ec98e3f40bccd1a2bf851a014f",
+=======
             "version": "3.275.7",
             "source": {
                 "type": "git",
@@ -202,6 +214,7 @@
                 "type": "zip",
                 "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/54dcef3349c81b46c0f5f6e54b5f9bfb5db19903",
                 "reference": "54dcef3349c81b46c0f5f6e54b5f9bfb5db19903",
+>>>>>>> main
                 "shasum": ""
             },
             "require": {
@@ -281,9 +294,15 @@
             "support": {
                 "forum": "https://forums.aws.amazon.com/forum.jspa?forumID=80",
                 "issues": "https://github.com/aws/aws-sdk-php/issues",
+<<<<<<< HEAD
+                "source": "https://github.com/aws/aws-sdk-php/tree/3.276.3"
+            },
+            "time": "2023-07-21T18:30:18+00:00"
+=======
                 "source": "https://github.com/aws/aws-sdk-php/tree/3.275.7"
             },
             "time": "2023-07-13T18:21:04+00:00"
+>>>>>>> main
         },
         {
             "name": "aws/aws-sdk-php-laravel",
@@ -2002,6 +2021,18 @@
         },
         {
             "name": "fleetbase/core-api",
+<<<<<<< HEAD
+            "version": "1.1.6-alpha",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/fleetbase/core-api.git",
+                "reference": "9f33ddeae8e3df7ae296cb59997904639b276364"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/fleetbase/core-api/zipball/9f33ddeae8e3df7ae296cb59997904639b276364",
+                "reference": "9f33ddeae8e3df7ae296cb59997904639b276364",
+=======
             "version": "1.1.4-alpha",
             "source": {
                 "type": "git",
@@ -2012,6 +2043,7 @@
                 "type": "zip",
                 "url": "https://api.github.com/repos/fleetbase/core-api/zipball/19388701609d02579138ba64f86e06688a608fa4",
                 "reference": "19388701609d02579138ba64f86e06688a608fa4",
+>>>>>>> main
                 "shasum": ""
             },
             "require": {
@@ -2028,7 +2060,6 @@
                 "illuminate/routing": "^7.0|^8.0|^9.0",
                 "illuminate/support": "^7.0|^8.0|^9.0",
                 "jdorn/sql-formatter": "^1.2",
-                "laravel/cashier": "^13.15",
                 "laravel/sanctum": "^2.15",
                 "maatwebsite/excel": "^3.1",
                 "php": "^7.4|^8.0",
@@ -2085,29 +2116,35 @@
             ],
             "support": {
                 "issues": "https://github.com/fleetbase/core-api/issues",
+<<<<<<< HEAD
+                "source": "https://github.com/fleetbase/core-api/tree/v1.1.6-alpha"
+            },
+            "time": "2023-07-23T09:32:15+00:00"
+=======
                 "source": "https://github.com/fleetbase/core-api/tree/v1.1.4-alpha"
             },
             "time": "2023-07-16T05:29:08+00:00"
+>>>>>>> main
         },
         {
             "name": "fleetbase/fleetops-api",
-            "version": "1.0.7-alpha",
+            "version": "1.0.9-alpha",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fleetbase/fleetops-api.git",
-                "reference": "0b5142bf9f32ba56b6d7c789c34ee3ba35021842"
+                "reference": "12a1c68eedcffed4142af8a43a4484fbe468f160"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fleetbase/fleetops-api/zipball/0b5142bf9f32ba56b6d7c789c34ee3ba35021842",
-                "reference": "0b5142bf9f32ba56b6d7c789c34ee3ba35021842",
+                "url": "https://api.github.com/repos/fleetbase/fleetops-api/zipball/12a1c68eedcffed4142af8a43a4484fbe468f160",
+                "reference": "12a1c68eedcffed4142af8a43a4484fbe468f160",
                 "shasum": ""
             },
             "require": {
                 "barryvdh/laravel-dompdf": "^2.0",
                 "brick/geo": "0.7.2",
                 "cknow/laravel-money": "^7.1",
-                "fleetbase/core-api": "^1.1.3-alpha",
+                "fleetbase/core-api": "^1.1.6-alpha",
                 "geocoder-php/google-maps-places-provider": "^1.4",
                 "giggsey/libphonenumber-for-php": "^8.13",
                 "league/geotools": "^1.1.0",
@@ -2162,27 +2199,27 @@
             ],
             "support": {
                 "issues": "https://github.com/fleetbase/fleetops-api/issues",
-                "source": "https://github.com/fleetbase/fleetops-api/tree/v1.0.7-alpha"
+                "source": "https://github.com/fleetbase/fleetops-api/tree/v1.0.9-alpha"
             },
-            "time": "2023-07-10T12:48:47+00:00"
+            "time": "2023-07-23T09:34:55+00:00"
         },
         {
             "name": "fleetbase/storefront-api",
-            "version": "1.0.6-alpha",
+            "version": "1.0.8-alpha",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fleetbase/storefront-api.git",
-                "reference": "fd95411375f886871c8af1517493bcefb1116b05"
+                "reference": "102aaf2fe3a2bff1ed5c8ce7d300aba68a6e46f8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fleetbase/storefront-api/zipball/fd95411375f886871c8af1517493bcefb1116b05",
-                "reference": "fd95411375f886871c8af1517493bcefb1116b05",
+                "url": "https://api.github.com/repos/fleetbase/storefront-api/zipball/102aaf2fe3a2bff1ed5c8ce7d300aba68a6e46f8",
+                "reference": "102aaf2fe3a2bff1ed5c8ce7d300aba68a6e46f8",
                 "shasum": ""
             },
             "require": {
-                "fleetbase/core-api": "^1.1.3-alpha",
-                "fleetbase/fleetops-api": "^1.0.7-alpha",
+                "fleetbase/core-api": "^1.1.6-alpha",
+                "fleetbase/fleetops-api": "^1.0.9-alpha",
                 "geocoder-php/google-maps-places-provider": "^1.4",
                 "laravel-notification-channels/apn": "^3.8",
                 "laravel-notification-channels/fcm": "^2.7",
@@ -2209,7 +2246,8 @@
                 },
                 "fleetbase": {
                     "create-database": "storefront",
-                    "order-config": "Fleetbase\\Storefront\\Support\\OrderConfig"
+                    "order-config": "Fleetbase\\Storefront\\Support\\OrderConfig",
+                    "sandbox-migrations": false
                 }
             },
             "autoload": {
@@ -2241,9 +2279,9 @@
             ],
             "support": {
                 "issues": "https://github.com/fleetbase/storefront-api/issues",
-                "source": "https://github.com/fleetbase/storefront-api/tree/v1.0.6-alpha"
+                "source": "https://github.com/fleetbase/storefront-api/tree/v1.0.8-alpha"
             },
-            "time": "2023-07-10T12:50:48+00:00"
+            "time": "2023-07-23T09:36:54+00:00"
         },
         {
             "name": "fruitcake/laravel-cors",
@@ -2725,6 +2763,18 @@
         },
         {
             "name": "giggsey/libphonenumber-for-php",
+<<<<<<< HEAD
+            "version": "8.13.17",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/giggsey/libphonenumber-for-php.git",
+                "reference": "dee92bfa0782fd5899fe6b295dea40cdb0607476"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/giggsey/libphonenumber-for-php/zipball/dee92bfa0782fd5899fe6b295dea40cdb0607476",
+                "reference": "dee92bfa0782fd5899fe6b295dea40cdb0607476",
+=======
             "version": "8.13.16",
             "source": {
                 "type": "git",
@@ -2735,6 +2785,7 @@
                 "type": "zip",
                 "url": "https://api.github.com/repos/giggsey/libphonenumber-for-php/zipball/7716e1c385f293416bc7bbd1ff4ec93b04a821e2",
                 "reference": "7716e1c385f293416bc7bbd1ff4ec93b04a821e2",
+>>>>>>> main
                 "shasum": ""
             },
             "require": {
@@ -2793,7 +2844,11 @@
                 "issues": "https://github.com/giggsey/libphonenumber-for-php/issues",
                 "source": "https://github.com/giggsey/libphonenumber-for-php"
             },
+<<<<<<< HEAD
+            "time": "2023-07-20T10:32:50+00:00"
+=======
             "time": "2023-07-10T19:39:54+00:00"
+>>>>>>> main
         },
         {
             "name": "giggsey/locale",
@@ -4332,90 +4387,6 @@
                 "source": "https://github.com/laravel-notification-channels/twilio"
             },
             "time": "2023-02-21T21:35:58+00:00"
-        },
-        {
-            "name": "laravel/cashier",
-            "version": "v13.17.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/laravel/cashier-stripe.git",
-                "reference": "cae3a62e1819a0429ead6567ee26c049bf0c2677"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/laravel/cashier-stripe/zipball/cae3a62e1819a0429ead6567ee26c049bf0c2677",
-                "reference": "cae3a62e1819a0429ead6567ee26c049bf0c2677",
-                "shasum": ""
-            },
-            "require": {
-                "dompdf/dompdf": "^1.2.1|^2.0",
-                "ext-json": "*",
-                "illuminate/console": "^8.37|^9.0|^10.0",
-                "illuminate/contracts": "^8.37|^9.0|^10.0",
-                "illuminate/database": "^8.37|^9.0|^10.0",
-                "illuminate/http": "^8.37|^9.0|^10.0",
-                "illuminate/log": "^8.37|^9.0|^10.0",
-                "illuminate/notifications": "^8.37|^9.0|^10.0",
-                "illuminate/routing": "^8.37|^9.0|^10.0",
-                "illuminate/support": "^8.37|^9.0|^10.0",
-                "illuminate/view": "^8.37|^9.0|^10.0",
-                "moneyphp/money": "^3.2|^4.0",
-                "nesbot/carbon": "^2.0",
-                "php": "^7.3|^8.0",
-                "stripe/stripe-php": "^7.39|^8.0|^9.0",
-                "symfony/http-kernel": "^5.0|^6.0",
-                "symfony/polyfill-intl-icu": "^1.22.1"
-            },
-            "require-dev": {
-                "mockery/mockery": "^1.0",
-                "orchestra/testbench": "^6.0|^7.0|^8.0",
-                "phpunit/phpunit": "^9.0"
-            },
-            "suggest": {
-                "ext-intl": "Allows for more locales besides the default \"en\" when formatting money values."
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "13.x-dev"
-                },
-                "laravel": {
-                    "providers": [
-                        "Laravel\\Cashier\\CashierServiceProvider"
-                    ]
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Laravel\\Cashier\\": "src/",
-                    "Laravel\\Cashier\\Database\\Factories\\": "database/factories/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Taylor Otwell",
-                    "email": "taylor@laravel.com"
-                },
-                {
-                    "name": "Dries Vints",
-                    "email": "dries@laravel.com"
-                }
-            ],
-            "description": "Laravel Cashier provides an expressive, fluent interface to Stripe's subscription billing services.",
-            "keywords": [
-                "billing",
-                "laravel",
-                "stripe"
-            ],
-            "support": {
-                "issues": "https://github.com/laravel/cashier/issues",
-                "source": "https://github.com/laravel/cashier"
-            },
-            "time": "2023-03-01T09:33:20+00:00"
         },
         {
             "name": "laravel/framework",
@@ -9492,67 +9463,6 @@
             "time": "2022-11-25T16:15:06+00:00"
         },
         {
-            "name": "stripe/stripe-php",
-            "version": "v9.9.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/stripe/stripe-php.git",
-                "reference": "479b5c2136fde0debb93d290ceaf20dd161c358f"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/stripe/stripe-php/zipball/479b5c2136fde0debb93d290ceaf20dd161c358f",
-                "reference": "479b5c2136fde0debb93d290ceaf20dd161c358f",
-                "shasum": ""
-            },
-            "require": {
-                "ext-curl": "*",
-                "ext-json": "*",
-                "ext-mbstring": "*",
-                "php": ">=5.6.0"
-            },
-            "require-dev": {
-                "friendsofphp/php-cs-fixer": "3.5.0",
-                "php-coveralls/php-coveralls": "^2.5",
-                "phpstan/phpstan": "^1.2",
-                "phpunit/phpunit": "^5.7 || ^9.0",
-                "squizlabs/php_codesniffer": "^3.3"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "2.0-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Stripe\\": "lib/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Stripe and contributors",
-                    "homepage": "https://github.com/stripe/stripe-php/contributors"
-                }
-            ],
-            "description": "Stripe PHP Library",
-            "homepage": "https://stripe.com/",
-            "keywords": [
-                "api",
-                "payment processing",
-                "stripe"
-            ],
-            "support": {
-                "issues": "https://github.com/stripe/stripe-php/issues",
-                "source": "https://github.com/stripe/stripe-php/tree/v9.9.0"
-            },
-            "time": "2022-11-08T20:25:52+00:00"
-        },
-        {
             "name": "swiftmailer/swiftmailer",
             "version": "v6.3.0",
             "source": {
@@ -10904,93 +10814,6 @@
             ],
             "support": {
                 "source": "https://github.com/symfony/polyfill-intl-grapheme/tree/v1.27.0"
-            },
-            "funding": [
-                {
-                    "url": "https://symfony.com/sponsor",
-                    "type": "custom"
-                },
-                {
-                    "url": "https://github.com/fabpot",
-                    "type": "github"
-                },
-                {
-                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
-                    "type": "tidelift"
-                }
-            ],
-            "time": "2022-11-03T14:55:06+00:00"
-        },
-        {
-            "name": "symfony/polyfill-intl-icu",
-            "version": "v1.27.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/symfony/polyfill-intl-icu.git",
-                "reference": "a3d9148e2c363588e05abbdd4ee4f971f0a5330c"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/symfony/polyfill-intl-icu/zipball/a3d9148e2c363588e05abbdd4ee4f971f0a5330c",
-                "reference": "a3d9148e2c363588e05abbdd4ee4f971f0a5330c",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=7.1"
-            },
-            "suggest": {
-                "ext-intl": "For best performance and support of other locales than \"en\""
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-main": "1.27-dev"
-                },
-                "thanks": {
-                    "name": "symfony/polyfill",
-                    "url": "https://github.com/symfony/polyfill"
-                }
-            },
-            "autoload": {
-                "files": [
-                    "bootstrap.php"
-                ],
-                "psr-4": {
-                    "Symfony\\Polyfill\\Intl\\Icu\\": ""
-                },
-                "classmap": [
-                    "Resources/stubs"
-                ],
-                "exclude-from-classmap": [
-                    "/Tests/"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Nicolas Grekas",
-                    "email": "p@tchwork.com"
-                },
-                {
-                    "name": "Symfony Community",
-                    "homepage": "https://symfony.com/contributors"
-                }
-            ],
-            "description": "Symfony polyfill for intl's ICU-related data and classes",
-            "homepage": "https://symfony.com",
-            "keywords": [
-                "compatibility",
-                "icu",
-                "intl",
-                "polyfill",
-                "portable",
-                "shim"
-            ],
-            "support": {
-                "source": "https://github.com/symfony/polyfill-intl-icu/tree/v1.27.0"
             },
             "funding": [
                 {
@@ -14420,37 +14243,33 @@
         },
         {
             "name": "mockery/mockery",
-            "version": "1.6.2",
+            "version": "1.6.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mockery/mockery.git",
-                "reference": "13a7fa2642c76c58fa2806ef7f565344c817a191"
+                "reference": "d1413755e26fe56a63455f7753221c86cbb88f66"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mockery/mockery/zipball/13a7fa2642c76c58fa2806ef7f565344c817a191",
-                "reference": "13a7fa2642c76c58fa2806ef7f565344c817a191",
+                "url": "https://api.github.com/repos/mockery/mockery/zipball/d1413755e26fe56a63455f7753221c86cbb88f66",
+                "reference": "d1413755e26fe56a63455f7753221c86cbb88f66",
                 "shasum": ""
             },
             "require": {
                 "hamcrest/hamcrest-php": "^2.0.1",
                 "lib-pcre": ">=7.0",
-                "php": "^7.4 || ^8.0"
+                "php": ">=7.4,<8.3"
             },
             "conflict": {
                 "phpunit/phpunit": "<8.0"
             },
             "require-dev": {
                 "phpunit/phpunit": "^8.5 || ^9.3",
-                "psalm/plugin-phpunit": "^0.18",
-                "vimeo/psalm": "^5.9"
+                "psalm/plugin-phpunit": "^0.18.4",
+                "symplify/easy-coding-standard": "^11.5.0",
+                "vimeo/psalm": "^5.13.1"
             },
             "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-main": "1.6.x-dev"
-                }
-            },
             "autoload": {
                 "files": [
                     "library/helpers.php",
@@ -14468,12 +14287,20 @@
                 {
                     "name": "Pádraic Brady",
                     "email": "padraic.brady@gmail.com",
-                    "homepage": "http://blog.astrumfutura.com"
+                    "homepage": "https://github.com/padraic",
+                    "role": "Author"
                 },
                 {
                     "name": "Dave Marshall",
                     "email": "dave.marshall@atstsolutions.co.uk",
-                    "homepage": "http://davedevelopment.co.uk"
+                    "homepage": "https://davedevelopment.co.uk",
+                    "role": "Developer"
+                },
+                {
+                    "name": "Nathanael Esayeas",
+                    "email": "nathanael.esayeas@protonmail.com",
+                    "homepage": "https://github.com/ghostwriter",
+                    "role": "Lead Developer"
                 }
             ],
             "description": "Mockery is a simple yet flexible PHP mock object framework",
@@ -14491,10 +14318,13 @@
                 "testing"
             ],
             "support": {
+                "docs": "https://docs.mockery.io/",
                 "issues": "https://github.com/mockery/mockery/issues",
-                "source": "https://github.com/mockery/mockery/tree/1.6.2"
+                "rss": "https://github.com/mockery/mockery/releases.atom",
+                "security": "https://github.com/mockery/mockery/security/advisories",
+                "source": "https://github.com/mockery/mockery"
             },
-            "time": "2023-06-07T09:07:52+00:00"
+            "time": "2023-07-19T15:51:02+00:00"
         },
         {
             "name": "myclabs/deep-copy",
