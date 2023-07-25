@@ -192,6 +192,7 @@
         },
         {
             "name": "aws/aws-sdk-php",
+<<<<<<< HEAD
             "version": "3.277.7",
             "source": {
                 "type": "git",
@@ -202,6 +203,18 @@
                 "type": "zip",
                 "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/906caee3dc8ddffeb992062c84f4552dc2e2da19",
                 "reference": "906caee3dc8ddffeb992062c84f4552dc2e2da19",
+=======
+            "version": "3.276.4",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/aws/aws-sdk-php.git",
+                "reference": "80509b932c7e8e917a5026a89bd7af1f2b34ed59"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/80509b932c7e8e917a5026a89bd7af1f2b34ed59",
+                "reference": "80509b932c7e8e917a5026a89bd7af1f2b34ed59",
+>>>>>>> 71f6a0d (wip)
                 "shasum": ""
             },
             "require": {
@@ -281,9 +294,15 @@
             "support": {
                 "forum": "https://forums.aws.amazon.com/forum.jspa?forumID=80",
                 "issues": "https://github.com/aws/aws-sdk-php/issues",
+<<<<<<< HEAD
                 "source": "https://github.com/aws/aws-sdk-php/tree/3.277.7"
             },
             "time": "2023-08-02T18:04:32+00:00"
+=======
+                "source": "https://github.com/aws/aws-sdk-php/tree/3.276.4"
+            },
+            "time": "2023-07-24T18:15:58+00:00"
+>>>>>>> 71f6a0d (wip)
         },
         {
             "name": "aws/aws-sdk-php-laravel",
@@ -2001,7 +2020,99 @@
             "time": "2023-07-14T18:33:00+00:00"
         },
         {
+            "name": "fleetbase/billing-api",
+            "version": "0.0.2",
+            "dist": {
+                "type": "path",
+                "url": "../packages/billing-api",
+                "reference": "568704003af6889f1b3de28fa3f337234dd667fa"
+            },
+            "require": {
+                "fleetbase/core-api": "^1.1.6-alpha",
+                "laravel/cashier": "^13.17",
+                "php": "^7.4|^8.0",
+                "php-http/guzzle7-adapter": "^1.0",
+                "psr/http-factory-implementation": "*",
+                "stripe/stripe-php": "^9.9"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "^2.16.4",
+                "pestphp/pest": "^0.3.8",
+                "phpstan/phpstan": "^0.12.48",
+                "symfony/var-dumper": "^5.2.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Fleetbase\\Billing\\Providers\\BillingServiceProvider"
+                    ]
+                },
+                "fleetbase": {
+                    "sandbox-migrations": false
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Fleetbase\\Billing\\": "src/",
+                    "Fleetbase\\Billing\\Seeds\\": "seeds/"
+                }
+            },
+            "autoload-dev": {
+                "psr-4": {
+                    "Fleetbase\\Billing\\Tests\\": "tests/"
+                }
+            },
+            "scripts": {
+                "lint": [
+                    "php-cs-fixer fix -v"
+                ],
+                "test:lint": [
+                    "php-cs-fixer fix -v --dry-run"
+                ],
+                "test:types": [
+                    "phpstan analyse --ansi --memory-limit=0"
+                ],
+                "test:unit": [
+                    "pest --colors=always"
+                ],
+                "test": [
+                    "@test:lint",
+                    "@test:types",
+                    "@test:unit"
+                ]
+            },
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Fleetbase Pte Ltd.",
+                    "email": "hello@fleetbase.io"
+                },
+                {
+                    "name": "Ronald A. Richardson",
+                    "email": "ron@fleetbase.io"
+                }
+            ],
+            "description": "Enables billing of organizations on Fleetbase instance to generate revenue.",
+            "keywords": [
+                "billing",
+                "billing system",
+                "fleetbase",
+                "fleetbase-extension",
+                "revenue engine",
+                "revenue generator",
+                "stripe",
+                "stripe api"
+            ],
+            "transport-options": {
+                "relative": true
+            }
+        },
+        {
             "name": "fleetbase/core-api",
+<<<<<<< HEAD
             "version": "1.1.9",
             "source": {
                 "type": "git",
@@ -2013,6 +2124,13 @@
                 "url": "https://api.github.com/repos/fleetbase/core-api/zipball/b68858f563d4b0a77f89ac62bec5c6f78cf62309",
                 "reference": "b68858f563d4b0a77f89ac62bec5c6f78cf62309",
                 "shasum": ""
+=======
+            "version": "1.1.6-alpha",
+            "dist": {
+                "type": "path",
+                "url": "../packages/core-api",
+                "reference": "3905f2f2687a1d45db086a204b41ba4872b567a8"
+>>>>>>> 71f6a0d (wip)
             },
             "require": {
                 "aloha/twilio": "^5.0",
@@ -2063,7 +2181,30 @@
                     "Fleetbase\\Seeds\\": "seeds/"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
+            "autoload-dev": {
+                "psr-4": {
+                    "Fleetbase\\Tests\\": "tests/"
+                }
+            },
+            "scripts": {
+                "lint": [
+                    "php-cs-fixer fix -v"
+                ],
+                "test:lint": [
+                    "php-cs-fixer fix -v --dry-run"
+                ],
+                "test:types": [
+                    "phpstan analyse --ansi --memory-limit=0"
+                ],
+                "test:unit": [
+                    "pest --colors=always"
+                ],
+                "test": [
+                    "@test:lint",
+                    "@test:types",
+                    "@test:unit"
+                ]
+            },
             "license": [
                 "MIT"
             ],
@@ -2082,6 +2223,7 @@
                 "fleetbase",
                 "logistics platform"
             ],
+<<<<<<< HEAD
             "support": {
                 "issues": "https://github.com/fleetbase/core-api/issues",
                 "source": "https://github.com/fleetbase/core-api/tree/v1.1.9"
@@ -2101,6 +2243,19 @@
                 "url": "https://api.github.com/repos/fleetbase/fleetops-api/zipball/d565a50ccc6a241d720ec5523f405ca8ee6b70ed",
                 "reference": "d565a50ccc6a241d720ec5523f405ca8ee6b70ed",
                 "shasum": ""
+=======
+            "transport-options": {
+                "relative": true
+            }
+        },
+        {
+            "name": "fleetbase/fleetops-api",
+            "version": "1.0.9-alpha",
+            "dist": {
+                "type": "path",
+                "url": "../packages/fleetops-api",
+                "reference": "d340853edb25ccd7570945fe3295966d0747bc04"
+>>>>>>> 71f6a0d (wip)
             },
             "require": {
                 "barryvdh/laravel-dompdf": "^2.0",
@@ -2137,7 +2292,30 @@
                     "Fleetbase\\FleetOps\\": "src/"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
+            "autoload-dev": {
+                "psr-4": {
+                    "Fleetbase\\Tests\\": "tests/"
+                }
+            },
+            "scripts": {
+                "lint": [
+                    "php-cs-fixer fix -v"
+                ],
+                "test:lint": [
+                    "php-cs-fixer fix -v --dry-run"
+                ],
+                "test:types": [
+                    "phpstan analyse --ansi --memory-limit=0"
+                ],
+                "test:unit": [
+                    "pest --colors=always"
+                ],
+                "test": [
+                    "@test:lint",
+                    "@test:types",
+                    "@test:unit"
+                ]
+            },
             "license": [
                 "MIT"
             ],
@@ -2159,6 +2337,7 @@
                 "last-mile",
                 "tms"
             ],
+<<<<<<< HEAD
             "support": {
                 "issues": "https://github.com/fleetbase/fleetops-api/issues",
                 "source": "https://github.com/fleetbase/fleetops-api/tree/v1.1.1"
@@ -2178,6 +2357,110 @@
                 "url": "https://api.github.com/repos/fleetbase/storefront-api/zipball/028d56f1b0c6737166c9fb7cfb1584fe09aa1432",
                 "reference": "028d56f1b0c6737166c9fb7cfb1584fe09aa1432",
                 "shasum": ""
+=======
+            "transport-options": {
+                "relative": true
+            }
+        },
+        {
+            "name": "fleetbase/pallet-api",
+            "version": "0.0.1",
+            "dist": {
+                "type": "path",
+                "url": "../packages/pallet-api",
+                "reference": "2b41e83a4576d7d229a530e4fa5ba2d9603ff4a3"
+            },
+            "require": {
+                "fleetbase/core-api": "^1.1.6-alpha",
+                "laravel/cashier": "^13.17",
+                "php": "^7.4|^8.0",
+                "php-http/guzzle7-adapter": "^1.0",
+                "psr/http-factory-implementation": "*",
+                "stripe/stripe-php": "^9.9"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "^2.16.4",
+                "pestphp/pest": "^0.3.8",
+                "phpstan/phpstan": "^0.12.48",
+                "symfony/var-dumper": "^5.2.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Fleetbase\\Pallet\\Providers\\PalletServiceProvider"
+                    ]
+                },
+                "fleetbase": {
+                    "sandbox-migrations": false
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Fleetbase\\Pallet\\": "src/",
+                    "Fleetbase\\Pallet\\Seeds\\": "seeds/"
+                }
+            },
+            "autoload-dev": {
+                "psr-4": {
+                    "Fleetbase\\Pallet\\Tests\\": "tests/"
+                }
+            },
+            "scripts": {
+                "lint": [
+                    "php-cs-fixer fix -v"
+                ],
+                "test:lint": [
+                    "php-cs-fixer fix -v --dry-run"
+                ],
+                "test:types": [
+                    "phpstan analyse --ansi --memory-limit=0"
+                ],
+                "test:unit": [
+                    "pest --colors=always"
+                ],
+                "test": [
+                    "@test:lint",
+                    "@test:types",
+                    "@test:unit"
+                ]
+            },
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Fleetbase Pte Ltd.",
+                    "email": "hello@fleetbase.io"
+                },
+                {
+                    "name": "Ronald A. Richardson",
+                    "email": "ron@fleetbase.io"
+                }
+            ],
+            "description": "Enables Pallet API, the inventory management extension for Fleetbase.",
+            "keywords": [
+                "ecommerce",
+                "fleetbase",
+                "fleetbase-extension",
+                "inventory",
+                "inventory management",
+                "inventory management api",
+                "inventory system",
+                "stock management"
+            ],
+            "transport-options": {
+                "relative": true
+            }
+        },
+        {
+            "name": "fleetbase/storefront-api",
+            "version": "1.0.8-alpha",
+            "dist": {
+                "type": "path",
+                "url": "../packages/storefront-api",
+                "reference": "e7e7ad23df4cefca8f63ce1bc0438a27ebfd7af5"
+>>>>>>> 71f6a0d (wip)
             },
             "require": {
                 "fleetbase/core-api": "^1.1.9",
@@ -2217,7 +2500,30 @@
                     "Fleetbase\\Storefront\\": "src/"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
+            "autoload-dev": {
+                "psr-4": {
+                    "Fleetbase\\Storefront\\Tests\\": "tests/"
+                }
+            },
+            "scripts": {
+                "lint": [
+                    "php-cs-fixer fix -v"
+                ],
+                "test:lint": [
+                    "php-cs-fixer fix -v --dry-run"
+                ],
+                "test:types": [
+                    "phpstan analyse --ansi --memory-limit=0"
+                ],
+                "test:unit": [
+                    "pest --colors=always"
+                ],
+                "test": [
+                    "@test:lint",
+                    "@test:types",
+                    "@test:unit"
+                ]
+            },
             "license": [
                 "MIT"
             ],
@@ -2239,11 +2545,17 @@
                 "marketplace",
                 "storefront"
             ],
+<<<<<<< HEAD
             "support": {
                 "issues": "https://github.com/fleetbase/storefront-api/issues",
                 "source": "https://github.com/fleetbase/storefront-api/tree/v1.1.0"
             },
             "time": "2023-08-01T07:49:47+00:00"
+=======
+            "transport-options": {
+                "relative": true
+            }
+>>>>>>> 71f6a0d (wip)
         },
         {
             "name": "fruitcake/laravel-cors",
@@ -4332,6 +4644,90 @@
                 "source": "https://github.com/laravel-notification-channels/twilio"
             },
             "time": "2023-02-21T21:35:58+00:00"
+        },
+        {
+            "name": "laravel/cashier",
+            "version": "v13.17.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/laravel/cashier-stripe.git",
+                "reference": "cae3a62e1819a0429ead6567ee26c049bf0c2677"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/laravel/cashier-stripe/zipball/cae3a62e1819a0429ead6567ee26c049bf0c2677",
+                "reference": "cae3a62e1819a0429ead6567ee26c049bf0c2677",
+                "shasum": ""
+            },
+            "require": {
+                "dompdf/dompdf": "^1.2.1|^2.0",
+                "ext-json": "*",
+                "illuminate/console": "^8.37|^9.0|^10.0",
+                "illuminate/contracts": "^8.37|^9.0|^10.0",
+                "illuminate/database": "^8.37|^9.0|^10.0",
+                "illuminate/http": "^8.37|^9.0|^10.0",
+                "illuminate/log": "^8.37|^9.0|^10.0",
+                "illuminate/notifications": "^8.37|^9.0|^10.0",
+                "illuminate/routing": "^8.37|^9.0|^10.0",
+                "illuminate/support": "^8.37|^9.0|^10.0",
+                "illuminate/view": "^8.37|^9.0|^10.0",
+                "moneyphp/money": "^3.2|^4.0",
+                "nesbot/carbon": "^2.0",
+                "php": "^7.3|^8.0",
+                "stripe/stripe-php": "^7.39|^8.0|^9.0",
+                "symfony/http-kernel": "^5.0|^6.0",
+                "symfony/polyfill-intl-icu": "^1.22.1"
+            },
+            "require-dev": {
+                "mockery/mockery": "^1.0",
+                "orchestra/testbench": "^6.0|^7.0|^8.0",
+                "phpunit/phpunit": "^9.0"
+            },
+            "suggest": {
+                "ext-intl": "Allows for more locales besides the default \"en\" when formatting money values."
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "13.x-dev"
+                },
+                "laravel": {
+                    "providers": [
+                        "Laravel\\Cashier\\CashierServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Laravel\\Cashier\\": "src/",
+                    "Laravel\\Cashier\\Database\\Factories\\": "database/factories/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Taylor Otwell",
+                    "email": "taylor@laravel.com"
+                },
+                {
+                    "name": "Dries Vints",
+                    "email": "dries@laravel.com"
+                }
+            ],
+            "description": "Laravel Cashier provides an expressive, fluent interface to Stripe's subscription billing services.",
+            "keywords": [
+                "billing",
+                "laravel",
+                "stripe"
+            ],
+            "support": {
+                "issues": "https://github.com/laravel/cashier/issues",
+                "source": "https://github.com/laravel/cashier"
+            },
+            "time": "2023-03-01T09:33:20+00:00"
         },
         {
             "name": "laravel/framework",
@@ -9408,6 +9804,67 @@
             "time": "2022-11-25T16:15:06+00:00"
         },
         {
+            "name": "stripe/stripe-php",
+            "version": "v9.9.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/stripe/stripe-php.git",
+                "reference": "479b5c2136fde0debb93d290ceaf20dd161c358f"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/stripe/stripe-php/zipball/479b5c2136fde0debb93d290ceaf20dd161c358f",
+                "reference": "479b5c2136fde0debb93d290ceaf20dd161c358f",
+                "shasum": ""
+            },
+            "require": {
+                "ext-curl": "*",
+                "ext-json": "*",
+                "ext-mbstring": "*",
+                "php": ">=5.6.0"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "3.5.0",
+                "php-coveralls/php-coveralls": "^2.5",
+                "phpstan/phpstan": "^1.2",
+                "phpunit/phpunit": "^5.7 || ^9.0",
+                "squizlabs/php_codesniffer": "^3.3"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.0-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Stripe\\": "lib/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Stripe and contributors",
+                    "homepage": "https://github.com/stripe/stripe-php/contributors"
+                }
+            ],
+            "description": "Stripe PHP Library",
+            "homepage": "https://stripe.com/",
+            "keywords": [
+                "api",
+                "payment processing",
+                "stripe"
+            ],
+            "support": {
+                "issues": "https://github.com/stripe/stripe-php/issues",
+                "source": "https://github.com/stripe/stripe-php/tree/v9.9.0"
+            },
+            "time": "2022-11-08T20:25:52+00:00"
+        },
+        {
             "name": "swiftmailer/swiftmailer",
             "version": "v6.3.0",
             "source": {
@@ -10759,6 +11216,93 @@
             ],
             "support": {
                 "source": "https://github.com/symfony/polyfill-intl-grapheme/tree/v1.27.0"
+            },
+            "funding": [
+                {
+                    "url": "https://symfony.com/sponsor",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/fabpot",
+                    "type": "github"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
+                    "type": "tidelift"
+                }
+            ],
+            "time": "2022-11-03T14:55:06+00:00"
+        },
+        {
+            "name": "symfony/polyfill-intl-icu",
+            "version": "v1.27.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/polyfill-intl-icu.git",
+                "reference": "a3d9148e2c363588e05abbdd4ee4f971f0a5330c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/polyfill-intl-icu/zipball/a3d9148e2c363588e05abbdd4ee4f971f0a5330c",
+                "reference": "a3d9148e2c363588e05abbdd4ee4f971f0a5330c",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.1"
+            },
+            "suggest": {
+                "ext-intl": "For best performance and support of other locales than \"en\""
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-main": "1.27-dev"
+                },
+                "thanks": {
+                    "name": "symfony/polyfill",
+                    "url": "https://github.com/symfony/polyfill"
+                }
+            },
+            "autoload": {
+                "files": [
+                    "bootstrap.php"
+                ],
+                "psr-4": {
+                    "Symfony\\Polyfill\\Intl\\Icu\\": ""
+                },
+                "classmap": [
+                    "Resources/stubs"
+                ],
+                "exclude-from-classmap": [
+                    "/Tests/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Nicolas Grekas",
+                    "email": "p@tchwork.com"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "https://symfony.com/contributors"
+                }
+            ],
+            "description": "Symfony polyfill for intl's ICU-related data and classes",
+            "homepage": "https://symfony.com",
+            "keywords": [
+                "compatibility",
+                "icu",
+                "intl",
+                "polyfill",
+                "portable",
+                "shim"
+            ],
+            "support": {
+                "source": "https://github.com/symfony/polyfill-intl-icu/tree/v1.27.0"
             },
             "funding": [
                 {
