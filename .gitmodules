@@ -54,3 +54,11 @@
 	path = socket
 	url = git@github.com:fleetbase/socket.git
 	branch = dev-main
+[submodule "packages/pallet-api"]
+	path = packages/pallet-api
+	url = git@github.com:fleetbase/pallet-api.git
+	branch = dev-main
+[submodule "packages/pallet-engine"]
+	path = packages/pallet-engine
+	url = git@github.com:fleetbase/pallet-engine.git
+	branch = dev-main
