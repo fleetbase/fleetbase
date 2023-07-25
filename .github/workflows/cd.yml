@@ -114,7 +114,7 @@ jobs:
         export API_HOST=api.${{ env.STACK }}.${{ env.PROJECT }}.io
         export SOCKETCLUSTER_HOST=socket.${{ env.STACK }}.${{ env.PROJECT }}.io
 
-        yarn build
+        pnpm build
       working-directory: ./console
 
     - name: configure aws credentials
