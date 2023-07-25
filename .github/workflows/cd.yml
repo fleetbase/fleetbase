@@ -11,8 +11,8 @@ concurrency:
 env:
   PROJECT: fleetbase
 jobs:
-  build:
-    name: Build and Start Docker Services
+  build_service:
+    name: Build and Deploy the Service
     runs-on: ubuntu-latest
     permissions:
       id-token: write # This is required for requesting the JWT
@@ -60,4 +60,72 @@ jobs:
     - name: Deploy the images
       run: |-
           set -eu
+          # run deploy.sh script before deployments
+          env "ECS_RUN.SERVICE=app" "ECS_RUN.LAUNCH_TYPE=FARGATE" ./ecs-tool run --image_tag '{container_name}-${{ env.VERSION }}' --cluster ${{ env.PROJECT }}-${{ env.STACK }} --task_definition ${{ env.PROJECT }}-${{ env.STACK }}-app --container_name app ./deploy.sh
           ./ecs-tool deploy --image_tag '{container_name}-${{ env.VERSION }}' --cluster ${{ env.PROJECT }}-${{ env.STACK }} -s app -s scheduler -s events
+
+  build_frontend:
+    name: Build and Deploy the Console
+    needs: [build_service]
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write # This is required for requesting the JWT
+      contents: read  # This is required for actions/checkout
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+      with:
+        submodules: true
+
+    - name: Install Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: 16
+
+    - uses: pnpm/action-setup@v2
+      name: Install pnpm
+      id: pnpm-install
+      with:
+        version: 8
+        run_install: false
+
+    - name: Get pnpm store directory
+      id: pnpm-cache
+      shell: bash
+      run: |
+        echo "STORE_PATH=$(pnpm store path)" >> $GITHUB_OUTPUT
+
+    - uses: actions/cache@v3
+      name: Setup pnpm cache
+      with:
+        path: ${{ steps.pnpm-cache.outputs.STORE_PATH }}
+        key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+        restore-keys: |
+          ${{ runner.os }}-pnpm-store-
+
+    - name: Install dependencies
+      run: pnpm install
+      working-directory: ./console
+    - name: build
+      run: |
+        set -eu
+
+        export API_HOST=api.${{ env.STACK }}.${{ env.PROJECT }}.io
+        export SOCKETCLUSTER_HOST=socket.${{ env.STACK }}.${{ env.PROJECT }}.io
+
+        yarn build
+      working-directory: ./console
+
+    - name: configure aws credentials
+      uses: aws-actions/configure-aws-credentials@v2
+      with:
+        role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT_NUMBER }}:role/${{ env.PROJECT }}-${{ env.STACK }}-deployer
+        role-session-name: github
+        aws-region: ${{ secrets.AWS_REGION }}
+    - name: Deploy console
+      run: |
+
+          DEPLOY_BUCKET=${{ env.PROJECT }}}-${{ env.STACK }}
+          wget -O- https://github.com/bep/s3deploy/releases/download/v2.11.0/s3deploy_2.11.0_linux-amd64.tar.gz | tar xzv -C /usr/bin/ -f - s3deploy
+          s3deploy -region ${AWS_REGION} -source console/dist -bucket ${DEPLOY_BUCKET}
