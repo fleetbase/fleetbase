@@ -9,7 +9,7 @@ concurrency:
     cancel-in-progress: true
 
 env:
-  PROJECT: fleetbase
+  PROJECT: ${{ secrets.PROJECT }}
 jobs:
   build_service:
     name: Build and Deploy the Service
@@ -85,6 +85,19 @@ jobs:
           echo "VERSION=${SHORT_COMMIT}" >> $GITHUB_ENV
           echo "STACK=$(basename $GITHUB_REF)" >> $GITHUB_ENV
 
+    - name: Configure AWS Credentials
+      uses: aws-actions/configure-aws-credentials@v2
+      with:
+        role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT_NUMBER }}:role/${{ env.PROJECT }}-${{ env.STACK }}-deployer
+        role-session-name: github
+        aws-region: ${{ secrets.AWS_REGION }}
+
+    - name: Get infra-provided configuration
+      run: |
+          wget -O- https://github.com/springload/ssm-parent/releases/download/1.8.0/ssm-parent_1.8.0_linux_amd64.tar.gz | tar xvzf - ssm-parent
+
+          ./ssm-parent -n /actions/${{ env.PROJECT }}/${{ env.STACK }}/configuration dotenv /dev/stdout | cat >> $GITHUB_ENV
+
     - name: Install Node.js
       uses: actions/setup-node@v3
       with:
@@ -119,18 +132,9 @@ jobs:
       run: |
         set -eu
 
-        export API_HOST=api.${{ env.STACK }}.${{ env.PROJECT }}.io
-        export SOCKETCLUSTER_HOST=socket.${{ env.STACK }}.${{ env.PROJECT }}.io
-
         pnpm build
       working-directory: ./console
 
-    - name: Configure AWS Credentials
-      uses: aws-actions/configure-aws-credentials@v2
-      with:
-        role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT_NUMBER }}:role/${{ env.PROJECT }}-${{ env.STACK }}-deployer
-        role-session-name: github
-        aws-region: ${{ secrets.AWS_REGION }}
     
     - name: Deploy Console 🚀
       run: |
