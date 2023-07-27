@@ -99,7 +99,8 @@ jobs:
           wget -O- https://github.com/springload/ssm-parent/releases/download/1.8.0/ssm-parent_1.8.0_linux_amd64.tar.gz | tar xvzf - ssm-parent
 
           ./ssm-parent -n /actions/${{ env.PROJECT }}/${{ env.STACK }}/configuration dotenv /tmp/dotenv.file
-          cat /tmp/dotenv.file >> $GITHUB_ENV
+          # remove double quotes and pipe into the env
+          cat /tmp/dotenv.file | sed -e 's/"//g' >> $GITHUB_ENV
 
     - name: Install Node.js
       uses: actions/setup-node@v3
