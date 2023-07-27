@@ -134,6 +134,6 @@ jobs:
     
     - name: Deploy Console 🚀
       run: |
-          DEPLOY_BUCKET=${{ env.PROJECT }}}-${{ env.STACK }}
+          DEPLOY_BUCKET=${{ env.PROJECT }}-${{ env.STACK }}
           wget -O- https://github.com/bep/s3deploy/releases/download/v2.11.0/s3deploy_2.11.0_linux-amd64.tar.gz | tar xzv -f - s3deploy
           ./s3deploy -region ${AWS_REGION} -source console/dist -bucket ${DEPLOY_BUCKET}
