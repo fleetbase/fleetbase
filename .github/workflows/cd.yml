@@ -18,7 +18,6 @@ jobs:
       id-token: write # This is required for requesting the JWT
       contents: read  # This is required for actions/checkout
 
-
     steps:
     - name: Checkout Code
       uses: actions/checkout@v3
@@ -28,13 +27,13 @@ jobs:
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v2
 
-    - name: Set dynamic env vars
+    - name: Set Dynamic ENV Vars
       run: |
           SHORT_COMMIT=$(echo $GITHUB_SHA | cut -c -8)
           echo "VERSION=${SHORT_COMMIT}" >> $GITHUB_ENV
           echo "STACK=$(basename $GITHUB_REF)" >> $GITHUB_ENV
 
-    - name: configure aws credentials
+    - name: Configure AWS Credentials
       uses: aws-actions/configure-aws-credentials@v2
       with:
         role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT_NUMBER }}:role/${{ env.PROJECT }}-${{ env.STACK }}-deployer
@@ -45,7 +44,7 @@ jobs:
       id: login-ecr
       uses: aws-actions/amazon-ecr-login@v1
 
-    - name: Build and release
+    - name: Build and Release
       uses: docker/bake-action@v2
       env: 
         REGISTRY: ${{ steps.login-ecr.outputs.registry }}/${{ env.PROJECT }}-${{ env.STACK }}
@@ -54,10 +53,12 @@ jobs:
         push: true
         files: |
           ./docker-bake.hcl
+
     - name: Download ecs-tool
       run: |
           wget -O ecs-tool.tar.gz https://github.com/springload/ecs-tool/releases/download/1.9.6/ecs-tool_1.9.6_linux_amd64.tar.gz && tar -xvf ecs-tool.tar.gz ecs-tool
-    - name: Deploy the images
+    
+    - name: Deploy the images 🚀
       run: |-
           set -eu
           # run deploy.sh script before deployments
@@ -78,6 +79,12 @@ jobs:
       with:
         submodules: true
 
+    - name: Set Dynamic ENV Vars
+      run: |
+          SHORT_COMMIT=$(echo $GITHUB_SHA | cut -c -8)
+          echo "VERSION=${SHORT_COMMIT}" >> $GITHUB_ENV
+          echo "STACK=$(basename $GITHUB_REF)" >> $GITHUB_ENV
+
     - name: Install Node.js
       uses: actions/setup-node@v3
       with:
@@ -90,14 +97,14 @@ jobs:
         version: 8
         run_install: false
 
-    - name: Get pnpm store directory
+    - name: Get pnpm Store Directory
       id: pnpm-cache
       shell: bash
       run: |
         echo "STORE_PATH=$(pnpm store path)" >> $GITHUB_OUTPUT
 
     - uses: actions/cache@v3
-      name: Setup pnpm cache
+      name: Setup pnpm Cache
       with:
         path: ${{ steps.pnpm-cache.outputs.STORE_PATH }}
         key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
@@ -107,7 +114,8 @@ jobs:
     - name: Install dependencies
       run: pnpm install
       working-directory: ./console
-    - name: build
+
+    - name: Build
       run: |
         set -eu
 
@@ -117,13 +125,14 @@ jobs:
         pnpm build
       working-directory: ./console
 
-    - name: configure aws credentials
+    - name: Configure AWS Credentials
       uses: aws-actions/configure-aws-credentials@v2
       with:
         role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT_NUMBER }}:role/${{ env.PROJECT }}-${{ env.STACK }}-deployer
         role-session-name: github
         aws-region: ${{ secrets.AWS_REGION }}
-    - name: Deploy console
+    
+    - name: Deploy Console 🚀
       run: |
 
           DEPLOY_BUCKET=${{ env.PROJECT }}}-${{ env.STACK }}
