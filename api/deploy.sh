@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Exit the script as soon as a command fails
+set -e
+
 # Create mysql databases if none exists
 php artisan mysql:createdb
 
