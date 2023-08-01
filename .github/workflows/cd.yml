@@ -10,7 +10,7 @@ concurrency:
 
 env:
   PROJECT: ${{ secrets.PROJECT }}
-  COMPOSER_AUTH: '{"github-oauth": {"github.com": "${{ secrets.COMPOSER_GITHUB_AUTH_TOKEN }}"}}'
+  COMPOSER_AUTH: '{"github-oauth": {"github.com": "${{ secrets._GITHUB_AUTH_TOKEN }}"}}'
 
 jobs:
   build_service:
@@ -51,7 +51,7 @@ jobs:
       env: 
         REGISTRY: ${{ steps.login-ecr.outputs.registry }}/${{ env.PROJECT }}-${{ env.STACK }}
         VERSION: ${{ env.VERSION }}
-        COMPOSER_AUTH: '{"github-oauth": {"github.com": "${{ secrets.COMPOSER_GITHUB_AUTH_TOKEN }}"}}'
+        COMPOSER_AUTH: '{"github-oauth": {"github.com": "${{ secrets._GITHUB_AUTH_TOKEN }}"}}'
       with:
         push: true
         files: |
@@ -131,6 +131,13 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-pnpm-store-
 
+    - name: Check for _GITHUB_AUTH_TOKEN and create .npmrc
+      run: |
+        if [[ -n "${{ secrets._GITHUB_AUTH_TOKEN }}" ]]; then
+          echo "//npm.pkg.github.com/:_authToken=${{ secrets._GITHUB_AUTH_TOKEN }}" > .npmrc
+        fi
+      working-directory: ./console
+
     - name: Install dependencies
       run: pnpm install
       working-directory: ./console
@@ -141,7 +148,6 @@ jobs:
 
         pnpm build
       working-directory: ./console
-
     
     - name: Deploy Console 🚀
       run: |
