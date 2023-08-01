@@ -53,9 +53,14 @@ WORKDIR /
 # Create unique instance ID
 RUN echo $(cat /proc/sys/kernel/random/uuid) > /.fleetbase
 
-# Setup composer auth if applicable
-RUN mkdir -p ~/.composer
-COPY composer-auth.jso[n] ~/.composer/auth.json
+# Setup composer root directory
+RUN mkdir -p /root/.composer
+
+# Docker image will accept a build-arg named COMPOSER_AUTH
+ARG COMPOSER_AUTH
+
+# If applicable use `COMPOSER_AUTH` build-arg to generate the auth.json file.
+RUN if [ -n "$COMPOSER_AUTH" ]; then echo $COMPOSER_AUTH > /root/.composer/auth.json; fi
 
 # Set environment
 ARG ENVIRONMENT=production
