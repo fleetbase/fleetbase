@@ -10,6 +10,8 @@ concurrency:
 
 env:
   PROJECT: ${{ secrets.PROJECT }}
+  COMPOSER_AUTH: '{"github-oauth": {"github.com": "${{ secrets.COMPOSER_GITHUB_AUTH_TOKEN }}"}}'
+
 jobs:
   build_service:
     name: Build and Deploy the Service
@@ -49,6 +51,7 @@ jobs:
       env: 
         REGISTRY: ${{ steps.login-ecr.outputs.registry }}/${{ env.PROJECT }}-${{ env.STACK }}
         VERSION: ${{ env.VERSION }}
+        COMPOSER_AUTH: '{"github-oauth": {"github.com": "${{ secrets.COMPOSER_GITHUB_AUTH_TOKEN }}"}}'
       with:
         push: true
         files: |
