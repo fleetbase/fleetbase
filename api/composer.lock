@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f2d82ac81e0ce1db42223b3c9b10b237",
+    "content-hash": "587f5996d9363941654af18867c3e7ba",
     "packages": [
         {
             "name": "aloha/twilio",
@@ -192,16 +192,16 @@
         },
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.277.4",
+            "version": "3.277.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "9f36e76a3e1f8c7eba8cacbfa1d5f1257cd04241"
+                "reference": "69539f82d8690be86f686ea5be1e572b44efcd8b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/9f36e76a3e1f8c7eba8cacbfa1d5f1257cd04241",
-                "reference": "9f36e76a3e1f8c7eba8cacbfa1d5f1257cd04241",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/69539f82d8690be86f686ea5be1e572b44efcd8b",
+                "reference": "69539f82d8690be86f686ea5be1e572b44efcd8b",
                 "shasum": ""
             },
             "require": {
@@ -281,9 +281,9 @@
             "support": {
                 "forum": "https://forums.aws.amazon.com/forum.jspa?forumID=80",
                 "issues": "https://github.com/aws/aws-sdk-php/issues",
-                "source": "https://github.com/aws/aws-sdk-php/tree/3.277.4"
+                "source": "https://github.com/aws/aws-sdk-php/tree/3.277.5"
             },
-            "time": "2023-07-28T22:10:53+00:00"
+            "time": "2023-07-31T18:10:09+00:00"
         },
         {
             "name": "aws/aws-sdk-php-laravel",
@@ -2002,16 +2002,16 @@
         },
         {
             "name": "fleetbase/core-api",
-            "version": "1.1.8",
+            "version": "1.1.9",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fleetbase/core-api.git",
-                "reference": "077cc923e1344b62f0d6441a5a55ec9823031004"
+                "reference": "b68858f563d4b0a77f89ac62bec5c6f78cf62309"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fleetbase/core-api/zipball/077cc923e1344b62f0d6441a5a55ec9823031004",
-                "reference": "077cc923e1344b62f0d6441a5a55ec9823031004",
+                "url": "https://api.github.com/repos/fleetbase/core-api/zipball/b68858f563d4b0a77f89ac62bec5c6f78cf62309",
+                "reference": "b68858f563d4b0a77f89ac62bec5c6f78cf62309",
                 "shasum": ""
             },
             "require": {
@@ -2084,29 +2084,29 @@
             ],
             "support": {
                 "issues": "https://github.com/fleetbase/core-api/issues",
-                "source": "https://github.com/fleetbase/core-api/tree/v1.1.8"
+                "source": "https://github.com/fleetbase/core-api/tree/v1.1.9"
             },
-            "time": "2023-07-31T12:20:50+00:00"
+            "time": "2023-08-01T07:44:16+00:00"
         },
         {
             "name": "fleetbase/fleetops-api",
-            "version": "1.0.9-alpha",
+            "version": "1.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fleetbase/fleetops-api.git",
-                "reference": "12a1c68eedcffed4142af8a43a4484fbe468f160"
+                "reference": "d565a50ccc6a241d720ec5523f405ca8ee6b70ed"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fleetbase/fleetops-api/zipball/12a1c68eedcffed4142af8a43a4484fbe468f160",
-                "reference": "12a1c68eedcffed4142af8a43a4484fbe468f160",
+                "url": "https://api.github.com/repos/fleetbase/fleetops-api/zipball/d565a50ccc6a241d720ec5523f405ca8ee6b70ed",
+                "reference": "d565a50ccc6a241d720ec5523f405ca8ee6b70ed",
                 "shasum": ""
             },
             "require": {
                 "barryvdh/laravel-dompdf": "^2.0",
                 "brick/geo": "0.7.2",
                 "cknow/laravel-money": "^7.1",
-                "fleetbase/core-api": "^1.1.6-alpha",
+                "fleetbase/core-api": "^1.1.9",
                 "geocoder-php/google-maps-places-provider": "^1.4",
                 "giggsey/libphonenumber-for-php": "^8.13",
                 "league/geotools": "^1.1.0",
@@ -2161,27 +2161,27 @@
             ],
             "support": {
                 "issues": "https://github.com/fleetbase/fleetops-api/issues",
-                "source": "https://github.com/fleetbase/fleetops-api/tree/v1.0.9-alpha"
+                "source": "https://github.com/fleetbase/fleetops-api/tree/v1.1.1"
             },
-            "time": "2023-07-23T09:34:55+00:00"
+            "time": "2023-08-01T07:47:21+00:00"
         },
         {
             "name": "fleetbase/storefront-api",
-            "version": "1.0.9-alpha",
+            "version": "1.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fleetbase/storefront-api.git",
-                "reference": "3bd21dff45ea3cd2d7959e7d7cc43fb13e7b4573"
+                "reference": "028d56f1b0c6737166c9fb7cfb1584fe09aa1432"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fleetbase/storefront-api/zipball/3bd21dff45ea3cd2d7959e7d7cc43fb13e7b4573",
-                "reference": "3bd21dff45ea3cd2d7959e7d7cc43fb13e7b4573",
+                "url": "https://api.github.com/repos/fleetbase/storefront-api/zipball/028d56f1b0c6737166c9fb7cfb1584fe09aa1432",
+                "reference": "028d56f1b0c6737166c9fb7cfb1584fe09aa1432",
                 "shasum": ""
             },
             "require": {
-                "fleetbase/core-api": "^1.1.8",
-                "fleetbase/fleetops-api": "^1.0.9-alpha",
+                "fleetbase/core-api": "^1.1.9",
+                "fleetbase/fleetops-api": "^1.1.1",
                 "geocoder-php/google-maps-places-provider": "^1.4",
                 "laravel-notification-channels/apn": "^3.8",
                 "laravel-notification-channels/fcm": "^2.7",
@@ -2241,9 +2241,9 @@
             ],
             "support": {
                 "issues": "https://github.com/fleetbase/storefront-api/issues",
-                "source": "https://github.com/fleetbase/storefront-api/tree/v1.0.9-alpha"
+                "source": "https://github.com/fleetbase/storefront-api/tree/v1.1.0"
             },
-            "time": "2023-07-31T12:23:09+00:00"
+            "time": "2023-08-01T07:49:47+00:00"
         },
         {
             "name": "fruitcake/laravel-cors",
@@ -8226,16 +8226,16 @@
         },
         {
             "name": "psy/psysh",
-            "version": "v0.11.19",
+            "version": "v0.11.20",
             "source": {
                 "type": "git",
                 "url": "https://github.com/bobthecow/psysh.git",
-                "reference": "1724ceff278daeeac5a006744633bacbb2dc4706"
+                "reference": "0fa27040553d1d280a67a4393194df5228afea5b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/bobthecow/psysh/zipball/1724ceff278daeeac5a006744633bacbb2dc4706",
-                "reference": "1724ceff278daeeac5a006744633bacbb2dc4706",
+                "url": "https://api.github.com/repos/bobthecow/psysh/zipball/0fa27040553d1d280a67a4393194df5228afea5b",
+                "reference": "0fa27040553d1d280a67a4393194df5228afea5b",
                 "shasum": ""
             },
             "require": {
@@ -8296,9 +8296,9 @@
             ],
             "support": {
                 "issues": "https://github.com/bobthecow/psysh/issues",
-                "source": "https://github.com/bobthecow/psysh/tree/v0.11.19"
+                "source": "https://github.com/bobthecow/psysh/tree/v0.11.20"
             },
-            "time": "2023-07-15T19:42:19+00:00"
+            "time": "2023-07-31T14:32:22+00:00"
         },
         {
             "name": "ralouphie/getallheaders",
