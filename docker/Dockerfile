@@ -35,11 +35,11 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 # For development only
 WORKDIR /var/www/html
-COPY --chown=www-data:nogroup packages ./
+COPY --chown=www-data:nogroup ./packages ./
 
 # Setup application
 WORKDIR /var/www/html/api
-COPY --chown=www-data:nogroup api ./
+COPY --chown=www-data:nogroup ./api ./
 RUN chown -R www-data:www-data /var/www/html/api
 RUN mkdir -p ./storage/logs/ && ln -sf /dev/stdout ./storage/logs/laravel-$(date +'%Y-%m-%d').log
 USER www-data
