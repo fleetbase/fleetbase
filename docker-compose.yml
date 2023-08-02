@@ -49,6 +49,7 @@ services:
       REDIS_URL: tcp://cache
       SESSION_DOMAIN: localhost
       BROADCAST_DRIVER: socketcluster
+      MAIL_MAILER: ses
       MAIL_FROM_NAME: Fleetbase
       LOG_CHANNEL: daily
     depends_on:
