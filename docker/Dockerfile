@@ -34,6 +34,9 @@ COPY --from=ghcr.io/springload/ssm-parent:1.8 /usr/bin/ssm-parent /sbin/ssm-pare
 # Install Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
+# Set some build ENV variables
+ENV LOG_CHANNEL=stdout
+
 # For development only
 WORKDIR /var/www/html
 COPY --chown=www-data:nogroup ./packages ./packages
@@ -60,8 +63,8 @@ RUN echo $(cat /proc/sys/kernel/random/uuid) > /.fleetbase
 RUN mkdir -p /root/.composer
 
 # Load the secret into the auth.json file.
-RUN --mount=type=secret,id=composer_auth,dst=/root/.composer/auth.json \
-    cp /root/.composer/auth.json /root/.composer/auth.json
+RUN --mount=type=secret,id=composer_auth,dst=/root/.composer/auth.json echo "Composer auth.json mounted"
+
 
 # Set environment
 ARG ENVIRONMENT=production
