@@ -51,28 +51,19 @@ RUN chown -R www-data:www-data /var/www/html/api
 RUN mkdir -p /root/.composer
 RUN mkdir -p /var/www/.composer && chown www-data:www-data /var/www/.composer
 
-# # Load the secret into the auth.json file.
-# RUN --mount=type=secret,id=composer_auth,target=/root/.composer/auth.json
-
-# # Print the contents of the auth.json file
-# RUN cat /root/.composer/auth.json
-
 # Setup logging
-# RUN mkdir -p ./storage/logs/ && ln -sf /dev/stdout ./storage/logs/laravel-$(date +'%Y-%m-%d').log
 RUN mkdir -p ./storage/logs/ && touch ./storage/logs/laravel-$(date +'%Y-%m-%d').log
 RUN chown -R www-data:www-data ./storage
 RUN chmod -R 755 ./storage
 
-# Load the secret into the auth.json file, print its contents, and run composer commands
+# Load the secret into the auth.json file if exists, and install dependencies
 RUN --mount=type=secret,id=composer_auth,target=/root/.composer/auth.json \
-    cp /root/.composer/auth.json /var/www/.composer/auth.json && \
-    chown www-data:www-data /var/www/.composer/auth.json && \
+    if [ -f "/root/.composer/auth.json" ]; then \
+        cat /root/.composer/auth.json && \
+        cp /root/.composer/auth.json /var/www/.composer/auth.json && \
+        chown www-data:www-data /var/www/.composer/auth.json; \
+    fi && \
     su www-data -s /bin/sh -c "composer install && composer dumpautoload"
-
-# # Install depencendies
-# USER www-data
-# RUN composer install
-# RUN composer dumpautoload
 
 # Continue
 USER root
