@@ -36,6 +36,6 @@ jobs:
         files: |
           ./docker-bake.hcl
         set: |
-          *.secrets.0.type=file
-          *.secrets.0.id=composer_auth
-          *.secrets.0.src=./composer-auth.json
+          secrets[.type]=file
+          secrets[.id]=composer_auth
+          secrets[.src]=composer-auth.json
