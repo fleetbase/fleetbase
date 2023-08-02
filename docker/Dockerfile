@@ -54,6 +54,12 @@ RUN mkdir -p /var/www/.composer && chown www-data:www-data /var/www/.composer
 # Load the secret into the auth.json file.
 RUN --mount=type=secret,id=composer_auth,dst=/root/.composer/auth.json
 
+# Print composer auth information for debugging
+RUN echo $COMPOSER_AUTH
+
+# Print the contents of the auth.json file
+RUN cat /root/.composer/auth.json
+
 # Setup logging
 # RUN mkdir -p ./storage/logs/ && ln -sf /dev/stdout ./storage/logs/laravel-$(date +'%Y-%m-%d').log
 RUN mkdir -p ./storage/logs/ && touch ./storage/logs/laravel-$(date +'%Y-%m-%d').log
