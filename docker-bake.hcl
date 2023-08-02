@@ -25,6 +25,10 @@ target "app" {
     "${REGISTRY}:${tgt}-%s",
     compact(["latest", VERSION])
   ) : []
+
+  secret = [
+    "type=file,id=composer_auth,src=${HOME}/.composer/auth.json"
+  ]
 }
 
 target "app-httpd" {
