@@ -64,8 +64,9 @@ RUN chown -R www-data:www-data ./storage
 RUN chmod -R 755 ./storage
 
 # Load the secret into the auth.json file, print its contents, and run composer commands
-RUN --mount=type=secret,id=composer_auth,target=/var/www/.composer/auth.json \
-    cat /var/www/.composer/auth.json && \
+RUN --mount=type=secret,id=composer_auth,target=/root/.composer/auth.json \
+    cp /root/.composer/auth.json /var/www/.composer/auth.json && \
+    chown www-data:www-data /var/www/.composer/auth.json && \
     su www-data -s /bin/sh -c "composer install && composer dumpautoload"
 
 # # Install depencendies
