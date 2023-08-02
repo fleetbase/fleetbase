@@ -47,7 +47,7 @@ jobs:
       uses: aws-actions/amazon-ecr-login@v1
 
     - name: Prepare Composer Auth Secret
-      run: echo '${{ secrets.COMPOSER_AUTH }}' > composer-auth.json
+      run: echo '${{ env.COMPOSER_AUTH }}' > composer-auth.json
 
     - name: Build and Release
       uses: docker/bake-action@v2
