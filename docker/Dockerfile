@@ -45,9 +45,14 @@ COPY --chown=www-data:nogroup ./packages ./packages
 WORKDIR /var/www/html/api
 COPY --chown=www-data:nogroup ./api ./
 RUN chown -R www-data:www-data /var/www/html/api
-RUN mkdir -p ./storage/logs/ && ln -sf /dev/stdout ./storage/logs/laravel-$(date +'%Y-%m-%d').log
-RUN chown -R www-data:www-data /var/www/html/api/storage
-RUN chmod -R 755 /var/www/html/api/storage
+
+# Setup logging
+# RUN mkdir -p ./storage/logs/ && ln -sf /dev/stdout ./storage/logs/laravel-$(date +'%Y-%m-%d').log
+RUN mkdir -p ./storage/logs/ && touch ./storage/logs/laravel-$(date +'%Y-%m-%d').log
+RUN chown -R www-data:www-data ./storage
+RUN chmod -R 755 ./storage
+
+# Install depencendies
 USER www-data
 RUN composer install --no-cache
 RUN composer dumpautoload
@@ -63,8 +68,7 @@ RUN echo $(cat /proc/sys/kernel/random/uuid) > /.fleetbase
 RUN mkdir -p /root/.composer
 
 # Load the secret into the auth.json file.
-RUN --mount=type=secret,id=composer_auth,dst=/root/.composer/auth.json echo "Composer auth.json mounted"
-
+RUN --mount=type=secret,id=composer_auth,dst=/root/.composer/auth.json
 
 # Set environment
 ARG ENVIRONMENT=production
