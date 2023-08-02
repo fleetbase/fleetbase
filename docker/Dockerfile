@@ -61,7 +61,7 @@ RUN chmod -R 755 ./storage
 
 # Install depencendies
 USER www-data
-RUN composer install --no-cache
+RUN composer install
 RUN composer dumpautoload
 
 # Continue
