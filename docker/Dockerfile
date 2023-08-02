@@ -36,6 +36,7 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 # Set some build ENV variables
 ENV LOG_CHANNEL=stdout
+ENV CACHE_DRIVER=null
 
 # For development only
 WORKDIR /var/www/html
@@ -45,6 +46,12 @@ COPY --chown=www-data:nogroup ./packages ./packages
 WORKDIR /var/www/html/api
 COPY --chown=www-data:nogroup ./api ./
 RUN chown -R www-data:www-data /var/www/html/api
+
+# Setup composer root directory
+RUN mkdir -p /root/.composer
+
+# Load the secret into the auth.json file.
+RUN --mount=type=secret,id=composer_auth,dst=/root/.composer/auth.json
 
 # Setup logging
 # RUN mkdir -p ./storage/logs/ && ln -sf /dev/stdout ./storage/logs/laravel-$(date +'%Y-%m-%d').log
@@ -63,12 +70,6 @@ WORKDIR /
 
 # Create unique instance ID
 RUN echo $(cat /proc/sys/kernel/random/uuid) > /.fleetbase
-
-# Setup composer root directory
-RUN mkdir -p /root/.composer
-
-# Load the secret into the auth.json file.
-RUN --mount=type=secret,id=composer_auth,dst=/root/.composer/auth.json
 
 # Set environment
 ARG ENVIRONMENT=production
