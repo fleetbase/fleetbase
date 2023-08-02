@@ -27,7 +27,7 @@ target "app" {
   ) : []
 
   secret = [
-    "type=file,id=composer_auth,src=${HOME}/.composer/auth.json"
+    "type=file,id=composer_auth,src=./composer-auth.json"
   ]
 }
 
