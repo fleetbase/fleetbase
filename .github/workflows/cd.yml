@@ -62,8 +62,6 @@ jobs:
         push: true
         files: |
           ./docker-bake.hcl
-        secrets: |
-          composer_auth=./composer-auth.json
 
     - name: Download ecs-tool
       run: |
