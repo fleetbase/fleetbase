@@ -1,5 +1,4 @@
 // docker-bake.hcl
-variable "COMPOSER_AUTH" { default = "" }
 variable "REGISTRY" { default = "" }
 variable "VERSION" { default = "latest" }
 
@@ -26,10 +25,6 @@ target "app" {
     "${REGISTRY}:${tgt}-%s",
     compact(["latest", VERSION])
   ) : []
-
-  args = { 
-    "COMPOSER_AUTH" = COMPOSER_AUTH
-  }
 }
 
 target "app-httpd" {

@@ -1,3 +1,4 @@
+# syntax = docker/dockerfile:1.2
 # Base stage
 FROM php:7.4-fpm-bullseye as base
 
@@ -43,7 +44,7 @@ COPY --chown=www-data:nogroup ./api ./
 RUN chown -R www-data:www-data /var/www/html/api
 RUN mkdir -p ./storage/logs/ && ln -sf /dev/stdout ./storage/logs/laravel-$(date +'%Y-%m-%d').log
 USER www-data
-RUN composer install
+RUN composer install --no-cache
 RUN composer dumpautoload
 
 # Continue
@@ -56,11 +57,9 @@ RUN echo $(cat /proc/sys/kernel/random/uuid) > /.fleetbase
 # Setup composer root directory
 RUN mkdir -p /root/.composer
 
-# Docker image will accept a build-arg named COMPOSER_AUTH
-ARG COMPOSER_AUTH
-
-# If applicable use `COMPOSER_AUTH` build-arg to generate the auth.json file.
-RUN if [ -n "$COMPOSER_AUTH" ]; then echo $COMPOSER_AUTH > /root/.composer/auth.json; fi
+# Load the secret into the auth.json file.
+RUN --mount=type=secret,id=composer_auth,dst=/root/.composer/auth.json \
+    cp /root/.composer/auth.json /root/.composer/auth.json
 
 # Set environment
 ARG ENVIRONMENT=production
