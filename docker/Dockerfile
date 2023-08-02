@@ -49,6 +49,7 @@ RUN chown -R www-data:www-data /var/www/html/api
 
 # Setup composer root directory
 RUN mkdir -p /root/.composer
+RUN mkdir -p /var/www/.composer && chown www-data:www-data /var/www/.composer
 
 # Load the secret into the auth.json file.
 RUN --mount=type=secret,id=composer_auth,dst=/root/.composer/auth.json
