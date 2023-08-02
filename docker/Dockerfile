@@ -45,11 +45,9 @@ RUN chown -R www-data:www-data /var/www/html/api
 RUN mkdir -p ./storage/logs/ && ln -sf /dev/stdout ./storage/logs/laravel-$(date +'%Y-%m-%d').log
 RUN chown -R www-data:www-data /var/www/html/api/storage
 RUN chmod -R 755 /var/www/html/api/storage
-RUN export LOG_CHANNEL=stderr
 USER www-data
 RUN composer install --no-cache
 RUN composer dumpautoload
-RUN unset LOG_CHANNEL
 
 # Continue
 USER root
