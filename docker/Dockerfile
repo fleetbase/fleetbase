@@ -59,7 +59,7 @@ RUN chmod -R 755 ./storage
 # Load the secret into the auth.json file if exists, and install dependencies
 COPY composer-auth.jso[n] /root/.composer/auth.json
 RUN --mount=type=secret,id=composer_auth,target=/root/.composer/auth.json \
-    cp /root/.composer/auth.json /var/www/.composer/auth.json && \
+    cp /root/.composer/auth.json /var/www/.composer/auth.json 2>/dev/null && \
     chown www-data:www-data /var/www/.composer/auth.json && \
     su www-data -s /bin/sh -c "composer install && composer dumpautoload"
 
