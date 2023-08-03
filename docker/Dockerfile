@@ -1,3 +1,4 @@
+# syntax = docker/dockerfile:1.2
 # Base stage
 FROM php:7.4-fpm-bullseye as base
 
@@ -33,6 +34,10 @@ COPY --from=ghcr.io/springload/ssm-parent:1.8 /usr/bin/ssm-parent /sbin/ssm-pare
 # Install Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
+# Set some build ENV variables
+ENV LOG_CHANNEL=stdout
+ENV CACHE_DRIVER=null
+
 # For development only
 WORKDIR /var/www/html
 COPY --chown=www-data:nogroup ./packages ./packages
@@ -41,10 +46,22 @@ COPY --chown=www-data:nogroup ./packages ./packages
 WORKDIR /var/www/html/api
 COPY --chown=www-data:nogroup ./api ./
 RUN chown -R www-data:www-data /var/www/html/api
-RUN mkdir -p ./storage/logs/ && ln -sf /dev/stdout ./storage/logs/laravel-$(date +'%Y-%m-%d').log
-USER www-data
-RUN composer install
-RUN composer dumpautoload
+
+# Setup composer root directory
+RUN mkdir -p /root/.composer
+RUN mkdir -p /var/www/.composer && chown www-data:www-data /var/www/.composer
+
+# Setup logging
+RUN mkdir -p ./storage/logs/ && touch ./storage/logs/laravel-$(date +'%Y-%m-%d').log
+RUN chown -R www-data:www-data ./storage
+RUN chmod -R 755 ./storage
+
+# Load the secret into the auth.json file if exists, and install dependencies
+COPY composer-auth.jso[n] /root/.composer/auth.json
+RUN --mount=type=secret,id=composer_auth,target=/root/.composer/auth.json \
+    cp /root/.composer/auth.json /var/www/.composer/auth.json 2>/dev/null && \
+    chown www-data:www-data /var/www/.composer/auth.json && \
+    su www-data -s /bin/sh -c "composer install && composer dumpautoload"
 
 # Continue
 USER root
@@ -52,15 +69,6 @@ WORKDIR /
 
 # Create unique instance ID
 RUN echo $(cat /proc/sys/kernel/random/uuid) > /.fleetbase
-
-# Setup composer root directory
-RUN mkdir -p /root/.composer
-
-# Docker image will accept a build-arg named COMPOSER_AUTH
-ARG COMPOSER_AUTH
-
-# If applicable use `COMPOSER_AUTH` build-arg to generate the auth.json file.
-RUN if [ -n "$COMPOSER_AUTH" ]; then echo $COMPOSER_AUTH > /root/.composer/auth.json; fi
 
 # Set environment
 ARG ENVIRONMENT=production

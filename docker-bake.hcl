@@ -1,5 +1,4 @@
 // docker-bake.hcl
-variable "COMPOSER_AUTH" { default = "" }
 variable "REGISTRY" { default = "" }
 variable "VERSION" { default = "latest" }
 
@@ -27,9 +26,9 @@ target "app" {
     compact(["latest", VERSION])
   ) : []
 
-  args = { 
-    "COMPOSER_AUTH" = COMPOSER_AUTH
-  }
+  secret = [
+    "type=file,id=composer_auth,src=./composer-auth.json"
+  ]
 }
 
 target "app-httpd" {
