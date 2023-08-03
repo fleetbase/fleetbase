@@ -1,0 +1,18 @@
+name: "Close Invalid PRs"
+on:
+  pull_request:
+    branches:
+      - cloud
+
+jobs:
+  close_pr:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Close invalid PRs
+        run: |
+          if [[ "${{ github.event.pull_request.head.ref }}" != "main" ]] && [[ "${{ github.event.pull_request.head.ref }}" != "dev-cloud" ]]; then
+            echo "This PR is from '${{ github.event.pull_request.head.ref }}', but only PRs from 'main' or 'dev-cloud' are allowed. Closing PR."
+            gh pr close ${{ github.event.pull_request.number }} --repo ${{ github.repository }}
+          fi
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
