@@ -5,10 +5,14 @@
         "This file is @generated automatically"
     ],
 <<<<<<< HEAD
+<<<<<<< HEAD
     "content-hash": "6e9e3d69860219b36c287baea742a8c4",
 =======
     "content-hash": "3e71ee50f9853c07fcdadbdc330e53cd",
 >>>>>>> a8944ad (patch deploy script, update core-api to v1.1.7 to use utf-8 aware url parser for db connections)
+=======
+    "content-hash": "f2d82ac81e0ce1db42223b3c9b10b237",
+>>>>>>> b162749 (Hotfix `Utils::parseUrl` for correctly parsing encoded urls)
     "packages": [
         {
             "name": "aloha/twilio",
@@ -2117,6 +2121,7 @@
         {
             "name": "fleetbase/core-api",
 <<<<<<< HEAD
+<<<<<<< HEAD
             "version": "1.1.6-alpha",
             "dist": {
                 "type": "path",
@@ -2124,15 +2129,18 @@
                 "reference": "3905f2f2687a1d45db086a204b41ba4872b567a8"
 =======
             "version": "1.1.7",
+=======
+            "version": "1.1.8",
+>>>>>>> b162749 (Hotfix `Utils::parseUrl` for correctly parsing encoded urls)
             "source": {
                 "type": "git",
                 "url": "https://github.com/fleetbase/core-api.git",
-                "reference": "90bda3385d8cbaacef29a855b23d9070d4db153f"
+                "reference": "077cc923e1344b62f0d6441a5a55ec9823031004"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fleetbase/core-api/zipball/90bda3385d8cbaacef29a855b23d9070d4db153f",
-                "reference": "90bda3385d8cbaacef29a855b23d9070d4db153f",
+                "url": "https://api.github.com/repos/fleetbase/core-api/zipball/077cc923e1344b62f0d6441a5a55ec9823031004",
+                "reference": "077cc923e1344b62f0d6441a5a55ec9823031004",
                 "shasum": ""
 >>>>>>> a8944ad (patch deploy script, update core-api to v1.1.7 to use utf-8 aware url parser for db connections)
             },
@@ -2234,10 +2242,14 @@
 =======
             "support": {
                 "issues": "https://github.com/fleetbase/core-api/issues",
-                "source": "https://github.com/fleetbase/core-api/tree/v1.1.7"
+                "source": "https://github.com/fleetbase/core-api/tree/v1.1.8"
             },
+<<<<<<< HEAD
             "time": "2023-07-30T02:49:06+00:00"
 >>>>>>> a8944ad (patch deploy script, update core-api to v1.1.7 to use utf-8 aware url parser for db connections)
+=======
+            "time": "2023-07-31T12:20:50+00:00"
+>>>>>>> b162749 (Hotfix `Utils::parseUrl` for correctly parsing encoded urls)
         },
         {
             "name": "fleetbase/fleetops-api",
@@ -2424,14 +2436,28 @@
         },
         {
             "name": "fleetbase/storefront-api",
+<<<<<<< HEAD
             "version": "1.0.8-alpha",
             "dist": {
                 "type": "path",
                 "url": "../packages/storefront-api",
                 "reference": "e7e7ad23df4cefca8f63ce1bc0438a27ebfd7af5"
+=======
+            "version": "1.0.9-alpha",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/fleetbase/storefront-api.git",
+                "reference": "3bd21dff45ea3cd2d7959e7d7cc43fb13e7b4573"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/fleetbase/storefront-api/zipball/3bd21dff45ea3cd2d7959e7d7cc43fb13e7b4573",
+                "reference": "3bd21dff45ea3cd2d7959e7d7cc43fb13e7b4573",
+                "shasum": ""
+>>>>>>> b162749 (Hotfix `Utils::parseUrl` for correctly parsing encoded urls)
             },
             "require": {
-                "fleetbase/core-api": "^1.1.6-alpha",
+                "fleetbase/core-api": "^1.1.8",
                 "fleetbase/fleetops-api": "^1.0.9-alpha",
                 "geocoder-php/google-maps-places-provider": "^1.4",
                 "laravel-notification-channels/apn": "^3.8",
@@ -2513,9 +2539,17 @@
                 "marketplace",
                 "storefront"
             ],
+<<<<<<< HEAD
             "transport-options": {
                 "relative": true
             }
+=======
+            "support": {
+                "issues": "https://github.com/fleetbase/storefront-api/issues",
+                "source": "https://github.com/fleetbase/storefront-api/tree/v1.0.9-alpha"
+            },
+            "time": "2023-07-31T12:23:09+00:00"
+>>>>>>> b162749 (Hotfix `Utils::parseUrl` for correctly parsing encoded urls)
         },
         {
             "name": "fruitcake/laravel-cors",
@@ -5939,16 +5973,16 @@
         },
         {
             "name": "masterminds/html5",
-            "version": "2.8.0",
+            "version": "2.8.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Masterminds/html5-php.git",
-                "reference": "3c5d5a56d56f48a1ca08a0670f0f80c1dad368f3"
+                "reference": "f47dcf3c70c584de14f21143c55d9939631bc6cf"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Masterminds/html5-php/zipball/3c5d5a56d56f48a1ca08a0670f0f80c1dad368f3",
-                "reference": "3c5d5a56d56f48a1ca08a0670f0f80c1dad368f3",
+                "url": "https://api.github.com/repos/Masterminds/html5-php/zipball/f47dcf3c70c584de14f21143c55d9939631bc6cf",
+                "reference": "f47dcf3c70c584de14f21143c55d9939631bc6cf",
                 "shasum": ""
             },
             "require": {
@@ -6000,9 +6034,9 @@
             ],
             "support": {
                 "issues": "https://github.com/Masterminds/html5-php/issues",
-                "source": "https://github.com/Masterminds/html5-php/tree/2.8.0"
+                "source": "https://github.com/Masterminds/html5-php/tree/2.8.1"
             },
-            "time": "2023-04-26T07:27:39+00:00"
+            "time": "2023-05-10T11:58:31+00:00"
         },
         {
             "name": "milon/barcode",
@@ -6694,20 +6728,20 @@
         },
         {
             "name": "nette/utils",
-            "version": "v3.2.9",
+            "version": "v3.2.10",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nette/utils.git",
-                "reference": "c91bac3470c34b2ecd5400f6e6fdf0b64a836a5c"
+                "reference": "a4175c62652f2300c8017fb7e640f9ccb11648d2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nette/utils/zipball/c91bac3470c34b2ecd5400f6e6fdf0b64a836a5c",
-                "reference": "c91bac3470c34b2ecd5400f6e6fdf0b64a836a5c",
+                "url": "https://api.github.com/repos/nette/utils/zipball/a4175c62652f2300c8017fb7e640f9ccb11648d2",
+                "reference": "a4175c62652f2300c8017fb7e640f9ccb11648d2",
                 "shasum": ""
             },
             "require": {
-                "php": ">=7.2 <8.3"
+                "php": ">=7.2 <8.4"
             },
             "conflict": {
                 "nette/di": "<3.0.6"
@@ -6774,9 +6808,9 @@
             ],
             "support": {
                 "issues": "https://github.com/nette/utils/issues",
-                "source": "https://github.com/nette/utils/tree/v3.2.9"
+                "source": "https://github.com/nette/utils/tree/v3.2.10"
             },
-            "time": "2023-01-18T03:26:20+00:00"
+            "time": "2023-07-30T15:38:18+00:00"
         },
         {
             "name": "nikic/php-parser",
@@ -10545,16 +10579,16 @@
         },
         {
             "name": "symfony/finder",
-            "version": "v5.4.26",
+            "version": "v5.4.27",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/finder.git",
-                "reference": "01ef6b2391a59bb4c5d3c59e2ef9b99c7d335d17"
+                "reference": "ff4bce3c33451e7ec778070e45bd23f74214cd5d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/finder/zipball/01ef6b2391a59bb4c5d3c59e2ef9b99c7d335d17",
-                "reference": "01ef6b2391a59bb4c5d3c59e2ef9b99c7d335d17",
+                "url": "https://api.github.com/repos/symfony/finder/zipball/ff4bce3c33451e7ec778070e45bd23f74214cd5d",
+                "reference": "ff4bce3c33451e7ec778070e45bd23f74214cd5d",
                 "shasum": ""
             },
             "require": {
@@ -10588,7 +10622,7 @@
             "description": "Finds files and directories via an intuitive fluent interface",
             "homepage": "https://symfony.com",
             "support": {
-                "source": "https://github.com/symfony/finder/tree/v5.4.26"
+                "source": "https://github.com/symfony/finder/tree/v5.4.27"
             },
             "funding": [
                 {
@@ -10604,7 +10638,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2023-07-09T13:55:15+00:00"
+            "time": "2023-07-31T08:02:31+00:00"
         },
         {
             "name": "symfony/http-foundation",
@@ -10684,16 +10718,16 @@
         },
         {
             "name": "symfony/http-kernel",
-            "version": "v5.4.26",
+            "version": "v5.4.27",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/http-kernel.git",
-                "reference": "535261726c4e06284305e037c173675fed4aea0d"
+                "reference": "9f5624816c0b8d92f85666ac7ed2825a18fcd899"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/http-kernel/zipball/535261726c4e06284305e037c173675fed4aea0d",
-                "reference": "535261726c4e06284305e037c173675fed4aea0d",
+                "url": "https://api.github.com/repos/symfony/http-kernel/zipball/9f5624816c0b8d92f85666ac7ed2825a18fcd899",
+                "reference": "9f5624816c0b8d92f85666ac7ed2825a18fcd899",
                 "shasum": ""
             },
             "require": {
@@ -10776,7 +10810,7 @@
             "description": "Provides a structured process for converting a Request into a Response",
             "homepage": "https://symfony.com",
             "support": {
-                "source": "https://github.com/symfony/http-kernel/tree/v5.4.26"
+                "source": "https://github.com/symfony/http-kernel/tree/v5.4.27"
             },
             "funding": [
                 {
@@ -10792,7 +10826,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2023-07-29T15:43:25+00:00"
+            "time": "2023-07-31T10:18:38+00:00"
         },
         {
             "name": "symfony/mime",
