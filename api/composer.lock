@@ -4,15 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-<<<<<<< HEAD
-<<<<<<< HEAD
-    "content-hash": "74cf9651ce1be68cc789fbe17b2ee2da",
-=======
-    "content-hash": "240772719cdb045b2016e608d214672b",
->>>>>>> e03c34d (add billing extension to cloud branch)
-=======
-    "content-hash": "d869f76f3d808cc1ac6b39bde50fc453",
->>>>>>> d139e69 (Added billing extension for cloud version)
+    "content-hash": "96f484c0affadbfb960a3d78de06b8c0",
     "packages": [
         {
             "name": "aloha/twilio",
@@ -200,7 +192,6 @@
         },
         {
             "name": "aws/aws-sdk-php",
-<<<<<<< HEAD
             "version": "3.277.9",
             "source": {
                 "type": "git",
@@ -211,18 +202,6 @@
                 "type": "zip",
                 "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/f2437a755b70756425bf8f1bd588a7c583891900",
                 "reference": "f2437a755b70756425bf8f1bd588a7c583891900",
-=======
-            "version": "3.277.8",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "dc082f3a3e7bed6f453e839472baeb5b5dd433ec"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/dc082f3a3e7bed6f453e839472baeb5b5dd433ec",
-                "reference": "dc082f3a3e7bed6f453e839472baeb5b5dd433ec",
->>>>>>> e03c34d (add billing extension to cloud branch)
                 "shasum": ""
             },
             "require": {
@@ -302,15 +281,9 @@
             "support": {
                 "forum": "https://forums.aws.amazon.com/forum.jspa?forumID=80",
                 "issues": "https://github.com/aws/aws-sdk-php/issues",
-<<<<<<< HEAD
                 "source": "https://github.com/aws/aws-sdk-php/tree/3.277.9"
             },
             "time": "2023-08-04T18:16:19+00:00"
-=======
-                "source": "https://github.com/aws/aws-sdk-php/tree/3.277.8"
-            },
-            "time": "2023-08-03T18:09:45+00:00"
->>>>>>> e03c34d (add billing extension to cloud branch)
         },
         {
             "name": "aws/aws-sdk-php-laravel",
@@ -5462,7 +5435,6 @@
         },
         {
             "name": "league/mime-type-detection",
-<<<<<<< HEAD
             "version": "1.13.0",
             "source": {
                 "type": "git",
@@ -5473,18 +5445,6 @@
                 "type": "zip",
                 "url": "https://api.github.com/repos/thephpleague/mime-type-detection/zipball/a6dfb1194a2946fcdc1f38219445234f65b35c96",
                 "reference": "a6dfb1194a2946fcdc1f38219445234f65b35c96",
-=======
-            "version": "1.12.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/thephpleague/mime-type-detection.git",
-                "reference": "c7f2872fb273bf493811473dafc88d60ae829f48"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/thephpleague/mime-type-detection/zipball/c7f2872fb273bf493811473dafc88d60ae829f48",
-                "reference": "c7f2872fb273bf493811473dafc88d60ae829f48",
->>>>>>> e03c34d (add billing extension to cloud branch)
                 "shasum": ""
             },
             "require": {
@@ -5515,11 +5475,7 @@
             "description": "Mime-type detection for Flysystem",
             "support": {
                 "issues": "https://github.com/thephpleague/mime-type-detection/issues",
-<<<<<<< HEAD
                 "source": "https://github.com/thephpleague/mime-type-detection/tree/1.13.0"
-=======
-                "source": "https://github.com/thephpleague/mime-type-detection/tree/1.12.0"
->>>>>>> e03c34d (add billing extension to cloud branch)
             },
             "funding": [
                 {
@@ -5531,11 +5487,7 @@
                     "type": "tidelift"
                 }
             ],
-<<<<<<< HEAD
             "time": "2023-08-05T12:09:49+00:00"
-=======
-            "time": "2023-08-03T07:14:11+00:00"
->>>>>>> e03c34d (add billing extension to cloud branch)
         },
         {
             "name": "maatwebsite/excel",
