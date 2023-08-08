@@ -58,6 +58,7 @@ jobs:
       env: 
         REGISTRY: ${{ steps.login-ecr.outputs.registry }}/${{ env.PROJECT }}-${{ env.STACK }}
         VERSION: ${{ env.VERSION }}
+        CACHE: type=gha
       with:
         push: true
         files: |
