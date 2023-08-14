@@ -1,0 +1,59 @@
+image: docker:stable-git
+variables:
+# will need the following env vars set in the CI/CD settings
+# PROJECT - needs to match the project name in the infrastructure
+# GITHUB_AUTH_TOKEN - if you have it
+# the AWS specific variables:
+# AWS_REGION - the project region
+# AWS_ACCESS_KEY_ID - since OIDC support in Gitlab greatly varies between versions have to revert to plain old user creds
+# AWS_SECRET_ACCESS_KEY
+
+build_image:
+  stage: build
+  tags:
+    - docker
+  script:
+    - mkdir -p /usr/local/lib/docker/cli-plugins && wget -O /usr/local/lib/docker/cli-plugins/docker-buildx https://github.com/docker/buildx/releases/download/v0.11.2/buildx-v0.11.2.linux-amd64 && chmod +x /usr/local/lib/docker/cli-plugins/docker-buildx
+    - |-
+        if [[ -n "${GITHUB_AUTH_TOKEN}" ]]; then
+          echo '{"github-oauth": {"github.com": "'${GITHUB_AUTH_TOKEN}'"}}' > composer-auth.json
+        else
+          echo '{}' > composer-auth.json
+        fi
+    - |-
+        set -eu
+
+        docker buildx create --driver docker-container --driver-opt image=moby/buildkit:v0.11.5 --use
+
+        docker buildx bake -f docker-bake.hcl --print # just print for now
+
+
+deploy:
+  stage: deploy
+  only:
+    - /^deploy\/.*$/
+  tags:
+    - docker
+  script:
+    - mkdir -p /usr/local/lib/docker/cli-plugins && wget -O /usr/local/lib/docker/cli-plugins/docker-buildx https://github.com/docker/buildx/releases/download/v0.11.2/buildx-v0.11.2.linux-amd64 && chmod +x /usr/local/lib/docker/cli-plugins/docker-buildx
+    - docker buildx create --driver docker-container --driver-opt image=moby/buildkit:v0.11.5 --use
+    - 'export VERSION="$(git describe --always --tags)"'
+    - 'export STACK="$(basename $CI_COMMIT_REF_NAME)"'
+    - |-
+        if [[ -n "${GITHUB_AUTH_TOKEN}" ]]; then
+          echo '{"github-oauth": {"github.com": "'${GITHUB_AUTH_TOKEN}'"}}' > composer-auth.json
+        else
+          echo '{}' > composer-auth.json
+        fi
+    - |-
+        set -eu
+
+        wget https://github.com/springload/ecs-tool/releases/download/1.9.6/ecs-tool_1.9.6_linux_amd64.tar.gz -O /tmp/ecs-tool.tar.gz && tar -C /usr/bin -xvf /tmp/ecs-tool.tar.gz ecs-tool
+        export REGISTRY=$(ecs-tool ecr-endpoint)/${PROJECT}-${STACK}
+        eval $(ecs-tool ecr-login)
+
+        docker buildx bake -f docker-bake.hcl --push
+
+        # run deploy.sh script before deployments
+        env "ECS_RUN.SERVICE=app" "ECS_RUN.LAUNCH_TYPE=FARGATE" ecs-tool run --image_tag '{container_name}-${VERSION}' --cluster ${PROJECT}-${STACK} --task_definition ${PROJECT}-${STACK}-app --container_name app ./deploy.sh
+        ecs-tool deploy --image_tag '{container_name}-${{ env.VERSION }}' --cluster ${{ env.PROJECT }}-${{ env.STACK }} -s app -s scheduler -s events
