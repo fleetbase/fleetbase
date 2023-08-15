@@ -1,0 +1,20 @@
+connectionString: "mysql://root@tcp(127.0.0.1:3306)/fleetbase"
+
+schema: 
+  - "fleetbase"
+  - "fleetbase_storefront"
+
+useAllTables: true
+
+showAllConstraints: true
+encloseWithMermaidBackticks: false
+outputFileName: "fleetbase-db.mmd"
+debug: true
+omitConstraintLabels: true
+omitAttributeKeys: true
+showDescriptions:
+  - enumValues
+  - columnComments
+  - notNull
+showSchemaPrefix: true
+schemaPrefixSeparator: "_"
