@@ -1,0 +1,1559 @@
+erDiagram
+    fleetbase_activity {
+        char causer_id
+        varchar causer_type
+        char company_id
+        timestamp created_at
+        text description "{NOT_NULL}"
+        int id "{NOT_NULL}"
+        varchar log_name
+        text properties
+        char subject_id
+        varchar subject_type
+        timestamp updated_at
+        char uuid
+    }
+
+    fleetbase_api_credentials {
+        varchar _key
+        varchar api
+        json browser_origins
+        varchar company_uuid
+        timestamp created_at
+        timestamp deleted_at
+        datetime expires_at
+        int id "{NOT_NULL}"
+        varchar key
+        datetime last_used_at
+        varchar name
+        varchar secret
+        int test_mode "{NOT_NULL}"
+        timestamp updated_at
+        varchar user_uuid
+        varchar uuid
+    }
+
+    fleetbase_api_events {
+        varchar _key
+        varchar api_credential_uuid
+        varchar company_uuid
+        timestamp created_at
+        json data
+        timestamp deleted_at
+        varchar description
+        varchar event
+        int id "{NOT_NULL}"
+        varchar method
+        varchar public_id
+        varchar source
+        timestamp updated_at
+        varchar uuid
+    }
+
+    fleetbase_api_request_logs {
+        varchar _key
+        char api_credential_uuid
+        char company_uuid
+        varchar content_type
+        timestamp created_at
+        timestamp deleted_at
+        decimal duration
+        varchar full_url
+        int id "{NOT_NULL}"
+        varchar ip_address
+        varchar method
+        varchar path
+        varchar public_id
+        json query_params
+        varchar reason_phrase
+        json related
+        json request_body
+        json request_headers
+        mediumtext request_raw_body
+        json response_body
+        json response_headers
+        mediumtext response_raw_body
+        varchar source
+        varchar status_code
+        timestamp updated_at
+        char uuid "{NOT_NULL}"
+        varchar version
+    }
+
+    fleetbase_categories {
+        varchar _key
+        varchar company_uuid
+        timestamp created_at
+        timestamp deleted_at
+        varchar description
+        varchar for
+        varchar icon
+        varchar icon_color
+        char icon_file_uuid
+        int id "{NOT_NULL}"
+        varchar internal_id
+        json meta
+        varchar name
+        varchar order
+        varchar owner_type
+        varchar owner_uuid
+        varchar parent_uuid
+        varchar public_id
+        varchar slug
+        json tags
+        json translations
+        timestamp updated_at
+        varchar uuid
+    }
+
+    fleetbase_companies {
+        varchar _key
+        varchar backdrop_uuid
+        varchar card_brand
+        varchar card_last_four
+        varchar country
+        timestamp created_at
+        varchar currency
+        timestamp deleted_at
+        varchar description
+        int id "{NOT_NULL}"
+        varchar logo_uuid
+        varchar name
+        json options
+        varchar owner_uuid
+        varchar phone
+        varchar place_uuid
+        varchar plan
+        varchar public_id
+        varchar slug
+        varchar status
+        varchar stripe_connect_id
+        varchar stripe_id
+        varchar timezone
+        timestamp trial_ends_at
+        varchar type
+        timestamp updated_at
+        varchar uuid
+        varchar website_url
+    }
+
+    fleetbase_company_users {
+        varchar _key
+        char company_uuid
+        timestamp created_at
+        timestamp deleted_at
+        int id "{NOT_NULL}"
+        varchar status "{NOT_NULL}"
+        timestamp updated_at
+        char user_uuid
+        char uuid "{NOT_NULL}"
+    }
+
+    fleetbase_contacts {
+        varchar _key
+        varchar company_uuid
+        timestamp created_at
+        timestamp deleted_at
+        varchar email
+        int id "{NOT_NULL}"
+        varchar internal_id
+        json meta
+        varchar name
+        varchar phone
+        varchar photo_uuid
+        varchar public_id
+        varchar slug
+        varchar title
+        varchar type
+        timestamp updated_at
+        char user_uuid
+        varchar uuid
+    }
+
+    fleetbase_drivers {
+        varchar _key
+        varchar altitude
+        varchar auth_token
+        varchar bearing
+        varchar city
+        varchar company_uuid
+        varchar country
+        timestamp created_at
+        varchar currency
+        varchar current_job_uuid
+        timestamp deleted_at
+        varchar drivers_license_number
+        varchar heading
+        int id "{NOT_NULL}"
+        varchar internal_id
+        varchar latitude
+        point location "{NOT_NULL}"
+        varchar longitude
+        int online "{NOT_NULL}"
+        varchar public_id
+        varchar signup_token_used
+        varchar slug
+        varchar speed
+        varchar status
+        timestamp updated_at
+        varchar user_uuid
+        varchar uuid
+        varchar vehicle_uuid
+        varchar vendor_type
+        varchar vendor_uuid
+    }
+
+    fleetbase_entities {
+        varchar _import_id
+        varchar _key
+        mediumtext barcode
+        varchar company_uuid
+        timestamp created_at
+        varchar currency
+        varchar customer_type
+        varchar customer_uuid
+        int declared_value
+        timestamp deleted_at
+        mediumtext description
+        varchar destination_uuid
+        varchar dimensions_unit
+        varchar driver_assigned_uuid
+        varchar height
+        int id "{NOT_NULL}"
+        varchar internal_id
+        varchar length
+        json meta
+        varchar name
+        varchar payload_uuid
+        mediumtext photo_uuid
+        varchar price
+        varchar public_id
+        mediumtext qr_code
+        varchar sale_price
+        varchar sku
+        varchar slug
+        varchar tracking_number_uuid
+        varchar type
+        timestamp updated_at
+        varchar uuid
+        varchar weight
+        varchar weight_unit
+        varchar width
+    }
+
+    fleetbase_extension_installs {
+        varchar _key
+        varchar company_uuid
+        json config
+        timestamp created_at
+        timestamp deleted_at
+        char extension_uuid
+        bigint id "{NOT_NULL}"
+        json meta
+        json overwrite
+        timestamp updated_at
+        varchar uuid
+    }
+
+    fleetbase_extensions {
+        varchar _key
+        varchar author_uuid
+        varchar category_uuid
+        varchar client_token
+        varchar component_url
+        json config
+        varchar contact_email
+        tinyint core_service "{NOT_NULL}"
+        timestamp created_at
+        timestamp deleted_at
+        mediumtext description
+        varchar display_name
+        json domains
+        varchar extension_id
+        varchar fa_icon
+        varchar icon_uuid
+        int id "{NOT_NULL}"
+        varchar internal_route
+        varchar key
+        json meta
+        varchar meta_type
+        varchar name
+        varchar namespace
+        varchar privacy_policy_url
+        varchar public_id
+        varchar secret
+        varchar slug
+        varchar status
+        json tags
+        varchar tos_url
+        varchar type_uuid
+        timestamp updated_at
+        varchar uuid
+        varchar version
+        varchar website_url
+    }
+
+    fleetbase_files {
+        varchar _key
+        varchar bucket
+        varchar caption
+        varchar company_uuid
+        varchar content_type
+        timestamp created_at
+        mediumtext data_params
+        timestamp deleted_at
+        varchar etag
+        int file_size
+        varchar folder
+        int id "{NOT_NULL}"
+        varchar original_filename
+        longtext path
+        varchar public_id
+        varchar slug
+        varchar subject_type
+        varchar subject_uuid
+        varchar type
+        timestamp updated_at
+        varchar uploader_uuid
+        varchar uuid
+    }
+
+    fleetbase_fleet_drivers {
+        varchar _key
+        timestamp created_at
+        timestamp deleted_at
+        varchar driver_uuid
+        varchar fleet_uuid
+        int id "{NOT_NULL}"
+        timestamp updated_at
+        varchar uuid
+    }
+
+    fleetbase_fleets {
+        varchar _key
+        varchar color
+        varchar company_uuid
+        timestamp created_at
+        timestamp deleted_at
+        int id "{NOT_NULL}"
+        varchar image_uuid
+        varchar name
+        varchar public_id
+        varchar service_area_uuid
+        varchar slug
+        varchar status
+        varchar task
+        timestamp updated_at
+        varchar uuid
+        varchar zone_uuid
+    }
+
+    fleetbase_fuel_reports {
+        varchar _key
+        varchar amount
+        varchar company_uuid
+        timestamp created_at
+        varchar currency
+        timestamp deleted_at
+        varchar driver_uuid
+        int id "{NOT_NULL}"
+        varchar latitude
+        point location "{NOT_NULL}"
+        varchar longitude
+        varchar metric_unit
+        varchar odometer
+        varchar public_id
+        timestamp updated_at
+        varchar uuid
+        varchar vehicle_uuid
+        varchar volume
+    }
+
+    fleetbase_group_users {
+        varchar _key
+        timestamp created_at
+        timestamp deleted_at
+        char group_uuid "{NOT_NULL}"
+        int id "{NOT_NULL}"
+        timestamp updated_at
+        char user_uuid "{NOT_NULL}"
+        varchar uuid
+    }
+
+    fleetbase_groups {
+        varchar _key
+        varchar company_uuid
+        timestamp created_at
+        timestamp deleted_at
+        varchar description
+        int id "{NOT_NULL}"
+        varchar name
+        varchar slug
+        timestamp updated_at
+        varchar uuid
+    }
+
+    fleetbase_integrated_vendors {
+        varchar _key
+        char company_uuid
+        timestamp created_at
+        char created_by_uuid
+        json credentials
+        timestamp deleted_at
+        varchar host
+        bigint id "{NOT_NULL}"
+        varchar namespace
+        json options
+        varchar provider
+        varchar public_id
+        tinyint sandbox "{NOT_NULL}"
+        timestamp updated_at
+        char uuid
+        varchar webhook_url
+    }
+
+    fleetbase_invites {
+        varchar _key
+        varchar code
+        char company_uuid
+        timestamp created_at
+        char created_by_uuid
+        timestamp deleted_at
+        datetime expires_at
+        bigint id "{NOT_NULL}"
+        varchar protocol "{NOT_NULL}"
+        varchar public_id
+        varchar reason
+        json recipients
+        varchar subject_type
+        char subject_uuid
+        timestamp updated_at
+        varchar uri
+        char uuid
+    }
+
+    fleetbase_issues {
+        varchar _key
+        varchar assigned_to_uuid
+        varchar company_uuid
+        timestamp created_at
+        timestamp deleted_at
+        varchar driver_uuid
+        int id "{NOT_NULL}"
+        varchar issue_id
+        varchar latitude
+        point location "{NOT_NULL}"
+        varchar longitude
+        varchar odometer
+        varchar priority
+        varchar public_id
+        varchar report
+        datetime resolved_at
+        varchar status
+        varchar type
+        timestamp updated_at
+        varchar uuid
+        varchar vehicle_uuid
+    }
+
+    fleetbase_login_attempts {
+        varchar _key
+        timestamp created_at
+        timestamp deleted_at
+        int id "{NOT_NULL}"
+        varchar identity
+        varchar password
+        timestamp updated_at
+        varchar uuid
+    }
+
+    fleetbase_migrations {
+        int batch "{NOT_NULL}"
+        int id "{NOT_NULL}"
+        varchar migration "{NOT_NULL}"
+    }
+
+    fleetbase_model_has_permissions {
+        char model_id "{NOT_NULL}"
+        varchar model_type "{NOT_NULL}"
+        char permission_id "{NOT_NULL}"
+    }
+
+    fleetbase_model_has_policies {
+        varchar model_type "{NOT_NULL}"
+        char model_uuid "{NOT_NULL}"
+        char policy_id "{NOT_NULL}"
+    }
+
+    fleetbase_model_has_roles {
+        char model_id "{NOT_NULL}"
+        varchar model_type "{NOT_NULL}"
+        char role_id "{NOT_NULL}"
+    }
+
+    fleetbase_orders {
+        varchar _key
+        tinyint adhoc "{NOT_NULL}"
+        int adhoc_distance
+        varchar company_uuid
+        timestamp created_at
+        char created_by_uuid
+        varchar customer_type
+        varchar customer_uuid
+        timestamp deleted_at
+        tinyint dispatched "{NOT_NULL}"
+        datetime dispatched_at
+        int distance
+        varchar driver_assigned_uuid
+        varchar facilitator_type
+        varchar facilitator_uuid
+        int id "{NOT_NULL}"
+        varchar internal_id
+        tinyint is_route_optimized "{NOT_NULL}"
+        json meta
+        mediumtext notes
+        json options
+        varchar payload_uuid
+        varchar pod_method
+        tinyint pod_required
+        varchar public_id
+        varchar purchase_rate_uuid
+        char route_uuid
+        datetime scheduled_at
+        varchar session_uuid
+        tinyint started "{NOT_NULL}"
+        datetime started_at
+        varchar status
+        int time
+        varchar tracking_number_uuid
+        varchar transaction_uuid
+        varchar type
+        timestamp updated_at
+        char updated_by_uuid
+        varchar uuid
+    }
+
+    fleetbase_payloads {
+        varchar _key
+        int cod_amount
+        varchar cod_currency
+        varchar cod_payment_method
+        varchar company_uuid
+        timestamp created_at
+        varchar current_waypoint_uuid
+        timestamp deleted_at
+        varchar dropoff_uuid
+        int id "{NOT_NULL}"
+        json meta
+        varchar payment_method
+        varchar pickup_uuid
+        varchar provider
+        varchar public_id
+        varchar return_uuid
+        varchar type
+        timestamp updated_at
+        varchar uuid
+    }
+
+    fleetbase_permissions {
+        timestamp created_at
+        varchar guard_name "{NOT_NULL}"
+        char id "{NOT_NULL}"
+        varchar name "{NOT_NULL}"
+        timestamp updated_at
+    }
+
+    fleetbase_personal_access_tokens {
+        text abilities
+        timestamp created_at
+        bigint id "{NOT_NULL}"
+        timestamp last_used_at
+        varchar name "{NOT_NULL}"
+        varchar token "{NOT_NULL}"
+        char tokenable_id "(DC2Type:guid) {NOT_NULL}"
+        varchar tokenable_type "{NOT_NULL}"
+        timestamp updated_at
+    }
+
+    fleetbase_places {
+        varchar _import_id
+        varchar _key
+        varchar building
+        varchar city
+        varchar company_uuid
+        varchar country
+        timestamp created_at
+        timestamp deleted_at
+        varchar district
+        int id "{NOT_NULL}"
+        varchar latitude
+        point location "{NOT_NULL}"
+        varchar longitude
+        json meta
+        varchar name
+        varchar neighborhood
+        varchar owner_type
+        char owner_uuid
+        varchar phone
+        varchar postal_code
+        varchar province
+        varchar public_id
+        mediumtext remarks
+        varchar security_access_code
+        varchar street1
+        varchar street2
+        varchar type
+        timestamp updated_at
+        varchar uuid
+    }
+
+    fleetbase_policies {
+        varchar _key
+        char company_uuid
+        timestamp created_at
+        timestamp deleted_at
+        varchar description
+        varchar guard_name
+        char id "{NOT_NULL}"
+        varchar name
+        timestamp updated_at
+    }
+
+    fleetbase_positions {
+        varchar _key
+        varchar altitude
+        varchar bearing
+        char company_uuid
+        point coordinates "{NOT_NULL}"
+        timestamp created_at
+        timestamp deleted_at
+        char destination_uuid
+        varchar heading
+        bigint id "{NOT_NULL}"
+        char order_uuid
+        varchar speed
+        varchar subject_type
+        char subject_uuid
+        timestamp updated_at
+        char uuid "{NOT_NULL}"
+    }
+
+    fleetbase_proofs {
+        varchar _key
+        char company_uuid
+        timestamp created_at
+        json data
+        timestamp deleted_at
+        char file_uuid
+        int id "{NOT_NULL}"
+        char order_uuid
+        varchar public_id
+        longtext raw_data
+        longtext remarks
+        varchar subject_type
+        char subject_uuid
+        timestamp updated_at
+        char uuid "{NOT_NULL}"
+    }
+
+    fleetbase_purchase_rates {
+        varchar _key
+        varchar company_uuid
+        timestamp created_at
+        varchar customer_type
+        varchar customer_uuid
+        timestamp deleted_at
+        int id "{NOT_NULL}"
+        json meta
+        varchar payload_uuid
+        varchar public_id
+        varchar service_quote_uuid
+        varchar status
+        varchar transaction_uuid
+        timestamp updated_at
+        varchar uuid
+    }
+
+    fleetbase_role_has_permissions {
+        char permission_id "{NOT_NULL}"
+        char role_id "{NOT_NULL}"
+    }
+
+    fleetbase_roles {
+        char company_uuid
+        timestamp created_at
+        timestamp deleted_at
+        varchar description
+        varchar guard_name "{NOT_NULL}"
+        char id "{NOT_NULL}"
+        varchar name "{NOT_NULL}"
+        timestamp updated_at
+    }
+
+    fleetbase_routes {
+        varchar _key
+        char company_uuid
+        timestamp created_at
+        timestamp deleted_at
+        json details
+        bigint id "{NOT_NULL}"
+        char order_uuid
+        double total_distance
+        double total_time
+        timestamp updated_at
+        char uuid "{NOT_NULL}"
+    }
+
+    fleetbase_service_areas {
+        varchar _key
+        multipolygon border
+        varchar color
+        varchar company_uuid
+        varchar country
+        timestamp created_at
+        timestamp deleted_at
+        int id "{NOT_NULL}"
+        varchar name
+        varchar parent_uuid
+        varchar public_id
+        varchar status
+        varchar stroke_color
+        varchar type
+        timestamp updated_at
+        varchar uuid
+    }
+
+    fleetbase_service_quote_items {
+        varchar _key
+        varchar amount
+        varchar code
+        timestamp created_at
+        varchar currency
+        timestamp deleted_at
+        varchar details
+        int id "{NOT_NULL}"
+        varchar service_quote_uuid
+        timestamp updated_at
+        varchar uuid
+    }
+
+    fleetbase_service_quotes {
+        varchar _key
+        int amount
+        varchar company_uuid
+        timestamp created_at
+        varchar currency
+        timestamp deleted_at
+        varchar expired_at
+        int id "{NOT_NULL}"
+        char integrated_vendor_uuid
+        json meta
+        varchar payload_uuid
+        varchar public_id
+        varchar request_id
+        varchar service_rate_uuid
+        timestamp updated_at
+        varchar uuid
+    }
+
+    fleetbase_service_rate_fees {
+        varchar _key
+        timestamp created_at
+        varchar currency
+        timestamp deleted_at
+        int distance
+        varchar distance_unit
+        int fee
+        int id "{NOT_NULL}"
+        int max
+        int min
+        varchar service_rate_uuid
+        varchar unit
+        timestamp updated_at
+        varchar uuid
+    }
+
+    fleetbase_service_rate_parcel_fees {
+        varchar _key
+        timestamp created_at
+        varchar currency
+        timestamp deleted_at
+        varchar dimensions_unit
+        int fee
+        varchar height
+        int id "{NOT_NULL}"
+        varchar length
+        varchar service_rate_uuid
+        varchar size
+        timestamp updated_at
+        varchar uuid
+        varchar weight
+        varchar weight_unit
+        varchar width
+    }
+
+    fleetbase_service_rates {
+        varchar _key
+        varchar algorithm
+        int base_fee
+        varchar cod_calculation_method
+        int cod_flat_fee
+        int cod_percent
+        varchar company_uuid
+        timestamp created_at
+        varchar currency
+        timestamp deleted_at
+        varchar duration_terms
+        int estimated_days
+        int has_cod_fee
+        int has_peak_hours_fee
+        int id "{NOT_NULL}"
+        varchar peak_hours_calculation_method
+        varchar peak_hours_end
+        int peak_hours_flat_fee
+        int peak_hours_percent
+        varchar peak_hours_start
+        int per_meter_flat_rate_fee
+        varchar per_meter_unit
+        varchar public_id
+        varchar rate_calculation_method
+        varchar service_area_uuid
+        varchar service_name
+        varchar service_type
+        timestamp updated_at
+        varchar uuid
+        varchar zone_uuid
+    }
+
+    fleetbase_settings {
+        int id "{NOT_NULL}"
+        varchar key
+        json value
+    }
+
+    fleetbase_tracking_numbers {
+        varchar _key
+        mediumtext barcode
+        varchar company_uuid
+        timestamp created_at
+        timestamp deleted_at
+        int id "{NOT_NULL}"
+        varchar owner_type
+        varchar owner_uuid
+        varchar public_id
+        mediumtext qr_code
+        varchar region
+        varchar status_uuid
+        varchar tracking_number
+        timestamp updated_at
+        varchar uuid
+    }
+
+    fleetbase_tracking_statuses {
+        varchar _key
+        varchar city
+        varchar code
+        varchar company_uuid
+        varchar country
+        timestamp created_at
+        timestamp deleted_at
+        mediumtext details
+        int id "{NOT_NULL}"
+        varchar latitude
+        point location "{NOT_NULL}"
+        varchar longitude
+        json meta
+        varchar postal_code
+        char proof_uuid
+        varchar province
+        varchar public_id
+        varchar status
+        varchar tracking_number_uuid
+        timestamp updated_at
+        varchar uuid
+    }
+
+    fleetbase_transaction_items {
+        varchar _key
+        varchar amount
+        varchar code
+        timestamp created_at
+        varchar currency
+        timestamp deleted_at
+        varchar details
+        int id "{NOT_NULL}"
+        json meta
+        varchar transaction_uuid
+        timestamp updated_at
+        varchar uuid
+    }
+
+    fleetbase_transactions {
+        varchar _key
+        int amount
+        varchar company_uuid
+        timestamp created_at
+        varchar currency
+        varchar customer_type
+        varchar customer_uuid
+        timestamp deleted_at
+        varchar description
+        varchar gateway
+        varchar gateway_transaction_id
+        char gateway_uuid
+        int id "{NOT_NULL}"
+        json meta
+        varchar owner_type
+        char owner_uuid
+        varchar public_id
+        varchar status
+        varchar type
+        timestamp updated_at
+        varchar uuid
+    }
+
+    fleetbase_types {
+        varchar _key
+        varchar company_uuid
+        timestamp created_at
+        timestamp deleted_at
+        varchar description
+        varchar for
+        int id "{NOT_NULL}"
+        varchar key
+        json meta
+        varchar name
+        varchar slug
+        varchar subject_type
+        char subject_uuid
+        timestamp updated_at
+        varchar uuid
+    }
+
+    fleetbase_user_devices {
+        varchar _key
+        timestamp created_at
+        timestamp deleted_at
+        int id "{NOT_NULL}"
+        varchar platform
+        varchar public_id
+        varchar status
+        mediumtext token
+        timestamp updated_at
+        varchar user_uuid
+        varchar uuid
+    }
+
+    fleetbase_users {
+        varchar _key
+        varchar avatar_uuid
+        varchar company_uuid
+        varchar country
+        timestamp created_at
+        varchar date_of_birth
+        timestamp deleted_at
+        varchar email
+        datetime email_verified_at
+        int id "{NOT_NULL}"
+        varchar ip_address
+        varchar last_login
+        json meta
+        varchar name
+        varchar password
+        varchar phone
+        datetime phone_verified_at
+        varchar public_id
+        varchar remember_token
+        varchar slug
+        varchar status
+        varchar timezone
+        varchar type
+        timestamp updated_at
+        varchar username
+        varchar uuid
+    }
+
+    fleetbase_vehicles {
+        varchar _key
+        varchar avatar_url
+        varchar company_uuid
+        timestamp created_at
+        timestamp deleted_at
+        int id "{NOT_NULL}"
+        varchar make
+        json meta
+        varchar model
+        varchar model_0_to_100_kph
+        varchar model_body
+        varchar model_co2
+        varchar model_doors
+        varchar model_drive
+        varchar model_engine_bore_mm
+        varchar model_engine_cc
+        varchar model_engine_compression
+        varchar model_engine_cyl
+        varchar model_engine_fuel
+        varchar model_engine_position
+        varchar model_engine_power_ps
+        varchar model_engine_power_rpm
+        varchar model_engine_stroke_mm
+        varchar model_engine_torque_nm
+        varchar model_engine_torque_rpm
+        varchar model_engine_valves_per_cyl
+        varchar model_fuel_cap_l
+        varchar model_length_mm
+        varchar model_lkm_city
+        varchar model_lkm_hwy
+        varchar model_lkm_mixed
+        varchar model_make_display
+        varchar model_seats
+        varchar model_sold_in_us
+        varchar model_top_speed_kph
+        varchar model_transmission_type
+        varchar model_weight_kg
+        varchar model_wheelbase_mm
+        varchar model_width_mm
+        varchar photo_uuid
+        varchar plate_number
+        varchar public_id
+        varchar slug
+        varchar status
+        varchar trim
+        varchar type
+        timestamp updated_at
+        varchar uuid
+        varchar vendor_uuid
+        varchar vin
+        mediumtext vin_data
+        varchar year
+    }
+
+    fleetbase_vendors {
+        varchar _key
+        varchar business_id
+        json callbacks
+        varchar company_uuid
+        varchar connect_company_uuid
+        int connected
+        varchar country
+        timestamp created_at
+        timestamp deleted_at
+        varchar email
+        int id "{NOT_NULL}"
+        varchar internal_id
+        varchar logo_uuid
+        json meta
+        varchar name
+        varchar phone
+        varchar place_uuid
+        varchar public_id
+        varchar slug
+        varchar status
+        varchar type
+        varchar type_uuid
+        timestamp updated_at
+        varchar uuid
+        varchar website_url
+    }
+
+    fleetbase_verification_codes {
+        varchar _key
+        varchar code
+        timestamp created_at
+        timestamp deleted_at
+        datetime expires_at
+        varchar for
+        int id "{NOT_NULL}"
+        json meta
+        varchar status
+        varchar subject_type
+        char subject_uuid
+        timestamp updated_at
+        char uuid "{NOT_NULL}"
+    }
+
+    fleetbase_waypoints {
+        varchar _import_id
+        varchar _key
+        varchar company_uuid
+        timestamp created_at
+        timestamp deleted_at
+        int id "{NOT_NULL}"
+        int order
+        varchar payload_uuid
+        varchar place_uuid
+        varchar public_id
+        varchar tracking_number_uuid
+        varchar type
+        timestamp updated_at
+        varchar uuid
+    }
+
+    fleetbase_webhook_endpoints {
+        varchar _key
+        varchar api_credential_uuid
+        varchar company_uuid
+        timestamp created_at
+        char created_by_uuid
+        timestamp deleted_at
+        varchar description
+        json events
+        int id "{NOT_NULL}"
+        varchar mode
+        varchar status
+        timestamp updated_at
+        char updated_by_uuid
+        varchar url
+        varchar uuid
+        varchar version
+    }
+
+    fleetbase_webhook_request_logs {
+        varchar _key
+        char api_credential_uuid
+        char api_event_uuid
+        int attempt
+        char company_uuid
+        timestamp created_at
+        timestamp deleted_at
+        decimal duration
+        json headers
+        int id "{NOT_NULL}"
+        json meta
+        varchar method
+        varchar public_id
+        varchar reason_phrase
+        json response
+        datetime sent_at
+        varchar status
+        varchar status_code
+        timestamp updated_at
+        varchar url
+        char uuid "{NOT_NULL}"
+        char webhook_uuid
+    }
+
+    fleetbase_zones {
+        varchar _key
+        polygon border
+        varchar color
+        varchar company_uuid
+        timestamp created_at
+        timestamp deleted_at
+        mediumtext description
+        int id "{NOT_NULL}"
+        varchar name
+        varchar public_id
+        varchar service_area_uuid
+        varchar status
+        varchar stroke_color
+        timestamp updated_at
+        varchar uuid
+    }
+
+    fleetbase_storefront_carts {
+        char checkout_uuid
+        char company_uuid
+        timestamp created_at
+        varchar currency
+        varchar customer_id
+        timestamp deleted_at
+        varchar discount_code
+        json events
+        datetime expires_at
+        bigint id "{NOT_NULL}"
+        json items
+        varchar public_id
+        varchar unique_identifier
+        timestamp updated_at
+        char user_uuid
+        char uuid
+    }
+
+    fleetbase_storefront_checkouts {
+        int amount
+        tinyint captured "{NOT_NULL}"
+        json cart_state
+        char cart_uuid
+        char company_uuid
+        timestamp created_at
+        varchar currency
+        timestamp deleted_at
+        char gateway_uuid
+        bigint id "{NOT_NULL}"
+        tinyint is_cod "{NOT_NULL}"
+        tinyint is_pickup "{NOT_NULL}"
+        char network_uuid
+        json options
+        char order_uuid
+        varchar owner_type
+        char owner_uuid
+        varchar public_id
+        char service_quote_uuid
+        char store_uuid
+        varchar token
+        timestamp updated_at
+        char uuid
+    }
+
+    fleetbase_storefront_gateways {
+        varchar callback_url
+        varchar code
+        char company_uuid
+        json config
+        timestamp created_at
+        char created_by_uuid
+        timestamp deleted_at
+        varchar description
+        bigint id "{NOT_NULL}"
+        char logo_file_uuid
+        json meta
+        varchar name
+        varchar owner_type
+        char owner_uuid
+        varchar public_id
+        varchar return_url
+        tinyint sandbox "{NOT_NULL}"
+        varchar type
+        timestamp updated_at
+        char uuid
+    }
+
+    fleetbase_storefront_network_stores {
+        char category_uuid
+        timestamp created_at
+        timestamp deleted_at
+        bigint id "{NOT_NULL}"
+        varchar network_uuid
+        varchar store_uuid
+        timestamp updated_at
+        char uuid
+    }
+
+    fleetbase_storefront_networks {
+        json alertable
+        char backdrop_uuid
+        varchar company_uuid
+        timestamp created_at
+        varchar created_by_uuid
+        varchar currency
+        timestamp deleted_at
+        varchar description
+        varchar email
+        varchar facebook
+        bigint id "{NOT_NULL}"
+        varchar instagram
+        longtext key
+        char logo_uuid
+        varchar name
+        tinyint online "{NOT_NULL}"
+        json options
+        varchar phone
+        varchar pod_method
+        varchar public_id
+        varchar slug
+        json tags
+        varchar timezone
+        json translations
+        varchar twitter
+        timestamp updated_at
+        char uuid
+        varchar website
+    }
+
+    fleetbase_storefront_notification_channels {
+        varchar app_key
+        char certificate_uuid
+        char company_uuid
+        json config
+        timestamp created_at
+        char created_by_uuid
+        timestamp deleted_at
+        bigint id "{NOT_NULL}"
+        varchar name
+        json options
+        varchar owner_type
+        varchar owner_uuid
+        varchar scheme
+        timestamp updated_at
+        char uuid
+    }
+
+    fleetbase_storefront_payment_methods {
+        varchar brand
+        char company_uuid
+        timestamp created_at
+        timestamp deleted_at
+        varchar gateway_id
+        char gateway_uuid
+        bigint id "{NOT_NULL}"
+        varchar last4
+        json meta
+        varchar owner_type
+        char owner_uuid
+        varchar public_id
+        char store_uuid
+        varchar type
+        timestamp updated_at
+        char uuid
+    }
+
+    fleetbase_storefront_product_addon_categories {
+        varchar category_uuid
+        timestamp created_at
+        timestamp deleted_at
+        json excluded_addons
+        bigint id "{NOT_NULL}"
+        tinyint is_required
+        mediumint max_selectable
+        varchar product_uuid
+        timestamp updated_at
+        char uuid
+    }
+
+    fleetbase_storefront_product_addons {
+        varchar category_uuid
+        timestamp created_at
+        varchar created_by_uuid
+        timestamp deleted_at
+        varchar description
+        bigint id "{NOT_NULL}"
+        tinyint is_on_sale
+        varchar name
+        int price "{NOT_NULL}"
+        varchar public_id
+        int sale_price "{NOT_NULL}"
+        varchar slug
+        json translations
+        timestamp updated_at
+        char uuid
+    }
+
+    fleetbase_storefront_product_hours {
+        timestamp created_at
+        varchar day_of_week
+        timestamp deleted_at
+        time end "{NOT_NULL}"
+        bigint id "{NOT_NULL}"
+        varchar product_uuid
+        time start "{NOT_NULL}"
+        timestamp updated_at
+        char uuid
+    }
+
+    fleetbase_storefront_product_store_locations {
+        timestamp created_at
+        timestamp deleted_at
+        bigint id "{NOT_NULL}"
+        varchar product_uuid
+        varchar store_location_uuid
+        timestamp updated_at
+    }
+
+    fleetbase_storefront_product_variant_options {
+        int additional_cost "{NOT_NULL}"
+        timestamp created_at
+        timestamp deleted_at
+        varchar description
+        bigint id "{NOT_NULL}"
+        json meta
+        varchar name
+        varchar product_variant_uuid
+        varchar public_id
+        json translations
+        timestamp updated_at
+        char uuid
+    }
+
+    fleetbase_storefront_product_variants {
+        timestamp created_at
+        timestamp deleted_at
+        varchar description
+        bigint id "{NOT_NULL}"
+        tinyint is_multiselect "{NOT_NULL}"
+        tinyint is_required "{NOT_NULL}"
+        mediumint max "{NOT_NULL}"
+        json meta
+        mediumint min "{NOT_NULL}"
+        varchar name
+        varchar product_uuid
+        varchar public_id
+        varchar slug
+        json translations
+        timestamp updated_at
+        char uuid
+    }
+
+    fleetbase_storefront_products {
+        mediumtext barcode
+        tinyint can_pickup "{NOT_NULL}"
+        varchar category_uuid
+        varchar company_uuid
+        timestamp created_at
+        varchar created_by_uuid
+        varchar currency
+        timestamp deleted_at
+        longtext description
+        bigint id "{NOT_NULL}"
+        tinyint is_available "{NOT_NULL}"
+        tinyint is_bookable "{NOT_NULL}"
+        tinyint is_on_sale
+        tinyint is_recommended
+        tinyint is_service
+        json meta
+        varchar name
+        int price "{NOT_NULL}"
+        varchar primary_image_uuid
+        varchar public_id
+        mediumtext qr_code
+        int sale_price "{NOT_NULL}"
+        varchar sku
+        varchar slug
+        varchar status
+        varchar store_uuid
+        json tags
+        json translations
+        timestamp updated_at
+        char uuid
+        json youtube_urls
+    }
+
+    fleetbase_storefront_reviews {
+        text content
+        timestamp created_at
+        varchar created_by_uuid
+        char customer_uuid
+        timestamp deleted_at
+        bigint id "{NOT_NULL}"
+        varchar public_id
+        mediumint rating
+        tinyint rejected "{NOT_NULL}"
+        varchar subject_type
+        char subject_uuid
+        timestamp updated_at
+        char uuid
+    }
+
+    fleetbase_storefront_store_hours {
+        timestamp created_at
+        varchar day_of_week
+        timestamp deleted_at
+        time end "{NOT_NULL}"
+        bigint id "{NOT_NULL}"
+        time start "{NOT_NULL}"
+        char store_location_uuid
+        timestamp updated_at
+        char uuid
+    }
+
+    fleetbase_storefront_store_locations {
+        timestamp created_at
+        varchar created_by_uuid
+        timestamp deleted_at
+        bigint id "{NOT_NULL}"
+        varchar name
+        varchar place_uuid
+        varchar public_id
+        varchar store_uuid
+        timestamp updated_at
+        char uuid
+    }
+
+    fleetbase_storefront_stores {
+        json alertable
+        char backdrop_uuid
+        varchar company_uuid
+        timestamp created_at
+        varchar created_by_uuid
+        varchar currency
+        timestamp deleted_at
+        longtext description
+        varchar email
+        varchar facebook
+        bigint id "{NOT_NULL}"
+        varchar instagram
+        longtext key
+        varchar logo_uuid
+        json meta
+        varchar name
+        tinyint online "{NOT_NULL}"
+        json options
+        varchar phone
+        varchar pod_method
+        varchar public_id
+        varchar slug
+        json tags
+        varchar timezone
+        json translations
+        varchar twitter
+        timestamp updated_at
+        char uuid
+        varchar website
+    }
+
+    fleetbase_storefront_votes {
+        timestamp created_at
+        varchar created_by_uuid
+        char customer_uuid
+        timestamp deleted_at
+        bigint id "{NOT_NULL}"
+        varchar public_id
+        varchar subject_type
+        char subject_uuid
+        varchar type
+        timestamp updated_at
+        char uuid
+    }
+
+    fleetbase_storefront_carts }o--|| fleetbase_companies : ""
+    fleetbase_storefront_carts }o--|| fleetbase_users : ""
+    fleetbase_storefront_carts }o--|| fleetbase_storefront_checkouts : ""
+    fleetbase_storefront_checkouts }o--|| fleetbase_storefront_carts : ""
+    fleetbase_storefront_checkouts }o--|| fleetbase_companies : ""
+    fleetbase_storefront_checkouts }o--|| fleetbase_orders : ""
+    fleetbase_storefront_checkouts }o--|| fleetbase_service_quotes : ""
+    fleetbase_storefront_checkouts }o--|| fleetbase_storefront_gateways : ""
+    fleetbase_storefront_checkouts }o--|| fleetbase_storefront_networks : ""
+    fleetbase_storefront_checkouts }o--|| fleetbase_storefront_stores : ""
+    fleetbase_storefront_gateways }o--|| fleetbase_companies : ""
+    fleetbase_storefront_gateways }o--|| fleetbase_files : ""
+    fleetbase_storefront_gateways }o--|| fleetbase_users : ""
+    fleetbase_storefront_payment_methods }o--|| fleetbase_storefront_gateways : ""
+    fleetbase_storefront_network_stores }o--|| fleetbase_categories : ""
+    fleetbase_storefront_network_stores }o--|| fleetbase_storefront_networks : ""
+    fleetbase_storefront_network_stores }o--|| fleetbase_storefront_stores : ""
+    fleetbase_storefront_networks }o--|| fleetbase_companies : ""
+    fleetbase_storefront_networks }o--|| fleetbase_files : ""
+    fleetbase_storefront_networks }o--|| fleetbase_files : ""
+    fleetbase_storefront_networks }o--|| fleetbase_users : ""
+    fleetbase_storefront_notification_channels }o--|| fleetbase_companies : ""
+    fleetbase_storefront_notification_channels }o--|| fleetbase_files : ""
+    fleetbase_storefront_notification_channels }o--|| fleetbase_users : ""
+    fleetbase_storefront_payment_methods }o--|| fleetbase_companies : ""
+    fleetbase_storefront_payment_methods }o--|| fleetbase_storefront_stores : ""
+    fleetbase_storefront_product_addon_categories }o--|| fleetbase_categories : ""
+    fleetbase_storefront_product_addon_categories }o--|| fleetbase_storefront_products : ""
+    fleetbase_storefront_product_addons }o--|| fleetbase_categories : ""
+    fleetbase_storefront_product_addons }o--|| fleetbase_users : ""
+    fleetbase_storefront_product_hours }o--|| fleetbase_storefront_products : ""
+    fleetbase_storefront_product_store_locations }o--|| fleetbase_storefront_products : ""
+    fleetbase_storefront_product_store_locations }o--|| fleetbase_storefront_store_locations : ""
+    fleetbase_storefront_product_variant_options }o--|| fleetbase_storefront_product_variants : ""
+    fleetbase_storefront_product_variants }o--|| fleetbase_storefront_products : ""
+    fleetbase_storefront_products }o--|| fleetbase_categories : ""
+    fleetbase_storefront_products }o--|| fleetbase_companies : ""
+    fleetbase_storefront_products }o--|| fleetbase_files : ""
+    fleetbase_storefront_products }o--|| fleetbase_users : ""
+    fleetbase_storefront_products }o--|| fleetbase_storefront_stores : ""
+    fleetbase_storefront_reviews }o--|| fleetbase_contacts : ""
+    fleetbase_storefront_reviews }o--|| fleetbase_users : ""
+    fleetbase_storefront_store_hours }o--|| fleetbase_storefront_store_locations : ""
+    fleetbase_storefront_store_locations }o--|| fleetbase_places : ""
+    fleetbase_storefront_store_locations }o--|| fleetbase_users : ""
+    fleetbase_storefront_store_locations }o--|| fleetbase_storefront_stores : ""
+    fleetbase_storefront_stores }o--|| fleetbase_companies : ""
+    fleetbase_storefront_stores }o--|| fleetbase_files : ""
+    fleetbase_storefront_stores }o--|| fleetbase_files : ""
+    fleetbase_storefront_stores }o--|| fleetbase_users : ""
+    fleetbase_storefront_votes }o--|| fleetbase_contacts : ""
+    fleetbase_storefront_votes }o--|| fleetbase_users : ""
