@@ -1,6 +1,7 @@
 // docker-bake.hcl
 variable "REGISTRY" { default = "" }
 variable "VERSION" { default = "latest" }
+variable "CACHE" { default = "" }
 
 group "default" {
   targets = ["app", "app-httpd"]
@@ -29,6 +30,9 @@ target "app" {
   secret = [
     "type=file,id=composer_auth,src=./composer-auth.json"
   ]
+
+  cache-from = notequal("", CACHE) ? ["${CACHE}"] : []
+  cache-to   = notequal("", CACHE) ? ["${CACHE},mode=max,ignore-error=true"] : []
 }
 
 target "app-httpd" {
