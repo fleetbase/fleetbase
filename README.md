@@ -207,7 +207,7 @@ Use Docker Compose to build and run the necessary containers. In the root direct
   </li>
   <li>🛣 Routing! By default Fleetbase currently will use it's own routing engine which is hosted at <a href="https://routing.fleetbase.io" target="_fleetbase_routing_machine">https://routing.fleetbase.io</a>, this routing engine only works for a few enabled countries which include USA, Canada, Belgium, Spain, Serbia, Taiwan, Malaysia, Singapore, Brunei, Mongolia, India, Ghana. We can enable more regions and countries upon request. There is a Roadmap item to allow users to easily change to any routing engine provider such as Mapbox, Google Maps, and other 3rd Party Routing services. Optionally, you can switch out Fleetase Routing engine with any OSRM compatible service such as OpenStreetMap by changing the console environment variable <code>OSRM_HOST</code> which can be found in <code>console/environments/*.env</code>.
   </li>
-  <li>If you find any bugs or unexpected issues please <a href="https://github.com/fleetbase/fleetbase/issues/new/choose">post an issue</a> to the repo or join our <a href="https://discord.gg/MJQgxHwN" target="_discord" alt="Fleetbase Discord">Discord</a>.
+  <li>If you find any bugs or unexpected issues please <a href="https://github.com/fleetbase/fleetbase/issues/new/choose">post an issue</a> to the repo or join our <a href="https://discord.gg/V7RVWRQ2Wm" target="_discord" alt="Fleetbase Discord">Discord</a>.
   </li>
 </ol>
 
