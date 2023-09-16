@@ -159,7 +159,9 @@ jobs:
     - name: Deploy Console 🚀
       run: |
           set -u
+
+          DEPLOY_BUCKET=${STATIC_DEPLOY_BUCKET:-${{ env.PROJECT }}-${{ env.STACK }}}
           # this value will come from the dotenv above
-          echo "Deploying to $STATIC_DEPLOY_BUCKET"
+          echo "Deploying to $DEPLOY_BUCKET"
           wget -O- https://github.com/bep/s3deploy/releases/download/v2.11.0/s3deploy_2.11.0_linux-amd64.tar.gz | tar xzv -f - s3deploy
-          ./s3deploy -region ${AWS_REGION} -source console/dist -bucket ${STATIC_DEPLOY_BUCKET}
+          ./s3deploy -region ${AWS_REGION} -source console/dist -bucket ${DEPLOY_BUCKET}
