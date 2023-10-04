@@ -219,7 +219,7 @@ Have an issue with the installation, try a few of these workarounds.
   <li><strong>Installer not working?</strong> <br>If you encounter issues with the web based installer use this workaround to get going.
   <ol>
     <li>Login to the application container. 
-      <pre class="bash">docker exec -ti fleetbase-application-1 bash</pre>
+      <pre class="bash">docker exec -ti fleetbase_application_1 bash</pre>
     </li>
     <li>Manually run the database setup and migrations.
       <pre class="bash">php artisan mysql:createdb
