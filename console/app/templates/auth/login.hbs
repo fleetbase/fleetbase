@@ -1,0 +1,57 @@
+<div>
+    <div class="mx-auto w-12 h-12">
+        <LogoIcon @url={{@brand.icon_url}} @size="12" class="mx-auto" />
+    </div>
+    <h2 class="mt-6 mb-3 text-3xl font-extrabold leading-9 text-center text-gray-900 dark:text-gray-100">
+        Sign in to your account
+    </h2>
+</div>
+
+{{#if (gte this.failedAttempts 3)}}
+    <div class="px-3 py-2 my-6 rounded-md shadow-sm bg-yellow-200">
+        <div class="flex mb-5">
+            <div>
+                <FaIcon @icon="exclamation-triangle" @size="lg" class="text-yellow-900 mr-4" />
+            </div>
+            <p class="flex-1 text-sm text-yellow-900 dark:yellow-red-900">
+                <strong>Forgot your password?</strong><br> Click the button below to reset your password.
+            </p>
+        </div>
+        <Button @text="Ok, help me reset!" @type="warning" @onClick={{this.forgotPassword}} />
+    </div>
+{{/if}}
+
+<form class="mt-8" {{on "submit" this.login}}>
+    <input type="hidden" name="remember" value="true" />
+    <div class="rounded-md shadow-sm">
+        <div>
+            <Input @value={{this.email}} aria-label="Email address" name="email" @type="email" autocomplete="username" required class="relative block w-full px-3 py-2 text-gray-900 placeholder-gray-500 border border-gray-300 rounded-none appearance-none rounded-t-md focus:outline-none focus:shadow-outline-blue focus:border-blue-300 focus:z-10 sm:text-sm sm:leading-5 dark:text-white dark:bg-gray-700 dark:border-gray-900" placeholder="Email address" disabled={{this.isLoading}} />
+        </div>
+        <div class="-mt-px">
+            <Input @value={{this.password}} aria-label="Password" name="password" @type="password" autocomplete="current-password" required class="relative block w-full px-3 py-2 text-gray-900 placeholder-gray-500 border border-gray-300 rounded-none appearance-none rounded-b-md focus:outline-none focus:shadow-outline-blue focus:border-blue-300 focus:z-10 sm:text-sm sm:leading-5 dark:text-white dark:bg-gray-700 dark:border-gray-900" placeholder="Password" disabled={{this.isLoading}} />
+        </div>
+    </div>
+
+    <div class="flex items-center justify-between mt-6">
+        <div class="flex items-center">
+            <Input id="rememberMe" @type="checkbox" @checked={{this.rememberMe}} disabled={{this.isLoading}} class="w-4 h-4 transition duration-150 ease-in-out form-checkbox text-sky-500" />
+            <label for="rememberMe" class="block ml-2 text-sm leading-5 text-gray-900 dark:text-gray-100">
+                Remember me
+            </label>
+        </div>
+
+        <div class="text-sm leading-5">
+            <a href="javascript:;" {{on "click" this.forgotPassword}} disabled={{this.isLoading}} class="font-medium transition duration-150 ease-in-out text-sky-600 hover:text-sky-500 focus:outline-none focus:underline">
+                Forgot your password?
+            </a>
+        </div>
+    </div>
+
+    <div class="mt-6">
+        <Button @buttonType="submit" @type="primary" @text="Sign In" @icon="lock" @wrapperClass="btn-block" @isLoading={{this.isLoading}} @onClick={{this.login}} />
+    </div>
+
+    <div class="mt-3">
+        <Button @text="Create a new Account" @wrapperClass="btn-block" @disabled={{this.isLoading}} @onClick={{fn (transition-to "onboard")}} />
+    </div>
+</form>

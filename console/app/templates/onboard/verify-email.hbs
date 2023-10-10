@@ -1,0 +1,45 @@
+<div class="bg-white dark:bg-gray-800 py-8 px-4 shadow rounded-lg w-full">
+    <div class="mb-8">
+        <img class="mx-auto h-12 w-auto " src="/images/fleetbase-logo-svg.svg" alt={{t "app.name"}}>
+        <h2 class="mt-6 text-center text-lg font-extrabold text-gray-900 dark:text-white truncate">
+            Verify your email address
+        </h2>
+    </div>
+
+    <div class="flex px-3 py-2 mb-6 rounded-md shadow-sm bg-blue-200">
+        <div>
+            <FaIcon @icon="shield-check" @size="lg" class="text-blue-900 mr-4" />
+        </div>
+        <p class="flex-1 text-sm text-blue-900 dark:text-blue-900">
+            <strong>Almost done!</strong><br> Check your email for a verification code.
+        </p>
+    </div>
+
+    <form class="mt-8 space-y-6" {{on "submit" this.verifyCode}}>
+        <InputGroup @type="tel" @name="Verification Code" @value={{this.code}} @helpText="Enter the verification code you received via email." @inputClass="input-lg" {{on "input" this.validateInput}} />
+
+        <div>
+            <Button @icon="check" @iconPrefix="fas" @buttonType="submit" @type="primary" @size="lg" @text="Verify & Continue" @isLoading={{this.isLoading}} @disabled={{this.isNotReadyToSubmit}} @onClick={{this.verifyCode}} />
+        </div>
+
+        {{#if this.stillWaiting}}
+            <div class="bg-yellow-50 rounded shadow-sm border-l-4 border-yellow-400 px-4 py-2">
+                <div class="flex">
+                    <div class="flex-shrink-0">
+                        <FaIcon @icon="exclamation-triangle" @size="lg" class="text-yellow-400" />
+                    </div>
+                    <div class="ml-3 flex items-center">
+                        <span class="text-lg font-extrabold text-yellow-800">Didn't receive an email yet?</span>
+                    </div>
+                </div>
+                <div class="py-3">
+                    <p class="text-yellow-700">Use alternaitve options below to verify your account.</p>
+                    <div class="flex items-center mt-3">
+                        <Button @type="default" class="mr-2" @onClick={{this.resendEmail}}>Resend Email</Button>
+                        <Button @type="default" @onClick={{this.resendBySms}}>Send by SMS</Button>
+                    </div>
+                </div>
+            </div>
+        {{/if}}
+    </form>
+</div>

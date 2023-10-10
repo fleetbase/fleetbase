@@ -1,0 +1,68 @@
+<Layout::Section::Header @title="Organization Settings" />
+
+<Layout::Section::Body class="overflow-y-scroll h-full">
+    <div class="container mx-auto h-screen" {{increase-height-by 500}}>
+        <div class="max-w-3xl my-10 mx-auto space-y-6">
+            <ContentPanel @title="Organization Settings" @open={{true}} @pad={{true}} @panelBodyClass="bg-white dark:bg-gray-800">
+                <form {{on "submit" this.saveSettings}}>
+                    <InputGroup @name="Organization name" @value={{@model.name}} />
+                    <InputGroup @name="Organization description" @value={{@model.description}} />
+                    <InputGroup @name="Organization phone number">
+                        <PhoneInput @value={{@model.phone}} @onInput={{fn (mut @model.phone)}} class="form-input w-full" />
+                    </InputGroup>
+                    <InputGroup @name="Organization currency">
+                        <CurrencySelect @value={{@model.currency}} @onSelect={{fn (mut @model.currency)}} @triggerClass="w-full form-select" />
+                    </InputGroup>
+                    <InputGroup @name="Organization ID" @value={{@model.public_id}} @disabled={{true}} />
+                    <div class="mt-3 flex items-center justify-end">
+                        <Button @buttonType="submit" @type="primary" @size="lg" @icon="save" @text="Save Changes" @isLoading={{this.isLoading}} />
+                    </div>
+                </form>
+            </ContentPanel>
+
+            <ContentPanel @title="Organization Branding" @open={{true}} @pad={{true}} @panelBodyClass="bg-white dark:bg-gray-800">
+                <InputGroup @name="Logo" @helpText="Logo for your organization.">
+                    <div class="flex flex-row items-center">
+                        <Image src={{@model.logo_url}} @fallbackSrc={{config "defaultValues.placeholderImage"}} alt={{concat @model.name " logo"}} class="h-20 w-64 border dark:border-gray-900 rounded-md mr-4" />
+                        <FileUpload @name="logo" @accept="image/*" @onFileAdded={{fn this.uploadFile "logo"}} as |queue|>
+                            <a tabindex={{0}} class="flex items-center px-0 mt-2 text-xs no-underline truncate btn btn-sm btn-default">
+                                {{#if queue.files.length}}
+                                    <Spinner class="mr-1" />
+                                    <span>
+                                        Uploading...
+                                    </span>
+                                {{else}}
+                                    <FaIcon @icon="image" class="mr-1" />
+                                    <span>
+                                        Upload new logo
+                                    </span>
+                                {{/if}}
+                            </a>
+                        </FileUpload>
+                    </div>
+                </InputGroup>
+
+                <InputGroup @name="Backdrop" @helpText="Optional banner or background image for your organization.">
+                    <div class="flex flex-row items-center">
+                        <Image src={{@model.backdrop_url}} @fallbackSrc={{config "defaultValues.placeholderImage"}} alt={{concat @model.name " backdrop"}} class="h-20 w-64 border dark:border-gray-900 rounded-md mr-4" />
+                        <FileUpload @name="backdrop" @accept="image/*" @onFileAdded={{fn this.uploadFile "backdrop"}} as |queue|>
+                            <a tabindex={{0}} class="flex items-center px-0 mt-2 text-xs no-underline truncate btn btn-sm btn-default">
+                                {{#if queue.files.length}}
+                                    <Spinner class="mr-1" />
+                                    <span>
+                                        Uploading...
+                                    </span>
+                                {{else}}
+                                    <FaIcon @icon="image" class="mr-1" />
+                                    <span>
+                                        Upload new backdrop
+                                    </span>
+                                {{/if}}
+                            </a>
+                        </FileUpload>
+                    </div>
+                </InputGroup>
+            </ContentPanel>
+        </div>
+    </div>
+</Layout::Section::Body>

@@ -1,0 +1,36 @@
+<div class="bg-white dark:bg-gray-800 py-5 px-4 shadow rounded-lg w-full">
+    <div class="mb-4">
+        <Image src={{@model.logo_url}} @fallbackSrc="/images/fleetbase-logo-svg.svg" alt={{t "app.name"}} width="160" height="56" class="w-40 h-14 mx-auto" />
+        <h2 class="text-center text-lg font-extrabold text-gray-900 dark:text-white truncate">
+            Create your account
+        </h2>
+    </div>
+
+    <div class="flex px-3 py-2 mb-4 rounded-md shadow-sm bg-blue-200">
+        <div>
+            <FaIcon @icon="hand-spock" @size="lg" class="text-blue-900 mr-4" />
+        </div>
+        <p class="flex-1 text-sm text-blue-900 dark:text-blue-900">
+            <strong>Welcome to {{t "app.name"}}!</strong><br />
+            Complete the details required below to get started.
+        </p>
+    </div>
+
+    <form {{on "submit" this.startOnboard}}>
+        {{#if this.error}}
+            <InfoBlock @icon="exclamation-triangle" @text={{this.error}} class="mb-6 px-3 py-2 bg-red-300 text-red-900" @textClass="text-red-900" />
+        {{/if}}
+        <InputGroup @name="Your full name" @value={{this.name}} @helpText="Your full name." @inputClass="input-lg" />
+        <InputGroup @name="Your email address" @type="email" @value={{this.email}} @helpText="Your email address." @inputClass="input-lg" />
+        <InputGroup @name="Your phone number" @helpText="Your phone number.">
+            <PhoneInput @onInput={{fn (mut this.phone)}} class="form-input input-lg w-full" />
+        </InputGroup>
+        <InputGroup @name="Organization name" @value={{this.organization_name}} @helpText="Your organization name, all your services and resources will be managed under this organization, later you can create as many organizations as you want or need." @inputClass="input-lg" />
+        <InputGroup @name="Enter a password" @value={{this.password}} @type="password" @helpText="Your password, make sure it's a good one." @inputClass="input-lg" />
+        <InputGroup @name="Confirm your password" @value={{this.password_confirmation}} @type="password" @helpText="Just to confirm the password you entered above." @inputClass="input-lg" />
+
+        <div class="flex items-center justify-end mt-5">
+            <Button @icon="check" @iconPrefix="fas" @type="primary" @size="lg" @text="Continue" @isLoading={{this.isLoading}} @disabled={{this.readyToSubmit}} @onClick={{this.startOnboard}} />
+        </div>
+    </form>
+</div>

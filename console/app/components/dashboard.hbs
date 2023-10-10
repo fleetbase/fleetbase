@@ -1,0 +1,7 @@
+<div class="fleetbase-dashboard-grid">
+    <div class="grid grid-cols-1 md:grid-cols-12 gap-4">
+        {{#each this.dashboards as |dashboard index|}}
+            <Dashboard::Create @index={{index}} @dashboard={{dashboard}} />
+        {{/each}}
+    </div>
+</div>

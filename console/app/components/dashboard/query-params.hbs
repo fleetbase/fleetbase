@@ -1,0 +1,8 @@
+<div class="flex flex-row items-center space-x-3" ...attributes>
+    {{#each-in @params as |param options|}}
+        <div class="flex flex-col lg:flex-row lg:items-center">
+            <label class="hidden lg:flex mr-2 text-sm">{{humanize param}}:</label>
+            {{component options.component onChange=(fn this.onChange param) placeholder=(humanize param) class="form-input-sm"}}
+        </div>
+    {{/each-in}}
+</div>
