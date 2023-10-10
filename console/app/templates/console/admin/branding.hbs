@@ -1,0 +1,68 @@
+{{page-title "Branding"}}
+<Layout::Section::Header @title="Branding" />
+
+<Layout::Section::Body class="overflow-y-scroll h-full">
+    <div class="container mx-auto h-screen" {{increase-height-by 300}}>
+        <div class="max-w-3xl my-10 mx-auto space-y-">
+            <ContentPanel @title="Branding" @open={{true}} @pad={{true}} @panelBodyClass="bg-white dark:bg-gray-800">
+                <form class="flex flex-col" {{on "submit" this.save}}>
+                    <div class="input-group">
+                        <label>Icon</label>
+                        <div class="flex flex-row items-center space-x-2">
+                            <Image src={{@model.icon_url}} @fallbackSrc="/images/icon.png" alt={{t "app.name"}} width="32" height="32" class="w-8 h-8 shadow-sm" />
+                            <FileUpload @name="icon" @accept="image/*" @onFileAdded={{this.uploadIcon}} @labelClass="flex flex-row items-center justify-center mb-0i" as |queue|>
+                                <a tabindex={{0}} class="flex items-center px-0 text-xs no-underline truncate btn btn-sm btn-default" disabled={{queue.files.length}}>
+                                    {{#if queue.files.length}}
+                                        <div class="mr-1.5">
+                                            <Spinner />
+                                        </div>
+                                        <span>
+                                            Uploading...
+                                        </span>
+                                    {{else}}
+                                        <FaIcon @icon="image" class="mr-1.5" />
+                                        <span>
+                                            Upload new
+                                        </span>
+                                    {{/if}}
+                                </a>
+                            </FileUpload>
+                        </div>
+                        <a href="javascript:;" class="text-danger text-xs mt-1" {{on "click" (fn this.unset "icon_url" "/images/icon.png")}}>Reset to default</a>
+                    </div>
+                    <div class="input-group">
+                        <label>Logo</label>
+                        <div class="flex flex-row items-center space-x-2">
+                            <Image src={{@model.logo_url}} @fallbackSrc="/images/fleetbase-logo-svg.svg" alt={{t "app.name"}} width="160" height="56" class="w-40 h-14" />
+                            <FileUpload @name="logo" @accept="image/*" @onFileAdded={{this.uploadLogo}} @labelClass="flex flex-row items-center justify-center mb-0i" as |queue|>
+                                <a tabindex={{0}} class="flex items-center px-0 text-xs no-underline truncate btn btn-sm btn-default" disabled={{queue.files.length}}>
+                                    {{#if queue.files.length}}
+                                        <div class="mr-1.5">
+                                            <Spinner />
+                                        </div>
+                                        <span>
+                                            Uploading...
+                                        </span>
+                                    {{else}}
+                                        <FaIcon @icon="image" class="mr-1.5" />
+                                        <span>
+                                            Upload new
+                                        </span>
+                                    {{/if}}
+                                </a>
+                            </FileUpload>
+                        </div>
+                        <a href="javascript:;" class="text-danger text-xs mt-1" {{on "click" (fn this.unset "logo_url" "/images/fleetbase-logo-svg.svg")}}>Reset to default</a>
+                    </div>
+                    <InputGroup @name="Default Theme">
+                        <Select @value={{@model.default_theme}} @onSelect={{this.setTheme}} @options={{this.themeOptions}} />
+                    </InputGroup>
+                </form>
+            </ContentPanel>
+
+            <div class="mt-3 flex items-center justify-end">
+                <Button @type="primary" @size="lg" @icon="save" @text="Save Changes" @onClick={{this.save}} @disabled={{this.isLoading}} @isLoading={{this.isLoading}} />
+            </div>
+        </div>
+    </div>
+</Layout::Section::Body>

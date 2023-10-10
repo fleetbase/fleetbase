@@ -1,0 +1,49 @@
+<div class="fleetbase-github-card relative flex-1 w-full" ...attributes>
+    <div class="border dark:border-gray-700 border-gray-200 dark:bg-gray-800 bg-gray-50 rounded-lg shadow-sm flex flex-col">
+        {{#if this.isLoading}}
+            <div class="p-4">
+                <Spinner />
+            </div>
+        {{else}}
+            <div class="flex flex-row p-4 border-b dark:border-gray-700 border-gray-200">
+                <div class="w-12 flex-shrink-0"><img src={{this.data.owner.avatar_url}} alt="fleetbase/fleetbase" class="rounded-full w-8 h-8" width="32" height="32" /></div>
+                <div class="flex-1 -mt-2">
+                    <div class="flex flex-1 flex-row items-center justify-between mb-2">
+                        <a href={{this.data.html_url}} target="_github" class="dark:text-gray-100 text-black text-lg font-semibold">{{this.data.full_name}}</a>
+                        <a href={{this.data.html_url}} target="_github" class="btn btn-xs btn-default">
+                            <FaIcon @icon="star" class="text-yellow-400" />
+                            <span class="hidden lg:flex ml-2.5">Star on Github</span>
+                        </a>
+                    </div>
+                    <p class="dark:text-gray-100 text-black text-sm">{{this.data.description}}</p>
+                    <div class="flex-grow-0 flex mt-2">
+                        <a href={{this.releaseUrl}} class="rounded-lg px-2 py-1 flex flex-row items-center text-xs text-white font-bold font-mono">
+                            <FaIcon @icon="arrow-up-right-from-square" @size="xs" class="mr-2" />
+                            <span>Latest Release: {{this.latestRelease.name}}</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="rounded-b-lg px-4 py-2">
+                <div class="grid grid-cols-12 gap-2">
+                    <div class="col-span-3 dark:text-gray-100 text-black text-xs flex flex-row">
+                        <span class="font-bold mr-1">{{this.data.stargazers_count}}</span>
+                        <span>Stars</span>
+                    </div>
+                    <div class="col-span-3 dark:text-gray-100 text-black text-xs flex flex-row">
+                        <span class="font-bold mr-1">{{this.data.subscribers_count}}</span>
+                        <span>Watchers</span>
+                    </div>
+                    <div class="col-span-3 dark:text-gray-100 text-black text-xs flex flex-row">
+                        <span class="font-bold mr-1">{{this.data.forks_count}}</span>
+                        <span>Forks</span>
+                    </div>
+                    <div class="col-span-3 dark:text-gray-100 text-black text-xs flex flex-row">
+                        <span class="font-bold mr-1">{{this.data.open_issues_count}}</span>
+                        <span><span class="hidden lg:inline-flex">Open</span> Issues</span>
+                    </div>
+                </div>
+            </div>
+        {{/if}}
+    </div>
+</div>

@@ -1,0 +1,25 @@
+# Ignore files not needed for docker to build microservice image
+node_modules/*
+postgres/*
+typings/*
+*/.git*
+*.git*
+*.git
+*.md
+!gulpfile.js
+ci/
+.circleci/
+Vagrantfile
+concourse/
+infra/*
+vagrant/*
+docker/*
+deploy/*
+media/*
+data/*
+appspec.yml
+compose.yml
+docker-compose-prod.yml
+docker-compose.yml
+$virtualenv.tar.gz
+$node_modules.tar.gz

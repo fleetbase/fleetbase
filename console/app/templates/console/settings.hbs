@@ -1,0 +1,18 @@
+{{page-title "Settings"}}
+<EmberWormhole @to="sidebar-menu-items">
+    <Layout::Sidebar::Panel @open={{true}} @title="Settings">
+        <Layout::Sidebar::Item @route="console.settings.index" @icon="cog">Organization</Layout::Sidebar::Item>
+        {{#each this.universe.settingsMenuItems as |menuItem|}}
+            <Layout::Sidebar::Item @onClick={{fn this.universe.transitionMenuItem "console.settings.virtual" menuItem}} @item={{menuItem}} @icon={{menuItem.icon}}>{{menuItem.title}}</Layout::Sidebar::Item>
+        {{/each}}
+    </Layout::Sidebar::Panel>
+    {{#each this.universe.settingsMenuPanels as |menuPanel|}}
+        <Layout::Sidebar::Panel @open={{menuPanel.open}} @title={{menuPanel.title}}>
+            {{#each menuPanel.items as |menuItem|}}
+                <Layout::Sidebar::Item @onClick={{fn this.universe.transitionMenuItem "console.settings.virtual" menuItem}} @item={{menuItem}} @icon={{menuItem.icon}}>{{menuItem.title}}</Layout::Sidebar::Item>
+            {{/each}}
+        </Layout::Sidebar::Panel>
+    {{/each}}
+</EmberWormhole>
+
+{{outlet}}

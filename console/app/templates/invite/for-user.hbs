@@ -1,0 +1,36 @@
+<div class="min-h-screen bg-gray-50 dark:bg-gray-900 flex flex-col justify-center py-12">
+    <div class="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
+        <div class="bg-white dark:bg-gray-800 py-8 px-4 shadow sm:rounded-lg sm:px-10">
+            <div class="mb-8">
+                <img class="mx-auto h-12 w-auto" src={{@brand.icon_url}} alt={{t "app.name"}}>
+                <h2 class="mt-6 text-center text-lg font-extrabold text-gray-900 dark:text-white truncate">
+                    You've been invited to join {{@model.name}}
+                </h2>
+            </div>
+
+            <div class="flex px-3 py-2 mb-6 rounded-md shadow-sm bg-blue-200">
+                <div>
+                    <FaIcon @icon="info-circle" class="text-blue-900 mr-4" />
+                </div>
+                <p class="flex-1 text-sm text-blue-900 dark:text-blue-900">
+                    You've been invited to join the {{@model.name}} organization on {{t "app.name"}}. To accept this invitation, input your invitation code received by email and click continue.
+                </p>
+            </div>
+
+            <form class="space-y-6" {{on "submit" this.acceptInvite}}>
+                <div>
+                    <label for="code" class="block text-sm font-medium text-gray-700 dark:text-gray-50">
+                        Your invitiation code
+                    </label>
+                    <div class="mt-2">
+                        <Input @value={{this.code}} id="code" name="code" @type="code" required class="form-input form-input-lg w-full" placeholder="Your invitiation code" />
+                    </div>
+                </div>
+
+                <div>
+                    <Button @icon="check" @size="lg" @type="primary" @buttonType="submit" @text="Accept Invitation" @onClick={{this.acceptInvite}} @isLoading={{this.isLoading}} />
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

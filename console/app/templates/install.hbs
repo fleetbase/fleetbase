@@ -1,0 +1,34 @@
+<div class="max-w-2xl m-auto h-screen overflow-y-scroll">
+    <div class="h-full">
+        <div class="border border-black bg-gray-900 shadow-md rounded-md p-5 mt-12">
+            <div class="w-full flex-col items-center justify-center text-center mb-6">
+                <img src="/images/icon.png" alt={{concat (t "app.name") " Install"}} class="w-12 h-12 mx-auto" width="48" height="48" />
+                <h3 class="mt-2 text-gray-50 font-bold">{{t "app.name"}} Installer</h3>
+            </div>
+            <div class="space-y-4 mb-5">
+                {{#each this.steps as |step|}}
+                    <div class="border {{if (eq step.status 'pending') 'border-black bg-gray-800'}} {{if (eq step.status 'in_progress') "border-blue-500 bg-blue-900"}} {{if (eq step.status 'completed') 'border-green-900 bg-green-800'}} {{if (eq step.status 'failed') 'border-red-900 bg-red-800'}} shadow-md px-4 py-2 flex flex-row items-center rounded-xl">
+                        <div class="w-12 flex flex-row items-center">
+                            <FaIcon @icon="circle-check" class="{{if (eq step.status 'pending') "text-gray-500"}} {{if (eq step.status 'in_progress') "text-blue-200"}} {{if (eq step.status 'completed') "text-green-400"}} {{if (eq step.status 'failed') "text-red-400"}}" />
+                            {{#if (eq step.status 'in_progress')}}
+                                <div class="ml-2 -mb-0.5">
+                                    <Spinner />
+                                </div>
+                            {{/if}}
+                        </div>
+                        <span class="{{if (eq step.status 'pending') "text-gray-500"}} {{if (eq step.status 'in_progress') "text-blue-200"}} {{if (eq step.status 'completed') "text-green-400"}} {{if (eq step.status 'failed') "text-red-400"}} font-semibold">{{step.name}}</span>
+                    </div>
+                {{/each}}
+            </div>
+            <div class="flex flex-col flex-1 my-1">
+                {{#if this.error}}
+                    <div class="flex items-center border border-red-900 bg-red-800 text-red-100 px-4 py-1.5 rounded-lg mb-3 shadow-md">
+                        <FaIcon @icon="triangle-exclamation" class="text-red-100 mr-2" />
+                        <span>The install failed! Click the button below to retry the install.</span>
+                    </div>
+                {{/if}}
+                <Button @type="primary" @icon="play" @size="lg" @text={{if this.error "Retry Install" "Start Install"}} @wrapperClass="flex-1" class="w-full" @onClick={{this.startInstall}} @isLoading={{this.install.isRunning}} @disabled={{this.install.isRunning}} />
+            </div>
+        </div>
+    </div>
+</div>

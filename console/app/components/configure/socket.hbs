@@ -1,0 +1,46 @@
+<ContentPanel @title="SocketCluster Connection" @open={{true}} @pad={{true}} @panelBodyClass="bg-white dark:bg-gray-800">
+    <p class="mb-4">The SocketCluster configuration cannot be changed at this time.</p>
+    <div id="output" class="font-mono rounded-lg max-h-full px-6 py-4 overflow-y-scroll bg-black shadow-inner dark:shadow-none">
+        <div class="flex items-center justify-between mb-4">
+            <div class="block w-1/2 font-mono text-sm font-semibold text-green-300">
+                Output
+            </div>
+            {{#if this.events.length}}
+                <div class="flex items-center justify-end w-1/2 text-sm text-green-300">
+                    <Spinner @iconClass="green-loader" />
+
+                    <span class="ml-2 text-sm font-mono">
+                        Awaiting events...
+                    </span>
+                </div>
+            {{/if}}
+        </div>
+
+        <div>
+            {{#each this.events as |event|}}
+                <div class="mb-3 text-sm font-mono rounded-lg shadow-sm flex flex-row">
+                    <div class="text-{{event.color}}-300 uppercase text-sm font-mono pr-2 flex-shrink-0">
+                        [{{event.time}}]:
+                    </div>
+                    <div class="text-{{event.color}}-300 text-sm font-mono">
+                        {{html-safe event.content}}
+                    </div>
+                </div>
+            {{else}}
+                <div class="flex items-center mt-6 text-green-300">
+                    <Spinner @iconClass="green-loader" />
+                    <span class="ml-2 text-sm font-mono">
+                        Awaiting events...
+                    </span>
+                </div>
+            {{/each}}
+        </div>
+    </div>
+    {{#if this.testResponse}}
+        <div class="animate-pulse flex flex-row items-center rounded-lg border {{if (eq this.testResponse.status 'error') 'border-red-900 bg-red-800 text-red-100' 'border-green-900 bg-green-800 text-green-100'}} shadow-sm my-2 px-4 py-2">
+            <FaIcon @icon={{if (eq this.testResponse.status 'error') 'triangle-exclamation' 'circle-check'}} class="mr-1.5 {{if (eq this.testResponse.status 'error') 'text-red-200' 'text-green-200'}}" />
+            <span class="text-xs">{{this.this.testResponse.message}}</span>
+        </div>
+    {{/if}}
+    <Button @wrapperClass="mt-3" @icon="plug" @text="Test Socket Connection" @onClick={{this.testSocketConnection}} @isLoading={{this.isLoading}} />
+</ContentPanel>
