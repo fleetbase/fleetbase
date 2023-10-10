@@ -1,0 +1,21 @@
+<ContentPanel @title="Filesystem" @open={{true}} @pad={{true}} @panelBodyClass="bg-white dark:bg-gray-800">
+    <InputGroup @name="Driver" @helpText="Select the default filesystem driver for Fleetbase to use.">
+        <Select @options={{this.disks}} @value={{this.driver}} @onSelect={{this.setDriver}} @placeholder="Select filesystem driver" class="w-full" disabled={{this.isLoading}} />
+    </InputGroup>
+    {{#if (eq this.driver "s3")}}
+        <InputGroup @name="S3 Bucket" @value={{this.s3Bucket}} disabled={{this.isLoading}} />
+        <InputGroup @name="S3 URL" @value={{this.s3Url}} disabled={{this.isLoading}} />
+        <InputGroup @name="S3 Endpoint" @value={{this.s3Endpoint}} disabled={{this.isLoading}} />
+    {{/if}}
+    {{#if this.testResponse}}
+        <div class="animate-pulse flex flex-row items-center rounded-lg border {{if (eq this.testResponse.status 'error') 'border-red-900 bg-red-800 text-red-100' 'border-green-900 bg-green-800 text-green-100'}} shadow-sm my-2 px-4 py-2">
+            <FaIcon @icon={{if (eq this.testResponse.status 'error') 'triangle-exclamation' 'circle-check'}} class="mr-1.5 {{if (eq this.testResponse.status 'error') 'text-red-200' 'text-green-200'}}" />
+            <span class="text-xs">{{this.this.testResponse.message}}</span>
+        </div>
+    {{/if}}
+    <Button @wrapperClass="mt-3" @icon="plug" @text="Test Config" @onClick={{this.test}} @isLoading={{this.isLoading}} />
+</ContentPanel>
+
+<div class="mt-3 flex items-center justify-end">
+    <Button @type="primary" @size="lg" @icon="save" @text="Save Changes" @onClick={{this.save}} @disabled={{this.isLoading}} @isLoading={{this.isLoading}} />
+</div>

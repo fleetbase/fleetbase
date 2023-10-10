@@ -1,0 +1,69 @@
+image: docker:stable-git
+
+build_image:
+  stage: build
+  tags:
+    - simpledocker
+  script:
+    - mkdir -p /usr/local/lib/docker/cli-plugins && wget -O /usr/local/lib/docker/cli-plugins/docker-buildx https://github.com/docker/buildx/releases/download/v0.11.2/buildx-v0.11.2.linux-amd64 && chmod +x /usr/local/lib/docker/cli-plugins/docker-buildx
+    - |-
+        if [[ -n "${GITHUB_AUTH_TOKEN}" ]]; then
+          echo '{"github-oauth": {"github.com": "'${GITHUB_AUTH_TOKEN}'"}}' > composer-auth.json
+        else
+          echo '{}' > composer-auth.json
+        fi
+    - |-
+        set -eu
+
+        docker buildx create --driver docker-container --driver-opt image=moby/buildkit:v0.11.5 --use
+
+        docker buildx bake -f docker-bake.hcl --print # just print for now
+
+deploy:
+  stage: deploy
+  only:
+    - /^deploy\/.*$/
+  tags:
+    - simpledocker
+  script:
+    - mkdir -p /usr/local/lib/docker/cli-plugins && wget -O /usr/local/lib/docker/cli-plugins/docker-buildx https://github.com/docker/buildx/releases/download/v0.11.2/buildx-v0.11.2.linux-amd64 && chmod +x /usr/local/lib/docker/cli-plugins/docker-buildx
+    - docker buildx create --driver docker-container --driver-opt image=moby/buildkit:v0.11.5 --use
+    - 'export VERSION="$(git describe --always --tags)"'
+    - 'export STACK="$(basename $CI_COMMIT_REF_NAME)"'
+    - |-
+        if [[ -n "${GITHUB_AUTH_TOKEN}" ]]; then
+          echo '{"github-oauth": {"github.com": "'${GITHUB_AUTH_TOKEN}'"}}' > composer-auth.json
+        else
+          echo '{}' > composer-auth.json
+        fi
+    - |-
+        set -e
+        set -u
+
+        wget https://github.com/springload/ecs-tool/releases/download/1.9.6/ecs-tool_1.9.6_linux_amd64.tar.gz -O - | tar -xzvf - ecs-tool
+        export REGISTRY=$(./ecs-tool ecr-endpoint)/${PROJECT}-${STACK}
+        eval $(./ecs-tool ecr-login)
+
+        docker buildx bake -f docker-bake.hcl --push
+
+        # run deploy.sh script before deployments
+        env "ECS_RUN.SERVICE=app" "ECS_RUN.LAUNCH_TYPE=FARGATE" ./ecs-tool run -l "ecs-tool" --debug --image_tag "{container_name}-${VERSION}" --cluster ${PROJECT}-${STACK} --task_definition ${PROJECT}-${STACK}-app --container_name app ./deploy.sh
+        ./ecs-tool deploy --image_tag "{container_name}-${VERSION}" --cluster ${PROJECT}-${STACK} -s app -s scheduler -s events
+
+    # deploy frontend
+    # get parameters
+    - |-
+        wget -O- https://github.com/springload/ssm-parent/releases/download/1.8.0/ssm-parent_1.8.0_linux_amd64.tar.gz | tar xvzf - ssm-parent
+
+        ./ssm-parent -n /actions/${PROJECT}/${STACK}/configuration dotenv /tmp/dotenv.file
+        # remove double quotes and pipe into the env
+        # that's because Docker doesn't like them
+        sed -i -e 's/"//g' /tmp/dotenv.file
+
+    # build the builder
+    - docker buildx build -t frontend-${STACK}-${VERSION} --load --target builder -f console/Dockerfile .
+    - docker run -i --rm --env-file /tmp/dotenv.file -v "$(pwd)/console_dist:/app/dist" frontend-${STACK}-${VERSION} pnpm build
+    - |-
+        DEPLOY_BUCKET=${PROJECT}-${STACK}
+        wget -O- https://github.com/bep/s3deploy/releases/download/v2.11.0/s3deploy_2.11.0_linux-amd64.tar.gz | tar xzv -f - s3deploy
+        ./s3deploy -region ${AWS_REGION} -source ./console_dist -bucket ${DEPLOY_BUCKET}

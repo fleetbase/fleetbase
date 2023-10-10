@@ -1,0 +1,10 @@
+{{page-title "Dashboard"}}
+<Layout::Section::Body class="overflow-y-scroll h-full pt-6">
+    <div class="container mx-auto h-screen space-y-4" {{increase-height-by 300}}>
+        <div class="grid grid-cols-1 md:grid-cols-12 gap-4">
+            <GithubCard class="lg:col-span-4" />
+            <FleetbaseBlog class="lg:col-span-8" />
+        </div>
+        <Dashboard @sidebar={{this.sidebarContext}} />
+    </div>
+</Layout::Section::Body>

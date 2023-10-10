@@ -1,0 +1,15 @@
+{{page-title "Console"}}
+<Layout::Container>
+    <Layout::Header @brand={{@model}} @user={{this.user}} @organizations={{this.organizations}} @menuItems={{this.universe.headerMenuItems}} @extensions={{this.extensions}} @onAction={{this.onAction}} />
+    <Layout::Main>
+        <Layout::Sidebar @onSetup={{this.setSidebarContext}}>
+            <div class="next-sidebar-content-inner">
+                <div role="menu" id="sidebar-menu-items"></div>
+            </div>
+        </Layout::Sidebar>
+        <Layout::Section>
+            {{outlet}}
+        </Layout::Section>
+    </Layout::Main>
+    <Layout::MobileNavbar @brand={{@model}} @user={{this.user}} @organizations={{this.organizations}} @menuItems={{this.universe.headerMenuItems}} @extensions={{this.extensions}} @onAction={{this.onAction}} />
+</Layout::Container>
