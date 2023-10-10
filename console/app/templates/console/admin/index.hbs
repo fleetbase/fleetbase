@@ -1,0 +1,14 @@
+{{page-title "Overview"}}
+<Layout::Section::Header @title="Overview" />
+
+<Layout::Section::Body class="overflow-y-scroll h-full">
+    <div class="container mx-auto h-screen" {{increase-height-by 800}}>
+        <div class="max-w-3xl my-10 mx-auto space-y-6">
+            <div class="grid grid-cols-3 xs:grid-cols-1 gap-4">
+                <StatWidget @title="Total Users" @value={{@model.total_users}} />
+                <StatWidget @title="Total Organizations" @value={{@model.total_organizations}} />
+                <StatWidget @title="Total Transactions" @value={{@model.total_transactions}} />
+            </div>
+        </div>
+    </div>
+</Layout::Section::Body>

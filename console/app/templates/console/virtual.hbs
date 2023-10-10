@@ -1,0 +1,10 @@
+{{page-title @model.title}}
+<Layout::Section::Header @title={{@model.title}} />
+
+<Layout::Section::Body class="overflow-y-scroll h-full">
+    <div class="container mx-auto h-screen" {{increase-height-by 300}}>
+        <div class="max-w-3xl my-10 mx-auto space-y-">
+            {{component @model.component params=@model.componentParams}}
+        </div>
+    </div>
+</Layout::Section::Body>

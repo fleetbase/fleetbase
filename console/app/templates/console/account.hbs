@@ -1,0 +1,18 @@
+{{page-title "Account"}}
+<EmberWormhole @to="sidebar-menu-items">
+    <Layout::Sidebar::Panel @open={{true}} @title="Account">
+        <Layout::Sidebar::Item @route="console.account.index" @icon="user">Profile</Layout::Sidebar::Item>
+        {{#each this.universe.accountMenuItems as |menuItem|}}
+            <Layout::Sidebar::Item @onClick={{fn this.universe.transitionMenuItem "console.account.virtual" menuItem}} @item={{menuItem}} @icon={{menuItem.icon}}>{{menuItem.title}}</Layout::Sidebar::Item>
+        {{/each}}
+    </Layout::Sidebar::Panel>
+    {{#each this.universe.accountMenuPanels as |menuPanel|}}
+        <Layout::Sidebar::Panel @open={{menuPanel.open}} @title={{menuPanel.title}}>
+            {{#each menuPanel.items as |menuItem|}}
+                <Layout::Sidebar::Item @onClick={{fn this.universe.transitionMenuItem "console.account.virtual" menuItem}} @item={{menuItem}} @icon={{menuItem.icon}}>{{menuItem.title}}</Layout::Sidebar::Item>
+            {{/each}}
+        </Layout::Sidebar::Panel>
+    {{/each}}
+</EmberWormhole>
+
+{{outlet}}
