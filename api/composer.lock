@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "d7dd425fca477197e2f47d776d3cf76f",
+    "content-hash": "265e49a3b34040f5a2056d4674b0ca83",
     "packages": [
         {
             "name": "aloha/twilio",
@@ -192,16 +192,16 @@
         },
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.283.2",
+            "version": "3.283.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "6616677d76e39af28138512740199d38a461859f"
+                "reference": "4cc8d6c7e856de80d9316f659c4c626d3713f6c1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/6616677d76e39af28138512740199d38a461859f",
-                "reference": "6616677d76e39af28138512740199d38a461859f",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/4cc8d6c7e856de80d9316f659c4c626d3713f6c1",
+                "reference": "4cc8d6c7e856de80d9316f659c4c626d3713f6c1",
                 "shasum": ""
             },
             "require": {
@@ -281,9 +281,9 @@
             "support": {
                 "forum": "https://forums.aws.amazon.com/forum.jspa?forumID=80",
                 "issues": "https://github.com/aws/aws-sdk-php/issues",
-                "source": "https://github.com/aws/aws-sdk-php/tree/3.283.2"
+                "source": "https://github.com/aws/aws-sdk-php/tree/3.283.3"
             },
-            "time": "2023-10-06T18:09:54+00:00"
+            "time": "2023-10-12T18:14:56+00:00"
         },
         {
             "name": "aws/aws-sdk-php-laravel",
@@ -2092,16 +2092,16 @@
         },
         {
             "name": "fleetbase/fleetops-api",
-            "version": "0.2.8",
+            "version": "0.2.9",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fleetbase/fleetops.git",
-                "reference": "8d9e775238158f9f595d54c030cdbf4a763e90ea"
+                "reference": "49cbcd58ad141ac778bdd20af4b28732abef57d2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fleetbase/fleetops/zipball/8d9e775238158f9f595d54c030cdbf4a763e90ea",
-                "reference": "8d9e775238158f9f595d54c030cdbf4a763e90ea",
+                "url": "https://api.github.com/repos/fleetbase/fleetops/zipball/49cbcd58ad141ac778bdd20af4b28732abef57d2",
+                "reference": "49cbcd58ad141ac778bdd20af4b28732abef57d2",
                 "shasum": ""
             },
             "require": {
@@ -2132,6 +2132,16 @@
                     "providers": [
                         "Fleetbase\\FleetOps\\Providers\\FleetOpsServiceProvider",
                         "Fleetbase\\FleetOps\\Providers\\EventServiceProvider"
+                    ]
+                },
+                "fleetbase/fleetops-api": {
+                    "excludes": [
+                        "addon",
+                        "app",
+                        "assets",
+                        "config",
+                        "tests",
+                        "vendor"
                     ]
                 }
             },
@@ -2164,9 +2174,9 @@
             ],
             "support": {
                 "issues": "https://github.com/fleetbase/fleetops/issues",
-                "source": "https://github.com/fleetbase/fleetops/tree/v0.2.8"
+                "source": "https://github.com/fleetbase/fleetops/tree/v0.2.9"
             },
-            "time": "2023-10-10T12:52:40+00:00"
+            "time": "2023-10-13T09:16:35+00:00"
         },
         {
             "name": "fleetbase/storefront-api",
@@ -2729,16 +2739,16 @@
         },
         {
             "name": "giggsey/libphonenumber-for-php",
-            "version": "8.13.22",
+            "version": "8.13.23",
             "source": {
                 "type": "git",
                 "url": "https://github.com/giggsey/libphonenumber-for-php.git",
-                "reference": "fc69cbcaff14c1af1f935b79033bdc5c0fa4a846"
+                "reference": "b2dff83693cb46eb4478b193e9d94e2ff6258480"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/giggsey/libphonenumber-for-php/zipball/fc69cbcaff14c1af1f935b79033bdc5c0fa4a846",
-                "reference": "fc69cbcaff14c1af1f935b79033bdc5c0fa4a846",
+                "url": "https://api.github.com/repos/giggsey/libphonenumber-for-php/zipball/b2dff83693cb46eb4478b193e9d94e2ff6258480",
+                "reference": "b2dff83693cb46eb4478b193e9d94e2ff6258480",
                 "shasum": ""
             },
             "require": {
@@ -2797,7 +2807,7 @@
                 "issues": "https://github.com/giggsey/libphonenumber-for-php/issues",
                 "source": "https://github.com/giggsey/libphonenumber-for-php"
             },
-            "time": "2023-09-29T14:53:55+00:00"
+            "time": "2023-10-11T07:12:56+00:00"
         },
         {
             "name": "giggsey/locale",
@@ -9309,16 +9319,16 @@
         },
         {
             "name": "sentry/sentry-laravel",
-            "version": "3.8.1",
+            "version": "3.8.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/getsentry/sentry-laravel.git",
-                "reference": "b6142a80fa9360a10b786d2da032339602d0e362"
+                "reference": "1293e5732f8405e12f000cdf5dee78c927a18de0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/getsentry/sentry-laravel/zipball/b6142a80fa9360a10b786d2da032339602d0e362",
-                "reference": "b6142a80fa9360a10b786d2da032339602d0e362",
+                "url": "https://api.github.com/repos/getsentry/sentry-laravel/zipball/1293e5732f8405e12f000cdf5dee78c927a18de0",
+                "reference": "1293e5732f8405e12f000cdf5dee78c927a18de0",
                 "shasum": ""
             },
             "require": {
@@ -9385,7 +9395,7 @@
             ],
             "support": {
                 "issues": "https://github.com/getsentry/sentry-laravel/issues",
-                "source": "https://github.com/getsentry/sentry-laravel/tree/3.8.1"
+                "source": "https://github.com/getsentry/sentry-laravel/tree/3.8.2"
             },
             "funding": [
                 {
@@ -9397,7 +9407,7 @@
                     "type": "custom"
                 }
             ],
-            "time": "2023-10-04T10:21:16+00:00"
+            "time": "2023-10-12T14:38:46+00:00"
         },
         {
             "name": "spatie/enum",
@@ -14814,16 +14824,16 @@
         },
         {
             "name": "kitloong/laravel-migrations-generator",
-            "version": "v6.10.0",
+            "version": "v6.11.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/kitloong/laravel-migrations-generator.git",
-                "reference": "116f50fab918b7f1363a40ebd954ce250f6aedcd"
+                "reference": "220b5f17fcb16610a3e9757d68c197319c0f7444"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/kitloong/laravel-migrations-generator/zipball/116f50fab918b7f1363a40ebd954ce250f6aedcd",
-                "reference": "116f50fab918b7f1363a40ebd954ce250f6aedcd",
+                "url": "https://api.github.com/repos/kitloong/laravel-migrations-generator/zipball/220b5f17fcb16610a3e9757d68c197319c0f7444",
+                "reference": "220b5f17fcb16610a3e9757d68c197319c0f7444",
                 "shasum": ""
             },
             "require": {
@@ -14877,7 +14887,7 @@
             ],
             "support": {
                 "issues": "https://github.com/kitloong/laravel-migrations-generator/issues",
-                "source": "https://github.com/kitloong/laravel-migrations-generator/tree/v6.10.0"
+                "source": "https://github.com/kitloong/laravel-migrations-generator/tree/v6.11.0"
             },
             "funding": [
                 {
@@ -14885,7 +14895,7 @@
                     "type": "custom"
                 }
             ],
-            "time": "2023-03-26T07:37:00+00:00"
+            "time": "2023-10-10T13:55:26+00:00"
         },
         {
             "name": "laravel/sail",
