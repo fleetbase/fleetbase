@@ -2,6 +2,7 @@ import Controller from '@ember/controller';
 import { tracked } from '@glimmer/tracking';
 import { inject as service } from '@ember/service';
 import { action } from '@ember/object';
+import { isArray } from '@ember/array';
 
 export default class ConsoleAdminBrandingController extends Controller {
     /**
@@ -51,13 +52,43 @@ export default class ConsoleAdminBrandingController extends Controller {
     }
 
     /**
-     * Unset a branding settings
+     * Unsets the value of a given key or array of keys on the model.
      *
-     * @param {String} key
+     * @action
+     * @param {string | string[]} key - The key or keys to unset on the model.
+     * @param {*} [newValue=null] - The new value to set for the given key or keys. Defaults to null.
      * @memberof ConsoleAdminBrandingController
      */
     @action unset(key, newValue = null) {
-        this.model[key] = newValue;
+        if (isArray(key)) {
+            return key.forEach((k) => this.unset(k, undefined));
+        }
+
+        this.model.set(key, newValue);
+    }
+
+    /**
+     * Unsets the icon properties on the model.
+     *
+     * @action
+     * @returns {void} - No return value.
+     * @memberof ConsoleAdminBrandingController
+     */
+    @action unsetIcon() {
+        this.unset(['icon_uuid', 'icon_url']);
+        this.model.set('icon_url', '/images/icon.png');
+    }
+
+    /**
+     * Unsets the logo properties on the model.
+     *
+     * @action
+     * @returns {void} - No return value.
+     * @memberof ConsoleAdminBrandingController
+     */
+    @action unsetLogo() {
+        this.unset(['logo_uuid', 'logo_url']);
+        this.model.set('logo_url', '/images/fleetbase-logo-svg.svg');
     }
 
     /**
