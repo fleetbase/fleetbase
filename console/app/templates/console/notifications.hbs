@@ -1,0 +1,13 @@
+<h1>View All Notifications</h1>
+
+{{#each this.model as |notification|}}
+    {{! Render each notification }}
+    <div class="notification-item">
+        <h3>{{notification.data.subject}}</h3>
+        <p>{{notification.data.message}}</p>
+        <span>Received: {{notification.createdAgo}}</span>
+    </div>
+{{/each}}
+
+{{! Render the pagination component }}
+<Pagination @totalPages={{this.model.meta.totalPages}} @currentPage={{this.model.meta.page}} @onChangePage={{this.changePage}} />
