@@ -66,18 +66,18 @@ export default class ConsoleController extends Controller {
     @tracked organizations = [];
 
     /**
-     * Whether or not to hide the sidebar.
-     *
-     * @var {Boolean}
-     */
-    @tracked hideSidebar = true;
-
-    /**
      * Sidebar Context Controls
      *
      * @var {SidebarContext}
      */
     @tracked sidebarContext;
+
+    /**
+     * Routes which should hide the sidebar menu.
+     *
+     * @var {Array}
+     */
+    @tracked hiddenSidebarRoutes = ['console.home', 'console.extensions', 'console.notifications'];
 
     /**
      * Installed extensions.
@@ -104,7 +104,7 @@ export default class ConsoleController extends Controller {
 
         this.router.on('routeDidChange', (transition) => {
             if (this.sidebarContext) {
-                if (transition.to.name === 'console.home' || transition.to.name === 'console.extensions') {
+                if (this.hiddenSidebarRoutes.includes(transition.to.name)) {
                     this.sidebarContext.hideNow();
                 } else {
                     this.sidebarContext.show();
@@ -123,7 +123,7 @@ export default class ConsoleController extends Controller {
         this.sidebarContext = sidebarContext;
         this.universe.sidebarContext = sidebarContext;
 
-        if (this.router.currentRouteName === 'console.home' || this.router.currentRouteName === 'console.extensions') {
+        if (this.hiddenSidebarRoutes.includes(this.router.currentRouteName)) {
             this.sidebarContext.hideNow();
         }
     }

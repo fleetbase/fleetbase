@@ -22,6 +22,7 @@ Router.map(function () {
     this.route('console', { path: '/' }, function () {
         this.route('home', { path: '/' });
         this.route('extensions');
+        this.route('notifications');
         this.route('account', function () {
             this.route('virtual', { path: '/:slug/:view' });
         });
@@ -49,11 +50,6 @@ Router.map(function () {
             path: 'developers',
         });
 
-        this.mount('@fleetbase/fleetops-engine', {
-            as: 'fleet-ops',
-            path: 'fleet-ops',
-        });
-
         this.mount('@fleetbase/iam-engine', {
             as: 'iam',
             path: 'iam',
@@ -63,7 +59,11 @@ Router.map(function () {
             as: 'storefront',
             path: 'storefront',
         });
-        this.route('notifications');
+
+        this.mount('@fleetbase/fleetops-engine', {
+            as: 'fleet-ops',
+            path: 'fleet-ops',
+        });
     });
     this.route('install');
 });

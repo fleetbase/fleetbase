@@ -9,6 +9,7 @@ export default class NotificationModel extends Model {
     /** @attributes */
     @attr('string') type;
     @attr('raw') data;
+    @attr('raw') meta;
 
     /** @dates */
     @attr('date') read_at;
