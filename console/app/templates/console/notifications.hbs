@@ -1,13 +1,55 @@
-<h1>View All Notifications</h1>
+<Layout::Section::Header @title="Notifications">
+    <Button @icon="check-square" @type="default" @text="Select All" {{on "click" this.selectAll}} class="mr-2" />
+    <Button @icon="envelope" @type="primary" @text="Mark as Read" {{on "click" this.read}} class="mr-2" />
+    <Button @icon="trash" @type="danger" @text="Delete" {{on "click" this.delete}} />
+</Layout::Section::Header>
 
-{{#each this.model as |notification|}}
-    {{! Render each notification }}
-    <div class="notification-item">
-        <h3>{{notification.data.subject}}</h3>
-        <p>{{notification.data.message}}</p>
-        <span>Received: {{notification.createdAgo}}</span>
+<Layout::Section::Body class="h-full w-full">
+    <div class="max-h-[calc(100vh-10rem)] h-full w-full overflow-y-scroll px-1">
+        <div class="space-y-1 p-1 h-full w-full">
+            {{#each @model as |notification|}}
+                <div
+                    class="p-4 rounded-md text-black dark:text-white text-sm hover:shadow-xl transition-transform transform hover:scale-101
+                        {{if notification.read_at 'bg-white dark:bg-gray-900' 'bg-gray-200 dark:bg-gray-800'}}"
+                        {{on "click" (fn this.toggleCheckbox notification)}}
+                >
+                    <div class="flex flex-row items-center">
+                        <div class="mr-4">
+                            <Checkbox @value={{includes notification this.selected}} @onToggle={{fn this.selectNotification notification}} class="border-2" />
+                        </div>
+                        <div class="flex-1">
+                            <div class="flex flex-row items-center">
+                                <div class="mr-2">
+                                    {{#if notification.read_at}}
+                                        <FaIcon @icon="envelope-open" class="text-purple-400 dark:text-blue-300" />
+                                    {{else}}
+                                        <FaIcon @icon="envelope" class="text-purple-600 dark:text-blue-500" />
+                                    {{/if}}
+                                </div>
+                                <h1 class="text-base font-semibold">{{notification.data.subject}}</h1>
+                            </div>
+                            <p class="mt-2">{{notification.data.message}}</p>
+                            <span class="text-gray-300 text-sm">Received: {{notification.createdAgo}}</span>
+                        </div>
+                    </div>
+                </div>
+            {{else}}
+                <div class="flex items-center justify-center h-full w-full">
+                    <p class="text-base text-gray-800 dark:text-gray-300 italic">No notifications to display.</p>
+                </div>
+            {{/each}}
+        </div>
     </div>
-{{/each}}
+</Layout::Section::Body>
 
-{{! Render the pagination component }}
-<Pagination @totalPages={{this.model.meta.totalPages}} @currentPage={{this.model.meta.page}} @onChangePage={{this.changePage}} />
+<div class="fixed bottom-0 w-full">
+    <Layout::Section::Footer>
+        <Pagination
+            @meta={{@model.meta}}
+            @currentPage={{this.page}}
+            @onPageChange={{fn (mut this.page)}}
+            @tfootVerticalOffset="53"
+            @tfootVerticalOffsetElements=".next-view-section-subheader"
+        />
+    </Layout::Section::Footer>
+</div>
