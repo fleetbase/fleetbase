@@ -3,6 +3,9 @@ import { tracked } from '@glimmer/tracking';
 import { action } from '@ember/object';
 import { inject as service } from '@ember/service';
 
+/**
+ * Controller for managing notifications.
+ */
 export default class NotificationsController extends Controller {
     // Inject the store service to fetch notifications
     @service socket;
@@ -42,6 +45,11 @@ export default class NotificationsController extends Controller {
 
     @tracked selected = [];
 
+    /**
+     * Action to select or deselect a notification.
+     *
+     * @param {Object} notification - The notification to select or deselect.
+     */
     @action selectNotification(notification) {
         if (this.selected.includes(notification)) {
             this.selected.removeObject(notification);
@@ -50,6 +58,9 @@ export default class NotificationsController extends Controller {
         }
     }
 
+    /**
+     * Action to delete selected notifications.
+     */
     @action delete() {
         return this.fetch
             .delete('notifications/bulk-delete', {
@@ -67,6 +78,9 @@ export default class NotificationsController extends Controller {
             });
     }
 
+    /**
+     * Action to mark selected notifications as read.
+     */
     @action read() {
         return this.fetch
             .put('notifications/mark-as-read', {
@@ -84,10 +98,16 @@ export default class NotificationsController extends Controller {
             });
     }
 
+    /**
+     * Action to select all notifications.
+     */
     @action selectAll() {
-        this.selected = this.model.toArray();
+        if (this.selected.length === this.model.length) {
+            this.selected.clear();
+        } else {
+            this.selected = this.model.toArray();
+        }
     }
-
     @tracked selectedNotifications = [];
 
     @tracked allNotifications = [];
@@ -97,6 +117,9 @@ export default class NotificationsController extends Controller {
         this.fetchAllNotifications();
     }
 
+    /**
+     * Fetch all notifications and store them in the `allNotifications` property.
+     */
     async fetchAllNotifications() {
         try {
             const allNotifications = await this.store.findAll('notification');
@@ -106,6 +129,11 @@ export default class NotificationsController extends Controller {
         }
     }
 
+    /**
+     * Action to select or deselect a notification from the list of all notifications.
+     *
+     * @param {Object} notification - The notification to select or deselect.
+     */
     @action onSelectNotification(notification) {
         if (this.selectedNotifications.includes(notification)) {
             this.selectedNotifications.removeObject(notification);
@@ -114,6 +142,9 @@ export default class NotificationsController extends Controller {
         }
     }
 
+    /**
+     * Action to select all notifications from the list of all notifications.
+     */
     @action selectAllNotifications() {
         if (this.selectedNotifications.length === this.model.length) {
             this.selectNotifications.clear();
@@ -122,6 +153,11 @@ export default class NotificationsController extends Controller {
         }
     }
 
+    /**
+     * Action to toggle the selection of a notification and mark it as read if it's not already read.
+     *
+     * @param {Object} notification - The notification to select or deselect.
+     */
     @action toggleCheckbox(notification) {
         if (this.selected.includes(notification)) {
             this.selected.removeObject(notification);

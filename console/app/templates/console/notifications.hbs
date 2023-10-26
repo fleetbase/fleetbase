@@ -4,13 +4,13 @@
     <Button @icon="trash" @type="danger" @text="Delete" {{on "click" this.delete}} />
 </Layout::Section::Header>
 
-<Layout::Section::Body class="h-full w-full">
+<Layout::Section::Body class="h-full w-full px-2">
     <div class="max-h-[calc(100vh-10rem)] h-full w-full overflow-y-scroll px-1">
         <div class="space-y-1 p-1 h-full w-full">
             {{#each @model as |notification|}}
                 <div
                     class="p-4 rounded-md text-black dark:text-white text-sm hover:shadow-xl transition-transform transform hover:scale-101
-                        {{if notification.read_at 'bg-white dark:bg-gray-900' 'bg-gray-200 dark:bg-gray-800'}}"
+                        {{if notification.read_at 'bg-white dark:bg-gray-900' 'bg-gray-100 dark:bg-gray-800'}}"
                         {{on "click" (fn this.toggleCheckbox notification)}}
                 >
                     <div class="flex flex-row items-center">
@@ -21,9 +21,9 @@
                             <div class="flex flex-row items-center">
                                 <div class="mr-2">
                                     {{#if notification.read_at}}
-                                        <FaIcon @icon="envelope-open" class="text-purple-400 dark:text-blue-300" />
+                                        <FaIcon @icon="envelope-open" class="text-blue-300" />
                                     {{else}}
-                                        <FaIcon @icon="envelope" class="text-purple-600 dark:text-blue-500" />
+                                        <FaIcon @icon="envelope" class="text-blue-500" />
                                     {{/if}}
                                 </div>
                                 <h1 class="text-base font-semibold">{{notification.data.subject}}</h1>
