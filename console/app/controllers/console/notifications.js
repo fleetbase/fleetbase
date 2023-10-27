@@ -129,6 +129,7 @@ export default class NotificationsController extends Controller {
     @action markNotificationAsRead(notification) {
         return notification.markAsRead().then(() => {
             this.notifications.info('Notification marked as read.');
+            this.universe.trigger('notifications.read', [notification]);
         });
     }
 }
