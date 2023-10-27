@@ -7,7 +7,6 @@ import { inject as service } from '@ember/service';
  * Controller for managing notifications.
  */
 export default class NotificationsController extends Controller {
-    // Inject the store service to fetch notifications
     @service socket;
     @service store;
     @service fetch;
@@ -43,7 +42,23 @@ export default class NotificationsController extends Controller {
      */
     @tracked sort = '-created_at';
 
+    /**
+     * The selected notifications.
+     *
+     * @tracked
+     * @var {Array}
+     * @memberof NotificationsController
+     */
     @tracked selected = [];
+
+    constructor() {
+        super(...arguments);
+
+        // listen for received notifications
+        this.universe.on('notification.received', () => {
+            this.router.refresh();
+        });
+    }
 
     /**
      * Action to select or deselect a notification.
@@ -82,13 +97,15 @@ export default class NotificationsController extends Controller {
      * Action to mark selected notifications as read.
      */
     @action read() {
+        const unreadSelectedNotifications = this.selected.filter((notification) => notification.unread);
+
         return this.fetch
             .put('notifications/mark-as-read', {
-                notifications: this.selected.map(({ id }) => id),
+                notifications: unreadSelectedNotifications.map(({ id }) => id),
             })
             .then(() => {
-                this.notifications.success(`${this.selected.length} notifications marked as read`);
-                this.universe.trigger('notifications.read', [...this.selected]);
+                this.notifications.success(`${unreadSelectedNotifications.length} notifications marked as read`);
+                this.universe.trigger('notifications.read', [...unreadSelectedNotifications]);
                 this.selected.clear();
 
                 return this.router.refresh();
@@ -108,64 +125,10 @@ export default class NotificationsController extends Controller {
             this.selected = this.model.toArray();
         }
     }
-    @tracked selectedNotifications = [];
 
-    @tracked allNotifications = [];
-
-    constructor() {
-        super(...arguments);
-        this.fetchAllNotifications();
-    }
-
-    /**
-     * Fetch all notifications and store them in the `allNotifications` property.
-     */
-    async fetchAllNotifications() {
-        try {
-            const allNotifications = await this.store.findAll('notification');
-            this.allNotifications = allNotifications.toArray();
-        } catch (error) {
-            console.error('Failed to fetch all notifications:', error);
-        }
-    }
-
-    /**
-     * Action to select or deselect a notification from the list of all notifications.
-     *
-     * @param {Object} notification - The notification to select or deselect.
-     */
-    @action onSelectNotification(notification) {
-        if (this.selectedNotifications.includes(notification)) {
-            this.selectedNotifications.removeObject(notification);
-        } else {
-            this.selectedNotifications.pushObject(notification);
-        }
-    }
-
-    /**
-     * Action to select all notifications from the list of all notifications.
-     */
-    @action selectAllNotifications() {
-        if (this.selectedNotifications.length === this.model.length) {
-            this.selectNotifications.clear();
-        } else {
-            this.selectedNotifications = this.allNotifications.slice();
-        }
-    }
-
-    /**
-     * Action to toggle the selection of a notification and mark it as read if it's not already read.
-     *
-     * @param {Object} notification - The notification to select or deselect.
-     */
-    @action toggleCheckbox(notification) {
-        if (this.selected.includes(notification)) {
-            this.selected.removeObject(notification);
-        } else {
-            this.selected.pushObject(notification);
-            if (!notification.read_at) {
-                this.read();
-            }
-        }
+    @action markNotificationAsRead(notification) {
+        return notification.markAsRead().then(() => {
+            this.notifications.info('Notification marked as read.');
+        });
     }
 }
