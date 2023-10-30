@@ -42,39 +42,8 @@ Router.map(function () {
                 this.route('socket');
             });
             this.route('branding');
-            this.route('virtual', { path: '/:slug/:view' });
             this.route('notifications');
-        });
-
-        this.mount('@fleetbase/dev-engine', {
-            as: 'developers',
-            path: 'developers'
-        });
-
-        this.mount('@fleetbase/fleetops-engine', {
-            as: 'fleet-ops',
-            path: 'fleet-ops'
-        });
-
-        this.mount('@fleetbase/flespi-engine', {
-            as: 'flespi',
-            path: 'flespi'
-        });
-
-        this.mount('@fleetbase/fleetops-engine', {
-            as: 'fleet-ops',
-            path: 'fleet-ops',
-        });
-
-        this.mount('@fleetbase/iam-engine', {
-            as: 'iam',
-            path: 'iam'
-        });
-
-        this.mount('@fleetbase/storefront-engine', {
-            as: 'storefront',
-            path: 'storefront',
-            path: 'storefront'
+            this.route('virtual', { path: '/:slug/:view' });
         });
     });
     this.route('install');
