@@ -1,0 +1,51 @@
+<Layout::Section::Header @title="Notifications">
+    <Button @icon="check-square" @type="default" @text="Select All" {{on "click" this.selectAll}} class="mr-2" />
+    <Button @icon="envelope" @type="primary" @text="Mark as Read" {{on "click" this.read}} class="mr-2" />
+    <Button @icon="trash" @type="danger" @text="Delete" {{on "click" this.delete}} />
+</Layout::Section::Header>
+
+<Layout::Section::Body class="h-full w-full">
+    <div class="max-h-[calc(100vh-10rem)] h-full w-full overflow-y-scroll">
+        <div class="h-full w-full">
+            {{#each @model as |notification|}}
+                <div class="flex flex-row justify-between px-4 py-3 text-black dark:text-white border-b dark:border-gray-800 border-gray-200 text-sm hover:opacity-60 {{if notification.read_at 'bg-gray-100 dark:bg-gray-900' 'bg-white dark:bg-gray-800'}}">
+                    <div class="flex flex-row flex-1">
+                        <div class="flex items-center justify-center mr-6">
+                            <Checkbox @value={{includes notification this.selected}} @onToggle={{fn this.selectNotification notification}} />
+                        </div>
+                        <a href="javascript:;" class="flex-1 flex flex-row" {{on "click" (fn this.markNotificationAsRead notification)}}>
+                            <div class="mr-4 flex items-center justify-center">
+                                {{#if notification.read_at}}
+                                    <FaIcon @icon="envelope-open" class="text-gray-200" />
+                                {{else}}
+                                    <FaIcon @icon="envelope" class="text-gray-200" />
+                                {{/if}}
+                            </div>
+                            <div class="flex flex-col">
+                                <div class="flex flex-row space-x-2">
+                                    <h1 class="text-sm font-semibold antialiased leading-4">{{notification.data.subject}}</h1>
+                                    <div class="text-xs antialiased text-gray-900 dark:text-gray-200">- {{notification.data.message}}</div>
+                                </div>
+                                <div class="text-gray-300 text-xs antialiased mt-1">Received: {{notification.createdAgo}}</div>
+                            </div>
+                        </a>
+                        <div>
+                            <FaIcon @icon="clock" class="text-gray-400 dark:text-gray-700" @size="sm" />
+                            <span class="text-gray-400 dark:text-gray-600 text-xs">{{notification.createdAt}}</span>
+                        </div>
+                    </div>
+                </div>
+            {{else}}
+                <div class="flex items-center justify-center h-full w-full">
+                    <p class="text-base text-gray-800 dark:text-gray-300 italic">No notifications to display.</p>
+                </div>
+            {{/each}}
+        </div>
+    </div>
+</Layout::Section::Body>
+
+<div class="fixed bottom-0 w-full">
+    <Layout::Section::Footer>
+        <Pagination @meta={{@model.meta}} @currentPage={{this.page}} @onPageChange={{fn (mut this.page)}} @tfootVerticalOffset="53" @tfootVerticalOffsetElements=".next-view-section-subheader" />
+    </Layout::Section::Footer>
+</div>
