@@ -43,6 +43,7 @@ Router.map(function () {
             });
             this.route('branding');
             this.route('virtual', { path: '/:slug/:view' });
+            this.route('notifications');
         });
 
         this.mount('@fleetbase/dev-engine', {
@@ -60,6 +61,11 @@ Router.map(function () {
             path: 'flespi'
         });
 
+        this.mount('@fleetbase/fleetops-engine', {
+            as: 'fleet-ops',
+            path: 'fleet-ops',
+        });
+
         this.mount('@fleetbase/iam-engine', {
             as: 'iam',
             path: 'iam'
@@ -67,6 +73,7 @@ Router.map(function () {
 
         this.mount('@fleetbase/storefront-engine', {
             as: 'storefront',
+            path: 'storefront',
             path: 'storefront'
         });
     });

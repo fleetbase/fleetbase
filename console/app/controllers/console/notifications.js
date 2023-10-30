@@ -65,6 +65,7 @@ export default class NotificationsController extends Controller {
      *
      * @param {Object} notification - The notification to select or deselect.
      */
+
     @action selectNotification(notification) {
         if (this.selected.includes(notification)) {
             this.selected.removeObject(notification);
