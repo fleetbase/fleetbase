@@ -1,0 +1,32 @@
+{{page-title "Notifications"}}
+<Layout::Section::Header @title="Notifications">
+     <Button @type="primary" @size="sm" @icon="save" @text="Save Changes" @onClick={{this.saveSettings}} @disabled={{this.isLoading}} @isLoading={{this.isLoading}} />
+</Layout::Section::Header>
+
+<Layout::Section::Body class="overflow-y-scroll h-full">
+    <div class="container mx-auto h-screen" {{increase-height-by 1200}}>
+        <div class="max-w-3xl my-10 mx-auto space-y-4">
+            {{#each-in this.groupedNotifications as |groupName notifications|}}
+                <ContentPanel @title={{concat (smart-humanize groupName) " Notification Settings"}} @open={{true}} @pad={{true}} @panelBodyClass="bg-white dark:bg-gray-800">
+                    {{#each notifications as |notification|}}
+                        <InputGroup @name={{notification.name}} @helpText={{notification.description}}>
+                            <div class="fleetbase-model-select fleetbase-power-select ember-model-select">
+                                <PowerSelectMultiple
+                                    @searchEnabled={{true}}
+                                    @options={{this.notifiables}}
+                                    @selected={{get this.notificationSettings (concat (get-notification-key notification.definition notification.name) ".notifiables")}}
+                                    @onChange={{fn this.onSelectNotifiable notification}}
+                                    @placeholder="Select notifiables..."
+                                    @triggerClass="form-select form-input form-input-sm flex-1"
+                                    as |notifiable|
+                                >
+                                    {{notifiable.label}}
+                                </PowerSelectMultiple>
+                            </div>
+                        </InputGroup>
+                    {{/each}}
+                </ContentPanel>
+            {{/each-in}}
+        </div>
+    </div>
+</Layout::Section::Body>

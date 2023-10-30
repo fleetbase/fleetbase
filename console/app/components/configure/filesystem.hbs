@@ -16,6 +16,6 @@
     <Button @wrapperClass="mt-3" @icon="plug" @text="Test Config" @onClick={{this.test}} @isLoading={{this.isLoading}} />
 </ContentPanel>
 
-<div class="mt-3 flex items-center justify-end">
-    <Button @type="primary" @size="lg" @icon="save" @text="Save Changes" @onClick={{this.save}} @disabled={{this.isLoading}} @isLoading={{this.isLoading}} />
-</div>
+<EmberWormhole @to="next-view-section-subheader-actions">
+    <Button @type="primary" @size="sm" @icon="save" @text="Save Changes" @onClick={{this.save}} @disabled={{this.isLoading}} @isLoading={{this.isLoading}} />
+</EmberWormhole>
