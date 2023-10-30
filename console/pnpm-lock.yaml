@@ -2496,9 +2496,9 @@ packages:
     engines: {node: 14.* || >= 16}
     dependencies:
       date-fns: 2.30.0
-      ember-auto-import: 2.6.3(webpack@5.74.0)
+      ember-auto-import: 2.4.2(webpack@5.74.0)
       ember-cli-babel: 7.26.11
-      ember-cli-htmlbars: 6.3.0
+      ember-cli-htmlbars: 6.1.0
       ember-cli-notifications: 8.0.0(@babel/core@7.23.2)(postcss@8.4.21)
       ember-concurrency: 2.3.7(@babel/core@7.23.2)
       ember-concurrency-decorators: 2.0.3(@babel/core@7.23.2)
@@ -2602,7 +2602,7 @@ packages:
     dev: false
 
   /@fleetbase/fleetops-data@0.1.1:
-    resolution: {integrity: sha512-x3BsFR4hZ3P/2LSMqOx4XVgaahVs1Nr4fWFOPoS1FyF/XI8LU1EO6CNA/oimlLLC+0tbddQlT9wttXUrDOm5uw==}
+    resolution: {integrity: sha512-x3BsFR4hZ3P/2LSMqOx4XVgaahVs1Nr4fWFOPoS1FyF/XI8LU1EO6CNA/oimlLLC+0tbddQlT9wttXUrDOm5uw==, tarball: https://npm.pkg.github.com/download/@fleetbase/fleetops-data/0.1.1/5de00fb4d99013cc86ecc55f85e8086bbfa56b30}
     engines: {node: 14.* || >= 16}
     dependencies:
       date-fns: 2.30.0
@@ -2708,7 +2708,7 @@ packages:
     dev: false
 
   /@fleetbase/leaflet-routing-machine@3.2.16:
-    resolution: {integrity: sha512-af0mKH3VKIGEfYEGXS9cedhgniwgkNwjC/Gp9ZEzXGTX2/13PyMdd1XOQTamaItPbh5x2uK2/n1BP0vIJ7ObEQ==}
+    resolution: {integrity: sha512-sd+Cn3TmWQKyx3Wtx+nFfkejV0f/3ugY6Gl71NUBhaEZ5SlwiR/npibHWXXXQWA377TFSXTc3MKjY+MnpO2uAA==, tarball: https://npm.pkg.github.com/download/@fleetbase/leaflet-routing-machine/3.2.16/f5c1d638b5d1ebd0a81544ae49740005eec27a92}
     dependencies:
       '@mapbox/corslite': 0.0.7
       '@mapbox/polyline': 0.2.0
@@ -2729,7 +2729,7 @@ packages:
       '@fortawesome/free-solid-svg-icons': 6.4.0
       ember-cli-babel: 7.26.11
       ember-cli-es6-transform: 1.0.0
-      ember-cli-htmlbars: 6.1.0
+      ember-cli-htmlbars: 6.3.0
       ember-engines: 0.8.23(@ember/legacy-built-in-components@0.4.1)(ember-source@4.6.0)
       ember-intl: 6.0.0-beta.6(webpack@5.74.0)
       ember-tag-input: 3.1.0
@@ -2876,7 +2876,7 @@ packages:
       broccoli-source: 3.0.1
       camel-case: 4.1.2
       ember-ast-helpers: 0.3.5
-      ember-auto-import: 2.6.3(webpack@5.74.0)
+      ember-auto-import: 2.4.2(webpack@5.74.0)
       ember-cli-babel: 7.26.11
       ember-cli-htmlbars: 5.7.2
       ember-get-config: 2.1.1
@@ -7354,7 +7354,7 @@ packages:
       broccoli-merge-trees: 4.2.0
       broccoli-postcss: 6.1.0
       ember-cli-babel: 7.26.11
-      ember-cli-htmlbars: 6.3.0
+      ember-cli-htmlbars: 6.1.0
       ember-decorators-polyfill: 1.1.5(@babel/core@7.23.2)
       ember-get-config: 0.5.0
       ember-on-modifier: 1.0.1(@babel/core@7.23.2)
@@ -8054,7 +8054,7 @@ packages:
       '@embroider/macros': 1.13.2
       '@glimmer/component': 1.1.2(@babel/core@7.23.2)
       '@glimmer/tracking': 1.1.2
-      ember-auto-import: 2.6.3(webpack@5.74.0)
+      ember-auto-import: 2.4.2(webpack@5.74.0)
       ember-modifier: 3.2.7(@babel/core@7.23.2)
       tracked-built-ins: 3.3.0
     transitivePeerDependencies:
