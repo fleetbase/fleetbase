@@ -1,6 +1,6 @@
 import Model, { attr } from '@ember-data/model';
-import { computed, action } from '@ember/object';
-import { getOwner } from '@ember/application';
+import { computed } from '@ember/object';
+
 import { format, formatDistanceToNow } from 'date-fns';
 
 export default class NotificationModel extends Model {
@@ -37,8 +37,8 @@ export default class NotificationModel extends Model {
         return this.read_at instanceof Date;
     }
 
-    @computed('read') get unread() {
-        return !this.isRead;
+    @computed('isRead') get unread() {
+        return !this.get('isRead');
     }
 
     /** @actions */
@@ -46,8 +46,8 @@ export default class NotificationModel extends Model {
         if (this.isRead) {
             return;
         }
-        
-        this.read_at = new Date();
+
+        this.set('read_at', new Date());
         return this.save();
     }
 }
