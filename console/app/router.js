@@ -48,7 +48,17 @@ Router.map(function () {
 
         this.mount('@fleetbase/dev-engine', {
             as: 'developers',
-            path: 'developers',
+            path: 'developers'
+        });
+
+        this.mount('@fleetbase/fleetops-engine', {
+            as: 'fleet-ops',
+            path: 'fleet-ops'
+        });
+
+        this.mount('@fleetbase/flespi-engine', {
+            as: 'flespi',
+            path: 'flespi'
         });
 
         this.mount('@fleetbase/fleetops-engine', {
@@ -58,12 +68,13 @@ Router.map(function () {
 
         this.mount('@fleetbase/iam-engine', {
             as: 'iam',
-            path: 'iam',
+            path: 'iam'
         });
 
         this.mount('@fleetbase/storefront-engine', {
             as: 'storefront',
             path: 'storefront',
+            path: 'storefront'
         });
     });
     this.route('install');
