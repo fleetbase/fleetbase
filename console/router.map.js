@@ -42,6 +42,7 @@ Router.map(function () {
                 this.route('socket');
             });
             this.route('branding');
+            this.route('notifications');
             this.route('virtual', { path: '/:slug/:view' });
         });
     });

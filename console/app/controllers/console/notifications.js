@@ -7,11 +7,46 @@ import { inject as service } from '@ember/service';
  * Controller for managing notifications.
  */
 export default class NotificationsController extends Controller {
+    /**
+     * Inject the `socket` service
+     *
+     * @memberof NotificationsController
+     */
     @service socket;
+
+    /**
+     * Inject the `store` service
+     *
+     * @memberof NotificationsController
+     */
     @service store;
+
+    /**
+     * Inject the `fetch` service
+     *
+     * @memberof NotificationsController
+     */
     @service fetch;
+
+    /**
+     * Inject the `notifications` service
+     *
+     * @memberof NotificationsController
+     */
     @service notifications;
+
+    /**
+     * Inject the `universe` service
+     *
+     * @memberof NotificationsController
+     */
     @service universe;
+
+    /**
+     * Inject the `router` service
+     *
+     * @memberof NotificationsController
+     */
     @service router;
 
     /**
@@ -51,6 +86,10 @@ export default class NotificationsController extends Controller {
      */
     @tracked selected = [];
 
+    /**
+     * Creates an instance of NotificationsController.
+     * @memberof NotificationsController
+     */
     constructor() {
         super(...arguments);
 
@@ -63,9 +102,9 @@ export default class NotificationsController extends Controller {
     /**
      * Action to select or deselect a notification.
      *
-     * @param {Object} notification - The notification to select or deselect.
+     * @param {NotificationModel} notification - The notification to select or deselect.
+     * @memberof NotificationsController
      */
-
     @action selectNotification(notification) {
         if (this.selected.includes(notification)) {
             this.selected.removeObject(notification);
@@ -76,6 +115,8 @@ export default class NotificationsController extends Controller {
 
     /**
      * Action to delete selected notifications.
+     *
+     * @memberof NotificationsController
      */
     @action delete() {
         return this.fetch
@@ -96,6 +137,8 @@ export default class NotificationsController extends Controller {
 
     /**
      * Action to mark selected notifications as read.
+     *
+     * @memberof NotificationsController
      */
     @action read() {
         const unreadSelectedNotifications = this.selected.filter((notification) => notification.unread);
@@ -118,6 +161,8 @@ export default class NotificationsController extends Controller {
 
     /**
      * Action to select all notifications.
+     *
+     * @memberof NotificationsController
      */
     @action selectAll() {
         if (this.selected.length === this.model.length) {
@@ -127,6 +172,13 @@ export default class NotificationsController extends Controller {
         }
     }
 
+    /**
+     * Action to mark a notification as read.
+     *
+     * @param {NotificationModel} notification
+     * @return {Promise}
+     * @memberof NotificationsController
+     */
     @action markNotificationAsRead(notification) {
         return notification.markAsRead().then(() => {
             this.notifications.info('Notification marked as read.');
