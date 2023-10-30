@@ -60,7 +60,7 @@ export default class ConsoleAdminNotificationsController extends Controller {
      * @memberof ConsoleAdminNotificationsController
      */
     @action onSelectNotifiable(notification, notifiables) {
-        const notificationKey = createNotificationKey(notification.definition);
+        const notificationKey = createNotificationKey(notification.definition, notification.name);
         const _notificationSettings = { ...this.notificationSettings };
 
         if (!_notificationSettings[notificationKey]) {

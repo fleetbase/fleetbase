@@ -14,7 +14,7 @@
                                 <PowerSelectMultiple
                                     @searchEnabled={{true}}
                                     @options={{this.notifiables}}
-                                    @selected={{get this.notificationSettings (concat (get-notification-key notification.definition) ".notifiables")}}
+                                    @selected={{get this.notificationSettings (concat (get-notification-key notification.definition notification.name) ".notifiables")}}
                                     @onChange={{fn this.onSelectNotifiable notification}}
                                     @placeholder="Select notifiables..."
                                     @triggerClass="form-select form-input form-input-sm flex-1"

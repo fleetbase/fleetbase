@@ -1,6 +1,8 @@
 import { camelize } from '@ember/string';
 
-export default function createNotificationKey(definition) {
+export default function createNotificationKey(definition, name) {
     const withoutSlashes = definition.replace(/[\W_]+/g, '');
-    return camelize(withoutSlashes);
+    const key = `${camelize(withoutSlashes)}__${camelize(name)}`;
+    
+    return key;
 }
