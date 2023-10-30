@@ -7,7 +7,6 @@ import createNotificationKey from '../../../utils/create-notification-key';
 export default class ConsoleAdminNotificationsController extends Controller {
     @service notifications;
     @service fetch;
-
     @tracked notificationSettings = {};
     @tracked notificationTransportMethods = ['email', 'sms'];
     @tracked isLoading = false;
@@ -77,7 +76,6 @@ export default class ConsoleAdminNotificationsController extends Controller {
      *
      * @returns {Promise<void>} A promise for successful retrieval and update, or an error on failure.
      */
-
     getSettings() {
         return this.fetch
             .get('notifications/get-settings')
