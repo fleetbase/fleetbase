@@ -1,6 +1,6 @@
 {
     "name": "@fleetbase/console",
-    "version": "0.2.7",
+    "version": "0.2.8",
     "private": true,
     "description": "Fleetbase Console",
     "repository": "",
@@ -26,12 +26,12 @@
     "dependencies": {
         "@ember/legacy-built-in-components": "^0.4.1",
         "@fleetbase/ember-core": "^0.1.6",
-        "@fleetbase/ember-ui": "^0.2.2",
+        "@fleetbase/ember-ui": "^0.2.3",
         "@fleetbase/dev-engine": "^0.1.9",
         "@fleetbase/iam-engine": "^0.0.7",
-        "@fleetbase/fleetops-engine": "^0.3.1",
-        "@fleetbase/fleetops-data": "^0.1.1",
-        "@fleetbase/storefront-engine": "^0.2.2",
+        "@fleetbase/fleetops-engine": "^0.3.2",
+        "@fleetbase/fleetops-data": "^0.1.2",
+        "@fleetbase/storefront-engine": "^0.2.3",
         "@fleetbase/leaflet-routing-machine": "^3.2.16",
         "@fortawesome/ember-fontawesome": "^0.4.1",
         "ember-intl": "^6.0.0-beta.6",
@@ -67,7 +67,7 @@
         "dragula": "^3.7.3",
         "ember-auto-import": "^2.4.2",
         "ember-cli": "~4.6.0",
-        "ember-cli-app-version": "^5.0.0",
+        "ember-cli-app-version": "^6.0.1",
         "ember-cli-babel": "^7.26.11",
         "ember-cli-dependency-checker": "^3.3.1",
         "ember-cli-dotenv": "^3.1.0",
@@ -125,9 +125,9 @@
     },
     "pnpm": {
         "overrides": {
-            "@fleetbase/fleetops-data": "^0.1.1",
-            "@fleetbase/ember-core": "^0.1.5",
-            "@fleetbase/ember-ui": "^0.2.2"
+            "@fleetbase/fleetops-data": "^0.1.2",
+            "@fleetbase/ember-core": "^0.1.6",
+            "@fleetbase/ember-ui": "^0.2.3"
         }
     },
     "prettier": {
