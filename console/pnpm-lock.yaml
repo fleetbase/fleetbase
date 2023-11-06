@@ -31,8 +31,8 @@ dependencies:
     specifier: ^3.2.16
     version: 3.2.16
   '@fleetbase/storefront-engine':
-    specifier: ^0.2.2
-    version: 0.2.2(@babel/core@7.23.2)(@ember/test-helpers@2.8.1)(ember-engines@0.8.23)(ember-fetch@8.1.1)(ember-source@4.6.0)(postcss@8.4.21)(rollup@4.3.0)(webpack@5.74.0)
+    specifier: ^0.2.3
+    version: 0.2.3(@babel/core@7.23.2)(@ember/test-helpers@2.8.1)(ember-engines@0.8.23)(ember-fetch@8.1.1)(ember-source@4.6.0)(postcss@8.4.21)(rollup@4.3.0)(webpack@5.74.0)
   '@fortawesome/ember-fontawesome':
     specifier: ^0.4.1
     version: 0.4.1(rollup@4.3.0)
@@ -2723,8 +2723,8 @@ packages:
       osrm-text-instructions: 0.13.4
     dev: false
 
-  /@fleetbase/storefront-engine@0.2.2(@babel/core@7.23.2)(@ember/test-helpers@2.8.1)(ember-engines@0.8.23)(ember-fetch@8.1.1)(ember-source@4.6.0)(postcss@8.4.21)(rollup@4.3.0)(webpack@5.74.0):
-    resolution: {integrity: sha512-H7tsLQ+/2v2hXQk+aSkik2EHiBacsYJo9lxomaZwLuMedGBVBec36xy5kiToGNL3b9lhQVW3u13F4dtKUFHkzw==}
+  /@fleetbase/storefront-engine@0.2.3(@babel/core@7.23.2)(@ember/test-helpers@2.8.1)(ember-engines@0.8.23)(ember-fetch@8.1.1)(ember-source@4.6.0)(postcss@8.4.21)(rollup@4.3.0)(webpack@5.74.0):
+    resolution: {integrity: sha512-Lbb8gSiuawqFy4wiwxMyU0FxkWzGSyW9mGckl7UEc8qhg02TV8UCzjLvZaMQx+iIlbKRZhRyqfrVWJqgJ6lGWg==}
     engines: {node: 14.* || >= 16}
     peerDependencies:
       ember-engines: ^0.8.23
@@ -2737,7 +2737,7 @@ packages:
       '@fortawesome/free-solid-svg-icons': 6.4.0
       ember-cli-babel: 7.26.11
       ember-cli-es6-transform: 1.0.0
-      ember-cli-htmlbars: 6.1.0
+      ember-cli-htmlbars: 6.3.0
       ember-engines: 0.8.23(@ember/legacy-built-in-components@0.4.1)(ember-source@4.6.0)
       ember-intl: 6.0.0-beta.6(webpack@5.74.0)
       ember-tag-input: 3.1.0
@@ -7965,7 +7965,7 @@ packages:
     dependencies:
       '@embroider/util': 1.12.0(ember-source@4.6.0)
       ember-cli-babel: 7.26.11
-      ember-cli-htmlbars: 6.1.0
+      ember-cli-htmlbars: 6.3.0
       ember-source: 4.6.0(@babel/core@7.23.2)(webpack@5.74.0)
     transitivePeerDependencies:
       - '@glint/environment-ember-loose'
