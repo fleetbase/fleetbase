@@ -10,7 +10,7 @@ export default class Company extends Model {
     @attr('string') owner_uuid;
     @attr('string') logo_uuid;
     @attr('string') backdrop_uuid;
-    @attr('string') address_uuid;
+    @attr('string') place_uuid;
 
     /** @relationships */
     @belongsTo('file') logo;
