@@ -43,7 +43,7 @@ module.exports = function (defaults) {
                     postcssMixins,
                     postcssPresetEnv({ stage: 1 }),
                     postcssEach,
-                    tailwind('./tailwind.js'),
+                    tailwind('./tailwind.config.js'),
                     autoprefixer,
                 ],
             },
