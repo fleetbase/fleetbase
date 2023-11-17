@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "399f842da8880539c83b7ca6ade2460c",
+    "content-hash": "adbf96bf8dfb70d05ccc5040dafba55f",
     "packages": [
         {
             "name": "aloha/twilio",
@@ -2003,16 +2003,10 @@
         {
             "name": "fleetbase/core-api",
             "version": "1.3.2",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/fleetbase/core-api.git",
-                "reference": "e10f6e69d1604a4fa58257017d845e0d9b72e1c6"
-            },
             "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/fleetbase/core-api/zipball/e10f6e69d1604a4fa58257017d845e0d9b72e1c6",
-                "reference": "e10f6e69d1604a4fa58257017d845e0d9b72e1c6",
-                "shasum": ""
+                "type": "path",
+                "url": "../packages/core-api",
+                "reference": "4f691333490413869dbafc49a0d4bab99dfb9e33"
             },
             "require": {
                 "aloha/twilio": "^5.0",
@@ -2065,7 +2059,30 @@
                     "Fleetbase\\Seeds\\": "seeds/"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
+            "autoload-dev": {
+                "psr-4": {
+                    "Fleetbase\\Tests\\": "tests/"
+                }
+            },
+            "scripts": {
+                "lint": [
+                    "php-cs-fixer fix -v"
+                ],
+                "test:lint": [
+                    "php-cs-fixer fix -v --dry-run"
+                ],
+                "test:types": [
+                    "phpstan analyse --ansi --memory-limit=0"
+                ],
+                "test:unit": [
+                    "pest --colors=always"
+                ],
+                "test": [
+                    "@test:lint",
+                    "@test:types",
+                    "@test:unit"
+                ]
+            },
             "license": [
                 "MIT"
             ],
@@ -2084,25 +2101,17 @@
                 "fleetbase",
                 "logistics platform"
             ],
-            "support": {
-                "issues": "https://github.com/fleetbase/core-api/issues",
-                "source": "https://github.com/fleetbase/core-api/tree/v1.3.2"
-            },
-            "time": "2023-10-30T10:40:02+00:00"
+            "transport-options": {
+                "relative": true
+            }
         },
         {
             "name": "fleetbase/fleetops-api",
             "version": "0.3.4",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/fleetbase/fleetops.git",
-                "reference": "6a65ca81441b1d55ad2ddb81b9210cf74f037638"
-            },
             "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/fleetbase/fleetops/zipball/6a65ca81441b1d55ad2ddb81b9210cf74f037638",
-                "reference": "6a65ca81441b1d55ad2ddb81b9210cf74f037638",
-                "shasum": ""
+                "type": "path",
+                "url": "../packages/fleetops",
+                "reference": "6a65ca81441b1d55ad2ddb81b9210cf74f037638"
             },
             "require": {
                 "barryvdh/laravel-dompdf": "^2.0",
@@ -2150,7 +2159,30 @@
                     "Fleetbase\\FleetOps\\": "server/src/"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
+            "autoload-dev": {
+                "psr-4": {
+                    "Fleetbase\\Tests\\": "server/tests/"
+                }
+            },
+            "scripts": {
+                "lint": [
+                    "php-cs-fixer fix -v"
+                ],
+                "test:lint": [
+                    "php-cs-fixer fix -v --dry-run"
+                ],
+                "test:types": [
+                    "phpstan analyse --ansi --memory-limit=4G"
+                ],
+                "test:unit": [
+                    "pest --colors=always"
+                ],
+                "test": [
+                    "@test:lint",
+                    "@test:types",
+                    "@test:unit"
+                ]
+            },
             "license": [
                 "MIT"
             ],
@@ -2172,29 +2204,203 @@
                 "last-mile",
                 "tms"
             ],
-            "support": {
-                "issues": "https://github.com/fleetbase/fleetops/issues",
-                "source": "https://github.com/fleetbase/fleetops/tree/v0.3.4"
+            "transport-options": {
+                "relative": true
+            }
+        },
+        {
+            "name": "fleetbase/flespi-integration",
+            "version": "0.1.2",
+            "dist": {
+                "type": "path",
+                "url": "../packages/flespi",
+                "reference": "8aa9abc33c168ea9e6a98912f938882e8845ce3a"
             },
-            "time": "2023-11-16T10:31:43+00:00"
+            "require": {
+                "fleetbase/core-api": "^1.3.2",
+                "fleetbase/fleetops-api": "^0.3.4",
+                "php": "^7.4|^8.0",
+                "php-http/guzzle7-adapter": "^1.0",
+                "psr/http-factory-implementation": "*",
+                "vlucas/phpdotenv": "^5.5"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "^3.34.1",
+                "nunomaduro/collision": "^5.11.0|^6.4.0",
+                "pestphp/pest": "^1.22.6",
+                "phpstan/phpstan": "^1.10.38",
+                "symfony/var-dumper": "^5.4.29"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Fleetbase\\Flespi\\Providers\\FlespiIntegrationServiceProvider",
+                        "Fleetbase\\Flespi\\Providers\\NotificationServiceProvider"
+                    ]
+                },
+                "fleetbase": {
+                    "sandbox-migrations": false
+                },
+                "fleetbase/flespi-integration": {
+                    "excludes": [
+                        "addon",
+                        "app",
+                        "assets",
+                        "config",
+                        "tests",
+                        "vendor"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Fleetbase\\Flespi\\": "server/src/"
+                }
+            },
+            "autoload-dev": {
+                "psr-4": {
+                    "Fleetbase\\Flespi\\Tests\\": "server/tests/"
+                }
+            },
+            "scripts": {
+                "lint": [
+                    "php-cs-fixer fix -v"
+                ],
+                "test:lint": [
+                    "php-cs-fixer fix -v --dry-run"
+                ],
+                "test:types": [
+                    "phpstan analyse --ansi --memory-limit=0"
+                ],
+                "test:unit": [
+                    "pest --colors=always"
+                ],
+                "test": [
+                    "@test:lint",
+                    "@test:types",
+                    "@test:unit"
+                ]
+            },
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Fleetbase Pte Ltd.",
+                    "email": "hello@fleetbase.io"
+                }
+            ],
+            "description": "Flespi Universal Telematics Gateway, Parser & API Extension for Fleetbase",
+            "keywords": [
+                "fleetbase-extension",
+                "flespi"
+            ],
+            "transport-options": {
+                "relative": true
+            }
+        },
+        {
+            "name": "fleetbase/pallet-api",
+            "version": "0.0.1",
+            "dist": {
+                "type": "path",
+                "url": "../packages/pallet",
+                "reference": "ce0cf1787f90e79678f0c9516649da59ed8d022e"
+            },
+            "require": {
+                "fleetbase/core-api": "^1.2.6",
+                "php": "^7.4|^8.0",
+                "php-http/guzzle7-adapter": "^1.0",
+                "psr/http-factory-implementation": "*"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "^3.34.1",
+                "nunomaduro/collision": "^5.11.0|^6.4.0",
+                "pestphp/pest": "^1.22.6",
+                "phpstan/phpstan": "^1.10.38",
+                "symfony/var-dumper": "^5.4.29"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Fleetbase\\Pallet\\Providers\\PalletServiceProvider"
+                    ]
+                },
+                "fleetbase": {
+                    "sandbox-migrations": false
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Fleetbase\\Pallet\\": "server/src/",
+                    "Fleetbase\\Pallet\\Seeds\\": "server/seeds/"
+                }
+            },
+            "autoload-dev": {
+                "psr-4": {
+                    "Fleetbase\\Pallet\\Tests\\": "server/tests/"
+                }
+            },
+            "scripts": {
+                "lint": [
+                    "php-cs-fixer fix -v"
+                ],
+                "test:lint": [
+                    "php-cs-fixer fix -v --dry-run"
+                ],
+                "test:types": [
+                    "phpstan analyse --ansi --memory-limit=0"
+                ],
+                "test:unit": [
+                    "pest --colors=always"
+                ],
+                "test": [
+                    "@test:lint",
+                    "@test:types",
+                    "@test:unit"
+                ]
+            },
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Fleetbase Pte Ltd.",
+                    "email": "hello@fleetbase.io"
+                },
+                {
+                    "name": "Ronald A. Richardson",
+                    "email": "ron@fleetbase.io"
+                }
+            ],
+            "description": "Inventory & Warehouse Management Extension for Fleetbase",
+            "keywords": [
+                "ecommerce",
+                "fleetbase",
+                "fleetbase-extension",
+                "inventory",
+                "inventory management",
+                "inventory management api",
+                "inventory system",
+                "stock management"
+            ],
+            "transport-options": {
+                "relative": true
+            }
         },
         {
             "name": "fleetbase/storefront-api",
             "version": "0.2.4",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/fleetbase/storefront.git",
-                "reference": "df155f5b3e04f73087899c85208d8b3f5de5d466"
-            },
             "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/fleetbase/storefront/zipball/df155f5b3e04f73087899c85208d8b3f5de5d466",
-                "reference": "df155f5b3e04f73087899c85208d8b3f5de5d466",
-                "shasum": ""
+                "type": "path",
+                "url": "../packages/storefront",
+                "reference": "df155f5b3e04f73087899c85208d8b3f5de5d466"
             },
             "require": {
                 "fleetbase/core-api": "^1.3.2",
-                "fleetbase/fleetops-api": "^0.3.2",
+                "fleetbase/fleetops-api": "^0.3.3",
                 "geocoder-php/google-maps-places-provider": "^1.4",
                 "laravel-notification-channels/apn": "^3.8",
                 "laravel-notification-channels/fcm": "^2.7",
@@ -2231,7 +2437,30 @@
                     "Fleetbase\\Storefront\\": "server/src/"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
+            "autoload-dev": {
+                "psr-4": {
+                    "Fleetbase\\Storefront\\Tests\\": "server/tests/"
+                }
+            },
+            "scripts": {
+                "lint": [
+                    "php-cs-fixer fix -v"
+                ],
+                "test:lint": [
+                    "php-cs-fixer fix -v --dry-run"
+                ],
+                "test:types": [
+                    "phpstan analyse --ansi --memory-limit=0"
+                ],
+                "test:unit": [
+                    "pest --colors=always"
+                ],
+                "test": [
+                    "@test:lint",
+                    "@test:types",
+                    "@test:unit"
+                ]
+            },
             "license": [
                 "MIT"
             ],
@@ -2253,11 +2482,9 @@
                 "marketplace",
                 "storefront"
             ],
-            "support": {
-                "issues": "https://github.com/fleetbase/storefront/issues",
-                "source": "https://github.com/fleetbase/storefront/tree/v0.2.4"
-            },
-            "time": "2023-11-09T08:50:52+00:00"
+            "transport-options": {
+                "relative": true
+            }
         },
         {
             "name": "fruitcake/laravel-cors",
