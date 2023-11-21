@@ -45,6 +45,16 @@ Router.map(function () {
             this.route('notifications');
             this.route('virtual', { path: '/:slug/:view' });
         });
+
+        this.mount('@fleetbase/fleetops-engine', {
+            as: 'fleet-ops',
+            path: 'fleet-ops'
+        });
+
+        this.mount('@fleetbase/loconav-engine', {
+            as: 'loconav',
+            path: 'loconav'
+        });
     });
     this.route('install');
 });
