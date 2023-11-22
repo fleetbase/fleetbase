@@ -35,7 +35,7 @@ jobs:
           echo "STACK=$(basename $GITHUB_REF)" >> $GITHUB_ENV
 
     - name: Configure AWS Credentials
-      uses: aws-actions/configure-aws-credentials@v2
+      uses: aws-actions/configure-aws-credentials@v4
       with:
         role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT_NUMBER }}:role/${{ env.PROJECT }}-${{ env.STACK }}-deployer
         role-session-name: github
