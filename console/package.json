@@ -1,6 +1,6 @@
 {
     "name": "@fleetbase/console",
-    "version": "0.2.9",
+    "version": "0.3.1",
     "private": true,
     "description": "Fleetbase Console",
     "repository": "",
@@ -26,10 +26,12 @@
     "dependencies": {
         "@ember/legacy-built-in-components": "^0.4.1",
         "@fleetbase/ember-core": "^0.1.8",
-        "@fleetbase/ember-ui": "link:../packages/ember-ui",
-        "@fleetbase/fleetops-data": "^0.1.4",
-        "@fleetbase/fleetops-engine": "link:../packages/fleetops",
-        "@fleetbase/flespi-engine": "link:../packages/flespi",
+        "@fleetbase/ember-ui": "^0.2.6",
+        "@fleetbase/fleetops-data": "^0.1.5",
+        "@fleetbase/fleetops-engine": "^0.3.5",
+        "@fleetbase/storefront-engine": "^0.2.4",
+        "@fleetbase/dev-engine": "^0.1.9",
+        "@fleetbase/iam-engine": "^0.0.7",
         "@fleetbase/leaflet-routing-machine": "^3.2.16",
         "@fortawesome/ember-fontawesome": "^0.4.1",
         "ember-changeset": "^4.1.2",
@@ -123,9 +125,9 @@
     },
     "pnpm": {
         "overrides": {
-            "@fleetbase/fleetops-data": "^0.1.4",
+            "@fleetbase/fleetops-data": "^0.1.5",
             "@fleetbase/ember-core": "^0.1.8",
-            "@fleetbase/ember-ui": "link:../packages/ember-ui"
+            "@fleetbase/ember-ui": "^0.2.6"
         }
     },
     "prettier": {
