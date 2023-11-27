@@ -9,6 +9,9 @@ dependencies:
   '@ember/legacy-built-in-components':
     specifier: ^0.4.1
     version: 0.4.1(ember-source@4.6.0)
+  '@fleetbase/billing-engine':
+    specifier: ^0.0.5
+    version: 0.0.5(@babel/core@7.23.3)(@ember/test-helpers@2.8.1)(ember-engines@0.8.23)(ember-fetch@8.1.1)(ember-source@4.6.0)(postcss@8.4.21)(rollup@4.5.1)(webpack@5.74.0)
   '@fleetbase/dev-engine':
     specifier: ^0.1.9
     version: 0.1.9(@babel/core@7.23.3)(@ember/test-helpers@2.8.1)(ember-engines@0.8.23)(ember-fetch@8.1.1)(ember-source@4.6.0)(postcss@8.4.21)(rollup@4.5.1)(webpack@5.74.0)
@@ -285,6 +288,16 @@ packages:
     resolution: {integrity: sha512-1Yjs2SvM8TflER/OD3cOjhWWOZb58A2t7wpE2S9XfBYTiIl+XFhQG2bjy4Pu1I+EAlCNUzRDYDdFwFYUKvXcIA==}
     engines: {node: '>=0.10.0'}
     dev: true
+
+  /@adopted-ember-addons/ember-stripe-elements@2.0.5:
+    resolution: {integrity: sha512-OPANw0wSqnxebgDRWU50qT+oQEdumBBkOxbeEEJMd9WivQhmlT3Cp8Y4Pu6BToMUtjXSVc14gQvy21HGDV8eTQ==}
+    engines: {node: 12.* || 14.* || >= 16}
+    dependencies:
+      ember-cli-babel: 7.26.11
+      ember-cli-htmlbars: 6.3.0
+    transitivePeerDependencies:
+      - supports-color
+    dev: false
 
   /@ampproject/remapping@2.2.1:
     resolution: {integrity: sha512-lFMjJTrFL3j7L9yBxwYfCq2k6qqwHyzuUl/XBnif78PWTJYyL/dfowQHWE3sp6U6ZzqWiiIZnpTMO96zhkjwtg==}
@@ -2480,8 +2493,50 @@ packages:
       - supports-color
     dev: true
 
+  /@fleetbase/billing-engine@0.0.5(@babel/core@7.23.3)(@ember/test-helpers@2.8.1)(ember-engines@0.8.23)(ember-fetch@8.1.1)(ember-source@4.6.0)(postcss@8.4.21)(rollup@4.5.1)(webpack@5.74.0):
+    resolution: {integrity: sha512-m1gpbk1Uetdff/PQkf4TvID9nD6oeTE44I8qpe/0JJLnkp4m2GVnwHKhbSJBCVms9pcLxJVFIeWYh7z1CfTfKg==, tarball: https://npm.pkg.github.com/download/@fleetbase/billing-engine/0.0.5/018f7ca9e1688c4c7e0df09ba2392153ded950a5}
+    engines: {node: 14.* || >= 16}
+    peerDependencies:
+      ember-engines: ^0.8.23
+    dependencies:
+      '@adopted-ember-addons/ember-stripe-elements': 2.0.5
+      '@fleetbase/ember-core': 0.1.8(@babel/core@7.23.3)(ember-fetch@8.1.1)(postcss@8.4.21)(webpack@5.74.0)
+      '@fleetbase/ember-ui': 0.2.6(@babel/core@7.23.3)(@ember/test-helpers@2.8.1)(ember-source@4.6.0)(postcss@8.4.21)(rollup@4.5.1)(webpack@5.74.0)
+      '@fortawesome/ember-fontawesome': 0.4.1(rollup@4.5.1)
+      '@fortawesome/fontawesome-svg-core': 6.4.0
+      '@fortawesome/free-solid-svg-icons': 6.4.0
+      ember-cli-babel: 7.26.11
+      ember-cli-htmlbars: 6.1.0
+      ember-engines: 0.8.23(@ember/legacy-built-in-components@0.4.1)(ember-source@4.6.0)
+      ember-intl: 6.0.0-beta.6(webpack@5.74.0)
+      ember-radio-button: 3.0.0-beta.1
+      ember-wormhole: 0.6.0
+    transitivePeerDependencies:
+      - '@babel/core'
+      - '@ember/test-helpers'
+      - '@glint/environment-ember-loose'
+      - '@glint/template'
+      - '@swc/core'
+      - bufferutil
+      - ember-cli-mirage
+      - ember-fetch
+      - ember-source
+      - esbuild
+      - miragejs
+      - postcss
+      - rollup
+      - supports-color
+      - ts-node
+      - typescript
+      - uglify-js
+      - utf-8-validate
+      - webpack
+      - webpack-cli
+      - webpack-command
+    dev: false
+
   /@fleetbase/dev-engine@0.1.9(@babel/core@7.23.3)(@ember/test-helpers@2.8.1)(ember-engines@0.8.23)(ember-fetch@8.1.1)(ember-source@4.6.0)(postcss@8.4.21)(rollup@4.5.1)(webpack@5.74.0):
-    resolution: {integrity: sha512-qAuXFyAkhIG+4v66MlMnKFHFPl0LZscHVbH/o/X/hmt+cyNksaPGyjE8b40i7lQUp0x8C9MUb+JHq5hVFSW8qQ==}
+    resolution: {integrity: sha512-qAuXFyAkhIG+4v66MlMnKFHFPl0LZscHVbH/o/X/hmt+cyNksaPGyjE8b40i7lQUp0x8C9MUb+JHq5hVFSW8qQ==, tarball: https://npm.pkg.github.com/download/@fleetbase/dev-engine/0.1.9/eb05fccb737c4cadef0cf1896b3d32fcdef3c376}
     engines: {node: 14.* || >= 16}
     peerDependencies:
       ember-engines: ^0.8.23
@@ -2492,7 +2547,7 @@ packages:
       '@fortawesome/fontawesome-svg-core': 6.4.0
       '@fortawesome/free-solid-svg-icons': 6.4.0
       ember-cli-babel: 7.26.11
-      ember-cli-htmlbars: 6.3.0
+      ember-cli-htmlbars: 6.1.0
       ember-engines: 0.8.23(@ember/legacy-built-in-components@0.4.1)(ember-source@4.6.0)
       ember-intl: 6.0.0-beta.6(webpack@5.74.0)
       ember-prism: 0.13.0(@babel/core@7.23.3)(ember-source@4.6.0)(webpack@5.74.0)
@@ -2520,7 +2575,7 @@ packages:
     dev: false
 
   /@fleetbase/ember-core@0.1.8(@babel/core@7.23.3)(ember-fetch@8.1.1)(postcss@8.4.21)(webpack@5.74.0):
-    resolution: {integrity: sha512-ayfxpdeGDdEmecGCBkaMlmZNLXUmcpAWVxMB4ge/+/I1GDkw5ZngZ2XCZK6wlMYyPpkKsoE2TstD1fwg89ZuYA==}
+    resolution: {integrity: sha512-ayfxpdeGDdEmecGCBkaMlmZNLXUmcpAWVxMB4ge/+/I1GDkw5ZngZ2XCZK6wlMYyPpkKsoE2TstD1fwg89ZuYA==, tarball: https://npm.pkg.github.com/download/@fleetbase/ember-core/0.1.8/a91ba26443db5b78c70b447f7730ff19c34a2236}
     engines: {node: 14.* || >= 16}
     dependencies:
       date-fns: 2.30.0
@@ -2552,7 +2607,7 @@ packages:
     dev: false
 
   /@fleetbase/ember-ui@0.2.6(@babel/core@7.23.3)(@ember/test-helpers@2.8.1)(ember-source@4.6.0)(postcss@8.4.21)(rollup@4.5.1)(webpack@5.74.0):
-    resolution: {integrity: sha512-WykDNllbjjhzmnGk5n+7Di9Plb34mVfJ0YXtWuQsczrbifSiVTMHMG3wKwj48mYFp/XHCl6gahehKnN99QYtwQ==}
+    resolution: {integrity: sha512-WykDNllbjjhzmnGk5n+7Di9Plb34mVfJ0YXtWuQsczrbifSiVTMHMG3wKwj48mYFp/XHCl6gahehKnN99QYtwQ==, tarball: https://npm.pkg.github.com/download/@fleetbase/ember-ui/0.2.6/1314255b4320c45990d3fdc7369b93e194f22c86}
     engines: {node: 14.* || >= 16}
     dependencies:
       '@ember/render-modifiers': 2.1.0(@babel/core@7.23.3)(ember-source@4.6.0)
@@ -2633,7 +2688,7 @@ packages:
     dev: false
 
   /@fleetbase/fleetops-data@0.1.5:
-    resolution: {integrity: sha512-AMAp7QBHCMHfgH1lDN7E5yAaYANEnY/OlhbUmBuIbZRLzfnhH5OJQvyOWMf9kT/5hXYYSx52FBZjaqmh0k3bzg==}
+    resolution: {integrity: sha512-AMAp7QBHCMHfgH1lDN7E5yAaYANEnY/OlhbUmBuIbZRLzfnhH5OJQvyOWMf9kT/5hXYYSx52FBZjaqmh0k3bzg==, tarball: https://npm.pkg.github.com/download/@fleetbase/fleetops-data/0.1.5/cc87de7cdfd72f0ba75970700e40c45bc93398c3}
     engines: {node: 14.* || >= 16}
     dependencies:
       date-fns: 2.30.0
@@ -2644,7 +2699,7 @@ packages:
     dev: false
 
   /@fleetbase/fleetops-engine@0.3.5(@babel/core@7.23.3)(@ember/test-helpers@2.8.1)(ember-engines@0.8.23)(ember-fetch@8.1.1)(ember-source@4.6.0)(postcss@8.4.21)(rollup@4.5.1)(webpack@5.74.0):
-    resolution: {integrity: sha512-CpeCi1M2f/AcT6Rt7XCMJOwSlMP1HaRiqdoSVGgyO6CZRC9PqZiADQvg7kMFCQ2xBnYLi7A+iESajilghIb0DA==}
+    resolution: {integrity: sha512-CpeCi1M2f/AcT6Rt7XCMJOwSlMP1HaRiqdoSVGgyO6CZRC9PqZiADQvg7kMFCQ2xBnYLi7A+iESajilghIb0DA==, tarball: https://npm.pkg.github.com/download/@fleetbase/fleetops-engine/0.3.5/6b1c8730f564493915a609d351dfa7e37c73aaf0}
     engines: {node: 14.* || >= 16}
     peerDependencies:
       ember-engines: ^0.8.23
@@ -2699,7 +2754,7 @@ packages:
     dev: false
 
   /@fleetbase/iam-engine@0.0.7(@babel/core@7.23.3)(@ember/test-helpers@2.8.1)(ember-engines@0.8.23)(ember-fetch@8.1.1)(ember-source@4.6.0)(postcss@8.4.21)(rollup@4.5.1)(webpack@5.74.0):
-    resolution: {integrity: sha512-zzG+MsssL+GAl1Hsq9kkCg80kp84uBQbcWht8a15ii8/g+sf195GtMhlo25LLmdbLO9IyuVxAKSciEPjpbXKRg==}
+    resolution: {integrity: sha512-zzG+MsssL+GAl1Hsq9kkCg80kp84uBQbcWht8a15ii8/g+sf195GtMhlo25LLmdbLO9IyuVxAKSciEPjpbXKRg==, tarball: https://npm.pkg.github.com/download/@fleetbase/iam-engine/0.0.7/11e6420d43accace15447f7db661087ea1ce9c08}
     engines: {node: 14.* || >= 16}
     peerDependencies:
       ember-engines: ^0.8.23
@@ -2710,7 +2765,7 @@ packages:
       '@fortawesome/fontawesome-svg-core': 6.4.0
       '@fortawesome/free-solid-svg-icons': 6.4.0
       ember-cli-babel: 7.26.11
-      ember-cli-htmlbars: 6.3.0
+      ember-cli-htmlbars: 6.1.0
       ember-engines: 0.8.23(@ember/legacy-built-in-components@0.4.1)(ember-source@4.6.0)
       ember-intl: 6.0.0-beta.6(webpack@5.74.0)
       ember-radio-button: 3.0.0-beta.1
@@ -2740,7 +2795,7 @@ packages:
     dev: false
 
   /@fleetbase/leaflet-routing-machine@3.2.16:
-    resolution: {integrity: sha512-af0mKH3VKIGEfYEGXS9cedhgniwgkNwjC/Gp9ZEzXGTX2/13PyMdd1XOQTamaItPbh5x2uK2/n1BP0vIJ7ObEQ==}
+    resolution: {integrity: sha512-sd+Cn3TmWQKyx3Wtx+nFfkejV0f/3ugY6Gl71NUBhaEZ5SlwiR/npibHWXXXQWA377TFSXTc3MKjY+MnpO2uAA==, tarball: https://npm.pkg.github.com/download/@fleetbase/leaflet-routing-machine/3.2.16/f5c1d638b5d1ebd0a81544ae49740005eec27a92}
     dependencies:
       '@mapbox/corslite': 0.0.7
       '@mapbox/polyline': 0.2.0
@@ -2748,7 +2803,7 @@ packages:
     dev: false
 
   /@fleetbase/storefront-engine@0.2.4(@babel/core@7.23.3)(@ember/test-helpers@2.8.1)(ember-engines@0.8.23)(ember-fetch@8.1.1)(ember-source@4.6.0)(postcss@8.4.21)(rollup@4.5.1)(webpack@5.74.0):
-    resolution: {integrity: sha512-e8PXVDuxdEL0cn62oE18bQV5DjYQXtNSnzh2fn9LaG2MgmVLmUDOPVT8jxla9/AGnrUqe4i+d+3MuDBhW7+YpQ==}
+    resolution: {integrity: sha512-e8PXVDuxdEL0cn62oE18bQV5DjYQXtNSnzh2fn9LaG2MgmVLmUDOPVT8jxla9/AGnrUqe4i+d+3MuDBhW7+YpQ==, tarball: https://npm.pkg.github.com/download/@fleetbase/storefront-engine/0.2.4/ff6a3f85a3982d464a29df34e793548783865dcf}
     engines: {node: 14.* || >= 16}
     peerDependencies:
       ember-engines: ^0.8.23
@@ -2761,7 +2816,7 @@ packages:
       '@fortawesome/free-solid-svg-icons': 6.4.0
       ember-cli-babel: 7.26.11
       ember-cli-es6-transform: 1.0.0
-      ember-cli-htmlbars: 6.3.0
+      ember-cli-htmlbars: 6.1.0
       ember-engines: 0.8.23(@ember/legacy-built-in-components@0.4.1)(ember-source@4.6.0)
       ember-intl: 6.0.0-beta.6(webpack@5.74.0)
       ember-tag-input: 3.1.0
@@ -5586,7 +5641,7 @@ packages:
     hasBin: true
     dependencies:
       caniuse-lite: 1.0.30001564
-      electron-to-chromium: 1.4.590
+      electron-to-chromium: 1.4.592
       node-releases: 2.0.13
       update-browserslist-db: 1.0.13(browserslist@4.22.1)
 
@@ -6823,8 +6878,8 @@ packages:
   /ee-first@1.1.1:
     resolution: {integrity: sha512-WMwm9LhRUo+WUaRN+vRuETqG89IgZphVSNkdFgeb6sS/E4OrDIN7t48CAewSHXc6C8lefD8KKfr5vY61brQlow==}
 
-  /electron-to-chromium@1.4.590:
-    resolution: {integrity: sha512-hohItzsQcG7/FBsviCYMtQwUSWvVF7NVqPOnJCErWsAshsP/CR2LAXdmq276RbESNdhxiAq5/vRo1g2pxGXVww==}
+  /electron-to-chromium@1.4.592:
+    resolution: {integrity: sha512-D3NOkROIlF+d5ixnz7pAf3Lu/AuWpd6AYgI9O67GQXMXTcCP1gJQRotOq35eQy5Sb4hez33XH1YdTtILA7Udww==}
 
   /element-closest@3.0.2:
     resolution: {integrity: sha512-JxKQiJKX0Zr5Q2/bCaTx8P+UbfyMET1OQd61qu5xQFeWr1km3fGaxelSJtnfT27XQ5Uoztn2yIyeamAc/VX13g==}
@@ -6881,7 +6936,7 @@ packages:
     engines: {node: '>= 12'}
     dependencies:
       ember-cli-babel: 7.26.11
-      ember-cli-htmlbars: 6.3.0
+      ember-cli-htmlbars: 6.1.0
     transitivePeerDependencies:
       - supports-color
     dev: false
@@ -7021,7 +7076,7 @@ packages:
       '@glimmer/component': 1.1.2(@babel/core@7.23.3)
       '@glimmer/tracking': 1.1.2
       ember-cli-babel: 7.26.11
-      ember-cli-htmlbars: 6.3.0
+      ember-cli-htmlbars: 6.1.0
       ember-cli-typescript: 4.2.1
       ember-element-helper: 0.6.1(ember-source@4.6.0)
       ember-get-config: 2.1.1
