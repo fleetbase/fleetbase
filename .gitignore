@@ -17,10 +17,11 @@ api/composer-install-dev.sh
 api/auth.json
 act.sh
 composer-auth.json
-packages/billing-api
-packages/billing-engine
-packages/flespi-engine
-packages/flespi-integration
-packages/projectargus-engine
 docker/database/*
 docker/database/mysql/*
+.talismanrc
+# private packages
+packages/billing
+packages/flespi
+packages/loconav
+packages/projectargus-engine
