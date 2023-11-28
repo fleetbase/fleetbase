@@ -10,6 +10,9 @@
       <a href="https://fleetbase.github.io/guides" rel="nofollow">Fleetbase Documentation →</a>
       <br>
       <br>
+      <a href="https://meetings.hubspot.com/shiv-thakker" rel="nofollow">Book a Demo</a>
+      <br>
+      <br>
       <a href="https://github.com/fleetbase/fleetbase/issues">Report an Issue</a>
       ·
       <a href="https://fleetbase.github.io/api-reference">API Reference</a>
