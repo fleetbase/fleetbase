@@ -23,6 +23,21 @@ services:
       SOCKETCLUSTER_WORKERS: 10
       SOCKETCLUSTER_BROKERS: 10
 
+  verdaccio:
+    # image: verdaccio/verdaccio
+    build:
+      context: ./verdaccio
+      dockerfile: Dockerfile
+    user: root
+    environment:
+      - VERDACCIO_PORT=4873
+    ports:
+      - '4873:4873'
+    volumes:
+      - './verdaccio/storage:/verdaccio/storage'
+      - './verdaccio/config:/verdaccio/conf'
+      - './verdaccio/plugins:/verdaccio/plugins'
+
   console:
     ports:
       - "4200:4200"

@@ -3,6 +3,8 @@
 .env.backup
 .phpunit.result.cache
 .pnpm-store
+.npmrc
+*/.npmrc
 docker-compose.override.yml
 npm-debug.log
 yarn-error.log
@@ -24,3 +26,6 @@ packages/flespi-integration
 packages/projectargus-engine
 docker/database/*
 docker/database/mysql/*
+verdaccio/storage/*
+verdaccio/config/htpasswd
+verdaccio/plugins/*/node_modules
