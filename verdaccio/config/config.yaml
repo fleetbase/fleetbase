@@ -16,7 +16,7 @@ plugins: ../plugins
 
 # https://verdaccio.org/docs/webui
 web:
-  title: Verdaccio
+  title: Fleetbase Extensions
   # comment out to disable gravatar support
   # gravatar: false
   # by default packages are ordercer ascendant (asc|desc)
@@ -47,6 +47,17 @@ web:
   #    - '<div id="myId">html before webpack scripts</div>'
   #  Public path for template manifest scripts (only manifest)
   #  publicPath: http://somedomain.org/
+
+# customized storage
+store:
+  '@fleetbase/verdaccio-fleetbase-s3-storage':
+    bucket: fleetbase-registry
+    keyPrefix: flb
+    region: ap-southeast-1
+    endpoint: http://minio:9000
+    accessKeyId: foobar
+    secretAccessKey: 1234567e
+    s3ForcePathStyle: true
 
 # https://verdaccio.org/docs/configuration#authentication
 auth:
@@ -198,7 +209,7 @@ middlewares:
 
 # https://verdaccio.org/docs/logger
 # log settings
-log: { type: stdout, format: pretty, level: http }
+log: { type: stdout, format: pretty, level: debug }
 #experiments:
 #  # support for npm token command
 #  token: false
