@@ -15,6 +15,14 @@ services:
       MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
       MYSQL_DATABASE: "fleetbase"
 
+  solid:
+    image: solidproject/community-server:7
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./solid/data:/data
+      - ./solid/config:/data
+
   socket:
     image: socketcluster/socketcluster:v17.4.0
     ports:
