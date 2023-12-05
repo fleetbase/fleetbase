@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: socketcluster
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: socketcluster
+  template:
+    metadata:
+      labels:
+        app: socketcluster
+    spec:
+      containers:
+        - name: socketcluster
+          image: socketcluster/socketcluster:v17.4.0
+          ports:
+            - containerPort: 8000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: socketcluster
+spec:
+  selector:
+    app: socketcluster
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8000
+  type: ClusterIP
+
