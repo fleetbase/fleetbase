@@ -21,7 +21,7 @@ Router.map(function () {
     });
     this.route('console', { path: '/' }, function () {
         this.route('home', { path: '/' });
-        this.route('extensions');
+        this.route('extensions', function () {});
         this.route('notifications');
         this.route('account', function () {
             this.route('virtual', { path: '/:slug/:view' });

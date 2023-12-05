@@ -38,6 +38,19 @@ services:
       - './verdaccio/config:/verdaccio/conf'
       - './verdaccio/plugins:/verdaccio/plugins'
 
+  minio:
+    image: minio/minio
+    restart: always
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ACCESS_KEY: 'foobar'
+      MINIO_SECRET_KEY: '1234567e'
+    ports:
+      - 9000:9000
+      - 9001:9001
+    volumes:
+      - ./verdaccio/minio:/data
+
   console:
     ports:
       - "4200:4200"

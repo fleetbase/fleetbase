@@ -77,7 +77,7 @@ export default class ConsoleController extends Controller {
      *
      * @var {Array}
      */
-    @tracked hiddenSidebarRoutes = ['console.home', 'console.extensions', 'console.notifications'];
+    @tracked hiddenSidebarRoutes = ['console.home', 'console.extensions', 'console.extensions.index', 'console.notifications'];
 
     /**
      * Installed extensions.
