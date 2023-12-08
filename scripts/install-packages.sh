@@ -10,11 +10,21 @@ if [ ! -d "$packages_dir" ]; then
     exit 1
 fi
 
-# Check for the command-line argument to remove pnpm-lock.yaml
+# Initialize flags
 remove_lock=false
-if [ "$1" == "--remove-lock" ]; then
-    remove_lock=true
-fi
+remove_modules=false
+
+for arg in "$@"
+do
+    case $arg in
+        --remove-lock)
+            remove_lock=true
+            ;;
+        --remove-modules)
+            remove_modules=true
+            ;;
+    esac
+done
 
 # Navigate to the packages directory
 cd "$packages_dir"
@@ -28,6 +38,12 @@ for dir in */; do
         if [ "$remove_lock" = true ] && [ -f "${dir}pnpm-lock.yaml" ]; then
             echo "Removing pnpm-lock.yaml in $dir"
             rm "${dir}pnpm-lock.yaml"
+        fi
+
+        # Remove ./node_modules if the option is set
+        if [ "$remove_modules" = true ] && [ -d "${dir}node_modules" ]; then
+            echo "Removing /node_modules in $dir"
+            rm -rf "${dir}node_modules"
         fi
 
         cd "$dir"
