@@ -17,6 +17,9 @@ spec:
           image: socketcluster/socketcluster:v19.1.2
           ports:
             - containerPort: 8000
+          env:
+            - name: SOCKETCLUSTER_PORT
+              value: 8000
 ---
 apiVersion: v1
 kind: Service
