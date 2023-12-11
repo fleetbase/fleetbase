@@ -93,7 +93,7 @@ jobs:
 
     - name: deploy with helm
       run: |
-        helm upgrade -i fleetbase infra/helm -n ${{ env.PROJECT }}-${{ env.STACK }} --set image.registry=${{ env.REGISTRY }} --set image.tag=${{ env.VERSION }} --set 'api_host=${{ env.API_HOST }}' --set 'socketcluster_host=${{ env.SOCKETCLUSTER_HOST }}' --set 'ingress.annotations.kubernetes\.io/ingress\.global-static-ip-name=${{ env.PROJECT }}-${{ env.STACK }}' 
+        helm upgrade -i fleetbase infra/helm -n ${{ env.PROJECT }}-${{ env.STACK }} --set image.repository=${{ env.REGISTRY }} --set image.tag=${{ env.VERSION }} --set 'api_host=${{ env.API_HOST }}' --set 'socketcluster_host=${{ env.SOCKETCLUSTER_HOST }}' --set 'ingress.annotations.kubernetes\.io/ingress\.global-static-ip-name=${{ env.PROJECT }}-${{ env.STACK }}' 
 
   build_frontend:
     name: Build and Deploy the Console
