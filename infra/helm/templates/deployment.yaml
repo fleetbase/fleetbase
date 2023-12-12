@@ -61,6 +61,10 @@ spec:
           env:
             - name: CACHE_URL
               value: $(REDIS_SERVICE_PORT)/1
+            - name: SOCKETCLUSTER_PORT
+              value: "8000"
+            - name: SOCKETCLUSTER_HOST
+              value: $(SOCKETCLUSTER_SERVICE_HOST)
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       {{- with .Values.nodeSelector }}
