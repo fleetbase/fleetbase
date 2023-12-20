@@ -101,7 +101,6 @@ export default class ConsoleController extends Controller {
      */
     constructor() {
         super(...arguments);
-
         this.router.on('routeDidChange', (transition) => {
             if (this.sidebarContext) {
                 if (this.hiddenSidebarRoutes.includes(transition.to.name)) {

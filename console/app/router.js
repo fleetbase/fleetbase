@@ -44,6 +44,27 @@ Router.map(function () {
             this.route('branding');
             this.route('notifications');
             this.route('virtual', { path: '/:slug/:view' });
+            this.route('two-fa-settings');
+        });
+
+        this.mount('@fleetbase/dev-engine', {
+            as: 'developers',
+            path: 'developers',
+        });
+
+        this.mount('@fleetbase/fleetops-engine', {
+            as: 'fleet-ops',
+            path: 'fleet-ops',
+        });
+
+        this.mount('@fleetbase/iam-engine', {
+            as: 'iam',
+            path: 'iam',
+        });
+
+        this.mount('@fleetbase/storefront-engine', {
+            as: 'storefront',
+            path: 'storefront',
         });
     });
     this.route('install');
