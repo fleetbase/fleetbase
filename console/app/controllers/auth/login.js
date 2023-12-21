@@ -109,9 +109,18 @@ export default class AuthLoginController extends Controller {
 
         try {
             await this.session.authenticate('authenticator:fleetbase', { email, password }, rememberMe);
+
+            const isTwoFactorEnabled = this.session.user ? this.session.user.isTwoFactorEnabled : false;
+
+            if (isTwoFactorEnabled) {
+                // Redirect to the 2FA page if 2FA is enabled
+                this.transitionToRoute('auth.two-fa');
+            } else {
+                // Continue with the default behavior (e.g., redirect to another route)
+                this.success();
+            }
         } catch (error) {
             this.failedAttempts++;
-
             return this.failure(error);
         }
 

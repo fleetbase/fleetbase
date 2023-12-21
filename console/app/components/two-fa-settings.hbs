@@ -6,18 +6,9 @@
 {{#if this.is2FAEnabled}}
     <div class="mt-6">
         <label class="text-lg font-medium">Choose an authentication method</label>
-        <p class="text-sm text-gray-600 mt-1">In addition to your username and password, you'll have to enter a code(delivered via app or SMS) to sign in to your account</p>
-        {{#if this.selected2FAMethod}}
-            <p class="text-sm text-gray-600 mt-1">
-                {{#each this.TwoFaMethods as |method|}}
-                    {{#if (eq this.selected2FAMethod method)}}
-                        {{method.description}}
-                    {{/if}}
-                {{/each}}
-            </p>
-        {{/if}}
+        <p class="text-sm text-gray-600 mt-1">In addition to your username and password, you'll have to enter a code (delivered via app or SMS) to sign in to your account</p>
         {{#each this.TwoFaMethods as |method|}}
-            <div class="border p-4 mt-2 transition duration-300 {{eq this.selected2FAMethod method 'border-blue-500' 'border-gray-200'}}">
+            <div class="border p-4 mt-2 transition duration-300 {{if (eq this.selected2FAMethod method) 'border-blue-500' 'border-gray-200'}}">
                 <input type="radio" name="2fa-method" id="{{method.name}}" checked={{eq this.selected2FAMethod method}} {{on "change" (fn this.select2FAMethod method)}} />
                 <label for="{{method.name}}">
                     {{method.name}}
