@@ -2,6 +2,7 @@
 variable "REGISTRY" { default = "" }
 variable "VERSION" { default = "latest" }
 variable "CACHE" { default = "" }
+variable "GCP" { default = false }
 
 group "default" {
   targets = ["app", "app-httpd"]
@@ -23,7 +24,7 @@ target "app" {
   ]
 
   tags = notequal("", REGISTRY) ? formatlist(
-    "${REGISTRY}:${tgt}-%s",
+    GCP ? "${REGISTRY}/${tgt}:%s" : "${REGISTRY}:${tgt}-%s",
     compact(["latest", VERSION])
   ) : []
 
@@ -43,7 +44,7 @@ target "app-httpd" {
   ]
 
   tags = notequal("", REGISTRY) ? formatlist(
-    "${REGISTRY}:app-httpd-%s",
+    GCP ? "${REGISTRY}/app-httpd:%s" : "${REGISTRY}:app-httpd-%s",
     compact(["latest", VERSION])
   ) : []
 }
