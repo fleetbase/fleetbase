@@ -31,9 +31,12 @@ export default class TwoFaSettingsComponent extends Component {
         } else {
             this.selected2FAMethod = this.TwoFaMethods.find((method) => method.recommended);
         }
+
+        console.log('selected2FAMethod:', this.selected2FAMethod);
     }
 
     @action select2FAMethod(method) {
         this.selected2FAMethod = method;
+        console.log('selected2FAMethod:', this.selected2FAMethod);
     }
 }

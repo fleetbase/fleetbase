@@ -80,7 +80,7 @@ export default class UserModel extends Model {
     @not('isPhoneVerified') phoneIsNotVerified;
 
     /** @computed */
-    @computed('meta') get isTwoFactorEnabled() {
+    @computed('meta.two_factor_enabled') get isTwoFactorEnabled() {
         return this.meta && this.meta.two_factor_enabled;
     }
 

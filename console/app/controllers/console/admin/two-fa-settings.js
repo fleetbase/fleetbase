@@ -4,56 +4,72 @@ import { action } from '@ember/object';
 import { tracked } from '@glimmer/tracking';
 
 export default class ConsoleAdminTwoFaSettingsController extends Controller {
+    /**
+     * Inject the notifications service.
+     *
+     * @memberof ConsoleAdminTwoFaSettingsController
+     */
     @service notifications;
-    @service currentUser;
+
+    /**
+     * Inject the fetch service.
+     *
+     * @memberof ConsoleAdminTwoFaSettingsController
+     */
+    @service fetch;
 
     @tracked selected2FAMethod;
-    @tracked is2FAEnabled = false;
 
-    // @action
-    // async saveSettings() {
-    //     const currentUser = this.currentUser.user;
-    //     if (currentUser) {
-    //         console.log('Before setting meta:', currentUser.meta);
-    //         currentUser.meta = {
-    //             two_factor_method: this.selected2FAMethod,
-    //         };
-    //         console.log('After setting meta:', currentUser.meta);
-    //         try {
-    //             await currentUser.save();
-    //             this.notifications.success('Settings saved successfully.');
-    //         } catch (error) {
-    //             console.error('Error saving settings:', error);
-    //             this.notifications.error('Failed to save settings.');
-    //         }
-    //     } else {
-    //         console.error('Current user not found.');
-    //         this.notifications.error('User not found.');
-    //     }
-    // }
+    @tracked is2FAEnabled;
 
-    @action
-    async saveSettings() {
-        const currentUser = this.currentUser.user;
-        if (currentUser) {
-            if (this.selected2FAMethod) {
-                currentUser.meta = {
-                    two_factor_method: this.selected2FAMethod,
-                };
-                try {
-                    await currentUser.save();
-                    this.notifications.success('Settings saved successfully.');
-                } catch (error) {
-                    console.error('Error saving settings:', error);
-                    this.notifications.error('Failed to save settings.');
-                }
-            } else {
-                console.error('No selected 2FA method.');
-                this.notifications.warning('Please select a 2FA method before saving.');
-            }
-        } else {
-            console.error('Current user not found.');
-            this.notifications.error('User not found.');
-        }
+    /**
+     * The 2FA settings value JSON.
+     *
+     * @memberof ConsoleAdminNotificationsController
+     * @var {Object}
+     */
+    @tracked twoFaSettings = {
+        selectedMethod: null,
+        isEnabled: false,
+    };
+
+    /**
+     * Tracked property for the loading state
+     *
+     * @memberof ConsoleAdminTwoFaSettingsController
+     * @var {Boolean}
+     */
+    @tracked isLoading = false;
+
+    constructor(){
+        super(...arguments);
+    }
+
+    /**
+     * Save Two Factor settings to the server.
+     *
+     * @action
+     * @method saveSettings
+     * @returns {Promise}
+     * @memberof ConsoleAdminTwoFaSettingsController
+     */
+    @action saveSettings() {
+        const { twoFaSettings } = this;
+
+        console.log('settings', twoFaSettings)
+
+        this.isLoading = true;
+
+        return this.fetch
+            .post('two-fa-settings/save-settings', { twoFaSettings })
+            .then(() => {
+                this.notifications.success('2FA settings successfully saved.');
+            })
+            .catch((error) => {
+                this.notifications.serverError(error);
+            })
+            .finally(() => {
+                this.isLoading = false;
+            });
     }
 }

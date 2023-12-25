@@ -43,6 +43,7 @@ Router.map(function () {
             });
             this.route('branding');
             this.route('notifications');
+            this.route('two-fa-settings');
             this.route('virtual', { path: '/:slug/:view' });
         });
     });
