@@ -180,6 +180,6 @@ jobs:
       run: |
           set -eu
 
-          gcloud app deploy --appyaml gcp/app.yaml console/dist
+          gcloud app deploy --appyaml console/app.yaml console/dist
           # leave 2 versions
           gcloud app versions list --filter="traffic_split=0" --sort-by '~version' --format 'value(version.id)' | sed '1d' | xargs -r gcloud app versions delete
