@@ -100,7 +100,7 @@ return [
 
     'from' => [
         'address' => env('MAIL_FROM_ADDRESS', 'hello@fleetbase.io'),
-        'name' => env('MAIL_FROM_NAME', 'Fleetbase'),
+        'name' => env('MAIL_FROM_NAME', env('APP_NAME', 'Fleetbase')),
     ],
 
     /*
