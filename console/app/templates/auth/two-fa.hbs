@@ -11,10 +11,24 @@
             <FaIcon @icon="check-circle" @size="lg" class="text-green-900 mr-4" />
         </div>
         <p class="flex-1 text-sm text-green-900 dark:text-green-900">
-            <strong>Check your SMS!</strong><br />
-            We've sent you a verification code via SMS. Enter the code below to complete the login process.
+            <strong>Check your {{this.selectedMethod}}</strong><br />
+            We've sent you a verification code. Enter the code below to complete the login process.
         </p>
     </div>
+
+    <div class="mb-4">
+        <label for="mfaMethod" class="block text-sm font-medium text-gray-700 dark:text-gray-50">
+            Choose 2FA Method
+        </label>
+        <div class="mt-2">
+            <select id="mfaMethod" name="mfaMethod" class="form-select form-select-lg w-full" {{on "change" this.updateSelectedMethod}}>
+                <option value="sms">SMS</option>
+                <option value="email">Email</option>
+                <option value="authenticator">Authenticator App</option>
+            </select>
+        </div>
+    </div>
+
     <form class="space-y-6" {{on "submit" this.verifyCode}}>
         <div>
             <label for="verificationCode" class="block text-sm font-medium text-gray-700 dark:text-gray-50">
@@ -31,6 +45,19 @@
                     placeholder="Enter your verification code"
                 />
             </div>
+        </div>
+
+        <div class="text-right">
+            <a href="#" class="text-sm text-blue-500 hover:underline" {{on "click" this.resendCode}}>
+                Resend Code
+            </a>
+        </div>
+
+        <div class="flex items-center">
+            <input type="checkbox" id="rememberDevice" name="rememberDevice" class="form-checkbox" checked={{this.rememberDevice}} {{on "change" this.toggleRememberDevice}} />
+            <label for="rememberDevice" class="ml-2 text-sm text-gray-700 dark:text-gray-50">
+                Remember this device
+            </label>
         </div>
 
         <div class="flex flex-row space-x-2">

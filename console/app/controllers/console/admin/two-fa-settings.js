@@ -18,9 +18,9 @@ export default class ConsoleAdminTwoFaSettingsController extends Controller {
      */
     @service fetch;
 
-    @tracked selected2FAMethod;
+    @tracked selected2FAMethod = null;
 
-    @tracked is2FAEnabled;
+    @tracked is2FAEnabled = true;
 
     /**
      * The 2FA settings value JSON.
@@ -29,8 +29,8 @@ export default class ConsoleAdminTwoFaSettingsController extends Controller {
      * @var {Object}
      */
     @tracked twoFaSettings = {
-        selectedMethod: null,
-        isEnabled: false,
+        Selected: this.selected2FAMethod,
+        Enabled: this.is2FAEnabled,
     };
 
     /**
@@ -41,8 +41,9 @@ export default class ConsoleAdminTwoFaSettingsController extends Controller {
      */
     @tracked isLoading = false;
 
-    constructor(){
+    constructor() {
         super(...arguments);
+        this.twoFaSettings;
     }
 
     /**
@@ -56,7 +57,7 @@ export default class ConsoleAdminTwoFaSettingsController extends Controller {
     @action saveSettings() {
         const { twoFaSettings } = this;
 
-        console.log('settings', twoFaSettings)
+        console.log('settings', twoFaSettings);
 
         this.isLoading = true;
 

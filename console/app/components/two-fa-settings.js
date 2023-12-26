@@ -7,8 +7,10 @@ export default class TwoFaSettingsComponent extends Component {
     @service fetch;
     @service notifications;
 
-    @tracked is2FAEnabled = false;
     @tracked selected2FAMethod;
+    @tracked is2FAEnabled;
+    @tracked twoFaSettings;
+    @tracked isLoading;
 
     TwoFaMethods = [
         { name: 'Authenticator App', description: 'Get codes from an app like Authy, 1Password, Microsoft Authenticator, or Google Authenticator', recommended: true },
