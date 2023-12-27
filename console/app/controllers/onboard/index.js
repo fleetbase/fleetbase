@@ -22,6 +22,13 @@ export default class OnboardIndexController extends Controller {
     @service session;
 
     /**
+     * Inject the `router` service
+     *
+     * @memberof OnboardIndexController
+     */
+    @service router;
+
+    /**
      * Inject the `notifications` service
      *
      * @memberof OnboardIndexController
@@ -122,12 +129,12 @@ export default class OnboardIndexController extends Controller {
                     this.session.isOnboarding().manuallyAuthenticate(response.token);
 
                     if (response.skipVerification === true) {
-                        return this.transitionToRoute('console').then(() => {
+                        return this.router.transitionTo('console').then(() => {
                             this.notifications.success('Welcome to Fleetbase!');
                         });
                     }
 
-                    return this.transitionToRoute('onboard.verify-email', { queryParams: { hello: response.session } });
+                    return this.router.transitionTo('onboard.verify-email', { queryParams: { hello: response.session } });
                 }
             })
             .catch((error) => {

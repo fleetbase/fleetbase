@@ -8,6 +8,7 @@ export default class InviteForUserController extends Controller {
     @service session;
     @service notifications;
     @service modalsManager;
+    @service router;
     @tracked code;
     @tracked isLoading;
 
@@ -24,7 +25,7 @@ export default class InviteForUserController extends Controller {
 
                 this.isLoading = false;
 
-                return this.transitionToRoute('console').then(() => {
+                return this.router.transitionTo('console').then(() => {
                     if (response.needs_password && response.needs_password === true) {
                         this.setPassword();
                     }
