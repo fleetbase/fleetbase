@@ -11,8 +11,8 @@ export default class ApplicationRoute extends Route {
     @service urlSearchParams;
     @service modalsManager;
     @service intl;
+    @service router;
     @tracked defaultTheme;
-    @tracked router;
 
     /**
      * Check the installation status of Fleetbase and transition user accordingly.
