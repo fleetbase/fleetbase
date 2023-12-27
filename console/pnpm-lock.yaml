@@ -22,8 +22,8 @@ dependencies:
     specifier: ^0.1.6
     version: 0.1.6
   '@fleetbase/fleetops-engine':
-    specifier: ^0.3.6
-    version: 0.3.6(@ember/test-helpers@3.2.0)(@glimmer/component@1.1.2)(@glimmer/tracking@1.1.2)(ember-engines@0.8.23)(ember-source@5.4.0)(postcss@8.4.21)(rollup@4.9.1)(tracked-built-ins@3.3.0)(webpack@5.89.0)
+    specifier: ^0.3.7
+    version: 0.3.7(@ember/test-helpers@3.2.0)(@glimmer/component@1.1.2)(@glimmer/tracking@1.1.2)(ember-engines@0.8.23)(ember-source@5.4.0)(postcss@8.4.21)(rollup@4.9.1)(tracked-built-ins@3.3.0)(webpack@5.89.0)
   '@fleetbase/iam-engine':
     specifier: ^0.0.8
     version: 0.0.8(@ember/test-helpers@3.2.0)(@glimmer/component@1.1.2)(@glimmer/tracking@1.1.2)(ember-engines@0.8.23)(ember-source@5.4.0)(postcss@8.4.21)(rollup@4.9.1)(tracked-built-ins@3.3.0)(webpack@5.89.0)
@@ -2123,7 +2123,7 @@ packages:
       '@ember/edition-utils': 1.2.0
       '@ember/string': 3.1.1
       '@embroider/macros': 1.13.4
-      ember-auto-import: 2.6.3(webpack@5.89.0)
+      ember-auto-import: 2.7.1(webpack@5.89.0)
       ember-cli-babel: 7.26.11
     transitivePeerDependencies:
       - '@glint/template'
@@ -2773,8 +2773,8 @@ packages:
       - supports-color
     dev: false
 
-  /@fleetbase/fleetops-engine@0.3.6(@ember/test-helpers@3.2.0)(@glimmer/component@1.1.2)(@glimmer/tracking@1.1.2)(ember-engines@0.8.23)(ember-source@5.4.0)(postcss@8.4.21)(rollup@4.9.1)(tracked-built-ins@3.3.0)(webpack@5.89.0):
-    resolution: {integrity: sha512-bo7LrEq2LK2bBn46e9Vqm3iJIpnGRx6jl8WUTYvClranAr3jqpnHb3u/wKc5PcUxkOPdEKft9u/hQh0gsat0+g==}
+  /@fleetbase/fleetops-engine@0.3.7(@ember/test-helpers@3.2.0)(@glimmer/component@1.1.2)(@glimmer/tracking@1.1.2)(ember-engines@0.8.23)(ember-source@5.4.0)(postcss@8.4.21)(rollup@4.9.1)(tracked-built-ins@3.3.0)(webpack@5.89.0):
+    resolution: {integrity: sha512-u4x+uDBixJbnO74FB116I5bajzF+bn3nLWdanfzGLcWeP2kkxqEmOf9bG5DsvR5A8prgk7NiM8BD3LNWuow0Bw==}
     engines: {node: '>= 18'}
     peerDependencies:
       ember-engines: ^0.9.0
@@ -7419,7 +7419,6 @@ packages:
       - '@glint/template'
       - supports-color
       - webpack
-    dev: false
 
   /ember-basic-dropdown@6.0.2(@babel/core@7.23.2)(ember-source@5.4.0):
     resolution: {integrity: sha512-JgI/cy7eS/Y2WoQl7B2Mko/1aFTAlxr5d+KpQeH7rBKOFml7IQtLvhiDQrpU/FLkrQ9aLNEJtzwtDZV1xQxAKA==}
@@ -8189,7 +8188,7 @@ packages:
       '@babel/core': 7.23.2
       '@ember/render-modifiers': 2.1.0(@babel/core@7.23.2)(ember-source@5.4.0)
       '@glimmer/component': 1.1.2(@babel/core@7.23.2)
-      ember-auto-import: 2.6.3(webpack@5.89.0)
+      ember-auto-import: 2.7.1(webpack@5.89.0)
       ember-cli-babel: 8.2.0(@babel/core@7.23.2)
       ember-cli-htmlbars: 6.3.0
       ember-element-helper: 0.8.5(ember-source@5.4.0)
