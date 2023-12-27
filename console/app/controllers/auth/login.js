@@ -33,6 +33,14 @@ export default class AuthLoginController extends Controller {
      */
     @service session;
 
+
+    /**
+     * Inject the `router` service
+     *
+     * @var {Service}
+     */
+    @service router;
+
     /**
      * Whether or not to remember the users session
      *
@@ -124,14 +132,14 @@ export default class AuthLoginController extends Controller {
      * Transition user to onboarding screen
      */
     @action transitionToOnboard() {
-        return this.transitionToRoute('onboard');
+        return this.router.transitionTo('onboard');
     }
 
     /**
      * Transition to forgot password screen, if email is set - set it.
      */
     @action forgotPassword() {
-        return this.transitionToRoute('auth.forgot-password').then(() => {
+        return this.router.transitionTo('auth.forgot-password').then(() => {
             if (this.email) {
                 this.forgotPasswordController.email = this.email;
             }
