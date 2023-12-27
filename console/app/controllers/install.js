@@ -7,6 +7,7 @@ import { task } from 'ember-concurrency-decorators';
 export default class InstallController extends Controller {
     @service fetch;
     @service notifications;
+    @service router;
     @tracked error;
     @tracked steps = [
         { task: 'createdb', name: 'Create Database', status: 'pending' },
@@ -46,7 +47,7 @@ export default class InstallController extends Controller {
 
         if (isCompleted) {
             this.notifications.success('Install completed successfully!');
-            return this.transitionToRoute('onboard');
+            return this.router.transitionTo('onboard');
         }
     }
 

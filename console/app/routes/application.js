@@ -11,6 +11,7 @@ export default class ApplicationRoute extends Route {
     @service urlSearchParams;
     @service modalsManager;
     @service intl;
+    @service router;
     @tracked defaultTheme;
 
     /**
@@ -27,11 +28,11 @@ export default class ApplicationRoute extends Route {
         this.defaultTheme = defaultTheme;
 
         if (shouldInstall) {
-            return this.transitionTo('install');
+            return this.router.transitionTo('install');
         }
 
         if (shouldOnboard) {
-            return this.transitionTo('onboard');
+            return this.router.transitionTo('onboard');
         }
     }
 
@@ -49,7 +50,7 @@ export default class ApplicationRoute extends Route {
         const shift = this.urlSearchParams.get('shift');
 
         if (isAuthenticated && shift) {
-            return this.transitionTo(pathToRoute(shift));
+            return this.router.transitionTo(pathToRoute(shift));
         }
     }
 

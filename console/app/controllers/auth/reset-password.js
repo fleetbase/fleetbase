@@ -19,6 +19,13 @@ export default class AuthResetPasswordController extends Controller {
     @service notifications;
 
     /**
+     * Inject the `router` service
+     *
+     * @memberof AuthResetPasswordController
+     */
+    @service router;
+
+    /**
      * The code param.
      *
      * @memberof AuthResetPasswordController
@@ -65,7 +72,7 @@ export default class AuthResetPasswordController extends Controller {
             .then(() => {
                 this.notifications.success('Your password has been reset! Login to continue.');
 
-                return this.transitionToRoute('auth.login');
+                return this.router.transitionTo('auth.login');
             })
             .catch((error) => {
                 this.notifications.serverError(error);

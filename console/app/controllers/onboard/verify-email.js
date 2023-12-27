@@ -34,6 +34,14 @@ export default class OnboardVerifyEmailController extends Controller {
      */
     @service currentUser;
 
+
+    /**
+     * Inject the `router` service
+     *
+     * @memberof OnboardIndexController
+     */
+    @service router;
+
     /**
      * The session paramerer.
      *
@@ -139,7 +147,7 @@ export default class OnboardVerifyEmailController extends Controller {
                     this.notifications.success('Email successfully verified!');
                     this.notifications.info('Welcome to Fleetbase!');
 
-                    return this.transitionToRoute('console');
+                    return this.router.transitionTo('console');
                 }
             })
             .catch((error) => {
