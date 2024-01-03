@@ -33,13 +33,19 @@ export default class AuthLoginController extends Controller {
      */
     @service session;
 
-
     /**
      * Inject the `router` service
      *
      * @var {Service}
      */
     @service router;
+
+    /**
+     * Inject the `intl` service
+     *
+     * @var {Service}
+     */
+    @service intl;
 
     /**
      * Whether or not to remember the users session
@@ -185,7 +191,7 @@ export default class AuthLoginController extends Controller {
      * @void
      */
     slowConnection() {
-        this.notifications.error('Experiencing connectivity issues.');
+        this.notifications.error(this.intl.t('auth.login.slow-connection-message'));
     }
 
     /**

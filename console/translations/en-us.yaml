@@ -3,6 +3,7 @@ app:
 
 auth:
   forgot-password:
+    success-message: Check your email to continue!
     is-sent:  
       title: Almost Done!
       message: <strong>Check your email!</strong><br> We've sent you a magic link to your email which will allow you to reset your password. The link expires in 15 minutes.
@@ -13,6 +14,34 @@ auth:
       email-label: Your email address
       submit-button: OK, Send me a magic link!
       nevermind-button: Nevermind
+  login:
+    title: Sign in to your account
+    failed-attempt:
+      message: <strong>Forgot your password?</strong><br> Click the button below to reset your password.
+      button-text: Ok, help me reset!
+    form:
+      email-label: Email address
+      password-label: Password
+      remember-me-label: Remember me
+      forgot-password-label: Forgot your password?
+      sign-in-button: Sign in
+      create-account-button: Create a new Account
+    slow-connection-message: Experiencing connectivity issues.
+  reset-password:
+    success-message: Your password has been reset! Login to continue.
+    title: Reset your password
+    form:
+      code:
+        label: Your reset code
+        help-text: The verification code you received in your email.
+      password:
+        label: New Password
+        help-text: Enter a password at-least 6 characters to continue.
+      confirm-password:
+        label: Confirm new Password
+        help-text: Enter a password at-least 6 characters to continue.
+      submit-button: Reset Password
+      back-button: Back
 
 layout:
   header:
@@ -37,6 +66,7 @@ terms:
   logout: Logout
   dashboard: Dashboard
   search: Search
+  uploading: Uploading...
 phrases:
   search-input: Search Input
 
