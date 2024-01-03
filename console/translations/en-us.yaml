@@ -1,6 +1,19 @@
 app:
   name: Fleetbase
 
+auth:
+  forgot-password:
+    is-sent:  
+      title: Almost Done!
+      message: <strong>Check your email!</strong><br> We've sent you a magic link to your email which will allow you to reset your password. The link expires in 15 minutes.
+    not-sent:
+      title: Forgot your password?
+      message: <strong>Don't worry, we've got your back.</strong><br> Enter the email you use to login to {appName} and we will send you a secure link to reset your password.
+    form:
+      email-label: Your email address
+      submit-button: OK, Send me a magic link!
+      nevermind-button: Nevermind
+
 layout:
   header:
     menus:
