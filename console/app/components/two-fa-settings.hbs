@@ -1,21 +1,21 @@
 <div class="flex items-center space-x-4">
     <label class="text-lg font-medium">Enable Two-Factor Authentication</label>
-    <Toggle @isToggled={{this.is2FAEnabled}} @onToggle={{this.toggle2FA}} />
+    <Toggle @isToggled={{this.isTwoFaEnabled}} @onToggle={{this.onTwoFaToggled}} />
 </div>
 
-{{#if this.is2FAEnabled}}
+{{#if this.isTwoFaEnabled}}
     <div class="mt-6">
         <label class="text-lg font-medium">Choose an authentication method</label>
-        <p class="text-sm text-gray-600 mt-1">In addition to your username and password, you'll have to enter a code (delivered via app or SMS) to sign in to your account</p>
-        {{#each this.TwoFaMethods as |method|}}
-            <div class="border p-4 mt-2 transition duration-300 {{if (eq this.selected2FAMethod method) 'border-blue-500' 'border-gray-200'}}">
-                <input type="radio" name="2fa-method" id="{{method.name}}" checked={{eq this.selected2FAMethod method}} {{on "change" (fn this.select2FAMethod method)}} />
+        <p class="text-sm text-gray-600 dark:text-gray-300 mt-1">In addition to your username and password, you'll have to enter a code (delivered via app or SMS) to sign in to your account</p>
+        {{#each @twoFaMethods as |method|}}
+            <div class="border rounded-lg px-4 py-3 mt-2 transition duration-300 {{if (eq this.selectedTwoFaMethod method.key) 'border-blue-500' 'border-gray-200 dark:border-gray-700'}}">
+                <input type="radio" name="2fa-method" id="{{method.name}}" checked={{eq this.selectedTwoFaMethod method.key}} {{on "change" (fn this.onTwoFaSelected method.key)}} />
                 <label for="{{method.name}}">
                     {{method.name}}
                     {{#if method.recommended}}
-                        <span class="bg-blue-500 text-white px-2 py-1 ml-2 text-xs font-semibold">Recommended</span>
+                        <span class="bg-blue-500 rounded-xl text-white px-2 py-1 ml-2 text-xs font-semibold">Recommended</span>
                     {{/if}}
-                    <p class="text-sm text-gray-600 mt-1">{{method.description}}</p>
+                    <p class="text-sm text-gray-600 dark:text-gray-300 mt-1">{{method.description}}</p>
                 </label>
             </div>
         {{/each}}

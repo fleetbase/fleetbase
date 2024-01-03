@@ -11,7 +11,6 @@ Router.map(function () {
         this.route('login', { path: '/' });
         this.route('forgot-password');
         this.route('reset-password');
-        this.route('two-fa');
     });
     this.route('onboard', function () {
         this.route('verify-email');
@@ -53,14 +52,14 @@ Router.map(function () {
             path: 'developers'
         });
 
-        this.mount('@fleetbase/fleetops-engine', {
-            as: 'fleet-ops',
-            path: 'fleet-ops'
-        });
-
         this.mount('@fleetbase/iam-engine', {
             as: 'iam',
             path: 'iam'
+        });
+
+        this.mount('@fleetbase/fleetops-engine', {
+            as: 'fleet-ops',
+            path: 'fleet-ops'
         });
 
         this.mount('@fleetbase/storefront-engine', {

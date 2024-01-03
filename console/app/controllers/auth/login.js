@@ -11,7 +11,7 @@ export default class AuthLoginController extends Controller {
      * @var {Controller}
      */
     @controller('auth.forgot-password') forgotPasswordController;
-
+    
     /**
      * Inject the `notifications` service
      *
@@ -89,45 +89,50 @@ export default class AuthLoginController extends Controller {
      */
     @tracked failedAttempts = 0;
 
+    @action async login(event) {
+        // firefox patch
+        event.preventDefault();
+        // get user credentials
+        const { identity, password, rememberMe } = this;
+        // start loader
+        this.set('isLoading', true);
+        // set where to redirect on login
+        this.setRedirect();
+        try {
+            await this.session.authenticate('authenticator:fleetbase', { identity, password }, rememberMe);
+        } catch (error) {
+            this.failedAttempts++;
+            return this.failure(error);
+        }
+        if (this.session.isAuthenticated) {
+            this.success();
+        }
+    }
+
     /**
      * Authenticate the user
      *
      * @void
      */
-    @action async login(event) {
-        // firefox patch
-        event.preventDefault();
-
-        // get user credentials
-        const { email, password, rememberMe } = this;
-
-        // start loader
-        this.set('isLoading', true);
-
-        // set where to redirect on login
-        this.setRedirect();
-
-        try {
-            await this.session.authenticate('authenticator:fleetbase', { email, password }, rememberMe);
-
-            const isTwoFactorEnabled = this.session.user ? this.session.user.isTwoFactorEnabled : false;
-
-            if (isTwoFactorEnabled) {
-                // Redirect to the 2FA page if 2FA is enabled
-                this.transitionToRoute('auth.two-fa');
-            } else {
-                // Continue with the default behavior (e.g., redirect to another route)
-                this.success();
-            }
-        } catch (error) {
-            this.failedAttempts++;
-            return this.failure(error);
-        }
-
-        if (this.session.isAuthenticated) {
-            this.success();
-        }
-    }
+    // @action async login(event) {
+    //     // firefox patch
+    //     event.preventDefault();
+    //     // get user credentials
+    //     const { email, password, rememberMe } = this;
+    //     // start loader
+    //     this.set('isLoading', true);
+    //     // set where to redirect on login
+    //     this.setRedirect();
+    //     try {
+    //         await this.session.authenticate('authenticator:fleetbase', { email, password }, rememberMe);
+    //     } catch (error) {
+    //         this.failedAttempts++;
+    //         return this.failure(error);
+    //     }
+    //     if (this.session.isAuthenticated) {
+    //         this.success();
+    //     }
+    // }
 
     /**
      * Transition user to onboarding screen

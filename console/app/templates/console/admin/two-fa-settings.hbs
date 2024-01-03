@@ -1,18 +1,17 @@
-{{page-title "Two-Factor Authentication"}}
-<Layout::Section::Header @title="Two-Factor Authentication">
+{{page-title "2FA Config"}}
+<Layout::Section::Header @title="2FA Config">
     <Button @type="primary" @size="sm" @icon="save" @text="Save Changes" @onClick={{this.saveSettings}} @disabled={{this.isLoading}} @isLoading={{this.isLoading}} />
 </Layout::Section::Header>
 
 <Layout::Section::Body class="overflow-y-scroll h-full">
     <div class="container mx-auto h-screen" {{increase-height-by 1200}}>
         <div class="max-w-3xl my-10 mx-auto space-y-4">
-            <ContentPanel @title="Two-Factor Authentication Settings" @open={{true}} @pad={{true}} @panelBodyClass="bg-white dark:bg-gray-800">
+            <ContentPanel @title="2FA Config" @open={{true}} @pad={{true}} @panelBodyClass="bg-white dark:bg-gray-800">
                 <TwoFaSettings
-                    @selected2FAMethod={{this.selected2FAMethod}}
-                    @is2FAEnabled={{this.is2FAEnabled}}
+                    @twoFaMethods={{this.methods}}
                     @twoFaSettings={{this.twoFaSettings}}
-                    @isLoading={{this.isLoading}}
-                    @saveSettings={{this.saveSettings}}
+                    @onTwoFaToggled={{this.onTwoFaToggled}}
+                    @onTwoFaMethodSelected={{this.onTwoFaMethodSelected}}
                 />
             </ContentPanel>
         </div>

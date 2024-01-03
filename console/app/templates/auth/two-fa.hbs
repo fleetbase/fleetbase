@@ -16,19 +16,6 @@
         </p>
     </div>
 
-    <div class="mb-4">
-        <label for="mfaMethod" class="block text-sm font-medium text-gray-700 dark:text-gray-50">
-            Choose 2FA Method
-        </label>
-        <div class="mt-2">
-            <select id="mfaMethod" name="mfaMethod" class="form-select form-select-lg w-full" {{on "change" this.updateSelectedMethod}}>
-                <option value="sms">SMS</option>
-                <option value="email">Email</option>
-                <option value="authenticator">Authenticator App</option>
-            </select>
-        </div>
-    </div>
-
     <form class="space-y-6" {{on "submit" this.verifyCode}}>
         <div>
             <label for="verificationCode" class="block text-sm font-medium text-gray-700 dark:text-gray-50">
@@ -51,13 +38,6 @@
             <a href="#" class="text-sm text-blue-500 hover:underline" {{on "click" this.resendCode}}>
                 Resend Code
             </a>
-        </div>
-
-        <div class="flex items-center">
-            <input type="checkbox" id="rememberDevice" name="rememberDevice" class="form-checkbox" checked={{this.rememberDevice}} {{on "change" this.toggleRememberDevice}} />
-            <label for="rememberDevice" class="ml-2 text-sm text-gray-700 dark:text-gray-50">
-                Remember this device
-            </label>
         </div>
 
         <div class="flex flex-row space-x-2">

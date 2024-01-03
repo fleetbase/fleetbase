@@ -14,7 +14,8 @@
                 <FaIcon @icon="exclamation-triangle" @size="lg" class="text-yellow-900 mr-4" />
             </div>
             <p class="flex-1 text-sm text-yellow-900 dark:yellow-red-900">
-                <strong>Forgot your password?</strong><br> Click the button below to reset your password.
+                <strong>Forgot your password?</strong><br />
+                Click the button below to reset your password.
             </p>
         </div>
         <Button @text="Ok, help me reset!" @type="warning" @onClick={{this.forgotPassword}} />
@@ -24,11 +25,44 @@
 <form class="mt-8" {{on "submit" this.login}}>
     <input type="hidden" name="remember" value="true" />
     <div class="rounded-md shadow-sm">
+        {{!-- <div>
+            <Input
+                @value={{this.email}}
+                aria-label="Email address"
+                name="email"
+                @type="email"
+                autocomplete="username"
+                required
+                class="relative block w-full px-3 py-2 text-gray-900 placeholder-gray-500 border border-gray-300 rounded-none appearance-none rounded-t-md focus:outline-none focus:shadow-outline-blue focus:border-blue-300 focus:z-10 sm:text-sm sm:leading-5 dark:text-white dark:bg-gray-700 dark:border-gray-900"
+                placeholder="Email address"
+                disabled={{this.isLoading}}
+            />
+        </div> --}}
         <div>
-            <Input @value={{this.email}} aria-label="Email address" name="email" @type="email" autocomplete="username" required class="relative block w-full px-3 py-2 text-gray-900 placeholder-gray-500 border border-gray-300 rounded-none appearance-none rounded-t-md focus:outline-none focus:shadow-outline-blue focus:border-blue-300 focus:z-10 sm:text-sm sm:leading-5 dark:text-white dark:bg-gray-700 dark:border-gray-900" placeholder="Email address" disabled={{this.isLoading}} />
+            <Input
+                @value={{this.identity}}
+                aria-label="Email or Phone Number"
+                name="email"
+                @type="email"
+                autocomplete="username"
+                required
+                class="relative block w-full px-3 py-2 text-gray-900 placeholder-gray-500 border border-gray-300 rounded-none appearance-none rounded-t-md focus:outline-none focus:shadow-outline-blue focus:border-blue-300 focus:z-10 sm:text-sm sm:leading-5 dark:text-white dark:bg-gray-700 dark:border-gray-900"
+                placeholder="Email or Phone Number"
+                disabled={{this.isLoading}}
+            />
         </div>
         <div class="-mt-px">
-            <Input @value={{this.password}} aria-label="Password" name="password" @type="password" autocomplete="current-password" required class="relative block w-full px-3 py-2 text-gray-900 placeholder-gray-500 border border-gray-300 rounded-none appearance-none rounded-b-md focus:outline-none focus:shadow-outline-blue focus:border-blue-300 focus:z-10 sm:text-sm sm:leading-5 dark:text-white dark:bg-gray-700 dark:border-gray-900" placeholder="Password" disabled={{this.isLoading}} />
+            <Input
+                @value={{this.password}}
+                aria-label="Password"
+                name="password"
+                @type="password"
+                autocomplete="current-password"
+                required
+                class="relative block w-full px-3 py-2 text-gray-900 placeholder-gray-500 border border-gray-300 rounded-none appearance-none rounded-b-md focus:outline-none focus:shadow-outline-blue focus:border-blue-300 focus:z-10 sm:text-sm sm:leading-5 dark:text-white dark:bg-gray-700 dark:border-gray-900"
+                placeholder="Password"
+                disabled={{this.isLoading}}
+            />
         </div>
     </div>
 
@@ -41,7 +75,12 @@
         </div>
 
         <div class="text-sm leading-5">
-            <a href="javascript:;" {{on "click" this.forgotPassword}} disabled={{this.isLoading}} class="font-medium transition duration-150 ease-in-out text-sky-600 hover:text-sky-500 focus:outline-none focus:underline">
+            <a
+                href="javascript:;"
+                {{on "click" this.forgotPassword}}
+                disabled={{this.isLoading}}
+                class="font-medium transition duration-150 ease-in-out text-sky-600 hover:text-sky-500 focus:outline-none focus:underline"
+            >
                 Forgot your password?
             </a>
         </div>
