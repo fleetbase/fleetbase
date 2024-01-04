@@ -1,6 +1,37 @@
 app:
   name: Fleetbase
 
+common: 
+  save-button-text: Save Changes
+  new: New
+  delete: Delete
+  sort: Sort
+  filter: Filer
+  columns: Columns
+  settings: Settings
+  home: Home
+  admin: Admin
+  logout: Logout
+  dashboard: Dashboard
+  search: Search
+  uploading: Uploading...
+  profile: Profile
+  your-profile: Your Profile
+  name: Name
+  email: Email
+  phone: Your phone number
+  date-of-birth: Date of Birth
+  overview: Overview
+  account: Account
+  overview: Overview
+  branding: Branding
+  notifications: Notifications
+  services: Services
+  mail: Mail
+  filesystem: Filesystem
+  queue: Queue
+  socket: Socket
+  notification-channels: Notification Channels
 auth:
   forgot-password:
     success-message: Check your email to continue!
@@ -42,17 +73,100 @@ auth:
         help-text: Enter a password at-least 6 characters to continue.
       submit-button: Reset Password
       back-button: Back
+console:
+  account:
+    index: 
+      upload-new: Upload new
+      phone: Your phone number.
+      photos: photos
+  admin:
+    config:
+      database:
+        title: Database Configuration
+      filesystem:
+        title: Filesystem Configuration
+      mail:
+        title: Mail Configuration
+      notification-channels: 
+        title: Notification Channels Configuration
+      queue:
+        title: Queue Configuration
+      services:
+        title: Services Configuration
+      socket:
+        title: Socket Configuration
+    branding:
+      title: Branding
+      icon-text: Icon
+      upload-new: Upload new
+      reset-default: Reset to default
+      logo-text: Logo
+      theme: Default Theme
+    index:
+      total-users: Total Users
+      total-organizations: Total Organizations
+      total-transactions: Total Transactions
+    notification:
+      title: Notifications
+      notification-settings:  Notification Settings
+        
+  settings:
+    index:
+      title: Organization Settings
+      organization-name: Organization name
+      organization-description: Organization description
+      organization-phone: Organization phone number
+      organization-currency: Organization currency
+      organization-id: Organization ID
+      organization-branding: Organization Branding
+      logo: Logo
+      logo-help-text: Logo for your organization.
+      upload-new-logo: Upload new logo
+      backdrop: Backdrop
+      backdrop-help-text: Optional banner or background image for your organization.
+      upload-new-backdrop: Upload new backdrop
+  extensions:
+    title: Extensions are coming soon!
+    message: Please check back in the upcoming versions as we prepare to launch the Extensions repository and marketplace.
+  notifications:
+    select-all:
+    mark-as-read:
+    
+
+
 invite:
   for-users:
-    invitation-message: You've been invited to join
+    invitation-message: You've been invited to join {companyName}
     invitation-sent-message: You've been invited to join the {companyName} organization on {appName}. To accept this invitation, input your invitation code received by email and click continue.
     invitation-code-sent-text: Your invitiation code
     accept-invitation-text: Accept Invitation
 onboard:
-  install:
-    failed-message-sent: The install failed! Click the button below to retry the install.
-    retry-install: Retry Install
-    start-install: Start Install
+  index:
+    title: Create your account
+    welcome-title: <strong>Welcome to {companyName}!</strong><br />
+    welcome-text: Complete the details required below to get started.
+    fullname: Your full name.
+    email: Your email address.
+    phone: Your phone number.
+    organization-name: Your organization name, all your services and resources will be managed under this organization, later you can create as many organizations as you want or need.
+    password: Your password, make sure it's a good one.
+    confirm-password: Just to confirm the password you entered above.
+    continue-button: Continue
+  verify-email:
+    title: Verify your email address
+    message-text: <strong>Almost done!</strong><br> Check your email for a verification code.
+    verification-code-text: Enter the verification code you received via email.
+    verify-button-text: Verify & Continue
+    not-sent:
+      message: Didn't receive an email yet?
+      alternative-choice: Use alternaitve options below to verify your account.
+      resent-button-text: Resend Email
+      sms-button-text: Send by SMS
+
+install:
+  failed-message-sent: The install failed! Click the button below to retry the install.
+  retry-install: Retry Install
+  start-install: Start Install
 
 layout:
   header:
@@ -66,18 +180,7 @@ layout:
         keyboard-shortcuts: Show keyboard shortcuts
         changelog: Changelog
 
-terms:
-  new: New
-  sort: Sort
-  filter: Filer
-  columns: Columns
-  settings: Settings
-  home: Home
-  admin: Admin
-  logout: Logout
-  dashboard: Dashboard
-  search: Search
-  uploading: Uploading...
+
 phrases:
   search-input: Search Input
 

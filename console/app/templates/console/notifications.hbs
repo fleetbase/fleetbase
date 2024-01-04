@@ -1,7 +1,7 @@
 <Layout::Section::Header @title="Notifications">
-    <Button @icon="check-square" @type="default" @text="Select All" {{on "click" this.selectAll}} class="mr-2" />
-    <Button @icon="envelope" @type="primary" @text="Mark as Read" {{on "click" this.read}} class="mr-2" />
-    <Button @icon="trash" @type="danger" @text="Delete" {{on "click" this.delete}} />
+    <Button @icon="check-square" @type="default" @text={{t "console.notifications.select-all"}} {{on "click" this.selectAll}} class="mr-2" />
+    <Button @icon="envelope" @type="primary" @text={{t "console.notifications.mark-as-read"}} {{on "click" this.read}} class="mr-2" />
+    <Button @icon="trash" @type="danger" @text={{t "common.delete"}} {{on "click" this.delete}} />
 </Layout::Section::Header>
 
 <Layout::Section::Body class="h-full w-full">
@@ -37,7 +37,7 @@
                 </div>
             {{else}}
                 <div class="flex items-center justify-center h-full w-full">
-                    <p class="text-base text-gray-800 dark:text-gray-300 italic">No notifications to display.</p>
+                    <p class="text-base text-gray-800 dark:text-gray-300 italic">{{t "console.notifications.message"}}</p>
                 </div>
             {{/each}}
         </div>

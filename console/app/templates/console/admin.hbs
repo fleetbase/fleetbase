@@ -1,9 +1,9 @@
 {{page-title "Admin"}}
 
 <EmberWormhole @to="sidebar-menu-items">
-    <Layout::Sidebar::Item @route="console.admin.index" @icon="rectangle-list">Overview</Layout::Sidebar::Item>
-    <Layout::Sidebar::Item @route="console.admin.branding" @icon="palette">Branding</Layout::Sidebar::Item>
-    <Layout::Sidebar::Item @route="console.admin.notifications" @icon="bell">Notifications</Layout::Sidebar::Item>
+    <Layout::Sidebar::Item @route="console.admin.index" @icon="rectangle-list">{{t "common.overview"}}</Layout::Sidebar::Item>
+    <Layout::Sidebar::Item @route="console.admin.branding" @icon="palette">{{t "common.branding"}}</Layout::Sidebar::Item>
+    <Layout::Sidebar::Item @route="console.admin.notifications" @icon="bell">{{t "common.notifications"}}</Layout::Sidebar::Item>
     {{#each this.universe.adminMenuItems as |menuItem|}}
         <Layout::Sidebar::Item @onClick={{fn this.universe.transitionMenuItem "console.admin.virtual" menuItem}} @item={{menuItem}} @icon={{menuItem.icon}}>{{menuItem.title}}</Layout::Sidebar::Item>
     {{/each}}
@@ -15,12 +15,12 @@
         </Layout::Sidebar::Panel>
     {{/each}}
     <Layout::Sidebar::Panel @open={{true}} @title="System Config">
-        <Layout::Sidebar::Item @route="console.admin.config.services" @icon="bell-concierge">Services</Layout::Sidebar::Item>
-        <Layout::Sidebar::Item @route="console.admin.config.mail" @icon="envelope">Mail</Layout::Sidebar::Item>
-        <Layout::Sidebar::Item @route="console.admin.config.filesystem" @icon="hard-drive">Filesystem</Layout::Sidebar::Item>
-        <Layout::Sidebar::Item @route="console.admin.config.queue" @icon="layer-group">Queue</Layout::Sidebar::Item>
-        <Layout::Sidebar::Item @route="console.admin.config.socket" @icon="plug">Socket</Layout::Sidebar::Item>
-        <Layout::Sidebar::Item @route="console.admin.config.notification-channels" @icon="tower-broadcast">Notification Channels</Layout::Sidebar::Item>
+        <Layout::Sidebar::Item @route="console.admin.config.services" @icon="bell-concierge">{{t "common.services"}}</Layout::Sidebar::Item>
+        <Layout::Sidebar::Item @route="console.admin.config.mail" @icon="envelope">{{t "common.mail"}}</Layout::Sidebar::Item>
+        <Layout::Sidebar::Item @route="console.admin.config.filesystem" @icon="hard-drive">{{t "common.filesystem"}}</Layout::Sidebar::Item>
+        <Layout::Sidebar::Item @route="console.admin.config.queue" @icon="layer-group">{{t "common.queue"}}</Layout::Sidebar::Item>
+        <Layout::Sidebar::Item @route="console.admin.config.socket" @icon="plug">{{t "common.socket"}}</Layout::Sidebar::Item>
+        <Layout::Sidebar::Item @route="console.admin.config.notification-channels" @icon="tower-broadcast">{{t "common.notification-channels"}}</Layout::Sidebar::Item>
     </Layout::Sidebar::Panel>
 </EmberWormhole>
 
