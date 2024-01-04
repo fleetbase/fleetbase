@@ -42,6 +42,17 @@ auth:
         help-text: Enter a password at-least 6 characters to continue.
       submit-button: Reset Password
       back-button: Back
+invite:
+  for-users:
+    invitation-message: You've been invited to join
+    invitation-sent-message: You've been invited to join the {companyName} organization on {appName}. To accept this invitation, input your invitation code received by email and click continue.
+    invitation-code-sent-text: Your invitiation code
+    accept-invitation-text: Accept Invitation
+onboard:
+  install:
+    failed-message-sent: The install failed! Click the button below to retry the install.
+    retry-install: Retry Install
+    start-install: Start Install
 
 layout:
   header:
