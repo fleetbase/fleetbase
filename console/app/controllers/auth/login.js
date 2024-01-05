@@ -34,6 +34,13 @@ export default class AuthLoginController extends Controller {
     @service session;
 
     /**
+     * Inject the `router` service
+     *
+     * @var {Service}
+     */
+    @service router;
+
+    /**
      * Whether or not to remember the users session
      *
      * @var {Boolean}
@@ -103,10 +110,12 @@ export default class AuthLoginController extends Controller {
 
         // send request to check for 2fa
         try {
-            let { twoFaSession, twoFaEnabled, isTwoFaValidated } = await this.session.checkForTwoFactor(identity);
+            let { twoFaSession, isTwoFaEnabled, isTwoFaValidated } = await this.session.checkForTwoFactor(identity);
 
-            if (twoFaEnabled && !isTwoFaValidated) {
-                return this.router.transitionTo('auth.two-fa', { token: twoFaSession });
+            if (isTwoFaEnabled && !isTwoFaValidated) {
+                return this.session.store.persist({ two_fa_identity: identity }).then(() => {
+                    return this.router.transitionTo('auth.two-fa', { queryParams: { token: twoFaSession } });
+                });
             }
         } catch (error) {
             return this.notifications.serverError(error);
@@ -123,31 +132,6 @@ export default class AuthLoginController extends Controller {
             this.success();
         }
     }
-
-    /**
-     * Authenticate the user
-     *
-     * @void
-     */
-    // @action async login(event) {
-    //     // firefox patch
-    //     event.preventDefault();
-    //     // get user credentials
-    //     const { email, password, rememberMe } = this;
-    //     // start loader
-    //     this.set('isLoading', true);
-    //     // set where to redirect on login
-    //     this.setRedirect();
-    //     try {
-    //         await this.session.authenticate('authenticator:fleetbase', { email, password }, rememberMe);
-    //     } catch (error) {
-    //         this.failedAttempts++;
-    //         return this.failure(error);
-    //     }
-    //     if (this.session.isAuthenticated) {
-    //         this.success();
-    //     }
-    // }
 
     /**
      * Transition user to onboarding screen

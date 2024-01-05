@@ -44,5 +44,9 @@
             <Button @icon="check-circle" @type="primary" @buttonType="submit" @text="Verify Code" @onClick={{this.verifyCode}} @isLoading={{this.isLoading}} />
             <Button @buttonType="button" @text="Cancel" @onClick={{fn (transition-to "auth.login")}} @disabled={{this.isLoading}} />
         </div>
+
+        <div class="text-right">
+            <span class="text-sm text-gray-500" id="countdown-timer">{{this.timerValue}}</span>
+        </div>
     </form>
 </div>
