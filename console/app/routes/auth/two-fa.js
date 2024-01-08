@@ -37,6 +37,11 @@ export default class AuthTwoFaRoute extends Route {
     @tracked identity;
 
     /**
+     * The client token from the validated 2fa session
+     */
+    @tracked clientToken;
+
+    /**
      * Query parameters for the route.
      *
      * @var {Object}
@@ -46,6 +51,10 @@ export default class AuthTwoFaRoute extends Route {
             refreshModel: false,
             replace: true,
         },
+        client_token: {
+            refreshModel: false,
+            replace: true
+        }
     };
 
     /**
@@ -69,14 +78,30 @@ export default class AuthTwoFaRoute extends Route {
 
             return this.fetch
                 .post('two-fa/validate-session', { token, identity: two_fa_identity })
-                .then(() => {
+                .then(({ client_token }) => {
                     // clear session data after validated 2fa session
-                    this.session.store.clear();
+                    // this.session.store.clear();
+                    // set the client token to the url
+                    this.clientToken = client_token;
                 })
                 .catch((error) => {
                     this.notifications.serverError(error);
                     return this.router.transitionTo('auth.login');
                 });
         });
+    }
+
+    /**
+     * Sets up the controller, including client token and session expiration details.
+     *
+     * @param {Object} controller - The controller for the route.
+     */
+    setupController(controller) {
+        super.setupController(...arguments);
+
+        // set client token to controller
+        controller.clientToken = this.clientToken;
+        controller.twoFactorSessionExpiresAfter = controller.getExpirationDateFromClientToken(this.clientToken);
+        controller.countdownReady = true;
     }
 }
