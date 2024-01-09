@@ -25,19 +25,6 @@
 <form class="mt-8" {{on "submit" this.login}}>
     <input type="hidden" name="remember" value="true" />
     <div class="rounded-md shadow-sm">
-        {{!-- <div>
-            <Input
-                @value={{this.email}}
-                aria-label="Email address"
-                name="email"
-                @type="email"
-                autocomplete="username"
-                required
-                class="relative block w-full px-3 py-2 text-gray-900 placeholder-gray-500 border border-gray-300 rounded-none appearance-none rounded-t-md focus:outline-none focus:shadow-outline-blue focus:border-blue-300 focus:z-10 sm:text-sm sm:leading-5 dark:text-white dark:bg-gray-700 dark:border-gray-900"
-                placeholder="Email address"
-                disabled={{this.isLoading}}
-            />
-        </div> --}}
         <div>
             <Input
                 @value={{this.identity}}

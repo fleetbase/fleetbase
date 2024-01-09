@@ -34,7 +34,7 @@
             </div>
         </div>
         {{#if this.countdownReady}}
-                <Countdown @expiry={{this.twoFactorSessionExpiresAfter}} />
+            <Countdown @expiry={{this.twoFactorSessionExpiresAfter}} />
         {{/if}}
         <div class="text-right">
             <a href="#" class="text-sm text-blue-500 hover:underline" {{on "click" this.resendCode}}>
@@ -43,7 +43,7 @@
         </div>
 
         <div class="flex flex-row space-x-2">
-            <Button @icon="check-circle" @type="primary" @buttonType="submit" @text="Verify Code" @onClick={{this.verifyCode}} @isLoading={{this.isLoading}} />
+            <Button @icon="check-circle" @type="primary" @buttonType="submit" @text="Verify Code" @isLoading={{this.isLoading}} />
             <Button @buttonType="button" @text="Cancel" @onClick={{fn (transition-to "auth.login")}} @disabled={{this.isLoading}} />
         </div>
     </form>

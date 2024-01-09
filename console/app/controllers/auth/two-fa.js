@@ -1,6 +1,7 @@
 import Controller from '@ember/controller';
 import { tracked } from '@glimmer/tracking';
 import { action } from '@ember/object';
+import { inject as service } from '@ember/service';
 /**
  * Controller responsible for handling two-factor authentication.
  * @class AuthTwoFaController
@@ -8,12 +9,45 @@ import { action } from '@ember/object';
  */
 export default class AuthTwoFaController extends Controller {
     /**
+     * Router service.
+     *
+     * @var {Service}
+     */
+    @service router;
+
+    /**
+     * Fetch service for making HTTP requests.
+     *
+     * @var {Service}
+     */
+    @service fetch;
+
+    /**
+     * Notifications service for handling notifications.
+     *
+     * @var {Service}
+     */
+    @service notifications;
+
+    /**
+     * Session service for managing user sessions.
+     *
+     * @var {Service}
+     */
+    @service session;
+
+    /**
      * Tracked property for storing the verification token.
      *
      * @property {string} token
      * @tracked
      */
     @tracked token;
+
+    /**
+     * The current 2FA identity in memory
+     */
+    @tracked identity;
 
     /**
      * Tracked property representing the remaining time in seconds for the countdown.
@@ -55,7 +89,7 @@ export default class AuthTwoFaController extends Controller {
      *
      * @property {Array} queryParams
      */
-    queryParams = ['token'];
+    queryParams = ['token', 'clientToken'];
 
     /**
      * Action method for verifying the entered verification code.
@@ -63,22 +97,28 @@ export default class AuthTwoFaController extends Controller {
      * @method verifyCode
      * @action
      */
-    @action async verifyCode() {
+    @action async verifyCode(event) {
+        // prevent form default behaviour
+        event.preventDefault();
+
         try {
-            const { token, verificationCode } = this;
+            const { token, verificationCode, clientToken, identity } = this;
 
             // Call the backend API to verify the entered verification code
             const { authToken } = await this.fetch.post('two-fa/verify-code', {
                 token,
                 verificationCode,
+                clientToken,
+                identity,
             });
 
             // If verification is successful, transition to the desired route
             this.notifications.success('Verification successful!');
 
             // authenticate user
-            this.session.manuallyAuthenticate(authToken);
-            this.router.transitionTo('console');
+            return this.session.authenticate('authenticator:fleetbase', { authToken }).then((response) => {
+                return this.router.transitionTo('console');
+            });
         } catch (error) {
             // Handle verification failure
             this.notifications.error('Verification failed. Please try again.');
@@ -91,7 +131,23 @@ export default class AuthTwoFaController extends Controller {
      * @method resendCode
      * @action
      */
-    @action resendCode() {}
+    @action async resendCode() {
+        try {
+            const { identity, token, clientToken } = this;
+
+            // Call the backend API to resend the verification code
+            await this.fetch.post('two-fa/resend-code', {
+                identity,
+                token,
+                clientToken,
+            });
+
+            this.notifications.success('Verification code resent successfully.');
+        } catch (error) {
+            // Handle resend failure
+            this.notifications.error('Failed to resend verification code. Please try again.');
+        }
+    }
 
     /**
      * Converts a base64 encoded client token to a Date representing the expiration date.

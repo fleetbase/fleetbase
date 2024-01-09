@@ -1,6 +1,5 @@
 import Route from '@ember/routing/route';
 import { inject as service } from '@ember/service';
-import { tracked } from '@glimmer/tracking';
 
 export default class AuthTwoFaRoute extends Route {
     /**
@@ -32,16 +31,6 @@ export default class AuthTwoFaRoute extends Route {
     @service session;
 
     /**
-     * The current 2FA identity in memory
-     */
-    @tracked identity;
-
-    /**
-     * The client token from the validated 2fa session
-     */
-    @tracked clientToken;
-
-    /**
      * Query parameters for the route.
      *
      * @var {Object}
@@ -51,10 +40,10 @@ export default class AuthTwoFaRoute extends Route {
             refreshModel: false,
             replace: true,
         },
-        client_token: {
+        clientToken: {
             refreshModel: false,
-            replace: true
-        }
+            replace: true,
+        },
     };
 
     /**
@@ -65,24 +54,22 @@ export default class AuthTwoFaRoute extends Route {
      */
     beforeModel(transition) {
         // validate 2fa session with server
-        const { token } = transition.to.queryParams;
+        let { token, clientToken } = transition.to.queryParams;
 
-        return this.session.store.restore().then(({ two_fa_identity }) => {
-            if (!two_fa_identity) {
-                this.notifications.error('Unable to initiate 2FA.');
+        return this.session.store.restore().then(({ identity }) => {
+            if (!identity) {
+                this.notifications.error('Two Factor Authentication failed to start.');
                 return this.router.transitionTo('auth.login');
             }
 
-            // store to current route
-            this.identity = two_fa_identity;
-
             return this.fetch
-                .post('two-fa/validate-session', { token, identity: two_fa_identity })
-                .then(({ client_token }) => {
+                .post('two-fa/validate-session', { token, identity, clientToken })
+                .then(({ clientToken }) => {
                     // clear session data after validated 2fa session
-                    // this.session.store.clear();
-                    // set the client token to the url
-                    this.clientToken = client_token;
+                    this.session.store.persist({
+                        identity,
+                        clientToken,
+                    });
                 })
                 .catch((error) => {
                     this.notifications.serverError(error);
@@ -99,9 +86,11 @@ export default class AuthTwoFaRoute extends Route {
     setupController(controller) {
         super.setupController(...arguments);
 
-        // set client token to controller
-        controller.clientToken = this.clientToken;
-        controller.twoFactorSessionExpiresAfter = controller.getExpirationDateFromClientToken(this.clientToken);
-        controller.countdownReady = true;
+        this.session.store.restore().then(({ clientToken, identity }) => {
+            controller.clientToken = clientToken;
+            controller.identity = identity;
+            controller.twoFactorSessionExpiresAfter = controller.getExpirationDateFromClientToken(clientToken);
+            controller.countdownReady = true;
+        });
     }
 }
