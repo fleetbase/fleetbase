@@ -44,6 +44,10 @@ export default class AuthTwoFaRoute extends Route {
             refreshModel: false,
             replace: true,
         },
+        newClientSessionToken: {
+            refreshModel: false,
+            replace: true,
+        },
     };
 
     /**
@@ -54,7 +58,7 @@ export default class AuthTwoFaRoute extends Route {
      */
     beforeModel(transition) {
         // validate 2fa session with server
-        let { token, clientToken } = transition.to.queryParams;
+        let { token, clientToken, newClientSessionToken } = transition.to.queryParams;
 
         return this.session.store.restore().then(({ identity }) => {
             if (!identity) {
@@ -62,8 +66,10 @@ export default class AuthTwoFaRoute extends Route {
                 return this.router.transitionTo('auth.login');
             }
 
+            const selectedClientToken = newClientSessionToken || clientToken;
+
             return this.fetch
-                .post('two-fa/validate-session', { token, identity, clientToken })
+                .post('two-fa/validate-session', { token, identity, clientToken: selectedClientToken })
                 .then(({ clientToken }) => {
                     // clear session data after validated 2fa session
                     this.session.store.persist({
@@ -86,10 +92,11 @@ export default class AuthTwoFaRoute extends Route {
     setupController(controller) {
         super.setupController(...arguments);
 
-        this.session.store.restore().then(({ clientToken, identity }) => {
+        this.session.store.restore().then(({ clientToken, newClientSessionToken, identity }) => {
             controller.clientToken = clientToken;
+            controller.newClientSessionToken = newClientSessionToken;
             controller.identity = identity;
-            controller.twoFactorSessionExpiresAfter = controller.getExpirationDateFromClientToken(clientToken);
+            controller.twoFactorSessionExpiresAfter = controller.getExpirationDateFromClientToken(clientToken || newClientSessionToken);
             controller.countdownReady = true;
         });
     }

@@ -68,6 +68,15 @@ export default class AuthTwoFaController extends Controller {
     @tracked clientToken;
 
     /**
+     * Tracked property representing the new client token from the validated 2fa session.
+     *
+     * @property {number} newClientSessionToken
+     * @tracked
+     * @default null
+     */
+    @tracked newClientSessionToken;
+
+    /**
      * Tracked property representing the date the 2fa session will expire
      * @property {Date|null} twoFactorSessionExpiresAfter
      * @tracked
@@ -102,13 +111,26 @@ export default class AuthTwoFaController extends Controller {
         event.preventDefault();
 
         try {
-            const { token, verificationCode, clientToken, identity } = this;
+            const { token, verificationCode, clientToken, newClientSessionToken, identity } = this;
+
+            console.log('Verification Code:', verificationCode);
+            console.log('Client Token:', clientToken);
+            console.log('New Client Session Token:', newClientSessionToken);
+
+            const selectedClientToken = newClientSessionToken || clientToken;
+
+            console.log('selectedClientToken:', selectedClientToken);
+
+            if (!selectedClientToken) {
+                this.notifications.error('Invalid session. Please try again.');
+                return;
+            }
 
             // Call the backend API to verify the entered verification code
             const { authToken } = await this.fetch.post('two-fa/verify-code', {
                 token,
                 verificationCode,
-                clientToken,
+                clientToken: selectedClientToken,
                 identity,
             });
 
@@ -125,22 +147,18 @@ export default class AuthTwoFaController extends Controller {
         }
     }
 
-    /**
-     * Action method for resending the verification code.
-     *
-     * @method resendCode
-     * @action
-     */
     @action async resendCode() {
         try {
-            const { identity, token, clientToken } = this;
+            const { token, clientToken, identity } = this;
 
             // Call the backend API to resend the verification code
-            await this.fetch.post('two-fa/resend-code', {
-                identity,
+            const { newClientSessionToken } = await this.fetch.post('two-fa/resend-code', {
                 token,
                 clientToken,
+                identity,
             });
+
+            this.newClientSessionToken = newClientSessionToken;
 
             this.notifications.success('Verification code resent successfully.');
         } catch (error) {
@@ -156,9 +174,9 @@ export default class AuthTwoFaController extends Controller {
      * @param {string} clientToken - Base64 encoded client token.
      * @returns {Date|null} - Date representing the expiration date, or null if invalid.
      */
-    getExpirationDateFromClientToken(clientToken) {
+    getExpirationDateFromClientToken(sessionToken) {
         const decoder = new TextDecoder();
-        const binString = atob(clientToken);
+        const binString = atob(sessionToken);
         const bytes = Uint8Array.from(binString, (m) => m.codePointAt(0));
         const decodedString = decoder.decode(bytes);
 
