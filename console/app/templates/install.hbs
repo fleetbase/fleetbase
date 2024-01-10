@@ -27,7 +27,7 @@
                         <span>{{t "onboard.install.failed-message-sent"}}</span>
                     </div>
                 {{/if}}
-                <Button @type="primary" @icon="play" @size="lg" @text={{if this.error {{t "onboard.install.retry-install"}} {{t "onboard.install.start-install"}} }} @wrapperClass="flex-1" class="w-full" @onClick={{this.startInstall}} @isLoading={{this.install.isRunning}} @disabled={{this.install.isRunning}} />
+                <Button @type="primary" @icon="play" @size="lg" @text={{if this.error (t "onboard.install.retry-install") (t "onboard.install.start-install") }} @wrapperClass="flex-1" class="w-full" @onClick={{this.startInstall}} @isLoading={{this.install.isRunning}} @disabled={{this.install.isRunning}} />
             </div>
         </div>
     </div>
