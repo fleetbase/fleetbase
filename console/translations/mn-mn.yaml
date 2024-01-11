@@ -1,0 +1,107 @@
+app:
+  name: Fleetbase
+
+common: 
+  save-button-text: Өөрчлөлтийг хадгалах
+  new: Шинэ
+  delete: Устгах
+  sort: Эрэмбэлэх
+  filter: Шүүлт
+  columns: Баганууд
+  settings: Тохиргоо
+  home: Нүүр хуудас
+  admin: Админ
+  logout: Гарах
+  dashboard: Тохиргоо таб
+  search: Хайлт
+  uploading: Ачааллаж байна...
+  profile: Профайл
+  your-profile: Таны Профайл
+  name: Нэр
+  email: Имэйл
+  phone: Таны утасны дугаар
+  date-of-birth: Төрсөн өдөр
+  overview: Тойм
+  account: Данс
+  branding: Брэндинг
+  notifications: Мэдэгдэл
+  services: Үйлчилгээнүүд
+  mail: Имэйл
+  filesystem: Файл систем
+  queue: Дараалал
+  socket: Сокет
+  notification-channels: Мэдэгдлийн сувгууд
+auth:
+  forgot-password:
+    success-message: Имэйлээ шалгаад үргэлжилнэ үү !
+    is-sent:  
+      title: Дуусаж байна !
+      message: <strong>Имэйлээ шалгаарай!</strong><br> Имэйл руу илгээсэн янз бүртэй нууц үг сэргээх холбоосыг таны имэйл руу илгээсэн байна. Холбоос нь 15 минутын дотор дуусах болно.
+    not-sent:
+      title: Нууц үгээ мартсан уу?
+      message: <strong>Туслаач, бид танд туслах болно.</strong><br> {appName} руу нэвтрэх имэйлээ оруулж, танд аюулгүй холбоос илгээх болно.
+    form:
+      email-label: Таны имэйл хаяг
+      submit-button: Зөв, Миний имэйл руу чинь холбоос илгээнэ үү!
+      nevermind-button: Цуцлах
+  login:
+    title: Таны дансанд нэвтрэх
+    failed-attempt:
+      message: <strong>Нууц үг мартсан уу?</strong><br> Доорх товчлуур дээр дарж таны нууц үгийг сэргээхийн тулд.
+      button-text: Тийм, туслах!
+    form:
+      email-label: Имэйл хаяг
+      password-label: Нууц үг
+      remember-me-label: Намайг сана
+      forgot-password-label: Нууц үг мартсан уу?
+      sign-in-button: Нэвтрэх
+      create-account-button: Шинэ данс үүсгэх
+    slow-connection-message: Холболтын асуудалтай байна.
+  reset-password:
+    success-message: Таны нууц үг сэргээгдлээ! Нэвтрэхийн тулд нэвтрэнэ үү.
+    title: Таны нууц үг сэргээх
+    form:
+      code:
+        label: Таны сэргээх код
+        help-text: Таны имэйлээр авсан баталгаажуулалтын код.
+      password:
+        label: Шинэ нууц үг
+        help-text: Доод хязгаар 6 тэмдэгттэй нууц үг оруулна уу.
+      confirm-password:
+        label: Шинэ нууц үг баталгаажуулах
+        help-text: Доод хязгаар 6 тэмдэгттэй нууц үг оруулна уу.
+      submit-button: Нууц үгээ сэргээх
+      back-button: Буцах
+console:
+  account:
+    index: 
+      upload-new: Шинээр оруулах
+      phone: Таны утасны дугаар.
+      photos: зургууд
+  admin:
+    config:
+      database:
+        title: Датабаз тохиргоо
+      filesystem:
+        title: Файл систем тохиргоо
+      mail:
+        title: Имэйл тохиргоо
+      notification-channels: 
+        title: Мэдэгдлийн сувгуудын тохиргоо
+      queue:
+        title: Чулуу тохиргоо
+      services:
+        title: Үйлчилгээнүүдийн тохиргоо
+      socket:
+        title: Сокет тохиргоо
+    branding:
+      title: Брэндинг
+      icon-text: Зургийн текст
+      upload-new: Шинээр оруулах
+      reset-default: Өмнөх рүү буцаах
+      logo-text: Лого
+      theme: Өмнөх загвар
+    index:
+      total-users: Нийт хэрэглэгчид
+      total-organizations: Нийт байгууллагууд
+      total-transactions: Нийт гүйлгээн
