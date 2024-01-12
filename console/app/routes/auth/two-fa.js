@@ -66,15 +66,16 @@ export default class AuthTwoFaRoute extends Route {
                 return this.router.transitionTo('auth.login');
             }
 
-            const selectedClientToken = newClientSessionToken || clientToken;
-
             return this.fetch
-                .post('two-fa/validate-session', { token, identity, clientToken: selectedClientToken })
-                .then(({ clientToken }) => {
+                .post('two-fa/validate-session', { token, identity, clientToken, newClientSessionToken })
+                .then(({ clientToken, newClientSessionToken }) => {
+                    const tokenToPersist = clientToken || newClientSessionToken;
                     // clear session data after validated 2fa session
                     this.session.store.persist({
                         identity,
+                        token: tokenToPersist,
                         clientToken,
+                        newClientSessionToken,
                     });
                 })
                 .catch((error) => {
@@ -92,11 +93,11 @@ export default class AuthTwoFaRoute extends Route {
     setupController(controller) {
         super.setupController(...arguments);
 
-        this.session.store.restore().then(({ clientToken, newClientSessionToken, identity }) => {
+        this.session.store.restore().then(({ clientToken, identity, newClientSessionToken }) => {
             controller.clientToken = clientToken;
             controller.newClientSessionToken = newClientSessionToken;
             controller.identity = identity;
-            controller.twoFactorSessionExpiresAfter = controller.getExpirationDateFromClientToken(clientToken || newClientSessionToken);
+            controller.twoFactorSessionExpiresAfter = controller.getExpirationDateFromClientToken(clientToken);
             controller.countdownReady = true;
         });
     }

@@ -1,50 +1,36 @@
-<div class="bg-white dark:bg-gray-800 py-8 px-4 shadow rounded-lg">
-    <div class="mb-4">
-        <Image src={{@model.logo_url}} @fallbackSrc="/images/fleetbase-logo-svg.svg" alt={{t "app.name"}} width="160" height="56" class="w-40 h-14 mx-auto" />
-        <h2 class="text-center text-lg font-extrabold text-gray-900 dark:text-white truncate">
-            {{if this.isSent "Verification Code"}}
-        </h2>
-    </div>
-
-    <div class="flex px-3 py-2 mb-4 rounded-md shadow-sm bg-green-200">
-        <div>
-            <FaIcon @icon="check-circle" @size="lg" class="text-green-900 mr-4" />
-        </div>
-        <p class="flex-1 text-sm text-green-900 dark:text-green-900">
-            <strong>Check your {{this.selectedMethod}}</strong><br />
-            We've sent you a verification code. Enter the code below to complete the login process.
-        </p>
-    </div>
-
-    <form class="space-y-6" {{on "submit" this.verifyCode}}>
-        <div>
-            <label for="verificationCode" class="block text-sm font-medium text-gray-700 dark:text-gray-50">
-                Verification Code
-            </label>
-            <div class="mt-2">
-                <Input
-                    @value={{this.verificationCode}}
-                    @type="text"
-                    id="verificationCode"
-                    name="verificationCode"
-                    required
-                    class="form-input form-input-lg w-full"
-                    placeholder="Enter your verification code"
-                />
-            </div>
-        </div>
-        {{#if this.countdownReady}}
-            <Countdown @expiry={{this.twoFactorSessionExpiresAfter}} />
-        {{/if}}
-        <div class="text-right">
-            <a href="#" class="text-sm text-blue-500 hover:underline" {{on "click" this.resendCode}}>
-                Resend Code
-            </a>
-        </div>
-
-        <div class="flex flex-row space-x-2">
-            <Button @icon="check-circle" @type="primary" @buttonType="submit" @text="Verify Code" @isLoading={{this.isLoading}} />
-            <Button @buttonType="button" @text="Cancel" @onClick={{fn (transition-to "auth.login")}} @disabled={{this.isLoading}} />
-        </div>
-    </form>
+<div class="mb-8 text-center">
+    <Image src={{@model.logo_url}} @fallbackSrc="/images/fleetbase-logo-svg.svg" alt={{t "app.name"}} width="160" height="56" class="w-40 h-14 mx-auto" />
+    <h2 class="text-lg font-extrabold text-gray-900 dark:text-white truncate">
+        {{if this.isSent "Verification Code"}}
+    </h2>
 </div>
+
+<div class="flex px-3 py-2 mb-4 rounded-md shadow-sm bg-green-200">
+    <div>
+        <FaIcon @icon="check-circle" @size="lg" class="text-green-900 mr-4" />
+    </div>
+    <p class="flex-1 text-sm text-green-900 dark:text-green-900">
+        <strong>Check your {{this.selectedMethod}}</strong><br />
+        We've sent you a verification code. Enter the code below to complete the login process.
+    </p>
+</div>
+
+<form class="mt-8" {{on "submit" this.verifyCode}}>
+    <div class="flex items-center justify-between mt-6">
+        <OtpInput @onInput={{this.handleOtpInput}}/>
+    </div>
+    
+    {{#if this.countdownReady}}
+        <Countdown @expiry={{this.twoFactorSessionExpiresAfter}} />
+    {{/if}}
+
+    <div class="mt-6">
+        <Button @buttonType="submit" @type="primary" @text="Verify Code" @icon="check-circle" @wrapperClass="btn-block" @isLoading={{this.isLoading}} />
+    </div>
+
+    <div class="text-center">
+        <a href="#" class="text-sm text-blue-500 hover:underline inline-block" {{on "click" this.resendCode}}>
+            Resend Code
+        </a>
+    </div>
+</form>

@@ -68,13 +68,29 @@ export default class AuthTwoFaController extends Controller {
     @tracked clientToken;
 
     /**
-     * Tracked property representing the new client token from the validated 2fa session.
+     * Tracked property representing the client token from the validated 2fa session.
      *
-     * @property {number} newClientSessionToken
+     * @property {number} clientToken
      * @tracked
      * @default null
      */
     @tracked newClientSessionToken;
+
+    /**
+     * Tracked property for storing the verification code.
+     *
+     * @property {string} verificationCode
+     * @tracked
+     */
+    @tracked verificationCode = '';
+
+    /**
+     * Tracked property for storing the verification code.
+     *
+     * @property {string} verificationCode
+     * @tracked
+     */
+    @tracked otpValue = '';
 
     /**
      * Tracked property representing the date the 2fa session will expire
@@ -98,7 +114,11 @@ export default class AuthTwoFaController extends Controller {
      *
      * @property {Array} queryParams
      */
-    queryParams = ['token', 'clientToken'];
+    queryParams = ['token', 'clientToken', 'newClientSessionToken'];
+
+    constructor() {
+        super(...arguments);
+    }
 
     /**
      * Action method for verifying the entered verification code.
@@ -111,27 +131,22 @@ export default class AuthTwoFaController extends Controller {
         event.preventDefault();
 
         try {
-            const { token, verificationCode, clientToken, newClientSessionToken, identity } = this;
+            const { token, verificationCode, clientToken, identity, newClientSessionToken } = this;
 
-            console.log('Verification Code:', verificationCode);
-            console.log('Client Token:', clientToken);
-            console.log('New Client Session Token:', newClientSessionToken);
-
-            const selectedClientToken = newClientSessionToken || clientToken;
-
-            console.log('selectedClientToken:', selectedClientToken);
-
-            if (!selectedClientToken) {
+            if (!clientToken && !newClientSessionToken) {
                 this.notifications.error('Invalid session. Please try again.');
                 return;
             }
+
+            console.log("Verification Code to be verified:", verificationCode);
 
             // Call the backend API to verify the entered verification code
             const { authToken } = await this.fetch.post('two-fa/verify-code', {
                 token,
                 verificationCode,
-                clientToken: selectedClientToken,
+                clientToken,
                 identity,
+                newClientSessionToken,
             });
 
             // If verification is successful, transition to the desired route
@@ -142,27 +157,45 @@ export default class AuthTwoFaController extends Controller {
                 return this.router.transitionTo('console');
             });
         } catch (error) {
-            // Handle verification failure
-            this.notifications.error('Verification failed. Please try again.');
+            if (error.message.includes('Verification code has expired')) {
+                this.notifications.info('Verification code has expired. Please request a new one.');
+            } else {
+                this.notifications.error('Verification failed. Please try again.');
+            }
         }
     }
 
     @action async resendCode() {
         try {
-            const { token, clientToken, identity } = this;
+            const { identity, token, clientToken } = this;
+
+            if (!clientToken) {
+                this.notifications.error('Invalid session. Please try again.');
+                return;
+            }
 
             // Call the backend API to resend the verification code
-            const { newClientSessionToken } = await this.fetch.post('two-fa/resend-code', {
-                token,
-                clientToken,
-                identity,
+            const response = await this.fetch.post('two-fa/resend-code', {
+                token: this.token,
+                identity: this.identity,
+                clientToken: this.clientToken,
             });
 
-            this.newClientSessionToken = newClientSessionToken;
+            // const { newClientSessionToken } = response;
+            const { newClientSessionToken, generatedVerificationCode } = response;
 
-            this.notifications.success('Verification code resent successfully.');
+            if (newClientSessionToken) {
+                this.newClientSessionToken = newClientSessionToken;
+
+                console.log("Generated Verification Code:", generatedVerificationCode);
+
+                this.notifications.success('Verification code resent successfully.');
+            } else {
+                this.notifications.error('Failed to get a new client session token. Please try again.');
+            }
         } catch (error) {
-            // Handle resend failure
+            console.error('Error while resending verification code:', error);
+            // Handle the error, e.g., show an error notification
             this.notifications.error('Failed to resend verification code. Please try again.');
         }
     }
@@ -174,9 +207,9 @@ export default class AuthTwoFaController extends Controller {
      * @param {string} clientToken - Base64 encoded client token.
      * @returns {Date|null} - Date representing the expiration date, or null if invalid.
      */
-    getExpirationDateFromClientToken(sessionToken) {
+    getExpirationDateFromClientToken(clientToken) {
         const decoder = new TextDecoder();
-        const binString = atob(sessionToken);
+        const binString = atob(clientToken);
         const bytes = Uint8Array.from(binString, (m) => m.codePointAt(0));
         const decodedString = decoder.decode(bytes);
 
@@ -203,7 +236,10 @@ export default class AuthTwoFaController extends Controller {
         const utcDate = new Date(utcDateTimeString);
         const clientTimezoneOffset = new Date().getTimezoneOffset();
         const clientDate = new Date(utcDate.getTime() - clientTimezoneOffset * 60 * 1000);
-
         return clientDate;
+    }
+
+    @action handleOtpInput(otpValue) {
+        this.verificationCode = otpValue;
     }
 }
