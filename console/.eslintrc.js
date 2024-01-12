@@ -30,7 +30,7 @@ module.exports = {
         'ember/no-empty-glimmer-component-classes': 'off',
         'ember/no-get': 'off',
         'ember/classic-decorator-no-classic-methods': 'off',
-        'node/no-unpublished-require': [
+        'n/no-unpublished-require': [
             'error',
             {
                 allowModules: [
