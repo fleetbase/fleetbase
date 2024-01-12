@@ -14,7 +14,7 @@ export default class App extends Application {
 
     async ready() {
         const extensions = await loadExtensions();
-        
+
         this.extensions = extensions;
         this.engines = mapEngines(extensions);
     }

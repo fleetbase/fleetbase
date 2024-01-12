@@ -34,7 +34,6 @@ export default class OnboardVerifyEmailController extends Controller {
      */
     @service currentUser;
 
-
     /**
      * Inject the `router` service
      *

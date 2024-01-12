@@ -33,7 +33,6 @@ export default class AuthLoginController extends Controller {
      */
     @service session;
 
-
     /**
      * Inject the `router` service
      *
