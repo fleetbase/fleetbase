@@ -36,19 +36,19 @@ auth:
     success-message: Имэйлээ шалгаад үргэлжилнэ үү !
     is-sent:  
       title: Дуусаж байна !
-      message: <strong>Имэйлээ шалгаарай!</strong><br> Имэйл руу илгээсэн янз бүртэй нууц үг сэргээх холбоосыг таны имэйл руу илгээсэн байна. Холбоос нь 15 минутын дотор дуусах болно.
+      message: <strong>Имэйлээ шалгаарай!</strong><br> Бид таны и майл хаягруу нууц үгийг шинэчлэх линк илгээсэн. Линкийн хүчинтэй хугацаа 15 минут.
     not-sent:
       title: Нууц үгээ мартсан уу?
-      message: <strong>Туслаач, бид танд туслах болно.</strong><br> {appName} руу нэвтрэх имэйлээ оруулж, танд аюулгүй холбоос илгээх болно.
+      message: <strong>Санаа зовох хэрэггүй, бид танд туслах болно.</strong><br> Нэвтрэхийн тулд И майл хаягаа оруулна уу {appName} Бид таньруу нууц үгээ шинэчлэх линк илгээх болно.
     form:
       email-label: Таны имэйл хаяг
-      submit-button: Зөв, Миний имэйл руу чинь холбоос илгээнэ үү!
+      submit-button: Зөв, Миний имэйл руу холбоос илгээнэ үү!
       nevermind-button: Цуцлах
   login:
-    title: Таны дансанд нэвтрэх
+    title: Нэвтрэх
     failed-attempt:
-      message: <strong>Нууц үг мартсан уу?</strong><br> Доорх товчлуур дээр дарж таны нууц үгийг сэргээхийн тулд.
-      button-text: Тийм, туслах!
+      message: <strong>Нууц үг мартсан уу?</strong><br> Хэрэв нууц үгээ сэргээх бол доорх товчлуур дээр дарна уу!
+      button-text: Тийм, Шинэчлэх!
     form:
       email-label: Имэйл хаяг
       password-label: Нууц үг
@@ -58,7 +58,7 @@ auth:
       create-account-button: Шинэ данс үүсгэх
     slow-connection-message: Холболтын асуудалтай байна.
   reset-password:
-    success-message: Таны нууц үг сэргээгдлээ! Нэвтрэхийн тулд нэвтрэнэ үү.
+    success-message: Таны нууц үг сэргээгдлээ! 
     title: Таны нууц үг сэргээх
     form:
       code:
@@ -77,7 +77,7 @@ console:
     index: 
       upload-new: Шинээр оруулах
       phone: Таны утасны дугаар.
-      photos: зургууд
+      photos: Зургууд
   admin:
     config:
       database:
@@ -89,7 +89,7 @@ console:
       notification-channels: 
         title: Мэдэгдлийн сувгуудын тохиргоо
       queue:
-        title: Чулуу тохиргоо
+        title: Дараалалын тохиргоо
       services:
         title: Үйлчилгээнүүдийн тохиргоо
       socket:
@@ -104,4 +104,79 @@ console:
     index:
       total-users: Нийт хэрэглэгчид
       total-organizations: Нийт байгууллагууд
-      total-transactions: Нийт гүйлгээн
+      total-transactions: Нийт гүйлгээ
+notification:
+  title: Мэдэгдэл
+  notification-settings: Мэдэгдлийн Тохиргоо
+
+settings:
+  index:
+    title: Байгууллагын Тохиргоо
+    organization-name: Байгууллагын нэр
+    organization-description: Байгууллагын тайлбар
+    organization-phone: Байгууллагын утасны дугаар
+    organization-currency: Байгууллагын валют
+    organization-id: Байгууллагын ID
+    organization-branding: Байгууллагын Брэндинг
+    logo: Лого
+    logo-help-text: Таны байгууллагын лого.
+    upload-new-logo: Шинэ лого оруулах
+    backdrop: Зураг
+    backdrop-help-text: Таны байгууллагын зураг эсвэл дэлгэцийн зургийг оруулах.
+    upload-new-backdrop: Шинэ зураг оруулах
+  extensions:
+    title: Шинэчлэлийг ачааллаж байна. 
+    message: Өргөтгөлийн агуулах болон маркетплайсыг  эхлүүлэхээр бэлтгэж байгаа тул удахгүй гарах шинэ хувилбаруудыг дахин шалгана уу.
+  notifications:
+    select-all:
+    mark-as-read:
+
+invite:
+  for-users:
+    invitation-message: Та {companyName} -д нэгдлээ.
+    invitation-sent-message: Таныг {appName}-д {companyName} байгууллагт нэгдүүлж байна. Энэ зурвасыг хүлээн авахын тулд таны имэйлээр ирсэн нэмэлт кодыг оруулж "Үргэлжлүүлэх" товчийг дарна уу.
+    invitation-code-sent-text: Таны баталгаажуулах код
+    accept-invitation-text: Хүсэлтийг баталгаажуулах 
+onboard:
+  index:
+    title: Данс үүсгэх
+    welcome-title: <strong>{companyName}-д тавтай морилно уу!</strong><br />
+    welcome-text: Эхлэхийн тулд доорх талбаруудыг бөглөнө үү.
+    fullname: Таны бүтэн нэр
+    email: Таны имэйл хаяг
+    phone: Таны утасны дугаар
+    organization-name: Таны байгууллагын нэр, таны үзүүлэх үйлчилгээ болон эх үүсвэрүүд энэ байгууллагын нэрэн дор зохицуулагдах болно, та дараа нь хүссэн хэмжээгээрэй байгууллагууд нэмэж үүсгэх боломжтой.
+    password: Таны нууц үг, Баталгаатай нууц үг эсэхээ шалгана уу!
+    confirm-password: Доорхи нууц үгээ баталгаажуулах
+    continue-button: Үргэлжлүүлэх
+  verify-email:
+    title: Та имэйл хаягаа баталгаажуулна уу
+    message-text: <strong>Одоогоор дууссан!</strong><br> Танд илгээсэн баталгаажуулалтын кодыг шалгана уу !
+    verification-code-text: Имэйлээр ирсэн баталгаажуулалтын кодыг оруулна уу.
+    verify-button-text: Баталгаажуулах & Үргэлжлүүлэх
+    not-sent:
+      message: Имэйл ирээгүй байна уу?
+      alternative-choice: Бүртгэлээ баталгаажуулахын тулд доорх сонголтуудыг ашиглана уу.
+      resent-button-text: Имэйл дахин илгээх
+      sms-button-text: SMS илгээх
+
+install:
+  failed-message-sent: Суулгалт амжилтгүй болсон! Доорх товчийг дарж дахин оролдоно уу.
+  retry-install: Дахин оролдох
+  start-install: Таталтыг эхлүүлэх 
+
+layout:
+  header:
+    menus:
+      organization:
+        settings: Байгууллагын тохиргоо
+        create-or-join: Байгууллага үүсгэх эсвэл орох
+        explore-extensions: Сунгалт үзэх
+      user:
+        view-profile: Профайл харах
+        keyboard-shortcuts: Товчлуурын хослолуудыг үзэх
+        changelog: Шинэчлэл
+
+
+phrases:
+  search-input: Хайх 
