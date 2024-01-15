@@ -10,9 +10,13 @@
             <Dashboard::QueryParams @params={{@dashboard.queryParams}} @onChange={{this.onQueryParamsChanged}} />
         </div>
     </div>
-    <div class="grid grid-cols-2 lg:grid-cols-12 gap-4">
-        {{#each this.dashboard.widgets as |widget|}}
-            {{component (concat "dashboard/" widget.component) options=widget.options}}
+    <GridStack @options={{hash float=true animate=true}} @onChange={{this.change}} class="w-full">
+
+        {{#each this.dashboard.widgets as |widget index|}}
+            <GridStackItem @options={{hash w=2 h=2}}>
+                {{component (concat "dashboard/" widget.component) options=widget.options}}
+            </GridStackItem>
         {{/each}}
-    </div>
+    </GridStack>
+
 </div>
