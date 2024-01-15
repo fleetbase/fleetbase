@@ -119,7 +119,9 @@ export default class AuthTwoFaController extends Controller {
      */
     @action async verifyCode(event) {
         // prevent form default behaviour
-        event.preventDefault();
+        if (event && typeof event.preventDefault === 'function') {
+            event.preventDefault();
+        }
 
         try {
             const { token, verificationCode, clientToken, identity } = this;
@@ -154,19 +156,23 @@ export default class AuthTwoFaController extends Controller {
     }
 
     @action async resendCode() {
-        try {
-            const { identity, clientToken } = this;
+        // disable countdown timer
+        this.countdownReady = false;
 
-            if (!clientToken) {
-                this.notifications.error('Invalid session. Please try again.');
-                return;
-            }
-            
-            await this.fetch.post('two-fa/resend-code', {
+        try {
+            const { identity } = this;
+            const { clientToken } = await this.fetch.post('two-fa/resend-code', {
                 identity,
             });
 
-            this.notifications.success('Verification code resent successfully.');
+            if (clientToken) {
+                this.clientToken = clientToken;
+                this.twoFactorSessionExpiresAfter = this.getExpirationDateFromClientToken(clientToken);
+                this.countdownReady = true;
+                this.notifications.success('Verification code resent successfully.');
+            } else {
+                this.notifications.error('Unable to send verification code.');
+            }
         } catch (error) {
             // Handle errors, show error notifications, etc.
             this.notifications.error('Error resending verification code. Please try again.');
@@ -214,5 +220,6 @@ export default class AuthTwoFaController extends Controller {
 
     @action handleOtpInput(otpValue) {
         this.verificationCode = otpValue;
+        this.verifyCode();
     }
 }

@@ -16,19 +16,21 @@
 </div>
 
 <form class="mt-8" {{on "submit" this.verifyCode}}>
-    <div class="flex items-center justify-between mt-6">
-        <OtpInput @onInput={{this.handleOtpInput}}/>
+    <div class="flex items-center justify-between my-6">
+        <OtpInput @onInputCompleted={{this.handleOtpInput}} />
     </div>
     
-    {{#if this.countdownReady}}
-        <Countdown @expiry={{this.twoFactorSessionExpiresAfter}} />
-    {{/if}}
+    <div id="otp-countdown-container" class="otp-countdown-container flex items-center justify-center h-12">
+        {{#if this.countdownReady}}
+            <Countdown @expiry={{this.twoFactorSessionExpiresAfter}} @countdownClass="text-lg" />
+        {{/if}}
+    </div>
 
-    <div class="mt-6">
+    <div class="mt-4">
         <Button @buttonType="submit" @type="primary" @text="Verify Code" @icon="check-circle" @wrapperClass="btn-block" @isLoading={{this.isLoading}} />
     </div>
 
-    <div class="text-center">
+    <div class="text-center mt-3.5">
         <a href="#" class="text-sm text-blue-500 hover:underline inline-block" {{on "click" this.resendCode}}>
             Resend Code
         </a>
