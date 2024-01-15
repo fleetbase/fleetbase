@@ -44,10 +44,6 @@ export default class AuthTwoFaRoute extends Route {
             refreshModel: false,
             replace: true,
         },
-        newClientSessionToken: {
-            refreshModel: false,
-            replace: true,
-        },
     };
 
     /**
@@ -58,7 +54,7 @@ export default class AuthTwoFaRoute extends Route {
      */
     beforeModel(transition) {
         // validate 2fa session with server
-        let { token, clientToken, newClientSessionToken } = transition.to.queryParams;
+        let { token, clientToken } = transition.to.queryParams;
 
         return this.session.store.restore().then(({ identity }) => {
             if (!identity) {
@@ -67,15 +63,13 @@ export default class AuthTwoFaRoute extends Route {
             }
 
             return this.fetch
-                .post('two-fa/validate-session', { token, identity, clientToken, newClientSessionToken })
-                .then(({ clientToken, newClientSessionToken }) => {
-                    const tokenToPersist = clientToken || newClientSessionToken;
+                .post('two-fa/validate-session', { token, identity, clientToken })
+                .then(({ clientToken }) => {
                     // clear session data after validated 2fa session
                     this.session.store.persist({
                         identity,
-                        token: tokenToPersist,
+                        token,
                         clientToken,
-                        newClientSessionToken,
                     });
                 })
                 .catch((error) => {
@@ -93,9 +87,8 @@ export default class AuthTwoFaRoute extends Route {
     setupController(controller) {
         super.setupController(...arguments);
 
-        this.session.store.restore().then(({ clientToken, identity, newClientSessionToken }) => {
+        this.session.store.restore().then(({ clientToken, identity }) => {
             controller.clientToken = clientToken;
-            controller.newClientSessionToken = newClientSessionToken;
             controller.identity = identity;
             controller.twoFactorSessionExpiresAfter = controller.getExpirationDateFromClientToken(clientToken);
             controller.countdownReady = true;

@@ -68,15 +68,6 @@ export default class AuthTwoFaController extends Controller {
     @tracked clientToken;
 
     /**
-     * Tracked property representing the client token from the validated 2fa session.
-     *
-     * @property {number} clientToken
-     * @tracked
-     * @default null
-     */
-    @tracked newClientSessionToken;
-
-    /**
      * Tracked property for storing the verification code.
      *
      * @property {string} verificationCode
@@ -114,7 +105,7 @@ export default class AuthTwoFaController extends Controller {
      *
      * @property {Array} queryParams
      */
-    queryParams = ['token', 'clientToken', 'newClientSessionToken'];
+    queryParams = ['token', 'clientToken'];
 
     constructor() {
         super(...arguments);
@@ -131,14 +122,12 @@ export default class AuthTwoFaController extends Controller {
         event.preventDefault();
 
         try {
-            const { token, verificationCode, clientToken, identity, newClientSessionToken } = this;
+            const { token, verificationCode, clientToken, identity } = this;
 
-            if (!clientToken && !newClientSessionToken) {
+            if (!clientToken) {
                 this.notifications.error('Invalid session. Please try again.');
                 return;
             }
-
-            console.log("Verification Code to be verified:", verificationCode);
 
             // Call the backend API to verify the entered verification code
             const { authToken } = await this.fetch.post('two-fa/verify-code', {
@@ -146,7 +135,6 @@ export default class AuthTwoFaController extends Controller {
                 verificationCode,
                 clientToken,
                 identity,
-                newClientSessionToken,
             });
 
             // If verification is successful, transition to the desired route
@@ -167,36 +155,21 @@ export default class AuthTwoFaController extends Controller {
 
     @action async resendCode() {
         try {
-            const { identity, token, clientToken } = this;
+            const { identity, clientToken } = this;
 
             if (!clientToken) {
                 this.notifications.error('Invalid session. Please try again.');
                 return;
             }
-
-            // Call the backend API to resend the verification code
-            const response = await this.fetch.post('two-fa/resend-code', {
-                token: this.token,
-                identity: this.identity,
-                clientToken: this.clientToken,
+            
+            await this.fetch.post('two-fa/resend-code', {
+                identity,
             });
 
-            // const { newClientSessionToken } = response;
-            const { newClientSessionToken, generatedVerificationCode } = response;
-
-            if (newClientSessionToken) {
-                this.newClientSessionToken = newClientSessionToken;
-
-                console.log("Generated Verification Code:", generatedVerificationCode);
-
-                this.notifications.success('Verification code resent successfully.');
-            } else {
-                this.notifications.error('Failed to get a new client session token. Please try again.');
-            }
+            this.notifications.success('Verification code resent successfully.');
         } catch (error) {
-            console.error('Error while resending verification code:', error);
-            // Handle the error, e.g., show an error notification
-            this.notifications.error('Failed to resend verification code. Please try again.');
+            // Handle errors, show error notifications, etc.
+            this.notifications.error('Error resending verification code. Please try again.');
         }
     }
 
