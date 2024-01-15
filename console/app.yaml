@@ -1,0 +1,12 @@
+runtime: python312
+
+handlers:
+- url: /(.*\..+)$
+  static_files: \1
+  upload: (.+)
+  secure: always
+  expiration: 1h
+- url: /.*
+  static_files: index.html
+  upload: index.html
+  secure: always

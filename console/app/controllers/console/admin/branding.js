@@ -104,6 +104,16 @@ export default class ConsoleAdminBrandingController extends Controller {
             .save()
             .then(() => {
                 this.notifications.success('Branding settings saved.');
+
+                // if logo url is null
+                if (this.model.logo_url === null) {
+                    this.model.set('logo_url', '/images/fleetbase-logo-svg.svg');
+                }
+
+                // if icon url is null
+                if (this.model.icon_url === null) {
+                    this.model.set('icon_url', '/images/icon.png');
+                }
             })
             .finally(() => {
                 this.isLoading = false;

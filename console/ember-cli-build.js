@@ -13,7 +13,7 @@ const autoprefixer = require('autoprefixer');
 const tailwind = require('tailwindcss');
 
 module.exports = function (defaults) {
-    let app = new EmberApp(defaults, {
+    const app = new EmberApp(defaults, {
         storeConfigInMeta: false,
 
         fingerprint: {

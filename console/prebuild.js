@@ -5,6 +5,17 @@ const recast = require('recast');
 const babelParser = require('recast/parsers/babel');
 const builders = recast.types.builders;
 
+function getExtensionMountPath(extensionName) {
+    let extensionNameSegments = extensionName.split('/');
+    let mountName = extensionNameSegments[1];
+
+    if (typeof mountName !== 'string') {
+        mountName = extensionNameSegments[0];
+    }
+
+    return mountName.replace('-engine', '');
+}
+
 function only(subject, props = []) {
     const keys = Object.keys(subject);
     const result = {};
@@ -85,8 +96,7 @@ function getRouterFileContents() {
                 if (functionExpression) {
                     // Check and add the new engine mounts
                     extensions.forEach((extension) => {
-                        const mountName = extension.name.split('/')[1];
-                        const mountPath = mountName.replace('-engine', '');
+                        const mountPath = getExtensionMountPath(extension.name);
                         let route = mountPath;
 
                         if (extension.fleetbase && extension.fleetbase.route) {

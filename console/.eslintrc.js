@@ -2,12 +2,13 @@
 
 module.exports = {
     root: true,
-    parser: 'babel-eslint',
+    parser: '@babel/eslint-parser',
     parserOptions: {
-        ecmaVersion: 2018,
+        ecmaVersion: 'latest',
         sourceType: 'module',
-        ecmaFeatures: {
-            legacyDecorators: true,
+        requireConfigFile: false,
+        babelOptions: {
+            plugins: [['@babel/plugin-proposal-decorators', { decoratorsBeforeExport: true }]],
         },
     },
     plugins: ['ember'],
@@ -29,7 +30,7 @@ module.exports = {
         'ember/no-empty-glimmer-component-classes': 'off',
         'ember/no-get': 'off',
         'ember/classic-decorator-no-classic-methods': 'off',
-        'node/no-unpublished-require': [
+        'n/no-unpublished-require': [
             'error',
             {
                 allowModules: [
@@ -50,18 +51,18 @@ module.exports = {
         'no-prototype-builtins': 'off',
     },
     overrides: [
-        // node files
         {
             files: [
                 './.eslintrc.js',
                 './.prettierrc.js',
+                './.stylelintrc.js',
                 './.template-lintrc.js',
                 './ember-cli-build.js',
-                './index.js',
                 './testem.js',
                 './blueprints/*/index.js',
                 './config/**/*.js',
-                './tests/dummy/config/**/*.js',
+                './lib/*/index.js',
+                './server/**/*.js',
             ],
             parserOptions: {
                 sourceType: 'script',
@@ -70,13 +71,7 @@ module.exports = {
                 browser: false,
                 node: true,
             },
-            plugins: ['node'],
-            extends: ['plugin:node/recommended'],
-        },
-        {
-            // test files
-            files: ['tests/**/*-test.{js,ts}'],
-            extends: ['plugin:qunit/recommended'],
+            extends: ['plugin:n/recommended'],
         },
     ],
 };
