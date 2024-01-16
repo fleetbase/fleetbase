@@ -19,10 +19,16 @@
     <div class="flex items-center justify-between my-6">
         <OtpInput @onInputCompleted={{this.handleOtpInput}} />
     </div>
-    
-    <div id="otp-countdown-container" class="otp-countdown-container flex items-center justify-center h-12">
+
+    <div id="otp-countdown-container" class="otp-countdown-container flex items-center justify-center min-h-12">
         {{#if this.countdownReady}}
-            <Countdown @expiry={{this.twoFactorSessionExpiresAfter}} @countdownClass="text-lg" />
+            <Countdown @expiry={{this.twoFactorSessionExpiresAfter}} @countdownClass="text-lg" @onCountdownEnd={{this.handleCodeExpired}} />
+        {{/if}}
+        {{#if this.isCodeExpired}}
+            <InfoBlock>
+                <div>Your 2FA authentication code has expired. You can request another code if you need more time.</div>
+                <Button @type="primary" @wrapperClass="mt-2" @text="Resend Code" @icon="arrow-rotate-right" @onClick={{this.resendCode}} />
+            </InfoBlock>
         {{/if}}
     </div>
 
@@ -30,9 +36,12 @@
         <Button @buttonType="submit" @type="primary" @text="Verify Code" @icon="check-circle" @wrapperClass="btn-block" @isLoading={{this.isLoading}} />
     </div>
 
-    <div class="text-center mt-3.5">
+    <div class="text-center flex flex-row items-center justify-center space-x-4 mt-3.5">
         <a href="#" class="text-sm text-blue-500 hover:underline inline-block" {{on "click" this.resendCode}}>
             Resend Code
+        </a>
+        <a href="#" class="text-sm text-danger hover:underline inline-block" {{on "click" this.cancelTwoFactor}}>
+            Cancel Two-Factor
         </a>
     </div>
 </form>

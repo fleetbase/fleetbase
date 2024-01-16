@@ -58,13 +58,18 @@ export default class AuthTwoFaRoute extends Route {
 
         return this.session.store.restore().then(({ identity }) => {
             if (!identity) {
-                this.notifications.error('Two Factor Authentication failed to start.');
+                this.notifications.error('2FA failed to initialize.');
                 return this.router.transitionTo('auth.login');
             }
 
             return this.fetch
-                .post('two-fa/validate-session', { token, identity, clientToken })
-                .then(({ clientToken }) => {
+                .post('two-fa/validate', { token, identity, clientToken })
+                .then(({ clientToken, expired }) => {
+                    // handle when code expired
+                    if (expired === true) {
+                        return this.invalidateTwoFaSession(token, identity);
+                    }
+
                     // clear session data after validated 2fa session
                     this.session.store.persist({
                         identity,
@@ -93,5 +98,17 @@ export default class AuthTwoFaRoute extends Route {
             controller.twoFactorSessionExpiresAfter = controller.getExpirationDateFromClientToken(clientToken);
             controller.countdownReady = true;
         });
+    }
+
+    invalidateTwoFaSession(token, identity) {
+        this.notifications.error('2FA authentication session has expired.');
+        return this.fetch
+            .post('two-fa/invalidate', {
+                token,
+                identity,
+            })
+            .then(() => {
+                return this.router.transitionTo('auth.login');
+            });
     }
 }

@@ -10,7 +10,7 @@ import { inject as service } from '@ember/service';
  * @property {string} DEFAULT_2FA_METHOD
  * @private
  */
-const DEFAULT_2FA_METHOD = 'authenticator_app';
+const DEFAULT_2FA_METHOD = 'email';
 
 /**
  * Glimmer component for managing Two-Factor Authentication settings.
@@ -52,6 +52,23 @@ export default class TwoFaSettingsComponent extends Component {
     @tracked isTwoFaEnabled;
 
     /**
+     * Indicates whether Two-Factor Authentication is required for all users.
+     *
+     * @property {boolean} isTwoFaEnforced
+     * @public
+     */
+    @tracked isTwoFaEnforced;
+
+    /**
+     * Indicates whether the settings should render an option to `enforce`
+     * Enforce is a flag that indicates that users either under a company or system must setup 2FA.
+     *
+     * @property {boolean} showEnforceOption
+     * @public
+     */
+    @tracked showEnforceOption;
+
+    /**
      * Class constructor to initialize the component.
      *
      * @constructor
@@ -60,11 +77,12 @@ export default class TwoFaSettingsComponent extends Component {
      * @param {Object} options.twoFaSettings - The current Two-Factor Authentication settings.
      * @param {Array} options.twoFaMethods - Available Two-Factor Authentication methods.
      */
-    constructor(owner, { twoFaSettings, twoFaMethods }) {
+    constructor(owner, { twoFaSettings, twoFaMethods, showEnforceOption }) {
         super(...arguments);
 
         const userSelectedMethod = isArray(twoFaMethods) ? twoFaMethods.find(({ key }) => key === twoFaSettings.method) : null;
 
+        this.showEnforceOption = showEnforceOption === true;
         this.isTwoFaEnabled = twoFaSettings.enabled === true;
         this.selectedTwoFaMethod = userSelectedMethod ? userSelectedMethod.key : DEFAULT_2FA_METHOD;
     }
@@ -95,6 +113,22 @@ export default class TwoFaSettingsComponent extends Component {
 
         if (typeof this.args.onTwoFaMethodSelected === 'function') {
             this.args.onTwoFaMethodSelected(this.selectedTwoFaMethod);
+        }
+    }
+
+    /**
+     * Action handler for toggling Two-Factor Authentication.
+     *
+     * @method onTwoFaEnforcedToggled
+     * @param {boolean} isTwoFaEnforced - Indicates whether Two-Factor Authentication is enabled.
+     * @return {void}
+     * @public
+     */
+    @action onTwoFaEnforcedToggled(isTwoFaEnforced) {
+        this.isTwoFaEnforced = isTwoFaEnforced;
+
+        if (typeof this.args.onTwoFaEnforcedToggled === 'function') {
+            this.args.onTwoFaEnforcedToggled(...arguments);
         }
     }
 

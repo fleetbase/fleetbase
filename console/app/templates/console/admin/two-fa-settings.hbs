@@ -7,12 +7,13 @@
     <div class="container mx-auto h-screen" {{increase-height-by 1200}}>
         <div class="max-w-3xl my-10 mx-auto space-y-4">
             <ContentPanel @title="2FA Config" @open={{true}} @pad={{true}} @panelBodyClass="bg-white dark:bg-gray-800">
-                <TwoFaSettings
-                    @twoFaMethods={{this.methods}}
-                    @twoFaSettings={{this.twoFaSettings}}
-                    @onTwoFaToggled={{this.onTwoFaToggled}}
-                    @onTwoFaMethodSelected={{this.onTwoFaMethodSelected}}
-                />
+                {{#if this.loadSystemTwoFaConfig.isIdle}}
+                    <TwoFaSettings @showEnforceOption={{true}} @twoFaMethods={{this.methods}} @twoFaSettings={{this.twoFaSettings}} @onTwoFaToggled={{this.onTwoFaToggled}} @onTwoFaEnforcedToggled={{this.onTwoFaEnforcedToggled}} @onTwoFaMethodSelected={{this.onTwoFaMethodSelected}} />
+                {{else}}
+                    <div class="flex items-center justify-center p-4">
+                        <Spinner @loadingMessage="Loading 2FA Config..." @wrapperClass="flex flex-row" @iconClass="mr-2" />
+                    </div>
+                {{/if}}
             </ContentPanel>
         </div>
     </div>

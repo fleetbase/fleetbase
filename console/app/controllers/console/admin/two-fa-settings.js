@@ -2,6 +2,8 @@ import Controller from '@ember/controller';
 import { inject as service } from '@ember/service';
 import { action } from '@ember/object';
 import { tracked } from '@glimmer/tracking';
+import { task } from 'ember-concurrency-decorators';
+import getTwoFaMethods from '@fleetbase/console/utils/get-two-fa-methods';
 
 /**
  * Controller responsible for handling Two-Factor Authentication settings in the admin console.
@@ -38,16 +40,7 @@ export default class ConsoleAdminTwoFaSettingsController extends Controller {
      * @memberof ConsoleAdminTwoFaSettingsController
      * @type {Array}
      */
-    @tracked methods = [
-        {
-            key: 'authenticator_app',
-            name: 'Authenticator App',
-            description: 'Get codes from an app like Authy, 1Password, Microsoft Authenticator, or Google Authenticator',
-            recommended: true,
-        },
-        { key: 'sms', name: 'SMS', description: 'Receive a unique code via SMS' },
-        { key: 'email', name: 'Email', description: 'Receive a unique code via Email' },
-    ];
+    @tracked methods = getTwoFaMethods();
 
     /**
      * The 2FA settings value JSON.
@@ -57,7 +50,8 @@ export default class ConsoleAdminTwoFaSettingsController extends Controller {
      */
     @tracked twoFaSettings = {
         enabled: false,
-        method: 'authenticator_app',
+        enforced: false,
+        method: 'email',
     };
 
     /**
@@ -75,7 +69,7 @@ export default class ConsoleAdminTwoFaSettingsController extends Controller {
      */
     constructor() {
         super(...arguments);
-        this.loadSettings();
+        this.loadSystemTwoFaConfig.perform();
     }
 
     /**
@@ -89,6 +83,16 @@ export default class ConsoleAdminTwoFaSettingsController extends Controller {
     }
 
     /**
+     * Action method triggered when Two-Factor Authentication enforcement is toggled.
+     *
+     * @action
+     * @param {Boolean} isEnabled - The new state of Two-Factor Authentication.
+     */
+    @action onTwoFaEnforcedToggled(isEnabled) {
+        this.onTwoFaEnforcedToggled = isEnabled;
+    }
+
+    /**
      * Action method triggered when a Two-Factor Authentication method is selected.
      *
      * @action
@@ -98,24 +102,16 @@ export default class ConsoleAdminTwoFaSettingsController extends Controller {
         this.twoFaMethod = method;
     }
 
-    /**
-     * Action method to load Two-Factor Authentication settings from the server.
-     *
-     * @action
-     * @returns {Promise}
-     */
-    @action loadSettings() {
-        return this.fetch
-            .get('two-fa/settings')
-            .then((twoFaSettings) => {
-                this.twoFaSettings = twoFaSettings;
-            })
-            .catch((error) => {
-                this.notifications.serverError(error);
-            })
-            .finally(() => {
-                this.isLoading = false;
-            });
+    @task *loadSystemTwoFaConfig() {
+        const twoFaSettings = yield this.fetch.get('two-fa/config').catch((error) => {
+            this.notifications.serverError(error);
+        });
+
+        if (twoFaSettings) {
+            this.twoFaSettings = twoFaSettings;
+        }
+
+        return twoFaSettings;
     }
 
     /**
@@ -129,15 +125,16 @@ export default class ConsoleAdminTwoFaSettingsController extends Controller {
     @action saveSettings() {
         const twoFaSettings = {
             enabled: this.isTwoFaEnabled,
+            enforced: this.isTwoFaEnforced,
             method: this.twoFaMethod,
         };
 
         this.isLoading = true;
 
         return this.fetch
-            .post('two-fa/settings', { twoFaSettings })
+            .post('two-fa/config', { twoFaSettings })
             .then(() => {
-                this.notifications.success('2FA Settings saved successfully.');
+                this.notifications.success('2FA Configuration saved successfully.');
             })
             .catch((error) => {
                 this.notifications.serverError(error);

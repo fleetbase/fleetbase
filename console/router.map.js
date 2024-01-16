@@ -26,9 +26,11 @@ Router.map(function () {
         this.route('notifications');
         this.route('account', function () {
             this.route('virtual', { path: '/:slug/:view' });
+            this.route('auth');
         });
         this.route('settings', function () {
             this.route('virtual', { path: '/:slug/:view' });
+            this.route('auth');
         });
         this.route('virtual', { path: '/:slug/:view' });
         this.route('admin', function () {

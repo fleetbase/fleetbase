@@ -50,15 +50,6 @@ export default class AuthTwoFaController extends Controller {
     @tracked identity;
 
     /**
-     * Tracked property representing the remaining time in seconds for the countdown.
-     *
-     * @property {number} timeRemaining
-     * @tracked
-     * @default 60
-     */
-    @tracked timeRemaining = 60;
-
-    /**
      * Tracked property representing the client token from the validated 2fa session.
      *
      * @property {number} clientToken
@@ -101,15 +92,20 @@ export default class AuthTwoFaController extends Controller {
     @tracked countdownReady = false;
 
     /**
+     * Tracked property representing when verification code has expired.
+     *
+     * @property {Boolean} isCodeExpired
+     * @tracked
+     * @default false
+     */
+    @tracked isCodeExpired = false;
+
+    /**
      * Query parameters for the controller.
      *
      * @property {Array} queryParams
      */
     queryParams = ['token', 'clientToken'];
-
-    constructor() {
-        super(...arguments);
-    }
 
     /**
      * Action method for verifying the entered verification code.
@@ -132,9 +128,9 @@ export default class AuthTwoFaController extends Controller {
             }
 
             // Call the backend API to verify the entered verification code
-            const { authToken } = await this.fetch.post('two-fa/verify-code', {
+            const { authToken } = await this.fetch.post('two-fa/verify', {
                 token,
-                verificationCode,
+                code: verificationCode,
                 clientToken,
                 identity,
             });
@@ -155,20 +151,29 @@ export default class AuthTwoFaController extends Controller {
         }
     }
 
+    /**
+     * Resends the verification code for Two-Factor Authentication.
+     * Disables the countdown timer while processing and handles success or error notifications.
+     *
+     * @returns {Promise<void>}
+     * @action
+     */
     @action async resendCode() {
         // disable countdown timer
         this.countdownReady = false;
 
         try {
-            const { identity } = this;
-            const { clientToken } = await this.fetch.post('two-fa/resend-code', {
+            const { identity, token } = this;
+            const { clientToken } = await this.fetch.post('two-fa/resend', {
                 identity,
+                token
             });
 
             if (clientToken) {
                 this.clientToken = clientToken;
                 this.twoFactorSessionExpiresAfter = this.getExpirationDateFromClientToken(clientToken);
                 this.countdownReady = true;
+                this.isCodeExpired = false;
                 this.notifications.success('Verification code resent successfully.');
             } else {
                 this.notifications.error('Unable to send verification code.');
@@ -177,6 +182,45 @@ export default class AuthTwoFaController extends Controller {
             // Handle errors, show error notifications, etc.
             this.notifications.error('Error resending verification code. Please try again.');
         }
+    }
+
+    /**
+     * Cancels the current Two-Fa session and redirects to login screen.
+     *
+     * @returns {Promise<Transition>}
+     * @memberof AuthTwoFaController
+     */
+    @action cancelTwoFactor() {
+        return this.fetch
+            .post('two-fa/invalidate', {
+                identity: this.identity,
+                token: this.token,
+            })
+            .then(({ ok }) => {
+                return this.router.transitionTo('auth.login');
+            });
+    }
+
+    /**
+     * Set that the verification code has expired and allow user to resend.
+     *
+     * @memberof AuthTwoFaController
+     */
+    @action handleCodeExpired() {
+        this.isCodeExpired = true;
+        this.countdownReady = false;
+    }
+
+    /**
+     * Handles the input of the OTP (One-Time Password) and triggers the verification process.
+     *
+     * @param {string} otpValue - The OTP value entered by the user.
+     * @returns {void}
+     * @action
+     */
+    @action handleOtpInput(otpValue) {
+        this.verificationCode = otpValue;
+        this.verifyCode();
     }
 
     /**
@@ -216,10 +260,5 @@ export default class AuthTwoFaController extends Controller {
         const clientTimezoneOffset = new Date().getTimezoneOffset();
         const clientDate = new Date(utcDate.getTime() - clientTimezoneOffset * 60 * 1000);
         return clientDate;
-    }
-
-    @action handleOtpInput(otpValue) {
-        this.verificationCode = otpValue;
-        this.verifyCode();
     }
 }

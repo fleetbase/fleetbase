@@ -4,7 +4,7 @@
     <Layout::Sidebar::Item @route="console.admin.index" @icon="rectangle-list">Overview</Layout::Sidebar::Item>
     <Layout::Sidebar::Item @route="console.admin.branding" @icon="palette">Branding</Layout::Sidebar::Item>
     <Layout::Sidebar::Item @route="console.admin.notifications" @icon="bell">Notifications</Layout::Sidebar::Item>
-    <Layout::Sidebar::Item @route="console.admin.two-fa-settings" @icon="shield">2FA config</Layout::Sidebar::Item>
+    <Layout::Sidebar::Item @route="console.admin.two-fa-settings" @icon="shield">2FA Config</Layout::Sidebar::Item>
     {{#each this.universe.adminMenuItems as |menuItem|}}
         <Layout::Sidebar::Item @onClick={{fn this.universe.transitionMenuItem "console.admin.virtual" menuItem}} @item={{menuItem}} @icon={{menuItem.icon}}>{{menuItem.title}}</Layout::Sidebar::Item>
     {{/each}}

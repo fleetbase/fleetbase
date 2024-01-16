@@ -110,12 +110,22 @@ export default class AuthLoginController extends Controller {
 
         // send request to check for 2fa
         try {
-            let { twoFaSession, isTwoFaEnabled, isTwoFaValidated } = await this.session.checkForTwoFactor(identity);
+            let { twoFaSession, isTwoFaEnabled } = await this.session.checkForTwoFactor(identity);
 
-            if (isTwoFaEnabled && !isTwoFaValidated) {
-                return this.session.store.persist({ identity }).then(() => {
-                    return this.router.transitionTo('auth.two-fa', { queryParams: { token: twoFaSession } });
-                });
+            if (isTwoFaEnabled) {
+                return this.session.store
+                    .persist({ identity })
+                    .then(() => {
+                        return this.router.transitionTo('auth.two-fa', { queryParams: { token: twoFaSession } }).then(() => {
+                            this.reset('success');
+                        });
+                    })
+                    .catch((error) => {
+                        this.notifications.serverError(error);
+                        this.reset('error');
+
+                        throw error;
+                    });
             }
         } catch (error) {
             return this.notifications.serverError(error);
