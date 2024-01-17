@@ -120,17 +120,17 @@ export default class ConsoleController extends Controller {
             if (this.sidebarContext) {
                 // Determine if the new route should hide the sidebar
                 const shouldHideSidebar = this.hiddenSidebarRoutes.includes(transition.to.name);
-    
+
                 // Check if the sidebar was manually toggled and is currently closed
                 const isSidebarManuallyClosed = this.sidebarToggleState.clicked && !this.sidebarToggleState.isOpen;
-    
+
                 // Hide the sidebar if the current route is in hiddenSidebarRoutes
                 if (shouldHideSidebar) {
                     this.sidebarContext.hideNow();
                     this.sidebarToggleEnabled = false;
                     return; // Exit early as no further action is required
                 }
-    
+
                 // If the sidebar was manually closed and not on a hidden route, keep it closed
                 if (isSidebarManuallyClosed) {
                     this.sidebarContext.hideNow();
@@ -138,7 +138,7 @@ export default class ConsoleController extends Controller {
                     // Otherwise, show the sidebar
                     this.sidebarContext.show();
                 }
-    
+
                 // Ensure toggle is enabled unless on a hidden route
                 this.sidebarToggleEnabled = !shouldHideSidebar;
             }
@@ -155,7 +155,7 @@ export default class ConsoleController extends Controller {
     @action onSidebarToggle(sidebar, isOpen) {
         this.sidebarToggleState = {
             clicked: true,
-            isOpen
+            isOpen,
         };
     }
 
