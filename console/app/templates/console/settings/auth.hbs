@@ -1,2 +1,34 @@
-{{page-title "Auth"}}
-{{outlet}}
+{{page-title "Organization Auth"}}
+<Layout::Section::Header @title="Organization Auth" />
+
+<Layout::Section::Body class="overflow-y-scroll h-full">
+    <div class="container mx-auto h-screen" {{increase-height-by 500}}>
+        <div class="max-w-3xl my-10 mx-auto space-y-6">
+
+            <ContentPanel @title="Enforce 2FA Settings For All Users" @open={{true}} @pad={{true}} @panelBodyClass="bg-white dark:bg-gray-800">
+                <div class="mb-3">
+                    {{#if this.loadCompanyTwoFaSettings.isIdle}}
+                        <TwoFaSettings
+                            @twoFaMethods={{this.methods}}
+                            @twoFaSettings={{this.twoFaSettings}}
+                            @onTwoFaToggled={{this.onTwoFaToggled}}
+                            @onTwoFaMethodSelected={{this.onTwoFaMethodSelected}}
+                        />
+                    {{else}}
+                        <div class="flex items-center justify-center p-4">
+                            <Spinner @loadingMessage="Loading User 2FA Settings..." @wrapperClass="flex flex-row" @iconClass="mr-2" />
+                        </div>
+                    {{/if}}
+                </div>
+                <Button
+                    @type="primary"
+                    @buttonType="submit"
+                    @text="Save 2FA Settings"
+                    @icon="save"
+                    @onClick={{this.enforceTwoFaForCompanyUsersAction}}
+                    @isLoading={{this.enforceTwoFaForCompanyUsersAction.isRunning}}
+                />
+            </ContentPanel>
+        </div>
+    </div>
+</Layout::Section::Body>
