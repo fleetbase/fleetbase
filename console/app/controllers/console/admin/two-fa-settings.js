@@ -86,10 +86,10 @@ export default class ConsoleAdminTwoFaSettingsController extends Controller {
      * Action method triggered when Two-Factor Authentication enforcement is toggled.
      *
      * @action
-     * @param {Boolean} isEnabled - The new state of Two-Factor Authentication.
+     * @param {Boolean} isEnforced - The new state of Two-Factor Authentication.
      */
-    @action onTwoFaEnforcedToggled(isEnabled) {
-        this.onTwoFaEnforcedToggled = isEnabled;
+    @action onTwoFaEnforcedToggled(isEnforced) {
+        this.isTwoFaEnforced = isEnforced;
     }
 
     /**
