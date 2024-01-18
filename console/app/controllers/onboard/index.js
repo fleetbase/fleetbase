@@ -124,17 +124,18 @@ export default class OnboardIndexController extends Controller {
 
         return this.fetch
             .post('onboard/create-account', input)
-            .then((response) => {
-                if (response.status === 'success') {
-                    this.session.isOnboarding().manuallyAuthenticate(response.token);
+            .then(({ status, skipVerification, token, session }) => {
+                if (status === 'success') {
+                    if (skipVerification === true && token) {
+                        // only manually authenticate if skip verification
+                        this.session.isOnboarding().manuallyAuthenticate(token);
 
-                    if (response.skipVerification === true) {
                         return this.router.transitionTo('console').then(() => {
                             this.notifications.success('Welcome to Fleetbase!');
                         });
                     }
 
-                    return this.router.transitionTo('onboard.verify-email', { queryParams: { hello: response.session } });
+                    return this.router.transitionTo('onboard.verify-email', { queryParams: { hello: session } });
                 }
             })
             .catch((error) => {
