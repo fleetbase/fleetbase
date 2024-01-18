@@ -14,3 +14,6 @@ php artisan sandbox:migrate --force
 
 # Seed database
 php artisan fleetbase:seed
+
+# Restart queue
+php artisan queue:restart
