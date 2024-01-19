@@ -84,6 +84,7 @@ export default class TwoFaSettingsComponent extends Component {
 
         this.showEnforceOption = showEnforceOption === true;
         this.isTwoFaEnabled = twoFaSettings.enabled === true;
+        this.isTwoFaEnforced = twoFaSettings.enforced === true;
         this.selectedTwoFaMethod = userSelectedMethod ? userSelectedMethod.key : DEFAULT_2FA_METHOD;
     }
 
@@ -145,6 +146,14 @@ export default class TwoFaSettingsComponent extends Component {
 
         if (typeof this.args.onTwoFaMethodSelected === 'function') {
             this.args.onTwoFaMethodSelected(...arguments);
+        }
+    }
+
+    @action onRequireUsersToSetUpToggled(isTwoFaEnforced) {
+        this.isTwoFaEnforced = isTwoFaEnforced;
+
+        if (typeof this.args.onTwoFaEnforcedToggled === 'function') {
+            this.args.onTwoFaEnforcedToggled(isTwoFaEnforced);
         }
     }
 }

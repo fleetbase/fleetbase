@@ -189,6 +189,7 @@ export default class ConsoleAccountAuthController extends Controller {
         const twoFaSettings = yield this.fetch.get('users/two-fa');
 
         if (twoFaSettings) {
+            this.isUserTwoFaEnabled = twoFaSettings.enabled;
             this.twoFaSettings = twoFaSettings;
         }
         return twoFaSettings;
@@ -240,7 +241,6 @@ export default class ConsoleAccountAuthController extends Controller {
             });
 
             this.notifications.success('Password change successfully.');
-            this.router.transitionTo('console');
         } catch (error) {
             this.notifications.error('Failed to change password');
         }

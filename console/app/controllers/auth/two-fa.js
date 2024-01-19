@@ -166,7 +166,7 @@ export default class AuthTwoFaController extends Controller {
             const { identity, token } = this;
             const { clientToken } = await this.fetch.post('two-fa/resend', {
                 identity,
-                token
+                token,
             });
 
             if (clientToken) {

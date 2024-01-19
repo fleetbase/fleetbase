@@ -31,6 +31,7 @@ Router.map(function () {
         this.route('settings', function () {
             this.route('virtual', { path: '/:slug/:view' });
             this.route('auth');
+            this.route('two-fa');
         });
         this.route('virtual', { path: '/:slug/:view' });
         this.route('admin', function () {
@@ -52,22 +53,22 @@ Router.map(function () {
 
         this.mount('@fleetbase/dev-engine', {
             as: 'developers',
-            path: 'developers'
+            path: 'developers',
         });
 
         this.mount('@fleetbase/iam-engine', {
             as: 'iam',
-            path: 'iam'
+            path: 'iam',
         });
 
         this.mount('@fleetbase/fleetops-engine', {
             as: 'fleet-ops',
-            path: 'fleet-ops'
+            path: 'fleet-ops',
         });
 
         this.mount('@fleetbase/storefront-engine', {
             as: 'storefront',
-            path: 'storefront'
+            path: 'storefront',
         });
     });
     this.route('install');

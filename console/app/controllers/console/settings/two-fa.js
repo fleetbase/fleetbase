@@ -1,17 +1,11 @@
 import Controller from '@ember/controller';
-import { inject as service } from '@ember/service';
-import { action } from '@ember/object';
 import { tracked } from '@glimmer/tracking';
+import { action } from '@ember/object';
+import { inject as service } from '@ember/service';
 import { task } from 'ember-concurrency-decorators';
 import getTwoFaMethods from '@fleetbase/console/utils/get-two-fa-methods';
 
-/**
- * Controller responsible for handling Two-Factor Authentication settings in the admin console.
- *
- * @class ConsoleAdminTwoFaSettingsController
- * @extends Controller
- */
-export default class ConsoleAdminTwoFaSettingsController extends Controller {
+export default class ConsoleSettingsTwoFaController extends Controller {
     /**
      * Service for handling data fetching.
      *
@@ -48,6 +42,13 @@ export default class ConsoleAdminTwoFaSettingsController extends Controller {
     @tracked isSystemTwoFaEnabled = false;
 
     /**
+     * Flag indicating whether system-wide two-factor authentication is enabled.
+     *
+     * @type {boolean}
+     */
+    @tracked isUserTwoFaEnabled = false;
+
+    /**
      * Flag indicating whether 2FA enforcement is required.
      *
      * @type {boolean}
@@ -62,14 +63,6 @@ export default class ConsoleAdminTwoFaSettingsController extends Controller {
     @tracked methods = getTwoFaMethods();
 
     /**
-     * Tracked property for the loading state
-     *
-     * @memberof ConsoleAdminTwoFaSettingsController
-     * @var {Boolean}
-     */
-    @tracked isLoading = false;
-
-    /**
      * Constructor method for the ConsoleAccountAuthController.
      *
      * @constructor
@@ -77,6 +70,8 @@ export default class ConsoleAdminTwoFaSettingsController extends Controller {
     constructor() {
         super(...arguments);
         this.loadSystemTwoFaConfig.perform();
+        this.loadCompanyTwoFaSettings.perform();
+        this.loadUserTwoFaSettings.perform();
     }
 
     /**
@@ -119,18 +114,26 @@ export default class ConsoleAdminTwoFaSettingsController extends Controller {
     }
 
     /**
-     * Handles the event when 2FA enforcement is toggled.
-     *
-     * @method onTwoFaEnforceToggled
-     */
-
-    /**
      * Initiates the task to save user-specific two-factor authentication settings asynchronously.
      *
-     * @method saveTwoFactorAuthSettings
+     * @method saveTwoFactor
      */
-    @action saveSettings() {
-        this.saveTwoFactorSettingsForAdmin.perform(this.twoFaSettings);
+    @action saveTwoFactor() {
+        this.saveTwoFactorSettingsForCompany.perform(this.twoFaSettings);
+    }
+
+    /**
+     * Initiates the task to load user-specific two-factor authentication settings asynchronously.
+     *
+     * @method loadUserTwoFaSettings
+     */
+    @task *loadCompanyTwoFaSettings() {
+        const twoFaSettings = yield this.fetch.get('companies/two-fa');
+        if (twoFaSettings) {
+            this.twoFaSettings = twoFaSettings;
+            this.isTwoFaEnforced = twoFaSettings.enforced;
+        }
+        return twoFaSettings;
     }
 
     /**
@@ -138,35 +141,44 @@ export default class ConsoleAdminTwoFaSettingsController extends Controller {
      *
      * @method loadSystemTwoFaConfig
      */
-
     @task *loadSystemTwoFaConfig() {
-        const twoFaSettings = yield this.fetch.get('two-fa/config').catch((error) => {
-            this.notifications.serverError(error);
-        });
+        const twoFaConfig = yield this.fetch.get('two-fa/config');
+
+        if (twoFaConfig) {
+            this.isSystemTwoFaEnabled = twoFaConfig.enabled;
+            this.twoFaConfig = twoFaConfig;
+        }
+        return twoFaConfig;
+    }
+
+    /**
+     * Initiates the task to load user-specific two-factor authentication settings asynchronously.
+     *
+     * @method loadUserTwoFaSettings
+     */
+    @task *loadUserTwoFaSettings() {
+        const twoFaSettings = yield this.fetch.get('users/two-fa');
         if (twoFaSettings) {
+            this.isUserTwoFaEnabled = twoFaSettings.enabled;
             this.twoFaSettings = twoFaSettings;
         }
-
         return twoFaSettings;
     }
 
     /**
-     * Initiates the task to save user-specific two-factor authentication settings asynchronously.
+     * Initiates the task to save user-specific two-factor authentication settings for the company asynchronously.
      *
-     * @method saveTwoFactorSettingsForAdmin
+     * @method saveTwoFactorSettingsForCompany
      * @param {Object} twoFaSettings - User-specific two-factor authentication settings.
      */
-    @task *saveTwoFactorSettingsForAdmin(twoFaSettings = {}) {
+    @task *saveTwoFactorSettingsForCompany(twoFaSettings = {}) {
         yield this.fetch
-            .post('two-fa/config', { twoFaSettings })
+            .post('companies/two-fa', { twoFaSettings })
             .then(() => {
-                this.notifications.success('2FA Settings saved for admin successfully.');
+                this.notifications.success('2FA Settings saved for organization successfully.');
             })
             .catch((error) => {
                 this.notifications.serverError(error);
-            })
-            .finally(() => {
-                this.isLoading = false;
             });
     }
 }

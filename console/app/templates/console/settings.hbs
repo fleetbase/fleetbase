@@ -2,7 +2,7 @@
 <EmberWormhole @to="sidebar-menu-items">
     <Layout::Sidebar::Panel @open={{true}} @title="Settings">
         <Layout::Sidebar::Item @route="console.settings.index" @icon="cog">Organization</Layout::Sidebar::Item>
-        <Layout::Sidebar::Item @route="console.settings.auth" @icon="key">Auth</Layout::Sidebar::Item>
+        <Layout::Sidebar::Item @route="console.settings.two-fa" @icon="shield">Two Factor</Layout::Sidebar::Item>
         {{#each this.universe.settingsMenuItems as |menuItem|}}
             <Layout::Sidebar::Item
                 @onClick={{fn this.universe.transitionMenuItem "console.settings.virtual" menuItem}}

@@ -6,15 +6,6 @@
         <div class="max-w-3xl my-10 mx-auto space-y-6">
             <ContentPanel @title="Change Password" @open={{true}} @pad={{true}} @panelBodyClass="bg-white dark:bg-gray-800">
                 {{#if this.isPasswordValidated}}
-                    <form id="validate-password-form" aria-label="validate-password" {{on "submit" this.validatePassword}}>
-                        <legend class="mb-3">Validate Current Password</legend>
-                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
-                            <InputGroup @name="Password" @type="password" @value={{this.password}} />
-                            <InputGroup @name="Confirm Password" @type="password" @value={{this.confirmPassword}} />
-                        </div>
-                        <Button @type="primary" @buttonType="submit" @text="Continue" @icon="check" {{on "click" this.validatePassword}} />
-                    </form>
-                {{else}}
                     <form id="change-password-form" aria-label="change-password" {{on "submit" this.changeUserPassword}}>
                         <legend class="mb-3">Change Password</legend>
                         <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
@@ -22,6 +13,15 @@
                             <InputGroup @name="Confirm Password" @type="password" @value={{this.newConfirmPassword}} />
                         </div>
                         <Button @type="primary" @buttonType="submit" @text="Confirm & Change Password" @icon="save" {{on "click" this.changeUserPassword}} />
+                    </form>
+                {{else}}
+                    <form id="validate-password-form" aria-label="validate-password" {{on "submit" this.validatePassword}}>
+                        <legend class="mb-3">Validate Current Password</legend>
+                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                            <InputGroup @name="Password" @type="password" @value={{this.password}} />
+                            <InputGroup @name="Confirm Password" @type="password" @value={{this.confirmPassword}} />
+                        </div>
+                        <Button @type="primary" @buttonType="submit" @text="Continue" @icon="check" {{on "click" this.validatePassword}} />
                     </form>
                 {{/if}}
             </ContentPanel>
