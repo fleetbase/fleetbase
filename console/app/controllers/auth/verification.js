@@ -81,7 +81,7 @@ export default class AuthVerificationController extends Controller {
      *
      * @memberof OnboardVerifyEmailController
      */
-    @tracked waitTimeout = 800 * 60 * 2;
+    @tracked waitTimeout = 60 * 100;
 
     /**
      * Determines if Fleetbase is still awaiting verification after a certain time.
@@ -190,8 +190,10 @@ export default class AuthVerificationController extends Controller {
                 modal.startLoading();
                 const phone = modal.getOption('phone');
 
-                return this.fetch.post('onboard/send-verification-sms', { phone }).then(() => {
+                return this.fetch.post('onboard/send-verification-sms', { phone, session: this.hello }).then(() => {
                     this.notifications.success('Verification code SMS sent!');
+                }).catch((error) => {
+                    this.notifications.serverError(error);
                 });
             },
         });
@@ -211,8 +213,10 @@ export default class AuthVerificationController extends Controller {
                 modal.startLoading();
                 const email = modal.getOption('email');
 
-                return this.fetch.post('onboard/send-verification-email', { email }).then(() => {
+                return this.fetch.post('onboard/send-verification-email', { email, session: this.hello }).then(() => {
                     this.notifications.success('Verification code email sent!');
+                }).catch((error) => {
+                    this.notifications.serverError(error);
                 });
             },
         });
