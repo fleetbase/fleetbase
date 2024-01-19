@@ -1,6 +1,6 @@
 # syntax = docker/dockerfile:1.2
 # Base stage
-FROM php:7.4-fpm-bullseye as base
+FROM php:8.0-fpm-bullseye as base
 
 # Download and install GEOS PHP bindings
 RUN mkdir -p /usr/src/php/ext \
@@ -36,7 +36,9 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 # Set some build ENV variables
 ENV LOG_CHANNEL=stdout
-ENV CACHE_DRIVER=null
+ENV CACHE_DRIVER=redis
+ENV BROADCAST_DRIVER=socketcluster
+ENV QUEUE_CONNECTION=redis
 
 # For development only
 WORKDIR /var/www/html
