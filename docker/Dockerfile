@@ -1,6 +1,6 @@
 # syntax = docker/dockerfile:1.2
 # Base stage
-FROM php:8.0-fpm-bullseye as base
+FROM php:7.4-fpm-bullseye as base
 
 # Download and install GEOS PHP bindings
 RUN mkdir -p /usr/src/php/ext \
