@@ -37,6 +37,13 @@ export default class AuthTwoFaController extends Controller {
     @service session;
 
     /**
+     * Internationalization service.
+     *
+     * @var {Service}
+     */
+    @service intl;
+
+    /**
      * Tracked property for storing the verification token.
      *
      * @property {string} token
@@ -123,7 +130,7 @@ export default class AuthTwoFaController extends Controller {
             const { token, verificationCode, clientToken, identity } = this;
 
             if (!clientToken) {
-                this.notifications.error('Invalid session. Please try again.');
+                this.notifications.error(this.intl.t('auth.two-fa.verify-code.invalid-session-error-notification'));
                 return;
             }
 
@@ -136,17 +143,17 @@ export default class AuthTwoFaController extends Controller {
             });
 
             // If verification is successful, transition to the desired route
-            this.notifications.success('Verification successful!');
+            this.notifications.success(this.intl.t('auth.two-fa.verify-code.verification-successful-notification'));
 
             // authenticate user
-            return this.session.authenticate('authenticator:fleetbase', { authToken }).then((response) => {
+            return this.session.authenticate('authenticator:fleetbase', { authToken }).then(() => {
                 return this.router.transitionTo('console');
             });
         } catch (error) {
             if (error.message.includes('Verification code has expired')) {
-                this.notifications.info('Verification code has expired. Please request a new one.');
+                this.notifications.info(this.intl.t('auth.two-fa.verify-code.verification-code-expired-notification'));
             } else {
-                this.notifications.error('Verification failed. Please try again.');
+                this.notifications.error(this.intl.t('auth.two-fa.verify-code.verification-code-failed-notification'));
             }
         }
     }
@@ -174,13 +181,13 @@ export default class AuthTwoFaController extends Controller {
                 this.twoFactorSessionExpiresAfter = this.getExpirationDateFromClientToken(clientToken);
                 this.countdownReady = true;
                 this.isCodeExpired = false;
-                this.notifications.success('Verification code resent successfully.');
+                this.notifications.success(this.intl.t('auth.two-fa.resend-code.verification-code-resent-notification'));
             } else {
-                this.notifications.error('Unable to send verification code.');
+                this.notifications.error(this.intl.t('auth.two-fa.resend-code.verification-code-resent-error-notification'));
             }
         } catch (error) {
             // Handle errors, show error notifications, etc.
-            this.notifications.error('Error resending verification code. Please try again.');
+            this.notifications.error(this.intl.t('auth.two-fa.resend-code.verification-code-resent-error-notification'));
         }
     }
 
@@ -196,7 +203,7 @@ export default class AuthTwoFaController extends Controller {
                 identity: this.identity,
                 token: this.token,
             })
-            .then(({ ok }) => {
+            .then(() => {
                 return this.router.transitionTo('auth.login');
             });
     }

@@ -1,6 +1,6 @@
 {{page-title "Account"}}
 <EmberWormhole @to="sidebar-menu-items">
-    <Layout::Sidebar::Panel @open={{true}} @title="Account">
+    <Layout::Sidebar::Panel @open={{true}} @title={{t "common.account"}}>
         <Layout::Sidebar::Item @route="console.account.index" @icon="user">Profile</Layout::Sidebar::Item>
         <Layout::Sidebar::Item @route="console.account.auth" @icon="key">Auth</Layout::Sidebar::Item>
         {{#each this.universe.accountMenuItems as |menuItem|}}

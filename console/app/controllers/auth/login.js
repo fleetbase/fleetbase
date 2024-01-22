@@ -41,6 +41,13 @@ export default class AuthLoginController extends Controller {
     @service router;
 
     /**
+     * Inject the `intl` service
+     *
+     * @var {Service}
+     */
+    @service intl;
+
+    /**
      * Inject the `fetch` service
      *
      * @var {Service}
@@ -113,12 +120,12 @@ export default class AuthLoginController extends Controller {
 
         // If no password error
         if (!identity) {
-            return this.notifications.warning('Did you forget to enter your email?');
+            return this.notifications.warning(this.intl.t('auth.login.no-identity-notification'));
         }
 
         // If no password error
         if (!password) {
-            return this.notifications.warning('Did you forget to enter your password?');
+            return this.notifications.warning(this.intl.t('auth.login.no-identity-notification'));
         }
 
         // start loader
@@ -156,7 +163,7 @@ export default class AuthLoginController extends Controller {
 
             // Handle unverified user
             if (error.toString().includes('not verified')) {
-                return this.sendUserForEmailVerification(email);
+                return this.sendUserForEmailVerification(identity);
             }
 
             return this.failure(error);
@@ -189,13 +196,13 @@ export default class AuthLoginController extends Controller {
      * Creates an email verification session and transitions user to verification route.
      *
      * @param {String} email
-     * @return {Promise<Transition>} 
+     * @return {Promise<Transition>}
      * @memberof AuthLoginController
      */
     sendUserForEmailVerification(email) {
         return this.fetch.post('auth/create-verification-session', { email, send: true }).then(({ token }) => {
             return this.session.store.persist({ email }).then(() => {
-                this.notifications.warning('Your account needs to be verified to proceed.');
+                this.notifications.warning(this.intl.t('auth.login.unverified-notification'));
                 return this.router
                     .transitionTo('auth.verification', {
                         queryParams: {
@@ -248,7 +255,7 @@ export default class AuthLoginController extends Controller {
      * @void
      */
     slowConnection() {
-        this.notifications.error('Experiencing connectivity issues.');
+        this.notifications.error(this.intl.t('auth.login.slow-connection-message'));
     }
 
     /**

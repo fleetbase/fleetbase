@@ -24,10 +24,10 @@
                 {{#if this.error}}
                     <div class="flex items-center border border-red-900 bg-red-800 text-red-100 px-4 py-1.5 rounded-lg mb-3 shadow-md">
                         <FaIcon @icon="triangle-exclamation" class="text-red-100 mr-2" />
-                        <span>The install failed! Click the button below to retry the install.</span>
+                        <span>{{t "onboard.install.failed-message-sent"}}</span>
                     </div>
                 {{/if}}
-                <Button @type="primary" @icon="play" @size="lg" @text={{if this.error "Retry Install" "Start Install"}} @wrapperClass="flex-1" class="w-full" @onClick={{this.startInstall}} @isLoading={{this.install.isRunning}} @disabled={{this.install.isRunning}} />
+                <Button @type="primary" @icon="play" @size="lg" @text={{if this.error (t "onboard.install.retry-install") (t "onboard.install.start-install") }} @wrapperClass="flex-1" class="w-full" @onClick={{this.startInstall}} @isLoading={{this.install.isRunning}} @disabled={{this.install.isRunning}} />
             </div>
         </div>
     </div>
