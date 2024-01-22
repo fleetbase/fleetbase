@@ -3,6 +3,7 @@ import { action } from '@ember/object';
 import { task } from 'ember-concurrency-decorators';
 import { inject as service } from '@ember/service';
 import { tracked } from '@glimmer/tracking';
+
 /**
  * Glimmer component for handling notification enforcement.
  *

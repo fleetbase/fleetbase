@@ -51,6 +51,15 @@ component:
     message: To enhance the security of your account, your organization requires Two-Factor Authentication (2FA). Enable 2FA in your account settings for an additional layer of protection.
     button-text: Setup 2FA
 auth:
+  two-fa:
+    verify-code:
+      invalid-session-error-notification: Invalid session. Please try again.
+      verification-successful-notification: Verification successful!
+      verification-code-expired-notification: Verification code has expired. Please request a new one.
+      verification-code-failed-notification: Verification failed. Please try again.
+    resend-code: 
+      verification-code-resent-notification: New verification code sent.
+      verification-code-resent-error-notification: Error resending verification code. Please try again.
   forgot-password:
     success-message: Check your email to continue!
     is-sent:  

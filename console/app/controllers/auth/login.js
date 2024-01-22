@@ -163,7 +163,7 @@ export default class AuthLoginController extends Controller {
 
             // Handle unverified user
             if (error.toString().includes('not verified')) {
-                return this.sendUserForEmailVerification(email);
+                return this.sendUserForEmailVerification(identity);
             }
 
             return this.failure(error);
@@ -196,7 +196,7 @@ export default class AuthLoginController extends Controller {
      * Creates an email verification session and transitions user to verification route.
      *
      * @param {String} email
-     * @return {Promise<Transition>} 
+     * @return {Promise<Transition>}
      * @memberof AuthLoginController
      */
     sendUserForEmailVerification(email) {

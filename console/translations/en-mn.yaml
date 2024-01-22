@@ -1,0 +1,178 @@
+app:
+  name: Fleetbase
+
+terms:
+  new: Шинэ
+  sort: Эрэмбэлэх
+  filter: Шүүлт
+  columns: Баганууд
+  settings: Тохиргоо
+  home: Нүүр
+  admin: Админ
+  logout: Гарах
+  dashboard: Тааварлага
+  search: Хайлт
+  search-input: Хайх оруулга
+common: 
+  save-button-text: Өөрчлөлтүүдийг хадгалах
+  new: Шинэ
+  delete: Устгах
+  sort: Эрэмбэлэх
+  filter: Шүүлт
+  columns: Баганууд
+  settings: Тохиргоо
+  home: Нүүр
+  admin: Админ
+  logout: Гарах
+  dashboard: Тааварлага
+  search: Хайлт
+  search-input: Хайх оруулга
+  uploading: Хуулах...
+  profile: Профайл
+  your-profile: Таны Профайл
+  name: Нэр
+  email: Имэйл
+  phone: Таны утасны дугаар
+  date-of-birth: Төрсөн огноо
+  overview: Тойм
+  account: Акаунт
+  branding: Брэндинг
+  notifications: Мэдэгдэл
+  services: Үйлчилгээнүүд
+  mail: Имэйл
+  filesystem: Файл систем
+  queue: Дарааллын жагсаалт
+  socket: Сокет
+  notification-channels: Мэдэгдлийн чиглэл
+  2fa-config: 2FA тохиргоо
+  two-factor: 2 Хувийн
+component: 
+  two-fa-enforcement-alert:
+    message: Таны дансанд нэмэлт аюулгүйн хамгаалалт хийхийн тулд, таны байгууллага 2-хавтай нэвтрэхийг шаарддаг. Нэвтрэх тохиргооны "2FA" хэсэгтэйгээр 2FA-г идэвхжүүлнэ үү.
+    button-text: 2FA тохируулах
+auth:
+  two-fa:
+    verify-code:
+      invalid-session-error-notification: Хүчинтэй хугацаа дууссан байна. Дахин оролдоно уу.
+      verification-successful-notification: Баталгаажсан!
+      verification-code-expired-notification: Баталгаажуулах код хугацаа нь дууссан байна. Дахин авахыг хүсэж байна.
+      verification-code-failed-notification: Баталгаажуулалт амжилтгүй боллоо. Дахин оролдоно уу.
+    resend-code: 
+      verification-code-resent-notification: Шинэ баталгаажуулах код илгээгдлээ.
+      verification-code-resent-error-notification: Баталгаажуулах кодыг дахин илгээхэд алдаа гарлаа. Дахин оролдоно уу.
+  forgot-password:
+    success-message: Имэйлээ шалгаад дараах зааврыг дагаарай!
+    is-sent:  
+      title: Хаалттай!
+      message: <strong>Имэйлээ шалгаарай!</strong><br> Таны имэйл руу илгээсэн сүлжээний холбоосоор таны нууц үгийг сэргээх боломжтой болно. Холбоос нь 15 минут дуусах болно.
+    not-sent:
+      title: Нууц үгээ мартсан уу?
+      message: <strong>Ахин бодохгүй, бид таны тусгай имэйлээ танд илгээж байна.</strong><br> {appName}-д нэвтрэхийн тулд ашиглаж буй имэйл хаягаа оруулна уу, бид танд нууц үг сэргээх зааврыг илгээнэ.
+    form:
+      email-label: Таны имэйл хаяг
+      submit-button: Заавал, Би Магадгүй!
+      nevermind-button: Тийм
+  login:
+    title: Таны акаунт руу нэвтрэх
+    no-identity-notification: Имэйл хаягаа оруулаагүй байна уу?
+    no-password-notification: Нууц үгээ оруулагүй байна уу?
+    unverified-notification: Таны акаунт баталгаажагдсан байх ёстой.
+    failed-attempt:
+      message: <strong>Нууц үгээ мартсан уу?</strong><br> Доорх товч дээр дарж нууц үгээ сэргээхийг хүсэлтэй байна.
+      button-text: Ой, магадгүйтэй болов уу!
+    form:
+      email-label: Имэйл хаяг
+      password-label: Нууц үг
+      remember-me-label: Намайг сана
+      forgot-password-label: Нууц үгээ мартсан уу?
+      sign-in-button: Нэвтрэх
+      create-account-button: Шинэ акаунт үүсгэх
+    slow-connection-message: Холболтын асуудалтай байна.
+  reset-password:
+    success-message: Таны нууц үг амжилттай сэргэгдлээ! Нэвтрэхийн тулд нэвтэрнэ үү.
+    title: Таны нууц үг сэргээх
+    form:
+      code:
+        label: Таны сэргээх код
+        help-text: Имэйлээр авсан баталгаажуулах код.
+      password:
+        label: Шинэ нууц үг
+        help-text: 6-с дээш тэмдэгт агуулсан нууц үг оруулна уу.
+      confirm-password:
+        label: Нууц үгээ давтах
+        help-text: 6-с дээш тэмдэгт агуулсан нууц үг оруулна уу.
+      submit-button: Нууц үг сэргээх
+      back-button: Буцах
+console:
+  account:
+    index: 
+      upload-new: Шинээр байршуулах
+      phone: Таны утасны дугаар.
+      photos: зургууд
+  admin:
+    config:
+      database:
+        title: Датабаз тохиргоо
+      filesystem:
+        title: Файл систем тохиргоо
+      mail:
+        title: Имэйл тохиргоо
+      notification-channels: 
+        title: Мэдэгдлийн чиглэл тохиргоо
+      queue:
+        title: Дарааллын жагсаалт тохиргоо
+      services:
+        title: Үйлчилгээнүүдийн тохиргоо
+      socket:
+        title: Сокет тохиргоо
+    branding:
+      title: Брэндинг
+      icon-text: Зургийн текст
+      upload-new: Шинээр байршуулах
+      reset-default: Эхлэл руу буцаах
+      logo-text: Лого
+      theme: Өглөөний загвар
+    index:
+      total-users: Нийт хэрэглэгчид
+      total-organizations: Нийт байгууллагууд
+      total-transactions: Нийт гүйлгээ
+    notification:
+      title: Мэдэгдэл
+      notification-settings:  Мэдэгдэл тохиргоо
+        
+  settings:
+    index:
+      title: Байгууллагын тохиргоо
+      organization-name: Байгууллагын нэр
+      organization-description: Байгууллагын тайлбар
+      organization-phone: Байгууллагын утасны дугаар
+      organization-currency: Байгууллагын валют
+      organization-id: Байгууллагын дугаар
+      organization-branding: Байгууллагын брэндинг
+      logo: Лого
+      logo-help-text: Таны байгууллагын лого.
+      upload-new-logo: Шинээр лого байршуулах
+      backdrop: Дэлгэц
+      backdrop-help-text: Байгууллагын зурган эсвэл дэлгэц.
+      upload-new-backdrop: Шинээр дэлгэц байршуулах
+  extensions:
+    title: Өргөгдөл багууд хамгаалагдаагүй!
+    message: Та бусад хувилбарууд дээр хүлээж байна уу.
+  notifications:
+    select-all:
+    mark-as-read:
+invite:
+  for-users:
+    invitation-message: Та {companyName}-д оролцох зөвшөөрлөө авсан байна
+    invitation-sent-message: Та {appName}-д {companyName} байгууллагт оролцох зөвшөөрлөө илгээлээ. Илгээлт кодыг имэйлээр авч, үргэлжлүүлнэ үү.
+    invitation-code-sent-text: Таны илгээлтийн код
+    accept-invitation-text: Зөвшөөрлөө авах
+onboard:
+  index:
+    title: Таны данс үүсгэх
+    welcome-title: <strong>{companyName}-д тавтай морилно уу!</strong><br />
+    welcome-text: Дараах дүрэмтэйгээр мэдээллийг бөглөнө үү.
+    fullname: Таны овог нэр
+    email: Таны имэйл хаяг
+    phone: Таны утасны дугаар
+    organization-name: Таны байгууллагын нэр, бүх үйлчилгээнд энэ байгууллагаар ямар ч үйлчилгээг удирдах боломжтой болно, дараа нь та байгууллага үүсг
