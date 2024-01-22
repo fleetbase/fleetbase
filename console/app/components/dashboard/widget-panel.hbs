@@ -1,0 +1,18 @@
+<Overlay @isOpen={{@isOpen}} @onLoad={{this.setOverlayContext}} @position="right" @noBackdrop={{true}} @fullHeight={{true}} @width={{or this.width @width "600px"}}>
+    <Overlay::Header @title={{"Add widgets"}} @hideStatusDot={{true}} @titleWrapperClass="leading-5">
+        <div class="flex flex-1 justify-end">
+            <Button @icon={{"save"}} @type="primary" @text={{"Save Dashboard"}} @onClick={{this.save}} @wrapperClass="mr-2" />
+            <Button @type="default" @icon="times" @helpText={{"Add new widgets to Dashbord"}} @onClick={{this.onPressCancel}} />
+        </div>
+    </Overlay::Header>
+
+    <Overlay::Body @wrapperClass="new-service-rate-overlay-body px-4 space-y-4 pt-4" @increaseInnerBodyHeightBy={{1000}}>
+        <div class="grid grid-cols-3 gap-1 text-xs dark:text-gray-100">
+            <div class="grid grid-cols-2 lg:grid-cols-12 gap-4">
+                {{#each this.widgets as |widget|}}
+                    {{component widget.options.component}}
+                {{/each}}
+            </div>
+        </div>
+    </Overlay::Body>
+</Overlay>

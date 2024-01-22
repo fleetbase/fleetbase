@@ -1,7 +1,10 @@
 <div class="fleetbase-dashboard-grid">
     <div class="grid grid-cols-1 md:grid-cols-12 gap-4">
+        <Button @type="default" @icon="add" @helpText={{"Add new widgets to Dashbord"}} @onClick={{this.openWidget}} />
         {{#each this.dashboards as |dashboard index|}}
             <Dashboard::Create @index={{index}} @dashboard={{dashboard}} />
         {{/each}}
+        <Dashboard::WidgetPanel @isOpen={{this.isOpenWidget}} />
+
     </div>
 </div>

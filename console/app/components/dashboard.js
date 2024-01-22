@@ -11,6 +11,7 @@ export default class DashboardComponent extends Component {
     @tracked extensions;
     @tracked dashboards = [];
     @tracked isLoading;
+    @tracked isOpenWidget = false;
 
     constructor() {
         super(...arguments);
@@ -19,6 +20,7 @@ export default class DashboardComponent extends Component {
 
     @action async loadExtensions() {
         this.extensions = await loadExtensions();
+        console.log('Extensions:', this.extensions);
         this.loadDashboardBuilds.perform();
     }
 
@@ -39,10 +41,16 @@ export default class DashboardComponent extends Component {
 
     @task({ enqueue: true, maxConcurrency: 1 }) *loadDashboardBuilds() {
         const extensionsWithDashboards = this.extensions.filter((extension) => typeof extension.fleetbase?.dashboard === 'string');
+        console.log('Extensions with Dashboards:', extensionsWithDashboards);
 
         for (let i = 0; i < extensionsWithDashboards.length; i++) {
             const extension = extensionsWithDashboards[i];
             yield this.loadDashboard.perform(extension);
         }
+    }
+
+    @action openWidget() {
+        this.isOpenWidget = !this.isOpenWidget;
+        console.log(this.isOpenWidget);
     }
 }

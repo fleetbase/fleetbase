@@ -23,16 +23,16 @@ services:
       SOCKETCLUSTER_WORKERS: 10
       SOCKETCLUSTER_BROKERS: 10
 
-  console:
-    ports:
-      - "4200:4200"
-    volumes:
-      - ./console:/app/console
-    build:
-      context: .
-      dockerfile: console/Dockerfile
-      args:
-        ENVIRONMENT: development
+  # console:
+  #   ports:
+  #     - "4200:4200"
+  #   volumes:
+  #     - ./console:/app/console
+  #   build:
+  #     context: .
+  #     dockerfile: console/Dockerfile
+  #     args:
+  #       ENVIRONMENT: development
 
   application:
     build:

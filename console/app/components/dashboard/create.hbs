@@ -10,13 +10,33 @@
             <Dashboard::QueryParams @params={{@dashboard.queryParams}} @onChange={{this.onQueryParamsChanged}} />
         </div>
     </div>
-    <GridStack @options={{hash float=true animate=true}} @onChange={{this.change}} class="w-full">
 
+    <div class="grid grid-cols-2 lg:grid-cols-12 gap-4">
+        {{#each this.dashboard.widgets as |widget|}}
+            {{component (concat "dashboard/" widget.component) options=widget.options}}
+        {{/each}}
+    </div>
+
+    <GridStack>
+        <GridStackItem @options={{hash x=0 y=0 w=6 h=2}}>
+            Widget #1
+        </GridStackItem>
+    </GridStack>
+
+    <GridStack @options={{hash animate=true column=12 maxRow=10}}>
         {{#each this.dashboard.widgets as |widget index|}}
-            <GridStackItem @options={{hash w=2 h=2}}>
+            <GridStackItem @options={{hash w=3 h=3 autoPosition=true}} class="min-w-16">
                 {{component (concat "dashboard/" widget.component) options=widget.options}}
             </GridStackItem>
         {{/each}}
     </GridStack>
+
+    <WidgetGridStack::WidgetGridStack @options={{hash float=false animate=false}} class="w-full grid gap-4 grid-cols-3 grid-rows-3">
+        {{#each this.dashboard.widgets as |widget index|}}
+            <WidgetGridStack::WidgetGridStackItem @options={{hash w=2 h=2}}>
+                {{component (concat "dashboard/" widget.component) options=widget.options}}
+            </WidgetGridStack::WidgetGridStackItem>
+        {{/each}}
+    </WidgetGridStack::WidgetGridStack>
 
 </div>

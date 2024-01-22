@@ -27,20 +27,17 @@
     },
     "dependencies": {
         "@ember/legacy-built-in-components": "^0.4.1",
-        "@fleetbase/dev-engine": "^0.2.0",
-        "@fleetbase/ember-core": "^0.1.9",
-        "@fleetbase/ember-ui": "^0.2.8",
-        "@fleetbase/fleetops-data": "^0.1.6",
+        "@fleetbase/ember-core": "link:../packages/ember-core",
+        "@fleetbase/ember-ui": "link:../packages/ember-ui",
         "@fleetbase/fleetops-engine": "^0.3.8",
-        "@fleetbase/iam-engine": "^0.0.8",
         "@fleetbase/leaflet-routing-machine": "^3.2.16",
-        "@fleetbase/storefront-engine": "^0.2.6",
         "@fortawesome/ember-fontawesome": "^0.4.1",
         "ember-changeset": "^4.1.2",
         "ember-changeset-validations": "^4.1.1",
         "ember-composable-helpers": "^5.0.0",
         "ember-concurrency": "^3.0.0",
         "ember-concurrency-decorators": "^2.0.3",
+        "ember-gridstack": "^4.0.0",
         "ember-intl": "6.3.2",
         "ember-math-helpers": "^2.18.2",
         "ember-power-select": "^6.0.1",
@@ -48,6 +45,7 @@
         "ember-radio-button": "3.0.0-beta.1",
         "ember-tag-input": "^3.1.0",
         "fleetbase-extensions-indexer": "^0.0.4",
+        "gridstack": "^10.0.1",
         "postcss-at-rules-variables": "^0.3.0",
         "postcss-custom-properties": "^12.1.9",
         "postcss-nth-list": "^1.0.2"
@@ -87,7 +85,6 @@
         "ember-data": "^4.12.5",
         "ember-engines": "^0.8.23",
         "ember-fetch": "^8.1.2",
-        "ember-gridstack": "^4.0.0",
         "ember-leaflet": "^5.1.1",
         "ember-load-initializers": "^2.1.2",
         "ember-modifier": "^4.1.0",
@@ -137,8 +134,8 @@
     "pnpm": {
         "overrides": {
             "@fleetbase/fleetops-data": "^0.1.6",
-            "@fleetbase/ember-core": "^0.1.9",
-            "@fleetbase/ember-ui": "^0.2.8"
+            "@fleetbase/ember-core": "link:../packages/ember-core",
+            "@fleetbase/ember-ui": "link:../packages/ember-ui"
         }
     },
     "prettier": {
