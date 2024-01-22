@@ -103,15 +103,11 @@ export default class AuthLoginController extends Controller {
      */
     @tracked failedAttempts = 0;
 
-    /**
-     * Authenticate the user
-     *
-     * @void
-     */
+    @tracked token;
+
     @action async login(event) {
         // firefox patch
         event.preventDefault();
-
         // get user credentials
         const { email, password, rememberMe } = this;
 
@@ -127,12 +123,34 @@ export default class AuthLoginController extends Controller {
 
         // start loader
         this.set('isLoading', true);
-
         // set where to redirect on login
         this.setRedirect();
 
+        // send request to check for 2fa
         try {
-            await this.session.authenticate('authenticator:fleetbase', { email, password }, rememberMe);
+            let { twoFaSession, isTwoFaEnabled } = await this.session.checkForTwoFactor(identity);
+
+            if (isTwoFaEnabled) {
+                return this.session.store
+                    .persist({ identity })
+                    .then(() => {
+                        return this.router.transitionTo('auth.two-fa', { queryParams: { token: twoFaSession } }).then(() => {
+                            this.reset('success');
+                        });
+                    })
+                    .catch((error) => {
+                        this.notifications.serverError(error);
+                        this.reset('error');
+
+                        throw error;
+                    });
+            }
+        } catch (error) {
+            return this.notifications.serverError(error);
+        }
+
+        try {
+            await this.session.authenticate('authenticator:fleetbase', { identity, password }, rememberMe);
         } catch (error) {
             this.failedAttempts++;
 
