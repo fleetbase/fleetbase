@@ -1,16 +1,14 @@
 {{#if this.shouldRender}}
-    <InfoBlock @icon="triangle-exclamation" class="two-fa-enforcement-alert bg-yellow-100 border-2 border-yellow-600 dark:border-yellow-500 rounded-lg">
+    <InfoBlock @icon="triangle-exclamation" class="two-fa-enforcement-alert bg-yellow-100 border-2 border-yellow-600 dark:border-yellow-500 rounded-lg py-3.5 px-5">
         <div class="flex flex-row justify-between">
             <div class="flex-1 pr-2">
-                <p class="text-base dark:text-yellow-900 mb-2">
+                <p class="text-sm dark:text-yellow-900 mb-2">
                     To enhance the security of your account, your organization requires Two-Factor Authentication (2FA). Enable 2FA in your account settings for an additional layer of
                     protection.
                 </p>
             </div>
             <div class="flex-shrink-0">
-                <Button id="two-fa-setup-button" @type="warning" @buttonType="button" @onClick={{this.transitionToTwoFactorSettings}}>
-                    Setup 2FA
-                </Button>
+                <Button id="two-fa-setup-button" @text="Setup 2FA" @icon="shield-halved" @type="warning" @buttonType="button" @onClick={{this.transitionToTwoFactorSettings}} />
             </div>
         </div>
     </InfoBlock>
