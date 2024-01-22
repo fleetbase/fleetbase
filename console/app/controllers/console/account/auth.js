@@ -218,13 +218,13 @@ export default class ConsoleAccountAuthController extends Controller {
     @task *validatePasswordTask() {
         try {
             yield this.fetch.post('users/validate-password', {
-                current_password: this.password,
-                confirm_password: this.confirmPassword,
+                password: this.password,
+                password_confirmation: this.confirmPassword,
             });
 
             this.isPasswordValidated = true;
         } catch (error) {
-            this.notifications.error('Invalid current password.');
+            this.notifications.serverError(error, 'Invalid current password.');
         }
     }
 

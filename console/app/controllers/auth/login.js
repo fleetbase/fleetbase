@@ -109,10 +109,10 @@ export default class AuthLoginController extends Controller {
         // firefox patch
         event.preventDefault();
         // get user credentials
-        const { email, password, rememberMe } = this;
+        const { identity, password, rememberMe } = this;
 
         // If no password error
-        if (!email) {
+        if (!identity) {
             return this.notifications.warning('Did you forget to enter your email?');
         }
 
