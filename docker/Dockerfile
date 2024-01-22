@@ -37,6 +37,8 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 # Set some build ENV variables
 ENV LOG_CHANNEL=stdout
 ENV CACHE_DRIVER=null
+ENV BROADCAST_DRIVER=socketcluster
+ENV QUEUE_CONNECTION=redis
 
 # For development only
 WORKDIR /var/www/html

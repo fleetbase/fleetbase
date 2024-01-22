@@ -1,6 +1,18 @@
 app:
   name: Fleetbase
 
+terms:
+  new: New
+  sort: Sort
+  filter: Filer
+  columns: Columns
+  settings: Settings
+  home: Home
+  admin: Admin
+  logout: Logout
+  dashboard: Dashboard
+  search: Search
+  search-input: Search Input
 common: 
   save-button-text: Save Changes
   new: New
@@ -14,6 +26,7 @@ common:
   logout: Logout
   dashboard: Dashboard
   search: Search
+  search-input: Search Input
   uploading: Uploading...
   profile: Profile
   your-profile: Your Profile
@@ -31,6 +44,12 @@ common:
   queue: Queue
   socket: Socket
   notification-channels: Notification Channels
+  2fa-config: 2FA Config
+  two-factor: Two Factor
+component: 
+  two-fa-enforcement-alert:
+    message: To enhance the security of your account, your organization requires Two-Factor Authentication (2FA). Enable 2FA in your account settings for an additional layer of protection.
+    button-text: Setup 2FA
 auth:
   forgot-password:
     success-message: Check your email to continue!
@@ -46,6 +65,9 @@ auth:
       nevermind-button: Nevermind
   login:
     title: Sign in to your account
+    no-identity-notification: Did you forget to enter your email?
+    no-password-notification: Did you forget to enter your password?
+    unverified-notification: Your account needs to be verified to proceed.
     failed-attempt:
       message: <strong>Forgot your password?</strong><br> Click the button below to reset your password.
       button-text: Ok, help me reset!
@@ -130,9 +152,6 @@ console:
   notifications:
     select-all:
     mark-as-read:
-    
-
-
 invite:
   for-users:
     invitation-message: You've been invited to join {companyName}
@@ -178,9 +197,3 @@ layout:
         view-profile: View profile
         keyboard-shortcuts: Show keyboard shortcuts
         changelog: Changelog
-
-
-phrases:
-  search-input: Search Input
-
-
