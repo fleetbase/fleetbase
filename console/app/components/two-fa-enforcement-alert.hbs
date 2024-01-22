@@ -1,13 +1,15 @@
 {{#if this.shouldRender}}
-    <InfoBlock class="bg-yellow-100 border-none">
-        <div class="flex flex-col md:flex-row items-start">
-            <p class="text-lg dark:text-gray-700 mb-2 md:mb-0">
-                To enhance the security of your account, your organization requires Two-Factor Authentication (2FA). Enable 2FA in your account settings for an additional layer of
-                protection.
-            </p>
-            <div class="flex items-center md:ml-4">
-                <Button class="py-2 px-4 rounded border-none mt-5 whitespace-nowrap" @type="warning" @buttonType="Button" @onClick={{this.transitionToTwoFactorSettings}}>
-                    Enable 2FA
+    <InfoBlock @icon="triangle-exclamation" class="two-fa-enforcement-alert bg-yellow-100 border-2 border-yellow-600 dark:border-yellow-500 rounded-lg">
+        <div class="flex flex-row justify-between">
+            <div class="flex-1 pr-2">
+                <p class="text-base dark:text-yellow-900 mb-2">
+                    To enhance the security of your account, your organization requires Two-Factor Authentication (2FA). Enable 2FA in your account settings for an additional layer of
+                    protection.
+                </p>
+            </div>
+            <div class="flex-shrink-0">
+                <Button id="two-fa-setup-button" @type="warning" @buttonType="button" @onClick={{this.transitionToTwoFactorSettings}}>
+                    Setup 2FA
                 </Button>
             </div>
         </div>

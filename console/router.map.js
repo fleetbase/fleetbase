@@ -30,7 +30,7 @@ Router.map(function () {
         });
         this.route('settings', function () {
             this.route('virtual', { path: '/:slug/:view' });
-            this.route('auth');
+            this.route('two-fa');
         });
         this.route('virtual', { path: '/:slug/:view' });
         this.route('admin', function () {
