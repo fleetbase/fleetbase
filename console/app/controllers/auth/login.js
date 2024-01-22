@@ -41,6 +41,13 @@ export default class AuthLoginController extends Controller {
     @service router;
 
     /**
+     * Inject the `fetch` service
+     *
+     * @var {Service}
+     */
+    @service fetch;
+
+    /**
      * Whether or not to remember the users session
      *
      * @var {Boolean}
@@ -102,7 +109,18 @@ export default class AuthLoginController extends Controller {
         // firefox patch
         event.preventDefault();
         // get user credentials
-        const { identity, password, rememberMe } = this;
+        const { email, password, rememberMe } = this;
+
+        // If no password error
+        if (!email) {
+            return this.notifications.warning('Did you forget to enter your email?');
+        }
+
+        // If no password error
+        if (!password) {
+            return this.notifications.warning('Did you forget to enter your password?');
+        }
+
         // start loader
         this.set('isLoading', true);
         // set where to redirect on login
@@ -135,6 +153,12 @@ export default class AuthLoginController extends Controller {
             await this.session.authenticate('authenticator:fleetbase', { identity, password }, rememberMe);
         } catch (error) {
             this.failedAttempts++;
+
+            // Handle unverified user
+            if (error.toString().includes('not verified')) {
+                return this.sendUserForEmailVerification(email);
+            }
+
             return this.failure(error);
         }
 
@@ -158,6 +182,30 @@ export default class AuthLoginController extends Controller {
             if (this.email) {
                 this.forgotPasswordController.email = this.email;
             }
+        });
+    }
+
+    /**
+     * Creates an email verification session and transitions user to verification route.
+     *
+     * @param {String} email
+     * @return {Promise<Transition>} 
+     * @memberof AuthLoginController
+     */
+    sendUserForEmailVerification(email) {
+        return this.fetch.post('auth/create-verification-session', { email, send: true }).then(({ token }) => {
+            return this.session.store.persist({ email }).then(() => {
+                this.notifications.warning('Your account needs to be verified to proceed.');
+                return this.router
+                    .transitionTo('auth.verification', {
+                        queryParams: {
+                            token,
+                        },
+                    })
+                    .then(() => {
+                        this.reset('error');
+                    });
+            });
         });
     }
 

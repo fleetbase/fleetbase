@@ -12,6 +12,7 @@ Router.map(function () {
         this.route('forgot-password');
         this.route('reset-password');
         this.route('two-fa');
+        this.route('verification');
     });
     this.route('onboard', function () {
         this.route('verify-email');
