@@ -1,10 +1,8 @@
 <div class="fleetbase-dashboard-grid">
-    <div class="grid grid-cols-1 md:grid-cols-12 gap-4">
-        <Button @type="default" @icon="add" @helpText={{"Add new widgets to Dashbord"}} @onClick={{this.openWidget}} />
-        {{#each this.dashboards as |dashboard index|}}
-            <Dashboard::Create @index={{index}} @dashboard={{dashboard}} />
-        {{/each}}
-        <Dashboard::WidgetPanel @isOpen={{this.isOpenWidget}} />
-
+    <div class="flex flex-row">
+        <Button @type="default" @icon="add" @helpText={{"Add new widgets to Dashbord"}} @onClick={{this.openWidgetSelector}} />
     </div>
+    <Dashboard::Create @dashboard={{this.currentDashboard}} />
 </div>
+
+<Dashboard::WidgetPanel @isOpen={{this.isSelectingWidgets}} @onLoad={{this.setWidgetSelectorPanelContext}} @dashboard={{this.currentDashboard}} />

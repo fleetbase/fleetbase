@@ -21,6 +21,7 @@
         "lint:hbs:fix": "ember-template-lint . --fix",
         "lint:js": "eslint . --cache",
         "lint:js:fix": "eslint . --fix",
+        "postinstall": "patch-package",
         "start": "pnpm run prebuild && ember serve",
         "test": "concurrently \"npm:lint\" \"npm:test:*\" --names \"lint,test:\"",
         "test:ember": "ember test"
@@ -29,7 +30,6 @@
         "@ember/legacy-built-in-components": "^0.4.1",
         "@fleetbase/ember-core": "link:../packages/ember-core",
         "@fleetbase/ember-ui": "link:../packages/ember-ui",
-        "@fleetbase/fleetops-engine": "^0.3.8",
         "@fleetbase/leaflet-routing-machine": "^3.2.16",
         "@fortawesome/ember-fontawesome": "^0.4.1",
         "ember-changeset": "^4.1.2",
@@ -45,7 +45,8 @@
         "ember-radio-button": "3.0.0-beta.1",
         "ember-tag-input": "^3.1.0",
         "fleetbase-extensions-indexer": "^0.0.4",
-        "gridstack": "^10.0.1",
+        "gridstack": "^7.2.2",
+        "patch-package": "^8.0.0",
         "postcss-at-rules-variables": "^0.3.0",
         "postcss-custom-properties": "^12.1.9",
         "postcss-nth-list": "^1.0.2"

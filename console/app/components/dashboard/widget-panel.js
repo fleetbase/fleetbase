@@ -1,28 +1,20 @@
 import Component from '@glimmer/component';
+import { tracked } from '@glimmer/tracking';
 import { inject as service } from '@ember/service';
 import { action } from '@ember/object';
-import { tracked } from '@glimmer/tracking';
 
 export default class DashboardWidgetPanelComponent extends Component {
-    @tracked isLoading = false;
-    @tracked isOpen = false;
     @service universe;
+    @tracked availableWidgets = [];
 
     /**
      * Constructs the component and applies initial state.
      */
-    constructor() {
+    constructor(owner, { dashboard }) {
         super(...arguments);
 
-        console.log(this.args);
-    }
-
-    didReceiveArguments() {
-        if (this.args.isOpen !== this.isOpen) {
-            // Handle the change in isOpen here
-            this.isOpen = this.args.isOpen;
-            console.log('Parent isOpen changed:', this.isOpen);
-        }
+        this.availableWidgets = this.universe.getWidgets();
+        this.dashboard = dashboard;
     }
 
     /**
@@ -33,19 +25,15 @@ export default class DashboardWidgetPanelComponent extends Component {
      */
     @action setOverlayContext(overlayContext) {
         this.context = overlayContext;
-        console.log('Context: ', this.context, arguments);
+
         if (typeof this.args.onLoad === 'function') {
             this.args.onLoad(...arguments);
         }
     }
 
-    /**
-     * Saves the widget changes.
-     *
-     * @action
-     * @returns {Promise<any>}
-     */
-    @action save() {}
+    @action addWidgetToDashboard(widget) {
+        this.dashboard.addWidget(widget);
+    }
 
     /**
      * Handles cancel button press.
@@ -54,11 +42,17 @@ export default class DashboardWidgetPanelComponent extends Component {
      * @returns {any}
      */
     @action onPressCancel() {
+        this.context.close();
         // return contextComponentCallback(this, 'onPressCancel', this.widget);
     }
 
-    get widgets() {
-        console.log(this.universe.getWidgets());
-        return this.universe.getWidgets();
+    @action onDragToDashboard(item) {
+        console.log('Event: ', item);
+    }
+
+    myClone(event) {
+        const el = event.target.cloneNode(true);
+        el.setAttribute('gs-id', 'foo'); // TEST why clone element is not used directly on drop #2231
+        return el;
     }
 }

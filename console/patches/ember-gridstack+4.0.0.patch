@@ -1,0 +1,34 @@
+diff --git a/node_modules/ember-gridstack/addon/components/grid-stack.js b/node_modules/ember-gridstack/addon/components/grid-stack.js
+index fa51392..ed247af 100644
+--- a/node_modules/ember-gridstack/addon/components/grid-stack.js
++++ b/node_modules/ember-gridstack/addon/components/grid-stack.js
+@@ -40,7 +40,7 @@ export const GRID_STACK_EVENTS = [
+   'removed',
+   'resizestart',
+   'resize',
+-  'resizestop',
++  'resizestop'
+ ];
+ 
+ export default class GridStackComponent extends Component {
+@@ -52,6 +52,7 @@ export default class GridStackComponent extends Component {
+   constructor() {
+     super(...arguments);
+     this.gridStackRegistry.registerGrid(this.guid, this);
++    
+   }
+ 
+   get options() {
+@@ -93,6 +94,12 @@ export default class GridStackComponent extends Component {
+   _createGridStack() {
+     this.gridStack = GridStack.init({ ...this.options }, this.elm);
+ 
++    if(this.dragInOptions){
++      const { selector, options } = this.dragInOptions
++      console.log("Setup Drag in: ", this.dragInOptions)
++      this.gridStack?.setupDragIn(selector, options);
++    }
++
+     GRID_STACK_EVENTS.forEach((eventName) => {
+       const action = this.args[`on${capitalize(eventName)}`];
+ 

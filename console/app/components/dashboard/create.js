@@ -2,40 +2,111 @@ import Component from '@glimmer/component';
 import { tracked } from '@glimmer/tracking';
 import { inject as service } from '@ember/service';
 import { action } from '@ember/object';
-import { isArray } from '@ember/array';
+import { isArray, A } from '@ember/array';
 import { task } from 'ember-concurrency-decorators';
+import FleetbaseBlogComponent from '../fleetbase-blog';
+import GithubCardComponent from '../github-card';
+import DashboardCountComponent from './count';
 
 export default class DashboardCreateComponent extends Component {
-    @service fetch;
-    @tracked isLoading = false;
     @tracked dashboard;
 
-    constructor() {
+    constructor(owner, { dashboard }) {
         super(...arguments);
-        this.dashboard = this.args.dashboard;
+
+        this.dashboard = {
+            title: 'Fleetops stats',
+            widgets: [
+                {
+                    name: 'Blog',
+                    component: FleetbaseBlogComponent,
+                    gridOptions: { w: 8, h: 3, minW: 2 },
+                    options: {},
+                },
+                {
+                    name: 'Github',
+                    component: GithubCardComponent,
+                    gridOptions: { w: 4, h: 3, minW: 2 },
+                    options: {},
+                },
+                {
+                    name: 'Blog',
+                    component: DashboardCountComponent,
+                    gridOptions: { w: 2, h: 2, minW: 2 },
+                    options: {
+                        format: 'money',
+                        value: '150',
+                        currency: '$',
+                    },
+                },
+                {
+                    name: 'Blog',
+                    component: DashboardCountComponent,
+                    gridOptions: { w: 2, h: 2, minW: 2 },
+                    options: {
+                        format: 'money',
+                        value: '150',
+                        currency: '$',
+                    },
+                },
+                {
+                    name: 'Blog',
+                    component: DashboardCountComponent,
+                    gridOptions: { w: 2, h: 2, minW: 2 },
+                    options: {
+                        format: 'money',
+                        value: '150',
+                        currency: '$',
+                    },
+                },
+                {
+                    name: 'Blog',
+                    component: DashboardCountComponent,
+                    gridOptions: { w: 2, h: 2, minW: 2 },
+                    options: {
+                        format: 'money',
+                        value: '150',
+                        currency: '$',
+                    },
+                },
+                {
+                    name: 'Blog',
+                    component: DashboardCountComponent,
+                    gridOptions: { w: 2, h: 2, minW: 2 },
+                    options: {
+                        format: 'money',
+                        value: '150',
+                        currency: '$',
+                    },
+                },
+                {
+                    name: 'Blog',
+                    component: DashboardCountComponent,
+                    gridOptions: { w: 2, h: 2, minW: 2 },
+                    options: {
+                        format: 'money',
+                        value: '150',
+                        currency: '$',
+                    },
+                },
+            ],
+        };
+    }
+
+    @action
+    toggleFloat() {
+        this.shouldFloat = !this.shouldFloat;
     }
 
     @action onQueryParamsChanged(changedParams) {
         this.reloadDashboard.perform(changedParams);
     }
 
-    @task *reloadDashboard(params) {
-        const { extension } = this.args.dashboard;
-        const index = this.args.index;
-        let dashboards = [];
+    @action onChangeGrid(event) {
+        console.log('Grid Stack event: ', event);
+    }
 
-        this.isLoading = true;
-
-        try {
-            dashboards = yield this.fetch.get(extension.fleetbase.dashboard, params, { namespace: '' });
-        } catch {
-            return;
-        }
-
-        this.isLoading = false;
-
-        if (isArray(dashboards)) {
-            this.dashboard = dashboards.objectAt(index);
-        }
+    @action onDragToDashboard(event) {
+        console.log('Grid Stack drag event: ', event);
     }
 }
