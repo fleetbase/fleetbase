@@ -81,7 +81,7 @@ export default class AuthVerificationController extends Controller {
      *
      * @memberof OnboardVerifyEmailController
      */
-    @tracked waitTimeout = 60 * 100;
+    @tracked waitTimeout = 1000 * 60 * 1.25;
 
     /**
      * Determines if Fleetbase is still awaiting verification after a certain time.
