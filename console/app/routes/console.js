@@ -26,6 +26,13 @@ export default class ConsoleRoute extends Route {
     @service session;
 
     /**
+     * Inject the `intl` service
+     *
+     * @var {Service}
+     */
+    @service intl;
+
+    /**
      * Inject the `currentUser` service
      *
      * @var {Service}
@@ -72,6 +79,12 @@ export default class ConsoleRoute extends Route {
     @action setupController(controller, model) {
         super.setupController(controller, model);
 
+        // Get and set user locale
+        this.fetch.get('users/locale').then(({ locale }) => {
+            this.intl.setLocale(locale);
+        });
+
+        // Get user organizations
         this.fetch.get('auth/organizations').then((organizations) => {
             this.currentUser.setOption('organizations', organizations);
             controller.organizations = organizations;

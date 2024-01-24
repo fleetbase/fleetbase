@@ -1,6 +1,6 @@
 {
     "name": "@fleetbase/console",
-    "version": "0.3.7",
+    "version": "0.3.8",
     "private": true,
     "description": "Fleetbase Console",
     "repository": "https://github.com/fleetbase/fleetbase",
@@ -21,6 +21,7 @@
         "lint:hbs:fix": "ember-template-lint . --fix",
         "lint:js": "eslint . --cache",
         "lint:js:fix": "eslint . --fix",
+        "lint:intl": "fleetbase-intl-lint",
         "start": "pnpm run prebuild && ember serve",
         "test": "concurrently \"npm:lint\" \"npm:test:*\" --names \"lint,test:\"",
         "test:ember": "ember test"
@@ -28,11 +29,11 @@
     "dependencies": {
         "@fleetbase/ember-core": "^0.2.0",
         "@fleetbase/ember-ui": "^0.2.9",
-        "@fleetbase/storefront-engine": "^0.2.7",
-        "@fleetbase/fleetops-engine": "^0.4.0",
+        "@fleetbase/storefront-engine": "^0.2.8",
+        "@fleetbase/fleetops-engine": "^0.4.1",
         "@fleetbase/fleetops-data": "^0.1.7",
-        "@fleetbase/dev-engine": "^0.2.0",
-        "@fleetbase/iam-engine": "^0.0.8",
+        "@fleetbase/dev-engine": "^0.2.1",
+        "@fleetbase/iam-engine": "^0.0.9",
         "@fleetbase/billing-engine": "^0.0.6",
         "@fleetbase/leaflet-routing-machine": "^3.2.16",
         "@ember/legacy-built-in-components": "^0.4.1",
@@ -54,6 +55,7 @@
         "postcss-nth-list": "^1.0.2"
     },
     "devDependencies": {
+        "@fleetbase/intl-lint": "^0.0.1",
         "@babel/core": "^7.23.2",
         "@babel/eslint-parser": "^7.22.15",
         "@babel/plugin-proposal-decorators": "^7.23.2",

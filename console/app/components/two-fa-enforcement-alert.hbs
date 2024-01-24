@@ -1,0 +1,14 @@
+{{#if this.shouldRender}}
+    <InfoBlock @icon="triangle-exclamation" class="two-fa-enforcement-alert bg-yellow-100 border-2 border-yellow-600 dark:border-yellow-500 rounded-lg py-3.5 px-5">
+        <div class="flex flex-row justify-between">
+            <div class="flex-1 pr-2">
+                <p class="text-sm dark:text-yellow-900 mb-2">
+                    {{t "component.two-fa-enforcement-alert.message"}}
+                </p>
+            </div>
+            <div class="flex-shrink-0">
+                <Button id="two-fa-setup-button" @text={{t "component.two-fa-enforcement-alert.button-text"}} @icon="shield-halved" @type="warning" @buttonType="button" @onClick={{this.transitionToTwoFactorSettings}} />
+            </div>
+        </div>
+    </InfoBlock>
+{{/if}}

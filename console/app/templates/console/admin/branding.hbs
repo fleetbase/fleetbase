@@ -1,62 +1,62 @@
-{{page-title "Branding"}}
-<Layout::Section::Header @title="Branding">
-    <Button @type="primary" @size="sm" @icon="save" @text="Save Changes" @onClick={{this.save}} @disabled={{this.isLoading}} @isLoading={{this.isLoading}} />
+{{page-title (t "console.admin.branding.title")}}
+<Layout::Section::Header @title={{t "console.admin.branding.title"}}>
+    <Button @type="primary" @size="sm" @icon="save" @text={{t "common.save-button-text"}} @onClick={{this.save}} @disabled={{this.isLoading}} @isLoading={{this.isLoading}} />
 </Layout::Section::Header>
 
 <Layout::Section::Body class="overflow-y-scroll h-full">
     <div class="container mx-auto h-screen" {{increase-height-by 300}}>
-        <div class="max-w-3xl my-10 mx-auto space-y-">
-            <ContentPanel @title="Branding" @open={{true}} @pad={{true}} @panelBodyClass="bg-white dark:bg-gray-800">
+        <div class="max-w-3xl my-10 mx-auto space-y-6">
+            <ContentPanel @title={{t "console.admin.branding.title"}} @open={{true}} @pad={{true}} @panelBodyClass="bg-white dark:bg-gray-800">
                 <form class="flex flex-col" {{on "submit" this.save}}>
                     <div class="input-group">
-                        <label>Icon</label>
+                        <label>{{t "console.admin.branding.icon-text"}}</label>
                         <div class="flex flex-row items-center space-x-2">
                             <Image src={{@model.icon_url}} @fallbackSrc="/images/icon.png" alt={{t "app.name"}} width="32" height="32" class="w-8 h-8 shadow-sm" />
-                            <FileUpload @name="icon" @accept="image/*" @onFileAdded={{this.uploadIcon}} @labelClass="flex flex-row items-center justify-center mb-0i" as |queue|>
+                            <FileUpload @name={{t "console.admin.branding.icon-text"}} @accept="image/*" @onFileAdded={{this.uploadIcon}} @labelClass="flex flex-row items-center justify-center mb-0i" as |queue|>
                                 <a tabindex={{0}} class="flex items-center px-0 text-xs no-underline truncate btn btn-sm btn-default" disabled={{queue.files.length}}>
                                     {{#if queue.files.length}}
                                         <div class="mr-1.5">
                                             <Spinner />
                                         </div>
                                         <span>
-                                            Uploading...
+                                            {{t "common.uploading"}}
                                         </span>
                                     {{else}}
                                         <FaIcon @icon="image" class="mr-1.5" />
                                         <span>
-                                            Upload new
+                                            {{t "console.admin.branding.upload-new"}}
                                         </span>
                                     {{/if}}
                                 </a>
                             </FileUpload>
                         </div>
-                        <a href="javascript:;" class="text-danger text-xs mt-1" {{on "click" this.unsetIcon}}>Reset to default</a>
+                        <a href="javascript:;" class="text-danger text-xs mt-1" {{on "click" this.unsetIcon}}>{{t "console.admin.branding.reset-default"}}</a>
                     </div>
                     <div class="input-group">
-                        <label>Logo</label>
+                        <label>{{t "console.admin.branding.logo-text"}}</label>
                         <div class="flex flex-row items-center space-x-2">
                             <Image src={{@model.logo_url}} @fallbackSrc="/images/fleetbase-logo-svg.svg" alt={{t "app.name"}} width="160" height="56" class="w-40 h-14" />
-                            <FileUpload @name="logo" @accept="image/*" @onFileAdded={{this.uploadLogo}} @labelClass="flex flex-row items-center justify-center mb-0i" as |queue|>
+                            <FileUpload @name={{t "console.admin.branding.logo-text"}} @accept="image/*" @onFileAdded={{this.uploadLogo}} @labelClass="flex flex-row items-center justify-center mb-0i" as |queue|>
                                 <a tabindex={{0}} class="flex items-center px-0 text-xs no-underline truncate btn btn-sm btn-default" disabled={{queue.files.length}}>
                                     {{#if queue.files.length}}
                                         <div class="mr-1.5">
                                             <Spinner />
                                         </div>
                                         <span>
-                                            Uploading...
+                                            {{t "common.uploading"}}
                                         </span>
                                     {{else}}
                                         <FaIcon @icon="image" class="mr-1.5" />
                                         <span>
-                                            Upload new
+                                            {{t "console.admin.branding.upload-new"}}
                                         </span>
                                     {{/if}}
                                 </a>
                             </FileUpload>
                         </div>
-                        <a href="javascript:;" class="text-danger text-xs mt-1" {{on "click" this.unsetLogo}}>Reset to default</a>
+                        <a href="javascript:;" class="text-danger text-xs mt-1" {{on "click" this.unsetLogo}}>{{t "console.admin.branding.reset-default"}}</a>
                     </div>
-                    <InputGroup @name="Default Theme">
+                    <InputGroup @name={{t "console.admin.branding.theme"}}>
                         <Select @value={{@model.default_theme}} @onSelect={{this.setTheme}} @options={{this.themeOptions}} />
                     </InputGroup>
                 </form>

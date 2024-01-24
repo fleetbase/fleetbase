@@ -1,10 +1,11 @@
-{{page-title "Console"}}
+{{page-title (t "app.name")}}
 <Layout::Container>
     <Layout::Header @brand={{@model}} @user={{this.user}} @organizations={{this.organizations}} @menuItems={{this.universe.headerMenuItems}} @extensions={{this.extensions}} @onAction={{this.onAction}} @showSidebarToggle={{true}} @sidebarToggleEnabled={{this.sidebarToggleEnabled}} @onSidebarToggle={{this.onSidebarToggle}} />
     <Layout::Main>
         <Layout::Sidebar @onSetup={{this.setSidebarContext}}>
             <div class="next-sidebar-content-inner">
-                <div role="menu" id="sidebar-menu-items"></div>
+                <div role="menu" id="sidebar-menu-items">
+                </div>
             </div>
         </Layout::Sidebar>
         <Layout::Section>
@@ -13,3 +14,8 @@
     </Layout::Main>
     <Layout::MobileNavbar @brand={{@model}} @user={{this.user}} @organizations={{this.organizations}} @menuItems={{this.universe.headerMenuItems}} @extensions={{this.extensions}} @onAction={{this.onAction}} />
 </Layout::Container>
+
+{{!-- Add Locale Selector to Header --}}
+<EmberWormhole @to="view-header-actions">
+    <LocaleSelector class="mr-0.5" />
+</EmberWormhole>
