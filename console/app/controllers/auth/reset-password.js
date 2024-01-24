@@ -26,6 +26,13 @@ export default class AuthResetPasswordController extends Controller {
     @service router;
 
     /**
+     * Inject the `intl` service
+     *
+     * @memberof AuthResetPasswordController
+     */
+    @service intl;
+
+    /**
      * The code param.
      *
      * @memberof AuthResetPasswordController
@@ -70,7 +77,7 @@ export default class AuthResetPasswordController extends Controller {
         this.fetch
             .post('auth/reset-password', { link: id, code, password, password_confirmation })
             .then(() => {
-                this.notifications.success('Your password has been reset! Login to continue.');
+                this.notifications.success(this.intl.t('auth.reset-password.success-message'));
 
                 return this.router.transitionTo('auth.login');
             })
