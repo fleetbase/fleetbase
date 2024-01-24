@@ -9,6 +9,7 @@
                     {{#if this.loadCompanyTwoFaSettings.isIdle}}
                         <TwoFaSettings
                             @showEnforceOption={{true}}
+                            @showMethodSelection={{false}}
                             @twoFaMethods={{this.methods}}
                             @twoFaSettings={{this.twoFaSettings}}
                             @onTwoFaToggled={{this.onTwoFaToggled}}
