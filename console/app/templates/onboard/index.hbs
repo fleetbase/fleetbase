@@ -20,8 +20,8 @@
         {{#if this.error}}
             <InfoBlock @icon="exclamation-triangle" @text={{this.error}} class="mb-6 px-3 py-2 bg-red-300 text-red-900" @textClass="text-red-900" />
         {{/if}}
-        <InputGroup @name={{t "common.full-name"}} @value={{this.name}} @helpText={{t "onboard.index.fullname"}} @inputClass="input-lg" />
-        <InputGroup @name={{t "onboard.index.your-email"}} @type="email" @value={{this.email}} @helpText={{t "onboard.index.email"}} @inputClass="input-lg" />
+        <InputGroup @name={{t "onboard.index.full-name"}} @value={{this.name}} @helpText={{t "onboard.index.full-name"}} @inputClass="input-lg" />
+        <InputGroup @name={{t "onboard.index.your-email"}} @type="email" @value={{this.email}} @helpText={{t "onboard.index.your-email"}} @inputClass="input-lg" />
         <InputGroup @name={{t "common.phone"}} @helpText={{t "onboard.index.phone"}}>
             <PhoneInput @onInput={{fn (mut this.phone)}} class="form-input input-lg w-full" />
         </InputGroup>

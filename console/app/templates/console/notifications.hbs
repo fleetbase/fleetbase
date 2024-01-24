@@ -1,4 +1,4 @@
-<Layout::Section::Header @title="Notifications">
+<Layout::Section::Header @title={{t "common.notifications"}}>
     <Button @icon="check-square" @type="default" @text={{t "console.notifications.select-all"}} {{on "click" this.selectAll}} class="mr-2" />
     <Button @icon="envelope" @type="primary" @text={{t "console.notifications.mark-as-read"}} {{on "click" this.read}} class="mr-2" />
     <Button @icon="trash" @type="danger" @text={{t "common.delete"}} {{on "click" this.delete}} />
@@ -26,7 +26,7 @@
                                     <h1 class="text-sm font-semibold antialiased leading-4">{{notification.data.subject}}</h1>
                                     <div class="text-xs antialiased text-gray-900 dark:text-gray-200">- {{notification.data.message}}</div>
                                 </div>
-                                <div class="text-gray-300 text-xs antialiased mt-1">Received: {{notification.createdAgo}}</div>
+                                <div class="text-gray-300 text-xs antialiased mt-1">{{t "console.notifications.received"}} {{notification.createdAgo}}</div>
                             </div>
                         </a>
                         <div>
