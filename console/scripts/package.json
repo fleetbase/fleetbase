@@ -1,0 +1,13 @@
+{
+  "name": "fleetops-scripts",
+  "version": "1.0.0",
+  "description": "Node scripts for maintaining and analyzing the fleetops extension",
+  "scripts": {
+    "intl-lint": "node ./intl-lint.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "js-yaml": "^4.1.0"
+  }
+}
