@@ -1,4 +1,3 @@
-import { getOwner } from '@ember/application';
 import config from 'ember-get-config';
 
 export function initialize(owner) {
