@@ -1,3 +1,4 @@
+{{- if .Values.gcp }}
 apiVersion: networking.gke.io/v1
 kind: ManagedCertificate
 metadata:
@@ -15,3 +16,4 @@ spec:
   redirectToHttps:
     enabled: true
     responseCodeName: MOVED_PERMANENTLY_DEFAULT
+{{- end }}
