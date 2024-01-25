@@ -14,83 +14,8 @@ export default class DashboardCreateComponent extends Component {
     constructor(owner, { dashboard }) {
         super(...arguments);
 
-        this.dashboard = {
-            title: 'Fleetops stats',
-            widgets: [
-                {
-                    name: 'Blog',
-                    component: FleetbaseBlogComponent,
-                    gridOptions: { w: 8, h: 3, minW: 2 },
-                    options: {},
-                },
-                {
-                    name: 'Github',
-                    component: GithubCardComponent,
-                    gridOptions: { w: 4, h: 3, minW: 2 },
-                    options: {},
-                },
-                {
-                    name: 'Blog',
-                    component: DashboardCountComponent,
-                    gridOptions: { w: 2, h: 2, minW: 2 },
-                    options: {
-                        format: 'money',
-                        value: '150',
-                        currency: '$',
-                    },
-                },
-                {
-                    name: 'Blog',
-                    component: DashboardCountComponent,
-                    gridOptions: { w: 2, h: 2, minW: 2 },
-                    options: {
-                        format: 'money',
-                        value: '150',
-                        currency: '$',
-                    },
-                },
-                {
-                    name: 'Blog',
-                    component: DashboardCountComponent,
-                    gridOptions: { w: 2, h: 2, minW: 2 },
-                    options: {
-                        format: 'money',
-                        value: '150',
-                        currency: '$',
-                    },
-                },
-                {
-                    name: 'Blog',
-                    component: DashboardCountComponent,
-                    gridOptions: { w: 2, h: 2, minW: 2 },
-                    options: {
-                        format: 'money',
-                        value: '150',
-                        currency: '$',
-                    },
-                },
-                {
-                    name: 'Blog',
-                    component: DashboardCountComponent,
-                    gridOptions: { w: 2, h: 2, minW: 2 },
-                    options: {
-                        format: 'money',
-                        value: '150',
-                        currency: '$',
-                    },
-                },
-                {
-                    name: 'Blog',
-                    component: DashboardCountComponent,
-                    gridOptions: { w: 2, h: 2, minW: 2 },
-                    options: {
-                        format: 'money',
-                        value: '150',
-                        currency: '$',
-                    },
-                },
-            ],
-        };
+        this.dashboard = dashboard;
+        console.log('Dashboard in Create: ', this.args.dashboard, dashboard);
     }
 
     @action

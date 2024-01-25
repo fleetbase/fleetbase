@@ -7,22 +7,6 @@
     </Overlay::Header>
 
     <Overlay::Body @wrapperClass="new-service-rate-overlay-body px-4 space-y-4 pt-4" @increaseInnerBodyHeightBy={{1000}}>
-        <GridStack @options={{hash float=true animate=true}} @onChange={{this.onChangeGrid}} @onSetupDragIn={{this.onDragToDashboard}} as |grid|>
-            {{#each this.availableWidgets as |widget|}}
-                <GridStackItem @options={{hash w=4 h=1}}>
-                    <div
-                        class="flex flex-col items-center justify-center rounded-lg border border-gray-200 bg-gray-50 dark:border-gray-700 dark:bg-gray-800 shadow-sm mr-1"
-                        {{on "click" (fn this.addWidgetToDashboard widget)}}
-                    >
-                        <p class="text-lg font-bold dark:text-gray-100 text-black p-4">
-                            {{widget.name}}
-                            widget
-                        </p>
-                    </div>
-                </GridStackItem>
-            {{/each}}
-        </GridStack>
-
         <div class="grid grid-cols-3 gap-1 text-xs dark:text-gray-100">
             {{#each this.availableWidgets as |widget|}}
                 <GridStackItem @options={{widget.gridOptions}}>

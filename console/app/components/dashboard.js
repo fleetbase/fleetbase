@@ -13,12 +13,26 @@ export default class DashboardComponent extends Component {
 
     constructor() {
         super(...arguments);
+        console.log(arguments);
+
         this.loadDashboards.perform();
     }
 
     @task *loadDashboards() {
-        this.dashboards = yield this.store.findAll('dashboard');
-        this.currentDashboard = this.dashboards[0];
+        try {
+            this.dashboards = yield this.store.findAll('dashboard');
+
+            const currentDashboard = this.dashboards[0];
+            console.log(currentDashboard);
+
+            currentDashboard.widgets = yield this.store.query('dashboard-widget', { params: { dashboard_uuid: currentDashboard.uuid } });
+            currentDashboard.widgets = yield this.store.query('dashboard-widget', { dashboard_uuid: currentDashboard.uuid });
+            this.currentDashboard = currentDashboard;
+
+            console.log('Current Dashboard: ', this.currentDashboard);
+        } catch (error) {
+            console.error('Error loading dashboards:', error);
+        }
     }
 
     @action selectDashboard(dashboard) {

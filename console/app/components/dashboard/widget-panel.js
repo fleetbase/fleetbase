@@ -15,6 +15,8 @@ export default class DashboardWidgetPanelComponent extends Component {
 
         this.availableWidgets = this.universe.getWidgets();
         this.dashboard = dashboard;
+
+        console.log(this.dashboard, dashboard, arguments);
     }
 
     /**
@@ -48,11 +50,5 @@ export default class DashboardWidgetPanelComponent extends Component {
 
     @action onDragToDashboard(item) {
         console.log('Event: ', item);
-    }
-
-    myClone(event) {
-        const el = event.target.cloneNode(true);
-        el.setAttribute('gs-id', 'foo'); // TEST why clone element is not used directly on drop #2231
-        return el;
     }
 }
