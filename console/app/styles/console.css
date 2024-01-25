@@ -11,3 +11,13 @@ body[data-theme='dark'] .two-fa-enforcement-alert button#two-fa-setup-button.btn
     color: rgb(254 249 195);
     cursor: default;
 }
+
+.app-version-in-nav {
+    display: flex;
+    align-items: center;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+    font-size: 0.8rem;
+    line-height: 1rem;
+    padding-left: 1rem;
+    padding-top: 0.2rem;
+}
