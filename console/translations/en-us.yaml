@@ -51,6 +51,19 @@ component:
     message: To enhance the security of your account, your organization requires Two-Factor Authentication (2FA). Enable 2FA in your account settings for an additional layer of protection.
     button-text: Setup 2FA
 auth:
+  verification:
+    header-title: Account Verification
+    title: Verify your email address
+    message-text: <strong>Almost done!</strong><br> Check your email for a verification code.
+    verification-code-text: Enter the verification code you received via email.
+    verification-input-label: Verification Code
+    verify-button-text: Verify & Continue
+    didnt-receive-a-code: Didn't receive a code yet?
+    not-sent:
+      message: Didn't receive a code yet?
+      alternative-choice: Use alternaitve options below to verify your account.
+      resend-email: Resend Email
+      send-by-sms: Send by SMS
   two-fa:
     verify-code:
       invalid-session-error-notification: Invalid session. Please try again.
@@ -188,15 +201,18 @@ onboard:
     confirm-password-help-text: Just to confirm the password you entered above.
     continue-button-text: Continue
   verify-email:
+    header-title: Account Verification
     title: Verify your email address
     message-text: <strong>Almost done!</strong><br> Check your email for a verification code.
     verification-code-text: Enter the verification code you received via email.
+    verification-input-label: Verification Code
     verify-button-text: Verify & Continue
+    didnt-receive-a-code: Didn't receive a code yet?
     not-sent:
-      message: Didn't receive an email yet?
+      message: Didn't receive a code yet?
       alternative-choice: Use alternaitve options below to verify your account.
-      resent-button-text: Resend Email
-      sms-button-text: Send by SMS
+      resend-email: Resend Email
+      send-by-sms: Send by SMS
 install:
   installer-header: Installer
   failed-message-sent: The install failed! Click the button below to retry the install.
