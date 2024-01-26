@@ -10,7 +10,7 @@ Router.map(function () {
     this.route('auth', function () {
         this.route('login', { path: '/' });
         this.route('forgot-password');
-        this.route('reset-password');
+        this.route('reset-password', { path: '/reset-password/:id' });
         this.route('two-fa');
         this.route('verification');
     });
@@ -51,24 +51,9 @@ Router.map(function () {
             this.route('virtual', { path: '/:slug/:view' });
         });
 
-        this.mount('@fleetbase/dev-engine', {
-            as: 'developers',
-            path: 'developers'
-        });
-
         this.mount('@fleetbase/fleetops-engine', {
             as: 'fleet-ops',
-            path: 'fleet-ops'
-        });
-
-        this.mount('@fleetbase/iam-engine', {
-            as: 'iam',
-            path: 'iam'
-        });
-
-        this.mount('@fleetbase/storefront-engine', {
-            as: 'storefront',
-            path: 'storefront'
+            path: 'fleet-ops',
         });
     });
     this.route('install');
