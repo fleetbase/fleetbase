@@ -1,15 +1,11 @@
-import DashboardCountComponent from '../components/dashboard/count';
-import FleetbaseBlogComponent from '../components/fleetbase-blog';
-import GithubCardComponent from '../components/github-card';
-
 export function initialize(application) {
     const universe = application.lookup('service:universe');
 
     const fleetOpsWidgets = [
         {
             name: 'Open Issues',
-            component: DashboardCountComponent,
-            gridOptions: { w: 2, h: 2 },
+            component: 'dashboard/count',
+            grid_options: { w: 2, h: 2 },
             options: {},
         },
     ];
@@ -17,8 +13,8 @@ export function initialize(application) {
     const storefrontWidgets = [
         {
             name: 'Total Products',
-            component: DashboardCountComponent,
-            gridOptions: { w: 2, h: 2 },
+            component: 'dashboard/count',
+            grid_options: { w: 2, h: 2 },
             options: {},
         },
     ];
@@ -26,14 +22,14 @@ export function initialize(application) {
     const iamWidgets = [
         {
             name: 'User count',
-            component: DashboardCountComponent,
-            gridOptions: { w: 2, h: 2 },
+            component: 'dashboard/count',
+            grid_options: { w: 2, h: 2 },
             options: {},
         },
         {
             name: 'Group count',
-            component: DashboardCountComponent,
-            gridOptions: { w: 2, h: 2 },
+            component: 'dashboard/count',
+            grid_options: { w: 2, h: 2 },
             options: {},
         },
     ];
@@ -41,14 +37,14 @@ export function initialize(application) {
     const availableWidgets = [
         {
             name: 'Fleetbase Blog',
-            component: FleetbaseBlogComponent,
-            gridOptions: { w: 8, h: 3 },
+            component: 'fleetbase-blog',
+            grid_options: { w: 8, h: 3 },
             options: {},
         },
         {
             name: 'Github Card',
-            component: GithubCardComponent,
-            gridOptions: { w: 4, h: 3 },
+            component: 'github-card',
+            grid_options: { w: 4, h: 3 },
             options: {},
         },
         ...fleetOpsWidgets,

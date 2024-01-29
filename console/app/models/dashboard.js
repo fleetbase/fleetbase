@@ -9,11 +9,30 @@ export default class DashboardModel extends Model {
         const owner = getOwner(this);
         const store = owner.lookup('service:store');
 
-        // create widget model instance
         const widgetRecord = store.createRecord('dashboard-widget', widget);
+
+        widgetRecord.dashboard = this;
 
         widgetRecord.save().then((widgetRecord) => {
             this.widgets.pushObject(widgetRecord);
         });
+    }
+
+    removeWidget(widget) {
+        const owner = getOwner(this);
+        const store = owner.lookup('service:store');
+
+        const widgetRecord = store.peekRecord('dashboard-widget', widget);
+
+        if (widgetRecord) {
+            widgetRecord
+                .destroyRecord()
+                .then(() => {
+                    this.widgets.removeObject(widgetRecord);
+                })
+                .catch((error) => {
+                    console.error('Error removing widget:', error);
+                });
+        }
     }
 }

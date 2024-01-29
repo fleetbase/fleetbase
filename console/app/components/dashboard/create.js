@@ -1,21 +1,17 @@
+import { action } from '@ember/object';
 import Component from '@glimmer/component';
 import { tracked } from '@glimmer/tracking';
-import { inject as service } from '@ember/service';
-import { action } from '@ember/object';
-import { isArray, A } from '@ember/array';
-import { task } from 'ember-concurrency-decorators';
-import FleetbaseBlogComponent from '../fleetbase-blog';
-import GithubCardComponent from '../github-card';
-import DashboardCountComponent from './count';
 
 export default class DashboardCreateComponent extends Component {
     @tracked dashboard;
 
-    constructor(owner, { dashboard }) {
+    constructor(owner, args) {
         super(...arguments);
 
-        this.dashboard = dashboard;
-        console.log('Dashboard in Create: ', this.args.dashboard, dashboard);
+        const { dashboard } = args;
+        // Access the dashboard property from the arguments
+        this.dashboard = dashboard || this.args.dashboard;
+        console.log('Dashboard in Create: ', this.args.dashboard, args, dashboard);
     }
 
     @action
@@ -33,5 +29,10 @@ export default class DashboardCreateComponent extends Component {
 
     @action onDragToDashboard(event) {
         console.log('Grid Stack drag event: ', event);
+    }
+
+    @action removeWidget(widget) {
+        console.log('Removing widget: ', widget);
+        this.args.dashboard.removeWidget(widget.id);
     }
 }

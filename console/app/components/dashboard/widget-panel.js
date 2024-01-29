@@ -6,7 +6,8 @@ import { action } from '@ember/object';
 export default class DashboardWidgetPanelComponent extends Component {
     @service universe;
     @tracked availableWidgets = [];
-
+    @tracked dashboard;
+    @tracked isOpen = true;
     /**
      * Constructs the component and applies initial state.
      */
@@ -16,7 +17,7 @@ export default class DashboardWidgetPanelComponent extends Component {
         this.availableWidgets = this.universe.getWidgets();
         this.dashboard = dashboard;
 
-        console.log(this.dashboard, dashboard, arguments);
+        console.log(this.availableWidgets);
     }
 
     /**
@@ -34,21 +35,18 @@ export default class DashboardWidgetPanelComponent extends Component {
     }
 
     @action addWidgetToDashboard(widget) {
-        this.dashboard.addWidget(widget);
+        console.log('Adding widget to dashboard: ', widget);
+        this.args.dashboard.addWidget(widget);
     }
 
     /**
      * Handles cancel button press.
      *
      * @action
-     * @returns {any}
      */
-    @action onPressCancel() {
-        this.context.close();
-        // return contextComponentCallback(this, 'onPressCancel', this.widget);
-    }
-
-    @action onDragToDashboard(item) {
-        console.log('Event: ', item);
+    @action onPressClose() {
+        this.isOpen = false;
+        console.log(this.args);
+        this.args.onClose();
     }
 }

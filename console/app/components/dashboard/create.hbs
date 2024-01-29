@@ -1,12 +1,17 @@
 <div class="fleetbase-dashboard-grid" ...attributes>
     <GridStack
-        @options={{hash float=true animate=true acceptWidgets=true}}
+        @options={{hash float=true animate=true acceptWidgets=true alwaysShowResizeHandle=@isEdit}}
         @onChange={{this.onChangeGrid}}
         @dragInOptions={{hash selector="test" options=(hash appendTo="body" helper="clone")}}
     >
-        {{#each this.dashboard.widgets as |widget index|}}
-            <GridStackItem @options={{widget.gridOptions}}>
+        {{#each this.args.dashboard.widgets as |widget index|}}
+            <GridStackItem @options={{widget.grid_options}} class="relative">
                 {{component widget.component options=widget.options}}
+                {{!-- {{#if this.isEdit}} --}}
+                <div class="absolute top-0 right-0">
+                    <Button @type="default" @icon="trash" @onClick={{fn this.removeWidget widget}} />
+                </div>
+                {{!-- {{/if}} --}}
             </GridStackItem>
         {{/each}}
     </GridStack>

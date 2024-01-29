@@ -10,10 +10,10 @@ export default class DashboardComponent extends Component {
     @tracked dashboards = [];
     @tracked currentDashboard;
     @tracked isSelectingWidgets = false;
+    @tracked isEditDashboard = false;
 
     constructor() {
         super(...arguments);
-        console.log(arguments);
 
         this.loadDashboards.perform();
     }
@@ -22,14 +22,14 @@ export default class DashboardComponent extends Component {
         try {
             this.dashboards = yield this.store.findAll('dashboard');
 
-            const currentDashboard = this.dashboards[0];
-            console.log(currentDashboard);
+            if (this.dashboards.length > 0) {
+                const currentDashboard = this.dashboards[0];
 
-            currentDashboard.widgets = yield this.store.query('dashboard-widget', { params: { dashboard_uuid: currentDashboard.uuid } });
-            currentDashboard.widgets = yield this.store.query('dashboard-widget', { dashboard_uuid: currentDashboard.uuid });
-            this.currentDashboard = currentDashboard;
+                currentDashboard.widgets = yield this.store.query('dashboard-widget', { dashboard_uuid: currentDashboard.uuid });
+                this.currentDashboard = currentDashboard;
 
-            console.log('Current Dashboard: ', this.currentDashboard);
+                console.log('Current Dashboard: ', this.currentDashboard);
+            }
         } catch (error) {
             console.error('Error loading dashboards:', error);
         }
@@ -46,5 +46,13 @@ export default class DashboardComponent extends Component {
 
     @action openWidgetSelector() {
         this.isSelectingWidgets = true;
+    }
+
+    @action closeWidgetSelector() {
+        this.isSelectingWidgets = false;
+    }
+
+    @action onChangeEdit() {
+        this.isEditDashboard = !this.isEditDashboard;
     }
 }
