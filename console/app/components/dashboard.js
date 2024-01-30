@@ -8,6 +8,7 @@ export default class DashboardComponent extends Component {
     @service store;
     @service notifications;
     @service modalsManager;
+    @service fetch;
 
     @tracked dashboards = [];
     @tracked currentDashboard;
@@ -24,7 +25,7 @@ export default class DashboardComponent extends Component {
             this.dashboards = yield this.store.findAll('dashboard');
 
             if (this.dashboards.length > 0) {
-                this.currentDashboard = this.dashboards[0];
+                this.currentDashboard = this.dashboards.find((dashboard) => dashboard.is_default) || this.dashboards[0];
 
                 console.log('Current Dashboard: ', this.currentDashboard);
             }
@@ -34,7 +35,17 @@ export default class DashboardComponent extends Component {
     }
 
     @action selectDashboard(dashboard) {
-        this.currentDashboard = dashboard;
+        console.log('Selected dashboard: ', dashboard);
+        this.fetch
+            .post('dashboards/switch', { dashboard_uuid: dashboard.id })
+            .then((response) => {
+                this.store.pushPayload(response);
+                const selectedDashboardId = response.uuid;
+                this.currentDashboard = this.store.peekRecord('dashboard', selectedDashboardId);
+            })
+            .finally(() => {
+                this.isLoading = false;
+            });
     }
 
     @action setWidgetSelectorPanelContext(widgetSelectorContext) {
@@ -117,6 +128,12 @@ export default class DashboardComponent extends Component {
                     });
             },
             ...options,
+        });
+    }
+
+    setCurrentDashboard(dashboard) {
+        return this.fetch.post('dashboards/switch', { dashboard_uuid: dashboard.id }).then((response) => {
+            this.currentDashboard = response;
         });
     }
 }

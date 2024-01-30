@@ -1,15 +1,15 @@
 <div class="fleetbase-dashboard-grid flex items-center justify-between mx-2">
     <div class="left-section">
-        {{!-- Dashboard Title Text --}}
+        {{! Dashboard Title Text }}
         <h1 class="text-lg font-bold">{{this.currentDashboard.name}}</h1>
     </div>
     <div class="right-section ml-4 flex items-center">
-        {{!-- Select Dropdown --}}
+        {{! Select Dropdown }}
         <div class="fleetbase-model-select fleetbase-power-select ember-model-select h-10">
             <PowerSelect
                 @options={{this.dashboards}}
                 @selected={{this.currentDashboard}}
-                @onChange={{fn (mut this.currentDashboard)}}
+                @onChange={{fn this.selectDashboard}}
                 @placeholder="Select Dashboard"
                 @triggerClass="form-select form-input"
                 as |dashboard|
@@ -17,7 +17,7 @@
                 {{smart-humanize dashboard.name}}
             </PowerSelect>
         </div>
-        {{!-- Button --}}
+        {{! Button }}
 
         <div class="ml-2 relative h-10">
             <DropdownButton class="h-10" @icon="ellipsis-h" @size="sm" @iconPrefix="fas" @triggerClass="hidden md:flex" as |dd|>

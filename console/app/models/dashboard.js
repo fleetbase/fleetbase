@@ -2,6 +2,8 @@ import Model, { attr, hasMany } from '@ember-data/model';
 import { getOwner } from '@ember/application';
 
 export default class DashboardModel extends Model {
+    @attr('string') uuid;
+    @attr('boolean') is_default;
     @attr('string') name;
     @hasMany('dashboard-widget') widgets;
 
