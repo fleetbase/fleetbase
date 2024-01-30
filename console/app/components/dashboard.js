@@ -65,7 +65,6 @@ export default class DashboardComponent extends Component {
                         this.isEditingDashboard = true;
                         if (typeof options.successNotification === 'function') {
                             this.notifications.success(options.successNotification(response));
-                            this.notifications.warning;
                         } else {
                             this.notifications.success(options.successNotification || `${response.name} created.`);
                         }
