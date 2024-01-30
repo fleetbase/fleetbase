@@ -1,12 +1,14 @@
-import Component from '@glimmer/component';
-import loadExtensions from '@fleetbase/ember-core/utils/load-extensions';
-import { inject as service } from '@ember/service';
 import { action } from '@ember/object';
+import { inject as service } from '@ember/service';
+import Component from '@glimmer/component';
 import { tracked } from '@glimmer/tracking';
 import { task } from 'ember-concurrency-decorators';
 
 export default class DashboardComponent extends Component {
     @service store;
+    @service notifications;
+    @service modalsManager;
+
     @tracked dashboards = [];
     @tracked currentDashboard;
     @tracked isSelectingWidgets = false;
@@ -54,5 +56,35 @@ export default class DashboardComponent extends Component {
 
     @action onChangeEdit() {
         this.isEditDashboard = !this.isEditDashboard;
+    }
+
+    @action createDashboard(dashboard, options = {}) {
+        this.modalsManager.show('modals/create-dashboard', {
+            title: `Create a new dashboard`,
+            acceptButtonText: 'Save Changes',
+            confirm: (modal, done) => {
+                modal.startLoading();
+                const { name } = modal.getOptions();
+
+                const newDashboard = this.store.createRecord('dashboard', { name });
+
+                newDashboard
+                    .save()
+                    .then((response) => {
+                        if (typeof options.successNotification === 'function') {
+                            this.notifications.success(options.successNotification(response));
+                        } else {
+                            this.notifications.success(options.successNotification || `${response.name} created.`);
+                        }
+
+                        done();
+                    })
+                    .catch((error) => {
+                        modal.stopLoading();
+                        this.notifications.serverError(error);
+                    });
+            },
+            ...options,
+        });
     }
 }

@@ -20,9 +20,33 @@
         <!-- Button -->
 
         <div class="ml-4 relative">
-
-            <Button @type="magic" @icon="edit" @helpText={{"Edit Dashboard"}} @onClick={{this.onChangeEdit}} />
-            <Button @type="magic" @icon="add" @helpText={{"Add new widgets to Dashboard"}} @onClick={{this.openWidgetSelector}} />
+            <DropdownButton @icon="ellipsis-h" @size="sm" @iconPrefix="fas" @triggerClass="mr-2 hidden md:flex" as |dd|>
+                <div class="next-dd-menu mt-1 mx-0" aria-labelledby="user-menu">
+                    <div class="p-1">
+                        <a href="javascript:;" class="next-dd-item" {{on "click" (dropdown-fn dd this.createDashboard)}}>
+                            <div class="w-6">
+                                <FaIcon @icon="add" />
+                            </div>
+                            <span>Create new Dashboard</span>
+                        </a>
+                        <a href="javascript:;" class="next-dd-item" {{on "click" (dropdown-fn dd this.onChangeEdit)}}>
+                            <div class="w-6">
+                                <FaIcon @icon="edit" />
+                            </div>
+                            <span>Edit dashboard</span>
+                        </a>
+                        <a href="javascript:;" class="next-dd-item" {{on "click" (dropdown-fn dd this.openWidgetSelector)}}>
+                            <div class="w-6">
+                                <FaIcon @icon="grip" />
+                            </div>
+                            <span>Add widgets</span>
+                        </a>
+                    </div>
+                </div>
+            </DropdownButton>
+        </div>
+        <div class="ml-4">
+            <Button @type="magic" @icon="save" @helpText={{"Save Dashboard"}} @onClick={{this.onChangeEdit}} />
         </div>
     </div>
 </div>

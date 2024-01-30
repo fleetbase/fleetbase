@@ -27,12 +27,7 @@ export default class DashboardCreateComponent extends Component {
         console.log('Grid Stack event: ', event);
     }
 
-    @action onDragToDashboard(event) {
-        console.log('Grid Stack drag event: ', event);
-    }
-
     @action removeWidget(widget) {
-        console.log('Removing widget: ', widget);
         this.args.dashboard.removeWidget(widget.id);
     }
 }

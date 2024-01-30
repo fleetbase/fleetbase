@@ -7,11 +7,11 @@
         {{#each this.args.dashboard.widgets as |widget index|}}
             <GridStackItem @options={{widget.grid_options}} class="relative">
                 {{component widget.component options=widget.options}}
-                {{!-- {{#if this.isEdit}} --}}
-                <div class="absolute top-0 right-0">
-                    <Button @type="default" @icon="trash" @onClick={{fn this.removeWidget widget}} />
-                </div>
-                {{!-- {{/if}} --}}
+                {{#if this.args.isEdit}}
+                    <div class="absolute top-2 right-2">
+                        <Button @type="default" @icon="trash" @onClick={{fn this.removeWidget widget}} />
+                    </div>
+                {{/if}}
             </GridStackItem>
         {{/each}}
     </GridStack>
