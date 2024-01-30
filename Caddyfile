@@ -1,18 +1,12 @@
 {
-	# Enable FrankenPHP
 	frankenphp
-	# Configure when the directive must be executed
 	order php_server before file_server
 }
 
-http://localhost:8080 {
-	# Set the webroot to the public/ dir
-	root * /app/public
-	# Enable compression
+http://localhost:8000 {
+	root * /fleetbase/api/public
 	encode zstd gzip
-	# Execute PHP files in the current directory and serve assets
 	php_server {
-		# Required for the public/storage/ dir
 		resolve_root_symlink
 	}
 }
