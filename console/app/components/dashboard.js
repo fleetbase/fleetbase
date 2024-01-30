@@ -87,4 +87,39 @@ export default class DashboardComponent extends Component {
             ...options,
         });
     }
+
+    @action deleteDashboard(dashboard, options = {}) {
+        this.modalsManager.confirm({
+            title: `Are you sure to delete this ${dashboard.name}?`,
+            confirm: (modal) => {
+                if (typeof options.onConfirm === 'function') {
+                    options.onConfirm(model);
+                }
+
+                modal.startLoading();
+
+                return dashboard
+                    .destroyRecord()
+                    .then((model) => {
+                        this.notifications.success(options.successNotification || `${dashboard.name} has been deleted.`);
+                        if (typeof options.onSuccess === 'function') {
+                            options.onSuccess(model);
+                        }
+                    })
+                    .catch((error) => {
+                        this.notifications.serverError(error);
+
+                        if (typeof options.onError === 'function') {
+                            options.onError(error, model);
+                        }
+                    })
+                    .finally(() => {
+                        if (typeof options.callback === 'function') {
+                            options.callback(this.currentDashboard);
+                        }
+                    });
+            },
+            ...options,
+        });
+    }
 }

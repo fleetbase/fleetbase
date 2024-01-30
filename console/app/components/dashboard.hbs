@@ -41,6 +41,13 @@
                             </div>
                             <span>Add widgets</span>
                         </a>
+
+                        <a href="javascript:;" class="next-dd-item" {{on "click" (dropdown-fn dd this.deleteDashboard this.currentDashboard)}}>
+                            <div class="w-6">
+                                <FaIcon @icon="trash" />
+                            </div>
+                            <span>Delete dashboard</span>
+                        </a>
                     </div>
                 </div>
             </DropdownButton>
