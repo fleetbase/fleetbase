@@ -1,11 +1,11 @@
-<div class="fleetbase-dashboard-grid flex items-center justify-between">
+<div class="fleetbase-dashboard-grid flex items-center justify-between mx-2">
     <div class="left-section">
         <!-- Dashboard Title Text -->
         <h1 class="text-lg font-bold">{{this.currentDashboard.name}}</h1>
     </div>
     <div class="right-section ml-4 flex items-center">
         <!-- Select Dropdown -->
-        <div class="fleetbase-model-select fleetbase-power-select ember-model-select">
+        <div class="fleetbase-model-select fleetbase-power-select ember-model-select h-10">
             <PowerSelect
                 @options={{this.dashboards}}
                 @selected={{this.currentDashboard}}
@@ -19,8 +19,8 @@
         </div>
         <!-- Button -->
 
-        <div class="ml-4 relative">
-            <DropdownButton @icon="ellipsis-h" @size="sm" @iconPrefix="fas" @triggerClass="mr-2 hidden md:flex" as |dd|>
+        <div class="ml-2 relative h-10">
+            <DropdownButton class="h-10" @icon="ellipsis-h" @size="sm" @iconPrefix="fas" @triggerClass="hidden md:flex" as |dd|>
                 <div class="next-dd-menu mt-1 mx-0" aria-labelledby="user-menu">
                     <div class="p-1">
                         <a href="javascript:;" class="next-dd-item" {{on "click" (dropdown-fn dd this.createDashboard)}}>
@@ -45,9 +45,11 @@
                 </div>
             </DropdownButton>
         </div>
-        <div class="ml-4">
-            <Button @type="magic" @icon="save" @helpText={{"Save Dashboard"}} @onClick={{this.onChangeEdit}} />
-        </div>
+        {{#if this.isEditDashboard}}
+            <div class="ml-2 h-10">
+                <Button @type="magic" @icon="save" @helpText={{"Save Dashboard"}} @onClick={{this.onChangeEdit}} class="h-10" />
+            </div>
+        {{/if}}
     </div>
 </div>
 
