@@ -1,4 +1,4 @@
-<Overlay @isOpen={{@isOpen}} @onLoad={{this.setOverlayContext}} @position="right" @noBackdrop={{true}} @fullHeight={{true}} @width={{or this.width @width "600px"}}>
+<Overlay @isOpen={{@isOpen}} @onLoad={{this.setOverlayContext}} @position="right" @noBackdrop={{true}} @fullHeight={{true}} @width={{or this.width @width "400px"}}>
     <Overlay::Header @title={{"Add widgets"}} @hideStatusDot={{true}} @titleWrapperClass="leading-5">
         <div class="flex flex-1 justify-end">
             <Button @icon={{"save"}} @type="primary" @text={{"Save Dashboard"}} @onClick={{this.save}} @wrapperClass="mr-2" />
@@ -7,20 +7,18 @@
     </Overlay::Header>
 
     <Overlay::Body @wrapperClass="new-service-rate-overlay-body px-4 space-y-4 pt-4" @increaseInnerBodyHeightBy={{1000}}>
-        <div class="grid grid-cols-3 gap-1 text-xs dark:text-gray-100">
+        <div class="grid grid-cols-2 gap-1 text-xs dark:text-gray-100">
             {{#each this.availableWidgets as |widget|}}
-                <GridStackItem @options={{widget.grid_options}}>
-                    <div
-                        class="flex flex-col items-center justify-center rounded-lg border border-gray-200 bg-gray-50 dark:border-gray-700 dark:bg-gray-800 shadow-sm mr-1"
-                        {{on "click" (fn this.addWidgetToDashboard widget)}}
-                    >
-                        {{log this.args}}
-                        <p class="text-lg font-bold dark:text-gray-100 text-black p-4">
-                            {{widget.name}}
-                            widget
-                        </p>
-                    </div>
-                </GridStackItem>
+                <div
+                    class="flex flex-col items-center justify-center rounded-lg border border-gray-200 bg-gray-50 dark:border-gray-700 dark:bg-gray-800 shadow-sm m-1"
+                    {{on "click" (fn this.addWidgetToDashboard widget)}}
+                >
+                    {{log this.args}}
+                    <p class="text-sm font-bold dark:text-gray-100 text-black p-4">
+                        {{widget.name}}
+                        widget
+                    </p>
+                </div>
             {{/each}}
         </div>
 
