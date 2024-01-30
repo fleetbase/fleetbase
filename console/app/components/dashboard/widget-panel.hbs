@@ -1,8 +1,7 @@
 <Overlay @isOpen={{@isOpen}} @onLoad={{this.setOverlayContext}} @position="right" @noBackdrop={{true}} @fullHeight={{true}} @width={{or this.width @width "400px"}}>
-    <Overlay::Header @title={{"Add widgets"}} @hideStatusDot={{true}} @titleWrapperClass="leading-5">
+    <Overlay::Header @title={{"Select widgets"}} @hideStatusDot={{true}} @titleWrapperClass="leading-5">
         <div class="flex flex-1 justify-end">
-            <Button @icon={{"save"}} @type="primary" @text={{"Save Dashboard"}} @onClick={{this.save}} @wrapperClass="mr-2" />
-            <Button @type="default" @icon="times" @helpText={{"Add new widgets to Dashbord"}} @onClick={{this.onPressClose}} />
+            <Button @type="default" @icon="times" @helpText={{"Close and Save"}} @onClick={{this.onPressClose}} />
         </div>
     </Overlay::Header>
 

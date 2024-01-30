@@ -5,7 +5,7 @@
                 {{component widget.component options=widget.options}}
                 {{#if this.args.isEdit}}
                     <div class="absolute top-2 right-2">
-                        <Button @type="default" @icon="trash" @onClick={{fn this.removeWidget widget}} />
+                        <Button @type="default" @icon="trash" @helpText={{"Remove widget from the dashboard"}} @onClick={{fn this.removeWidget widget}} />
                     </div>
                 {{/if}}
             </GridStackItem>

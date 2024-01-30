@@ -11,8 +11,7 @@ export default class DashboardComponent extends Component {
 
     @tracked dashboards = [];
     @tracked currentDashboard;
-    @tracked isSelectingWidgets = false;
-    @tracked isEditDashboard = false;
+    @tracked isEditingDashboard = false;
 
     constructor() {
         super(...arguments);
@@ -25,10 +24,7 @@ export default class DashboardComponent extends Component {
             this.dashboards = yield this.store.findAll('dashboard');
 
             if (this.dashboards.length > 0) {
-                const currentDashboard = this.dashboards[0];
-
-                currentDashboard.widgets = yield this.store.query('dashboard-widget', { dashboard_uuid: currentDashboard.uuid });
-                this.currentDashboard = currentDashboard;
+                this.currentDashboard = this.dashboards[0];
 
                 console.log('Current Dashboard: ', this.currentDashboard);
             }
@@ -46,16 +42,8 @@ export default class DashboardComponent extends Component {
         console.log('widgetSelectorContext', widgetSelectorContext);
     }
 
-    @action openWidgetSelector() {
-        this.isSelectingWidgets = true;
-    }
-
-    @action closeWidgetSelector() {
-        this.isSelectingWidgets = false;
-    }
-
-    @action onChangeEdit() {
-        this.isEditDashboard = !this.isEditDashboard;
+    @action onChangeEdit(state = true) {
+        this.isEditingDashboard = state;
     }
 
     @action createDashboard(dashboard, options = {}) {
@@ -64,6 +52,8 @@ export default class DashboardComponent extends Component {
             acceptButtonText: 'Save Changes',
             confirm: (modal, done) => {
                 modal.startLoading();
+
+                // Get the name from the modal options
                 const { name } = modal.getOptions();
 
                 const newDashboard = this.store.createRecord('dashboard', { name });
@@ -71,8 +61,11 @@ export default class DashboardComponent extends Component {
                 newDashboard
                     .save()
                     .then((response) => {
+                        this.currentDashboard = response;
+                        this.isEditingDashboard = true;
                         if (typeof options.successNotification === 'function') {
                             this.notifications.success(options.successNotification(response));
+                            this.notifications.warning;
                         } else {
                             this.notifications.success(options.successNotification || `${response.name} created.`);
                         }
@@ -89,6 +82,10 @@ export default class DashboardComponent extends Component {
     }
 
     @action deleteDashboard(dashboard, options = {}) {
+        if (this.dashboards.length === 1) {
+            this.notifications.error('You cannot delete the last dashboard.');
+            return;
+        }
         this.modalsManager.confirm({
             title: `Are you sure to delete this ${dashboard.name}?`,
             confirm: (modal) => {
@@ -105,6 +102,7 @@ export default class DashboardComponent extends Component {
                         if (typeof options.onSuccess === 'function') {
                             options.onSuccess(model);
                         }
+                        this.currentDashboard = this.dashboards[0];
                     })
                     .catch((error) => {
                         this.notifications.serverError(error);

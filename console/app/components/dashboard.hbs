@@ -1,10 +1,10 @@
 <div class="fleetbase-dashboard-grid flex items-center justify-between mx-2">
     <div class="left-section">
-        <!-- Dashboard Title Text -->
+        {{!-- Dashboard Title Text --}}
         <h1 class="text-lg font-bold">{{this.currentDashboard.name}}</h1>
     </div>
     <div class="right-section ml-4 flex items-center">
-        <!-- Select Dropdown -->
+        {{!-- Select Dropdown --}}
         <div class="fleetbase-model-select fleetbase-power-select ember-model-select h-10">
             <PowerSelect
                 @options={{this.dashboards}}
@@ -17,7 +17,7 @@
                 {{smart-humanize dashboard.name}}
             </PowerSelect>
         </div>
-        <!-- Button -->
+        {{!-- Button --}}
 
         <div class="ml-2 relative h-10">
             <DropdownButton class="h-10" @icon="ellipsis-h" @size="sm" @iconPrefix="fas" @triggerClass="hidden md:flex" as |dd|>
@@ -29,17 +29,11 @@
                             </div>
                             <span>Create new Dashboard</span>
                         </a>
-                        <a href="javascript:;" class="next-dd-item" {{on "click" (dropdown-fn dd this.onChangeEdit)}}>
+                        <a href="javascript:;" class="next-dd-item" {{on "click" (dropdown-fn dd this.onChangeEdit true)}}>
                             <div class="w-6">
                                 <FaIcon @icon="edit" />
                             </div>
                             <span>Edit dashboard</span>
-                        </a>
-                        <a href="javascript:;" class="next-dd-item" {{on "click" (dropdown-fn dd this.openWidgetSelector)}}>
-                            <div class="w-6">
-                                <FaIcon @icon="grip" />
-                            </div>
-                            <span>Add widgets</span>
                         </a>
 
                         <a href="javascript:;" class="next-dd-item" {{on "click" (dropdown-fn dd this.deleteDashboard this.currentDashboard)}}>
@@ -52,15 +46,15 @@
                 </div>
             </DropdownButton>
         </div>
-        {{#if this.isEditDashboard}}
+        {{#if this.isEditingDashboard}}
             <div class="ml-2 h-10">
-                <Button @type="magic" @icon="save" @helpText={{"Save Dashboard"}} @onClick={{this.onChangeEdit}} class="h-10" />
+                <Button @type="magic" @icon="save" @helpText={{"Save Dashboard"}} @onClick={{fn this.onChangeEdit false}} class="h-10" />
             </div>
         {{/if}}
     </div>
 </div>
 
-<Dashboard::Create @isEdit={{this.isEditDashboard}} @dashboard={{this.currentDashboard}} />
-{{#if this.isSelectingWidgets}}
-    <Dashboard::WidgetPanel @isOpen={{this.isSelectingWidgets}} @onLoad={{this.setWidgetSelectorPanelContext}} @dashboard={{this.currentDashboard}} @onClose={{this.closeWidgetSelector}} />
+<Dashboard::Create @isEdit={{this.isEditingDashboard}} @dashboard={{this.currentDashboard}} />
+{{#if this.isEditingDashboard}}
+    <Dashboard::WidgetPanel @isOpen={{this.isEditingDashboard}} @onLoad={{this.setWidgetSelectorPanelContext}} @dashboard={{this.currentDashboard}} @onClose={{fn this.onChangeEdit false}} />
 {{/if}}
