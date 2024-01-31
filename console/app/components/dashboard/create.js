@@ -1,4 +1,4 @@
-import { action } from '@ember/object';
+import { action, computed } from '@ember/object';
 import Component from '@glimmer/component';
 import { tracked } from '@glimmer/tracking';
 
@@ -29,5 +29,18 @@ export default class DashboardCreateComponent extends Component {
 
     @action removeWidget(widget) {
         this.args.dashboard.removeWidget(widget.id);
+    }
+
+    @computed('args.isEdit')
+    get gridOptions() {
+        return {
+            float: true,
+            animate: true,
+            acceptWidgets: true,
+            alwaysShowResizeHandle: this.args.isEdit,
+            disableDrag: !this.args.isEdit,
+            disableResize: !this.args.isEdit,
+            resizable: { handles: 'n,ne,e,se,s,sw,w,nw' },
+        };
     }
 }

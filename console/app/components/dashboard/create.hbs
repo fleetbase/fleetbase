@@ -1,5 +1,5 @@
 <div class="fleetbase-dashboard-grid" ...attributes>
-    <GridStack @options={{hash float=true animate=true acceptWidgets=true alwaysShowResizeHandle=@isEdit}} @onChange={{this.onChangeGrid}}>
+    <GridStack @options={{this.gridOptions}} @onChange={{this.onChangeGrid}}>
         {{#each this.args.dashboard.widgets as |widget index|}}
             <GridStackItem @options={{widget.grid_options}} class="relative">
                 {{component widget.component options=widget.options}}
