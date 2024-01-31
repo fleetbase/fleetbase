@@ -40,7 +40,8 @@ export default class DashboardCreateComponent extends Component {
             alwaysShowResizeHandle: this.args.isEdit,
             disableDrag: !this.args.isEdit,
             disableResize: !this.args.isEdit,
-            resizable: { handles: 'n,ne,e,se,s,sw,w,nw' },
+            resizable: { handles: 'all' },
+            cellHeight: 30,
         };
     }
 }

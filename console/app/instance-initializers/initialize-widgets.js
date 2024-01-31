@@ -5,7 +5,7 @@ export function initialize(application) {
         {
             name: 'Fleetbase Blog',
             component: 'fleetbase-blog',
-            grid_options: { w: 8, h: 3 },
+            grid_options: { w: 8, h: 9 },
             options: {
                 title: 'Fleetbase Blog',
             },
@@ -13,7 +13,7 @@ export function initialize(application) {
         {
             name: 'Github Card',
             component: 'github-card',
-            grid_options: { w: 4, h: 3 },
+            grid_options: { w: 4, h: 8 },
             options: {
                 title: 'Github Card',
             },
@@ -21,7 +21,7 @@ export function initialize(application) {
         {
             name: 'Fleet-Ops Metrics',
             component: 'dashboard/metric',
-            grid_options: { w: 12, h: 4 },
+            grid_options: { w: 12, h: 12 },
             options: {
                 title: 'Fleet-Ops Metrics',
                 endpoint: 'int/v1/fleet-ops/dashboard',
@@ -30,7 +30,7 @@ export function initialize(application) {
         {
             name: 'Identity & Access Management Metrics',
             component: 'dashboard/metric',
-            grid_options: { w: 12, h: 3 },
+            grid_options: { w: 12, h: 7 },
             options: {
                 title: 'Identity & Access Management Metrics',
                 endpoint: 'int/v1/metrics/iam-dashboard',
@@ -39,7 +39,7 @@ export function initialize(application) {
         {
             name: 'Storefront Metrics',
             component: 'dashboard/metric',
-            grid_options: { w: 12, h: 3 },
+            grid_options: { w: 12, h: 8 },
             options: {
                 title: 'Storefront Metrics',
                 endpoint: 'storefront/int/v1/dashboard',
