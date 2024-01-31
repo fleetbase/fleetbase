@@ -23,6 +23,21 @@ services:
       SOCKETCLUSTER_WORKERS: 10
       SOCKETCLUSTER_BROKERS: 10
 
+  queue:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+      target: events-dev
+      args:
+        ENVIRONMENT: development
+    environment:
+      DATABASE_URL: "mysql://root@database/fleetbase"
+      QUEUE_CONNECTION: redis
+      CACHE_DRIVER: redis
+      CACHE_PATH: /var/www/html/api/storage/framework/cache
+      CACHE_URL: tcp://cache
+      REDIS_URL: tcp://cache
+
   console:
     ports:
       - "4200:4200"
@@ -43,6 +58,7 @@ services:
         ENVIRONMENT: development
     environment:
       DATABASE_URL: "mysql://root@database/fleetbase"
+      QUEUE_CONNECTION: redis
       CACHE_DRIVER: redis
       CACHE_PATH: /var/www/html/api/storage/framework/cache
       CACHE_URL: tcp://cache
@@ -55,3 +71,4 @@ services:
     depends_on:
       - database
       - cache
+      - queue
