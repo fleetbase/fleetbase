@@ -27,6 +27,9 @@ export default class DashboardComponent extends Component {
             if (this.dashboards.length > 0) {
                 this.currentDashboard = this.dashboards.find((dashboard) => dashboard.is_default) || this.dashboards[0];
 
+                if (this.currentDashboard?.widgets?.length === 0) {
+                    this.onChangeEdit(true);
+                }
                 console.log('Current Dashboard: ', this.currentDashboard);
             }
         } catch (error) {
@@ -42,6 +45,10 @@ export default class DashboardComponent extends Component {
                 this.store.pushPayload(response);
                 const selectedDashboardId = response.uuid;
                 this.currentDashboard = this.store.peekRecord('dashboard', selectedDashboardId);
+
+                if (this.currentDashboard?.widgets?.length === 0) {
+                    this.onChangeEdit(true);
+                }
             })
             .finally(() => {
                 this.isLoading = false;
