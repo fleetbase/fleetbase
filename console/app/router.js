@@ -51,11 +51,6 @@ Router.map(function () {
             this.route('virtual', { path: '/:slug/:view' });
             this.route('organizations', function () {});
         });
-
-        this.mount('@fleetbase/fleetops-engine', {
-            as: 'fleet-ops',
-            path: 'fleet-ops',
-        });
     });
     this.route('install');
 });
