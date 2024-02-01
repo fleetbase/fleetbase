@@ -10,7 +10,7 @@ Router.map(function () {
     this.route('auth', function () {
         this.route('login', { path: '/' });
         this.route('forgot-password');
-        this.route('reset-password');
+        this.route('reset-password', { path: '/reset-password/:id' });
         this.route('two-fa');
         this.route('verification');
     });

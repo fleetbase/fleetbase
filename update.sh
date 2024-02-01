@@ -4,7 +4,7 @@
 set -e
 
 echo "Switching to the main branch..."
-git checkout main
+# git checkout main
 
 echo "Updating submodules..."
 git submodule update --init --recursive
