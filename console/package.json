@@ -137,8 +137,13 @@
     },
     "pnpm": {
         "overrides": {
+<<<<<<< Updated upstream
             "@fleetbase/fleetops-data": "^0.1.7",
             "@fleetbase/ember-core": "^0.2.1",
+=======
+            "@fleetbase/fleetops-data": "link:../packages/fleetops-data",
+            "@fleetbase/ember-core": "link:../packages/ember-core",
+>>>>>>> Stashed changes
             "@fleetbase/ember-ui": "^0.2.9"
         }
     },

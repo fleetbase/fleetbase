@@ -49,6 +49,7 @@ Router.map(function () {
             this.route('notifications');
             this.route('two-fa-settings');
             this.route('virtual', { path: '/:slug/:view' });
+            this.route('organizations', function () {});
         });
 
         this.mount('@fleetbase/fleetops-engine', {
