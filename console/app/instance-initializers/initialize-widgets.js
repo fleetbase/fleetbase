@@ -1,9 +1,12 @@
+import { faGithub } from '@fortawesome/free-brands-svg-icons';
+
 export function initialize(application) {
     const universe = application.lookup('service:universe');
 
     const availableWidgets = [
         {
             name: 'Fleetbase Blog',
+            icon: 'newspaper',
             component: 'fleetbase-blog',
             grid_options: { w: 8, h: 9 },
             options: {
@@ -12,6 +15,7 @@ export function initialize(application) {
         },
         {
             name: 'Github Card',
+            icon: faGithub,
             component: 'github-card',
             grid_options: { w: 4, h: 8 },
             options: {
@@ -20,6 +24,7 @@ export function initialize(application) {
         },
         {
             name: 'Fleet-Ops Metrics',
+            icon: 'route',
             component: 'dashboard/metric',
             grid_options: { w: 12, h: 12 },
             options: {
@@ -28,16 +33,18 @@ export function initialize(application) {
             },
         },
         {
-            name: 'Identity & Access Management Metrics',
+            name: 'IAM Metrics',
+            icon: 'shield-halved',
             component: 'dashboard/metric',
             grid_options: { w: 12, h: 7 },
             options: {
-                title: 'Identity & Access Management Metrics',
+                title: 'IAM Metrics',
                 endpoint: 'int/v1/metrics/iam-dashboard',
             },
         },
         {
             name: 'Storefront Metrics',
+            icon: 'store',
             component: 'dashboard/metric',
             grid_options: { w: 12, h: 8 },
             options: {

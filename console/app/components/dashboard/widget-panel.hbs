@@ -6,17 +6,19 @@
     </Overlay::Header>
 
     <Overlay::Body @wrapperClass="new-service-rate-overlay-body px-4 space-y-4 pt-4" @increaseInnerBodyHeightBy={{1000}}>
-        <div class="grid grid-cols-2 gap-1 text-xs dark:text-gray-100">
+        <div class="grid grid-cols-2 gap-4 text-xs dark:text-gray-100">
             {{#each this.availableWidgets as |widget|}}
                 <div
-                    class="flex flex-col items-center justify-center rounded-lg border border-gray-200 bg-gray-50 dark:border-gray-700 dark:bg-gray-800 shadow-sm m-1"
+                    class="flex flex-col items-center justify-center rounded-lg border border-gray-300 bg-white dark:border-gray-700 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 transition-all duration-300 ease-in-out shadow-md p-4 cursor-pointer"
                     {{on "click" (fn this.addWidgetToDashboard widget)}}
                 >
-                    {{log this.args}}
-                    <p class="text-sm font-bold dark:text-gray-100 text-black p-4">
-                        {{widget.name}}
-                        widget
-                    </p>
+                    <div class="flex items-center mb-2">
+                        <FaIcon @icon={{widget.icon}} class="text-2xl text-gray-600 dark:text-gray-300 mr-2" />
+                        <p class="text-sm font-semibold dark:text-gray-100 text-gray-800">
+                            {{widget.name}}
+                            widget
+                        </p>
+                    </div>
                 </div>
             {{/each}}
         </div>
