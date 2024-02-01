@@ -2,10 +2,12 @@
 const toBoolean = require('./utils/to-boolean');
 const getenv = require('./utils/getenv');
 const fixApiHost = require('./utils/fix-api-host');
+const { version } = require('../package');
 
 module.exports = function (environment) {
     const ENV = {
         modulePrefix: '@fleetbase/console',
+        version,
         environment,
         rootURL: '/',
         locationType: 'history',

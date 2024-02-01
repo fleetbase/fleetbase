@@ -3,7 +3,7 @@
         <div class="border border-black bg-gray-900 shadow-md rounded-md p-5 mt-12">
             <div class="w-full flex-col items-center justify-center text-center mb-6">
                 <img src="/images/icon.png" alt={{concat (t "app.name") " Install"}} class="w-12 h-12 mx-auto" width="48" height="48" />
-                <h3 class="mt-2 text-gray-50 font-bold">{{t "app.name"}} Installer</h3>
+                <h3 class="mt-2 text-gray-50 font-bold">{{t "app.name"}} {{t "install.installer-header"}}</h3>
             </div>
             <div class="space-y-4 mb-5">
                 {{#each this.steps as |step|}}
@@ -24,10 +24,10 @@
                 {{#if this.error}}
                     <div class="flex items-center border border-red-900 bg-red-800 text-red-100 px-4 py-1.5 rounded-lg mb-3 shadow-md">
                         <FaIcon @icon="triangle-exclamation" class="text-red-100 mr-2" />
-                        <span>{{t "onboard.install.failed-message-sent"}}</span>
+                        <span>{{t "install.failed-message-sent"}}</span>
                     </div>
                 {{/if}}
-                <Button @type="primary" @icon="play" @size="lg" @text={{if this.error (t "onboard.install.retry-install") (t "onboard.install.start-install") }} @wrapperClass="flex-1" class="w-full" @onClick={{this.startInstall}} @isLoading={{this.install.isRunning}} @disabled={{this.install.isRunning}} />
+                <Button @type="primary" @icon="play" @size="lg" @text={{if this.error (t "install.retry-install") (t "install.start-install") }} @wrapperClass="flex-1" class="w-full" @onClick={{this.startInstall}} @isLoading={{this.install.isRunning}} @disabled={{this.install.isRunning}} />
             </div>
         </div>
     </div>

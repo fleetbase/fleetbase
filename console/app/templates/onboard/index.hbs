@@ -11,7 +11,7 @@
             <FaIcon @icon="hand-spock" @size="lg" class="text-blue-900 mr-4" />
         </div>
         <p class="flex-1 text-sm text-blue-900 dark:text-blue-900">
-            {{t "onboard.index.welcome-title" htnmlSafe=true companyName=(t "app.name")}}
+            {{t "onboard.index.welcome-title" htmlSafe=true companyName=(t "app.name")}}
             {{t "onboard.index.welcome-text"}}
         </p>
     </div>
@@ -20,17 +20,17 @@
         {{#if this.error}}
             <InfoBlock @icon="exclamation-triangle" @text={{this.error}} class="mb-6 px-3 py-2 bg-red-300 text-red-900" @textClass="text-red-900" />
         {{/if}}
-        <InputGroup @name={{t "common.full-name"}} @value={{this.name}} @helpText={{t "onboard.index.fullname"}} @inputClass="input-lg" />
-        <InputGroup @name={{t "onboard.index.your-email"}} @type="email" @value={{this.email}} @helpText={{t "onboard.index.email"}} @inputClass="input-lg" />
-        <InputGroup @name={{t "common.phone"}} @helpText={{t "onboard.index.phone"}}>
+        <InputGroup @name={{t "onboard.index.full-name"}} @value={{this.name}} @helpText={{t "onboard.index.full-name-help-text"}} @inputClass="input-lg" />
+        <InputGroup @name={{t "onboard.index.your-email"}} @type="email" @value={{this.email}} @helpText={{t "onboard.index.your-email-help-text"}} @inputClass="input-lg" />
+        <InputGroup @name={{t "onboard.index.phone"}} @helpText={{t "onboard.index.phone-help-text"}}>
             <PhoneInput @onInput={{fn (mut this.phone)}} class="form-input input-lg w-full" />
         </InputGroup>
-        <InputGroup @name={{t "onboard.index.organization-name"}} @value={{this.organization_name}} @helpText={{t "onboard.index.organization-name"}} @inputClass="input-lg" />
-        <InputGroup @name={{t "onboard.index.password"}} @value={{this.password}} @type="password" @helpText={{t "onboard.index.password"}} @inputClass="input-lg" />
-        <InputGroup @name={{t "onboard.index.confirm-password"}} @value={{this.password_confirmation}} @type="password" @helpText={{t "onboard.index.confirm-password"}} @inputClass="input-lg" />
+        <InputGroup @name={{t "onboard.index.organization-name"}} @value={{this.organization_name}} @helpText={{t "onboard.index.organization-help-text"}} @inputClass="input-lg" />
+        <InputGroup @name={{t "onboard.index.password"}} @value={{this.password}} @type="password" @helpText={{t "onboard.index.password-help-text"}} @inputClass="input-lg" />
+        <InputGroup @name={{t "onboard.index.confirm-password"}} @value={{this.password_confirmation}} @type="password" @helpText={{t "onboard.index.confirm-password-help-text"}} @inputClass="input-lg" />
 
         <div class="flex items-center justify-end mt-5">
-            <Button @icon="check" @iconPrefix="fas" @type="primary" @size="lg" @text={{t "onboard.index.continue-button"}} @isLoading={{this.isLoading}} @disabled={{this.readyToSubmit}} @onClick={{this.startOnboard}} />
+            <Button @icon="check" @iconPrefix="fas" @type="primary" @size="lg" @text={{t "onboard.index.continue-button-text"}} @isLoading={{this.isLoading}} @disabled={{this.readyToSubmit}} @onClick={{this.startOnboard}} />
         </div>
     </form>
 </div>

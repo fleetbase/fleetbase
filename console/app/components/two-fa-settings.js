@@ -69,6 +69,15 @@ export default class TwoFaSettingsComponent extends Component {
     @tracked showEnforceOption;
 
     /**
+     * Indicates whether the settings should render an option to select 2fa `mn=ethod`
+     * Method is a flag that indicates which method users can receive a 2FA code from.
+     *
+     * @property {boolean} showEnforceOption
+     * @public
+     */
+    @tracked showMethodSelection;
+
+    /**
      * Class constructor to initialize the component.
      *
      * @constructor
@@ -77,11 +86,12 @@ export default class TwoFaSettingsComponent extends Component {
      * @param {Object} options.twoFaSettings - The current Two-Factor Authentication settings.
      * @param {Array} options.twoFaMethods - Available Two-Factor Authentication methods.
      */
-    constructor(owner, { twoFaSettings, twoFaMethods, showEnforceOption }) {
+    constructor(owner, { twoFaSettings, twoFaMethods, showEnforceOption, showMethodSelection = true }) {
         super(...arguments);
 
         const userSelectedMethod = isArray(twoFaMethods) ? twoFaMethods.find(({ key }) => key === twoFaSettings.method) : null;
 
+        this.showMethodSelection = showMethodSelection === true;
         this.showEnforceOption = showEnforceOption === true;
         this.isTwoFaEnabled = twoFaSettings.enabled === true;
         this.isTwoFaEnforced = twoFaSettings.enforced === true;

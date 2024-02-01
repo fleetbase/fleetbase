@@ -1,6 +1,5 @@
 app:
   name: Fleetbase
-
 terms:
   new: New
   sort: Sort
@@ -137,10 +136,9 @@ console:
       total-users: Total Users
       total-organizations: Total Organizations
       total-transactions: Total Transactions
-    notification:
+    notifications:
       title: Notifications
-      notification-settings:  Notification Settings
-        
+      notification-settings: Notification Settings
   settings:
     index:
       title: Organization Settings
@@ -160,8 +158,11 @@ console:
     title: Extensions are coming soon!
     message: Please check back in the upcoming versions as we prepare to launch the Extensions repository and marketplace.
   notifications:
-    select-all:
-    mark-as-read:
+    select-all: Select All
+    mark-as-read: Mark as Read
+    received: >-
+        Received:
+    message: No notifications to display.
 invite:
   for-users:
     invitation-message: You've been invited to join {companyName}
@@ -173,13 +174,19 @@ onboard:
     title: Create your account
     welcome-title: <strong>Welcome to {companyName}!</strong><br />
     welcome-text: Complete the details required below to get started.
-    fullname: Your full name.
-    email: Your email address.
-    phone: Your phone number.
-    organization-name: Your organization name, all your services and resources will be managed under this organization, later you can create as many organizations as you want or need.
-    password: Your password, make sure it's a good one.
-    confirm-password: Just to confirm the password you entered above.
-    continue-button: Continue
+    full-name: Full name
+    full-name-help-text: Your full name
+    your-email: Email address
+    your-email-help-text: Your email address
+    phone: Phone number
+    phone-help-text: Your phone number
+    organization-name: Organization name
+    organization-help-text: Your organization name, all your services and resources will be managed under this organization, later you can create as many organizations as you want or need.
+    password: Enter a password
+    password-help-text: Your password, make sure it's a good one.
+    confirm-password: Confirm your password
+    confirm-password-help-text: Just to confirm the password you entered above.
+    continue-button-text: Continue
   verify-email:
     title: Verify your email address
     message-text: <strong>Almost done!</strong><br> Check your email for a verification code.
@@ -190,12 +197,11 @@ onboard:
       alternative-choice: Use alternaitve options below to verify your account.
       resent-button-text: Resend Email
       sms-button-text: Send by SMS
-
 install:
+  installer-header: Installer
   failed-message-sent: The install failed! Click the button below to retry the install.
   retry-install: Retry Install
   start-install: Start Install
-
 layout:
   header:
     menus:
