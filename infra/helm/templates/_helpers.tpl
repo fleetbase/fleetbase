@@ -56,7 +56,7 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 - name: CACHE_DRIVER
   value: redis
 - name: SOCKETCLUSTER_PORT
-  value: "8000"
+  value: "80"
 - name: SOCKETCLUSTER_HOST
   value: $(SOCKETCLUSTER_SERVICE_HOST)
 {{- end }}

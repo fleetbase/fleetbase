@@ -13,6 +13,9 @@ terms:
   search: Search
   search-input: Search Input
 common: 
+  edit: Edit
+  save: Save
+  cancel: Cancel
   2fa-config: 2FA Config
   account: Account
   admin: Admin
@@ -46,11 +49,52 @@ common:
   two-factor: Two Factor
   uploading: Uploading...
   your-profile: Your Profile
-component: 
+component:
+  file:
+    dropdown-label: File actions
+  dropzone:
+    file: file
+    drop-to-upload: Drop to upload
+    invalid: Invalid
+    files-ready-for-upload:  >-
+      {numOfFiles} ready for upload.
+    upload-images-videos: Upload Images & Videos
+    upload-documents: Upload Documents
+    upload-documents-files: Upload Documents & Files
+    dropzone-supported-images-videos: Drag and drop image and video files onto this dropzone
+    dropzone-supported-files: Drag and drop files onto this dropzone
+    or-select-button-text: or select files to upload.
+    upload-queue: Upload Queue
+    uploading: Uploading...
   two-fa-enforcement-alert:
     message: To enhance the security of your account, your organization requires Two-Factor Authentication (2FA). Enable 2FA in your account settings for an additional layer of protection.
     button-text: Setup 2FA
+  comment-thread:
+    publish-comment-button-text: Publish comment
+    publish-reply-button-text: Publish reply
+    reply-comment-button-text: Reply
+    edit-comment-button-text: Edit
+    delete-comment-button-text: Delete
+    comment-published-ago: >-
+            {createdAgo} ago
+    comment-input-placeholder: Input a new comment...
+    comment-reply-placeholder: Input your reply...
+    comment-input-empty-notification: You cannot publish empty comments...
+    comment-min-length-notification: Comment must be atleast 2 characters
 auth:
+  verification:
+    header-title: Account Verification
+    title: Verify your email address
+    message-text: <strong>Almost done!</strong><br> Check your email for a verification code.
+    verification-code-text: Enter the verification code you received via email.
+    verification-input-label: Verification Code
+    verify-button-text: Verify & Continue
+    didnt-receive-a-code: Didn't receive a code yet?
+    not-sent:
+      message: Didn't receive a code yet?
+      alternative-choice: Use alternaitve options below to verify your account.
+      resend-email: Resend Email
+      send-by-sms: Send by SMS
   two-fa:
     verify-code:
       invalid-session-error-notification: Invalid session. Please try again.
@@ -188,15 +232,18 @@ onboard:
     confirm-password-help-text: Just to confirm the password you entered above.
     continue-button-text: Continue
   verify-email:
+    header-title: Account Verification
     title: Verify your email address
     message-text: <strong>Almost done!</strong><br> Check your email for a verification code.
     verification-code-text: Enter the verification code you received via email.
+    verification-input-label: Verification Code
     verify-button-text: Verify & Continue
+    didnt-receive-a-code: Didn't receive a code yet?
     not-sent:
-      message: Didn't receive an email yet?
+      message: Didn't receive a code yet?
       alternative-choice: Use alternaitve options below to verify your account.
-      resent-button-text: Resend Email
-      sms-button-text: Send by SMS
+      resend-email: Resend Email
+      send-by-sms: Send by SMS
 install:
   installer-header: Installer
   failed-message-sent: The install failed! Click the button below to retry the install.

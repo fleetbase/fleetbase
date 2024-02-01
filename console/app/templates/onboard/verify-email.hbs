@@ -1,7 +1,8 @@
-{{page-title "Account Verification"}}
+{{page-title (t "onboard.verify-email.header-title")}}
+
 <div class="bg-white dark:bg-gray-800 py-8 px-4 shadow rounded-lg w-full">
     <div class="mb-8">
-        <img class="mx-auto h-12 w-auto" src="/images/fleetbase-logo-svg.svg" alt={{t "app.name"}}>
+        <img class="mx-auto h-12 w-auto " src="/images/fleetbase-logo-svg.svg" alt={{t "app.name"}}>
         <h2 class="mt-6 text-center text-lg font-extrabold text-gray-900 dark:text-white truncate">
             {{t "onboard.verify-email.title"}}
         </h2>
@@ -12,15 +13,16 @@
             <FaIcon @icon="shield-check" @size="lg" class="text-blue-900 mr-4" />
         </div>
         <p class="flex-1 text-sm text-blue-900 dark:text-blue-900">
-            {{t "onboard.verify-email.message-text" htmlSafe=true}}
+             {{t "onboard.verify-email.message-text" htmlSafe=true}}
         </p>
     </div>
 
     <form class="mt-8 space-y-6" {{on "submit" this.verifyCode}}>
-        <InputGroup @type="tel" @name="Verification Code" @value={{this.code}} @helpText={{t "onboard.verify-email.verification-code-text"}} @inputClass="input-lg" {{on "input" this.validateInput}} />
+        <InputGroup @type="tel" @name={{t "onboard.verify-email.verification-input-label"}} @value={{this.code}} @helpText={{t "onboard.verify-email.verification-code-text"}} @inputClass="input-lg" {{on "input" this.validateInput}} />
 
-        <div>
-            <Button @icon="check" @iconPrefix="fas" @buttonType="submit" @type="primary" @size="lg" @text={{t "onboard.verify-email.verify-button-text"}} @isLoading={{this.isLoading}} @disabled={{this.isNotReadyToSubmit}} @onClick={{this.verifyCode}} />
+        <div class="flex flex-row items-center space-x-4">
+            <Button @icon="check" @iconPrefix="fas" @buttonType="submit" @type="primary" @size="lg" @text="Verify & Continue" @isLoading={{this.isLoading}} @disabled={{this.isNotReadyToSubmit}} @onClick={{this.verifyCode}} />
+            <a href="#" {{on "click" this.onDidntReceiveCode}} class="text-sm text-blue-400 hover:text-blue-300">{{t "onboard.verify-email.didnt-receive-a-code"}}</a>
         </div>
 
         {{#if this.stillWaiting}}
@@ -30,14 +32,14 @@
                         <FaIcon @icon="exclamation-triangle" @size="lg" class="text-yellow-400" />
                     </div>
                     <div class="ml-3 flex items-center">
-                        <span class="text-lg font-extrabold text-yellow-800">{{t "onboard.verify-email.not-sent.message"}}</span>
+                        <span class="text-lg font-extrabold text-yellow-800">{{t "onboard.verify-email.didnt-receive-a-code"}}</span>
                     </div>
                 </div>
-                <div class="py-3">
-                    <p class="text-yellow-700">{{t "onboard.verify-email.not-sent.alternative-choice"}}</p>
+                <div class="py-1">
+                    <p class="text-yellow-700 text-sm">{{t "onboard.verify-email.not-sent.alternative-choice"}}</p>
                     <div class="flex items-center mt-3">
-                        <Button @type="default" class="mr-2" @onClick={{this.resendEmail}}>{{t "onboard.verify-email.not-sent.resent-button-text"}}</Button>
-                        <Button @type="default" @onClick={{this.resendBySms}}>{{t "onboard.verify-email.not-sent.sms-button-text"}}</Button>
+                        <Button @buttonType="button" @type="warning" @wrapperClass="mr-2" @onClick={{this.resendEmail}} class="btn-warning-alert">{{t "onboard.verify-email.not-sent.resend-email"}}</Button>
+                        <Button @buttonType="button" @type="warning" @onClick={{this.resendBySms}} class="btn-warning-alert">{{t "onboard.verify-email.not-sent.send-by-sms"}}</Button>
                     </div>
                 </div>
             </div>
