@@ -52,11 +52,6 @@ Router.map(function () {
             this.route('organizations');
             this.route('organization-users', { path: '/:company_id' });
         });
-
-        this.mount('@fleetbase/dev-engine', {
-            as: 'developers',
-            path: 'developers'
-        });
     });
     this.route('install');
 });
