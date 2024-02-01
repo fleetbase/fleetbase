@@ -8,6 +8,7 @@ export default class DashboardWidgetPanelComponent extends Component {
     @tracked availableWidgets = [];
     @tracked dashboard;
     @tracked isOpen = true;
+    @service notifications;
     /**
      * Constructs the component and applies initial state.
      */
@@ -17,7 +18,7 @@ export default class DashboardWidgetPanelComponent extends Component {
         this.availableWidgets = this.universe.getWidgets();
         this.dashboard = dashboard;
 
-        console.log(this.availableWidgets);
+        console.log(this.availableWidgets, this.dashboard);
     }
 
     /**
@@ -36,7 +37,9 @@ export default class DashboardWidgetPanelComponent extends Component {
 
     @action addWidgetToDashboard(widget) {
         console.log('Adding widget to dashboard: ', widget);
-        this.args.dashboard.addWidget(widget);
+        this.args.dashboard.addWidget(widget).catch((error) => {
+            this.notifications.serverError(error);
+        });
     }
 
     /**

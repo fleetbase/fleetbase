@@ -5,6 +5,7 @@ export default class DashboardModel extends Model {
     @attr('string') uuid;
     @attr('boolean') is_default;
     @attr('string') name;
+    @attr('string') owner_uuid;
     @hasMany('dashboard-widget') widgets;
 
     addWidget(widget) {
@@ -14,9 +15,18 @@ export default class DashboardModel extends Model {
         const widgetRecord = store.createRecord('dashboard-widget', widget);
 
         widgetRecord.dashboard = this;
-
-        widgetRecord.save().then((widgetRecord) => {
-            this.widgets.pushObject(widgetRecord);
+        console.log(widgetRecord);
+        return new Promise((resolve, reject) => {
+            widgetRecord
+                .save()
+                .then((widgetRecord) => {
+                    this.widgets.pushObject(widgetRecord);
+                    resolve(widgetRecord);
+                })
+                .catch((error) => {
+                    store.unloadRecord(widgetRecord);
+                    reject(error);
+                });
         });
     }
 
@@ -27,14 +37,17 @@ export default class DashboardModel extends Model {
         const widgetRecord = store.peekRecord('dashboard-widget', widget);
 
         if (widgetRecord) {
-            widgetRecord
-                .destroyRecord()
-                .then(() => {
-                    this.widgets.removeObject(widgetRecord);
-                })
-                .catch((error) => {
-                    console.error('Error removing widget:', error);
-                });
+            return new Promise((resolve, reject) => {
+                widgetRecord
+                    .destroyRecord()
+                    .then(() => {
+                        this.widgets.removeObject(widgetRecord);
+                        resolve();
+                    })
+                    .catch((error) => {
+                        reject(error);
+                    });
+            });
         }
     }
 }

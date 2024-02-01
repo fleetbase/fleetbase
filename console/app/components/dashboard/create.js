@@ -2,8 +2,11 @@ import { action, computed } from '@ember/object';
 import Component from '@glimmer/component';
 import { tracked } from '@glimmer/tracking';
 
+import { inject as service } from '@ember/service';
 export default class DashboardCreateComponent extends Component {
     @tracked dashboard;
+
+    @service notifications;
 
     constructor(owner, args) {
         super(...arguments);
@@ -28,7 +31,9 @@ export default class DashboardCreateComponent extends Component {
     }
 
     @action removeWidget(widget) {
-        this.args.dashboard.removeWidget(widget.id);
+        this.args.dashboard.removeWidget(widget.id).catch((error) => {
+            this.notifications.serverError(error);
+        });
     }
 
     @computed('args.isEdit')
