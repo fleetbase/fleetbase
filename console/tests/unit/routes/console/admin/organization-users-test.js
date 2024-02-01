@@ -1,11 +1,11 @@
 import { module, test } from 'qunit';
 import { setupTest } from '@fleetbase/console/tests/helpers';
 
-module('Unit | Route | console/admin/organizations/index', function (hooks) {
+module('Unit | Route | console/admin/organization-users', function (hooks) {
     setupTest(hooks);
 
     test('it exists', function (assert) {
-        let route = this.owner.lookup('route:console/admin/organizations/index');
+        let route = this.owner.lookup('route:console/admin/organization-users');
         assert.ok(route);
     });
 });
