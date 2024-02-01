@@ -49,11 +49,7 @@ Router.map(function () {
             this.route('notifications');
             this.route('two-fa-settings');
             this.route('virtual', { path: '/:slug/:view' });
-        });
-
-        this.mount('@fleetbase/fleetops-engine', {
-            as: 'fleet-ops',
-            path: 'fleet-ops',
+            this.route('organizations', function () {});
         });
     });
     this.route('install');
