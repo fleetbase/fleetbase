@@ -3,7 +3,7 @@
 	order php_server before file_server
 }
 
-http://localhost:8000 {
+http://:8000 {
 	root * /fleetbase/api/public
 	encode zstd gzip
 	php_server {

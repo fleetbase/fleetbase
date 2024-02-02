@@ -12,7 +12,7 @@ services:
       - "./docker/database/:/docker-entrypoint-initdb.d/"
       - "./docker/database/mysql:/var/lib/mysql"
     environment:
-      MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
       MYSQL_DATABASE: "fleetbase"
 
   socket:
@@ -78,7 +78,7 @@ services:
       - ./api/storage:/var/www/html/api/storage
     build:
       context: .
-      dockerfile:  docker/httpd/Dockerfile
+      dockerfile: docker/httpd/Dockerfile
     ports:
       - "8000:80"
     depends_on:
