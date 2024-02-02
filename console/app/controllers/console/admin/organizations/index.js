@@ -47,6 +47,27 @@ export default class ConsoleAdminOrganizationsController extends Controller {
     @tracked limit = 20;
 
     /**
+     * Array to store the fetched companies.
+     *
+     * @var {Array}
+     */
+    @tracked companies = [];
+
+    /**
+     * The filterable param `name`
+     *
+     * @var {String}
+     */
+    @tracked name;
+
+    /**
+     * Queryable parameters for this controller's model
+     *
+     * @var {Array}
+     */
+    queryParams = ['name', 'page', 'limit'];
+
+    /**
      * Constructor for ConsoleAdminOrganizationsController.
      * Invokes the getAllCompanies method to fetch all companies.
      *
@@ -56,6 +77,21 @@ export default class ConsoleAdminOrganizationsController extends Controller {
     constructor() {
         super(...arguments);
         this.getAllCompanies();
+        this.columns = [
+            {
+                label: 'Name',
+                valuePath: 'name',
+            },
+            {
+                label: 'Country',
+                valuePath: 'country_name',
+            },
+            {
+                label: 'Created At',
+                valuePath: 'createdAt',
+            },
+            
+        ];
     }
 
     /**
@@ -64,7 +100,7 @@ export default class ConsoleAdminOrganizationsController extends Controller {
      * @method getAllCompanies
      */
     getAllCompanies() {
-        this.store.findAll('company').then((companies) => {
+        this.store.findAll('company', { page: this.page, limit: this.limit }).then((companies) => {
             this.set('companies', companies);
         });
     }
@@ -76,6 +112,6 @@ export default class ConsoleAdminOrganizationsController extends Controller {
      * @param {Object} company - The selected company.
      */
     @action goToCompany(company) {
-        this.router.transitionTo('console.admin.organization-users', company.id);
+        this.router.transitionTo('console.admin.organizations.users', company.id);
     }
 }

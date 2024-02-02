@@ -49,8 +49,30 @@ Router.map(function () {
             this.route('notifications');
             this.route('two-fa-settings');
             this.route('virtual', { path: '/:slug/:view' });
-            this.route('organizations');
-            this.route('organization-users', { path: '/:company_id' });
+            this.route('organizations', function () {
+                this.route('index', { path: '/' });
+                this.route('users', { path: '/:company_id' });
+            });
+        });
+
+        this.mount('@fleetbase/dev-engine', {
+            as: 'developers',
+            path: 'developers',
+        });
+
+        this.mount('@fleetbase/iam-engine', {
+            as: 'iam',
+            path: 'iam',
+        });
+
+        this.mount('@fleetbase/fleetops-engine', {
+            as: 'fleet-ops',
+            path: 'fleet-ops',
+        });
+
+        this.mount('@fleetbase/storefront-engine', {
+            as: 'storefront',
+            path: 'storefront',
         });
     });
     this.route('install');
