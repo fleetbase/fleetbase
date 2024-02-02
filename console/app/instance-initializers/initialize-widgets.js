@@ -24,7 +24,7 @@ export function initialize(application) {
             options: {
                 title: 'Github Card',
             },
-        }
+        },
     ];
 
     universe.registerDefaultDashboardWidgets(defaultWidgets);

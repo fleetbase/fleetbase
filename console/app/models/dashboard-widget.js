@@ -4,6 +4,7 @@ import { format, formatDistanceToNow } from 'date-fns';
 
 export default class DashboardWidgetModel extends Model {
     /** @ids */
+    @attr('string') uuid;
     @attr('string') dashboard_uuid;
 
     /** @relationships */
@@ -14,7 +15,7 @@ export default class DashboardWidgetModel extends Model {
     @attr('string') component;
     @attr('object') grid_options;
     @attr('object') options;
-    
+
     /** @dates */
     @attr('date') created_at;
     @attr('date') updated_at;

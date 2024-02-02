@@ -2,19 +2,13 @@ import { action, computed } from '@ember/object';
 import Component from '@glimmer/component';
 import { tracked } from '@glimmer/tracking';
 
+import { merge } from '@ember/object/internals';
 import { inject as service } from '@ember/service';
 export default class DashboardCreateComponent extends Component {
-    @tracked dashboard;
-
     @service notifications;
 
     constructor(owner, args) {
         super(...arguments);
-
-        const { dashboard } = args;
-        // Access the dashboard property from the arguments
-        this.dashboard = dashboard || this.args.dashboard;
-        console.log('Dashboard in Create: ', this.args.dashboard, args, dashboard);
     }
 
     @action
@@ -22,12 +16,12 @@ export default class DashboardCreateComponent extends Component {
         this.shouldFloat = !this.shouldFloat;
     }
 
-    @action onQueryParamsChanged(changedParams) {
-        this.reloadDashboard.perform(changedParams);
-    }
-
     @action onChangeGrid(event) {
         console.log('Grid Stack event: ', event);
+        console.log(
+            'dashboard: ',
+            this.args.dashboard.widgets.map((widget) => widget.serialize())
+        );
     }
 
     @action removeWidget(widget) {

@@ -14,6 +14,7 @@ export default class DashboardService extends Service {
     @tracked dashboards = [];
     @tracked currentDashboard;
     @tracked isEditingDashboard = false;
+    @tracked isAddingWidget = false;
 
     @task *loadDashboards() {
         try {
@@ -98,11 +99,15 @@ export default class DashboardService extends Service {
         this.isEditingDashboard = state;
     }
 
+    @action onAddingWidget(state = true) {
+        this.isAddingWidget = state;
+    }
+
     _createDefaultDashboard() {
         const defaultDashboard = this.store.createRecord('dashboard', {
             name: 'Default Dashboard',
             is_default: false,
-            widgets: this._createDefaultDashboardWidgets()
+            widgets: this._createDefaultDashboardWidgets(),
         });
 
         return defaultDashboard;

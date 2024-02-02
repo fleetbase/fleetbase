@@ -1,7 +1,7 @@
 <div class="fleetbase-dashboard-grid" ...attributes>
     <GridStack @options={{this.gridOptions}} @onChange={{this.onChangeGrid}}>
         {{#each @dashboard.widgets as |widget|}}
-            <GridStackItem @options={{widget.grid_options}} class="relative">
+            <GridStackItem @options={{spread-widget-options (hash id=widget.uuid options=widget.grid_options)}} class="relative">
                 {{component widget.component options=widget.options}}
                 {{#if @isEdit}}
                     <div class="absolute top-2 right-2">
