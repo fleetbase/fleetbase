@@ -9,6 +9,7 @@ export default class DashboardService extends Service {
     @service store;
     @service fetch;
     @service notifications;
+    @service universe;
 
     @tracked dashboards = [];
     @tracked currentDashboard;
@@ -16,14 +17,15 @@ export default class DashboardService extends Service {
 
     @task *loadDashboards() {
         try {
-            this.dashboards = yield this.store.findAll('dashboard');
+            const dashboards = yield this.store.findAll('dashboard');
 
-            if (this.dashboards.length > 0) {
-                this.currentDashboard = this.dashboards.find((dashboard) => dashboard.is_default) || this.dashboards[0];
+            this.dashboards = dashboards.toArray();
+            this.dashboards.unshiftObject(this._createDefaultDashboard());
 
-                if (this.currentDashboard?.widgets?.length === 0) {
-                    this.onChangeEdit(true);
-                }
+            // Set the current dashboard
+            this.currentDashboard = this.dashboards.find((dashboard) => dashboard.is_default) || this.dashboards[0];
+            if (this.currentDashboard?.widgets?.length === 0) {
+                this.onChangeEdit(true);
             }
         } catch (error) {
             console.error('Error loading dashboards:', error);
@@ -94,5 +96,23 @@ export default class DashboardService extends Service {
 
     @action onChangeEdit(state = true) {
         this.isEditingDashboard = state;
+    }
+
+    _createDefaultDashboard() {
+        const defaultDashboard = this.store.createRecord('dashboard', {
+            name: 'Default Dashboard',
+            is_default: false,
+            widgets: this._createDefaultDashboardWidgets()
+        });
+
+        return defaultDashboard;
+    }
+
+    _createDefaultDashboardWidgets() {
+        const widgets = this.universe.getDefaultDashboardWidgets().map((defaultWidget) => {
+            return this.store.createRecord('dashboard-widget', defaultWidget);
+        });
+
+        return widgets;
     }
 }

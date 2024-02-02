@@ -1,21 +1,28 @@
-<div class="fleetbase-dashboard-grid flex items-center justify-between mx-2">
+<div class="fleetbase-dashboard-grid flex items-center justify-between mb-4 mt-6 px-14">
     <div class="left-section">
         {{! Dashboard Title Text }}
         <h1 class="text-lg font-bold">{{this.dashboard.currentDashboard.name}}</h1>
     </div>
-    <div class="right-section ml-4 flex items-center">
+    <div class="fleetbase-dashboard-actions right-section ml-4 flex items-center">
         {{! Select Dropdown }}
         <div class="fleetbase-model-select fleetbase-power-select ember-model-select h-10">
-            <PowerSelect
-                @options={{this.dashboard.dashboards}}
-                @selected={{this.dashboard.currentDashboard}}
-                @onChange={{this.selectDashboard}}
-                @placeholder="Select Dashboard"
-                @triggerClass="form-select form-input"
-                as |dashboard|
-            >
+            {{!-- <PowerSelect @options={{this.dashboard.dashboards}} @selected={{this.dashboard.currentDashboard}} @onChange={{this.selectDashboard}} @placeholder="Select Dashboard" @triggerClass="form-select form-input" as |dashboard|>
                 {{smart-humanize dashboard.name}}
-            </PowerSelect>
+            </PowerSelect> --}}
+            <DropdownButton class="h-10" @text="Select Dashboard" @textClass="text-sm mr-2" @buttonClass="flex-row-reverse" @icon="caret-down" @iconClass="mr-0i" @size="sm" @iconPrefix="fas" @triggerClass="hidden md:flex" as |dd|>
+                <div class="next-dd-menu mt-1 mx-0" aria-labelledby="user-menu">
+                    <div class="p-1">
+                        {{#each this.dashboard.dashboards as |dashboard|}}
+                            <a href="javascript:;" class="next-dd-item" {{on "click" (dropdown-fn dd this.selectDashboard dashboard)}}>
+                                <div class="w-6">
+                                    <FaIcon @icon="desktop" />
+                                </div>
+                                <span>{{dashboard.name}}</span>
+                            </a>
+                        {{/each}}
+                    </div>
+                </div>
+            </DropdownButton>
         </div>
         {{! Button }}
 
@@ -54,12 +61,11 @@
     </div>
 </div>
 
-<Dashboard::Create @isEdit={{this.dashboard.isEditingDashboard}} @dashboard={{this.dashboard.currentDashboard}} />
-{{#if this.dashboard.isEditingDashboard}}
-    <Dashboard::WidgetPanel
-        @isOpen={{this.dashboard.isEditingDashboard}}
-        @onLoad={{this.setWidgetSelectorPanelContext}}
-        @dashboard={{this.dashboard.currentDashboard}}
-        @onClose={{fn this.onChangeEdit false}}
-    />
-{{/if}}
+<div class="px-10">
+    <Dashboard::Create @isEdit={{this.dashboard.isEditingDashboard}} @dashboard={{this.dashboard.currentDashboard}} />
+    {{#if this.dashboard.isEditingDashboard}}
+        <EmberWormhole @to="console-home-wormhole">
+            <Dashboard::WidgetPanel @isOpen={{this.dashboard.isEditingDashboard}} @onLoad={{this.setWidgetSelectorPanelContext}} @dashboard={{this.dashboard.currentDashboard}} @onClose={{fn this.onChangeEdit false}} />
+        </EmberWormhole>
+    {{/if}}
+</div>

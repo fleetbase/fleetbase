@@ -9,13 +9,14 @@ export default class DashboardWidgetPanelComponent extends Component {
     @tracked dashboard;
     @tracked isOpen = true;
     @service notifications;
+    
     /**
      * Constructs the component and applies initial state.
      */
     constructor(owner, { dashboard }) {
         super(...arguments);
 
-        this.availableWidgets = this.universe.getWidgets();
+        this.availableWidgets = this.universe.getDashboardWidgets();
         this.dashboard = dashboard;
 
         console.log(this.availableWidgets, this.dashboard);

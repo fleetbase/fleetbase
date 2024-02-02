@@ -13,7 +13,6 @@ export default class DashboardComponent extends Component {
 
     constructor() {
         super(...arguments);
-
         this.loadDashboards.perform();
     }
 
@@ -52,9 +51,9 @@ export default class DashboardComponent extends Component {
 
     @action deleteDashboard(dashboard, options = {}) {
         if (this.dashboard.dashboards?.length === 1) {
-            this.notifications.error('You cannot delete the last dashboard.');
-            return;
+            return this.notifications.error('You cannot delete the last dashboard.');
         }
+
         this.modalsManager.confirm({
             title: `Are you sure to delete this ${dashboard.name}?`,
             confirm: async (modal, done) => {
