@@ -50,6 +50,16 @@ app.kubernetes.io/name: {{ include "helm.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 
+{{- define "helm.commonVariables" -}}
+- name: CACHE_URL
+  value: $(REDIS_SERVICE_PORT)/1
+- name: CACHE_DRIVER
+  value: redis
+- name: SOCKETCLUSTER_PORT
+  value: "80"
+- name: SOCKETCLUSTER_HOST
+  value: $(SOCKETCLUSTER_SERVICE_HOST)
+{{- end }}
 {{/*
 Create the name of the service account to use
 */}}

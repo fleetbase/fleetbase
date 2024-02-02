@@ -1,0 +1,25 @@
+.two-fa-enforcement-alert svg.fa-triangle-exclamation {
+    font-size: 2.25rem;
+    padding-right: 0.5rem;
+    color: rgb(202 138 4);
+}
+
+body[data-theme='dark'] .btn.btn-warning-alert.btn-warning,
+.btn.btn-warning-alert.btn-warning,
+.two-fa-enforcement-alert button#two-fa-setup-button.btn.btn-warning,
+body[data-theme='dark'] .two-fa-enforcement-alert button#two-fa-setup-button.btn.btn-warning {
+    background-color: rgb(202 138 4);
+    border-color: rgb(161 98 7);
+    color: rgb(254 249 195);
+    cursor: default;
+}
+
+.app-version-in-nav {
+    display: flex;
+    align-items: center;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+    font-size: 0.8rem;
+    line-height: 1rem;
+    padding-left: 1rem;
+    padding-top: 0.2rem;
+}

@@ -1,0 +1,47 @@
+<div class="mb-8 text-center">
+    <Image src={{@model.logo_url}} @fallbackSrc="/images/fleetbase-logo-svg.svg" alt={{t "app.name"}} width="160" height="56" class="w-40 h-14 mx-auto" />
+    <h2 class="text-lg font-extrabold text-gray-900 dark:text-white truncate">
+        {{if this.isSent "Verification Code"}}
+    </h2>
+</div>
+
+<div class="flex px-3 py-2 mb-4 rounded-md shadow-sm bg-green-200">
+    <div>
+        <FaIcon @icon="check-circle" @size="lg" class="text-green-900 mr-4" />
+    </div>
+    <p class="flex-1 text-sm text-green-900 dark:text-green-900">
+        <strong>Check your {{this.selectedMethod}}</strong><br />
+        We've sent you a verification code. Enter the code below to complete the login process.
+    </p>
+</div>
+
+<form class="mt-8" {{on "submit" this.verifyCode}}>
+    <div class="flex items-center justify-between my-6">
+        <OtpInput @onInputCompleted={{this.handleOtpInput}} />
+    </div>
+
+    <div id="otp-countdown-container" class="otp-countdown-container flex items-center justify-center min-h-12">
+        {{#if this.countdownReady}}
+            <Countdown @expiry={{this.twoFactorSessionExpiresAfter}} @countdownClass="text-lg" @onCountdownEnd={{this.handleCodeExpired}} />
+        {{/if}}
+        {{#if this.isCodeExpired}}
+            <InfoBlock>
+                <div>Your 2FA authentication code has expired. You can request another code if you need more time.</div>
+                <Button @type="primary" @wrapperClass="mt-2" @text="Resend Code" @icon="arrow-rotate-right" @onClick={{this.resendCode}} />
+            </InfoBlock>
+        {{/if}}
+    </div>
+
+    <div class="mt-4">
+        <Button @buttonType="submit" @type="primary" @text="Verify Code" @icon="check-circle" @wrapperClass="btn-block" @isLoading={{this.isLoading}} />
+    </div>
+
+    <div class="text-center flex flex-row items-center justify-center space-x-4 mt-3.5">
+        <a href="#" class="text-sm text-blue-500 hover:underline inline-block" {{on "click" this.resendCode}}>
+            Resend Code
+        </a>
+        <a href="#" class="text-sm text-danger hover:underline inline-block" {{on "click" this.cancelTwoFactor}}>
+            Cancel Two-Factor
+        </a>
+    </div>
+</form>

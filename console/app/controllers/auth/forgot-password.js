@@ -19,6 +19,13 @@ export default class AuthForgotPasswordController extends Controller {
     @service notifications;
 
     /**
+     * Inject the `intl` service
+     *
+     * @memberof AuthForgotPasswordController
+     */
+    @service intl;
+
+    /**
      * The email variable
      *
      * @memberof AuthForgotPasswordController
@@ -55,7 +62,7 @@ export default class AuthForgotPasswordController extends Controller {
         this.fetch
             .post('auth/get-magic-reset-link', { email })
             .then(() => {
-                this.notifications.success('Check your email to continue!');
+                this.notifications.success(this.intl.t('auth.forgot-password.success-message'));
                 this.isSent = true;
             })
             .catch((error) => {

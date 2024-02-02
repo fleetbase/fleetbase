@@ -10,7 +10,9 @@ Router.map(function () {
     this.route('auth', function () {
         this.route('login', { path: '/' });
         this.route('forgot-password');
-        this.route('reset-password');
+        this.route('reset-password', { path: '/reset-password/:id' });
+        this.route('two-fa');
+        this.route('verification');
     });
     this.route('onboard', function () {
         this.route('verify-email');
@@ -25,9 +27,11 @@ Router.map(function () {
         this.route('notifications');
         this.route('account', function () {
             this.route('virtual', { path: '/:slug/:view' });
+            this.route('auth');
         });
         this.route('settings', function () {
             this.route('virtual', { path: '/:slug/:view' });
+            this.route('two-fa');
         });
         this.route('virtual', { path: '/:slug/:view' });
         this.route('admin', function () {
@@ -43,6 +47,7 @@ Router.map(function () {
             });
             this.route('branding');
             this.route('notifications');
+            this.route('two-fa-settings');
             this.route('virtual', { path: '/:slug/:view' });
         });
     });

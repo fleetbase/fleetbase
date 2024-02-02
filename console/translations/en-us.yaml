@@ -1,18 +1,5 @@
 app:
   name: Fleetbase
-
-layout:
-  header:
-    menus:
-      organization:
-        settings: Organization settings
-        create-or-join: Create or join organizations
-        explore-extensions: Explore extensions
-      user:
-        view-profile: View profile
-        keyboard-shortcuts: Show keyboard shortcuts
-        changelog: Changelog
-
 terms:
   new: New
   sort: Sort
@@ -24,7 +11,252 @@ terms:
   logout: Logout
   dashboard: Dashboard
   search: Search
-phrases:
   search-input: Search Input
-
-
+common: 
+  edit: Edit
+  save: Save
+  cancel: Cancel
+  2fa-config: 2FA Config
+  account: Account
+  admin: Admin
+  branding: Branding
+  columns: Columns
+  dashboard: Dashboard
+  date-of-birth: Date of Birth
+  delete: Delete
+  email: Email
+  filesystem: Filesystem
+  filter: Filer
+  home: Home
+  logout: Logout
+  mail: Mail
+  name: Name
+  new: New
+  notification-channels: Notification Channels
+  notifications: Notifications
+  organization: Organization
+  overview: Overview
+  phone: Your phone number
+  profile: Profile
+  queue: Queue
+  save-button-text: Save Changes
+  search-input: Search Input
+  search: Search
+  services: Services
+  settings: Settings
+  socket: Socket
+  sort: Sort
+  two-factor: Two Factor
+  uploading: Uploading...
+  your-profile: Your Profile
+component:
+  file:
+    dropdown-label: File actions
+  dropzone:
+    file: file
+    drop-to-upload: Drop to upload
+    invalid: Invalid
+    files-ready-for-upload:  >-
+      {numOfFiles} ready for upload.
+    upload-images-videos: Upload Images & Videos
+    upload-documents: Upload Documents
+    upload-documents-files: Upload Documents & Files
+    dropzone-supported-images-videos: Drag and drop image and video files onto this dropzone
+    dropzone-supported-files: Drag and drop files onto this dropzone
+    or-select-button-text: or select files to upload.
+    upload-queue: Upload Queue
+    uploading: Uploading...
+  two-fa-enforcement-alert:
+    message: To enhance the security of your account, your organization requires Two-Factor Authentication (2FA). Enable 2FA in your account settings for an additional layer of protection.
+    button-text: Setup 2FA
+  comment-thread:
+    publish-comment-button-text: Publish comment
+    publish-reply-button-text: Publish reply
+    reply-comment-button-text: Reply
+    edit-comment-button-text: Edit
+    delete-comment-button-text: Delete
+    comment-published-ago: >-
+            {createdAgo} ago
+    comment-input-placeholder: Input a new comment...
+    comment-reply-placeholder: Input your reply...
+    comment-input-empty-notification: You cannot publish empty comments...
+    comment-min-length-notification: Comment must be atleast 2 characters
+auth:
+  verification:
+    header-title: Account Verification
+    title: Verify your email address
+    message-text: <strong>Almost done!</strong><br> Check your email for a verification code.
+    verification-code-text: Enter the verification code you received via email.
+    verification-input-label: Verification Code
+    verify-button-text: Verify & Continue
+    didnt-receive-a-code: Didn't receive a code yet?
+    not-sent:
+      message: Didn't receive a code yet?
+      alternative-choice: Use alternaitve options below to verify your account.
+      resend-email: Resend Email
+      send-by-sms: Send by SMS
+  two-fa:
+    verify-code:
+      invalid-session-error-notification: Invalid session. Please try again.
+      verification-successful-notification: Verification successful!
+      verification-code-expired-notification: Verification code has expired. Please request a new one.
+      verification-code-failed-notification: Verification failed. Please try again.
+    resend-code: 
+      verification-code-resent-notification: New verification code sent.
+      verification-code-resent-error-notification: Error resending verification code. Please try again.
+  forgot-password:
+    success-message: Check your email to continue!
+    is-sent:  
+      title: Almost Done!
+      message: <strong>Check your email!</strong><br> We've sent you a magic link to your email which will allow you to reset your password. The link expires in 15 minutes.
+    not-sent:
+      title: Forgot your password?
+      message: <strong>Don't worry, we've got your back.</strong><br> Enter the email you use to login to {appName} and we will send you a secure link to reset your password.
+    form:
+      email-label: Your email address
+      submit-button: OK, Send me a magic link!
+      nevermind-button: Nevermind
+  login:
+    title: Sign in to your account
+    no-identity-notification: Did you forget to enter your email?
+    no-password-notification: Did you forget to enter your password?
+    unverified-notification: Your account needs to be verified to proceed.
+    failed-attempt:
+      message: <strong>Forgot your password?</strong><br> Click the button below to reset your password.
+      button-text: Ok, help me reset!
+    form:
+      email-label: Email address
+      password-label: Password
+      remember-me-label: Remember me
+      forgot-password-label: Forgot your password?
+      sign-in-button: Sign in
+      create-account-button: Create a new Account
+    slow-connection-message: Experiencing connectivity issues.
+  reset-password:
+    success-message: Your password has been reset! Login to continue.
+    title: Reset your password
+    form:
+      code:
+        label: Your reset code
+        help-text: The verification code you received in your email.
+      password:
+        label: New Password
+        help-text: Enter a password at-least 6 characters to continue.
+      confirm-password:
+        label: Confirm new Password
+        help-text: Enter a password at-least 6 characters to continue.
+      submit-button: Reset Password
+      back-button: Back
+console:
+  account:
+    index: 
+      upload-new: Upload new
+      phone: Your phone number.
+      photos: photos
+  admin:
+    config:
+      database:
+        title: Database Configuration
+      filesystem:
+        title: Filesystem Configuration
+      mail:
+        title: Mail Configuration
+      notification-channels: 
+        title: Notification Channels Configuration
+      queue:
+        title: Queue Configuration
+      services:
+        title: Services Configuration
+      socket:
+        title: Socket Configuration
+    branding:
+      title: Branding
+      icon-text: Icon
+      upload-new: Upload new
+      reset-default: Reset to default
+      logo-text: Logo
+      theme: Default Theme
+    index:
+      total-users: Total Users
+      total-organizations: Total Organizations
+      total-transactions: Total Transactions
+    notifications:
+      title: Notifications
+      notification-settings: Notification Settings
+  settings:
+    index:
+      title: Organization Settings
+      organization-name: Organization name
+      organization-description: Organization description
+      organization-phone: Organization phone number
+      organization-currency: Organization currency
+      organization-id: Organization ID
+      organization-branding: Organization Branding
+      logo: Logo
+      logo-help-text: Logo for your organization.
+      upload-new-logo: Upload new logo
+      backdrop: Backdrop
+      backdrop-help-text: Optional banner or background image for your organization.
+      upload-new-backdrop: Upload new backdrop
+  extensions:
+    title: Extensions are coming soon!
+    message: Please check back in the upcoming versions as we prepare to launch the Extensions repository and marketplace.
+  notifications:
+    select-all: Select All
+    mark-as-read: Mark as Read
+    received: >-
+        Received:
+    message: No notifications to display.
+invite:
+  for-users:
+    invitation-message: You've been invited to join {companyName}
+    invitation-sent-message: You've been invited to join the {companyName} organization on {appName}. To accept this invitation, input your invitation code received by email and click continue.
+    invitation-code-sent-text: Your invitiation code
+    accept-invitation-text: Accept Invitation
+onboard:
+  index:
+    title: Create your account
+    welcome-title: <strong>Welcome to {companyName}!</strong><br />
+    welcome-text: Complete the details required below to get started.
+    full-name: Full name
+    full-name-help-text: Your full name
+    your-email: Email address
+    your-email-help-text: Your email address
+    phone: Phone number
+    phone-help-text: Your phone number
+    organization-name: Organization name
+    organization-help-text: Your organization name, all your services and resources will be managed under this organization, later you can create as many organizations as you want or need.
+    password: Enter a password
+    password-help-text: Your password, make sure it's a good one.
+    confirm-password: Confirm your password
+    confirm-password-help-text: Just to confirm the password you entered above.
+    continue-button-text: Continue
+  verify-email:
+    header-title: Account Verification
+    title: Verify your email address
+    message-text: <strong>Almost done!</strong><br> Check your email for a verification code.
+    verification-code-text: Enter the verification code you received via email.
+    verification-input-label: Verification Code
+    verify-button-text: Verify & Continue
+    didnt-receive-a-code: Didn't receive a code yet?
+    not-sent:
+      message: Didn't receive a code yet?
+      alternative-choice: Use alternaitve options below to verify your account.
+      resend-email: Resend Email
+      send-by-sms: Send by SMS
+install:
+  installer-header: Installer
+  failed-message-sent: The install failed! Click the button below to retry the install.
+  retry-install: Retry Install
+  start-install: Start Install
+layout:
+  header:
+    menus:
+      organization:
+        settings: Organization settings
+        create-or-join: Create or join organizations
+        explore-extensions: Explore extensions
+      user:
+        view-profile: View profile
+        keyboard-shortcuts: Show keyboard shortcuts
+        changelog: Changelog

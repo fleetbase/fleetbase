@@ -4,7 +4,14 @@ import { inject as service } from '@ember/service';
 export default class AuthResetPasswordRoute extends Route {
     @service store;
 
-    model() {
-        return this.store.findRecord('brand', 1);
+    async model(params) {
+        return params;
+    }
+
+    async setupController(controller) {
+        super.setupController(...arguments);
+
+        // set brand to controller
+        this.brand = await this.store.findRecord('brand', 1);
     }
 }

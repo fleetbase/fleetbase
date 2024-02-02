@@ -41,6 +41,20 @@ export default class AuthLoginController extends Controller {
     @service router;
 
     /**
+     * Inject the `intl` service
+     *
+     * @var {Service}
+     */
+    @service intl;
+
+    /**
+     * Inject the `fetch` service
+     *
+     * @var {Service}
+     */
+    @service fetch;
+
+    /**
      * Whether or not to remember the users session
      *
      * @var {Boolean}
@@ -96,28 +110,61 @@ export default class AuthLoginController extends Controller {
      */
     @tracked failedAttempts = 0;
 
-    /**
-     * Authenticate the user
-     *
-     * @void
-     */
+    @tracked token;
+
     @action async login(event) {
         // firefox patch
         event.preventDefault();
-
         // get user credentials
-        const { email, password, rememberMe } = this;
+        const { identity, password, rememberMe } = this;
+
+        // If no password error
+        if (!identity) {
+            return this.notifications.warning(this.intl.t('auth.login.no-identity-notification'));
+        }
+
+        // If no password error
+        if (!password) {
+            return this.notifications.warning(this.intl.t('auth.login.no-identity-notification'));
+        }
 
         // start loader
         this.set('isLoading', true);
-
         // set where to redirect on login
         this.setRedirect();
 
+        // send request to check for 2fa
         try {
-            await this.session.authenticate('authenticator:fleetbase', { email, password }, rememberMe);
+            let { twoFaSession, isTwoFaEnabled } = await this.session.checkForTwoFactor(identity);
+
+            if (isTwoFaEnabled) {
+                return this.session.store
+                    .persist({ identity })
+                    .then(() => {
+                        return this.router.transitionTo('auth.two-fa', { queryParams: { token: twoFaSession } }).then(() => {
+                            this.reset('success');
+                        });
+                    })
+                    .catch((error) => {
+                        this.notifications.serverError(error);
+                        this.reset('error');
+
+                        throw error;
+                    });
+            }
+        } catch (error) {
+            return this.notifications.serverError(error);
+        }
+
+        try {
+            await this.session.authenticate('authenticator:fleetbase', { identity, password }, rememberMe);
         } catch (error) {
             this.failedAttempts++;
+
+            // Handle unverified user
+            if (error.toString().includes('not verified')) {
+                return this.sendUserForEmailVerification(identity);
+            }
 
             return this.failure(error);
         }
@@ -142,6 +189,30 @@ export default class AuthLoginController extends Controller {
             if (this.email) {
                 this.forgotPasswordController.email = this.email;
             }
+        });
+    }
+
+    /**
+     * Creates an email verification session and transitions user to verification route.
+     *
+     * @param {String} email
+     * @return {Promise<Transition>}
+     * @memberof AuthLoginController
+     */
+    sendUserForEmailVerification(email) {
+        return this.fetch.post('auth/create-verification-session', { email, send: true }).then(({ token }) => {
+            return this.session.store.persist({ email }).then(() => {
+                this.notifications.warning(this.intl.t('auth.login.unverified-notification'));
+                return this.router
+                    .transitionTo('auth.verification', {
+                        queryParams: {
+                            token,
+                        },
+                    })
+                    .then(() => {
+                        this.reset('error');
+                    });
+            });
         });
     }
 
@@ -184,7 +255,7 @@ export default class AuthLoginController extends Controller {
      * @void
      */
     slowConnection() {
-        this.notifications.error('Experiencing connectivity issues.');
+        this.notifications.error(this.intl.t('auth.login.slow-connection-message'));
     }
 
     /**

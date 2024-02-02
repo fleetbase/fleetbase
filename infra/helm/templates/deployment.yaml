@@ -3,6 +3,7 @@ kind: Deployment
 metadata:
   name: {{ include "helm.fullname" . }}
   labels:
+    service: app
     {{- include "helm.labels" . | nindent 4 }}
 spec:
   {{- if not .Values.autoscaling.enabled }}
@@ -10,6 +11,7 @@ spec:
   {{- end }}
   selector:
     matchLabels:
+      service: app
       {{- include "helm.selectorLabels" . | nindent 6 }}
   template:
     metadata:
@@ -18,6 +20,7 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       labels:
+        service: app
         {{- include "helm.selectorLabels" . | nindent 8 }}
     spec:
       {{- with .Values.imagePullSecrets }}
@@ -59,12 +62,7 @@ spec:
             - secretRef:
                 name: infra-provided-secret
           env:
-            - name: CACHE_URL
-              value: $(REDIS_SERVICE_PORT)/1
-            - name: SOCKETCLUSTER_PORT
-              value: "8000"
-            - name: SOCKETCLUSTER_HOST
-              value: $(SOCKETCLUSTER_SERVICE_HOST)
+          {{- include "helm.commonVariables" . | nindent 12 }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       {{- with .Values.nodeSelector }}
