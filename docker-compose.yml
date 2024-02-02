@@ -72,3 +72,14 @@ services:
       - database
       - cache
       - queue
+
+  httpd:
+    volumes:
+      - ./api/storage:/var/www/html/api/storage
+    build:
+      context: .
+      dockerfile:  docker/httpd/Dockerfile
+    ports:
+      - "8000:80"
+    depends_on:
+      - application

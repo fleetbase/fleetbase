@@ -5,7 +5,7 @@ variable "CACHE" { default = "" }
 variable "GCP" { default = false }
 
 group "default" {
-  targets = ["app"]
+  targets = ["app", "app-httpd"]
 }
 
 target "app" {
@@ -34,4 +34,17 @@ target "app" {
 
   cache-from = notequal("", CACHE) ? ["${CACHE}"] : []
   cache-to   = notequal("", CACHE) ? ["${CACHE},mode=max,ignore-error=true"] : []
+}
+
+target "app-httpd" {
+  context    = "./"
+  dockerfile = "docker/httpd/Dockerfile"
+  platforms = [
+    "linux/amd64",
+  ]
+
+  tags = notequal("", REGISTRY) ? formatlist(
+    GCP ? "${REGISTRY}/app-httpd:%s" : "${REGISTRY}:app-httpd-%s",
+    compact(["latest", VERSION])
+  ) : []
 }
