@@ -34,7 +34,7 @@ services:
       DATABASE_URL: "mysql://root@database/fleetbase"
       QUEUE_CONNECTION: redis
       CACHE_DRIVER: redis
-      CACHE_PATH: /var/www/html/api/storage/framework/cache
+      CACHE_PATH: /fleetbase/api/storage/framework/cache
       CACHE_URL: tcp://cache
       REDIS_URL: tcp://cache
 
@@ -60,7 +60,7 @@ services:
       DATABASE_URL: "mysql://root@database/fleetbase"
       QUEUE_CONNECTION: redis
       CACHE_DRIVER: redis
-      CACHE_PATH: /var/www/html/api/storage/framework/cache
+      CACHE_PATH: /fleetbase/api/storage/framework/cache
       CACHE_URL: tcp://cache
       REDIS_URL: tcp://cache
       SESSION_DOMAIN: localhost
@@ -75,7 +75,7 @@ services:
 
   httpd:
     volumes:
-      - ./api/storage:/var/www/html/api/storage
+      - ./api/storage:/fleetbase/api/storage
     build:
       context: .
       dockerfile: docker/httpd/Dockerfile

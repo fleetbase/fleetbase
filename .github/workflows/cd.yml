@@ -72,7 +72,7 @@ jobs:
       run: |-
           set -eu
           # run deploy.sh script before deployments
-          env "ECS_RUN.SERVICE=app" "ECS_RUN.LAUNCH_TYPE=FARGATE" ./ecs-tool run -l "ecs-tool" --image_tag '{container_name}-${{ env.VERSION }}' --cluster ${{ env.PROJECT }}-${{ env.STACK }} --task_definition ${{ env.PROJECT }}-${{ env.STACK }}-app --container_name app ./deploy.sh
+          env "ECS_RUN.SERVICE=app" "ECS_RUN.LAUNCH_TYPE=FARGATE" ./ecs-tool run -l "ecs-tool" --image_tag '{container_name}-${{ env.VERSION }}' --cluster ${{ env.PROJECT }}-${{ env.STACK }} --task_definition ${{ env.PROJECT }}-${{ env.STACK }}-app --container_name app ls -la
           ./ecs-tool deploy --image_tag '{container_name}-${{ env.VERSION }}' --cluster ${{ env.PROJECT }}-${{ env.STACK }} -s app -s scheduler -s events
 
   build_frontend:

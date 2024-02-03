@@ -79,6 +79,9 @@ RUN mkdir -p /fleetbase/api/storage/logs/ && touch /fleetbase/api/storage/logs/l
 RUN chown -R www-data:www-data /fleetbase/api/storage
 RUN chmod -R 755 /fleetbase/api/storage
 
+# Set permissions for deploy script
+RUN chmod +x /fleetbase/api/deploy.sh
+
 # Scheduler base stage
 FROM base as scheduler-base
 
@@ -112,10 +115,8 @@ FROM base as app-dev
 ENTRYPOINT ["docker-php-entrypoint"]
 # add --watch flag later
 CMD ["sh", "-c", "php artisan octane:frankenphp --port=8000 --host=0.0.0.0 --caddyfile $CADDYFILE_PATH"] 
-# CMD ["sh", "-c", "frankenphp run --config $CADDYFILE_PATH"]
 
 # Application stage
 FROM base as app
 ENTRYPOINT ["/sbin/ssm-parent", "-c", ".ssm-parent.yaml", "run", "--", "docker-php-entrypoint"]
 CMD ["sh", "-c", "php artisan octane:frankenphp --port=8000 --host=0.0.0.0 --https --http-redirect --caddyfile $CADDYFILE_PATH"]
-# CMD ["sh", "-c", "frankenphp run --config $CADDYFILE_PATH"]
