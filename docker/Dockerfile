@@ -54,11 +54,6 @@ COPY --chown=www-data:www-data ./Caddyfile $CADDYFILE_PATH
 # Create /fleetbase directory and set correct permissions
 RUN mkdir -p /fleetbase/api && chown -R www-data:www-data /fleetbase
 
-# Copy packages
-COPY --chown=www-data:www-data ./packages/core-api /fleetbase/packages/core-api
-COPY --chown=www-data:www-data ./packages/fleetops /fleetbase/packages/fleetops
-COPY --chown=www-data:www-data ./packages/storefront /fleetbase/packages/storefront
-
 # Set working directory
 WORKDIR /fleetbase/api
 
