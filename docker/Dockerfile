@@ -4,31 +4,31 @@ FROM dunglas/frankenphp:sha-7454826-php8.2-alpine as base
 
 # Install packages
 RUN apk update && apk add git openssh bind-tools mycli nodejs npm \
-    && mkdir -p /root/.ssh \
-    && ssh-keyscan github.com >> /root/.ssh/known_hosts
+  && mkdir -p /root/.ssh \
+  && ssh-keyscan github.com >> /root/.ssh/known_hosts
 
 # Install PHP Extensions
 RUN install-php-extensions \
-    pdo_mysql \
-    gd \
-    bcmath \
-    redis \
-    intl \
-    zip \
-    gmp \
-    apcu \
-    opcache \
-    memcached \
-    imagick \
-    geos \
-    sockets \
-    pcntl \
-    @composer
+  pdo_mysql \
+  gd \
+  bcmath \
+  redis \
+  intl \
+  zip \
+  gmp \
+  apcu \
+  opcache \
+  memcached \
+  imagick \
+  geos \
+  sockets \
+  pcntl \
+  @composer
 
 # Update PHP configurations
 RUN sed -e 's/^expose_php.*/expose_php = Off/' "$PHP_INI_DIR/php.ini-production" > "$PHP_INI_DIR/php.ini" \
-    && sed -i -e 's/^upload_max_filesize.*/upload_max_filesize = 600M/' -e 's/^post_max_size.*/post_max_size = 0/' \
-    -e 's/^memory_limit.*/memory_limit = 600M/' "$PHP_INI_DIR/php.ini"
+  && sed -i -e 's/^upload_max_filesize.*/upload_max_filesize = 600M/' -e 's/^post_max_size.*/post_max_size = 0/' \
+  -e 's/^memory_limit.*/memory_limit = 600M/' "$PHP_INI_DIR/php.ini"
 
 # Install global node modules
 RUN npm install -g chokidar
@@ -69,6 +69,9 @@ RUN su www-data -s /bin/sh -c "composer install --no-scripts --no-autoloader --o
 
 # Setup application
 COPY --chown=www-data:www-data ./api /fleetbase/api
+
+
+RUN su www-data -s /bin/sh -c "composer dumpautoload"
 
 # Setup composer root directory
 RUN mkdir -p /root/.composer
