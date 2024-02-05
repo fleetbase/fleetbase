@@ -48,6 +48,9 @@ ENV OCTANE_SERVER=frankenphp
 ARG ENVIRONMENT=production
 ENV APP_ENV=$ENVIRONMENT
 
+# Setup github auth
+ARG GITHUB_AUTH_KEY
+
 # Copy Caddyfile
 COPY --chown=www-data:www-data ./Caddyfile $CADDYFILE_PATH
 
@@ -57,9 +60,8 @@ RUN mkdir -p /fleetbase/api && chown -R www-data:www-data /fleetbase
 # Set working directory
 WORKDIR /fleetbase/api
 
-# Load the secret into the auth.json file if exists, and install dependencies
-COPY --chown=www-data:www-data ./api/auth.jso[n] /fleetbase/api/auth.json
-RUN --mount=type=secret,id=composer_auth,target=/fleetbase/api/auth.json
+# If GITHUB_AUTH_KEY is provided, create auth.json with it
+RUN if [ -n "$GITHUB_AUTH_KEY" ]; then echo "{\"github-oauth\": {\"github.com\": \"$GITHUB_AUTH_KEY\"}}" > auth.json; fi
 
 # Optimize Composer Dependency Installation
 COPY --chown=www-data:www-data ./api/composer.json /fleetbase/api/

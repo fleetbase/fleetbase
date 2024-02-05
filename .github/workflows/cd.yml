@@ -10,6 +10,7 @@ concurrency:
 
 env:
   PROJECT: ${{ secrets.PROJECT }}
+  GITHUB_AUTH_KEY: ${{ secrets._GITHUB_AUTH_TOKEN }}
 
 jobs:
   build_service:
@@ -45,14 +46,6 @@ jobs:
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
 
-      - name: Prepare Composer Auth Secret
-        run: |
-          if [[ -n "${{ secrets._GITHUB_AUTH_TOKEN }}" ]]; then
-            echo '{"github-oauth": {"github.com": "'${{ secrets._GITHUB_AUTH_TOKEN }}'"}}' > composer-auth.json
-          else
-            echo '{}' > composer-auth.json
-          fi
-
       - name: Build and Release
         uses: docker/bake-action@v2
         env:
@@ -61,6 +54,8 @@ jobs:
           CACHE: type=gha
         with:
           push: true
+          set:
+            *.args.GITHUB_AUTH_KEY: ${{ env.GITHUB_AUTH_KEY }}
           files: |
             ./docker-bake.hcl
 
