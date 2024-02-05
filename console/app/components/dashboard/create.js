@@ -22,14 +22,27 @@ export default class DashboardCreateComponent extends Component {
             'dashboard: ',
             this.args.dashboard.widgets.map((widget) => widget.serialize())
         );
-        const widgetEvent = event.detail[0];
-        const changedWidget = this.args.dashboard.widgets.find((widget) => widget.id === widgetEvent.id);
 
-        if (changedWidget) {
-            const { id, x, y, w, h } = widgetEvent;
+        const updatedWidgets = [];
+
+        event.detail.forEach((currentWidgetEvent, index) => {
+            const alreadyUpdated = updatedWidgets.find((item) => item.uuid === currentWidgetEvent.id);
+            if (alreadyUpdated) {
+                return; // Skip updating if already updated
+            }
+
+            const changedWidget = this.args.dashboard.widgets.find((widget) => widget.id === currentWidgetEvent.id);
+            if (!changedWidget) {
+                return;
+            }
+
+            const { id, x, y, w, h } = currentWidgetEvent;
             changedWidget.grid_options = { x, y, w, h };
-            changedWidget.updatePosition({ id, x, y, h, w });
-        }
+            const response = changedWidget.updatePosition({ id, x, y, h, w });
+            if (response) {
+                updatedWidgets.push(changedWidget);
+            }
+        });
     }
 
     @action removeWidget(widget) {
