@@ -90,7 +90,6 @@ export default class ConsoleAdminOrganizationsController extends Controller {
                 label: 'Created At',
                 valuePath: 'createdAt',
             },
-            
         ];
     }
 

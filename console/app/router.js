@@ -65,14 +65,14 @@ Router.map(function () {
             path: 'iam',
         });
 
-        this.mount('@fleetbase/fleetops-engine', {
-            as: 'fleet-ops',
-            path: 'fleet-ops',
-        });
-
         this.mount('@fleetbase/storefront-engine', {
             as: 'storefront',
             path: 'storefront',
+        });
+
+        this.mount('@fleetbase/fleetops-engine', {
+            as: 'fleet-ops',
+            path: 'fleet-ops',
         });
     });
     this.route('install');

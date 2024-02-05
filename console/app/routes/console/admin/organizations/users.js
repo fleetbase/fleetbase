@@ -38,7 +38,7 @@ export default class ConsoleAdminOrganizationUsersRoute extends Route {
      */
     async model(params) {
         const id = params.company_id;
-        const users = await this.fetch.get('companies/' + id + '/users');
+        const users = await this.fetch.get(`companies/${id}/users`);
         return users.toArray();
     }
 
