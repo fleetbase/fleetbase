@@ -57,22 +57,22 @@ Router.map(function () {
 
         this.mount('@fleetbase/dev-engine', {
             as: 'developers',
-            path: 'developers',
+            path: 'developers'
         });
 
         this.mount('@fleetbase/iam-engine', {
             as: 'iam',
-            path: 'iam',
+            path: 'iam'
         });
 
         this.mount('@fleetbase/storefront-engine', {
             as: 'storefront',
-            path: 'storefront',
+            path: 'storefront'
         });
 
         this.mount('@fleetbase/fleetops-engine', {
             as: 'fleet-ops',
-            path: 'fleet-ops',
+            path: 'fleet-ops'
         });
     });
     this.route('install');

@@ -41,16 +41,4 @@ export default class ConsoleAdminOrganizationUsersRoute extends Route {
         const users = await this.fetch.get(`companies/${id}/users`);
         return users.toArray();
     }
-
-    /**
-     * Sets up the controller with the company ID.
-     *
-     * @method setupController
-     * @param {Controller} controller - The controller for this route.
-     * @param {Array} model - An array containing the users associated with the company.
-     */
-    setupController(controller, model) {
-        super.setupController(controller, model);
-        controller.companyId = model.company_id;
-    }
 }

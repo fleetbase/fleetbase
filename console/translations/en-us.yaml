@@ -46,6 +46,10 @@ common:
   two-factor: Two Factor
   uploading: Uploading...
   your-profile: Your Profile
+  created-at: Created At
+  country: Country
+  phone-number: Phone
+  status: Status
 component: 
   two-fa-enforcement-alert:
     message: To enhance the security of your account, your organization requires Two-Factor Authentication (2FA). Enable 2FA in your account settings for an additional layer of protection.
@@ -152,6 +156,11 @@ console:
     notifications:
       title: Notifications
       notification-settings: Notification Settings
+    organizations:
+      index:
+        title: Organizations
+      users:
+        title: Users
   settings:
     index:
       title: Organization Settings

@@ -10,6 +10,13 @@ export default class ConsoleAdminOrganizationUsersController extends Controller 
     @service filters;
 
     /**
+     * Inject the `intl` service
+     *
+     * @var {Service}
+     */
+    @service intl;
+
+    /**
      * The current page of data being viewed
      *
      * @var {Integer}
@@ -69,19 +76,19 @@ export default class ConsoleAdminOrganizationUsersController extends Controller 
         super(...arguments);
         this.columns = [
             {
-                label: 'Name',
+                label: this.intl.t('common.name'),
                 valuePath: 'name',
             },
             {
-                label: 'Phone',
+                label: this.intl.t('common.phone-number'),
                 valuePath: 'phone',
             },
             {
-                label: 'Email',
+                label: this.intl.t('common.email'),
                 valuePath: 'email',
             },
             {
-                label: 'Status',
+                label: this.intl.t('common.status'),
                 valuePath: 'status',
             },
         ];

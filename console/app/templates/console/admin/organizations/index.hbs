@@ -1,4 +1,4 @@
-<Layout::Section::Header @title="Organizations" @searchQuery={{this.query}} @onSearch={{perform this.search}} />
+<Layout::Section::Header @title={{t "console.admin.organizations.index.title"}} @searchQuery={{this.query}} @onSearch={{perform this.search}} />
 
 <Layout::Section::Body>
     <Table
@@ -13,7 +13,7 @@
         @onPageChange={{fn (mut this.page)}}
         @tfootVerticalOffset="53"
         @tfootVerticalOffsetElements=".next-view-section-subheader"
-        @onRowClick={{fn this.goToCompany}}
+        @onRowClick={{this.goToCompany}}
     />
 </Layout::Section::Body>
 {{outlet}}

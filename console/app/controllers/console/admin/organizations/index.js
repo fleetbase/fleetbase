@@ -17,6 +17,14 @@ export default class ConsoleAdminOrganizationsController extends Controller {
      * @type {Object}
      */
     @service store;
+
+    /**
+     * Inject the `intl` service
+     *
+     * @var {Service}
+     */
+    @service intl;
+
     /**
      * The Ember Router service for handling transitions between routes.
      *
@@ -61,6 +69,13 @@ export default class ConsoleAdminOrganizationsController extends Controller {
     @tracked name;
 
     /**
+     * The filterable param `country`
+     *
+     * @var {String}
+     */
+    @tracked country;
+
+    /**
      * Queryable parameters for this controller's model
      *
      * @var {Array}
@@ -79,15 +94,23 @@ export default class ConsoleAdminOrganizationsController extends Controller {
         this.getAllCompanies();
         this.columns = [
             {
-                label: 'Name',
+                label: this.intl.t('common.name'),
                 valuePath: 'name',
+                resizable: true,
+                sortable: true,
+                filterable: true,
+                filterComponent: 'filter/string',
             },
             {
-                label: 'Country',
+                label: this.intl.t('common.country'),
                 valuePath: 'country_name',
+                resizable: true,
+                sortable: true,
+                filterable: true,
+                filterComponent: 'filter/string',
             },
             {
-                label: 'Created At',
+                label: this.intl.t('common.created-at'),
                 valuePath: 'createdAt',
             },
         ];
