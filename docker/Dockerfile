@@ -58,19 +58,19 @@ RUN mkdir -p /fleetbase/api && chown -R www-data:www-data /fleetbase
 WORKDIR /fleetbase/api
 
 # Load the secret into the auth.json file if exists, and install dependencies
-COPY composer-auth.jso[n] /fleetbase/api/auth.json
+COPY --chown=www-data:www-data ./api/auth.jso[n] /fleetbase/api/auth.json
 RUN --mount=type=secret,id=composer_auth,target=/fleetbase/api/auth.json
 
 # Optimize Composer Dependency Installation
-COPY --chown=www-data:www-data ./api/composer.json ./api/composer.lock /fleetbase/api/
+COPY --chown=www-data:www-data ./api/composer.json /fleetbase/api/
 
 # Pre-install Composer dependencies
-RUN su www-data -s /bin/sh -c "composer install --no-scripts --no-autoloader --optimize-autoloader --no-dev"
+RUN su www-data -s /bin/sh -c "composer install --no-scripts --optimize-autoloader --no-dev"
 
 # Setup application
 COPY --chown=www-data:www-data ./api /fleetbase/api
 
-
+# Dump autoload
 RUN su www-data -s /bin/sh -c "composer dumpautoload"
 
 # Setup composer root directory
@@ -116,7 +116,7 @@ CMD ["php", "artisan", "queue:work"]
 # Application dev stage
 FROM base as app-dev
 ENTRYPOINT ["docker-php-entrypoint"]
-# add --watch flag later
+# Add --watch flag later
 CMD ["sh", "-c", "php artisan octane:frankenphp --port=8000 --host=0.0.0.0 --caddyfile $CADDYFILE_PATH"] 
 
 # Application stage
