@@ -22,6 +22,14 @@ export default class DashboardCreateComponent extends Component {
             'dashboard: ',
             this.args.dashboard.widgets.map((widget) => widget.serialize())
         );
+        const widgetEvent = event.detail[0];
+        const changedWidget = this.args.dashboard.widgets.find((widget) => widget.id === widgetEvent.id);
+
+        if (changedWidget) {
+            const { id, x, y, w, h } = widgetEvent;
+            changedWidget.grid_options = { x, y, w, h };
+            changedWidget.updatePosition({ id, x, y, h, w });
+        }
     }
 
     @action removeWidget(widget) {

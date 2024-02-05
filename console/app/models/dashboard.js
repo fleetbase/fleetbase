@@ -86,17 +86,4 @@ export default class DashboardModel extends Model {
             });
         }
     }
-
-    updateWidget(widget) {
-        const owner = getOwner(this);
-        const store = owner.lookup('service:store');
-
-        const widgetRecord = store.findRecord('dashboard-widget', widget.id);
-        if (widgetRecord) {
-            widgetRecord.set('grid_options', widget.grid_options);
-            widgetRecord.save().then((post) => {
-                console.log('Post updated successfully.');
-            });
-        }
-    }
 }

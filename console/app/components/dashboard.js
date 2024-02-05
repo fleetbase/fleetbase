@@ -78,7 +78,7 @@ export default class DashboardComponent extends Component {
         this.dashboard.onChangeEdit(state);
     }
 
-    onAddingWidget(state = true) {
+    @action onAddingWidget(state = true) {
         this.dashboard.onAddingWidget(state);
     }
 }

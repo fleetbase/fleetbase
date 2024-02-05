@@ -1,6 +1,7 @@
 import Model, { attr, belongsTo } from '@ember-data/model';
 import { computed } from '@ember/object';
 import { format, formatDistanceToNow } from 'date-fns';
+import { getOwner } from '@ember/application';
 
 export default class DashboardWidgetModel extends Model {
     /** @ids */
@@ -43,5 +44,11 @@ export default class DashboardWidgetModel extends Model {
 
     @computed('created_at') get createdAtShort() {
         return format(this.created_at, 'PP');
+    }
+
+    updatePosition() {
+        this.save().then((response) => {
+            console.log('Widget updated successfully.', response);
+        });
     }
 }

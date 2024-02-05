@@ -9,7 +9,7 @@ export default class DashboardWidgetPanelComponent extends Component {
     @tracked dashboard;
     @tracked isOpen = true;
     @service notifications;
-    
+
     /**
      * Constructs the component and applies initial state.
      */

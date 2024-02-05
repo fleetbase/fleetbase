@@ -88,7 +88,7 @@
                 @isOpen={{this.dashboard.isAddingWidget}}
                 @onLoad={{this.setWidgetSelectorPanelContext}}
                 @dashboard={{this.dashboard.currentDashboard}}
-                @onClose={{fn this.onChangeEdit false}}
+                @onClose={{fn this.onAddingWidget false}}
             />
         </EmberWormhole>
     {{/if}}
