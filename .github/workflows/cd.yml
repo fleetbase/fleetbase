@@ -55,7 +55,7 @@ jobs:
         with:
           push: true
           set:
-            *.args.GITHUB_AUTH_KEY: ${{ env.GITHUB_AUTH_KEY }}
+            GITHUB_AUTH_KEY: ${{ env.GITHUB_AUTH_KEY }}
           files: |
             ./docker-bake.hcl
 
