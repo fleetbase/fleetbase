@@ -35,6 +35,10 @@ export default class DashboardService extends Service {
 
     @task *selectDashboard(dashboard) {
         try {
+            if (dashboard.owner_uuid === 'system') {
+                this.currentDashboard = dashboard;
+                return;
+            }
             const response = yield this.fetch.post('dashboards/switch', { dashboard_uuid: dashboard.id });
             this.store.pushPayload(response);
             const selectedDashboardId = response.uuid;
@@ -107,6 +111,7 @@ export default class DashboardService extends Service {
         const defaultDashboard = this.store.createRecord('dashboard', {
             name: 'Default Dashboard',
             is_default: false,
+            owner_uuid: 'system',
             widgets: this._createDefaultDashboardWidgets(),
         });
 

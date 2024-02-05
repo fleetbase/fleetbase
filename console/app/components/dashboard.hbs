@@ -9,7 +9,7 @@
 
             <DropdownButton
                 class="h-10"
-                @text="Select Dashboard"
+                @text={{if this.dashboard.currentDashboard.name this.dashboard.currentDashboard.name "Select Dashboard"}}
                 @textClass="text-sm mr-2"
                 @buttonClass="flex-row-reverse"
                 @icon="caret-down"
@@ -45,19 +45,29 @@
                             </div>
                             <span>Create new Dashboard</span>
                         </a>
-                        <a href="javascript:;" class="next-dd-item" {{on "click" (dropdown-fn dd this.onChangeEdit true)}}>
-                            <div class="w-6">
-                                <FaIcon @icon="edit" />
-                            </div>
-                            <span>Edit dashboard</span>
-                        </a>
 
-                        <a href="javascript:;" class="next-dd-item" {{on "click" (dropdown-fn dd this.deleteDashboard this.dashboard.currentDashboard)}}>
-                            <div class="w-6">
-                                <FaIcon @icon="trash" />
-                            </div>
-                            <span>Delete dashboard</span>
-                        </a>
+                        {{#unless (eq this.dashboard.currentDashboard.owner_uuid "system")}}
+                            <a href="javascript:;" class="next-dd-item" {{on "click" (dropdown-fn dd this.onChangeEdit true)}}>
+                                <div class="w-6">
+                                    <FaIcon @icon="edit" />
+                                </div>
+                                <span>Edit layout</span>
+                            </a>
+                            <a href="javascript:;" class="next-dd-item" {{on "click" (dropdown-fn dd this.onAddingWidget true)}}>
+                                <div class="w-6">
+                                    <FaIcon @icon="add" />
+                                </div>
+                                <span>Add widgets</span>
+                            </a>
+
+                            <a href="javascript:;" class="next-dd-item" {{on "click" (dropdown-fn dd this.deleteDashboard this.dashboard.currentDashboard)}}>
+                                <div class="w-6">
+                                    <FaIcon @icon="trash" />
+                                </div>
+                                <span>Delete dashboard</span>
+                            </a>
+                        {{/unless}}
+
                     </div>
                 </div>
             </DropdownButton>
@@ -71,11 +81,11 @@
 </div>
 
 <div class="px-10">
-    <Dashboard::Create @isEdit={{this.dashboard.isEditingDashboard}} @dashboard={{this.dashboard.currentDashboard}} />
-    {{#if this.dashboard.isEditingDashboard}}
+    <Dashboard::Create @isEdit={{this.dashboard.isEditingDashboard}} @isAddingWidget={{this.dashboard.isAddingWidget}} @dashboard={{this.dashboard.currentDashboard}} />
+    {{#if this.dashboard.isAddingWidget}}
         <EmberWormhole @to="console-home-wormhole">
             <Dashboard::WidgetPanel
-                @isOpen={{this.dashboard.isEditingDashboard}}
+                @isOpen={{this.dashboard.isAddingWidget}}
                 @onLoad={{this.setWidgetSelectorPanelContext}}
                 @dashboard={{this.dashboard.currentDashboard}}
                 @onClose={{fn this.onChangeEdit false}}

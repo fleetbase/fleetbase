@@ -66,27 +66,25 @@ export default class DashboardModel extends Model {
         });
     }
 
-    /** @methods */
-    addWidget(widget) {
+    removeWidget(widget) {
         const owner = getOwner(this);
         const store = owner.lookup('service:store');
 
-        const widgetRecord = store.createRecord('dashboard-widget', widget);
+        const widgetRecord = store.peekRecord('dashboard-widget', widget);
 
-        widgetRecord.dashboard = this;
-        console.log(widgetRecord);
-        return new Promise((resolve, reject) => {
-            widgetRecord
-                .save()
-                .then((widgetRecord) => {
-                    this.widgets.pushObject(widgetRecord);
-                    resolve(widgetRecord);
-                })
-                .catch((error) => {
-                    store.unloadRecord(widgetRecord);
-                    reject(error);
-                });
-        });
+        if (widgetRecord) {
+            return new Promise((resolve, reject) => {
+                widgetRecord
+                    .destroyRecord()
+                    .then(() => {
+                        this.widgets.removeObject(widgetRecord);
+                        resolve();
+                    })
+                    .catch((error) => {
+                        reject(error);
+                    });
+            });
+        }
     }
 
     updateWidget(widget) {
