@@ -9,7 +9,7 @@ export function initialize(application) {
             description: 'Lists latest news and events from the Fleetbase official team.',
             icon: 'newspaper',
             component: 'fleetbase-blog',
-            grid_options: { w: 8, h: 9 },
+            grid_options: { w: 8, h: 9, minW: 8, minH: 9 },
             options: {
                 title: 'Fleetbase Blog',
             },
@@ -20,7 +20,7 @@ export function initialize(application) {
             description: 'Displays current Github stats from the official Fleetbase repo.',
             icon: faGithub,
             component: 'github-card',
-            grid_options: { w: 4, h: 8 },
+            grid_options: { w: 4, h: 8, minW: 4, minH: 8 },
             options: {
                 title: 'Github Card',
             },
