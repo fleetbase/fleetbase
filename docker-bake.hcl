@@ -2,7 +2,7 @@
 variable "REGISTRY" { default = "" }
 variable "VERSION" { default = "latest" }
 variable "CACHE" { default = "" }
-variable "CACHE" { default = "" }
+variable "GCP" { default = false }
 variable "GITHUB_AUTH_KEY" { default = "" }
 
 group "default" {
