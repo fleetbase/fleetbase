@@ -19,14 +19,15 @@ export default class DashboardService extends Service {
     @task *loadDashboards() {
         try {
             const dashboards = yield this.store.findAll('dashboard');
-
             this.dashboards = dashboards.toArray();
-            this.dashboards.unshiftObject(this._createDefaultDashboard());
 
+            if (dashboards.some((dashboard) => dashboard.owner_uuid !== 'system')) {
+                this.dashboards.unshiftObject(this._createDefaultDashboard());
+            }
             // Set the current dashboard
             this.currentDashboard = this.dashboards.find((dashboard) => dashboard.is_default) || this.dashboards[0];
             if (this.currentDashboard?.widgets?.length === 0) {
-                this.onChangeEdit(true);
+                this.onAddingWidget(true);
             }
         } catch (error) {
             console.error('Error loading dashboards:', error);
@@ -63,9 +64,6 @@ export default class DashboardService extends Service {
                 this.notifications.success(options.successNotification || `${response.name} created.`);
             }
 
-            const defaultDashboard = this.dashboards.find((dashboard) => dashboard.owner_uuid === 'system');
-            console.log(this.dashboards, defaultDashboard);
-            this.store.unloadRecord(defaultDashboard);
             this.selectDashboard.perform(response);
             this.isEditingDashboard = true;
         } catch (error) {
