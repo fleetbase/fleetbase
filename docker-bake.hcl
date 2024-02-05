@@ -29,10 +29,6 @@ target "app" {
     compact(["latest", VERSION])
   ) : []
 
-  secret = [
-    "type=file,id=composer_auth,src=./composer-auth.json"
-  ]
-
   args = {
     GITHUB_AUTH_KEY = "${GITHUB_AUTH_KEY}"
   }
