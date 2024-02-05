@@ -51,11 +51,10 @@ jobs:
         env:
           REGISTRY: ${{ steps.login-ecr.outputs.registry }}/${{ env.PROJECT }}-${{ env.STACK }}
           VERSION: ${{ env.VERSION }}
+          GITHUB_AUTH_KEY: ${{ env.GITHUB_AUTH_KEY }}
           CACHE: type=gha
         with:
           push: true
-          set:
-            GITHUB_AUTH_KEY: ${{ env.GITHUB_AUTH_KEY }}
           files: |
             ./docker-bake.hcl
 
