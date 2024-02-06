@@ -1,0 +1,11 @@
+diff --git a/node_modules/ember-gridstack/addon/components/grid-stack.js b/node_modules/ember-gridstack/addon/components/grid-stack.js
+index fa51392..fdabb2a 100644
+--- a/node_modules/ember-gridstack/addon/components/grid-stack.js
++++ b/node_modules/ember-gridstack/addon/components/grid-stack.js
+@@ -133,5 +133,6 @@ export default class GridStackComponent extends Component {
+   removeWidget(element, removeDOM = false, triggerEvent = true) {
+     triggerEvent = triggerEvent && !this.isDestroying && !this.isDestroyed;
+     this.gridStack?.removeWidget(element, removeDOM, triggerEvent);
++    this.gridStack?.compact();
+   }
+ }

@@ -1,41 +1,67 @@
+import { action, computed } from '@ember/object';
 import Component from '@glimmer/component';
 import { tracked } from '@glimmer/tracking';
+
+import { merge } from '@ember/object/internals';
 import { inject as service } from '@ember/service';
-import { action } from '@ember/object';
-import { isArray } from '@ember/array';
-import { task } from 'ember-concurrency-decorators';
-
 export default class DashboardCreateComponent extends Component {
-    @service fetch;
-    @tracked isLoading = false;
-    @tracked dashboard;
+    @service notifications;
 
-    constructor() {
+    constructor(owner, args) {
         super(...arguments);
-        this.dashboard = this.args.dashboard;
     }
 
-    @action onQueryParamsChanged(changedParams) {
-        this.reloadDashboard.perform(changedParams);
+    @action
+    toggleFloat() {
+        this.shouldFloat = !this.shouldFloat;
     }
 
-    @task *reloadDashboard(params) {
-        const { extension } = this.args.dashboard;
-        const index = this.args.index;
-        let dashboards = [];
+    @action onChangeGrid(event) {
+        console.log('Grid Stack event: ', event);
+        console.log(
+            'dashboard: ',
+            this.args.dashboard.widgets.map((widget) => widget.serialize())
+        );
 
-        this.isLoading = true;
+        const updatedWidgets = [];
 
-        try {
-            dashboards = yield this.fetch.get(extension.fleetbase.dashboard, params, { namespace: '' });
-        } catch {
-            return;
-        }
+        event.detail.forEach((currentWidgetEvent, index) => {
+            const alreadyUpdated = updatedWidgets.find((item) => item.uuid === currentWidgetEvent.id);
+            if (alreadyUpdated) {
+                return; // Skip updating if already updated
+            }
 
-        this.isLoading = false;
+            const changedWidget = this.args.dashboard.widgets.find((widget) => widget.id === currentWidgetEvent.id);
+            if (!changedWidget) {
+                return;
+            }
 
-        if (isArray(dashboards)) {
-            this.dashboard = dashboards.objectAt(index);
-        }
+            const { id, x, y, w, h } = currentWidgetEvent;
+            changedWidget.grid_options = { x, y, w, h };
+            const response = changedWidget.updatePosition({ id, x, y, h, w });
+            if (response) {
+                updatedWidgets.push(changedWidget);
+            }
+        });
+    }
+
+    @action removeWidget(widget) {
+        this.args.dashboard.removeWidget(widget.id).catch((error) => {
+            this.notifications.serverError(error);
+        });
+    }
+
+    @computed('args.isEdit')
+    get gridOptions() {
+        return {
+            float: true,
+            animate: true,
+            acceptWidgets: true,
+            alwaysShowResizeHandle: this.args.isEdit,
+            disableDrag: !this.args.isEdit,
+            disableResize: !this.args.isEdit,
+            resizable: { handles: 'all' },
+            cellHeight: 30,
+        };
     }
 }

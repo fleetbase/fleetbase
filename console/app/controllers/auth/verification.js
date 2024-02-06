@@ -128,6 +128,15 @@ export default class AuthVerificationController extends Controller {
     }
 
     /**
+     * Allow user to manually trigger no code received prompt.
+     *
+     * @memberof AuthVerificationController
+     */
+    @action onDidntReceiveCode() {
+        this.stillWaiting = true;
+    }
+
+    /**
      * Validates the input
      *
      * @param {InputEvent} { target: { value } }

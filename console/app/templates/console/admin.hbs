@@ -5,13 +5,22 @@
     <Layout::Sidebar::Item @route="console.admin.branding" @icon="palette">{{t "common.branding"}}</Layout::Sidebar::Item>
     <Layout::Sidebar::Item @route="console.admin.notifications" @icon="bell">{{t "common.notifications"}}</Layout::Sidebar::Item>
     <Layout::Sidebar::Item @route="console.admin.two-fa-settings" @icon="shield-halved">{{t "common.2fa-config"}}</Layout::Sidebar::Item>
+    <Layout::Sidebar::Item @route="console.admin.organizations" @icon="building">{{t "common.organization"}}</Layout::Sidebar::Item>
     {{#each this.universe.adminMenuItems as |menuItem|}}
-        <Layout::Sidebar::Item @onClick={{fn this.universe.transitionMenuItem "console.admin.virtual" menuItem}} @item={{menuItem}} @icon={{menuItem.icon}}>{{menuItem.title}}</Layout::Sidebar::Item>
+        <Layout::Sidebar::Item
+            @onClick={{fn this.universe.transitionMenuItem "console.admin.virtual" menuItem}}
+            @item={{menuItem}}
+            @icon={{menuItem.icon}}
+        >{{menuItem.title}}</Layout::Sidebar::Item>
     {{/each}}
     {{#each this.universe.adminMenuPanels as |menuPanel|}}
         <Layout::Sidebar::Panel @open={{menuPanel.open}} @title={{menuPanel.title}}>
             {{#each menuPanel.items as |menuItem|}}
-                <Layout::Sidebar::Item @onClick={{fn this.universe.transitionMenuItem "console.admin.virtual" menuItem}} @item={{menuItem}} @icon={{menuItem.icon}}>{{menuItem.title}}</Layout::Sidebar::Item>
+                <Layout::Sidebar::Item
+                    @onClick={{fn this.universe.transitionMenuItem "console.admin.virtual" menuItem}}
+                    @item={{menuItem}}
+                    @icon={{menuItem.icon}}
+                >{{menuItem.title}}</Layout::Sidebar::Item>
             {{/each}}
         </Layout::Sidebar::Panel>
     {{/each}}

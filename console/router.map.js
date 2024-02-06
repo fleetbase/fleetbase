@@ -10,7 +10,7 @@ Router.map(function () {
     this.route('auth', function () {
         this.route('login', { path: '/' });
         this.route('forgot-password');
-        this.route('reset-password');
+        this.route('reset-password', { path: '/reset-password/:id' });
         this.route('two-fa');
         this.route('verification');
     });
@@ -49,6 +49,10 @@ Router.map(function () {
             this.route('notifications');
             this.route('two-fa-settings');
             this.route('virtual', { path: '/:slug/:view' });
+            this.route('organizations', function () {
+                this.route('index', { path: '/' });
+                this.route('users', { path: '/:company_id' });
+            });
         });
     });
     this.route('install');
