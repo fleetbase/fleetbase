@@ -54,26 +54,6 @@ Router.map(function () {
                 this.route('users', { path: '/:company_id' });
             });
         });
-
-        this.mount('@fleetbase/dev-engine', {
-            as: 'developers',
-            path: 'developers'
-        });
-
-        this.mount('@fleetbase/iam-engine', {
-            as: 'iam',
-            path: 'iam'
-        });
-
-        this.mount('@fleetbase/storefront-engine', {
-            as: 'storefront',
-            path: 'storefront'
-        });
-
-        this.mount('@fleetbase/fleetops-engine', {
-            as: 'fleet-ops',
-            path: 'fleet-ops'
-        });
     });
     this.route('install');
 });
