@@ -49,6 +49,10 @@ common:
   two-factor: Two Factor
   uploading: Uploading...
   your-profile: Your Profile
+  created-at: Created At
+  country: Country
+  phone-number: Phone
+  status: Status
 component:
   file:
     dropdown-label: File actions
@@ -183,6 +187,11 @@ console:
     notifications:
       title: Notifications
       notification-settings: Notification Settings
+    organizations:
+      index:
+        title: Organizations
+      users:
+        title: Users
   settings:
     index:
       title: Organization Settings
