@@ -1947,18 +1947,18 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/fleetbase/core-api.git",
-                "reference": "f4ef6c1913d8f5036fd1443a109cd4aa4c1794b3"
+                "reference": "ff8721c419c3ade4445a1fa5506a2cd8ee837632"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fleetbase/core-api/zipball/f4ef6c1913d8f5036fd1443a109cd4aa4c1794b3",
-                "reference": "f4ef6c1913d8f5036fd1443a109cd4aa4c1794b3",
+                "url": "https://api.github.com/repos/fleetbase/core-api/zipball/ff8721c419c3ade4445a1fa5506a2cd8ee837632",
+                "reference": "ff8721c419c3ade4445a1fa5506a2cd8ee837632",
                 "shasum": ""
             },
             "require": {
                 "aloha/twilio": "^5.0",
                 "aws/aws-sdk-php-laravel": "^3.7",
-                "fleetbase/laravel-mysql-spatial": "^1.0.1",
+                "fleetbase/laravel-mysql-spatial": "^1.0.2",
                 "giggsey/libphonenumber-for-php": "^8.13",
                 "guzzlehttp/guzzle": "^7.4",
                 "hammerstone/fast-paginate": "^1.0",
@@ -2053,7 +2053,7 @@
                 "source": "https://github.com/fleetbase/core-api/tree/feature/upgrade-laravel-10x",
                 "issues": "https://github.com/fleetbase/core-api/issues"
             },
-            "time": "2024-02-06T05:03:19+00:00"
+            "time": "2024-02-06T06:25:49+00:00"
         },
         {
             "name": "fleetbase/fleetops-api",
@@ -2061,12 +2061,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/fleetbase/fleetops.git",
-                "reference": "b72f1e6e6aa52c726249e7c04782a8c5a911cfa3"
+                "reference": "b26ec50dd37f29b1f20bdabd4845e60d8733d7cf"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fleetbase/fleetops/zipball/b72f1e6e6aa52c726249e7c04782a8c5a911cfa3",
-                "reference": "b72f1e6e6aa52c726249e7c04782a8c5a911cfa3",
+                "url": "https://api.github.com/repos/fleetbase/fleetops/zipball/b26ec50dd37f29b1f20bdabd4845e60d8733d7cf",
+                "reference": "b26ec50dd37f29b1f20bdabd4845e60d8733d7cf",
                 "shasum": ""
             },
             "require": {
@@ -2164,20 +2164,20 @@
                 "source": "https://github.com/fleetbase/fleetops/tree/feature/upgrade-laravel-10x",
                 "issues": "https://github.com/fleetbase/fleetops/issues"
             },
-            "time": "2024-01-31T09:21:16+00:00"
+            "time": "2024-02-06T06:20:01+00:00"
         },
         {
             "name": "fleetbase/laravel-mysql-spatial",
-            "version": "1.0.1",
+            "version": "1.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fleetbase/laravel-mysql-spatial.git",
-                "reference": "f55bea7f0f26d7c06a97769a66671fa54bf9aff8"
+                "reference": "72bb675f5fa700f123f0990f501a9e3e038b6f7a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fleetbase/laravel-mysql-spatial/zipball/f55bea7f0f26d7c06a97769a66671fa54bf9aff8",
-                "reference": "f55bea7f0f26d7c06a97769a66671fa54bf9aff8",
+                "url": "https://api.github.com/repos/fleetbase/laravel-mysql-spatial/zipball/72bb675f5fa700f123f0990f501a9e3e038b6f7a",
+                "reference": "72bb675f5fa700f123f0990f501a9e3e038b6f7a",
                 "shasum": ""
             },
             "require": {
@@ -2225,9 +2225,9 @@
             "description": "MySQL spatial data types extension for Laravel x Fleetbase.",
             "support": {
                 "issues": "https://github.com/fleetbase/laravel-mysql-spatial/issues",
-                "source": "https://github.com/fleetbase/laravel-mysql-spatial/tree/v1.0.1"
+                "source": "https://github.com/fleetbase/laravel-mysql-spatial/tree/v1.0.2"
             },
-            "time": "2024-01-30T02:44:57+00:00"
+            "time": "2024-02-06T06:14:18+00:00"
         },
         {
             "name": "fleetbase/storefront-api",
@@ -2235,12 +2235,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/fleetbase/storefront.git",
-                "reference": "60cef55385e73e47f7303b7200388089222c4e14"
+                "reference": "0b68ee25d61c70e7cefde702bc7242313846ac40"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fleetbase/storefront/zipball/60cef55385e73e47f7303b7200388089222c4e14",
-                "reference": "60cef55385e73e47f7303b7200388089222c4e14",
+                "url": "https://api.github.com/repos/fleetbase/storefront/zipball/0b68ee25d61c70e7cefde702bc7242313846ac40",
+                "reference": "0b68ee25d61c70e7cefde702bc7242313846ac40",
                 "shasum": ""
             },
             "require": {
@@ -2331,7 +2331,7 @@
                 "source": "https://github.com/fleetbase/storefront/tree/feature/upgrade-laravel-10x",
                 "issues": "https://github.com/fleetbase/storefront/issues"
             },
-            "time": "2024-01-31T09:25:07+00:00"
+            "time": "2024-02-06T06:20:57+00:00"
         },
         {
             "name": "fruitcake/php-cors",
