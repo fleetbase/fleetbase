@@ -13,6 +13,9 @@ terms:
   search: Search
   search-input: Search Input
 common: 
+  edit: Edit
+  save: Save
+  cancel: Cancel
   2fa-config: 2FA Config
   account: Account
   admin: Admin
@@ -50,10 +53,38 @@ common:
   country: Country
   phone-number: Phone
   status: Status
-component: 
+component:
+  file:
+    dropdown-label: File actions
+  dropzone:
+    file: file
+    drop-to-upload: Drop to upload
+    invalid: Invalid
+    files-ready-for-upload:  >-
+      {numOfFiles} ready for upload.
+    upload-images-videos: Upload Images & Videos
+    upload-documents: Upload Documents
+    upload-documents-files: Upload Documents & Files
+    dropzone-supported-images-videos: Drag and drop image and video files onto this dropzone
+    dropzone-supported-files: Drag and drop files onto this dropzone
+    or-select-button-text: or select files to upload.
+    upload-queue: Upload Queue
+    uploading: Uploading...
   two-fa-enforcement-alert:
     message: To enhance the security of your account, your organization requires Two-Factor Authentication (2FA). Enable 2FA in your account settings for an additional layer of protection.
     button-text: Setup 2FA
+  comment-thread:
+    publish-comment-button-text: Publish comment
+    publish-reply-button-text: Publish reply
+    reply-comment-button-text: Reply
+    edit-comment-button-text: Edit
+    delete-comment-button-text: Delete
+    comment-published-ago: >-
+            {createdAgo} ago
+    comment-input-placeholder: Input a new comment...
+    comment-reply-placeholder: Input your reply...
+    comment-input-empty-notification: You cannot publish empty comments...
+    comment-min-length-notification: Comment must be atleast 2 characters
 auth:
   verification:
     header-title: Account Verification
