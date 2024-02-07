@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "0b1fada79cefbe4576d9fb027f1e1ec9",
+    "content-hash": "15f7da4c261e48719ed25089775be9f6",
     "packages": [
         {
             "name": "aloha/twilio",
@@ -136,16 +136,16 @@
         },
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.298.3",
+            "version": "3.298.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "70fde185df4a8dd99983a308b823991fb5b39060"
+                "reference": "c61e8f8640352c4cad1ec364c0801b8adae8adb9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/70fde185df4a8dd99983a308b823991fb5b39060",
-                "reference": "70fde185df4a8dd99983a308b823991fb5b39060",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/c61e8f8640352c4cad1ec364c0801b8adae8adb9",
+                "reference": "c61e8f8640352c4cad1ec364c0801b8adae8adb9",
                 "shasum": ""
             },
             "require": {
@@ -225,9 +225,9 @@
             "support": {
                 "forum": "https://forums.aws.amazon.com/forum.jspa?forumID=80",
                 "issues": "https://github.com/aws/aws-sdk-php/issues",
-                "source": "https://github.com/aws/aws-sdk-php/tree/3.298.3"
+                "source": "https://github.com/aws/aws-sdk-php/tree/3.298.4"
             },
-            "time": "2024-02-05T19:05:28+00:00"
+            "time": "2024-02-06T19:09:25+00:00"
         },
         {
             "name": "aws/aws-sdk-php-laravel",
@@ -1943,16 +1943,16 @@
         },
         {
             "name": "fleetbase/core-api",
-            "version": "dev-feature/upgrade-laravel-10x",
+            "version": "dev-dev-v1.4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fleetbase/core-api.git",
-                "reference": "ff8721c419c3ade4445a1fa5506a2cd8ee837632"
+                "reference": "ceb5c7ae480fdbad27732c9f4d169fb4a5f6960e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fleetbase/core-api/zipball/ff8721c419c3ade4445a1fa5506a2cd8ee837632",
-                "reference": "ff8721c419c3ade4445a1fa5506a2cd8ee837632",
+                "url": "https://api.github.com/repos/fleetbase/core-api/zipball/ceb5c7ae480fdbad27732c9f4d169fb4a5f6960e",
+                "reference": "ceb5c7ae480fdbad27732c9f4d169fb4a5f6960e",
                 "shasum": ""
             },
             "require": {
@@ -2050,30 +2050,30 @@
                 "logistics platform"
             ],
             "support": {
-                "source": "https://github.com/fleetbase/core-api/tree/feature/upgrade-laravel-10x",
+                "source": "https://github.com/fleetbase/core-api/tree/dev-v1.4.0",
                 "issues": "https://github.com/fleetbase/core-api/issues"
             },
-            "time": "2024-02-06T06:25:49+00:00"
+            "time": "2024-02-07T03:38:26+00:00"
         },
         {
             "name": "fleetbase/fleetops-api",
-            "version": "dev-feature/upgrade-laravel-10x",
+            "version": "dev-dev-v0.4.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fleetbase/fleetops.git",
-                "reference": "b26ec50dd37f29b1f20bdabd4845e60d8733d7cf"
+                "reference": "20a51973407d48e4645930e46bb5964d60078929"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fleetbase/fleetops/zipball/b26ec50dd37f29b1f20bdabd4845e60d8733d7cf",
-                "reference": "b26ec50dd37f29b1f20bdabd4845e60d8733d7cf",
+                "url": "https://api.github.com/repos/fleetbase/fleetops/zipball/20a51973407d48e4645930e46bb5964d60078929",
+                "reference": "20a51973407d48e4645930e46bb5964d60078929",
                 "shasum": ""
             },
             "require": {
                 "barryvdh/laravel-dompdf": "^2.0",
                 "brick/geo": "0.7.2",
                 "cknow/laravel-money": "^7.1",
-                "fleetbase/core-api": "dev-feature/upgrade-laravel-10x",
+                "fleetbase/core-api": "dev-dev-v1.4.0",
                 "geocoder-php/google-maps-places-provider": "^1.4",
                 "giggsey/libphonenumber-for-php": "^8.13",
                 "league/geotools": "^1.1.0",
@@ -2161,10 +2161,10 @@
                 "tms"
             ],
             "support": {
-                "source": "https://github.com/fleetbase/fleetops/tree/feature/upgrade-laravel-10x",
+                "source": "https://github.com/fleetbase/fleetops/tree/dev-v0.4.5",
                 "issues": "https://github.com/fleetbase/fleetops/issues"
             },
-            "time": "2024-02-06T06:20:01+00:00"
+            "time": "2024-02-07T03:50:41+00:00"
         },
         {
             "name": "fleetbase/laravel-mysql-spatial",
@@ -2231,21 +2231,21 @@
         },
         {
             "name": "fleetbase/storefront-api",
-            "version": "dev-feature/upgrade-laravel-10x",
+            "version": "dev-dev-v0.2.10",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fleetbase/storefront.git",
-                "reference": "0b68ee25d61c70e7cefde702bc7242313846ac40"
+                "reference": "ab0568bb4f951dc3508c10a8e40d1d033facf794"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fleetbase/storefront/zipball/0b68ee25d61c70e7cefde702bc7242313846ac40",
-                "reference": "0b68ee25d61c70e7cefde702bc7242313846ac40",
+                "url": "https://api.github.com/repos/fleetbase/storefront/zipball/ab0568bb4f951dc3508c10a8e40d1d033facf794",
+                "reference": "ab0568bb4f951dc3508c10a8e40d1d033facf794",
                 "shasum": ""
             },
             "require": {
-                "fleetbase/core-api": "dev-feature/upgrade-laravel-10x",
-                "fleetbase/fleetops-api": "dev-feature/upgrade-laravel-10x",
+                "fleetbase/core-api": "dev-dev-v1.4.0",
+                "fleetbase/fleetops-api": "dev-dev-v0.4.5",
                 "geocoder-php/google-maps-places-provider": "^1.4",
                 "laravel-notification-channels/apn": "^5.0",
                 "laravel-notification-channels/fcm": "^4.1",
@@ -2328,10 +2328,10 @@
                 "storefront"
             ],
             "support": {
-                "source": "https://github.com/fleetbase/storefront/tree/feature/upgrade-laravel-10x",
+                "source": "https://github.com/fleetbase/storefront/tree/dev-v0.2.10",
                 "issues": "https://github.com/fleetbase/storefront/issues"
             },
-            "time": "2024-02-06T06:20:57+00:00"
+            "time": "2024-02-07T03:50:09+00:00"
         },
         {
             "name": "fruitcake/php-cors",
@@ -3407,50 +3407,6 @@
                 }
             ],
             "time": "2023-11-12T22:16:48+00:00"
-        },
-        {
-            "name": "grpc/grpc",
-            "version": "1.57.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/grpc/grpc-php.git",
-                "reference": "b610c42022ed3a22f831439cb93802f2a4502fdf"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/grpc/grpc-php/zipball/b610c42022ed3a22f831439cb93802f2a4502fdf",
-                "reference": "b610c42022ed3a22f831439cb93802f2a4502fdf",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=7.0.0"
-            },
-            "require-dev": {
-                "google/auth": "^v1.3.0"
-            },
-            "suggest": {
-                "ext-protobuf": "For better performance, install the protobuf C extension.",
-                "google/protobuf": "To get started using grpc quickly, install the native protobuf library."
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Grpc\\": "src/lib/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "Apache-2.0"
-            ],
-            "description": "gRPC library for PHP",
-            "homepage": "https://grpc.io",
-            "keywords": [
-                "rpc"
-            ],
-            "support": {
-                "source": "https://github.com/grpc/grpc-php/tree/v1.57.0"
-            },
-            "time": "2023-08-14T23:57:54+00:00"
         },
         {
             "name": "grpc/grpc",
