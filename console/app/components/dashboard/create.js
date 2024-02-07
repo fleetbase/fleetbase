@@ -1,25 +1,18 @@
 import { action, computed } from '@ember/object';
 import Component from '@glimmer/component';
-import { tracked } from '@glimmer/tracking';
-
-import { merge } from '@ember/object/internals';
 import { inject as service } from '@ember/service';
+
 export default class DashboardCreateComponent extends Component {
     @service notifications;
 
-    constructor(owner, args) {
-        super(...arguments);
-    }
-
-    @action
-    toggleFloat() {
+    @action toggleFloat() {
         this.shouldFloat = !this.shouldFloat;
     }
 
     @action onChangeGrid(event) {
         const updatedWidgets = [];
 
-        event.detail.forEach((currentWidgetEvent, index) => {
+        event.detail.forEach((currentWidgetEvent) => {
             const alreadyUpdated = updatedWidgets.find((item) => item.uuid === currentWidgetEvent.id);
             if (alreadyUpdated) {
                 return; // Skip updating if already updated
@@ -30,7 +23,7 @@ export default class DashboardCreateComponent extends Component {
                 return;
             }
 
-            const { id, x, y, w, h } = currentWidgetEvent;
+            const { x, y, w, h } = currentWidgetEvent;
             const response = changedWidget.updateProperties({
                 grid_options: { x, y, w, h },
             });
@@ -46,8 +39,7 @@ export default class DashboardCreateComponent extends Component {
         });
     }
 
-    @computed('args.isEdit')
-    get gridOptions() {
+    @computed('args.isEdit') get gridOptions() {
         return {
             float: true,
             animate: true,

@@ -50,8 +50,9 @@ Router.map(function () {
             this.route('two-fa-settings');
             this.route('virtual', { path: '/:slug/:view' });
             this.route('organizations', function () {
-                this.route('index', { path: '/' });
-                this.route('users', { path: '/:company_id' });
+                this.route('index', { path: '/' }, function () {
+                    this.route('users', { path: '/:public_id/users' });
+                });
             });
         });
     });

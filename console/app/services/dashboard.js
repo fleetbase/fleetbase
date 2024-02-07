@@ -111,20 +111,19 @@ export default class DashboardService extends Service {
     /**
      * Task for creating a new dashboard. It handles dashboard creation, success notification, and dashboard selection.
      * @param {string} name - Name of the new dashboard.
-     * @param {Object} [options={}] - Optional configuration options.
      */
-    @task *createDashboard(name, options = {}) {
-        try {
-            const dashboardRecord = this.store.createRecord('dashboard', { name, is_default: true });
-            const dashboard = yield dashboardRecord.save().catch((error) => {
-                this.notifications.serverError(error);
-            });
-        } catch (error) {}
+    @task *createDashboard(name) {
+        const dashboardRecord = this.store.createRecord('dashboard', { name, is_default: true });
+        const dashboard = yield dashboardRecord.save().catch((error) => {
+            this.notifications.serverError(error);
+        });
 
-        this.notifications.success(this.intl.t('services.dashboard-service.create-dashboard-success-notification', { dashboardName: dashboard.name }));
-        this.selectDashboard.perform(dashboard);
-        this.dashboards.pushObject(dashboard);
-        this.isEditingDashboard = true;
+        if (dashboard) {
+            this.notifications.success(this.intl.t('services.dashboard-service.create-dashboard-success-notification', { dashboardName: dashboard.name }));
+            this.selectDashboard.perform(dashboard);
+            this.dashboards.pushObject(dashboard);
+            this.isEditingDashboard = true;
+        }
     }
 
     /**
@@ -133,15 +132,13 @@ export default class DashboardService extends Service {
      * @param {Object} [options={}] - Optional configuration options.
      */
     @task *deleteDashboard(dashboard, options = {}) {
-        try {
-            yield dashboard.destroyRecord().catch((error) => {
-                this.notification.serverError(error);
+        yield dashboard.destroyRecord().catch((error) => {
+            this.notification.serverError(error);
 
-                if (typeof options.onError === 'function') {
-                    options.onError(error, dashboard);
-                }
-            });
-        } catch (error) {}
+            if (typeof options.onError === 'function') {
+                options.onError(error, dashboard);
+            }
+        });
 
         this.notifications.success(this.intl.t('services.dashboard-service.delete-dashboard-success-notification', { dashboardName: dashboard.name }));
         this.loadDashboards.perform();
@@ -156,13 +153,13 @@ export default class DashboardService extends Service {
      * @param {Object} dashboard - The dashboard object to set as current.
      */
     @task *setCurrentDashboard(dashboard) {
-        try {
-            const currentDashboard = yield this.fetch.post('dashboards/switch', { dashboard_uuid: dashboard.id }, { normalizeToEmberData: true }).catch((error) => {
-                this.notifications.serverError(error);
-            });
+        const currentDashboard = yield this.fetch.post('dashboards/switch', { dashboard_uuid: dashboard.id }, { normalizeToEmberData: true }).catch((error) => {
+            this.notifications.serverError(error);
+        });
 
+        if (currentDashboard) {
             this.currentDashboard = currentDashboard;
-        } catch (error) {}
+        }
     }
 
     /**

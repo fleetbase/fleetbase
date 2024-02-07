@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "15f7da4c261e48719ed25089775be9f6",
+    "content-hash": "f2e1700330f541d9be6260646f82e78a",
     "packages": [
         {
             "name": "aloha/twilio",
@@ -1943,16 +1943,16 @@
         },
         {
             "name": "fleetbase/core-api",
-            "version": "dev-dev-v1.4.0",
+            "version": "1.4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fleetbase/core-api.git",
-                "reference": "ceb5c7ae480fdbad27732c9f4d169fb4a5f6960e"
+                "reference": "c98e08a257d8dc480abfc5c2f48e62a7539c0dff"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fleetbase/core-api/zipball/ceb5c7ae480fdbad27732c9f4d169fb4a5f6960e",
-                "reference": "ceb5c7ae480fdbad27732c9f4d169fb4a5f6960e",
+                "url": "https://api.github.com/repos/fleetbase/core-api/zipball/c98e08a257d8dc480abfc5c2f48e62a7539c0dff",
+                "reference": "c98e08a257d8dc480abfc5c2f48e62a7539c0dff",
                 "shasum": ""
             },
             "require": {
@@ -2007,30 +2007,7 @@
                     "Fleetbase\\Seeds\\": "seeds/"
                 }
             },
-            "autoload-dev": {
-                "psr-4": {
-                    "Fleetbase\\Tests\\": "tests/"
-                }
-            },
-            "scripts": {
-                "lint": [
-                    "php-cs-fixer fix -v"
-                ],
-                "test:lint": [
-                    "php-cs-fixer fix -v --dry-run"
-                ],
-                "test:types": [
-                    "phpstan analyse --ansi --memory-limit=0"
-                ],
-                "test:unit": [
-                    "pest --colors=always"
-                ],
-                "test": [
-                    "@test:lint",
-                    "@test:types",
-                    "@test:unit"
-                ]
-            },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -2050,30 +2027,30 @@
                 "logistics platform"
             ],
             "support": {
-                "source": "https://github.com/fleetbase/core-api/tree/dev-v1.4.0",
-                "issues": "https://github.com/fleetbase/core-api/issues"
+                "issues": "https://github.com/fleetbase/core-api/issues",
+                "source": "https://github.com/fleetbase/core-api/tree/v1.4.0"
             },
-            "time": "2024-02-07T03:38:26+00:00"
+            "time": "2024-02-07T05:49:54+00:00"
         },
         {
             "name": "fleetbase/fleetops-api",
-            "version": "dev-dev-v0.4.5",
+            "version": "0.4.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fleetbase/fleetops.git",
-                "reference": "20a51973407d48e4645930e46bb5964d60078929"
+                "reference": "3cb247bba476f01d7b0a16818c07a3fbdc2619d6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fleetbase/fleetops/zipball/20a51973407d48e4645930e46bb5964d60078929",
-                "reference": "20a51973407d48e4645930e46bb5964d60078929",
+                "url": "https://api.github.com/repos/fleetbase/fleetops/zipball/3cb247bba476f01d7b0a16818c07a3fbdc2619d6",
+                "reference": "3cb247bba476f01d7b0a16818c07a3fbdc2619d6",
                 "shasum": ""
             },
             "require": {
                 "barryvdh/laravel-dompdf": "^2.0",
                 "brick/geo": "0.7.2",
                 "cknow/laravel-money": "^7.1",
-                "fleetbase/core-api": "dev-dev-v1.4.0",
+                "fleetbase/core-api": "^1.4.0",
                 "geocoder-php/google-maps-places-provider": "^1.4",
                 "giggsey/libphonenumber-for-php": "^8.13",
                 "league/geotools": "^1.1.0",
@@ -2115,30 +2092,7 @@
                     "Fleetbase\\FleetOps\\": "server/src/"
                 }
             },
-            "autoload-dev": {
-                "psr-4": {
-                    "Fleetbase\\Tests\\": "server/tests/"
-                }
-            },
-            "scripts": {
-                "lint": [
-                    "php-cs-fixer fix -v"
-                ],
-                "test:lint": [
-                    "php-cs-fixer fix -v --dry-run"
-                ],
-                "test:types": [
-                    "phpstan analyse --ansi --memory-limit=4G"
-                ],
-                "test:unit": [
-                    "pest --colors=always"
-                ],
-                "test": [
-                    "@test:lint",
-                    "@test:types",
-                    "@test:unit"
-                ]
-            },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -2161,10 +2115,10 @@
                 "tms"
             ],
             "support": {
-                "source": "https://github.com/fleetbase/fleetops/tree/dev-v0.4.5",
-                "issues": "https://github.com/fleetbase/fleetops/issues"
+                "issues": "https://github.com/fleetbase/fleetops/issues",
+                "source": "https://github.com/fleetbase/fleetops/tree/v0.4.5"
             },
-            "time": "2024-02-07T03:50:41+00:00"
+            "time": "2024-02-07T06:32:22+00:00"
         },
         {
             "name": "fleetbase/laravel-mysql-spatial",
@@ -2231,21 +2185,21 @@
         },
         {
             "name": "fleetbase/storefront-api",
-            "version": "dev-dev-v0.2.10",
+            "version": "0.2.10",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fleetbase/storefront.git",
-                "reference": "ab0568bb4f951dc3508c10a8e40d1d033facf794"
+                "reference": "0f072d511ec70146d8ad173f61e47c226da599f2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fleetbase/storefront/zipball/ab0568bb4f951dc3508c10a8e40d1d033facf794",
-                "reference": "ab0568bb4f951dc3508c10a8e40d1d033facf794",
+                "url": "https://api.github.com/repos/fleetbase/storefront/zipball/0f072d511ec70146d8ad173f61e47c226da599f2",
+                "reference": "0f072d511ec70146d8ad173f61e47c226da599f2",
                 "shasum": ""
             },
             "require": {
-                "fleetbase/core-api": "dev-dev-v1.4.0",
-                "fleetbase/fleetops-api": "dev-dev-v0.4.5",
+                "fleetbase/core-api": "^1.4.0",
+                "fleetbase/fleetops-api": "^0.4.5",
                 "geocoder-php/google-maps-places-provider": "^1.4",
                 "laravel-notification-channels/apn": "^5.0",
                 "laravel-notification-channels/fcm": "^4.1",
@@ -2282,30 +2236,7 @@
                     "Fleetbase\\Storefront\\": "server/src/"
                 }
             },
-            "autoload-dev": {
-                "psr-4": {
-                    "Fleetbase\\Storefront\\Tests\\": "server/tests/"
-                }
-            },
-            "scripts": {
-                "lint": [
-                    "php-cs-fixer fix -v"
-                ],
-                "test:lint": [
-                    "php-cs-fixer fix -v --dry-run"
-                ],
-                "test:types": [
-                    "phpstan analyse --ansi --memory-limit=0"
-                ],
-                "test:unit": [
-                    "pest --colors=always"
-                ],
-                "test": [
-                    "@test:lint",
-                    "@test:types",
-                    "@test:unit"
-                ]
-            },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -2328,10 +2259,10 @@
                 "storefront"
             ],
             "support": {
-                "source": "https://github.com/fleetbase/storefront/tree/dev-v0.2.10",
-                "issues": "https://github.com/fleetbase/storefront/issues"
+                "issues": "https://github.com/fleetbase/storefront/issues",
+                "source": "https://github.com/fleetbase/storefront/tree/v0.2.10"
             },
-            "time": "2024-02-07T03:50:09+00:00"
+            "time": "2024-02-07T06:38:48+00:00"
         },
         {
             "name": "fruitcake/php-cors",
@@ -16897,11 +16828,7 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {
-        "fleetbase/core-api": 20,
-        "fleetbase/fleetops-api": 20,
-        "fleetbase/storefront-api": 20
-    },
+    "stability-flags": [],
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {

@@ -1,7 +1,6 @@
 import Model, { attr, belongsTo } from '@ember-data/model';
 import { computed } from '@ember/object';
 import { format, formatDistanceToNow } from 'date-fns';
-import { getOwner } from '@ember/application';
 
 export default class DashboardWidgetModel extends Model {
     /** @ids */

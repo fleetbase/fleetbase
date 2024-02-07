@@ -2,10 +2,10 @@
 
 <EmberWormhole @to="sidebar-menu-items">
     <Layout::Sidebar::Item @route="console.admin.index" @icon="rectangle-list">{{t "common.overview"}}</Layout::Sidebar::Item>
+    <Layout::Sidebar::Item @route="console.admin.organizations" @icon="building">{{t "common.organizations"}}</Layout::Sidebar::Item>
     <Layout::Sidebar::Item @route="console.admin.branding" @icon="palette">{{t "common.branding"}}</Layout::Sidebar::Item>
     <Layout::Sidebar::Item @route="console.admin.notifications" @icon="bell">{{t "common.notifications"}}</Layout::Sidebar::Item>
     <Layout::Sidebar::Item @route="console.admin.two-fa-settings" @icon="shield-halved">{{t "common.2fa-config"}}</Layout::Sidebar::Item>
-    <Layout::Sidebar::Item @route="console.admin.organizations" @icon="building">{{t "common.organization"}}</Layout::Sidebar::Item>
     {{#each this.universe.adminMenuItems as |menuItem|}}
         <Layout::Sidebar::Item
             @onClick={{fn this.universe.transitionMenuItem "console.admin.virtual" menuItem}}

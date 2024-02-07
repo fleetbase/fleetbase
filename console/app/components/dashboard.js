@@ -1,8 +1,6 @@
 import Component from '@glimmer/component';
 import { action } from '@ember/object';
 import { inject as service } from '@ember/service';
-import { tracked } from '@glimmer/tracking';
-import { task } from 'ember-concurrency-decorators';
 
 export default class DashboardComponent extends Component {
     @service store;
@@ -13,10 +11,6 @@ export default class DashboardComponent extends Component {
 
     constructor() {
         super(...arguments);
-        this.loadDashboards.perform();
-    }
-
-    @task *loadDashboards() {
         this.dashboard.loadDashboards.perform();
     }
 
@@ -26,10 +20,6 @@ export default class DashboardComponent extends Component {
 
     @action setWidgetSelectorPanelContext(widgetSelectorContext) {
         this.widgetSelectorContext = widgetSelectorContext;
-    }
-
-    @action onChangeEdit(state = true) {
-        this.isEditingDashboard = state;
     }
 
     @action createDashboard(dashboard, options = {}) {
@@ -57,17 +47,16 @@ export default class DashboardComponent extends Component {
         this.modalsManager.confirm({
             title: `Are you sure to delete this ${dashboard.name}?`,
             confirm: async (modal, done) => {
-                if (typeof options.onConfirm === 'function') {
-                    options.onConfirm(model);
-                }
-
                 modal.startLoading();
-
                 await this.dashboard.deleteDashboard.perform(dashboard);
                 done();
             },
             ...options,
         });
+    }
+
+    @action onAddingWidget(state = true) {
+        this.dashboard.onAddingWidget(state);
     }
 
     setCurrentDashboard(dashboard) {
@@ -76,9 +65,5 @@ export default class DashboardComponent extends Component {
 
     onChangeEdit(state = true) {
         this.dashboard.onChangeEdit(state);
-    }
-
-    @action onAddingWidget(state = true) {
-        this.dashboard.onAddingWidget(state);
     }
 }

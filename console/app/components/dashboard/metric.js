@@ -4,7 +4,6 @@ import { inject as service } from '@ember/service';
 import { action } from '@ember/object';
 import { isArray } from '@ember/array';
 import { task } from 'ember-concurrency-decorators';
-import { ar } from 'date-fns/locale';
 
 export default class MetricComponent extends Component {
     @service fetch;

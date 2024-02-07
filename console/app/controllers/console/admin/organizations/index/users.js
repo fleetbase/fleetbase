@@ -2,7 +2,9 @@ import Controller from '@ember/controller';
 import { tracked } from '@glimmer/tracking';
 import { inject as service } from '@ember/service';
 import { action } from '@ember/object';
-import { task } from 'ember-concurrency';
+import { isBlank } from '@ember/utils';
+import { task } from 'ember-concurrency-decorators';
+import { timeout } from 'ember-concurrency';
 
 export default class ConsoleAdminOrganizationsIndexUsersController extends Controller {
     /**
@@ -52,7 +54,7 @@ export default class ConsoleAdminOrganizationsIndexUsersController extends Contr
      *
      * @var {String}
      */
-    @tracked nestedQuery;
+    @tracked nestedQuery = '';
 
     /**
      * The company loaded.
@@ -106,14 +108,14 @@ export default class ConsoleAdminOrganizationsIndexUsersController extends Contr
     /**
      * Handle closing the overlay.
      *
-     * @return {Promise<Transition>} 
+     * @return {Promise<Transition>}
      * @memberof ConsoleAdminOrganizationsIndexUsersController
      */
     @action onPressClose() {
         if (this.contextApi && typeof this.contextApi.close === 'function') {
             this.contextApi.close();
         }
-        
+
         return this.router.transitionTo('console.admin.organizations.index');
     }
 
@@ -126,7 +128,12 @@ export default class ConsoleAdminOrganizationsIndexUsersController extends Contr
      * @public
      */
     @task({ restartable: true }) *search(event) {
-        this.nestedQuery = event.target.value;
-        // this.companies = yield this.fetch.get(`companies/${this.company.public_id}/users`, { query: event.target.value });
+        const searchQuery = event.target.value ?? '';
+        if (isBlank(searchQuery)) {
+            return;
+        }
+
+        yield timeout(600);
+        this.nestedQuery = searchQuery;
     }
 }

@@ -52,7 +52,7 @@ export default class DashboardWidgetPanelComponent extends Component {
      */
     @action onPressClose() {
         this.isOpen = false;
-        
+
         if (typeof this.args.onClose === 'function') {
             this.args.onClose();
         }
