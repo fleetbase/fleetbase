@@ -91,7 +91,8 @@ RUN chmod +x /fleetbase/api/deploy.sh
 FROM base as scheduler-base
 
 # Install go-crond
-RUN curl -L https://github.com/webdevops/go-crond/releases/download/0.6.1/go-crond-64-linux > /usr/local/bin/go-crond && chmod +x /usr/local/bin/go-crond
+# RUN curl -L https://github.com/webdevops/go-crond/releases/download/0.6.1/go-crond-64-linux > /usr/local/bin/go-crond && chmod +x /usr/local/bin/go-crond
+RUN curl -L https://github.com/webdevops/go-crond/releases/download/23.12.0/go-crond.linux.amd64 > /usr/local/bin/go-crond && chmod +x /usr/local/bin/go-crond
 COPY docker/crontab ./crontab
 RUN chmod 0600 ./crontab
 
