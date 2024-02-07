@@ -18,10 +18,10 @@ export default class CommentSerializer extends ApplicationSerializer.extend(Embe
     serializeAttribute(snapshot, json, key, attributes) {
         if (key === 'editable') {
             return;
-        } 
+        }
 
         super.serializeAttribute(...arguments);
-      }
+    }
 
     serializeHasMany(snapshot, json, relationship) {
         let key = relationship.key;

@@ -13,7 +13,6 @@ export default class MetricComponent extends Component {
 
     constructor() {
         super(...arguments);
-        console.log('Dashboard in Metric: ', this.args.options);
         this.loadDashboard.perform();
     }
 

@@ -53,6 +53,8 @@ common:
   country: Country
   phone-number: Phone
   status: Status
+  close-and-save: Close and Save
+  users: Users
 component:
   file:
     dropdown-label: File actions
@@ -85,6 +87,21 @@ component:
     comment-reply-placeholder: Input your reply...
     comment-input-empty-notification: You cannot publish empty comments...
     comment-min-length-notification: Comment must be atleast 2 characters
+  dashboard:
+    select-dashboard: Select Dashboard
+    create-new-dashboard: Create new Dashboard
+    edit-layout: Edit layout
+    add-widgets: Add widgets
+    delete-dashboard: Delete dashboard
+  dashboard-widget-panel:
+    widget-name: >-
+      {widgetName} Widget
+    select-widgets: Select Widgets
+    close-and-save: Close and Save
+services:
+  dashboard-service:
+    create-dashboard-success-notification: New dashboard `{dashboardName}` created succesfully.
+    delete-dashboard-success-notification: Dashboard `{dashboardName}` was deleted.
 auth:
   verification:
     header-title: Account Verification
@@ -190,6 +207,8 @@ console:
     organizations:
       index:
         title: Organizations
+        phone-column: Phone
+        email-column: Email
       users:
         title: Users
   settings:

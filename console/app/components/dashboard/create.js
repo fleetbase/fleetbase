@@ -17,12 +17,6 @@ export default class DashboardCreateComponent extends Component {
     }
 
     @action onChangeGrid(event) {
-        console.log('Grid Stack event: ', event);
-        console.log(
-            'dashboard: ',
-            this.args.dashboard.widgets.map((widget) => widget.serialize())
-        );
-
         const updatedWidgets = [];
 
         event.detail.forEach((currentWidgetEvent, index) => {
@@ -37,8 +31,9 @@ export default class DashboardCreateComponent extends Component {
             }
 
             const { id, x, y, w, h } = currentWidgetEvent;
-            changedWidget.grid_options = { x, y, w, h };
-            const response = changedWidget.updatePosition({ id, x, y, h, w });
+            const response = changedWidget.updateProperties({
+                grid_options: { x, y, w, h },
+            });
             if (response) {
                 updatedWidgets.push(changedWidget);
             }

@@ -5,7 +5,8 @@ import { getOwner } from '@ember/application';
 
 export default class DashboardModel extends Model {
     /** @ids */
-    @attr('string') owner_uuid;
+    @attr('string') company_uuid;
+    @attr('string') user_uuid;
 
     /** @relationships */
     @hasMany('dashboard-widget', { async: false }) widgets;
@@ -47,11 +48,8 @@ export default class DashboardModel extends Model {
     addWidget(widget) {
         const owner = getOwner(this);
         const store = owner.lookup('service:store');
+        const widgetRecord = store.createRecord('dashboard-widget', { ...widget, dashboard: this });
 
-        const widgetRecord = store.createRecord('dashboard-widget', widget);
-
-        widgetRecord.dashboard = this;
-        console.log(widgetRecord);
         return new Promise((resolve, reject) => {
             widgetRecord
                 .save()
@@ -69,7 +67,6 @@ export default class DashboardModel extends Model {
     removeWidget(widget) {
         const owner = getOwner(this);
         const store = owner.lookup('service:store');
-
         const widgetRecord = store.peekRecord('dashboard-widget', widget);
 
         if (widgetRecord) {

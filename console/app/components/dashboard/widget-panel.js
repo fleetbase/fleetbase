@@ -18,8 +18,6 @@ export default class DashboardWidgetPanelComponent extends Component {
 
         this.availableWidgets = this.universe.getDashboardWidgets();
         this.dashboard = dashboard;
-
-        console.log(this.availableWidgets, this.dashboard);
     }
 
     /**
@@ -37,7 +35,11 @@ export default class DashboardWidgetPanelComponent extends Component {
     }
 
     @action addWidgetToDashboard(widget) {
-        console.log('Adding widget to dashboard: ', widget);
+        // If widget is a component definition/class
+        if (typeof widget.component === 'function') {
+            widget.component = widget.component.name;
+        }
+
         this.args.dashboard.addWidget(widget).catch((error) => {
             this.notifications.serverError(error);
         });
@@ -50,7 +52,9 @@ export default class DashboardWidgetPanelComponent extends Component {
      */
     @action onPressClose() {
         this.isOpen = false;
-        console.log(this.args);
-        this.args.onClose();
+        
+        if (typeof this.args.onClose === 'function') {
+            this.args.onClose();
+        }
     }
 }

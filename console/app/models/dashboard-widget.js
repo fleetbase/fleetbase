@@ -5,7 +5,6 @@ import { getOwner } from '@ember/application';
 
 export default class DashboardWidgetModel extends Model {
     /** @ids */
-    @attr('string') uuid;
     @attr('string') dashboard_uuid;
 
     /** @relationships */
@@ -46,9 +45,15 @@ export default class DashboardWidgetModel extends Model {
         return format(this.created_at, 'PP');
     }
 
-    updatePosition() {
-        this.save().then((response) => {
-            console.log('Widget updated successfully.', response);
-        });
+    /**
+     * Update the dashboard widget properties on the server
+     *
+     * @param {Object} [properties={}]
+     * @return {Promise<DashboardWidgetModel>}
+     * @memberof DashboardWidgetModel
+     */
+    updateProperties(properties = {}) {
+        this.setProperties(properties);
+        return this.save();
     }
 }

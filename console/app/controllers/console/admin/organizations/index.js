@@ -2,6 +2,7 @@ import Controller from '@ember/controller';
 import { inject as service } from '@ember/service';
 import { action } from '@ember/object';
 import { tracked } from '@glimmer/tracking';
+import { task } from 'ember-concurrency';
 
 /**
  * Controller for managing organizations in the admin console.
@@ -55,11 +56,11 @@ export default class ConsoleAdminOrganizationsController extends Controller {
     @tracked limit = 20;
 
     /**
-     * Array to store the fetched companies.
+     * The filterable param `sort`
      *
-     * @var {Array}
+     * @var {String|Array}
      */
-    @tracked companies = [];
+    @tracked sort = '-created_at';
 
     /**
      * The filterable param `name`
@@ -76,55 +77,57 @@ export default class ConsoleAdminOrganizationsController extends Controller {
     @tracked country;
 
     /**
+     * Array to store the fetched companies.
+     *
+     * @var {Array}
+     */
+    @tracked companies = [];
+
+    /**
      * Queryable parameters for this controller's model
      *
      * @var {Array}
      */
-    queryParams = ['name', 'page', 'limit'];
+    queryParams = ['name', 'page', 'limit', 'sort'];
 
     /**
-     * Constructor for ConsoleAdminOrganizationsController.
-     * Invokes the getAllCompanies method to fetch all companies.
+     * Columns for organization
      *
-     * @constructor
-     * @method constructor
+     * @memberof ConsoleAdminOrganizationsController
      */
-    constructor() {
-        super(...arguments);
-        this.getAllCompanies();
-        this.columns = [
-            {
-                label: this.intl.t('common.name'),
-                valuePath: 'name',
-                resizable: true,
-                sortable: true,
-                filterable: true,
-                filterComponent: 'filter/string',
-            },
-            {
-                label: this.intl.t('common.country'),
-                valuePath: 'country_name',
-                resizable: true,
-                sortable: true,
-                filterable: true,
-                filterComponent: 'filter/string',
-            },
-            {
-                label: this.intl.t('common.created-at'),
-                valuePath: 'createdAt',
-            },
-        ];
-    }
+    columns = [
+        {
+            label: this.intl.t('common.name'),
+            valuePath: 'name',
+            resizable: true,
+            sortable: true,
+            filterable: true,
+            filterComponent: 'filter/string',
+        },
+        {
+            label: this.intl.t('console.admin.organizations.index.phone-column'),
+            valuePath: 'phone',
+            resizable: true,
+            sortable: true,
+            filterable: true,
+            filterComponent: 'filter/string',
+        },
+        {
+            label: this.intl.t('common.created-at'),
+            valuePath: 'createdAt',
+        },
+    ];
 
     /**
-     * Fetches all companies from the store and sets the 'companies' property.
+     * `search` is a task that performs a search query on the 'company' model in the store.
      *
-     * @method getAllCompanies
+     * @method search
+     * @param {string} query - The search query.
+     * @returns {Promise} A promise that resolves with the search results.
+     * @public
      */
-    getAllCompanies() {
-        this.store.findAll('company', { page: this.page, limit: this.limit }).then((companies) => {
-            this.set('companies', companies);
-        });
+    @task({ restartable: true }) *search(event) {
+        this.companies = yield this.store.query('company', { query: event.target.value });
     }
 
     /**
@@ -134,6 +137,6 @@ export default class ConsoleAdminOrganizationsController extends Controller {
      * @param {Object} company - The selected company.
      */
     @action goToCompany(company) {
-        this.router.transitionTo('console.admin.organizations.users', company.id);
+        this.router.transitionTo('console.admin.organizations.index.users', company.public_id);
     }
 }

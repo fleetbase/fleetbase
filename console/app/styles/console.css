@@ -23,3 +23,29 @@ body[data-theme='dark'] .two-fa-enforcement-alert button#two-fa-setup-button.btn
     padding-left: 1rem;
     padding-top: 0.2rem;
 }
+
+/** move to ember-ui later */
+.fleetbase-pagination-meta-info-wrapper.within-layout-section-header {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: right;
+    flex: 1;
+}
+
+.without-padding  {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+}
+
+.without-padding-y  {
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+}
+
+.without-padding-x  {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+}
