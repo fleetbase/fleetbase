@@ -4,7 +4,7 @@ export function initialize(application) {
     const universe = application.lookup('service:universe');
     const defaultWidgets = [
         {
-            did: 'fleetbase-blog',
+            widgetId: 'fleetbase-blog',
             name: 'Fleetbase Blog',
             description: 'Lists latest news and events from the Fleetbase official team.',
             icon: 'newspaper',
@@ -15,7 +15,7 @@ export function initialize(application) {
             },
         },
         {
-            did: 'github-card',
+            widgetId: 'fleetbase-github-card',
             name: 'Github Card',
             description: 'Displays current Github stats from the official Fleetbase repo.',
             icon: faGithub,
