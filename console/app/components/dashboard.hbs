@@ -78,7 +78,7 @@
         </div>
         {{#if this.dashboard.isEditingDashboard}}
             <div class="ml-2 h-10">
-                <Button @type="magic" @icon="save" @helpText={{"Save Dashboard"}} @onClick={{fn this.onChangeEdit false}} class="h-10" />
+                <Button @type="magic" @icon="save" @helpText={{t "component.dashboard.save-dashboard"}} @onClick={{fn this.onChangeEdit false}} class="h-10" />
             </div>
         {{/if}}
     </div>

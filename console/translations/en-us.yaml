@@ -91,9 +91,14 @@ component:
   dashboard:
     select-dashboard: Select Dashboard
     create-new-dashboard: Create new Dashboard
+    create-a-new-dashboard: Create a new Dashboard
+    confirm-create-dashboard: Create Dashboard!
     edit-layout: Edit layout
     add-widgets: Add widgets
     delete-dashboard: Delete dashboard
+    save-dashboard: Save Dashboard
+    you-cannot-delete-this-dashboard: You cannot delete this dashboard.
+    are-you-sure-you-want-delete-dashboard: Are you sure to delete this {dashboardName}?
   dashboard-widget-panel:
     widget-name: >-
       {widgetName} Widget

@@ -74,10 +74,15 @@ export default class DashboardService extends Service {
 
         if (isArray(dashboards)) {
             this.dashboards = dashboards.toArray();
-            this.dashboards.unshiftObject(this._createDefaultDashboard());
+
+            // insert default dashboard if it's not loaded
+            const defaultDashboard = this._createDefaultDashboard();
+            if (this._isDefaultDashboardNotLoaded()) {
+                this.dashboards.unshiftObject(defaultDashboard);
+            }
 
             // Set the current dashboard
-            this.currentDashboard = this.dashboards.find((dashboard) => dashboard.is_default) || this.dashboards[0];
+            this.currentDashboard = this._getNextDashboard();
             if (this.currentDashboard && this.currentDashboard.widgets.length === 0) {
                 this.onAddingWidget(true);
             }
@@ -101,10 +106,6 @@ export default class DashboardService extends Service {
 
         if (currentDashboard) {
             this.currentDashboard = currentDashboard;
-
-            if (this.currentDashboard && this.currentDashboard.widgets.length === 0) {
-                this.onChangeEdit(true);
-            }
         }
     }
 
@@ -122,7 +123,6 @@ export default class DashboardService extends Service {
             this.notifications.success(this.intl.t('services.dashboard-service.create-dashboard-success-notification', { dashboardName: dashboard.name }));
             this.selectDashboard.perform(dashboard);
             this.dashboards.pushObject(dashboard);
-            this.isEditingDashboard = true;
         }
     }
 
@@ -141,7 +141,8 @@ export default class DashboardService extends Service {
         });
 
         this.notifications.success(this.intl.t('services.dashboard-service.delete-dashboard-success-notification', { dashboardName: dashboard.name }));
-        this.loadDashboards.perform();
+        yield this.loadDashboards.perform();
+        yield this.selectDashboard.perform(this._getNextDashboard());
 
         if (typeof options.callback === 'function') {
             options.callback(this.currentDashboard);
@@ -184,8 +185,21 @@ export default class DashboardService extends Service {
      * @returns {Object} The default dashboard object.
      */
     _createDefaultDashboard() {
-        const defaultDashboard = this.store.createRecord('dashboard', {
+        let defaultDashboard;
+
+        // check store for default dashboard
+        const loadedDashboars = this.store.peekAll('dashboard');
+
+        // check for default dashboard loaded in store
+        defaultDashboard = loadedDashboars.find((dashboard) => dashboard.id === 'system');
+        if (defaultDashboard) {
+            return defaultDashboard;
+        }
+
+        // create new default dashboard
+        defaultDashboard = this.store.createRecord('dashboard', {
             id: 'system',
+            uuid: 'system',
             name: 'Default Dashboard',
             is_default: false,
             user_uuid: 'system',
@@ -206,5 +220,36 @@ export default class DashboardService extends Service {
         });
 
         return widgets;
+    }
+
+    /**
+     * Checks if default dashboard is already loaded.
+     * @private
+     * @return {Boolean}
+     * @memberof DashboardService
+     */
+    _isDefaultDashboardLoaded() {
+        const defaultDashboard = this._createDefaultDashboard();
+        return this.dashboards.some((dashboard) => dashboard.id === defaultDashboard.id);
+    }
+
+    /**
+     * Checks if default dashboard is not already loaded.
+     * @private
+     * @return {Boolean}
+     * @memberof DashboardService
+     */
+    _isDefaultDashboardNotLoaded() {
+        return !this._isDefaultDashboardLoaded();
+    }
+
+    /**
+     * Gets the current dasbhoard or next available dashboard.
+     *
+     * @return {DashboardModel}
+     * @memberof DashboardService
+     */
+    _getNextDashboard() {
+        return this.dashboards.find((dashboard) => dashboard.is_default) || this.dashboards[0];
     }
 }
