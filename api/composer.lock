@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "2bec912308785cf64d5cd1dc1f3ad43a",
+    "content-hash": "abbd34ef62870827631a02d2764bed2b",
     "packages": [
         {
             "name": "aloha/twilio",
@@ -2047,23 +2047,23 @@
                 "stripe api"
             ],
             "support": {
-                "source": "https://github.com/fleetbase/billing/tree/main",
+                "source": "https://github.com/fleetbase/billing/tree/v0.0.7",
                 "issues": "https://github.com/fleetbase/billing/issues"
             },
             "time": "2024-02-08T08:48:12+00:00"
         },
         {
             "name": "fleetbase/core-api",
-            "version": "1.4.0",
+            "version": "1.4.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fleetbase/core-api.git",
-                "reference": "c98e08a257d8dc480abfc5c2f48e62a7539c0dff"
+                "reference": "ace06533b6629027d244f5616db96abfcdbd8247"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fleetbase/core-api/zipball/c98e08a257d8dc480abfc5c2f48e62a7539c0dff",
-                "reference": "c98e08a257d8dc480abfc5c2f48e62a7539c0dff",
+                "url": "https://api.github.com/repos/fleetbase/core-api/zipball/ace06533b6629027d244f5616db96abfcdbd8247",
+                "reference": "ace06533b6629027d244f5616db96abfcdbd8247",
                 "shasum": ""
             },
             "require": {
@@ -2139,9 +2139,9 @@
             ],
             "support": {
                 "issues": "https://github.com/fleetbase/core-api/issues",
-                "source": "https://github.com/fleetbase/core-api/tree/v1.4.0"
+                "source": "https://github.com/fleetbase/core-api/tree/v1.4.1"
             },
-            "time": "2024-02-07T05:49:54+00:00"
+            "time": "2024-02-08T11:04:14+00:00"
         },
         {
             "name": "fleetbase/fleetops-api",
@@ -2330,7 +2330,7 @@
                 "fleetbase-internals"
             ],
             "support": {
-                "source": "https://github.com/fleetbase/internals/tree/main",
+                "source": "https://github.com/fleetbase/internals/tree/v0.0.2",
                 "issues": "https://github.com/fleetbase/internals/issues"
             },
             "time": "2024-02-08T08:48:36+00:00"
@@ -17283,5 +17283,5 @@
         "php": "^7.3|^8.0"
     },
     "platform-dev": [],
-    "plugin-api-version": "2.2.0"
+    "plugin-api-version": "2.6.0"
 }
