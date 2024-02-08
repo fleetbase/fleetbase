@@ -2,8 +2,8 @@
     <div class="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
         <div class="bg-white dark:bg-gray-800 py-8 px-4 shadow sm:rounded-lg sm:px-10">
             <div class="mb-8">
-                <img class="mx-auto h-12 w-auto" src={{@brand.icon_url}} alt={{t "app.name"}}>
-                <h2 class="mt-6 text-center text-lg font-extrabold text-gray-900 dark:text-white truncate">
+                <Image src={{@model.logo_url}} @fallbackSrc="/images/fleetbase-logo-svg.svg" alt={{t "app.name"}} width="160" height="56" class="w-40 h-14 mx-auto" />
+                <h2 class="text-center text-lg font-extrabold text-gray-900 dark:text-white truncate">
                     {{t "invite.for-users.invitation-message" companyName=@model.name}}
                 </h2>
             </div>
