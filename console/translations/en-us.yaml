@@ -35,6 +35,7 @@ common:
   notification-channels: Notification Channels
   notifications: Notifications
   organization: Organization
+  organizations: Organizations
   overview: Overview
   phone: Your phone number
   profile: Profile
@@ -49,6 +50,12 @@ common:
   two-factor: Two Factor
   uploading: Uploading...
   your-profile: Your Profile
+  created-at: Created At
+  country: Country
+  phone-number: Phone
+  status: Status
+  close-and-save: Close and Save
+  users: Users
 component:
   file:
     dropdown-label: File actions
@@ -81,6 +88,26 @@ component:
     comment-reply-placeholder: Input your reply...
     comment-input-empty-notification: You cannot publish empty comments...
     comment-min-length-notification: Comment must be atleast 2 characters
+  dashboard:
+    select-dashboard: Select Dashboard
+    create-new-dashboard: Create new Dashboard
+    create-a-new-dashboard: Create a new Dashboard
+    confirm-create-dashboard: Create Dashboard!
+    edit-layout: Edit layout
+    add-widgets: Add widgets
+    delete-dashboard: Delete dashboard
+    save-dashboard: Save Dashboard
+    you-cannot-delete-this-dashboard: You cannot delete this dashboard.
+    are-you-sure-you-want-delete-dashboard: Are you sure to delete this {dashboardName}?
+  dashboard-widget-panel:
+    widget-name: >-
+      {widgetName} Widget
+    select-widgets: Select Widgets
+    close-and-save: Close and Save
+services:
+  dashboard-service:
+    create-dashboard-success-notification: New dashboard `{dashboardName}` created succesfully.
+    delete-dashboard-success-notification: Dashboard `{dashboardName}` was deleted.
 auth:
   verification:
     header-title: Account Verification
@@ -183,6 +210,13 @@ console:
     notifications:
       title: Notifications
       notification-settings: Notification Settings
+    organizations:
+      index:
+        title: Organizations
+        phone-column: Phone
+        email-column: Email
+      users:
+        title: Users
   settings:
     index:
       title: Organization Settings

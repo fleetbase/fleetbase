@@ -15,13 +15,13 @@ export default class CommentSerializer extends ApplicationSerializer.extend(Embe
         };
     }
 
-    serializeAttribute(snapshot, json, key, attributes) {
+    serializeAttribute(snapshot, json, key) {
         if (key === 'editable') {
             return;
-        } 
+        }
 
         super.serializeAttribute(...arguments);
-      }
+    }
 
     serializeHasMany(snapshot, json, relationship) {
         let key = relationship.key;

@@ -3,6 +3,7 @@ variable "REGISTRY" { default = "" }
 variable "VERSION" { default = "latest" }
 variable "CACHE" { default = "" }
 variable "GCP" { default = false }
+variable "GITHUB_AUTH_KEY" { default = "" }
 
 group "default" {
   targets = ["app", "app-httpd"]
@@ -28,9 +29,9 @@ target "app" {
     compact(["latest", VERSION])
   ) : []
 
-  secret = [
-    "type=file,id=composer_auth,src=./composer-auth.json"
-  ]
+  args = {
+    GITHUB_AUTH_KEY = "${GITHUB_AUTH_KEY}"
+  }
 
   cache-from = notequal("", CACHE) ? ["${CACHE}"] : []
   cache-to   = notequal("", CACHE) ? ["${CACHE},mode=max,ignore-error=true"] : []

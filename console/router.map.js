@@ -49,6 +49,11 @@ Router.map(function () {
             this.route('notifications');
             this.route('two-fa-settings');
             this.route('virtual', { path: '/:slug/:view' });
+            this.route('organizations', function () {
+                this.route('index', { path: '/' }, function () {
+                    this.route('users', { path: '/:public_id/users' });
+                });
+            });
         });
     });
     this.route('install');

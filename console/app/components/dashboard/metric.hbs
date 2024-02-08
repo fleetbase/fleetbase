@@ -1,0 +1,18 @@
+<div class="col-span-{{or @dashboard.size 12}}">
+    <div class="dashboard-title flex flex-col lg:flex-row lg:items-center">
+        <div class="flex flex-row items-center mb-2 lg:mb-0">
+            {{#if this.isLoading}}
+                <Spinner class="mr-2i" />
+            {{/if}}
+            <h2 class="text-sm font-bold dark:text-gray-100 text-black">{{this.dashboard.title}}</h2>
+        </div>
+        <div>
+            <Dashboard::QueryParams @params={{this.dashboard.queryParams}} @onChange={{this.onQueryParamsChanged}} />
+        </div>
+    </div>
+    <div class="grid grid-cols-2 lg:grid-cols-12 gap-4">
+        {{#each this.dashboard.widgets as |widget|}}
+            {{component (concat "dashboard/" widget.component) options=widget.options}}
+        {{/each}}
+    </div>
+</div>

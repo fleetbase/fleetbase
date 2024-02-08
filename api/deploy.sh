@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 # Exit the script as soon as a command fails
 set -e
