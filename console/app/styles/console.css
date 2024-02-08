@@ -4,9 +4,8 @@
     color: rgb(202 138 4);
 }
 
-body[data-theme='dark'] .btn.btn-warning-alert.btn-warning,
 .btn.btn-warning-alert.btn-warning,
-.two-fa-enforcement-alert button#two-fa-setup-button.btn.btn-warning,
+.two-fa-enforcement-alert button#two-fa-setup-button.btn.btn-warning body[data-theme='dark'] .btn.btn-warning-alert.btn-warning,
 body[data-theme='dark'] .two-fa-enforcement-alert button#two-fa-setup-button.btn.btn-warning {
     background-color: rgb(202 138 4);
     border-color: rgb(161 98 7);
@@ -22,4 +21,26 @@ body[data-theme='dark'] .two-fa-enforcement-alert button#two-fa-setup-button.btn
     line-height: 1rem;
     padding-left: 1rem;
     padding-top: 0.2rem;
+}
+
+.fleetbase-pagination-meta-info-wrapper.within-layout-section-header {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: right;
+    flex: 1;
+}
+
+.without-padding {
+    padding: 0 !important;
+}
+
+.without-padding-y {
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+}
+
+.without-padding-x {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
 }

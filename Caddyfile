@@ -1,0 +1,12 @@
+{
+	frankenphp
+	order php_server before file_server
+}
+
+http://:8000 {
+	root * /fleetbase/api/public
+	encode zstd gzip
+	php_server {
+		resolve_root_symlink
+	}
+}

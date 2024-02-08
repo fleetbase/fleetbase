@@ -1,7 +1,99 @@
-<div class="fleetbase-dashboard-grid">
-    <div class="grid grid-cols-1 md:grid-cols-12 gap-4">
-        {{#each this.dashboards as |dashboard index|}}
-            <Dashboard::Create @index={{index}} @dashboard={{dashboard}} />
-        {{/each}}
+<div class="fleetbase-dashboard-grid flex items-center justify-between mb-4 mt-6 px-14">
+    <div class="left-section">
+        <h1 class="text-lg font-bold">{{this.dashboard.currentDashboard.name}}</h1>
     </div>
+    <div class="fleetbase-dashboard-actions right-section ml-4 flex items-center">
+        <div class="fleetbase-model-select fleetbase-power-select ember-model-select h-10">
+
+            <DropdownButton
+                class="h-10"
+                @text={{if this.dashboard.currentDashboard.name this.dashboard.currentDashboard.name (t "component.dashboard.select-dashboard")}}
+                @textClass="text-sm mr-2"
+                @buttonClass="flex-row-reverse w-44 justify-between"
+                @icon="caret-down"
+                @iconClass="mr-0i"
+                @size="sm"
+                @iconPrefix="fas"
+                @triggerClass="hidden md:flex"
+                as |dd|
+            >
+                <div class="next-dd-menu mt-1 mx-0" aria-labelledby="user-menu">
+                    <div class="p-1">
+                        {{#each this.dashboard.dashboards as |dashboard|}}
+                            <a href="javascript:;" class="next-dd-item" {{on "click" (dropdown-fn dd this.selectDashboard dashboard)}}>
+                                <div class="flex-1 flex flex-row items-center">
+                                    <div class="w-6">
+                                        <FaIcon @icon="desktop" />
+                                    </div>
+                                    <span>{{dashboard.name}}</span>
+                                </div>
+                                <div>
+                                    {{#if (eq this.dashboard.currentDashboard.id dashboard.id)}}
+                                        <FaIcon @icon="check" class="text-green-500" />
+                                    {{/if}}
+                                </div>
+                            </a>
+                        {{/each}}
+                    </div>
+                </div>
+            </DropdownButton>
+        </div>
+
+        <div class="ml-2 relative h-10">
+            <DropdownButton class="h-10" @icon="ellipsis-h" @size="sm" @iconPrefix="fas" @triggerClass="hidden md:flex" as |dd|>
+                <div class="next-dd-menu mt-1 mx-0" aria-labelledby="user-menu">
+                    <div class="p-1">
+                        <a href="javascript:;" class="next-dd-item" {{on "click" (dropdown-fn dd this.createDashboard)}}>
+                            <div class="w-6">
+                                <FaIcon @icon="add" />
+                            </div>
+                            <span>{{t "component.dashboard.create-new-dashboard"}}</span>
+                        </a>
+
+                        {{#unless (eq this.dashboard.currentDashboard.user_uuid "system")}}
+                            <a href="javascript:;" class="next-dd-item" {{on "click" (dropdown-fn dd this.onChangeEdit true)}}>
+                                <div class="w-6">
+                                    <FaIcon @icon="edit" />
+                                </div>
+                                <span>{{t "component.dashboard.edit-layout"}}</span>
+                            </a>
+                            <a href="javascript:;" class="next-dd-item" {{on "click" (dropdown-fn dd this.onAddingWidget true)}}>
+                                <div class="w-6">
+                                    <FaIcon @icon="add" />
+                                </div>
+                                <span>{{t "component.dashboard.add-widgets"}}</span>
+                            </a>
+
+                            <a href="javascript:;" class="next-dd-item" {{on "click" (dropdown-fn dd this.deleteDashboard this.dashboard.currentDashboard)}}>
+                                <div class="w-6">
+                                    <FaIcon @icon="trash" />
+                                </div>
+                                <span>{{t "component.dashboard.delete-dashboard"}}</span>
+                            </a>
+                        {{/unless}}
+
+                    </div>
+                </div>
+            </DropdownButton>
+        </div>
+        {{#if this.dashboard.isEditingDashboard}}
+            <div class="ml-2 h-10">
+                <Button @type="magic" @icon="save" @helpText={{t "component.dashboard.save-dashboard"}} @onClick={{fn this.onChangeEdit false}} class="h-10" />
+            </div>
+        {{/if}}
+    </div>
+</div>
+
+<div class="px-10">
+    <Dashboard::Create @isEdit={{this.dashboard.isEditingDashboard}} @isAddingWidget={{this.dashboard.isAddingWidget}} @dashboard={{this.dashboard.currentDashboard}} />
+    {{#if this.dashboard.isAddingWidget}}
+        <EmberWormhole @to="console-home-wormhole">
+            <Dashboard::WidgetPanel
+                @isOpen={{this.dashboard.isAddingWidget}}
+                @onLoad={{this.setWidgetSelectorPanelContext}}
+                @dashboard={{this.dashboard.currentDashboard}}
+                @onClose={{fn this.onAddingWidget false}}
+            />
+        </EmberWormhole>
+    {{/if}}
 </div>

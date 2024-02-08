@@ -12,6 +12,6 @@ export default class AuthResetPasswordRoute extends Route {
         super.setupController(...arguments);
 
         // set brand to controller
-        this.brand = await this.store.findRecord('brand', 1);
+        controller.brand = await this.store.findRecord('brand', 1);
     }
 }

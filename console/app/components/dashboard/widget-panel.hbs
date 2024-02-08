@@ -1,0 +1,31 @@
+<Overlay @isOpen={{@isOpen}} @onLoad={{this.setOverlayContext}} @position="right" @noBackdrop={{true}} @fullHeight={{true}} @width={{or this.width @width "400px"}}>
+    <Overlay::Header @title={{t "component.dashboard-widget-panel.select-widgets"}} @hideStatusDot={{true}} @titleWrapperClass="leading-5">
+        <div class="flex flex-1 justify-end">
+            <Button @type="default" @icon="times" @helpText={{t "component.dashboard-widget-panel.close-and-save"}} @onClick={{this.onPressClose}} />
+        </div>
+    </Overlay::Header>
+
+    <Overlay::Body @wrapperClass="new-service-rate-overlay-body px-4 space-y-4 pt-4">
+        <div class="grid grid-cols-1 gap-4 text-xs dark:text-gray-100">
+            {{#each this.availableWidgets as |widget|}}
+                <div
+                    class="rounded-lg border border-gray-300 bg-white dark:border-gray-700 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 transition-all duration-300 ease-in-out shadow-md px-4 py-2 cursor-pointer"
+                    {{on "click" (fn this.addWidgetToDashboard widget)}}
+                >
+                    <div class="flex flex-row items-center leading-6 mb-2.5">
+                        <div class="w-8 flex items-center justify-start">
+                            <FaIcon @icon={{widget.icon}} class="text-lg text-gray-600 dark:text-gray-300" />
+                        </div>
+                        <p class="text-sm truncate font-semibold dark:text-gray-100 text-gray-800">
+                            {{t "component.dashboard-widget-panel.widget-name" widgetName=widget.name}}
+                        </p>
+                    </div>
+                    <div>
+                        <p class="text-xs dark:text-gray-100 text-gray-800">{{widget.description}}</p>
+                    </div>
+                </div>
+            {{/each}}
+        </div>
+        <Spacer @height="300px" />
+    </Overlay::Body>
+</Overlay>

@@ -12,7 +12,7 @@ services:
       - "./docker/database/:/docker-entrypoint-initdb.d/"
       - "./docker/database/mysql:/var/lib/mysql"
     environment:
-      MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
       MYSQL_DATABASE: "fleetbase"
 
   socket:
@@ -22,6 +22,21 @@ services:
     environment:
       SOCKETCLUSTER_WORKERS: 10
       SOCKETCLUSTER_BROKERS: 10
+
+  queue:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+      target: events-dev
+      args:
+        ENVIRONMENT: development
+    environment:
+      DATABASE_URL: "mysql://root@database/fleetbase"
+      QUEUE_CONNECTION: redis
+      CACHE_DRIVER: redis
+      CACHE_PATH: /fleetbase/api/storage/framework/cache
+      CACHE_URL: tcp://cache
+      REDIS_URL: tcp://cache
 
   console:
     ports:
@@ -41,10 +56,12 @@ services:
       target: app-dev
       args:
         ENVIRONMENT: development
+        GITHUB_AUTH_KEY: ${GITHUB_AUTH_KEY}
     environment:
       DATABASE_URL: "mysql://root@database/fleetbase"
+      QUEUE_CONNECTION: redis
       CACHE_DRIVER: redis
-      CACHE_PATH: /var/www/html/api/storage/framework/cache
+      CACHE_PATH: /fleetbase/api/storage/framework/cache
       CACHE_URL: tcp://cache
       REDIS_URL: tcp://cache
       SESSION_DOMAIN: localhost
@@ -55,13 +72,12 @@ services:
     depends_on:
       - database
       - cache
+      - queue
 
   httpd:
-    volumes:
-      - ./api/storage:/var/www/html/api/storage
     build:
       context: .
-      dockerfile:  docker/httpd/Dockerfile
+      dockerfile: docker/httpd/Dockerfile
     ports:
       - "8000:80"
     depends_on:

@@ -120,6 +120,9 @@ export default class OnboardIndexController extends Controller {
             return;
         }
 
+        // Set user timezone
+        input.timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+
         this.isLoading = true;
 
         return this.fetch
