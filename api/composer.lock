@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "abbd34ef62870827631a02d2764bed2b",
+    "content-hash": "e69eef68a38122252aad35a57bc7c18f",
     "packages": [
         {
             "name": "aloha/twilio",
@@ -136,16 +136,16 @@
         },
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.298.5",
+            "version": "3.298.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "b9bc34a8702a37a6151d843af966bf3b36aaaae3"
+                "reference": "0afccba68a96c0cbc10f6fc5b08c5a0e09774220"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/b9bc34a8702a37a6151d843af966bf3b36aaaae3",
-                "reference": "b9bc34a8702a37a6151d843af966bf3b36aaaae3",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/0afccba68a96c0cbc10f6fc5b08c5a0e09774220",
+                "reference": "0afccba68a96c0cbc10f6fc5b08c5a0e09774220",
                 "shasum": ""
             },
             "require": {
@@ -225,9 +225,9 @@
             "support": {
                 "forum": "https://forums.aws.amazon.com/forum.jspa?forumID=80",
                 "issues": "https://github.com/aws/aws-sdk-php/issues",
-                "source": "https://github.com/aws/aws-sdk-php/tree/3.298.5"
+                "source": "https://github.com/aws/aws-sdk-php/tree/3.298.6"
             },
-            "time": "2024-02-07T19:05:01+00:00"
+            "time": "2024-02-08T19:03:23+00:00"
         },
         {
             "name": "aws/aws-sdk-php-laravel",
@@ -2145,23 +2145,23 @@
         },
         {
             "name": "fleetbase/fleetops-api",
-            "version": "0.4.7",
+            "version": "0.4.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fleetbase/fleetops.git",
-                "reference": "9ce45d040249ae7f0477a4c6f1fbb455f9579aee"
+                "reference": "899e67d9a87b29e8df3b5680d07ec8b78b12a3d9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fleetbase/fleetops/zipball/9ce45d040249ae7f0477a4c6f1fbb455f9579aee",
-                "reference": "9ce45d040249ae7f0477a4c6f1fbb455f9579aee",
+                "url": "https://api.github.com/repos/fleetbase/fleetops/zipball/899e67d9a87b29e8df3b5680d07ec8b78b12a3d9",
+                "reference": "899e67d9a87b29e8df3b5680d07ec8b78b12a3d9",
                 "shasum": ""
             },
             "require": {
                 "barryvdh/laravel-dompdf": "^2.0",
                 "brick/geo": "0.7.2",
                 "cknow/laravel-money": "^7.1",
-                "fleetbase/core-api": "^1.4.0",
+                "fleetbase/core-api": "^1.4.1",
                 "geocoder-php/google-maps-places-provider": "^1.4",
                 "giggsey/libphonenumber-for-php": "^8.13",
                 "league/geotools": "^1.1.0",
@@ -2227,9 +2227,9 @@
             ],
             "support": {
                 "issues": "https://github.com/fleetbase/fleetops/issues",
-                "source": "https://github.com/fleetbase/fleetops/tree/v0.4.7"
+                "source": "https://github.com/fleetbase/fleetops/tree/v0.4.8"
             },
-            "time": "2024-02-08T05:52:43+00:00"
+            "time": "2024-02-09T10:59:58+00:00"
         },
         {
             "name": "fleetbase/internals-api",
@@ -17283,5 +17283,5 @@
         "php": "^7.3|^8.0"
     },
     "platform-dev": [],
-    "plugin-api-version": "2.6.0"
+    "plugin-api-version": "2.2.0"
 }
