@@ -98,12 +98,12 @@ RUN chmod 0600 ./crontab
 # Scheduler dev stage
 FROM scheduler-base as scheduler-dev
 ENTRYPOINT []
-CMD ["go-crond", "--verbose", "--no-auto", "root:./crontab"]
+CMD ["go-crond", "--verbose", "root:./crontab"]
 
 # Scheduler stage
 FROM scheduler-base as scheduler
 ENTRYPOINT ["/sbin/ssm-parent", "-c", ".ssm-parent.yaml", "run", "--"]
-CMD ["go-crond", "--verbose", "--no-auto", "root:./crontab"]
+CMD ["go-crond", "--verbose", "root:./crontab"]
 
 # Events stage
 FROM base as events
