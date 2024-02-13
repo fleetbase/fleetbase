@@ -25,8 +25,8 @@ dependencies:
     specifier: ^0.1.8
     version: 0.1.8
   '@fleetbase/fleetops-engine':
-    specifier: ^0.4.8
-    version: 0.4.8(@ember/test-helpers@3.2.0)(@glimmer/component@1.1.2)(@glimmer/tracking@1.1.2)(ember-engines@0.8.23)(ember-source@5.4.0)(postcss@8.4.21)(rollup@4.9.1)(tracked-built-ins@3.3.0)(webpack@5.89.0)
+    specifier: ^0.4.9
+    version: 0.4.9(@ember/test-helpers@3.2.0)(@glimmer/component@1.1.2)(@glimmer/tracking@1.1.2)(ember-engines@0.8.23)(ember-source@5.4.0)(postcss@8.4.21)(rollup@4.9.1)(tracked-built-ins@3.3.0)(webpack@5.89.0)
   '@fleetbase/iam-engine':
     specifier: ^0.0.9
     version: 0.0.9(@ember/test-helpers@3.2.0)(@glimmer/component@1.1.2)(@glimmer/tracking@1.1.2)(ember-engines@0.8.23)(ember-source@5.4.0)(postcss@8.4.21)(rollup@4.9.1)(tracked-built-ins@3.3.0)(webpack@5.89.0)
@@ -34,8 +34,8 @@ dependencies:
     specifier: ^3.2.16
     version: 3.2.16
   '@fleetbase/storefront-engine':
-    specifier: ^0.2.11
-    version: 0.2.11(@ember/test-helpers@3.2.0)(@glimmer/component@1.1.2)(@glimmer/tracking@1.1.2)(ember-engines@0.8.23)(ember-source@5.4.0)(postcss@8.4.21)(rollup@4.9.1)(tracked-built-ins@3.3.0)(webpack@5.89.0)
+    specifier: ^0.3.0
+    version: 0.3.0(@ember/test-helpers@3.2.0)(@glimmer/component@1.1.2)(@glimmer/tracking@1.1.2)(ember-engines@0.8.23)(ember-source@5.4.0)(postcss@8.4.21)(rollup@4.9.1)(tracked-built-ins@3.3.0)(webpack@5.89.0)
   '@fortawesome/ember-fontawesome':
     specifier: ^0.4.1
     version: 0.4.1(rollup@4.9.1)
@@ -2842,8 +2842,8 @@ packages:
       - supports-color
     dev: false
 
-  /@fleetbase/fleetops-engine@0.4.8(@ember/test-helpers@3.2.0)(@glimmer/component@1.1.2)(@glimmer/tracking@1.1.2)(ember-engines@0.8.23)(ember-source@5.4.0)(postcss@8.4.21)(rollup@4.9.1)(tracked-built-ins@3.3.0)(webpack@5.89.0):
-    resolution: {integrity: sha512-RIlOFSWV/TOJspB/peqaoLCpUyt46M2Wt97m4+pNPiZyz4t3WYBu02owH64X33uBQXmEp2RaaP8MZEZFa8w+yg==, tarball: https://npm.pkg.github.com/download/@fleetbase/fleetops-engine/0.4.8/d67494a06c1f5370894e4910c5254f75c8974b47}
+  /@fleetbase/fleetops-engine@0.4.9(@ember/test-helpers@3.2.0)(@glimmer/component@1.1.2)(@glimmer/tracking@1.1.2)(ember-engines@0.8.23)(ember-source@5.4.0)(postcss@8.4.21)(rollup@4.9.1)(tracked-built-ins@3.3.0)(webpack@5.89.0):
+    resolution: {integrity: sha512-IGwj7ne/ftKcUbCQMDal1WxAYvQPQ9CZboHLLWNk9TWUpJQemaVxYCMTEjPbAu1v29OrkQrbRjkGibql75EAMA==, tarball: https://npm.pkg.github.com/download/@fleetbase/fleetops-engine/0.4.9/4604c93fb1fdbc4b9a6bbf3180c8006192a6dd8c}
     engines: {node: '>= 18'}
     peerDependencies:
       ember-engines: ^0.9.0
@@ -2958,8 +2958,8 @@ packages:
       osrm-text-instructions: 0.13.4
     dev: false
 
-  /@fleetbase/storefront-engine@0.2.11(@ember/test-helpers@3.2.0)(@glimmer/component@1.1.2)(@glimmer/tracking@1.1.2)(ember-engines@0.8.23)(ember-source@5.4.0)(postcss@8.4.21)(rollup@4.9.1)(tracked-built-ins@3.3.0)(webpack@5.89.0):
-    resolution: {integrity: sha512-JnuLWn771GAT+ap60Iyw2KBXpYUqG1XD+t931sbdLUQ7XkdFW3/pOIjIAn6/JcmAziz9M9PF0+IPMrQGyBYz8A==, tarball: https://npm.pkg.github.com/download/@fleetbase/storefront-engine/0.2.11/47bd283edb4a65910157c940a5425741e638b963}
+  /@fleetbase/storefront-engine@0.3.0(@ember/test-helpers@3.2.0)(@glimmer/component@1.1.2)(@glimmer/tracking@1.1.2)(ember-engines@0.8.23)(ember-source@5.4.0)(postcss@8.4.21)(rollup@4.9.1)(tracked-built-ins@3.3.0)(webpack@5.89.0):
+    resolution: {integrity: sha512-YZhvSMg80zRnIL/QCWrryHUahBFNOdkTcoikds8za3WdKrrW01iaZMoeG2FblzSi8+NMz879niNyFLrl1PieUw==, tarball: https://npm.pkg.github.com/download/@fleetbase/storefront-engine/0.3.0/cb704be77879da2361f73b4f1a1cdbdda1597e8e}
     engines: {node: '>= 18'}
     peerDependencies:
       ember-engines: ^0.9.0
