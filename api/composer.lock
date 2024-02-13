@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e69eef68a38122252aad35a57bc7c18f",
+    "content-hash": "50c3ee5c0a81c7de6a3e379a82dca48a",
     "packages": [
         {
             "name": "aloha/twilio",
@@ -136,16 +136,16 @@
         },
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.298.6",
+            "version": "3.298.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "0afccba68a96c0cbc10f6fc5b08c5a0e09774220"
+                "reference": "9d123669b14ccd0f87f7f7de77ace7e5d8fe9d13"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/0afccba68a96c0cbc10f6fc5b08c5a0e09774220",
-                "reference": "0afccba68a96c0cbc10f6fc5b08c5a0e09774220",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/9d123669b14ccd0f87f7f7de77ace7e5d8fe9d13",
+                "reference": "9d123669b14ccd0f87f7f7de77ace7e5d8fe9d13",
                 "shasum": ""
             },
             "require": {
@@ -225,9 +225,9 @@
             "support": {
                 "forum": "https://forums.aws.amazon.com/forum.jspa?forumID=80",
                 "issues": "https://github.com/aws/aws-sdk-php/issues",
-                "source": "https://github.com/aws/aws-sdk-php/tree/3.298.6"
+                "source": "https://github.com/aws/aws-sdk-php/tree/3.298.8"
             },
-            "time": "2024-02-08T19:03:23+00:00"
+            "time": "2024-02-12T19:07:29+00:00"
         },
         {
             "name": "aws/aws-sdk-php-laravel",
@@ -2947,16 +2947,16 @@
         },
         {
             "name": "giggsey/libphonenumber-for-php",
-            "version": "8.13.29",
+            "version": "8.13.30",
             "source": {
                 "type": "git",
                 "url": "https://github.com/giggsey/libphonenumber-for-php.git",
-                "reference": "b8fa0daf0c27bb6fdb5940e0288f203be7e5cfd4"
+                "reference": "e09260a4a470b3737877c0f04f964e8a4938ebbd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/giggsey/libphonenumber-for-php/zipball/b8fa0daf0c27bb6fdb5940e0288f203be7e5cfd4",
-                "reference": "b8fa0daf0c27bb6fdb5940e0288f203be7e5cfd4",
+                "url": "https://api.github.com/repos/giggsey/libphonenumber-for-php/zipball/e09260a4a470b3737877c0f04f964e8a4938ebbd",
+                "reference": "e09260a4a470b3737877c0f04f964e8a4938ebbd",
                 "shasum": ""
             },
             "require": {
@@ -3015,7 +3015,7 @@
                 "issues": "https://github.com/giggsey/libphonenumber-for-php/issues",
                 "source": "https://github.com/giggsey/libphonenumber-for-php"
             },
-            "time": "2024-01-26T08:49:18+00:00"
+            "time": "2024-02-09T12:16:23+00:00"
         },
         {
             "name": "giggsey/locale",
@@ -3131,21 +3131,21 @@
         },
         {
             "name": "google/cloud-core",
-            "version": "v1.54.0",
+            "version": "v1.55.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/googleapis/google-cloud-php-core.git",
-                "reference": "cd3f670dbb7f6a5b9b550b0d1b8e5b6ed148fb58"
+                "reference": "45c8e6e0511944b410bb788a940b2a1ab75975ff"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/googleapis/google-cloud-php-core/zipball/cd3f670dbb7f6a5b9b550b0d1b8e5b6ed148fb58",
-                "reference": "cd3f670dbb7f6a5b9b550b0d1b8e5b6ed148fb58",
+                "url": "https://api.github.com/repos/googleapis/google-cloud-php-core/zipball/45c8e6e0511944b410bb788a940b2a1ab75975ff",
+                "reference": "45c8e6e0511944b410bb788a940b2a1ab75975ff",
                 "shasum": ""
             },
             "require": {
                 "google/auth": "^1.34",
-                "google/gax": "^1.26.3",
+                "google/gax": "^1.27.0",
                 "guzzlehttp/guzzle": "^6.5.8|^7.4.4",
                 "guzzlehttp/promises": "^1.4||^2.0",
                 "guzzlehttp/psr7": "^2.6",
@@ -3191,9 +3191,9 @@
             ],
             "description": "Google Cloud PHP shared dependency, providing functionality useful to all components.",
             "support": {
-                "source": "https://github.com/googleapis/google-cloud-php-core/tree/v1.54.0"
+                "source": "https://github.com/googleapis/google-cloud-php-core/tree/v1.55.0"
             },
-            "time": "2024-01-26T20:27:24+00:00"
+            "time": "2024-02-09T19:51:53+00:00"
         },
         {
             "name": "google/cloud-storage",
@@ -9762,6 +9762,83 @@
             "time": "2022-10-12T17:22:51+00:00"
         },
         {
+            "name": "s-ichikawa/laravel-sendgrid-driver",
+            "version": "4.0.4",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/s-ichikawa/laravel-sendgrid-driver.git",
+                "reference": "f83f6ba04a5ba16bc3293b302e26b01233b7bc88"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/s-ichikawa/laravel-sendgrid-driver/zipball/f83f6ba04a5ba16bc3293b302e26b01233b7bc88",
+                "reference": "f83f6ba04a5ba16bc3293b302e26b01233b7bc88",
+                "shasum": ""
+            },
+            "require": {
+                "guzzlehttp/guzzle": "^7.2",
+                "illuminate/mail": "^9.0||^10.0",
+                "illuminate/support": "^9.0||^10.0"
+            },
+            "require-dev": {
+                "illuminate/container": "^9.0||^10.0",
+                "illuminate/filesystem": "^9.0||^10.0",
+                "laravel/helpers": "^1.2",
+                "phpunit/phpunit": "^9.5.8||^10.0",
+                "vlucas/phpdotenv": "^5.4.1"
+            },
+            "suggest": {
+                "s-ichikawa/sendgrid-api-builder": "support to build json for sendgrid api"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Sichikawa\\LaravelSendgridDriver\\SendgridTransportServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Sichikawa\\LaravelSendgridDriver\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "shingo.ichikawa",
+                    "email": "ichikawa.shingo.0829@gmail.com"
+                }
+            ],
+            "description": "This library adds a 'sendgrid' mail driver to Laravel.",
+            "keywords": [
+                "laravel",
+                "sendgrid"
+            ],
+            "support": {
+                "issues": "https://github.com/s-ichikawa/laravel-sendgrid-driver/issues",
+                "source": "https://github.com/s-ichikawa/laravel-sendgrid-driver/tree/4.0.4"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/[user1",
+                    "type": "github"
+                },
+                {
+                    "url": "https://github.com/s-ichikawa]# Replace with up to 4 GitHub Sponsors-enabled usernames e.g.",
+                    "type": "github"
+                },
+                {
+                    "url": "https://github.com/user2",
+                    "type": "github"
+                }
+            ],
+            "time": "2023-03-02T13:21:47+00:00"
+        },
+        {
             "name": "sabberworm/php-css-parser",
             "version": "8.5.0",
             "source": {
@@ -13914,7 +13991,7 @@
         },
         {
             "name": "web-token/jwt-core",
-            "version": "3.2.9",
+            "version": "3.2.10",
             "source": {
                 "type": "git",
                 "url": "https://github.com/web-token/jwt-core.git",
@@ -13978,7 +14055,7 @@
                 "symfony"
             ],
             "support": {
-                "source": "https://github.com/web-token/jwt-core/tree/3.2.9"
+                "source": "https://github.com/web-token/jwt-core/tree/3.2.10"
             },
             "funding": [
                 {
@@ -13990,16 +14067,16 @@
         },
         {
             "name": "web-token/jwt-key-mgmt",
-            "version": "3.2.9",
+            "version": "3.2.10",
             "source": {
                 "type": "git",
                 "url": "https://github.com/web-token/jwt-key-mgmt.git",
-                "reference": "2a034fdbf5142e39152b62cde066d2e707cfacb9"
+                "reference": "7ccd50f9ebf089cb864e3d3c62017192ac7cb450"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/web-token/jwt-key-mgmt/zipball/2a034fdbf5142e39152b62cde066d2e707cfacb9",
-                "reference": "2a034fdbf5142e39152b62cde066d2e707cfacb9",
+                "url": "https://api.github.com/repos/web-token/jwt-key-mgmt/zipball/7ccd50f9ebf089cb864e3d3c62017192ac7cb450",
+                "reference": "7ccd50f9ebf089cb864e3d3c62017192ac7cb450",
                 "shasum": ""
             },
             "require": {
@@ -14056,7 +14133,7 @@
                 "symfony"
             ],
             "support": {
-                "source": "https://github.com/web-token/jwt-key-mgmt/tree/3.2.9"
+                "source": "https://github.com/web-token/jwt-key-mgmt/tree/3.2.10"
             },
             "funding": [
                 {
@@ -14064,11 +14141,11 @@
                     "type": "patreon"
                 }
             ],
-            "time": "2024-01-04T15:42:08+00:00"
+            "time": "2024-02-12T21:58:26+00:00"
         },
         {
             "name": "web-token/jwt-signature",
-            "version": "3.2.9",
+            "version": "3.2.10",
             "source": {
                 "type": "git",
                 "url": "https://github.com/web-token/jwt-signature.git",
@@ -14133,7 +14210,7 @@
                 "symfony"
             ],
             "support": {
-                "source": "https://github.com/web-token/jwt-signature/tree/3.2.9"
+                "source": "https://github.com/web-token/jwt-signature/tree/3.2.10"
             },
             "funding": [
                 {
@@ -14145,7 +14222,7 @@
         },
         {
             "name": "web-token/jwt-signature-algorithm-ecdsa",
-            "version": "3.2.9",
+            "version": "3.2.10",
             "source": {
                 "type": "git",
                 "url": "https://github.com/web-token/jwt-signature-algorithm-ecdsa.git",
@@ -14203,7 +14280,7 @@
                 "symfony"
             ],
             "support": {
-                "source": "https://github.com/web-token/jwt-signature-algorithm-ecdsa/tree/3.2.9"
+                "source": "https://github.com/web-token/jwt-signature-algorithm-ecdsa/tree/3.2.10"
             },
             "funding": [
                 {
@@ -17059,16 +17136,16 @@
         },
         {
             "name": "spatie/laravel-ignition",
-            "version": "2.4.1",
+            "version": "2.4.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spatie/laravel-ignition.git",
-                "reference": "005e1e7b1232f3b22d7e7be3f602693efc7dba67"
+                "reference": "351504f4570e32908839fc5a2dc53bf77d02f85e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spatie/laravel-ignition/zipball/005e1e7b1232f3b22d7e7be3f602693efc7dba67",
-                "reference": "005e1e7b1232f3b22d7e7be3f602693efc7dba67",
+                "url": "https://api.github.com/repos/spatie/laravel-ignition/zipball/351504f4570e32908839fc5a2dc53bf77d02f85e",
+                "reference": "351504f4570e32908839fc5a2dc53bf77d02f85e",
                 "shasum": ""
             },
             "require": {
@@ -17147,7 +17224,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2024-01-12T13:14:58+00:00"
+            "time": "2024-02-09T16:08:40+00:00"
         },
         {
             "name": "symfony/yaml",
