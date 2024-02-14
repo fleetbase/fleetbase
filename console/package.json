@@ -1,6 +1,6 @@
 {
     "name": "@fleetbase/console",
-    "version": "0.4.3",
+    "version": "0.4.4",
     "private": true,
     "description": "Fleetbase Console",
     "repository": "https://github.com/fleetbase/fleetbase",
@@ -12,7 +12,7 @@
     },
     "scripts": {
         "prebuild": "node prebuild.js",
-        "build": "pnpm run prebuild && ember build --environment=production",
+        "build": "pnpm run prebuild && ember build",
         "lint": "concurrently \"npm:lint:*(!fix)\" --names \"lint:\"",
         "lint:css": "stylelint \"**/*.css\"",
         "lint:css:fix": "concurrently \"npm:lint:css -- --fix\"",

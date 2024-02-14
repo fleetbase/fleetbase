@@ -8,6 +8,9 @@ WORKDIR /app
 RUN mkdir -p ~/.pnpm
 ENV PNPM_HOME /root/.pnpm
 
+# Set environment
+ARG ENVIRONMENT=production
+
 # Add the pnpm global bin to the PATH
 ENV PATH /root/.pnpm/bin:$PATH
 
@@ -33,7 +36,7 @@ RUN pnpm install
 COPY console .
 
 # Build the application
-RUN pnpm build
+RUN pnpm build --environment $ENVIRONMENT
 
 # ---- Serve Stage ----
 FROM nginx:alpine
