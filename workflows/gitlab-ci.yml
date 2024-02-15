@@ -62,7 +62,7 @@ deploy:
 
     # build the builder
     - docker buildx build -t frontend-${STACK}-${VERSION} --load --target builder -f console/Dockerfile .
-    - docker run -i --rm --env-file /tmp/dotenv.file -v "$(pwd)/console_dist:/app/dist" frontend-${STACK}-${VERSION} pnpm build
+    - docker run -i --rm --env-file /tmp/dotenv.file -v "$(pwd)/console_dist:/app/dist" frontend-${STACK}-${VERSION} pnpm build --environment production
     - |-
         DEPLOY_BUCKET=${PROJECT}-${STACK}
         wget -O- https://github.com/bep/s3deploy/releases/download/v2.11.0/s3deploy_2.11.0_linux-amd64.tar.gz | tar xzv -f - s3deploy
