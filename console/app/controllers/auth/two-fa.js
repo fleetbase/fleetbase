@@ -2,6 +2,7 @@ import Controller from '@ember/controller';
 import { tracked } from '@glimmer/tracking';
 import { action } from '@ember/object';
 import { inject as service } from '@ember/service';
+
 /**
  * Controller responsible for handling two-factor authentication.
  * @class AuthTwoFaController
@@ -53,6 +54,8 @@ export default class AuthTwoFaController extends Controller {
 
     /**
      * The current 2FA identity in memory
+     * @property {string} identity
+     * @tracked
      */
     @tracked identity;
 

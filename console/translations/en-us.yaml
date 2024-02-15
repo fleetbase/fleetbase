@@ -13,6 +13,7 @@ terms:
   search: Search
   search-input: Search Input
 common: 
+  confirm: Confirm
   edit: Edit
   save: Save
   cancel: Cancel
@@ -56,6 +57,8 @@ common:
   status: Status
   close-and-save: Close and Save
   users: Users
+  changelog: Changelog
+  ok: OK
 component:
   file:
     dropdown-label: File actions
@@ -124,6 +127,13 @@ auth:
       send-by-sms: Send by SMS
   two-fa:
     verify-code:
+      verification-code: Verification Code
+      check-title: Check your email or phone
+      check-subtitle: We've sent you a verification code. Enter the code below to complete the login process.
+      expired-help-text: Your 2FA authentication code has expired. You can request another code if you need more time.
+      resend-code: Resend Code
+      verify-code: Verify Code
+      cancel-two-factor: Cancel Two-Factor
       invalid-session-error-notification: Invalid session. Please try again.
       verification-successful-notification: Verification successful!
       verification-code-expired-notification: Verification code has expired. Please request a new one.
@@ -175,6 +185,15 @@ auth:
       submit-button: Reset Password
       back-button: Back
 console:
+  create-or-join-organization:
+    modal-title: Create or join a organization
+    join-success-notification: You have joined a new organization!
+    create-success-notification: You have created a new organization!
+  switch-organization:
+    modal-title: Are you sure you want to switch organization to {organizationName}?
+    modal-body: By confirming your account will remain logged in, but your primary organization will be switched.
+    modal-accept-button-text: Yes, I want to switch organization
+    success-notification: You have switched organizations
   account:
     index: 
       upload-new: Upload new
