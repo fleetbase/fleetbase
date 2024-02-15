@@ -10,8 +10,8 @@
         <FaIcon @icon="check-circle" @size="lg" class="text-green-900 mr-4" />
     </div>
     <p class="flex-1 text-sm text-green-900 dark:text-green-900">
-        <strong>Check your {{this.selectedMethod}}</strong><br />
-        We've sent you a verification code. Enter the code below to complete the login process.
+        <strong>{{t "auth.two-fa.verify-code.check-title"}}</strong><br />
+        {{t "auth.two-fa.verify-code.check-subtitle"}}
     </p>
 </div>
 
@@ -26,22 +26,22 @@
         {{/if}}
         {{#if this.isCodeExpired}}
             <InfoBlock>
-                <div>Your 2FA authentication code has expired. You can request another code if you need more time.</div>
-                <Button @type="primary" @wrapperClass="mt-2" @text="Resend Code" @icon="arrow-rotate-right" @onClick={{this.resendCode}} />
+                <div>{{t "auth.two-fa.verify-code.expired-help-text"}}</div>
+                <Button @type="primary" @wrapperClass="mt-2" @text={{t "auth.two-fa.verify-code.resend-code"}} @icon="arrow-rotate-right" @onClick={{this.resendCode}} />
             </InfoBlock>
         {{/if}}
     </div>
 
     <div class="mt-4">
-        <Button @buttonType="submit" @type="primary" @text="Verify Code" @icon="check-circle" @wrapperClass="btn-block" @isLoading={{this.isLoading}} />
+        <Button @buttonType="submit" @type="primary" @text={{t "auth.two-fa.verify-code.verify-code"}} @icon="check-circle" @wrapperClass="btn-block" @isLoading={{this.isLoading}} />
     </div>
 
     <div class="text-center flex flex-row items-center justify-center space-x-4 mt-3.5">
         <a href="#" class="text-sm text-blue-500 hover:underline inline-block" {{on "click" this.resendCode}}>
-            Resend Code
+            {{t "auth.two-fa.verify-code.resend-code"}}
         </a>
         <a href="#" class="text-sm text-danger hover:underline inline-block" {{on "click" this.cancelTwoFactor}}>
-            Cancel Two-Factor
+            {{t "auth.two-fa.verify-code.cancel-two-factor"}}
         </a>
     </div>
 </form>
