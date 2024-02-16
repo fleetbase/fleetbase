@@ -1,7 +1,8 @@
 import Controller from '@ember/controller';
+import { tracked } from '@glimmer/tracking';
 import { inject as service } from '@ember/service';
 import { action } from '@ember/object';
-import { tracked } from '@glimmer/tracking';
+import { isBlank } from '@ember/utils';
 import { task } from 'ember-concurrency';
 
 /**
@@ -105,12 +106,31 @@ export default class ConsoleAdminOrganizationsController extends Controller {
             filterComponent: 'filter/string',
         },
         {
+            label: this.intl.t('console.admin.organizations.index.owner-name-column'),
+            valuePath: 'owner.name',
+            resizable: true,
+            sortable: true,
+        },
+        {
+            label: this.intl.t('console.admin.organizations.index.owner-email-column'),
+            valuePath: 'owner.email',
+            resizable: true,
+            sortable: true,
+            filterable: true,
+        },
+        {
             label: this.intl.t('console.admin.organizations.index.phone-column'),
-            valuePath: 'phone',
+            valuePath: 'owner.phone',
             resizable: true,
             sortable: true,
             filterable: true,
             filterComponent: 'filter/string',
+        },
+        {
+            label: this.intl.t('console.admin.organizations.index.users-count-column'),
+            valuePath: 'users_count',
+            resizable: true,
+            sortable: true
         },
         {
             label: this.intl.t('common.created-at'),
@@ -127,7 +147,12 @@ export default class ConsoleAdminOrganizationsController extends Controller {
      * @public
      */
     @task({ restartable: true }) *search(event) {
-        this.companies = yield this.store.query('company', { query: event.target.value });
+        const query = event.target.value;
+        if (isBlank(query)) {
+            return;
+        }
+
+        // this.companies = yield this.store.query('company', { view: 'admin', query: event.target.value });
     }
 
     /**

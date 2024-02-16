@@ -1,15 +1,15 @@
 {{page-title (t "console.admin.organizations.index.title")}}
-<Layout::Section::Header @title={{t "console.admin.organizations.index.title"}} @searchQuery={{this.query}} @onSearch={{perform this.search}} />
+<Layout::Section::Header @title={{t "console.admin.organizations.index.title"}} @searchQuery={{this.query}} @onSearch={{fn (noop)}} />
 
 <Layout::Section::Body>
     <Table
-        @rows={{this.companies}}
+        @rows={{@model}}
         @columns={{this.columns}}
         @selectable={{true}}
         @canSelectAll={{true}}
         @onSetup={{fn (mut this.table)}}
         @pagination={{true}}
-        @paginationMeta={{this.companies}}
+        @paginationMeta={{@model.meta}}
         @page={{this.page}}
         @onPageChange={{fn (mut this.page)}}
         @tfootVerticalOffset="53"
