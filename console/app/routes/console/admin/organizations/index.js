@@ -14,11 +14,6 @@ export default class ConsoleAdminOrganizationsRoute extends Route {
     };
 
     model(params) {
-        return this.store.query('company', params);
-    }
-
-    setupController(controller, model) {
-        super.setupController(controller, model);
-        controller.companies = model;
+        return this.store.query('company', { view: 'admin', ...params });
     }
 }

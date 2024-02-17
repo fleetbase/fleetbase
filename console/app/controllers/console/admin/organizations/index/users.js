@@ -2,9 +2,6 @@ import Controller from '@ember/controller';
 import { tracked } from '@glimmer/tracking';
 import { inject as service } from '@ember/service';
 import { action } from '@ember/object';
-import { isBlank } from '@ember/utils';
-import { task } from 'ember-concurrency-decorators';
-import { timeout } from 'ember-concurrency';
 
 export default class ConsoleAdminOrganizationsIndexUsersController extends Controller {
     /**
@@ -96,6 +93,17 @@ export default class ConsoleAdminOrganizationsIndexUsersController extends Contr
     ];
 
     /**
+     * Update search query param and reset page to 1
+     *
+     * @param {Event} event
+     * @memberof ConsoleAdminOrganizationsController
+     */
+    @action search(event) {
+        this.nestedQuery = event.target.value ?? '';
+        this.nestedPage = 1;
+    }
+
+    /**
      * Set the overlay component context object.
      *
      * @param {Object} contextApi
@@ -117,23 +125,5 @@ export default class ConsoleAdminOrganizationsIndexUsersController extends Contr
         }
 
         return this.router.transitionTo('console.admin.organizations.index');
-    }
-
-    /**
-     * `search` is a task that performs a search query on the 'company' model in the store.
-     *
-     * @method search
-     * @param {string} query - The search query.
-     * @returns {Promise} A promise that resolves with the search results.
-     * @public
-     */
-    @task({ restartable: true }) *search(event) {
-        const searchQuery = event.target.value ?? '';
-        if (isBlank(searchQuery)) {
-            return;
-        }
-
-        yield timeout(600);
-        this.nestedQuery = searchQuery;
     }
 }

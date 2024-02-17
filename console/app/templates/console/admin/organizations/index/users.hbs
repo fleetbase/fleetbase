@@ -1,5 +1,5 @@
 {{page-title (t "common.users")}}
-<Overlay @isOpen={{@isOpen}} @onLoad={{this.setOverlayContext}} @position="right" @noBackdrop={{true}} @fullHeight={{true}} @width={{or this.width @width "600px"}}>
+<Overlay @isOpen={{@isOpen}} @onLoad={{this.setOverlayContext}} @position="right" @noBackdrop={{true}} @fullHeight={{true}} @width="600px" @isResizable={{true}}>
     <Overlay::Header @title={{concat this.company.name " - " (t "common.users")}} @hideStatusDot={{true}} @titleWrapperClass="leading-5">
         <div class="flex flex-1 justify-end">
             <Button @type="default" @icon="times" @helpText={{t "common.close-and-save"}} @onClick={{this.onPressClose}} />
@@ -7,12 +7,13 @@
     </Overlay::Header>
 
     <Overlay::Body class="without-padding">
-        <Layout::Section::Header @title={{t "console.admin.organizations.users.title"}} @searchQuery={{this.nestedQuery}} @onSearch={{perform this.search}}>
+        {{!-- template-lint-disable no-unbound --}}
+        <Layout::Section::Header @title={{t "console.admin.organizations.users.title"}} @searchQuery={{unbound this.nestedQuery}} @onSearch={{this.search}}>
             <Pagination @meta={{@model.meta}} @page={{this.nestedPage}} @onPageChange={{fn (mut this.nestedPage)}} @metaInfoClass="hidden" @metaInfoWrapperClass="within-layout-section-header" />
         </Layout::Section::Header>
 
         <Layout::Section::Body>
-            <Table @rows={{@model}} @columns={{this.columns}} @selectable={{true}} @canSelectAll={{true}} @onSetup={{fn (mut this.table)}} />
+            <Table @rows={{@model}} @columns={{this.columns}} @selectable={{false}} @canSelectAll={{false}} @onSetup={{fn (mut this.table)}} />
         </Layout::Section::Body>
     </Overlay::Body>
 </Overlay>

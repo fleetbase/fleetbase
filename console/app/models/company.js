@@ -13,6 +13,7 @@ export default class Company extends Model {
     @attr('string') place_uuid;
 
     /** @relationships */
+    @belongsTo('user') owner;
     @belongsTo('file') logo;
     @belongsTo('file') backdrop;
 
@@ -23,6 +24,7 @@ export default class Company extends Model {
     @attr('string') backdrop_url;
     @attr('string') description;
     @attr('raw') options;
+    @attr('number') users_count;
     @attr('string') type;
     @attr('string') currency;
     @attr('string') country;

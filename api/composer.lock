@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "18a4b7a6d74305f9ffae9e1cd72760a5",
+    "content-hash": "eb17a8cdb17c5f77b08e54aea7ebad70",
     "packages": [
         {
             "name": "aloha/twilio",
@@ -136,16 +136,16 @@
         },
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.298.10",
+            "version": "3.299.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "99af8830cb0662e3edaebe1a976d1cc833a86091"
+                "reference": "a0f87b8e8bfb9afd0ffd702fcda556b465eee457"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/99af8830cb0662e3edaebe1a976d1cc833a86091",
-                "reference": "99af8830cb0662e3edaebe1a976d1cc833a86091",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/a0f87b8e8bfb9afd0ffd702fcda556b465eee457",
+                "reference": "a0f87b8e8bfb9afd0ffd702fcda556b465eee457",
                 "shasum": ""
             },
             "require": {
@@ -225,9 +225,9 @@
             "support": {
                 "forum": "https://forums.aws.amazon.com/forum.jspa?forumID=80",
                 "issues": "https://github.com/aws/aws-sdk-php/issues",
-                "source": "https://github.com/aws/aws-sdk-php/tree/3.298.10"
+                "source": "https://github.com/aws/aws-sdk-php/tree/3.299.1"
             },
-            "time": "2024-02-14T19:05:54+00:00"
+            "time": "2024-02-16T19:08:34+00:00"
         },
         {
             "name": "aws/aws-sdk-php-laravel",
@@ -2287,16 +2287,16 @@
         },
         {
             "name": "fleetbase/core-api",
-            "version": "1.4.4",
+            "version": "1.4.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fleetbase/core-api.git",
-                "reference": "27dcac2199e55ba359e41e2c899445ac966da906"
+                "reference": "dd8e5e665db4cf4625af2ea51646b1a4fb592516"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fleetbase/core-api/zipball/27dcac2199e55ba359e41e2c899445ac966da906",
-                "reference": "27dcac2199e55ba359e41e2c899445ac966da906",
+                "url": "https://api.github.com/repos/fleetbase/core-api/zipball/dd8e5e665db4cf4625af2ea51646b1a4fb592516",
+                "reference": "dd8e5e665db4cf4625af2ea51646b1a4fb592516",
                 "shasum": ""
             },
             "require": {
@@ -2372,29 +2372,29 @@
             ],
             "support": {
                 "issues": "https://github.com/fleetbase/core-api/issues",
-                "source": "https://github.com/fleetbase/core-api/tree/v1.4.4"
+                "source": "https://github.com/fleetbase/core-api/tree/v1.4.5"
             },
-            "time": "2024-02-15T16:21:08+00:00"
+            "time": "2024-02-17T11:04:20+00:00"
         },
         {
             "name": "fleetbase/fleetops-api",
-            "version": "0.4.10",
+            "version": "0.4.12",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fleetbase/fleetops.git",
-                "reference": "2703d5c6161d05812b8d3ad0aa28e5023f18256b"
+                "reference": "b37bad2266f60182a964e2de44324df0cd2fbdbf"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fleetbase/fleetops/zipball/2703d5c6161d05812b8d3ad0aa28e5023f18256b",
-                "reference": "2703d5c6161d05812b8d3ad0aa28e5023f18256b",
+                "url": "https://api.github.com/repos/fleetbase/fleetops/zipball/b37bad2266f60182a964e2de44324df0cd2fbdbf",
+                "reference": "b37bad2266f60182a964e2de44324df0cd2fbdbf",
                 "shasum": ""
             },
             "require": {
                 "barryvdh/laravel-dompdf": "^2.0",
                 "brick/geo": "0.7.2",
                 "cknow/laravel-money": "^7.1",
-                "fleetbase/core-api": "^1.4.4",
+                "fleetbase/core-api": "^1.4.5",
                 "geocoder-php/google-maps-places-provider": "^1.4",
                 "giggsey/libphonenumber-for-php": "^8.13",
                 "league/geotools": "^1.1.0",
@@ -2460,9 +2460,9 @@
             ],
             "support": {
                 "issues": "https://github.com/fleetbase/fleetops/issues",
-                "source": "https://github.com/fleetbase/fleetops/tree/v0.4.10"
+                "source": "https://github.com/fleetbase/fleetops/tree/v0.4.12"
             },
-            "time": "2024-02-15T16:24:21+00:00"
+            "time": "2024-02-17T11:03:15+00:00"
         },
         {
             "name": "fleetbase/laravel-mysql-spatial",
@@ -3329,16 +3329,16 @@
         },
         {
             "name": "google/cloud-storage",
-            "version": "v1.37.1",
+            "version": "v1.38.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/googleapis/google-cloud-php-storage.git",
-                "reference": "7982d8afc3d0b2fc6b2676b329d05abadc5c2554"
+                "reference": "0e77372b224d7d6dd2766bc0644da86b5d2b2de9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/googleapis/google-cloud-php-storage/zipball/7982d8afc3d0b2fc6b2676b329d05abadc5c2554",
-                "reference": "7982d8afc3d0b2fc6b2676b329d05abadc5c2554",
+                "url": "https://api.github.com/repos/googleapis/google-cloud-php-storage/zipball/0e77372b224d7d6dd2766bc0644da86b5d2b2de9",
+                "reference": "0e77372b224d7d6dd2766bc0644da86b5d2b2de9",
                 "shasum": ""
             },
             "require": {
@@ -3380,9 +3380,9 @@
             ],
             "description": "Cloud Storage Client for PHP",
             "support": {
-                "source": "https://github.com/googleapis/google-cloud-php-storage/tree/v1.37.1"
+                "source": "https://github.com/googleapis/google-cloud-php-storage/tree/v1.38.0"
             },
-            "time": "2024-01-26T20:27:24+00:00"
+            "time": "2024-02-16T17:18:43+00:00"
         },
         {
             "name": "google/common-protos",
@@ -3438,16 +3438,16 @@
         },
         {
             "name": "google/gax",
-            "version": "v1.27.2",
+            "version": "v1.28.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/googleapis/gax-php.git",
-                "reference": "da805a00c3548ffc17a2b9ea844f666b413943e8"
+                "reference": "dfca60f46fed8d9a4d9d2ece7286f18d53d3ebad"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/googleapis/gax-php/zipball/da805a00c3548ffc17a2b9ea844f666b413943e8",
-                "reference": "da805a00c3548ffc17a2b9ea844f666b413943e8",
+                "url": "https://api.github.com/repos/googleapis/gax-php/zipball/dfca60f46fed8d9a4d9d2ece7286f18d53d3ebad",
+                "reference": "dfca60f46fed8d9a4d9d2ece7286f18d53d3ebad",
                 "shasum": ""
             },
             "require": {
@@ -3487,9 +3487,9 @@
             ],
             "support": {
                 "issues": "https://github.com/googleapis/gax-php/issues",
-                "source": "https://github.com/googleapis/gax-php/tree/v1.27.2"
+                "source": "https://github.com/googleapis/gax-php/tree/v1.28.0"
             },
-            "time": "2024-02-14T20:18:41+00:00"
+            "time": "2024-02-15T19:05:13+00:00"
         },
         {
             "name": "google/grpc-gcp",
@@ -3582,16 +3582,16 @@
         },
         {
             "name": "google/protobuf",
-            "version": "v3.25.2",
+            "version": "v3.25.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/protocolbuffers/protobuf-php.git",
-                "reference": "83ea4c147718666ce6a9b9332ac2aa588c9211eb"
+                "reference": "983a87f4f8798a90ca3a25b0f300b8fda38df643"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/protocolbuffers/protobuf-php/zipball/83ea4c147718666ce6a9b9332ac2aa588c9211eb",
-                "reference": "83ea4c147718666ce6a9b9332ac2aa588c9211eb",
+                "url": "https://api.github.com/repos/protocolbuffers/protobuf-php/zipball/983a87f4f8798a90ca3a25b0f300b8fda38df643",
+                "reference": "983a87f4f8798a90ca3a25b0f300b8fda38df643",
                 "shasum": ""
             },
             "require": {
@@ -3620,9 +3620,9 @@
                 "proto"
             ],
             "support": {
-                "source": "https://github.com/protocolbuffers/protobuf-php/tree/v3.25.2"
+                "source": "https://github.com/protocolbuffers/protobuf-php/tree/v3.25.3"
             },
-            "time": "2024-01-09T22:12:32+00:00"
+            "time": "2024-02-15T21:11:49+00:00"
         },
         {
             "name": "graham-campbell/result-type",
@@ -4723,16 +4723,16 @@
         },
         {
             "name": "laminas/laminas-diactoros",
-            "version": "3.3.0",
+            "version": "3.3.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laminas/laminas-diactoros.git",
-                "reference": "4db52734837c60259c9b2d7caf08eef8f7f9b9ac"
+                "reference": "74cfb9a7522ffd2a161d1ebe10db2fc2abb9df45"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laminas/laminas-diactoros/zipball/4db52734837c60259c9b2d7caf08eef8f7f9b9ac",
-                "reference": "4db52734837c60259c9b2d7caf08eef8f7f9b9ac",
+                "url": "https://api.github.com/repos/laminas/laminas-diactoros/zipball/74cfb9a7522ffd2a161d1ebe10db2fc2abb9df45",
+                "reference": "74cfb9a7522ffd2a161d1ebe10db2fc2abb9df45",
                 "shasum": ""
             },
             "require": {
@@ -4752,9 +4752,9 @@
                 "http-interop/http-factory-tests": "^0.9.0",
                 "laminas/laminas-coding-standard": "~2.5.0",
                 "php-http/psr7-integration-tests": "^1.3",
-                "phpunit/phpunit": "^9.5.28",
+                "phpunit/phpunit": "^9.6.16",
                 "psalm/plugin-phpunit": "^0.18.4",
-                "vimeo/psalm": "^5.15.0"
+                "vimeo/psalm": "^5.22.1"
             },
             "type": "library",
             "extra": {
@@ -4804,7 +4804,7 @@
                     "type": "community_bridge"
                 }
             ],
-            "time": "2023-10-26T11:01:07+00:00"
+            "time": "2024-02-16T16:06:16+00:00"
         },
         {
             "name": "laravel-notification-channels/apn",
@@ -6624,41 +6624,41 @@
         },
         {
             "name": "moneyphp/money",
-            "version": "v4.4.0",
+            "version": "v4.5.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/moneyphp/money.git",
-                "reference": "5e60aebf09f709dd4ea16bf85e66d65301c0d172"
+                "reference": "a1daa7daf159b4044e3d0c34c41fe2be5860e850"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/moneyphp/money/zipball/5e60aebf09f709dd4ea16bf85e66d65301c0d172",
-                "reference": "5e60aebf09f709dd4ea16bf85e66d65301c0d172",
+                "url": "https://api.github.com/repos/moneyphp/money/zipball/a1daa7daf159b4044e3d0c34c41fe2be5860e850",
+                "reference": "a1daa7daf159b4044e3d0c34c41fe2be5860e850",
                 "shasum": ""
             },
             "require": {
                 "ext-bcmath": "*",
                 "ext-filter": "*",
                 "ext-json": "*",
-                "php": "~8.0.0 || ~8.1.0 || ~8.2.0 || ~8.3.0"
+                "php": "~8.1.0 || ~8.2.0 || ~8.3.0"
             },
             "require-dev": {
                 "cache/taggable-cache": "^1.1.0",
-                "doctrine/coding-standard": "^9.0",
-                "doctrine/instantiator": "^1.4.0",
+                "doctrine/coding-standard": "^12.0",
+                "doctrine/instantiator": "^1.5.0 || ^2.0",
                 "ext-gmp": "*",
                 "ext-intl": "*",
-                "florianv/exchanger": "^2.6.3",
+                "florianv/exchanger": "^2.8.1",
                 "florianv/swap": "^4.3.0",
-                "moneyphp/crypto-currencies": "^1.0.0",
-                "moneyphp/iso-currencies": "^3.2.1",
-                "php-http/message": "^1.11.0",
-                "php-http/mock-client": "^1.4.1",
+                "moneyphp/crypto-currencies": "^1.1.0",
+                "moneyphp/iso-currencies": "^3.4",
+                "php-http/message": "^1.16.0",
+                "php-http/mock-client": "^1.6.0",
                 "phpbench/phpbench": "^1.2.5",
-                "phpunit/phpunit": "^9.5.4",
+                "phpunit/phpunit": "^10.5.9",
                 "psalm/plugin-phpunit": "^0.18.4",
                 "psr/cache": "^1.0.1 || ^2.0 || ^3.0",
-                "vimeo/psalm": "~5.15.0"
+                "vimeo/psalm": "~5.20.0"
             },
             "suggest": {
                 "ext-gmp": "Calculate without integer limits",
@@ -6706,9 +6706,9 @@
             ],
             "support": {
                 "issues": "https://github.com/moneyphp/money/issues",
-                "source": "https://github.com/moneyphp/money/tree/v4.4.0"
+                "source": "https://github.com/moneyphp/money/tree/v4.5.0"
             },
-            "time": "2024-01-24T08:29:16+00:00"
+            "time": "2024-02-15T19:47:21+00:00"
         },
         {
             "name": "monolog/monolog",
