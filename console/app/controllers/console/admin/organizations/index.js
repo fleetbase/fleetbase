@@ -2,8 +2,6 @@ import Controller from '@ember/controller';
 import { tracked } from '@glimmer/tracking';
 import { inject as service } from '@ember/service';
 import { action } from '@ember/object';
-import { isBlank } from '@ember/utils';
-import { task } from 'ember-concurrency';
 
 /**
  * Controller for managing organizations in the admin console.
@@ -41,6 +39,13 @@ export default class ConsoleAdminOrganizationsController extends Controller {
      * @var {Service}
      */
     @service filters;
+
+    /**
+     * The search query param value.
+     *
+     * @var {String|null}
+     */
+    @tracked query;
 
     /**
      * The current page of data being viewed
@@ -108,12 +113,14 @@ export default class ConsoleAdminOrganizationsController extends Controller {
         {
             label: this.intl.t('console.admin.organizations.index.owner-name-column'),
             valuePath: 'owner.name',
+            width: '200px',
             resizable: true,
             sortable: true,
         },
         {
             label: this.intl.t('console.admin.organizations.index.owner-email-column'),
             valuePath: 'owner.email',
+            width: '200px',
             resizable: true,
             sortable: true,
             filterable: true,
@@ -121,6 +128,7 @@ export default class ConsoleAdminOrganizationsController extends Controller {
         {
             label: this.intl.t('console.admin.organizations.index.phone-column'),
             valuePath: 'owner.phone',
+            width: '200px',
             resizable: true,
             sortable: true,
             filterable: true,
@@ -130,7 +138,7 @@ export default class ConsoleAdminOrganizationsController extends Controller {
             label: this.intl.t('console.admin.organizations.index.users-count-column'),
             valuePath: 'users_count',
             resizable: true,
-            sortable: true
+            sortable: true,
         },
         {
             label: this.intl.t('common.created-at'),
@@ -139,20 +147,14 @@ export default class ConsoleAdminOrganizationsController extends Controller {
     ];
 
     /**
-     * `search` is a task that performs a search query on the 'company' model in the store.
+     * Update search query param and reset page to 1
      *
-     * @method search
-     * @param {string} query - The search query.
-     * @returns {Promise} A promise that resolves with the search results.
-     * @public
+     * @param {Event} event
+     * @memberof ConsoleAdminOrganizationsController
      */
-    @task({ restartable: true }) *search(event) {
-        const query = event.target.value;
-        if (isBlank(query)) {
-            return;
-        }
-
-        // this.companies = yield this.store.query('company', { view: 'admin', query: event.target.value });
+    @action search(event) {
+        this.query = event.target.value ?? '';
+        this.page = 1;
     }
 
     /**

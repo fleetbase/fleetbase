@@ -9,7 +9,7 @@ export default class CompanySerializer extends ApplicationSerializer.extend(Embe
      */
     get attrs() {
         return {
-            owner: { embedded: 'always' }
+            owner: { embedded: 'always' },
         };
     }
 }

@@ -44,3 +44,7 @@ body[data-theme='dark'] .two-fa-enforcement-alert button#two-fa-setup-button.btn
     padding-left: 0 !important;
     padding-right: 0 !important;
 }
+
+body.console-admin-organizations-index-index .next-table-wrapper > table {
+    table-layout: auto;
+}
