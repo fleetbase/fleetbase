@@ -6,7 +6,7 @@
         <Textarea class="form-input w-full" @value={{this.apn.private_key_content}} placeholder="APN Private Key" rows="10" disabled={{this.isLoading}} />
     </InputGroup> --}}
     <InputGroup @wrapperClass="flex flex-row items-center">
-        <UploadButton @name="apn-key" @accept="text/plain,application/x-pem-file,application/x-pkcs12,application/x-x509-ca-cert,.p12,.pem,.p8" @onFileAdded={{this.uploadApnKey}} @buttonText="Upload P8 Key File" @uploadIcon="upload" class="w-auto m-0i mt-0i" />
+        <UploadButton @name="apn-key" @accept="text/plain,application/x-pem-file,application/x-pkcs12,application/x-x509-ca-cert,.p12,.pem,.p8" @onFileAdded={{this.uploadApnKey}} @buttonText="Upload P8 Key File" @icon="upload" class="w-auto m-0i mt-0i" />
         {{#if this.apn.private_key_file}}
             <div class="ml-2.5 text-sm dark:text-white text-black flex flex-row items-center border border-blue-500 rounded-lg px-2 py-0.5 -mt-1">
                 <FaIcon @icon="file-text" @size="sm" class="mr-2 dark:text-white text-black" />
@@ -15,16 +15,32 @@
             </div>
         {{/if}}
     </InputGroup>
-    <InputGroup>
+    <InputGroup @wrapperClass="mb-0i">
         <Checkbox @label="APN Production" @value={{this.apn.production}} @onToggle={{fn (mut this.apn.production)}} @disabled={{this.isLoading}} />
     </InputGroup>
+</ContentPanel>
+
+<ContentPanel @title="Firebase Configutation" @open={{true}} @pad={{true}} @panelBodyClass="bg-white dark:bg-gray-800">
+    <InputGroup @wrapperClass="flex flex-row items-center mb-0i">
+        <UploadButton @name="firebase-service-account" @accept="text/plain,text/javascript,application/json" @onFileAdded={{this.uploadFirebaseCredentials}} @buttonText="Upload Service Account JSON" @icon="upload" class="w-auto m-0i mt-0i" />
+        {{#if this.firebase.credentials_file}}
+            <div class="ml-2.5 text-sm dark:text-white text-black flex flex-row items-center border border-blue-500 rounded-lg px-2 py-0.5 -mt-1">
+                <FaIcon @icon="file-text" @size="sm" class="mr-2 dark:text-white text-black" />
+                <span>{{this.firebase.credentials_file.original_filename}}</span>
+                <a href="javascript:;" class="text-red-500 ml-2" {{on "click" this.removeFirebaseCredentialsFile}}><FaIcon @icon="times" class="text-red-500" /></a>
+            </div>
+        {{/if}}
+    </InputGroup>
+</ContentPanel>
+
+<ContentPanel @title="Test Push Notification" @open={{true}} @pad={{true}} @panelBodyClass="bg-white dark:bg-gray-900">
     {{#if this.testResponse}}
         <div class="animate-pulse flex flex-row items-center rounded-lg border {{if (eq this.testResponse.status 'error') 'border-red-900 bg-red-800 text-red-100' 'border-green-900 bg-green-800 text-green-100'}} shadow-sm my-2 px-4 py-2">
             <FaIcon @icon={{if (eq this.testResponse.status 'error') 'triangle-exclamation' 'circle-check'}} class="mr-1.5 {{if (eq this.testResponse.status 'error') 'text-red-200' 'text-green-200'}}" />
             <span class="text-xs">{{this.this.testResponse.message}}</span>
         </div>
     {{/if}}
-    <div class="mt-3 rounded-lg bg-gray-900 shadow-inner p-3">
+    <div class="">
         <div class="flex flex-col space-y-2">
             <div class="flex flex-row items-center">
                 <div class="text-sm w-40">Title:</div>
@@ -46,6 +62,8 @@
         <Button @wrapperClass="mt-3" @icon="plug" @text="Test Config" @onClick={{this.test}} @isLoading={{this.isLoading}} />
     </div>
 </ContentPanel>
+
+<Spacer @height="300px" />
 
 <EmberWormhole @to="next-view-section-subheader-actions">
     <Button @type="primary" @size="sm" @icon="save" @text="Save Changes" @onClick={{this.save}} @disabled={{this.isLoading}} @isLoading={{this.isLoading}} />
