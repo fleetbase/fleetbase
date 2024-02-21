@@ -32,16 +32,6 @@
         "nunomaduro/collision": "^7.0",
         "phpunit/phpunit": "^10.0"
     },
-    "repositories": [
-        {
-            "type": "path",
-            "url": "../packages/core-api"
-        },
-        {
-            "type": "path",
-            "url": "../packages/fleetops"
-        }
-    ],
     "autoload": {
         "psr-4": {
             "App\\": "app/",
