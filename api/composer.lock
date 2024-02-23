@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "5ed33da7f9b90ea19bbd653a213c514f",
+    "content-hash": "94a1f5ed2ee1c3c0d647e0e49acff375",
     "packages": [
         {
             "name": "aloha/twilio",
@@ -136,16 +136,16 @@
         },
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.300.2",
+            "version": "3.300.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "61d3d0179eff76793e338349c40c73271854fd1c"
+                "reference": "a1202d1a82593fc2cdad54d627e54c518a984738"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/61d3d0179eff76793e338349c40c73271854fd1c",
-                "reference": "61d3d0179eff76793e338349c40c73271854fd1c",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/a1202d1a82593fc2cdad54d627e54c518a984738",
+                "reference": "a1202d1a82593fc2cdad54d627e54c518a984738",
                 "shasum": ""
             },
             "require": {
@@ -225,9 +225,9 @@
             "support": {
                 "forum": "https://forums.aws.amazon.com/forum.jspa?forumID=80",
                 "issues": "https://github.com/aws/aws-sdk-php/issues",
-                "source": "https://github.com/aws/aws-sdk-php/tree/3.300.2"
+                "source": "https://github.com/aws/aws-sdk-php/tree/3.300.3"
             },
-            "time": "2024-02-21T19:07:54+00:00"
+            "time": "2024-02-22T19:20:21+00:00"
         },
         {
             "name": "aws/aws-sdk-php-laravel",
@@ -2398,16 +2398,16 @@
         },
         {
             "name": "fleetbase/core-api",
-            "version": "1.4.8",
+            "version": "1.4.9",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fleetbase/core-api.git",
-                "reference": "d5cf8b714f26ecd44876906dabe8f484cba91899"
+                "reference": "734e0cb2475aa0f53014afe033c14e67afe2e884"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fleetbase/core-api/zipball/d5cf8b714f26ecd44876906dabe8f484cba91899",
-                "reference": "d5cf8b714f26ecd44876906dabe8f484cba91899",
+                "url": "https://api.github.com/repos/fleetbase/core-api/zipball/734e0cb2475aa0f53014afe033c14e67afe2e884",
+                "reference": "734e0cb2475aa0f53014afe033c14e67afe2e884",
                 "shasum": ""
             },
             "require": {
@@ -2486,29 +2486,29 @@
             ],
             "support": {
                 "issues": "https://github.com/fleetbase/core-api/issues",
-                "source": "https://github.com/fleetbase/core-api/tree/v1.4.8"
+                "source": "https://github.com/fleetbase/core-api/tree/v1.4.9"
             },
-            "time": "2024-02-22T09:44:51+00:00"
+            "time": "2024-02-23T05:31:33+00:00"
         },
         {
             "name": "fleetbase/fleetops-api",
-            "version": "0.4.14",
+            "version": "0.4.15",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fleetbase/fleetops.git",
-                "reference": "a609f0d29ab8691640579c37b6592828ff61c989"
+                "reference": "09d60f92e365e89fef37be394a0e2132a9f2199d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fleetbase/fleetops/zipball/a609f0d29ab8691640579c37b6592828ff61c989",
-                "reference": "a609f0d29ab8691640579c37b6592828ff61c989",
+                "url": "https://api.github.com/repos/fleetbase/fleetops/zipball/09d60f92e365e89fef37be394a0e2132a9f2199d",
+                "reference": "09d60f92e365e89fef37be394a0e2132a9f2199d",
                 "shasum": ""
             },
             "require": {
                 "barryvdh/laravel-dompdf": "^2.0",
                 "brick/geo": "0.7.2",
                 "cknow/laravel-money": "^7.1",
-                "fleetbase/core-api": "^1.4.7",
+                "fleetbase/core-api": "^1.4.9",
                 "geocoder-php/google-maps-places-provider": "^1.4",
                 "giggsey/libphonenumber-for-php": "^8.13",
                 "league/geotools": "^1.1.0",
@@ -2574,9 +2574,9 @@
             ],
             "support": {
                 "issues": "https://github.com/fleetbase/fleetops/issues",
-                "source": "https://github.com/fleetbase/fleetops/tree/v0.4.14"
+                "source": "https://github.com/fleetbase/fleetops/tree/v0.4.15"
             },
-            "time": "2024-02-22T04:31:52+00:00"
+            "time": "2024-02-23T05:36:54+00:00"
         },
         {
             "name": "fleetbase/internals-api",
@@ -2750,21 +2750,21 @@
         },
         {
             "name": "fleetbase/storefront-api",
-            "version": "0.3.1",
+            "version": "0.3.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fleetbase/storefront.git",
-                "reference": "c356f467c0753fcb26b69e29603a461ed7a0c6a9"
+                "reference": "0de015786a55c802b5f478e3154362d7e9a2d87a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fleetbase/storefront/zipball/c356f467c0753fcb26b69e29603a461ed7a0c6a9",
-                "reference": "c356f467c0753fcb26b69e29603a461ed7a0c6a9",
+                "url": "https://api.github.com/repos/fleetbase/storefront/zipball/0de015786a55c802b5f478e3154362d7e9a2d87a",
+                "reference": "0de015786a55c802b5f478e3154362d7e9a2d87a",
                 "shasum": ""
             },
             "require": {
-                "fleetbase/core-api": "^1.4.7",
-                "fleetbase/fleetops-api": "^0.4.13",
+                "fleetbase/core-api": "^1.4.9",
+                "fleetbase/fleetops-api": "^0.4.15",
                 "geocoder-php/google-maps-places-provider": "^1.4",
                 "laravel-notification-channels/apn": "^5.0",
                 "laravel-notification-channels/fcm": "^4.1",
@@ -2825,9 +2825,9 @@
             ],
             "support": {
                 "issues": "https://github.com/fleetbase/storefront/issues",
-                "source": "https://github.com/fleetbase/storefront/tree/v0.3.1"
+                "source": "https://github.com/fleetbase/storefront/tree/v0.3.2"
             },
-            "time": "2024-02-21T10:32:09+00:00"
+            "time": "2024-02-23T05:40:38+00:00"
         },
         {
             "name": "fruitcake/php-cors",
@@ -11112,16 +11112,16 @@
         },
         {
             "name": "stripe/stripe-php",
-            "version": "v13.11.0",
+            "version": "v13.12.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/stripe/stripe-php.git",
-                "reference": "d92a95bd61be5d3141d86986c3b454065f9fcc13"
+                "reference": "8052da9058caae10c7297f85821f652b38e31d85"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/stripe/stripe-php/zipball/d92a95bd61be5d3141d86986c3b454065f9fcc13",
-                "reference": "d92a95bd61be5d3141d86986c3b454065f9fcc13",
+                "url": "https://api.github.com/repos/stripe/stripe-php/zipball/8052da9058caae10c7297f85821f652b38e31d85",
+                "reference": "8052da9058caae10c7297f85821f652b38e31d85",
                 "shasum": ""
             },
             "require": {
@@ -11165,9 +11165,9 @@
             ],
             "support": {
                 "issues": "https://github.com/stripe/stripe-php/issues",
-                "source": "https://github.com/stripe/stripe-php/tree/v13.11.0"
+                "source": "https://github.com/stripe/stripe-php/tree/v13.12.0"
             },
-            "time": "2024-02-16T00:23:50+00:00"
+            "time": "2024-02-22T22:19:58+00:00"
         },
         {
             "name": "symfony/cache",
@@ -14718,6 +14718,7 @@
                     "type": "patreon"
                 }
             ],
+            "abandoned": "web-token/jwt-library",
             "time": "2024-02-22T07:19:34+00:00"
         },
         {
@@ -14880,6 +14881,7 @@
                     "type": "patreon"
                 }
             ],
+            "abandoned": "web-token/jwt-library",
             "time": "2024-02-22T07:19:34+00:00"
         },
         {
