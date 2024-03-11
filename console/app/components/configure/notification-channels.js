@@ -24,7 +24,7 @@ export default class ConfigureNotificationChannelsComponent extends Component {
         production: true,
     };
     @tracked firebase = {
-        credentials: ''
+        credentials: '',
     };
 
     constructor() {
