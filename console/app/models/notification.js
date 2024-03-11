@@ -1,6 +1,5 @@
 import Model, { attr } from '@ember-data/model';
 import { computed } from '@ember/object';
-
 import { format, formatDistanceToNow } from 'date-fns';
 
 export default class NotificationModel extends Model {

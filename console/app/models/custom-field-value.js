@@ -1,28 +1,22 @@
 import Model, { attr } from '@ember-data/model';
 import { computed } from '@ember/object';
+import { getOwner } from '@ember/application';
 import { format, formatDistanceToNow } from 'date-fns';
 
-export default class CustomFieldModel extends Model {
+function isValidFileObjectJson(str) {
+    return typeof str === 'string' && str.startsWith('{') && str.endsWith('}');
+}
+
+export default class CustomFieldValueModel extends Model {
     /** @ids */
     @attr('string') company_uuid;
-    @attr('string') category_uuid;
+    @attr('string') custom_field_uuid;
     @attr('string') subject_uuid;
     @attr('string') subject_type;
 
     /** @attributes */
-    @attr('string') name;
-    @attr('string') description;
-    @attr('string') help_text;
-    @attr('string') label;
-    @attr('string') type;
-    @attr('string') component;
-    @attr('string') default_value;
-    @attr('number') order;
-    @attr('boolean') required;
-    @attr('boolean', { defaultValue: true }) editable;
-    @attr('raw') options;
-    @attr('raw') validation_rules;
-    @attr('raw') meta;
+    @attr('string') value;
+    @attr('string') value_type;
 
     /** @dates */
     @attr('date') created_at;
@@ -30,6 +24,18 @@ export default class CustomFieldModel extends Model {
     @attr('date') deleted_at;
 
     /** @computed */
+    @computed('value') get asFile() {
+        const owner = getOwner(this);
+        const fetch = owner.lookup(`service:fetch`);
+        const value = this.value;
+        if (!isValidFileObjectJson(value)) {
+            return null;
+        }
+
+        const fileModel = fetch.jsonToModel(value, 'file');
+        return fileModel;
+    }
+    
     @computed('created_at') get createdAgo() {
         return formatDistanceToNow(this.created_at);
     }

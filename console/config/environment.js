@@ -63,6 +63,11 @@ module.exports = function (environment) {
             keyDelimiter: '/',
             includeEmberDataSupport: true,
         },
+
+        'ember-cli-notifications': {
+            autoClear: true,
+            clearDuration: 1000 * 3.5,
+        },
     };
 
     if (environment === 'development') {
