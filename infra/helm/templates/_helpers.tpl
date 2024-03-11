@@ -52,13 +52,13 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 
 {{- define "helm.commonVariables" -}}
 - name: CACHE_URL
-  value: $(REDIS_SERVICE_PORT)/1
+  value: tcp://redis-service.{{ .Release.Namespace }}.svc.cluster.local/1
 - name: CACHE_DRIVER
   value: redis
 - name: SOCKETCLUSTER_PORT
   value: "80"
 - name: SOCKETCLUSTER_HOST
-  value: $(SOCKETCLUSTER_SERVICE_HOST)
+  value: socketcluster.{{ .Release.Namespace }}.svc.cluster.local
 {{- end }}
 {{/*
 Create the name of the service account to use
