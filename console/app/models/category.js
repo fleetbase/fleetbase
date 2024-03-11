@@ -29,6 +29,7 @@ export default class CategoryModel extends Model {
     @attr('string') slug;
     @attr('string') order;
     @attr('raw') translations;
+    @attr('raw') meta;
 
     /** @dates */
     @attr('date') deleted_at;
