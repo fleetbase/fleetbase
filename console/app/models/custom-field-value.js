@@ -35,7 +35,7 @@ export default class CustomFieldValueModel extends Model {
         const fileModel = fetch.jsonToModel(value, 'file');
         return fileModel;
     }
-    
+
     @computed('created_at') get createdAgo() {
         return formatDistanceToNow(this.created_at);
     }
