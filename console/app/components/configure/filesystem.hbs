@@ -7,6 +7,31 @@
         <InputGroup @name="S3 URL" @value={{this.s3Url}} disabled={{this.isLoading}} />
         <InputGroup @name="S3 Endpoint" @value={{this.s3Endpoint}} disabled={{this.isLoading}} />
     {{/if}}
+    {{#if (eq this.driver "gcs")}}
+        {{#if this.isGoogleCloudStorageEnvConfigued}}
+            <div class="border border-yellow-900 shadow-sm rounded-lg bg-yellow-200 mb-4">
+                <div class="px-3 py-2 text-sm text-yellow-900 flex items-center">
+                    <FaIcon @icon="triangle-exclamation" @size="md" class="mr-1.5" />
+                    Warning! GCS is already configured in the server environment. Changing values below may break this.
+                </div>
+            </div>
+        {{/if}}
+        <InputGroup @name="GCS Bucket" @value={{this.gcsBucket}} disabled={{this.isLoading}} />
+        <InputGroup @name="GCS Service Account Key File" @wrapperClass="">
+            <div class="flex flex-row items-center mb-0i">
+                <UploadButton @name="firebase-service-account" @accept="text/plain,text/javascript,application/json" @onFileAdded={{this.uploadGcsCredentialsFile}} @buttonText="Upload Service Account JSON" @icon="upload" class="w-auto m-0i mt-0i" />
+                {{#if this.gcsCredentialsFile}}
+                    <div class="ml-2.5 text-sm dark:text-white text-black flex flex-row items-center border border-blue-500 rounded-lg px-2 py-0.5 -mt-1">
+                        <FaIcon @icon="file-text" @size="sm" class="mr-2 dark:text-white text-black" />
+                        <span>{{this.gcsCredentialsFile.original_filename}}</span>
+                        <a href="javascript:;" class="text-red-500 ml-2" {{on "click" this.removeGcsCredentialsFile}}>
+                            <FaIcon @icon="times" class="text-red-500" />
+                        </a>
+                    </div>
+                {{/if}}
+            </div>
+        </InputGroup>
+    {{/if}}
     {{#if this.testResponse}}
         <div class="animate-pulse flex flex-row items-center rounded-lg border {{if (eq this.testResponse.status 'error') 'border-red-900 bg-red-800 text-red-100' 'border-green-900 bg-green-800 text-green-100'}} shadow-sm my-2 px-4 py-2">
             <FaIcon @icon={{if (eq this.testResponse.status 'error') 'triangle-exclamation' 'circle-check'}} class="mr-1.5 {{if (eq this.testResponse.status 'error') 'text-red-200' 'text-green-200'}}" />
