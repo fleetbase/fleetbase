@@ -1,6 +1,6 @@
 {
     "name": "@fleetbase/console",
-    "version": "0.4.11",
+    "version": "0.4.12",
     "private": true,
     "description": "Fleetbase Console",
     "repository": "https://github.com/fleetbase/fleetbase",
@@ -31,8 +31,8 @@
     "dependencies": {
         "@fleetbase/ember-core": "^0.2.6",
         "@fleetbase/ember-ui": "^0.2.11",
-        "@fleetbase/fleetops-engine": "^0.4.18",
-        "@fleetbase/fleetops-data": "^0.1.13",
+        "@fleetbase/fleetops-engine": "^0.4.19",
+        "@fleetbase/fleetops-data": "^0.1.14",
         "@fleetbase/storefront-engine": "^0.3.5",
         "@fleetbase/dev-engine": "^0.2.1",
         "@fleetbase/iam-engine": "^0.0.9",
@@ -144,7 +144,7 @@
         "overrides": {
             "@fleetbase/ember-core": "^0.2.6",
             "@fleetbase/ember-ui": "^0.2.11",
-            "@fleetbase/fleetops-data": "^0.1.13"
+            "@fleetbase/fleetops-data": "^0.1.14"
         }
     },
     "prettier": {
