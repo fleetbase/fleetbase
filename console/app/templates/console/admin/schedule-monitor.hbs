@@ -1,0 +1,34 @@
+{{page-title (t "console.admin.schedule-monitor.schedule-monitor")}}
+<Layout::Section::Header @title={{t "console.admin.schedule-monitor.schedule-monitor"}} />
+
+<Layout::Section::Body class="overflow-y-scroll h-full">
+    <div class="next-table-wrapper">
+        <table>
+            <thead>
+                <tr>
+                    <th {{set-width "300px"}}>{{t "console.admin.schedule-monitor.name"}}</th>
+                    <th {{set-width "100px"}}>{{t "console.admin.schedule-monitor.type"}}</th>
+                    <th {{set-width "90px"}}>{{t "console.admin.schedule-monitor.timezone"}}</th>
+                    <th>{{t "console.admin.schedule-monitor.last-started"}}</th>
+                    <th>{{t "console.admin.schedule-monitor.last-finished"}}</th>
+                    <th>{{t "console.admin.schedule-monitor.last-failure"}}</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#each @model as |task|}}
+                    <tr>
+                        <td>
+                            <LinkTo @route="console.admin.schedule-monitor.logs" @model={{task}}>{{task.name}}</LinkTo>
+                        </td>
+                        <td>{{task.type}}</td>
+                        <td>{{task.timezone}}</td>
+                        <td>{{n-a task.last_started_at_fmt}}</td>
+                        <td>{{n-a task.last_finished_at_fmt}}</td>
+                        <td>{{n-a task.last_failed_at_fmt}}</td>
+                    </tr>
+                {{/each}}
+            </tbody>
+        </table>
+    </div>
+</Layout::Section::Body>
+{{outlet}}

@@ -204,6 +204,22 @@ console:
       phone: Your phone number.
       photos: photos
   admin:
+    schedule-monitor:
+      schedule-monitor: Schedule Monitor
+      task-logs-for: >-
+        Task Logs For: 
+      showing-last-count: Showing last {count} logs
+      name: Name
+      type: Type
+      timezone: Timezone
+      last-started: Last Started
+      last-finished: Last Finished
+      last-failure: Last Failure
+      date: Date
+      memory: Memory
+      runtime: Runtime
+      output: Output
+      no-output: No output
     config:
       database:
         title: Database Configuration

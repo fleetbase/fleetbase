@@ -54,6 +54,9 @@ Router.map(function () {
                     this.route('users', { path: '/:public_id/users' });
                 });
             });
+            this.route('schedule-monitor', function () {
+                this.route('logs', { path: '/:id/logs' });
+            });
         });
     });
     this.route('install');

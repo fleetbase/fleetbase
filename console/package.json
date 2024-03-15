@@ -1,6 +1,6 @@
 {
     "name": "@fleetbase/console",
-    "version": "0.4.12",
+    "version": "0.4.13",
     "private": true,
     "description": "Fleetbase Console",
     "repository": "https://github.com/fleetbase/fleetbase",
@@ -29,9 +29,9 @@
         "test:ember": "ember test"
     },
     "dependencies": {
-        "@fleetbase/ember-core": "^0.2.6",
+        "@fleetbase/ember-core": "^0.2.8",
         "@fleetbase/ember-ui": "^0.2.11",
-        "@fleetbase/fleetops-engine": "^0.4.19",
+        "@fleetbase/fleetops-engine": "^0.4.20",
         "@fleetbase/fleetops-data": "^0.1.14",
         "@fleetbase/storefront-engine": "^0.3.5",
         "@fleetbase/dev-engine": "^0.2.1",
@@ -142,7 +142,7 @@
     },
     "pnpm": {
         "overrides": {
-            "@fleetbase/ember-core": "^0.2.6",
+            "@fleetbase/ember-core": "^0.2.8",
             "@fleetbase/ember-ui": "^0.2.11",
             "@fleetbase/fleetops-data": "^0.1.14"
         }
