@@ -17,3 +17,6 @@ php artisan fleetbase:seed
 
 # Restart queue
 php artisan queue:restart
+
+# Sync scheduler
+php artisan schedule-monitor:sync
