@@ -61,6 +61,13 @@ export default class ConsoleAdminOrganizationsIndexUsersController extends Contr
     @tracked company;
 
     /**
+     * The overlay context API.
+     *
+     * @memberof ConsoleAdminOrganizationsIndexUsersController
+     */
+    @tracked contextApi;
+
+    /**
      * Queryable parameters for this controller's model
      *
      * @var {Array}

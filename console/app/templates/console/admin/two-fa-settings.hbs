@@ -4,7 +4,7 @@
 </Layout::Section::Header>
 
 <Layout::Section::Body class="overflow-y-scroll h-full">
-    <div class="container mx-auto h-screen" {{increase-height-by 1200}}>
+    <div class="container mx-auto h-screen">
         <div class="max-w-3xl my-10 mx-auto space-y-4">
             <ContentPanel @title="2FA Config" @open={{true}} @pad={{true}} @panelBodyClass="bg-white dark:bg-gray-800">
                 {{#if this.loadSystemTwoFaConfig.isIdle}}
@@ -25,4 +25,5 @@
             </ContentPanel>
         </div>
     </div>
+    <Spacer @height="300px" />
 </Layout::Section::Body>

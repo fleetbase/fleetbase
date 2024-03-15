@@ -1,0 +1,34 @@
+{{page-title (concat (t "console.admin.schedule-monitor.schedule-monitor") " - " @model.name)}}
+<Overlay @isOpen={{true}} @onLoad={{this.setOverlayContext}} @position="right" @noBackdrop={{true}} @fullHeight={{true}} @width="600px" @isResizable={{true}}>
+    <Overlay::Header @title={{concat (t "console.admin.schedule-monitor.task-logs-for") @model.name}} @titleClass="max-w-400px truncate" @hideStatusDot={{true}} @titleWrapperClass="leading-5">
+        <div class="flex flex-1 justify-end">
+            <Button @type="default" @icon="times" @helpText={{t "common.close-and-save"}} @onClick={{this.onPressClose}} />
+        </div>
+    </Overlay::Header>
+
+    <Overlay::Body>
+        <div class="p-4">
+            <div class="flex items-center justify-between mb-4">
+                <div class="text-sm">{{t "console.admin.schedule-monitor.showing-last-count" count=20}}</div>
+                <Button @size="xs" @icon="arrows-rotate" @onClick={{perform this.reload @model}} @isLoading={{not this.reload.isIdle}} />
+            </div>
+            <div class="space-y-4">
+                {{#each this.logs as |log|}}
+                    <div class="bg-gray-100 border border-gray-200 dark:border-gray-700 dark:bg-gray-800 rounded-lg p-2 font-mono text-xs">
+                        <div class="font-mono"><span class="font-semibold font-mono">{{t "console.admin.schedule-monitor.date"}}:</span> {{log.created_at_fmt}}</div>
+                        <div class="font-mono"><span class="font-semibold font-mono">{{t "console.admin.schedule-monitor.memory"}}:</span> {{format-bytes log.meta.memory}}</div>
+                        <div class="font-mono"><span class="font-semibold font-mono">{{t "console.admin.schedule-monitor.runtime"}}:</span> {{format-milliseconds log.meta.runtime}}</div>
+                        <div class="font-semibold font-mono mb-2">{{t "console.admin.schedule-monitor.output"}}:</div>
+                        <div class="whitespace-pre-line overflow-hidden bg-black text-green-400 rounded-lg p-2 font-mono text-xs border border-gray-900">
+                            {{#if log.meta.output}}
+                                {{log.meta.output}}
+                            {{else}}
+                                {{t "console.admin.schedule-monitor.no-output"}}
+                            {{/if}}
+                        </div>
+                    </div>
+                {{/each}}
+            </div>
+        </div>
+    </Overlay::Body>
+</Overlay>
