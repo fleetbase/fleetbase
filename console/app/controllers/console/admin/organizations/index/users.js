@@ -60,7 +60,6 @@ export default class ConsoleAdminOrganizationsIndexUsersController extends Contr
      */
     @tracked company;
 
-
     /**
      * The overlay context API.
      *
