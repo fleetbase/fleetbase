@@ -152,6 +152,7 @@ jobs:
         env:
           API_HOST: ${{ secrets.API_HOST }}
           SOCKETCLUSTER_HOST: ${{ secrets.SOCKETCLUSTER_HOST }}
+          SOCKETCLUSTER_PORT: "443" # it uses common ingress so port 443
         run: |
           set -eu
 
