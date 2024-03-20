@@ -149,6 +149,9 @@ jobs:
         working-directory: ./console
 
       - name: Build
+        env:
+          API_HOST: ${{ secrets.API_HOST }}
+          SOCKETCLUSTER_HOST: ${{ secrets.SOCKETCLUSTER_HOST }}
         run: |
           set -eu
 
