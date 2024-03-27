@@ -34,7 +34,11 @@ spec:
         - name: {{ .Chart.Name }}-httpd
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
+          {{- if .Values.gcp }}
           image: "{{ .Values.image.repository }}/app-httpd:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          {{- else }}
+          image: "{{ .Values.image.repository }}:app-httpd-{{ .Values.image.tag | default .Chart.AppVersion }}"
+          {{- end }}
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           env:
             - name: NGINX_APPLICATION_HOSTNAME
@@ -56,7 +60,11 @@ spec:
         - name: {{ .Chart.Name }}
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
+          {{- if .Values.gcp }}
           image: "{{ .Values.image.repository }}/app:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          {{- else }}
+          image: "{{ .Values.image.repository }}:app-{{ .Values.image.tag | default .Chart.AppVersion }}"
+          {{- end }}
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           envFrom:
             - secretRef:

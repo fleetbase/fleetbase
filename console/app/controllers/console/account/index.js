@@ -50,9 +50,9 @@ export default class ConsoleAccountIndexController extends Controller {
             file,
             {
                 path: `uploads/${this.user.company_uuid}/users/${this.user.slug}`,
-                key_uuid: this.user.id,
-                key_type: `user`,
-                type: `user_avatar`,
+                subject_uuid: this.user.id,
+                subject_type: 'user',
+                type: 'user_avatar',
             },
             (uploadedFile) => {
                 this.user.setProperties({

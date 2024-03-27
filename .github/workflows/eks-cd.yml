@@ -1,0 +1,170 @@
+name: Fleetbase EKS CI/CD
+
+on:
+  push:
+    branches: ["eksdeploy/*"]
+
+concurrency:
+  group: ${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  PROJECT: ${{ secrets.PROJECT }}
+  GITHUB_AUTH_KEY: ${{ secrets._GITHUB_AUTH_TOKEN }}
+
+jobs:
+  build_service:
+    name: Build and Deploy the Service
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write # This is required for requesting the JWT
+      contents: read # This is required for actions/checkout
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+        with:
+          submodules: recursive
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Set Dynamic ENV Vars
+        run: |
+          SHORT_COMMIT=$(echo $GITHUB_SHA | cut -c -8)
+          echo "VERSION=${SHORT_COMMIT}" >> $GITHUB_ENV
+          echo "STACK=$(basename $GITHUB_REF)" >> $GITHUB_ENV
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.EKS_DEPLOYER_ROLE }}
+          role-session-name: github
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+
+      - name: Build and Release
+        uses: docker/bake-action@v2
+        env:
+          REGISTRY: ${{ steps.login-ecr.outputs.registry }}/${{ env.PROJECT }}-${{ env.STACK }}
+          VERSION: ${{ env.VERSION }}
+          GITHUB_AUTH_KEY: ${{ env.GITHUB_AUTH_KEY }}
+          CACHE: type=gha
+        with:
+          push: true
+          files: |
+            ./docker-bake.hcl
+
+      - name: Update kube config
+        run: aws eks update-kubeconfig --name ${{ secrets.EKS_CLUSTER_NAME }} --region ${{ secrets.AWS_REGION }}
+
+      - name: Deploy the images 🚀
+        env:
+          REGISTRY: ${{ steps.login-ecr.outputs.registry }}/${{ env.PROJECT }}-${{ env.STACK }}
+        run: |-
+          set -eu
+          # run deploy.sh script before deployments
+          helm upgrade -i ${{ env.PROJECT }} infra/helm -n ${{ env.PROJECT}}-${{ env.STACK }} --set image.repository=${{ env.REGISTRY }} \
+            --set image.tag=${{ env.VERSION }} --set 'api_host=${{ secrets.API_HOST }}' --set 'socketcluster_host=${{ secrets.SOCKETCLUSTER_HOST }}' \
+            --set gcp=false --set 'ingress.annotations.kubernetes\.io/ingress\.class=null' --set 'ingress.annotations.alb\.ingress\.kubernetes\.io/scheme=internet-facing' \
+            --set serviceAccount.name=default --set serviceAccount.create=false --set ingress.className=alb \
+            --set 'ingress.annotations.alb\.ingress\.kubernetes\.io/listen-ports=[{"HTTPS":443}]' \
+            --set service.type=NodePort
+
+  build_frontend:
+    name: Build and Deploy the Console
+    needs: [build_service]
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write # This is required for requesting the JWT
+      contents: read # This is required for actions/checkout
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          submodules: true
+
+      - name: Set Dynamic ENV Vars
+        run: |
+          SHORT_COMMIT=$(echo $GITHUB_SHA | cut -c -8)
+          echo "VERSION=${SHORT_COMMIT}" >> $GITHUB_ENV
+          echo "STACK=$(basename $GITHUB_REF)" >> $GITHUB_ENV
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          role-to-assume: ${{ secrets.EKS_DEPLOYER_ROLE }}
+          role-session-name: github
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Get infra-provided configuration
+        run: |
+          set -eu
+
+          wget -O- https://github.com/springload/ssm-parent/releases/download/1.8.0/ssm-parent_1.8.0_linux_amd64.tar.gz | tar xvzf - ssm-parent
+
+          ./ssm-parent -n /actions/${{ env.PROJECT }}/${{ env.STACK }}/configuration dotenv /tmp/dotenv.file
+          # remove double quotes and pipe into the env
+          cat /tmp/dotenv.file | sed -e 's/"//g' >> $GITHUB_ENV
+
+      - name: Install Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+
+      - uses: pnpm/action-setup@v2
+        name: Install pnpm
+        id: pnpm-install
+        with:
+          version: 8
+          run_install: false
+
+      - name: Get pnpm Store Directory
+        id: pnpm-cache
+        shell: bash
+        run: |
+          echo "STORE_PATH=$(pnpm store path)" >> $GITHUB_OUTPUT
+
+      - uses: actions/cache@v3
+        name: Setup pnpm Cache
+        with:
+          path: ${{ steps.pnpm-cache.outputs.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+
+      - name: Check for _GITHUB_AUTH_TOKEN and create .npmrc
+        run: |
+          if [[ -n "${{ secrets._GITHUB_AUTH_TOKEN }}" ]]; then
+            echo "//npm.pkg.github.com/:_authToken=${{ secrets._GITHUB_AUTH_TOKEN }}" > .npmrc
+          fi
+        working-directory: ./console
+
+      - name: Install dependencies
+        run: pnpm install
+        working-directory: ./console
+
+      - name: Build
+        env:
+          API_HOST: ${{ secrets.API_HOST }}
+          SOCKETCLUSTER_HOST: ${{ secrets.SOCKETCLUSTER_HOST }}
+          SOCKETCLUSTER_PORT: "443" # it uses common ingress so port 443
+        run: |
+          set -eu
+
+          pnpm build --environment production
+        working-directory: ./console
+
+      - name: Deploy Console 🚀
+        run: |
+          set -u
+
+          DEPLOY_BUCKET=${STATIC_DEPLOY_BUCKET:-${{ env.PROJECT }}-${{ env.STACK }}}
+          # this value will come from the dotenv above
+          echo "Deploying to $DEPLOY_BUCKET"
+          wget -O- https://github.com/bep/s3deploy/releases/download/v2.11.0/s3deploy_2.11.0_linux-amd64.tar.gz | tar xzv -f - s3deploy
+          ./s3deploy -region ${AWS_REGION} -source console/dist -bucket ${DEPLOY_BUCKET}
