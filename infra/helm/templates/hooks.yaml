@@ -28,8 +28,12 @@ spec:
       - name: deployment-job
         securityContext:
           {{- toYaml .Values.securityContext | nindent 10 }}
+        {{- if .Values.gcp }}
         image: "{{ .Values.image.repository }}/app:{{ .Values.image.tag | default .Chart.AppVersion }}"
-        command: ["./deploy.sh"]
+        {{- else }}
+        image: "{{ .Values.image.repository }}:app-{{ .Values.image.tag | default .Chart.AppVersion }}"
+        {{- end }}
+        args: ["./deploy.sh"]
         env:
         {{- include "helm.commonVariables" . | nindent 12 }}
         envFrom:
