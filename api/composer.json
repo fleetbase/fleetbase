@@ -9,9 +9,9 @@
     "license": "MIT",
     "require": {
         "php": "^8.0",
-        "fleetbase/core-api": "^1.4.15",
-        "fleetbase/fleetops-api": "^0.4.23",
-        "fleetbase/storefront-api": "^0.3.6",
+        "fleetbase/core-api": "^1.4.16",
+        "fleetbase/fleetops-api": "^0.4.24",
+        "fleetbase/storefront-api": "^0.3.7",
         "fleetbase/billing-api": "dev-main",
         "fleetbase/internals-api": "dev-main",
         "guzzlehttp/guzzle": "^7.0.1",
@@ -96,6 +96,7 @@
         }
     },
     "config": {
+        "secure-http": false, 
         "optimize-autoloader": true,
         "preferred-install": "dist",
         "sort-packages": true,

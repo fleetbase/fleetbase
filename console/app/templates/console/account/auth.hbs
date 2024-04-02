@@ -5,51 +5,28 @@
     <div class="container mx-auto h-screen" {{increase-height-by 500}}>
         <div class="max-w-3xl my-10 mx-auto space-y-6">
             <ContentPanel @title="Change Password" @open={{true}} @pad={{true}} @panelBodyClass="bg-white dark:bg-gray-800">
-                {{#if this.isPasswordValidated}}
-                    <form id="change-password-form" aria-label="change-password" {{on "submit" this.changeUserPassword}}>
-                        <legend class="mb-3">Change Password</legend>
-                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
-                            <InputGroup @name="Enter new Password" @type="password" @value={{this.newPassword}} />
-                            <InputGroup @name="Confirm Password" @type="password" @value={{this.newConfirmPassword}} />
-                        </div>
-                        <Button @type="primary" @buttonType="submit" @text="Confirm & Change Password" @icon="save" {{on "click" this.changeUserPassword}} />
-                    </form>
-                {{else}}
-                    <form id="validate-password-form" aria-label="validate-password" {{on "submit" this.validatePassword}}>
-                        <legend class="mb-3">Validate Current Password</legend>
-                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
-                            <InputGroup @name="Password" @type="password" @value={{this.password}} />
-                            <InputGroup @name="Confirm Password" @type="password" @value={{this.confirmPassword}} />
-                        </div>
-                        <Button @type="primary" @buttonType="submit" @text="Continue" @icon="check" {{on "click" this.validatePassword}} />
-                    </form>
-                {{/if}}
+                <form id="change-password-form" aria-label="change-password" {{on "submit" (perform this.changePassword)}}>
+                    <legend class="mb-3">Change Password</legend>
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                        <InputGroup @name="Enter new Password" @type="password" @value={{this.newPassword}} />
+                        <InputGroup @name="Confirm Password" @type="password" @value={{this.newConfirmPassword}} />
+                    </div>
+                    <Button @type="primary" @buttonType="submit" @text="Confirm & Change Password" @icon="save" {{on "click" (perform this.changePassword)}} />
+                </form>
             </ContentPanel>
 
             {{#if this.isSystemTwoFaEnabled}}
                 <ContentPanel @title="2FA Settings" @open={{true}} @pad={{true}} @panelBodyClass="bg-white dark:bg-gray-800">
                     <div class="mb-3">
                         {{#if this.loadUserTwoFaSettings.isIdle}}
-                            <TwoFaSettings
-                                @twoFaMethods={{this.methods}}
-                                @twoFaSettings={{this.twoFaSettings}}
-                                @onTwoFaToggled={{this.onTwoFaToggled}}
-                                @onTwoFaMethodSelected={{this.onTwoFaMethodSelected}}
-                            />
+                            <TwoFaSettings @twoFaMethods={{this.methods}} @twoFaSettings={{this.twoFaSettings}} @onTwoFaToggled={{this.onTwoFaToggled}} @onTwoFaMethodSelected={{this.onTwoFaMethodSelected}} />
                         {{else}}
                             <div class="flex items-center justify-center p-4">
                                 <Spinner @loadingMessage="Loading User 2FA Settings..." @wrapperClass="flex flex-row" @iconClass="mr-2" />
                             </div>
                         {{/if}}
                     </div>
-                    <Button
-                        @type="primary"
-                        @buttonType="submit"
-                        @text="Save 2FA Settings"
-                        @icon="save"
-                        @onClick={{this.saveTwoFactorAuthSettings}}
-                        @isLoading={{this.saveUserTwoFaSettings.isRunning}}
-                    />
+                    <Button @type="primary" @buttonType="submit" @text="Save 2FA Settings" @icon="save" @onClick={{this.saveTwoFactorAuthSettings}} @isLoading={{this.saveUserTwoFaSettings.isRunning}} />
                 </ContentPanel>
             {{/if}}
         </div>

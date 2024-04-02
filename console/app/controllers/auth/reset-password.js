@@ -1,7 +1,7 @@
 import Controller from '@ember/controller';
 import { inject as service } from '@ember/service';
 import { tracked } from '@glimmer/tracking';
-import { action } from '@ember/object';
+import { task } from 'ember-concurrency';
 
 export default class AuthResetPasswordController extends Controller {
     /**
@@ -54,38 +54,23 @@ export default class AuthResetPasswordController extends Controller {
     @tracked password_confirmation;
 
     /**
-     * Loading stae of password reset.
+     * The reset password task.
      *
      * @memberof AuthResetPasswordController
      */
-    @tracked isLoading;
-
-    /**
-     * The reset password action.
-     *
-     * @memberof AuthResetPasswordController
-     */
-    @action resetPassword(event) {
-        // firefox patch
+    @task *resetPassword(event) {
         event.preventDefault();
 
         const { code, password, password_confirmation } = this;
         const { id } = this.model;
 
-        this.isLoading = true;
+        try {
+            yield this.fetch.post('auth/reset-password', { link: id, code, password, password_confirmation });
+        } catch (error) {
+            return this.notifications.serverError(error);
+        }
 
-        this.fetch
-            .post('auth/reset-password', { link: id, code, password, password_confirmation })
-            .then(() => {
-                this.notifications.success(this.intl.t('auth.reset-password.success-message'));
-
-                return this.router.transitionTo('auth.login');
-            })
-            .catch((error) => {
-                this.notifications.serverError(error);
-            })
-            .finally(() => {
-                this.isLoading = false;
-            });
+        this.notifications.success(this.intl.t('auth.reset-password.success-message'));
+        yield this.router.transitionTo('auth.login');
     }
 }
