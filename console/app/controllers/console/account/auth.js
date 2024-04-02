@@ -34,17 +34,11 @@ export default class ConsoleAccountAuthController extends Controller {
     @service router;
 
     /**
-     * The user's current password.
-     * @type {string}
-     */
-    @tracked password;
-
-    /**
-     * The user's confirmation of the new password.
+     * Service for managing modals.
      *
-     * @type {string}
+     * @type {router}
      */
-    @tracked confirmPassword;
+    @service modalsManager;
 
     /**
      * The new password the user intends to set.
@@ -59,13 +53,6 @@ export default class ConsoleAccountAuthController extends Controller {
      * @type {string}
      */
     @tracked newConfirmPassword;
-
-    /**
-     * Flag indicating whether the current password has been validated.
-     *
-     * @type {boolean}
-     */
-    @tracked isPasswordValidated = false;
 
     /**
      * System-wide two-factor authentication configuration.
@@ -107,28 +94,6 @@ export default class ConsoleAccountAuthController extends Controller {
     }
 
     /**
-     * Validates the user's current password.
-     *
-     * @method validatePassword
-     * @param {Event} event - The event object triggering the action.
-     */
-    @action validatePassword(event) {
-        event.preventDefault();
-        this.validatePasswordTask.perform();
-    }
-
-    /**
-     * Initiates the task to change the user's password asynchronously.
-     *
-     * @method changeUserPasswordTask
-     * @param {Event} event - The event object triggering the action.
-     */
-    @action changeUserPassword(event) {
-        event.preventDefault();
-        this.changeUserPasswordTask.perform();
-    }
-
-    /**
      * Handles the event when two-factor authentication is toggled.
      *
      * @method onTwoFaToggled
@@ -161,6 +126,58 @@ export default class ConsoleAccountAuthController extends Controller {
      */
     @action saveTwoFactorAuthSettings() {
         this.saveUserTwoFaSettings.perform(this.twoFaSettings);
+    }
+
+    /**
+     * Initiates the task to change the user's password asynchronously.
+     *
+     * @method changePassword
+     */
+    @task *changePassword(event) {
+        // If from event fired
+        if (event instanceof Event) {
+            event.preventDefault();
+        }
+
+        // Validate current password
+        const isPasswordValid = yield this.validatePassword.perform();
+        if (!isPasswordValid) {
+            this.newPassword = undefined;
+            this.newConfirmPassword = undefined;
+            return;
+        }
+
+        try {
+            yield this.fetch.post('users/change-password', {
+                password: this.newPassword,
+                password_confirmation: this.newConfirmPassword,
+            });
+
+            this.notifications.success('Password change successfully.');
+        } catch (error) {
+            this.notifications.serverError(error, 'Failed to change password.');
+        }
+
+        this.newPassword = undefined;
+        this.newConfirmPassword = undefined;
+    }
+
+    /**
+     * Task to validate current password
+     *
+     * @return {boolean}
+     */
+    @task *validatePassword() {
+        let isPasswordValid = false;
+
+        yield this.modalsManager.show('modals/validate-password', {
+            body: 'You must validate your current password before it can be changed.',
+            onValidated: (isValid) => {
+                isPasswordValid = isValid;
+            },
+        });
+
+        return isPasswordValid;
     }
 
     /**
@@ -208,41 +225,5 @@ export default class ConsoleAccountAuthController extends Controller {
             this.twoFaConfig = twoFaConfig;
         }
         return twoFaConfig;
-    }
-
-    /**
-     * Initiates the task to validate the user's current password asynchronously.
-     *
-     * @method validatePasswordTask
-     */
-    @task *validatePasswordTask() {
-        try {
-            yield this.fetch.post('users/validate-password', {
-                password: this.password,
-                password_confirmation: this.confirmPassword,
-            });
-
-            this.isPasswordValidated = true;
-        } catch (error) {
-            this.notifications.serverError(error, 'Invalid current password.');
-        }
-    }
-
-    /**
-     * Initiates the task to change the user's password asynchronously.
-     *
-     * @method changeUserPasswordTask
-     */
-    @task *changeUserPasswordTask() {
-        try {
-            yield this.fetch.post('users/change-password', {
-                password: this.newPassword,
-                password_confirmation: this.newConfirmPassword,
-            });
-
-            this.notifications.success('Password change successfully.');
-        } catch (error) {
-            this.notifications.error('Failed to change password');
-        }
     }
 }
