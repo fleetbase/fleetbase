@@ -1,11 +1,15 @@
 import Component from '@glimmer/component';
 import { tracked } from '@glimmer/tracking';
-import { action, computed } from '@ember/object';
+import { computed } from '@ember/object';
 import { isArray } from '@ember/array';
 import { isBlank } from '@ember/utils';
+import { task } from 'ember-concurrency';
+import { storageFor } from 'ember-local-storage';
+import { add, isPast } from 'date-fns';
 import fetch from 'fetch';
 
 export default class GithubCardComponent extends Component {
+    @storageFor('local-cache') localCache;
     @tracked data;
     @tracked tags;
     @tracked isLoading = false;
@@ -30,29 +34,47 @@ export default class GithubCardComponent extends Component {
 
     constructor() {
         super(...arguments);
-        this.loadRepositoryData();
-        this.loadRepositoryTags();
+        this.getRepositoryData.perform();
+        this.getRepositoryTags.perform();
     }
 
-    @action loadRepositoryData() {
-        this.isLoading = true;
+    @task *getRepositoryData() {
+        // Check if cached data and expiration are available
+        const cachedData = this.localCache.get('fleetbase-github-data');
+        const expiration = this.localCache.get('fleetbase-github-data-expiration');
 
-        return fetch('https://api.github.com/repos/fleetbase/fleetbase')
-            .then((response) => {
-                return response.json().then((data) => {
-                    this.data = data;
-                });
-            })
-            .finally(() => {
-                this.isLoading = false;
-            });
+        // Check if the cached data is still valid
+        if (cachedData && expiration && !isPast(new Date(expiration))) {
+            // Use cached data
+            this.data = cachedData;
+        } else {
+            // Fetch new data
+            const response = yield fetch('https://api.github.com/repos/fleetbase/fleetbase');
+            if (response.ok) {
+                this.data = yield response.json();
+                this.localCache.set('fleetbase-github-data', this.data);
+                this.localCache.set('fleetbase-github-data-expiration', add(new Date(), { hours: 6 }));
+            }
+        }
     }
 
-    @action loadRepositoryTags() {
-        return fetch('https://api.github.com/repos/fleetbase/fleetbase/tags').then((response) => {
-            return response.json().then((data) => {
-                this.tags = data;
-            });
-        });
+    @task *getRepositoryTags() {
+        // Check if cached tags and expiration are available
+        const cachedTags = this.localCache.get('fleetbase-github-tags');
+        const expiration = this.localCache.get('fleetbase-github-tags-expiration');
+
+        // Check if the cached tags are still valid
+        if (cachedTags && expiration && !isPast(new Date(expiration))) {
+            // Use cached tags
+            this.tags = cachedTags;
+        } else {
+            // Fetch new tags
+            const response = yield fetch('https://api.github.com/repos/fleetbase/fleetbase/tags');
+            if (response.ok) {
+                this.tags = yield response.json();
+                this.localCache.set('fleetbase-github-tags', this.tags);
+                this.localCache.set('fleetbase-github-tags-expiration', add(new Date(), { hours: 6 }));
+            }
+        }
     }
 }

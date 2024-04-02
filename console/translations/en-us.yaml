@@ -179,6 +179,7 @@ auth:
     slow-connection-message: Experiencing connectivity issues.
   reset-password:
     success-message: Your password has been reset! Login to continue.
+    invalid-verification-code: This reset password link is invalid or expired.
     title: Reset your password
     form:
       code:
