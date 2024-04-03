@@ -1,10 +1,10 @@
 <Layout::Section::Header @title={{t "common.profile"}} />
 
 <Layout::Section::Body class="overflow-y-scroll h-full">
-    <div class="container mx-auto h-screen" {{increase-height-by 500}}>
+    <div class="container mx-auto h-screen">
         <div class="max-w-3xl my-10 mx-auto">
             <ContentPanel @title={{t "common.your-profile"}} @open={{true}} @pad={{true}} @panelBodyClass="bg-white dark:bg-gray-800">
-                <form class="flex flex-col md:flex-row" {{on "submit" this.saveProfile}}>
+                <form class="flex flex-col md:flex-row" {{on "submit" (perform this.saveProfile)}}>
                     <div class="w-32 flex flex-col justify-center mb-6 mr-6">
                         <Image src={{this.user.avatar_url}} @fallbackSrc={{config "defaultValues.userImage"}} alt={{this.user.name}} class="w-32 h-32 rounded-md" />
                         <FileUpload @name={{t "console.account.index.photos"}} @accept="image/*" @onFileAdded={{this.uploadNewPhoto}} @labelClass="flex flex-row items-center justify-center" as |queue|>
@@ -35,11 +35,12 @@
                             <InputGroup @name={{t "common.date-of-birth"}} @type="date" @value={{this.user.date_of_birth}} />
                         </div>
                         <div class="mt-3 flex items-center justify-end">
-                            <Button @buttonType="submit" @type="primary" @size="lg" @icon="save" @text={{t "common.save-button-text"}} @onClick={{this.saveProfile}} @isLoading={{this.isLoading}} />
+                            <Button @buttonType="submit" @type="primary" @size="lg" @icon="save" @text={{t "common.save-button-text"}} @onClick={{perform this.saveProfile}} @isLoading={{not this.saveProfile.isIdle}} />
                         </div>
                     </div>
                 </form>
             </ContentPanel>
         </div>
     </div>
+    <Spacer @height="500px" />
 </Layout::Section::Body>
