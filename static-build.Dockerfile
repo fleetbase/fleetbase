@@ -1,9 +1,9 @@
 FROM --platform=linux/amd64 dunglas/frankenphp:static-builder
 
-# Install packages
-RUN apt-get update && apt-get install -y git bind9-utils mycli nodejs npm \
-  && mkdir -p /root/.ssh \
-  && ssh-keyscan github.com >> /root/.ssh/known_hosts
+# # Install packages
+# RUN apt-get update && apt-get install -y git bind9-utils mycli nodejs npm \
+#   && mkdir -p /root/.ssh \
+#   && ssh-keyscan github.com >> /root/.ssh/known_hosts
 
 # Set some build ENV variables
 ENV LOG_CHANNEL=stdout
@@ -18,28 +18,28 @@ ARG ENVIRONMENT=production
 ENV APP_ENV=$ENVIRONMENT
 
 # Copy Caddyfile
-COPY --chown=www-data:www-data ./Caddyfile $CADDYFILE_PATH
+COPY ./Caddyfile $CADDYFILE_PATH
 
 # Create /fleetbase directory and set correct permissions
-RUN mkdir -p /fleetbase/api && chown -R www-data:www-data /fleetbase
+RUN mkdir -p /fleetbase && mkdir -p /fleetbase/api && mkdir -p /fleetbase/console
 
 # Set working directory
 WORKDIR /fleetbase/api
 
 # Setup api
-COPY --chown=www-data:www-data ./api /fleetbase/api
+COPY  ./api /fleetbase/api
 
 # Setup console
-COPY --chown=www-data:www-data ./console /fleetbase/console
+COPY  ./console /fleetbase/console
 
 # Set permissions for deploy script
 RUN chmod +x /fleetbase/api/deploy.sh
 
 # Pre-install Composer dependencies
-RUN su www-data -s /bin/sh -c "composer install --no-scripts --optimize-autoloader --no-dev"
+# RUN /bin/sh -c "composer install --no-scripts --optimize-autoloader --no-dev"
 
 # Dump autoload
-RUN su www-data -s /bin/sh -c "composer dumpautoload"
+# RUN /bin/sh -c "composer dumpautoload"
 
 # Build binary
 RUN EMBED=/ \
