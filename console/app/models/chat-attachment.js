@@ -18,5 +18,5 @@ export default class ChatAttachment extends Model {
 
     /** @dates */
     @attr('date') created_at;
-
+    @attr('date') updated_at;
 }

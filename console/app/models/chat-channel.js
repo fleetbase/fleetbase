@@ -1,6 +1,6 @@
-import Model, { attr, hasMany } from '@ember-data/model';
+import Model, { attr, hasMany, belongsTo } from '@ember-data/model';
 import { computed } from '@ember/object';
-import { format, formatDistanceToNow } from 'date-fns';
+import { format, formatDistanceToNow, isValid as isValidDate } from 'date-fns';
 
 export default class ChatChannel extends Model {
     /** @ids */
@@ -13,15 +13,15 @@ export default class ChatChannel extends Model {
     @attr('array') meta;
 
     /** @relationships */
-    @hasMany('chat-participant', { async: true }) participants;
-    @hasMany('chat-message', { async: true }) messages;
+    @hasMany('chat-participant', { async: false }) participants;
+    @hasMany('chat-message', { async: false }) messages;
     @hasMany('chat-attachment', { async: true }) attachments;
     @hasMany('chat-presence', { async: true }) presences;
+    @belongsTo('chat-message', { async: false }) lastMessage;
 
     /** @dates */
     @attr('date') created_at;
     @attr('date') updated_at;
-    @attr('date') deleted_at;
 
     /** @computed */
     @computed('updated_at') get updatedAgo() {
