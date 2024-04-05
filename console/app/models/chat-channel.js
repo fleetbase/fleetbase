@@ -1,5 +1,6 @@
 import Model, { attr, hasMany, belongsTo } from '@ember-data/model';
 import { computed } from '@ember/object';
+import { getOwner } from '@ember/application';
 import { format, formatDistanceToNow, isValid as isValidDate } from 'date-fns';
 
 export default class ChatChannel extends Model {
@@ -54,5 +55,36 @@ export default class ChatChannel extends Model {
         }
 
         return formatDate(this.created_at, 'PP HH:mm');
+    }
+
+    /** @methods */
+    reloadParticipants() {
+        const owner = getOwner(this);
+        const store = owner.lookup('service:store');
+
+        return store.query('chat-participant', { chat_channel_uuid: this.id }).then((participants) => {
+            this.set('participants', participants);
+            return participants
+        });
+    }
+
+    reloadMessages() {
+        const owner = getOwner(this);
+        const store = owner.lookup('service:store');
+
+        return store.query('chat-message', { chat_channel_uuid: this.id }).then((messages) => {
+            this.set('messages', messages);
+            return messages
+        });
+    }
+
+    reloadAttachments() {
+        const owner = getOwner(this);
+        const store = owner.lookup('service:store');
+
+        return store.query('chat-attachment', { chat_channel_uuid: this.id }).then((attachments) => {
+            this.set('attachments', attachments);
+            return attachments
+        });
     }
 }
