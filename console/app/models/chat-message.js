@@ -1,4 +1,4 @@
-import Model, { attr, belongsTo } from '@ember-data/model';
+import Model, { attr, belongsTo, hasMany } from '@ember-data/model';
 import { computed } from '@ember/object';
 import { format, formatDistanceToNow, isValid as isValidDate } from 'date-fns';
 
@@ -12,6 +12,7 @@ export default class ChatMessage extends Model {
 
     /** @relationships */
     @belongsTo('chat-participant', { async: false }) sender;
+    @hasMany('chat-attachment', { async: false }) attachments;
 
     /** @dates */
     @attr('date') created_at;
