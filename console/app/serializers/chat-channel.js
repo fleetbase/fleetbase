@@ -11,6 +11,7 @@ export default class ChatChannelSerializer extends ApplicationSerializer.extend(
         return {
             participants: { embedded: 'always' },
             messages: { embedded: 'always' },
+            last_message: { embedded: 'always' },
         };
     }
 }

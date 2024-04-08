@@ -3,14 +3,16 @@ import { computed } from '@ember/object';
 import { getOwner } from '@ember/application';
 import { format, formatDistanceToNow, isValid as isValidDate } from 'date-fns';
 
-export default class ChatChannel extends Model {
+export default class ChatChannelModel extends Model {
     /** @ids */
     @attr('string') public_id;
     @attr('string') company_uuid;
 
     /** @attributes */
     @attr('string') name;
+    @attr('string') title;
     @attr('string') slug;
+    @attr('array') feed;
     @attr('array') meta;
 
     /** @relationships */
@@ -18,7 +20,7 @@ export default class ChatChannel extends Model {
     @hasMany('chat-message', { async: false }) messages;
     @hasMany('chat-attachment', { async: true }) attachments;
     @hasMany('chat-presence', { async: true }) presences;
-    @belongsTo('chat-message', { async: false }) lastMessage;
+    @belongsTo('chat-message', { async: false }) last_message;
 
     /** @dates */
     @attr('date') created_at;
@@ -64,7 +66,7 @@ export default class ChatChannel extends Model {
 
         return store.query('chat-participant', { chat_channel_uuid: this.id }).then((participants) => {
             this.set('participants', participants);
-            return participants
+            return participants;
         });
     }
 
@@ -74,7 +76,7 @@ export default class ChatChannel extends Model {
 
         return store.query('chat-message', { chat_channel_uuid: this.id }).then((messages) => {
             this.set('messages', messages);
-            return messages
+            return messages;
         });
     }
 
@@ -84,7 +86,7 @@ export default class ChatChannel extends Model {
 
         return store.query('chat-attachment', { chat_channel_uuid: this.id }).then((attachments) => {
             this.set('attachments', attachments);
-            return attachments
+            return attachments;
         });
     }
 }
