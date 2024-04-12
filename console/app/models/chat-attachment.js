@@ -2,6 +2,8 @@ import Model, { attr, belongsTo } from '@ember-data/model';
 import { getOwner } from '@ember/application';
 import { computed } from '@ember/object';
 import { format, formatDistanceToNow, isValid as isValidDate } from 'date-fns';
+import isVideoFile from '@fleetbase/ember-core/utils/is-video-file';
+import isImageFile from '@fleetbase/ember-core/utils/is-image-file';
 
 export default class ChatAttachment extends Model {
     /** @ids */
@@ -20,6 +22,8 @@ export default class ChatAttachment extends Model {
     @attr('string') sender_uuid;
     @attr('string') file_uuid;
     @attr('string') url;
+    @attr('string') filename;
+    @attr('string') content_type;
 
     /** @dates */
     @attr('date') created_at;
@@ -58,6 +62,14 @@ export default class ChatAttachment extends Model {
         return formatDate(this.created_at, 'PP HH:mm');
     }
 
+    @computed('content_type') get isVideo() {
+        return isVideoFile(this.content_type);
+    }
+
+    @computed('content_type') get isImage() {
+        return isImageFile(this.content_type);
+    }
+
     /** @methods */
     downloadFromApi() {
         window.open(ENV.api.host + '/' + ENV.api.namespace + '/files/download?file=' + this.file_uuid, '_self');
@@ -65,8 +77,8 @@ export default class ChatAttachment extends Model {
 
     download() {
         const owner = getOwner(this);
-        const fetch = owner.lookup(`service:store`);
+        const fetch = owner.lookup('service:fetch');
 
-        return fetch.download('files/download', { file: this.file_uuid });
+        return fetch.download('files/download', { file: this.file_uuid }, { fileName: this.filename, mimeType: this.content_type });
     }
 }

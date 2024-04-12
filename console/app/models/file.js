@@ -69,8 +69,8 @@ export default class FileModel extends Model {
 
     download() {
         const owner = getOwner(this);
-        const fetch = owner.lookup(`service:store`);
+        const fetch = owner.lookup('service:fetch');
 
-        return fetch.download('files/download', { file: this.id });
+        return fetch.download('files/download', { file: this.id }, { fileName: this.original_filename, mimeType: this.content_type });
     }
 }

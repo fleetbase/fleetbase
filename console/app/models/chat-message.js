@@ -9,6 +9,7 @@ export default class ChatMessage extends Model {
 
     /** @attributes */
     @attr('string') content;
+    @attr('array') attachment_files;
 
     /** @relationships */
     @belongsTo('chat-participant', { async: false }) sender;

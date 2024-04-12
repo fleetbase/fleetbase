@@ -13,12 +13,14 @@ export default class ChatParticipant extends Model {
     @attr('string') phone;
     @attr('string') email;
     @attr('string') avatar_url;
+    @attr('boolean') is_online;
 
     /** @relationships */
     @belongsTo('user', { async: true }) user;
     @belongsTo('chat-channel', { async: true }) chatChannel;
 
     /** @dates */
+    @attr('date') last_seen_at;
     @attr('date') created_at;
     @attr('date') updated_at;
 
@@ -53,5 +55,21 @@ export default class ChatParticipant extends Model {
         }
 
         return formatDate(this.created_at, 'PP HH:mm');
+    }
+
+    @computed('last_seen_at') get lastSeenAgo() {
+        if (!isValidDate(this.last_seen_at)) {
+            return null;
+        }
+
+        return formatDistanceToNow(this.last_seen_at);
+    }
+
+    @computed('last_seen_at') get lastSeenAt() {
+        if (!isValidDate(this.last_seen_at)) {
+            return null;
+        }
+
+        return formatDate(this.last_seen_at, 'PP HH:mm');
     }
 }

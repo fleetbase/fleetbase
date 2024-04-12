@@ -1,6 +1,5 @@
-import Model, { belongsTo } from '@ember-data/model';
+import Model, { attr, belongsTo } from '@ember-data/model';
 import { computed } from '@ember/object';
-import { getOwner } from '@ember/application';
 import { format, formatDistanceToNow, isValid as isValidDate } from 'date-fns';
 
 export default class ChatLogModel extends Model {
@@ -26,7 +25,7 @@ export default class ChatLogModel extends Model {
             return null;
         }
 
-        return formatDistanceToNow(this.updated_at);
+        return formatDistanceToNow(this.updated_at, { addSuffix: true });
     }
 
     @computed('updated_at') get updatedAt() {
@@ -42,7 +41,7 @@ export default class ChatLogModel extends Model {
             return null;
         }
 
-        return formatDistanceToNow(this.created_at);
+        return formatDistanceToNow(this.created_at, { addSuffix: true });
     }
 
     @computed('created_at') get createdAt() {
