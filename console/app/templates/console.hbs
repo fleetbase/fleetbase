@@ -14,9 +14,5 @@
     </Layout::Main>
     <Layout::MobileNavbar @brand={{@model}} @user={{this.user}} @organizations={{this.organizations}} @menuItems={{this.universe.headerMenuItems}} @extensions={{this.extensions}} @onAction={{this.onAction}} />
 </Layout::Container>
-
-{{!-- Add Locale Selector to Header --}}
-<EmberWormhole @to="view-header-actions">
-    <LocaleSelector class="mr-0.5" />
-</EmberWormhole>
+<ChatContainer />
 <ConsoleWormhole />

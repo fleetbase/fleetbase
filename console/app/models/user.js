@@ -26,11 +26,13 @@ export default class UserModel extends Model {
     @attr('string') type;
     @attr('string') session_status;
     @attr('string') status;
+    @attr('boolean') is_online;
     @attr('boolean') is_admin;
     @attr('raw') types;
     @attr('raw') meta;
 
     /** @dates */
+    @attr('date') last_seen_at;
     @attr('date') phone_verified_at;
     @attr('date') email_verified_at;
     @attr('date') last_login;
