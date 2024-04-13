@@ -14,6 +14,7 @@ export default class ChatMessage extends Model {
     /** @relationships */
     @belongsTo('chat-participant', { async: false }) sender;
     @hasMany('chat-attachment', { async: false }) attachments;
+    @hasMany('chat-receipt', { async: false }) receipts;
 
     /** @dates */
     @attr('date') created_at;
@@ -50,5 +51,14 @@ export default class ChatMessage extends Model {
         }
 
         return formatDate(this.created_at, 'PP HH:mm');
+    }
+
+    /** @methods */
+    hasReadReceipt(chatParticipant) {
+        return chatParticipant && this.receipts.find((receipt) => chatParticipant.id === receipt.participant_uuid) !== undefined;
+    }
+
+    doesntHaveReadReceipt(chatParticipant) {
+        return !this.hasReadReceipt(chatParticipant);
     }
 }

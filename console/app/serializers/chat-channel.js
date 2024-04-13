@@ -13,9 +13,17 @@ export default class ChatChannelSerializer extends ApplicationSerializer.extend(
     get attrs() {
         return {
             participants: { embedded: 'always' },
-            messages: { embedded: 'always' },
             last_message: { embedded: 'always' },
         };
+    }
+
+    serialize(snapshot) {
+        let json = {
+            name: snapshot.attr('name'),
+            meta: snapshot.attr('meta'),
+        };
+
+        return json;
     }
 
     normalize(typeClass, hash) {

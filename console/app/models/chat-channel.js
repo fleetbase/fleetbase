@@ -7,19 +7,18 @@ export default class ChatChannelModel extends Model {
     /** @ids */
     @attr('string') public_id;
     @attr('string') company_uuid;
+    @attr('string') created_by_uuid;
 
     /** @attributes */
     @attr('string') name;
     @attr('string') title;
+    @attr('number') unread_count;
     @attr('string') slug;
     @attr('array') feed;
     @attr('array') meta;
 
     /** @relationships */
     @hasMany('chat-participant', { async: false }) participants;
-    @hasMany('chat-message', { async: false }) messages;
-    @hasMany('chat-attachment', { async: true }) attachments;
-    @hasMany('chat-presence', { async: true }) presences;
     @belongsTo('chat-message', { async: false }) last_message;
 
     /** @dates */
@@ -60,6 +59,14 @@ export default class ChatChannelModel extends Model {
     }
 
     /** @methods */
+    toJSON() {
+        return {
+            company_uuid: this.company_uuid,
+            name: this.name,
+            meta: this.meta,
+        };
+    }
+
     reloadParticipants() {
         const owner = getOwner(this);
         const store = owner.lookup('service:store');
@@ -70,23 +77,11 @@ export default class ChatChannelModel extends Model {
         });
     }
 
-    reloadMessages() {
-        const owner = getOwner(this);
-        const store = owner.lookup('service:store');
-
-        return store.query('chat-message', { chat_channel_uuid: this.id }).then((messages) => {
-            this.set('messages', messages);
-            return messages;
-        });
+    existsInFeed(type, record) {
+        return this.feed.find((_) => _.type === type && _.record.id === record.id) !== undefined;
     }
 
-    reloadAttachments() {
-        const owner = getOwner(this);
-        const store = owner.lookup('service:store');
-
-        return store.query('chat-attachment', { chat_channel_uuid: this.id }).then((attachments) => {
-            this.set('attachments', attachments);
-            return attachments;
-        });
+    doesntExistsInFeed(type, record) {
+        return this.feed.find((_) => _.type === type && _.record.id === record.id) === undefined;
     }
 }

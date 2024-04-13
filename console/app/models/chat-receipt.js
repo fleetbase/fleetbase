@@ -1,15 +1,18 @@
 import Model, { attr, belongsTo } from '@ember-data/model';
 import { computed } from '@ember/object';
-import { format, formatDistanceToNow, isValid as isValidDate } from 'date-fns';
+import { format as formatDate, formatDistanceToNow, isValid as isValidDate } from 'date-fns';
 
 export default class ChatReceipt extends Model {
     /** @ids */
     @attr('string') participant_uuid;
-    @attr('string') chat_channel_uuid;
+    @attr('string') chat_message_uuid;
 
     /** @relationships */
     @belongsTo('chat-participant', { async: true }) participant;
     @belongsTo('chat-message', { async: true }) chatMessage;
+
+    /** @attributes */
+    @attr('string') participant_name;
 
     /** @dates */
     @attr('date') created_at;

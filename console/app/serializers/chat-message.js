@@ -11,6 +11,7 @@ export default class ChatMessageSerializer extends ApplicationSerializer.extend(
         return {
             sender: { embedded: 'always' },
             attachments: { embedded: 'always' },
+            receipts: { embedded: 'always' },
         };
     }
 }
