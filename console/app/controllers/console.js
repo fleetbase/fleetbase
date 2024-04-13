@@ -174,6 +174,7 @@ export default class ConsoleController extends Controller {
     @action setSidebarContext(sidebarContext) {
         this.sidebarContext = sidebarContext;
         this.universe.sidebarContext = sidebarContext;
+        this.universe.trigger('sidebarContext.available', sidebarContext);
 
         if (this.hiddenSidebarRoutes.includes(this.router.currentRouteName)) {
             this.sidebarContext.hideNow();
