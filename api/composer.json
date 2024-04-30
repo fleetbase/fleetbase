@@ -9,8 +9,8 @@
     "license": "MIT",
     "require": {
         "php": "^8.0",
-        "fleetbase/core-api": "^1.4.19",
-        "fleetbase/fleetops-api": "^0.4.26",
+        "fleetbase/core-api": "^1.4.20",
+        "fleetbase/fleetops-api": "^0.4.27",
         "fleetbase/storefront-api": "^0.3.7",
         "fleetbase/billing-api": "dev-main",
         "fleetbase/internals-api": "dev-main",
@@ -42,6 +42,10 @@
         {
             "type": "vcs",
             "url": "https://github.com/fleetbase/internals"
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/fleetbase/laravel-model-caching"
         }
     ],
     "autoload": {
@@ -104,6 +108,6 @@
             "php-http/discovery": true
         }
     },
-    "minimum-stability": "stable",
+    "minimum-stability": "dev",
     "prefer-stable": true
 }
