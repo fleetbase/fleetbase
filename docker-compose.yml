@@ -69,6 +69,9 @@ services:
       MAIL_FROM_NAME: Fleetbase
       APP_NAME: Fleetbase
       LOG_CHANNEL: daily
+      MODEL_CACHE_ENABLED: true
+      RESPONSE_CACHE_ENABLED: true
+      RESPONSE_CACHE_DRIVER: redis
     depends_on:
       - database
       - cache

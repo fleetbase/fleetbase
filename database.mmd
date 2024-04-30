@@ -1,5 +1,747 @@
 erDiagram
 
+  fixflo_activity {
+    INTUNSIGNED id PK
+    CHAR uuid
+    VARCHAR log_name
+    TEXT description
+    VARCHAR company_id
+    VARCHAR subject_id
+    VARCHAR subject_type
+    VARCHAR causer_id
+    VARCHAR causer_type
+    TEXT properties
+    TIMESTAMP created_at
+    TIMESTAMP updated_at
+    TIMESTAMP deleted_at
+  }
+
+  fixflo_board_groups {
+    BIGINTUNSIGNED id PK
+    CHAR uuid UK
+    CHAR board_uuid FK
+    CHAR group_uuid FK
+    TIMESTAMP created_at
+    TIMESTAMP updated_at
+    TIMESTAMP deleted_at
+    BIT can_edit
+  }
+
+  fixflo_board_members {
+    BIGINTUNSIGNED id PK
+    CHAR uuid UK
+    CHAR board_uuid FK
+    CHAR user_uuid FK
+    TIMESTAMP created_at
+    TIMESTAMP updated_at
+    TIMESTAMP deleted_at
+    BIT can_edit
+  }
+
+  fixflo_board_orders {
+    CHAR board_uuid PK
+    CHAR user_uuid PK
+    INT order
+  }
+
+  fixflo_boards {
+    BIGINTUNSIGNED id PK
+    CHAR uuid UK
+    CHAR company_uuid FK
+    CHAR owner_uuid FK
+    VARCHAR name
+    BIT is_sample
+    JSON tags
+    JSON params
+    VARCHAR type
+    VARCHAR slug
+    TIMESTAMP created_at
+    TIMESTAMP updated_at
+    TIMESTAMP deleted_at
+  }
+
+  fixflo_boundaries {
+    BIGINTUNSIGNED id PK
+    CHAR uuid UK
+    CHAR zone_uuid FK
+    GEOMETRY boundary
+    GEOMETRY location
+    TIMESTAMP created_at
+    TIMESTAMP updated_at
+    TIMESTAMP deleted_at
+  }
+
+  fixflo_cargo_grades {
+    INTUNSIGNED id PK
+    CHAR uuid UK
+    CHAR company_uuid FK
+    VARCHAR name
+    VARCHAR display_name
+    JSON aliases
+    VARCHAR slug
+    TIMESTAMP deleted_at
+    TIMESTAMP created_at
+    TIMESTAMP updated_at
+  }
+
+  fixflo_cell_comments {
+    BIGINTUNSIGNED id PK
+    CHAR uuid UK
+    CHAR company_uuid FK
+    CHAR user_uuid FK
+    CHAR subject_uuid
+    VARCHAR subject
+    VARCHAR content
+    JSON cell
+    VARCHAR slug
+    TIMESTAMP created_at
+    TIMESTAMP updated_at
+    TIMESTAMP deleted_at
+  }
+
+  fixflo_charterers {
+    INTUNSIGNED id PK
+    CHAR uuid UK
+    VARCHAR name
+    VARCHAR display_name
+    JSON aliases
+    VARCHAR slug
+    TIMESTAMP deleted_at
+    TIMESTAMP created_at
+    TIMESTAMP updated_at
+  }
+
+  fixflo_chat_messages {
+    BIGINTUNSIGNED id PK
+    CHAR uuid UK
+    CHAR chat_session_uuid FK
+    CHAR user_uuid FK
+    TEXT content
+    TIMESTAMP created_at
+    TIMESTAMP updated_at
+    TIMESTAMP deleted_at
+  }
+
+  fixflo_chat_participants {
+    BIGINTUNSIGNED id PK
+    CHAR uuid UK
+    CHAR chat_session_uuid FK
+    CHAR user_uuid FK
+    TIMESTAMP created_at
+    TIMESTAMP updated_at
+    TIMESTAMP deleted_at
+  }
+
+  fixflo_chat_sessions {
+    BIGINTUNSIGNED id PK
+    CHAR uuid UK
+    CHAR group_uuid FK
+    VARCHAR type
+    TIMESTAMP created_at
+    TIMESTAMP updated_at
+    TIMESTAMP deleted_at
+  }
+
+  fixflo_color_codes {
+    BIGINTUNSIGNED id PK
+    CHAR uuid UK
+    CHAR company_uuid FK
+    VARCHAR name
+    VARCHAR color
+    VARCHAR slug
+    TIMESTAMP created_at
+    TIMESTAMP updated_at
+    TIMESTAMP deleted_at
+  }
+
+  fixflo_column_states {
+    BIGINTUNSIGNED id PK
+    CHAR uuid UK
+    CHAR user_uuid FK
+    CHAR source_uuid
+    VARCHAR source
+    JSON state
+    TIMESTAMP created_at
+    TIMESTAMP updated_at
+    TIMESTAMP deleted_at
+  }
+
+  fixflo_companies {
+    BIGINTUNSIGNED id PK
+    CHAR uuid UK
+    CHAR owner_uuid FK
+    VARCHAR name
+    VARCHAR status
+    VARCHAR slug
+    TIMESTAMP created_at
+    TIMESTAMP updated_at
+    TIMESTAMP deleted_at
+  }
+
+  fixflo_completed_tours {
+    BIGINTUNSIGNED id PK
+    CHAR user_uuid FK
+    VARCHAR tour
+    TIMESTAMP deleted_at
+    TIMESTAMP created_at
+    TIMESTAMP updated_at
+  }
+
+  fixflo_confidentiality_levels {
+    BIGINTUNSIGNED id PK
+    CHAR uuid UK
+    CHAR company_uuid FK
+    VARCHAR name
+    VARCHAR slug
+    VARCHAR filter
+    TIMESTAMP created_at
+    TIMESTAMP updated_at
+    TIMESTAMP deleted_at
+  }
+
+  fixflo_files {
+    INTUNSIGNED id PK
+    CHAR uuid UK
+    CHAR company_uuid FK
+    CHAR uploader_uuid FK
+    CHAR key_uuid
+    VARCHAR caption
+    VARCHAR key
+    VARCHAR bucket
+    VARCHAR folder
+    VARCHAR etag
+    TEXT data_params
+    VARCHAR original_filename
+    VARCHAR type
+    VARCHAR content_type
+    INT file_size
+    VARCHAR slug
+    TIMESTAMP deleted_at
+    TIMESTAMP created_at
+    TIMESTAMP updated_at
+  }
+
+  fixflo_fixture_groups {
+    BIGINTUNSIGNED id PK
+    CHAR uuid UK
+    CHAR company_uuid FK
+    CHAR owner_uuid FK
+    VARCHAR name
+    VARCHAR status
+    BIT shared_with_company
+    VARCHAR slug
+    TIMESTAMP created_at
+    TIMESTAMP updated_at
+    TIMESTAMP deleted_at
+  }
+
+  fixflo_fixture_set_groups {
+    BIGINTUNSIGNED id PK
+    CHAR uuid UK
+    CHAR set_uuid FK
+    CHAR group_uuid FK
+    VARCHAR status
+    TIMESTAMP created_at
+    TIMESTAMP updated_at
+    TIMESTAMP deleted_at
+  }
+
+  fixflo_fixture_sets {
+    BIGINTUNSIGNED id PK
+    CHAR uuid UK
+    CHAR company_uuid FK
+    CHAR owner_uuid FK
+    VARCHAR name
+    VARCHAR status
+    VARCHAR slug
+    TIMESTAMP created_at
+    TIMESTAMP updated_at
+    TIMESTAMP deleted_at
+  }
+
+  fixflo_fixture_values {
+    BIGINTUNSIGNED id PK
+    CHAR uuid UK
+    CHAR fixture_uuid FK
+    CHAR relation_uuid
+    VARCHAR key
+    VARCHAR label
+    TEXT pattern
+    VARCHAR entry
+    INT pos
+    TIMESTAMP created_at
+    TIMESTAMP updated_at
+    TIMESTAMP deleted_at
+    VARCHAR rate
+    CHAR rate_binded_to
+    BIT rate_bind_primary
+  }
+
+  fixflo_fixtures {
+    BIGINTUNSIGNED id PK
+    CHAR uuid UK
+    CHAR set_uuid FK
+    CHAR updated_by_uuid FK
+    CHAR created_by_uuid FK
+    CHAR vessel_uuid FK
+    CHAR load_port_uuid FK
+    CHAR discharge_port_uuid FK
+    TEXT raw_text
+    INT import_position
+    VARCHAR charterer
+    CHAR charterer_uuid FK
+    VARCHAR laycan
+    DATETIME laycan_range_start
+    DATETIME laycan_range_end
+    VARCHAR quantity
+    VARCHAR grade
+    CHAR grade_uuid FK
+    VARCHAR rate
+    VARCHAR status
+    VARCHAR comments
+    VARCHAR load
+    VARCHAR discharge
+    VARCHAR vessel
+    VARCHAR cell_classname
+    VARCHAR confidentiality
+    TIMESTAMP created_at
+    TIMESTAMP updated_at
+    TIMESTAMP deleted_at
+    BIT is_duplicate
+    CHAR duplicate_source_uuid FK
+    CHAR duplicate_fixture_uuid FK
+    BIT internal
+    BIT ignore_as_duplicate
+    VARCHAR updated_by
+    VARCHAR created_by
+  }
+
+  fixflo_free_board_columns {
+    BIGINTUNSIGNED id PK
+    CHAR uuid UK
+    CHAR board_uuid FK
+    VARCHAR label
+    VARCHAR key
+    BIT read_only
+    INT order
+    TIMESTAMP created_at
+    TIMESTAMP updated_at
+    TIMESTAMP deleted_at
+  }
+
+  fixflo_free_board_inputs {
+    BIGINTUNSIGNED id PK
+    CHAR uuid UK
+    CHAR board_uuid FK
+    INT row
+    INT column
+    VARCHAR key
+    TEXT value
+    TIMESTAMP created_at
+    TIMESTAMP updated_at
+    TIMESTAMP deleted_at
+  }
+
+  fixflo_generated_reports {
+    BIGINTUNSIGNED id PK
+    CHAR uuid UK
+    CHAR user_uuid FK
+    CHAR source_uuid
+    CHAR report_template_uuid FK
+    VARCHAR format
+    VARCHAR sort
+    JSON fixtures
+    JSON filters
+    BIT saved
+    TIMESTAMP created_at
+    TIMESTAMP updated_at
+    TIMESTAMP deleted_at
+    VARCHAR source_type
+  }
+
+  fixflo_group_members {
+    BIGINTUNSIGNED id PK
+    CHAR uuid UK
+    CHAR user_uuid FK
+    CHAR group_uuid FK
+    VARCHAR status
+    TIMESTAMP created_at
+    TIMESTAMP updated_at
+    TIMESTAMP deleted_at
+  }
+
+  fixflo_groups {
+    BIGINTUNSIGNED id PK
+    CHAR uuid UK
+    CHAR owner_uuid FK
+    VARCHAR name
+    VARCHAR status
+    VARCHAR slug
+    TIMESTAMP created_at
+    TIMESTAMP updated_at
+    TIMESTAMP deleted_at
+    VARCHAR company_uuid FK
+  }
+
+  fixflo_login_attempts {
+    INTUNSIGNED id PK
+    VARCHAR uuid UK
+    VARCHAR session_uuid FK
+    VARCHAR identity
+    VARCHAR password
+    TIMESTAMP deleted_at
+    TIMESTAMP created_at
+    TIMESTAMP updated_at
+  }
+
+  fixflo_manual_cache_updates {
+    BIGINTUNSIGNED id PK
+    CHAR uuid UK
+    CHAR resource_uuid
+    VARCHAR resource_class
+    VARCHAR update_method
+    VARCHAR cache_key_pattern
+    BIT completed
+    TIMESTAMP deleted_at
+    TIMESTAMP created_at
+    TIMESTAMP updated_at
+  }
+
+  fixflo_migrations {
+    INTUNSIGNED id PK
+    VARCHAR migration
+    INT batch
+  }
+
+  fixflo_notes {
+    BIGINTUNSIGNED id PK
+    CHAR uuid UK
+    CHAR company_uuid FK
+    CHAR for_uuid
+    CHAR user_uuid FK
+    TEXT content
+    VARCHAR for
+    VARCHAR scope
+    TIMESTAMP created_at
+    TIMESTAMP updated_at
+    TIMESTAMP deleted_at
+  }
+
+  fixflo_password_resets {
+    BIGINTUNSIGNED id PK
+    CHAR uuid UK
+    VARCHAR email
+    VARCHAR token
+    TIMESTAMP created_at
+    TIMESTAMP updated_at
+    TIMESTAMP deleted_at
+  }
+
+  fixflo_permissions {
+    BIGINTUNSIGNED id PK
+    CHAR uuid UK
+    VARCHAR slug
+    TIMESTAMP created_at
+    TIMESTAMP updated_at
+    TIMESTAMP deleted_at
+    VARCHAR subject
+  }
+
+  fixflo_report_templates {
+    BIGINTUNSIGNED id PK
+    CHAR uuid UK
+    CHAR company_uuid FK
+    CHAR user_uuid FK
+    VARCHAR name
+    TEXT header
+    JSON columns
+    VARCHAR case
+    VARCHAR format
+    BIT zone_slash
+    BIT shared_with_company
+    VARCHAR slug
+    TIMESTAMP created_at
+    TIMESTAMP updated_at
+    TIMESTAMP deleted_at
+  }
+
+  fixflo_report_type_sorts {
+    BIGINTUNSIGNED id PK
+    CHAR uuid UK
+    CHAR report_type_uuid FK
+    VARCHAR sort_by
+    INT order
+    TIMESTAMP created_at
+    TIMESTAMP updated_at
+    TIMESTAMP deleted_at
+  }
+
+  fixflo_report_type_sources {
+    BIGINTUNSIGNED id PK
+    CHAR uuid UK
+    CHAR report_type_uuid FK
+    CHAR board_uuid FK
+    INT order
+    TIMESTAMP created_at
+    TIMESTAMP updated_at
+    TIMESTAMP deleted_at
+  }
+
+  fixflo_report_types {
+    BIGINTUNSIGNED id PK
+    CHAR uuid UK
+    CHAR company_uuid FK
+    CHAR user_uuid FK
+    CHAR report_template_uuid FK
+    VARCHAR name
+    VARCHAR description
+    VARCHAR format
+    JSON filters
+    VARCHAR slug
+    TIMESTAMP created_at
+    TIMESTAMP updated_at
+    TIMESTAMP deleted_at
+  }
+
+  fixflo_reports {
+    BIGINTUNSIGNED id PK
+    CHAR uuid UK
+    CHAR user_uuid FK
+    CHAR report_type_uuid FK
+    TIMESTAMP created_at
+    TIMESTAMP updated_at
+    TIMESTAMP deleted_at
+  }
+
+  fixflo_role_permissions {
+    BIGINTUNSIGNED id PK
+    CHAR uuid UK
+    CHAR role_uuid FK
+    CHAR permission_uuid FK
+    BIT create
+    BIT read
+    BIT update
+    BIT delete
+    BIT export
+    BIT import
+    BIT share
+    TIMESTAMP created_at
+    TIMESTAMP updated_at
+    TIMESTAMP deleted_at
+  }
+
+  fixflo_roles {
+    BIGINTUNSIGNED id PK
+    CHAR uuid UK
+    CHAR company_uuid FK
+    VARCHAR name
+    VARCHAR slug
+    TIMESTAMP created_at
+    TIMESTAMP updated_at
+    TIMESTAMP deleted_at
+  }
+
+  fixflo_saved_filters {
+    BIGINTUNSIGNED id PK
+    CHAR uuid UK
+    CHAR user_uuid FK
+    CHAR company_uuid FK
+    CHAR for_uuid
+    VARCHAR name
+    VARCHAR for
+    JSON params
+    BIT shared_with_company
+    VARCHAR slug
+    TIMESTAMP created_at
+    TIMESTAMP updated_at
+    TIMESTAMP deleted_at
+  }
+
+  fixflo_saved_reports {
+    BIGINTUNSIGNED id PK
+    CHAR uuid UK
+    CHAR user_uuid FK
+    CHAR company_uuid FK
+    CHAR report_type_uuid FK
+    VARCHAR name
+    VARCHAR description
+    VARCHAR format
+    VARCHAR sort
+    BIT shared_with_company
+    VARCHAR slug
+    TIMESTAMP created_at
+    TIMESTAMP updated_at
+    TIMESTAMP deleted_at
+    JSON quantity
+  }
+
+  fixflo_sessions {
+    INTUNSIGNED id PK
+    VARCHAR uuid UK
+    VARCHAR user_uuid FK
+    VARCHAR company_uuid FK
+    VARCHAR ip_address
+    TEXT token_hash
+    VARCHAR origin_app
+    VARCHAR x_forwarded_for
+    VARCHAR user_agent
+    VARCHAR isp
+    VARCHAR hostname
+    VARCHAR timezone
+    VARCHAR currency
+    VARCHAR country
+    VARCHAR region
+    VARCHAR city
+    VARCHAR postal_code
+    VARCHAR longitude
+    VARCHAR latitude
+    JSON info
+    JSON threat
+    TIMESTAMP deleted_at
+    TIMESTAMP created_at
+    TIMESTAMP updated_at
+    TIMESTAMP expire_at
+  }
+
+  fixflo_sidebar_folder_items {
+    BIGINTUNSIGNED id PK
+    CHAR uuid UK
+    CHAR sidebar_folder_uuid FK
+    CHAR item_uuid
+    VARCHAR item_type
+    TIMESTAMP created_at
+    TIMESTAMP updated_at
+    TIMESTAMP deleted_at
+  }
+
+  fixflo_sidebar_folders {
+    BIGINTUNSIGNED id PK
+    CHAR uuid UK
+    CHAR user_uuid FK
+    VARCHAR name
+    VARCHAR icon
+    VARCHAR slug
+    TIMESTAMP created_at
+    TIMESTAMP updated_at
+    TIMESTAMP deleted_at
+    VARCHAR type
+  }
+
+  fixflo_sub_cargo_grades {
+    BIGINTUNSIGNED id PK
+    CHAR uuid UK
+    CHAR parent_uuid FK
+    CHAR cargo_grade_uuid FK
+    TIMESTAMP created_at
+    TIMESTAMP updated_at
+    TIMESTAMP deleted_at
+  }
+
+  fixflo_user_confidentiality_settings {
+    BIGINTUNSIGNED id PK
+    CHAR uuid UK
+    CHAR user_uuid FK
+    CHAR level
+    VARCHAR font_color
+    BIT font_bold
+    BIT font_italic
+    VARCHAR background_color
+    TIMESTAMP created_at
+    TIMESTAMP updated_at
+    TIMESTAMP deleted_at
+  }
+
+  fixflo_users {
+    BIGINTUNSIGNED id PK
+    CHAR uuid UK
+    CHAR company_uuid FK
+    CHAR role_uuid FK
+    VARCHAR name
+    VARCHAR email UK
+    VARCHAR phone_number
+    VARCHAR timezone
+    JSON layout_state
+    TIMESTAMP email_verified_at
+    TIMESTAMP last_login
+    VARCHAR password
+    VARCHAR status
+    VARCHAR type
+    VARCHAR slug
+    VARCHAR remember_token
+    TIMESTAMP created_at
+    TIMESTAMP updated_at
+    TIMESTAMP deleted_at
+  }
+
+  fixflo_vessels {
+    INTUNSIGNED id PK
+    CHAR uuid UK
+    CHAR created_by_uuid FK
+    CHAR company_uuid FK
+    VARCHAR name
+    VARCHAR ex_name
+    VARCHAR imo
+    VARCHAR mmsi
+    VARCHAR call_sign
+    VARCHAR hull
+    VARCHAR age
+    VARCHAR flag
+    VARCHAR type
+    VARCHAR record_type
+    VARCHAR division
+    VARCHAR kind
+    VARCHAR category
+    VARCHAR class
+    JSON company
+    JSON measurement
+    JSON mechanical
+    JSON history
+    BIT scrapped
+    BIT total_loss
+    BIT cancelled
+    BIT active
+    DATETIME delivery_date
+    VARCHAR slug
+    TIMESTAMP deleted_at
+    TIMESTAMP created_at
+    TIMESTAMP updated_at
+    VARCHAR fleet
+  }
+
+  fixflo_widgets {
+    INTUNSIGNED id PK
+    CHAR uuid UK
+    CHAR company_uuid FK
+    CHAR owner_uuid FK
+    VARCHAR name
+    CHAR source_uuid
+    VARCHAR source_type
+    VARCHAR x_axis
+    VARCHAR y_axis
+    VARCHAR type
+    BIT shared_with_company
+    VARCHAR slug
+    TIMESTAMP deleted_at
+    TIMESTAMP created_at
+    TIMESTAMP updated_at
+  }
+
+  fixflo_zones {
+    INTUNSIGNED id PK
+    CHAR uuid UK
+    CHAR company_uuid
+    VARCHAR name
+    VARCHAR display_name
+    VARCHAR country
+    GEOMETRY location
+    JSON aliases
+    VARCHAR type
+    VARCHAR slug
+    TIMESTAMP deleted_at
+    TIMESTAMP created_at
+    TIMESTAMP updated_at
+  }
+
   fleetbase_activity {
     INTUNSIGNED id PK
     CHAR uuid
@@ -8,9 +750,11 @@ erDiagram
     CHAR company_id
     CHAR subject_id
     VARCHAR subject_type
+    VARCHAR event
     CHAR causer_id
     VARCHAR causer_type
     TEXT properties
+    CHAR batch_uuid
     TIMESTAMP created_at
     TIMESTAMP updated_at
   }
@@ -151,7 +895,7 @@ erDiagram
     CHAR company_uuid FK
     CHAR payment_gateway_uuid FK
     CHAR plan_uuid FK
-    VARCHAR name
+    VARCHAR type
     VARCHAR payment_gateway_id
     VARCHAR payment_gateway_status
     VARCHAR payment_gateway_price
@@ -181,12 +925,113 @@ erDiagram
     VARCHAR icon
     VARCHAR icon_color
     VARCHAR for
+    BIT core_category
     VARCHAR slug
     VARCHAR order
     TIMESTAMP deleted_at
     TIMESTAMP created_at
     TIMESTAMP updated_at
     CHAR icon_file_uuid FK
+  }
+
+  fleetbase_chat_attachments {
+    INTUNSIGNED id PK
+    CHAR uuid
+    VARCHAR public_id
+    CHAR company_uuid FK
+    CHAR sender_uuid FK
+    CHAR chat_channel_uuid FK
+    CHAR chat_message_uuid FK
+    CHAR file_uuid FK
+    TIMESTAMP created_at
+    TIMESTAMP updated_at
+    TIMESTAMP deleted_at
+  }
+
+  fleetbase_chat_channels {
+    INTUNSIGNED id PK
+    CHAR uuid
+    CHAR company_uuid FK
+    CHAR created_by_uuid FK
+    VARCHAR public_id
+    VARCHAR name
+    VARCHAR slug
+    JSON meta
+    TIMESTAMP created_at
+    TIMESTAMP updated_at
+    TIMESTAMP deleted_at
+  }
+
+  fleetbase_chat_logs {
+    BIGINTUNSIGNED id PK
+    CHAR uuid
+    VARCHAR public_id
+    CHAR company_uuid FK
+    CHAR chat_channel_uuid FK
+    CHAR initiator_uuid FK
+    VARCHAR event_type
+    MEDIUMTEXT content
+    JSON subjects
+    JSON meta
+    VARCHAR status
+    TIMESTAMP created_at
+    TIMESTAMP updated_at
+    TIMESTAMP deleted_at
+  }
+
+  fleetbase_chat_messages {
+    INTUNSIGNED id PK
+    CHAR uuid
+    VARCHAR public_id
+    CHAR company_uuid FK
+    CHAR sender_uuid FK
+    CHAR chat_channel_uuid FK
+    MEDIUMTEXT content
+    TIMESTAMP created_at
+    TIMESTAMP updated_at
+    TIMESTAMP deleted_at
+  }
+
+  fleetbase_chat_participants {
+    INTUNSIGNED id PK
+    CHAR uuid
+    VARCHAR public_id
+    CHAR company_uuid FK
+    CHAR user_uuid FK
+    CHAR chat_channel_uuid FK
+    TIMESTAMP created_at
+    TIMESTAMP updated_at
+    TIMESTAMP deleted_at
+  }
+
+  fleetbase_chat_receipts {
+    INTUNSIGNED id PK
+    CHAR uuid
+    VARCHAR public_id
+    CHAR company_uuid FK
+    CHAR participant_uuid FK
+    CHAR chat_message_uuid FK
+    TIMESTAMP read_at
+    TIMESTAMP created_at
+    TIMESTAMP updated_at
+    TIMESTAMP deleted_at
+  }
+
+  fleetbase_comments {
+    INTUNSIGNED id PK
+    CHAR uuid
+    VARCHAR public_id UK
+    CHAR company_uuid FK
+    CHAR author_uuid FK
+    CHAR parent_comment_uuid FK
+    CHAR subject_uuid
+    VARCHAR subject_type
+    MEDIUMTEXT content
+    JSON tags
+    JSON meta
+    TIMESTAMP created_at
+    TIMESTAMP updated_at
+    TIMESTAMP deleted_at
   }
 
   fleetbase_companies {
@@ -238,9 +1083,9 @@ erDiagram
     VARCHAR uuid UK
     VARCHAR public_id UK
     VARCHAR internal_id
-    VARCHAR company_uuid FK
+    CHAR company_uuid FK
     CHAR user_uuid
-    VARCHAR photo_uuid FK
+    CHAR photo_uuid FK
     VARCHAR name
     VARCHAR title
     VARCHAR email
@@ -253,21 +1098,86 @@ erDiagram
     TIMESTAMP updated_at
   }
 
+  fleetbase_custom_field_values {
+    INTUNSIGNED id PK
+    CHAR uuid
+    CHAR company_uuid FK
+    CHAR custom_field_uuid FK
+    CHAR subject_uuid
+    VARCHAR subject_type
+    TEXT value
+    VARCHAR value_type
+    TIMESTAMP created_at
+    TIMESTAMP updated_at
+    TIMESTAMP deleted_at
+  }
+
+  fleetbase_custom_fields {
+    INTUNSIGNED id PK
+    CHAR uuid
+    CHAR company_uuid FK
+    CHAR category_uuid
+    CHAR subject_uuid
+    VARCHAR subject_type
+    VARCHAR name
+    VARCHAR label
+    VARCHAR type
+    VARCHAR component
+    JSON options
+    BIT required
+    BIT editable
+    TEXT default_value
+    JSON validation_rules
+    JSON meta
+    MEDIUMTEXT description
+    MEDIUMTEXT help_text
+    INT order
+    TIMESTAMP created_at
+    TIMESTAMP updated_at
+    TIMESTAMP deleted_at
+  }
+
+  fleetbase_dashboard_widgets {
+    BIGINTUNSIGNED id PK
+    CHAR uuid
+    CHAR dashboard_uuid FK
+    VARCHAR name
+    VARCHAR component
+    JSON grid_options
+    JSON options
+    TIMESTAMP created_at
+    TIMESTAMP updated_at
+    TIMESTAMP deleted_at
+  }
+
+  fleetbase_dashboards {
+    BIGINTUNSIGNED id PK
+    CHAR uuid
+    CHAR company_uuid
+    CHAR user_uuid
+    VARCHAR name
+    BIT is_default
+    TIMESTAMP deleted_at
+    TIMESTAMP created_at
+    TIMESTAMP updated_at
+  }
+
   fleetbase_drivers {
     INTUNSIGNED id PK
     VARCHAR _key
     VARCHAR uuid UK
     VARCHAR public_id UK
     VARCHAR internal_id
-    VARCHAR company_uuid FK
-    VARCHAR vehicle_uuid FK
-    VARCHAR vendor_uuid FK
+    CHAR company_uuid FK
+    CHAR vehicle_uuid FK
+    CHAR vendor_uuid FK
     VARCHAR vendor_type
-    VARCHAR current_job_uuid FK
-    VARCHAR user_uuid FK
+    CHAR current_job_uuid FK
+    CHAR user_uuid FK
     VARCHAR auth_token
     VARCHAR drivers_license_number
     VARCHAR signup_token_used
+    MEDIUMTEXT avatar_url
     GEOMETRY location
     VARCHAR latitude
     VARCHAR longitude
@@ -281,6 +1191,7 @@ erDiagram
     INT online
     VARCHAR status
     VARCHAR slug
+    JSON meta
     TIMESTAMP deleted_at
     TIMESTAMP created_at
     TIMESTAMP updated_at
@@ -291,14 +1202,16 @@ erDiagram
     VARCHAR _key
     VARCHAR uuid UK
     VARCHAR public_id UK
-    VARCHAR payload_uuid FK
-    VARCHAR company_uuid FK
-    VARCHAR driver_assigned_uuid FK
-    VARCHAR destination_uuid FK
+    CHAR payload_uuid FK
+    CHAR company_uuid FK
+    CHAR driver_assigned_uuid FK
+    CHAR supplier_uuid FK
+    CHAR destination_uuid FK
     VARCHAR customer_uuid
     VARCHAR customer_type
-    VARCHAR tracking_number_uuid FK
+    CHAR tracking_number_uuid FK
     MEDIUMTEXT photo_uuid
+    CHAR category_uuid FK
     VARCHAR _import_id
     VARCHAR internal_id
     VARCHAR name
@@ -417,8 +1330,8 @@ erDiagram
     INTUNSIGNED id PK
     VARCHAR _key
     VARCHAR uuid UK
-    VARCHAR fleet_uuid FK
-    VARCHAR driver_uuid FK
+    CHAR fleet_uuid FK
+    CHAR driver_uuid FK
     TIMESTAMP deleted_at
     TIMESTAMP created_at
     TIMESTAMP updated_at
@@ -440,9 +1353,9 @@ erDiagram
     VARCHAR _key
     VARCHAR uuid UK
     VARCHAR public_id UK
-    VARCHAR company_uuid FK
-    VARCHAR service_area_uuid FK
-    VARCHAR zone_uuid FK
+    CHAR company_uuid FK
+    CHAR service_area_uuid FK
+    CHAR zone_uuid FK
     CHAR vendor_uuid FK
     CHAR parent_fleet_uuid FK
     VARCHAR image_uuid
@@ -461,17 +1374,19 @@ erDiagram
     VARCHAR _key
     VARCHAR uuid UK
     VARCHAR public_id UK
-    VARCHAR company_uuid FK
-    VARCHAR driver_uuid FK
-    VARCHAR vehicle_uuid FK
+    CHAR company_uuid FK
+    CHAR driver_uuid FK
+    CHAR vehicle_uuid FK
+    CHAR reported_by_uuid FK
+    MEDIUMTEXT report
     VARCHAR odometer
     GEOMETRY location
-    VARCHAR latitude
-    VARCHAR longitude
     VARCHAR amount
     VARCHAR currency
     VARCHAR volume
     VARCHAR metric_unit
+    JSON meta
+    VARCHAR status
     TIMESTAMP deleted_at
     TIMESTAMP created_at
     TIMESTAMP updated_at
@@ -493,6 +1408,7 @@ erDiagram
     VARCHAR _key
     VARCHAR uuid UK
     VARCHAR company_uuid FK
+    VARCHAR public_id
     VARCHAR name
     VARCHAR description
     VARCHAR slug
@@ -546,17 +1462,18 @@ erDiagram
     VARCHAR uuid UK
     VARCHAR public_id UK
     VARCHAR issue_id UK
-    VARCHAR company_uuid FK
-    VARCHAR driver_uuid FK
-    VARCHAR vehicle_uuid FK
-    VARCHAR assigned_to_uuid FK
-    VARCHAR odometer
+    CHAR company_uuid FK
+    CHAR driver_uuid FK
+    CHAR vehicle_uuid FK
+    CHAR assigned_to_uuid FK
+    CHAR reported_by_uuid FK
     GEOMETRY location
-    VARCHAR latitude
-    VARCHAR longitude
     VARCHAR type
-    VARCHAR report
+    VARCHAR category
+    MEDIUMTEXT report
     VARCHAR priority
+    JSON meta
+    JSON tags
     DATETIME resolved_at
     VARCHAR status
     TIMESTAMP deleted_at
@@ -584,7 +1501,7 @@ erDiagram
   fleetbase_model_has_permissions {
     CHAR permission_id PK
     VARCHAR model_type PK
-    CHAR model_id PK
+    CHAR model_uuid PK
   }
 
   fleetbase_model_has_policies {
@@ -596,7 +1513,69 @@ erDiagram
   fleetbase_model_has_roles {
     CHAR role_id PK
     VARCHAR model_type PK
-    CHAR model_id PK
+    CHAR model_uuid PK
+  }
+
+  fleetbase_monitored_scheduled_task_log_items {
+    BIGINTUNSIGNED id PK
+    BIGINTUNSIGNED monitored_scheduled_task_id FK
+    VARCHAR type
+    JSON meta
+    TIMESTAMP created_at
+    TIMESTAMP updated_at
+  }
+
+  fleetbase_monitored_scheduled_tasks {
+    BIGINTUNSIGNED id PK
+    VARCHAR name
+    VARCHAR type
+    VARCHAR cron_expression
+    VARCHAR timezone
+    VARCHAR ping_url
+    DATETIME last_started_at
+    DATETIME last_finished_at
+    DATETIME last_failed_at
+    DATETIME last_skipped_at
+    DATETIME registered_on_oh_dear_at
+    DATETIME last_pinged_at
+    INT grace_time_in_minutes
+    TIMESTAMP created_at
+    TIMESTAMP updated_at
+  }
+
+  fleetbase_notifications {
+    CHAR id PK
+    VARCHAR type
+    VARCHAR notifiable_type
+    CHAR notifiable_id
+    TEXT data
+    TIMESTAMP read_at
+    TIMESTAMP created_at
+    TIMESTAMP updated_at
+  }
+
+  fleetbase_order_configs {
+    INTUNSIGNED id PK
+    CHAR uuid
+    VARCHAR public_id
+    CHAR company_uuid FK
+    CHAR author_uuid FK
+    CHAR category_uuid FK
+    CHAR icon_uuid FK
+    VARCHAR name
+    VARCHAR namespace
+    MEDIUMTEXT description
+    VARCHAR key
+    VARCHAR status
+    VARCHAR version
+    BIT core_service
+    JSON flow
+    JSON entities
+    JSON tags
+    JSON meta
+    TIMESTAMP created_at
+    TIMESTAMP updated_at
+    TIMESTAMP deleted_at
   }
 
   fleetbase_orders {
@@ -604,21 +1583,22 @@ erDiagram
     VARCHAR _key
     VARCHAR uuid UK
     VARCHAR public_id UK
-    VARCHAR company_uuid FK
+    CHAR company_uuid FK
     CHAR created_by_uuid FK
     CHAR updated_by_uuid FK
+    CHAR order_config_uuid FK
     VARCHAR internal_id
-    VARCHAR customer_uuid
+    CHAR customer_uuid
     VARCHAR customer_type
     VARCHAR facilitator_uuid
     VARCHAR facilitator_type
-    VARCHAR session_uuid
-    VARCHAR payload_uuid FK
+    CHAR session_uuid
+    CHAR payload_uuid FK
     CHAR route_uuid FK
-    VARCHAR transaction_uuid FK
-    VARCHAR purchase_rate_uuid FK
-    VARCHAR tracking_number_uuid FK
-    VARCHAR driver_assigned_uuid FK
+    CHAR transaction_uuid FK
+    CHAR purchase_rate_uuid FK
+    CHAR tracking_number_uuid FK
+    CHAR driver_assigned_uuid FK
     JSON meta
     JSON options
     BIT dispatched
@@ -646,11 +1626,11 @@ erDiagram
     VARCHAR _key
     VARCHAR uuid UK
     VARCHAR public_id UK
-    VARCHAR company_uuid FK
-    VARCHAR pickup_uuid FK
-    VARCHAR dropoff_uuid FK
-    VARCHAR return_uuid FK
-    VARCHAR current_waypoint_uuid FK
+    CHAR company_uuid FK
+    CHAR pickup_uuid FK
+    CHAR dropoff_uuid FK
+    CHAR return_uuid FK
+    CHAR current_waypoint_uuid FK
     VARCHAR provider
     VARCHAR payment_method
     INT cod_amount
@@ -679,6 +1659,7 @@ erDiagram
     VARCHAR token UK
     TEXT abilities
     TIMESTAMP last_used_at
+    TIMESTAMP expires_at
     TIMESTAMP created_at
     TIMESTAMP updated_at
   }
@@ -689,7 +1670,7 @@ erDiagram
     VARCHAR uuid UK
     VARCHAR public_id UK
     VARCHAR _import_id
-    VARCHAR company_uuid FK
+    CHAR company_uuid FK
     CHAR owner_uuid
     VARCHAR owner_type
     VARCHAR name
@@ -709,6 +1690,7 @@ erDiagram
     JSON meta
     VARCHAR phone
     MEDIUMTEXT remarks
+    MEDIUMTEXT avatar_url
     VARCHAR type
     TIMESTAMP deleted_at
     TIMESTAMP created_at
@@ -772,10 +1754,10 @@ erDiagram
     JSON meta
     VARCHAR customer_uuid
     VARCHAR customer_type
-    VARCHAR company_uuid FK
-    VARCHAR transaction_uuid FK
-    VARCHAR service_quote_uuid FK
-    VARCHAR payload_uuid FK
+    CHAR company_uuid FK
+    CHAR transaction_uuid FK
+    CHAR service_quote_uuid FK
+    CHAR payload_uuid FK
     VARCHAR status
     TIMESTAMP deleted_at
     TIMESTAMP created_at
@@ -817,14 +1799,14 @@ erDiagram
     VARCHAR _key
     VARCHAR uuid UK
     VARCHAR public_id UK
-    VARCHAR company_uuid FK
+    CHAR company_uuid FK
     VARCHAR name
     VARCHAR type
     VARCHAR country
     GEOMETRY border
     VARCHAR color
     VARCHAR stroke_color
-    VARCHAR parent_uuid FK
+    CHAR parent_uuid FK
     VARCHAR status
     TIMESTAMP deleted_at
     TIMESTAMP created_at
@@ -835,7 +1817,7 @@ erDiagram
     INTUNSIGNED id PK
     VARCHAR _key
     VARCHAR uuid UK
-    VARCHAR service_quote_uuid FK
+    CHAR service_quote_uuid FK
     VARCHAR amount
     VARCHAR currency
     VARCHAR details
@@ -851,9 +1833,9 @@ erDiagram
     VARCHAR uuid UK
     VARCHAR public_id UK
     VARCHAR request_id
-    VARCHAR company_uuid FK
-    VARCHAR payload_uuid FK
-    VARCHAR service_rate_uuid FK
+    CHAR company_uuid FK
+    CHAR payload_uuid FK
+    CHAR service_rate_uuid FK
     INT amount
     VARCHAR currency
     JSON meta
@@ -868,7 +1850,7 @@ erDiagram
     INTUNSIGNED id PK
     VARCHAR _key
     VARCHAR uuid UK
-    VARCHAR service_rate_uuid FK
+    CHAR service_rate_uuid FK
     INT distance
     INT min
     INT max
@@ -885,7 +1867,7 @@ erDiagram
     INTUNSIGNED id PK
     VARCHAR _key
     VARCHAR uuid UK
-    VARCHAR service_rate_uuid FK
+    CHAR service_rate_uuid FK
     VARCHAR size
     VARCHAR length
     VARCHAR width
@@ -905,9 +1887,10 @@ erDiagram
     VARCHAR _key
     VARCHAR uuid UK
     VARCHAR public_id UK
-    VARCHAR company_uuid FK
-    VARCHAR service_area_uuid FK
-    VARCHAR zone_uuid FK
+    CHAR company_uuid FK
+    CHAR service_area_uuid FK
+    CHAR zone_uuid FK
+    CHAR order_config_uuid FK
     VARCHAR service_name
     VARCHAR service_type
     INT base_fee
@@ -944,10 +1927,10 @@ erDiagram
     VARCHAR _key
     VARCHAR uuid UK
     VARCHAR public_id UK
-    VARCHAR company_uuid FK
-    VARCHAR owner_uuid
+    CHAR company_uuid FK
+    CHAR owner_uuid
     VARCHAR owner_type
-    VARCHAR status_uuid FK
+    CHAR status_uuid FK
     VARCHAR tracking_number
     VARCHAR region
     MEDIUMTEXT qr_code
@@ -962,8 +1945,8 @@ erDiagram
     VARCHAR _key
     VARCHAR uuid UK
     VARCHAR public_id UK
-    VARCHAR company_uuid FK
-    VARCHAR tracking_number_uuid FK
+    CHAR company_uuid FK
+    CHAR tracking_number_uuid FK
     CHAR proof_uuid
     JSON meta
     VARCHAR status
@@ -1081,6 +2064,27 @@ erDiagram
     TIMESTAMP updated_at
   }
 
+  fleetbase_vehicle_device_events {
+    INTUNSIGNED id PK
+    CHAR uuid
+    CHAR vehicle_device_uuid FK
+    JSON payload
+    JSON meta
+    VARCHAR ident
+    VARCHAR protocol
+    VARCHAR provider
+    GEOMETRY location
+    VARCHAR mileage
+    VARCHAR state
+    VARCHAR code
+    VARCHAR reason
+    MEDIUMTEXT comment
+    TIMESTAMP resolved_at
+    TIMESTAMP deleted_at
+    TIMESTAMP created_at
+    TIMESTAMP updated_at
+  }
+
   fleetbase_vehicle_devices {
     INTUNSIGNED id PK
     CHAR uuid
@@ -1111,10 +2115,10 @@ erDiagram
     VARCHAR _key
     VARCHAR uuid UK
     VARCHAR public_id UK
-    VARCHAR company_uuid FK
-    VARCHAR vendor_uuid FK
-    VARCHAR photo_uuid FK
-    VARCHAR avatar_url
+    CHAR company_uuid FK
+    CHAR vendor_uuid FK
+    CHAR photo_uuid FK
+    MEDIUMTEXT avatar_url
     GEOMETRY location
     VARCHAR speed
     VARCHAR heading
@@ -1143,11 +2147,11 @@ erDiagram
     VARCHAR _key
     VARCHAR uuid UK
     VARCHAR public_id UK
-    VARCHAR company_uuid FK
-    VARCHAR place_uuid FK
-    VARCHAR type_uuid FK
-    VARCHAR connect_company_uuid FK
-    VARCHAR logo_uuid FK
+    CHAR company_uuid FK
+    CHAR place_uuid FK
+    CHAR type_uuid FK
+    CHAR connect_company_uuid FK
+    CHAR logo_uuid FK
     VARCHAR name
     VARCHAR internal_id
     VARCHAR business_id
@@ -1187,10 +2191,10 @@ erDiagram
     VARCHAR _key
     VARCHAR uuid UK
     VARCHAR public_id
-    VARCHAR company_uuid FK
-    VARCHAR place_uuid FK
-    VARCHAR payload_uuid FK
-    VARCHAR tracking_number_uuid FK
+    CHAR company_uuid FK
+    CHAR place_uuid FK
+    CHAR payload_uuid FK
+    CHAR tracking_number_uuid FK
     VARCHAR _import_id
     VARCHAR type
     INT order
@@ -1248,8 +2252,8 @@ erDiagram
     VARCHAR _key
     VARCHAR uuid UK
     VARCHAR public_id UK
-    VARCHAR company_uuid FK
-    VARCHAR service_area_uuid FK
+    CHAR company_uuid FK
+    CHAR service_area_uuid FK
     VARCHAR name
     MEDIUMTEXT description
     GEOMETRY border
@@ -1615,6 +2619,84 @@ erDiagram
     TIMESTAMP updated_at
   }
 
+  fixflo_boards ||--o{ fixflo_board_groups : "foreign key"
+  fixflo_boards ||--o{ fixflo_board_members : "foreign key"
+  fixflo_boards ||--o{ fixflo_free_board_columns : "foreign key"
+  fixflo_boards ||--o{ fixflo_free_board_inputs : "foreign key"
+  fixflo_boards ||--o{ fixflo_report_type_sources : "foreign key"
+  fixflo_cargo_grades ||--o{ fixflo_fixtures : "foreign key"
+  fixflo_cargo_grades ||--o{ fixflo_sub_cargo_grades : "foreign key"
+  fixflo_charterers ||--o{ fixflo_fixtures : "foreign key"
+  fixflo_chat_sessions ||--o{ fixflo_chat_messages : "foreign key"
+  fixflo_chat_sessions ||--o{ fixflo_chat_participants : "foreign key"
+  fixflo_companies ||--o{ fixflo_boards : "foreign key"
+  fixflo_companies ||--o{ fixflo_cargo_grades : "foreign key"
+  fixflo_companies ||--o{ fixflo_cell_comments : "foreign key"
+  fixflo_companies ||--o{ fixflo_color_codes : "foreign key"
+  fixflo_companies ||--o{ fixflo_confidentiality_levels : "foreign key"
+  fixflo_companies ||--o{ fixflo_files : "foreign key"
+  fixflo_companies ||--o{ fixflo_fixture_groups : "foreign key"
+  fixflo_companies ||--o{ fixflo_fixture_sets : "foreign key"
+  fixflo_companies ||--o{ fixflo_groups : "foreign key"
+  fixflo_companies ||--o{ fixflo_notes : "foreign key"
+  fixflo_companies ||--o{ fixflo_report_templates : "foreign key"
+  fixflo_companies ||--o{ fixflo_report_types : "foreign key"
+  fixflo_companies ||--o{ fixflo_roles : "foreign key"
+  fixflo_companies ||--o{ fixflo_saved_filters : "foreign key"
+  fixflo_companies ||--o{ fixflo_saved_reports : "foreign key"
+  fixflo_companies ||--o{ fixflo_sessions : "foreign key"
+  fixflo_companies ||--o{ fixflo_users : "foreign key"
+  fixflo_companies ||--o{ fixflo_vessels : "foreign key"
+  fixflo_companies ||--o{ fixflo_widgets : "foreign key"
+  fixflo_fixture_sets ||--o{ fixflo_fixture_set_groups : "foreign key"
+  fixflo_fixture_sets ||--o{ fixflo_fixtures : "foreign key"
+  fixflo_fixtures ||--o{ fixflo_fixture_values : "foreign key"
+  fixflo_fixtures ||--o{ fixflo_fixtures : "foreign key"
+  fixflo_groups ||--o{ fixflo_board_groups : "foreign key"
+  fixflo_groups ||--o{ fixflo_chat_sessions : "foreign key"
+  fixflo_groups ||--o{ fixflo_fixture_set_groups : "foreign key"
+  fixflo_groups ||--o{ fixflo_group_members : "foreign key"
+  fixflo_permissions ||--o{ fixflo_role_permissions : "foreign key"
+  fixflo_report_templates ||--o{ fixflo_generated_reports : "foreign key"
+  fixflo_report_templates ||--o{ fixflo_report_types : "foreign key"
+  fixflo_report_types ||--o{ fixflo_report_type_sorts : "foreign key"
+  fixflo_report_types ||--o{ fixflo_report_type_sources : "foreign key"
+  fixflo_report_types ||--o{ fixflo_reports : "foreign key"
+  fixflo_report_types ||--o{ fixflo_saved_reports : "foreign key"
+  fixflo_roles ||--o{ fixflo_role_permissions : "foreign key"
+  fixflo_roles ||--o{ fixflo_users : "foreign key"
+  fixflo_sessions ||--o{ fixflo_login_attempts : "foreign key"
+  fixflo_sidebar_folders ||--o{ fixflo_sidebar_folder_items : "foreign key"
+  fixflo_sub_cargo_grades ||--o{ fixflo_sub_cargo_grades : "foreign key"
+  fixflo_users ||--o{ fixflo_board_members : "foreign key"
+  fixflo_users ||--o{ fixflo_boards : "foreign key"
+  fixflo_users ||--o{ fixflo_cell_comments : "foreign key"
+  fixflo_users ||--o{ fixflo_chat_messages : "foreign key"
+  fixflo_users ||--o{ fixflo_chat_participants : "foreign key"
+  fixflo_users ||--o{ fixflo_column_states : "foreign key"
+  fixflo_users ||--o{ fixflo_companies : "foreign key"
+  fixflo_users ||--o{ fixflo_completed_tours : "foreign key"
+  fixflo_users ||--o{ fixflo_files : "foreign key"
+  fixflo_users ||--o{ fixflo_fixture_groups : "foreign key"
+  fixflo_users ||--o{ fixflo_fixture_sets : "foreign key"
+  fixflo_users ||--o{ fixflo_fixtures : "foreign key"
+  fixflo_users ||--o{ fixflo_generated_reports : "foreign key"
+  fixflo_users ||--o{ fixflo_group_members : "foreign key"
+  fixflo_users ||--o{ fixflo_groups : "foreign key"
+  fixflo_users ||--o{ fixflo_notes : "foreign key"
+  fixflo_users ||--o{ fixflo_report_templates : "foreign key"
+  fixflo_users ||--o{ fixflo_report_types : "foreign key"
+  fixflo_users ||--o{ fixflo_reports : "foreign key"
+  fixflo_users ||--o{ fixflo_saved_filters : "foreign key"
+  fixflo_users ||--o{ fixflo_saved_reports : "foreign key"
+  fixflo_users ||--o{ fixflo_sessions : "foreign key"
+  fixflo_users ||--o{ fixflo_sidebar_folders : "foreign key"
+  fixflo_users ||--o{ fixflo_user_confidentiality_settings : "foreign key"
+  fixflo_users ||--o{ fixflo_vessels : "foreign key"
+  fixflo_users ||--o{ fixflo_widgets : "foreign key"
+  fixflo_vessels ||--o{ fixflo_fixtures : "foreign key"
+  fixflo_zones ||--o{ fixflo_boundaries : "foreign key"
+  fixflo_zones ||--o{ fixflo_fixtures : "foreign key"
   fleetbase_api_credentials ||--o{ fleetbase_api_request_logs : "foreign key"
   fleetbase_api_credentials ||--o{ fleetbase_webhook_endpoints : "foreign key"
   fleetbase_api_credentials ||--o{ fleetbase_webhook_request_logs : "foreign key"
@@ -1623,17 +2705,39 @@ erDiagram
   fleetbase_billing_payment_gateways ||--o{ fleetbase_billing_subscriptions : "foreign key"
   fleetbase_billing_plans ||--o{ fleetbase_billing_subscriptions : "foreign key"
   fleetbase_billing_subscriptions ||--o{ fleetbase_billing_subscription_items : "foreign key"
+  fleetbase_categories ||--o{ fleetbase_entities : "foreign key"
   fleetbase_categories ||--o{ fleetbase_extensions : "foreign key"
+  fleetbase_categories ||--o{ fleetbase_order_configs : "foreign key"
   fleetbase_categories ||--o{ fleetbase_storefront_network_stores : "foreign key"
   fleetbase_categories ||--o{ fleetbase_storefront_product_addon_categories : "foreign key"
   fleetbase_categories ||--o{ fleetbase_storefront_product_addons : "foreign key"
   fleetbase_categories ||--o{ fleetbase_storefront_products : "foreign key"
+  fleetbase_chat_channels ||--o{ fleetbase_chat_attachments : "foreign key"
+  fleetbase_chat_channels ||--o{ fleetbase_chat_logs : "foreign key"
+  fleetbase_chat_channels ||--o{ fleetbase_chat_messages : "foreign key"
+  fleetbase_chat_channels ||--o{ fleetbase_chat_participants : "foreign key"
+  fleetbase_chat_messages ||--o{ fleetbase_chat_attachments : "foreign key"
+  fleetbase_chat_messages ||--o{ fleetbase_chat_receipts : "foreign key"
+  fleetbase_chat_participants ||--o{ fleetbase_chat_attachments : "foreign key"
+  fleetbase_chat_participants ||--o{ fleetbase_chat_logs : "foreign key"
+  fleetbase_chat_participants ||--o{ fleetbase_chat_messages : "foreign key"
+  fleetbase_chat_participants ||--o{ fleetbase_chat_receipts : "foreign key"
+  fleetbase_comments ||--o{ fleetbase_comments : "foreign key"
   fleetbase_companies ||--o{ fleetbase_api_credentials : "foreign key"
   fleetbase_companies ||--o{ fleetbase_api_request_logs : "foreign key"
   fleetbase_companies ||--o{ fleetbase_billing_customers : "foreign key"
   fleetbase_companies ||--o{ fleetbase_billing_subscriptions : "foreign key"
+  fleetbase_companies ||--o{ fleetbase_chat_attachments : "foreign key"
+  fleetbase_companies ||--o{ fleetbase_chat_channels : "foreign key"
+  fleetbase_companies ||--o{ fleetbase_chat_logs : "foreign key"
+  fleetbase_companies ||--o{ fleetbase_chat_messages : "foreign key"
+  fleetbase_companies ||--o{ fleetbase_chat_participants : "foreign key"
+  fleetbase_companies ||--o{ fleetbase_chat_receipts : "foreign key"
+  fleetbase_companies ||--o{ fleetbase_comments : "foreign key"
   fleetbase_companies ||--o{ fleetbase_company_users : "foreign key"
   fleetbase_companies ||--o{ fleetbase_contacts : "foreign key"
+  fleetbase_companies ||--o{ fleetbase_custom_field_values : "foreign key"
+  fleetbase_companies ||--o{ fleetbase_custom_fields : "foreign key"
   fleetbase_companies ||--o{ fleetbase_drivers : "foreign key"
   fleetbase_companies ||--o{ fleetbase_entities : "foreign key"
   fleetbase_companies ||--o{ fleetbase_extension_installs : "foreign key"
@@ -1644,6 +2748,7 @@ erDiagram
   fleetbase_companies ||--o{ fleetbase_integrated_vendors : "foreign key"
   fleetbase_companies ||--o{ fleetbase_invites : "foreign key"
   fleetbase_companies ||--o{ fleetbase_issues : "foreign key"
+  fleetbase_companies ||--o{ fleetbase_order_configs : "foreign key"
   fleetbase_companies ||--o{ fleetbase_orders : "foreign key"
   fleetbase_companies ||--o{ fleetbase_payloads : "foreign key"
   fleetbase_companies ||--o{ fleetbase_places : "foreign key"
@@ -1677,6 +2782,8 @@ erDiagram
   fleetbase_companies ||--o{ fleetbase_storefront_stores : "foreign key"
   fleetbase_contacts ||--o{ fleetbase_storefront_reviews : "foreign key"
   fleetbase_contacts ||--o{ fleetbase_storefront_votes : "foreign key"
+  fleetbase_custom_fields ||--o{ fleetbase_custom_field_values : "foreign key"
+  fleetbase_dashboards ||--o{ fleetbase_dashboard_widgets : "foreign key"
   fleetbase_drivers ||--o{ fleetbase_entities : "foreign key"
   fleetbase_drivers ||--o{ fleetbase_fleet_drivers : "foreign key"
   fleetbase_drivers ||--o{ fleetbase_fuel_reports : "foreign key"
@@ -1685,9 +2792,11 @@ erDiagram
   fleetbase_extensions ||--o{ fleetbase_extension_installs : "foreign key"
   fleetbase_files ||--o{ fleetbase_billing_payment_gateways : "foreign key"
   fleetbase_files ||--o{ fleetbase_categories : "foreign key"
+  fleetbase_files ||--o{ fleetbase_chat_attachments : "foreign key"
   fleetbase_files ||--o{ fleetbase_companies : "foreign key"
   fleetbase_files ||--o{ fleetbase_contacts : "foreign key"
   fleetbase_files ||--o{ fleetbase_extensions : "foreign key"
+  fleetbase_files ||--o{ fleetbase_order_configs : "foreign key"
   fleetbase_files ||--o{ fleetbase_proofs : "foreign key"
   fleetbase_files ||--o{ fleetbase_users : "foreign key"
   fleetbase_files ||--o{ fleetbase_vehicles : "foreign key"
@@ -1702,6 +2811,9 @@ erDiagram
   fleetbase_fleets ||--o{ fleetbase_fleets : "foreign key"
   fleetbase_groups ||--o{ fleetbase_group_users : "foreign key"
   fleetbase_integrated_vendors ||--o{ fleetbase_service_quotes : "foreign key"
+  fleetbase_monitored_scheduled_tasks ||--o{ fleetbase_monitored_scheduled_task_log_items : "foreign key"
+  fleetbase_order_configs ||--o{ fleetbase_orders : "foreign key"
+  fleetbase_order_configs ||--o{ fleetbase_service_rates : "foreign key"
   fleetbase_orders ||--o{ fleetbase_drivers : "foreign key"
   fleetbase_orders ||--o{ fleetbase_positions : "foreign key"
   fleetbase_orders ||--o{ fleetbase_routes : "foreign key"
@@ -1746,13 +2858,18 @@ erDiagram
   fleetbase_types ||--o{ fleetbase_extensions : "foreign key"
   fleetbase_types ||--o{ fleetbase_vendors : "foreign key"
   fleetbase_users ||--o{ fleetbase_api_credentials : "foreign key"
+  fleetbase_users ||--o{ fleetbase_chat_channels : "foreign key"
+  fleetbase_users ||--o{ fleetbase_chat_participants : "foreign key"
+  fleetbase_users ||--o{ fleetbase_comments : "foreign key"
   fleetbase_users ||--o{ fleetbase_companies : "foreign key"
   fleetbase_users ||--o{ fleetbase_company_users : "foreign key"
   fleetbase_users ||--o{ fleetbase_drivers : "foreign key"
+  fleetbase_users ||--o{ fleetbase_fuel_reports : "foreign key"
   fleetbase_users ||--o{ fleetbase_group_users : "foreign key"
   fleetbase_users ||--o{ fleetbase_integrated_vendors : "foreign key"
   fleetbase_users ||--o{ fleetbase_invites : "foreign key"
   fleetbase_users ||--o{ fleetbase_issues : "foreign key"
+  fleetbase_users ||--o{ fleetbase_order_configs : "foreign key"
   fleetbase_users ||--o{ fleetbase_orders : "foreign key"
   fleetbase_users ||--o{ fleetbase_user_devices : "foreign key"
   fleetbase_users ||--o{ fleetbase_webhook_endpoints : "foreign key"
@@ -1766,12 +2883,14 @@ erDiagram
   fleetbase_users ||--o{ fleetbase_storefront_store_locations : "foreign key"
   fleetbase_users ||--o{ fleetbase_storefront_stores : "foreign key"
   fleetbase_users ||--o{ fleetbase_storefront_votes : "foreign key"
+  fleetbase_vehicle_devices ||--o{ fleetbase_vehicle_device_events : "foreign key"
   fleetbase_vehicles ||--o{ fleetbase_drivers : "foreign key"
   fleetbase_vehicles ||--o{ fleetbase_fleet_vehicles : "foreign key"
   fleetbase_vehicles ||--o{ fleetbase_fuel_reports : "foreign key"
   fleetbase_vehicles ||--o{ fleetbase_issues : "foreign key"
   fleetbase_vehicles ||--o{ fleetbase_vehicle_devices : "foreign key"
   fleetbase_vendors ||--o{ fleetbase_drivers : "foreign key"
+  fleetbase_vendors ||--o{ fleetbase_entities : "foreign key"
   fleetbase_vendors ||--o{ fleetbase_fleets : "foreign key"
   fleetbase_vendors ||--o{ fleetbase_vehicles : "foreign key"
   fleetbase_webhook_endpoints ||--o{ fleetbase_webhook_request_logs : "foreign key"
