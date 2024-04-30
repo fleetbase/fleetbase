@@ -20,3 +20,6 @@ php artisan queue:restart
 
 # Sync scheduler
 php artisan schedule-monitor:sync
+
+# Clear cache
+php artisan cache:clear
