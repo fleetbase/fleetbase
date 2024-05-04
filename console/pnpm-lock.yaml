@@ -14,8 +14,8 @@ dependencies:
     specifier: ^0.4.1
     version: 0.4.1(ember-source@5.4.0)
   '@fleetbase/billing-engine':
-    specifier: ^0.0.6
-    version: 0.0.6(@ember/test-helpers@3.2.0)(@glimmer/component@1.1.2)(@glimmer/tracking@1.1.2)(ember-engines@0.8.23)(ember-source@5.4.0)(postcss@8.4.21)(rollup@4.9.1)(tracked-built-ins@3.3.0)(webpack@5.89.0)
+    specifier: ^0.0.8
+    version: 0.0.8(@ember/test-helpers@3.2.0)(@glimmer/component@1.1.2)(@glimmer/tracking@1.1.2)(ember-engines@0.8.23)(ember-source@5.4.0)(postcss@8.4.21)(rollup@4.9.1)(tracked-built-ins@3.3.0)(webpack@5.89.0)
   '@fleetbase/dev-engine':
     specifier: ^0.2.2
     version: 0.2.2(@ember/test-helpers@3.2.0)(@glimmer/component@1.1.2)(@glimmer/tracking@1.1.2)(ember-engines@0.8.23)(ember-source@5.4.0)(postcss@8.4.21)(rollup@4.9.1)(tracked-built-ins@3.3.0)(webpack@5.89.0)
@@ -2631,8 +2631,8 @@ packages:
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
     dev: true
 
-  /@fleetbase/billing-engine@0.0.6(@ember/test-helpers@3.2.0)(@glimmer/component@1.1.2)(@glimmer/tracking@1.1.2)(ember-engines@0.8.23)(ember-source@5.4.0)(postcss@8.4.21)(rollup@4.9.1)(tracked-built-ins@3.3.0)(webpack@5.89.0):
-    resolution: {integrity: sha512-lZiTSB/Lxi6dFQiKxT++U4OsPEJgL9gBqqmTY2icTlRAE+sBrB6kYO7RLVJ1ttEQh3EkRfiglLY/VSLOFK2/OA==, tarball: https://npm.pkg.github.com/download/@fleetbase/billing-engine/0.0.6/1e5a017faafbca0a3fce16919ec4519b4744e3c5}
+  /@fleetbase/billing-engine@0.0.8(@ember/test-helpers@3.2.0)(@glimmer/component@1.1.2)(@glimmer/tracking@1.1.2)(ember-engines@0.8.23)(ember-source@5.4.0)(postcss@8.4.21)(rollup@4.9.1)(tracked-built-ins@3.3.0)(webpack@5.89.0):
+    resolution: {integrity: sha512-SMW0FdgeqbME0ld3BYd8bePytg1lzXFguMI1qAPEUsfAa7PeiGBnqYHcjB5Zj/Y6mBj7Vg6u4jUXdxsPoVn8Fw==, tarball: https://npm.pkg.github.com/download/@fleetbase/billing-engine/0.0.8/9f8094214112a7244941edb6955fda962aef09d6}
     engines: {node: '>= 18'}
     peerDependencies:
       ember-engines: ^0.9.0
