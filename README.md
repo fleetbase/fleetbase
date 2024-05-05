@@ -40,15 +40,15 @@ sh deploy.sh
 
 ## 📖 Table of contents
 
-  - [Features](-features)
-  - [Install](-install)
-  - [Roadmap](-roadmap)
-  - [Bugs and Feature Requests](-bugs-and--feature-requests)
-  - [Documentation](-documentation)
-  - [Contributing](-contributing)
-  - [Community](-community)
-  - [Creators](-creators)
-  - [License & Copyright](-license-and-copyright)
+  - [Features](#-features)
+  - [Install](#-install)
+  - [Roadmap](#-roadmap)
+  - [Bugs and Feature Requests](#-bugs-and--feature-requests)
+  - [Documentation](#-documentation)
+  - [Contributing](#-contributing)
+  - [Community](#-community)
+  - [Creators](#-creators)
+  - [License & Copyright](#-license-and-copyright)
 
 ## 📦 Features
 - **Extensible:** Build installable extensions and additional functionality directly into the OS via modular architecture.
