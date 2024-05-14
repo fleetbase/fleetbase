@@ -199,19 +199,13 @@ export default class AuthLoginController extends Controller {
      * @return {Promise<Transition>}
      * @memberof AuthLoginController
      */
-    sendUserForEmailVerification(email) {
-        return this.fetch.post('auth/create-verification-session', { email, send: true }).then(({ token }) => {
+    @action sendUserForEmailVerification(email) {
+        return this.fetch.post('auth/create-verification-session', { email, send: true }).then(({ token, session }) => {
             return this.session.store.persist({ email }).then(() => {
                 this.notifications.warning(this.intl.t('auth.login.unverified-notification'));
-                return this.router
-                    .transitionTo('auth.verification', {
-                        queryParams: {
-                            token,
-                        },
-                    })
-                    .then(() => {
-                        this.reset('error');
-                    });
+                return this.router.transitionTo('auth.verification', { queryParams: { token, hello: session } }).then(() => {
+                    this.reset('error');
+                });
             });
         });
     }
