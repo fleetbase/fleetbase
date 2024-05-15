@@ -108,26 +108,44 @@ export default class UserModel extends Model {
     }
 
     @computed('updated_at') get updatedAgo() {
+        if (!isValid(this.updated_at)) {
+            return '-';
+        }
         return formatDistanceToNow(this.updated_at);
     }
 
     @computed('updated_at') get updatedAt() {
+        if (!isValid(this.updated_at)) {
+            return '-';
+        }
         return format(this.updated_at, 'PPP p');
     }
 
     @computed('updated_at') get updatedAtShort() {
+        if (!isValid(this.updated_at)) {
+            return '-';
+        }
         return format(this.updated_at, 'PP');
     }
 
     @computed('created_at') get createdAgo() {
+        if (!isValid(this.created_at)) {
+            return '-';
+        }
         return formatDistanceToNow(this.created_at);
     }
 
     @computed('created_at') get createdAt() {
+        if (!isValid(this.created_at)) {
+            return '-';
+        }
         return format(this.created_at, 'PPP p');
     }
 
     @computed('created_at') get createdAtShort() {
+        if (!isValid(this.created_at)) {
+            return '-';
+        }
         return format(this.created_at, 'PP');
     }
 }

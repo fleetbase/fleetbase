@@ -18,7 +18,7 @@
     </div>
 
     <form class="mt-8 space-y-6" {{on "submit" this.verifyCode}}>
-        <InputGroup @type="tel" @name={{t "auth.verification.verification-input-label"}} @value={{this.code}} @helpText={{t "auth.verification.verification-code-text"}} @inputClass="input-lg" {{on "input" this.validateInput}} />
+        <InputGroup @type="tel" @name={{t "auth.verification.verification-input-label"}} @value={{this.code}} @helpText={{t "auth.verification.verification-code-text"}} @inputClass="input-lg" {{on "input" this.validateInput}} {{did-insert this.validateInitInput}} />
 
         <div class="flex flex-row items-center space-x-4">
             <Button @icon="check" @iconPrefix="fas" @buttonType="submit" @type="primary" @size="lg" @text="Verify & Continue" @isLoading={{this.isLoading}} @disabled={{this.isNotReadyToSubmit}} @onClick={{this.verifyCode}} />
