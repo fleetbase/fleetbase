@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "07fe4c17f476cd9174904784006f38bc",
+    "content-hash": "6b4cde0c61a41f3f26a35a63a9b55dce",
     "packages": [
         {
             "name": "aloha/twilio",
@@ -136,16 +136,16 @@
         },
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.305.9",
+            "version": "3.306.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "a611af9a40a5d93f2f04427b322dbb6044e90327"
+                "reference": "79a618bb5624e52f31de7083a26d1749050aa5a0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/a611af9a40a5d93f2f04427b322dbb6044e90327",
-                "reference": "a611af9a40a5d93f2f04427b322dbb6044e90327",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/79a618bb5624e52f31de7083a26d1749050aa5a0",
+                "reference": "79a618bb5624e52f31de7083a26d1749050aa5a0",
                 "shasum": ""
             },
             "require": {
@@ -225,9 +225,9 @@
             "support": {
                 "forum": "https://forums.aws.amazon.com/forum.jspa?forumID=80",
                 "issues": "https://github.com/aws/aws-sdk-php/issues",
-                "source": "https://github.com/aws/aws-sdk-php/tree/3.305.9"
+                "source": "https://github.com/aws/aws-sdk-php/tree/3.306.6"
             },
-            "time": "2024-05-03T18:09:03+00:00"
+            "time": "2024-05-14T18:05:44+00:00"
         },
         {
             "name": "aws/aws-sdk-php-laravel",
@@ -308,20 +308,20 @@
         },
         {
             "name": "barryvdh/laravel-dompdf",
-            "version": "v2.1.1",
+            "version": "v2.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/barryvdh/laravel-dompdf.git",
-                "reference": "cb37868365f9b937039d316727a1fced1e87b31c"
+                "reference": "c96f90c97666cebec154ca1ffb67afed372114d8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/barryvdh/laravel-dompdf/zipball/cb37868365f9b937039d316727a1fced1e87b31c",
-                "reference": "cb37868365f9b937039d316727a1fced1e87b31c",
+                "url": "https://api.github.com/repos/barryvdh/laravel-dompdf/zipball/c96f90c97666cebec154ca1ffb67afed372114d8",
+                "reference": "c96f90c97666cebec154ca1ffb67afed372114d8",
                 "shasum": ""
             },
             "require": {
-                "dompdf/dompdf": "^2.0.3",
+                "dompdf/dompdf": "^2.0.7",
                 "illuminate/support": "^6|^7|^8|^9|^10|^11",
                 "php": "^7.2 || ^8.0"
             },
@@ -369,7 +369,7 @@
             ],
             "support": {
                 "issues": "https://github.com/barryvdh/laravel-dompdf/issues",
-                "source": "https://github.com/barryvdh/laravel-dompdf/tree/v2.1.1"
+                "source": "https://github.com/barryvdh/laravel-dompdf/tree/v2.2.0"
             },
             "funding": [
                 {
@@ -381,7 +381,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2024-03-15T12:48:39+00:00"
+            "time": "2024-04-25T13:16:04+00:00"
         },
         {
             "name": "beste/clock",
@@ -2361,16 +2361,16 @@
         },
         {
             "name": "fleetbase/core-api",
-            "version": "1.4.22",
+            "version": "1.4.23",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fleetbase/core-api.git",
-                "reference": "96c766bb190db31418fd576aa91df94c50345b48"
+                "reference": "7b7693a06f1c07d1a9f55835434a28f0eb920c66"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fleetbase/core-api/zipball/96c766bb190db31418fd576aa91df94c50345b48",
-                "reference": "96c766bb190db31418fd576aa91df94c50345b48",
+                "url": "https://api.github.com/repos/fleetbase/core-api/zipball/7b7693a06f1c07d1a9f55835434a28f0eb920c66",
+                "reference": "7b7693a06f1c07d1a9f55835434a28f0eb920c66",
                 "shasum": ""
             },
             "require": {
@@ -2453,29 +2453,29 @@
             ],
             "support": {
                 "issues": "https://github.com/fleetbase/core-api/issues",
-                "source": "https://github.com/fleetbase/core-api/tree/v1.4.22"
+                "source": "https://github.com/fleetbase/core-api/tree/v1.4.23"
             },
-            "time": "2024-05-04T05:01:24+00:00"
+            "time": "2024-05-15T05:27:58+00:00"
         },
         {
             "name": "fleetbase/fleetops-api",
-            "version": "0.4.27",
+            "version": "0.4.28",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fleetbase/fleetops.git",
-                "reference": "46a2fa7231291a4c17ddbdb3f486743ab2b4e3fa"
+                "reference": "721b909d423e62d5a323e33475e56b980a5b5356"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fleetbase/fleetops/zipball/46a2fa7231291a4c17ddbdb3f486743ab2b4e3fa",
-                "reference": "46a2fa7231291a4c17ddbdb3f486743ab2b4e3fa",
+                "url": "https://api.github.com/repos/fleetbase/fleetops/zipball/721b909d423e62d5a323e33475e56b980a5b5356",
+                "reference": "721b909d423e62d5a323e33475e56b980a5b5356",
                 "shasum": ""
             },
             "require": {
                 "barryvdh/laravel-dompdf": "^2.0",
                 "brick/geo": "0.7.2",
                 "cknow/laravel-money": "^7.1",
-                "fleetbase/core-api": "^1.4.20",
+                "fleetbase/core-api": "^1.4.23",
                 "geocoder-php/google-maps-places-provider": "^1.4",
                 "giggsey/libphonenumber-for-php": "^8.13",
                 "league/geotools": "^1.1.0",
@@ -2542,9 +2542,9 @@
             ],
             "support": {
                 "issues": "https://github.com/fleetbase/fleetops/issues",
-                "source": "https://github.com/fleetbase/fleetops/tree/v0.4.27"
+                "source": "https://github.com/fleetbase/fleetops/tree/v0.4.28"
             },
-            "time": "2024-04-30T09:48:34+00:00"
+            "time": "2024-05-15T05:39:20+00:00"
         },
         {
             "name": "fleetbase/laravel-mysql-spatial",
@@ -2614,21 +2614,21 @@
         },
         {
             "name": "fleetbase/storefront-api",
-            "version": "0.3.7",
+            "version": "0.3.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fleetbase/storefront.git",
-                "reference": "ddc4c6f804958f321a93a259fda7c00d28f8884a"
+                "reference": "778154b5a6ef401730439ac7607c5b2c7b81b1ea"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fleetbase/storefront/zipball/ddc4c6f804958f321a93a259fda7c00d28f8884a",
-                "reference": "ddc4c6f804958f321a93a259fda7c00d28f8884a",
+                "url": "https://api.github.com/repos/fleetbase/storefront/zipball/778154b5a6ef401730439ac7607c5b2c7b81b1ea",
+                "reference": "778154b5a6ef401730439ac7607c5b2c7b81b1ea",
                 "shasum": ""
             },
             "require": {
-                "fleetbase/core-api": "^1.4.16",
-                "fleetbase/fleetops-api": "^0.4.24",
+                "fleetbase/core-api": "^1.4.23",
+                "fleetbase/fleetops-api": "^0.4.28",
                 "geocoder-php/google-maps-places-provider": "^1.4",
                 "laravel-notification-channels/apn": "^5.0",
                 "laravel-notification-channels/fcm": "^4.1",
@@ -2691,9 +2691,9 @@
             ],
             "support": {
                 "issues": "https://github.com/fleetbase/storefront/issues",
-                "source": "https://github.com/fleetbase/storefront/tree/v0.3.7"
+                "source": "https://github.com/fleetbase/storefront/tree/v0.3.8"
             },
-            "time": "2024-04-02T09:30:49+00:00"
+            "time": "2024-05-15T06:09:31+00:00"
         },
         {
             "name": "fruitcake/php-cors",
@@ -3658,23 +3658,23 @@
         },
         {
             "name": "google/gax",
-            "version": "v1.32.0",
+            "version": "v1.33.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/googleapis/gax-php.git",
-                "reference": "9b06449585573f76540cb55d8d0d041e232057ce"
+                "reference": "12a158e9b503df0087ebf9e218e8d75dc815a521"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/googleapis/gax-php/zipball/9b06449585573f76540cb55d8d0d041e232057ce",
-                "reference": "9b06449585573f76540cb55d8d0d041e232057ce",
+                "url": "https://api.github.com/repos/googleapis/gax-php/zipball/12a158e9b503df0087ebf9e218e8d75dc815a521",
+                "reference": "12a158e9b503df0087ebf9e218e8d75dc815a521",
                 "shasum": ""
             },
             "require": {
                 "google/auth": "^1.34.0",
                 "google/common-protos": "^4.4",
                 "google/grpc-gcp": "^0.4",
-                "google/longrunning": "~0.2",
+                "google/longrunning": "~0.4",
                 "google/protobuf": "^v3.25.3||^4.26.1",
                 "grpc/grpc": "^1.13",
                 "guzzlehttp/promises": "^2.0",
@@ -3709,9 +3709,9 @@
             ],
             "support": {
                 "issues": "https://github.com/googleapis/gax-php/issues",
-                "source": "https://github.com/googleapis/gax-php/tree/v1.32.0"
+                "source": "https://github.com/googleapis/gax-php/tree/v1.33.0"
             },
-            "time": "2024-04-25T15:45:37+00:00"
+            "time": "2024-05-14T14:55:14+00:00"
         },
         {
             "name": "google/grpc-gcp",
@@ -5476,16 +5476,16 @@
         },
         {
             "name": "laravel/octane",
-            "version": "v2.3.9",
+            "version": "v2.3.10",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/octane.git",
-                "reference": "33773bbbf7ba6c9cea3d9bc3f63e3ec57197729f"
+                "reference": "61a3e69eaba9cf71f038c9950bec1a84d9c63223"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/octane/zipball/33773bbbf7ba6c9cea3d9bc3f63e3ec57197729f",
-                "reference": "33773bbbf7ba6c9cea3d9bc3f63e3ec57197729f",
+                "url": "https://api.github.com/repos/laravel/octane/zipball/61a3e69eaba9cf71f038c9950bec1a84d9c63223",
+                "reference": "61a3e69eaba9cf71f038c9950bec1a84d9c63223",
                 "shasum": ""
             },
             "require": {
@@ -5561,7 +5561,7 @@
                 "issues": "https://github.com/laravel/octane/issues",
                 "source": "https://github.com/laravel/octane"
             },
-            "time": "2024-04-29T13:25:54+00:00"
+            "time": "2024-05-07T13:19:11+00:00"
         },
         {
             "name": "laravel/prompts",
@@ -7817,16 +7817,16 @@
         },
         {
             "name": "paragonie/constant_time_encoding",
-            "version": "v2.6.3",
+            "version": "v2.7.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/paragonie/constant_time_encoding.git",
-                "reference": "58c3f47f650c94ec05a151692652a868995d2938"
+                "reference": "52a0d99e69f56b9ec27ace92ba56897fe6993105"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/paragonie/constant_time_encoding/zipball/58c3f47f650c94ec05a151692652a868995d2938",
-                "reference": "58c3f47f650c94ec05a151692652a868995d2938",
+                "url": "https://api.github.com/repos/paragonie/constant_time_encoding/zipball/52a0d99e69f56b9ec27ace92ba56897fe6993105",
+                "reference": "52a0d99e69f56b9ec27ace92ba56897fe6993105",
                 "shasum": ""
             },
             "require": {
@@ -7880,7 +7880,7 @@
                 "issues": "https://github.com/paragonie/constant_time_encoding/issues",
                 "source": "https://github.com/paragonie/constant_time_encoding"
             },
-            "time": "2022-06-14T06:56:20+00:00"
+            "time": "2024-05-08T12:18:48+00:00"
         },
         {
             "name": "paragonie/random_compat",
@@ -9564,20 +9564,20 @@
         },
         {
             "name": "psr/http-factory",
-            "version": "1.0.2",
+            "version": "1.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-fig/http-factory.git",
-                "reference": "e616d01114759c4c489f93b099585439f795fe35"
+                "reference": "2b4765fddfe3b508ac62f829e852b1501d3f6e8a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-fig/http-factory/zipball/e616d01114759c4c489f93b099585439f795fe35",
-                "reference": "e616d01114759c4c489f93b099585439f795fe35",
+                "url": "https://api.github.com/repos/php-fig/http-factory/zipball/2b4765fddfe3b508ac62f829e852b1501d3f6e8a",
+                "reference": "2b4765fddfe3b508ac62f829e852b1501d3f6e8a",
                 "shasum": ""
             },
             "require": {
-                "php": ">=7.0.0",
+                "php": ">=7.1",
                 "psr/http-message": "^1.0 || ^2.0"
             },
             "type": "library",
@@ -9601,7 +9601,7 @@
                     "homepage": "https://www.php-fig.org/"
                 }
             ],
-            "description": "Common interfaces for PSR-7 HTTP message factories",
+            "description": "PSR-17: Common interfaces for PSR-7 HTTP message factories",
             "keywords": [
                 "factory",
                 "http",
@@ -9613,9 +9613,9 @@
                 "response"
             ],
             "support": {
-                "source": "https://github.com/php-fig/http-factory/tree/1.0.2"
+                "source": "https://github.com/php-fig/http-factory"
             },
-            "time": "2023-04-10T20:10:41+00:00"
+            "time": "2024-04-15T12:06:14+00:00"
         },
         {
             "name": "psr/http-message",

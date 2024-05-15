@@ -1,7 +1,7 @@
 {
-    "name": "laravel/laravel",
+    "name": "fleetbase/fleetbase",
     "type": "project",
-    "description": "The Laravel Framework.",
+    "description": "Modular logistics and supply chain operating system (LSOS)",
     "keywords": [
         "framework",
         "laravel"
@@ -9,9 +9,9 @@
     "license": "MIT",
     "require": {
         "php": "^8.0",
-        "fleetbase/core-api": "^1.4.22",
-        "fleetbase/fleetops-api": "^0.4.27",
-        "fleetbase/storefront-api": "^0.3.7",
+        "fleetbase/core-api": "^1.4.23",
+        "fleetbase/fleetops-api": "^0.4.28",
+        "fleetbase/storefront-api": "^0.3.8",
         "guzzlehttp/guzzle": "^7.0.1",
         "laravel/framework": "^10.0",
         "laravel/octane": "^2.3",
