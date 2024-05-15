@@ -11,6 +11,12 @@ export default class AuthVerificationRoute extends Route {
             refreshModel: false,
             replace: true,
         },
+        code: {
+            refreshModel: false,
+        },
+        hello: {
+            refreshModel: false,
+        },
     };
 
     beforeModel(transition) {

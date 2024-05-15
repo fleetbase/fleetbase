@@ -151,6 +151,21 @@ export default class AuthVerificationController extends Controller {
     }
 
     /**
+     * Validates input on the first render
+     *
+     * @param {HTMLElement} el
+     * @memberof AuthVerificationController
+     */
+    @action validateInitInput(el) {
+        const value = el.value;
+        if (value.length > 5) {
+            this.isReadyToSubmit = true;
+        } else {
+            this.isReadyToSubmit = false;
+        }
+    }
+
+    /**
      * Submits to verify code.
      *
      * @return {Promise}

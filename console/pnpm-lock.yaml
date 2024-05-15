@@ -1,13 +1,9 @@
 lockfileVersion: '6.0'
 
-settings:
-  autoInstallPeers: true
-  excludeLinksFromLockfile: false
-
 overrides:
   '@fleetbase/ember-core': ^0.2.9
-  '@fleetbase/ember-ui': ^0.2.13
-  '@fleetbase/fleetops-data': ^0.1.14
+  '@fleetbase/ember-ui': ^0.2.14
+  '@fleetbase/fleetops-data': ^0.1.15
 
 dependencies:
   '@ember/legacy-built-in-components':
@@ -23,14 +19,14 @@ dependencies:
     specifier: ^0.2.9
     version: 0.2.9(@ember/test-helpers@3.2.0)(ember-source@5.4.0)(webpack@5.89.0)
   '@fleetbase/ember-ui':
-    specifier: ^0.2.13
-    version: 0.2.13(@ember/test-helpers@3.2.0)(@glimmer/component@1.1.2)(@glimmer/tracking@1.1.2)(ember-source@5.4.0)(postcss@8.4.21)(rollup@4.9.1)(tracked-built-ins@3.3.0)(webpack@5.89.0)
+    specifier: ^0.2.14
+    version: 0.2.14(@ember/test-helpers@3.2.0)(@glimmer/component@1.1.2)(@glimmer/tracking@1.1.2)(ember-source@5.4.0)(postcss@8.4.21)(rollup@4.9.1)(tracked-built-ins@3.3.0)(webpack@5.89.0)
   '@fleetbase/fleetops-data':
-    specifier: ^0.1.14
-    version: 0.1.14
+    specifier: ^0.1.15
+    version: 0.1.15
   '@fleetbase/fleetops-engine':
-    specifier: ^0.4.27
-    version: 0.4.27(@ember/test-helpers@3.2.0)(@glimmer/component@1.1.2)(@glimmer/tracking@1.1.2)(ember-engines@0.8.23)(ember-source@5.4.0)(postcss@8.4.21)(rollup@4.9.1)(tracked-built-ins@3.3.0)(webpack@5.89.0)
+    specifier: ^0.4.28
+    version: 0.4.28(@ember/test-helpers@3.2.0)(@glimmer/component@1.1.2)(@glimmer/tracking@1.1.2)(ember-engines@0.8.23)(ember-source@5.4.0)(postcss@8.4.21)(rollup@4.9.1)(tracked-built-ins@3.3.0)(webpack@5.89.0)
   '@fleetbase/iam-engine':
     specifier: ^0.0.10
     version: 0.0.10(@ember/test-helpers@3.2.0)(@glimmer/component@1.1.2)(@glimmer/tracking@1.1.2)(ember-engines@0.8.23)(ember-source@5.4.0)(postcss@8.4.21)(rollup@4.9.1)(tracked-built-ins@3.3.0)(webpack@5.89.0)
@@ -2640,7 +2636,7 @@ packages:
       '@adopted-ember-addons/ember-stripe-elements': 2.0.5
       '@babel/core': 7.23.2
       '@fleetbase/ember-core': 0.2.9(@ember/test-helpers@3.2.0)(ember-source@5.4.0)(webpack@5.89.0)
-      '@fleetbase/ember-ui': 0.2.13(@ember/test-helpers@3.2.0)(@glimmer/component@1.1.2)(@glimmer/tracking@1.1.2)(ember-source@5.4.0)(postcss@8.4.21)(rollup@4.9.1)(tracked-built-ins@3.3.0)(webpack@5.89.0)
+      '@fleetbase/ember-ui': 0.2.14(@ember/test-helpers@3.2.0)(@glimmer/component@1.1.2)(@glimmer/tracking@1.1.2)(ember-source@5.4.0)(postcss@8.4.21)(rollup@4.9.1)(tracked-built-ins@3.3.0)(webpack@5.89.0)
       '@fortawesome/ember-fontawesome': 0.4.1(rollup@4.9.1)
       '@fortawesome/fontawesome-svg-core': 6.4.0
       '@fortawesome/free-solid-svg-icons': 6.4.0
@@ -2683,7 +2679,7 @@ packages:
     dependencies:
       '@babel/core': 7.23.2
       '@fleetbase/ember-core': 0.2.9(@ember/test-helpers@3.2.0)(ember-source@5.4.0)(webpack@5.89.0)
-      '@fleetbase/ember-ui': 0.2.13(@ember/test-helpers@3.2.0)(@glimmer/component@1.1.2)(@glimmer/tracking@1.1.2)(ember-source@5.4.0)(postcss@8.4.21)(rollup@4.9.1)(tracked-built-ins@3.3.0)(webpack@5.89.0)
+      '@fleetbase/ember-ui': 0.2.14(@ember/test-helpers@3.2.0)(@glimmer/component@1.1.2)(@glimmer/tracking@1.1.2)(ember-source@5.4.0)(postcss@8.4.21)(rollup@4.9.1)(tracked-built-ins@3.3.0)(webpack@5.89.0)
       '@fortawesome/ember-fontawesome': 0.4.1(rollup@4.9.1)
       '@fortawesome/fontawesome-svg-core': 6.4.0
       '@fortawesome/free-solid-svg-icons': 6.4.0
@@ -2763,8 +2759,8 @@ packages:
       - webpack
     dev: false
 
-  /@fleetbase/ember-ui@0.2.13(@ember/test-helpers@3.2.0)(@glimmer/component@1.1.2)(@glimmer/tracking@1.1.2)(ember-source@5.4.0)(postcss@8.4.21)(rollup@4.9.1)(tracked-built-ins@3.3.0)(webpack@5.89.0):
-    resolution: {integrity: sha512-H+6H/+Uefif1kaxxGyLqfp40Krr7dhOXXi+AOCi00mhbfTyM2pVWFVLMj3TXoDB9GIYKGreQMuIx1XDc/yM4Nw==, tarball: https://npm.pkg.github.com/download/@fleetbase/ember-ui/0.2.13/df058caf709bdfb0e3bbb7580b3d277ced76f60b}
+  /@fleetbase/ember-ui@0.2.14(@ember/test-helpers@3.2.0)(@glimmer/component@1.1.2)(@glimmer/tracking@1.1.2)(ember-source@5.4.0)(postcss@8.4.21)(rollup@4.9.1)(tracked-built-ins@3.3.0)(webpack@5.89.0):
+    resolution: {integrity: sha512-31FAddlqt9M4Gcnzsgot/2I+/yWg+iWOuRef0zKTOh58BBKE5mrPP9UaK+er6SShgPRyLDAirIwttha1AMXuNg==, tarball: https://npm.pkg.github.com/download/@fleetbase/ember-ui/0.2.14/820369cdc0fbb36e761eaf3e2b12c1e1fdef4c2f}
     engines: {node: '>= 18'}
     dependencies:
       '@babel/core': 7.23.2
@@ -2819,7 +2815,7 @@ packages:
       ember-window-mock: 0.9.0(ember-source@5.4.0)
       ember-wormhole: 0.6.0
       imask: 6.6.3
-      intl-tel-input: 18.3.3
+      intl-tel-input: 22.0.2
       postcss-at-rules-variables: 0.3.0(postcss@8.4.21)
       postcss-conditionals-renewed: 1.0.0(postcss@8.4.21)
       postcss-each: 1.1.0(postcss@8.4.21)
@@ -2846,8 +2842,8 @@ packages:
       - webpack-command
     dev: false
 
-  /@fleetbase/fleetops-data@0.1.14:
-    resolution: {integrity: sha512-CNgr/De//I2+USYBhFvaRD4c1KBbNJUUmPy5oT07fkFbCGplYeVfPhYlCxj2JpeGbtBBqfGEujrViRVRfR2JKg==, tarball: https://npm.pkg.github.com/download/@fleetbase/fleetops-data/0.1.14/a17990a17d673fdfdae7a04bcb5e5e413a8a3409}
+  /@fleetbase/fleetops-data@0.1.15:
+    resolution: {integrity: sha512-vASD94APnJqtikQJ8RIqmARmGv9V16pxBJ74azzT/0hNQS9n1VUDiluIJEyuNGnb/BceYIIODdQ7+qi2/cktGw==, tarball: https://npm.pkg.github.com/download/@fleetbase/fleetops-data/0.1.15/62a3b609b2cc5a289f57d22cc590a2a90c0d4bf8}
     engines: {node: '>= 18'}
     dependencies:
       '@babel/core': 7.23.2
@@ -2858,16 +2854,16 @@ packages:
       - supports-color
     dev: false
 
-  /@fleetbase/fleetops-engine@0.4.27(@ember/test-helpers@3.2.0)(@glimmer/component@1.1.2)(@glimmer/tracking@1.1.2)(ember-engines@0.8.23)(ember-source@5.4.0)(postcss@8.4.21)(rollup@4.9.1)(tracked-built-ins@3.3.0)(webpack@5.89.0):
-    resolution: {integrity: sha512-flc8mK7N8qUrlIXYIlIWFmbLGNeSIRWtPOviWHIGuCJbYpY0yQBONUcZlaIqyF9YQpMxtI1E/beHRkn2Dd26sQ==, tarball: https://npm.pkg.github.com/download/@fleetbase/fleetops-engine/0.4.27/4da3e78c4fd0d66bd94b8b855dd569d1dc9d6abb}
+  /@fleetbase/fleetops-engine@0.4.28(@ember/test-helpers@3.2.0)(@glimmer/component@1.1.2)(@glimmer/tracking@1.1.2)(ember-engines@0.8.23)(ember-source@5.4.0)(postcss@8.4.21)(rollup@4.9.1)(tracked-built-ins@3.3.0)(webpack@5.89.0):
+    resolution: {integrity: sha512-taOAE6jM7ND1yy6Q4pfi5AYCWXPB7W3sYQ8F0IlVflAP+EI1GZc4JC55yNilOUCWca2Anqq7qmQ24irTJdAa5g==, tarball: https://npm.pkg.github.com/download/@fleetbase/fleetops-engine/0.4.28/7ea09079b701312d7989b9a8d3ea610f4f70a1f0}
     engines: {node: '>= 18'}
     peerDependencies:
       ember-engines: ^0.9.0
     dependencies:
       '@babel/core': 7.23.2
       '@fleetbase/ember-core': 0.2.9(@ember/test-helpers@3.2.0)(ember-source@5.4.0)(webpack@5.89.0)
-      '@fleetbase/ember-ui': 0.2.13(@ember/test-helpers@3.2.0)(@glimmer/component@1.1.2)(@glimmer/tracking@1.1.2)(ember-source@5.4.0)(postcss@8.4.21)(rollup@4.9.1)(tracked-built-ins@3.3.0)(webpack@5.89.0)
-      '@fleetbase/fleetops-data': 0.1.14
+      '@fleetbase/ember-ui': 0.2.14(@ember/test-helpers@3.2.0)(@glimmer/component@1.1.2)(@glimmer/tracking@1.1.2)(ember-source@5.4.0)(postcss@8.4.21)(rollup@4.9.1)(tracked-built-ins@3.3.0)(webpack@5.89.0)
+      '@fleetbase/fleetops-data': 0.1.15
       '@fleetbase/leaflet-routing-machine': 3.2.16
       '@fortawesome/ember-fontawesome': 0.4.1(rollup@4.9.1)
       '@fortawesome/fontawesome-svg-core': 6.4.0
@@ -2925,7 +2921,7 @@ packages:
     dependencies:
       '@babel/core': 7.23.2
       '@fleetbase/ember-core': 0.2.9(@ember/test-helpers@3.2.0)(ember-source@5.4.0)(webpack@5.89.0)
-      '@fleetbase/ember-ui': 0.2.13(@ember/test-helpers@3.2.0)(@glimmer/component@1.1.2)(@glimmer/tracking@1.1.2)(ember-source@5.4.0)(postcss@8.4.21)(rollup@4.9.1)(tracked-built-ins@3.3.0)(webpack@5.89.0)
+      '@fleetbase/ember-ui': 0.2.14(@ember/test-helpers@3.2.0)(@glimmer/component@1.1.2)(@glimmer/tracking@1.1.2)(ember-source@5.4.0)(postcss@8.4.21)(rollup@4.9.1)(tracked-built-ins@3.3.0)(webpack@5.89.0)
       '@fortawesome/ember-fontawesome': 0.4.1(rollup@4.9.1)
       '@fortawesome/fontawesome-svg-core': 6.4.0
       '@fortawesome/free-solid-svg-icons': 6.4.0
@@ -2984,8 +2980,8 @@ packages:
     dependencies:
       '@babel/core': 7.23.2
       '@fleetbase/ember-core': 0.2.9(@ember/test-helpers@3.2.0)(ember-source@5.4.0)(webpack@5.89.0)
-      '@fleetbase/ember-ui': 0.2.13(@ember/test-helpers@3.2.0)(@glimmer/component@1.1.2)(@glimmer/tracking@1.1.2)(ember-source@5.4.0)(postcss@8.4.21)(rollup@4.9.1)(tracked-built-ins@3.3.0)(webpack@5.89.0)
-      '@fleetbase/fleetops-data': 0.1.14
+      '@fleetbase/ember-ui': 0.2.14(@ember/test-helpers@3.2.0)(@glimmer/component@1.1.2)(@glimmer/tracking@1.1.2)(ember-source@5.4.0)(postcss@8.4.21)(rollup@4.9.1)(tracked-built-ins@3.3.0)(webpack@5.89.0)
+      '@fleetbase/fleetops-data': 0.1.15
       '@fortawesome/ember-fontawesome': 0.4.1(rollup@4.9.1)
       '@fortawesome/fontawesome-svg-core': 6.4.0
       '@fortawesome/free-solid-svg-icons': 6.4.0
@@ -11267,8 +11263,8 @@ packages:
       tslib: 2.6.2
     dev: false
 
-  /intl-tel-input@18.3.3:
-    resolution: {integrity: sha512-46MgSeT4ztAwxHm1ZtqDGDsaW6aBI/OC4i7GtcadwUw6SHEa0ObrdTMNP0ODjyBnlz+LLImDlLfv8XStRTV18w==}
+  /intl-tel-input@22.0.2:
+    resolution: {integrity: sha512-FYDLp56aCVE+G7TJGmKCeU8LlfSztINiv54TALquMhMJumlUP1d48I6fEssbcq325vcXOrqdOO7Bbi1U/WRCcw==}
     dev: false
 
   /invariant@2.2.4:
@@ -16935,3 +16931,7 @@ packages:
     resolution: {integrity: sha512-9bnSc/HEW2uRy67wc+T8UwauLuPJVn28jb+GtJY16iiKWyvmYJRXVT4UamsAEGQfPohgr2q4Tq0sQbQlxTfi1g==}
     engines: {node: '>=12.20'}
     dev: true
+
+settings:
+  autoInstallPeers: true
+  excludeLinksFromLockfile: false
