@@ -41,6 +41,13 @@ export default class ConsoleAdminOrganizationsController extends Controller {
     @service filters;
 
     /**
+     * Inject the `crud` service
+     *
+     * @var {Service}
+     */
+    @service crud;
+
+    /**
      * The search query param value.
      *
      * @var {String|null}
@@ -165,5 +172,15 @@ export default class ConsoleAdminOrganizationsController extends Controller {
      */
     @action goToCompany(company) {
         this.router.transitionTo('console.admin.organizations.index.users', company.public_id);
+    }
+
+    /**
+     * Toggles dialog to export `drivers`
+     *
+     * @void
+     */
+    @action exportOrganization() {
+        const selections = this.table.selectedRows.map((_) => _.id);
+        this.crud.export('companies', { params: { selections } });
     }
 }
