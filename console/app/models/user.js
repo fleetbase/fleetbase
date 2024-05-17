@@ -100,11 +100,11 @@ export default class UserModel extends Model {
     }
 
     @computed('last_login') get lastLogin() {
-        if (!this.last_login || !isValid(new Date(this.last_login))) {
+        if (!this.last_login || !isValid(this.last_login)) {
             return 'Never';
         }
 
-        return format(new Date(this.last_login), 'PP');
+        return format(this.last_login, 'PP p');
     }
 
     @computed('updated_at') get updatedAgo() {

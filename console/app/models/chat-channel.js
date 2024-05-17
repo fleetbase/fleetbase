@@ -1,7 +1,7 @@
 import Model, { attr, hasMany, belongsTo } from '@ember-data/model';
 import { computed } from '@ember/object';
 import { getOwner } from '@ember/application';
-import { format, formatDistanceToNow, isValid as isValidDate } from 'date-fns';
+import { format as formatDate, formatDistanceToNow, isValid as isValidDate } from 'date-fns';
 
 export default class ChatChannelModel extends Model {
     /** @ids */
