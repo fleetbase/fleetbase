@@ -1,7 +1,7 @@
 {{page-title (t "console.admin.organizations.index.title")}}
 {{! template-lint-disable no-unbound }}
 <Layout::Section::Header @title={{t "console.admin.organizations.index.title"}} @searchQuery={{unbound this.query}} @onSearch={{this.search}}>
-    <Button @icon="long-arrow-up" @iconClass="rotate-icon-45" @text={{t "fleet-ops.common.export"}} @wrapperClass="hidden md:flex" @onClick={{this.exportOrganization}} />
+    <Button @icon="long-arrow-up" @iconClass="rotate-icon-45" @text={{t "common.export"}} @wrapperClass="hidden md:flex" @onClick={{this.exportOrganization}} />
 </Layout::Section::Header>
 
 <Layout::Section::Body>

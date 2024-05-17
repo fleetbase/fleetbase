@@ -1,9 +1,10 @@
 import Model, { attr, belongsTo } from '@ember-data/model';
 import { getOwner } from '@ember/application';
 import { computed } from '@ember/object';
-import { format, formatDistanceToNow, isValid as isValidDate } from 'date-fns';
+import { format as formatDate, formatDistanceToNow, isValid as isValidDate } from 'date-fns';
 import isVideoFile from '@fleetbase/ember-core/utils/is-video-file';
 import isImageFile from '@fleetbase/ember-core/utils/is-image-file';
+import ENV from '@fleetbase/console/config/environment';
 
 export default class ChatAttachment extends Model {
     /** @ids */
@@ -18,9 +19,6 @@ export default class ChatAttachment extends Model {
     @belongsTo('file', { async: true }) file;
 
     /** @attributes */
-    @attr('string') chat_channel_uuid;
-    @attr('string') sender_uuid;
-    @attr('string') file_uuid;
     @attr('string') url;
     @attr('string') filename;
     @attr('string') content_type;
