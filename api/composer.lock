@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "6f39a90bd175aabfcd0a97780e825131",
+    "content-hash": "9ff7b4b661477907338c83585d443edc",
     "packages": [
         {
             "name": "aloha/twilio",
@@ -136,16 +136,16 @@
         },
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.306.6",
+            "version": "3.307.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "79a618bb5624e52f31de7083a26d1749050aa5a0"
+                "reference": "2cff93427287ec2bcb1ff6eeddd5ca98feeccdfc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/79a618bb5624e52f31de7083a26d1749050aa5a0",
-                "reference": "79a618bb5624e52f31de7083a26d1749050aa5a0",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/2cff93427287ec2bcb1ff6eeddd5ca98feeccdfc",
+                "reference": "2cff93427287ec2bcb1ff6eeddd5ca98feeccdfc",
                 "shasum": ""
             },
             "require": {
@@ -225,9 +225,9 @@
             "support": {
                 "forum": "https://forums.aws.amazon.com/forum.jspa?forumID=80",
                 "issues": "https://github.com/aws/aws-sdk-php/issues",
-                "source": "https://github.com/aws/aws-sdk-php/tree/3.306.6"
+                "source": "https://github.com/aws/aws-sdk-php/tree/3.307.0"
             },
-            "time": "2024-05-14T18:05:44+00:00"
+            "time": "2024-05-16T18:06:49+00:00"
         },
         {
             "name": "aws/aws-sdk-php-laravel",
@@ -2471,16 +2471,16 @@
         },
         {
             "name": "fleetbase/core-api",
-            "version": "1.4.23",
+            "version": "1.4.24",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fleetbase/core-api.git",
-                "reference": "7b7693a06f1c07d1a9f55835434a28f0eb920c66"
+                "reference": "48e3464b58b42fa4ba6787e6fa483221f36b2958"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fleetbase/core-api/zipball/7b7693a06f1c07d1a9f55835434a28f0eb920c66",
-                "reference": "7b7693a06f1c07d1a9f55835434a28f0eb920c66",
+                "url": "https://api.github.com/repos/fleetbase/core-api/zipball/48e3464b58b42fa4ba6787e6fa483221f36b2958",
+                "reference": "48e3464b58b42fa4ba6787e6fa483221f36b2958",
                 "shasum": ""
             },
             "require": {
@@ -2563,29 +2563,29 @@
             ],
             "support": {
                 "issues": "https://github.com/fleetbase/core-api/issues",
-                "source": "https://github.com/fleetbase/core-api/tree/v1.4.23"
+                "source": "https://github.com/fleetbase/core-api/tree/v1.4.24"
             },
-            "time": "2024-05-15T05:27:58+00:00"
+            "time": "2024-05-17T08:02:41+00:00"
         },
         {
             "name": "fleetbase/fleetops-api",
-            "version": "0.4.28",
+            "version": "0.4.29",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fleetbase/fleetops.git",
-                "reference": "721b909d423e62d5a323e33475e56b980a5b5356"
+                "reference": "de165990bcd0a1202f40765cc68840dd3073638b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fleetbase/fleetops/zipball/721b909d423e62d5a323e33475e56b980a5b5356",
-                "reference": "721b909d423e62d5a323e33475e56b980a5b5356",
+                "url": "https://api.github.com/repos/fleetbase/fleetops/zipball/de165990bcd0a1202f40765cc68840dd3073638b",
+                "reference": "de165990bcd0a1202f40765cc68840dd3073638b",
                 "shasum": ""
             },
             "require": {
                 "barryvdh/laravel-dompdf": "^2.0",
                 "brick/geo": "0.7.2",
                 "cknow/laravel-money": "^7.1",
-                "fleetbase/core-api": "^1.4.23",
+                "fleetbase/core-api": "^1.4.24",
                 "geocoder-php/google-maps-places-provider": "^1.4",
                 "giggsey/libphonenumber-for-php": "^8.13",
                 "league/geotools": "^1.1.0",
@@ -2652,9 +2652,9 @@
             ],
             "support": {
                 "issues": "https://github.com/fleetbase/fleetops/issues",
-                "source": "https://github.com/fleetbase/fleetops/tree/v0.4.28"
+                "source": "https://github.com/fleetbase/fleetops/tree/v0.4.29"
             },
-            "time": "2024-05-15T05:39:20+00:00"
+            "time": "2024-05-17T08:10:32+00:00"
         },
         {
             "name": "fleetbase/internals-api",
@@ -3507,16 +3507,16 @@
         },
         {
             "name": "giggsey/libphonenumber-for-php",
-            "version": "8.13.36",
+            "version": "8.13.37",
             "source": {
                 "type": "git",
                 "url": "https://github.com/giggsey/libphonenumber-for-php.git",
-                "reference": "9ca4179e4332d21578cb29f0c0406f0a2b8803e3"
+                "reference": "536c747ff1af433dddc615b26b9674047e013076"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/giggsey/libphonenumber-for-php/zipball/9ca4179e4332d21578cb29f0c0406f0a2b8803e3",
-                "reference": "9ca4179e4332d21578cb29f0c0406f0a2b8803e3",
+                "url": "https://api.github.com/repos/giggsey/libphonenumber-for-php/zipball/536c747ff1af433dddc615b26b9674047e013076",
+                "reference": "536c747ff1af433dddc615b26b9674047e013076",
                 "shasum": ""
             },
             "require": {
@@ -3578,7 +3578,7 @@
                 "issues": "https://github.com/giggsey/libphonenumber-for-php/issues",
                 "source": "https://github.com/giggsey/libphonenumber-for-php"
             },
-            "time": "2024-05-03T06:27:03+00:00"
+            "time": "2024-05-16T09:01:39+00:00"
         },
         {
             "name": "giggsey/locale",
@@ -4578,26 +4578,26 @@
         },
         {
             "name": "hammerstone/fast-paginate",
-            "version": "v1.0.1",
+            "version": "v1.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/hammerstonedev/fast-paginate.git",
-                "reference": "1e9b31ded2fdd8526e654f6101d6c545b06fdda0"
+                "reference": "6a1fb26c860d04176d00761ae8a93f04da14c81c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/hammerstonedev/fast-paginate/zipball/1e9b31ded2fdd8526e654f6101d6c545b06fdda0",
-                "reference": "1e9b31ded2fdd8526e654f6101d6c545b06fdda0",
+                "url": "https://api.github.com/repos/hammerstonedev/fast-paginate/zipball/6a1fb26c860d04176d00761ae8a93f04da14c81c",
+                "reference": "6a1fb26c860d04176d00761ae8a93f04da14c81c",
                 "shasum": ""
             },
             "require": {
-                "illuminate/database": "^8.37|^9.0|^10.0",
+                "illuminate/database": "^8.37|^9.0|^10.0|^11.0",
                 "php": "^7.4|^8.0"
             },
             "require-dev": {
-                "laravel/scout": "^9.4",
+                "laravel/scout": "^9.4|^10.8",
                 "mockery/mockery": "^1.3.3",
-                "orchestra/testbench": "^6|^7|^8.0",
+                "orchestra/testbench": "^6|^7|^8.0|^9.0",
                 "phpunit/phpunit": ">=8.5.23|^9"
             },
             "type": "library",
@@ -4626,9 +4626,9 @@
             "description": "Fast paginate for Laravel",
             "support": {
                 "issues": "https://github.com/hammerstonedev/fast-paginate/issues",
-                "source": "https://github.com/hammerstonedev/fast-paginate/tree/v1.0.1"
+                "source": "https://github.com/hammerstonedev/fast-paginate/tree/v1.1.1"
             },
-            "time": "2023-04-29T18:13:05+00:00"
+            "time": "2024-05-16T15:45:29+00:00"
         },
         {
             "name": "http-interop/http-factory-guzzle",
@@ -4961,16 +4961,16 @@
         },
         {
             "name": "kreait/firebase-php",
-            "version": "7.10.0",
+            "version": "7.11.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/kreait/firebase-php.git",
-                "reference": "a0e50e4db4f14aa070b45dfda6bb2678b1e24d66"
+                "reference": "022c3e8cd78f035557ad114fb374eca05af6c922"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/kreait/firebase-php/zipball/a0e50e4db4f14aa070b45dfda6bb2678b1e24d66",
-                "reference": "a0e50e4db4f14aa070b45dfda6bb2678b1e24d66",
+                "url": "https://api.github.com/repos/kreait/firebase-php/zipball/022c3e8cd78f035557ad114fb374eca05af6c922",
+                "reference": "022c3e8cd78f035557ad114fb374eca05af6c922",
                 "shasum": ""
             },
             "require": {
@@ -4989,7 +4989,7 @@
                 "guzzlehttp/guzzle": "^7.5",
                 "guzzlehttp/promises": "^2.0",
                 "guzzlehttp/psr7": "^2.6",
-                "kreait/firebase-tokens": "^4.2",
+                "kreait/firebase-tokens": "^5.1",
                 "lcobucci/jwt": "^4.3.0|^5.0",
                 "mtdowling/jmespath.php": "^2.6.1",
                 "php": "~8.1.0 || ~8.2.0 || ~8.3.0",
@@ -5001,15 +5001,15 @@
                 "psr/log": "^1.1|^2.0|^3.0"
             },
             "require-dev": {
-                "friendsofphp/php-cs-fixer": "^3.51.0",
-                "google/cloud-firestore": "^1.41.1",
+                "friendsofphp/php-cs-fixer": "^3.57.1",
+                "google/cloud-firestore": "^1.43.2",
                 "phpstan/extension-installer": "^1.3.1",
-                "phpstan/phpstan": "^1.10.59",
-                "phpstan/phpstan-phpunit": "^1.3.16",
-                "phpunit/phpunit": "^10.5.11",
-                "rector/rector": "^1.0.1",
-                "shipmonk/composer-dependency-analyser": "^1.5.0",
-                "symfony/var-dumper": "^6.3.5 || ^7.0.4"
+                "phpstan/phpstan": "^1.11.1",
+                "phpstan/phpstan-phpunit": "^1.4.0",
+                "phpunit/phpunit": "^10.5.20",
+                "rector/rector": "^1.0.5",
+                "shipmonk/composer-dependency-analyser": "^1.5.3",
+                "symfony/var-dumper": "^6.3.5 || ^7.0.7"
             },
             "suggest": {
                 "google/cloud-firestore": "^1.0 to use the Firestore component"
@@ -5055,20 +5055,20 @@
                     "type": "github"
                 }
             ],
-            "time": "2024-04-25T10:28:06+00:00"
+            "time": "2024-05-15T23:01:16+00:00"
         },
         {
             "name": "kreait/firebase-tokens",
-            "version": "4.3.0",
+            "version": "5.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/kreait/firebase-tokens-php.git",
-                "reference": "e5a4f09d6fd5b976263e1f3418a4c19bce254ffa"
+                "reference": "94a3ab1bff7937adc31b4aa8c5c171a153ffe0a7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/kreait/firebase-tokens-php/zipball/e5a4f09d6fd5b976263e1f3418a4c19bce254ffa",
-                "reference": "e5a4f09d6fd5b976263e1f3418a4c19bce254ffa",
+                "url": "https://api.github.com/repos/kreait/firebase-tokens-php/zipball/94a3ab1bff7937adc31b4aa8c5c171a153ffe0a7",
+                "reference": "94a3ab1bff7937adc31b4aa8c5c171a153ffe0a7",
                 "shasum": ""
             },
             "require": {
@@ -5076,22 +5076,20 @@
                 "ext-json": "*",
                 "ext-openssl": "*",
                 "fig/http-message-util": "^1.1.5",
-                "guzzlehttp/guzzle": "^7.5",
-                "lcobucci/clock": "^3.0",
-                "lcobucci/jwt": "^4.3.0|^5.0",
+                "guzzlehttp/guzzle": "^7.8",
+                "lcobucci/jwt": "^5.2",
                 "php": "~8.1.0 || ~8.2.0 || ~8.3.0",
                 "psr/cache": "^1.0|^2.0|^3.0"
             },
             "require-dev": {
-                "friendsofphp/php-cs-fixer": "^3.40",
-                "phpstan/extension-installer": "^1.2",
-                "phpstan/phpstan": "^1.9.2",
-                "phpstan/phpstan-phpunit": "^1.2.2",
-                "phpunit/phpunit": "^9.5.26",
-                "rector/rector": "^0.12.23",
-                "roave/backward-compatibility-check": "^8.1",
-                "symfony/cache": "^5.4|^6.1.7",
-                "symfony/var-dumper": "^5.3|^6.1.6"
+                "friendsofphp/php-cs-fixer": "^3.56.1",
+                "phpstan/extension-installer": "^1.3.1",
+                "phpstan/phpstan": "^1.10.67",
+                "phpstan/phpstan-phpunit": "^1.3.16",
+                "phpunit/phpunit": "^10.5.20",
+                "rector/rector": "^1.0.5",
+                "symfony/cache": "^6.4.3 || ^7.0.7",
+                "symfony/var-dumper": "^6.4.3 || ^7.0.7"
             },
             "suggest": {
                 "psr/cache-implementation": "to cache fetched remote public keys"
@@ -5123,7 +5121,7 @@
             ],
             "support": {
                 "issues": "https://github.com/kreait/firebase-tokens-php/issues",
-                "source": "https://github.com/kreait/firebase-tokens-php/tree/4.3.0"
+                "source": "https://github.com/kreait/firebase-tokens-php/tree/5.1.0"
             },
             "funding": [
                 {
@@ -5131,7 +5129,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2023-11-30T23:04:35+00:00"
+            "time": "2024-05-10T21:47:37+00:00"
         },
         {
             "name": "kreait/laravel-firebase",
@@ -6113,70 +6111,6 @@
                 "source": "https://github.com/laravel/tinker/tree/v2.9.0"
             },
             "time": "2024-01-04T16:10:04+00:00"
-        },
-        {
-            "name": "lcobucci/clock",
-            "version": "3.2.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/lcobucci/clock.git",
-                "reference": "6f28b826ea01306b07980cb8320ab30b966cd715"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/lcobucci/clock/zipball/6f28b826ea01306b07980cb8320ab30b966cd715",
-                "reference": "6f28b826ea01306b07980cb8320ab30b966cd715",
-                "shasum": ""
-            },
-            "require": {
-                "php": "~8.2.0 || ~8.3.0",
-                "psr/clock": "^1.0"
-            },
-            "provide": {
-                "psr/clock-implementation": "1.0"
-            },
-            "require-dev": {
-                "infection/infection": "^0.27",
-                "lcobucci/coding-standard": "^11.0.0",
-                "phpstan/extension-installer": "^1.3.1",
-                "phpstan/phpstan": "^1.10.25",
-                "phpstan/phpstan-deprecation-rules": "^1.1.3",
-                "phpstan/phpstan-phpunit": "^1.3.13",
-                "phpstan/phpstan-strict-rules": "^1.5.1",
-                "phpunit/phpunit": "^10.2.3"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Lcobucci\\Clock\\": "src"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Luís Cobucci",
-                    "email": "lcobucci@gmail.com"
-                }
-            ],
-            "description": "Yet another clock abstraction",
-            "support": {
-                "issues": "https://github.com/lcobucci/clock/issues",
-                "source": "https://github.com/lcobucci/clock/tree/3.2.0"
-            },
-            "funding": [
-                {
-                    "url": "https://github.com/lcobucci",
-                    "type": "github"
-                },
-                {
-                    "url": "https://www.patreon.com/lcobucci",
-                    "type": "patreon"
-                }
-            ],
-            "time": "2023-11-17T17:00:27+00:00"
         },
         {
             "name": "lcobucci/jwt",
@@ -15770,16 +15704,16 @@
         },
         {
             "name": "mockery/mockery",
-            "version": "1.6.11",
+            "version": "1.6.12",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mockery/mockery.git",
-                "reference": "81a161d0b135df89951abd52296adf97deb0723d"
+                "reference": "1f4efdd7d3beafe9807b08156dfcb176d18f1699"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mockery/mockery/zipball/81a161d0b135df89951abd52296adf97deb0723d",
-                "reference": "81a161d0b135df89951abd52296adf97deb0723d",
+                "url": "https://api.github.com/repos/mockery/mockery/zipball/1f4efdd7d3beafe9807b08156dfcb176d18f1699",
+                "reference": "1f4efdd7d3beafe9807b08156dfcb176d18f1699",
                 "shasum": ""
             },
             "require": {
@@ -15849,7 +15783,7 @@
                 "security": "https://github.com/mockery/mockery/security/advisories",
                 "source": "https://github.com/mockery/mockery"
             },
-            "time": "2024-03-21T18:34:15+00:00"
+            "time": "2024-05-16T03:13:13+00:00"
         },
         {
             "name": "myclabs/deep-copy",

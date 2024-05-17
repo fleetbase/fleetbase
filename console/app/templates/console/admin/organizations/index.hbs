@@ -1,13 +1,15 @@
 {{page-title (t "console.admin.organizations.index.title")}}
-{{!-- template-lint-disable no-unbound --}}
-<Layout::Section::Header @title={{t "console.admin.organizations.index.title"}} @searchQuery={{unbound this.query}} @onSearch={{this.search}} />
+{{! template-lint-disable no-unbound }}
+<Layout::Section::Header @title={{t "console.admin.organizations.index.title"}} @searchQuery={{unbound this.query}} @onSearch={{this.search}}>
+    <Button @icon="long-arrow-up" @iconClass="rotate-icon-45" @text={{t "common.export"}} @wrapperClass="hidden md:flex" @onClick={{this.exportOrganization}} />
+</Layout::Section::Header>
 
 <Layout::Section::Body>
     <Table
         @rows={{@model}}
         @columns={{this.columns}}
-        @selectable={{false}}
-        @canSelectAll={{false}}
+        @selectable={{true}}
+        @canSelectAll={{true}}
         @onSetup={{fn (mut this.table)}}
         @pagination={{true}}
         @paginationMeta={{@model.meta}}

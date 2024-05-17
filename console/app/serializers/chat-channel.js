@@ -1,7 +1,6 @@
 import ApplicationSerializer from '@fleetbase/ember-core/serializers/application';
 import { EmbeddedRecordsMixin } from '@ember-data/serializer/rest';
 import { getOwner } from '@ember/application';
-import { underscore } from '@ember/string';
 import { isArray } from '@ember/array';
 
 export default class ChatChannelSerializer extends ApplicationSerializer.extend(EmbeddedRecordsMixin) {

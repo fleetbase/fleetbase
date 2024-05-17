@@ -1,6 +1,6 @@
 import Model, { attr, belongsTo, hasMany } from '@ember-data/model';
 import { computed } from '@ember/object';
-import { format, formatDistanceToNow, isValid as isValidDate } from 'date-fns';
+import { format as formatDate, formatDistanceToNow, isValid as isValidDate } from 'date-fns';
 
 export default class ChatMessage extends Model {
     /** @ids */

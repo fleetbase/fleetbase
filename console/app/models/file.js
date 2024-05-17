@@ -3,7 +3,7 @@ import { computed } from '@ember/object';
 import { not } from '@ember/object/computed';
 import { getOwner } from '@ember/application';
 import { format, formatDistanceToNow } from 'date-fns';
-import ENV from '@fleetbase/console/config/environment';
+import config from '@fleetbase/console/config/environment';
 import isVideoFile from '@fleetbase/ember-core/utils/is-video-file';
 import isImageFile from '@fleetbase/ember-core/utils/is-image-file';
 
@@ -64,7 +64,7 @@ export default class FileModel extends Model {
 
     /** @methods */
     downloadFromApi() {
-        window.open(ENV.api.host + '/' + ENV.api.namespace + '/files/download?file=' + this.id, '_self');
+        window.open(config.api.host + '/' + config.api.namespace + '/files/download?file=' + this.id, '_self');
     }
 
     download() {
