@@ -43,7 +43,7 @@ export default class ApplicationRoute extends Route {
      * @return {Transition}
      * @memberof ApplicationRoute
      */
-    async beforeModel() {
+    async beforeModel(transition) {
         await this.session.setup();
 
         const { isAuthenticated } = this.session;
