@@ -4,7 +4,7 @@ import { computed } from '@ember/object';
 import { format as formatDate, formatDistanceToNow, isValid as isValidDate } from 'date-fns';
 import isVideoFile from '@fleetbase/ember-core/utils/is-video-file';
 import isImageFile from '@fleetbase/ember-core/utils/is-image-file';
-import ENV from '@fleetbase/console/config/environment';
+import config from '@fleetbase/console/config/environment';
 
 export default class ChatAttachment extends Model {
     /** @ids */
@@ -70,7 +70,7 @@ export default class ChatAttachment extends Model {
 
     /** @methods */
     downloadFromApi() {
-        window.open(ENV.api.host + '/' + ENV.api.namespace + '/files/download?file=' + this.file_uuid, '_self');
+        window.open(config.api.host + '/' + config.api.namespace + '/files/download?file=' + this.file_uuid, '_self');
     }
 
     download() {
