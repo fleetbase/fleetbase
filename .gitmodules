@@ -33,9 +33,6 @@
 	path = packages/fleetops-data
 	url = git@github.com:fleetbase/fleetops-data.git
 	branch = main
-[submodule "docs/guides"]
-	path = docs/guides
-	url = git@github.com:fleetbase/guides.git
-[submodule "docs/api-reference"]
-	path = docs/api-reference
-	url = git@github.com:fleetbase/api-reference.git
+[submodule "docs"]
+	path = docs
+	url = git@github.com:fleetbase/docs.git
