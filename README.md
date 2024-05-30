@@ -7,7 +7,7 @@
     <p align="center" dir="auto">
       Modular logistics and supply chain operating system
       <br>
-      <a href="https://fleetbase.github.io/guides" rel="nofollow">Documentation</a>
+      <a href="https://docs.fleetbase.io/" rel="nofollow">Documentation</a>
       ·
       <a href="https://console.fleetbase.io" rel="nofollow">Cloud Version</a>
       ·
@@ -42,6 +42,7 @@ sh deploy.sh
 
   - [Features](#-features)
   - [Install](#-install)
+  - [Apps](#-apps)
   - [Roadmap](#-roadmap)
   - [Bugs and Feature Requests](#-bugs-and--feature-requests)
   - [Documentation](#-documentation)
@@ -67,7 +68,7 @@ sh deploy.sh
 - **Open Source:** Deploy it either on-premise or in the cloud according to your organization's needs and preferences.
 
 ## 💾 Install
-Getting up and running with Fleetbase via Docker is the quickest and most straightforward way. If you’d like to use Fleetbase without docker read the [full install guide in the Fleetbase documentation](https://docs.fleetbase.io/install).  
+Getting up and running with Fleetbase via Docker is the quickest and most straightforward way. If you’d like to use Fleetbase without docker read the [full install guide in the Fleetbase documentation](https://docs.fleetbase.io/getting-started/install).  
   
 Make sure you have both the latest versions of docker and docker-compose installed on your system.
 
@@ -89,7 +90,7 @@ Fleetbase API: http://localhost:8000
 
 **CORS:** If you’re installing directly on a server you may need to add your IP address or domain to the `api/config/cors.php` file in the `allowed_hosts` array.  
   
-**Routing:** Fleetbase ships with its own OSRM server hosted at `routing.fleetbase.io` but you’re able to use your own or any other OSRM compatible server. You can modify this in the `console/environments` directory by modifying the env file of the environment you’re deploying and setting the `OSRM_HOST` to the OSRM server for Fleetbase to use.  
+**Routing:** Fleetbase ships with its own OSRM server hosted at `[bundle.routing.fleetbase.io](https://bundle.routing.fleetbase.io)` but you’re able to use your own or any other OSRM compatible server. You can modify this in the `console/environments` directory by modifying the env file of the environment you’re deploying and setting the `OSRM_HOST` to the OSRM server for Fleetbase to use.  
   
 **Services:** There are a few environment variables which need to be set for Fleetbase to function with full features. If you’re deploying with docker then it’s easiest to just create a `docker-compose.override.yml` and supply the environment variables in this file.
 
@@ -99,7 +100,7 @@ services:
   application:  
     environment:  
       MAIL_MAILER: (ses, smtp, mailgun, postmark, sendgrid)
-      OSRM_HOST: https://routing.fleetbase.io
+      OSRM_HOST: https://bundle.routing.fleetbase.io
       IPINFO_API_KEY:
       GOOGLE_MAPS_API_KEY:  
       GOOGLE_MAPS_LOCALE: us
@@ -109,7 +110,16 @@ services:
       CONSOLE_HOST: http://localhost:4200
 ```
 
-You can learn more about full installation, and configuration in the [official documentation](https://docs.fleetbase.io).
+You can learn more about full installation, and configuration in the [official documentation](https://docs.fleetbase.io/getting-started/install).
+
+# 📱 Apps
+
+Fleetbase offers a few open sourced apps which are built on Fleetbase which can be cloned and customized. Every app is built so that the Fleetbase instance can be switched out whether on-premise install or cloud hosted.
+
+<ul>
+  <li><a href="https://github.com/fleetbase/storefront-app">Storefront App</a>: Fleetbase based ecommerce/on-demand app for launching your very own shop or marketplace to Apple or Android playstore.</li>
+  <li><a href="https://github.com/fleetbase/navigator-app">Navigator App</a>: Fleetbase based driver app which can be used for drivers to manage and update order, additionally provides real time driver location which can be viewed in the Fleetbase Console.</li>
+</ul>
 
 ## 🛣️ Roadmap
 1.  **Extensions Registry and Marketplace** ~ Allows users to publish and sell installable extensions on Fleetbase instances.
@@ -133,7 +143,7 @@ Please read through our <a href="https://github.com/fleetbase/fleetbase/blob/mai
 Get updates on Fleetbase's development and chat with the project maintainers and community members by joining our <a href="https://discord.gg/V7RVWRQ2Wm">Discord</a>.
 
 <ul>
-  <li>Follow <a href="https://twitter.com/fleetbase_io">@fleetbase_io on Twitter</a>.</li>
+  <li>Follow <a href="https://x.com/fleetbase_io">@fleetbase_io on X</a>.</li>
   <li>Read and subscribe to <a href="https://www.fleetbase.io/blog-2">The Official Fleetbase Blog</a>.</li>
   <li>Ask and explore <a href="https://github.com/orgs/fleetbase/discussions">our GitHub Discussions</a>.</li>
 </ul>

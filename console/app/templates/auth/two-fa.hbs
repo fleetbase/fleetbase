@@ -17,10 +17,10 @@
 
 <form class="mt-8" {{on "submit" this.verifyCode}}>
     <div class="flex items-center justify-between my-6">
-        <OtpInput @onInputCompleted={{this.handleOtpInput}} />
+        <OtpInput @onInputCompleted={{this.handleOtpInput}} @size={{6}} class="w-full" />
     </div>
 
-    <div id="otp-countdown-container" class="otp-countdown-container flex items-center justify-center min-h-12">
+    <div id="otp-countdown-container" class="otp-countdown-container flex {{if this.isCodeExpired "flex-col" "flex-row"}} items-center justify-center min-h-12">
         {{#if this.countdownReady}}
             <Countdown @expiry={{this.twoFactorSessionExpiresAfter}} @countdownClass="text-lg" @onCountdownEnd={{this.handleCodeExpired}} />
         {{/if}}

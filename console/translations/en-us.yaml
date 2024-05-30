@@ -69,6 +69,16 @@ common:
 component:
   file:
     dropdown-label: File actions
+  import-modal:
+    loading-message: Processing import...
+    drop-upload: Drop to upload
+    invalid: Invalid
+    ready-upload: ready for upload.
+    upload-spreadsheets: Upload Spreadsheets
+    drag-drop: Drag and drop spreadsheet files onto this dropzone
+    button-text: or select spreadsheets to upload
+    spreadsheets: spreadsheets
+    upload-queue: Upload Queue
   dropzone:
     file: file
     drop-to-upload: Drop to upload
