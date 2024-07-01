@@ -164,3 +164,4 @@ Get updates on Fleetbase's development and chat with the project maintainers and
 # License & Copyright
 
 Code and documentation copyright 2018–2023 the <a href="https://github.com/fleetbase/fleetbase/graphs/contributors">Fleetbase Authors</a>. Code released under the <a href="https://github.com/fleetbase/storefront-app/blob/main/LICENSE.md">MIT License</a>.
+ 
