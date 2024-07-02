@@ -31,7 +31,7 @@ RUN sed -e 's/^expose_php.*/expose_php = Off/' "$PHP_INI_DIR/php.ini-production"
   -e 's/^memory_limit.*/memory_limit = 600M/' "$PHP_INI_DIR/php.ini"
 
 # Install global node modules
-RUN npm install -g chokidar
+RUN npm install -g chokidar pnpm ember-cli
 
 # Install ssm-parent
 COPY --from=ghcr.io/springload/ssm-parent:1.8 /usr/bin/ssm-parent /sbin/ssm-parent
