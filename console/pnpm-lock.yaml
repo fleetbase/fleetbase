@@ -10,8 +10,8 @@ dependencies:
     specifier: ^0.4.1
     version: 0.4.1(ember-source@5.4.0)
   '@fleetbase/dev-engine':
-    specifier: ^0.2.3
-    version: 0.2.3(@ember/test-helpers@3.2.0)(@glimmer/component@1.1.2)(@glimmer/tracking@1.1.2)(ember-engines@0.8.23)(ember-source@5.4.0)(postcss@8.4.21)(rollup@4.18.0)(tracked-built-ins@3.3.0)(webpack@5.89.0)
+    specifier: ^0.2.4
+    version: 0.2.4(@ember/test-helpers@3.2.0)(@glimmer/component@1.1.2)(@glimmer/tracking@1.1.2)(ember-engines@0.8.23)(ember-source@5.4.0)(postcss@8.4.21)(rollup@4.18.0)(tracked-built-ins@3.3.0)(webpack@5.89.0)
   '@fleetbase/ember-core':
     specifier: ^0.2.12
     version: 0.2.12(@ember/test-helpers@3.2.0)(ember-source@5.4.0)(webpack@5.89.0)
@@ -2732,8 +2732,8 @@ packages:
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
     dev: true
 
-  /@fleetbase/dev-engine@0.2.3(@ember/test-helpers@3.2.0)(@glimmer/component@1.1.2)(@glimmer/tracking@1.1.2)(ember-engines@0.8.23)(ember-source@5.4.0)(postcss@8.4.21)(rollup@4.18.0)(tracked-built-ins@3.3.0)(webpack@5.89.0):
-    resolution: {integrity: sha512-PFIz3kslnfx2Bwv6xsXDrGfRkd7ZgyGBNDcrDSTwn7Tiyz6ZnDxx4+Xs86i6MqJoE1zWCGHf6sFoQ09umM2d3A==}
+  /@fleetbase/dev-engine@0.2.4(@ember/test-helpers@3.2.0)(@glimmer/component@1.1.2)(@glimmer/tracking@1.1.2)(ember-engines@0.8.23)(ember-source@5.4.0)(postcss@8.4.21)(rollup@4.18.0)(tracked-built-ins@3.3.0)(webpack@5.89.0):
+    resolution: {integrity: sha512-8VfoZxS4ipLGAbzhmQNxusc4/gUHnOTDYMWBn9WHYPpRmQTzNokitvFAIMhh9ejleIClLeENcP0NjXGmNYmV2Q==}
     engines: {node: '>= 18'}
     peerDependencies:
       ember-engines: ^0.9.0
