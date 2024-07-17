@@ -3,7 +3,7 @@
 FROM dunglas/frankenphp:1.1.0-php8.2-bookworm as base
 
 # Install packages
-RUN apt-get update && apt-get install -y git bind9-utils mycli nodejs npm \
+RUN apt-get update && apt-get install -y git bind9-utils mycli nodejs npm nano \
   && mkdir -p /root/.ssh \
   && ssh-keyscan github.com >> /root/.ssh/known_hosts
 
@@ -31,10 +31,17 @@ RUN sed -e 's/^expose_php.*/expose_php = Off/' "$PHP_INI_DIR/php.ini-production"
   -e 's/^memory_limit.*/memory_limit = 600M/' "$PHP_INI_DIR/php.ini"
 
 # Install global node modules
-RUN npm install -g chokidar
+RUN npm install -g chokidar ember-cli pnpm
 
 # Install ssm-parent
 COPY --from=ghcr.io/springload/ssm-parent:1.8 /usr/bin/ssm-parent /sbin/ssm-parent
+
+# # Create the pnpm directory and set the PNPM_HOME environment variable
+# RUN mkdir -p ~/.pnpm
+# ENV PNPM_HOME /root/.pnpm
+
+# # Add the pnpm global bin to the PATH
+# ENV PATH /root/.pnpm/bin:$PATH
 
 # Set some build ENV variables
 ENV LOG_CHANNEL=stdout
@@ -42,6 +49,7 @@ ENV CACHE_DRIVER=null
 ENV BROADCAST_DRIVER=socketcluster
 ENV QUEUE_CONNECTION=redis
 ENV CADDYFILE_PATH=/fleetbase/Caddyfile
+ENV CONSOLE_PATH=/fleetbase/console
 ENV OCTANE_SERVER=frankenphp
 
 # Set environment
@@ -57,17 +65,46 @@ COPY --chown=www-data:www-data ./Caddyfile $CADDYFILE_PATH
 # Create /fleetbase directory and set correct permissions
 RUN mkdir -p /fleetbase/api && chown -R www-data:www-data /fleetbase
 
+## -- Start Console Setup --
+
+# Set working directory
+WORKDIR /fleetbase/console
+
+# TEMPORARILY ADD REGISTRY BRIDGE AND CORE API
+COPY ./packages/registry-bridge /fleetbase/packages/registry-bridge
+COPY ./packages/core-api /fleetbase/packages/core-api
+
+# Copy pnpm-lock.yaml (or package.json) into the directory /app in the container
+COPY ./console/package.json ./console/pnpm-lock.yaml /fleetbase/console/
+
+# Copy over .npmrc if applicable
+COPY ./console/.npmr[c] /fleetbase/console/
+
+# Install app dependencies
+# RUN pnpm install
+
+# Copy the console directory contents into the container at /app
+COPY ./console /fleetbase/console/
+
+# Build the application
+# RUN pnpm build --environment $ENVIRONMENT
+
+## -- End Console Setup --
+
 # Set working directory
 WORKDIR /fleetbase/api
 
 # If GITHUB_AUTH_KEY is provided, create auth.json with it
 RUN if [ -n "$GITHUB_AUTH_KEY" ]; then echo "{\"github-oauth\": {\"github.com\": \"$GITHUB_AUTH_KEY\"}}" > auth.json; fi
 
+# Prepare composer cache directory
+RUN mkdir -p /var/www/.cache/composer && chown -R www-data:www-data /var/www/.cache/composer
+
 # Optimize Composer Dependency Installation
 COPY --chown=www-data:www-data ./api/composer.json ./api/composer.lock /fleetbase/api/
 
 # Pre-install Composer dependencies
-RUN su www-data -s /bin/sh -c "composer install --no-scripts --optimize-autoloader --no-dev"
+RUN su www-data -s /bin/sh -c "composer install --no-scripts --optimize-autoloader --no-dev --no-cache"
 
 # Setup application
 COPY --chown=www-data:www-data ./api /fleetbase/api
