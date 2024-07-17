@@ -10,3 +10,10 @@ http://:8000 {
 		resolve_root_symlink
 	}
 }
+
+http://:4201 {
+	root * /fleetbase/console/dist
+	try_files {path} /
+	encode zstd gzip
+	file_server
+}
