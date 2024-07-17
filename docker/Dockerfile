@@ -36,12 +36,12 @@ RUN npm install -g chokidar pnpm ember-cli
 # Install ssm-parent
 COPY --from=ghcr.io/springload/ssm-parent:1.8 /usr/bin/ssm-parent /sbin/ssm-parent
 
-# # Create the pnpm directory and set the PNPM_HOME environment variable
-# RUN mkdir -p ~/.pnpm
-# ENV PNPM_HOME /root/.pnpm
+# Create the pnpm directory and set the PNPM_HOME environment variable
+RUN mkdir -p ~/.pnpm
+ENV PNPM_HOME /root/.pnpm
 
-# # Add the pnpm global bin to the PATH
-# ENV PATH /root/.pnpm/bin:$PATH
+# Add the pnpm global bin to the PATH
+ENV PATH /root/.pnpm/bin:$PATH
 
 # Set some build ENV variables
 ENV LOG_CHANNEL=stdout
@@ -65,14 +65,12 @@ COPY --chown=www-data:www-data ./Caddyfile $CADDYFILE_PATH
 # Create /fleetbase directory and set correct permissions
 RUN mkdir -p /fleetbase/api && chown -R www-data:www-data /fleetbase
 
+## -------------------------
 ## -- Start Console Setup --
+## -------------------------
 
 # Set working directory
 WORKDIR /fleetbase/console
-
-# TEMPORARILY ADD REGISTRY BRIDGE AND CORE API
-COPY ./packages/registry-bridge /fleetbase/packages/registry-bridge
-COPY ./packages/core-api /fleetbase/packages/core-api
 
 # Copy pnpm-lock.yaml (or package.json) into the directory /app in the container
 COPY ./console/package.json ./console/pnpm-lock.yaml /fleetbase/console/
@@ -81,15 +79,17 @@ COPY ./console/package.json ./console/pnpm-lock.yaml /fleetbase/console/
 COPY ./console/.npmr[c] /fleetbase/console/
 
 # Install app dependencies
-# RUN pnpm install
+RUN pnpm install
 
 # Copy the console directory contents into the container at /app
 COPY ./console /fleetbase/console/
 
 # Build the application
-# RUN pnpm build --environment $ENVIRONMENT
+RUN pnpm build --environment $ENVIRONMENT
 
+## -------------------------
 ## -- End Console Setup --
+## -------------------------
 
 # Set working directory
 WORKDIR /fleetbase/api
