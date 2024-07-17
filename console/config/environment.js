@@ -40,6 +40,10 @@ module.exports = function (environment) {
             port: getenv('SOCKETCLUSTER_PORT', 38000),
         },
 
+        stripe: {
+            publishableKey: getenv('STRIPE_KEY')
+        },
+
         defaultValues: {
             categoryImage: getenv('DEFAULT_CATEGORY_IMAGE', 'https://flb-assets.s3.ap-southeast-1.amazonaws.com/images/fallback-placeholder-1.png'),
             placeholderImage: getenv('DEFAULT_PLACEHOLDER_IMAGE', 'https://flb-assets.s3.ap-southeast-1.amazonaws.com/images/fallback-placeholder-2.png'),

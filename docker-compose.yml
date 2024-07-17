@@ -38,18 +38,9 @@ services:
       CACHE_URL: tcp://cache
       REDIS_URL: tcp://cache
 
-  console:
-    ports:
-      - "4200:4200"
-    volumes:
-      - ./console:/app/console
-    build:
-      context: .
-      dockerfile: console/Dockerfile
-      args:
-        ENVIRONMENT: development
-
   application:
+    ports:
+      - "4201:4201"
     build:
       context: .
       dockerfile: docker/Dockerfile
