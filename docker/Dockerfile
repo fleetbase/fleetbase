@@ -65,32 +65,6 @@ COPY --chown=www-data:www-data ./Caddyfile $CADDYFILE_PATH
 # Create /fleetbase directory and set correct permissions
 RUN mkdir -p /fleetbase/api && chown -R www-data:www-data /fleetbase
 
-## -------------------------
-## -- Start Console Setup --
-## -------------------------
-
-# Set working directory
-WORKDIR /fleetbase/console
-
-# Copy pnpm-lock.yaml (or package.json) into the directory /app in the container
-COPY ./console/package.json ./console/pnpm-lock.yaml /fleetbase/console/
-
-# Copy over .npmrc if applicable
-COPY ./console/.npmr[c] /fleetbase/console/
-
-# Install app dependencies
-RUN pnpm install
-
-# Copy the console directory contents into the container at /app
-COPY ./console /fleetbase/console/
-
-# Build the application
-RUN pnpm build --environment $ENVIRONMENT
-
-## -------------------------
-## -- End Console Setup --
-## -------------------------
-
 # Set working directory
 WORKDIR /fleetbase/api
 
@@ -123,6 +97,33 @@ RUN chmod -R 755 /fleetbase/api/storage
 
 # Set permissions for deploy script
 RUN chmod +x /fleetbase/api/deploy.sh
+
+## -------------------------
+## -- Start Console Setup --
+## -------------------------
+
+# Set working directory
+WORKDIR /fleetbase/console
+
+# Copy pnpm-lock.yaml (or package.json) into the directory /app in the container
+COPY ./console/package.json ./console/pnpm-lock.yaml ./console/.npmrc /fleetbase/console/ 
+
+# Copy over .npmrc if applicable
+# COPY ./console/.npmr[c] /fleetbase/console/
+RUN cat /fleetbase/console/.npmrc
+
+# Install app dependencies
+RUN pnpm install
+
+# Copy the console directory contents into the container at /app
+COPY ./console /fleetbase/console/
+
+# Build the application
+RUN pnpm build --environment $ENVIRONMENT
+
+## -------------------------
+## -- End Console Setup --
+## -------------------------
 
 # Scheduler base stage
 FROM base as scheduler-base
