@@ -1,6 +1,6 @@
 # syntax = docker/dockerfile:1.2
 # Base stage
-FROM dunglas/frankenphp:1.1.0-php8.2-bookworm as base
+FROM dunglas/frankenphp:1.2.2-php8.2-bookworm as base
 
 # Install packages
 RUN apt-get update && apt-get install -y git bind9-utils mycli nodejs npm nano \
@@ -31,7 +31,7 @@ RUN sed -e 's/^expose_php.*/expose_php = Off/' "$PHP_INI_DIR/php.ini-production"
   -e 's/^memory_limit.*/memory_limit = 600M/' "$PHP_INI_DIR/php.ini"
 
 # Install global node modules
-RUN npm install -g chokidar pnpm ember-cli
+RUN npm install -g chokidar pnpm ember-cli npm-cli-login
 
 # Install ssm-parent
 COPY --from=ghcr.io/springload/ssm-parent:1.8 /usr/bin/ssm-parent /sbin/ssm-parent

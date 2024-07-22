@@ -1,5 +1,3 @@
-version: "3.8"
-
 services:
   cache:
     image: redis:4-alpine
@@ -39,15 +37,15 @@ services:
       REDIS_URL: tcp://cache
 
   console:
-    ports:
-      - "4200:4200"
-    volumes:
-      - ./console:/app/console
     build:
       context: .
-      dockerfile: console/Dockerfile
+      dockerfile: console/Dockerfile.server-build
       args:
         ENVIRONMENT: development
+    ports:
+      - "4201:4201"
+    volumes:
+      - console-build:/console
 
   application:
     build:
@@ -57,7 +55,12 @@ services:
       args:
         ENVIRONMENT: development
         GITHUB_AUTH_KEY: ${GITHUB_AUTH_KEY}
+    ports:
+      - "4200:4200"
+    volumes:
+      - console-build:/fleetbase/console
     environment:
+      ENVIRONMENT: development
       DATABASE_URL: "mysql://root@database/fleetbase"
       QUEUE_CONNECTION: redis
       CACHE_DRIVER: redis
@@ -87,3 +90,6 @@ services:
       - "8000:80"
     depends_on:
       - application
+
+volumes:
+  console-build:

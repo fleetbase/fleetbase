@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "97c8ec919da304026f2d3c2946b47972",
+    "content-hash": "f8d4ccd8caf567419ccebf0e71a2ede9",
     "packages": [
         {
             "name": "aloha/twilio",
@@ -2614,16 +2614,16 @@
         },
         {
             "name": "fleetbase/registry-bridge",
-            "version": "0.0.7",
+            "version": "0.0.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fleetbase/registry-bridge.git",
-                "reference": "6b38d3c4e0ef22f48e63ef902a918f2dcf92df75"
+                "reference": "ba548736aa64e057b40549d77b31bd0e22fbd28c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fleetbase/registry-bridge/zipball/6b38d3c4e0ef22f48e63ef902a918f2dcf92df75",
-                "reference": "6b38d3c4e0ef22f48e63ef902a918f2dcf92df75",
+                "url": "https://api.github.com/repos/fleetbase/registry-bridge/zipball/ba548736aa64e057b40549d77b31bd0e22fbd28c",
+                "reference": "ba548736aa64e057b40549d77b31bd0e22fbd28c",
                 "shasum": ""
             },
             "require": {
@@ -2690,9 +2690,9 @@
             ],
             "support": {
                 "issues": "https://github.com/fleetbase/registry-bridge/issues",
-                "source": "https://github.com/fleetbase/registry-bridge/tree/v0.0.7"
+                "source": "https://github.com/fleetbase/registry-bridge/tree/v0.0.8"
             },
-            "time": "2024-07-19T10:53:57+00:00"
+            "time": "2024-07-20T05:27:42+00:00"
         },
         {
             "name": "fleetbase/storefront-api",
@@ -17893,5 +17893,5 @@
         "php": "^8.0"
     },
     "platform-dev": [],
-    "plugin-api-version": "2.6.0"
+    "plugin-api-version": "2.2.0"
 }
