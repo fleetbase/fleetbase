@@ -1,5 +1,5 @@
 # ---- Build Stage ----
-    FROM node:18.15.0-alpine
+    FROM node:18.15.0-alpine as builder
 
     # Set the working directory in the container to /console
     WORKDIR /console
