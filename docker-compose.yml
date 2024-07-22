@@ -43,7 +43,7 @@ services:
       args:
         ENVIRONMENT: development
     ports:
-      - "4201:4201"
+      - "4200:4200"
     volumes:
       - console-build:/console
 
@@ -55,8 +55,6 @@ services:
       args:
         ENVIRONMENT: development
         GITHUB_AUTH_KEY: ${GITHUB_AUTH_KEY}
-    ports:
-      - "4200:4200"
     volumes:
       - console-build:/fleetbase/console
     environment:
