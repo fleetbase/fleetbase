@@ -2,6 +2,7 @@
 const toBoolean = require('./utils/to-boolean');
 const getenv = require('./utils/getenv');
 const fixApiHost = require('./utils/fix-api-host');
+const asArray = require('./utils/as-array');
 const { version } = require('../package');
 
 module.exports = function (environment) {
@@ -20,7 +21,7 @@ module.exports = function (environment) {
         },
 
         APP: {
-            showExtensionsLink: toBoolean(getenv('SHOW_EXTENSIONS_LINK', true)),
+            extensions: asArray(getenv('EXTENSIONS')),
         },
 
         API: {
