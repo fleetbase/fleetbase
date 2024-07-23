@@ -23,3 +23,6 @@ php artisan schedule-monitor:sync
 
 # Clear cache
 php artisan cache:clear
+
+# Initialize registry
+php artisan registry:init
