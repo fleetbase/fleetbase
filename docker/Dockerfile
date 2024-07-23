@@ -63,7 +63,7 @@ ARG GITHUB_AUTH_KEY
 COPY --chown=www-data:www-data ./Caddyfile $CADDYFILE_PATH
 
 # Create /fleetbase directory and set correct permissions
-RUN mkdir -p /fleetbase/api && chown -R www-data:www-data /fleetbase
+RUN mkdir -p /fleetbase/api && mkdir -p /fleetbase/console && chown -R www-data:www-data /fleetbase
 
 # Set working directory
 WORKDIR /fleetbase/api
