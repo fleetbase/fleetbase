@@ -142,13 +142,13 @@ jobs:
       - name: Set Env Variables for QA
         if: startsWith(github.ref, 'refs/heads/deploy/qa')
         run: |
-          echo "STRIPE_KEY=${{ secrets.STRIPE_TEST_KEY }}" >> ./console/environments/.env.production
+          echo "STRIPE_KEY=${{ secrets.STRIPE_TEST_KEY }}" >> ./environments/.env.production
         working-directory: ./console
 
       - name: Set Env Variables for Production
         if: startsWith(github.ref, 'refs/heads/deploy/production')
         run: |
-          echo "STRIPE_KEY=${{ secrets.STRIPE_KEY }}" >> ./console/environments/.env.production
+          echo "STRIPE_KEY=${{ secrets.STRIPE_KEY }}" >> ./environments/.env.production
         working-directory: ./console
 
       - name: Install dependencies
