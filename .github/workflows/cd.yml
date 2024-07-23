@@ -115,7 +115,7 @@ jobs:
         name: Install pnpm
         id: pnpm-install
         with:
-          version: 9
+          version: 9.5.0
           run_install: false
 
       - name: Get pnpm Store Directory
@@ -136,7 +136,6 @@ jobs:
         run: |
           if [[ -n "${{ secrets._GITHUB_AUTH_TOKEN }}" ]]; then
             echo "//npm.pkg.github.com/:_authToken=${{ secrets._GITHUB_AUTH_TOKEN }}" > .npmrc
-            echo "@fleetbase:registry=https://npm.pkg.github.com" > .npmrc
           fi
         working-directory: ./console
 
