@@ -1,11 +1,13 @@
 {
-	frankenphp
+	frankenphp {
+		num_threads 24
+	}
 	order php_server before file_server
 }
 
 http://:8000 {
 	root * /fleetbase/api/public
-	encode zstd gzip
+	encode zstd br gzip
 	php_server {
 		resolve_root_symlink
 	}

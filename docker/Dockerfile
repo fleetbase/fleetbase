@@ -130,9 +130,9 @@ CMD ["php", "artisan", "queue:work"]
 FROM base as app-dev
 ENTRYPOINT ["docker-php-entrypoint"]
 # Add --watch flag later
-CMD ["sh", "-c", "php artisan octane:frankenphp --port=8000 --host=0.0.0.0 --caddyfile $CADDYFILE_PATH"] 
+CMD ["sh", "-c", "php artisan octane:frankenphp --workers=6 --max-requests=250 --port=8000 --host=0.0.0.0 --caddyfile $CADDYFILE_PATH"] 
 
 # Application stage
 FROM base as app
 ENTRYPOINT ["/sbin/ssm-parent", "-c", ".ssm-parent.yaml", "run", "--", "docker-php-entrypoint"]
-CMD ["sh", "-c", "php artisan octane:frankenphp --port=8000 --host=0.0.0.0 --https --http-redirect --caddyfile $CADDYFILE_PATH"]
+CMD ["sh", "-c", "php artisan octane:frankenphp --workers=6 --max-requests=250 --port=8000 --host=0.0.0.0 --https --http-redirect --caddyfile $CADDYFILE_PATH"]
