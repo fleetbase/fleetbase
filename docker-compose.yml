@@ -75,6 +75,7 @@ services:
       RESPONSE_CACHE_DRIVER: redis
       REGISTRY_HOST: https://registry.fleetbase.io
       REGISTRY_PREINSTALLED_EXTENSIONS: 'true'
+      OSRM_HOST: https://router.project-osrm.org
     depends_on:
       - database
       - cache

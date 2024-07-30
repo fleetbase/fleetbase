@@ -30,8 +30,8 @@ module.exports = function (environment) {
         },
 
         osrm: {
-            host: getenv('OSRM_HOST', 'https://bundle.routing.fleetbase.io'),
-            servers: getenv('OSRM_SERVERS', '').split(',').filter(Boolean),
+            host: getenv('OSRM_HOST', 'https://router.project-osrm.org'),
+            servers: {},
         },
 
         socket: {
