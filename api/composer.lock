@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "096f069535a15efa7bc600339bf24a3f",
+    "content-hash": "c5ecbfc1d797d34ac80154ad8eac7794",
     "packages": [
         {
             "name": "aloha/twilio",
@@ -2656,6 +2656,94 @@
                 "source": "https://github.com/fleetbase/fleetops/tree/v0.5.5"
             },
             "time": "2024-07-25T09:30:53+00:00"
+        },
+        {
+            "name": "fleetbase/flespi-integration",
+            "version": "0.1.12",
+            "dist": {
+                "type": "tar",
+                "url": "https://s3.ap-southeast-1.amazonaws.com/fleetbase-registry-qa/flb/%40fleetbase/flespi-engine/flespi-engine-0.1.12.tgz?AWSAccessKeyId=ASIA26E6KG6WKSHD3EOV&Expires=1722423922&Signature=jYK3LOeunRgwfUUZneUL2NooBA8%3D&x-amz-security-token=IQoJb3JpZ2luX2VjEG8aDmFwLXNvdXRoZWFzdC0xIkYwRAIgD8WhlzuzOVpA0JeKPboz6pIzPZq933fNP72y2XVSh0sCICEulro6klUO%2FthYOeH%2FLd1T3Gvr%2BOuVfYryovibkK9kKoYECFgQABoMNzUxOTUxMjk2NDI4Igx05FMZmGvtZyWOCh8q4wMyZFq16oEqv%2Bd2gHAf%2FbHDvEZa%2FpSZymFbIXzU3qz%2FDGOTbXOvWZ3fTaaRfox9VZIeC1hCSdY4KGFnposB%2FbYJCbR88Bo5ncSE3hAb4jBX%2B1xcE20AftsKZ5%2BzUPP%2BFwGiCKu1yk8TXhO8BoYA%2BLnXL07eiP0mutRL7Fg776Ey4IYadUuovhIRwFUrwM4%2Be3cBJnZLLGYK1Mrm3iF6Frf4Nn3MiTRkYpe6vJVJEt99bNSMyEZY6USaqk%2BpkJ2I%2BE6q43RlNf07IXXB%2BvKCyqA93D671AGaJtIM0EMD24gb%2FKyGONRrzD9xcP5Y5TV8l7qGtyMourzfRVRX1VEPVpj%2BLyIcSM34BbjyoAmUsaIMcVqEZO2MbM9dwW8VOm5etVw68owgBVtAKq1oJbc5q9WgeWvvZL6MOv%2F8m28XV6xCoDo6aUAbOLJJhe%2BnLvKLVO7Q4TWqqLCTdvaF8oo8KJjr%2F5CcjUPqz4AoqhpTaECS1joBOrMZjKQjHVsRiDDLF3ENlh4GPV9Y6CHk8PPTYsmWJ6are5V%2FOZYHrgs27zkovwmpcL2Yeox2w7D9Vj7ATGfPJWzkMRkWjGwKxVs%2BufxPkoxF87PHnK%2FrLP7hTFm23HfoyCvsjlFu7pIT%2FaW1XgzN%2B%2B0w%2FsCntQY6pgF4%2Fg%2FhKoD%2FQUdQe8yvSdOClak00FlrrGmm3c6%2FqnTdT7VLlNxR8kh4zfwLsKwY%2FmuxGXsikaLMFD3M9EmIDA6%2FWi3ctx5M6b2uTsBZqNNdB1QMEDl%2F4Vy%2BFcVjvT51YD7Hodqjed2abBqb6vgcpY%2BrxUyEhJRKNL7wSQXjZAw%2F5MZJCRVVWxgbptiHEgVhETxTZy3BoGpTzfJn%2BHBlDsSXR0Xuop5%2B"
+            },
+            "require": {
+                "fleetbase/core-api": "^1.5.0",
+                "fleetbase/fleetops-api": "^0.5.5",
+                "php": "^8.0",
+                "php-http/guzzle7-adapter": "^1.0",
+                "psr/http-factory-implementation": "*",
+                "vlucas/phpdotenv": "^5.5"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "^3.34.1",
+                "nunomaduro/collision": "^5.11.0|^6.4.0",
+                "pestphp/pest": "^1.22.6",
+                "phpstan/phpstan": "^1.10.38",
+                "symfony/var-dumper": "^5.4.29"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Fleetbase\\Flespi\\Providers\\FlespiIntegrationServiceProvider",
+                        "Fleetbase\\Flespi\\Providers\\NotificationServiceProvider"
+                    ]
+                },
+                "fleetbase": {
+                    "sandbox-migrations": false
+                },
+                "fleetbase/flespi-integration": {
+                    "excludes": [
+                        "addon",
+                        "app",
+                        "assets",
+                        "config",
+                        "tests",
+                        "vendor"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Fleetbase\\Flespi\\": "server/src/"
+                }
+            },
+            "autoload-dev": {
+                "psr-4": {
+                    "Fleetbase\\Flespi\\Tests\\": "server/tests/"
+                }
+            },
+            "scripts": {
+                "lint": [
+                    "php-cs-fixer fix -v"
+                ],
+                "test:lint": [
+                    "php-cs-fixer fix -v --dry-run"
+                ],
+                "test:types": [
+                    "phpstan analyse --ansi --memory-limit=0"
+                ],
+                "test:unit": [
+                    "pest --colors=always"
+                ],
+                "test": [
+                    "@test:lint",
+                    "@test:types",
+                    "@test:unit"
+                ]
+            },
+            "license": [
+                "AGPL-3.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "Fleetbase Pte Ltd.",
+                    "email": "hello@fleetbase.io"
+                }
+            ],
+            "description": "Flespi Universal Telematics Gateway, Parser & API Extension for Fleetbase",
+            "keywords": [
+                "fleetbase-extension",
+                "flespi"
+            ]
         },
         {
             "name": "fleetbase/internals-api",
