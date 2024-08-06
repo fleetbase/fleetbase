@@ -825,88 +825,6 @@ erDiagram
     TIMESTAMP deleted_at
   }
 
-  fleetbase_billing_customers {
-    BIGINTUNSIGNED id PK
-    CHAR uuid
-    CHAR company_uuid FK
-    VARCHAR payment_gateway_id
-    VARCHAR pm_type
-    VARCHAR pm_last_four
-    TIMESTAMP trial_ends_at
-    JSON options
-    TIMESTAMP deleted_at
-    TIMESTAMP created_at
-    TIMESTAMP updated_at
-  }
-
-  fleetbase_billing_payment_gateways {
-    BIGINTUNSIGNED id PK
-    CHAR uuid
-    VARCHAR name
-    VARCHAR code
-    VARCHAR description
-    VARCHAR api_key
-    VARCHAR api_secret
-    VARCHAR callback_url
-    VARCHAR return_url
-    VARCHAR webhook_secret
-    CHAR logo_uuid FK
-    CHAR backdrop_uuid FK
-    JSON options
-    TIMESTAMP deleted_at
-    TIMESTAMP created_at
-    TIMESTAMP updated_at
-  }
-
-  fleetbase_billing_plans {
-    BIGINTUNSIGNED id PK
-    CHAR uuid
-    CHAR payment_gateway_uuid FK
-    VARCHAR name
-    TEXT description
-    VARCHAR payment_gateway_id
-    INT price
-    BIT recurring
-    VARCHAR billing_period
-    VARCHAR interval
-    INT trial_period_days
-    JSON options
-    TIMESTAMP deleted_at
-    TIMESTAMP created_at
-    TIMESTAMP updated_at
-  }
-
-  fleetbase_billing_subscription_items {
-    BIGINTUNSIGNED id PK
-    CHAR uuid
-    CHAR subscription_uuid FK
-    VARCHAR payment_gateway_id
-    VARCHAR payment_gateway_product
-    VARCHAR payment_gateway_price
-    INT quantity
-    TIMESTAMP deleted_at
-    TIMESTAMP created_at
-    TIMESTAMP updated_at
-  }
-
-  fleetbase_billing_subscriptions {
-    BIGINTUNSIGNED id PK
-    CHAR uuid
-    CHAR company_uuid FK
-    CHAR payment_gateway_uuid FK
-    CHAR plan_uuid FK
-    VARCHAR type
-    VARCHAR payment_gateway_id
-    VARCHAR payment_gateway_status
-    VARCHAR payment_gateway_price
-    INT quantity
-    TIMESTAMP trial_ends_at
-    TIMESTAMP ends_at
-    TIMESTAMP deleted_at
-    TIMESTAMP created_at
-    TIMESTAMP updated_at
-  }
-
   fleetbase_categories {
     INTUNSIGNED id PK
     VARCHAR _key
@@ -1599,6 +1517,7 @@ erDiagram
     CHAR purchase_rate_uuid FK
     CHAR tracking_number_uuid FK
     CHAR driver_assigned_uuid FK
+    CHAR vehicle_assigned_uuid FK
     JSON meta
     JSON options
     BIT dispatched
@@ -1762,6 +1681,121 @@ erDiagram
     TIMESTAMP deleted_at
     TIMESTAMP created_at
     TIMESTAMP updated_at
+  }
+
+  fleetbase_registry_extension_bundles {
+    INTUNSIGNED id PK
+    CHAR uuid
+    CHAR public_id
+    CHAR bundle_id
+    CHAR company_uuid FK
+    CHAR created_by_uuid FK
+    CHAR extension_uuid FK
+    CHAR bundle_uuid FK
+    VARCHAR bundle_number
+    VARCHAR version
+    VARCHAR status
+    JSON meta
+    TIMESTAMP created_at
+    TIMESTAMP updated_at
+    TIMESTAMP deleted_at
+  }
+
+  fleetbase_registry_extension_installs {
+    INTUNSIGNED id PK
+    CHAR uuid
+    CHAR company_uuid FK
+    CHAR extension_uuid FK
+    JSON meta
+    TIMESTAMP created_at
+    TIMESTAMP updated_at
+    TIMESTAMP deleted_at
+  }
+
+  fleetbase_registry_extension_purchases {
+    INTUNSIGNED id PK
+    CHAR uuid
+    CHAR company_uuid FK
+    CHAR extension_uuid FK
+    VARCHAR stripe_checkout_session_id
+    VARCHAR stripe_payment_intent_id
+    BIT is_subcription
+    INT locked_price
+    VARCHAR subscription_billing_period
+    VARCHAR subscription_model
+    JSON meta
+    TIMESTAMP created_at
+    TIMESTAMP updated_at
+    TIMESTAMP deleted_at
+  }
+
+  fleetbase_registry_extensions {
+    INTUNSIGNED id PK
+    CHAR uuid
+    CHAR company_uuid FK
+    CHAR created_by_uuid FK
+    CHAR registry_user_uuid FK
+    CHAR current_bundle_uuid FK
+    CHAR next_bundle_uuid FK
+    CHAR icon_uuid FK
+    CHAR category_uuid FK
+    VARCHAR public_id
+    VARCHAR stripe_product_id
+    VARCHAR name
+    VARCHAR subtitle
+    BIT self_managed
+    BIT payment_required
+    INT price
+    INT sale_price
+    BIT on_sale
+    BIT subscription_required
+    VARCHAR subscription_billing_period
+    VARCHAR subscription_model
+    INT subscription_amount
+    JSON subscription_tiers
+    VARCHAR currency
+    VARCHAR slug
+    VARCHAR version
+    VARCHAR fa_icon
+    MEDIUMTEXT description
+    MEDIUMTEXT promotional_text
+    VARCHAR website_url
+    VARCHAR repo_url
+    VARCHAR support_url
+    VARCHAR privacy_policy_url
+    VARCHAR tos_url
+    VARCHAR copyright
+    VARCHAR primary_language
+    JSON tags
+    JSON languages
+    JSON meta
+    BIT core_extension
+    VARCHAR status
+    TIMESTAMP published_at
+    TIMESTAMP accepted_at
+    TIMESTAMP rejected_at
+    TIMESTAMP created_at
+    TIMESTAMP updated_at
+    TIMESTAMP deleted_at
+  }
+
+  fleetbase_registry_users {
+    INTUNSIGNED id PK
+    CHAR uuid
+    CHAR company_uuid FK
+    CHAR user_uuid FK
+    VARCHAR public_id
+    VARCHAR token
+    VARCHAR registry_token
+    VARCHAR scope
+    TIMESTAMP expires_at
+    TIMESTAMP last_used_at
+    VARCHAR name
+    JSON meta
+    BIT revoked
+    TIMESTAMP created_at
+    TIMESTAMP updated_at
+    TIMESTAMP deleted_at
   }
 
   fleetbase_role_has_permissions {
@@ -2195,6 +2229,8 @@ erDiagram
     CHAR place_uuid FK
     CHAR payload_uuid FK
     CHAR tracking_number_uuid FK
+    CHAR customer_uuid
+    VARCHAR customer_type
     VARCHAR _import_id
     VARCHAR type
     INT order
@@ -2701,13 +2737,10 @@ erDiagram
   fleetbase_api_credentials ||--o{ fleetbase_webhook_endpoints : "foreign key"
   fleetbase_api_credentials ||--o{ fleetbase_webhook_request_logs : "foreign key"
   fleetbase_api_events ||--o{ fleetbase_webhook_request_logs : "foreign key"
-  fleetbase_billing_payment_gateways ||--o{ fleetbase_billing_plans : "foreign key"
-  fleetbase_billing_payment_gateways ||--o{ fleetbase_billing_subscriptions : "foreign key"
-  fleetbase_billing_plans ||--o{ fleetbase_billing_subscriptions : "foreign key"
-  fleetbase_billing_subscriptions ||--o{ fleetbase_billing_subscription_items : "foreign key"
   fleetbase_categories ||--o{ fleetbase_entities : "foreign key"
   fleetbase_categories ||--o{ fleetbase_extensions : "foreign key"
   fleetbase_categories ||--o{ fleetbase_order_configs : "foreign key"
+  fleetbase_categories ||--o{ fleetbase_registry_extensions : "foreign key"
   fleetbase_categories ||--o{ fleetbase_storefront_network_stores : "foreign key"
   fleetbase_categories ||--o{ fleetbase_storefront_product_addon_categories : "foreign key"
   fleetbase_categories ||--o{ fleetbase_storefront_product_addons : "foreign key"
@@ -2725,8 +2758,6 @@ erDiagram
   fleetbase_comments ||--o{ fleetbase_comments : "foreign key"
   fleetbase_companies ||--o{ fleetbase_api_credentials : "foreign key"
   fleetbase_companies ||--o{ fleetbase_api_request_logs : "foreign key"
-  fleetbase_companies ||--o{ fleetbase_billing_customers : "foreign key"
-  fleetbase_companies ||--o{ fleetbase_billing_subscriptions : "foreign key"
   fleetbase_companies ||--o{ fleetbase_chat_attachments : "foreign key"
   fleetbase_companies ||--o{ fleetbase_chat_channels : "foreign key"
   fleetbase_companies ||--o{ fleetbase_chat_logs : "foreign key"
@@ -2756,6 +2787,11 @@ erDiagram
   fleetbase_companies ||--o{ fleetbase_positions : "foreign key"
   fleetbase_companies ||--o{ fleetbase_proofs : "foreign key"
   fleetbase_companies ||--o{ fleetbase_purchase_rates : "foreign key"
+  fleetbase_companies ||--o{ fleetbase_registry_extension_bundles : "foreign key"
+  fleetbase_companies ||--o{ fleetbase_registry_extension_installs : "foreign key"
+  fleetbase_companies ||--o{ fleetbase_registry_extension_purchases : "foreign key"
+  fleetbase_companies ||--o{ fleetbase_registry_extensions : "foreign key"
+  fleetbase_companies ||--o{ fleetbase_registry_users : "foreign key"
   fleetbase_companies ||--o{ fleetbase_roles : "foreign key"
   fleetbase_companies ||--o{ fleetbase_routes : "foreign key"
   fleetbase_companies ||--o{ fleetbase_service_areas : "foreign key"
@@ -2790,7 +2826,6 @@ erDiagram
   fleetbase_drivers ||--o{ fleetbase_issues : "foreign key"
   fleetbase_drivers ||--o{ fleetbase_orders : "foreign key"
   fleetbase_extensions ||--o{ fleetbase_extension_installs : "foreign key"
-  fleetbase_files ||--o{ fleetbase_billing_payment_gateways : "foreign key"
   fleetbase_files ||--o{ fleetbase_categories : "foreign key"
   fleetbase_files ||--o{ fleetbase_chat_attachments : "foreign key"
   fleetbase_files ||--o{ fleetbase_companies : "foreign key"
@@ -2798,6 +2833,8 @@ erDiagram
   fleetbase_files ||--o{ fleetbase_extensions : "foreign key"
   fleetbase_files ||--o{ fleetbase_order_configs : "foreign key"
   fleetbase_files ||--o{ fleetbase_proofs : "foreign key"
+  fleetbase_files ||--o{ fleetbase_registry_extension_bundles : "foreign key"
+  fleetbase_files ||--o{ fleetbase_registry_extensions : "foreign key"
   fleetbase_files ||--o{ fleetbase_users : "foreign key"
   fleetbase_files ||--o{ fleetbase_vehicles : "foreign key"
   fleetbase_files ||--o{ fleetbase_vendors : "foreign key"
@@ -2834,6 +2871,11 @@ erDiagram
   fleetbase_places ||--o{ fleetbase_storefront_store_locations : "foreign key"
   fleetbase_policies ||--o{ fleetbase_model_has_policies : "foreign key"
   fleetbase_purchase_rates ||--o{ fleetbase_orders : "foreign key"
+  fleetbase_registry_extension_bundles ||--o{ fleetbase_registry_extensions : "foreign key"
+  fleetbase_registry_extensions ||--o{ fleetbase_registry_extension_bundles : "foreign key"
+  fleetbase_registry_extensions ||--o{ fleetbase_registry_extension_installs : "foreign key"
+  fleetbase_registry_extensions ||--o{ fleetbase_registry_extension_purchases : "foreign key"
+  fleetbase_registry_users ||--o{ fleetbase_registry_extensions : "foreign key"
   fleetbase_roles ||--o{ fleetbase_model_has_roles : "foreign key"
   fleetbase_roles ||--o{ fleetbase_role_has_permissions : "foreign key"
   fleetbase_routes ||--o{ fleetbase_orders : "foreign key"
@@ -2871,6 +2913,9 @@ erDiagram
   fleetbase_users ||--o{ fleetbase_issues : "foreign key"
   fleetbase_users ||--o{ fleetbase_order_configs : "foreign key"
   fleetbase_users ||--o{ fleetbase_orders : "foreign key"
+  fleetbase_users ||--o{ fleetbase_registry_extension_bundles : "foreign key"
+  fleetbase_users ||--o{ fleetbase_registry_extensions : "foreign key"
+  fleetbase_users ||--o{ fleetbase_registry_users : "foreign key"
   fleetbase_users ||--o{ fleetbase_user_devices : "foreign key"
   fleetbase_users ||--o{ fleetbase_webhook_endpoints : "foreign key"
   fleetbase_users ||--o{ fleetbase_storefront_carts : "foreign key"
@@ -2888,6 +2933,7 @@ erDiagram
   fleetbase_vehicles ||--o{ fleetbase_fleet_vehicles : "foreign key"
   fleetbase_vehicles ||--o{ fleetbase_fuel_reports : "foreign key"
   fleetbase_vehicles ||--o{ fleetbase_issues : "foreign key"
+  fleetbase_vehicles ||--o{ fleetbase_orders : "foreign key"
   fleetbase_vehicles ||--o{ fleetbase_vehicle_devices : "foreign key"
   fleetbase_vendors ||--o{ fleetbase_drivers : "foreign key"
   fleetbase_vendors ||--o{ fleetbase_entities : "foreign key"
