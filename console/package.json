@@ -1,6 +1,6 @@
 {
     "name": "@fleetbase/console",
-    "version": "0.5.3",
+    "version": "0.5.5",
     "private": true,
     "description": "Modular logistics and supply chain operating system (LSOS)",
     "repository": "https://github.com/fleetbase/fleetbase",
@@ -29,16 +29,17 @@
         "test:ember": "ember test"
     },
     "dependencies": {
-        "@fleetbase/ember-core": "^0.2.14",
-        "@fleetbase/ember-ui": "^0.2.20",
-        "@fleetbase/fleetops-engine": "^0.5.5",
-        "@fleetbase/storefront-engine": "^0.3.13",
-        "@fleetbase/dev-engine": "^0.2.5",
-        "@fleetbase/iam-engine": "^0.0.14",
-        "@fleetbase/registry-bridge-engine": "^0.0.11",
-        "@fleetbase/fleetops-data": "^0.1.17",
-        "@fleetbase/leaflet-routing-machine": "^3.2.16",
         "@ember/legacy-built-in-components": "^0.4.1",
+        "@fleetbase/dev-engine": "^0.2.5",
+        "@fleetbase/ember-core": "^0.2.14",
+        "@fleetbase/ember-ui": "^0.2.21",
+        "@fleetbase/fleetops-data": "^0.1.17",
+        "@fleetbase/fleetops-engine": "^0.5.5",
+        "@fleetbase/flespi-engine": "^0.1.12",
+        "@fleetbase/iam-engine": "^0.0.14",
+        "@fleetbase/leaflet-routing-machine": "^3.2.16",
+        "@fleetbase/registry-bridge-engine": "^0.0.12",
+        "@fleetbase/storefront-engine": "^0.3.13",
         "@fortawesome/ember-fontawesome": "^2.0.0",
         "ember-changeset": "^4.1.2",
         "ember-changeset-validations": "^4.1.1",
@@ -60,13 +61,13 @@
         "postcss-nth-list": "^1.0.2"
     },
     "devDependencies": {
-        "@fleetbase/intl-lint": "^0.0.1",
         "@babel/core": "^7.23.2",
         "@babel/eslint-parser": "^7.22.15",
         "@babel/plugin-proposal-decorators": "^7.23.2",
         "@ember/optional-features": "^2.0.0",
         "@ember/string": "^3.1.1",
         "@ember/test-helpers": "^3.2.0",
+        "@fleetbase/intl-lint": "^0.0.1",
         "@fortawesome/fontawesome-svg-core": "6.4.0",
         "@fortawesome/free-brands-svg-icons": "6.4.0",
         "@fortawesome/free-solid-svg-icons": "6.4.0",
@@ -144,7 +145,7 @@
     "pnpm": {
         "overrides": {
             "@fleetbase/ember-core": "^0.2.14",
-            "@fleetbase/ember-ui": "^0.2.20",
+            "@fleetbase/ember-ui": "^0.2.21",
             "@fleetbase/fleetops-data": "^0.1.17"
         }
     },
