@@ -1,4 +1,4 @@
-import Model, { attr } from '@ember-data/model';
+import Model, { attr, belongsTo, hasMany } from '@ember-data/model';
 import { computed, get } from '@ember/object';
 import { not } from '@ember/object/computed';
 import { getOwner } from '@ember/application';
@@ -30,6 +30,11 @@ export default class UserModel extends Model {
     @attr('boolean') is_admin;
     @attr('raw') types;
     @attr('raw') meta;
+
+    /** @relationships */
+    @belongsTo('role') role;
+    @hasMany('policy') policies;
+    @hasMany('permission') permissions;
 
     /** @dates */
     @attr('date') last_seen_at;

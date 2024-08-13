@@ -16,3 +16,7 @@
 </Layout::Container>
 <ChatContainer />
 <ConsoleWormhole />
+{{!-- template-lint-disable no-potential-path-strings --}}
+<RegistryYield @registry="@fleetbase/console" as |RegistryComponent|>
+    <RegistryComponent @controller={{this}} />
+</RegistryYield>

@@ -1,5 +1,6 @@
 import Model, { attr } from '@ember-data/model';
 import { computed } from '@ember/object';
+import { capitalize } from '@ember/string';
 import { pluralize } from 'ember-inflector';
 import { format, formatDistanceToNow } from 'date-fns';
 import humanize from '@fleetbase/ember-core/utils/humanize';
@@ -32,9 +33,25 @@ const lowercase = function (string) {
     return words.join(' ');
 };
 
-const titleize = function (string) {
-    return lowercase(humanize(string));
-};
+const titleize = function (string = '') {
+    if (typeof string !== 'string') {
+        return '';
+    }
+    return humanize(string).split(' ').map((w) => capitalize(w)).join(' ');
+}
+
+const smartTitleize = function (string = '') {
+    if (typeof string !== 'string') {
+        return '';
+    }
+
+    let titleized = titleize(string);
+    if (titleized === 'Iam') {
+        titleized = titleized.toUpperCase();
+    }
+
+    return titleized;
+}
 
 /**
  * Permission model for handling and authorizing actions.
@@ -90,9 +107,9 @@ export default class PermissionModel extends Model {
     @computed('actionName', 'name', 'resourceName', 'extensionName') get description() {
         let actionName = this.actionName;
         let actionPreposition = 'to';
-        let resourceName = pluralize(humanize(this.resourceName));
+        let resourceName = pluralize(smartTitleize(this.resourceName));
         let resourcePreposition = getPermissionAction(this.name) === '*' && resourceName ? 'with' : '';
-        let extensionName = humanize(this.extensionName);
+        let extensionName = smartTitleize(this.extensionName);
         let extensionPreposition = 'on';
         let descriptionParts = ['Permission', actionPreposition, actionName, resourcePreposition, resourceName, extensionPreposition, extensionName];
 
