@@ -1,6 +1,6 @@
 <?php
 
-namespace Aloha\Twilio;
+namespace Fleetbase\Twilio;
 
 use Twilio\Exceptions\ConfigurationException;
 use Twilio\Rest\Api;

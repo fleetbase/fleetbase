@@ -1,6 +1,6 @@
 <?php
 
-namespace Aloha\Twilio;
+namespace Fleetbase\Twilio;
 
 use Twilio\Exceptions\ConfigurationException;
 use Twilio\Exceptions\TwilioException;
@@ -38,12 +38,12 @@ class Twilio implements TwilioInterface
     protected $twilio;
 
     /**
-     * @param string $token
-     * @param string $from
-     * @param string $sid
+     * @param string|null $token
+     * @param string|null $from
+     * @param string|null $sid
      * @param bool $sslVerify
      */
-    public function __construct(string $sid, string $token, string $from, bool $sslVerify = true)
+    public function __construct(?string $sid = null, ?string $token = null, ?string $from = null, bool $sslVerify = true)
     {
         $this->sid = $sid;
         $this->token = $token;

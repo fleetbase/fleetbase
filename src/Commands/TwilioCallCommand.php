@@ -1,8 +1,8 @@
 <?php
 
-namespace Aloha\Twilio\Commands;
+namespace Fleetbase\Twilio\Commands;
 
-use Aloha\Twilio\TwilioInterface;
+use Fleetbase\Twilio\TwilioInterface;
 use Illuminate\Console\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;

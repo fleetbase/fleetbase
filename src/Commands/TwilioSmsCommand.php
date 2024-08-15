@@ -1,8 +1,8 @@
 <?php
 
-namespace Aloha\Twilio\Commands;
+namespace Fleetbase\Twilio\Commands;
 
-use Aloha\Twilio\TwilioInterface;
+use Fleetbase\Twilio\TwilioInterface;
 use Illuminate\Console\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
@@ -24,14 +24,14 @@ class TwilioSmsCommand extends Command
     protected $description = 'Twilio command to test Twilio SMS API Integration.';
 
     /**
-     * @var \Aloha\Twilio\TwilioInterface
+     * @var \Fleetbase\Twilio\TwilioInterface
      */
     protected $twilio;
 
     /**
      * Create a new command instance.
      *
-     * @param \Aloha\Twilio\TwilioInterface $twilio
+     * @param \Fleetbase\Twilio\TwilioInterface $twilio
      */
     public function __construct(TwilioInterface $twilio)
     {

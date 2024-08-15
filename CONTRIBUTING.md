@@ -2,7 +2,7 @@
 
 Contributions are **welcome** and will be fully **credited**.
 
-We accept contributions via Pull Requests on [Github](https://github.com/aloha/laravel-twilio).
+We accept contributions via Pull Requests on [Github](https://github.com/fleetbase/laravel-twilio).
 
 ## Pull Requests
 

@@ -1,9 +1,14 @@
 {
-    "name": "aloha/twilio",
+    "name": "fleetbase/twilio",
     "description": "Twilio API for Laravel",
+    "version": "5.0.1",
     "type": "library",
     "keywords": ["sms", "ivr", "laravel", "twilio"],
     "authors": [
+        {
+            "name": "Ronald A Richardson",
+            "email": "ron@fleetbase.io"
+        },
         {
             "name": "Travis J Ryan",
             "email": "travisjryan@gmail.com"
@@ -13,7 +18,7 @@
             "email": "vandevreken.hannes@gmail.com"
         }
     ],
-    "homepage":"https://github.com/aloha/laravel-twilio",
+    "homepage":"https://github.com/fleetbase/laravel-twilio",
     "license": "MIT",
     "require": {
         "php": ">=7.2.0",
@@ -27,12 +32,12 @@
     },
     "autoload": {
         "psr-4": {
-            "Aloha\\Twilio\\": "src/"
+            "Fleetbase\\Twilio\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Aloha\\Twilio\\Tests\\": "tests/"
+            "Fleetbase\\Twilio\\Tests\\": "tests/"
         }
     },
     "scripts": {
@@ -51,10 +56,10 @@
     "extra": {
         "laravel": {
             "providers": [
-                "Aloha\\Twilio\\Support\\Laravel\\ServiceProvider"
+                "Fleetbase\\Twilio\\Support\\Laravel\\ServiceProvider"
             ],
             "aliases": {
-                "Twilio": "Aloha\\Twilio\\Support\\Laravel\\Facade"
+                "Twilio": "Fleetbase\\Twilio\\Support\\Laravel\\Facade"
             }
         }
     }

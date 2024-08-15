@@ -1,6 +1,6 @@
 <?php
 
-namespace Aloha\Twilio;
+namespace Fleetbase\Twilio;
 
 use Twilio\Rest\Api\V2010\Account\CallInstance;
 use Twilio\Rest\Api\V2010\Account\MessageInstance;

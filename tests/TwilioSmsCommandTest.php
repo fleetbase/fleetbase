@@ -1,8 +1,8 @@
 <?php
 
-namespace Aloha\Twilio\Tests;
+namespace Fleetbase\Twilio\Tests;
 
-use Aloha\Twilio\Commands\TwilioSmsCommand;
+use Fleetbase\Twilio\Commands\TwilioSmsCommand;
 use PHPUnit\Framework\TestCase;
 
 class TwilioSmsCommandTest extends TestCase
@@ -13,7 +13,7 @@ class TwilioSmsCommandTest extends TestCase
     public function testName()
     {
         // Arrange
-        $stub = $this->createMock('Aloha\Twilio\TwilioInterface');
+        $stub = $this->createMock('Fleetbase\Twilio\TwilioInterface');
         $command = new TwilioSmsCommand($stub);
 
         // Act

@@ -1,6 +1,6 @@
 <?php
 
-namespace Aloha\Twilio;
+namespace Fleetbase\Twilio;
 
 use InvalidArgumentException;
 use Twilio\Rest\Api\V2010\Account\CallInstance;
@@ -51,7 +51,7 @@ class Manager implements TwilioInterface
             throw new InvalidArgumentException("Connection \"{$connection}\" is not configured.");
         }
 
-        $settings = $this->settings[$connection];
+        $settings = $this->settings[$connection] ?? ['sid' => '', 'token' => '', 'from' => ''];
 
         return new Twilio($settings['sid'], $settings['token'], $settings['from']);
     }

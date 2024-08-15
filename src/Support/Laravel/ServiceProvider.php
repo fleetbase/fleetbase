@@ -1,11 +1,11 @@
 <?php
 
-namespace Aloha\Twilio\Support\Laravel;
+namespace Fleetbase\Twilio\Support\Laravel;
 
-use Aloha\Twilio\Commands\TwilioCallCommand;
-use Aloha\Twilio\Commands\TwilioSmsCommand;
-use Aloha\Twilio\Manager;
-use Aloha\Twilio\TwilioInterface;
+use Fleetbase\Twilio\Commands\TwilioCallCommand;
+use Fleetbase\Twilio\Commands\TwilioSmsCommand;
+use Fleetbase\Twilio\Manager;
+use Fleetbase\Twilio\TwilioInterface;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider as BaseServiceProvider;
 
