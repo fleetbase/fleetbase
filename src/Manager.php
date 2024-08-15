@@ -51,7 +51,7 @@ class Manager implements TwilioInterface
             throw new InvalidArgumentException("Connection \"{$connection}\" is not configured.");
         }
 
-        $settings = $this->settings[$connection] ?? ['sid' => '', 'token' => '', 'from' => ''];
+        $settings = $this->settings[$connection];
 
         return new Twilio($settings['sid'], $settings['token'], $settings['from']);
     }
