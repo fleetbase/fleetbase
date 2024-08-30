@@ -166,6 +166,11 @@ export default class AuthLoginController extends Controller {
                 return this.sendUserForEmailVerification(identity);
             }
 
+            // Handle password reset required
+            if (error.toString().includes('reset required')) {
+                return this.sendUserForPasswordReset(identity);
+            }
+
             return this.failure(error);
         }
 
@@ -207,6 +212,20 @@ export default class AuthLoginController extends Controller {
                     this.reset('error');
                 });
             });
+        });
+    }
+
+    /**
+     * Sends user to forgot password flow.
+     *
+     * @param {String} email
+     * @return {Promise<Transition>}
+     * @memberof AuthLoginController
+     */
+    @action sendUserForPasswordReset(email) {
+        this.notifications.warning(this.intl.t('auth.login.password-reset-required'));
+        return this.router.transitionTo('auth.forgot-password', { queryParams: { email } }).then(() => {
+            this.reset('error');
         });
     }
 

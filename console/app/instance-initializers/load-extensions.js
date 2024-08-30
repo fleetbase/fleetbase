@@ -1,4 +1,4 @@
-export function initialize (owner) {
+export function initialize(owner) {
     const universe = owner.lookup('service:universe');
     if (universe) {
         universe.createRegistry('@fleetbase/console');

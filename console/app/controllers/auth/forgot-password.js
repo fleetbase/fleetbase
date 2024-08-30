@@ -1,7 +1,7 @@
 import Controller from '@ember/controller';
 import { inject as service } from '@ember/service';
 import { tracked } from '@glimmer/tracking';
-import { action } from '@ember/object';
+import { task } from 'ember-concurrency';
 
 export default class AuthForgotPasswordController extends Controller {
     /**
@@ -33,13 +33,6 @@ export default class AuthForgotPasswordController extends Controller {
     @tracked email;
 
     /**
-     * The loading state
-     *
-     * @memberof AuthForgotPasswordController
-     */
-    @tracked isLoading;
-
-    /**
      * Indicator if request has been sent.
      *
      * @memberof AuthForgotPasswordController
@@ -47,29 +40,26 @@ export default class AuthForgotPasswordController extends Controller {
     @tracked isSent = false;
 
     /**
+     * Query parameters.
+     *
+     * @memberof AuthForgotPasswordController
+     */
+    queryParams = ['email'];
+
+    /**
      * Sends a secure magic reset link to the user provided email.
      *
      * @memberof AuthForgotPasswordController
      */
-    @action sendSecureLink(event) {
-        // firefox patch
+    @task *sendSecureLink(event) {
         event.preventDefault();
 
-        const { email } = this;
-
-        this.isLoading = true;
-
-        this.fetch
-            .post('auth/get-magic-reset-link', { email })
-            .then(() => {
-                this.notifications.success(this.intl.t('auth.forgot-password.success-message'));
-                this.isSent = true;
-            })
-            .catch((error) => {
-                this.notifications.serverError(error);
-            })
-            .finally(() => {
-                this.isLoading = false;
-            });
+        try {
+            yield this.fetch.post('auth/get-magic-reset-link', { email: this.email });
+            this.notifications.success(this.intl.t('auth.forgot-password.success-message'));
+            this.isSent = true;
+        } catch (error) {
+            this.notifications.serverError(error);
+        }
     }
 }

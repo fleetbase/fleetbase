@@ -28,7 +28,6 @@ export default class UserModel extends Model {
     @attr('string') status;
     @attr('boolean') is_online;
     @attr('boolean') is_admin;
-    @attr('raw') types;
     @attr('raw') meta;
 
     /** @relationships */
@@ -48,7 +47,7 @@ export default class UserModel extends Model {
     /** @methods */
     deactivate() {
         const owner = getOwner(this);
-        const fetch = owner.lookup(`service:fetch`);
+        const fetch = owner.lookup('service:fetch');
 
         return fetch.patch(`users/deactivate/${this.id}`).then((response) => {
             this.session_status = 'inactive';
@@ -59,7 +58,7 @@ export default class UserModel extends Model {
 
     activate() {
         const owner = getOwner(this);
-        const fetch = owner.lookup(`service:fetch`);
+        const fetch = owner.lookup('service:fetch');
 
         return fetch.patch(`users/activate/${this.id}`).then((response) => {
             this.session_status = 'active';
@@ -70,16 +69,53 @@ export default class UserModel extends Model {
 
     removeFromCurrentCompany() {
         const owner = getOwner(this);
-        const fetch = owner.lookup(`service:fetch`);
+        const fetch = owner.lookup('service:fetch');
 
         return fetch.delete(`users/remove-from-company/${this.id}`);
     }
 
     resendInvite() {
         const owner = getOwner(this);
-        const fetch = owner.lookup(`service:fetch`);
+        const fetch = owner.lookup('service:fetch');
 
         return fetch.post(`users/resend-invite`, { user: this.id });
+    }
+
+    getPermissions() {
+        const permissions = [];
+
+        // get direct applied permissions
+        if (this.get('permissions')) {
+            permissions.pushObjects(this.get('permissions').toArray());
+        }
+
+        // get role permissions and role policies permissions
+        if (this.get('role')) {
+            if (this.get('role.permissions')) {
+                permissions.pushObjects(this.get('role.permissions').toArray());
+            }
+
+            if (this.get('role.policies')) {
+                for (let i = 0; i < this.get('role.policies').length; i++) {
+                    const policy = this.get('role.policies').objectAt(i);
+                    if (policy.get('permissions')) {
+                        permissions.pushObjects(policy.get('permissions').toArray());
+                    }
+                }
+            }
+        }
+
+        // get direct applied policy permissions
+        if (this.get('policies')) {
+            for (let i = 0; i < this.get('policies').length; i++) {
+                const policy = this.get('policies').objectAt(i);
+                if (policy.get('permissions')) {
+                    permissions.pushObjects(policy.get('permissions').toArray());
+                }
+            }
+        }
+
+        return permissions;
     }
 
     /** @computed */
@@ -87,8 +123,16 @@ export default class UserModel extends Model {
     @not('isPhoneVerified') phoneIsNotVerified;
 
     /** @computed */
+    get allPermissions() {
+        return this.getPermissions();
+    }
+
     @computed('meta.two_factor_enabled') get isTwoFactorEnabled() {
         return this.meta && this.meta.two_factor_enabled;
+    }
+
+    @computed('is_admin') get isAdmin() {
+        return this.is_admin === true;
     }
 
     @computed('types') get typesList() {

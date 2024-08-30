@@ -12,6 +12,7 @@ export default class PolicyModel extends Model {
     /** @attributes */
     @attr('string') name;
     @attr('string') type;
+    @attr('string') service;
     @attr('string') guard_name;
     @attr('string') description;
     @attr('boolean') is_mutable;

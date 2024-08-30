@@ -27,18 +27,15 @@ export const getPermissionResource = function (permissionName) {
     return parserPermissionName(permissionName, 2);
 };
 
-const lowercase = function (string) {
-    let words = string.split(' ');
-    words[0] = words[0].toLowerCase();
-    return words.join(' ');
-};
-
 const titleize = function (string = '') {
     if (typeof string !== 'string') {
         return '';
     }
-    return humanize(string).split(' ').map((w) => capitalize(w)).join(' ');
-}
+    return humanize(string)
+        .split(' ')
+        .map((w) => capitalize(w))
+        .join(' ');
+};
 
 const smartTitleize = function (string = '') {
     if (typeof string !== 'string') {
@@ -51,7 +48,7 @@ const smartTitleize = function (string = '') {
     }
 
     return titleized;
-}
+};
 
 /**
  * Permission model for handling and authorizing actions.
@@ -66,6 +63,7 @@ export default class PermissionModel extends Model {
     /** @attributes */
     @attr('string') name;
     @attr('string') guard_name;
+    @attr('string') service;
 
     /** @dates */
     @attr('date') created_at;
@@ -76,6 +74,7 @@ export default class PermissionModel extends Model {
         return {
             name: this.name,
             guard_name: this.guard_name,
+            service: this.service,
             created_at: this.created_at,
             updated_at: this.updated_at,
         };
@@ -95,6 +94,10 @@ export default class PermissionModel extends Model {
 
         if (action === '*') {
             return 'do anything';
+        }
+
+        if (action === 'see') {
+            return 'Visibly See';
         }
 
         return titleize(action);
