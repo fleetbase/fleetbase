@@ -1,6 +1,6 @@
 <div class="fleetbase-github-card relative flex-1 w-full" ...attributes>
     <div class="border dark:border-gray-700 border-gray-200 dark:bg-gray-800 bg-gray-50 rounded-lg shadow-sm flex flex-col">
-        {{#if this.isLoading}}
+        {{#if this.getRepositoryData.isRunning}}
             <div class="p-4">
                 <Spinner />
             </div>

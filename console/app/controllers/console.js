@@ -1,69 +1,21 @@
 import Controller from '@ember/controller';
 import { tracked } from '@glimmer/tracking';
 import { inject as service } from '@ember/service';
-import { getOwner } from '@ember/application';
 import { later } from '@ember/runloop';
-import { action, computed } from '@ember/object';
-import { alias } from '@ember/object/computed';
+import { action } from '@ember/object';
 import { isArray } from '@ember/array';
 import first from '@fleetbase/ember-core/utils/first';
 
 export default class ConsoleController extends Controller {
-    /**
-     * Inject the `currentUser` service.
-     *
-     * @var {Service}
-     */
     @service currentUser;
-
-    /**
-     * Inject the `modalsManager` service.
-     *
-     * @var {Service}
-     */
     @service modalsManager;
-
-    /**
-     * Inject the `session` service.
-     *
-     * @var {Service}
-     */
     @service session;
-
-    /**
-     * Inject the `fetch` service.
-     *
-     * @var {Service}
-     */
     @service fetch;
-
-    /**
-     * Inject the `notifications` service.
-     *
-     * @var {Service}
-     */
     @service notifications;
-
-    /**
-     * Inject the `router` service.
-     *
-     * @var {Service}
-     */
     @service router;
-
-    /**
-     * Inject the `intl` service.
-     *
-     * @var {Service}
-     */
     @service intl;
-
-    /**
-     * Inject the `universe` service.
-     *
-     * @var {Service}
-     */
     @service universe;
+    @service abilities;
 
     /**
      * Authenticated user organizations.
@@ -98,23 +50,28 @@ export default class ConsoleController extends Controller {
      *
      * @var {Array}
      */
-    @tracked hiddenSidebarRoutes = ['console.home', 'console.extensions', 'console.notifications'];
+    @tracked hiddenSidebarRoutes = ['console.home', 'console.notifications'];
 
     /**
-     * Installed extensions.
+     * Menu items to be added to the main header navigation bar.
      *
-     * @var {Array}
+     * @memberof ConsoleController
      */
-    @computed() get extensions() {
-        return getOwner(this).application.extensions;
-    }
+    @tracked menuItems = [];
 
     /**
-     * Get the currently authenticated user
+     * Menu items to be added to the user dropdown menu located in the header.
      *
-     * @var {Model}
+     * @memberof ConsoleController
      */
-    @alias('currentUser.user') user;
+    @tracked userMenuItems = [];
+
+    /**
+     * Menu items to be added to the organization dropdown menu located in the header.
+     *
+     * @memberof ConsoleController
+     */
+    @tracked organizationMenuItems = [];
 
     /**
      * Creates an instance of ConsoleController.
@@ -228,53 +185,51 @@ export default class ConsoleController extends Controller {
             changeAction: (action) => {
                 this.modalsManager.setOption('action', action);
             },
-            confirm: (modal) => {
+            confirm: async (modal) => {
                 modal.startLoading();
 
                 const { action, next, name, description, phone, currency, country, timezone } = modal.getOptions();
 
                 if (action === 'join') {
-                    return this.fetch
-                        .post('auth/join-organization', { next })
-                        .then(() => {
-                            this.fetch.flushRequestCache('auth/organizations');
-                            this.notifications.success(this.intl.t('console.create-or-join-organization.join-success-notification'));
-                            later(
-                                this,
-                                () => {
-                                    window.location.reload();
-                                },
-                                900
-                            );
-                        })
-                        .catch((error) => {
-                            this.notifications.serverError(error);
-                        });
-                }
-
-                return this.fetch
-                    .post('auth/create-organization', {
-                        name,
-                        description,
-                        phone,
-                        currency,
-                        country,
-                        timezone,
-                    })
-                    .then(() => {
+                    try {
+                        await this.fetch.post('auth/join-organization', { next });
                         this.fetch.flushRequestCache('auth/organizations');
-                        this.notifications.success(this.intl.t('console.create-or-join-organization.create-success-notification'));
-                        later(
+                        this.notifications.success(this.intl.t('console.create-or-join-organization.join-success-notification'));
+                        return later(
                             this,
                             () => {
                                 window.location.reload();
                             },
                             900
                         );
-                    })
-                    .catch((error) => {
-                        this.notifications.serverError(error);
+                    } catch (error) {
+                        modal.stopLoading();
+                        return this.notifications.serverError(error);
+                    }
+                }
+
+                try {
+                    await this.fetch.post('auth/create-organization', {
+                        name,
+                        description,
+                        phone,
+                        currency,
+                        country,
+                        timezone,
                     });
+                    this.fetch.flushRequestCache('auth/organizations');
+                    this.notifications.success(this.intl.t('console.create-or-join-organization.create-success-notification'));
+                    return later(
+                        this,
+                        () => {
+                            window.location.reload();
+                        },
+                        900
+                    );
+                } catch (error) {
+                    modal.stopLoading();
+                    return this.notifications.serverError(error);
+                }
             },
         });
     }
@@ -294,25 +249,24 @@ export default class ConsoleController extends Controller {
             body: this.intl.t('console.switch-organization.modal-body'),
             acceptButtonText: this.intl.t('console.switch-organization.modal-accept-button-text'),
             acceptButtonScheme: 'primary',
-            confirm: (modal) => {
+            confirm: async (modal) => {
                 modal.startLoading();
 
-                return this.fetch
-                    .post('auth/switch-organization', { next: organization.uuid })
-                    .then(() => {
-                        this.fetch.flushRequestCache('auth/organizations');
-                        this.notifications.success(this.intl.t('console.switch-organization.success-notification'));
-                        later(
-                            this,
-                            () => {
-                                window.location.reload();
-                            },
-                            900
-                        );
-                    })
-                    .catch((error) => {
-                        this.notifications.serverError(error);
-                    });
+                try {
+                    await this.fetch.post('auth/switch-organization', { next: organization.uuid });
+                    this.fetch.flushRequestCache('auth/organizations');
+                    this.notifications.success(this.intl.t('console.switch-organization.success-notification'));
+                    return later(
+                        this,
+                        () => {
+                            window.location.reload();
+                        },
+                        900
+                    );
+                } catch (error) {
+                    modal.stopLoading();
+                    return this.notifications.serverError(error);
+                }
             },
         });
     }

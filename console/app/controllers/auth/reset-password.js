@@ -54,6 +54,13 @@ export default class AuthResetPasswordController extends Controller {
     @tracked password_confirmation;
 
     /**
+     * Query parameters.
+     *
+     * @memberof AuthResetPasswordController
+     */
+    queryParams = ['code'];
+
+    /**
      * The reset password task.
      *
      * @memberof AuthResetPasswordController

@@ -27,9 +27,10 @@ export default class DashboardCountComponent extends Component {
      * @param {Object} { options }
      * @memberof WidgetKeyMetricsCountComponent
      */
-    constructor(owner, { options, title }) {
+    constructor(owner, { options, title, value = null }) {
         super(...arguments);
         this.title = title;
+        this.value = value;
         this.createRenderValueFromOptions(options);
     }
 
@@ -40,6 +41,10 @@ export default class DashboardCountComponent extends Component {
      * @memberof WidgetKeyMetricsCountComponent
      */
     createRenderValueFromOptions(options = {}) {
+        if (value !== null) {
+            return;
+        }
+
         let { format, currency, dateFormat, value } = options;
 
         switch (format) {

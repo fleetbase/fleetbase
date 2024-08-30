@@ -42,7 +42,7 @@ module.exports = function (environment) {
         },
 
         stripe: {
-            publishableKey: getenv('STRIPE_KEY')
+            publishableKey: getenv('STRIPE_KEY'),
         },
 
         defaultValues: {
