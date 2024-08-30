@@ -39,7 +39,7 @@ Router.map(function () {
                 this.route('cache');
                 this.route('filesystem');
                 this.route('mail');
-                this.route('notification-channels');
+                this.route('notification-channels', { path: '/push-notifications' });
                 this.route('queue');
                 this.route('services');
                 this.route('socket');

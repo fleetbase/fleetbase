@@ -2,6 +2,7 @@ import Component from '@glimmer/component';
 import { inject as service } from '@ember/service';
 import { tracked } from '@glimmer/tracking';
 import { action } from '@ember/object';
+import { task } from 'ember-concurrency';
 
 export default class ConfigureServicesComponent extends Component {
     @service fetch;
@@ -37,7 +38,7 @@ export default class ConfigureServicesComponent extends Component {
      */
     constructor() {
         super(...arguments);
-        this.loadConfigValues();
+        this.loadConfigValues.perform();
     }
 
     @action setConfigValues(config) {
@@ -48,24 +49,19 @@ export default class ConfigureServicesComponent extends Component {
         }
     }
 
-    @action loadConfigValues() {
-        this.isLoading = true;
-
-        this.fetch
-            .get('settings/services-config')
-            .then((response) => {
-                this.setConfigValues(response);
-            })
-            .finally(() => {
-                this.isLoading = false;
-            });
+    @task *loadConfigValues() {
+        try {
+            const config = yield this.fetch.get('settings/services-config');
+            this.setConfigValues(config);
+            return config;
+        } catch (error) {
+            this.notifications.serverError(error);
+        }
     }
 
-    @action save() {
-        this.isLoading = true;
-
-        this.fetch
-            .post('settings/services-config', {
+    @task *save() {
+        try {
+            yield this.fetch.post('settings/services-config', {
                 aws: {
                     key: this.awsKey,
                     secret: this.awsSecret,
@@ -86,45 +82,36 @@ export default class ConfigureServicesComponent extends Component {
                 sentry: {
                     dsn: this.sentryDsn,
                 },
-            })
-            .then(() => {
-                this.notifications.success('Services configuration saved.');
-            })
-            .finally(() => {
-                this.isLoading = false;
             });
+        } catch (error) {
+            this.notifications.serverError(error);
+        }
     }
 
-    @action testTwilio() {
-        this.isLoading = true;
-
-        this.fetch
-            .post('settings/test-twilio-config', {
+    @task *testTwilio() {
+        try {
+            const twilioTestResponse = yield this.fetch.post('settings/test-twilio-config', {
                 sid: this.twilioSid,
                 token: this.twilioToken,
                 from: this.twilioFrom,
                 phone: this.twilioTestPhone,
-            })
-            .then((response) => {
-                this.twilioTestResponse = response;
-            })
-            .finally(() => {
-                this.isLoading = false;
             });
+            this.twilioTestResponse = twilioTestResponse;
+            return twilioTestResponse;
+        } catch (error) {
+            this.notifications.serverError(error);
+        }
     }
 
-    @action testSentry() {
-        this.isLoading = true;
-
-        this.fetch
-            .post('settings/test-sentry-config', {
+    @task *testSentry() {
+        try {
+            const sentryTestResponse = yield this.fetch.post('settings/test-sentry-config', {
                 dsn: this.sentryDsn,
-            })
-            .then((response) => {
-                this.sentryTestResponse = response;
-            })
-            .finally(() => {
-                this.isLoading = false;
             });
+            this.sentryTestResponse = sentryTestResponse;
+            return sentryTestResponse;
+        } catch (error) {
+            this.notifications.serverError(error);
+        }
     }
 }

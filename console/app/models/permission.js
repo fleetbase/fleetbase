@@ -1,5 +1,6 @@
 import Model, { attr } from '@ember-data/model';
 import { computed } from '@ember/object';
+import { capitalize } from '@ember/string';
 import { pluralize } from 'ember-inflector';
 import { format, formatDistanceToNow } from 'date-fns';
 import humanize from '@fleetbase/ember-core/utils/humanize';
@@ -26,14 +27,27 @@ export const getPermissionResource = function (permissionName) {
     return parserPermissionName(permissionName, 2);
 };
 
-const lowercase = function (string) {
-    let words = string.split(' ');
-    words[0] = words[0].toLowerCase();
-    return words.join(' ');
+const titleize = function (string = '') {
+    if (typeof string !== 'string') {
+        return '';
+    }
+    return humanize(string)
+        .split(' ')
+        .map((w) => capitalize(w))
+        .join(' ');
 };
 
-const titleize = function (string) {
-    return lowercase(humanize(string));
+const smartTitleize = function (string = '') {
+    if (typeof string !== 'string') {
+        return '';
+    }
+
+    let titleized = titleize(string);
+    if (titleized === 'Iam') {
+        titleized = titleized.toUpperCase();
+    }
+
+    return titleized;
 };
 
 /**
@@ -49,6 +63,7 @@ export default class PermissionModel extends Model {
     /** @attributes */
     @attr('string') name;
     @attr('string') guard_name;
+    @attr('string') service;
 
     /** @dates */
     @attr('date') created_at;
@@ -59,6 +74,7 @@ export default class PermissionModel extends Model {
         return {
             name: this.name,
             guard_name: this.guard_name,
+            service: this.service,
             created_at: this.created_at,
             updated_at: this.updated_at,
         };
@@ -80,6 +96,10 @@ export default class PermissionModel extends Model {
             return 'do anything';
         }
 
+        if (action === 'see') {
+            return 'Visibly See';
+        }
+
         return titleize(action);
     }
 
@@ -90,9 +110,9 @@ export default class PermissionModel extends Model {
     @computed('actionName', 'name', 'resourceName', 'extensionName') get description() {
         let actionName = this.actionName;
         let actionPreposition = 'to';
-        let resourceName = pluralize(humanize(this.resourceName));
+        let resourceName = pluralize(smartTitleize(this.resourceName));
         let resourcePreposition = getPermissionAction(this.name) === '*' && resourceName ? 'with' : '';
-        let extensionName = humanize(this.extensionName);
+        let extensionName = smartTitleize(this.extensionName);
         let extensionPreposition = 'on';
         let descriptionParts = ['Permission', actionPreposition, actionName, resourcePreposition, resourceName, extensionPreposition, extensionName];
 

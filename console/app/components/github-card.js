@@ -10,9 +10,12 @@ import fetch from 'fetch';
 
 export default class GithubCardComponent extends Component {
     @storageFor('local-cache') localCache;
-    @tracked data;
-    @tracked tags;
-    @tracked isLoading = false;
+    @tracked data = {
+        owner: {
+            avatar_url: 'https://avatars.githubusercontent.com/u/38091894?v=4',
+        },
+    };
+    @tracked tags = [];
 
     @computed('tags.length') get latestRelease() {
         if (isArray(this.tags) && this.tags.length) {

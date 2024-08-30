@@ -1,4 +1,4 @@
-{{page-title "Notifications"}}
+{{page-title "Push Notifications"}}
 <Layout::Section::Header @title={{t "console.admin.notifications.title"}}>
      <Button @type="primary" @size="sm" @icon="save" @text={{t "common.save-button-text"}} @onClick={{this.saveSettings}} @disabled={{this.isLoading}} @isLoading={{this.isLoading}} />
 </Layout::Section::Header>
@@ -7,9 +7,9 @@
     <div class="container mx-auto h-screen">
         <div class="max-w-3xl my-10 mx-auto space-y-4">
             {{#each-in this.groupedNotifications as |groupName notifications|}}
-                <ContentPanel @title={{concat (smart-humanize groupName) (t "console.admin.notifications.notification-settings") }} @open={{true}} @pad={{true}} @panelBodyClass="bg-white dark:bg-gray-800">
+                <ContentPanel @title={{concat (smart-humanize groupName) " " (t "console.admin.notifications.notification-settings") }} @open={{true}} @pad={{true}} @panelBodyClass="bg-white dark:bg-gray-800">
                     {{#each notifications as |notification|}}
-                        <InputGroup @name={{notification.name}} @helpText={{notification.description}}>
+                        <InputGroup @name={{titleize notification.name}} @helpText={{notification.description}}>
                             <div class="fleetbase-model-select fleetbase-power-select ember-model-select">
                                 <PowerSelectMultiple
                                     @searchEnabled={{true}}

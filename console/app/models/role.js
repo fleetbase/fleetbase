@@ -14,6 +14,10 @@ export default class RoleModel extends Model {
     @attr('string') name;
     @attr('string') guard_name;
     @attr('string') description;
+    @attr('string') service;
+    @attr('string') type;
+    @attr('boolean') is_mutable;
+    @attr('boolean') is_deletable;
 
     /** @dates */
     @attr('date') created_at;
