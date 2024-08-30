@@ -106,10 +106,8 @@ export default class ConfigureFilesystemComponent extends Component {
                     type: 'gcs_credentials',
                 },
                 (uploadedFile) => {
-                    console.log('uploadedFile', uploadedFile);
                     this.gcsCredentialsFileId = uploadedFile.id;
                     this.gcsCredentialsFile = uploadedFile;
-                    console.log('this.gcsCredentialsFile', this.gcsCredentialsFile);
                 }
             );
         } catch (error) {

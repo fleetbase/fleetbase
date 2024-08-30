@@ -21,7 +21,7 @@
     {{/if}}
     <div class="flex flex-row items-center mt-3">
         <Input @value={{this.twilioTestPhone}} @type="tel" placeholder="Send Test SMS Here" class="form-input form-input-sm" />
-        <Button @wrapperClass="ml-2" @icon="plug" @text="Test Twilio Config" @onClick={{this.testTwilio}} @isLoading={{this.isLoading}} @disabled={{not this.twilioTestPhone}} />
+        <Button @wrapperClass="ml-2" @icon="plug" @text="Test Twilio Config" @onClick={{perform this.testTwilio}} @isLoading={{this.testTwilio.isRunning}} @disabled={{not this.twilioTestPhone}} />
     </div>
 </ContentPanel>
 
@@ -33,13 +33,15 @@
             <span class="text-xs">{{this.this.sentryTestResponse.message}}</span>
         </div>
     {{/if}}
-    <Button @wrapperClass="mt-3" @icon="plug" @text="Test Sentry Config" @onClick={{this.testSentry}} @isLoading={{this.isLoading}} />
+    <Button @wrapperClass="mt-3" @icon="plug" @text="Test Sentry Config" @onClick={{perform this.testSentry}} @isLoading={{this.testSentry.isRunning}} @disabled={{not this.sentryDsn}} />
 </ContentPanel>
 
 <ContentPanel @title="IP Info" @open={{true}} @pad={{true}} @panelBodyClass="bg-white dark:bg-gray-800">
     <InputGroup @name="IP Info API Key" @value={{this.ipinfoApiKey}} disabled={{this.isLoading}} />
 </ContentPanel>
 
+<Spacer @height="200px" />
+
 <EmberWormhole @to="next-view-section-subheader-actions">
-    <Button @type="primary" @size="sm" @icon="save" @text="Save Changes" @onClick={{this.save}} @disabled={{this.isLoading}} @isLoading={{this.isLoading}} />
+    <Button @type="primary" @size="sm" @icon="save" @text="Save Changes" @onClick={{perform this.save}} @disabled={{or this.save.isRunning this.loadConfigValues.isRunning}} @isLoading={{or this.save.isRunning this.loadConfigValues.isRunning}} />
 </EmberWormhole>

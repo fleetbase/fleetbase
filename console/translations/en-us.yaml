@@ -68,6 +68,12 @@ common:
   export: Export
   reload: Reload
   reload-data: Reload data
+  unauthorized: Unauthorized
+  unauthorized-to: Unauthorized to
+  unauthorized-access: Unauthorized Access
+  unauthorized-access-message: Unauthorized Access, you must request permissions to access.
+  permissions-required-for-changes: You do not have the required permissions to make changes.
+  push-notifications: Push Notifications
 component:
   file:
     dropdown-label: File actions
@@ -179,6 +185,7 @@ auth:
     no-identity-notification: Did you forget to enter your email?
     no-password-notification: Did you forget to enter your password?
     unverified-notification: Your account needs to be verified to proceed.
+    password-reset-required: A password reset is required to continue.
     failed-attempt:
       message: <strong>Forgot your password?</strong><br> Click the button below to reset your password.
       button-text: Ok, help me reset!
@@ -246,7 +253,7 @@ console:
       mail:
         title: Mail Configuration
       notification-channels: 
-        title: Notification Channels Configuration
+        title: Push Notifications Configuration
       queue:
         title: Queue Configuration
       services:
