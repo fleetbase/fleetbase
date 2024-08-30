@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e36984e9016ec9c31454d6bc50a1632a",
+    "content-hash": "91bbd06b358ceef6c2f566d41d6fe49a",
     "packages": [
         {
             "name": "aws/aws-crt-php",
@@ -2295,16 +2295,16 @@
         },
         {
             "name": "fleetbase/core-api",
-            "version": "1.5.3",
+            "version": "1.5.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fleetbase/core-api.git",
-                "reference": "98bb2c16a3357a0b6f45bc8928a99dfdad6ccca1"
+                "reference": "d24a05b1082f8cd87797d209c7f66a6b2678c8c4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fleetbase/core-api/zipball/98bb2c16a3357a0b6f45bc8928a99dfdad6ccca1",
-                "reference": "98bb2c16a3357a0b6f45bc8928a99dfdad6ccca1",
+                "url": "https://api.github.com/repos/fleetbase/core-api/zipball/d24a05b1082f8cd87797d209c7f66a6b2678c8c4",
+                "reference": "d24a05b1082f8cd87797d209c7f66a6b2678c8c4",
                 "shasum": ""
             },
             "require": {
@@ -2387,9 +2387,9 @@
             ],
             "support": {
                 "issues": "https://github.com/fleetbase/core-api/issues",
-                "source": "https://github.com/fleetbase/core-api/tree/v1.5.3"
+                "source": "https://github.com/fleetbase/core-api/tree/v1.5.4"
             },
-            "time": "2024-08-30T05:57:37+00:00"
+            "time": "2024-08-30T10:00:59+00:00"
         },
         {
             "name": "fleetbase/fleetops-api",
@@ -10304,16 +10304,16 @@
         },
         {
             "name": "rize/uri-template",
-            "version": "0.3.7",
+            "version": "0.3.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/rize/UriTemplate.git",
-                "reference": "0c78eaa2e5241faf6c9f246beb53ef3fb31057fd"
+                "reference": "34a5b96d0b65a5dddb7d20f09b6527a43faede24"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/rize/UriTemplate/zipball/0c78eaa2e5241faf6c9f246beb53ef3fb31057fd",
-                "reference": "0c78eaa2e5241faf6c9f246beb53ef3fb31057fd",
+                "url": "https://api.github.com/repos/rize/UriTemplate/zipball/34a5b96d0b65a5dddb7d20f09b6527a43faede24",
+                "reference": "34a5b96d0b65a5dddb7d20f09b6527a43faede24",
                 "shasum": ""
             },
             "require": {
@@ -10346,7 +10346,7 @@
             ],
             "support": {
                 "issues": "https://github.com/rize/UriTemplate/issues",
-                "source": "https://github.com/rize/UriTemplate/tree/0.3.7"
+                "source": "https://github.com/rize/UriTemplate/tree/0.3.8"
             },
             "funding": [
                 {
@@ -10362,7 +10362,7 @@
                     "type": "open_collective"
                 }
             ],
-            "time": "2024-08-29T15:43:27+00:00"
+            "time": "2024-08-30T07:09:40+00:00"
         },
         {
             "name": "s-ichikawa/laravel-sendgrid-driver",
@@ -17907,5 +17907,5 @@
         "php": "^8.0"
     },
     "platform-dev": [],
-    "plugin-api-version": "2.2.0"
+    "plugin-api-version": "2.6.0"
 }
