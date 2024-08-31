@@ -7,8 +7,7 @@ export default class ConsoleAdminRoute extends Route {
     @service router;
 
     beforeModel() {
-        // USER MUST BE ADMIN
-        if (!this.currentUser.user.is_admin) {
+        if (!this.currentUser.isAdmin) {
             return this.router.transitionTo('console').then(() => {
                 this.notifications.error('You do not have authorization to access admin!');
             });
