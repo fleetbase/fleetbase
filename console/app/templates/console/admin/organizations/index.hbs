@@ -15,9 +15,8 @@
         @paginationMeta={{@model.meta}}
         @page={{this.page}}
         @onPageChange={{fn (mut this.page)}}
-        @tfootVerticalOffset="53"
-        @tfootVerticalOffsetElements=".next-view-section-subheader"
         @onRowClick={{this.goToCompany}}
     />
 </Layout::Section::Body>
+
 {{outlet}}
