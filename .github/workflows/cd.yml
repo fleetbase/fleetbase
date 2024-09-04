@@ -132,10 +132,13 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-pnpm-store-
 
-      - name: Check for _GITHUB_AUTH_TOKEN and create .npmrc
+      - name: Create and Setup .npmrc
         run: |
           if [[ -n "${{ secrets._GITHUB_AUTH_TOKEN }}" ]]; then
             echo "//npm.pkg.github.com/:_authToken=${{ secrets._GITHUB_AUTH_TOKEN }}" > .npmrc
+          fi
+          if [[ -n "${{ secrets.FLEETBASE_REGISTRY_TOKEN }}" ]]; then
+            echo "//registry.fleetbase.io/:_authToken=${{ secrets.FLEETBASE_REGISTRY_TOKEN }}" > .npmrc
           fi
         working-directory: ./console
 

@@ -13,6 +13,7 @@ Router.map(function () {
         this.route('reset-password', { path: '/reset-password/:id' });
         this.route('two-fa');
         this.route('verification');
+        this.route('portal-login', { path: '/portal' });
     });
     this.route('onboard', function () {
         this.route('verify-email');
@@ -58,5 +59,6 @@ Router.map(function () {
             });
         });
     });
+    this.route('portal');
     this.route('install');
 });

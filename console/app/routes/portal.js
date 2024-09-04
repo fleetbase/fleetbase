@@ -1,25 +1,19 @@
 import Route from '@ember/routing/route';
 import { inject as service } from '@ember/service';
-import '@fleetbase/leaflet-routing-machine';
 
-export default class ConsoleRoute extends Route {
+export default class PortalRoute extends Route {
     @service store;
     @service session;
-    @service router;
 
     /**
-     * Require authentication to access all `console` routes.
+     * Require authentication to access all `portal` routes.
      *
      * @param {Transition} transition
      * @return {Promise}
      * @memberof ConsoleRoute
      */
-    async beforeModel (transition) {
-        this.session.requireAuthentication(transition, 'auth.login');
-
-        if (this.session.data.authenticated.type === 'customer') {
-            return this.router.transitionTo('portal');
-        }
+    async beforeModel(transition) {
+        this.session.requireAuthentication(transition, 'auth.portal-login');
 
         return this.session.promiseCurrentUser(transition);
     }
@@ -30,7 +24,7 @@ export default class ConsoleRoute extends Route {
      * @return {BrandModel}
      * @memberof ConsoleRoute
      */
-    model () {
+    model() {
         return this.store.findRecord('brand', 1);
     }
 }

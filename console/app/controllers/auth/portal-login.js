@@ -4,7 +4,7 @@ import { tracked } from '@glimmer/tracking';
 import { action } from '@ember/object';
 import pathToRoute from '@fleetbase/ember-core/utils/path-to-route';
 
-export default class AuthLoginController extends Controller {
+export default class AuthPortalLoginController extends Controller {
     @controller('auth.forgot-password') forgotPasswordController;
     @service notifications;
     @service urlSearchParams;
@@ -72,7 +72,7 @@ export default class AuthLoginController extends Controller {
     /**
      * Authentication token.
      *
-     * @memberof AuthLoginController
+     * @memberof AuthPortalLoginController
      */
     @tracked token;
 
@@ -81,7 +81,7 @@ export default class AuthLoginController extends Controller {
      *
      * @param {Event} event
      * @return {void}
-     * @memberof AuthLoginController
+     * @memberof AuthPortalLoginController
      */
     @action async login(event) {
         // firefox patch
@@ -128,6 +128,7 @@ export default class AuthLoginController extends Controller {
         }
 
         try {
+            this.session.setRedirect('portal');
             await this.session.authenticate('authenticator:fleetbase', { identity, password }, rememberMe);
         } catch (error) {
             this.failedAttempts++;
@@ -173,7 +174,7 @@ export default class AuthLoginController extends Controller {
      *
      * @param {String} email
      * @return {Promise<Transition>}
-     * @memberof AuthLoginController
+     * @memberof AuthPortalLoginController
      */
     @action sendUserForEmailVerification(email) {
         return this.fetch.post('auth/create-verification-session', { email, send: true }).then(({ token, session }) => {
@@ -191,7 +192,7 @@ export default class AuthLoginController extends Controller {
      *
      * @param {String} email
      * @return {Promise<Transition>}
-     * @memberof AuthLoginController
+     * @memberof AuthPortalLoginController
      */
     @action sendUserForPasswordReset(email) {
         this.notifications.warning(this.intl.t('auth.login.password-reset-required'));

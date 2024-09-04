@@ -4,25 +4,8 @@ import { tracked } from '@glimmer/tracking';
 import { task } from 'ember-concurrency';
 
 export default class AuthForgotPasswordController extends Controller {
-    /**
-     * Inject the `fetch` service
-     *
-     * @memberof AuthForgotPasswordController
-     */
     @service fetch;
-
-    /**
-     * Inject the `notifications` service
-     *
-     * @memberof AuthForgotPasswordController
-     */
     @service notifications;
-
-    /**
-     * Inject the `intl` service
-     *
-     * @memberof AuthForgotPasswordController
-     */
     @service intl;
 
     /**
