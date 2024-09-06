@@ -1,8 +1,14 @@
 {{page-title "Portal"}}
-<div class="portal-container">
-    <div class="container">
+<Portal::Container>
+    <Portal::Header @onAction={{this.onAction}}  />
+    <Portal::Main>
+        <Portal::Sidebar />
+        <Portal::Section>{{outlet}}</Portal::Section>
+    </Portal::Main>
+</Portal::Container>
+    {{!-- <div class="container">
         <div class="flex flex-row">
             <a href="javascript:;" {{on "click" this.invalidateSession}}>Sign out</a>
         </div>
     </div>
-</div>
+</div> --}}

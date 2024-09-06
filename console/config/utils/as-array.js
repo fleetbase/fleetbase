@@ -3,7 +3,7 @@ module.exports = function asArray(value) {
         return value;
     }
 
-    if (typeof value === 'string' && value.includes(',')) {
+    if (typeof value === 'string') {
         return value.split(',');
     }
 

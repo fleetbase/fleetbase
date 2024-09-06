@@ -14,7 +14,7 @@ export default class ConsoleRoute extends Route {
      * @return {Promise}
      * @memberof ConsoleRoute
      */
-    async beforeModel (transition) {
+    async beforeModel(transition) {
         this.session.requireAuthentication(transition, 'auth.login');
 
         if (this.session.data.authenticated.type === 'customer') {
@@ -30,7 +30,7 @@ export default class ConsoleRoute extends Route {
      * @return {BrandModel}
      * @memberof ConsoleRoute
      */
-    model () {
+    model() {
         return this.store.findRecord('brand', 1);
     }
 }

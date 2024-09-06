@@ -6,12 +6,24 @@ export default class PortalController extends Controller {
     @service session;
 
     /**
+     * Action handler.
+     *
+     * @void
+     */
+    @action onAction(action, ...params) {
+        if (typeof this[action] === 'function') {
+            this[action](...params);
+        }
+    }
+
+    /**
      * Action to invalidate and log user out
      *
      * @void
      */
     @action invalidateSession(event) {
-        event.preventDefault();
+        console.log('invalidateSession', ...arguments)
+        // event.preventDefault();
         this.session.invalidateWithLoader();
     }
 }

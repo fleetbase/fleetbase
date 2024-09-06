@@ -7,6 +7,7 @@ export default class Router extends EmberRouter {
 }
 
 Router.map(function () {
+    this.route('install');
     this.route('auth', function () {
         this.route('login', { path: '/' });
         this.route('forgot-password');
@@ -21,6 +22,9 @@ Router.map(function () {
     this.route('invite', { path: 'join' }, function () {
         this.route('for-driver', { path: '/fleet/:public_id' });
         this.route('for-user', { path: '/org/:public_id' });
+    });
+    this.route('portal', function () {
+        this.route('account');
     });
     this.route('console', { path: '/' }, function () {
         this.route('home', { path: '/' });
@@ -59,6 +63,4 @@ Router.map(function () {
             });
         });
     });
-    this.route('portal');
-    this.route('install');
 });
