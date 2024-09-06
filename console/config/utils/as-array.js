@@ -7,5 +7,5 @@ module.exports = function asArray(value) {
         return value.split(',');
     }
 
-    return [];
+    return Array.from(value);
 };
