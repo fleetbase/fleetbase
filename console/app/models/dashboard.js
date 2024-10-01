@@ -83,4 +83,14 @@ export default class DashboardModel extends Model {
             });
         }
     }
+
+    getRegistry() {
+        const owner = getOwner(this);
+        const universe = owner.lookup('service:universe');
+        if (universe) {
+            return universe.getDashboardRegistry(this.id);
+        }
+
+        return undefined;
+    }
 }

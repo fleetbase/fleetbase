@@ -27,6 +27,14 @@ export default class UserSerializer extends ApplicationSerializer.extend(Embedde
 
         // delete the password always
         delete json.password;
+        // delete verification attributes
+        delete json.email_verified_at;
+        delete json.phone_verified_at;
+
+        // delete server managed dates
+        delete json.deleted_at;
+        delete json.created_at;
+        delete json.updated_at;
 
         return json;
     }

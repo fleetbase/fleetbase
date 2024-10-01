@@ -83,7 +83,7 @@ export default class AuthLoginController extends Controller {
      * @return {void}
      * @memberof AuthLoginController
      */
-    @action async login(event) {
+    @action async login (event) {
         // firefox patch
         event.preventDefault();
         // get user credentials
@@ -116,7 +116,7 @@ export default class AuthLoginController extends Controller {
                             this.reset('success');
                         });
                     })
-                    .catch((error) => {
+                    .catch(error => {
                         this.notifications.serverError(error);
                         this.reset('error');
 
@@ -153,14 +153,14 @@ export default class AuthLoginController extends Controller {
     /**
      * Transition user to onboarding screen
      */
-    @action transitionToOnboard() {
+    @action transitionToOnboard () {
         return this.router.transitionTo('onboard');
     }
 
     /**
      * Transition to forgot password screen, if email is set - set it.
      */
-    @action forgotPassword() {
+    @action forgotPassword () {
         return this.router.transitionTo('auth.forgot-password').then(() => {
             if (this.email) {
                 this.forgotPasswordController.email = this.email;
@@ -175,7 +175,7 @@ export default class AuthLoginController extends Controller {
      * @return {Promise<Transition>}
      * @memberof AuthLoginController
      */
-    @action sendUserForEmailVerification(email) {
+    @action sendUserForEmailVerification (email) {
         return this.fetch.post('auth/create-verification-session', { email, send: true }).then(({ token, session }) => {
             return this.session.store.persist({ email }).then(() => {
                 this.notifications.warning(this.intl.t('auth.login.unverified-notification'));
@@ -193,7 +193,7 @@ export default class AuthLoginController extends Controller {
      * @return {Promise<Transition>}
      * @memberof AuthLoginController
      */
-    @action sendUserForPasswordReset(email) {
+    @action sendUserForPasswordReset (email) {
         this.notifications.warning(this.intl.t('auth.login.password-reset-required'));
         return this.router.transitionTo('auth.forgot-password', { queryParams: { email } }).then(() => {
             this.reset('error');
@@ -205,7 +205,7 @@ export default class AuthLoginController extends Controller {
      *
      * @void
      */
-    setRedirect() {
+    setRedirect () {
         const shift = this.urlSearchParams.get('shift');
 
         if (shift) {
@@ -218,7 +218,7 @@ export default class AuthLoginController extends Controller {
      *
      * @void
      */
-    success() {
+    success () {
         this.reset('success');
     }
 
@@ -228,7 +228,7 @@ export default class AuthLoginController extends Controller {
      * @param {String} error An error message
      * @void
      */
-    failure(error) {
+    failure (error) {
         this.notifications.serverError(error);
         this.reset('error');
     }
@@ -238,7 +238,7 @@ export default class AuthLoginController extends Controller {
      *
      * @void
      */
-    slowConnection() {
+    slowConnection () {
         this.notifications.error(this.intl.t('auth.login.slow-connection-message'));
     }
 
@@ -248,7 +248,7 @@ export default class AuthLoginController extends Controller {
      * @param {String} type
      * @void
      */
-    reset(type) {
+    reset (type) {
         // reset login form state
         this.isLoading = false;
         this.isSlowConnection = false;

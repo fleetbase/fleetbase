@@ -7,5 +7,14 @@ module.exports = function asArray(value) {
         return value.split(',');
     }
 
-    return Array.from(value);
+    try {
+        let iterable = Array.from(value);
+        if (Array.isArray(iterable)) {
+            return iterable;
+        }
+    } catch (error) {
+        return [];
+    }
+
+    return [];
 };

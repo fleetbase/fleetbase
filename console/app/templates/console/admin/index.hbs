@@ -2,7 +2,7 @@
 <Layout::Section::Header @title={{t "common.overview"}} />
 
 <Layout::Section::Body class="overflow-y-scroll h-full">
-    <div class="container mx-auto h-screen" {{increase-height-by 800}}>
+    <div class="container mx-auto h-screen">
         <div class="max-w-3xl my-10 mx-auto space-y-6">
             <div class="grid grid-cols-3 xs:grid-cols-1 gap-4">
                 <StatWidget @title={{t "console.admin.index.total-users"}} @value={{@model.total_users}} />
@@ -11,4 +11,5 @@
             </div>
         </div>
     </div>
+    <Spacer @height="300px" />
 </Layout::Section::Body>

@@ -19,7 +19,13 @@
                 </p>
             </div>
         </div>
-        <Button @text={{t "auth.login.failed-attempt.button-text"}} @type="link" class="text-yellow-100" @wrapperClass="px-4 py-2 bg-gray-900 bg-opacity-25 hover:opacity-50" @onClick={{this.forgotPassword}} />
+        <Button
+            @text={{t "auth.login.failed-attempt.button-text"}}
+            @type="link"
+            class="text-yellow-100"
+            @wrapperClass="px-4 py-2 bg-gray-900 bg-opacity-25 hover:opacity-50"
+            @onClick={{this.forgotPassword}}
+        />
     </div>
 {{/if}}
 
@@ -67,7 +73,7 @@
                 href="javascript:;"
                 {{on "click" this.forgotPassword}}
                 disabled={{this.isLoading}}
-                class="font-medium transition duration-150 ease-in-out text-sky-600 hover:text-sky-500 focus:outline-none focus:underline"
+                class="font-medium transition duration-150 ease-in-out text-sky-500 hover:text-sky-400 focus:outline-none focus:underline"
             >
                 {{t "auth.login.form.forgot-password-label"}}
             </a>
@@ -75,8 +81,26 @@
     </div>
 
     <div class="mt-6 space-y-4">
-        <Button @buttonType="submit" @type="primary" @text={{t "auth.login.form.sign-in-button"}} @icon="lock" @wrapperClass="btn-block" @isLoading={{this.isLoading}} @onClick={{this.login}} />
-        <Button @text={{t "auth.login.form.create-account-button"}} @wrapperClass="btn-block" @disabled={{this.isLoading}} @onClick={{fn (transition-to "onboard")}} />
-        <Button @text="Customer Login" @type="link" @wrapperClass="btn-block py-1 border dark:border-gray-700 border-gray-200 hover:opacity-50" @disabled={{this.isLoading}} @onClick={{fn (transition-to "auth.portal-login")}} />
+        <Button
+            @buttonType="submit"
+            @type="primary"
+            @text={{t "auth.login.form.sign-in-button"}}
+            @icon="lock"
+            @wrapperClass="btn-block"
+            @isLoading={{this.isLoading}}
+            @onClick={{this.login}}
+        />
+        <Button @text={{t "auth.login.form.create-account-button"}} @icon="briefcase" @wrapperClass="btn-block" @disabled={{this.isLoading}} @onClick={{fn (transition-to "onboard")}} />
+        <RegistryYield @type="menu" @registry="auth:login" as |menuItem|>
+            <Button
+                @text={{menuItem.title}}
+                @icon={{menuItem.icon}}
+                @type={{menuItem.type}}
+                @wrapperClass={{menuItem.wrapperClass}}
+                @disabled={{this.isLoading}}
+                @onClick={{menuItem.onClick}}
+                @permission={{menuItem.permission}}
+            />
+        </RegistryYield>
     </div>
 </form>

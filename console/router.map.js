@@ -7,7 +7,11 @@ export default class Router extends EmberRouter {
 }
 
 Router.map(function () {
+    this.route('virtual', { path: '/:slug' });
     this.route('install');
+    this.route('onboard', function () {
+        this.route('verify-email');
+    });
     this.route('auth', function () {
         this.route('login', { path: '/' });
         this.route('forgot-password');
@@ -16,28 +20,22 @@ Router.map(function () {
         this.route('verification');
         this.route('portal-login', { path: '/portal' });
     });
-    this.route('onboard', function () {
-        this.route('verify-email');
-    });
     this.route('invite', { path: 'join' }, function () {
         this.route('for-driver', { path: '/fleet/:public_id' });
         this.route('for-user', { path: '/org/:public_id' });
-    });
-    this.route('portal', function () {
-        this.route('account');
     });
     this.route('console', { path: '/' }, function () {
         this.route('home', { path: '/' });
         this.route('notifications');
         this.route('account', function () {
-            this.route('virtual', { path: '/:slug/:view' });
+            this.route('virtual', { path: '/:slug' });
             this.route('auth');
         });
         this.route('settings', function () {
-            this.route('virtual', { path: '/:slug/:view' });
+            this.route('virtual', { path: '/:slug' });
             this.route('two-fa');
         });
-        this.route('virtual', { path: '/:slug/:view' });
+        this.route('virtual', { path: '/:slug' });
         this.route('admin', function () {
             this.route('config', function () {
                 this.route('database');
@@ -52,7 +50,7 @@ Router.map(function () {
             this.route('branding');
             this.route('notifications');
             this.route('two-fa-settings');
-            this.route('virtual', { path: '/:slug/:view' });
+            this.route('virtual', { path: '/:slug' });
             this.route('organizations', function () {
                 this.route('index', { path: '/' }, function () {
                     this.route('users', { path: '/:public_id/users' });

@@ -12,32 +12,9 @@ import getTwoFaMethods from '@fleetbase/console/utils/get-two-fa-methods';
  * @extends Controller
  */
 export default class ConsoleAccountAuthController extends Controller {
-    /**
-     * Service for handling data fetching.
-     *
-     * @type {fetch}
-     */
     @service fetch;
-
-    /**
-     * Service for displaying notifications.
-     *
-     * @type {notifications}
-     */
     @service notifications;
-
-    /**
-     * Service for managing application routing.
-     *
-     * @type {router}
-     */
     @service router;
-
-    /**
-     * Service for managing modals.
-     *
-     * @type {router}
-     */
     @service modalsManager;
 
     /**
@@ -187,14 +164,12 @@ export default class ConsoleAccountAuthController extends Controller {
      * @param {Object} twoFaSettings - User-specific two-factor authentication settings.
      */
     @task *saveUserTwoFaSettings(twoFaSettings = {}) {
-        yield this.fetch
-            .post('users/two-fa', { twoFaSettings })
-            .then(() => {
-                this.notifications.success('2FA Settings saved successfully.');
-            })
-            .catch((error) => {
-                this.notifications.serverError(error);
-            });
+        try {
+            yield this.fetch.post('users/two-fa', { twoFaSettings });
+            this.notifications.success('2FA Settings saved successfully.');
+        } catch (error) {
+            this.notifications.serverError(error);
+        }
     }
 
     /**
@@ -203,13 +178,17 @@ export default class ConsoleAccountAuthController extends Controller {
      * @method loadUserTwoFaSettings
      */
     @task *loadUserTwoFaSettings() {
-        const twoFaSettings = yield this.fetch.get('users/two-fa');
+        try {
+            const twoFaSettings = yield this.fetch.get('users/two-fa');
+            if (twoFaSettings) {
+                this.isUserTwoFaEnabled = twoFaSettings.enabled;
+                this.twoFaSettings = twoFaSettings;
+            }
 
-        if (twoFaSettings) {
-            this.isUserTwoFaEnabled = twoFaSettings.enabled;
-            this.twoFaSettings = twoFaSettings;
+            return twoFaSettings;
+        } catch (error) {
+            this.notifications.serverError(error);
         }
-        return twoFaSettings;
     }
 
     /**
@@ -218,12 +197,16 @@ export default class ConsoleAccountAuthController extends Controller {
      * @method loadSystemTwoFaConfig
      */
     @task *loadSystemTwoFaConfig() {
-        const twoFaConfig = yield this.fetch.get('two-fa/config');
+        try {
+            const twoFaConfig = yield this.fetch.get('two-fa/config');
+            if (twoFaConfig) {
+                this.isSystemTwoFaEnabled = twoFaConfig.enabled;
+                this.twoFaConfig = twoFaConfig;
+            }
 
-        if (twoFaConfig) {
-            this.isSystemTwoFaEnabled = twoFaConfig.enabled;
-            this.twoFaConfig = twoFaConfig;
+            return twoFaConfig;
+        } catch (error) {
+            this.notifications.serverError(error);
         }
-        return twoFaConfig;
     }
 }

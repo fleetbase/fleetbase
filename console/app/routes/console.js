@@ -5,7 +5,10 @@ import '@fleetbase/leaflet-routing-machine';
 export default class ConsoleRoute extends Route {
     @service store;
     @service session;
+    @service universe;
     @service router;
+    @service currentUser;
+    @service intl;
 
     /**
      * Require authentication to access all `console` routes.
@@ -15,13 +18,13 @@ export default class ConsoleRoute extends Route {
      * @memberof ConsoleRoute
      */
     async beforeModel(transition) {
-        this.session.requireAuthentication(transition, 'auth.login');
+        await this.session.requireAuthentication(transition, 'auth.login');
 
-        if (this.session.data.authenticated.type === 'customer') {
-            return this.router.transitionTo('portal');
+        this.universe.callHooks('console:before-model', this.session, this.router, transition);
+
+        if (this.session.isAuthenticated) {
+            return this.session.promiseCurrentUser(transition);
         }
-
-        return this.session.promiseCurrentUser(transition);
     }
 
     /**
