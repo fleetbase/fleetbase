@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "1644cb552184c1762848cb89bed4d5ec",
+    "content-hash": "9434dad57bb1a79ca56bcb052f8f55ee",
     "packages": [
         {
             "name": "aws/aws-crt-php",
@@ -2296,16 +2296,9 @@
         {
             "name": "fleetbase/billing-api",
             "version": "0.1.2",
-            "source": {
-                "type": "git",
-                "url": "git@github.com:fleetbase/billing.git",
-                "reference": "347a9ad64d3fce6a7d37318125083512f59d25d6"
-            },
             "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/fleetbase/billing/zipball/347a9ad64d3fce6a7d37318125083512f59d25d6",
-                "reference": "347a9ad64d3fce6a7d37318125083512f59d25d6",
-                "shasum": ""
+                "type": "tar",
+                "url": "https://s3.ap-southeast-1.amazonaws.com/fleetbase-registry-production/flb/%40fleetbase/billing-engine/billing-engine-0.1.2.tgz?AWSAccessKeyId=ASIA26E6KG6WFBE5SMKT&Expires=1727873011&Signature=%2BjSJrUpetJOU%2BaNVz9Qn01G82TI%3D&x-amz-security-token=IQoJb3JpZ2luX2VjEFwaDmFwLXNvdXRoZWFzdC0xIkcwRQIgXXmdiNvAkiwh4edludtvRXtIGxUp3N4jMtjkpjxUiRQCIQCCenKw86s%2FCG9aAsQBpsS0yC%2F5DYfTpS7Y72ai164m4iqfBAil%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F8BEAAaDDc1MTk1MTI5NjQyOCIM%2BDvy4tqFav38MHLRKvMDEvW4dPe3n0XC6xSWG4rNK4gZhKO18pRKCoXsmeptPjl72SReknC0dcHFk2riuXO96UhjYbPvGdxbBSlbAt2Tq%2FdMy52Vfez%2Fyu5OMTTb39P1ndeoRFYkswc70QBYy6krWFckY0CaFwIkiPf4N51HV%2FqTByjInadL4gTstXMvLaJzmzjOOesFPbd17hYHNxs7Xw%2F8a22uULPhy4P512zZBCpmrhe%2FAqFKhPkZGrxWrax9cNZ%2B9e4BdVHtYrt1DylHD7AgCvFLDD%2BqsGG9Ox%2FEMxgT8SuFd%2FOLiksNb9z6isG6lWH%2BP3jD%2F6duZUAHrLK51xhGY0BxJCD94AbZORADFmLSnbpOoGbowVc71FDraAdz1Uq36bOwbhqjruwEVic1xdWbxyAzbZ7uFbEAEjI8R37FUUbdr7mqNSLGxe7ELnoyXlMadZbGOuDFa41nLOnuT%2BRqNNANNS12CLppHrW1q4F8j5dBc4Kl1sQV30%2B1mqNCNqTmTqmIrgqU2DCoSaF3FNZZMeHgrpEmgmqitk%2FfEH8zTIerluEe0Xu2Pewsqe8FO5qqJ3pUlfLoP31VNxIERs%2BfmEc2hJpu%2FviF98pE0aG3i53%2F3BSAjcmZcmM94EsF72S8Gr3VCbvg9qeTOGzH7wQVajWjOdnokFucO9rIOq2boTCZ7PS3BjqmAVw5W6zqmqRd5CTLrk1%2FFxrVm%2B9DkvtPV80OQAvFsnhrkArx6ejdvECKQGbs%2FgB0T8J%2BS1vYJ880gGOpjTR43avh0iXNQIbpdy7svFrAO8ubCatseXR61rOEzc6avaKc21csezxFPjK44F9x%2Fvtk6f5dwJr8WXV3BpvKiD8XR9BiXScRNQmimVrn%2FD%2B5M%2BR6Tl4X5%2BEwn8bxaZ4Bj1AU24rw9or93EQ%3D"
             },
             "require": {
                 "fleetbase/core-api": "^1.5.6",
@@ -2396,12 +2389,7 @@
                 "revenue generator",
                 "stripe",
                 "stripe api"
-            ],
-            "support": {
-                "source": "https://github.com/fleetbase/billing/tree/v0.1.2",
-                "issues": "https://github.com/fleetbase/billing/issues"
-            },
-            "time": "2024-09-04T04:32:57+00:00"
+            ]
         },
         {
             "name": "fleetbase/core-api",
@@ -2502,6 +2490,96 @@
             "time": "2024-10-02T05:48:55+00:00"
         },
         {
+            "name": "fleetbase/customer-portal-api",
+            "version": "0.0.1",
+            "source": {
+                "type": "git",
+                "url": "git@github.com:fleetbase/customer-portal.git",
+                "reference": "36bd1e61c5fba3cb7c12caba04c8ef7d47040b8a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/fleetbase/customer-portal/zipball/36bd1e61c5fba3cb7c12caba04c8ef7d47040b8a",
+                "reference": "36bd1e61c5fba3cb7c12caba04c8ef7d47040b8a",
+                "shasum": ""
+            },
+            "require": {
+                "fleetbase/core-api": "^1.5.9",
+                "php": "^8.0",
+                "php-http/guzzle7-adapter": "^1.0",
+                "psr/http-factory-implementation": "*"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "^3.34.1",
+                "nunomaduro/collision": "^5.11.0|^6.4.0",
+                "pestphp/pest": "^1.22.6",
+                "phpstan/phpstan": "^1.10.38",
+                "symfony/var-dumper": "^5.4.29"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Fleetbase\\CustomerPortal\\Providers\\CustomerPortalServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Fleetbase\\CustomerPortal\\": "server/src/",
+                    "Fleetbase\\CustomerPortal\\Seeds\\": "server/seeds/"
+                }
+            },
+            "autoload-dev": {
+                "psr-4": {
+                    "Fleetbase\\CustomerPortal\\Tests\\": "server/tests/"
+                }
+            },
+            "scripts": {
+                "lint": [
+                    "php-cs-fixer fix -v"
+                ],
+                "test:lint": [
+                    "php-cs-fixer fix -v --dry-run"
+                ],
+                "test:types": [
+                    "phpstan analyse --ansi --memory-limit=0"
+                ],
+                "test:unit": [
+                    "pest --colors=always"
+                ],
+                "test": [
+                    "@test:lint",
+                    "@test:types",
+                    "@test:unit"
+                ]
+            },
+            "license": [
+                "AGPL-3.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "Fleetbase Pte Ltd.",
+                    "email": "hello@fleetbase.io"
+                }
+            ],
+            "description": "Extendable Customer Portal for Fleetbase",
+            "keywords": [
+                "customer",
+                "customer management",
+                "customer portal",
+                "customer support",
+                "customer tracking",
+                "fleetbase",
+                "fleetbase-extension"
+            ],
+            "support": {
+                "source": "https://github.com/fleetbase/customer-portal/tree/v0.0.1",
+                "issues": "https://github.com/fleetbase/customer-portal/issues"
+            },
+            "time": "2024-10-02T10:19:59+00:00"
+        },
+        {
             "name": "fleetbase/fleetops-api",
             "version": "0.5.8",
             "source": {
@@ -2595,7 +2673,7 @@
             "version": "0.1.13",
             "dist": {
                 "type": "tar",
-                "url": "https://s3.ap-southeast-1.amazonaws.com/fleetbase-registry-production/flb/%40fleetbase/flespi-engine/flespi-engine-0.1.13.tgz?AWSAccessKeyId=ASIA26E6KG6WDODHANUY&Expires=1727869031&Signature=XRaTPV48uybA7SIAvr3dmCSNE2k%3D&x-amz-security-token=IQoJb3JpZ2luX2VjEFYaDmFwLXNvdXRoZWFzdC0xIkcwRQIhAPRwnecV7sjBYBkLi7l1hAdISE%2BDY2kOweTuRtF2TO74AiB8d5c1vdcwo67o4EFl9rgIWGN15Yy8sAJ8eK%2BqAVfk7yqfBAif%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F8BEAAaDDc1MTk1MTI5NjQyOCIMYkB%2BCi%2FgxZ8n2TPXKvMDq%2BzAFDFo7r2k6rGQ2iO93gVZlIEMTfZmi%2BWVFF2yho8mwckzQ1L5SFGeofZfXJenBNENyaIDl9%2Fl6Sbp%2BAdkon6MVxyX1l4rn9per2grRL0Tsxmul0sUBvjn8587sLp9C1yYW6P2dsOX0HTlY8nr7JhO2%2Ftv7oF7kELifE6y8lD71hEeP13jwK15epDTgRq2cR7MwPwCaYmc5i5ZPa7rbVnJRsh9vvRfQZdPJdCLf%2Bw3qJcaVz2pNCGDNKEnaILxgqUhrLRrM98dW2AdeA5W1r3LpGLOJoeDW8fQg3yIzFYoT3EkoTj1UCnXCh2R9PkF1k%2BR8XeUofx%2BhgS7N41q1Ie2%2ByVsCZFrJWERc2sqVB52wazHR89QsLjiwQoakVPzgtUnl2iDmL9Dygnp2jKqPPLlwDgY%2FCG9wJ%2Fb7zNijMxkbfRRy4%2BbN1p1EJPNmdr0WWkrnzf3YX2j5NgTnxKc%2BJhOX%2BXyrsm3XHR5fbgCes5mM20PwYod0oGub4TyEcsGHRO3gsKakUlV%2BqvXUuwnGvBrdP3QGMOLarf38oTDwW3mMX8JsZ1E54eiThpHyN5Iajq7ZD2L6qZtTa8kJpbuXOStUbdSASv2sftnXtgbYE9sUDvP0cVaQAb64NW6iEabIB9vlo2gFv%2Fyc0UHum8S5LNnAjCuu%2FO3BjqmAe8NrLr9dnhS%2F5IgY%2BMLk6nxqWjZazhlSf1tiNZC8LlY1MED7CVSPoAHGfYtZ%2F0Fg9uxC6UUVApknNTZS%2BdYWc%2FpCbJTjtuG2n0rfXc002fj6tXHz2hh8lUz6ff6371XJjnp1jJMj47AYIwCNfUX5GTiXwPAkFVkWLvTwb4dn9IDrpLzMA4QKSGqPF4bTcp1CBsm33FqrWO3e%2B1FRSDP5v4ZyA361p0%3D"
+                "url": "https://s3.ap-southeast-1.amazonaws.com/fleetbase-registry-production/flb/%40fleetbase/flespi-engine/flespi-engine-0.1.13.tgz?AWSAccessKeyId=ASIA26E6KG6WFBE5SMKT&Expires=1727873011&Signature=dB7j%2FeAgnd7CS4ih9vhFkOW4x94%3D&x-amz-security-token=IQoJb3JpZ2luX2VjEFwaDmFwLXNvdXRoZWFzdC0xIkcwRQIgXXmdiNvAkiwh4edludtvRXtIGxUp3N4jMtjkpjxUiRQCIQCCenKw86s%2FCG9aAsQBpsS0yC%2F5DYfTpS7Y72ai164m4iqfBAil%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F8BEAAaDDc1MTk1MTI5NjQyOCIM%2BDvy4tqFav38MHLRKvMDEvW4dPe3n0XC6xSWG4rNK4gZhKO18pRKCoXsmeptPjl72SReknC0dcHFk2riuXO96UhjYbPvGdxbBSlbAt2Tq%2FdMy52Vfez%2Fyu5OMTTb39P1ndeoRFYkswc70QBYy6krWFckY0CaFwIkiPf4N51HV%2FqTByjInadL4gTstXMvLaJzmzjOOesFPbd17hYHNxs7Xw%2F8a22uULPhy4P512zZBCpmrhe%2FAqFKhPkZGrxWrax9cNZ%2B9e4BdVHtYrt1DylHD7AgCvFLDD%2BqsGG9Ox%2FEMxgT8SuFd%2FOLiksNb9z6isG6lWH%2BP3jD%2F6duZUAHrLK51xhGY0BxJCD94AbZORADFmLSnbpOoGbowVc71FDraAdz1Uq36bOwbhqjruwEVic1xdWbxyAzbZ7uFbEAEjI8R37FUUbdr7mqNSLGxe7ELnoyXlMadZbGOuDFa41nLOnuT%2BRqNNANNS12CLppHrW1q4F8j5dBc4Kl1sQV30%2B1mqNCNqTmTqmIrgqU2DCoSaF3FNZZMeHgrpEmgmqitk%2FfEH8zTIerluEe0Xu2Pewsqe8FO5qqJ3pUlfLoP31VNxIERs%2BfmEc2hJpu%2FviF98pE0aG3i53%2F3BSAjcmZcmM94EsF72S8Gr3VCbvg9qeTOGzH7wQVajWjOdnokFucO9rIOq2boTCZ7PS3BjqmAVw5W6zqmqRd5CTLrk1%2FFxrVm%2B9DkvtPV80OQAvFsnhrkArx6ejdvECKQGbs%2FgB0T8J%2BS1vYJ880gGOpjTR43avh0iXNQIbpdy7svFrAO8ubCatseXR61rOEzc6avaKc21csezxFPjK44F9x%2Fvtk6f5dwJr8WXV3BpvKiD8XR9BiXScRNQmimVrn%2FD%2B5M%2BR6Tl4X5%2BEwn8bxaZ4Bj1AU24rw9or93EQ%3D"
             },
             "require": {
                 "fleetbase/core-api": "^1.5.9",
@@ -8764,16 +8842,16 @@
         },
         {
             "name": "php-http/message",
-            "version": "1.16.1",
+            "version": "1.16.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-http/message.git",
-                "reference": "5997f3289332c699fa2545c427826272498a2088"
+                "reference": "06dd5e8562f84e641bf929bfe699ee0f5ce8080a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-http/message/zipball/5997f3289332c699fa2545c427826272498a2088",
-                "reference": "5997f3289332c699fa2545c427826272498a2088",
+                "url": "https://api.github.com/repos/php-http/message/zipball/06dd5e8562f84e641bf929bfe699ee0f5ce8080a",
+                "reference": "06dd5e8562f84e641bf929bfe699ee0f5ce8080a",
                 "shasum": ""
             },
             "require": {
@@ -8827,9 +8905,9 @@
             ],
             "support": {
                 "issues": "https://github.com/php-http/message/issues",
-                "source": "https://github.com/php-http/message/tree/1.16.1"
+                "source": "https://github.com/php-http/message/tree/1.16.2"
             },
-            "time": "2024-03-07T13:22:09+00:00"
+            "time": "2024-10-02T11:34:13+00:00"
         },
         {
             "name": "php-http/promise",
