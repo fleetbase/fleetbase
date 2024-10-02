@@ -34,4 +34,9 @@ return [
         'api_key' => env('SENDGRID_API_KEY'),
     ],
 
+    'stripe' => [
+        'key' => env('STRIPE_KEY', env('STRIPE_API_KEY')),
+        'secret' => env('STRIPE_SECRET', env('STRIPE_API_SECRET')),
+        'webhook_secret' => env('STRIPE_WEBHOOK_SECRET'),
+    ],
 ];

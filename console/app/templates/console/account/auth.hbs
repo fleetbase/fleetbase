@@ -2,7 +2,7 @@
 <Layout::Section::Header @title="Account Auth" />
 
 <Layout::Section::Body class="overflow-y-scroll h-full">
-    <div class="container mx-auto h-screen" {{increase-height-by 500}}>
+    <div class="container mx-auto h-screen">
         <div class="max-w-3xl my-10 mx-auto space-y-6">
             <ContentPanel @title="Change Password" @open={{true}} @pad={{true}} @panelBodyClass="bg-white dark:bg-gray-800">
                 <form id="change-password-form" aria-label="change-password" {{on "submit" (perform this.changePassword)}}>
@@ -31,4 +31,5 @@
             {{/if}}
         </div>
     </div>
+    <Spacer @height="500px" />
 </Layout::Section::Body>

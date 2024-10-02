@@ -155,9 +155,9 @@ export default class ConsoleController extends Controller {
      *
      * @void
      */
-    @action invalidateSession(noop, event) {
+    @action async invalidateSession(noop, event) {
         event.preventDefault();
-        this.session.invalidateWithLoader();
+        await this.session.invalidateWithLoader();
     }
 
     /**

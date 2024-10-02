@@ -1,12 +1,12 @@
 import { module, test } from 'qunit';
 import { setupTest } from '@fleetbase/console/tests/helpers';
 
-module('Unit | Service | dashboard', function (hooks) {
+module('Unit | Controller | console/admin/virtual', function (hooks) {
     setupTest(hooks);
 
     // TODO: Replace this with your real tests.
     test('it exists', function (assert) {
-        let service = this.owner.lookup('service:dashboard');
-        assert.ok(service);
+        let controller = this.owner.lookup('controller:console/admin/virtual');
+        assert.ok(controller);
     });
 });

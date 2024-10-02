@@ -1,0 +1,357 @@
+app:
+  name: Fleetbase
+terms:
+  new: Novo
+  sort: Classificar
+  filter: Filtrar
+  columns: Colunas
+  settings: Configurações
+  home: Início
+  admin: Admin
+  logout: Desconectar
+  dashboard: Painel
+  search: Pesquisar
+  search-input: Termo de Pesquisa
+common:
+  confirm: Confirmar
+  edit: Editar
+  save: Salvar
+  save-changes: Salvar Alterações
+  cancel: Cancelar
+  2fa-config: Configurações 2FA
+  account: Conta
+  admin: Admin
+  branding: Marca
+  columns: Colunas
+  dashboard: Painel
+  date-of-birth: Data de Nascimento
+  delete: Deletar
+  email: Email
+  filesystem: Sistema de Arquivos
+  filter: Filtrar
+  home: Início
+  logout: Desconectar
+  mail: Mail (TRADUZIR)
+  name: Nome
+  new: Novo
+  notification-channels: Canais de Notificações
+  notifications: Notificações
+  organization: Organização
+  organizations: Organizações
+  overview: Visão geral
+  phone: Número de Telefone
+  profile: Perfil
+  queue: Fila
+  save-button-text: Salvar Alterações
+  search-input: Termo de Pesquisa
+  search: Pesquisar
+  services: Serviços
+  settings: Configurações
+  socket: Socket
+  sort: Classificar
+  two-factor: Dois Fatores
+  uploading: Carregando...
+  your-profile: Seu Perfil
+  created-at: Criado em
+  country: País
+  phone-number: Telefone
+  status: Status
+  close-and-save: Fechar e Salvar
+  users: Usuários
+  changelog: Registro de Alterações
+  ok: OK
+  select-file: Selecionar Arquivo
+  back: Voltar
+  next: Próximo
+  continue: Continuar
+  done: Concluído
+  export: Exportar
+  reload: Recarregar
+  reload-data: Recarregar dados
+component:
+  file:
+    dropdown-label: Ações do Arquivo
+  import-modal:
+    loading-message: Processando dados...
+    drop-upload: Arraste para Carregar
+    invalid: Invalido
+    ready-upload: Pronto para Carregar.
+    upload-spreadsheets: Carregar Planilhas
+    drag-drop: Arraste e solte os arquivos das planilhas nesta área
+    button-text: ou selecione planilhas para carregar
+    spreadsheets: Planilhas
+    upload-queue: Carregar Fila
+  dropzone:
+    file: Arquivo
+    drop-to-upload: Solte para Carregar
+    invalid: Invalido
+    files-ready-for-upload:  >-
+      {numOfFiles} pronto fara carregar.
+    upload-images-videos: Carregar Imagens & Videos
+    upload-documents: Carregar Documentos
+    upload-documents-files: Carregar Documentos & Arquivos
+    upload-avatar-files: Carregar Avatares Customizados
+    dropzone-supported-images-videos: Arraste e solte arquivos de imagens e videos nesta área
+    dropzone-supported-avatars: Arraste e solte arquivos SVG ou PNG.
+    dropzone-supported-files: Arraste e solte arquivos nesta área.
+    or-select-button-text: or select files to upload.
+    upload-queue: Carregar Fila
+    uploading: Carregando...
+  two-fa-enforcement-alert:
+    message: Para aumentar a segurança da sua conta, sua organização requer Autenticação de Dois Fatores (2FA). Ative 2FA na configurações da conta para uma camada adicional de proteção.
+    button-text: Ativar 2FA
+  comment-thread:
+    publish-comment-button-text: Publicar comentário
+    publish-reply-button-text: Publicar resposta
+    reply-comment-button-text: Reponder
+    edit-comment-button-text: Editar
+    delete-comment-button-text: Deletar
+    comment-published-ago: >-
+            {createdAgo} atrás
+    comment-input-placeholder: Digite um novo comentário...
+    comment-reply-placeholder: Digite sua resposta...
+    comment-input-empty-notification: Você não pode publicar comentários em branco...
+    comment-min-length-notification: Comentarários devem ter pelo menos 2 caracteres
+  dashboard:
+    select-dashboard: Selecionar Painel
+    create-new-dashboard: Criar novo Painel
+    create-a-new-dashboard: Create um novo Painel
+    confirm-create-dashboard: Criar Painel!
+    edit-layout: Editar layout
+    add-widgets: Adicionar widgets (elementos)
+    delete-dashboard: Deletar Painel
+    save-dashboard: Salvar Painel
+    you-cannot-delete-this-dashboard: Você não pode deletar esse painel.
+    are-you-sure-you-want-delete-dashboard: Você tem certeza que deseja deletar {dashboardName}?
+  dashboard-widget-panel:
+    widget-name: >-
+      {widgetName} Elemento
+    select-widgets: Selecionar Elementos
+    close-and-save: Fechar e Salvar
+services:
+  dashboard-service:
+    create-dashboard-success-notification: Novo painel `{dashboardName}` criado com sucesso.
+    delete-dashboard-success-notification: Painel `{dashboardName}` foi deletado.
+auth:
+  verification:
+    header-title: Verificação de Conta
+    title: Verifique seu endereço de Email.
+    message-text: <strong>Quase Pronto!</strong><br> Verifique seu email para obter um código de verificação.
+    verification-code-text: Digite o código de verificação recebido em seu email.
+    verification-input-label: Código de Verificação
+    verify-button-text: Verificar & Continuar
+    didnt-receive-a-code: Ainda não recebeu o código?
+    not-sent:
+      message: Ainda não recebeu o código?
+      alternative-choice: Use opções alternativas abaixo para verificar sua conta.
+      resend-email: Reenviar Email
+      send-by-sms: Enviar via SMS
+  two-fa:
+    verify-code:
+      verification-code: Código de Verificação
+      check-title: Verifique seu Email ou Telefone.
+      check-subtitle: Nós enviamos um código de verificação. Digite o código abaixo para completar o processo de login.
+      expired-help-text: Seu código de verificação 2FA expirou. Você pode pedir outro código se precisar de mais tempo.
+      resend-code: Reenviar Código
+      verify-code: Verificar Código
+      cancel-two-factor: Cancelar Dois-Fatores
+      invalid-session-error-notification: Sessão Inválida. Por favor tente novamente.
+      verification-successful-notification: Verificação concluída!
+      verification-code-expired-notification: Código de vericação expirado. Por favor peça um novo.
+      verification-code-failed-notification: Verificação falhou. Por favor tente novamente.
+    resend-code:
+      verification-code-resent-notification: Novo código de verificação enviado.
+      verification-code-resent-error-notification: Erro ao reenviar o código de verificação. Por favor tente novamente.
+  forgot-password:
+    success-message: Verifique seu email para continuar!
+    is-sent:
+      title: Quase Pronto!
+      message: <strong>Verifique seu Email!</strong><br> Nós te enviamos um link mágico para o seu email que vai permitir você redefinir sua senha. O link expira em 15 minutos.
+    not-sent:
+      title: Esqueceu sua senha?
+      message: <strong>Não se preocupe, nós damos um jeito.</strong><br> Digite o email que voce usa para fazer login no {appName} e nós te enviaremos um link seguro para redefinir sua senha.
+    form:
+      email-label: Seu endereço de Email
+      submit-button: OK, me envie o link!
+      nevermind-button: Deixa para lá.
+  login:
+    title: Entre na sua conta!
+    no-identity-notification: Você se esqueceu de digitar seu email?
+    no-password-notification: Você se esqueceu de digirar sua senha?
+    unverified-notification: Sua conta precisa ser verificada para continuar.
+    failed-attempt:
+      message: <strong>Esqueceu a senha?</strong><br> Clique no botão abaixo para redefini-la.
+      button-text: Ok, ajude-me a redefinir!
+    form:
+      email-label: Endereço de Email
+      password-label: Senha
+      remember-me-label: Lembre de mim
+      forgot-password-label: Esqueceu sua Senha?
+      sign-in-button: Entrar
+      create-account-button: Criar uma Nova Conta
+    slow-connection-message: Enfrentando problemas de conectividade.
+  reset-password:
+    success-message: Sua senha foi redefinida! Faça Login para continuar.
+    invalid-verification-code: Esse link de redefinição de senha é inválido ou está expirado.
+    title: Redefina sua senha
+    form:
+      code:
+        label: Seu código de redefinição
+        help-text: O código que você recebeu em seu email.
+      password:
+        label: Nova Senha
+        help-text: Digite uma senha de pelo menos 6 caracteres para continuar.
+      confirm-password:
+        label: Confirme a nova Senha
+        help-text: Digite uma senha de pelo menos 6 caracteres para continuar.
+      submit-button: Redefinir Senha.
+      back-button: Voltar
+console:
+  create-or-join-organization:
+    modal-title: Criar ou juntar-se a uma Organização
+    join-success-notification: Você se juntou a uma organização!
+    create-success-notification: Você criou uma nova organização!
+  switch-organization:
+    modal-title: Você tem certeza que deseja trocar de organização para {organizationName}?
+    modal-body: Ao confirmar, sua conta permanecerá conectada, mas sua organização principal será alterada.
+    modal-accept-button-text: Sim, quero mudar de organização
+    success-notification: Você trocou de organização
+  account:
+    index:
+      upload-new: Carregar novo
+      phone: Seu telefone.
+      photos: Fotos
+  admin:
+    schedule-monitor:
+      schedule-monitor: Monitor de Cronograma
+      task-logs-for: >-
+        Registros de tarefas para:
+      showing-last-count: Mostrando últimos {count} registros
+      name: Nome
+      type: Tipo
+      timezone: Fuso horário
+      last-started: Último Iniciado
+      last-finished: Último Finalizado
+      last-failure: Última Falha
+      date: Data
+      memory: Memoria
+      runtime: Tempo de execução
+      output: Saída
+      no-output: Sem Saída
+    config:
+      database:
+        title: Configuração do Banco de Dados
+      filesystem:
+        title: Configuração do Sistema de Arquivos
+      mail:
+        title: Configuração do Email
+      notification-channels:
+        title: Configuração de Canais de Notificação
+      queue:
+        title: Configuração da Fila
+      services:
+        title: Configuração de Serviços
+      socket:
+        title: Configuração de Soquete
+    branding:
+      title: Marca
+      icon-text: Ícone
+      upload-new: Carregar novo
+      reset-default: Restaurar Padrão
+      logo-text: Logo
+      theme: Tema Padrão
+    index:
+      total-users: Total de Usuários
+      total-organizations: Total de Organizações
+      total-transactions: Total de Transações
+    notifications:
+      title: Notificações
+      notification-settings: Configuração de Notificações
+    organizations:
+      index:
+        title: Organizações
+        owner-name-column: Proprietário
+        owner-phone-column: Telefone do Proprietário
+        owner-email-column: Email do Proprietário
+        users-count-column: Usuários
+        phone-column: Telefone
+        email-column: Email
+      users:
+        title: Usuários
+  settings:
+    index:
+      title: Configuração da Organização
+      organization-name: Nome da Organização
+      organization-description: Descrição da Organização
+      organization-phone: Número de telefone da Organização
+      organization-currency: Moeda da Organização
+      organization-id: ID da Organização
+      organization-branding: Marca da Organização
+      logo: Logo
+      logo-help-text: Logo da sua Organização.
+      upload-new-logo: Carregar novo logo
+      backdrop: Imagem de Fundo
+      backdrop-help-text: Banner opcional ou imagem de fundo para sua organização.
+      upload-new-backdrop: Carregar nova Imagem de Fundo
+  extensions:
+    title: As extensões chegarão em breve!
+    message: Volte nas próximas versões enquanto nos preparamos para lançar o repositório e o mercado de extensões.
+  notifications:
+    select-all: Selecionar todas
+    mark-as-read: Marcar como lido
+    received: >-
+        Recebido:
+    message: Nenhuma notificação para exibir.
+invite:
+  for-users:
+    invitation-message: Você foi convidado para entrar em {companyName}
+    invitation-sent-message: Você foi convidado para participar da organização {companyName} no {appName}. Para aceitar este convite, insira seu código de convite recebido por e-mail e clique em continuar.
+    invitation-code-sent-text: Seu código de convite
+    accept-invitation-text: Aceitar convite
+onboard:
+  index:
+    title: Criar sua conta
+    welcome-title: <strong>Bem vindo a {companyName}!</strong><br />
+    welcome-text: Preencha os detalhes necessários abaixo para começar.
+    full-name: Nome Completo
+    full-name-help-text: Seu nome completo
+    your-email: Endereço de Email
+    your-email-help-text: Seu endereço de email
+    phone: Telefone
+    phone-help-text: Seu número de telefone
+    organization-name: Nome da Organização
+    organization-help-text: O nome da sua organização, todos os seus serviços e recursos serão gerenciados por esta organização. Mais tarde, você poderá criar quantas organizações quiser ou precisar.
+    password: Digite a senha
+    password-help-text: Sua senha, certifique-se de que seja uma boa senha.
+    confirm-password: Confirme sua Senha
+    confirm-password-help-text: Apenas para confirmar a senha que você digitou acima.
+    continue-button-text: Continuar
+  verify-email:
+    header-title: Verificação de Conta
+    title: Verifique seu endereço de Email
+    message-text: <strong>Quase pronto!</strong><br> Verifique seu e-mail para obter o código de verificação.
+    verification-code-text: Insira o código de verificação que você recebeu por e-mail.
+    verification-input-label: Código de Verificação
+    verify-button-text: Verificar & Continuar
+    didnt-receive-a-code: Ainda não recebeu o código?
+    not-sent:
+      message: Ainda não recebeu o código?
+      alternative-choice: Use as opções alternativas abaixo para verificar sua conta.
+      resend-email: Reenviar E-mail
+      send-by-sms: Enviar por SMS
+install:
+  installer-header: Instalador
+  failed-message-sent: A instalação falhou! Clique no botão abaixo para tentar instalar novamente.
+  retry-install: Tentar instalar novamente
+  start-install: Iniciar instalação
+layout:
+  header:
+    menus:
+      organization:
+        settings: Configurações da Organização
+        create-or-join: Criar ou entrar em organizações
+        explore-extensions: Explorar extensões
+      user:
+        view-profile: Ver Perfil
+        keyboard-shortcuts: Mostrar atalhos de teclado
+        changelog: Registro de alterações

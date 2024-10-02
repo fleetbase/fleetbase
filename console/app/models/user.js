@@ -23,9 +23,11 @@ export default class UserModel extends Model {
     @attr('string') country;
     @attr('string') ip_address;
     @attr('string') slug;
+    @attr('string') role_name;
     @attr('string') type;
     @attr('string') session_status;
     @attr('string') status;
+    @attr('string') locale;
     @attr('boolean') is_online;
     @attr('boolean') is_admin;
     @attr('raw') meta;

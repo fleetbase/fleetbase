@@ -4,7 +4,14 @@ import { inject as service } from '@ember/service';
 export default class ConsoleAdminVirtualRoute extends Route {
     @service universe;
 
-    model({ slug, view }) {
-        return this.universe.lookupMenuItemFromRegistry('admin', slug, view);
+    queryParams = {
+        view: {
+            refreshModel: true,
+        },
+    };
+
+    model({ slug }, transition) {
+        const view = this.universe.getViewFromTransition(transition);
+        return this.universe.lookupMenuItemFromRegistry('console:admin', slug, view);
     }
 }
