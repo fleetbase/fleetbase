@@ -10,7 +10,7 @@ export default class VirtualRoute extends Route {
         },
     };
 
-    model ({ slug }, transition) {
+    model({ slug }, transition) {
         const view = this.universe.getViewFromTransition(transition);
         return this.universe.lookupMenuItemFromRegistry('auth:login', slug, view);
     }

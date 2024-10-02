@@ -1,4 +1,4 @@
-export function initialize (owner) {
+export function initialize(owner) {
     const leafletService = owner.lookup('service:leaflet');
     if (leafletService) {
         leafletService.load({

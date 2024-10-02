@@ -23,7 +23,7 @@ export default class ApplicationRoute extends Route {
      * @memberof ApplicationRoute
      */
     // eslint-disable-next-line ember/classic-decorator-hooks
-    async init () {
+    async init() {
         super.init(...arguments);
         const { shouldInstall, shouldOnboard, defaultTheme } = await this.checkInstallationStatus();
 
@@ -45,7 +45,7 @@ export default class ApplicationRoute extends Route {
      * @return {Transition}
      * @memberof ApplicationRoute
      */
-    async beforeModel () {
+    async beforeModel() {
         await this.session.setup();
         await this.universe.booting();
 
@@ -61,7 +61,7 @@ export default class ApplicationRoute extends Route {
      * @memberof ApplicationRoute
      * @void
      */
-    activate () {
+    activate() {
         this.initializeTheme();
         this.initializeLocale();
     }
@@ -74,7 +74,7 @@ export default class ApplicationRoute extends Route {
      * `'is-electron'` class to the array. It then calls the `initialize` method of the `theme` service,
      * passing in the `bodyClassNames` array and the `defaultTheme` configuration.
      */
-    initializeTheme () {
+    initializeTheme() {
         const bodyClassNames = [];
 
         if (isElectron()) {
@@ -91,7 +91,7 @@ export default class ApplicationRoute extends Route {
      * If no locale is set by the user, it defaults to `'en-us'`. It then sets the application's locale by calling
      * the `setLocale` method of the `intl` service with the retrieved locale.
      */
-    initializeLocale () {
+    initializeLocale() {
         const locale = this.currentUser.getOption('locale', 'en-us');
         this.intl.setLocale([locale]);
     }
@@ -102,7 +102,7 @@ export default class ApplicationRoute extends Route {
      * @return {Promise}
      * @memberof ApplicationRoute
      */
-    checkInstallationStatus () {
+    checkInstallationStatus() {
         return this.fetch.get('installer/initialize');
     }
 }
