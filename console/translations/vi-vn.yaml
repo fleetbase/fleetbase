@@ -1,0 +1,363 @@
+app:
+  name: Fleetbase
+terms:
+  new: Mới
+  sort: Sắp xếp
+  filter: Lọc
+  columns: Cột
+  settings: Cài đặt
+  home: Trang chủ
+  admin: Admin
+  logout: Đăng xuất
+  dashboard: Bảng điều khiển
+  search: Tìm kiếm
+  search-input: Đầu vào tìm kiếm
+common: 
+  confirm: Xác nhận
+  edit: Chỉnh sửa
+  save: Lưu
+  save-changes: Lưu thay đổi
+  cancel: Hủy
+  2fa-config: Cấu hình 2FA
+  account: Tài khoản
+  admin: Admin
+  branding: Thương hiệu
+  columns: Cột
+  dashboard: Bảng điều khiển
+  date-of-birth: Ngày sinh
+  delete: Xóa
+  email: Email
+  filesystem: Hệ thống tệp
+  filter: Lọc
+  home: Trang chủ
+  logout: Đăng xuất
+  mail: Mail
+  name: Tên
+  new: Mới
+  notification-channels: Kênh thông báo
+  notifications: Thông báo
+  organization: Tổ chức
+  organizations: Các tổ chức
+  overview: Tổng quan
+  phone: Số điện thoại của bạn
+  profile: Hồ sơ
+  queue: Hàng đợi
+  save-button-text: Lưu thay đổi
+  search-input: Đầu vào tìm kiếm
+  search: Tìm kiếm
+  services: Dịch vụ
+  settings: Cài đặt
+  socket: Socket
+  sort: Sắp xếp
+  two-factor: Hai yếu tố
+  uploading: Đang tải lên...
+  your-profile: Hồ sơ của bạn
+  created-at: Được tạo vào
+  country: Quốc qua
+  phone-number: Số điện thoại
+  status: Trạng thái
+  close-and-save: Đóng và Lưu
+  users: Người dùng
+  changelog: Nhật ký thay đổi
+  ok: OK
+  select-file: Chọn tệp
+  back: Quay lại
+  next: Tiếp theo
+  continue: Tiếp tục
+  done: Đã xong
+  export: Xuất
+  reload: Tải lại
+  reload-data: Tải lại dữ liệu
+  unauthorized: Không có quyền
+  unauthorized-to: Không có quyền để
+  unauthorized-access: Không có quyền truy cập
+  unauthorized-access-message: Không có quyền truy cập, bạn phải yêu cầu quyền để truy cập.
+  permissions-required-for-changes: Bạn không có quyền cần thiết để thực hiện thay đổi.
+  push-notifications: Đẩy thông báo
+component:
+  file:
+    dropdown-label: Hành động với tệp
+  import-modal:
+    loading-message: Đang tiến hành nhập...
+    drop-upload: Thả để tải lên
+    invalid: Không hợp lệ
+    ready-upload: sẵn sàng tải lên.
+    upload-spreadsheets: Tải lên Bảng tính
+    drag-drop: Kéo và thả các tệp bảng tính vào vùng thả này
+    button-text: hoặc chọn bảng tính để tải lên
+    spreadsheets: bảng tính
+    upload-queue: Tải lên hàng đợi
+  dropzone:
+    file: file
+    drop-to-upload: Thả để tải lên
+    invalid: Không hợp lệ
+    files-ready-for-upload:  >-
+      {numOfFiles} sẵn sàng tải lên.
+    upload-images-videos: Tải lên hình ảnh và video
+    upload-documents: Tải lên tài liệu
+    upload-documents-files: Tải lên tài liệu và tập tin
+    upload-avatar-files: Tải lên ảnh đại diện tùy chỉnh
+    dropzone-supported-images-videos: Kéo và thả ảnh hoặc video vào vùng thả này
+    dropzone-supported-avatars: Kéo và thả tệp SVG hoặc PNG
+    dropzone-supported-files: Kéo và thả tệp vào vùng thả này
+    or-select-button-text: hoặc chọn file để tải lên.
+    upload-queue: Tải lên hàng đợi
+    uploading: Đang tải lên...
+  two-fa-enforcement-alert:
+    message: Để tăng cường bảo mật cho tài khoản của bạn, tổ chức của bạn yêu cầu Xác thực hai yếu tố (2FA). Bật 2FA trong cài đặt tài khoản của bạn để có thêm một lớp bảo vệ.
+    button-text: Cấu hình 2FA
+  comment-thread:
+    publish-comment-button-text: Đăng bình luận
+    publish-reply-button-text: Đăng phản hồi
+    reply-comment-button-text: Phản hồi
+    edit-comment-button-text: Chỉnh sửa
+    delete-comment-button-text: Xóa
+    comment-published-ago: >-
+            {createdAgo} trước
+    comment-input-placeholder: Nhập một bình luận mới...
+    comment-reply-placeholder: Nhập phản hồi của bạn...
+    comment-input-empty-notification: Bạn không thể đăng bình luận trống...
+    comment-min-length-notification: Bình luận phải chứa ít nhất 2 ký tự
+  dashboard:
+    select-dashboard: Chọn Bảng điều khiển
+    create-new-dashboard: Tạo mới Bảng điều khiển
+    create-a-new-dashboard: Tạo mới một Bảng điều khiển
+    confirm-create-dashboard: Tạo Bảng điều khiển!
+    edit-layout: Chỉnh sửa bố cục
+    add-widgets: Thêm tiện ích
+    delete-dashboard: Xóa bảng điều khiển
+    save-dashboard: Lưu bảng điều khiển
+    you-cannot-delete-this-dashboard: Bạn không thể xóa bảng điều khiển này.
+    are-you-sure-you-want-delete-dashboard: Bạn có chắc chắn xóa {dashboardName}?
+  dashboard-widget-panel:
+    widget-name: >-
+      {widgetName} Tiện ích
+    select-widgets: Chọn tiện ích
+    close-and-save: Đóng và Lưu
+services:
+  dashboard-service:
+    create-dashboard-success-notification: Bảng điều khiển `{dashboardName}` đã được tạo thành công.
+    delete-dashboard-success-notification: Bảng điều khiển `{dashboardName}` đã được xóa.
+auth:
+  verification:
+    header-title: Xác thực tài khoản
+    title: Xác thực email của bạn
+    message-text: <strong>Gần xong rồi!</strong><br> Kiểm tả email của bạn để lấy mã xác thực.
+    verification-code-text: Nhập mã xác thực bạn vừa nhận qua email.
+    verification-input-label: Mã xác thực
+    verify-button-text: Xác thực & Tiếp tục
+    didnt-receive-a-code: Chưa nhận được mã?
+    not-sent:
+      message: Chưa nhận được mã?
+      alternative-choice: Sử dụng các tùy chọn thay thế bên dưới để xác thực tài khoản của bạn.
+      resend-email: Gửi lại email
+      send-by-sms: Gửi qua SMS
+  two-fa:
+    verify-code:
+      verification-code: Mã xác thực
+      check-title: Kiểm tra email hoặc điện thoại của bạn.
+      check-subtitle: Chúng tôi đã gửi cho bạn mã xác thực. Nhập mã bên dưới để hoàn tất quá trình đăng nhập.
+      expired-help-text: Mã xác thực 2FA của bạn đã hết hạn. Bạn có thể yêu cầu mã khác nếu cần thêm thời gian.
+      resend-code: Gửi lại mã
+      verify-code: Xác thực mã
+      cancel-two-factor: Hủy 2 yếu tố
+      invalid-session-error-notification: Phiên không hợp lệ. Vui lòng thử lại.
+      verification-successful-notification: Xác thực thành công!
+      verification-code-expired-notification: Mã xác thực đã hết hạn. Vui lòng yêu cầu một mã mới.
+      verification-code-failed-notification: Xác thực thất bại. Vui lòng thử lại.
+    resend-code: 
+      verification-code-resent-notification: Mã xác thực mới đã được gửi.
+      verification-code-resent-error-notification: Xảy ra lỗi khi gửi lại mã xác thực. Vui lòng thử lại.
+  forgot-password:
+    success-message: Kiểm tra email của bạn để tiếp tục!
+    is-sent:  
+      title: Gần xong rồi!
+      message: <strong>Kiểm tra email của bạn!</strong><br> Chúng tôi đã gửi cho bạn một liên kết đến email của bạn, cho phép bạn đặt lại mật khẩu. Liên kết sẽ hết hạn sau 15 phút.
+    not-sent:
+      title: Quên mật khẩu?
+      message: <strong>Đừng lo lắng, chúng tôi luôn hỗ trợ bạn.</strong><br> Nhập email bạn sử dụng để đăng nhập {appName} và chúng tôi sẽ gửi cho bạn một liên kết an toàn để đặt lại mật khẩu.
+    form:
+      email-label: Địa chỉ email của bạn
+      submit-button: OK, Gửi cho tôi một liên kết!
+      nevermind-button: Ok
+  login:
+    title: Đăng nhập vào tài khoản của bạn
+    no-identity-notification: Bạn quên nhập email của bạn?
+    no-password-notification: Bạn quên nhập mật khẩu của bạn?
+    unverified-notification: Tài khoản của bạn cần được xác minh để tiếp tục.
+    failed-attempt:
+      message: <strong>Quên mật khẩu?</strong><br> Nhấp vào nút bên dưới để đặt lại mật khẩu của bạn.
+      button-text: Được, giúp tôi thiết lập lại nhé!
+    form:
+      email-label: Địa chỉ email
+      password-label: Mật khẩu
+      remember-me-label: Ghi nhớ đăng nhập
+      forgot-password-label: Quên mật khẩu?
+      sign-in-button: Đăng nhập
+      create-account-button: Tạo mới tài khoản
+    slow-connection-message: Đang gặp sự cố kết nối.
+  reset-password:
+    success-message: Mật khẩu của bạn đã được đặt lại! Đăng nhập để tiếp tục.
+    invalid-verification-code: Liên kết đặt lại mật khẩu này không hợp lệ hoặc đã hết hạn.
+    title: Đặt lại mật khẩu của bạn
+    form:
+      code:
+        label: Mã đặt lại của bạn
+        help-text: Mã xác thực bạn đã nhận qua email.
+      password:
+        label: Mật khẩu mới
+        help-text: Nhập mật khẩu ít nhất 6 ký tự để tiếp tục.
+      confirm-password:
+        label: Xác nhận mật khẩu mới
+        help-text: Nhập mật khẩu ít nhất 6 ký tự để tiếp tục.
+      submit-button: Đặt lại mật khẩu
+      back-button: Quay lại
+console:
+  create-or-join-organization:
+    modal-title: Tạo mới hoặc tham gia một tổ chức
+    join-success-notification: Bạn đã tham gia một tổ chức mới!
+    create-success-notification: Bạn vừa tạo ra một tổ chức mới!
+  switch-organization:
+    modal-title: Bạn có chắc chắn muốn chuyển đổi sang tổ chức {organizationName}?
+    modal-body: Bằng cách xác nhận, tài khoản của bạn sẽ vẫn được đăng nhập, nhưng tổ chức chính của bạn sẽ được chuyển đổi.
+    modal-accept-button-text: Vâng, tôi muốn chuyển đổi tổ chức
+    success-notification: Bạn đã chuyển đổi tổ chức
+  account:
+    index: 
+      upload-new: Tải lên mới
+      phone: Số điện thoại của bạn.
+      photos: ảnh
+  admin:
+    schedule-monitor:
+      schedule-monitor: Lịch trình giám sát
+      task-logs-for: >-
+        Nhật ký tác vụ cho:
+      showing-last-count: Đang hiển thị {count} nhật ký cuối
+      name: Tên
+      type: Loại
+      timezone: Múi giờ
+      last-started: Lần bắt đầu cuối
+      last-finished: Lần kết thúc cuối
+      last-failure: Lần thất bại cuối
+      date: Ngày
+      memory: Memory
+      runtime: Runtime
+      output: Đầu ra
+      no-output: Không có đầu ra
+    config:
+      database:
+        title: Cấu hình cơ sở dữ liệu 
+      filesystem:
+        title: Cấu hình hệ thống tập tin
+      mail:
+        title: Cấu hình Mail
+      notification-channels: 
+        title: Cấu hình kênh thông báo
+      queue:
+        title: Cấu hình hàng đợi
+      services:
+        title: Cấu hình dịch vụ
+      socket:
+        title: Cấu hình Socket
+    branding:
+      title: Thương hiệu
+      icon-text: Icon
+      upload-new: Tải lên
+      reset-default: Đặt về mặc định
+      logo-text: Logo
+      theme: Chủ đề mặc định
+    index:
+      total-users: Tổng số người dùng
+      total-organizations: Tổng số tổ chức
+      total-transactions: Tổng số giao dịch
+    notifications:
+      title: Thông báo
+      notification-settings: Cài đặt thông báo
+    organizations:
+      index:
+        title: Tổ chức
+        owner-name-column: Người sở hữu
+        owner-phone-column: Điện thoại chủ sở hữu
+        owner-email-column: Email chủ sở hữu
+        users-count-column: Người dùng
+        phone-column: Số điện thoại
+        email-column: Email
+      users:
+        title: Người dùng
+  settings:
+    index:
+      title: Cài đặt tổ chức
+      organization-name: Tên tổ chức
+      organization-description: Mô tả
+      organization-phone: Số điện thoại
+      organization-currency: Tiền tệ
+      organization-id: ID
+      organization-branding: Thương hiệu
+      logo: Logo
+      logo-help-text: Logo cho tổ chức của bạn..
+      upload-new-logo: Tải lên logo mới
+      backdrop: Phông nền
+      backdrop-help-text: Biểu ngữ hoặc hình ảnh nền tùy chọn cho tổ chức của bạn.
+      upload-new-backdrop: Tải lên phông nền mới
+  extensions:
+    title: Các tiện ích mở rộng sẽ sớm ra mắt!
+    message: Vui lòng kiểm tra lại trong các phiên bản sắp tới khi chúng tôi chuẩn bị ra mắt kho lưu trữ và thị trường Tiện ích mở rộng.
+  notifications:
+    select-all: Chọn tất cả
+    mark-as-read: Đánh dấu là đã đọc
+    received: >-
+        Đã nhận:
+    message: Không có thông báo nào để hiển thị.
+invite:
+  for-users:
+    invitation-message: Bạn đã được mời tham gia {companyName}
+    invitation-sent-message: Bạn đã được mời tham gia tổ chức {companyName} trên {appName}. Để chấp nhận lời mời này, hãy nhập mã mời nhận được qua email và nhấp vào tiếp tục.
+    invitation-code-sent-text: Mã mời của bạn
+    accept-invitation-text: Chấp nhận lời mời
+onboard:
+  index:
+    title: Tạo tài khoản mới
+    welcome-title: <strong>Chào mừng tới {companyName}!</strong><br />
+    welcome-text: Hoàn tất các thông tin yêu cầu bên dưới để bắt đầu.
+    full-name: Tên đầy đủ
+    full-name-help-text: Tên đầy đủ của bạn
+    your-email: Địa chỉ email
+    your-email-help-text: Địa chỉ email của bạn
+    phone: Số điện thoại
+    phone-help-text: Số điện thoại của bạn
+    organization-name: Tên tổ chức
+    organization-help-text: Tên tổ chức của bạn, tất cả các dịch vụ và tài nguyên của bạn sẽ được quản lý theo tổ chức này, sau đó bạn có thể tạo nhiều tổ chức tùy ý hoặc theo nhu cầu.
+    password: Nhập mật khẩu
+    password-help-text: Mật khẩu của bạn phải an toàn.
+    confirm-password: Xác nhận mật khẩu của bạn
+    confirm-password-help-text: Chỉ để xác nhận mật khẩu bạn đã nhập ở trên.
+    continue-button-text: Tiếp tục
+  verify-email:
+    header-title: Xác thực tài khoản
+    title: Xác thực địa chỉ email của bạn
+    message-text: <strong>Gần xong rồi!</strong><br> Kiêm tra mã xác thực trong email của bạn.
+    verification-code-text: Nhập mã xác thực bạn vừa nhận qua email.
+    verification-input-label: Mã xác thực
+    verify-button-text: Xác thực & Tiếp tục
+    didnt-receive-a-code: Bạn vẫn chưa nhận được mã?
+    not-sent:
+      message: Bạn vẫn chưa nhận được mã?
+      alternative-choice: Sử dụng các tùy chọn thay thế bên dưới để xác thực tài khoản của bạn.
+      resend-email: Gửi lại
+      send-by-sms: Gửi qua SMS
+install:
+  installer-header: Trình cài đặt
+  failed-message-sent: Cài đặt thất bại! Nhấp vào nút bên dưới để thử cài đặt lại.
+  retry-install: Thử lại cài đặt
+  start-install: Bắt đầu cài đặt
+layout:
+  header:
+    menus:
+      organization:
+        settings: Cài đặt tổ chức
+        create-or-join: Tạo mới hoặc tham gia một tổ chức
+        explore-extensions: Khám phá phần mở rộng
+      user:
+        view-profile: Xem hồ sơ
+        keyboard-shortcuts: Hiển thị phím tắt
+        changelog: Nhật ký thay đổi

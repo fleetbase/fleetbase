@@ -1,11 +1,14 @@
 import Route from '@ember/routing/route';
 import { inject as service } from '@ember/service';
-import { action } from '@ember/object';
 import '@fleetbase/leaflet-routing-machine';
 
 export default class ConsoleRoute extends Route {
     @service store;
     @service session;
+    @service universe;
+    @service router;
+    @service currentUser;
+    @service intl;
 
     /**
      * Require authentication to access all `console` routes.
@@ -14,10 +17,14 @@ export default class ConsoleRoute extends Route {
      * @return {Promise}
      * @memberof ConsoleRoute
      */
-    @action async beforeModel(transition) {
-        this.session.requireAuthentication(transition, 'auth.login');
+    async beforeModel(transition) {
+        await this.session.requireAuthentication(transition, 'auth.login');
 
-        return this.session.promiseCurrentUser(transition);
+        this.universe.callHooks('console:before-model', this.session, this.router, transition);
+
+        if (this.session.isAuthenticated) {
+            return this.session.promiseCurrentUser(transition);
+        }
     }
 
     /**

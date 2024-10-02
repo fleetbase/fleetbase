@@ -74,6 +74,12 @@ module.exports = function (environment) {
             autoClear: true,
             clearDuration: 1000 * 3.5,
         },
+
+        'ember-leaflet': {
+            excludeCSS: true,
+            excludeJS: true,
+            excludeImages: true,
+        },
     };
 
     if (environment === 'development') {

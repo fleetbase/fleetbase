@@ -143,12 +143,11 @@ Fleetbase offers a few open sourced apps which are built on Fleetbase which can 
 </ul>
 
 ## 🛣️ Roadmap
-1.  **Customer Facing Views** ~ Extensions will be able to create public/customer facing views tracking and management from outside of the console UI.
-2.  **Inventory and Warehouse Management** ~ Pallet will be Fleetbase’s first official extension for WMS & Inventory.
-3.  **Accounting and Invoicing** ~ Pallet will be Fleetbase’s first official extension for WMS & Inventory.
-4.  **Binary Builds** ~ Run Fleetbase from a single binary.
-6.  **Fleetbase for Desktop** ~ Desktop builds for OSX and Windows.
-7. **Custom Maps and Routing Engines** ~ Feature to enable easy integrations with custom maps and routing engines like Google Maps or Mapbox etc…
+1.  **Inventory and Warehouse Management** ~ Pallet will be Fleetbase’s first official extension for WMS & Inventory.
+2.  **Accounting and Invoicing** ~ Ledger will be Fleetbase’s first official extension accounting and invoicing.
+3.  **Binary Builds** ~ Run Fleetbase from a single binary.
+4.  **Fleetbase for Desktop** ~ Desktop builds for OSX and Windows.
+5. **Custom Maps and Routing Engines** ~ Feature to enable easy integrations with custom maps and routing engines like Google Maps or Mapbox etc…
 
 ## 🪲 Bugs and 💡 Feature Requests
 
