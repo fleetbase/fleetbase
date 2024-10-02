@@ -1,0 +1,364 @@
+app:
+  name: Fleetbase
+terms:
+  new: جديد
+  sort: ترتيب
+  filter: تصفية
+  columns: أعمدة
+  settings: إعدادات
+  home: الصفحة الرئيسية
+  admin: مشرف
+  logout: تسجيل الخروج
+  dashboard: لوحة القيادة
+  search: بحث
+  search-input: إدخال البحث
+common: 
+  confirm: تأكيد
+  edit: تحرير
+  save: حفظ
+  save-changes: حفظ التغييرات
+  cancel: إلغاء
+  2fa-config: تكوين المصادقة الثنائية
+  account: حساب
+  admin: مشرف
+  branding: العلامة التجارية
+  columns: أعمدة
+  dashboard: لوحة القيادة
+  date-of-birth: تاريخ الميلاد
+  delete: حذف
+  email: البريد الإلكتروني
+  filesystem: نظام الملفات
+  filter: تصفية
+  home: الصفحة الرئيسية
+  logout: تسجيل الخروج
+  mail: بريد
+  name: اسم
+  new: جديد
+  notification-channels: قنوات الإشعارات
+  notifications: إشعارات
+  organization: منظمة
+  organizations: منظمات
+  overview: نظرة عامة
+  phone: رقم هاتفك
+  profile: الملف الشخصي
+  queue: قائمة الانتظار
+  save-button-text: حفظ التغييرات
+  search-input: إدخال البحث
+  search: بحث
+  services: خدمات
+  settings: إعدادات
+  socket: مقبس
+  sort: ترتيب
+  two-factor: المصادقة الثنائية
+  uploading: جارٍ التحميل...
+  your-profile: ملفك الشخصي
+  created-at: تم الإنشاء في
+  country: البلد
+  phone-number: الهاتف
+  status: الحالة
+  close-and-save: إغلاق وحفظ
+  users: المستخدمون
+  changelog: سجل التغييرات
+  ok: موافق
+  select-file: اختر ملف
+  back: رجوع
+  next: التالي
+  continue: متابعة
+  done: تم
+  export: تصدير
+  reload: إعادة تحميل
+  reload-data: إعادة تحميل البيانات
+  unauthorized: غير مصرح
+  unauthorized-to: غير مصرح لـ
+  unauthorized-access: وصول غير مصرح
+  unauthorized-access-message: وصول غير مصرح، يجب عليك طلب الأذونات للوصول.
+  permissions-required-for-changes: ليس لديك الأذونات المطلوبة لإجراء التغييرات.
+  push-notifications: إشعارات الدفع
+component:
+  file:
+    dropdown-label: إجراءات الملف
+  import-modal:
+    loading-message: جارٍ معالجة الاستيراد...
+    drop-upload: إسقاط للتحميل
+    invalid: غير صالح
+    ready-upload: جاهز للتحميل.
+    upload-spreadsheets: تحميل جداول البيانات
+    drag-drop: اسحب وأفلت ملفات جداول البيانات في منطقة الإسقاط هذه
+    button-text: أو اختر جداول البيانات للتحميل
+    spreadsheets: جداول البيانات
+    upload-queue: قائمة انتظار التحميل
+  dropzone:
+    file: ملف
+    drop-to-upload: إسقاط للتحميل
+    invalid: غير صالح
+    files-ready-for-upload:  >-
+      {numOfFiles} جاهز للتحميل.
+    upload-images-videos: تحميل الصور ومقاطع الفيديو
+    upload-documents: تحميل المستندات
+    upload-documents-files: تحميل المستندات والملفات
+    upload-avatar-files: تحميل الصور الرمزية المخصصة
+    dropzone-supported-images-videos: اسحب وأفلت ملفات الصور والفيديو في منطقة الإسقاط هذه
+    dropzone-supported-avatars: اسحب وأفلت ملفات SVG أو PNG
+    dropzone-supported-files: اسحب وأفلت الملفات في منطقة الإسقاط هذه
+    or-select-button-text: أو اختر الملفات للتحميل.
+    upload-queue: قائمة انتظار التحميل
+    uploading: جارٍ التحميل...
+  two-fa-enforcement-alert:
+    message: لتعزيز أمان حسابك، تتطلب مؤسستك المصادقة الثنائية (2FA). قم بتمكين المصادقة الثنائية في إعدادات حسابك للحصول على طبقة إضافية من الحماية.
+    button-text: إعداد المصادقة الثنائية
+  comment-thread:
+    publish-comment-button-text: نشر التعليق
+    publish-reply-button-text: نشر الرد
+    reply-comment-button-text: رد
+    edit-comment-button-text: تحرير
+    delete-comment-button-text: حذف
+    comment-published-ago: >-
+      {createdAgo} منذ
+    comment-input-placeholder: أدخل تعليقًا جديدًا...
+    comment-reply-placeholder: أدخل ردك...
+    comment-input-empty-notification: لا يمكنك نشر تعليقات فارغة...
+    comment-min-length-notification: يجب أن يكون التعليق على الأقل 2 حرف
+  dashboard:
+    select-dashboard: اختر لوحة القيادة
+    create-new-dashboard: إنشاء لوحة قيادة جديدة
+    create-a-new-dashboard: إنشاء لوحة قيادة جديدة
+    confirm-create-dashboard: إنشاء لوحة القيادة!
+    edit-layout: تحرير التخطيط
+    add-widgets: إضافة عناصر واجهة
+    delete-dashboard: حذف لوحة القيادة
+    save-dashboard: حفظ لوحة القيادة
+    you-cannot-delete-this-dashboard: لا يمكنك حذف هذه اللوحة.
+    are-you-sure-you-want-delete-dashboard: هل أنت متأكد من حذف {dashboardName}؟
+  dashboard-widget-panel:
+    widget-name: >-
+      عنصر واجهة {widgetName}
+    select-widgets: اختر عناصر الواجهة
+    close-and-save: إغلاق وحفظ
+services:
+  dashboard-service:
+    create-dashboard-success-notification: تم إنشاء لوحة القيادة الجديدة `{dashboardName}` بنجاح.
+    delete-dashboard-success-notification: تم حذف لوحة القيادة `{dashboardName}`.
+auth:
+  verification:
+    header-title: التحقق من الحساب
+    title: تحقق من عنوان بريدك الإلكتروني
+    message-text: <strong>اقتربت من الانتهاء!</strong><br> تحقق من بريدك الإلكتروني للحصول على رمز التحقق.
+    verification-code-text: أدخل رمز التحقق الذي تلقيته عبر البريد الإلكتروني.
+    verification-input-label: رمز التحقق
+    verify-button-text: تحقق واستمر
+    didnt-receive-a-code: لم تتلق رمزًا بعد؟
+    not-sent:
+      message: لم تتلق رمزًا بعد؟
+      alternative-choice: استخدم الخيارات البديلة أدناه للتحقق من حسابك.
+      resend-email: إعادة إرسال البريد الإلكتروني
+      send-by-sms: إرسال عبر الرسائل القصيرة
+  two-fa:
+    verify-code:
+      verification-code: رمز التحقق
+      check-title: تحقق من بريدك الإلكتروني أو هاتفك
+      check-subtitle: لقد أرسلنا لك رمز تحقق. أدخل الرمز أدناه لإكمال عملية تسجيل الدخول.
+      expired-help-text: انتهت صلاحية رمز المصادقة الثنائية الخاص بك. يمكنك طلب رمز آخر إذا كنت بحاجة إلى مزيد من الوقت.
+      resend-code: إعادة إرسال الرمز
+      verify-code: تحقق من الرمز
+      cancel-two-factor: إلغاء المصادقة الثنائية
+      invalid-session-error-notification: جلسة غير صالحة. حاول مرة أخرى.
+      verification-successful-notification: تم التحقق بنجاح!
+      verification-code-expired-notification: انتهت صلاحية رمز التحقق. يرجى طلب رمز جديد.
+      verification-code-failed-notification: فشل التحقق. حاول مرة أخرى.
+    resend-code: 
+      verification-code-resent-notification: تم إرسال رمز التحقق الجديد.
+      verification-code-resent-error-notification: خطأ في إعادة إرسال رمز التحقق. حاول مرة أخرى.
+  forgot-password:
+    success-message: تحقق من بريدك الإلكتروني للمتابعة!
+    is-sent:  
+      title: اقتربت من الانتهاء!
+      message: <strong>تحقق من بريدك الإلكتروني!</strong><br> لقد أرسلنا لك رابطًا سحريًا إلى بريدك الإلكتروني سيسمح لك بإعادة تعيين كلمة المرور الخاصة بك. ينتهي صلاحية الرابط في 15 دقيقة.
+    not-sent:
+      title: هل نسيت كلمة المرور؟
+      message: <strong>لا تقلق، نحن هنا لمساعدتك.</strong><br> أدخل البريد الإلكتروني الذي تستخدمه لتسجيل الدخول إلى {appName} وسنرسل لك رابطًا آمنًا لإعادة تعيين كلمة المرور الخاصة بك.
+    form:
+      email-label: عنوان بريدك الإلكتروني
+      submit-button: حسنًا، أرسل لي رابطًا سحريًا!
+      nevermind-button: لا تهتم
+  login:
+    title: تسجيل الدخول إلى حسابك
+    no-identity-notification: هل نسيت إدخال بريدك الإلكتروني؟
+    no-password-notification: هل نسيت إدخال كلمة المرور الخاصة بك؟
+    unverified-notification: يجب التحقق من حسابك للمتابعة.
+    password-reset-required: مطلوب إعادة تعيين كلمة المرور للمتابعة.
+    failed-attempt:
+      message: <strong>هل نسيت كلمة المرور الخاصة بك؟</strong><br> انقر على الزر أدناه لإعادة تعيين كلمة المرور الخاصة بك.
+      button-text: حسنًا، ساعدني في إعادة التعيين!
+    form:
+      email-label: عنوان البريد الإلكتروني
+      password-label: كلمة المرور
+      remember-me-label: تذكرني
+      forgot-password-label: هل نسيت كلمة المرور الخاصة بك؟
+      sign-in-button: تسجيل الدخول
+      create-account-button: إنشاء حساب جديد
+    slow-connection-message: تواجه مشكلات في الاتصال.
+  reset-password:
+    success-message: تم إعادة تعيين كلمة المرور الخاصة بك! تسجيل الدخول للمتابعة.
+    invalid-verification-code: هذا الرابط لإعادة تعيين كلمة المرور غير صالح أو منتهي الصلاحية.
+    title: إعادة تعيين كلمة المرور الخاصة بك
+    form:
+      code:
+        label: رمز إعادة التعيين الخاص بك
+        help-text: رمز التحقق الذي تلقيته في بريدك الإلكتروني.
+      password:
+        label: كلمة مرور جديدة
+        help-text: أدخل كلمة مرور لا تقل عن 6 أحرف للمتابعة.
+      confirm-password:
+        label: تأكيد كلمة المرور الجديدة
+        help-text: أدخل كلمة مرور لا تقل عن 6 أحرف للمتابعة.
+      submit-button: إعادة تعيين كلمة المرور
+      back-button: رجوع
+console:
+  create-or-join-organization:
+    modal-title: إنشاء أو الانضمام إلى منظمة
+    join-success-notification: لقد انضممت إلى منظمة جديدة!
+    create-success-notification: لقد أنشأت منظمة جديدة!
+  switch-organization:
+    modal-title: هل أنت متأكد أنك تريد التبديل إلى المنظمة {organizationName}؟
+    modal-body: من خلال التأكيد، سيظل حسابك مسجلاً الدخول، ولكن سيتم تبديل المنظمة الأساسية الخاصة بك.
+    modal-accept-button-text: نعم، أريد التبديل إلى المنظمة
+    success-notification: لقد قمت بتبديل المنظمات
+  account:
+      index: 
+        upload-new: تحميل جديد
+        phone: رقم هاتفك.
+        photos: الصور
+  admin:
+    schedule-monitor:
+      schedule-monitor: مراقب الجدول
+      task-logs-for: >-
+        سجلات المهام لـ: 
+      showing-last-count: عرض آخر {count} سجلات
+      name: الاسم
+      type: النوع
+      timezone: المنطقة الزمنية
+      last-started: آخر بدء
+      last-finished: آخر انتهاء
+      last-failure: آخر فشل
+      date: التاريخ
+      memory: الذاكرة
+      runtime: وقت التشغيل
+      output: المخرجات
+      no-output: لا توجد مخرجات
+    config:
+      database:
+        title: تكوين قاعدة البيانات
+      filesystem:
+        title: تكوين نظام الملفات
+      mail:
+        title: تكوين البريد
+      notification-channels: 
+        title: تكوين إشعارات الدفع
+      queue:
+        title: تكوين قائمة الانتظار
+      services:
+        title: تكوين الخدمات
+      socket:
+        title: تكوين المقبس
+    branding:
+      title: العلامة التجارية
+      icon-text: أيقونة
+      upload-new: تحميل جديد
+      reset-default: إعادة التعيين إلى الافتراضي
+      logo-text: شعار
+      theme: السمة الافتراضية
+    index:
+      total-users: إجمالي المستخدمين
+      total-organizations: إجمالي المنظمات
+      total-transactions: إجمالي المعاملات
+    notifications:
+      title: الإشعارات
+      notification-settings: إعدادات الإشعارات
+    organizations:
+      index:
+        title: المنظمات
+        owner-name-column: المالك
+        owner-phone-column: هاتف المالك
+        owner-email-column: بريد المالك
+        users-count-column: المستخدمون
+        phone-column: الهاتف
+        email-column: البريد الإلكتروني
+      users:
+        title: المستخدمون
+  settings:
+    index:
+      title: إعدادات المنظمة
+      organization-name: اسم المنظمة
+      organization-description: وصف المنظمة
+      organization-phone: رقم هاتف المنظمة
+      organization-currency: عملة المنظمة
+      organization-id: معرف المنظمة
+      organization-branding: العلامة التجارية للمنظمة
+      logo: الشعار
+      logo-help-text: شعار منظمتك.
+      upload-new-logo: تحميل شعار جديد
+      backdrop: الخلفية
+      backdrop-help-text: لافتة اختيارية أو صورة خلفية لمنظمتك.
+      upload-new-backdrop: تحميل خلفية جديدة
+  extensions:
+    title: الإضافات قادمة قريبًا!
+    message: يرجى التحقق مرة أخرى في الإصدارات القادمة حيث نستعد لإطلاق مستودع الإضافات والسوق.
+  notifications:
+  select-all: تحديد الكل
+  mark-as-read: تعليم كمقروء
+  received: >-
+    تم الاستلام:
+  message: لا توجد إشعارات لعرضها.
+invite:
+  for-users:
+    invitation-message: لقد تمت دعوتك للانضمام إلى {companyName}
+    invitation-sent-message: لقد تمت دعوتك للانضمام إلى منظمة {companyName} على {appName}. لقبول هذه الدعوة، أدخل رمز الدعوة الذي تلقيته عبر البريد الإلكتروني وانقر على متابعة.
+    invitation-code-sent-text: رمز الدعوة الخاص بك
+    accept-invitation-text: قبول الدعوة
+onboard:
+  index:
+    title: أنشئ حسابك
+    welcome-title: <strong>مرحبًا بك في {companyName}!</strong><br />
+    welcome-text: أكمل التفاصيل المطلوبة أدناه للبدء.
+    full-name: الاسم الكامل
+    full-name-help-text: اسمك الكامل
+    your-email: عنوان البريد الإلكتروني
+    your-email-help-text: عنوان بريدك الإلكتروني
+    phone: رقم الهاتف
+    phone-help-text: رقم هاتفك
+    organization-name: اسم المنظمة
+    organization-help-text: اسم منظمتك، سيتم إدارة جميع خدماتك ومواردك تحت هذه المنظمة، لاحقًا يمكنك إنشاء العديد من المنظمات كما تريد أو تحتاج.
+    password: أدخل كلمة مرور
+    password-help-text: كلمة مرورك، تأكد من أنها جيدة.
+    confirm-password: تأكيد كلمة المرور
+    confirm-password-help-text: فقط لتأكيد كلمة المرور التي أدخلتها أعلاه.
+    continue-button-text: متابعة
+  verify-email:
+  header-title: التحقق من الحساب
+  title: تحقق من عنوان بريدك الإلكتروني
+  message-text: <strong>اقتربت من الانتهاء!</strong><br> تحقق من بريدك الإلكتروني للحصول على رمز التحقق.
+  verification-code-text: أدخل رمز التحقق الذي تلقيته عبر البريد الإلكتروني.
+  verification-input-label: رمز التحقق
+  verify-button-text: تحقق واستمر
+  didnt-receive-a-code: لم تتلق رمزًا بعد؟
+  not-sent:
+    message: لم تتلق رمزًا بعد؟
+    alternative-choice: استخدم الخيارات البديلة أدناه للتحقق من حسابك.
+    resend-email: إعادة إرسال البريد الإلكتروني
+    send-by-sms: إرسال عبر الرسائل القصيرة
+install:
+  installer-header: المثبت
+  failed-message-sent: فشل التثبيت! انقر على الزر أدناه لإعادة محاولة التثبيت.
+  retry-install: إعادة محاولة التثبيت
+  start-install: بدء التثبيت
+layout:
+  header:
+    menus:
+      organization:
+        settings: إعدادات المنظمة
+        create-or-join: إنشاء أو الانضمام إلى المنظمات
+        explore-extensions: استكشاف الإضافات
+      user:
+        view-profile: عرض الملف الشخصي
+        keyboard-shortcuts: عرض اختصارات لوحة المفاتيح
+        changelog: سجل التغييرات

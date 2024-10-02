@@ -2,7 +2,7 @@
 
 <div class="bg-white dark:bg-gray-800 py-8 px-4 shadow rounded-lg w-full">
     <div class="mb-8">
-        <img class="mx-auto h-12 w-auto " src="/images/fleetbase-logo-svg.svg" alt={{t "app.name"}}>
+        <img class="mx-auto h-12 w-auto" src="/images/fleetbase-logo-svg.svg" alt={{t "app.name"}} />
         <h2 class="mt-6 text-center text-lg font-extrabold text-gray-900 dark:text-white truncate">
             {{t "auth.verification.title"}}
         </h2>
@@ -13,34 +13,66 @@
             <FaIcon @icon="shield-check" @size="lg" class="text-blue-900 mr-4" />
         </div>
         <p class="flex-1 text-sm text-blue-900 dark:text-blue-900">
-             {{t "auth.verification.message-text" htmlSafe=true}}
+            {{t "auth.verification.message-text" htmlSafe=true}}
         </p>
     </div>
 
     <form class="mt-8 space-y-6" {{on "submit" this.verifyCode}}>
-        <InputGroup @type="tel" @name={{t "auth.verification.verification-input-label"}} @value={{this.code}} @helpText={{t "auth.verification.verification-code-text"}} @inputClass="input-lg" {{on "input" this.validateInput}} {{did-insert this.validateInitInput}} />
+        <InputGroup
+            @type="tel"
+            @name={{t "auth.verification.verification-input-label"}}
+            @value={{this.code}}
+            @helpText={{t "auth.verification.verification-code-text"}}
+            @inputClass="input-lg"
+            {{on "input" this.validateInput}}
+            {{did-insert this.validateInitInput}}
+        />
 
         <div class="flex flex-row items-center space-x-4">
-            <Button @icon="check" @iconPrefix="fas" @buttonType="submit" @type="primary" @size="lg" @text="Verify & Continue" @isLoading={{this.isLoading}} @disabled={{this.isNotReadyToSubmit}} @onClick={{this.verifyCode}} />
-            <a href="#" {{on "click" this.onDidntReceiveCode}} class="text-sm text-blue-400 hover:text-blue-300">{{t "auth.verification.didnt-receive-a-code"}}</a>
+            <Button
+                @icon="check"
+                @iconPrefix="fas"
+                @buttonType="submit"
+                @type="primary"
+                @size="lg"
+                @text="Verify & Continue"
+                @isLoading={{this.isLoading}}
+                @disabled={{this.isNotReadyToSubmit}}
+                @onClick={{this.verifyCode}}
+            />
+            <a href="javascript:;" {{on "click" this.onDidntReceiveCode}} class="text-sm text-blue-400 hover:text-blue-300">{{t "auth.verification.didnt-receive-a-code"}}</a>
         </div>
 
         {{#if this.stillWaiting}}
-            <div class="bg-yellow-50 rounded shadow-sm border-l-4 border-yellow-400 px-4 py-2">
-                <div class="flex">
-                    <div class="flex-shrink-0">
-                        <FaIcon @icon="exclamation-triangle" @size="lg" class="text-yellow-400" />
+            <div class="flex flex-col flex-grow-0 flex-shrink-0 text-sm bg-yellow-800 border border-yellow-600 px-2 py-2 rounded-md text-yellow-100 my-4 transition-all">
+                <div class="flex flex-row items-start mb-2">
+                    <div class="w-8 flex-grow-0 flex-shrink-0">
+                        <FaIcon @icon="triangle-exclamation" @size="xl" class="pt-1" />
                     </div>
-                    <div class="ml-3 flex items-center">
-                        <span class="text-lg font-extrabold text-yellow-800">{{t "auth.verification.didnt-receive-a-code"}}</span>
+                    <div class="flex-1">
+                        <div class="flex-1 text-sm text-yellow-100">
+                            <div>{{t "auth.verification.didnt-receive-a-code" htmlSafe=true}}</div>
+                            <div>{{t "auth.verification.not-sent.alternative-choice" htmlSafe=true}}</div>
+                        </div>
                     </div>
                 </div>
-                <div class="py-1">
-                    <p class="text-yellow-700 text-sm">{{t "auth.verification.not-sent.alternative-choice"}}</p>
-                    <div class="flex items-center mt-3">
-                        <Button @buttonType="button" @type="warning" @wrapperClass="mr-2" @onClick={{this.resendEmail}} class="btn-warning-alert">{{t "auth.verification.not-sent.resend-email"}}</Button>
-                        <Button @buttonType="button" @type="warning" @onClick={{this.resendBySms}} class="btn-warning-alert">{{t "auth.verification.not-sent.send-by-sms"}}</Button>
-                    </div>
+                <div class="flex items-center space-x-2">
+                    <Button
+                        @text={{t "auth.verification.not-sent.resend-email"}}
+                        @buttonType="button"
+                        @type="link"
+                        class="text-yellow-100"
+                        @wrapperClass="px-4 py-2 bg-gray-900 bg-opacity-25 hover:opacity-50"
+                        @onClick={{this.resendEmail}}
+                    />
+                    <Button
+                        @text={{t "auth.verification.not-sent.send-by-sms"}}
+                        @buttonType="button"
+                        @type="link"
+                        class="text-yellow-100"
+                        @wrapperClass="px-4 py-2 bg-gray-900 bg-opacity-25 hover:opacity-50"
+                        @onClick={{this.resendBySms}}
+                    />
                 </div>
             </div>
         {{/if}}

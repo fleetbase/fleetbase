@@ -11,7 +11,9 @@ export default class ApplicationRoute extends Route {
     @service urlSearchParams;
     @service modalsManager;
     @service intl;
+    @service currentUser;
     @service router;
+    @service universe;
     @tracked defaultTheme;
 
     /**
@@ -45,11 +47,10 @@ export default class ApplicationRoute extends Route {
      */
     async beforeModel() {
         await this.session.setup();
+        await this.universe.booting();
 
-        const { isAuthenticated } = this.session;
         const shift = this.urlSearchParams.get('shift');
-
-        if (isAuthenticated && shift) {
+        if (this.session.isAuthenticated && shift) {
             return this.router.transitionTo(pathToRoute(shift));
         }
     }
@@ -61,6 +62,19 @@ export default class ApplicationRoute extends Route {
      * @void
      */
     activate() {
+        this.initializeTheme();
+        this.initializeLocale();
+    }
+
+    /**
+     * Initializes the application's theme settings, applying necessary class names and default theme configurations.
+     *
+     * This method prepares the theme by setting up an array of class names that should be applied to the
+     * application's body element. If the application is running inside an Electron environment, it adds the
+     * `'is-electron'` class to the array. It then calls the `initialize` method of the `theme` service,
+     * passing in the `bodyClassNames` array and the `defaultTheme` configuration.
+     */
+    initializeTheme() {
         const bodyClassNames = [];
 
         if (isElectron()) {
@@ -68,7 +82,18 @@ export default class ApplicationRoute extends Route {
         }
 
         this.theme.initialize({ bodyClassNames, theme: this.defaultTheme });
-        this.intl.setLocale(['en-us']);
+    }
+
+    /**
+     * Initializes the application's locale settings based on the current user's preferences.
+     *
+     * This method retrieves the user's preferred locale using the `getOption` method from the `currentUser` service.
+     * If no locale is set by the user, it defaults to `'en-us'`. It then sets the application's locale by calling
+     * the `setLocale` method of the `intl` service with the retrieved locale.
+     */
+    initializeLocale() {
+        const locale = this.currentUser.getOption('locale', 'en-us');
+        this.intl.setLocale([locale]);
     }
 
     /**
