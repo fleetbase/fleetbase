@@ -1,6 +1,7 @@
 import Route from '@ember/routing/route';
 import { tracked } from '@glimmer/tracking';
 import { inject as service } from '@ember/service';
+import { action } from '@ember/object';
 import isElectron from '@fleetbase/ember-core/utils/is-electron';
 import pathToRoute from '@fleetbase/ember-core/utils/path-to-route';
 
@@ -15,6 +16,27 @@ export default class ApplicationRoute extends Route {
     @service router;
     @service universe;
     @tracked defaultTheme;
+
+    /**
+     * The application loading event. 
+     * Here will just run extension hooks.
+     *
+     * @memberof ApplicationRoute
+     */
+    @action loading (transition) {
+        this.universe.callHooks('application:loading', this.session, this.router, transition);
+    }
+
+    /**
+     * On application route activation
+     *
+     * @memberof ApplicationRoute
+     * @void
+     */
+    @action activate() {
+        this.initializeTheme();
+        this.initializeLocale();
+    }
 
     /**
      * Check the installation status of Fleetbase and transition user accordingly.
@@ -45,25 +67,16 @@ export default class ApplicationRoute extends Route {
      * @return {Transition}
      * @memberof ApplicationRoute
      */
-    async beforeModel() {
+    async beforeModel(transition) {
         await this.session.setup();
         await this.universe.booting();
+
+        this.universe.callHooks('application:before-model', this.session, this.router, transition);
 
         const shift = this.urlSearchParams.get('shift');
         if (this.session.isAuthenticated && shift) {
             return this.router.transitionTo(pathToRoute(shift));
         }
-    }
-
-    /**
-     * On application route activation
-     *
-     * @memberof ApplicationRoute
-     * @void
-     */
-    activate() {
-        this.initializeTheme();
-        this.initializeLocale();
     }
 
     /**
