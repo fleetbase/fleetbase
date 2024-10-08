@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "6668ad7f86aabc85e2599adf74cc2c37",
+    "content-hash": "8cd3991d254e9330f7523dcf62ab21ab",
     "packages": [
         {
             "name": "aws/aws-crt-php",
@@ -62,16 +62,16 @@
         },
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.322.9",
+            "version": "3.323.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "0bd7513a7dd9b5330cb92575da99d9057f79b39c"
+                "reference": "030b93340f0e7d6fd20276037087d3eab8f16575"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/0bd7513a7dd9b5330cb92575da99d9057f79b39c",
-                "reference": "0bd7513a7dd9b5330cb92575da99d9057f79b39c",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/030b93340f0e7d6fd20276037087d3eab8f16575",
+                "reference": "030b93340f0e7d6fd20276037087d3eab8f16575",
                 "shasum": ""
             },
             "require": {
@@ -154,9 +154,9 @@
             "support": {
                 "forum": "https://forums.aws.amazon.com/forum.jspa?forumID=80",
                 "issues": "https://github.com/aws/aws-sdk-php/issues",
-                "source": "https://github.com/aws/aws-sdk-php/tree/3.322.9"
+                "source": "https://github.com/aws/aws-sdk-php/tree/3.323.2"
             },
-            "time": "2024-10-01T18:23:10+00:00"
+            "time": "2024-10-07T18:11:24+00:00"
         },
         {
             "name": "aws/aws-sdk-php-laravel",
@@ -2295,16 +2295,16 @@
         },
         {
             "name": "fleetbase/core-api",
-            "version": "1.5.9",
+            "version": "1.5.10",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fleetbase/core-api.git",
-                "reference": "4f7b6797f7fe1d141ff3de283b517d0362796d48"
+                "reference": "cd750f8a98f448f4b3caaad1fb8ada1dbcc17f7b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fleetbase/core-api/zipball/4f7b6797f7fe1d141ff3de283b517d0362796d48",
-                "reference": "4f7b6797f7fe1d141ff3de283b517d0362796d48",
+                "url": "https://api.github.com/repos/fleetbase/core-api/zipball/cd750f8a98f448f4b3caaad1fb8ada1dbcc17f7b",
+                "reference": "cd750f8a98f448f4b3caaad1fb8ada1dbcc17f7b",
                 "shasum": ""
             },
             "require": {
@@ -2387,9 +2387,9 @@
             ],
             "support": {
                 "issues": "https://github.com/fleetbase/core-api/issues",
-                "source": "https://github.com/fleetbase/core-api/tree/v1.5.9"
+                "source": "https://github.com/fleetbase/core-api/tree/v1.5.10"
             },
-            "time": "2024-10-02T05:48:55+00:00"
+            "time": "2024-10-08T12:15:58+00:00"
         },
         {
             "name": "fleetbase/fleetops-api",
@@ -2548,20 +2548,20 @@
         },
         {
             "name": "fleetbase/registry-bridge",
-            "version": "0.0.14",
+            "version": "0.0.15",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fleetbase/registry-bridge.git",
-                "reference": "572c135222637fe695bf7574c4b7a82b692fca04"
+                "reference": "2554590451be756460ef76dda73dcbd349879821"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fleetbase/registry-bridge/zipball/572c135222637fe695bf7574c4b7a82b692fca04",
-                "reference": "572c135222637fe695bf7574c4b7a82b692fca04",
+                "url": "https://api.github.com/repos/fleetbase/registry-bridge/zipball/2554590451be756460ef76dda73dcbd349879821",
+                "reference": "2554590451be756460ef76dda73dcbd349879821",
                 "shasum": ""
             },
             "require": {
-                "fleetbase/core-api": "^1.5.9",
+                "fleetbase/core-api": "^1.5.10",
                 "laravel/cashier": "^15.2.1",
                 "php": "^8.0",
                 "php-http/guzzle7-adapter": "^1.0",
@@ -2624,9 +2624,9 @@
             ],
             "support": {
                 "issues": "https://github.com/fleetbase/registry-bridge/issues",
-                "source": "https://github.com/fleetbase/registry-bridge/tree/v0.0.14"
+                "source": "https://github.com/fleetbase/registry-bridge/tree/v0.0.15"
             },
-            "time": "2024-10-02T10:12:31+00:00"
+            "time": "2024-10-08T12:52:39+00:00"
         },
         {
             "name": "fleetbase/storefront-api",
@@ -3387,34 +3387,36 @@
         },
         {
             "name": "giggsey/libphonenumber-for-php",
-            "version": "8.13.46",
+            "version": "8.13.47",
             "source": {
                 "type": "git",
                 "url": "https://github.com/giggsey/libphonenumber-for-php.git",
-                "reference": "b75c463fce43a61cc206ea18cd5f2cc3ed5e6555"
+                "reference": "717d328bb7154f439c33136e93da37d614c14432"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/giggsey/libphonenumber-for-php/zipball/b75c463fce43a61cc206ea18cd5f2cc3ed5e6555",
-                "reference": "b75c463fce43a61cc206ea18cd5f2cc3ed5e6555",
+                "url": "https://api.github.com/repos/giggsey/libphonenumber-for-php/zipball/717d328bb7154f439c33136e93da37d614c14432",
+                "reference": "717d328bb7154f439c33136e93da37d614c14432",
                 "shasum": ""
             },
             "require": {
-                "giggsey/locale": "^1.7|^2.0",
-                "php": ">=5.3.2",
+                "giggsey/locale": "^2.0",
+                "php": "^7.4|^8.0",
                 "symfony/polyfill-mbstring": "^1.17"
             },
             "replace": {
                 "giggsey/libphonenumber-for-php-lite": "self.version"
             },
             "require-dev": {
-                "pear/pear-core-minimal": "^1.9",
+                "friendsofphp/php-cs-fixer": "^3.64",
+                "pear/pear-core-minimal": "^1.10",
                 "pear/pear_exception": "^1.0",
-                "pear/versioncontrol_git": "^0.5",
-                "phing/phing": "^2.7",
-                "php-coveralls/php-coveralls": "^1.0|^2.0",
-                "symfony/console": "^2.8|^3.0|^v4.4|^v5.2",
-                "symfony/phpunit-bridge": "^4.2 || ^5"
+                "pear/versioncontrol_git": "^0.7",
+                "phing/phing": "^3.0",
+                "php-coveralls/php-coveralls": "^2.0",
+                "phpunit/phpunit": "^9.6",
+                "symfony/console": "^v5.2",
+                "symfony/var-exporter": "^5.2"
             },
             "type": "library",
             "extra": {
@@ -3458,7 +3460,7 @@
                 "issues": "https://github.com/giggsey/libphonenumber-for-php/issues",
                 "source": "https://github.com/giggsey/libphonenumber-for-php"
             },
-            "time": "2024-09-25T08:54:14+00:00"
+            "time": "2024-10-08T09:43:12+00:00"
         },
         {
             "name": "giggsey/locale",
@@ -3642,16 +3644,16 @@
         },
         {
             "name": "google/cloud-storage",
-            "version": "v1.43.0",
+            "version": "v1.43.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/googleapis/google-cloud-php-storage.git",
-                "reference": "e6f5f0d9cad317291aedea238af693a4e1a26801"
+                "reference": "e4a071bd5efaecd14fe82b0f4f7748d1acfb1cfc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/googleapis/google-cloud-php-storage/zipball/e6f5f0d9cad317291aedea238af693a4e1a26801",
-                "reference": "e6f5f0d9cad317291aedea238af693a4e1a26801",
+                "url": "https://api.github.com/repos/googleapis/google-cloud-php-storage/zipball/e4a071bd5efaecd14fe82b0f4f7748d1acfb1cfc",
+                "reference": "e4a071bd5efaecd14fe82b0f4f7748d1acfb1cfc",
                 "shasum": ""
             },
             "require": {
@@ -3693,9 +3695,9 @@
             ],
             "description": "Cloud Storage Client for PHP",
             "support": {
-                "source": "https://github.com/googleapis/google-cloud-php-storage/tree/v1.43.0"
+                "source": "https://github.com/googleapis/google-cloud-php-storage/tree/v1.43.1"
             },
-            "time": "2024-09-28T04:24:22+00:00"
+            "time": "2024-10-05T04:59:14+00:00"
         },
         {
             "name": "google/common-protos",
@@ -6266,16 +6268,16 @@
         },
         {
             "name": "league/flysystem",
-            "version": "3.29.0",
+            "version": "3.29.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/thephpleague/flysystem.git",
-                "reference": "0adc0d9a51852e170e0028a60bd271726626d3f0"
+                "reference": "edc1bb7c86fab0776c3287dbd19b5fa278347319"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/thephpleague/flysystem/zipball/0adc0d9a51852e170e0028a60bd271726626d3f0",
-                "reference": "0adc0d9a51852e170e0028a60bd271726626d3f0",
+                "url": "https://api.github.com/repos/thephpleague/flysystem/zipball/edc1bb7c86fab0776c3287dbd19b5fa278347319",
+                "reference": "edc1bb7c86fab0776c3287dbd19b5fa278347319",
                 "shasum": ""
             },
             "require": {
@@ -6343,9 +6345,9 @@
             ],
             "support": {
                 "issues": "https://github.com/thephpleague/flysystem/issues",
-                "source": "https://github.com/thephpleague/flysystem/tree/3.29.0"
+                "source": "https://github.com/thephpleague/flysystem/tree/3.29.1"
             },
-            "time": "2024-09-29T11:59:11+00:00"
+            "time": "2024-10-08T08:58:34+00:00"
         },
         {
             "name": "league/flysystem-aws-s3-v3",
@@ -7537,24 +7539,24 @@
         },
         {
             "name": "nette/schema",
-            "version": "v1.3.0",
+            "version": "v1.3.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nette/schema.git",
-                "reference": "a6d3a6d1f545f01ef38e60f375d1cf1f4de98188"
+                "reference": "da801d52f0354f70a638673c4a0f04e16529431d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nette/schema/zipball/a6d3a6d1f545f01ef38e60f375d1cf1f4de98188",
-                "reference": "a6d3a6d1f545f01ef38e60f375d1cf1f4de98188",
+                "url": "https://api.github.com/repos/nette/schema/zipball/da801d52f0354f70a638673c4a0f04e16529431d",
+                "reference": "da801d52f0354f70a638673c4a0f04e16529431d",
                 "shasum": ""
             },
             "require": {
                 "nette/utils": "^4.0",
-                "php": "8.1 - 8.3"
+                "php": "8.1 - 8.4"
             },
             "require-dev": {
-                "nette/tester": "^2.4",
+                "nette/tester": "^2.5.2",
                 "phpstan/phpstan-nette": "^1.0",
                 "tracy/tracy": "^2.8"
             },
@@ -7593,9 +7595,9 @@
             ],
             "support": {
                 "issues": "https://github.com/nette/schema/issues",
-                "source": "https://github.com/nette/schema/tree/v1.3.0"
+                "source": "https://github.com/nette/schema/tree/v1.3.2"
             },
-            "time": "2023-12-11T11:54:22+00:00"
+            "time": "2024-10-06T23:10:23+00:00"
         },
         {
             "name": "nette/utils",
@@ -8265,16 +8267,16 @@
         },
         {
             "name": "php-http/discovery",
-            "version": "1.19.4",
+            "version": "1.20.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-http/discovery.git",
-                "reference": "0700efda8d7526335132360167315fdab3aeb599"
+                "reference": "82fe4c73ef3363caed49ff8dd1539ba06044910d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-http/discovery/zipball/0700efda8d7526335132360167315fdab3aeb599",
-                "reference": "0700efda8d7526335132360167315fdab3aeb599",
+                "url": "https://api.github.com/repos/php-http/discovery/zipball/82fe4c73ef3363caed49ff8dd1539ba06044910d",
+                "reference": "82fe4c73ef3363caed49ff8dd1539ba06044910d",
                 "shasum": ""
             },
             "require": {
@@ -8338,9 +8340,9 @@
             ],
             "support": {
                 "issues": "https://github.com/php-http/discovery/issues",
-                "source": "https://github.com/php-http/discovery/tree/1.19.4"
+                "source": "https://github.com/php-http/discovery/tree/1.20.0"
             },
-            "time": "2024-03-29T13:00:05+00:00"
+            "time": "2024-10-02T11:20:13+00:00"
         },
         {
             "name": "php-http/guzzle7-adapter",
@@ -8463,16 +8465,16 @@
         },
         {
             "name": "php-http/message",
-            "version": "1.16.1",
+            "version": "1.16.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-http/message.git",
-                "reference": "5997f3289332c699fa2545c427826272498a2088"
+                "reference": "06dd5e8562f84e641bf929bfe699ee0f5ce8080a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-http/message/zipball/5997f3289332c699fa2545c427826272498a2088",
-                "reference": "5997f3289332c699fa2545c427826272498a2088",
+                "url": "https://api.github.com/repos/php-http/message/zipball/06dd5e8562f84e641bf929bfe699ee0f5ce8080a",
+                "reference": "06dd5e8562f84e641bf929bfe699ee0f5ce8080a",
                 "shasum": ""
             },
             "require": {
@@ -8526,9 +8528,9 @@
             ],
             "support": {
                 "issues": "https://github.com/php-http/message/issues",
-                "source": "https://github.com/php-http/message/tree/1.16.1"
+                "source": "https://github.com/php-http/message/tree/1.16.2"
             },
-            "time": "2024-03-07T13:22:09+00:00"
+            "time": "2024-10-02T11:34:13+00:00"
         },
         {
             "name": "php-http/promise",
@@ -9059,16 +9061,16 @@
         },
         {
             "name": "pragmarx/countries",
-            "version": "v0.8.2",
+            "version": "v0.8.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/antonioribeiro/countries.git",
-                "reference": "b98fe53cd899917efbddca92080e5982c5336a98"
+                "reference": "e1778535231d15503c50998084de5f19043f4a5b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/antonioribeiro/countries/zipball/b98fe53cd899917efbddca92080e5982c5336a98",
-                "reference": "b98fe53cd899917efbddca92080e5982c5336a98",
+                "url": "https://api.github.com/repos/antonioribeiro/countries/zipball/e1778535231d15503c50998084de5f19043f4a5b",
+                "reference": "e1778535231d15503c50998084de5f19043f4a5b",
                 "shasum": ""
             },
             "require": {
@@ -9076,7 +9078,7 @@
                 "nette/caching": "^2.5|^3.0",
                 "php": ">=7.0",
                 "pragmarx/coollection": ">=0.8",
-                "psr/simple-cache": "^1.0|^2.0"
+                "psr/simple-cache": "^1.0|^2.0|^3.0"
             },
             "require-dev": {
                 "gasparesganga/php-shapefile": "^3.4",
@@ -9119,27 +9121,27 @@
             ],
             "support": {
                 "issues": "https://github.com/antonioribeiro/countries/issues",
-                "source": "https://github.com/antonioribeiro/countries/tree/v0.8.2"
+                "source": "https://github.com/antonioribeiro/countries/tree/v0.8.3"
             },
-            "time": "2022-09-07T10:41:57+00:00"
+            "time": "2024-10-05T20:15:45+00:00"
         },
         {
             "name": "pragmarx/ia-arr",
-            "version": "v7.3.2",
+            "version": "v7.3.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/antonioribeiro/ia-arr.git",
-                "reference": "b526eb701791faaa548bcfa7b7bcd12748739839"
+                "reference": "6f4303c25cc1a79a55044ca413e0a0d757628fab"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/antonioribeiro/ia-arr/zipball/b526eb701791faaa548bcfa7b7bcd12748739839",
-                "reference": "b526eb701791faaa548bcfa7b7bcd12748739839",
+                "url": "https://api.github.com/repos/antonioribeiro/ia-arr/zipball/6f4303c25cc1a79a55044ca413e0a0d757628fab",
+                "reference": "6f4303c25cc1a79a55044ca413e0a0d757628fab",
                 "shasum": ""
             },
             "require": {
                 "php": ">=7.0",
-                "symfony/var-dumper": "~3.3|~4.0|~5.0|~6.0"
+                "symfony/var-dumper": "~3.3|~4.0|~5.0|~6.0|~7.0"
             },
             "require-dev": {
                 "mockery/mockery": "~1.0",
@@ -9189,29 +9191,29 @@
             ],
             "support": {
                 "issues": "https://github.com/antonioribeiro/ia-arr/issues",
-                "source": "https://github.com/antonioribeiro/ia-arr/tree/v7.3.2"
+                "source": "https://github.com/antonioribeiro/ia-arr/tree/v7.3.3"
             },
-            "time": "2022-09-07T10:25:34+00:00"
+            "time": "2024-10-05T19:56:41+00:00"
         },
         {
             "name": "pragmarx/ia-collection",
-            "version": "v7.3.1",
+            "version": "v7.3.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/antonioribeiro/ia-collection.git",
-                "reference": "eccd15376002c3c4509ae575682e0b6950ded10e"
+                "reference": "c88a4ca6842fbaed57ac394ecff7ee3e7d27d15e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/antonioribeiro/ia-collection/zipball/eccd15376002c3c4509ae575682e0b6950ded10e",
-                "reference": "eccd15376002c3c4509ae575682e0b6950ded10e",
+                "url": "https://api.github.com/repos/antonioribeiro/ia-collection/zipball/c88a4ca6842fbaed57ac394ecff7ee3e7d27d15e",
+                "reference": "c88a4ca6842fbaed57ac394ecff7ee3e7d27d15e",
                 "shasum": ""
             },
             "require": {
                 "nesbot/carbon": "^1.26 || ^2.00",
                 "php": ">=7.0",
                 "ramsey/uuid": "~3.7|~4.0",
-                "symfony/var-dumper": "~3.3|~4.0|~5.0|^6.0",
+                "symfony/var-dumper": "~3.3|~4.0|~5.0|^6.0|^7.0",
                 "voku/portable-ascii": "^1.4|^2.0"
             },
             "require-dev": {
@@ -9258,9 +9260,9 @@
             ],
             "support": {
                 "issues": "https://github.com/antonioribeiro/ia-collection/issues",
-                "source": "https://github.com/antonioribeiro/ia-collection/tree/v7.3.1"
+                "source": "https://github.com/antonioribeiro/ia-collection/tree/v7.3.2"
             },
-            "time": "2022-09-07T10:21:56+00:00"
+            "time": "2024-10-05T19:56:18+00:00"
         },
         {
             "name": "pragmarx/ia-str",
@@ -17842,5 +17844,5 @@
         "php": "^8.0"
     },
     "platform-dev": [],
-    "plugin-api-version": "2.6.0"
+    "plugin-api-version": "2.2.0"
 }
