@@ -18,13 +18,12 @@ export default class ApplicationRoute extends Route {
     @tracked defaultTheme;
 
     /**
-     * The application loading event. 
-     * Here will just run extension hooks.
+     * Handle the transition into the application.
      *
      * @memberof ApplicationRoute
      */
-    @action loading (transition) {
-        this.universe.callHooks('application:loading', this.session, this.router, transition);
+    @action willTransition(transition) {
+        this.universe.callHooks('application:will-transition', this.session, this.router, transition);
     }
 
     /**
@@ -36,6 +35,16 @@ export default class ApplicationRoute extends Route {
     @action activate() {
         this.initializeTheme();
         this.initializeLocale();
+    }
+
+    /**
+     * The application loading event.
+     * Here will just run extension hooks.
+     *
+     * @memberof ApplicationRoute
+     */
+    @action loading(transition) {
+        this.universe.callHooks('application:loading', this.session, this.router, transition);
     }
 
     /**

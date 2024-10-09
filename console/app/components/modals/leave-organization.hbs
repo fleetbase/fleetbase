@@ -1,0 +1,43 @@
+<Modal::Default @modalIsOpened={{@modalIsOpened}} @options={{@options}} @confirm={{@onConfirm}} @decline={{@onDecline}}>
+    <div class="modal-body-container pt-0i text-gray-900 dark:text-white">
+        {{#if @options.isOwner}}
+            {{#if @options.hasOtherMembers}}
+                <p>
+                    <div class="text-base mb-2">
+                        As the owner of
+                        <strong>{{@options.organization.name}}</strong>, leaving the organization requires you to nominate a new owner.
+                    </div>
+                    <div>Please select a member from the dropdown below to transfer ownership before you can proceed.</div>
+                </p>
+                <InputGroup @name="Select a New Owner" @wrapperClass="mt-2 mb-0i">
+                    <Select
+                        @options={{@options.organization.users}}
+                        @value={{@options.newOwnerId}}
+                        @onSelect={{@options.selectNewOwner}}
+                        @optionLabel="name"
+                        @optionValue="id"
+                        @placeholder="Select a member"
+                    />
+                </InputGroup>
+            {{else if @options.willBeDeleted}}
+                <p>
+                    <div class="text-base mb-2">
+                        You are the sole owner of
+                        <strong>{{@options.organization.name}}</strong>.
+                    </div>
+                    <div>By leaving, the organization will be permanently deleted along with all its data.</div>
+                    <div>Are you sure you want to proceed?</div>
+                </p>
+                <p class="mt-3"><em>This action cannot be undone.</em></p>
+            {{/if}}
+        {{else}}
+            <p>
+                <div class="text-base mb-2">
+                    Are you sure you want to leave the organization
+                    <strong>{{@options.organization.name}}</strong>?
+                </div>
+                <div>You will no longer have access to its resources and settings.</div>
+            </p>
+        {{/if}}
+    </div>
+</Modal::Default>
