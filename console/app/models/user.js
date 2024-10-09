@@ -69,6 +69,17 @@ export default class UserModel extends Model {
         });
     }
 
+    verify() {
+        const owner = getOwner(this);
+        const fetch = owner.lookup('service:fetch');
+
+        return fetch.patch(`users/verify/${this.id}`).then((response) => {
+            this.email_verified_at = response.email_verified_at;
+
+            return response;
+        });
+    }
+
     removeFromCurrentCompany() {
         const owner = getOwner(this);
         const fetch = owner.lookup('service:fetch');

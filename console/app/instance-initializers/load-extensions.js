@@ -1,4 +1,4 @@
-export function initialize (application) {
+export function initialize(application) {
     const universe = application.lookup('service:universe');
     if (universe) {
         universe.createRegistries(['@fleetbase/console', 'auth:login']);

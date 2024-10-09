@@ -30,6 +30,7 @@ Router.map(function () {
         this.route('account', function () {
             this.route('virtual', { path: '/:slug' });
             this.route('auth');
+            this.route('organizations');
         });
         this.route('settings', function () {
             this.route('virtual', { path: '/:slug' });
@@ -62,5 +63,4 @@ Router.map(function () {
         });
     });
     this.route('catch', { path: '/*' });
-    
 });

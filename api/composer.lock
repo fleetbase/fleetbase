@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "8cd3991d254e9330f7523dcf62ab21ab",
+    "content-hash": "8e4e82d71a9b40574bb3de8f8141c988",
     "packages": [
         {
             "name": "aws/aws-crt-php",
@@ -62,16 +62,16 @@
         },
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.323.2",
+            "version": "3.323.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "030b93340f0e7d6fd20276037087d3eab8f16575"
+                "reference": "9dec2a6453bdb32b3abeb475fc63b46ba1cbd996"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/030b93340f0e7d6fd20276037087d3eab8f16575",
-                "reference": "030b93340f0e7d6fd20276037087d3eab8f16575",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/9dec2a6453bdb32b3abeb475fc63b46ba1cbd996",
+                "reference": "9dec2a6453bdb32b3abeb475fc63b46ba1cbd996",
                 "shasum": ""
             },
             "require": {
@@ -154,9 +154,9 @@
             "support": {
                 "forum": "https://forums.aws.amazon.com/forum.jspa?forumID=80",
                 "issues": "https://github.com/aws/aws-sdk-php/issues",
-                "source": "https://github.com/aws/aws-sdk-php/tree/3.323.2"
+                "source": "https://github.com/aws/aws-sdk-php/tree/3.323.3"
             },
-            "time": "2024-10-07T18:11:24+00:00"
+            "time": "2024-10-08T18:05:47+00:00"
         },
         {
             "name": "aws/aws-sdk-php-laravel",
@@ -1919,16 +1919,16 @@
         },
         {
             "name": "dragonmantank/cron-expression",
-            "version": "v3.3.3",
+            "version": "v3.4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/dragonmantank/cron-expression.git",
-                "reference": "adfb1f505deb6384dc8b39804c5065dd3c8c8c0a"
+                "reference": "8c784d071debd117328803d86b2097615b457500"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dragonmantank/cron-expression/zipball/adfb1f505deb6384dc8b39804c5065dd3c8c8c0a",
-                "reference": "adfb1f505deb6384dc8b39804c5065dd3c8c8c0a",
+                "url": "https://api.github.com/repos/dragonmantank/cron-expression/zipball/8c784d071debd117328803d86b2097615b457500",
+                "reference": "8c784d071debd117328803d86b2097615b457500",
                 "shasum": ""
             },
             "require": {
@@ -1941,10 +1941,14 @@
             "require-dev": {
                 "phpstan/extension-installer": "^1.0",
                 "phpstan/phpstan": "^1.0",
-                "phpstan/phpstan-webmozart-assert": "^1.0",
                 "phpunit/phpunit": "^7.0|^8.0|^9.0"
             },
             "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "3.x-dev"
+                }
+            },
             "autoload": {
                 "psr-4": {
                     "Cron\\": "src/Cron/"
@@ -1968,7 +1972,7 @@
             ],
             "support": {
                 "issues": "https://github.com/dragonmantank/cron-expression/issues",
-                "source": "https://github.com/dragonmantank/cron-expression/tree/v3.3.3"
+                "source": "https://github.com/dragonmantank/cron-expression/tree/v3.4.0"
             },
             "funding": [
                 {
@@ -1976,7 +1980,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2023-08-10T19:36:49+00:00"
+            "time": "2024-10-09T13:47:03+00:00"
         },
         {
             "name": "edamov/pushok",
@@ -2295,16 +2299,16 @@
         },
         {
             "name": "fleetbase/core-api",
-            "version": "1.5.10",
+            "version": "1.5.11",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fleetbase/core-api.git",
-                "reference": "cd750f8a98f448f4b3caaad1fb8ada1dbcc17f7b"
+                "reference": "41b0068c18b00c7305cf920c245f35052d905cc4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fleetbase/core-api/zipball/cd750f8a98f448f4b3caaad1fb8ada1dbcc17f7b",
-                "reference": "cd750f8a98f448f4b3caaad1fb8ada1dbcc17f7b",
+                "url": "https://api.github.com/repos/fleetbase/core-api/zipball/41b0068c18b00c7305cf920c245f35052d905cc4",
+                "reference": "41b0068c18b00c7305cf920c245f35052d905cc4",
                 "shasum": ""
             },
             "require": {
@@ -2387,29 +2391,29 @@
             ],
             "support": {
                 "issues": "https://github.com/fleetbase/core-api/issues",
-                "source": "https://github.com/fleetbase/core-api/tree/v1.5.10"
+                "source": "https://github.com/fleetbase/core-api/tree/v1.5.11"
             },
-            "time": "2024-10-08T12:15:58+00:00"
+            "time": "2024-10-09T16:24:17+00:00"
         },
         {
             "name": "fleetbase/fleetops-api",
-            "version": "0.5.8",
+            "version": "0.5.9",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fleetbase/fleetops.git",
-                "reference": "09487c1c508c6c493af28f81786e0208d3005580"
+                "reference": "8a40f529dd5e65d971b21a560b0f1feb05cd7623"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fleetbase/fleetops/zipball/09487c1c508c6c493af28f81786e0208d3005580",
-                "reference": "09487c1c508c6c493af28f81786e0208d3005580",
+                "url": "https://api.github.com/repos/fleetbase/fleetops/zipball/8a40f529dd5e65d971b21a560b0f1feb05cd7623",
+                "reference": "8a40f529dd5e65d971b21a560b0f1feb05cd7623",
                 "shasum": ""
             },
             "require": {
                 "barryvdh/laravel-dompdf": "^2.0",
                 "brick/geo": "0.7.2",
                 "cknow/laravel-money": "^7.1",
-                "fleetbase/core-api": "^1.5.9",
+                "fleetbase/core-api": "*",
                 "geocoder-php/google-maps-places-provider": "^1.4",
                 "giggsey/libphonenumber-for-php": "^8.13",
                 "league/geotools": "^1.1.0",
@@ -2476,9 +2480,9 @@
             ],
             "support": {
                 "issues": "https://github.com/fleetbase/fleetops/issues",
-                "source": "https://github.com/fleetbase/fleetops/tree/v0.5.8"
+                "source": "https://github.com/fleetbase/fleetops/tree/v0.5.9"
             },
-            "time": "2024-10-02T09:56:23+00:00"
+            "time": "2024-10-09T16:31:28+00:00"
         },
         {
             "name": "fleetbase/laravel-mysql-spatial",
@@ -2548,16 +2552,16 @@
         },
         {
             "name": "fleetbase/registry-bridge",
-            "version": "0.0.15",
+            "version": "0.0.16",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fleetbase/registry-bridge.git",
-                "reference": "2554590451be756460ef76dda73dcbd349879821"
+                "reference": "2f9a2533c0e18567bd66f463ef74bf48e4d84af1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fleetbase/registry-bridge/zipball/2554590451be756460ef76dda73dcbd349879821",
-                "reference": "2554590451be756460ef76dda73dcbd349879821",
+                "url": "https://api.github.com/repos/fleetbase/registry-bridge/zipball/2f9a2533c0e18567bd66f463ef74bf48e4d84af1",
+                "reference": "2f9a2533c0e18567bd66f463ef74bf48e4d84af1",
                 "shasum": ""
             },
             "require": {
@@ -2624,9 +2628,9 @@
             ],
             "support": {
                 "issues": "https://github.com/fleetbase/registry-bridge/issues",
-                "source": "https://github.com/fleetbase/registry-bridge/tree/v0.0.15"
+                "source": "https://github.com/fleetbase/registry-bridge/tree/v0.0.16"
             },
-            "time": "2024-10-08T12:52:39+00:00"
+            "time": "2024-10-08T14:18:13+00:00"
         },
         {
             "name": "fleetbase/storefront-api",
@@ -5666,16 +5670,16 @@
         },
         {
             "name": "laravel/octane",
-            "version": "v2.5.8",
+            "version": "v2.5.9",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/octane.git",
-                "reference": "ce37959546cf5e04df02aa41960f3ee816670b9b"
+                "reference": "d8d432eb1e51a8ab2575854963d94e70d4592e15"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/octane/zipball/ce37959546cf5e04df02aa41960f3ee816670b9b",
-                "reference": "ce37959546cf5e04df02aa41960f3ee816670b9b",
+                "url": "https://api.github.com/repos/laravel/octane/zipball/d8d432eb1e51a8ab2575854963d94e70d4592e15",
+                "reference": "d8d432eb1e51a8ab2575854963d94e70d4592e15",
                 "shasum": ""
             },
             "require": {
@@ -5752,7 +5756,7 @@
                 "issues": "https://github.com/laravel/octane/issues",
                 "source": "https://github.com/laravel/octane"
             },
-            "time": "2024-10-01T21:03:50+00:00"
+            "time": "2024-10-06T21:09:20+00:00"
         },
         {
             "name": "laravel/prompts",
@@ -7687,16 +7691,16 @@
         },
         {
             "name": "nikic/php-parser",
-            "version": "v5.3.0",
+            "version": "v5.3.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nikic/PHP-Parser.git",
-                "reference": "3abf7425cd284141dc5d8d14a9ee444de3345d1a"
+                "reference": "8eea230464783aa9671db8eea6f8c6ac5285794b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nikic/PHP-Parser/zipball/3abf7425cd284141dc5d8d14a9ee444de3345d1a",
-                "reference": "3abf7425cd284141dc5d8d14a9ee444de3345d1a",
+                "url": "https://api.github.com/repos/nikic/PHP-Parser/zipball/8eea230464783aa9671db8eea6f8c6ac5285794b",
+                "reference": "8eea230464783aa9671db8eea6f8c6ac5285794b",
                 "shasum": ""
             },
             "require": {
@@ -7739,9 +7743,9 @@
             ],
             "support": {
                 "issues": "https://github.com/nikic/PHP-Parser/issues",
-                "source": "https://github.com/nikic/PHP-Parser/tree/v5.3.0"
+                "source": "https://github.com/nikic/PHP-Parser/tree/v5.3.1"
             },
-            "time": "2024-09-29T13:56:26+00:00"
+            "time": "2024-10-08T18:51:32+00:00"
         },
         {
             "name": "nunomaduro/termwind",
@@ -15514,16 +15518,16 @@
         },
         {
             "name": "laravel/sail",
-            "version": "v1.34.0",
+            "version": "v1.35.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/sail.git",
-                "reference": "511e9c95b0f3ee778dc9e11e242bcd2af8e002cd"
+                "reference": "992bc2d9e52174c79515967f30849d21daa334d8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/sail/zipball/511e9c95b0f3ee778dc9e11e242bcd2af8e002cd",
-                "reference": "511e9c95b0f3ee778dc9e11e242bcd2af8e002cd",
+                "url": "https://api.github.com/repos/laravel/sail/zipball/992bc2d9e52174c79515967f30849d21daa334d8",
+                "reference": "992bc2d9e52174c79515967f30849d21daa334d8",
                 "shasum": ""
             },
             "require": {
@@ -15573,7 +15577,7 @@
                 "issues": "https://github.com/laravel/sail/issues",
                 "source": "https://github.com/laravel/sail"
             },
-            "time": "2024-09-27T14:58:09+00:00"
+            "time": "2024-10-08T14:45:26+00:00"
         },
         {
             "name": "mockery/mockery",
@@ -16318,16 +16322,16 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "10.5.35",
+            "version": "10.5.36",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "7ac8b4e63f456046dcb4c9787da9382831a1874b"
+                "reference": "aa0a8ce701ea7ee314b0dfaa8970dc94f3f8c870"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/7ac8b4e63f456046dcb4c9787da9382831a1874b",
-                "reference": "7ac8b4e63f456046dcb4c9787da9382831a1874b",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/aa0a8ce701ea7ee314b0dfaa8970dc94f3f8c870",
+                "reference": "aa0a8ce701ea7ee314b0dfaa8970dc94f3f8c870",
                 "shasum": ""
             },
             "require": {
@@ -16399,7 +16403,7 @@
             "support": {
                 "issues": "https://github.com/sebastianbergmann/phpunit/issues",
                 "security": "https://github.com/sebastianbergmann/phpunit/security/policy",
-                "source": "https://github.com/sebastianbergmann/phpunit/tree/10.5.35"
+                "source": "https://github.com/sebastianbergmann/phpunit/tree/10.5.36"
             },
             "funding": [
                 {
@@ -16415,7 +16419,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-09-19T10:52:21+00:00"
+            "time": "2024-10-08T15:36:51+00:00"
         },
         {
             "name": "sebastian/cli-parser",
