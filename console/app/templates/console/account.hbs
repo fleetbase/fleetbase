@@ -3,6 +3,7 @@
     <Layout::Sidebar::Panel @open={{true}} @title={{t "common.account"}}>
         <Layout::Sidebar::Item @route="console.account.index" @icon="user">Profile</Layout::Sidebar::Item>
         <Layout::Sidebar::Item @route="console.account.auth" @icon="key">Auth</Layout::Sidebar::Item>
+        <Layout::Sidebar::Item @route="console.account.organizations" @icon="building">Organizations</Layout::Sidebar::Item>
         {{#each this.universe.accountMenuItems as |menuItem|}}
             <Layout::Sidebar::Item @onClick={{fn this.universe.transitionMenuItem "console.account.virtual" menuItem}} @item={{menuItem}} @icon={{menuItem.icon}}>{{menuItem.title}}</Layout::Sidebar::Item>
         {{/each}}
