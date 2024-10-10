@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "8e4e82d71a9b40574bb3de8f8141c988",
+    "content-hash": "f5e847518bf3f1ae7ebfb84605985f77",
     "packages": [
         {
             "name": "aws/aws-crt-php",
@@ -62,16 +62,16 @@
         },
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.323.3",
+            "version": "3.323.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "9dec2a6453bdb32b3abeb475fc63b46ba1cbd996"
+                "reference": "e66ee025b1d169fad3c784934f56648d3eec11ae"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/9dec2a6453bdb32b3abeb475fc63b46ba1cbd996",
-                "reference": "9dec2a6453bdb32b3abeb475fc63b46ba1cbd996",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/e66ee025b1d169fad3c784934f56648d3eec11ae",
+                "reference": "e66ee025b1d169fad3c784934f56648d3eec11ae",
                 "shasum": ""
             },
             "require": {
@@ -154,9 +154,9 @@
             "support": {
                 "forum": "https://forums.aws.amazon.com/forum.jspa?forumID=80",
                 "issues": "https://github.com/aws/aws-sdk-php/issues",
-                "source": "https://github.com/aws/aws-sdk-php/tree/3.323.3"
+                "source": "https://github.com/aws/aws-sdk-php/tree/3.323.4"
             },
-            "time": "2024-10-08T18:05:47+00:00"
+            "time": "2024-10-09T18:10:22+00:00"
         },
         {
             "name": "aws/aws-sdk-php-laravel",
@@ -2299,16 +2299,16 @@
         },
         {
             "name": "fleetbase/core-api",
-            "version": "1.5.11",
+            "version": "1.5.12",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fleetbase/core-api.git",
-                "reference": "41b0068c18b00c7305cf920c245f35052d905cc4"
+                "reference": "b19b9606f15ef1bc6f39c464df66032f0b4342df"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fleetbase/core-api/zipball/41b0068c18b00c7305cf920c245f35052d905cc4",
-                "reference": "41b0068c18b00c7305cf920c245f35052d905cc4",
+                "url": "https://api.github.com/repos/fleetbase/core-api/zipball/b19b9606f15ef1bc6f39c464df66032f0b4342df",
+                "reference": "b19b9606f15ef1bc6f39c464df66032f0b4342df",
                 "shasum": ""
             },
             "require": {
@@ -2391,9 +2391,9 @@
             ],
             "support": {
                 "issues": "https://github.com/fleetbase/core-api/issues",
-                "source": "https://github.com/fleetbase/core-api/tree/v1.5.11"
+                "source": "https://github.com/fleetbase/core-api/tree/v1.5.12"
             },
-            "time": "2024-10-09T16:24:17+00:00"
+            "time": "2024-10-10T02:48:01+00:00"
         },
         {
             "name": "fleetbase/fleetops-api",
@@ -17848,5 +17848,5 @@
         "php": "^8.0"
     },
     "platform-dev": [],
-    "plugin-api-version": "2.2.0"
+    "plugin-api-version": "2.6.0"
 }

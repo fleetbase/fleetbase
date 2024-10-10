@@ -11,11 +11,16 @@ export default class ConsoleAccountOrganizationsController extends Controller {
     @service notifications;
     @service intl;
     @service fetch;
+    @service router;
 
     @action async leaveOrganization (organization) {
         const isOwner = this.currentUser.id === organization.owner_uuid;
         const hasOtherMembers = organization.users_count > 1;
         const willBeDeleted = isOwner && organization.users_count === 1;
+
+        if (this.model.length === 1) {
+            return this.notifications.warning('Unable to leave your only organization.');
+        }
 
         if (hasOtherMembers) {
             organization.loadUsers({ exclude: [this.currentUser.id] });
@@ -32,7 +37,7 @@ export default class ConsoleAccountOrganizationsController extends Controller {
             willBeDeleted,
             organization,
             newOwnerId: null,
-            selectNewOwner: (newOwnerId) => {
+            selectNewOwner: newOwnerId => {
                 this.modalsManager.setOption('newOwnerId', newOwnerId);
                 this.modalsManager.setOption('acceptButtonDisabled', false);
             },
@@ -47,16 +52,18 @@ export default class ConsoleAccountOrganizationsController extends Controller {
                         } catch (error) {
                             this.notifications.serverError(error);
                         }
-                        return modal.done();
+
+                        return this.router.refresh();
                     }
 
                     if (willBeDeleted) {
                         try {
-                            await organization.delete();
+                            await organization.destroyRecord();
                         } catch (error) {
                             this.notifications.serverError(error);
                         }
-                        return modal.done();
+
+                        return this.router.refresh();
                     }
                 }
 
@@ -66,7 +73,7 @@ export default class ConsoleAccountOrganizationsController extends Controller {
                     this.notifications.serverError(error);
                 }
 
-                return modal.done();
+                return this.router.refresh();
             },
         });
     }
@@ -118,10 +125,15 @@ export default class ConsoleAccountOrganizationsController extends Controller {
             acceptButtonText: 'Delete Organization',
             acceptButtonScheme: 'danger',
             acceptButtonIcon: 'trash',
-            confirm: () => {
+            confirm: async modal => {
                 modal.startLoading();
 
-                return organization.delete();
+                try {
+                    await organization.destroyRecord();
+                    return this.router.refresh();
+                } catch (error) {
+                    this.notifications.serverError(error);
+                }
             },
         });
     }
@@ -133,10 +145,58 @@ export default class ConsoleAccountOrganizationsController extends Controller {
             acceptButtonIcon: 'save',
             isOwner: this.currentUser.id === organization.owner_uuid,
             organization,
-            confirm: (modal) => {
+            confirm: async modal => {
                 modal.startLoading();
 
-                return organization.save();
+                try {
+                    await organization.save();
+                    return this.router.refresh();
+                } catch (error) {
+                    this.notifications.serverError(error);
+                }
+            },
+        });
+    }
+
+    @action createOrganization () {
+        const currency = this.currentUser.currency;
+        const country = this.currentUser.country;
+
+        this.modalsManager.show('modals/edit-organization', {
+            title: 'Create Organization',
+            acceptButtonText: this.intl.t('common.confirm'),
+            acceptButtonIcon: 'check',
+            acceptButtonIconPrefix: 'fas',
+            organization: {
+                name: null,
+                decription: null,
+                phone: null,
+                currency,
+                country,
+                timezone: null,
+            },
+            confirm: async modal => {
+                modal.startLoading();
+
+                const organization = modal.getOption('organization');
+                const { name, description, phone, currency, country, timezone } = organization;
+
+                try {
+                    await this.fetch.post('auth/create-organization', {
+                        name,
+                        description,
+                        phone,
+                        currency,
+                        country,
+                        timezone,
+                    });
+                    this.fetch.flushRequestCache('auth/organizations');
+                    this.notifications.success(this.intl.t('console.create-or-join-organization.create-success-notification'));
+                    return this.router.refresh();
+                } catch (error) {
+                    modal.stopLoading();
+                    return this.notifications.serverError(error);
+                }
             },
         });
     }
