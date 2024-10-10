@@ -5,6 +5,6 @@ export default class ConsoleAccountOrganizationsRoute extends Route {
     @service currentUser;
 
     model() {
-        return this.currentUser.organizations;
+        return this.currentUser.loadOrganizations();
     }
 }
