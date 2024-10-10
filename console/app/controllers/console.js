@@ -161,7 +161,7 @@ export default class ConsoleController extends Controller {
     }
 
     /**
-     * Action to invalidate and log user out
+     * Action to create or join an organization.
      *
      * @void
      */
