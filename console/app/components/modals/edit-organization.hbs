@@ -1,0 +1,12 @@
+<Modal::Default @modalIsOpened={{@modalIsOpened}} @options={{@options}} @confirm={{@onConfirm}} @decline={{@onDecline}}>
+    <div class="modal-body-container pt-0i text-gray-900 dark:text-white">
+        <InputGroup @name="Organization name" @value={{@options.organization.name}} />
+        <InputGroup @name="Organization description" @value={{@options.organization.description}} />
+        <InputGroup @name="Organization phone number">
+            <PhoneInput @value={{@options.organization.phone}} @onInput={{fn (mut @options.organization.phone)}} class="form-input w-full" />
+        </InputGroup>
+        <InputGroup @name="Organization currency">
+            <CurrencySelect @value={{@options.organization.currency}} @onSelect={{fn (mut @options.organization.currency)}} @triggerClass="w-full form-select" />
+        </InputGroup>
+    </div>
+</Modal::Default>

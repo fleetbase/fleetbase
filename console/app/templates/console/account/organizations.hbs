@@ -1,0 +1,37 @@
+{{page-title "Organizations"}}
+<Layout::Section::Header @title="Organizations" />
+
+<Layout::Section::Body class="overflow-y-scroll h-full">
+    <div class="container mx-auto h-screen">
+        <div class="max-w-3xl my-10 mx-auto space-y-4">
+            <div class="flex flex-row justify-end">
+                <Button @type="primary" @icon="plus" @text="Create Organization" @onClick={{this.createOrganization}} />
+            </div>
+            <ContentPanel @title="Your Organizations" @open={{true}} @pad={{true}} @panelBodyClass="bg-white dark:bg-gray-800">
+                <div class="space-y-2">
+                    {{#each @model as |organization|}}
+                        <div class="grid grid-cols-3 border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 rounded-lg px-3 py-2 items-center">
+                            <div>
+                                <div class="font-semibold">{{organization.name}}</div>
+                                <div>Member Since: {{format-date organization.joined_at}}</div>
+                            </div>
+                            <div class="col-span-2 flex flex-row items-center justify-end space-x-2">
+                                {{#let (eq organization.owner_uuid this.currentUser.id) as |isOwner|}}
+                                    <Button @type="danger" @size="xs" @icon="person-walking-arrow-right" @text="Leave" @onClick={{fn this.leaveOrganization organization}} />
+                                    {{#unless (eq this.currentUser.companyId organization.id)}}
+                                        <Button @size="xs" @icon="shuffle" @text="Switch" @onClick={{fn this.switchOrganization organization}} />
+                                    {{/unless}}
+                                    {{#if isOwner}}
+                                        <Button @size="xs" @icon="pencil" @text="Edit" @onClick={{fn this.editOrganization organization}} />
+                                        <Button @type="danger" @size="xs" @icon="trash" @text="Delete" @onClick={{fn this.deleteOrganization organization}} />
+                                    {{/if}}
+                                {{/let}}
+                            </div>
+                        </div>
+                    {{/each}}
+                </div>
+            </ContentPanel>
+        </div>
+    </div>
+    <Spacer @height="300px" />
+</Layout::Section::Body>
