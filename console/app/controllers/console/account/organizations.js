@@ -13,7 +13,7 @@ export default class ConsoleAccountOrganizationsController extends Controller {
     @service fetch;
     @service router;
 
-    @action async leaveOrganization (organization) {
+    @action async leaveOrganization(organization) {
         const isOwner = this.currentUser.id === organization.owner_uuid;
         const hasOtherMembers = organization.users_count > 1;
         const willBeDeleted = isOwner && organization.users_count === 1;
@@ -37,11 +37,11 @@ export default class ConsoleAccountOrganizationsController extends Controller {
             willBeDeleted,
             organization,
             newOwnerId: null,
-            selectNewOwner: newOwnerId => {
+            selectNewOwner: (newOwnerId) => {
                 this.modalsManager.setOption('newOwnerId', newOwnerId);
                 this.modalsManager.setOption('acceptButtonDisabled', false);
             },
-            confirm: async modal => {
+            confirm: async (modal) => {
                 modal.startLoading();
 
                 if (isOwner) {
@@ -78,13 +78,13 @@ export default class ConsoleAccountOrganizationsController extends Controller {
         });
     }
 
-    @action switchOrganization (organization) {
+    @action switchOrganization(organization) {
         this.modalsManager.confirm({
             title: this.intl.t('console.switch-organization.modal-title', { organizationName: organization.name }),
             body: this.intl.t('console.switch-organization.modal-body'),
             acceptButtonText: this.intl.t('console.switch-organization.modal-accept-button-text'),
             acceptButtonScheme: 'primary',
-            confirm: async modal => {
+            confirm: async (modal) => {
                 modal.startLoading();
 
                 try {
@@ -106,7 +106,7 @@ export default class ConsoleAccountOrganizationsController extends Controller {
         });
     }
 
-    @action deleteOrganization (organization) {
+    @action deleteOrganization(organization) {
         const isOwner = this.currentUser.id === organization.owner_uuid;
 
         if (this.model.length === 1) {
@@ -125,7 +125,7 @@ export default class ConsoleAccountOrganizationsController extends Controller {
             acceptButtonText: 'Delete Organization',
             acceptButtonScheme: 'danger',
             acceptButtonIcon: 'trash',
-            confirm: async modal => {
+            confirm: async (modal) => {
                 modal.startLoading();
 
                 try {
@@ -138,14 +138,14 @@ export default class ConsoleAccountOrganizationsController extends Controller {
         });
     }
 
-    @action editOrganization (organization) {
+    @action editOrganization(organization) {
         this.modalsManager.show('modals/edit-organization', {
             title: 'Edit Organization',
             acceptButtonText: 'Save Changes',
             acceptButtonIcon: 'save',
             isOwner: this.currentUser.id === organization.owner_uuid,
             organization,
-            confirm: async modal => {
+            confirm: async (modal) => {
                 modal.startLoading();
 
                 try {
@@ -158,7 +158,7 @@ export default class ConsoleAccountOrganizationsController extends Controller {
         });
     }
 
-    @action createOrganization () {
+    @action createOrganization() {
         const currency = this.currentUser.currency;
         const country = this.currentUser.country;
 
@@ -175,7 +175,7 @@ export default class ConsoleAccountOrganizationsController extends Controller {
                 country,
                 timezone: null,
             },
-            confirm: async modal => {
+            confirm: async (modal) => {
                 modal.startLoading();
 
                 const organization = modal.getOption('organization');
