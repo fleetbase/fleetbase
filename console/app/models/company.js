@@ -41,54 +41,54 @@ export default class Company extends Model {
     @attr('date') updated_at;
 
     /** @computed */
-    @computed('phone_country_code', 'country') get phoneCountryCode () {
+    @computed('phone_country_code', 'country') get phoneCountryCode() {
         return this.phone_country_code || this.country;
     }
 
-    @computed('updated_at') get updatedAgo () {
+    @computed('updated_at') get updatedAgo() {
         return formatDistanceToNow(this.updated_at);
     }
 
-    @computed('updated_at') get updatedAt () {
+    @computed('updated_at') get updatedAt() {
         return format(this.updated_at, 'PPP p');
     }
 
-    @computed('updated_at') get updatedAtShort () {
+    @computed('updated_at') get updatedAtShort() {
         return format(this.updated_at, 'PP');
     }
 
-    @computed('created_at') get createdAgo () {
+    @computed('created_at') get createdAgo() {
         return formatDistanceToNow(this.created_at);
     }
 
-    @computed('created_at') get createdAt () {
+    @computed('created_at') get createdAt() {
         return format(this.created_at, 'PPP p');
     }
 
-    @computed('created_at') get createdAtShort () {
+    @computed('created_at') get createdAtShort() {
         return format(this.created_at, 'PP');
     }
 
     /** @methods */
-    toJSON () {
+    toJSON() {
         return autoSerialize(this);
     }
 
-    async transferOwnership (newOwner, params = {}) {
+    async transferOwnership(newOwner, params = {}) {
         const owner = getOwner(this);
         const fetch = owner.lookup('service:fetch');
 
         return fetch.post('companies/transfer-ownership', { company: this.id, newOwner, ...params });
     }
 
-    async leave (user = null, params = {}) {
+    async leave(user = null, params = {}) {
         const owner = getOwner(this);
         const fetch = owner.lookup('service:fetch');
 
         return fetch.post('companies/leave', { company: this.id, user, ...params });
     }
 
-    async loadUsers (params = {}) {
+    async loadUsers(params = {}) {
         const owner = getOwner(this);
         const fetch = owner.lookup('service:fetch');
 
