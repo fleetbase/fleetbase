@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "de0aafe92aa1d47b648ef38f0dd9ff8d",
+    "content-hash": "cd0eb44c3f32bf3d4820a1d2f1755766",
     "packages": [
         {
             "name": "aws/aws-crt-php",
@@ -62,16 +62,16 @@
         },
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.324.2",
+            "version": "3.324.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "fea3d0ac8f96009cb87cf8166caba6558f26a0ab"
+                "reference": "4467374b1efda020b58adddd010f05949d9fa383"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/fea3d0ac8f96009cb87cf8166caba6558f26a0ab",
-                "reference": "fea3d0ac8f96009cb87cf8166caba6558f26a0ab",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/4467374b1efda020b58adddd010f05949d9fa383",
+                "reference": "4467374b1efda020b58adddd010f05949d9fa383",
                 "shasum": ""
             },
             "require": {
@@ -154,9 +154,9 @@
             "support": {
                 "forum": "https://forums.aws.amazon.com/forum.jspa?forumID=80",
                 "issues": "https://github.com/aws/aws-sdk-php/issues",
-                "source": "https://github.com/aws/aws-sdk-php/tree/3.324.2"
+                "source": "https://github.com/aws/aws-sdk-php/tree/3.324.4"
             },
-            "time": "2024-10-14T18:06:11+00:00"
+            "time": "2024-10-16T18:04:55+00:00"
         },
         {
             "name": "aws/aws-sdk-php-laravel",
@@ -2409,16 +2409,16 @@
         },
         {
             "name": "fleetbase/core-api",
-            "version": "1.5.14",
+            "version": "1.5.15",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fleetbase/core-api.git",
-                "reference": "8dd4932c191d2721ad0949df6aad98b4bcb3c592"
+                "reference": "8db60ca17977fc5976f3cc01348ba6f885de131c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fleetbase/core-api/zipball/8dd4932c191d2721ad0949df6aad98b4bcb3c592",
-                "reference": "8dd4932c191d2721ad0949df6aad98b4bcb3c592",
+                "url": "https://api.github.com/repos/fleetbase/core-api/zipball/8db60ca17977fc5976f3cc01348ba6f885de131c",
+                "reference": "8db60ca17977fc5976f3cc01348ba6f885de131c",
                 "shasum": ""
             },
             "require": {
@@ -2501,22 +2501,22 @@
             ],
             "support": {
                 "issues": "https://github.com/fleetbase/core-api/issues",
-                "source": "https://github.com/fleetbase/core-api/tree/v1.5.14"
+                "source": "https://github.com/fleetbase/core-api/tree/v1.5.15"
             },
-            "time": "2024-10-15T09:05:53+00:00"
+            "time": "2024-10-17T08:52:07+00:00"
         },
         {
             "name": "fleetbase/fleetops-api",
-            "version": "0.5.11",
+            "version": "0.5.12",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fleetbase/fleetops.git",
-                "reference": "27558ad50d97b206febc76538f540ba34bf709a5"
+                "reference": "d2e98638e77b8f6511f285565cbca78ff435b414"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fleetbase/fleetops/zipball/27558ad50d97b206febc76538f540ba34bf709a5",
-                "reference": "27558ad50d97b206febc76538f540ba34bf709a5",
+                "url": "https://api.github.com/repos/fleetbase/fleetops/zipball/d2e98638e77b8f6511f285565cbca78ff435b414",
+                "reference": "d2e98638e77b8f6511f285565cbca78ff435b414",
                 "shasum": ""
             },
             "require": {
@@ -2590,16 +2590,16 @@
             ],
             "support": {
                 "issues": "https://github.com/fleetbase/fleetops/issues",
-                "source": "https://github.com/fleetbase/fleetops/tree/v0.5.11"
+                "source": "https://github.com/fleetbase/fleetops/tree/v0.5.12"
             },
-            "time": "2024-10-15T09:33:34+00:00"
+            "time": "2024-10-17T08:55:41+00:00"
         },
         {
             "name": "fleetbase/flespi-integration",
             "version": "0.1.13",
             "dist": {
                 "type": "tar",
-                "url": "https://s3.ap-southeast-1.amazonaws.com/fleetbase-registry-qa/flb/%40fleetbase/flespi-engine/flespi-engine-0.1.13.tgz?AWSAccessKeyId=ASIA26E6KG6WAR5RP7PU&Expires=1728995406&Signature=Xnjq%2B7%2FPAekxcS%2F3PbdLrbpd84E%3D&x-amz-security-token=IQoJb3JpZ2luX2VjEJT%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaDmFwLXNvdXRoZWFzdC0xIkcwRQIgPUvTvGhO2%2FsHc6QaTWlJp3vqOEVczBBLbC8TKZ2WkuYCIQC5rgBe0DuksEihyi529Hsm39dXs6SoMRqk2d7d5pcs%2FCqPBAjt%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F8BEAAaDDc1MTk1MTI5NjQyOCIMHdABwu1XQARKaYYuKuMDv3AFySKCZdZWddpGQIcSMRkueez10Bitln3iv4LGZEsHpokeXDbeTytj%2BnRlV%2Fv1CMklc0yl%2FtkZtXDO9mOTNnX6cmO5uZeXBHcdXRBuZl66HgEkAe4xnQBFucVJ7XPvqqKX%2FmgUuVN737rtUsmDn9fxaqiGGuJm75Y6OaY5evIwuvbu8nZWqG5DeJX7HlQJdbNpSLj6mgySuSrDZaIs6Z05fCQJptqgpcbFJGKGp5H9BBw0Nx5b%2F4WBlJwmi0bYV0DzFpuWvr9JQsTdEpxCYb2tjWn60sg5tlmdl0pxJ8C5ztmbFP7ukOa4MQuycDv%2FI8Q0rh4zy%2Fka8CbGaB%2BhMeo9ATc3FbjnfiFOMolW5%2BSR5%2BxYIQcq%2F303gvx6fOVRGdsRZn6FQY2RgSibiA32D6xJV3TONcjQ9rKvcfGZq3DvfQ9kSUpn0XFn8Clh9xjUj%2BDYkQNVxjcY3h5xfCDpo0ozk%2BqmT5bp%2Bqozus6lvk%2Bv8QtVwArxl4K0pn8O585bpfOlgm695wHGz6ghYj28%2BvqrKT3TOvZ%2F5gHAMtFX%2Fq5Y8N5hPJLxOt%2Fj557ig77o7oVQ9W%2Bv3r%2Bd5KfIuYYKESrcFvGQhmUL2aU7ZJS7rWSDq44SFurFrdpVkhSkLCnylMglMJOyubgGOqUBmNoZTBcOKev4MCQXkA3jqeGws19Dmplf%2BxR%2BosNsqBej%2BbiD7%2BsvGF7wzuy91%2Bvz9MC7p%2FT%2F34GbrMGCMx62CabVyYc3eWm62xbK3V36U%2FYgtXWpqyQNpyADmRBifm2jqE5Z79fxJr1pT041qAtzjopfMEMEDaoXcUb%2FWsGUbjrysmH5uG5SdP2W5piXcbvQwGwDVc8HIZ2ZeblA%2BdprpIqOK2nv"
+                "url": "https://s3.ap-southeast-1.amazonaws.com/fleetbase-registry-qa/flb/%40fleetbase/flespi-engine/flespi-engine-0.1.13.tgz?AWSAccessKeyId=ASIA26E6KG6WBHD7IGLC&Expires=1729157855&Signature=mgsxczbNhmqUCxLyUDHqpFJAaKo%3D&x-amz-security-token=IQoJb3JpZ2luX2VjEMH%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaDmFwLXNvdXRoZWFzdC0xIkcwRQIgPDS6Nm50x7zG1OBB7KTUq0ON1dBwpxFnVL85PhBI%2FlQCIQDlyREeCNH8pRbPW1c5dJBW2jYZt2RDHhWuP3s1WaK6VSqGBAgqEAAaDDc1MTk1MTI5NjQyOCIMJfnbsDDWDSSlLPhgKuMD4aM6R3OTHMXh4Dc7rECt%2F5CGIaf44LzstxsLisQ%2FFeeiGWendzf%2BcZycgxY667RbU9SXcXjhsgq1LHJH0Ro%2F24o%2B6nWOUfqQVcoSSPm41unVZ66f56Ocpoe8fRZ6jI3epplJZoNxpYJOTT%2BuProtiyvT%2F7Yh6FNdSAp0%2Fe6uAe0LeLhfUssWqWfCIzXYr50hhB3TxR6u%2BWtY4FEMGIxCnKEMamwYL%2BjbKvK1Vp6Jx744MTmgREEs3RLzGwDAkz17hW50uQlhN4UYiP2xwsL8mOVleZsgmCItKpL5Q2hoIkvnytL51HOE0kIRxTLoPA6wpNHhyrd9Fq8YwuSpZPqAtgoAvjc3zIpSJW%2FvdDn48tOznDHlb4382W6drxXWOlBG0iW1%2BtlPIjwshDboRxUXZ6%2FXdSgWkSDdp1B5XRa2bI158hMCW8lmHa4du0eGK7aUS5MfdfUyMh%2FZkLYdZjWRdZFU2dnl34ToQttHqDM9tIZ1JFXAXAL3jFh0jMAdrHc9WTid2vkTZAcnCdhaHPxsYoXtDGpflDIEZ8RfAMlNnG%2BN%2B6MrlzXCW5eKC33iC8fci%2BXlbBWf%2FlcBMa3ZeiuEQq3Utxj%2BMAQm3hjzgq5ZtCkO9BF%2BLB4SKTzAgx3a9kRBHu6wMPetw7gGOqUBXgRntfov7akhGnnOYZI7tVM3i6T2oho0Wna8smjO%2BQ21PTBARKFSSuBNgt8gwH8PLHK8GwNIaPi2%2F6ogBkgCA1HG%2Bcd3UCd6zqT2Npj5T4JhV4PEYzwk%2F6mYyweMJqLE3iwsRfhE4MBSOVsAZVYvppewqpAcubyEOjAxWefWAbpL9Iyt69uhaZiPYB3l3C6EPY%2FMpC5yJ7BXBfB9NCESJZMuiD1O"
             },
             "require": {
                 "fleetbase/core-api": "^1.5.9",
@@ -8050,33 +8050,32 @@
         },
         {
             "name": "nunomaduro/termwind",
-            "version": "v1.15.1",
+            "version": "v1.16.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nunomaduro/termwind.git",
-                "reference": "8ab0b32c8caa4a2e09700ea32925441385e4a5dc"
+                "reference": "dcf1ec3dfa36137b7ce41d43866644a7ab8fc257"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nunomaduro/termwind/zipball/8ab0b32c8caa4a2e09700ea32925441385e4a5dc",
-                "reference": "8ab0b32c8caa4a2e09700ea32925441385e4a5dc",
+                "url": "https://api.github.com/repos/nunomaduro/termwind/zipball/dcf1ec3dfa36137b7ce41d43866644a7ab8fc257",
+                "reference": "dcf1ec3dfa36137b7ce41d43866644a7ab8fc257",
                 "shasum": ""
             },
             "require": {
                 "ext-mbstring": "*",
-                "php": "^8.0",
-                "symfony/console": "^5.3.0|^6.0.0"
+                "php": "^8.1",
+                "symfony/console": "^6.4.12"
             },
             "require-dev": {
-                "ergebnis/phpstan-rules": "^1.0.",
-                "illuminate/console": "^8.0|^9.0",
-                "illuminate/support": "^8.0|^9.0",
-                "laravel/pint": "^1.0.0",
-                "pestphp/pest": "^1.21.0",
-                "pestphp/pest-plugin-mock": "^1.0",
-                "phpstan/phpstan": "^1.4.6",
-                "phpstan/phpstan-strict-rules": "^1.1.0",
-                "symfony/var-dumper": "^5.2.7|^6.0.0",
+                "illuminate/console": "^10.48.22",
+                "illuminate/support": "^10.48.22",
+                "laravel/pint": "^1.18.1",
+                "pestphp/pest": "^2",
+                "pestphp/pest-plugin-mock": "2.0.0",
+                "phpstan/phpstan": "^1.12.6",
+                "phpstan/phpstan-strict-rules": "^1.6.1",
+                "symfony/var-dumper": "^6.4.11",
                 "thecodingmachine/phpstan-strict-rules": "^1.0.0"
             },
             "type": "library",
@@ -8116,7 +8115,7 @@
             ],
             "support": {
                 "issues": "https://github.com/nunomaduro/termwind/issues",
-                "source": "https://github.com/nunomaduro/termwind/tree/v1.15.1"
+                "source": "https://github.com/nunomaduro/termwind/tree/v1.16.0"
             },
             "funding": [
                 {
@@ -8132,7 +8131,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2023-02-08T01:06:31+00:00"
+            "time": "2024-10-15T15:27:12+00:00"
         },
         {
             "name": "nyholm/psr7",
@@ -15819,16 +15818,16 @@
         },
         {
             "name": "laravel/sail",
-            "version": "v1.35.0",
+            "version": "v1.36.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/sail.git",
-                "reference": "992bc2d9e52174c79515967f30849d21daa334d8"
+                "reference": "f184d3d687155d06bc8cb9ff6dc48596a138460c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/sail/zipball/992bc2d9e52174c79515967f30849d21daa334d8",
-                "reference": "992bc2d9e52174c79515967f30849d21daa334d8",
+                "url": "https://api.github.com/repos/laravel/sail/zipball/f184d3d687155d06bc8cb9ff6dc48596a138460c",
+                "reference": "f184d3d687155d06bc8cb9ff6dc48596a138460c",
                 "shasum": ""
             },
             "require": {
@@ -15878,7 +15877,7 @@
                 "issues": "https://github.com/laravel/sail/issues",
                 "source": "https://github.com/laravel/sail"
             },
-            "time": "2024-10-08T14:45:26+00:00"
+            "time": "2024-10-10T13:26:02+00:00"
         },
         {
             "name": "mockery/mockery",
@@ -16088,40 +16087,40 @@
         },
         {
             "name": "nunomaduro/collision",
-            "version": "v7.10.0",
+            "version": "v7.11.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nunomaduro/collision.git",
-                "reference": "49ec67fa7b002712da8526678abd651c09f375b2"
+                "reference": "994ea93df5d4132f69d3f1bd74730509df6e8a05"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nunomaduro/collision/zipball/49ec67fa7b002712da8526678abd651c09f375b2",
-                "reference": "49ec67fa7b002712da8526678abd651c09f375b2",
+                "url": "https://api.github.com/repos/nunomaduro/collision/zipball/994ea93df5d4132f69d3f1bd74730509df6e8a05",
+                "reference": "994ea93df5d4132f69d3f1bd74730509df6e8a05",
                 "shasum": ""
             },
             "require": {
-                "filp/whoops": "^2.15.3",
+                "filp/whoops": "^2.16.0",
                 "nunomaduro/termwind": "^1.15.1",
                 "php": "^8.1.0",
-                "symfony/console": "^6.3.4"
+                "symfony/console": "^6.4.12"
             },
             "conflict": {
                 "laravel/framework": ">=11.0.0"
             },
             "require-dev": {
-                "brianium/paratest": "^7.3.0",
-                "laravel/framework": "^10.28.0",
-                "laravel/pint": "^1.13.3",
-                "laravel/sail": "^1.25.0",
-                "laravel/sanctum": "^3.3.1",
-                "laravel/tinker": "^2.8.2",
-                "nunomaduro/larastan": "^2.6.4",
-                "orchestra/testbench-core": "^8.13.0",
-                "pestphp/pest": "^2.23.2",
-                "phpunit/phpunit": "^10.4.1",
-                "sebastian/environment": "^6.0.1",
-                "spatie/laravel-ignition": "^2.3.1"
+                "brianium/paratest": "^7.3.1",
+                "laravel/framework": "^10.48.22",
+                "laravel/pint": "^1.18.1",
+                "laravel/sail": "^1.36.0",
+                "laravel/sanctum": "^3.3.3",
+                "laravel/tinker": "^2.10.0",
+                "nunomaduro/larastan": "^2.9.8",
+                "orchestra/testbench-core": "^8.28.3",
+                "pestphp/pest": "^2.35.1",
+                "phpunit/phpunit": "^10.5.36",
+                "sebastian/environment": "^6.1.0",
+                "spatie/laravel-ignition": "^2.8.0"
             },
             "type": "library",
             "extra": {
@@ -16180,7 +16179,7 @@
                     "type": "patreon"
                 }
             ],
-            "time": "2023-10-11T15:45:01+00:00"
+            "time": "2024-10-15T15:12:40+00:00"
         },
         {
             "name": "phar-io/manifest",
