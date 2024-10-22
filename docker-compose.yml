@@ -1,7 +1,6 @@
 services:
   cache:
     image: redis:4-alpine
-
   database:
     image: mysql:8.0-oracle
     ports:
@@ -12,6 +11,12 @@ services:
     environment:
       MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
       MYSQL_DATABASE: "fleetbase"
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -uroot --silent"]
+      interval: 10s
+      retries: 5
+      start_period: 30s
+      timeout: 10s
 
   socket:
     image: socketcluster/socketcluster:v17.4.0
@@ -76,10 +81,15 @@ services:
       REGISTRY_HOST: https://registry.fleetbase.io
       REGISTRY_PREINSTALLED_EXTENSIONS: 'true'
       OSRM_HOST: https://router.project-osrm.org
+      APP_KEY: base64:bGZkMzVjOTBpM3NsZHR0bzUzeGt4bTg0YnN2NnpxazQ= # Change this to a random string and don't share it with anyone (don't use this key in production)
     depends_on:
-      - database
-      - cache
-      - queue
+      database:
+        condition: service_healthy
+        restart: true
+      cache:
+        condition : service_started
+      queue:
+        condition : service_started
 
   httpd:
     build:
