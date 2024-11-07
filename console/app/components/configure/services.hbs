@@ -14,7 +14,7 @@
     <InputGroup @name="Twilio Token" @value={{this.twilioToken}} disabled={{this.isLoading}} />
     <InputGroup @name="Twilio From" @value={{this.twilioFrom}} disabled={{this.isLoading}} />
     {{#if this.twilioTestResponse}}
-        <div class="animate-pulse flex flex-row items-center rounded-lg border {{if (eq this.twilioTestResponse.status 'error') 'border-red-900 bg-red-800 text-red-100' 'border-green-900 bg-green-800 text-green-100'}} shadow-sm my-2 px-4 py-2">
+        <div class="flex flex-row items-center rounded-lg border {{if (eq this.twilioTestResponse.status 'error') 'border-red-900 bg-red-800 text-red-100' 'border-green-900 bg-green-800 text-green-100'}} shadow-sm my-2 px-4 py-2">
             <FaIcon @icon={{if (eq this.twilioTestResponse.status 'error') 'triangle-exclamation' 'circle-check'}} class="mr-1.5 {{if (eq this.twilioTestResponse.status 'error') 'text-red-200' 'text-green-200'}}" />
             <span class="text-xs">{{this.this.twilioTestResponse.message}}</span>
         </div>
@@ -28,7 +28,7 @@
 <ContentPanel @title="Sentry" @open={{true}} @pad={{true}} @panelBodyClass="bg-white dark:bg-gray-800">
     <InputGroup @name="Sentry DSN" @value={{this.sentryDsn}} disabled={{this.isLoading}} />
     {{#if this.sentryTestResponse}}
-        <div class="animate-pulse flex flex-row items-center rounded-lg border {{if (eq this.sentryTestResponse.status 'error') 'border-red-900 bg-red-800 text-red-100' 'border-green-900 bg-green-800 text-green-100'}} shadow-sm my-2 px-4 py-2">
+        <div class="flex flex-row items-center rounded-lg border {{if (eq this.sentryTestResponse.status 'error') 'border-red-900 bg-red-800 text-red-100' 'border-green-900 bg-green-800 text-green-100'}} shadow-sm my-2 px-4 py-2">
             <FaIcon @icon={{if (eq this.sentryTestResponse.status 'error') 'triangle-exclamation' 'circle-check'}} class="mr-1.5 {{if (eq this.sentryTestResponse.status 'error') 'text-red-200' 'text-green-200'}}" />
             <span class="text-xs">{{this.this.sentryTestResponse.message}}</span>
         </div>

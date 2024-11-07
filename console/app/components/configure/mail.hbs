@@ -3,25 +3,54 @@
         <Select @options={{this.mailers}} @value={{this.mailer}} @onSelect={{this.setMailer}} @placeholder="Select mailer" class="w-full" />
     </InputGroup>
     {{#if (eq this.mailer "smtp")}}
-        <InputGroup @name="SMTP Host" @value={{this.smtpHost}} disabled={{this.isLoading}} />
-        <InputGroup @name="SMTP Port" @type="number" @value={{this.smtpPort}} disabled={{this.isLoading}} />
-        <InputGroup @name="SMTP Encryption" @value={{this.smtpEncryption}} disabled={{this.isLoading}} />
-        <InputGroup @name="SMTP Username" @value={{this.smtpUsername}} disabled={{this.isLoading}} />
-        <InputGroup @name="SMTP Password" @type="password" @value={{this.smtpPassword}} disabled={{this.isLoading}} />
-        <InputGroup @name="SMTP Timeout" @value={{this.smtpTimeout}} disabled={{this.isLoading}} />
-        <InputGroup @name="SMTP Auth Mode" @value={{this.smtpAuth_mode}} disabled={{this.isLoading}} />
+        <InputGroup @name="SMTP Host" @value={{this.smtpHost}} disabled={{this.loadConfigValues.isRunning}} />
+        <InputGroup @name="SMTP Port" @type="number" @value={{this.smtpPort}} disabled={{this.loadConfigValues.isRunning}} />
+        <InputGroup>
+            <Toggle @isToggled={{eq this.smtpEncryption "tls"}} @onToggle={{this.enableSmtpEncryption}} @label="SMTP Encryption" @helpText="Enabled TLS Encryption" />
+        </InputGroup>
+        <InputGroup @name="SMTP Username" @value={{this.smtpUsername}} disabled={{this.loadConfigValues.isRunning}} />
+        <InputGroup @name="SMTP Password" @value={{this.smtpPassword}} disabled={{this.loadConfigValues.isRunning}} />
+        <InputGroup @name="SMTP Timeout" @value={{this.smtpTimeout}} disabled={{this.loadConfigValues.isRunning}} />
+        <InputGroup @name="SMTP Auth Mode" @value={{this.smtpAuth_mode}} disabled={{this.loadConfigValues.isRunning}} />
     {{/if}}
-    <InputGroup @name="From Address" @helpText="Input the email address for Fleetbase to send emails from." @value={{this.fromAddress}} @placeholder="From Address" disabled={{this.isLoading}} />
+    {{#if (eq this.mailer "mailgun")}}
+        <InputGroup @name="Mailgun Domain" @value={{this.mailgunDomain}} disabled={{this.loadConfigValues.isRunning}} />
+        <InputGroup @name="Mailgun Endpoint" @value={{this.mailgunEndpoint}} disabled={{this.loadConfigValues.isRunning}} />
+        <InputGroup @name="Mailgun Secret" @value={{this.mailgunSecret}} disabled={{this.loadConfigValues.isRunning}} />
+    {{/if}}
+    {{#if (eq this.mailer "postmark")}}
+        <InputGroup @name="Postmark Token" @value={{this.postmarkToken}} disabled={{this.loadConfigValues.isRunning}} />
+    {{/if}}
+    {{#if (eq this.mailer "sendgrid")}}
+        <InputGroup @name="Sendgrid API Key" @value={{this.sendgridApi_key}} disabled={{this.loadConfigValues.isRunning}} />
+    {{/if}}
+    {{#if (eq this.mailer "resend")}}
+        <InputGroup @name="Resend API Key" @value={{this.resendKey}} disabled={{this.loadConfigValues.isRunning}} />
+    {{/if}}
+    <InputGroup
+        @name="From Address"
+        @helpText="Input the email address for Fleetbase to send emails from."
+        @value={{this.fromAddress}}
+        @placeholder="From Address"
+        disabled={{this.isLoading}}
+    />
     <InputGroup @name="From Name" @helpText="Input the name for Fleetbase to send emails from." @value={{this.fromName}} @placeholder="From Name" disabled={{this.isLoading}} />
     {{#if this.testResponse}}
-        <div class="animate-pulse flex flex-row items-center rounded-lg border {{if (eq this.testResponse.status 'error') 'border-red-900 bg-red-800 text-red-100' 'border-green-900 bg-green-800 text-green-100'}} shadow-sm my-2 px-4 py-2">
-            <FaIcon @icon={{if (eq this.testResponse.status 'error') 'triangle-exclamation' 'circle-check'}} class="mr-1.5 {{if (eq this.testResponse.status 'error') 'text-red-200' 'text-green-200'}}" />
-            <span class="text-xs">{{this.this.testResponse.message}}</span>
+        <div
+            class="flex flex-row items-center rounded-lg border
+                {{if (eq this.testResponse.status 'error') 'border-red-900 bg-red-800 text-red-100' 'border-green-900 bg-green-800 text-green-100'}}
+                shadow-sm my-2 px-4 py-2"
+        >
+            <FaIcon
+                @icon={{if (eq this.testResponse.status "error") "triangle-exclamation" "circle-check"}}
+                class="mr-1.5 {{if (eq this.testResponse.status 'error') 'text-red-200' 'text-green-200'}}"
+            />
+            <span class="text-xs">{{this.testResponse.message}}</span>
         </div>
     {{/if}}
-    <Button @wrapperClass="mt-3" @icon="plug" @text="Test Config" @onClick={{this.test}} @isLoading={{this.isLoading}} />
+    <Button @wrapperClass="mt-3" @icon="plug" @text="Test Config" @onClick={{perform this.test}} @isLoading={{this.test.isRunning}} />
 </ContentPanel>
 
 <EmberWormhole @to="next-view-section-subheader-actions">
-    <Button @type="primary" @size="sm" @icon="save" @text="Save Changes" @onClick={{this.save}} @disabled={{this.isLoading}} @isLoading={{this.isLoading}} />
+    <Button @type="primary" @size="sm" @icon="save" @text="Save Changes" @onClick={{perform this.save}} @disabled={{this.save.isRunning}} @isLoading={{this.save.isRunning}} />
 </EmberWormhole>

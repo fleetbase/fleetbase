@@ -1,0 +1,36 @@
+{{#if this.isImpersonator}}
+    <EmberWormhole @to="view-header-actions">
+        <div class="next-user-button locale-selector-tray" ...attributes>
+            <BasicDropdown
+                class={{@wrapperClass}}
+                @onOpen={{@onOpen}}
+                @onClose={{@onClose}}
+                @calculatePosition={{this.calculatePosition}}
+                @verticalPosition={{@verticalPosition}}
+                @horizontalPosition={{@horizontalPosition}}
+                @renderInPlace={{or @renderInPlace (not (media "isMobile"))}}
+                as |dd|
+            >
+                <dd.Trigger class="{{@triggerClass}} local-selector-tray-trigger {{if (media 'isMobile') 'is-mobile'}}">
+                    <div class="next-org-button-trigger flex-shrink-0 {{if dd.isOpen 'is-open'}}">
+                        <FaIcon @icon="user-secret" @size="sm" />
+                    </div>
+                </dd.Trigger>
+                <dd.Content class="{{@contentClass}} locale-selector-tray-content {{if (media 'isMobile') 'is-mobile'}}">
+                    <div class="next-dd-menu {{@dropdownMenuClass}} {{if dd.isOpen 'is-open'}}">
+                        <div class="px-1">
+                            <a href="javascript:;" class="next-dd-item" {{on "click" this.restoreSession}}>
+                                <div class="flex flex-row items-centerw-full">
+                                    <div class="w-6">
+                                        <FaIcon @icon="person-walking-arrow-loop-left" @size="sm" />
+                                    </div>
+                                    <div>End Impersonation</div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </dd.Content>
+            </BasicDropdown>
+        </div>
+    </EmberWormhole>
+{{/if}}

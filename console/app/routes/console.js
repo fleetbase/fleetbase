@@ -1,5 +1,6 @@
 import Route from '@ember/routing/route';
 import { inject as service } from '@ember/service';
+import { action } from '@ember/object';
 import '@fleetbase/leaflet-routing-machine';
 
 export default class ConsoleRoute extends Route {
@@ -25,6 +26,26 @@ export default class ConsoleRoute extends Route {
         if (this.session.isAuthenticated) {
             return this.session.promiseCurrentUser(transition);
         }
+    }
+
+    /**
+     * Register after model hook.
+     *
+     * @param {DS.Model} model
+     * @param {Transition} transition
+     * @memberof ConsoleRoute
+     */
+    async afterModel(model, transition) {
+        this.universe.callHooks('console:after-model', this.session, this.router, model, transition);
+    }
+
+    /**
+     * Route did complete transition.
+     *
+     * @memberof ConsoleRoute
+     */
+    @action didTransition() {
+        this.universe.callHooks('console:did-transition', this.session, this.router);
     }
 
     /**

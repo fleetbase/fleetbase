@@ -70,9 +70,6 @@ services:
       MAIL_FROM_NAME: Fleetbase
       APP_NAME: Fleetbase
       LOG_CHANNEL: daily
-      MODEL_CACHE_ENABLED: 'true'
-      RESPONSE_CACHE_ENABLED: 'true'
-      RESPONSE_CACHE_DRIVER: redis
       REGISTRY_HOST: https://registry.fleetbase.io
       REGISTRY_PREINSTALLED_EXTENSIONS: 'true'
       OSRM_HOST: https://router.project-osrm.org
