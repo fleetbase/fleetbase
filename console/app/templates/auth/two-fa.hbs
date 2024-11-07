@@ -1,5 +1,7 @@
 <div class="mb-8 text-center">
-    <Image src={{@model.logo_url}} @fallbackSrc="/images/fleetbase-logo-svg.svg" alt={{t "app.name"}} width="160" height="56" class="w-40 h-14 mx-auto" />
+    <LinkTo @route="console" class="flex items-center justify-center">
+        <LogoIcon @brand={{@brand}} @size="12" class="rounded-md" />
+    </LinkTo>
     <h2 class="text-lg font-extrabold text-gray-900 dark:text-white truncate">
         {{if this.isSent "Verification Code"}}
     </h2>
@@ -20,7 +22,7 @@
         <OtpInput @onInputCompleted={{this.handleOtpInput}} @size={{6}} class="w-full" />
     </div>
 
-    <div id="otp-countdown-container" class="otp-countdown-container flex {{if this.isCodeExpired "flex-col" "flex-row"}} items-center justify-center min-h-12">
+    <div id="otp-countdown-container" class="otp-countdown-container flex {{if this.isCodeExpired 'flex-col' 'flex-row'}} items-center justify-center min-h-12">
         {{#if this.countdownReady}}
             <Countdown @expiry={{this.twoFactorSessionExpiresAfter}} @countdownClass="text-lg" @onCountdownEnd={{this.handleCodeExpired}} />
         {{/if}}

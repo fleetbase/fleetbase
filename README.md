@@ -13,7 +13,7 @@
       ·
       <a href="https://fleetbase.apichecker.com" target="_api_status" rel="nofollow">API Status</a>
       ·
-      <a href="https://meetings.hubspot.com/shiv-thakker" rel="nofollow">Book a Demo</a>
+      <a href="https://tally.so/r/3NBpAW" rel="nofollow">Book a Demo</a>
       ·
       <a href="https://discord.gg/V7RVWRQ2Wm" target="discord" rel="nofollow">Discord</a>
     </p>
