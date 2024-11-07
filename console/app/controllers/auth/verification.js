@@ -6,47 +6,13 @@ import { later } from '@ember/runloop';
 import { not } from '@ember/object/computed';
 
 export default class AuthVerificationController extends Controller {
-    /**
-     * Inject the `fetch` service
-     *
-     * @memberof OnboardIndexController
-     */
     @service fetch;
-
-    /**
-     * Inject the `notifications` service
-     *
-     * @memberof OnboardIndexController
-     */
     @service notifications;
-
-    /**
-     * Inject the `modalsManager` service
-     *
-     * @memberof OnboardIndexController
-     */
     @service modalsManager;
-
-    /**
-     * Inject the `currentUser` service
-     *
-     * @memberof OnboardIndexController
-     */
     @service currentUser;
-
-    /**
-     * Inject the `router` service
-     *
-     * @memberof OnboardIndexController
-     */
     @service router;
-
-    /**
-     * Inject the `session` service
-     *
-     * @memberof OnboardIndexController
-     */
     @service session;
+    @service intl;
 
     /**
      * The session paramerer.
@@ -61,13 +27,6 @@ export default class AuthVerificationController extends Controller {
      * @memberof OnboardVerifyEmailController
      */
     @tracked token;
-
-    /**
-     * The loading state of the verification request.
-     *
-     * @memberof OnboardVerifyEmailController
-     */
-    @tracked isLoading = false;
 
     /**
      * Validation state tracker.
@@ -91,11 +50,18 @@ export default class AuthVerificationController extends Controller {
     @tracked stillWaiting = false;
 
     /**
-     * the input code.
+     * The input code.
      *
      * @memberof OnboardVerifyEmailController
      */
     @tracked code;
+
+    /**
+     * The email to verify.
+     *
+     * @memberof OnboardVerifyEmailController
+     */
+    @tracked email;
 
     /**
      * The query param for the session token.
@@ -168,38 +134,27 @@ export default class AuthVerificationController extends Controller {
     /**
      * Submits to verify code.
      *
-     * @return {Promise}
      * @memberof OnboardVerifyEmailController
      */
-    @action verifyCode() {
-        const { token, code, email } = this;
+    @task *verifyCode() {
+        try {
+            const { status, token } = yield this.fetch.post('auth/verify-email', { token: this.token, code: this.code, email: this.email, authenticate: true });
+            if (status === 'ok') {
+                this.notifications.success('Email successfully verified!');
 
-        this.isLoading = true;
+                if (token) {
+                    this.notifications.info(`Welcome to ${this.intl.t('app.name')}`);
+                    this.session.manuallyAuthenticate(token);
 
-        return this.fetch
-            .post('auth/verify-email', { token, code, email, authenticate: true })
-            .then(({ status, token }) => {
-                if (status === 'ok') {
-                    this.notifications.success('Email successfully verified!');
-
-                    if (token) {
-                        this.notifications.info('Welcome to Fleetbase!');
-                        this.session.manuallyAuthenticate(token);
-
-                        return this.router.transitionTo('console');
-                    }
-
-                    return this.router.transitionTo('auth.login');
+                    return this.router.transitionTo('console');
                 }
-            })
-            .catch((error) => {
-                this.notifications.serverError(error);
-            })
-            .finally(() => {
-                this.isLoading = false;
-            });
-    }
 
+                return this.router.transitionTo('auth.login');
+            }
+        } catch (error) {
+            this.notifications.serverError(error);
+        }
+    }
     /**
      * Action to resend verification code by SMS.
      *
@@ -210,18 +165,21 @@ export default class AuthVerificationController extends Controller {
             title: 'Verify Account by Phone',
             acceptButtonText: 'Send',
             phone: this.currentUser.phone,
-            confirm: (modal) => {
+            confirm: async (modal) => {
                 modal.startLoading();
                 const phone = modal.getOption('phone');
+                if (!phone) {
+                    this.notifications.error('No phone number provided.');
+                }
 
-                return this.fetch
-                    .post('onboard/send-verification-sms', { phone, session: this.hello })
-                    .then(() => {
-                        this.notifications.success('Verification code SMS sent!');
-                    })
-                    .catch((error) => {
-                        this.notifications.serverError(error);
-                    });
+                try {
+                    await this.fetch.post('onboard/send-verification-sms', { phone, session: this.hello });
+                    this.notifications.success('Verification code SMS sent!');
+                    modal.done();
+                } catch (error) {
+                    this.notifications.serverError(error);
+                    modal.stopLoading();
+                }
             },
         });
     }
@@ -236,18 +194,21 @@ export default class AuthVerificationController extends Controller {
             title: 'Resend Verification Code',
             acceptButtonText: 'Send',
             email: this.currentUser.email,
-            confirm: (modal) => {
+            confirm: async (modal) => {
                 modal.startLoading();
                 const email = modal.getOption('email');
+                if (!email) {
+                    this.notifications.error('No email number provided.');
+                }
 
-                return this.fetch
-                    .post('onboard/send-verification-email', { email, session: this.hello })
-                    .then(() => {
-                        this.notifications.success('Verification code email sent!');
-                    })
-                    .catch((error) => {
-                        this.notifications.serverError(error);
-                    });
+                try {
+                    await this.fetch.post('onboard/send-verification-email', { email, session: this.hello });
+                    this.notifications.success('Verification code email sent!');
+                    modal.done();
+                } catch (error) {
+                    this.notifications.serverError(error);
+                    modal.stopLoading();
+                }
             },
         });
     }

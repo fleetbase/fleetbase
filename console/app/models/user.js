@@ -1,3 +1,4 @@
+import { set } from '@ember/object';
 import Model, { attr, belongsTo, hasMany } from '@ember-data/model';
 import { computed, get } from '@ember/object';
 import { not } from '@ember/object/computed';
@@ -74,7 +75,7 @@ export default class UserModel extends Model {
         const fetch = owner.lookup('service:fetch');
 
         return fetch.patch(`users/verify/${this.id}`).then((response) => {
-            this.email_verified_at = response.email_verified_at;
+            set(this, 'email_verified_at', response.email_verified_at);
 
             return response;
         });

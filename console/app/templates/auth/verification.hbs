@@ -1,23 +1,20 @@
 {{page-title (t "auth.verification.header-title")}}
 
 <div class="bg-white dark:bg-gray-800 py-8 px-4 shadow rounded-lg w-full">
-    <div class="mb-8">
-        <img class="mx-auto h-12 w-auto" src="/images/fleetbase-logo-svg.svg" alt={{t "app.name"}} />
+    <div class="mb-6">
+        <LinkTo @route="console" class="flex items-center justify-center">
+            <LogoIcon @brand={{@brand}} @size="12" class="rounded-md" />
+        </LinkTo>
         <h2 class="mt-6 text-center text-lg font-extrabold text-gray-900 dark:text-white truncate">
             {{t "auth.verification.title"}}
         </h2>
     </div>
 
-    <div class="flex px-3 py-2 mb-6 rounded-md shadow-sm bg-blue-200">
-        <div>
-            <FaIcon @icon="shield-check" @size="lg" class="text-blue-900 mr-4" />
-        </div>
-        <p class="flex-1 text-sm text-blue-900 dark:text-blue-900">
-            {{t "auth.verification.message-text" htmlSafe=true}}
-        </p>
-    </div>
+    <InfoBlock @type="info" @icon="shield-halved" @iconSize="lg">
+        {{t "auth.verification.message-text" htmlSafe=true}}
+    </InfoBlock>
 
-    <form class="mt-8 space-y-6" {{on "submit" this.verifyCode}}>
+    <form class="mt-8 space-y-6" {{on "submit" (perform this.verifyCode)}}>
         <InputGroup
             @type="tel"
             @name={{t "auth.verification.verification-input-label"}}
@@ -36,9 +33,9 @@
                 @type="primary"
                 @size="lg"
                 @text="Verify & Continue"
-                @isLoading={{this.isLoading}}
-                @disabled={{this.isNotReadyToSubmit}}
-                @onClick={{this.verifyCode}}
+                @isLoading={{this.verifyCode.isRunning}}
+                @disabled={{not this.isReadyToSubmit}}
+                @onClick={{perform this.verifyCode}}
             />
             <a href="javascript:;" {{on "click" this.onDidntReceiveCode}} class="text-sm text-blue-400 hover:text-blue-300">{{t "auth.verification.didnt-receive-a-code"}}</a>
         </div>

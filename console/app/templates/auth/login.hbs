@@ -1,7 +1,7 @@
 <div>
-    <div class="mx-auto w-12 h-12">
-        <LogoIcon @size="12" class="mx-auto rounded-sm" />
-    </div>
+    <LinkTo @route="console" class="flex items-center justify-center">
+        <LogoIcon @brand={{@brand}} @size="12" class="rounded-md" />
+    </LinkTo>
     <h2 class="mt-6 mb-3 text-3xl font-extrabold leading-9 text-center text-gray-900 dark:text-gray-100">
         {{t "auth.login.title"}}
     </h2>
