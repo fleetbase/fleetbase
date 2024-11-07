@@ -2,28 +2,16 @@ import Controller from '@ember/controller';
 import { tracked } from '@glimmer/tracking';
 import { inject as service } from '@ember/service';
 import { action } from '@ember/object';
+import { later } from '@ember/runloop';
 
 export default class ConsoleAdminOrganizationsIndexUsersController extends Controller {
-    /**
-     * Inject the `filters` service
-     *
-     * @var {Service}
-     */
     @service filters;
-
-    /**
-     * Inject the `intl` service
-     *
-     * @var {Service}
-     */
     @service intl;
-
-    /**
-     * Inject the `router` service
-     *
-     * @var {Service}
-     */
     @service router;
+    @service fetch;
+    @service notifications;
+    @service modalsManager;
+    @service session;
 
     /**
      * The current page of data being viewed
@@ -85,6 +73,10 @@ export default class ConsoleAdminOrganizationsIndexUsersController extends Contr
             valuePath: 'name',
         },
         {
+            label: this.intl.t('common.role'),
+            valuePath: 'roleName',
+        },
+        {
             label: this.intl.t('common.phone-number'),
             valuePath: 'phone',
         },
@@ -97,7 +89,70 @@ export default class ConsoleAdminOrganizationsIndexUsersController extends Contr
             valuePath: 'status',
             cellComponent: 'table/cell/status',
         },
+        {
+            label: '',
+            cellComponent: 'table/cell/dropdown',
+            ddButtonText: false,
+            ddButtonIcon: 'ellipsis-h',
+            ddButtonIconPrefix: 'fas',
+            ddMenuLabel: 'User Actions',
+            cellClassNames: 'overflow-visible',
+            wrapperClass: 'flex items-center justify-end mx-2',
+            width: '9%',
+            actions: [
+                {
+                    label: 'Impersonate',
+                    icon: 'user-secret',
+                    fn: this.impersonateUser,
+                },
+                {
+                    label: 'Change Password',
+                    icon: 'lock-open',
+                    fn: this.changeUserPassword,
+                },
+            ],
+            sortable: false,
+            filterable: false,
+            resizable: false,
+            searchable: false,
+        },
     ];
+
+    /**
+     * Impersonate the selected user.
+     *
+     * @param {UserModel} user
+     * @memberof ConsoleAdminOrganizationsIndexUsersController
+     */
+    @action async impersonateUser(user) {
+        try {
+            const { token } = await this.fetch.post('auth/impersonate', { user: user.id });
+            await this.router.transitionTo('console');
+            this.session.manuallyAuthenticate(token);
+            this.notifications.info(`Now impersonating ${user.email}...`);
+            later(
+                this,
+                () => {
+                    window.location.reload();
+                },
+                600
+            );
+        } catch (error) {
+            this.notifications.serverError(error);
+        }
+    }
+
+    /**
+     * Change password for a user
+     *
+     * @void
+     */
+    @action changeUserPassword(user) {
+        this.modalsManager.show('modals/change-user-password', {
+            keepOpen: true,
+            user,
+        });
+    }
 
     /**
      * Update search query param and reset page to 1

@@ -35,7 +35,7 @@
 
 <ContentPanel @title="Test Push Notification" @open={{true}} @pad={{true}} @panelBodyClass="bg-white dark:bg-gray-900">
     {{#if this.testResponse}}
-        <div class="animate-pulse flex flex-row items-center rounded-lg border {{if (eq this.testResponse.status 'error') 'border-red-900 bg-red-800 text-red-100' 'border-green-900 bg-green-800 text-green-100'}} shadow-sm my-2 px-4 py-2">
+        <div class="flex flex-row items-center rounded-lg border {{if (eq this.testResponse.status 'error') 'border-red-900 bg-red-800 text-red-100' 'border-green-900 bg-green-800 text-green-100'}} shadow-sm my-2 px-4 py-2">
             <FaIcon @icon={{if (eq this.testResponse.status 'error') 'triangle-exclamation' 'circle-check'}} class="mr-1.5 {{if (eq this.testResponse.status 'error') 'text-red-200' 'text-green-200'}}" />
             <span class="text-xs">{{this.this.testResponse.message}}</span>
         </div>

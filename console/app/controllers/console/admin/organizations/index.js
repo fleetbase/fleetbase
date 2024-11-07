@@ -10,41 +10,10 @@ import { action } from '@ember/object';
  * @extends Controller
  */
 export default class ConsoleAdminOrganizationsController extends Controller {
-    /**
-     * The Ember Data service for interacting with the store.
-     *
-     * @property {Service} store
-     * @type {Object}
-     */
     @service store;
-
-    /**
-     * Inject the `intl` service
-     *
-     * @var {Service}
-     */
     @service intl;
-
-    /**
-     * The Ember Router service for handling transitions between routes.
-     *
-     * @property {Service} router
-     * @type {Object}
-     */
     @service router;
-
-    /**
-     * Inject the `filters` service
-     *
-     * @var {Service}
-     */
     @service filters;
-
-    /**
-     * Inject the `crud` service
-     *
-     * @var {Service}
-     */
     @service crud;
 
     /**
