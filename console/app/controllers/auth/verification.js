@@ -81,7 +81,7 @@ export default class AuthVerificationController extends Controller {
      * Creates an instance of OnboardVerifyEmailController.
      * @memberof OnboardVerifyEmailController
      */
-    constructor () {
+    constructor() {
         super(...arguments);
 
         later(
@@ -98,7 +98,7 @@ export default class AuthVerificationController extends Controller {
      *
      * @memberof AuthVerificationController
      */
-    @action onDidntReceiveCode () {
+    @action onDidntReceiveCode() {
         this.stillWaiting = true;
     }
 
@@ -108,7 +108,7 @@ export default class AuthVerificationController extends Controller {
      * @param {InputEvent} { target: { value } }
      * @memberof OnboardVerifyEmailController
      */
-    @action validateInput ({ target: { value } }) {
+    @action validateInput({ target: { value } }) {
         if (value.length > 5) {
             this.isReadyToSubmit = true;
         } else {
@@ -122,7 +122,7 @@ export default class AuthVerificationController extends Controller {
      * @param {HTMLElement} el
      * @memberof AuthVerificationController
      */
-    @action validateInitInput (el) {
+    @action validateInitInput(el) {
         const value = el.value;
         if (value.length > 5) {
             this.isReadyToSubmit = true;
@@ -136,7 +136,7 @@ export default class AuthVerificationController extends Controller {
      *
      * @memberof OnboardVerifyEmailController
      */
-    @task *verifyCode () {
+    @task *verifyCode() {
         try {
             const { status, token } = yield this.fetch.post('auth/verify-email', { token: this.token, code: this.code, email: this.email, authenticate: true });
             if (status === 'ok') {
@@ -160,12 +160,12 @@ export default class AuthVerificationController extends Controller {
      *
      * @memberof OnboardVerifyEmailController
      */
-    @action resendBySms () {
+    @action resendBySms() {
         this.modalsManager.show('modals/verify-by-sms', {
             title: 'Verify Account by Phone',
             acceptButtonText: 'Send',
             phone: this.currentUser.phone,
-            confirm: async modal => {
+            confirm: async (modal) => {
                 modal.startLoading();
                 const phone = modal.getOption('phone');
                 if (!phone) {
@@ -189,12 +189,12 @@ export default class AuthVerificationController extends Controller {
      *
      * @memberof OnboardVerifyEmailController
      */
-    @action resendEmail () {
+    @action resendEmail() {
         this.modalsManager.show('modals/resend-verification-email', {
             title: 'Resend Verification Code',
             acceptButtonText: 'Send',
             email: this.currentUser.email,
-            confirm: async modal => {
+            confirm: async (modal) => {
                 modal.startLoading();
                 const email = modal.getOption('email');
                 if (!email) {
