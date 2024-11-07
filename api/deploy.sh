@@ -28,8 +28,8 @@ php artisan schedule-monitor:sync
 php artisan cache:clear
 
 # Optimize
-php artisan config:cache
-php artisan route:cache
+# php artisan config:cache
+# php artisan route:cache
 
 # Initialize registry
 php artisan registry:init
