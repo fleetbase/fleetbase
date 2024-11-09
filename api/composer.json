@@ -9,8 +9,8 @@
     "license": "AGPL-3.0-or-later",
     "require": {
         "php": "^8.0",
-        "fleetbase/core-api": "^1.5.19",
-        "fleetbase/fleetops-api": "^0.5.13",
+        "fleetbase/core-api": "^1.5.20",
+        "fleetbase/fleetops-api": "^0.5.14",
         "fleetbase/registry-bridge": "^0.0.18",
         "fleetbase/storefront-api": "^0.3.17",
         "guzzlehttp/guzzle": "^7.0.1",
@@ -37,10 +37,6 @@
         "phpunit/phpunit": "^10.0"
     },
     "repositories": [
-        {
-            "type": "vcs",
-            "url": "https://github.com/fleetbase/laravel-model-caching"
-        },
         {
             "type": "composer",
             "url": "https://registry.fleetbase.io"
