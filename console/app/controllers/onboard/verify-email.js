@@ -1,39 +1,40 @@
 import AuthVerificationController from '../auth/verification';
+import { inject as service } from '@ember/service';
+import { tracked } from '@glimmer/tracking';
 import { action } from '@ember/object';
+import { later } from '@ember/runloop';
+import { not } from '@ember/object/computed';
+import { task } from 'ember-concurrency';
 
 export default class OnboardVerifyEmailController extends AuthVerificationController {
-    /**
-     * Submits to verify code.
-     *
-     * @return {Promise}
-     * @memberof OnboardVerifyEmailController
-     */
-    @action verifyCode() {
-        const { hello, code } = this;
+    @service fetch;
+    @service notifications;
+    @service session;
+    @service currentUser;
+    @service router;
 
-        this.isLoading = true;
+    /** props */
+    @tracked hello;
+    @tracked code;
+    @tracked queryParams = ['hello', 'code'];
 
-        return this.fetch
-            .post('onboard/verify-email', { session: hello, code })
-            .then(({ status, token }) => {
-                if (status === 'ok') {
-                    this.notifications.success('Email successfully verified!');
+    @task *verifyCode() {
+        try {
+            const { status, token } = yield this.fetch.post('onboard/verify-email', { session: this.hello, code: this.code });
+            if (status === 'ok') {
+                this.notifications.success('Email successfully verified!');
 
-                    if (token) {
-                        this.notifications.info('Welcome to Fleetbase!');
-                        this.session.manuallyAuthenticate(token);
+                if (token) {
+                    this.notifications.info('Welcome to Fleetbase!');
+                    this.session.manuallyAuthenticate(token);
 
-                        return this.router.transitionTo('console');
-                    }
-
-                    return this.router.transitionTo('auth.login');
+                    return this.router.transitionTo('console');
                 }
-            })
-            .catch((error) => {
-                this.notifications.serverError(error);
-            })
-            .finally(() => {
-                this.isLoading = false;
-            });
+
+                return this.router.transitionTo('auth.login');
+            }
+        } catch (error) {
+            this.notifications.serverError(error);
+        }
     }
 }
