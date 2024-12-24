@@ -11,7 +11,7 @@
                         <PhoneInput @value={{@model.phone}} @onInput={{fn (mut @model.phone)}} class="form-input w-full" />
                     </InputGroup>
                     <InputGroup @name={{t "console.settings.index.organization-currency"}}>
-                        <CurrencySelect @value={{@model.currency}} @onSelect={{fn (mut @model.currency)}} @triggerClass="w-full form-select" />
+                        <CurrencySelect @currency={{@model.currency}} @onCurrencyChange={{fn (mut @model.currency)}} @triggerClass="w-full form-select" />
                     </InputGroup>
                     <InputGroup @name={{t "console.settings.index.organization-id"}} @value={{@model.public_id}} @disabled={{true}} />
                     <div class="mt-3 flex items-center justify-end">
