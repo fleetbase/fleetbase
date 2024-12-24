@@ -1,27 +1,42 @@
 {{page-title (t "onboard.verify-email.header-title")}}
 
 <div class="bg-white dark:bg-gray-800 py-8 px-4 shadow rounded-lg w-full">
-    <div class="mb-8">
-        <img class="mx-auto h-12 w-auto " src="/images/fleetbase-logo-svg.svg" alt={{t "app.name"}}>
+    <div class="mb-6">
+        <LinkTo @route="console" class="flex items-center justify-center">
+            <LogoIcon @size="12" class="rounded-md" />
+        </LinkTo>
         <h2 class="mt-6 text-center text-lg font-extrabold text-gray-900 dark:text-white truncate">
             {{t "onboard.verify-email.title"}}
         </h2>
     </div>
 
-    <div class="flex px-3 py-2 mb-6 rounded-md shadow-sm bg-blue-200">
-        <div>
-            <FaIcon @icon="shield-check" @size="lg" class="text-blue-900 mr-4" />
-        </div>
-        <p class="flex-1 text-sm text-blue-900 dark:text-blue-900">
-             {{t "onboard.verify-email.message-text" htmlSafe=true}}
-        </p>
-    </div>
+    <InfoBlock @type="info" @icon="shield-halved" @iconSize="lg">
+        {{t "onboard.verify-email.message-text" htmlSafe=true}}
+    </InfoBlock>
 
-    <form class="mt-8 space-y-6" {{on "submit" this.verifyCode}}>
-        <InputGroup @type="tel" @name={{t "onboard.verify-email.verification-input-label"}} @value={{this.code}} @helpText={{t "onboard.verify-email.verification-code-text"}} @inputClass="input-lg" {{on "input" this.validateInput}} {{did-insert this.validateInitInput}} />
+    <form class="mt-8 space-y-6" {{on "submit" (perform this.verifyCode)}}>
+        <InputGroup
+            @type="tel"
+            @name={{t "onboard.verify-email.verification-input-label"}}
+            @value={{this.code}}
+            @helpText={{t "onboard.verify-email.verification-code-text"}}
+            @inputClass="input-lg"
+            {{on "input" this.validateInput}}
+            {{did-insert this.validateInitInput}}
+        />
 
         <div class="flex flex-row items-center space-x-4">
-            <Button @icon="check" @iconPrefix="fas" @buttonType="submit" @type="primary" @size="lg" @text="Verify & Continue" @isLoading={{this.isLoading}} @disabled={{this.isNotReadyToSubmit}} @onClick={{this.verifyCode}} />
+            <Button
+                @icon="check"
+                @iconPrefix="fas"
+                @buttonType="submit"
+                @type="primary"
+                @size="lg"
+                @text="Verify & Continue"
+                @isLoading={{this.verifyCode.isRunning}}
+                @disabled={{not this.isReadyToSubmit}}
+                @onClick={{perform this.verifyCode}}
+            />
             <a href="#" {{on "click" this.onDidntReceiveCode}} class="text-sm text-blue-400 hover:text-blue-300">{{t "onboard.verify-email.didnt-receive-a-code"}}</a>
         </div>
 
@@ -33,14 +48,14 @@
                     </div>
                     <div class="flex-1">
                         <div class="flex-1 text-sm text-yellow-100">
-                            <div>{{t "onboard.verify-email.didnt-receive-a-code" htmlSafe=true}}</div>
-                            <div>{{t "onboard.verify-email.not-sent.alternative-choice" htmlSafe=true}}</div>
+                            <div>{{t "auth.verification.didnt-receive-a-code" htmlSafe=true}}</div>
+                            <div>{{t "auth.verification.not-sent.alternative-choice" htmlSafe=true}}</div>
                         </div>
                     </div>
                 </div>
                 <div class="flex items-center space-x-2">
                     <Button
-                        @text={{t "onboard.verify-email.not-sent.resend-email"}}
+                        @text={{t "auth.verification.not-sent.resend-email"}}
                         @buttonType="button"
                         @type="link"
                         class="text-yellow-100"
@@ -48,7 +63,7 @@
                         @onClick={{this.resendEmail}}
                     />
                     <Button
-                        @text={{t "onboard.verify-email.not-sent.send-by-sms"}}
+                        @text={{t "auth.verification.not-sent.send-by-sms"}}
                         @buttonType="button"
                         @type="link"
                         class="text-yellow-100"
