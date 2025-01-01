@@ -553,6 +553,11 @@ fleet-ops:
       uninstall-order-config: Désinstaller la Configuration
       uninstall-order-config-success-message: Extension {extensionName} désinstallée.
       select-order-config-to-start: Sélectionnez ou créez une configuration de commande pour commencer.
+      index:
+        details: Détails
+        activity-flow: Flux d'activité
+        custom-fields: Champs personnalisés
+        entities: Entités
       details:
         details: Détails
         name: Nom
@@ -584,6 +589,7 @@ fleet-ops:
           delete-body-message: Une fois ce groupe de champs supprimé, il ne sera pas récupérable et vous perdrez tous les champs personnalisés qu'il contient.
           confirm-delete: Supprimer
       entities:
+        entities: Entités
         new-custom-entity: Nouvelle Entité Personnalisée
         name: Nom
         description: Description

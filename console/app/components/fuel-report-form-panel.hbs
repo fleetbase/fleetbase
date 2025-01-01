@@ -52,7 +52,6 @@
     <Overlay::Body @wrapperClass="new-service-rate-overlay-body px-4 space-y-4 pt-4">
         {{#let (cannot this.savePermission) as |unauthorized|}}
             <div class="grid grid-cols-1 text-xs dark:text-gray-100">
-                Hi T
                 <InputGroup @name={{t "fleet-ops.common.reporter"}}>
                     <ModelSelect
                         @modelName="user"

@@ -86,28 +86,28 @@ return [
             'host' => $redis_host,
             'password' => $redis_password,
             'port' => env('REDIS_PORT', 6379),
-            'database' => $redis_database,
+            'database' => 0, //$redis_database,
         ],
 
         'sql' => [
             'host' => $redis_host,
             'password' => $redis_password,
             'port' => env('REDIS_PORT', 6379),
-            'database' => $redis_database . '_sql_cache',
+            'database' => 1, //$redis_database . '_sql_cache',
         ],
 
         'cache' => [
             'host' => $redis_host,
             'password' => $redis_password,
             'port' => env('REDIS_PORT', 6379),
-            'database' => $redis_database . '_cache',
+            'database' => 2, //$redis_database . '_cache',
         ],
 
         'geocode-cache' => [
             'host' => $redis_host,
             'password' => $redis_password,
             'port' => env('REDIS_PORT', 6379),
-            'database' => $redis_database . '_geocode_cache',
+            'database' => 3, //$redis_database . '_geocode_cache',
         ],
     ],
 

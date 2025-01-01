@@ -91,5 +91,7 @@ module.exports = function (/* environment */) {
         requiresTranslation(/* key, locale */) {
             return true;
         },
+
+        includeLocales: ['en-us', 'fr-fr', 'es-es', 'de-de', 'it-it', 'pt-br','ar-ae', 'vi-vn'],
     };
 };

@@ -41,4 +41,12 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    // hasPolicyAssigned()
+    public static function hasPolicyAssigned()
+    {
+        return true;
+    }
+
+    
 }
