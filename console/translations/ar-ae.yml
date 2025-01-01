@@ -362,3 +362,967 @@ layout:
         view-profile: عرض الملف الشخصي
         keyboard-shortcuts: عرض اختصارات لوحة المفاتيح
         changelog: سجل التغييرات
+fleet-ops:
+  extension-name: عمليات الأسطول
+  common:
+    active-manpower: القوى العاملة النشطة
+    address: العنوان
+    amount: المبلغ
+    assignee: المكلف
+    avatar: الصورة الرمزية
+    building: المبنى
+    bulk-action: إجراء جماعي
+    cancel: إلغاء
+    category: الفئة
+    city: المدينة
+    coordinates: الإحداثيات
+    cost: التكلفة
+    code: الرمز
+    country: البلد
+    config: الإعدادات
+    created-at: تم الإنشاء في
+    date-created: تاريخ الإنشاء
+    delete: حذف
+    destination: الوجهة
+    details: التفاصيل
+    description: الوصف
+    distance: المسافة
+    driver-license: رخصة القيادة
+    driver: السائق
+    edit: تعديل
+    email: البريد الإلكتروني
+    export: تصدير
+    fleet: الأسطول
+    height: الارتفاع
+    host: المضيف
+    id: المعرف
+    internal-id: المعرف الداخلي
+    item: العنصر
+    key: المفتاح
+    label: التسمية
+    length: الطول
+    license: الترخيص
+    loading: جارِ التحميل...
+    loading-resource: جارِ تحميل {resourceName}...
+    make: الصنع
+    manage-message: إدارة الموردين
+    manpower: القوى العاملة
+    model: الطراز
+    name: الاسم
+    namespace: نطاق الأسماء
+    neighborhood: الحي
+    new: جديد
+    odometer: عداد المسافات
+    options: الخيارات
+    orders: الطلبات
+    parent-fleet: الأسطول الرئيسي
+    phone: الهاتف
+    photos: الصور
+    plate-number: رقم اللوحة
+    postal-code: الرمز البريدي
+    priority: الأولوية
+    reload: إعادة التحميل
+    reload-data: إعادة تحميل البيانات
+    remove: إزالة
+    reporter: المبلغ
+    sandbox: البيئة التجريبية
+    save-changes: حفظ التغييرات
+    schedule: الجدول الزمني
+    search: بحث
+    security-access-code: رمز الوصول الأمني
+    service-area: منطقة الخدمة
+    service: الخدمة
+    state: الولاية
+    status: الحالة
+    street-1: الشارع 1
+    street-2: الشارع 2
+    street: الشارع
+    task: المهمة
+    title: العنوان
+    type: النوع
+    unit: الوحدة
+    updated-at: تم التحديث في
+    upload-new: تحميل جديد
+    uploading: جارِ التحميل...
+    value: القيمة
+    vehicle: المركبة
+    vendor: المورد
+    vin-number: رقم VIN
+    volume: الحجم
+    weight: الوزن
+    website-url: رابط الموقع الإلكتروني
+    website: الموقع الإلكتروني
+    width: العرض
+    year: السنة
+    zone: المنطقة
+    total: المجموع
+    back: عودة
+    done: تم
+    tracking: رقم التتبع
+    customer: العميل
+    vehicle-name: اسم المركبة
+    pickup: التقاط
+    dropoff: تسليم
+    import: استيراد
+    order: الطلب
+    create-order: إنشاء طلب
+    dispatch-order: إرسال الطلب
+  component:
+    activity-logic-builder:
+      activity-logic: منطق النشاط
+      activity-logic-help-text: حدد شروط منطقية مخصصة تحدد متى يصبح النشاط متاحًا في سير العمل. تتيح لك هذه الميزة تكييف التدفق وفقًا لمعايير محددة، مما يضمن تشغيل كل نشاط فقط عند استيفاء شروطه المحددة مسبقًا.
+      activity-logic-add-logic-help-text: قم بإنشاء مجموعة جديدة من الشروط التي ستحدد متى يجب تنشيط النشاط. انقر هنا لبدء تصميم قاعدة منطقية جديدة.
+      activity-logic-select-logic-type-help-text: اختر نوع المنطق الذي سيتبعه هذا الشرط. حدد 'إذا' لشرط مباشر، 'و'/'أو' للشروط المركبة، أو 'لا' لنفي شرط.
+      activity-logic-add-condition-help-text: أضف متطلبًا محددًا يجب تلبيته في هذه المجموعة المنطقية. استخدم هذا الخيار لتحديد معايير إضافية تتحكم في توفر النشاط.
+      field: الحقل
+      value: القيمة
+      add-logic: إضافة منطق
+    activity-event-selector:
+      activity-events: أحداث النشاط
+      activity-events-select-to-fire: حدد الأحداث التي سيتم تنشيطها عند حدوث هذا النشاط.
+      activity-events-select-events-info: حدد الحدث المحدد الذي تريد تشغيله استجابة لهذا النشاط.
+      select-event-to-add: حدد حدثًا لإضافته...
+    custom-field-form-panel:
+      meta-col-span: 'ميتا: امتداد الأعمدة'
+      col-span-size: حجم امتداد الأعمدة
+      custom-field-title-concat: 'حقل مخصص: '
+      new-custom-field: حقل مخصص جديد
+      close-new-custom-field: إلغاء تعديلات الحقل المخصص
+      save-custom-field: حفظ التعديلات
+      create-custom-field: إنشاء حقل جديد
+      field-name: اسم الحقل
+      field-label: تسمية الحقل
+      field-type: نوع الحقل
+      select-field-type: اختر نوع الحقل...
+      field-description: وصف الحقل
+      field-help-text: نص المساعدة للحقل
+      field-default-value: القيمة الافتراضية للحقل
+      field-is-required: الحقل مطلوب
+      field-is-editable: الحقل قابل للتعديل
+      field-options: خيارات الحقل
+      field-validation-rules: قواعد التحقق من صحة الحقل
+      field-model-type: نوع نموذج الحقل
+      field-select-model-type: اختر نوع النموذج
+      add-new-option: إضافة خيار جديد
+    activity-form-panel:
+      title-concat: 'نشاط: '
+      new-activity-title: إنشاء نشاط جديد
+      key: المفتاح
+      code: الرمز
+      status: الحالة
+      details: التفاصيل
+      proof-of-delivery: إثبات التسليم
+      require-pod: يتطلب إثبات التسليم
+      require-pod-help-text: يتطلب هذا النشاط إثباتًا ليتم تطبيقه على الطلب.
+      select-pod-method: طريقة إثبات التسليم
+      pod-method-placeholder: اختر طريقة إثبات التسليم
+      completes-order: إكمال الطلب
+      complete: مكتمل
+      key-help: "أدخل مفتاحًا يستخدم لاتخاذ القرار البرمجي. يمكن أن يمثل هذا المفتاح نشاطًا واحدًا أو أكثر بنفس المعرف. ملاحظة: لا يحتاج هذا المفتاح أن يكون فريدًا."
+      code-help: أدخل معرفًا فريدًا محددًا لهذا النشاط.
+      status-help: حدد الحالة المعروضة للمستخدم النهائي عند تشغيل هذا النشاط.
+      details-help: قدم وصفًا مفصلاً للنشاط لفهم المستخدم النهائي.
+    custom-entity-issue-form-panel:
+      new-custom-entity: كيان مخصص جديد
+      name: الاسم
+      description: الوصف
+      details: التفاصيل
+      type: النوع
+      length: الطول
+      width: العرض
+      height: الارتفاع
+      weight: الوزن
+      entity-image: صورة الكيان
+      measurements: القياسات
+    order-config-manager:
+      title: إعدادات الطلبات
+      message: تتيح لك إعدادات الطلبات تحديد إعدادات ديناميكية تخبر Fleetbase كيفية تنفيذ أنواع مختلفة من الطلبات.
+      configuration: الإعداد
+      new-order-config: إعداد طلب جديد
+      select-order-config: اختر إعداد طلب
+      create-new-title: إنشاء إعداد طلب جديد
+      create-warning-message: يتطلب إعداد الطلب اسمًا
+      create-success-message: تم إنشاء إعداد الطلب الجديد بنجاح.
+      no-order-config-selected: لم يتم اختيار إعداد طلب.
+      saved-success-message: تم حفظ الإعداد {orderConfigName}.
+      cloned-success-message: تم نسخ إعداد الطلب بنجاح.
+      enter-clone-name: أدخل اسم الإعداد المنسوخ
+      no-config-name-warning-message: لم يتم إدخال اسم الإعداد.
+      delete-warning-message: بمجرد حذف إعداد الطلب هذا، لن تتمكن من إنشاء طلبات باستخدامه. هل أنت متأكد؟
+      uninstall-order-config: إلغاء تثبيت الإعداد
+      uninstall-order-config-success-message: تم إلغاء تثبيت الملحق {extensionName}.
+      select-order-config-to-start: اختر أو أنشئ إعداد طلب للبدء.
+      details:
+        details: التفاصيل
+        name: الاسم
+        description: الوصف
+        tags: العلامات
+        add-tags: إضافة علامات
+        key: المفتاح
+        version: الإصدار
+        namespace: نطاق الأسماء
+        controls: عناصر التحكم
+        delete-config: حذف الإعداد
+        delete:
+          delete-title: حذف إعداد الطلب هذا؟
+          delete-body-message: بمجرد حذف إعداد الطلب هذا، لن يكون قابلاً للاسترداد وستفقد جميع الإعدادات.
+          confirm-delete: حذف
+      activity-flow:
+        save-activity-flow: حفظ تدفق النشاط
+        edit-activity-unique-code-warning: يجب أن يكون رمز النشاط فريدًا!
+      custom-fields:
+        new-field-group: مجموعة حقول جديدة
+        new-custom-field: إنشاء حقل مخصص جديد
+        grid-size: حجم الشبكة
+        delete-custom-field-prompt:
+          modal-title: حذف هذا الحقل المخصص؟
+          delete-body-message: بمجرد حذف هذا الحقل المخصص، لن يكون قابلاً للاسترداد وستفقد جميع الإعدادات.
+          confirm-delete: حذف
+        delete-custom-field-group-prompt:
+          modal-title: حذف مجموعة الحقول هذه؟
+          delete-body-message: بمجرد حذف مجموعة الحقول هذه، لن تكون قابلة للاسترداد وستفقد جميع الحقول المخصصة التي تحتويها.
+          confirm-delete: حذف
+      entities:
+        new-custom-entity: كيان مخصص جديد
+        name: الاسم
+        description: الوصف
+        type: النوع
+        length: الطول
+        width: العرض
+        height: الارتفاع
+        weight: الوزن
+        delete-custom-entity-title: حذف هذا الكيان المخصص؟
+        delete-custom-entity-body: بمجرد حذف هذا الكيان المخصص، لن يكون قابلاً للاسترداد وستفقد جميع الإعدادات.
+        confirm-delete: تأكيد
+      types:
+        no-order-installed: لا يوجد إعداد طلب مثبت!
+        you-have-no-configs: لا يوجد لديك حالياً أي إعدادات طلب مثبتة. راجع الملحقات لتثبيت إعداد طلب والبدء.
+        view-extensions: عرض الملحقات
+    avatar-picker:
+      avatar: الصورة الرمزية
+      select-map-avatar: اختر صورة رمزية للخريطة
+      select-avatar-rendering: اختر صورة رمزية لاستخدامها في العرض على الخرائط عند استخدام ميزات التتبع الجغرافي.
+      select-avatar: اختر صورة رمزية
+    admin:
+      navigator-app:
+        title: تطبيق التنقل
+        name: رابط ربط النسخة
+        message: استخدم هذا الرابط لربط تطبيق التنقل الرسمي بهذه النسخة {companyName}. فتح هذا الرابط على جهاز محمول سيفتح تطبيق التنقل ويحدث إعداداته وعلامته التجارية.
+        settings: إعدادات الكيان
+        select-input: السماح للسائق بتحديث تفاصيل الكيان
+        driver-settings: إعدادات السائق
+        description: تفعيل دمج السائقين
+        upload-document: طلب تحميل المستندات من السائق
+        upload-body: إضافة مستندات
+        document: مستند
+      visibility-controls:
+        title: ضوابط الرؤية
+        message: تتيح لك ضوابط الرؤية تعطيل أقسام من Fleet-Ops. حدد أو ألغِ تحديد المربع لتفعيل أو تعطيل الأقسام المراد إخفاؤها في Fleet-Ops.
+        checkbox-text: تفعيل أو تعطيل الرؤية لهذا القسم في Fleet-Ops.
+      avatar-management:
+        upload-avatar: تحميل صورة رمزية
+        view-avatar: عرض الصورة الرمزية
+        vehicles: المركبات
+        drivers: السائقون
+        places: الأماكن
+    entity-field-editing-settings:
+      entitiy-field-editing-settings: إعدادات تحرير حقول الكيان
+      entity-field-editing-settings-help-text: تحدد هذه الإعدادات أي حقول الكيان يمكن تعديلها من قبل السائق عبر تطبيق التنقل.
+      select-order-config: اختر إعداد طلب
+      select-order-config-help-text: اختر إعداد طلب لتطبيق هذه الإعدادات عليه.
+      enable-driver-to-edit-entity-fields: السماح للسائق بتعديل تفاصيل الكيان
+      enable-driver-to-edit-entity-fields-help-text: تفعيل هذا الخيار يمنح السائق إذن تعديل حقول الكيان المحددة أدناه.
+    driver-onboard-settings:
+      driver-onboard-settings: إعدادات انضمام السائقين
+      enable-driver-onboard-from-app: تفعيل انضمام السائقين من تطبيق التنقل
+      enable-driver-onboard-from-app-help-text: تفعيل هذا الخيار يسمح للسائقين بالانضمام بشكل مستقل (إنشاء حساباتهم الخاصة) عبر تطبيق التنقل.
+      select-onboard-method: اختر طريقة انضمام السائقين
+      select-onboard-method-help-text: يحدد هذا الإعداد كيف يُسمح للسائقين بإنشاء حساباتهم عبر تطبيق التنقل. اختر 'دعوة' إذا كان يجب على السائقين تلقي دعوة بالبريد الإلكتروني لإنشاء حسابهم. اختر 'زر' لتفعيل زر في التطبيق يسمح لأي شخص بإنشاء حساب سائق.
+      require-driver-to-upload-onboard-documents: طلب تحميل مستندات الانضمام من السائق
+      require-driver-to-upload-onboard-documents-help-text: يحدد هذا الإعداد المستندات التي يجب على السائق تقديمها قبل إنشاء حسابه.
+      required-onboard-documents: مستندات الانضمام المطلوبة
+      required-onboard-documents-help-text: أدخل جميع مستندات الانضمام المطلوبة التي يجب على السائق تقديمها أدناه باستخدام زر "إضافة مستند انضمام".
+      enter-document-name: أدخل اسم المستند
+      add-onboard-document: إضافة مستند انضمام
+    cell:
+      driver-name:
+        not-assigned: لم يتم تعيين سائق
+    fleet-panel:
+      details:
+        active-manpower: القوى العاملة النشطة
+      driver-listing:
+        search-driver: البحث عن سائقين في الأسطول
+        add-driver: إضافة سائق إلى الأسطول
+        loading-driver: جارٍ تحميل سائقي الأسطول...
+      vehicle-listing:
+        search-vehicle: البحث عن مركبات في الأسطول
+        add-vehicle: إضافة مركبة إلى الأسطول
+        loading-vehicle: جارٍ تحميل مركبات الأسطول...
+    layout:
+      fleet-ops-sidebar:
+        payments: المدفوعات
+        navigator-app: تطبيق التنقل
+        resources: الموارد
+        operations: العمليات
+        dashboard: لوحة التحكم
+        service-rates: أسعار الخدمة
+        scheduler: المجدول
+        drivers: السائقون
+        vehicles: المركبات
+        fleets: الأساطيل
+        vendors: الموردون
+        contacts: جهات الاتصال
+        places: الأماكن
+        fuel-reports: تقارير الوقود
+        issues: المشكلات
+        title: إنشاء طلب جديد
+        settings: الإعدادات
+        order-config: إعداد الطلب
+    live-map-drawer:
+      driver-listing:
+        location: الموقع
+        current-job: العمل الحالي
+        last-seen: شوهد آخر مرة
+        view-driver: عرض تفاصيل السائق...
+        edit-driver: تعديل السائق...
+        locate-driver: تحديد موقع السائق...
+        delete-driver: حذف السائق...
+        warning-message: تعذر تحديد موقع السائق.
+        message: تصفية السائقين حسب الكلمة المفتاحية...
+      place-listing:
+        location: الموقع
+        place: المكان
+        view-place: عرض تفاصيل المكان...
+        edit-place: تعديل المكان...
+        locate-place: تحديد موقع المكان...
+        delete-place: حذف المكان...
+        warning-message: تعذر تحديد موقع المكان.
+        message: تصفية الأماكن حسب الكلمة المفتاحية...
+      vehicle-listing:
+        location: الموقع
+        last-seen: شوهدت آخر مرة
+        view-vehicle: عرض تفاصيل المركبة...
+        edit-vehicle: تعديل المركبة...
+        locate-vehicle: تحديد موقع المركبة...
+        delete-vehicle: حذف المركبة...
+        warning-message: تعذر تحديد موقع المركبة.
+        message: تصفية المركبات حسب الكلمة المفتاحية...
+    map-container:
+      visibility-control-panel:
+        title: ضوابط الرؤية
+        hide-places: إخفاء جميع الأماكن...
+        show-places: إظهار جميع الأماكن...
+        vehicles: المركبات
+        vehicle-controls: ضوابط رؤية المركبات...
+        hide-vehicles: إخفاء جميع المركبات...
+        show-vehicles: إظهار جميع المركبات...
+        online-vehicles: إظهار المركبات المتصلة فقط...
+        offline-vehicles: إظهار المركبات غير المتصلة فقط...
+      zones-panel:
+        title: مناطق الخدمة
+        create-service: إنشاء منطقة خدمة جديدة...
+        show: إظهار جميع مناطق الخدمة
+        hide: إخفاء جميع مناطق الخدمة
+        action: إجراءات...
+        focus: تركيز
+        blur: إخفاء منطقة الخدمة...
+        create-zone: إنشاء منطقة داخلية...
+      toolbar:
+        create: إنشاء طلب
+        view-order: عرض الطلبات
+        view-service-area: عرض مناطق الخدمة
+        visibility: ضوابط الرؤية
+        scope: النطاق
+    modals:
+      new-custom-field-group:
+        modal-title: إنشاء مجموعة حقول مخصصة جديدة
+        group-name: اسم المجموعة
+      assign-driver:
+        select-driver: اختيار سائق
+        select-assign: اختيار سائق للتعيين
+      clone-config-form:
+        name: اسم الإعداد
+        description: وصف الإعداد
+      driver-assign-order:
+        order: اختيار طلب
+        assign-order: اختيار طلب للتعيين
+      driver-assign-vehicle:
+        vehicle: اختيار مركبة
+        assign-vehicle: اختيار مركبة للتعيين
+      driver-assign-vendor:
+        vendor: اختيار مورد
+      driver-details:
+        job: العمل الحالي
+        view: عرض على الخريطة
+      driver-form:
+        select-vendor: اختيار مورد
+        select-vehicle: اختيار مركبة
+      edit-meta-form:
+        add: إضافة حقل تعريفي
+      entity-form:
+        name-text: اسم العنصر أو الكيان.
+        id-text: استخدم هذا الحقل لتحديد معرف مخصص أو داخلي للكيان إذا لزم الأمر.
+        sku: رقم المنتج (SKU)
+        sku-text: رقم المنتج (SKU) إذا كان قابلاً للتطبيق.
+        description: الوصف
+        description-text: وصف إضافي للكيان.
+        price-title: السعر والقيمة
+        price: السعر
+        price-text: سعر الكيان.
+        sale-price: سعر البيع
+        sale-price-text: سعر البيع أو الخصم للكيان.
+        declare: القيمة المصرح بها
+        declare-text: القيمة المصرح بها للكيان، مفيدة إذا كانت قابلة للتأمين.
+        measurement-title: الأبعاد والوزن
+        length: الطول
+        length-text: طول الكيان.
+        width: العرض
+        width-text: عرض الكيان.
+        height: الارتفاع
+        height-text: ارتفاع الكيان.
+        weight: الوزن
+        weight-text: وزن الكيان.
+      entity-meta-field-prompt:
+        name: مفتاح الحقل التعريفي
+      fleet-form:
+        title: اسم الأسطول
+        assign: تعيين لمنطقة خدمة
+        assign-text: اختر منطقة خدمة لتعيين الأسطول لها
+        zone: تعيين لمنطقة
+        zone-text: اختر منطقة لتعيين الأسطول لها
+        task: المهمة / البعثة
+        task-text: قدم وصفاً للمهمة أو البعثة الرئيسية لهذا الأسطول، إذا كان قابلاً للتطبيق.
+        select-task: اختر مهمة
+        status-text: اختر حالة الأسطول.
+        select-status: اختر الحالة
+      fuel-report-details:
+        fuel: الوقود / الحجم
+      fuel-report-form:
+        select-driver: اختر سائقاً
+        select-vehicle: اختر مركبة
+        volume: الحجم
+        volume-text: اختر وحدة القياس وحجم الوقود المراد الإبلاغ عنه.
+      group-details:
+        name: اسم المجموعة
+        member: الأعضاء
+        address: العنوان
+      group-form:
+        title: اسم المجموعة
+        users-add: اختر مستخدمين لإضافتهم إلى المجموعة
+        search: ابحث واختر مستخدمين لإضافتهم إلى هذه المجموعة.
+        select-user: اختر مستخدماً لإضافته إلى المجموعة
+        no-users: لم تتم إضافة مستخدمين للمجموعة
+      install-prompt:
+        message: أنت تحاول تثبيت الملحق {extensionName}. هل أنت متأكد من أنك تريد متابعة هذا التثبيت؟
+        sub-message: بعض الملحقات تتطلب الوصول إلى مواردك.
+      issue-details:
+        assigned: مُسند إلى
+        type: نوع المشكلة
+        category: فئة المشكلة
+      issue-form:
+        reported: تم الإبلاغ بواسطة
+        select-reporter: اختر المُبلغ
+        assigned: مُسند إلى
+        select-assignee: اختر المُسند إليه
+        select-driver: اختر سائقاً
+        select-vehicle: اختر مركبة
+        select-type: اختر النوع
+        select-category: اختر الفئة
+        type: نوع المشكلة
+        type-text: اختر نوع المشكلة
+        category: فئة المشكلة
+        category-text: اختر فئة المشكلة
+        report: تقرير المشكلة
+        tags: علامات المشكلة
+        add-tags: إضافة علامات
+        select-status: اختر حالة المشكلة
+      map-layer-form:
+        layer-type: نوع الطبقة
+        layer-type-text: اختر نوع الطبقة التي تريد إنشاءها.
+        select-layer-type: اختر نوع الطبقة...
+        service-area: منطقة الخدمة
+        service-area-text: اختر منطقة الخدمة لتعيين هذه المنطقة لها.
+        select-service-area: اختر منطقة خدمة لتعيين الأسطول
+        set-name: حدد اسم العرض لـ {options}.
+        service-type: نوع منطقة الخدمة
+        service-type-text: اختر تعريف النوع لمنطقة الخدمة هذه.
+        select-service-type: اختر نوع منطقة الخدمة...
+        customize-border: خصص لون الحدود لـ {options}.
+        customize-fill-color: خصص لون التعبئة لـ {options}.
+        service-area-country: بلد منطقة الخدمة
+        service-area-country-text: حدد اختيارياً البلد الذي تقع أو تتمركز فيه منطقة الخدمة هذه.
+      new-order-config:
+        name: اسم الإعداد
+        description: وصف الإعداد
+        tags: علامات الإعداد
+        add-tags: إضافة علامات
+      order-assign-driver:
+        select-driver: اختر سائقاً
+        select-assign: اختر سائقاً للتعيين
+      order-config-new-status:
+        new-status: حالة جديدة
+        status-text: أدخل حالة نشاط جديدة لإضافتها إلى التدفق
+      order-event:
+        schedule: جدولة
+        unschedule: إلغاء الجدولة
+      order-form:
+        id-text: استخدم هذا الحقل لتحديد معرّف مخصص أو داخلي للطلب اختيارياً.
+        schedule-text: التاريخ والوقت الذي سيتم فيه إرسال الطلب. إذا لم يتم تعيين سائق وقت الإرسال، سيفشل الإرسال. إذا كان الطلب مخصصاً، سيتم إرساله إلى السائقين القريبين من نقطة الالتقاط.
+        customer: العميل
+        customer-text: قم بتعيين عميل لهذا الطلب اختيارياً. إذا كان عميلاً جديداً، استخدم زر "عميل جديد" أعلاه.
+        select-customer: اختر عميلاً
+        facilitator: الميسر
+        facilitator-text: قم بتعيين ميسر لهذا الطلب اختيارياً، الميسر يمكن أن يكون مقاول من الباطن أو خدمة طرف ثالث ستسهل نقل هذا الطلب.
+        select-facilitator: اختر ميسراً
+        assign-driver: تعيين سائق
+        assign-driver-text: عيّن السائق الذي سيتم إرسال هذا الطلب إليه.
+        select-driver: اختر سائقاً
+        assign-vehicle: تعيين مركبة
+        assign-vehicle-text: عيّن المركبة التي سيتم تنفيذ هذا الطلب بها.
+        select-vehicle: اختر مركبة
+      order-import:
+        loading-message: جارٍ معالجة الاستيراد...
+        drop-upload: أسقط للتحميل
+        invalid: غير صالح
+        ready-upload: جاهز للتحميل.
+        upload-spreadsheets: تحميل جداول البيانات
+        drag-drop: اسحب وأسقط ملفات جداول البيانات في منطقة الإسقاط هذه
+        button-text: أو اختر جداول بيانات للتحميل
+        spreadsheets: جداول البيانات
+        upload-queue: قائمة انتظار التحميل
+      order-label:
+        loading: جارٍ تحميل الملصق...
+      order-new-activity:
+        select-message: اختر حالة نشاط لتحديث تتبع الطلب، أو أدخل نشاطاً مخصصاً.
+        order-currently-message: هذا الطلب حالياً {options}، سيحل النشاط الإضافي محل هذه الحالة.
+        not-recommend-message: Fleetbase لا يوصي بذلك إلا إذا كنت تعرف بالضبط ما تفعله.
+        activity-options: خيارات النشاط
+        activity: نشاط
+        dispatch: سيؤدي هذا إلى إطلاق إرسال الطلب.
+        status: حالة النشاط المخصص
+        details: تفاصيل النشاط المخصص
+        code: رمز النشاط المخصص
+        fleetbase-message: Fleetbase لا يوصي بذلك إلا إذا كنت تعرف بالضبط ما تفعله.
+      order-route-form:
+        toggle: تفعيل التسليمات المتعددة
+        optimize: تحسين المسار
+        optimize-text: سيقوم Fleetbase بتحسين المسار تلقائياً.
+        add: إضافة نقطة توقف
+        add-text: استخدم زر `إضافة نقطة توقف` لإضافة نقاط توقف أخرى لهذا الطلب. سيقوم محرك التوجيه في Fleetbase بتحسين المسار تلقائياً عند إضافة أو إزالة كل نقطة توقف.
+        select-waypoint: اختر نقطة توقف
+        pickup: التقاط
+        edit-address: تعديل العنوان
+        select-pickup: اختر نقطة التقاط
+        invalid: إحداثيات غير صالحة!
+        dropoff: تسليم
+        select-dropoff: اختر نقطة تسليم
+        return: إرجاع
+        select-return: اختر نقطة إرجاع
+      place-assign-vendor:
+        select-vendor: اختر مورداً
+      place-details:
+        view: عرض على الخريطة
+      policy-form:
+        name: اسم السياسة
+        name-text: أدخل اسماً لسياستك
+        description: وصف السياسة
+        description-text: أدخل وصفاً لسياستك
+        permissions: اختر الأذونات
+      role-form:
+        name: اسم الدور
+        name-text: أدخل اسماً لهذا الدور
+        permissions: اختر الأذونات
+      select-payment-method:
+        card-ending: بطاقة تنتهي بـ {method}
+      service-area-form:
+        name: اسم منطقة الخدمة
+        name-text: حدد اسم العرض لمنطقة الخدمة.
+        type: نوع منطقة الخدمة
+        type-text: اختر تعريف النوع لمنطقة الخدمة هذه.
+        select-type: اختر نوع منطقة الخدمة...
+        border-color: لون حدود منطقة الخدمة
+        customize-border-color: خصص لون الحدود لمنطقة الخدمة هذه.
+        area-color: لون منطقة الخدمة
+        customize-area-color: خصص لون التعبئة لمنطقة الخدمة هذه.
+        country: بلد منطقة الخدمة
+        country-text: حدد اختيارياً البلد الذي تقع أو تتمركز فيه منطقة الخدمة هذه.
+      set-password:
+        message: مرحباً بك في Fleetbase! قبل البدء، حدد كلمة مرور جديدة للمتابعة أدناه.
+        new-password: كلمة المرور الجديدة
+        confirm-password: تأكيد كلمة المرور
+        help-text: أدخل كلمة مرور من 8 أحرف على الأقل للمتابعة.
+      uninstall-prompt:
+        message: أنت على وشك إلغاء تثبيت الملحق "{options}". هل أنت متأكد من أنك تريد متابعة إلغاء التثبيت هذا؟
+        sub-message: سيتم فقدان جميع الإعدادات والتكوينات المخصصة.
+      vehicle-details:
+        make: الماركة
+        model: الطراز
+        year: السنة
+        driver-assigned: السائق المعين
+        no-driver-assigned: لم يتم تعيين سائق
+        vehicle-assigned: المركبة المعينة
+        no-vehicle-assigned: لم يتم تعيين مركبة
+        avatar: الصورة الرمزية
+        model-information: معلومات الطراز
+        acceleration: 0 إلى 100 كم/ساعة
+        body: الهيكل
+        doors: الأبواب
+        length: الطول (مم)
+        seats: المقاعد
+        top-speed: السرعة القصوى (كم/ساعة)
+        transmission: نوع ناقل الحركة
+        weight: الوزن (كجم)
+        wheelbase: قاعدة العجلات (مم)
+        width: العرض (مم)
+        engine-information: معلومات المحرك
+        engine-bore: تجويف المحرك (مم)
+        cc: سم مكعب
+        compression: الضغط
+        cylinder: الأسطوانات
+        position: الموضع
+        power-ps: القدرة (حصان)
+        power-rpm: دورات القدرة (د/د)
+        stroke: الشوط (مم)
+        torque-nm: العزم (نيوتن متر)
+        torque-rpm: دورات العزم (د/د)
+        valves: الصمامات لكل أسطوانة
+        fuel-information: معلومات الوقود
+        fuel: الوقود
+        fuel-cap: سعة خزان الوقود (لتر)
+        liters-city: لتر لكل كم (المدينة)
+        liters-highway: لتر لكل كم (الطريق السريع)
+        liters-mixed: لتر لكل كم (مختلط)
+      vehicle-form:
+        map-avatar: اختر صورة رمزية للخريطة
+        map-avatar-text: اختر صورة رمزية لاستخدامها في العرض على الخرائط عند استخدام ميزات التتبع الجغرافي.
+        select-avatar: اختر صورة رمزية
+        make: ماركة المركبة
+        model: طراز المركبة
+        year: سنة المركبة
+        select-driver: اختر سائقاً
+        body: نوع هيكل المركبة
+        doors: عدد الأبواب
+        type: نوع ناقل الحركة
+        length: طول المركبة (مم)
+        seats: عدد المقاعد
+        top-speed: السرعة القصوى للمركبة (كم/س)
+        transmission: نوع ناقل حركة المركبة
+        weight: وزن المركبة (كجم)
+        wheelbase: قاعدة العجلات (مم)
+        width: عرض المركبة (مم)
+        engine-bore: قطر المحرك (مم)
+        cc: سعة المحرك
+        compression: نسبة الانضغاط
+        cylinder: عدد الأسطوانات
+        position: موضع المحرك
+        power-ps: قوة المحرك (حصان)
+        power-rpm: دورات المحرك القصوى (د/د)
+        stroke: شوط المحرك (مم)
+        torque-nm: عزم الدوران (نيوتن متر)
+        torque-rpm: دورات عزم الدوران (د/د)
+        fuel-type: نوع الوقود
+        fuel-cap: سعة خزان الوقود (لتر)
+      vendor-details:
+        sandbox: البيئة التجريبية
+        host: المضيف
+        namespace: مساحة الاسم
+      vendor-form:
+        choose-vendor: اختيار مورد مدمج
+        create-vendor: إنشاء مورد مخصص
+        credentials: بيانات الاعتماد
+        options: الخيارات
+        hide-advanced: إخفاء الخيارات المتقدمة
+        show-advanced: إظهار الخيارات المتقدمة
+        custom-host: مضيف مخصص
+        host-text: قم بتوفير مضيف مخصص اختيارياً لاستخدامه في هذا التكامل.
+        custom-namespace: مساحة اسم مخصصة
+        namespace-text: قم بتوفير مساحة اسم مخصصة أو إصدار API اختيارياً لاستخدامه في التكامل.
+        webhook: رابط Webhook
+        webhook-text: المزودون المدمجون يحتاجون عادةً إلى هذا حتى يتمكن Fleetbase من تلقي تحديثات النشاط على الطلبات. لا تقم بتعديل هذا إلا إذا كنت تعرف ما تفعله! تعديله قد يعطل تحديثات طلباتك!
+        cancel-credentials: إلغاء إعادة تعيين بيانات الاعتماد
+        reset-message: لا يمكن إلا إعادة تعيين بيانات الاعتماد الحساسة. لتحديث بيانات الاعتماد، يجب عليك إعادة إدخالها.
+        optionally: قم بتوفير بيانات الاعتماد الخاصة بك اختيارياً
+        configure-vendor: لإعداد هذا المورد.
+        select: اختيار
+        sandbox: البيئة التجريبية
+        name-text: اسم المورد، عادةً اسم شركة.
+        email-text: عنوان البريد الإلكتروني للمورد، الذي يمكن استخدامه لإرسال رسائل بريد إلكتروني إلى المورد.
+        phone-text: رقم هاتف المورد، الذي يمكن استخدامه لإرسال رسائل SMS أو رسائل إلى المورد.
+        website-text: موقع المورد الإلكتروني، أضف الموقع اختيارياً للرجوع إليه.
+        select-address: اختيار عنوان
+      zone-form:
+        name: اسم المنطقة
+        name-text: تحديد اسم عرض للمنطقة.
+        border-color: لون حدود المنطقة
+        customize-border: تخصيص حدود المنطقة.
+        zone-color: لون المنطقة
+        customize-fill-color: تخصيص لون تعبئة المنطقة.
+        optionally: أضف وصفاً للمنطقة اختيارياً.
+        description-zone: وصف المنطقة
+    order:
+      header:
+        dispatched-order: تم إرسال {order}
+        dispatched: تم الإرسال
+        dispatched-at: تم الإرسال في
+        edit: تعديل التفاصيل
+        update: تحديث النشاط
+        assign: تعيين سائق
+        get-order: الحصول على ملصق الطلب
+        split-order: تقسيم الطلب
+        reschedule: إعادة جدولة الطلب
+        cancel-order: إلغاء الطلب
+      place-card:
+        show-less: إظهار تفاصيل أقل
+        show-more: إظهار تفاصيل أكثر
+      schedule-card:
+        destination: الوجهة
+        unassign-driver: إلغاء تعيين السائق؟
+        unassign-text: أنت على وشك إلغاء تعيين السائق للطلب {orderId}. انقر على متابعة لتأكيد إزالة السائق.
+        unassign-button: متابعة وإلغاء تعيين السائق
+        assign-driver: تعيين سائق جديد؟
+        assign-text: أنت على وشك تعيين سائق جديد ({driverName}) للطلب {orderId}. انقر على متابعة لتأكيد السائق.
+        assign-button: متابعة وتعيين السائق
+        date: التاريخ المتوقع
+        driver-assigned: السائق
+        vehicle-assigned: المركبة
+        no-driver: لا يوجد سائق
+        no-vehicle: لا توجد مركبة
+        select-driver: اختيار سائق
+        select-vehicle: اختيار مركبة
+    widget:
+      fleet-ops-quickstart:
+        message: دعنا نرى ما يمكنك فعله لبدء العمليات...
+        start-task: بدء مهمة
+      key-metrics:
+        title: مؤشرات Fleet-Ops الرئيسية
+        earnings: الأرباح
+        fuel-expenses: نفقات الوقود
+        traveled: المسافة المقطوعة
+        total-time: الوقت الإجمالي
+        order-scheduled: الطلبات المجدولة
+        order-completed: الطلبات المكتملة
+        order-progress: الطلبات قيد التنفيذ
+        order-canceled: الطلبات الملغاة
+        driver-online: السائقون المتصلون
+        customers: العملاء
+        open-issue: المشكلات المفتوحة
+        closed-issues: المشكلات المغلقة
+      live-order-map:
+        loading: جارٍ تحميل الطلبات قيد التنفيذ...
+        assigned: تم تعيين السائق
+        no-order: لا توجد طلبات قيد التنفيذ
+        message: عندما تكون هناك طلبات قيد التنفيذ، ستظهر في هذه الأداة وتعرض النشاط في الوقت الفعلي.
+      recent-orders:
+        title: الطلبات الأخيرة
+        loading: جارٍ تحميل الطلبات الأخيرة...
+        no-orders: لا توجد طلبات هذا الأسبوع
+        message-part-1: لم تكن هناك طلبات هذا الأسبوع، قم بتحريك الأمور عن طريق
+        message-part-2: إنشاء طلب جديد
+        message-part-3: أو السماح لعملائك بتقديم طلبات عبر API.
+      transactions:
+        title: المعاملات الأخيرة
+        loading: جارٍ تحميل المعاملات الأخيرة...
+        no-transactions: لا توجد معاملات هذا الأسبوع
+        message: عندما تتم الطلبات مع رسوم خدمة، يقوم Fleetbase تلقائياً بتتبع المعاملات.
+    contact-form-panel:
+      success-message: تم حفظ جهة الاتصال {contactName} بنجاح.
+      view-contact-button: عرض تفاصيل جهة الاتصال
+      save-contact: حفظ جهة الاتصال
+      create-contact: إنشاء جهة اتصال
+      cancel-edit-button: إلغاء تعديل جهة الاتصال
+      cancel-new-button: إلغاء جهة الاتصال الجديدة
+      new-contact: جهة اتصال جديدة
+      select-address: اختيار العنوان
+      edit: تعديل
+      new-address: عنوان جديد
+      contact-details: تفاصيل جهة الاتصال
+    customer-form-panel:
+      success-message: تم حفظ العميل {customerName} بنجاح.
+      view-customer-button: عرض تفاصيل العميل
+      save-customer: حفظ العميل
+      create-customer: إنشاء عميل
+      cancel-edit-button: إلغاء تعديل العميل
+      cancel-new-button: إلغاء العميل الجديد
+      new-customer: عميل جديد
+      select-address: اختيار العنوان
+      edit: تعديل
+      new-address: عنوان جديد
+      customer-details: تفاصيل العميل
+    contact-panel:
+      details:
+        web-url: رابط الموقع الإلكتروني
+      edit-button: تعديل جهة الاتصال
+      cancel-edit-button: إلغاء تعديل جهة الاتصال
+      cancel-new-button: إلغاء جهة الاتصال الجديدة
+    customer-panel:
+      details:
+        web-url: رابط الموقع الإلكتروني
+      edit-button: تعديل العميل
+      cancel-edit-button: إلغاء تعديل العميل
+      cancel-new-button: إلغاء العميل الجديد
+    display-panel:
+      no-address: لا يوجد عنوان {type}!
+      no-address-message: لا يوجد عنوان!
+    driver-card:
+      no-fleets: لا توجد أساطيل
+    driver-form-panel:
+      driver-details: تفاصيل السائق
+      user-account: حساب المستخدم
+      user-account-help-text: يجب ربط كل ملف تعريف سائق بحساب مستخدم محدد. هذا الارتباط ضروري لإدارة عملية المصادقة، مما يضمن أن كل سائق يمكنه الوصول إلى ملفه الشخصي وإدارته بشكل آمن.
+      success-message: تم حفظ السائق ({driverName}) بنجاح.
+      driver-detail: عرض تفاصيل السائق
+      save-driver: حفظ السائق
+      create-driver: إنشاء سائق
+      cancel-edit-driver: إلغاء تعديل السائق
+      cancel-new-driver: إلغاء السائق الجديد
+      upload-new-photo: تحميل صورة جديدة
+      new-driver: سائق جديد
+      vendor: المورد
+      select-vehicle: اختيار مركبة
+      driver-status: اختيار حالة السائق
+      order-history: سجل الطلبات
+      select-user: اختيار المستخدم
+    driver-panel:
+      user-account: حساب المستخدم
+      driver-details: تفاصيل السائق
+      locate-button-text: تحديد موقع السائق
+      edit-button-text: تعديل السائق
+      close-button-text: إغلاق تفاصيل السائق
+      no-vehicle-message: لا توجد مركبة معينة
+      assign-vehicle-button: تعيين مركبة للسائق
+    fleet-driver-listing:
+      search-driver: البحث عن سائقين في الأسطول
+      add-driver: إضافة سائق إلى الأسطول
+      loading-message: جارٍ تحميل سائقي الأسطول...
+    fleet-form-panel:
+      success-message: تم حفظ الأسطول ({fleetName}) بنجاح.
+      title: أسطول جديد
+      save-fleet: حفظ الأسطول
+      create-fleet: إنشاء أسطول
+      view-details: عرض تفاصيل الأسطول
+      cancel-edit-fleet: إلغاء تعديل الأسطول
+      cancel-new-fleet: إلغاء الأسطول الجديد
+      fleet-name: اسم الأسطول
+      parent-fleet: الأسطول الرئيسي
+      select-parent-fleet: اختيار الأسطول الرئيسي لتعيينه للأسطول
+      select-vendor: اختيار المورد لتعيينه للأسطول
+      service-title: تعيين لمنطقة الخدمة
+      select-service: اختيار منطقة الخدمة لتعيينها للأسطول
+      zone-title: تعيين للمنطقة
+      select-zone: اختيار المنطقة لتعيينها للأسطول
+      select-status-fleet: اختيار حالة الأسطول.
+      select-status: اختيار الحالة
+      task-mission-title: المهمة/البعثة
+      task-text: تقديم وصف للمهمة أو البعثة الرئيسية لهذا الأسطول، إن وجدت.
+    fleet-vehicle-listing:
+      search-vehicle: البحث عن مركبة في الأسطول
+      add-vehicle: إضافة مركبة إلى الأسطول
+      loading-message: جارٍ تحميل مركبات الأسطول...
+    fuel-report-form-panel:
+      success-message: تم حفظ تقرير الوقود بنجاح.
+      fuel-report: تقرير وقود جديد
+      save-fuel-report: حفظ تقرير الوقود
+      create-fuel-report: إنشاء تقرير وقود
+      view-details: عرض تفاصيل تقرير الوقود
+      cancel-edit-fuel-report: إلغاء تعديل تقرير الوقود
+      cancel-new-fuel-report: إلغاء تقرير الوقود الجديد
+      select-reporter: اختيار المُبلغ
+      select-driver: اختيار السائق
+      select-vehicle: اختيار المركبة
+      select-fuel-report: اختيار حالة تقرير الوقود
+      odometer: عداد المسافات
+      cost: التكلفة
+      volume: الحجم
+      select-volume-text: اختيار وحدة القياس وحجم الوقود المراد الإبلاغ عنه.
+    fuel-report-panel:
+      title: تفاصيل تقرير الوقود
+      edit-button: تعديل تقرير الوقود
+      cancel-edit-fuel-report: إلغاء تعديل تقرير الوقود
+      cancel-new-fuel-report: إلغاء تقرير الوقود الجديد
+      details:
+        fuel: الوقود/الحجم
+    global-search:
+      search: البحث بالكلمة المفتاحية...
+    integrated-order-details:
+      order-id: معرف الطلب
+      quotation-id: معرف عرض السعر
+      driver-id: معرف السائق
+      link: رابط قابل للمشاركة
+      price-breakdown: تفصيل السعر
+      metadata: البيانات الوصفية
+    issue-form-panel:
+      success-message: تم حفظ المشكلة ({publicId}) بنجاح.
+      issue: مشكلة جديدة
+      save-issue: حفظ المشكلة
+      create-issue: إنشاء مشكلة
+      view-details: عرض تفاصيل المشكلة
+      cancel-edit-issue: إلغاء تعديل المشكلة
+      cancel-new-issue: إلغاء المشكلة الجديدة
+      reported-by: تم الإبلاغ بواسطة
+      assigned: مُسند إلى
+      select-assign: اختيار المُسند إليه
+      select-reporter: اختيار المُبلغ
+      select-driver: اختيار السائق
+      select-vehicle: اختيار المركبة
+      type: نوع المشكلة
+      select-type: اختيار نوع المشكلة
+      category: فئة المشكلة
+      select-category: اختيار فئة المشكلة
+      report: تقرير المشكلة
+      tags: علامات المشكلة
+      add-tags: إضافة علامات
+      priority: أولوية المشكلة
+      select-priority: اختيار أولوية المشكلة
+      select-status: اختيار حالة المشكلة
+    issue-panel:
+      details:
+        assigned: مُسند إلى
+        type: نوع المشكلة
+        category: فئة المشكلة
+        priority: أولوية المشكلة
+        report: التقرير
+      title: تفاصيل المشكلة
+      edit-issue: تعديل المشكلة
+      cancel-edit-issue: إلغاء تعديل المشكلة
+      cancel-new-issue: إلغاء المشكلة الجديدة
+    live-map:
+      onText: إخفاء أدوات الرسم...
+      offText: تفعيل أدوات الرسم...
+      show-coordinates: عرض الإحداثيات...
+      center-map: توسيط الخريطة هنا...
+      zoom-in: تكبير...
+      zoom-out: تصغير...
+      hide-draw: إخفاء أدوات الرسم...
+      enable-draw: تفعيل أدوات الرسم...
+      create-new-service: إنشاء منطقة خدمة جديدة...
+      focus-service: 'التركيز على منطقة الخدمة: {serviceName}'
+      view-driver: 'عرض السائق: {driverName}'
+      edit-driver: 'تعديل السائق: {driverName}'
+      delete-driver: 'حذف السائق: {driverName}'
+      view-vehicle-for: 'عرض المركبة لـ: {driverName}'
+      view-vehicle: 'عرض المركبة: {vehicleName}'
+      edit-vehicle: 'تعديل المركبة: {vehicleName}'
+      delete-vehicle: 'حذف المركبة: {vehicleName}'
+      edit-zone: 'تعديل المنطقة: {zoneName}'
+      delete-zone: 'حذف المنطقة: {zoneName}'
+      assign-zone: 'تعيين الأسطول للمنطقة: {zoneName}'
+      blur-service: 'إخفاء منطقة الخدمة: {serviceName}'
+      create-zone: 'إنشاء منطقة في: {serviceName}'
+      assign-fleet: 'تعيين الأسطول لمنطقة الخدمة: {serviceName}'
+      edit-service: 'تعديل منطقة الخدمة: {serviceName}'
+      delete-service: 'حذف منطقة الخدمة: {serviceName}'
+      service-area: منطقة الخدمة
+      zone: المنطقة
+    order-config:
+      create-new-title: إنشاء إعداد طلب جديد
+      warning-message: يتطلب إعداد الطلب اسماً
+      success-message: تم إنشاء إعداد الطلب الجديد بنجاح.
+      no-order-warning: لم يتم اختيار إعداد طلب.
+      saved-success: تم حفظ إعداد الطلب '{orderName}'.
+      enter-name-title: أدخل اسم الإعداد المنسوخ
+      no-config-warning: لم يتم إدخال اسم الإعداد.
+      cloned-success: تم نسخ إعداد الطلب بنجاح.
+      body: بمجرد حذف إعداد الطلب هذا، لن تتمكن من إنشاء طلبات باستخدامه. هل أنت متأكد؟
+      uninstall-title: إلغاء تثبيت الإعداد
+      uninstall-success: تم إلغاء تثبيت الملحق {extensionName}.
+        
