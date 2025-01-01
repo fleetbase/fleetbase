@@ -1,0 +1,36 @@
+<?php
+
+namespace App\Providers;
+
+use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\Route;
+
+class FleetbaseOverrideServiceProvider extends ServiceProvider
+{
+    public function boot()
+    {
+        // This should load AFTER Fleetbase's routes
+        $this->loadRoutesAfter();
+    }
+
+    protected function loadRoutesAfter()
+    {
+        Route::prefix('api')
+            ->middleware('api')
+            ->group(function () {
+                Route::prefix('v1')->group(function () {
+                    // Override the specific route you want to customize
+                        Route::post('/orders/{id}/start', 'App\Http\Controllers\Api\v1\CustomOrderController@driverAcceptance')
+                        ->name('orders.driverAcceptance'); // Give it the same name as Fleetbase's route
+
+                        Route::prefix('drivers')->group(function () {
+                            Route::post('/login-with-sms', 'App\Http\Controllers\Api\v1\DriverController@loginWithPhone')
+                            ->name('drivers.login-with-sms'); 
+                            Route::post('/verify-code', 'App\Http\Controllers\Api\v1\DriverController@verifyCode')
+                                    ->name('drivers.verify-code'); 
+                        });
+        
+                });
+            });
+    }
+}

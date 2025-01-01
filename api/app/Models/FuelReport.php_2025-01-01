@@ -1,0 +1,49 @@
+<?php
+
+namespace App\Models;
+
+use Fleetbase\FleetOps\Models\FuelReport as BaseFuelReport;
+
+class FuelReport extends BaseFuelReport
+{
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [
+        'public_id',
+        'company_uuid',
+        'driver_uuid',
+        'vehicle_uuid',
+        'reported_by_uuid',
+        'amount',
+        'currency',
+        'volume',
+        'metric_unit',
+        'odometer',
+        'status',
+        'location',
+        'report',
+        'report_type',      // New field
+        'payment_method',   // New field
+        'card_type',       // New field
+        'driver_name',
+        'vehicle_name',
+        'reporter_name'
+    ];
+
+    /**
+     * Constants for enum values
+     */
+    const REPORT_TYPES = [
+        'fuel' => 'Fuel',
+        'toll' => 'Toll',
+        'parking' => 'Parking'
+    ];
+
+    const PAYMENT_METHODS = [
+        'card' => 'Card',
+        'other' => 'Other'
+    ];
+}

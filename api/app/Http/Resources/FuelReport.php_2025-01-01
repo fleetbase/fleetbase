@@ -1,0 +1,28 @@
+<?php
+
+namespace App\Http\Resources;
+
+use Fleetbase\FleetOps\Resources\FuelReport as BaseFuelReport;
+
+class FuelReport extends BaseFuelReport
+{
+    /**
+     * Transform the resource into an array.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return array
+     */
+    public function toArray($request)
+    {
+        // Get the base resource array
+        $fuelReport = parent::toArray($request);
+
+        // Add or modify fields
+        return array_merge($fuelReport, [
+            'report_type' => data_get($this, 'report_type'),
+            'payment_method' => data_get($this, 'payment_method'), 
+            'card_type' => data_get($this, 'card_type')
+            // You can also override existing fields if needed
+        ]);
+    }
+}
