@@ -174,6 +174,8 @@ return [
         // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
+        // Fleetbase\FleetOps\Providers\FleetOpsServiceProvider::class,
+        // Add your override provider AFTER Fleetbase's providers
         App\Providers\FleetbaseOverrideServiceProvider::class,
 
     ],

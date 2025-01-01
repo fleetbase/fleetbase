@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\v1;
 
 use Fleetbase\FleetOps\Http\Controllers\Api\v1\OrderController as BaseOrderController;
 use Illuminate\Http\Request;
+<<<<<<< HEAD
 use Fleetbase\FleetOps\Events\OrderDispatchFailed;
 use Fleetbase\FleetOps\Events\OrderReady;
 use Fleetbase\FleetOps\Events\OrderStarted;
@@ -40,6 +41,9 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\OrderRejectionMail;
 use App\Models\User;
+=======
+use App\Http\Controllers\Controller;
+>>>>>>> upstream/main
 
 class CustomOrderController extends BaseOrderController
 {
@@ -52,7 +56,11 @@ class CustomOrderController extends BaseOrderController
     {
         // Your custom implementation here
         // Or call parent method with modifications:
+<<<<<<< HEAD
         return "welcosssme";
+=======
+        return "welcome";
+>>>>>>> upstream/main
     }
 
     /**
@@ -62,6 +70,7 @@ class CustomOrderController extends BaseOrderController
     {
         // Your custom implementation here
     }
+<<<<<<< HEAD
     public function start(Request $request)
     {
         /**
@@ -303,4 +312,6 @@ class CustomOrderController extends BaseOrderController
         }
     }
        
+=======
+>>>>>>> upstream/main
 }
