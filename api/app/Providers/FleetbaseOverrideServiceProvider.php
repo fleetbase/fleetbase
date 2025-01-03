@@ -37,12 +37,10 @@ class FleetbaseOverrideServiceProvider extends ServiceProvider
                         Route::post('/verify-code', 'App\Http\Controllers\Api\v1\DriverController@verifyCode')
                             ->name('drivers.verify-code');
                     });
-                    // Route::prefix('fuel-reports')->group(function () {
-                    //     Route::get('/', 'App\Http\Controllers\Api\v1\FuelReportController@export')
-                    //     ->name('fuel-reports.export');
-                    //     Route::post('/', 'App\Http\Controllers\Api\v1\FuelReportController@create')
-                    //     ->name('fuel-reports.create');
-                    // });
+                    Route::get('/parking-areas/create', 'App\Http\Controllers\Api\v1\ParkingAreaController@insert')
+                    ->name('parking-areas.create');
+                    Route::post('/parking-areas', 'App\Http\Controllers\Api\v1\ParkingAreaController@nearest')
+                    ->name('parking-areas');
                     
                 });
             });

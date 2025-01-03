@@ -43,4 +43,7 @@ return [
         'secret' => env('STRIPE_SECRET', env('STRIPE_API_SECRET')),
         'webhook_secret' => env('STRIPE_WEBHOOK_SECRET'),
     ],
+    'snap_api' => [
+        'url' => env('SNAP_API_URL'),
+    ],
 ];
