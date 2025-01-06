@@ -2,13 +2,13 @@
 
 namespace App\Models;
 
-use Fleetbase\FleetOps\Models\FuelReport as BaseFuelReport;
+// use Fleetbase\FleetOps\Models\FuelReport as BaseFuelReport;
 
+use Fleetbase\Models\Model;
 use Fleetbase\Casts\Json;
 use Fleetbase\FleetOps\Casts\Point;
 use Fleetbase\FleetOps\Support\Utils;
 use Fleetbase\LaravelMysqlSpatial\Eloquent\SpatialTrait;
-use Fleetbase\Models\Model;
 use Fleetbase\Models\User;
 use Fleetbase\Traits\HasApiModelBehavior;
 use Fleetbase\Traits\HasPublicId;
@@ -16,8 +16,10 @@ use Fleetbase\Traits\HasUuid;
 use Fleetbase\Traits\Searchable;
 use Fleetbase\Traits\TracksApiCredential;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Fleetbase\FleetOps\Models\Vehicle;
+use Fleetbase\FleetOps\Models\Driver;
 
-class FuelReport extends BaseFuelReport
+class FuelReport extends Model
 {
     use HasUuid;
     use TracksApiCredential;

@@ -8,6 +8,7 @@ use App\Http\Resources\FuelReport as FuelReportResource;
 use Fleetbase\FleetOps\Http\Resources\v1\FuelReport as BaseFuelReportResource;
 use App\Models\FuelReport as FuelReportModel;
 use Fleetbase\FleetOps\Models\FuelReport as BaseFuelReportModel;
+use Fleetbase\FleetOps\Http\Middleware\TransformLocationMiddleware;
 
 class FleetbaseOverrideServiceProvider extends ServiceProvider
 {
@@ -27,20 +28,36 @@ class FleetbaseOverrideServiceProvider extends ServiceProvider
             ->group(function () {
                 Route::prefix('v1')->group(function () {
                     // Override the specific route you want to customize
-                    Route::get('/orders', 'App\Http\Controllers\Api\v1\CustomOrderController@query')
-                        ->name('orders.query'); // Give it the same name as Fleetbase's route
-                    Route::post('/orders/{id}/start', 'App\Http\Controllers\Api\v1\CustomOrderController@driverAcceptance')
-                        ->name('orders.driverAcceptance'); // Give it the same name as Fleetbase's route
+                   
                     Route::prefix('drivers')->group(function () {
                         Route::post('/login-with-sms', 'App\Http\Controllers\Api\v1\DriverController@loginWithPhone')
                             ->name('drivers.login-with-sms');
                         Route::post('/verify-code', 'App\Http\Controllers\Api\v1\DriverController@verifyCode')
                             ->name('drivers.verify-code');
                     });
+                   
+                    
+                    Route::middleware(['fleetbase.api', TransformLocationMiddleware::class])
+                    
+                    ->group(function () {
+                        Route::prefix('expense-reports')->group(function () {
+                        Route::post('/', 'App\Http\Controllers\Api\v1\ExpenseReportController@create')
+                            ->name('expense-reports.create');
+                        Route::get('/', 'App\Http\Controllers\Api\v1\ExpenseReportController@list')
+                            ->name('expense-reports.list');
+                        Route::delete('/{id}', 'App\Http\Controllers\Api\v1\ExpenseReportController@delete')
+                            ->name('expense-reports.delete');
+                        Route::put('/{id}', 'App\Http\Controllers\Api\v1\ExpenseReportController@update')
+                            ->name('expense-reports.update');
+                    });
                     Route::get('/parking-areas/create', 'App\Http\Controllers\Api\v1\ParkingAreaController@insert')
                     ->name('parking-areas.create');
                     Route::post('/parking-areas', 'App\Http\Controllers\Api\v1\ParkingAreaController@nearest')
                     ->name('parking-areas');
+
+                    Route::post('/orders/{id}/start', 'App\Http\Controllers\Api\v1\CustomOrderController@driverAcceptance')
+                    ->name('orders.driverAcceptance'); // Give it the same name as Fleetbase's route
+                });
                     
                 });
             });
