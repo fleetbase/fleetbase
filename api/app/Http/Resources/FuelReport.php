@@ -47,6 +47,7 @@ class FuelReport extends FleetbaseResource
             'report_type'       => $this->when(Http::isInternalRequest(), $this->report_type),
             'payment_method'    => $this->when(Http::isInternalRequest(), $this->payment_method),
             'card_type'         => $this->when(Http::isInternalRequest(), $this->card_type),
+            'order_id'          => $this->when(Http::isInternalRequest(), $this->order_id),
         ];
     }
 
@@ -76,6 +77,7 @@ class FuelReport extends FleetbaseResource
             'report_type'       => $this->report_type,
             'payment_method'    => $this->payment_method,
             'card_type'         => $this->card_type,
+            'order_id'          => $this->order_id,
         ];
     }
 }

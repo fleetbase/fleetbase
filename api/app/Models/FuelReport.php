@@ -70,7 +70,8 @@ class FuelReport extends Model
         'status',
         'report_type',      // New field
         'payment_method',   // New field
-        'card_type'    
+        'card_type',
+        'order_id'
     ];
 
     /**
