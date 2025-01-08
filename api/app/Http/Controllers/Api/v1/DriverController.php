@@ -529,8 +529,9 @@ class DriverController extends FleetbaseDriverController
 
             return response()->apiError('Unable to authenticate driver.');
         }
-
-        return new DriverResource($driver);
+        $driverResource = new DriverResource($driver);
+        return $driverResource->additional(['user_id' => $user->uuid]);
+    
     }
 
     /**

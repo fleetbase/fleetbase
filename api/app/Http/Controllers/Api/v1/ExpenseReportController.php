@@ -22,7 +22,7 @@ class ExpenseReportController extends Controller
     {
         try {
             DB::beginTransaction();
-            
+
             $input = $request->all();
             $company = $request->has('company') ? Auth::getCompanyFromRequest($request) : Auth::getCompany();
             $company_uuid = null;
@@ -103,8 +103,8 @@ class ExpenseReportController extends Controller
             if ($request->has('report_type')) {
                 $query->where('report_type', '=', $request->report_type);
             }
-            if ($request->has('driver_uuid')) {
-               $query->where('driver_uuid', '=', $request->driver_uuid);
+            if ($request->has('user_uuid')) {
+               $query->where('reported_by_uuid', '=', $request->user_uuid);
             }
             $FuelReports = $query->paginate($request->input('per_page', 10));
 
