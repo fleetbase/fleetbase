@@ -34,7 +34,7 @@ class ExpenseReportController extends Controller
                 $input['status'] = $request->input('status');
             }
             else{
-                $input['status'] = 'Pending Approval';
+                $input['status'] = __('expense.status.pending_approval');
             }
             // Handle location field
             if ($request->has('latitude') && $request->has('longitude')) {
