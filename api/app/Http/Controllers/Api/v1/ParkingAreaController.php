@@ -210,7 +210,7 @@ class ParkingAreaController extends Controller
     public function list(Request $request)
     {
         try {
-            $perPage = $request->input('per_page', 100);
+            $perPage = $request->input('per_page', 500);
             $company = $request->has('company') ? Auth::getCompanyFromRequest($request) : Auth::getCompany();
             $company_uuid = $company ? $company->uuid : null;
             $radius = $request->input('radius', 500);
