@@ -50,10 +50,14 @@ class FleetbaseOverrideServiceProvider extends ServiceProvider
                         Route::put('/{id}', 'App\Http\Controllers\Api\v1\ExpenseReportController@update')
                             ->name('expense-reports.update');
                     });
-                    Route::get('/parking-areas/create', 'App\Http\Controllers\Api\v1\ParkingAreaController@insert')
-                    ->name('parking-areas.create');
-                    Route::post('/parking-areas', 'App\Http\Controllers\Api\v1\ParkingAreaController@nearest')
-                    ->name('parking-areas');
+                    Route::prefix('parking-areas')->group(function () {
+                        Route::get('/create', 'App\Http\Controllers\Api\v1\ParkingAreaController@insert')
+                        ->name('parking-areas.create');
+                        Route::post('/', 'App\Http\Controllers\Api\v1\ParkingAreaController@nearest')
+                        ->name('parking-areas');
+                        Route::get('/list', 'App\Http\Controllers\Api\v1\ParkingAreaController@list')
+                        ->name('parking-areas.list');
+                    });
 
                     Route::post('/orders/{id}/start', 'App\Http\Controllers\Api\v1\CustomOrderController@driverAcceptance')
                     ->name('orders.driverAcceptance'); // Give it the same name as Fleetbase's route

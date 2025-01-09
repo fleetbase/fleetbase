@@ -52,12 +52,16 @@ class ParkingAreaController extends Controller
                     if (empty($area['location']['latitude']) || empty($area['location']['longitude'])) {
                         continue;
                     }
-
+                    $company = $request->has('company') ? Auth::getCompanyFromRequest($request) : Auth::getCompany();
+                    $company_uuid = null;
+                    if($company){
+                        $company_uuid = $company->uuid;
+                    }
                     // Create coordinates array for border
                     $lat = $area['location']['latitude'];
                     $lng = $area['location']['longitude'];
                     $serviceAreaData = [
-                        'company_uuid' => session('company'),
+                        'company_uuid' => $company_uuid,
                         'name' => $area['name'],
                         // 'description' => 'Parking Area with capacity: ' . ($area['snapCapacity'] ?? 'N/A'),
                         'status' => 'active',
@@ -71,7 +75,7 @@ class ParkingAreaController extends Controller
                     ];
                     // Try to find existing service area by location and name
                     $existingArea = ServiceArea::where('name', $serviceAreaData['name'])
-                        ->where('company_uuid', session('company'))
+                        ->where('company_uuid', $company_uuid)
                         ->first();
 
                     if ($existingArea) {
@@ -125,7 +129,7 @@ class ParkingAreaController extends Controller
         try {
             $latitude = floatval($request->input('latitude'));
             $longitude = floatval($request->input('longitude'));
-            $radius = floatval($request->input('radius', 10)); // Default 50km radius
+            $radius = floatval( config('services.parking_radius_meter')); // Default 50km radius
 
             if (!$latitude || !$longitude) {
                 return response()->json([
@@ -142,7 +146,7 @@ class ParkingAreaController extends Controller
             }
             // Get the parking areas from the service_areas table
             $parkingAreas = ServiceArea::where('company_uuid', $company_uuid)->where('type', 'parking')
-                ->distanceSphere('location', $currentLocation, $radius * 10) // Convert km to meters
+                ->distanceSphere('location', $currentLocation, $radius) // Convert km to meters
                 ->orderByDistanceSphere('location', $currentLocation)
                 ->get();
 
@@ -195,5 +199,68 @@ class ParkingAreaController extends Controller
                 'status' => $area['state']
             ];
         })->toArray();
+    }
+
+    /**
+     * List all parking service areas with pagination
+     * 
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function list(Request $request)
+    {
+        try {
+            $perPage = $request->input('per_page', 100);
+            $company = $request->has('company') ? Auth::getCompanyFromRequest($request) : Auth::getCompany();
+            $company_uuid = $company ? $company->uuid : null;
+            $radius = $request->input('radius', 500);
+            $query = ServiceArea::where('company_uuid', $company_uuid)
+                ->where('type', 'parking');
+
+            $serviceAreas = $query->paginate($perPage);
+
+            // Transform the paginated results
+            $transformed = $serviceAreas->through(function ($area) {
+                return [
+                    'id' => $area->id,
+                    'uuid' => $area->uuid,
+                    'public_id' => $area->public_id,
+                    'name' => $area->name,
+                    'type' => $area->type,
+                    'center' => [
+                        'type' => 'Point',
+                        'coordinates' => [
+                            $area->location->getLng(),
+                            $area->location->getLat()
+                        ]
+                    ],
+                    'border' => $area->border,
+                    'zones' => $area->zones ?? [],
+                    'status' => $area->status,
+                    'updated_at' => $area->updated_at,
+                    'created_at' => $area->created_at
+                ];
+            });
+
+            return response()->json([
+                'service_areas' => $transformed->items(),
+                'meta' => [
+                    'total' => $transformed->total(),
+                    'per_page' => $transformed->perPage(),
+                    'current_page' => $transformed->currentPage(),
+                    'last_page' => $transformed->lastPage(),
+                    'from' => $transformed->firstItem(),
+                    'to' => $transformed->lastItem(),
+                    'time' => round(microtime(true) * 1000),
+                    'radius' => floatval( config('services.parking_radius_meter'))
+                ]
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => $e->getMessage(),
+                'trace' => config('app.debug') ? $e->getTrace() : null
+            ], 500);
+        }
     }
 }

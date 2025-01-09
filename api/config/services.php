@@ -46,4 +46,5 @@ return [
     'snap_api' => [
         'url' => env('SNAP_API_URL'),
     ],
+    'parking_radius_meter' => env('PARKING_RADIUS_METER', 500),
 ];
