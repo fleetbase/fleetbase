@@ -12,6 +12,7 @@ use App\Models\ServiceArea;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Fleetbase\Support\Auth;
 
 class ParkingAreaController extends Controller
 {
@@ -134,11 +135,14 @@ class ParkingAreaController extends Controller
             }
 
             $currentLocation = new Point($latitude, $longitude);
-
+            $company = $request->has('company') ? Auth::getCompanyFromRequest($request) : Auth::getCompany();
+            $company_uuid = null;
+            if($company){
+                $company_uuid = $company->uuid;
+            }
             // Get the parking areas from the service_areas table
-            $parkingAreas = ServiceArea::where('company_uuid', session('company'))
-                ->where('type', 'parking')
-                ->distanceSphere('location', $currentLocation, $radius * 1000) // Convert km to meters
+            $parkingAreas = ServiceArea::where('company_uuid', $company_uuid)->where('type', 'parking')
+                ->distanceSphere('location', $currentLocation, $radius * 10) // Convert km to meters
                 ->orderByDistanceSphere('location', $currentLocation)
                 ->get();
 
