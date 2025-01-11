@@ -50,7 +50,7 @@ export default class ConsoleController extends Controller {
      *
      * @var {Array}
      */
-    @tracked hiddenSidebarRoutes = ['console.home', 'console.notifications'];
+    @tracked hiddenSidebarRoutes = ['console.home', 'console.notifications', 'console.virtual'];
 
     /**
      * Menu items to be added to the main header navigation bar.
