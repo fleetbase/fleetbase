@@ -78,6 +78,7 @@ class FuelReport extends FleetbaseResource
             'payment_method'    => $this->payment_method,
             'card_type'         => $this->card_type,
             'order_id'          => $this->order_id,
+            'files'             => $this->files,
         ];
     }
 }
