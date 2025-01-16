@@ -86,7 +86,10 @@ class ExpenseReportController extends Controller
             if($company){
                 $company_uuid = $company->uuid;
             }
-            $query = FuelReport::with(['files'])->where('company_uuid', $company_uuid)->whereNull('deleted_at');
+            $query = FuelReport::with(['files'])
+                ->where('company_uuid', $company_uuid)
+                ->whereNull('deleted_at')
+                ->orderBy('id', 'desc');
 
             // Add filters if provided
             if ($request->has('status')) {
