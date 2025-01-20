@@ -1,0 +1,36 @@
+<OrderConfigManager as |Action Context|>
+    <Overlay
+        @onLoad={{this.setOverlayContext}}
+        @onOpen={{this.onOpen}}
+        @onClose={{this.onClose}}
+        @onToggle={{this.onToggle}}
+        @position="right"
+        @noBackdrop={{true}}
+        @fullHeight={{true}}
+        @isResizeble={{true}}
+        @width="645px"
+    >
+        <Overlay::Header @title={{t "fleet-ops.component.order-config-manager.title"}} @onPressCancel={{this.onPressCancel}}>
+            <Action.NewOrderConfigButton />
+        </Overlay::Header>
+
+        <Overlay::Body class="p-0i" @wrapperClass="py-5">
+            <div class="section-header-actions w-full overflow-x-scroll lg:overflow-x-auto">
+                <div class="ui-tabs mt-4">
+                    <nav>
+                        {{#each Context.tabs as |tab|}}
+                            <a href="javascript:;" class="ui-tab {{if (eq tab.slug Context.currentTab.slug) 'active'}}" {{on "click" (fn Context.onTabChanged tab.slug)}}>
+                                <FaIcon @icon={{tab.icon}} class="mr-1" />
+                                <span>{{tab.title}}</span>
+                            </a>
+                        {{/each}}
+                    </nav>
+                </div>
+            </div>
+            <div class="tab-content tab-{{Context.currentTab.slug}}">
+                <Context.Content />
+            </div>
+            <Spacer @height="300px" />
+        </Overlay::Body>
+    </Overlay>
+</OrderConfigManager>

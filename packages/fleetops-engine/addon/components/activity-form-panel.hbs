@@ -1,0 +1,89 @@
+<Overlay
+    @onLoad={{this.setOverlayContext}}
+    @onOpen={{this.onOpen}}
+    @onClose={{this.onClose}}
+    @onToggle={{this.onToggle}}
+    @position="right"
+    @noBackdrop={{true}}
+    @fullHeight={{true}}
+    @isResizable={{or this.isResizable @isResizable}}
+    @width={{or this.width @width "570px"}}
+>
+    <Overlay::Header
+        @title={{if
+            this.activity.status
+            (concat (t "fleet-ops.component.activity-form-panel.title-concat") this.activity.status)
+            (t "fleet-ops.component.activity-form-panel.new-activity-title")
+        }}
+        @hideStatusDot={{true}}
+        @titleWrapperClass="leading-5"
+    >
+        <div class="flex flex-1 justify-end">
+            <Button @type="primary" @icon="save" @text={{t "common.save"}} @onClick={{perform this.save}} @isLoading={{this.save.isRunning}} @wrapperClass="mr-2" />
+            <Button @type="default" @icon="times" @text={{t "fleet-ops.common.cancel"}} @onClick={{this.onPressCancel}} />
+        </div>
+    </Overlay::Header>
+
+    <Overlay::Body @wrapperClass="px-4 pt-4">
+        <InputGroup
+            @name={{t "fleet-ops.component.activity-form-panel.key"}}
+            @value={{this.activity.key}}
+            @helpText={{t "fleet-ops.component.activity-form-panel.key-help"}}
+            @disabled={{cannot "fleet-ops update order-config"}}
+            {{on "input" this.setActivityKey}}
+        />
+        <InputGroup
+            @name={{t "fleet-ops.component.activity-form-panel.code"}}
+            @value={{this.activity.code}}
+            @helpText={{t "fleet-ops.component.activity-form-panel.code-help"}}
+            @disabled={{cannot "fleet-ops update order-config"}}
+            {{on "input" this.setActivityCode}}
+        />
+        <InputGroup
+            @name={{t "fleet-ops.component.activity-form-panel.status"}}
+            @value={{this.activity.status}}
+            @disabled={{cannot "fleet-ops update order-config"}}
+            @helpText={{t "fleet-ops.component.activity-form-panel.status-help"}}
+        />
+        <InputGroup
+            @name={{t "fleet-ops.component.activity-form-panel.details"}}
+            @value={{this.activity.details}}
+            @disabled={{cannot "fleet-ops update order-config"}}
+            @helpText={{t "fleet-ops.component.activity-form-panel.details-help"}}
+        />
+        <InputGroup>
+            <Toggle @isToggled={{this.activity.complete}} @onToggle={{fn (mut this.activity.complete)}} @disabled={{cannot "fleet-ops update order-config"}}>
+                <span class="dark:text-gray-100 text-sm ml-2">{{t "fleet-ops.component.activity-form-panel.completes-order"}}</span>
+            </Toggle>
+        </InputGroup>
+        <InputGroup @helpText={{t "fleet-ops.component.activity-form-panel.require-pod-help-text"}}>
+            <Toggle
+                @isToggled={{this.activity.require_pod}}
+                @onToggle={{fn (mut this.activity.require_pod)}}
+                @disabled={{cannot "fleet-ops update order-config"}}
+                @helpText={{t "fleet-ops.component.activity-form-panel.require-pod-help-text"}}
+            >
+                <span class="dark:text-gray-100 text-sm mx-2">{{t "fleet-ops.component.activity-form-panel.require-pod"}}</span>
+            </Toggle>
+        </InputGroup>
+        {{#if this.activity.require_pod}}
+            <InputGroup @name={{t "fleet-ops.component.activity-form-panel.select-pod-method"}}>
+                <select class="form-select w-full has--placeholder" disabled={{cannot "fleet-ops update order-config"}} {{on "change" this.setProofOfDeliveryMethod}}>
+                    <option selected disabled>
+                        {{t "fleet-ops.component.activity-form-panel.pod-method-placeholder"}}
+                    </option>
+                    {{#each this.podOptions as |podOption|}}
+                        <option value={{podOption}} selected={{eq this.activity.pod_method podOption}}>
+                            {{smart-humanize podOption}}
+                        </option>
+                    {{/each}}
+                </select>
+            </InputGroup>
+        {{/if}}
+        {{#unless (cannot "fleet-ops update order-config")}}
+            <ActivityLogicBuilder @activity={{this.activity}} @onChange={{this.updateActivityLogic}} class="mb-4" />
+            <ActivityEventSelector @activity={{this.activity}} @onChange={{this.updateActivityEvents}} />
+        {{/unless}}
+        <Spacer @height="300px" />
+    </Overlay::Body>
+</Overlay>

@@ -1,0 +1,104 @@
+<Overlay
+    @onLoad={{this.setOverlayContext}}
+    @onOpen={{this.onOpen}}
+    @onClose={{this.onClose}}
+    @onToggle={{this.onToggle}}
+    @position="right"
+    @noBackdrop={{true}}
+    @fullHeight={{true}}
+    @isResizeble={{true}}
+    @width="570px"
+    @overlayClass="place-form-panel"
+>
+    <Overlay::Header
+        @title={{if this.place.public_id this.place.address (t "fleet-ops.component.place-form-panel.place")}}
+        @status={{this.place.public_id}}
+        @hideStatusDot={{true}}
+        @titleWrapperClass="flex-col leading-5"
+    >
+        <div class="flex flex-1 justify-end">
+            <Button
+                @icon={{if this.place.id "save" "check"}}
+                @type="primary"
+                @text={{if this.place.id (t "fleet-ops.component.place-form-panel.save-place") (t "fleet-ops.component.place-form-panel.create-place")}}
+                @onClick={{perform this.save}}
+                @isLoading={{this.save.isRunning}}
+                @wrapperClass="mr-2"
+                @permission={{this.savePermission}}
+            />
+            <Button
+                @type="default"
+                @icon="times"
+                @helpText={{if this.place.id (t "fleet-ops.component.place-form-panel.cancel-edit-place") (t "fleet-ops.component.place-form-panel.cancel-new-place")}}
+                @onClick={{this.onPressCancel}}
+            />
+        </div>
+    </Overlay::Header>
+
+    <Overlay::Body @wrapperClass="new-service-rate-overlay-body px-4 space-y-4 pt-4">
+        {{#let (cannot this.savePermission) as |unauthorized|}}
+            <div class="flex-1 space-y-4">
+                <div class="grid grid-cols-3 gap-1 text-xs dark:text-gray-100">
+                    <InputGroup @name={{t "fleet-ops.common.name"}} @wrapperClass="col-span-2">
+                        <Input @value={{this.place.name}} @type="text" class="w-full form-input" placeholder={{t "fleet-ops.common.name"}} disabled={{unauthorized}} />
+                    </InputGroup>
+                    <InputGroup @name={{t "fleet-ops.component.place-form-panel.street-1"}} @value={{this.place.street1}} @wrapperClass="col-span-3">
+                        <AutocompleteInput
+                            @value={{this.place.street1}}
+                            @fetchUrl="places/lookup"
+                            @onSelect={{this.onAutocomplete}}
+                            disabled={{unauthorized}}
+                            placeholder={{t "fleet-ops.component.place-form-panel.street-1"}}
+                            class="w-full"
+                            as |result|
+                        >
+                            {{result.address}}
+                        </AutocompleteInput>
+                    </InputGroup>
+                    <InputGroup
+                        @name={{t "fleet-ops.component.place-form-panel.street-2"}}
+                        @autocomplete="nope"
+                        @value={{this.place.street2}}
+                        @wrapperClass="col-span-3"
+                        @disabled={{unauthorized}}
+                    />
+                    <InputGroup @name={{t "fleet-ops.component.place-form-panel.neighborhood"}} @autocomplete="nope" @value={{this.place.neighborhood}} @disabled={{unauthorized}} />
+                    <InputGroup @name={{t "fleet-ops.component.place-form-panel.building"}} @autocomplete="nope" @value={{this.place.building}} @disabled={{unauthorized}} />
+                    <InputGroup @name={{t "fleet-ops.component.place-form-panel.security-code"}} @autocomplete="nope" @value={{this.place.security_access_code}} @disabled={{unauthorized}} />
+                    <InputGroup @name={{t "fleet-ops.component.place-form-panel.postal-code"}} @autocomplete="nope" @value={{this.place.postal_code}} @disabled={{unauthorized}} />
+                    <InputGroup @name={{t "fleet-ops.common.city"}} @autocomplete="nope" @value={{this.place.city}} @disabled={{unauthorized}} />
+                    <InputGroup @name={{t "fleet-ops.component.place-form-panel.state"}} @autocomplete="nope" @value={{this.place.province}} @disabled={{unauthorized}} />
+                    <InputGroup @name={{t "fleet-ops.common.country"}} @wrapperClass="col-span-2">
+                        <CountrySelect
+                            class="w-full form-input form-select form-datalist"
+                            @value={{this.place.country}}
+                            @onChange={{fn (mut this.place.country)}}
+                            @placeholder={{t "fleet-ops.common.country"}}
+                            @disabled={{unauthorized}}
+                        />
+                    </InputGroup>
+                    <InputGroup @name={{t "fleet-ops.common.coordinates"}} @wrapperClass="col-span-2">
+                        <CoordinatesInput
+                            @value={{this.place.location}}
+                            @onChange={{this.updatePlaceCoordinates}}
+                            @onGeocode={{this.onAutocomplete}}
+                            @onUpdatedFromMap={{this.onReverseGeocode}}
+                            @onInit={{this.setCoordinatesInput}}
+                            @disabled={{unauthorized}}
+                        />
+                    </InputGroup>
+                    <div class="col-span-1"></div>
+                    <InputGroup @name={{t "fleet-ops.common.phone"}} @wrapperClass="col-span-2">
+                        <PhoneInput @value={{this.place.phone}} @autocomplete="nope" @onInput={{this.phone}} disabled={{unauthorized}} class="form-input w-full" />
+                    </InputGroup>
+                </div>
+
+                <ContentPanel @title={{t "fleet-ops.component.avatar-picker.avatar"}} @open={{true}} @pad={{true}} @panelBodyClass="bg-white dark:bg-gray-800">
+                    <AvatarPicker @model={{this.place}} @defaultAvatar={{config "defaultValues.placeAvatar"}} @disabled={{unauthorized}} />
+                </ContentPanel>
+            </div>
+        {{/let}}
+
+        <Spacer @height="300px" />
+    </Overlay::Body>
+</Overlay>

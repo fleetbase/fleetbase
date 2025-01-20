@@ -1,0 +1,8 @@
+parameters:
+    level: max
+    paths:
+        - server/src
+
+    checkMissingIterableValueType: true
+    checkGenericClassInNonGenericObjectType: false
+    reportUnmatchedIgnoredErrors: true

@@ -1,0 +1,80 @@
+<Modal::Default @modalIsOpened={{@modalIsOpened}} @options={{@options}} @confirm={{@onConfirm}} @decline={{@onDecline}}>
+    <div class="modal-body-container">
+        <p class="mb-5 dark:text-gray-100">{{t "fleet-ops.component.modals.order-new-activity.select-message"}}</p>
+
+        {{#if @options.order.activityHasEnded}}
+            <InfoBlock class="warning mt-2" @icon="exclamation-triangle">
+                {{t "fleet-ops.component.modals.order-new-activity.order-currently-message" htmlSafe=true options=@options.order.status}}
+                {{t "fleet-ops.component.modals.order-new-activity.fleetbase-message"}}
+            </InfoBlock>
+        {{/if}}
+
+        <fieldset class="my-5">
+            <legend class="sr-only">
+                {{t "fleet-ops.component.modals.order-new-activity.activity-options"}}
+            </legend>
+
+            <div class="radio-group-condensed -space-y-px">
+                {{#each @options.activityOptions as |activity index|}}
+                    <div class="radio-group-item shadow-sm {{if (eq @options.selected index) 'is-checked'}}">
+                        <div class="flex items-center h-5">
+                            <RadioButton
+                                @radioClass="focus:ring-blue-500"
+                                @radioId={{concat "activity_" index}}
+                                @value={{index}}
+                                @groupValue={{@options.selected}}
+                                @name={{t "fleet-ops.component.modals.order-new-activity.activity"}}
+                                @changed={{fn (mut @options.selected)}}
+                            />
+                        </div>
+                        <label for={{concat "activity_" index}} class="ml-3 flex flex-col cursor-pointer w-full">
+                            <span class="block text-sm font-semibold">
+                                {{activity.status}}
+                            </span>
+                            <span class="block text-sm">
+                                {{activity.details}}
+
+                                {{#if (eq activity.code "dispatched")}}
+                                    <InfoBlock
+                                        class="warning xs mt-2"
+                                        @icon="exclamation-triangle"
+                                        @textClass="text-yellow-900 focus:text-yellow-900"
+                                        @text={{t "fleet-ops.component.modals.order-new-activity.dispatch"}}
+                                    />
+                                {{/if}}
+                            </span>
+                        </label>
+                        <div>
+                            <Badge @status={{dasherize activity.code}} class="uppercase">{{activity.code}}</Badge>
+                        </div>
+                    </div>
+                {{/each}}
+
+                <div class="radio-group-item shadow-sm {{if (eq @options.selected 'custom') 'is-checked'}}">
+                    <div class="flex items-center h-5">
+                        <RadioButton
+                            @radioClass="focus:ring-blue-500"
+                            @radioId="activity_custom"
+                            @value="custom"
+                            @groupValue={{@options.selected}}
+                            @name={{t "fleet-ops.component.modals.order-new-activity.activity"}}
+                            @changed={{fn (mut @options.selected)}}
+                        />
+                    </div>
+                    <label for="activity_custom" class="ml-3 flex flex-col cursor-pointer w-full pr-5">
+                        <span class="block text-sm font-medium">
+                            <Input @type="text" class="form-input form-input-sm w-full rounded-b-none" placeholder={{t "fleet-ops.component.modals.order-new-activity.status"}} />
+                        </span>
+                        <span class="block text-sm">
+                            <Input @type="text" class="form-input form-input-sm w-full rounded-t-none" placeholder={{t "fleet-ops.component.modals.order-new-activity.details"}} />
+                        </span>
+                    </label>
+                    <div>
+                        <Input @type="text" class="form-input form-input-sm" placeholder={{t "fleet-ops.component.modals.order-new-activity.code"}} />
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+
+    </div>
+</Modal::Default>

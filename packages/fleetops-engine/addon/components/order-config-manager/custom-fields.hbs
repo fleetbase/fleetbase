@@ -1,0 +1,67 @@
+<div class="px-6 space-y-4">
+    <div class="flex flex-row items-center py-2 space-x-4">
+        <Button @type="primary" @icon="square-plus" @text={{t "fleet-ops.component.order-config-manager.custom-fields.new-field-group"}} @onClick={{this.createNewFieldGroup}} @permission="fleet-ops update order-config" />
+    </div>
+    {{#each this.groups as |group|}}
+        <ContentPanel @title={{group.name}} @open={{true}} @pad={{true}} @panelBodyClass="bg-white dark:bg-gray-900">
+            <div class="flex flex-row items-center py-2 space-x-4 mb-3">
+                <Button
+                    @type="primary"
+                    @icon="square-plus"
+                    @text={{t "fleet-ops.component.order-config-manager.custom-fields.new-custom-field"}}
+                    @onClick={{fn this.createNewCustomField group}}
+                    @permission="fleet-ops update order-config"
+                />
+                <DropdownButton
+                    @text={{concat (t "fleet-ops.component.order-config-manager.custom-fields.grid-size") ": " (or group.meta.grid_size 1)}}
+                    @textClass="text-sm mr-2"
+                    @buttonClass="flex-row-reverse w-44 justify-between"
+                    @icon="caret-down"
+                    @iconClass="mr-0i"
+                    @size="sm"
+                    @iconPrefix="fas"
+                    @triggerClass="hidden md:flex"
+                    @permission="fleet-ops update order-config"
+                    as |dd|
+                >
+                    <div class="next-dd-menu mt-1 mx-0" aria-labelledby="user-menu">
+                        <div class="p-1">
+                            {{#each this.gridSizeOptions as |size|}}
+                                <a href="javascript:;" class="next-dd-item" {{on "click" (dropdown-fn dd this.selectGridSize group size)}} disabled={{cannot "fleet-ops update order-config"}}>
+                                    <div class="flex-1 flex flex-row items-center">
+                                        <div class="w-6">
+                                            <FaIcon @icon="grip" />
+                                        </div>
+                                        <span>{{size}}</span>
+                                    </div>
+                                    <div>
+                                        {{#if (eq size (or group.meta.grid_size 1))}}
+                                            <FaIcon @icon="check" class="text-green-500" />
+                                        {{/if}}
+                                    </div>
+                                </a>
+                            {{/each}}
+                        </div>
+                    </div>
+                </DropdownButton>
+                <Button @type="danger" @icon="trash" @onClick={{fn this.deleteCustomFieldGroup group}} @permission="fleet-ops update order-config" />
+            </div>
+            <div class="grid grid-cols-{{or group.meta.grid_size 1}} gap-2">
+                {{#each group.customFields as |customField|}}
+                    <div class="rounded-lg border border-gray-200 dark:border-gray-700 px-3 py-1.5 flex flex-row items-center justify-between {{unless customField.id 'opacity-50'}}">
+                        <div class="flex items-center space-x-2">
+                            <div class="font-semibold text-sm">{{customField.label}}</div>
+                            <div class="order-config-custom-field-type-pill rounded-lg bg-gray-300 dark:bg-gray-700 text-black dark:text-gray-300 px-2 py-0.5 text-xs truncate font-mono">
+                                {{customField.type}}
+                            </div>
+                        </div>
+                        <div class="flex flex-row items-center space-x-2">
+                            <Button @type="default" @icon="pencil" @onClick={{fn this.editCustomField customField}} @permission="fleet-ops update order-config" />
+                            <Button @type="danger" @icon="trash" @onClick={{fn this.deleteCustomField customField}} @permission="fleet-ops update order-config" />
+                        </div>
+                    </div>
+                {{/each}}
+            </div>
+        </ContentPanel>
+    {{/each}}
+</div>

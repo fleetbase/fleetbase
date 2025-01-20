@@ -1,0 +1,35 @@
+<Overlay
+    @onLoad={{this.setOverlayContext}}
+    @onOpen={{this.onOpen}}
+    @onClose={{this.onClose}}
+    @onToggle={{this.onToggle}}
+    @position="right"
+    @noBackdrop={{true}}
+    @fullHeight={{true}}
+    @isResizeble={{or this.isResizable @isResizable}}
+    @width={{or this.width @width "570px"}}
+>
+    <Overlay::Header @title={{this.fleet.name}} @disableBadgeHumanize={{true}} @hideStatusDot={{true}} @createdAt={{this.fleet.createdAt}}>
+        <Button @type="default" @icon="pen" @helpText="Edit fleet" @onClick={{this.onEdit}} @wrapperClass="mr-2" @permission="fleet-ops update fleet" />
+        <Button @type="default" @icon="times" @helpText={{if this.fleet.id "Cancel edit fleet" "Cancel new fleet"}} @onClick={{this.onPressCancel}} />
+    </Overlay::Header>
+
+    <Overlay::Body class="no-padding">
+        <div class="section-header-actions w-full overflow-x-scroll lg:overflow-x-auto">
+            <div class="ui-tabs mt-4">
+                <nav>
+                    {{#each this.tabs as |tab|}}
+                        <a href="javascript:;" class="ui-tab {{if (eq this.tab.slug tab.slug) 'active'}}" {{on "click" (fn this.onTabChanged tab.slug)}}>
+                            <FaIcon @icon={{tab.icon}} class="mr-1" />
+                            <span>{{tab.title}}</span>
+                        </a>
+                    {{/each}}
+                </nav>
+            </div>
+        </div>
+        <div class="tab-content tab-{{this.tab.slug}}">
+            {{component this.tab.component fleet=this.fleet tabOptions=this.tab options=this.tab.componentParams}}
+        </div>
+        <Spacer @height="300px" />
+    </Overlay::Body>
+</Overlay>

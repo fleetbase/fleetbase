@@ -1,0 +1,5 @@
+{{#if this.contextPanel.currentContextRegistry}}
+    {{#let this.contextPanel.currentContext this.contextPanel.currentContextRegistry this.contextPanel.currentContextComponentArguments as |model registry dynamicArgs|}}
+        {{component registry.component context=model dynamicArgs=dynamicArgs onPressCancel=this.contextPanel.clear options=this.contextPanel.contextOptions}}
+    {{/let}}
+{{/if}}

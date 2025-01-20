@@ -1,0 +1,11 @@
+<div class="panel-title flex flex-row items-center justify-between">
+    <div class="flex">
+        <div class="flex-1 flex flex-row items-center">
+            <img src={{@context.vehicle_avatar}} alt={{@context.name}} class="w-5 h-5 mr-1.5" />
+            <div>
+                <div class="text-sm">{{@context.name}}</div>
+            </div>
+        </div>
+        <span class="resource-count">{{pluralize @context.orderPanelActiveJobs.length (t "fleet-ops.common.order")}}</span>
+    </div>
+</div>

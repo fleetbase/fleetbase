@@ -1,0 +1,17 @@
+<div class="order-progress-bar {{if (gt @progress 0) 'has-progress'}}" {{did-update this.updateProgress @progress}} ...attributes>
+    <div class="order-progress-bar-marker-wrapper {{if @firstWaypointCompleted 'completed' ''}}">
+        <div class="order-progress-bar-marker"></div>
+    </div>
+    <div class="order-progress-bar-wrapper">
+        <div class="order-progress-bar-track"></div>
+        <div class="order-progress-bar-progression" style={{this.progressionWidth}}></div>
+        <div class="order-progress-bar-truck-icon" style={{this.iconPaddingLeft}}>
+            <div class="truck-icon-wrapper">
+                <FaIcon @icon="truck" />
+            </div>
+        </div>
+    </div>
+    <div class="order-progress-bar-marker-wrapper  {{if @lastWaypointCompleted 'completed' ''}}">
+        <div class="order-progress-bar-marker"></div>
+    </div>
+</div>

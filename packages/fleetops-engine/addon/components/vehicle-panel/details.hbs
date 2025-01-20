@@ -1,0 +1,44 @@
+<div class="p-4 space-y-4">
+    <ContentPanel @title="Details" @open={{true}} @pad={{true}} @panelBodyClass="bg-white dark:bg-gray-900">
+        <div class="grid grid-cols-2 gap-4 text-xs dark:text-gray-100">
+            <div class="field-info-container space-y-2">
+                <div class="field-name">{{t "fleet-ops.common.name"}}</div>
+                <div class="field-value">{{n-a @vehicle.display_name}}</div>
+            </div>
+            <div class="field-info-container space-y-2">
+                <div class="field-name">{{t "fleet-ops.common.plate-number"}}</div>
+                <div class="field-value">{{n-a @vehicle.plate_number}}</div>
+            </div>
+            <div class="field-info-container space-y-2">
+                <div class="field-name">{{t "fleet-ops.common.vin-number"}}</div>
+                <div class="field-value">{{n-a @vehicle.vin}}</div>
+            </div>
+            <div class="field-info-container space-y-2">
+                <div class="field-name">{{t "fleet-ops.common.make"}}</div>
+                <div class="field-value">{{n-a @vehicle.make}}</div>
+            </div>
+            <div class="field-info-container space-y-2">
+                <div class="field-name">{{t "fleet-ops.common.model"}}</div>
+                <div class="field-value">{{n-a @vehicle.model}}</div>
+            </div>
+            <div class="field-info-container space-y-2">
+                <div class="field-name">{{t "fleet-ops.common.year"}}</div>
+                <div class="field-value">{{n-a @vehicle.year}}</div>
+            </div>
+            <div class="field-info-container col-span-3">
+                <div class="field-name">
+                    {{t "fleet-ops.common.coordinates"}}
+                </div>
+                <div class="field-value">
+                    {{point-coordinates @vehicle.location}}
+                </div>
+            </div>
+        </div>
+    </ContentPanel>
+
+    <ContentPanel @title="Avatar" @open={{true}} @pad={{true}} @panelBodyClass="bg-white dark:bg-gray-800">
+        <div class="p-4">
+            <img alt={{@vehicle.displayName}} src={{@vehicle.avatar_url}} class="w-24 h-24" />
+        </div>
+    </ContentPanel>
+</div>

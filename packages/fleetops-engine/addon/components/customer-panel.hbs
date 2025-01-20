@@ -1,0 +1,90 @@
+<Overlay
+    @onLoad={{this.setOverlayContext}}
+    @onOpen={{this.onOpen}}
+    @onClose={{this.onClose}}
+    @onToggle={{this.onToggle}}
+    @position="right"
+    @noBackdrop={{true}}
+    @fullHeight={{true}}
+    @isResizable={{or this.isResizable @isResizable}}
+    @width={{or this.width @width "570px"}}
+>
+    <Overlay::Header @hideLeftSection={{true}} @actionsWrapperClass="flex-1 flex-col py-3" class="h-auto-i min-h-[127px]">
+        <div class="flex flex-row items-center justify-between w-full mb-4">
+            <div class="flex flex-1 space-x-2">
+                <Button @type="default" @icon="pen" @helpText={{t "fleet-ops.component.contact-panel.edit-button"}} @onClick={{this.onEdit}} @permission="fleet-ops update contact" />
+            </div>
+            <div class="flex flex-1 justify-end space-x-2">
+                <div>
+                    <DropdownButton @icon="ellipsis-h" @size="sm" @iconSize="md" as |dd|>
+                        <div class="next-dd-menu mt-1 mx-0" aria-labelledby="user-menu">
+                            <div class="px-1 py-0.5">
+                                <a href="javascript:;" class="next-dd-item truncate" disabled={{cannot "fleet-ops reset-credentials-for customer"}} {{on "click" (dropdown-fn dd this.resetCredentials)}}>
+                                    <div class="w-6"><FaIcon @icon="unlock" @size="sm" /></div>
+                                    <div>Reset customer credentials</div>
+                                </a>
+                            </div>
+                        </div>
+                    </DropdownButton>
+                </div>
+                <div>
+                    <div class="flex">
+                        <Button
+                            @type="default"
+                            @icon="times"
+                            @helpText={{if this.customer.id (t "fleet-ops.component.contact-panel.cancel-edit-button") (t "fleet-ops.component.contact-panel.cancel-new-button")}}
+                            @onClick={{this.onPressCancel}}
+                        />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="flex flex-row justify-between w-full">
+            <div class="flex flex-col flex-1 w-3/4">
+                <div class="flex flex-row">
+                    <div class="w-14 flex items-center justify-start">
+                        <Image
+                            src={{this.customer.photo_url}}
+                            @fallbackSrc={{config "defaultValues.contactImage"}}
+                            alt={{this.customer.name}}
+                            height="48"
+                            width="48"
+                            class="h-12 w-12 rounded-lg shadow-sm"
+                        />
+                        <Attach::Tooltip @class="clean" @animation="scale" @placement="top">
+                            <InputInfo @text={{this.customer.public_id}} />
+                        </Attach::Tooltip>
+                    </div>
+                    <div class="flex flex-col">
+                        <h1 class="text-gray-900 dark:text-white text-2xl">{{this.customer.name}}</h1>
+                        <div class="-mt-1">
+                            <div class="flex flex-row items-center">
+                                <span class="text-sm dark:text-blue-400 text-blue-600">{{this.customer.email}}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="flex justify-end w-1/4">
+                <Badge @status={{this.customer.public_id}} @type="info" @hideStatusDot={{true}} />
+            </div>
+        </div>
+    </Overlay::Header>
+    <Overlay::Body class="no-padding">
+        <div class="section-header-actions w-full overflow-x-scroll lg:overflow-x-auto">
+            <div class="ui-tabs mt-4">
+                <nav>
+                    {{#each this.tabs as |tab|}}
+                        <a href="javascript:;" class="ui-tab {{if (eq this.tab.slug tab.slug) 'active'}}" {{on "click" (fn this.onTabChanged tab.slug)}}>
+                            <FaIcon @icon={{tab.icon}} class="mr-1" />
+                            <span>{{tab.title}}</span>
+                        </a>
+                    {{/each}}
+                </nav>
+            </div>
+        </div>
+        <div class="tab-content tab-{{this.tab.slug}}">
+            {{component this.tab.component customer=this.customer tabOptions=this.tab options=this.tab.componentParams}}
+        </div>
+    </Overlay::Body>
+</Overlay>

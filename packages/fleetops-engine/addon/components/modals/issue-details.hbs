@@ -1,0 +1,38 @@
+<Modal::Default @modalIsOpened={{@modalIsOpened}} @options={{@options}} @confirm={{@onConfirm}} @decline={{@onDecline}}>
+    <div class="modal-body-container">
+        <div class="grid grid-cols-2 flex-col md:flex-row gap-2 mb-6">
+            <div class="field-info-container space-y-2">
+                <div class="field-name">{{t "fleet-ops.common.reporter"}}</div>
+                <div class="field-value">{{n-a @issue.reporter}}</div>
+            </div>
+            <div class="field-info-container space-y-2">
+                <div class="field-name">{{t "fleet-ops.component.modals.issue-details.assigned"}}</div>
+                <div class="field-value">{{n-a @issue.assignee}}</div>
+            </div>
+            <div class="field-info-container space-y-2">
+                <div class="field-name">{{t "fleet-ops.common.driver"}}</div>
+                <div class="field-value">{{n-a @issue.driver}}</div>
+            </div>
+            <div class="field-info-container space-y-2">
+                <div class="field-name">{{t "fleet-ops.common.vehicle"}}</div>
+                <div class="field-value">{{n-a @issue.vehicle.displayName}}</div>
+            </div>
+            <div class="field-info-container space-y-2">
+                <div class="field-name">{{t "fleet-ops.component.modals.issue-details.type"}}</div>
+                <div class="field-value">{{n-a @issue.type}}</div>
+            </div>
+            <div class="field-info-container space-y-2">
+                <div class="field-name">{{t "fleet-ops.component.modals.issue-details.category"}}</div>
+                <div class="field-value">{{n-a @issue.category}}</div>
+            </div>
+            <div class="field-info-container space-y-2">
+                <div class="field-name">{{t "fleet-ops.common.date-created"}}</div>
+                <div class="field-value">{{@issue.createdAtShort}}</div>
+            </div>
+            <div class="field-info-container space-y-2">
+                <div class="field-name">{{t "fleet-ops.common.coordinates"}}</div>
+                <div class="field-value">{{point-coordinates @issue.location}}</div>
+            </div>
+        </div>
+    </div>
+</Modal::Default>

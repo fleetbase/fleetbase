@@ -1,0 +1,212 @@
+<Overlay
+    @onLoad={{this.setOverlayContext}}
+    @onOpen={{this.onOpen}}
+    @onClose={{this.onClose}}
+    @onToggle={{this.onToggle}}
+    @position="right"
+    @noBackdrop={{true}}
+    @fullHeight={{true}}
+    @isResizeble={{or this.isResizable @isResizable}}
+    @width={{or this.width @width "570px"}}
+>
+    <Overlay::Header @hideLeftSection={{true}} @actionsWrapperClass="flex-1 flex-col py-3" class="h-auto-i min-h-[127px]">
+        <div class="flex flex-row items-center justify-between w-full mb-4">
+            <div class="flex flex-1 space-x-2">
+                {{#if this.vehicle.id}}
+                    <Button
+                        @type="default"
+                        @icon="car"
+                        @helpText={{t "fleet-ops.component.vehicle-form-panel.view-details"}}
+                        @onClick={{this.onViewDetails}}
+                        @disabled={{this.isLoading}}
+                        @permission="fleet-ops view vehicle"
+                    />
+                {{/if}}
+            </div>
+            <div class="flex flex-1 justify-end">
+                <div class="mr-2">
+                    <Button
+                        @icon={{if this.vehicle.id "save" "check"}}
+                        @type="primary"
+                        @text={{if this.vehicle.id (t "fleet-ops.component.vehicle-form-panel.save-vehicle") (t "fleet-ops.component.vehicle-form-panel.create-vehicle")}}
+                        @onClick={{perform this.save}}
+                        @isLoading={{not this.save.isIdle}}
+                        @permission={{this.savePermission}}
+                    />
+                </div>
+                <Button
+                    @type="default"
+                    @icon="times"
+                    @helpText={{if this.vehicle.id (t "fleet-ops.component.vehicle-form-panel.cancel-edit-vehicle") (t "fleet-ops.component.vehicle-form-panel.cancel-new-vehicle")}}
+                    @onClick={{this.onPressCancel}}
+                    @disabled={{this.isLoading}}
+                />
+            </div>
+        </div>
+        <div class="flex flex-row justify-between w-full">
+            <div class="flex flex-col flex-1 w-3/4">
+                <div class="flex flex-row">
+                    <div class="w-14">
+                        <div class="upload-avatar-overlay w-12 h-12 flex items-center justify-start rounded-lg">
+                            <img src={{this.vehicle.photo_url}} alt={{this.vehicle.name}} height="48" width="48" class="h-12 w-12 rounded-lg shadow-sm" />
+                            <Attach::Tooltip @class="clean" @animation="scale" @placement="top">
+                                <InputInfo @text={{t "fleet-ops.component.vehicle-form-panel.upload-photo"}} />
+                            </Attach::Tooltip>
+                            <div class="upload-avatar-button-wrapper rounded-lg">
+                                <UploadButton
+                                    @name={{t "fleet-ops.common.photos"}}
+                                    @accept="image/*"
+                                    @onFileAdded={{this.onUploadNewPhoto}}
+                                    @icon="upload"
+                                    @hideButtonText={{true}}
+                                    @labelClass="upload-avatar-label-overlay"
+                                    @permission={{this.savePermission}}
+                                    class="w-12 btn-reset"
+                                />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex flex-col">
+                        <h1 class="text-gray-900 dark:text-white text-2xl">
+                            {{#if this.vehicle.id}}
+                                {{this.vehicle.displayName}}
+                            {{else}}
+                                {{#if this.vehicle.displayName}}
+                                    {{this.vehicle.displayName}}
+                                {{else}}
+                                    <span>{{t "fleet-ops.component.vehicle-form-panel.new-vehicle"}}</span>
+                                {{/if}}
+                            {{/if}}
+                        </h1>
+                        <div class="-mt-1">
+                            {{#if this.vehicle.driver}}
+                                <div class="flex flex-row items-center">
+                                    <span class="text-sm dark:text-gray-500 text-gray-700 mr-3">{{this.vehicle.driver.name}}</span>
+                                </div>
+                            {{else}}
+                                <div class="flex flex-row items-center">
+                                    <span class="text-sm dark:text-gray-500 text-gray-700 mr-3">{{t "fleet-ops.component.vehicle-form-panel.not-assigned"}}</span>
+                                </div>
+                            {{/if}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="flex justify-end w-1/4">
+                <Badge @status={{this.vehicle.status}} />
+            </div>
+        </div>
+    </Overlay::Header>
+
+    <Overlay::Body @wrapperClass="new-service-rate-overlay-body px-4 space-y-4 pt-4">
+        {{#let (cannot this.savePermission) as |unauthorized|}}
+            <div class="flex-1 space-y-4">
+                <ContentPanel @title="Details" @open={{true}} @pad={{true}} @panelBodyClass="bg-white dark:bg-gray-800">
+                    <div class="grid grid-cols-1 gap-4 lg:grid-cols-2 lg:gap-2">
+                        <InputGroup @name={{t "fleet-ops.common.internal-id"}}>
+                            <Input @value={{this.vehicle.internal_id}} @type="text" class="w-full form-input" placeholder={{t "fleet-ops.common.internal-id"}} disabled={{unauthorized}} />
+                        </InputGroup>
+
+                        <InputGroup @name={{t "fleet-ops.component.vehicle-form-panel.plate-number"}}>
+                            <Input
+                                @value={{this.vehicle.plate_number}}
+                                @type="text"
+                                class="w-full form-input"
+                                placeholder={{t "fleet-ops.component.vehicle-form-panel.plate-number"}}
+                                disabled={{unauthorized}}
+                            />
+                        </InputGroup>
+
+                        <InputGroup @name={{t "fleet-ops.component.vehicle-form-panel.vin-number"}}>
+                            <Input
+                                @value={{this.vehicle.vin}}
+                                @type="text"
+                                class="w-full form-input"
+                                placeholder={{t "fleet-ops.component.vehicle-form-panel.vin-number"}}
+                                disabled={{unauthorized}}
+                            />
+                        </InputGroup>
+
+                        <InputGroup @name={{t "fleet-ops.component.vehicle-form-panel.make"}}>
+                            <Input
+                                @value={{this.vehicle.make}}
+                                @type="text"
+                                class="w-full form-input"
+                                placeholder={{t "fleet-ops.component.vehicle-form-panel.vehicle-make"}}
+                                disabled={{unauthorized}}
+                            />
+                        </InputGroup>
+
+                        <InputGroup @name={{t "fleet-ops.component.vehicle-form-panel.model"}}>
+                            <Input
+                                @value={{this.vehicle.model}}
+                                @type="text"
+                                class="w-full form-input"
+                                placeholder={{t "fleet-ops.component.vehicle-form-panel.vehicle-model"}}
+                                disabled={{unauthorized}}
+                            />
+                        </InputGroup>
+
+                        <InputGroup @name={{t "fleet-ops.component.vehicle-form-panel.year"}}>
+                            <Input
+                                @value={{this.vehicle.year}}
+                                @type="text"
+                                class="w-full form-input"
+                                placeholder={{t "fleet-ops.component.vehicle-form-panel.vehicle-year"}}
+                                disabled={{unauthorized}}
+                            />
+                        </InputGroup>
+
+                        <InputGroup @name={{t "fleet-ops.component.vehicle-form-panel.driver-assigned"}}>
+                            <ModelSelect
+                                @modelName="driver"
+                                @selectedModel={{this.vehicle.driver}}
+                                @placeholder={{t "fleet-ops.component.vehicle-form-panel.select-driver"}}
+                                @triggerClass="form-select form-input"
+                                @infiniteScroll={{false}}
+                                @renderInPlace={{true}}
+                                @onChange={{fn (mut this.vehicle.driver)}}
+                                @permission="fleet-ops assign-driver-for vehicle"
+                                as |model|
+                            >
+                                {{model.name}}
+                            </ModelSelect>
+                        </InputGroup>
+
+                        <InputGroup @name={{t "fleet-ops.common.status"}}>
+                            <div class="fleetbase-model-select fleetbase-power-select ember-model-select">
+                                <PowerSelect
+                                    @options={{this.vehicleStatusOptions}}
+                                    @selected={{this.vehicle.status}}
+                                    @onChange={{fn (mut this.vehicle.status)}}
+                                    @placeholder={{t "fleet-ops.common.status"}}
+                                    @triggerClass="form-select form-input"
+                                    @disabled={{unauthorized}}
+                                    as |status|
+                                >
+                                    {{smart-humanize status}}
+                                </PowerSelect>
+                            </div>
+                        </InputGroup>
+                        <InputGroup @name={{t "fleet-ops.common.coordinates"}} @wrapperClass="col-span-2">
+                            <CoordinatesInput
+                                @value={{this.vehicle.location}}
+                                @onChange={{this.onCoordinatesChanged}}
+                                @onGeocode={{this.onAutocomplete}}
+                                @onUpdatedFromMap={{this.onCoordinatesChanged}}
+                                @onInit={{this.setCoordinatesInput}}
+                                @disabled={{unauthorized}}
+                            />
+                        </InputGroup>
+                    </div>
+                </ContentPanel>
+
+                <ContentPanel @title={{t "fleet-ops.component.avatar-picker.avatar"}} @open={{true}} @pad={{true}} @panelBodyClass="bg-white dark:bg-gray-800">
+                    <AvatarPicker @model={{this.vehicle}} @defaultAvatar={{config "defaultValues.vehicleAvatar"}} @disabled={{unauthorized}} />
+                </ContentPanel>
+            </div>
+        {{/let}}
+
+        <Spacer @height="300px" />
+    </Overlay::Body>
+</Overlay>

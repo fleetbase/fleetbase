@@ -1,0 +1,128 @@
+<div class="activity-logic-builder rounded-lg bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700" ...attributes>
+    <div class="activity-logic-builder-actions flex flex-row items-center justify-between px-4 py-2">
+        <div>
+            <div class="text-sm font-semibold">{{t "fleet-ops.component.activity-logic-builder.activity-logic"}}</div>
+            <Attach::Tooltip @class="clean" @animation="scale" @placement="top">
+                <InputInfo @text={{t "fleet-ops.component.activity-logic-builder.activity-logic-help-text"}} />
+            </Attach::Tooltip>
+        </div>
+        <div>
+            <Button
+                @type="magic"
+                @icon="plus"
+                @text={{t "fleet-ops.component.activity-logic-builder.add-logic"}}
+                @onClick={{this.addLogic}}
+                @helpText={{t "fleet-ops.component.activity-logic-builder.activity-logic-add-logic-help-text"}}
+            />
+        </div>
+    </div>
+    <div class="activity-logic-builder-logic-container">
+        {{#each this.logic as |logic index|}}
+            <div class="activity-logic-builder-logic">
+                <div class="activity-logic-builder-condition-type-container space-x-2">
+                    <DropdownButton
+                        @text={{smart-humanize logic.type}}
+                        @buttonClass="activity-logic-builder-condition-type flex-row-reverse justify-between"
+                        @icon="caret-down"
+                        @iconClass="mr-0i"
+                        @size="sm"
+                        @iconPrefix="fas"
+                        @triggerClass="hidden md:flex"
+                        @helpText={{t "fleet-ops.component.activity-logic-builder.activity-logic-select-logic-type-help-text"}}
+                        as |dd|
+                    >
+                        <div class="next-dd-menu mt-1 mx-0" aria-labelledby="user-menu">
+                            <div class="p-1 overflow-y-scroll h-40">
+                                {{#each this.types as |type|}}
+                                    <a href="javascript:;" class="next-dd-item" {{on "click" (dropdown-fn dd this.selectLogicType type index)}}>
+                                        <div class="py-0.5">
+                                            <div class="text-sm font-semibold mb-0.5">{{smart-humanize type.type}}</div>
+                                            <div class="text-xs">{{type.description}}</div>
+                                        </div>
+                                    </a>
+                                {{/each}}
+                            </div>
+                        </div>
+                    </DropdownButton>
+                    <Button
+                        class="activity-logic-builder-add-condition"
+                        @type="default"
+                        @size="xs"
+                        @icon="plus"
+                        @text="Add condition"
+                        @onClick={{fn this.addCondition index}}
+                        @helpText={{t "fleet-ops.component.activity-logic-builder.activity-logic-add-condition-help-text"}}
+                    />
+                    <Button class="activity-logic-builder-add-condition" @type="danger" @size="xs" @icon="trash" @onClick={{fn this.removeLogic index}} />
+                </div>
+                <div class="activity-logic-builder-conditions">
+                    {{#if logic.type}}
+                        <div class="space-y-2">
+                            {{#each logic.conditions as |condition conditionIndex|}}
+                                <div class="flex flex-row">
+                                    <div class="activity-logic-builder-condition">
+                                        <div class="activity-logic-builder-condition-field">
+                                            <Input
+                                                placeholder={{t "fleet-ops.component.activity-logic-builder.field"}}
+                                                class="form-input"
+                                                @value={{condition.field}}
+                                                {{on "blur" this.trackConditionInputChanges}}
+                                            />
+                                        </div>
+                                        <div class="activity-logic-builder-condition-operator">
+                                            {{#let (get this.operators condition.operator) as |operatorMap|}}
+                                                <DropdownButton
+                                                    @text={{operatorMap.symbol}}
+                                                    @textClass="text-xs"
+                                                    @buttonClass="flex-row-reverse justify-between"
+                                                    @icon="caret-down"
+                                                    @iconClass="mr-0i"
+                                                    @size="sm"
+                                                    @iconPrefix="fas"
+                                                    @triggerClass="hidden md:flex"
+                                                    as |dd|
+                                                >
+                                                    <div class="next-dd-menu mt-1 mx-0" aria-labelledby="user-menu">
+                                                        <div class="p-1">
+                                                            {{#each-in this.operators as |key|}}
+                                                                <a
+                                                                    href="javascript:;"
+                                                                    class="next-dd-item"
+                                                                    {{on "click" (dropdown-fn dd this.selectConditionOperator index conditionIndex key)}}
+                                                                >
+                                                                    <div class="flex-1 flex flex-row items-center">
+                                                                        <span>{{smart-humanize key}}</span>
+                                                                    </div>
+                                                                    <div>
+                                                                        {{#if (eq key condition.operator)}}
+                                                                            <FaIcon @icon="check" class="text-green-500" />
+                                                                        {{/if}}
+                                                                    </div>
+                                                                </a>
+                                                            {{/each-in}}
+                                                        </div>
+                                                    </div>
+                                                </DropdownButton>
+                                            {{/let}}
+                                        </div>
+                                        <div class="activity-logic-builder-condition-value">
+                                            <Input
+                                                placeholder={{t "fleet-ops.component.activity-logic-builder.value"}}
+                                                class="form-input"
+                                                @value={{condition.value}}
+                                                {{on "blur" this.trackConditionInputChanges}}
+                                            />
+                                        </div>
+                                    </div>
+                                    <div class="px-1">
+                                        <Button @type="danger" @icon="trash" @onClick={{fn this.removeCondition index conditionIndex}} />
+                                    </div>
+                                </div>
+                            {{/each}}
+                        </div>
+                    {{/if}}
+                </div>
+            </div>
+        {{/each}}
+    </div>
+</div>

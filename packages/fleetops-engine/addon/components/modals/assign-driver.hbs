@@ -1,0 +1,33 @@
+<Modal::Default @modalIsOpened={{@modalIsOpened}} @options={{@options}} @confirm={{@onConfirm}} @decline={{@onDecline}}>
+    <div class="modal-body-container">
+        <InputGroup @name={{t "fleet-ops.component.modals.assign-driver.select-driver"}}>
+            <ModelSelect
+                @modelName="driver"
+                @selectedModel={{@options.order.driver_assigned}}
+                @placeholder={{t "fleet-ops.component.modals.assign-driver.select-assign"}}
+                @triggerClass="form-select form-input"
+                @infiniteScroll={{false}}
+                @renderInPlace={{true}}
+                @onChange={{fn (mut @options.order.driver_assigned)}}
+                as |model|
+            >
+                <div class="flex items-center">
+                    <div class="w-7">
+                        <FaIcon @icon="id-card-alt" />
+                    </div>
+                    <div class="flex-1 flex flex-row truncate">
+                        <span class="uppercase mr-2">{{model.name}}</span>
+                        <span class="uppercase">{{model.phone}}</span>
+                    </div>
+                    {{#if @options.order.facilitator}}
+                        <div class="px-1 ml-2 leading-5 bg-green-400 rounded shadow">
+                            <span class="text-xs text-green-900">
+                                {{@options.order.facilitator.name}}
+                            </span>
+                        </div>
+                    {{/if}}
+                </div>
+            </ModelSelect>
+        </InputGroup>
+    </div>
+</Modal::Default>

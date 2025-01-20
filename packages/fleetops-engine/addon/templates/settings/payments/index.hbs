@@ -1,0 +1,69 @@
+<Layout::Section::Header @title={{t "fleet-ops.settings.payments.payments"}}>
+    {{#if this.hasStripeConnectAccount}}
+        <div class="flex flex-row items-center space-x-2">
+            {{#each-in @model.amount_totals as |currency total|}}
+                <div class="flex flex-row space-x-1 px-2 py-0.5 border border-gray-200 dark:border-gray-700 rounded-md bg-white dark:bg-gray-800">
+                    <span class="text-sm text-black dark:text-white font-bold">Total {{currency}}:</span>
+                    <span class="text-sm text-black dark:text-white">{{format-currency total currency}}</span>
+                </div>
+            {{/each-in}}
+        </div>
+    {{/if}}
+</Layout::Section::Header>
+
+<Layout::Section::Body class="overflow-y-scroll h-full">
+    {{#if this.lookupStripeConnectAccount.isRunning}}
+        <div class="flex items-center justify-center flex-1 p-4">
+            <Spinner @loadingMessage="Loading payment settings..." @loadingMessageClass="ml-2 text-black dark:text-white" @wrapperClass="flex flex-row items-center" />
+        </div>
+    {{else}}
+        {{#if this.hasStripeConnectAccount}}
+            <Table
+                @rows={{@model.data}}
+                @columns={{this.columns}}
+                @selectable={{false}}
+                @canSelectAll={{false}}
+                @onSetup={{fn (mut this.table)}}
+                @pagination={{true}}
+                @paginationMeta={{@model.meta}}
+                @page={{this.page}}
+                @onPageChange={{fn (mut this.page)}}
+            />
+        {{else}}
+            <div class="container">
+                <div class="max-w-3xl mx-auto mt-4">
+                    <div class="content">
+                        <div class="flex flex-col items-center justify-center">
+                            <InfoBlock @type="info" @icon="triangle-exclamation" @iconWrapperClass="leading-5" class="w-full">
+                                <h2 id="title" class="text-base">
+                                    Your account is not setup to accept payments yet.
+                                </h2>
+                                <span id="subtitle">
+                                    To accept and process payments, you must complete the onboard process via Stripe.
+                                </span>
+                                {{#if this.isStripeEnabled}}
+                                    <Button
+                                        @type="primary"
+                                        @size="lg"
+                                        @icon="flag-checkered"
+                                        @text="Start payments onboard"
+                                        @onClick={{transition-to "settings.payments.onboard"}}
+                                        @permission="fleet-ops onboard payments"
+                                        @wrapperClass="mt-4 mb-1"
+                                    />
+                                {{/if}}
+                            </InfoBlock>
+                            {{#unless this.isStripeEnabled}}
+                                <InfoBlock
+                                    @type="warning"
+                                    @text="This system is unable to acceot or process payments at this time, contact the system administrator to configure payments."
+                                    class="mt-4"
+                                />
+                            {{/unless}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {{/if}}
+    {{/if}}
+</Layout::Section::Body>
