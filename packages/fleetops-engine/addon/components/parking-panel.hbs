@@ -9,11 +9,11 @@
     @isResizable={{or this.isResizable @isResizable}}
     @width={{or this.width @width "570px"}}
 >
-    <Overlay::Header @title={{t "fleet-ops.component.fuel-report-panel.title"}} @status={{this.fuelReport.public_id}} @hideStatusDot={{true}} @createdAt={{this.fuelReport.createdAt}}>
+    <Overlay::Header @title={{t "fleet-ops.component.parking-report-panel.title"}} @status={{this.fuelReport.public_id}} @hideStatusDot={{true}} @createdAt={{this.fuelReport.createdAt}}>
         <Button
             @type="default"
             @icon="pen"
-            @helpText={{t "fleet-ops.component.fuel-report-panel.edit-button"}}
+            @helpText={{t "fleet-ops.component.parking-report-panel.edit-button"}}
             @onClick={{this.onEdit}}
             @wrapperClass="mr-2"
             @permission="fleet-ops update fuel-report"
@@ -21,7 +21,7 @@
         <Button
             @type="default"
             @icon="times"
-            @helpText={{if this.fuelReport.id (t "fleet-ops.component.fuel-report-panel.cancel-edit-fuel-report") (t "fleet-ops.component.fuel-report-panel.cancel-new-fuel-report")}}
+            @helpText={{if this.fuelReport.id (t "fleet-ops.component.parking-report-panel.cancel-edit-parking-report") (t "fleet-ops.component.parking-report-panel.cancel-new-parking-report")}}
             @onClick={{this.onPressCancel}}
         />
     </Overlay::Header>

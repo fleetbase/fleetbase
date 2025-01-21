@@ -398,6 +398,8 @@ layout:
         keyboard-shortcuts: Mostrar atajos de teclado
         changelog: Registro de cambios
 fleet-ops:
+  iam: Gestión de acceso de usuarios
+  fleet-ops: Flota Sí Flujo
   extension-name: Operaciones de flota
   common:
     active-manpower: Fuerza laboral activa
@@ -766,6 +768,7 @@ fleet-ops:
         title: Crear un nuevo pedido
         settings: Ajustes
         order-config: Configuración del pedido
+        parking: Informes de estacionamiento
     live-map-drawer:
       driver-listing:
         location: Ubicación
@@ -1369,6 +1372,19 @@ fleet-ops:
       volume: Volumen
       select-volume-text: Seleccione la unidad de medida y el volumen de combustible
         a reportar.
+    parking-form-panel:
+      success-message: Informe de estacionamiento guardado con éxito.
+      parking-report: Nuevo informe de estacionamiento
+      save-parking-report: Guardar informe de estacionamiento
+      create-parking-report: Crear informe de estacionamiento
+      view-details: Ver detalles del informe de estacionamiento
+      cancel-edit-parking-report: Cancelar edición del informe de estacionamiento
+      cancel-new-parking-report: Cancelar nuevo informe de estacionamiento
+      select-reporter: Seleccionar reportero
+      select-driver: Seleccionar conductor
+      select-vehicle: Seleccionar vehículo
+      select-parking-report: Seleccionar estado del informe de estacionamiento
+      cost: Costo
     fuel-report-panel:
       title: Detalles del informe de combustible
       edit-button: Cambiar proporción de combustible
@@ -1376,6 +1392,11 @@ fleet-ops:
       cancel-new-fuel-report: Cancelar nuevo informe de combustible
       details:
         fuel: Combustible/Volumen
+    parking-report-panel:
+      title: Detalles del informe de estacionamiento
+      edit-button: Editar informe de estacionamiento
+      cancel-edit-parking-report: Cancelar edición del informe de estacionamiento
+      cancel-new-parking-report: Cancelar nuevo informe de estacionamiento
     global-search:
       search: Buscar por palabra clave...
     integrated-order-details:
@@ -1769,6 +1790,16 @@ fleet-ops:
             Haga clic en continuar para continuar.
         title: Informes de combustible
         delete-fuel-reports: Eliminar informes de combustible
+    parking:
+      index:
+        view: Ver detalles
+        edit-parking-report: Editar informe de estacionamiento
+        delete: Eliminar informe de estacionamiento
+        delete-button: Eliminar informes de estacionamiento
+        edit:
+          body: Los cambios no guardados en este informe de estacionamiento se perderán. Haz clic en continuar para proceder.
+        title: Informes de estacionamiento
+        delete-parking-report: Eliminar informes de estacionamiento
     issues:
       index:
         view: Ver detalles
@@ -2410,7 +2441,7 @@ iam:
   application:
     access-management: Gestión de acceso
   home:
-    identity-access-management: Gestión de identidad y acceso.
+    identity-access-management: Gestión de acceso de usuarios
 registry-bridge:
   extension-name: Puente de Registro
   common:

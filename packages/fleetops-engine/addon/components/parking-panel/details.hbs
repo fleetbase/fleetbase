@@ -30,5 +30,35 @@
                 <div class="field-value">{{point-coordinates @fuelReport.location}}</div>
             </div>
         </div>
+        <div class="field-info-container content-start space-y-2">
+            {{#if @fuelReport.files}}
+                <div class="header" style="font-weight: bold; font-size: 1.2rem; margin-bottom: 0.5rem;">Documents</div>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-4" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem;">
+                    {{#each @fuelReport.files as |file|}}
+                        <div class="file-item" style="text-align: center; padding: 0.5rem; border: 1px solid #ddd; border-radius: 4px; background-color: #f9f9f9;">
+                            <!-- File icon or image based on content type -->
+                            {{#if (or (eq file.content_type "image/jpg") (eq file.content_type "image/jpeg") (eq file.content_type "image/png"))}}
+                                <!-- Display the image if content type is image/jpg, image/jpeg, or image/png -->
+                                <img src="{{file.url}}" alt="{{file.original_filename}}" style="max-width: 120px; height: auto; margin-bottom: 0.5rem;">
+                            {{else}}
+                                <!-- Display file icon for other content types -->
+                                <div style="font-size: 2rem; color: #888; margin-bottom: 0.5rem; max-width: 120px">📄</div>
+                            {{/if}}
+
+                            <!-- File name as a clickable link -->
+                            <a href="{{file.url}}" target="_blank" style="display: block; text-decoration: underline; color: #007bff; cursor: pointer; margin-top: 0.5rem; bottom: 0; max-width: 100%; word-wrap: break-word; word-break: break-word; text-align: center;">
+                                {{file.original_filename}}
+                            </a>
+                        </div>
+                    {{/each}}
+                </div>
+            {{!-- <div class="header">Documents</div>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-4">
+                {{#each @fuelReport.files as |file|}}
+                    <File @file={{file}} @onRemoveFile={{this.removeFile}}/>
+                {{/each}}
+            </div> --}}
+            {{/if}}
+        </div>
     </ContentPanel>
 </div>

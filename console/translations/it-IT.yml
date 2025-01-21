@@ -1,5 +1,5 @@
 app:
-  name: Fleetbase
+  name: flotta sì
 terms:
   new: Nuovo
   sort: Ordina
@@ -75,6 +75,37 @@ common:
   permissions-required-for-changes: Non hai i permessi necessari per apportare modifiche.
   push-notifications: Notifiche push
   role: Ruolo
+  report-type: Tipo di rapporto
+  payment-method: Metodo di pagamento
+  select-payment-method: Seleziona il metodo di pagamento
+  select-report-type: Seleziona Tipo di rapporto
+  card-type: Tipo di carta
+validation:
+  required:
+    report_type: Il campo Tipo di report è obbligatorio
+    payment_method: Il metodo di pagamento è obbligatorio
+  form_invalid: "Compila i campi obbligatori tipo di report e metodo di pagamento."
+statuses:
+    draft: "Bozza"
+    pending-approval: "In attesa di approvazione"
+    approved: "Approvato"
+    rejected: "Rifiutato"
+    revised: "Rivisto"
+    submitted: "Inviato"
+    in-review: "In revisione"
+    confirmed: "Confermato"
+    processed: "Elaborato"
+    archived: "Archiviato"
+    cancelled: "Annullato"
+    pending: "In attesa"
+fuelReportTypes:
+    Fuel: "Carburante"
+    Parking: "Parcheggio"
+    Toll: "Pedaggio"
+paymentOptions:
+    Card: "Carta"
+    Other: "Altro"
+
 component:
   file:
     dropdown-label: Azioni file
@@ -215,6 +246,8 @@ auth:
       submit-button: Reimposta la password
       back-button: Indietro
 fleet-ops:
+  iam: Gestione degli accessi degli utenti
+  fleet-ops: Flotta Sì Flusso
   extension-name: Fleet-Ops
   common:
     active-manpower: Manodopera Attiva
@@ -535,6 +568,7 @@ fleet-ops:
         title: Crea nuovo ordine
         settings: Impostazioni
         order-config: Configurazione Ordine
+        parking: Rapporti di parcheggio
     live-map-drawer:
       driver-listing:
         location: Posizione
@@ -1091,6 +1125,19 @@ fleet-ops:
       cost: Costo
       volume: Volume
       select-volume-text: Seleziona l'unità di misura e il volume del carburante da riportare.
+    parking-form-panel:
+      success-message: Rapporto di parcheggio salvato con successo.
+      parking-report: Nuovo rapporto di parcheggio
+      save-parking-report: Salva rapporto di parcheggio
+      create-parking-report: Crea rapporto di parcheggio
+      view-details: Visualizza i dettagli del rapporto di parcheggio
+      cancel-edit-parking-report: Annulla modifica del rapporto di parcheggio
+      cancel-new-parking-report: Annulla nuovo rapporto di parcheggio
+      select-reporter: Seleziona il reporter
+      select-driver: Seleziona il conducente
+      select-vehicle: Seleziona il veicolo
+      select-parking-report: Seleziona lo stato del rapporto di parcheggio
+      cost: Costo
     fuel-report-panel:
       title: Dettagli rapporto carburante
       edit-button: Modifica rapporto carburante
@@ -1098,6 +1145,11 @@ fleet-ops:
       cancel-new-fuel-report: Annulla nuovo rapporto carburante
       details:
         fuel: Carburante/Volume
+    parking-report-panel:
+      title: Dettagli del rapporto di parcheggio
+      edit-button: Modifica rapporto di parcheggio
+      cancel-edit-parking-report: Annulla modifica del rapporto di parcheggio
+      cancel-new-parking-report: Annulla nuovo rapporto di parcheggio
     global-search:
       search: Cerca per parola chiave...
     integrated-order-details:
@@ -1457,6 +1509,16 @@ fleet-ops:
           body: Le modifiche non salvate a questo rapporto carburante verranno perse. Clicca su continua per procedere.
         title: Rapporti carburante
         delete-fuel-reports: Elimina rapporti carburante
+    parking:
+      index:
+        view: Visualizza dettagli
+        edit-parking-report: Modifica rapporto di parcheggio
+        delete: Elimina rapporto di parcheggio
+        delete-button: Elimina rapporti di parcheggio
+        edit:
+          body: Le modifiche non salvate a questo rapporto di parcheggio saranno perse. Clicca su continua per procedere.
+        title: Rapporti di parcheggio
+        delete-parking-report: Elimina rapporti di parcheggio
     issues:
       index:
         view: Visualizza dettagli
@@ -1998,7 +2060,7 @@ iam:
   application:
     access-management: Gestione Accessi
   home:
-    identity-access-management: Gestione Identità e Accessi
+    identity-access-management: Gestione degli accessi degli utenti
 registry-bridge:
   extension-name: Ponte Registro
   common:

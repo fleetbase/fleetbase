@@ -871,6 +871,19 @@ fleet-ops:
       cost: Cost
       volume: Volume
       select-volume-text: Select the metric unit and volume of fuel to report.
+    parking-form-panel:
+      success-message: Parking report saved successfully.
+      parking-report: New Parking Report
+      save-parking-report: Save Parking Report
+      create-parking-report: Create Parking Report
+      view-details: View parking report details
+      cancel-edit-parking-report: Cancel edit parking report
+      cancel-new-parking-report: Cancel new parking report
+      select-reporter: Select Reporter
+      select-driver: Select Driver
+      select-vehicle: Select Vehicle
+      select-parking-report: Select parking-report status
+      cost: Cost
     fuel-report-panel:
       title: Fuel Report Details
       edit-button: Edit fuel report
@@ -878,6 +891,11 @@ fleet-ops:
       cancel-new-fuel-report: Cancel new fuel report
       details: 
         fuel: Fuel/ Volume
+    parking-report-panel:
+      title: Parking Report Details
+      edit-button: Edit parking report
+      cancel-edit-fuel-report: Cancel edit parking report
+      cancel-new-fuel-report: Cancel new parking report
     global-search:
       search: Search by keyword...
     integrated-order-details:

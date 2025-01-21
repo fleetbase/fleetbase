@@ -1,5 +1,5 @@
 app:
-  name: Fleetbase
+  name: flotte oui
 terms:
   new: Nouveau
   sort: Trier
@@ -75,6 +75,36 @@ common:
   permissions-required-for-changes: Vous n'avez pas les autorisations nécessaires pour effectuer des modifications.
   push-notifications: Notifications push
   role: Rôle
+  report-type: Type de rapport
+  payment-method: Mode de paiement
+  select-payment-method: Sélectionnez le mode de paiement
+  select-report-type: Sélectionnez le type de rapport
+  card-type: Type de carte
+validation:
+  required:
+    report_type: Le champ Type de rapport est obligatoire
+    payment_method: Le mode de paiement est requis
+  form_invalid: "Veuillez remplir les champs obligatoires type de rapport et mode de paiement."
+statuses:
+    draft: "Brouillon"
+    pending-approval: "En attente d'approbation"
+    approved: "Approuvé"
+    rejected: "Rejeté"
+    revised: "Révisé"
+    submitted: "Soumis"
+    in-review: "En révision"
+    confirmed: "Confirmé"
+    processed: "Traité"
+    archived: "Archivé"
+    cancelled: "Annulé"
+    pending: "En attente"
+fuelReportTypes:
+    Fuel: "Carburant"
+    Parking: "Stationnement"
+    Toll: "Péage"
+paymentOptions:
+    Card: "Carte"
+    Other: "Autre"
 component:
   file:
     dropdown-label: Actions sur le fichier
@@ -364,6 +394,8 @@ layout:
         keyboard-shortcuts: Afficher les raccourcis clavier
         changelog: Journal des modifications
 fleet-ops:
+  iam: Gestion des accès utilisateurs
+  fleet-ops: Flotte Oui flotte
   extension-name: Opérations de Flotte
   common:
     active-manpower: Main-d'œuvre Active
@@ -685,6 +717,7 @@ fleet-ops:
         title: Créer une nouvelle commande
         settings: Paramètres
         order-config: Configuration de commande
+        parking: Rapports de stationnement
     live-map-drawer:
       driver-listing:
         location: Localisation
@@ -1241,6 +1274,19 @@ fleet-ops:
       cost: Coût
       volume: Volume
       select-volume-text: Sélectionner l'unité de mesure et le volume du carburant à rapporter.
+    parking-form-panel:
+      success-message: Rapport de stationnement enregistré avec succès.
+      parking-report: Nouveau rapport de stationnement
+      save-parking-report: Enregistrer le rapport de stationnement
+      create-parking-report: Créer un rapport de stationnement
+      view-details: Voir les détails du rapport de stationnement
+      cancel-edit-parking-report: Annuler la modification du rapport de stationnement
+      cancel-new-parking-report: Annuler le nouveau rapport de stationnement
+      select-reporter: Sélectionner un rapporteur
+      select-driver: Sélectionner un conducteur
+      select-vehicle: Sélectionner un véhicule
+      select-parking-report: Sélectionner le statut du rapport de stationnement
+      cost: Coût
     fuel-report-panel:
       title: Détails du rapport de carburant
       edit-button: Modifier le rapport de carburant
@@ -1248,6 +1294,11 @@ fleet-ops:
       cancel-new-fuel-report: Annuler le nouveau rapport de carburant
       details:
         fuel: Carburant/Volume
+    parking-report-panel:
+      title: Détails du rapport de stationnement
+      edit-button: Modifier le rapport de stationnement
+      cancel-edit-parking-report: Annuler la modification du rapport de stationnement
+      cancel-new-parking-report: Annuler le nouveau rapport de stationnement
     global-search:
       search: Rechercher par mot-clé...
     integrated-order-details:
@@ -1608,6 +1659,16 @@ fleet-ops:
           body: Les modifications non enregistrées de ce rapport de carburant seront perdues. Cliquez sur continuer pour procéder.
         title: Rapports de carburant
         delete-fuel-reports: Supprimer les rapports de carburant
+    parking:
+      index:
+        view: Voir les détails
+        edit-parking-report: Modifier le rapport de stationnement
+        delete: Supprimer le rapport de stationnement
+        delete-button: Supprimer les rapports de stationnement
+        edit:
+          body: Les modifications non enregistrées de ce rapport de stationnement seront perdues. Cliquez sur continuer pour procéder.
+        title: Rapports de stationnement
+        delete-parking-report: Supprimer les rapports de stationnement
     issues:
       index:
         view: Voir les détails
@@ -2149,7 +2210,7 @@ iam:
   application:
       access-management: Gestion des accès
   home:
-      identity-access-management: Gestion des identités et des accès
+      identity-access-management: Gestion des accès utilisateurs
 registry-bridge:
   extension-name: Pont de Registre
   common:

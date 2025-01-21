@@ -310,6 +310,7 @@ fleet-ops:
         title: Tạo đơn hàng mới
         settings: Cài đặt
         order-config: Cấu hình Đơn hàng
+        parking: Báo cáo đỗ xe
     live-map-drawer:
       driver-listing:
         location: Vị trí
@@ -843,6 +844,19 @@ fleet-ops:
       cost: Chi phí
       volume: Khối lượng
       select-volume-text: Chọn đơn vị đo lường và khối lượng của nhiên liệu để báo cáo.
+    parking-form-panel:
+      success-message: Báo cáo đỗ xe đã được lưu thành công.
+      parking-report: Báo cáo đỗ xe mới
+      save-parking-report: Lưu báo cáo đỗ xe
+      create-parking-report: Tạo báo cáo đỗ xe
+      view-details: Xem chi tiết báo cáo đỗ xe
+      cancel-edit-parking-report: Hủy chỉnh sửa báo cáo đỗ xe
+      cancel-new-parking-report: Hủy báo cáo đỗ xe mới
+      select-reporter: Chọn người báo cáo
+      select-driver: Chọn tài xế
+      select-vehicle: Chọn phương tiện
+      select-parking-report: Chọn trạng thái báo cáo đỗ xe
+      cost: Chi phí
     fuel-report-panel:
       title: Chi tiết Báo cáo Nhiên liệu
       edit-button: Chỉnh sửa báo cáo nhiên liệu
@@ -850,6 +864,11 @@ fleet-ops:
       cancel-new-fuel-report: Hủy báo cáo nhiên liệu mới
       details: 
         fuel: Nhiên liệu/ Khối lượng
+    parking-report-panel:
+      title: Chi tiết báo cáo đỗ xe
+      edit-button: Chỉnh sửa báo cáo đỗ xe
+      cancel-edit-parking-report: Hủy chỉnh sửa báo cáo đỗ xe
+      cancel-new-parking-report: Hủy báo cáo đỗ xe mới
     global-search:
       search: Tìm kiếm theo từ khóa...
     integrated-order-details:
@@ -1194,6 +1213,16 @@ fleet-ops:
           body: Các thay đổi chưa được lưu cho báo cáo nhiên liệu này sẽ bị mất. Nhấp vào tiếp tục để tiếp tục.
         title: Báo Cáo Nhiên Liệu
         delete-fuel-reports: Xóa Báo Cáo Nhiên Liệu
+    parking:
+      index:
+        view: Xem chi tiết
+        edit-parking-report: Chỉnh sửa báo cáo đỗ xe
+        delete: Xóa báo cáo đỗ xe
+        delete-button: Xóa báo cáo đỗ xe
+        edit:
+          body: Những thay đổi chưa lưu trong báo cáo đỗ xe này sẽ bị mất. Nhấn tiếp tục để tiếp tục.
+        title: Báo cáo đỗ xe
+        delete-parking-report: Xóa báo cáo đỗ xe
     issues:
       index:
         view: Xem Chi Tiết

@@ -7,6 +7,7 @@ import ParkingPanelDetailsComponent from './parking-panel/details';
 import contextComponentCallback from '@fleetbase/ember-core/utils/context-component-callback';
 import applyContextComponentArguments from '@fleetbase/ember-core/utils/apply-context-component-arguments';
 import findActiveTab from '../utils/find-active-tab';
+import ENV from '@fleetbase/console/config/environment';
 
 export default class ParkingPanelComponent extends Component {
     /**
@@ -145,4 +146,57 @@ export default class ParkingPanelComponent extends Component {
     @action onPressCancel() {
         return contextComponentCallback(this, 'onPressCancel', this.fuelReport);
     }
+
+    /**
+     * Action triggered when a file is removed.
+     *
+     * @param {File} file - The file to be removed.
+     * @returns {Promise} - A promise representing the file destruction operation.
+     */
+    @action 
+        async removeFile(file) {
+            if (!confirm(`Are you sure you want to delete the file "${file.original_filename}"?`)) {
+                return;
+            }
+           
+            this.fuelReport.files.removeObject(file);
+            
+            try {
+                const apiUrl = `${ENV.API_HOST}/v1/files/${file.public_id}`;
+                const authToken = this.session.data?.authenticated?.token; // Safely access nested properties
+    
+                if (!authToken) {
+                    throw new Error('Authentication token not found.');
+                }
+    
+                const response = await fetch(apiUrl, {
+                    method: 'DELETE',
+                    headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${authToken}`, // Include auth header if required
+                    },
+                });
+    
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.message || 'Failed to delete the file.');
+                }
+          
+                // Trigger a success notification
+                this.notifications.success('File deleted successfully!', {
+                    autoClear: true,
+                    clearDuration: 3000, // Duration in milliseconds
+                });
+
+                return data;
+                // Optionally, show a success notification to the user
+              } catch (error) {
+                // Revert the UI change
+                this.fuelReport.files.pushObject(file);
+                this.notifications.error('Failed to delete file. Please try again.', {
+                    autoClear: true,
+                    clearDuration: 5000,
+                });
+              }
+        }
 }

@@ -230,7 +230,7 @@ export default class ManagementParkingIndexController extends BaseController {
                     permission: 'fleet-ops view fuel-report',
                 },
                 {
-                    label: this.intl.t('fleet-ops.management.parking.index.edit-fuel'),
+                    label: this.intl.t('fleet-ops.management.parking.index.edit-parking-report'),
                     fn: this.editFuelReport,
                     permission: 'fleet-ops update fuel-report',
                 },

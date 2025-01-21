@@ -1,5 +1,5 @@
 app:
-  name: Fleetbase
+  name: الأسطول نعم
 terms:
   new: جديد
   sort: ترتيب
@@ -74,6 +74,37 @@ common:
   unauthorized-access-message: وصول غير مصرح، يجب عليك طلب الأذونات للوصول.
   permissions-required-for-changes: ليس لديك الأذونات المطلوبة لإجراء التغييرات.
   push-notifications: إشعارات الدفع
+  role: دور
+  report-type: نوع التقرير
+  payment-method: طريقة الدفع
+  select-payment-method: حدد طريقة الدفع
+  select-report-type: حدد نوع التقرير
+  card-type: نوع البطاقة
+validation:
+  required:
+    report_type: حقل نوع التقرير مطلوب
+    payment_method: طريقة الدفع مطلوبة
+  form_invalid: " الخاصة بنوع التقرير وطريقة الدف"
+statuses:
+    draft: "مسودة"
+    pending-approval: "قيد الموافقة"
+    approved: "معتمد"
+    rejected: "مرفوض"
+    revised: "منقح"
+    submitted: "مُقدّم"
+    in-review: "قيد المراجعة"
+    confirmed: "مؤكد"
+    processed: "مُعالج"
+    archived: "مؤرشف"
+    cancelled: "ملغى"
+    pending: "قيد الانتظار"
+fuelReportTypes:
+    Fuel: "وقود"
+    Parking: "مواقف سيارات"
+    Toll: "رسوم الطرق"
+paymentOptions:
+    Card: "بطاقة"
+    Other: "أخرى"
 component:
   file:
     dropdown-label: إجراءات الملف
@@ -363,6 +394,8 @@ layout:
         keyboard-shortcuts: عرض اختصارات لوحة المفاتيح
         changelog: سجل التغييرات
 fleet-ops:
+  fleet-ops: تدفق نعم الأسطول
+  iam: إدارة وصول المستخدم
   extension-name: عمليات الأسطول
   common:
     active-manpower: القوى العاملة النشطة
@@ -683,6 +716,7 @@ fleet-ops:
         title: إنشاء طلب جديد
         settings: الإعدادات
         order-config: إعداد الطلب
+        parking: تقارير مواقف السيارات
     live-map-drawer:
       driver-listing:
         location: الموقع
@@ -1239,6 +1273,19 @@ fleet-ops:
       cost: التكلفة
       volume: الحجم
       select-volume-text: اختيار وحدة القياس وحجم الوقود المراد الإبلاغ عنه.
+    parking-form-panel:
+      success-message: تم حفظ تقرير وقوف السيارات بنجاح.
+      parking-report: تقرير وقوف جديد
+      save-parking-report: حفظ تقرير وقوف السيارات
+      create-parking-report: إنشاء تقرير وقوف السيارات
+      view-details: عرض تفاصيل تقرير وقوف السيارات
+      cancel-edit-parking-report: إلغاء تعديل تقرير وقوف السيارات
+      cancel-new-parking-report: إلغاء تقرير وقوف السيارات الجديد
+      select-reporter: اختر المراسل
+      select-driver: اختر السائق
+      select-vehicle: اختر المركبة
+      select-parking-report: اختر حالة تقرير وقوف السيارات
+      cost: التكلفة
     fuel-report-panel:
       title: تفاصيل تقرير الوقود
       edit-button: تعديل تقرير الوقود
@@ -1246,6 +1293,11 @@ fleet-ops:
       cancel-new-fuel-report: إلغاء تقرير الوقود الجديد
       details:
         fuel: الوقود/الحجم
+    parking-report-panel:
+      title: تفاصيل تقرير مواقف السيارات
+      edit-button: تحرير تقرير مواقف السيارات
+      cancel-edit-parking-report: إلغاء تعديل تقرير مواقف السيارات
+      cancel-new-parking-report: إلغاء تقرير مواقف السيارات الجديد
     global-search:
       search: البحث بالكلمة المفتاحية...
     integrated-order-details:
@@ -1605,6 +1657,16 @@ fleet-ops:
           body: "سيتم فقدان التعديلات غير المحفوظة على هذا التقرير. انقر متابعة للمتابعة."
         title: "تقارير الوقود"
         delete-fuel-reports: "حذف تقارير الوقود"
+    parking:
+      index:
+        view: عرض التفاصيل
+        edit-parking-report: تعديل تقرير مواقف السيارات
+        delete: حذف تقرير مواقف السيارات
+        delete-button: حذف تقارير مواقف السيارات
+        edit:
+          body: ستفقد التغييرات غير المحفوظة في هذا التقرير. انقر على متابعة للمتابعة.
+        title: تقارير مواقف السيارات
+        delete-parking-report: حذف تقارير مواقف السيارات
     issues:
       index:
         view: "عرض التفاصيل"
@@ -2146,7 +2208,7 @@ iam:
   application:
       access-management: إدارة الوصول
   home:
-      identity-access-management: إدارة الهوية والوصول
+      identity-access-management: إدارة وصول المستخدم
 registry-bridge:
   extension-name: جسر السجل
   common:

@@ -1,5 +1,5 @@
 app:
-  name: Fleetbase
+  name: Flotte ja
 terms:
   new: Neu
   sort: Sortieren
@@ -75,6 +75,36 @@ common:
   permissions-required-for-changes: Sie haben nicht die erforderlichen Berechtigungen, um Änderungen vorzunehmen.
   push-notifications: Push-Benachrichtigungen
   role: Rolle
+  report-type: Berichtstyp
+  payment-method: Zahlungsmethode
+  select-payment-method: Wählen Sie Zahlungsmethode
+  select-report-type: Wählen Sie den Berichtstyp aus
+  card-type: Kartentyp
+validation:
+  required:
+    report_type: Das Feld „Berichtstyp“ ist erforderlich
+    payment_method: Zahlungsmethode ist erforderlich
+  form_invalid: "Bitte füllen Sie die Pflichtfelder „Berichtstyp“ und „Zahlungsmethode“ aus."
+statuses:
+    draft: "Entwurf"
+    pending-approval: "Ausstehende Genehmigung"
+    approved: "Genehmigt"
+    rejected: "Abgelehnt"
+    revised: "Überarbeitet"
+    submitted: "Eingereicht"
+    in-review: "In Überprüfung"
+    confirmed: "Bestätigt"
+    processed: "Verarbeitet"
+    archived: "Archiviert"
+    cancelled: "Abgebrochen"
+    pending: "Ausstehend"
+fuelReportTypes:
+    Fuel: "Kraftstoff"
+    Parking: "Parken"
+    Toll: "Maut"
+paymentOptions:
+    Card: "Kreditkarte"
+    Other: "Andere"
 component:
   file:
     dropdown-label: Dateiaktionen
@@ -364,6 +394,8 @@ layout:
         keyboard-shortcuts: Tastenkürzel anzeigen
         changelog: Changelog
 fleet-ops:
+  fleet-ops: Flotte Ja Fluss
+  iam: Benutzerzugriffsverwaltung
   extension-name: Flotten-Betrieb
   common:
     active-manpower: Aktive Arbeitskraft
@@ -684,6 +716,7 @@ fleet-ops:
         title: Neue Bestellung erstellen
         settings: Einstellungen
         order-config: Bestellkonfiguration
+        parking: Parkplatzberichte
     live-map-drawer:
       driver-listing:
         location: Standort
@@ -1240,6 +1273,19 @@ fleet-ops:
       cost: Kosten
       volume: Volumen
       select-volume-text: Wählen Sie die Maßeinheit und das Volumen des zu meldenden Kraftstoffs aus.
+    parking-form-panel:
+      success-message: Parkplatzbericht erfolgreich gespeichert.
+      parking-report: Neuer Parkplatzbericht
+      save-parking-report: Parkplatzbericht speichern
+      create-parking-report: Parkplatzbericht erstellen
+      view-details: Parkplatzberichtdetails anzeigen
+      cancel-edit-parking-report: Bearbeitung des Parkplatzberichts abbrechen
+      cancel-new-parking-report: Neuen Parkplatzbericht abbrechen
+      select-reporter: Reporter auswählen
+      select-driver: Fahrer auswählen
+      select-vehicle: Fahrzeug auswählen
+      select-parking-report: Parkplatzberichtstatus auswählen
+      cost: Kosten
     fuel-report-panel:
       title: Details des Kraftstoffberichts
       edit-button: Kraftstoffbericht bearbeiten
@@ -1247,6 +1293,11 @@ fleet-ops:
       cancel-new-fuel-report: Neuer Kraftstoffbericht abbrechen
       details:
         fuel: Kraftstoff/ Volumen
+    parking-report-panel:
+      title: Parkplatzbericht Details
+      edit-button: Parkplatzbericht bearbeiten
+      cancel-edit-parking-report: Bearbeitung des Parkplatzberichts abbrechen
+      cancel-new-parking-report: Neuen Parkplatzbericht abbrechen
     global-search:
       search: Suche nach Schlüsselwort...
     integrated-order-details:
@@ -1607,6 +1658,16 @@ fleet-ops:
           body: Nicht gespeicherte Änderungen an diesem Kraftstoffbericht gehen verloren. Klicken Sie auf Weiter, um fortzufahren.
         title: Kraftstoffberichte
         delete-fuel-reports: Kraftstoffberichte löschen
+    parking:
+      index:
+        view: Details anzeigen
+        edit-parking-report: Parkplatzbericht bearbeiten
+        delete: Parkplatzbericht löschen
+        delete-button: Parkplatzberichte löschen
+        edit:
+          body: Ungespeicherte Änderungen an diesem Parkplatzbericht gehen verloren. Klicken Sie auf Weiter, um fortzufahren.
+        title: Parkplatzberichte
+        delete-parking-report: Parkplatzberichte löschen
     issues:
       index:
         view: Details anzeigen
@@ -2148,7 +2209,7 @@ iam:
   application:
       access-management: Zugriffsmanagement
   home:
-      identity-access-management: Identitäts- und Zugriffsmanagement
+      identity-access-management: Benutzerzugriffsverwaltung
 registry-bridge:
   extension-name: Registry-Brücke
   common:
