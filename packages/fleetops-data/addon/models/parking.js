@@ -121,7 +121,7 @@ export default class ParkingModel extends Model {
         });
     }
 
-    oadFiles() {
+    loadFiles() {
         const owner = getOwner(this);
         const store = owner.lookup('fleet-ops:fuelreports');
 
