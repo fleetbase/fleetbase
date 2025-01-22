@@ -1,0 +1,86 @@
+<div class="mb-4">
+    <div class="flex flex-row items-stretch rounded-lg border border-gray-200 dark:border-gray-700">
+        <div class="w-48 h-full bg-white dark:bg-gray-700 rounded-l-lg">
+            {{#each this.categories as |category index|}}
+                <a
+                    href="#"
+                    class="flex flex-row px-4 py-2 border-b border-gray-200 dark:border-gray-900 hover:bg-blue-400
+                        {{if (eq this.currentCategory.type category.type) 'bg-blue-500'}}
+                        {{if (eq index 1) 'rounded-tl-lg'}}"
+                    {{on "click" (fn this.switchCategory category)}}
+                >
+                    <div class="w-6">
+                        <FaIcon @icon={{category.icon}} @size="sm" />
+                    </div>
+                    <div>{{category.name}}</div>
+                </a>
+            {{/each}}
+        </div>
+        <div class="flex-1 border-l border-gray-200 dark:border-gray-700">
+            <div class="p-4">
+                {{#if this.isUploading}}
+                    <div
+                        class="dropzone w-full rounded-lg px-4 py-8 bg-gray-50 dark:bg-gray-900 bg-opacity-25 text-gray-900 dark:text-white text-center flex flex-col items-center justify-center border-2 border-dashed border-gray-200 dark:border-indigo-500"
+                    >
+                        <div class="flex items-center justify-center py-5">
+                            <Spinner class="text-sm dar:text-gray-100" @loadingMessage={{t "fleet-ops.common.uploading"}} />
+                        </div>
+                    </div>
+                {{else}}
+                    {{#let (file-queue name="files" onFileAdded=this.queueFile accept=(join "," this.acceptedFileTypes)) as |queue|}}
+                        <FileDropzone @queue={{queue}} class="dropzone file-dropzone" as |dropzone|>
+                            {{#if dropzone.active}}
+                                {{#if dropzone.valid}}
+                                    {{t "component.dropzone.drop-to-upload"}}
+                                {{else}}
+                                    {{t "component.dropzone.invalid"}}
+                                {{/if}}
+                            {{else if queue.files.length}}
+                                <div class="my-2">
+                                    <FaIcon @icon="folder-open" class="text-indigo-500 mr-2" />
+                                    {{t "component.dropzone.files-ready-for-upload" numOfFiles=(pluralize queue.files.length (t "component.dropzone.file"))}}
+                                </div>
+                                <div class="my-2">({{queue.progress}}%)</div>
+                            {{else}}
+                                <h4 class="font-semibold">
+                                    <FaIcon @icon="folder-open" @size="lg" class="text-indigo-500 mr-2" />
+                                    {{t "component.dropzone.upload-avatar-files"}}
+                                </h4>
+                                <div>
+                                    {{#if dropzone.supported}}
+                                        <p class="text-sm my-5">{{t "component.dropzone.dropzone-supported-avatars"}}</p>
+                                    {{/if}}
+                                    <FileUpload @name="files" @for="files" @accept={{join "," this.acceptedFileTypes}} @multiple={{true}} @onFileAdded={{this.queueFile}}>
+                                        <a tabindex={{0}} class="btn btn-magic cursor-pointer ml-1">{{t "component.dropzone.or-select-button-text"}}</a>
+                                    </FileUpload>
+                                </div>
+                            {{/if}}
+                        </FileDropzone>
+                    {{/let}}
+                {{/if}}
+                <div class="space-y-4 mt-4">
+                    {{#if this.uploadQueue}}
+                        <div class="space-y-2">
+                            {{#each this.uploadQueue as |file|}}
+                                <div class="flex items-center justify-between bg-blue-100 border border-blue-800 dark:border-blue-800 py-1.5 shadow-sm rounded-lg px-4">
+                                    <div class="text-xs text-blue-900 truncate">{{truncate-filename file.name 50}}</div>
+                                    <div class="flex items-center text-sm">
+                                        <Spinner class="text-blue-900 mr-2" />
+                                        <span class="font-bold text-blue-900">{{round file.progress}}%</span>
+                                    </div>
+                                </div>
+                            {{/each}}
+                        </div>
+                    {{/if}}
+                    <div>
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-4">
+                            {{#each this.currentCategory.avatars as |file|}}
+                                <File @file={{file}} @onDelete={{this.removeFile}} />
+                            {{/each}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

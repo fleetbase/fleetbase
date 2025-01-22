@@ -1,0 +1,470 @@
+<Overlay @position="right" @noBackdrop={{true}} @width="580px" @fullHeight={{true}} @isResizable={{true}} as |overlay|>
+    <Overlay::Header @overlay={{overlay}} @title="New Order" @onPressCancel={{this.cancelOrderCreation}}>
+        <Button
+            @icon="check"
+            @type="primary"
+            @text={{if (media "isMobile") "" "Submit"}}
+            @onClick={{perform this.createOrder}}
+            @isLoading={{this.createOrder.isRunning}}
+            @permission="fleet-ops create order"
+            @disabled={{this.load.isRunning}}
+        />
+    </Overlay::Header>
+    <Overlay::Body @wrapperClass="new-order-overlay-body">
+        <ContentPanel @title={{t "fleet-ops.common.type"}} @open={{true}} @pad={{true}} @panelBodyClass="bg-white dark:bg-gray-800">
+            <div class="input-group">
+                <InputLabel @labelText={{t "fleet-ops.operations.orders.index.new.order-type"}} @helpText="Select the type of order you want to create." />
+                <Select
+                    @value={{this.orderConfig.id}}
+                    @options={{this.orderConfigs}}
+                    @optionValue="id"
+                    @optionLabel="name"
+                    @onChange={{this.setConfig}}
+                    @placeholder={{t "fleet-ops.operations.orders.index.new.order-type-placeholder"}}
+                    disabled={{this.load.isRunning}}
+                    class="w-full"
+                />
+            </div>
+        </ContentPanel>
+
+        {{#if this.loadCustomerOrderConfig.isIdle}}
+            {{#if this.orderConfig}}
+                {{#each this.customFieldGroups as |group|}}
+                    <ContentPanel @title={{group.name}} @open={{true}} @pad={{true}} @panelBodyClass="bg-white dark:bg-gray-800">
+                        <div class="grid grid-cols-{{or group.meta.grid_size 1}} gap-2">
+                            {{#each group.customFields as |customField|}}
+                                <CustomField @customField={{customField}} @order={{this.order}} @orderConfig={{this.orderConfig}} @onChange={{this.setCustomFieldValue}} />
+                            {{/each}}
+                        </div>
+                    </ContentPanel>
+                {{/each}}
+            {{/if}}
+
+            <ContentPanel @title={{t "fleet-ops.operations.orders.index.new.route"}} @open={{true}} @pad={{true}} @panelBodyClass="bg-white dark:bg-gray-800">
+                <div class="lg:col-span-2">
+                    <div class="flex flex-row justify-between mb-4">
+                        <div class="flex">
+                            <Toggle @isToggled={{this.isMultipleDropoffOrder}} @onToggle={{this.toggleMultiDropOrder}} @label={{t "fleet-ops.operations.orders.index.new.route-label"}} />
+                        </div>
+                        <div class="flex flex-1 justify-end space-x-2">
+                            {{#if this.isMultipleDropoffOrder}}
+                                <Button
+                                    @icon="map-marked-alt"
+                                    @text={{t "fleet-ops.operations.orders.index.new.add-waypoint"}}
+                                    @size="sm"
+                                    @onClick={{this.addWaypoint}}
+                                    @helpText={{t "fleet-ops.operations.orders.index.new.add-waypoint-help-text"}}
+                                    @permission="fleet-ops create order"
+                                />
+                            {{/if}}
+                        </div>
+                    </div>
+                    {{#if this.isMultipleDropoffOrder}}
+                        <DragSortList class="multi-drop-select-container overflow-visible" @items={{this.waypoints}} @dragEndAction={{this.sortWaypoints}} as |waypoint index|>
+                            <div id={{concat "waypoint_" (add index 1)}} class="border rounded-md px-3 py-2 shadow-sm border-gray-300 dark:border-gray-900 mb-3">
+                                <div class="flex items-start justify-between">
+                                    <div class="flex items-center justify-between grip-cursor">
+                                        <FaIcon @icon="grip-lines" @prefix="fas" class="mr-3 text-gray-100" />
+                                        <label class="waypoint-label dark:text-gray-100 text-sm">
+                                            {{waypoint-label (add index 1)}}
+                                        </label>
+                                    </div>
+                                    <div class="flex-1 flex-col px-3">
+                                        <ModelSelect
+                                            @modelName="place"
+                                            @selectedModel={{waypoint.place}}
+                                            @placeholder={{concat (t "fleet-ops.operations.orders.index.new.select-waypoint-placeholder") " " (add index 1)}}
+                                            @triggerClass="form-select form-input truncate max-w-250px"
+                                            @infiniteScroll={{false}}
+                                            @customSearchEndpoint="places/search"
+                                            @query={{hash geo=true latitude=this.latitude longitude=this.longitude}}
+                                            @renderInPlace={{true}}
+                                            @onChange={{fn this.setWaypointPlace index}}
+                                            @permission="fleet-ops create order"
+                                            as |model|
+                                        >
+                                            {{model.address}}
+                                        </ModelSelect>
+                                        {{#if waypoint.place.hasInvalidCoordinates}}
+                                            <div class="leading-5 text-sm text-red-400 mt-2">
+                                                <FaIcon @icon="exclamation-triangle" class="mr-1" />
+                                                {{t "fleet-ops.operations.orders.index.new.invalid-coordinates"}}
+                                            </div>
+                                        {{/if}}
+                                    </div>
+                                    <div class="flex items-center flex-grow-0 space-x-2">
+                                        {{#if waypoint.place}}
+                                            <Button @icon="edit" @size="sm" @onClick={{fn this.editPlace waypoint.place}} />
+                                        {{/if}}
+                                        <Button @type="danger" @icon="trash" @size="sm" @onClick={{fn this.removeWaypoint waypoint}} />
+                                    </div>
+                                </div>
+                            </div>
+                        </DragSortList>
+                    {{else}}
+                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-2 text-xs dark:text-gray-100">
+                            <InputGroup>
+                                <div class="flex items-center justify-between">
+                                    <label>{{t "fleet-ops.operations.orders.index.new.pickup"}}</label>
+                                    <div class="flex-row space-x-1 pr-0.5">
+                                        {{#if this.payload.pickup}}
+                                            <a href="javascript:;" {{on "click" (fn this.editPlace this.payload.pickup)}}>
+                                                <FaIcon @icon="edit" />
+                                            </a>
+                                            <a href="javascript:;" {{on "click" (fn this.setPayloadPlace "pickup" null)}}>
+                                                <FaIcon @icon="trash" />
+                                            </a>
+                                        {{/if}}
+                                    </div>
+                                </div>
+                                <ModelSelect
+                                    @modelName="place"
+                                    @selectedModel={{this.payload.pickup}}
+                                    @placeholder={{t "fleet-ops.operations.orders.index.new.select-pickup"}}
+                                    @triggerClass="form-select form-input"
+                                    @infiniteScroll={{false}}
+                                    @customSearchEndpoint="places/search"
+                                    @query={{hash geo=true latitude=this.latitude longitude=this.longitude}}
+                                    @renderInPlace={{true}}
+                                    @onChange={{fn this.setPayloadPlace "pickup"}}
+                                    @permission="fleet-ops create order"
+                                    as |model|
+                                >
+                                    {{model.address}}
+                                </ModelSelect>
+                                {{#if this.payload.pickup.hasInvalidCoordinates}}
+                                    <div class="leading-5 text-sm text-red-400 mt-2">
+                                        <FaIcon @icon="exclamation-triangle" class="mr-1" />
+                                        {{t "fleet-ops.operations.orders.index.new.invalid-coordinates"}}
+                                    </div>
+                                {{/if}}
+                            </InputGroup>
+                            <InputGroup>
+                                <div class="flex items-center justify-between">
+                                    <label>{{t "fleet-ops.operations.orders.index.new.dropoff"}}</label>
+                                    <div class="flex-row space-x-2 pr-0.5">
+                                        {{#if this.payload.dropoff}}
+                                            <a href="javascript:;" {{on "click" (fn this.editPlace this.payload.dropoff)}} disaled={{cannot "fleet-ops update place"}}>
+                                                <FaIcon @icon="edit" />
+                                            </a>
+                                            <a href="javascript:;" {{on "click" (fn this.setPayloadPlace "dropoff" null)}}>
+                                                <FaIcon @icon="trash" />
+                                            </a>
+                                        {{/if}}
+                                    </div>
+                                </div>
+                                <ModelSelect
+                                    @modelName="place"
+                                    @selectedModel={{this.payload.dropoff}}
+                                    @placeholder={{t "fleet-ops.operations.orders.index.new.select-dropoff"}}
+                                    @triggerClass="form-select form-input"
+                                    @infiniteScroll={{false}}
+                                    @customSearchEndpoint="places/search"
+                                    @query={{hash geo=true latitude=this.latitude longitude=this.longitude}}
+                                    @renderInPlace={{true}}
+                                    @onChange={{fn this.setPayloadPlace "dropoff"}}
+                                    @permission="fleet-ops create order"
+                                    as |model|
+                                >
+                                    {{model.address}}
+                                </ModelSelect>
+                                {{#if this.payload.dropoff.hasInvalidCoordinates}}
+                                    <div class="leading-5 text-sm text-red-400 mt-2">
+                                        <FaIcon @icon="exclamation-triangle" class="mr-1" />
+                                        {{t "fleet-ops.operations.orders.index.new.invalid-coordinates"}}
+                                    </div>
+                                {{/if}}
+                            </InputGroup>
+                            <InputGroup>
+                                <div class="flex items-center justify-between">
+                                    <label>{{t "fleet-ops.operations.orders.index.new.return"}}</label>
+                                    {{#if this.payload.return}}
+                                        <a href="javascript:;" {{on "click" (fn this.editPlace this.payload.return)}}>{{t "fleet-ops.operations.orders.index.new.edit-address"}}</a>
+                                    {{/if}}
+                                </div>
+                                <ModelSelect
+                                    @modelName="place"
+                                    @selectedModel={{this.payload.return}}
+                                    @placeholder={{t "fleet-ops.operations.orders.index.new.select-return"}}
+                                    @triggerClass="form-select form-input"
+                                    @infiniteScroll={{false}}
+                                    @customSearchEndpoint="places/search"
+                                    @query={{hash geo=true latitude=this.latitude longitude=this.longitude}}
+                                    @renderInPlace={{true}}
+                                    @onChange={{fn this.setPayloadPlace "return"}}
+                                    @permission="fleet-ops create order"
+                                    as |model|
+                                >
+                                    {{model.address}}
+                                </ModelSelect>
+                                {{#if this.payload.return.hasInvalidCoordinates}}
+                                    <div class="leading-5 text-sm text-red-400 mt-2">
+                                        <FaIcon @icon="exclamation-triangle" class="mr-1" />
+                                        {{t "fleet-ops.operations.orders.index.new.invalid-coordinates"}}
+                                    </div>
+                                {{/if}}
+                            </InputGroup>
+                        </div>
+                    {{/if}}
+                </div>
+            </ContentPanel>
+
+            <ContentPanel @title="Details" @open={{true}} @pad={{true}} @panelBodyClass="bg-white dark:bg-gray-800">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-2">
+                    <div class="lg:col-span-2">
+                        <InputGroup>
+                            <Toggle
+                                @label={{t "fleet-ops.operations.orders.index.new.require-proof"}}
+                                @wrapperClass="justify-start-i"
+                                @isToggled={{this.order.pod_required}}
+                                @onToggle={{this.toggleProofOfDelivery}}
+                                @disabled={{cannot "fleet-ops create order"}}
+                                @helpText={{t "fleet-ops.operations.orders.index.new.require-proof-help-text"}}
+                            />
+                        </InputGroup>
+                        {{#if this.order.pod_required}}
+                            <InputGroup @wrapperClass="mt-4">
+                                <InputLabel
+                                    @labelText={{t "fleet-ops.operations.orders.index.new.proof-delivery"}}
+                                    @helpText={{t "fleet-ops.operations.orders.index.new.proof-delivery-help-text"}}
+                                />
+                                <Select
+                                    class="w-full"
+                                    @options={{this.podOptions}}
+                                    @value={{this.order.pod_method}}
+                                    @onSelect={{fn (mut this.order.pod_method)}}
+                                    @placeholder={{t "fleet-ops.operations.orders.index.new.proof-delivery-placeholder"}}
+                                    @disabled={{cannot "fleet-ops create order"}}
+                                />
+                            </InputGroup>
+                        {{/if}}
+                    </div>
+                </div>
+            </ContentPanel>
+
+            <ContentPanel @title={{t "fleet-ops.operations.orders.index.new.payload-entities"}} @open={{true}} @pad={{true}} @panelBodyClass="bg-white dark:bg-gray-800">
+                <div class="flex items-center mb-4">
+                    <Button
+                        @wrapperClass="mr-2"
+                        @icon="square-plus"
+                        @iconPrefix="fas"
+                        @text={{t "fleet-ops.operations.orders.index.new.add-item-order"}}
+                        @size="sm"
+                        @onClick={{this.addEntity}}
+                        @permission="fleet-ops create order"
+                    />
+                </div>
+
+                <div class="space-y-2">
+                    {{#each this.entities as |entity index|}}
+                        <div>
+                            <div class="flex flex-row w-full rounded-md bg-gray-100 dark:bg-gray-900 shadow-sm p-3 relative">
+                                <div class="flex mr-3">
+                                    <img src={{entity.photo_url}} class="w-12 h-12" alt={{or entity.name entity.public_id}} />
+                                </div>
+                                <div class="flex-1 space-y-2">
+                                    <div>
+                                        <Input @value={{entity.name}} @type="text" class="w-full form-input form-input-sm" placeholder={{t "fleet-ops.common.name"}} />
+                                    </div>
+                                    <div>
+                                        <Input @value={{entity.sku}} @type="text" class="w-full form-input form-input-sm" placeholder={{t "fleet-ops.operations.orders.index.new.sku"}} />
+                                    </div>
+                                    {{#if this.waypoints.length}}
+                                        <Select
+                                            @value={{entity.destination_uuid}}
+                                            @options={{this.waypoints}}
+                                            @optionValue="place.id"
+                                            @optionLabel="place.address"
+                                            @placeholder={{t "fleet-ops.operations.orders.index.new.select-destination"}}
+                                            @onChange={{fn this.setEntityDestionation index}}
+                                            class="w-full form-input-sm"
+                                        />
+                                    {{/if}}
+                                    <Button @icon="pencil" @text={{t "fleet-ops.operations.orders.index.new.edit-item"}} @size="sm" @onClick={{fn this.editEntity entity}} />
+                                </div>
+                                <div class="ml-3">
+                                    <Button
+                                        @icon="times"
+                                        @iconPrefix="fas"
+                                        @type="danger"
+                                        @size="xs"
+                                        @onClick={{fn this.removeEntity entity}}
+                                        @wrapperClass={{if (eq index 0) "invisible"}}
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                    {{/each}}
+                </div>
+            </ContentPanel>
+
+            <ContentPanel @title={{t "fleet-ops.common.service"}} @open={{true}} @pad={{true}} @panelBodyClass="bg-white dark:bg-gray-800">
+                {{#if this.getQuotes.isRunning}}
+                    <div class="flex items-center justify-center py-5">
+                        <Spinner
+                            class="text-sm dark:text-gray-100 flex flex-row items-center"
+                            @iconClass="mr-2"
+                            @loadingMessage={{t "fleet-ops.operations.orders.index.new.loading-message"}}
+                        />
+                    </div>
+                {{else}}
+                    {{#if this.serviceQuotes}}
+                        <InfoBlock @text={{t "fleet-ops.operations.orders.index.new.info-text"}} class="mb-4" />
+                    {{/if}}
+                    <div class="radio-group-condensed -space-y-px">
+                        {{#each this.serviceQuotes as |serviceQuote|}}
+                            <div class="radio-group-item shadow-sm flex-col pl-0i pr-0i {{if (eq this.selectedServiceQuote serviceQuote.id) 'is-checked'}}">
+                                <div class="flex flex-row items-center mb-2.5 px-4">
+                                    <RadioButton
+                                        @radioClass="focus:ring-blue-500 h-6 w-6 text-blue-500"
+                                        @radioId={{serviceQuote.id}}
+                                        @value={{serviceQuote.id}}
+                                        @groupValue={{this.selectedServiceQuote}}
+                                        @name="serviceQuote"
+                                        @changed={{fn (mut this.selectedServiceQuote)}}
+                                    />
+                                    <label for={{serviceQuote.uuid}} class="ml-3 flex-1">{{serviceQuote.public_id}}</label>
+                                    <Badge @hideStatusDot={{true}} @status="info">
+                                        {{serviceQuote.request_id}}
+                                    </Badge>
+                                </div>
+                                <div class="next-table-wrapper no-scroll h-auto table-fluid rounded-none">
+                                    <table class="table table-fixed flex-1">
+                                        <thead>
+                                            <tr>
+                                                <th class="text-left">{{t "fleet-ops.operations.orders.index.new.breakdown"}}</th>
+                                                <th></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {{#each serviceQuote.items as |item|}}
+                                                <tr>
+                                                    <td>
+                                                        <span class="font-semibold">{{smart-humanize item.details}}</span>
+                                                    </td>
+                                                    <td>
+                                                        <span>{{format-currency item.amount serviceQuote.currency}}</span>
+                                                    </td>
+                                                </tr>
+                                            {{/each}}
+                                            <tr class="border-b-0">
+                                                <td class="border-b-0">
+                                                    <span class="font-semibold">{{t "fleet-ops.common.total"}}</span>
+                                                </td>
+                                                <td class="border-b-0">
+                                                    <span>{{format-currency serviceQuote.amount serviceQuote.currency}}</span>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        {{else}}
+                            <InfoBlock
+                                @type="warning"
+                                @text={{if
+                                    this.payloadCoordinates.length
+                                    (t "fleet-ops.operations.orders.index.new.no-service-info-text")
+                                    (t "fleet-ops.operations.orders.index.new.input-order-info-text")
+                                }}
+                            />
+                        {{/each}}
+                    </div>
+                {{/if}}
+            </ContentPanel>
+
+            <ContentPanel @title={{t "fleet-ops.operations.orders.index.new.notes-title"}} @open={{true}} @pad={{true}} @panelBodyClass="bg-white dark:bg-gray-800">
+                <Textarea
+                    @value={{this.order.notes}}
+                    class="form-input w-full"
+                    placeholder={{t "fleet-ops.operations.orders.index.new.notes-placeholder"}}
+                    disabled={{cannot "fleet-ops create order"}}
+                    rows={{4}}
+                />
+            </ContentPanel>
+
+            <ContentPanel @title={{t "fleet-ops.operations.orders.index.view.documents-panel-title"}} @open={{true}} @pad={{true}} @panelBodyClass="bg-white dark:bg-gray-800">
+                <div class="space-y-4">
+                    {{#if this.isUploading}}
+                        <div
+                            class="dropzone w-full rounded-lg px-4 py-8 bg-gray-50 dark:bg-gray-900 bg-opacity-25 text-gray-900 dark:text-white text-center flex flex-col items-center justify-center border-2 border-dashed border-gray-200 dark:border-indigo-500"
+                        >
+                            <div class="flex items-center justify-center py-5">
+                                <Spinner class="text-sm dar:text-gray-100" @loadingMessage={{t "fleet-ops.common.uploading"}} />
+                            </div>
+                        </div>
+                    {{else}}
+                        {{#let (file-queue name="files" onFileAdded=(perform this.queueFile) accept=(join "," this.acceptedFileTypes)) as |queue|}}
+                            <FileDropzone @queue={{queue}} class="dropzone file-dropzone" @disabled={{cannot "fleet-ops create order"}} as |dropzone|>
+                                {{#if dropzone.active}}
+                                    {{#if dropzone.valid}}
+                                        {{t "component.dropzone.drop-to-upload"}}
+                                    {{else}}
+                                        {{t "component.dropzone.invalid"}}
+                                    {{/if}}
+                                {{else if queue.files.length}}
+                                    <div class="my-2">
+                                        <FaIcon @icon="folder-open" class="text-indigo-500 mr-2" />
+                                        {{t "component.dropzone.files-ready-for-upload" numOfFiles=(pluralize queue.files.length (t "component.dropzone.file"))}}
+                                    </div>
+                                    <div class="my-2">({{queue.progress}}%)</div>
+                                {{else}}
+                                    <h4 class="font-semibold">
+                                        <FaIcon @icon="folder-open" @size="lg" class="text-indigo-500 mr-2" />
+                                        {{t "component.dropzone.upload-documents-files"}}
+                                    </h4>
+                                    <div>
+                                        {{#if dropzone.supported}}
+                                            <p class="text-sm my-5">{{t "component.dropzone.dropzone-supported-files"}}</p>
+                                        {{/if}}
+                                        <FileUpload
+                                            @name="files"
+                                            @for="files"
+                                            @accept={{join "," this.acceptedFileTypes}}
+                                            @multiple={{true}}
+                                            @onFileAdded={{perform this.queueFile}}
+                                            @disabled={{cannot "fleet-ops create order"}}
+                                        >
+                                            <a tabindex={{0}} class="btn btn-magic cursor-pointer ml-1">{{t "component.dropzone.or-select-button-text"}}</a>
+                                        </FileUpload>
+                                    </div>
+                                {{/if}}
+                            </FileDropzone>
+                        {{/let}}
+                        {{#if this.uploadQueue}}
+                            <div class="mx-4">
+                                <div class="flex items-center justify-between mb-4">
+                                    <span class="leading-6 dark:text-gray-100">{{t "component.dropzone.upload-queue"}}</span>
+                                </div>
+                                <div class="space-y-2 mb-4">
+                                    {{#each this.uploadQueue as |file|}}
+                                        <div class="flex items-center justify-between bg-blue-100 border border-blue-800 dark:border-blue-800 py-1.5 shadow-sm rounded-lg px-4">
+                                            <div class="text-xs text-blue-900 truncate">{{truncate-filename file.name 50}}</div>
+                                            <div class="flex items-center text-sm">
+                                                <Spinner class="text-blue-900 mr-2" />
+                                                <span class="font-bold text-blue-900">{{round file.progress}}%</span>
+                                            </div>
+                                        </div>
+                                    {{/each}}
+                                </div>
+                            </div>
+                        {{/if}}
+                        <div>
+                            <div class="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-4">
+                                {{#each this.order.files as |file|}}
+                                    <File @file={{file}} @onDelete={{this.removeFile}} />
+                                {{/each}}
+                            </div>
+                        </div>
+                    {{/if}}
+                </div>
+            </ContentPanel>
+        {{else}}
+            <div class="p-4 flex items-center justify-center">
+                <Spinner />
+            </div>
+        {{/if}}
+
+        <Spacer @height="300px" />
+    </Overlay::Body>
+</Overlay>
