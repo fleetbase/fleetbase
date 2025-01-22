@@ -24,29 +24,18 @@
     <Overlay::Body @wrapperClass="new-service-rate-overlay-body px-4 space-y-4 pt-4">
         {{#let (cannot this.savePermission) as |unauthorized|}}
         <div class="grid grid-cols-1 text-xs dark:text-gray-100">
-            <!-- Fuel Report Type -->
-            <InputGroup @name={{t "common.report-type" }}>
-                <div class="fleetbase-model-select fleetbase-power-select ember-model-select">
-                    {{!-- <PowerSelect @options={{this.fuelReportTypes}} @selected={{this.fuelReport.report_type}} 
-                    @onChange={{fn (mut this.fuelReport.report_type)}}
-                        @placeholder={{t "common.select-report-type" }}
-                        @triggerClass="form-select form-input" @disabled={{unauthorized}} as |status|>
-                        {{smart-humanize status}}
-                    </PowerSelect> --}}
-                    <PowerSelect @options={{this.fuelReportTypes}} @selected={{this.selectedfuelReportTypes}} 
-                        @onChange={{this.updatefuelReportTypes}}
-                        @placeholder={{t "common.select-report-type" }}
-                        @triggerClass="form-select form-input" @disabled={{unauthorized}} as |status|>
-                        {{t status.translationKey}}
-                    </PowerSelect>
-                </div>
-            </InputGroup>
-            <InputGroup @name={{t "fleet-ops.common.reporter" }}>
-                <ModelSelect @modelName="user" @selectedModel={{this.fuelReport.reporter}}
-                    @placeholder={{t "fleet-ops.component.parking-form-panel.select-reporter" }}
-                    @triggerClass="form-select form-input" @infiniteScroll={{false}} @renderInPlace={{true}}
-                    @onChange={{fn (mut this.fuelReport.reporter)}} @onChangeId={{fn (mut
-                    this.fuelReport.reported_by_uuid)}} @disabled={{unauthorized}} as |model|>
+            
+           <InputGroup @name={{t "fleet-ops.common.reporter" }}>
+                <ModelSelect 
+                    @modelName="user" 
+                    @selectedModel={{this.fuelReport.reporter}}
+                    @placeholder={{t "fleet-ops.component.fuel-report-form-panel.select-reporter" }}
+                    @triggerClass="form-select form-input" 
+                    @infiniteScroll={{false}} 
+                    @renderInPlace={{true}}
+                    @onChange={{fn (mut this.fuelReport.reporter)}} 
+                    @onChangeId={{this.updateReporterId}} 
+                    @disabled={{unauthorized}} as |model|>
                     {{model.name}}
                 </ModelSelect>
             </InputGroup>
