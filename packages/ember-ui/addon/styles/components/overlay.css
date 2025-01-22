@@ -1,0 +1,162 @@
+.content-overlay {
+    z-index: 800;
+    background-color: rgba(244, 245, 247, 0.5);
+    transition: opacity 300ms ease-in-out;
+    opacity: 0;
+    @apply absolute inset-0 w-full h-full;
+}
+
+.content-overlay .content-overlay-content {
+    z-index: 850;
+    opacity: 0;
+    pointer-events: auto;
+    @apply absolute bg-white;
+}
+
+.content-overlay .content-overlay-content .overlay-inner-content {
+    @apply flex-1;
+}
+
+.content-overlay .content-overlay-content .gutter {
+    @apply bg-gray-200;
+    background-repeat: no-repeat;
+    background-position: 50%;
+}
+
+.content-overlay.no-resize .gutter {
+    display: none;
+}
+
+/* &.resizable.overlay-x-right .overlay-inner-content {
+        margin-left: 10px;
+        padding-right: 10px;
+        width: 100%;
+        height: 100%;
+    }
+
+    &.resizable.overlay-x-left  .overlay-inner-content {
+        margin-right: 10px;
+        padding-left: 10px;
+        width: 100%;
+        height: 100%;
+    } */
+
+.content-overlay.no-transition {
+    transition: none 0s ease 0s;
+    transition: initial;
+    opacity: 1;
+}
+
+.content-overlay.no-transition.overlay-x-left,
+.content-overlay.no-transition.overlay-x-right {
+    transform: translateX(0);
+}
+
+.content-overlay.no-transition.overlay-y-top,
+.content-overlay.no-transition.overlay-y-bottom {
+    transform: translateY(0);
+    min-height: 200px;
+}
+
+.content-overlay.no-transition .content-overlay-content {
+    transform: translate(0);
+    opacity: 1;
+}
+
+.content-overlay.no-backdrop {
+    background-color: transparent;
+    pointer-events: none;
+}
+
+.content-overlay.no-backdrop > * {
+    pointer-events: auto;
+}
+
+.content-overlay.is-open {
+    opacity: 1;
+}
+
+.content-overlay.is-open.overlay-x-left .content-overlay-content,
+.content-overlay.is-open.overlay-x-right .content-overlay-content {
+    transform: translateX(0);
+    opacity: 1;
+}
+
+.content-overlay.is-open.overlay-x-left .content-overlay-content .gutter,
+.content-overlay.is-open.overlay-x-right .content-overlay-content .gutter {
+    width: 10px;
+    height: 100%;
+    cursor: col-resize;
+    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAeCAYAAADkftS9AAAAIklEQVQoU2M4c+bMfxAGAgYYmwGrIIiDjrELjpo5aiZeMwF+yNnOs5KSvgAAAABJRU5ErkJggg==');
+}
+
+.content-overlay.is-open.overlay-x-right .gutter {
+    float: left;
+}
+
+.content-overlay.is-open.overlay-x-left .gutter {
+    float: right;
+}
+
+.content-overlay.is-open.overlay-y-top .content-overlay-content,
+.content-overlay.is-open.overlay-y-bottom .content-overlay-content {
+    min-height: 200px;
+    transform: translateY(0);
+    opacity: 1;
+}
+
+.content-overlay.is-open.overlay-y-top .content-overlay-content .gutter,
+.content-overlay.is-open.overlay-y-bottom .content-overlay-content .gutter {
+    height: 10px;
+    width: 100%;
+    cursor: row-resize;
+    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAFAQMAAABo7865AAAABlBMVEVHcEzMzMzyAv2sAAAAAXRSTlMAQObYZgAAABBJREFUeF5jOAMEEAIEEFwAn3kMwcB6I2AAAAAASUVORK5CYII=');
+}
+
+.content-overlay.overlay-y-bottom .content-overlay-content {
+    @apply left-0 right-0 bottom-0 border-t w-full;
+    transition: height 50ms ease-in-out;
+    transform: translateY(100%);
+}
+
+.content-overlay.overlay-y-top .content-overlay-content {
+    @apply left-0 right-0 top-0 border-b w-full;
+    transition: height 50ms ease-in-out;
+    transform: translateY(100%);
+}
+
+.content-overlay.overlay-x-left .content-overlay-content {
+    @apply left-0 border-r h-full;
+    transition: width 50ms ease-in-out;
+    transform: translateX(100%);
+}
+
+.content-overlay.overlay-x-right .content-overlay-content {
+    @apply right-0 border-l h-full;
+    transition: width 50ms ease-in-out;
+    transform: translateX(100%);
+}
+
+[data-theme='dark'] .content-overlay {
+    background-color: rgba(38, 47, 63, 0.7);
+}
+
+[data-theme='dark'] .content-overlay.no-backdrop {
+    background-color: transparent;
+}
+
+/* &.overlay-x-right,
+        &.overlay-y-bottom,
+        &.overlay-y-top {
+            & .content-overlay-content {
+                @apply shadow-dark-overlay-gray;
+            }
+        } */
+
+[data-theme='dark'] .content-overlay .content-overlay-content {
+    @apply bg-gray-800 border-gray-900;
+}
+
+[data-theme='dark'] .content-overlay .content-overlay-content .gutter {
+    @apply bg-gray-900;
+}

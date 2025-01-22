@@ -1,0 +1,8 @@
+<Modal::Default @modalIsOpened={{@modalIsOpened}} @options={{@options}} @confirm={{@onConfirm}} @decline={{@onDecline}}>
+    <div class="modal-body-container">
+        <div class="mt-2 grid grid-cols-2 gap-2">
+            <InputGroup @name="Rows" @value={{@options.rows}} @helpText="The number of rows for the table" @inputClass="input-lg" />
+            <InputGroup @name="Columns" @value={{@options.columns}} @helpText="The number of columns for the table" @inputClass="input-lg" />
+        </div>
+    </div>
+</Modal::Default>

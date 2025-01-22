@@ -1,0 +1,314 @@
+.tip-tap-editor {
+    display: flex;
+    flex-direction: column;
+    border: 1px #e2e8f0 solid;
+    background-color: #fff;
+    border-radius: 0.25rem;
+    box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+}
+
+body[data-theme='dark'] .tip-tap-editor {
+    border: 1px #374151 solid;
+    background-color: #1f2937;
+}
+
+.tip-tap-editor > div.tiptap[contenteditable='true'] {
+    padding: 0.5rem;
+    background-color: #ffffff;
+    color: #000000;
+    border-bottom-left-radius: 0.25rem;
+    border-bottom-right-radius: 0.25rem;
+}
+
+body[data-theme='dark'] .tip-tap-editor > div.tiptap[contenteditable='true'] {
+    color: #000000;
+    background-color: #f3f4f6;
+}
+
+.tip-tap-editor > div.tiptap[contenteditable='true'] p.is-editor-empty:first-child::before {
+    color: #9ca3af;
+    content: attr(data-placeholder);
+    float: left;
+    height: 0;
+    pointer-events: none;
+}
+
+.tip-tap-editor > div.tiptap[contenteditable='true'] hr {
+    border: none;
+    border-top: 1px solid #e5e7eb;
+    margin: .5rem 0;
+}
+
+.tip-tap-editor > div.tiptap[contenteditable='true'] ol,
+.tip-tap-editor > div.tiptap[contenteditable='true'] ul {
+    padding-left: 25px;
+}
+
+.tip-tap-editor > div.tiptap[contenteditable='true'] ol {
+    list-style: decimal;
+}
+
+.tip-tap-editor > div.tiptap[contenteditable='true'] ul {
+    list-style: disc;
+}
+
+.tip-tap-editor > div.tiptap[contenteditable='true'] blockquote {
+    border-left: 3px #e2e8f0 solid;
+    padding-left: 0.5rem;
+    margin-left: 0.25rem;
+    font-style: italic;
+}
+
+body[data-theme='dark'] .tip-tap-editor > div.tiptap[contenteditable='true'] blockquote {
+    border-left: 3px #4b5563 solid;
+}
+
+.tip-tap-editor > div.tiptap[contenteditable='true'] pre {
+    white-space: pre;
+    font-family: monospace;
+    padding: 0.25rem 0.75rem;
+    border-radius: 0.25rem;
+    background-color: #f3f4f6;
+    box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+}
+
+.tip-tap-editor > div.tiptap[contenteditable='true'] pre > code {
+    font-family: monospace;
+}
+
+body[data-theme='dark'] .tip-tap-editor > div.tiptap[contenteditable='true'] pre {
+    background-color: #030712;
+}
+
+.tip-tap-editor > div.tiptap[contenteditable='true'] table {
+    border-collapse: collapse;
+    margin: 0;
+    overflow: hidden;
+    table-layout: fixed;
+    width: 100%;
+}
+
+.tip-tap-editor > div.tiptap[contenteditable='true'] table td,
+.tip-tap-editor > div.tiptap[contenteditable='true'] table th {
+    border: 1px solid #d1d5db;
+    box-sizing: border-box;
+    min-width: 1em;
+    padding: 6px 8px;
+    position: relative;
+    vertical-align: top;
+}
+
+.tip-tap-editor > div.tiptap[contenteditable='true'] table td > *,
+.tip-tap-editor > div.tiptap[contenteditable='true'] table th > * {
+    margin-bottom: 0;
+}
+
+.tip-tap-editor > div.tiptap[contenteditable='true'] table th {
+    background-color: #e5e7eb;
+    font-weight: bold;
+    text-align: left;
+}
+
+.tip-tap-editor > div.tiptap[contenteditable='true'] table .selectedCell:after {
+    background: #e5e7eb;
+    content: '';
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    pointer-events: none;
+    position: absolute;
+    z-index: 2;
+}
+
+.tip-tap-editor > div.tiptap[contenteditable='true'] table .column-resize-handle {
+    background-color: #60a5fa;
+    bottom: -2px;
+    pointer-events: none;
+    position: absolute;
+    right: -2px;
+    top: 0;
+    width: 4px;
+}
+
+.tip-tap-editor > div.tiptap[contenteditable='true'] .tableWrapper {
+    margin: 1.5rem 0;
+    overflow-x: auto;
+}
+
+.tip-tap-editor > div.tiptap[contenteditable='true'] .resize-cursor {
+    cursor: ew-resize;
+    cursor: col-resize;
+}
+
+.tip-tap-editor > .tip-tap-editor-controls {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: 0.25rem;
+    padding: 0.25rem;
+    border-bottom: 1px #e2e8f0 solid;
+}
+
+body[data-theme='dark'] .tip-tap-editor > .tip-tap-editor-controls {
+    border-bottom: 1px #374151 solid;
+}
+
+.tip-tap-editor > .tip-tap-editor-controls .tip-tap-colorpicker {
+    display: flex;
+    flex-direction: row;
+}
+
+.tip-tap-editor > .tip-tap-editor-controls .tip-tap-colorpicker > input[type='color'] {
+    border: 1px rgba(17, 24, 39, 1) solid;
+    border-right: 0px;
+    border-top-left-radius: 0.25rem;
+    border-bottom-left-radius: 0.25rem;
+    width: 18px;
+    height: 22.8px;
+    background-color: transparent;
+}
+
+.tip-tap-editor > .tip-tap-editor-controls .tip-tap-colorpicker > .btn-wrapper > button.tip-tap-control-button {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    border-left: 0px;
+    height: 22.8px;
+}
+
+.tip-tap-editor > .tip-tap-editor-controls .tip-tap-colorpicker > input[type='color' i]::-webkit-color-swatch-wrapper {
+    padding: 0;
+}
+
+.tip-tap-editor > .tip-tap-editor-controls .tip-tap-colorpicker > input[type='color' i]::-webkit-color-swatch {
+    border-top-left-radius: 0.25rem;
+    border-bottom-left-radius: 0.25rem;
+    border: unset;
+}
+
+.tip-tap-editor > .tip-tap-editor-controls > .tip-tap-editor-control-group {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    padding: 0.15rem 0.2rem;
+    border-radius: 0.25rem;
+    background-color: #e2e8f0;
+    gap: 0.25rem;
+}
+
+body[data-theme='dark'] .tip-tap-editor > .tip-tap-editor-controls > .tip-tap-editor-control-group {
+    background-color: #374151;
+}
+
+.tip-tap-editor > .tip-tap-editor-controls > .tip-tap-editor-control-group.grouped-buttons {
+    gap: 0;
+}
+
+.tip-tap-editor > .tip-tap-editor-controls > .tip-tap-editor-control-group.grouped-buttons > .ember-basic-dropdown:first-child > .ember-basic-dropdown-trigger > .btn-wrapper > button,
+.tip-tap-editor > .tip-tap-editor-controls > .tip-tap-editor-control-group.grouped-buttons > .btn-wrapper:first-child > button {
+    border-top-left-radius: 0.25rem;
+    border-bottom-left-radius: 0.25rem;
+    border-right: 0;
+}
+
+.tip-tap-editor > .tip-tap-editor-controls > .tip-tap-editor-control-group.grouped-buttons > .ember-basic-dropdown > .ember-basic-dropdown-trigger > .btn-wrapper > button,
+.tip-tap-editor > .tip-tap-editor-controls > .tip-tap-editor-control-group.grouped-buttons > .btn-wrapper > button {
+    border-radius: 0;
+}
+
+.tip-tap-editor > .tip-tap-editor-controls > .tip-tap-editor-control-group.grouped-buttons > .ember-basic-dropdown:last-child > .ember-basic-dropdown-trigger > .btn-wrapper > button,
+.tip-tap-editor > .tip-tap-editor-controls > .tip-tap-editor-control-group.grouped-buttons > .btn-wrapper:last-child > button {
+    border-top-right-radius: 0.25rem;
+    border-bottom-right-radius: 0.25rem;
+    border-left: 0;
+}
+
+.tip-tap-editor
+    > .tip-tap-editor-controls
+    > .tip-tap-editor-control-group.grouped-buttons
+    > .ember-basic-dropdown:first-child
+    + .ember-basic-dropdown:last-child
+    > .ember-basic-dropdown-trigger
+    > .btn-wrapper
+    > button,
+.tip-tap-editor > .tip-tap-editor-controls > .tip-tap-editor-control-group.grouped-buttons > .btn-wrapper:first-child + .btn-wrapper:last-child > button {
+    border-left: 1px rgba(209, 213, 219, 1) solid;
+}
+
+body[data-theme='dark']
+    .tip-tap-editor
+    > .tip-tap-editor-controls
+    > .tip-tap-editor-control-group.grouped-buttons
+    > .ember-basic-dropdown:first-child
+    + .ember-basic-dropdown:last-child
+    > .ember-basic-dropdown-trigger
+    > .btn-wrapper
+    > button,
+body[data-theme='dark'] .tip-tap-editor > .tip-tap-editor-controls > .tip-tap-editor-control-group.grouped-buttons > .btn-wrapper:first-child + .btn-wrapper:last-child > button {
+    border-left: 1px rgba(17, 24, 39, 1) solid;
+}
+
+.tip-tap-editor > .tip-tap-editor-controls > .tip-tap-editor-control-group > .btn-wrapper {
+    box-shadow: none;
+    margin-bottom: 0;
+}
+
+.tip-tap-editor > .tip-tap-editor-controls > .tip-tap-editor-control-group > label.file-upload.btn-wrapper {
+    height: 22.8px;
+}
+
+.tip-tap-editor > .tip-tap-editor-controls > .btn-wrapper {
+    box-shadow: none;
+    margin-bottom: 0;
+}
+
+.tip-tap-editor > .tip-tap-editor-controls > .btn-wrapper > a.tip-tap-control-button,
+.tip-tap-editor > .tip-tap-editor-controls > .btn-wrapper > button.tip-tap-control-button {
+    box-shadow: none;
+    height: 22.8px;
+}
+
+.tip-tap-editor > .tip-tap-editor-controls a.tip-tap-control-button,
+.tip-tap-editor > .tip-tap-editor-controls button.tip-tap-control-button {
+    padding: 0.15rem 0.4rem;
+    box-shadow: none;
+    height: 22.8px;
+}
+
+.tip-tap-editor > .tip-tap-editor-controls a.tip-tap-control-button .btn-icon-wrapper > svg,
+.tip-tap-editor > .tip-tap-editor-controls button.tip-tap-control-button .btn-icon-wrapper > svg {
+    font-size: 0.75rem;
+}
+
+.tip-tap-editor > .tip-tap-editor-controls > .tip-tap-editor-control-group > .ember-basic-dropdown > .ember-basic-dropdown-trigger > .btn-wrapper,
+.tip-tap-editor > .tip-tap-editor-controls > .ember-basic-dropdown > .ember-basic-dropdown-trigger > .btn-wrapper {
+    box-shadow: none;
+}
+
+.tip-tap-editor > .tip-tap-editor-controls > .tip-tap-editor-control-group > .ember-basic-dropdown > .ember-basic-dropdown-trigger > .btn-wrapper > button.tip-tap-control-button,
+.tip-tap-editor > .tip-tap-editor-controls > .ember-basic-dropdown > .ember-basic-dropdown-trigger > .btn-wrapper > button.tip-tap-control-button {
+    box-shadow: none;
+    padding: 0 0.4rem;
+    font-size: 0.75rem;
+    height: 22.8px;
+}
+
+.tip-tap-editor > .tip-tap-editor-controls > .ember-basic-dropdown .next-dd-menu {
+    margin-top: 0.25rem;
+    border: 1px #e2e8f0 solid;
+}
+
+body[data-theme='dark'] .tip-tap-editor > .tip-tap-editor-controls > .ember-basic-dropdown .next-dd-menu {
+    margin-top: 0.25rem;
+    border: 1px #374151 solid;
+    padding: 0.25rem;
+}
+
+.tip-tap-editor > .tip-tap-editor-controls > .ember-basic-dropdown .next-dd-menu > .next-dd-item:first-child {
+    margin-top: 0;
+}
+
+.tip-tap-editor > .tip-tap-editor-controls > .ember-basic-dropdown .next-dd-menu > .next-dd-item:last-child {
+    margin-bottom: 0;
+}

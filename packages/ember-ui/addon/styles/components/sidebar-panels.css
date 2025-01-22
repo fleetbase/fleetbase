@@ -1,0 +1,634 @@
+#extensionsNav,
+.sidebar-panels {
+    @apply w-2/12 h-full min-h-screen bg-gray-100 border-r;
+}
+
+#extensionsNav.not-service-nav,
+.sidebar-panels.not-service-nav {
+    min-height: auto !important;
+}
+
+#extensionsNav.not-service-nav,
+.sidebar-panels.not-service-nav {
+    height: auto;
+}
+
+#extensionsNav .next-content-panel-container .next-content-panel .cp-Panel-toggle,
+.sidebar-panels .next-content-panel-container .next-content-panel .cp-Panel-toggle,
+#extensionsNav .cp-Panels .next-content-panel .cp-Panel-toggle,
+.sidebar-panels .cp-Panels .next-content-panel .cp-Panel-toggle,
+#extensionsNav .next-content-panel-container .cp-Panel .cp-Panel-toggle,
+.sidebar-panels .next-content-panel-container .cp-Panel .cp-Panel-toggle,
+#extensionsNav .cp-Panels .cp-Panel .cp-Panel-toggle,
+.sidebar-panels .cp-Panels .cp-Panel .cp-Panel-toggle {
+    @apply flex items-center px-3 py-2 text-white no-underline border-b border-gray-300 select-none;
+}
+
+#extensionsNav .next-content-panel-container .next-content-panel .cp-Panel-toggle > span,
+.sidebar-panels .next-content-panel-container .next-content-panel .cp-Panel-toggle > span,
+#extensionsNav .cp-Panels .next-content-panel .cp-Panel-toggle > span,
+.sidebar-panels .cp-Panels .next-content-panel .cp-Panel-toggle > span,
+#extensionsNav .next-content-panel-container .cp-Panel .cp-Panel-toggle > span,
+.sidebar-panels .next-content-panel-container .cp-Panel .cp-Panel-toggle > span,
+#extensionsNav .cp-Panels .cp-Panel .cp-Panel-toggle > span,
+.sidebar-panels .cp-Panels .cp-Panel .cp-Panel-toggle > span {
+    @apply text-sm text-gray-400;
+}
+
+#extensionsNav .next-content-panel-container .next-content-panel .cp-Panel-toggle svg,
+.sidebar-panels .next-content-panel-container .next-content-panel .cp-Panel-toggle svg,
+#extensionsNav .cp-Panels .next-content-panel .cp-Panel-toggle svg,
+.sidebar-panels .cp-Panels .next-content-panel .cp-Panel-toggle svg,
+#extensionsNav .next-content-panel-container .cp-Panel .cp-Panel-toggle svg,
+.sidebar-panels .next-content-panel-container .cp-Panel .cp-Panel-toggle svg,
+#extensionsNav .cp-Panels .cp-Panel .cp-Panel-toggle svg,
+.sidebar-panels .cp-Panels .cp-Panel .cp-Panel-toggle svg {
+    @apply mr-2 text-gray-400;
+    transition: all 0.1s linear;
+}
+
+#extensionsNav .next-content-panel-container .next-content-panel .cp-Panel-toggle:hover,
+.sidebar-panels .next-content-panel-container .next-content-panel .cp-Panel-toggle:hover,
+#extensionsNav .cp-Panels .next-content-panel .cp-Panel-toggle:hover,
+.sidebar-panels .cp-Panels .next-content-panel .cp-Panel-toggle:hover,
+#extensionsNav .next-content-panel-container .cp-Panel .cp-Panel-toggle:hover,
+.sidebar-panels .next-content-panel-container .cp-Panel .cp-Panel-toggle:hover,
+#extensionsNav .cp-Panels .cp-Panel .cp-Panel-toggle:hover,
+.sidebar-panels .cp-Panels .cp-Panel .cp-Panel-toggle:hover {
+    @apply bg-gray-300;
+}
+
+#extensionsNav .next-content-panel-container .next-content-panel.next-content-panel-is-open .cp-Panel-toggle svg,
+.sidebar-panels .next-content-panel-container .next-content-panel.next-content-panel-is-open .cp-Panel-toggle svg,
+#extensionsNav .cp-Panels .next-content-panel.next-content-panel-is-open .cp-Panel-toggle svg,
+.sidebar-panels .cp-Panels .next-content-panel.next-content-panel-is-open .cp-Panel-toggle svg,
+#extensionsNav .next-content-panel-container .cp-Panel.next-content-panel-is-open .cp-Panel-toggle svg,
+.sidebar-panels .next-content-panel-container .cp-Panel.next-content-panel-is-open .cp-Panel-toggle svg,
+#extensionsNav .cp-Panels .cp-Panel.next-content-panel-is-open .cp-Panel-toggle svg,
+.sidebar-panels .cp-Panels .cp-Panel.next-content-panel-is-open .cp-Panel-toggle svg,
+#extensionsNav .next-content-panel-container .next-content-panel.cp-is-open .cp-Panel-toggle svg,
+.sidebar-panels .next-content-panel-container .next-content-panel.cp-is-open .cp-Panel-toggle svg,
+#extensionsNav .cp-Panels .next-content-panel.cp-is-open .cp-Panel-toggle svg,
+.sidebar-panels .cp-Panels .next-content-panel.cp-is-open .cp-Panel-toggle svg,
+#extensionsNav .next-content-panel-container .cp-Panel.cp-is-open .cp-Panel-toggle svg,
+.sidebar-panels .next-content-panel-container .cp-Panel.cp-is-open .cp-Panel-toggle svg,
+#extensionsNav .cp-Panels .cp-Panel.cp-is-open .cp-Panel-toggle svg,
+.sidebar-panels .cp-Panels .cp-Panel.cp-is-open .cp-Panel-toggle svg {
+    transform: rotate(90deg);
+}
+
+#extensionsNav .next-content-panel-container .next-content-panel .next-content-panel-body .cp-Panel-body-inner,
+.sidebar-panels .next-content-panel-container .next-content-panel .next-content-panel-body .cp-Panel-body-inner,
+#extensionsNav .cp-Panels .next-content-panel .next-content-panel-body .cp-Panel-body-inner,
+.sidebar-panels .cp-Panels .next-content-panel .next-content-panel-body .cp-Panel-body-inner,
+#extensionsNav .next-content-panel-container .cp-Panel .next-content-panel-body .cp-Panel-body-inner,
+.sidebar-panels .next-content-panel-container .cp-Panel .next-content-panel-body .cp-Panel-body-inner,
+#extensionsNav .cp-Panels .cp-Panel .next-content-panel-body .cp-Panel-body-inner,
+.sidebar-panels .cp-Panels .cp-Panel .next-content-panel-body .cp-Panel-body-inner,
+#extensionsNav .next-content-panel-container .next-content-panel .cp-Panel-body .cp-Panel-body-inner,
+.sidebar-panels .next-content-panel-container .next-content-panel .cp-Panel-body .cp-Panel-body-inner,
+#extensionsNav .cp-Panels .next-content-panel .cp-Panel-body .cp-Panel-body-inner,
+.sidebar-panels .cp-Panels .next-content-panel .cp-Panel-body .cp-Panel-body-inner,
+#extensionsNav .next-content-panel-container .cp-Panel .cp-Panel-body .cp-Panel-body-inner,
+.sidebar-panels .next-content-panel-container .cp-Panel .cp-Panel-body .cp-Panel-body-inner,
+#extensionsNav .cp-Panels .cp-Panel .cp-Panel-body .cp-Panel-body-inner,
+.sidebar-panels .cp-Panels .cp-Panel .cp-Panel-body .cp-Panel-body-inner {
+    @apply py-4 border-b border-gray-900;
+}
+
+#extensionsNav .next-content-panel-container .next-content-panel .next-content-panel-body .cp-Panel-body-inner.no-padding .cp-Panel-body-inner,
+.sidebar-panels .next-content-panel-container .next-content-panel .next-content-panel-body .cp-Panel-body-inner.no-padding .cp-Panel-body-inner,
+#extensionsNav .cp-Panels .next-content-panel .next-content-panel-body .cp-Panel-body-inner.no-padding .cp-Panel-body-inner,
+.sidebar-panels .cp-Panels .next-content-panel .next-content-panel-body .cp-Panel-body-inner.no-padding .cp-Panel-body-inner,
+#extensionsNav .next-content-panel-container .cp-Panel .next-content-panel-body .cp-Panel-body-inner.no-padding .cp-Panel-body-inner,
+.sidebar-panels .next-content-panel-container .cp-Panel .next-content-panel-body .cp-Panel-body-inner.no-padding .cp-Panel-body-inner,
+#extensionsNav .cp-Panels .cp-Panel .next-content-panel-body .cp-Panel-body-inner.no-padding .cp-Panel-body-inner,
+.sidebar-panels .cp-Panels .cp-Panel .next-content-panel-body .cp-Panel-body-inner.no-padding .cp-Panel-body-inner,
+#extensionsNav .next-content-panel-container .next-content-panel .cp-Panel-body .cp-Panel-body-inner.no-padding .cp-Panel-body-inner,
+.sidebar-panels .next-content-panel-container .next-content-panel .cp-Panel-body .cp-Panel-body-inner.no-padding .cp-Panel-body-inner,
+#extensionsNav .cp-Panels .next-content-panel .cp-Panel-body .cp-Panel-body-inner.no-padding .cp-Panel-body-inner,
+.sidebar-panels .cp-Panels .next-content-panel .cp-Panel-body .cp-Panel-body-inner.no-padding .cp-Panel-body-inner,
+#extensionsNav .next-content-panel-container .cp-Panel .cp-Panel-body .cp-Panel-body-inner.no-padding .cp-Panel-body-inner,
+.sidebar-panels .next-content-panel-container .cp-Panel .cp-Panel-body .cp-Panel-body-inner.no-padding .cp-Panel-body-inner,
+#extensionsNav .cp-Panels .cp-Panel .cp-Panel-body .cp-Panel-body-inner.no-padding .cp-Panel-body-inner,
+.sidebar-panels .cp-Panels .cp-Panel .cp-Panel-body .cp-Panel-body-inner.no-padding .cp-Panel-body-inner {
+    @apply p-0;
+}
+
+#extensionsNav .next-content-panel-container .next-content-panel .next-content-panel-body .cp-Panel-body-inner a,
+.sidebar-panels .next-content-panel-container .next-content-panel .next-content-panel-body .cp-Panel-body-inner a,
+#extensionsNav .cp-Panels .next-content-panel .next-content-panel-body .cp-Panel-body-inner a,
+.sidebar-panels .cp-Panels .next-content-panel .next-content-panel-body .cp-Panel-body-inner a,
+#extensionsNav .next-content-panel-container .cp-Panel .next-content-panel-body .cp-Panel-body-inner a,
+.sidebar-panels .next-content-panel-container .cp-Panel .next-content-panel-body .cp-Panel-body-inner a,
+#extensionsNav .cp-Panels .cp-Panel .next-content-panel-body .cp-Panel-body-inner a,
+.sidebar-panels .cp-Panels .cp-Panel .next-content-panel-body .cp-Panel-body-inner a,
+#extensionsNav .next-content-panel-container .next-content-panel .cp-Panel-body .cp-Panel-body-inner a,
+.sidebar-panels .next-content-panel-container .next-content-panel .cp-Panel-body .cp-Panel-body-inner a,
+#extensionsNav .cp-Panels .next-content-panel .cp-Panel-body .cp-Panel-body-inner a,
+.sidebar-panels .cp-Panels .next-content-panel .cp-Panel-body .cp-Panel-body-inner a,
+#extensionsNav .next-content-panel-container .cp-Panel .cp-Panel-body .cp-Panel-body-inner a,
+.sidebar-panels .next-content-panel-container .cp-Panel .cp-Panel-body .cp-Panel-body-inner a,
+#extensionsNav .cp-Panels .cp-Panel .cp-Panel-body .cp-Panel-body-inner a,
+.sidebar-panels .cp-Panels .cp-Panel .cp-Panel-body .cp-Panel-body-inner a {
+    @apply flex items-center px-4 pb-3 text-sm text-gray-400 no-underline select-none;
+}
+
+#extensionsNav .next-content-panel-container .next-content-panel .next-content-panel-body .cp-Panel-body-inner a:last-child,
+.sidebar-panels .next-content-panel-container .next-content-panel .next-content-panel-body .cp-Panel-body-inner a:last-child,
+#extensionsNav .cp-Panels .next-content-panel .next-content-panel-body .cp-Panel-body-inner a:last-child,
+.sidebar-panels .cp-Panels .next-content-panel .next-content-panel-body .cp-Panel-body-inner a:last-child,
+#extensionsNav .next-content-panel-container .cp-Panel .next-content-panel-body .cp-Panel-body-inner a:last-child,
+.sidebar-panels .next-content-panel-container .cp-Panel .next-content-panel-body .cp-Panel-body-inner a:last-child,
+#extensionsNav .cp-Panels .cp-Panel .next-content-panel-body .cp-Panel-body-inner a:last-child,
+.sidebar-panels .cp-Panels .cp-Panel .next-content-panel-body .cp-Panel-body-inner a:last-child,
+#extensionsNav .next-content-panel-container .next-content-panel .cp-Panel-body .cp-Panel-body-inner a:last-child,
+.sidebar-panels .next-content-panel-container .next-content-panel .cp-Panel-body .cp-Panel-body-inner a:last-child,
+#extensionsNav .cp-Panels .next-content-panel .cp-Panel-body .cp-Panel-body-inner a:last-child,
+.sidebar-panels .cp-Panels .next-content-panel .cp-Panel-body .cp-Panel-body-inner a:last-child,
+#extensionsNav .next-content-panel-container .cp-Panel .cp-Panel-body .cp-Panel-body-inner a:last-child,
+.sidebar-panels .next-content-panel-container .cp-Panel .cp-Panel-body .cp-Panel-body-inner a:last-child,
+#extensionsNav .cp-Panels .cp-Panel .cp-Panel-body .cp-Panel-body-inner a:last-child,
+.sidebar-panels .cp-Panels .cp-Panel .cp-Panel-body .cp-Panel-body-inner a:last-child {
+    @apply pb-1;
+}
+
+#extensionsNav .next-content-panel-container .next-content-panel .next-content-panel-body .cp-Panel-body-inner a > span:first-child,
+.sidebar-panels .next-content-panel-container .next-content-panel .next-content-panel-body .cp-Panel-body-inner a > span:first-child,
+#extensionsNav .cp-Panels .next-content-panel .next-content-panel-body .cp-Panel-body-inner a > span:first-child,
+.sidebar-panels .cp-Panels .next-content-panel .next-content-panel-body .cp-Panel-body-inner a > span:first-child,
+#extensionsNav .next-content-panel-container .cp-Panel .next-content-panel-body .cp-Panel-body-inner a > span:first-child,
+.sidebar-panels .next-content-panel-container .cp-Panel .next-content-panel-body .cp-Panel-body-inner a > span:first-child,
+#extensionsNav .cp-Panels .cp-Panel .next-content-panel-body .cp-Panel-body-inner a > span:first-child,
+.sidebar-panels .cp-Panels .cp-Panel .next-content-panel-body .cp-Panel-body-inner a > span:first-child,
+#extensionsNav .next-content-panel-container .next-content-panel .cp-Panel-body .cp-Panel-body-inner a > span:first-child,
+.sidebar-panels .next-content-panel-container .next-content-panel .cp-Panel-body .cp-Panel-body-inner a > span:first-child,
+#extensionsNav .cp-Panels .next-content-panel .cp-Panel-body .cp-Panel-body-inner a > span:first-child,
+.sidebar-panels .cp-Panels .next-content-panel .cp-Panel-body .cp-Panel-body-inner a > span:first-child,
+#extensionsNav .next-content-panel-container .cp-Panel .cp-Panel-body .cp-Panel-body-inner a > span:first-child,
+.sidebar-panels .next-content-panel-container .cp-Panel .cp-Panel-body .cp-Panel-body-inner a > span:first-child,
+#extensionsNav .cp-Panels .cp-Panel .cp-Panel-body .cp-Panel-body-inner a > span:first-child,
+.sidebar-panels .cp-Panels .cp-Panel .cp-Panel-body .cp-Panel-body-inner a > span:first-child {
+    @apply w-8;
+}
+
+#extensionsNav .next-content-panel-container .next-content-panel .next-content-panel-body .cp-Panel-body-inner a > span:last-child,
+.sidebar-panels .next-content-panel-container .next-content-panel .next-content-panel-body .cp-Panel-body-inner a > span:last-child,
+#extensionsNav .cp-Panels .next-content-panel .next-content-panel-body .cp-Panel-body-inner a > span:last-child,
+.sidebar-panels .cp-Panels .next-content-panel .next-content-panel-body .cp-Panel-body-inner a > span:last-child,
+#extensionsNav .next-content-panel-container .cp-Panel .next-content-panel-body .cp-Panel-body-inner a > span:last-child,
+.sidebar-panels .next-content-panel-container .cp-Panel .next-content-panel-body .cp-Panel-body-inner a > span:last-child,
+#extensionsNav .cp-Panels .cp-Panel .next-content-panel-body .cp-Panel-body-inner a > span:last-child,
+.sidebar-panels .cp-Panels .cp-Panel .next-content-panel-body .cp-Panel-body-inner a > span:last-child,
+#extensionsNav .next-content-panel-container .next-content-panel .cp-Panel-body .cp-Panel-body-inner a > span:last-child,
+.sidebar-panels .next-content-panel-container .next-content-panel .cp-Panel-body .cp-Panel-body-inner a > span:last-child,
+#extensionsNav .cp-Panels .next-content-panel .cp-Panel-body .cp-Panel-body-inner a > span:last-child,
+.sidebar-panels .cp-Panels .next-content-panel .cp-Panel-body .cp-Panel-body-inner a > span:last-child,
+#extensionsNav .next-content-panel-container .cp-Panel .cp-Panel-body .cp-Panel-body-inner a > span:last-child,
+.sidebar-panels .next-content-panel-container .cp-Panel .cp-Panel-body .cp-Panel-body-inner a > span:last-child,
+#extensionsNav .cp-Panels .cp-Panel .cp-Panel-body .cp-Panel-body-inner a > span:last-child,
+.sidebar-panels .cp-Panels .cp-Panel .cp-Panel-body .cp-Panel-body-inner a > span:last-child {
+    @apply w-full truncate;
+}
+
+#extensionsNav .next-content-panel-container .next-content-panel .next-content-panel-body .cp-Panel-body-inner a:hover,
+.sidebar-panels .next-content-panel-container .next-content-panel .next-content-panel-body .cp-Panel-body-inner a:hover,
+#extensionsNav .cp-Panels .next-content-panel .next-content-panel-body .cp-Panel-body-inner a:hover,
+.sidebar-panels .cp-Panels .next-content-panel .next-content-panel-body .cp-Panel-body-inner a:hover,
+#extensionsNav .next-content-panel-container .cp-Panel .next-content-panel-body .cp-Panel-body-inner a:hover,
+.sidebar-panels .next-content-panel-container .cp-Panel .next-content-panel-body .cp-Panel-body-inner a:hover,
+#extensionsNav .cp-Panels .cp-Panel .next-content-panel-body .cp-Panel-body-inner a:hover,
+.sidebar-panels .cp-Panels .cp-Panel .next-content-panel-body .cp-Panel-body-inner a:hover,
+#extensionsNav .next-content-panel-container .next-content-panel .cp-Panel-body .cp-Panel-body-inner a:hover,
+.sidebar-panels .next-content-panel-container .next-content-panel .cp-Panel-body .cp-Panel-body-inner a:hover,
+#extensionsNav .cp-Panels .next-content-panel .cp-Panel-body .cp-Panel-body-inner a:hover,
+.sidebar-panels .cp-Panels .next-content-panel .cp-Panel-body .cp-Panel-body-inner a:hover,
+#extensionsNav .next-content-panel-container .cp-Panel .cp-Panel-body .cp-Panel-body-inner a:hover,
+.sidebar-panels .next-content-panel-container .cp-Panel .cp-Panel-body .cp-Panel-body-inner a:hover,
+#extensionsNav .cp-Panels .cp-Panel .cp-Panel-body .cp-Panel-body-inner a:hover,
+.sidebar-panels .cp-Panels .cp-Panel .cp-Panel-body .cp-Panel-body-inner a:hover {
+    @apply text-gray-100;
+}
+
+#extensionsNav .next-content-panel-container .next-content-panel .next-content-panel-body .cp-Panel-body-inner a.active,
+.sidebar-panels .next-content-panel-container .next-content-panel .next-content-panel-body .cp-Panel-body-inner a.active,
+#extensionsNav .cp-Panels .next-content-panel .next-content-panel-body .cp-Panel-body-inner a.active,
+.sidebar-panels .cp-Panels .next-content-panel .next-content-panel-body .cp-Panel-body-inner a.active,
+#extensionsNav .next-content-panel-container .cp-Panel .next-content-panel-body .cp-Panel-body-inner a.active,
+.sidebar-panels .next-content-panel-container .cp-Panel .next-content-panel-body .cp-Panel-body-inner a.active,
+#extensionsNav .cp-Panels .cp-Panel .next-content-panel-body .cp-Panel-body-inner a.active,
+.sidebar-panels .cp-Panels .cp-Panel .next-content-panel-body .cp-Panel-body-inner a.active,
+#extensionsNav .next-content-panel-container .next-content-panel .cp-Panel-body .cp-Panel-body-inner a.active,
+.sidebar-panels .next-content-panel-container .next-content-panel .cp-Panel-body .cp-Panel-body-inner a.active,
+#extensionsNav .cp-Panels .next-content-panel .cp-Panel-body .cp-Panel-body-inner a.active,
+.sidebar-panels .cp-Panels .next-content-panel .cp-Panel-body .cp-Panel-body-inner a.active,
+#extensionsNav .next-content-panel-container .cp-Panel .cp-Panel-body .cp-Panel-body-inner a.active,
+.sidebar-panels .next-content-panel-container .cp-Panel .cp-Panel-body .cp-Panel-body-inner a.active,
+#extensionsNav .cp-Panels .cp-Panel .cp-Panel-body .cp-Panel-body-inner a.active,
+.sidebar-panels .cp-Panels .cp-Panel .cp-Panel-body .cp-Panel-body-inner a.active {
+    @apply font-bold;
+}
+
+body[data-theme='dark'] #extensionsNav,
+body[data-theme='dark'] .sidebar-panels {
+    @apply bg-gray-800 border-gray-900;
+}
+
+body[data-theme='dark'] #extensionsNav .next-content-panel-container .next-content-panel .next-content-panel-toggle,
+body[data-theme='dark'] .sidebar-panels .next-content-panel-container .next-content-panel .next-content-panel-toggle,
+body[data-theme='dark'] #extensionsNav .cp-Panels .next-content-panel .next-content-panel-toggle,
+body[data-theme='dark'] .sidebar-panels .cp-Panels .next-content-panel .next-content-panel-toggle,
+body[data-theme='dark'] #extensionsNav .next-content-panel-container .cp-Panel .next-content-panel-toggle,
+body[data-theme='dark'] .sidebar-panels .next-content-panel-container .cp-Panel .next-content-panel-toggle,
+body[data-theme='dark'] #extensionsNav .cp-Panels .cp-Panel .next-content-panel-toggle,
+body[data-theme='dark'] .sidebar-panels .cp-Panels .cp-Panel .next-content-panel-toggle,
+body[data-theme='dark'] #extensionsNav .next-content-panel-container .next-content-panel .cp-Panel-toggle,
+body[data-theme='dark'] .sidebar-panels .next-content-panel-container .next-content-panel .cp-Panel-toggle,
+body[data-theme='dark'] #extensionsNav .cp-Panels .next-content-panel .cp-Panel-toggle,
+body[data-theme='dark'] .sidebar-panels .cp-Panels .next-content-panel .cp-Panel-toggle,
+body[data-theme='dark'] #extensionsNav .next-content-panel-container .cp-Panel .cp-Panel-toggle,
+body[data-theme='dark'] .sidebar-panels .next-content-panel-container .cp-Panel .cp-Panel-toggle,
+body[data-theme='dark'] #extensionsNav .cp-Panels .cp-Panel .cp-Panel-toggle,
+body[data-theme='dark'] .sidebar-panels .cp-Panels .cp-Panel .cp-Panel-toggle {
+    @apply border-gray-900;
+}
+
+body[data-theme='dark'] #extensionsNav .next-content-panel-container .next-content-panel .next-content-panel-toggle:hover,
+body[data-theme='dark'] .sidebar-panels .next-content-panel-container .next-content-panel .next-content-panel-toggle:hover,
+body[data-theme='dark'] #extensionsNav .cp-Panels .next-content-panel .next-content-panel-toggle:hover,
+body[data-theme='dark'] .sidebar-panels .cp-Panels .next-content-panel .next-content-panel-toggle:hover,
+body[data-theme='dark'] #extensionsNav .next-content-panel-container .cp-Panel .next-content-panel-toggle:hover,
+body[data-theme='dark'] .sidebar-panels .next-content-panel-container .cp-Panel .next-content-panel-toggle:hover,
+body[data-theme='dark'] #extensionsNav .cp-Panels .cp-Panel .next-content-panel-toggle:hover,
+body[data-theme='dark'] .sidebar-panels .cp-Panels .cp-Panel .next-content-panel-toggle:hover,
+body[data-theme='dark'] #extensionsNav .next-content-panel-container .next-content-panel .cp-Panel-toggle:hover,
+body[data-theme='dark'] .sidebar-panels .next-content-panel-container .next-content-panel .cp-Panel-toggle:hover,
+body[data-theme='dark'] #extensionsNav .cp-Panels .next-content-panel .cp-Panel-toggle:hover,
+body[data-theme='dark'] .sidebar-panels .cp-Panels .next-content-panel .cp-Panel-toggle:hover,
+body[data-theme='dark'] #extensionsNav .next-content-panel-container .cp-Panel .cp-Panel-toggle:hover,
+body[data-theme='dark'] .sidebar-panels .next-content-panel-container .cp-Panel .cp-Panel-toggle:hover,
+body[data-theme='dark'] #extensionsNav .cp-Panels .cp-Panel .cp-Panel-toggle:hover,
+body[data-theme='dark'] .sidebar-panels .cp-Panels .cp-Panel .cp-Panel-toggle:hover {
+    @apply bg-gray-700;
+}
+
+body[data-theme='dark'] #extensionsNav .next-content-panel-container .next-content-panel .next-content-panel-body .next-content-panel-body-inner,
+body[data-theme='dark'] .sidebar-panels .next-content-panel-container .next-content-panel .next-content-panel-body .next-content-panel-body-inner,
+body[data-theme='dark'] #extensionsNav .cp-Panels .next-content-panel .next-content-panel-body .next-content-panel-body-inner,
+body[data-theme='dark'] .sidebar-panels .cp-Panels .next-content-panel .next-content-panel-body .next-content-panel-body-inner,
+body[data-theme='dark'] #extensionsNav .next-content-panel-container .cp-Panel .next-content-panel-body .next-content-panel-body-inner,
+body[data-theme='dark'] .sidebar-panels .next-content-panel-container .cp-Panel .next-content-panel-body .next-content-panel-body-inner,
+body[data-theme='dark'] #extensionsNav .cp-Panels .cp-Panel .next-content-panel-body .next-content-panel-body-inner,
+body[data-theme='dark'] .sidebar-panels .cp-Panels .cp-Panel .next-content-panel-body .next-content-panel-body-inner,
+body[data-theme='dark'] #extensionsNav .next-content-panel-container .next-content-panel .cp-Panel-body .next-content-panel-body-inner,
+body[data-theme='dark'] .sidebar-panels .next-content-panel-container .next-content-panel .cp-Panel-body .next-content-panel-body-inner,
+body[data-theme='dark'] #extensionsNav .cp-Panels .next-content-panel .cp-Panel-body .next-content-panel-body-inner,
+body[data-theme='dark'] .sidebar-panels .cp-Panels .next-content-panel .cp-Panel-body .next-content-panel-body-inner,
+body[data-theme='dark'] #extensionsNav .next-content-panel-container .cp-Panel .cp-Panel-body .next-content-panel-body-inner,
+body[data-theme='dark'] .sidebar-panels .next-content-panel-container .cp-Panel .cp-Panel-body .next-content-panel-body-inner,
+body[data-theme='dark'] #extensionsNav .cp-Panels .cp-Panel .cp-Panel-body .next-content-panel-body-inner,
+body[data-theme='dark'] .sidebar-panels .cp-Panels .cp-Panel .cp-Panel-body .next-content-panel-body-inner,
+body[data-theme='dark'] #extensionsNav .next-content-panel-container .next-content-panel .next-content-panel-body .cp-Panel-body-inner,
+body[data-theme='dark'] .sidebar-panels .next-content-panel-container .next-content-panel .next-content-panel-body .cp-Panel-body-inner,
+body[data-theme='dark'] #extensionsNav .cp-Panels .next-content-panel .next-content-panel-body .cp-Panel-body-inner,
+body[data-theme='dark'] .sidebar-panels .cp-Panels .next-content-panel .next-content-panel-body .cp-Panel-body-inner,
+body[data-theme='dark'] #extensionsNav .next-content-panel-container .cp-Panel .next-content-panel-body .cp-Panel-body-inner,
+body[data-theme='dark'] .sidebar-panels .next-content-panel-container .cp-Panel .next-content-panel-body .cp-Panel-body-inner,
+body[data-theme='dark'] #extensionsNav .cp-Panels .cp-Panel .next-content-panel-body .cp-Panel-body-inner,
+body[data-theme='dark'] .sidebar-panels .cp-Panels .cp-Panel .next-content-panel-body .cp-Panel-body-inner,
+body[data-theme='dark'] #extensionsNav .next-content-panel-container .next-content-panel .cp-Panel-body .cp-Panel-body-inner,
+body[data-theme='dark'] .sidebar-panels .next-content-panel-container .next-content-panel .cp-Panel-body .cp-Panel-body-inner,
+body[data-theme='dark'] #extensionsNav .cp-Panels .next-content-panel .cp-Panel-body .cp-Panel-body-inner,
+body[data-theme='dark'] .sidebar-panels .cp-Panels .next-content-panel .cp-Panel-body .cp-Panel-body-inner,
+body[data-theme='dark'] #extensionsNav .next-content-panel-container .cp-Panel .cp-Panel-body .cp-Panel-body-inner,
+body[data-theme='dark'] .sidebar-panels .next-content-panel-container .cp-Panel .cp-Panel-body .cp-Panel-body-inner,
+body[data-theme='dark'] #extensionsNav .cp-Panels .cp-Panel .cp-Panel-body .cp-Panel-body-inner,
+body[data-theme='dark'] .sidebar-panels .cp-Panels .cp-Panel .cp-Panel-body .cp-Panel-body-inner {
+    @apply border-gray-900;
+}
+
+body[data-theme='dark'] #extensionsNav .next-content-panel-container .next-content-panel .next-content-panel-body .next-content-panel-body-inner a,
+body[data-theme='dark'] .sidebar-panels .next-content-panel-container .next-content-panel .next-content-panel-body .next-content-panel-body-inner a,
+body[data-theme='dark'] #extensionsNav .cp-Panels .next-content-panel .next-content-panel-body .next-content-panel-body-inner a,
+body[data-theme='dark'] .sidebar-panels .cp-Panels .next-content-panel .next-content-panel-body .next-content-panel-body-inner a,
+body[data-theme='dark'] #extensionsNav .next-content-panel-container .cp-Panel .next-content-panel-body .next-content-panel-body-inner a,
+body[data-theme='dark'] .sidebar-panels .next-content-panel-container .cp-Panel .next-content-panel-body .next-content-panel-body-inner a,
+body[data-theme='dark'] #extensionsNav .cp-Panels .cp-Panel .next-content-panel-body .next-content-panel-body-inner a,
+body[data-theme='dark'] .sidebar-panels .cp-Panels .cp-Panel .next-content-panel-body .next-content-panel-body-inner a,
+body[data-theme='dark'] #extensionsNav .next-content-panel-container .next-content-panel .cp-Panel-body .next-content-panel-body-inner a,
+body[data-theme='dark'] .sidebar-panels .next-content-panel-container .next-content-panel .cp-Panel-body .next-content-panel-body-inner a,
+body[data-theme='dark'] #extensionsNav .cp-Panels .next-content-panel .cp-Panel-body .next-content-panel-body-inner a,
+body[data-theme='dark'] .sidebar-panels .cp-Panels .next-content-panel .cp-Panel-body .next-content-panel-body-inner a,
+body[data-theme='dark'] #extensionsNav .next-content-panel-container .cp-Panel .cp-Panel-body .next-content-panel-body-inner a,
+body[data-theme='dark'] .sidebar-panels .next-content-panel-container .cp-Panel .cp-Panel-body .next-content-panel-body-inner a,
+body[data-theme='dark'] #extensionsNav .cp-Panels .cp-Panel .cp-Panel-body .next-content-panel-body-inner a,
+body[data-theme='dark'] .sidebar-panels .cp-Panels .cp-Panel .cp-Panel-body .next-content-panel-body-inner a,
+body[data-theme='dark'] #extensionsNav .next-content-panel-container .next-content-panel .next-content-panel-body .cp-Panel-body-inner a,
+body[data-theme='dark'] .sidebar-panels .next-content-panel-container .next-content-panel .next-content-panel-body .cp-Panel-body-inner a,
+body[data-theme='dark'] #extensionsNav .cp-Panels .next-content-panel .next-content-panel-body .cp-Panel-body-inner a,
+body[data-theme='dark'] .sidebar-panels .cp-Panels .next-content-panel .next-content-panel-body .cp-Panel-body-inner a,
+body[data-theme='dark'] #extensionsNav .next-content-panel-container .cp-Panel .next-content-panel-body .cp-Panel-body-inner a,
+body[data-theme='dark'] .sidebar-panels .next-content-panel-container .cp-Panel .next-content-panel-body .cp-Panel-body-inner a,
+body[data-theme='dark'] #extensionsNav .cp-Panels .cp-Panel .next-content-panel-body .cp-Panel-body-inner a,
+body[data-theme='dark'] .sidebar-panels .cp-Panels .cp-Panel .next-content-panel-body .cp-Panel-body-inner a,
+body[data-theme='dark'] #extensionsNav .next-content-panel-container .next-content-panel .cp-Panel-body .cp-Panel-body-inner a,
+body[data-theme='dark'] .sidebar-panels .next-content-panel-container .next-content-panel .cp-Panel-body .cp-Panel-body-inner a,
+body[data-theme='dark'] #extensionsNav .cp-Panels .next-content-panel .cp-Panel-body .cp-Panel-body-inner a,
+body[data-theme='dark'] .sidebar-panels .cp-Panels .next-content-panel .cp-Panel-body .cp-Panel-body-inner a,
+body[data-theme='dark'] #extensionsNav .next-content-panel-container .cp-Panel .cp-Panel-body .cp-Panel-body-inner a,
+body[data-theme='dark'] .sidebar-panels .next-content-panel-container .cp-Panel .cp-Panel-body .cp-Panel-body-inner a,
+body[data-theme='dark'] #extensionsNav .cp-Panels .cp-Panel .cp-Panel-body .cp-Panel-body-inner a,
+body[data-theme='dark'] .sidebar-panels .cp-Panels .cp-Panel .cp-Panel-body .cp-Panel-body-inner a {
+    @apply text-gray-400;
+}
+
+body[data-theme='dark'] #extensionsNav .next-content-panel-container .next-content-panel .next-content-panel-body .next-content-panel-body-inner a:hover,
+body[data-theme='dark'] .sidebar-panels .next-content-panel-container .next-content-panel .next-content-panel-body .next-content-panel-body-inner a:hover,
+body[data-theme='dark'] #extensionsNav .cp-Panels .next-content-panel .next-content-panel-body .next-content-panel-body-inner a:hover,
+body[data-theme='dark'] .sidebar-panels .cp-Panels .next-content-panel .next-content-panel-body .next-content-panel-body-inner a:hover,
+body[data-theme='dark'] #extensionsNav .next-content-panel-container .cp-Panel .next-content-panel-body .next-content-panel-body-inner a:hover,
+body[data-theme='dark'] .sidebar-panels .next-content-panel-container .cp-Panel .next-content-panel-body .next-content-panel-body-inner a:hover,
+body[data-theme='dark'] #extensionsNav .cp-Panels .cp-Panel .next-content-panel-body .next-content-panel-body-inner a:hover,
+body[data-theme='dark'] .sidebar-panels .cp-Panels .cp-Panel .next-content-panel-body .next-content-panel-body-inner a:hover,
+body[data-theme='dark'] #extensionsNav .next-content-panel-container .next-content-panel .cp-Panel-body .next-content-panel-body-inner a:hover,
+body[data-theme='dark'] .sidebar-panels .next-content-panel-container .next-content-panel .cp-Panel-body .next-content-panel-body-inner a:hover,
+body[data-theme='dark'] #extensionsNav .cp-Panels .next-content-panel .cp-Panel-body .next-content-panel-body-inner a:hover,
+body[data-theme='dark'] .sidebar-panels .cp-Panels .next-content-panel .cp-Panel-body .next-content-panel-body-inner a:hover,
+body[data-theme='dark'] #extensionsNav .next-content-panel-container .cp-Panel .cp-Panel-body .next-content-panel-body-inner a:hover,
+body[data-theme='dark'] .sidebar-panels .next-content-panel-container .cp-Panel .cp-Panel-body .next-content-panel-body-inner a:hover,
+body[data-theme='dark'] #extensionsNav .cp-Panels .cp-Panel .cp-Panel-body .next-content-panel-body-inner a:hover,
+body[data-theme='dark'] .sidebar-panels .cp-Panels .cp-Panel .cp-Panel-body .next-content-panel-body-inner a:hover,
+body[data-theme='dark'] #extensionsNav .next-content-panel-container .next-content-panel .next-content-panel-body .cp-Panel-body-inner a:hover,
+body[data-theme='dark'] .sidebar-panels .next-content-panel-container .next-content-panel .next-content-panel-body .cp-Panel-body-inner a:hover,
+body[data-theme='dark'] #extensionsNav .cp-Panels .next-content-panel .next-content-panel-body .cp-Panel-body-inner a:hover,
+body[data-theme='dark'] .sidebar-panels .cp-Panels .next-content-panel .next-content-panel-body .cp-Panel-body-inner a:hover,
+body[data-theme='dark'] #extensionsNav .next-content-panel-container .cp-Panel .next-content-panel-body .cp-Panel-body-inner a:hover,
+body[data-theme='dark'] .sidebar-panels .next-content-panel-container .cp-Panel .next-content-panel-body .cp-Panel-body-inner a:hover,
+body[data-theme='dark'] #extensionsNav .cp-Panels .cp-Panel .next-content-panel-body .cp-Panel-body-inner a:hover,
+body[data-theme='dark'] .sidebar-panels .cp-Panels .cp-Panel .next-content-panel-body .cp-Panel-body-inner a:hover,
+body[data-theme='dark'] #extensionsNav .next-content-panel-container .next-content-panel .cp-Panel-body .cp-Panel-body-inner a:hover,
+body[data-theme='dark'] .sidebar-panels .next-content-panel-container .next-content-panel .cp-Panel-body .cp-Panel-body-inner a:hover,
+body[data-theme='dark'] #extensionsNav .cp-Panels .next-content-panel .cp-Panel-body .cp-Panel-body-inner a:hover,
+body[data-theme='dark'] .sidebar-panels .cp-Panels .next-content-panel .cp-Panel-body .cp-Panel-body-inner a:hover,
+body[data-theme='dark'] #extensionsNav .next-content-panel-container .cp-Panel .cp-Panel-body .cp-Panel-body-inner a:hover,
+body[data-theme='dark'] .sidebar-panels .next-content-panel-container .cp-Panel .cp-Panel-body .cp-Panel-body-inner a:hover,
+body[data-theme='dark'] #extensionsNav .cp-Panels .cp-Panel .cp-Panel-body .cp-Panel-body-inner a:hover,
+body[data-theme='dark'] .sidebar-panels .cp-Panels .cp-Panel .cp-Panel-body .cp-Panel-body-inner a:hover {
+    @apply text-gray-100;
+}
+
+body[data-theme='dark'] #extensionsNav .next-content-panel-container .next-content-panel .next-content-panel-body .next-content-panel-body-inner a.active,
+body[data-theme='dark'] .sidebar-panels .next-content-panel-container .next-content-panel .next-content-panel-body .next-content-panel-body-inner a.active,
+body[data-theme='dark'] #extensionsNav .cp-Panels .next-content-panel .next-content-panel-body .next-content-panel-body-inner a.active,
+body[data-theme='dark'] .sidebar-panels .cp-Panels .next-content-panel .next-content-panel-body .next-content-panel-body-inner a.active,
+body[data-theme='dark'] #extensionsNav .next-content-panel-container .cp-Panel .next-content-panel-body .next-content-panel-body-inner a.active,
+body[data-theme='dark'] .sidebar-panels .next-content-panel-container .cp-Panel .next-content-panel-body .next-content-panel-body-inner a.active,
+body[data-theme='dark'] #extensionsNav .cp-Panels .cp-Panel .next-content-panel-body .next-content-panel-body-inner a.active,
+body[data-theme='dark'] .sidebar-panels .cp-Panels .cp-Panel .next-content-panel-body .next-content-panel-body-inner a.active,
+body[data-theme='dark'] #extensionsNav .next-content-panel-container .next-content-panel .cp-Panel-body .next-content-panel-body-inner a.active,
+body[data-theme='dark'] .sidebar-panels .next-content-panel-container .next-content-panel .cp-Panel-body .next-content-panel-body-inner a.active,
+body[data-theme='dark'] #extensionsNav .cp-Panels .next-content-panel .cp-Panel-body .next-content-panel-body-inner a.active,
+body[data-theme='dark'] .sidebar-panels .cp-Panels .next-content-panel .cp-Panel-body .next-content-panel-body-inner a.active,
+body[data-theme='dark'] #extensionsNav .next-content-panel-container .cp-Panel .cp-Panel-body .next-content-panel-body-inner a.active,
+body[data-theme='dark'] .sidebar-panels .next-content-panel-container .cp-Panel .cp-Panel-body .next-content-panel-body-inner a.active,
+body[data-theme='dark'] #extensionsNav .cp-Panels .cp-Panel .cp-Panel-body .next-content-panel-body-inner a.active,
+body[data-theme='dark'] .sidebar-panels .cp-Panels .cp-Panel .cp-Panel-body .next-content-panel-body-inner a.active,
+body[data-theme='dark'] #extensionsNav .next-content-panel-container .next-content-panel .next-content-panel-body .cp-Panel-body-inner a.active,
+body[data-theme='dark'] .sidebar-panels .next-content-panel-container .next-content-panel .next-content-panel-body .cp-Panel-body-inner a.active,
+body[data-theme='dark'] #extensionsNav .cp-Panels .next-content-panel .next-content-panel-body .cp-Panel-body-inner a.active,
+body[data-theme='dark'] .sidebar-panels .cp-Panels .next-content-panel .next-content-panel-body .cp-Panel-body-inner a.active,
+body[data-theme='dark'] #extensionsNav .next-content-panel-container .cp-Panel .next-content-panel-body .cp-Panel-body-inner a.active,
+body[data-theme='dark'] .sidebar-panels .next-content-panel-container .cp-Panel .next-content-panel-body .cp-Panel-body-inner a.active,
+body[data-theme='dark'] #extensionsNav .cp-Panels .cp-Panel .next-content-panel-body .cp-Panel-body-inner a.active,
+body[data-theme='dark'] .sidebar-panels .cp-Panels .cp-Panel .next-content-panel-body .cp-Panel-body-inner a.active,
+body[data-theme='dark'] #extensionsNav .next-content-panel-container .next-content-panel .cp-Panel-body .cp-Panel-body-inner a.active,
+body[data-theme='dark'] .sidebar-panels .next-content-panel-container .next-content-panel .cp-Panel-body .cp-Panel-body-inner a.active,
+body[data-theme='dark'] #extensionsNav .cp-Panels .next-content-panel .cp-Panel-body .cp-Panel-body-inner a.active,
+body[data-theme='dark'] .sidebar-panels .cp-Panels .next-content-panel .cp-Panel-body .cp-Panel-body-inner a.active,
+body[data-theme='dark'] #extensionsNav .next-content-panel-container .cp-Panel .cp-Panel-body .cp-Panel-body-inner a.active,
+body[data-theme='dark'] .sidebar-panels .next-content-panel-container .cp-Panel .cp-Panel-body .cp-Panel-body-inner a.active,
+body[data-theme='dark'] #extensionsNav .cp-Panels .cp-Panel .cp-Panel-body .cp-Panel-body-inner a.active,
+body[data-theme='dark'] .sidebar-panels .cp-Panels .cp-Panel .cp-Panel-body .cp-Panel-body-inner a.active {
+    @apply text-white;
+}
+
+body[data-theme='light'] #extensionsNav,
+body[data-theme='light'] .sidebar-panels {
+    @apply bg-gray-100 border-gray-300;
+}
+
+body[data-theme='light'] #extensionsNav .next-content-panel-container .next-content-panel .next-content-panel-toggle,
+body[data-theme='light'] .sidebar-panels .next-content-panel-container .next-content-panel .next-content-panel-toggle,
+body[data-theme='light'] #extensionsNav .cp-Panels .next-content-panel .next-content-panel-toggle,
+body[data-theme='light'] .sidebar-panels .cp-Panels .next-content-panel .next-content-panel-toggle,
+body[data-theme='light'] #extensionsNav .next-content-panel-container .cp-Panel .next-content-panel-toggle,
+body[data-theme='light'] .sidebar-panels .next-content-panel-container .cp-Panel .next-content-panel-toggle,
+body[data-theme='light'] #extensionsNav .cp-Panels .cp-Panel .next-content-panel-toggle,
+body[data-theme='light'] .sidebar-panels .cp-Panels .cp-Panel .next-content-panel-toggle,
+body[data-theme='light'] #extensionsNav .next-content-panel-container .next-content-panel .cp-Panel-toggle,
+body[data-theme='light'] .sidebar-panels .next-content-panel-container .next-content-panel .cp-Panel-toggle,
+body[data-theme='light'] #extensionsNav .cp-Panels .next-content-panel .cp-Panel-toggle,
+body[data-theme='light'] .sidebar-panels .cp-Panels .next-content-panel .cp-Panel-toggle,
+body[data-theme='light'] #extensionsNav .next-content-panel-container .cp-Panel .cp-Panel-toggle,
+body[data-theme='light'] .sidebar-panels .next-content-panel-container .cp-Panel .cp-Panel-toggle,
+body[data-theme='light'] #extensionsNav .cp-Panels .cp-Panel .cp-Panel-toggle,
+body[data-theme='light'] .sidebar-panels .cp-Panels .cp-Panel .cp-Panel-toggle {
+    @apply text-gray-700 border-gray-300;
+}
+
+body[data-theme='light'] #extensionsNav .next-content-panel-container .next-content-panel .next-content-panel-toggle span,
+body[data-theme='light'] .sidebar-panels .next-content-panel-container .next-content-panel .next-content-panel-toggle span,
+body[data-theme='light'] #extensionsNav .cp-Panels .next-content-panel .next-content-panel-toggle span,
+body[data-theme='light'] .sidebar-panels .cp-Panels .next-content-panel .next-content-panel-toggle span,
+body[data-theme='light'] #extensionsNav .next-content-panel-container .cp-Panel .next-content-panel-toggle span,
+body[data-theme='light'] .sidebar-panels .next-content-panel-container .cp-Panel .next-content-panel-toggle span,
+body[data-theme='light'] #extensionsNav .cp-Panels .cp-Panel .next-content-panel-toggle span,
+body[data-theme='light'] .sidebar-panels .cp-Panels .cp-Panel .next-content-panel-toggle span,
+body[data-theme='light'] #extensionsNav .next-content-panel-container .next-content-panel .cp-Panel-toggle span,
+body[data-theme='light'] .sidebar-panels .next-content-panel-container .next-content-panel .cp-Panel-toggle span,
+body[data-theme='light'] #extensionsNav .cp-Panels .next-content-panel .cp-Panel-toggle span,
+body[data-theme='light'] .sidebar-panels .cp-Panels .next-content-panel .cp-Panel-toggle span,
+body[data-theme='light'] #extensionsNav .next-content-panel-container .cp-Panel .cp-Panel-toggle span,
+body[data-theme='light'] .sidebar-panels .next-content-panel-container .cp-Panel .cp-Panel-toggle span,
+body[data-theme='light'] #extensionsNav .cp-Panels .cp-Panel .cp-Panel-toggle span,
+body[data-theme='light'] .sidebar-panels .cp-Panels .cp-Panel .cp-Panel-toggle span {
+    @apply text-gray-700;
+}
+
+body[data-theme='light'] #extensionsNav .next-content-panel-container .next-content-panel .next-content-panel-toggle:hover,
+body[data-theme='light'] .sidebar-panels .next-content-panel-container .next-content-panel .next-content-panel-toggle:hover,
+body[data-theme='light'] #extensionsNav .cp-Panels .next-content-panel .next-content-panel-toggle:hover,
+body[data-theme='light'] .sidebar-panels .cp-Panels .next-content-panel .next-content-panel-toggle:hover,
+body[data-theme='light'] #extensionsNav .next-content-panel-container .cp-Panel .next-content-panel-toggle:hover,
+body[data-theme='light'] .sidebar-panels .next-content-panel-container .cp-Panel .next-content-panel-toggle:hover,
+body[data-theme='light'] #extensionsNav .cp-Panels .cp-Panel .next-content-panel-toggle:hover,
+body[data-theme='light'] .sidebar-panels .cp-Panels .cp-Panel .next-content-panel-toggle:hover,
+body[data-theme='light'] #extensionsNav .next-content-panel-container .next-content-panel .cp-Panel-toggle:hover,
+body[data-theme='light'] .sidebar-panels .next-content-panel-container .next-content-panel .cp-Panel-toggle:hover,
+body[data-theme='light'] #extensionsNav .cp-Panels .next-content-panel .cp-Panel-toggle:hover,
+body[data-theme='light'] .sidebar-panels .cp-Panels .next-content-panel .cp-Panel-toggle:hover,
+body[data-theme='light'] #extensionsNav .next-content-panel-container .cp-Panel .cp-Panel-toggle:hover,
+body[data-theme='light'] .sidebar-panels .next-content-panel-container .cp-Panel .cp-Panel-toggle:hover,
+body[data-theme='light'] #extensionsNav .cp-Panels .cp-Panel .cp-Panel-toggle:hover,
+body[data-theme='light'] .sidebar-panels .cp-Panels .cp-Panel .cp-Panel-toggle:hover {
+    @apply bg-gray-200;
+}
+
+body[data-theme='light'] #extensionsNav .next-content-panel-container .next-content-panel .next-content-panel-body .next-content-panel-body-inner,
+body[data-theme='light'] .sidebar-panels .next-content-panel-container .next-content-panel .next-content-panel-body .next-content-panel-body-inner,
+body[data-theme='light'] #extensionsNav .cp-Panels .next-content-panel .next-content-panel-body .next-content-panel-body-inner,
+body[data-theme='light'] .sidebar-panels .cp-Panels .next-content-panel .next-content-panel-body .next-content-panel-body-inner,
+body[data-theme='light'] #extensionsNav .next-content-panel-container .cp-Panel .next-content-panel-body .next-content-panel-body-inner,
+body[data-theme='light'] .sidebar-panels .next-content-panel-container .cp-Panel .next-content-panel-body .next-content-panel-body-inner,
+body[data-theme='light'] #extensionsNav .cp-Panels .cp-Panel .next-content-panel-body .next-content-panel-body-inner,
+body[data-theme='light'] .sidebar-panels .cp-Panels .cp-Panel .next-content-panel-body .next-content-panel-body-inner,
+body[data-theme='light'] #extensionsNav .next-content-panel-container .next-content-panel .cp-Panel-body .next-content-panel-body-inner,
+body[data-theme='light'] .sidebar-panels .next-content-panel-container .next-content-panel .cp-Panel-body .next-content-panel-body-inner,
+body[data-theme='light'] #extensionsNav .cp-Panels .next-content-panel .cp-Panel-body .next-content-panel-body-inner,
+body[data-theme='light'] .sidebar-panels .cp-Panels .next-content-panel .cp-Panel-body .next-content-panel-body-inner,
+body[data-theme='light'] #extensionsNav .next-content-panel-container .cp-Panel .cp-Panel-body .next-content-panel-body-inner,
+body[data-theme='light'] .sidebar-panels .next-content-panel-container .cp-Panel .cp-Panel-body .next-content-panel-body-inner,
+body[data-theme='light'] #extensionsNav .cp-Panels .cp-Panel .cp-Panel-body .next-content-panel-body-inner,
+body[data-theme='light'] .sidebar-panels .cp-Panels .cp-Panel .cp-Panel-body .next-content-panel-body-inner,
+body[data-theme='light'] #extensionsNav .next-content-panel-container .next-content-panel .next-content-panel-body .cp-Panel-body-inner,
+body[data-theme='light'] .sidebar-panels .next-content-panel-container .next-content-panel .next-content-panel-body .cp-Panel-body-inner,
+body[data-theme='light'] #extensionsNav .cp-Panels .next-content-panel .next-content-panel-body .cp-Panel-body-inner,
+body[data-theme='light'] .sidebar-panels .cp-Panels .next-content-panel .next-content-panel-body .cp-Panel-body-inner,
+body[data-theme='light'] #extensionsNav .next-content-panel-container .cp-Panel .next-content-panel-body .cp-Panel-body-inner,
+body[data-theme='light'] .sidebar-panels .next-content-panel-container .cp-Panel .next-content-panel-body .cp-Panel-body-inner,
+body[data-theme='light'] #extensionsNav .cp-Panels .cp-Panel .next-content-panel-body .cp-Panel-body-inner,
+body[data-theme='light'] .sidebar-panels .cp-Panels .cp-Panel .next-content-panel-body .cp-Panel-body-inner,
+body[data-theme='light'] #extensionsNav .next-content-panel-container .next-content-panel .cp-Panel-body .cp-Panel-body-inner,
+body[data-theme='light'] .sidebar-panels .next-content-panel-container .next-content-panel .cp-Panel-body .cp-Panel-body-inner,
+body[data-theme='light'] #extensionsNav .cp-Panels .next-content-panel .cp-Panel-body .cp-Panel-body-inner,
+body[data-theme='light'] .sidebar-panels .cp-Panels .next-content-panel .cp-Panel-body .cp-Panel-body-inner,
+body[data-theme='light'] #extensionsNav .next-content-panel-container .cp-Panel .cp-Panel-body .cp-Panel-body-inner,
+body[data-theme='light'] .sidebar-panels .next-content-panel-container .cp-Panel .cp-Panel-body .cp-Panel-body-inner,
+body[data-theme='light'] #extensionsNav .cp-Panels .cp-Panel .cp-Panel-body .cp-Panel-body-inner,
+body[data-theme='light'] .sidebar-panels .cp-Panels .cp-Panel .cp-Panel-body .cp-Panel-body-inner {
+    @apply border-gray-300;
+}
+
+body[data-theme='light'] #extensionsNav .next-content-panel-container .next-content-panel .next-content-panel-body .next-content-panel-body-inner a,
+body[data-theme='light'] .sidebar-panels .next-content-panel-container .next-content-panel .next-content-panel-body .next-content-panel-body-inner a,
+body[data-theme='light'] #extensionsNav .cp-Panels .next-content-panel .next-content-panel-body .next-content-panel-body-inner a,
+body[data-theme='light'] .sidebar-panels .cp-Panels .next-content-panel .next-content-panel-body .next-content-panel-body-inner a,
+body[data-theme='light'] #extensionsNav .next-content-panel-container .cp-Panel .next-content-panel-body .next-content-panel-body-inner a,
+body[data-theme='light'] .sidebar-panels .next-content-panel-container .cp-Panel .next-content-panel-body .next-content-panel-body-inner a,
+body[data-theme='light'] #extensionsNav .cp-Panels .cp-Panel .next-content-panel-body .next-content-panel-body-inner a,
+body[data-theme='light'] .sidebar-panels .cp-Panels .cp-Panel .next-content-panel-body .next-content-panel-body-inner a,
+body[data-theme='light'] #extensionsNav .next-content-panel-container .next-content-panel .cp-Panel-body .next-content-panel-body-inner a,
+body[data-theme='light'] .sidebar-panels .next-content-panel-container .next-content-panel .cp-Panel-body .next-content-panel-body-inner a,
+body[data-theme='light'] #extensionsNav .cp-Panels .next-content-panel .cp-Panel-body .next-content-panel-body-inner a,
+body[data-theme='light'] .sidebar-panels .cp-Panels .next-content-panel .cp-Panel-body .next-content-panel-body-inner a,
+body[data-theme='light'] #extensionsNav .next-content-panel-container .cp-Panel .cp-Panel-body .next-content-panel-body-inner a,
+body[data-theme='light'] .sidebar-panels .next-content-panel-container .cp-Panel .cp-Panel-body .next-content-panel-body-inner a,
+body[data-theme='light'] #extensionsNav .cp-Panels .cp-Panel .cp-Panel-body .next-content-panel-body-inner a,
+body[data-theme='light'] .sidebar-panels .cp-Panels .cp-Panel .cp-Panel-body .next-content-panel-body-inner a,
+body[data-theme='light'] #extensionsNav .next-content-panel-container .next-content-panel .next-content-panel-body .cp-Panel-body-inner a,
+body[data-theme='light'] .sidebar-panels .next-content-panel-container .next-content-panel .next-content-panel-body .cp-Panel-body-inner a,
+body[data-theme='light'] #extensionsNav .cp-Panels .next-content-panel .next-content-panel-body .cp-Panel-body-inner a,
+body[data-theme='light'] .sidebar-panels .cp-Panels .next-content-panel .next-content-panel-body .cp-Panel-body-inner a,
+body[data-theme='light'] #extensionsNav .next-content-panel-container .cp-Panel .next-content-panel-body .cp-Panel-body-inner a,
+body[data-theme='light'] .sidebar-panels .next-content-panel-container .cp-Panel .next-content-panel-body .cp-Panel-body-inner a,
+body[data-theme='light'] #extensionsNav .cp-Panels .cp-Panel .next-content-panel-body .cp-Panel-body-inner a,
+body[data-theme='light'] .sidebar-panels .cp-Panels .cp-Panel .next-content-panel-body .cp-Panel-body-inner a,
+body[data-theme='light'] #extensionsNav .next-content-panel-container .next-content-panel .cp-Panel-body .cp-Panel-body-inner a,
+body[data-theme='light'] .sidebar-panels .next-content-panel-container .next-content-panel .cp-Panel-body .cp-Panel-body-inner a,
+body[data-theme='light'] #extensionsNav .cp-Panels .next-content-panel .cp-Panel-body .cp-Panel-body-inner a,
+body[data-theme='light'] .sidebar-panels .cp-Panels .next-content-panel .cp-Panel-body .cp-Panel-body-inner a,
+body[data-theme='light'] #extensionsNav .next-content-panel-container .cp-Panel .cp-Panel-body .cp-Panel-body-inner a,
+body[data-theme='light'] .sidebar-panels .next-content-panel-container .cp-Panel .cp-Panel-body .cp-Panel-body-inner a,
+body[data-theme='light'] #extensionsNav .cp-Panels .cp-Panel .cp-Panel-body .cp-Panel-body-inner a,
+body[data-theme='light'] .sidebar-panels .cp-Panels .cp-Panel .cp-Panel-body .cp-Panel-body-inner a {
+    @apply text-gray-500;
+}
+
+body[data-theme='light'] #extensionsNav .next-content-panel-container .next-content-panel .next-content-panel-body .next-content-panel-body-inner a:hover,
+body[data-theme='light'] .sidebar-panels .next-content-panel-container .next-content-panel .next-content-panel-body .next-content-panel-body-inner a:hover,
+body[data-theme='light'] #extensionsNav .cp-Panels .next-content-panel .next-content-panel-body .next-content-panel-body-inner a:hover,
+body[data-theme='light'] .sidebar-panels .cp-Panels .next-content-panel .next-content-panel-body .next-content-panel-body-inner a:hover,
+body[data-theme='light'] #extensionsNav .next-content-panel-container .cp-Panel .next-content-panel-body .next-content-panel-body-inner a:hover,
+body[data-theme='light'] .sidebar-panels .next-content-panel-container .cp-Panel .next-content-panel-body .next-content-panel-body-inner a:hover,
+body[data-theme='light'] #extensionsNav .cp-Panels .cp-Panel .next-content-panel-body .next-content-panel-body-inner a:hover,
+body[data-theme='light'] .sidebar-panels .cp-Panels .cp-Panel .next-content-panel-body .next-content-panel-body-inner a:hover,
+body[data-theme='light'] #extensionsNav .next-content-panel-container .next-content-panel .cp-Panel-body .next-content-panel-body-inner a:hover,
+body[data-theme='light'] .sidebar-panels .next-content-panel-container .next-content-panel .cp-Panel-body .next-content-panel-body-inner a:hover,
+body[data-theme='light'] #extensionsNav .cp-Panels .next-content-panel .cp-Panel-body .next-content-panel-body-inner a:hover,
+body[data-theme='light'] .sidebar-panels .cp-Panels .next-content-panel .cp-Panel-body .next-content-panel-body-inner a:hover,
+body[data-theme='light'] #extensionsNav .next-content-panel-container .cp-Panel .cp-Panel-body .next-content-panel-body-inner a:hover,
+body[data-theme='light'] .sidebar-panels .next-content-panel-container .cp-Panel .cp-Panel-body .next-content-panel-body-inner a:hover,
+body[data-theme='light'] #extensionsNav .cp-Panels .cp-Panel .cp-Panel-body .next-content-panel-body-inner a:hover,
+body[data-theme='light'] .sidebar-panels .cp-Panels .cp-Panel .cp-Panel-body .next-content-panel-body-inner a:hover,
+body[data-theme='light'] #extensionsNav .next-content-panel-container .next-content-panel .next-content-panel-body .cp-Panel-body-inner a:hover,
+body[data-theme='light'] .sidebar-panels .next-content-panel-container .next-content-panel .next-content-panel-body .cp-Panel-body-inner a:hover,
+body[data-theme='light'] #extensionsNav .cp-Panels .next-content-panel .next-content-panel-body .cp-Panel-body-inner a:hover,
+body[data-theme='light'] .sidebar-panels .cp-Panels .next-content-panel .next-content-panel-body .cp-Panel-body-inner a:hover,
+body[data-theme='light'] #extensionsNav .next-content-panel-container .cp-Panel .next-content-panel-body .cp-Panel-body-inner a:hover,
+body[data-theme='light'] .sidebar-panels .next-content-panel-container .cp-Panel .next-content-panel-body .cp-Panel-body-inner a:hover,
+body[data-theme='light'] #extensionsNav .cp-Panels .cp-Panel .next-content-panel-body .cp-Panel-body-inner a:hover,
+body[data-theme='light'] .sidebar-panels .cp-Panels .cp-Panel .next-content-panel-body .cp-Panel-body-inner a:hover,
+body[data-theme='light'] #extensionsNav .next-content-panel-container .next-content-panel .cp-Panel-body .cp-Panel-body-inner a:hover,
+body[data-theme='light'] .sidebar-panels .next-content-panel-container .next-content-panel .cp-Panel-body .cp-Panel-body-inner a:hover,
+body[data-theme='light'] #extensionsNav .cp-Panels .next-content-panel .cp-Panel-body .cp-Panel-body-inner a:hover,
+body[data-theme='light'] .sidebar-panels .cp-Panels .next-content-panel .cp-Panel-body .cp-Panel-body-inner a:hover,
+body[data-theme='light'] #extensionsNav .next-content-panel-container .cp-Panel .cp-Panel-body .cp-Panel-body-inner a:hover,
+body[data-theme='light'] .sidebar-panels .next-content-panel-container .cp-Panel .cp-Panel-body .cp-Panel-body-inner a:hover,
+body[data-theme='light'] #extensionsNav .cp-Panels .cp-Panel .cp-Panel-body .cp-Panel-body-inner a:hover,
+body[data-theme='light'] .sidebar-panels .cp-Panels .cp-Panel .cp-Panel-body .cp-Panel-body-inner a:hover {
+    @apply text-gray-700;
+}
+
+body[data-theme='light'] #extensionsNav .next-content-panel-container .next-content-panel .next-content-panel-body .next-content-panel-body-inner a.active,
+body[data-theme='light'] .sidebar-panels .next-content-panel-container .next-content-panel .next-content-panel-body .next-content-panel-body-inner a.active,
+body[data-theme='light'] #extensionsNav .cp-Panels .next-content-panel .next-content-panel-body .next-content-panel-body-inner a.active,
+body[data-theme='light'] .sidebar-panels .cp-Panels .next-content-panel .next-content-panel-body .next-content-panel-body-inner a.active,
+body[data-theme='light'] #extensionsNav .next-content-panel-container .cp-Panel .next-content-panel-body .next-content-panel-body-inner a.active,
+body[data-theme='light'] .sidebar-panels .next-content-panel-container .cp-Panel .next-content-panel-body .next-content-panel-body-inner a.active,
+body[data-theme='light'] #extensionsNav .cp-Panels .cp-Panel .next-content-panel-body .next-content-panel-body-inner a.active,
+body[data-theme='light'] .sidebar-panels .cp-Panels .cp-Panel .next-content-panel-body .next-content-panel-body-inner a.active,
+body[data-theme='light'] #extensionsNav .next-content-panel-container .next-content-panel .cp-Panel-body .next-content-panel-body-inner a.active,
+body[data-theme='light'] .sidebar-panels .next-content-panel-container .next-content-panel .cp-Panel-body .next-content-panel-body-inner a.active,
+body[data-theme='light'] #extensionsNav .cp-Panels .next-content-panel .cp-Panel-body .next-content-panel-body-inner a.active,
+body[data-theme='light'] .sidebar-panels .cp-Panels .next-content-panel .cp-Panel-body .next-content-panel-body-inner a.active,
+body[data-theme='light'] #extensionsNav .next-content-panel-container .cp-Panel .cp-Panel-body .next-content-panel-body-inner a.active,
+body[data-theme='light'] .sidebar-panels .next-content-panel-container .cp-Panel .cp-Panel-body .next-content-panel-body-inner a.active,
+body[data-theme='light'] #extensionsNav .cp-Panels .cp-Panel .cp-Panel-body .next-content-panel-body-inner a.active,
+body[data-theme='light'] .sidebar-panels .cp-Panels .cp-Panel .cp-Panel-body .next-content-panel-body-inner a.active,
+body[data-theme='light'] #extensionsNav .next-content-panel-container .next-content-panel .next-content-panel-body .cp-Panel-body-inner a.active,
+body[data-theme='light'] .sidebar-panels .next-content-panel-container .next-content-panel .next-content-panel-body .cp-Panel-body-inner a.active,
+body[data-theme='light'] #extensionsNav .cp-Panels .next-content-panel .next-content-panel-body .cp-Panel-body-inner a.active,
+body[data-theme='light'] .sidebar-panels .cp-Panels .next-content-panel .next-content-panel-body .cp-Panel-body-inner a.active,
+body[data-theme='light'] #extensionsNav .next-content-panel-container .cp-Panel .next-content-panel-body .cp-Panel-body-inner a.active,
+body[data-theme='light'] .sidebar-panels .next-content-panel-container .cp-Panel .next-content-panel-body .cp-Panel-body-inner a.active,
+body[data-theme='light'] #extensionsNav .cp-Panels .cp-Panel .next-content-panel-body .cp-Panel-body-inner a.active,
+body[data-theme='light'] .sidebar-panels .cp-Panels .cp-Panel .next-content-panel-body .cp-Panel-body-inner a.active,
+body[data-theme='light'] #extensionsNav .next-content-panel-container .next-content-panel .cp-Panel-body .cp-Panel-body-inner a.active,
+body[data-theme='light'] .sidebar-panels .next-content-panel-container .next-content-panel .cp-Panel-body .cp-Panel-body-inner a.active,
+body[data-theme='light'] #extensionsNav .cp-Panels .next-content-panel .cp-Panel-body .cp-Panel-body-inner a.active,
+body[data-theme='light'] .sidebar-panels .cp-Panels .next-content-panel .cp-Panel-body .cp-Panel-body-inner a.active,
+body[data-theme='light'] #extensionsNav .next-content-panel-container .cp-Panel .cp-Panel-body .cp-Panel-body-inner a.active,
+body[data-theme='light'] .sidebar-panels .next-content-panel-container .cp-Panel .cp-Panel-body .cp-Panel-body-inner a.active,
+body[data-theme='light'] #extensionsNav .cp-Panels .cp-Panel .cp-Panel-body .cp-Panel-body-inner a.active,
+body[data-theme='light'] .sidebar-panels .cp-Panels .cp-Panel .cp-Panel-body .cp-Panel-body-inner a.active {
+    @apply text-gray-900;
+}
+
+.next-content-panel-container .next-content-panel.next-content-panel-is-open .next-content-panel-toggle span.panel-caret svg,
+.cp-Panels .next-content-panel.next-content-panel-is-open .next-content-panel-toggle span.panel-caret svg,
+.next-content-panel-container .cp-Panel.next-content-panel-is-open .next-content-panel-toggle span.panel-caret svg,
+.cp-Panels .cp-Panel.next-content-panel-is-open .next-content-panel-toggle span.panel-caret svg,
+.next-content-panel-container .next-content-panel.cp-is-open .next-content-panel-toggle span.panel-caret svg,
+.cp-Panels .next-content-panel.cp-is-open .next-content-panel-toggle span.panel-caret svg,
+.next-content-panel-container .cp-Panel.cp-is-open .next-content-panel-toggle span.panel-caret svg,
+.cp-Panels .cp-Panel.cp-is-open .next-content-panel-toggle span.panel-caret svg,
+.next-content-panel-container .next-content-panel.next-content-panel-is-open .cp-Panel-toggle span.panel-caret svg,
+.cp-Panels .next-content-panel.next-content-panel-is-open .cp-Panel-toggle span.panel-caret svg,
+.next-content-panel-container .cp-Panel.next-content-panel-is-open .cp-Panel-toggle span.panel-caret svg,
+.cp-Panels .cp-Panel.next-content-panel-is-open .cp-Panel-toggle span.panel-caret svg,
+.next-content-panel-container .next-content-panel.cp-is-open .cp-Panel-toggle span.panel-caret svg,
+.cp-Panels .next-content-panel.cp-is-open .cp-Panel-toggle span.panel-caret svg,
+.next-content-panel-container .cp-Panel.cp-is-open .cp-Panel-toggle span.panel-caret svg,
+.cp-Panels .cp-Panel.cp-is-open .cp-Panel-toggle span.panel-caret svg {
+    transform: rotate(90deg);
+}

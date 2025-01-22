@@ -1,0 +1,6 @@
+<div class="filter-string" ...attributes>
+    <Input @value={{@value}} placeholder={{@placeholder}} {{on "input" this.onChange}} aria-label="Filter Input" autocomplete="false" class="form-input form-input-sm flex-1" />
+    <button type="button" class="clear-button" disabled={{not @value}} alt="Clear" {{on "click" this.clear}}>
+        <FaIcon @icon="times" />
+    </button>
+</div>

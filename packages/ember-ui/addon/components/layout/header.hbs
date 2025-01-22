@@ -1,0 +1,79 @@
+<header class="next-view-header" ...attributes>
+    <div class="next-view-header-left">
+        {{!-- <LinkToExternal @route="console" class="logo navbar-logo mr-4"> --}}
+            <LogoIcon @brand={{@brand}} @size="8" />
+        {{!-- </LinkToExternal> --}}
+        {{#if (and @showSidebarToggle (not (media "isMobile")))}}
+            <Layout::Header::SidebarToggle class="mr-2" @onToggle={{@onSidebarToggle}} @disabled={{not @sidebarToggleEnabled}} />
+        {{/if}}
+        {{#unless (media "isMobile")}}
+            <div role="menu" class="next-catalog-menu-items flex mr-4">
+                {{#each this.menuItems as |menuItem|}}
+                    <LinkToExternal
+                        @route={{menuItem.route}}
+                        id={{concat (dasherize menuItem.route) "-header-button"}}
+                        class="next-view-header-item truncate {{menuItem.class}}"
+                        role="menuitem"
+                    >
+                        <div class="w-6">
+                            {{#if menuItem.iconComponent}}
+                                {{component menuItem.iconComponent options=menuItem.iconComponentOptions}}
+                            {{else}}
+                                <FaIcon @icon={{menuItem.icon}} @prefix={{menuItem.iconPrefix}} @size="sm" />
+                            {{/if}}
+                        </div>
+                        <div>
+                            <span>{{t (concat "fleet-ops." (dasherize menuItem.title))}}</span>
+                        </div>
+                        {{!-- <div>
+                            <span>{{menuItem.title}}</span> 
+                        </div> --}}
+                    </LinkToExternal>
+                {{/each}}
+            </div>
+        {{/unless}}
+        <div id="view-header-left-content-a"></div>
+        {{yield}}
+        <div id="view-header-left-content-b"></div>
+    </div>
+    <div class="next-view-header-right">
+        <Layout::Header::LoadingIndicator />
+        <div id="view-header-actions"></div>
+        <div class="flex items-center justify-between">
+            <div class="flex-1 flex items-center pr-1 space-x-1">
+                <LocaleSelectorTray />
+                <NotificationTray @registerAPI={{@registerNotificationTrayApi}} @onClickNotification={{@onClickNotification}} />
+                <ChatTray />
+            </div>
+            <div class="flex-1 flex items-center pr-1">
+                <Layout::Header::Dropdown @items={{this.organizationMenuItems}} @onAction={{@onAction}} class="flex-shrink-0" @triggerClass="flex-shrink-0" as |dd|>
+                    <div class="next-org-button-trigger flex-shrink-0 {{if dd.isOpen 'is-open'}}">
+                        <div class="org-badge">
+                            {{first-char this.currentUser.companyName}}
+                        </div>
+                        <style>
+                            .org-badge {
+                                background-color: #496453 !important;
+                            }
+                        </style>
+                        <div class="text-sm w-10 md:w-14 lg:w-10/12 truncate flex-shrink-0 text-gray-800 dark:text-white">{{this.currentUser.companyName}}</div>
+                    </div>
+                </Layout::Header::Dropdown>
+            </div>
+            <div class="flex-1 flex items-center justify-end">
+                <Layout::Header::Dropdown @items={{this.userMenuItems}} @onAction={{@onAction}} class="flex-shrink-0" @triggerClass="flex-shrink-0" as |dd|>
+                    <div class="next-user-button-trigger flex-shrink-0 {{if dd.isOpen 'is-open'}}">
+                        <Image
+                            class="rounded-full h-5 w-5 shadow-sm flex-shrink-0"
+                            height="20"
+                            width="20"
+                            src={{this.currentUser.avatarUrl}}
+                            @fallbackSrc="https://s3.ap-southeast-1.amazonaws.com/flb-assets/static/no-avatar.png"
+                            alt={{this.currentUser.name}}
+                        />
+                    </div>
+                </Layout::Header::Dropdown>
+            </div>
+        </div>
+    </div>
+</header>

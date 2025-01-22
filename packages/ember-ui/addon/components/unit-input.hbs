@@ -1,0 +1,28 @@
+<div class="ui-unit-input {{@wrapperClass}} {{if this.disabled 'unit-input-disabled opacity-50'}}">
+    <div class="flex rounded-md shadow-sm">
+        <Input @type="tel" @value={{@value}} class="form-input rounded-r-none" placeholder={{this.placeholder}} disabled={{this.disabled}} ...attributes />
+        <span
+            class="shadow-sm inline-flex items-center px-3 border rounded-r-lg border-gray-300 bg-gray-50 text-gray-500 dark:border-gray-900 dark:bg-gray-800 dark:text-gray-200 sm:text-sm"
+        >
+            {{#if @canSelectUnit}}
+                <PowerSelect
+                    class="unit-input-selector"
+                    @renderInPlace={{true}}
+                    @options={{this.units}}
+                    @selected={{this.selectedUnitObject}}
+                    @onChange={{this.setUnit}}
+                    @triggerComponent={{component "unit-input/unit-handle" unit=this.selectedUnitObject}}
+                    @disabled={{this.disabled}}
+                    as |unit|
+                >
+                    <div class="truncate flex items-center space-x-1">
+                        <span>{{unit.name}}</span>
+                        <span class="italic">({{unit.value}})</span>
+                    </div>
+                </PowerSelect>
+            {{else}}
+                <span>{{this.unit}}</span>
+            {{/if}}
+        </span>
+    </div>
+</div>

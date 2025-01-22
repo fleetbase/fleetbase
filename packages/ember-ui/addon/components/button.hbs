@@ -1,0 +1,45 @@
+{{#if this.visible}}
+    <span class="btn-wrapper {{@wrapperClass}} inline-flex rounded-md {{if this.isNotSecondary 'shadow-sm'}} {{if @isLoading 'is-loading'}}" {{did-insert this.setupComponent}}>
+        <button
+            class="btn {{if @isLoading 'btn-is-loading'}} {{if @outline 'btn-outline'}} btn-{{or @type 'default'}} btn-{{or @size 'sm'}}"
+            disabled={{this.isDisabled}}
+            ...attributes
+            type={{or @buttonType "button"}}
+            {{on "click" this.onClick}}
+        >
+            {{#if @isLoading}}
+                <span class="btn-icon-wrapper btn-loading-icon-wrapper" data-icon-prefix={{@iconPrefix}}>
+                    <Spinner @width={{or @loaderWidth 14}} @height={{or @loaderHeight 14}} />
+                </span>
+            {{/if}}
+            {{#if this.showIcon}}
+                <span class="btn-icon-wrapper" data-icon-prefix={{@iconPrefix}}>
+                    <FaIcon
+                        @prefix={{@iconPrefix}}
+                        @icon={{@icon}}
+                        @size={{@iconSize}}
+                        @rotation={{@iconRotation}}
+                        @flip={{@iconFlip}}
+                        @spin={{@iconSpin}}
+                        class="{{if @text 'mr-2'}} {{@iconClass}}"
+                    />
+                </span>
+            {{/if}}
+            {{#if @text}}
+                <span class="{{@textClass}} {{if @responsive 'sm:hidden'}}">
+                    {{@text}}
+                </span>
+            {{/if}}
+            {{yield}}
+        </button>
+        {{#if this.disabledByPermission}}
+            <Attach::Tooltip @class="clean" @animation="scale" @placement={{or @tooltipPlacement "top"}}>
+                <InputInfo @text={{t "common.unauthorized"}} />
+            </Attach::Tooltip>
+        {{else if @helpText}}
+            <Attach::Tooltip @class="clean" @animation="scale" @placement={{or @tooltipPlacement "top"}}>
+                <InputInfo @text={{@helpText}} @exampleText={{@exampleText}} />
+            </Attach::Tooltip>
+        {{/if}}
+    </span>
+{{/if}}

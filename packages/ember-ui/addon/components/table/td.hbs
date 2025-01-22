@@ -1,0 +1,11 @@
+<Table::Cell class={{@column.cellClassNames}} ...attributes>
+    {{#if (has-block)}}
+        {{yield}}
+    {{else}}
+        {{#if @column.cellComponent}}
+            {{component @column.cellComponent column=@column row=@row value=@value}}
+        {{else}}
+            <Table::Cell::Base @column={{@column}} @row={{@row}} @value={{@value}} />
+        {{/if}}
+    {{/if}}
+</Table::Cell>

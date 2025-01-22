@@ -1,0 +1,24 @@
+<div class="next-user-button next-header-menu-item-dd {{if (media 'isMobile') 'is-mobile'}}" ...attributes>
+    <BasicDropdown
+        @defaultClass={{@wrapperClass}}
+        @onOpen={{@onOpen}}
+        @onClose={{@onClose}}
+        @calculatePosition={{this.calculatePosition}}
+        @verticalPosition={{@verticalPosition}}
+        @horizontalPosition={{@horizontalPosition}}
+        @renderInPlace={{or @renderInPlace (not (media "isMobile"))}}
+        @initiallyOpened={{@initiallyOpened}}
+        as |dd|
+    >
+        <dd.Trigger class="{{@triggerClass}} next-header-menu-item-dd-trigger {{if (media 'isMobile') 'is-mobile'}}">
+            {{yield dd}}
+        </dd.Trigger>
+        <dd.Content class="{{@contentClass}} next-header-menu-item-dd-content {{if (media 'isMobile') 'is-mobile'}}">
+            <div class="next-dd-menu {{@dropdownMenuClass}} {{if dd.isOpen 'is-open'}}">
+                {{#each @items as |item|}}
+                    <Layout::Header::Dropdown::Item @item={{item}} @onClick={{item.onClick}} @onAction={{fn this.onAction dd}} />
+                {{/each}}
+            </div>
+        </dd.Content>
+    </BasicDropdown>
+</div>

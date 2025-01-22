@@ -1,0 +1,56 @@
+<tbody ...attributes>
+    {{#if (has-block)}}
+        {{#if @canExpand}}
+            {{#each @rows as |row|}}
+                <Table::ExpandableRow @colspan={{@columns.length}} @row={{row}} @selected={{get row "checked"}} @onRowClick={{@onRowClick}}>
+                    <Table::Td>
+                        <Table::Cell::ExpandArrow @isExpanded={{get row "expanded"}} />
+                    </Table::Td>
+                    {{#if @selectable}}
+                        <Table::Td>
+                            <Table::Cell::Checkbox @row={{row}} @value={{get row "checked"}} />
+                        </Table::Td>
+                    {{/if}}
+                    {{#each @columns as |column|}}
+                        <Table::Td @column={{column}} @row={{row}} @value={{get row column.valuePath}} />
+                    {{/each}}
+                </Table::ExpandableRow>
+                {{yield (hash expanded-row=(component "table/expandable-row/content" isExpanded=row.expanded row=row colspan=@columns.length))}}
+            {{/each}}
+        {{else}}
+            {{yield (hash rows=@rows)}}
+        {{/if}}
+    {{else}}
+        {{#if @canExpand}}
+            {{#each @rows as |row|}}
+                <Table::ExpandableRow @colspan={{@columns.length}} @row={{row}} @selected={{get row "checked"}} @onRowClick={{@onRowClick}}>
+                    <Table::Td>
+                        <Table::Cell::ExpandArrow @isExpanded={{get row "expanded"}} />
+                    </Table::Td>
+                    {{#if @selectable}}
+                        <Table::Td>
+                            <Table::Cell::Checkbox @row={{row}} @value={{get row "checked"}} />
+                        </Table::Td>
+                    {{/if}}
+                    {{#each @columns as |column|}}
+                        <Table::Td @column={{column}} @row={{row}} @value={{get row column.valuePath}} />
+                    {{/each}}
+                </Table::ExpandableRow>
+                {{yield (hash expanded-row=(component "table/expandable-row/content" isExpanded=row.expanded row=row colspan=@columns.length))}}
+            {{/each}}
+        {{else}}
+            {{#each @rows as |row|}}
+                <Table::Row @selected={{get row "checked"}} @onRowClick={{@onRowClick}} @row={{row}}>
+                    {{#if @selectable}}
+                        <Table::Td>
+                            <Table::Cell::Checkbox @row={{row}} @value={{get row "checked"}} />
+                        </Table::Td>
+                    {{/if}}
+                    {{#each @columns as |column|}}
+                        <Table::Td @column={{column}} @row={{row}} @value={{get row column.valuePath}} />
+                    {{/each}}
+                </Table::Row>
+            {{/each}}
+        {{/if}}
+    {{/if}}
+</tbody>

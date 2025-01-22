@@ -1,0 +1,67 @@
+<div class="x-fleetbase-file" ...attributes>
+    <div class="x-fleetbase-file-wrapper">
+        <div class="x-fleetbase-file-actions">
+            <DropdownButton
+                @dropdownId="x-fleetbase-file-actions-dropdown"
+                @icon="ellipsis"
+                @iconSize="xs"
+                @iconPrefix={{@dropdownButtonIconPrefix}}
+                @text={{@dropdownButtonText}}
+                @size="xs"
+                @horizontalPosition="left"
+                @calculatePosition={{@dropdownButtonCalculatePosition}}
+                @renderInPlace={{or @dropdownButtonRenderInPlace true}}
+                @wrapperClass={{concat @dropdownButtonWrapperClass " " "next-nav-item-dropdown-button"}}
+                @triggerClass={{@dropdownButtonTriggerClass}}
+                @registerAPI={{@registerAPI}}
+                @onInsert={{this.onDropdownButtonInsert}}
+                as |dd|
+            >
+                <div class="next-dd-menu mt-0i" role="menu" aria-orientation="vertical" aria-labelledby="user-menu">
+                    <div class="px-1">
+                        <div class="text-sm flex flex-row items-center px-3 py-1 rounded-md my-1 text-gray-800 dark:text-gray-300">
+                            {{t "component.file.dropdown-label"}}
+                        </div>
+                    </div>
+                    <div class="next-dd-menu-seperator"></div>
+                    <div role="group" class="px-1">
+                        {{! template-lint-disable no-nested-interactive }}
+                        <a href="javascript:;" role="menuitem" class="next-dd-item text-danger" {{on "click" (fn this.onDropdownItemClick "onDelete" dd)}}>
+                            <span class="mr-1">
+                                <FaIcon @icon="trash" @prefix={{@dropdownButtonIconPrefix}} />
+                            </span>
+                            {{t "common.delete"}}
+                        </a>
+                    </div>
+                </div>
+            </DropdownButton>
+        </div>
+        <div class="flex flex-1 flex-col justify-between items-center">
+            <div class="flex-1">
+                {{#if this.isImage}}
+                    <Image src={{@file.url}} alt={{@file.original_filename}} class="x-fleetbase-file-preview rounded-md shadow-sm" />
+                {{else}}
+                    <div class="x-fleetbase-file-preview">
+                        <FileIcon @file={{@file}} @hideExtension={{true}} @iconSize="2xl" />
+                    </div>
+                {{/if}}
+            </div>
+            <div class="flex-1 overflow-hidden flex flex-col items-center justify-end">
+                <div class="x-fleetbase-file-name">
+                    {{!-- {{truncate-filename @file.original_filename}} --}}
+                    <a
+                        href={{@file.url}}
+                        download
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        class="text-blue-500 hover:underline"
+                        style="color:#fff;"
+                        title="Download {{@file.original_filename}}"
+                    >
+                        {{truncate-filename @file.original_filename}}
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

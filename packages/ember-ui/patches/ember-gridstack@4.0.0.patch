@@ -1,0 +1,171 @@
+diff --git a/addon/components/grid-stack.js b/addon/components/grid-stack.js
+index fa513923b0ff22658677b2e09aa6205a59b59979..97c1bdaa4bf6d6029bb1aaeaa7849ba10c5e6dbf 100644
+--- a/addon/components/grid-stack.js
++++ b/addon/components/grid-stack.js
+@@ -19,14 +19,14 @@
+  * Full list of options:
+  *   https://github.com/gridstack/gridstack.js/tree/master/doc#grid-options
+  */
+-import Component from '@glimmer/component';
+-import { tracked } from '@glimmer/tracking';
+-import { action } from '@ember/object';
+-import { inject as service } from '@ember/service';
+-import { scheduleOnce } from '@ember/runloop';
+-import { capitalize } from '@ember/string';
+-import { guidFor } from '@ember/object/internals';
+-import { GridStack } from 'gridstack';
++import Component from '@glimmer/component'
++import { tracked } from '@glimmer/tracking'
++import { action } from '@ember/object'
++import { inject as service } from '@ember/service'
++import { scheduleOnce } from '@ember/runloop'
++import { capitalize } from '@ember/string'
++import { guidFor } from '@ember/object/internals'
++import { GridStack } from 'gridstack'
+ 
+ export const GRID_STACK_EVENTS = [
+   'added',
+@@ -40,98 +40,99 @@ export const GRID_STACK_EVENTS = [
+   'removed',
+   'resizestart',
+   'resize',
+-  'resizestop',
+-];
++  'resizestop'
++]
+ 
+ export default class GridStackComponent extends Component {
+-  @service gridStackRegistry;
++  @service gridStackRegistry
+ 
+-  guid = guidFor(this);
+-  @tracked elm;
++  guid = guidFor(this)
++  @tracked elm
+ 
+-  constructor() {
+-    super(...arguments);
+-    this.gridStackRegistry.registerGrid(this.guid, this);
++  constructor () {
++    super(...arguments)
++    this.gridStackRegistry.registerGrid(this.guid, this)
+   }
+ 
+-  get options() {
++  get options () {
+     return {
+-      ...this.args.options,
+-    };
++      ...this.args.options
++    }
+   }
+ 
+   /**
+    * https://github.com/gridstack/gridstack.js/tree/master/doc#api
+    * @property {GridStack|null} gridStack - reference to gridstack object
+    */
+-  gridStack = null;
++  gridStack = null
+ 
+   /**
+    * @property {Array} subscribedEvents - List of events for which event handlers were set up
+    */
+-  subscribedEvents = [];
++  subscribedEvents = []
+ 
+-  _destroyGridStack() {
+-    const { gridStack } = this;
++  _destroyGridStack () {
++    const { gridStack } = this
+ 
+     if (gridStack) {
+-      this.subscribedEvents.forEach((eventName) => gridStack.off(eventName));
+-      this.subscribedEvents = [];
++      this.subscribedEvents.forEach(eventName => gridStack.off(eventName))
++      this.subscribedEvents = []
+ 
+       // Use `false` option to prevent removing dom elements, let Ember do that
+-      gridStack.destroy(false);
++      gridStack.destroy(false)
+ 
+-      this.gridStack = null;
++      this.gridStack = null
+ 
+       // Remove 'grid-stack-instance-####' class left behind
+-      [...this.elm.classList]
+-        .filter((x) => /grid-stack-instance-\d*/.test(x))
+-        .forEach((x) => this.elm.classList.remove(x));
++      ;[...this.elm.classList]
++        .filter(x => /grid-stack-instance-\d*/.test(x))
++        .forEach(x => this.elm.classList.remove(x))
+     }
+   }
+ 
+-  _createGridStack() {
+-    this.gridStack = GridStack.init({ ...this.options }, this.elm);
++  _createGridStack () {
++    this.gridStack = GridStack.init({ ...this.options }, this.elm)
+ 
+-    GRID_STACK_EVENTS.forEach((eventName) => {
+-      const action = this.args[`on${capitalize(eventName)}`];
++    GRID_STACK_EVENTS.forEach(eventName => {
++      const action = this.args[`on${capitalize(eventName)}`]
+ 
+       if (action) {
+         this.gridStack.on(eventName, function () {
+-          scheduleOnce('afterRender', this, action, ...arguments);
+-        });
++          scheduleOnce('afterRender', this, action, ...arguments)
++        })
+ 
+-        this.subscribedEvents.push(eventName);
++        this.subscribedEvents.push(eventName)
+       }
+-    });
++    })
+   }
+ 
+   @action
+-  setup(elm) {
+-    this.elm = elm;
+-    this._createGridStack();
++  setup (elm) {
++    this.elm = elm
++    this._createGridStack()
+   }
+ 
+   @action
+-  update() {
+-    this._destroyGridStack();
+-    this._createGridStack();
++  update () {
++    this._destroyGridStack()
++    this._createGridStack()
+   }
+ 
+   @action
+-  willDestroyNode() {
+-    this.gridStackRegistry.unregisterGridComponent(this.guid, this);
+-    this._destroyGridStack();
++  willDestroyNode () {
++    this.gridStackRegistry.unregisterGridComponent(this.guid, this)
++    this._destroyGridStack()
+   }
+ 
+   @action
+-  addWidget(element) {
+-    this.gridStack?.makeWidget(element);
++  addWidget (element) {
++    this.gridStack?.makeWidget(element)
+   }
+ 
+   @action
+-  removeWidget(element, removeDOM = false, triggerEvent = true) {
+-    triggerEvent = triggerEvent && !this.isDestroying && !this.isDestroyed;
+-    this.gridStack?.removeWidget(element, removeDOM, triggerEvent);
++  removeWidget (element, removeDOM = false, triggerEvent = true) {
++    triggerEvent = triggerEvent && !this.isDestroying && !this.isDestroyed
++    this.gridStack?.removeWidget(element, removeDOM, triggerEvent)
++    this.gridStack?.compact()
+   }
+ }

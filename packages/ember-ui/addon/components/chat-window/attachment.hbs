@@ -1,0 +1,15 @@
+<a href="#" class="chat-attachment-container" {{on "click" this.download}}>
+    {{#if this.chatAttachment.isImage}}
+        <Image src={{this.chatAttachment.url}} @fallbackSrc={{config "defaultValues.placeholderImage"}} alt={{this.chatAttachment.filename}} class="chat-attachment-image-preview" />
+    {{else}}
+        <div class="chat-attachment-file-preview">
+            <div class="file-icon file-icon-{{this.extension}}">
+                <FaIcon @icon={{this.icon}} />
+            </div>
+            <div class="chat-attachment-file-preview-filename">{{this.chatAttachment.filename}}</div>
+        </div>
+    {{/if}}
+    <Attach::Tooltip @class="clean" @animation="scale" @placement="top">
+        <InputInfo @text="Click to download attachment" />
+    </Attach::Tooltip>
+</a>

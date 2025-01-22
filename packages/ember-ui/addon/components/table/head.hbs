@@ -1,0 +1,19 @@
+<thead ...attributes>
+    {{#if (has-block)}}
+        {{yield (hash columns=@columns row=(component "table/row" columns=@columns))}}
+    {{else}}
+        <Table::Row>
+            {{#if @canExpand}}
+                <Table::Th @width={{60}} />
+            {{/if}}
+            {{#if @canSelectAll}}
+                <Table::Th @width={{40}} @resizable={{false}}>
+                    <Table::Cell::Checkbox @value={{@allRowsToggled}} @onToggle={{@selectAllRows}} />
+                </Table::Th>
+            {{/if}}
+            {{#each @columns as |column|}}
+                <Table::Th @column={{column}} @resizable={{column.resizable}} @sortable={{column.sortable}}>{{column.label}}</Table::Th>
+            {{/each}}
+        </Table::Row>
+    {{/if}}
+</thead>

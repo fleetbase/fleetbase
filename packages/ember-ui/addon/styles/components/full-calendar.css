@@ -1,0 +1,105 @@
+.fleetbase-full-calendar .fc-toolbar-title {
+    @apply text-base text-gray-900 font-semibold;
+}
+
+body[data-theme='dark'] .fleetbase-full-calendar.fc .fc-toolbar-title {
+    @apply text-gray-200;
+}
+
+.fleetbase-full-calendar.fc td,
+.fleetbase-full-calendar.fc th {
+    @apply border-gray-200;
+}
+
+body[data-theme='dark'] .fleetbase-full-calendar.fc td,
+body[data-theme='dark'] .fleetbase-full-calendar.fc th {
+    @apply border-gray-700;
+}
+
+.fleetbase-full-calendar.fc table.fc-scrollgrid {
+    @apply border-gray-200;
+}
+
+body[data-theme='dark'] .fleetbase-full-calendar.fc table.fc-scrollgrid {
+    @apply border-gray-700;
+}
+
+.fleetbase-full-calendar.fc .fc-button {
+    @apply inline-flex items-center px-3 py-2 text-sm font-medium leading-4 transition duration-150 ease-in-out border border-transparent rounded-md text-gray-800;
+    cursor: default !important;
+}
+
+.fleetbase-full-calendar.fc .fc-button:disabled,
+.fleetbase-full-calendar.fc .fc-button-primary:disabled,
+body[data-theme='dark'] .fleetbase-full-calendar.fc .fc-button-primary:disabled {
+    @apply opacity-50 cursor-not-allowed;
+}
+
+.fleetbase-full-calendar.fc .fc-button .fc-icon {
+    font-size: 1rem;
+}
+
+.fleetbase-full-calendar.fc .fc-toolbar {
+    justify-content: flex-start;
+}
+
+.fleetbase-full-calendar.fc .fc-toolbar.fc-header-toolbar {
+    margin-bottom: 1rem;
+}
+
+.fleetbase-full-calendar.fc .fc-toolbar > .fc-toolbar-chunk {
+    margin-right: 1.25rem;
+}
+
+body[data-theme='dark'] .fleetbase-full-calendar.fc .fc-button-primary {
+    @apply text-gray-300 bg-gray-700 border-gray-900 shadow;
+}
+
+body[data-theme='dark'] .fleetbase-full-calendar.fc .fc-button-primary:hover:not(:disabled) {
+    @apply text-gray-200 bg-gray-600;
+}
+
+body[data-theme='dark'] .fleetbase-full-calendar.fc .fc-button-primary:focus {
+    @apply outline-0;
+}
+
+body[data-theme='dark'] .fleetbase-full-calendar.fc .fc-button-primary:active:not(:disabled) {
+    @apply text-gray-300 bg-gray-600;
+}
+
+body[data-theme='dark'] .fleetbase-full-calendar.fc .fc-button .fc-icon {
+    @apply text-gray-300;
+}
+
+.fleetbase-full-calendar.fc .fc-button-primary {
+    @apply bg-white border-gray-300 shadow-sm text-gray-800;
+}
+
+.fleetbase-full-calendar.fc .fc-button-primary:hover:not(:disabled) {
+    @apply text-gray-500;
+}
+
+.fleetbase-full-calendar.fc .fc-button-primary:focus {
+    @apply border-gray-300 outline-0;
+}
+
+.fleetbase-full-calendar.fc .fc-button-primary:active:not(:disabled) {
+    @apply text-gray-800 bg-gray-50;
+}
+
+.fleetbase-full-calendar.fc .fc-button .fc-icon {
+    @apply text-gray-900;
+}
+
+.fleetbase-full-calendar.fc .fc-button-primary:not(:disabled).fc-button-active:focus,
+.fleetbase-full-calendar.fc .fc-button-primary:not(:disabled):active:focus,
+body[data-theme='dark'] .fleetbase-full-calendar.fc .fc-button-primary:not(:disabled).fc-button-active:focus,
+body[data-theme='dark'] .fleetbase-full-calendar.fc .fc-button-primary:not(:disabled):active:focus {
+    box-shadow: none;
+}
+
+.draggable-disabled {
+    opacity: 0.9;
+    pointer-events: none;
+    cursor: not-allowed;
+}

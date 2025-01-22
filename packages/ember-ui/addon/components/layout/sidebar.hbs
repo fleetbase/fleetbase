@@ -1,0 +1,6 @@
+<nav class="next-sidebar" {{did-insert (fn this.setupNode "sidebar")}} ...attributes>
+    <div class="next-sidebar-content">
+        {{yield}}
+    </div>
+    <div class="gutter" {{did-insert (fn this.setupNode "gutter")}} {{on "mousedown" this.startResize}}></div>
+</nav>

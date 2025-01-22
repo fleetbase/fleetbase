@@ -1,0 +1,51 @@
+<Modal class="flb--default-modal {{@options.modalClass}}" @modalIsOpened={{@modalIsOpened}} @onClose={{@decline}} @onSubmit={{@confirm}} @onOpen={{@onOpen}} ...attributes as |modal|>
+    <modal.header class={{@options.modalHeaderClass}} @onClose={{modal.close}} @closeButton={{if (eq @options.closeButton false) false true}}>
+        {{#if @options.titleComponent}}
+            {{component @options.titleComponent options=@options modal=modal}}
+        {{else}}
+            {{#unless @options.hideTitle}}
+                <Modal::Header::Title class={{@options.modalHeaderTitleClass}}>
+                    {{@options.title}}
+                </Modal::Header::Title>
+            {{/unless}}
+        {{/if}}
+    </modal.header>
+    <modal.body class={{@options.modalBodyClass}}>
+        {{#if @options.bodyComponent}}
+            {{component @options.bodyComponent options=@options modal=modal}}
+        {{else}}
+            {{yield @options modal}}
+        {{/if}}
+    </modal.body>
+    <modal.footer class={{@options.modalFooterClass}}>
+        {{#if @options.footerComponent}}
+            {{component @options.footerComponent options=@options confirm=modal.submit modal=modal}}
+        {{else}}
+            {{#unless @options.hideFooterActions}}
+                <div class="modal-footer-actions {{@options.modalFooterActionsClass}}">
+                    <Button
+                        class="mr-2 {{if @options.hideDeclineButton 'hidden'}}"
+                        @type={{or @options.declineButtonScheme "default"}}
+                        @size={{or @options.buttonSize "md"}}
+                        @icon={{or @options.declineButtonIcon "times"}}
+                        @iconPrefix={{@options.declineButtonIconPrefix}}
+                        @text={{or @options.declineButtonText "Cancel"}}
+                        @onClick={{modal.close}}
+                        @disabled={{or @options.declineButtonDisabled @options.isLoading}}
+                    />
+                    <Button
+                        class="{{if @options.hideAcceptButton 'hidden'}}"
+                        @type={{or @options.acceptButtonScheme "primary"}}
+                        @size={{or @options.buttonSize "md"}}
+                        @icon={{or @options.acceptButtonIcon "check"}}
+                        @iconPrefix={{@options.acceptButtonIconPrefix}}
+                        @isLoading={{@options.isLoading}}
+                        @text={{or @options.acceptButtonText "Confirm"}}
+                        @onClick={{modal.submit}}
+                        @disabled={{or @options.acceptButtonDisabled @options.isLoading}}
+                    />
+                </div>
+            {{/unless}}
+        {{/if}}
+    </modal.footer>
+</Modal>

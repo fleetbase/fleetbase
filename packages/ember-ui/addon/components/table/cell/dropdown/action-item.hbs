@@ -1,0 +1,33 @@
+{{#if this.visible}}
+    {{#if @columnAction.separator}}
+        <div class="next-dd-menu-seperator"></div>
+    {{else}}
+        {{#if this.isVisible}}
+            <div role="group" class="px-1">
+                <a
+                    href="javascript:;"
+                    role="menuitem"
+                    class="next-dd-item {{@columnAction.class}} {{if this.disabled 'disabled'}}"
+                    disabled={{this.disabled}}
+                    {{on "click" (fn this.onClick @columnAction @row @dd)}}
+                >
+                    {{#if @columnAction.icon}}
+                        <div class="w-6">
+                            <FaIcon class={{@columnAction.iconClass}} @icon={{@columnAction.icon}} @prefix={{@columnAction.iconPrefix}} />
+                        </div>
+                    {{/if}}
+                    {{@columnAction.label}}
+                    {{#if this.doesntHavePermissions}}
+                        <Attach::Tooltip @class="clean" @animation="scale" @placement={{or @columnAction.tooltipPlacement "right"}}>
+                            <InputInfo @text={{t "common.unauthorized"}} />
+                        </Attach::Tooltip>
+                    {{else if @columnAction.helpText}}
+                        <Attach::Tooltip @class="clean" @animation="scale" @placement={{or @columnAction.tooltipPlacement "right"}}>
+                            <InputInfo @text={{@columnAction.helpText}} @exampleText={{@columnAction.exampleText}} />
+                        </Attach::Tooltip>
+                    {{/if}}
+                </a>
+            </div>
+        {{/if}}
+    {{/if}}
+{{/if}}

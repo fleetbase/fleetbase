@@ -1,0 +1,49 @@
+<div class="next-user-button notification-tray" ...attributes>
+    <BasicDropdown
+        @registerAPI={{this.registerAPI}}
+        @defaultClass={{@wrapperClass}}
+        @onOpen={{@onOpen}}
+        @onClose={{@onClose}}
+        @calculatePosition={{this.calculatePosition}}
+        @verticalPosition={{@verticalPosition}}
+        @horizontalPosition={{@horizontalPosition}}
+        @renderInPlace={{or @renderInPlace (not (media "isMobile"))}}
+        as |dd|
+    >
+        <dd.Trigger class="{{@triggerClass}} local-selector-tray-trigger {{if (media 'isMobile') 'is-mobile'}}">
+            <div class="next-org-button-trigger flex-shrink-0 {{if dd.isOpen 'is-open'}}">
+                <FaIcon @icon="bell"/>
+                {{#if this.notifications.length}}
+                    <div class="notification-tray-unread-notifications-badge">{{this.notifications.length}}</div>
+                {{/if}}
+            </div>
+        </dd.Trigger>
+        <dd.Content class="notification-tray-panel-container {{@contentClass}} {{if (media 'isMobile') 'is-mobile'}}">
+            <div class="notification-tray-panel">
+                <div>
+                    <div class="px-4 py-2 border-b border-gray-200 dark:border-gray-700 flex flex-row space-x-4">
+                        <h1 class="text-black dark:text-gray-100 text-sm font-bold">{{pluralize this.notifications.length "Unread Notification"}}</h1>
+                    </div>
+                    <div class="h-48 overflow-y-scroll p-2">
+                        {{#each this.notifications as |notification|}}
+                            <a href="javascript:;" class="notification-item {{if notification._isRemoving 'opacity-50'}}" {{on "click" (fn this.onClickNotification notification)}}>
+                                <h3 class="font-semibold text-small truncate">{{notification.data.subject}}</h3>
+                                <p class="text-xs mb-1.5 truncate">{{notification.data.message}}</p>
+                                <span class="text-xs">Received: {{notification.createdAgo}}</span>
+                            </a>
+                        {{else}}
+                            <div class="flex flex-1 items-center justify-center w-full h-full">
+                                <span class="text-base text-gray-800 dark:text-gray-300 italic">No unread notifications</span>
+                            </div>
+                        {{/each}}
+                    </div>
+                </div>
+                <div class="px-2 py-1.5 border-t border-gray-200 dark:border-gray-700 flex flex-row space-x-4">
+                    <LinkTo @route="console.notifications" class="notification-tray-view-all-link">
+                        View all notifications
+                    </LinkTo>
+                </div>
+            </div>
+        </dd.Content>
+    </BasicDropdown>
+</div>

@@ -1,0 +1,29 @@
+<div
+    role="dialog"
+    aria-modal="true"
+    class="next-drawer
+        {{if this.isMinimized 'drawer-is-minimized'}}
+        {{if this.isResizing 'drawer-is-resizing'}}
+        {{if this.isOpen 'drawer-is-open'}}
+        {{if this.noBackdrop 'drawer-no-backdrop'}}
+        {{if @fullHeight 'drawer-full-height'}}
+        {{@overlayClass}}"
+    {{did-insert this.setupComponent}}
+>
+    {{#if this._rendered}}
+        <div class="next-drawer-panel-container {{@containerClass}}" {{did-insert (fn this.setupNode "drawerContainer")}}>
+            {{#if this.isResizable}}
+                <div class="gutter" {{did-insert (fn this.setupNode "gutter")}} {{on "mousedown" this.startResize}}>
+                    {{#if @notchEnabled}}
+                        <div class="notch" {{on "dblclick" this.toggleMinimize}}>
+                            <span class="bar"></span>
+                            <span class="bar"></span>
+                            <span class="bar"></span>
+                        </div>
+                    {{/if}}
+                </div>
+            {{/if}}
+            <div class="next-drawer-panel" {{did-insert (fn this.setupNode "drawerPanel")}} {{set-height this.height}} ...attributes>{{yield this.context}}</div>
+        </div>
+    {{/if}}
+</div>

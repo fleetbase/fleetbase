@@ -1,0 +1,14 @@
+{{#let (component (or @buttonComponent "button")) as |Button|}}
+    <div class="flb--modal-footer" ...attributes {{on "submit" (or @onSubmit (noop))}}>
+        {{#if (has-block)}}
+            {{yield}}
+        {{else}}
+            {{#if @submitTitle}}
+                <Button @onClick={{@onClose}}>{{or @closeTitle "Ok"}}</Button>
+                <Button @type={{or @submitButtonType "primary"}} @onClick={{@onSubmit}} disabled={{or @submitDisabled false}}>{{@submitTitle}}</Button>
+            {{else}}
+                <Button @type="primary" @onClick={{@onClose}}>{{or @closeTitle "Ok"}}</Button>
+            {{/if}}
+        {{/if}}
+    </div>
+{{/let}}

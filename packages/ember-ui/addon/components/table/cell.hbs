@@ -1,0 +1,10 @@
+{{#if @inHead}}
+    <th ...attributes {{did-insert this.setupComponent}}>
+        {{yield}}
+        {{#if @resizable}}
+            <Table::Cell::Resizer />
+        {{/if}}
+    </th>
+{{else}}
+    <td ...attributes {{did-insert this.setupComponent}}>{{yield}}</td>
+{{/if}}

@@ -1,0 +1,48 @@
+* {
+    margin-block-start: 0;
+    margin-block-end: 0;
+    margin-inline-start: 0;
+    margin-inline-end: 0;
+}
+
+body {
+    --sb-track-color: #e2e8f0;
+    --sb-thumb-color: rgba(148, 163, 184, 0.75);
+    --sb-thumb-hover-color: #64748b;
+    --sb-size: 7px;
+}
+
+body[data-theme="dark"] {
+    --sb-track-color: #111827;
+    --sb-thumb-color: #374151;
+    --sb-thumb-hover-color: rgba(55, 65, 81, .5);
+}
+
+::-webkit-scrollbar {
+    width: var(--sb-size);
+}
+
+::-webkit-scrollbar-track {
+    background: var(--sb-track-color);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--sb-thumb-color);
+    border-radius: .15rem;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--sb-thumb-hover-color);
+}
+
+@supports not selector(::-webkit-scrollbar) {
+    body {
+        scrollbar-color: var(--sb-thumb-color) var(--sb-track-color);
+    }
+}
+
+
+a[disabled] {
+    pointer-events: none;
+    cursor: not-allowed;
+}

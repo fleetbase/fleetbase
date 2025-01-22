@@ -1,0 +1,7 @@
+<Button @type={{@type}} @text={{or @text "Filters"}} @icon={{or @icon "filter"}} @size={{or @size "xs"}} @wrapperClass={{@wrapperClass}} ...attributes>
+    {{#if @buttonComponentArgs.activeFilters.length}}
+        <div class="box-divider">
+            <span class="font-semibold text-sky-500">{{@buttonComponentArgs.activeFilters.length}}</span>
+        </div>
+    {{/if}}
+</Button>

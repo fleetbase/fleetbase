@@ -1,0 +1,1022 @@
+html,
+body {
+    font-family: 'Inter UI', Arial, Helvetica, sans-serif;
+    font-size: 16px;
+    line-height: 1.5;
+    text-rendering: optimizeLegibility;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    user-select: none;
+    -webkit-text-size-adjust: none;
+    -moz-text-size-adjust: none;
+    text-size-adjust: none;
+    cursor: default;
+    overscroll-behavior: none;
+    -webkit-tap-highlight-color: transparent;
+    @apply h-screen overflow-hidden antialiased text-gray-900;
+}
+
+.font-default,
+div,
+span,
+applet,
+object,
+iframe,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+blockquote,
+pre,
+a,
+abbr,
+acronym,
+address,
+big,
+cite,
+code,
+del,
+dfn,
+em,
+img,
+ins,
+kbd,
+q,
+s,
+samp,
+small,
+strike,
+strong,
+sub,
+sup,
+tt,
+var,
+b,
+u,
+i,
+center,
+dl,
+dt,
+dd,
+ol,
+ul,
+li,
+fieldset,
+form,
+label,
+legend,
+table,
+caption,
+tbody,
+tfoot,
+thead,
+tr,
+th,
+td,
+article,
+aside,
+canvas,
+details,
+embed,
+figure,
+figcaption,
+footer,
+header,
+hgroup,
+menu,
+nav,
+output,
+ruby,
+section,
+summary,
+time,
+mark,
+audio,
+video {
+    font-family: marcellus, sans-serif !important;
+    letter-spacing: 0.01rem;
+    font-size: 1.1rem !important;
+    
+}
+
+a.navbar-logo {
+    width: 32px;
+    height: 32px;
+    margin-right: 1rem;
+    box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+    border-radius: 0.25rem;
+    transition: opacity 200ms ease-in-out;
+}
+
+a.navbar-logo:hover {
+    opacity: 0.9;
+}
+
+a.navbar-logo > img {
+    width: 32px;
+    height: 32px;
+    border-radius: 0.25rem;
+}
+
+.leaflet-container a {
+    color: inherit;
+}
+
+* {
+    box-sizing: border-box;
+    touch-action: pan-x pan-y;
+}
+
+:focus {
+    outline: none;
+}
+
+h1 {
+    @apply text-2xl;
+}
+
+h2 {
+    @apply text-xl;
+}
+
+h3 {
+    @apply text-lg;
+}
+
+a {
+    cursor: default;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    user-select: none;
+    @apply text-gray-200 no-underline;
+}
+
+a,
+div[role='button'],
+button {
+    cursor: default;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    user-select: none;
+}
+
+address {
+    @apply not-italic;
+}
+
+.webhook-icon {
+    fill: #f4f5f7;
+    width: 1.25em;
+    height: 1.25em;
+    margin-left: -3px;
+}
+
+.rotate-icon-45 {
+    transform: rotate(45deg);
+}
+
+.section-header {
+    @apply flex justify-between;
+}
+
+.section-header .section-header-actions {
+    @apply flex items-center;
+}
+
+.section-content {
+    @apply w-full h-screen;
+}
+
+.filter-row {
+    @apply block bg-white w-full border-b border-gray-200;
+}
+
+.filter-row.filter-is-active .filter-row-body {
+    @apply h-auto;
+    max-height: 800px;
+}
+
+.filter-row .filter-row-header {
+    @apply flex items-center px-3 py-2 text-sm;
+}
+
+.filter-row .filter-row-body {
+    @apply h-0 overflow-hidden bg-gray-50;
+    max-height: 0;
+    transition: max-height 0.15s ease-out;
+}
+
+.filter-row:last-child {
+    @apply border-b-0 rounded-b;
+}
+
+body[data-theme='dark'] .filter-row {
+    @apply bg-gray-900 border-gray-700;
+}
+
+body[data-theme='dark'] .filter-row .filter-row-body {
+    @apply bg-gray-900 bg-opacity-50;
+}
+
+.box-divider {
+    padding-left: 8px;
+    margin-left: 8px;
+    box-shadow: inset 1px 0 #e3e8ee;
+    box-sizing: border-box;
+}
+
+.ember-basic-dropdown-content,
+#ember-basic-dropdown-wormhole .ember-basic-dropdown-content {
+    z-index: 9999;
+}
+
+.datum-row {
+    @apply flex items-center justify-between w-full px-3 py-2 mb-2 text-gray-800 bg-gray-300 rounded;
+}
+
+.datum-row .datum-key {
+    @apply flex-1 w-1/2 font-semibold truncate;
+}
+
+.datum-row .datum-value {
+    @apply w-1/2 font-light text-right truncate;
+}
+
+body[data-theme='dark'] .datum-row {
+    @apply text-gray-100 bg-gray-900;
+}
+
+.overlay-panel-section-title {
+    @apply mb-3 font-bold;
+}
+
+body[data-theme='dark'] .overlay-panel-section-title {
+    @apply text-gray-100;
+}
+
+.click-to-reveal {
+    @apply relative;
+}
+
+.click-to-reveal .click-to-reveal--hidden-value {
+    @apply block w-full max-w-full truncate;
+    filter: blur(2px);
+}
+
+.click-to-reveal.is-visible > .click-to-reveal--hidden-value {
+    filter: blur(0);
+}
+
+.click-to-reveal .click-to-reveal--button {
+    box-shadow: none !important;
+}
+
+.click-to-reveal .click-to-reveal--button {
+    @apply absolute inset-0 flex items-center justify-center;
+}
+
+.click-to-reveal .click-to-reveal--button > button {
+    padding: 0.185rem 0.7rem !important;
+}
+
+.click-to-reveal.is-visible > .click-to-reveal--button {
+    @apply hidden;
+}
+
+.click-to-reveal .click-to-reveal--tooltip {
+    @apply absolute top-0 right-0 px-2 py-1 -mt-1 text-xs font-semibold text-center text-white transition-all duration-200 scale-0 bg-gray-800 rounded shadow-md opacity-0;
+}
+
+.click-to-reveal:hover > .click-to-reveal--tooltip {
+    @apply scale-100 opacity-100;
+}
+
+.click-to-copy {
+    @apply relative;
+}
+
+.click-to-copy .click-to-copy--tooltip {
+    @apply absolute top-0 right-0 px-2 py-1 -mt-1 text-xs font-semibold text-center text-white transition-all duration-200 scale-0 bg-gray-800 rounded shadow-md opacity-0;
+}
+
+.click-to-copy:hover > .click-to-copy--tooltip {
+    @apply scale-100 opacity-100;
+}
+
+.console-main-content {
+    @apply w-full h-screen;
+}
+
+.console-main-content .scrollable-content {
+    @apply pb-14;
+}
+
+.section-content .ember-scrollable .ember-light-table {
+    padding-bottom: 13rem;
+}
+
+.section-content.ui-map-layout {
+    position: absolute;
+    top: 0;
+    margin-top: 0;
+}
+
+.section-header-actions.section-header-actions-map-ui {
+    position: absolute;
+    right: 0;
+    margin-right: 2rem;
+    padding: 1rem;
+    z-index: 30;
+    @apply rounded-md bg-gray-900 shadow;
+}
+
+.live-map-component {
+    height: 100%;
+    width: 100%;
+}
+
+.orders-map {
+    height: 100%;
+    width: 100vw;
+}
+
+.fleetops-home-map {
+    height: 25vh;
+    width: 100vw;
+}
+
+[data-theme='dark'] .list-scroll-box {
+    @apply border-gray-900;
+}
+
+.list-scroll-box {
+    @apply border border-gray-300 block w-full overflow-y-scroll;
+    margin: 0.5rem 0;
+    height: 250px;
+    padding-left: 0px;
+}
+
+.list-scroll-box > li {
+    @apply flex items-center justify-between py-2 px-3 border-b border-gray-300 list-none;
+}
+
+[data-theme='dark'] .list-scroll-box > li {
+    @apply border-gray-900;
+}
+
+.list-scroll-box > li:last-child {
+    border-bottom: 0px;
+}
+
+.z-999 {
+    z-index: 9999;
+}
+
+.z-9999 {
+    z-index: 9999;
+}
+
+.z-99999 {
+    z-index: 9999;
+}
+
+#console-loader,
+.overloader {
+    @apply absolute inset-0 w-full h-full text-gray-800 flex items-center justify-center bg-opacity-10;
+    z-index: 9999999999;
+}
+
+body[data-theme='light'] #console-loader,
+body[data-theme='light'] .overloader {
+    @apply bg-gray-100 text-gray-800;
+}
+
+body[data-theme='dark'] #console-loader,
+body[data-theme='dark'] .overloader {
+    @apply bg-gray-900 text-gray-100 bg-opacity-10;
+}
+
+.overloader.overloader-opacity-3 {
+    background-color: rgba(17, 24, 39, 0.5);
+}
+
+.overloader.overloader-opacity-2 {
+    background-color: rgba(17, 24, 39, 0.3);
+}
+
+.overloader.overloader-opacity-1 {
+    background-color: rgba(17, 24, 39, 0.2);
+}
+
+.waypoint-label {
+    @apply bg-green-500 rounded-full px-3 py-2;
+}
+
+.order-route-list {
+    @apply text-sm relative z-20;
+}
+
+.order-route-list.storefront:before {
+    z-index: 80;
+    height: 100%;
+    @apply border-[#496453];
+}
+
+.order-route-list.storefront .order-route-stop:first-child {
+    @apply items-start;
+}
+
+.order-route-list.storefront .order-route-stop:first-child .order-route-stop-index .index-count {
+    @apply bg-[#496453] !important;
+}
+
+.order-route-list.storefront .order-route-stop:last-child {
+    @apply items-end mb-0;
+}
+
+.order-route-list.storefront .order-route-stop:last-child .order-route-stop-index .index-count {
+    z-index: 99;
+    @apply bg-red-500;
+}
+
+.order-route-list:before {
+    @apply absolute border-l-2 border-green-500 h-full left-0 ml-6 opacity-90;
+    content: '';
+    z-index: -1;
+}
+
+.order-route-list .order-route-stop {
+    @apply flex items-start justify-between text-sm px-3 mb-3 z-20;
+}
+
+.order-route-list .order-route-stop.bg--green {
+    @apply bg-green-600;
+}
+
+.order-route-list .order-route-stop:last-child {
+    @apply items-end mb-0;
+}
+
+.order-route-list .order-route-stop .order-route-location {
+    @apply flex-1 truncate;
+}
+
+.order-route-list .order-route-stop .order-route-stop-index {
+    @apply mr-3;
+}
+
+.order-route-list .order-route-stop .order-route-stop-index .index-count {
+    @apply bg-green-500 rounded-full text-sm text-gray-100 h-6 w-6 flex items-center justify-center shadow-sm;
+}
+
+.ember-attacher-tooltip.clean {
+    @apply bg-transparent m-0 p-0 rounded-none;
+}
+
+.zones-panel {
+    @apply m-8;
+    width: 500px;
+}
+
+.radio-group-condensed {
+    @apply bg-white rounded-md;
+}
+
+.radio-group-condensed .radio-group-item {
+    @apply relative border border-gray-200 p-4 flex;
+}
+
+.radio-group-condensed .radio-group-item label span:first-child {
+    @apply text-gray-900;
+}
+
+.radio-group-condensed .radio-group-item label span:last-child {
+    @apply text-gray-500;
+}
+
+.radio-group-condensed .radio-group-item.is-checked label span:first-child {
+    @apply text-white;
+}
+
+.radio-group-condensed .radio-group-item.is-checked label span:last-child {
+    @apply text-white;
+}
+
+.radio-group-condensed .radio-group-item input[type='radio'] {
+    @apply h-4 w-4 text-white cursor-pointer border-gray-300;
+}
+
+.radio-group-condensed .radio-group-item:first-child {
+    @apply rounded-tl-md rounded-tr-md;
+}
+
+.radio-group-condensed .radio-group-item:last-child {
+    @apply rounded-bl-md rounded-br-md;
+}
+
+body[data-theme='dark'] .radio-group-condensed {
+    @apply bg-night-805 shadow;
+}
+
+body[data-theme='dark'] .radio-group-condensed .radio-group-item {
+    @apply text-gray-100 border-night-905;
+}
+
+body[data-theme='dark'] .radio-group-condensed .radio-group-item .ui-input-info-block .ui-input-info-block-text > span,
+body[data-theme='dark'] .radio-group-condensed .radio-group-item .ui-input-info-block .ui-input-info-block-text > p {
+    @apply text-white;
+}
+
+body[data-theme='dark'] .radio-group-condensed .radio-group-item.warning .ui-input-info-block .ui-input-info-block-text > span,
+body[data-theme='dark'] .radio-group-condensed .radio-group-item.warning .ui-input-info-block .ui-input-info-block-text > p {
+    @apply text-yellow-900;
+}
+
+body[data-theme='dark'] .radio-group-condensed .radio-group-item.success .ui-input-info-block .ui-input-info-block-text > span,
+body[data-theme='dark'] .radio-group-condensed .radio-group-item.success .ui-input-info-block .ui-input-info-block-text > p {
+    @apply text-green-900;
+}
+
+body[data-theme='dark'] .radio-group-condensed .radio-group-item label span:first-child {
+    @apply text-gray-200;
+}
+
+body[data-theme='dark'] .radio-group-condensed .radio-group-item label span:last-child {
+    @apply text-gray-50;
+}
+
+body[data-theme='dark'] .radio-group-condensed .radio-group-item.is-checked label span:first-child {
+    @apply text-white;
+}
+
+body[data-theme='dark'] .radio-group-condensed .radio-group-item.is-checked label span:last-child {
+    @apply text-white;
+}
+
+body[data-theme='dark'] .radio-group-condensed .radio-group-item input[type='radio'] {
+    @apply border-gray-900;
+}
+
+.ui-input-info-block.info,
+.ui-input-info-block.base,
+.ui-input-info-block {
+    @apply bg-[#2A3C30] border border-[#3F5747] text-white rounded-md text-sm p-2 !important;
+}
+
+.ui-input-info-block .ui-input-info-block-inner,
+.ui-input-info-block.base .ui-input-info-block-inner {
+    line-height: 1.25rem;
+}
+
+body[data-theme='dark'] .ui-input-info-block > .ui-input-info-block-inner > .ui-input-info-block-yield-container .btn-wrapper > .btn,
+body[data-theme='dark'] .ui-input-info-block > .ui-input-info-block-inner > .ui-input-info-block-yield-container .btn-wrapper > button.btn,
+body[data-theme='dark'] .ui-input-info-block > .ui-input-info-block-inner > .ui-input-info-block-yield-container .btn-wrapper > button.btn.btn-primary,
+body[data-theme='dark'] .ui-input-info-block > .ui-input-info-block-inner > .ui-input-info-block-yield-container .btn-wrapper > button.btn.btn-default,
+.ui-input-info-block > .ui-input-info-block-inner > .ui-input-info-block-yield-container .btn-wrapper > button.btn.btn-primary,
+.ui-input-info-block > .ui-input-info-block-inner > .ui-input-info-block-yield-container .btn-wrapper > button.btn.btn-default,
+.ui-input-info-block > .ui-input-info-block-inner > .ui-input-info-block-yield-container .btn-wrapper > button.btn {
+    outline: none;
+    transition: all ease-in-out 125ms;
+    @apply border border-[#1F2F24] bg-[#3F5747] text-white !important;
+}
+
+body[data-theme='dark'] .ui-input-info-block > .ui-input-info-block-inner > .ui-input-info-block-yield-container .btn-wrapper > .btn:hover,
+body[data-theme='dark'] .ui-input-info-block > .ui-input-info-block-inner > .ui-input-info-block-yield-container .btn-wrapper > button.btn:hover,
+body[data-theme='dark'] .ui-input-info-block > .ui-input-info-block-inner > .ui-input-info-block-yield-container .btn-wrapper > button.btn.btn-primary:hover,
+body[data-theme='dark'] .ui-input-info-block > .ui-input-info-block-inner > .ui-input-info-block-yield-container .btn-wrapper > button.btn.btn-default:hover,
+.ui-input-info-block > .ui-input-info-block-inner > .ui-input-info-block-yield-container .btn-wrapper > button.btn.btn-primary:hover,
+.ui-input-info-block > .ui-input-info-block-inner > .ui-input-info-block-yield-container .btn-wrapper > button.btn.btn-default:hover,
+.ui-input-info-block > .ui-input-info-block-inner > .ui-input-info-block-yield-container .btn-wrapper > button.btn:hover {
+    opacity: 0.7;
+}
+
+.ui-input-info-block.lg {
+    @apply px-4 py-3 text-lg;
+}
+
+.ui-input-info-block.lg .ui-input-info-block-inner {
+    @apply text-lg;
+}
+
+.ui-input-info-block.md {
+    @apply px-3 py-2.5 text-base;
+}
+
+.ui-input-info-block.md .ui-input-info-block-inner {
+    @apply text-base;
+}
+
+.ui-input-info-block.sm {
+    @apply text-sm px-3 py-2;
+}
+
+.ui-input-info-block.sm .ui-input-info-block-inner {
+    @apply text-sm;
+}
+
+.ui-input-info-block.xs {
+    @apply px-2 py-1.5;
+}
+
+.ui-input-info-block.xs .ui-input-info-block-inner {
+    font-size: 0.75rem;
+    line-height: 1.25rem;
+}
+
+.ui-input-info-block.success {
+    @apply bg-green-800 border-green-600 text-green-100;
+}
+
+body[data-theme='dark'] .ui-input-info-block.success > .ui-input-info-block-inner > .ui-input-info-block-yield-container .btn-wrapper > .btn,
+body[data-theme='dark'] .ui-input-info-block.success > .ui-input-info-block-inner > .ui-input-info-block-yield-container .btn-wrapper > button.btn,
+body[data-theme='dark'] .ui-input-info-block.success > .ui-input-info-block-inner > .ui-input-info-block-yield-container .btn-wrapper > button.btn.btn-primary,
+body[data-theme='dark'] .ui-input-info-block.success > .ui-input-info-block-inner > .ui-input-info-block-yield-container .btn-wrapper > button.btn.btn-default,
+.ui-input-info-block.success > .ui-input-info-block-inner > .ui-input-info-block-yield-container .btn-wrapper > button.btn.btn-primary,
+.ui-input-info-block.success > .ui-input-info-block-inner > .ui-input-info-block-yield-container .btn-wrapper > button.btn.btn-default,
+.ui-input-info-block.success > .ui-input-info-block-inner > .ui-input-info-block-yield-container .btn-wrapper > button.btn {
+    outline: none;
+    transition: all ease-in-out 125ms;
+    @apply border border-green-900 bg-green-600 text-green-100;
+}
+
+.ui-input-info-block.warning {
+    @apply bg-yellow-800 border-yellow-600 text-yellow-100;
+}
+
+body[data-theme='dark'] .ui-input-info-block.warning > .ui-input-info-block-inner > .ui-input-info-block-yield-container .btn-wrapper > .btn,
+body[data-theme='dark'] .ui-input-info-block.warning > .ui-input-info-block-inner > .ui-input-info-block-yield-container .btn-wrapper > button.btn,
+body[data-theme='dark'] .ui-input-info-block.warning > .ui-input-info-block-inner > .ui-input-info-block-yield-container .btn-wrapper > button.btn.btn-primary,
+body[data-theme='dark'] .ui-input-info-block.warning > .ui-input-info-block-inner > .ui-input-info-block-yield-container .btn-wrapper > button.btn.btn-default,
+.ui-input-info-block.warning > .ui-input-info-block-inner > .ui-input-info-block-yield-container .btn-wrapper > button.btn.btn-primary,
+.ui-input-info-block.warning > .ui-input-info-block-inner > .ui-input-info-block-yield-container .btn-wrapper > button.btn.btn-default,
+.ui-input-info-block.warning > .ui-input-info-block-inner > .ui-input-info-block-yield-container .btn-wrapper > button.btn {
+    outline: none;
+    transition: all ease-in-out 125ms;
+    @apply border border-yellow-900 bg-yellow-600 text-yellow-100;
+}
+
+.ui-input-info-block.danger {
+    @apply bg-red-800 border-red-600 text-red-100;
+}
+
+body[data-theme='dark'] .ui-input-info-block.danger > .ui-input-info-block-inner > .ui-input-info-block-yield-container .btn-wrapper > .btn,
+body[data-theme='dark'] .ui-input-info-block.danger > .ui-input-info-block-inner > .ui-input-info-block-yield-container .btn-wrapper > button.btn,
+body[data-theme='dark'] .ui-input-info-block.danger > .ui-input-info-block-inner > .ui-input-info-block-yield-container .btn-wrapper > button.btn.btn-primary,
+body[data-theme='dark'] .ui-input-info-block.danger > .ui-input-info-block-inner > .ui-input-info-block-yield-container .btn-wrapper > button.btn.btn-default,
+.ui-input-info-block.danger > .ui-input-info-block-inner > .ui-input-info-block-yield-container .btn-wrapper > button.btn.btn-primary,
+.ui-input-info-block.danger > .ui-input-info-block-inner > .ui-input-info-block-yield-container .btn-wrapper > button.btn.btn-default,
+.ui-input-info-block.danger > .ui-input-info-block-inner > .ui-input-info-block-yield-container .btn-wrapper > button.btn {
+    outline: none;
+    transition: all ease-in-out 125ms;
+    @apply border border-red-900 bg-red-600 text-red-100;
+}
+
+.ui-input-info-block.magic {
+    @apply bg-indigo-800 border-indigo-600 text-indigo-100;
+}
+
+body[data-theme='dark'] .ui-input-info-block.magic > .ui-input-info-block-inner > .ui-input-info-block-yield-container .btn-wrapper > .btn,
+body[data-theme='dark'] .ui-input-info-block.magic > .ui-input-info-block-inner > .ui-input-info-block-yield-container .btn-wrapper > button.btn,
+body[data-theme='dark'] .ui-input-info-block.magic > .ui-input-info-block-inner > .ui-input-info-block-yield-container .btn-wrapper > button.btn.btn-primary,
+body[data-theme='dark'] .ui-input-info-block.magic > .ui-input-info-block-inner > .ui-input-info-block-yield-container .btn-wrapper > button.btn.btn-default,
+.ui-input-info-block.magic > .ui-input-info-block-inner > .ui-input-info-block-yield-container .btn-wrapper > button.btn.btn-primary,
+.ui-input-info-block.magic > .ui-input-info-block-inner > .ui-input-info-block-yield-container .btn-wrapper > button.btn.btn-default,
+.ui-input-info-block.magic > .ui-input-info-block-inner > .ui-input-info-block-yield-container .btn-wrapper > button.btn {
+    outline: none;
+    transition: all ease-in-out 125ms;
+    @apply border border-indigo-900 bg-indigo-600 text-indigo-100;
+}
+
+.ui-input-info-block .ui-input-info-block-text,
+.ui-input-info-block .ui-input-info-block-text span,
+.ui-input-info-block p {
+    @apply text-white;
+}
+
+.ui-input-info-block .ui-input-info-block-text.warning,
+.ui-input-info-block .ui-input-info-block-text.warning span,
+.ui-input-info-block .ui-input-info-block-text.warning p {
+    @apply text-yellow-100;
+}
+
+.ui-input-info-block .ui-input-info-block-text.success span,
+.ui-input-info-block .ui-input-info-block-text.success span,
+.ui-input-info-block .ui-input-info-block-text.success p {
+    @apply text-green-100;
+}
+
+.ui-input-info-block .ui-input-info-block-text.danger span,
+.ui-input-info-block .ui-input-info-block-text.danger span,
+.ui-input-info-block .ui-input-info-block-text.danger p {
+    @apply text-red-100;
+}
+
+.ui-input-info-block .ui-input-info-block-text.magic span,
+.ui-input-info-block .ui-input-info-block-text.magic span,
+.ui-input-info-block .ui-input-info-block-text.magic p {
+    @apply text-white;
+}
+
+.ui-input-info-block.warning .ui-input-info-block-text,
+.ui-input-info-block.warning .ui-input-info-block-text > span,
+.ui-input-info-block.warning .ui-input-info-block-text > span:last-child,
+.ui-input-info-block.warning .ui-input-info-block-text > p,
+.ui-input-info-block.warning span,
+.ui-input-info-block.warning span:last-child,
+.ui-input-info-block.warning span:first-child,
+.ui-input-info-block.warning p {
+    @apply text-yellow-100;
+}
+
+.ui-input-info-block.danger .ui-input-info-block-text,
+.ui-input-info-block.danger .ui-input-info-block-text > span,
+.ui-input-info-block.danger .ui-input-info-block-text > span:last-child,
+.ui-input-info-block.danger .ui-input-info-block-text > p,
+.ui-input-info-block.danger span,
+.ui-input-info-block.danger span:last-child,
+.ui-input-info-block.danger span:first-child,
+.ui-input-info-block.danger p {
+    @apply text-red-100;
+}
+
+.ui-input-info-block.success .ui-input-info-block-text,
+.ui-input-info-block.success .ui-input-info-block-text > span,
+.ui-input-info-block.success .ui-input-info-block-text > p,
+.ui-input-info-block.success span,
+.ui-input-info-block.success span:last-child,
+.ui-input-info-block.success span:first-child,
+.ui-input-info-block.success p {
+    @apply text-green-100;
+}
+
+.ui-input-info-block.magic .ui-input-info-block-text,
+.ui-input-info-block.magic .ui-input-info-block-text > span,
+.ui-input-info-block.magic .ui-input-info-block-text > p,
+.ui-input-info-block.magic span,
+.ui-input-info-block.magic span:last-child,
+.ui-input-info-block.magic span:first-child,
+.ui-input-info-block.magic p {
+    @apply text-white;
+}
+
+.activity-flow-connector {
+    position: relative;
+}
+
+.activity-flow-connector:before {
+    @apply border-r-4 border-gray-900 absolute;
+    height: 80%;
+    content: '';
+    top: 0;
+    left: 0;
+    margin-left: 50%;
+    z-index: -1;
+}
+
+.activity-flow-connector .activity-events-list > div {
+    @apply rounded-none;
+}
+
+.activity-flow-connector .activity-events-list > div:first-child {
+    @apply rounded-t;
+}
+
+.activity-flow-connector .activity-events-list > div:last-child {
+    @apply rounded-b;
+}
+
+.activity-flow-sub-connector {
+    position: relative;
+}
+
+.activity-flow-sub-connector:before {
+    @apply border-r-4 border-green-400 h-full absolute;
+    content: '';
+    top: 0;
+    left: 0;
+    margin-left: 50%;
+    z-index: -1;
+}
+
+.activity-flow-sub-connector:last-child:before {
+    height: 70%;
+}
+
+.activity-flow-sub-connector.live-flow:before,
+.activity-flow-sub-connector.created-flow:before,
+.activity-flow-sub-connector.enabled-flow:before,
+.activity-flow-sub-connector.success-flow:before,
+.activity-flow-sub-connector.succeeded-flow:before,
+.activity-flow-sub-connector.dispatched-flow:before,
+.activity-flow-sub-connector.operational-flow:before,
+.activity-flow-sub-connector.active-flow:before,
+.activity-flow-sub-connector.completed-flow:before {
+    @apply border-green-100;
+}
+
+.activity-flow-sub-connector[class*='5']:before,
+.activity-flow-sub-connector.disabled-flow:before,
+.activity-flow-sub-connector.failed-flow:before,
+.activity-flow-sub-connector.canceled-flow:before {
+    @apply border-red-100;
+}
+
+.activity-flow-sub-connector[class*='4']:before,
+.activity-flow-sub-connector.test-flow:before,
+.activity-flow-sub-connector.warning-flow:before,
+.activity-flow-sub-connector.pending-flow:before {
+    @apply border-yellow-100;
+}
+
+.activity-flow-sub-connector.dispatched-flow:before,
+.activity-flow-sub-connector.assigned-flow:before {
+    @apply border-indigo-100;
+}
+
+.activity-flow-sub-connector.driver-enroute-element:before,
+.activity-flow-sub-connector.driver-enroute-flow:before {
+    @apply border-orange-100;
+}
+
+.activity-flow-sub-connector.info-flow:before,
+.activity-flow-sub-connector.in-progress-flow:before {
+    @apply border-[#DCE3DE];
+}
+
+.ui-combo-box .selected-list a.combo-box-option,
+.ui-combo-box .options-list a.combo-box-option {
+    @apply flex text-gray-800 px-4 py-2 border-b border-gray-200 bg-gray-50 relative;
+}
+
+.ui-combo-box .selected-list a.combo-box-option:first-child {
+    @apply rounded-t-md;
+}
+
+.ui-combo-box .options-list a.combo-box-option:hover {
+    @apply bg-gray-300;
+}
+
+.ui-combo-box .options-list a.combo-box-option.selected:hover,
+.ui-combo-box .options-list a.combo-box-option.selected {
+    background-color: #76a9fa !important;
+}
+
+.ui-combo-box .options-list a.combo-box-option.selected:hover,
+.ui-combo-box .options-list a.combo-box-option.selected {
+    @apply bg-[#8CA18F] !important;
+}
+
+body[data-theme='dark'] .ui-combo-box .selected-list a.combo-box-option,
+body[data-theme='dark'] .ui-combo-box .options-list a.combo-box-option {
+    @apply border-gray-900 text-gray-100 bg-gray-700 relative;
+}
+
+body[data-theme='dark'] .ui-combo-box .selected-list a.combo-box-option:hover,
+body[data-theme='dark'] .ui-combo-box .options-list a.combo-box-option:hover {
+    @apply bg-gray-600;
+}
+
+.file-dropzone {
+    @apply w-full rounded-lg px-4 py-8 bg-gray-50 text-gray-800 text-center flex flex-col items-center justify-center border-2 border-dashed border-gray-200;
+    min-height: 10rem;
+}
+
+body[data-theme='dark'] .file-dropzone {
+    @apply text-white bg-gray-900 border-gray-700;
+}
+
+.aside-item-link.active {
+    @apply bg-[#8CA18F] text-white !important;
+}
+
+body[data-theme='dark'] .aside-item-link.active {
+    @apply bg-[#3F5747] !important;
+}
+
+body[data-theme='dark'].invite-for-network,
+body.invite-for-network {
+    background-color: #222;
+}
+
+body.fleetbase-console .container {
+    @apply px-4 py-2;
+}
+
+/** when hovering over a network folder **/
+
+.network-folder:hover,
+.network-folder.hovering {
+    opacity: 0.5;
+}
+
+.network-folder {
+    cursor: pointer;
+}
+
+.network-folder > .network-store {
+    display: none;
+}
+
+.store-boolean-settings {
+    @apply border border-gray-200 bg-gray-50 rounded-md;
+}
+
+.store-boolean-settings > .input-group {
+    @apply px-4 py-3 border-b border-gray-200 mb-0;
+}
+
+.store-boolean-settings > .input-group:last-child {
+    @apply border-b-0;
+}
+
+body[data-theme='dark'] .store-boolean-settings {
+    @apply border-gray-700 bg-gray-900;
+}
+
+body[data-theme='dark'] .store-boolean-settings > .input-group {
+    @apply border-gray-700;
+}
+
+body[data-theme='dark'] li.iti__country > span {
+    @apply text-gray-100;
+}
+
+.ui-input-info {
+    @apply border bg-[#1F2F24] border-[#2A3C30] dark:bg-gray-900 dark:border-gray-800 text-white px-3 py-1.5 text-sm leading-4 rounded-md shadow-md flex flex-row;
+}
+
+.ui-input-info > svg {
+    margin-right: 0.5rem;
+}
+
+.ui-input-info.danger {
+    @apply bg-red-900 text-red-100 border-red-700;
+}
+
+body[data-theme='light'].ui-input-info {
+    @apply bg-gray-50 bg-opacity-75 border-gray-200 text-gray-600;
+}
+
+body[data-theme='light'] .ui-input-info.danger {
+    @apply bg-red-100 text-red-600 border-red-600;
+}
+
+.fleetbase-console .ember-cli-notifications-notification__container .c-notification__icon {
+    @apply flex items-center justify-center;
+}
+
+.fleetbase-console .ember-cli-notifications-notification__container .c-notification__content {
+    @apply text-sm;
+}
+
+.fleetbase-console .ember-cli-notifications-notification__container .c-notification__content .c-notification__close {
+    @apply pt-1;
+}
+
+.fleetbase-console .token.operator,
+.fleetbase-console .token.entity,
+.fleetbase-console .token.url,
+.fleetbase-console .language-css .token.string,
+.fleetbase-console .style .token.string {
+    @apply bg-transparent;
+}
+
+.fleetbase-console code[class*='language-'],
+.fleetbase-console pre[class*='language-'] {
+    text-shadow: none;
+}
+
+.anchor-button {
+    @apply px-2 py-0.5 rounded-md border border-gray-200 flex flex-row items-center shadow-sm;
+}
+
+.anchor-button:hover {
+    @apply outline-offset-2 outline-[#496453];
+}
+
+.anchor-button:hover > div:last-child {
+    @apply text-white;
+}
+
+.anchor-button div {
+    @apply px-1 flex items-center;
+}
+
+.anchor-button div:first-child {
+    @apply justify-center;
+}
+
+.anchor-button > div:last-child {
+    @apply border-l border-gray-200 truncate flex-1;
+}
+
+body[data-theme='dark'] .anchor-button {
+    @apply border-gray-700 bg-gray-900 text-gray-100;
+}
+
+body[data-theme='dark'] .anchor-button > div:last-child {
+    @apply border-gray-700;
+}

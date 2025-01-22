@@ -1,0 +1,112 @@
+{{#if this.isTextOnly}}
+    <div class={{if @item.overwriteWrapperClass @item.wrapperClass (concat @item.wrapperClass " next-header-dd-menu-item px-1 flex flex-row")}}>
+        {{#if @item.icon}}
+            <FaIcon @icon={{@item.icon}} @size={{or @item.iconSize "sm"}} class={{or @item.iconClass "mr-2"}} />
+        {{/if}}
+        <div class="inline-flex flex-col {{@item.inlineClass}}">
+            {{#if @item.intl}}
+                {{#if (is-array @item.intl)}}
+                    {{#each @item.intl as |intl|}}
+                        <div class="{{@item.class}}">{{t intl}}</div>
+                    {{/each}}
+                {{else}}
+                    <div class="{{@item.class}}">{{t @item.intl}}</div>
+                {{/if}}
+            {{else}}
+                {{#if (is-array @item.text)}}
+                    {{#each @item.text as |line|}}
+                        {{#if (is-object line)}}
+                            <div class="{{@item.class}}">
+                                {{#if line.component}}
+                                    {{component
+                                        line.component
+                                        item=line
+                                        text=line.text
+                                        label=(or line.label line.text)
+                                        status=(or line.status line.text)
+                                        type=line.type
+                                        onClick=line.onClick
+                                        hideStatusDot=line.hideStatusDot
+                                        disableHumanize=line.disableHumanize
+                                        class=line.class
+                                        wrapperClass=line.wrapperClass
+                                        spanClass=line.spanClass
+                                        textClass=line.textClass
+                                        icon=line.icon
+                                        iconClass=line.iconClass
+                                        iconSize=line.iconSize
+                                    }}
+                                {{else}}
+                                    <div class="{{line.class}}">{{line.text}}</div>
+                                {{/if}}
+                            </div>
+                        {{else}}
+                            <div class="{{@item.class}}">{{line}}</div>
+                        {{/if}}
+                    {{/each}}
+                {{else}}
+                    <div class="{{@item.class}}">{{@item.text}}</div>
+                {{/if}}
+            {{/if}}
+        </div>
+    </div>
+{{/if}}
+
+{{#if this.isLink}}
+    <div class={{if @item.overwriteWrapperClass @item.wrapperClass (concat @item.wrapperClass " px-1")}}>
+        <LinkTo @route={{@item.route}} disabled={{@item.disabled}} class="next-header-dd-menu-item next-dd-item {{@item.class}}">
+            {{#if @item.icon}}
+                <FaIcon @icon={{@item.icon}} @size={{or @item.iconSize "sm"}} class={{or @item.iconClass "mr-2"}} />
+            {{/if}}
+            {{#if @item.intl}}
+                <span>{{t @item.intl}}</span>
+            {{else}}
+                <span>{{@item.text}}</span>
+            {{/if}}
+        </LinkTo>
+    </div>
+{{/if}}
+
+{{#if this.isAnchor}}
+    <div class={{if @item.overwriteWrapperClass @item.wrapperClass (concat @item.wrapperClass " px-1")}}>
+        <a
+            href={{@item.href}}
+            class="next-header-dd-menu-item next-dd-item {{if @item.disabled 'disabled'}} {{@item.class}}"
+            target={{@item.target}}
+            disabled={{@item.disabled}}
+            {{on "click" (fn @onAction @item.action @item.params)}}
+        >
+            {{#if @item.icon}}
+                <FaIcon @icon={{@item.icon}} @size={{or @item.iconSize "sm"}} class={{or @item.iconClass "mr-2"}} />
+            {{/if}}
+            {{#if @item.intl}}
+                <span>{{t @item.intl}}</span>
+            {{else}}
+                <span>{{@item.text}}</span>
+            {{/if}}
+        </a>
+    </div>
+{{/if}}
+
+{{#if this.isInteractive}}
+    <div class={{if @item.overwriteWrapperClass @item.wrapperClass (concat @item.wrapperClass " px-1")}}>
+        <a href="javascript:;" class="next-header-dd-menu-item next-dd-item {{if this.active 'active'}}" disabled={{@item.disabled}} {{on "click" @item.onClick}} ...attributes>
+            {{#if @item.icon}}
+                <FaIcon @icon={{@item.icon}} @size={{or @item.iconSize "sm"}} class={{or @item.iconClass "mr-2"}} />
+            {{/if}}
+            {{#if @item.intl}}
+                <span>{{t @item.intl}}</span>
+            {{else}}
+                <span>{{@item.text}}</span>
+            {{/if}}
+        </a>
+    </div>
+{{/if}}
+
+{{#if this.isSeperator}}
+    <div class="next-dd-menu-seperator"></div>
+{{/if}}
+
+{{#if this.isComponent}}
+    {{component @item.component @item}}
+{{/if}}

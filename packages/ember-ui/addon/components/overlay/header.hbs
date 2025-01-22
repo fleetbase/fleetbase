@@ -1,0 +1,64 @@
+<div class="next-content-overlay-panel-header" {{did-insert this.setupComponent}} ...attributes>
+    {{#unless @hideLeftSection}}
+        <div class="next-view-header-left {{@headerLeftClass}}">
+            <div class="next-view-header-left-inner {{@headerLeftInnerClass}}">
+                <div class="next-view-header-left-title-wrapper flex flex-row items-center {{@titleWrapperClass}}">
+                    <h2 class="next-content-overlay-panel-title {{@titleClass}}">
+                        {{#if @overlay.isMinimized}}
+                            {{this.titleWithElipsis}}
+                        {{else}}
+                            {{@title}}
+                        {{/if}}
+                    </h2>
+                    <div class="flex flex-row space-x-2">
+                        {{#if @status}}
+                            <Badge @hideStatusDot={{@hideStatusDot}} @disableHumanize={{@disableBadgeHumanize}} @status={{@status}} class="ml-2" />
+                        {{/if}}
+                        {{#if (and @dispatched (eq @status "created"))}}
+                            <Badge @hideStatusDot={{true}} @disableHumanize={{@disableBadgeHumanize}} @status="Dispatched" class="ml-2" />
+                        {{/if}}
+                    </div>
+                </div>
+                {{#if @createdAt}}
+                    <div class="text-sm">{{@createdAt}}</div>
+                {{/if}}
+            </div>
+        </div>
+    {{/unless}}
+    <div class="next-view-header-right {{@actionsWrapperClass}}">
+        {{yield}}
+        {{#if @overlay.onMaximize}}
+            <button
+                type="button"
+                class="next-content-overlay-panel-maximize-button {{@maximizeButtonClass}}"
+                {{set-height @maximizeButtonHeight}}
+                {{set-width @maximizeButtonWidth}}
+                {{on "click" @overlay.maximize}}
+            >
+                <FaIcon @icon={{or @minimizeIcon "window-maximize"}} @size={{@iconSize}} @prefix={{or @iconPrefix "fas"}} class={{@iconClass}} />
+            </button>
+        {{/if}}
+        {{#if @overlay.onMinimize}}
+            <button
+                type="button"
+                class="next-content-overlay-panel-minimize-button {{@minimizeButtonClass}}"
+                {{set-height @minimizeButtonHeight}}
+                {{set-width @minimizeButtonWidth}}
+                {{on "click" @overlay.minimize}}
+            >
+                <FaIcon @icon={{or @minimizeIcon "window-minimize"}} @size={{@iconSize}} @prefix={{or @iconPrefix "fas"}} class={{@iconClass}} />
+            </button>
+        {{/if}}
+        {{#if @onPressCancel}}
+            <button
+                type="button"
+                class="next-content-overlay-panel-cancel-button {{@cancelButtonClass}}"
+                {{set-height @cancelButtonHeight}}
+                {{set-width @cancelButtonWidth}}
+                {{on "click" this.cancel}}
+            >
+                <FaIcon @icon={{or @cancelIcon "times"}} @size={{@iconSize}} @prefix={{or @iconPrefix "fas"}} class={{@iconClass}} />
+            </button>
+        {{/if}}
+    </div>
+</div>

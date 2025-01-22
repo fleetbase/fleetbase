@@ -1,0 +1,675 @@
+.fleetbase-console .form-input,
+.fleetbase-console .form-textarea,
+.fleetbase-console .form-multiselect,
+.fleetbase-console .form-select {
+    @apply rounded-md;
+}
+
+.ember-power-select-trigger.form-input.form-input-sm,
+.ember-power-select-trigger.form-input-sm,
+select.form-input-sm,
+input.form-input.form-input-sm {
+    @apply px-2.5 py-1.5 text-xs leading-4;
+}
+
+select.form-select.form-input-sm,
+select.form-input-sm {
+    @apply pr-8;
+}
+
+select.form-input-md,
+input.form-input.form-input-md {
+    @apply px-3 py-2 text-sm leading-4;
+}
+
+select.form-input-lg,
+input.form-input.form-input-lg {
+    @apply px-4 py-3 text-base leading-5;
+}
+
+body[data-theme='light'] select.form-select.has--placeholder,
+body[data-theme='dark'] select.form-select.has--placeholder,
+select.form-select.has--placeholder {
+    color: #9fa6b2;
+}
+
+.fleetbase-console .form-input,
+.fleetbase-console .form-textarea,
+.fleetbase-console .form-select,
+.fleetbase-console .form-multiselect {
+    @apply border border-gray-300 dark:border-gray-900;
+}
+
+body[data-theme='dark'] .fleetbase-console .form-input,
+body[data-theme='dark'] .fleetbase-console .form-textarea,
+body[data-theme='dark'] .fleetbase-console .form-select,
+body[data-theme='dark'] .fleetbase-console .form-multiselect {
+    @apply border-gray-900;
+}
+
+body.fleetbase-console .form-input {
+    @apply text-sm;
+}
+
+.fleetbase-input:not(.fleetbase-date-input),
+.fleetbase-input:not(.fleetbase-date-input) .form-input {
+    @apply text-xs leading-4;
+}
+
+.fleetbase-power-select .ember-power-select-trigger.form-select .ember-power-select-status-icon,
+.fleetbase-multi-select .ember-power-select-trigger.form-select .ember-power-select-status-icon,
+.fleetbase-model-select .ember-power-select-trigger.form-select .ember-power-select-status-icon {
+    @apply hidden;
+}
+
+.fleetbase-input.with-left-icon .form-input {
+    padding-left: 2rem;
+}
+
+.fleetbase-input.with-right-icon .form-input {
+    padding-right: 1.6rem;
+}
+
+.fleetbase-input .input-icon {
+    position: absolute;
+    top: 0;
+    padding-top: 0.7rem;
+}
+
+.fleetbase-input .form-input-sm .input-icon {
+    padding-top: 0.5rem;
+}
+
+.fleetbase-input .input-icon.input-icon-left {
+    left: 0;
+    padding-left: 0.75rem;
+}
+
+.fleetbase-input .input-icon.input-icon-right {
+    right: 0;
+    padding-right: 0.75rem;
+}
+
+body.fleetbase-console select.form-select,
+div.input-group > select.form-select,
+select.form-select,
+.form-select {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='none'%3e%3cpath d='M7 7l3-3 3 3m0 6l-3 3-3-3' stroke='%239fa6b2' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3e%3c/svg%3e");
+    background-position: right 0.5rem center;
+    background-size: 1.5em 1.5em;
+    @apply text-sm;
+}
+
+body[data-theme='dark'] .form-input.ember-power-select-trigger,
+body[data-theme='dark'] .form-input,
+body[data-theme='dark'] .form-select {
+    @apply text-sm text-white bg-gray-700 border border-gray-900 shadow-sm shadow-gray-900 outline-0;
+}
+
+body[data-theme='dark'] .form-input.ember-power-select-trigger:active,
+body[data-theme='dark'] .form-input:active,
+body[data-theme='dark'] .form-select:active,
+body[data-theme='dark'] .form-input.ember-power-select-trigger:focus,
+body[data-theme='dark'] .form-input:focus,
+body[data-theme='dark'] .form-select:focus {
+    @apply shadow-gray-900 outline-0;
+    --tw-shadow: transparent;
+}
+
+body[data-theme='dark'] input.form-input:active,
+body[data-theme='dark'] input.form-input:focus {
+    @apply outline-0;
+    box-shadow: none;
+    --tw-shadow: transparent;
+}
+
+.input-group {
+    @apply mb-5;
+}
+
+.input-group label {
+    @apply block mb-1 text-sm font-medium leading-5 text-gray-700;
+}
+
+body[data-theme='dark'] .input-group label {
+    @apply text-gray-100;
+}
+
+.form-input:disabled {
+    @apply opacity-50 cursor-not-allowed;
+}
+
+.form-datalist::-webkit-calendar-picker-indicator {
+    display: none;
+}
+
+body[data-theme='dark'] .form-datalist:hover {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='none'%3e%3cpath d='M7 7l3-3 3 3m0 6l-3 3-3-3' stroke='%23f3f4f6' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3e%3c/svg%3e");
+}
+
+body[data-theme='light'] .form-datalist:hover {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='none'%3e%3cpath d='M7 7l3-3 3 3m0 6l-3 3-3-3' stroke='%236b7280' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3e%3c/svg%3e");
+}
+
+.fleetbase-power-select .ember-power-select-trigger .ember-power-select-placeholder,
+#ember-basic-dropdown-wormhole .ember-power-select-trigger .ember-power-select-placeholder,
+.ember-model-select .ember-power-select-trigger .ember-power-select-placeholder {
+    @apply w-full ml-0 truncate;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    color: #9fa6b2;
+}
+
+.fleetbase-power-select .ember-power-select-trigger .ember-power-select-selected-item,
+#ember-basic-dropdown-wormhole .ember-power-select-trigger .ember-power-select-selected-item,
+.ember-model-select .ember-power-select-trigger .ember-power-select-selected-item {
+    @apply w-full ml-0 truncate;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+}
+
+.fleetbase-power-select .ember-model-select__dropdown,
+#ember-basic-dropdown-wormhole .ember-model-select__dropdown,
+.ember-model-select .ember-model-select__dropdown {
+    @apply bg-white border border-gray-300 shadow;
+}
+
+body[data-theme='dark'] .fleetbase-power-select .ember-model-select__dropdown,
+body[data-theme='dark'] #ember-basic-dropdown-wormhole .ember-model-select__dropdown,
+body[data-theme='dark'] .ember-model-select .ember-model-select__dropdown {
+    @apply bg-gray-700 border-gray-900 shadow;
+}
+
+.fleetbase-power-select .ember-power-select-option,
+#ember-basic-dropdown-wormhole .ember-power-select-option,
+.ember-model-select .ember-power-select-option {
+    @apply w-full px-3 py-2 text-sm leading-4 truncate;
+}
+
+.fleetbase-power-select .ember-power-select-search > input,
+#ember-basic-dropdown-wormhole .ember-power-select-search > input,
+.ember-model-select .ember-power-select-search > input {
+    @apply px-2.5 py-1.5 text-xs border border-gray-300 leading-4;
+}
+
+body[data-theme='dark'] .fleetbase-power-select .ember-power-select-search > input,
+body[data-theme='dark'] #ember-basic-dropdown-wormhole .ember-power-select-search > input,
+body[data-theme='dark'] .ember-model-select .ember-power-select-search > input {
+    @apply text-white bg-gray-800 border-gray-900 shadow-sm;
+}
+
+body[data-theme='light'] .fleetbase-power-select[aria-current='true'],
+body[data-theme='light'] #ember-basic-dropdown-wormhole[aria-current='true'],
+body[data-theme='light'] .ember-model-select[aria-current='true'] {
+    @apply bg-gray-100;
+}
+
+body[data-theme='light'] .fleetbase-power-select[aria-selected='true'],
+body[data-theme='light'] #ember-basic-dropdown-wormhole[aria-selected='true'],
+body[data-theme='light'] .ember-model-select[aria-selected='true'] {
+    @apply bg-gray-300;
+}
+
+body[data-theme='dark'] .fleetbase-power-select .ember-power-select-search {
+    @apply bg-gray-700 border-gray-800 border;
+}
+
+body[data-theme='dark'] .fleetbase-power-select .ember-power-select-dropdown {
+    @apply bg-gray-800 border-gray-800;
+}
+
+body[data-theme='dark'] .fleetbase-power-select .ember-power-select-trigger .ember-power-select-placeholder {
+    color: #9fa6b2;
+}
+
+body[data-theme='dark'] .fleetbase-power-select .ember-model-select__loading {
+    @apply bg-gray-700;
+}
+
+body[data-theme='dark'] .fleetbase-power-select .ember-model-select__dropdown {
+    @apply bg-gray-700 border border-gray-900 shadow;
+}
+
+body[data-theme='dark'] .fleetbase-power-select .ember-power-select-option {
+    @apply text-gray-100;
+}
+
+body[data-theme='dark'] .fleetbase-power-select .ember-power-select-option[aria-current='true'] {
+    @apply bg-gray-800;
+}
+
+body[data-theme='dark'] .fleetbase-power-select .ember-power-select-option[aria-selected='true'] {
+    @apply bg-gray-900;
+}
+
+label.required:after {
+    color: #e3342f;
+    content: '*';
+    left: 3px;
+    top: 0px;
+    font-size: 16px;
+    position: relative;
+    font-family: arial;
+}
+
+.unit-input-currency-selector,
+.ui-unit-input .ember-basic-dropdown > .ember-basic-dropdown-trigger,
+.ui-unit-input .unit-input-selector {
+    display: flex;
+}
+
+.unit-input-currency-selector .ember-power-select-trigger,
+.ui-unit-input .ember-basic-dropdown > .ember-basic-dropdown-trigger .ember-power-select-trigger,
+.ui-unit-input .unit-input-selector .ember-power-select-trigger {
+    @apply border-0 rounded-none bg-transparent m-0 p-0;
+}
+
+.unit-input-currency-selector + .ember-basic-dropdown-content-wormhole-origin > .ember-basic-dropdown-content,
+.ui-unit-input .ember-basic-dropdown > .ember-basic-dropdown-trigger + .ember-basic-dropdown-content-wormhole-origin > .ember-basic-dropdown-content,
+.ui-unit-input .unit-input-selector + .ember-basic-dropdown-content-wormhole-origin > .ember-basic-dropdown-content,
+.unit-input-currency-selector .ember-basic-dropdown-content,
+.ui-unit-input .ember-basic-dropdown > .ember-basic-dropdown-trigger .ember-basic-dropdown-content,
+.ui-unit-input .unit-input-selector .ember-basic-dropdown-content {
+    min-width: 20rem;
+}
+
+.unit-input-currency-selector .ember-power-select-search-input,
+.ui-unit-input .ember-basic-dropdown > .ember-basic-dropdown-trigger .ember-power-select-search-input,
+.ui-unit-input .unit-input-selector .ember-power-select-search-input {
+    @apply text-sm rounded shadow-sm;
+}
+
+.unit-input-currency-selector.ember-basic-dropdown-trigger,
+.ui-unit-input .ember-basic-dropdown > .ember-basic-dropdown-trigger.ember-basic-dropdown-trigger,
+.ui-unit-input .unit-input-selector.ember-basic-dropdown-trigger,
+.unit-input-currency-selector .ember-basic-dropdown-trigger,
+.ui-unit-input .ember-basic-dropdown > .ember-basic-dropdown-trigger .ember-basic-dropdown-trigger,
+.ui-unit-input .unit-input-selector .ember-basic-dropdown-trigger {
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+.unit-input-currency-selector.ember-basic-dropdown-trigger,
+.ui-unit-input .ember-basic-dropdown > .ember-basic-dropdown-trigger.ember-basic-dropdown-trigger,
+.ui-unit-input .unit-input-selector.ember-basic-dropdown-trigger,
+.unit-input-currency-selector .ember-basic-dropdown-trigger,
+.ui-unit-input .ember-basic-dropdown > .ember-basic-dropdown-trigger .ember-basic-dropdown-trigger,
+.ui-unit-input .unit-input-selector .ember-basic-dropdown-trigger {
+    @apply flex items-center justify-center text-center m-0 p-0;
+}
+
+.ui-unit-input input.form-input {
+    border-top-right-radius: 0px !important;
+    border-bottom-right-radius: 0px !important;
+    border-right: 0 !important;
+}
+
+.ui-unit-input input.form-input + span {
+    border-top-left-radius: 0px !important;
+    border-bottom-left-radius: 0px !important;
+    border-left: 0 !important;
+}
+
+.ui-unit-input .ember-basic-dropdown > .unit-input-selector.ember-basic-dropdown-trigger {
+    background: transparent !important;
+    border: 0px !important;
+}
+
+.ui-unit-input .ember-basic-dropdown > .unit-input-selector.ember-basic-dropdown-trigger {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.ui-unit-input-selector:not(.form-input-sm) {
+    height: 38px;
+}
+
+.money-input-currency-selector,
+.ui-money-input .ember-basic-dropdown > .ember-basic-dropdown-trigger,
+.ui-money-input .money-input-currency-selector {
+    display: flex;
+}
+
+.country-selector .ember-power-select-trigger,
+.money-input-currency-selector .ember-power-select-trigger,
+.ui-money-input .ember-basic-dropdown > .ember-basic-dropdown-trigger .ember-power-select-trigger,
+.ui-money-input .money-input-currency-selector .ember-power-select-trigger {
+    @apply border-0 rounded-none bg-transparent m-0 p-0;
+}
+
+.country-selector + .ember-basic-dropdown-content-wormhole-origin > .ember-basic-dropdown-content,
+.money-input-currency-selector + .ember-basic-dropdown-content-wormhole-origin > .ember-basic-dropdown-content,
+.ui-money-input .ember-basic-dropdown > .ember-basic-dropdown-trigger + .ember-basic-dropdown-content-wormhole-origin > .ember-basic-dropdown-content,
+.ui-money-input .money-input-currency-selector + .ember-basic-dropdown-content-wormhole-origin > .ember-basic-dropdown-content,
+.money-input-currency-selector .ember-basic-dropdown-content,
+.ui-money-input .ember-basic-dropdown > .ember-basic-dropdown-trigger .ember-basic-dropdown-content,
+.ui-money-input .money-input-currency-selector .ember-basic-dropdown-content {
+    min-width: 20rem;
+}
+
+.country-selector .ember-power-select-search-input,
+.money-input-currency-selector .ember-power-select-search-input,
+.ui-money-input .ember-basic-dropdown > .ember-basic-dropdown-trigger .ember-power-select-search-input,
+.ui-money-input .money-input-currency-selector .ember-power-select-search-input {
+    @apply text-sm rounded shadow-sm;
+}
+
+.country-selector.ember-basic-dropdown-trigger,
+.money-input-currency-selector.ember-basic-dropdown-trigger,
+.ui-money-input .ember-basic-dropdown > .ember-basic-dropdown-trigger.ember-basic-dropdown-trigger,
+.ui-money-input .money-input-currency-selector.ember-basic-dropdown-trigger,
+.money-input-currency-selector .ember-basic-dropdown-trigger,
+.ui-money-input .ember-basic-dropdown > .ember-basic-dropdown-trigger .ember-basic-dropdown-trigger,
+.ui-money-input .money-input-currency-selector .ember-basic-dropdown-trigger {
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+.country-selector.ember-basic-dropdown-trigger,
+.money-input-currency-selector.ember-basic-dropdown-trigger,
+.ui-money-input .ember-basic-dropdown > .ember-basic-dropdown-trigger.ember-basic-dropdown-trigger,
+.ui-money-input .money-input-currency-selector.ember-basic-dropdown-trigger,
+.money-input-currency-selector .ember-basic-dropdown-trigger,
+.ui-money-input .ember-basic-dropdown > .ember-basic-dropdown-trigger .ember-basic-dropdown-trigger,
+.ui-money-input .money-input-currency-selector .ember-basic-dropdown-trigger {
+    @apply flex items-center justify-center text-center m-0 p-0;
+}
+
+.country-selector.ember-basic-dropdown-trigger,
+.money-input-currency-selector.ember-basic-dropdown-trigger {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.country-selector .ember-power-select-status-icon,
+.money-input-currency-selector .ember-power-select-status-icon {
+    display: none;
+}
+
+.country-selector-trigger:not(.form-input-sm),
+.money-input-currency-selector:not(.form-input-sm) {
+    height: 38px;
+}
+
+body[data-theme='dark'] .country-selector .ember-basic-dropdown > .ember-basic-dropdown-trigger + .ember-basic-dropdown-content-wormhole-origin > .ember-basic-dropdown-content,
+body[data-theme='dark'] .ui-money-input .ember-basic-dropdown > .ember-basic-dropdown-trigger + .ember-basic-dropdown-content-wormhole-origin > .ember-basic-dropdown-content,
+body[data-theme='dark'] .country-selector + .ember-basic-dropdown-content-wormhole-origin > .ember-basic-dropdown-content,
+body[data-theme='dark'] .money-input-currency-selector + .ember-basic-dropdown-content-wormhole-origin > .ember-basic-dropdown-content,
+body[data-theme='dark'] .ui-money-input .ember-basic-dropdown > .ember-basic-dropdown-trigger .ember-basic-dropdown-content,
+body[data-theme='dark'] .country-selector .ember-basic-dropdown-content,
+body[data-theme='dark'] .money-input-currency-selector .ember-basic-dropdown-content {
+    @apply bg-gray-800 rounded-md shadow text-gray-100 border border-gray-900;
+}
+
+body[data-theme='dark']
+    .ui-money-input
+    .ember-basic-dropdown
+    > .ember-basic-dropdown-trigger
+    + .ember-basic-dropdown-content-wormhole-origin
+    > .ember-basic-dropdown-content
+    .ember-power-select-option[aria-selected='true'],
+body[data-theme='dark']
+    .country-selector
+    .ember-basic-dropdown
+    > .ember-basic-dropdown-trigger
+    + .ember-basic-dropdown-content-wormhole-origin
+    > .ember-basic-dropdown-content
+    .ember-power-select-option[aria-selected='true'],
+body[data-theme='dark'] .country-selector + .ember-basic-dropdown-content-wormhole-origin > .ember-basic-dropdown-content .ember-power-select-option[aria-selected='true'],
+body[data-theme='dark'] .money-input-currency-selector + .ember-basic-dropdown-content-wormhole-origin > .ember-basic-dropdown-content .ember-power-select-option[aria-selected='true'],
+body[data-theme='dark'] .ui-money-input .ember-basic-dropdown > .ember-basic-dropdown-trigger .ember-basic-dropdown-content .ember-power-select-option[aria-selected='true'],
+body[data-theme='dark'] .money-input-currency-selector .ember-basic-dropdown-content .ember-power-select-option[aria-selected='true'] {
+    @apply bg-night-805;
+}
+
+body[data-theme='dark']
+    .ui-money-input
+    .ember-basic-dropdown
+    > .ember-basic-dropdown-trigger
+    + .ember-basic-dropdown-content-wormhole-origin
+    > .ember-basic-dropdown-content
+    .ember-power-select-search-input,
+body[data-theme='dark']
+    .country-selector
+    .ember-basic-dropdown
+    > .ember-basic-dropdown-trigger
+    + .ember-basic-dropdown-content-wormhole-origin
+    > .ember-basic-dropdown-content
+    .ember-power-select-search-input,
+body[data-theme='dark'] .money-input-currency-selector + .ember-basic-dropdown-content-wormhole-origin > .ember-basic-dropdown-content .ember-power-select-search-input,
+body[data-theme='dark'] .country-selector + .ember-basic-dropdown-content-wormhole-origin > .ember-basic-dropdown-content .ember-power-select-search-input,
+body[data-theme='dark'] .ui-money-input .ember-basic-dropdown > .ember-basic-dropdown-trigger .ember-basic-dropdown-content .ember-power-select-search-input,
+body[data-theme='dark'] .money-input-currency-selector .ember-basic-dropdown-content .ember-power-select-search-input {
+    @apply border border-blue-900 bg-gray-900 py-1;
+}
+
+.emberTagInput.form-input,
+.emberTagInput {
+    height: 39px;
+    display: flex;
+    flex-direction: row;
+    padding: 0.25rem 0.5rem;
+    line-height: 1rem;
+}
+
+body[data-theme='dark'] .emberTagInput.form-input:disabled,
+body[data-theme='dark'] .emberTagInput.form-input.disabled,
+body[data-theme='dark'] .emberTagInput:disabled,
+body[data-theme='dark'] .emberTagInput.disabled,
+.emberTagInput.form-input:disabled,
+.emberTagInput.form-input.disabled,
+.emberTagInput:disabled,
+.emberTagInput.disabled,
+body[data-theme='dark'] .emberTagInput.emberTagInput--readOnly,
+.emberTagInput.emberTagInput--readOnly {
+    opacity: 0.5;
+    pointer-events: none;
+    cursor: not-allowed;
+}
+
+.emberTagInput li.emberTagInput-new {
+    margin: 0;
+    padding: 0;
+    background: transparent;
+}
+
+.emberTagInput li input.emberTagInput-input {
+    @apply text-sm;
+    background-color: transparent;
+    margin: 0;
+    line-height: 1.25rem;
+    padding: 0.25rem;
+}
+
+.emberTagInput .emberTagInput-tag {
+    margin-bottom: 0;
+    @apply rounded-md bg-sky-500 flex items-center px-2 mr-1;
+}
+
+.emberTagInput .emberTagInput-tag > .emberTagInput-remove:before {
+    color: #fff;
+    margin-left: 0.5rem;
+    content: 'x';
+}
+
+body[data-theme='dark'] .emberTagInput input.emberTagInput-input {
+    @apply text-gray-100;
+}
+
+body[data-theme='dark'] .emberTagInput-tag {
+    @apply bg-gray-900 shadow-sm;
+}
+
+body[data-theme='dark'] .iti__dropdown-content {
+    @apply bg-gray-900 rounded-md shadow-sm border-gray-700 mt-1;
+}
+
+.iti__search-input {
+    border: 0px;
+    border-top-left-radius: 0.375rem;
+    border-top-right-radius: 0.375rem;
+}
+
+.iti__selected-dial-code {
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+}
+
+body[data-theme='dark'] .iti__selected-dial-code {
+    color: #fff;
+}
+
+body[data-theme='dark'] .iti__search-input {
+    background-color: #111827;
+    border-bottom: 1px #374151 solid;
+}
+
+body[data-theme='dark'] .iti__divider {
+    border-bottom: 1px solid #374151;
+}
+
+.ui-money-input .ember-basic-dropdown > .ember-basic-dropdown-trigger {
+    border: 0px;
+    background: transparent;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+}
+
+.ui-money-input input.form-input {
+    @apply rounded-l-none shadow-none outline-0 outline-none;
+}
+
+.ui-date-time-input > input[type='date'],
+.ui-date-time-input > input[type='time'] {
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    padding: 0;
+    margin: 0;
+    border: 0;
+    outline: 0;
+}
+
+.ui-date-time-input > input[type='date']:focus,
+.ui-date-time-input > input[type='time']:focus {
+    outline: 0;
+}
+
+.fleetbase-console .form-checkbox {
+    @apply rounded shadow-sm;
+}
+
+.fleetbase-console .form-checkbox:focus,
+.fleetbase-console .form-checkbox:focus-visible,
+.fleetbase-console .form-checkbox:focus-within,
+.fleetbase-console .form-radio:focus {
+    box-shadow:
+        0 0 rgba(0, 0, 0, 0),
+        0 0 rgba(0, 0, 0, 0),
+        var(--tw-shadow) !important;
+    box-shadow: var(--tw-ring-offset-shadow, 0 0 rgba(0, 0, 0, 0)), var(--tw-ring-shadow, 0 0 rgba(0, 0, 0, 0)), var(--tw-shadow) !important;
+}
+
+.fleetbase-console .form-checkbox:focus,
+.fleetbase-console .form-checkbox:focus-visible,
+.fleetbase-console .form-checkbox:focus-within,
+.fleetbase-console .form-radio:focus {
+    outline: 0;
+    outline-offset: 0;
+}
+
+.fleetbase-console .form-checkbox[data-checked],
+.fleetbase-console .form-radio[data-checked] {
+    outline: 0;
+    outline-offset: 0;
+    @apply bg-blue-400 shadow-sm;
+}
+
+.fleetbase-checkbox {
+    @apply w-4 h-4 transition duration-150 ease-in-out bg-gray-200 border-gray-200 dark:bg-gray-800 dark:border-gray-900;
+}
+
+body[data-theme='light'] .form-checkbox,
+body[data-theme='light'] .form-radio {
+    @apply border-gray-200;
+}
+
+.coordinates-input-map-container {
+    @apply rounded shadow-md relative my-2;
+    height: 240px;
+    width: 290px;
+}
+
+.coordinates-input-map-container > .leaflet-container {
+    @apply rounded shadow-sm;
+    height: 240px;
+    width: 290px;
+}
+
+.coordinates-input-zoom-controls {
+    position: absolute;
+    top: 0;
+    left: 0;
+    padding: 0.5rem;
+    z-index: 999;
+}
+
+.coordinates-input-zoom-controls > .coordinates-input-zoom-controls-container {
+    @apply bg-white rounded-full mb-3 flex flex-col items-center justify-center p-1 shadow-next-nav;
+}
+
+body[data-theme='dark'] .coordinates-input-zoom-controls > .coordinates-input-zoom-controls-container {
+    @apply bg-gray-900;
+}
+
+.next-map-container.next-map-container-layout-map .next-map-container-toolbar-container.toolbar-container-horizontal .toolbar-button {
+    @apply mb-0;
+}
+
+.coordinates-input-zoom-controls > .coordinates-input-zoom-controls-container > div:last-child .toolbar-button {
+    @apply mb-0;
+}
+
+.coordinates-input-zoom-controls > .coordinates-input-zoom-controls-container .toolbar-button {
+    @apply flex items-center justify-center rounded-full w-5 h-5 m-auto mb-2;
+}
+
+.coordinates-input-zoom-controls > .coordinates-input-zoom-controls-container.toolbar-button.is-action:hover {
+   background-color: #496453;
+}
+
+.coordinates-input-zoom-controls > .coordinates-input-zoom-controls-container .toolbar-button:focus,
+.coordinates-input-zoom-controls > .coordinates-input-zoom-controls-container .toolbar-button:active,
+.coordinates-input-zoom-controls > .coordinates-input-zoom-controls-container .toolbar-button:hover {
+    @apply outline-none;
+}
+
+.coordinates-input-zoom-controls > .coordinates-input-zoom-controls-container .toolbar-button:hover {
+    @apply bg-gray-600;
+}
+
+body[data-theme='light'] .coordinates-input-zoom-controls > .coordinates-input-zoom-controls-container .toolbar-button svg {
+    @apply text-gray-800;
+}
+
+body[data-theme='light'] .coordinates-input-zoom-controls > .coordinates-input-zoom-controls-container .toolbar-button.is-action:hover {
+    background-color: #496453;
+}
+
+body[data-theme='light'] .coordinates-input-zoom-controls > .coordinates-input-zoom-controls-container .toolbar-button.is-action:hover svg {
+    @apply text-white;
+}
+
+body[data-theme='light'] .coordinates-input-zoom-controls > .coordinates-input-zoom-controls-container .toolbar-button:hover {
+    @apply bg-gray-200;
+}
+
+body[data-theme='dark'] .iti__selected-country[aria-disabled='true'] .iti__selected-country[aria-disabled='true'] {
+    @apply opacity-50 cursor-not-allowed;
+}

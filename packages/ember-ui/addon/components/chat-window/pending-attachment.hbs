@@ -1,0 +1,21 @@
+<div class="chat-window-pending-attachment">
+    <div class="chat-window-pending-attachment-preview">
+        {{#if this.isImage}}
+            <Image src={{@file.url}} @fallbackSrc={{config "defaultValues.placeholderImage"}} alt={{@file.original_filename}} class="x-fleetbase-file-preview rounded-md shadow-sm" />
+        {{else}}
+            <div class="x-fleetbase-file-preview">
+                <FileIcon @file={{@file}} @hideExtension={{true}} @iconSize="2xl" />
+            </div>
+        {{/if}}
+    </div>
+    <div class="chat-window-pending-attachment-name">
+        {{truncate-filename @file.original_filename}}
+    </div>
+    <div class="chat-window-pending-attachment-actions">
+        <a href="javascript:;" {{on "click" this.remove}}>
+            <span class="mr-1">
+                <FaIcon @icon="trash" class="text-red-500" />
+            </span>
+        </a>
+    </div>
+</div>

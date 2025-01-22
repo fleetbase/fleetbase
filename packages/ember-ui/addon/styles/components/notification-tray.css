@@ -1,0 +1,42 @@
+/* Default styling for the notification tray container when it's closed */
+.notification-tray {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+/* Styling for the notification tray badge */
+.notification-tray-unread-notifications-badge {
+    position: absolute;
+    top: -6px;
+    right: -6px;
+    width: 16px;
+    height: 16px;
+    background: #dc2626;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    font-size: 10px;
+    font-weight: bold;
+}
+
+/* Adding a hover effect for the badge */
+.notification-tray-unread-notifications-badge:hover {
+    background-color: #b91c1c;
+    cursor: pointer;
+}
+
+.notification-tray-panel {
+    @apply mt-3 bg-white border border-gray-200 shadow-md rounded-lg dark:bg-gray-900 dark:border-gray-700 space-y-2 truncate;
+    width: 300px;
+}
+
+.notification-tray-panel .notification-item {
+    @apply flex flex-col rounded-md px-3 py-1.5 hover:bg-gray-100 dark:hover:bg-gray-800 truncate;
+}
+
+.notification-tray-view-all-link {
+    @apply rounded px-2 py-1 text-sm text-gray-800 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-moregray-750;
+}

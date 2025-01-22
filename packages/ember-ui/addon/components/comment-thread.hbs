@@ -1,0 +1,22 @@
+<div class="flex flex-col mb-4" ...attributes>
+    <Textarea @value={{this.input}} class="form-input w-full" placeholder={{t "component.comment-thread.comment-input-placeholder"}} rows={{3}} disabled={{not this.publishComment.isIdle}} />
+    <div class="flex flex-row items-center justify-end mt-2">
+        <Button
+            @type="primary"
+            @buttonType="button"
+            @icon="paper-plane"
+            @text={{t "component.comment-thread.publish-comment-button-text"}}
+            @onClick={{perform this.publishComment}}
+            @disabled={{or (not this.publishComment.isIdle) (not this.input)}}
+        />
+    </div>
+</div>
+<div>
+    {{#each this.comments as |comment|}}
+        {{#if (has-block)}}
+            {{yield (component "comment-thread/comment" comment=comment contextApi=this.context) comment}}
+        {{else}}
+            <CommentThread::Comment @comment={{comment}} @contextApi={{this.context}} />
+        {{/if}}
+    {{/each}}
+</div>

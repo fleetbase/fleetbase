@@ -1,0 +1,57 @@
+{{#if this.visible}}
+    <ContentPanel
+        @title={{@title}}
+        @titleIcon={{@titleIcon}}
+        @titleIconPrefix={{@titleIconPrefix}}
+        @titleIconClass={{@titleIconClass}}
+        @titleIconSize={{@titleIconSize}}
+        @open={{@open}}
+        @disabled={{@disabled}}
+        @permission={{this.permission}}
+        @doesntHavePermissions={{this.doesntHavePermissions}}
+        @isLoading={{@isLoading}}
+        @hideCaret={{@hideCaret}}
+        @toggleOnCaretOnly={{@toggleOnCaretOnly}}
+        @wrapperClass="next-sidebar-panel-container {{@wrapperClass}}"
+        @containerClass="next-sidebar-panel {{@containerClass}}"
+        @panelHeaderClass="next-sidebar-panel-toggle {{@panelHeaderClass}}"
+        @prefixTitle={{@prefixTitle}}
+        @titleComponent={{@titleComponent}}
+        @titleComponentContext={{@titleComponentContext}}
+        @titleContainerClass={{@titleContainerClass}}
+        @panelTitleClass={{@panelTitleClass}}
+        @titleStatusRight={{@titleStatusRight}}
+        @titleStatusRightText={{@titleStatusRightText}}
+        @titleStatusRightContainerClass={{@titleStatusRightContainerClass}}
+        @hideRightTitleStatusDot={{@hideRightTitleStatusDot}}
+        @titleStatusRightClass={{concat "next-content-panel-status-badge" " " @titleStatusRightClass}}
+        @disableTitleStatusRightHumanize={{@disableTitleStatusRightHumanize}}
+        @prefixTitleRight={{@prefixTitleRight}}
+        @prefixTitleRightContainerClass={{@prefixTitleRightContainerClass}}
+        @prefixTitleRightClass={{@prefixTitleRightClass}}
+        @titleRightSideComponent={{@titleRightSideComponent}}
+        @titleRightSideComponentContext={{@titleRightSideComponentContext}}
+        @actionButtons={{@actionButtons}}
+        @dropdownButton={{@dropdownButton}}
+        @dropdownButtonDefaultClass={{@dropdownButtonDefaultClass}}
+        @dropdownButtonWrapperClass="next-content-panel-dd {{@dropdownButtonWrapperClass}}"
+        @dropdownButtonActions={{@dropdownButtonActions}}
+        @dropdownButtonIcon={{@dropdownButtonIcon}}
+        @dropdownButtonIconPrefix={{@dropdownButtonIconPrefix}}
+        @dropdownButtonText={{@dropdownButtonText}}
+        @dropdownButtonCalculatePosition={{@dropdownButtonCalculatePosition}}
+        @dropdownButtonRenderInPlace={{@dropdownButtonRenderInPlace}}
+        @dropdownMenuWrapperClass={{@dropdownMenuWrapperClass}}
+        @dropdownButtonMenuLabel={{@dropdownButtonMenuLabel}}
+        @dropdownButtonMenuLabelClass={{@dropdownButtonMenuLabelClass}}
+        @dropdownButtonHorizontalPosition={{@dropdownButtonHorizontalPosition}}
+        @dropdownButtonVerticalPosition={{@dropdownButtonVerticalPosition}}
+        @onClickPanelTitle={{@onClickPanelTitle}}
+        @onClickCaret={{@onClickCaret}}
+        @onClick={{@onClick}}
+        @onToggle={{@onToggle}}
+        ...attributes
+    >
+        {{yield}}
+    </ContentPanel>
+{{/if}}

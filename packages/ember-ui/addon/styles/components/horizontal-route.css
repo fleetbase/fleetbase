@@ -1,0 +1,36 @@
+.horizontal-route-scroller {
+    @apply border-t-4 border-blue-300 px-5 relative;
+}
+--scollbar.horizontal-route-scroller {
+    @apply w-full flex flex-row relative overflow-x-scroll pt-20 -mt-20;
+    pointer-events: none;
+}
+.horizontal-route-scroller:before {
+    @apply text-blue-400;
+    content: '⬤';
+    position: absolute;
+    top: 0;
+    left: -5px;
+    margin-top: -1rem;
+    font-size: 1.25rem;
+}
+.horizontal-route-scroller:after {
+    @apply text-blue-400;
+    content: '⬤';
+    position: absolute;
+    top: 0;
+    right: -5px;
+    margin-top: -1rem;
+    font-size: 1.25rem;
+}
+.horizontal-route-scroller .horizontal-route {
+    pointer-events: all;
+    margin-top: -0.5rem;
+    @apply flex flex-col items-center;
+}
+.horizontal-route-scroller .horizontal-route.is-destination > .notch {
+    @apply bg-blue-600;
+}
+.horizontal-route-scroller .horizontal-route > .notch {
+    @apply w-3 h-3 bg-gray-100 rounded-full m-auto mb-5;
+}

@@ -1,0 +1,53 @@
+pre[class*='language-'] {
+    @apply px-3 py-0 m-0 font-mono text-xs bg-transparent;
+}
+
+pre[class*='language-'] .line-numbers-rows {
+    @apply border-r-0;
+}
+
+pre[class*='language-'] .line-numbers-rows span {
+    @apply text-gray-200;
+}
+
+.content-panel-body pre[class*='language-'] {
+    @apply overflow-y-hidden;
+}
+
+body[data-theme='dark'] pre[class*='language-'] code[class*='language-'],
+body[data-theme='dark'] pre[class*='language-'] pre[class*='language-'] {
+    text-shadow: 0 1px #161f2e;
+}
+
+body[data-theme='dark'] pre[class*='language-'] .token.operator,
+body[data-theme='dark'] pre[class*='language-'] .token.entity,
+body[data-theme='dark'] pre[class*='language-'] .token.url,
+body[data-theme='dark'] pre[class*='language-'] .language-css .token.string,
+body[data-theme='dark'] pre[class*='language-'] .style .token.string {
+    @apply text-gray-100 bg-transparent;
+}
+
+body[data-theme='dark'] pre[class*='language-'] .token.property,
+body[data-theme='dark'] pre[class*='language-'] .token.tag,
+body[data-theme='dark'] pre[class*='language-'] .token.boolean,
+body[data-theme='dark'] pre[class*='language-'] .token.number,
+body[data-theme='dark'] pre[class*='language-'] .token.constant,
+body[data-theme='dark'] pre[class*='language-'] .token.symbol,
+body[data-theme='dark'] pre[class*='language-'] .token.deleted {
+    color: #ff6bbd;
+}
+
+body[data-theme='dark'] pre[class*='language-'] .token.atrule,
+body[data-theme='dark'] pre[class*='language-'] .token.attr-value,
+body[data-theme='dark'] pre[class*='language-'] .token.keyword {
+    color: #89dbff;
+}
+
+body[data-theme='dark'] pre[class*='language-'] .token.selector,
+body[data-theme='dark'] pre[class*='language-'] .token.attr-name,
+body[data-theme='dark'] pre[class*='language-'] .token.string,
+body[data-theme='dark'] pre[class*='language-'] .token.char,
+body[data-theme='dark'] pre[class*='language-'] .token.builtin,
+body[data-theme='dark'] pre[class*='language-'] .token.inserted {
+    color: #baff2f;
+}

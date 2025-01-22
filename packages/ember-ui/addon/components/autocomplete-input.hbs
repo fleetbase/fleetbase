@@ -1,0 +1,46 @@
+<div class="fleetbase-autocomplete-input relative {{@wrapperClass}}">
+    <div class="relative">
+        <Input
+            @type="text"
+            name="geocoder-autocomplete-search"
+            @value={{@value}}
+            class="form-input"
+            {{on "input" this.onInput}}
+            {{on "blur" this.onBlur}}
+            {{on "focus" this.onFocus}}
+            autocomplete="nope"
+            autofill="nope"
+            ...attributes
+        />
+        {{#if this.isLoading}}
+            <div class="absolute inset-y-0 right-0 h-full w-10 pr-1 flex items-center justify-center">
+                <Spinner @iconClass="text-sky-500 fa-spin-800ms" />
+            </div>
+        {{/if}}
+    </div>
+
+    <div
+        class="fleetbase-autocomplete-input--results absolute w-full mt-1 rounded-md bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-sm
+            {{if this.hideResults 'hidden'}}"
+    >
+        {{#if this.isLoading}}
+            <div class="fleetbase-autocomplete-input--results-result flex px-4 py-2 text-gray-700 dark:text-gray-100 dark-hover:bg-gray-700 hover:bg-gray-50">
+                <div class="flex text-center items-center justify-center">
+                    <Spinner @iconClass="text-sky-500 fa-spin-800ms" class="mr-2" />
+                    <span class="text-sky-500">Loading...</span>
+                </div>
+            </div>
+        {{/if}}
+        {{#each this.results as |result index|}}
+            <a
+                href="javascript:;"
+                {{on "click" (fn this.selectResult result)}}
+                class="{{if (eq index 0) 'rounded-t'}}
+                    {{if (eq (add index 1) this.results.length) 'rounded-b border-b-0' 'border-b'}}
+                    fleetbase-autocomplete-input--results-result flex px-4 py-2 text-gray-700 dark:text-gray-100 dark:hover:bg-gray-700 hover:bg-gray-50 border-gray-200 dark:border-gray-700"
+            >
+                {{yield result this.value}}
+            </a>
+        {{/each}}
+    </div>
+</div>

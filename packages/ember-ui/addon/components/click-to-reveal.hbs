@@ -1,0 +1,19 @@
+<div class="relative click-to-reveal {{if this.isVisible 'is-visible' 'is-blurred'}}" {{on "click" (fn this.copy @value)}} ...attributes>
+    <span class="click-to-reveal--hidden-value">
+        {{#if (has-block)}}
+            {{yield}}
+        {{else}}
+            {{n-a @value}}
+        {{/if}}
+    </span>
+    <Button @text={{get-default-value @buttonText "Click to reveal"}} @size="xs" @wrapperClass="click-to-reveal--button" @onClick={{this.reveal}} @isLoading={{this.isLoading}} />
+    {{#if this.canClickToCopy}}
+        <span class="click-to-reveal--tooltip">
+            {{#if this.isCopied}}
+                Copied!
+            {{else}}
+                Click to copy
+            {{/if}}
+        </span>
+    {{/if}}
+</div>

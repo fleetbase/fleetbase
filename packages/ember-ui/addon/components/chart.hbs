@@ -1,0 +1,16 @@
+<div class="ui-chart relative">
+    {{#if this.isLoading}}
+        <div class="overloader overloader-opacity-2">
+            <div class="p-8">
+                <div class="flex items-center">
+                    <Spinner @iconClass="text-sky-500 fa-spin-800ms mr-3" />
+                    <span class="font-semibold text-gray-700 dark:text-gray-100 test-sm">
+                        {{or @loadingMessage "Loading..."}}
+                    </span>
+                </div>
+            </div>
+        </div>
+    {{/if}}
+
+    <canvas ...attributes {{did-insert this.renderChart}}></canvas>
+</div>

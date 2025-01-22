@@ -1,0 +1,258 @@
+:root {
+    --origins: bottom, top, right, left;
+    --circle-origins: 0% 50%, 0% -50%, 50% 5%, -50% 5%;
+}
+
+@define-mixin arrow $position, $width {
+    @if '$position' == 'top' {
+        transform: rotate(-45deg);
+        bottom: calc(-$width * 0.5);
+    } @else if '$position' == 'bottom' {
+        transform: rotate(135deg);
+        top: calc(-$width * 0.5);
+    } @else if '$position' == 'left' {
+        transform: rotate(225deg);
+        right: calc(-$width * 0.5);
+        top: 50%;
+    } @else if '$position' == 'right' {
+        transform: rotate(45deg);
+        left: calc(-$width * 0.5);
+        top: 50%;
+    }
+}
+
+@define-mixin circle-transform-hide $position {
+    @if '$position' == 'top' {
+        transform: scale(0) translate(-50%, -50%);
+    } @else if '$position' == 'bottom' {
+        transform: scale(0) translate(-50%, -50%);
+    } @else if '$position' == 'left' {
+        transform: scale(0) translate(-50%, -33%);
+    } @else if '$position' == 'right' {
+        transform: scale(0) translate(-50%, -33%);
+    }
+}
+
+@define-mixin ember-attacher-hide-transform $position, $animation {
+    @if '$animation' == 'perspective' {
+        @if '$position' == 'top' {
+            transform: translateY(0) rotateX(90deg);
+        } @else if '$position' == 'bottom' {
+            transform: translateY(0) rotateX(-90deg);
+        } @else if '$position' == 'left' {
+            transform: translateX(0) rotateY(-90deg);
+        } @else if '$position' == 'right' {
+            transform: translateX(0) rotateY(90deg);
+        }
+    } @else if '$animation' == 'shift' {
+        @if '$position' == 'top' {
+            transform: translateY(0);
+        } @else if '$position' == 'bottom' {
+            transform: translateY(0);
+        } @else if '$position' == 'left' {
+            transform: translateX(0);
+        } @else if '$position' == 'right' {
+            transform: translateX(0);
+        }
+    } @else if '$animation' == 'scale' {
+        @if '$position' == 'top' {
+            transform: translateY(0) scale(0);
+        } @else if '$position' == 'bottom' {
+            transform: translateY(0) scale(0);
+        } @else if '$position' == 'left' {
+            transform: translateX(0) scale(0);
+        } @else if '$position' == 'right' {
+            transform: translateX(0) scale(0);
+        }
+    } @else if '$animation' == 'none' {
+        @if '$position' == 'top' {
+            transform: translateY(-10px);
+        } @else if '$position' == 'bottom' {
+            transform: translateY(10px);
+        } @else if '$position' == 'left' {
+            transform: translateX(-10px);
+        } @else if '$position' == 'right' {
+            transform: translateX(10px);
+        }
+    }
+}
+
+@define-mixin ember-attacher-show-transform $position, $animation {
+    @if '$animation' == 'perspective' {
+        @if '$position' == 'top' {
+            transform: translateY(-10px) rotateX(0);
+        } @else if '$position' == 'bottom' {
+            transform: translateY(10px) rotateX(0);
+        } @else if '$position' == 'left' {
+            transform: translateX(-10px) rotateY(0);
+        } @else if '$position' == 'right' {
+            transform: translateX(10px) rotateY(0);
+        }
+    } @else if '$animation' == 'fade' {
+        @if '$position' == 'top' {
+            transform: translateY(-10px);
+        } @else if '$position' == 'bottom' {
+            transform: translateY(10px);
+        } @else if '$position' == 'left' {
+            transform: translateX(-10px);
+        } @else if '$position' == 'right' {
+            transform: translateX(10px);
+        }
+    } @else if '$animation' == 'scale' {
+        @if '$position' == 'top' {
+            transform: translateY(-10px) scale(1);
+        } @else if '$position' == 'bottom' {
+            transform: translateY(10px) scale(1);
+        } @else if '$position' == 'left' {
+            transform: translateX(-10px) scale(1);
+        } @else if '$position' == 'right' {
+            transform: translateX(10px) scale(1);
+        }
+    }
+}
+
+.ember-attacher-light-theme {
+    background-color: #f3f6f9;
+    border: 1px solid #ced2e2;
+    box-shadow:
+        0 0 16px -4px rgba(0, 20, 40, 0.2),
+        0 0 80px -10px rgba(0, 20, 40, 0.3);
+    color: #203d5d;
+}
+
+.ember-attacher-light-theme > div[x-arrow] {
+    background-color: #f3f6f9;
+    border-color: transparent transparent #ced2e2 #ced2e2;
+}
+
+.ember-attacher-light-theme > div[x-circle] {
+    background-color: #f3f6f9;
+}
+
+.ember-attacher {
+    perspective: 800px;
+    transition-timing-function: cubic-bezier(0.165, 0.84, 0.44, 1);
+    z-index: 9999;
+
+    @each $position, $index in var(--origins) {
+        &[x-placement^='$(position)'] {
+            & div[x-arrow] {
+                @mixin arrow $position, 10px;
+            }
+
+            & div[x-circle] {
+                @mixin circle-transform-hide $position;
+                opacity: 0;
+                transform-origin: nth(var(--circle-origins), $index);
+            }
+
+            & > .ember-attacher-fill {
+                @mixin ember-attacher-hide-transform $position, shift;
+                opacity: 0;
+            }
+
+            & > .ember-attacher-none {
+                @mixin ember-attacher-hide-transform $position, none;
+                opacity: 1;
+            }
+
+            & > .ember-attacher-fade {
+                @mixin ember-attacher-show-transform $position, fade;
+                opacity: 0;
+            }
+
+            & > .ember-attacher-shift {
+                @mixin ember-attacher-hide-transform $position, shift;
+                opacity: 0;
+            }
+
+            & > .ember-attacher-scale {
+                @mixin ember-attacher-hide-transform $position, scale;
+                opacity: 0;
+            }
+
+            & > .ember-attacher-perspective {
+                @mixin ember-attacher-hide-transform $position, perspective;
+                opacity: 0;
+                transform-origin: nth(var(--origins), $index);
+            }
+
+            & > .ember-attacher-show {
+                & > div[x-circle] {
+                    opacity: 1;
+                    transform: scale(1.2) translate(-50%, -50%);
+                }
+
+                &.ember-attacher-fade,
+                &.ember-attacher-fill,
+                &.ember-attacher-none,
+                &.ember-attacher-shift {
+                    @mixin ember-attacher-show-transform $position, fade;
+                    opacity: 1;
+                }
+
+                &.ember-attacher-scale {
+                    @mixin ember-attacher-show-transform $position, scale;
+                    opacity: 1;
+                }
+
+                &.ember-attacher-perspective {
+                    @mixin ember-attacher-show-transform $position, perspective;
+                    opacity: 1;
+                }
+            }
+        }
+    }
+}
+
+.ember-attacher-tooltip {
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-font-smoothing: antialiased;
+    text-align: center;
+    max-width: 380px;
+    position: relative;
+    will-change: transform;
+}
+
+.ember-attacher-tooltip.ember-attacher-fill {
+    background-color: transparent;
+    overflow: hidden;
+}
+
+.ember-attacher-tooltip > div[x-arrow] {
+    background-color: #333;
+    border: 1px solid;
+    border-color: transparent transparent #333 #333;
+    height: 10px;
+    position: absolute;
+    width: 10px;
+    z-index: -1;
+}
+
+.ember-attacher-tooltip > div[x-circle] {
+    background-color: #333;
+    border-radius: 50%;
+    left: 50%;
+    opacity: 0;
+    overflow: hidden;
+    position: absolute;
+    transition: all ease-out;
+    width: 120%;
+    width: calc(100% + 2rem);
+    will-change: transform;
+    z-index: -1;
+}
+
+.ember-attacher-tooltip > div[x-circle]::before {
+    content: '';
+    padding-top: 100%;
+    padding-top: calc(75% + 2rem);
+    float: left;
+}
+
+@media (max-width: 450px) {
+    .ember-attacher-tooltip {
+        max-width: 96%;
+        max-width: calc(100% - 42px);
+    }
+}

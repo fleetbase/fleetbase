@@ -1,0 +1,64 @@
+.otp-input-container {
+    position: relative;
+    width: 100%;
+    padding: 0 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    line-height: 1.5rem;
+    letter-spacing: 1rem;
+    text-align: center;
+    font-family: monospace;
+}
+
+.otp-input-container > .otp-input-placeholder {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.72rem;
+    line-height: 1.5rem;
+    letter-spacing: 1.1rem;
+    color: #6b7280;
+    opacity: 0.5; 
+    text-align: center;
+    font-family: monospace;
+    pointer-events: none;
+    background-color: transparent;
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    top: 0;
+    width: 100%;
+    overflow: hidden;
+}
+
+body[data-theme="dark"] > input.otp-input,
+.otp-input-container > input.otp-input,
+.otp-input-container > input {
+    text-align: center;
+    font-family: monospace;
+    font-size: 1.5rem;
+    line-height: 1.5rem;
+    letter-spacing: 1rem;
+    border: 3px solid #3498db;
+    color: #ecf0f1;
+    transition: all 0.3s ease;
+}
+
+body[data-theme="dark"] > input.otp-input::placeholder,
+.otp-input-container > input.otp-input::placeholder,
+.otp-input-container > input::placeholder {
+    color: rgba(107, 114, 128, 0.5);
+    letter-spacing: 1rem;
+}
+
+.otp-input-container input:focus {
+    outline: none;
+    border-color: #2980b9;
+}
+
+.otp-input-container input:hover {
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}

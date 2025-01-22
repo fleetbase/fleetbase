@@ -1,0 +1,16 @@
+<div class="fleetbase-dashboard-grid" ...attributes>
+    <GridStack @options={{this.gridOptions}} @onChange={{this.onChangeGrid}}>
+        {{#each @dashboard.widgets as |widget|}}
+            {{#if (component-resolvable widget.component)}}
+                <GridStackItem id={{widget.id}} @options={{spread-widget-options (hash id=widget.id options=widget.grid_options)}} class="relative">
+                    {{component widget.component options=widget.options}}
+                    {{#if @isEdit}}
+                        <div class="absolute top-2 right-2">
+                            <Button @type="default" @icon="trash" @helpText={{"Remove widget from the dashboard"}} @onClick={{fn this.removeWidget widget}} />
+                        </div>
+                    {{/if}}
+                </GridStackItem>
+            {{/if}}
+        {{/each}}
+    </GridStack>
+</div>

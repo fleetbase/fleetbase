@@ -1,0 +1,18 @@
+{{#if @renderInPlace}}
+    <div {{did-insert this.setupComponent}} role={{@ariaRole}} x-placement={{@placement}} ...attributes>
+        {{yield}}
+    </div>
+{{else}}
+    <div class="floating--parent-finder" {{did-insert this.findParent}}></div>
+    {{#if this.floatingContainer}}
+        {{#in-element this.floatingContainer insertBefore=null}}
+            <div {{did-insert this.setupComponent}} role={{@ariaRole}} x-placement={{@placement}} ...attributes>
+                {{yield}}
+
+                {{#if @arrow}}
+                    <div x-arrow></div>
+                {{/if}}
+            </div>
+        {{/in-element}}
+    {{/if}}
+{{/if}}

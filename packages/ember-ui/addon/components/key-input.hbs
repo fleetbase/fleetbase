@@ -1,0 +1,12 @@
+<Input
+    class="w-full form-input {{@inputClass}}"
+    id={{this.id}}
+    @type={{or @type "text"}}
+    @value={{this.value}}
+    placeholder={{or @placeholder @name}}
+    required={{@required}}
+    disabled={{@disabled}}
+    {{on "input" this.formatKey}}
+    {{on "blur" this.blur}}
+    ...attributes
+/>

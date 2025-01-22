@@ -1,0 +1,35 @@
+<DropdownButton
+    @text={{or @text "Columns"}}
+    @icon={{or @icon "sliders-h"}}
+    @type={{@type}}
+    @size={{or @size "xs"}}
+    @buttonClass={{@buttonClass}}
+    @buttonWrapperClass={{@buttonWrapperClass}}
+    @triggerClass={{@triggerClass}}
+    @wrapperClass={{@wrapperClass}}
+    @renderInPlace={{@renderInPlace}}
+    @registerAPI={{@registerAPI}}
+    @horizontalPosition={{@horizontalPosition}}
+    @verticalPosition={{@verticalPosition}}
+    @calculatePosition={{@calculatePosition}}
+    @defaultClass={{@defaultClass}}
+    @matchTriggerWidth={{@matchTriggerWidth}}
+    @onOpen={{@onOpen}}
+    @onClose={{@onClose}}
+    ...attributes
+    as |dd|
+>
+    <div class="customize-columns-dropdown-container">
+        <div class="customize-columns-dropdown-header justify-between">
+            <h4>{{or @dropdownHeaderText "Customize Columns"}}</h4>
+            <Button @text="Done" @icon="check" @type="primary" @size="xs" @onClick={{dropdown-fn dd this.applyChanges}} />
+        </div>
+        <div class="customize-columns-dropdown-body">
+            <div class="grid grid-cols-3 lg:grid-cols-3 sm:grid-cols-1 gap-2 w-full">
+                {{#each this.columnsWithLabels as |column|}}
+                    <Checkbox @label={{column.label}} @value={{not column.hidden}} @onToggle={{fn this.selectColumn column}} />
+                {{/each}}
+            </div>
+        </div>
+    </div>
+</DropdownButton>

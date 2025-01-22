@@ -1,0 +1,15 @@
+:root {
+    --fleet-summary-toggle-base-padding: 1rem;
+    --fleet-summary-nav-item-base-padding: 1.125rem;
+    --fleet-summary-depths: 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12;
+}
+
+@each $i in var(--fleet-summary-depths) {
+    .next-fleet-summary .next-sidebar-panel-container.next-fleet-summary-fleet.fleet-depth-$(i) > .next-sidebar-panel > .next-content-panel > .next-sidebar-panel-toggle {
+        padding-left: calc(1rem + $i * var(--fleet-summary-toggle-base-padding));
+    }
+
+    .next-fleet-summary .next-sidebar-panel-container.next-fleet-summary-fleet.fleet-depth-$(i) > .next-sidebar-panel > .next-content-panel > .next-content-panel-body .next-nav-item {
+        padding-left: calc(1rem + ($i + 1) * var(--fleet-summary-nav-item-base-padding));
+    }
+}

@@ -1,0 +1,5 @@
+<Table::Cell::Base @column={{@column}}>
+    {{#let (or @row.currency @column.currency) as |currency|}}
+        {{format-currency @value currency}}
+    {{/let}}
+</Table::Cell::Base>

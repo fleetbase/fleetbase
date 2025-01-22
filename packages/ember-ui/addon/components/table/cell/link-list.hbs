@@ -1,0 +1,17 @@
+<div class="cell-link-list" ...attributes>
+    <ul class="list-none">
+        {{#let (get @row @column.valuePath) as |items|}}
+            {{#each items as |item|}}
+                <li>
+                    <a href="javascript:;" class="truncate" {{on "click" (fn @column.action item @row)}}>
+                        {{get item (or @column.cellComponentLabelPath "name")}}
+                    </a>
+                </li>
+            {{else}}
+                <li>
+                    <span>-</span>
+                </li>
+            {{/each}}
+        {{/let}}
+    </ul>
+</div>

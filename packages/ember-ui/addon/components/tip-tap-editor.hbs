@@ -1,0 +1,116 @@
+<div class="tip-tap-editor" {{did-insert this.createTipTapEditor}} ...attributes>
+    <div class="tip-tap-editor-controls">
+        <div class="tip-tap-editor-control-group grouped-buttons">
+            <Button class="tip-tap-control-button" @onClick={{this.undo}} @icon="arrow-rotate-left" @helpText="Undo" />
+            <Button class="tip-tap-control-button" @onClick={{this.redo}} @icon="arrow-rotate-right" @helpText="Redo" />
+        </div>
+        <div class="tip-tap-editor-control-group">
+            <DropdownButton @text="Format" @icon="caret-down" @buttonClass="tip-tap-control-button" @renderInPlace={{true}} as |dd|>
+                <div class="next-dd-menu" aria-labelledby="editor-format-menu">
+                    {{#each this.formatControls as |formatControl|}}
+                        <a href="javascript:;" class="next-dd-item" {{on "click" (dropdown-fn dd formatControl.fn)}}>
+                            <div class="flex-1 flex flex-row items-center">
+                                <div class="w-6">
+                                    <FaIcon @icon={{formatControl.icon}} />
+                                </div>
+                                <span>{{formatControl.title}}</span>
+                            </div>
+                        </a>
+                    {{/each}}
+                </div>
+            </DropdownButton>
+        </div>
+        <div class="tip-tap-editor-control-group">
+            <DropdownButton @text="Heading" @icon="caret-down" @buttonClass="tip-tap-control-button" @renderInPlace={{true}} as |dd|>
+                <div class="next-dd-menu" aria-labelledby="editor-format-menu">
+                    {{#each this.headingControls as |headingControl|}}
+                        <a href="javascript:;" class="next-dd-item" {{on "click" (dropdown-fn dd headingControl.fn headingControl.params)}}>
+                            <div class="flex-1 flex flex-row items-center">
+                                <div class="w-6">
+                                    <FaIcon @icon={{headingControl.icon}} />
+                                </div>
+                                <span>{{headingControl.title}}</span>
+                            </div>
+                        </a>
+                    {{/each}}
+                </div>
+            </DropdownButton>
+            <DropdownButton @text="Font" @icon="caret-down" @buttonClass="tip-tap-control-button" @renderInPlace={{true}} as |dd|>
+                <div class="next-dd-menu" aria-labelledby="editor-format-menu">
+                    {{#each this.fontFamilyControls as |fontFamilyControl|}}
+                        <a href="javascript:;" class="next-dd-item" {{on "click" (dropdown-fn dd fontFamilyControl.fn fontFamilyControl.params)}}>
+                            <div class="flex-1 flex flex-row items-center">
+                                <div class="w-6">
+                                    <FaIcon @icon={{fontFamilyControl.icon}} />
+                                </div>
+                                <span>{{fontFamilyControl.title}}</span>
+                            </div>
+                        </a>
+                    {{/each}}
+                </div>
+            </DropdownButton>
+            <div class="tip-tap-colorpicker">
+                <Input @type="color" @value={{this.color}} {{on "change" this.fontColor}} class="tip-tap-colorpicker-input" />
+                <Button class="tip-tap-control-button" @helpText="Clear Color" @onClick={{this.clearFontColor}} @icon="eraser" />
+            </div>
+        </div>
+        <div class="tip-tap-editor-control-group grouped-buttons">
+            <Button class="tip-tap-control-button" @onClick={{this.alignLeft}} @icon="align-left" @helpText="Align Left" />
+            <Button class="tip-tap-control-button" @onClick={{this.alginCenter}} @icon="align-center" @helpText="Align Center" />
+            <Button class="tip-tap-control-button" @onClick={{this.alignRight}} @icon="align-right" @helpText="Align Right" />
+        </div>
+        <div class="tip-tap-editor-control-group">
+            <Button class="tip-tap-control-button" @onClick={{this.paragraph}} @icon="paragraph" @helpText="Paragraph" />
+            <Button class="tip-tap-control-button" @onClick={{this.blockquote}} @icon="quote-left" @helpText="Blockquote" />
+            <Button class="tip-tap-control-button" @onClick={{this.codeblock}} @icon="code" @helpText="Codeblock" />
+            <Button class="tip-tap-control-button" @onClick={{this.horizontalRule}} @icon="minus" @helpText="Insert Horizontal Rule" />
+        </div>
+        <div class="tip-tap-editor-control-group">
+            <Button class="tip-tap-control-button" @onClick={{this.bold}} @icon="bold" @helpText="Bold" />
+            <Button class="tip-tap-control-button" @onClick={{this.italic}} @icon="italic" @helpText="Italic" />
+            <Button class="tip-tap-control-button" @onClick={{this.strikethrough}} @icon="strikethrough" @helpText="Strikethrough" />
+        </div>
+        <div class="tip-tap-editor-control-group">
+            <Button class="tip-tap-control-button" @onClick={{this.list}} @icon="list" @helpText="List" />
+            <Button class="tip-tap-control-button" @onClick={{this.orderedList}} @icon="list-ol" @helpText="Ordered List" />
+        </div>
+        <div class="tip-tap-editor-control-group">
+            <Button class="tip-tap-control-button" @onClick={{this.insertTable}} @icon="table" @helpText="Insert Table" />
+            <DropdownButton @text="Table" @icon="caret-down" @buttonClass="tip-tap-control-button" @renderInPlace={{true}} @helpText="Modify Current Table" as |dd|>
+                <div class="next-dd-menu" aria-labelledby="editor-format-menu">
+                    {{#each this.tableControls as |tableControl|}}
+                        {{#if tableControl.seperator}}
+                            <div class="next-dd-menu-seperator"></div>
+                        {{else}}
+                            <a href="javascript:;" class="next-dd-item" {{on "click" (dropdown-fn dd tableControl.fn)}}>
+                                <div class="flex-1 flex flex-row items-center">
+                                    <div class="w-6">
+                                        <FaIcon @icon={{tableControl.icon}} />
+                                    </div>
+                                    <span>{{tableControl.title}}</span>
+                                </div>
+                            </a>
+                        {{/if}}
+                    {{/each}}
+                </div>
+            </DropdownButton>
+        </div>
+        <div class="tip-tap-editor-control-group">
+            <FileUpload @name="image" @for="image" @accept="jpg,png,gif,webp" @multiple={{false}} @onFileAdded={{this.insertImage}} @labelClass="btn-wrapper rounded-md shadow-sm">
+                <a type="button" class="btn btn-default tip-tap-control-button cursor-pointer">
+                    <FaIcon @icon="image" />
+                    {{#if this.file}}
+                        <div class="ml-1 flex items-center text-sm">
+                            <Spinner class="dark:text-blue-400 text-blue-900" @width="10" @height="10" />
+                            <span class="ml-1 text-xs dark:text-blue-400 text-blue-900">{{round this.file.progress}}%</span>
+                        </div>
+                    {{/if}}
+                </a>
+                <Attach::Tooltip @class="clean" @animation="scale" @placement={{or @tooltipPlacement "top"}}>
+                    <InputInfo @text="Insert Image" />
+                </Attach::Tooltip>
+            </FileUpload>
+            <Button class="tip-tap-control-button" @onClick={{this.insertYoutube}} @icon="youtube" @iconPrefix="fab" @helpText="Insert Youtube Video" />
+        </div>
+    </div>
+</div>

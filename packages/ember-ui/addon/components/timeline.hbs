@@ -1,0 +1,26 @@
+<div class="timeline timeline-activity-{{@activity.length}}" {{did-insert this.setupComponent}} ...attributes>
+    <div class="timeline-controls {{@controlsClass}}">
+        <div class="timeline-controls-button-wrapper">
+            <button class="timeline-arrow-left {{@arrowClass}} {{@arrowLeftClass}}" disabled={{eq this.startIndex 0}} type="button" {{on "click" this.previous}}>&larr;</button>
+        </div>
+    </div>
+
+    <div class="timeline-wrapper {{@wrapperClass}}">
+        <div class="timeline-items-container {{@itemsContainerClass}}">
+            {{#each this.visibleActivities as |activity|}}
+                {{yield (component "timeline/item" activity=activity context=this.context)}}
+            {{/each}}
+        </div>
+    </div>
+
+    <div class="timeline-controls {{@controlsClass}}">
+        <div class="timeline-controls-button-wrapper">
+            <button
+                class="timeline-arrow-right {{@arrowClass}} {{@arrowRightClass}}"
+                disabled={{eq this.endIndex (sub @activity.length 1)}}
+                type="button"
+                {{on "click" this.next}}
+            >&rarr;</button>
+        </div>
+    </div>
+</div>

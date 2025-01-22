@@ -1,0 +1,23 @@
+.cell-qr-code {
+    width: 2rem;
+}
+
+.dropdown-menu-cell.align-right {
+    padding-right: 2.5rem;
+}
+/** link list */
+.cell-link-list ul {
+    list-style: none;
+    display: flex;
+}
+.cell-link-list ul li {
+    text-transform: uppercase;
+}
+.next-table-wrapper table tbody tr td > .cell-link-list ul li a,
+.cell-link-list ul li a {
+    @apply text-white uppercase;
+}
+.next-table-wrapper table tbody tr td > .cell-link-list ul li a:hover,
+.cell-link-list ul li a:hover {
+    @apply text-white;
+}

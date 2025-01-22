@@ -1,0 +1,44 @@
+<div id="next-view-section-subheader" class="next-view-section-subheader {{if (media 'isMobile') 'is-mobile'}} {{if @hideActions 'actions-hidden'}}" ...attributes>
+    {{#if @headerComponent}}
+        {{component @headerComponent}}
+    {{else}}
+        <div id="next-view-section-subheader-left" class="next-view-section-subheader-left {{@leftSubheaderClass}}">
+            {{#if @headerTitleComponent}}
+                {{component @headerTitleComponent}}
+            {{else}}
+                <div class="next-view-section-subheader-left-inner-wrapper flex flex-row items-center">
+                    {{#if @badge}}
+                        <span class="mr-2 {{@badgeContainerClass}}">
+                            <Badge @status={{@badge}} @hideStatusDot={{@hideStatusDot}} class={{@badgeClass}} @disableHumanize={{@disableBadgeHumanize}} />
+                        </span>
+                    {{/if}}
+                    {{#if @icon}}
+                        <FaIcon @icon={{@icon}} @size={{@iconSize}} @prefix={{@iconPrefix}} class="{{@iconClass}} mr-2" />
+                    {{/if}}
+                    <h2 id="next-view-section-subheader-title" class="next-view-section-subheader-title {{@titleClass}}">{{@title}}</h2>
+                    {{#if @subtitle}}
+                        <div class={{@subtitleClass}}>
+                            {{@subtitle}}
+                        </div>
+                    {{/if}}
+                </div>
+            {{/if}}
+            {{#if @onSearch}}
+                <Input
+                    @type="text"
+                    @value={{@searchQuery}}
+                    aria-label={{t "common.search-input"}}
+                    placeholder={{or @searchPlaceholder (concat (t "common.search") " " (pluralize @title))}}
+                    class="w-64 ml-3 form-input form-input-sm {{@searchInputClass}}"
+                    disabled={{@searchDisabled}}
+                    {{on "keyup" @onSearch}}
+                />
+            {{/if}}
+        </div>
+        {{#unless @hideActions}}
+            <div id="next-view-section-subheader-actions" class="next-view-section-subheader-actions {{@actionsWrapperClass}}">
+                {{yield}}
+            </div>
+        {{/unless}}
+    {{/if}}
+</div>

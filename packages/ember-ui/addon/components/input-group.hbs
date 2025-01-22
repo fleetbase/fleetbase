@@ -1,0 +1,21 @@
+<div class="input-group {{@wrapperClass}}">
+    {{#if (and @name (not @hideLabel))}}
+        <InputLabel for={{this.id}} @labelText={{@name}} @helpText={{@helpText}} @required={{@required}} @wrapperClass={{@labelWrapperClass}} />
+    {{/if}}
+    {{#if (has-block)}}
+        {{yield this.id @name}}
+    {{else}}
+        <Input
+            class="w-full form-input {{@inputClass}}"
+            id={{this.id}}
+            @type={{or @type "text"}}
+            @value={{@value}}
+            placeholder={{or @placeholder @name}}
+            required={{@required}}
+            disabled={{@disabled}}
+            autocomplete={{@autocomplete}}
+            autofill={{@autofill}}
+            ...attributes
+        />
+    {{/if}}
+</div>

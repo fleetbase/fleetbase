@@ -1,0 +1,20 @@
+<div
+    role="dialog"
+    aria-modal="true"
+    class="next-content-overlay next-content-overlay-pos-{{or @position 'right'}}
+        {{if this.isOpen 'is-open'}}
+        {{if @noBackdrop 'no-backdrop'}}
+        {{if @outView 'outview'}}
+        {{if @fullHeight 'full-height'}}
+        {{if this.isMaximized 'maximized'}}
+        {{if this.isMinimized 'minimized'}}
+        {{@overlayClass}}"
+    {{did-insert this.setupComponent}}
+>
+    <div class="next-content-overlay-panel-container {{@containerClass}}" {{did-insert (fn this.setupNode "overlayContainer")}}>
+        <div class="next-content-overlay-panel" {{did-insert (fn this.setupNode "overlayPanel")}} {{set-width @width}} ...attributes>{{yield this.context}}</div>
+        {{#if @isResizable}}
+            <div class="gutter" {{did-insert (fn this.setupNode "gutter")}} {{on "mousedown" this.startResize}}></div>
+        {{/if}}
+    </div>
+</div>

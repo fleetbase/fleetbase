@@ -1,0 +1,20 @@
+<div role="menu" class="next-catalog-menu-items flex" ...attributes>
+    {{#each @extensions as |extension|}}
+        <LinkToExternal @route={{concat "console." (dasherize extension.extension)}} class={{@itemClass}} role="menuitem">
+            <div class="w-6">
+                <FaIcon @icon={{extension.icon}} @size="sm" />
+            </div>
+            <div>
+                <span>{{extension.extension}}</span>
+            </div>
+        </LinkToExternal>
+    {{/each}}
+    <a href="javascript:;" class={{@itemClass}} role="menuitem" {{on "click" (fn this.routeTo "console.extensions")}}>
+        <div class="w-6">
+            <FaIcon @icon="shapes" @size="sm" />
+        </div>
+        <div>
+            <span>Extensions</span>
+        </div>
+    </a>
+</div>
