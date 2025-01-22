@@ -501,6 +501,7 @@ fleet-ops:
     order: Order
     create-order: Create Order
     dispatch-order: Dispatch Order
+    actions: Actions
   component:
     activity-logic-builder:
       activity-logic: Activity Logic
@@ -709,6 +710,7 @@ fleet-ops:
         places: Places
         fuel-reports: Fuel Reports
         parking: Parking Reports
+        toll-reports: Toll Reports
         issues: Issues
         title: Create new order
         settings: Settings
@@ -1283,6 +1285,19 @@ fleet-ops:
       select-vehicle: Select Vehicle
       select-parking-report: Select parking-report status
       cost: Cost
+    toll-report-form-panel:
+      success-message: Toll report saved successfully.
+      parking-report: New Toll Report
+      save-parking-report: Save Toll Report
+      create-parking-report: Create Toll Report
+      view-details: View Toll report details
+      cancel-edit-parking-report: Cancel edit Toll report
+      cancel-new-parking-report: Cancel new Toll report
+      select-reporter: Select Reporter
+      select-driver: Select Driver
+      select-vehicle: Select Vehicle
+      select-parking-report: Select toll-report status
+      cost: Cost
     fuel-report-panel:
       title: Fuel Report Details
       edit-button: Edit Fuel report
@@ -1295,6 +1310,11 @@ fleet-ops:
       edit-button: Edit parking report
       cancel-edit-parking-report: Cancel edit parking report
       cancel-new-parking-report: Cancel new parking report
+    toll-report-panel:
+      title: Toll Report Details
+      edit-button: Edit Toll report
+      cancel-edit-parking-report: Cancel edit toll report
+      cancel-new-parking-report: Cancel new toll report
     global-search:
       search: Search by keyword...
     integrated-order-details:
@@ -1665,6 +1685,16 @@ fleet-ops:
           body: Unsaved changes to this parking report will be lost. Click continue to proceed.
         title: Parking Reports
         delete-parking-report: Delete Parking Reports
+    toll-reports:
+      index:
+        view: View Details
+        edit-toll-report: Edit Toll Report
+        delete: Delete Toll Report
+        delete-button: Delete Toll Reports
+        edit:
+          body: Unsaved changes to this toll report will be lost. Click continue to proceed.
+        title: Toll Reports
+        delete-parking-report: Delete Toll Reports
     issues:
       index:
         view: View Details

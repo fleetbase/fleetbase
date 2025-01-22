@@ -136,6 +136,14 @@ export default class LayoutFleetOpsSidebarComponent extends Component {
                 visible: this.abilities.can('fleet-ops see fuel-report'),
             },
             {
+                intl: 'fleet-ops.component.layout.fleet-ops-sidebar.toll-reports',
+                title: this.intl.t('fleet-ops.component.layout.fleet-ops-sidebar.toll-reports'),
+                icon: 'money-bills',
+                route: 'management.toll-reports',
+                permission: 'fleet-ops list fuel-report',
+                visible: this.abilities.can('fleet-ops see fuel-report'),
+            },
+            {
                 intl: 'fleet-ops.component.layout.fleet-ops-sidebar.issues',
                 title: this.intl.t('fleet-ops.component.layout.fleet-ops-sidebar.issues'),
                 icon: 'triangle-exclamation',
