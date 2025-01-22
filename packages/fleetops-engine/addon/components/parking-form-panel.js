@@ -169,6 +169,16 @@ export default class ParkingFormPanelComponent extends Component {
     updatepaymentOptions(selectedpaymentOptions) {
         this.fuelReport.payment_method = selectedpaymentOptions.value;
     }
+
+    @task *loadFuelReport() {
+        this.fuelReport = yield this.store.findRecord('fuel-report', reportId);
+        this.fuelReport.reporter = yield this.store.findRecord('user', this.fuelReport.reported_by_uuid);
+    }
+    @action
+    updateReporterId(newReporterId) {
+        console.log('Updating reporter ID:', newReporterId);
+        this.fuelReport.reported_by_uuid = newReporterId;
+    }
     /**
      * Task to save fuel report.
      *
@@ -239,11 +249,12 @@ export default class ParkingFormPanelComponent extends Component {
         try {
             this.isSaving = true;
             this.fuelReport.report_type = "Parking";
+            this.fuelReport.reported_by_uuid = this.fuelReport.reported_by_uuid;
+            this.fuelReport = yield this.fuelReport.save();
             // Save the fuel report first if it's new
             if (this.fuelReport.isNew) {
-                // console.log("Fuel report is new, saving to generate ID...");
+                this.fuelReport.reported_by_uuid = this.fuelReport.reported_by_uuid;
                 this.fuelReport = yield this.fuelReport.save(); // Persist to get an ID
-                // console.log("Fuel report saved, ID:", this.fuelReport.id);
             }
             
             // Map uploadQueue to include the saved fuelReport ID as subject_uuid
