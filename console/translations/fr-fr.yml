@@ -394,7 +394,7 @@ layout:
         changelog: Journal des modifications
 fleet-ops:
   iam: Gestion des accès utilisateurs
-  fleet-ops: Flotte Oui flotte
+  fleet-ops: Flotte Oui Flux
   extension-name: Opérations de Flotte
   common:
     active-manpower: Main-d'œuvre Active
@@ -704,7 +704,7 @@ fleet-ops:
         operations: Opérations
         dashboard: Tableau de bord
         service-rates: Tarifs de service
-        scheduler: Planificateur
+        scheduler: Calendrier
         drivers: Conducteurs
         vehicles: Véhicules
         fleets: Flottes
@@ -2056,11 +2056,11 @@ iam:
     bulk-action: Action de masse
     country: Pays
     create: Créé
-    dashboard: Tableau de bord
+    dashboard: Aperçu
     description: Description
     email: E-mail
     export: Exporter
-    group: Groupes
+    group: Réseaux
     member: Membres
     name: Nom
     new: Nouveau
@@ -2068,7 +2068,7 @@ iam:
     phone: Téléphone
     photo: Photo
     policy: Politique
-    policies: Politiques
+    policies: Contrôle d'accès
     attach-policies: Joindre des politiques
     select-policy: Sélectionner une politique
     attach-permissions: Joindre des permissions
@@ -2079,7 +2079,7 @@ iam:
     roles: Rôles
     status: Statut
     type: Type
-    user: Utilisateurs
+    user: Profils
     service: Service
     reload: Recharger
     reload-data: Recharger les données
@@ -2143,7 +2143,7 @@ iam:
       data-assosciated-this-group-deleted: Êtes-vous sûr de vouloir supprimer ce groupe ? Toutes les données associées à ce groupe seront également supprimées. Cette action est irréversible.
   policies:
     index:
-      title: Politiques
+      title: Contrôle d'accès
       delete-policies: Supprimer des politiques
       contact-action: Actions de contact
       edit-policy: Modifier la politique...

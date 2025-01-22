@@ -756,7 +756,7 @@ fleet-ops:
         operations: Operaciones
         dashboard: Panel
         service-rates: Tarifas de servicio
-        scheduler: Planificador
+        scheduler: Calendario
         drivers: Conductores
         vehicles: Vehículos
         fleets: Flotas
@@ -2266,11 +2266,11 @@ iam:
     bulk-action: acción masiva
     country: País
     create: Creado
-    dashboard: Panel
+    dashboard: Visión general
     description: Descripción
     email: Correo electrónico
     export: Exportar
-    group: Grupos
+    group: Redes
     member: Miembros
     name: Nombre
     new: Nuevo
@@ -2278,7 +2278,7 @@ iam:
     phone: Teléfono
     photo: Foto
     policy: Política
-    policies: Políticas
+    policies: Control de acceso
     attach-policies: Adjuntar políticas
     select-policy: Seleccione una póliza
     attach-permissions: Adjuntar permisos
@@ -2289,7 +2289,7 @@ iam:
     roles: Roles
     status: Estado
     type: Amable
-    user: Usuarios
+    user: Perfiles
     service: Servicio
     reload: Recargar
     reload-data: Recargar datos
@@ -2352,7 +2352,7 @@ iam:
         acción es irreversible.
   policies:
     index:
-      title: Políticas
+      title: Control de acceso
       delete-policies: Eliminar políticas
       contact-action: Acciones de contacto
       edit-policy: Editar política...

@@ -393,8 +393,8 @@ layout:
         keyboard-shortcuts: Tastenkürzel anzeigen
         changelog: Changelog
 fleet-ops:
-  fleet-ops: Flotte Ja Fluss
-  iam: Benutzerzugriffsverwaltung
+  fleet-ops: Flotte Ja Fließen
+  iam: Benutzer Zugriffsverwaltung
   extension-name: Flotten-Betrieb
   common:
     active-manpower: Aktive Arbeitskraft
@@ -703,7 +703,7 @@ fleet-ops:
         operations: Operationen
         dashboard: Dashboard
         service-rates: Servicegebühren
-        scheduler: Zeitplaner
+        scheduler: Kalender
         drivers: Fahrer
         vehicles: Fahrzeuge
         fleets: Flotten
@@ -2055,11 +2055,11 @@ iam:
     bulk-action: Massenaktion
     country: Land
     create: Erstellt
-    dashboard: Dashboard 
+    dashboard: Übersicht 
     description: Beschreibung
     email: E-Mail
     export: Exportieren
-    group: Gruppen
+    group: Netzwerke
     member: Mitglieder
     name: Name
     new: Neu
@@ -2067,7 +2067,7 @@ iam:
     phone: Telefon
     photo: Foto
     policy: Richtlinie
-    policies: Richtlinien
+    policies: Zugriffskontrolle
     attach-policies: Richtlinien anhängen
     select-policy: Richtlinie auswählen
     attach-permissions: Berechtigungen anhängen
@@ -2078,7 +2078,7 @@ iam:
     roles: Rollen
     status: Status
     type: Typ
-    user: Benutzer
+    user: Profile
     service: Dienst
     reload: Neu laden
     reload-data: Daten neu laden
@@ -2142,7 +2142,7 @@ iam:
       data-assosciated-this-group-deleted: Möchten Sie diese Gruppe wirklich löschen? Alle mit dieser Gruppe verknüpften Daten werden ebenfalls gelöscht. Diese Aktion kann nicht rückgängig gemacht werden.
   policies:
     index:
-      title: Richtlinien
+      title: Zugriffskontrolle
       delete-policies: Richtlinien löschen
       contact-action: Kontaktaktionen
       edit-policy: Richtlinie bearbeiten...
@@ -2209,7 +2209,7 @@ iam:
   application:
       access-management: Zugriffsmanagement
   home:
-      identity-access-management: Benutzerzugriffsverwaltung
+      identity-access-management: Benutzer Zugriffsverwaltung
 registry-bridge:
   extension-name: Registry-Brücke
   common:

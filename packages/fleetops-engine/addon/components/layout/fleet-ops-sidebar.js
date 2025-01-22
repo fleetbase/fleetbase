@@ -43,7 +43,7 @@ export default class LayoutFleetOpsSidebarComponent extends Component {
             {
                 intl: 'fleet-ops.component.layout.fleet-ops-sidebar.service-rates',
                 title: this.intl.t('fleet-ops.component.layout.fleet-ops-sidebar.service-rates'),
-                icon: 'file-invoice-dollar',
+                icon: 'tag',
                 route: 'operations.service-rates',
                 permission: 'fleet-ops list service-rate',
                 visible: this.abilities.can('fleet-ops see service-rate'),
@@ -51,7 +51,7 @@ export default class LayoutFleetOpsSidebarComponent extends Component {
             {
                 intl: 'fleet-ops.component.layout.fleet-ops-sidebar.scheduler',
                 title: this.intl.t('fleet-ops.component.layout.fleet-ops-sidebar.scheduler'),
-                icon: 'calendar-day',
+                icon: 'calendar-check',
                 route: 'operations.scheduler',
                 permission: 'fleet-ops list order',
                 visible: this.abilities.can('fleet-ops see order'),
@@ -59,7 +59,7 @@ export default class LayoutFleetOpsSidebarComponent extends Component {
             {
                 intl: 'fleet-ops.component.layout.fleet-ops-sidebar.order-config',
                 title: this.intl.t('fleet-ops.component.layout.fleet-ops-sidebar.order-config'),
-                icon: 'diagram-project',
+                icon: 'cog',
                 route: 'operations.order-config',
                 permission: 'fleet-ops list order-config',
                 visible: this.abilities.can('fleet-ops see order-config'),
@@ -80,7 +80,7 @@ export default class LayoutFleetOpsSidebarComponent extends Component {
             {
                 intl: 'fleet-ops.component.layout.fleet-ops-sidebar.vehicles',
                 title: this.intl.t('fleet-ops.component.layout.fleet-ops-sidebar.vehicles'),
-                icon: 'truck',
+                icon: 'truck-moving',
                 route: 'management.vehicles',
                 permission: 'fleet-ops list vehicle',
                 visible: this.abilities.can('fleet-ops see vehicle'),
@@ -88,7 +88,7 @@ export default class LayoutFleetOpsSidebarComponent extends Component {
             {
                 intl: 'fleet-ops.component.layout.fleet-ops-sidebar.fleets',
                 title: this.intl.t('fleet-ops.component.layout.fleet-ops-sidebar.fleets'),
-                icon: 'user-group',
+                icon: 'truck-ramp-box',
                 route: 'management.fleets',
                 renderComponentInPlace: true,
                 component: FleetListingComponent,
@@ -98,7 +98,7 @@ export default class LayoutFleetOpsSidebarComponent extends Component {
             {
                 intl: 'fleet-ops.component.layout.fleet-ops-sidebar.vendors',
                 title: this.intl.t('fleet-ops.component.layout.fleet-ops-sidebar.vendors'),
-                icon: 'warehouse',
+                icon: 'shop',
                 route: 'management.vendors',
                 permission: 'fleet-ops list vendor',
                 visible: this.abilities.can('fleet-ops see vendor'),
@@ -114,7 +114,7 @@ export default class LayoutFleetOpsSidebarComponent extends Component {
             {
                 intl: 'fleet-ops.component.layout.fleet-ops-sidebar.places',
                 title: this.intl.t('fleet-ops.component.layout.fleet-ops-sidebar.places'),
-                icon: 'location-dot',
+                icon: 'magnifying-glass-location',
                 route: 'management.places',
                 permission: 'fleet-ops list place',
                 visible: this.abilities.can('fleet-ops see place'),
@@ -146,7 +146,7 @@ export default class LayoutFleetOpsSidebarComponent extends Component {
             {
                 intl: 'fleet-ops.component.layout.fleet-ops-sidebar.issues',
                 title: this.intl.t('fleet-ops.component.layout.fleet-ops-sidebar.issues'),
-                icon: 'triangle-exclamation',
+                icon: 'clipboard-list',
                 route: 'management.issues',
                 permission: 'fleet-ops list issue',
                 visible: this.abilities.can('fleet-ops see issue'),

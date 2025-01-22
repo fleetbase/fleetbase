@@ -1,10 +1,10 @@
 <EmberWormhole @to="sidebar-menu-items">
     {{!-- <Layout::Sidebar::Panel @open={{true}} @title={{t "iam.application.access-management"}}> --}}
-    <Layout::Sidebar::Item @route="console.iam.home" @icon="home">{{t "iam.common.dashboard"}}</Layout::Sidebar::Item>
-    <Layout::Sidebar::Item @route="console.iam.users" @icon="id-card" @permission="iam list user" @visible={{can "iam see user"}}>{{t "iam.common.user"}}</Layout::Sidebar::Item>
-    <Layout::Sidebar::Item @route="console.iam.groups" @icon="building" @permission="iam list group" @visible={{can "iam see group"}}>{{t "iam.common.group"}}</Layout::Sidebar::Item>
-    <Layout::Sidebar::Item @route="console.iam.roles" @icon="tag" @permission="iam list role" @visible={{can "iam see role"}}>{{t "iam.common.roles"}}</Layout::Sidebar::Item>
-    <Layout::Sidebar::Item @route="console.iam.policies" @icon="shield" @permission="iam list policy" @visible={{can "iam see policy"}}>{{t "iam.common.policies"}}</Layout::Sidebar::Item>
+    <Layout::Sidebar::Item @route="console.iam.home" @icon="chart-simple">{{t "iam.common.dashboard"}}</Layout::Sidebar::Item>
+    <Layout::Sidebar::Item @route="console.iam.users" @icon="id-badge" @permission="iam list user" @visible={{can "iam see user"}}>{{t "iam.common.user"}}</Layout::Sidebar::Item>
+    <Layout::Sidebar::Item @route="console.iam.groups" @icon="users-gear" @permission="iam list group" @visible={{can "iam see group"}}>{{t "iam.common.group"}}</Layout::Sidebar::Item>
+    <Layout::Sidebar::Item @route="console.iam.roles" @icon="key" @permission="iam list role" @visible={{can "iam see role"}}>{{t "iam.common.roles"}}</Layout::Sidebar::Item>
+    <Layout::Sidebar::Item @route="console.iam.policies" @icon="lock" @permission="iam list policy" @visible={{can "iam see policy"}}>{{t "iam.common.policies"}}</Layout::Sidebar::Item>
     {{!-- </Layout::Sidebar::Panel> --}}
 </EmberWormhole>
 

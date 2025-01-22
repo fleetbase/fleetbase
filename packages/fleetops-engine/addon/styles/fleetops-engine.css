@@ -154,6 +154,8 @@ body.fleetbase-console .next-content-overlay > .next-content-overlay-panel-conta
     padding: 0.05rem 0.2rem;
     text-overflow: ellipsis;
     font-size: 0.7rem;
+    background-color: #496453;
+    border-color:#496453;
 }
 
 #fleet-ops-scheduler-sidebar .fleetbase-model-select > .ember-basic-dropdown > .ember-basic-dropdown-trigger {
@@ -205,8 +207,8 @@ body.fleetbase-console .next-content-overlay > .next-content-overlay-panel-conta
 }
 
 .fleetops-pill-tabs > nav > a.ui-tab.active {
-    background-color: #3b82f6;
-    border: 1px solid #2563eb;
+    background-color: #496453;
+    border: 1px solid #496453;
 }
 
 .fleetops-pill-tabs > nav > a.ui-tab:hover {
@@ -219,8 +221,8 @@ body[data-theme='light'] .fleetops-pill-tabs > nav > a.ui-tab {
 }
 
 body[data-theme='light'] .fleetops-pill-tabs > nav > a.ui-tab.active {
-    background-color: #3b82f6;
-    border: 1px solid #2563eb;
+    background-color: #496453;
+    border: 1px solid #496453;
     color: #fff;
 }
 
@@ -264,7 +266,7 @@ body[data-theme='light'] .flow-activity-status-pill text {
 }
 
 .flow-activity-add-button:hover {
-    fill: #3b82f6;
+    fill: #496453;
 }
 
 .joint-js-paper {
