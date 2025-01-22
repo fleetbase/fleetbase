@@ -1,0 +1,17 @@
+<Modal::Default @modalIsOpened={{@modalIsOpened}} @options={{@options}} @confirm={{@onConfirm}} @decline={{@onDecline}}>
+    <div class="modal-body-container" ...attributes>
+        <InputGroup @name={{t "iam.components.modals.role-form.role-name"}} @value={{@options.role.name}} @placeholder={{t "iam.components.modals.role-form.enter-name-for-this-role"}} @disabled={{cannot @options.formPermission}} />
+        <InputGroup
+            @name={{t "iam.components.modals.role-form.role-description"}}
+            @value={{@options.role.description}}
+            @placeholder={{t "iam.components.modals.role-form.enter-description-your-role"}}
+            @disabled={{cannot @options.formPermission}}
+        />
+        <InputGroup @name={{t "iam.common.attach-policies"}}>
+            <PolicyAttacher @onChange={{fn (mut @options.role.policies)}} @value={{@options.role.policies}} @disabled={{cannot @options.formPermission}} />
+        </InputGroup>
+        <InputGroup @name={{t "iam.components.modals.role-form.select-permission"}}>
+            <PermissionPicker @selected={{@options.role.permissionsArray}} @onChange={{@options.setPermissions}} @disabled={{cannot @options.formPermission}} />
+        </InputGroup>
+    </div>
+</Modal::Default>

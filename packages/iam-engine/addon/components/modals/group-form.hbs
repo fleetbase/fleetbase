@@ -1,0 +1,77 @@
+<Modal::Default @modalIsOpened={{@modalIsOpened}} @options={{@options}} @confirm={{@onConfirm}} @decline={{@onDecline}}>
+    <div class="modal-body-container">
+        <div class="text-xs dark:text-gray-100">
+            <InputGroup
+                @name={{t "iam.components.modals.group-form.group-name"}}
+                @value={{@options.group.name}}
+                @placeholder={{t "iam.components.modals.group-form.group-name"}}
+                @disabled={{cannot @options.formPermission}}
+            />
+            <InputGroup @name={{t "iam.components.modals.group-form.group-description"}}>
+                <Textarea
+                    @value={{@options.group.description}}
+                    rows="5"
+                    class="w-full form-input"
+                    placeholder={{t "iam.components.modals.group-form.group-description"}}
+                    disabled={{cannot @options.formPermission}}
+                />
+            </InputGroup>
+
+            <div class="input-group">
+                <div class="mb-4">
+                    <InputLabel
+                        class="mb-2"
+                        @labelText={{t "iam.components.modals.group-form.select-users-add-group"}}
+                        @helpText={{t "iam.components.modals.group-form.search-select-users-add-group"}}
+                    />
+
+                    <div class="flex items-start justify-between">
+                        <ModelSelect
+                            @modelName="user"
+                            @selectedModel={{@options.lastSelectedUser}}
+                            @placeholder={{t "iam.components.modals.group-form.select-user-add-group"}}
+                            class="w-64"
+                            @triggerClass="form-select form-input"
+                            @infiniteScroll={{false}}
+                            @renderInPlace={{true}}
+                            @onChange={{@options.addUser}}
+                            @disabled={{cannot @options.formPermission}}
+                            as |model|
+                        >
+                            {{model.name}}
+                        </ModelSelect>
+                    </div>
+                </div>
+                <div class="h-48 overflow-y-scroll bg-white border border-gray-200 rounded shadow-sm dark:bg-gray-800 dark:border-gray-900">
+                    {{#if @options.group.users}}
+                        {{#each @options.group.users as |user|}}
+                            <div class="flex items-center justify-between p-3 text-sm text-gray-800 border-b border-gray-200 dark:border-gray-900 dark:text-gray-100">
+                                <span>
+                                    {{user.name}}
+                                </span>
+                                <span>
+                                    <a
+                                        href="javascript:;"
+                                        class="text-blue-300 no-underline hover:text-blue-500"
+                                        {{on "click" (fn @options.removeUser user)}}
+                                        disabled={{cannot @options.formPermission}}
+                                    >
+                                        <FaIcon @icon="times" @prefix="fas" />
+                                    </a>
+                                </span>
+                            </div>
+                        {{/each}}
+                    {{else}}
+                        <div class="flex items-center justify-center h-full dark:text-gray-100">
+                            <div class="flex flex-col items-center justify-center w-2/4 h-full my-8 text-center">
+                                <div class="text-base font-semibold">
+                                    {{t "iam.components.modals.group-form.no-user-add-group"}}
+                                </div>
+                            </div>
+                        </div>
+                    {{/if}}
+                </div>
+            </div>
+        </div>
+    </div>
+</Modal::Default>

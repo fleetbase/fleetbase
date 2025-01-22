@@ -1,0 +1,40 @@
+<Layout::Section::Header @title={{t "iam.common.role"}} @searchQuery={{this.query}} @onSearch={{perform this.search}} @searchDisabled={{cannot "iam list role"}}>
+    <Button @icon="refresh" @onClick={{this.reload}} @helpText={{t "iam.common.reload-data"}} class="mr-2" />
+    <FiltersPicker
+        @columns={{this.columns}}
+        @onApply={{fn this.filters.apply this}}
+        @onClear={{fn this.filters.reset this}}
+        @onFilterClear={{this.filters.clear}}
+        @onChange={{this.filters.set}}
+        @buttonWrapperClass="mr-2"
+    />
+    <VisibleColumnPicker @columns={{this.columns}} @onChange={{fn (mut this.columns)}} @buttonWrapperClass="mr-2" />
+    {{#if (safe-has this.table "selectedRows")}}
+        <DropdownButton @icon="layer-group" @text={{t "iam.common.bulk-action"}} @type="magic" @size="sm" @buttonWrapperClass="mr-2" @contentClass="dropdown-menu" @permission="iam delete role" as |dd|>
+            <div class="next-dd-menu mt-2 mx-0">
+                <div class="px-1">
+                    <a href="#" class="text-red-500 next-dd-item" {{on "click" (dropdown-fn dd this.bulkDeleteRoles)}}>
+                        {{t "iam.roles.index.delete-roles"}}
+                    </a>
+                </div>
+            </div>
+        </DropdownButton>
+    {{/if}}
+    <Button @icon="plus" @iconPrefix="fas" @type="primary" @text={{t "iam.common.new"}} class="mr-2" @onClick={{this.createRole}} @permission="iam create role" />
+</Layout::Section::Header>
+
+<Layout::Section::Body>
+    <Table
+        @rows={{@model}}
+        @columns={{this.columns}}
+        @selectable={{true}}
+        @canSelectAll={{true}}
+        @onSetup={{fn (mut this.table)}}
+        @pagination={{true}}
+        @paginationMeta={{@model.meta}}
+        @page={{this.page}}
+        @onPageChange={{fn (mut this.page)}}
+    />
+</Layout::Section::Body>
+
+{{outlet}}

@@ -1,0 +1,27 @@
+<div class="policy-attacher" ...attributes>
+    <ModelSelect
+        @modelName="policy"
+        @selectedModel={{this.lastSelected}}
+        @placeholder={{t "iam.common.select-policy"}}
+        @triggerClass="form-select form-input truncate max-w-300px"
+        @infiniteScroll={{false}}
+        @renderInPlace={{true}}
+        @onChange={{this.selectPolicy}}
+        @query={{hash sort="name"}}
+        @disabled={{@disabled}}
+        as |model|
+    >
+        {{model.name}}
+    </ModelSelect>
+
+    {{#if this.selected}}
+        <div class="flex flex-row bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-md shadow-sm p-2 mt-4 space-x-2 {{if @disabled 'opacity-50'}}">
+            {{#each this.selected as |policy|}}
+                <Badge @hideStatusDot={{true}} @status="info" class="flex flex-row items-center">
+                    <div class="mr-2">{{policy.name}}</div>
+                    <Button @icon="trash" @size="xs" @type="link" @onClick={{fn this.removePolicy policy}} @disabled={{@disabled}} class="hover:opacity-50" />
+                </Badge>
+            {{/each}}
+        </div>
+    {{/if}}
+</div>

@@ -1,0 +1,157 @@
+iam:
+  extension-name: IAM
+  common:
+    address: Địa chỉ
+    bulk-action: Hành động hàng loạt
+    country: Quốc gia
+    create: Tạo mới
+    dashboard: Bảng điều khiển
+    description: Mô tả
+    email: Email
+    export: Xuất
+    group: Nhóm
+    member: Thành viên
+    name: Tên
+    new: Mới
+    permission: Quyền
+    phone: Điện thoại
+    photo: Ảnh
+    policy: Chính sách
+    policies: Các chính sách
+    attach-policies: Đính kèm các chính sách
+    select-policy: Chọn chính sách
+    attach-permissions: Đính kèm quyền
+    attach-inline-permissions: Đính kèm quyền nội tuyến
+    select-permissions: Chọn quyền
+    primary: Chính
+    role: Vai trò
+    roles: Các vai trò
+    status: Trạng thái
+    type: Loại
+    user: Người dùng
+    service: Dịch vụ
+    reload: Tải lại
+    reload-data: Tải lại dữ liệu
+  components:
+    widget:
+      metrics:
+        title: Các chỉ số IAM
+    modals:
+      group-details:    
+        group-name: Tên nhóm
+      group-form:
+        group-name: Tên nhóm
+        group-description: Mô tả nhóm
+        select-users-add-group: Chọn người dùng để thêm vào nhóm
+        search-select-users-add-group: Tìm kiếm và chọn người dùng để thêm vào nhóm này.
+        select-user-add-group: Chọn người dùng để thêm vào nhóm
+        no-user-add-group: Chưa có người dùng nào được thêm vào nhóm
+      policy-form:
+        policy-name: Tên chính sách
+        enter-name-your-policy: Nhập tên cho chính sách của bạn
+        policy-description: Mô tả chính sách
+        enter-description-your-policy: Nhập mô tả cho chính sách của bạn
+        select-permissions: Chọn quyền
+      view-policy-permissions:
+        view-permissions: >-
+          Chính sách: {policyName} Quyền
+      view-role-permissions:
+        view-permissions: >-
+          Vai trò: {roleName} Quyền
+      view-user-permissions:
+        view-permissions: >-
+          Người dùng: {userName} Quyền
+      role-form:
+        role-name: Tên vai trò
+        enter-name-for-this-role: Nhập tên cho vai trò này
+        role-description: Mô tả vai trò
+        enter-description-your-role: Nhập mô tả cho vai trò của bạn
+        select-permission: Chọn quyền
+    table:
+      group-members:
+        no-member: Không có thành viên
+    permission-picker:
+      selected: >-
+        Đã chọn: 
+      search-permissions-keyword: Tìm kiếm quyền theo từ khóa
+      loading-permission: Đang tải quyền...
+  groups:
+    index:
+      untitled: Không có tiêu đề
+      delete-group-title: Xóa nhóm {groupName}
+      delete-group-success-message: Nhóm {name} đã được xóa.
+      delete-group: Xóa Nhóm
+      created: Đã tạo
+      edit-group: Chỉnh sửa nhóm...
+      delete-group-label: Xóa nhóm...
+      new-group: Nhóm Mới
+      new-group-created: Nhóm mới đã được tạo.
+      edit-group-title: Chỉnh sửa Nhóm
+      group-actions: Hành động Nhóm
+      changes-group-save: Thay đổi nhóm đã được lưu.
+      data-assosciated-this-group-deleted: Bạn có chắc chắn muốn xóa nhóm này không? Tất cả dữ liệu liên quan đến nhóm này cũng sẽ bị xóa. Hành động này không thể hoàn tác.
+  policies:
+    index:
+      title: Chính sách
+      delete-policies: Xóa Chính sách
+      contact-action: Hành động Liên hệ
+      edit-policy: Chỉnh sửa chính sách...
+      delete-policy: Xóa chính sách...
+      new-policy: Chính sách Mới
+      new-policy-created: Chính sách mới đã được tạo.
+      unable-changes-policy-warning: Không thể thực hiện thay đổi cho chính sách {policyType}.
+      edit-policy-title: Chỉnh sửa Chính sách
+      policy-actions: Hành động Chính sách
+      changes-policy-saved-success: Thay đổi chính sách đã được lưu.
+      unable-delete-policy-warning: Không thể xóa chính sách {policyType}.
+      data-assosciated-this-policy-deleted: Bạn có chắc chắn muốn xóa chính sách này không? Tất cả dữ liệu liên quan đến chính sách này cũng sẽ bị xóa. Hành động này không thể hoàn tác.
+      policy-deleted: Chính sách {policyName} đã được xóa.
+  roles:
+    index:
+      delete-roles: Xóa Vai trò
+      contact-action: Hành động Liên hệ
+      edit-role: Chỉnh sửa vai trò...
+      delete-role: Xóa vai trò...
+      new-role: Vai trò Mới
+      new-role-create: Vai trò mới đã được tạo
+      edit-role-title: Chỉnh sửa Vai trò
+      role-actions: Hành động Vai trò
+      changes-role-saved: Thay đổi vai trò đã được lưu.
+      data-assosciated-this-role-deleted: Bạn có chắc chắn muốn xóa vai trò này không? Tất cả dữ liệu liên quan đến vai trò này cũng sẽ bị xóa. Hành động này không thể hoàn tác.
+      role-deleted: Vai trò {roleName} đã được xóa.
+      unable-changes-role-warning: Không thể thực hiện thay đổi cho vai trò {roleType}.
+      unable-delete-role-warning: Không thể xóa vai trò {roleType}.
+  users:
+    index:
+      delete-user-title: Xóa người dùng {userName}
+      delete-user-success-message: Người dùng {userName} đã được xóa.
+      deactivate-user-title: Vô hiệu hóa tài khoản người dùng {userName}
+      deactivate-user-success-message: Người dùng {userName} đã được vô hiệu hóa.
+      re-activate-user-title: Kích hoạt lại tài khoản người dùng {userName}
+      re-activate-user-success-message: Người dùng {userName} đã được kích hoạt lại.
+      delete-users: Xóa Người dùng
+      last-login: Đăng nhập lần cuối
+      created-at: Ngày tạo
+      updated-at: Ngày cập nhật
+      user-actions: Hành động Người dùng
+      edit-user: Chỉnh sửa người dùng...
+      view-user-permissions: Xem quyền truy cập...
+      re-send-invitation: Gửi lại lời mời...
+      deactivate-user: Vô hiệu hóa người dùng...
+      activate-user: Kích hoạt người dùng...
+      delete-user: Xóa người dùng...
+      new-user: Người dùng Mới
+      user-invited-join-your-organization-success: Người dùng đã được mời tham gia tổ chức của bạn.
+      edit-user-title: Chỉnh sửa Người dùng
+      user-changes-saved-success: Thay đổi người dùng đã được lưu.
+      error-you-cant-delete-yourself: Bạn không thể xóa chính mình
+      data-assosciated-user-delete: Bạn có chắc chắn muốn xóa người dùng này không? Tất cả dữ liệu liên quan đến người dùng này cũng sẽ bị xóa. Hành động này không thể hoàn tác.
+      access-account-or-resources-unless-re-activated: Bạn có chắc chắn muốn vô hiệu hóa người dùng này không? Người dùng này sẽ không còn truy cập vào tài khoản hoặc tài nguyên của họ trừ khi được kích hoạt lại.
+      this-user-will-regain-access-to-your-organization: Bạn có chắc chắn muốn kích hoạt lại người dùng này không? Người dùng này sẽ lấy lại quyền truy cập vào tổ chức của bạn.
+      resend-invitation-to-join-organization: Gửi lại lời mời tham gia tổ chức
+      confirming-fleetbase-will-re-send-invitation-for-user-to-join-your-organization: Bằng cách xác nhận, Fleetbase sẽ gửi lại lời mời cho người dùng này tham gia tổ chức của bạn.
+      invitation-resent: Lời mời đã được gửi lại.
+  application:
+      access-management: Quản lý Quyền Truy cập
+  home:
+      identity-access-management: Quản lý Danh tính & Quyền Truy cập
