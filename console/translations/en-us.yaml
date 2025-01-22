@@ -83,9 +83,8 @@ common:
   card-type: Card Type
 validation:
   required:
-    report_type: Report type field is required
     payment_method: Payment method is required
-  form_invalid: "Please Fill the mandatory fields reporttype and payment method."
+  form_invalid: "Please Fill the fields."
 statuses: 
     draft: Draft
     pending-approval: Pending Approval

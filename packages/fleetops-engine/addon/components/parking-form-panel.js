@@ -64,8 +64,7 @@ export default class ParkingFormPanelComponent extends Component {
      */
     // @tracked fuelReportTypes = ['Fuel', 'Toll', 'Parking'];
     @tracked fuelReportTypes = [
-        { value: 'Fuel', translationKey: 'fuelReportTypes.Fuel' },
-        { value: 'Toll', translationKey: 'fuelReportTypes.Toll' },
+     
         { value: 'Parking', translationKey: 'fuelReportTypes.Parking' },
     ]
 
@@ -168,7 +167,6 @@ export default class ParkingFormPanelComponent extends Component {
     }
     @action
     updatepaymentOptions(selectedpaymentOptions) {
-        alert("eee");
         this.fuelReport.payment_method = selectedpaymentOptions.value;
     }
     /**
@@ -240,7 +238,7 @@ export default class ParkingFormPanelComponent extends Component {
     
         try {
             this.isSaving = true;
-    
+            this.fuelReport.report_type = "Parking";
             // Save the fuel report first if it's new
             if (this.fuelReport.isNew) {
                 // console.log("Fuel report is new, saving to generate ID...");

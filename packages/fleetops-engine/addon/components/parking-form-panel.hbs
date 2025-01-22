@@ -25,16 +25,22 @@
         {{#let (cannot this.savePermission) as |unauthorized|}}
         <div class="grid grid-cols-1 text-xs dark:text-gray-100">
             <!-- Fuel Report Type -->
-           <InputGroup @name={{t "common.report-type"}}>
-                <input type="hidden" 
-                    name="report_type" 
-                    value="Parking" />
-                <!-- Validation Error for Report Type -->
-                {{!-- {{#if this.errors.report_type}}
-                    <div class="text-red-500 text-xs mt-1">{{this.errors.report_type}}</div>
-                {{/if}} --}}
+            <InputGroup @name={{t "common.report-type" }}>
+                <div class="fleetbase-model-select fleetbase-power-select ember-model-select">
+                    {{!-- <PowerSelect @options={{this.fuelReportTypes}} @selected={{this.fuelReport.report_type}} 
+                    @onChange={{fn (mut this.fuelReport.report_type)}}
+                        @placeholder={{t "common.select-report-type" }}
+                        @triggerClass="form-select form-input" @disabled={{unauthorized}} as |status|>
+                        {{smart-humanize status}}
+                    </PowerSelect> --}}
+                    <PowerSelect @options={{this.fuelReportTypes}} @selected={{this.selectedfuelReportTypes}} 
+                        @onChange={{this.updatefuelReportTypes}}
+                        @placeholder={{t "common.select-report-type" }}
+                        @triggerClass="form-select form-input" @disabled={{unauthorized}} as |status|>
+                        {{t status.translationKey}}
+                    </PowerSelect>
+                </div>
             </InputGroup>
-
             <InputGroup @name={{t "fleet-ops.common.reporter" }}>
                 <ModelSelect @modelName="user" @selectedModel={{this.fuelReport.reporter}}
                     @placeholder={{t "fleet-ops.component.parking-form-panel.select-reporter" }}
