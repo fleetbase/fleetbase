@@ -27,7 +27,7 @@ export default class ParkingSerializer extends ApplicationSerializer.extend(Embe
         const json = super.serialize(...arguments);
 
         // remove automatically set `reporter_uuid`
-        delete json.reporter_uuid;
+        // delete json.reporter_uuid;
 
         return json;
     }

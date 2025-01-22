@@ -27,7 +27,7 @@ export default class FuelReportSerializer extends ApplicationSerializer.extend(E
         const json = super.serialize(...arguments);
 
         // remove automatically set `reporter_uuid`
-        delete json.reporter_uuid;
+        // delete json.reporter_uuid;
 
         return json;
     }
