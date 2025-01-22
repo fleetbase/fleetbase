@@ -5,11 +5,11 @@ iam:
     bulk-action: Hành động hàng loạt
     country: Quốc gia
     create: Tạo mới
-    dashboard: Bảng điều khiển
+    dashboard: Tổng quan
     description: Mô tả
     email: Email
     export: Xuất
-    group: Nhóm
+    group: Mạng lưới
     member: Thành viên
     name: Tên
     new: Mới
@@ -17,7 +17,7 @@ iam:
     phone: Điện thoại
     photo: Ảnh
     policy: Chính sách
-    policies: Các chính sách
+    policies: Kiểm soát truy cập
     attach-policies: Đính kèm các chính sách
     select-policy: Chọn chính sách
     attach-permissions: Đính kèm quyền
@@ -28,7 +28,7 @@ iam:
     roles: Các vai trò
     status: Trạng thái
     type: Loại
-    user: Người dùng
+    user: Hồ sơ
     service: Dịch vụ
     reload: Tải lại
     reload-data: Tải lại dữ liệu
@@ -92,7 +92,7 @@ iam:
       data-assosciated-this-group-deleted: Bạn có chắc chắn muốn xóa nhóm này không? Tất cả dữ liệu liên quan đến nhóm này cũng sẽ bị xóa. Hành động này không thể hoàn tác.
   policies:
     index:
-      title: Chính sách
+      title: Kiểm soát truy cập
       delete-policies: Xóa Chính sách
       contact-action: Hành động Liên hệ
       edit-policy: Chỉnh sửa chính sách...

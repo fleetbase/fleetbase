@@ -367,6 +367,8 @@ layout:
         keyboard-shortcuts: Mostrar atajos de teclado
         changelog: Registro de cambios
 fleet-ops:
+  iam: Gestión de acceso de usuarios
+  fleet-ops: Flota Sí Flujo
   extension-name: Fleet-Ops
   common:
     active-manpower: Mano de obra activa
@@ -671,7 +673,7 @@ fleet-ops:
         operations: Operaciones
         dashboard: Panel de control
         service-rates: Tarifas de servicio
-        scheduler: Programador
+        scheduler: Calendario
         drivers: Conductores
         vehicles: Vehículos
         fleets: Flotas
@@ -1993,11 +1995,11 @@ iam:
     bulk-action: Acción Masiva
     country: País
     create: Creado
-    dashboard: Tablero
+    dashboard: Visión general
     description: Descripción
     email: Correo Electrónico
     export: Exportar
-    group: Grupos
+    group: Redes
     member: Miembros
     name: Nombre
     new: Nuevo
@@ -2005,7 +2007,7 @@ iam:
     phone: Teléfono
     photo: Foto
     policy: Política
-    policies: Políticas
+    policies: Control de acceso
     attach-policies: Adjuntar Políticas
     select-policy: Seleccionar Política
     attach-permissions: Adjuntar Permisos
@@ -2016,7 +2018,7 @@ iam:
     roles: Roles
     status: Estado
     type: Tipo
-    user: Usuarios
+    user: Perfiles
     service: Servicio
     reload: Recargar
     reload-data: Recargar datos
@@ -2080,7 +2082,7 @@ iam:
       data-assosciated-this-group-deleted: ¿Estás seguro de que deseas eliminar este grupo? Todos los datos asociados con este grupo también se eliminarán. Esta acción no se puede deshacer.
   policies:
     index:
-      title: Políticas
+      title: Control de acceso
       delete-policies: Eliminar Políticas
       contact-action: Acciones de Contacto
       edit-policy: Editar política...

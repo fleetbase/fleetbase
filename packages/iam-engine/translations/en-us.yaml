@@ -5,11 +5,11 @@ iam:
     bulk-action: Bulk Action
     country: Country
     create: Created
-    dashboard: Dashboard 
+    dashboard: Overview
     description: Description
     email: Email
     export: Export
-    group: Groups
+    group: Networks
     member: Members
     name: Name
     new: New
@@ -17,7 +17,7 @@ iam:
     phone: Phone
     photo: Photo
     policy: Policy
-    policies: Policies
+    policies: Access Control
     attach-policies: Attach Policies
     select-policy: Select Policy
     attach-permissions: Attach Permissions
@@ -28,7 +28,7 @@ iam:
     roles: Roles
     status: Status
     type: Type
-    user: Users
+    user: Profiles
     service: Service
     reload: Reload
     reload-data: Reload data
@@ -92,7 +92,7 @@ iam:
       data-assosciated-this-group-deleted: Are you sure you want to delete this group? All data assosciated with this group will also be deleted. This action cannot be undone.
   policies:
     index:
-      title: Policies
+      title: Access Control
       delete-policies: Delete Policies
       contact-action: Contact Actions
       edit-policy: Edit policy...

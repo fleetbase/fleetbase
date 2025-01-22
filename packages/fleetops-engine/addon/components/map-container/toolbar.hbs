@@ -72,7 +72,7 @@
                 </Attach::Tooltip>
             </button>
         {{/let}}
-        {{#let (cannot "fleet-ops list service-area") as |unauthorized|}}
+        {{!-- {{#let (cannot "fleet-ops list service-area") as |unauthorized|}}
             <BasicDropdown id="map-toolbar-service-areas-button" @horizontalPosition="right" @calculatePosition={{this.calculatePosition}} @renderInPlace={{true}} as |dd|>
                 <dd.Trigger class="toolbar-button {{if unauthorized 'unauthorized'}}">
                     <FaIcon @icon="map-marked-alt" />
@@ -93,7 +93,7 @@
                     <MapContainer::Toolbar::ZonesPanel @dd={{dd}} @liveMap={{@liveMap}} @map={{@map}} @onPressCreateServiceArea={{@onPressCreateServiceArea}} />
                 </dd.Content>
             </BasicDropdown>
-        {{/let}}
+        {{/let}} --}}
         <BasicDropdown id="map-toolbar-visibility-controls-button" @horizontalPosition="right" @calculatePosition={{this.calculatePosition}} @renderInPlace={{true}} as |dd|>
             <dd.Trigger class="toolbar-button">
                 <FaIcon @icon="eye" />

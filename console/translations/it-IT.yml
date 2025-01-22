@@ -555,7 +555,7 @@ fleet-ops:
         operations: Operazioni
         dashboard: Dashboard
         service-rates: Tariffe Servizio
-        scheduler: Pianificatore
+        scheduler: Calendario
         drivers: Conducenti
         vehicles: Veicoli
         fleets: Flotte
@@ -1906,11 +1906,11 @@ iam:
     bulk-action: Azione Multipla
     country: Paese
     create: Creato
-    dashboard: Dashboard
+    dashboard: Panoramica
     description: Descrizione
     email: Email
     export: Esporta
-    group: Gruppi
+    group: Reti
     member: Membri
     name: Nome
     new: Nuovo
@@ -1918,7 +1918,7 @@ iam:
     phone: Telefono
     photo: Foto
     policy: Politica
-    policies: Politiche
+    policies: Controllo degli accessi
     attach-policies: Allegare Politiche
     select-policy: Seleziona Politica
     attach-permissions: Allegare Permessi
@@ -1929,7 +1929,7 @@ iam:
     roles: Ruoli
     status: Stato
     type: Tipo
-    user: Utenti
+    user: Profili
     service: Servizio
     reload: Ricarica
     reload-data: Ricarica Dati
@@ -1993,7 +1993,7 @@ iam:
       data-assosciated-this-group-deleted: Sei sicuro di voler eliminare questo gruppo? Tutti i dati associati a questo gruppo saranno eliminati. Questa azione non può essere annullata.
   policies:
     index:
-      title: Politiche
+      title: Controllo degli accessi
       delete-policies: Elimina Politiche
       contact-action: Azioni Contatto
       edit-policy: Modifica politica...
