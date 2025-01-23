@@ -1,5 +1,5 @@
 app:
-  name: Fleetbase
+  name: FleetYes
 terms:
   new: Nuevo
   sort: Ordenar
@@ -543,7 +543,7 @@ fleet-ops:
             measurements: Mediciones
     order-config-manager:
       title: Configuración de pedidos
-      message: Las configuraciones de pedidos te permiten definir configuraciones dinámicas que le indicarán a Fleetbase cómo deben ejecutarse los diferentes tipos de pedidos.
+      message: Las configuraciones de pedidos te permiten definir configuraciones dinámicas que le indicarán a FleetYes cómo deben ejecutarse los diferentes tipos de pedidos.
       configuration: Configuración
       new-order-config: Nueva configuración de pedido
       select-order-config: Seleccionar configuración de pedido
@@ -902,20 +902,20 @@ fleet-ops:
       order-new-activity:
         select-message: Selecciona un estado de actividad para actualizar el seguimiento del pedido, o ingresa una actividad personalizada.
         order-currently-message: Este pedido está actualmente {options}, la actividad adicional sobrescribirá este estado.
-        not-recommend-message: Fleetbase no recomienda esto a menos que sepas exactamente lo que estás haciendo.
+        not-recommend-message: FleetYes no recomienda esto a menos que sepas exactamente lo que estás haciendo.
         activity-options: Opciones de actividad
         activity: actividad
         dispatch: Esto activará el envío del pedido.
         status: Estado de actividad personalizada
         details: Detalles de actividad personalizada
         code: Código de actividad personalizada
-        fleetbase-message: Fleetbase no recomienda esto a menos que sepas exactamente lo que estás haciendo.
+        fleetbase-message: FleetYes no recomienda esto a menos que sepas exactamente lo que estás haciendo.
       order-route-form:
         toggle: Activar múltiples entregas
         optimize: Optimizar ruta
-        optimize-text: Fleetbase optimizará automáticamente la ruta.
+        optimize-text: FleetYes optimizará automáticamente la ruta.
         add: Agregar punto de referencia
-        add-text: Usa el botón `Agregar punto de referencia` para agregar más paradas a este pedido. El motor de rutas de Fleetbase optimizará automáticamente la ruta conforme se agregan o eliminan las paradas.
+        add-text: Usa el botón `Agregar punto de referencia` para agregar más paradas a este pedido. El motor de rutas de FleetYes optimizará automáticamente la ruta conforme se agregan o eliminan las paradas.
         select-waypoint: Seleccionar punto de referencia
         pickup: Recogida
         edit-address: Editar dirección
@@ -954,7 +954,7 @@ fleet-ops:
         country: País del área de servicio
         country-text: Establecer opcionalmente el país en el que se encuentra o está basado este área de servicio.
       set-password:
-        message: ¡Bienvenido a Fleetbase! Antes de comenzar, establece una nueva contraseña para continuar a continuación.
+        message: ¡Bienvenido a FleetYes! Antes de comenzar, establece una nueva contraseña para continuar a continuación.
         new-password: Nueva contraseña
         confirm-password: Confirmar contraseña
         help-text: Ingresa una contraseña de al menos 8 caracteres para continuar.
@@ -1045,7 +1045,7 @@ fleet-ops:
         custom-namespace: Namespace personalizado
         namespace-text: Opcionalmente, proporciona un namespace o versión de API personalizada que debe usarse para la integración.
         webhook: URL de Webhook
-        webhook-text: Los proveedores integrados generalmente requieren esto para que Fleetbase reciba actualizaciones de actividad sobre el pedido. ¡No cambies esto a menos que sepas lo que estás haciendo! Cambiar esto puede interrumpir las actualizaciones de pedidos.
+        webhook-text: Los proveedores integrados generalmente requieren esto para que FleetYes reciba actualizaciones de actividad sobre el pedido. ¡No cambies esto a menos que sepas lo que estás haciendo! Cambiar esto puede interrumpir las actualizaciones de pedidos.
         cancel-credentials: Cancelar reinicio de credenciales
         reset-message: Las credenciales sensibles solo pueden restablecerse. Para actualizar las credenciales, debes volver a ingresar las credenciales.
         optionally: Opcionalmente proporciona tu propio 
@@ -1130,7 +1130,7 @@ fleet-ops:
         title: Transacciones recientes
         loading: Cargando transacciones recientes...
         no-transactions: No hay transacciones esta semana
-        message: Cuando los pedidos se procesan con tarifas de servicio, Fleetbase rastrea las transacciones automáticamente.
+        message: Cuando los pedidos se procesan con tarifas de servicio, FleetYes rastrea las transacciones automáticamente.
     contact-form-panel:
       success-message: El contacto {contactName} se guardó con éxito.
       view-contact-button: Ver detalles del contacto
@@ -1495,7 +1495,7 @@ fleet-ops:
         namespace: Espacio de Nombres Personalizado
         namespace-text: Opcionalmente, proporciona un espacio de nombres o versión API personalizada que debería usarse para la integración.
         webhook: URL del Webhook
-        webhook-text: Los proveedores integrados normalmente requerirán esto para que Fleetbase pueda recibir actualizaciones de actividad del pedido. ¡No cambies esto a menos que sepas lo que estás haciendo! Cambiarlo podría romper las actualizaciones de tus pedidos.
+        webhook-text: Los proveedores integrados normalmente requerirán esto para que FleetYes pueda recibir actualizaciones de actividad del pedido. ¡No cambies esto a menos que sepas lo que estás haciendo! Cambiarlo podría romper las actualizaciones de tus pedidos.
         select-integrated: Selecciona un proveedor integrado.
         vendor-details: Detalles del Proveedor
         select-vendor-status: Seleccionar estado del proveedor
@@ -1696,7 +1696,7 @@ fleet-ops:
         edit-order: Editar metadatos de la orden
         add-field: Agregar campo personalizado
         order-type: Tipo de Orden
-        order-type-help-text: Seleccionar el tipo de orden indicará a Fleetbase qué configuraciones de orden usar.
+        order-type-help-text: Seleccionar el tipo de orden indicará a FleetYes qué configuraciones de orden usar.
         order-type-placeholder: Seleccionar Tipo de Orden
         internal-id: ID Interno
         internal-id-help-text: Usa este campo para opcionalmente establecer un identificador personalizado o interno para la orden.
@@ -1734,9 +1734,9 @@ fleet-ops:
         route: Ruta
         route-label: Múltiples Entregas
         optimize-route: Optimizar Ruta
-        optimize-route-help-text: Fleetbase optimizará automáticamente la ruta.
+        optimize-route-help-text: FleetYes optimizará automáticamente la ruta.
         add-waypoint: Agregar Punto de Ruta
-        add-waypoint-help-text: Usa el botón `Agregar Punto de Ruta` para agregar más paradas para esta orden. El motor de rutas de Fleetbase optimizará automáticamente la ruta a medida que se agreguen o eliminen paradas.
+        add-waypoint-help-text: Usa el botón `Agregar Punto de Ruta` para agregar más paradas para esta orden. El motor de rutas de FleetYes optimizará automáticamente la ruta a medida que se agreguen o eliminen paradas.
         select-waypoint-placeholder: Seleccionar Punto de Ruta
         infoblock-text: no puede admitir esta ubicación.
         invalid-coordinates: ¡Coordenadas no válidas!
@@ -1762,7 +1762,7 @@ fleet-ops:
         select-service-rate: Seleccionar Tarifa de Servicio
         refresh-button: Refrescar
         loading-message: Cargando cotizaciones de servicio...
-        info-text: Selecciona una cotización de servicio en tiempo real para aplicar a esta orden. Una vez que se aplique una cotización a la orden, se convertirá en una tarifa comprada. Las transacciones se rastrearán dentro del libro mayor de Fleetbase.
+        info-text: Selecciona una cotización de servicio en tiempo real para aplicar a esta orden. Una vez que se aplique una cotización a la orden, se convertirá en una tarifa comprada. Las transacciones se rastrearán dentro del libro mayor de FleetYes.
         breakdown: Desglosar
         no-service-info-text: No hay cotizaciones de servicio.
         input-order-info-text: Ingresa la ruta de la orden para ver las cotizaciones de servicio.
@@ -1853,7 +1853,7 @@ fleet-ops:
         order-notes-updated: Notas de la orden actualizadas.
       config:
         title: Configuración de Órdenes
-        message: Las configuraciones de órdenes te permiten definir configuraciones dinámicas que le indicarán a Fleetbase cómo deben ejecutarse los diferentes tipos de órdenes.
+        message: Las configuraciones de órdenes te permiten definir configuraciones dinámicas que le indicarán a FleetYes cómo deben ejecutarse los diferentes tipos de órdenes.
         configuration: Configuración
         types:
           no-order-installed: ¡No hay configuraciones de órdenes instaladas!
@@ -2144,7 +2144,7 @@ iam:
       access-account-or-resources-unless-re-activated: ¿Estás seguro de que deseas desactivar a este usuario? Este usuario ya no podrá acceder a su cuenta o recursos a menos que sea reactivado.
       this-user-will-regain-access-to-your-organization: ¿Estás seguro de que deseas reactivar a este usuario? Este usuario recuperará el acceso a tu organización.
       resend-invitation-to-join-organization: Reenviar invitación para unirse a la organización
-      confirming-fleetbase-will-re-send-invitation-for-user-to-join-your-organization: Al confirmar, Fleetbase reenviará la invitación para que este usuario se una a tu organización.
+      confirming-fleetbase-will-re-send-invitation-for-user-to-join-your-organization: Al confirmar, FleetYes reenviará la invitación para que este usuario se una a tu organización.
       invitation-resent: Invitación reenviada.
   application:
       access-management: Gestión de Acceso
@@ -2172,7 +2172,7 @@ registry-bridge:
       updated: Actualizado
       website: Sitio web
       self-managed: Autogestionado
-      self-managed-help-text: Una extensión autogestionada está diseñada para usuarios que alojan Fleetbase en sus propios servidores, fuera del entorno en la nube/SaaS. Estas extensiones requieren instalación y configuración manual. Si estás utilizando Fleetbase como una instancia autogestionada, puedes usar estas extensiones para añadir funciones adicionales. Sin embargo, no están disponibles para usuarios en la nube/SaaS.
+      self-managed-help-text: Una extensión autogestionada está diseñada para usuarios que alojan FleetYes en sus propios servidores, fuera del entorno en la nube/SaaS. Estas extensiones requieren instalación y configuración manual. Si estás utilizando FleetYes como una instancia autogestionada, puedes usar estas extensiones para añadir funciones adicionales. Sin embargo, no están disponibles para usuarios en la nube/SaaS.
       self-hosted-install: Instalación Autogestionada
       self-hosted-install-help-text: Ver las instrucciones de instalación autogestionada.
     extension-pending-publish-viewer:
@@ -2285,4 +2285,4 @@ registry-bridge:
         bundles: Paquetes
         upload-new-bundle: Subir Nuevo Paquete
         self-managed: Autogestionado
-        self-managed-help-text: Habilita esta opción si tu módulo está destinado solo para instancias autogestionadas. Al seleccionar esto, el módulo no estará disponible para su instalación en la versión en la nube/SaaS de Fleetbase y debe instalarse manualmente por el usuario en su propio servidor.
+        self-managed-help-text: Habilita esta opción si tu módulo está destinado solo para instancias autogestionadas. Al seleccionar esto, el módulo no estará disponible para su instalación en la versión en la nube/SaaS de FleetYes y debe instalarse manualmente por el usuario en su propio servidor.

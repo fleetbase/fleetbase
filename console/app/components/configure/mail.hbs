@@ -1,5 +1,5 @@
 <ContentPanel @title="Mail" @open={{true}} @pad={{true}} @panelBodyClass="bg-white dark:bg-gray-800">
-    <InputGroup @name="Mailer" @helpText="Select the default mailer for Fleetbase to use.">
+    <InputGroup @name="Mailer" @helpText="Select the default mailer for FleetYes to use.">
         <Select @options={{this.mailers}} @value={{this.mailer}} @onSelect={{this.setMailer}} @placeholder="Select mailer" class="w-full" />
     </InputGroup>
     {{#if (eq this.mailer "smtp")}}
@@ -29,12 +29,12 @@
     {{/if}}
     <InputGroup
         @name="From Address"
-        @helpText="Input the email address for Fleetbase to send emails from."
+        @helpText="Input the email address for FleetYes to send emails from."
         @value={{this.fromAddress}}
         @placeholder="From Address"
         disabled={{this.isLoading}}
     />
-    <InputGroup @name="From Name" @helpText="Input the name for Fleetbase to send emails from." @value={{this.fromName}} @placeholder="From Name" disabled={{this.isLoading}} />
+    <InputGroup @name="From Name" @helpText="Input the name for FleetYes to send emails from." @value={{this.fromName}} @placeholder="From Name" disabled={{this.isLoading}} />
     {{#if this.testResponse}}
         <div
             class="flex flex-row items-center rounded-lg border
