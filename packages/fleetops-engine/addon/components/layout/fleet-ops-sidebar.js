@@ -56,14 +56,14 @@ export default class LayoutFleetOpsSidebarComponent extends Component {
                 permission: 'fleet-ops list order',
                 visible: this.abilities.can('fleet-ops see order'),
             },
-            {
-                intl: 'fleet-ops.component.layout.fleet-ops-sidebar.order-config',
-                title: this.intl.t('fleet-ops.component.layout.fleet-ops-sidebar.order-config'),
-                icon: 'cog',
-                route: 'operations.order-config',
-                permission: 'fleet-ops list order-config',
-                visible: this.abilities.can('fleet-ops see order-config'),
-            },
+            // {
+            //     intl: 'fleet-ops.component.layout.fleet-ops-sidebar.order-config',
+            //     title: this.intl.t('fleet-ops.component.layout.fleet-ops-sidebar.order-config'),
+            //     icon: 'cog',
+            //     route: 'operations.order-config',
+            //     permission: 'fleet-ops list order-config',
+            //     visible: this.abilities.can('fleet-ops see order-config'),
+            // },
         ];
 
         const resourcesItems = [

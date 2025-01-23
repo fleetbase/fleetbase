@@ -717,6 +717,7 @@ fleet-ops:
         settings: Paramètres
         order-config: Configuration de commande
         parking: Rapports de stationnement
+        toll-reports: Rapports de péage
     live-map-drawer:
       driver-listing:
         location: Localisation
@@ -986,7 +987,7 @@ fleet-ops:
         country: Pays de la zone de service
         country-text: Facultativement, définissez le pays où cette zone de service est située ou basée.
       set-password:
-        message: Bienvenue sur Fleetbase ! Avant de commencer, définissez un nouveau mot de passe pour continuer ci-dessous.
+        message: Bienvenue sur FleetYes ! Avant de commencer, définissez un nouveau mot de passe pour continuer ci-dessous.
         new-password: Nouveau mot de passe
         confirm-password: Confirmez le mot de passe
         help-text: Entrez un mot de passe d'au moins 8 caractères pour continuer.
@@ -1287,6 +1288,19 @@ fleet-ops:
       select-vehicle: Sélectionner un véhicule
       select-parking-report: Sélectionner le statut du rapport de stationnement
       cost: Coût
+    toll-report-form-panel:
+      success-message: Rapport de péage enregistré avec succès.
+      parking-report: Nouveau rapport de péage
+      save-parking-report: Enregistrer le rapport de péage
+      create-parking-report: Créer un rapport de péage
+      view-details: Voir les détails du rapport de péage
+      cancel-edit-parking-report: Annuler la modification du rapport de péage
+      cancel-new-parking-report: Annuler le nouveau rapport de péage
+      select-reporter: Sélectionner le rapporteur
+      select-driver: Sélectionner le conducteur
+      select-vehicle: Sélectionner le véhicule
+      select-parking-report: Sélectionner l'état du rapport de péage
+      cost: Coût
     fuel-report-panel:
       title: Détails du rapport de carburant
       edit-button: Modifier le rapport de carburant
@@ -1299,6 +1313,11 @@ fleet-ops:
       edit-button: Modifier le rapport de stationnement
       cancel-edit-parking-report: Annuler la modification du rapport de stationnement
       cancel-new-parking-report: Annuler le nouveau rapport de stationnement
+    toll-report-panel:
+      title: Détails du rapport de péage
+      edit-button: Modifier le rapport de péage
+      cancel-edit-parking-report: Annuler la modification du rapport de péage
+      cancel-new-parking-report: Annuler le nouveau rapport de péage
     global-search:
       search: Rechercher par mot-clé...
     integrated-order-details:
@@ -1669,6 +1688,16 @@ fleet-ops:
           body: Les modifications non enregistrées de ce rapport de stationnement seront perdues. Cliquez sur continuer pour procéder.
         title: Rapports de stationnement
         delete-parking-report: Supprimer les rapports de stationnement
+    toll-reports:
+      index:
+        view: Voir les détails
+        edit-toll-report: Modifier le rapport de péage
+        delete: Supprimer le rapport de péage
+        delete-button: Supprimer les rapports de péage
+        edit:
+          body: Les modifications non enregistrées de ce rapport de péage seront perdues. Cliquez sur continuer pour procéder.
+        title: Rapports de péage
+        delete-parking-report: Supprimer les rapports de péage
     issues:
       index:
         view: Voir les détails

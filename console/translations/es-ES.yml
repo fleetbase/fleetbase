@@ -769,6 +769,7 @@ fleet-ops:
         settings: Ajustes
         order-config: Configuración del pedido
         parking: Informes de estacionamiento
+        toll-reports: Informes de peaje
     live-map-drawer:
       driver-listing:
         location: Ubicación
@@ -1060,7 +1061,7 @@ fleet-ops:
         country-text: Opcionalmente, defina el país donde se encuentra o tiene su
           sede esta área de servicio.
       set-password:
-        message: ¡Bienvenidos a Fleetbase! Antes de comenzar, establezca una nueva
+        message: ¡Bienvenidos a FleetYes! Antes de comenzar, establezca una nueva
           contraseña para continuar a continuación.
         new-password: Nueva contraseña
         confirm-password: Confirmar Contraseña
@@ -1385,6 +1386,19 @@ fleet-ops:
       select-vehicle: Seleccionar vehículo
       select-parking-report: Seleccionar estado del informe de estacionamiento
       cost: Costo
+    toll-report-form-panel:
+      success-message: Informe de peaje guardado con éxito.
+      parking-report: Nuevo informe de peaje
+      save-parking-report: Guardar informe de peaje
+      create-parking-report: Crear informe de peaje
+      view-details: Ver detalles del informe de peaje
+      cancel-edit-parking-report: Cancelar edición del informe de peaje
+      cancel-new-parking-report: Cancelar nuevo informe de peaje
+      select-reporter: Seleccionar informante
+      select-driver: Seleccionar conductor
+      select-vehicle: Seleccionar vehículo
+      select-parking-report: Seleccionar estado del informe de peaje
+      cost: Costo
     fuel-report-panel:
       title: Detalles del informe de combustible
       edit-button: Editar informe de combustible
@@ -1397,6 +1411,11 @@ fleet-ops:
       edit-button: Editar informe de estacionamiento
       cancel-edit-parking-report: Cancelar edición del informe de estacionamiento
       cancel-new-parking-report: Cancelar nuevo informe de estacionamiento
+    toll-report-panel:
+      title: Detalles del informe de peaje
+      edit-button: Editar informe de peaje
+      cancel-edit-parking-report: Cancelar edición del informe de peaje
+      cancel-new-parking-report: Cancelar nuevo informe de peaje
     global-search:
       search: Buscar por palabra clave...
     integrated-order-details:
@@ -1800,6 +1819,16 @@ fleet-ops:
           body: Los cambios no guardados en este informe de estacionamiento se perderán. Haz clic en continuar para proceder.
         title: Informes de estacionamiento
         delete-parking-report: Eliminar informes de estacionamiento
+    toll-reports:
+      index:
+        view: Ver detalles
+        edit-toll-report: Editar informe de peaje
+        delete: Eliminar informe de peaje
+        delete-button: Eliminar informes de peaje
+        edit:
+          body: Los cambios no guardados en este informe de peaje se perderán. Haz clic en continuar para proceder.
+        title: Informes de peaje
+        delete-parking-report: Eliminar informes de peaje
     issues:
       index:
         view: Ver detalles

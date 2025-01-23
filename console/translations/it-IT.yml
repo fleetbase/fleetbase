@@ -837,7 +837,7 @@ fleet-ops:
         country: Paese dell'Area di Servizio
         country-text: Imposta facoltativamente il paese in cui si trova o è basata questa Area di Servizio.
       set-password:
-        message: Benvenuto su Fleetbase! Prima di iniziare, imposta una nuova password per continuare di seguito.
+        message: Benvenuto su FleetYes! Prima di iniziare, imposta una nuova password per continuare di seguito.
         new-password: Nuova Password
         confirm-password: Conferma la Password
         help-text: Inserisci una password di almeno 8 caratteri per continuare.
@@ -1138,6 +1138,19 @@ fleet-ops:
       select-vehicle: Seleziona il veicolo
       select-parking-report: Seleziona lo stato del rapporto di parcheggio
       cost: Costo
+    toll-report-form-panel:
+      success-message: Rapporto pedaggio salvato con successo.
+      parking-report: Nuovo rapporto pedaggio
+      save-parking-report: Salva rapporto pedaggio
+      create-parking-report: Crea rapporto pedaggio
+      view-details: Visualizza i dettagli del rapporto pedaggio
+      cancel-edit-parking-report: Annulla modifica rapporto pedaggio
+      cancel-new-parking-report: Annulla nuovo rapporto pedaggio
+      select-reporter: Seleziona il reporter
+      select-driver: Seleziona il conducente
+      select-vehicle: Seleziona il veicolo
+      select-parking-report: Seleziona lo stato del rapporto pedaggio
+      cost: Costo
     fuel-report-panel:
       title: Dettagli del rapporto sul carburante
       edit-button: Modifica il rapporto sul carburante
@@ -1150,6 +1163,11 @@ fleet-ops:
       edit-button: Modifica rapporto di parcheggio
       cancel-edit-parking-report: Annulla modifica del rapporto di parcheggio
       cancel-new-parking-report: Annulla nuovo rapporto di parcheggio
+    toll-report-panel:
+      title: Dettagli rapporto pedaggio
+      edit-button: Modifica rapporto pedaggio
+      cancel-edit-parking-report: Annulla modifica rapporto pedaggio
+      cancel-new-parking-report: Annulla nuovo rapporto pedaggio
     global-search:
       search: Cerca per parola chiave...
     integrated-order-details:
@@ -1519,6 +1537,16 @@ fleet-ops:
           body: Le modifiche non salvate a questo rapporto di parcheggio saranno perse. Clicca su continua per procedere.
         title: Rapporti di parcheggio
         delete-parking-report: Elimina rapporti di parcheggio
+    toll-reports:
+      index:
+        view: Visualizza dettagli
+        edit-toll-report: Modifica rapporto pedaggio
+        delete: Elimina rapporto pedaggio
+        delete-button: Elimina rapporti pedaggio
+        edit:
+          body: Le modifiche non salvate a questo rapporto pedaggio andranno perse. Clicca su continua per procedere.
+        title: Rapporti pedaggio
+        delete-parking-report: Elimina rapporti pedaggio
     issues:
       index:
         view: Visualizza dettagli

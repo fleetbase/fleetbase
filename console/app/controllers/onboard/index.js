@@ -134,7 +134,7 @@ export default class OnboardIndexController extends Controller {
                         this.session.isOnboarding().manuallyAuthenticate(token);
 
                         return this.router.transitionTo('console').then(() => {
-                            this.notifications.success('Welcome to Fleetbase!');
+                            this.notifications.success('Welcome to FleetYes!');
                         });
                     }
 

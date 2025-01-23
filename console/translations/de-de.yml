@@ -716,6 +716,7 @@ fleet-ops:
         settings: Einstellungen
         order-config: Bestellkonfiguration
         parking: Parkplatzberichte
+        toll-reports: Mautberichte
     live-map-drawer:
       driver-listing:
         location: Standort
@@ -985,7 +986,7 @@ fleet-ops:
         country: Land der Service Area
         country-text: Legen Sie optional das Land fest, in dem sich diese Service Area befindet oder basiert.
       set-password:
-        message: Willkommen bei Fleetbase! Bevor Sie beginnen, legen Sie unten ein neues Passwort fest, um fortzufahren.
+        message: Willkommen bei FleetYes! Bevor Sie beginnen, legen Sie unten ein neues Passwort fest, um fortzufahren.
         new-password: Neues Passwort
         confirm-password: Passwort bestätigen
         help-text: Geben Sie ein Passwort mit mindestens 8 Zeichen ein, um fortzufahren.
@@ -1286,6 +1287,19 @@ fleet-ops:
       select-vehicle: Fahrzeug auswählen
       select-parking-report: Parkplatzberichtstatus auswählen
       cost: Kosten
+    toll-report-form-panel:
+      success-message: Mautbericht erfolgreich gespeichert.
+      parking-report: Neuer Mautbericht
+      save-parking-report: Mautbericht speichern
+      create-parking-report: Mautbericht erstellen
+      view-details: Details des Mautberichts anzeigen
+      cancel-edit-parking-report: Bearbeitung des Mautberichts abbrechen
+      cancel-new-parking-report: Neuen Mautbericht abbrechen
+      select-reporter: Melder auswählen
+      select-driver: Fahrer auswählen
+      select-vehicle: Fahrzeug auswählen
+      select-parking-report: Status des Mautberichts auswählen
+      cost: Kosten
     fuel-report-panel:
       title: Details des Kraftstoffberichts
       edit-button: Kraftstoffbericht bearbeiten
@@ -1293,6 +1307,11 @@ fleet-ops:
       cancel-new-fuel-report: Neuen Kraftstoffbericht abbrechen
       details:
         fuel: Kraftstoff/ Volumen
+    toll-report-panel:
+      title: Mautberichtdetails
+      edit-button: Mautbericht bearbeiten
+      cancel-edit-parking-report: Bearbeitung des Mautberichts abbrechen
+      cancel-new-parking-report: Neuen Mautbericht abbrechen
     parking-report-panel:
       title: Parkplatzbericht Details
       edit-button: Parkplatzbericht bearbeiten
@@ -1668,6 +1687,16 @@ fleet-ops:
           body: Ungespeicherte Änderungen an diesem Parkplatzbericht gehen verloren. Klicken Sie auf Weiter, um fortzufahren.
         title: Parkplatzberichte
         delete-parking-report: Parkplatzberichte löschen
+    toll-reports:
+      index:
+        view: Details ansehen
+        edit-toll-report: Mautbericht bearbeiten
+        delete: Mautbericht löschen
+        delete-button: Mautberichte löschen
+        edit:
+          body: Nicht gespeicherte Änderungen an diesem Mautbericht gehen verloren. Klicken Sie auf Weiter, um fortzufahren.
+        title: Mautberichte
+        delete-parking-report: Mautberichte löschen
     issues:
       index:
         view: Details anzeigen

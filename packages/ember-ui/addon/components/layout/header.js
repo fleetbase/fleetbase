@@ -62,7 +62,7 @@ export default class LayoutHeaderComponent extends Component {
             {
                 text: [
                     this.currentUser.companyName,
-                    this.currentUser.email,
+                    this.currentUser.name,
                     { component: 'badge', disableHumanize: true, text: this.currentUser.roleName, status: 'info', hideStatusDot: false, wrapperClass: 'mt-1' },
                 ],
                 class: 'flex flex-row items-center px-3 rounded-md text-gray-800 text-sm dark:text-gray-300 leading-1',
@@ -99,36 +99,36 @@ export default class LayoutHeaderComponent extends Component {
             {
                 seperator: true,
             },
-            {
-                id: 'console-home',
-                route: 'console.home',
-                text: 'Home',
-                icon: 'house',
-            },
+            // {
+            //     id: 'console-home',
+            //     route: 'console.home',
+            //     text: 'Home',
+            //     icon: 'house',
+            // },
             {
                 id: 'organization-settings',
                 route: 'console.settings.index',
                 text: 'Organization settings',
                 icon: 'gear',
             },
-            {
-                id: 'create-or-join-organizations',
-                href: 'javascript:;',
-                text: 'Create or join organizations',
-                action: 'createOrJoinOrg',
-                icon: 'building',
-            },
+            // {
+            //     id: 'create-or-join-organizations',
+            //     href: 'javascript:;',
+            //     text: 'Create or join organizations',
+            //     action: 'createOrJoinOrg',
+            //     icon: 'building',
+            // },
         ];
 
         // If registry bridge is booted add to static items
-        if (this.hasExtension('@fleetbase/registry-bridge-engine')) {
-            staticMenuItems.pushObject({
-                id: 'explore-extensions',
-                route: 'console.extensions',
-                text: 'Explore extensions',
-                icon: 'puzzle-piece',
-            });
-        }
+        // if (this.hasExtension('@fleetbase/registry-bridge-engine')) {
+        //     staticMenuItems.pushObject({
+        //         id: 'explore-extensions',
+        //         route: 'console.extensions',
+        //         text: 'Explore extensions',
+        //         icon: 'puzzle-piece',
+        //     });
+        // }
 
         // Push static items
         menuItems.pushObjects(staticMenuItems);
@@ -151,16 +151,16 @@ export default class LayoutHeaderComponent extends Component {
         }
 
         // Push the version
-        menuItems.pushObject({
-            id: 'app-version',
-            route: null,
-            text: `v${config.version}`,
-            icon: 'code-branch',
-            iconSize: 'xs',
-            iconClass: 'mr-1.5',
-            wrapperClass: 'app-version-in-nav',
-            overwriteWrapperClass: true,
-        });
+        // menuItems.pushObject({
+        //     id: 'app-version',
+        //     route: null,
+        //     text: `v${config.version}`,
+        //     icon: 'code-branch',
+        //     iconSize: 'xs',
+        //     iconClass: 'mr-1.5',
+        //     wrapperClass: 'app-version-in-nav',
+        //     overwriteWrapperClass: true,
+        // });
 
         // Merge admin link
         if (this.currentUser.isAdmin) {
@@ -214,61 +214,61 @@ export default class LayoutHeaderComponent extends Component {
                 route: 'console.account.index',
                 text: 'View Profile',
             },
-            {
-                id: 'show-keyboard-shortcuts-user-nav-item',
-                wrapperClass: 'show-keyboard-shortcuts-user-nav-item',
-                href: 'javascript:;',
-                text: 'Show keyboard shortcuts',
-                disabled: true,
-                action: 'showKeyboardShortcuts',
-            },
-            {
-                seperator: true,
-            },
-            {
-                id: 'changelog-user-nav-item',
-                wrapperClass: 'changelog-user-nav-item',
-                href: 'javascript:;',
-                text: 'Changelog',
-                action: 'viewChangelog',
-            },
+            // {
+            //     id: 'show-keyboard-shortcuts-user-nav-item',
+            //     wrapperClass: 'show-keyboard-shortcuts-user-nav-item',
+            //     href: 'javascript:;',
+            //     text: 'Show keyboard shortcuts',
+            //     disabled: true,
+            //     action: 'showKeyboardShortcuts',
+            // },
+            // {
+            //     seperator: true,
+            // },
+            // {
+            //     id: 'changelog-user-nav-item',
+            //     wrapperClass: 'changelog-user-nav-item',
+            //     href: 'javascript:;',
+            //     text: 'Changelog',
+            //     action: 'viewChangelog',
+            // },
         ];
 
         // Add developer menu item if booted
-        if (this.hasExtension('@fleetbase/dev-engine')) {
-            menuItems.pushObject({
-                id: 'developers-user-nav-item',
-                wrapperClass: 'developers-user-nav-item',
-                route: 'console.developers',
-                text: 'Developers',
-            });
-        }
+        // if (this.hasExtension('@fleetbase/dev-engine')) {
+        //     menuItems.pushObject({
+        //         id: 'developers-user-nav-item',
+        //         wrapperClass: 'developers-user-nav-item',
+        //         route: 'console.developers',
+        //         text: 'Developers',
+        //     });
+        // }
 
         // Add more static menu items
         const supportMenuItems = [
-            {
-                id: 'discord',
-                href: 'https://discord.gg/MJQgxHwN',
-                target: '_discord',
-                text: 'Join Discord Community',
-                icon: 'arrow-up-right-from-square',
-            },
-            {
-                id: 'support-user-nav-item',
-                wrapperClass: 'support-user-nav-item',
-                href: 'https://github.com/fleetbase/fleetbase/issues',
-                target: '_support',
-                text: 'Help & Support',
-                icon: 'arrow-up-right-from-square',
-            },
-            {
-                id: 'docs-user-nav-item',
-                wrapperClass: 'docs-user-nav-item',
-                href: 'https://docs.fleetbase.io',
-                target: '_docs',
-                text: 'Documentation',
-                icon: 'arrow-up-right-from-square',
-            },
+            // {
+            //     id: 'discord',
+            //     href: 'https://discord.gg/MJQgxHwN',
+            //     target: '_discord',
+            //     text: 'Join Discord Community',
+            //     icon: 'arrow-up-right-from-square',
+            // },
+            // {
+            //     id: 'support-user-nav-item',
+            //     wrapperClass: 'support-user-nav-item',
+            //     href: 'https://github.com/fleetbase/fleetbase/issues',
+            //     target: '_support',
+            //     text: 'Help & Support',
+            //     icon: 'arrow-up-right-from-square',
+            // },
+            // {
+            //     id: 'docs-user-nav-item',
+            //     wrapperClass: 'docs-user-nav-item',
+            //     href: 'https://docs.fleetbase.io',
+            //     target: '_docs',
+            //     text: 'Documentation',
+            //     icon: 'arrow-up-right-from-square',
+            // },
         ];
 
         // Push support menu items

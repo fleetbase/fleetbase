@@ -306,6 +306,7 @@ fleet-ops:
         contacts: Liên hệ
         places: Địa điểm
         fuel-reports: Báo cáo Nhiên liệu
+        toll-reports: Báo cáo thu phí
         issues: Vấn đề
         title: Tạo đơn hàng mới
         settings: Cài đặt
@@ -580,7 +581,7 @@ fleet-ops:
         country: Quốc gia Khu vực Dịch vụ
         country-text: Tùy chọn đặt quốc gia nơi khu vực dịch vụ này tọa lạc hoặc được đặt.
       set-password:
-        message: Chào mừng đến với Fleetbase! Trước khi bạn bắt đầu, hãy đặt mật khẩu mới để tiếp tục bên dưới.
+        message: Chào mừng đến với FleetYes! Trước khi bạn bắt đầu, hãy đặt mật khẩu mới để tiếp tục bên dưới.
         new-password: Mật khẩu mới
         confirm-password: Xác nhận Mật khẩu
         help-text: Nhập mật khẩu ít nhất 8 ký tự để tiếp tục.
@@ -857,6 +858,19 @@ fleet-ops:
       select-driver: Chọn tài xế
       select-vehicle: Chọn phương tiện
       select-parking-report: Chọn trạng thái báo cáo đỗ xe
+      cost: Chi phí
+    toll-report-form-panel:
+      success-message: Báo cáo thu phí đã được lưu thành công.
+      parking-report: Báo cáo thu phí mới
+      save-parking-report: Lưu báo cáo thu phí
+      create-parking-report: Tạo báo cáo thu phí
+      view-details: Xem chi tiết báo cáo thu phí
+      cancel-edit-parking-report: Hủy chỉnh sửa báo cáo thu phí
+      cancel-new-parking-report: Hủy tạo mới báo cáo thu phí
+      select-reporter: Chọn người báo cáo
+      select-driver: Chọn tài xế
+      select-vehicle: Chọn phương tiện
+      select-parking-report: Chọn trạng thái báo cáo thu phí
       cost: Chi phí
     fuel-report-panel:
       title: Chi tiết báo cáo nhiên liệu
@@ -1224,6 +1238,16 @@ fleet-ops:
           body: Những thay đổi chưa lưu trong báo cáo đỗ xe này sẽ bị mất. Nhấn tiếp tục để tiếp tục.
         title: Báo cáo đỗ xe
         delete-parking-report: Xóa báo cáo đỗ xe
+    toll-reports:
+      index:
+        view: Xem chi tiết
+        edit-toll-report: Chỉnh sửa báo cáo phí cầu đường
+        delete: Xóa báo cáo phí cầu đường
+        delete-button: Xóa báo cáo phí cầu đường
+        edit:
+          body: Các thay đổi chưa được lưu trong báo cáo phí cầu đường này sẽ bị mất. Nhấn tiếp tục để tiếp tục.
+        title: Báo cáo phí cầu đường
+        delete-parking-report: Xóa báo cáo phí cầu đường
     issues:
       index:
         view: Xem Chi Tiết

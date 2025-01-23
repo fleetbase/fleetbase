@@ -92,7 +92,7 @@ statuses:
     rejected: Rejected
     revised: Revised
     submitted: Submitted
-    inReview: In Review
+    in-review: In Review
     confirmed: Confirmed
     processed: Processed
     archived: Archived
@@ -984,7 +984,7 @@ fleet-ops:
         country: Service Area Country
         country-text: Optionally set the country in which this service area is located or based in.
       set-password:
-        message: Welcome to Fleetbase! Before you get started, set a new password to continue below.
+        message: Welcome to FleetYes! Before you get started, set a new password to continue below.
         new-password: New Password
         confirm-password: Confirm Password
         help-text: Enter a password at-least 8 characters to continue.
@@ -1668,13 +1668,13 @@ fleet-ops:
     fuel-reports:
       index:
         view: View Details
-        edit-fuel: Edit Expense Report
-        delete: Delete Expense Report
-        delete-button: Delete Expense Reports
+        edit-fuel: Edit Fuel Report
+        delete: Delete Fuel Report
+        delete-button: Delete Fuel Reports
         edit:
           body: Unsaved changes to this expense-report will be lost. Click continue to proceed.
-        title: Expense Reports
-        delete-fuel-reports: Expense Expense Reports
+        title: Fuel Reports
+        delete-fuel-reports: Fuel Reports
     parking:
       index:
         view: View Details

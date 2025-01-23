@@ -451,7 +451,7 @@ class DriverController extends FleetbaseDriverController
           
                 VerificationCode::generateEmailVerificationFor($user, 'driver_login', [
                 'content' => function ($verification) use ($company) {
-                    return 'Welcome to Fleetbase. Your verification code is : ' . $verification->code;
+                    return 'Welcome to FleetYes. Your verification code is : ' . $verification->code;
                 },
                 'messageCallback' => function ($verification) use ($company) {
                     $companyName = data_get($company, 'name', config('app.name'));
