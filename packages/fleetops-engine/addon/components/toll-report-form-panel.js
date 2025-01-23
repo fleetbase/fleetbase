@@ -291,7 +291,7 @@ export default class TollReportFormPanelComponent extends Component {
            
     
             this.notifications.success(
-                this.intl.t('fleet-ops.component.parking-form-panel.success-message')
+                this.intl.t('fleet-ops.component.toll-report-form-panel.success-message')
             );
     
             // Optional: Run a callback after save
