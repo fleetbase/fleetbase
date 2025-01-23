@@ -129,11 +129,11 @@
                 </div>
             </InputGroup>
             {{#if (eq this.fuelReport.payment_method "Card")}}
-            <InputGroup @name={{t "common.card-type" }}>
+            {{!-- <InputGroup @name={{t "common.card-type" }}>
                 <div class="fleetbase-model-select fleetbase-power-select ember-model-select">
                     <Input class="form-input w-full" onblur="{{fn (mut this.fuelReport.card_type)}}"  />
                 </div>
-            </InputGroup>
+            </InputGroup> --}}
             {{/if}}
 
             {{!-- <InputGroup @name={{t "fleet-ops.common.coordinates" }}>
