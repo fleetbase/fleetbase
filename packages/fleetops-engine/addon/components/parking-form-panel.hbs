@@ -10,7 +10,7 @@
                 (t "fleet-ops.component.parking-form-panel.create-parking-report" )}} @onClick={{perform this.save}}
                 @isLoading={{this.save.isRunning}} @wrapperClass="mr-2" @permission={{this.savePermission}} />
             {{#if this.fuelReport.id}}
-            <Button @type="default" @icon="gas-pump"
+            <Button @type="default" @icon="parking"
                 @helpText={{t "fleet-ops.component.parking-form-panel.view-details" }}
                 @onClick={{this.onViewDetails}} @wrapperClass="mr-2" @permission="fleet-ops view fuel-report" />
             {{/if}}

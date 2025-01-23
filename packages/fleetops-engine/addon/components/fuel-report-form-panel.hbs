@@ -97,23 +97,19 @@
                     </PowerSelect>
                 </div>
             </InputGroup>
-            {{#if this.isFuelReport}}
             <InputGroup @name={{t "fleet-ops.component.fuel-report-form-panel.odometer" }} @type="number"
                 @value={{this.fuelReport.odometer}} />
-            {{/if}}
             <InputGroup @name={{t "fleet-ops.component.fuel-report-form-panel.cost" }}>
                 <MoneyInput class="w-full" @value={{this.fuelReport.amount}} @currency={{this.fuelReport.currency}}
                     @canSelectCurrency={{true}} @onCurrencyChange={{fn (mut this.fuelReport.currency)}}
                     @disabled={{unauthorized}} />
             </InputGroup>
-            {{#if this.isFuelReport}}
             <InputGroup @name={{t "fleet-ops.component.fuel-report-form-panel.volume" }}
                 @helpText={{t "fleet-ops.component.fuel-report-form-panel.select-volume-text" }} @wrapperClass="w-full">
                 <UnitInput class="w-full" @measurement="volume" @value={{this.fuelReport.volume}}
                     @unit={{this.fuelReport.metric_unit}} @canSelectUnit={{true}} @onUnitChange={{fn (mut
                     this.fuelReport.metric_unit)}} @disabled={{unauthorized}} onblur="{{fn (mut this.fuelReport.report_type)}}"/>
             </InputGroup>
-            {{/if}}
             <!-- Payment Method -->
             <InputGroup @name={{t "common.payment-method" }}>
                 <div class="fleetbase-model-select fleetbase-power-select ember-model-select">
