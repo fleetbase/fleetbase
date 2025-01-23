@@ -440,7 +440,7 @@ class DriverController extends FleetbaseDriverController
         // check if user exists
         $user = User::where('phone', $phone)->whereHas('driver')->whereNull('deleted_at')->withoutGlobalScopes()->first();
         if (!$user) {
-            return response()->apiError('No driver with this phone # found.');
+            return response()->apiError(__('messages.no_driver_found'));
         }
 
         // Get the user's company for this driver profile

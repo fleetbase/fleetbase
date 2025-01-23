@@ -529,20 +529,20 @@ fleet-ops:
       order-new-activity:
         select-message: Chọn trạng thái hoạt động để cập nhật hoạt động theo dõi đơn hàng, hoặc nhập hoạt động tùy chỉnh.
         order-currently-message: Đơn hàng này hiện tại đang {options}, hoạt động bổ sung sẽ ghi đè trạng thái này.
-        not-recommend-message: Fleetbase không khuyến khích điều này trừ khi bạn hoàn toàn biết bạn đang làm gì.
+        not-recommend-message: FleetYes không khuyến khích điều này trừ khi bạn hoàn toàn biết bạn đang làm gì.
         activity-options: Tùy chọn hoạt động
         activity: hoạt động
         dispatch: Điều này sẽ kích hoạt đơn hàng để gửi đi.
         status: Trạng thái hoạt động tùy chỉnh
         details: Chi tiết hoạt động tùy chỉnh
         code: Mã hoạt động tùy chỉnh
-        fleetbase-message: Fleetbase không khuyến khích điều này trừ khi bạn hoàn toàn biết bạn đang làm gì.
+        fleetbase-message: FleetYes không khuyến khích điều này trừ khi bạn hoàn toàn biết bạn đang làm gì.
       order-route-form:
         toggle: Bật/Tắt Nhiều Điểm giao
         optimize: Tối ưu hóa Tuyến đường
-        optimize-text: Fleetbase sẽ tự động tối ưu hóa tuyến đường.
+        optimize-text: FleetYes sẽ tự động tối ưu hóa tuyến đường.
         add: Thêm Điểm dừng
-        add-text: Sử dụng nút `Thêm Điểm dừng` để thêm các điểm dừng khác cho đơn hàng này. Bộ xử lý định tuyến của Fleetbase sẽ tự động tối ưu hóa tuyến đường khi mỗi điểm dừng được thêm vào hoặc gỡ bỏ.
+        add-text: Sử dụng nút `Thêm Điểm dừng` để thêm các điểm dừng khác cho đơn hàng này. Bộ xử lý định tuyến của FleetYes sẽ tự động tối ưu hóa tuyến đường khi mỗi điểm dừng được thêm vào hoặc gỡ bỏ.
         select-waypoint: Chọn Điểm dừng
         pickup: Nhận hàng
         edit-address: Chỉnh sửa Địa chỉ
@@ -672,7 +672,7 @@ fleet-ops:
         custom-namespace: Tên miền Tùy chỉnh
         namespace-text: Tùy chọn cung cấp tên miền hoặc phiên bản API tùy chỉnh để sử dụng cho tích hợp này.
         webhook: URL Webhook
-        webhook-text: Các nhà cung cấp tích hợp thường yêu cầu điều này để Fleetbase có thể nhận cập nhật hoạt động về đơn hàng. Đừng thay đổi trừ khi bạn biết mình đang làm gì! Thay đổi điều này có thể làm hỏng việc cập nhật đơn hàng của bạn!
+        webhook-text: Các nhà cung cấp tích hợp thường yêu cầu điều này để FleetYes có thể nhận cập nhật hoạt động về đơn hàng. Đừng thay đổi trừ khi bạn biết mình đang làm gì! Thay đổi điều này có thể làm hỏng việc cập nhật đơn hàng của bạn!
         cancel-credentials: Hủy cài đặt lại thông tin đăng nhập
         reset-message: Thông tin đăng nhập nhạy cảm chỉ có thể được đặt lại, để cập nhật thông tin đăng nhập bạn phải nhập lại thông tin đăng nhập.
         optionally: Tùy chọn cung cấp của bạn
@@ -757,7 +757,7 @@ fleet-ops:
         title: Giao dịch Gần đây
         loading: Đang tải các giao dịch gần đây...
         no-transactions: Không có giao dịch trong tuần này
-        message: Khi các đơn hàng được thực hiện với các mức phí dịch vụ, Fleetbase theo dõi giao dịch tự động.
+        message: Khi các đơn hàng được thực hiện với các mức phí dịch vụ, FleetYes theo dõi giao dịch tự động.
     contact-form-panel:
       success-message: liên hệ {contactName} đã được lưu thành công.
       view-contact-button: Xem chi tiết liên hệ
@@ -1132,7 +1132,7 @@ fleet-ops:
         namespace: Tên miền Tùy chỉnh
         namespace-text: Tùy chọn cung cấp tên miền tùy chỉnh hoặc phiên bản API sẽ được sử dụng cho tích hợp.
         webhook: URL Webhook
-        webhook-text: Các nhà cung cấp tích hợp thường yêu cầu điều này để Fleetbase có thể nhận các bản cập nhật hoạt động trên đơn hàng. Không thay đổi trừ khi bạn biết bạn đang làm gì! Thay đổi điều này có thể làm hỏng các bản cập nhật đơn hàng của bạn!
+        webhook-text: Các nhà cung cấp tích hợp thường yêu cầu điều này để FleetYes có thể nhận các bản cập nhật hoạt động trên đơn hàng. Không thay đổi trừ khi bạn biết bạn đang làm gì! Thay đổi điều này có thể làm hỏng các bản cập nhật đơn hàng của bạn!
         select-integrated: Chọn nhà cung cấp tích hợp.
         vendor-details: Chi tiết Nhà cung cấp
         select-vendor-status: Chọn trạng thái nhà cung cấp
@@ -1334,7 +1334,7 @@ fleet-ops:
           edit-order: Chỉnh sửa metadata đơn hàng
           add-field: Thêm trường tùy chỉnh
           order-type: Loại Đơn Hàng
-          order-type-help-text: Chọn loại đơn hàng sẽ cho Fleetbase biết cấu hình đơn hàng nào sẽ được sử dụng.
+          order-type-help-text: Chọn loại đơn hàng sẽ cho FleetYes biết cấu hình đơn hàng nào sẽ được sử dụng.
           order-type-placeholder: Chọn Loại Đơn Hàng
           internal-id: ID Nội Bộ
           internal-id-help-text: Sử dụng trường này để tùy chọn thiết lập một mã nhận diện hoặc mã nội bộ cho đơn hàng.
@@ -1372,9 +1372,9 @@ fleet-ops:
           route: Tuyến đường
           route-label: Nhiều Điểm Giao
           optimize-route: Tối ưu hóa Tuyến Đường
-          optimize-route-help-text: Fleetbase sẽ tự động tối ưu hóa tuyến đường.
+          optimize-route-help-text: FleetYes sẽ tự động tối ưu hóa tuyến đường.
           add-waypoint: Thêm Điểm Đến
-          add-waypoint-help-text: Sử dụng nút `Thêm Điểm Đến` để thêm nhiều điểm dừng cho đơn hàng này. Công cụ định tuyến Fleetbase sẽ tự động tối ưu hóa tuyến đường khi từng điểm dừng được thêm vào hoặc loại bỏ.
+          add-waypoint-help-text: Sử dụng nút `Thêm Điểm Đến` để thêm nhiều điểm dừng cho đơn hàng này. Công cụ định tuyến FleetYes sẽ tự động tối ưu hóa tuyến đường khi từng điểm dừng được thêm vào hoặc loại bỏ.
           select-waypoint-placeholder: Chọn Điểm Đến
           infoblock-text: không thể hỗ trợ địa điểm này.
           invalid-coordinates: Tọa độ không hợp lệ!
@@ -1400,7 +1400,7 @@ fleet-ops:
           select-service-rate: Chọn Tỷ Lệ Dịch Vụ
           refresh-button: Làm mới
           loading-message: Đang tải bảng giá dịch vụ...
-          info-text: Chọn bảng giá dịch vụ thời gian thực để áp dụng cho đơn hàng này. Khi một bảng giá được áp dụng cho đơn hàng, nó sẽ trở thành tỷ lệ đã mua. Các giao dịch sẽ được theo dõi trong sổ cái Fleetbase.
+          info-text: Chọn bảng giá dịch vụ thời gian thực để áp dụng cho đơn hàng này. Khi một bảng giá được áp dụng cho đơn hàng, nó sẽ trở thành tỷ lệ đã mua. Các giao dịch sẽ được theo dõi trong sổ cái FleetYes.
           breakdown: Phân tích
           no-service-info-text: Không có bảng giá dịch vụ.
           input-order-info-text: Nhập tuyến đường đơn hàng để xem bảng giá dịch vụ.
@@ -1490,7 +1490,7 @@ fleet-ops:
           order-notes-updated: Ghi chú đơn hàng đã được cập nhật.
         config:
           title: Cấu Hình Đơn Hàng
-          message: Cấu hình đơn hàng cho phép bạn xác định các cấu hình động sẽ cho Fleetbase biết cách thực hiện các loại đơn hàng khác nhau.
+          message: Cấu hình đơn hàng cho phép bạn xác định các cấu hình động sẽ cho FleetYes biết cách thực hiện các loại đơn hàng khác nhau.
           configuration: Cấu hình
           types:
             no-order-installed: Không có cấu hình đơn hàng nào được cài đặt!
