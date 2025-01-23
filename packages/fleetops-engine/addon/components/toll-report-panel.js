@@ -3,7 +3,7 @@ import { tracked } from '@glimmer/tracking';
 import { inject as service } from '@ember/service';
 import { action } from '@ember/object';
 import { isArray } from '@ember/array';
-import FuelReportPanelDetailsComponent from './fuel-report-panel/details';
+import TollReportPanelDetailsComponent from './toll-report-panel/details';
 import contextComponentCallback from '@fleetbase/ember-core/utils/context-component-callback';
 import applyContextComponentArguments from '@fleetbase/ember-core/utils/apply-context-component-arguments';
 import findActiveTab from '../utils/find-active-tab';
@@ -76,7 +76,7 @@ export default class TollReportPanelComponent extends Component {
     get tabs() {
         const registeredTabs = this.universe.getMenuItemsFromRegistry('fleet-ops:component:fuel-report-panel');
         // this.universe._createMenuItem('Tracking', null, { icon: 'satellite-dish', component: VehiclePanelTrackingComponent }),
-        const defaultTabs = [this.universe._createMenuItem('Details', null, { icon: 'circle-info', component: FuelReportPanelDetailsComponent })];
+        const defaultTabs = [this.universe._createMenuItem('Details', null, { icon: 'circle-info', component: TollReportPanelDetailsComponent })];
 
         if (isArray(registeredTabs)) {
             return [...defaultTabs, ...registeredTabs];

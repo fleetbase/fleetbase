@@ -320,7 +320,7 @@ export default class TollReportFormPanelComponent extends Component {
      * @return {boolean}
      */
     get isFuelReport() { 
-        return this.fuelReport.report_type === 'Fuel';
+        return this.fuelReport.report_type === 'Toll';
     }
     /**
      * View the details of the fuel-report.
