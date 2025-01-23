@@ -38,7 +38,7 @@
             </DropdownButton>
         </div>
 
-        <div class="ml-2 relative h-10">
+        {{!-- <div class="ml-2 relative h-10">
             <DropdownButton class="h-10" @icon="ellipsis-h" @size="sm" @iconPrefix="fas" @triggerClass="hidden md:flex" as |dd|>
                 <div class="next-dd-menu mt-1 mx-0" aria-labelledby="user-menu">
                     <div class="p-1">
@@ -74,7 +74,7 @@
                     </div>
                 </div>
             </DropdownButton>
-        </div>
+        </div> --}}
         {{#if this.dashboard.isEditingDashboard}}
             <div class="ml-2 h-10">
                 <Button @type="magic" @icon="save" @helpText={{t "component.dashboard.save-dashboard"}} @onClick={{fn this.onChangeEdit false}} class="h-10" />

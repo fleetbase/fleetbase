@@ -9,7 +9,7 @@ export default class ConfigureNotificationChannelsComponent extends Component {
     @service currentUser;
     @tracked isLoading = false;
     @tracked testResponse;
-    @tracked testTitle = 'Hello World from Fleetbase 🚀';
+    @tracked testTitle = 'Hello World from FleetYes 🚀';
     @tracked testMessage = 'This is a test push notification!';
     @tracked apnToken;
     @tracked fcmToken;

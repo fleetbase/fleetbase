@@ -568,7 +568,7 @@ fleet-ops:
       measurements: Maße
     order-config-manager:
       title: Bestellkonfiguration
-      message: Bestellkonfigurationen ermöglichen es Ihnen, dynamische Konfigurationen zu definieren, die Fleetbase mitteilen, wie verschiedene Arten von Bestellungen ausgeführt werden sollen.
+      message: Bestellkonfigurationen ermöglichen es Ihnen, dynamische Konfigurationen zu definieren, die FleetYes mitteilen, wie verschiedene Arten von Bestellungen ausgeführt werden sollen.
       configuration: Konfiguration
       new-order-config: Neue Bestellkonfiguration
       select-order-config: Bestellkonfiguration auswählen
@@ -716,6 +716,7 @@ fleet-ops:
         settings: Einstellungen
         order-config: Bestellkonfiguration
         parking: Parkplatzberichte
+        toll-reports: Mautberichte
     live-map-drawer:
       driver-listing:
         location: Standort
@@ -933,20 +934,20 @@ fleet-ops:
       order-new-activity:
         select-message: Wählen Sie einen Aktivitätsstatus aus, um die Bestellverfolgung zu aktualisieren, oder geben Sie eine benutzerdefinierte Aktivität ein.
         order-currently-message: Diese Bestellung befindet sich derzeit in {options}, zusätzliche Aktivitäten überschreiben diesen Status.
-        not-recommend-message: Fleetbase empfiehlt dies nicht, es sei denn, Sie wissen genau, was Sie tun.
+        not-recommend-message: FleetYes empfiehlt dies nicht, es sei denn, Sie wissen genau, was Sie tun.
         activity-options: Aktivitätsoptionen
         activity: Aktivität
         dispatch: Dies wird die Bestellung zur Auslieferung anstoßen.
         status: Benutzerdefinierter Aktivitätsstatus
         details: Benutzerdefinierte Aktivitätsdetails
         code: Benutzerdefinierter Aktivitätscode
-        fleetbase-message: Fleetbase empfiehlt dies nicht, es sei denn, Sie wissen genau, was Sie tun.
+        fleetbase-message: FleetYes empfiehlt dies nicht, es sei denn, Sie wissen genau, was Sie tun.
       order-route-form:
         toggle: Mehrere Abgabestellen umschalten
         optimize: Route optimieren
-        optimize-text: Fleetbase wird die Route automatisch optimieren.
+        optimize-text: FleetYes wird die Route automatisch optimieren.
         add: Wegpunkt hinzufügen
-        add-text: Verwenden Sie die Schaltfläche "Wegpunkt hinzufügen", um weitere Stopps für diese Bestellung hinzuzufügen. Der Fleetbase-Routing-Engine wird die Route automatisch optimieren, während jeder Stopp hinzugefügt oder entfernt wird.
+        add-text: Verwenden Sie die Schaltfläche "Wegpunkt hinzufügen", um weitere Stopps für diese Bestellung hinzuzufügen. Der FleetYes-Routing-Engine wird die Route automatisch optimieren, während jeder Stopp hinzugefügt oder entfernt wird.
         select-waypoint: Wegpunkt auswählen
         pickup: Abholung
         edit-address: Adresse bearbeiten
@@ -985,7 +986,7 @@ fleet-ops:
         country: Land der Service Area
         country-text: Legen Sie optional das Land fest, in dem sich diese Service Area befindet oder basiert.
       set-password:
-        message: Willkommen bei Fleetbase! Bevor Sie beginnen, legen Sie unten ein neues Passwort fest, um fortzufahren.
+        message: Willkommen bei FleetYes! Bevor Sie beginnen, legen Sie unten ein neues Passwort fest, um fortzufahren.
         new-password: Neues Passwort
         confirm-password: Passwort bestätigen
         help-text: Geben Sie ein Passwort mit mindestens 8 Zeichen ein, um fortzufahren.
@@ -1076,7 +1077,7 @@ fleet-ops:
         custom-namespace: Benutzerdefinierter Namespace
         namespace-text: Geben Sie optional einen benutzerdefinierten Namespace oder eine API-Version an, die für die Integration verwendet werden soll.
         webhook: Webhook-URL
-        webhook-text: Integrierte Anbieter benötigen in der Regel diesen Webhook, damit Fleetbase Aktivitätsupdates für Bestellungen empfangen kann. Ändern Sie dies nicht, es sei denn, Sie wissen genau, was Sie tun! Eine Änderung könnte Ihre Bestell-Updates beeinträchtigen!
+        webhook-text: Integrierte Anbieter benötigen in der Regel diesen Webhook, damit FleetYes Aktivitätsupdates für Bestellungen empfangen kann. Ändern Sie dies nicht, es sei denn, Sie wissen genau, was Sie tun! Eine Änderung könnte Ihre Bestell-Updates beeinträchtigen!
         cancel-credentials: Rücksetzung der Anmeldedaten abbrechen
         reset-message: Empfindliche Anmeldedaten können nur zurückgesetzt werden, um die Anmeldedaten zu aktualisieren, müssen die Anmeldedaten erneut eingegeben werden.
         optionally: Optional können Sie Ihre eigenen 
@@ -1161,7 +1162,7 @@ fleet-ops:
         title: Kürzliche Transaktionen
         loading: Kürzliche Transaktionen werden geladen...
         no-transactions: Keine Transaktionen in dieser Woche
-        message: Wenn Bestellungen mit Serviceraten abgewickelt werden, verfolgt Fleetbase die Transaktionen automatisch.
+        message: Wenn Bestellungen mit Serviceraten abgewickelt werden, verfolgt FleetYes die Transaktionen automatisch.
     contact-form-panel:
       success-message: Kontakt {contactName} wurde erfolgreich gespeichert.
       view-contact-button: Kontaktdetails anzeigen
@@ -1286,6 +1287,19 @@ fleet-ops:
       select-vehicle: Fahrzeug auswählen
       select-parking-report: Parkplatzberichtstatus auswählen
       cost: Kosten
+    toll-report-form-panel:
+      success-message: Mautbericht erfolgreich gespeichert.
+      parking-report: Neuer Mautbericht
+      save-parking-report: Mautbericht speichern
+      create-parking-report: Mautbericht erstellen
+      view-details: Details des Mautberichts anzeigen
+      cancel-edit-parking-report: Bearbeitung des Mautberichts abbrechen
+      cancel-new-parking-report: Neuen Mautbericht abbrechen
+      select-reporter: Melder auswählen
+      select-driver: Fahrer auswählen
+      select-vehicle: Fahrzeug auswählen
+      select-parking-report: Status des Mautberichts auswählen
+      cost: Kosten
     fuel-report-panel:
       title: Details des Kraftstoffberichts
       edit-button: Kraftstoffbericht bearbeiten
@@ -1293,6 +1307,11 @@ fleet-ops:
       cancel-new-fuel-report: Neuen Kraftstoffbericht abbrechen
       details:
         fuel: Kraftstoff/ Volumen
+    toll-report-panel:
+      title: Mautberichtdetails
+      edit-button: Mautbericht bearbeiten
+      cancel-edit-parking-report: Bearbeitung des Mautberichts abbrechen
+      cancel-new-parking-report: Neuen Mautbericht abbrechen
     parking-report-panel:
       title: Parkplatzbericht Details
       edit-button: Parkplatzbericht bearbeiten
@@ -1545,7 +1564,7 @@ fleet-ops:
         namespace: Eigener Namespace
         namespace-text: Optional können Sie einen eigenen Namespace oder API-Version für die Integration angeben.
         webhook: Webhook-URL
-        webhook-text: Integrierte Anbieter benötigen in der Regel diese URL, damit Fleetbase Aktivitäten des Auftrags empfangen kann. Ändern Sie dies nur, wenn Sie wissen, was Sie tun! Eine Änderung kann die Auftragsaktualisierungen beeinträchtigen!
+        webhook-text: Integrierte Anbieter benötigen in der Regel diese URL, damit FleetYes Aktivitäten des Auftrags empfangen kann. Ändern Sie dies nur, wenn Sie wissen, was Sie tun! Eine Änderung kann die Auftragsaktualisierungen beeinträchtigen!
         select-integrated: Wählen Sie einen integrierten Anbieter aus.
         vendor-details: Anbieter-Details
         select-vendor-status: Anbieterstatus auswählen
@@ -1668,6 +1687,16 @@ fleet-ops:
           body: Ungespeicherte Änderungen an diesem Parkplatzbericht gehen verloren. Klicken Sie auf Weiter, um fortzufahren.
         title: Parkplatzberichte
         delete-parking-report: Parkplatzberichte löschen
+    toll-reports:
+      index:
+        view: Details ansehen
+        edit-toll-report: Mautbericht bearbeiten
+        delete: Mautbericht löschen
+        delete-button: Mautberichte löschen
+        edit:
+          body: Nicht gespeicherte Änderungen an diesem Mautbericht gehen verloren. Klicken Sie auf Weiter, um fortzufahren.
+        title: Mautberichte
+        delete-parking-report: Mautberichte löschen
     issues:
       index:
         view: Details anzeigen
@@ -1756,7 +1785,7 @@ fleet-ops:
           edit-order: Bestellmetadaten bearbeiten
           add-field: Benutzerdefiniertes Feld hinzufügen
           order-type: Bestelltyp
-          order-type-help-text: Die Auswahl des Bestelltyps gibt an, welche Bestellkonfigurationen von Fleetbase verwendet werden sollen.
+          order-type-help-text: Die Auswahl des Bestelltyps gibt an, welche Bestellkonfigurationen von FleetYes verwendet werden sollen.
           order-type-placeholder: Bestelltyp auswählen
           internal-id: Interne ID
           internal-id-help-text: Verwenden Sie dieses Feld, um optional eine benutzerdefinierte oder interne Identifikationsnummer für die Bestellung festzulegen.
@@ -1794,9 +1823,9 @@ fleet-ops:
           route: Route
           route-label: Mehrere Ablieferungen
           optimize-route: Route optimieren
-          optimize-route-help-text: Fleetbase wird die Route automatisch optimieren.
+          optimize-route-help-text: FleetYes wird die Route automatisch optimieren.
           add-waypoint: Wegpunkt hinzufügen
-          add-waypoint-help-text: Verwenden Sie die Schaltfläche „Wegpunkt hinzufügen“, um weitere Haltestellen für diese Bestellung hinzuzufügen. Die Fleetbase-Routing-Engine wird die Route automatisch optimieren, wenn Haltestellen hinzugefügt oder entfernt werden.
+          add-waypoint-help-text: Verwenden Sie die Schaltfläche „Wegpunkt hinzufügen“, um weitere Haltestellen für diese Bestellung hinzuzufügen. Die FleetYes-Routing-Engine wird die Route automatisch optimieren, wenn Haltestellen hinzugefügt oder entfernt werden.
           select-waypoint-placeholder: Wegpunkt auswählen
           infoblock-text: kann diesen Standort nicht unterstützen.
           invalid-coordinates: Ungültige Koordinaten!
@@ -1822,7 +1851,7 @@ fleet-ops:
           select-service-rate: Servicegebühr auswählen
           refresh-button: Aktualisieren
           loading-message: Lade Serviceangebote...
-          info-text: Wählen Sie ein Echtzeit-Serviceangebot aus, um es auf diese Bestellung anzuwenden. Sobald ein Angebot auf die Bestellung angewendet wird, wird es zu einem gekauften Tarif. Transaktionen werden im Fleetbase-Hauptbuch erfasst.
+          info-text: Wählen Sie ein Echtzeit-Serviceangebot aus, um es auf diese Bestellung anzuwenden. Sobald ein Angebot auf die Bestellung angewendet wird, wird es zu einem gekauften Tarif. Transaktionen werden im FleetYes-Hauptbuch erfasst.
           breakdown: Aufschlüsselung
           no-service-info-text: Keine Serviceangebote.
           input-order-info-text: Geben Sie die Bestellroute ein, um Serviceangebote anzuzeigen.
@@ -1913,7 +1942,7 @@ fleet-ops:
           order-notes-updated: Bestellnotizen wurden aktualisiert.
         config:
           title: Bestellkonfiguration
-          message: Bestellkonfigurationen ermöglichen es Ihnen, dynamische Konfigurationen zu definieren, die Fleetbase mitteilen, wie verschiedene Bestelltypen ausgeführt werden sollen.
+          message: Bestellkonfigurationen ermöglichen es Ihnen, dynamische Konfigurationen zu definieren, die FleetYes mitteilen, wie verschiedene Bestelltypen ausgeführt werden sollen.
           configuration: Konfiguration
           types:
             no-order-installed: Keine Bestellkonfigurationen installiert!
@@ -2204,7 +2233,7 @@ iam:
       access-account-or-resources-unless-re-activated: Möchten Sie diesen Benutzer wirklich deaktivieren? Dieser Benutzer kann nicht mehr auf sein Konto oder Ressourcen zugreifen, es sei denn, er wird wieder aktiviert.
       this-user-will-regain-access-to-your-organization: Möchten Sie diesen Benutzer wirklich wieder aktivieren? Dieser Benutzer erhält wieder Zugang zu Ihrer Organisation.
       resend-invitation-to-join-organization: Einladung erneut senden, um der Organisation beizutreten
-      confirming-fleetbase-will-re-send-invitation-for-user-to-join-your-organization: Durch die Bestätigung wird Fleetbase die Einladung erneut senden, damit dieser Benutzer Ihrer Organisation beitreten kann.
+      confirming-fleetbase-will-re-send-invitation-for-user-to-join-your-organization: Durch die Bestätigung wird FleetYes die Einladung erneut senden, damit dieser Benutzer Ihrer Organisation beitreten kann.
       invitation-resent: Einladung erneut gesendet.
   application:
       access-management: Zugriffsmanagement
@@ -2232,7 +2261,7 @@ registry-bridge:
       updated: Aktualisiert
       website: Webseite
       self-managed: Selbstverwaltet
-      self-managed-help-text: Eine selbstverwaltete Erweiterung ist für Benutzer gedacht, die Fleetbase auf ihren eigenen Servern hosten, außerhalb der Cloud-/SaaS-Umgebung. Diese Erweiterungen erfordern eine manuelle Installation und Konfiguration. Wenn Sie Fleetbase als selbstgehostete Instanz verwenden, können Sie diese Erweiterungen verwenden, um zusätzliche Funktionen hinzuzufügen. Sie sind jedoch nicht für Cloud-/SaaS-Benutzer verfügbar.
+      self-managed-help-text: Eine selbstverwaltete Erweiterung ist für Benutzer gedacht, die FleetYes auf ihren eigenen Servern hosten, außerhalb der Cloud-/SaaS-Umgebung. Diese Erweiterungen erfordern eine manuelle Installation und Konfiguration. Wenn Sie FleetYes als selbstgehostete Instanz verwenden, können Sie diese Erweiterungen verwenden, um zusätzliche Funktionen hinzuzufügen. Sie sind jedoch nicht für Cloud-/SaaS-Benutzer verfügbar.
       self-hosted-install: Selbstgehostete Installation
       self-hosted-install-help-text: Anweisungen für die selbstgehostete Installation anzeigen.
     extension-pending-publish-viewer:
@@ -2345,4 +2374,4 @@ registry-bridge:
         bundles: Bundles
         upload-new-bundle: Neues Bundle hochladen
         self-managed: Selbstverwaltet
-        self-managed-help-text: Aktivieren Sie diese Option, wenn Ihr Modul nur für selbstgehostete Instanzen gedacht ist. Durch die Auswahl wird das Modul nicht für die Installation in der Cloud-/SaaS-Version von Fleetbase verfügbar sein und muss vom Benutzer manuell auf seinem eigenen Server installiert werden.
+        self-managed-help-text: Aktivieren Sie diese Option, wenn Ihr Modul nur für selbstgehostete Instanzen gedacht ist. Durch die Auswahl wird das Modul nicht für die Installation in der Cloud-/SaaS-Version von FleetYes verfügbar sein und muss vom Benutzer manuell auf seinem eigenen Server installiert werden.
