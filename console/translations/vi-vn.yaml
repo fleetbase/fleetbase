@@ -80,6 +80,10 @@ common:
   select-payment-method: Chọn phương thức thanh toán
   select-report-type: Chọn loại báo cáo
   card-type: Loại thẻ
+  model-delete-confirmation: Bạn có chắc chắn muốn xóa {modelName} này không?
+  model-delete-success: "Mẫu {modelName} đã bị xóa."
+  bulk-delete-success: "{record_count} bản ghi đã bị xóa."
+  single-model-delete-success: Bản ghi đã bị xóa.
 validation:
   required:
     payment_method: Phương thức thanh toán là bắt buộc

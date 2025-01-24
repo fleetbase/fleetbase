@@ -291,7 +291,7 @@ export default class TollReportFormPanelComponent extends Component {
            
     
             this.notifications.success(
-                this.intl.t('fleet-ops.component.parking-form-panel.success-message')
+                this.intl.t('fleet-ops.component.toll-report-form-panel.success-message')
             );
     
             // Optional: Run a callback after save
@@ -320,7 +320,7 @@ export default class TollReportFormPanelComponent extends Component {
      * @return {boolean}
      */
     get isFuelReport() { 
-        return this.fuelReport.report_type === 'Fuel';
+        return this.fuelReport.report_type === 'Toll';
     }
     /**
      * View the details of the fuel-report.

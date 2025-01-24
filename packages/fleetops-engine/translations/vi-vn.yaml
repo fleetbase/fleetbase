@@ -884,6 +884,11 @@ fleet-ops:
       edit-button: Chỉnh sửa báo cáo đỗ xe
       cancel-edit-parking-report: Hủy chỉnh sửa báo cáo đỗ xe
       cancel-new-parking-report: Hủy báo cáo đỗ xe mới
+    toll-report-panel:
+      title: Chi tiết báo cáo trạm thu phí
+      edit-button: Chỉnh sửa báo cáo trạm thu phí
+      cancel-edit-fuel-report: Hủy chỉnh sửa báo cáo trạm thu phí
+      cancel-new-fuel-report: Hủy báo cáo trạm thu phí mới
     global-search:
       search: Tìm kiếm theo từ khóa...
     integrated-order-details:
@@ -1238,6 +1243,9 @@ fleet-ops:
           body: Những thay đổi chưa lưu trong báo cáo đỗ xe này sẽ bị mất. Nhấn tiếp tục để tiếp tục.
         title: Báo cáo đỗ xe
         delete-parking-report: Xóa báo cáo đỗ xe
+        delete-parking-report-confirm: Bạn có chắc chắn muốn xóa báo cáo đỗ xe này không?
+        delete-parking-report-success: Báo cáo đỗ xe đã bị xóa.
+        delete-parking-reports: Xóa báo cáo đỗ xe
     toll-reports:
       index:
         view: Xem chi tiết
@@ -1248,6 +1256,9 @@ fleet-ops:
           body: Các thay đổi chưa được lưu trong báo cáo phí cầu đường này sẽ bị mất. Nhấn tiếp tục để tiếp tục.
         title: Báo cáo phí cầu đường
         delete-parking-report: Xóa báo cáo phí cầu đường
+        delete-toll-report-confirm: Bạn có chắc chắn muốn xóa báo cáo thu phí này không?
+        delete-toll-report-success: Báo cáo thu phí đã bị xóa.
+        delete-toll-reports: Xóa báo cáo thu phí
     issues:
       index:
         view: Xem Chi Tiết

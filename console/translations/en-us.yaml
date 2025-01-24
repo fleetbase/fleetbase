@@ -81,6 +81,10 @@ common:
   select-payment-method: Select Payment Method
   select-report-type: Select Report Type
   card-type: Card Type
+  model-delete-confirmation: Are you sure to delete this {modelName}?
+  model-delete-success: The {modelName} has been deleted.
+  bulk-delete-success: "{record_count} records deleted."
+  single-model-delete-success: The record has been deleted.
 validation:
   required:
     payment_method: Payment method is required
@@ -1313,8 +1317,8 @@ fleet-ops:
     toll-report-panel:
       title: Toll Report Details
       edit-button: Edit Toll report
-      cancel-edit-parking-report: Cancel edit toll report
-      cancel-new-parking-report: Cancel new toll report
+      cancel-edit-fuel-report: Cancel edit toll report
+      cancel-new-fuel-report: Cancel new toll report
     global-search:
       search: Search by keyword...
     integrated-order-details:
@@ -1674,7 +1678,7 @@ fleet-ops:
         edit:
           body: Unsaved changes to this expense-report will be lost. Click continue to proceed.
         title: Fuel Reports
-        delete-fuel-reports: Fuel Reports
+        delete-fuel-reports: Delete Fuel Reports
     parking:
       index:
         view: View Details
@@ -1685,6 +1689,9 @@ fleet-ops:
           body: Unsaved changes to this parking report will be lost. Click continue to proceed.
         title: Parking Reports
         delete-parking-report: Delete Parking Reports
+        delete-parking-report-confirm: Are you sure to delete this Parking Report?
+        delete-parking-report-success: The Parking Report has been deleted.
+        delete-parking-reports: Delete Parking Reports
     toll-reports:
       index:
         view: View Details
@@ -1694,7 +1701,9 @@ fleet-ops:
         edit:
           body: Unsaved changes to this toll report will be lost. Click continue to proceed.
         title: Toll Reports
-        delete-parking-report: Delete Toll Reports
+        delete-toll-report-confirm: Are you sure to delete this Toll Report?
+        delete-toll-report-success: The Toll Report has been deleted.
+        delete-toll-reports: Delete Toll Reports
     issues:
       index:
         view: View Details

@@ -463,7 +463,7 @@ class DriverController extends FleetbaseDriverController
                 app('sentry')->captureException($e);
             }
 
-            return response()->apiError('Unable to send SMS Verification code.');
+            return response()->apiError(__('messages.sms_verification_error'));
         }
 
         return response()->json(['status' => 'OK']);

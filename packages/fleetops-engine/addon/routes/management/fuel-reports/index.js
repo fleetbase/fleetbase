@@ -30,6 +30,10 @@ export default class ManagementFuelReportsIndexRoute extends Route {
     }
 
     model(params) {
-        return this.store.query('fuel-report', { ...params, with: ['driver', 'vehicle', 'reporter'] });
+        return this.store.query('fuel-report', { 
+            ...params, 
+            report_type: 'fuel', 
+            with: ['driver', 'vehicle', 'reporter'] 
+        });
     }
 }

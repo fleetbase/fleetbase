@@ -12,6 +12,7 @@ import humanize from '../utils/humanize';
 import first from '../utils/first';
 
 export default class CrudService extends Service {
+    @service intl;
     /**
      * Inject the `fetch` service
      *
@@ -54,9 +55,29 @@ export default class CrudService extends Service {
      */
     @action delete(model, options = {}) {
         const modelName = getModelName(model, get(options, 'modelName'), { humanize: true, capitalizeWords: true });
-
+        //custom delete message for paking and toll
+        const custom_model_actions = options.action_path ? options.action_path : null;
+        const actionMap = {
+            is_parking: {
+                title: 'fleet-ops.management.parking.index.delete-parking-report-confirm',
+                successMessage: 'fleet-ops.management.parking.index.delete-parking-report-success',
+            },
+            is_toll: {
+                title: 'fleet-ops.management.toll-reports.index.delete-toll-report-confirm',
+                successMessage: 'fleet-ops.management.toll-reports.index.delete-toll-report-success',
+            },
+        };
+        
+        const { title, successMessage } = actionMap[custom_model_actions] || {
+            title: 'common.model-delete-confirmation',
+            successMessage: 'common.model-delete-success',
+        };
+        
+        const translatedTitle = this.intl.t(title, { modelName });
+        const translatedSuccessMessage = this.intl.t(successMessage, { modelName });
+        //end custom translation for parking and toll
         this.modalsManager.confirm({
-            title: `Are you sure to delete this ${modelName}?`,
+            title: translatedTitle ,
             args: ['model'],
             model,
             confirm: (modal) => {
@@ -69,7 +90,13 @@ export default class CrudService extends Service {
                 return model
                     .destroyRecord()
                     .then((model) => {
-                        this.notifications.success(options.successNotification || `${model.name ? modelName + " '" + model.name + "'" : "'" + modelName + "'"} has been deleted.`);
+                        if(translatedSuccessMessage != null) {
+                            this.notifications.success(translatedSuccessMessage);
+                        }
+                        else{
+                            this.notifications.success(options.successNotification || `${model.name ? modelName + " '" + model.name + "'" : "'" + modelName + "'"} has been deleted.`);
+                        }
+                        
                         if (typeof options.onSuccess === 'function') {
                             options.onSuccess(model);
                         }
@@ -105,11 +132,18 @@ export default class CrudService extends Service {
 
         const firstModel = first(selected);
         const modelName = getModelName(firstModel, get(options, 'modelName'), { humanize: true, capitalizeWords: true });
-
+        const record_count = selected.length;
+        let translateddeleteSuccessMessage;
+        if (record_count === 1) {
+            translateddeleteSuccessMessage = this.intl.t('common.single-model-delete-success', { modelName });
+        } else {
+            translateddeleteSuccessMessage = this.intl.t('common.bulk-delete-success', { record_count: record_count, modelName });
+        }
         // make sure all are the same type
         selected = selected.filter((m) => getModelName(m) === getModelName(firstModel));
 
         return this.bulkAction('delete', selected, {
+            bulk_deleted_success: translateddeleteSuccessMessage,
             acceptButtonScheme: 'danger',
             acceptButtonIcon: 'trash',
             actionPath: `${dasherize(pluralize(modelName))}/bulk-delete`,
@@ -137,9 +171,9 @@ export default class CrudService extends Service {
         const actionMethod = (typeof options.actionMethod === 'string' ? options.actionMethod : `POST`).toLowerCase();
         const fetchParams = getWithDefault(options, 'fetchParams', {});
         const fetchOptions = getWithDefault(options, 'fetchOptions', {});
-
+        const deleteSuccessMessage = options.bulk_deleted_success ? options.bulk_deleted_success : null;
         this.modalsManager.show('modals/bulk-action-model', {
-            title: `Bulk ${verb} ${pluralize(modelName)}`,
+            // title: `Bulk ${verb} ${pluralize(modelName)}`,
             acceptButtonText: humanize(verb),
             args: ['selected'],
             modelNamePath: 'name',
@@ -169,8 +203,12 @@ export default class CrudService extends Service {
                     fetchOptions
                 )
                     .then((response) => {
+                        if(actionMethod == 'delete' && deleteSuccessMessage != null){
+                            this.notifications.success(deleteSuccessMessage);
+                        } 
+                        else{
                         this.notifications.success(response.message ?? options.successNotification ?? `${count} ${pluralize(modelName, count)} were updated successfully.`);
-
+                        }
                         if (typeof options.onSuccess === 'function') {
                             options.onSuccess(selected);
                         }
