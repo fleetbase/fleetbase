@@ -23,6 +23,9 @@ module.exports = {
             ringColor: {
                 DEFAULT: 'transparent',
             },
+            fontFamily: {
+                montserrat: ['"Montserrat"', 'serif'],
+              },        
             colors: {
                 sky: {
                     100: '#e6f0fb',
