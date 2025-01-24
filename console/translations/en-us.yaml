@@ -83,6 +83,8 @@ common:
   card-type: Card Type
   model-delete-confirmation: Are you sure to delete this {modelName}?
   model-delete-success: The {modelName} has been deleted.
+  bulk-delete-success: "{record_count} records deleted."
+  single-model-delete-success: The record has been deleted.
 validation:
   required:
     payment_method: Payment method is required
@@ -1676,7 +1678,7 @@ fleet-ops:
         edit:
           body: Unsaved changes to this expense-report will be lost. Click continue to proceed.
         title: Fuel Reports
-        delete-fuel-reports: Fuel Reports
+        delete-fuel-reports: Delete Fuel Reports
     parking:
       index:
         view: View Details

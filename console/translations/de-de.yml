@@ -82,6 +82,8 @@ common:
   card-type: Kartentyp
   model-delete-confirmation: Bist du sicher, dass du dieses {modelName} löschen möchtest?
   model-delete-success: Das {modelName} wurde gelöscht.
+  bulk-delete-success: "{record_count} Datensätze gelöscht."
+  single-model-delete-success: Der Datensatz wurde gelöscht.
 validation:
   required:
     payment_method: Zahlungsmethode ist erforderlich

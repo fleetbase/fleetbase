@@ -82,6 +82,8 @@ common:
   card-type: Type de carte
   model-delete-confirmation: Êtes-vous sûr de vouloir supprimer ce {modelName} ?
   model-delete-success: Le {modelName} a été supprimé.
+  bulk-delete-success: "{record_count} enregistrements supprimés."
+  single-model-delete-success: L'enregistrement a été supprimé.
 validation:
   required:
     payment_method: Le mode de paiement est requis

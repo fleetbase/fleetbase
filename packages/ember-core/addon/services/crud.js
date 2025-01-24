@@ -132,11 +132,18 @@ export default class CrudService extends Service {
 
         const firstModel = first(selected);
         const modelName = getModelName(firstModel, get(options, 'modelName'), { humanize: true, capitalizeWords: true });
-
+        const record_count = selected.length;
+        let translateddeleteSuccessMessage;
+        if (record_count === 1) {
+            translateddeleteSuccessMessage = this.intl.t('common.single-model-delete-success', { modelName });
+        } else {
+            translateddeleteSuccessMessage = this.intl.t('common.bulk-delete-success', { record_count: record_count, modelName });
+        }
         // make sure all are the same type
         selected = selected.filter((m) => getModelName(m) === getModelName(firstModel));
 
         return this.bulkAction('delete', selected, {
+            bulk_deleted_success: translateddeleteSuccessMessage,
             acceptButtonScheme: 'danger',
             acceptButtonIcon: 'trash',
             actionPath: `${dasherize(pluralize(modelName))}/bulk-delete`,
@@ -164,9 +171,9 @@ export default class CrudService extends Service {
         const actionMethod = (typeof options.actionMethod === 'string' ? options.actionMethod : `POST`).toLowerCase();
         const fetchParams = getWithDefault(options, 'fetchParams', {});
         const fetchOptions = getWithDefault(options, 'fetchOptions', {});
-
+        const deleteSuccessMessage = options.bulk_deleted_success ? options.bulk_deleted_success : null;
         this.modalsManager.show('modals/bulk-action-model', {
-            title: `Bulk ${verb} ${pluralize(modelName)}`,
+            // title: `Bulk ${verb} ${pluralize(modelName)}`,
             acceptButtonText: humanize(verb),
             args: ['selected'],
             modelNamePath: 'name',
@@ -196,8 +203,12 @@ export default class CrudService extends Service {
                     fetchOptions
                 )
                     .then((response) => {
+                        if(actionMethod == 'delete' && deleteSuccessMessage != null){
+                            this.notifications.success(deleteSuccessMessage);
+                        } 
+                        else{
                         this.notifications.success(response.message ?? options.successNotification ?? `${count} ${pluralize(modelName, count)} were updated successfully.`);
-
+                        }
                         if (typeof options.onSuccess === 'function') {
                             options.onSuccess(selected);
                         }

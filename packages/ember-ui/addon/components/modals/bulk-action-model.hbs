@@ -13,30 +13,34 @@
             </div>
             <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
                 <h3 class="text-lg leading-6 font-medium text-gray-900 dark:text-gray-100">
-                    {{#if @options.subtitle}}
+                     {{#if @options.subtitle}}
                         {{@options.message}}
                     {{else}}
-                        Are you sure you want to
-                        {{@options.verb}}
-                        these
-                        {{pluralize @options.modelName}}?
+                        {{#if @options.count}}
+                            {{#if (eq @options.count 1)}}
+                                Are you sure you want to {{@options.verb}} this record?
+                            {{else}}
+                                Are you sure you want to {{@options.verb}} these records?
+                            {{/if}}
+                        {{/if}}
                     {{/if}}
                 </h3>
                 <div class="mt-2">
-                    <p class="text-sm leading-5 text-gray-500 dark:text-gray-50">
-                        {{#if @options.message}}
-                            {{@options.message}}
+                  <p class="text-sm leading-5 text-gray-500 dark:text-gray-50">
+                    {{#if @options.message}}
+                        {{@options.message}}
+                    {{else}}
+                        {{#if (eq @options.count 1)}}
+                            You have selected 1 record for {{@options.verb}}.
                         {{else}}
-                            You have selected
-                            {{pluralize @options.count @options.modelName}}
-                            for
-                            {{@options.verb}}.
+                            You have selected {{@options.count}} records for {{@options.verb}}.
                         {{/if}}
-                    </p>
+                    {{/if}}
+                </p>
                 </div>
             </div>
         </div>
-        <ul class="list-scroll-box rounded shadow border border-gray-300 bg-gray-100 dark:bg-gray-800">
+        {{!-- <ul class="list-scroll-box rounded shadow border border-gray-300 bg-gray-100 dark:bg-gray-800">
             {{#each @options.selected as |selected|}}
                 <li>
                     <span class="text-sm dark:text-gray-100">{{n-a (get selected @options.modelNamePath)}}</span>
@@ -46,6 +50,6 @@
                     </a>
                 </li>
             {{/each}}
-        </ul>
+        </ul> --}}
     </div>
 </Modal::Default>
