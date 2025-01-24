@@ -342,6 +342,7 @@ export default class ManagementTollReportsIndexController extends BaseController
      */
     @action deleteFuelReport(fuelReport, options = {}) {
         this.crud.delete(fuelReport, {
+            action_path: 'is_toll',
             onConfirm: () => {
                 this.hostRouter.refresh();
             },

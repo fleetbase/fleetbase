@@ -80,6 +80,8 @@ common:
   select-payment-method: Seleziona il metodo di pagamento
   select-report-type: Seleziona Tipo di rapporto
   card-type: Tipo di carta
+  model-delete-confirmation: Sei sicuro di voler eliminare questo {modelName}?
+  model-delete-success: Il {modelName} è stato eliminato.
 validation:
   required:
     payment_method: Il metodo di pagamento è obbligatorio
@@ -1537,6 +1539,9 @@ fleet-ops:
           body: Le modifiche non salvate a questo rapporto di parcheggio saranno perse. Clicca su continua per procedere.
         title: Rapporti di parcheggio
         delete-parking-report: Elimina rapporti di parcheggio
+        delete-parking-report-confirm: Sei sicuro di voler eliminare questo report di parcheggio?
+        delete-parking-report-success: Il report di parcheggio è stato eliminato.
+        delete-parking-reports: Elimina i rapporti di parcheggio
     toll-reports:
       index:
         view: Visualizza dettagli
@@ -1547,6 +1552,9 @@ fleet-ops:
           body: Le modifiche non salvate a questo rapporto pedaggio andranno perse. Clicca su continua per procedere.
         title: Rapporti pedaggio
         delete-parking-report: Elimina rapporti pedaggio
+        delete-toll-report-confirm: Sei sicuro di voler eliminare questo report di pedaggio?
+        delete-toll-report-success: Il report di pedaggio è stato eliminato.
+        delete-toll-reports: Elimina i rapporti di pedaggio
     issues:
       index:
         view: Visualizza dettagli

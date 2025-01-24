@@ -342,6 +342,7 @@ export default class ManagementParkingIndexController extends BaseController {
      */
     @action deleteFuelReport(fuelReport, options = {}) {
         this.crud.delete(fuelReport, {
+            action_path: 'is_parking',
             onConfirm: () => {
                 this.hostRouter.refresh();
             },
@@ -357,7 +358,6 @@ export default class ManagementParkingIndexController extends BaseController {
      */
     @action bulkDeleteFuelReports() {
         const selected = this.table.selectedRows;
-
         this.crud.bulkDelete(selected, {
             modelNamePath: `name`,
             acceptButtonText: this.intl.t('fleet-ops.management.parking.index.delete-button'),

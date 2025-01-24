@@ -77,6 +77,8 @@ common:
     cambios.
   push-notifications: Notificaciones push
   role: Role
+  model-delete-confirmation: ¿Estás seguro de que quieres eliminar este {modelName}?
+  model-delete-success: El {modelName} ha sido eliminado.
 component:
   file:
     dropdown-label: Acciones de archivos
@@ -1819,6 +1821,9 @@ fleet-ops:
           body: Los cambios no guardados en este informe de estacionamiento se perderán. Haz clic en continuar para proceder.
         title: Informes de estacionamiento
         delete-parking-report: Eliminar informes de estacionamiento
+        delete-parking-report-confirm: ¿Estás seguro de que quieres eliminar este informe de estacionamiento?
+        delete-parking-report-success: El informe de estacionamiento ha sido eliminado.
+        delete-parking-reports: Eliminar informes de estacionamiento
     toll-reports:
       index:
         view: Ver detalles
@@ -1829,6 +1834,9 @@ fleet-ops:
           body: Los cambios no guardados en este informe de peaje se perderán. Haz clic en continuar para proceder.
         title: Informes de peaje
         delete-parking-report: Eliminar informes de peaje
+        delete-toll-report-confirm: ¿Estás seguro de que quieres eliminar este informe de peaje?
+        delete-toll-report-success: El informe de peaje ha sido eliminado.
+        delete-toll-reports: Eliminar informes de peaje
     issues:
       index:
         view: Ver detalles

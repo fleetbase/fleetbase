@@ -81,6 +81,8 @@ common:
   select-payment-method: Select Payment Method
   select-report-type: Select Report Type
   card-type: Card Type
+  model-delete-confirmation: Are you sure to delete this {modelName}?
+  model-delete-success: The {modelName} has been deleted.
 validation:
   required:
     payment_method: Payment method is required
@@ -1685,6 +1687,9 @@ fleet-ops:
           body: Unsaved changes to this parking report will be lost. Click continue to proceed.
         title: Parking Reports
         delete-parking-report: Delete Parking Reports
+        delete-parking-report-confirm: Are you sure to delete this Parking Report?
+        delete-parking-report-success: The Parking Report has been deleted.
+        delete-parking-reports: Delete Parking Reports
     toll-reports:
       index:
         view: View Details
@@ -1694,7 +1699,9 @@ fleet-ops:
         edit:
           body: Unsaved changes to this toll report will be lost. Click continue to proceed.
         title: Toll Reports
-        delete-parking-report: Delete Toll Reports
+        delete-toll-report-confirm: Are you sure to delete this Toll Report?
+        delete-toll-report-success: The Toll Report has been deleted.
+        delete-toll-reports: Delete Toll Reports
     issues:
       index:
         view: View Details

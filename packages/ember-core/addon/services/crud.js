@@ -12,6 +12,7 @@ import humanize from '../utils/humanize';
 import first from '../utils/first';
 
 export default class CrudService extends Service {
+    @service intl;
     /**
      * Inject the `fetch` service
      *
@@ -54,9 +55,29 @@ export default class CrudService extends Service {
      */
     @action delete(model, options = {}) {
         const modelName = getModelName(model, get(options, 'modelName'), { humanize: true, capitalizeWords: true });
-
+        //custom delete message for paking and toll
+        const custom_model_actions = options.action_path ? options.action_path : null;
+        const actionMap = {
+            is_parking: {
+                title: 'fleet-ops.management.parking.index.delete-parking-report-confirm',
+                successMessage: 'fleet-ops.management.parking.index.delete-parking-report-success',
+            },
+            is_toll: {
+                title: 'fleet-ops.management.toll-reports.index.delete-toll-report-confirm',
+                successMessage: 'fleet-ops.management.toll-reports.index.delete-toll-report-success',
+            },
+        };
+        
+        const { title, successMessage } = actionMap[custom_model_actions] || {
+            title: 'common.model-delete-confirmation',
+            successMessage: 'common.model-delete-success',
+        };
+        
+        const translatedTitle = this.intl.t(title, { modelName });
+        const translatedSuccessMessage = this.intl.t(successMessage, { modelName });
+        //end custom translation for parking and toll
         this.modalsManager.confirm({
-            title: `Are you sure to delete this ${modelName}?`,
+            title: translatedTitle ,
             args: ['model'],
             model,
             confirm: (modal) => {
@@ -69,7 +90,13 @@ export default class CrudService extends Service {
                 return model
                     .destroyRecord()
                     .then((model) => {
-                        this.notifications.success(options.successNotification || `${model.name ? modelName + " '" + model.name + "'" : "'" + modelName + "'"} has been deleted.`);
+                        if(translatedSuccessMessage != null) {
+                            this.notifications.success(translatedSuccessMessage);
+                        }
+                        else{
+                            this.notifications.success(options.successNotification || `${model.name ? modelName + " '" + model.name + "'" : "'" + modelName + "'"} has been deleted.`);
+                        }
+                        
                         if (typeof options.onSuccess === 'function') {
                             options.onSuccess(model);
                         }

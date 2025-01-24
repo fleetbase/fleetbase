@@ -80,6 +80,8 @@ common:
   select-payment-method: Sélectionnez le mode de paiement
   select-report-type: Sélectionnez le type de rapport
   card-type: Type de carte
+  model-delete-confirmation: Êtes-vous sûr de vouloir supprimer ce {modelName} ?
+  model-delete-success: Le {modelName} a été supprimé.
 validation:
   required:
     payment_method: Le mode de paiement est requis
@@ -1688,6 +1690,9 @@ fleet-ops:
           body: Les modifications non enregistrées de ce rapport de stationnement seront perdues. Cliquez sur continuer pour procéder.
         title: Rapports de stationnement
         delete-parking-report: Supprimer les rapports de stationnement
+        delete-parking-report-confirm: Êtes-vous sûr de vouloir supprimer ce rapport de stationnement ?
+        delete-parking-report-success: Le rapport de stationnement a été supprimé.
+        delete-parking-reports: Supprimer les rapports de stationnement
     toll-reports:
       index:
         view: Voir les détails
@@ -1698,6 +1703,10 @@ fleet-ops:
           body: Les modifications non enregistrées de ce rapport de péage seront perdues. Cliquez sur continuer pour procéder.
         title: Rapports de péage
         delete-parking-report: Supprimer les rapports de péage
+        delete-parking-reports: Supprimer les rapports de stationnement
+        delete-toll-report-confirm: Êtes-vous sûr de vouloir supprimer ce rapport de péage ?
+        delete-toll-report-success: Le rapport de péage a été supprimé.
+        delete-toll-reports: Supprimer les rapports de péage
     issues:
       index:
         view: Voir les détails

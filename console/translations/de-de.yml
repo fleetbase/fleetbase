@@ -80,6 +80,8 @@ common:
   select-payment-method: Wählen Sie Zahlungsmethode
   select-report-type: Wählen Sie den Berichtstyp aus
   card-type: Kartentyp
+  model-delete-confirmation: Bist du sicher, dass du dieses {modelName} löschen möchtest?
+  model-delete-success: Das {modelName} wurde gelöscht.
 validation:
   required:
     payment_method: Zahlungsmethode ist erforderlich
@@ -1687,6 +1689,9 @@ fleet-ops:
           body: Ungespeicherte Änderungen an diesem Parkplatzbericht gehen verloren. Klicken Sie auf Weiter, um fortzufahren.
         title: Parkplatzberichte
         delete-parking-report: Parkplatzberichte löschen
+        delete-parking-report-confirm: Bist du sicher, dass du diesen Parkbericht löschen möchtest?
+        delete-parking-report-success: Der Parkbericht wurde gelöscht.
+        delete-parking-reports: Parkplatzberichte löschen
     toll-reports:
       index:
         view: Details ansehen
@@ -1697,6 +1702,9 @@ fleet-ops:
           body: Nicht gespeicherte Änderungen an diesem Mautbericht gehen verloren. Klicken Sie auf Weiter, um fortzufahren.
         title: Mautberichte
         delete-parking-report: Mautberichte löschen
+        delete-toll-report-confirm: Bist du sicher, dass du diesen Mautbericht löschen möchtest?
+        delete-toll-report-success: Der Mautbericht wurde gelöscht.
+        delete-toll-reports: Mautberichte löschen
     issues:
       index:
         view: Details anzeigen
