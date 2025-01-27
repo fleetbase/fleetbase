@@ -27,7 +27,12 @@ export default class OperationsSchedulerIndexRoute extends Route {
     }
 
     model() {
-        return this.store.query('order', { status: 'created', with: ['payload', 'driverAssigned.vehicle'] });
+        return this.store.query('order', { 
+            status: 'created', 
+            with: ['payload', 'driverAssigned.vehicle'], 
+            limit: 1000, //To do: need to change the limit & do pagination for the scroll
+            sort: '-created_at',
+        });
     }
 
     setupController(controller, model) {
