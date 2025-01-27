@@ -220,6 +220,8 @@ body[data-theme='dark'] .status-badge:not(.shadow-none) {
 }
 
 .org-badge {
-    @apply rounded-md bg-[#496453] text-gray-900 text-white w-5 h-5 text-xs flex items-center justify-center text-center shadow-sm flex-shrink-0 mr-2.5 !important;
+    @apply rounded-md bg-[#496453] text-gray-900 text-white w-5 h-5 text-xs flex items-center justify-center text-center shadow-sm flex-shrink-0 mr-2.5;
+    height:40px;
+    width: 40px;
 }
 
