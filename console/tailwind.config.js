@@ -24,7 +24,7 @@ module.exports = {
                 DEFAULT: 'transparent',
             },
             fontFamily: {
-                montserrat: ['"Montserrat"', 'serif'],
+                montserrat: ["Montserrat", 'serif'],
               },        
             colors: {
                 sky: {
