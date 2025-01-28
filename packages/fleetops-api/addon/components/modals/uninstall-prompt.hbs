@@ -1,0 +1,20 @@
+<Modal::Default @modalIsOpened={{@modalIsOpened}} @options={{@options}} @confirm={{@onConfirm}} @decline={{@onDecline}}>
+    <div class="modal-body-container space-y-4">
+        <div class="flex">
+            <div>
+                <div class="flex items-center justify-center p-3 rounded-full bg-red-50 shadow mr-4">
+                    <FaIcon @icon="trash" class="text-red-900" @size="2x" />
+                </div>
+            </div>
+            <div class="flex-1 dark:text-gray-100">
+                <p class="text-base mb-2">{{t "fleet-ops.component.modals.uninstall-prompt.message" htmlSafe=true options=@options.extensionName}}</p>
+                <small>{{t "fleet-ops.component.modals.uninstall-prompt.sub-message"}}</small>
+            </div>
+        </div>
+        {{#if @options.isUninstalling}}
+            <div>
+                <ProgressBar @task="uninstall" @color="red" @progress={{@options.uninstallProgress}} />
+            </div>
+        {{/if}}
+    </div>
+</Modal::Default>

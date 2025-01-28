@@ -1,0 +1,250 @@
+<div class="flex items-center justify-center min-h-screen px-4 py-12 bg-gray-50 dark:bg-gray-900 sm:px-6 lg:px-8">
+    <div class="w-full max-w-lg">
+        {{#if this.order}}
+            <div class="flex flex-row justify-end mb-2">
+                <Button @icon="rotate" @text="Lookup another order" @onClick={{this.lookupAnother}} />
+            </div>
+        {{/if}}
+        <div class="border border-gray-200 text-black dark:text-white bg-gray-100 dark:border-gray-700 dark:bg-gray-900 rounded-lg shadow-sm {{unless this.order 'p-4'}}">
+            {{#if this.order}}
+                {{#let this.order as |order|}}
+                    <div class="customer-order-details-container render-in-place">
+                        <div class="customer-order-details border-0">
+                            <div class="flex flex-row justify-between">
+                                <div>
+                                    <ClickToCopy @value={{order.tracking_number.tracking_number}}>
+                                        <h1 class="font-bold text-lg">{{order.tracking_number.tracking_number}}</h1>
+                                    </ClickToCopy>
+                                    <div class="flex flex-row">
+                                        <div class="text-sm font-semibold mr-1">Date Created:</div>
+                                        <div class="text-sm">{{order.createdAtShort}}</div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <Badge @status={{order.status}} />
+                                </div>
+                            </div>
+                            <div class="customer-order-details-seperator"></div>
+                            {{#if this.mapReady}}
+                                <div>
+                                    <div class="flex flex-row items-center justify-between mb-2 ml-1">
+                                        <div class="flex-1">
+                                            <h1 class="font-bold text-sm">Live Map:</h1>
+                                        </div>
+                                        <div class="flex flew-row space-x-2">
+                                            <Button @helpText="View Route" @icon="route" @onClick={{this.locateOrderRoute}} @size="xs" />
+                                            <Button @helpText="Locate Driver" @icon="truck" @onClick={{this.locateDriver}} @size="xs" @disabled={{not order.has_driver_assigned}} />
+                                        </div>
+                                    </div>
+                                    <div class="order-tracking-lookup-map-wrapper">
+                                        <LeafletMap @lat={{this.latitude}} @lng={{this.longitude}} @zoom={{this.zoom}} @onLoad={{this.setupMap}} ...attributes as |layers|>
+                                            <layers.tile @url={{this.tileSourceUrl}} />
+                                            {{#let this.order.driver_assigned as |driver|}}
+                                                {{#if driver}}
+                                                    <layers.tracking-marker
+                                                        @id={{driver.id}}
+                                                        @publicId={{driver.public_id}}
+                                                        @location={{driver.coordinates}}
+                                                        @rotationAngle={{driver.heading}}
+                                                        @icon={{icon iconUrl=(or driver.vehicle_avatar (config "defaultValues.vehicleAvatar")) iconSize=(array 24 24)}}
+                                                        @onAdd={{this.startTrackingDriverPosition}}
+                                                        as |marker|
+                                                    >
+                                                        <marker.popup @maxWidth="500" @minWidth="225">
+                                                            <div class="flex flex-row">
+                                                                <div class="flex-1">
+                                                                    <div class="text-xs font-semibold">{{driver.name}}</div>
+                                                                    <div class="text-xs">Status:
+                                                                        <span class="{{if driver.online 'text-green-500' 'text-red-400'}}">{{if
+                                                                                driver.online
+                                                                                "Online"
+                                                                                "Offline"
+                                                                            }}</span></div>
+                                                                    <div class="text-xs truncate">Pos: {{driver.positionString}}</div>
+                                                                </div>
+                                                            </div>
+                                                        </marker.popup>
+                                                        <marker.tooltip @permanent={{false}} @sticky={{true}}>
+                                                            <div class="flex items-center space-x-1">
+                                                                <div class="text-xs font-semibold">{{driver.name}}</div>
+                                                                <div>•</div>
+                                                                <div class="text-xs {{if driver.online 'text-green-500' 'text-red-400'}}">{{if driver.online "Online" "Offline"}}</div>
+                                                            </div>
+                                                            <div class="text-xs truncate"><FaIcon @icon="location-dot" @size="xs" class="mr-0.5" />{{driver.positionString}}</div>
+                                                        </marker.tooltip>
+                                                    </layers.tracking-marker>
+                                                {{/if}}
+                                            {{/let}}
+                                        </LeafletMap>
+                                    </div>
+                                </div>
+                                <div class="customer-order-details-seperator"></div>
+                            {{/if}}
+                            <div>
+                                <div class="flex flex-row mb-2 ml-1">
+                                    <div class="flex-1">
+                                        <h1 class="font-bold text-sm">Tracking:</h1>
+                                    </div>
+                                </div>
+                                <div class="space-y-2">
+                                    <div class="order-progress-card-progress">
+                                        <OrderProgressBar
+                                            @order={{this.order}}
+                                            @progress={{this.order.tracker_data.progress_percentage}}
+                                            @firstWaypointCompleted={{this.order.tracker_data.first_waypoint_completed}}
+                                            @lastWaypointCompleted={{this.order.tracker_data.last_waypoint_completed}}
+                                        />
+                                    </div>
+                                    <div class="grid grid-cols-2 gap-2 mt-1 px-1">
+                                        <div class="flex flex-col text-xs">
+                                            <div class="font-semibold">Current ETA:</div>
+                                            <div class="">{{format-duration this.order.tracker_data.current_destination_eta}}</div>
+                                        </div>
+                                        <div class="flex flex-col text-xs">
+                                            <div class="font-semibold">ECT:</div>
+                                            <div class="">{{n-a this.order.tracker_data.estimated_completion_time_formatted}}</div>
+                                        </div>
+                                        <div class="col-span-2 flex flex-col text-xs">
+                                            <div class="font-semibold">Current Destination:</div>
+                                            <div class="truncate">{{n-a this.order.tracker_data.current_destination.address}}</div>
+                                        </div>
+                                        <div class="col-span-2 flex flex-col text-xs">
+                                            <div class="font-semibold">Next Destination:</div>
+                                            <div class="truncate">{{n-a this.order.tracker_data.next_destination.address}}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="customer-order-details-seperator"></div>
+                            <div>
+                                <div class="flex flex-row justify-between mb-2 ml-1">
+                                    <div class="flex-1">
+                                        <h1 class="font-bold text-sm">Activity:</h1>
+                                    </div>
+                                    <div>
+                                        <div
+                                            class="rounded-md {{if order.has_driver_assigned 'bg-green-300 text-green-900' 'bg-yellow-300 text-yellow-900'}} px-2 py-0.5 text-xs flex-grow-0"
+                                        >
+                                            {{#if order.has_driver_assigned}}
+                                                <span>Driver Assigned</span>
+                                            {{else}}
+                                                <span>No Driver Assigned</span>
+                                            {{/if}}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="space-y-2">
+                                    {{#each order.tracking_statuses as |trackingStatus|}}
+                                        <div class="activity-detail">
+                                            <div class="flex flex-row space-x-1">
+                                                <h3 class="font-semibold text-sm">{{trackingStatus.status}}</h3>
+                                                <div class="text-sm">{{trackingStatus.createdAtShortWithTime}}</div>
+                                            </div>
+                                            <div class="text-sm">{{n-a trackingStatus.details}}</div>
+                                        </div>
+                                    {{else}}
+                                        <div class="px-10 py-2 flex items-center justify-center">
+                                            <p class="text-red-600 dark:text-red-100">{{t "fleet-ops.operations.orders.index.view.no-order-activity"}}</p>
+                                        </div>
+                                    {{/each}}
+                                </div>
+                            </div>
+                            <div class="customer-order-details-seperator"></div>
+                            <div>
+                                <div class="mb-2 ml-1">
+                                    <h1 class="font-bold text-sm">Items:</h1>
+                                </div>
+                                {{#if order.isMultipleDropoffOrder}}
+                                    <div class="flex flex-col space-y-2 overflow-y-scroll" {{set-max-height "255px"}}>
+                                        {{#each order.payload.entitiesByDestination as |group|}}
+                                            <div class="item-detail">
+                                                <div class="flex flex-row justify-between flex-grow-0">
+                                                    <DisplayPlace @place={{group.waypoint}} @addressClass="text-xs truncate" {{set-width "140px"}} />
+                                                    <div class="flex flex-col items-end flex-grow-0">
+                                                        <div class="rounded-md bg-yellow-300 text-yellow-900 px-2 py-0.5 text-xs flex-grow-0">{{t
+                                                                "fleet-ops.operations.orders.index.view.tracking"
+                                                            }}
+                                                            {{group.waypoint.tracking}}</div>
+                                                        <Badge @status={{group.waypoint.status_code}} />
+                                                    </div>
+                                                </div>
+                                                <div class="customer-order-details-seperator"></div>
+                                                <div class="flex flex-col space-y-2">
+                                                    {{#each group.entities as |entity index|}}
+                                                        <div class="flex flex-row">
+                                                            <div class="w-20 shrink-0">
+                                                                <Image src={{entity.photo_url}} class="w-14 h-14 rounded-md shadow-sm" alt={{entity.name}} />
+                                                            </div>
+                                                            <div class="flex-1">
+                                                                <div class="text-sm font-bold">{{n-a entity.name (concat "Item " (add index 1))}}</div>
+                                                                <div class="text-xs"><span class="font-semibold">Description:</span>
+                                                                    {{n-a entity.description "No description provided."}}</div>
+                                                                <div class="text-xs"><span class="font-semibold">Tracking:</span> {{n-a entity.tracking}}</div>
+                                                                {{#if entity.price}}
+                                                                    <div class="text-xs"><span class="font-semibold">Price:</span>
+                                                                        {{format-currency entity.price entity.currency}}</div>
+                                                                {{/if}}
+                                                            </div>
+                                                        </div>
+                                                    {{/each}}
+                                                </div>
+                                            </div>
+                                        {{else}}
+                                            <div class="text-xs text-gray-500 px-2">None</div>
+                                        {{/each}}
+                                    </div>
+                                {{else}}
+                                    <div class="flex flex-col space-y-2">
+                                        {{#each order.payload.entities as |entity index|}}
+                                            <div class="item-detail">
+                                                <div class="flex flex-row">
+                                                    <div class="w-20 shrink-0">
+                                                        <Image src={{entity.photo_url}} class="w-14 h-14 rounded-md shadow-sm" alt={{entity.name}} />
+                                                    </div>
+                                                    <div class="flex-1">
+                                                        <div class="text-sm font-bold">{{n-a entity.name (concat "Item " (add index 1))}}</div>
+                                                        <div class="text-xs"><span class="font-semibold">Description:</span>
+                                                            {{n-a entity.description "No description provided."}}</div>
+                                                        <div class="text-xs"><span class="font-semibold">Tracking:</span> {{n-a entity.tracking}}</div>
+                                                        {{#if entity.price}}
+                                                            <div class="text-xs"><span class="font-semibold">Price:</span> {{format-currency entity.price entity.currency}}</div>
+                                                        {{/if}}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        {{else}}
+                                            <div class="text-xs text-gray-500 px-2">None</div>
+                                        {{/each}}
+                                    </div>
+                                {{/if}}
+                            </div>
+                        </div>
+                    </div>
+                {{/let}}
+            {{else}}
+                <form class="space-y-4" {{on "submit" (perform this.lookupOrder)}}>
+                    <div>
+                        <div class="text-base font-semibold dark:text-white mb-2">Enter your tracking number:</div>
+                        <Input @value={{this.trackingNumber}} placeholder="Enter your tracking number" class="form-input form-input-lg w-full" disabled={{this.lookupOrder.isRunning}} />
+                    </div>
+                    <Button
+                        @buttonType="submit"
+                        @type="primary"
+                        @text="Lookup Order"
+                        @size="lg"
+                        @icon="check"
+                        @disabled={{not this.trackingNumber}}
+                        @isLoading={{this.lookupOrder.isRunning}}
+                        @onClick={{perform this.lookupOrder}}
+                    />
+                </form>
+            {{/if}}
+        </div>
+    </div>
+</div>
+
+<div class="absolute left-0 top-0">
+    <div class="p-4">
+        <Button @text="Back to Console" @icon="arrow-left" @onClick={{this.transitionToConsole}} @size="xs" />
+    </div>
+</div>

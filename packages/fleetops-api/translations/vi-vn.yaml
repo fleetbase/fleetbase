@@ -1,0 +1,1569 @@
+fleet-ops:
+  extension-name: Fleet-Ops
+  common:
+    active-manpower: Nhân lực hoạt động
+    address: Địa chỉ
+    amount: Số lượng
+    assignee: Người được phân công
+    avatar: Hình đại diện
+    building: Tòa nhà
+    bulk-action: Hành động hàng loạt
+    cancel: Hủy
+    category: Danh mục
+    city: Thành phố
+    coordinates: Tọa độ
+    cost: Chi phí
+    code: Mã
+    country: Quốc gia
+    config: Cấu hình
+    created-at: Được tạo lúc
+    date-created: Ngày tạo
+    delete: Xóa
+    destination: Điểm đến
+    details: Chi tiết
+    description: Mô tả
+    distance: Khoảng cách
+    driver-license: Giấy phép lái xe
+    driver: Tài xế
+    edit: Chỉnh sửa
+    email: Email
+    export: Xuất khẩu
+    fleet: Đội xe
+    height: Chiều cao
+    host: Chủ nhà
+    id: ID
+    internal-id: Mã nội bộ
+    item: Mục
+    key: Khóa
+    label: Nhãn
+    length: Chiều dài
+    license: Giấy phép
+    loading: Đang tải...
+    loading-resource: Đang tải {resourceName}...
+    make: Hãng xe
+    manage-message: Quản lý nhà cung cấp của bạn
+    manpower: Nhân lực
+    model: Mô hình
+    name: Tên
+    namespace: Không gian tên
+    neighborhood: Khu vực lân cận
+    new: Mới
+    odometer: Đồng hồ đo quãng đường
+    options: Tùy chọn
+    orders: Đơn hàng
+    parent-fleet: Đội xe chính
+    phone: Điện thoại
+    photos: Ảnh
+    plate-number: Biển số
+    postal-code: Mã bưu điện
+    priority: Ưu tiên
+    reload: Tải lại
+    reload-data: Tải lại dữ liệu
+    remove: Gỡ bỏ
+    reporter: Người báo cáo
+    sandbox: Hộp cát
+    save-changes: Lưu thay đổi
+    schedule: Lịch trình
+    search: Tìm kiếm
+    security-access-code: Mã truy cập bảo mật
+    service-area: Khu vực dịch vụ
+    service: Dịch vụ
+    state: Bang/Tỉnh
+    status: Trạng thái
+    street-1: Đường 1
+    street-2: Đường 2
+    street: Đường
+    task: Nhiệm vụ
+    title: Tiêu đề
+    type: Loại
+    unit: Đơn vị
+    updated-at: Được cập nhật lúc
+    upload-new: Tải lên mới
+    uploading: Đang tải lên...
+    value: Giá trị
+    vehicle: Phương tiện
+    vendor: Nhà cung cấp
+    vin-number: Số VIN
+    volume: Thể tích
+    weight: Trọng lượng
+    website-url: URL trang web
+    website: Trang web
+    width: Chiều rộng
+    year: Năm
+    zone: Khu vực
+    total: Tổng cộng
+    back: Quay lại
+    done: Hoàn tất
+    tracking: Số theo dõi
+    customer: Khách hàng
+    vehicle-name: Tên phương tiện
+    pickup: Nhận hàng
+    dropoff: Giao hàng
+    import: Nhập khẩu
+  component:
+    activity-logic-builder:
+      activity-logic: Logic Hoạt động
+      activity-logic-help-text: Xác định các điều kiện logic tùy chỉnh để xác định khi nào một hoạt động trở nên khả dụng trong luồng công việc. Tính năng này cho phép bạn điều chỉnh luồng dựa trên các tiêu chí cụ thể, đảm bảo rằng mỗi hoạt động chỉ được kích hoạt khi các điều kiện đã xác định trước được thỏa mãn.
+      activity-logic-add-logic-help-text: Tạo một bộ điều kiện mới sẽ xác định khi nào một hoạt động nên được kích hoạt. Nhấp vào đây để bắt đầu xây dựng một quy tắc logic mới.
+      activity-logic-select-logic-type-help-text: Chọn loại logic mà điều kiện này sẽ tuân theo. Chọn 'Nếu' cho một điều kiện trực tiếp, 'Và'/'Hoặc' cho các điều kiện hợp chất, hoặc 'Không' để phủ định một điều kiện.
+      activity-logic-add-condition-help-text: Thêm một yêu cầu cụ thể cần được thỏa mãn trong bộ logic này. Sử dụng điều này để xác định các tiêu chí bổ sung kiểm soát tính khả dụng của hoạt động.
+      field: Trường
+      value: Giá trị
+      add-logic: Thêm Logic
+    activity-event-selector:
+      activity-events: Sự kiện hoạt động
+      activity-events-select-to-fire: Chọn những sự kiện sẽ được kích hoạt khi hoạt động này xảy ra.
+      activity-events-select-events-info: Chọn sự kiện cụ thể bạn muốn kích hoạt để phản hồi hoạt động này.
+      select-event-to-add: Chọn sự kiện để thêm...
+    custom-field-form-panel:
+      meta-col-span: 'Meta: Cột-Span'
+      col-span-size: Kích thước Cột Span
+      custom-field-title-concat: 'Trường Tùy chỉnh: '
+      new-custom-field: Trường tùy chỉnh mới
+      close-new-custom-field: Hủy thay đổi trường tùy chỉnh
+      save-custom-field: Lưu Thay đổi
+      create-custom-field: Tạo Trường Mới
+      field-name: Tên Trường
+      field-label: Nhãn Trường
+      field-type: Loại Trường
+      select-field-type: Chọn loại trường...
+      field-description: Mô tả Trường
+      field-help-text: Văn bản Trợ giúp Trường
+      field-default-value: Giá trị Mặc định của Trường
+      field-is-required: Trường là Bắt buộc
+      field-is-editable: Trường có thể Chỉnh sửa
+      field-options: Tùy chọn Trường
+      field-validation-rules: Quy tắc Xác thực Trường
+      field-model-type: Loại Mô hình Trường
+      field-select-model-type: Chọn loại mô hình
+      add-new-option: Thêm tùy chọn mới
+    activity-form-panel:
+      title-concat: 'Hoạt động: '
+      new-activity-title: Tạo hoạt động mới
+      key: Khóa
+      code: Mã
+      status: Trạng thái
+      details: Chi tiết
+      proof-of-delivery: Chứng nhận Giao hàng
+      require-pod: Yêu cầu Chứng nhận Giao hàng
+      require-pod-help-text: Hoạt động này yêu cầu một chứng nhận được tạo trước khi nó có thể được áp dụng vào đơn hàng.
+      select-pod-method: Phương thức Chứng nhận Giao hàng
+      pod-method-placeholder: Chọn Phương thức Chứng nhận Giao hàng
+      completes-order: Hoàn thành Đơn hàng
+      complete: Hoàn thành
+      key-help: "Nhập khóa được sử dụng cho việc ra quyết định lập trình. Khóa này có thể đại diện cho một hoặc nhiều hoạt động với cùng một định danh. Lưu ý: Khóa này không cần phải là duy nhất."
+      code-help: Nhập một định danh duy nhất cụ thể cho hoạt động này.
+      status-help: Xác định trạng thái hiển thị cho người dùng cuối khi hoạt động này được kích hoạt.
+      details-help: Cung cấp mô tả chi tiết về hoạt động để người dùng cuối hiểu.
+    custom-entity-issue-form-panel: 
+        new-custom-entity: Thực thể Tùy chỉnh Mới
+        name: Tên
+        description: Mô tả
+        details: Chi tiết
+        type: Loại
+        length: Chiều dài
+        width: Chiều rộng
+        height: Chiều cao
+        weight: Trọng lượng
+        entity-image: Hình ảnh Thực thể
+        measurements: Kích thước
+    order-config-manager:
+      title: Cấu hình Đơn hàng
+      message: Cấu hình đơn hàng cho phép bạn xác định các cấu hình động để chỉ định cách các loại đơn hàng khác nhau nên được thực hiện.
+      configuration: Cấu hình
+      new-order-config: Cấu hình Đơn hàng Mới
+      select-order-config: Chọn Cấu hình Đơn hàng
+      create-new-title: Tạo cấu hình đơn hàng mới
+      create-warning-message: Cấu hình đơn hàng yêu cầu một tên
+      create-success-message: Cấu hình đơn hàng mới đã được tạo thành công.
+      no-order-config-selected: Không có cấu hình đơn hàng nào được chọn.
+      saved-success-message: '{orderConfigName} cấu hình đã được lưu.'
+      cloned-success-message: Cấu hình đơn hàng đã được sao chép thành công.
+      enter-clone-name: Nhập tên của cấu hình sao chép
+      no-config-name-warning-message: Chưa nhập tên cấu hình.
+      delete-warning-message: Khi cấu hình đơn hàng này bị xóa, bạn sẽ không thể tạo đơn hàng sử dụng nó nữa. Bạn có chắc chắn không?
+      uninstall-order-config: Gỡ cài đặt Cấu hình
+      uninstall-order-config-success-message: Mở rộng {extensionName} đã được gỡ cài đặt.
+      select-order-config-to-start: Chọn hoặc tạo cấu hình đơn hàng để bắt đầu.
+      details:
+        details: Chi tiết
+        name: Tên
+        description: Mô tả
+        tags: Thẻ
+        add-tags: Thêm Thẻ
+        key: Khóa
+        version: Phiên bản
+        namespace: Không gian tên
+        controls: Điều khiển
+        delete-config: Xóa Cấu hình
+        delete:
+          delete-title: Xóa cấu hình đơn hàng này?
+          delete-body-message: Khi cấu hình đơn hàng này bị xóa, nó sẽ không thể phục hồi và bạn sẽ mất tất cả các cấu hình.
+          confirm-delete: Xóa
+      activity-flow:
+        save-activity-flow: Lưu Luồng Hoạt động
+        edit-activity-unique-code-warning: Mã hoạt động phải là duy nhất!
+      custom-fields:
+        new-field-group: Nhóm trường mới
+        new-custom-field: Tạo trường tùy chỉnh mới
+        grid-size: Kích thước Lưới
+        delete-custom-field-prompt:
+          modal-title: Xóa trường tùy chỉnh này?
+          delete-body-message: Khi trường tùy chỉnh này bị xóa, nó sẽ không thể phục hồi và bạn sẽ mất tất cả các cấu hình.
+          confirm-delete: Xóa
+        delete-custom-field-group-prompt:
+          modal-title: Xóa nhóm trường này?
+          delete-body-message: Khi nhóm trường này bị xóa, nó sẽ không thể phục hồi và bạn sẽ mất tất cả các trường tùy chỉnh bên trong.
+          confirm-delete: Xóa
+      entities: 
+        new-custom-entity: Thực thể Tùy chỉnh Mới
+        name: Tên
+        description: Mô tả
+        type: Loại
+        length: Chiều dài
+        width: Chiều rộng
+        height: Chiều cao
+        weight: Trọng lượng
+        delete-custom-entity-title: Xóa thực thể tùy chỉnh này?
+        delete-custom-entity-body: Khi thực thể tùy chỉnh này bị xóa, nó sẽ không thể phục hồi và bạn sẽ mất tất cả các cấu hình.
+        confirm-delete: Xác nhận
+      types:
+        no-order-installed: Không có cấu hình đơn hàng nào được cài đặt!
+        you-have-no-configs: Bạn hiện không có cấu hình đơn hàng nào được cài đặt, hãy kiểm tra các tiện ích mở rộng để cài đặt cấu hình đơn hàng và bắt đầu.
+        view-extensions: Xem tiện ích mở rộng
+    avatar-picker:
+      avatar: Avatar
+      select-map-avatar: Chọn avatar bản đồ
+      select-avatar-rendering: Chọn một avatar để được sử dụng cho việc hiển thị trên bản đồ khi sử dụng các tính năng theo dõi địa lý.
+      select-avatar: Chọn avatar
+    admin:
+      navigator-app:
+        title: Ứng dụng Navigator
+        name: URL Liên kết Instance
+        message: Sử dụng URL này để liên kết ứng dụng Navigator chính thức với instance {companyName} này. Mở URL này trên thiết bị di động sẽ mở ứng dụng Navigator và cập nhật cấu hình và thương hiệu của nó.
+        settings: Cài đặt Thực thể
+        select-input: Cho phép tài xế cập nhật thông tin thực thể
+        driver-settings: Cài đặt Tài xế
+        description: Kích hoạt tài xế trên tàu
+        upload-document: Yêu cầu tài xế tải tài liệu lên
+        upload-body: Thêm tài liệu
+        document: Tài liệu
+      visibility-controls:
+        title: Điều khiển Hiển thị
+        message: Các điều khiển hiển thị cho phép bạn tắt các phần của Fleet-Ops. Chuyển đổi hộp kiểm để bật hoặc tắt các phần để ẩn trong Fleet-Ops.
+        checkbox-text: Kích hoạt hoặc vô hiệu hóa hiển thị cho phần này trong Fleet-Ops.
+      avatar-management:
+        upload-avatar: Tải lên Avatar
+        view-avatar: Xem Avatar
+        vehicles: Phương tiện
+        drivers: Tài xế
+        places: Địa điểm
+    entity-field-editing-settings:
+      entitiy-field-editing-settings: Cài đặt Chỉnh sửa Trường Thực thể
+      entity-field-editing-settings-help-text: Các cài đặt này xác định các trường của một thực thể có thể chỉnh sửa được bởi tài xế qua Ứng dụng Navigator
+      select-order-config: Chọn Cấu hình Đơn hàng
+      select-order-config-help-text: Chọn một cấu hình đơn hàng mà các cài đặt này sẽ áp dụng
+      enable-driver-to-edit-entity-fields: Cho phép tài xế chỉnh sửa thông tin thực thể
+      enable-driver-to-edit-entity-fields-help-text: Bật tùy chọn này cấp quyền cho tài xế sửa đổi các trường thực thể cụ thể được chọn bên dưới.
+    driver-onboard-settings:
+      driver-onboard-settings: Cài đặt Tài xế trên tàu
+      enable-driver-onboard-from-app: Kích hoạt tài xế trên tàu từ Ứng dụng Navigator
+      enable-driver-onboard-from-app-help-text: Bật cài đặt này cho phép tài xế tự onboard (tạo tài khoản của riêng họ) qua Ứng dụng Navigator.
+      select-onboard-method: Chọn phương thức onboard tài xế
+      select-onboard-method-help-text: Cài đặt này xác định cách tài xế được phép tạo tài khoản của họ qua Ứng dụng Navigator. Chọn 'Mời' nếu tài xế cần nhận lời mời qua email để tạo tài khoản. Chọn 'Nút' nếu bạn muốn kích hoạt một nút trong ứng dụng cho phép bất kỳ ai tạo tài khoản tài xế.
+      require-driver-to-upload-onboard-documents: Yêu cầu tài xế tải lên tài liệu onboard
+      require-driver-to-upload-onboard-documents-help-text: Cài đặt này yêu cầu tài liệu mà tài xế phải cung cấp trước khi tài khoản của họ có thể được tạo.
+      required-onboard-documents: Tài liệu onboard cần thiết
+      required-onboard-documents-help-text: Nhập tất cả các tài liệu onboard cần thiết mà tài xế phải cung cấp bên dưới bằng cách sử dụng nút "Thêm tài liệu onboard".
+      enter-document-name: Nhập tên tài liệu
+      add-onboard-document: Thêm tài liệu onboard
+    cell:
+      driver-name:
+        not-assigned: Không có tài xế được chỉ định
+    fleet-panel:
+      details:
+        active-manpower: Nhân lực Hoạt động
+      driver-listing:
+        search-driver: Tìm kiếm tài xế trong đội xe
+        add-driver: Thêm tài xế vào đội xe
+        loading-driver: Đang tải tài xế đội xe...
+      vehicle-listing:
+        search-vehicle: Tìm kiếm phương tiện trong đội xe
+        add-vehicle: Thêm phương tiện vào đội xe
+        loading-vehicle: Đang tải phương tiện đội xe...
+    layout:
+      fleet-ops-sidebar:
+        navigator-app: Ứng dụng Navigator
+        resources: Tài nguyên
+        operations: Hoạt động
+        dashboard: Bảng điều khiển
+        service-rates: Giá Dịch vụ
+        scheduler: Lịch trình
+        drivers: Tài xế
+        vehicles: Phương tiện
+        fleets: Đội xe
+        vendors: Nhà cung cấp
+        contacts: Liên hệ
+        places: Địa điểm
+        fuel-reports: Báo cáo Nhiên liệu
+        issues: Vấn đề
+        title: Tạo đơn hàng mới
+        settings: Cài đặt
+        order-config: Cấu hình Đơn hàng
+    live-map-drawer:
+      driver-listing:
+        location: Vị trí
+        current-job: Công việc hiện tại
+        last-seen: Lần cuối thấy
+        view-driver: Xem chi tiết tài xế...
+        edit-driver: Chỉnh sửa tài xế...
+        locate-driver: Xác định vị trí tài xế...
+        delete-driver: Xóa tài xế...
+        warning-message: Không thể xác định vị trí tài xế.
+        message: Lọc tài xế theo từ khóa...
+      place-listing:
+        location: Vị trí
+        place: Địa điểm
+        view-place: Xem chi tiết địa điểm...
+        edit-place: Chỉnh sửa địa điểm...
+        locate-place: Xác định vị trí địa điểm...
+        delete-place: Xóa địa điểm...
+        warning-message: Không thể xác định vị trí địa điểm.
+        message: Lọc địa điểm theo từ khóa...
+      vehicle-listing:
+        location: Vị trí
+        last-seen: Lần cuối thấy
+        view-vehicle: Xem chi tiết phương tiện...
+        edit-vehicle: Chỉnh sửa phương tiện...
+        locate-vehicle: Xác định vị trí phương tiện...
+        delete-vehicle: Xóa phương tiện...
+        warning-message: Không thể xác định vị trí phương tiện.
+        message: Lọc phương tiện theo từ khóa...
+    map-container:
+      visibility-control-panel:
+        title: Điều khiển Hiển thị
+        hide-places: Ẩn tất cả địa điểm...
+        show-places: Hiển thị tất cả địa điểm...
+        vehicles: Phương tiện
+        vehicle-controls: Điều khiển Hiển thị Phương tiện...
+        hide-vehicles: Ẩn tất cả phương tiện...
+        show-vehicles: Hiển thị tất cả phương tiện...
+        online-vehicles: Chỉ hiển thị phương tiện trực tuyến...
+        offline-vehicles: Chỉ hiển thị phương tiện ngoại tuyến...
+      zones-panel:
+        title: Khu vực Dịch vụ
+        create-service: Tạo khu vực dịch vụ mới...
+        show: Hiển thị tất cả khu vực dịch vụ
+        hide: Ẩn tất cả khu vực dịch vụ
+        action: Hành động...
+        focus: Tập trung
+        blur: Làm mờ khu vực dịch vụ...
+        create-zone: Tạo khu vực trong...
+      toolbar:
+        create: Tạo Đơn hàng
+        view-order: Xem Đơn hàng
+        view-service-area: Xem Khu vực Dịch vụ
+        visibility: Điều khiển Hiển thị
+        scope: Phạm vi
+    modals:
+      new-custom-field-group:
+        modal-title: Tạo nhóm trường tùy chỉnh mới
+        group-name: Tên nhóm
+      assign-driver:
+        select-driver: Chọn Tài xế
+        select-assign: Chọn tài xế để gán
+      clone-config-form:
+        name: Tên Cấu hình
+        description: Mô tả Cấu hình
+      driver-assign-order:
+        order: Chọn Đơn hàng
+        assign-order: Chọn đơn hàng để gán
+      driver-assign-vehicle:
+        vehicle: Chọn Phương tiện
+        assign-vehicle: Chọn phương tiện để gán
+      driver-assign-vendor:
+        vendor: Chọn Nhà cung cấp
+      driver-details:
+        job: Công việc hiện tại
+        view: Xem trên bản đồ
+      driver-form:
+        select-vendor: Chọn Nhà cung cấp
+        select-vehicle: Chọn Phương tiện
+      edit-meta-form:
+        add: Thêm trường meta
+      entity-form:
+        name-text: Tên của mặt hàng hoặc thực thể.
+        id-text: Sử dụng trường này để tùy chọn thiết lập một định danh tùy chỉnh hoặc định danh nội bộ cho thực thể.
+        sku: SKU
+        sku-text: Số đơn vị lưu kho nếu có.
+        description: Mô tả
+        description-text: Văn bản mô tả bổ sung của thực thể.
+        price-title: Giá & Giá trị
+        price: Giá
+        price-text: Giá của thực thể.
+        sale-price: Giá bán
+        sale-price-text: Giá bán hoặc giá giảm của thực thể.
+        declare: Giá trị Được khai báo
+        declare-text: Giá trị được khai báo của thực thể, hữu ích trong việc bảo hiểm.
+        measurement-title: Kích thước & Cân nặng
+        length: Chiều dài
+        length-text: Chiều dài của thực thể.
+        width: Chiều rộng
+        width-text: Chiều rộng của thực thể.
+        height: Chiều cao
+        height-text: Chiều cao của thực thể.
+        weight: Cân nặng
+        weight-text: Cân nặng của thực thể.
+      entity-meta-field-prompt:
+        name: Khóa Trường Meta
+      fleet-form:
+        title: Tên Đội xe
+        assign: Gán cho Khu vực Dịch vụ
+        assign-text: Chọn khu vực dịch vụ để gán đội xe
+        zone: Gán cho Khu vực
+        zone-text: Chọn khu vực để gán đội xe
+        task: Nhiệm vụ/ Sứ mệnh
+        task-text: Cung cấp mô tả về nhiệm vụ hoặc sứ mệnh chính của đội xe này nếu có.
+        select-task: Chọn nhiệm vụ
+        status-text: Chọn trạng thái của đội xe.
+        select-status: Chọn trạng thái
+      fuel-report-details:
+        fuel: Nhiên liệu/ Khối lượng
+      fuel-report-form:
+        select-driver: Chọn Tài xế
+        select-vehicle: Chọn Phương tiện
+        volume: Khối lượng
+        volume-text: Chọn đơn vị đo lường và khối lượng của nhiên liệu để báo cáo.
+      group-details:
+        name: Tên Nhóm
+        member: Thành viên
+        address: Địa chỉ
+      group-form:
+        title: Tên Nhóm
+        users-add: Chọn người dùng để thêm vào nhóm
+        search: Tìm kiếm và chọn người dùng để thêm vào nhóm này.
+        select-user: Chọn người dùng để thêm vào nhóm
+        no-users: Không có người dùng nào được thêm vào nhóm
+      install-prompt:
+        message: Bạn đang cố gắng cài đặt tiện ích mở rộng {extensionName}. Bạn có chắc chắn muốn tiếp tục cài đặt này không?
+        sub-message: Một số tiện ích mở rộng yêu cầu quyền truy cập vào tài nguyên của bạn.
+      issue-details:
+        assigned: Được giao cho
+        type: Loại Vấn đề
+        category: Danh mục Vấn đề
+      issue-form:
+        reported: Được báo cáo bởi
+        select-reporter: Chọn Người báo cáo
+        assigned: Được giao cho
+        select-assignee: Chọn Người nhận giao
+        select-driver: Chọn Tài xế
+        select-vehicle: Chọn Phương tiện
+        select-type: Chọn Loại
+        select-category: Chọn Danh mục
+        type: Loại Vấn đề
+        type-text: Chọn loại vấn đề
+        category: Danh mục Vấn đề
+        category-text: Chọn danh mục vấn đề
+        report: Báo cáo Vấn đề
+        tags: Thẻ Vấn đề
+        add-tags: Thêm thẻ
+        select-status: Chọn trạng thái vấn đề
+      map-layer-form:
+        layer-type: Loại Lớp
+        layer-type-text: Chọn loại lớp mà bạn muốn tạo.
+        select-layer-type: Chọn loại lớp...
+        service-area: Khu vực Dịch vụ
+        service-area-text: Chọn Khu vực Dịch vụ để gán cho Khu vực này.
+        select-service-area: Chọn khu vực dịch vụ để gán đội xe
+        set-name: Đặt tên hiển thị cho {options}.
+        service-type: Loại Khu vực Dịch vụ
+        service-type-text: Chọn định nghĩa loại cho khu vực dịch vụ này.
+        select-service-type: Chọn loại khu vực dịch vụ...
+        customize-border: Tùy chỉnh màu sắc viền cho {options}.
+        customize-fill-color: Tùy chỉnh màu sắc nền cho {options}.
+        service-area-country: Quốc gia Khu vực Dịch vụ
+        service-area-country-text: Tùy chọn đặt quốc gia nơi khu vực dịch vụ này tọa lạc hoặc được đặt.
+      new-order-config:
+        name: Tên Cấu hình
+        description: Mô tả Cấu hình
+        tags: Thẻ Cấu hình
+        add-tags: Thêm thẻ
+      order-assign-driver:
+        select-driver: Chọn Tài xế
+        select-assign: Chọn tài xế để gán
+      order-config-new-status:
+        new-status: Trạng thái Mới
+        status-text: Nhập trạng thái hoạt động mới để thêm vào quy trình
+      order-event:
+        schedule: Lên lịch
+        unschedule: Hủy lịch
+      order-form:
+        id-text: Sử dụng trường này để tùy chọn thiết lập một định danh tùy chỉnh hoặc định danh nội bộ cho đơn hàng.
+        schedule-text: Ngày và giờ đơn hàng sẽ được gửi. Nếu không có tài xế được giao vào thời điểm gửi, việc gửi sẽ thất bại. Nếu đơn hàng là Ad-Hoc, đơn hàng sẽ được gửi đến các tài xế trong khu vực đón.
+        customer: Khách hàng
+        customer-text: Tùy chọn chỉ định khách hàng cho đơn hàng này. Nếu là khách hàng mới, sử dụng nút 'Khách hàng mới' ở trên.
+        select-customer: Chọn Khách hàng
+        facilitator: Người điều phối
+        facilitator-text: Tùy chọn chỉ định người điều phối cho đơn hàng này, người điều phối có thể là nhà thầu phụ hoặc dịch vụ bên thứ ba sẽ hỗ trợ việc vận chuyển đơn hàng này.
+        select-facilitator: Chọn Người điều phối
+        assign-driver: Gán Tài xế
+        assign-driver-text: Gán tài xế mà đơn hàng này sẽ được gửi đến.
+        select-driver: Chọn Tài xế
+        assign-vehicle: Gán Phương tiện
+        assign-vehicle-text: Gán phương tiện mà đơn hàng này sẽ được thực hiện bằng.
+        select-vehicle: Chọn Phương tiện
+      order-import:
+        loading-message: Đang xử lý nhập khẩu...
+        drop-upload: Kéo và thả để tải lên
+        invalid: Không hợp lệ
+        ready-upload: sẵn sàng để tải lên.
+        upload-spreadsheets: Tải lên Bảng tính
+        drag-drop: Kéo và thả các tệp bảng tính vào khu vực thả này
+        button-text: hoặc chọn bảng tính để tải lên
+        spreadsheets: bảng tính
+        upload-queue: Danh sách Tải lên
+      order-label:
+        loading: Đang tải Nhãn...
+      order-new-activity:
+        select-message: Chọn trạng thái hoạt động để cập nhật hoạt động theo dõi đơn hàng, hoặc nhập hoạt động tùy chỉnh.
+        order-currently-message: Đơn hàng này hiện tại đang {options}, hoạt động bổ sung sẽ ghi đè trạng thái này.
+        not-recommend-message: Fleetbase không khuyến khích điều này trừ khi bạn hoàn toàn biết bạn đang làm gì.
+        activity-options: Tùy chọn hoạt động
+        activity: hoạt động
+        dispatch: Điều này sẽ kích hoạt đơn hàng để gửi đi.
+        status: Trạng thái hoạt động tùy chỉnh
+        details: Chi tiết hoạt động tùy chỉnh
+        code: Mã hoạt động tùy chỉnh
+        fleetbase-message: Fleetbase không khuyến khích điều này trừ khi bạn hoàn toàn biết bạn đang làm gì.
+      order-route-form:
+        toggle: Bật/Tắt Nhiều Điểm giao
+        optimize: Tối ưu hóa Tuyến đường
+        optimize-text: Fleetbase sẽ tự động tối ưu hóa tuyến đường.
+        add: Thêm Điểm dừng
+        add-text: Sử dụng nút `Thêm Điểm dừng` để thêm các điểm dừng khác cho đơn hàng này. Bộ xử lý định tuyến của Fleetbase sẽ tự động tối ưu hóa tuyến đường khi mỗi điểm dừng được thêm vào hoặc gỡ bỏ.
+        select-waypoint: Chọn Điểm dừng
+        pickup: Nhận hàng
+        edit-address: Chỉnh sửa Địa chỉ
+        select-pickup: Chọn Nhận hàng
+        invalid: Tọa độ không hợp lệ!
+        dropoff: Giao hàng
+        select-dropoff: Chọn Giao hàng
+        return: Trả lại
+        select-return: Chọn Trả lại
+      place-assign-vendor:
+        select-vendor: Chọn Nhà cung cấp
+      place-details:
+        view: Xem trên bản đồ
+      policy-form:
+        name: Tên Chính sách
+        name-text: Nhập tên cho chính sách của bạn
+        description: Mô tả Chính sách
+        description-text: Nhập mô tả cho chính sách của bạn
+        permissions: Chọn Quyền
+      role-form:
+        name: Tên Vai trò
+        name-text: Nhập tên cho vai trò này
+        permissions: Chọn Quyền
+      select-payment-method:
+        card-ending: Thẻ kết thúc bằng {method}
+      service-area-form:
+        name: Tên Khu vực Dịch vụ
+        name-text: Đặt tên hiển thị cho khu vực dịch vụ.
+        type: Loại Khu vực Dịch vụ
+        type-text: Chọn định nghĩa loại cho khu vực dịch vụ này.
+        select-type: Chọn loại khu vực dịch vụ...
+        border-color: Màu sắc Viền Khu vực Dịch vụ
+        customize-border-color: Tùy chỉnh màu sắc viền cho khu vực dịch vụ này.
+        area-color: Màu sắc Khu vực Dịch vụ
+        customize-area-color: Tùy chỉnh màu sắc nền cho khu vực dịch vụ này.
+        country: Quốc gia Khu vực Dịch vụ
+        country-text: Tùy chọn đặt quốc gia nơi khu vực dịch vụ này tọa lạc hoặc được đặt.
+      set-password:
+        message: Chào mừng đến với Fleetbase! Trước khi bạn bắt đầu, hãy đặt mật khẩu mới để tiếp tục bên dưới.
+        new-password: Mật khẩu mới
+        confirm-password: Xác nhận Mật khẩu
+        help-text: Nhập mật khẩu ít nhất 8 ký tự để tiếp tục.
+      uninstall-prompt:
+        message: Bạn đang cố gắng gỡ bỏ tiện ích mở rộng "{options}". Bạn có chắc chắn muốn tiếp tục gỡ bỏ này không?
+        sub-message: Tất cả cấu hình và cài đặt tùy chỉnh sẽ bị mất.
+      vehicle-details:
+        make: Hãng xe
+        model: Mẫu xe
+        year: Năm
+        driver-assigned: Tài xế được giao
+        no-driver-assigned: Không có tài xế được giao
+        vehicle-assigned: Phương tiện được giao
+        no-vehicle-assigned: Không có phương tiện được giao
+        avatar: Ảnh đại diện
+        model-information: Thông tin Mẫu xe
+        acceleration: 0 đến 100 Kph
+        body: Thân xe
+        doors: Cửa
+        length: Chiều dài (mm)
+        seats: Ghế
+        top-speed: Tốc độ tối đa (kph)
+        transmission: Loại hộp số
+        weight: Cân nặng (kg)
+        wheelbase: Khoảng cách trục (mm)
+        width: Chiều rộng (mm)
+        engine-information: Thông tin Động cơ
+        engine-bore: Đường kính xilanh (mm)
+        cc: CC
+        compression: Tỷ số nén
+        cylinder: Xilanh
+        position: Vị trí
+        power-ps: Công suất (ps)
+        power-rpm: Công suất (rpm)
+        stroke: Đường kính hành trình (mm)
+        torque-nm: Mô-men xoắn (nm)
+        torque-rpm: Mô-men xoắn (rpm)
+        valves: Van mỗi xilanh
+        fuel-information: Thông tin Nhiên liệu
+        fuel: Nhiên liệu
+        fuel-cap: Nắp bình nhiên liệu (l)
+        liters-city: Lít mỗi km Thành phố
+        liters-highway: Lít mỗi km Đường cao tốc
+        liters-mixed: Lít mỗi km Tổng hợp
+      vehicle-form:
+        map-avatar: Chọn ảnh đại diện trên bản đồ
+        map-avatar-text: Chọn một ảnh đại diện để sử dụng khi hiển thị trên bản đồ khi sử dụng các tính năng theo dõi định vị.
+        select-avatar: Chọn ảnh đại diện
+        make: Hãng xe
+        model: Mẫu xe
+        year: Năm xe
+        select-driver: Chọn Tài xế
+        body: Loại thân xe
+        doors: Số cửa
+        type: Loại hệ dẫn động xe
+        length: Chiều dài xe (mm)
+        seats: Số ghế
+        top-speed: Tốc độ tối đa của xe (kph)
+        transmission: Loại hộp số
+        weight: Trọng lượng xe (kg)
+        wheelbase: Khoảng cách trục xe (mm)
+        width: Chiều rộng xe (mm)
+        engine-bore: Đường kính xilanh (mm)
+        cc: CC
+        compression: Tỷ số nén động cơ
+        cylinder: Số xilanh
+        position: Vị trí động cơ
+        power-ps: Công suất động cơ (ps)
+        power-rpm: Công suất động cơ (rpm)
+        stroke: Độ dài hành trình (mm)
+        torque-nm: Mô-men xoắn động cơ (nm)
+        torque-rpm: Mô-men xoắn động cơ (rpm)
+        fuel-type: Loại nhiên liệu
+        fuel-cap: Khối lượng nắp bình nhiên liệu (L)
+      vendor-details:
+        sandbox: Sandbox
+        host: Máy chủ
+        namespace: Tên miền
+      vendor-form:
+        choose-vendor: Chọn Nhà cung cấp Tích hợp
+        create-vendor: Tạo Nhà cung cấp Tùy chỉnh
+        credentials: Thông tin đăng nhập
+        options: Tùy chọn
+        hide-advanced: Ẩn Tùy chọn Nâng cao
+        show-advanced: Hiển thị Tùy chọn Nâng cao
+        custom-host: Máy chủ Tùy chỉnh
+        host-text: Tùy chọn cung cấp máy chủ tùy chỉnh để sử dụng cho tích hợp này.
+        custom-namespace: Tên miền Tùy chỉnh
+        namespace-text: Tùy chọn cung cấp tên miền hoặc phiên bản API tùy chỉnh để sử dụng cho tích hợp này.
+        webhook: URL Webhook
+        webhook-text: Các nhà cung cấp tích hợp thường yêu cầu điều này để Fleetbase có thể nhận cập nhật hoạt động về đơn hàng. Đừng thay đổi trừ khi bạn biết mình đang làm gì! Thay đổi điều này có thể làm hỏng việc cập nhật đơn hàng của bạn!
+        cancel-credentials: Hủy cài đặt lại thông tin đăng nhập
+        reset-message: Thông tin đăng nhập nhạy cảm chỉ có thể được đặt lại, để cập nhật thông tin đăng nhập bạn phải nhập lại thông tin đăng nhập.
+        optionally: Tùy chọn cung cấp của bạn
+        configure-vendor: để cấu hình nhà cung cấp này.
+        select: Chọn
+        sandbox: Sandbox
+        name-text: Tên của nhà cung cấp, thường là tên của doanh nghiệp.
+        email-text: Email của nhà cung cấp, có thể được sử dụng để gửi email đến nhà cung cấp.
+        phone-text: Số điện thoại của nhà cung cấp, có thể được sử dụng để gửi SMS hoặc tin nhắn đến nhà cung cấp.
+        website-text: Trang web của nhà cung cấp, tùy chọn thêm trang web của nhà cung cấp để tham khảo.
+        select-address: Chọn Địa chỉ
+      zone-form:
+        name: Tên Khu vực
+        name-text: Đặt tên hiển thị cho khu vực.
+        border-color: Màu sắc Viền Khu vực
+        customize-border: Tùy chỉnh màu sắc viền cho khu vực này.
+        zone-color: Màu sắc Khu vực
+        customize-fill-color: Tùy chỉnh màu sắc nền cho khu vực này.
+        optionally: Tùy chọn cung cấp mô tả cho khu vực.
+        description-zone: Mô tả Khu vực
+    order:
+      header:
+        dispatched-order: Đã gửi tại {order}
+        dispatched: Đã gửi
+        dispatched-at: Gửi tại
+        edit: Chỉnh sửa Chi tiết
+        update: Cập nhật Hoạt động
+        assign: Gán Tài xế
+        get-order: Lấy Nhãn Đơn hàng
+        split-order: Tách Đơn hàng
+        reschedule: Đặt lại lịch Đơn hàng
+        cancel-order: Hủy Đơn hàng
+      place-card:
+        show-less: Hiển thị ít chi tiết hơn
+        show-more: Hiển thị nhiều chi tiết hơn
+      schedule-card:
+        destination: Điểm đến
+        unassign-driver: Hủy gán tài xế?
+        unassign-text: Bạn sắp hủy gán tài xế cho Đơn hàng {orderId}. Nhấp tiếp tục để xác nhận việc gỡ bỏ tài xế.
+        unassign-button: Tiếp tục và hủy gán tài xế
+        assign-driver: Gán Tài xế Mới?
+        assign-text: Bạn sắp gán một tài xế mới ({driverName}) cho Đơn hàng {orderId}. Nhấp tiếp tục để xác nhận tài xế.
+        assign-button: Tiếp tục và gán tài xế
+        date: Ngày đã lên lịch
+        driver-assigned: Tài xế
+        vehicle-assigned: Phương tiện
+        no-driver: Không có tài xế
+        no-vehicle: Không có phương tiện
+        select-driver: Chọn Tài xế
+        select-vehicle: Chọn Phương tiện
+    widget:
+      fleet-ops-quickstart:
+        message: Hãy xem những gì bạn có thể làm để khởi động các hoạt động...
+        start-task: Bắt đầu Nhiệm vụ
+      key-metrics:
+        title: Các Chỉ số Fleet-Ops
+        earnings: Doanh thu
+        fuel-expenses: Chi phí Nhiên liệu
+        traveled: Khoảng cách đã di chuyển
+        total-time: Tổng Thời gian
+        order-scheduled: Đơn hàng đã lên lịch
+        order-completed: Đơn hàng đã hoàn thành
+        order-progress: Đơn hàng đang tiến hành
+        order-canceled: Đơn hàng đã bị hủy
+        driver-online: Tài xế Online
+        customers: Khách hàng
+        open-issue: Vấn đề Mở
+        closed-issues: Vấn đề Đã đóng
+      live-order-map:
+        loading: Đang tải đơn hàng đang tiến hành...
+        assigned: Tài xế Đã Gán
+        no-order: Không có đơn hàng đang tiến hành
+        message: Khi các đơn hàng đang tiến hành, chúng sẽ hiển thị trong widget này và cho thấy hoạt động theo thời gian thực.
+      recent-orders:
+        title: Đơn hàng Gần đây
+        loading: Đang tải các đơn hàng gần đây...
+        no-orders: Không có đơn hàng trong tuần này
+        message-part-1: Chưa có đơn hàng nào trong tuần này, hãy bắt đầu di chuyển bằng cách
+        message-part-2: tạo một đơn hàng mới
+        message-part-3: hoặc cho phép khách hàng của bạn gửi đơn hàng qua API.
+      transactions:
+        title: Giao dịch Gần đây
+        loading: Đang tải các giao dịch gần đây...
+        no-transactions: Không có giao dịch trong tuần này
+        message: Khi các đơn hàng được thực hiện với các mức phí dịch vụ, Fleetbase theo dõi giao dịch tự động.
+    contact-form-panel:
+      success-message: liên hệ {contactName} đã được lưu thành công.
+      view-contact-button: Xem chi tiết liên hệ
+      save-contact: Lưu Liên hệ
+      create-contact: Tạo Liên hệ
+      cancel-edit-button: Hủy chỉnh sửa liên hệ
+      cancel-new-button: Hủy liên hệ mới
+      new-contact: Liên hệ Mới
+    contact-panel:
+      details:
+        web-url: URL Trang web
+      edit-button: Chỉnh sửa liên hệ
+      cancel-edit-button: Hủy chỉnh sửa liên hệ
+      cancel-new-button: Hủy liên hệ mới
+    display-panel:
+      no-address: Không có địa chỉ {type}!
+      no-address-message: Không có địa chỉ!
+    driver-card:
+      no-fleets: Không có đội xe
+    driver-form-panel:
+      driver-details: Chi tiết Tài xế
+      user-account: Tài khoản Người dùng
+      user-account-help-text: Mỗi hồ sơ tài xế cần phải liên kết với một tài khoản người dùng cụ thể. Mối liên kết này là cần thiết để xử lý quy trình xác thực, đảm bảo rằng mỗi tài xế có thể truy cập và quản lý hồ sơ của mình một cách an toàn.
+      success-message: Tài xế ({driverName}) đã được lưu thành công.
+      driver-detail: Xem chi tiết tài xế
+      save-driver: Lưu Tài xế
+      create-driver: Tạo Tài xế
+      cancel-edit-driver: Hủy chỉnh sửa tài xế
+      cancel-new-driver: Hủy tài xế mới
+      upload-new-photo: Tải lên ảnh mới
+      new-driver: Tài xế Mới
+      vendor: Nhà cung cấp
+      select-vehicle: Chọn Phương tiện
+      driver-status: Chọn trạng thái tài xế
+      order-history: Lịch sử Đơn hàng
+    driver-panel:
+      user-account: Tài khoản Người dùng
+      driver-details: Chi tiết Tài xế
+      locate-button-text: Định vị tài xế
+      edit-button-text: Chỉnh sửa tài xế
+      close-button-text: Đóng chi tiết tài xế
+      no-vehicle-message: Không có phương tiện gán
+      assign-vehicle-button: Gán một phương tiện cho tài xế
+    fleet-driver-listing:
+      search-driver: Tìm tài xế trong đội xe
+      add-driver: Thêm tài xế vào đội xe
+      loading-message: Đang tải tài xế đội xe...
+    fleet-form-panel:
+      success-message: Đội xe ({fleetName}) đã được lưu thành công.
+      title: Đội Xe Mới
+      save-fleet: Lưu Đội Xe
+      create-fleet: Tạo Đội Xe
+      view-details: Xem chi tiết đội xe
+      cancel-edit-fleet: Hủy chỉnh sửa đội xe
+      cancel-new-fleet: Hủy đội xe mới
+      fleet-name: Tên Đội Xe
+      parent-fleet: Đội Xe Cha
+      select-parent-fleet: Chọn đội xe cha để gán đội xe
+      select-vendor: Chọn nhà cung cấp để gán đội xe
+      service-title: Gán vào Khu vực Dịch vụ
+      select-service: Chọn khu vực dịch vụ để gán đội xe
+      zone-title: Gán vào Khu vực
+      select-zone: Chọn khu vực để gán đội xe
+      select-status-fleet: Chọn trạng thái của đội xe.
+      select-status: Chọn trạng thái
+      task-mission-title: Nhiệm vụ/ Sứ mệnh
+      task-text: Cung cấp mô tả về nhiệm vụ hoặc sứ mệnh chính của đội xe này nếu có.
+    fleet-vehicle-listing:
+      search-vehicle: Tìm phương tiện trong đội xe
+      add-vehicle: Thêm phương tiện vào đội xe
+      loading-message: Đang tải phương tiện đội xe...
+    fuel-report-form-panel:
+      success-message: Báo cáo nhiên liệu đã được lưu thành công.
+      fuel-report: Báo cáo Nhiên liệu Mới
+      save-fuel-report: Lưu Báo cáo Nhiên liệu
+      create-fuel-report: Tạo Báo cáo Nhiên liệu
+      view-details: Xem chi tiết báo cáo nhiên liệu
+      cancel-edit-fuel-report: Hủy chỉnh sửa báo cáo nhiên liệu
+      cancel-new-fuel-report: Hủy báo cáo nhiên liệu mới
+      select-reporter: Chọn Người báo cáo
+      select-driver: Chọn Tài xế
+      select-vehicle: Chọn Phương tiện
+      select-fuel-report: Chọn trạng thái báo cáo nhiên liệu
+      odometer: Công tơ mét
+      cost: Chi phí
+      volume: Khối lượng
+      select-volume-text: Chọn đơn vị đo lường và khối lượng của nhiên liệu để báo cáo.
+    fuel-report-panel:
+      title: Chi tiết Báo cáo Nhiên liệu
+      edit-button: Chỉnh sửa báo cáo nhiên liệu
+      cancel-edit-fuel-report: Hủy chỉnh sửa báo cáo nhiên liệu
+      cancel-new-fuel-report: Hủy báo cáo nhiên liệu mới
+      details: 
+        fuel: Nhiên liệu/ Khối lượng
+    global-search:
+      search: Tìm kiếm theo từ khóa...
+    integrated-order-details:
+      order-id: ID Đơn hàng
+      quotation-id: ID Báo giá
+      driver-id: ID Tài xế
+      link: Liên kết Chia sẻ
+      price-breakdown: Chi tiết Giá
+      metadata: Siêu dữ liệu
+    issue-form-panel:
+      success-message: >-
+        Vấn đề ({publicId}) đã được lưu thành công.
+      issue: Vấn đề Mới
+      save-issue: Lưu Vấn đề
+      create-issue: Tạo Vấn đề
+      view-details: Xem chi tiết vấn đề
+      cancel-edit-issue: Hủy chỉnh sửa vấn đề
+      cancel-new-issue: Hủy vấn đề mới
+      reported-by: Báo cáo Bởi
+      assigned: Được Gán Cho
+      select-assign: Chọn Người được Gán
+      select-reporter: Chọn Người báo cáo
+      select-driver: Chọn Tài xế
+      select-vehicle: Chọn Phương tiện
+      type: Loại Vấn đề
+      select-type: Chọn loại vấn đề
+      category: Danh mục Vấn đề
+      select-category: Chọn danh mục vấn đề
+      report: Báo cáo Vấn đề
+      tags: Thẻ Vấn đề
+      add-tags: Thêm thẻ
+      priority: Ưu tiên Vấn đề
+      select-priority: Chọn mức độ ưu tiên của vấn đề
+      select-status: Chọn trạng thái vấn đề
+    issue-panel:
+      details:
+        assigned: Được Gán Cho
+        type: Loại Vấn đề
+        category: Danh mục Vấn đề
+        priority: Ưu tiên Vấn đề
+        report: Báo cáo
+      title: Chi tiết Vấn đề
+      edit-issue: Chỉnh sửa Vấn đề
+      cancel-edit-issue: Hủy chỉnh sửa vấn đề
+      cancel-new-issue: Hủy vấn đề mới
+    live-map:
+      onText: Ẩn các điều khiển vẽ...
+      offText: Bật các điều khiển vẽ...
+      show-coordinates: Hiển thị tọa độ...
+      center-map: Căn giữa bản đồ tại đây...
+      zoom-in: Phóng to...
+      zoom-out: Thu nhỏ...
+      hide-draw: Ẩn các điều khiển vẽ...
+      enable-draw: Bật các điều khiển vẽ...
+      create-new-service: Tạo Khu vực Dịch vụ Mới...
+      focus-service: 'Tập trung Khu vực Dịch vụ: {serviceName}'
+      view-driver: 'Xem Tài xế: {driverName}'
+      edit-driver: 'Chỉnh sửa Tài xế: {driverName}'
+      delete-driver: 'Xóa Tài xế: {driverName}'
+      view-vehicle-for: 'Xem Phương tiện cho: {driverName}'
+      view-vehicle: 'Xem phương tiện: {vehicleName}'
+      edit-vehicle: 'Chỉnh sửa phương tiện: {vehicleName}'
+      delete-vehicle: 'Xóa phương tiện: {vehicleName}'
+      edit-zone: 'Chỉnh sửa khu vực: {zoneName}'
+      delete-zone: 'Xóa khu vực: {zoneName}'
+      assign-zone: 'Gán Đội xe vào Khu vực: {zoneName}'
+      blur-service: 'Làm mờ Khu vực Dịch vụ: {serviceName}'
+      create-zone: 'Tạo Khu vực trong: {serviceName}'
+      assign-fleet: 'Gán Đội xe vào Khu vực Dịch vụ: {serviceName}'
+      edit-service: 'Chỉnh sửa Khu vực Dịch vụ: {serviceName}'
+      delete-service: 'Xóa Khu vực Dịch vụ: {serviceName}'
+      service-area: Khu vực Dịch vụ
+      zone: Khu vực
+    order-config:
+      create-new-title: Tạo cấu hình đơn hàng mới
+      warning-message: Cấu hình đơn hàng yêu cầu một tên
+      success-message: Cấu hình đơn hàng mới đã được tạo thành công.
+      no-order-warning: Không có cấu hình đơn hàng nào được chọn.
+      saved-success: Cấu hình đơn hàng '{orderName}' đã được lưu.
+      enter-name-title: Nhập tên của cấu hình được sao chép
+      no-config-warning: Chưa nhập tên cấu hình.
+      cloned-success: Cấu hình đơn hàng đã được sao chép thành công.
+      body: Khi cấu hình đơn hàng này bị xóa, bạn sẽ không thể tạo đơn hàng bằng nó nữa. Bạn có chắc chắn không?
+      uninstall-title: Gỡ cài đặt Cấu hình
+      uninstall-success: Tiện ích mở rộng {extensionName} đã được gỡ cài đặt.
+      activity-flow-editor:
+        add-status: Thêm trạng thái mới vào luồng
+        no-status: Chưa nhập trạng thái.
+        overwrite: Điều này sẽ ghi đè lên trạng thái hiện có!
+        overwrite-text: Đã có một trạng thái {statusName} khác trong luồng này, nếu bạn tiếp tục trạng thái này sẽ bị ghi đè. Bạn có muốn ghi đè trạng thái {statusName} trước đó không?
+        overwrite-button: Có, ghi đè!
+        remove: Xóa trạng thái
+        remove-text: Bạn có chắc chắn muốn xóa trạng thái này không? Tất cả các hoạt động và logic liên quan sẽ bị xóa cùng với trạng thái.
+        delete-button: Có, xóa
+        unable-warning: >-
+          {status} phải theo thứ tự này, không thể di chuyển.
+        order-warning: Trạng thái được tạo phải luôn là chuỗi đầu tiên của luồng đơn hàng.
+        title: Luồng Hoạt động
+        message: Cấu hình luồng hoạt động cho phép bạn xác định các loại hoạt động trạng thái theo dõi khác nhau áp dụng cho loại đơn hàng này. Logic của luồng hoạt động cũng có thể được cấu hình.
+        order-flow: Luồng Đơn hàng
+        waypoint-flow: Luồng Điểm dừng
+        new-activity: Hoạt động Mới
+        activity-details: Chi tiết Hoạt động
+        logic-stack: Ngăn xếp Logic
+        add-logic: Thêm điều kiện logic
+        select-field: Chọn trường
+        select-operator: Chọn toán tử
+        enter-value: Nhập giá trị để so sánh
+        no-logic: Không có điều kiện logic nào được áp dụng
+      details-editor:
+        success: Đã cài đặt
+        key-text: Chuyển khóa này vào loại đơn hàng của bạn để cấu hình đơn hàng sử dụng cấu hình này.
+        namespace-text: Tên miền duy nhất cho tiện ích mở rộng này.
+        id: ID Tiện ích mở rộng
+        id-text: ID duy nhất cho tiện ích mở rộng này.
+        version: Phiên bản Tiện ích mở rộng
+        version-text: Phiên bản của tiện ích mở rộng này.
+        clone: Sao chép Cấu hình
+        uninstall: Gỡ cài đặt Cấu hình
+        delete: Xóa Cấu hình
+      entities-editor:
+        warning-message: Chưa nhập tên khóa trường meta.
+        title: Thực thể
+        message: Cấu hình thực thể cho phép bạn xác định các loại thực thể khác nhau mà có thể được chọn cho loại đơn hàng này. Những thực thể này nên được sử dụng như các mẫu để tạo đơn hàng thủ công nhanh hơn.
+        type: Loại Thực thể
+        add-meta: Thêm trường meta
+      fields-editor:
+        text-field: Trường Văn bản
+        boolean: Boolean
+        boolean-text: Cho phép người dùng bật hoặc tắt thuộc tính đúng hoặc sai bằng hộp kiểm
+        dropdown: Chọn từ danh sách
+        dropdown-text: Cho phép người dùng chọn một tùy chọn từ danh sách các tùy chọn
+        datetime: Chọn Ngày & Giờ
+        datetime-text: Cho phép người dùng chọn ngày & giờ
+        port: Chọn Cổng
+        port-text: Cho phép người dùng chọn một cổng
+        vessel: Chọn Tàu
+        vessel-text: Cho phép người dùng chọn một tàu
+        warning-message: Chưa nhập tên nhóm.
+        field-title: Các Trường Meta
+        new-field: Trường Tùy chỉnh Mới
+        new-custom-field: Nhóm Trường Tùy chỉnh Mới
+        field-text: Cấu hình các trường meta sẽ cho phép bạn xác định các trường nhập tùy chỉnh sẽ được áp dụng cho đơn hàng.
+        custom-field-group: Nhóm Trường Tùy chỉnh
+        default-field: Các Trường Mặc định
+        custom-field: Trường Tùy chỉnh
+        type: Loại Trường
+        select-type: Chọn loại trường
+        add-option: Thêm Tùy chọn
+      select-message: Chọn một cấu hình đơn hàng để chỉnh sửa, hoặc nhấp vào "Cấu hình Mới" để tạo cấu hình đơn hàng mới.
+      new-config: Cấu hình Mới
+      loading-configuration: Đang tải các cấu hình đơn hàng của bạn...
+      select-order: Chọn cấu hình đơn hàng
+      save-changes: Lưu Thay đổi
+      details: Chi tiết
+      fields: Trường Tùy chỉnh
+      flow: Luồng Hoạt động
+      entities: Thực thể
+    order-list-overlay:
+      search: Tìm kiếm đơn hàng...
+      selected: Đã chọn
+      assign: Gán cho tài xế...
+      cancel: Hủy đơn hàng...
+      delete: Xóa đơn hàng...
+      actions: Hành động
+      create-order: Tạo đơn hàng mới...
+      create-fleet: Tạo đội xe mới...
+      active-order: Đơn hàng đang hoạt động
+      unassigned-order: Đơn hàng chưa được gán
+    place-form-panel:
+      success-message: địa điểm ({placeAddress}) đã được lưu thành công.
+      place: Địa điểm Mới
+      save-place: Lưu Địa điểm
+      create-place: Tạo Địa điểm
+      view-details: Xem chi tiết địa điểm
+      cancel-edit-place: Hủy chỉnh sửa địa điểm
+      cancel-new-place: Hủy địa điểm mới
+      street-1: Đường 1
+      street-2: Đường 2
+      neighborhood: Khu phố
+      building: Tòa nhà
+      security-code: Mã Truy cập Bảo mật
+      postal-code: Mã Bưu điện
+      state: Bang
+    place-panel:
+      edit-place: Chỉnh sửa địa điểm
+      cancel-edit-place: Hủy chỉnh sửa địa điểm
+      cancel-new-place: Hủy địa điểm mới
+    route-list:
+      expand: Nhấn để mở rộng
+      collapse: Nhấn để thu gọn
+      more-waypoints: thêm điểm dừng
+    settings-window:
+      success-message: Cài đặt đã được lưu thành công.
+      title: Cài đặt FleetOps
+      save: Lưu Thay đổi
+      name: Khoảng cách Ping Adhoc Mặc định
+      name-text: Cài đặt này xác định khoảng cách mặc định tính bằng mét mà các đơn hàng adhoc nên ping tài xế trong khu vực của điểm đón đơn hàng.
+      message: Khoảng cách phải tính bằng mét
+    vehicle-form-panel:
+      success-message: Xe ({vehicleName}) đã được lưu thành công.
+      view-details: Xem chi tiết xe
+      save-vehicle: Lưu Xe
+      create-vehicle: Tạo Xe      
+      cancel-edit-vehicle: Hủy chỉnh sửa xe
+      cancel-new-vehicle: Hủy xe mới
+      upload-photo: Tải lên ảnh mới
+      new-vehicle: Xe Mới
+      not-assigned: Chưa gán tài xế
+      plate-number: Số Biển Số
+      vin-number: Số VIN
+      make: Hãng
+      vehicle-make: Hãng xe
+      model: Mẫu
+      vehicle-model: Mẫu xe
+      year: Năm
+      vehicle-year: Năm xe
+      driver-assigned: Tài xế Được Gán
+      vehicle-assigned: Xe Được Gán
+      select-driver: Chọn Tài xế
+      select-vehicle: Chọn Xe
+      avatar: Avatar
+      select-map-avatar: Chọn avatar trên bản đồ
+      select-avatar-rendering: Chọn một avatar để được sử dụng cho việc hiển thị trên bản đồ khi sử dụng các tính năng theo dõi định vị.
+      select-avatar: Chọn avatar
+    vehicle-panel:
+      edit: Chỉnh sửa xe
+      close: Đóng chi tiết xe
+      not-assigned: Chưa gán tài xế
+      assign-driver: Gán một tài xế cho xe
+    vendor-form-panel:
+      success-message: Nhà cung cấp ({vendorName}) đã được lưu thành công.
+      create-form:
+        integrated-vendor: Chọn nhà cung cấp tích hợp
+        custom-vendor: Tạo nhà cung cấp tùy chỉnh
+        title: Cài đặt
+        select-vendor-type: Chọn loại nhà cung cấp
+        choose-vendor: Chọn nhà cung cấp tích hợp
+        provider: Nhà cung cấp
+        credentials: Thông tin xác thực
+        advanced-options: Tùy chọn Nâng cao
+        hide-advanced-options: Ẩn Tùy chọn Nâng cao
+        show-advanced-options: Hiển thị Tùy chọn Nâng cao
+        host: Máy chủ Tùy chỉnh
+        host-text: Tùy chọn cung cấp máy chủ tùy chỉnh sẽ được sử dụng cho tích hợp này.
+        namespace: Tên miền Tùy chỉnh
+        namespace-text: Tùy chọn cung cấp tên miền tùy chỉnh hoặc phiên bản API sẽ được sử dụng cho tích hợp.
+        webhook: URL Webhook
+        webhook-text: Các nhà cung cấp tích hợp thường yêu cầu điều này để Fleetbase có thể nhận các bản cập nhật hoạt động trên đơn hàng. Không thay đổi trừ khi bạn biết bạn đang làm gì! Thay đổi điều này có thể làm hỏng các bản cập nhật đơn hàng của bạn!
+        select-integrated: Chọn nhà cung cấp tích hợp.
+        vendor-details: Chi tiết Nhà cung cấp
+        select-vendor-status: Chọn trạng thái nhà cung cấp
+        select-address: Chọn Địa chỉ
+        edit: Chỉnh sửa
+        new-address: Địa chỉ Mới
+        optionally: Tùy chọn cung cấp riêng của bạn
+        configure-vendor: để cấu hình nhà cung cấp này.
+        select: Chọn
+        name-text: Tên của nhà cung cấp, thường là tên của doanh nghiệp.
+        email-text: Email của nhà cung cấp, có thể được sử dụng để gửi email cho nhà cung cấp.
+        phone-text: >-
+          Số điện thoại của nhà cung cấp, có thể được sử dụng để gửi SMS hoặc tin nhắn cho nhà cung cấp.
+        website-text: Trang web của nhà cung cấp, tùy chọn thêm trang web của nhà cung cấp để tham khảo.
+      edit-form:
+        cancel-credentials: Hủy việc đặt lại thông tin xác thực
+        sensitive-credentials: Thông tin xác thực nhạy cảm chỉ có thể được đặt lại, để cập nhật thông tin xác thực bạn phải nhập lại thông tin xác thực.
+        reset-credentials: Nhấp vào đây để đặt lại thông tin xác thực
+        select-address: Chọn Địa chỉ
+      view-details: Xem chi tiết nhà cung cấp
+      save-vendor: Lưu Nhà cung cấp
+      create-vendor: Tạo Nhà cung cấp      
+      cancel-edit-vendor: Hủy chỉnh sửa nhà cung cấp
+      cancel-new-vendor: Hủy nhà cung cấp mới
+      upload-photo: Tải lên ảnh mới
+      new-vendor: Nhà cung cấp Mới
+    vendor-panel:
+      edit: Chỉnh sửa nhà cung cấp
+      close: Đóng chi tiết nhà cung cấp
+      new-vendor: Nhà cung cấp Mới
+  management:
+    contacts:
+      index:
+        delete-button: Xóa Danh Bạ
+        updated: Cập nhật lúc
+        created: Tạo lúc
+        view-contact: Xem Chi tiết Danh Bạ
+        edit-contact: Chỉnh sửa Danh Bạ
+        delete-contact: Xóa Danh Bạ
+        edit:
+          title: Tiếp tục mà không lưu?
+          body: Các thay đổi chưa được lưu cho danh bạ này sẽ bị mất. Nhấp vào tiếp tục để tiếp tục.
+          button: Tiếp tục mà không lưu
+        title: Danh Bạ
+        delete-contacts: Xóa Danh Bạ
+    drivers:
+      index:
+        assign-driver: Gán Tài Xế
+        view-details: Xem chi tiết tài xế...
+        edit-details: Chỉnh sửa chi tiết tài xế...
+        assign-order-driver: Gán đơn hàng cho tài xế...
+        assign-vehicle-driver: Gán xe cho tài xế...
+        locate-driver-map: Xác định vị trí tài xế trên bản đồ...
+        delete-driver: Xóa tài xế...
+        delete-button: Xóa Tài Xế
+        order-driver: Gán Đơn Hàng cho Tài Xế này
+        assign-order: Gán Đơn Hàng
+        no-order-warning: Chưa chọn đơn hàng!
+        assign-success: '{driverName} đã được gán cho đơn hàng.'
+        title-vehicle: Gán Xe cho Tài Xế này
+        confirm-button: Xác Nhận & Tạo
+        assign-vehicle: '{driverName} đã được gán cho xe.'
+        locate-driver: Vị trí Hiện Tại của {driverName}
+        edit:
+          title: Tiếp tục mà không lưu?
+          body: Các thay đổi chưa được lưu cho tài xế này sẽ bị mất. Nhấp vào tiếp tục để tiếp tục.
+          button: Tiếp tục mà không lưu
+        title: Tài Xế
+        delete-drivers: Xóa Tài Xế  
+        search-placeholder: Tìm kiếm Tài Xế 
+      new:
+         warning-message: Không có tệp nào trong hàng đợi để tải lên!
+         import-success: Nhập khẩu hoàn tất.
+       
+    fleets:
+      index:
+        view-fleet: Xem chi tiết đội xe...
+        edit-fleet: Chỉnh sửa chi tiết đội xe...
+        assign-driver: Gán tài xế cho đội xe...
+        delete-fleet: Xóa đội xe...
+        delete-button: Xóa Đội Xe
+        edit:
+          body: Các thay đổi chưa được lưu cho đội xe này sẽ bị mất. Nhấp vào tiếp tục để tiếp tục.
+        title: Đội Xe
+        delete-fleets: Xóa Đội Xe
+    fuel-reports:
+      index:
+        view: Xem Chi Tiết
+        edit-fuel: Chỉnh sửa Báo Cáo Nhiên Liệu
+        delete: Xóa Báo Cáo Nhiên Liệu
+        delete-button: Xóa Báo Cáo Nhiên Liệu
+        edit:
+          body: Các thay đổi chưa được lưu cho báo cáo nhiên liệu này sẽ bị mất. Nhấp vào tiếp tục để tiếp tục.
+        title: Báo Cáo Nhiên Liệu
+        delete-fuel-reports: Xóa Báo Cáo Nhiên Liệu
+    issues:
+      index:
+        view: Xem Chi Tiết
+        edit-issues: Chỉnh sửa Vấn Đề
+        delete: Xóa Vấn Đề
+        delete-button: Xóa Vấn Đề
+        edit:
+          body: Các thay đổi chưa được lưu cho vấn đề này sẽ bị mất. Nhấp vào tiếp tục để tiếp tục.
+        title: Vấn Đề
+        delete-issues: Xóa Vấn Đề
+    places:
+      index:
+        view-details: Xem Chi tiết Địa điểm
+        edit-place: Chỉnh sửa Địa điểm
+        view-place: Xem Địa điểm trên Bản đồ
+        delete: Xóa Địa điểm
+        title: Gán Địa điểm này cho Nhà cung cấp
+        confirm-button: Xác Nhận & Tạo
+        delete-button: Xóa Địa điểm
+        success-message: 'Chi tiết {placeName} đã được cập nhật.'
+        locate-title: Vị trí của {placeName}
+        edit:
+          body: Các thay đổi chưa được lưu cho địa điểm này sẽ bị mất. Nhấp vào tiếp tục để tiếp tục.
+        places-title: Địa điểm
+        delete-places: Xóa Địa điểm
+    vehicles:
+      index:
+        view-vehicle: Xem chi tiết xe...
+        edit-vehicle: Chỉnh sửa chi tiết xe...        
+        delete-vehicle: Xóa xe...
+        delete-button: Xóa Xe
+        locate-action-title: Xác định Vị trí Xe
+        locate-title: Vị trí Hiện Tại của {vehicleName}
+        edit:
+          body: Các thay đổi chưa được lưu cho xe này sẽ bị mất. Nhấp vào tiếp tục để tiếp tục.
+        title: Xe
+        delete-vehicles: Xóa Xe
+    vendors:
+      index:
+        delete-button: Xóa Nhà Cung Cấp
+        view-vendor: Xem Chi tiết Nhà Cung Cấp
+        edit-vendor: Chỉnh sửa Nhà Cung Cấp
+        delete-vendor: Xóa Nhà Cung Cấp
+        edit:
+          body: Các thay đổi chưa được lưu cho nhà cung cấp này sẽ bị mất. Nhấp vào tiếp tục để tiếp tục.
+        title: Nhà Cung Cấp
+        delete-vendors: Xóa Nhà Cung Cấp
+  operations:
+    order-config:
+      route-loading-message: Đang tải Trình cấu hình Đơn hàng
+    orders:
+      index:
+        payload: Tải trọng
+        customer: Khách hàng
+        facilitator: Người điều phối
+        pickup: Nhận hàng
+        dropoff: Giao hàng
+        scheduled-at: Lên lịch vào
+        items: Mặt hàng
+        transaction: Tổng giao dịch
+        tracking: Số theo dõi
+        driver-assigned: Tài xế
+        vehicle-assigned: Xe
+        created-by: Tạo bởi
+        updated-by: Cập nhật bởi
+        view-order: Xem Đơn Hàng
+        cancel-order: Hủy Đơn Hàng
+        delete-order: Xóa Đơn Hàng
+        cancel-title: Bạn có chắc chắn muốn hủy đơn hàng này không?
+        cancel-body: Khi đơn hàng này bị hủy, bản ghi đơn hàng vẫn sẽ hiển thị nhưng không thể thêm hoạt động vào đơn hàng này.
+        cancel-success: Đơn hàng {orderId} đã được hủy.
+        dispatch-title: Bạn có chắc chắn muốn gửi đơn hàng này không?
+        dispatch-body: Khi đơn hàng này được gửi, tài xế được gán sẽ nhận được thông báo.
+        dispatch-success: Đơn hàng {orderId} đã được gửi.          
+        map: Bản đồ
+        table: Bảng
+        cancel-orders: Hủy Đơn Hàng
+        delete-orders: Xóa Đơn Hàng
+        new:
+          create-new-customer: Tạo khách hàng mới
+          create-new-facilitator: Tạo người điều phối mới
+          create-new-place: Tạo địa điểm mới
+          add-order: Thêm thực thể vào đơn hàng
+          edit-order: Chỉnh sửa metadata đơn hàng
+          add-field: Thêm trường tùy chỉnh
+          order-type: Loại Đơn Hàng
+          order-type-help-text: Chọn loại đơn hàng sẽ cho Fleetbase biết cấu hình đơn hàng nào sẽ được sử dụng.
+          order-type-placeholder: Chọn Loại Đơn Hàng
+          internal-id: ID Nội Bộ
+          internal-id-help-text: Sử dụng trường này để tùy chọn thiết lập một mã nhận diện hoặc mã nội bộ cho đơn hàng.
+          schedule: Lên lịch
+          schedule-help-text: Ngày và giờ mà đơn hàng sẽ được gửi. Nếu không có tài xế được gán tại thời điểm gửi, việc gửi sẽ thất bại. Nếu đơn hàng là Ad-Hoc, đơn hàng sẽ được gửi tới các tài xế trong khu vực nhận hàng.
+          customer: Khách hàng
+          customer-help-text: Tùy chọn gán khách hàng cho đơn hàng này. Nếu đây là khách hàng mới, hãy sử dụng nút 'Khách hàng mới' ở trên.
+          customer-placeholder: Chọn Khách Hàng
+          facilitator: Người điều phối
+          facilitator-help-text: Tùy chọn gán một người điều phối cho đơn hàng này, người điều phối có thể là nhà thầu phụ hoặc dịch vụ thứ ba sẽ hỗ trợ việc vận chuyển đơn hàng này.
+          facilitator-placeholder: Chọn Người Điều Phối
+          service-type: Loại Dịch Vụ
+          service-type-placeholder: Chọn loại dịch vụ
+          service-type-help-text: Chọn loại dịch vụ mà bạn muốn sử dụng cho 
+          assign-driver: Gán Tài Xế
+          assign-driver-help-text: Gán tài xế mà đơn hàng này sẽ được gửi đến.
+          assign-driver-placeholder: Chọn Tài Xế
+          assign-vehicle: Gán Xe
+          assign-vehicle-help-text: Gán xe mà đơn hàng này sẽ được thực hiện bằng.
+          assign-vehicle-placeholder: Chọn Xe
+          proof-delivery: Bằng chứng giao hàng
+          proof-delivery-help-text: Chọn loại bằng chứng giao hàng yêu cầu. Có thể là quét mã QR hoặc phương pháp ký tên.
+          proof-delivery-placeholder: Chọn Phương Pháp Bằng Chứng Giao Hàng
+          adhoc-ping: Khoảng cách Adhoc Ping
+          adhoc-ping-help-text: Cài đặt này xác định khoảng cách adhoc để ping cho đơn hàng này, nếu không thiết lập, nó sẽ quay lại cài đặt mặc định.
+          adhoc-ping-message: Khoảng cách phải tính bằng mét
+          ad-hoc: Ad-Hoc
+          ad-hoc-help-text: Bật Ad-Hoc sẽ cho phép đơn hàng thông minh ping các tài xế trong khu vực nhận hàng về đơn hàng, cho phép tài xế có sẵn đầu tiên nhận đơn hàng. Đây là một sự thay thế cho việc gán tài xế thủ công cho các đơn hàng theo thời gian thực.
+          dispatch: Gửi Ngay
+          dispatch-help-text: Bật gửi sẽ gửi đơn hàng này ngay lập tức sau khi tạo.
+          require-proof: Yêu Cầu Bằng Chứng Giao Hàng
+          require-proof-help-text: Bật tùy chọn này sẽ yêu cầu tài xế hoàn thành bằng chứng giao hàng.
+          additional-details: Chi tiết thêm
+          metadata: Metadata
+          route: Tuyến đường
+          route-label: Nhiều Điểm Giao
+          optimize-route: Tối ưu hóa Tuyến Đường
+          optimize-route-help-text: Fleetbase sẽ tự động tối ưu hóa tuyến đường.
+          add-waypoint: Thêm Điểm Đến
+          add-waypoint-help-text: Sử dụng nút `Thêm Điểm Đến` để thêm nhiều điểm dừng cho đơn hàng này. Công cụ định tuyến Fleetbase sẽ tự động tối ưu hóa tuyến đường khi từng điểm dừng được thêm vào hoặc loại bỏ.
+          select-waypoint-placeholder: Chọn Điểm Đến
+          infoblock-text: không thể hỗ trợ địa điểm này.
+          invalid-coordinates: Tọa độ không hợp lệ!
+          pickup: Nhận hàng
+          select-pickup: Chọn Nhận Hàng
+          dropoff: Giao hàng
+          select-dropoff: Chọn Giao Hàng
+          return: Trả lại
+          edit-address: Chỉnh sửa Địa Chỉ
+          select-return: Chọn Trả Lại
+          payload-entities: Tải trọng / Thực thể
+          add-item-order: Thêm Mặt Hàng vào Đơn Hàng
+          items-drop: Mặt hàng rơi tại
+          add-item-button: Thêm Mặt Hàng
+          add-entity: Thêm Thực Thể
+          sku: SKU
+          select-destination: Chọn Điểm Đến
+          edit-item: Chỉnh sửa Mặt Hàng
+          apply-service-rate: Áp dụng tỷ lệ dịch vụ
+          service-help-text: Chọn tỷ lệ dịch vụ đã định nghĩa để tạo bảng giá dịch vụ thời gian thực áp dụng cho đơn hàng này.
+          service-quotes: Bảng giá Dịch Vụ
+          service-quotes-help-text: Chọn tỷ lệ dịch vụ nào để lấy bảng giá.
+          select-service-rate: Chọn Tỷ Lệ Dịch Vụ
+          refresh-button: Làm mới
+          loading-message: Đang tải bảng giá dịch vụ...
+          info-text: Chọn bảng giá dịch vụ thời gian thực để áp dụng cho đơn hàng này. Khi một bảng giá được áp dụng cho đơn hàng, nó sẽ trở thành tỷ lệ đã mua. Các giao dịch sẽ được theo dõi trong sổ cái Fleetbase.
+          breakdown: Phân tích
+          no-service-info-text: Không có bảng giá dịch vụ.
+          input-order-info-text: Nhập tuyến đường đơn hàng để xem bảng giá dịch vụ.
+          notes-title: Ghi chú
+          notes-placeholder: Nhập ghi chú đơn hàng ở đây....
+          success-message: Đơn hàng mới {orderId} đã được tạo
+          warning-message: Không có tệp nào trong hàng đợi để tải lên!
+          import-success: Nhập khẩu hoàn tất.
+          service-warning: Không thể lấy bảng giá dịch vụ cho đơn hàng này.
+          no-route-warning: Không có tuyến đường để xem trước.
+          route-error: Tối ưu hóa tuyến đường thất bại, kiểm tra mục tuyến đường và thử lại.
+          custom-field-title: Thêm trường tùy chỉnh vào đơn hàng
+          label-warning: Trường tùy chỉnh phải có nhãn
+          value-warning: Trường tùy chỉnh phải có giá trị
+          edit-field-title: Chỉnh sửa trường tùy chỉnh
+          edit-metadata: Chỉnh sửa Metadata
+          input-field-required: Trường {inputFieldName} là bắt buộc.
+        view:
+          purchase-rate-panel-title: Tỷ Lệ Mua
+          documents-panel-title: Tài liệu & Tệp
+          route-panel-title: Tuyến Đường
+          currency: Tiền tệ
+          comments-title: Nhận xét
+          notes-title: Ghi chú
+          dispatch: Gửi
+          order-actions: Hành Động Đơn Hàng
+          edit-details: Chỉnh sửa Chi tiết
+          update-activity: Cập nhật Hoạt Động
+          unassign-driver: Gỡ Tài Xế
+          assign-driver: Gán Tài Xế
+          get-order-label: Lấy Nhãn Đơn Hàng
+          listen-socket-channel: Lắng nghe kênh socket
+          view-metadata: Xem metadata
+          cancel-order: Hủy Đơn Hàng
+          delete-order: Xóa Đơn Hàng
+          activity: Hoạt Động
+          unable-load-order-activity: Không thể tải hoạt động đơn hàng
+          ad-hoc: Ad-Hoc
+          customer: Khách hàng
+          facilitator: Người điều phối
+          driver-assigned: Tài xế đã được gán
+          vehicle-assigned: Xe đã được gán
+          change-driver: Thay đổi Tài Xế
+          tracking-number: Số Theo Dõi
+          date-scheduled: Ngày Lên Lịch
+          date-dispatched: Ngày Gửi
+          date-started: Ngày Bắt Đầu
+          order-details-title: Chi tiết Đơn Hàng
+          additional-details-title: Chi tiết thêm
+          route: Tuyến Đường
+          pickup: Nhận hàng
+          dropoff: Giao hàng
+          return: Trả lại
+          order-summary: Tóm Tắt Đơn Hàng
+          subtotal: Tổng phụ
+          delivery-fee: Phí giao hàng
+          tip: Tiền thưởng
+          delivery-tip: Tiền thưởng giao hàng
+          total: Tổng cộng
+          payload: Tải trọng
+          items-drop: Mặt hàng rơi tại
+          tracking: Theo dõi
+          waypoint-actions: Hành động Điểm Đến
+          get-label: Lấy Nhãn
+          view-activity: Xem Hoạt Động
+          add-item-button: Thêm Mặt Hàng
+          edit-item-button: Chỉnh sửa Mặt Hàng
+          edit-order-title: Chỉnh sửa Chi tiết Đơn Hàng
+          update-success: 'Chi tiết {orderId} đã được cập nhật.'
+          order-metadata: Metadata Đơn Hàng
+          unassign-title: Bạn có chắc chắn muốn gỡ tài xế ({driverName}) khỏi đơn hàng này không?
+          unassign-body: Khi tài xế bị gỡ, tài xế sẽ không còn quyền truy cập vào chi tiết của đơn hàng này.
+          unassign-success: Tài xế đã được gỡ khỏi đơn hàng này.
+          edit-route-title: Chỉnh sửa Tuyến Đường Đơn Hàng
+          route-error: Tối ưu hóa tuyến đường thất bại, kiểm tra mục tuyến đường và thử lại.
+          route-update-success: 'Chi tiết tuyến đường {orderId} đã được cập nhật.'
+          add-activity-title: Thêm hoạt động mới vào đơn hàng
+          invalid-warning: Nhập trạng thái tùy chỉnh không hợp lệ.
+          change-order: Thay đổi tài xế đơn hàng
+          assign-order: Gán tài xế cho đơn hàng
+          assign-success: '{orderId} tài xế đã được cập nhật.'
+          order-title: Nhãn Đơn Hàng
+          waypoint-title: Nhãn Điểm Đến
+          proof-of-delivery: Bằng chứng Giao Hàng
+          notes-placeholder: Nhập ghi chú đơn hàng ở đây....
+          save-order-note: Lưu Ghi Chú Đơn Hàng
+          order-notes-updated: Ghi chú đơn hàng đã được cập nhật.
+        config:
+          title: Cấu Hình Đơn Hàng
+          message: Cấu hình đơn hàng cho phép bạn xác định các cấu hình động sẽ cho Fleetbase biết cách thực hiện các loại đơn hàng khác nhau.
+          configuration: Cấu hình
+          types:
+            no-order-installed: Không có cấu hình đơn hàng nào được cài đặt!
+            you-have-no-configs: Hiện tại bạn không có cấu hình đơn hàng nào được cài đặt, kiểm tra các tiện ích mở rộng để cài đặt cấu hình đơn hàng để bắt đầu.
+            view-extensions: Xem tiện ích mở rộng
+    scheduler:
+      index:
+        success-message: Đơn hàng {orderId} đã được lên lịch vào {orderAt}.
+        info-message: Đơn hàng {orderId} đã được hủy lịch.
+        title: Lịch Trình
+        unscheduled-orders: Đơn Hàng Không Lên Lịch
+        scheduled-orders: Đơn Hàng Đã Lên Lịch
+    service-rates:
+      index:
+        edit-service: Chỉnh sửa Tỷ Lệ Dịch Vụ
+        delete-service: Xóa Tỷ Lệ Dịch Vụ
+        accept-button: Xóa Tỷ Lệ Dịch Vụ
+        edit:
+          success-message: Tỷ lệ dịch vụ {serviceName} đã được cập nhật
+        title: Tỷ Lệ Dịch Vụ
+        reload-data: Làm mới dữ liệu
+        delete-service-rates: Xóa Tỷ Lệ Dịch Vụ
+        new:
+          success-message: Tỷ lệ dịch vụ mới {serviceName} đã được tạo
+          new-service-rate-title: Tỷ lệ dịch vụ mới
+          save-service-button: Lưu Tỷ Lệ Dịch Vụ
+          create-service-button: Tạo Tỷ Lệ Dịch Vụ
+          service-name: Tên Dịch Vụ
+          service-name-help-text: Tên hiển thị cho dịch vụ này.
+          service-order-label: Loại Đơn Hàng Dịch Vụ
+          service-order-help-text: Chọn cấu hình đơn hàng mà tỷ lệ dịch vụ này sẽ được áp dụng độc quyền. Điều này đảm bảo rằng chỉ các đơn hàng được tạo với cấu hình đơn hàng đã chọn mới có thể sử dụng tỷ lệ dịch vụ cụ thể này.
+          service-order-placeholder: Chọn loại đơn hàng để hạn chế dịch vụ
+          base-fee-label: Phí Cơ Bản
+          base-fee-help-text: Đặt phí cơ bản đại diện cho chi phí tối thiểu cho dịch vụ này.
+          rate-calculation-label: Phương Pháp Tính Tỷ Lệ
+          rate-calculation-help-text: Phương pháp mà dịch vụ này sẽ sử dụng để tính toán tỷ lệ khi truy vấn.
+          rate-calculation-placeholder: Chọn phương pháp tính tỷ lệ
+          estimated-days: Ngày Giao Dự Đoán
+          estimated-days-help-text: Số ngày dự đoán mà dịch vụ này sẽ mất. Đối với dịch vụ cùng ngày, sử dụng `0`.
+          duration-terms-label: Điều Khoản Thời Gian
+          duration-terms-help-text: Thêm các điều khoản dịch vụ bổ sung liên quan đến thời gian cho tỷ lệ dịch vụ này.
+          duration-terms-placeholder: Điều khoản thời gian nếu có
+          fixed-meter: Tùy Chọn Meter Cố Định
+          fixed-meter-text: Tùy chọn này xác định phí cố định cho mỗi kilometer.
+          fixed-meter-example-text: >-
+            Ví dụ: Mỗi 1 kilometer có một phí cố định được xác định. Nếu khoảng cách di chuyển của đơn hàng là 3,300 mét, phí cố định cho kilometer thứ 3 sẽ được cộng vào tổng phí cơ bản.
+          maximum-distance: Khoảng Cách Tối Đa
+          maximum-distance-help-text: Khoảng cách tối đa có thể phục vụ.
+          distance: Khoảng Cách
+          fee: Phí
+          per-drop-off-title: Tùy Chọn Theo Điểm Giao
+          per-drop-off-text: Tùy chọn này xác định phí cố định cho mỗi điểm giao hàng.
+          per-drop-off-example-text: >-
+            Ví dụ: 1-5 điểm giao hàng trong đơn hàng sẽ có giá $x, 5-10 điểm giao hàng mỗi đơn hàng sẽ có giá $x. Điều này sẽ được cộng vào tổng phí cơ bản.
+          add-drop-off-button: Thêm khoảng cách điểm giao hàng
+          min-drop: Điểm Giao Tối Thiểu
+          max-drop: Điểm Giao Tối Đa
+          min: Tối Thiểu
+          max: Tối Đa
+          per-meter: Theo Meter
+          per-meter-text: Tùy chọn này cho phép dịch vụ được tính toán theo mỗi kilometer hoặc meter, có nghĩa là bạn xác định một mức phí cố định sau đó được nhân với khoảng cách có thể là meter hoặc kilometer.
+          per-meter-example-text: >-
+            Ví dụ: '{fee}' * '{distance}' + '{baseFee}'
+          per-meter-rate-fee: Phí Theo Meter
+          per-meter-rate-fee-help-text: Phí cố định duy nhất sẽ được nhân với khoảng cách.
+          distance-unit: Đơn Vị Khoảng Cách
+          distance-unit-help-text: Đơn vị khoảng cách có thể là mỗi kilometer hoặc meter.
+          distance-unit-placeholder: Chọn đơn vị khoảng cách.
+          custom-algorithm-title: Thuật Toán Tùy Chỉnh
+          custom-algorithm-info-message: Tùy chọn này là để định nghĩa một phép tính tùy chỉnh cho phí của dịch vụ này với các biến.
+          custom-algorithm-info-second-message: Lưu ý rằng các biến phải được bao bọc trong dấu ngoặc nhọn đơn.
+          distance-message: khoảng cách
+          distance-continue-message: >- 
+            - khoảng cách tính bằng mét từ tuyến đường đơn hàng.
+          time-message: thời gian
+          time-continue-message: >-
+            - thời gian dự đoán tuyến đường tính bằng giây.
+          example: Ví dụ
+          example-message: Nếu yêu cầu đơn hàng là khoảng cách 2,200 mét với thời gian dự đoán là 30 phút.
+          example-second-message: Sau đó công thức sau sẽ tính phí dịch vụ là $2.50, sẽ được cộng vào phí cơ bản.
+          algorithm-label: Thuật Toán
+          algorithm-help-text: Định nghĩa công thức để được đánh giá cho tính toán tỷ lệ dịch vụ này.
+          algorithm-placeholder: >-
+            (( '{distance}' / 50 ) * .05 ) + (( '{time}' / 60 ) * .01)
+          percel-fee-title: Phí Hàng Hóa
+          length-label: Chiều Dài
+          length-placeholder: Chiều dài trong {parcelFeeDimension}
+          width-label: Chiều Rộng
+          width-placeholder: Chiều rộng trong {parcelFeeDimension}
+          height-label: Chiều Cao
+          height-placeholder: Chiều cao trong {parcelFeeDimension}
+          weight-label: Cân Nặng
+          weight-placeholder: Cân nặng trong {parcelFeeWeight}
+          deminsions-unit: Đơn Vị Kích Thước
+          select-unit-placeholder: Chọn đơn vị
+          weight-unit: Đơn Vị Cân Nặng
+          additional-fee: Phí Thêm
+          cash-delivery-title: Thanh Toán Khi Giao Hàng
+          cash-delivery-label: Kích hoạt phí thêm cho đơn hàng `thanh toán khi giao hàng`?
+          calculation-method-label: Phương Pháp Tính Phí Thanh Toán Khi Giao Hàng
+          calculation-method-help-text: Phương pháp được sử dụng để tính phí COD.
+          calculation-method-placeholder: Chọn phương pháp tính phí COD
+          delivery-flat-fee: Phí Thanh Toán Khi Giao Hàng Cố Định
+          delivery-flat-fee-help-text: Xác định phí cố định sẽ được cộng thêm trong giờ cao điểm.
+          fee-percentage: Phần Trăm Phí Thanh Toán Khi Giao Hàng
+          fee-percentage-help-text: Xác định phí theo tỷ lệ phần trăm từ tổng số phí dịch vụ sẽ được cộng thêm như phí COD.
+          percentage-placeholder: Phần Trăm
+          peak-hours-title: Giờ Cao Điểm
+          peak-hours-label: Kích hoạt phí thêm cho đơn hàng thực hiện trong `giờ cao điểm` xác định của dịch vụ?
+          peak-hours-start-label: Giờ Cao Điểm Bắt Đầu
+          peak-hours-start-help-text: Xác định thời gian bắt đầu phí giờ cao điểm.
+          peak-hours-end-label: Giờ Cao Điểm Kết Thúc
+          peak-hours-end-help-text: Xác định thời gian kết thúc phí giờ cao điểm.
+          peak-hours-fee-label: Phương Pháp Tính Phí Giờ Cao Điểm
+          peak-hours-fee-help-text: Phương pháp được sử dụng để tính phí giờ cao điểm.
+          peak-hours-fee-placeholder: Chọn phương pháp tính phí giờ cao điểm
+          flat-fee-label: Phí Cố Định Giờ Cao Điểm
+          flat-fee-help-text: Xác định phí cố định sẽ được cộng thêm trong giờ cao điểm.
+          peak-hours-percentage-label: Phần Trăm Phí Giờ Cao Điểm
+          peak-hours-percentage-help-text: Xác định phí theo tỷ lệ phần trăm từ tổng số phí dịch vụ sẽ được cộng thêm trong giờ cao điểm.
+          restrict-service-title: Hạn Chế Dịch Vụ
+          service-area-label: Khu Vực Dịch Vụ
+          service-area-help-text: Hạn chế dịch vụ này cho các yêu cầu đơn hàng xuất phát từ khu vực dịch vụ.
+          service-area-placeholder: Hạn chế theo khu vực dịch vụ
+          zone-label: Khu Vực
+          zone-help-text: Hạn chế dịch vụ này cho các yêu cầu đơn hàng xuất phát từ một khu vực cụ thể.
+          zone-placeholder: Hạn chế theo khu vực
+  settings:
+    navigator-app:
+      navigator-app-settings: Cài đặt ứng dụng điều hướng

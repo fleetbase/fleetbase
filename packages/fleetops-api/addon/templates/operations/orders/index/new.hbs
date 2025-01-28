@@ -1,0 +1,912 @@
+<Overlay @position="right" @noBackdrop={{true}} @isResizable={{true}} @width="570px" @fullHeight={{true}} @onLoad={{this.setupInterface}} as |overlay|>
+    <Overlay::Header @overlay={{overlay}} @title="New Order" @onPressCancel={{this.transitionBack}}>
+        <DropdownButton @icon="ellipsis-h" @size="sm" @iconPrefix="fas" @triggerClass="mr-2 hidden md:flex" as |dd|>
+            <div class="next-dd-menu mt-1 mx-0" aria-labelledby="user-menu">
+                <div class="p-1">
+                    <a href="javascript:;" class="next-dd-item" {{on "click" (dropdown-fn dd this.newCustomer)}} disabled={{cannot "fleet-ops create customer"}}>
+                        <div class="w-7 flex-grow-0 flex-shrink-0">
+                            <FaIcon @icon="user-plus" />
+                        </div>
+                        <span>{{t "fleet-ops.operations.orders.index.new.create-new-customer"}}</span>
+                    </a>
+                    <a href="javascript:;" class="next-dd-item" {{on "click" (dropdown-fn dd this.newFacilitator)}} disabled={{cannot "fleet-ops create facilitator"}}>
+                        <div class="w-7 flex-grow-0 flex-shrink-0">
+                            <FaIcon @icon="truck" />
+                        </div>
+                        <span>{{t "fleet-ops.operations.orders.index.new.create-new-facilitator"}}</span>
+                    </a>
+                    <a href="javascript:;" class="next-dd-item" {{on "click" (dropdown-fn dd this.createPlace)}} disabled={{cannot "fleet-ops create place"}}>
+                        <div class="w-7 flex-grow-0 flex-shrink-0">
+                            <FaIcon @icon="map-pin" />
+                        </div>
+                        <span>{{t "fleet-ops.operations.orders.index.new.create-new-place"}}</span>
+                    </a>
+                    <a href="javascript:;" class="next-dd-item" {{on "click" (dropdown-fn dd this.addEntity)}} disabled={{cannot "fleet-ops create entity"}}>
+                        <div class="w-7 flex-grow-0 flex-shrink-0">
+                            <FaIcon @icon="box" />
+                        </div>
+                        <span>{{t "fleet-ops.operations.orders.index.new.add-order"}}</span>
+                    </a>
+                    <a href="javascript:;" class="next-dd-item" {{on "click" (dropdown-fn dd this.editMetaData)}}>
+                        <div class="w-7 flex-grow-0 flex-shrink-0">
+                            <FaIcon @icon="table" />
+                        </div>
+                        <span>{{t "fleet-ops.operations.orders.index.new.edit-order"}}</span>
+                    </a>
+                </div>
+            </div>
+        </DropdownButton>
+        <Button @icon="upload" @type="magic" @text={{if (media "isMobile") "" "Import"}} @onClick={{this.importOrder}} @disabled={{this.isCreatingOrder}} @permission="fleet-ops import order" class="mr-2" />
+        <Button @icon="check" @type="primary" @text={{if (media "isMobile") "" "Submit"}} @onClick={{this.createOrder}} @isLoading={{this.isCreatingOrder}} @permission="fleet-ops create order" @disabled={{not this.isValid}} />
+    </Overlay::Header>
+
+    <Overlay::Body @wrapperClass="new-order-overlay-body">
+        <ContentPanel @title="Details" @open={{true}} @pad={{true}} @panelBodyClass="bg-white dark:bg-gray-800">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-2">
+                <div class="input-group">
+                    <InputLabel @labelText={{t "fleet-ops.operations.orders.index.new.order-type"}} @helpText={{t "fleet-ops.operations.orders.index.new.order-type-help-text"}} />
+                    <Select
+                        @options={{this.orderConfigs}}
+                        @optionValue="id"
+                        @optionLabel="name"
+                        @onChange={{this.setConfig}}
+                        @placeholder={{t "fleet-ops.operations.orders.index.new.order-type-placeholder"}}
+                        @disabled={{cannot "fleet-ops create order"}}
+                        class="w-full"
+                    />
+                </div>
+
+                <InputGroup
+                    @name={{t "fleet-ops.operations.orders.index.new.internal-id"}}
+                    @value={{this.order.internal_id}}
+                    @helpText={{t "fleet-ops.operations.orders.index.new.internal-id-help-text"}}
+                    @disabled={{cannot "fleet-ops create order"}}
+                />
+
+                <InputGroup>
+                    <InputLabel @labelText={{t "fleet-ops.operations.orders.index.new.schedule"}} @helpText={{t "fleet-ops.operations.orders.index.new.schedule-help-text"}} />
+                    <DateTimeInput
+                        class="form-input"
+                        @value={{this.order.scheduled_at}}
+                        @minDate={{format-date (now) "yyyy-MM-dd"}}
+                        @minTime={{format-date (now) "HH:mm"}}
+                        @onUpdate={{this.scheduleOrder}}
+                        @disabled={{or this.order.dispatched (cannot "fleet-ops create order")}}
+                    />
+                </InputGroup>
+
+                <InputGroup @name={{t "fleet-ops.operations.orders.index.new.customer"}} @helpText={{t "fleet-ops.operations.orders.index.new.customer-help-text"}}>
+                    <ModelSelect
+                        @modelName="customer"
+                        @selectedModel={{this.order.customer}}
+                        @placeholder={{t "fleet-ops.operations.orders.index.new.customer-placeholder"}}
+                        @triggerClass="form-select form-input"
+                        @infiniteScroll={{false}}
+                        @renderInPlace={{true}}
+                        @allowClear={{true}}
+                        @disabled={{this.isMultipleDropoffOrder}}
+                        @permission="fleet-ops create order"
+                        @onChange={{this.setOrderCustomer}}
+                        as |model|
+                    >
+                        <div class="flex items-center">
+                            <div class="w-7 flex-grow-0 flex-shrink-0">
+                                <FaIcon @icon={{if model.isVendor "warehouse" "user"}} />
+                            </div>
+                            <span class="uppercase">
+                                {{model.name}}
+                            </span>
+                        </div>
+                    </ModelSelect>
+                </InputGroup>
+
+                <InputGroup @name={{t "fleet-ops.operations.orders.index.new.facilitator"}} @helpText={{t "fleet-ops.operations.orders.index.new.facilitator-help-text"}}>
+                    <ModelSelect
+                        @modelName="facilitator"
+                        @selectedModel={{this.order.facilitator}}
+                        @placeholder={{t "fleet-ops.operations.orders.index.new.facilitator-placeholder"}}
+                        @triggerClass="form-select form-input"
+                        @allowClear={{true}}
+                        @infiniteScroll={{false}}
+                        @renderInPlace={{true}}
+                        @permission="fleet-ops create order"
+                        @onChange={{this.setOrderFacilitator}}
+                        as |model|
+                    >
+                        <div class="flex items-center">
+                            <div class="w-7 flex-grow-0 flex-shrink-0">
+                                {{#if model.isIntegratedVendor}}
+                                    <Image src={{model.photo_url}} alt={{model.name}} class="w-4 h-4" width="16" height="16" />
+                                {{else}}
+                                    <FaIcon @icon={{if model.isVendor "warehouse" "user"}} />
+                                {{/if}}
+                            </div>
+                            <span class="uppercase">
+                                {{model.name}}
+                            </span>
+                        </div>
+                    </ModelSelect>
+                </InputGroup>
+
+                {{#if (and this.order.facilitator.isIntegratedVendor this.order.facilitator.service_types.length)}}
+                    <InputGroup
+                        @name={{t "fleet-ops.operations.orders.index.new.service-type"}}
+                        @helpText={{concat (t "fleet-ops.operations.orders.index.new.service-type-help-text") this.order.facilitator.name "."}}
+                    >
+                        <Select
+                            class="w-full"
+                            @options={{this.order.facilitator.service_types}}
+                            @value={{this.integratedVendorServiceType}}
+                            @optionLabel="description"
+                            @optionValue="key"
+                            @onSelect={{this.selectIntegratedServiceType}}
+                            @placeholder={{t "fleet-ops.operations.orders.index.new.service-type-placeholder"}}
+                            @disabled={{cannot "fleet-ops create order"}}
+                        />
+                    </InputGroup>
+                {{/if}}
+
+                <InputGroup @name={{t "fleet-ops.operations.orders.index.new.assign-driver"}} @helpText={{t "fleet-ops.operations.orders.index.new.assign-driver-help-text"}}>
+                    <ModelSelect
+                        @modelName="driver"
+                        @selectedModel={{this.order.driver_assigned}}
+                        @query={{this.driversQuery}}
+                        @placeholder={{t "fleet-ops.operations.orders.index.new.assign-driver-placeholder"}}
+                        @triggerClass="form-select form-input"
+                        @infiniteScroll={{false}}
+                        @renderInPlace={{true}}
+                        @allowClear={{true}}
+                        @disabled={{this.isUsingIntegratedVendor}}
+                        @permission="fleet-ops create order"
+                        @onChange={{this.selectDriver}}
+                        as |model|
+                    >
+                        <div class="flex items-center">
+                            <div class="w-7 flex-grow-0 flex-shrink-0">
+                                <FaIcon @icon="id-card-alt" />
+                            </div>
+                            <div class="flex-1 flex flex-row truncate">
+                                <span class="uppercase mr-2">{{model.name}}</span>
+                                <span class="uppercase">{{model.phone}}</span>
+                            </div>
+                            {{#if this.order.facilitator}}
+                                <div class="px-1 ml-2 leading-5 bg-green-400 rounded shadow">
+                                    <span class="text-xs text-green-900">
+                                        {{this.order.facilitator.name}}
+                                    </span>
+                                </div>
+                            {{/if}}
+                        </div>
+                    </ModelSelect>
+                </InputGroup>
+
+                <InputGroup @name={{t "fleet-ops.operations.orders.index.new.assign-vehicle"}} @helpText={{t "fleet-ops.operations.orders.index.new.assign-vehicle-help-text"}}>
+                    <ModelSelect
+                        @modelName="vehicle"
+                        @selectedModel={{this.order.vehicle_assigned}}
+                        @query={{this.vehiclesQuery}}
+                        @placeholder={{t "fleet-ops.operations.orders.index.new.assign-vehicle-placeholder"}}
+                        @triggerClass="form-select form-input"
+                        @infiniteScroll={{false}}
+                        @renderInPlace={{true}}
+                        @allowClear={{true}}
+                        @disabled={{this.isUsingIntegratedVendor}}
+                        @permission="fleet-ops create order"
+                        @onChange={{fn (mut this.order.vehicle_assigned)}}
+                        as |model|
+                    >
+                        <div class="flex items-center">
+                            <div class="w-7 flex-grow-0 flex-shrink-0">
+                                <Image @src={{model.avatar_url}} @fallbackSrc={{config "defaultValues.vehicleAvatar"}} class="w-4 h-4 shadow-sm rounded-md" />
+                            </div>
+                            <div class="flex-1 flex flex-row truncate">
+                                <span class="uppercase">{{model.display_name}}</span>
+                            </div>
+                        </div>
+                    </ModelSelect>
+                </InputGroup>
+
+                {{#if (and this.order.pod_required (not this.isUsingIntegratedVendor))}}
+                    <InputGroup>
+                        <InputLabel
+                            @labelText={{t "fleet-ops.operations.orders.index.new.proof-delivery"}}
+                            @helpText={{t "fleet-ops.operations.orders.index.new.proof-delivery-help-text"}}
+                        />
+                        <Select
+                            class="w-full"
+                            @options={{this.podOptions}}
+                            @value={{this.order.pod_method}}
+                            @onSelect={{fn (mut this.order.pod_method)}}
+                            @placeholder={{t "fleet-ops.operations.orders.index.new.proof-delivery-placeholder"}}
+                            @disabled={{cannot "fleet-ops create order"}}
+                        />
+                    </InputGroup>
+                {{/if}}
+
+                {{#if this.order.adhoc}}
+                    <div>
+                        <InputGroup
+                            @name={{t "fleet-ops.operations.orders.index.new.adhoc-ping"}}
+                            @type="number"
+                            @value={{this.order.adhoc_distance}}
+                            @wrapperClass="mb-0"
+                            @helpText={{t "fleet-ops.operations.orders.index.new.adhoc-ping-help-text"}}
+                        />
+                        <div class="mt-2 px-3 py-1 rounded-lg border border-blue-600 bg-blue-100 flex items-center">
+                            <FaIcon @icon="triangle-exclamation" class="text-blue-900 mr-1.5" />
+                            <span class="text-blue-900 text-xs">{{t "fleet-ops.operations.orders.index.new.adhoc-ping-message"}}</span>
+                        </div>
+                    </div>
+                {{/if}}
+
+                <div class="lg:col-span-2">
+                    <InputGroup @wrapperClass="pt-2">
+                        <Toggle
+                            @label={{t "fleet-ops.operations.orders.index.new.ad-hoc"}}
+                            @wrapperClass="justify-start-i"
+                            @isToggled={{this.order.adhoc}}
+                            @onToggle={{this.toggleAdhoc}}
+                            @disabled={{or (cannot "fleet-ops create order") this.isUsingIntegratedVendor}}
+                            @helpText={{t "fleet-ops.operations.orders.index.new.ad-hoc-help-text"}}
+                        />
+                    </InputGroup>
+                </div>
+
+                <div class="lg:col-span-2">
+                    <InputGroup @wrapperClass="pt-1">
+                        <Toggle
+                            @label={{t "fleet-ops.operations.orders.index.new.dispatch"}}
+                            @wrapperClass="justify-start-i"
+                            @isToggled={{this.order.dispatched}}
+                            @onToggle={{fn (mut this.order.dispatched)}}
+                            @disabled={{or (cannot "fleet-ops create order") this.isUsingIntegratedVendor}}
+                            @helpText={{t "fleet-ops.operations.orders.index.new.dispatch-help-text"}}
+                        />
+                    </InputGroup>
+                </div>
+
+                <div class="lg:col-span-2">
+                    <InputGroup @wrapperClass="pt-1">
+                        <Toggle
+                            @label={{t "fleet-ops.operations.orders.index.new.require-proof"}}
+                            @wrapperClass="justify-start-i"
+                            @isToggled={{this.order.pod_required}}
+                            @onToggle={{this.toggleProofOfDelivery}}
+                            @disabled={{cannot "fleet-ops create order"}}
+                            @helpText={{t "fleet-ops.operations.orders.index.new.require-proof-help-text"}}
+                        />
+                    </InputGroup>
+                </div>
+            </div>
+        </ContentPanel>
+
+        {{#if this.orderConfig}}
+            {{#each this.customFieldGroups as |group|}}
+                <ContentPanel @title={{group.name}} @open={{true}} @pad={{true}} @panelBodyClass="bg-white dark:bg-gray-800">
+                    <div class="grid grid-cols-{{or group.meta.grid_size 1}} gap-2">
+                        {{#each group.customFields as |customField|}}
+                            <CustomField @customField={{customField}} @order={{this.order}} @orderConfig={{this.orderConfig}} @onChange={{this.setCustomFieldValue}} />
+                        {{/each}}
+                    </div>
+                </ContentPanel>
+            {{/each}}
+        {{/if}}
+
+        <ContentPanel @title={{t "fleet-ops.operations.orders.index.new.route"}} @open={{true}} @pad={{true}} @panelBodyClass="bg-white dark:bg-gray-800">
+            <div class="flex flex-row justify-between mb-4">
+                <div class="flex">
+                    <Toggle @isToggled={{this.isMultipleDropoffOrder}} @onToggle={{this.toggleMultiDropOrder}} @label={{t "fleet-ops.operations.orders.index.new.route-label"}} />
+                </div>
+                <div class="flex flex-1 justify-end space-x-2">
+                    {{#if this.isMultipleDropoffOrder}}
+                        <Button
+                            @type="magic"
+                            @icon="magic"
+                            @text={{t "fleet-ops.operations.orders.index.new.optimize-route"}}
+                            @size="sm"
+                            @onClick={{this.optimizeRoute}}
+                            @permission="fleet-ops optimize order"
+                            @helpText={{t "fleet-ops.operations.orders.index.new.optimize-route-help-text"}}
+                            @disabled={{lt this.waypoints.length 3}}
+                            @isLoading={{this.isOptimizingRoute}}
+                        />
+                        <Button
+                            @icon="map-marked-alt"
+                            @text={{t "fleet-ops.operations.orders.index.new.add-waypoint"}}
+                            @size="sm"
+                            @onClick={{this.addWaypoint}}
+                            @helpText={{t "fleet-ops.operations.orders.index.new.add-waypoint-help-text"}}
+                            @permission="fleet-ops create order"
+                        />
+                    {{/if}}
+                </div>
+            </div>
+
+            {{#if this.isMultipleDropoffOrder}}
+                <DragSortList class="multi-drop-select-container overflow-visible" @items={{this.waypoints}} @dragEndAction={{this.sortWaypoints}} as |waypoint index|>
+                    <div id={{concat "waypoint_" (add index 1)}} class="border rounded-md px-3 py-2 shadow-sm border-gray-300 dark:border-gray-900 mb-3">
+                        <div class="flex items-start justify-between">
+                            <div class="flex items-center justify-between grip-cursor">
+                                <FaIcon @icon="grip-lines" @prefix="fas" class="mr-3 text-gray-100" />
+                                <label class="waypoint-label dark:text-gray-100 text-sm">
+                                    {{waypoint-label (add index 1)}}
+                                </label>
+                            </div>
+
+                            <div class="flex-1 flex-col px-3">
+                                <div class="mb-2">
+                                    <ModelSelect
+                                        @modelName="place"
+                                        @selectedModel={{waypoint.place}}
+                                        @placeholder={{concat (t "fleet-ops.operations.orders.index.new.select-waypoint-placeholder") " " (add index 1)}}
+                                        @triggerClass="form-select form-input truncate max-w-300px"
+                                        @infiniteScroll={{false}}
+                                        @customSearchEndpoint="places/search"
+                                        @query={{hash geo=true latitude=this.userLatitude longitude=this.userLongitude}}
+                                        @renderInPlace={{true}}
+                                        @onChange={{fn this.setWaypointPlace index}}
+                                        @permission="fleet-ops create order"
+                                        as |model|
+                                    >
+                                        {{model.address}}
+                                    </ModelSelect>
+                                    {{#if (and this.isUsingIntegratedVendor (is-not-facilitator-supported-place this.order.facilitator waypoint.place))}}
+                                        <InfoBlock
+                                            class="my-2 px-4 py-1.5 danger"
+                                            @blockClass="flex flex-row items-center"
+                                            @text={{concat this.order.facilitator.name (t "fleet-ops.operations.orders.index.new.infoblock-text")}}
+                                        />
+                                    {{/if}}
+                                    {{#if waypoint.place.hasInvalidCoordinates}}
+                                        <div class="leading-5 text-sm text-red-400 mt-2">
+                                            <FaIcon @icon="exclamation-triangle" class="mr-1" />
+                                            {{t "fleet-ops.operations.orders.index.new.invalid-coordinates"}}
+                                        </div>
+                                    {{/if}}
+                                </div>
+                                <div>
+                                    <ModelSelect
+                                        @modelName="customer"
+                                        @selectedModel={{waypoint.customer}}
+                                        @placeholder={{t "fleet-ops.operations.orders.index.new.customer-placeholder"}}
+                                        @triggerClass="form-select form-input truncate max-w-300px"
+                                        @infiniteScroll={{false}}
+                                        @renderInPlace={{true}}
+                                        @allowClear={{true}}
+                                        @onChange={{fn this.setWaypointCustomer waypoint}}
+                                        @permission="fleet-ops create order"
+                                        as |model|
+                                    >
+                                        <div class="flex items-center">
+                                            <div class="w-7">
+                                                <FaIcon @icon={{if model.isVendor "warehouse" "user"}} />
+                                            </div>
+                                            <span class="uppercase">
+                                                {{model.name}}
+                                            </span>
+                                        </div>
+                                    </ModelSelect>
+                                </div>
+                            </div>
+
+                            <div class="flex items-center">
+                                {{#if waypoint.place}}
+                                    <Button class="mr-2" @icon="edit" @size="sm" @onClick={{fn this.editPlace waypoint.place}} @permission="fleet-ops update place" />
+                                {{/if}}
+                                <Button @type="danger" @icon="trash" @size="sm" @onClick={{fn this.removeWaypoint waypoint}} />
+                            </div>
+                        </div>
+                    </div>
+                </DragSortList>
+            {{else}}
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-2 text-xs dark:text-gray-100">
+                    <InputGroup>
+                        <div class="flex items-center justify-between">
+                            <label>{{t "fleet-ops.operations.orders.index.new.pickup"}}</label>
+
+                            <div class="flex-row space-x-1 pr-0.5">
+                                {{#if this.payload.pickup}}
+                                    <a href="javascript:;" {{on "click" (fn this.editPlace this.payload.pickup)}}>
+                                        <FaIcon @icon="edit" />
+                                    </a>
+                                    <a href="javascript:;" {{on "click" (fn this.setPayloadPlace "pickup" null)}}>
+                                        <FaIcon @icon="trash" />
+                                    </a>
+                                {{/if}}
+                            </div>
+                        </div>
+
+                        <ModelSelect
+                            @modelName="place"
+                            @selectedModel={{this.payload.pickup}}
+                            @placeholder={{t "fleet-ops.operations.orders.index.new.select-pickup"}}
+                            @triggerClass="form-select form-input"
+                            @infiniteScroll={{false}}
+                            @customSearchEndpoint="places/search"
+                            @query={{hash geo=true latitude=this.userLatitude longitude=this.userLongitude}}
+                            @renderInPlace={{true}}
+                            @onChange={{fn this.setPayloadPlace "pickup"}}
+                            @permission="fleet-ops create order"
+                            as |model|
+                        >
+                            {{model.address}}
+                        </ModelSelect>
+
+                        {{#if (and this.isUsingIntegratedVendor (is-not-facilitator-supported-place this.order.facilitator this.payload.pickup))}}
+                            <InfoBlock
+                                class="my-2 px-4 py-1.5 danger"
+                                @blockClass="flex flex-row items-center"
+                                @text={{concat this.order.facilitator.name (t "fleet-ops.operations.orders.index.new.infoblock-text")}}
+                            />
+                        {{/if}}
+
+                        {{#if this.payload.pickup.hasInvalidCoordinates}}
+                            <div class="leading-5 text-sm text-red-400 mt-2">
+                                <FaIcon @icon="exclamation-triangle" class="mr-1" />
+                                {{t "fleet-ops.operations.orders.index.new.invalid-coordinates"}}
+                            </div>
+                        {{/if}}
+                    </InputGroup>
+
+                    <InputGroup>
+                        <div class="flex items-center justify-between">
+                            <label>{{t "fleet-ops.operations.orders.index.new.dropoff"}}</label>
+
+                            <div class="flex-row space-x-2 pr-0.5">
+                                {{#if this.payload.dropoff}}
+                                    <a href="javascript:;" {{on "click" (fn this.editPlace this.payload.dropoff)}} disaled={{cannot "fleet-ops update place"}}>
+                                        <FaIcon @icon="edit" />
+                                    </a>
+                                    <a href="javascript:;" {{on "click" (fn this.setPayloadPlace "dropoff" null)}}>
+                                        <FaIcon @icon="trash" />
+                                    </a>
+                                {{/if}}
+                            </div>
+                        </div>
+
+                        <ModelSelect
+                            @modelName="place"
+                            @selectedModel={{this.payload.dropoff}}
+                            @placeholder={{t "fleet-ops.operations.orders.index.new.select-dropoff"}}
+                            @triggerClass="form-select form-input"
+                            @infiniteScroll={{false}}
+                            @customSearchEndpoint="places/search"
+                            @query={{hash geo=true latitude=this.userLatitude longitude=this.userLongitude}}
+                            @renderInPlace={{true}}
+                            @onChange={{fn this.setPayloadPlace "dropoff"}}
+                            @permission="fleet-ops create order"
+                            as |model|
+                        >
+                            {{model.address}}
+                        </ModelSelect>
+
+                        {{#if (and this.isUsingIntegratedVendor (is-not-facilitator-supported-place this.order.facilitator this.payload.dropoff))}}
+                            <InfoBlock
+                                class="my-2 px-4 py-1.5 danger"
+                                @blockClass="flex flex-row items-center"
+                                @text={{concat this.order.facilitator.name (t "fleet-ops.operations.orders.index.new.infoblock-text")}}
+                            />
+                        {{/if}}
+
+                        {{#if this.payload.dropoff.hasInvalidCoordinates}}
+                            <div class="leading-5 text-sm text-red-400 mt-2">
+                                <FaIcon @icon="exclamation-triangle" class="mr-1" />
+                                {{t "fleet-ops.operations.orders.index.new.invalid-coordinates"}}
+                            </div>
+                        {{/if}}
+                    </InputGroup>
+
+                    <InputGroup>
+                        <div class="flex items-center justify-between">
+                            <label>{{t "fleet-ops.operations.orders.index.new.return"}}</label>
+
+                            {{#if this.payload.return}}
+                                <a href="javascript:;" {{on "click" (fn this.editPlace this.payload.return)}}>{{t "fleet-ops.operations.orders.index.new.edit-address"}}</a>
+                            {{/if}}
+                        </div>
+
+                        <ModelSelect
+                            @modelName="place"
+                            @selectedModel={{this.payload.return}}
+                            @placeholder={{t "fleet-ops.operations.orders.index.new.select-return"}}
+                            @triggerClass="form-select form-input"
+                            @infiniteScroll={{false}}
+                            @customSearchEndpoint="places/search"
+                            @query={{hash geo=true latitude=this.userLatitude longitude=this.userLongitude}}
+                            @renderInPlace={{true}}
+                            @onChange={{fn this.setPayloadPlace "return"}}
+                            @permission="fleet-ops create order"
+                            as |model|
+                        >
+                            {{model.address}}
+                        </ModelSelect>
+
+                        {{#if (and this.isUsingIntegratedVendor (is-not-facilitator-supported-place this.order.facilitator this.payload.return))}}
+                            <InfoBlock
+                                class="my-2 px-4 py-1.5 danger"
+                                @blockClass="flex flex-row items-center"
+                                @text={{concat this.order.facilitator.name (t "fleet-ops.operations.orders.index.new.infoblock-text")}}
+                            />
+                        {{/if}}
+
+                        {{#if this.payload.return.hasInvalidCoordinates}}
+                            <div class="leading-5 text-sm text-red-400 mt-2">
+                                <FaIcon @icon="exclamation-triangle" class="mr-1" />
+                                {{t "fleet-ops.operations.orders.index.new.invalid-coordinates"}}
+                            </div>
+                        {{/if}}
+                    </InputGroup>
+                </div>
+            {{/if}}
+        </ContentPanel>
+
+        <RegistryYield @registry="fleet-ops:template:operations:orders:new" as |RegistryComponent|>
+            <RegistryComponent @order={{this.order}} @controller={{this}} />
+        </RegistryYield>
+
+        <ContentPanel @title={{t "fleet-ops.operations.orders.index.new.payload-entities"}} @open={{true}} @pad={{true}} @panelBodyClass="bg-white dark:bg-gray-800">
+            {{#if this.isNotCsvImportedOrder}}
+                <div class="flex items-center mb-4">
+                    <Button
+                        @wrapperClass="mr-2"
+                        @icon="square-plus"
+                        @iconPrefix="fas"
+                        @text={{t "fleet-ops.operations.orders.index.new.add-item-order"}}
+                        @size="sm"
+                        @onClick={{this.addEntity}}
+                        @permission="fleet-ops create order"
+                    />
+                    {{#if this.orderConfig.entities}}
+                        <DropdownButton
+                            @type="magic"
+                            @icon="ellipsis-h"
+                            @size="sm"
+                            @iconPrefix="fas"
+                            @text={{t "fleet-ops.operations.orders.index.new.add-entity"}}
+                            @triggerClass="mr-2 hidden md:flex"
+                            @permission="fleet-ops create order"
+                            as |dd|
+                        >
+                            <div class="next-dd-menu mt-1 mx-0" aria-labelledby="user-menu">
+                                {{#each this.orderConfig.entities as |customEntity|}}
+                                    <div class="p-1">
+                                        <a href="javascript:;" class="next-dd-item" {{on "click" (dropdown-fn dd this.addFromCustomEntity customEntity)}}>
+                                            <div class="w-7 flex-grow-0 flex-shrink-0">
+                                                <FaIcon @icon="cube" />
+                                            </div>
+                                            <div>
+                                                <div class="font-semibold">{{customEntity.name}}</div>
+                                                <span class="text-xs">{{customEntity.description}}</span>
+                                            </div>
+                                        </a>
+                                    </div>
+                                {{/each}}
+                            </div>
+                        </DropdownButton>
+                    {{/if}}
+                    {{#if this.renderableEntityInputComponents}}
+                        {{#each this.renderableEntityInputComponents as |renderableEntityInputComponent|}}
+                            {{component renderableEntityInputComponent order=this.order controller=this}}
+                        {{/each}}
+                    {{/if}}
+                </div>
+            {{/if}}
+            {{#if this.isCsvImportedOrder}}
+                <div class="space-y-2">
+                    {{#each this.entitiesByImportId as |group|}}
+                        <div class="rounded-md border border-gray-200 dark:border-gray-900 p-3">
+                            <div class="mb-3 flex justify-between">
+                                <div class="w-3/4">
+                                    <div class="dark:text-gray-100 text-sm">{{t "fleet-ops.operations.orders.index.new.items-drop"}}</div>
+                                    <h4 class="font-bold dark:text-gray-100">{{group.waypoint.place.address}}</h4>
+                                </div>
+                                <div>
+                                    <Button
+                                        @icon="plus"
+                                        @iconPrefix="fas"
+                                        @text={{t "fleet-ops.operations.orders.index.new.add-item-button"}}
+                                        @size="sm"
+                                        @onClick={{fn this.addEntity group.importId}}
+                                    />
+                                </div>
+                            </div>
+                            <div class="grid grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-2">
+                                {{#each group.entities as |entity index|}}
+                                    <div class="col-3">
+                                        <div class="w-full rounded-md bg-gray-100 dark:bg-gray-900 shadow-sm p-3 relative">
+                                            <div class="flex items-center justify-center mb-3">
+                                                <img src={{entity.photo_url}} class="w-12 h-12" alt={{or entity.name entity.public_id}} />
+                                            </div>
+                                            <div class="space-y-2">
+                                                <div>
+                                                    <Input @value={{entity.name}} @type="text" class="w-full form-input form-input-sm" placeholder={{t "fleet-ops.common.name"}} />
+                                                </div>
+                                                <div>
+                                                    <Input
+                                                        @value={{entity.sku}}
+                                                        @type="text"
+                                                        class="w-full form-input form-input-sm"
+                                                        placeholder={{t "fleet-ops.operations.orders.index.new.sku"}}
+                                                    />
+                                                </div>
+                                                <Button @icon="pencil" @text={{t "fleet-ops.operations.orders.index.new.edit-item"}} @size="sm" @onClick={{fn this.editEntity entity}} />
+                                            </div>
+                                            <div class="absolute top-0 right-0 p-2">
+                                                <Button
+                                                    @icon="times"
+                                                    @iconPrefix="fas"
+                                                    @type="danger"
+                                                    @size="xs"
+                                                    @onClick={{fn this.removeEntity entity}}
+                                                    @wrapperClass={{if (eq index 0) "invisible"}}
+                                                />
+                                            </div>
+                                        </div>
+                                    </div>
+                                {{/each}}
+                            </div>
+                        </div>
+                    {{/each}}
+                </div>
+            {{else}}
+                <div class="grid grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-2">
+                    {{#each this.entities as |entity index|}}
+                        <div>
+                            <div class="w-full rounded-md bg-gray-100 dark:bg-gray-900 shadow-sm p-3 relative">
+                                <div class="flex items-center justify-center mb-3">
+                                    <img src={{entity.photo_url}} class="w-12 h-12" alt={{or entity.name entity.public_id}} />
+                                </div>
+                                <div class="space-y-2">
+                                    <div>
+                                        <Input @value={{entity.name}} @type="text" class="w-full form-input form-input-sm" placeholder={{t "fleet-ops.common.name"}} />
+                                    </div>
+                                    <div>
+                                        <Input @value={{entity.sku}} @type="text" class="w-full form-input form-input-sm" placeholder={{t "fleet-ops.operations.orders.index.new.sku"}} />
+                                    </div>
+                                    {{#if this.waypoints.length}}
+                                        <Select
+                                            @value={{entity.destination_uuid}}
+                                            @options={{this.waypoints}}
+                                            @optionValue="place.id"
+                                            @optionLabel="place.address"
+                                            @placeholder={{t "fleet-ops.operations.orders.index.new.select-destination"}}
+                                            @onChange={{fn this.setEntityDestionation index}}
+                                            class="w-full form-input-sm"
+                                        />
+                                    {{/if}}
+                                    <Button @icon="pencil" @text={{t "fleet-ops.operations.orders.index.new.edit-item"}} @size="sm" @onClick={{fn this.editEntity entity}} />
+                                </div>
+                                <div class="absolute top-0 right-0 p-2">
+                                    <Button
+                                        @icon="times"
+                                        @iconPrefix="fas"
+                                        @type="danger"
+                                        @size="xs"
+                                        @onClick={{fn this.removeEntity entity}}
+                                        @wrapperClass={{if (eq index 0) "invisible"}}
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                    {{/each}}
+                </div>
+            {{/if}}
+        </ContentPanel>
+
+        <ContentPanel @title={{t "fleet-ops.common.service"}} @open={{true}} @pad={{true}} @panelBodyClass="bg-white dark:bg-gray-800">
+            <Toggle
+                @label={{t "fleet-ops.operations.orders.index.new.apply-service-rate"}}
+                @wrapperClass="justify-start-i mb-4"
+                @isToggled={{this.servicable}}
+                @onToggle={{this.checkServiceRates}}
+                @disabled={{or (cannot "fleet-ops create order") this.isNotServicable}}
+                @helpText={{t "fleet-ops.operations.orders.index.new.service-help-text"}}
+            />
+
+            {{#if this.servicable}}
+                <ContentPanel
+                    @title={{t "fleet-ops.operations.orders.index.new.service-quotes"}}
+                    @open={{true}}
+                    @pad={{true}}
+                    @wrapperClass="mt-6"
+                    @panelBodyClass="bg-white dark:bg-gray-800"
+                >
+                    {{#unless this.isUsingIntegratedVendor}}
+                        <div class="input-group mb-2i">
+                            <InputLabel
+                                @labelText={{t "fleet-ops.operations.orders.index.new.select-service-rate"}}
+                                @helpText={{t "fleet-ops.operations.orders.index.new.service-quotes-help-text"}}
+                            />
+
+                            <Select
+                                class="w-full"
+                                @options={{this.serviceRates}}
+                                @value={{this.selectedServiceRate}}
+                                @optionLabel="service_name"
+                                @optionValue="uuid"
+                                @onSelect={{this.getQuotes}}
+                                @placeholder={{t "fleet-ops.operations.orders.index.new.select-service-rate"}}
+                            />
+                        </div>
+                    {{/unless}}
+
+                    <div class="flex flex-row justify-end">
+                        <Button @icon="retweet" @text={{t "fleet-ops.operations.orders.index.new.refresh-button"}} @disabled={{this.isFetchingQuotes}} @onClick={{this.getQuotes}} />
+                    </div>
+
+                    {{#if this.isFetchingQuotes}}
+                        <div class="flex items-center justify-center py-5">
+                            <Spinner
+                                class="text-sm dark:text-gray-100 flex flex-row items-center"
+                                @iconClass="mr-2"
+                                @loadingMessage={{t "fleet-ops.operations.orders.index.new.loading-message"}}
+                            />
+                        </div>
+                    {{else}}
+                        <InfoBlock class="my-3" @text={{t "fleet-ops.operations.orders.index.new.info-text"}} />
+
+                        <div class="radio-group-condensed -space-y-px">
+                            {{#each this.serviceQuotes as |serviceQuote|}}
+                                <div class="radio-group-item shadow-sm flex-col pl-0i pr-0i {{if (eq this.selectedServiceQuote serviceQuote.uuid) 'is-checked'}}">
+                                    <div class="flex flex-row items-center mb-2.5 px-4">
+                                        <RadioButton
+                                            @radioClass="focus:ring-blue-500 h-6 w-6 text-blue-500"
+                                            @radioId={{serviceQuote.uuid}}
+                                            @value={{serviceQuote.uuid}}
+                                            @groupValue={{this.selectedServiceQuote}}
+                                            @name="serviceQuote"
+                                            @changed={{fn (mut this.selectedServiceQuote)}}
+                                        />
+                                        <label for={{serviceQuote.uuid}} class="ml-3 flex-1">{{serviceQuote.public_id}}</label>
+                                        <Badge @hideStatusDot={{true}} @status="info">
+                                            {{serviceQuote.request_id}}
+                                        </Badge>
+                                    </div>
+                                    <div class="next-table-wrapper no-scroll h-auto table-fluid rounded-none">
+                                        <table class="table table-fixed flex-1">
+                                            <thead>
+                                                <tr>
+                                                    <th class="text-left">{{t "fleet-ops.operations.orders.index.new.breakdown"}}</th>
+                                                    <th></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {{#each serviceQuote.items as |item|}}
+                                                    <tr>
+                                                        <td>
+                                                            <span class="font-semibold">{{smart-humanize item.details}}</span>
+                                                        </td>
+                                                        <td>
+                                                            <span>{{format-currency item.amount serviceQuote.currency}}</span>
+                                                        </td>
+                                                    </tr>
+                                                {{/each}}
+                                                <tr class="border-b-0">
+                                                    <td class="border-b-0">
+                                                        <span class="font-semibold">{{t "fleet-ops.common.total"}}</span>
+                                                    </td>
+                                                    <td class="border-b-0">
+                                                        <span>{{format-currency serviceQuote.amount serviceQuote.currency}}</span>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            {{else}}
+                                <InfoBlock
+                                    class="my-2 px-4 py-1.5 warning"
+                                    @blockClass="flex flex-row items-center"
+                                    @text={{if
+                                        this.payloadCoordinates.length
+                                        (t "fleet-ops.operations.orders.index.new.no-service-info-text")
+                                        (t "fleet-ops.operations.orders.index.new.input-order-info-text")
+                                    }}
+                                />
+                            {{/each}}
+                        </div>
+                    {{/if}}
+                </ContentPanel>
+            {{/if}}
+        </ContentPanel>
+
+        <ContentPanel @title={{t "fleet-ops.operations.orders.index.new.notes-title"}} @open={{true}} @pad={{true}} @panelBodyClass="bg-white dark:bg-gray-800">
+            <Textarea @value={{this.order.notes}} class="form-input w-full" placeholder={{t "fleet-ops.operations.orders.index.new.notes-placeholder"}} disabled={{cannot "fleet-ops create order"}} rows={{4}} />
+        </ContentPanel>
+
+        <ContentPanel @title={{t "fleet-ops.operations.orders.index.view.documents-panel-title"}} @open={{true}} @pad={{true}} @panelBodyClass="bg-white dark:bg-gray-800">
+            <div class="space-y-4">
+                {{#if this.isUploading}}
+                    <div
+                        class="dropzone w-full rounded-lg px-4 py-8 bg-gray-50 dark:bg-gray-900 bg-opacity-25 text-gray-900 dark:text-white text-center flex flex-col items-center justify-center border-2 border-dashed border-gray-200 dark:border-indigo-500"
+                    >
+                        <div class="flex items-center justify-center py-5">
+                            <Spinner class="text-sm dar:text-gray-100" @loadingMessage={{t "fleet-ops.common.uploading"}} />
+                        </div>
+                    </div>
+                {{else}}
+                    {{#let (file-queue name="files" onFileAdded=this.queueFile accept=(join "," this.acceptedFileTypes)) as |queue|}}
+                        <FileDropzone @queue={{queue}} class="dropzone file-dropzone" @disabled={{cannot "fleet-ops create order"}} as |dropzone|>
+                            {{#if dropzone.active}}
+                                {{#if dropzone.valid}}
+                                    {{t "component.dropzone.drop-to-upload"}}
+                                {{else}}
+                                    {{t "component.dropzone.invalid"}}
+                                {{/if}}
+                            {{else if queue.files.length}}
+                                <div class="my-2">
+                                    <FaIcon @icon="folder-open" class="text-indigo-500 mr-2" />
+                                    {{t "component.dropzone.files-ready-for-upload" numOfFiles=(pluralize queue.files.length (t "component.dropzone.file"))}}
+                                </div>
+                                <div class="my-2">({{queue.progress}}%)</div>
+                            {{else}}
+                                <h4 class="font-semibold">
+                                    <FaIcon @icon="folder-open" @size="lg" class="text-indigo-500 mr-2" />
+                                    {{t "component.dropzone.upload-documents-files"}}
+                                </h4>
+                                <div>
+                                    {{#if dropzone.supported}}
+                                        <p class="text-sm my-5">{{t "component.dropzone.dropzone-supported-files"}}</p>
+                                    {{/if}}
+                                    <FileUpload @name="files" @for="files" @accept={{join "," this.acceptedFileTypes}} @multiple={{true}} @onFileAdded={{this.queueFile}} @disabled={{cannot "fleet-ops create order"}}>
+                                        <a tabindex={{0}} class="btn btn-magic cursor-pointer ml-1">{{t "component.dropzone.or-select-button-text"}}</a>
+                                    </FileUpload>
+                                </div>
+                            {{/if}}
+                        </FileDropzone>
+                    {{/let}}
+                    {{#if this.uploadQueue}}
+                        <div class="mx-4">
+                            <div class="flex items-center justify-between mb-4">
+                                <span class="leading-6 dark:text-gray-100">{{t "component.dropzone.upload-queue"}}</span>
+                            </div>
+                            <div class="space-y-2 mb-4">
+                                {{#each this.uploadQueue as |file|}}
+                                    <div class="flex items-center justify-between bg-blue-100 border border-blue-800 dark:border-blue-800 py-1.5 shadow-sm rounded-lg px-4">
+                                        <div class="text-xs text-blue-900 truncate">{{truncate-filename file.name 50}}</div>
+                                        <div class="flex items-center text-sm">
+                                            <Spinner class="text-blue-900 mr-2" />
+                                            <span class="font-bold text-blue-900">{{round file.progress}}%</span>
+                                        </div>
+                                    </div>
+                                {{/each}}
+                            </div>
+                        </div>
+                    {{/if}}
+                    <div>
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-4">
+                            {{#each this.order.files as |file|}}
+                                <File @file={{file}} @onDelete={{this.removeFile}} />
+                            {{/each}}
+                        </div>
+                    </div>
+                {{/if}}
+            </div>
+        </ContentPanel>
+
+        <ContentPanel
+            @title={{t "fleet-ops.operations.orders.index.new.metadata"}}
+            @open={{this.order.meta.length}}
+            @pad={{true}}
+            @panelBodyClass="bg-white dark:bg-gray-800"
+            @actionButtons={{this.metadataButtons}}
+        >
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-2">
+                {{#each this.order.meta as |metaField index|}}
+                    <InputGroup>
+                        <div class="flex justify-between items-center mb-0.5">
+                            <label>{{metaField.label}}</label>
+                            <a href="javascript:;" class="text-xs" {{on "click" (fn this.editCustomField index)}}>
+                                <FaIcon @icon="edit" @size="sm" class="mr-1" />
+                                {{t "common.edit"}}
+                            </a>
+                        </div>
+                        <Input class="w-full form-input" @value={{metaField.value}} placeholder={{metaField.label}} />
+                    </InputGroup>
+                {{/each}}
+            </div>
+        </ContentPanel>
+
+        <Spacer @height="300px" />
+    </Overlay::Body>
+</Overlay>

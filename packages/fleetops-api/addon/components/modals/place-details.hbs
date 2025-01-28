@@ -1,0 +1,105 @@
+<Modal::Default @modalIsOpened={{@modalIsOpened}} @options={{@options}} @confirm={{@onConfirm}} @decline={{@onDecline}}>
+    <div class="modal-body-container">
+        <div class="flex">
+            <div class="w-48 mb-6 mr-6">
+                <LeafletMap class="w-full h-48 mb-2 rounded-md shadow-md" @lat={{@options.place.latitude}} @lng={{@options.place.longitude}} @zoom={{12}} as |layers|>
+                    <layers.tile @url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png" />
+
+                    <layers.marker @location={{@options.place.coordinates}} />
+                </LeafletMap>
+            </div>
+            <div class="flex-1">
+                <div class="grid grid-cols-1 gap-2 text-xs dark:text-gray-100">
+
+                    <div class="field-info-container space-y-2">
+                        <div class="field-name">{{t "fleet-ops.common.name"}}</div>
+                        <div class="field-value">{{n-a @options.place.name}}</div>
+                    </div>
+
+                    <div class="field-info-container space-y-2">
+                        <div class="field-name">{{t "fleet-ops.common.street"}}</div>
+                        <div class="field-value">{{n-a @options.place.street1}}</div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-3 gap-2 text-xs dark:text-gray-100">
+
+                    <div class="field-info-container space-y-2">
+                        <div class="field-name">{{t "fleet-ops.common.neighborhood"}}</div>
+                        <div class="field-value">{{n-a @options.place.neighborhood}}</div>
+                    </div>
+
+                    <div class="field-info-container space-y-2">
+                        <div class="field-name">{{t "fleet-ops.common.building"}}</div>
+                        <div class="field-value">{{n-a @options.place.building}}</div>
+                    </div>
+
+                    <div class="field-info-container space-y-2">
+                        <div class="field-name">{{t "fleet-ops.common.security-access-code"}}</div>
+                        <div class="field-value">{{n-a @options.place.security_access_code}}</div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-3 gap-2 text-xs dark:text-gray-100">
+
+                    <div class="field-info-container space-y-2">
+                        <div class="field-name">{{t "fleet-ops.common.city"}}</div>
+                        <div class="field-value">{{n-a @options.place.city}}</div>
+                    </div>
+
+                    <div class="field-info-container space-y-2">
+                        <div class="field-name">{{t "fleet-ops.common.state"}}</div>
+                        <div class="field-value">{{n-a @options.place.province}}</div>
+                    </div>
+
+                    <div class="field-info-container space-y-2">
+                        <div class="field-name">{{t "fleet-ops.common.country"}}</div>
+                        <div class="field-value"><CountryName @country={{@options.place.country}} @showFlag={{true}} /></div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-3 gap-2 text-xs dark:text-gray-100">
+
+                    <div class="field-info-container space-y-2">
+                        <div class="field-name">{{t "fleet-ops.common.phone"}}</div>
+                        <div class="field-value">{{n-a @options.place.phone}}</div>
+                    </div>
+
+                    <div class="field-info-container space-y-2">
+                        <div class="field-name">{{t "fleet-ops.common.email"}}</div>
+                        <div class="field-value">{{n-a @options.place.email}}</div>
+                    </div>
+
+                    <div class="field-info-container space-y-2">
+                        <div class="field-name">{{t "fleet-ops.common.vendor"}}</div>
+                        <div class="field-value">
+                            {{#if @options.place.vendor_uuid}}
+                                <a href="javascript:;" {{on "click" @options.viewVendor}}>
+                                    {{@options.place.vendor_name}}
+                                </a>
+                            {{else}}
+                                {{@options.place.vendor_name}}
+                            {{/if}}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4 text-xs dark:text-gray-100">
+                    <div class="mb-5">
+                        <label class="flex items-center mb-2 font-bold">
+                            {{t "fleet-ops.common.coordinates"}}
+                            <a href="javascript:;" class="block ml-3" {{on "click" @options.viewPlaceOnMap}}>
+                                <FaIcon @icon="map" class="mr-1" />
+                                {{t "fleet-ops.component.modals.place-details.view"}}
+                            </a>
+                        </label>
+                        <span class="block truncate">
+                            {{point-coordinates @options.place.location}}
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{yield}}
+</Modal::Default>

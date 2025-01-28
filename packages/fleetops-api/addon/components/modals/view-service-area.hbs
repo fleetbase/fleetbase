@@ -1,0 +1,29 @@
+<Modal::Default @modalIsOpened={{@modalIsOpened}} @options={{@options}} @confirm={{@onConfirm}} @decline={{@onDecline}}>
+    <div class="next-map-container">
+        <LeafletMap
+            class="h-screen-65 w-full {{@options.mapClass}}"
+            @lat={{this.latitude}}
+            @lng={{this.longitude}}
+            @zoom={{11}}
+            @zoomControl={{false}}
+            @onLoad={{this.setupMap}}
+            ...attributes
+            as |layers|
+        >
+            <layers.tile @url={{this.tileSourceUrl}} />
+            {{#if @options.serviceArea}}
+                <layers.polygon
+                    @id={{@options.serviceArea.id}}
+                    @record={{@options.serviceArea}}
+                    @locations={{@options.serviceArea.bounds}}
+                    @fillColor={{@options.serviceArea.color}}
+                    @color={{@options.serviceArea.stroke_color}}
+                    @onAdd={{fn this.onServiceAreaAdded @options.serviceArea}}
+                    as |polygon|
+                >
+                    <polygon.tooltip @permanent={{true}} @sticky={{true}}>{{@options.serviceArea.name}} {{t "fleet-ops.common.service-area"}}</polygon.tooltip>
+                </layers.polygon>
+            {{/if}}
+        </LeafletMap>
+    </div>
+</Modal::Default>

@@ -1,0 +1,17 @@
+<div class="rounded-lg border border-gray-200 dark:border-gray-700" ...attributes>
+    <div class="flex flex-row items-center justify-between px-4 py-2">
+        <div class="mr-2 text-sm">{{t "fleet-ops.component.custom-field-form-panel.field-options"}}</div>
+        <Button @type="magic" @icon="plus" @text="Add new option" @size="xs" @onClick={{this.addOption}} />
+    </div>
+    {{#each-in this.options as |index option|}}
+        <div class="border-t border-gray-200 dark:border-gray-700 flex flex-row items-center pr-2 py-1">
+            <input
+                value={{option}}
+                {{on "input" (fn this.updateOptionValue index)}}
+                {{on "blur" this.updateOptions}}
+                class="w-full bg-white dark:bg-gray-900 text-sm leading-4 text-black dark:text-gray-200 p-2"
+            />
+            <Button @type="danger" @icon="times" @onClick={{fn this.removeOption index}} @size="xs" />
+        </div>
+    {{/each-in}}
+</div>

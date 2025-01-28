@@ -1,0 +1,97 @@
+<OrderConfigManager
+    @tab={{this.tab}}
+    @orderConfig={{this.config}}
+    @context={{this.context}}
+    @contextModel={{this.contextModel}}
+    @onTabChanged={{this.onTabChanged}}
+    @onConfigChanged={{this.onConfigChanged}}
+    @onContextChanged={{this.onContextChanged}}
+    as |Action Context|
+>
+    <Layout::Section::Header @title={{t "fleet-ops.component.order-config-manager.title"}}>
+        {{#if Context.ready}}
+            <DropdownButton
+                class="order-config-select-button mr-2"
+                @disabled={{not Context.configs}}
+                @text={{if Context.currentConfig.name Context.currentConfig.name (t "fleet-ops.component.order-config-manager.select-order-config")}}
+                @textClass="text-sm mr-2"
+                @buttonClass="flex-row-reverse w-44 justify-between"
+                @icon="caret-down"
+                @iconClass="mr-0i"
+                @size="sm"
+                @iconPrefix="fas"
+                @triggerClass="hidden md:flex"
+                @permission="fleet-ops list order-config"
+                as |dd|
+            >
+                <div class="next-dd-menu mt-1 mx-0" aria-labelledby="user-menu">
+                    <div class="p-1">
+                        {{#each Context.configs as |orderConfig|}}
+                            <a href="javascript:;" class="next-dd-item" {{on "click" (dropdown-fn dd Context.selectConfig orderConfig)}}>
+                                <div class="flex-1 flex flex-row items-center">
+                                    <div class="w-6">
+                                        <FaIcon @icon="cogs" />
+                                    </div>
+                                    <span>{{orderConfig.name}}</span>
+                                </div>
+                                <div>
+                                    {{#if (eq Context.currentConfig.id orderConfig.id)}}
+                                        <FaIcon @icon="check" class="text-green-500" />
+                                    {{/if}}
+                                </div>
+                            </a>
+                        {{/each}}
+                    </div>
+                </div>
+            </DropdownButton>
+            <Action.NewOrderConfigButton />
+        {{else}}
+            <Spinner />
+        {{/if}}
+    </Layout::Section::Header>
+
+    <Layout::Section::Body class="h-full">
+        <div class="h-full w-full overflow-y-scroll">
+            {{#if Context.currentConfig}}
+                <div class="px-5 py-3">
+                    <div class="fleetops-pill-tabs">
+                        <nav>
+                            {{#each Context.tabs as |tab|}}
+                                <a
+                                    href="javascript:;"
+                                    class="ui-tab {{if (eq tab.slug Context.currentTab.slug) 'active'}} {{if (cannot 'fleet-ops view order-config') 'disabled'}}"
+                                    disabled={{cannot "fleet-ops view order-config"}}
+                                    {{on "click" (fn Context.onTabChanged tab.slug)}}
+                                >
+                                    <FaIcon @icon={{tab.icon}} class="mr-1" />
+                                    <span>{{tab.title}}</span>
+                                    {{#if (cannot "fleet-ops view order-config")}}
+                                        <Attach::Tooltip @class="clean" @animation="scale" @placement="top">
+                                            <InputInfo @text={{t "common.unauthorized"}} />
+                                        </Attach::Tooltip>
+                                    {{/if}}
+                                </a>
+                            {{/each}}
+                        </nav>
+                    </div>
+                </div>
+                <Context.content />
+                <Spacer @height="300px" />
+            {{else}}
+                <div class="h-full">
+                    <div class="flex flex-col items-center justify-center h-40">
+                        <h4 class="text-lg text-gray-400 mb-4">{{t "fleet-ops.component.order-config-manager.select-order-config-to-start"}}</h4>
+                        <Button
+                            @type="link"
+                            @text={{t "fleet-ops.component.order-config-manager.new-order-config"}}
+                            @onClick={{Context.onClickCreateOrderConfig}}
+                            @permission="fleet-ops create order-config"
+                            class="text-blue-400"
+                        />
+                    </div>
+                </div>
+            {{/if}}
+        </div>
+    </Layout::Section::Body>
+</OrderConfigManager>
+{{outlet}}

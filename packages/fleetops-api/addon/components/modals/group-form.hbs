@@ -1,0 +1,58 @@
+<Modal::Default @modalIsOpened={{@modalIsOpened}} @options={{@options}} @confirm={{@onConfirm}} @decline={{@onDecline}}>
+    <div class="modal-body-container">
+        <div class="text-xs dark:text-gray-100">
+            <div class="input-group">
+                <label>
+                    {{t "fleet-ops.component.modals.group-form.title"}}
+                </label>
+                <Input @value={{@options.group.name}} @type="text" class="w-full form-input" placeholder={{t "fleet-ops.component.modals.group-form.title"}} />
+            </div>
+
+            <div class="input-group">
+                <div class="mb-4">
+                    <InputLabel class="mb-2" @labelText={{t "fleet-ops.component.modals.group-form.users-add"}} @helpText={{t "fleet-ops.component.modals.group-form.search"}} />
+
+                    <div class="flex items-start justify-between">
+                        <ModelSelect
+                            @modelName="user"
+                            @selectedModel={{@options.lastSelectedUser}}
+                            @placeholder={{t "fleet-ops.component.modals.group-form.select-user"}}
+                            @triggerClass="form-select form-input"
+                            @infiniteScroll={{false}}
+                            @renderInPlace={{true}}
+                            @onChange={{@options.addUser}}
+                            as |model|
+                        >
+                            {{model.name}}
+                        </ModelSelect>
+                    </div>
+                </div>
+                <div class="h-48 overflow-y-scroll bg-white border border-gray-200 rounded shadow-sm dark:bg-gray-800 dark:border-gray-900">
+                    {{#if @options.group.users}}
+                        {{#each @options.group.users as |user|}}
+                            <div class="flex items-center justify-between p-3 text-sm text-gray-800 border-b border-gray-200 dark:border-gray-900 dark:text-gray-100">
+                                <span>
+                                    {{user.name}}
+                                </span>
+                                <span>
+                                    <a href="javascript:;" class="text-blue-300 no-underline hover:text-blue-500" {{on "click" (fn @options.removeUser user)}}>
+                                        <FaIcon @icon="times" @prefix="fas" />
+                                    </a>
+                                </span>
+                            </div>
+                        {{/each}}
+                    {{else}}
+                        <div class="flex items-center justify-center h-full dark:text-gray-100">
+                            <div class="flex flex-col items-center justify-center w-2/4 h-full my-8 text-center">
+                                <div class="text-base font-semibold">
+                                    {{t "fleet-ops.component.modals.group-form.no-users"}}
+                                </div>
+                            </div>
+                        </div>
+                    {{/if}}
+                </div>
+            </div>
+        </div>
+    </div>
+    {{yield}}
+</Modal::Default>

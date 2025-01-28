@@ -1,0 +1,27 @@
+<div class="order-board-container">
+    <div class="flex flex-row items-center justify-between px-6 py-3">
+        <div></div>
+        <div>
+            <DropdownButton
+                @icon="layer-group"
+                @text={{concat "Order Type: " this.type.name}}
+                @type="magic"
+                @size="sm"
+                @contentClass="dropdown-menu"
+                @disabled={{not this.orderTypes}}
+                as |dd|
+            >
+                <div class="next-dd-menu mt-2 mx-0">
+                    {{#each this.orderTypes as |type|}}
+                        <div class="px-1">
+                            <a href="#" class="next-dd-item" {{on "click" (dropdown-fn dd this.selectOrderType type)}}>
+                                {{type.name}}
+                            </a>
+                        </div>
+                    {{/each}}
+                </div>
+            </DropdownButton>
+        </div>
+    </div>
+    <Kanban @columns={{this.columns}} />
+</div>

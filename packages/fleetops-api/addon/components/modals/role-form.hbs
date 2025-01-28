@@ -1,0 +1,16 @@
+<Modal::Default @modalIsOpened={{@modalIsOpened}} @options={{@options}} @confirm={{@onConfirm}} @decline={{@onDecline}} as |options|>
+    <div class="modal-body-container" ...attributes>
+        <div class="input-group">
+            <label>
+                {{t "fleet-ops.component.modals.role-form.name"}}
+            </label>
+            <Input @value={{@options.role.name}} @type="text" class="w-full form-input" placeholder={{t "fleet-ops.component.modals.role-form.name-text"}} />
+        </div>
+        <div class="input-group">
+            <label>
+                {{t "fleet-ops.component.modals.role-form.permissions"}}
+            </label>
+            <PermissionPicker @selected={{@options.role.permissions}} @onChange={{fn (mut @options.role.permissions)}} />
+        </div>
+    </div>
+</Modal::Default>

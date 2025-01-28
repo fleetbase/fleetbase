@@ -1,0 +1,200 @@
+<div id="create-order-button-menu-wrapper" class="create-order-menu-button-wrapper mb-2">
+    <Button
+        @text={{t "fleet-ops.component.layout.fleet-ops-sidebar.title"}}
+        @type="primary"
+        @size="xs"
+        @icon="paper-plane"
+        @iconPrefix="fas"
+        @iconSize="sm"
+        @wrapperClass="w-full create-order-button-wrapper"
+        @onClick={{this.onClickCreateOrder}}
+        @permission="fleet-ops create order"
+        @tooltipPlacement="right"
+        class="w-full create-order-button"
+    />
+</div>
+{{#each this.universeMenuItems as |menuItem|}}
+    {{#if menuItem.renderComponentInPlace}}
+        {{component menuItem.component}}
+    {{else}}
+        <Layout::Sidebar::Item
+            @onClick={{fn this.universe.transitionMenuItem (concat this.routePrefix "virtual") menuItem}}
+            @menuItem={{menuItem}}
+            @icon={{menuItem.icon}}
+            @rightSideComponent={{menuItem.rightSideComponent}}
+            @rightSideComponentContext={{menuItem.rightSideComponentContext}}
+            @rightSideStatus={{menuItem.rightSideStatus}}
+            @rightSideStatusText={{menuItem.rightSideStatusText}}
+            @hideRightSideStatusDot={{menuItem.hideRightSideStatusDot}}
+            @rightSideStatusClass={{menuItem.rightSideStatusClass}}
+            @disableRightSideStatusHumanize={{menuItem.disableRightSideStatusHumanize}}
+            @dropdownButton={{menuItem.dropdownButton}}
+            @dropdownButtonActions={{menuItem.dropdownButtonActions}}
+            @dropdownButtonIcon={{menuItem.dropdownButtonIcon}}
+            @dropdownButtonIconPrefix={{menuItem.dropdownButtonIconPrefix}}
+            @dropdownButtonText={{menuItem.dropdownButtonText}}
+            @dropdownButtonCalculatePosition={{menuItem.dropdownButtonCalculatePosition}}
+            @dropdownButtonRenderInPlace={{menuItem.dropdownButtonRenderInPlace}}
+            @dropdownButtonMenuLabel={{menuItem.dropdownButtonMenuLabel}}
+            @dropdownButtonWrapperClass={{menuItem.dropdownButtonWrapperClass}}
+            @dropdownButtonTriggerClass={{menuItem.dropdownButtonTriggerClass}}
+            @registerDropdownButtonAPI={{menuItem.registerDropdownButtonAPI}}
+            @permission={{menuItem.permission}}
+            @visible={{menuItem.visible}}
+        >{{if menuItem.intl (t menuItem.intl) menuItem.title}}</Layout::Sidebar::Item>
+    {{/if}}
+{{/each}}
+{{#each this.menuPanels as |menuPanel|}}
+    <Layout::Sidebar::Panel
+        @open={{menuPanel.open}}
+        @title={{if menuPanel.intl (t menuPanel.intl) menuPanel.title}}
+        @titleIcon={{menuPanel.icon}}
+        @hideCaret={{menuPanel.hideCaret}}
+        @toggleOnCaretOnly={{menuPanel.toggleOnCaretOnly}}
+        @onClickPanelTitle={{menuPanel.onClickPanelTitle}}
+        @wrapperClass={{menuPanel.wrapperClass}}
+        @dropdownButton={{menuPanel.dropdownButton}}
+        @dropdownButtonActions={{menuPanel.dropdownButtonActions}}
+        @dropdownButtonRenderInPlace={{menuPanel.dropdownButtonRenderInPlace}}
+        @dropdownHorizontalPosition={{menuPanel.dropdownHorizontalPosition}}
+        @dropdownButtonMenuLabel={{menuPanel.dropdownButtonMenuLabel}}
+    >
+        {{#each menuPanel.items as |menuItem|}}
+            {{#if menuItem.renderComponentInPlace}}
+                {{component
+                    menuItem.component
+                    menuItem=menuItem
+                    title=(if menuItem.intl (t menuItem.intl) menuItem.title)
+                    onClick=menuItem.onClick
+                    route=(concat this.routePrefix menuItem.route)
+                    icon=menuItem.icon
+                    rightSideComponent=menuItem.rightSideComponent
+                    rightSideComponentContext=menuItem.rightSideComponentContext
+                    rightSideStatus=menuItem.rightSideStatus
+                    rightSideStatusText=menuItem.rightSideStatusText
+                    hideRightSideStatusDot=menuItem.hideRightSideStatusDot
+                    rightSideStatusClass=menuItem.rightSideStatusClass
+                    disableRightSideStatusHumanize=menuItem.disableRightSideStatusHumanize
+                    dropdownButton=menuItem.dropdownButton
+                    dropdownButtonActions=menuItem.dropdownButtonActions
+                    dropdownButtonIcon=menuItem.dropdownButtonIcon
+                    dropdownButtonIconPrefix=menuItem.dropdownButtonIconPrefix
+                    dropdownButtonText=menuItem.dropdownButtonText
+                    dropdownButtonCalculatePosition=menuItem.dropdownButtonCalculatePosition
+                    dropdownButtonRenderInPlace=menuItem.dropdownButtonRenderInPlace
+                    dropdownButtonMenuLabel=menuItem.dropdownButtonMenuLabel
+                    dropdownButtonWrapperClass=menuItem.dropdownButtonWrapperClass
+                    dropdownButtonTriggerClass=menuItem.dropdownButtonTriggerClass
+                    registerDropdownButtonAPI=menuItem.registerDropdownButtonAPI
+                    permission=menuItem.permission
+                    visible=menuItem.visible
+                }}
+            {{else}}
+                <Layout::Sidebar::Item
+                    @onClick={{menuItem.onClick}}
+                    @route={{concat this.routePrefix menuItem.route}}
+                    @icon={{menuItem.icon}}
+                    @rightSideComponent={{menuItem.rightSideComponent}}
+                    @rightSideComponentContext={{menuItem.rightSideComponentContext}}
+                    @rightSideStatus={{menuItem.rightSideStatus}}
+                    @rightSideStatusText={{menuItem.rightSideStatusText}}
+                    @hideRightSideStatusDot={{menuItem.hideRightSideStatusDot}}
+                    @rightSideStatusClass={{menuItem.rightSideStatusClass}}
+                    @disableRightSideStatusHumanize={{menuItem.disableRightSideStatusHumanize}}
+                    @dropdownButton={{menuItem.dropdownButton}}
+                    @dropdownButtonActions={{menuItem.dropdownButtonActions}}
+                    @dropdownButtonIcon={{menuItem.dropdownButtonIcon}}
+                    @dropdownButtonIconPrefix={{menuItem.dropdownButtonIconPrefix}}
+                    @dropdownButtonText={{menuItem.dropdownButtonText}}
+                    @dropdownButtonCalculatePosition={{menuItem.dropdownButtonCalculatePosition}}
+                    @dropdownButtonRenderInPlace={{menuItem.dropdownButtonRenderInPlace}}
+                    @dropdownButtonMenuLabel={{menuItem.dropdownButtonMenuLabel}}
+                    @dropdownButtonWrapperClass={{menuItem.dropdownButtonWrapperClass}}
+                    @dropdownButtonTriggerClass={{menuItem.dropdownButtonTriggerClass}}
+                    @registerDropdownButtonAPI={{menuItem.registerDropdownButtonAPI}}
+                    @permission={{menuItem.permission}}
+                    @visible={{menuItem.visible}}
+                >{{if menuItem.intl (t menuItem.intl) menuItem.title}}</Layout::Sidebar::Item>
+            {{/if}}
+        {{/each}}
+        {{#if (eq menuPanel.routePrefix "settings")}}
+            {{#each this.universeSettingsMenuItems as |menuItem|}}
+                {{#if menuItem.renderComponentInPlace}}
+                    {{component menuItem.component}}
+                {{else}}
+                    <Layout::Sidebar::Item
+                        @onClick={{fn this.universe.transitionMenuItem (concat this.routePrefix "virtual") menuItem}}
+                        @menuItem={{menuItem}}
+                        @icon={{menuItem.icon}}
+                        @rightSideComponent={{menuItem.rightSideComponent}}
+                        @rightSideComponentContext={{menuItem.rightSideComponentContext}}
+                        @rightSideStatus={{menuItem.rightSideStatus}}
+                        @rightSideStatusText={{menuItem.rightSideStatusText}}
+                        @hideRightSideStatusDot={{menuItem.hideRightSideStatusDot}}
+                        @rightSideStatusClass={{menuItem.rightSideStatusClass}}
+                        @disableRightSideStatusHumanize={{menuItem.disableRightSideStatusHumanize}}
+                        @dropdownButton={{menuItem.dropdownButton}}
+                        @dropdownButtonActions={{menuItem.dropdownButtonActions}}
+                        @dropdownButtonIcon={{menuItem.dropdownButtonIcon}}
+                        @dropdownButtonIconPrefix={{menuItem.dropdownButtonIconPrefix}}
+                        @dropdownButtonText={{menuItem.dropdownButtonText}}
+                        @dropdownButtonCalculatePosition={{menuItem.dropdownButtonCalculatePosition}}
+                        @dropdownButtonRenderInPlace={{menuItem.dropdownButtonRenderInPlace}}
+                        @dropdownButtonMenuLabel={{menuItem.dropdownButtonMenuLabel}}
+                        @dropdownButtonWrapperClass={{menuItem.dropdownButtonWrapperClass}}
+                        @dropdownButtonTriggerClass={{menuItem.dropdownButtonTriggerClass}}
+                        @registerDropdownButtonAPI={{menuItem.registerDropdownButtonAPI}}
+                        @permission={{menuItem.permission}}
+                        @visible={{menuItem.visible}}
+                    >{{if menuItem.intl (t menuItem.intl) menuItem.title}}</Layout::Sidebar::Item>
+                {{/if}}
+            {{/each}}
+        {{/if}}
+    </Layout::Sidebar::Panel>
+{{/each}}
+{{#each this.universeMenuPanels as |menuPanel|}}
+    <Layout::Sidebar::Panel
+        @open={{menuPanel.open}}
+        @title={{if menuPanel.intl (t menuPanel.intl) menuPanel.title}}
+        @titleIcon={{menuPanel.icon}}
+        @hideCaret={{menuPanel.hideCaret}}
+        @toggleOnCaretOnly={{menuPanel.toggleOnCaretOnly}}
+        @onClickPanelTitle={{menuPanel.onClickPanelTitle}}
+        @wrapperClass={{menuPanel.wrapperClass}}
+        @dropdownButton={{menuPanel.dropdownButton}}
+        @dropdownButtonActions={{menuPanel.dropdownButtonActions}}
+        @dropdownButtonRenderInPlace={{menuPanel.dropdownButtonRenderInPlace}}
+        @dropdownHorizontalPosition={{menuPanel.dropdownHorizontalPosition}}
+        @dropdownButtonMenuLabel={{menuPanel.dropdownButtonMenuLabel}}
+    >
+        {{#each menuPanel.items as |menuItem|}}
+            <Layout::Sidebar::Item
+                @onClick={{fn this.universe.transitionMenuItem (concat this.routePrefix "virtual") menuItem}}
+                @menuItem={{menuItem}}
+                @icon={{menuItem.icon}}
+                @rightSideComponent={{menuItem.rightSideComponent}}
+                @rightSideComponentContext={{menuItem.rightSideComponentContext}}
+                @rightSideStatus={{menuItem.rightSideStatus}}
+                @rightSideStatusText={{menuItem.rightSideStatusText}}
+                @hideRightSideStatusDot={{menuItem.hideRightSideStatusDot}}
+                @rightSideStatusClass={{menuItem.rightSideStatusClass}}
+                @disableRightSideStatusHumanize={{menuItem.disableRightSideStatusHumanize}}
+                @dropdownButton={{menuItem.dropdownButton}}
+                @dropdownButtonActions={{menuItem.dropdownButtonActions}}
+                @dropdownButtonIcon={{menuItem.dropdownButtonIcon}}
+                @dropdownButtonIconPrefix={{menuItem.dropdownButtonIconPrefix}}
+                @dropdownButtonText={{menuItem.dropdownButtonText}}
+                @dropdownButtonCalculatePosition={{menuItem.dropdownButtonCalculatePosition}}
+                @dropdownButtonRenderInPlace={{menuItem.dropdownButtonRenderInPlace}}
+                @dropdownButtonMenuLabel={{menuItem.dropdownButtonMenuLabel}}
+                @dropdownButtonWrapperClass={{menuItem.dropdownButtonWrapperClass}}
+                @dropdownButtonTriggerClass={{menuItem.dropdownButtonTriggerClass}}
+                @registerDropdownButtonAPI={{menuItem.registerDropdownButtonAPI}}
+                @permission={{menuItem.permission}}
+                @visible={{menuItem.visible}}
+            >{{if menuItem.intl (t menuItem.intl) menuItem.title}}</Layout::Sidebar::Item>
+        {{/each}}
+    </Layout::Sidebar::Panel>
+{{/each}}
+{{yield}}
+<Spacer @height="10px" />

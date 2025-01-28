@@ -1,0 +1,19 @@
+<Modal::Default @modalIsOpened={{@modalIsOpened}} @options={{@options}} @confirm={{@onConfirm}} @decline={{@onDecline}}>
+    <div class="modal-body-container">
+        <InputGroup @name={{t "fleet-ops.component.modals.new-order-config.name"}} @value={{@options.orderConfig.name}} />
+        <InputGroup @name={{t "fleet-ops.component.modals.new-order-config.description"}} @value={{@options.orderConfig.description}} />
+        <InputGroup @name={{t "fleet-ops.component.modals.new-order-config.tags"}}>
+            <TagInput
+                class="form-input"
+                @placeholder={{t "fleet-ops.component.modals.new-order-config.add-tags"}}
+                @allowSpacesInTags={{true}}
+                @tags={{@options.orderConfig.tags}}
+                @addTag={{@options.addTag}}
+                @removeTagAtIndex={{@options.removeTag}}
+                as |tag|
+            >
+                {{tag}}
+            </TagInput>
+        </InputGroup>
+    </div>
+</Modal::Default>

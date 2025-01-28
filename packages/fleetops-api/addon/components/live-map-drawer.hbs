@@ -1,0 +1,17 @@
+<Drawer @onResizeEnd={{@onResizeEnd}} @onResizeStart={{@onResizeStart}} @isMinimized={{@isMinimized}} @isOpen={{@isOpen}} @notchEnabled={{true}} @onLoad={{this.setDrawerContext}}>
+    <div class="ui-tabs pt-4">
+        <nav>
+            {{#each this.tabs as |tab|}}
+                <a href="javascript:;" class="ui-tab {{if (eq this.tab.slug tab.slug) 'active'}}" {{on "click" (fn this.onTabChanged tab.slug)}}>
+                    <FaIcon @icon={{tab.icon}} class="mr-1" />
+                    <span>{{tab.title}}</span>
+                </a>
+            {{/each}}
+        </nav>
+    </div>
+    <div class="tab-content tab-{{this.tab.slug}}">
+        {{#if this.drawer}}
+            {{component this.tab.component drivers=@drivers vehicles=@vehicles places=@places drawer=this.drawer liveMap=@liveMap tabOptions=this.tab options=this.tab.componentParams}}
+        {{/if}}
+    </div>
+</Drawer>

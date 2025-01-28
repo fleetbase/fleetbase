@@ -1,0 +1,24 @@
+<Modal::Default @modalIsOpened={{@modalIsOpened}} @options={{@options}} @confirm={{@onConfirm}} @decline={{@onDecline}}>
+    <div class="modal-body-container">
+        <div class="px-3 mb-4">
+            <div class="flex justify-between items-start">
+                <div class="flex-1 flex items-center">
+                    <label class="dark:text-gray-100 mr-3">{{t "fleet-ops.component.modals.order-event.schedule"}}</label>
+
+                    <DateTimeInput
+                        class="form-input"
+                        @value={{@options.order.scheduled_at}}
+                        @minDate={{format-date (now) "yyyy-MM-d"}}
+                        @minTime={{format-date (now) "HH:mm"}}
+                        @onUpdate={{@options.reschedule}}
+                    />
+                </div>
+                <div class="flex justify-end">
+                    <Button @type="danger" @text={{t "fleet-ops.component.modals.order-event.unschedule"}} @onClick={{@options.unschedule}} @disabled={{not @options.order.scheduled_at}} />
+                </div>
+            </div>
+        </div>
+
+        <Order::ScheduleCard class="border border-night-905" @itemClass="bg-green-600" @contentClass="bg-transparent-i py-3" @titleClass="hidden-i" @order={{@options.order}} />
+    </div>
+</Modal::Default>

@@ -1,0 +1,85 @@
+<Modal::Default @modalIsOpened={{@modalIsOpened}} @options={{@options}} @confirm={{@onConfirm}} @decline={{@onDecline}}>
+    <div class="modal-body-container">
+        <div class="flex flex-col md:flex-row">
+            <div class="lg:flex-none lg:w-40 mb-4 md:mb-0">
+                <div class="w-32">
+                    <img src={{@options.driver.photo_url}} alt={{@options.driver.name}} height="128" width="128" class="h-32 w-32 rounded-md" />
+                </div>
+            </div>
+            <div class="flex-1 grid grid-cols-2 md:grid-cols-3 gap-2">
+                <div class="field-info-container">
+                    <div class="field-name">{{t "fleet-ops.common.name"}}</div>
+                    <div class="field-value">{{n-a @options.driver.name}}</div>
+                </div>
+                <div class="field-info-container space-y-2">
+                    <div class="field-name">{{t "fleet-ops.common.id"}}</div>
+                    <div class="field-value">{{n-a @options.driver.public_id}}</div>
+                </div>
+                <div class="field-info-container space-y-2">
+                    <div class="field-name">{{t "fleet-ops.common.internal-id"}}</div>
+                    <div class="field-value">{{n-a @options.driver.internal_id}}</div>
+                </div>
+                <div class="field-info-container md:col-span-3">
+                    <div class="field-name">{{t "fleet-ops.common.driver-license"}}</div>
+                    <div class="field-value">{{n-a @options.driver.drivers_license}}</div>
+                </div>
+                <div class="field-info-container md:col-span-3">
+                    <div class="field-name">{{t "fleet-ops.common.email"}}</div>
+                    <div class="field-value">{{n-a @options.driver.email}}</div>
+                </div>
+                <div class="field-info-container md:col-span-3">
+                    <div class="field-name">{{t "fleet-ops.common.phone"}}</div>
+                    <div class="field-value">{{n-a @options.driver.phone}}</div>
+                </div>
+                <div class="field-info-container md:col-span-3">
+                    <div class="field-name">{{t "fleet-ops.common.status"}}</div>
+                    <div class="field-value">
+                        <Badge @status={{@options.driver.status}} />
+                    </div>
+                </div>
+                <div class="field-info-container space-y-2">
+                    <div class="field-name">{{t "fleet-ops.component.modals.driver-details.job"}}</div>
+                    <div class="field-value">{{n-a @options.driver.current_job_id}}</div>
+                </div>
+                <div class="field-info-container space-y-2">
+                    <div class="field-name">{{t "fleet-ops.common.vehicle"}}</div>
+                    <div class="field-value">
+                        {{#if @options.driver.vehicle_uuid}}
+                            <a href="javascript:;" {{on "click" @options.viewVehicle}}>{{@options.driver.vehicle_name}}</a>
+                        {{else}}
+                            {{n-a @options.driver.vehicle_name}}
+                        {{/if}}
+                    </div>
+                </div>
+                <div class="field-info-container space-y-2">
+                    <div class="field-name">{{t "fleet-ops.common.vendor"}}</div>
+                    <div class="field-value">
+                        {{#if @options.driver.vendor_uuid}}
+                            <a href="javascript:;" {{on "click" @options.viewVendor}}>{{@options.driver.vendor_name}}</a>
+                        {{else}}
+                            {{n-a @options.driver.vendor_name}}
+                        {{/if}}
+                    </div>
+                </div>
+                <div class="field-info-container space-y-2">
+                    <div class="field-name">{{t "fleet-ops.common.city"}}</div>
+                    <div class="field-value">{{n-a @options.driver.city}}</div>
+                </div>
+                <div class="field-info-container space-y-2">
+                    <div class="field-name">{{t "fleet-ops.common.country"}}</div>
+                    <div class="field-value">
+                        <CountryName @country={{@options.driver.country}} />
+                    </div>
+                </div>
+                <div class="field-info-container md:col-span-3">
+                    <div class="field-name">{{t "fleet-ops.common.coordinates"}}</div>
+                    <div class="field-value">{{point-coordinates @options.driver.location}}</div>
+                    <a href="javascript:;" class="btn btn-xs btn-default mt-1" {{on "click" @options.viewDriverOnMap}}>
+                        <FaIcon @icon="map" class="mr-1.5" />
+                        <span>{{t "fleet-ops.component.modals.driver-details.view"}}</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</Modal::Default>

@@ -1,0 +1,61 @@
+<Modal::Default @modalIsOpened={{@modalIsOpened}} @options={{@options}} @confirm={{@onConfirm}} @decline={{@onDecline}}>
+    <div class="modal-body-container">
+        <div class="flex">
+            <div class="w-32 mb-6 mr-6">
+                <img src={{@options.user.avatar_url}} alt={{@options.user.name}} class="w-32 h-32 rounded-md" />
+                <FileUpload @name="photos" @accept="image/*" @onFileAdded={{@options.uploadNewPhoto}} as |queue|>
+                    <a tabindex={{0}} class="flex items-center px-0 mt-2 text-xs no-underline truncate btn btn-sm btn-default">
+                        {{#if queue.files.length}}
+                            <Spinner class="mr-1" />
+                            <span>
+                                {{t "fleet-ops.common.uploading"}}
+                            </span>
+                        {{else}}
+                            <FaIcon @icon="image" class="mr-1" />
+                            <span>
+                                {{t "fleet-ops.common.upload-new"}}
+                            </span>
+                        {{/if}}
+                    </a>
+                </FileUpload>
+            </div>
+            <div class="flex-1">
+                <div class="grid grid-cols-2 gap-4 text-xs dark:text-gray-100">
+                    <div class="input-group">
+                        <label>
+                            {{t "fleet-ops.common.name"}}
+                        </label>
+                        <Input @value={{@options.user.name}} @type="text" class="w-full form-input" placeholder={{t "fleet-ops.common.name"}} />
+                    </div>
+
+                    <div class="input-group">
+                        <label>
+                            {{t "fleet-ops.common.email"}}
+                        </label>
+                        <Input @value={{@options.user.email}} @type="text" class="w-full form-input" placeholder={{t "fleet-ops.common.email"}} />
+                    </div>
+
+                    <div class="input-group">
+                        <label>
+                            {{t "fleet-ops.common.phone"}}
+                        </label>
+                        <PhoneInput @value={{@options.user.phone}} @onInput={{fn (mut @options.user.phone)}} class="form-input w-full" />
+                    </div>
+
+                    <div class="input-group">
+                        <label>
+                            {{t "fleet-ops.common.country"}}
+                        </label>
+                        <CountrySelect
+                            class="w-full form-input form-select form-datalist"
+                            @value={{@options.user.country}}
+                            @onChange={{fn (mut @options.user.country)}}
+                            placeholder={{t "fleet-ops.common.country"}}
+                        />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{yield}}
+</Modal::Default>
