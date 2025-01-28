@@ -1,0 +1,117 @@
+<div>
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-2">
+        {{#if this.isLalamove}}
+            <div class="field-info-container space-y-2">
+                <div class="field-name">{{t "fleet-ops.component.integrated-order-details.order-id"}}</div>
+                <div class="field-value">
+                    {{n-a @details.orderId}}
+                </div>
+            </div>
+            <div class="field-info-container space-y-2">
+                <div class="field-name">{{t "fleet-ops.component.integrated-order-details.quotation-id"}}</div>
+                <div class="field-value">
+                    {{n-a @details.quotationId}}
+                </div>
+            </div>
+
+            <div class="field-info-container space-y-2">
+                <div class="field-name">{{t "fleet-ops.component.integrated-order-details.driver-id"}}</div>
+                <div class="field-value">
+                    {{n-a @details.driverId "No Driver Assigned"}}
+                </div>
+            </div>
+            <div class="field-info-container space-y-2">
+                <div class="field-name">{{t "fleet-ops.common.status"}}</div>
+                <div class="field-value">
+                    {{smart-humanize @details.status}}
+                </div>
+            </div>
+            <div class="field-info-container space-y-2">
+                <div class="field-name">{{t "fleet-ops.common.distance"}}</div>
+                <div class="field-value">
+                    {{format-meters @details.distance.value}}
+                </div>
+            </div>
+            <div class="field-info-container space-y-2">
+                <div class="field-name">{{t "fleet-ops.component.integrated-order-details.link"}}</div>
+                <div class="field-value">
+                    <a href={{@details.shareLink}} class="break-words anchor-button" target="_lalamove_link">
+                        <div>
+                            <FaIcon @icon="link" />
+                        </div>
+                        <div>{{@details.shareLink}}</div>
+                    </a>
+                </div>
+            </div>
+            <div class="field-info-container space-y-2 lg:col-span-2">
+                <div class="field-name">{{t "fleet-ops.component.integrated-order-details.price-breakdown"}}</div>
+                <div class="field-value">
+                    <div class="next-table-wrapper">
+                        <table class="table table-fixed w-full">
+                            <thead>
+                                <tr>
+                                    <th class="text-left">{{t "fleet-ops.common.item"}}</th>
+                                    <th class="text-left">{{t "fleet-ops.common.amount"}}</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {{#each-in @details.priceBreakdown as |key value|}}
+                                    {{#if (not (includes key this.skipInPriceBreakdown))}}
+                                        <tr>
+                                            <td>{{smart-humanize key}}</td>
+                                            <td>{{format-currency (mult value 100) @details.priceBreakdown.currency}}</td>
+                                        </tr>
+                                    {{/if}}
+                                {{/each-in}}
+                                <tr>
+                                    <td class="font-bold">{{t "fleet-ops.common.total"}}</td>
+                                    <td class="font-bold">{{format-currency (mult @details.priceBreakdown.total 100) @details.priceBreakdown.currency}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="field-info-container space-y-2 lg:col-span-2">
+                <div class="field-name">{{t "fleet-ops.component.integrated-order-details.metadata"}}</div>
+                <div class="field-value">
+                    <div class="next-table-wrapper">
+                        <table class="table table-fixed w-full">
+                            <thead>
+                                <tr>
+                                    <th class="text-left">{{t "fleet-ops.common.key"}}</th>
+                                    <th class="text-left">{{t "fleet-ops.common.value"}}</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {{#each-in @details.metadata as |key value|}}
+                                    <tr>
+                                        <td>{{smart-humanize key}}</td>
+                                        <td>{{value}}</td>
+                                    </tr>
+                                {{/each-in}}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        {{else}}
+            {{#each-in @details as |key value|}}
+                <div class="field-info-container space-y-2">
+                    <div class="field-name">{{smart-humanize key}}</div>
+                    <div class="field-value">
+                        {{#if (is-array value)}}
+                            {{join ", " value}}
+                        {{else if (is-object value)}}
+                            {{#each-in value as |k v|}}
+                                <div>{{smart-humanize k}}: {{v}}</div>
+                            {{/each-in}}
+                        {{else}}
+                            {{n-a value}}
+                        {{/if}}
+                    </div>
+                </div>
+            {{/each-in}}
+        {{/if}}
+    </div>
+</div>

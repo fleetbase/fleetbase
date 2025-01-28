@@ -1,0 +1,36 @@
+<Modal::Default @modalIsOpened={{@modalIsOpened}} @options={{@options}} @confirm={{@onConfirm}} @decline={{@onDecline}}>
+    <div class="modal-body-container">
+        <InputGroup
+            @value={{@options.serviceArea.name}}
+            @name={{t "fleet-ops.component.modals.service-area-form.name"}}
+            @helpText={{t "fleet-ops.component.modals.service-area-form.name-text"}}
+            @required={{true}}
+        />
+        <InputGroup @name={{t "fleet-ops.component.modals.service-area-form.type"}} @helpText={{t "fleet-ops.component.modals.service-area-form.type-text"}}>
+            <Select
+                @options={{@options.serviceAreaTypes}}
+                @value={{@options.serviceArea.type}}
+                @onSelect={{fn (mut @options.serviceArea.type)}}
+                @placeholder={{t "fleet-ops.component.modals.service-area-form.select-type"}}
+                class="w-full"
+            />
+        </InputGroup>
+        <InputGroup
+            @type="color"
+            @value={{@options.serviceArea.stroke_color}}
+            @name={{t "fleet-ops.component.modals.service-area-form.border-color"}}
+            @helpText={{t "fleet-ops.component.modals.service-area-form.customize-border-color"}}
+            class="p-0 border-0 m-0 w-8 h-8 bg-transparent rounded-none"
+        />
+        <InputGroup
+            @type="color"
+            @value={{@options.serviceArea.color}}
+            @name={{t "fleet-ops.component.modals.service-area-form.area-color"}}
+            @helpText={{t "fleet-ops.component.modals.service-area-form.customize-area-color"}}
+            class="p-0 border-0 m-0 w-8 h-8 bg-transparent rounded-none"
+        />
+        <InputGroup @name={{t "fleet-ops.component.modals.service-area-form.country"}} @helpText={{t "fleet-ops.component.modals.service-area-form.country-text"}}>
+            <CountrySelect class="w-full form-input" @value={{@options.serviceArea.country}} @onChange={{fn (mut @options.serviceArea.country)}} />
+        </InputGroup>
+    </div>
+</Modal::Default>

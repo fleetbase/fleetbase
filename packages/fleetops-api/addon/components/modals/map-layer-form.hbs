@@ -1,0 +1,67 @@
+<Modal::Default @modalIsOpened={{@modalIsOpened}} @options={{@options}} @confirm={{@onConfirm}} @decline={{@onDecline}}>
+    <div class="modal-body-container">
+        <div class="mb-4 border border-gray-700 shadow-sm rounded-md pt-2 px-4">
+            <InputGroup @name={{t "fleet-ops.component.modals.map-layer-form.layer-type"}} @helpText={{t "fleet-ops.component.modals.map-layer-form.layer-type-text"}}>
+                <Select
+                    @options={{@options.layerTypes}}
+                    @value={{@options.selectedLayerType}}
+                    @onSelect={{fn (mut @options.selectedLayerType)}}
+                    @placeholder={{t "fleet-ops.component.modals.map-layer-form.select-layer-type"}}
+                    class="w-full"
+                />
+            </InputGroup>
+        </div>
+        {{#if (eq @options.selectedLayerType "Zone")}}
+            <InputGroup @name={{t "fleet-ops.component.modals.map-layer-form.service-area"}} @helpText={{t "fleet-ops.component.modals.map-layer-form.service-area-text"}}>
+                <ModelSelect
+                    @modelName="service-area"
+                    @selectedModel={{@options.layerOptions.service_area}}
+                    @placeholder={{t "fleet-ops.component.modals.map-layer-form.select-service-area"}}
+                    @triggerClass="form-select form-input"
+                    @infiniteScroll={{false}}
+                    @renderInPlace={{true}}
+                    @onChange={{fn (mut @options.layerOptions.service_area)}}
+                    as |model|
+                >
+                    {{model.name}}
+                </ModelSelect>
+            </InputGroup>
+        {{/if}}
+        <InputGroup
+            @value={{@options.layerOptions.name}}
+            @name="{{@options.selectedLayerType}} Name"
+            @helpText={{t "fleet-ops.component.modals.map-layer-form.set-name" htmlSafe=true options=@options.selectedLayerType}}
+            @required={{true}}
+        />
+        {{#if (eq @options.selectedLayerType "Service Area")}}
+            <InputGroup @name={{t "fleet-ops.component.modals.map-layer-form.service-type"}} @helpText={{t "fleet-ops.component.modals.map-layer-form.service-type-text"}}>
+                <Select
+                    @options={{@options.serviceAreaTypes}}
+                    @value={{@options.layerOptions.type}}
+                    @onSelect={{fn (mut @options.layerOptions.type)}}
+                    @placeholder={{t "fleet-ops.component.modals.map-layer-form.select-service-type"}}
+                    class="w-full"
+                />
+            </InputGroup>
+        {{/if}}
+        <InputGroup
+            @type="color"
+            @value={{@options.layerOptions.stroke_color}}
+            @name="{{@options.selectedLayerType}} Border Color"
+            @helpText={{t "fleet-ops.component.modals.map-layer-form.customize-border" htmlSafe=true options=@options.selectedLayerType}}
+            class="p-0 border-0 m-0 w-8 h-8 bg-transparent rounded-none"
+        />
+        <InputGroup
+            @type="color"
+            @value={{@options.layerOptions.color}}
+            @name="{{@options.selectedLayerType}} Color"
+            @helpText={{t "fleet-ops.component.modals.map-layer-form.customize-fill-color" htmlSafe=true options=@options.selectedLayerType}}
+            class="p-0 border-0 m-0 w-8 h-8 bg-transparent rounded-none"
+        />
+        {{#if (eq @options.selectedLayerType "Service Area")}}
+            <InputGroup @name={{t "fleet-ops.component.modals.map-layer-form.service-area-country"}} @helpText={{t "fleet-ops.component.modals.map-layer-form.service-area-country-text"}}>
+                <CountrySelect class="w-full form-input" @value={{@options.layerOptions.country}} @onChange={{fn (mut @options.layerOptions.country)}} />
+            </InputGroup>
+        {{/if}}
+    </div>
+</Modal::Default>

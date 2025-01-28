@@ -1,0 +1,70 @@
+<div class="order-route-list" ...attributes>
+    {{#if @order.isMultipleDropoffOrder}}
+        {{#if @order.payload.firstWaypoint}}
+            <div class="order-route-stop {{@routeStopClass}}">
+                <div class="order-route-stop-index {{@routeStopIndexClass}}">
+                    <div class="index-count">1</div>
+                </div>
+                <div class="order-route-location {{@routeLocationClass}} dark:text-gray-100">
+                    <DisplayPlace @place={{@order.payload.firstWaypoint}} @eta={{get @eta @order.payload.firstWaypoint.id}} />
+                </div>
+            </div>
+        {{/if}}
+
+        {{#if (gt @order.payload.waypoints.length 2)}}
+            <Button class="btn-reset w-full" @wrapperClass="w-full" @onClick={{this.toggleWaypointsCollapse}}>
+                <div class="px-3 py-2 w-full bg-yellow-200 text-yellow-900 rounded shadow-sm flex flex-col justify-center items-start mb-3">
+                    <div class="flex flex-row items-center">
+                        <FaIcon @icon="eye" class="mr-2 text-yellow-900" />
+                        <span class="font-bold">{{if this.isWaypointsCollapsed (t "fleet-ops.component.route-list.expand") (t "fleet-ops.component.route-list.collapse")}}</span>
+                    </div>
+                    <div>{{@order.payload.middleWaypoints.length}} {{t "fleet-ops.component.route-list.more-waypoints"}}</div>
+                </div>
+            </Button>
+            {{#unless this.isWaypointsCollapsed}}
+                {{#each @order.payload.middleWaypoints as |waypoint index|}}
+                    <div class="order-route-stop {{@routeStopClass}}">
+                        <div class="order-route-stop-index {{@routeStopIndexClass}}">
+                            <div class="index-count">{{add index 2}}</div>
+                        </div>
+                        <div class="order-route-location {{@routeLocationClass}} dark:text-gray-100">
+                            <DisplayPlace @place={{waypoint}} @eta={{get @eta waypoint.id}} />
+                        </div>
+                    </div>
+                {{/each}}
+            {{/unless}}
+        {{/if}}
+
+        {{#if @order.payload.lastWaypoint}}
+            <div class="order-route-stop {{@routeStopClass}}">
+                <div class="order-route-stop-index {{@routeStopIndexClass}}">
+                    <div class="index-count">{{add @order.payload.middleWaypoints.length 2}}</div>
+                </div>
+                <div class="order-route-location {{@routeLocationClass}} dark:text-gray-100">
+                    <DisplayPlace @place={{@order.payload.lastWaypoint}} @eta={{get @eta @order.payload.lastWaypoint.id}} />
+                </div>
+            </div>
+        {{/if}}
+    {{else}}
+        {{#if @order.payload.pickup}}
+            <div class="order-route-stop {{@routeStopClass}}">
+                <div class="order-route-stop-index {{@routeStopIndexClass}}">
+                    <div class="index-count">1</div>
+                </div>
+                <div class="order-route-location {{@routeLocationClass}} dark:text-gray-100">
+                    <DisplayPlace @place={{@order.payload.pickup}} @eta={{get @eta @order.payload.pickup.id}} />
+                </div>
+            </div>
+        {{/if}}
+        {{#if @order.payload.dropoff}}
+            <div class="order-route-stop {{@routeStopClass}}">
+                <div class="order-route-stop-index {{@routeStopIndexClass}}">
+                    <div class="index-count">2</div>
+                </div>
+                <div class="order-route-location {{@routeLocationClass}} dark:text-gray-100">
+                    <DisplayPlace @place={{@order.payload.dropoff}} @eta={{get @eta @order.payload.dropoff.id}} />
+                </div>
+            </div>
+        {{/if}}
+    {{/if}}
+</div>

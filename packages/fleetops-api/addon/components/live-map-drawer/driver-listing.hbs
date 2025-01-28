@@ -1,0 +1,12 @@
+<div class="flex flex-row items-center px-5 py-2 border-b border-gray-200 dark:border-gray-700">
+    <div>
+        <Input
+            @value={{this.query}}
+            {{on "input" this.performSearch}}
+            @type="text"
+            class="form-input form-input-sm w-60"
+            placeholder={{t "fleet-ops.component.live-map-drawer.driver-listing.message"}}
+        />
+    </div>
+</div>
+<Table @rows={{this.drivers}} @columns={{this.columns}} @onSetup={{fn (mut this.table)}} />

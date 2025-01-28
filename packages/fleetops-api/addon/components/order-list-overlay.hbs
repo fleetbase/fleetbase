@@ -1,0 +1,178 @@
+<Overlay
+    class="orders-panel"
+    @position="right"
+    @onLoad={{this.onLoad}}
+    @onClose={{this.onClose}}
+    @onOpen={{this.onOpen}}
+    @isOpen={{this.isOpen}}
+    @noBackdrop={{@noBackdrop}}
+    @fullHeight={{@fullHeight}}
+    @outView={{@outView}}
+    @width={{@width}}
+>
+    <Overlay::Header @hideLeftSection={{true}} @onPressCancel={{@onPressCancel}} @actionsWrapperClass="h-full" @cancelButtonHeight="1.5rem" class="pl-0i" {{set-height "2.75rem"}}>
+        <div class="h-full flex-1 pl-11 relative">
+            <div class="absolute h-full left-0 top-0 bottom-0 pl-4 flex items-center justify-center">
+                {{#if this.load.isRunning}}
+                    <Spinner />
+                {{else}}
+                    <FaIcon @icon="search" />
+                {{/if}}
+            </div>
+            <Input
+                @value={{this.query}}
+                @type="text"
+                placeholder={{t "fleet-ops.component.order-list-overlay.search"}}
+                class="w-full p-0 m-0 h-full bg-transparent order-list-overlay-search"
+            />
+        </div>
+        <div class="flex flex-row items-center space-x-2">
+            {{#if this.selectedOrders.length}}
+                <BasicDropdown @renderInPlace={{true}} as |dd|>
+                    <dd.Trigger>
+                        <div class="next-org-button-trigger has-selections {{if dd.isOpen 'is-open'}}">
+                            <FaIcon @icon="ellipsis-h" @prefix="fas" class="text-gray-800 dark:text-white" />
+                        </div>
+                    </dd.Trigger>
+                    <dd.Content>
+                        <div class="next-dd-menu">
+                            <div class="px-1">
+                                <div class="text-sm flex flex-row items-center px-3 py-0.5 rounded-md my-1">
+                                    {{t "fleet-ops.component.order-list-overlay.selected"}}
+                                    {{pluralize this.selectedOrders.length "Order"}}
+                                </div>
+                            </div>
+                            <div class="next-dd-menu-seperator"></div>
+                            <div class="px-1">
+                                <a href="javascript:;" class="next-dd-item" {{on "click" (dropdown-fn dd this.onAction "onPressCancelOrders" this.selectedOrders)}}>{{t
+                                        "fleet-ops.component.order-list-overlay.cancel"
+                                    }}</a>
+                                <a href="javascript:;" class="next-dd-item text-danger" {{on "click" (dropdown-fn dd this.onAction "onPressDeleteOrders" this.selectedOrders)}}>{{t
+                                        "fleet-ops.component.order-list-overlay.delete"
+                                    }}</a>
+                            </div>
+                        </div>
+                    </dd.Content>
+                </BasicDropdown>
+            {{/if}}
+            <BasicDropdown @renderInPlace={{true}} as |dd|>
+                <dd.Trigger>
+                    <div class="next-org-button-trigger {{if dd.isOpen 'is-open'}}">
+                        <FaIcon @icon="ellipsis-h" @prefix="fas" class="text-gray-900 dark:text-gray-500" />
+                    </div>
+                </dd.Trigger>
+                <dd.Content>
+                    <div class="next-dd-menu">
+                        <div class="px-1">
+                            <div class="text-sm flex flex-row items-center px-3 py-0.5 rounded-md my-1">
+                                {{t "fleet-ops.component.order-list-overlay.actions"}}
+                            </div>
+                        </div>
+                        <div class="next-dd-menu-seperator"></div>
+                        <div class="px-1">
+                            <a href="javascript:;" class="next-dd-item" {{on "click" (dropdown-fn dd this.onAction "onPressCreateOrder")}}>{{t
+                                    "fleet-ops.component.order-list-overlay.create-order"
+                                }}</a>
+                            <a href="javascript:;" class="next-dd-item" {{on "click" (dropdown-fn dd this.onAction "onPressCreateFleet")}}>{{t
+                                    "fleet-ops.component.order-list-overlay.create-fleet"
+                                }}</a>
+                        </div>
+                    </div>
+                </dd.Content>
+            </BasicDropdown>
+        </div>
+    </Overlay::Header>
+
+    <Overlay::Body class="fleetops-order-list-overlay" @wrapperClass="fleetops-order-list-overlay-inner-wrapper">
+        <div class="fleetops-order-list-overlay-list">
+            {{#if this.load.isIdle}}
+                <div class="next-content-panel-wrapper">
+                    {{#each-in this.orderGroups as |key orders|}}
+                        <ContentPanel
+                            @title={{t (concat "fleet-ops.component.order-list-overlay." (dasherize key))}}
+                            @subtitle={{pluralize orders.length (t "fleet-ops.common.order")}}
+                            @open={{orders.length}}
+                            @panelTitleInlineClass="fleetops-order-list-title-text"
+                            @panelSubtitleInlineClass="resource-count"
+                            @panelBodyClass="order-listings"
+                        >
+                            {{#each orders as |order index|}}
+                                <OrderListOverlay::Order
+                                    @order={{order}}
+                                    @index={{add index 1}}
+                                    @isSelected={{includes order this.selectedOrders}}
+                                    @onClick={{this.selectOrder}}
+                                    @onDoubleClick={{fn this.onAction "onPressViewOrder"}}
+                                    @onMouseEnter={{fn this.onAction "onMouseEnterOrder"}}
+                                    @onMouseLeave={{fn this.onAction "onMouseLeaveOrder"}}
+                                    as |isSelected|
+                                >
+                                    {{#if isSelected}}
+                                        <div class="order-listing-actions space-x-2">
+                                            <Button
+                                                @type="default"
+                                                @icon="file-invoice"
+                                                @text={{t "fleet-ops.common.details"}}
+                                                @size="xs"
+                                                @onClick={{fn this.onAction "onPressViewOrder" order}}
+                                                @wrapperClass="order-listing-action-button"
+                                            />
+                                        </div>
+                                    {{/if}}
+                                </OrderListOverlay::Order>
+                            {{/each}}
+                        </ContentPanel>
+                    {{/each-in}}
+
+                    {{#each this.fleets as |fleet|}}
+                        <ContentPanel
+                            @title={{fleet.name}}
+                            @subtitle={{concat fleet.drivers_online_count " of " fleet.drivers_count " Online"}}
+                            @open={{fleet.drivers.length}}
+                            @actionButtons={{array (hash type="default" icon="cog" size="xs" onClick=(fn this.onAction "onPressManageFleet" fleet))}}
+                            @panelTitleInlineClass="fleetops-order-list-title-text"
+                            @panelSubtitleInlineClass="resource-count"
+                            @panelBodyClass="fleet-listings"
+                        >
+                            {{#each fleet.drivers as |driver|}}
+                                <ContentPanel
+                                    @titleComponent="order-list-overlay/driver-panel-title"
+                                    @titleComponentContext={{driver}}
+                                    @panelHeaderClass="next-orders-driver-header"
+                                    @panelBodyClass="order-listings"
+                                >
+                                    {{#each driver.orderPanelActiveJobs as |order index|}}
+                                        <OrderListOverlay::Order
+                                            @order={{order}}
+                                            @index={{add index 1}}
+                                            @isSelected={{includes order this.selectedOrders}}
+                                            @onClick={{this.selectOrder}}
+                                            @onDoubleClick={{fn this.onAction "onPressViewOrder"}}
+                                            @onMouseEnter={{fn this.onAction "onMouseEnterOrder"}}
+                                            @onMouseLeave={{fn this.onAction "onMouseLeaveOrder"}}
+                                            as |isSelected|
+                                        >
+                                            {{#if isSelected}}
+                                                <div class="order-listing-actions space-x-2">
+                                                    <Button
+                                                        @type="default"
+                                                        @icon="file-invoice"
+                                                        @text={{t "fleet-ops.common.details"}}
+                                                        @size="xs"
+                                                        @onClick={{fn this.onAction "onPressViewOrder" order}}
+                                                        @wrapperClass="order-listing-action-button"
+                                                    />
+                                                </div>
+                                            {{/if}}
+                                        </OrderListOverlay::Order>
+                                    {{/each}}
+                                </ContentPanel>
+                            {{/each}}
+                        </ContentPanel>
+                    {{/each}}
+                </div>
+            {{/if}}
+            <Spacer @height="200px" />
+        </div>
+    </Overlay::Body>
+</Overlay>

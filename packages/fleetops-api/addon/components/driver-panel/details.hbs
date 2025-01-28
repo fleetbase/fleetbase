@@ -1,0 +1,55 @@
+<div class="p-4">
+    <div class="flex-1 space-y-4">
+        <ContentPanel @title={{t "fleet-ops.component.driver-panel.user-account"}} @open={{true}} @pad={{true}} @panelBodyClass="bg-white dark:bg-gray-900">
+            <div class="grid grid-cols-2 gap-4 text-xs dark:text-gray-100">
+                <div class="field-info-container md:col-span-3">
+                    <div class="field-name">{{t "fleet-ops.common.name"}}</div>
+                    <div class="field-value">{{n-a @driver.name}}</div>
+                </div>
+                <div class="field-info-container space-y-2">
+                    <div class="field-name">{{t "fleet-ops.common.email"}}</div>
+                    <ClickToCopy @value={{@driver.email}} class="field-value">{{n-a @driver.email}}</ClickToCopy>
+                </div>
+                <div class="field-info-container space-y-2">
+                    <div class="field-name">{{t "fleet-ops.common.phone"}}</div>
+                    <ClickToCopy @value={{@driver.phone}} class="field-value">{{n-a @driver.phone}}</ClickToCopy>
+                </div>
+            </div>
+        </ContentPanel>
+        <ContentPanel @title={{t "fleet-ops.component.driver-panel.driver-details"}} @open={{true}} @pad={{true}} @panelBodyClass="bg-white dark:bg-gray-900">
+            <div class="grid grid-cols-2 gap-4 text-xs dark:text-gray-100">
+                <div class="field-info-container space-y-2">
+                    <div class="field-name">{{t "fleet-ops.common.id"}}</div>
+                    <ClickToCopy @value={{@driver.public_id}} class="field-value">{{n-a @driver.public_id}}</ClickToCopy>
+                </div>
+                <div class="field-info-container space-y-2">
+                    <div class="field-name">{{t "fleet-ops.common.internal-id"}}</div>
+                    <div class="field-value">{{n-a @driver.internal_id}}</div>
+                </div>
+                <div class="field-info-container space-y-2">
+                    <div class="field-name">{{t "fleet-ops.common.driver-license"}}</div>
+                    <div class="field-value">{{n-a @driver.drivers_license_number}}</div>
+                </div>
+                <div class="field-info-container space-y-2">
+                    <div class="field-name">{{t "fleet-ops.common.vendor"}}</div>
+                    <div class="field-value">{{n-a @driver.vendor_name}}</div>
+                </div>
+                <div class="col-span-3"></div>
+                <div class="field-info-container space-y-2">
+                    <div class="field-name">{{t "fleet-ops.common.city"}}</div>
+                    <div class="field-value">{{n-a @driver.city}}</div>
+                </div>
+                <div class="field-info-container space-y-2">
+                    <div class="field-name">{{t "fleet-ops.common.country"}}</div>
+                    <div class="field-value">
+                        <CountryName @country={{@driver.country}} />
+                    </div>
+                </div>
+                <div class="field-info-container md:col-span-3">
+                    <div class="field-name">{{t "fleet-ops.common.coordinates"}}</div>
+                    <div class="field-value">{{point-coordinates @driver.location}}</div>
+                </div>
+            </div>
+        </ContentPanel>
+    </div>
+</div>

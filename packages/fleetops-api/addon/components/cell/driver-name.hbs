@@ -1,0 +1,24 @@
+{{#if this.driver}}
+    <div class="relative flex items-center" ...attributes>
+        <img src={{this.driver.photo_url}} alt={{this.driver.name}} {{fallback-img-src (config "defaultValues.driverImage")}} class="w-5 h-5 mr-2 rounded-md" />
+        <a href="javascript:;" class="relative flex flex-row items-center" disabled={{and @column.permission (cannot @column.permission)}} {{on "click" (fn this.onClick this.driver)}}>
+            <span>{{get-default-value this.driver.name}}</span>
+            {{#if @row.vehicle_assigned}}
+                <div class="ml-2 rounded-lg bg-gray-300 dark:bg-gray-800 opacity-50 px-1 text-xs">
+                    <FaIcon @icon="car" @size="xs" class="mr-0.5" />
+                    <span>{{n-a @row.vehicle_assigned.display_name}}</span>
+                </div>
+            {{else if this.driver.vehicle}}
+                <div class="ml-2 rounded-lg bg-gray-300 dark:bg-gray-800 opacity-50 px-1 text-xs">
+                    <FaIcon @icon="car" @size="xs" class="mr-0.5" />
+                    <span>{{n-a this.driver.vehicle_name}}</span>
+                </div>
+            {{/if}}
+        </a>
+        <FaIcon @icon="circle" @size="2xs" class="absolute left-0 top-0 -mt-1 -ml-1 {{if this.driver.online 'text-green-500' 'text-yellow-200'}}" />
+    </div>
+{{else}}
+    <div class="flex items-center">
+        <span>{{t "fleet-ops.component.cell.driver-name.not-assigned"}}</span>
+    </div>
+{{/if}}

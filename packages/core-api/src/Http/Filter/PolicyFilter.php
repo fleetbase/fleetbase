@@ -1,0 +1,37 @@
+<?php
+
+namespace Fleetbase\Http\Filter;
+
+class PolicyFilter extends Filter
+{
+    public function queryForInternal()
+    {
+        if ($this->request->filled('type')) {
+            return;
+        }
+
+        $this->builder->where(
+            function ($query) {
+                $query->where('company_uuid', $this->session->get('company'))->orWhereNull('company_uuid');
+            }
+        );
+    }
+
+    public function query(?string $query)
+    {
+        $this->builder->search($query);
+    }
+
+    public function type(?string $type)
+    {
+        switch ($type) {
+            case 'flb-managed':
+                $this->builder->whereNull('company_uuid');
+                break;
+            case 'org-managed':
+            default:
+                $this->builder->where('company_uuid', $this->session->get('company'));
+                break;
+        }
+    }
+}

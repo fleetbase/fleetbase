@@ -1,0 +1,42 @@
+<Modal::Default @modalIsOpened={{@modalIsOpened}} @options={{@options}} @confirm={{@onConfirm}} @decline={{@onDecline}}>
+    <div class="modal-body-container">
+        <div class="grid grid-cols-3 gap-2 text-xs dark:text-gray-100">
+            <div class="col-span-3 mb-5">
+                <label class="block mb-2 font-bold">
+                    {{t "fleet-ops.component.modals.group-details.name"}}
+                </label>
+                <span class="block truncate">
+                    {{@options.group.name}}
+                </span>
+            </div>
+
+            <div class="mb-5">
+                <label class="block mb-2 font-bold">
+                    {{t "fleet-ops.component.modals.group-details.member"}}
+                </label>
+                <span class="block truncate">
+                    {{@options.user.internal_id}}
+                </span>
+            </div>
+
+            <div class="mb-5">
+                <label class="block mb-2 font-bold">
+                    {{t "fleet-ops.common.status"}}
+                </label>
+                <Badge @status={{@options.vendor.status}} />
+            </div>
+
+            <div class="col-span-1"></div>
+
+            <div class="col-span-2 mb-5">
+                <label class="block mb-2 font-bold">
+                    {{t "fleet-ops.component.modals.group-details.address"}}
+                </label>
+                <div>
+                    {{(html-safe @options.vendor.address)}}
+                </div>
+            </div>
+        </div>
+    </div>
+    {{yield}}
+</Modal::Default>

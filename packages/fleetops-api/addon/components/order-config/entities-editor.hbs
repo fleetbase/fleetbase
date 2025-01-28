@@ -1,0 +1,89 @@
+<div class="order-config-entities-editor" ...attributes>
+    <div class="content-panel mb-20">
+        <div class="content-panel-header items-center">
+            <h3 class="text-lg font-semibold dark:text-gray-100">
+                {{t "fleet-ops.component.order-config.entities-editor.title"}}
+            </h3>
+
+            <Button @text="New Entity Type" @icon="plus" @iconPrefix="fas" @onClick={{this.newEntity}} />
+        </div>
+        <div class="content-panel-body">
+            <div class="mb-6">
+                <p>
+                    {{t "fleet-ops.component.order-config.entities-editor.message"}}
+                </p>
+            </div>
+
+            <div class="space-y-3">
+                {{#if this.orderConfig.meta.entities}}
+                    {{#each this.orderConfig.meta.entities as |entity index|}}
+                        <div class="rounded shadow-sm border border-gray-300 dark:border-gray-700">
+                            <div class="border-b border-gray-300 dark:border-gray-700 dark:bg-gray-900 p-3">
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <FaIcon @icon="box-alt" class="mr-2 dark:text-sky-300" />
+                                        <span class="dark:text-gray-100 text-sm mr-1">{{t "fleet-ops.component.order-config.entities-editor.type"}}</span>
+                                        <span class="dark:text-gray-100 text-sm">({{entity.name}})</span>
+                                    </div>
+                                    <div class="flex items-center">
+                                        <a href="javascript:;" class="mr-2 btn btn-danger btn-sm" {{on "click" (fn this.removeEntity index)}}>
+                                            <FaIcon @icon="trash" />
+                                        </a>
+                                        <Button
+                                            @text={{t "fleet-ops.component.order-config.entities-editor.add-meta"}}
+                                            @icon="plus"
+                                            @iconPrefix="fas"
+                                            @onClick={{fn this.addMetaField index}}
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="p-3">
+                                <div class="grid grid-cols-3 gap-2">
+                                    <InputGroup @name={{t "fleet-ops.common.name"}} @value={{entity.name}} />
+                                    <InputGroup @name={{t "fleet-ops.common.type"}} @value={{entity.type}}>
+                                        <KeyInput @value={{entity.type}} @onChange={{fn (mut entity.type)}} />
+                                    </InputGroup>
+                                    <InputGroup @name={{t "fleet-ops.common.description"}} @value={{entity.description}} class="col-span-2" />
+                                </div>
+
+                                <div class="grid grid-cols-5 gap-2">
+                                    <InputGroup @name={{t "fleet-ops.common.weight"}} @value={{entity.weight}} class="col-span-3" />
+                                    <InputGroup @name={{t "fleet-ops.common.unit"}}>
+                                        <Select @value={{entity.weight_unit}} @options={{this.weightUnits}} @optionLabel="name" @optionValue="value" class="w-full" />
+                                    </InputGroup>
+                                </div>
+
+                                <div class="grid grid-cols-5 gap-2">
+                                    <InputGroup @name={{t "fleet-ops.common.length"}} @value={{entity.length}} />
+                                    <InputGroup @name={{t "fleet-ops.common.width"}} @value={{entity.width}} />
+                                    <InputGroup @name={{t "fleet-ops.common.height"}} @value={{entity.width}} />
+                                    <InputGroup @name={{t "fleet-ops.common.unit"}}>
+                                        <Select @value={{entity.dimentions_unit}} @options={{this.lengthUnits}} @optionLabel="name" @optionValue="value" class="w-full" />
+                                    </InputGroup>
+                                </div>
+
+                                <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                                    {{#each-in entity.meta as |key value|}}
+                                        <div class="input-group">
+                                            <div class="flex items-center justify-between mb-1.5">
+                                                <InputLabel @labelText={{humanize key}} class="truncate" />
+                                                <div>
+                                                    <button type="button" class="btn btn-danger btn-outline btn-sm" {{on "click" (fn this.removeMetaKey index key)}}>
+                                                        <FaIcon @icon="trash" />
+                                                    </button>
+                                                </div>
+                                            </div>
+                                            <Input class="form-input w-full" name={{humanize key}} @value={{value}} placeholder={{humanize key}} />
+                                        </div>
+                                    {{/each-in}}
+                                </div>
+                            </div>
+                        </div>
+                    {{/each}}
+                {{/if}}
+            </div>
+
+        </div>
+    </div>
+</div>

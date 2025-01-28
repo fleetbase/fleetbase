@@ -1,0 +1,81 @@
+<div class="p-4 space-y-4">
+    <ContentPanel @title="Map" @open={{true}}>
+        <LeafletMap class="w-full h-48 rounded-b-md shadow-md" @lat={{@place.latitude}} @lng={{@place.longitude}} @zoom={{17}} @zoomControl={{false}} as |layers|>
+            <layers.tile @url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png" />
+            <layers.marker
+                @id={{@place.id}}
+                @icon={{icon iconUrl="/engines-dist/images/building-marker.png" iconSize=(array 16 16)}}
+                @location={{point-to-coordinates @place.location}}
+                @riseOnHover={{true}}
+                @title={{@place.address}}
+                @alt={{@place.address}}
+                as |marker|
+            >
+                <marker.popup>
+                    <div>{{@place.address}}</div>
+                    <div>{{format-point @place.location}}</div>
+                </marker.popup>
+                <marker.tooltip @permanent={{false}} @sticky={{true}} @direction="bottom">{{@place.name}}</marker.tooltip>
+            </layers.marker>
+        </LeafletMap>
+    </ContentPanel>
+    <ContentPanel @title="Details" @open={{true}} @pad={{true}} @panelBodyClass="bg-white dark:bg-gray-900">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-2 text-xs dark:text-gray-100">
+            <div class="field-info-container col-span-3">
+                <div class="field-name">{{t "fleet-ops.common.name"}}</div>
+                <div class="field-value uppercase">{{n-a @place.name}}</div>
+            </div>
+
+            <div class="field-info-container col-span-3">
+                <div class="field-name">{{t "fleet-ops.common.street"}}</div>
+                <div class="field-value uppercase">{{n-a @place.street1}}</div>
+            </div>
+
+            <div class="field-info-container space-y-2">
+                <div class="field-name">{{t "fleet-ops.common.neighborhood"}}</div>
+                <div class="field-value uppercase">{{n-a @place.neighborhood}}</div>
+            </div>
+
+            <div class="field-info-container space-y-2">
+                <div class="field-name">{{t "fleet-ops.common.building"}}</div>
+                <div class="field-value uppercase">{{n-a @place.building}}</div>
+            </div>
+
+            <div class="field-info-container space-y-2">
+                <div class="field-name">{{t "fleet-ops.common.security-access-code"}}</div>
+                <div class="field-value uppercase">{{n-a @place.security_access_code}}</div>
+            </div>
+
+            <div class="field-info-container space-y-2">
+                <div class="field-name">{{t "fleet-ops.common.city"}}</div>
+                <div class="field-value uppercase">{{n-a @place.city}}</div>
+            </div>
+
+            <div class="field-info-container space-y-2">
+                <div class="field-name">{{t "fleet-ops.common.state"}}</div>
+                <div class="field-value uppercase">{{n-a @place.province}}</div>
+            </div>
+
+            <div class="field-info-container space-y-2">
+                <div class="field-name">{{t "fleet-ops.common.country"}}</div>
+                <div class="field-value uppercase">
+                    <CountryName @country={{@place.country}} @showFlag={{true}} />
+                </div>
+            </div>
+
+            <div class="field-info-container space-y-2">
+                <div class="field-name">{{t "fleet-ops.common.phone"}}</div>
+                <div class="field-value uppercase">{{n-a @place.phone}}</div>
+            </div>
+
+            <div class="field-info-container col-span-3">
+                <div class="field-name">
+                    {{t "fleet-ops.common.coordinates"}}
+                </div>
+                <div class="field-value">
+                    {{point-coordinates @place.location}}
+                </div>
+            </div>
+        </div>
+    </ContentPanel>
+</div>

@@ -1,0 +1,42 @@
+<div class="p-4">
+    <ContentPanel @title={{t "fleet-ops.common.details"}} @open={{true}} @pad={{true}} @panelBodyClass="bg-white dark:bg-gray-900">
+        <div class="grid grid-cols-2 gap-4 text-xs md:mb-6 dark:text-gray-100">
+            <div class="field-info-container space-y-2">
+                <div class="field-name">{{t "fleet-ops.common.id"}}</div>
+                <div class="field-value">{{n-a @fuelReport.public_id}}</div>
+            </div>
+            <div class="field-info-container col-span-2">
+                <div class="field-name">{{t "fleet-ops.common.reporter"}}</div>
+                <div class="field-value">{{n-a @fuelReport.reporter_name}}</div>
+            </div>
+            <div class="field-info-container space-y-2">
+                <div class="field-name">{{t "fleet-ops.common.driver"}}</div>
+                <div class="field-value">{{n-a @fuelReport.driver_name}}</div>
+            </div>
+            <div class="field-info-container space-y-2">
+                <div class="field-name">{{t "fleet-ops.common.vehicle"}}</div>
+                <div class="field-value">{{n-a @fuelReport.vehicle_name}}</div>
+            </div>
+            <div class="field-info-container space-y-2">
+                <div class="field-name">{{t "fleet-ops.common.odometer"}}</div>
+                <div class="field-value">{{n-a @fuelReport.odometer}}</div>
+            </div>
+            <div class="field-info-container space-y-2">
+                <div class="field-name">{{t "fleet-ops.common.cost"}}</div>
+                <div class="field-value">{{format-currency @fuelReport.amount @fuelReport.currency}}</div>
+            </div>
+            <div class="field-info-container space-y-2">
+                <div class="field-name">{{t "fleet-ops.component.fuel-report-panel.details.fuel"}}</div>
+                <div class="field-value">{{pluralize (n-a @fuelReport.volume) (n-a @fuelReport.metric_unit)}}</div>
+            </div>
+            <div class="field-info-container space-y-2">
+                <div class="field-name">{{t "fleet-ops.common.date-created"}}</div>
+                <div class="field-value">{{@fuelReport.createdAtShort}}</div>
+            </div>
+            <div class="field-info-container space-y-2">
+                <div class="field-name">{{t "fleet-ops.common.coordinates"}}</div>
+                <div class="field-value">{{point-coordinates @fuelReport.location}}</div>
+            </div>
+        </div>
+    </ContentPanel>
+</div>

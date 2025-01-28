@@ -1,0 +1,39 @@
+<Overlay
+    @onLoad={{this.onLoad}}
+    @isOpen={{@isOpen}}
+    @position="right"
+    @noBackdrop={{true}}
+    @fullHeight={{true}}
+    @isResizable={{true}}
+    @isMaximizable={{true}}
+    @isMinimizable={{true}}
+    @width="600px"
+    as |overlay|
+>
+    <Overlay::Header @overlay={{overlay}} @title={{t "fleet-ops.component.settings-window.title"}} @onPressCancel={{@onPressCancel}}>
+        <Button
+            @icon="save"
+            @type="primary"
+            @text={{if (media "isMobile") "" (t "fleet-ops.component.settings-window.save")}}
+            @onClick={{this.saveSettings}}
+            @isLoading={{this.isSaving}}
+            @disabled={{or this.isLoading this.isSaving}}
+        />
+    </Overlay::Header>
+
+    <Overlay::Body>
+        <div class="px-5 py-4">
+            <InputGroup
+                @name={{t "fleet-ops.component.settings-window.name"}}
+                @type="number"
+                @value={{this.company.options.fleetops.adhoc_distance}}
+                @wrapperClass="mb-0"
+                @helpText={{t "fleet-ops.component.settings-window.name-text"}}
+            />
+            <div class="mt-2 px-3 py-1 rounded-lg border border-blue-600 bg-blue-100 flex items-center">
+                <FaIcon @icon="triangle-exclamation" class="text-blue-900 mr-1.5" />
+                <span class="text-blue-900 text-xs">{{t "fleet-ops.component.settings-window.message"}}</span>
+            </div>
+        </div>
+    </Overlay::Body>
+</Overlay>
