@@ -893,7 +893,7 @@ body[data-theme='dark'] .next-map-container-table-container {
 }
 
 .next-map-container-view-switch > button {
-    @apply bg-gray-200 text-gray-900 rounded-xl m-1 outline-none text-sm px-6 py-0.5;
+    @apply bg-gray-200 text-gray-900 m-1 outline-none text-sm px-6 py-0.5;
 }
 
 .next-map-container-view-switch > button:hover,
@@ -940,10 +940,10 @@ body[data-theme='dark'] .next-map-container-view-switch > button:active {
 }
 
 .next-view-header-item {
-    @apply rounded-md text-sm px-3 py-1 flex items-center justify-center border border-transparent cursor-default mr-2;
+    @apply text-sm px-3 py-1 flex items-center justify-center border border-transparent cursor-default mr-2;
     max-height: 31px;
-    padding-top: 25px !important;
-    padding-bottom: 25px !important;
+    padding-top: 25px;
+    padding-bottom: 25px;
 }
 
 .next-view-header-item > div:first-child {
@@ -1236,7 +1236,10 @@ body[data-theme='dark'] .next-view-header .next-view-header-right .next-user-but
 }
 
 .next-sidebar .next-nav-item {
-    @apply text-sm flex flex-row items-center px-3 py-0.5 rounded-md mb-1;
+    @apply text-sm flex flex-row items-center ;
+    padding-left: 0.75rem;
+    padding-top: 0.75rem;
+    padding-bottom: 0.30rem;
 }
 
 .next-sidebar .next-nav-item:hover {
