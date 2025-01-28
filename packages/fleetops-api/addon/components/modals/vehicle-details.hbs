@@ -1,0 +1,227 @@
+<Modal::Default @modalIsOpened={{@modalIsOpened}} @options={{@options}} @confirm={{@onConfirm}} @decline={{@onDecline}}>
+    <div class="modal-body-container">
+        <div class="flex flex-col md:flex-row">
+            <div class="lg:flex-none lg:w-40 mb-4 md:mb-0">
+                <div class="w-32">
+                    <Image src={{@options.vehicle.photo_url}} @fallbackSrc={{@options.vehicle.avatar_url}} alt={{@options.vehicle.name}} height="128" width="128" class="h-32 w-32" />
+                </div>
+            </div>
+            <div class="flex-1 space-y-4">
+                <ContentPanel @title="Details" @open={{true}} @pad={{true}} @panelBodyClass="bg-white dark:bg-gray-800">
+                    <div class="grid grid-cols-2 gap-4 text-xs md:mb-6 dark:text-gray-100">
+                        <div class="field-info-container space-y-2">
+                            <div class="field-name">{{t "fleet-ops.common.name"}}</div>
+                            <div class="field-value">{{n-a @options.vehicle.name}}</div>
+                        </div>
+
+                        <div class="field-info-container space-y-2">
+                            <div class="field-name">{{t "fleet-ops.common.vehicle"}}</div>
+                            <div class="field-value">{{n-a @options.vehicle.internal_id}}</div>
+                        </div>
+
+                        <div class="field-info-container space-y-2">
+                            <div class="field-name">{{t "fleet-ops.common.plate-number"}}</div>
+                            <div class="field-value">{{n-a @options.vehicle.plate_number}}</div>
+                        </div>
+
+                        <div class="field-info-container space-y-2">
+                            <div class="field-name">{{t "fleet-ops.common.vin-number"}}</div>
+                            <div class="field-value">{{n-a @options.vehicle.vin}}</div>
+                        </div>
+
+                        <div class="field-info-container space-y-2">
+                            <div class="field-name">{{t "fleet-ops.component.modals.vehicle-details.make"}}</div>
+                            <div class="field-value">{{n-a @options.vehicle.name}}</div>
+                        </div>
+
+                        <div class="field-info-container space-y-2">
+                            <div class="field-name">{{t "fleet-ops.component.modals.vehicle-details.model"}}</div>
+                            <div class="field-value">{{n-a @options.vehicle.model}}</div>
+                        </div>
+
+                        <div class="field-info-container space-y-2">
+                            <div class="field-name">{{t "fleet-ops.component.modals.vehicle-details.year"}}</div>
+                            <div class="field-value">{{n-a @options.vehicle.year}}</div>
+                        </div>
+
+                        <div class="field-info-container space-y-2">
+                            <div class="field-name">{{t "fleet-ops.common.status"}}</div>
+                            <Badge @status={{@options.vehicle.status}} />
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 gap-4 lg:grid-cols-2 lg:gap-2 mb-2 mt-2">
+                        <div class="col-span-2">
+                            <div class="field-info-container space-y-2">
+                                <div class="field-name">{{t "fleet-ops.component.modals.vehicle-details.driver-assigned"}}</div>
+                                <div class="field-value">
+                                    {{#if @options.vehicle.driver}}
+                                        <DriverCard class="dark:bg-gray-800 rounded-md px-3 py-2" @driver={{@options.vehicle.driver}} @onClick={{@options.viewDriver}} />
+                                    {{else}}
+                                        <span>{{t "fleet-ops.component.modals.vehicle-details.no-driver-assigned"}}</span>
+                                    {{/if}}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </ContentPanel>
+
+                <ContentPanel @title={{t "fleet-ops.component.modals.vehicle-details.avatar"}} @open={{false}} @pad={{true}} @panelBodyClass="bg-white dark:bg-gray-800">
+                    <div class="grid grid-cols-1 gap-2 text-xs dark:text-gray-100">
+                        <div>
+                            <Image alt={{@options.vehicle.public_id}} src={{@options.vehicle.avatar_url}} class="w-24 h-24" />
+                        </div>
+                    </div>
+                </ContentPanel>
+
+                <ContentPanel @title={{t "fleet-ops.component.modals.vehicle-details.model-information"}} @open={{false}} @pad={{true}} @panelBodyClass="bg-white dark:bg-gray-800">
+                    <div class="grid grid-cols-1 gap-4 lg:grid-cols-2 lg:gap-2">
+                        <div class="field-info-container space-y-2">
+                            <div class="field-name">{{t "fleet-ops.component.modals.vehicle-details.acceleration"}}</div>
+                            <div class="field-value">{{n-a @options.vehicle.model_0_to_100_kph}}</div>
+                        </div>
+
+                        <div class="field-info-container space-y-2">
+                            <div class="field-name">{{t "fleet-ops.component.modals.vehicle-details.body"}}</div>
+                            <div class="field-value">{{n-a @options.vehicle.model_body}}</div>
+                        </div>
+
+                        <div class="field-info-container space-y-2">
+                            <div class="field-name">{{t "fleet-ops.component.modals.vehicle-details.doors"}}</div>
+                            <div class="field-value">{{n-a @options.vehicle.model_doors}}</div>
+                        </div>
+
+                        <div class="field-info-container space-y-2">
+                            <div class="field-name">{{t "fleet-ops.common.driver"}}</div>
+                            <div class="field-value">{{n-a @options.vehicle.model_drive}}</div>
+                        </div>
+
+                        <div class="field-info-container space-y-2">
+                            <div class="field-name">{{t "fleet-ops.component.modals.vehicle-details.length"}}</div>
+                            <div class="field-value">{{n-a @options.vehicle.model_length_mm}}</div>
+                        </div>
+
+                        <div class="field-info-container space-y-2">
+                            <div class="field-name">{{t "fleet-ops.component.modals.vehicle-details.seats"}}</div>
+                            <div class="field-value">{{n-a @options.vehicle.model_seats}}</div>
+                        </div>
+
+                        <div class="field-info-container space-y-2">
+                            <div class="field-name">{{t "fleet-ops.component.modals.vehicle-details.top-speed"}}</div>
+                            <div class="field-value">{{n-a @options.vehicle.model_top_speed_kph}}</div>
+                        </div>
+
+                        <div class="field-info-container space-y-2">
+                            <div class="field-name">{{t "fleet-ops.component.modals.vehicle-details.transmission"}}</div>
+                            <div class="field-value">{{n-a @options.vehicle.model_transmission_type}}</div>
+                        </div>
+
+                        <div class="field-info-container space-y-2">
+                            <div class="field-name">{{t "fleet-ops.component.modals.vehicle-details.weight"}}</div>
+                            <div class="field-value">{{n-a @options.vehicle.model_weight_kg}}</div>
+                        </div>
+
+                        <div class="field-info-container space-y-2">
+                            <div class="field-name">{{t "fleet-ops.component.modals.vehicle-details.wheelbase"}}</div>
+                            <div class="field-value">{{n-a @options.vehicle.model_wheelbase_mm}}</div>
+                        </div>
+
+                        <div class="field-info-container space-y-2">
+                            <div class="field-name">{{t "fleet-ops.component.modals.vehicle-details.width"}}</div>
+                            <div class="field-value">{{n-a @options.vehicle.model_width_mm}}</div>
+                        </div>
+                    </div>
+                </ContentPanel>
+
+                <ContentPanel @title={{t "fleet-ops.component.modals.vehicle-details.engine-information"}} @open={{false}} @pad={{true}} @panelBodyClass="bg-white dark:bg-gray-800">
+                    <div class="grid grid-cols-1 gap-4 lg:grid-cols-2 lg:gap-2">
+                        <div class="field-info-container space-y-2">
+                            <div class="field-name">{{t "fleet-ops.component.modals.vehicle-details.engine-bore"}}</div>
+                            <div class="field-value">{{n-a @options.vehicle.model_engine_bore_mm}}</div>
+                        </div>
+
+                        <div class="field-info-container space-y-2">
+                            <div class="field-name">{{t "fleet-ops.component.modals.vehicle-details.cc"}}</div>
+                            <div class="field-value">{{n-a @options.vehicle.model_engine_cc}}</div>
+                        </div>
+
+                        <div class="field-info-container space-y-2">
+                            <div class="field-name">{{t "fleet-ops.component.modals.vehicle-details.compression"}}</div>
+                            <div class="field-value">{{n-a @options.vehicle.model_engine_compression}}</div>
+                        </div>
+
+                        <div class="field-info-container space-y-2">
+                            <div class="field-name">{{t "fleet-ops.component.modals.vehicle-details.cylinder"}}</div>
+                            <div class="field-value">{{n-a @options.vehicle.model_engine_cyl}}</div>
+                        </div>
+
+                        <div class="field-info-container space-y-2">
+                            <div class="field-name">{{t "fleet-ops.component.modals.vehicle-details.position"}}</div>
+                            <div class="field-value">{{n-a @options.vehicle.model_engine_position}}</div>
+                        </div>
+
+                        <div class="field-info-container space-y-2">
+                            <div class="field-name">{{t "fleet-ops.component.modals.vehicle-details.power-ps"}}</div>
+                            <div class="field-value">{{n-a @options.vehicle.model_engine_power_ps}}</div>
+                        </div>
+
+                        <div class="field-info-container space-y-2">
+                            <div class="field-name">{{t "fleet-ops.component.modals.vehicle-details.power-rpm"}}</div>
+                            <div class="field-value">{{n-a @options.vehicle.model_engine_power_rpm}}</div>
+                        </div>
+
+                        <div class="field-info-container space-y-2">
+                            <div class="field-name">{{t "fleet-ops.component.modals.vehicle-details.stroke"}}</div>
+                            <div class="field-value">{{n-a @options.vehicle.model_engine_stroke_mm}}</div>
+                        </div>
+
+                        <div class="field-info-container space-y-2">
+                            <div class="field-name">{{t "fleet-ops.component.modals.vehicle-details.torque-nm"}}</div>
+                            <div class="field-value">{{n-a @options.vehicle.model_engine_torque_nm}}</div>
+                        </div>
+
+                        <div class="field-info-container space-y-2">
+                            <div class="field-name">{{t "fleet-ops.component.modals.vehicle-details.torque-rpm"}}</div>
+                            <div class="field-value">{{n-a @options.vehicle.model_engine_torque_rpm}}</div>
+                        </div>
+
+                        <div class="field-info-container space-y-2">
+                            <div class="field-name">{{t "fleet-ops.component.modals.vehicle-details.valves"}}</div>
+                            <div class="field-value">{{n-a @options.vehicle.model_valves_per_cyl}}</div>
+                        </div>
+                    </div>
+                </ContentPanel>
+
+                <ContentPanel @title={{t "fleet-ops.component.modals.vehicle-details.fuel-information"}} @open={{false}} @pad={{true}} @panelBodyClass="bg-white dark:bg-gray-800">
+                    <div class="grid grid-cols-1 gap-4 lg:grid-cols-2 lg:gap-2">
+                        <div class="field-info-container space-y-2">
+                            <div class="field-name">{{t "fleet-ops.component.modals.vehicle-details.fuel"}}</div>
+                            <div class="field-value">{{n-a @options.vehicle.model_engine_fuel}}</div>
+                        </div>
+
+                        <div class="field-info-container space-y-2">
+                            <div class="field-name">{{t "fleet-ops.component.modals.vehicle-details.fuel-cap"}}</div>
+                            <div class="field-value">{{n-a @options.vehicle.model_fuel_cap_l}}</div>
+                        </div>
+
+                        <div class="field-info-container space-y-2">
+                            <div class="field-name">{{t "fleet-ops.component.modals.vehicle-details.liters-city"}}</div>
+                            <div class="field-value">{{n-a @options.vehicle.model_lkm_city}}</div>
+                        </div>
+
+                        <div class="field-info-container space-y-2">
+                            <div class="field-name">{{t "fleet-ops.component.modals.vehicle-details.liters-highway"}}</div>
+                            <div class="field-value">{{n-a @options.vehicle.model_lkm_hwy}}</div>
+                        </div>
+
+                        <div class="field-info-container space-y-2">
+                            <div class="field-name">{{t "fleet-ops.component.modals.vehicle-details.liters-mixed"}}</div>
+                            <div class="field-value">{{n-a @options.vehicle.model_lkm_mixed}}</div>
+                        </div>
+                    </div>
+                </ContentPanel>
+            </div>
+        </div>
+    </div>
+    {{yield}}
+</Modal::Default>

@@ -1,0 +1,21 @@
+<Modal::Default @modalIsOpened={{@modalIsOpened}} @options={{@options}} @confirm={{@onConfirm}} @decline={{@onDecline}}>
+    <div class="modal-body-container">
+        <div class="flex flex-row mb-5">
+            <Button @text={{t "fleet-ops.component.modals.edit-meta-form.add"}} @icon="plus" @iconPrefix="fas" @onClick={{fn @options.addMetaField @options.meta}} />
+        </div>
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-2">
+            {{#each @options.meta as |metaField index|}}
+                <div class="input-group">
+                    <div class="flex justify-between items-center mb-1">
+                        <Input class="form-input border-0 px-2 py-1 m-0 bg-white dark:bg-gray-900 shadow-none" @value={{metaField.label}} placeholder={{metaField.label}} />
+                        <a href="javascript:;" class="text-xs" {{on "click" (fn @options.removeMetaField @options.meta index)}}>
+                            <FaIcon @icon="trash" @size="sm" class="mr-1" />
+                            {{t "fleet-ops.common.remove"}}
+                        </a>
+                    </div>
+                    <Input class="w-full form-input" @value={{metaField.value}} placeholder={{metaField.label}} />
+                </div>
+            {{/each}}
+        </div>
+    </div>
+</Modal::Default>

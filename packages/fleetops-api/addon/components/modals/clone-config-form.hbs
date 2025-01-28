@@ -1,0 +1,6 @@
+<Modal::Default @modalIsOpened={{@modalIsOpened}} @options={{@options}} @confirm={{@onConfirm}} @decline={{@onDecline}}>
+    <div class="modal-body-container">
+        <InputGroup @name={{t "fleet-ops.component.modals.clone-config-form.name"}} @value={{@options.name}} />
+        <InputGroup @name={{t "fleet-ops.component.modals.clone-config-form.description"}} @value={{@options.description}} />
+    </div>
+</Modal::Default>

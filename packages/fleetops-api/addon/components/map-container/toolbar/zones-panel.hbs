@@ -1,0 +1,56 @@
+<div class="next-dd-menu overflow-visible">
+    <div class="px-1">
+        <div class="text-sm flex flex-row items-center px-3 py-0.5 rounded-md my-1 text-gray-800 dark:text-gray-300">
+            {{t "fleet-ops.component.map-container.zones-panel.title"}}
+        </div>
+    </div>
+    <div class="next-dd-menu-seperator"></div>
+    <div class="px-1">
+        <a href="javascript:;" class="next-dd-item" {{on "click" (dropdown-fn @dd this.triggerCallback "createServiceArea")}}>{{t
+                "fleet-ops.component.map-container.zones-panel.create-service"
+            }}</a>
+        <a href="javascript:;" class="next-dd-item" {{on "click" (dropdown-fn @dd this.triggerCallback "focusAllServiceAreas")}}>{{t
+                "fleet-ops.component.map-container.zones-panel.show"
+            }}</a>
+        <a href="javascript:;" class="next-dd-item" {{on "click" (dropdown-fn @dd this.triggerCallback "blurAllServiceAreas")}}>{{t "fleet-ops.component.map-container.zones-panel.hide"}}</a>
+        {{#each this.serviceAreaRecords as |serviceArea|}}
+            <BasicDropdownHover @horizontalPosition="right" @calculatePosition={{this.calculatePosition}} @renderInPlace={{true}} as |dd|>
+                <dd.Trigger class="next-dd-item {{if dd.isOpen 'active'}}">
+                    <FaIcon @icon="drafting-compass" class="mr-2" />
+                    <span>{{serviceArea.name}}</span>
+                </dd.Trigger>
+                <dd.Content>
+                    <div class="next-dd-menu">
+                        <div class="px-1">
+                            <div class="text-sm flex flex-row items-center px-3 py-0.5 rounded-md my-1 text-gray-800 dark:text-gray-300 truncate">
+                                <FaIcon @icon="drafting-compass" class="mr-2" />
+                                <span>{{serviceArea.name}} {{t "fleet-ops.component.map-container.zones-panel.action"}}</span>
+                            </div>
+                        </div>
+                        <div class="next-dd-menu-seperator"></div>
+                        <div class="px-1">
+                            <a href="javascript:;" class="next-dd-item" {{on "click" (dropdown-fn dd this.triggerCallback "focusServiceArea" serviceArea)}}>{{t
+                                    "fleet-ops.component.map-container.zones-panel.focus"
+                                }}
+                                {{serviceArea.name}}...</a>
+                            {{#if (eq serviceArea this.liveMap.activeServiceArea)}}
+                                <a href="javascript:;" class="next-dd-item" {{on "click" (dropdown-fn dd this.triggerCallback "blurServiceArea" serviceArea)}}>{{t
+                                        "fleet-ops.component.map-container.zones-panel.blur"
+                                    }}</a>
+                            {{/if}}
+                            <a href="javascript:;" class="next-dd-item" {{on "click" (dropdown-fn dd this.triggerCallback "createZone" serviceArea)}}>{{t
+                                    "fleet-ops.component.map-container.zones-panel.create-zone"
+                                }}</a>
+                            <a href="javascript:;" class="next-dd-item" {{on "click" (dropdown-fn dd this.triggerCallback "editServiceAreaDetails" serviceArea)}}>{{t
+                                    "fleet-ops.common.edit"
+                                }}
+                                {{serviceArea.name}}...</a>
+                            <a href="javascript:;" class="next-dd-item" {{on "click" (dropdown-fn dd this.triggerCallback "deleteServiceArea" serviceArea)}}>{{t "fleet-ops.common.delete"}}
+                                {{serviceArea.name}}...</a>
+                        </div>
+                    </div>
+                </dd.Content>
+            </BasicDropdownHover>
+        {{/each}}
+    </div>
+</div>

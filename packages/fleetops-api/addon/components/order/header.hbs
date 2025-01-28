@@ -1,0 +1,56 @@
+<div class="px-3 py-4 border-b border-gray-900 order-view-header">
+    <div class="flex items-start justify-between">
+        <div class="flex items-start flex-1">
+            <Button @text={{t "fleet-ops.common.back"}} @onClick={{@onBackButtonClick}} class="mr-3" />
+            <div>
+                <h1 class="mb-1 text-gray-700 dark:text-gray-100">
+                    {{@order.public_id}}
+                </h1>
+                <div class="flex flex-row">
+                    <Badge
+                        @status={{@order.status}}
+                        @helpText={{if
+                            (eq @order.status (t "fleet-ops.component.order.header.dispatched"))
+                            (concat (t "fleet-ops.component.order.header.dispatched-at") @order.dispatchedAt)
+                        }}
+                    />
+                    {{#if @order.shouldDisplayDispatchLabel}}
+                        <Badge @status="info" class="ml-2" @helpText={{t "fleet-ops.component.order.header.dispatched" htmlSafe=true order=@order.dispatchedAt}}>{{t
+                                "fleet-ops.component.order.header.dispatched"
+                            }}</Badge>
+                    {{/if}}
+                </div>
+            </div>
+        </div>
+        <div class="flex">
+            {{#if @order.canBeDispatched}}
+                <Button @type="primary" @icon="paper-plane" @text={{t "fleet-ops.component.order.header.dispatched"}} class="mr-2" @onClick={{fn this.forwardAction "dispatchOrder"}} />
+            {{/if}}
+            <DropdownButton @icon="ellipsis-h" @contentClass="dropdown-menu" as |dd|>
+                <div class="dropdown-menu-content context-menu">
+                    <a href="#" class="dropdown-menu-item" {{on "click" (fn this.forwardAction "editOrder" dd)}}>
+                        {{t "fleet-ops.component.order.header.edit"}}
+                    </a>
+                    <a href="#" class="dropdown-menu-item" {{on "click" (fn this.forwardAction "createNewActivity" dd)}}>
+                        {{t "fleet-ops.component.order.header.update"}}
+                    </a>
+                    <a href="#" class="dropdown-menu-item" {{on "click" (fn this.forwardAction "assignDriver" dd)}}>
+                        {{t "fleet-ops.component.order.header.assign"}}
+                    </a>
+                    <a href="#" class="dropdown-menu-item" {{on "click" (fn this.forwardAction "viewOrderLabel" dd)}}>
+                        {{t "fleet-ops.component.order.header.get-order"}}
+                    </a>
+                    {{!-- <a href="#" class="dropdown-menu-item" {{on "click" (fn this.forwardAction "splitOrder" dd)}}>
+                        {{t "fleet-ops.component.order.header.split-order"}}
+                    </a> --}}
+                    {{!-- <a href="#" class="dropdown-menu-item" {{on "click" (fn this.forwardAction "splitOrder" dd)}}>
+                        {{t "fleet-ops.component.order.header.reschedule"}}
+                    </a> --}}
+                    <a href="#" class="dropdown-menu-item" {{on "click" (fn this.forwardAction "cancelOrder" dd)}}>
+                        {{t "fleet-ops.component.order.header.cancel-order"}}
+                    </a>
+                </div>
+            </DropdownButton>
+        </div>
+    </div>
+</div>

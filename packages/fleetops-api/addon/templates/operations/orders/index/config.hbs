@@ -1,0 +1,23 @@
+<Overlay @position="right" @noBackdrop={{true}} @fullHeight={{true}} @isResizable={{true}} @isMaximizable={{true}} @isMinimizable={{true}} as |overlay|>
+    <Overlay::Header @overlay={{overlay}} @title={{t "fleet-ops.operations.orders.index.config.title"}} @onPressCancel={{this.transitionBack}} />
+
+    <Overlay::Body @wrapperClass="py-5">
+        <div class="px-4 mb-4">
+            <p class="dark:text-gray-50">
+                {{t "fleet-ops.operations.orders.index.config.message"}}
+            </p>
+        </div>
+
+        <div class="ui-tabs ui-tabs-parent">
+            <nav>
+                <LinkTo @route="operations.orders.index.config.types" class="ui-tab">
+                    {{t "fleet-ops.operations.orders.index.config.configuration"}}
+                </LinkTo>
+            </nav>
+        </div>
+
+        <div>
+            {{outlet}}
+        </div>
+    </Overlay::Body>
+</Overlay>

@@ -893,7 +893,7 @@ body[data-theme='dark'] .next-map-container-table-container {
 }
 
 .next-map-container-view-switch > button {
-    @apply bg-gray-200 text-gray-900 rounded-xl m-1 outline-none text-sm px-6 py-0.5;
+    @apply bg-gray-200 text-gray-900 m-1 outline-none text-sm px-6 py-0.5;
 }
 
 .next-map-container-view-switch > button:hover,
@@ -940,8 +940,10 @@ body[data-theme='dark'] .next-map-container-view-switch > button:active {
 }
 
 .next-view-header-item {
-    @apply rounded-md text-sm px-3 py-1 flex items-center justify-center border border-transparent cursor-default mr-2;
+    @apply text-sm px-3 py-1 flex items-center justify-center border border-transparent cursor-default mr-2;
     max-height: 31px;
+    padding-top: 25px;
+    padding-bottom: 25px;
 }
 
 .next-view-header-item > div:first-child {
@@ -1026,12 +1028,14 @@ body[data-theme='dark'] .next-content-panel-wrapper .next-content-panel-containe
 }
 
 .next-view-header {
+    height: 100px;
+    width: 100px;
     display: flex;
     box-align: center;
     align-items: center;
     justify-content: space-between;
     padding: 0px 24px 0px 36px;
-    height: 57px;
+    /* height: 57px; */
     flex-shrink: 0;
     min-width: 100vw;
     max-width: 100%;
@@ -1060,6 +1064,12 @@ body[data-theme='dark'] .next-content-panel-wrapper .next-content-panel-containe
     justify-content: flex-end;
     user-select: none;
     -webkit-app-region: drag;
+}
+
+.next-view-header-right .next-org-button-trigger {
+    width: 40px;
+    height: 40px;
+    padding: 0;
 }
 
 .next-view-header .next-view-header-right .next-user-button button.next-dd-item svg,
@@ -1169,9 +1179,9 @@ body[data-theme='dark'] .next-view-header .next-view-header-right .next-user-but
     pointer-events: auto;
     display: flex;
     flex-direction: row;
-    min-width: 220px;
-    max-width: 330px;
-    width: 220px;
+    /* min-width: 220px; */
+    /* max-width: 330px; */
+    width: 250px;
     flex-shrink: 0;
     box-sizing: border-box;
     -webkit-user-select: auto;
@@ -1201,9 +1211,9 @@ body[data-theme='dark'] .next-view-header .next-view-header-right .next-user-but
     width: 100%;
 }
 
-.next-sidebar > .next-sidebar-content > .next-sidebar-content-inner {
+/* .next-sidebar > .next-sidebar-content > .next-sidebar-content-inner {
     @apply px-2 pt-3;
-}
+} */
 
 .next-content-overlay > .next-content-overlay-panel-container > .next-content-overlay-panel + .gutter,
 .next-sidebar > .next-sidebar-content + .gutter,
@@ -1226,7 +1236,10 @@ body[data-theme='dark'] .next-view-header .next-view-header-right .next-user-but
 }
 
 .next-sidebar .next-nav-item {
-    @apply text-sm flex flex-row items-center px-3 py-0.5 rounded-md mb-1;
+    @apply text-sm flex flex-row items-center ;
+    padding-left: 0.75rem;
+    padding-top: 0.75rem;
+    padding-bottom: 0.30rem;
 }
 
 .next-sidebar .next-nav-item:hover {
@@ -1338,7 +1351,11 @@ body[data-theme='dark']
 
 .next-org-button-trigger {
     @apply flex flex-row items-center px-3 py-1.5 rounded-md cursor-default truncate;
-    max-height: 31px;
+    /* max-height: 31px; */
+    height: 40px;
+    width: 40px;
+    padding: 0;
+    gap: 8px;
 }
 
 .next-org-button-trigger:hover,
@@ -1371,8 +1388,16 @@ body[data-theme='dark']
 }
 
 .next-user-button-trigger {
-    @apply flex flex-row items-center justify-center px-3 py-1.5 rounded-md cursor-default;
-    max-height: 31px;
+    @apply flex flex-row items-center justify-center rounded-md cursor-default;
+    /* max-height: 31px; */
+}
+
+.next-view-header .next-view-header-right > * {
+    margin-left: 16px; 
+}
+
+.next-view-header .next-view-header-right > :first-child {
+    margin-left: 0;
 }
 
 .next-user-button-trigger:hover,
@@ -2194,7 +2219,23 @@ nav.next-sidebar.sidebar-hidden {
     min-width: 80px;
 }
 
-.sidebar-hidden #create-order-button-menu-wrapper {
+.sidebar-hidden #create-order-button-menu-wrapper .create-order-button span:nth-child(2) {
     display: none;
+}
+
+.svg-inline--fa.fa-sm {
+    vertical-align: -0.0714285705em;
+    height: 40px !important;
+    width: 40px !important;
+}
+
+.w-6 {
+    padding-right: 50px;
+    width: 1.5rem;
+}
+
+.bell-icon, .message-icon {
+    width: 100% !important;
+    height: 100% !important;
 }
 

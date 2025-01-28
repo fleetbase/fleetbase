@@ -1,0 +1,242 @@
+{{#let (cannot "fleet-ops create vendor") as |unauthorized|}}
+    <div class="space-y-4">
+        <ContentPanel @title={{t "fleet-ops.component.vendor-form-panel.create-form.title"}} @open={{true}} @pad={{true}} @panelBodyClass="bg-white dark:bg-gray-800">
+            <InputGroup @name={{t "fleet-ops.component.vendor-form-panel.create-form.select-vendor-type"}}>
+                <div class="fleetbase-model-select fleetbase-power-select ember-model-select">
+                    <PowerSelect
+                        @options={{this.vendorTypes}}
+                        @selected={{this.selectedVendorType}}
+                        @onChange={{this.onSelectVendorType}}
+                        @placeholder={{t "fleet-ops.component.vendor-form-panel.create-form.select-vendor-type"}}
+                        @triggerClass="form-select form-input"
+                        @disabled={{unauthorized}}
+                        as |vendorType|
+                    >
+                        {{vendorType.label}}
+                    </PowerSelect>
+                </div>
+            </InputGroup>
+            {{#if (eq this.selectedVendorType.value "integrated-vendor")}}
+                <InputGroup @name={{t "fleet-ops.component.vendor-form-panel.create-form.choose-vendor"}}>
+                    <div class="fleetbase-model-select fleetbase-power-select ember-model-select">
+                        <PowerSelect
+                            @options={{this.supportedIntegratedVendors}}
+                            @selected={{this.selectedIntegratedVendor}}
+                            @onChange={{this.onSelectIntegratedVendor}}
+                            @placeholder="Select integrated vendor provider"
+                            @triggerClass="form-select form-input"
+                            @disabled={{unauthorized}}
+                            as |integratedVendor|
+                        >
+                            <div class="flex flex-row items-center">
+                                <Image src={{integratedVendor.logo}} alt={{integratedVendor.code}} class="w-4 h-4" width="16" height="16" />
+                                <h3 class="text-sm ml-4 dark:text-white">{{integratedVendor.name}}</h3>
+                            </div>
+                        </PowerSelect>
+                    </div>
+                </InputGroup>
+            {{/if}}
+        </ContentPanel>
+        {{#if this.selectedVendorType.value}}
+            {{#if (eq this.selectedVendorType.value "integrated-vendor")}}
+                {{#if this.selectedIntegratedVendor}}
+                    <ContentPanel @title={{t "fleet-ops.component.vendor-form-panel.create-form.provider"}} @open={{true}} @pad={{true}} @panelBodyClass="bg-white dark:bg-gray-800">
+                        <div class="flex flex-row items-center">
+                            <img src={{this.selectedIntegratedVendor.logo}} alt={{this.selectedIntegratedVendor.code}} class="w-12 h-12" width="48" height="48" />
+                            <h3 class="text-base text-black dark:text-white ml-4">{{this.selectedIntegratedVendor.name}}</h3>
+                        </div>
+                    </ContentPanel>
+                    <ContentPanel @title={{t "fleet-ops.component.vendor-form-panel.create-form.credentials"}} @open={{true}} @pad={{true}} @panelBodyClass="bg-white dark:bg-gray-800">
+                        {{#each this.selectedIntegratedVendor.credential_params as |param|}}
+                            <InputGroup
+                                @name={{smart-humanize param.key}}
+                                @value={{mut (get this.integratedVendor.credentials param.key)}}
+                                @helpText={{concat
+                                    (t "fleet-ops.component.vendor-form-panel.create-form.optionally")
+                                    (smart-humanize param.key)
+                                    (t "fleet-ops.component.vendor-form-panel.create-form.configure-vendor")
+                                }}
+                                @disabled={{unauthorized}}
+                            />
+                        {{/each}}
+                    </ContentPanel>
+                    <ContentPanel @title={{t "fleet-ops.common.options"}} @open={{true}} @pad={{true}} @panelBodyClass="bg-white dark:bg-gray-800">
+                        {{#each this.selectedIntegratedVendor.option_params as |param|}}
+                            {{#if param.options}}
+                                <InputGroup @name={{smart-humanize param.key}}>
+                                    <Select
+                                        @value={{mut (get this.integratedVendor.options param.key)}}
+                                        @options={{param.options}}
+                                        @optionValue={{param.optionValue}}
+                                        @optionLabel={{param.optionLabel}}
+                                        @humanize={{true}}
+                                        @placeholder={{concat (t "fleet-ops.component.vendor-form-panel.create-form.select") (smart-humanize param.key)}}
+                                        @onSelect={{fn (mut (get this.integratedVendor.options param.key))}}
+                                        @disabled={{unauthorized}}
+                                    />
+                                </InputGroup>
+                            {{else}}
+                                <InputGroup
+                                    @name={{smart-humanize param.key}}
+                                    @value={{mut (get this.integratedVendor.options param.key)}}
+                                    @helpText={{concat
+                                        (t "fleet-ops.component.vendor-form-panel.create-form.optionally")
+                                        (smart-humanize param.key)
+                                        (t "fleet-ops.component.vendor-form-panel.create-form.configure-vendor")
+                                    }}
+                                    @disabled={{unauthorized}}
+                                />
+                            {{/if}}
+                        {{/each}}
+                        <InputGroup>
+                            <Checkbox
+                                @value={{this.integratedVendor.sandbox}}
+                                @label="Sandbox"
+                                @onToggle={{fn (mut this.integratedVendor.sandbox)}}
+                                @alignItems="center"
+                                @labelClass="mb-0i"
+                                @disabled={{unauthorized}}
+                            />
+                        </InputGroup>
+                    </ContentPanel>
+                    <ContentPanel @title={{t "fleet-ops.component.vendor-form-panel.create-form.advanced-options"}} @open={{true}} @pad={{true}} @panelBodyClass="bg-white dark:bg-gray-800">
+                        <div>
+                            <a href="javascript:;" class="text-blue-600 underline text-sm" disabled={{unauthorized}} {{on "click" this.toggleAdvancedOptions}}>{{if
+                                    this.showAdvancedOptions
+                                    (t "fleet-ops.component.vendor-form-panel.create-form.hide-advanced-options")
+                                    (t "fleet-ops.component.vendor-form-panel.create-form.show-advanced-options")
+                                }}</a>
+                        </div>
+                        {{#if this.showAdvancedOptions}}
+                            <div class="mt-4">
+                                <InputGroup
+                                    @name={{t "fleet-ops.component.vendor-form-panel.create-form.host"}}
+                                    @value={{this.integratedVendor.host}}
+                                    @helpText={{t "fleet-ops.component.vendor-form-panel.create-form.host-text"}}
+                                    @disabled={{unauthorized}}
+                                />
+                                <InputGroup
+                                    @name={{t "fleet-ops.component.vendor-form-panel.create-form.namespace"}}
+                                    @value={{this.integratedVendor.namespace}}
+                                    @helpText={{t "fleet-ops.component.vendor-form-panel.create-form.namespace-text"}}
+                                    @disabled={{unauthorized}}
+                                />
+                                <InputGroup
+                                    @name={{t "fleet-ops.component.vendor-form-panel.create-form.webhook"}}
+                                    @value={{this.integratedVendor.webhook_url}}
+                                    @helpText={{t "fleet-ops.component.vendor-form-panel.create-form.webhook-text"}}
+                                    @disabled={{unauthorized}}
+                                />
+                            </div>
+                        {{/if}}
+                    </ContentPanel>
+                {{else}}
+                    <div class="flex items-center justify-center border-2 border-dashed h-32 w-full rounded-md dark:border-gray-700 border-gray-200">
+                        <h3 class="text-gray-800 dark:text-gray-400 italic text-sm">{{t "fleet-ops.component.vendor-form-panel.create-form.select-integrated"}}</h3>
+                    </div>
+                {{/if}}
+            {{else}}
+                <ContentPanel @title={{t "fleet-ops.component.vendor-form-panel.create-form.vendor-details"}} @open={{true}} @pad={{true}} @panelBodyClass="bg-white dark:bg-gray-800">
+                    <InputGroup
+                        @name={{t "fleet-ops.common.name"}}
+                        @value={{this.vendor.name}}
+                        @helpText={{t "fleet-ops.component.vendor-form-panel.create-form.name-text"}}
+                        @disabled={{unauthorized}}
+                    />
+                    <InputGroup
+                        @name={{t "fleet-ops.common.email"}}
+                        @type="email"
+                        @value={{this.vendor.email}}
+                        @helpText={{t "fleet-ops.component.vendor-form-panel.create-form.email-text"}}
+                        @disabled={{unauthorized}}
+                    />
+                    <InputGroup @name={{t "fleet-ops.common.phone"}} @helpText={{t "fleet-ops.component.vendor-form-panel.create-form.phone-text"}}>
+                        <PhoneInput @value={{this.vendor.phone}} @onInput={{fn (mut this.vendor.phone)}} class="form-input w-full" disabled={{unauthorized}} />
+                    </InputGroup>
+                    <InputGroup
+                        @name={{t "fleet-ops.common.website"}}
+                        @value={{this.vendor.website_url}}
+                        @helpText={{t "fleet-ops.component.vendor-form-panel.create-form.website-text"}}
+                        @disabled={{unauthorized}}
+                    />
+                    <InputGroup @name={{t "fleet-ops.common.type"}}>
+                        <div class="fleetbase-model-select fleetbase-power-select ember-model-select">
+                            <PowerSelect
+                                @options={{@vendorTypes}}
+                                @selected={{this.vendor.type}}
+                                @onChange={{fn (mut this.vendor.type)}}
+                                @placeholder={{t "fleet-ops.component.vendor-form-panel.create-form.select-vendor-type"}}
+                                @triggerClass="form-select form-input"
+                                @disabled={{unauthorized}}
+                                as |type|
+                            >
+                                {{smart-humanize type}}
+                            </PowerSelect>
+                        </div>
+                    </InputGroup>
+                    <InputGroup @name={{t "fleet-ops.common.status"}}>
+                        <div class="fleetbase-model-select fleetbase-power-select ember-model-select">
+                            <PowerSelect
+                                @options={{@vendorStatusOptions}}
+                                @selected={{this.vendor.status}}
+                                @onChange={{fn (mut this.vendor.status)}}
+                                @placeholder={{t "fleet-ops.component.vendor-form-panel.create-form.select-vendor-status"}}
+                                @triggerClass="form-select form-input"
+                                @disabled={{unauthorized}}
+                                as |status|
+                            >
+                                {{smart-humanize status}}
+                            </PowerSelect>
+                        </div>
+                    </InputGroup>
+                    <InputGroup @wrapperClass="col-span-2">
+                        <div class="flex items-center justify-between">
+                            <label>
+                                {{t "fleet-ops.common.address"}}
+                            </label>
+                            <div class="mb-1.5 flex flex-row">
+                                <Button
+                                    @type="default"
+                                    @size="xs"
+                                    @icon="edit"
+                                    @text={{if
+                                        this.vendor.has_place
+                                        (t "fleet-ops.component.vendor-form-panel.create-form.edit")
+                                        (t "fleet-ops.component.vendor-form-panel.create-form.new-address")
+                                    }}
+                                    @onClick={{this.editAddress}}
+                                    @disabled={{unauthorized}}
+                                />
+                            </div>
+                        </div>
+                        <ModelSelect
+                            @modelName="place"
+                            @selectedModel={{this.vendor.place}}
+                            @placeholder={{t "fleet-ops.component.vendor-form-panel.create-form.select-address"}}
+                            @triggerClass="form-select form-input"
+                            @infiniteScroll={{false}}
+                            @renderInPlace={{true}}
+                            @onChange={{this.selectVendorAddress}}
+                            @disabled={{unauthorized}}
+                            as |model|
+                        >
+                            <div class="flex items-center flex-row justify-between">
+                                <div class="truncate flex-1">{{n-a model.address}}</div>
+                                <Badge @hideStatusDot={{true}} @status="info">{{model.public_id}}</Badge>
+                            </div>
+                        </ModelSelect>
+                    </InputGroup>
+                    <InputGroup @name={{t "fleet-ops.common.country"}}>
+                        <CountrySelect
+                            class="w-full form-input form-select form-datalist"
+                            @value={{this.vendor.country}}
+                            @onChange={{fn (mut this.vendor.country)}}
+                            @disabled={{unauthorized}}
+                            @placeholder={{t "fleet-ops.common.country"}}
+                        />
+                    </InputGroup>
+                </ContentPanel>
+            {{/if}}
+        {{/if}}
+    </div>
+{{/let}}

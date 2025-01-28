@@ -1,0 +1,103 @@
+{
+    "name": "fleetbase/core-api",
+    "version": "1.5.20",
+    "description": "Core Framework and Resources for Fleetbase API",
+    "keywords": [
+        "fleetbase",
+        "logistics platform"
+    ],
+    "license": "AGPL-3.0-or-later",
+    "authors": [
+        {
+            "name": "Fleetbase Pte Ltd.",
+            "email": "hello@fleetbase.io"
+        },
+        {
+            "name": "Ronald A. Richardson",
+            "email": "ron@fleetbase.io"
+        }
+    ],
+    "require": {
+        "php": "^8.0",
+        "fleetbase/twilio": "^5.0.1",
+        "aws/aws-sdk-php-laravel": "^3.7",
+        "fleetbase/laravel-mysql-spatial": "^1.0.2",
+        "giggsey/libphonenumber-for-php": "^8.13",
+        "guzzlehttp/guzzle": "^7.4",
+        "hammerstone/fast-paginate": "^1.0",
+        "illuminate/broadcasting": "^9.0|^10.0",
+        "illuminate/contracts": "^9.0|^10.0",
+        "illuminate/database": "^9.0|^10.0",
+        "illuminate/http": "^9.0|^10.0",
+        "illuminate/notifications": "^9.0|^10.0",
+        "illuminate/routing": "^9.0|^10.0",
+        "illuminate/support": "^9.0|^10.0",
+        "inkrot/php-compress-json": "^0.1.1",
+        "jdorn/sql-formatter": "^1.2",
+        "laravel-notification-channels/apn": "^5.0",
+        "laravel-notification-channels/fcm": "^4.1",
+        "laravel-notification-channels/twilio": "^3.3",
+        "laravel/sanctum": "3.2.4",
+        "maatwebsite/excel": "^3.1",
+        "phpoffice/phpspreadsheet": "^1.28",
+        "phrity/websocket": "^1.7",
+        "pragmarx/countries": "^0.8.2",
+        "sentry/sentry-laravel": "*",
+        "spatie/laravel-activitylog": "^4.7",
+        "spatie/laravel-google-cloud-storage": "^2.2",
+        "spatie/laravel-permission": "^6.3",
+        "spatie/laravel-responsecache": "^7.5",
+        "spatie/laravel-schedule-monitor": "^3.7",
+        "spatie/laravel-sluggable": "^3.5",
+        "sqids/sqids": "^0.4.1",
+        "xantios/mimey": "^2.2.0"
+    },
+    "require-dev": {
+        "friendsofphp/php-cs-fixer": "^3.34.1",
+        "nunomaduro/collision": "^7.0",
+        "pestphp/pest": "^2.33.2",
+        "phpstan/phpstan": "^1.10.38",
+        "symfony/var-dumper": "^5.4.29"
+    },
+    "autoload": {
+        "psr-4": {
+            "Fleetbase\\": "src/",
+            "Fleetbase\\Seeders\\": "seeders/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Fleetbase\\Tests\\": "tests/"
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Fleetbase\\Providers\\CoreServiceProvider",
+                "Fleetbase\\Providers\\EventServiceProvider",
+                "Fleetbase\\Providers\\SocketClusterServiceProvider"
+            ]
+        }
+    },
+    "config": {
+        "sort-packages": true,
+        "preferred-install": "dist",
+        "allow-plugins": {
+            "pestphp/pest-plugin": true,
+            "php-http/discovery": true
+        }
+    },
+    "scripts": {
+        "lint": "php-cs-fixer fix -v",
+        "test:lint": "php-cs-fixer fix -v --dry-run",
+        "test:types": "phpstan analyse --ansi --memory-limit=0",
+        "test:unit": "pest --colors=always",
+        "test": [
+            "@test:lint",
+            "@test:types",
+            "@test:unit"
+        ]
+    }
+}

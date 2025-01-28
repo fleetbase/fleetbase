@@ -1,0 +1,51 @@
+<div class="place-card" ...attributes>
+    <span class={{@titleClass}}>
+        {{@title}}
+    </span>
+    <div class="place-name">
+        {{@place.name @place.street1}}
+    </div>
+    <div class="place-street1 {{if this.noTitle 'hidden'}}">
+        {{@place.street1}}
+    </div>
+    <div class="place-street2 {{unless @place.street2 'hidden'}}">
+        {{@place.street2}}
+    </div>
+    <div class="flex flex-row place-location">
+        <div class="place-city {{unless @place.city 'hidden'}}">
+            {{@place.city}}
+        </div>
+        <div class="place-province {{unless @place.province 'hidden'}}">
+            {{@place.province}}
+        </div>
+        <div class="place-postalcode {{unless @place.postal_code 'hidden'}}">
+            {{@place.postal_code}}
+        </div>
+    </div>
+    <div class="place-country {{unless @place.country 'hidden'}}">
+        {{@place.country}}
+    </div>
+
+    {{#if @place.metadata}}
+        <Button @size="xs" @onClick={{this.showMeta}} class="my-2">
+            {{#if this.showingMeta}}
+                {{t "fleet-ops.component.order.place-card.show-less"}}
+            {{else}}
+                {{t "fleet-ops.component.order.place-card.show-more"}}
+            {{/if}}
+        </Button>
+        {{#if this.showingMeta}}
+            {{#each-in @place.metadata as |key value|}}
+                <div class="place-meta">
+                    <div class="place-meta-key">
+                        {{humanize key}}:
+                    </div>
+                    <div class="place-meta-value">
+                        {{value}}
+                    </div>
+                </div>
+            {{/each-in}}
+        {{/if}}
+    {{/if}}
+</div>
+{{yield}}

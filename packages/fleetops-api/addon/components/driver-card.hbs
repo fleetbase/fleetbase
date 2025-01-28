@@ -1,0 +1,27 @@
+<div class="driver-card flex flex-1" ...attributes>
+    <a href="javascript:;" class="driver-card-details flex flex-1 bg-black bg-opacity-25 rounded-md px-4 py-3 shadow-sm" {{on "click" this.onClick}}>
+        <div class="flex flex-row">
+            <div class="mr-3">
+                <img src={{@driver.photoUrl}} alt={{@driver.name}} class="rounded-md w-12 h-12 shadow-sm" />
+            </div>
+            <div class="flex-1">
+                <h1 class="driver-name font-semibold text-base">{{@driver.name}}</h1>
+                <div>
+                    <div class="driver-info horizontal-li flex flex-row">
+                        {{#if @driver.vehicle_uuid}}
+                            <span class="horizontal-li-item truncate text-xs">{{@driver.vehicle_name}}</span>
+                        {{/if}}
+                        <span class="horizontal-li-item truncate text-xs">{{@driver.phone}}</span>
+                    </div>
+                    <div class="driver-fleets horizontal-li flex flex-row">
+                        {{#each @driver.fleets as |fleet|}}
+                            <span class="driver-fleet-name truncate horizontal-li-item text-xs">{{fleet.name}}</span>
+                        {{else}}
+                            <span class="text-xs text-muted">{{t "fleet-ops.component.driver-card.no-fleets"}}</span>
+                        {{/each}}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </a>
+</div>

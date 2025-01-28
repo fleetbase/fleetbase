@@ -1,0 +1,29 @@
+<Modal::Default @modalIsOpened={{@modalIsOpened}} @options={{@options}} @confirm={{@onConfirm}} @decline={{@onDecline}}>
+    <div class="next-map-container">
+        <LeafletMap
+            class="h-screen-65 w-full {{@options.mapClass}}"
+            @lat={{this.latitude}}
+            @lng={{this.longitude}}
+            @zoom={{11}}
+            @zoomControl={{false}}
+            @onLoad={{this.setupMap}}
+            ...attributes
+            as |layers|
+        >
+            <layers.tile @url={{this.tileSourceUrl}} />
+            {{#if @options.zone}}
+                <layers.polygon
+                    @id={{@options.zone.id}}
+                    @record={{@options.zone}}
+                    @locations={{@options.zone.locations}}
+                    @fillColor={{@options.zone.color}}
+                    @color={{@options.zone.stroke_color}}
+                    @onAdd={{fn this.onZoneAdded @options.zone}}
+                    as |polygon|
+                >
+                    <polygon.tooltip @permanent={{true}} @sticky={{true}}>{{@options.zone.name}} Zone</polygon.tooltip>
+                </layers.polygon>
+            {{/if}}
+        </LeafletMap>
+    </div>
+</Modal::Default>

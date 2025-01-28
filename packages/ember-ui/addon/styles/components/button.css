@@ -2,7 +2,7 @@
 a.btn,
 .fc-button,
 .ui-full-calendar .fc-button {
-    @apply inline-flex items-center px-3 py-2 text-sm font-medium leading-4 transition duration-150 ease-in-out border border-transparent rounded-md;
+    @apply inline-flex items-center px-3 py-2 text-sm font-medium leading-4 transition duration-150 ease-in-out border border-transparent;
 }
 
 .btn.btn-is-loading,
@@ -20,7 +20,8 @@ a.btn.btn-is-loading:disabled,
 a.btn.btn-xs,
 .fc-button.btn-xs,
 .ui-full-calendar .fc-button.btn-xs {
-    @apply px-2.5 py-1.5 text-sm leading-4 font-medium rounded-md;
+    @apply text-sm leading-4 font-medium;
+    padding-left: 0.625rem
 }
 
 .btn.btn-sm,

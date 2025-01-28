@@ -1,0 +1,50 @@
+<Layout::Section::Header @title="Payments Onboard" />
+
+<Layout::Section::Body class="overflow-y-scroll h-full">
+    <div class="container">
+        <div class="max-w-3xl mx-auto mt-4">
+            <div class="content">
+                <div class="flex flex-col items-center justify-center">
+                    <InfoBlock @type={{if this.onboardCompleted "success" "info"}} @icon={{if this.onboardCompleted "check" "triangle-exclamation"}} @iconWrapperClass="leading-6" class="w-full">
+                        <h2 id="title" class="text-base">
+                            {{#if this.onboardCompleted}}
+                                Onboarding was completed successfully!
+                            {{else}}
+                                Complete this onboard process to accept payments.
+                            {{/if}}
+                        </h2>
+                        <span id="subtitle">
+                            {{#if this.onboardCompleted}}
+                                Your onboard was successful and you're now able to accept and receive payments from customers and 3rd parties.
+                            {{else}}
+                                This onboard process must be completed for payments to be accepted for orders.
+                            {{/if}}
+                        </span>
+                        <div class="mt-4 mb-1">
+                            {{#if this.onboardCompleted}}
+                                <Button @icon="check" @type="primary" @size="lg" @text="Continue" @onClick={{transition-to "settings.payments.index"}} @disabled={{this.onboardInProgress}} />
+                            {{else}}
+                                <Button
+                                    @icon="play"
+                                    @type="primary"
+                                    @size="lg"
+                                    @text={{if this.onboardInProgress "Onboard in progress" "Start onboard now"}}
+                                    @onClick={{perform this.startOnboard}}
+                                    @isLoading={{this.startOnboard.isRunning}}
+                                    @disabled={{this.onboardInProgress}}
+                                />
+                            {{/if}}
+                        </div>
+                    </InfoBlock>
+
+                    <div
+                        id="embedded-onboarding-container"
+                        class="min-h-20 bg-gray-50 dark:bg-gray-100 shadow-md rounded-lg border border-gray-300 dark:border-gray-900 w-full mt-4 {{unless this.onboardInProgress 'hidden'}}"
+                        {{did-insert (fn this.createTrackedElement "embeddedOnboardingContainer")}}
+                    >
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</Layout::Section::Body>
