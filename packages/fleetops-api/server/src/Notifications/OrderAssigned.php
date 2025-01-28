@@ -115,7 +115,7 @@ class OrderAssigned extends Notification implements ShouldQueue
             $message->line('Dispatch is scheduled for ' . $this->order->scheduled_at);
         }
 
-        $message->action('View Details', Utils::consoleUrl('', ['shift' => 'fleet-ops/orders/view/' . $this->order->public_id]));
+        // $message->action('View Details', Utils::consoleUrl('', ['shift' => 'fleet-ops/orders/view/' . $this->order->public_id]));
 
         return $message;
     }
