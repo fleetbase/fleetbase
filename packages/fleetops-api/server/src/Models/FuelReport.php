@@ -36,7 +36,7 @@ class FuelReport extends Model
      *
      * @var string
      */
-    protected $publicIdType = 'expense_report';
+    protected $publicIdType = '';
 
     /**
      * These attributes that can be queried.
