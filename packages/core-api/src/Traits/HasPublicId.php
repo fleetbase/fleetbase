@@ -51,7 +51,7 @@ trait HasPublicId
             return static::generatePublicId($type);
         }
 
-        return $type . '_' . $hashid;
+        return $hashid;
     }
 
     /**
