@@ -2,7 +2,7 @@
 .fleetbase-console .form-textarea,
 .fleetbase-console .form-multiselect,
 .fleetbase-console .form-select {
-    @apply rounded-md;
+    /* @apply rounded-md; */
 }
 
 .ember-power-select-trigger.form-input.form-input-sm,
@@ -403,7 +403,7 @@ body[data-theme='dark'] .money-input-currency-selector + .ember-basic-dropdown-c
 body[data-theme='dark'] .ui-money-input .ember-basic-dropdown > .ember-basic-dropdown-trigger .ember-basic-dropdown-content,
 body[data-theme='dark'] .country-selector .ember-basic-dropdown-content,
 body[data-theme='dark'] .money-input-currency-selector .ember-basic-dropdown-content {
-    @apply bg-gray-800 rounded-md shadow text-gray-100 border border-gray-900;
+    @apply bg-gray-800 shadow text-gray-100 border border-gray-900;
 }
 
 body[data-theme='dark']
@@ -488,7 +488,7 @@ body[data-theme='dark'] .emberTagInput.emberTagInput--readOnly,
 
 .emberTagInput .emberTagInput-tag {
     margin-bottom: 0;
-    @apply rounded-md bg-[#496453] flex items-center px-2 mr-1;
+    @apply bg-[#496453] flex items-center px-2 mr-1;
 }
 
 .emberTagInput .emberTagInput-tag > .emberTagInput-remove:before {
@@ -506,7 +506,7 @@ body[data-theme='dark'] .emberTagInput-tag {
 }
 
 body[data-theme='dark'] .iti__dropdown-content {
-    @apply bg-gray-900 rounded-md shadow-sm border-gray-700 mt-1;
+    @apply bg-gray-900 shadow-sm border-gray-700 mt-1;
 }
 
 .iti__search-input {

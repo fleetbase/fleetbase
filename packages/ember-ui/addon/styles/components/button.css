@@ -28,28 +28,28 @@ a.btn.btn-xs,
 a.btn.btn-sm,
 .fc-button.btn-sm,
 .ui-full-calendar .fc-button.btn-sm {
-    @apply px-3 py-2 text-sm font-medium leading-4 rounded-md;
+    @apply px-3 py-2 text-sm font-medium leading-4;
 }
 
 .btn.btn-md,
 a.btn.btn-md,
 .fc-button.btn-md,
 .ui-full-calendar .fc-button.btn-md {
-    @apply px-4 py-2 text-sm font-medium leading-5 rounded-md;
+    @apply px-4 py-2 text-sm font-medium leading-5;
 }
 
 .btn.btn-lg,
 a.btn.btn-lg,
 .fc-button.btn-lg,
 .ui-full-calendar .fc-button.btn-lg {
-    @apply px-4 py-2 text-base font-medium leading-6 rounded-md;
+    @apply px-4 py-2 text-base font-medium leading-6;
 }
 
 .btn.btn-xl,
 a.btn.btn-xl,
 .fc-button.btn-xl,
 .ui-full-calendar .fc-button.btn-xl {
-    @apply px-6 py-3 text-base font-medium leading-6 rounded-md;
+    @apply px-6 py-3 text-base font-medium leading-6;
 }
 
 .btn.btn-link,
@@ -357,7 +357,7 @@ a.btn:disabled,
 }
 
 .order-action-button {
-    @apply h-16 flex flex-col items-center justify-center border border-gray-200 bg-white text-gray-800 rounded-md shadow-sm truncate;
+    @apply h-16 flex flex-col items-center justify-center border border-gray-200 bg-white text-gray-800 shadow-sm truncate;
 }
 
 .order-action-button.strict-width {
@@ -382,7 +382,7 @@ a.btn:disabled,
 
 button.integrated-vendor-button,
 .integrated-vendor-button {
-    @apply flex flex-col items-center justify-center border border-gray-200 p-4 rounded-md outline-0;
+    @apply flex flex-col items-center justify-center border border-gray-200 p-4 outline-0;
 }
 
 button.integrated-vendor-button.selected,
