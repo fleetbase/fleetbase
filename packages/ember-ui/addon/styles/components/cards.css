@@ -27,19 +27,19 @@ body[data-theme='dark'] .place-card .place-name {
 }
 
 .order-schedule-card {
-    @apply rounded border border-gray-200;
+    @apply border border-gray-200;
 }
 
 .order-schedule-card .card-title {
-    @apply px-5 py-2 flex items-center justify-between rounded-t;
+    @apply px-5 py-2 flex items-center justify-between ;
 }
 
 .order-schedule-card .card-content {
-    @apply px-5 py-2.5 rounded-b;
+    @apply px-5 py-2.5;
 }
 
 body[data-theme='dark'] .order-schedule-card {
-    @apply rounded text-gray-100 border-gray-700;
+    @apply text-gray-100 border-gray-700;
 }
 
 body[data-theme='dark'] .order-schedule-card .card-title {

@@ -103,14 +103,14 @@ export default class LayoutFleetOpsSidebarComponent extends Component {
             //     permission: 'fleet-ops list vendor',
             //     visible: this.abilities.can('fleet-ops see vendor'),
             // },
-            {
-                intl: 'fleet-ops.component.layout.fleet-ops-sidebar.contacts',
-                title: this.intl.t('fleet-ops.component.layout.fleet-ops-sidebar.contacts'),
-                icon: 'address-book',
-                route: 'management.contacts',
-                permission: 'fleet-ops list contact',
-                visible: this.abilities.can('fleet-ops see contact'),
-            },
+            // {
+            //     intl: 'fleet-ops.component.layout.fleet-ops-sidebar.contacts',
+            //     title: this.intl.t('fleet-ops.component.layout.fleet-ops-sidebar.contacts'),
+            //     icon: 'address-book',
+            //     route: 'management.contacts',
+            //     permission: 'fleet-ops list contact',
+            //     visible: this.abilities.can('fleet-ops see contact'),
+            // },
             {
                 intl: 'fleet-ops.component.layout.fleet-ops-sidebar.places',
                 title: this.intl.t('fleet-ops.component.layout.fleet-ops-sidebar.places'),

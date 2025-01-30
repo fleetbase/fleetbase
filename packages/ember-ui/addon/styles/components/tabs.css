@@ -195,6 +195,7 @@ body[data-theme='dark'] .ui-tabs > nav .ui-tab:disabled {
 .fleetbase-pill-tabs > nav > a.ui-tab.active {
     background-color: #496453;
     border: 1px solid #496453;
+    opacity: 0.75;
 }
 
 .fleetbase-pill-tabs > nav > a.ui-tab:hover {
@@ -210,4 +211,5 @@ body[data-theme='light'] .fleetbase-pill-tabs > nav > a.ui-tab.active {
     background-color: #496453;
     border: 1px solid #496453;
     color: #fff;
+    opacity: 0.75;
 }

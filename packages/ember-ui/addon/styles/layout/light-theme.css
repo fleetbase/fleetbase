@@ -17,7 +17,7 @@ body[data-theme='light'] .next-view-container > nav.next-sidebar {
     @apply bg-white;
 }
 body[data-theme='light'] .next-view-container > nav.next-sidebar a.next-nav-item:hover {
-    @apply bg-[#496453] text-white !important;
+    @apply bg-[#496453] text-white opacity-75;
 }
 body[data-theme='light'] .next-view-container > nav.next-sidebar a.next-nav-item:hover .next-nav-item-icon-container svg {
     @apply text-white;
