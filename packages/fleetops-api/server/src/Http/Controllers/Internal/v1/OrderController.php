@@ -116,17 +116,12 @@ class OrderController extends FleetOpsController
             
                     // Now perform actions that require an order ID
                     $isUnavailability = $request->input('mark_as_unavailable');
-                    if(!isset($isUnavailability)){
                     $order
                         ->setRoute($route)
                         ->setStatus('created', false)
                         ->insertPayload($payload)
                         ->insertWaypoints($waypoints)
                         ->insertEntities($entities);
-                    }
-                    else{
-                        $order->setStatus('created', false);
-                    }
                     // If order creation includes files associate each to this order
                     if ($uploads) {
                         $ids   = collect($uploads)->pluck('uuid');
