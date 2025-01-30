@@ -326,7 +326,7 @@ class CustomOrderController extends BaseOrderController
         if ($existingTrackingStatus) {
             $trackingData = [
                 'status'       => 'Order Accepted',  // Example status, update as needed
-                'details'      => 'Order confirmed by driver.',
+                'details'      => 'Order Accepted by the driver.',
                 'code'         => 'CONFIRMED',  // Will be generated automatically if empty
                 'location'     => $existingTrackingStatus['location'],
                 'tracking_number_uuid' => $existingTrackingStatus['tracking_number_uuid'],
