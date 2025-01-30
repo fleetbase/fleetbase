@@ -177,9 +177,9 @@ class OrderController extends FleetOpsController
                 }
             );
             // Trigger order created event
-            if(!$isUnavailability){
-                event(new OrderReady($record));
-            }
+            // if(!$isUnavailability){
+            //     event(new OrderReady($record));
+            // }
             // Return response
             return ['order' => new $this->resource($record)];
         }
