@@ -8,6 +8,7 @@ use Fleetbase\Http\Resources\File;
 use Fleetbase\Http\Resources\FleetbaseResource;
 use Fleetbase\Support\Http;
 use Fleetbase\Support\Resolve;
+use Fleetbase\FleetOps\Http\Resources\v1\TrackingStatus;
 
 class Order extends FleetbaseResource
 {
@@ -49,7 +50,7 @@ class Order extends FleetbaseResource
             'driver_assigned'          => new Driver($this->driverAssigned()->without(['jobs', 'currentJob'])->first()),
             'vehicle_assigned'         => new Vehicle($this->vehicleAssigned()->without(['fleets', 'vendor'])->first()),
             'tracking_number'          => new TrackingNumber($this->trackingNumber),
-            'tracking_statuses'        => $this->whenLoaded('trackingStatuses', fn () => TrackingStatus::collection($this->trackingStatuses)),
+            'tracking_statuses'        => $this->when('trackingStatuses', fn () => TrackingStatus::collection($this->trackingStatuses)),
             'tracking'                 => $this->when(Http::isInternalRequest(), $this->trackingNumber ? $this->trackingNumber->tracking_number : null),
             'barcode'                  => $this->when(Http::isInternalRequest(), $this->trackingNumber ? $this->trackingNumber->barcode : null),
             'qr_code'                  => $this->when(Http::isInternalRequest(), $this->trackingNumber ? $this->trackingNumber->qr_code : null),

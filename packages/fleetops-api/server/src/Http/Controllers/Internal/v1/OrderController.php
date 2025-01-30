@@ -115,13 +115,18 @@ class OrderController extends FleetOpsController
                     $order->save(); // Ensure order is saved before further processing
             
                     // Now perform actions that require an order ID
+                    $isUnavailability = $request->input('mark_as_unavailable');
+                    if(!isset($isUnavailability)){
                     $order
                         ->setRoute($route)
                         ->setStatus('created', false)
                         ->insertPayload($payload)
                         ->insertWaypoints($waypoints)
                         ->insertEntities($entities);
-            
+                    }
+                    else{
+                        $order->setStatus('created', false);
+                    }
                     // If order creation includes files associate each to this order
                     if ($uploads) {
                         $ids   = collect($uploads)->pluck('uuid');
@@ -157,7 +162,7 @@ class OrderController extends FleetOpsController
                     }
             
                     // Notify driver if assigned
-                    if($order->driver_assigned_uuid){
+                    if((!isset($isUnavailability)) && (!empty($order->driver_assigned_uuid))){
                         $order->notifyDriverAssigned();
                     }       
             
@@ -171,7 +176,9 @@ class OrderController extends FleetOpsController
                     $order->firstDispatchWithActivity();
             
                     // Load tracking number
+                    if(!isset($isUnavailability)){
                     $order->load(['trackingNumber']);
+                    }
                 }
             );
             
