@@ -171,9 +171,9 @@ class OrderController extends FleetOpsController
                     $order->firstDispatchWithActivity();
             
                     // Load tracking number
-                    if(!isset($isUnavailability)){
+                    // if(!isset($isUnavailability)){
                     $order->load(['trackingNumber']);
-                    }
+                    //}
                 }
             );
             
@@ -181,7 +181,8 @@ class OrderController extends FleetOpsController
             event(new OrderReady($record));
             
             // Return response
-            return ['order' => new $this->resource($record)];
+            // return ['order' => new $this->resource($record)];
+            return $record;
         }
             
         catch (\Exception $e) {
