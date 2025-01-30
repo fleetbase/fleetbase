@@ -488,7 +488,7 @@ body[data-theme='dark'] .emberTagInput.emberTagInput--readOnly,
 
 .emberTagInput .emberTagInput-tag {
     margin-bottom: 0;
-    @apply bg-[#496453] flex items-center px-2 mr-1;
+    @apply bg-[#496453] flex items-center px-2 mr-1 opacity-75;
 }
 
 .emberTagInput .emberTagInput-tag > .emberTagInput-remove:before {
@@ -642,6 +642,7 @@ body[data-theme='dark'] .coordinates-input-zoom-controls > .coordinates-input-zo
 
 .coordinates-input-zoom-controls > .coordinates-input-zoom-controls-container.toolbar-button.is-action:hover {
    background-color: #496453;
+   opacity: 0.75;
 }
 
 .coordinates-input-zoom-controls > .coordinates-input-zoom-controls-container .toolbar-button:focus,
@@ -660,6 +661,7 @@ body[data-theme='light'] .coordinates-input-zoom-controls > .coordinates-input-z
 
 body[data-theme='light'] .coordinates-input-zoom-controls > .coordinates-input-zoom-controls-container .toolbar-button.is-action:hover {
     background-color: #496453;
+    opacity: 0.75;
 }
 
 body[data-theme='light'] .coordinates-input-zoom-controls > .coordinates-input-zoom-controls-container .toolbar-button.is-action:hover svg {

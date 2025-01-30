@@ -422,7 +422,7 @@ body[data-theme='dark'] .overloader {
 .order-route-list.storefront:before {
     z-index: 80;
     height: 100%;
-    @apply border-[#496453];
+    @apply border-[#496453] opacity-75;
 }
 
 .order-route-list.storefront .order-route-stop:first-child {
@@ -430,7 +430,7 @@ body[data-theme='dark'] .overloader {
 }
 
 .order-route-list.storefront .order-route-stop:first-child .order-route-stop-index .index-count {
-    @apply bg-[#496453] !important;
+    @apply bg-[#496453] opacity-75;
 }
 
 .order-route-list.storefront .order-route-stop:last-child {
@@ -994,7 +994,7 @@ body[data-theme='light'] .ui-input-info.danger {
 }
 
 .anchor-button:hover {
-    @apply outline-offset-2 outline-[#496453];
+    @apply outline-offset-2 outline-[#496453] opacity-75;
 }
 
 .anchor-button:hover > div:last-child {
