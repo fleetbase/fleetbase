@@ -62,8 +62,9 @@ class OrderController extends FleetOpsController
         if ($validator->fails()) {
             return $createOrderRequest->responseWithErrors($validator);
         }
-
+        
         try {
+            $isUnavailability = $request->input('mark_as_unavailable');
             $record = $this->model->createRecordFromRequest(
                 $request,
                 function ($request, &$input) {
@@ -157,9 +158,9 @@ class OrderController extends FleetOpsController
                     }
             
                     // Notify driver if assigned
-                    if((!isset($isUnavailability)) && (!empty($order->driver_assigned_uuid))){
+                    // if((!isset($isUnavailability)) && (!empty($order->driver_assigned_uuid))){
                         $order->notifyDriverAssigned();
-                    }       
+                    //}       
             
                     // Set driving distance and time
                     $order->setPreliminaryDistanceAndTime();
@@ -178,8 +179,8 @@ class OrderController extends FleetOpsController
             );
             // Trigger order created event
             // if(!$isUnavailability){
-            //     event(new OrderReady($record));
-            // }
+                event(new OrderReady($record));
+            //}
             // Return response
             return ['order' => new $this->resource($record)];
         }
