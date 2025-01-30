@@ -176,9 +176,9 @@ class OrderController extends FleetOpsController
                     //}
                 }
             );
-            
+            echo "wclooeo";
             // Trigger order created event
-            event(new OrderReady($record));
+            // event(new OrderReady($record));
             
             // Return response
             // return ['order' => new $this->resource($record)];
