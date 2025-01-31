@@ -3,7 +3,7 @@
         <DropdownButton @icon="ellipsis-h" @size="sm" @iconPrefix="fas" @triggerClass="mr-2 hidden md:flex" as |dd|>
             <div class="next-dd-menu mt-1 mx-0" aria-labelledby="user-menu">
                 <div class="p-1">
-                    <a href="javascript:;" class="next-dd-item" {{on "click" (dropdown-fn dd this.newCustomer)}} disabled={{cannot "fleet-ops create customer"}}>
+                    {{!-- <a href="javascript:;" class="next-dd-item" {{on "click" (dropdown-fn dd this.newCustomer)}} disabled={{cannot "fleet-ops create customer"}}>
                         <div class="w-7 flex-grow-0 flex-shrink-0">
                             <FaIcon @icon="user-plus" />
                         </div>
@@ -14,7 +14,7 @@
                             <FaIcon @icon="truck" />
                         </div>
                         <span>{{t "fleet-ops.operations.orders.index.new.create-new-facilitator"}}</span>
-                    </a>
+                    </a> --}}
                     <a href="javascript:;" class="next-dd-item" {{on "click" (dropdown-fn dd this.createPlace)}} disabled={{cannot "fleet-ops create place"}}>
                         <div class="w-7 flex-grow-0 flex-shrink-0">
                             <FaIcon @icon="map-pin" />
@@ -75,7 +75,7 @@
                     />
                 </InputGroup>
 
-                <InputGroup @name={{t "fleet-ops.operations.orders.index.new.customer"}} @helpText={{t "fleet-ops.operations.orders.index.new.customer-help-text"}}>
+                {{!-- <InputGroup @name={{t "fleet-ops.operations.orders.index.new.customer"}} @helpText={{t "fleet-ops.operations.orders.index.new.customer-help-text"}}>
                     <ModelSelect
                         @modelName="customer"
                         @selectedModel={{this.order.customer}}
@@ -98,9 +98,9 @@
                             </span>
                         </div>
                     </ModelSelect>
-                </InputGroup>
+                </InputGroup> --}}
 
-                <InputGroup @name={{t "fleet-ops.operations.orders.index.new.facilitator"}} @helpText={{t "fleet-ops.operations.orders.index.new.facilitator-help-text"}}>
+                {{!-- <InputGroup @name={{t "fleet-ops.operations.orders.index.new.facilitator"}} @helpText={{t "fleet-ops.operations.orders.index.new.facilitator-help-text"}}>
                     <ModelSelect
                         @modelName="facilitator"
                         @selectedModel={{this.order.facilitator}}
@@ -126,7 +126,7 @@
                             </span>
                         </div>
                     </ModelSelect>
-                </InputGroup>
+                </InputGroup> --}}
 
                 {{#if (and this.order.facilitator.isIntegratedVendor this.order.facilitator.service_types.length)}}
                     <InputGroup
@@ -693,7 +693,7 @@
             {{/if}}
         </ContentPanel>
 
-        <ContentPanel @title={{t "fleet-ops.common.service"}} @open={{true}} @pad={{true}} @panelBodyClass="bg-white dark:bg-gray-800">
+        {{!-- <ContentPanel @title={{t "fleet-ops.common.service"}} @open={{true}} @pad={{true}} @panelBodyClass="bg-white dark:bg-gray-800">
             <Toggle
                 @label={{t "fleet-ops.operations.orders.index.new.apply-service-rate"}}
                 @wrapperClass="justify-start-i mb-4"
@@ -808,7 +808,7 @@
                     {{/if}}
                 </ContentPanel>
             {{/if}}
-        </ContentPanel>
+        </ContentPanel> --}}
 
         <ContentPanel @title={{t "fleet-ops.operations.orders.index.new.notes-title"}} @open={{true}} @pad={{true}} @panelBodyClass="bg-white dark:bg-gray-800">
             <Textarea @value={{this.order.notes}} class="form-input w-full" placeholder={{t "fleet-ops.operations.orders.index.new.notes-placeholder"}} disabled={{cannot "fleet-ops create order"}} rows={{4}} />

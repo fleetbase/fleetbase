@@ -1,6 +1,6 @@
 <MapContainer::Topbar class="next-topbar-{{this.layout}}">
     <MapContainer::ViewSwitch>
-        <FaIcon @icon="layer-group" class="mr-2 text-gray-400 dark:text-gray-600" />
+        {{!-- <FaIcon @icon="layer-group" class="mr-2 text-gray-400 dark:text-gray-600" /> --}}
         <button type="button" id="ops-map-view-button" class="{{if this.isMapLayout 'active'}}" {{on "click" (fn this.setLayoutMode "map")}}>{{t
                 "fleet-ops.operations.orders.index.map"
             }}</button>

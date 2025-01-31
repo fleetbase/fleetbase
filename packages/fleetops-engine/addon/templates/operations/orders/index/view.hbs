@@ -201,10 +201,10 @@
                 {{/if}}
             </div>
             <div class="grid grid-cols-2 lg:grid-cols-3 field-info-containers-darker gap-4 lg:gap-2">
-                <div class="field-info-container space-y-2">
-                    {{#if this.isMultiDropOrder}}
-                        <div class="field-name">{{pluralize (t "fleet-ops.operations.orders.index.view.customer")}}</div>
-                        <div class="flex flex-col space-y-2">
+                {{!-- <div class="field-info-container space-y-2">
+                    {{#if this.isMultiDropOrder}} --}}
+                        {{!-- <div class="field-name">{{pluralize (t "fleet-ops.operations.orders.index.view.customer")}}</div> --}}
+                        {{!-- <div class="flex flex-col space-y-2">
                             {{#each this.orderWaypoints as |waypoint|}}
                                 <div class="flex flex-row">
                                     <Image
@@ -229,10 +229,10 @@
                                     </Attach::Tooltip>
                                 </div>
                             {{/each}}
-                        </div>
-                    {{else}}
-                        <div class="field-name">{{t "fleet-ops.operations.orders.index.view.customer"}}</div>
-                        <div class="flex flex-row">
+                        </div> --}}
+                    {{!-- {{else}} --}}
+                        {{!-- <div class="field-name">{{t "fleet-ops.operations.orders.index.view.customer"}}</div> --}}
+                        {{!-- <div class="flex flex-row">
                             <div>
                                 <Image
                                     src={{avatar-url @model.customer.photo_url}}
@@ -247,10 +247,10 @@
                                     <div>{{n-a @model.customer.phone "No Phone"}}</div>
                                 {{/if}}
                             </div>
-                        </div>
-                    {{/if}}
-                </div>
-                <div class="field-info-container space-y-2">
+                        </div> --}}
+                    {{!-- {{/if}} --}}
+                {{!-- </div> --}}
+                {{!-- <div class="field-info-container space-y-2">
                     <div class="field-name">{{t "fleet-ops.operations.orders.index.view.facilitator"}}</div>
                     <div class="flex flex-row">
                         <div>
@@ -268,7 +268,7 @@
                             {{/if}}
                         </div>
                     </div>
-                </div>
+                </div> --}}
                 <div class="field-info-container space-y-2">
                     <div class="field-name flex flex-row items-center justify-between">
                         <span>{{t "fleet-ops.operations.orders.index.view.driver-assigned"}}</span>
