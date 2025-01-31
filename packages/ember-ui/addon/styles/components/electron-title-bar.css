@@ -1,0 +1,34 @@
+.electron-titlebar {
+    -webkit-user-select: none;
+    -webkit-app-region: drag;
+    display: flex;
+    box-align: center;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0px 10px 0px 10px;
+    flex-shrink: 0;
+    min-width: 100vw;
+    max-width: 100vw;
+    overflow: visible;
+
+    @apply h-12 w-full bg-white fixed top-0 inset-x-0;
+}
+
+.electron-titlebar > .electron-titlebar-menu,
+.electron-titlebar > .electron-titlebar-actions {
+    @apply flex flex-row items-center;
+}
+
+.electron-titlebar > .electron-titlebar-actions {
+    @apply justify-end;
+}
+
+.electron-titlebar .electron-titlebar-button,
+.electron-titlebar button,
+.electron-titlebar a {
+    -webkit-app-region: no-drag;
+}
+
+body[data-theme='dark'] .electron-titlebar {
+    @apply bg-gray-900;
+}

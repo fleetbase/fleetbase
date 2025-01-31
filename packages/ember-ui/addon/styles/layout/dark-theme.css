@@ -1,0 +1,21 @@
+body[data-theme='dark'] {
+    @apply bg-gray-800;
+}
+body[data-theme='dark'] .section-header .section-header-title {
+    @apply text-gray-300;
+}
+body[data-theme='dark'] a:not([class*='text-']) {
+    cursor: default !important;
+}
+body[data-theme='dark'] a:not([class*='text-']) {
+    @apply no-underline text-gray-50;
+}
+body[data-theme='dark'] a:not([class*='text-']):hover {
+    @apply text-gray-50;
+}
+body[data-theme='dark'] .box-divider {
+    box-shadow: inset 1px 0 #2b323e;
+}
+body[data-theme='dark'] ::-webkit-calendar-picker-indicator {
+    filter: invert(1);
+}

@@ -1,0 +1,16 @@
+{{#let (component (or @titleComponent "modal/header/title")) (component (or @closeComponent "modal/header/close") onClick=@onClose) as |Title Close|}}
+    <div class="flb--modal-header" ...attributes>
+        {{#if (has-block-params)}}
+            {{yield (hash title=Title close=Close)}}
+        {{else}}
+            {{#if (has-block)}}
+                {{yield}}
+            {{else}}
+                <Modal::Header::Title>{{@title}}</Modal::Header::Title>
+            {{/if}}
+            {{#if (or @closeButton true)}}
+                <Modal::Header::Close @onClick={{@onClose}} />
+            {{/if}}
+        {{/if}}
+    </div>
+{{/let}}

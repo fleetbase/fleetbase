@@ -1,0 +1,18 @@
+<Modal::Default @modalIsOpened={{@modalIsOpened}} @options={{@options}} @confirm={{@onConfirm}} @decline={{@onDecline}}>
+    <div class="p-4 space-y-4">
+        {{#each @options.promptOptions as |option index|}}
+            <div class="flex flex-row items-center bg-gray-100 border-gray-200 px-4 py-2 dark:bg-gray-800 dark:border-gray-700 rounded-lg">
+                <RadioButton
+                    @radioClass="focus:ring-blue-500 mr-3"
+                    @radioId={{concat "option_" index}}
+                    @value={{option}}
+                    @groupValue={{@options.selected}}
+                    @name="option"
+                    @changed={{fn (mut @options.selected)}}
+                >
+                    <span class="dark:text-white font-semibold">{{humanize option}}</span>
+                </RadioButton>
+            </div>
+        {{/each}}
+    </div>
+</Modal::Default>

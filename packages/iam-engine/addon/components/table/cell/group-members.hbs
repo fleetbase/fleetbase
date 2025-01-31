@@ -1,0 +1,15 @@
+<div class="flex flex-row items-center space-x-2">
+    {{#each @row.users as |user|}}
+        <div class="rounded-lg shadow-sm border border-blue-800 bg-blue-600 hover:bg-blue-500 text-white">
+            <a
+                href="javascript:;"
+                class="truncate inline-flex items-center px-2 py-0.5 rounded-lg text-xs font-medium text-white leading-4 whitespace-no-wrap"
+                {{on "click" (fn @column.onClick user @row)}}
+            >
+                {{user.name}}
+            </a>
+        </div>
+    {{else}}
+        <span>{{t "iam.components.table.group-members.no-member"}}</span>
+    {{/each}}
+</div>

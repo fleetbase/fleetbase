@@ -1,0 +1,46 @@
+<Overlay
+    @onLoad={{this.setOverlayContext}}
+    @onOpen={{this.onOpen}}
+    @onClose={{this.onClose}}
+    @onToggle={{this.onToggle}}
+    @position="right"
+    @noBackdrop={{true}}
+    @fullHeight={{true}}
+    @isResizable={{or this.isResizable @isResizable}}
+    @width={{or this.width @width "570px"}}
+>
+    <Overlay::Header @title={{t "fleet-ops.component.parking-report-panel.title"}} @status={{this.fuelReport.public_id}} @hideStatusDot={{true}} @createdAt={{this.fuelReport.createdAt}}>
+        <Button
+            @type="default"
+            @icon="pen"
+            @helpText={{t "fleet-ops.component.parking-report-panel.edit-button"}}
+            @onClick={{this.onEdit}}
+            @wrapperClass="mr-2"
+            @permission="fleet-ops update fuel-report"
+        />
+        <Button
+            @type="default"
+            @icon="times"
+            @helpText={{if this.fuelReport.id (t "fleet-ops.component.parking-report-panel.cancel-edit-parking-report") (t "fleet-ops.component.parking-report-panel.cancel-new-parking-report")}}
+            @onClick={{this.onPressCancel}}
+        />
+    </Overlay::Header>
+    <Overlay::Body class="no-padding">
+        <div class="section-header-actions w-full overflow-x-scroll lg:overflow-x-auto">
+            <div class="ui-tabs mt-4">
+                <nav>
+                    {{#each this.tabs as |tab|}}
+                        <a href="javascript:;" class="ui-tab {{if (eq this.tab.slug tab.slug) 'active'}}" {{on "click" (fn this.onTabChanged tab.slug)}}>
+                            <FaIcon @icon={{tab.icon}} class="mr-1" />
+                            <span>{{tab.title}}</span>
+                        </a>
+                    {{/each}}
+                </nav>
+            </div>
+        </div>
+        <div class="tab-content tab-{{this.tab.slug}}">
+            {{component this.tab.component fuelReport=this.fuelReport tabOptions=this.tab options=this.tab.componentParams}}
+        </div>
+        <Spacer @height="300px" />
+    </Overlay::Body>
+</Overlay>

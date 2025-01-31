@@ -1,0 +1,103 @@
+{{#if this.isVisible}}
+    <div
+        id={{concat "channel-" this.channel.id "-window"}}
+        class="chat-window-container {{if this.pendingAttachmentFiles 'has-attachments'}}"
+        {{did-insert this.positionWindow}}
+        ...attributes
+    >
+        <div class="chat-window-controls-container">
+            <div class="chat-window-name">
+                {{n-a this.channel.name "Untitled Chat"}}
+                <a href="#" {{on "click" this.editChatName}} class="ml-2 hover:opacity-50">
+                    <FaIcon @icon="pencil" @size="xs" />
+                </a>
+            </div>
+            <div id={{concat "channel-" this.channel.id "-controls"}} class="chat-window-controls">
+                <DropdownButton class="chat-window-button" @icon="user-plus" @size="sm" @iconPrefix="fas" @triggerClass="hidden md:flex" @disabled={{not this.availableUsers}} as |dd|>
+                    <div class="next-dd-menu mt-1 mx-0" aria-labelledby="user-menu">
+                        <div class="p-1">
+                            {{#each this.availableUsers as |user|}}
+                                <a href="javascript:;" class="next-dd-item" {{on "click" (dropdown-fn dd this.addParticipant user)}}>
+                                    <div class="flex-1 flex flex-row items-center">
+                                        <Badge @status={{if user.is_online "online" "offline"}} @hideText={{true}} @roundedFull={{true}} class="mr-2" />
+                                        <div class="w-6">
+                                            <FaIcon @icon="user" @size="xs" />
+                                        </div>
+                                        <span>{{user.name}}</span>
+                                    </div>
+                                </a>
+                            {{/each}}
+                        </div>
+                    </div>
+                </DropdownButton>
+                <button type="button" class="chat-window-button chat-window-close-button" {{on "click" this.closeChannel}}>
+                    <FaIcon @icon="times" @size="sm" />
+                </button>
+            </div>
+        </div>
+        <div id={{concat "channel-" this.channel.id "-participants"}} class="chat-window-participants-container">
+            {{#each this.channel.participants as |chatParticipant|}}
+                <div class="chat-window-participant-bubble-container">
+                    <Image src={{chatParticipant.avatar_url}} @fallbackSrc={{config "defaultValues.userImage"}} alt={{chatParticipant.name}} class="chat-window-participant-bubble" />
+                    <Attach::Tooltip @class="clean" @animation="scale" @placement="top">
+                        <InputInfo @text={{chatParticipant.name}} />
+                    </Attach::Tooltip>
+                    {{#if (can-remove-chat-participant this.channel this.sender chatParticipant)}}
+                        <button type="button" class="chat-window-remove-participant" {{on "click" (fn this.removeParticipant chatParticipant)}}>
+                            <FaIcon @icon="times" @size="sm" />
+                        </button>
+                    {{/if}}
+                    <div class="chat-window-participant-online-status {{if chatParticipant.is_online 'is-online'}}"></div>
+                </div>
+            {{/each}}
+        </div>
+        <div id={{concat "channel-" this.channel.id "-feed"}} class="chat-window-messages-container" {{did-insert this.scrollMessageWindowBottom}}>
+            <ChatWindow::Feed @channel={{this.channel}} @chatParticipant={{this.sender}} />
+        </div>
+        <div id={{concat "channel-" this.channel.id "-input"}} class="chat-window-input-container {{if this.pendingAttachmentFiles 'has-attachments'}}">
+            <div class="chat-window-attachments-container">
+                <div class="chat-window-attachment-input">
+                    <FileUpload
+                        @name={{this.customField.name}}
+                        @for={{this.customField.name}}
+                        @accept={{join "," this.acceptedFileTypes}}
+                        @multiple={{true}}
+                        @onFileAdded={{perform this.uploadAttachmentFile}}
+                    >
+                        <a tabindex={{0}} class="btn btn-default btn-xs cursor-pointer">
+                            <FaIcon @icon="paperclip" @size="sm" class="mr-2" />
+                            <span>Add Attachment</span>
+                        </a>
+                    </FileUpload>
+                    {{#if this.pendingAttachmentFile}}
+                        <div class="ml-2 flex items-center text-sm">
+                            <Spinner class="dark:text-blue-400 text-blue-900" />
+                            <span class="ml-2 text-xs dark:text-blue-400 text-blue-900">{{round this.pendingAttachmentFile.progress}}%</span>
+                        </div>
+                    {{/if}}
+                </div>
+                {{#if this.pendingAttachmentFiles}}
+                    <div class="chat-window-pending-attachments-container">
+                        {{#each this.pendingAttachmentFiles as |pendingFile|}}
+                            <ChatWindow::PendingAttachment @file={{pendingFile}} @onRemove={{fn this.removePendingAttachmentFile pendingFile}} />
+                        {{/each}}
+                    </div>
+                {{/if}}
+            </div>
+            <div class="chat-window-input-box">
+                <Textarea @value={{this.pendingMessageContent}} {{on "keypress" this.handleKeyPress}} placeholder="Type your message here" class="chat-window-input" rows="3" />
+            </div>
+            <div class="chat-window-submit-container">
+                <Button
+                    @type="primary"
+                    @icon="paper-plane"
+                    @text="Send"
+                    @size="xs"
+                    @onClick={{perform this.sendMessage}}
+                    @disabled={{not this.pendingMessageContent}}
+                    @isLoading={{and (not this.sendMessage.isIdle) (not this.uploadAttachmentFile.isIdle)}}
+                />
+            </div>
+        </div>
+    </div>
+{{/if}}

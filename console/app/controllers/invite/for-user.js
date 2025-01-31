@@ -21,7 +21,7 @@ export default class InviteForUserController extends Controller {
             .post('users/accept-company-invite', { code })
             .then((response) => {
                 this.session.manuallyAuthenticate(response.token);
-                this.notifications.success('Invitation accepted, welcome to Fleetbase!');
+                this.notifications.success('Invitation accepted, welcome to FleetYes!');
 
                 this.isLoading = false;
 

@@ -1,0 +1,187 @@
+.fleetbase-console-navbar {
+    @apply bg-gray-300 shadow-md;
+}
+
+.fleetbase-console-navbar .navbar-item {
+    @apply mr-2 select-none;
+}
+
+.fleetbase-console-navbar .navbar-item a {
+    @apply px-3 text-sm font-medium text-white rounded-md;
+    padding-top: 0.35rem;
+    padding-bottom: 0.35rem;
+}
+
+.fleetbase-console-navbar .navbar-item a:focus {
+    @apply text-white bg-gray-700 outline-none;
+}
+
+.fleetbase-console-navbar .navbar-item.active {
+    @apply bg-gray-700;
+}
+
+.fleetbase-console-navbar a {
+    @apply no-underline;
+}
+
+.fleetbase-console-navbar .ember-basic-dropdown-content {
+    @apply bg-white rounded-md shadow-lg;
+    min-width: 14rem;
+}
+
+.fleetbase-console-navbar .ember-basic-dropdown-content .dd-menu-links {
+    @apply shadow-xs;
+}
+
+.fleetbase-console-navbar .ember-basic-dropdown-content .nav-link {
+    @apply flex items-center px-4 py-2 text-sm text-gray-700 rounded-none;
+}
+
+.fleetbase-console-navbar .ember-basic-dropdown-content .nav-link:hover {
+    @apply bg-gray-100;
+}
+
+.fleetbase-console-navbar .ember-basic-dropdown-content .nav-link.nav-link-extension {
+    @apply py-3 px-6;
+}
+
+.fleetbase-console-navbar .ember-basic-dropdown-content .nav-link.nav-link-mobile {
+    @apply py-3 px-6;
+}
+
+.fleetbase-console-navbar .ember-basic-dropdown-content .dd-menu-links {
+    @apply py-2;
+}
+
+body[data-theme='light'] .fleetbase-console-navbar {
+    @apply bg-gray-100 border-b border-gray-300 shadow-pop-less;
+}
+
+body[data-theme='light'] .fleetbase-console-navbar .navbar-item,
+body[data-theme='light'] .fleetbase-console-navbar .navbar-item a {
+    @apply text-gray-700;
+}
+
+body[data-theme='light'] .fleetbase-console-navbar .navbar-item a:hover,
+body[data-theme='light'] .fleetbase-console-navbar .navbar-item a.dd-is-open,
+body[data-theme='light'] .fleetbase-console-navbar .navbar-item a.active {
+    @apply bg-gray-200;
+}
+
+body[data-theme='dark'] .fleetbase-console-navbar {
+    @apply bg-gray-800 border-b border-gray-900;
+}
+
+body[data-theme='dark'] .fleetbase-console-navbar .navbar-item a:hover,
+body[data-theme='dark'] .fleetbase-console-navbar .navbar-item a.dd-is-open,
+body[data-theme='dark'] .fleetbase-console-navbar .navbar-item a.active {
+    @apply bg-gray-700;
+}
+
+body[data-theme='dark'] .fleetbase-console-navbar .ember-basic-dropdown-content {
+    @apply bg-gray-800;
+}
+
+body[data-theme='dark'] .fleetbase-console-navbar .ember-basic-dropdown-content a.nav-link {
+    @apply text-sm text-gray-300;
+}
+
+body[data-theme='dark'] .fleetbase-console-navbar .ember-basic-dropdown-content a.nav-link:hover {
+    @apply text-gray-100 bg-gray-700;
+}
+
+.services-nav .ember-basic-dropdown-content {
+    @apply flex bg-gray-100 border border-gray-300;
+    width: 33rem;
+}
+
+.services-nav .ember-basic-dropdown-content .services-container {
+    @apply flex w-full p-3;
+}
+
+.services-nav .ember-basic-dropdown-content .services-container .nav-link {
+    @apply rounded;
+}
+
+.services-nav .ember-basic-dropdown-content .services-container .nav-link:hover {
+    @apply bg-gray-200;
+}
+
+.services-nav .ember-basic-dropdown-content .services-container .nav-link.active:not(:hover) {
+    @apply bg-transparent;
+}
+
+body[data-theme='dark'] .services-nav .ember-basic-dropdown-content {
+    @apply border-gray-900;
+}
+
+body.sandbox-console .fleetbase-console-navbar {
+    border-bottom: 2px #ecc94b solid;
+}
+
+body.sandbox-console .fleetbase-console-navbar::after {
+    position: absolute;
+    left: 0;
+    right: 0;
+    margin: auto;
+    padding: 0.3rem;
+    background-color: #ecc94b;
+    content: 'Viewing Sandbox Data';
+    width: 12rem;
+    font-size: 0.8rem;
+    text-align: center;
+    color: #4a5568;
+    font-weight: 700;
+    border-bottom-left-radius: 0.5rem;
+    border-bottom-right-radius: 0.5rem;
+    box-shadow:
+        0 4px 6px -1px rgba(0, 0, 0, 0.1),
+        0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    z-index: 12;
+}
+
+.dropdown-menu-panel.ember-basic-dropdown-content {
+    min-width: 14rem;
+    @apply mt-2 bg-white rounded-md shadow-lg border border-gray-200;
+}
+
+.dropdown-menu-panel.ember-basic-dropdown-content .dd-menu-links {
+    @apply shadow-xs;
+}
+
+.dropdown-menu-panel.ember-basic-dropdown-content .nav-link {
+    @apply flex items-center px-4 py-2 text-sm text-gray-700 rounded-none;
+}
+
+.dropdown-menu-panel.ember-basic-dropdown-content .nav-link:hover {
+    @apply bg-gray-100;
+}
+
+.dropdown-menu-panel.ember-basic-dropdown-content .dd-menu-links {
+    @apply py-2;
+}
+
+body[data-theme='dark'] .dropdown-menu-panel.ember-basic-dropdown-content {
+    @apply bg-gray-800 border-gray-900;
+}
+
+body[data-theme='dark'] .dropdown-menu-panel.ember-basic-dropdown-content a.nav-link {
+    @apply text-sm text-gray-300;
+}
+
+body[data-theme='dark'] .dropdown-menu-panel.ember-basic-dropdown-content a.nav-link:hover {
+    @apply text-gray-100 bg-gray-700;
+}
+
+#extensionsNav {
+    z-index: 999999;
+    transform: translateX(0);
+    transition:
+        transform 0.3s ease,
+        width 0.3s ease;
+    @apply fixed top-0 left-0 w-10/12 h-screen bg-gray-900 border-r border-gray-900 shadow-lg;
+}
+
+#extensionsNav.closed {
+    transform: translateX(-100%);
+}

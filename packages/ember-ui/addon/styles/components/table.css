@@ -1,0 +1,328 @@
+.table-wrapper {
+    @apply sm:rounded-lg inline-block min-w-full overflow-hidden align-middle border-b border-gray-200;
+}
+
+.table-wrapper.table-native table thead tr th {
+    @apply py-1;
+}
+
+.table-wrapper.table-native table tbody tr td {
+    @apply py-1;
+}
+
+.table-wrapper.table-fluid {
+    @apply border-none;
+}
+
+.table-wrapper.table-fluid table {
+    @apply border-none;
+}
+
+.table-wrapper.table-fluid table tbody {
+    @apply bg-transparent border-none;
+}
+
+.table-wrapper.table-fluid table thead tr th {
+    @apply bg-transparent border-none;
+}
+
+.table-wrapper.table-fluid .ember-light-table {
+    @apply w-full;
+}
+
+.table-wrapper table {
+    border-top-width: 1px;
+    @apply min-w-full border-gray-200;
+}
+
+.table-wrapper table tbody {
+    border-top-width: 1px;
+    @apply bg-white border-gray-200;
+}
+
+.table-wrapper table tbody tr td {
+    @apply px-4 py-2 text-sm truncate whitespace-nowrap border-b border-gray-200 select-none;
+}
+
+.table-wrapper table tbody tr td.overflow-visible {
+    overflow: visible !important;
+}
+
+.table-wrapper table tbody tr:last-child td {
+    @apply border-b-0;
+}
+
+.table-wrapper table tbody tr.is-selected {
+    @apply shadow select-none;
+}
+
+.table-wrapper table tbody tr.is-selected td {
+    @apply bg-[#A6B8A9] select-none;
+}
+
+.table-wrapper table thead tr th {
+    @apply relative px-4 py-2 text-xs font-medium leading-4 tracking-wider text-gray-500 uppercase bg-gray-50;
+}
+
+.table-wrapper table thead tr th:last-child {
+    @apply border-r-0;
+}
+
+[data-theme='light'] .table-wrapper {
+    @apply shadow-pop-least;
+}
+
+[data-theme='light'] .table-wrapper.table-fluid {
+    @apply shadow-none;
+}
+
+[data-theme='light'] .table-wrapper.table-fluid table tbody tr:nth-child(even) td {
+    /* background-color: #f1f2f4; */
+    @apply bg-gray-100;
+}
+
+[data-theme='light'] .table-wrapper.table-fluid table tbody tr:last-child td {
+    @apply border-none;
+}
+
+[data-theme='light'] .table-wrapper.table-fluid table tbody tr:hover:not(.is-expandable),
+[data-theme='light'] .table-wrapper.table-fluid table tbody tr:hover:not(.is-selected) {
+    @apply shadow;
+}
+
+[data-theme='light'] .table-wrapper.table-fluid table tbody tr:hover:not(.is-expandable) td,
+[data-theme='light'] .table-wrapper.table-fluid table tbody tr:hover:not(.is-selected) td {
+    @apply bg-white;
+}
+
+[data-theme='light'] .table-wrapper .lt-foot-wrap {
+    @apply bg-gray-100;
+}
+
+[data-theme='dark'] .table-wrapper {
+    @apply bg-transparent shadow;
+}
+
+[data-theme='dark'] .table-wrapper.table-boxed {
+    @apply bg-transparent border-none rounded-md;
+}
+
+[data-theme='dark'] .table-wrapper.table-boxed table {
+    @apply bg-transparent border border-gray-900 rounded-md shadow-md;
+}
+
+[data-theme='dark'] .table-wrapper.table-boxed tbody {
+    @apply border-none;
+}
+
+[data-theme='dark'] .table-wrapper.table-boxed tbody tr td {
+    @apply text-gray-400 bg-gray-800 border-gray-900;
+}
+
+[data-theme='dark'] .table-wrapper.table-boxed thead {
+    @apply border-none;
+}
+
+[data-theme='dark'] .table-wrapper.table-boxed thead tr th {
+    @apply text-gray-100 bg-gray-900 border-gray-900;
+}
+
+[data-theme='dark'] .table-wrapper.table-boxed thead tr th:last-child {
+    @apply border-none;
+}
+
+[data-theme='dark'] .table-wrapper.table-native table {
+    @apply border-gray-800;
+}
+
+[data-theme='dark'] .table-wrapper.table-native table thead tr th:hover {
+    @apply border-gray-900;
+}
+
+[data-theme='dark'] .table-wrapper.table-native table thead tr th:not([class*='bg-']) {
+    @apply bg-gray-800;
+}
+
+[data-theme='dark'] .table-wrapper.table-native table tbody {
+    @apply border-gray-900;
+}
+
+[data-theme='dark'] .table-wrapper.table-native table tbody tr td {
+    @apply text-gray-400 border-gray-900;
+}
+
+[data-theme='dark'] .table-wrapper.table-native table tbody tr:nth-child(even):not(.is-expandable) td,
+[data-theme='dark'] .table-wrapper.table-native table tbody tr:nth-child(even):not(.is-selected) td {
+    @apply bg-moregray-750;
+}
+
+[data-theme='dark'] .table-wrapper.table-fluid {
+    @apply shadow-none;
+}
+
+[data-theme='dark'] .table-wrapper.table-fluid table {
+    @apply border-gray-900;
+}
+
+[data-theme='dark'] .table-wrapper.table-fluid table tbody {
+    @apply border-gray-900;
+}
+
+[data-theme='dark'] .table-wrapper.table-fluid table tbody tr td {
+    @apply text-gray-400 border-gray-900;
+}
+
+[data-theme='dark'] .table-wrapper.table-fluid table tbody tr.is-selected {
+    @apply shadow-lg select-none;
+}
+
+[data-theme='dark'] .table-wrapper.table-fluid table tbody tr.is-selected td {
+    @apply text-white bg-[#496453] border-[#3F5747] opacity-75;
+}
+
+[data-theme='dark'] .table-wrapper.table-fluid table tbody tr.is-selected td a {
+    @apply text-white;
+}
+
+[data-theme='dark'] .table-wrapper.table-fluid table thead tr th:hover {
+    @apply text-white;
+}
+
+[data-theme='dark'] .table-wrapper.table-fluid table tbody tr:nth-child(even):not(.is-selected) td {
+    @apply bg-moregray-750;
+}
+
+[data-theme='dark'] .table-wrapper.table-fluid table tbody tr:hover:nth-child(even):not(.is-selected),
+[data-theme='dark'] .table-wrapper.table-fluid table tbody tr:hover:not(.is-selected) {
+    @apply shadow-lg;
+}
+
+[data-theme='dark'] .table-wrapper.table-fluid table tbody tr:hover:nth-child(even):not(.is-selected) td,
+[data-theme='dark'] .table-wrapper.table-fluid table tbody tr:hover:not(.is-selected) td {
+    @apply bg-moregray-850;
+}
+
+[data-theme='dark'] .table-wrapper.table-fluid table thead tr th {
+    @apply border-gray-700;
+}
+
+[data-theme='dark'] .table-wrapper.table-fluid .lt-foot-wrap {
+    @apply text-gray-400 bg-gray-800 border-gray-900;
+}
+
+table.sub-table tbody tr {
+    border-bottom: 0px;
+    border: 0px;
+}
+
+table.sub-table tbody tr td {
+    border-bottom: 0px;
+}
+
+table.sub-table tbody tr:hover {
+    box-shadow: none !important;
+}
+
+.table-spaced-y-1 {
+    border-collapse: separate;
+    border-spacing: 0 0.25rem;
+}
+
+.table-spaced-y-2 {
+    border-collapse: separate;
+    border-spacing: 0 0.5rem;
+}
+
+.table-spaced-y-3 {
+    border-collapse: separate;
+    border-spacing: 0 0.75rem;
+}
+
+.table-spaced-y-4 {
+    border-collapse: separate;
+    border-spacing: 0 1rem;
+}
+
+.table-cells-valign-top td,
+.table-cells-valign-top th {
+    vertical-align: top;
+}
+
+.next-table-wrapper table .resizer,
+table .resizer {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 5px;
+    cursor: col-resize;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    user-select: none;
+}
+
+.next-table-wrapper table .resizer.resizer:hover,
+table .resizer.resizer:hover,
+.next-table-wrapper table .resizer.resizing,
+table .resizer.resizing {
+    @apply border-r-4 border-solid border-[#496453] border-opacity-60 opacity-75;
+}
+
+body[data-theme='dark'] .table-wrapper.table-fluid > .next-table-wrapper > table > tbody > tr.expandable-row.is-expanded > td,
+body[data-theme='dark'] .table-wrapper.table-fluid > .next-table-wrapper > table > tbody > tr.expandable-row:hover > td,
+.next-table-wrapper table > tbody > tr.expandable-row.is-expanded > td,
+.next-table-wrapper table > tbody > tr.expandable-row:hover > td,
+table > tbody > tr.expandable-row.is-expanded > td,
+table > tbody > tr.expandable-row:hover > td {
+    @apply bg-[#496453] text-white border-y border-[#3F5747] opacity-75;
+}
+
+body[data-theme='dark'] .next-table-wrapper > table.is-expandable > tbody > tr.expandable-row:nth-child(even) > td {
+    @apply bg-gray-800;
+}
+
+.next-table-wrapper > table.is-expandable > tbody > tr.expandable-row:nth-child(even) > td {
+    @apply bg-gray-200;
+}
+
+table > tbody > tr.expandable-row + tr.expanded-row {
+    display: none;
+}
+
+table > tbody > tr.expandable-row.is-expanded + tr.expanded-row {
+    display: table-row;
+}
+
+body[data-theme='dark'] .table-wrapper.table-fluid > .next-table-wrapper > table.is-expandable > tbody > tr.expandable-row > td a.next-dd-item,
+.table-wrapper.table-fluid > .next-table-wrapper > table.is-expandable > tbody > tr.expandable-row > td a.next-dd-item,
+.next-table-wrapper table.is-expandable > tbody > tr.expandable-row.is-expanded > td a.next-dd-item {
+    @apply text-white;
+}
+
+body[data-theme='light'] .next-table-wrapper.auto-height,
+body[data-theme='dark'] .next-table-wrapper.auto-height,
+.next-table-wrapper.auto-height {
+    height: auto;
+}
+
+body[data-theme='light'] .next-table-wrapper.auto-height > table,
+body[data-theme='dark'] .next-table-wrapper.auto-height > table,
+.next-table-wrapper.auto-height > table {
+    height: auto;
+}
+body[data-theme='light'] .next-table-wrapper.auto-height > table > tbody:after,
+body[data-theme='dark'] .next-table-wrapper.auto-height > table > tbody:after,
+.next-table-wrapper.auto-height > table > tbody:after {
+    height: 0;
+}
+
+body[data-theme='light'] .next-table-wrapper.rounded-b > table > tbody > tr:last-child > td:first-child,
+body[data-theme='dark'] .next-table-wrapper.rounded-b > table > tbody > tr:last-child > td:first-child,
+.next-table-wrapper.auto-height > table > tbody > tr:last-child > td:first-child {
+    border-bottom-left-radius: 0.25rem;
+}
+
+body[data-theme='light'] .next-table-wrapper.rounded-b > table > tbody > tr:last-child > td:last-child,
+body[data-theme='dark'] .next-table-wrapper.rounded-b > table > tbody > tr:last-child > td:last-child,
+.next-table-wrapper.auto-height > table > tbody > tr:last-child > td:last-child {
+    border-bottom-right-radius: 0.25rem;
+}

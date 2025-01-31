@@ -1,0 +1,150 @@
+<MapContainer::Topbar class="next-topbar-{{this.layout}}">
+    <MapContainer::ViewSwitch>
+        {{!-- <FaIcon @icon="layer-group" class="mr-2 text-gray-400 dark:text-gray-600" /> --}}
+        <button type="button" id="ops-map-view-button" class="{{if this.isMapLayout 'active'}}" {{on "click" (fn this.setLayoutMode "map")}}>{{t
+                "fleet-ops.operations.orders.index.map"
+            }}</button>
+        <button type="button" id="ops-table-view-button" class="{{if this.isTableLayout 'active'}} flex flex-row items-center relative" {{on "click" (fn this.setLayoutMode "table")}}>
+            <div class="mr-1.5">{{t "fleet-ops.operations.orders.index.table"}}</div>
+            <Badge
+                class="flex items-center justify-center -mr-4"
+                @spanClass="items-center justify-center h-5 w-7"
+                @hideStatusDot={{true}}
+                @status="info"
+            >{{@model.meta.total}}</Badge>
+        </button>
+        {{!-- <button type="button" id="ops-kanban-view-button" class="{{if this.isKanbanView 'active'}}" {{on "click" (fn this.setLayoutMode "kanban")}}>Board</button> --}}
+    </MapContainer::ViewSwitch>
+</MapContainer::Topbar>
+
+{{#if this.isMapLayout}}
+    <MapContainer @layout={{this.layout}} @onReady={{this.onMapContainerReady}}>
+        <GlobalSearch @visible={{this.isSearchVisible}} @onPressOrder={{this.viewOrder}} />
+        <MapContainer::Toolbar
+            @activeOrdersCount={{this.activeOrdersCount}}
+            @liveMap={{this.liveMap}}
+            @map={{this.leafletMap}}
+            @onPressViewOrders={{this.toggleOrdersPanel}}
+            @onPressSearch={{this.toggleSearch}}
+            @onPressCreateOrder={{this.createOrder}}
+            @onPressLiveMapDrawerToggle={{this.onPressLiveMapDrawerToggle}}
+        />
+        <OrderListOverlay
+            @isOpen={{false}}
+            @noBackdrop={{true}}
+            @fullHeight={{true}}
+            @width={{if (media "isMobile") "100%" "338px"}}
+            @onLoad={{this.setOrderListOverlayContext}}
+            @onPressCancel={{this.hideOrdersPanel}}
+            @onPressCreateOrder={{this.createOrder}}
+            @onPressViewOrder={{this.viewOrder}}
+            @onPressCreateFleet={{this.fleetController.createFleet}}
+            @onPressManageFleet={{this.fleetController.viewFleet}}
+            @onPressCancelOrders={{this.bulkCancelOrders}}
+            @onPressDeleteOrders={{this.bulkDeleteOrders}}
+            @onMouseEnterOrder={{this.previewOrderRoute}}
+            @onMouseLeaveOrder={{this.restoreDefaultLiveMap}}
+        />
+        <LiveMap
+            id="leafletMap"
+            class="next-leaflet-container-map"
+            @lat={{1.3521}}
+            @lng={{103.8198}}
+            @zoom={{12}}
+            @zoomControl={{false}}
+            @onLoad={{this.setMapReference}}
+            @onDrawerReady={{this.setDrawerContext}}
+            @isDrawerMinimized={{not this.drawerOpen}}
+            @onDrawerResizeEnd={{this.onDrawerResizeEnd}}
+            @onDrawerTabChanged={{this.onDrawerTabChanged}}
+            @drawerTab={{this.drawerTab}}
+            {{set-container-dimensions}}
+        />
+    </MapContainer>
+{{/if}}
+
+{{#if this.isTableLayout}}
+    <Layout::Section::Header @title={{t "fleet-ops.common.orders"}} @onSearch={{perform this.search}}>
+        <Button @icon="refresh" @onClick={{this.reload}} @helpText={{t "fleet-ops.common.reload-data"}} class="mr-2" />
+        <FiltersPicker
+            @columns={{this.columns}}
+            @onApply={{fn this.filters.apply this}}
+            @onClear={{fn this.filters.reset this}}
+            @onFilterClear={{this.filters.clear}}
+            @onChange={{this.filters.set}}
+            @buttonWrapperClass="mr-2"
+        />
+        <VisibleColumnPicker @columns={{this.columns}} @onChange={{fn (mut this.columns)}} class="mr-2" />
+        {{#if (safe-has this.table "selectedRows")}}
+            <DropdownButton @icon="layer-group" @type="magic" @text={{t "fleet-ops.common.bulk-action"}} @size="sm" @buttonWrapperClass="mr-2" as |dd|>
+                <div class="next-dd-menu mt-2 mx-0">
+                    <div class="px-1">
+                        <a href="javascript:;" class="next-dd-item" {{on "click" (dropdown-fn dd this.bulkCancelOrders)}} disabled={{cannot "fleet-ops cancel order"}}>
+                            <div class="w-6"><FaIcon @icon="ban" @size="sm" /></div>
+                            <div>{{t "fleet-ops.operations.orders.index.cancel-orders"}}</div>
+                        </a>
+                    </div>
+                    <div class="px-1">
+                        <a href="javascript:;" class="text-red-500 next-dd-item" {{on "click" (dropdown-fn dd this.bulkDeleteOrders)}} disabled={{cannot "fleet-ops delete order"}}>
+                            <div class="w-6"><FaIcon @icon="trash" @size="sm" /></div>
+                            <div>{{t "fleet-ops.operations.orders.index.delete-orders"}}</div>
+                        </a>
+                    </div>
+                    <div class="next-dd-menu-seperator"></div>
+                    <div class="px-1">
+                        <a href="javascript:;" class="next-dd-item" {{on "click" (dropdown-fn dd this.bulkDispatchOrders)}} disabled={{cannot "fleet-ops dispatch order"}}>
+                            <div class="w-6"><FaIcon @icon="rocket" @size="sm" /></div>
+                            <div>{{t "fleet-ops.operations.orders.index.dispatch-orders"}}</div>
+                        </a>
+                    </div>
+                </div>
+            </DropdownButton>
+        {{/if}}
+        <Button
+            @type="primary"
+            @icon="plus"
+            @iconPrefix="fas"
+            @text={{t "fleet-ops.common.new"}}
+            @wrapperClass="mr-2"
+            @onClick={{fn (transition-to "operations.orders.index.new")}}
+            @permission="fleet-ops create order"
+        />
+        <Button @icon="long-arrow-up" @iconClass="rotate-icon-45" @text={{t "fleet-ops.common.export"}} @onClick={{this.exportOrders}} @permission="fleet-ops export order" />
+    </Layout::Section::Header>
+    <Layout::Section::Body>
+        <Table
+            @rows={{@model}}
+            @columns={{this.columns}}
+            @selectable={{true}}
+            @canSelectAll={{true}}
+            @onSetup={{fn (mut this.table)}}
+            @pagination={{true}}
+            @paginationMeta={{@model.meta}}
+            @page={{this.page}}
+            @onPageChange={{fn (mut this.page)}}
+            @tfootVerticalOffset="7"
+            @tfootVerticalOffsetElements="#next-view-section-subheader,.next-table-wrapper > table > thead,.next-map-container-topbar"
+        />
+    </Layout::Section::Body>
+{{/if}}
+
+{{#if this.isKanbanView}}
+    <Layout::Section::Header @title={{t "fleet-ops.common.orders"}} @onSearch={{perform this.search}}>
+        <Button @icon="cogs" @text={{t "fleet-ops.common.config"}} class="mr-2" @onClick={{fn (transition-to "operations.orders.index.config")}} />
+        <FiltersPicker
+            @columns={{this.columns}}
+            @onApply={{fn this.filters.apply this}}
+            @onClear={{fn this.filters.reset this}}
+            @onFilterClear={{this.filters.clear}}
+            @onChange={{this.filters.set}}
+            @buttonWrapperClass="mr-2"
+        />
+        <Button @type="primary" @icon="plus" @iconPrefix="fas" @text={{t "fleet-ops.common.new"}} @wrapperClass="mr-2" @onClick={{fn (transition-to "operations.orders.index.new")}} />
+        <Button @icon="long-arrow-up" @iconClass="rotate-icon-45" @text={{t "fleet-ops.common.export"}} @onClick={{this.exportOrders}} />
+    </Layout::Section::Header>
+    <Layout::Section::Body>
+        <OrderBoard @type={{this.type}} />
+    </Layout::Section::Body>
+{{/if}}
+
+{{outlet}}

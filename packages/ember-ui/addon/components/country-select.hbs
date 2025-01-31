@@ -1,0 +1,21 @@
+<div class="fleetbase-power-select {{@wrapperClass}}">
+    <PowerSelect
+        @renderInPlace={{true}}
+        @searchEnabled={{true}}
+        @selected={{this.selected}}
+        @searchField="name"
+        @options={{this.countries}}
+        @onChange={{this.selectCountry}}
+        @triggerClass="form-select form-input {{@triggerClass}}"
+        @dropdownClass={{or @dropdownClass "ember-model-select__dropdown"}}
+        @placeholder={{or @placeholder "Select country..."}}
+        @disabled={{or this.disabled this.fetchCountries.isRunning}}
+        @allowClear={{@allowClear}}
+        ...attributes
+        as |country|
+    >
+        <span class="mr-1">{{country.emoji}}</span>
+        <span>{{country.name}}</span>
+    </PowerSelect>
+    <Input @type="hidden" class="hidden" @value={{@value}} aria-label="Country Value" data-county={{@value}} {{did-insert this.listenForInputChanges}} />
+</div>

@@ -1,0 +1,535 @@
+.btn,
+a.btn,
+.fc-button,
+.ui-full-calendar .fc-button {
+    @apply inline-flex items-center px-3 py-2 text-sm font-medium leading-4 transition duration-150 ease-in-out border border-transparent;
+}
+
+.btn.btn-is-loading,
+a.btn.btn-is-loading,
+.fc-button.btn-is-loading,
+.ui-full-calendar .fc-button.btn-is-loading,
+.btn.btn-is-loading:disabled,
+a.btn.btn-is-loading:disabled,
+.fc-button.btn-is-loading:disabled,
+.ui-full-calendar .fc-button.btn-is-loading:disabled {
+    @apply cursor-wait;
+}
+
+.btn.btn-xs,
+a.btn.btn-xs,
+.fc-button.btn-xs,
+.ui-full-calendar .fc-button.btn-xs {
+    @apply text-sm leading-4 font-medium;
+    /* padding-left: 20px; */
+}
+
+.btn.btn-sm,
+a.btn.btn-sm,
+.fc-button.btn-sm,
+.ui-full-calendar .fc-button.btn-sm {
+    @apply px-3 py-2 text-sm font-medium leading-4;
+}
+
+.btn.btn-md,
+a.btn.btn-md,
+.fc-button.btn-md,
+.ui-full-calendar .fc-button.btn-md {
+    @apply px-4 py-2 text-sm font-medium leading-5;
+}
+
+.btn.btn-lg,
+a.btn.btn-lg,
+.fc-button.btn-lg,
+.ui-full-calendar .fc-button.btn-lg {
+    @apply px-4 py-2 text-base font-medium leading-6;
+}
+
+.btn.btn-xl,
+a.btn.btn-xl,
+.fc-button.btn-xl,
+.ui-full-calendar .fc-button.btn-xl {
+    @apply px-6 py-3 text-base font-medium leading-6;
+}
+
+.btn.btn-link,
+a.btn.btn-link,
+.fc-button.btn-link,
+.ui-full-calendar .fc-button.btn-link {
+    @apply border-0 outline-0 shadow-none px-0 py-0;
+}
+
+.btn.btn-default,
+a.btn.btn-default,
+.fc-button.btn-default,
+.ui-full-calendar .fc-button.btn-default {
+    @apply bg-white border-gray-300 shadow-sm;
+}
+
+.btn.btn-default:hover,
+a.btn.btn-default:hover,
+.fc-button.btn-default:hover,
+.ui-full-calendar .fc-button.btn-default:hover {
+    @apply text-gray-500;
+}
+
+.btn.btn-default:focus,
+a.btn.btn-default:focus,
+.fc-button.btn-default:focus,
+.ui-full-calendar .fc-button.btn-default:focus {
+    @apply border-gray-300 outline-0;
+}
+
+.btn.btn-default:active,
+a.btn.btn-default:active,
+.fc-button.btn-default:active,
+.ui-full-calendar .fc-button.btn-default:active {
+    @apply text-gray-800 bg-gray-50;
+}
+
+.btn.fb-button-primary,
+a.btn.fb-button-primary,
+.fc-button.fb-button-primary,
+.ui-full-calendar .fc-button.fb-button-primary,
+.btn.btn-primary,
+a.btn.btn-primary,
+.fc-button.btn-primary,
+.ui-full-calendar .fc-button.btn-primary {
+    @apply text-white bg-[#496453] border-[#496453] shadow opacity-75;
+}
+
+.btn.fb-button-primary:hover:not(:disabled),
+a.btn.fb-button-primary:hover:not(:disabled),
+.fc-button.fb-button-primary:hover:not(:disabled),
+.ui-full-calendar .fc-button.fb-button-primary:hover:not(:disabled),
+.btn.btn-primary:hover:not(:disabled),
+a.btn.btn-primary:hover:not(:disabled),
+.fc-button.btn-primary:hover:not(:disabled),
+.ui-full-calendar .fc-button.btn-primary:hover:not(:disabled) {
+    @apply bg-[#5B7765] !important;
+}
+
+.btn.fb-button-primary:focus,
+a.btn.fb-button-primary:focus,
+.fc-button.fb-button-primary:focus,
+.ui-full-calendar .fc-button.fb-button-primary:focus,
+.btn.btn-primary:focus,
+a.btn.btn-primary:focus,
+.fc-button.btn-primary:focus,
+.ui-full-calendar .fc-button.btn-primary:focus {
+    @apply outline-0 border-[#3F5747];
+}
+
+.btn.fb-button-primary:active,
+a.btn.fb-button-primary:active,
+.fc-button.fb-button-primary:active,
+.ui-full-calendar .fc-button.fb-button-primary:active,
+.btn.btn-primary:active,
+a.btn.btn-primary:active,
+.fc-button.btn-primary:active,
+.ui-full-calendar .fc-button.btn-primary:active {
+    @apply bg-[#375747] !important;
+}
+
+.btn.fb-button-success,
+a.btn.fb-button-success,
+.fc-button.fb-button-success,
+.ui-full-calendar .fc-button.fb-button-success,
+.btn.btn-success,
+a.btn.btn-success,
+.fc-button.btn-success,
+.ui-full-calendar .fc-button.btn-success {
+    @apply text-white bg-green-700 border-green-600 shadow-sm;
+}
+
+.btn.fb-button-success:hover:not(:disabled),
+a.btn.fb-button-success:hover:not(:disabled),
+.fc-button.fb-button-success:hover:not(:disabled),
+.ui-full-calendar .fc-button.fb-button-success:hover:not(:disabled),
+.btn.btn-success:hover:not(:disabled),
+a.btn.btn-success:hover:not(:disabled),
+.fc-button.btn-success:hover:not(:disabled),
+.ui-full-calendar .fc-button.btn-success:hover:not(:disabled) {
+    @apply bg-green-400;
+}
+
+.btn.fb-button-success:focus,
+a.btn.fb-button-success:focus,
+.fc-button.fb-button-success:focus,
+.ui-full-calendar .fc-button.fb-button-success:focus,
+.btn.btn-success:focus,
+a.btn.btn-success:focus,
+.fc-button.btn-success:focus,
+.ui-full-calendar .fc-button.btn-success:focus {
+    @apply outline-0 border-green-600;
+}
+
+.btn.fb-button-success:active,
+a.btn.fb-button-success:active,
+.fc-button.fb-button-success:active,
+.ui-full-calendar .fc-button.fb-button-success:active,
+.btn.btn-success:active,
+a.btn.btn-success:active,
+.fc-button.btn-success:active,
+.ui-full-calendar .fc-button.btn-success:active {
+    @apply bg-green-600;
+}
+
+.btn.btn-magic,
+a.btn.btn-magic,
+.fc-button.btn-magic,
+.ui-full-calendar .fc-button.btn-magic {
+    @apply text-white bg-[#496453] border-[#496453] shadow-sm opacity-75;
+}
+
+.btn.btn-magic:hover:not(:disabled),
+a.btn.btn-magic:hover:not(:disabled),
+.fc-button.btn-magic:hover:not(:disabled),
+.ui-full-calendar .fc-button.btn-magic:hover:not(:disabled) {
+    @apply bg-[#5B7765] opacity-75;
+}
+
+.btn.btn-magic:focus,
+a.btn.btn-magic:focus,
+.fc-button.btn-magic:focus,
+.ui-full-calendar .fc-button.btn-magic:focus {
+    @apply outline-0 border-[#496453] opacity-75;
+}
+
+.btn.btn-magic:active,
+a.btn.btn-magic:active,
+.fc-button.btn-magic:active,
+.ui-full-calendar .fc-button.btn-magic:active {
+    @apply bg-[#3F5747] opacity-75;
+}
+
+.btn.btn-black,
+a.btn.btn-black,
+.fc-button.btn-black,
+.ui-full-calendar .fc-button.btn-black {
+    @apply text-white bg-black border-gray-900 shadow-sm;
+}
+
+.btn.btn-black:hover:not(:disabled),
+a.btn.btn-black:hover:not(:disabled),
+.fc-button.btn-black:hover:not(:disabled),
+.ui-full-calendar .fc-button.btn-black:hover:not(:disabled) {
+    @apply bg-black bg-opacity-75 text-white;
+}
+
+.btn.btn-black:focus,
+a.btn.btn-black:focus,
+.fc-button.btn-black:focus,
+.ui-full-calendar .fc-button.btn-black:focus {
+    @apply outline-0 border-gray-800;
+}
+
+.btn.btn-black:active,
+a.btn.btn-black:active,
+.fc-button.btn-black:active,
+.ui-full-calendar .fc-button.btn-black:active {
+    @apply bg-[#496453] opacity-75;
+}
+
+.btn.btn-secondary,
+a.btn.btn-secondary,
+.fc-button.btn-secondary,
+.ui-full-calendar .fc-button.btn-secondary {
+    @apply bg-[#496453] opacity-75;
+}
+
+.btn.btn-secondary:hover:not(:disabled),
+a.btn.btn-secondary:hover:not(:disabled),
+.fc-button.btn-secondary:hover:not(:disabled),
+.ui-full-calendar .fc-button.btn-secondary:hover:not(:disabled) {
+    @apply bg-[#496453] opacity-75;
+}
+
+.btn.btn-secondary:focus,
+a.btn.btn-secondary:focus,
+.fc-button.btn-secondary:focus,
+.ui-full-calendar .fc-button.btn-secondary:focus {
+    @apply bg-[#496453] opacity-75;
+}
+
+.btn.btn-secondary:active,
+a.btn.btn-secondary:active,
+.fc-button.btn-secondary:active,
+.ui-full-calendar .fc-button.btn-secondary:active {
+    @apply bg-[#496453] opacity-75;
+}
+
+.btn.btn-danger,
+a.btn.btn-danger,
+.fc-button.btn-danger,
+.ui-full-calendar .fc-button.btn-danger {
+    @apply text-white bg-red-600 border-red-700 shadow-sm;
+}
+
+.btn.btn-danger:hover:not(:disabled),
+a.btn.btn-danger:hover:not(:disabled),
+.fc-button.btn-danger:hover:not(:disabled),
+.ui-full-calendar .fc-button.btn-danger:hover:not(:disabled) {
+    @apply bg-red-500;
+}
+
+.btn.btn-danger:focus,
+a.btn.btn-danger:focus,
+.fc-button.btn-danger:focus,
+.ui-full-calendar .fc-button.btn-danger:focus {
+    @apply border-red-700 outline-0;
+}
+
+.btn.btn-danger:active,
+a.btn.btn-danger:active,
+.fc-button.btn-danger:active,
+.ui-full-calendar .fc-button.btn-danger:active {
+    @apply bg-red-700;
+}
+
+.btn.btn-warning,
+a.btn.btn-warning,
+.fc-button.btn-warning,
+.ui-full-calendar .fc-button.btn-warning {
+    @apply text-white bg-yellow-500 border-yellow-600 shadow-sm;
+}
+
+.btn.btn-warning:hover:not(:disabled),
+a.btn.btn-warning:hover:not(:disabled),
+.fc-button.btn-warning:hover:not(:disabled),
+.ui-full-calendar .fc-button.btn-warning:hover:not(:disabled) {
+    @apply bg-yellow-400;
+}
+
+.btn.btn-warning:focus,
+a.btn.btn-warning:focus,
+.fc-button.btn-warning:focus,
+.ui-full-calendar .fc-button.btn-warning:focus {
+    @apply border-yellow-600 outline-0;
+}
+
+.btn.btn-warning:active,
+a.btn.btn-warning:active,
+.fc-button.btn-warning:active,
+.ui-full-calendar .fc-button.btn-warning:active {
+    @apply bg-yellow-600;
+}
+
+.btn.btn-is-loading .btn-loading-icon-wrapper > svg,
+a.btn.btn-is-loading .btn-loading-icon-wrapper > svg,
+.fc-button.btn-is-loading .btn-loading-icon-wrapper > svg,
+.ui-full-calendar .fc-button.btn-is-loading .btn-loading-icon-wrapper > svg {
+    animation: fa-spin 1s infinite linear;
+}
+
+.btn.btn-transparent-border,
+a.btn.btn-transparent-border,
+.fc-button.btn-transparent-border,
+.ui-full-calendar .fc-button.btn-transparent-border {
+    border-color: transparent !important;
+}
+
+.btn:disabled,
+a.btn:disabled,
+.fc-button:disabled,
+.ui-full-calendar .fc-button:disabled {
+    @apply opacity-50 cursor-not-allowed;
+}
+
+.btn-wrapper {
+    display: flex;
+}
+
+.btn-wrapper.btn-block {
+    @apply block w-full;
+}
+
+.btn-wrapper.btn-block > .btn {
+    @apply relative justify-center w-full text-center;
+}
+
+.btn-wrapper.btn-block > .btn .btn-icon-wrapper {
+    @apply absolute inset-y-0 left-0 flex items-center pl-3;
+}
+
+.btn-wrapper.btn-flex {
+    @apply flex;
+}
+
+.order-action-button {
+    @apply h-16 flex flex-col items-center justify-center border border-gray-200 bg-white text-gray-800 shadow-sm truncate;
+}
+
+.order-action-button.strict-width {
+    @apply w-16;
+}
+
+.order-action-button span {
+    @apply truncate;
+}
+
+.order-action-button.success {
+    @apply bg-green-600 border-green-500 text-green-900;
+}
+
+.order-action-button.danger {
+    @apply bg-red-600 border-red-500 text-red-900;
+}
+
+.order-action-button.warning {
+    @apply bg-yellow-600 border-yellow-500 text-yellow-900;
+}
+
+button.integrated-vendor-button,
+.integrated-vendor-button {
+    @apply flex flex-col items-center justify-center border border-gray-200 p-4 outline-0;
+}
+
+button.integrated-vendor-button.selected,
+.integrated-vendor-button.selected {
+    @apply border-[#496453] opacity-75
+}
+
+button.integrated-vendor-button:focus,
+.integrated-vendor-button:focus,
+button.integrated-vendor-button:active,
+.integrated-vendor-button:active,
+button.integrated-vendor-button:visited,
+.integrated-vendor-button:visited {
+    @apply border-gray-200 outline-0;
+}
+
+body[data-theme='dark'] .ui-full-calendar .fc-button.btn-default,
+body[data-theme='dark'] .fc-button.btn-default,
+body[data-theme='dark'] .btn.btn-default {
+    @apply text-gray-300 bg-gray-700 border-gray-900 shadow;
+}
+
+body[data-theme='dark'] .ui-full-calendar .fc-button.btn-default:hover:not(:disabled),
+body[data-theme='dark'] .fc-button.btn-default:hover:not(:disabled),
+body[data-theme='dark'] .btn.btn-default:hover:not(:disabled) {
+    @apply text-gray-200 bg-gray-600;
+}
+
+body[data-theme='dark'] .ui-full-calendar .fc-button.btn-default:focus,
+body[data-theme='dark'] .fc-button.btn-default:focus,
+body[data-theme='dark'] .btn.btn-default:focus {
+    @apply outline-0;
+}
+
+body[data-theme='dark'] .ui-full-calendar .fc-button.btn-default:active,
+body[data-theme='dark'] .fc-button.btn-default:active,
+body[data-theme='dark'] .btn.btn-default:active {
+    @apply text-gray-300 bg-gray-600;
+}
+
+body[data-theme='dark'] .ui-full-calendar .fc-button.btn-link,
+body[data-theme='dark'] .fc-button.btn-link,
+body[data-theme='dark'] .btn.btn-link {
+    @apply text-gray-100;
+}
+
+body[data-theme='dark'] .ui-full-calendar .fc-button.btn-link.dd-is-open,
+body[data-theme='dark'] .fc-button.btn-link.dd-is-open,
+body[data-theme='dark'] .btn.btn-link.dd-is-open,
+body[data-theme='dark'] .ui-full-calendar .fc-button.btn-link:hover,
+body[data-theme='dark'] .fc-button.btn-link:hover,
+body[data-theme='dark'] .btn.btn-link:hover,
+body[data-theme='dark'] .ui-full-calendar .fc-button.btn-link:active,
+body[data-theme='dark'] .fc-button.btn-link:active,
+body[data-theme='dark'] .btn.btn-link:active {
+    @apply text-gray-50 text-opacity-50;
+}
+
+body[data-theme='dark'] .ui-full-calendar .fc-button.btn-primary,
+body[data-theme='dark'] .fc-button.btn-primary,
+body[data-theme='dark'] .btn.btn-primary {
+    @apply border-gray-900 shadow;
+}
+
+body[data-theme='dark'] .ui-full-calendar .fc-button.btn-magic,
+body[data-theme='dark'] .fc-button.btn-magic,
+body[data-theme='dark'] .btn.btn-magic {
+    @apply border-gray-900 shadow;
+}
+
+body[data-theme='dark'] .ui-full-calendar .fc-button.btn-secondary,
+body[data-theme='dark'] .fc-button.btn-secondary,
+body[data-theme='dark'] .btn.btn-secondary {
+    @apply border-gray-900 shadow;
+}
+
+body[data-theme='dark'] .ui-full-calendar .fc-button.btn-warning,
+body[data-theme='dark'] .fc-button.btn-warning,
+body[data-theme='dark'] .btn.btn-warning {
+    @apply border-gray-900 shadow;
+}
+
+body[data-theme='dark'] .ui-full-calendar .fc-button.btn-danger,
+body[data-theme='dark'] .fc-button.btn-danger,
+body[data-theme='dark'] .btn.btn-danger {
+    @apply border-gray-900 shadow bg-red-700;
+}
+
+body[data-theme='dark'] .ui-full-calendar .fc-button.btn-danger:hover:not(:disabled),
+body[data-theme='dark'] .fc-button.btn-danger:hover:not(:disabled),
+body[data-theme='dark'] .btn.btn-danger:hover:not(:disabled) {
+    @apply bg-red-600;
+}
+
+body[data-theme='dark'] .order-action-button {
+    @apply border-gray-700 bg-gray-800 text-gray-100;
+}
+
+body[data-theme='dark'] button.integrated-vendor-button,
+body[data-theme='dark'] .integrated-vendor-button {
+    @apply border-gray-700;
+}
+
+body[data-theme='dark'] button.integrated-vendor-button.selected,
+body[data-theme='dark'] .integrated-vendor-button.selected {
+    @apply border-[#496453] outline-offset-2 outline-[#496453];
+}
+
+body[data-theme='dark'] button.integrated-vendor-button:focus,
+body[data-theme='dark'] .integrated-vendor-button:focus,
+body[data-theme='dark'] button.integrated-vendor-button:active,
+body[data-theme='dark'] .integrated-vendor-button:active,
+body[data-theme='dark'] button.integrated-vendor-button:visited,
+body[data-theme='dark'] .integrated-vendor-button:visited {
+    @apply border-gray-700;
+}
+
+a.btn.hidden,
+.btn.hidden {
+    display: none;
+}
+
+button.btn > .btn-loading-icon-wrapper,
+button.btn.btn-is-loading > .btn-loading-icon-wrapper {
+    line-height: 0;
+}
+
+button.btn > .btn-loading-icon-wrapper > .fleetbase-loader-wrapper,
+button.btn.btn-is-loading > .btn-loading-icon-wrapper > .fleetbase-loader-wrapper {
+    line-height: 0 !important;
+}
+
+button.btn > .btn-loading-icon-wrapper > .fleetbase-loader-wrapper,
+button.btn.btn-is-loading > .btn-loading-icon-wrapper > .fleetbase-loader-wrapper {
+    margin-right: 0.5rem;
+}
+
+button.btn > .btn-loading-icon-wrapper > .fleetbase-loader-wrapper > span.fleetbase-loader,
+button.btn.btn-is-loading > .btn-loading-icon-wrapper > .fleetbase-loader-wrapper > span.fleetbase-loader {
+    width: 14px;
+    height: 14px;
+}
+
+.btn.btn-reset {
+    border: 0 !important;
+    box-shadow: none !important;
+    background-color: transparent !important;
+    padding: 0 !important;
+    margin: 0 !important;
+}

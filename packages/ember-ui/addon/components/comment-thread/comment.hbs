@@ -1,0 +1,110 @@
+<div class="thread-comment flex flex-row p-1 space-x-3" ...attributes>
+    <div class="thread-comment-avatar-wrapper w-18 flex flex-col items-center">
+        <Image src={{this.comment.author.avatar_url}} @fallbackSrc={{config "defaultValues.userImage"}} alt={{this.comment.author.name}} class="w-8 h-8 rounded-full" />
+    </div>
+    <div class="thread-comment-content-wrapper flex-1">
+        <div class="thread-comment-author flex flex-row items-center">
+            <div class="thread-comment-author-name text-sm dark:text-white text-black font-bold mr-1.5">{{this.comment.author.name}}</div>
+            <div class="thread-comment-created-at dark:text-gray-300 text-gray-600 text-xs">{{t "component.comment-thread.comment-published-ago" createdAgo=this.comment.createdAgo}}</div>
+        </div>
+        <div class="thread-comment-conent-paragraph-wrapper mt-2">
+            {{#if this.editing}}
+                <Textarea
+                    @value={{this.comment.content}}
+                    class="form-input w-full"
+                    placeholder={{t "component.comment-thread.comment-reply-placeholder"}}
+                    rows={{2}}
+                    disabled={{not this.updateComment.isIdle}}
+                />
+                <div class="flex flex-row items-center justify-end space-x-2 mt-2">
+                    <Button @type="link" @buttonType="button" @size="xs" @text={{t "common.cancel"}} @onClick={{this.cancelEdit}} @disabled={{not this.updateComment.isIdle}} />
+                    <Button
+                        @type="primary"
+                        @buttonType="button"
+                        @icon="save"
+                        @size="xs"
+                        @iconSize="xs"
+                        @iconClass="text-xs"
+                        @text={{t "common.save"}}
+                        @onClick={{perform this.updateComment}}
+                        @disabled={{or (not this.updateComment.isIdle) (not this.comment.content)}}
+                    />
+                </div>
+            {{else}}
+                <p class="thread-comment-conent-paragraph text-xs text-gray-900 dark:text-gray-100">{{this.comment.content}}</p>
+            {{/if}}
+        </div>
+        <div class="thread-comment-conent-actions-wrapper flex flex-row items-center mt-2 space-x-4">
+            <Button
+                @wrapperClass="thread-comment-conent-actions-reply"
+                @type="link"
+                @buttonType="button"
+                @size="xs"
+                @iconSize="xs"
+                @textClass="text-xs"
+                @icon="reply"
+                @text={{t "component.comment-thread.reply-comment-button-text"}}
+                @onClick={{this.reply}}
+            />
+            {{#if this.comment.editable}}
+                <Button
+                    @wrapperClass="thread-comment-conent-actions-edit"
+                    @type="link"
+                    @buttonType="button"
+                    @size="xs"
+                    @iconSize="xs"
+                    @textClass="text-xs"
+                    @icon="edit"
+                    @text={{t "component.comment-thread.edit-comment-button-text"}}
+                    @onClick={{this.edit}}
+                />
+                <Button
+                    @wrapperClass="thread-comment-conent-actions-delete"
+                    @type="link"
+                    @buttonType="button"
+                    @size="xs"
+                    @iconSize="xs"
+                    @iconClass="text-xs text-danger"
+                    @textClass="text-xs text-danger"
+                    @icon="trash"
+                    @text={{t "component.comment-thread.delete-comment-button-text"}}
+                    @onClick={{this.delete}}
+                />
+            {{/if}}
+        </div>
+        {{#if this.replying}}
+            <div class="flex flex-col mt-3">
+                <Textarea
+                    @value={{this.input}}
+                    class="form-input w-full"
+                    placeholder={{t "component.comment-thread.comment-reply-placeholder"}}
+                    rows={{2}}
+                    disabled={{not this.publishReply.isIdle}}
+                />
+                <div class="flex flex-row items-center justify-end space-x-2 mt-2">
+                    <Button @type="link" @buttonType="button" @size="xs" @text={{t "common.cancel"}} @onClick={{this.cancelReply}} @disabled={{not this.publishReply.isIdle}} />
+                    <Button
+                        @type="primary"
+                        @buttonType="button"
+                        @icon="reply"
+                        @size="xs"
+                        @iconSize="xs"
+                        @iconClass="text-xs"
+                        @text={{t "component.comment-thread.publish-reply-button-text"}}
+                        @onClick={{perform this.publishReply}}
+                        @disabled={{or (not this.publishReply.isIdle) (not this.input)}}
+                    />
+                </div>
+            </div>
+        {{/if}}
+        <div class="thread-comment-replies mt-3">
+            {{#each this.comment.replies as |reply|}}
+                {{#if (has-block)}}
+                    {{yield (component "comment-thread/comment" comment=reply) reply}}
+                {{else}}
+                    <CommentThread::Comment @comment={{reply}} />
+                {{/if}}
+            {{/each}}
+        </div>
+    </div>
+</div>

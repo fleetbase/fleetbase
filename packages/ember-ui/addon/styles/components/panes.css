@@ -1,0 +1,37 @@
+body[data-theme='dark'] .operations-panes-container .lm_content {
+    @apply bg-gray-800;
+}
+
+.collapsible-panes .next-content-panel,
+.collapsible-panes .cp-Panel {
+    @apply border border-gray-800 shadow-sm rounded mb-2;
+}
+
+.collapsible-panes .next-content-panel > .next-content-panel-toggle,
+.collapsible-panes .cp-Panel > .next-content-panel-toggle,
+.collapsible-panes .next-content-panel > .cp-Panel-toggle,
+.collapsible-panes .cp-Panel > .cp-Panel-toggle {
+    @apply px-4 py-2 border-b border-gray-800 bg-gray-800 block;
+}
+
+.collapsible-panes .next-content-panel.next-content-panel-is-open > .next-content-panel-body,
+.collapsible-panes .cp-Panel.next-content-panel-is-open > .next-content-panel-body,
+.collapsible-panes .next-content-panel.cp-is-open > .next-content-panel-body,
+.collapsible-panes .cp-Panel.cp-is-open > .next-content-panel-body,
+.collapsible-panes .next-content-panel.next-content-panel-is-open > .cp-Panel-body,
+.collapsible-panes .cp-Panel.next-content-panel-is-open > .cp-Panel-body,
+.collapsible-panes .next-content-panel.cp-is-open > .cp-Panel-body,
+.collapsible-panes .cp-Panel.cp-is-open > .cp-Panel-body {
+    @apply p-4;
+}
+
+.collapsible-panes .next-content-panel.next-content-panel-is-open .next-content-panel-toggle svg,
+.collapsible-panes .cp-Panel.next-content-panel-is-open .next-content-panel-toggle svg,
+.collapsible-panes .next-content-panel.cp-is-open .next-content-panel-toggle svg,
+.collapsible-panes .cp-Panel.cp-is-open .next-content-panel-toggle svg,
+.collapsible-panes .next-content-panel.next-content-panel-is-open .cp-Panel-toggle svg,
+.collapsible-panes .cp-Panel.next-content-panel-is-open .cp-Panel-toggle svg,
+.collapsible-panes .next-content-panel.cp-is-open .cp-Panel-toggle svg,
+.collapsible-panes .cp-Panel.cp-is-open .cp-Panel-toggle svg {
+    transform: rotate(90deg);
+}

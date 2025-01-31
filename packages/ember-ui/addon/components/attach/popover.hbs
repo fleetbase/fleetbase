@@ -1,0 +1,29 @@
+<div {{did-insert this.setupComponent}}>
+    {{#if (and this.currentTarget (or (not this.lazyRender) this.mustRender))}}
+        <Floating
+            id={{this.id}}
+            class="ember-attacher"
+            @ariaRole={{@ariaRole}}
+            @placement={{this.placement}}
+            @container={{this.floatingContainer}}
+            @target={{this.currentTarget}}
+            @registerAPI={{this.registerAPI}}
+            @renderInPlace={{this.renderInPlace}}
+            @arrow={{this.arrow}}
+            @offset={{@offset}}
+            @shiftOptions={{@shiftOptions}}
+            as |floating|
+        >
+            <div class="{{this.className}} {{@classNames}}" style={{this.computedStyle}}>
+                {{yield floating}}
+
+                {{#if this.arrow}}
+                    <div x-arrow></div>
+                {{/if}}
+                {{#if (eq this.animation "fill")}}
+                    <div x-circle style={{this.circleTransitionDuration}}></div>
+                {{/if}}
+            </div>
+        </Floating>
+    {{/if}}
+</div>

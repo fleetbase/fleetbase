@@ -1,0 +1,105 @@
+<Overlay
+    @onLoad={{this.setOverlayContext}}
+    @onOpen={{this.onOpen}}
+    @onClose={{this.onClose}}
+    @onToggle={{this.onToggle}}
+    @position="right"
+    @noBackdrop={{true}}
+    @fullHeight={{true}}
+    @isResizeble={{or this.isResizable @isResizable}}
+    @width={{or this.width @width "570px"}}
+>
+    <Overlay::Header @hideLeftSection={{true}} @actionsWrapperClass="flex-1 flex-col py-3" class="h-auto-i">
+        <div class="flex flex-row items-center justify-between w-full mb-4">
+            <div class="flex flex-1 space-x-2">
+                {{#if this.vendor.id}}
+                    <Button @type="default" @icon="warehouse" @helpText={{t "fleet-ops.component.vendor-form-panel.view-details"}} @onClick={{this.onViewDetails}} @permission="fleet-ops view vendor" />
+                {{/if}}
+            </div>
+            <div class="flex flex-1 justify-end">
+                <div class="mr-2">
+                    <Button
+                        @icon={{if this.vendor.id "save" "check"}}
+                        @type="primary"
+                        @text={{if this.vendor.id (t "fleet-ops.component.vendor-form-panel.save-vendor") (t "fleet-ops.component.vendor-form-panel.create-vendor")}}
+                        @onClick={{perform this.save}}
+                        @isLoading={{not this.save.isIdle}}
+                        @permission={{this.savePermission}}
+                    />
+                </div>
+                <Button
+                    @type="default"
+                    @icon="times"
+                    @helpText={{if this.vendor.id (t "fleet-ops.component.vendor-form-panel.cancel-edit-vendor") (t "fleet-ops.component.vendor-form-panel.cancel-new-vendor")}}
+                    @onClick={{this.onPressCancel}}
+                />
+            </div>
+        </div>
+        <div class="flex flex-row justify-between w-full">
+            <div class="flex flex-col flex-1 w-3/4">
+                <div class="flex flex-row">
+                    <div class="w-14">
+                        <div class="upload-avatar-overlay w-12 h-12 flex items-center justify-start rounded-lg">
+                            <img src={{this.vendor.logo_url}} alt={{this.vendor.name}} height="48" width="48" class="h-12 w-12 rounded-lg shadow-sm" />
+                            <Attach::Tooltip @class="clean" @animation="scale" @placement="top">
+                                <InputInfo @text={{t "fleet-ops.component.vendor-form-panel.upload-photo"}} />
+                            </Attach::Tooltip>
+                            <div class="upload-avatar-button-wrapper rounded-lg">
+                                <UploadButton
+                                    @name={{t "fleet-ops.common.photos"}}
+                                    @accept="image/*"
+                                    @onFileAdded={{this.onUploadNewPhoto}}
+                                    @icon="upload"
+                                    @hideButtonText={{true}}
+                                    @labelClass="upload-avatar-label-overlay"
+                                    @permission={{this.savePermission}}
+                                    class="w-12 btn-reset"
+                                />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex flex-col">
+                        <h1 class="text-gray-900 dark:text-white text-2xl truncate">
+                            {{#if this.vendor.id}}
+                                {{this.vendor.name}}
+                            {{else}}
+                                {{#if this.vendor.name}}
+                                    {{this.vendor.name}}
+                                {{else}}
+                                    <span>{{t "fleet-ops.component.vendor-form-panel.new-vendor"}}</span>
+                                {{/if}}
+                            {{/if}}
+                        </h1>
+                        <div class="-mt-1">
+                            <div class="flex flex-row items-center">
+                                <span class="text-sm dark:text-blue-400 text-blue-600">{{n-a (smart-humanize this.vendor.type)}}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="flex justify-end w-1/4">
+                <Badge @status={{this.vendor.status}} @type="info" @hideStatusDot={{true}} />
+            </div>
+        </div>
+    </Overlay::Header>
+
+    <Overlay::Body @wrapperClass="new-service-rate-overlay-body px-4 space-y-4 pt-4">
+        {{#if this.isEditing}}
+            <VendorFormPanel::EditForm
+                @vendor={{this.vendor}}
+                @vendorTypes={{this.vendorTypeOptions}}
+                @vendorStatusOptions={{this.vendorStatusOptions}}
+                @onVendorChanged={{this.onVendorChanged}}
+            />
+        {{else}}
+            <VendorFormPanel::CreateForm
+                @vendor={{this.vendor}}
+                @vendorTypes={{this.vendorTypeOptions}}
+                @vendorStatusOptions={{this.vendorStatusOptions}}
+                @onVendorChanged={{this.onVendorChanged}}
+            />
+        {{/if}}
+        <Spacer @height="300px" />
+    </Overlay::Body>
+</Overlay>

@@ -1,0 +1,51 @@
+<Modal::Default @modalIsOpened={{@modalIsOpened}} @options={{@options}} @confirm={{@onConfirm}} @decline={{@onDecline}}>
+    <div class="modal-body-container">
+        <div class="flex">
+            <div class="w-32 mb-6 mr-6">
+                <Image src={{@options.user.avatar_url}} @fallbackSrc={{config "defaultValues.userImage"}} alt={{@options.user.name}} height="128" width="128" class="h-32 w-32 rounded-md" />
+                <UploadButton @name={{t "iam.common.photo"}} @accept="image/*" @onFileAdded={{@options.uploadNewPhoto}} @disabled={{cannot @options.formPermission}} class="w-32" />
+            </div>
+            <div class="flex-1">
+                <div class="grid grid-cols-2 gap-2 text-xs dark:text-gray-100 mb-2">
+                    <InputGroup @name={{t "iam.common.name"}} @value={{@options.user.name}} @disabled={{cannot @options.formPermission}} />
+                    <InputGroup @name={{t "iam.common.email"}} @type="email" @value={{@options.user.email}} @disabled={{cannot @options.formPermission}} />
+                    <InputGroup @name={{t "iam.common.phone"}}>
+                        <PhoneInput @value={{@options.user.phone}} @onInput={{fn (mut @options.user.phone)}} disabled={{cannot @options.formPermission}} class="form-input w-full" />
+                    </InputGroup>
+                    <InputGroup @name={{t "iam.common.country"}}>
+                        <CountrySelect
+                            class="w-full form-input form-select form-datalist"
+                            @value={{@options.user.country}}
+                            @onChange={{fn (mut @options.user.country)}}
+                            @disabled={{cannot @options.formPermission}}
+                            placeholder={{t "iam.common.country"}}
+                        />
+                    </InputGroup>
+                    <InputGroup @name={{t "iam.common.role"}}>
+                        <ModelSelect
+                            @modelName="role"
+                            @selectedModel={{@options.user.role}}
+                            @placeholder={{t "iam.common.role"}}
+                            @triggerClass="form-select form-input truncate max-w-300px"
+                            @infiniteScroll={{false}}
+                            @renderInPlace={{true}}
+                            @onChange={{fn (mut @options.user.role)}}
+                            @disabled={{cannot @options.formPermission}}
+                            as |model|
+                        >
+                            {{model.name}}
+                        </ModelSelect>
+                    </InputGroup>
+                </div>
+                {{#if (can @options.formPermission)}}
+                    <InputGroup @name={{t "iam.common.attach-policies"}}>
+                        <PolicyAttacher @onChange={{fn (mut @options.user.policies)}} @value={{@options.user.policies}} @disabled={{cannot @options.formPermission}} />
+                    </InputGroup>
+                    <InputGroup @name={{t "iam.common.select-permissions"}}>
+                        <PermissionPicker @selected={{@options.user.permissions}} @onChange={{fn (mut @options.user.permissions)}} />
+                    </InputGroup>
+                {{/if}}
+            </div>
+        </div>
+    </div>
+</Modal::Default>

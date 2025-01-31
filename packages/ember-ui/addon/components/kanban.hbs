@@ -1,0 +1,14 @@
+<div class="kanban-container">
+    <div class="kanban-inner-container">
+        {{#each @columns as |column|}}
+            <div class="kanban-column">
+                <div class="kanban-column-header">
+                    <h1 class="text-white">{{smart-humanize column}}</h1>
+                </div>
+                <div class="kanban-column-body">
+
+                </div>
+            </div>
+        {{/each}}
+    </div>
+</div>

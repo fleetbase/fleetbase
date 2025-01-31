@@ -7,21 +7,6 @@
 [submodule "packages/pallet"]
 	path = packages/pallet
 	url = git@github.com:fleetbase/pallet.git
-[submodule "packages/core-api"]
-	path = packages/core-api
-	url = git@github.com:fleetbase/core-api.git
-	branch = main
-[submodule "packages/ember-core"]
-	path = packages/ember-core
-	url = git@github.com:fleetbase/ember-core.git
-	branch = main
-[submodule "packages/ember-ui"]
-	path = packages/ember-ui
-	url = git@github.com:fleetbase/ember-ui.git
-	branch = main
-[submodule "packages/iam-engine"]
-	path = packages/iam-engine
-	url = git@github.com:fleetbase/iam-engine.git
 [submodule "packages/dev-engine"]
 	path = packages/dev-engine
 	url = git@github.com:fleetbase/dev-engine.git
@@ -29,10 +14,6 @@
 [submodule "packages/fleetbase-extensions-indexer"]
 	path = packages/fleetbase-extensions-indexer
 	url = git@github.com:fleetbase/fleetbase-extensions-indexer.git
-[submodule "packages/fleetops-data"]
-	path = packages/fleetops-data
-	url = git@github.com:fleetbase/fleetops-data.git
-	branch = main
 [submodule "docs"]
 	path = docs
 	url = git@github.com:fleetbase/docs.git

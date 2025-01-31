@@ -1,0 +1,51 @@
+body[data-theme='light'] {
+    @apply bg-white;
+}
+body[data-theme='light'] a {
+    @apply no-underline text-gray-800;
+}
+body[data-theme='light'] a:hover {
+    @apply text-gray-800;
+}
+body[data-theme='light'] .next-view-header {
+    @apply bg-white;
+}
+body[data-theme='light'] .next-view-container {
+    @apply bg-white;
+}
+body[data-theme='light'] .next-view-container > nav.next-sidebar {
+    @apply bg-white;
+}
+body[data-theme='light'] .next-view-container > nav.next-sidebar a.next-nav-item:hover {
+    @apply bg-[#496453] text-white opacity-75;
+}
+body[data-theme='light'] .next-view-container > nav.next-sidebar a.next-nav-item:hover .next-nav-item-icon-container svg {
+    @apply text-white;
+}
+body[data-theme='light'] .next-dd-menu {
+    @apply bg-white;
+}
+body[data-theme='light'] .next-dd-menu a.next-dd-item:hover {
+    @apply bg-[#496453] text-white !important;
+}
+body[data-theme='light'] .next-dd-menu a.next-dd-item.active {
+    @apply bg-[#496453] text-white !important;
+}
+body[data-theme='light'] .form-input {
+    @apply shadow-sm text-gray-800;
+}
+body[data-theme='light'] .form-input:focus {
+    @apply shadow-sm border-gray-300;
+}
+body[data-theme='light'] .form-select {
+    @apply shadow-sm;
+}
+body[data-theme='light'] .form-select:focus {
+    @apply shadow-sm border-gray-300;
+}
+body[data-theme='light'] .ElementsApp,
+body[data-theme='light'] .ElementsApp .InputElement,
+body[data-theme='light'] .InputContainer .InputElement,
+body[data-theme='light'] .InputElement {
+    @apply text-gray-800;
+}

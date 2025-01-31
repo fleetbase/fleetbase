@@ -1,0 +1,102 @@
+<div id="fleetbase-pagination" class="fleetbase-pagination" ...attributes>
+    <div id="fleetbase-pagination-button-wrapper" class="flex justify-between flex-1 sm:hidden {{@directionButtonWrapperClass}}">
+        <a
+            href="#"
+            id="fleetbase-pagination-previous-button"
+            class="direction-button {{@directionButtonClass}} {{if this.cannotStepBackward 'disabled'}}"
+            disabled={{this.cannotStepBackward}}
+            tabindex="-1"
+            aria-label="Previous"
+            {{on "click" (fn this.incrementPage -1)}}
+        >
+            Previous
+        </a>
+        <a
+            href="#"
+            id="fleetbase-pagination-next-button"
+            class="ml-3 direction-button {{@directionButtonClass}} {{if this.cannotStepForward 'disabled'}}"
+            disabled={{this.cannotStepForward}}
+            aria-label="Next"
+            {{on "click" (fn this.incrementPage 1)}}
+        >
+            Next
+        </a>
+    </div>
+    <div class="fleetbase-pagination-meta-info-wrapper hidden sm:flex-1 sm:flex sm:items-center sm:justify-between {{@metaInfoWrapperClass}}">
+        <div class={{concat "fleetbase-pagination-meta-info" " " @metaInfoClass}}>
+            <p class="fleetbase-pagination-meta-info-content text-sm leading-5 text-gray-700 pagination-showing {{@metaInfoParagraph}}">
+                Showing
+                <span class="font-medium">
+                    {{this.from}}
+                </span>
+                to
+                <span class="font-medium">
+                    {{this.to}}
+                </span>
+                of
+                <span class="font-medium">
+                    {{this.totalResults}}
+                </span>
+                results
+            </p>
+        </div>
+
+        <div class="fleetbase-pagination-meta-info-paging-wrapper flex items-center justify-end {{@paginationClass}} ">
+            {{#if @isLoading}}
+                <div class="flex items-center justify-center mr-2 {{@loadingWrapperClass}}">
+                    <Spinner @iconClass="text-sky-500 fa-spin-800ms {{@loadingIconClass}}" />
+                </div>
+            {{/if}}
+            <span class="fleetbase-pagination-meta-info-paging-inner relative z-0 inline-flex shadow-sm {{@innerPaginationClass}}">
+                <button
+                    id="fleetbase-pagination-backward-button"
+                    type="button"
+                    class="page-item-arrow {{@backwardClass}} {{if this.cannotStepBackward 'disabled'}}"
+                    disabled={{this.cannotStepBackward}}
+                    {{on "click" (fn this.incrementPage -1)}}
+                >
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                        <path
+                            fill-rule="evenodd"
+                            d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
+                            clip-rule="evenodd"
+                        ></path>
+                    </svg>
+                </button>
+
+                {{#each this.pageItems as |item|}}
+                    <button
+                        type="button"
+                        class="fleetbase-pagination-page-item page-item {{if item.current 'active'}} {{@pageItemClass}}"
+                        disabled={{or item.active item.dots}}
+                        {{on "click" (fn this.goToPage item.page)}}
+                    >
+                        {{#if item.dots}}
+                            <span>
+                                ...
+                            </span>
+                        {{else}}
+                            {{item.page}}
+                        {{/if}}
+                    </button>
+                {{/each}}
+
+                <button
+                    id="fleetbase-pagination-forward-button"
+                    type="button"
+                    class="page-item-arrow {{@forwardClass}} {{if this.cannotStepForward 'disabled'}}"
+                    disabled={{this.cannotStepForward}}
+                    {{on "click" (fn this.incrementPage 1)}}
+                >
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                        <path
+                            fill-rule="evenodd"
+                            d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                            clip-rule="evenodd"
+                        ></path>
+                    </svg>
+                </button>
+            </span>
+        </div>
+    </div>
+</div>

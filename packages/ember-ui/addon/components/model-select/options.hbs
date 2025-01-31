@@ -1,0 +1,25 @@
+<ul role="listbox" ...attributes>
+    <li>
+        <PowerSelect::Options
+            @loadingMessage={{@loadingMessage}}
+            @select={{@select}}
+            @options={{@options}}
+            @groupIndex={{@groupIndex}}
+            @optionsComponent={{@optionsComponent}}
+            @extra={{@extra}}
+            @highlightOnHover={{@highlightOnHover}}
+            @groupComponent={{@groupComponent}}
+            as |option select|
+        >
+            {{yield option select}}
+        </PowerSelect::Options>
+    </li>
+
+    {{#if this.showLoader}}
+        <li>
+            <InfinityLoader @infinityModel={{@infiniteModel}} @hideOnInfinity={{true}} @scrollable={{concat "#ember-basic-dropdown-content-" @select.uniqueId}}>
+                <ModelSelect::Spinner />
+            </InfinityLoader>
+        </li>
+    {{/if}}
+</ul>

@@ -1,0 +1,178 @@
+<div class="next-content-panel-wrapper {{@wrapperClass}} {{if @isLoading 'is-loading'}}">
+    <div class="next-content-panel-container {{@containerClass}}">
+        <div class="next-content-panel {{if this.isOpen 'next-content-panel-is-open' 'next-content-panel-is-closed'}} {{@panelClass}} {{if @isLoading 'is-loading'}}">
+            <div
+                class="next-content-panel-header next-content-panel-toggle
+                    {{if this.isOpen 'next-content-panel-is-open' 'next-content-panel-is-closed'}}
+                    {{@panelHeaderClass}}
+                    {{if @isLoading 'is-loading'}}"
+            >
+                <a href="javascript:;" aria-expanded={{this.isOpen}} class="next-content-panel-header-left {{if this.disabled 'opacity-50'}} {{@panelHeaderLeftClass}}" disabled={{this.disabled}} {{on "click" this.toggle}}>
+                    {{#unless @hideCaret}}
+                        <span class="icon-container" {{did-insert this.trackIconContainer}}>
+                            <FaIcon @icon={{if this.isOpen "caret-down" "caret-right"}} @prefix="fas" />
+                        </span>
+                    {{/unless}}
+                    {{#if @isLoading}}
+                        <Spinner @iconClass="text-sky-500 fa-spin-800ms" class="flex mr-2i" />
+                    {{/if}}
+                    {{#if @titleIcon}}
+                        <span class="icon-container {{@titleIconWrapperClass}}" {{did-insert this.trackIconContainer}}>
+                            <FaIcon @icon={{@titleIcon}} @prefix={{@titleIconPrefix}} @size={{or @titleIconSize "xs"}} class={{@titleIconClass}} />
+                        </span>
+                    {{/if}}
+                    <div class="next-content-panel-title-container {{@titleContainerClass}}">
+                        {{#if @titleComponent}}
+                            {{component @titleComponent context=@titleComponentContext}}
+                        {{else}}
+                            <div class="flex flex-row items-center justify-between">
+                                <div>
+                                    {{#if @prefixTitle}}
+                                        <div class="next-content-panel-prefix-title-container {{@prefixTitleContainerClass}}">
+                                            <span class="next-content-panel-prefix-title text-xs {{@prefixTitleClass}}">{{@prefixTitle}}</span>
+                                        </div>
+                                    {{/if}}
+                                </div>
+                            </div>
+                            <div class="panel-title flex-shrink-0 {{@panelTitleClass}}">
+                                <div class="flex flex-col {{@panelTitleWrapperClass}}">
+                                    <span class={{@panelTitleInlineClass}}>{{@title}}</span>
+                                    {{#if @subtitle}}
+                                        <span class={{@panelSubtitleInlineClass}}>{{@subtitle}}</span>
+                                    {{/if}}
+                                </div>
+                                {{#if @titleStatus}}
+                                    <span class="ml-2 {{@titleStatusContainerClass}}">
+                                        <Badge @status={{@titleStatus}} @hideStatusDot={{@hideStatusDot}} class={{@titleStatusClass}} @disableHumanize={{@disableTitleStatusHumanize}} />
+                                    </span>
+                                {{/if}}
+                            </div>
+                        {{/if}}
+                    </div>
+                    {{#if this.doesntHavePermissions}}
+                        <Attach::Tooltip @class="clean" @animation="scale" @placement={{or @tooltipPlacement "right"}}>
+                            <InputInfo @text={{t "common.unauthorized"}} />
+                        </Attach::Tooltip>
+                    {{else if @helpText}}
+                        <Attach::Tooltip @class="clean" @animation="scale" @placement={{or @tooltipPlacement "right"}}>
+                            <InputInfo @text={{@helpText}} @exampleText={{@exampleText}} />
+                        </Attach::Tooltip>
+                    {{/if}}
+                </a>
+                <div class="next-content-panel-header-right {{@panelHeaderRightClass}}">
+                    {{#if @titleRightSideComponent}}
+                        {{component @titleRightSideComponent context=@titleRightSideComponentContext}}
+                    {{else}}
+                        {{#if @prefixTitleRight}}
+                            <div class={{@prefixTitleRightContainerClass}}>
+                                <span class="text-xs {{@prefixTitleRightClass}}">{{@prefixTitleRight}}</span>
+                            </div>
+                        {{/if}}
+                        {{#if @titleStatusRight}}
+                            <span class="ml-2 {{@titleStatusRightContainerClass}}">
+                                {{#if @titleStatusRightText}}
+                                    <Badge
+                                        @status={{@titleStatusRight}}
+                                        @hideStatusDot={{@hideRightTitleStatusDot}}
+                                        class={{@titleStatusRightClass}}
+                                        @disableHumanize={{@disableTitleStatusRightHumanize}}
+                                    >
+                                        {{@titleStatusRightText}}
+                                    </Badge>
+                                {{else}}
+                                    <Badge
+                                        @status={{@titleStatusRight}}
+                                        @hideStatusDot={{@hideRightTitleStatusDot}}
+                                        class={{@titleStatusRightClass}}
+                                        @disableHumanize={{@disableTitleStatusRightHumanize}}
+                                    />
+                                {{/if}}
+                            </span>
+                        {{/if}}
+                        {{#each @actionButtons as |button|}}
+                            <Button
+                                @type={{button.type}}
+                                @text={{button.text}}
+                                @icon={{button.icon}}
+                                @size={{button.size}}
+                                @iconPrefix={{button.iconPrefix}}
+                                @onClick={{button.onClick}}
+                                @wrapperClass={{button.wrapperClass}}
+                                @permission={{button.permission}}
+                                @disabled={{button.disabled}}
+                                class={{button.class}}
+                            />
+                        {{/each}}
+                        {{#if @dropdownButton}}
+                            <DropdownButton
+                                class={{@dropdownButtonWrapperClass}}
+                                @defaultClass={{@dropdownButtonDefaultClass}}
+                                @icon={{or @dropdownButtonIcon "ellipsis"}}
+                                @iconPrefix={{@dropdownButtonIconPrefix}}
+                                @text={{@dropdownButtonText}}
+                                @size="xs"
+                                @horizontalPosition={{or @dropdownButtonHorizontalPosition "right"}}
+                                @verticalPosition={{@verticalPosition}}
+                                @calculatePosition={{@dropdownButtonCalculatePosition}}
+                                @renderInPlace={{this.dropdownButtonRenderInPlace}}
+                                @permission={{@dropdownButtonPermission}}
+                                @disabled={{@dropdownButtonDisabled}}
+                                as |dd|
+                            >
+                                <div class="next-dd-menu mt-0i {{@dropdownMenuWrapperClass}}" role="menu" aria-orientation="vertical" aria-labelledby="user-menu">
+                                    {{#if @dropdownButtonMenuLabel}}
+                                        <div class="next-dd-menu-label-container px-1">
+                                            <div class="next-dd-menu-label {{@dropdownButtonMenuLabelClass}}">
+                                                {{@dropdownButtonMenuLabel}}
+                                            </div>
+                                        </div>
+                                        <div class="next-dd-menu-seperator"></div>
+                                    {{/if}}
+                                    {{#each @dropdownButtonActions as |action|}}
+                                        {{#if action.separator}}
+                                            <div class="next-dd-menu-seperator"></div>
+                                        {{else}}
+                                            {{#if (is-dd-item-visible action.context action.isVisible)}}
+                                                <div role="group" class="px-1">
+                                                    <a href="javascript:;" role="menuitem" class="next-dd-item {{action.class}}" {{on "click" (fn this.onDropdownItemClick action dd)}}>
+                                                        {{#if action.icon}}
+                                                            <span class="mr-1">
+                                                                <FaIcon class={{action.iconClass}} @icon={{action.icon}} @prefix={{action.iconPrefix}} />
+                                                            </span>
+                                                        {{/if}}
+                                                        {{action.label}}
+                                                    </a>
+                                                </div>
+                                            {{/if}}
+                                        {{/if}}
+                                    {{/each}}
+                                </div>
+                            </DropdownButton>
+                        {{/if}}
+                    {{/if}}
+                </div>
+            </div>
+            <div class="next-content-panel-body {{if this.isOpen 'next-content-panel-is-open' 'next-content-panel-is-closed'}} {{@panelBodyClass}} {{if @isLoading 'is-loading'}}">
+                {{#if this.isOpen}}
+                    <div
+                        class="next-content-panel-body-inner next-content-panel-body-wrapper relative
+                            {{@panelBodyWrapperClass}}
+                            {{if @pad 'p-4'}}
+                            {{if @isLoading 'opacity-50'}}
+                            {{if @isLoading 'is-loading'}}"
+                    >
+                        {{#if @isLoading}}
+                            <div class="absolute w-full h-full inset-0 bg-opacity-50 bg-gray-900 flex items-center justify-center">
+                                <div class="flex flex-row items-center">
+                                    <Spinner @iconClass="text-sky-500 fa-spin-800ms" class="flex mr-2i" />
+                                    <span>Loading...</span>
+                                </div>
+                            </div>
+                        {{/if}}
+                        {{yield}}
+                    </div>
+                {{/if}}
+            </div>
+        </div>
+    </div>
+</div>

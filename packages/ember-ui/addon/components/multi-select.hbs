@@ -1,0 +1,18 @@
+<PowerSelectMultiple
+    class="form-select form-input {{@selectClass}}"
+    @registerAPI={{@registerAPI}}
+    @searchEnabled={{@searchEnabled}}
+    @search={{@search}}
+    @options={{@options}}
+    @selected={{@selected}}
+    @placeholder={{@placeholder}}
+    @onChange={{@onChange}}
+    @allowClear={{@allowClear}}
+    @placeholderComponent={{@placeholderComponent}}
+    @preventScroll={{@preventScroll}}
+    @renderInPlace={{@renderInPlace}}
+    @scrollTo={{@scrollTo}}
+    as |option|
+>
+    {{yield option}}
+</PowerSelectMultiple>

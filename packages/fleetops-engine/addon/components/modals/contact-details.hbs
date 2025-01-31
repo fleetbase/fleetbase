@@ -1,0 +1,44 @@
+<Modal::Default @modalIsOpened={{@modalIsOpened}} @options={{@options}} @confirm={{@onConfirm}} @decline={{@onDecline}}>
+    <div class="modal-body-container">
+        <div class="flex">
+            <div class="w-32 mb-6 mr-6">
+                <img src={{@options.contact.photo_url}} alt={{@options.contact.name}} class="w-full rounded-md" />
+            </div>
+            <div class="flex-1">
+                <div class="grid grid-cols-1 gap-2 lg:grid-cols-2 lg:gap-4 text-xs dark:text-gray-100">
+
+                    <div class="field-info-container space-y-2">
+                        <div class="field-name">{{t "fleet-ops.common.website-url"}}</div>
+                        <div class="field-value">{{n-a @options.contact.name}}</div>
+                    </div>
+
+                    <div class="field-info-container space-y-2">
+                        <div class="field-name">{{t "fleet-ops.common.title"}}</div>
+                        <div class="field-value">{{n-a @options.contact.title}}</div>
+                    </div>
+
+                    <div class="field-info-container space-y-2">
+                        <div class="field-name">{{t "fleet-ops.common.internal-id"}}</div>
+                        <div class="field-value">{{n-a @options.contact.internal_id}}</div>
+                    </div>
+
+                    <div class="field-info-container space-y-2">
+                        <div class="field-name">{{t "fleet-ops.common.email"}}</div>
+                        <div class="field-value">{{n-a @options.contact.email}}</div>
+                    </div>
+
+                    <div class="field-info-container space-y-2">
+                        <div class="field-name">{{t "fleet-ops.common.phone"}}</div>
+                        <div class="field-value">{{n-a @options.contact.phone}}</div>
+                    </div>
+
+                    <div class="field-info-container space-y-2">
+                        <div class="field-name">{{t "fleet-ops.common.type"}}</div>
+                        <div class="field-value"><Badge @status={{@options.contact.type}} /></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{yield}}
+</Modal::Default>

@@ -1,0 +1,65 @@
+<div {{did-insert this.handleVisibilityChanges}} {{did-update this.handleVisibilityChanges @open}}></div>
+
+{{#if this.inDom}}
+    {{!
+    ember-on-helper do not support FastBoot yet. This guard can be removed as
+    soon as ember-on-helper guards for FastBoot itself. It is tracked in this
+    GitHub issue: https://github.com/buschtoens/ember-on-helper/issues/3
+  }}
+    {{#unless this.isFastBoot}}
+        {{on-window "resize" this.adjustDialog}}
+    {{/unless}}
+
+    {{#let
+        (component
+            (or @dialogComponent "modal/dialog")
+            onClose=this.close
+            fade=this._fade
+            showModal=this.showModal
+            keyboard=this.keyboard
+            size=@size
+            backdropClose=this.backdropClose
+            inDom=this.inDom
+            paddingLeft=this.paddingLeft
+            paddingRight=this.paddingRight
+            centered=(eq this.position "center")
+            scrollable=this.scrollable
+            fullscreen=@fullscreen
+        )
+        as |Dialog|
+    }}
+        {{#if this._renderInPlace}}
+            <Dialog {{create-ref "modalElement"}} ...attributes>
+                {{yield
+                    (hash
+                        header=(component (or @headerComponent "modal/header") onClose=this.close)
+                        body=(component (or @bodyComponent "modal/body"))
+                        footer=(component (or @footerComponent "modal/footer") onClose=this.close onSubmit=this.doSubmit)
+                        close=this.close
+                        submit=this.doSubmit
+                    )
+                }}
+            </Dialog>
+            {{#if this.shouldShowBackdrop}}
+                <div class="flb--modal-backdrop {{if this._fade 'fade'}} {{if this.showModal 'show'}}" {{create-ref "backdropElement"}}></div>
+            {{/if}}
+        {{else}}
+            {{#in-element this.destinationElement insertBefore=null}}
+                <Dialog {{create-ref "modalElement"}} ...attributes>
+                    {{yield
+                        (hash
+                            header=(component (ensure-safe-component (or @headerComponent (component "modal/header"))) onClose=this.close)
+                            body=(ensure-safe-component (or @bodyComponent (component "modal/body")))
+                            footer=(component (ensure-safe-component (or @footerComponent (component "modal/footer"))) onClose=this.close onSubmit=this.doSubmit)
+                            close=this.close
+                            submit=this.doSubmit
+                        )
+                    }}
+                </Dialog>
+                {{#if this.shouldShowBackdrop}}
+                    <div class="flb--modal-backdrop {{if this._fade 'fade'}} {{if this.showModal 'show'}}" {{create-ref "backdropElement"}}></div>
+                {{/if}}
+            {{/in-element}}
+        {{/if}}
+    {{/let}}
+{{/if}}

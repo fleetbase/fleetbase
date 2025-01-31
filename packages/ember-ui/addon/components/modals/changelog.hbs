@@ -1,0 +1,28 @@
+<Modal::Default @modalIsOpened={{@modalIsOpened}} @options={{@options}} @confirm={{@onConfirm}} @decline={{@onDecline}}>
+    <div class="px-5 overflow-y-scroll" {{set-height 300}}>
+        {{#if this.isLoading}}
+            <div class="p-4">
+                <Spinner />
+            </div>
+        {{else}}
+            {{#each this.releases as |release|}}
+                <div class="mb-4">
+                    <div class="flex flex-row items-center leading-4 mb-2 space-x-2">
+                        <h2 class="font-mono text-black dark:text-gray-100 font-bold text-sm">{{release.name}}</h2>
+                        <span class="text-black dark:text-gray-100">•</span>
+                        <span class="text-xs font-mono text-black dark:text-gray-100">{{release.created_at}}</span>
+                    </div>
+                    <div class="pl-6">
+                        <ul class="list-disc">
+                            {{#each release.changes as |change|}}
+                                {{#if change}}
+                                    <li class="text-xs font-mono text-gray-800 dark:text-gray-300">{{change}}</li>
+                                {{/if}}
+                            {{/each}}
+                        </ul>
+                    </div>
+                </div>
+            {{/each}}
+        {{/if}}
+    </div>
+</Modal::Default>

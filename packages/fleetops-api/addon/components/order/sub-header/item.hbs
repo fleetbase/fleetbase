@@ -1,0 +1,16 @@
+<div class="order-subheader-item" ...attributes>
+    <div class="flex flex-row items-center justify-between px-3">
+        <div class="flex flex-col flex-1">
+            <span class="text-xs font-semibold uppercase dark:text-gray-200">
+                {{@name}}
+            </span>
+            <span class="w-11/12 text-sm font-bold truncate dark:text-gray-300">
+                {{@value}}
+            </span>
+        </div>
+        <div>
+            <FaIcon @icon={{@icon}} @size="lg" class="dark:text-gray-300" />
+        </div>
+        {{yield}}
+    </div>
+</div>

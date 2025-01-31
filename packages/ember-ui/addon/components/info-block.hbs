@@ -1,0 +1,21 @@
+<div class="ui-input-info-block {{or @type 'info'}} {{or @size "base"}}" ...attributes>
+    <div class="ui-input-info-block-inner flex {{@innerWrapperClass}}">
+        <div class="ui-input-info-block-icon-container flex-shrink-0 {{@iconWrapperClass}}">
+            <FaIcon @icon={{or @icon "info-circle"}} @size={{or @iconSize "md"}} @prefix={{or @iconPrefix "fas"}} class={{@iconClass}} />
+        </div>
+        <div class="ui-input-info-block-yield-container ml-3 flex-1 md:flex md:justify-between {{@blockContainerClass}}">
+            <div class="ui-input-info-block-text subpixel-antialiased {{@blockClass}}">
+                {{#if (has-block)}}
+                    {{yield}}
+                {{else}}
+                    <span class={{@textClass}}>{{@text}}</span>
+                    {{#if @exampleText}}
+                        <div class={{@exampleTextWrapperClass}}>
+                            <code class="mt-3 break-text subpixel-antialiased text-xs font-mono {{@exampleTextClass}}">{{@exampleText}}</code>
+                        </div>
+                    {{/if}}
+                {{/if}}
+            </div>
+        </div>
+    </div>
+</div>

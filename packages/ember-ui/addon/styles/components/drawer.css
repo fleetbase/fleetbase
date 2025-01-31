@@ -1,0 +1,125 @@
+.next-drawer {
+    @apply absolute inset-0 opacity-0 transition duration-300 ease-in-out pointer-events-auto bg-gray-900 bg-opacity-50;
+    width: 100%;
+    height: 100%;
+    z-index: 800;
+}
+
+.next-drawer.drawer-no-backdrop {
+    @apply bg-transparent pointer-events-none;
+}
+
+.next-drawer.drawer-no-backdrop > * {
+    @apply pointer-events-auto;
+}
+
+.next-drawer.drawer-is-open {
+    @apply opacity-100;
+}
+
+.next-drawer.drawer-is-open > .next-drawer-panel-container {
+    transform: translateY(0);
+}
+
+.next-drawer.drawer-is-minimized {
+    @apply bg-transparent pointer-events-none;
+}
+
+.next-drawer.drawer-is-minimized > * {
+    @apply pointer-events-auto;
+}
+
+.next-drawer.drawer-is-minimized > .next-drawer-panel-container > .next-drawer-panel {
+    height: 0px !important;
+}
+
+.next-drawer.drawer-is-minimized > .next-drawer-panel-container {
+    @apply pointer-events-auto;
+}
+
+.next-drawer > .next-drawer-panel-container {
+    @apply left-0 right-0 bottom-0;
+    transform: translateY(100%);
+}
+
+.next-drawer > .next-drawer-panel-container {
+    @apply absolute transform transition ease-in-out duration-500 pointer-events-auto;
+}
+
+.next-drawer > .next-drawer-panel-container > .next-drawer-panel {
+    @apply transform transition ease-in-out duration-500 pointer-events-auto bg-white shadow-next-nav;
+}
+
+.next-drawer.drawer-is-open .next-drawer-panel-container .next-drawer-panel {
+    @apply shadow-none;
+}
+
+body[data-theme='dark'] .next-drawer > .next-drawer-panel-container > .next-drawer-panel {
+    @apply bg-gray-900;
+}
+
+.next-drawer > .next-drawer-panel-container > .gutter {
+    height: auto;
+    width: 100%;
+    background-image: none;
+    background-color: inherit;
+    cursor: row-resize;
+    background-position: unset;
+    background-repeat: unset;
+    position: relative;
+    z-index: 9999;
+    @apply border-2 border-gray-200 border-solid;
+}
+
+body[data-theme='dark'] .next-drawer > .next-drawer-panel-container > .gutter {
+    @apply border-gray-500;
+}
+
+.next-drawer > .next-drawer-panel-container > .gutter:hover,
+.next-drawer.drawer-is-resizing > .next-drawer-panel-container > .gutter,
+body[data-theme='dark'] .next-drawer > .next-drawer-panel-container > .gutter:hover,
+body[data-theme='dark'] .next-drawer.drawer-is-resizing > .next-drawer-panel-container > .gutter {
+    
+    background-color: #496453;
+    border-color: #496453;
+    opacity: 0.75;
+}
+
+
+.next-drawer > .next-drawer-panel-container > .gutter > .notch {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 3.5rem;
+    height: 1.25rem;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: -11px;
+    z-index: 9999999;
+    padding: 0 0.75rem;
+    cursor: grab !important;
+    @apply bg-gray-200 border-2 border-white shadow-md drop-shadow-md rounded-lg;
+}
+
+body[data-theme='dark'] .next-drawer > .next-drawer-panel-container > .gutter > .notch {
+    @apply bg-gray-600 border-gray-600;
+}
+
+.next-drawer > .next-drawer-panel-container > .gutter > .notch > .bar {
+    display: block;
+    height: 0.0955555555rem;
+    width: 100%;
+    margin: 0.09rem 0;
+    border-radius: 2px;
+    cursor: grab !important;
+    @apply bg-gray-400;
+}
+
+body[data-theme='dark'] .next-drawer > .next-drawer-panel-container > .gutter > .notch > .bar {
+    @apply bg-gray-400;
+}

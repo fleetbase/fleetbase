@@ -1,0 +1,61 @@
+<div class="px-6 space-y-4">
+    <div class="flex flex-row items-center py-2 space-x-4">
+        <Button @type="primary" @icon="plus" @text={{t "fleet-ops.component.order-config-manager.entities.new-custom-entity"}} @onClick={{this.createNewCustomEntity}} @permission="fleet-ops update order-config" />
+    </div>
+    {{#each this.customEntities as |customEntity index|}}
+        <ContentPanel
+            @title={{customEntity.name}}
+            @subtitle={{customEntity.description}}
+            @panelSubtitleInlineClass="text-xs"
+            @open={{true}}
+            @pad={{true}}
+            @panelBodyClass="bg-white dark:bg-gray-900"
+        >
+            <div class="flex flex-row items-center py-2 space-x-2 mb-4">
+                <Button @type="default" @icon="pencil" @onClick={{fn this.editCustomEntity customEntity index}} @permission="fleet-ops update order-config" />
+                <Button @type="danger" @icon="trash" @onClick={{fn this.deleteCustomEntity customEntity index}} @permission="fleet-ops update order-config" />
+            </div>
+            <div class="flex">
+                <div class="pr-4">
+                    <div class="w-32 flex flex-col items-center">
+                        <Image src={{customEntity.photo_url}} alt={{customEntity.name}} height="128" width="128" class="h-32 w-32 rounded-md" />
+                    </div>
+                </div>
+                <div class="flex-1 space-y-4 pl-2">
+                    <div class="grid grid-cols-4 gap-2">
+                        <div>
+                            <div class="font-semibold text-sm mb-2">{{t "fleet-ops.component.order-config-manager.entities.name"}}</div>
+                            <div class="text-xs">{{customEntity.name}}</div>
+                        </div>
+                        <div>
+                            <div class="font-semibold text-sm mb-2">{{t "fleet-ops.component.order-config-manager.entities.description"}}</div>
+                            <div class="text-xs">{{customEntity.description}}</div>
+                        </div>
+                        <div>
+                            <div class="font-semibold text-sm mb-2">{{t "fleet-ops.component.order-config-manager.entities.type"}}</div>
+                            <div class="text-xs"><Badge @type="default">{{customEntity.type}}</Badge></div>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-4 gap-2">
+                        <div>
+                            <div class="font-semibold text-sm mb-2">{{t "fleet-ops.component.order-config-manager.entities.length"}}</div>
+                            <div class="text-xs">{{customEntity.length}} {{customEntity.dimensions_unit}}</div>
+                        </div>
+                        <div>
+                            <div class="font-semibold text-sm mb-2">{{t "fleet-ops.component.order-config-manager.entities.width"}}</div>
+                            <div class="text-xs">{{customEntity.width}} {{customEntity.dimensions_unit}}</div>
+                        </div>
+                        <div>
+                            <div class="font-semibold text-sm mb-2">{{t "fleet-ops.component.order-config-manager.entities.height"}}</div>
+                            <div class="text-xs">{{customEntity.height}} {{customEntity.dimensions_unit}}</div>
+                        </div>
+                        <div>
+                            <div class="font-semibold text-sm mb-2">{{t "fleet-ops.component.order-config-manager.entities.weight"}}</div>
+                            <div class="text-xs">{{customEntity.weight}} {{customEntity.weight_unit}}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </ContentPanel>
+    {{/each}}
+</div>

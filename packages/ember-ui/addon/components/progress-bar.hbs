@@ -1,0 +1,12 @@
+<div>
+    <div class="mb-2 flex justify-between items-center">
+        <h3 class="text-sm font-semibold text-gray-800 dark:text-white">{{@title}}</h3>
+        <span class="text-sm text-gray-800 dark:text-white">{{@percent}}%</span>
+    </div>
+    <div class="flex w-full h-2 bg-gray-200 rounded-full overflow-hidden dark:bg-neutral-700" role="progressbar" aria-valuenow={{@percent}} aria-valuemin="0" aria-valuemax="100">
+        <div
+            class="flex flex-col justify-center rounded-full overflow-hidden bg-blue-600 text-xs text-white text-center whitespace-nowrap transition duration-500 dark:bg-blue-500"
+            {{did-update this.setProgress @percent}}
+        ></div>
+    </div>
+</div>

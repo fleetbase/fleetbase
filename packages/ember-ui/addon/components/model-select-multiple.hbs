@@ -1,0 +1,84 @@
+<ModelSelect
+    @modelName={{@modelName}}
+    @selectedModel={{@selectedModel}}
+    @optionLabel={{@optionLabel}}
+    @searchProperty={{@searchProperty}}
+    @searchKey={{@searchKey}}
+    @loadDefaultOptions={{@loadDefaultOptions}}
+    @infiniteScroll={{@infiniteScroll}}
+    @pageSize={{@pageSize}}
+    @query={{@query}}
+    @debounceDuration={{this.debounceDuration}}
+    @withCreate={{@withCreate}}
+    @buildSuggestion={{@buildSuggestion}}
+    @perPageParam={{@perPageParam}}
+    @pageParam={{@pageParam}}
+    @totalPagesParam={{@totalPagesParam}}
+    @onCreate={{@onCreate}}
+    {{! overwritten arguments }}
+    @onChange={{this.change}}
+    @searchField={{@optionLabel}}
+    @triggerClass="ember-model-select-multiple-trigger {{@triggerClass}}"
+    {{! power-select-multiple defaults }}
+    @triggerRole={{@triggerRole}}
+    @ariaDescribedBy={{@ariaDescribedBy}}
+    @ariaInvalid={{@ariaInvalid}}
+    @ariaLabel={{@ariaLabel}}
+    @ariaLabelledBy={{@ariaLabelledBy}}
+    @afterOptionsComponent={{@afterOptionsComponent}}
+    @allowClear={{@allowClear}}
+    @beforeOptionsComponent={{or @beforeOptionsComponent null}}
+    @buildSelection={{or @buildSelection this.defaultBuildSelection}}
+    @calculatePosition={{@calculatePosition}}
+    @closeOnSelect={{@closeOnSelect}}
+    @defaultHighlighted={{@defaultHighlighted}}
+    @destination={{@destination}}
+    @disabled={{@disabled}}
+    @dropdownClass={{@dropdownClass}}
+    @extra={{@extra}}
+    @groupComponent={{@groupComponent}}
+    @horizontalPosition={{@horizontalPosition}}
+    @initiallyOpened={{@initiallyOpened}}
+    @loadingMessage={{@loadingMessage}}
+    @matcher={{@matcher}}
+    @matchTriggerWidth={{@matchTriggerWidth}}
+    @noMatchesMessage={{@noMatchesMessage}}
+    @onBlur={{@onBlur}}
+    {{!-- @onChange={{@onChange}} --}}
+    @onClose={{@onClose}}
+    @onFocus={{this.handleFocus}}
+    @onInput={{@onInput}}
+    @onKeydown={{this.handleKeydown}}
+    @onOpen={{this.handleOpen}}
+    @options={{@options}}
+    @optionsComponent={{@optionsComponent}}
+    @placeholder={{@placeholder}}
+    @placeholderComponent={{@placeholderComponent}}
+    @preventScroll={{@preventScroll}}
+    @registerAPI={{@registerAPI}}
+    @renderInPlace={{@renderInPlace}}
+    @required={{@required}}
+    @scrollTo={{@scrollTo}}
+    @search={{@search}}
+    @searchEnabled={{@searchEnabled}}
+    {{!-- @searchField={{@searchField}} --}}
+    @searchMessage={{@searchMessage}}
+    @searchPlaceholder={{@searchPlaceholder}}
+    {{!-- @selected={{@selected}} --}}
+    @selectedItemComponent={{@selectedItemComponent}}
+    @eventType={{@eventType}}
+    @title={{@title}}
+    {{!-- @triggerClass="ember-power-select-multiple-trigger {{@triggerClass}}" --}}
+    @triggerComponent={{component (or @triggerComponent "power-select-multiple/trigger") tabindex=@tabindex}}
+    @triggerId={{@triggerId}}
+    @verticalPosition={{@verticalPosition}}
+    @tabindex={{this.computedTabIndex}}
+    ...attributes
+    as |model|
+>
+    {{#if (has-block)}}
+        {{yield model}}
+    {{else}}
+        {{get model @optionLabel}}
+    {{/if}}
+</ModelSelect>

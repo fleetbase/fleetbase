@@ -1,0 +1,86 @@
+.fleetbase-pagination {
+    @apply flex flex-1 items-center justify-between py-3;
+}
+
+.fleetbase-pagination .direction-button {
+    @apply relative inline-flex items-center px-3 py-1 text-sm font-medium leading-5 text-gray-700 transition duration-150 ease-in-out bg-white border border-gray-300;
+}
+
+.fleetbase-pagination .direction-button:focus {
+    @apply border-[#A6B8A9] outline-none outline-offset-0 outline-[#496453] opacity-75;
+}
+
+.fleetbase-pagination .direction-button:hover {
+    @apply text-gray-500;
+}
+
+.fleetbase-pagination .direction-button:active,
+.fleetbase-pagination .direction-button.active {
+    @apply text-gray-700 bg-gray-100;
+}
+
+.fleetbase-pagination .page-item {
+    @apply relative inline-flex items-center px-3 py-1 -ml-px text-sm font-medium leading-5 text-gray-700 transition duration-150 ease-in-out bg-white border border-gray-300;
+}
+
+.fleetbase-pagination .page-item:focus {
+    @apply z-10 border-blue-300 outline-none outline-offset-0 outline-blue-500;
+}
+
+.fleetbase-pagination .page-item:hover {
+    @apply text-gray-500;
+}
+
+.fleetbase-pagination .page-item:active,
+.fleetbase-pagination .page-item.active {
+    @apply text-gray-800 bg-gray-100 shadow-inner;
+}
+
+.fleetbase-pagination .page-item-arrow {
+    @apply relative inline-flex items-center px-2 py-1 text-sm font-medium leading-5 text-gray-500 transition duration-150 ease-in-out bg-white border border-gray-300;
+}
+
+.fleetbase-pagination .page-item-arrow:focus {
+    @apply z-10 border-blue-300 outline-none outline-offset-0 outline-blue-500;
+}
+
+.fleetbase-pagination .page-item-arrow:hover {
+    @apply text-gray-400;
+}
+
+.fleetbase-pagination .page-item-arrow:active {
+    @apply text-gray-500 bg-gray-100;
+}
+
+.fleetbase-pagination .page-item-arrow:first-child {
+    /* @apply rounded-l-md; */
+}
+
+.fleetbase-pagination .page-item-arrow:last-child {
+    @apply -ml-px;
+}
+
+[data-theme='dark'] .fleetbase-pagination .page-item,
+[data-theme='dark'] .fleetbase-pagination .page-item-arrow,
+[data-theme='dark'] .fleetbase-pagination .direction-button {
+    @apply text-gray-100 bg-gray-800 border-gray-700 shadow;
+}
+
+[data-theme='dark'] .fleetbase-pagination .page-item:hover,
+[data-theme='dark'] .fleetbase-pagination .page-item-arrow:hover,
+[data-theme='dark'] .fleetbase-pagination .direction-button:hover {
+    @apply text-white;
+}
+
+[data-theme='dark'] .fleetbase-pagination .page-item:active,
+[data-theme='dark'] .fleetbase-pagination .page-item-arrow:active,
+[data-theme='dark'] .fleetbase-pagination .direction-button:active,
+[data-theme='dark'] .fleetbase-pagination .page-item.active,
+[data-theme='dark'] .fleetbase-pagination .page-item-arrow.active,
+[data-theme='dark'] .fleetbase-pagination .direction-button.active {
+    @apply text-gray-100 bg-gray-700;
+}
+
+[data-theme='dark'] .fleetbase-pagination .pagination-showing {
+    @apply text-gray-100;
+}

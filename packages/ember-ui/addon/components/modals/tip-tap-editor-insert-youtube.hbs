@@ -1,0 +1,9 @@
+<Modal::Default @modalIsOpened={{@modalIsOpened}} @options={{@options}} @confirm={{@onConfirm}} @decline={{@onDecline}}>
+    <div class="modal-body-container">
+        <InputGroup @name="Youtube Video URL" @value={{@options.url}} @helpText="The URL to the Youtube video you want to insert" @inputClass="input-lg" />
+        <div class="mt-2 grid grid-cols-2 gap-2">
+            <InputGroup @name="Height" @value={{@options.height}} @helpText="The Height of the Youtube video" @inputClass="input-lg" />
+            <InputGroup @name="Width" @value={{@options.width}} @helpText="The Width of the Youtube video" @inputClass="input-lg" />
+        </div>
+    </div>
+</Modal::Default>

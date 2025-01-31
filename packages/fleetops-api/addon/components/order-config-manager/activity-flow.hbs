@@ -1,0 +1,19 @@
+<div class="flex flex-row items-center px-6 py-2 space-x-2">
+    <Button
+        @type="primary"
+        @icon="save"
+        @text={{t "fleet-ops.component.order-config-manager.activity-flow.save-activity-flow"}}
+        @onClick={{perform this.save}}
+        @isLoading={{not this.save.isIdle}}
+        @disabled={{this.config.core_service}}
+        @permission="fleet-ops update order-config"
+    />
+    <Button @type="default" @icon="rotate" @text="Reset" @onClick={{this.resetConfig}} @disabled={{or this.config.core_service (cannot "fleet-ops update order-config")}} />
+</div>
+<div class="activity-flow-graph-container">
+    <div class="activity-flow-zoom-controls">
+        <Button @icon="plus" @onClick={{this.zoomIn}} />
+        <Button @icon="minus" @onClick={{this.zoomOut}} />
+    </div>
+    <JointGraph @onSetup={{this.initializeGraph}} />
+</div>

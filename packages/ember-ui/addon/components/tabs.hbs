@@ -1,0 +1,6 @@
+<div class="ui-tabs" ...attributes>
+    <ul class="nav nav-tabs" role="tablist">
+        {{yield (component "tabs/tab" tabsId=this.id activeTab=this.activeTab onClick=this.onClick onCreated=this.onCreated)}}
+    </ul>
+    <div id={{this.id}} class="tab-content {{or @tagContentClass ''}}"></div>
+</div>

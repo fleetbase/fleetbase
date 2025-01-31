@@ -1,5 +1,5 @@
 app:
-  name: Fleetbase
+  name: FleetYes
 terms:
   new: Nuovo
   sort: Ordina
@@ -75,6 +75,40 @@ common:
   permissions-required-for-changes: Non hai i permessi necessari per apportare modifiche.
   push-notifications: Notifiche push
   role: Ruolo
+  report-type: Tipo di rapporto
+  payment-method: Metodo di pagamento
+  select-payment-method: Seleziona il metodo di pagamento
+  select-report-type: Seleziona Tipo di rapporto
+  card-type: Tipo di carta
+  model-delete-confirmation: Sei sicuro di voler eliminare questo {modelName}?
+  model-delete-success: Il {modelName} è stato eliminato.
+  bulk-delete-success: "{record_count} record eliminati."
+  single-model-delete-success: Il record è stato eliminato.
+validation:
+  required:
+    payment_method: Il metodo di pagamento è obbligatorio
+  form_invalid: "Compila i campi obbligatori tipo di report e metodo di pagamento."
+statuses:
+    draft: "Bozza"
+    pending-approval: "In attesa di approvazione"
+    approved: "Approvato"
+    rejected: "Rifiutato"
+    revised: "Rivisto"
+    submitted: "Inviato"
+    in-review: "In revisione"
+    confirmed: "Confermato"
+    processed: "Elaborato"
+    archived: "Archiviato"
+    cancelled: "Annullato"
+    pending: "In attesa"
+fuelReportTypes:
+    Fuel: "Carburante"
+    Parking: "Parcheggio"
+    Toll: "Pedaggio"
+paymentOptions:
+    Card: "Carta"
+    Other: "Altro"
+
 component:
   file:
     dropdown-label: Azioni file
@@ -215,6 +249,8 @@ auth:
       submit-button: Reimposta la password
       back-button: Indietro
 fleet-ops:
+  iam: Gestione degli accessi degli utenti
+  fleet-ops: Flotta Sì Flusso
   extension-name: Fleet-Ops
   common:
     active-manpower: Manodopera Attiva
@@ -388,7 +424,7 @@ fleet-ops:
       measurements: Misure
     order-config-manager:
       title: Configurazione Ordini
-      message: Le configurazioni degli ordini ti consentono di definire configurazioni dinamiche che diranno a Fleetbase come diversi tipi di ordini dovrebbero essere eseguiti.
+      message: Le configurazioni degli ordini ti consentono di definire configurazioni dinamiche che diranno a FleetYes come diversi tipi di ordini dovrebbero essere eseguiti.
       configuration: Configurazione
       new-order-config: Nuova Configurazione Ordine
       select-order-config: Seleziona Configurazione Ordine
@@ -523,18 +559,20 @@ fleet-ops:
         operations: Operazioni
         dashboard: Dashboard
         service-rates: Tariffe Servizio
-        scheduler: Pianificatore
+        scheduler: Calendario
         drivers: Conducenti
         vehicles: Veicoli
         fleets: Flotte
         vendors: Fornitori
         contacts: Contatti
         places: Luoghi
-        fuel-reports: Rapporti Carburante
+        fuel-reports: Tracciamento del carburante
         issues: Problemi
         title: Crea nuovo ordine
         settings: Impostazioni
         order-config: Configurazione Ordine
+        parking: Monitoraggio parcheggi
+        toll-reports: Spese di pedaggio
     live-map-drawer:
       driver-listing:
         location: Posizione
@@ -752,20 +790,20 @@ fleet-ops:
       order-new-activity:
         select-message: Seleziona uno stato di attività per aggiornare l'attività di tracciamento dell'ordine, o inserisci un'attività personalizzata.
         order-currently-message: Questo ordine è attualmente {options}, l'attività aggiuntiva sovrascriverà questo stato.
-        not-recommend-message: Fleetbase non consiglia questo a meno che tu non sappia esattamente cosa stai facendo.
+        not-recommend-message: FleetYes non consiglia questo a meno che tu non sappia esattamente cosa stai facendo.
         activity-options: Opzioni di Attività
         activity: attività
         dispatch: Questo attiverà la spedizione dell'ordine.
         status: Stato attività personalizzato
         details: Dettagli attività personalizzati
         code: Codice attività personalizzato
-        fleetbase-message: Fleetbase non consiglia questo a meno che tu non sappia esattamente cosa stai facendo.
+        fleetbase-message: FleetYes non consiglia questo a meno che tu non sappia esattamente cosa stai facendo.
       order-route-form:
         toggle: Attiva/Disattiva più fermate
         optimize: Ottimizza Percorso
-        optimize-text: Fleetbase ottimizza automaticamente il percorso.
+        optimize-text: FleetYes ottimizza automaticamente il percorso.
         add: Aggiungi Punto di Passaggio
-        add-text: Usa il pulsante `Aggiungi Punto di Passaggio` per aggiungere altre fermate a questo ordine. Il motore di routing Fleetbase ottimizzerà automaticamente il percorso man mano che ogni fermata verrà aggiunta o rimossa.
+        add-text: Usa il pulsante `Aggiungi Punto di Passaggio` per aggiungere altre fermate a questo ordine. Il motore di routing FleetYes ottimizzerà automaticamente il percorso man mano che ogni fermata verrà aggiunta o rimossa.
         select-waypoint: Seleziona Punto di Passaggio
         pickup: Ritiro
         edit-address: Modifica Indirizzo
@@ -804,7 +842,7 @@ fleet-ops:
         country: Paese dell'Area di Servizio
         country-text: Imposta facoltativamente il paese in cui si trova o è basata questa Area di Servizio.
       set-password:
-        message: Benvenuto su Fleetbase! Prima di iniziare, imposta una nuova password per continuare di seguito.
+        message: Benvenuto su FleetYes! Prima di iniziare, imposta una nuova password per continuare di seguito.
         new-password: Nuova Password
         confirm-password: Conferma la Password
         help-text: Inserisci una password di almeno 8 caratteri per continuare.
@@ -980,7 +1018,7 @@ fleet-ops:
         title: Transazioni recenti
         loading: Caricamento transazioni recenti...
         no-transactions: Nessuna transazione questa settimana
-        message: Quando gli ordini vengono elaborati con le tariffe di servizio, Fleetbase traccia automaticamente le transazioni.
+        message: Quando gli ordini vengono elaborati con le tariffe di servizio, FleetYes traccia automaticamente le transazioni.
     contact-form-panel:
       success-message: Contatto {contactName} salvato con successo.
       view-contact-button: Visualizza dettagli contatto
@@ -1076,28 +1114,65 @@ fleet-ops:
       add-vehicle: Aggiungi veicolo alla flotta
       loading-message: Caricamento veicolo della flotta...
     fuel-report-form-panel:
-      success-message: Rapporto carburante salvato con successo.
-      fuel-report: Nuovo rapporto carburante
-      save-fuel-report: Salva rapporto carburante
-      create-fuel-report: Crea rapporto carburante
-      view-details: Visualizza dettagli rapporto carburante
-      cancel-edit-fuel-report: Annulla modifica rapporto carburante
-      cancel-new-fuel-report: Annulla nuovo rapporto carburante
-      select-reporter: Seleziona chi ha redatto il rapporto
-      select-driver: Seleziona conducente
-      select-vehicle: Seleziona veicolo
-      select-fuel-report: Seleziona stato rapporto carburante
-      odometer: Contachilometri
+      success-message: "Rapporto carburante salvato con successo."
+      fuel-report: "Nuovo rapporto carburante"
+      save-fuel-report: "Salva rapporto carburante"
+      create-fuel-report: "Crea rapporto carburante"
+      view-details: "Visualizza dettagli rapporto carburante"
+      cancel-edit-fuel-report: "Annulla modifica rapporto carburante"
+      cancel-new-fuel-report: "Annulla nuovo rapporto carburante"
+      select-reporter: "Seleziona reporter"
+      select-driver: "Seleziona conducente"
+      select-vehicle: "Seleziona veicolo"
+      select-fuel-report: "Seleziona stato rapporto carburante"
+      odometer: "Contachilometri"
+      cost: "Costo"
+      volume: "Volume"
+      file-delete-message: "Immagine del rapporto carburante eliminata con successo."
+      select-volume-text: "Seleziona l'unità di misura e il volume di carburante da riportare."
+    parking-form-panel:
+      success-message: Rapporto di parcheggio salvato con successo.
+      parking-report: Nuovo rapporto di parcheggio
+      save-parking-report: Salva rapporto di parcheggio
+      create-parking-report: Crea rapporto di parcheggio
+      view-details: Visualizza i dettagli del rapporto di parcheggio
+      cancel-edit-parking-report: Annulla modifica del rapporto di parcheggio
+      cancel-new-parking-report: Annulla nuovo rapporto di parcheggio
+      select-reporter: Seleziona il reporter
+      select-driver: Seleziona il conducente
+      select-vehicle: Seleziona il veicolo
+      select-parking-report: Seleziona lo stato del rapporto di parcheggio
       cost: Costo
-      volume: Volume
-      select-volume-text: Seleziona l'unità di misura e il volume del carburante da riportare.
+    toll-report-form-panel:
+      success-message: Rapporto pedaggio salvato con successo.
+      parking-report: Nuovo rapporto pedaggio
+      save-parking-report: Salva rapporto pedaggio
+      create-parking-report: Crea rapporto pedaggio
+      view-details: Visualizza i dettagli del rapporto pedaggio
+      cancel-edit-parking-report: Annulla modifica rapporto pedaggio
+      cancel-new-parking-report: Annulla nuovo rapporto pedaggio
+      select-reporter: Seleziona il reporter
+      select-driver: Seleziona il conducente
+      select-vehicle: Seleziona il veicolo
+      select-parking-report: Seleziona lo stato del rapporto pedaggio
+      cost: Costo
     fuel-report-panel:
-      title: Dettagli rapporto carburante
-      edit-button: Modifica rapporto carburante
-      cancel-edit-fuel-report: Annulla modifica rapporto carburante
-      cancel-new-fuel-report: Annulla nuovo rapporto carburante
+      title: Dettagli del rapporto sul carburante
+      edit-button: Modifica il rapporto sul carburante
+      cancel-edit-fuel-report: Annulla la modifica del rapporto sul carburante
+      cancel-new-fuel-report: Annulla il nuovo rapporto sul carburante
       details:
         fuel: Carburante/Volume
+    parking-report-panel:
+      title: Dettagli del rapporto di parcheggio
+      edit-button: Modifica rapporto di parcheggio
+      cancel-edit-parking-report: Annulla modifica del rapporto di parcheggio
+      cancel-new-parking-report: Annulla nuovo rapporto di parcheggio
+    toll-report-panel:
+      title: Dettagli rapporto pedaggio
+      edit-button: Modifica rapporto pedaggio
+      cancel-edit-fuel-report: Annulla modifica rapporto pedaggio
+      cancel-new-fuel-report: Annulla nuovo rapporto pedaggio
     global-search:
       search: Cerca per parola chiave...
     integrated-order-details:
@@ -1345,7 +1420,7 @@ fleet-ops:
         namespace: Namespace personalizzato
         namespace-text: Fornisci facoltativamente un namespace o una versione API personalizzati da utilizzare per l'integrazione.
         webhook: URL Webhook
-        webhook-text: I fornitori integrati di solito richiedono questo URL affinché Fleetbase possa ricevere gli aggiornamenti delle attività sull'ordine. Non cambiarlo a meno che tu non sappia cosa stai facendo! Modificarlo potrebbe interrompere gli aggiornamenti dell'ordine!
+        webhook-text: I fornitori integrati di solito richiedono questo URL affinché FleetYes possa ricevere gli aggiornamenti delle attività sull'ordine. Non cambiarlo a meno che tu non sappia cosa stai facendo! Modificarlo potrebbe interrompere gli aggiornamenti dell'ordine!
         select-integrated: Seleziona un fornitore integrato.
         vendor-details: Dettagli fornitore
         select-vendor-status: Seleziona stato fornitore
@@ -1457,6 +1532,32 @@ fleet-ops:
           body: Le modifiche non salvate a questo rapporto carburante verranno perse. Clicca su continua per procedere.
         title: Rapporti carburante
         delete-fuel-reports: Elimina rapporti carburante
+    parking:
+      index:
+        view: Visualizza dettagli
+        edit-parking-report: Modifica rapporto di parcheggio
+        delete: Elimina rapporto di parcheggio
+        delete-button: Elimina rapporti di parcheggio
+        edit:
+          body: Le modifiche non salvate a questo rapporto di parcheggio saranno perse. Clicca su continua per procedere.
+        title: Rapporti di parcheggio
+        delete-parking-report: Elimina rapporti di parcheggio
+        delete-parking-report-confirm: Sei sicuro di voler eliminare questo report di parcheggio?
+        delete-parking-report-success: Il report di parcheggio è stato eliminato.
+        delete-parking-reports: Elimina i rapporti di parcheggio
+    toll-reports:
+      index:
+        view: Visualizza dettagli
+        edit-toll-report: Modifica rapporto pedaggio
+        delete: Elimina rapporto pedaggio
+        delete-button: Elimina rapporti pedaggio
+        edit:
+          body: Le modifiche non salvate a questo rapporto pedaggio andranno perse. Clicca su continua per procedere.
+        title: Rapporti pedaggio
+        delete-parking-report: Elimina rapporti pedaggio
+        delete-toll-report-confirm: Sei sicuro di voler eliminare questo report di pedaggio?
+        delete-toll-report-success: Il report di pedaggio è stato eliminato.
+        delete-toll-reports: Elimina i rapporti di pedaggio
     issues:
       index:
         view: Visualizza dettagli
@@ -1545,7 +1646,7 @@ fleet-ops:
           edit-order: Modifica metadati ordine
           add-field: Aggiungi campo personalizzato
           order-type: Tipo Ordine
-          order-type-help-text: Selezionando il tipo di ordine, Fleetbase saprà quale configurazione di ordine utilizzare.
+          order-type-help-text: Selezionando il tipo di ordine, FleetYes saprà quale configurazione di ordine utilizzare.
           order-type-placeholder: Seleziona Tipo Ordine
           internal-id: ID Interno
           internal-id-help-text: Usa questo campo per impostare facoltativamente un identificatore personalizzato o interno per l'ordine.
@@ -1583,9 +1684,9 @@ fleet-ops:
           route: Percorso
           route-label: Più Consegne
           optimize-route: Ottimizza Percorso
-          optimize-route-help-text: Fleetbase ottimizza automaticamente il percorso.
+          optimize-route-help-text: FleetYes ottimizza automaticamente il percorso.
           add-waypoint: Aggiungi Punto di Passaggio
-          add-waypoint-help-text: Usa il pulsante "Aggiungi Punto di Passaggio" per aggiungere altre fermate per questo ordine. Il motore di routing di Fleetbase ottimizzerà automaticamente il percorso man mano che verranno aggiunte o rimosse fermate.
+          add-waypoint-help-text: Usa il pulsante "Aggiungi Punto di Passaggio" per aggiungere altre fermate per questo ordine. Il motore di routing di FleetYes ottimizzerà automaticamente il percorso man mano che verranno aggiunte o rimosse fermate.
           select-waypoint-placeholder: Seleziona Punto di Passaggio
           infoblock-text: non è in grado di supportare questa posizione.
           invalid-coordinates: Coordinate non valide!
@@ -1611,7 +1712,7 @@ fleet-ops:
           select-service-rate: Seleziona Tariffa di Servizio
           refresh-button: Ricarica
           loading-message: Caricamento preventivi servizio...
-          info-text: Seleziona un preventivo di servizio in tempo reale da applicare a questo ordine. Una volta applicato, diventerà una tariffa acquistata. Le transazioni saranno tracciate nel libro mastro di Fleetbase.
+          info-text: Seleziona un preventivo di servizio in tempo reale da applicare a questo ordine. Una volta applicato, diventerà una tariffa acquistata. Le transazioni saranno tracciate nel libro mastro di FleetYes.
           breakdown: Dettaglio
           no-service-info-text: Nessun preventivo servizio disponibile.
           input-order-info-text: Inserisci il percorso dell'ordine per visualizzare i preventivi di servizio.
@@ -1702,7 +1803,7 @@ fleet-ops:
           order-notes-updated: Le note dell'ordine sono state aggiornate.
         config:
           title: Configurazione Ordini
-          message: Le configurazioni degli ordini ti permettono di definire configurazioni dinamiche che diranno a Fleetbase come devono essere eseguiti i diversi tipi di ordini.
+          message: Le configurazioni degli ordini ti permettono di definire configurazioni dinamiche che diranno a FleetYes come devono essere eseguiti i diversi tipi di ordini.
           configuration: Configurazione
           types:
             no-order-installed: Nessuna configurazione ordine installata!
@@ -1844,11 +1945,11 @@ iam:
     bulk-action: Azione Multipla
     country: Paese
     create: Creato
-    dashboard: Dashboard
+    dashboard: Panoramica
     description: Descrizione
     email: Email
     export: Esporta
-    group: Gruppi
+    group: Reti
     member: Membri
     name: Nome
     new: Nuovo
@@ -1856,7 +1957,7 @@ iam:
     phone: Telefono
     photo: Foto
     policy: Politica
-    policies: Politiche
+    policies: Controllo degli accessi
     attach-policies: Allegare Politiche
     select-policy: Seleziona Politica
     attach-permissions: Allegare Permessi
@@ -1867,7 +1968,7 @@ iam:
     roles: Ruoli
     status: Stato
     type: Tipo
-    user: Utenti
+    user: Profili
     service: Servizio
     reload: Ricarica
     reload-data: Ricarica Dati
@@ -1931,7 +2032,7 @@ iam:
       data-assosciated-this-group-deleted: Sei sicuro di voler eliminare questo gruppo? Tutti i dati associati a questo gruppo saranno eliminati. Questa azione non può essere annullata.
   policies:
     index:
-      title: Politiche
+      title: Controllo degli accessi
       delete-policies: Elimina Politiche
       contact-action: Azioni Contatto
       edit-policy: Modifica politica...
@@ -1993,12 +2094,12 @@ iam:
       access-account-or-resources-unless-re-activated: Sei sicuro di voler disattivare questo utente? Questo utente non potrà più accedere al proprio account o alle risorse a meno che non venga riattivato.
       this-user-will-regain-access-to-your-organization: Sei sicuro di voler riattivare questo utente? Questo utente riacquisterà l'accesso alla tua organizzazione.
       resend-invitation-to-join-organization: Re-invia invito a unirsi all'organizzazione
-      confirming-fleetbase-will-re-send-invitation-for-user-to-join-your-organization: Confermando, Fleetbase re-invierà l'invito a questo utente per unirsi alla tua organizzazione.
+      confirming-fleetbase-will-re-send-invitation-for-user-to-join-your-organization: Confermando, FleetYes re-invierà l'invito a questo utente per unirsi alla tua organizzazione.
       invitation-resent: Invito reinviato.
   application:
     access-management: Gestione Accessi
   home:
-    identity-access-management: Gestione Identità e Accessi
+    identity-access-management: Gestione degli accessi degli utenti
 registry-bridge:
   extension-name: Ponte Registro
   common:
@@ -2021,7 +2122,7 @@ registry-bridge:
       updated: Aggiornato
       website: Sito web
       self-managed: Autogestita
-      self-managed-help-text: Un'estensione autogestita è progettata per gli utenti che ospitano Fleetbase sui propri server, al di fuori dell'ambiente cloud/SaaS. Queste estensioni richiedono installazione e configurazione manuali. Se utilizzi Fleetbase come istanza self-hosted, puoi utilizzare queste estensioni per aggiungere funzionalità aggiuntive. Tuttavia, non sono disponibili per gli utenti cloud/SaaS.
+      self-managed-help-text: Un'estensione autogestita è progettata per gli utenti che ospitano FleetYes sui propri server, al di fuori dell'ambiente cloud/SaaS. Queste estensioni richiedono installazione e configurazione manuali. Se utilizzi FleetYes come istanza self-hosted, puoi utilizzare queste estensioni per aggiungere funzionalità aggiuntive. Tuttavia, non sono disponibili per gli utenti cloud/SaaS.
       self-hosted-install: Installazione Self-Hosted
       self-hosted-install-help-text: Visualizza le istruzioni per l'installazione self-hosted.
     extension-pending-publish-viewer:
@@ -2134,4 +2235,4 @@ registry-bridge:
         bundles: Pacchetti
         upload-new-bundle: Carica nuovo Pacchetto
         self-managed: Autogestita
-        self-managed-help-text: Abilita questa opzione se il tuo modulo è destinato esclusivamente a istanze self-hosted. Se selezioni questa opzione, il modulo non sarà disponibile per l'installazione sulla versione cloud/SaaS di Fleetbase e dovrà essere installato manualmente dall'utente sul proprio server.
+        self-managed-help-text: Abilita questa opzione se il tuo modulo è destinato esclusivamente a istanze self-hosted. Se selezioni questa opzione, il modulo non sarà disponibile per l'installazione sulla versione cloud/SaaS di FleetYes e dovrà essere installato manualmente dall'utente sul proprio server.

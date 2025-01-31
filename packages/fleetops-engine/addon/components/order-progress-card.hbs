@@ -1,0 +1,64 @@
+<a href="javascript:;" class="order-progress-card" {{on "click" this.handleClick}} ...attributes>
+    <div class="order-progress-card-header">
+        <div class="order-progress-card-header-id">
+            <div class="order-progress-card-header-id-icon-wrapper">
+                <FaIcon @icon="box" />
+            </div>
+            <div>
+                <h1 class="order-progress-tracking-number">{{this.order.tracking}}</h1>
+                <div class="order-progress-creation-date">{{this.order.createdAt}}</div>
+            </div>
+        </div>
+        <div class="order-progress-card-header-status">
+            <Badge @status={{this.order.status}}>{{smart-humanize this.order.status}}</Badge>
+        </div>
+    </div>
+    <div class="order-progress-card-progress">
+        <OrderProgressBar
+            @order={{this.order}}
+            @progress={{this.order.tracker_data.progress_percentage}}
+            @firstWaypointCompleted={{this.order.tracker_data.first_waypoint_completed}}
+            @lastWaypointCompleted={{this.order.tracker_data.last_waypoint_completed}}
+        />
+    </div>
+    <div class="order-progress-card-details">
+        <div class="order-progress-card-details-address start">
+            {{#if this.order.payload.isMultiDrop}}
+                {{this.order.payload.firstWaypoint.address}}
+            {{else}}
+                {{this.order.payload.pickup.address}}
+            {{/if}}
+        </div>
+        <div class="order-progress-card-details-address end">
+            {{#if this.order.payload.isMultiDrop}}
+                {{this.order.payload.lastWaypoint.address}}
+            {{else}}
+                {{this.order.payload.dropoff.address}}
+            {{/if}}
+        </div>
+    </div>
+    <div class="order-progress-card-footer">
+        <div class="grid grid-cols-2 gap-2 mt-1 px-1">
+            <div class="flex flex-col text-xs">
+                <div class="font-semibold">Current ETA:</div>
+                <div class="">{{format-duration this.order.tracker_data.current_destination_eta}}</div>
+            </div>
+            <div class="flex flex-col text-xs">
+                <div class="font-semibold">ECT:</div>
+                <div class="">{{n-a this.order.tracker_data.estimated_completion_time_formatted}}</div>
+            </div>
+            <div class="flex flex-col text-xs">
+                <div class="font-semibold">Driver:</div>
+                <div class="truncate {{if this.order.has_driver_assigned 'text-green-900 dark:text-green-200' 'text-yellow-900 dark:text-yellow-200'}}">{{if
+                        this.order.has_driver_assigned
+                        "Driver Assigned"
+                        "No Driver Assigned"
+                    }}</div>
+            </div>
+            <div class="flex flex-col text-xs">
+                <div class="font-semibold">Current Destination:</div>
+                <div class="truncate">{{n-a this.order.tracker_data.current_destination.address}}</div>
+            </div>
+        </div>
+    </div>
+</a>

@@ -1,0 +1,77 @@
+<div class="next-table-wrapper {{@wrapperClass}}">
+    <table class="{{if @canExpand 'is-expandable'}}" ...attributes {{did-insert this.setupComponent}}>
+        {{#if (has-block)}}
+            {{yield
+                (hash
+                    columns=this.visibleColumns
+                    rows=@rows
+                    pagination=@pagination
+                    body=(component "table/body" selectable=@selectable rows=@rows columns=this.visibleColumns canExpand=@canExpand onRowClick=@onRowClick)
+                    head=(component
+                        "table/head"
+                        canSelectAll=@canSelectAll
+                        canExpand=@canExpand
+                        rows=@rows
+                        columns=this.visibleColumns
+                        allRowsToggled=this.allRowsToggled
+                        selectAllRows=this.selectAllRows
+                        selectAllColumnWidth=@selectAllColumnWidth
+                    )
+                )
+            }}
+            {{#if @insertPagination}}
+                <Table::Foot @tfootVerticalOffset={{@tfootVerticalOffset}} @tfootVerticalOffsetElements={{@tfootVerticalOffsetElements}}>
+                    <tr class="tfoot-row {{if @pagination 'next-pagination-row'}}">
+                        <td class="tfoot-column {{if @pagination 'next-pagination-column'}}" colspan={{add this.visibleColumns.length 1}}>
+                            <div class="tfoot-wrapper">
+                                {{#if @pagination}}
+                                    <Pagination @columns={{this.visibleColumns}} @meta={{@paginationMeta}} @currentPage={{@page}} @onPageChange={{@onPageChange}} />
+                                {{/if}}
+                            </div>
+                        </td>
+                    </tr>
+                </Table::Foot>
+            {{/if}}
+        {{else}}
+            <Table::Head @canSelectAll={{@canSelectAll}} @columns={{this.visibleColumns}}>
+                <Table::Row>
+                    {{#if @canSelectAll}}
+                        <Table::Th @width={{or @selectAllColumnWidth 40}} @resizable={{false}}>
+                            <Table::Cell::Checkbox @value={{this.allRowsToggled}} @onToggle={{this.selectAllRows}} />
+                        </Table::Th>
+                    {{/if}}
+                    {{#each this.visibleColumns as |column|}}
+                        <Table::Th @column={{column}} @resizable={{column.resizable}} @sortable={{column.sortable}}>{{column.label}}</Table::Th>
+                    {{/each}}
+                </Table::Row>
+            </Table::Head>
+            <Table::Body @selectable={{@selectable}} @rows={{@rows}} @columns={{this.visibleColumns}} @canExpand={{@canExpand}} @onRowClick={{@onRowClick}}>
+                {{#each @rows as |row|}}
+                    <Table::Row @selected={{get row "checked"}} @onRowClick={{@onRowClick}} @row={{row}}>
+                        {{#if @selectable}}
+                            <Table::Td>
+                                <Table::Cell::Checkbox @row={{row}} @value={{get row "checked"}} />
+                            </Table::Td>
+                        {{/if}}
+                        {{#each this.visibleColumns as |column|}}
+                            <Table::Td @column={{column}} @row={{row}} @value={{get row column.valuePath}} />
+                        {{/each}}
+                    </Table::Row>
+                {{/each}}
+            </Table::Body>
+            {{#if (or @tfoot @pagination)}}
+                <Table::Foot @columns={{this.visibleColumns}} @tfootVerticalOffset={{@tfootVerticalOffset}} @tfootVerticalOffsetElements={{@tfootVerticalOffsetElements}}>
+                    <tr class="tfoot-row {{if @pagination 'next-pagination-row'}}">
+                        <td class="tfoot-column {{if @pagination 'next-pagination-column'}}" colspan={{add this.visibleColumns.length 1}}>
+                            <div class="tfoot-wrapper">
+                                {{#if @pagination}}
+                                    <Pagination @columns={{this.visibleColumns}} @meta={{@paginationMeta}} @currentPage={{@page}} @onPageChange={{@onPageChange}} />
+                                {{/if}}
+                            </div>
+                        </td>
+                    </tr>
+                </Table::Foot>
+            {{/if}}
+        {{/if}}
+    </table>
+</div>

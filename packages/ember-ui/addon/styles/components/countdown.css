@@ -1,0 +1,55 @@
+.countdown-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.remaining-normal {
+    font-size: 24px;
+    color: #3498db;
+}
+
+.remaining-low {
+    font-size: 24px;
+    color: #e74c3c;
+    font-weight: bold;
+    animation: pulse 0.5s infinite alternate;
+}
+
+.progress-ring {
+    margin-top: 10px;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background-color: transparent;
+    border: 5px solid #3498db;
+    animation: rotate 1s linear infinite;
+}
+
+.progress-circle {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    clip: rect(0, 60px, 60px, 30px);
+    background-color: #fff;
+    transform: rotate(90deg);
+    transform-origin: 50% 50%;
+}
+
+@keyframes rotate {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes pulse {
+    from {
+        transform: scale(1);
+    }
+    to {
+        transform: scale(1.1);
+    }
+}

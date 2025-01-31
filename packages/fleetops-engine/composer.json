@@ -1,0 +1,96 @@
+{
+    "name": "fleetbase/fleetops-api",
+    "version": "0.5.16",
+    "description": "Fleet & Transport Management Extension for Fleetbase",
+    "keywords": [
+        "fleetbase-extension",
+        "fleetops",
+        "last-mile",
+        "tms",
+        "delivery management"
+    ],
+    "license": "AGPL-3.0-or-later",
+    "authors": [
+        {
+            "name": "Fleetbase Pte Ltd.",
+            "email": "hello@fleetbase.io"
+        },
+        {
+            "name": "Ronald A. Richardson",
+            "email": "ron@fleetbase.io"
+        }
+    ],
+    "require": {
+        "php": "^8.0",
+        "fleetbase/core-api": "*",
+        "barryvdh/laravel-dompdf": "^2.0",
+        "brick/geo": "0.7.2",
+        "cknow/laravel-money": "^7.1",
+        "geocoder-php/google-maps-places-provider": "^1.4",
+        "giggsey/libphonenumber-for-php": "^8.13",
+        "league/geotools": "^1.1.0",
+        "milon/barcode": "^10.0",
+        "php-http/guzzle7-adapter": "^1.0",
+        "psr/http-factory-implementation": "*",
+        "toin0u/geocoder-laravel": "^4.4",
+        "webit/eval-math": "^1.0"
+    },
+    "require-dev": {
+        "friendsofphp/php-cs-fixer": "^3.34.1",
+        "nunomaduro/collision": "^7.0",
+        "pestphp/pest": "^2.33.2",
+        "phpstan/phpstan": "^1.10.38",
+        "symfony/var-dumper": "^5.4.29"
+    },
+    "autoload": {
+        "psr-4": {
+            "Fleetbase\\FleetOps\\": "server/src/",
+            "Fleetbase\\FleetOps\\Seeders\\": "server/seeders/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Fleetbase\\Tests\\": "server/tests/"
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Fleetbase\\FleetOps\\Providers\\FleetOpsServiceProvider",
+                "Fleetbase\\FleetOps\\Providers\\EventServiceProvider"
+            ]
+        },
+        "fleetbase/fleetops-api": {
+            "excludes": [
+                "addon",
+                "app",
+                "assets",
+                "config",
+                "tests",
+                "vendor"
+            ]
+        }
+    },
+    "config": {
+        "vendor-dir": "./server_vendor",
+        "sort-packages": true,
+        "preferred-install": "dist",
+        "allow-plugins": {
+            "pestphp/pest-plugin": true,
+            "php-http/discovery": true
+        }
+    },
+    "scripts": {
+        "lint": "php-cs-fixer fix -v",
+        "test:lint": "php-cs-fixer fix -v --dry-run",
+        "test:types": "phpstan analyse --ansi --memory-limit=4G",
+        "test:unit": "pest --colors=always",
+        "test": [
+            "@test:lint",
+            "@test:types",
+            "@test:unit"
+        ]
+    }
+}

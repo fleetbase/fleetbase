@@ -1,0 +1,127 @@
+<aside role="menubar" class="flex flex-col lg:hidden w-full border-b border-gray-200 dark:border-gray-700 shadow-sm px-2 py-3">
+    <div class="flex items-center justify-between mb-2">
+        <span>{{pluralize @items.length this.resource}}</span>
+        {{#if @onCreate}}
+            <Button @type="primary" @icon="plus" @iconPrefix="fas" @text={{concat "Create " this.resource}} @onClick={{this.onCreate}} />
+        {{/if}}
+    </div>
+    <div>
+        <DropdownButton
+            @contentClass="w-full"
+            @buttonWrapperClass="w-full"
+            @buttonClass="w-full"
+            @icon="bars"
+            @iconPrefix="fas"
+            @text={{concat "Select " this.resource}}
+            @matchTriggerWidth={{true}}
+            @verticalPosition="below"
+            @renderInPlace={{true}}
+            as |dd|
+        >
+            <div class="next-dd-menu w-full h-screen-50 overflow-y-scroll" aria-orientation="vertical" aria-labelledby="user-menu">
+                {{#each-in this.itemsGroupByTitleLetter as |key items|}}
+                    <div class="px-1">
+                        <div class="text-sm flex flex-row items-center px-3 py-1 rounded-md my-1 text-gray-800 dark:text-gray-300">
+                            {{capitalize key}}
+                        </div>
+                    </div>
+                    <div class="next-dd-menu-seperator"></div>
+                    {{#each items as |item|}}
+                        <div role="group" class="px-1">
+                            <div role="menuitem" class="next-dd-item">
+                                {{yield item dd}}
+                            </div>
+                        </div>
+                    {{/each}}
+                {{else}}
+                    <div class="flex flex-col items-center text-center my-4">
+                        <div class="mb-4">
+                            <h4 class="dark:text-gray-100">No {{pluralize this.resource}}</h4>
+                        </div>
+                    </div>
+                {{/each-in}}
+            </div>
+        </DropdownButton>
+    </div>
+</aside>
+<aside role="menu" class="hidden xl:order-first lg:flex lg:flex-col flex-shrink-0 w-96 border-r border-gray-200 dark:border-gray-700 shadow-sm" ...attributes>
+    <div class="px-5 pt-6 pb-4">
+        <div class="flex justify-between">
+            <div class="flex-1">
+                <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">{{this.title}}</h2>
+                <p class="mt-1 text-sm text-gray-600">
+                    Search
+                    {{pluralize @items.length this.resource}}
+                </p>
+            </div>
+            <div>
+                {{#if @onCreate}}
+                    <Button @type="primary" @icon="plus" @text={{concat "Create " this.resource}} @onClick={{this.onCreate}} />
+                {{/if}}
+            </div>
+        </div>
+        <div class="mt-4">
+            <Input @type="text" class="form-input w-full" @value={{this.searchQuery}} aria-label="Search Input" placeholder="Search" />
+        </div>
+    </div>
+    <div class="h-screen overflow-y-scroll {{@scrollableClass}}">
+        <nav class="flex-1 min-h-0 overflow-y-auto {{@navClass}}" aria-label="Directory">
+            <div class="relative" {{increase-height-by 300}}>
+                {{#if @customTopItemComponent}}
+                    <ul class="relative z-0 divide-y divide-gray-200 dark:divide-gray-900">
+                        <li>
+                            <div class="relative flex items-center space-x-3 hover:bg-gray-50 dark:hover:bg-gray-700 focus-within:ring-2 focus-within:ring-inset focus-within:ring-blue-400">
+                                <div class="flex-1 min-w-0">
+                                    {{component @customTopItemComponent onClick=@customTopItemOnClick item=@customTopItem text=@customTopItemText wrapperClass=@customTopItemClass}}
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                {{/if}}
+                {{#each-in this.itemsGroupByTitleLetter as |key items|}}
+                    <div
+                        class="z-10 sticky top-0 border-t border-b border-gray-200 bg-gray-50 px-6 py-1 text-sm font-medium text-gray-500 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-100"
+                    >
+                        <h3>{{capitalize key}}</h3>
+                    </div>
+                    <ul class="relative z-0 divide-y divide-gray-200 dark:divide-gray-900">
+                        {{#each items as |item|}}
+                            <li>
+                                <div
+                                    class="relative flex items-center space-x-3 hover:bg-gray-50 dark:hover:bg-gray-700 focus-within:ring-2 focus-within:ring-inset focus-within:ring-blue-400"
+                                >
+                                    <div class="flex-1 min-w-0">
+                                        {{yield item}}
+                                    </div>
+                                </div>
+                            </li>
+                        {{/each}}
+                    </ul>
+                {{else}}
+                    <div class="flex flex-col items-center text-center my-4">
+                        <div class="mb-4">
+                            <h4 class="dark:text-gray-100">No {{pluralize this.resource}}</h4>
+                        </div>
+                    </div>
+                {{/each-in}}
+                {{#if @customBottomItemComponent}}
+                    <ul class="relative z-0 divide-y divide-gray-200 dark:divide-gray-900">
+                        <li>
+                            <div class="relative flex items-center space-x-3 hover:bg-gray-50 dark:hover:bg-gray-700 focus-within:ring-2 focus-within:ring-inset focus-within:ring-blue-400">
+                                <div class="flex-1 min-w-0">
+                                    {{component
+                                        @customBottomItemComponent
+                                        onClick=@customBottomItemOnClick
+                                        item=@customBottomItem
+                                        text=@customBottomItemText
+                                        wrapperClass=@customBottomItemClass
+                                    }}
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                {{/if}}
+            </div>
+        </nav>
+    </div>
+</aside>

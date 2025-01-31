@@ -1,0 +1,46 @@
+<ContentPanel @title="Fleet-Ops Order Settings" @open={{true}} @pad={{true}} @panelBodyClass="bg-white dark:bg-gray-800 mb-4">
+    <InputGroup @name="Enabled Order Types">
+        <div class="space-y-1">
+            {{#if this.loadOrderConfigs.isRunning}}
+                <Spinner />
+            {{else}}
+                {{#each this.orderConfigs as |orderConfig|}}
+                    <Checkbox @value={{includes orderConfig.id this.enabledOrderConfigs}} @onChange={{perform this.toggleOrderConfig orderConfig}}>{{orderConfig.name}}</Checkbox>
+                {{/each}}
+            {{/if}}
+        </div>
+        {{#if this.toggleOrderConfig.isRunning}}
+            <div class="mt-4">
+                <Spinner @loadingMessage="Saving changes..." @loadingMessageClass="ml-2" @wrapperClass="flex flex-row items-center" />
+            </div>
+        {{/if}}
+    </InputGroup>
+    <InputGroup @name="Enable Payments" @wrapperClass="mb-0i">
+        <Toggle
+            @isToggled={{this.paymentsEnabled}}
+            @onToggle={{perform this.togglePayments}}
+            @label="Enable customer to make payments through portal"
+            @wrapperClass={{if (or this.togglePayments.isRunning this.loadOrderConfigs.isRunning) "pointer-events-none opacity-50" ""}}
+            @disable={{not this.paymentsOnboardCompleted}}
+        />
+        {{#if this.toggleOrderConfig.isIdle}}
+            <div class="space-y-4 mt-4">
+                {{#unless this.paymentsOnboardCompleted}}
+                    <InfoBlock @type="warning" @icon="triangle-exclamation">
+                        <span>Payment onboard must be completed to enable payments from customers.</span>
+                        <Button @text="Completed Payments Onboard" @onClick={{transition-to "settings.payments.onboard"}} @wrapperClass="mt-2" />
+                    </InfoBlock>
+                {{/unless}}
+                <InfoBlock
+                    @type={{if this.isStripeEnabled "success" "warning"}}
+                    @icon={{if this.isStripeEnabled "check" "triangle-exclamation"}}
+                    @text={{if
+                        this.isStripeEnabled
+                        "Stripe is configured."
+                        "Stripe is NOT configured. The system administrator needs to configure stripe in order for customer payments to be accepted"
+                    }}
+                />
+            </div>
+        {{/if}}
+    </InputGroup>
+</ContentPanel>

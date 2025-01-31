@@ -1,0 +1,133 @@
+{
+    "name": "@fleetbase/iam-engine",
+    "version": "0.1.3",
+    "description": "Fleetbase IAM extension provides identity and access management module for managing users, permissions and policies.",
+    "fleetbase": {
+        "route": "iam"
+    },
+    "keywords": [
+        "fleetbase-extension",
+        "identity-access-management",
+        "fleetbase-iam",
+        "fleetbase-policy-management",
+        "fleetbase",
+        "ember-addon",
+        "ember-engine"
+    ],
+    "repository": "https://github.com/fleetbase/iam-engine",
+    "license": "AGPL-3.0-or-later",
+    "author": "Fleetbase Pte Ltd <hello@fleetbase.io>",
+    "directories": {
+        "app": "app",
+        "addon": "addon",
+        "tests": "tests"
+    },
+    "scripts": {
+        "build": "ember build --environment=production",
+        "lint": "concurrently \"npm:lint:*(!fix)\" --names \"lint:\"",
+        "lint:css": "stylelint \"**/*.css\"",
+        "lint:css:fix": "concurrently \"npm:lint:css -- --fix\"",
+        "lint:fix": "concurrently \"npm:lint:*:fix\" --names \"fix:\"",
+        "lint:hbs": "ember-template-lint .",
+        "lint:hbs:fix": "ember-template-lint . --fix",
+        "lint:js": "eslint . --cache",
+        "lint:js:fix": "eslint . --fix",
+        "lint:intl": "fleetbase-intl-lint",
+        "start": "ember serve",
+        "test": "concurrently \"npm:lint\" \"npm:test:*\" --names \"lint,test:\"",
+        "test:ember": "ember test",
+        "test:ember-compatibility": "ember try:each",
+        "publish:npm": "npm config set registry https://registry.npmjs.org/ && npm publish",
+        "publish:github": "npm config set '@fleetbase:registry' https://npm.pkg.github.com/ && npm publish"
+    },
+    "dependencies": {
+        "@fleetbase/ember-core": "^0.2.21",
+        "@fleetbase/ember-ui": "^0.2.35",
+        "@babel/core": "^7.23.2",
+        "ember-cli-babel": "^8.2.0",
+        "ember-cli-htmlbars": "^6.3.0",
+        "@fortawesome/ember-fontawesome": "^2.0.0",
+        "@fortawesome/fontawesome-svg-core": "6.4.0",
+        "@fortawesome/free-solid-svg-icons": "6.4.0",
+        "@fortawesome/free-brands-svg-icons": "6.4.0",
+        "ember-auto-import": "^2.7.4",
+        "ember-intl": "6.3.2",
+        "ember-radio-button": "^3.0.0-beta.1",
+        "ember-wormhole": "^0.6.0"
+    },
+    "devDependencies": {
+        "@fleetbase/intl-lint": "^0.0.1",
+        "@babel/eslint-parser": "^7.22.15",
+        "@babel/plugin-proposal-decorators": "^7.23.2",
+        "@ember/optional-features": "^2.0.0",
+        "@ember/test-helpers": "^3.2.0",
+        "@embroider/test-setup": "^3.0.2",
+        "@glimmer/component": "^1.1.2",
+        "@glimmer/tracking": "^1.1.2",
+        "broccoli-asset-rev": "^3.0.0",
+        "broccoli-funnel": "^3.0.8",
+        "concurrently": "^8.2.2",
+        "ember-cli": "~5.4.1",
+        "ember-cli-clean-css": "^3.0.0",
+        "ember-cli-dependency-checker": "^3.3.2",
+        "ember-cli-inject-live-reload": "^2.1.0",
+        "ember-cli-sri": "^2.1.1",
+        "ember-cli-terser": "^4.0.2",
+        "ember-data": "^4.12.5",
+        "ember-engines": "^0.9.0",
+        "ember-load-initializers": "^2.1.2",
+        "ember-page-title": "^8.0.0",
+        "ember-qunit": "^8.0.1",
+        "ember-resolver": "^11.0.1",
+        "ember-source": "~5.4.0",
+        "ember-source-channel-url": "^3.0.0",
+        "ember-template-lint": "^5.11.2",
+        "ember-try": "^3.0.0",
+        "eslint": "^8.52.0",
+        "eslint-config-prettier": "^9.0.0",
+        "eslint-plugin-ember": "^11.11.1",
+        "eslint-plugin-n": "^16.2.0",
+        "eslint-plugin-prettier": "^5.0.1",
+        "eslint-plugin-qunit": "^8.0.1",
+        "loader.js": "^4.7.0",
+        "prettier": "^3.0.3",
+        "qunit": "^2.20.0",
+        "qunit-dom": "^2.0.0",
+        "stylelint": "^15.11.0",
+        "stylelint-config-standard": "^34.0.0",
+        "stylelint-prettier": "^4.0.2",
+        "webpack": "^5.89.0"
+    },
+    "peerDependencies": {
+        "ember-engines": "^0.9.0"
+    },
+    "engines": {
+        "node": ">= 18"
+    },
+    "ember": {
+        "edition": "octane"
+    },
+    "ember-addon": {
+        "configPath": "tests/dummy/config"
+    },
+    "pnpm": {
+        "overrides": {
+            "broccoli-funnel": "3.0.8"
+        }
+    },
+    "prettier": {
+        "trailingComma": "es5",
+        "tabWidth": 4,
+        "semi": true,
+        "singleQuote": true,
+        "printWidth": 190,
+        "overrides": [
+            {
+                "files": "*.hbs",
+                "options": {
+                    "singleQuote": false
+                }
+            }
+        ]
+    }
+}

@@ -1,0 +1,28 @@
+<FileUpload @name={{@name}} @accept={{@accept}} @onFileAdded={{@onFileAdded}} @labelClass={{@labelClass}} @disabled={{@disabled}} as |queue|>
+    <a
+        tabindex={{0}}
+        class="flex items-center px-0 mt-2 text-xs no-underline truncate cursor-pointer btn
+            {{if @outline 'btn-outline'}}
+            btn-{{or @type 'default'}}
+            btn-{{or @size 'sm'}}
+            {{if @disabled 'opacity-50 cursor-not-allowed'}}"
+        disabled={{@disabled}}
+        ...attributes
+    >
+        {{#if queue.files.length}}
+            <Spinner class={{unless @hideButtonText "mr-2"}} />
+            {{#unless @hideButtonText}}
+                <span>
+                    Uploading...
+                </span>
+            {{/unless}}
+        {{else}}
+            <FaIcon @icon={{or @icon "image"}} class="{{@iconClass}} {{unless @hideButtonText 'mr-2'}}" />
+            {{#unless @hideButtonText}}
+                <span>
+                    {{or @buttonText "Upload new"}}
+                </span>
+            {{/unless}}
+        {{/if}}
+    </a>
+</FileUpload>

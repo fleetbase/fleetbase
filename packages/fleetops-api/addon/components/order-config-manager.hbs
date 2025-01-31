@@ -1,0 +1,26 @@
+{{yield
+    (hash NewOrderConfigButton=(component "button" type="primary" icon="plus" text=(t "fleet-ops.component.order-config-manager.new-order-config") onClick=this.createNewOrderConfig permission="fleet-ops create order-config"))
+    (hash
+        ready=this.ready
+        configs=this.configs
+        currentConfig=this.currentConfig
+        selectConfig=this.selectConfig
+        tabs=this.tabs
+        currentTab=this.tab
+        content=(component
+            this.tab.component
+            configManagerContext=this.configManagerContext
+            config=this.currentConfig
+            context=this.context
+            contextModel=this.contextModel
+            tabOptions=this.tab
+            options=this.tab.componentParams
+            onConfigDeleting=this.onConfigDeleting
+            onConfigDeleted=this.onConfigDeleted
+            onConfigUpdated=this.onConfigUpdated
+            onContextChanged=this.onContextChanged
+        )
+        onTabChanged=this.onTabChanged
+        onClickCreateOrderConfig=this.createNewOrderConfig
+    )
+}}

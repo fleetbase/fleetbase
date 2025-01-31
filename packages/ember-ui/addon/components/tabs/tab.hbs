@@ -1,0 +1,12 @@
+<li class="nav-item {{if this.isActive 'active'}} {{or @tabListItemClass ''}}">
+    <a href="javascript:;" class="nav-link {{or @tabClass ''}} {{this.activeTabClass}}" {{on "click" this.onClick}}>
+        <span>{{@title}}</span>
+    </a>
+</li>
+{{#if this.isActive}}
+    <EmberWormhole @to={{@tabsId}}>
+        <div class="ui-tab-pane tab-pane fade {{or @tagPaneClass ''}} {{this.activePaneClass}}" role="tabpanel" ...attributes>
+            {{yield}}
+        </div>
+    </EmberWormhole>
+{{/if}}

@@ -1,0 +1,6 @@
+<div class="next-view-section-footer" {{vertical-offset-by "bottom" offset=@verticalOffset elements=@verticalOffsetElements}} ...attributes>
+    {{#if @footerComponent}}
+        {{component @footerComponent}}
+    {{/if}}
+    {{yield}}
+</div>

@@ -1,0 +1,75 @@
+<div class="next-user-button" ...attributes>
+    <BasicDropdown
+        @registerAPI={{this.registerAPI}}
+        @defaultClass={{@wrapperClass}}
+        @onOpen={{this.unlockAudio}}
+        @onClose={{@onClose}}
+        @calculatePosition={{this.calculatePosition}}
+        @verticalPosition={{@verticalPosition}}
+        @horizontalPosition={{@horizontalPosition}}
+        @renderInPlace={{or @renderInPlace (not (media "isMobile"))}}
+        as |dd|
+    >
+        <dd.Trigger class="chat-tray-panel-trigger {{@triggerClass}} {{if (media 'isMobile') 'is-mobile'}}">
+            <div class="next-org-button-trigger chat-tray-icon flex-shrink-0 {{if dd.isOpen 'is-open'}}">
+                <FaIcon @icon="message" class="message-icon"/>
+                {{#if this.unreadCount}}
+                    <div class="chat-tray-unread-notifications-badge">{{this.unreadCount}}</div>
+                {{/if}}
+            </div>
+        </dd.Trigger>
+        <dd.Content class="chat-tray-panel-container {{@contentClass}} {{if (media 'isMobile') 'is-mobile'}}">
+            <div class="chat-tray-panel">
+                <div class="p-4">
+                    <Button @type="primary" @text="Start Chat" @icon="paper-plane" @onClick={{dropdown-fn dd this.startChat}} />
+                </div>
+                <div class="flex flex-col">
+                    {{#each this.channels as |channel|}}
+                        <div class="chat-tray-channel-preview flex items-start px-4 py-3 border-t dark:border-gray-700 border-gray-200">
+                            <button type="button" class="chat-tray-channel-preview-btn flex flex-col flex-1 cursor-default" {{on "click" (dropdown-fn dd this.openChannel channel)}}>
+                                <div class="flex items-center mb-2">
+                                    <div class="chat-tray-channel-preview-title flex self-start items-center font-bold">{{n-a channel.title "Untitled Chat"}}</div>
+                                    {{#if channel.unread_count}}
+                                        <Badge @status="info" @hideStatusDot={{true}} class="flex self-start ml-2">{{pluralize channel.unread_count "Unread"}}</Badge>
+                                    {{/if}}
+                                </div>
+                                <div class="flex flex-row">
+                                    <div class="w-10">
+                                        <Image
+                                            src={{channel.last_message.sender.avatar_url}}
+                                            @fallbackSrc={{config "defaultValues.userImage"}}
+                                            alt={{channel.last_message.sender.name}}
+                                            class="chat-tray-channel-preview-avatar rounded-full shadow-sm w-8 h-8"
+                                        />
+                                    </div>
+                                    <div class="chat-tray-channel-preview-last-message text-sm truncate dark:text-gray-200 text-gray-900">
+                                        <span>{{channel.last_message.content}}</span>
+                                        {{#if channel.last_message.attachments}}
+                                            <div class="chat-tray-channel-preview-last-message-attachments">
+                                                <FaIcon @icon="paperclip" @size="sm" class="mr-0.5" />
+                                                {{pluralize channel.last_message.attachments.length "Attachment"}}
+                                            </div>
+                                        {{/if}}
+                                    </div>
+                                </div>
+                            </button>
+                            <div class="flex">
+                                {{#if (eq channel.created_by_uuid this.currentUser.id)}}
+                                    <div class="btn-wrapper">
+                                        <button
+                                            type="button"
+                                            class="chat-tray-channel-preview-close-channel-btn btn btn-danger btn-xs cursor-default"
+                                            {{on "click" (dropdown-fn dd this.removeChannel channel)}}
+                                        >
+                                            <FaIcon @icon="times" @size="sm" />
+                                        </button>
+                                    </div>
+                                {{/if}}
+                            </div>
+                        </div>
+                    {{/each}}
+                </div>
+            </div>
+        </dd.Content>
+    </BasicDropdown>
+</div>

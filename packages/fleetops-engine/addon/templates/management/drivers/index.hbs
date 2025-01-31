@@ -1,0 +1,85 @@
+<Layout::Section::Header
+    @title={{t "fleet-ops.management.drivers.index.title"}}
+    @searchPlaceholder={{t "fleet-ops.management.drivers.index.search-placeholder"}}
+    @searchQuery={{this.query}}
+    @onSearch={{perform this.search}}
+>
+    <Button @icon="refresh" @onClick={{this.reload}} @helpText={{t "fleet-ops.common.reload-data"}} class="mr-2" />
+    <Button @icon="grip-horizontal" @prefix="fas" @onClick={{this.changeLayout "grid"}} @disabled={{this.isGridLayout}} class="mr-2" />
+    <Button @icon="table" @prefix="fas" @onClick={{fn this.changeLayout "table"}} @disabled={{this.isTableLayout}} class="mr-2" />
+    <FiltersPicker
+        @columns={{this.columns}}
+        @onApply={{fn this.filters.apply this}}
+        @onClear={{fn this.filters.reset this}}
+        @onFilterClear={{this.filters.clear}}
+        @onChange={{this.filters.set}}
+        @buttonWrapperClass="mr-2"
+    />
+    <VisibleColumnPicker @columns={{this.columns}} @onChange={{fn (mut this.columns)}} class="mr-2" />
+    {{#if (safe-has this.table "selectedRows")}}
+        <DropdownButton
+            @icon="layer-group"
+            @text={{t "fleet-ops.common.bulk-action"}}
+            @type="magic"
+            @size="sm"
+            @buttonWrapperClass="mr-2"
+            @contentClass="dropdown-menu"
+            @permission="fleet-ops delete driver"
+            as |dd|
+        >
+            <div class="next-dd-menu mt-2 mx-0">
+                <div class="px-1">
+                    <a href="#" class="text-red-500 next-dd-item" {{on "click" (dropdown-fn dd this.bulkDeleteDrivers)}}>
+                        {{t "fleet-ops.management.drivers.index.delete-drivers"}}
+                    </a>
+                </div>
+            </div>
+        </DropdownButton>
+    {{/if}}
+    <Button @icon="plus" @iconPrefix="fas" @type="primary" @text={{t "fleet-ops.common.new"}} class="mr-2" @onClick={{this.createDriver}} @permission="fleet-ops create driver" />
+    <Button
+        @icon="upload"
+        @type="magic"
+        @text={{t "fleet-ops.common.import"}}
+        @wrapperClass="hidden md:flex"
+        @onClick={{this.importDrivers}}
+        @permission="fleet-ops import driver"
+        class="mr-2"
+    />
+    <Button
+        @icon="long-arrow-up"
+        @iconClass="rotate-icon-45"
+        @text={{t "fleet-ops.common.export"}}
+        @wrapperClass="hidden md:flex"
+        @onClick={{this.exportDrivers}}
+        @permission="fleet-ops export driver"
+    />
+</Layout::Section::Header>
+
+{{#if this.isTableLayout}}
+    <Layout::Section::Body>
+        <Table
+            @rows={{@model}}
+            @columns={{this.columns}}
+            @selectable={{true}}
+            @canSelectAll={{true}}
+            @onSetup={{fn (mut this.table)}}
+            @pagination={{true}}
+            @paginationMeta={{@model.meta}}
+            @page={{this.page}}
+            @onPageChange={{fn (mut this.page)}}
+        />
+    </Layout::Section::Body>
+{{/if}}
+
+{{#if this.isGridLayout}}
+    <div class="p-5">
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-2">
+            {{#each @model as |driver|}}
+                <DriverCard @driver={{driver}} @onClick={{fn this.editDriver driver}} />
+            {{/each}}
+        </div>
+    </div>
+{{/if}}
+
+{{outlet}}

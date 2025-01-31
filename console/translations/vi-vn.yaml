@@ -1,5 +1,5 @@
 app:
-  name: Fleetbase
+  name: FleetYes
 terms:
   new: Mới
   sort: Sắp xếp
@@ -74,6 +74,40 @@ common:
   unauthorized-access-message: Không có quyền truy cập, bạn phải yêu cầu quyền để truy cập.
   permissions-required-for-changes: Bạn không có quyền cần thiết để thực hiện thay đổi.
   push-notifications: Đẩy thông báo
+  role: Vai trò
+  report-type: Loại báo cáo
+  payment-method: Phương thức thanh toán
+  select-payment-method: Chọn phương thức thanh toán
+  select-report-type: Chọn loại báo cáo
+  card-type: Loại thẻ
+  model-delete-confirmation: Bạn có chắc chắn muốn xóa {modelName} này không?
+  model-delete-success: "Mẫu {modelName} đã bị xóa."
+  bulk-delete-success: "{record_count} bản ghi đã bị xóa."
+  single-model-delete-success: Bản ghi đã bị xóa.
+validation:
+  required:
+    payment_method: Phương thức thanh toán là bắt buộc
+  form_invalid: "Vui lòng điền vào các trường bắt buộc: reporttype và phương thức thanh toán."
+statuses:
+    draft: "Bản nháp"
+    pending-approval: "Chờ phê duyệt"
+    approved: "Đã phê duyệt"
+    rejected: "Bị từ chối"
+    revised: "Đã sửa đổi"
+    submitted: "Đã nộp"
+    in-review: "Đang xem xét"
+    confirmed: "Đã xác nhận"
+    processed: "Đã xử lý"
+    archived: "Đã lưu trữ"
+    cancelled: "Đã hủy"
+    pending: "Đang chờ"
+fuelReportTypes:
+    Fuel: "Nhiên liệu"
+    Parking: "Đậu xe"
+    Toll: "Phí cầu"
+paymentOptions:
+    Card: "Thẻ"
+    Other: "Khác"
 component:
   file:
     dropdown-label: Hành động với tệp
@@ -361,3 +395,9 @@ layout:
         view-profile: Xem hồ sơ
         keyboard-shortcuts: Hiển thị phím tắt
         changelog: Nhật ký thay đổi
+fleet-ops:
+  iam: Người sử dụng Truy cập Sự quản lý
+  fleet-ops: Hạm đội Có Dòng chảy
+iam:
+  home:
+    identity-access-management: Người sử dụng Truy cập Sự quản lý

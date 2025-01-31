@@ -1,0 +1,48 @@
+<div class="translations-editor-input" ...attributes>
+    <div class="translation-editor-input-header border border-gray-200 dark:border-gray-700 border-b-0 rounded-t-md">
+        <div class="flex items-center justify-between px-3 py-2">
+            <div>
+                <div class="{{@labelClass}} dark:text-gray-100">{{or @label "Translations"}}</div>
+            </div>
+            <div class="flex flex-row">
+                <CountrySelect @selected={{this.language}} @onChange={{this.addLanguage}} @placeholder="Add Language" @triggerClass="form-input-sm w-40" />
+            </div>
+        </div>
+        <div class="ui-tabs w-full">
+            <nav>
+                {{#each this.languages as |language|}}
+                    <a href="javascript:;" class="ui-tab {{if (eq this.language language) 'active'}}" {{on "click" (fn this.loadLanguage language)}}>
+                        <span>{{language}}</span>
+                    </a>
+                {{/each}}
+            </nav>
+        </div>
+    </div>
+    <div class="translation-editor-input-body rounded-b-md px-3 py-2 border border-t-0 border-gray-200 dark:border-gray-700">
+        {{#if this.language}}
+            <div class="flex items-center justify-end mb-4">
+                <Button @size="sm" @text="Add new translation" @icon="plus" @iconPrefix="fas" @onClick={{this.addTranslation}} />
+            </div>
+        {{/if}}
+        <div class="space-y-2">
+            {{#each-in this.loadedTranslations as |key value|}}
+                <div class="flex flex-row">
+                    <div class="flex-1">
+                        <Input @value={{key}} {{on "blur" (fn this.setTranslationKey key)}} aria-label="Translation Key" placeholder={{key}} class="form-input w-full" />
+                    </div>
+                    <div class="flex items-center justify-center">
+                        <FaIcon @icon="equals" @prefix="fas" class="text-gray-500 mx-2" />
+                    </div>
+                    <div class="flex-1">
+                        <Input @value={{value}} {{on "blur" (fn this.setTranslationValue key)}} aria-label="Translation Value" placeholder={{key}} class="form-input w-full" />
+                    </div>
+                    <div class="flex items-center justify-center">
+                        <a href="javascript:;" class="text-danger" {{on "click" (fn this.removeTranslation key)}}>
+                            <FaIcon @icon="times" @prefix="fas" class="text-red-500 ml-2" />
+                        </a>
+                    </div>
+                </div>
+            {{/each-in}}
+        </div>
+    </div>
+</div>

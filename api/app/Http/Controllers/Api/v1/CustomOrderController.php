@@ -40,6 +40,8 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\OrderRejectionMail;
 use App\Models\User;
+use Fleetbase\FleetOps\Http\Controllers\Api\v1\TrackingStatusController;
+use Fleetbase\FleetOps\Models\TrackingStatus;
 
 class CustomOrderController extends BaseOrderController
 {
@@ -141,7 +143,7 @@ class CustomOrderController extends BaseOrderController
     if (!in_array($request->is_approved, [0, 1])) {
         return response()->json([
             'status' => false,
-            'message' => 'Invalid approval status.',
+            'message' => __('messages.invalid_approval_status'),
             'order' => null
         ], 400);
     }
@@ -150,14 +152,14 @@ class CustomOrderController extends BaseOrderController
         $order = Order::findRecordOrFail($id, ['payload.waypoints'], []);
 
         if ($order->started) {
-            return response()->json(['status' => false, 'message' => 'Order has already started.'], 400);
+            return response()->json(['status' => false, 'message' => __('messages.load_already_started')], 400);
         }
 
         if (($request->is_approved == 1 && $order->status === 'confirmed') ||
             ($request->is_approved == 0 && $order->status !== 'created')) {
             return response()->json([
                 'status' => false,
-                'message' => 'Invalid operation. Order is in ' . $order->status . ' status.',
+                'message' => __('messages.invalid_operation', ['status' => $order->status]),
                 'order' => null
             ], 400);
         }
@@ -181,7 +183,7 @@ class CustomOrderController extends BaseOrderController
 
                 $responseData = [
                     'status' => true,
-                    'message' => 'Order has been successfully confirmed.',
+                    'message' => __('messages.load_confirmed_success'),
                     'details' => [
                         'order_id' => $order->uuid,
                         'status' => 'confirmed',
@@ -204,7 +206,7 @@ class CustomOrderController extends BaseOrderController
 
                 $responseData = [
                     'status' => true,
-                    'message' => 'Order has been rejected.',
+                    'message' => __('messages.load_rejected'),
                     'details' => [
                         'order_id' => $order->uuid,
                         'status' => 'rejected',
@@ -228,8 +230,12 @@ class CustomOrderController extends BaseOrderController
             }
 
             CustomOrderController::logOrderStatusChange($order, $order->status, $oldStatus);
-
+            //insert record into tracking status:
+            $createTrackingStatus = $this->createTrackingStatus($order);
             DB::commit();
+            if (!$createTrackingStatus) {
+                return response()->json(['status' => false, 'message' => __('messages.duplicate_tracking_status')], 400);
+            }
 
         } catch (\Exception $e) {
             DB::rollBack();
@@ -244,7 +250,7 @@ class CustomOrderController extends BaseOrderController
         return response()->json($responseData);
 
     } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
-        return response()->json(['status' => false, 'message' => 'Order resource not found.'], 404);
+        return response()->json(['status' => false, 'message' => __('messages.load_not_found')], 404);
     } catch (\Exception $e) {
         return response()->json(['status' => false, 'message' => "Error: {$e->getMessage()}"], 500);
     }
@@ -302,5 +308,35 @@ class CustomOrderController extends BaseOrderController
             Log::error("Failed to send rejection email: {$e->getMessage()}");
         }
     }
-       
+
+    private function createTrackingStatus(Order $order)
+    {
+        $trackingnumber = $order->tracking_number_uuid;
+        $existingTrackingSameStatus = TrackingStatus::where('tracking_number_uuid', $trackingnumber)
+        ->where('code', 'CONFIRMED')
+        ->whereNull('deleted_at')
+        ->first();
+
+        if ($existingTrackingSameStatus) {
+            return false; // Do not insert if a similar status exists
+        }
+        $existingTrackingStatus = TrackingStatus::where('tracking_number_uuid', $trackingnumber)
+        ->whereNull('deleted_at') // Check if the status is also the same
+        ->first();
+        if ($existingTrackingStatus) {
+            $trackingData = [
+                'status'       => 'Order Accepted',  // Example status, update as needed
+                'details'      => 'Order Accepted by the driver.',
+                'code'         => 'CONFIRMED',  // Will be generated automatically if empty
+                'location'     => $existingTrackingStatus['location'],
+                'tracking_number_uuid' => $existingTrackingStatus['tracking_number_uuid'],
+                'company_uuid' => $existingTrackingStatus['company_uuid'],
+            ];
+        
+            $trackingStatus = TrackingStatus::create($trackingData);
+            return $trackingStatus;
+        }
+        return false;
+
+    }
 }

@@ -1,0 +1,177 @@
+@media (max-width: 767px) {
+    .next-sidebar {
+        opacity: 0.75;
+        transform: translateX(-100%);
+        width: 100%;
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        z-index: 999;
+        @apply transition duration-500 ease-in-out;
+    }
+
+    .next-sidebar.is-open {
+        @apply opacity-100;
+        transform: translateX(0px);
+    }
+
+    .next-content-overlay {
+        @apply w-full;
+    }
+
+    .next-content-overlay.next-content-overlay-pos-top > .next-content-overlay-panel-container,
+    .next-content-overlay.next-content-overlay-pos-bottom > .next-content-overlay-panel-container,
+    .next-content-overlay.next-content-overlay-pos-left > .next-content-overlay-panel-container,
+    .next-content-overlay.next-content-overlay-pos-right > .next-content-overlay-panel-container,
+    .next-content-overlay > .next-content-overlay-panel-container {
+        @apply w-full;
+    }
+
+    .next-content-overlay.next-content-overlay-pos-top > .next-content-overlay-panel-container > .next-content-overlay-panel,
+    .next-content-overlay.next-content-overlay-pos-bottom > .next-content-overlay-panel-container > .next-content-overlay-panel,
+    .next-content-overlay.next-content-overlay-pos-left > .next-content-overlay-panel-container > .next-content-overlay-panel,
+    .next-content-overlay.next-content-overlay-pos-right > .next-content-overlay-panel-container > .next-content-overlay-panel,
+    .next-content-overlay > .next-content-overlay-panel-container > .next-content-overlay-panel {
+        @apply w-full;
+    }
+
+    .next-content-overlay.next-content-overlay-pos-top > .next-content-overlay-panel-container > .next-content-overlay-panel > .next-content-overlay-panel-header > .next-view-header-left,
+    .next-content-overlay.next-content-overlay-pos-bottom > .next-content-overlay-panel-container > .next-content-overlay-panel > .next-content-overlay-panel-header > .next-view-header-left,
+    .next-content-overlay.next-content-overlay-pos-left > .next-content-overlay-panel-container > .next-content-overlay-panel > .next-content-overlay-panel-header > .next-view-header-left,
+    .next-content-overlay.next-content-overlay-pos-right > .next-content-overlay-panel-container > .next-content-overlay-panel > .next-content-overlay-panel-header > .next-view-header-left,
+    .next-content-overlay > .next-content-overlay-panel-container > .next-content-overlay-panel > .next-content-overlay-panel-header > .next-view-header-left {
+        @apply flex-initial;
+    }
+
+    .next-content-overlay.next-content-overlay-pos-top
+        > .next-content-overlay-panel-container
+        > .next-content-overlay-panel
+        > .next-content-overlay-panel-header
+        > .next-view-header-right
+        > *,
+    .next-content-overlay.next-content-overlay-pos-bottom
+        > .next-content-overlay-panel-container
+        > .next-content-overlay-panel
+        > .next-content-overlay-panel-header
+        > .next-view-header-right
+        > *,
+    .next-content-overlay.next-content-overlay-pos-left
+        > .next-content-overlay-panel-container
+        > .next-content-overlay-panel
+        > .next-content-overlay-panel-header
+        > .next-view-header-right
+        > *,
+    .next-content-overlay.next-content-overlay-pos-right
+        > .next-content-overlay-panel-container
+        > .next-content-overlay-panel
+        > .next-content-overlay-panel-header
+        > .next-view-header-right
+        > *,
+    .next-content-overlay > .next-content-overlay-panel-container > .next-content-overlay-panel > .next-content-overlay-panel-header > .next-view-header-right > * {
+        @apply flex-shrink-0;
+    }
+
+    /** minimized **/
+    .next-content-overlay.minimized > .next-content-overlay-panel-container > .next-content-overlay-panel > .next-content-overlay-panel-header {
+        height: 8rem;
+        padding-left: 0.45rem;
+    }
+
+    .next-content-overlay.minimized > .next-content-overlay-panel-container > .next-content-overlay-panel > .next-content-overlay-panel-header > .next-view-header-left {
+        padding-top: 0;
+    }
+
+    /** maximized **/
+    .next-content-overlay.maximized {
+    }
+
+    body[data-theme='light'] .aside-item-link.active,
+    body[data-theme='dark'] .aside-item-link.active {
+        @apply bg-transparent;
+    }
+
+    .modal {
+        z-index: 999;
+    }
+
+    .modal > .modal-dialog {
+        @apply h-full;
+    }
+
+    .modal > .modal-dialog > .modal-content {
+        @apply rounded-none h-full relative overflow-hidden;
+    }
+
+    .modal > .modal-dialog > .modal-content > .modal-header {
+        @apply bg-white rounded-none border-b border-gray-200;
+    }
+
+    .modal > .modal-dialog > .modal-content > .modal-footer {
+        @apply rounded-none px-3 py-2.5 fixed w-full bottom-0 bg-gray-50 border-t border-gray-200;
+    }
+
+    .modal > .modal-dialog > .modal-content > .modal-body {
+        @apply overflow-y-scroll py-4;
+        height: calc(100% - 7.65rem);
+    }
+
+    .modal > .modal-dialog > .modal-content > .modal-body > .modal-body-container {
+        @apply py-0 px-3;
+    }
+
+    body[data-theme='dark'] .modal > .modal-dialog > .modal-content > .modal-footer,
+    body[data-theme='dark'] .modal > .modal-dialog > .modal-content > .modal-header {
+        @apply bg-gray-900 border-gray-700;
+    }
+
+    header.next-view-header {
+        @apply py-0 px-2;
+    }
+
+    header.next-view-header > .next-view-header-left {
+        @apply flex-initial;
+    }
+
+    header.next-view-header > .next-view-header-left > .next-catalog-menu-items {
+        @apply hidden;
+    }
+
+    .next-table-wrapper {
+        height: 100%;
+    }
+
+    .next-table-wrapper > .ember-light-table {
+        height: calc(100% - 57px);
+    }
+
+    .next-table-wrapper.with-pagination .lt-foot-wrap {
+        @apply relative;
+    }
+
+    .next-view-section-subheader {
+        display: flex;
+        flex-direction: column;
+        @apply px-0 flex-col h-24;
+    }
+
+    .next-view-section-subheader.actions-hidden {
+        height: 57px;
+    }
+
+    .next-view-section-subheader > .next-view-section-subheader-left {
+        @apply w-full justify-between px-3;
+    }
+
+    .next-view-section-subheader > .next-view-section-subheader-actions {
+        @apply w-full items-center justify-start px-3;
+    }
+
+    .next-view-section-subheader > .next-view-section-subheader-actions > * {
+        @apply flex-shrink-0;
+    }
+
+    #launcher {
+        @apply hidden;
+    }
+}

@@ -1,0 +1,138 @@
+<Modal::Default @modalIsOpened={{@modalIsOpened}} @options={{@options}} @confirm={{@onConfirm}} @decline={{@onDecline}}>
+    <div class="modal-body-container">
+        <div class="grid grid-cols-1 text-xs dark:text-gray-100">
+            <InputGroup @name={{t "fleet-ops.component.modals.issue-form.reported"}}>
+                <ModelSelect
+                    @modelName="user"
+                    @selectedModel={{this.issue.reporter}}
+                    @placeholder={{t "fleet-ops.component.modals.issue-form.select-reporter"}}
+                    @triggerClass="form-select form-input"
+                    @infiniteScroll={{false}}
+                    @renderInPlace={{true}}
+                    @onChange={{fn (mut this.issue.reporter)}}
+                    as |model|
+                >
+                    {{model.name}}
+                </ModelSelect>
+            </InputGroup>
+
+            <InputGroup @name={{t "fleet-ops.component.modals.issue-form.assigned"}}>
+                <ModelSelect
+                    @modelName="user"
+                    @selectedModel={{this.issue.assignee}}
+                    @placeholder={{t "fleet-ops.component.modals.issue-form.select-assignee"}}
+                    @triggerClass="form-select form-input"
+                    @infiniteScroll={{false}}
+                    @renderInPlace={{true}}
+                    @onChange={{fn (mut this.issue.assignee)}}
+                    as |model|
+                >
+                    {{model.name}}
+                </ModelSelect>
+            </InputGroup>
+
+            <InputGroup @name={{t "fleet-ops.common.driver"}}>
+                <ModelSelect
+                    @modelName="driver"
+                    @selectedModel={{this.issue.driver}}
+                    @placeholder={{t "fleet-ops.component.modals.issue-form.select-driver"}}
+                    @triggerClass="form-select form-input"
+                    @infiniteScroll={{false}}
+                    @renderInPlace={{true}}
+                    @onChange={{fn (mut this.issue.driver)}}
+                    as |model|
+                >
+                    {{model.name}}
+                </ModelSelect>
+            </InputGroup>
+
+            <InputGroup @name={{t "fleet-ops.common.vehicle"}}>
+                <ModelSelect
+                    @modelName="vehicle"
+                    @selectedModel={{this.issue.vehicle}}
+                    @placeholder={{t "fleet-ops.component.modals.issue-form.select-vehicle"}}
+                    @triggerClass="form-select form-input"
+                    @infiniteScroll={{false}}
+                    @renderInPlace={{true}}
+                    @onChange={{fn (mut this.issue.vehicle)}}
+                    as |model|
+                >
+                    {{model.displayName}}
+                </ModelSelect>
+            </InputGroup>
+
+            <InputGroup @name={{t "fleet-ops.component.modals.issue-form.type"}}>
+                <div class="fleetbase-model-select fleetbase-power-select ember-model-select">
+                    <PowerSelect
+                        @options={{this.issueTypes}}
+                        @selected={{this.issue.type}}
+                        @onChange={{this.onSelectIssueType}}
+                        @placeholder={{t "fleet-ops.component.modals.issue-form.select-type"}}
+                        @triggerClass="form-select form-input"
+                        as |type|
+                    >
+                        {{smart-humanize type}}
+                    </PowerSelect>
+                </div>
+            </InputGroup>
+
+            <InputGroup @name={{t "fleet-ops.component.modals.issue-form.category"}}>
+                <div class="fleetbase-model-select fleetbase-power-select ember-model-select">
+                    <PowerSelect
+                        @options={{this.issueCategories}}
+                        @selected={{this.issue.category}}
+                        @onChange={{fn (mut this.issue.category)}}
+                        @placeholder={{t "fleet-ops.component.modals.issue-form.select-category"}}
+                        @triggerClass="form-select form-input"
+                        @disabled={{not this.issueCategories}}
+                        as |category|
+                    >
+                        {{smart-humanize category}}
+                    </PowerSelect>
+                </div>
+            </InputGroup>
+
+            <InputGroup @name={{t "fleet-ops.component.modals.issue-form.report"}}>
+                <Textarea @value={{this.issue.report}} aria-label="Issue Report" class="w-full form-input" placeholder={{t "fleet-ops.component.modals.issue-form.report"}} rows={{5}} />
+            </InputGroup>
+
+            <InputGroup @name={{t "fleet-ops.component.modals.issue-form.tags"}}>
+                <TagInput
+                    class="form-input"
+                    @placeholder={{t "fleet-ops.component.modals.issue-form.add-tags"}}
+                    @allowSpacesInTags={{true}}
+                    @tags={{this.issue.tags}}
+                    @addTag={{this.addTag}}
+                    @removeTagAtIndex={{this.removeTag}}
+                    as |tag|
+                >
+                    {{tag}}
+                </TagInput>
+            </InputGroup>
+
+            <InputGroup @name={{t "fleet-ops.common.priority"}}>
+                <Input @value={{this.issue.priority}} @type="text" class="w-full form-input" placeholder={{t "fleet-ops.common.priority"}} />
+            </InputGroup>
+
+            <InputGroup @name={{t "fleet-ops.common.status"}}>
+                <div class="fleetbase-model-select fleetbase-power-select ember-model-select">
+                    <PowerSelect
+                        @options={{this.issueStatusOptions}}
+                        @selected={{this.issue.status}}
+                        @onChange={{fn (mut this.issue.status)}}
+                        @placeholder={{t "fleet-ops.component.modals.issue-form.select-status"}}
+                        @triggerClass="form-select form-input"
+                        as |status|
+                    >
+                        {{smart-humanize status}}
+                    </PowerSelect>
+                </div>
+            </InputGroup>
+
+            <InputGroup @name={{t "fleet-ops.common.coordinates"}}>
+                <CoordinatesInput @value={{this.issue.location}} @onChange={{fn (mut this.issue.location)}} />
+            </InputGroup>
+        </div>
+    </div>
+    {{yield}}
+</Modal::Default>

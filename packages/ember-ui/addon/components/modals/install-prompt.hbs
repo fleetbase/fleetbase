@@ -1,0 +1,20 @@
+<Modal::Default @modalIsOpened={{@modalIsOpened}} @options={{@options}} @confirm={{@onConfirm}} @decline={{@onDecline}}>
+    <div class="modal-body-container space-y-4">
+        <div class="flex">
+            <div>
+                <div class="flex items-center justify-center p-3 rounded-md bg-gray-600 shadow mr-4">
+                    <FaIcon @icon="cloud-download" class="text-blue-400" @size="2x" />
+                </div>
+            </div>
+            <div class="flex-1 dark:text-gray-100">
+                <p class="text-base mb-2">You are attempting to install the extension "{{or @options.extensionName}}". Are you sure you wish to proceed with this installation?</p>
+                <small>Some extensions require access to your resources.</small>
+            </div>
+        </div>
+        {{#if @options.isInstalling}}
+            <div>
+                <ProgressBar @task="install" @progress={{@options.installProgress}} />
+            </div>
+        {{/if}}
+    </div>
+</Modal::Default>

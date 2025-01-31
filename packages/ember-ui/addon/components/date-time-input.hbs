@@ -1,0 +1,4 @@
+<div class="ui-date-time-input grid grid-cols-2 gap-2" ...attributes>
+    <Input @type="date" @value={{this.date}} min={{@minDate}} max={{@maxDate}} aria-label="Date Input" class="border-0 m-0 p-0 bg-transparent" {{on "input" (fn this.update "date")}} />
+    <Input @type="time" @value={{this.time}} min={{@minTime}} max={{@maxTime}} aria-label="Time Input" class="border-0 m-0 p-0 bg-transparent" {{on "input" (fn this.update "time")}} />
+</div>

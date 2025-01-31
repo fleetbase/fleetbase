@@ -1,0 +1,149 @@
+<div class="order-config-activity-flow-editor" {{did-insert this.setupComponent}} ...attributes>
+    <div class="content-panel mb-20">
+        <div class="content-panel-header items-center">
+            <h3 class="text-lg font-semibold dark:text-gray-100">
+                {{t "fleet-ops.component.order-config.activity-flow-editor.title"}}
+            </h3>
+
+            <Button @icon="plus" @iconPrefix="fas" @text="New Status" @size="sm" @onClick={{this.newStatus}} />
+        </div>
+        <div class="content-panel-body no-padding">
+            <div class="my-6 px-5">
+                <p>{{t "fleet-ops.component.order-config.activity-flow-editor.message"}}</p>
+            </div>
+
+            <div class="ui-tabs mb-4">
+                <nav>
+                    <a href="javascript:;" class="ui-tab {{if (eq this.activeTab 'order') 'active'}}" {{on "click" (fn (mut this.activeTab) "order")}}>
+                        {{t "fleet-ops.component.order-config.activity-flow-editor.order-flow"}}
+                    </a>
+                    <a href="javascript:;" class="ui-tab {{if (eq this.activeTab 'waypoint') 'active'}}" {{on "click" (fn (mut this.activeTab) "waypoint")}}>
+                        {{t "fleet-ops.component.order-config.activity-flow-editor.waypoint-flow"}}
+                    </a>
+                </nav>
+            </div>
+
+            {{#if @orderConfig.meta.flow}}
+                <div class="px-5">
+                    {{#if this.flow}}
+                        <Dragula @onDrop={{this.moveStatus}} @onReady={{this.setDragulaInstance}} as |Container|>
+                            <Container class="activity-flow-connector">
+                                {{#each-in this.activeFlow as |status activity|}}
+                                    <div data-status={{status}} class="activity-flow-sub-connector {{dasherize (flow-raw-status status)}}-flow pb-6">
+                                        <div class="activity-status relative cursor-move flex items-center justify-center mb-6">
+                                            <div
+                                                class="relative px-3 py-2 status-element
+                                                    {{dasherize (flow-raw-status status)}}-status-element rounded-md flex flex-col items-center justify-center"
+                                            >
+                                                <Badge @status={{flow-raw-status status}} class="status-badge-lg shadow-none" />
+                                                <Button
+                                                    @text={{t "fleet-ops.component.order-config.activity-flow-editor.new-activity"}}
+                                                    @icon="plus"
+                                                    @iconPrefix="fas"
+                                                    @wrapperClass="my-2"
+                                                    @onClick={{fn this.addNewActivity status}}
+                                                />
+                                                {{#if (not (includes status (w "created dispatched completed")))}}
+                                                    <div class="absolute top-0 right-0">
+                                                        <button
+                                                            type="button"
+                                                            class="flex items-center justify-center rounded-full w-6 h-6 bg-gray-900 font-semibold text-white -mt-3 -mr-3 shadow-sm"
+                                                            {{on "click" (fn this.removeStatus status)}}
+                                                        >
+                                                            <FaIcon @prefix="fas" @icon="times" class="text-white" />
+                                                        </button>
+                                                    </div>
+                                                {{/if}}
+                                            </div>
+                                        </div>
+                                        <div class="activity-events-list">
+                                            {{#each activity.events as |event|}}
+                                                <div class="shadow-sm border-2 status-element-border {{dasherize (flow-raw-status status)}}-status-element dark:bg-gray-800 bg-gray-100">
+                                                    <div class="p-3 border-b border-gray-300 dark:border-gray-900">
+                                                        <div class="mb-4 flex items-center justify-between">
+                                                            <div>
+                                                                <FaIcon @icon="sitemap" class="mr-2 dark:text-sky-300" />
+                                                                <span class="dark:text-gray-100 text-sm">{{t "fleet-ops.component.order-config.activity-flow-editor.activity-details"}}</span>
+                                                            </div>
+                                                            <a href="javascript:;" class="btn btn-danger btn-sm" {{on "click" (fn this.removeActivity status event)}}>
+                                                                <FaIcon @icon="trash" />
+                                                            </a>
+                                                        </div>
+                                                        <div class="grid grid-cols-3 gap-2">
+                                                            <InputGroup @name={{t "fleet-ops.common.status"}} @value={{event.status}} />
+                                                            <InputGroup @name={{t "fleet-ops.common.code"}} @value={{event.code}} />
+                                                            <InputGroup @name={{t "fleet-ops.common.details"}} @value={{event.details}} />
+                                                        </div>
+                                                    </div>
+                                                    <div class="p-3">
+                                                        <div class="mb-4 flex items-center justify-between">
+                                                            <div>
+                                                                <FaIcon @icon="project-diagram" class="mr-2 dark:text-sky-300" />
+                                                                <span class="dark:text-gray-100 text-sm">{{t "fleet-ops.component.order-config.activity-flow-editor.logic-stack"}}</span>
+                                                            </div>
+                                                            <Button
+                                                                @text={{t "fleet-ops.component.order-config.activity-flow-editor.add-logic"}}
+                                                                @icon="plus"
+                                                                @iconPrefix="fas"
+                                                                @onClick={{fn this.addLogicCondition status event}}
+                                                            />
+                                                        </div>
+                                                        <div class="space-y-3 mb-3">
+                                                            {{#each event.if as |logic conditionIndex|}}
+                                                                <div class="grid grid-cols-5 gap-2">
+                                                                    <div class="flex items-center col-span-2">
+                                                                        <div
+                                                                            class="py-2 px-3 rounded flex items-center justify-center text-center text-sm font-bold text-mono mr-3 dark:text-gray-50 border border-gray-50 dark:border-gray-900"
+                                                                        >
+                                                                            if
+                                                                        </div>
+                                                                        <Select
+                                                                            @options={{this.configFields}}
+                                                                            @value={{get logic 0}}
+                                                                            @placeholder="Select field"
+                                                                            class="flex-1 w-full"
+                                                                            @onSelect={{fn this.updateActivityLogic status event conditionIndex 0}}
+                                                                        />
+                                                                    </div>
+                                                                    <Select
+                                                                        @options={{this.logicOperators}}
+                                                                        @value={{get logic 1}}
+                                                                        @optionLabel="label"
+                                                                        @optionValue="value"
+                                                                        @onSelect={{fn this.updateActivityLogic status event conditionIndex 1}}
+                                                                        @placeholder={{t "fleet-ops.component.order-config.activity-flow-editor.select-operator"}}
+                                                                    />
+                                                                    <div class="flex items-center col-span-2">
+                                                                        <Input
+                                                                            @type="text"
+                                                                            @value={{get logic 2}}
+                                                                            {{on "keyup" (fn this.updateActivityLogic status event conditionIndex 2)}}
+                                                                            placeholder={{t "fleet-ops.component.order-config.activity-flow-editor.enter-value"}}
+                                                                            class="form-input w-full flex-1 mr-3"
+                                                                        />
+                                                                        <Button @size="sm" @icon="trash" @onClick={{fn this.removeLogicCondition event logic}} />
+                                                                    </div>
+                                                                </div>
+                                                            {{else}}
+                                                                <div class="flex items-center justify-center">
+                                                                    <div
+                                                                        class="rounded bg-gray-300 dark:bg-gray-700 shadow-sm text-sm text-center px-6 py-3 dark:text-gray-100 border border-dashed border-gray-500 dark:border-gray-900"
+                                                                    >{{t "fleet-ops.component.order-config.activity-flow-editor.no-logic"}}</div>
+                                                                </div>
+                                                            {{/each}}
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                            {{/each}}
+                                        </div>
+                                    </div>
+                                {{/each-in}}
+                            </Container>
+                        </Dragula>
+                    {{/if}}
+                </div>
+            {{/if}}
+        </div>
+    </div>
+</div>

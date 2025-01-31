@@ -1,0 +1,17 @@
+<div class="relative flex items-center">
+    <img src={{@row.avatar_url}} alt={{@row.name}} class="w-6 h-6 rounded-md {{if @column.hasOnline 'mx-2' 'mr-2'}}" />
+    <span class="relative block">
+        <a href="javascript:;" class="relative block" {{on "click" this.onClick}} disabled={{and @column.permission (cannot @column.permission)}}>
+            {{#if (has-block)}}
+                {{yield}}
+            {{else}}
+                <span>
+                    {{n-a @value}}
+                </span>
+            {{/if}}
+        </a>
+    </span>
+    {{#if @column.showOnlineIndicator}}
+        <FaIcon @icon="circle" class="absolute left-0 top-0 {{if @row.online 'text-green-500' 'text-yellow-200'}}" />
+    {{/if}}
+</div>

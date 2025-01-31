@@ -1,0 +1,9 @@
+<div class="chat-window-messages" {{did-insert this.setChannelFeedElements}}>
+    {{#if (has-block)}}
+        {{yield @channel.feed}}
+    {{else}}
+        {{#each @channel.feed as |item|}}
+            {{component (concat "chat-window/" item.type) record=item.record chatParticipant=@chatParticipant channelFeedContainerElement=this.channelFeedContainerElement}}
+        {{/each}}
+    {{/if}}
+</div>

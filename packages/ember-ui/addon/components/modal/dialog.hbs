@@ -1,0 +1,29 @@
+<div
+    role="dialog"
+    tabindex="-1"
+    aria-labelledby={{this.titleId}}
+    class="flb--modal {{if @fade 'fade'}} {{if @showModal 'show'}} {{if @inDom 'block'}}"
+    ...attributes
+    {{on "keydown" this.handleKeyDown}}
+    {{on "mousedown" this.handleMouseDown}}
+    {{on "mouseup" this.handleMouseUp}}
+    {{on "click" this.handleClick}}
+    {{style paddingLeft=(concat @paddingLeft "px") paddingRight=(concat @paddingRight "px") display=(if @inDom "block" "")}}
+    {{create-ref "mainNode"}}
+    {{did-insert this.getOrSetTitleId}}
+    {{did-insert this.setInitialFocus}}
+>
+    <div
+        class="flb--modal-dialog
+            {{this.sizeClass}}
+            {{if @centered 'flb--modal-dialog-centered'}}
+            {{if @scrollable 'flb--modal-dialog-scrollable'}}
+            {{if (macroCondition (macroGetOwnConfig 'isBS5')) (if @fullscreen (if (eq @fullscreen true) 'flb--modal-fullscreen' (concat 'flb--modal-fullscreen-' @fullscreen '-down')))}}
+            "
+        role="document"
+    >
+        <div class="flb--modal-content" tabindex="-1" {{focus-trap shouldSelfFocus=true focusTrapOptions=(hash clickOutsideDeactivates=true fallbackFocus=".flb--modal")}}>
+            {{yield}}
+        </div>
+    </div>
+</div>

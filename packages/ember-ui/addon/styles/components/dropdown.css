@@ -1,0 +1,39 @@
+.dropdown-menu {
+    @apply w-56 mt-2 bg-transparent rounded-md shadow-lg;
+}
+
+.dropdown-menu-content {
+    @apply bg-white border border-gray-300 rounded-md shadow-md;
+}
+
+.dropdown-menu-content.context-menu {
+    @apply py-2;
+}
+
+body[data-theme='dark'] .dropdown-menu-content {
+    @apply bg-gray-700 border-gray-900;
+}
+
+.dropdown-menu-item {
+    @apply block px-4 py-1 text-sm leading-5 text-gray-700 no-underline;
+}
+
+.dropdown-menu-item:hover {
+    @apply text-gray-900 bg-gray-100;
+}
+
+.dropdown-menu-item:focus {
+    @apply text-gray-900 bg-gray-100 outline-none;
+}
+
+body[data-theme='dark'] .dropdown-menu-item {
+    @apply text-gray-200;
+}
+
+body[data-theme='dark'] .dropdown-menu-item:hover {
+    @apply text-gray-100 bg-gray-800 shadow-inner;
+}
+
+body[data-theme='dark'] .dropdown-menu-item:focus {
+    @apply text-gray-100 bg-gray-800;
+}

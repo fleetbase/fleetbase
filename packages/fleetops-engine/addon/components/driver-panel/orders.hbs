@@ -1,0 +1,144 @@
+<Layout::Section::Header @title={{t "fleet-ops.common.orders"}} @onSearch={{this.search}}>
+    {{#unless this.queryOrders.isIdle}}
+        <div>
+            <Spinner class="dark:text-blue-400 text-blue-900" />
+        </div>
+    {{/unless}}
+</Layout::Section::Header>
+
+<Layout::Section::Body>
+    <div class="flex-col p-4 space-y-4">
+        {{#each this.orders as |order|}}
+            <div class="rounded-lg shadow-sm bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700">
+                <div class="flex flex-row justify-between rounded-t-lg px-4 py-2 border-b bg-gray-100 dark:bg-gray-900 border-gray-200 dark:border-gray-700">
+                    <div class="flex flex-row">
+                        <div class="mr-2 pt-1">
+                            <a href="#" {{on "click" (fn this.viewOrder order)}}>
+                                <FaIcon @icon="arrow-up-right-from-square" @size="xs" class="text-gray-500 dark:text-gray-700" />
+                            </a>
+                        </div>
+                        <div>
+                            <div>{{order.public_id}}</div>
+                            <div class="text-xs">{{order.createdAt}}</div>
+                        </div>
+                    </div>
+                    <div>
+                        <Badge @status={{order.status}} />
+                        <Badge @status="info">{{n-a (humanize order.type)}}</Badge>
+                    </div>
+                </div>
+                <div class="rounded-b-lg bg-white dark:bg-gray-800 py-2 px-4">
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-2">
+                        <div class="field-info-container space-y-2">
+                            {{#if order.isMultipleDropoffOrder}}
+                                <div class="field-name">{{pluralize (t "fleet-ops.operations.orders.index.view.customer")}}</div>
+                                <div class="flex flex-row space-x-2">
+                                    {{#each order.payload.waypoints as |waypoint|}}
+                                        <div class="flex flex-col items-center justify-center text-center">
+                                            <Image
+                                                src={{avatar-url waypoint.customer.photo_url}}
+                                                @fallbackSrc={{config "defaultValues.contactImage"}}
+                                                class="w-8 h-8 rounded-full shadow-sm mr-2"
+                                                alt={{waypoint.customer.name}}
+                                            />
+                                            <div class="text-xs truncate mt-1 w-12">{{waypoint.customer.name}}</div>
+                                            <Attach::Tooltip @class="clean" @animation="scale" @placement="top">
+                                                <InputInfo>
+                                                    <div class="field-value">{{n-a waypoint.customer.name "No Customer"}}</div>
+                                                    {{#if waypoint.customer}}
+                                                        <div class="mt-1 text-xs">{{n-a waypoint.customer.phone "No Phone"}}</div>
+                                                    {{/if}}
+                                                </InputInfo>
+                                            </Attach::Tooltip>
+                                        </div>
+                                    {{/each}}
+                                </div>
+                            {{else}}
+                                <div class="field-name">{{t "fleet-ops.operations.orders.index.view.customer"}}</div>
+                                <div class="flex flex-row">
+                                    <div>
+                                        <Image
+                                            src={{avatar-url order.customer.photo_url}}
+                                            @fallbackSrc={{config "defaultValues.contactImage"}}
+                                            class="w-8 h-8 rounded-md shadow-sm mr-2"
+                                            alt={{order.customer.name}}
+                                        />
+                                    </div>
+                                    <div>
+                                        <div class="field-value">{{n-a order.customer.name "No Customer"}}</div>
+                                        {{#if order.customer}}
+                                            <div>{{n-a order.customer.phone "No Phone"}}</div>
+                                        {{/if}}
+                                    </div>
+                                </div>
+                            {{/if}}
+                        </div>
+                        <div class="field-info-container space-y-2">
+                            <div class="field-name">{{t "fleet-ops.operations.orders.index.view.facilitator"}}</div>
+                            <div class="flex flex-row">
+                                <div>
+                                    <Image
+                                        src={{avatar-url order.facilitator.photo_url}}
+                                        @fallbackSrc={{config "defaultValues.contactImage"}}
+                                        class="w-8 h-8 rounded-md border border-gray-200 dark:border-gray-900 shadow-sm mr-2"
+                                        alt={{order.facilitator.name}}
+                                    />
+                                </div>
+                                <div>
+                                    <div class="field-value">{{n-a order.facilitator.name "No Facilitator"}}</div>
+                                    {{#if order.facilitator}}
+                                        <div>{{n-a order.facilitator.phone "No Phone"}}</div>
+                                    {{/if}}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="field-info-container space-y-2">
+                            <div class="field-name flex flex-row items-center justify-between">
+                                <span>{{t "fleet-ops.operations.orders.index.view.vehicle-assigned"}}</span>
+                            </div>
+                            <div>
+                                <a href="javascript:;" class="flex flex-row">
+                                    <div>
+                                        <Image
+                                            src={{order.vehicle_assigned.avatar_url}}
+                                            @fallbackSrc={{config "defaultValues.vehicleAvatar"}}
+                                            width="24"
+                                            height="24"
+                                            class="w-6 h-6 rounded-md shadow-sm mr-3 lg:mr-2"
+                                            alt={{order.vehicle_assigned.display_name}}
+                                        />
+                                    </div>
+                                    <div class="field-value">
+                                        <div>{{n-a order.vehicle_assigned.display_name "No Vehicle"}}</div>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="field-info-container space-y-2">
+                            <div class="field-name">{{t "fleet-ops.operations.orders.index.view.tracking-number"}}</div>
+                            <div class="field-value">{{n-a order.tracking_number.tracking_number}}</div>
+                        </div>
+                        <div class="field-info-container space-y-2">
+                            <div class="field-name">{{t "fleet-ops.common.internal-id"}}</div>
+                            <div class="field-value">{{n-a order.internal_id}}</div>
+                        </div>
+                        {{#if order.pod_required}}
+                            <div class="field-info-container space-y-2">
+                                <div class="field-name">{{t "fleet-ops.operations.orders.index.view.proof-of-delivery"}}</div>
+                                <div class="field-value">{{n-a (smart-humanize order.pod_method)}}</div>
+                            </div>
+                        {{/if}}
+                        <div class="field-info-container space-y-2">
+                            <div class="field-name">{{t "fleet-ops.operations.orders.index.view.date-started"}}</div>
+                            <div class="field-value">{{n-a order.startedAt}}</div>
+                        </div>
+                        <div class="col-span-3">
+                            <RouteList @order={{order}} class="mt-2" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {{/each}}
+    </div>
+    <Spacer @height="300px" />
+</Layout::Section::Body>

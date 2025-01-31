@@ -1,0 +1,58 @@
+<div class="ui-combo-box" ...attributes>
+    <div class="grid grid-cols-9 gap-2">
+        <div class="col-span-4">
+            <div class="h-6 mb-1">
+                {{#if @optionBoxLabel}}
+                    <span class="font-semibold dark:text-gray-100 text-gray-500">{{@optionBoxLabel}}</span>
+                {{/if}}
+            </div>
+            <div class="options-list rounded-md w-full h-48 overflow-y-scroll bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-900">
+                {{#each this.options as |option index|}}
+                    <a href="javascript:;" {{on "click" (fn this.toggleOption index)}} class="combo-box-option truncate {{if (in-array option this.pending) 'selected'}}">
+                        {{#if @optionLabel}}
+                            {{get option @optionLabel}}
+                        {{else}}
+                            {{option}}
+                        {{/if}}
+                    </a>
+                {{/each}}
+            </div>
+        </div>
+        <div class="controls h-48 flex items-center justify-center">
+            <div>
+                <button
+                    {{on "click" this.confirmPending}}
+                    type="button"
+                    class="rounded-t-md px-3 py-2 flex items-center justify-center bg-gray-50 dark:bg-gray-700 hover:bg-opacity:50 w-full border-b border-gray-200 dark:border-gray-900"
+                >
+                    <FaIcon @icon="arrow-right" class="text-sky-400" />
+                </button>
+                <button
+                    {{on "click" this.confirmUnpending}}
+                    type="button"
+                    class="rounded-b-md px-3 py-2 flex items-center justify-center bg-gray-50 dark:bg-gray-700 hover:bg-opacity:50 w-full"
+                >
+                    <FaIcon @icon="arrow-left" class="text-sky-400" />
+                </button>
+            </div>
+        </div>
+        <div class="col-span-4">
+            <div class="h-6 mb-1">
+                {{#if @selectionBoxLabel}}
+                    <span class="font-semibold dark:text-gray-100 text-gray-500">{{@selectionBoxLabel}}</span>
+                {{/if}}
+            </div>
+            <div class="selected-list rounded-md w-full h-48 overflow-y-scroll bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-900">
+                {{#each this.selected as |selection index|}}
+                    <a href="javascript:;" {{on "click" (fn this.toggleSelection index)}} class="combo-box-option truncate {{if (in-array selection this.unpending) 'selected'}}">
+                        {{#if @optionLabel}}
+                            {{get selection @optionLabel}}
+                        {{else}}
+                            {{selection}}
+                        {{/if}}
+                    </a>
+                {{/each}}
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,37 @@
+<div class="chat-message-container {{if this.chatMessage.attachments 'has-attachments'}}" {{did-insert this.trackVisibility}}>
+    <div class="chat-message-sender-bubble">
+        <Image src={{this.chatMessage.sender.avatar_url}} @fallbackSrc={{config "defaultValues.userImage"}} alt={{this.chatMessage.sender.name}} />
+        <div class="chat-message-sender-name">{{this.chatMessage.sender.name}}</div>
+        <Attach::Tooltip @class="clean" @animation="scale" @placement="top">
+            <InputInfo @text={{this.chatMessage.sender.name}} />
+        </Attach::Tooltip>
+    </div>
+    <div class="chat-message-content-bubble-container {{if this.chatMessage.attachments 'has-attachments'}}">
+        {{#if this.chatMessage.attachments}}
+            <div class="chat-message-attachments-container">
+                {{#each this.chatMessage.attachments as |attachment|}}
+                    <ChatWindow::Attachment @record={{attachment}} />
+                {{/each}}
+            </div>
+        {{/if}}
+        <div class="chat-message-content-bubble {{if (eq this.chatMessage.sender_uuid this.currentUser.id) 'sender-bubble'}}">
+            {{this.chatMessage.content}}
+        </div>
+        <div class="flex flex-row items-center justify-between mt-1">
+            <div class="chat-message-created-at">{{this.chatMessage.createdAgo}}</div>
+            <div class="chat-message-receipts">
+                {{#each this.chatMessage.receipts as |receipt|}}
+                    <div class="chat-message-receipt-container">
+                        <div class="chat-message-receipt">
+                            <FaIcon @icon="check" class="text-green-500" />
+                            {{receipt.participant_name}}
+                        </div>
+                        <Attach::Tooltip @class="clean" @animation="scale" @placement="top">
+                            <InputInfo @text={{concat "Read at " receipt.readAt}} class="xs" />
+                        </Attach::Tooltip>
+                    </div>
+                {{/each}}
+            </div>
+        </div>
+    </div>
+</div>

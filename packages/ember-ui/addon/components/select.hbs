@@ -1,0 +1,89 @@
+<select
+    ...attributes
+    class="form-select {{if this.value 'has--selection' 'has--placeholder'}} {{if this.disabled 'disabled'}}"
+    disabled={{this.disabled}}
+    {{on "change" this.select}}
+    {{did-update this.changed @value @placeholder}}
+>
+    {{#if this.placeholder}}
+        <option selected disabled>
+            {{this.placeholder}}
+        </option>
+    {{/if}}
+
+    {{#if (has-block)}}
+        {{#if @fetched}}
+            {{#if (is-object @options)}}
+                {{#each-in @options as |key selectable|}}
+                    {{#if @optionLabel}}
+                        <option
+                            value={{if @optionValue (get selectable @optionValue) selectable}}
+                            selected={{if @optionValue (eq this.value (get selectable @optionValue)) (eq this.value selectable)}}
+                        >
+                            {{yield (get selectable @optionLabel) key}}
+                        </option>
+                    {{else}}
+                        <option value={{selectable}}>
+                            {{yield selectable key}}
+                        </option>
+                    {{/if}}
+                {{/each-in}}
+            {{else}}
+                {{#each @options as |selectable|}}
+                    {{#if @optionLabel}}
+                        <option
+                            value={{if @optionValue (get selectable @optionValue) selectable}}
+                            selected={{if @optionValue (eq this.value (get selectable @optionValue)) (eq this.value selectable)}}
+                        >
+                            {{yield (get selectable @optionLabel) selectable}}
+                        </option>
+                    {{else}}
+                        <option value={{selectable}} selected={{eq this.value selectable}}>
+                            {{yield selectable}}
+                        </option>
+                    {{/if}}
+                {{/each}}
+            {{/if}}
+        {{else}}
+            {{#each @options as |selectable|}}
+                {{#if @optionLabel}}
+                    <option
+                        value={{if @optionValue (get selectable @optionValue) selectable}}
+                        selected={{if @optionValue (eq this.value (get selectable @optionValue)) (eq this.value selectable)}}
+                    >
+                        {{yield (get selectable @optionLabel) selectable}}
+                    </option>
+                {{else}}
+                    <option value={{selectable}} selected={{eq this.value selectable}}>
+                        {{yield selectable}}
+                    </option>
+                {{/if}}
+            {{/each}}
+        {{/if}}
+    {{else}}
+        {{#each @options as |selectable|}}
+            {{#if @optionLabel}}
+                {{#let (get selectable @optionLabel) as |label|}}
+                    <option
+                        value={{if @optionValue (get selectable @optionValue) selectable}}
+                        selected={{if @optionValue (eq this.value (get selectable @optionValue)) (eq this.value selectable)}}
+                    >
+                        {{#if @humanize}}
+                            {{or (humanize label) (humanize (get selectable @optionValue))}}
+                        {{else}}
+                            {{or label (get selectable @optionValue)}}
+                        {{/if}}
+                    </option>
+                {{/let}}
+            {{else}}
+                <option value={{selectable}} selected={{eq this.value selectable}}>
+                    {{#if @humanize}}
+                        {{humanize selectable}}
+                    {{else}}
+                        {{selectable}}
+                    {{/if}}
+                </option>
+            {{/if}}
+        {{/each}}
+    {{/if}}
+</select>

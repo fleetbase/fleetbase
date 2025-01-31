@@ -1,0 +1,106 @@
+<a
+    href="javascript:;"
+    class="order-listings-row-container {{@wrapperClass}} {{if @isSelected 'selected'}}"
+    {{on "click" (fn this.onClick @order)}}
+    {{on "dblclick" (fn this.onDoubleClick @order)}}
+    {{on "mouseenter" (fn this.onMouseEnter @order)}}
+    {{on "mouseleave" (fn this.onMouseLeave @order)}}
+    ...attributes
+>
+    <div class="order-listing-row">
+        <div class="order-listing-row-header">
+            <div class="order-listing-row-prefix">
+                <div class="order-listing-row-index">
+                    {{@index}}
+                </div>
+                <div class="order-listing-row-icon-container">
+                    <FaIcon @icon="map-marker" />
+                </div>
+            </div>
+            <div class="order-listing-row-subheader">
+                <div class="order-listing-row-header-title truncate">{{@order.tracking}}</div>
+                <Badge @status={{@order.status}} />
+            </div>
+        </div>
+        <div class="order-listing-row-details">
+            <div class="order-listing-row-progress">
+                <OrderProgressBar
+                    @order={{@order}}
+                    @progress={{@order.tracker_data.progress_percentage}}
+                    @firstWaypointCompleted={{@order.tracker_data.first_waypoint_completed}}
+                    @lastWaypointCompleted={{@order.tracker_data.last_waypoint_completed}}
+                />
+            </div>
+            <div class="order-listing-row-body">
+                <div class="order-listing-row-body-address start">
+                    <div class="font-semibold">Pickup</div>
+                    <div class="address-text">
+                        {{#if @order.payload.isMultiDrop}}
+                            {{@order.payload.firstWaypoint.address}}
+                        {{else}}
+                            {{@order.payload.pickup.address}}
+                        {{/if}}
+                    </div>
+                </div>
+                <div class="order-listing-row-body-address end">
+                    <div class="font-semibold">Dropoff</div>
+                    <div class="address-text">
+                        {{#if @order.payload.isMultiDrop}}
+                            {{@order.payload.lastWaypoint.address}}
+                        {{else}}
+                            {{@order.payload.dropoff.address}}
+                        {{/if}}
+                    </div>
+                </div>
+            </div>
+            <div class="order-listing-row-footer">
+                <div class="flex flex-row">
+                    <div class="flex-1">
+                        <div class="resource-assigned">
+                            <div class="resource-assigned-photo">
+                                <Image
+                                    src={{avatar-url @order.customer.photo_url}}
+                                    @fallbackSrc={{config "defaultValues.contactImage"}}
+                                    width="32"
+                                    height="32"
+                                    class="w-8 h-8 rounded-lg shadow-sm mr-2"
+                                    alt={{@order.customer.name}}
+                                />
+                            </div>
+                            <div class="resource-assigned-details">
+                                <div class="font-semibold">Customer</div>
+                                <div>{{n-a @order.customer.name "No Customer"}}</div>
+                                <div>{{n-a @order.customer.phone "No Phone"}}</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex-1">
+                        <div class="resource-assigned">
+                            <div class="resource-assigned-photo">
+                                <Image
+                                    src={{avatar-url @order.driver_assigned.photo_url}}
+                                    @fallbackSrc={{config "defaultValues.driverImage"}}
+                                    width="32"
+                                    height="32"
+                                    class="w-8 h-8 rounded-lg shadow-sm mr-2"
+                                    alt={{@order.driver_assigned.name}}
+                                />
+                                <FaIcon
+                                    @icon="circle"
+                                    @size="2xs"
+                                    class="absolute left-0 top-0 h-2 w-2 -ml-1 -mt-1 {{if @order.driver_assigned.online 'text-green-500' 'text-yellow-200'}}"
+                                />
+                            </div>
+                            <div class="resource-assigned-details">
+                                <div class="font-semibold">Driver Assigned</div>
+                                <div>{{n-a @order.driver_assigned.name "No Driver"}}</div>
+                                <div>{{n-a @order.driver_assigned.phone "No Phone"}}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {{yield @isSelected}}
+    </div>
+</a>

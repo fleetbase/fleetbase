@@ -1,0 +1,57 @@
+<div class="px-6 py-2 space-y-4">
+    <ContentPanel @title={{t "fleet-ops.component.order-config-manager.details.details"}} @open={{true}} @pad={{true}} @panelBodyClass="bg-white dark:bg-gray-900">
+        <InputGroup
+            @name={{t "fleet-ops.component.order-config-manager.details.name"}}
+            @value={{@config.name}}
+            @disabled={{or @config.core_service (cannot "fleet-ops update order-config")}}
+        />
+        <InputGroup
+            @name={{t "fleet-ops.component.order-config-manager.details.description"}}
+            @value={{@config.description}}
+            @disabled={{or @config.core_service (cannot "fleet-ops update order-config")}}
+        />
+        <InputGroup @name={{t "fleet-ops.component.order-config-manager.details.tags"}}>
+            {{#let (or @config.core_service (cannot "fleet-ops update order-config")) as |disabled|}}
+                <TagInput
+                    class="form-input {{if disabled 'disabled'}}"
+                    @placeholder={{t "fleet-ops.component.order-config-manager.details.add-tags"}}
+                    @allowSpacesInTags={{true}}
+                    @tags={{@config.tags}}
+                    @addTag={{@config.addTag}}
+                    @removeTagAtIndex={{@config.removeTag}}
+                    @readOnly={{disabled}}
+                    as |tag|
+                >
+                    {{tag}}
+                </TagInput>
+            {{/let}}
+        </InputGroup>
+        <InputGroup @name={{t "fleet-ops.component.order-config-manager.details.key"}} @value={{@config.key}} @disabled={{true}} />
+        <InputGroup @name={{t "fleet-ops.component.order-config-manager.details.namespace"}} @value={{@config.namespace}} @disabled={{true}} />
+        <InputGroup @name={{t "fleet-ops.component.order-config-manager.details.version"}} @value={{@config.version}} @disabled={{true}} />
+    </ContentPanel>
+
+    {{#unless @config.core_service}}
+        <ContentPanel @title={{t "fleet-ops.component.order-config-manager.details.controls"}} @open={{true}} @pad={{true}} @panelBodyClass="bg-white dark:bg-gray-900">
+            <div class="flex flex-row items-center py-2 space-x-4">
+                <Button
+                    @type="primary"
+                    @icon="save"
+                    @text={{t "common.save-changes"}}
+                    @onClick={{perform this.save}}
+                    @isLoading={{this.save.isRunning}}
+                    @disabled={{not @config.hasDirtyAttributes}}
+                    @permission="fleet-ops update order-config"
+                />
+                <Button
+                    @type="danger"
+                    @icon="trash"
+                    @text={{t "fleet-ops.component.order-config-manager.details.delete-config"}}
+                    @onClick={{this.delete}}
+                    @isLoading={{this.deleteConfig.isRunning}}
+                    @permission="fleet-ops delete order-config"
+                />
+            </div>
+        </ContentPanel>
+    {{/unless}}
+</div>

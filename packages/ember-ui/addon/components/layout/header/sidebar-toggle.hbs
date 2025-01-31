@@ -1,0 +1,16 @@
+<div class="sidebar-toggle-button-wrapper flex-shrink-0 {{if @disabled 'disabled opacity-50'}} {{if this.isSidebarVisible 'sidebar-is-visible'}} mr-6" ...attributes>
+    <button type="button" {{on "click" this.toggleSidebar}} class="sidebar-toggle-button next-org-button-trigger">
+        <svg id="sidebar-toggle-icon" data-name="sidebar-toggle-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 392 340" class="{{if this.isSidebarVisible 'expanded' 'collapsed'}}">
+            <rect x="0" y="0" width="150" height="340" fill={{if this.isSidebarVisible "white" "transparent"}} rx="40" ry="40"></rect>
+            <path
+                class="cls-1"
+                d="M484.25,220.5A27.76,27.76,0,0,1,512,248.23V496.77a27.76,27.76,0,0,1-27.73,27.73H183.71A27.76,27.76,0,0,1,156,496.77V248.23a27.76,27.76,0,0,1,27.73-27.73H484.25m0-18H183.71A45.73,45.73,0,0,0,138,248.23V496.77a45.72,45.72,0,0,0,45.73,45.73H484.25A45.72,45.72,0,0,0,530,496.77V248.23a45.73,45.73,0,0,0-45.73-45.73Z"
+                transform="translate(-137.98 -202.5)"
+            ></path>
+            <line class="cls-2" x1="159.6" y1="1.04" x2="159.6" y2="335.85"></line>
+            <rect class="cls-3" x="56.5" y="56.5" width="61" height="9" rx="4.36"></rect>
+            <rect class="cls-3" x="56.5" y="105.5" width="61" height="9" rx="4.36"></rect>
+            <rect class="cls-3" x="56.5" y="154.5" width="61" height="9" rx="4.36"></rect>
+        </svg>
+    </button>
+</div>

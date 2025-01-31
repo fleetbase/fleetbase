@@ -1,0 +1,12 @@
+<Modal::Default @modalIsOpened={{@modalIsOpened}} @options={{@options}} @confirm={{@onConfirm}} @decline={{@onDecline}}>
+    {{#each-in @options.order.meta as |key value|}}
+        <div class="grid grid-cols-2 border-t border-gray-200 dark:border-gray-700">
+            <div class="px-6 py-1.5 border-r border-gray-200 dark:border-gray-700">
+                <span class="text-gray-700 dark:text-white text-xs font-mono">{{key}}</span>
+            </div>
+            <div class="px-6 py-1.5">
+                <span class="text-gray-700 dark:text-white text-xs font-mono">{{value}}</span>
+            </div>
+        </div>
+    {{/each-in}}
+</Modal::Default>

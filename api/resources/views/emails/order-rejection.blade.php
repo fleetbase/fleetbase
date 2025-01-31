@@ -25,6 +25,6 @@
     <p>Please take necessary action to reassign this order.</p>
     
     <p>Best regards,<br>
-    Fleetbase Management System</p>
+    FleetYes</p>
 </body>
 </html>

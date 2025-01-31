@@ -1,0 +1,61 @@
+<div class="flex items-center" ...attributes>
+    <div class="flex items-center">
+        <h5 class="block truncate w-50 modal-title">
+            {{@options.title}}
+        </h5>
+        {{#if @options.headerStatus}}
+            <div class="ml-2.5">
+                <Badge @status={{@options.headerStatus}} />
+            </div>
+        {{/if}}
+    </div>
+    <div class="flex items-center ml-4">
+        {{#if @options.headerButtons}}
+            {{#each @options.headerButtons as |button|}}
+                {{#if button.options}}
+                    <DropdownButton
+                        @buttonWrapperClass="btn-flex"
+                        @text={{button.title}}
+                        @icon={{button.icon}}
+                        @iconPrefix={{button.iconPrefix}}
+                        @type={{button.type}}
+                        @size={{or button.size "xs"}}
+                        @horizontalPosition="left"
+                        @renderInPlace={{true}}
+                        as |dd|
+                    >
+                        <div class="next-dd-menu" role="menu" aria-orientation="vertical" aria-labelledby="user-menu">
+                            {{#if button.ddMenuLabel}}
+                                <div class="px-1">
+                                    <div class="text-sm flex flex-row items-center px-3 pt-2 rounded-md text-gray-800 dark:text-gray-300">
+                                        {{button.ddMenuLabel}}
+                                    </div>
+                                </div>
+                                <div class="next-dd-menu-seperator"></div>
+                            {{/if}}
+                            {{#each button.options as |menuOption|}}
+                                {{#if menuOption.separator}}
+                                    <div class="next-dd-menu-seperator"></div>
+                                {{else}}
+                                    <div role="group" class="px-1">
+                                        <a href="javascript:;" role="menuitem" class="next-dd-item {{menuOption.classNames}}" {{on "click" (fn this.handler menuOption dd)}}>
+                                            {{#if menuOption.icon}}
+                                                <span class="w-6">
+                                                    <FaIcon class={{menuOption.iconClass}} @icon={{menuOption.icon}} @prefix={{menuOption.iconPrefix}} />
+                                                </span>
+                                            {{/if}}
+                                            {{menuOption.title}}
+                                        </a>
+                                    </div>
+                                {{/if}}
+                            {{/each}}
+                        </div>
+                    </DropdownButton>
+                {{else}}
+                    <Button class={{button.class}} @icon={{button.icon}} @text={{button.title}} @type={{button.type}} @size={{button.size}} @onClick={{button.action}} />
+                {{/if}}
+            {{/each}}
+        {{/if}}
+    </div>
+    {{yield}}
+</div>

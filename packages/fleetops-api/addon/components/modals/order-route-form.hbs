@@ -1,0 +1,166 @@
+<Modal::Default @modalIsOpened={{@modalIsOpened}} @options={{@options}} @confirm={{@onConfirm}} @decline={{@onDecline}}>
+    <div class="modal-body-container">
+        <div class="flex flex-row justify-between mb-6">
+            <div class="flex">
+                <Toggle @isToggled={{@options.order.payload.isMultiDrop}} @onToggle={{@options.toggleMultiDropOrder}} @label={{t "fleet-ops.component.modals.order-route-form.toggle"}} />
+            </div>
+            <div class="flex flex-1 justify-end space-x-2">
+                {{#if @options.order.payload.isMultiDrop}}
+                    {{!-- <Button @type="magic" @icon="magic" @text={{t "fleet-ops.component.modals.order-route-form.optimize"}} @size="sm" @onClick={{fn @options.optimizeRoute}} @helpText={{t "fleet-ops.component.modals.order-route-form.optimize-text"}} @disabled={{lt @options.order.payload.waypoints.length 3}} @isLoading={{@options.isOptimizingRoute}} /> --}}
+                    <Button
+                        @icon="map-marked-alt"
+                        @text={{t "fleet-ops.component.modals.order-route-form.add"}}
+                        @size="sm"
+                        @onClick={{@options.addWaypoint}}
+                        @helpText={{t "fleet-ops.component.modals.order-route-form.add-text"}}
+                    />
+                {{/if}}
+            </div>
+        </div>
+
+        {{#if @options.order.payload.isMultiDrop}}
+            <DragSortList class="overflow-visible" @items={{@options.order.payload.waypoints}} @dragEndAction={{@options.sortWaypoints}} as |waypoint index|>
+                <div id={{concat "waypoint_" (add index 1)}} class="py-1 mb-3">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center justify-between cursor-move">
+                            <FaIcon @icon="grip-lines" @prefix="fas" class="mr-3 text-gray-100" />
+                            <label class="waypoint-label dark:text-gray-100 text-sm">
+                                {{waypoint-label (add index 1)}}
+                            </label>
+                        </div>
+
+                        <div class="flex-1 px-4">
+                            <ModelSelect
+                                @modelName="place"
+                                @selectedModel={{waypoint.place}}
+                                @placeholder={{concat (t "fleet-ops.component.modals.order-route-form.select-waypoint") (add index 1)}}
+                                @triggerClass="form-select form-input truncate"
+                                @wrapperClass="w-96"
+                                @infiniteScroll={{false}}
+                                @customSearchEndpoint="places/search"
+                                @query={{hash geo=true latitude=@options.userLatitude longitude=@options.userLongitude}}
+                                @renderInPlace={{true}}
+                                @onChange={{fn @options.setWaypointPlace index}}
+                                as |model|
+                            >
+                                {{model.address}}
+                            </ModelSelect>
+
+                            {{#if waypoint.place.hasInvalidCoordinates}}
+                                <div class="leading-5 text-sm text-red-400 mt-2">
+                                    <FaIcon @icon="exclamation-triangle" class="mr-1" />
+                                    {{t "fleet-ops.component.modals.order-route-form.invalid"}}
+                                </div>
+                            {{/if}}
+                        </div>
+
+                        <div class="flex items-center">
+                            {{#if waypoint.place}}
+                                <Button class="mr-2" @icon="edit" @size="sm" @onClick={{fn @options.editPlace waypoint.place}} />
+                            {{/if}}
+                            <Button @type="danger" @icon="trash" @iconPrefix="fas" @size="sm" @onClick={{fn @options.removeWaypoint waypoint}} />
+                        </div>
+                    </div>
+                </div>
+            </DragSortList>
+        {{else}}
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs dark:text-gray-100">
+                <div class="input-group">
+                    <div class="flex items-center justify-between">
+                        <label>{{t "fleet-ops.component.modals.order-route-form.pickup"}}</label>
+
+                        {{#if @options.order.payload.pickup}}
+                            <a href="javascript:;" {{on "click" (fn @options.editPlace @options.order.payload.pickup)}}>{{t "fleet-ops.component.modals.order-route-form.edit-address"}}</a>
+                        {{/if}}
+                    </div>
+
+                    <ModelSelect
+                        @modelName="place"
+                        @selectedModel={{@options.order.payload.pickup}}
+                        @placeholder={{t "fleet-ops.component.modals.order-route-form.select-pickup"}}
+                        @triggerClass="form-select form-input"
+                        @infiniteScroll={{false}}
+                        @customSearchEndpoint="places/search"
+                        @query={{hash geo=true latitude=@options.userLatitude longitude=@options.userLongitude}}
+                        @renderInPlace={{true}}
+                        @onChange={{fn @options.setPayloadPlace "pickup"}}
+                        as |model|
+                    >
+                        {{model.address}}
+                    </ModelSelect>
+
+                    {{#if @options.order.payload.pickup.hasInvalidCoordinates}}
+                        <div class="leading-5 text-sm text-red-400 mt-2">
+                            <FaIcon @icon="exclamation-triangle" class="mr-1" />
+                            {{t "fleet-ops.component.modals.order-route-form.invalid"}}
+                        </div>
+                    {{/if}}
+                </div>
+
+                <div class="input-group">
+                    <div class="flex items-center justify-between">
+                        <label>{{t "fleet-ops.component.modals.order-route-form.dropoff"}}</label>
+
+                        {{#if @options.order.payload.dropoff}}
+                            <a href="javascript:;" {{on "click" (fn @options.editPlace @options.order.payload.dropoff)}}>{{t "fleet-ops.component.modals.order-route-form.edit-address"}}</a>
+                        {{/if}}
+                    </div>
+
+                    <ModelSelect
+                        @modelName="place"
+                        @selectedModel={{@options.order.payload.dropoff}}
+                        @placeholder={{t "fleet-ops.component.modals.order-route-form.select-dropoff"}}
+                        @triggerClass="form-select form-input"
+                        @infiniteScroll={{false}}
+                        @customSearchEndpoint="places/search"
+                        @query={{hash geo=true latitude=@options.userLatitude longitude=@options.userLongitude}}
+                        @renderInPlace={{true}}
+                        @onChange={{fn @options.setPayloadPlace "dropoff"}}
+                        as |model|
+                    >
+                        {{model.address}}
+                    </ModelSelect>
+
+                    {{#if @options.order.payload.dropoff.hasInvalidCoordinates}}
+                        <div class="leading-5 text-sm text-red-400 mt-2">
+                            <FaIcon @icon="exclamation-triangle" class="mr-1" />
+                            {{t "fleet-ops.component.modals.order-route-form.invalid"}}
+                        </div>
+                    {{/if}}
+                </div>
+
+                <div class="input-group">
+                    <div class="flex items-center justify-between">
+                        <label>{{t "fleet-ops.component.modals.order-route-form.return"}}</label>
+
+                        {{#if @options.order.payload.return}}
+                            <a href="javascript:;" {{on "click" (fn @options.editPlace @options.order.payload.return)}}>{{t "fleet-ops.component.modals.order-route-form.edit-address"}}</a>
+                        {{/if}}
+                    </div>
+
+                    <ModelSelect
+                        @modelName="place"
+                        @selectedModel={{@options.order.payload.return}}
+                        @placeholder={{t "fleet-ops.component.modals.order-route-form.select-return"}}
+                        @triggerClass="form-select form-input"
+                        @infiniteScroll={{false}}
+                        @customSearchEndpoint="places/search"
+                        @query={{hash geo=true latitude=@options.userLatitude longitude=@options.userLongitude}}
+                        @renderInPlace={{true}}
+                        @onChange={{fn @options.setPayloadPlace "return"}}
+                        as |model|
+                    >
+                        {{model.address}}
+                    </ModelSelect>
+
+                    {{#if @options.order.payload.return.hasInvalidCoordinates}}
+                        <div class="leading-5 text-sm text-red-400 mt-2">
+                            <FaIcon @icon="exclamation-triangle" class="mr-1" />
+                            {{t "fleet-ops.component.modals.order-route-form.invalid"}}
+                        </div>
+                    {{/if}}
+                </div>
+            </div>
+        {{/if}}
+    </div>
+</Modal::Default>

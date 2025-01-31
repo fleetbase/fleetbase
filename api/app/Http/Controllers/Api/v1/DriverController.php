@@ -440,7 +440,7 @@ class DriverController extends FleetbaseDriverController
         // check if user exists
         $user = User::where('phone', $phone)->whereHas('driver')->whereNull('deleted_at')->withoutGlobalScopes()->first();
         if (!$user) {
-            return response()->apiError('No driver with this phone # found.');
+            return response()->apiError(__('messages.no_driver_found'));
         }
 
         // Get the user's company for this driver profile
@@ -451,11 +451,11 @@ class DriverController extends FleetbaseDriverController
           
                 VerificationCode::generateEmailVerificationFor($user, 'driver_login', [
                 'content' => function ($verification) use ($company) {
-                    return 'Welcome to Fleetbase. Your verification code is : ' . $verification->code;
+                    return __('messages.otp_content', ['code' => $verification->code]);
                 },
                 'messageCallback' => function ($verification) use ($company) {
                     $companyName = data_get($company, 'name', config('app.name'));
-                    return 'Your ' . $companyName . ' verification code is ' . $verification->code;
+                    return __('messages.otp_message', ['company' => $companyName, 'code' => $verification->code]);
                 },
             ]);
         } catch (\Throwable $e) {
@@ -463,7 +463,7 @@ class DriverController extends FleetbaseDriverController
                 app('sentry')->captureException($e);
             }
 
-            return response()->apiError('Unable to send SMS Verification code.');
+            return response()->apiError(__('messages.sms_verification_error'));
         }
 
         return response()->json(['status' => 'OK']);

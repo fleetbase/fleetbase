@@ -20,7 +20,7 @@ export default class OnboardVerifyEmailController extends AuthVerificationContro
                     this.notifications.success('Email successfully verified!');
 
                     if (token) {
-                        this.notifications.info('Welcome to Fleetbase!');
+                        this.notifications.info('Welcome to FleetYes!');
                         this.session.manuallyAuthenticate(token);
 
                         return this.router.transitionTo('console');

@@ -1,0 +1,19 @@
+<div class="ui-money-input {{@wrapperClass}}">
+    <div class="flex rounded-md shadow-sm">
+        <span
+            class="shadow-sm inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 dark:border-gray-900 dark:bg-gray-800 dark:text-gray-200 sm:text-sm"
+        >
+            {{#if @canSelectCurrency}}
+                <CurrencySelect
+                    @onChange={{this.setCurrency}}
+                    @currency={{this.currency}}
+                    @currencyData={{this.currencyData}}
+                    @triggerComponent={{component "money-input/currency-handle" currency=this.currencyData}}
+                />
+            {{else}}
+                <MoneyInput::CurrencyHandle @currency={{this.currencyData}} />
+            {{/if}}
+        </span>
+        <Input @type="tel" @value={{@value}} class="form-input flex-1 rounded-l-none" {{did-insert this.autoNumerize}} ...attributes />
+    </div>
+</div>

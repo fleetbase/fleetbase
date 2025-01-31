@@ -1,0 +1,22 @@
+{{#if (media "isMobile")}}
+    <div class="next-mobile-navbar" {{did-insert this.setupMobileNavbar}} ...attributes>
+        <div role="menubar" class="next-mobile-navbar-tabs">
+            <div role="menu" class="scrollable-nav-items">
+                {{#each this.menuItems as |menuItem|}}
+                    <LinkToExternal @route={{menuItem.route}} class="next-mobile-navbar-tab-item {{menuItem.class}}" role="menuitem">
+                        <div class="w-6">
+                            <FaIcon @icon={{menuItem.icon}} @size="sm" />
+                        </div>
+                        <div>
+                            <span>{{menuItem.title}}</span>
+                        </div>
+                    </LinkToExternal>
+                {{/each}}
+            </div>
+            <a href="javascript:;" class="next-mobile-navbar-tab-item menu-toggle" role="menuitem" {{on "click" this.toggleSidebar}}>
+                <FaIcon @icon="bars" @size="lg" class="text-gray-800 dark:text-gray-100" />
+                <span>Menu</span>
+            </a>
+        </div>
+    </div>
+{{/if}}

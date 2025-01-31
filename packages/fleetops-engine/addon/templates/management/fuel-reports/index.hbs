@@ -1,0 +1,60 @@
+<Layout::Section::Header @title={{t "fleet-ops.management.fuel-reports.index.title"}} @searchQuery={{this.query}} @onSearch={{perform this.search}}>
+    <Button @icon="refresh" @onClick={{this.reload}} @helpText={{t "fleet-ops.common.reload-data"}} class="mr-2" />
+    <FiltersPicker
+        @columns={{this.columns}}
+        @onApply={{fn this.filters.apply this}}
+        @onClear={{fn this.filters.reset this}}
+        @onFilterClear={{this.filters.clear}}
+        @onChange={{this.filters.set}}
+        @buttonWrapperClass="mr-2"
+    />
+    <VisibleColumnPicker @columns={{this.columns}} @onChange={{fn (mut this.columns)}} class="mr-2" />
+    {{#if (safe-has this.table "selectedRows")}}
+        <DropdownButton
+            @icon="layer-group"
+            @text={{t "fleet-ops.common.bulk-action"}}
+            @type="magic"
+            @size="sm"
+            @buttonWrapperClass="mr-2"
+            @contentClass="dropdown-menu"
+            @permission="fleet-ops delete fuel-report"
+            as |dd|
+        >
+            <div class="next-dd-menu mt-2 mx-0">
+                <div class="px-1">
+                    <a href="#" class="text-red-500 next-dd-item" {{on "click" (dropdown-fn dd this.bulkDeleteFuelReports)}}>
+                        {{t "fleet-ops.management.fuel-reports.index.delete-fuel-reports"}}
+                    </a>
+                </div>
+            </div>
+        </DropdownButton>
+    {{/if}}
+
+    <Button @icon="plus" @iconPrefix="fas" @type="primary" @text={{t "fleet-ops.common.new"}} class="mr-2" @onClick={{this.createFuelReport}} @permission="fleet-ops create fuel-report" />
+    <Button
+        @icon="upload"
+        @type="magic"
+        @text={{t "fleet-ops.common.import"}}
+        @wrapperClass="hidden md:flex"
+        @onClick={{this.importFuelReports}}
+        @permission="fleet-ops import fuel-report"
+        class="mr-2"
+    />
+    <Button @icon="long-arrow-up" @iconClass="rotate-icon-45" @text={{t "fleet-ops.common.export"}} @onClick={{this.exportFuelReports}} @permission="fleet-ops export fuel-report" />
+</Layout::Section::Header>
+
+<Layout::Section::Body @pagination={{true}} @onToggleAll={{this.toggleAll}} @allToggled={{this.allToggled}}>
+    <Table
+        @rows={{@model}}
+        @columns={{this.columns}}
+        @selectable={{true}}
+        @canSelectAll={{true}}
+        @onSetup={{fn (mut this.table)}}
+        @pagination={{true}}
+        @paginationMeta={{@model.meta}}
+        @page={{this.page}}
+        @onPageChange={{fn (mut this.page)}}
+    />
+</Layout::Section::Body>
+
+{{outlet}}

@@ -1,0 +1,264 @@
+.fleetbase-input.fleetbase-date-input .input-icon.input-icon-right {
+    right: 0;
+    padding-right: 0.7rem;
+    padding-top: 0.35rem;
+}
+
+.fleetbase-input.fleetbase-date-input .input-icon.input-icon-right {
+    font-size: 0.875rem;
+    line-height: 1.5;
+}
+
+.fleetbase-calendar {
+    margin-top: 0.3rem;
+    box-shadow: 0px 4px 4px rgba(13, 32, 80, 0.05);
+    border-radius: 8px;
+    @apply bg-white;
+}
+
+.fleetbase-date-input .fleetbase-date-input-placeholder {
+    color: #a0a0a0;
+}
+
+.fleetbase-calendar .fleetbase-calendar-selection-header {
+    @apply bg-sky-500;
+    border-radius: 8px 8px 0px 0px;
+    padding: 0.8rem 1rem;
+    display: flex;
+    align-items: center;
+}
+
+.fleetbase-calendar .fleetbase-calendar-selection-header .fleetbase-calendar-selection-header-selected {
+    font-family: 'Open Sans', sans-serif;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 18px;
+    color: #ffffff;
+}
+
+.fleetbase-calendar .ember-power-calendar-nav {
+    padding: 0.6rem 1rem;
+    display: flex;
+    align-items: center;
+    border-top: 0;
+    border-bottom: 0;
+}
+
+.fleetbase-calendar .ember-power-calendar-nav .ember-power-calendar-nav-title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    font-family: 'Open Sans', sans-serif;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 18px;
+    text-align: center;
+    color: #1e1e1e;
+}
+
+.fleetbase-calendar .ember-power-calendar-nav .ember-power-calendar-nav-title .fleetbase-calendar-control-step {
+    border: 0;
+    background-color: transparent;
+    padding: 0;
+    margin: 0;
+}
+
+.fleetbase-calendar .ember-power-calendar-nav .ember-power-calendar-nav-title .fleetbase-calendar-control-step:hover svg path {
+    stroke: #718096;
+}
+
+.fleetbase-calendar .ember-power-calendar-days {
+    padding: 0.5rem;
+    /* border: 1px solid #e6e8ea; */
+    border-top: 0;
+}
+
+.fleetbase-calendar .ember-power-calendar-days .ember-power-calendar-row {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-evenly;
+}
+
+.fleetbase-calendar .ember-power-calendar-days .ember-power-calendar-row .ember-power-calendar-weekday {
+    font-family: 'Open Sans', sans-serif;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 12px;
+    line-height: 16px;
+    min-height: 32px;
+    padding: 0.5rem;
+    display: flex;
+    align-items: center;
+}
+
+.fleetbase-calendar .ember-power-calendar-days .ember-power-calendar-day-grid .ember-power-calendar-day {
+    border: 0;
+    background-color: transparent;
+    font-family: 'Open Sans', sans-serif;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 12px;
+    line-height: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: #a0a0a0;
+    padding: 0.3rem;
+    min-width: 32px;
+    min-height: 32px;
+    margin: 0.2rem;
+    border-radius: 4px;
+}
+
+.fleetbase-calendar .ember-power-calendar-days .ember-power-calendar-day-grid .ember-power-calendar-day:hover {
+    background-color: #e6ebf4;
+    color: #121929;
+}
+
+.fleetbase-calendar .ember-power-calendar-days .ember-power-calendar-day-grid .ember-power-calendar-day.ember-power-calendar-day--selected {
+    background-color: #88b7ff;
+    color: #1e1e1e;
+}
+
+.fleetbase-daterange-input.input-group > div {
+    width: 50%;
+}
+
+.fleetbase-daterange-input.input-group > div:first-child .form-control {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+    border-right: 0;
+}
+
+.fleetbase-daterange-input.input-group > div:last-child .form-control {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+}
+
+.fleetbase-laycan-range-input {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.fleetbase-laycan-range-input > .input-group .fleetbase-datepicker {
+    flex: 2;
+}
+
+.fleetbase-laycan-range-input > .input-group > div:first-child .form-control {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+    border-right: 0;
+}
+
+.fleetbase-laycan-range-input > .input-group > div:last-child .form-control {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+}
+
+.fleetbase-laycan-range-input .range-separator {
+    display: block;
+    width: auto;
+    padding: 0.5rem;
+}
+
+.fleetbase-laycan-range-input .range-separator::after {
+    content: ' ';
+    border-top: 1px solid #cfd0d1;
+    display: block;
+    padding: 0 1rem;
+}
+
+body[data-theme='dark'] .fleetbase-calendar {
+    @apply bg-transparent border border-gray-900 shadow;
+}
+
+body[data-theme='dark'] .fleetbase-calendar .ember-power-calendar-nav,
+body[data-theme='dark'] .fleetbase-calendar .ember-power-calendar-days {
+    @apply bg-gray-700;
+}
+
+body[data-theme='dark'] .fleetbase-calendar .ember-power-calendar-nav-title {
+    @apply text-gray-100;
+}
+
+body[data-theme='dark'] .fleetbase-calendar .fleetbase-calendar-selection-header {
+    @apply bg-gray-800 border-b border-gray-900 text-gray-100;
+}
+
+body[data-theme='dark'] .fleetbase-calendar .ember-power-calendar-days {
+    @apply rounded-b-none;
+}
+
+body[data-theme='dark'] .fleetbase-calendar .ember-power-calendar-days .ember-power-calendar-day,
+body[data-theme='dark'] .fleetbase-calendar .ember-power-calendar-days .ember-power-calendar-weekday {
+    @apply text-gray-100;
+}
+
+.ui-full-calendar .fc-header-toolbar {
+    @apply bg-white w-full px-0 py-0 mb-2 shadow-none flex items-center;
+}
+
+.ui-full-calendar .fc-header-toolbar .fc-toolbar-title {
+    @apply text-base font-semibold text-gray-800;
+}
+
+.ui-full-calendar .fc-header-toolbar .fc-toolbar-chunk .fc-button {
+    @apply py-2;
+}
+
+.ui-full-calendar .fc-view-harness {
+    @apply p-3 rounded;
+}
+
+body[data-theme='dark'] .ui-full-calendar .fc-header-toolbar {
+    @apply bg-gray-900;
+}
+
+body[data-theme='dark'] .ui-full-calendar .fc-header-toolbar .fc-toolbar-title {
+    @apply text-gray-100;
+}
+
+body[data-theme='dark'] .ui-full-calendar .fc-col-header > tbody > tr,
+body[data-theme='dark'] .ui-full-calendar .fc-scrollgrid-section.fc-scrollgrid-section-header > td,
+body[data-theme='dark'] .ui-full-calendar .fc-scrollgrid-section.fc-scrollgrid-section-body > td {
+    @apply border-gray-700;
+}
+
+body[data-theme='dark'] .ui-full-calendar .fc-theme-standard .fc-scrollgrid,
+body[data-theme='dark'] .ui-full-calendar .fc-daygrid-body .fc-daygrid-day,
+body[data-theme='dark'] .ui-full-calendar .fc-col-header-cell,
+body[data-theme='dark'] .ui-full-calendar table.fc-scrollgrid {
+    @apply border border-gray-700;
+}
+
+body[data-theme='dark'] .ui-full-calendar .fc-view-harness {
+    @apply bg-night-805;
+}
+
+.ui-full-calendar .fc-button {
+    display: inline-flex !important;
+    font-size: 0.875rem !important;
+    font-weight: 500 !important;
+    line-height: 1rem !important;
+    border-width: 1px !important;
+    border-color: transparent !important;
+}
+
+.ui-full-calendar .fc-button {
+    border-radius: 0.375rem;
+}
+
+.ui-full-calendar .fc-button-group {
+}
+
+.ui-full-calendar .fc-daygrid-block-event .fc-event-time,
+.ui-full-calendar .fc-daygrid-block-event .fc-event-title {
+    @apply py-px px-1.5;
+}

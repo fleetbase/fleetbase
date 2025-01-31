@@ -1,6 +1,6 @@
 <div>
     <LinkTo @route="console" class="flex items-center justify-center">
-        <LogoIcon @brand={{@brand}} @size="12" class="rounded-md" />
+        <LogoIcon @brand={{@brand}} @size="12" class="" />
     </LinkTo>
     <h2 class="mt-6 mb-3 text-3xl font-extrabold leading-9 text-center text-gray-900 dark:text-gray-100">
         {{t "auth.login.title"}}
@@ -8,7 +8,7 @@
 </div>
 
 {{#if (gte this.failedAttempts 3)}}
-    <div class="flex flex-col flex-grow-0 flex-shrink-0 text-sm bg-yellow-800 border border-yellow-600 px-2 py-2 rounded-md text-yellow-100 my-4 transition-all">
+    <div class="flex flex-col flex-grow-0 flex-shrink-0 text-sm bg-yellow-800 border border-yellow-600 px-2 py-2 text-yellow-100 my-4 transition-all">
         <div class="flex flex-row items-start mb-2">
             <div class="w-8 flex-grow-0 flex-shrink-0">
                 <FaIcon @icon="triangle-exclamation" @size="xl" class="pt-1" />
@@ -31,7 +31,7 @@
 
 <form class="mt-8" {{on "submit" this.login}}>
     <input type="hidden" name="remember" value="true" />
-    <div class="rounded-md shadow-sm">
+    <div class="shadow-sm">
         <div>
             <Input
                 @value={{this.identity}}
@@ -40,7 +40,7 @@
                 @type="email"
                 autocomplete="username"
                 required
-                class="relative block w-full px-3 py-2 text-gray-900 placeholder-gray-500 border border-gray-300 rounded-none appearance-none rounded-t-md focus:outline-none focus:shadow-outline-blue focus:border-blue-300 focus:z-10 sm:text-sm sm:leading-5 dark:text-white dark:bg-gray-700 dark:border-gray-900"
+                class="relative block w-full px-3 py-2 text-gray-900 placeholder-gray-500 border border-gray-300 rounded-none appearance-none focus:outline-none focus:shadow-outline-blue focus:border-blue-300 focus:z-10 sm:text-sm sm:leading-5 dark:text-white dark:bg-gray-700 dark:border-gray-900"
                 placeholder={{t "auth.login.form.email-label"}}
                 disabled={{this.isLoading}}
             />
@@ -53,7 +53,7 @@
                 @type="password"
                 autocomplete="current-password"
                 required
-                class="relative block w-full px-3 py-2 text-gray-900 placeholder-gray-500 border border-gray-300 rounded-none appearance-none rounded-b-md focus:outline-none focus:shadow-outline-blue focus:border-blue-300 focus:z-10 sm:text-sm sm:leading-5 dark:text-white dark:bg-gray-700 dark:border-gray-900"
+                class="relative block w-full px-3 py-2 text-gray-900 placeholder-gray-500 border border-gray-300 rounded-none appearance-none focus:outline-none focus:shadow-outline-blue focus:border-blue-300 focus:z-10 sm:text-sm sm:leading-5 dark:text-white dark:bg-gray-700 dark:border-gray-900"
                 placeholder={{t "auth.login.form.password-label"}}
                 disabled={{this.isLoading}}
             />
@@ -90,7 +90,7 @@
             @isLoading={{this.isLoading}}
             @onClick={{this.login}}
         />
-        <Button @text={{t "auth.login.form.create-account-button"}} @icon="briefcase" @wrapperClass="btn-block" @disabled={{this.isLoading}} @onClick={{fn (transition-to "onboard")}} />
+        {{!-- <Button @text={{t "auth.login.form.create-account-button"}} @icon="briefcase" @wrapperClass="btn-block" @disabled={{this.isLoading}} @onClick={{fn (transition-to "onboard")}} /> --}}
         <RegistryYield @type="menu" @registry="auth:login" as |menuItem|>
             <Button
                 @text={{menuItem.title}}

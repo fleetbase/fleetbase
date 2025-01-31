@@ -1,0 +1,77 @@
+<div id="create-order-button-menu-wrapper" class="create-order-menu-button-wrapper">
+    <Button
+        @text={{t "fleet-ops.component.layout.fleet-ops-sidebar.title"}}
+        @type="primary"
+        @size="xs"
+        @icon="paper-plane"
+        @iconPrefix="fas"
+        @iconSize="sm"
+        @wrapperClass="w-full create-order-button-wrapper"
+        @onClick={{this.onClickCreateOrder}}
+        @permission="fleet-ops create order"
+        @tooltipPlacement="right"
+        class="w-full create-order-button"
+    />
+</div>
+{{#each this.menuPanels as |menuPanel|}}
+    {{#each menuPanel.items as |menuItem|}}
+        {{#each menuItem.renderComponentInPlace as |menuItem|}}
+            {{component
+                menuItem.component
+                menuItem=menuItem
+                title=(if menuItem.intl (t menuItem.intl) menuItem.title)
+                onClick=menuItem.onClick
+                route=(concat this.routePrefix menuItem.route)
+                icon=menuItem.icon
+                rightSideComponent=menuItem.rightSideComponent
+                rightSideComponentContext=menuItem.rightSideComponentContext
+                rightSideStatus=menuItem.rightSideStatus
+                rightSideStatusText=menuItem.rightSideStatusText
+                hideRightSideStatusDot=menuItem.hideRightSideStatusDot
+                rightSideStatusClass=menuItem.rightSideStatusClass
+                disableRightSideStatusHumanize=menuItem.disableRightSideStatusHumanize
+                dropdownButton=menuItem.dropdownButton
+                dropdownButtonActions=menuItem.dropdownButtonActions
+                dropdownButtonIcon=menuItem.dropdownButtonIcon
+                dropdownButtonIconPrefix=menuItem.dropdownButtonIconPrefix
+                dropdownButtonText=menuItem.dropdownButtonText
+                dropdownButtonCalculatePosition=menuItem.dropdownButtonCalculatePosition
+                dropdownButtonRenderInPlace=menuItem.dropdownButtonRenderInPlace
+                dropdownButtonMenuLabel=menuItem.dropdownButtonMenuLabel
+                dropdownButtonWrapperClass=menuItem.dropdownButtonWrapperClass
+                dropdownButtonTriggerClass=menuItem.dropdownButtonTriggerClass
+                registerDropdownButtonAPI=menuItem.registerDropdownButtonAPI
+                permission=menuItem.permission
+                visible=menuItem.visible
+            }}
+        {{else}}
+            <Layout::Sidebar::Item
+                @onClick={{menuItem.onClick}}
+                @route={{concat this.routePrefix menuItem.route}}
+                @icon={{menuItem.icon}}
+                @rightSideComponent={{menuItem.rightSideComponent}}
+                @rightSideComponentContext={{menuItem.rightSideComponentContext}}
+                @rightSideStatus={{menuItem.rightSideStatus}}
+                @rightSideStatusText={{menuItem.rightSideStatusText}}
+                @hideRightSideStatusDot={{menuItem.hideRightSideStatusDot}}
+                @rightSideStatusClass={{menuItem.rightSideStatusClass}}
+                @disableRightSideStatusHumanize={{menuItem.disableRightSideStatusHumanize}}
+                @dropdownButton={{menuItem.dropdownButton}}
+                @dropdownButtonActions={{menuItem.dropdownButtonActions}}
+                @dropdownButtonIcon={{menuItem.dropdownButtonIcon}}
+                @dropdownButtonIconPrefix={{menuItem.dropdownButtonIconPrefix}}
+                @dropdownButtonText={{menuItem.dropdownButtonText}}
+                @dropdownButtonCalculatePosition={{menuItem.dropdownButtonCalculatePosition}}
+                @dropdownButtonRenderInPlace={{menuItem.dropdownButtonRenderInPlace}}
+                @dropdownButtonMenuLabel={{menuItem.dropdownButtonMenuLabel}}
+                @dropdownButtonWrapperClass={{menuItem.dropdownButtonWrapperClass}}
+                @dropdownButtonTriggerClass={{menuItem.dropdownButtonTriggerClass}}
+                @registerDropdownButtonAPI={{menuItem.registerDropdownButtonAPI}}
+                @permission={{menuItem.permission}}
+                @visible={{menuItem.visible}}
+            >{{if menuItem.intl (t menuItem.intl) menuItem.title}}</Layout::Sidebar::Item>
+        {{/each}}
+    {{/each}}
+{{/each}}
+{{yield}}
+<Spacer @height="10px" />

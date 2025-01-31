@@ -1,0 +1,126 @@
+.timeline {
+    display: grid;
+    grid-template-columns: repeat(14, 1fr);
+    align-items: center;
+    width: 100%;
+    position: relative;
+    margin: 0 auto;
+    box-sizing: border-box;
+    overflow: hidden;
+}
+
+.timeline *,
+.timeline :after,
+.timeline :before {
+    box-sizing: inherit;
+}
+
+.timeline-controls {
+    display: flex;
+    align-items: center;
+    position: relative;
+    grid-column: span 2;
+    margin-top: -20px;
+    cursor: default;
+}
+
+.timeline-controls button,
+.timeline-controls a {
+    cursor: default;
+}
+
+.timeline-controls > .timeline-controls-button-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 1rem;
+}
+
+.timeline > .timeline-controls:first-child {
+    justify-content: flex-end;
+}
+
+.timeline > .timeline-controls:last-child {
+    justify-content: flex-start;
+}
+
+.timeline-arrow-left,
+.timeline-arrow-right {
+    border: none;
+    border-radius: 6px;
+    color: white;
+    cursor: pointer;
+    font-size: 14px;
+    padding: 0px 10px;
+    z-index: 10;
+}
+
+.timeline-arrow-left[disabled],
+.timeline-arrow-right[disabled] {
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+.timeline-wrapper {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-column: span 10;
+    transition: transform 0.5s ease;
+    max-height: 400px;
+    overflow: hidden;
+}
+
+.timeline-items-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-auto-flow: column;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scrollbar-width: none;
+    gap: 0.5rem;
+    position: relative;
+    overflow: visible;
+    margin-bottom: 10px;
+    padding-bottom: 20px;
+    border-bottom: 3px rgb(243, 244, 246) solid;
+}
+
+.timeline-items-container::-webkit-scrollbar {
+    display: none;
+}
+
+.timeline-item {
+    display: flex;
+    flex-direction: column;
+    will-change: transform, opacity;
+    overflow: visible;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    box-sizing: border-box;
+    min-width: 0;
+}
+
+.timeline-item * {
+    box-sizing: border-box;
+}
+
+.timeline-item.active::after {
+    background-color: rgb(59, 130, 246);
+    border-color: rgb(37, 99, 235);
+}
+
+.timeline-item::after {
+    background-color: #fff;
+    border: 4px solid #ddd;
+    border-radius: 50%;
+    content: '';
+    height: 20px;
+    position: absolute;
+    top: calc(100% + 20px);
+    bottom: 0;
+    left: calc(50% - 20px);
+    right: 0;
+    transform: translateY(-50%);
+    width: 20px;
+    z-index: 20;
+}

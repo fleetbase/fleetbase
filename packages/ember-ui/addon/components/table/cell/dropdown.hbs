@@ -1,0 +1,26 @@
+<div class="cell-dropdown-button overflow-visible {{@column.wrapperClass}}" {{did-insert this.setupComponent}} ...attributes>
+    <DropdownButton
+        @icon={{@column.ddButtonIcon}}
+        @iconPrefix={{@column.ddButtonIconPrefix}}
+        @text={{this.buttonText}}
+        @size="xs"
+        @horizontalPosition="left"
+        @calculatePosition={{this.calculatePosition}}
+        @renderInPlace={{true}}
+        as |dd|
+    >
+        <div class="next-dd-menu next-dd-menu-table-dd mt-0i {{@column.ddMenuWrapperClass}}" role="menu" aria-orientation="vertical" aria-labelledby="user-menu">
+            {{#if @column.ddMenuLabel}}
+                <div class="next-dd-menu-label-container px-1">
+                    <div class="next-dd-menu-label {{@column.ddMenuLabelClass}}">
+                        {{@column.ddMenuLabel}}
+                    </div>
+                </div>
+                <div class="next-dd-menu-seperator"></div>
+            {{/if}}
+            {{#each @column.actions as |columnAction|}}
+                <Table::Cell::Dropdown::ActionItem @columnAction={{columnAction}} @row={{@row}} @column={{@column}} @dd={{dd}} />
+            {{/each}}
+        </div>
+    </DropdownButton>
+</div>

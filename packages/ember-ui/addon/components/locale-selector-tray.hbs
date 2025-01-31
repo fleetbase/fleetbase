@@ -1,0 +1,43 @@
+<div class="next-user-button locale-selector-tray mx-2" ...attributes>
+    <BasicDropdown
+        class={{@wrapperClass}}
+        @onOpen={{@onOpen}}
+        @onClose={{@onClose}}
+        @calculatePosition={{this.calculatePosition}}
+        @verticalPosition={{@verticalPosition}}
+        @horizontalPosition={{@horizontalPosition}}
+        @renderInPlace={{or @renderInPlace (not (media "isMobile"))}}
+        as |dd|
+    >
+        <dd.Trigger class="{{@triggerClass}} local-selector-tray-trigger {{if (media 'isMobile') 'is-mobile'}}">
+            <div class="next-org-button-trigger flex-shrink-0 {{if dd.isOpen 'is-open'}} mr-2">
+                <FaIcon @icon="globe" @size="sm" />
+            </div>
+        </dd.Trigger>
+        <dd.Content class="{{@contentClass}} locale-selector-tray-content {{if (media 'isMobile') 'is-mobile'}}">
+            <div class="next-dd-menu {{@dropdownMenuClass}} {{if dd.isOpen 'is-open'}}">
+                {{#if this.loadAvailableCountries.isRunning}}
+                    <Spinner />
+                {{else}}
+                    {{#each-in this.availableLocales as |key country|}}
+                        <div class="px-1">
+                            <a href="javascript:;" class="next-dd-item" {{on "click" (fn this.changeLocale key)}}>
+                                <div class="flex flex-row items-center justify-between w-full">
+                                    <div class="flex-1">
+                                        <span class="mr-1">{{country.emoji}}</span>
+                                        <span>{{country.language}}</span>
+                                    </div>
+                                    {{#if (eq this.currentLocale key)}}
+                                        <div>
+                                            <FaIcon @icon="check" class="text-green-400" />
+                                        </div>
+                                    {{/if}}
+                                </div>
+                            </a>
+                        </div>
+                    {{/each-in}}
+                {{/if}}
+            </div>
+        </dd.Content>
+    </BasicDropdown>
+</div>

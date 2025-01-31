@@ -1,0 +1,161 @@
+iam:
+  extension-name: IAM
+  common:
+    address: العنوان
+    bulk-action: إجراء جماعي
+    country: البلد
+    create: تم الإنشاء
+    dashboard: لوحة القيادة
+    description: الوصف
+    email: البريد الإلكتروني
+    export: تصدير
+    group: المجموعات
+    member: الأعضاء
+    name: الاسم
+    new: جديد
+    permission: الإذن
+    phone: الهاتف
+    photo: الصورة
+    policy: السياسة
+    policies: السياسات
+    attach-policies: إرفاق السياسات
+    select-policy: اختيار السياسة
+    attach-permissions: إرفاق الأذونات
+    attach-inline-permissions: إرفاق الأذونات المضمنة
+    select-permissions: اختيار الأذونات
+    primary: الأساسي
+    role: الدور
+    roles: الأدوار
+    status: الحالة
+    type: النوع
+    user: المستخدمين
+    service: الخدمة
+    reload: إعادة تحميل
+    reload-data: إعادة تحميل البيانات
+  components:
+    widget:
+      metrics:
+        title: مقاييس IAM
+    modals:
+      group-details:    
+        group-name: اسم المجموعة
+      group-form:
+        group-name: اسم المجموعة
+        group-description: وصف المجموعة
+        select-users-add-group: اختيار المستخدمين لإضافتهم إلى المجموعة
+        search-select-users-add-group: البحث واختيار المستخدمين لإضافتهم إلى هذه المجموعة.
+        select-user-add-group: اختيار المستخدم لإضافته إلى المجموعة
+        no-user-add-group: لم تتم إضافة مستخدمين إلى المجموعة
+      policy-form:
+        policy-name: اسم السياسة
+        enter-name-your-policy: أدخل اسمًا لسياساتك
+        policy-description: وصف السياسة
+        enter-description-your-policy: أدخل وصفًا لسياساتك
+        select-permissions: اختيار الأذونات
+      view-policy-permissions:
+        view-permissions: >-
+          السياسة: {policyName} الأذونات
+      view-role-permissions:
+        view-permissions: >-
+          الدور: {roleName} الأذونات
+      view-user-permissions:
+        view-permissions: >-
+          المستخدم: {userName} الأذونات
+      role-form:
+        role-name: اسم الدور
+        enter-name-for-this-role: أدخل اسمًا لهذا الدور
+        role-description: وصف الدور
+        enter-description-your-role: أدخل وصفًا لدورك
+        select-permission: اختيار الأذونات
+    table:
+      group-members:
+        no-member: لا يوجد أعضاء
+    permission-picker:
+      selected: >-
+        المختار: 
+      search-permissions-keyword: البحث عن الأذونات بالكلمات الرئيسية
+      loading-permission: جارٍ تحميل الأذونات...
+  groups:
+    index:
+      untitled: بدون عنوان
+      delete-group-title: حذف مجموعة {groupName}
+      delete-group-success-message: تم حذف المجموعة {name}.
+      delete-group: حذف المجموعات
+      created: تم الإنشاء
+      edit-group: تحرير المجموعة...
+      delete-group-label: حذف المجموعة...
+      new-group: مجموعة جديدة
+      new-group-created: تم إنشاء مجموعة جديدة.
+      edit-group-title: تحرير المجموعة
+      group-actions: إجراءات المجموعة
+      changes-group-save: تم حفظ التغييرات في المجموعة.
+      data-assosciated-this-group-deleted: هل أنت متأكد أنك تريد حذف هذه المجموعة؟ سيتم أيضًا حذف جميع البيانات المرتبطة بهذه المجموعة. لا يمكن التراجع عن هذا الإجراء.
+  policies:
+    index:
+      title: السياسات
+      delete-policies: حذف السياسات
+      contact-action: إجراءات الاتصال
+      edit-policy: تحرير السياسة...
+      delete-policy: حذف السياسة...
+      new-policy: سياسة جديدة
+      new-policy-created: تم إنشاء سياسة جديدة.
+      unable-changes-policy-warning: غير قادر على إجراء تغييرات على سياسة {policyType}.
+      edit-policy-title: تحرير السياسة
+      policy-actions: إجراءات السياسة
+      changes-policy-saved-success: تم حفظ التغييرات في السياسة.
+      unable-delete-policy-warning: غير قادر على حذف سياسة {policyType}.
+      data-assosciated-this-policy-deleted: هل أنت متأكد أنك تريد حذف هذه السياسة؟ سيتم أيضًا حذف جميع البيانات المرتبطة بهذه السياسة. لا يمكن التراجع عن هذا الإجراء.
+      policy-deleted: تم حذف السياسة {policyName}.
+  roles:
+    index:
+      delete-roles: حذف الأدوار
+      contact-action: إجراءات الاتصال
+      edit-role: تحرير الدور...
+      delete-role: حذف الدور...
+      new-role: دور جديد
+      new-role-create: تم إنشاء دور جديد
+      edit-role-title: تحرير الدور
+      role-actions: إجراءات الدور
+      changes-role-saved: تم حفظ التغييرات في الدور.
+      data-assosciated-this-role-deleted: هل أنت متأكد أنك تريد حذف هذا الدور؟ سيتم أيضًا حذف جميع البيانات المرتبطة بهذا الدور. لا يمكن التراجع عن هذا الإجراء.
+      role-deleted: تم حذف الدور {roleName}.
+      unable-changes-role-warning: غير قادر على إجراء تغييرات على دور {roleType}.
+      unable-delete-role-warning: غير قادر على حذف دور {roleType}.
+  users:
+    index:
+      delete-user-title: حذف المستخدم {userName}
+      delete-user-success-message: تم حذف المستخدم {userName}.
+      deactivate-user-title: تعطيل حساب المستخدم {userName}
+      deactivate-user-success-message: تم تعطيل المستخدم {userName}.
+      re-activate-user-title: إعادة تفعيل حساب المستخدم {userName}
+      re-activate-user-success-message: تم تفعيل المستخدم {userName}.
+      delete-users: حذف المستخدمين
+      last-login: آخر تسجيل دخول
+      created-at: تم الإنشاء في
+      updated-at: تم التحديث في
+      user-actions: إجراءات المستخدم
+      edit-user: تحرير المستخدم...
+      view-user-permissions: عرض الأذونات...
+      re-send-invitation: إعادة إرسال الدعوة...
+      deactivate-user: تعطيل المستخدم...
+      activate-user: تفعيل المستخدم...
+      delete-user: حذف المستخدم...
+      new-user: مستخدم جديد
+      user-invited-join-your-organization-success: تم دعوة المستخدم للانضمام إلى مؤسستك.
+      edit-user-title: تحرير المستخدم
+      user-changes-saved-success: تم حفظ تغييرات المستخدم.
+      error-you-cant-delete-yourself: لا يمكنك حذف نفسك
+      data-assosciated-user-delete: هل أنت متأكد أنك تريد حذف هذا المستخدم؟ سيتم أيضًا حذف جميع البيانات المرتبطة بهذا المستخدم. لا يمكن التراجع عن هذا الإجراء.
+      access-account-or-resources-unless-re-activated: هل أنت متأكد أنك تريد تعطيل هذا المستخدم؟ لن يتمكن هذا المستخدم من الوصول إلى حسابه أو موارده ما لم يتم إعادة تفعيله.
+      this-user-will-regain-access-to-your-organization: هل أنت متأكد أنك تريد إعادة تفعيل هذا المستخدم؟ سيستعيد هذا المستخدم الوصول إلى مؤسستك.
+      resend-invitation-to-join-organization: إعادة إرسال الدعوة للانضمام إلى المنظمة
+      confirming-fleetbase-will-re-send-invitation-for-user-to-join-your-organization: بالتأكيد، ستعيد Fleetbase إرسال الدعوة لهذا المستخدم للانضمام إلى مؤسستك.
+      invitation-resent: تمت إعادة إرسال الدعوة.
+  application:
+    access-management: إدارة الوصول
+  home:
+    identity-access-management: إدارة الهوية والوصول      
+
+
+
+      

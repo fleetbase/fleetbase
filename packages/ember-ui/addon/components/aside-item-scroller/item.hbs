@@ -1,0 +1,11 @@
+<a href="javascript:;" class="aside-item-link cursor-pointer flex w-full md:px-6 md:py-5 {{@wrapperClass}}" ...attributes {{on "click" this.onClick}}>
+    <div class="flex items-center justify-between {{@innerClass}}">
+        <div class={{@contentClass}}>
+            {{#if (has-block)}}
+                {{yield @item}}
+            {{else}}
+                <h4>{{@text}}</h4>
+            {{/if}}
+        </div>
+    </div>
+</a>

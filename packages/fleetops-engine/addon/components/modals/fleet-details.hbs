@@ -1,0 +1,32 @@
+<Modal::Default @modalIsOpened={{@modalIsOpened}} @options={{@options}} @confirm={{@onConfirm}} @decline={{@onDecline}}>
+    <div class="modal-body-container">
+        <div class="grid grid-cols-2 flex-col md:flex-row gap-2 mb-6">
+            <div class="field-info-container space-y-2">
+                <div class="field-name">{{t "fleet-ops.common.name"}}</div>
+                <div class="field-value">{{n-a @options.fleet.name}}</div>
+            </div>
+            <div class="field-info-container space-y-2">
+                <div class="field-name">{{t "fleet-ops.common.service-area"}}</div>
+                <div class="field-value">{{n-a @options.fleet.serviceArea.name}}</div>
+            </div>
+            <div class="field-info-container space-y-2">
+                <div class="field-name">{{t "fleet-ops.common.zone"}}</div>
+                <div class="field-value">{{n-a @options.fleet.zone.name}}</div>
+            </div>
+            <div class="field-info-container space-y-2">
+                <div class="field-name">{{t "fleet-ops.common.task"}}</div>
+                <div class="field-value">{{n-a @options.fleet.task}}</div>
+            </div>
+            <div class="field-info-container space-y-2">
+                <div class="field-name">{{t "fleet-ops.common.active-manpower"}}</div>
+                <div class="field-value">{{@options.fleet.drivers_online_count}} of {{@options.fleet.drivers_count}} Online</div>
+            </div>
+            <div class="field-info-container space-y-2">
+                <div class="field-name">{{t "fleet-ops.common.date-created"}}</div>
+                <div class="field-value">{{@options.fleet.createdAtShort}}</div>
+            </div>
+        </div>
+        <FleetDriverListing @fleet={{@options.fleet}} @onAddDriver={{@options.addDriver}} @onRemoveDriver={{@options.removeDriver}} />
+        <FleetVehicleListing @fleet={{@options.fleet}} @onAddVehicle={{@options.addVehicle}} @onRemoveVehicle={{@options.removeVehicle}} />
+    </div>
+</Modal::Default>

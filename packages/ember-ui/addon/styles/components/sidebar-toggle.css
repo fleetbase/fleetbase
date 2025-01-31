@@ -1,0 +1,63 @@
+.sidebar-toggle-button-wrapper {
+    flex-shrink: 0;
+}
+
+.sidebar-toggle-button-wrapper.disabled:hover,
+.sidebar-toggle-button-wrapper.disabled > button:hover {
+    background-color: transparent;
+    box-shadow: none;
+    border: none;
+}
+
+.sidebar-toggle-button-wrapper > .sidebar-toggle-button.next-org-button-trigger,
+.sidebar-toggle-button-wrapper > .sidebar-toggle-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* padding: 0.25rem 0.5rem; */
+}
+
+.sidebar-toggle-button-wrapper > .sidebar-toggle-button > svg {
+    enable-background: new 0 0 50 50;
+    fill: rgb(249, 250, 251);
+    width: 40px;
+    height: 40px;
+}
+
+.sidebar-toggle-button-wrapper:hover > .sidebar-toggle-button > svg {
+    fill: #fff;
+}
+
+.sidebar-toggle-button .cls-1 {
+    fill: #fff;
+}
+
+.sidebar-toggle-button .cls-2 {
+    fill: none;
+    stroke-width: 18px;
+}
+
+.sidebar-toggle-button .cls-2,
+.sidebar-toggle-button .cls-3 {
+    stroke: #fff;
+    stroke-miterlimit: 10;
+}
+
+.sidebar-toggle-button .cls-3 {
+    stroke-width: 13px;
+}
+
+body[data-theme="dark"] .sidebar-toggle-button-wrapper > .sidebar-toggle-button > svg > rect.cls-3 {
+    stroke: #111827;
+}
+
+body[data-theme="light"] .sidebar-toggle-button-wrapper > .sidebar-toggle-button > svg,
+body[data-theme="light"] .sidebar-toggle-button-wrapper > .sidebar-toggle-button > svg > rect {
+    fill: #374151;
+}
+
+body[data-theme="light"] .sidebar-toggle-button .cls-1,
+body[data-theme="light"] .sidebar-toggle-button .cls-2,
+body[data-theme="light"] .sidebar-toggle-button .cls-3 {
+    fill: #374151;
+}

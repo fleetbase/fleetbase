@@ -1,0 +1,214 @@
+<Overlay
+    @onLoad={{this.setOverlayContext}}
+    @onOpen={{this.onOpen}}
+    @onClose={{this.onClose}}
+    @onToggle={{this.onToggle}}
+    @position="right"
+    @noBackdrop={{true}}
+    @fullHeight={{true}}
+    @isResizable={{or this.isResizable @isResizable}}
+    @width={{or this.width @width "570px"}}
+>
+    <Overlay::Header
+        @title={{if this.issue.public_id this.issue.name (t "fleet-ops.component.issue-form-panel.issue")}}
+        @status={{this.issue.public_id}}
+        @hideStatusDot={{true}}
+        @createdAt={{this.issue.createdAt}}
+        @titleWrapperClass="leading-5"
+    >
+        <div class="flex flex-1 justify-end">
+            <Button
+                @icon={{if this.issue.id "save" "check"}}
+                @type="primary"
+                @text={{if this.issue.id (t "fleet-ops.component.issue-form-panel.save-issue") (t "fleet-ops.component.issue-form-panel.create-issue")}}
+                @onClick={{perform this.save}}
+                @isLoading={{this.save.isRunning}}
+                @permission={{this.savePermission}}
+                @wrapperClass="mr-2"
+            />
+            {{#if this.issue.id}}
+                <Button
+                    @type="default"
+                    @icon="circle-exclamation"
+                    @helpText={{t "fleet-ops.component.issue-form-panel.view-details"}}
+                    @onClick={{this.onViewDetails}}
+                    @wrapperClass="mr-2"
+                    @permission="fleet-ops view issue"
+                />
+            {{/if}}
+            <Button
+                @type="default"
+                @icon="times"
+                @helpText={{if this.issue.id (t "fleet-ops.component.issue-form-panel.cancel-edit-issue") (t "fleet-ops.component.issue-form-panel.cancel-new-issue")}}
+                @onClick={{this.onPressCancel}}
+            />
+        </div>
+    </Overlay::Header>
+
+    <Overlay::Body @wrapperClass="new-service-rate-overlay-body px-4 pt-4">
+        {{#let (cannot this.savePermission) as |unauthorized|}}
+            <div class="grid grid-cols-1 text-xs dark:text-gray-100">
+                <InputGroup @name={{t "fleet-ops.component.issue-form-panel.reported-by"}}>
+                    <ModelSelect
+                        @modelName="user"
+                        @selectedModel={{this.issue.reporter}}
+                        @placeholder={{t "fleet-ops.component.issue-form-panel.select-reporter"}}
+                        @triggerClass="form-select form-input"
+                        @infiniteScroll={{false}}
+                        @renderInPlace={{true}}
+                        @onChange={{fn (mut this.issue.reporter)}}
+                        @onChangeId={{fn (mut this.issue.reported_by_uuid)}}
+                        @disabled={{unauthorized}}
+                        as |model|
+                    >
+                        {{model.name}}
+                    </ModelSelect>
+                </InputGroup>
+
+                <InputGroup @name={{t "fleet-ops.component.issue-form-panel.assigned"}}>
+                    <ModelSelect
+                        @modelName="user"
+                        @selectedModel={{this.issue.assignee}}
+                        @placeholder={{t "fleet-ops.component.issue-form-panel.select-assign"}}
+                        @triggerClass="form-select form-input"
+                        @infiniteScroll={{false}}
+                        @renderInPlace={{true}}
+                        @onChange={{fn (mut this.issue.assignee)}}
+                        @onChangeId={{fn (mut this.issue.assigned_to_uuid)}}
+                        @disabled={{unauthorized}}
+                        as |model|
+                    >
+                        {{model.name}}
+                    </ModelSelect>
+                </InputGroup>
+
+                <InputGroup @name={{t "fleet-ops.common.driver"}}>
+                    <ModelSelect
+                        @modelName="driver"
+                        @selectedModel={{this.issue.driver}}
+                        @placeholder={{t "fleet-ops.component.issue-form-panel.select-driver"}}
+                        @triggerClass="form-select form-input"
+                        @infiniteScroll={{false}}
+                        @renderInPlace={{true}}
+                        @onChange={{fn (mut this.issue.driver)}}
+                        @disabled={{unauthorized}}
+                        as |model|
+                    >
+                        {{model.name}}
+                    </ModelSelect>
+                </InputGroup>
+
+                <InputGroup @name={{t "fleet-ops.common.vehicle"}}>
+                    <ModelSelect
+                        @modelName="vehicle"
+                        @selectedModel={{this.issue.vehicle}}
+                        @placeholder={{t "fleet-ops.component.issue-form-panel.select-vehicle"}}
+                        @triggerClass="form-select form-input"
+                        @infiniteScroll={{false}}
+                        @renderInPlace={{true}}
+                        @onChange={{fn (mut this.issue.vehicle)}}
+                        @disabled={{unauthorized}}
+                        as |model|
+                    >
+                        {{model.displayName}}
+                    </ModelSelect>
+                </InputGroup>
+
+                <InputGroup @name={{t "fleet-ops.component.issue-form-panel.type"}}>
+                    <div class="fleetbase-model-select fleetbase-power-select ember-model-select">
+                        <PowerSelect
+                            @options={{this.issueTypes}}
+                            @selected={{this.issue.type}}
+                            @onChange={{this.onSelectIssueType}}
+                            @placeholder={{t "fleet-ops.component.issue-form-panel.select-type"}}
+                            @triggerClass="form-select form-input"
+                            @disabled={{unauthorized}}
+                            as |type|
+                        >
+                            {{smart-humanize type}}
+                        </PowerSelect>
+                    </div>
+                </InputGroup>
+
+                <InputGroup @name={{t "fleet-ops.component.issue-form-panel.category"}}>
+                    <div class="fleetbase-model-select fleetbase-power-select ember-model-select">
+                        <PowerSelect
+                            @options={{this.issueCategories}}
+                            @selected={{this.issue.category}}
+                            @onChange={{fn (mut this.issue.category)}}
+                            @placeholder={{t "fleet-ops.component.issue-form-panel.select-category"}}
+                            @triggerClass="form-select form-input"
+                            @disabled={{or unauthorized (not this.issueCategories)}}
+                            as |category|
+                        >
+                            {{smart-humanize category}}
+                        </PowerSelect>
+                    </div>
+                </InputGroup>
+
+                <InputGroup @name={{t "fleet-ops.component.issue-form-panel.report"}}>
+                    <Textarea
+                        @value={{this.issue.report}}
+                        aria-label="Issue Report"
+                        class="w-full form-input"
+                        disabled={{unauthorized}}
+                        placeholder={{t "fleet-ops.component.issue-form-panel.report"}}
+                        rows={{5}}
+                    />
+                </InputGroup>
+
+                <InputGroup @name={{t "fleet-ops.component.issue-form-panel.tags"}}>
+                    <TagInput
+                        class="form-input"
+                        @placeholder={{t "fleet-ops.component.issue-form-panel.add-tags"}}
+                        @allowSpacesInTags={{true}}
+                        @tags={{this.issue.tags}}
+                        @addTag={{this.addTag}}
+                        @removeTagAtIndex={{this.removeTag}}
+                        @disabled={{unauthorized}}
+                        as |tag|
+                    >
+                        {{tag}}
+                    </TagInput>
+                </InputGroup>
+
+                <InputGroup @name={{t "fleet-ops.component.issue-form-panel.priority"}}>
+                    <div class="fleetbase-model-select fleetbase-power-select ember-model-select">
+                        <PowerSelect
+                            @options={{this.issuePriorityOptions}}
+                            @selected={{this.issue.priority}}
+                            @onChange={{fn (mut this.issue.priority)}}
+                            @placeholder={{t "fleet-ops.component.issue-form-panel.select-priority"}}
+                            @triggerClass="form-select form-input"
+                            @disabled={{unauthorized}}
+                            as |priority|
+                        >
+                            {{smart-humanize priority}}
+                        </PowerSelect>
+                    </div>
+                </InputGroup>
+
+                <InputGroup @name={{t "fleet-ops.common.status"}}>
+                    <div class="fleetbase-model-select fleetbase-power-select ember-model-select">
+                        <PowerSelect
+                            @options={{this.issueStatusOptions}}
+                            @selected={{this.issue.status}}
+                            @onChange={{fn (mut this.issue.status)}}
+                            @placeholder={{t "fleet-ops.component.issue-form-panel.select-status"}}
+                            @triggerClass="form-select form-input"
+                            @disabled={{unauthorized}}
+                            as |status|
+                        >
+                            {{smart-humanize status}}
+                        </PowerSelect>
+                    </div>
+                </InputGroup>
+
+                <InputGroup @name={{t "fleet-ops.common.coordinates"}}>
+                    <CoordinatesInput @value={{this.issue.location}} @onChange={{fn (mut this.issue.location)}} @disabled={{unauthorized}} />
+                </InputGroup>
+            </div>
+        {{/let}}
+        <Spacer @height="300px" />
+    </Overlay::Body>
+</Overlay>

@@ -1,0 +1,5 @@
+{{#if this.isClickable}}
+    <a href="javascript:;" class={{@column.className}} {{on "click" this.onClick}}>{{this.display}}</a>
+{{else}}
+    <span class={{@column.className}}>{{this.display}}</span>
+{{/if}}

@@ -1,0 +1,217 @@
+<Overlay @onLoad={{this.setOverlayContext}} @onOpen={{this.onOpen}} @onClose={{this.onClose}}
+    @onToggle={{this.onToggle}} @position="right" @noBackdrop={{true}} @fullHeight={{true}} @isResizeble={{or
+    this.isResizable @isResizable}} @width={{or this.width @width "570px" }}>
+    <Overlay::Header @title={{if this.fuelReport.public_id this.fuelReport.name
+        (t "fleet-ops.component.toll-report-form-panel.parking-report" )}} @status={{this.fuelReport.public_id}}
+        @hideStatusDot={{true}} @createdAt={{this.fuelReport.createdAt}} @titleWrapperClass="leading-5">
+        <div class="flex flex-1 justify-end">
+            <Button @icon={{if this.fuelReport.id "save" "check" }} @type="primary" @text={{if this.fuelReport.id
+                (t "fleet-ops.component.toll-report-form-panel.save-parking-report" )
+                (t "fleet-ops.component.toll-report-form-panel.create-parking-report" )}} @onClick={{perform this.save}}
+                @isLoading={{this.save.isRunning}} @wrapperClass="mr-2" @permission={{this.savePermission}} />
+            {{#if this.fuelReport.id}}
+            <Button @type="default" @icon="money-bills"
+                @helpText={{t "fleet-ops.component.toll-report-form-panel.view-details" }}
+                @onClick={{this.onViewDetails}} @wrapperClass="mr-2" @permission="fleet-ops view fuel-report" />
+            {{/if}}
+            <Button @type="default" @icon="times" @helpText={{if this.fuelReport.id
+                (t "fleet-ops.component.toll-report-form-panel.cancel-edit-parking-report" )
+                (t "fleet-ops.component.toll-report-form-panel.cancel-new-parking-report" ) }}
+                @onClick={{this.onPressCancel}} />
+        </div>
+    </Overlay::Header>
+
+    <Overlay::Body @wrapperClass="new-service-rate-overlay-body px-4 space-y-4 pt-4">
+        {{#let (cannot this.savePermission) as |unauthorized|}}
+        <div class="grid grid-cols-1 text-xs dark:text-gray-100">
+            
+           <InputGroup @name={{t "fleet-ops.common.reporter" }}>
+                <ModelSelect 
+                    @modelName="user" 
+                    @selectedModel={{this.fuelReport.reporter}}
+                    @placeholder={{t "fleet-ops.component.fuel-report-form-panel.select-reporter" }}
+                    @triggerClass="form-select form-input" 
+                    @infiniteScroll={{false}} 
+                    @renderInPlace={{true}}
+                    @onChange={{fn (mut this.fuelReport.reporter)}} 
+                    @onChangeId={{this.updateReporterId}} 
+                    @disabled={{unauthorized}} as |model|>
+                    {{model.name}}
+                </ModelSelect>
+            </InputGroup>
+            <InputGroup @name={{t "fleet-ops.common.driver" }}>
+                <ModelSelect @modelName="driver" @selectedModel={{this.fuelReport.driver}}
+                    @placeholder={{t "fleet-ops.component.toll-report-form-panel.select-driver" }}
+                    @triggerClass="form-select form-input" @infiniteScroll={{false}} @renderInPlace={{true}}
+                    @onChange={{fn (mut this.fuelReport.driver)}} @onChangeId={{fn (mut this.fuelReport.driver_uuid)}}
+                    @disabled={{unauthorized}} as |model|>
+                    {{model.name}}
+                </ModelSelect>
+            </InputGroup>
+            <InputGroup @name={{t "fleet-ops.common.vehicle" }}>
+                <ModelSelect @modelName="vehicle" @selectedModel={{this.fuelReport.vehicle}}
+                    @placeholder={{t "fleet-ops.component.toll-report-form-panel.select-vehicle" }}
+                    @triggerClass="form-select form-input" @infiniteScroll={{false}} @renderInPlace={{true}}
+                    @onChange={{fn (mut this.fuelReport.vehicle)}} @onChangeId={{fn (mut this.fuelReport.vehicle_uuid)}}
+                    @disabled={{unauthorized}} as |model|>
+                    {{model.display_name}}
+                </ModelSelect>
+            </InputGroup>
+            {{!-- <InputGroup @name={{t "fleet-ops.common.status" }}>
+                <div class="fleetbase-model-select fleetbase-power-select ember-model-select">
+                    <PowerSelect @options={{this.statusOptions}} @selected={{this.fuelReport.status}}  @onChange={{fn (mut this.fuelReport.status)}}
+                        @placeholder={{t "fleet-ops.component.toll-report-form-panel.select-fuel-report" }}
+                        @triggerClass="form-select form-input" @disabled={{unauthorized}} as |status|>
+                        {{smart-humanize status.translationKey}}
+                    </PowerSelect>
+                </div>
+            </InputGroup> --}}
+            <InputGroup @name={{t "fleet-ops.common.status"}}>
+                <div class="fleetbase-model-select fleetbase-power-select ember-model-select">
+                    <PowerSelect
+                    @options={{this.statusOptions}}
+                    @selected={{this.selectedStatus}} 
+                    @onChange={{this.updateStatus}}
+                    @placeholder={{t "fleet-ops.component.toll-report-form-panel.select-parking-report"}}
+                    @triggerClass="form-select form-input"
+                    @disabled={{this.unauthorized}}
+                    as |status|
+                    >
+                    {{t status.translationKey}}
+                    </PowerSelect>
+                </div>
+            </InputGroup>
+            <!-- Payment Method -->
+            <InputGroup @name={{t "common.payment-method" }}>
+                <div class="fleetbase-model-select fleetbase-power-select ember-model-select">
+                    <PowerSelect @options={{this.reportPaymentOptions}} 
+                        @selected={{this.selectedpaymentOptions}} 
+                        @onChange={{this.updatepaymentOptions}}
+                        @placeholder={{t "common.select-payment-method" }}
+                        @triggerClass="form-select form-input" @disabled={{unauthorized}} as |status|>
+                        {{t status.translationKey}}
+                    </PowerSelect>
+                    {{!-- <PowerSelect @options={{this.reportPaymentOptions}} @selected={{this.fuelReport.payment_method}} @onChange={{fn
+                        (mut this.fuelReport.payment_method)}}
+                        @placeholder={{t "common.select-payment-method" }}
+                        @triggerClass="form-select form-input" @disabled={{unauthorized}} as |status|>
+                        {{smart-humanize status}}
+                    </PowerSelect> --}}
+                </div>
+            </InputGroup>
+            {{#if (eq this.fuelReport.payment_method "Card")}}
+            {{!-- <InputGroup @name={{t "common.card-type" }}>
+                <div class="fleetbase-model-select fleetbase-power-select ember-model-select">
+                    <Input class="form-input w-full" onblur="{{fn (mut this.fuelReport.card_type)}}"  />
+                </div>
+            </InputGroup> --}}
+            {{/if}}
+            <InputGroup @name={{t "fleet-ops.component.toll-report-form-panel.cost" }}>
+                <MoneyInput class="w-full" @value={{this.fuelReport.amount}} @currency={{this.fuelReport.currency}}
+                    @canSelectCurrency={{true}} @onCurrencyChange={{fn (mut this.fuelReport.currency)}}
+                    @disabled={{unauthorized}} />
+            </InputGroup>
+           
+            
+
+            {{!-- <InputGroup @name={{t "fleet-ops.common.coordinates" }}>
+                <CoordinatesInput @value={{this.fuelReport.location}} @onChange={{fn (mut this.fuelReport.location)}}
+                    @disabled={{unauthorized}} />
+            </InputGroup> --}}
+            <InputGroup @name={{t "fleet-ops.common.coordinates"}}>
+                <CoordinatesInput
+                    @value={{this.place.location}}
+                    @onChange={{this.updateFuelCoordinates}}
+                    @onGeocode={{this.onAutocomplete}}
+                    @onUpdatedFromMap={{this.onReverseGeocode}}
+                    @onInit={{this.setCoordinatesInput}}
+                    @disabled={{unauthorized}}
+                />
+            </InputGroup>
+ 
+
+            {{!-- {{#if this.fuelReport.id}} --}}
+            <!-- Add the FileUpload component here -->
+            <InputGroup @name="Upload File" @wrapperClass="w-full">
+                {{#if this.fuelReport.id}} 
+                    <FileUpload @name="fuel-report-file" @accept="application/pdf" @label="Document"
+                        @onFileAdded={{this.uploadFuelReportFile}} as |queue|>
+                        <a tabindex={{0}}
+                            class="flex items-center px-0 text-xs no-underline truncate btn btn-sm btn-default"
+                            disabled={{queue.files.length}}>
+                            {{#if queue.files.length}}
+                            <Spinner class="mr-1" />
+                            <span>{{t "common.uploading"}}</span>
+                            {{else}}
+                            <FaIcon @icon="upload" class="mr-1" />
+                            <span>Upload</span>
+                            {{/if}}
+                        </a>
+                    </FileUpload>
+                {{else}}
+                    <FileUpload
+                        @name="fuel-report-file"
+                        @for="fuel-report-file"
+                        @accept={{join "," this.acceptedFileTypes}}
+                        @multiple={{true}}
+                        @onFileAdded={{perform this.queueFile}}
+                        @disabled={{cannot "fleet-ops create order"}}
+                    >
+                        <a tabindex={{0}} class="btn btn-magic cursor-pointer ml-1">Upload</a>
+                    </FileUpload>
+                   
+                {{/if}}
+                {{!-- Display Uploaded Images --}}
+                {{#each this.uploadedFiles as |file|}}
+                    <div class="file-item">
+                        {{#if (or (ends-with file.path ".png") (ends-with file.path ".jpg") (ends-with file.path ".jpeg") (ends-with file.path ".gif"))}}
+                        <img src="{{file.path}}" alt="{{file.name}}" class="uploaded-image" />
+                        {{else}}
+                        <i class="file-icon">📄</i>
+                        {{/if}}
+                        <p>{{file.name}}</p>
+                    </div>
+                {{/each}}
+                {{#if this.fuelReport.isNew }}
+                <div class="upload-queue">
+                {{!-- <h3>Uploading Files</h3> --}}
+                
+                {{#if this.uploadQueue.length}}
+                    <ul>
+                    {{#each this.uploadQueue as |queuedFile|}}
+                        {{#if queuedFile.uploadedFile.isImage}}
+                            <li class="upload-item"><span>
+                                <img src="{{queuedFile.uploadedFile.url}}" alt="{{queuedFile.file.name}}" style=" width: 50px;height: 50px;object-fit: cover;margin-right: 10px;border-radius: 4px;" />
+                            </span></li>
+                        {{else}}
+                            <li class="upload-item">
+                                <i class="file-icon">📄</i>
+                                <span>{{queuedFile.file.name}}</span>
+                            </li>
+                        {{/if}}
+                      
+                    {{/each}}
+                    </ul>
+                {{else}}
+                    {{!-- <p>No files are being uploaded.</p> --}}
+                {{/if}}
+                </div> 
+                {{/if}}
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-4">
+                    {{!-- {{log this.fuelReport.files}} --}}
+                    {{#each this.fuelReport.files as |file|}}
+                        <File @file={{file}} @onDelete={{this.removeFile}}  />
+                    {{/each}}
+                    {{!-- {{#if this.isModalOpen}}
+                        <ModalComponent @file={{this.selectedFile}} @onClose={{this.closeViewFileModal}} />
+                    {{/if}} --}}
+                </div>
+
+            </InputGroup>
+            {{!-- {{/if}} --}}
+
+        </div>
+        {{/let}}
+        <Spacer @height="300px" />
+    </Overlay::Body>
+</Overlay>
