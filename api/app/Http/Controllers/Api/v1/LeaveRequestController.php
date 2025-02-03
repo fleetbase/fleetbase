@@ -15,8 +15,10 @@ class LeaveRequestController extends Controller
     public function list()
     {
         // Get all leave requests
-        $leaveRequests = LeaveRequest::whereNull('deleted_at')
-        ->orderBy('id', 'desc')->get();
+        $leaveRequests = LeaveRequest::with('user')->whereNull('deleted_at')
+        ->orderBy('id', 'desc')
+        ->get();
+        // dd($leaveRequests);
         return response()->json($leaveRequests);
     }
 

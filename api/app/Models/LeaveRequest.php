@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-
+use Fleetbase\Models\User;
 class LeaveRequest extends Model
 {
     use HasFactory, SoftDeletes;
@@ -41,4 +41,9 @@ class LeaveRequest extends Model
     ];
 
     protected $dates = ['deleted_at']; // Enable soft deletes
+
+    public function user()
+{
+    return $this->belongsTo(User::class, 'user_uuid', 'uuid'); // Assuming 'user_uuid' in leave_requests maps to 'uuid' in users table
+}
 }
