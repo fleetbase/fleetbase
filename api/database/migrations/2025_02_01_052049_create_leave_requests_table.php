@@ -11,6 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
+        if (!Schema::hasTable('leave_requests')) {
         Schema::create('leave_requests', function (Blueprint $table) {
             $table->engine = 'InnoDB';
             $table->increments('id');
@@ -37,6 +38,7 @@ return new class extends Migration
             // Indexes for faster queries
             $table->index('company_uuid');
         });
+    }
     }
 
     /**
