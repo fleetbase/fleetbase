@@ -66,7 +66,7 @@
                             {{model.name}}
                         </ModelSelect>
                     </InputGroup>
-                    <InputGroup @name={{t "fleet-ops.common.vendor"}} @value={{this.fleet.vendor}}>
+                    {{!-- <InputGroup @name={{t "fleet-ops.common.vendor"}} @value={{this.fleet.vendor}}>
                         <ModelSelect
                             @modelName="vendor"
                             @selectedModel={{this.fleet.vendor}}
@@ -81,7 +81,7 @@
                         >
                             {{model.name}}
                         </ModelSelect>
-                    </InputGroup>
+                    </InputGroup> --}}
                     <InputGroup @name={{t "fleet-ops.component.fleet-form-panel.service-title"}} @value={{this.fleet.service_area}}>
                         <ModelSelect
                             @modelName="service-area"
