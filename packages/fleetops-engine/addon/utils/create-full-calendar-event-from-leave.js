@@ -10,11 +10,9 @@ export default function createFullCalendarEventFromLeave(unavailability) {
     const startDate = new Date(unavailability.start_date);
     const endDate = new Date(unavailability.end_date);
     endDate.setDate(endDate.getDate() + 1);
-
-    console.log('createFullCalendarEventFromLeave', startDate, endDate);
     return {
         id: unavailability.public_id,
-        title: `Driver on leave: ${unavailability.reason}`,
+        title: `${unavailability.user.name} on leave`,
         start: startDate.toISOString(),
         end: endDate.toISOString(),
         allDay: true,
