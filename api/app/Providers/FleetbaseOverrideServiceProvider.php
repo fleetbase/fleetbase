@@ -62,18 +62,15 @@ class FleetbaseOverrideServiceProvider extends ServiceProvider
 
                     Route::post('/orders/{id}/start', 'App\Http\Controllers\Api\v1\CustomOrderController@driverAcceptance')
                     ->name('orders.driverAcceptance'); // Give it the same name as Fleetbase's route
-                
-                    // Route::get('/drivers/unavailability', 'App\Http\Controllers\Api\v1\CustomOrderController@unavailabilty')
-                    // ->name('drivers.unavailability'); 
-                    // Route::resource('leave-requests', LeaveRequestController::class);
-                    // Route::apiResource('leave-requests', LeaveRequestController::class);
                     Route::prefix('leave-requests')->group(function () {
                         Route::post('/create', 'App\Http\Controllers\Api\v1\LeaveRequestController@store')
                         ->name('leave-requests.create');
-                        // Route::post('/', 'App\Http\Controllers\Api\v1\ParkingAreaController@nearest')
-                        // ->name('parking-areas');
+                        Route::put('/{id}', 'App\Http\Controllers\Api\v1\LeaveRequestController@update')
+                        ->name('leave-requests.update');
                         Route::get('/list', 'App\Http\Controllers\Api\v1\LeaveRequestController@list')
                         ->name('leave-requests.list');
+                        Route::delete('/{id}', 'App\Http\Controllers\Api\v1\LeaveRequestController@destroy')
+                        ->name('leave-requests.destroy');
                     });
                 });
                     
