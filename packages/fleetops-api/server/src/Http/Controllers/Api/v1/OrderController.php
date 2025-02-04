@@ -34,6 +34,8 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Log;
+ 
 
 class OrderController extends Controller
 {
@@ -1123,6 +1125,7 @@ class OrderController extends Controller
         try {
             $order = Order::findRecordOrFail($id);
         } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $exception) {
+            Log::error('setDestination failed: '.$e->getMessage());
             return response()->json(
                 [
                     'error' => 'Order resource not found.',
