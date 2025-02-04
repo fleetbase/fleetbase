@@ -2,7 +2,17 @@
 
 return [
     'otp_content' => 'Willkommen bei FleetYes. Ihr Bestätigungscode lautet: :code',
-    'otp_message' => 'Ihr :company Bestätigungscode lautet :code',
-    'no_driver_found' => 'Kein Fahrer mit dieser Telefonnummer gefunden.',
-    'sms_verification_error' => 'Der Bestätigungscode per SMS konnte nicht gesendet werden.',
+    'otp_message' => 'Ihr Bestätigungscode für :company lautet :code',
+    'duplicate_tracking_status' => 'Der Tracking-Status existiert bereits oder konnte nicht erstellt werden.',
+    'load_not_found' => 'Bestellung nicht gefunden',
+    'load_confirmed_success' => 'Die Bestellung wurde erfolgreich bestätigt.',
+    'invalid_approval_status' => 'Ungültiger Genehmigungsstatus.',
+    'load_already_started' => 'Die Bestellung wurde bereits gestartet.',
+    'invalid_operation' => 'Ungültige Aktion. Die Bestellung befindet sich im Status :status.',
+    'load_rejected' => 'Die Bestellung wurde abgelehnt.',
+    'duplicate_leave_requests' => 'Es existiert bereits ein Urlaubsantrag für denselben Zeitraum.',
+    'request_update_success' => 'Der Urlaubsantrag wurde erfolgreich aktualisiert.',
+    'request_deleted_success' => 'Der Urlaubsantrag wurde erfolgreich gelöscht.',
+    'request_not_found' => 'Der Urlaubsantrag wurde nicht gefunden.',
+
 ];
