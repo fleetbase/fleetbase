@@ -1247,7 +1247,13 @@ body[data-theme='dark'] .next-view-header .next-view-header-right .next-user-but
 }
 
 .next-sidebar .next-nav-item.active {
-    @apply bg-gray-200 bg-opacity-25;
+    @apply bg-[#496453] opacity-75;
+    color: white !important;
+
+}
+.next-sidebar .next-nav-item.active svg {
+    color: white !important; 
+    fill: currentColor !important;
 }
 
 body[data-theme='dark'] .next-sidebar .next-nav-item.active {
@@ -2269,5 +2275,15 @@ nav.next-sidebar.sidebar-hidden {
 }
 
 .create-order-button {
+    background-color: #ffffff !important;
     padding-left: 20px !important;
+    border: none !important;
+    color: black !important; 
+    fill: currentColor !important;
+}
+
+.create-order-button:hover,
+.create-order-button:active {
+    color: white !important; 
+    fill: currentColor !important;
 }
