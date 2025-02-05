@@ -62,8 +62,9 @@ class OrderController extends FleetOpsController
         if ($validator->fails()) {
             return $createOrderRequest->responseWithErrors($validator);
         }
-
+        
         try {
+            $isUnavailability = $request->input('mark_as_unavailable');
             $record = $this->model->createRecordFromRequest(
                 $request,
                 function ($request, &$input) {
@@ -116,17 +117,12 @@ class OrderController extends FleetOpsController
             
                     // Now perform actions that require an order ID
                     $isUnavailability = $request->input('mark_as_unavailable');
-                    if(!isset($isUnavailability)){
                     $order
                         ->setRoute($route)
                         ->setStatus('created', false)
                         ->insertPayload($payload)
                         ->insertWaypoints($waypoints)
                         ->insertEntities($entities);
-                    }
-                    else{
-                        $order->setStatus('created', false);
-                    }
                     // If order creation includes files associate each to this order
                     if ($uploads) {
                         $ids   = collect($uploads)->pluck('uuid');
@@ -162,9 +158,9 @@ class OrderController extends FleetOpsController
                     }
             
                     // Notify driver if assigned
-                    if((!isset($isUnavailability)) && (!empty($order->driver_assigned_uuid))){
+                    // if((!isset($isUnavailability)) && (!empty($order->driver_assigned_uuid))){
                         $order->notifyDriverAssigned();
-                    }       
+                    //}       
             
                     // Set driving distance and time
                     $order->setPreliminaryDistanceAndTime();
@@ -176,15 +172,15 @@ class OrderController extends FleetOpsController
                     $order->firstDispatchWithActivity();
             
                     // Load tracking number
-                    if(!isset($isUnavailability)){
+                    // if(!isset($isUnavailability)){
                     $order->load(['trackingNumber']);
-                    }
+                    //}
                 }
             );
-            
             // Trigger order created event
-            event(new OrderReady($record));
-            
+            // if(!$isUnavailability){
+                event(new OrderReady($record));
+            //}
             // Return response
             return ['order' => new $this->resource($record)];
         }

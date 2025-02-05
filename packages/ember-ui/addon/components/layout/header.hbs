@@ -47,24 +47,19 @@
             </div>
             <div class="flex-1 flex items-center pr-1">
                 <Layout::Header::Dropdown @items={{this.organizationMenuItems}} @onAction={{@onAction}} class="flex-shrink-0" @triggerClass="flex-shrink-0" as |dd|>
-                    <div class="next-org-button-trigger flex-shrink-0 {{if dd.isOpen 'is-open'}}">
-                        <div class="org-badge">
+                    <div class="next-org-button-trigger flex-shrink-0 {{if dd.isOpen 'is-open'}} ml-4">
+                        <div class="org-badge" style="font-size: 15px;">
                             {{first-char this.currentUser.companyName}}
                         </div>
-                        <style>
-                            .org-badge {
-                                background-color: #496453 !important;
-                            }
-                        </style>
                         <div class="text-sm w-10 md:w-14 lg:w-10/12 truncate flex-shrink-0 text-gray-800 dark:text-white">{{this.currentUser.companyName}}</div>
                     </div>
                 </Layout::Header::Dropdown>
             </div>
             <div class="flex-1 flex items-center justify-end">
                 <Layout::Header::Dropdown @items={{this.userMenuItems}} @onAction={{@onAction}} class="flex-shrink-0" @triggerClass="flex-shrink-0" as |dd|>
-                    <div class="next-user-button-trigger flex-shrink-0 {{if dd.isOpen 'is-open'}}">
+                    <div class="next-user-button-trigger flex-shrink-0 {{if dd.isOpen 'is-open'}} ml-2">
                         <Image
-                            class="rounded-full h-5 w-5 shadow-sm flex-shrink-0"
+                            class="shadow-sm flex-shrink-0" style="height: 40px; width: 40px; object-fit: cover;"
                             height="20"
                             width="20"
                             src={{this.currentUser.avatarUrl}}

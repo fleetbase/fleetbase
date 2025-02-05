@@ -767,13 +767,13 @@ fleet-ops:
         vendors: Proveedores
         contacts: Contactos
         places: Lugares
-        fuel-reports: Informes de combustible
+        fuel-reports: Seguimiento de combustible
         issues: Problemas
         title: Crear un nuevo pedido
         settings: Ajustes
         order-config: Configuración del pedido
-        parking: Informes de estacionamiento
-        toll-reports: Informes de peaje
+        parking: Monitoreo de estacionamiento
+        toll-reports: Gastos de peaje
     live-map-drawer:
       driver-listing:
         location: Ubicación
@@ -1939,7 +1939,7 @@ fleet-ops:
           internal-id: Identificación interna
           internal-id-help-text: Utilice este campo para definir una ID personalizada
             o una ID interna para el pedido.
-          schedule: planear
+          schedule: Fecha de inicio
           schedule-help-text: La fecha y hora en que se enviará el pedido. Si no se
             asigna ningún conductor en el momento del envío, el envío fracasará. Si
             el pedido es Ad-Hoc, se enviará a los conductores cercanos al lugar de

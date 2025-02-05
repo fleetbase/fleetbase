@@ -715,13 +715,13 @@ fleet-ops:
         vendors: Fournisseurs
         contacts: Contacts
         places: Lieux
-        fuel-reports: Rapports de carburant
+        fuel-reports: Suivi du carburant
         issues: Problèmes
         title: Créer une nouvelle commande
         settings: Paramètres
         order-config: Configuration de commande
-        parking: Rapports de stationnement
-        toll-reports: Rapports de péage
+        parking: Surveillance du stationnement
+        toll-reports: Dépenses de péage
     live-map-drawer:
       driver-listing:
         location: Localisation
@@ -1801,7 +1801,7 @@ fleet-ops:
           order-type-placeholder: Sélectionner le type de commande
           internal-id: ID interne
           internal-id-help-text: Utilisez ce champ pour définir un identifiant personnalisé ou un identifiant interne pour la commande.
-          schedule: Planifier
+          schedule: Date de début
           schedule-help-text: La date et l'heure auxquelles la commande sera expédiée. Si aucun conducteur n'est assigné au moment de l'expédition, l'expédition échouera. Si la commande est Ad-Hoc, elle sera envoyée aux conducteurs à proximité du lieu de ramassage.
           customer: Client
           customer-help-text: Assigner facultativement le client de cette commande. Si c'est un nouveau client, utilisez le bouton "Nouveau client" ci-dessus.

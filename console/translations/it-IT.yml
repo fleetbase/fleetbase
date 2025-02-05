@@ -566,12 +566,13 @@ fleet-ops:
         vendors: Fornitori
         contacts: Contatti
         places: Luoghi
-        fuel-reports: Rapporti Carburante
+        fuel-reports: Tracciamento del carburante
         issues: Problemi
         title: Crea nuovo ordine
         settings: Impostazioni
         order-config: Configurazione Ordine
-        parking: Rapporti di parcheggio
+        parking: Monitoraggio parcheggi
+        toll-reports: Spese di pedaggio
     live-map-drawer:
       driver-listing:
         location: Posizione
@@ -1649,7 +1650,7 @@ fleet-ops:
           order-type-placeholder: Seleziona Tipo Ordine
           internal-id: ID Interno
           internal-id-help-text: Usa questo campo per impostare facoltativamente un identificatore personalizzato o interno per l'ordine.
-          schedule: Pianifica
+          schedule: Data di inizio
           schedule-help-text: La data e l'ora in cui l'ordine sarà spedito. Se nessun conducente è assegnato al momento della spedizione, la spedizione fallirà. Se l'ordine è Ad-Hoc, sarà inviato ai conducenti nelle vicinanze del ritiro.
           customer: Cliente
           customer-help-text: Assegna opzionalmente il cliente a questo ordine. Se è un nuovo cliente, usa il pulsante 'Nuovo Cliente' sopra.

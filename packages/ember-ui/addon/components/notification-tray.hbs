@@ -1,4 +1,4 @@
-<div class="next-user-button notification-tray" ...attributes>
+<div class="next-user-button notification-tray"style="margin: 0;" ...attributes>
     <BasicDropdown
         @registerAPI={{this.registerAPI}}
         @defaultClass={{@wrapperClass}}
@@ -11,8 +11,8 @@
         as |dd|
     >
         <dd.Trigger class="{{@triggerClass}} local-selector-tray-trigger {{if (media 'isMobile') 'is-mobile'}}">
-            <div class="next-org-button-trigger flex-shrink-0 {{if dd.isOpen 'is-open'}}">
-                <FaIcon @icon="bell"/>
+            <div class="next-org-button-trigger flex-shrink-0 {{if dd.isOpen 'is-open'}} mr-2">
+                <FaIcon @icon="bell" class="bell-icon"/>
                 {{#if this.notifications.length}}
                     <div class="notification-tray-unread-notifications-badge">{{this.notifications.length}}</div>
                 {{/if}}

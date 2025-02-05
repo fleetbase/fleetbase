@@ -98,7 +98,7 @@ body[data-theme='dark'] .next-table-wrapper.order-view-purchase-rate-table-wrapp
 
 nav.next-sidebar {
     height: 100%;
-    overflow-y: scroll;
+    overflow-y: hidden;
 }
 
 /** places management css mods */
@@ -156,6 +156,7 @@ body.fleetbase-console .next-content-overlay > .next-content-overlay-panel-conta
     font-size: 0.7rem;
     background-color: #496453;
     border-color:#496453;
+    opacity: 0.75;
 }
 
 #fleet-ops-scheduler-sidebar .fleetbase-model-select > .ember-basic-dropdown > .ember-basic-dropdown-trigger {
@@ -209,6 +210,7 @@ body.fleetbase-console .next-content-overlay > .next-content-overlay-panel-conta
 .fleetops-pill-tabs > nav > a.ui-tab.active {
     background-color: #496453;
     border: 1px solid #496453;
+    opacity: 0.75;
 }
 
 .fleetops-pill-tabs > nav > a.ui-tab:hover {
@@ -224,6 +226,7 @@ body[data-theme='light'] .fleetops-pill-tabs > nav > a.ui-tab.active {
     background-color: #496453;
     border: 1px solid #496453;
     color: #fff;
+    opacity: 0.75;
 }
 
 .next-view-section-subheader .next-view-section-subheader-actions button.btn.order-config-select-button,
@@ -267,6 +270,7 @@ body[data-theme='light'] .flow-activity-status-pill text {
 
 .flow-activity-add-button:hover {
     fill: #496453;
+    opacity: 0.75;
 }
 
 .joint-js-paper {
@@ -1083,7 +1087,7 @@ body[data-theme='dark'] .next-content-overlay-panel-body.fleetops-order-list-ove
     border: 1px #d1d5db solid;
     background-color: #fff;
     padding: 0.1rem 0.5rem;
-    border-radius: 0.5rem;
+    /* border-radius: 0.5rem; */
     box-shadow: 0 1px 2px 0 rgb(0 0 0 / 5%);
     color: #111827;
 }

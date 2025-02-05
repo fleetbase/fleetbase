@@ -1,6 +1,6 @@
 {{#if this.isImpersonator}}
     <EmberWormhole @to="view-header-actions">
-        <div class="next-user-button locale-selector-tray" ...attributes>
+        <div class="next-user-button locale-selector-tray mx-2" ...attributes>
             <BasicDropdown
                 class={{@wrapperClass}}
                 @onOpen={{@onOpen}}
@@ -12,7 +12,7 @@
                 as |dd|
             >
                 <dd.Trigger class="{{@triggerClass}} local-selector-tray-trigger {{if (media 'isMobile') 'is-mobile'}}">
-                    <div class="next-org-button-trigger flex-shrink-0 {{if dd.isOpen 'is-open'}}">
+                    <div class="next-org-button-trigger flex-shrink-0 {{if dd.isOpen 'is-open'}} mr-2">
                         <FaIcon @icon="user-secret" @size="sm" />
                     </div>
                 </dd.Trigger>

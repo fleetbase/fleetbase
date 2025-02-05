@@ -1,6 +1,6 @@
 <MapContainer::Topbar class="next-topbar-{{this.layout}}">
     <MapContainer::ViewSwitch>
-        <FaIcon @icon="layer-group" class="mr-2 text-gray-400 dark:text-gray-600" />
+        {{!-- <FaIcon @icon="layer-group" class="mr-2 text-gray-400 dark:text-gray-600" /> --}}
         <button type="button" id="ops-map-view-button" class="{{if this.isMapLayout 'active'}}" {{on "click" (fn this.setLayoutMode "map")}}>{{t
                 "fleet-ops.operations.orders.index.map"
             }}</button>
@@ -8,7 +8,7 @@
             <div class="mr-1.5">{{t "fleet-ops.operations.orders.index.table"}}</div>
             <Badge
                 class="flex items-center justify-center -mr-4"
-                @spanClass="rounded-full items-center justify-center h-5 w-7"
+                @spanClass="items-center justify-center h-5 w-7"
                 @hideStatusDot={{true}}
                 @status="info"
             >{{@model.meta.total}}</Badge>

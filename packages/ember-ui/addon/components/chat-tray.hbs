@@ -12,7 +12,7 @@
     >
         <dd.Trigger class="chat-tray-panel-trigger {{@triggerClass}} {{if (media 'isMobile') 'is-mobile'}}">
             <div class="next-org-button-trigger chat-tray-icon flex-shrink-0 {{if dd.isOpen 'is-open'}}">
-                <FaIcon @icon="message" />
+                <FaIcon @icon="message" class="message-icon"/>
                 {{#if this.unreadCount}}
                     <div class="chat-tray-unread-notifications-badge">{{this.unreadCount}}</div>
                 {{/if}}
