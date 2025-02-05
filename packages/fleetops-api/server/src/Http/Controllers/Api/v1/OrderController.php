@@ -1069,7 +1069,7 @@ class OrderController extends Controller
         if (!$currentWaypoint) {
             return response()->apiError('Current waypoint not found.');
         }
-
+        
         if ($currentWaypoint->status_code !== 'COMPLETED') {
             $this->completeTrackingStatus($currentWaypoint);
         }
@@ -1131,22 +1131,18 @@ class OrderController extends Controller
         }
     
         $payload = $order->payload;
+        $previousWaypoint = $payload->current_waypoint_uuid;
+
+        if ($previousWaypoint) {
+            $waypoint = $payload->waypointMarkers()->where('place_uuid', $previousWaypoint)->first();
+                $this->completeTrackingStatus($waypoint);
+        }
+       
         $place = $payload->waypoints->firstWhere('public_id', $placeId);
     
         if (!$place) {
             return response()->apiError('Place resource is not a valid destination.');
         }
-    
-        $previousWaypoint = $payload->currentWaypoint;
-        if ($previousWaypoint) {
-            $waypoint = $payload->waypointMarkers()->where('place_uuid', $previousWaypoint->uuid)->first();
-            
-            // if ($waypoint && $waypoint->getStatusCodeAttribute() === 'CREATED') {
-                // Update tracking status
-                $this->completeTrackingStatus($waypoint);
-            //}
-        }
-    
         $payload->setCurrentWaypoint($place);
     
         return new OrderResource($order);
