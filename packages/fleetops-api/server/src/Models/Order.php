@@ -92,6 +92,7 @@ class Order extends Model
         'company_uuid',
         'session_uuid',
         'payload_uuid',
+        'order_config_uuid',
         'transaction_uuid',
         'purchase_rate_uuid',
         'tracking_number_uuid',
