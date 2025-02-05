@@ -1059,27 +1059,29 @@ class OrderController extends Controller
         try {
             $order = Order::findRecordOrFail($id);
         } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $exception) {
-            return response()->json(
-                [
-                    'error' => 'Order resource not found.',
-                ],
-                404
-            );
+            return response()->json(['success' => false, 'error' => 'Order resource not found.'], 404);
+        }
+        if($order->status === "completed") {
+            return response()->json(['success' => false, 'error' => 'Order has been already completed'], 400);
+        }
+        $currentWaypoint = $order->payload->waypointMarkers->firstWhere('place_uuid', $order->payload->current_waypoint_uuid);
+
+        if (!$currentWaypoint) {
+            return response()->apiError('Current waypoint not found.');
         }
 
-        // confirm every waypoint is completed
-        $isCompleted = $order->payload->waypointMarkers->every(function ($waypoint) {
-            return $waypoint->status_code === 'COMPLETED';
-        });
+        if ($currentWaypoint->status_code !== 'COMPLETED') {
+            $this->completeTrackingStatus($currentWaypoint);
+        }
 
-        // if not completed respond with error
-        if (!$isCompleted) {
+        // Ensure all waypoints are completed
+        if (!$order->payload->waypointMarkers->every(fn($waypoint) => $waypoint->status_code === 'COMPLETED')) {
             return response()->apiError('Not all waypoints completed for order.');
         }
 
         $activity = $order->config()->getCompletedActivity();
+
         if ($order->driverAssigned) {
-            // unset from driver current job
             $order->driverAssigned->unassignCurrentOrder();
         }
 
@@ -1125,25 +1127,31 @@ class OrderController extends Controller
         try {
             $order = Order::findRecordOrFail($id);
         } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $exception) {
-            Log::error('setDestination failed: '.$e->getMessage());
-            return response()->json(
-                [
-                    'error' => 'Order resource not found.',
-                ],
-                404
-            );
+            return response()->json(['error' => 'Order resource not found.'], 404);
         }
-
-        $place = $order->payload->waypoints->firstWhere('public_id', $placeId);
-
+    
+        $payload = $order->payload;
+        $place = $payload->waypoints->firstWhere('public_id', $placeId);
+    
         if (!$place) {
             return response()->apiError('Place resource is not a valid destination.');
         }
-
-        $order->payload->setCurrentWaypoint($place);
-
+    
+        $previousWaypoint = $payload->currentWaypoint;
+        if ($previousWaypoint) {
+            $waypoint = $payload->waypointMarkers()->where('place_uuid', $previousWaypoint->uuid)->first();
+            
+            if ($waypoint && $waypoint->getStatusCodeAttribute() === 'CREATED') {
+                // Update tracking status
+                $this->completeTrackingStatus($waypoint);
+            }
+        }
+    
+        $payload->setCurrentWaypoint($place);
+    
         return new OrderResource($order);
     }
+    
 
     /**
      * Sends request for route optimization and re-sorts waypoints.
@@ -1466,4 +1474,33 @@ class OrderController extends Controller
 
         return response()->json($entityEditingSettings);
     }
+
+    /*
+     * Completes the tracking status for a waypoint
+     * @param $waypoint
+     * returns void
+     */
+    private function completeTrackingStatus($waypoint)
+    {
+        $trackingNumber = $waypoint->trackingNumber;
+
+        if (!$trackingNumber) {
+            return;
+        }
+
+        $trackingStatus = $trackingNumber->statuses()->where('uuid', $trackingNumber->status_uuid)->first();
+
+        if (!$trackingStatus) {
+            return response()->apiError('Tracking status for the waypoint is not completed.');
+        }
+
+        // Update tracking status in a single update call
+        $trackingStatus->update([
+            'status' => 'Waypoint completed',
+            'code' => 'COMPLETED',
+            'details' => 'Waypoint has been completed',
+            'updated_at' => now(), // Laravel helper for timestamps
+        ]);
+    }
+
 }
