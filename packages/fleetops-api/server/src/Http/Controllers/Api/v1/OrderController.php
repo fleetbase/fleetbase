@@ -1141,10 +1141,10 @@ class OrderController extends Controller
         if ($previousWaypoint) {
             $waypoint = $payload->waypointMarkers()->where('place_uuid', $previousWaypoint->uuid)->first();
             
-            if ($waypoint && $waypoint->getStatusCodeAttribute() === 'CREATED') {
+            // if ($waypoint && $waypoint->getStatusCodeAttribute() === 'CREATED') {
                 // Update tracking status
                 $this->completeTrackingStatus($waypoint);
-            }
+            //}
         }
     
         $payload->setCurrentWaypoint($place);
