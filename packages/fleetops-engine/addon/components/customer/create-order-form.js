@@ -46,7 +46,7 @@ export default class CustomerCreateOrderFormComponent extends Component {
     @tracked purchaseRate;
     @tracked scheduledDate;
     @tracked scheduledTime;
-    @tracked isMultipleDropoffOrder = false;
+    @tracked isMultipleDropoffOrder = true;
     @tracked isViewingRoutePreview = false;
     @tracked routePreviewArray = [];
     @tracked map;
