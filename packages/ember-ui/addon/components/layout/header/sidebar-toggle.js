@@ -5,7 +5,7 @@ import { tracked } from '@glimmer/tracking';
 
 export default class LayoutHeaderSidebarToggleComponent extends Component {
     @service universe;
-    @tracked isSidebarVisible = true;
+    @tracked isSidebarVisible = false;
 
     @action toggleSidebar() {
         if (this.args.disabled === true) {
