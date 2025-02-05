@@ -15,10 +15,20 @@ class LeaveRequestController extends Controller
     public function list()
     {
         // Get all leave requests
-        $leaveRequests = LeaveRequest::with('user')->whereNull('deleted_at')
-        ->orderBy('id', 'desc')
-        ->get();
-        return response()->json($leaveRequests);
+        $userUuid = request()->input('user_uuid');
+        $query = LeaveRequest::with('user')
+        ->whereNull('deleted_at')
+        ->orderBy('id', 'desc');
+        if ($userUuid) {
+            $query->where('user_uuid', $userUuid);
+        }
+        $leaveRequests = $query->get();
+        return response()->json([
+            'success' => true,
+            'data' => $leaveRequests,
+            "total" => $leaveRequests->count(),
+        ]);
+        
     }
 
     /**
@@ -50,7 +60,11 @@ class LeaveRequestController extends Controller
         $input['uuid'] = Str::uuid();
         $leaveRequest = LeaveRequest::create($input);
 
-        return response()->json($leaveRequest, 200);
+        return response()->json([
+            'success' => true,
+            'data' => $leaveRequest
+        ]);
+        
     }
 
     /**
@@ -60,7 +74,10 @@ class LeaveRequestController extends Controller
     {
         // Find the leave request by UUID
         $leaveRequest = LeaveRequest::where('uuid', $uuid)->firstOrFail();
-        return response()->json($leaveRequest);
+        return response()->json([
+            'success' => true,
+            'data' => $leaveRequest
+        ]);
     }
 
     /**
