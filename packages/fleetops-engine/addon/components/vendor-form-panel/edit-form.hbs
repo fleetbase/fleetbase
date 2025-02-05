@@ -142,7 +142,7 @@
                 @helpText={{t "fleet-ops.component.vendor-form-panel.create-form.website-text"}}
                 @disabled={{unauthorized}}
             />
-            <InputGroup @name={{t "fleet-ops.common.type"}}>
+            {{!-- <InputGroup @name={{t "fleet-ops.common.type"}}>
                 <div class="fleetbase-model-select fleetbase-power-select ember-model-select">
                     <PowerSelect
                         @options={{@vendorTypes}}
@@ -156,8 +156,8 @@
                         {{smart-humanize type}}
                     </PowerSelect>
                 </div>
-            </InputGroup>
-            <InputGroup @name={{t "fleet-ops.common.status"}}>
+            </InputGroup> --}}
+            {{!-- <InputGroup @name={{t "fleet-ops.common.status"}}>
                 <div class="fleetbase-model-select fleetbase-power-select ember-model-select">
                     <PowerSelect
                         @options={{@vendorStatusOptions}}
@@ -171,7 +171,7 @@
                         {{smart-humanize status}}
                     </PowerSelect>
                 </div>
-            </InputGroup>
+            </InputGroup> --}}
             <InputGroup @wrapperClass="col-span-2">
                 <div class="flex items-center justify-between">
                     <label>

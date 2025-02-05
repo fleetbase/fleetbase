@@ -22,7 +22,7 @@ export default class FleetOpsEngine extends Engine {
     };
     setupExtension = function (app, engine, universe) {
         // register menu item in header
-        universe.registerHeaderMenuItem('Fleet-Ops', 'console.fleet-ops', { icon: 'route', priority: 0 });
+        universe.registerHeaderMenuItem('Fleet-Ops', 'console.fleet-ops', { icon: 'map-location-dot', priority: 0 });
 
         // register admin settings -- create a fleet-ops menu panel with it's own setting options
         universe.registerAdminMenuPanel(

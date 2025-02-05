@@ -1,7 +1,7 @@
 html,
 body {
-    font-family: 'Inter UI', Arial, Helvetica, sans-serif;
-    font-size: 16px;
+    font-family: 'Montserrat', 'serif';
+    font-size: 14px;
     line-height: 1.5;
     text-rendering: optimizeLegibility;
     -webkit-user-select: none;
@@ -96,9 +96,9 @@ time,
 mark,
 audio,
 video {
-    font-family: marcellus, sans-serif !important;
+    font-family: 'Montserrat', 'serif';
     letter-spacing: 0.01rem;
-    font-size: 1.1rem !important;
+    font-size: 1.1rem;
     
 }
 
@@ -422,7 +422,7 @@ body[data-theme='dark'] .overloader {
 .order-route-list.storefront:before {
     z-index: 80;
     height: 100%;
-    @apply border-[#496453];
+    @apply border-[#496453] opacity-75;
 }
 
 .order-route-list.storefront .order-route-stop:first-child {
@@ -430,7 +430,7 @@ body[data-theme='dark'] .overloader {
 }
 
 .order-route-list.storefront .order-route-stop:first-child .order-route-stop-index .index-count {
-    @apply bg-[#496453] !important;
+    @apply bg-[#496453] opacity-75;
 }
 
 .order-route-list.storefront .order-route-stop:last-child {
@@ -880,7 +880,7 @@ body[data-theme='dark'] .ui-combo-box .options-list a.combo-box-option:hover {
 }
 
 .file-dropzone {
-    @apply w-full rounded-lg px-4 py-8 bg-gray-50 text-gray-800 text-center flex flex-col items-center justify-center border-2 border-dashed border-gray-200;
+    @apply w-full px-4 py-8 bg-gray-50 text-gray-800 text-center flex flex-col items-center justify-center border-2 border-dashed border-gray-200;
     min-height: 10rem;
 }
 
@@ -994,7 +994,7 @@ body[data-theme='light'] .ui-input-info.danger {
 }
 
 .anchor-button:hover {
-    @apply outline-offset-2 outline-[#496453];
+    @apply outline-offset-2 outline-[#496453] opacity-75;
 }
 
 .anchor-button:hover > div:last-child {

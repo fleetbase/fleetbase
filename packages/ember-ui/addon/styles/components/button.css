@@ -2,7 +2,7 @@
 a.btn,
 .fc-button,
 .ui-full-calendar .fc-button {
-    @apply inline-flex items-center px-3 py-2 text-sm font-medium leading-4 transition duration-150 ease-in-out border border-transparent rounded-md;
+    @apply inline-flex items-center px-3 py-2 text-sm font-medium leading-4 transition duration-150 ease-in-out border border-transparent;
 }
 
 .btn.btn-is-loading,
@@ -20,35 +20,36 @@ a.btn.btn-is-loading:disabled,
 a.btn.btn-xs,
 .fc-button.btn-xs,
 .ui-full-calendar .fc-button.btn-xs {
-    @apply px-2.5 py-1.5 text-sm leading-4 font-medium rounded-md;
+    @apply text-sm leading-4 font-medium;
+    /* padding-left: 20px; */
 }
 
 .btn.btn-sm,
 a.btn.btn-sm,
 .fc-button.btn-sm,
 .ui-full-calendar .fc-button.btn-sm {
-    @apply px-3 py-2 text-sm font-medium leading-4 rounded-md;
+    @apply px-3 py-2 text-sm font-medium leading-4;
 }
 
 .btn.btn-md,
 a.btn.btn-md,
 .fc-button.btn-md,
 .ui-full-calendar .fc-button.btn-md {
-    @apply px-4 py-2 text-sm font-medium leading-5 rounded-md;
+    @apply px-4 py-2 text-sm font-medium leading-5;
 }
 
 .btn.btn-lg,
 a.btn.btn-lg,
 .fc-button.btn-lg,
 .ui-full-calendar .fc-button.btn-lg {
-    @apply px-4 py-2 text-base font-medium leading-6 rounded-md;
+    @apply px-4 py-2 text-base font-medium leading-6;
 }
 
 .btn.btn-xl,
 a.btn.btn-xl,
 .fc-button.btn-xl,
 .ui-full-calendar .fc-button.btn-xl {
-    @apply px-6 py-3 text-base font-medium leading-6 rounded-md;
+    @apply px-6 py-3 text-base font-medium leading-6;
 }
 
 .btn.btn-link,
@@ -94,7 +95,7 @@ a.btn.fb-button-primary,
 a.btn.btn-primary,
 .fc-button.btn-primary,
 .ui-full-calendar .fc-button.btn-primary {
-    @apply text-white bg-[#496453] border-[#496453] shadow !important;
+    @apply text-white bg-[#496453] border-[#496453] shadow opacity-75;
 }
 
 .btn.fb-button-primary:hover:not(:disabled),
@@ -178,28 +179,28 @@ a.btn.btn-success:active,
 a.btn.btn-magic,
 .fc-button.btn-magic,
 .ui-full-calendar .fc-button.btn-magic {
-    @apply text-white bg-[#496453] border-[#496453] shadow-sm !important;
+    @apply text-white bg-[#496453] border-[#496453] shadow-sm opacity-75;
 }
 
 .btn.btn-magic:hover:not(:disabled),
 a.btn.btn-magic:hover:not(:disabled),
 .fc-button.btn-magic:hover:not(:disabled),
 .ui-full-calendar .fc-button.btn-magic:hover:not(:disabled) {
-    @apply bg-[#5B7765] !important;
+    @apply bg-[#5B7765] opacity-75;
 }
 
 .btn.btn-magic:focus,
 a.btn.btn-magic:focus,
 .fc-button.btn-magic:focus,
 .ui-full-calendar .fc-button.btn-magic:focus {
-    @apply outline-0 border-[#496453] !important;
+    @apply outline-0 border-[#496453] opacity-75;
 }
 
 .btn.btn-magic:active,
 a.btn.btn-magic:active,
 .fc-button.btn-magic:active,
 .ui-full-calendar .fc-button.btn-magic:active {
-    @apply bg-[#3F5747] !important;
+    @apply bg-[#3F5747] opacity-75;
 }
 
 .btn.btn-black,
@@ -227,35 +228,35 @@ a.btn.btn-black:focus,
 a.btn.btn-black:active,
 .fc-button.btn-black:active,
 .ui-full-calendar .fc-button.btn-black:active {
-    @apply bg-[#496453] !important;
+    @apply bg-[#496453] opacity-75;
 }
 
 .btn.btn-secondary,
 a.btn.btn-secondary,
 .fc-button.btn-secondary,
 .ui-full-calendar .fc-button.btn-secondary {
-    @apply bg-[#496453] !important;
+    @apply bg-[#496453] opacity-75;
 }
 
 .btn.btn-secondary:hover:not(:disabled),
 a.btn.btn-secondary:hover:not(:disabled),
 .fc-button.btn-secondary:hover:not(:disabled),
 .ui-full-calendar .fc-button.btn-secondary:hover:not(:disabled) {
-    @apply bg-blue-50;
+    @apply bg-[#496453] opacity-75;
 }
 
 .btn.btn-secondary:focus,
 a.btn.btn-secondary:focus,
 .fc-button.btn-secondary:focus,
 .ui-full-calendar .fc-button.btn-secondary:focus {
-    @apply bg-[#496453] !important;
+    @apply bg-[#496453] opacity-75;
 }
 
 .btn.btn-secondary:active,
 a.btn.btn-secondary:active,
 .fc-button.btn-secondary:active,
 .ui-full-calendar .fc-button.btn-secondary:active {
-    @apply bg-[#496453] !important;
+    @apply bg-[#496453] opacity-75;
 }
 
 .btn.btn-danger,
@@ -356,7 +357,7 @@ a.btn:disabled,
 }
 
 .order-action-button {
-    @apply h-16 flex flex-col items-center justify-center border border-gray-200 bg-white text-gray-800 rounded-md shadow-sm truncate;
+    @apply h-16 flex flex-col items-center justify-center border border-gray-200 bg-white text-gray-800 shadow-sm truncate;
 }
 
 .order-action-button.strict-width {
@@ -381,12 +382,12 @@ a.btn:disabled,
 
 button.integrated-vendor-button,
 .integrated-vendor-button {
-    @apply flex flex-col items-center justify-center border border-gray-200 p-4 rounded-md outline-0;
+    @apply flex flex-col items-center justify-center border border-gray-200 p-4 outline-0;
 }
 
 button.integrated-vendor-button.selected,
 .integrated-vendor-button.selected {
-    @apply border-[#496453]
+    @apply border-[#496453] opacity-75
 }
 
 button.integrated-vendor-button:focus,
@@ -487,7 +488,7 @@ body[data-theme='dark'] .integrated-vendor-button {
 
 body[data-theme='dark'] button.integrated-vendor-button.selected,
 body[data-theme='dark'] .integrated-vendor-button.selected {
-    @apply border-blue-500 outline-offset-2 outline-blue-500;
+    @apply border-[#496453] outline-offset-2 outline-[#496453];
 }
 
 body[data-theme='dark'] button.integrated-vendor-button:focus,

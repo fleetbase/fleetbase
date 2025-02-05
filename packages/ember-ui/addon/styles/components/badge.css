@@ -62,7 +62,7 @@
 }
 
 .status-badge.sky-status-badge > span {
-    @apply bg-[#496453] border-[#496453] text-white !important;
+    @apply bg-[#496453] border-[#496453] text-white opacity-75;
 }
 
 .status-badge.sky-status-badge > span svg {
@@ -70,7 +70,7 @@
 }
 
 .status-badge.emerald-status-badge > span {
-    @apply bg-[#496453] border-[#496453] text-white !important;
+    @apply bg-[#496453] border-[#496453] text-white opacity-75;
 }
 
 .status-badge.emerald-status-badge > span svg {
@@ -79,7 +79,7 @@
 
 .status-badge.started-status-badge > span,
 .status-badge.cyan-status-badge > span {
-    @apply bg-[#496453] border-[#496453] text-white !important;
+    @apply bg-[#496453] border-[#496453] text-white opacity-75;
 }
 
 .status-badge.started-status-badge > span svg,
@@ -88,7 +88,7 @@
 }
 
 .status-badge.violet-status-badge > span {
-    @apply bg-[#496453] border-[#496453] text-white !important;
+    @apply bg-[#496453] border-[#496453] text-white opacity-75;
 }
 
 .status-badge.cyan-status-badge > span svg {
@@ -96,7 +96,7 @@
 }
 
 .status-badge.slate-status-badge > span {
-    @apply bg-[#496453] border-[#496453] text-white !important;
+    @apply bg-[#496453] border-[#496453] text-white opacity-75;
 }
 
 .status-badge.slate-status-badge > span svg {
@@ -175,14 +175,14 @@
 .status-badge.operational-suggestion-status-badge > span,
 .status-badge.dispatched-status-badge > span,
 .status-badge.assigned-status-badge > span {
-    @apply bg-[#496453] border-[#496453] text-white !important;
+    @apply bg-[#496453] border-[#496453] text-white opacity-75;
 }
 
 .status-badge.indigo-status-badge > span svg,
 .status-badge.operational-suggestion-status-badge > span svg,
 .status-badge.dispatched-status-badge > span svg,
 .status-badge.assigned-status-badge > span svg {
-    @apply bg-[#496453] !important
+    @apply bg-[#496453] opacity-75
 }
 
 .status-badge.orange-status-badge > span,
@@ -203,7 +203,7 @@
 .status-badge.approved-status-badge > span,
 .status-badge.info-status-badge > span,
 .status-badge.in-progress-status-badge > span {
-    @apply bg-[#496453] border-[#496453] text-white !important;
+    @apply bg-[#496453] border-[#496453] text-white opacity-75;
 }
 
 .status-badge.blue-status-badge > span svg,
@@ -212,7 +212,7 @@
 .status-badge.approved-status-badge > span svg,
 .status-badge.info-status-badge > span svg,
 .status-badge.in-progress-status-badge > span svg {
-    @apply bg-[#496453] !important;
+    @apply bg-[#496453] opacity-75;
 }
 
 body[data-theme='dark'] .status-badge:not(.shadow-none) {
@@ -220,6 +220,8 @@ body[data-theme='dark'] .status-badge:not(.shadow-none) {
 }
 
 .org-badge {
-    @apply rounded-md bg-[#496453] text-gray-900 text-white w-5 h-5 text-xs flex items-center justify-center text-center shadow-sm flex-shrink-0 mr-2.5 !important;
+    @apply bg-[#496453] text-gray-900 text-white w-5 h-5 text-xs flex items-center justify-center text-center shadow-sm flex-shrink-0 mr-2.5 opacity-75;
+    height:40px;
+    width: 40px;
 }
 
