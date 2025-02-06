@@ -654,24 +654,6 @@ class OrderController extends Controller
         // find for the order
         try {
             $order = Order::findRecordOrFail($id);
-            
-            if ($order) {
-                $orderArray = $order->toArray();
-                $orderArray['id'] = $orderArray['public_id'];
-                // return $orderArray;
-                if (isset($orderArray['payload'])) {
-                    if (isset($orderArray['payload']['waypoints'])) {
-                        // $waypoints = $orderArray['payload']['waypoints'];
-                        unset($orderArray['payload']['waypoints']);
-                        $getwaypoints = Waypoint::where('payload_uuid', $orderArray['payload_uuid'])->get();
-                        $orderArray['payload']['waypoints'] = $getwaypoints;
-                        // return $orderArray;
-                    }
-                   
-                  
-                }
-                return response()->json($orderArray);
-            }
         } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $exception) {
             return response()->json(
                 [
@@ -680,7 +662,11 @@ class OrderController extends Controller
                 404
             );
         }
+
+        // response the order resource
+        return new OrderResource($order);
     }
+
 
     /**
      * Deletes a Fleetbase Order resources.

@@ -151,31 +151,12 @@ class Waypoint extends Model
     {
         return data_get($this, 'trackingNumber.tracking_number');
     }
-
-     /**
-     * Get the tracking status for this waypoint
-     */
-    public function trackingStatus()
-    {
-        return $this->belongsTo(TrackingStatus::class, 'tracking_number_uuid', 'tracking_number_uuid');
-    }
     /**
      * The latest tracking status for waypoint.
      */
     public function getStatusAttribute()
     {
-        // return data_get($this, 'trackingNumber.last_status');
-        $trackingNumber = $this->trackingNumber;
-        if (!$trackingNumber) {
-            return null;
-        }
-
-        // Get tracking status using tracking_number_uuid
-        $trackingStatus = TrackingStatus::where('tracking_number_uuid', $trackingNumber->uuid)
-            ->orderBy('created_at', 'desc')
-            ->first();
-
-        return $trackingStatus ? $trackingStatus->status : null;
+        return data_get($this, 'trackingNumber.last_status');
     }
 
     /**
@@ -183,19 +164,7 @@ class Waypoint extends Model
      */
     public function getStatusCodeAttribute()
     {
-        // return data_get($this, 'trackingNumber.last_status_code');
-         // First get tracking number record
-         $trackingNumber = $this->trackingNumber;
-         if (!$trackingNumber) {
-             return null;
-         }
- 
-         // Get tracking status using tracking_number_uuid
-         $trackingStatus = TrackingStatus::where('tracking_number_uuid', $trackingNumber->uuid)
-             ->orderBy('created_at', 'desc')
-             ->first();
- 
-         return $trackingStatus ? $trackingStatus->code : null;
+        return data_get($this, 'trackingNumber.last_status_code');
     }
 
     public static function insertGetUuid($values = [], ?Payload $payload = null)
