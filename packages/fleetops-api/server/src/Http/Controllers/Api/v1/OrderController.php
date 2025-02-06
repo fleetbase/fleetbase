@@ -35,6 +35,7 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Log;
+use Fleetbase\FleetOps\Models\TrackingStatus;
  
 
 class OrderController extends Controller
@@ -1150,7 +1151,8 @@ class OrderController extends Controller
 
         if ($previousWaypoint) {
             $waypoint = $payload->waypointMarkers()->where('place_uuid', $previousWaypoint)->first();
-                $this->completeTrackingStatus($waypoint);
+            // return $waypoint;
+            $this->completeTrackingStatus($waypoint);
         }
        
         $place = $payload->waypoints->firstWhere('public_id', $placeId);
@@ -1493,25 +1495,18 @@ class OrderController extends Controller
      */
     private function completeTrackingStatus($waypoint)
     {
-        $trackingNumber = $waypoint->trackingNumber;
+        $tracking_number_uuid = $waypoint->tracking_number_uuid;
 
-        if (!$trackingNumber) {
-            return;
+        if ($tracking_number_uuid) {
+            // Bulk update all matching records
+            TrackingStatus::where('tracking_number_uuid', $tracking_number_uuid)
+                ->update([
+                    'status' => 'Waypoint completed',
+                    'code' => 'COMPLETED',
+                    'details' => 'Waypoint has been completed',
+                    'updated_at' => now()
+                ]);
         }
-
-        $trackingStatus = $trackingNumber->statuses()->where('uuid', $trackingNumber->status_uuid)->first();
-
-        if (!$trackingStatus) {
-            return response()->apiError('Tracking status for the waypoint is not completed.');
-        }
-
-        // Update tracking status in a single update call
-        $trackingStatus->update([
-            'status' => 'Waypoint completed',
-            'code' => 'COMPLETED',
-            'details' => 'Waypoint has been completed',
-            'updated_at' => now(), // Laravel helper for timestamps
-        ]);
     }
 
 }
