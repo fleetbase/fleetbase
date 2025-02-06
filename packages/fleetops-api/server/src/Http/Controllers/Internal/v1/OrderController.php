@@ -93,12 +93,7 @@ class OrderController extends FleetOpsController
                     }
             
                     // Set order config
-                    $order_config = OrderConfig::where('key','order-create')->whereNull('deleted_at')->first();
-                    if ($order_config) {
-                        $input['order_config_uuid'] = $order_config->uuid;
-                        $input['type'] = $order_config->key;
-                    }
-                    else{
+                    if (!isset($input['order_config_uuid'])) {
                         $defaultOrderConfig = OrderConfig::default();
                         if ($defaultOrderConfig) {
                             $input['order_config_uuid'] = $defaultOrderConfig->uuid;
