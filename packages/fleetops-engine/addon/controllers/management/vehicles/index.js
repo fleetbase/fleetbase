@@ -263,25 +263,25 @@ export default class ManagementVehiclesIndexController extends BaseController {
             filterable: true,
             filterComponent: 'filter/string',
         },
-        {
-            label: this.intl.t('fleet-ops.common.vendor'),
-            cellComponent: 'table/cell/anchor',
-            permission: 'fleet-ops view vendor',
-            action: async ({ vendor_uuid }) => {
-                const vendor = await this.store.findRecord('vendor', vendor_uuid);
+        // {
+        //     label: this.intl.t('fleet-ops.common.vendor'),
+        //     cellComponent: 'table/cell/anchor',
+        //     permission: 'fleet-ops view vendor',
+        //     action: async ({ vendor_uuid }) => {
+        //         const vendor = await this.store.findRecord('vendor', vendor_uuid);
 
-                this.vendors.viewVendor(vendor);
-            },
-            valuePath: 'vendor_name',
-            width: '150px',
-            hidden: true,
-            resizable: true,
-            filterable: true,
-            filterComponent: 'filter/model',
-            filterComponentPlaceholder: 'Select vendor to filter by',
-            filterParam: 'vendor',
-            model: 'vendor',
-        },
+        //         this.vendors.viewVendor(vendor);
+        //     },
+        //     valuePath: 'vendor_name',
+        //     width: '150px',
+        //     hidden: true,
+        //     resizable: true,
+        //     filterable: true,
+        //     filterComponent: 'filter/model',
+        //     filterComponentPlaceholder: 'Select vendor to filter by',
+        //     filterParam: 'vendor',
+        //     model: 'vendor',
+        // },
         {
             label: this.intl.t('fleet-ops.common.status'),
             valuePath: 'status',

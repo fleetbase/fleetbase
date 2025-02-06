@@ -9,6 +9,7 @@ use Fleetbase\FleetOps\Http\Resources\v1\FuelReport as BaseFuelReportResource;
 use App\Models\FuelReport as FuelReportModel;
 use Fleetbase\FleetOps\Models\FuelReport as BaseFuelReportModel;
 use Fleetbase\FleetOps\Http\Middleware\TransformLocationMiddleware;
+use App\Http\Controllers\Api\v1\LeaveRequestController;
 
 class FleetbaseOverrideServiceProvider extends ServiceProvider
 {
@@ -61,6 +62,16 @@ class FleetbaseOverrideServiceProvider extends ServiceProvider
 
                     Route::post('/orders/{id}/start', 'App\Http\Controllers\Api\v1\CustomOrderController@driverAcceptance')
                     ->name('orders.driverAcceptance'); // Give it the same name as Fleetbase's route
+                    Route::prefix('leave-requests')->group(function () {
+                        Route::post('/create', 'App\Http\Controllers\Api\v1\LeaveRequestController@store')
+                        ->name('leave-requests.create');
+                        Route::put('/{id}', 'App\Http\Controllers\Api\v1\LeaveRequestController@update')
+                        ->name('leave-requests.update');
+                        Route::get('/list', 'App\Http\Controllers\Api\v1\LeaveRequestController@list')
+                        ->name('leave-requests.list');
+                        Route::delete('/{id}', 'App\Http\Controllers\Api\v1\LeaveRequestController@destroy')
+                        ->name('leave-requests.destroy');
+                    });
                 });
                     
                 });

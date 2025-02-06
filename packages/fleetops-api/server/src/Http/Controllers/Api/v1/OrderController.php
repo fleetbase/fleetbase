@@ -34,6 +34,9 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Log;
+use Fleetbase\FleetOps\Models\TrackingStatus;
+ 
 
 class OrderController extends Controller
 {
@@ -664,6 +667,7 @@ class OrderController extends Controller
         return new OrderResource($order);
     }
 
+
     /**
      * Deletes a Fleetbase Order resources.
      *
@@ -1057,27 +1061,29 @@ class OrderController extends Controller
         try {
             $order = Order::findRecordOrFail($id);
         } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $exception) {
-            return response()->json(
-                [
-                    'error' => 'Order resource not found.',
-                ],
-                404
-            );
+            return response()->json(['success' => false, 'error' => 'Order resource not found.'], 404);
+        }
+        if($order->status === "completed") {
+            return response()->json(['success' => false, 'error' => 'Order has been already completed'], 400);
+        }
+        $currentWaypoint = $order->payload->waypointMarkers->firstWhere('place_uuid', $order->payload->current_waypoint_uuid);
+
+        if (!$currentWaypoint) {
+            return response()->apiError('Current waypoint not found.');
+        }
+        
+        if ($currentWaypoint->status_code !== 'COMPLETED') {
+            $this->completeTrackingStatus($currentWaypoint);
         }
 
-        // confirm every waypoint is completed
-        $isCompleted = $order->payload->waypointMarkers->every(function ($waypoint) {
-            return $waypoint->status_code === 'COMPLETED';
-        });
-
-        // if not completed respond with error
-        if (!$isCompleted) {
+        // Ensure all waypoints are completed
+        if (!$order->payload->waypointMarkers->every(fn($waypoint) => $waypoint->status_code === 'COMPLETED')) {
             return response()->apiError('Not all waypoints completed for order.');
         }
 
         $activity = $order->config()->getCompletedActivity();
+
         if ($order->driverAssigned) {
-            // unset from driver current job
             $order->driverAssigned->unassignCurrentOrder();
         }
 
@@ -1123,24 +1129,28 @@ class OrderController extends Controller
         try {
             $order = Order::findRecordOrFail($id);
         } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $exception) {
-            return response()->json(
-                [
-                    'error' => 'Order resource not found.',
-                ],
-                404
-            );
+            return response()->json(['error' => 'Order resource not found.'], 404);
         }
+    
+        $payload = $order->payload;
+        $previousWaypoint = $payload->current_waypoint_uuid;
 
-        $place = $order->payload->waypoints->firstWhere('public_id', $placeId);
-
+        if ($previousWaypoint) {
+            $waypoint = $payload->waypointMarkers()->where('place_uuid', $previousWaypoint)->first();
+            // return $waypoint;
+            $this->completeTrackingStatus($waypoint);
+        }
+       
+        $place = $payload->waypoints->firstWhere('public_id', $placeId);
+    
         if (!$place) {
             return response()->apiError('Place resource is not a valid destination.');
         }
-
-        $order->payload->setCurrentWaypoint($place);
-
+        $payload->setCurrentWaypoint($place);
+    
         return new OrderResource($order);
     }
+    
 
     /**
      * Sends request for route optimization and re-sorts waypoints.
@@ -1463,4 +1473,26 @@ class OrderController extends Controller
 
         return response()->json($entityEditingSettings);
     }
+
+    /*
+     * Completes the tracking status for a waypoint
+     * @param $waypoint
+     * returns void
+     */
+    private function completeTrackingStatus($waypoint)
+    {
+        $tracking_number_uuid = $waypoint->tracking_number_uuid;
+
+        if ($tracking_number_uuid) {
+            // Bulk update all matching records
+            TrackingStatus::where('tracking_number_uuid', $tracking_number_uuid)
+                ->update([
+                    'status' => 'Waypoint completed',
+                    'code' => 'COMPLETED',
+                    'details' => 'Waypoint has been completed',
+                    'updated_at' => now()
+                ]);
+        }
+    }
+
 }

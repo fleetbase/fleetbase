@@ -20,6 +20,7 @@ use Illuminate\Support\Str;
 use Milon\Barcode\Facades\DNS2DFacade as DNS2D;
 use PhpUnitsOfMeasure\PhysicalQuantity\Length;
 use PhpUnitsOfMeasure\PhysicalQuantity\Mass;
+ 
 
 class Entity extends Model
 {
@@ -412,7 +413,6 @@ class Entity extends Model
         if ($save) {
             $this->save();
         }
-
         return $this;
     }
 

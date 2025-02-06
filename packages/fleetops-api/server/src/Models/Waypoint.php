@@ -151,7 +151,6 @@ class Waypoint extends Model
     {
         return data_get($this, 'trackingNumber.tracking_number');
     }
-
     /**
      * The latest tracking status for waypoint.
      */

@@ -1,7 +1,7 @@
 {{#let (cannot "fleet-ops create vendor") as |unauthorized|}}
     <div class="space-y-4">
         <ContentPanel @title={{t "fleet-ops.component.vendor-form-panel.create-form.title"}} @open={{true}} @pad={{true}} @panelBodyClass="bg-white dark:bg-gray-800">
-            <InputGroup @name={{t "fleet-ops.component.vendor-form-panel.create-form.select-vendor-type"}}>
+            {{!-- <InputGroup @name={{t "fleet-ops.component.vendor-form-panel.create-form.select-vendor-type"}}>
                 <div class="fleetbase-model-select fleetbase-power-select ember-model-select">
                     <PowerSelect
                         @options={{this.vendorTypes}}
@@ -15,7 +15,7 @@
                         {{vendorType.label}}
                     </PowerSelect>
                 </div>
-            </InputGroup>
+            </InputGroup> --}}
             {{#if (eq this.selectedVendorType.value "integrated-vendor")}}
                 <InputGroup @name={{t "fleet-ops.component.vendor-form-panel.create-form.choose-vendor"}}>
                     <div class="fleetbase-model-select fleetbase-power-select ember-model-select">
@@ -159,7 +159,7 @@
                         @helpText={{t "fleet-ops.component.vendor-form-panel.create-form.website-text"}}
                         @disabled={{unauthorized}}
                     />
-                    <InputGroup @name={{t "fleet-ops.common.type"}}>
+                    {{!-- <InputGroup @name={{t "fleet-ops.common.type"}}>
                         <div class="fleetbase-model-select fleetbase-power-select ember-model-select">
                             <PowerSelect
                                 @options={{@vendorTypes}}
@@ -173,8 +173,8 @@
                                 {{smart-humanize type}}
                             </PowerSelect>
                         </div>
-                    </InputGroup>
-                    <InputGroup @name={{t "fleet-ops.common.status"}}>
+                    </InputGroup> --}}
+                    {{!-- <InputGroup @name={{t "fleet-ops.common.status"}}>
                         <div class="fleetbase-model-select fleetbase-power-select ember-model-select">
                             <PowerSelect
                                 @options={{@vendorStatusOptions}}
@@ -188,7 +188,7 @@
                                 {{smart-humanize status}}
                             </PowerSelect>
                         </div>
-                    </InputGroup>
+                    </InputGroup> --}}
                     <InputGroup @wrapperClass="col-span-2">
                         <div class="flex items-center justify-between">
                             <label>

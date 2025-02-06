@@ -64,7 +64,7 @@ class OrderController extends FleetOpsController
         }
         
         try {
-            $isUnavailability = $request->input('mark_as_unavailable');
+            
             $record = $this->model->createRecordFromRequest(
                 $request,
                 function ($request, &$input) {
@@ -116,7 +116,7 @@ class OrderController extends FleetOpsController
                     $order->save(); // Ensure order is saved before further processing
             
                     // Now perform actions that require an order ID
-                    $isUnavailability = $request->input('mark_as_unavailable');
+                    
                     $order
                         ->setRoute($route)
                         ->setStatus('created', false)
@@ -158,9 +158,7 @@ class OrderController extends FleetOpsController
                     }
             
                     // Notify driver if assigned
-                    // if((!isset($isUnavailability)) && (!empty($order->driver_assigned_uuid))){
-                        $order->notifyDriverAssigned();
-                    //}       
+                    $order->notifyDriverAssigned();
             
                     // Set driving distance and time
                     $order->setPreliminaryDistanceAndTime();
@@ -172,15 +170,12 @@ class OrderController extends FleetOpsController
                     $order->firstDispatchWithActivity();
             
                     // Load tracking number
-                    // if(!isset($isUnavailability)){
                     $order->load(['trackingNumber']);
-                    //}
                 }
             );
             // Trigger order created event
-            // if(!$isUnavailability){
-                event(new OrderReady($record));
-            //}
+           
+            event(new OrderReady($record));
             // Return response
             return ['order' => new $this->resource($record)];
         }

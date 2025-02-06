@@ -56,12 +56,12 @@
                     />
                 </div>
 
-                <InputGroup
+                {{!-- <InputGroup
                     @name={{t "fleet-ops.operations.orders.index.new.internal-id"}}
                     @value={{this.order.internal_id}}
                     @helpText={{t "fleet-ops.operations.orders.index.new.internal-id-help-text"}}
                     @disabled={{cannot "fleet-ops create order"}}
-                />
+                /> --}}
 
                 <InputGroup>
                     <InputLabel @labelText={{t "fleet-ops.operations.orders.index.new.schedule"}} @helpText={{t "fleet-ops.operations.orders.index.new.schedule-help-text"}} />
@@ -146,7 +146,7 @@
                     </InputGroup>
                 {{/if}}
 
-                <InputGroup @name={{t "fleet-ops.operations.orders.index.new.assign-driver"}} @helpText={{t "fleet-ops.operations.orders.index.new.assign-driver-help-text"}}>
+                {{!-- <InputGroup @name={{t "fleet-ops.operations.orders.index.new.assign-driver"}} @helpText={{t "fleet-ops.operations.orders.index.new.assign-driver-help-text"}}>
                     <ModelSelect
                         @modelName="driver"
                         @selectedModel={{this.order.driver_assigned}}
@@ -178,9 +178,9 @@
                             {{/if}}
                         </div>
                     </ModelSelect>
-                </InputGroup>
+                </InputGroup> --}}
 
-                <InputGroup @name={{t "fleet-ops.operations.orders.index.new.assign-vehicle"}} @helpText={{t "fleet-ops.operations.orders.index.new.assign-vehicle-help-text"}}>
+                {{!-- <InputGroup @name={{t "fleet-ops.operations.orders.index.new.assign-vehicle"}} @helpText={{t "fleet-ops.operations.orders.index.new.assign-vehicle-help-text"}}>
                     <ModelSelect
                         @modelName="vehicle"
                         @selectedModel={{this.order.vehicle_assigned}}
@@ -204,7 +204,7 @@
                             </div>
                         </div>
                     </ModelSelect>
-                </InputGroup>
+                </InputGroup> --}}
 
                 {{#if (and this.order.pod_required (not this.isUsingIntegratedVendor))}}
                     <InputGroup>
@@ -239,7 +239,7 @@
                     </div>
                 {{/if}}
 
-                <div class="lg:col-span-2">
+                {{!-- <div class="lg:col-span-2">
                     <InputGroup @wrapperClass="pt-2">
                         <Toggle
                             @label={{t "fleet-ops.operations.orders.index.new.ad-hoc"}}
@@ -250,9 +250,9 @@
                             @helpText={{t "fleet-ops.operations.orders.index.new.ad-hoc-help-text"}}
                         />
                     </InputGroup>
-                </div>
+                </div> --}}
 
-                <div class="lg:col-span-2">
+                {{!-- <div class="lg:col-span-2">
                     <InputGroup @wrapperClass="pt-1">
                         <Toggle
                             @label={{t "fleet-ops.operations.orders.index.new.dispatch"}}
@@ -263,7 +263,7 @@
                             @helpText={{t "fleet-ops.operations.orders.index.new.dispatch-help-text"}}
                         />
                     </InputGroup>
-                </div>
+                </div> --}}
 
                 <div class="lg:col-span-2">
                     <InputGroup @wrapperClass="pt-1">
@@ -324,7 +324,7 @@
 
             {{#if this.isMultipleDropoffOrder}}
                 <DragSortList class="multi-drop-select-container overflow-visible" @items={{this.waypoints}} @dragEndAction={{this.sortWaypoints}} as |waypoint index|>
-                    <div id={{concat "waypoint_" (add index 1)}} class="border rounded-md px-3 py-2 shadow-sm border-gray-300 dark:border-gray-900 mb-3">
+                    <div id={{concat "waypoint_" (add index 1)}} class="border px-3 py-2 shadow-sm border-gray-300 dark:border-gray-900 mb-3">
                         <div class="flex items-start justify-between">
                             <div class="flex items-center justify-between grip-cursor">
                                 <FaIcon @icon="grip-lines" @prefix="fas" class="mr-3 text-gray-100" />
@@ -364,7 +364,7 @@
                                         </div>
                                     {{/if}}
                                 </div>
-                                <div>
+                                {{!-- <div>
                                     <ModelSelect
                                         @modelName="customer"
                                         @selectedModel={{waypoint.customer}}
@@ -386,7 +386,7 @@
                                             </span>
                                         </div>
                                     </ModelSelect>
-                                </div>
+                                </div> --}}
                             </div>
 
                             <div class="flex items-center">

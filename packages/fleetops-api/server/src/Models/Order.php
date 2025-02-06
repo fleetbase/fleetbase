@@ -188,6 +188,7 @@ class Order extends Model
      *
      * @var array
      */
+    
     protected $casts = [
         'meta'             => Json::class,
         'options'          => Json::class,
