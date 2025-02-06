@@ -47,6 +47,7 @@ class LeaveRequestController extends Controller
         $duplicateRequest = LeaveRequest::where('user_uuid', $input['user_uuid'])
         ->where('start_date', $input['start_date'])
         ->where('end_date', $input['end_date'])
+        ->where('reason', $input['reason'])
         ->whereNull('deleted_at') // Ensure it's not soft deleted
         ->first();
         if ($duplicateRequest) {
@@ -91,6 +92,7 @@ class LeaveRequestController extends Controller
         $existingLeaveRequest = LeaveRequest::where('driver_uuid', $input['driver_uuid'])
         ->where('start_date', $input['start_date'])
         ->where('end_date', $input['end_date'])
+        ->where('reason', $input['reason'])
         ->whereNull('deleted_at')
         ->where('id', '!=', $leaveRequest->id) // Exclude the current record from the check
         ->first();
