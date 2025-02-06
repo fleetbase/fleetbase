@@ -137,7 +137,7 @@ export default class OperationsOrdersIndexNewController extends BaseController {
     @tracked selectedServiceQuote;
     @tracked isCustomFieldsValid = true;
     @tracked isCreatingOrder = false;
-    @tracked isMultipleDropoffOrder = true;
+    @tracked isMultipleDropoffOrder = false;
     @tracked isViewingRoutePreview = false;
     @tracked isOptimizingRoute = false;
     @tracked optimizedRouteMarkers = [];
@@ -1073,7 +1073,7 @@ export default class OperationsOrdersIndexNewController extends BaseController {
         const orderConfigs = [];
         const orderConfig = undefined;
         const isCreatingOrder = false;
-        const isMultipleDropoffOrder = true;
+        const isMultipleDropoffOrder = false;
         const leafletRoute = undefined;
         const serviceRates = [];
         const selectedServiceRate = undefined;
