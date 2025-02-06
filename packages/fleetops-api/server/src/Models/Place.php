@@ -88,6 +88,7 @@ class Place extends Model
         'location',
         'meta',
         'phone',
+        'code'
     ];
 
     /**
