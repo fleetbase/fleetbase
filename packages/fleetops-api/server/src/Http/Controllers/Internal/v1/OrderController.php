@@ -252,10 +252,10 @@ class OrderController extends FleetOpsController
         $disk    = $request->input('disk', config('filesystems.default'));
         $files   = $request->input('files');
         $files   = File::whereIn('uuid', $files)->get();
-        $country = $request->input('country', Utils::or($info, ['country_name', 'region'], 'Singapore'));
+        // $country = $request->input('country', Utils::or($info, ['country_name', 'region'], 'Singapore'));
 
         $validFileTypes = ['csv', 'tsv', 'xls', 'xlsx'];
-        $imports        = collect();
+        // $imports        = collect();
 
         foreach ($files as $file) {
             // validate file type
@@ -265,49 +265,17 @@ class OrderController extends FleetOpsController
 
             try {
                 $data = Excel::toArray(new OrdersImport(), $file->path, $disk);
+                $data_import = $this->orderImport($data);
             } catch (\Exception $e) {
                 return response()->error('Invalid file, unable to proccess.');
             }
 
-            $imports = $imports->concat($data);
         }
-
-        $places   = collect();
-        $entities = collect();
-
-        foreach ($imports as $rows) {
-            foreach ($rows as $row) {
-                if (empty($row) || empty(array_values($row))) {
-                    continue;
-                }
-
-                $importId = (string) Str::uuid();
-                $place    = Place::createFromImportRow($row, $importId, $country);
-
-                if (!$place) {
-                    continue;
-                }
-
-                $places[] = $place;
-
-                $items          = Utils::or($row, ['items', 'entities', 'packages', 'passengers', 'products', 'services']);
-                $itemsDelimiter = Utils::findDelimiterFromString($items, '|');
-                $items          = is_string($items) ? explode($itemsDelimiter, $items) : [];
-
-                foreach ($items as $itemName) {
-                    $entity = new Entity(['name' => $itemName]);
-                    $entity->setAttribute('destination_uuid', $place->uuid);
-                    $entity->setAttribute('_import_id', $importId);
-                    $entity->setMeta($place->getMeta());
-                    $entities[] = $entity;
-                }
-            }
-        }
-
+        
         return response()->json(
             [
-                'entities' => $entities,
-                'places'   => $places,
+                'succeed' => true,
+                'message' => __('messages.order_import_success')
             ]
         );
     }
@@ -828,5 +796,128 @@ class OrderController extends FleetOpsController
         $order->eta          = $order->tracker()->eta();
 
         return new OrderResource($order);
+    }
+
+    
+
+    public function orderImport($excelData)
+    {
+        try {
+            $records = [];
+    
+            // Print excelData for debugging
+            Log::info('Excel Data:', ['data' => $excelData]);
+    
+            // Process all rows in excelData (both rows)
+            foreach ($excelData as $rowData) {
+                foreach ($rowData as $row) {
+                    $waypoints = [];
+                    $order = 0;
+    
+                    // Debug log for each row
+                    Log::info('Processing Row:', ['block_id' => $row['block_id'], 'trip_id' => $row['trip_id']]);
+    
+                    // Process waypoints for each stop
+                    for ($i = 1; $i <= 10; $i++) {
+                        $stopKey = "stop_" . $i;
+                        $arrivalKey = "stop_" . $i . "_yard_arrival";
+                        $departureKey = "stop_" . $i . "_yard_departure";
+    
+                        if (!empty($row[$stopKey])) {
+                            $place = Place::where('code', $row[$stopKey])->first();
+    
+                            if ($place) {
+                                $waypoints[] = [
+                                    'place_uuid' => $place->uuid,
+                                    'public_id' => $i === 1 ? $row['vr_id'] : null,
+                                    'order' => $order++,
+                                    'meta' => [
+                                        'yard_arrival' => $row[$arrivalKey] ?? null,
+                                        'yard_departure' => $row[$departureKey] ?? null
+                                    ]
+                                ];
+                            }
+                        }
+                    }
+    
+                    $orderInput = [
+                        'order' => [
+                            'internal_id' => $row['block_id'],
+                            'public_id' => $row['trip_id'],
+                            'status' => strtolower($row['status']),
+                            'type' => 'transport',
+                            'meta' => [
+                                'vehicle_id' => $row['vehicle_id'],
+                                'carrier' => $row['carrier'],
+                                'subcarrier' => $row['subcarrier'],
+                                'equipment_type' => $row['equipment_type'],
+                                'cpt' => $row['cpt']
+                            ],
+                            'payload' => [
+                                'waypoints' => $waypoints
+                            ]
+                        ]
+                    ];
+    
+                    $orderRequest = new Request();
+                    $orderRequest->merge($orderInput);
+    
+                    $record = $this->model->createRecordFromRequest(
+                        $orderRequest,
+                        function ($request, &$input) {
+                            if (!isset($input['order_config_uuid'])) {
+                                $defaultOrderConfig = OrderConfig::where('key', 'order-create')->first();
+                                if ($defaultOrderConfig) {
+                                    $input['order_config_uuid'] = $defaultOrderConfig->uuid;
+                                }
+                            }
+                        },
+                        function (&$request, Order &$order, &$requestInput) {
+                            $input = $request->input('order');
+                            
+                            // Save order first
+                            $order->save();
+    
+                            // Create payload
+                            $payload = new Payload([
+                                'company_uuid' => session('company'),
+                                'type' => 'transport'
+                            ]);
+                            $payload->save();
+    
+                            // Associate payload with order
+                            $order->payload_uuid = $payload->uuid;
+                            $order->save();
+    
+                            // Get waypoints data
+                            $waypoints = Utils::get($input, 'payload.waypoints', []);
+    
+                            // Create waypoints
+                            foreach ($waypoints as $waypointData) {
+                                Waypoint::create(array_merge($waypointData, [
+                                    'company_uuid' => session('company'),
+                                    'payload_uuid' => $payload->uuid
+                                ]));
+                            }
+    
+                            $order->setStatus($input['status'], false);
+                            $order->setPreliminaryDistanceAndTime();
+                        }
+                    );
+    
+                    $records[] = $record;
+                    event(new OrderReady($record));
+                }
+            }
+    
+            return ['orders' => $records];
+    
+        } catch (\Exception $e) {
+            Log::error('An exception occurred.', [
+                'message' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+            return response()->error($e->getMessage());
+        }
     }
 }
