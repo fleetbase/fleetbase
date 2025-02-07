@@ -36,6 +36,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Log;
+use Carbon\Carbon;
 
 class OrderController extends FleetOpsController
 {
@@ -248,6 +249,7 @@ class OrderController extends FleetOpsController
      */
     public function importFromFiles(Request $request)
     {
+        set_time_limit(300);
         $info    = Utils::lookupIp();
         $disk    = $request->input('disk', config('filesystems.default'));
         $files   = $request->input('files');
@@ -266,6 +268,7 @@ class OrderController extends FleetOpsController
             try {
                 $data = Excel::toArray(new OrdersImport(), $file->path, $disk);
                 $data_import = $this->orderImport($data);
+                return $data_import;
             } catch (\Exception $e) {
                 return response()->error('Invalid file, unable to proccess.');
             }
@@ -810,6 +813,7 @@ class OrderController extends FleetOpsController
     
             // Process all rows in excelData (both rows)
             foreach ($excelData as $rowData) {
+                print_r($rowData,true);
                 foreach ($rowData as $row) {
                     $waypoints = [];
                     $order = 0;
@@ -846,7 +850,9 @@ class OrderController extends FleetOpsController
                             'public_id' => $row['trip_id'],
                             'status' => strtolower($row['status']),
                             'type' => 'transport',
-                            'scheduled_at' => $row['start_date'],
+                            'scheduled_at' => isset($row['start_date']) && !empty($row['start_date']) 
+                                ? Carbon::parse(str_replace('/', '-', $row['start_date']))->format('Y-m-d H:i:s')
+                                : null,
                             'meta' => [
                                 'vehicle_id' => $row['vehicle_id'],
                                 'carrier' => $row['carrier'],
@@ -918,7 +924,7 @@ class OrderController extends FleetOpsController
                 'message' => $e->getMessage(),
                 'trace' => $e->getTraceAsString()
             ]);
-            return response()->error($e->getMessage());
+            return response()->json(data: ['success' => false, 'errors' => $e->getMessage()],status: 400);
         }
     }
 }
