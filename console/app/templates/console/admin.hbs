@@ -15,7 +15,7 @@
         >{{menuItem.title}}</Layout::Sidebar::Item>
     {{/each}}
     {{#each this.universe.adminMenuPanels as |menuPanel|}}
-        <Layout::Sidebar::Panel @open={{menuPanel.open}} @title={{menuPanel.title}}>
+        {{!-- <Layout::Sidebar::Panel @open={{menuPanel.open}} @title={{menuPanel.title}}> --}}
             {{#each menuPanel.items as |menuItem|}}
                 <Layout::Sidebar::Item
                     @onClick={{fn this.universe.transitionMenuItem "console.admin.virtual" menuItem}}
@@ -23,16 +23,16 @@
                     @icon={{menuItem.icon}}
                 >{{menuItem.title}}</Layout::Sidebar::Item>
             {{/each}}
-        </Layout::Sidebar::Panel>
+        {{!-- </Layout::Sidebar::Panel> --}}
     {{/each}}
-    <Layout::Sidebar::Panel @open={{true}} @title="System Config">
-        <Layout::Sidebar::Item @route="console.admin.config.services" @icon="bell-concierge">{{t "common.services"}}</Layout::Sidebar::Item>
-        <Layout::Sidebar::Item @route="console.admin.config.mail" @icon="envelope">{{t "common.mail"}}</Layout::Sidebar::Item>
-        <Layout::Sidebar::Item @route="console.admin.config.filesystem" @icon="hard-drive">{{t "common.filesystem"}}</Layout::Sidebar::Item>
-        <Layout::Sidebar::Item @route="console.admin.config.queue" @icon="layer-group">{{t "common.queue"}}</Layout::Sidebar::Item>
-        <Layout::Sidebar::Item @route="console.admin.config.socket" @icon="plug">{{t "common.socket"}}</Layout::Sidebar::Item>
-        <Layout::Sidebar::Item @route="console.admin.config.notification-channels" @icon="tower-broadcast">{{t "common.push-notifications"}}</Layout::Sidebar::Item>
-    </Layout::Sidebar::Panel>
+    {{!-- <Layout::Sidebar::Panel @open={{true}} @title="System Config"> --}}
+    <Layout::Sidebar::Item @route="console.admin.config.services" @icon="bell-concierge">{{t "common.services"}}</Layout::Sidebar::Item>
+    <Layout::Sidebar::Item @route="console.admin.config.mail" @icon="envelope">{{t "common.mail"}}</Layout::Sidebar::Item>
+    <Layout::Sidebar::Item @route="console.admin.config.filesystem" @icon="hard-drive">{{t "common.filesystem"}}</Layout::Sidebar::Item>
+    <Layout::Sidebar::Item @route="console.admin.config.queue" @icon="layer-group">{{t "common.queue"}}</Layout::Sidebar::Item>
+    <Layout::Sidebar::Item @route="console.admin.config.socket" @icon="plug">{{t "common.socket"}}</Layout::Sidebar::Item>
+    <Layout::Sidebar::Item @route="console.admin.config.notification-channels" @icon="tower-broadcast">{{t "common.push-notifications"}}</Layout::Sidebar::Item>
+    {{!-- </Layout::Sidebar::Panel> --}}
 </EmberWormhole>
 
 <Layout::Section::Container>
