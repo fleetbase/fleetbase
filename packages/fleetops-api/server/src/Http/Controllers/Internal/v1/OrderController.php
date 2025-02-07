@@ -249,7 +249,6 @@ class OrderController extends FleetOpsController
      */
     public function importFromFiles(Request $request)
     {
-        set_time_limit(300);
         $info    = Utils::lookupIp();
         $disk    = $request->input('disk', config('filesystems.default'));
         $files   = $request->input('files');
