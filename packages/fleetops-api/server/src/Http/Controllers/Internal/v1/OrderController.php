@@ -846,6 +846,7 @@ class OrderController extends FleetOpsController
                             'public_id' => $row['trip_id'],
                             'status' => strtolower($row['status']),
                             'type' => 'transport',
+                            'scheduled_at' => $row['start_date'],
                             'meta' => [
                                 'vehicle_id' => $row['vehicle_id'],
                                 'carrier' => $row['carrier'],
