@@ -456,20 +456,17 @@ trait HasApiControllerBehavior
                 $order = Order::find($id);
                 $driverAssignedUuid = $request->input('order.driver_assigned_uuid');
                 //check if the driver able to take the order
-                if (isset($driverAssignedUuid) && 
-                ($order->driver_assigned_uuid === null || 
-                 $order->driver_assigned_uuid !== $driverAssignedUuid)) {
-                    // if (!$order->driver_assigned_uuid) {
+                if (isset($driverAssignedUuid)){
+                    
+                    if($order->driver_assigned_uuid === null || 
+                    $order->driver_assigned_uuid !== $driverAssignedUuid) {
                         $check_driver_availability = $this->checkDriverAvailability($order,$driverAssignedUuid);
+                        // return $check_driver_availability;
                         if (!$check_driver_availability) {
-                            return response()->json([
-                                'success' => false, 
-                                'error' => 'The driver is unable to take the order. Please assign it to another driver.'
-                            ], 400);
-                            
+                            return response()->error('The driver is unable to take the order. Please assign it to another driver.', 400);
                         }
-                    //}
-                }
+                    }
+                } 
             }
             $onBeforeCallback = $this->getControllerCallback('onBeforeUpdate');
             $onAfterCallback  = $this->getControllerCallback('onAfterUpdate');
@@ -686,13 +683,14 @@ trait HasApiControllerBehavior
             $totalHours = $totalSeconds / 3600;
             $orderDuration = ceil($totalHours / 9); // in days
             $orderEndDate = Carbon::parse($order->scheduled_at)->addDays($orderDuration);
+            //2025-08-20
             // Check for overlapping leave requests
             $leaveRequest = LeaveRequest::where('driver_uuid', $driver_uuid)
-                ->where(function ($query) use ($order, $orderEndDate) {
-                    $query->where('start_date', '<=', $orderEndDate)
-                          ->where('end_date', '>=', $order->scheduled_at);
-                })
-                ->first();
+            ->where(function ($query) use ($order, $orderEndDate) {
+                $query->whereDate('start_date', '<=', $orderEndDate)
+                    ->whereDate('end_date', '>=', $order->scheduled_at);
+            })
+            ->first();
             if ($leaveRequest) {
                
                 return false;
