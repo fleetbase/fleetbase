@@ -458,12 +458,12 @@ trait HasApiControllerBehavior
                 if ($request->filled('driver_assigned_uuid') && 
                 ($order->driver_assigned_uuid === null || 
                  $order->driver_assigned_uuid !== $request->driver_assigned_uuid)) {
-                    if (!$order->driver_assigned_uuid) {
+                    // if (!$order->driver_assigned_uuid) {
                         $check_driver_availability = $this->checkDriverAvailability($order,$request->driver_assigned_uuid);
                         if (!$check_driver_availability) {
                             return response()->json(['message' => 'Driver is unable to take the order']);
                         }
-                    }
+                    //}
                 }
             }
             $onBeforeCallback = $this->getControllerCallback('onBeforeUpdate');
