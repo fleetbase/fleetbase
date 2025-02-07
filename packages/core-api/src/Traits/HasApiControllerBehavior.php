@@ -454,14 +454,15 @@ trait HasApiControllerBehavior
             $model_name = str_replace('Controller', '', class_basename($this));
             if ($model_name === 'Order') {
                 $order = Order::find($id);
+                $driverAssignedUuid = $request->input('order.driver_assigned_uuid');
                 //check if the driver able to take the order
-                if ($request->filled('driver_assigned_uuid') && 
+                if ($driverAssignedUuid && 
                 ($order->driver_assigned_uuid === null || 
                  $order->driver_assigned_uuid !== $request->driver_assigned_uuid)) {
                     // if (!$order->driver_assigned_uuid) {
                         $check_driver_availability = $this->checkDriverAvailability($order,$request->driver_assigned_uuid);
                         if (!$check_driver_availability) {
-                            return response()->json(['message' => 'Driver is unable to take the order']);
+                            return response()->json(['success' => false,'errors' => 'Thi Driver is unable to take the order. Assign to another driver'],400);
                         }
                     //}
                 }
