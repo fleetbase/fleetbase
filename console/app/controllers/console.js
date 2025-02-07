@@ -36,7 +36,7 @@ export default class ConsoleController extends Controller {
      *
      * @var {SidebarContext}
      */
-    @tracked sidebarToggleEnabled = false;
+    @tracked sidebarToggleEnabled = true;
 
     /**
      * The sidebar toggle state.
@@ -79,20 +79,31 @@ export default class ConsoleController extends Controller {
      */
     constructor() {
         super(...arguments);
-        this.sidebarToggleEnabled = true;
         this.router.on('routeDidChange', (transition) => {
             if (this.sidebarContext) {
+                // Determine if the new route should hide the sidebar
                 const shouldHideSidebar = this.hiddenSidebarRoutes.includes(transition.to.name);
-                // Ensure sidebar is hidden initially
-                this.sidebarContext.hideNow();
-                this.sidebarToggleEnabled = true;
-                // If the sidebar was manually toggled and is currently open, keep it open
-                if (this.sidebarToggleState.clicked && this.sidebarToggleState.isOpen) {
-                    this.sidebarContext.show();
-                }else {
-                    // Ensure toggle is enabled unless on a hidden route
-                    this.sidebarToggleEnabled = !shouldHideSidebar;
+
+                // Check if the sidebar was manually toggled and is currently closed
+                const isSidebarManuallyClosed = this.sidebarToggleState.clicked && !this.sidebarToggleState.isOpen;
+
+                // Hide the sidebar if the current route is in hiddenSidebarRoutes
+                if (shouldHideSidebar) {
+                    this.sidebarContext.hideNow();
+                    this.sidebarToggleEnabled = false;
+                    return; // Exit early as no further action is required
                 }
+
+                // If the sidebar was manually closed and not on a hidden route, keep it closed
+                if (isSidebarManuallyClosed) {
+                    this.sidebarContext.hideNow();
+                } else {
+                    // Otherwise, show the sidebar
+                    this.sidebarContext.show();
+                }
+
+                // Ensure toggle is enabled unless on a hidden route
+                this.sidebarToggleEnabled = !shouldHideSidebar;
             }
         });
     }
@@ -121,9 +132,11 @@ export default class ConsoleController extends Controller {
         this.sidebarContext = sidebarContext;
         this.universe.sidebarContext = sidebarContext;
         this.universe.trigger('sidebarContext.available', sidebarContext);
-        // Hide sidebar initially
-        this.sidebarContext.hideNow();
-        this.sidebarToggleEnabled = true;
+
+        if (this.hiddenSidebarRoutes.includes(this.router.currentRouteName)) {
+            this.sidebarContext.hideNow();
+            this.sidebarToggleEnabled = false;
+        }
     }
 
     /**
