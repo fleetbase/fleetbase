@@ -268,9 +268,20 @@ class OrderController extends FleetOpsController
             try {
                 $data = Excel::toArray(new OrdersImport(), $file->path, $disk);
                 $data_import = $this->orderImport($data);
-                return $data_import;
+               // Convert JsonResponse to array
+               if ($data_import instanceof \Illuminate\Http\JsonResponse) {
+                $data_import = json_decode($data_import->getContent(), true);
+                }
+            
+                if (!empty($data_import) && isset($data_import['errors'])) {
+                    return response()->json([
+                        'status' => 'error',
+                        'message' => __('messages.import_failed'),
+                        'errors' => $data_import['errors']
+                    ], 422);
+                }
             } catch (\Exception $e) {
-                return response()->error('Invalid file, unable to proccess.');
+                return response()->error(__('messages.invalid_file'));
             }
 
         }
@@ -917,7 +928,7 @@ class OrderController extends FleetOpsController
                 }
             }
     
-            return ['orders' => $records];
+            // return ['orders' => $records];
     
         } catch (\Exception $e) {
             Log::error('An exception occurred.', [

@@ -14,5 +14,7 @@ return [
     'request_update_success' => 'Leave Request has been updated successfully',
     'request_deleted_success' => 'Leave Request has been deleted successfully',
     'request_not_found' => 'Leave Request has not been found',
-    'order_import_success' => 'Orders imported successfully'
+    'order_import_success' => 'Orders imported successfully',
+    'import_failed' => 'Import failed',
+    'invalid_file' => 'Invalid file, unable to proccess.'
 ];
