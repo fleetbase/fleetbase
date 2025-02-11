@@ -227,10 +227,10 @@ export default class OperationsOrdersIndexNewController extends BaseController {
         }
     }
 
-    @computed('isCustomFieldsValid', 'entities.length', 'isMultipleDropoffOrder', 'isFetchingQuotes', 'isSubscriptionValid', 'order.type', 'payload.{dropoff,pickup}', 'waypoints.length')
+    @computed('isCustomFieldsValid', 'entities.length', 'isMultipleDropoffOrder', 'isFetchingQuotes', 'isSubscriptionValid', 'payload.{dropoff,pickup}', 'waypoints.length')
     get isValid() {
         const { isMultipleDropoffOrder, isSubscriptionValid, isFetchingQuotes } = this;
-        const isOrderTypeSet = isNotEmpty(this.order?.type);
+        // const isOrderTypeSet = isNotEmpty(this.order?.type);
         const isWaypointsSet = this.waypoints?.length > 1;
         const isPickupSet = isNotEmpty(this.payload?.pickup);
         const isDropoffSet = isNotEmpty(this.payload?.dropoff);
@@ -245,10 +245,10 @@ export default class OperationsOrdersIndexNewController extends BaseController {
         }
 
         if (isMultipleDropoffOrder) {
-            return isOrderTypeSet && isWaypointsSet;
+            return isWaypointsSet;
         }
 
-        return isOrderTypeSet && isPickupSet && isDropoffSet && this.isCustomFieldsValid;
+        return isPickupSet && isDropoffSet && this.isCustomFieldsValid;
     }
 
     updatePayloadCoordinates() {
