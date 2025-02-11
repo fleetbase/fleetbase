@@ -232,7 +232,7 @@ export default class OperationsOrdersIndexController extends BaseController {
      *
      * @type {String}
      */
-    @tracked layout = 'map';
+    @tracked layout = 'table';
 
     /**
      * Decides if scope drawer is open.

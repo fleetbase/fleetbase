@@ -572,7 +572,7 @@
             {{/each}}
         {{/if}}
 
-        <ContentPanel @title={{t "fleet-ops.operations.orders.index.view.payload"}} @open={{gt @model.payload.entities.length 0}} @pad={{true}} @panelBodyClass="bg-white dark:bg-gray-800">
+        {{!-- <ContentPanel @title={{t "fleet-ops.operations.orders.index.view.payload"}} @open={{gt @model.payload.entities.length 0}} @pad={{true}} @panelBodyClass="bg-white dark:bg-gray-800">
             {{#if this.isMultiDropOrder}}
                 <div class="space-y-2">
                     {{#each this.entitiesByDestination as |group|}}
@@ -635,9 +635,9 @@
                                                     >
                                                         {{t "fleet-ops.operations.orders.index.view.get-label"}}
                                                     </a>
-                                                    {{!-- <a href="javascript:;" class="next-dd-item">
+                                                    <a href="javascript:;" class="next-dd-item">
                                                         {{t "fleet-ops.operations.orders.index.view.view-activity"}}
-                                                    </a> --}}
+                                                    </a>
                                                 </div>
                                             </div>
                                         </DropdownButton>
@@ -740,7 +740,7 @@
                     {{/each}}
                 </div>
             {{/if}}
-        </ContentPanel>
+        </ContentPanel> --}}
 
         <ContentPanel @title={{t "fleet-ops.operations.orders.index.view.documents-panel-title"}} @open={{true}} @pad={{true}} @panelBodyClass="bg-white dark:bg-gray-800">
             <div class="space-y-4">
