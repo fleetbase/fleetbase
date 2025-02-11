@@ -137,7 +137,7 @@ export default class OperationsOrdersIndexNewController extends BaseController {
     @tracked selectedServiceQuote;
     @tracked isCustomFieldsValid = true;
     @tracked isCreatingOrder = false;
-    @tracked isMultipleDropoffOrder = false;
+    @tracked isMultipleDropoffOrder = true;
     @tracked isViewingRoutePreview = false;
     @tracked isOptimizingRoute = false;
     @tracked optimizedRouteMarkers = [];
@@ -206,6 +206,26 @@ export default class OperationsOrdersIndexNewController extends BaseController {
     @alias('currentUser.longitude') userLongitude;
     @alias('ordersController.leafletMap') leafletMap;
     @equal('isCsvImportedOrder', false) isNotCsvImportedOrder;
+
+    constructor() {
+        super(...arguments); // Always call the parent class constructor first
+        // Initialize waypoints with a default value
+        this.waypoints = [{ place: 'Default Place' }];   
+
+        // If needed, you can load waypoints from the store
+        this.loadWaypoints();
+    }
+
+    async loadWaypoints() {
+        let storedWaypoints = await this.store.findAll('waypoint');
+    
+        // Ensure only one waypoint is set initially
+        if (storedWaypoints.length > 0) {
+            this.set('waypoints', [storedWaypoints.firstObject]); // Keep only the first waypoint
+        } else {
+            this.set('waypoints', [{ place: 'Default Place' }]); // Default single waypoint
+        }
+    }
 
     @computed('isCustomFieldsValid', 'entities.length', 'isMultipleDropoffOrder', 'isFetchingQuotes', 'isSubscriptionValid', 'order.type', 'payload.{dropoff,pickup}', 'waypoints.length')
     get isValid() {
@@ -1073,7 +1093,7 @@ export default class OperationsOrdersIndexNewController extends BaseController {
         const orderConfigs = [];
         const orderConfig = undefined;
         const isCreatingOrder = false;
-        const isMultipleDropoffOrder = false;
+        const isMultipleDropoffOrder = true;
         const leafletRoute = undefined;
         const serviceRates = [];
         const selectedServiceRate = undefined;
@@ -1082,6 +1102,7 @@ export default class OperationsOrdersIndexNewController extends BaseController {
 
         this.removeRoutingControlPreview();
         this.removeOptimizedRoute();
+        this.set('waypoints', []);
         this.setProperties({
             order,
             payload,
@@ -1100,6 +1121,7 @@ export default class OperationsOrdersIndexNewController extends BaseController {
             servicable,
         });
         this.resetInterface();
+        this.loadWaypoints();
     }
 
     @action setConfig(event) {
