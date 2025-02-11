@@ -85,7 +85,7 @@ class OrderController extends FleetOpsController
             
                     // if no type is set its default to default
                     if (!isset($input['type'])) {
-                        $input['type'] = 'default';
+                        $input['type'] = 'transport';
                     }
             
                     // if no status is set its default to `created`
@@ -95,7 +95,7 @@ class OrderController extends FleetOpsController
             
                     // Set order config
                     if (!isset($input['order_config_uuid'])) {
-                        $defaultOrderConfig = OrderConfig::default();
+                        $defaultOrderConfig = OrderConfig::where('key', 'order-create')->first();
                         if ($defaultOrderConfig) {
                             $input['order_config_uuid'] = $defaultOrderConfig->uuid;
                         }
@@ -823,7 +823,6 @@ class OrderController extends FleetOpsController
     
             // Process all rows in excelData (both rows)
             foreach ($excelData as $rowData) {
-                print_r($rowData,true);
                 foreach ($rowData as $row) {
                     $waypoints = [];
                     $order = 0;

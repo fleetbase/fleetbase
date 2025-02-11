@@ -27,7 +27,7 @@ class CreateOrderRequest extends FleetbaseRequest
     public function rules()
     {
         $validations = [
-            'order_config_uuid' => ['required'],
+            // 'order_config_uuid' => ['required'],
             'adhoc'             => ['nullable', 'boolean'],
             'dispatch'          => ['nullable', 'boolean'],
             'adhoc_distance'    => ['nullable', 'numeric'],
