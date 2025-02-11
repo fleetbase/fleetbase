@@ -151,15 +151,15 @@
 
             <ContentPanel @title={{t "fleet-ops.component.driver-form-panel.driver-details"}} @open={{true}} @pad={{true}} @panelBodyClass="bg-white dark:bg-gray-800">
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 text-xs dark:text-gray-100">
-                    <InputGroup @name={{t "fleet-ops.common.internal-id"}}>
+                    {{!-- <InputGroup @name={{t "fleet-ops.common.internal-id"}}>
                         <Input @value={{this.driver.internal_id}} @type="text" class="w-full form-input" placeholder={{t "fleet-ops.common.internal-id"}} disabled={{cannot this.savePermission}} />
-                    </InputGroup>
+                    </InputGroup> --}}
 
                     <InputGroup @name={{t "fleet-ops.common.driver-license"}}>
                         <Input @value={{this.driver.drivers_license_number}} @type="text" class="w-full form-input" placeholder={{t "fleet-ops.common.driver-license"}} disabled={{cannot this.savePermission}} />
                     </InputGroup>
 
-                    <InputGroup @name={{t "fleet-ops.component.driver-form-panel.vendor"}}>
+                    {{!-- <InputGroup @name={{t "fleet-ops.component.driver-form-panel.vendor"}}>
                         <ModelSelect
                             @modelName="vendor"
                             @selectedModel={{this.driver.vendor}}
@@ -173,7 +173,7 @@
                         >
                             {{model.name}}
                         </ModelSelect>
-                    </InputGroup>
+                    </InputGroup> --}}
 
                     <InputGroup @name={{t "fleet-ops.common.vehicle"}}>
                         <ModelSelect

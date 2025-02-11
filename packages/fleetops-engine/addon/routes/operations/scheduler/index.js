@@ -72,16 +72,13 @@ export default class OperationsSchedulerIndexRoute extends Route {
         controller.unscheduledOrders = orders.filter(getUnscheduledOrder);
         // set scheduled orders
         controller.scheduledOrders = orders.filter(getScheduledOrder);
-        if (Array.isArray(driverUnavailability)) {
-        const leaveEvents = driverUnavailability.map(unavailability => createFullCalendarEventFromLeave(unavailability));
         controller.events = controller.scheduledOrders.map(order => createFullCalendarEventFromOrder(order));
-       
-        controller.events = [...controller.events, ...leaveEvents];
-        } else {
-            console.error('driverUnavailability is not an array:', driverUnavailability);
+        let driverUnavailabilityData = Array.isArray(driverUnavailability?.data) ? driverUnavailability.data : [];
+
+        if (driverUnavailabilityData.length > 0) {
+            const leaveEvents = driverUnavailabilityData.map(createFullCalendarEventFromLeave);
+            controller.events = [...controller.events, ...leaveEvents];
         }
-        // create events from scheduledOrders
-        // controller.events = controller.scheduledOrders.map(createFullCalendarEventFromOrder);
         
     }
 }

@@ -36,6 +36,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Log;
+use Carbon\Carbon;
 
 class OrderController extends FleetOpsController
 {
@@ -84,7 +85,7 @@ class OrderController extends FleetOpsController
             
                     // if no type is set its default to default
                     if (!isset($input['type'])) {
-                        $input['type'] = 'default';
+                        $input['type'] = 'transport';
                     }
             
                     // if no status is set its default to `created`
@@ -94,7 +95,7 @@ class OrderController extends FleetOpsController
             
                     // Set order config
                     if (!isset($input['order_config_uuid'])) {
-                        $defaultOrderConfig = OrderConfig::default();
+                        $defaultOrderConfig = OrderConfig::where('key', 'order-create')->first();
                         if ($defaultOrderConfig) {
                             $input['order_config_uuid'] = $defaultOrderConfig->uuid;
                         }
@@ -266,8 +267,31 @@ class OrderController extends FleetOpsController
             try {
                 $data = Excel::toArray(new OrdersImport(), $file->path, $disk);
                 $data_import = $this->orderImport($data);
+               // Convert JsonResponse to array
+               if ($data_import instanceof \Illuminate\Http\JsonResponse) {
+                $data_import = json_decode($data_import->getContent(), true);
+                }
+            
+                if (!empty($data_import) && isset($data_import['errors'])) {
+                    $errors = $data_import['errors'];
+                    
+                    // Check for duplicate entry error
+                    if (is_string($errors) && str_contains($errors, 'SQLSTATE[23000]') && str_contains($errors, 'Duplicate entry') && str_contains($errors, 'orders.orders_public_id_unique')) {
+                        return response()->json([
+                            'status' => 'error',
+                            'message' => 'Order exists with same block ID or trip ID',
+                            'errors' => $errors
+                        ], 422);
+                    }
+
+                    return response()->json([
+                        'status' => 'error',
+                        'message' => __('messages.import_failed'),
+                        'errors' => $errors
+                    ], 422);
+                }
             } catch (\Exception $e) {
-                return response()->error('Invalid file, unable to proccess.');
+                return response()->error(__('messages.invalid_file'));
             }
 
         }
@@ -813,19 +837,19 @@ class OrderController extends FleetOpsController
                 foreach ($rowData as $row) {
                     $waypoints = [];
                     $order = 0;
-    
+                    $i = 1;
                     // Debug log for each row
                     Log::info('Processing Row:', ['block_id' => $row['block_id'], 'trip_id' => $row['trip_id']]);
     
                     // Process waypoints for each stop
-                    for ($i = 1; $i <= 10; $i++) {
+                    while (array_key_exists("stop_" . $i, $row)) {
                         $stopKey = "stop_" . $i;
                         $arrivalKey = "stop_" . $i . "_yard_arrival";
                         $departureKey = "stop_" . $i . "_yard_departure";
-    
+
                         if (!empty($row[$stopKey])) {
                             $place = Place::where('code', $row[$stopKey])->first();
-    
+
                             if ($place) {
                                 $waypoints[] = [
                                     'place_uuid' => $place->uuid,
@@ -838,6 +862,7 @@ class OrderController extends FleetOpsController
                                 ];
                             }
                         }
+                        $i++;
                     }
     
                     $orderInput = [
@@ -846,6 +871,9 @@ class OrderController extends FleetOpsController
                             'public_id' => $row['trip_id'],
                             'status' => strtolower($row['status']),
                             'type' => 'transport',
+                            'scheduled_at' => isset($row['start_date']) && !empty($row['start_date']) 
+                                ? Carbon::parse(str_replace('/', '-', $row['start_date']))->format('Y-m-d H:i:s')
+                                : null,
                             'meta' => [
                                 'vehicle_id' => $row['vehicle_id'],
                                 'carrier' => $row['carrier'],
@@ -910,14 +938,15 @@ class OrderController extends FleetOpsController
                 }
             }
     
-            return ['orders' => $records];
+            // return ['orders' => $records];
     
-        } catch (\Exception $e) {
+        } 
+        catch (\Exception $e) {
             Log::error('An exception occurred.', [
                 'message' => $e->getMessage(),
                 'trace' => $e->getTraceAsString()
             ]);
-            return response()->error($e->getMessage());
+            return response()->json(data: ['success' => false, 'errors' => $e->getMessage()],status: 400);
         }
     }
 }
