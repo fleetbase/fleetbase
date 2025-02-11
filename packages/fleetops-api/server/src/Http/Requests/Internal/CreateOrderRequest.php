@@ -40,7 +40,7 @@ class CreateOrderRequest extends FleetbaseRequest
             'facilitator'       => ['nullable', new ExistsInAny(['vendors', 'contacts', 'integrated_vendors'], ['uuid', 'provider'])],
             'customer'          => ['nullable', new ExistsInAny(['vendors', 'contacts'], 'uuid')],
             'status'            => ['nullable', 'string'],
-            'type'              => ['string'],
+            'type'              => ['nullable', 'string'],
         ];
 
         // Conditionally require 'pod_method' if 'pod_required' is truthy
