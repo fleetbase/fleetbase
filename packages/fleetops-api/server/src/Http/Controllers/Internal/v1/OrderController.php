@@ -273,10 +273,21 @@ class OrderController extends FleetOpsController
                 }
             
                 if (!empty($data_import) && isset($data_import['errors'])) {
+                    $errors = $data_import['errors'];
+                    
+                    // Check for duplicate entry error
+                    if (is_string($errors) && str_contains($errors, 'SQLSTATE[23000]') && str_contains($errors, 'Duplicate entry') && str_contains($errors, 'orders.orders_public_id_unique')) {
+                        return response()->json([
+                            'status' => 'error',
+                            'message' => 'Order exists with same block ID or trip ID',
+                            'errors' => $errors
+                        ], 422);
+                    }
+
                     return response()->json([
                         'status' => 'error',
                         'message' => __('messages.import_failed'),
-                        'errors' => $data_import['errors']
+                        'errors' => $errors
                     ], 422);
                 }
             } catch (\Exception $e) {
@@ -928,7 +939,8 @@ class OrderController extends FleetOpsController
     
             // return ['orders' => $records];
     
-        } catch (\Exception $e) {
+        } 
+        catch (\Exception $e) {
             Log::error('An exception occurred.', [
                 'message' => $e->getMessage(),
                 'trace' => $e->getTraceAsString()
