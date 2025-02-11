@@ -704,7 +704,7 @@ export default class OperationsOrdersIndexNewController extends BaseController {
         }
 
         // switch to map mode
-        this.ordersController.setLayoutMode('map');
+        this.ordersController.setLayoutMode('table');
     }
 
     @action resetInterface() {
