@@ -837,19 +837,19 @@ class OrderController extends FleetOpsController
                 foreach ($rowData as $row) {
                     $waypoints = [];
                     $order = 0;
-    
+                    $i = 1;
                     // Debug log for each row
                     Log::info('Processing Row:', ['block_id' => $row['block_id'], 'trip_id' => $row['trip_id']]);
     
                     // Process waypoints for each stop
-                    for ($i = 1; $i <= 10; $i++) {
+                    while (array_key_exists("stop_" . $i, $row)) {
                         $stopKey = "stop_" . $i;
                         $arrivalKey = "stop_" . $i . "_yard_arrival";
                         $departureKey = "stop_" . $i . "_yard_departure";
-    
+
                         if (!empty($row[$stopKey])) {
                             $place = Place::where('code', $row[$stopKey])->first();
-    
+
                             if ($place) {
                                 $waypoints[] = [
                                     'place_uuid' => $place->uuid,
@@ -862,6 +862,7 @@ class OrderController extends FleetOpsController
                                 ];
                             }
                         }
+                        $i++;
                     }
     
                     $orderInput = [
