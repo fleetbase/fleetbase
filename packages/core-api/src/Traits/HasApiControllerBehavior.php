@@ -451,7 +451,7 @@ trait HasApiControllerBehavior
     {
        
         try {
-            $model_name = str_replace('Controller', '', class_basename($this));
+            /*$model_name = str_replace('Controller', '', class_basename($this));
             if ($model_name === 'Order') {
                 $order = Order::find($id);
                 $driverAssignedUuid = $request->input('order.driver_assigned_uuid');
@@ -467,7 +467,7 @@ trait HasApiControllerBehavior
                         }
                     }
                 } 
-            }
+            }*/
             $onBeforeCallback = $this->getControllerCallback('onBeforeUpdate');
             $onAfterCallback  = $this->getControllerCallback('onAfterUpdate');
 
