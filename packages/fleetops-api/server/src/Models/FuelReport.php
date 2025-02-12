@@ -114,7 +114,7 @@ class FuelReport extends Model
      */
     public function setAmountAttribute($value)
     {
-        $this->attributes['amount'] = $value;
+        $this->attributes['amount'] = Utils::numbersOnly($value);
     }
 
     /**
