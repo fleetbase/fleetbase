@@ -116,6 +116,7 @@ class Order extends Model
         'notes',
         'type',
         'status',
+        'estimated_end_date',
     ];
 
     /**
@@ -199,6 +200,7 @@ class Order extends Model
         'started'          => 'boolean',
         'pod_required'     => 'boolean',
         'scheduled_at'     => 'datetime',
+        'estimated_end_date' => 'datetime',
         'dispatched_at'    => 'datetime',
         'started_at'       => 'datetime',
     ];
