@@ -114,7 +114,7 @@ class FuelReport extends Model
      */
     public function setAmountAttribute($value)
     {
-        $this->attributes['amount'] = Utils::numbersOnly($value);
+        $this->attributes['amount'] = $value;
     }
 
     /**
@@ -210,7 +210,7 @@ class FuelReport extends Model
             'company_uuid'    => session('company'),
             'report'          => $report,
             'odometer'        => $odometer,
-            'amount'          => Utils::numbersOnly($amount),
+            'amount'          => $amount,
             'currency'        => $currency,
             'volume'          => $volume,
             'metric_unit'     => $metricUnit,

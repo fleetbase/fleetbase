@@ -826,6 +826,7 @@ class OrderController extends FleetOpsController
 
     public function orderImport($excelData)
     {
+        
         try {
             $records = [];
     
@@ -867,19 +868,22 @@ class OrderController extends FleetOpsController
     
                     $orderInput = [
                         'order' => [
-                            'internal_id' => $row['block_id'],
-                            'public_id' => $row['trip_id'],
-                            'status' => strtolower($row['status']),
+                            'internal_id' => isset($row['block_id']) && !empty($row['block_id']) ? $row['block_id'] : null,
+                            'public_id' => isset($row['trip_id']) && !empty($row['trip_id']) ? $row['trip_id'] : null,
+                            'status' => $row['status'] ? strtolower($row['status']) : null,
                             'type' => 'transport',
                             'scheduled_at' => isset($row['start_date']) && !empty($row['start_date']) 
                                 ? Carbon::parse(str_replace('/', '-', $row['start_date']))->format('Y-m-d H:i:s')
                                 : null,
+                            'estimated_end_date' => isset($row['end_date']) && !empty($row['end_date']) 
+                                ? Carbon::parse(str_replace('/', '-', $row['end_date']))->format('Y-m-d H:i:s')
+                                : null,
                             'meta' => [
-                                'vehicle_id' => $row['vehicle_id'],
-                                'carrier' => $row['carrier'],
-                                'subcarrier' => $row['subcarrier'],
-                                'equipment_type' => $row['equipment_type'],
-                                'cpt' => $row['cpt']
+                                'vehicle_id' => isset($row['vehicle_id']) && !empty($row['vehicle_id']) ? $row['vehicle_id'] : null,
+                                'carrier' => isset($row['carrier']) && !empty($row['carrier']) ? $row['carrier'] : null,
+                                'subcarrier' => isset($row['subcarrier']) && !empty($row['subcarrier']) ? $row['subcarrier'] : null,
+                                'equipment_type' => isset($row['equipment_type']) && !empty($row['equipment_type']) ? $row['equipment_type'] : null,
+                                'cpt' => isset($row['cpt']) && !empty($row['cpt']) ? $row['cpt'] : null
                             ],
                             'payload' => [
                                 'waypoints' => $waypoints
