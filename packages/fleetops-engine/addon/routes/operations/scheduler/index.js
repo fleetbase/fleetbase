@@ -5,13 +5,21 @@ import { isNone } from '@ember/utils';
 import createFullCalendarEventFromOrder from '../../../utils/create-full-calendar-event-from-order';
 import createFullCalendarEventFromLeave from '../../../utils/create-full-calendar-event-from-leave';
 import ENV from '@fleetbase/console/config/environment';
+
 const getUnscheduledOrder = (order) => {
-    return isNone(order.scheduled_at);
+    return isNone(order.driver_assigned_uuid) && isNone(order.vehicle_assigned_uuid);
 };
 
 const getScheduledOrder = (order) => {
-    return isValidDate(order.scheduled_at);
+    if (!order || typeof order !== "object") {
+        console.log("Order is undefined, null, or not an object:", order);
+        return false;
+    }
+    const scheduledOrder = !isNone(order.driver_assigned_uuid) &&
+    order.vehicle_assigned && !isNone(order.vehicle_assigned.uuid);
+    return scheduledOrder;
 };
+
 
 export default class OperationsSchedulerIndexRoute extends Route {
     @service store;
