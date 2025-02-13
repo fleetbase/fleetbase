@@ -81,7 +81,7 @@
                         @value={{this.order.estimated_end_date}}
                         @minDate={{format-date (now) "yyyy-MM-dd"}}
                         @minTime={{format-date (now) "HH:mm"}}
-                        @onUpdate={{this.scheduleOrder}}
+                        @onUpdate={{this.EndDateOrder}}
                         @disabled={{or this.order.dispatched (cannot "fleet-ops create order")}}
                     />
                 </InputGroup>
