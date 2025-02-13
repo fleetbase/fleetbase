@@ -210,7 +210,7 @@ class FuelReport extends Model
             'company_uuid'    => session('company'),
             'report'          => $report,
             'odometer'        => $odometer,
-            'amount'          => Utils::numbersOnly($amount),
+            'amount'          => $amount,
             'currency'        => $currency,
             'volume'          => $volume,
             'metric_unit'     => $metricUnit,
