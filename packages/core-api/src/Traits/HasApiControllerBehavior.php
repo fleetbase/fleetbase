@@ -477,10 +477,21 @@ trait HasApiControllerBehavior
             if (Http::isInternalRequest($request)) {
                 $this->resource::wrap($this->resourceSingularlName);
 
-                return new $this->resource($record);
+                // return new $this->resource($record);
+                return response()->json([
+                    'status' => 'success',
+                    'message' => 'Record updated successfully',
+                    'data' => new $this->resource($record)
+                    
+                ]);
             }
 
-            return new $this->resource($record);
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Record updated successfully',
+                'data' => new $this->resource($record)
+                
+            ]);
         } catch (\Exception $e) {
             return response()->error($e->getMessage());
         } catch (QueryException $e) {
