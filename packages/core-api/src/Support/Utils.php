@@ -725,7 +725,7 @@ class Utils
         $string = strval($value);
         $string = preg_replace('/[^0-9]/', '', $string);
 
-        return intval($string);
+        return floatval($string);
     }
 
     /**
