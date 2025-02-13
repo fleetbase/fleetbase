@@ -37,23 +37,40 @@ class LeaveRequestController extends Controller
     public function store(Request $request)
     {
         $company = $request->has('company') ? Auth::getCompanyFromRequest($request) : Auth::getCompany();
-            $company_uuid = null;
-            if($company){
-                $company_uuid = $company->uuid;
-            }
+        $company_uuid = null;
+        if($company){
+            $company_uuid = $company->uuid;
+        }
         $input = $request->all();
-        // Create the leave request record
-        // Check for duplicate leave requests (same user, same date range)
+
+        // Set end_date equal to start_date if not provided
+        if (empty($input['end_date'])) {
+            $input['end_date'] = $input['start_date'];
+        }
+
+        // Check if dates are in the past
+        $today = date('Y-m-d');
+        if ($input['start_date'] < $today || $input['end_date'] < $today) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Cannot submit leave request for past dates',
+            ], 400);
+        }
+
+        // Check for overlapping leave requests
         $duplicateRequest = LeaveRequest::where('user_uuid', $input['user_uuid'])
-        ->where('start_date', $input['start_date'])
-        ->where('end_date', $input['end_date'])
-        ->where('reason', $input['reason'])
-        ->whereNull('deleted_at') // Ensure it's not soft deleted
-        ->first();
+            ->where(function ($query) use ($input) {
+                // Check if any existing leave request overlaps with the new request
+                $query->where('start_date', '<=', $input['end_date'])
+                      ->where('end_date', '>=', $input['start_date']);
+            })
+            ->whereNull('deleted_at')
+            ->first();
+
         if ($duplicateRequest) {
             return response()->json([
                 'success' => false,
-                'message' => __('messages.duplicate_leave_requests'),
+                'message' => 'You already have a leave request for these dates',
             ], 400);
         }
         $input['public_id'] = Str::random(6);
