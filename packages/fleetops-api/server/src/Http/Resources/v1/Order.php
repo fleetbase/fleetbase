@@ -74,6 +74,7 @@ class Order extends FleetbaseResource
             'dispatched_at'         => $this->dispatched_at,
             'started_at'            => $this->started_at,
             'scheduled_at'          => $this->scheduled_at,
+            'estimated_end_date'    => $this->estimated_end_date,
             'updated_at'            => $this->updated_at,
             'created_at'            => $this->created_at,
         ];
@@ -141,6 +142,7 @@ class Order extends FleetbaseResource
             'dispatched_at'   => $this->dispatched_at,
             'started_at'      => $this->started_at,
             'scheduled_at'    => $this->scheduled_at,
+            'estimated_end_date' => $this->estimated_end_date,
             'updated_at'      => $this->updated_at,
             'created_at'      => $this->created_at,
         ];
