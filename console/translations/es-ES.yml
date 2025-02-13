@@ -1940,6 +1940,7 @@ fleet-ops:
           internal-id-help-text: Utilice este campo para definir una ID personalizada
             o una ID interna para el pedido.
           schedule: Fecha de inicio
+          estimated-end-date: Fecha de finalización
           schedule-help-text: La fecha y hora en que se enviará el pedido. Si no se
             asigna ningún conductor en el momento del envío, el envío fracasará. Si
             el pedido es Ad-Hoc, se enviará a los conductores cercanos al lugar de
@@ -2073,7 +2074,8 @@ fleet-ops:
           vehicle-assigned: Vehículo asignado
           change-driver: Cambiar conductor
           tracking-number: El número de rastreo
-          date-scheduled: fecha prevista
+          date-scheduled: Fecha de inicio programada
+          date-estimated: Fecha de finalización estimada
           date-dispatched: Fecha de envío
           date-started: Fecha de inicio
           order-details-title: Detalles del pedido
