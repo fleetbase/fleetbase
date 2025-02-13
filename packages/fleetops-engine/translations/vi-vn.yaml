@@ -1350,6 +1350,7 @@ fleet-ops:
           internal-id: ID Nội Bộ
           internal-id-help-text: Sử dụng trường này để tùy chọn thiết lập một mã nhận diện hoặc mã nội bộ cho đơn hàng.
           schedule: Lên lịch
+          estimated-end-date: Ngày kết thúc
           schedule-help-text: Ngày và giờ mà đơn hàng sẽ được gửi. Nếu không có tài xế được gán tại thời điểm gửi, việc gửi sẽ thất bại. Nếu đơn hàng là Ad-Hoc, đơn hàng sẽ được gửi tới các tài xế trong khu vực nhận hàng.
           customer: Khách hàng
           customer-help-text: Tùy chọn gán khách hàng cho đơn hàng này. Nếu đây là khách hàng mới, hãy sử dụng nút 'Khách hàng mới' ở trên.
@@ -1456,7 +1457,8 @@ fleet-ops:
           vehicle-assigned: Xe đã được gán
           change-driver: Thay đổi Tài Xế
           tracking-number: Số Theo Dõi
-          date-scheduled: Ngày Lên Lịch
+          date-scheduled: Ngày bắt đầu dự kiến
+          date-estimated": Ngày kết thúc ước tính
           date-dispatched: Ngày Gửi
           date-started: Ngày Bắt Đầu
           order-details-title: Chi tiết Đơn Hàng

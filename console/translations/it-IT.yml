@@ -1651,6 +1651,7 @@ fleet-ops:
           internal-id: ID Interno
           internal-id-help-text: Usa questo campo per impostare facoltativamente un identificatore personalizzato o interno per l'ordine.
           schedule: Data di inizio
+          estimated-end-date: Data di fine
           schedule-help-text: La data e l'ora in cui l'ordine sarà spedito. Se nessun conducente è assegnato al momento della spedizione, la spedizione fallirà. Se l'ordine è Ad-Hoc, sarà inviato ai conducenti nelle vicinanze del ritiro.
           customer: Cliente
           customer-help-text: Assegna opzionalmente il cliente a questo ordine. Se è un nuovo cliente, usa il pulsante 'Nuovo Cliente' sopra.
@@ -1758,7 +1759,8 @@ fleet-ops:
           vehicle-assigned: Veicolo Assegnato
           change-driver: Cambia Conducente
           tracking-number: Numero di Tracciamento
-          date-scheduled: Data Programmata
+          date-scheduled: Data di inizio programmata
+          date-estimated: Data di fine stimata
           date-dispatched: Data Spedizione
           date-started: Data Inizio
           order-details-title: Dettagli Ordine
