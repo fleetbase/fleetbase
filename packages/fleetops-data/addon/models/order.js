@@ -86,6 +86,7 @@ export default class OrderModel extends Model {
 
     /** @dates */
     @attr('date') scheduled_at;
+    @attr('date') estimated_end_date;
     @attr('date') dispatched_at;
     @attr('date') deleted_at;
     @attr('date') created_at;
@@ -268,6 +269,13 @@ export default class OrderModel extends Model {
 
     @computed('scheduled_at') get scheduledAt() {
         if (!isValidDate(this.scheduled_at)) {
+            return null;
+        }
+
+        return formatDate(this.scheduled_at, 'PP HH:mm');
+    }
+    @computed('estimated_end_date') get endDate() {
+        if (!isValidDate(this.estimated_end_date)) {
             return null;
         }
 
