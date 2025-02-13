@@ -116,8 +116,7 @@ class Order extends Model
         'meta',
         'notes',
         'type',
-        'status',
-        'estimated_end_date',
+        'status'
     ];
 
     /**

@@ -147,6 +147,7 @@ export default class OperationsOrdersIndexNewController extends BaseController {
     @tracked scheduledDate;
     @tracked estimatedEndaDate;
     @tracked scheduledTime;
+    @tracked estimatedEndDateTime;
     @tracked leafletRoute;
     @tracked leafletOptimizedRoute;
     @tracked currentLeafletRoute;
@@ -325,7 +326,7 @@ export default class OperationsOrdersIndexNewController extends BaseController {
 
         const { order, groupedMetaFields, payload, entities, waypoints } = this;
         const route = this.leafletOptimizedRoute ? this.getOptimizedRoute() : this.getRoute();
-
+        console.log(this.order.estimated_end_date);
         // set service quote if applicable
         if (this.selectedServiceQuote) {
             order.service_quote_uuid = this.selectedServiceQuote;
