@@ -145,6 +145,7 @@ export default class OperationsOrdersIndexNewController extends BaseController {
     @tracked isFetchingQuotes = false;
     @tracked servicable = false;
     @tracked scheduledDate;
+    @tracked estimatedEndaDate;
     @tracked scheduledTime;
     @tracked leafletRoute;
     @tracked leafletOptimizedRoute;
@@ -677,6 +678,10 @@ export default class OperationsOrdersIndexNewController extends BaseController {
 
     @action scheduleOrder(dateInstance) {
         this.order.scheduled_at = dateInstance;
+    }
+
+    @action EndDateOrder(dateInstance) {
+        this.order.estimated_end_date = dateInstance;
     }
 
     @action setupInterface() {
