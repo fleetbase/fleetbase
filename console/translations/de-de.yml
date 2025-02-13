@@ -1800,6 +1800,7 @@ fleet-ops:
           internal-id: Interne ID
           internal-id-help-text: Verwenden Sie dieses Feld, um optional eine benutzerdefinierte oder interne Identifikationsnummer für die Bestellung festzulegen.
           schedule: Startdatum
+          estimated-end-date: Enddatum
           schedule-help-text: Das Datum und die Uhrzeit, zu der die Bestellung versendet wird. Wenn zu diesem Zeitpunkt kein Fahrer zugewiesen ist, schlägt der Versand fehl. Wenn die Bestellung ad-hoc ist, wird sie an Fahrer in der Nähe des Abholorts gesendet.
           customer: Kunde
           customer-help-text: Weisen Sie dieser Bestellung optional einen Kunden zu. Wenn es sich um einen neuen Kunden handelt, verwenden Sie die Schaltfläche „Neuer Kunde“ oben.
@@ -1907,7 +1908,8 @@ fleet-ops:
           vehicle-assigned: Fahrzeug zugewiesen
           change-driver: Fahrer wechseln
           tracking-number: Sendungsverfolgungsnummer
-          date-scheduled: Geplantes Datum
+          date-scheduled: Geplanter Starttermin
+          date-estimated: Geschätztes Enddatum
           date-dispatched: Versendedatum
           date-started: Startdatum
           order-details-title: Bestelldetails
@@ -1963,8 +1965,8 @@ fleet-ops:
         success-message: Bestellung {orderId} wurde für {orderAt} geplant.
         info-message: Bestellung {orderId} wurde nicht geplant.
         title: Zeitplaner
-        unscheduled-orders: Nicht geplante Bestellungen
-        scheduled-orders: Geplante Bestellungen
+        unscheduled-orders: Nicht zugewiesene Aufträge
+        scheduled-orders: Zugewiesene Aufträge
         unauthorized-to-schedule: Sie sind nicht berechtigt, Bestellungen zu planen.
     service-rates:
       index:

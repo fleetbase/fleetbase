@@ -720,12 +720,14 @@ class Utils
      *
      * @return int
      */
-    public static function numbersOnly($value)
-    {
-        $string = strval($value);
-        $string = preg_replace('/[^0-9]/', '', $string);
-
-        return intval($string);
+    public static function numbersOnly($value) {
+        $string = strval($value); 
+        $string = preg_replace('/[^0-9.]/', '', $string); // Remove everything except numbers and dots
+    
+        // Ensure only the first decimal point is kept (removes extra dots)
+        $string = preg_replace('/\.(?=.*\.)/', '', $string);
+    
+        return floatval($string); // Convert to float to keep decimal values
     }
 
     /**

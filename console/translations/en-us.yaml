@@ -1797,6 +1797,7 @@ fleet-ops:
           internal-id: Internal ID
           internal-id-help-text: Use this field to optionally set a custom identifier or internal identifier for the order.
           schedule: Start Date
+          estimated-end-date: End Date
           schedule-help-text: The date and time the order will be dispatched. If no driver is assigned at time of dispatch, the dispatch will fail. If the order is Ad-Hoc the order will be pinged to drivers in vicinity of pickup.
           customer: Customer
           customer-help-text: Optionally assign the customer of this order. If it's a new customer, use the 'New Customer' button above.
@@ -1904,7 +1905,8 @@ fleet-ops:
           vehicle-assigned: Vehicle Assigned
           change-driver: Change Driver
           tracking-number: Tracking Number
-          date-scheduled: Date Scheduled
+          date-scheduled: Scheduled Start Date
+          date-estimated: Estimated End Date
           date-dispatched: Date Dispatched
           date-started: Date Started
           order-details-title: Order Details
@@ -1960,8 +1962,8 @@ fleet-ops:
         success-message: Order {orderId} has been scheduled at {orderAt}.
         info-message: Order {orderId} has been unscheduled.
         title: Scheduler
-        unscheduled-orders: Unscheduled Orders
-        scheduled-orders: Scheduled Orders
+        unscheduled-orders: Unassigned Orders
+        scheduled-orders: Assigned Orders
         unauthorized-to-schedule: You are not authorized to schedule orders.
     service-rates:
       index:

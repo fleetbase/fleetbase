@@ -101,6 +101,7 @@ class Order extends Model
         'created_by_uuid',
         'updated_by_uuid',
         'scheduled_at',
+        'estimated_end_date',
         'dispatched_at',
         'dispatched',
         'adhoc',
@@ -115,7 +116,7 @@ class Order extends Model
         'meta',
         'notes',
         'type',
-        'status',
+        'status'
     ];
 
     /**
@@ -199,6 +200,7 @@ class Order extends Model
         'started'          => 'boolean',
         'pod_required'     => 'boolean',
         'scheduled_at'     => 'datetime',
+        'estimated_end_date'  => 'datetime',
         'dispatched_at'    => 'datetime',
         'started_at'       => 'datetime',
     ];

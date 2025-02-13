@@ -64,13 +64,24 @@
                 /> --}}
 
                 <InputGroup>
-                    <InputLabel @labelText={{t "fleet-ops.operations.orders.index.new.schedule"}} @helpText={{t "fleet-ops.operations.orders.index.new.schedule-help-text"}} />
+                    <InputLabel @labelText={{t "fleet-ops.operations.orders.index.new.schedule"}} />
                     <DateTimeInput
                         class="form-input"
                         @value={{this.order.scheduled_at}}
                         @minDate={{format-date (now) "yyyy-MM-dd"}}
                         @minTime={{format-date (now) "HH:mm"}}
                         @onUpdate={{this.scheduleOrder}}
+                        @disabled={{or this.order.dispatched (cannot "fleet-ops create order")}}
+                    />
+                </InputGroup>
+                <InputGroup>
+                    <InputLabel @labelText={{t "fleet-ops.operations.orders.index.new.estimated-end-date"}} />
+                    <DateTimeInput
+                        class="form-input"
+                        @value={{this.order.estimated_end_date}}
+                        @minDate={{format-date (now) "yyyy-MM-dd"}}
+                        @minTime={{format-date (now) "HH:mm"}}
+                        @onUpdate={{this.EndDateOrder}}
                         @disabled={{or this.order.dispatched (cannot "fleet-ops create order")}}
                     />
                 </InputGroup>
