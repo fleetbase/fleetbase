@@ -16,7 +16,7 @@ export default class SessionService extends SimpleAuthSessionService {
      *
      * @var {String}
      */
-    @tracked redirectTo = 'console';
+    @tracked redirectTo = 'console.fleet-ops';
 
     /**
      * If session is onboarding a user.
@@ -180,7 +180,7 @@ export default class SessionService extends SimpleAuthSessionService {
      *
      * @void
      */
-    setRedirect(whereTo = 'console') {
+    setRedirect(whereTo = 'console.fleet-ops') {
         this.redirectTo = whereTo;
     }
 
