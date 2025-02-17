@@ -451,7 +451,7 @@ trait HasApiControllerBehavior
     {
        
         try {
-            /*$model_name = str_replace('Controller', '', class_basename($this));
+            $model_name = str_replace('Controller', '', class_basename($this));
             if ($model_name === 'Order') {
                 $order = Order::find($id);
                 $driverAssignedUuid = $request->input('order.driver_assigned_uuid');
@@ -460,14 +460,14 @@ trait HasApiControllerBehavior
                     
                     if($order->driver_assigned_uuid === null || 
                     $order->driver_assigned_uuid !== $driverAssignedUuid) {
-                        $check_driver_availability = $this->checkDriverAvailability($order,$driverAssignedUuid);
+                        $check_driver_availability = $this->driverAvailability($order,$driverAssignedUuid);
                         // return $check_driver_availability;
                         if (!$check_driver_availability) {
                             return response()->error('The driver is unable to take the order. Please assign it to another driver.', 400);
                         }
                     }
                 } 
-            }*/
+            }
             $onBeforeCallback = $this->getControllerCallback('onBeforeUpdate');
             $onAfterCallback  = $this->getControllerCallback('onAfterUpdate');
 
@@ -712,6 +712,57 @@ trait HasApiControllerBehavior
             $scheduledDate = Carbon::parse($order->scheduled_at);
             $isAvailable = $scheduledDate->greaterThan($unavailableUntil);
             return $isAvailable;
+
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    private function driverAvailability($order, $driver_uuid)
+    {
+        // Check if driver exists
+        $driver = Driver::where('uuid', $driver_uuid)->first();
+        if (!$driver) {
+            return false;
+        }
+
+        try {
+            $orderStartDate = Carbon::parse($order->scheduled_at);
+            $orderEndDate = Carbon::parse($order->estimated_end_date);
+
+            // Check for overlapping leave requests
+            $leaveRequest = LeaveRequest::where('driver_uuid', $driver_uuid)
+                ->where(function ($query) use ($orderStartDate, $orderEndDate) {
+                    $query->where(function ($q) use ($orderStartDate, $orderEndDate) {
+                        // Leave period overlaps with order period
+                        $q->where('start_date', '<=', $orderEndDate->format('Y-m-d'))
+                          ->where('end_date', '>=', $orderStartDate->format('Y-m-d'));
+                    });
+                })
+                ->whereNull('deleted_at')
+                ->first();
+
+            if ($leaveRequest) {
+                return false;
+            }
+
+            // Check for overlapping active orders
+            $activeOrder = Order::where('driver_assigned_uuid', $driver_uuid)
+                ->whereNotIn('status', ['completed', 'cancelled'])
+                ->where(function ($query) use ($orderStartDate, $orderEndDate) {
+                    $query->where(function ($q) use ($orderStartDate, $orderEndDate) {
+                        // Order period overlaps with existing order period
+                        $q->where('scheduled_at', '<=', $orderEndDate)
+                          ->where('estimated_end_date', '>=', $orderStartDate);
+                    });
+                })
+                ->first();
+
+            if ($activeOrder) {
+                return false;
+            }
+
+            return true;
 
         } catch (\Exception $e) {
             return false;
