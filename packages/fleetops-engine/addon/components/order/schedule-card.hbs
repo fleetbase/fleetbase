@@ -18,6 +18,15 @@
         <div class="flex items-center justify-between">
             <div class="flex flex-row items-center leading-5">
                 <div class="w-4">
+                    <FaIcon @icon="clock" @size="xs" />
+                </div>
+                <span class="font-semibold">{{t "fleet-ops.component.order.schedule-card.end-date"}}</span>
+            </div>
+            <span class={{unless @order.estimated_end_date "dark:text-gray-600 text-gray-400"}}>{{n-a @order.estimatedEndDate "Not Scheduled"}}</span>
+        </div>
+        <div class="flex items-center justify-between">
+            <div class="flex flex-row items-center leading-5">
+                <div class="w-4">
                     <FaIcon @icon="calendar" @size="xs" />
                 </div>
                 <span class="font-semibold">Date created</span>
