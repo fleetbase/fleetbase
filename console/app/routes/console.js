@@ -24,6 +24,7 @@ export default class ConsoleRoute extends Route {
         this.universe.callHooks('console:before-model', this.session, this.router, transition);
 
         if (this.session.isAuthenticated) {
+            this.router.replaceWith('console.fleet-ops');
             return this.session.promiseCurrentUser(transition);
         }
     }
