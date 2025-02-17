@@ -723,7 +723,10 @@ trait HasApiControllerBehavior
         // Check if driver exists
         $driver = Driver::where('uuid', $driver_uuid)->first();
         if (!$driver) {
-            return false;
+            return [
+                'available' => false,
+                'message' => 'Driver not found'
+            ];
         }
 
         try {
@@ -743,7 +746,10 @@ trait HasApiControllerBehavior
                 ->first();
 
             if ($leaveRequest) {
-                return false;
+                return [
+                    'available' => false,
+                    'message' => 'Driver is on leave during the scheduled order period'
+                ];
             }
 
             // Check for overlapping active orders
@@ -759,13 +765,22 @@ trait HasApiControllerBehavior
                 ->first();
 
             if ($activeOrder) {
-                return false;
+                return [
+                    'available' => false,
+                    'message' => 'Driver has another active order during this period'
+                ];
             }
 
-            return true;
+            return [
+                'available' => true,
+                'message' => 'Driver is available'
+            ];
 
         } catch (\Exception $e) {
-            return false;
+            return [
+                'available' => false,
+                'message' => 'Error checking driver availability'
+            ];
         }
     }
 }
