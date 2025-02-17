@@ -483,7 +483,7 @@
                         </div>
                     </div>
                 {{/if}}
-                <div class="flex flex-col border border-gray-200 bg-gray-50 dark:bg-gray-900 dark:border-gray-700 rounded-md px-4 py-4 shadow-sm">
+                {{!-- <div class="flex flex-col border border-gray-200 bg-gray-50 dark:bg-gray-900 dark:border-gray-700 rounded-md px-4 py-4 shadow-sm">
                     <div class="flex flex-row items-center justify-center space-x-4">
                         <div class="rounded-md bg-white p-2">
                             <img src={{concat "data:image/png;base64," @model.tracking_number.qr_code}} class="w-14 h-14" alt={{@model.public_id}} />
@@ -495,7 +495,7 @@
                     <div class="mt-4 flex justify-center items-center">
                         <Button @size="xs" @type="default" @icon="barcode" @text="Get Order Label" @onClick={{fn this.viewOrderLabel @model}} @permission="fleet-ops view order" />
                     </div>
-                </div>
+                </div> --}}
             </ContentPanel>
         {{/if}}
 
