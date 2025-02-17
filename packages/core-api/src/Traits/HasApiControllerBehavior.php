@@ -460,10 +460,9 @@ trait HasApiControllerBehavior
                     
                     if($order->driver_assigned_uuid === null || 
                     $order->driver_assigned_uuid !== $driverAssignedUuid) {
-                        $check_driver_availability = $this->driverAvailability($order,$driverAssignedUuid);
-                        // return $check_driver_availability;
-                        if (!$check_driver_availability) {
-                            return response()->error('The driver is unable to take the order. Please assign it to another driver.', 400);
+                        $check_driver_availability = $this->driverAvailability($order, $driverAssignedUuid);
+                        if ($check_driver_availability !== true) {
+                            return response()->error($check_driver_availability['error'], 400);
                         }
                     }
                 } 
@@ -724,8 +723,8 @@ trait HasApiControllerBehavior
         $driver = Driver::where('uuid', $driver_uuid)->first();
         if (!$driver) {
             return [
-                'available' => false,
-                'message' => 'Driver not found'
+                'status' => false,
+                'error' => 'Driver not found'
             ];
         }
 
@@ -737,7 +736,6 @@ trait HasApiControllerBehavior
             $leaveRequest = LeaveRequest::where('driver_uuid', $driver_uuid)
                 ->where(function ($query) use ($orderStartDate, $orderEndDate) {
                     $query->where(function ($q) use ($orderStartDate, $orderEndDate) {
-                        // Leave period overlaps with order period
                         $q->where('start_date', '<=', $orderEndDate->format('Y-m-d'))
                           ->where('end_date', '>=', $orderStartDate->format('Y-m-d'));
                     });
@@ -747,8 +745,8 @@ trait HasApiControllerBehavior
 
             if ($leaveRequest) {
                 return [
-                    'available' => false,
-                    'message' => 'Driver is on leave during the scheduled order period'
+                    'status' => false,
+                    'error' => 'Driver is on leave during the scheduled order period. Please assign another driver.'
                 ];
             }
 
@@ -757,7 +755,6 @@ trait HasApiControllerBehavior
                 ->whereNotIn('status', ['completed', 'cancelled'])
                 ->where(function ($query) use ($orderStartDate, $orderEndDate) {
                     $query->where(function ($q) use ($orderStartDate, $orderEndDate) {
-                        // Order period overlaps with existing order period
                         $q->where('scheduled_at', '<=', $orderEndDate)
                           ->where('estimated_end_date', '>=', $orderStartDate);
                     });
@@ -766,20 +763,17 @@ trait HasApiControllerBehavior
 
             if ($activeOrder) {
                 return [
-                    'available' => false,
-                    'message' => 'Driver has another active order during this period'
+                    'status' => false,
+                    'error' => 'Driver has another active order during this period. Please assign another driver.'
                 ];
             }
 
-            return [
-                'available' => true,
-                'message' => 'Driver is available'
-            ];
+            return true;
 
         } catch (\Exception $e) {
             return [
-                'available' => false,
-                'message' => 'Error checking driver availability'
+                'status' => false,
+                'error' => 'Error checking driver availability'
             ];
         }
     }
