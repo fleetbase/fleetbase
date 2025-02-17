@@ -106,30 +106,52 @@ class LeaveRequestController extends Controller
         // Find the leave request by UUID
         $leaveRequest = LeaveRequest::where('id', $id)->firstOrFail();
         $input = $request->all();
-        $existingLeaveRequest = LeaveRequest::where('driver_uuid', $input['driver_uuid'])
-        ->where('start_date', $input['start_date'])
-        ->where('end_date', $input['end_date'])
-        ->where('reason', $input['reason'])
-        ->whereNull('deleted_at')
-        ->where('id', '!=', $leaveRequest->id) // Exclude the current record from the check
-        ->first();
-        if ($existingLeaveRequest) {
+
+        // Set end_date equal to start_date if not provided
+        if (empty($input['end_date'])) {
+            $input['end_date'] = $input['start_date'];
+        }
+
+        // Check if dates are in the past
+        $today = date('Y-m-d');
+        if ($input['start_date'] < $today || $input['end_date'] < $today) {
             return response()->json([
                 'success' => false,
-                'message' => __('messages.duplicate_leave_requests'),
+                'message' => 'Cannot submit leave request for past dates',
             ], 400);
         }
-        
-            // Update the leave request only if data is dirty
-            $leaveRequest->update($input);
+
+        // Only check for overlaps if dates are being changed
+        if ($input['start_date'] !== $leaveRequest->start_date || 
+            $input['end_date'] !== $leaveRequest->end_date) {
+            
+            // Check for overlapping leave requests
+            $existingLeaveRequest = LeaveRequest::where('user_uuid', $input['user_uuid'])
+                ->where(function ($query) use ($input) {
+                    // Check if any existing leave request overlaps with the new request
+                    $query->where('start_date', '<=', $input['end_date'])
+                          ->where('end_date', '>=', $input['start_date']);
+                })
+                ->whereNull('deleted_at')
+                ->where('id', '!=', $leaveRequest->id) // Exclude the current record
+                ->first();
+
+            if ($existingLeaveRequest) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'You already have a leave request for these dates',
+                ], 400);
+            }
+        }
+
+        // Update the leave request only if data is dirty
+        $leaveRequest->update($input);
     
-            return response()->json([
-                'success' => true,
-                'message' => __('messages.request_update_success'), // Add a proper translation key
-                'data' => $leaveRequest,
-            ]);
-        
-       
+        return response()->json([
+            'success' => true,
+            'message' => __('messages.request_update_success'), // Add a proper translation key
+            'data' => $leaveRequest,
+        ]);
     }
 
     /**
