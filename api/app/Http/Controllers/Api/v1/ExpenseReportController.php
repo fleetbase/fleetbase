@@ -87,27 +87,33 @@ class ExpenseReportController extends Controller
                 $company_uuid = $company->uuid;
             }
             $query = FuelReport::with(['files'])
-                ->where('company_uuid', $company_uuid)
-                ->whereNull('deleted_at')
-                ->orderBy('id', 'desc');
+                ->leftJoin('drivers', 'fuel_reports.driver_uuid', '=', 'drivers.uuid')
+                ->select('fuel_reports.*')
+                ->where('fuel_reports.company_uuid', $company_uuid)
+                ->whereNull('fuel_reports.deleted_at')
+                ->orderBy('fuel_reports.id', 'desc');
 
             // Add filters if provided
             if ($request->has('status')) {
-                $query->where('status', $request->status);
+                $query->where('fuel_reports.status', $request->status);
             }
 
             if ($request->has('date_from')) {
-                $query->whereDate('created_at', '>=', $request->date_from);
+                $query->whereDate('fuel_reports.created_at', '>=', $request->date_from);
             }
 
             if ($request->has('date_to')) {
-                $query->whereDate('created_at', '<=', $request->date_to);
+                $query->whereDate('fuel_reports.created_at', '<=', $request->date_to);
             }
             if ($request->has('report_type')) {
-                $query->where('report_type', '=', $request->report_type);
+                $query->where('fuel_reports.report_type', '=', $request->report_type);
             }
             if ($request->has('user_uuid')) {
-               $query->where('reported_by_uuid', '=', $request->user_uuid);
+            //    $query->where('reported_by_uuid', '=', $request->user_uuid);
+                $query->where(function($q) use ($request) {
+                    $q->where('fuel_reports.reported_by_uuid', $request->user_uuid)
+                    ->orWhere('drivers.user_uuid', $request->user_uuid);  // Changed from user_uuid to created_by_uuid
+                });
             }
             $FuelReports = $query->paginate($request->input('per_page', 10));
 
