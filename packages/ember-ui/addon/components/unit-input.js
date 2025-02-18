@@ -107,6 +107,10 @@ export default class UnitInputComponent extends Component {
             value: 'dL',
         },
         {
+            name: 'Kilogram',
+            value: 'kg',
+        },
+        {
             name: 'Decimeter',
             value: 'dm',
         },
@@ -125,10 +129,6 @@ export default class UnitInputComponent extends Component {
         {
             name: 'Quart (US)',
             value: 'qt',
-        },
-        {
-            name: 'Kilogram',
-            value: 'kg',
         },
     ];
 
