@@ -431,6 +431,17 @@ export default class OperationsOrdersIndexController extends BaseController {
             filterComponent: 'filter/date',
         },
         {
+            label: this.intl.t('fleet-ops.operations.orders.index.estimated-end-date'),
+            valuePath: 'estimatedEndDate',
+            sortParam: 'estimated-end-date',
+            filterParam: 'estimated-end-date',
+            width: '150px',
+            resizable: true,
+            sortable: true,
+            filterable: true,
+            filterComponent: 'filter/date',
+        },
+        {
             label: this.intl.t('fleet-ops.operations.orders.index.items'),
             cellComponent: 'table/cell/base',
             valuePath: 'item_count',
@@ -484,7 +495,7 @@ export default class OperationsOrdersIndexController extends BaseController {
         },
         {
             label: this.intl.t('fleet-ops.common.created-at'),
-            valuePath: 'createdAtShort',
+            valuePath: 'createdAt',
             sortParam: 'created_at',
             filterParam: 'created_at',
             width: '140px',

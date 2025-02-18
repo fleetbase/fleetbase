@@ -107,6 +107,10 @@ export default class UnitInputComponent extends Component {
             value: 'dL',
         },
         {
+            name: 'Kilogram',
+            value: 'kg',
+        },
+        {
             name: 'Decimeter',
             value: 'dm',
         },
@@ -218,7 +222,7 @@ export default class UnitInputComponent extends Component {
      * @memberof UnitInputComponent
      */
     @computed('selectedUnitObject.name', 'unit') get unitName() {
-        return this.selectedUnitObject.name ?? this.unit;
+        return this.selectedUnitObject?.name || this.unit || '';
     }
 
     /**

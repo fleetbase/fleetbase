@@ -1126,6 +1126,7 @@ fleet-ops:
         assign-text: Sie sind dabei, einen neuen Fahrer ({driverName}) der Bestellung {orderId} zuzuweisen. Klicken Sie auf "Weiter", um die Zuweisung zu bestätigen.
         assign-button: Weiter und Fahrer zuweisen
         date: Geplantes Datum
+        end-date: Enddatum
         driver-assigned: Fahrer
         vehicle-assigned: Fahrzeug
         no-driver: Kein Fahrer
@@ -1787,6 +1788,7 @@ fleet-ops:
         cancel-orders: Bestellungen stornieren
         delete-orders: Bestellungen löschen
         dispatch-orders: Bestellungen versenden
+        estimated-end-date: Enddatum
         new:
           create-new-customer: Neuen Kunden erstellen
           create-new-facilitator: Neuen Vermittler erstellen
@@ -1964,7 +1966,7 @@ fleet-ops:
       index:
         success-message: Bestellung {orderId} wurde für {orderAt} geplant.
         info-message: Bestellung {orderId} wurde nicht geplant.
-        title: Zeitplaner
+        title: Kalender
         unscheduled-orders: Nicht zugewiesene Aufträge
         scheduled-orders: Zugewiesene Aufträge
         unauthorized-to-schedule: Sie sind nicht berechtigt, Bestellungen zu planen.
