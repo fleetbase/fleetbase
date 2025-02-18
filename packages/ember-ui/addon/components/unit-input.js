@@ -126,6 +126,10 @@ export default class UnitInputComponent extends Component {
             name: 'Quart (US)',
             value: 'qt',
         },
+        {
+            name: 'Kilogram',
+            value: 'kg',
+        },
     ];
 
     /**
