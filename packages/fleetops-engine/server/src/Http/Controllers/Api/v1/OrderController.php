@@ -564,8 +564,8 @@ class OrderController extends Controller
                 // });
 
                 $query->where(function ($q) use ($on) {
-                    // $q->whereDate('created_at', $on);
-                    $q->WhereDate('scheduled_at', $on);
+                    $q->whereDate('created_at', $on);
+                    $q->orWhereDate('scheduled_at', $on);
                 });
             }
 
