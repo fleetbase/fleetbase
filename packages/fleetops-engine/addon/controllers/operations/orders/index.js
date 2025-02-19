@@ -564,12 +564,12 @@ export default class OperationsOrdersIndexController extends BaseController {
                     permission: 'fleet-ops dispatch order',
                     isVisible: (order) => order.canBeDispatched,
                 },
-                {
-                    label: this.intl.t('fleet-ops.operations.orders.index.cancel-order'),
-                    icon: 'ban',
-                    fn: this.cancelOrder,
-                    permission: 'fleet-ops cancel order',
-                },
+                // {
+                //     label: this.intl.t('fleet-ops.operations.orders.index.cancel-order'),
+                //     icon: 'ban',
+                //     fn: this.cancelOrder,
+                //     permission: 'fleet-ops cancel order',
+                // },
                 {
                     separator: true,
                 },

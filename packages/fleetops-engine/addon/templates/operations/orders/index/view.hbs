@@ -83,12 +83,12 @@
                         {{/let}}
                         {{#let (cannot "fleet-ops view order") as |unauthorized|}}
                             <div>
-                                <a href="javascript:;" class="next-dd-item" {{on "click" (dropdown-fn dd this.viewOrderLabel @model)}} disabled={{unauthorized}}>
+                                {{!-- <a href="javascript:;" class="next-dd-item" {{on "click" (dropdown-fn dd this.viewOrderLabel @model)}} disabled={{unauthorized}}>
                                     <div class="w-6">
                                         <FaIcon @icon="file-invoice" />
                                     </div>
                                     <span>{{t "fleet-ops.operations.orders.index.view.get-order-label"}}</span>
-                                </a>
+                                </a> --}}
                                 {{#if unauthorized}}
                                     <Attach::Tooltip @class="clean" @animation="scale" @placement="right">
                                         <InputInfo @text={{t "common.unauthorized"}} />
@@ -98,12 +98,12 @@
                         {{/let}}
                     {{/unless}}
                     <div class="next-dd-menu-seperator"></div>
-                    <a href="javascript:;" class="next-dd-item" {{on "click" (dropdown-fn dd this.listenToSocket @model)}}>
+                    {{!-- <a href="javascript:;" class="next-dd-item" {{on "click" (dropdown-fn dd this.listenToSocket @model)}}>
                         <div class="w-6">
                             <FaIcon @icon="headphones" />
                         </div>
                         <span>{{t "fleet-ops.operations.orders.index.view.listen-socket-channel"}}</span>
-                    </a>
+                    </a> --}}
                     {{#let (cannot "fleet-ops view order") as |unauthorized|}}
                         <div>
                             <a href="javascript:;" class="next-dd-item" {{on "click" (dropdown-fn dd this.viewOrderMeta @model)}} disabled={{unauthorized}}>
@@ -123,12 +123,12 @@
                         {{#let (cannot "fleet-ops cancel order") as |unauthorized|}}
                             <div class="next-dd-menu-seperator"></div>
                             <div>
-                                <a href="javascript:;" class="next-dd-item text-danger" {{on "click" (dropdown-fn dd this.cancelOrder @model)}} disabled={{unauthorized}}>
+                                {{!-- <a href="javascript:;" class="next-dd-item text-danger" {{on "click" (dropdown-fn dd this.cancelOrder @model)}} disabled={{unauthorized}}>
                                     <div class="w-6">
                                         <FaIcon @icon="ban" class="text-danger" />
                                     </div>
                                     <span>{{t "fleet-ops.operations.orders.index.view.cancel-order"}}</span>
-                                </a>
+                                </a> --}}
                                 {{#if unauthorized}}
                                     <Attach::Tooltip @class="clean" @animation="scale" @placement="right">
                                         <InputInfo @text={{t "common.unauthorized"}} />
