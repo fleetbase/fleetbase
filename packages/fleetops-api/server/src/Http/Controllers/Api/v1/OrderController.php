@@ -558,7 +558,8 @@ class OrderController extends Controller
                 $on = Carbon::parse($request->input('on'));
 
                 $query->where(function ($q) use ($on) {
-                    $q->whereDate('scheduled_at', $on);
+                    $q->whereDate('created_at', $on);
+                    $q->orWhereDate('scheduled_at', $on);
                 });
             }
 

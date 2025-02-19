@@ -23,7 +23,7 @@
             </div>
             <div class="field-info-container space-y-2">
                 <div class="field-name">{{t "fleet-ops.common.date-created"}}</div>
-                <div class="field-value">{{@options.fleet.createdAtShort}}</div>
+                <div class="field-value">{{@options.fleet.createdAt}}</div>
             </div>
         </div>
         <FleetDriverListing @fleet={{@options.fleet}} @onAddDriver={{@options.addDriver}} @onRemoveDriver={{@options.removeDriver}} />
