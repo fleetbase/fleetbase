@@ -44,9 +44,9 @@
                             </div>
                             <div class="next-dd-menu-seperator"></div>
                             <div class="px-1">
-                                <a href="javascript:;" class="next-dd-item" {{on "click" (dropdown-fn dd this.onAction "onPressCancelOrders" this.selectedOrders)}}>{{t
+                                {{!-- <a href="javascript:;" class="next-dd-item" {{on "click" (dropdown-fn dd this.onAction "onPressCancelOrders" this.selectedOrders)}}>{{t
                                         "fleet-ops.component.order-list-overlay.cancel"
-                                    }}</a>
+                                    }}</a> --}}
                                 <a href="javascript:;" class="next-dd-item text-danger" {{on "click" (dropdown-fn dd this.onAction "onPressDeleteOrders" this.selectedOrders)}}>{{t
                                         "fleet-ops.component.order-list-overlay.delete"
                                     }}</a>
