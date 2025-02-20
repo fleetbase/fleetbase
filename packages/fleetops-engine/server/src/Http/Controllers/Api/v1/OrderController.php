@@ -553,12 +553,11 @@ class OrderController extends Controller
 
             if ($request->filled('on')) {
                 $on = Carbon::parse($request->input('on'));
-                $query->whereDate('created_at', $on);
-            }
-            
-            if ($request->filled('by')) {
-                $by = Carbon::parse($request->input('by'));
-                $query->whereDate('scheduled_at', $by);
+ 
+                $query->where(function ($q) use ($on) {
+                    $q->whereDate('created_at', $on);
+                    $q->orWhereDate('scheduled_at', $on);
+                });
             }
 
             if ($request->boolean('pod_required')) {

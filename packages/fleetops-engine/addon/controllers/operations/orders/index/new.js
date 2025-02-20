@@ -219,19 +219,15 @@ export default class OperationsOrdersIndexNewController extends BaseController {
     }
 
     async loadWaypoints() {
-       this.set('waypoints', [{ place: 'Default Place' }]);
-    }
-
-    // async loadWaypoints() {
-    //     let storedWaypoints = await this.store.findAll('waypoint');
+        let storedWaypoints = await this.store.findAll('waypoint');
     
-    //     // Ensure only one waypoint is set initially
-    //     if (storedWaypoints.length > 0) {
-    //         this.set('waypoints', [storedWaypoints.firstObject]); // Keep only the first waypoint
-    //     } else {
-    //         this.set('waypoints', [{ place: 'Default Place' }]); // Default single waypoint
-    //     }
-    // }
+        // Ensure only one waypoint is set initially
+        if (storedWaypoints.length > 0) {
+            this.set('waypoints', [storedWaypoints.firstObject]); // Keep only the first waypoint
+        } else {
+            this.set('waypoints', [{ place: 'Default Place' }]); // Default single waypoint
+        }
+    }
 
     @computed('isCustomFieldsValid', 'entities.length', 'isMultipleDropoffOrder', 'isFetchingQuotes', 'isSubscriptionValid', 'payload.{dropoff,pickup}', 'waypoints.length')
     get isValid() {
