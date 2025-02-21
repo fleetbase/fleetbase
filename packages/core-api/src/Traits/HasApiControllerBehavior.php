@@ -675,6 +675,10 @@ trait HasApiControllerBehavior
         if (!$driver) {
             return false;
         }
+       // Check if the driver has a vehicle assigned
+        if (is_null($driver->vehicle_uuid)) { 
+            return false;
+        }
         // Calculate order duration in days
         try {
             $orderEta = $order->tracker()->eta();
@@ -725,6 +729,13 @@ trait HasApiControllerBehavior
             return [
                 'status' => false,
                 'error' => 'Driver not found'
+            ];
+        }
+
+        if (is_null($driver->vehicle_uuid)) { 
+            return [
+                'status' => false,
+                'error' => 'No vehicle assigned to the driver.'
             ];
         }
 
