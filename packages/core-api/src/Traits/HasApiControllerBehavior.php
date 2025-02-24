@@ -785,8 +785,7 @@ trait HasApiControllerBehavior
         } catch (\Exception $e) {
             return [
                 'status' => false,
-                'error' => 'Error checking driver availability',
-                'warnings' => []
+                'error' => 'Error checking driver availability'
             ];
         }
     }

@@ -317,6 +317,11 @@ export default class OperationsOrdersIndexNewController extends BaseController {
     }
 
     @action createOrder() {
+        if (new Date(this.order.estimated_end_date) < new Date(this.order.scheduled_at)) {
+            this.errorMessage = "End Date cannot be earlier than the start date.";
+            this.notifications.error(this.errorMessage);
+            return;
+        }
         if (!this.isValid) {
             return;
         }

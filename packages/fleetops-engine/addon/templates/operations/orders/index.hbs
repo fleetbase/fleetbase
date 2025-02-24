@@ -78,12 +78,12 @@
         {{#if (safe-has this.table "selectedRows")}}
             <DropdownButton @icon="layer-group" @type="magic" @text={{t "fleet-ops.common.bulk-action"}} @size="sm" @buttonWrapperClass="mr-2" as |dd|>
                 <div class="next-dd-menu mt-2 mx-0">
-                    <div class="px-1">
+                    {{!-- <div class="px-1">
                         <a href="javascript:;" class="next-dd-item" {{on "click" (dropdown-fn dd this.bulkCancelOrders)}} disabled={{cannot "fleet-ops cancel order"}}>
                             <div class="w-6"><FaIcon @icon="ban" @size="sm" /></div>
                             <div>{{t "fleet-ops.operations.orders.index.cancel-orders"}}</div>
                         </a>
-                    </div>
+                    </div> --}}
                     <div class="px-1">
                         <a href="javascript:;" class="text-red-500 next-dd-item" {{on "click" (dropdown-fn dd this.bulkDeleteOrders)}} disabled={{cannot "fleet-ops delete order"}}>
                             <div class="w-6"><FaIcon @icon="trash" @size="sm" /></div>
