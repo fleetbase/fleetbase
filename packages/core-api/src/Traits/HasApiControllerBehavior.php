@@ -742,6 +742,7 @@ trait HasApiControllerBehavior
         try {
             $orderStartDate = Carbon::parse($order->scheduled_at);
             $orderEndDate = Carbon::parse($order->estimated_end_date);
+            $warnings = [];
 
             // Check for overlapping leave requests
             $leaveRequest = LeaveRequest::where('driver_uuid', $driver_uuid)
@@ -755,11 +756,15 @@ trait HasApiControllerBehavior
                 ->first();
 
             if ($leaveRequest) {
-                return [
-                    'status' => false,
-                    'error' => 'Driver is on leave during the scheduled order period. Please assign another driver.'
-                ];
+                $warnings[] = 'Driver is on leave during the scheduled order period.';
             }
+        
+            // if ($leaveRequest) {
+            //     return [
+            //         'status' => false,
+            //         'error' => 'Driver is on leave during the scheduled order period. Please assign another driver.'
+            //     ];
+            // }
 
             // Check for overlapping active orders
             $activeOrder = Order::where('driver_assigned_uuid', $driver_uuid)
@@ -773,13 +778,22 @@ trait HasApiControllerBehavior
                 ->first();
 
             if ($activeOrder) {
-                return [
-                    'status' => false,
-                    'error' => 'Driver has another active order during this period. Please assign another driver.'
-                ];
+                $warnings[] = 'Driver has another active order during this period.';
             }
 
-            return true;
+            // if ($activeOrder) {
+            //     return [
+            //         'status' => false,
+            //         'error' => 'Driver has another active order during this period. Please assign another driver.'
+            //     ];
+            // }
+
+            // return true;
+
+            return [
+                'status' => true,
+                'warnings' => $warnings
+            ];
 
         } catch (\Exception $e) {
             return [
