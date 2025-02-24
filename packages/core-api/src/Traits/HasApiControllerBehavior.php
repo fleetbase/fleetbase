@@ -756,7 +756,7 @@ trait HasApiControllerBehavior
                 ->first();
 
             if ($leaveRequest) {
-                $warnings[] = 'Driver is on leave during the scheduled order period.';
+                $warnings[] = 'Warning:The assigned driver is on leave during the scheduled order period. Please reassign the order to an available driver to avoid any scheduling issues';
             }
         
             // if ($leaveRequest) {
@@ -778,7 +778,7 @@ trait HasApiControllerBehavior
                 ->first();
 
             if ($activeOrder) {
-                $warnings[] = 'Driver has another active order during this period.';
+                $warnings[] = 'Warning:The assigned driver has another active order during the scheduled order period. Please reassign the order to an available driver to avoid any scheduling issues';
             }
 
             // if ($activeOrder) {
@@ -792,13 +792,15 @@ trait HasApiControllerBehavior
 
             return [
                 'status' => true,
+                'error' => null,
                 'warnings' => $warnings
             ];
 
         } catch (\Exception $e) {
             return [
                 'status' => false,
-                'error' => 'Error checking driver availability'
+                'error' => 'Error checking driver availability',
+                'warnings' => []
             ];
         }
     }
