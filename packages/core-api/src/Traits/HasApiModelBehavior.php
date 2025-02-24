@@ -549,6 +549,10 @@ trait HasApiModelBehavior
                 $builder->orderByDistance();
                 continue;
             }
+            if (strtolower($sort) == 'scheduled_at') {
+                $builder->orderBy('scheduled_at', 'asc');
+                continue;
+            }
 
             if (is_array($sort) || Str::contains($sort, ',')) {
                 $columns = !is_array($sort) ? explode(',', $sort) : $sort;
