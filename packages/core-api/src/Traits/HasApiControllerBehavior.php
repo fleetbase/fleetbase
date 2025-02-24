@@ -742,7 +742,6 @@ trait HasApiControllerBehavior
         try {
             $orderStartDate = Carbon::parse($order->scheduled_at);
             $orderEndDate = Carbon::parse($order->estimated_end_date);
-            $warnings = [];
 
             // Check for overlapping leave requests
             $leaveRequest = LeaveRequest::where('driver_uuid', $driver_uuid)
@@ -754,17 +753,13 @@ trait HasApiControllerBehavior
                 })
                 ->whereNull('deleted_at')
                 ->first();
-
-            if ($leaveRequest) {
-                $warnings[] = 'Warning:The assigned driver is on leave during the scheduled order period. Please reassign the order to an available driver to avoid any scheduling issues';
-            }
         
-            // if ($leaveRequest) {
-            //     return [
-            //         'status' => false,
-            //         'error' => 'Driver is on leave during the scheduled order period. Please assign another driver.'
-            //     ];
-            // }
+            if ($leaveRequest) {
+                return [
+                    'status' => false,
+                    'error' => 'Driver is on leave during the scheduled order period. Please assign another driver.'
+                ];
+            }
 
             // Check for overlapping active orders
             $activeOrder = Order::where('driver_assigned_uuid', $driver_uuid)
@@ -778,23 +773,14 @@ trait HasApiControllerBehavior
                 ->first();
 
             if ($activeOrder) {
-                $warnings[] = 'Warning:The assigned driver has another active order during the scheduled order period. Please reassign the order to an available driver to avoid any scheduling issues';
+                return [
+                    'status' => false,
+                    'error' => 'Driver has another active order during this period. Please assign another driver.'
+                ];
             }
 
-            // if ($activeOrder) {
-            //     return [
-            //         'status' => false,
-            //         'error' => 'Driver has another active order during this period. Please assign another driver.'
-            //     ];
-            // }
+            return true;
 
-            // return true;
-
-            return [
-                'status' => true,
-                'error' => null,
-                'warnings' => $warnings
-            ];
 
         } catch (\Exception $e) {
             return [
