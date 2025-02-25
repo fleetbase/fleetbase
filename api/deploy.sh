@@ -36,4 +36,4 @@ php artisan route:cache
 php artisan registry:init
 
 # Restart octane
-php artisan octane:reload
+# php artisan octane:reload
