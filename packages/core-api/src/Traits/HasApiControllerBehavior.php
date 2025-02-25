@@ -312,6 +312,7 @@ trait HasApiControllerBehavior
         $single        = $request->boolean('single');
         $queryCallback = $this->getControllerCallback('onQueryRecord');
         // $data          = $this->model->queryFromRequest($request, $queryCallback);
+
         // Create a new callback that combines date filtering with existing callback
         $combinedCallback = function ($query) use ($request, $queryCallback) {
             // Apply the original callback if it exists
@@ -327,12 +328,7 @@ trait HasApiControllerBehavior
                     $hasScheduledAt = \Schema::hasColumn($this->model->getTable(), 'scheduled_at');
                     
                     if ($hasScheduledAt) {
-                        $startOfDay = Carbon::parse($on)->startOfDay()->setTimezone('UTC');
-                        $endOfDay = Carbon::parse($on)->endOfDay()->setTimezone('UTC');
-                        $q->whereBetween('scheduled_at', [
-                            $startOfDay,
-                            $endOfDay
-                        ]);
+                        $q->whereDate('scheduled_at', $on);
                     } else {
                         $q->whereDate('created_at', $on);
                     }
