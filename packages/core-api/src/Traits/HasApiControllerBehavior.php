@@ -500,7 +500,7 @@ trait HasApiControllerBehavior
                     if($order->driver_assigned_uuid === null || 
                     $order->driver_assigned_uuid !== $driverAssignedUuid) {
                         $check_driver_availability = $this->driverAvailability($order, $driverAssignedUuid);
-                        if ($check_driver_availability !== true) {
+                        if ($check_driver_availability && $check_driver_availability['status'] !== true) {
                             return response()->error($check_driver_availability['error'], 400);
                         }
                     }
@@ -818,7 +818,10 @@ trait HasApiControllerBehavior
                 ];
             }
 
-            return true;
+            return [
+                'status' => true,
+                'error' => 'Driver is available'
+            ];
 
 
         } catch (\Exception $e) {
