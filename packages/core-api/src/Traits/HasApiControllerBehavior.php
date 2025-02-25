@@ -19,6 +19,7 @@ use Fleetbase\FleetOps\Models\Order;
 use Fleetbase\FleetOps\Models\Driver;
 use App\Models\LeaveRequest;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Log;
 trait HasApiControllerBehavior
 {
@@ -310,8 +311,33 @@ trait HasApiControllerBehavior
     {
         $single        = $request->boolean('single');
         $queryCallback = $this->getControllerCallback('onQueryRecord');
-        $data          = $this->model->queryFromRequest($request, $queryCallback);
+        // $data          = $this->model->queryFromRequest($request, $queryCallback);
+        $queryCallback = $this->getControllerCallback('onQueryRecord');
 
+        // Create a new callback that combines date filtering with existing callback
+        $combinedCallback = function ($query) use ($request, $queryCallback) {
+            // Apply the original callback if it exists
+            if ($queryCallback) {
+                $queryCallback($query);
+            }
+            // Add date filtering if 'on' parameter exists
+            if ($request->filled('on')) {
+                $on = Carbon::parse($request->input('on'));
+                
+                $query->where(function ($q) use ($on) {
+                    // Check if scheduled_at column exists in the table
+                    $hasScheduledAt = \Schema::hasColumn($this->model->getTable(), 'scheduled_at');
+                    
+                    if ($hasScheduledAt) {
+                        $q->whereDate('scheduled_at', $on);
+                    } else {
+                        $q->whereDate('created_at', $on);
+                    }
+                });
+            }
+        };
+
+        $data = $this->model->queryFromRequest($request, $combinedCallback);
         if ($single) {
             $data = Arr::first($data);
 
