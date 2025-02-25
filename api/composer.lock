@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "c357d83b3236a765462864221b6d4ce2",
+    "content-hash": "2eb68f7e32609c8993f8149f455f359f",
     "packages": [
         {
             "name": "aws/aws-crt-php",
@@ -2480,16 +2480,16 @@
         },
         {
             "name": "fleetbase/core-api",
-            "version": "1.5.30",
+            "version": "dev-dev/fix-perf-deploy",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fleetbase/core-api.git",
-                "reference": "3e6f9ef3341ecf52ae8d6441e359ad77d8fa42b8"
+                "reference": "bbeb63e7edb5805be542b674d30bb7838b35a372"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fleetbase/core-api/zipball/3e6f9ef3341ecf52ae8d6441e359ad77d8fa42b8",
-                "reference": "3e6f9ef3341ecf52ae8d6441e359ad77d8fa42b8",
+                "url": "https://api.github.com/repos/fleetbase/core-api/zipball/bbeb63e7edb5805be542b674d30bb7838b35a372",
+                "reference": "bbeb63e7edb5805be542b674d30bb7838b35a372",
                 "shasum": ""
             },
             "require": {
@@ -2553,7 +2553,30 @@
                     "Fleetbase\\Seeders\\": "seeders/"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
+            "autoload-dev": {
+                "psr-4": {
+                    "Fleetbase\\Tests\\": "tests/"
+                }
+            },
+            "scripts": {
+                "lint": [
+                    "php-cs-fixer fix -v"
+                ],
+                "test:lint": [
+                    "php-cs-fixer fix -v --dry-run"
+                ],
+                "test:types": [
+                    "phpstan analyse --ansi --memory-limit=0"
+                ],
+                "test:unit": [
+                    "pest --colors=always"
+                ],
+                "test": [
+                    "@test:lint",
+                    "@test:types",
+                    "@test:unit"
+                ]
+            },
             "license": [
                 "AGPL-3.0-or-later"
             ],
@@ -2573,10 +2596,10 @@
                 "logistics platform"
             ],
             "support": {
-                "issues": "https://github.com/fleetbase/core-api/issues",
-                "source": "https://github.com/fleetbase/core-api/tree/v1.5.30"
+                "source": "https://github.com/fleetbase/core-api/tree/dev/fix-perf-deploy",
+                "issues": "https://github.com/fleetbase/core-api/issues"
             },
-            "time": "2025-02-25T08:26:22+00:00"
+            "time": "2025-02-25T09:05:36+00:00"
         },
         {
             "name": "fleetbase/fleetops-api",
@@ -2672,7 +2695,7 @@
             "version": "0.1.13",
             "dist": {
                 "type": "tar",
-                "url": "https://s3.ap-southeast-1.amazonaws.com/fleetbase-registry-qa/flb/%40fleetbase/flespi-engine/flespi-engine-0.1.13.tgz?AWSAccessKeyId=ASIA26E6KG6WEC46WDQX&Expires=1740474294&Signature=1F3VKs4WlkdktJZvsOqprtzJDl8%3D&x-amz-security-token=IQoJb3JpZ2luX2VjEAkaDmFwLXNvdXRoZWFzdC0xIkgwRgIhANlNTd8zANMP2ww3nq6zbCLjhydLZiYY1OGKWVOSw5uhAiEAtGI0zE2jftXkxcx4AdLqxrKlfP1J6rlGXYNOe4bb97kqhgQIQhAAGgw3NTE5NTEyOTY0MjgiDJEXPjV9zj4julScpyrjA%2BK%2FL%2FIbG7YE%2B%2BiwHCSYrFQUe3vMfPHvVxh0%2BuHgX7R7RzcRoQtLPgzWPW4A7tzf7CAewL2RoDLTW0s7KXFeH71ZJ7BJtLl%2FimDtbA0Hu1dqIKLsEW3t9tIdvsw%2B66%2BYHU1%2BWrj%2F7qR64XQyfRS%2FPVWobSv%2F99Jd3guAGg51ibG3PBIWHZate1d6prfft8zeCQw84wMyY9W7t7RyjM5Hj2XwBLjV4OqUHtbzqsNYkfJHzQubTGMapG%2BAZXI7S8fJ2fO86IzFVd5zDsbXBF4C%2Bn%2FrzzyQKRuqYe8VxUcjZhzWo1LvyrL7gcVu0bxypi9w3MJuW%2FQd8OrLbiVGgC8QdV84w67IU6mKyjclKPOKnRAOyRgXZU8wfMlwqt8oziQxkRsr%2FOjFC7CStt%2FND43M3gLF9bC6y6C7N1UTqPFRtKjd70QBzR%2Bu881T1ClOwHmrUxw2l86E%2BRgMTQkrdcr09%2BF6U6slVWZJTgJFcUUMEj%2BXOIl6IJvCEk6KMlF52HjqHu8B%2Be%2BmJWKoYCqw52pi6PQDQWmhla65Ef4jI71bmFcUYrotdaXFzv44Zh2hnKef3PpJap7xLcui8DhnvNjC6ENOaJy2bRCFLdKVRPvUJonMo2yPgUgetmzUVQqErJbDudGn1jDGhPa9BjqkAcr2p0Ft4SHDhJ84SWGhOlWBEDN5t3MRyjvYofOE%2Fdlyef5pyeu6tnCyfiuqY9X3UurFXe%2Fy1buC3H2yJh78QrGN2FbXkemO%2B0E1kPZQLgd0EzqOkStc9qDEb7EMi9%2BA2vFkwJOwUwVcjBHOuSKOPU2IbEFcCD%2FzwWJHEOszIKrpPiZwQ4e8IeY94jCu0Pcbcmjt5r1CYAzjNA%2Buqu%2FvrFJHD%2B53"
+                "url": "https://s3.ap-southeast-1.amazonaws.com/fleetbase-registry-qa/flb/%40fleetbase/flespi-engine/flespi-engine-0.1.13.tgz?AWSAccessKeyId=ASIA26E6KG6WEC46WDQX&Expires=1740476016&Signature=FpMY2igfFoa7cE5XImAmUcvcmWo%3D&x-amz-security-token=IQoJb3JpZ2luX2VjEAkaDmFwLXNvdXRoZWFzdC0xIkgwRgIhANlNTd8zANMP2ww3nq6zbCLjhydLZiYY1OGKWVOSw5uhAiEAtGI0zE2jftXkxcx4AdLqxrKlfP1J6rlGXYNOe4bb97kqhgQIQhAAGgw3NTE5NTEyOTY0MjgiDJEXPjV9zj4julScpyrjA%2BK%2FL%2FIbG7YE%2B%2BiwHCSYrFQUe3vMfPHvVxh0%2BuHgX7R7RzcRoQtLPgzWPW4A7tzf7CAewL2RoDLTW0s7KXFeH71ZJ7BJtLl%2FimDtbA0Hu1dqIKLsEW3t9tIdvsw%2B66%2BYHU1%2BWrj%2F7qR64XQyfRS%2FPVWobSv%2F99Jd3guAGg51ibG3PBIWHZate1d6prfft8zeCQw84wMyY9W7t7RyjM5Hj2XwBLjV4OqUHtbzqsNYkfJHzQubTGMapG%2BAZXI7S8fJ2fO86IzFVd5zDsbXBF4C%2Bn%2FrzzyQKRuqYe8VxUcjZhzWo1LvyrL7gcVu0bxypi9w3MJuW%2FQd8OrLbiVGgC8QdV84w67IU6mKyjclKPOKnRAOyRgXZU8wfMlwqt8oziQxkRsr%2FOjFC7CStt%2FND43M3gLF9bC6y6C7N1UTqPFRtKjd70QBzR%2Bu881T1ClOwHmrUxw2l86E%2BRgMTQkrdcr09%2BF6U6slVWZJTgJFcUUMEj%2BXOIl6IJvCEk6KMlF52HjqHu8B%2Be%2BmJWKoYCqw52pi6PQDQWmhla65Ef4jI71bmFcUYrotdaXFzv44Zh2hnKef3PpJap7xLcui8DhnvNjC6ENOaJy2bRCFLdKVRPvUJonMo2yPgUgetmzUVQqErJbDudGn1jDGhPa9BjqkAcr2p0Ft4SHDhJ84SWGhOlWBEDN5t3MRyjvYofOE%2Fdlyef5pyeu6tnCyfiuqY9X3UurFXe%2Fy1buC3H2yJh78QrGN2FbXkemO%2B0E1kPZQLgd0EzqOkStc9qDEb7EMi9%2BA2vFkwJOwUwVcjBHOuSKOPU2IbEFcCD%2FzwWJHEOszIKrpPiZwQ4e8IeY94jCu0Pcbcmjt5r1CYAzjNA%2Buqu%2FvrFJHD%2B53"
             },
             "require": {
                 "fleetbase/core-api": "^1.5.9",
@@ -18572,9 +18595,18 @@
             "time": "2024-03-03T12:36:25+00:00"
         }
     ],
-    "aliases": [],
+    "aliases": [
+        {
+            "package": "fleetbase/core-api",
+            "version": "dev-dev/fix-perf-deploy",
+            "alias": "1.5.30",
+            "alias_normalized": "1.5.30.0"
+        }
+    ],
     "minimum-stability": "dev",
-    "stability-flags": [],
+    "stability-flags": {
+        "fleetbase/core-api": 20
+    },
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {

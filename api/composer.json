@@ -9,7 +9,7 @@
     "license": "AGPL-3.0-or-later",
     "require": {
         "php": "^8.0",
-        "fleetbase/core-api": "^1.5.30",
+        "fleetbase/core-api": "dev-dev/fix-perf-deploy as 1.5.30",
         "fleetbase/fleetops-api": "^0.5.23",
         "fleetbase/registry-bridge": "^0.0.18",
         "fleetbase/billing-api": "^0.1.7",
@@ -40,6 +40,10 @@
         "phpunit/phpunit": "^10.0"
     },
     "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/fleetbase/core-api"
+        },
         {
             "type": "vcs",
             "url": "https://github.com/fleetbase/billing"
