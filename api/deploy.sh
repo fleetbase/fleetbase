@@ -26,10 +26,14 @@ php artisan schedule-monitor:sync
 
 # Clear cache
 php artisan cache:clear
+php artisan route:clear
 
 # Optimize
-# php artisan config:cache
-# php artisan route:cache
+php artisan config:cache
+php artisan route:cache
 
 # Initialize registry
 php artisan registry:init
+
+# Restart octane
+# php artisan octane:reload
