@@ -4,8 +4,70 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "b74801901a99e0028b2663391068f74f",
+    "content-hash": "e14d62e6c692586cd7be40ac763fab31",
     "packages": [
+        {
+            "name": "appstract/laravel-opcache",
+            "version": "4.0.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/appstract/laravel-opcache.git",
+                "reference": "d2ce88cddda6af54c14d1f9ceaaf94b54f38f9d3"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/appstract/laravel-opcache/zipball/d2ce88cddda6af54c14d1f9ceaaf94b54f38f9d3",
+                "reference": "d2ce88cddda6af54c14d1f9ceaaf94b54f38f9d3",
+                "shasum": ""
+            },
+            "require": {
+                "guzzlehttp/guzzle": "^6.3.1|^7.0",
+                "laravel/framework": ">=7.0",
+                "php": ">=7.2.5"
+            },
+            "require-dev": {
+                "orchestra/testbench": "^5.0",
+                "phpunit/phpunit": "^8.5"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Appstract\\Opcache\\OpcacheServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Appstract\\Opcache\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Olav van Schie",
+                    "email": "mail@appstract.nl",
+                    "homepage": "https://appstract.nl",
+                    "role": "Developer"
+                }
+            ],
+            "description": "PHP OPcache Artisan commands for Laravel.",
+            "homepage": "https://github.com/appstract/laravel-opcache",
+            "keywords": [
+                "Opcache",
+                "appstract",
+                "laravel",
+                "php"
+            ],
+            "support": {
+                "issues": "https://github.com/appstract/laravel-opcache/issues",
+                "source": "https://github.com/appstract/laravel-opcache/tree/4.0.2"
+            },
+            "time": "2020-12-01T16:12:14+00:00"
+        },
         {
             "name": "aws/aws-crt-php",
             "version": "v1.2.7",
@@ -2370,16 +2432,16 @@
         },
         {
             "name": "fleetbase/core-api",
-            "version": "1.5.30",
+            "version": "1.5.31",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fleetbase/core-api.git",
-                "reference": "3e6f9ef3341ecf52ae8d6441e359ad77d8fa42b8"
+                "reference": "4bc6f0fe676396c7e377d552ee5036b54a9699a8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fleetbase/core-api/zipball/3e6f9ef3341ecf52ae8d6441e359ad77d8fa42b8",
-                "reference": "3e6f9ef3341ecf52ae8d6441e359ad77d8fa42b8",
+                "url": "https://api.github.com/repos/fleetbase/core-api/zipball/4bc6f0fe676396c7e377d552ee5036b54a9699a8",
+                "reference": "4bc6f0fe676396c7e377d552ee5036b54a9699a8",
                 "shasum": ""
             },
             "require": {
@@ -2464,22 +2526,22 @@
             ],
             "support": {
                 "issues": "https://github.com/fleetbase/core-api/issues",
-                "source": "https://github.com/fleetbase/core-api/tree/v1.5.30"
+                "source": "https://github.com/fleetbase/core-api/tree/v1.5.31"
             },
-            "time": "2025-02-25T08:26:22+00:00"
+            "time": "2025-02-25T11:55:05+00:00"
         },
         {
             "name": "fleetbase/fleetops-api",
-            "version": "0.5.23",
+            "version": "0.5.24",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fleetbase/fleetops.git",
-                "reference": "8d2a5230380efda22d59fa38f1f88542f4e036f3"
+                "reference": "226acb791491be916d25b28eb7fcc5deddcb8cc7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fleetbase/fleetops/zipball/8d2a5230380efda22d59fa38f1f88542f4e036f3",
-                "reference": "8d2a5230380efda22d59fa38f1f88542f4e036f3",
+                "url": "https://api.github.com/repos/fleetbase/fleetops/zipball/226acb791491be916d25b28eb7fcc5deddcb8cc7",
+                "reference": "226acb791491be916d25b28eb7fcc5deddcb8cc7",
                 "shasum": ""
             },
             "require": {
@@ -2553,9 +2615,9 @@
             ],
             "support": {
                 "issues": "https://github.com/fleetbase/fleetops/issues",
-                "source": "https://github.com/fleetbase/fleetops/tree/v0.5.23"
+                "source": "https://github.com/fleetbase/fleetops/tree/v0.5.24"
             },
-            "time": "2025-02-25T08:26:32+00:00"
+            "time": "2025-02-25T11:56:45+00:00"
         },
         {
             "name": "fleetbase/laravel-mysql-spatial",
