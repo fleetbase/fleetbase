@@ -1,6 +1,11 @@
 services:
   cache:
     image: redis:4-alpine
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   database:
     image: mysql:8.0-oracle
@@ -12,6 +17,11 @@ services:
     environment:
       MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
       MYSQL_DATABASE: "fleetbase"
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   socket:
     image: socketcluster/socketcluster:v17.4.0
@@ -28,6 +38,11 @@ services:
       target: events-dev
       args:
         ENVIRONMENT: development
+    healthcheck:
+      test: ["CMD", "php", "artisan", "queue:status"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
     environment:
       DATABASE_URL: "mysql://root@database/fleetbase"
       QUEUE_CONNECTION: redis
