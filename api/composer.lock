@@ -4,8 +4,70 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "2eb68f7e32609c8993f8149f455f359f",
+    "content-hash": "433ea3136e593e4e6b149fac632522aa",
     "packages": [
+        {
+            "name": "appstract/laravel-opcache",
+            "version": "4.0.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/appstract/laravel-opcache.git",
+                "reference": "d2ce88cddda6af54c14d1f9ceaaf94b54f38f9d3"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/appstract/laravel-opcache/zipball/d2ce88cddda6af54c14d1f9ceaaf94b54f38f9d3",
+                "reference": "d2ce88cddda6af54c14d1f9ceaaf94b54f38f9d3",
+                "shasum": ""
+            },
+            "require": {
+                "guzzlehttp/guzzle": "^6.3.1|^7.0",
+                "laravel/framework": ">=7.0",
+                "php": ">=7.2.5"
+            },
+            "require-dev": {
+                "orchestra/testbench": "^5.0",
+                "phpunit/phpunit": "^8.5"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Appstract\\Opcache\\OpcacheServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Appstract\\Opcache\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Olav van Schie",
+                    "email": "mail@appstract.nl",
+                    "homepage": "https://appstract.nl",
+                    "role": "Developer"
+                }
+            ],
+            "description": "PHP OPcache Artisan commands for Laravel.",
+            "homepage": "https://github.com/appstract/laravel-opcache",
+            "keywords": [
+                "Opcache",
+                "appstract",
+                "laravel",
+                "php"
+            ],
+            "support": {
+                "issues": "https://github.com/appstract/laravel-opcache/issues",
+                "source": "https://github.com/appstract/laravel-opcache/tree/4.0.2"
+            },
+            "time": "2020-12-01T16:12:14+00:00"
+        },
         {
             "name": "aws/aws-crt-php",
             "version": "v1.2.7",
