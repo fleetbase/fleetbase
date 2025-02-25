@@ -150,6 +150,7 @@ class Driver extends Model
         'vehicle_name',
         'vehicle_avatar',
         'vendor_name',
+        'is_available',
     ];
 
     /**
@@ -729,5 +730,10 @@ class Driver extends Model
                 $query->where('public_id', $identifier)->orWhere('drivers_license_number', $identifier);
             });
         })->first();
+    }
+
+    public function getIsAvailableAttribute()
+    {
+        return $this->attributes['is_available'] ?? null;
     }
 }
