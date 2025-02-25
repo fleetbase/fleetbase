@@ -463,8 +463,9 @@ fleet-ops:
     reporter: Rapporteur
     sandbox: Bac à Sable
     save-changes: Enregistrer les Modifications
-    schedule: Horaire
+    schedule: Date de début
     search: Rechercher
+    estimated-end-date: Date de fin estimée
     security-access-code: Code d'Accès Sécurisé
     service-area: Zone de Service
     service: Service
@@ -907,10 +908,12 @@ fleet-ops:
         new-status: Nouveau statut
         status-text: Saisissez un nouveau statut d'activité à ajouter au flux
       order-event:
-        schedule: Planifier
+        estimated-end-date: Date de fin estimée
+        schedule: Date de début
         unschedule: Déplanifier
       order-form:
         id-text: Utilisez ce champ pour définir éventuellement un identifiant personnalisé ou interne pour la commande.
+        end-date-text: La date et l'heure prévues pour l'achèvement de la commande. Cela marque la fin estimée du processus de livraison. Si la commande n'est pas terminée à ce moment-là, une action supplémentaire ou une réaffectation pourrait être nécessaire.
         schedule-text: La date et l'heure auxquelles la commande sera expédiée. Si aucun conducteur n'est assigné au moment de l'expédition, celle-ci échouera. Si la commande est Ad-Hoc, elle sera pingée aux conducteurs à proximité du point de collecte.
         customer: Client
         customer-text: Attribuez éventuellement un client à cette commande. S'il s'agit d'un nouveau client, utilisez le bouton "Nouveau client" ci-dessus.
@@ -1127,7 +1130,7 @@ fleet-ops:
         assign-text: Vous êtes sur le point d'assigner un nouveau chauffeur ({driverName}) à la commande {orderId}. Cliquez sur continuer pour confirmer le chauffeur.
         assign-button: Continuer et assigner le chauffeur
         date: Date prévue
-        end-date: Date de fin
+        end-date: Date de fin estimée
         driver-assigned: Chauffeur
         vehicle-assigned: Véhicule
         no-driver: Aucun chauffeur
@@ -1790,7 +1793,7 @@ fleet-ops:
         cancel-orders: Annuler les commandes
         delete-orders: Supprimer les commandes
         dispatch-orders: Expédier les commandes
-        estimated-end-date: Date de fin
+        estimated-end-date: Date de fin estimée
         new:
           create-new-customer: Créer un nouveau client
           create-new-facilitator: Créer un nouveau facilitateur
@@ -1804,7 +1807,7 @@ fleet-ops:
           internal-id: ID interne
           internal-id-help-text: Utilisez ce champ pour définir un identifiant personnalisé ou un identifiant interne pour la commande.
           schedule: Date de début
-          estimated-end-date: Date de fin
+          estimated-end-date: Date de fin estimée
           schedule-help-text: La date et l'heure auxquelles la commande sera expédiée. Si aucun conducteur n'est assigné au moment de l'expédition, l'expédition échouera. Si la commande est Ad-Hoc, elle sera envoyée aux conducteurs à proximité du lieu de ramassage.
           customer: Client
           customer-help-text: Assigner facultativement le client de cette commande. Si c'est un nouveau client, utilisez le bouton "Nouveau client" ci-dessus.
@@ -1912,7 +1915,7 @@ fleet-ops:
           vehicle-assigned: Véhicule assigné
           change-driver: Changer de conducteur
           tracking-number: Numéro de suivi
-          date-scheduled: Date de début prévue
+          date-scheduled: Date de début
           date-estimated: Date de fin estimée
           date-dispatched: Date expédiée
           date-started: Date de début

@@ -15,6 +15,18 @@
                 />
             </div>
 
+            <div class="input-group">
+                <InputLabel @labelText={{t "fleet-ops.common.estimated-end-date"}} @helpText={{t "fleet-ops.component.modals.order-form.end-date-text"}} />
+                <DateTimeInput
+                    class="form-input"
+                    @value={{@options.order.estimated_end_date}}
+                    @minDate={{format-date (now) "yyyy-MM-d"}}
+                    @minTime={{format-date (now) "HH:mm"}}
+                    @onUpdate={{@options.EndDateOrder}}
+                    @disabled={{@options.order.isIntegratedVendorOrder}}
+                />
+            </div>
+
             {{!-- <InputGroup @name={{t "fleet-ops.component.modals.order-form.customer"}} @helpText={{t "fleet-ops.component.modals.order-form.customer-text"}}>
                 <ModelSelect
                     @modelName="customer"
