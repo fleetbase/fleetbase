@@ -312,8 +312,6 @@ trait HasApiControllerBehavior
         $single        = $request->boolean('single');
         $queryCallback = $this->getControllerCallback('onQueryRecord');
         // $data          = $this->model->queryFromRequest($request, $queryCallback);
-        $queryCallback = $this->getControllerCallback('onQueryRecord');
-
         // Create a new callback that combines date filtering with existing callback
         $combinedCallback = function ($query) use ($request, $queryCallback) {
             // Apply the original callback if it exists
@@ -329,7 +327,12 @@ trait HasApiControllerBehavior
                     $hasScheduledAt = \Schema::hasColumn($this->model->getTable(), 'scheduled_at');
                     
                     if ($hasScheduledAt) {
-                        $q->whereDate('scheduled_at', $on);
+                        $startOfDay = Carbon::parse($on)->startOfDay()->setTimezone('UTC');
+                        $endOfDay = Carbon::parse($on)->endOfDay()->setTimezone('UTC');
+                        $q->whereBetween('scheduled_at', [
+                            $startOfDay,
+                            $endOfDay
+                        ]);
                     } else {
                         $q->whereDate('created_at', $on);
                     }
@@ -338,6 +341,20 @@ trait HasApiControllerBehavior
         };
 
         $data = $this->model->queryFromRequest($request, $combinedCallback);
+        if (get_class($this->model) === 'Fleetbase\FleetOps\Models\Driver' && $request->has('order_uuid')) {
+            // Get the order
+            // print_r($request->order_uuid);
+            $order = \Fleetbase\FleetOps\Models\Order::where('uuid', $request->order_uuid)->first();
+            
+            if ($order) {
+                // Filter drivers based on availability
+                $data = $data->map(function ($driver) use ($order) {
+                    $availability = $this->driverAvailability($order, $driver->uuid);
+                    $driver->is_available = ($availability && $availability['status'] === true) ? 1 : 0;
+                    return $driver;
+                });
+            }
+        }
         if ($single) {
             $data = Arr::first($data);
 
