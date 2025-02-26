@@ -40,6 +40,19 @@ export default class OperationsSchedulerIndexController extends BaseController {
 
                 order.set('scheduled_at', date);
             },
+            endDateReschedule: (date) => {
+                if (date && typeof date.toDate === 'function') {
+                    date = date.toDate();
+                }
+
+                if (order.scheduled_at && date < order.scheduled_at) {
+                    this.errorMessage = "End Date cannot be earlier than the start date.";
+                    this.notifications.error(this.errorMessage);
+                    return;
+                }    
+
+                order.set('estimated_end_date', date);
+            },
             unschedule: () => {
                 order.set('scheduled_at', null);
             },
@@ -51,6 +64,12 @@ export default class OperationsSchedulerIndexController extends BaseController {
                 }
 
                 try {
+                    if (order.scheduled_at && order.estimated_end_date && order.estimated_end_date < order.scheduled_at) {
+                        this.errorMessage = "End Date cannot be earlier than the start date.";
+                        this.notifications.error(this.errorMessage);
+                        modal.stopLoading();
+                        return;
+                    }
                     await order.save();
                     // remove event from calendar
                     if (event) {

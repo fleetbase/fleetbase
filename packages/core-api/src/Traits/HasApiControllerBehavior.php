@@ -839,5 +839,3 @@ trait HasApiControllerBehavior
         }
     }
 }
-
-

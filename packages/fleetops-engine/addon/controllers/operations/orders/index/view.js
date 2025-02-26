@@ -470,11 +470,38 @@ export default class OperationsOrdersIndexViewController extends BaseController 
             scheduleOrder: (dateInstance) => {
                 order.scheduled_at = dateInstance;
             },
+            
+            EndDateOrder: (dateInstance) => {
+                if (dateInstance < order.scheduled_at) {
+                    this.errorMessage = "End Date cannot be earlier than the start date.";
+                    this.notifications.error(this.errorMessage);
+                    return;
+                }
+                order.estimated_end_date = dateInstance;
+            },
+        
             driversQuery: {},
             order,
             confirm: async (modal) => {
                 modal.startLoading();
+                if (!order.estimated_end_date || new Date(order.estimated_end_date) < new Date(order.scheduled_at)) {
+                    this.errorMessage = "End Date cannot be earlier than the start date.";
+                    this.notifications.error(this.errorMessage);
+                    // Stop execution and revert changes
+                    modal.stopLoading();
+                    return;
+                }
 
+                // if (new Date(order.estimated_end_date) < new Date(order.scheduled_at)) {
+                //     this.errorMessage = "End Date cannot be earlier than the start date.";
+                //     this.notifications.error(this.errorMessage);
+            
+                //     // Revert to previous estimated_end_date
+                //     order.rollbackAttributes(); 
+                //     modal.stopLoading();
+                //     return;
+                // }
+   
                 try {
                     await order.save();
                     this.notifications.success(options.successNotification || this.intl.t('fleet-ops.operations.orders.index.view.update-success', { orderId: order.public_id }));

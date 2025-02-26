@@ -468,8 +468,9 @@ fleet-ops:
     reporter: Relator
     sandbox: Salvadera
     save-changes: Guardar cambios
-    schedule: Cada hora
+    schedule: Fecha de inicio
     search: investigar
+    estimated-end-date: Fecha estimada de finalización
     security-access-code: Código de acceso seguro
     service-area: Vía de Servício
     service: Servicio
@@ -967,11 +968,13 @@ fleet-ops:
         new-status: Nuevo estado
         status-text: Ingrese un nuevo estado de actividad para agregar al feed
       order-event:
-        schedule: planear
+        estimated-end-date: Fecha estimada de finalización
+        schedule: Fecha de inicio
         unschedule: Desprogramar
       order-form:
         id-text: Utilice este campo para definir opcionalmente un identificador interno
           o personalizado para el pedido.
+        end-date-text: La fecha y la hora en que se espera que el pedido se complete. Esto marca el final previsto del proceso de entrega. Si el pedido no se completa para entonces, puede ser necesaria una acción adicional o una reasignación.
         schedule-text: La fecha y hora en que se enviará el pedido. Si no se asigna
           ningún conductor en el momento del envío, el envío fracasará. Si el pedido
           es Ad-Hoc, se enviará un ping a los conductores cercanos al punto de recogida.
@@ -1218,7 +1221,7 @@ fleet-ops:
           confirmar el controlador.
         assign-button: Continuar y asignar el conductor.
         date: fecha prevista
-        end-date: Fecha de finalización
+        end-date: Fecha estimada de finalización
         driver-assigned: Conductor
         vehicle-assigned: Vehículo
         no-driver: Sin conductor
@@ -1926,7 +1929,7 @@ fleet-ops:
         cancel-orders: Cancelar pedidos
         delete-orders: Eliminar pedidos
         dispatch-orders: Enviar pedidos
-        estimated-end-date: Fecha de finalización
+        estimated-end-date: Fecha estimada de finalización
         new:
           create-new-customer: Crear un nuevo cliente
           create-new-facilitator: Crear un nuevo facilitador
@@ -1942,7 +1945,7 @@ fleet-ops:
           internal-id-help-text: Utilice este campo para definir una ID personalizada
             o una ID interna para el pedido.
           schedule: Fecha de inicio
-          estimated-end-date: Fecha de finalización
+          estimated-end-date: Fecha estimada de finalización
           schedule-help-text: La fecha y hora en que se enviará el pedido. Si no se
             asigna ningún conductor en el momento del envío, el envío fracasará. Si
             el pedido es Ad-Hoc, se enviará a los conductores cercanos al lugar de
@@ -2076,8 +2079,8 @@ fleet-ops:
           vehicle-assigned: Vehículo asignado
           change-driver: Cambiar conductor
           tracking-number: El número de rastreo
-          date-scheduled: Fecha de inicio programada
-          date-estimated: Fecha de finalización estimada
+          date-scheduled: Fecha de inicio
+          date-estimated: Fecha estimada de finalización
           date-dispatched: Fecha de envío
           date-started: Fecha de inicio
           order-details-title: Detalles del pedido
