@@ -11,12 +11,13 @@
         "php": "^8.0",
         "appstract/laravel-opcache": "^4.0",
         "fleetbase/billing-api": "^0.1.7",
-        "fleetbase/core-api": "^1.5.31",
-        "fleetbase/fleetops-api": "^0.5.24",
+        "fleetbase/core-api": "^1.5.32",
+        "fleetbase/fleetops-api": "^0.5.25",
         "fleetbase/flespi-integration": "^0.1.13",
         "fleetbase/internals-api": "^0.0.18",
         "fleetbase/registry-bridge": "^0.0.18",
         "fleetbase/storefront-api": "^0.3.28",
+        "fleetbase/customer-portal-api": "^0.0.7",
         "guzzlehttp/guzzle": "^7.0.1",
         "laravel/framework": "^10.0",
         "laravel/octane": "^2.3",
@@ -48,6 +49,10 @@
         {
             "type": "vcs",
             "url": "https://github.com/fleetbase/internals"
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/fleetbase/customer-portal"
         },
         {
             "type": "composer",
