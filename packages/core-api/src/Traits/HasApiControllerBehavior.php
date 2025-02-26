@@ -311,32 +311,39 @@ trait HasApiControllerBehavior
     {
         $single        = $request->boolean('single');
         $queryCallback = $this->getControllerCallback('onQueryRecord');
-        // $data          = $this->model->queryFromRequest($request, $queryCallback);
+        if (get_class($this->model) === 'Fleetbase\FleetOps\Models\Order') {
+            
+            $combinedCallback = function ($query) use ($request, $queryCallback) {
+                // Apply the original callback if it exists
+                if ($queryCallback) {
+                    $queryCallback($query);
+                }
+                // Add date filtering if 'on' parameter exists
+                if ($request->filled('on')) {
+                    $on = Carbon::parse($request->input('on'));
+                    
+                    $query->where(function ($q) use ($on) {
+                        // Check if scheduled_at column exists in the table
+                        $hasScheduledAt = Schema::hasColumn($this->model->getTable(), 'scheduled_at');
+                        
+                        if ($hasScheduledAt) {
+                            $q->whereDate('scheduled_at', $on);
+                        } else {
+                            $q->whereDate('created_at', $on);
+                        }
+                    });
+                }
+            };
+            $data = $this->model->queryFromRequest($request, $combinedCallback);
+        }
+        else {
+            $data = $this->model->queryFromRequest($request, $queryCallback);
+        }
 
         // Create a new callback that combines date filtering with existing callback
-        $combinedCallback = function ($query) use ($request, $queryCallback) {
-            // Apply the original callback if it exists
-            if ($queryCallback) {
-                $queryCallback($query);
-            }
-            // Add date filtering if 'on' parameter exists
-            if ($request->filled('on')) {
-                $on = Carbon::parse($request->input('on'));
-                
-                $query->where(function ($q) use ($on) {
-                    // Check if scheduled_at column exists in the table
-                    $hasScheduledAt = \Schema::hasColumn($this->model->getTable(), 'scheduled_at');
-                    
-                    if ($hasScheduledAt) {
-                        $q->whereDate('scheduled_at', $on);
-                    } else {
-                        $q->whereDate('created_at', $on);
-                    }
-                });
-            }
-        };
+        
 
-        $data = $this->model->queryFromRequest($request, $combinedCallback);
+        
         if (get_class($this->model) === 'Fleetbase\FleetOps\Models\Driver' && $request->has('order_uuid')) {
             // Get the order
             // print_r($request->order_uuid);
