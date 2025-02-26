@@ -325,7 +325,7 @@ trait HasApiControllerBehavior
                 
                 $query->where(function ($q) use ($on) {
                     // Check if scheduled_at column exists in the table
-                    $hasScheduledAt = \Schema::hasColumn($this->model->getTable(), 'scheduled_at');
+                    $hasScheduledAt = Schema::hasColumn($this->model->getTable(), 'scheduled_at');
                     
                     if ($hasScheduledAt) {
                         $q->whereDate('scheduled_at', $on);
