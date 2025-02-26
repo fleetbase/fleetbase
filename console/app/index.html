@@ -22,7 +22,12 @@
   </head>
   <body>
     {{content-for "body"}}
-
+    <div id="boot-loader" class="overloader">
+      <div class="loader-container">
+        <span class="fleetbase-loader" width="16" height="16"></span>
+        <div class="loading-message">Starting up...</div>
+      </div>
+    </div>
     <script src="{{rootURL}}assets/vendor.js"></script>
     <script src="{{rootURL}}assets/@fleetbase/console.js"></script>
 

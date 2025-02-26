@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "12ab9ae8f7ff15a1bc8aa3ebde21c4e8",
+    "content-hash": "0ec6e73052a67f14bd240d25d7b3c574",
     "packages": [
         {
             "name": "appstract/laravel-opcache",
@@ -124,16 +124,16 @@
         },
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.340.0",
+            "version": "3.340.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "435aa3c9867d11df4ba4d5c3d11c7b1696dc3898"
+                "reference": "414b84a625c239b3cbfa132b8d522c579a7eb75c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/435aa3c9867d11df4ba4d5c3d11c7b1696dc3898",
-                "reference": "435aa3c9867d11df4ba4d5c3d11c7b1696dc3898",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/414b84a625c239b3cbfa132b8d522c579a7eb75c",
+                "reference": "414b84a625c239b3cbfa132b8d522c579a7eb75c",
                 "shasum": ""
             },
             "require": {
@@ -215,9 +215,9 @@
             "support": {
                 "forum": "https://github.com/aws/aws-sdk-php/discussions",
                 "issues": "https://github.com/aws/aws-sdk-php/issues",
-                "source": "https://github.com/aws/aws-sdk-php/tree/3.340.0"
+                "source": "https://github.com/aws/aws-sdk-php/tree/3.340.1"
             },
-            "time": "2025-02-24T20:28:24+00:00"
+            "time": "2025-02-25T19:14:47+00:00"
         },
         {
             "name": "aws/aws-sdk-php-laravel",
@@ -636,16 +636,16 @@
         },
         {
             "name": "brick/math",
-            "version": "0.12.1",
+            "version": "0.12.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/brick/math.git",
-                "reference": "f510c0a40911935b77b86859eb5223d58d660df1"
+                "reference": "901eddb1e45a8e0f689302e40af871c181ecbe40"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/brick/math/zipball/f510c0a40911935b77b86859eb5223d58d660df1",
-                "reference": "f510c0a40911935b77b86859eb5223d58d660df1",
+                "url": "https://api.github.com/repos/brick/math/zipball/901eddb1e45a8e0f689302e40af871c181ecbe40",
+                "reference": "901eddb1e45a8e0f689302e40af871c181ecbe40",
                 "shasum": ""
             },
             "require": {
@@ -654,7 +654,7 @@
             "require-dev": {
                 "php-coveralls/php-coveralls": "^2.2",
                 "phpunit/phpunit": "^10.1",
-                "vimeo/psalm": "5.16.0"
+                "vimeo/psalm": "6.8.8"
             },
             "type": "library",
             "autoload": {
@@ -684,7 +684,7 @@
             ],
             "support": {
                 "issues": "https://github.com/brick/math/issues",
-                "source": "https://github.com/brick/math/tree/0.12.1"
+                "source": "https://github.com/brick/math/tree/0.12.2"
             },
             "funding": [
                 {
@@ -692,7 +692,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2023-11-29T23:19:16+00:00"
+            "time": "2025-02-26T10:21:45+00:00"
         },
         {
             "name": "cache/adapter-common",
@@ -2435,7 +2435,7 @@
             "version": "0.1.7",
             "dist": {
                 "type": "tar",
-                "url": "https://s3.ap-southeast-1.amazonaws.com/fleetbase-registry-production/flb/%40fleetbase/billing-engine/billing-engine-0.1.7.tgz?AWSAccessKeyId=ASIA26E6KG6WAW5HXSS7&Expires=1740487562&Signature=KJqFNCWV2lWtibBDGHufE38b93E%3D&x-amz-security-token=IQoJb3JpZ2luX2VjEAsaDmFwLXNvdXRoZWFzdC0xIkgwRgIhAMMEzRhMasYZIknZpppbWF8evcuHbPH6XdhDkoMg1sDNAiEA6houBffvaxNiMCbuU7teQyn1SIvPpFwfkr4n3Mr4cTQqlgQIRBAAGgw3NTE5NTEyOTY0MjgiDFX3Cwo2QdFVJaDqTirzAy5%2FeFmPm0tytR%2F0rzw28%2FJgDrYNXgQCfu5%2Bk0eX%2FypHhjMUjgGziTz%2Br78cwQnho97Mmj3%2FEY1oWVk03a5MfiX8e7olhSy0TjHVSUC59gxYYg%2FNnqajQpFf4XXKV1pKp%2BJ0d%2Fwn1h9iUc6wzFTMoBjWe4Kc69f%2Bj3BwCT6A0cY4elFLHpRgn9oLJK8JiW3Bn8135q8oRmpebsTrOI9P7B%2FbDE%2FzuE6RG%2BjSt08%2F%2Bi6e7OhZ7%2BmEsje17GmKU9r%2BNy9yw0G1w4JNwJe73dWoA2%2B4bTcoOnIZ2DlPP4A1eDZImeE02zvnpx3ttvoKxAIKJN0JG81TobZ8afFfKtMATtKyYWzJkg50MqqEsccW1f4azXg0LbyAwp6O9FazxV8U4zwtlS9X5QL2f%2F3Qfznho5DjadrKAdvw597%2FSya4hi%2FMauQEvy0Gg05yBsayreQa1zuJKklYq0IZIK5K9zoiVevpAcWLVDIWpv8bUsDG68CIhB%2FwrMtfDXMgYg%2BKZ1d%2B%2F1Hp1rCpyel9Nz1iroesgU8IApd4Zyg0nrGIkuk%2F11Rs9GRx5b9eHFtnYkpD04LAMXPg%2F5brzLefQ27YdZUHkGw%2Fz00%2Fj8sl8DPM%2B88TQe4I4nbInWbZ6qKJxseXPF0k7fytc0j0yp7zI1YeL7q8cqGnWacwhrb2vQY6pQGgp%2BNbrRHI0QBQ8OUpBmNHdHEDJrpqkr21b5eSqLtCdhPczWcUT34o7hqMOH7LgbtZ4qJerjiR%2BIuE7SUrG2jUQt7xvIPx1i5aVkljPQDbEJQx6rsg2MWAhQ0KJohMFOKUXG2MZLv4UHasSPpkf66Ztgs6STusQiUNikgT4Qn6rYvCreruxBejka4aII52DWoky4lkuxllrSqBliY2fnI9wzlKS%2BE%3D"
+                "url": "https://s3.ap-southeast-1.amazonaws.com/fleetbase-registry-production/flb/%40fleetbase/billing-engine/billing-engine-0.1.7.tgz?AWSAccessKeyId=ASIA26E6KG6WEUO2IIIP&Expires=1740573998&Signature=%2FCoETCxz4XBHcTaYJMQfOfqeX6Q%3D&x-amz-security-token=IQoJb3JpZ2luX2VjECQaDmFwLXNvdXRoZWFzdC0xIkcwRQIgWbnosccWGWsiBsa4WSHkZSMd2bvSfRvzidCWVoeMIKwCIQDgooAWr2BjNoS7PqEF5SCkVoQGUcK98tlaoD3qr5k7uiqWBAhdEAAaDDc1MTk1MTI5NjQyOCIM5%2BKtvhMnxUu1IrceKvMDDJzIataokUHpZJ%2BO2tvtCYE7OQaybwHj0iBGuxZvAuXQKu363I7VHjyLtWLAREaBqSkMZbIcmpIEe9rC9x%2BvDYNXdQC7Vrvhbq1LZvt6wl56buhfQn5spRFpi8gzQ3JjbATftRnsAVcub0Iq2CUPhA%2FIA6fPGjCYmKB8cxY6fMTxDxf2uPMlr045xmtIUWLdLhoOnoEcNoF%2F7gyeKgJAHmhj8xlAVdgqyYHvmUwtduL2M14q1ljeH2Ya7I%2BmoTUFPTIhn0UY0PNp8K1ome0CaOCTm73F%2BJ4VKg%2BIJsYboGVBeBJxvCZ5ICABYfrYtAT1jNLAJAx84FoL6wdkGJ9q4J6muIuohWjfpAk7ZpLA3Bn0H%2BZKsZcLHgLnRXgNcnVqeRu3mrbAZH7R3a9IcG2DAmZaiD5zngggtGICKiaAud750zZ8kr%2FRNWwDomriF3UVAfEyT7xPv%2BWGe1ROCu%2BdJiVrMU7mgqM4MRLyeE%2FePu0926jsoFhYf2g7ur2qT7c0h8xT6Gr1T2sgylO4ruNtao05YPFDQa6km5%2FYZoWZrHsyQASqzXdZswosO%2FMQotMcXRD6M%2FMghKkSLuAYWGEXKnPolHBt9fGwQFrJieHcpbhhmVURplZzfk2orDg04MMV3rfQaYVuWzlx0DHXgrpqPPi5bTDm%2Ffu9BjqmAdn1Q3THqgmHAEhAfEL3%2Fxrs0qyDE%2Bs0%2BMkyzje9inaPN8r19GQGwXC%2FMYAY%2F9v%2BrgcsShwtn1aKLMGoR8CabV1WHHBh6mVydgD7tP6ZPyiDgS8k04JVCDFDqD7tVfLLotMoKrH7haCR4OeM1yJBxOVEoSTWwMUYlH20ieJALHos8Qxkwgt%2FEaaAg6MM9btzof33yJsy%2Fr1hEWNnCpIdiOOEexepPDs%3D"
             },
             "require": {
                 "fleetbase/core-api": "*",
@@ -2530,16 +2530,16 @@
         },
         {
             "name": "fleetbase/core-api",
-            "version": "1.5.31",
+            "version": "1.5.32",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fleetbase/core-api.git",
-                "reference": "4bc6f0fe676396c7e377d552ee5036b54a9699a8"
+                "reference": "8d13595276fefc30bdc70e5d9deae89656a13fa2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fleetbase/core-api/zipball/4bc6f0fe676396c7e377d552ee5036b54a9699a8",
-                "reference": "4bc6f0fe676396c7e377d552ee5036b54a9699a8",
+                "url": "https://api.github.com/repos/fleetbase/core-api/zipball/8d13595276fefc30bdc70e5d9deae89656a13fa2",
+                "reference": "8d13595276fefc30bdc70e5d9deae89656a13fa2",
                 "shasum": ""
             },
             "require": {
@@ -2624,16 +2624,16 @@
             ],
             "support": {
                 "issues": "https://github.com/fleetbase/core-api/issues",
-                "source": "https://github.com/fleetbase/core-api/tree/v1.5.31"
+                "source": "https://github.com/fleetbase/core-api/tree/v1.5.32"
             },
-            "time": "2025-02-25T11:55:05+00:00"
+            "time": "2025-02-26T11:21:24+00:00"
         },
         {
             "name": "fleetbase/customer-portal-api",
-            "version": "0.0.6",
+            "version": "0.0.7",
             "dist": {
                 "type": "tar",
-                "url": "https://s3.ap-southeast-1.amazonaws.com/fleetbase-registry-production/flb/%40fleetbase/customer-portal-engine/customer-portal-engine-0.0.6.tgz?AWSAccessKeyId=ASIA26E6KG6WAW5HXSS7&Expires=1740487562&Signature=DpiAJQWd9fqyFyHUWpIj%2B0zNH4A%3D&x-amz-security-token=IQoJb3JpZ2luX2VjEAsaDmFwLXNvdXRoZWFzdC0xIkgwRgIhAMMEzRhMasYZIknZpppbWF8evcuHbPH6XdhDkoMg1sDNAiEA6houBffvaxNiMCbuU7teQyn1SIvPpFwfkr4n3Mr4cTQqlgQIRBAAGgw3NTE5NTEyOTY0MjgiDFX3Cwo2QdFVJaDqTirzAy5%2FeFmPm0tytR%2F0rzw28%2FJgDrYNXgQCfu5%2Bk0eX%2FypHhjMUjgGziTz%2Br78cwQnho97Mmj3%2FEY1oWVk03a5MfiX8e7olhSy0TjHVSUC59gxYYg%2FNnqajQpFf4XXKV1pKp%2BJ0d%2Fwn1h9iUc6wzFTMoBjWe4Kc69f%2Bj3BwCT6A0cY4elFLHpRgn9oLJK8JiW3Bn8135q8oRmpebsTrOI9P7B%2FbDE%2FzuE6RG%2BjSt08%2F%2Bi6e7OhZ7%2BmEsje17GmKU9r%2BNy9yw0G1w4JNwJe73dWoA2%2B4bTcoOnIZ2DlPP4A1eDZImeE02zvnpx3ttvoKxAIKJN0JG81TobZ8afFfKtMATtKyYWzJkg50MqqEsccW1f4azXg0LbyAwp6O9FazxV8U4zwtlS9X5QL2f%2F3Qfznho5DjadrKAdvw597%2FSya4hi%2FMauQEvy0Gg05yBsayreQa1zuJKklYq0IZIK5K9zoiVevpAcWLVDIWpv8bUsDG68CIhB%2FwrMtfDXMgYg%2BKZ1d%2B%2F1Hp1rCpyel9Nz1iroesgU8IApd4Zyg0nrGIkuk%2F11Rs9GRx5b9eHFtnYkpD04LAMXPg%2F5brzLefQ27YdZUHkGw%2Fz00%2Fj8sl8DPM%2B88TQe4I4nbInWbZ6qKJxseXPF0k7fytc0j0yp7zI1YeL7q8cqGnWacwhrb2vQY6pQGgp%2BNbrRHI0QBQ8OUpBmNHdHEDJrpqkr21b5eSqLtCdhPczWcUT34o7hqMOH7LgbtZ4qJerjiR%2BIuE7SUrG2jUQt7xvIPx1i5aVkljPQDbEJQx6rsg2MWAhQ0KJohMFOKUXG2MZLv4UHasSPpkf66Ztgs6STusQiUNikgT4Qn6rYvCreruxBejka4aII52DWoky4lkuxllrSqBliY2fnI9wzlKS%2BE%3D"
+                "url": "https://s3.ap-southeast-1.amazonaws.com/fleetbase-registry-production/flb/%40fleetbase/customer-portal-engine/customer-portal-engine-0.0.7.tgz?AWSAccessKeyId=ASIA26E6KG6WEUO2IIIP&Expires=1740573998&Signature=0lzOyhNP5%2BJxlZUScSkQXwfj04s%3D&x-amz-security-token=IQoJb3JpZ2luX2VjECQaDmFwLXNvdXRoZWFzdC0xIkcwRQIgWbnosccWGWsiBsa4WSHkZSMd2bvSfRvzidCWVoeMIKwCIQDgooAWr2BjNoS7PqEF5SCkVoQGUcK98tlaoD3qr5k7uiqWBAhdEAAaDDc1MTk1MTI5NjQyOCIM5%2BKtvhMnxUu1IrceKvMDDJzIataokUHpZJ%2BO2tvtCYE7OQaybwHj0iBGuxZvAuXQKu363I7VHjyLtWLAREaBqSkMZbIcmpIEe9rC9x%2BvDYNXdQC7Vrvhbq1LZvt6wl56buhfQn5spRFpi8gzQ3JjbATftRnsAVcub0Iq2CUPhA%2FIA6fPGjCYmKB8cxY6fMTxDxf2uPMlr045xmtIUWLdLhoOnoEcNoF%2F7gyeKgJAHmhj8xlAVdgqyYHvmUwtduL2M14q1ljeH2Ya7I%2BmoTUFPTIhn0UY0PNp8K1ome0CaOCTm73F%2BJ4VKg%2BIJsYboGVBeBJxvCZ5ICABYfrYtAT1jNLAJAx84FoL6wdkGJ9q4J6muIuohWjfpAk7ZpLA3Bn0H%2BZKsZcLHgLnRXgNcnVqeRu3mrbAZH7R3a9IcG2DAmZaiD5zngggtGICKiaAud750zZ8kr%2FRNWwDomriF3UVAfEyT7xPv%2BWGe1ROCu%2BdJiVrMU7mgqM4MRLyeE%2FePu0926jsoFhYf2g7ur2qT7c0h8xT6Gr1T2sgylO4ruNtao05YPFDQa6km5%2FYZoWZrHsyQASqzXdZswosO%2FMQotMcXRD6M%2FMghKkSLuAYWGEXKnPolHBt9fGwQFrJieHcpbhhmVURplZzfk2orDg04MMV3rfQaYVuWzlx0DHXgrpqPPi5bTDm%2Ffu9BjqmAdn1Q3THqgmHAEhAfEL3%2Fxrs0qyDE%2Bs0%2BMkyzje9inaPN8r19GQGwXC%2FMYAY%2F9v%2BrgcsShwtn1aKLMGoR8CabV1WHHBh6mVydgD7tP6ZPyiDgS8k04JVCDFDqD7tVfLLotMoKrH7haCR4OeM1yJBxOVEoSTWwMUYlH20ieJALHos8Qxkwgt%2FEaaAg6MM9btzof33yJsy%2Fr1hEWNnCpIdiOOEexepPDs%3D"
             },
             "require": {
                 "fleetbase/core-api": "*",
@@ -2708,16 +2708,16 @@
         },
         {
             "name": "fleetbase/fleetops-api",
-            "version": "0.5.24",
+            "version": "0.5.25",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fleetbase/fleetops.git",
-                "reference": "226acb791491be916d25b28eb7fcc5deddcb8cc7"
+                "reference": "75cb71247c110231b38b7e9979001501859bcd4a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fleetbase/fleetops/zipball/226acb791491be916d25b28eb7fcc5deddcb8cc7",
-                "reference": "226acb791491be916d25b28eb7fcc5deddcb8cc7",
+                "url": "https://api.github.com/repos/fleetbase/fleetops/zipball/75cb71247c110231b38b7e9979001501859bcd4a",
+                "reference": "75cb71247c110231b38b7e9979001501859bcd4a",
                 "shasum": ""
             },
             "require": {
@@ -2791,16 +2791,16 @@
             ],
             "support": {
                 "issues": "https://github.com/fleetbase/fleetops/issues",
-                "source": "https://github.com/fleetbase/fleetops/tree/v0.5.24"
+                "source": "https://github.com/fleetbase/fleetops/tree/v0.5.25"
             },
-            "time": "2025-02-25T11:56:45+00:00"
+            "time": "2025-02-26T11:26:16+00:00"
         },
         {
             "name": "fleetbase/flespi-integration",
             "version": "0.1.13",
             "dist": {
                 "type": "tar",
-                "url": "https://s3.ap-southeast-1.amazonaws.com/fleetbase-registry-production/flb/%40fleetbase/flespi-engine/flespi-engine-0.1.13.tgz?AWSAccessKeyId=ASIA26E6KG6WAW5HXSS7&Expires=1740487562&Signature=DIZHaV9hK%2BPpKFInslozzG2TOgY%3D&x-amz-security-token=IQoJb3JpZ2luX2VjEAsaDmFwLXNvdXRoZWFzdC0xIkgwRgIhAMMEzRhMasYZIknZpppbWF8evcuHbPH6XdhDkoMg1sDNAiEA6houBffvaxNiMCbuU7teQyn1SIvPpFwfkr4n3Mr4cTQqlgQIRBAAGgw3NTE5NTEyOTY0MjgiDFX3Cwo2QdFVJaDqTirzAy5%2FeFmPm0tytR%2F0rzw28%2FJgDrYNXgQCfu5%2Bk0eX%2FypHhjMUjgGziTz%2Br78cwQnho97Mmj3%2FEY1oWVk03a5MfiX8e7olhSy0TjHVSUC59gxYYg%2FNnqajQpFf4XXKV1pKp%2BJ0d%2Fwn1h9iUc6wzFTMoBjWe4Kc69f%2Bj3BwCT6A0cY4elFLHpRgn9oLJK8JiW3Bn8135q8oRmpebsTrOI9P7B%2FbDE%2FzuE6RG%2BjSt08%2F%2Bi6e7OhZ7%2BmEsje17GmKU9r%2BNy9yw0G1w4JNwJe73dWoA2%2B4bTcoOnIZ2DlPP4A1eDZImeE02zvnpx3ttvoKxAIKJN0JG81TobZ8afFfKtMATtKyYWzJkg50MqqEsccW1f4azXg0LbyAwp6O9FazxV8U4zwtlS9X5QL2f%2F3Qfznho5DjadrKAdvw597%2FSya4hi%2FMauQEvy0Gg05yBsayreQa1zuJKklYq0IZIK5K9zoiVevpAcWLVDIWpv8bUsDG68CIhB%2FwrMtfDXMgYg%2BKZ1d%2B%2F1Hp1rCpyel9Nz1iroesgU8IApd4Zyg0nrGIkuk%2F11Rs9GRx5b9eHFtnYkpD04LAMXPg%2F5brzLefQ27YdZUHkGw%2Fz00%2Fj8sl8DPM%2B88TQe4I4nbInWbZ6qKJxseXPF0k7fytc0j0yp7zI1YeL7q8cqGnWacwhrb2vQY6pQGgp%2BNbrRHI0QBQ8OUpBmNHdHEDJrpqkr21b5eSqLtCdhPczWcUT34o7hqMOH7LgbtZ4qJerjiR%2BIuE7SUrG2jUQt7xvIPx1i5aVkljPQDbEJQx6rsg2MWAhQ0KJohMFOKUXG2MZLv4UHasSPpkf66Ztgs6STusQiUNikgT4Qn6rYvCreruxBejka4aII52DWoky4lkuxllrSqBliY2fnI9wzlKS%2BE%3D"
+                "url": "https://s3.ap-southeast-1.amazonaws.com/fleetbase-registry-production/flb/%40fleetbase/flespi-engine/flespi-engine-0.1.13.tgz?AWSAccessKeyId=ASIA26E6KG6WEUO2IIIP&Expires=1740573998&Signature=3iRniN%2FLG1YcDR5hYXzYhOTsP6Y%3D&x-amz-security-token=IQoJb3JpZ2luX2VjECQaDmFwLXNvdXRoZWFzdC0xIkcwRQIgWbnosccWGWsiBsa4WSHkZSMd2bvSfRvzidCWVoeMIKwCIQDgooAWr2BjNoS7PqEF5SCkVoQGUcK98tlaoD3qr5k7uiqWBAhdEAAaDDc1MTk1MTI5NjQyOCIM5%2BKtvhMnxUu1IrceKvMDDJzIataokUHpZJ%2BO2tvtCYE7OQaybwHj0iBGuxZvAuXQKu363I7VHjyLtWLAREaBqSkMZbIcmpIEe9rC9x%2BvDYNXdQC7Vrvhbq1LZvt6wl56buhfQn5spRFpi8gzQ3JjbATftRnsAVcub0Iq2CUPhA%2FIA6fPGjCYmKB8cxY6fMTxDxf2uPMlr045xmtIUWLdLhoOnoEcNoF%2F7gyeKgJAHmhj8xlAVdgqyYHvmUwtduL2M14q1ljeH2Ya7I%2BmoTUFPTIhn0UY0PNp8K1ome0CaOCTm73F%2BJ4VKg%2BIJsYboGVBeBJxvCZ5ICABYfrYtAT1jNLAJAx84FoL6wdkGJ9q4J6muIuohWjfpAk7ZpLA3Bn0H%2BZKsZcLHgLnRXgNcnVqeRu3mrbAZH7R3a9IcG2DAmZaiD5zngggtGICKiaAud750zZ8kr%2FRNWwDomriF3UVAfEyT7xPv%2BWGe1ROCu%2BdJiVrMU7mgqM4MRLyeE%2FePu0926jsoFhYf2g7ur2qT7c0h8xT6Gr1T2sgylO4ruNtao05YPFDQa6km5%2FYZoWZrHsyQASqzXdZswosO%2FMQotMcXRD6M%2FMghKkSLuAYWGEXKnPolHBt9fGwQFrJieHcpbhhmVURplZzfk2orDg04MMV3rfQaYVuWzlx0DHXgrpqPPi5bTDm%2Ffu9BjqmAdn1Q3THqgmHAEhAfEL3%2Fxrs0qyDE%2Bs0%2BMkyzje9inaPN8r19GQGwXC%2FMYAY%2F9v%2BrgcsShwtn1aKLMGoR8CabV1WHHBh6mVydgD7tP6ZPyiDgS8k04JVCDFDqD7tVfLLotMoKrH7haCR4OeM1yJBxOVEoSTWwMUYlH20ieJALHos8Qxkwgt%2FEaaAg6MM9btzof33yJsy%2Fr1hEWNnCpIdiOOEexepPDs%3D"
             },
             "require": {
                 "fleetbase/core-api": "^1.5.9",
@@ -5010,6 +5010,7 @@
                 "issues": "https://github.com/hammerstonedev/fast-paginate/issues",
                 "source": "https://github.com/hammerstonedev/fast-paginate/tree/v1.1.1"
             },
+            "abandoned": "aaronfrancis/fast-paginate",
             "time": "2024-05-16T15:45:29+00:00"
         },
         {
@@ -11724,33 +11725,33 @@
         },
         {
             "name": "spatie/laravel-responsecache",
-            "version": "7.6.3",
+            "version": "7.6.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spatie/laravel-responsecache.git",
-                "reference": "713c56862b2e9145caa659aec19b1077d474064d"
+                "reference": "fbac90e8df40bc6c877302934e3e971c2da409db"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spatie/laravel-responsecache/zipball/713c56862b2e9145caa659aec19b1077d474064d",
-                "reference": "713c56862b2e9145caa659aec19b1077d474064d",
+                "url": "https://api.github.com/repos/spatie/laravel-responsecache/zipball/fbac90e8df40bc6c877302934e3e971c2da409db",
+                "reference": "fbac90e8df40bc6c877302934e3e971c2da409db",
                 "shasum": ""
             },
             "require": {
-                "illuminate/cache": "^10.0|^11.0",
-                "illuminate/console": "^10.0|^11.0",
-                "illuminate/container": "^10.0|^11.0",
-                "illuminate/http": "^10.0|^11.0",
-                "illuminate/support": "^10.0|^11.0",
+                "illuminate/cache": "^10.0|^11.0|^12.0",
+                "illuminate/console": "^10.0|^11.0|^12.0",
+                "illuminate/container": "^10.0|^11.0|^12.0",
+                "illuminate/http": "^10.0|^11.0|^12.0",
+                "illuminate/support": "^10.0|^11.0|^12.0",
                 "nesbot/carbon": "^2.63|^3.0",
                 "php": "^8.2",
                 "spatie/laravel-package-tools": "^1.9"
             },
             "require-dev": {
-                "laravel/framework": "^10.0|^11.0",
+                "laravel/framework": "^10.0|^11.0|^12.0",
                 "mockery/mockery": "^1.4",
-                "orchestra/testbench": "^8.0|^9.0",
-                "pestphp/pest": "^2.22"
+                "orchestra/testbench": "^8.0|^9.0|^10.0",
+                "pestphp/pest": "^2.22|^3.0"
             },
             "type": "library",
             "extra": {
@@ -11791,7 +11792,7 @@
                 "spatie"
             ],
             "support": {
-                "source": "https://github.com/spatie/laravel-responsecache/tree/7.6.3"
+                "source": "https://github.com/spatie/laravel-responsecache/tree/7.6.4"
             },
             "funding": [
                 {
@@ -11803,7 +11804,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2024-12-11T15:21:42+00:00"
+            "time": "2025-02-25T15:05:05+00:00"
         },
         {
             "name": "spatie/laravel-schedule-monitor",
@@ -12168,16 +12169,16 @@
         },
         {
             "name": "symfony/cache",
-            "version": "v7.2.3",
+            "version": "v7.2.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/cache.git",
-                "reference": "8d773a575e446de220dca03d600b2d8e1c1c10ec"
+                "reference": "d33cd9e14326e14a4145c21e600602eaf17cc9e7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/cache/zipball/8d773a575e446de220dca03d600b2d8e1c1c10ec",
-                "reference": "8d773a575e446de220dca03d600b2d8e1c1c10ec",
+                "url": "https://api.github.com/repos/symfony/cache/zipball/d33cd9e14326e14a4145c21e600602eaf17cc9e7",
+                "reference": "d33cd9e14326e14a4145c21e600602eaf17cc9e7",
                 "shasum": ""
             },
             "require": {
@@ -12246,7 +12247,7 @@
                 "psr6"
             ],
             "support": {
-                "source": "https://github.com/symfony/cache/tree/v7.2.3"
+                "source": "https://github.com/symfony/cache/tree/v7.2.4"
             },
             "funding": [
                 {
@@ -12262,7 +12263,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2025-01-27T11:08:17+00:00"
+            "time": "2025-02-26T09:57:54+00:00"
         },
         {
             "name": "symfony/cache-contracts",
@@ -12571,16 +12572,16 @@
         },
         {
             "name": "symfony/error-handler",
-            "version": "v6.4.18",
+            "version": "v6.4.19",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/error-handler.git",
-                "reference": "e8d3b5b1975e67812a54388b1ba8e9ec28eb770e"
+                "reference": "3d4e55cd2b8f1979a65eba9ab749d6466c316f71"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/error-handler/zipball/e8d3b5b1975e67812a54388b1ba8e9ec28eb770e",
-                "reference": "e8d3b5b1975e67812a54388b1ba8e9ec28eb770e",
+                "url": "https://api.github.com/repos/symfony/error-handler/zipball/3d4e55cd2b8f1979a65eba9ab749d6466c316f71",
+                "reference": "3d4e55cd2b8f1979a65eba9ab749d6466c316f71",
                 "shasum": ""
             },
             "require": {
@@ -12626,7 +12627,7 @@
             "description": "Provides tools to manage errors and ease debugging PHP code",
             "homepage": "https://symfony.com",
             "support": {
-                "source": "https://github.com/symfony/error-handler/tree/v6.4.18"
+                "source": "https://github.com/symfony/error-handler/tree/v6.4.19"
             },
             "funding": [
                 {
@@ -12642,7 +12643,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2025-01-06T09:38:16+00:00"
+            "time": "2025-02-02T20:16:33+00:00"
         },
         {
             "name": "symfony/event-dispatcher",
@@ -12866,16 +12867,16 @@
         },
         {
             "name": "symfony/http-client",
-            "version": "v7.2.3",
+            "version": "v7.2.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/http-client.git",
-                "reference": "7ce6078c79a4a7afff931c413d2959d3bffbfb8d"
+                "reference": "78981a2ffef6437ed92d4d7e2a86a82f256c6dc6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/http-client/zipball/7ce6078c79a4a7afff931c413d2959d3bffbfb8d",
-                "reference": "7ce6078c79a4a7afff931c413d2959d3bffbfb8d",
+                "url": "https://api.github.com/repos/symfony/http-client/zipball/78981a2ffef6437ed92d4d7e2a86a82f256c6dc6",
+                "reference": "78981a2ffef6437ed92d4d7e2a86a82f256c6dc6",
                 "shasum": ""
             },
             "require": {
@@ -12941,7 +12942,7 @@
                 "http"
             ],
             "support": {
-                "source": "https://github.com/symfony/http-client/tree/v7.2.3"
+                "source": "https://github.com/symfony/http-client/tree/v7.2.4"
             },
             "funding": [
                 {
@@ -12957,7 +12958,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2025-01-28T15:51:35+00:00"
+            "time": "2025-02-13T10:27:23+00:00"
         },
         {
             "name": "symfony/http-client-contracts",
@@ -13116,16 +13117,16 @@
         },
         {
             "name": "symfony/http-kernel",
-            "version": "v6.4.18",
+            "version": "v6.4.19",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/http-kernel.git",
-                "reference": "fca7197bfe9e99dfae7fb1ad3f7f5bd9ef80e1b7"
+                "reference": "88f2c9f7feff86bb7b9105c5151bc2c1404cd64c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/http-kernel/zipball/fca7197bfe9e99dfae7fb1ad3f7f5bd9ef80e1b7",
-                "reference": "fca7197bfe9e99dfae7fb1ad3f7f5bd9ef80e1b7",
+                "url": "https://api.github.com/repos/symfony/http-kernel/zipball/88f2c9f7feff86bb7b9105c5151bc2c1404cd64c",
+                "reference": "88f2c9f7feff86bb7b9105c5151bc2c1404cd64c",
                 "shasum": ""
             },
             "require": {
@@ -13210,7 +13211,7 @@
             "description": "Provides a structured process for converting a Request into a Response",
             "homepage": "https://symfony.com",
             "support": {
-                "source": "https://github.com/symfony/http-kernel/tree/v6.4.18"
+                "source": "https://github.com/symfony/http-kernel/tree/v6.4.19"
             },
             "funding": [
                 {
@@ -13226,7 +13227,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2025-01-29T07:25:58+00:00"
+            "time": "2025-02-26T10:51:37+00:00"
         },
         {
             "name": "symfony/mailer",
@@ -13379,16 +13380,16 @@
         },
         {
             "name": "symfony/mime",
-            "version": "v6.4.18",
+            "version": "v6.4.19",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/mime.git",
-                "reference": "917d77981eb1ea963608d5cda4d9c0cf72eaa68e"
+                "reference": "ac537b6c55ccc2c749f3c979edfa9ec14aaed4f3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/mime/zipball/917d77981eb1ea963608d5cda4d9c0cf72eaa68e",
-                "reference": "917d77981eb1ea963608d5cda4d9c0cf72eaa68e",
+                "url": "https://api.github.com/repos/symfony/mime/zipball/ac537b6c55ccc2c749f3c979edfa9ec14aaed4f3",
+                "reference": "ac537b6c55ccc2c749f3c979edfa9ec14aaed4f3",
                 "shasum": ""
             },
             "require": {
@@ -13444,7 +13445,7 @@
                 "mime-type"
             ],
             "support": {
-                "source": "https://github.com/symfony/mime/tree/v6.4.18"
+                "source": "https://github.com/symfony/mime/tree/v6.4.19"
             },
             "funding": [
                 {
@@ -13460,7 +13461,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2025-01-23T13:10:52+00:00"
+            "time": "2025-02-17T21:23:52+00:00"
         },
         {
             "name": "symfony/options-resolver",
@@ -14321,16 +14322,16 @@
         },
         {
             "name": "symfony/process",
-            "version": "v6.4.15",
+            "version": "v6.4.19",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/process.git",
-                "reference": "3cb242f059c14ae08591c5c4087d1fe443564392"
+                "reference": "7a1c12e87b08ec9c97abdd188c9b3f5a40e37fc3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/process/zipball/3cb242f059c14ae08591c5c4087d1fe443564392",
-                "reference": "3cb242f059c14ae08591c5c4087d1fe443564392",
+                "url": "https://api.github.com/repos/symfony/process/zipball/7a1c12e87b08ec9c97abdd188c9b3f5a40e37fc3",
+                "reference": "7a1c12e87b08ec9c97abdd188c9b3f5a40e37fc3",
                 "shasum": ""
             },
             "require": {
@@ -14362,7 +14363,7 @@
             "description": "Executes commands in sub-processes",
             "homepage": "https://symfony.com",
             "support": {
-                "source": "https://github.com/symfony/process/tree/v6.4.15"
+                "source": "https://github.com/symfony/process/tree/v6.4.19"
             },
             "funding": [
                 {
@@ -14378,7 +14379,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-11-06T14:19:14+00:00"
+            "time": "2025-02-04T13:35:48+00:00"
         },
         {
             "name": "symfony/property-access",
@@ -14709,16 +14710,16 @@
         },
         {
             "name": "symfony/serializer",
-            "version": "v7.2.3",
+            "version": "v7.2.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/serializer.git",
-                "reference": "320f30beb419ce4f96363ada5e225c41f1ef08ab"
+                "reference": "d3e6cd13f035e1061647f0144b5623a1e7e775ba"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/serializer/zipball/320f30beb419ce4f96363ada5e225c41f1ef08ab",
-                "reference": "320f30beb419ce4f96363ada5e225c41f1ef08ab",
+                "url": "https://api.github.com/repos/symfony/serializer/zipball/d3e6cd13f035e1061647f0144b5623a1e7e775ba",
+                "reference": "d3e6cd13f035e1061647f0144b5623a1e7e775ba",
                 "shasum": ""
             },
             "require": {
@@ -14787,7 +14788,7 @@
             "description": "Handles serializing and deserializing data structures, including object graphs, into array structures or other formats like XML and JSON.",
             "homepage": "https://symfony.com",
             "support": {
-                "source": "https://github.com/symfony/serializer/tree/v7.2.3"
+                "source": "https://github.com/symfony/serializer/tree/v7.2.4"
             },
             "funding": [
                 {
@@ -14803,7 +14804,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2025-01-29T07:13:55+00:00"
+            "time": "2025-02-24T10:49:57+00:00"
         },
         {
             "name": "symfony/service-contracts",
@@ -14977,16 +14978,16 @@
         },
         {
             "name": "symfony/translation",
-            "version": "v6.4.13",
+            "version": "v6.4.19",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/translation.git",
-                "reference": "bee9bfabfa8b4045a66bf82520e492cddbaffa66"
+                "reference": "3b9bf9f33997c064885a7bfc126c14b9daa0e00e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/translation/zipball/bee9bfabfa8b4045a66bf82520e492cddbaffa66",
-                "reference": "bee9bfabfa8b4045a66bf82520e492cddbaffa66",
+                "url": "https://api.github.com/repos/symfony/translation/zipball/3b9bf9f33997c064885a7bfc126c14b9daa0e00e",
+                "reference": "3b9bf9f33997c064885a7bfc126c14b9daa0e00e",
                 "shasum": ""
             },
             "require": {
@@ -15052,7 +15053,7 @@
             "description": "Provides tools to internationalize your application",
             "homepage": "https://symfony.com",
             "support": {
-                "source": "https://github.com/symfony/translation/tree/v6.4.13"
+                "source": "https://github.com/symfony/translation/tree/v6.4.19"
             },
             "funding": [
                 {
@@ -15068,7 +15069,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-09-27T18:14:25+00:00"
+            "time": "2025-02-13T10:18:43+00:00"
         },
         {
             "name": "symfony/translation-contracts",
@@ -15150,16 +15151,16 @@
         },
         {
             "name": "symfony/type-info",
-            "version": "v7.2.2",
+            "version": "v7.2.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/type-info.git",
-                "reference": "3b5a17470fff0034f25fd4287cbdaa0010d2f749"
+                "reference": "269344575181c326781382ed53f7262feae3c6a4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/type-info/zipball/3b5a17470fff0034f25fd4287cbdaa0010d2f749",
-                "reference": "3b5a17470fff0034f25fd4287cbdaa0010d2f749",
+                "url": "https://api.github.com/repos/symfony/type-info/zipball/269344575181c326781382ed53f7262feae3c6a4",
+                "reference": "269344575181c326781382ed53f7262feae3c6a4",
                 "shasum": ""
             },
             "require": {
@@ -15205,7 +15206,7 @@
                 "type"
             ],
             "support": {
-                "source": "https://github.com/symfony/type-info/tree/v7.2.2"
+                "source": "https://github.com/symfony/type-info/tree/v7.2.4"
             },
             "funding": [
                 {
@@ -15221,7 +15222,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-12-20T13:38:37+00:00"
+            "time": "2025-02-25T15:19:41+00:00"
         },
         {
             "name": "symfony/uid",
@@ -15384,16 +15385,16 @@
         },
         {
             "name": "symfony/var-exporter",
-            "version": "v7.2.0",
+            "version": "v7.2.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/var-exporter.git",
-                "reference": "1a6a89f95a46af0f142874c9d650a6358d13070d"
+                "reference": "4ede73aa7a73d81506002d2caadbbdad1ef5b69a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/var-exporter/zipball/1a6a89f95a46af0f142874c9d650a6358d13070d",
-                "reference": "1a6a89f95a46af0f142874c9d650a6358d13070d",
+                "url": "https://api.github.com/repos/symfony/var-exporter/zipball/4ede73aa7a73d81506002d2caadbbdad1ef5b69a",
+                "reference": "4ede73aa7a73d81506002d2caadbbdad1ef5b69a",
                 "shasum": ""
             },
             "require": {
@@ -15440,7 +15441,7 @@
                 "serialize"
             ],
             "support": {
-                "source": "https://github.com/symfony/var-exporter/tree/v7.2.0"
+                "source": "https://github.com/symfony/var-exporter/tree/v7.2.4"
             },
             "funding": [
                 {
@@ -15456,7 +15457,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-10-18T07:58:17+00:00"
+            "time": "2025-02-13T10:27:23+00:00"
         },
         {
             "name": "tijsverkoyen/css-to-inline-styles",
