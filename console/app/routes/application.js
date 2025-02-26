@@ -4,6 +4,7 @@ import { inject as service } from '@ember/service';
 import { action } from '@ember/object';
 import isElectron from '@fleetbase/ember-core/utils/is-electron';
 import pathToRoute from '@fleetbase/ember-core/utils/path-to-route';
+import removeBootLoader from '../utils/remove-boot-loader';
 
 export default class ApplicationRoute extends Route {
     @service session;
@@ -85,6 +86,17 @@ export default class ApplicationRoute extends Route {
         const shift = this.urlSearchParams.get('shift');
         if (this.session.isAuthenticated && shift) {
             return this.router.transitionTo(pathToRoute(shift));
+        }
+    }
+
+    /**
+     * Remove boot loader if not authenticated.
+     *
+     * @memberof ApplicationRoute
+     */
+    afterModel() {
+        if (!this.session.isAuthenticated) {
+            removeBootLoader();
         }
     }
 
