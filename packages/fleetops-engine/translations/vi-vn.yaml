@@ -63,8 +63,9 @@ fleet-ops:
     reporter: Người báo cáo
     sandbox: Hộp cát
     save-changes: Lưu thay đổi
-    schedule: Lịch trình
+    schedule: Ngày bắt đầu
     search: Tìm kiếm
+    estimated-end-date: Ngày kết thúc dự kiến
     security-access-code: Mã truy cập bảo mật
     service-area: Khu vực dịch vụ
     service: Dịch vụ
@@ -497,10 +498,12 @@ fleet-ops:
         new-status: Trạng thái Mới
         status-text: Nhập trạng thái hoạt động mới để thêm vào quy trình
       order-event:
-        schedule: Lên lịch
+        estimated-end-date: Ngày kết thúc dự kiến
+        schedule: Ngày bắt đầu
         unschedule: Hủy lịch
       order-form:
         id-text: Sử dụng trường này để tùy chọn thiết lập một định danh tùy chỉnh hoặc định danh nội bộ cho đơn hàng.
+        end-date-text: Ngày và giờ dự kiến hoàn thành đơn hàng. Đây là thời điểm kết thúc dự kiến của quá trình giao hàng. Nếu đơn hàng không được hoàn thành trước thời điểm này, có thể cần thực hiện hành động bổ sung hoặc phân công lại.
         schedule-text: Ngày và giờ đơn hàng sẽ được gửi. Nếu không có tài xế được giao vào thời điểm gửi, việc gửi sẽ thất bại. Nếu đơn hàng là Ad-Hoc, đơn hàng sẽ được gửi đến các tài xế trong khu vực đón.
         customer: Khách hàng
         customer-text: Tùy chọn chỉ định khách hàng cho đơn hàng này. Nếu là khách hàng mới, sử dụng nút 'Khách hàng mới' ở trên.
@@ -717,7 +720,7 @@ fleet-ops:
         assign-text: Bạn sắp gán một tài xế mới ({driverName}) cho Đơn hàng {orderId}. Nhấp tiếp tục để xác nhận tài xế.
         assign-button: Tiếp tục và gán tài xế
         date: Ngày đã lên lịch
-        end-date: Ngày kết thúc
+        end-date: Ngày kết thúc dự kiến
         driver-assigned: Tài xế
         vehicle-assigned: Phương tiện
         no-driver: Không có tài xế
@@ -1338,7 +1341,7 @@ fleet-ops:
         table: Bảng
         cancel-orders: Hủy Đơn Hàng
         delete-orders: Xóa Đơn Hàng
-        estimated-end-date: Ngày kết thúc
+        estimated-end-date: Ngày kết thúc dự kiến
         new:
           create-new-customer: Tạo khách hàng mới
           create-new-facilitator: Tạo người điều phối mới
@@ -1351,8 +1354,8 @@ fleet-ops:
           order-type-placeholder: Chọn Loại Đơn Hàng
           internal-id: ID Nội Bộ
           internal-id-help-text: Sử dụng trường này để tùy chọn thiết lập một mã nhận diện hoặc mã nội bộ cho đơn hàng.
-          schedule: Lên lịch
-          estimated-end-date: Ngày kết thúc
+          schedule: Ngày bắt đầu
+          estimated-end-date: Ngày kết thúc dự kiến
           schedule-help-text: Ngày và giờ mà đơn hàng sẽ được gửi. Nếu không có tài xế được gán tại thời điểm gửi, việc gửi sẽ thất bại. Nếu đơn hàng là Ad-Hoc, đơn hàng sẽ được gửi tới các tài xế trong khu vực nhận hàng.
           customer: Khách hàng
           customer-help-text: Tùy chọn gán khách hàng cho đơn hàng này. Nếu đây là khách hàng mới, hãy sử dụng nút 'Khách hàng mới' ở trên.
@@ -1459,10 +1462,10 @@ fleet-ops:
           vehicle-assigned: Xe đã được gán
           change-driver: Thay đổi Tài Xế
           tracking-number: Số Theo Dõi
-          date-scheduled: Ngày bắt đầu dự kiến
-          date-estimated": Ngày kết thúc ước tính
+          date-scheduled: Ngày bắt đầu
+          date-estimated": Ngày kết thúc dự kiến
           date-dispatched: Ngày Gửi
-          date-started: Ngày Bắt Đầu
+          date-started: Ngày bắt đầu
           order-details-title: Chi tiết Đơn Hàng
           additional-details-title: Chi tiết thêm
           route: Tuyến Đường

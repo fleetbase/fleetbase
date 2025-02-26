@@ -463,8 +463,9 @@ fleet-ops:
     reporter: Berichterstatter
     sandbox: Sandbox
     save-changes: Änderungen speichern
-    schedule: Zeitplan
+    schedule: Startdatum
     search: Suchen
+    estimated-end-date: Voraussichtliches Enddatum
     security-access-code: Sicherheitszugangscode
     service-area: Servicebereich
     service: Service
@@ -906,10 +907,12 @@ fleet-ops:
         new-status: Neuer Status
         status-text: Geben Sie einen neuen Aktivitätsstatus ein, der dem Ablauf hinzugefügt werden soll
       order-event:
-        schedule: Zeitplan
+        estimated-end-date: Voraussichtliches Enddatum
+        schedule: Startdatum
         unschedule: Zeitplan entfernen
       order-form:
         id-text: Verwenden Sie dieses Feld, um optional eine benutzerdefinierte Kennung oder eine interne Kennung für die Bestellung festzulegen.
+        end-date-text: Das Datum und die Uhrzeit, zu der die Bestellung voraussichtlich abgeschlossen sein wird. Dies markiert das erwartete Ende des Lieferprozesses. Falls die Bestellung bis zu diesem Zeitpunkt nicht abgeschlossen ist, kann eine weitere Maßnahme oder eine Neuzuweisung erforderlich sein.
         schedule-text: Das Datum und die Uhrzeit, zu der die Bestellung versendet wird. Wenn zum Zeitpunkt des Versands kein Fahrer zugewiesen ist, schlägt der Versand fehl. Wenn die Bestellung Ad-Hoc ist, wird sie an Fahrer in der Nähe der Abholung gesendet.
         customer: Kunde
         customer-text: Weisen Sie optional den Kunden dieser Bestellung zu. Wenn es sich um einen neuen Kunden handelt, verwenden Sie die Schaltfläche "Neuer Kunde" oben.
@@ -1126,7 +1129,7 @@ fleet-ops:
         assign-text: Sie sind dabei, einen neuen Fahrer ({driverName}) der Bestellung {orderId} zuzuweisen. Klicken Sie auf "Weiter", um die Zuweisung zu bestätigen.
         assign-button: Weiter und Fahrer zuweisen
         date: Geplantes Datum
-        end-date: Enddatum
+        end-date: Voraussichtliches Enddatum
         driver-assigned: Fahrer
         vehicle-assigned: Fahrzeug
         no-driver: Kein Fahrer
@@ -1788,7 +1791,7 @@ fleet-ops:
         cancel-orders: Bestellungen stornieren
         delete-orders: Bestellungen löschen
         dispatch-orders: Bestellungen versenden
-        estimated-end-date: Enddatum
+        estimated-end-date: Voraussichtliches Enddatum
         new:
           create-new-customer: Neuen Kunden erstellen
           create-new-facilitator: Neuen Vermittler erstellen
@@ -1802,7 +1805,7 @@ fleet-ops:
           internal-id: Interne ID
           internal-id-help-text: Verwenden Sie dieses Feld, um optional eine benutzerdefinierte oder interne Identifikationsnummer für die Bestellung festzulegen.
           schedule: Startdatum
-          estimated-end-date: Enddatum
+          estimated-end-date: Voraussichtliches Enddatum
           schedule-help-text: Das Datum und die Uhrzeit, zu der die Bestellung versendet wird. Wenn zu diesem Zeitpunkt kein Fahrer zugewiesen ist, schlägt der Versand fehl. Wenn die Bestellung ad-hoc ist, wird sie an Fahrer in der Nähe des Abholorts gesendet.
           customer: Kunde
           customer-help-text: Weisen Sie dieser Bestellung optional einen Kunden zu. Wenn es sich um einen neuen Kunden handelt, verwenden Sie die Schaltfläche „Neuer Kunde“ oben.
@@ -1910,8 +1913,8 @@ fleet-ops:
           vehicle-assigned: Fahrzeug zugewiesen
           change-driver: Fahrer wechseln
           tracking-number: Sendungsverfolgungsnummer
-          date-scheduled: Geplanter Starttermin
-          date-estimated: Geschätztes Enddatum
+          date-scheduled: Startdatum
+          date-estimated: Voraussichtliches Enddatum
           date-dispatched: Versendedatum
           date-started: Startdatum
           order-details-title: Bestelldetails

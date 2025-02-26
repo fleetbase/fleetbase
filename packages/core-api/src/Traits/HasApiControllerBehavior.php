@@ -19,6 +19,7 @@ use Fleetbase\FleetOps\Models\Order;
 use Fleetbase\FleetOps\Models\Driver;
 use App\Models\LeaveRequest;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Log;
 trait HasApiControllerBehavior
 {
@@ -310,8 +311,53 @@ trait HasApiControllerBehavior
     {
         $single        = $request->boolean('single');
         $queryCallback = $this->getControllerCallback('onQueryRecord');
-        $data          = $this->model->queryFromRequest($request, $queryCallback);
+        if (get_class($this->model) === 'Fleetbase\FleetOps\Models\Order') {
+            
+            $combinedCallback = function ($query) use ($request, $queryCallback) {
+                // Apply the original callback if it exists
+                if ($queryCallback) {
+                    $queryCallback($query);
+                }
+                // Add date filtering if 'on' parameter exists
+                if ($request->filled('on')) {
+                    $on = Carbon::parse($request->input('on'));
+                    
+                    $query->where(function ($q) use ($on) {
+                        // Check if scheduled_at column exists in the table
+                        $hasScheduledAt = Schema::hasColumn($this->model->getTable(), 'scheduled_at');
+                        
+                        if ($hasScheduledAt) {
+                            $q->whereDate('scheduled_at', $on);
+                        } else {
+                            $q->whereDate('created_at', $on);
+                        }
+                    });
+                }
+            };
+            $data = $this->model->queryFromRequest($request, $combinedCallback);
+        }
+        else {
+            $data = $this->model->queryFromRequest($request, $queryCallback);
+        }
 
+        // Create a new callback that combines date filtering with existing callback
+        
+
+        
+        if (get_class($this->model) === 'Fleetbase\FleetOps\Models\Driver' && $request->has('order_uuid')) {
+            // Get the order
+            // print_r($request->order_uuid);
+            $order = \Fleetbase\FleetOps\Models\Order::where('uuid', $request->order_uuid)->first();
+            
+            if ($order) {
+                // Filter drivers based on availability
+                $data = $data->map(function ($driver) use ($order) {
+                    $availability = $this->driverAvailability($order, $driver->uuid);
+                    $driver->is_available = ($availability && $availability['status'] === true) ? 1 : 0;
+                    return $driver;
+                });
+            }
+        }
         if ($single) {
             $data = Arr::first($data);
 
@@ -461,7 +507,7 @@ trait HasApiControllerBehavior
                     if($order->driver_assigned_uuid === null || 
                     $order->driver_assigned_uuid !== $driverAssignedUuid) {
                         $check_driver_availability = $this->driverAvailability($order, $driverAssignedUuid);
-                        if ($check_driver_availability !== true) {
+                        if ($check_driver_availability && $check_driver_availability['status'] !== true) {
                             return response()->error($check_driver_availability['error'], 400);
                         }
                     }
@@ -675,6 +721,10 @@ trait HasApiControllerBehavior
         if (!$driver) {
             return false;
         }
+       // Check if the driver has a vehicle assigned
+        if (is_null($driver->vehicle_uuid)) { 
+            return false;
+        }
         // Calculate order duration in days
         try {
             $orderEta = $order->tracker()->eta();
@@ -728,6 +778,13 @@ trait HasApiControllerBehavior
             ];
         }
 
+        if (is_null($driver->vehicle_uuid)) { 
+            return [
+                'status' => false,
+                'error' => 'No vehicle assigned to the driver.'
+            ];
+        }
+
         try {
             $orderStartDate = Carbon::parse($order->scheduled_at);
             $orderEndDate = Carbon::parse($order->estimated_end_date);
@@ -742,7 +799,7 @@ trait HasApiControllerBehavior
                 })
                 ->whereNull('deleted_at')
                 ->first();
-
+        
             if ($leaveRequest) {
                 return [
                     'status' => false,
@@ -768,7 +825,11 @@ trait HasApiControllerBehavior
                 ];
             }
 
-            return true;
+            return [
+                'status' => true,
+                'error' => 'Driver is available'
+            ];
+
 
         } catch (\Exception $e) {
             return [
@@ -778,5 +839,3 @@ trait HasApiControllerBehavior
         }
     }
 }
-
-

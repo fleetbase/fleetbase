@@ -465,7 +465,8 @@ fleet-ops:
     reporter: Reporter
     sandbox: Sandbox
     save-changes: Save changes
-    schedule: Schedule
+    schedule: Start Date
+    estimated-end-date: Estimated End Date
     search: Search
     security-access-code: Security access code
     service-area: Service area
@@ -904,11 +905,13 @@ fleet-ops:
         new-status: New Status
         status-text: Enter a new activity status to add to the flow
       order-event:
-        schedule: Schedule
+        estimated-end-date: Estimated End Date
+        schedule: Start Date
         unschedule: Unschedule
       order-form:
         id-text: Use this field to optionally set a custom identifier or internal identifier for the order.
         schedule-text: The date and time the order will be dispatched. If no driver is assigned at time of dispatch, the dispatch will fail. If the order is Ad-Hoc the order will be pinged to drivers in vicinity of pickup.
+        end-date-text: The date and time the order is scheduled to be completed. This marks the expected end of the delivery process. If the order is not completed by this time, it may require further action or reassignment.
         customer: Customer
         customer-text: Optionally assign the customer of this order. If it's a new customer, use the 'New Customer' button above.
         select-customer: Select Customer
@@ -1124,7 +1127,7 @@ fleet-ops:
         assign-text: You are about to assign a new driver ({driverName}) to Order {orderId}. Click continue to confirm driver.
         assign-button: Continue and assign driver
         date: Date scheduled
-        end-date: End Date
+        end-date: Estimated End Date
         driver-assigned: Driver
         vehicle-assigned: Vehicle
         no-driver: No Driver
@@ -1785,7 +1788,7 @@ fleet-ops:
         cancel-orders: Cancel Orders
         delete-orders: Delete Orders
         dispatch-orders: Dispatch Orders
-        estimated-end-date: End Date
+        estimated-end-date: Estimated End Date
         new:
           create-new-customer: Create new customer
           create-new-facilitator: Create new facilitator
@@ -1799,7 +1802,7 @@ fleet-ops:
           internal-id: Internal ID
           internal-id-help-text: Use this field to optionally set a custom identifier or internal identifier for the order.
           schedule: Start Date
-          estimated-end-date: End Date
+          estimated-end-date: Estimated End Date
           schedule-help-text: The date and time the order will be dispatched. If no driver is assigned at time of dispatch, the dispatch will fail. If the order is Ad-Hoc the order will be pinged to drivers in vicinity of pickup.
           customer: Customer
           customer-help-text: Optionally assign the customer of this order. If it's a new customer, use the 'New Customer' button above.
@@ -1907,10 +1910,10 @@ fleet-ops:
           vehicle-assigned: Vehicle Assigned
           change-driver: Change Driver
           tracking-number: Tracking Number
-          date-scheduled: Scheduled Start Date
+          date-scheduled: Start Date
           date-estimated: Estimated End Date
           date-dispatched: Date Dispatched
-          date-started: Date Started
+          date-started: Start Date
           order-details-title: Order Details
           additional-details-title: Additional Details
           route: Route
