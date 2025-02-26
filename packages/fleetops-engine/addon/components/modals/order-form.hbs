@@ -82,7 +82,7 @@
                 <ModelSelect
                     @modelName="driver"
                     @selectedModel={{@options.order.driver_assigned}}
-                    @query={{this.driversQuery}}
+                    @query={{hash order_uuid=@options.order.id}}
                     @placeholder={{t "fleet-ops.component.modals.order-form.select-driver"}}
                     @triggerClass="form-select form-input"
                     @infiniteScroll={{false}}
@@ -94,11 +94,15 @@
                 >
                     <div class="flex items-center">
                         <div class="w-7">
-                            <FaIcon @icon="id-card-alt" />
+                            {{#if model.is_available}}
+        <FaIcon @icon="circle" @size="xs" class="text-green-500" />
+    {{else}}
+        <FaIcon @icon="circle" @size="xs" class="text-red-500" />
+    {{/if}}
                         </div>
                         <div class="flex-1 flex flex-row truncate">
                             <span class="uppercase mr-2">{{model.name}}</span>
-                            <span class="uppercase">{{model.phone}}</span>
+                            {{!-- <span class="uppercase">{{model.phone}}</span> --}}
                         </div>
                         {{#if this.order.facilitator}}
                             <div class="px-1 ml-2 leading-5 bg-green-400 rounded shadow">

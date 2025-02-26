@@ -10,6 +10,7 @@ import { inject as service } from '@ember/service';
  * @memberof OrderScheduleCardComponent
  */
 export default class OrderScheduleCardComponent extends Component {
+    @service store;
     @service contextPanel;
     @service intl;
     @service modalsManager;
@@ -22,6 +23,8 @@ export default class OrderScheduleCardComponent extends Component {
      * @memberof OrderScheduleCardComponent
      */
     @tracked isAssigningDriver;
+    @tracked drivers = [];
+    @tracked isLoadingDrivers = false;
 
     /**
      * Constructor for OrderScheduleCardComponent.
@@ -32,8 +35,24 @@ export default class OrderScheduleCardComponent extends Component {
         super(...arguments);
         this.loadDriverFromOrder(order);
         this.loadPayloadFromOrder(order);
+        // this.loadDrivers(order.uuid);
     }
 
+    @action loadDrivers(orderUuid) {
+        this.isLoadingDrivers = true;
+        // console.log('Fetching drivers for order UUID:', orderUuid);
+        try {
+            
+            // console.log('Fetching drivers for order UUID:', orderUuid);
+            this.drivers = this.store.query('driver', { order_uuid: orderUuid });
+            // console.log(this.drivers);
+        } catch (error) {
+            console.error('Failed to load drivers:', error);
+            this.drivers = [];
+        } finally {
+            this.isLoadingDrivers = false;
+        }
+        }
     /**
      * Action to handle driver click events.
      * @action
@@ -64,6 +83,11 @@ export default class OrderScheduleCardComponent extends Component {
             return;
         }
         this.isAssigningDriver = !this.isAssigningDriver;
+        if (this.isAssigningDriver) {
+            const order = this.args.order;
+            console.log(order,"order");
+            this.loadDrivers(order.id);
+          }
     }
 
     /**
