@@ -501,18 +501,23 @@ trait HasApiControllerBehavior
             if ($model_name === 'Order') {
                 $order = Order::find($id);
                 $driverAssignedUuid = $request->input('order.driver_assigned_uuid');
-                $confirmationKey = $request->input('confirmation_key', false);
                 //check if the driver able to take the order
                 if (isset($driverAssignedUuid)){
                     
                     if($order->driver_assigned_uuid === null || 
-                        $order->driver_assigned_uuid !== $driverAssignedUuid) {
-                        if (!$confirmationKey) {
-                            $check_driver_availability = $this->driverAvailability($order, $driverAssignedUuid);
-                            if ($check_driver_availability && $check_driver_availability['status'] !== true) {
-                                return response()->error($check_driver_availability['message'], 400);
+                    $order->driver_assigned_uuid !== $driverAssignedUuid) {
+                    
+                        $check_driver_availability = $this->driverAvailability($order, $driverAssignedUuid);
+                        $warnings = $check_driver_availability['warnings'] ?? [];
+                        if (!empty($warnings)) {
+                            foreach ($warnings as $warning) {
+                                Log::warning($warning);
                             }
                         }
+                        // if ($check_driver_availability && $check_driver_availability['status'] !== true) {
+                        //     return response()->error($check_driver_availability['message'], 400);
+                        // }
+
                     }
                 } 
             }
@@ -782,11 +787,11 @@ trait HasApiControllerBehavior
         }
 
         if (is_null($driver->vehicle_uuid)) { 
-            return [
-                'status' => false,
-                'message' => 'No vehicle assigned to the driver.',
-                'confirmation_key' => true
-            ];
+            $warnings[] = 'The order is assigned successfully despite no vehicle assigned to the driver.';
+            // return [
+            //     'status' => false,
+            //     'message' => 'No vehicle assigned to the driver.',
+            // ];
         }
 
         try {
@@ -805,11 +810,11 @@ trait HasApiControllerBehavior
                 ->first();
         
             if ($leaveRequest) {
-                return [
-                    'status' => false,
-                    'message' => 'Driver is on leave during the scheduled order period.',
-                    'confirmation_key' => true
-                ];
+                $warnings[] = 'The order is assigned successfully, but the driver is on leave.';
+                // return [
+                //     'status' => false,
+                //     'message' => 'Driver is on leave during the scheduled order period.',
+                // ];
             }
 
             // Check for overlapping active orders
@@ -824,11 +829,11 @@ trait HasApiControllerBehavior
                 ->first();
 
             if ($activeOrder) {
-                return [
-                    'status' => false,
-                    'message' => 'Driver has another active order during this period.',
-                    'confirmation_key' => true
-                ];
+                $warnings[] = 'The order is assigned successfully despite the driver having another active order.';
+                // return [
+                //     'status' => false,
+                //     'message' => 'Driver has another active order during this period.',
+                // ];
             }
 
             return [
