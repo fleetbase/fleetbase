@@ -501,14 +501,17 @@ trait HasApiControllerBehavior
             if ($model_name === 'Order') {
                 $order = Order::find($id);
                 $driverAssignedUuid = $request->input('order.driver_assigned_uuid');
+                $confirmationKey = $request->input('confirmation_key', false);
                 //check if the driver able to take the order
                 if (isset($driverAssignedUuid)){
                     
                     if($order->driver_assigned_uuid === null || 
-                    $order->driver_assigned_uuid !== $driverAssignedUuid) {
-                        $check_driver_availability = $this->driverAvailability($order, $driverAssignedUuid);
-                        if ($check_driver_availability && $check_driver_availability['status'] !== true) {
-                            return response()->error($check_driver_availability['error'], 400);
+                        $order->driver_assigned_uuid !== $driverAssignedUuid) {
+                        if (!$confirmationKey) {
+                            $check_driver_availability = $this->driverAvailability($order, $driverAssignedUuid);
+                            if ($check_driver_availability && $check_driver_availability['status'] !== true) {
+                                return response()->error($check_driver_availability['message'], 400);
+                            }
                         }
                     }
                 } 
@@ -781,7 +784,8 @@ trait HasApiControllerBehavior
         if (is_null($driver->vehicle_uuid)) { 
             return [
                 'status' => false,
-                'error' => 'No vehicle assigned to the driver.'
+                'message' => 'No vehicle assigned to the driver.',
+                'confirmation_key' => true
             ];
         }
 
@@ -803,7 +807,8 @@ trait HasApiControllerBehavior
             if ($leaveRequest) {
                 return [
                     'status' => false,
-                    'error' => 'Driver is on leave during the scheduled order period. Please assign another driver.'
+                    'message' => 'Driver is on leave during the scheduled order period.',
+                    'confirmation_key' => true
                 ];
             }
 
@@ -821,7 +826,8 @@ trait HasApiControllerBehavior
             if ($activeOrder) {
                 return [
                     'status' => false,
-                    'error' => 'Driver has another active order during this period. Please assign another driver.'
+                    'message' => 'Driver has another active order during this period.',
+                    'confirmation_key' => true
                 ];
             }
 
