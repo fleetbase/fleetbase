@@ -498,7 +498,6 @@ trait HasApiControllerBehavior
        
         try {
             $model_name = str_replace('Controller', '', class_basename($this));
-            $warnings = [];
             if ($model_name === 'Order') {
                 $order = Order::find($id);
                 $driverAssignedUuid = $request->input('order.driver_assigned_uuid');
@@ -510,7 +509,7 @@ trait HasApiControllerBehavior
                     
                         $check_driver_availability = $this->driverAvailability($order, $driverAssignedUuid);
                         if ($check_driver_availability && $check_driver_availability['status'] !== true) {
-                            $warnings[] = $check_driver_availability['message'];
+                            return response()->warning($check_driver_availability['message'], 200);
                             // return response()->error($check_driver_availability['message'], 400);
                         }
 
@@ -523,17 +522,10 @@ trait HasApiControllerBehavior
             $this->validateRequest($request);
             $record = $this->model->updateRecordFromRequest($request, $id, $onBeforeCallback, $onAfterCallback);
 
-            // if (Http::isInternalRequest($request)) {
-            //     $this->resource::wrap($this->resourceSingularlName);
+            if (Http::isInternalRequest($request)) {
+                $this->resource::wrap($this->resourceSingularlName);
 
-            //     return new $this->resource($record);
-            if (!empty($warnings)) {
-                return response()->json([
-                    'status' => 'warning',
-                    'message' => 'The order was updated successfully, but with warnings.',
-                    'warnings' => $warnings,
-                    'data' => new $this->resource($record)
-                ]);
+                return new $this->resource($record);
             }
 
             return new $this->resource($record);
@@ -781,7 +773,6 @@ trait HasApiControllerBehavior
     private function driverAvailability($order, $driver_uuid)
     {
         // Check if driver exists
-        $warnings = [];
         $driver = Driver::where('uuid', $driver_uuid)->first();
         if (!$driver) {
             return [
@@ -791,11 +782,10 @@ trait HasApiControllerBehavior
         }
 
         if (is_null($driver->vehicle_uuid)) { 
-            $warnings[] = 'The order is assigned successfully despite no vehicle assigned to the driver.';
-            // return [
-            //     'status' => false,
-            //     'message' => 'The order is assigned successfully despite no vehicle assigned to the driver.'
-            // ];
+            return [
+                'status' => false,
+                'message' => 'The order is assigned successfully despite no vehicle assigned to the driver.'
+            ];
         }
 
         try {
@@ -814,12 +804,11 @@ trait HasApiControllerBehavior
                 ->first();
         
             if ($leaveRequest) {
-                $warnings[] = 'The order is assigned successfully, but the driver is on leave.';
-                
-                // return [
-                //     'status' => false,
-                //     'message' => 'The order is assigned successfully, but the driver is on leave.'
-                // ];
+                                
+                return [
+                    'status' => false,
+                    'message' => 'The order is assigned successfully, but the driver is on leave.',
+                ];
             }
 
             // Check for overlapping active orders
@@ -834,11 +823,11 @@ trait HasApiControllerBehavior
                 ->first();
 
             if ($activeOrder) {
-                $warnings[] = 'The order is assigned successfully despite the driver having another active order.';
-                // return [
-                //     'status' => false,
-                //     'message' => 'The order is assigned successfully despite the driver having another active order.'
-                // ];
+                
+                return [
+                    'status' => false,
+                    'message' => 'The order is assigned successfully despite the driver having another active order.',
+                ];
             }
 
             return [
