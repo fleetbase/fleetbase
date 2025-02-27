@@ -1125,6 +1125,7 @@ fleet-ops:
         unassign-button: Continue and unassign driver
         assign-driver: Assign New Driver?
         assign-text: You are about to assign a new driver ({driverName}) to Order {orderId}. Click continue to confirm driver.
+        assign-busy-text: The driver ({driverName}) {availability}. Do you still want to assign Order {orderId} to them? Click continue to confirm.
         assign-button: Continue and assign driver
         date: Date scheduled
         end-date: Estimated End Date

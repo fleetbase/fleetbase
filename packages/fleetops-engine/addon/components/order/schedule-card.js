@@ -130,7 +130,17 @@ export default class OrderScheduleCardComponent extends Component {
 
         return this.modalsManager.confirm({
             title: this.intl.t('fleet-ops.component.order.schedule-card.assign-driver'),
-            body: this.intl.t('fleet-ops.component.order.schedule-card.assign-text', { driverName: driver.name, orderId: order.public_id }),
+            // body: this.intl.t('fleet-ops.component.order.schedule-card.assign-text', { driverName: driver.name, orderId: order.public_id }),
+            body: driver.is_available
+            ? this.intl.t('fleet-ops.component.order.schedule-card.assign-text', {
+                  driverName: driver.name,
+                  orderId: order.public_id,
+              })
+            : this.intl.t('fleet-ops.component.order.schedule-card.assign-busy-text', {
+                  driverName: driver.name,
+                  orderId: order.public_id,
+                  availability:driver.availability_message,
+              }),
             acceptButtonText: this.intl.t('fleet-ops.component.order.schedule-card.assign-button'),
             confirm: () => {
                 order.set('driver_assigned_uuid', driver.id);
