@@ -354,6 +354,7 @@ trait HasApiControllerBehavior
                 $data = $data->map(function ($driver) use ($order) {
                     $availability = $this->driverAvailability($order, $driver->uuid);
                     $driver->is_available = ($availability && $availability['status'] === true) ? 1 : 0;
+                    $driver->availability_message = $availability['message'] ?? null;
                     return $driver;
                 });
             }
@@ -497,25 +498,25 @@ trait HasApiControllerBehavior
     {
        
         try {
-            $model_name = str_replace('Controller', '', class_basename($this));
-            if ($model_name === 'Order') {
-                $order = Order::find($id);
-                $driverAssignedUuid = $request->input('order.driver_assigned_uuid');
-                //check if the driver able to take the order
-                if (isset($driverAssignedUuid)){
+            // $model_name = str_replace('Controller', '', class_basename($this));
+            // if ($model_name === 'Order') {
+            //     $order = Order::find($id);
+            //     $driverAssignedUuid = $request->input('order.driver_assigned_uuid');
+            //     //check if the driver able to take the order
+            //     if (isset($driverAssignedUuid)){
                     
-                    if($order->driver_assigned_uuid === null || 
-                    $order->driver_assigned_uuid !== $driverAssignedUuid) {
+            //         if($order->driver_assigned_uuid === null || 
+            //         $order->driver_assigned_uuid !== $driverAssignedUuid) {
                     
-                        $check_driver_availability = $this->driverAvailability($order, $driverAssignedUuid);
-                        if ($check_driver_availability && $check_driver_availability['status'] !== true) {
-                            return response()->warning($check_driver_availability['message'], 200);
-                            // return response()->error($check_driver_availability['message'], 400);
-                        }
+            //             $check_driver_availability = $this->driverAvailability($order, $driverAssignedUuid);
+            //             if ($check_driver_availability && $check_driver_availability['status'] !== true) {
+            //                 return response()->warning($check_driver_availability['message'], 200);
+            //                 // return response()->error($check_driver_availability['message'], 400);
+            //             }
 
-                    }
-                } 
-            }
+            //         }
+            //     } 
+            // }
             $onBeforeCallback = $this->getControllerCallback('onBeforeUpdate');
             $onAfterCallback  = $this->getControllerCallback('onAfterUpdate');
 
@@ -784,7 +785,7 @@ trait HasApiControllerBehavior
         if (is_null($driver->vehicle_uuid)) { 
             return [
                 'status' => false,
-                'message' => 'The order is assigned successfully despite no vehicle assigned to the driver.'
+                'message' => 'has no vehicle assigned'
             ];
         }
 
@@ -807,7 +808,7 @@ trait HasApiControllerBehavior
                                 
                 return [
                     'status' => false,
-                    'message' => 'The order is assigned successfully, but the driver is on leave.',
+                    'message' => 'is currently on leave',
                 ];
             }
 
@@ -826,7 +827,7 @@ trait HasApiControllerBehavior
                 
                 return [
                     'status' => false,
-                    'message' => 'The order is assigned successfully despite the driver having another active order.',
+                    'message' => 'already has another active order assigned',
                 ];
             }
 

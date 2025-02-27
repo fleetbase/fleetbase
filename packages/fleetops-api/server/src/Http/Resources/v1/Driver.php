@@ -62,6 +62,7 @@ class Driver extends FleetbaseResource
             'updated_at'                    => $this->updated_at,
             'created_at'                    => $this->created_at,
             'is_available'                  => $this->is_available,
+            'availability_message'          => $this->availability_message,
         ];
     }
 
@@ -108,6 +109,8 @@ class Driver extends FleetbaseResource
             'updated_at'             => $this->updated_at,
             'created_at'             => $this->created_at,
             'is_available'           =>  $this->is_available,
+            'availability_message'   =>  $this->availability_message,
+            
         ];
     }
 }
