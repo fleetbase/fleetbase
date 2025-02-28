@@ -361,7 +361,7 @@
 
 .flb--modal.flb--default-modal.modal-sm > .flb--modal-dialog > .flb--modal-content,
 .flb--modal.modal-sm > .flb--modal-dialog > .flb--modal-content {
-    width: 30rem;
+    width: 50rem;
 }
 
 .flb--modal.flb--default-modal.modal-xs > .flb--modal-dialog > .flb--modal-content,
@@ -380,7 +380,7 @@
 }
 
 .flb--modal.flb--default-modal > .flb--modal-dialog > .flb--modal-content {
-    width: 57rem;
+    width: 67rem;
     /* height: 20rem; */
     overflow: visible;
     @apply inline-block text-left align-bottom transition-all transform bg-white shadow-xl opacity-100;

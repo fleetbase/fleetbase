@@ -151,6 +151,8 @@ class Driver extends Model
         'vehicle_avatar',
         'vendor_name',
         'is_available',
+        'availability_message',
+        'button_message',
     ];
 
     /**
@@ -735,5 +737,9 @@ class Driver extends Model
     public function getIsAvailableAttribute()
     {
         return $this->attributes['is_available'] ?? null;
+    }
+    public function getAvailabilityMessageAttribute()
+    {
+        return $this->attributes['availability_message'] ?? null;
     }
 }

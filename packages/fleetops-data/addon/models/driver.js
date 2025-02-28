@@ -56,7 +56,9 @@ export default class DriverModel extends Model {
     @attr('string') city;
     @attr('string') status;
     @attr('boolean') online;
-
+    @attr('boolean') is_available;
+    @attr('string') availability_message;
+    @attr('string') button_message;
     /** @dates */
     @attr('date') deleted_at;
     @attr('date') created_at;

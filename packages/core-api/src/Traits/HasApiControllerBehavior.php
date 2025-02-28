@@ -354,6 +354,8 @@ trait HasApiControllerBehavior
                 $data = $data->map(function ($driver) use ($order) {
                     $availability = $this->driverAvailability($order, $driver->uuid);
                     $driver->is_available = ($availability && $availability['status'] === true) ? 1 : 0;
+                    $driver->availability_message = $availability['message'] ?? null;
+                    $driver->button_message = $availability['button'] ?? null;
                     return $driver;
                 });
             }
@@ -497,22 +499,25 @@ trait HasApiControllerBehavior
     {
        
         try {
-            $model_name = str_replace('Controller', '', class_basename($this));
-            if ($model_name === 'Order') {
-                $order = Order::find($id);
-                $driverAssignedUuid = $request->input('order.driver_assigned_uuid');
-                //check if the driver able to take the order
-                if (isset($driverAssignedUuid)){
+            // $model_name = str_replace('Controller', '', class_basename($this));
+            // if ($model_name === 'Order') {
+            //     $order = Order::find($id);
+            //     $driverAssignedUuid = $request->input('order.driver_assigned_uuid');
+            //     //check if the driver able to take the order
+            //     if (isset($driverAssignedUuid)){
                     
-                    if($order->driver_assigned_uuid === null || 
-                    $order->driver_assigned_uuid !== $driverAssignedUuid) {
-                        $check_driver_availability = $this->driverAvailability($order, $driverAssignedUuid);
-                        if ($check_driver_availability && $check_driver_availability['status'] !== true) {
-                            return response()->error($check_driver_availability['error'], 400);
-                        }
-                    }
-                } 
-            }
+            //         if($order->driver_assigned_uuid === null || 
+            //         $order->driver_assigned_uuid !== $driverAssignedUuid) {
+                    
+            //             $check_driver_availability = $this->driverAvailability($order, $driverAssignedUuid);
+            //             if ($check_driver_availability && $check_driver_availability['status'] !== true) {
+            //                 return response()->warning($check_driver_availability['message'], 200);
+            //                 // return response()->error($check_driver_availability['message'], 400);
+            //             }
+
+            //         }
+            //     } 
+            // }
             $onBeforeCallback = $this->getControllerCallback('onBeforeUpdate');
             $onAfterCallback  = $this->getControllerCallback('onAfterUpdate');
 
@@ -781,7 +786,8 @@ trait HasApiControllerBehavior
         if (is_null($driver->vehicle_uuid)) { 
             return [
                 'status' => false,
-                'error' => 'No vehicle assigned to the driver.'
+                'message' => 'has no vehicle assigned',
+                'button' => 'Without Vehicle',
             ];
         }
 
@@ -801,9 +807,11 @@ trait HasApiControllerBehavior
                 ->first();
         
             if ($leaveRequest) {
+                                
                 return [
                     'status' => false,
-                    'error' => 'Driver is on leave during the scheduled order period. Please assign another driver.'
+                    'message' => 'is scheduled to be on leave during the assignment period.',
+                    'button' => 'with Assignment',
                 ];
             }
 
@@ -819,9 +827,11 @@ trait HasApiControllerBehavior
                 ->first();
 
             if ($activeOrder) {
+                
                 return [
                     'status' => false,
-                    'error' => 'Driver has another active order during this period. Please assign another driver.'
+                    'message' => 'already has another active order assigned',
+                    'button' => 'with Assignment',
                 ];
             }
 

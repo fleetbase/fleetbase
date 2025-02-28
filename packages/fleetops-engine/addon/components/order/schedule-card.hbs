@@ -59,24 +59,32 @@
             </div>
             <div>
                 {{#if this.isAssigningDriver}}
-                    <ModelSelect
-                        @modelName="driver"
-                        @selectedModel={{@order.driver_assigned}}
-                        @placeholder={{t "fleet-ops.component.order.schedule-card.select-driver"}}
-                        @triggerClass="form-select form-input form-input-sm w-48"
-                        @infiniteScroll={{false}}
-                        @renderInPlace={{true}}
-                        @allowClear={{true}}
-                        @disabled={{@model.isLoading}}
-                        @onChange={{this.assignDriver}}
-                        @permission="fleet-ops assign-driver-for order"
-                        as |model|
+                                        <PowerSelect
+                    @options={{this.drivers}}
+                    @selected={{@order.driver_assigned}}
+                    @placeholder={{if this.isLoadingDrivers "Loading..." (t "fleet-ops.component.order.schedule-card.select-driver")}}
+                    @triggerClass="custom-power-select form-input form-input-sm w-48 px-2 py-1 border border-gray-300 rounded-md shadow-sm focus:ring focus:ring-blue-500 focus:ring-opacity-50"
+                    @onChange={{this.assignDriver}}
+                    @allowClear={{true}}
+                    @disabled={{or this.isLoadingDrivers @model.isLoading}}
+                    @renderInPlace={{true}}
+                    as |driver|
                     >
-                        <div class="flex flex-row items-center truncate uppercase">
-                            <span class="uppercase mr-1.5">{{model.name}}</span>
-                            <span class="uppercase">{{model.phone}}</span>
+                    <div class="flex items-center">
+                        <div class="w-7">
+                        {{#if driver.is_available}}
+                            <FaIcon @icon="circle" @size="xs" class="text-green-500" />
+                        {{else}}
+                            <FaIcon @icon="circle" @size="xs" class="text-red-500" />
+                        {{/if}}
                         </div>
-                    </ModelSelect>
+                        <!-- Driver Name -->
+                        <span class="uppercase mr-2">{{driver.name}}</span>
+
+                        <!-- Driver Phone -->
+                        {{!-- <span class="uppercase">{{driver.phone}}</span> --}}
+                    </div>
+                    </PowerSelect>
                 {{else}}
                     <a
                         href="javascript:;"
