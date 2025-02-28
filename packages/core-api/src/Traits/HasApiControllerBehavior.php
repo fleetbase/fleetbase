@@ -355,6 +355,7 @@ trait HasApiControllerBehavior
                     $availability = $this->driverAvailability($order, $driver->uuid);
                     $driver->is_available = ($availability && $availability['status'] === true) ? 1 : 0;
                     $driver->availability_message = $availability['message'] ?? null;
+                    $driver->button_message = $availability['button'] ?? null;
                     return $driver;
                 });
             }
@@ -785,7 +786,8 @@ trait HasApiControllerBehavior
         if (is_null($driver->vehicle_uuid)) { 
             return [
                 'status' => false,
-                'message' => 'has no vehicle assigned'
+                'message' => 'has no vehicle assigned',
+                'button' => 'Without Vehicle',
             ];
         }
 
@@ -808,7 +810,8 @@ trait HasApiControllerBehavior
                                 
                 return [
                     'status' => false,
-                    'message' => 'is currently on leave',
+                    'message' => 'is scheduled to be on leave during the assignment period.',
+                    'button' => 'with Assignment',
                 ];
             }
 
@@ -828,6 +831,7 @@ trait HasApiControllerBehavior
                 return [
                     'status' => false,
                     'message' => 'already has another active order assigned',
+                    'button' => 'with Assignment',
                 ];
             }
 

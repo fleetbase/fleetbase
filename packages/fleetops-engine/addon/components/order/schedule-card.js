@@ -140,8 +140,15 @@ export default class OrderScheduleCardComponent extends Component {
                   driverName: driver.name,
                   orderId: order.public_id,
                   availability:driver.availability_message,
+                  button:driver.button_message,
               }),
-            acceptButtonText: this.intl.t('fleet-ops.component.order.schedule-card.assign-button'),
+            // acceptButtonText: this.intl.t('fleet-ops.component.order.schedule-card.assign-button'),
+            acceptButtonText: driver.is_available
+            ? this.intl.t('fleet-ops.component.order.schedule-card.assign-button')
+            : this.intl.t('fleet-ops.component.order.schedule-card.assign-busy-button',{
+                button:driver.button_message,
+            }),
+
             confirm: () => {
                 order.set('driver_assigned_uuid', driver.id);
                 return order

@@ -152,6 +152,7 @@ class Driver extends Model
         'vendor_name',
         'is_available',
         'availability_message',
+        'button_message',
     ];
 
     /**
