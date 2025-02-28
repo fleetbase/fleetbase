@@ -1128,7 +1128,7 @@ fleet-ops:
         unassign-button: Continuer et retirer le chauffeur
         assign-driver: Assigner un nouveau chauffeur ?
         assign-text: Vous êtes sur le point d'assigner un nouveau chauffeur ({driverName}) à la commande {orderId}. Cliquez sur continuer pour confirmer le chauffeur.
-        assign-busy-text: Le chauffeur ({driverName}) {availability}. Voulez-vous quand même lui attribuer la commande {orderId} ? Cliquez sur "Continuer" pour confirmer.
+        assign-busy-text: Le chauffeur ({driverName}) <strong >{availability}</strong>. Voulez-vous quand même lui attribuer la commande {orderId} ? Cliquez sur "Continuer" pour confirmer.
         assign-button: Continuer et assigner le chauffeur
         date: Date prévue
         end-date: Date de fin estimée
