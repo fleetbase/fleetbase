@@ -742,4 +742,10 @@ class Driver extends Model
     {
         return $this->attributes['availability_message'] ?? null;
     }
+
+    public function getButtonMessageAttribute()
+    {
+        // Example return statement (Modify this logic based on actual use case)
+        return $this->status === 'shift-ended' ? 'Shift has ended' : 'On break';
+    }
 }
