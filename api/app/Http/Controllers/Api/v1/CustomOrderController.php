@@ -155,8 +155,7 @@ class CustomOrderController extends BaseOrderController
             return response()->json(['status' => false, 'message' => __('messages.load_already_started')], 400);
         }
 
-        if (($request->is_approved == 1 && $order->status === 'confirmed') ||
-            ($request->is_approved == 0 && $order->status !== 'created')) {
+        if ($request->is_approved == 1 && $order->status === 'confirmed') {
             return response()->json([
                 'status' => false,
                 'message' => __('messages.invalid_operation', ['status' => $order->status]),
