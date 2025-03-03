@@ -15,5 +15,11 @@ return [
     'request_deleted_success' => 'La demande de congé a été supprimée avec succès.',
     'request_not_found' => 'La demande de congé est introuvable.',
     'invalid_activity_status' => 'Statut d\'activité invalide.',
-    'status_updated_successfully' => 'status updated successfully'
+    'status_updated_successfully' => 'Statut mis à jour avec succès',
+    'order_status_updated_to_by_driver' => 'Statut de la commande mis à jour à :status par le chauffeur',
+    'status' => [
+        'shift-ended' => 'Fin de service',
+        'on-break' => 'En Pause',
+        // ... existing code ...
+    ]
 ];

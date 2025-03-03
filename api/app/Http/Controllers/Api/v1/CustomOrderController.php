@@ -337,7 +337,7 @@ class CustomOrderController extends BaseOrderController
             else {
                 $trackingData = [
                     'status'       => ucfirst(str_replace('-', ' ', $status)),
-                    'details'      => 'Order status updated to ' . str_replace('-', ' ', $status),
+                    'details'      => __('messages.order_status_updated_to_by_driver', ['status' => __('messages.status.' . $status)]),
                     'code'         => str_replace('-', ' ', $status),
                     'location'     => $existingTrackingStatus['location'],
                     'tracking_number_uuid' => $existingTrackingStatus['tracking_number_uuid'],
