@@ -20,10 +20,14 @@ export function createOrderEventTitle(order) {
 }
 
 export default function createFullCalendarEventFromOrder(order) {
+    const startDate = new Date(order.scheduled_at);
+    const endDate = new Date(order.estimated_end_date);
+    endDate.setDate(endDate.getDate() + 1);
     return {
         id: order.id,
         title: createOrderEventTitle(order),
-        start: order.scheduled_at,
+        start: startDate.toISOString(),
+        end: endDate.toISOString(),
         allDay: true,
         display: 'block',
     };

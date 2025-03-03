@@ -84,7 +84,9 @@ export default class OperationsSchedulerIndexRoute extends Route {
         let driverUnavailabilityData = Array.isArray(driverUnavailability?.data) ? driverUnavailability.data : [];
 
         if (driverUnavailabilityData.length > 0) {
-            const leaveEvents = driverUnavailabilityData.map(createFullCalendarEventFromLeave);
+            const leaveEvents = driverUnavailabilityData.map((leave) => 
+                createFullCalendarEventFromLeave(leave, this.intl) // Pass intl here
+            );
             controller.events = [...controller.events, ...leaveEvents];
         }
         
