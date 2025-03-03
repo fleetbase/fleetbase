@@ -15,5 +15,11 @@ return [
     'request_deleted_success' => 'Der Urlaubsantrag wurde erfolgreich gelöscht.',
     'request_not_found' => 'Der Urlaubsantrag wurde nicht gefunden.',
     'invalid_activity_status' => 'Ungültiger Aktivitätsstatus.',
-    'status_updated_successfully' => 'status updated successfully'
+    'status_updated_successfully' => 'Status erfolgreich aktualisiert',
+    'order_status_updated_to_by_driver' => 'Auftragsstatus durch Fahrer auf :status aktualisiert',
+    'status' => [
+        'shift-ended' => 'Schicht Beendet',
+        'on-break' => 'Pause',
+        // ... existing code ...
+    ]
 ];

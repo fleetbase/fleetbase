@@ -15,5 +15,11 @@ return [
     'request_deleted_success' => 'La richiesta di permesso è stata eliminata con successo.',
     'request_not_found' => 'La richiesta di permesso non è stata trovata.',
     'invalid_activity_status' => 'Stato di attività non valido.',
-    'status_updated_successfully' => 'status updated successfully'
+    'status_updated_successfully' => 'Stato aggiornato con successo',
+    'order_status_updated_to_by_driver' => 'Stato dell\'ordine aggiornato a :status dall\'autista',
+    'status' => [
+        'shift-ended' => 'Turno Terminato',
+        'on-break' => 'In Pausa',
+        // ... existing code ...
+    ]
 ];

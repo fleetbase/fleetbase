@@ -155,8 +155,7 @@ class CustomOrderController extends BaseOrderController
             return response()->json(['status' => false, 'message' => __('messages.load_already_started')], 400);
         }
 
-        if (($request->is_approved == 1 && $order->status === 'confirmed') ||
-            ($request->is_approved == 0 && $order->status !== 'created')) {
+        if ($request->is_approved == 1 && $order->status === 'confirmed') {
             return response()->json([
                 'status' => false,
                 'message' => __('messages.invalid_operation', ['status' => $order->status]),
@@ -337,7 +336,7 @@ class CustomOrderController extends BaseOrderController
             else {
                 $trackingData = [
                     'status'       => ucfirst(str_replace('-', ' ', $status)),
-                    'details'      => 'Order status updated to ' . str_replace('-', ' ', $status),
+                    'details'      => __('messages.order_status_updated_to_by_driver', ['status' => __('messages.status.' . $status)]),
                     'code'         => str_replace('-', ' ', $status),
                     'location'     => $existingTrackingStatus['location'],
                     'tracking_number_uuid' => $existingTrackingStatus['tracking_number_uuid'],
