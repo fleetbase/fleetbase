@@ -191,6 +191,7 @@ class CustomOrderController extends BaseOrderController
                     ],
                     'order' => $order
                 ];
+                $status = 'confirmed';
             } else {
                 $driver_user = User::withoutGlobalScopes()->where('uuid', $driver->user_uuid)->first();
                 if($driver_user){
@@ -226,11 +227,12 @@ class CustomOrderController extends BaseOrderController
                         'phone' => $driver_phone ?? 'N/A',
                     ],
                 ];
+                $status = 'created';
             }
 
             CustomOrderController::logOrderStatusChange($order, $order->status, $oldStatus);
             //insert record into tracking status:
-            $createTrackingStatus = $this->createTrackingStatus($order, 'CONFIRMED');
+            $createTrackingStatus = $this->createTrackingStatus($order, $status);
             DB::commit();
             if (!$createTrackingStatus) {
                 return response()->json(['status' => false, 'message' => __('messages.duplicate_tracking_status')], 400);
@@ -336,7 +338,7 @@ class CustomOrderController extends BaseOrderController
             else {
                 $trackingData = [
                     'status'       => ucfirst(str_replace('-', ' ', $status)),
-                    'details'      => __('messages.order_status_updated_to_by_driver', ['status' => __('messages.status.' . $status)]),
+                    'details'      => 'Order status updated by the driver',
                     'code'         => str_replace('-', ' ', $status),
                     'location'     => $existingTrackingStatus['location'],
                     'tracking_number_uuid' => $existingTrackingStatus['tracking_number_uuid'],
