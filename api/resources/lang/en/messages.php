@@ -16,5 +16,7 @@ return [
     'request_not_found' => 'Leave Request has not been found',
     'order_import_success' => 'Orders imported successfully',
     'import_failed' => 'Import failed',
-    'invalid_file' => 'Invalid file, unable to proccess.'
+    'invalid_file' => 'Invalid file, unable to proccess.',
+    'invalid_activity_status' => 'Invalid activity status.',
+    'status_updated_successfully' => 'status updated successfully'
 ];

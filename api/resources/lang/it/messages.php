@@ -14,5 +14,6 @@ return [
     'request_update_success' => 'La richiesta di permesso è stata aggiornata con successo.',
     'request_deleted_success' => 'La richiesta di permesso è stata eliminata con successo.',
     'request_not_found' => 'La richiesta di permesso non è stata trovata.',
-
+    'invalid_activity_status' => 'Stato di attività non valido.',
+    'status_updated_successfully' => 'status updated successfully'
 ];

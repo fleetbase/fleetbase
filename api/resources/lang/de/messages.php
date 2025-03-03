@@ -14,5 +14,6 @@ return [
     'request_update_success' => 'Der Urlaubsantrag wurde erfolgreich aktualisiert.',
     'request_deleted_success' => 'Der Urlaubsantrag wurde erfolgreich gelöscht.',
     'request_not_found' => 'Der Urlaubsantrag wurde nicht gefunden.',
-
+    'invalid_activity_status' => 'Ungültiger Aktivitätsstatus.',
+    'status_updated_successfully' => 'status updated successfully'
 ];

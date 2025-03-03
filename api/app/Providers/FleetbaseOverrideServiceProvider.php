@@ -62,6 +62,8 @@ class FleetbaseOverrideServiceProvider extends ServiceProvider
 
                     Route::post('/orders/{id}/start', 'App\Http\Controllers\Api\v1\CustomOrderController@driverAcceptance')
                     ->name('orders.driverAcceptance'); // Give it the same name as Fleetbase's route
+                    Route::post('/orders/{id}/update-activity', 'App\Http\Controllers\Api\v1\CustomOrderController@driverActivity')
+                    ->name('orders.driverActivity');
                     Route::prefix('leave-requests')->group(function () {
                         Route::post('/create', 'App\Http\Controllers\Api\v1\LeaveRequestController@store')
                         ->name('leave-requests.create');

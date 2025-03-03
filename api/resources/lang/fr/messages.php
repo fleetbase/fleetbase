@@ -14,5 +14,6 @@ return [
     'request_update_success' => 'La demande de congé a été mise à jour avec succès.',
     'request_deleted_success' => 'La demande de congé a été supprimée avec succès.',
     'request_not_found' => 'La demande de congé est introuvable.',
-
+    'invalid_activity_status' => 'Statut d\'activité invalide.',
+    'status_updated_successfully' => 'status updated successfully'
 ];
