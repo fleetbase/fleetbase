@@ -198,7 +198,7 @@ class CustomOrderController extends BaseOrderController
                     $driver_name = $driver_user->name;
                     $driver_phone = $driver_user->phone;
                 }
-                $order->update(['status' => 'created', 'driver_assigned_uuid' => null, 'vehicle_assigned_uuid' => null, 'dispatched' => 0]);
+                $order->update(['status' => 'created', 'driver_assigned_uuid' => null, 'vehicle_assigned_uuid' => null, 'dispatched' => 0, 'dispatched_at' => null]);
                 
                 if ($driver->current_job_uuid === $order->uuid) {
                     $driver->update(['current_job_uuid' => null]);
