@@ -768,8 +768,13 @@ class Driver extends Model
                 return null;
         }
     }
-    private function getHaveNoVehicleAttribute()
-    {
-        return $this->attributes['have_no_vehicle'] ?? null;
+    public function getHaveNoVehicleAttribute() {
+        if (isset($this->attributes['have_no_vehicle'])) {
+            return $this->attributes['have_no_vehicle'];
+        } // Returns true if no vehicle is assigned
+        else{
+            return $this->attributes['have_no_vehicle'] = null;
+        }
     }
 }
+

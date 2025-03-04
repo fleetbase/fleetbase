@@ -780,7 +780,8 @@ trait HasApiControllerBehavior
         if (!$driver) {
             return [
                 'status' => false,
-                'error' => 'Driver not found'
+                'error' => 'Driver not found',
+                'have_no_vehicle' => 0,
             ];
         }
 
@@ -814,6 +815,7 @@ trait HasApiControllerBehavior
                     'status' => false,
                     'message' => 'is scheduled to be on leave during the assignment period.',
                     'button' => 'with Assignment',
+                    'have_no_vehicle' => 0,
                 ];
             }
 
@@ -834,19 +836,22 @@ trait HasApiControllerBehavior
                     'status' => false,
                     'message' => 'already has another active order assigned',
                     'button' => 'with Assignment',
+                    'have_no_vehicle' => 0,
                 ];
             }
 
             return [
                 'status' => true,
-                'error' => 'Driver is available'
+                'error' => 'Driver is available',
+                'have_no_vehicle' => 0,
             ];
 
 
         } catch (\Exception $e) {
             return [
                 'status' => false,
-                'error' => 'Error checking driver availability'
+                'error' => 'Error checking driver availability',
+                'have_no_vehicle' => 0,
             ];
         }
     }
