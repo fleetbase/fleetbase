@@ -356,10 +356,11 @@ trait HasApiControllerBehavior
                     // $driver->is_available = ($availability && $availability['status'] === true) ? 1 : 0;
                     $driver->is_available = ($availability && (
                         $availability['status'] === true || 
-                        ($availability['status'] === false && array_key_exists('has_vehicle', $availability))
+                        ($availability['status'] === false && array_key_exists('have_no_vehicle', $availability))
                     )) ? 1 : 0;
                     $driver->availability_message = $availability['message'] ?? null;
                     $driver->button_message = $availability['button'] ?? null;
+                    $driver->have_no_vehicle = $availability['have_no_vehicle'] ?? null;
                     return $driver;
                 });
             }
@@ -792,7 +793,7 @@ trait HasApiControllerBehavior
                 'status' => false,
                 'message' => 'has no vehicle assigned',
                 'button' => 'Without Vehicle',
-                'has_vehicle' => false,
+                'have_no_vehicle' => 1,
              ];
         }
 
