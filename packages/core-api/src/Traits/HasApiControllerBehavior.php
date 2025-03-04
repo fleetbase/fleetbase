@@ -355,7 +355,7 @@ trait HasApiControllerBehavior
                     $availability = $this->driverAvailability($order, $driver->uuid);
                     // $driver->is_available = ($availability && $availability['status'] === true) ? 1 : 0;
                     $driver->is_available = (($availability && 
-                    $availability['status'] === true) || ($availability && 
+                    $availability['status'] === true) || ($availability && ($availability['status'] === true) && 
                     (array_key_exists('has_vehicle', $availability)))
                     ) ? 1 : 0;
                     $driver->availability_message = $availability['message'] ?? null;
