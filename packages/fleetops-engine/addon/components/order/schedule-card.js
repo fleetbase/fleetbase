@@ -108,6 +108,7 @@ export default class OrderScheduleCardComponent extends Component {
                     order.setProperties({
                         driver_assigned: null,
                         driver_assigned_uuid: null,
+                        vehicle_assigned: null,
                     });
 
                     modal.startLoading();
@@ -150,7 +151,10 @@ export default class OrderScheduleCardComponent extends Component {
             }),
 
             confirm: () => {
-                order.set('driver_assigned_uuid', driver.id);
+                order.setProperties({
+                    driver_assigned_uuid: driver.id,
+                    vehicle_assigned: driver.vehicle || null,
+                });
                 return order
                     .save()
                     .catch((error) => {
