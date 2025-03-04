@@ -353,11 +353,7 @@ trait HasApiControllerBehavior
                 // Filter drivers based on availability
                 $data = $data->map(function ($driver) use ($order) {
                     $availability = $this->driverAvailability($order, $driver->uuid);
-                    // $driver->is_available = ($availability && $availability['status'] === true) ? 1 : 0;
-                    $driver->is_available = ($availability && (
-                        $availability['status'] === true || 
-                        ($availability['status'] === false && array_key_exists('have_no_vehicle', $availability))
-                    )) ? 1 : 0;
+                    $driver->is_available = ($availability && $availability['status'] === true) ? 1 : 0;
                     $driver->availability_message = $availability['message'] ?? null;
                     $driver->button_message = $availability['button'] ?? null;
                     $driver->have_no_vehicle = $availability['have_no_vehicle'] ?? null;
