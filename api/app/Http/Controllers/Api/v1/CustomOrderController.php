@@ -314,9 +314,10 @@ class CustomOrderController extends BaseOrderController
     {
         $trackingnumber = $order->tracking_number_uuid;
         $existingTrackingSameStatus = TrackingStatus::where('tracking_number_uuid', $trackingnumber)
-        ->where('code', $status)
-        ->whereNull('deleted_at')
-        ->first();
+            ->where('code', $status)
+            ->where('code', '!=', 'created')
+            ->whereNull('deleted_at')
+            ->first();
 
         if ($existingTrackingSameStatus) {
             return false; // Do not insert if a similar status exists
@@ -330,6 +331,16 @@ class CustomOrderController extends BaseOrderController
                     'status'       => 'Order Accepted',
                     'details'      => 'Order Accepted by the driver.',
                     'code'         => str_replace('-', ' ', $status),
+                    'location'     => $existingTrackingStatus['location'],
+                    'tracking_number_uuid' => $existingTrackingStatus['tracking_number_uuid'],
+                    'company_uuid' => $existingTrackingStatus['company_uuid'],
+                ];
+            } 
+            elseif($status === 'created') {
+                $trackingData = [
+                    'status'       => 'Order Rejected',
+                    'details'      => 'Order rejected by the driver. Please assign a new driver.',
+                    'code'         => 'created',
                     'location'     => $existingTrackingStatus['location'],
                     'tracking_number_uuid' => $existingTrackingStatus['tracking_number_uuid'],
                     'company_uuid' => $existingTrackingStatus['company_uuid'],
