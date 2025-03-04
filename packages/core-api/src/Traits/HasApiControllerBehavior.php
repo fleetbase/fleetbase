@@ -776,25 +776,15 @@ trait HasApiControllerBehavior
     private function driverAvailability($order, $driver_uuid)
     {
         // Check if driver exists
-        $driver = Driver::where('uuid', $driver_uuid)->first();
-        if (!$driver) {
-            return [
-                'status' => false,
-                'error' => 'Driver not found',
-                'have_no_vehicle' => 0,
-            ];
-        }
-
-        if (is_null($driver->vehicle_uuid)) { 
-            return [
-                'status' => false,
-                'message' => 'has no vehicle assigned',
-                'button' => 'Without Vehicle',
-                'have_no_vehicle' => 1,
-             ];
-        }
-
         try {
+            $driver = Driver::where('uuid', $driver_uuid)->first();
+            if (!$driver) {
+                return [
+                    'status' => false,
+                    'error' => 'Driver not found',
+                    'have_no_vehicle' => 0,
+                ];
+            }
             $orderStartDate = Carbon::parse($order->scheduled_at);
             $orderEndDate = Carbon::parse($order->estimated_end_date);
 
@@ -839,7 +829,14 @@ trait HasApiControllerBehavior
                     'have_no_vehicle' => 0,
                 ];
             }
-
+            if (is_null($driver->vehicle_uuid)) { 
+                return [
+                    'status' => false,
+                    'message' => 'has no vehicle assigned',
+                    'button' => 'Without Vehicle',
+                    'have_no_vehicle' => 1,
+                 ];
+            }
             return [
                 'status' => true,
                 'error' => 'Driver is available',
