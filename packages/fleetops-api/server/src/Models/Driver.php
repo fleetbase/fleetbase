@@ -745,7 +745,26 @@ class Driver extends Model
 
     public function getButtonMessageAttribute()
     {
-        // Example return statement (Modify this logic based on actual use case)
-        return $this->status === 'shift-ended' ? 'Shift has ended' : 'On break';
+        // Return early if button_message is already set from other functionality
+        if (isset($this->attributes['button_message'])) {
+            return $this->attributes['button_message'];
+        }
+        // Handle different driver statuses
+        switch ($this->status) {
+            case 'shift-ended':
+                return 'Shift has ended';
+            case 'on-break':
+                return 'On break';
+            case 'with Assignment':
+                return 'with Assignment';
+            case 'Without Vehicle':
+                return 'Without Vehicle';
+            case 'Confirmed':
+                return 'Confirmed';
+            case 'Created':
+                return 'Created';
+            default:
+                return null;
+        }
     }
 }
