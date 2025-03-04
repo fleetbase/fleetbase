@@ -3,7 +3,7 @@ import { get } from '@ember/object';
 export function createOrderEventTitle(order) {
     const scheduledAtTime = get(order, 'scheduledAtTime');
     const driverAssignedName = get(order, 'driver_assigned.name');
-    const vehicleAssignedName = get(order, 'driver_assigned.vehicle_name');
+    const vehicleAssignedName = get(order, 'driver_assigned.vehicle_name') || "No vehicle";
     const destination = get(order, 'pickupName');
 
     let title = [];
