@@ -198,7 +198,12 @@ class CustomOrderController extends BaseOrderController
                     $driver_name = $driver_user->name;
                     $driver_phone = $driver_user->phone;
                 }
-                $order->update(['status' => 'created', 'driver_assigned_uuid' => null, 'vehicle_assigned_uuid' => null, 'dispatched' => 0, 'dispatched_at' => null]);
+                else{
+                    $driver_name = null;
+                    $driver_phone = null;
+                }
+                $status = $order->dispatched === 1 ? 'dispatched' : 'created';
+                $order->update(['status' => $status, 'driver_assigned_uuid' => null, 'vehicle_assigned_uuid' => null]);
                 
                 if ($driver->current_job_uuid === $order->uuid) {
                     $driver->update(['current_job_uuid' => null]);
@@ -227,7 +232,7 @@ class CustomOrderController extends BaseOrderController
                         'phone' => $driver_phone ?? 'N/A',
                     ],
                 ];
-                $status = 'created';
+               
             }
 
             CustomOrderController::logOrderStatusChange($order, $order->status, $oldStatus);
@@ -348,7 +353,7 @@ class CustomOrderController extends BaseOrderController
             } 
             else {
                 $trackingData = [
-                    'status'       => ucfirst(str_replace('-', ' ', $status)),
+                    'status'       => ucwords(str_replace('-', ' ', $status)),
                     'details'      => 'Order status updated by the driver',
                     'code'         => str_replace('-', ' ', $status),
                     'location'     => $existingTrackingStatus['location'],
