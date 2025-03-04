@@ -431,7 +431,9 @@ export default class OperationsOrdersIndexViewController extends BaseController 
      * @void
      */
     @action editOrder(order, options = {}) {
-        options = options === null ? {} : options;
+        options = options === null ? {} : {};
+
+        let driverToAssign = null; // Store the driver assignment until confirmation
 
         this.modalsManager.show('modals/order-form', {
             title: this.intl.t('fleet-ops.operations.orders.index.view.edit-order-title'),
@@ -465,43 +467,10 @@ export default class OperationsOrdersIndexViewController extends BaseController 
                     if (driver.vehicle) {
                         order.set('vehicle_assigned', driver.vehicle);
                     }
-                    return;
+                } else {
+                    // Store the driver assignment for later confirmation
+                    driverToAssign = driver;
                 }
-                this.modalsManager.done();
-            
-                // If driver is not available, show confirmation modal
-                this.modalsManager.confirm({
-                    title: this.intl.t('fleet-ops.component.order.schedule-card.assign-driver'),
-                    body: this.intl.t('fleet-ops.component.order.schedule-card.assign-busy-text', {
-                        driverName: driver.name,
-                        orderId: order.public_id,
-                        availability: driver.availability_message,
-                        button:driver.button_message,
-                    }),
-                    acceptButtonText: this.intl.t('fleet-ops.component.order.schedule-card.assign-busy-button',{
-                        button:driver.button_message,
-                    }),
-                    confirm: async (modal) => {
-                        order.set('driver_assigned', driver);
-                        order.set('driver_assigned_uuid', driver.id);
-            
-                        if (driver.vehicle) {
-                            order.set('vehicle_assigned', driver.vehicle);
-                        }
-                        modal.startLoading();
-                        try {
-                            await order.save();
-                            this.notifications.success(options.successNotification || this.intl.t('fleet-ops.operations.orders.index.view.update-success', { orderId: order.public_id }));
-                            modal.done();
-                        } catch (error) {
-                            this.notifications.serverError(error);
-                            modal.stopLoading();
-                        }
-                    },
-                    decline: (modal) => {
-                        modal.done();
-                    },
-                });
             },
             setVehicle: (vehicle) => {
                 order.set('vehicle_assigned', vehicle);
@@ -533,14 +502,52 @@ export default class OperationsOrdersIndexViewController extends BaseController 
                     modal.stopLoading();
                     return;
                 }
-   
-                try {
-                    await order.save();
-                    this.notifications.success(options.successNotification || this.intl.t('fleet-ops.operations.orders.index.view.update-success', { orderId: order.public_id }));
+
+                const saveOrder = async () => {
+                    try {
+                        await order.save();
+                        this.notifications.success(options.successNotification || this.intl.t('fleet-ops.operations.orders.index.view.update-success', { orderId: order.public_id }));
+                        modal.done();
+                    } catch (error) {
+                        this.notifications.serverError(error);
+                        modal.stopLoading();
+                    }
+                };
+
+                // If driver confirmation is needed, show the modal before saving
+                if (driverToAssign) {
                     modal.done();
-                } catch (error) {
-                    this.notifications.serverError(error);
-                    modal.stopLoading();
+                    setTimeout(() => {
+                        this.modalsManager.confirm({
+                            title: this.intl.t('fleet-ops.component.order.schedule-card.assign-driver'),
+                            body: this.intl.t('fleet-ops.component.order.schedule-card.assign-busy-text', {
+                                driverName: driverToAssign.name,
+                                orderId: order.public_id,
+                                availability: driverToAssign.availability_message,
+                                button: driverToAssign.button_message,
+                            }),
+                            acceptButtonText: this.intl.t('fleet-ops.component.order.schedule-card.assign-busy-button', {
+                                button: driverToAssign.button_message,
+                            }),
+                            confirm: async (confirmModal) => {
+                                order.set('driver_assigned', driverToAssign);
+                                order.set('driver_assigned_uuid', driverToAssign.id);
+
+                                if (driverToAssign.vehicle) {
+                                    order.set('vehicle_assigned', driverToAssign.vehicle);
+                                }
+
+                                confirmModal.startLoading();
+                                await saveOrder();
+                            },
+                            decline: (confirmModal) => {
+                                confirmModal.done();
+                                modal.done();
+                            },
+                        });
+                    }, 300);
+                } else {
+                    await saveOrder();
                 }
             },
             decline: () => {
