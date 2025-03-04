@@ -34,6 +34,7 @@ export default class OperationsOrdersIndexViewController extends BaseController 
     @tracked customFieldGroups = [];
     @tracked customFields = [];
     @tracked uploadQueue = [];
+    @tracked drivers = [];
     acceptedFileTypes = [
         'application/vnd.ms-excel',
         'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
@@ -452,14 +453,55 @@ export default class OperationsOrdersIndexViewController extends BaseController 
                 order.set('customer_type', `fleet-ops:${model.customer_type}`);
             },
             setDriver: (driver) => {
-                order.set('driver_assigned', driver);
-                if (driver && driver.vehicle) {
-                    order.set('vehicle_assigned', driver.vehicle);
-                }
-
                 if (!driver) {
                     order.set('driver_assigned_uuid', null);
                 }
+            
+                // If driver is available, assign immediately
+                if (driver.is_available) {
+                    order.set('driver_assigned', driver);
+                    order.set('driver_assigned_uuid', driver.id);
+            
+                    if (driver.vehicle) {
+                        order.set('vehicle_assigned', driver.vehicle);
+                    }
+                    return;
+                }
+                this.modalsManager.done();
+            
+                // If driver is not available, show confirmation modal
+                this.modalsManager.confirm({
+                    title: this.intl.t('fleet-ops.component.order.schedule-card.assign-driver'),
+                    body: this.intl.t('fleet-ops.component.order.schedule-card.assign-busy-text', {
+                        driverName: driver.name,
+                        orderId: order.public_id,
+                        availability: driver.availability_message,
+                        button:driver.button_message,
+                    }),
+                    acceptButtonText: this.intl.t('fleet-ops.component.order.schedule-card.assign-busy-button',{
+                        button:driver.button_message,
+                    }),
+                    confirm: async (modal) => {
+                        order.set('driver_assigned', driver);
+                        order.set('driver_assigned_uuid', driver.id);
+            
+                        if (driver.vehicle) {
+                            order.set('vehicle_assigned', driver.vehicle);
+                        }
+                        modal.startLoading();
+                        try {
+                            await order.save();
+                            this.notifications.success(options.successNotification || this.intl.t('fleet-ops.operations.orders.index.view.update-success', { orderId: order.public_id }));
+                            modal.done();
+                        } catch (error) {
+                            this.notifications.serverError(error);
+                            modal.stopLoading();
+                        }
+                    },
+                    decline: (modal) => {
+                        modal.done();
+                    },
+                });
             },
             setVehicle: (vehicle) => {
                 order.set('vehicle_assigned', vehicle);
@@ -491,16 +533,6 @@ export default class OperationsOrdersIndexViewController extends BaseController 
                     modal.stopLoading();
                     return;
                 }
-
-                // if (new Date(order.estimated_end_date) < new Date(order.scheduled_at)) {
-                //     this.errorMessage = "End Date cannot be earlier than the start date.";
-                //     this.notifications.error(this.errorMessage);
-            
-                //     // Revert to previous estimated_end_date
-                //     order.rollbackAttributes(); 
-                //     modal.stopLoading();
-                //     return;
-                // }
    
                 try {
                     await order.save();

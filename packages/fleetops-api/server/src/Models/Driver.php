@@ -153,6 +153,7 @@ class Driver extends Model
         'is_available',
         'availability_message',
         'button_message',
+        'have_no_vehicle',
     ];
 
     /**
@@ -767,4 +768,13 @@ class Driver extends Model
                 return null;
         }
     }
+    public function getHaveNoVehicleAttribute() {
+        if (isset($this->attributes['have_no_vehicle'])) {
+            return $this->attributes['have_no_vehicle'];
+        } // Returns true if no vehicle is assigned
+        else{
+            return $this->attributes['have_no_vehicle'] = null;
+        }
+    }
 }
+
