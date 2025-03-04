@@ -379,7 +379,7 @@ class CustomOrderController extends BaseOrderController
                 $status = $request->input('status');
                 
                 // Validate status first
-                $status_array = ['shift-ended','on-break'];
+                $status_array = ['shift-ended','on-break', 'incident-reported'];
                 if(!in_array($status, $status_array)){
                     return response()->json(['status' => false, 'message' => __('messages.invalid_activity_status')], 400);
                 }
