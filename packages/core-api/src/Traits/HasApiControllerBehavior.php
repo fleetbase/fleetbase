@@ -804,7 +804,7 @@ trait HasApiControllerBehavior
                     });
                 })
                 ->whereNull('deleted_at')
-                ->first();
+                ->get();
         
             if ($leaveRequest) {
                                 
@@ -824,7 +824,7 @@ trait HasApiControllerBehavior
                           ->where('estimated_end_date', '>=', $orderStartDate);
                     });
                 })
-                ->first();
+                ->exists();
 
             if ($activeOrder) {
                 
