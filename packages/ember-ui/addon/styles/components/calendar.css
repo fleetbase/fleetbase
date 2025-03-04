@@ -264,6 +264,7 @@ body[data-theme='dark'] .ui-full-calendar .fc-view-harness {
 }
 /* scroll for calendar */
 .fc-scroller {
-    overflow-y: auto !important;
-    max-height: 350px; 
+    overflow-x: hidden !important;
+    overflow-y: auto !important;  /* Allow vertical scroll */
+    max-height: 90vh;  /* Prevents too much height restriction */
 }

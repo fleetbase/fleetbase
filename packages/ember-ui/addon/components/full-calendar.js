@@ -52,11 +52,23 @@ export default class FullCalendarComponent extends Component {
             contentHeight: 'auto', // ✅ Allow height to expand as needed
             expandRows: true, // ✅ Ensures rows expand instead of shrinking
             dayMaxEventRows: true,
-            nowIndicator: true, // Show current time indicator
+            nowIndicator: true,
+            buttonText: {
+                today: 'Today',
+                month: 'Month',
+                week: 'Week',
+                day: 'Day'
+            }, // Show current time indicator
             headerToolbar: {
                 left: 'prev,next today',
                 center: 'title',
                 right: 'dayGridWeek,dayGridMonth,dayGridDay',
+            },
+            views: {
+                dayGridMonth: {
+                    dayCount: 21, // Show only 21 days at a time
+                    // duration: { days: 21 }
+                }
             },
             
         });
