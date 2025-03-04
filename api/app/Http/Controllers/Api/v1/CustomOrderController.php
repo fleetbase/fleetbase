@@ -353,7 +353,7 @@ class CustomOrderController extends BaseOrderController
             } 
             else {
                 $trackingData = [
-                    'status'       => ucwords(str_replace('-', ' ', $status)),
+                    'status'       => $status,
                     'details'      => 'Order status updated by the driver',
                     'code'         => str_replace('-', ' ', $status),
                     'location'     => $existingTrackingStatus['location'],
