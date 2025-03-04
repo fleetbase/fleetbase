@@ -14,7 +14,9 @@
             >
                 <div class="flex items-center">
                     <div class="w-7">
-                        {{#if model.is_available}}
+                        {{#if model.have_no_vehicle}}
+                            <FaIcon @icon="circle" @size="xs" class="text-yellow-500" />
+                        {{else if model.is_available}}
                             <FaIcon @icon="circle" @size="xs" class="text-green-500" />
                         {{else}}
                             <FaIcon @icon="circle" @size="xs" class="text-red-500" />
