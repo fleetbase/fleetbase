@@ -59,6 +59,7 @@ export default class DriverModel extends Model {
     @attr('boolean') is_available;
     @attr('string') availability_message;
     @attr('string') button_message;
+    @attr('boolean') have_no_vehicle;
     /** @dates */
     @attr('date') deleted_at;
     @attr('date') created_at;
