@@ -15,8 +15,8 @@ const getScheduledOrder = (order) => {
         console.log("Order is undefined, null, or not an object:", order);
         return false;
     }
-    const scheduledOrder = !isNone(order.driver_assigned_uuid) &&
-    order.vehicle_assigned && !isNone(order.vehicle_assigned.uuid);
+    const scheduledOrder = !isNone(order.driver_assigned_uuid);
+    // order.vehicle_assigned && !isNone(order.vehicle_assigned.uuid);
     return scheduledOrder;
 };
 
