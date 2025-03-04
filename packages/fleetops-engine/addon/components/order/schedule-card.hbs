@@ -72,11 +72,13 @@
                     >
                     <div class="flex items-center">
                         <div class="w-7">
-                        {{#if driver.is_available}}
-                            <FaIcon @icon="circle" @size="xs" class="text-green-500" />
-                        {{else}}
-                            <FaIcon @icon="circle" @size="xs" class="text-red-500" />
-                        {{/if}}
+                      {{#if driver.have_no_vehicle}}
+    <FaIcon @icon="circle" @size="xs" class="text-yellow-500" />
+{{else if driver.is_available}}
+    <FaIcon @icon="circle" @size="xs" class="text-green-500" />
+{{else}}
+    <FaIcon @icon="circle" @size="xs" class="text-red-500" />
+{{/if}}
                         </div>
                         <!-- Driver Name -->
                         <span class="uppercase mr-2">{{driver.name}}</span>
