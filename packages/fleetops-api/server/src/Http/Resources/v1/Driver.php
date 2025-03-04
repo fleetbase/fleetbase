@@ -64,7 +64,7 @@ class Driver extends FleetbaseResource
             'is_available'                  => $this->is_available,
             'availability_message'          => $this->availability_message,
             'button_message'                => $this->button_message,
-            'have_no_vehicle'               => $this->have_no_vehicle,
+            // 'have_no_vehicle'               => $this->have_no_vehicle,
         ];
     }
 
