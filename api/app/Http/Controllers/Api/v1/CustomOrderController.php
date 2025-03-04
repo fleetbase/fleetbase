@@ -338,8 +338,8 @@ class CustomOrderController extends BaseOrderController
             } 
             elseif($status === 'created') {
                 $trackingData = [
-                    'status'       => 'Order Rejected',
-                    'details'      => 'Order rejected by the driver. Please assign a new driver.',
+                    'status'       => 'Order Rejected by the driver',
+                    'details'      => 'Please assign a new driver.',
                     'code'         => 'created',
                     'location'     => $existingTrackingStatus['location'],
                     'tracking_number_uuid' => $existingTrackingStatus['tracking_number_uuid'],
