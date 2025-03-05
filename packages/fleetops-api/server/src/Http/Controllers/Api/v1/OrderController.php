@@ -865,13 +865,9 @@ class OrderController extends Controller
         }
 
         // set order to started
-        if ($order->started === 0 && $order->started_at === null)
-        {
-            $order->started_at = now();
-            $order->started    = true;
-        }
        
-       
+        $order->started_at = now();
+        $order->started    = true;
         $order->save();
 
         // trigger start event
