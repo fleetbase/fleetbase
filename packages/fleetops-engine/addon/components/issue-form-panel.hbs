@@ -205,7 +205,14 @@
                 </InputGroup>
 
                 <InputGroup @name={{t "fleet-ops.common.coordinates"}}>
-                    <CoordinatesInput @value={{this.issue.location}} @onChange={{fn (mut this.issue.location)}} @disabled={{unauthorized}} />
+                    <CoordinatesInput
+                        @value={{this.issue.location}}
+                        @onChange={{this.updateIssueCoordinates}}
+                        @onGeocode={{this.onAutocomplete}}
+                        @onUpdatedFromMap={{this.onReverseGeocode}}
+                        @onInit={{this.setCoordinatesInput}}
+                        @disabled={{unauthorized}}
+                    />
                 </InputGroup>
             </div>
         {{/let}}
