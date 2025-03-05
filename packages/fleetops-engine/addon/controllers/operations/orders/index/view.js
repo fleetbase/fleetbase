@@ -785,21 +785,83 @@ export default class OperationsOrdersIndexViewController extends BaseController 
             await this.modalsManager.done();
         }
 
+   
+        let driverToAssign = null; // Store the driver assignment until confirmation
+    
         this.modalsManager.show(`modals/order-assign-driver`, {
             title: order.driver_uuid ? this.intl.t('fleet-ops.operations.orders.index.view.change-order') : this.intl.t('fleet-ops.operations.orders.index.view.assign-order'),
             acceptButtonText: 'Save Changes',
             order,
+            setDriver: (driver) => {
+                if (!driver) {
+                    order.set('driver_assigned_uuid', null);
+                }
+    
+                if (driver.is_available) {
+                    order.set('driver_assigned', driver);
+                    order.set('driver_assigned_uuid', driver.id);
+    
+                    if (driver.vehicle) {
+                        order.set('vehicle_assigned', driver.vehicle);
+                    }
+                } else {
+                    // Store driver assignment for later confirmation
+                    driverToAssign = driver;
+                }
+            },
             confirm: async (modal) => {
                 modal.startLoading();
-
-                try {
-                    await order.save();
-                    this.notifications.success(this.intl.t('fleet-ops.operations.orders.index.view.assign-success', { orderId: order.public_id }));
+    
+                const saveOrder = async () => {
+                    try {
+                        await order.save();
+                        this.notifications.success(this.intl.t('fleet-ops.operations.orders.index.view.update-success', { orderId: order.public_id }));
+                        modal.done();
+                    } catch (error) {
+                        this.notifications.serverError(error);
+                        modal.stopLoading();
+                    }
+                };
+    
+                // Show confirmation modal if the driver is unavailable
+                if (driverToAssign) {
                     modal.done();
-                } catch (error) {
-                    this.notifications.serverError(error);
-                    modal.stopLoading();
+                    setTimeout(() => {
+                        this.modalsManager.confirm({
+                            title: this.intl.t('fleet-ops.component.order.schedule-card.assign-driver'),
+                            body: this.intl.t('fleet-ops.component.order.schedule-card.assign-busy-text', {
+                                driverName: driverToAssign.name,
+                                orderId: order.public_id,
+                                availability: driverToAssign.availability_message,
+                                button: driverToAssign.button_message,
+                            }),
+                            acceptButtonText: this.intl.t('fleet-ops.component.order.schedule-card.assign-busy-button', {
+                                button: driverToAssign.button_message,
+                            }),
+                            confirm: async (confirmModal) => {
+                                order.set('driver_assigned', driverToAssign);
+                                order.set('driver_assigned_uuid', driverToAssign.id);
+    
+                                if (driverToAssign.vehicle) {
+                                    order.set('vehicle_assigned', driverToAssign.vehicle);
+                                }
+    
+                                confirmModal.startLoading();
+                                await saveOrder();
+                            },
+                            decline: (confirmModal) => {
+                                confirmModal.done();
+                                modal.done();
+                            },
+                        });
+                    }, 300);
+                } else {
+                    await saveOrder();
                 }
+            },
+            decline: () => {
+                order.rollbackAttributes();
+                this.modalsManager.done();
             },
         });
     }
