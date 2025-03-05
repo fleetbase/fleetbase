@@ -64,7 +64,7 @@
                 /> --}}
 
                 <InputGroup>
-                    <InputLabel @labelText={{t "fleet-ops.operations.orders.index.new.schedule"}} />
+                    <InputLabel @labelText={{html-safe (concat (t "fleet-ops.operations.orders.index.new.schedule") " <span style='color: red;'>*</span>")}} />
                     <DateTimeInput
                         class="form-input"
                         @value={{this.order.scheduled_at}}
@@ -75,7 +75,7 @@
                     />
                 </InputGroup>
                 <InputGroup>
-                    <InputLabel @labelText={{t "fleet-ops.operations.orders.index.new.estimated-end-date"}} />
+                    <InputLabel @labelText={{html-safe (concat (t "fleet-ops.operations.orders.index.new.estimated-end-date") " <span style='color: red;'>*</span>")}} />
                     <DateTimeInput
                         class="form-input"
                         @value={{this.order.estimated_end_date}}
