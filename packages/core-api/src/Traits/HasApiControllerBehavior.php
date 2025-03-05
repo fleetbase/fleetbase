@@ -318,21 +318,29 @@ trait HasApiControllerBehavior
                 if ($queryCallback) {
                     $queryCallback($query);
                 }
-                // Add date filtering if 'on' parameter exists
                 if ($request->filled('on')) {
                     $on = Carbon::parse($request->input('on'));
-                    
-                    $query->where(function ($q) use ($on) {
-                        // Check if scheduled_at column exists in the table
+                    $timezone = $request->input('timezone', 'UTC');
+                   
+                    $query->where(function ($q) use ($on, $timezone) {
                         $hasScheduledAt = Schema::hasColumn($this->model->getTable(), 'scheduled_at');
-                        
-                        if ($hasScheduledAt) {
-                            $q->whereDate('scheduled_at', $on);
+                        $dateColumn = $hasScheduledAt ? 'scheduled_at' : 'created_at';
+                
+                        if ($timezone && ($timezone !== 'UTC')) {
+                            // Convert user's date to UTC start and end of the day
+                            $localDate = Carbon::parse($on)->setTimezone($timezone);
+                            // echo $convertedOn;
+                            $startOfDayUtc =$localDate->copy()->startOfDay()->setTimezone('UTC');
+                            $endOfDayUtc = $localDate->copy()->endOfDay()->setTimezone('UTC');
+                            // Query between the UTC range
+                            $q->whereBetween($dateColumn, [$startOfDayUtc, $endOfDayUtc]);
                         } else {
-                            $q->whereDate('created_at', $on);
+                            // If no timezone specified or it's UTC, use direct date filter
+                            $q->whereDate($dateColumn, $on);
                         }
                     });
                 }
+                
             };
             $data = $this->model->queryFromRequest($request, $combinedCallback);
         }
@@ -779,6 +787,7 @@ trait HasApiControllerBehavior
         // Check if driver exists
 
         try {
+            $driver_uuid = '7ec62a87-2e0b-4e56-8fbb-44f70d2b8e17';
             $driver = Driver::where('uuid', $driver_uuid)->first();
             if (!$driver) {
                 return [
@@ -788,8 +797,10 @@ trait HasApiControllerBehavior
                 ];
             }
             if($timezone && $timezone !== 'UTC'){
-                $orderStartDate = Carbon::parse($order->scheduled_at)->setTimezone($timezone);
-                $orderEndDate = Carbon::parse($order->estimated_end_date)->setTimezone($timezone);
+                $localOrderStartDate = Carbon::parse($order->scheduled_at)->setTimezone($timezone);
+                $orderStartDate = Carbon::parse($localOrderStartDate)->setTimezone('UTC');
+                $localOrderEndDate = Carbon::parse($order->estimated_end_date)->setTimezone($timezone);
+                $orderEndDate = Carbon::parse($localOrderEndDate)->setTimezone('UTC');
             }
             else{
                 $orderStartDate = Carbon::parse($order->scheduled_at);
