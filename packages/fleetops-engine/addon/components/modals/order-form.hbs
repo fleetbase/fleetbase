@@ -82,7 +82,7 @@
                 <ModelSelect
                     @modelName="driver"
                     @selectedModel={{@options.order.driver_assigned}}
-                    @query={{hash order_uuid=@options.order.id}}
+                    @query={{hash order_uuid=@options.order.id timezone=(get-timezone)}}
                     @placeholder={{t "fleet-ops.component.modals.order-form.select-driver"}}
                     @triggerClass="form-select form-input"
                     @infiniteScroll={{false}}
