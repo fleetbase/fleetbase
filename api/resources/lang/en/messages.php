@@ -16,5 +16,13 @@ return [
     'request_not_found' => 'Leave Request has not been found',
     'order_import_success' => 'Orders imported successfully',
     'import_failed' => 'Import failed',
-    'invalid_file' => 'Invalid file, unable to proccess.'
+    'invalid_file' => 'Invalid file, unable to proccess.',
+    'invalid_activity_status' => 'Invalid activity status.',
+    'status_updated_successfully' => 'status updated successfully',
+    'order_status_updated_to_by_driver' => 'Order status updated to :status by driver',
+    'status' => [
+        'shift-ended' => 'Shift Ended',
+        'on-break' => 'On Break',
+        // ... other status translations
+    ]
 ];

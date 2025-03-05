@@ -15,8 +15,8 @@ const getScheduledOrder = (order) => {
         console.log("Order is undefined, null, or not an object:", order);
         return false;
     }
-    const scheduledOrder = !isNone(order.driver_assigned_uuid) &&
-    order.vehicle_assigned && !isNone(order.vehicle_assigned.uuid);
+    const scheduledOrder = !isNone(order.driver_assigned_uuid);
+    // order.vehicle_assigned && !isNone(order.vehicle_assigned.uuid);
     return scheduledOrder;
 };
 
@@ -84,7 +84,9 @@ export default class OperationsSchedulerIndexRoute extends Route {
         let driverUnavailabilityData = Array.isArray(driverUnavailability?.data) ? driverUnavailability.data : [];
 
         if (driverUnavailabilityData.length > 0) {
-            const leaveEvents = driverUnavailabilityData.map(createFullCalendarEventFromLeave);
+            const leaveEvents = driverUnavailabilityData.map((leave) => 
+                createFullCalendarEventFromLeave(leave, this.intl) // Pass intl here
+            );
             controller.events = [...controller.events, ...leaveEvents];
         }
         

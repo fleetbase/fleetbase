@@ -42,7 +42,7 @@
                         </div>
                     {{/let}}
                     {{#unless @model.isIntegratedVendorOrder}}
-                        {{#let (cannot "fleet-ops update order") as |unauthorized|}}
+                        {{!-- {{#let (cannot "fleet-ops update order") as |unauthorized|}}
                             <div>
                                 <a href="javascript:;" class="next-dd-item" {{on "click" (dropdown-fn dd this.createNewActivity @model)}} disabled={{unauthorized}}>
                                     <div class="w-6">
@@ -56,7 +56,7 @@
                                     </Attach::Tooltip>
                                 {{/if}}
                             </div>
-                        {{/let}}
+                        {{/let}} --}}
                         {{#let (cannot "fleet-ops assign-driver-for order") as |unauthorized|}}
                             <div>
                                 {{#if @model.driver_assigned_uuid}}
@@ -297,7 +297,7 @@
                                 {{/if}}
                             </div>
                         </a>
-                        <div class="mt-1">
+                        {{!-- <div class="mt-1">
                             <Button
                                 @size="xs"
                                 @type="default"
@@ -306,7 +306,7 @@
                                 @onClick={{fn this.assignDriver @model}}
                                 @permission="fleet-ops assign-driver-for order"
                             />
-                        </div>
+                        </div> --}}
                     </div>
                 </div>
                 <div class="field-info-container space-y-2">

@@ -14,5 +14,12 @@ return [
     'request_update_success' => 'La solicitud de permiso se ha actualizado correctamente.',
     'request_deleted_success' => 'La solicitud de permiso se ha eliminado correctamente.',
     'request_not_found' => 'No se ha encontrado la solicitud de permiso.',
-
+    'invalid_activity_status' => 'Estado de actividad no válido.',
+    'status_updated_successfully' => 'Estado actualizado correctamente',
+    'order_status_updated_to_by_driver' => 'Estado del pedido actualizado a :status por el conductor',
+    'status' => [
+        'shift-ended' => 'Fin de turno',
+        'on-break' => 'En Descanso',
+        // ... other status translations
+    ]
 ];

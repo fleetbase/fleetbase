@@ -153,6 +153,7 @@ class Driver extends Model
         'is_available',
         'availability_message',
         'button_message',
+        'have_no_vehicle',
     ];
 
     /**
@@ -742,4 +743,38 @@ class Driver extends Model
     {
         return $this->attributes['availability_message'] ?? null;
     }
+
+    public function getButtonMessageAttribute()
+    {
+        // Return early if button_message is already set from other functionality
+        if (isset($this->attributes['button_message'])) {
+            return $this->attributes['button_message'];
+        }
+        // Handle different driver statuses
+        switch ($this->status) {
+            case 'shift-ended':
+                return 'Shift has ended';
+            case 'on-break':
+                return 'On break';
+            case 'with Assignment':
+                return 'with Assignment';
+            case 'Without Vehicle':
+                return 'Without Vehicle';
+            case 'Confirmed':
+                return 'Confirmed';
+            case 'Created':
+                return 'Created';
+            default:
+                return null;
+        }
+    }
+    public function getHaveNoVehicleAttribute() {
+        if (isset($this->attributes['have_no_vehicle'])) {
+            return $this->attributes['have_no_vehicle'];
+        } // Returns true if no vehicle is assigned
+        else{
+            return $this->attributes['have_no_vehicle'] = null;
+        }
+    }
 }
+

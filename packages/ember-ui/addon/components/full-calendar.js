@@ -46,13 +46,31 @@ export default class FullCalendarComponent extends Component {
         this.calendar = new Calendar(calendarEl, {
             events,
             plugins: [dayGridPlugin, interactionPlugin],
-            initialView: 'dayGridMonth',
+            initialView: 'dayGridWeek',
             editable: true,
+            height: 'auto',  // ✅ Automatically adjust height based on data
+            contentHeight: 'auto', // ✅ Allow height to expand as needed
+            expandRows: true, // ✅ Ensures rows expand instead of shrinking
+            dayMaxEventRows: true,
+            nowIndicator: true,
+            buttonText: {
+                today: 'Today',
+                month: 'Month',
+                week: 'Week',
+                day: 'Day'
+            }, // Show current time indicator
             headerToolbar: {
                 left: 'prev,next today',
                 center: 'title',
-                right: '',
+                right: 'dayGridWeek,dayGridMonth,dayGridDay',
             },
+            views: {
+                dayGridMonth: {
+                    dayCount: 21, // Show only 21 days at a time
+                    // duration: { days: 21 }
+                }
+            },
+            
         });
 
         // trigger callback on initialize

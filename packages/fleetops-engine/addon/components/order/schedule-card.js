@@ -16,7 +16,7 @@ export default class OrderScheduleCardComponent extends Component {
     @service modalsManager;
     @service notifications;
     @service abilities;
-
+    @tracked timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
     /**
      * Indicates if a driver is currently being assigned.
      * @tracked
@@ -43,9 +43,9 @@ export default class OrderScheduleCardComponent extends Component {
         // console.log('Fetching drivers for order UUID:', orderUuid);
         try {
             
-            // console.log('Fetching drivers for order UUID:', orderUuid);
-            this.drivers = this.store.query('driver', { order_uuid: orderUuid });
-            // console.log(this.drivers);
+            this.drivers = this.store.query('driver', { order_uuid: orderUuid,
+                timezone: this.timezone
+             });
         } catch (error) {
             console.error('Failed to load drivers:', error);
             this.drivers = [];
@@ -108,6 +108,7 @@ export default class OrderScheduleCardComponent extends Component {
                     order.setProperties({
                         driver_assigned: null,
                         driver_assigned_uuid: null,
+                        vehicle_assigned: null,
                     });
 
                     modal.startLoading();
@@ -150,7 +151,10 @@ export default class OrderScheduleCardComponent extends Component {
             }),
 
             confirm: () => {
-                order.set('driver_assigned_uuid', driver.id);
+                order.setProperties({
+                    driver_assigned_uuid: driver.id,
+                    vehicle_assigned: driver.vehicle || null,
+                });
                 return order
                     .save()
                     .catch((error) => {

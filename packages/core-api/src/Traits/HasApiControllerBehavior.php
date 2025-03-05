@@ -350,12 +350,14 @@ trait HasApiControllerBehavior
             $order = \Fleetbase\FleetOps\Models\Order::where('uuid', $request->order_uuid)->first();
             
             if ($order) {
+                $timezone = $request->timezone ?? 'UTC';
                 // Filter drivers based on availability
-                $data = $data->map(function ($driver) use ($order) {
-                    $availability = $this->driverAvailability($order, $driver->uuid);
+                $data = $data->map(function ($driver) use ($order, $timezone) {
+                    $availability = $this->driverAvailability($order, $driver->uuid, $timezone);
                     $driver->is_available = ($availability && $availability['status'] === true) ? 1 : 0;
                     $driver->availability_message = $availability['message'] ?? null;
                     $driver->button_message = $availability['button'] ?? null;
+                    $driver->have_no_vehicle = $availability['have_no_vehicle'] ?? null;
                     return $driver;
                 });
             }
@@ -772,28 +774,27 @@ trait HasApiControllerBehavior
         }
     }
 
-    private function driverAvailability($order, $driver_uuid)
+    private function driverAvailability($order, $driver_uuid, $timezone)
     {
         // Check if driver exists
-        $driver = Driver::where('uuid', $driver_uuid)->first();
-        if (!$driver) {
-            return [
-                'status' => false,
-                'error' => 'Driver not found'
-            ];
-        }
-
-        if (is_null($driver->vehicle_uuid)) { 
-            return [
-                'status' => false,
-                'message' => 'has no vehicle assigned',
-                'button' => 'Without Vehicle',
-            ];
-        }
 
         try {
-            $orderStartDate = Carbon::parse($order->scheduled_at);
-            $orderEndDate = Carbon::parse($order->estimated_end_date);
+            $driver = Driver::where('uuid', $driver_uuid)->first();
+            if (!$driver) {
+                return [
+                    'status' => false,
+                    'error' => 'Driver not found',
+                    'have_no_vehicle' => 0,
+                ];
+            }
+            if($timezone && $timezone !== 'UTC'){
+                $orderStartDate = Carbon::parse($order->scheduled_at)->setTimezone($timezone);
+                $orderEndDate = Carbon::parse($order->estimated_end_date)->setTimezone($timezone);
+            }
+            else{
+                $orderStartDate = Carbon::parse($order->scheduled_at);
+                $orderEndDate = Carbon::parse($order->estimated_end_date);
+            }
 
             // Check for overlapping leave requests
             $leaveRequest = LeaveRequest::where('driver_uuid', $driver_uuid)
@@ -804,7 +805,7 @@ trait HasApiControllerBehavior
                     });
                 })
                 ->whereNull('deleted_at')
-                ->first();
+                ->exists();
         
             if ($leaveRequest) {
                                 
@@ -812,6 +813,7 @@ trait HasApiControllerBehavior
                     'status' => false,
                     'message' => 'is scheduled to be on leave during the assignment period.',
                     'button' => 'with Assignment',
+                    'have_no_vehicle' => 0,
                 ];
             }
 
@@ -824,7 +826,7 @@ trait HasApiControllerBehavior
                           ->where('estimated_end_date', '>=', $orderStartDate);
                     });
                 })
-                ->first();
+                ->exists();
 
             if ($activeOrder) {
                 
@@ -832,19 +834,29 @@ trait HasApiControllerBehavior
                     'status' => false,
                     'message' => 'already has another active order assigned',
                     'button' => 'with Assignment',
+                    'have_no_vehicle' => 0,
                 ];
             }
-
+            if (is_null($driver->vehicle_uuid)) { 
+                return [
+                    'status' => false,
+                    'message' => 'has no vehicle assigned',
+                    'button' => 'Without Vehicle',
+                    'have_no_vehicle' => 1,
+                 ];
+            }
             return [
                 'status' => true,
-                'error' => 'Driver is available'
+                'error' => 'Driver is available',
+                'have_no_vehicle' => 0,
             ];
 
 
         } catch (\Exception $e) {
             return [
                 'status' => false,
-                'error' => 'Error checking driver availability'
+                'error' => 'Error checking driver availability',
+                'have_no_vehicle' => 0,
             ];
         }
     }

@@ -3,7 +3,7 @@ import { get } from '@ember/object';
 export function createOrderEventTitle(order) {
     const scheduledAtTime = get(order, 'scheduledAtTime');
     const driverAssignedName = get(order, 'driver_assigned.name');
-    const vehicleAssignedName = get(order, 'driver_assigned.vehicle_name');
+    const vehicleAssignedName = get(order, 'driver_assigned.vehicle_name') || "No vehicle";
     const destination = get(order, 'pickupName');
 
     let title = [];
@@ -20,10 +20,14 @@ export function createOrderEventTitle(order) {
 }
 
 export default function createFullCalendarEventFromOrder(order) {
+    const startDate = new Date(order.scheduled_at);
+    const endDate = new Date(order.estimated_end_date);
+    endDate.setDate(endDate.getDate() + 1);
     return {
         id: order.id,
         title: createOrderEventTitle(order),
-        start: order.scheduled_at,
+        start: startDate.toISOString(),
+        end: endDate.toISOString(),
         allDay: true,
         display: 'block',
     };

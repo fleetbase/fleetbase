@@ -826,7 +826,7 @@ class OrderController extends Controller
             );
         }
 
-        if ($order->started) {
+        if ($order->started &&  $order->status === 'started') {
             return response()->apiError('Order has already started.');
         }
 

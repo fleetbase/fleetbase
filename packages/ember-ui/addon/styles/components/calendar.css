@@ -262,3 +262,9 @@ body[data-theme='dark'] .ui-full-calendar .fc-view-harness {
 .ui-full-calendar .fc-daygrid-block-event .fc-event-title {
     @apply py-px px-1.5;
 }
+/* scroll for calendar */
+.fc-scroller {
+    overflow-x: hidden !important;
+    overflow-y: auto !important;  /* Allow vertical scroll */
+    max-height: 90vh;  /* Prevents too much height restriction */
+}

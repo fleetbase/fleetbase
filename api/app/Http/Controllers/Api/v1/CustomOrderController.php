@@ -155,8 +155,7 @@ class CustomOrderController extends BaseOrderController
             return response()->json(['status' => false, 'message' => __('messages.load_already_started')], 400);
         }
 
-        if (($request->is_approved == 1 && $order->status === 'confirmed') ||
-            ($request->is_approved == 0 && $order->status !== 'created')) {
+        if ($request->is_approved == 1 && $order->status === 'confirmed') {
             return response()->json([
                 'status' => false,
                 'message' => __('messages.invalid_operation', ['status' => $order->status]),
@@ -192,13 +191,19 @@ class CustomOrderController extends BaseOrderController
                     ],
                     'order' => $order
                 ];
+                $status = 'confirmed';
             } else {
                 $driver_user = User::withoutGlobalScopes()->where('uuid', $driver->user_uuid)->first();
                 if($driver_user){
                     $driver_name = $driver_user->name;
                     $driver_phone = $driver_user->phone;
                 }
-                $order->update(['status' => 'created', 'driver_assigned_uuid' => null]);
+                else{
+                    $driver_name = null;
+                    $driver_phone = null;
+                }
+                $status = $order->dispatched === 1 ? 'dispatched' : 'created';
+                $order->update(['status' => $status, 'driver_assigned_uuid' => null, 'vehicle_assigned_uuid' => null]);
                 
                 if ($driver->current_job_uuid === $order->uuid) {
                     $driver->update(['current_job_uuid' => null]);
@@ -227,11 +232,12 @@ class CustomOrderController extends BaseOrderController
                         'phone' => $driver_phone ?? 'N/A',
                     ],
                 ];
+               
             }
 
             CustomOrderController::logOrderStatusChange($order, $order->status, $oldStatus);
             //insert record into tracking status:
-            $createTrackingStatus = $this->createTrackingStatus($order);
+            $createTrackingStatus = $this->createTrackingStatus($order, $status);
             DB::commit();
             if (!$createTrackingStatus) {
                 return response()->json(['status' => false, 'message' => __('messages.duplicate_tracking_status')], 400);
@@ -309,13 +315,14 @@ class CustomOrderController extends BaseOrderController
         }
     }
 
-    private function createTrackingStatus(Order $order)
+    private function createTrackingStatus(Order $order, $status)
     {
         $trackingnumber = $order->tracking_number_uuid;
         $existingTrackingSameStatus = TrackingStatus::where('tracking_number_uuid', $trackingnumber)
-        ->where('code', 'CONFIRMED')
-        ->whereNull('deleted_at')
-        ->first();
+            ->where('code', $status)
+            ->where('code', '!=', 'created')
+            ->whereNull('deleted_at')
+            ->first();
 
         if ($existingTrackingSameStatus) {
             return false; // Do not insert if a similar status exists
@@ -324,19 +331,99 @@ class CustomOrderController extends BaseOrderController
         ->whereNull('deleted_at') // Check if the status is also the same
         ->first();
         if ($existingTrackingStatus) {
-            $trackingData = [
-                'status'       => 'Order Accepted',  // Example status, update as needed
-                'details'      => 'Order Accepted by the driver.',
-                'code'         => 'CONFIRMED',  // Will be generated automatically if empty
-                'location'     => $existingTrackingStatus['location'],
-                'tracking_number_uuid' => $existingTrackingStatus['tracking_number_uuid'],
-                'company_uuid' => $existingTrackingStatus['company_uuid'],
-            ];
-        
+            if ($status === 'confirmed') {
+                $trackingData = [
+                    'status'       => 'Order Accepted',
+                    'details'      => 'Order Accepted by the driver.',
+                    'code'         => str_replace('-', ' ', $status),
+                    'location'     => $existingTrackingStatus['location'],
+                    'tracking_number_uuid' => $existingTrackingStatus['tracking_number_uuid'],
+                    'company_uuid' => $existingTrackingStatus['company_uuid'],
+                ];
+            } 
+            elseif($status === 'created') {
+                $trackingData = [
+                    'status'       => 'Order Rejected',
+                    'details'      => 'Order Rejected by the driver.Please assign a new driver.',
+                    'code'         => 'created',
+                    'location'     => $existingTrackingStatus['location'],
+                    'tracking_number_uuid' => $existingTrackingStatus['tracking_number_uuid'],
+                    'company_uuid' => $existingTrackingStatus['company_uuid'],
+                ];
+            } 
+            else {
+                $trackingData = [
+                    'status'       => $status,
+                    'details'      => 'Order status updated by the driver',
+                    'code'         => str_replace('-', ' ', $status),
+                    'location'     => $existingTrackingStatus['location'],
+                    'tracking_number_uuid' => $existingTrackingStatus['tracking_number_uuid'],
+                    'company_uuid' => $existingTrackingStatus['company_uuid'],
+                ];
+            }
             $trackingStatus = TrackingStatus::create($trackingData);
             return $trackingStatus;
         }
         return false;
+
+    }
+
+    public function driverActivity(string $id, Request $request)
+    {
+        try {
+                $order = Order::findRecordOrFail($id);
+
+                // Check if order exists and is in valid state
+                if (!$order) {
+                    return response()->json(['status' => false, 'message' => 'Order not found.'], 404);
+                }
+                
+                DB::beginTransaction();
+                $oldStatus = $order->status;
+                $status = $request->input('status');
+                
+                // Validate status first
+                $status_array = ['Shift Ended','On Break', 'Incident Reported'];
+                if(!in_array($status, $status_array)){
+                    return response()->json(['status' => false, 'message' => __('messages.invalid_activity_status')], 400);
+                }
+                
+                // Update order status
+                $order->update(['status' => $status]);
+                
+                // Log the status change
+                CustomOrderController::logOrderStatusChange($order, $status, $oldStatus);
+                // Create tracking status
+                $createTrackingStatus = $this->createTrackingStatus($order, $status);
+                
+                DB::commit();
+
+                if (!$createTrackingStatus) {
+                    return response()->json([
+                        'status' => false, 
+                        'message' => __('messages.duplicate_tracking_status')
+                    ], 400);
+                }
+
+                return response()->json([
+                    'status' => true,
+                    'message' => __('messages.status_updated_successfully'),
+                    'details' => [
+                        'order_id' => $order->uuid,
+                        'status' => $status,
+                        'previous_status' => $oldStatus,
+                        'activity_started_time' => now()->toDateTimeString()
+                    ],
+                    'order' => $order
+                ]);
+
+            } catch (\Exception $e) {
+                DB::rollBack();
+                return response()->json([
+                    'status' => false, 
+                    'message' => "Error: {$e->getMessage()}"
+                ], 500);
+            }
 
     }
 }
