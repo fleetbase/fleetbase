@@ -787,7 +787,6 @@ trait HasApiControllerBehavior
         // Check if driver exists
 
         try {
-            $driver_uuid = '7ec62a87-2e0b-4e56-8fbb-44f70d2b8e17';
             $driver = Driver::where('uuid', $driver_uuid)->first();
             if (!$driver) {
                 return [
