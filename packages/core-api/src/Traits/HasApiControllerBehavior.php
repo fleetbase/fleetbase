@@ -350,9 +350,10 @@ trait HasApiControllerBehavior
             $order = \Fleetbase\FleetOps\Models\Order::where('uuid', $request->order_uuid)->first();
             
             if ($order) {
+                $timezone = $request->timezone ?? 'UTC';
                 // Filter drivers based on availability
-                $data = $data->map(function ($driver) use ($order) {
-                    $availability = $this->driverAvailability($order, $driver->uuid);
+                $data = $data->map(function ($driver) use ($order, $timezone) {
+                    $availability = $this->driverAvailability($order, $driver->uuid, $timezone);
                     $driver->is_available = ($availability && $availability['status'] === true) ? 1 : 0;
                     $driver->availability_message = $availability['message'] ?? null;
                     $driver->button_message = $availability['button'] ?? null;
@@ -773,9 +774,10 @@ trait HasApiControllerBehavior
         }
     }
 
-    private function driverAvailability($order, $driver_uuid)
+    private function driverAvailability($order, $driver_uuid, $timezone)
     {
         // Check if driver exists
+
         try {
             $driver = Driver::where('uuid', $driver_uuid)->first();
             if (!$driver) {
@@ -785,8 +787,14 @@ trait HasApiControllerBehavior
                     'have_no_vehicle' => 0,
                 ];
             }
-            $orderStartDate = Carbon::parse($order->scheduled_at);
-            $orderEndDate = Carbon::parse($order->estimated_end_date);
+            if($timezone && $timezone !== 'UTC'){
+                $orderStartDate = Carbon::parse($order->scheduled_at)->setTimezone($timezone);
+                $orderEndDate = Carbon::parse($order->estimated_end_date)->setTimezone($timezone);
+            }
+            else{
+                $orderStartDate = Carbon::parse($order->scheduled_at);
+                $orderEndDate = Carbon::parse($order->estimated_end_date);
+            }
 
             // Check for overlapping leave requests
             $leaveRequest = LeaveRequest::where('driver_uuid', $driver_uuid)
