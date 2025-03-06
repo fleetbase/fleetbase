@@ -829,7 +829,7 @@ class OrderController extends Controller
         if ($order->started &&  $order->status === 'started') {
             return response()->apiError('Order has already started.');
         }
-        $status_array = ['Shift Ended','On Break', 'Incident Reported'];
+        $status_array = ['Shift Ended','on_break', 'Incident Reported'];
         if (in_array($order->status ,$status_array)) {
             $order->status = 'started';
             $order->save();
