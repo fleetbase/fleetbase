@@ -829,7 +829,19 @@ class OrderController extends Controller
         if ($order->started &&  $order->status === 'started') {
             return response()->apiError('Order has already started.');
         }
+        $status_array = ['Shift Ended','On Break', 'Incident Reported'];
+        if (in_array($order->status ,$status_array)) {
+            $order->status = 'started';
+            $order->save();
+            $orderConfig = $order->config();
 
+            // Get the order started activity
+            $activity = $orderConfig->getStartedActivity();
+            $updateActivityRequest = new Request(['activity' => $activity->serialize()]);
+
+            // update activity
+            return $this->updateActivity($order, $updateActivityRequest);
+        }
         // if the order is adhoc and the parameter of `assign` is set with a valid driver id, assign the driver and continue
         if ($order->adhoc && $assignAdhocDriver && Str::startsWith($assignAdhocDriver, 'driver_')) {
             $order->assignDriver($assignAdhocDriver, true);
