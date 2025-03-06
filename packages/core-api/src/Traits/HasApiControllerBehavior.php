@@ -327,6 +327,9 @@ trait HasApiControllerBehavior
                         $dateColumn = $hasScheduledAt ? 'scheduled_at' : 'created_at';
                 
                         if ($timezone && ($timezone !== 'UTC')) {
+                            if ($timezone === 'Asia/Calcutta') {
+                                $timezone = 'Asia/Kolkata'; // Convert old timezone to the correct one
+                            }
                             // Convert user's date to UTC start and end of the day
                             $localDate = Carbon::parse($on)->setTimezone($timezone);
                             // echo $convertedOn;
@@ -353,8 +356,6 @@ trait HasApiControllerBehavior
 
         
         if (get_class($this->model) === 'Fleetbase\FleetOps\Models\Driver' && $request->has('order_uuid')) {
-            // Get the order
-            // print_r($request->order_uuid);
             $order = \Fleetbase\FleetOps\Models\Order::where('uuid', $request->order_uuid)
                         ->whereNull('deleted_at')
                         ->first();
@@ -732,6 +733,7 @@ trait HasApiControllerBehavior
 
         try {
             $driver = Driver::where('uuid', $driver_uuid)
+                    ->where('status', 'active')
                     ->whereNull('deleted_at')->first();
             if (!$driver) {
                 return [
@@ -741,6 +743,9 @@ trait HasApiControllerBehavior
                 ];
             }
             if($timezone && $timezone !== 'UTC'){
+                if ($timezone === 'Asia/Calcutta') {
+                    $timezone = 'Asia/Kolkata'; // Convert old timezone to the correct one
+                }
                 $localOrderStartDate = Carbon::parse($order->scheduled_at)->setTimezone($timezone);
                 $orderStartDate = Carbon::parse($localOrderStartDate)->setTimezone('UTC');
                 $localOrderEndDate = Carbon::parse($order->estimated_end_date)->setTimezone($timezone);
