@@ -746,9 +746,11 @@ trait HasApiControllerBehavior
                     $timezone = 'Asia/Kolkata'; // Convert old timezone to the correct one
                 }
                 $localOrderStartDate = Carbon::parse($order->scheduled_at)->setTimezone($timezone);
-                $orderStartDate = Carbon::parse($localOrderStartDate)->setTimezone('UTC');
-                $localOrderEndDate = Carbon::parse($order->estimated_end_date)->setTimezone($timezone);
-                $orderEndDate = Carbon::parse($localOrderEndDate)->setTimezone('UTC');
+                $orderStartDate = $localOrderStartDate->copy()->startOfDay()->setTimezone('UTC');
+                // Convert `estimated_end_date` to local timezone and apply `endOfDay()`
+                $localOrderEndDate = Carbon::parse($order->estimated_end_date)->setTimezone($timezone)->endOfDay();
+                // Convert back to UTC
+                $orderEndDate = $localOrderEndDate->setTimezone('UTC');
             }
             else{
                 $orderStartDate = Carbon::parse($order->scheduled_at);
