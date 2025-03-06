@@ -556,11 +556,28 @@ class OrderController extends Controller
 
             if ($request->filled('on')) {
                 $on = Carbon::parse($request->input('on'));
- 
-                $query->where(function ($q) use ($on) {
-                    // $q->whereDate('created_at', $on);
-                    $q->orWhereDate('scheduled_at', $on);
-                });
+                    $timezone = $request->input('timezone', 'UTC');
+                   
+                    $query->where(function ($q) use ($on, $timezone) {
+                        
+                        $dateColumn = 'scheduled_at';
+                        $on = Carbon::parse($on)->startOfDay();
+                        if ($timezone && ($timezone !== 'UTC')) {
+                            if ($timezone === 'Asia/Calcutta') {
+                                $timezone = 'Asia/Kolkata'; // Convert old timezone to the correct one
+                            }
+                            // Convert user's date to UTC start and end of the day
+                            $localDate = Carbon::parse($on)->setTimezone($timezone);
+                            // echo $convertedOn;
+                            $startOfDayUtc =$localDate->copy()->startOfDay()->setTimezone('UTC');
+                            $endOfDayUtc = $localDate->copy()->endOfDay()->setTimezone('UTC');
+                            // Query between the UTC range
+                            $q->whereBetween($dateColumn, [$startOfDayUtc, $endOfDayUtc]);
+                        } else {
+                            // If no timezone specified or it's UTC, use direct date filter
+                            $q->whereDate($dateColumn, $on);
+                        }
+                    });
             }
 
             if ($request->boolean('pod_required')) {
@@ -826,10 +843,22 @@ class OrderController extends Controller
             );
         }
 
-        if ($order->started) {
+        if ($order->started &&  $order->status === 'started') {
             return response()->apiError('Order has already started.');
         }
+        $status_array = ['shift_ended','on_break', 'incident_reported'];
+        if (in_array($order->status ,$status_array)) {
+            $order->status = 'started';
+            $order->save();
+            $orderConfig = $order->config();
 
+            // Get the order started activity
+            $activity = $orderConfig->getStartedActivity();
+            $updateActivityRequest = new Request(['activity' => $activity->serialize()]);
+
+            // update activity
+            return $this->updateActivity($order, $updateActivityRequest);
+        }
         // if the order is adhoc and the parameter of `assign` is set with a valid driver id, assign the driver and continue
         if ($order->adhoc && $assignAdhocDriver && Str::startsWith($assignAdhocDriver, 'driver_')) {
             $order->assignDriver($assignAdhocDriver, true);
@@ -865,8 +894,9 @@ class OrderController extends Controller
         }
 
         // set order to started
-        $order->started    = true;
+       
         $order->started_at = now();
+        $order->started    = true;
         $order->save();
 
         // trigger start event

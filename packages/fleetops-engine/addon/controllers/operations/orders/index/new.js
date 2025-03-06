@@ -317,6 +317,15 @@ export default class OperationsOrdersIndexNewController extends BaseController {
     }
 
     @action createOrder() {
+        if (!this.order.scheduled_at || !this.order.estimated_end_date) {
+            let missingFields = [];
+            if (!this.order.scheduled_at) missingFields.push("Start Date");
+            if (!this.order.estimated_end_date) missingFields.push("End Date");
+        
+            this.errorMessage = `${missingFields.join(" and ")} ${missingFields.length > 1 ? "are" : "is"} required.`;
+            this.notifications.error(this.errorMessage);
+            return;
+        }
         if (new Date(this.order.estimated_end_date) < new Date(this.order.scheduled_at)) {
             this.errorMessage = "End Date cannot be earlier than the start date.";
             this.notifications.error(this.errorMessage);

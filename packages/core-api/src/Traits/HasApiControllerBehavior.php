@@ -318,21 +318,32 @@ trait HasApiControllerBehavior
                 if ($queryCallback) {
                     $queryCallback($query);
                 }
-                // Add date filtering if 'on' parameter exists
                 if ($request->filled('on')) {
                     $on = Carbon::parse($request->input('on'));
-                    
-                    $query->where(function ($q) use ($on) {
-                        // Check if scheduled_at column exists in the table
+                    $timezone = $request->input('timezone', 'UTC');
+                   
+                    $query->where(function ($q) use ($on, $timezone) {
                         $hasScheduledAt = Schema::hasColumn($this->model->getTable(), 'scheduled_at');
-                        
-                        if ($hasScheduledAt) {
-                            $q->whereDate('scheduled_at', $on);
+                        $dateColumn = $hasScheduledAt ? 'scheduled_at' : 'created_at';
+                        $on = Carbon::parse($on)->startOfDay();
+                        if ($timezone && ($timezone !== 'UTC')) {
+                            if ($timezone === 'Asia/Calcutta') {
+                                $timezone = 'Asia/Kolkata'; // Convert old timezone to the correct one
+                            }
+                            // Convert user's date to UTC start and end of the day
+                            $localDate = Carbon::parse($on)->setTimezone($timezone);
+                            // echo $convertedOn;
+                            $startOfDayUtc =$localDate->copy()->startOfDay()->setTimezone('UTC');
+                            $endOfDayUtc = $localDate->copy()->endOfDay()->setTimezone('UTC');
+                            // Query between the UTC range
+                            $q->whereBetween($dateColumn, [$startOfDayUtc, $endOfDayUtc]);
                         } else {
-                            $q->whereDate('created_at', $on);
+                            // If no timezone specified or it's UTC, use direct date filter
+                            $q->whereDate($dateColumn, $on);
                         }
                     });
                 }
+                
             };
             $data = $this->model->queryFromRequest($request, $combinedCallback);
         }
@@ -345,9 +356,9 @@ trait HasApiControllerBehavior
 
         
         if (get_class($this->model) === 'Fleetbase\FleetOps\Models\Driver' && $request->has('order_uuid')) {
-            // Get the order
-            // print_r($request->order_uuid);
-            $order = \Fleetbase\FleetOps\Models\Order::where('uuid', $request->order_uuid)->first();
+            $order = \Fleetbase\FleetOps\Models\Order::where('uuid', $request->order_uuid)
+                        ->whereNull('deleted_at')
+                        ->first();
             
             if ($order) {
                 $timezone = $request->timezone ?? 'UTC';
@@ -501,6 +512,18 @@ trait HasApiControllerBehavior
     {
        
         try {
+            $model_name = str_replace('Controller', '', class_basename($this));
+            if ($model_name === 'Order') {
+                $order = Order::find($id);
+                if ($order) {
+                    $vehicleAssigned = $request->input('order.vehicle_assigned');
+    
+                    if ($vehicleAssigned === null) {
+                        // Ensure vehicle_assigned_uuid is null if no vehicle is assigned
+                        $request->merge(['order.vehicle_assigned_uuid' => null]);
+                    }
+                }            
+            }
             // $model_name = str_replace('Controller', '', class_basename($this));
             // if ($model_name === 'Order') {
             //     $order = Order::find($id);
@@ -715,71 +738,14 @@ trait HasApiControllerBehavior
 
         return null;
     }
-    /**
-     * Check if driver is available to take the order
-     * @param Order $order
-     * @param string $driver_uuid
-     * @return bool
-     */
-    private function checkDriverAvailability($order, $driver_uuid)
-    {
-        // Check if driver exists
-        $driver = Driver::where('uuid', $driver_uuid)->first();
-        if (!$driver) {
-            return false;
-        }
-       // Check if the driver has a vehicle assigned
-        if (is_null($driver->vehicle_uuid)) { 
-            return false;
-        }
-        // Calculate order duration in days
-        try {
-            $orderEta = $order->tracker()->eta();
-            $totalSeconds = array_sum(array_values($orderEta));
-            $totalHours = $totalSeconds / 3600;
-            $orderDuration = ceil($totalHours / 9); // in days
-            $orderEndDate = Carbon::parse($order->scheduled_at)->addDays($orderDuration);
-            //2025-08-20
-            // Check for overlapping leave requests
-            $leaveRequest = LeaveRequest::where('driver_uuid', $driver_uuid)
-            ->where(function ($query) use ($order, $orderEndDate) {
-                $query->whereDate('start_date', '<=', $orderEndDate)
-                    ->whereDate('end_date', '>=', $order->scheduled_at);
-            })
-            ->first();
-            if ($leaveRequest) {
-               
-                return false;
-            }
-            // Check for active orders
-            $activeOrder = Order::where('driver_assigned_uuid', $driver_uuid)
-                ->whereNotIn('status', ['completed', 'cancelled'])
-                ->first();
-            if (!$activeOrder) {
-                
-                return true;
-            }
-            // Calculate driver availability based on current active order
-            $etaValues = $activeOrder->tracker()->eta();
-            $totalHours = array_sum(array_values($etaValues)) / 3600;
-            $workingDays = ceil($totalHours / 9);
-            $unavailableDays = $workingDays + 2;
-            $unavailableUntil = now()->addDays($unavailableDays);
-            $scheduledDate = Carbon::parse($order->scheduled_at);
-            $isAvailable = $scheduledDate->greaterThan($unavailableUntil);
-            return $isAvailable;
-
-        } catch (\Exception $e) {
-            return false;
-        }
-    }
-
+   
     private function driverAvailability($order, $driver_uuid, $timezone)
     {
         // Check if driver exists
 
         try {
-            $driver = Driver::where('uuid', $driver_uuid)->first();
+            $driver = Driver::where('uuid', $driver_uuid)
+                    ->whereNull('deleted_at')->first();
             if (!$driver) {
                 return [
                     'status' => false,
@@ -788,8 +754,15 @@ trait HasApiControllerBehavior
                 ];
             }
             if($timezone && $timezone !== 'UTC'){
-                $orderStartDate = Carbon::parse($order->scheduled_at)->setTimezone($timezone);
-                $orderEndDate = Carbon::parse($order->estimated_end_date)->setTimezone($timezone);
+                if ($timezone === 'Asia/Calcutta') {
+                    $timezone = 'Asia/Kolkata'; // Convert old timezone to the correct one
+                }
+                $localOrderStartDate = Carbon::parse($order->scheduled_at)->setTimezone($timezone);
+                $orderStartDate = $localOrderStartDate->copy()->startOfDay()->setTimezone('UTC');
+                // Convert `estimated_end_date` to local timezone and apply `endOfDay()`
+                $localOrderEndDate = Carbon::parse($order->estimated_end_date)->setTimezone($timezone)->endOfDay();
+                // Convert back to UTC
+                $orderEndDate = $localOrderEndDate->setTimezone('UTC');
             }
             else{
                 $orderStartDate = Carbon::parse($order->scheduled_at);
@@ -798,10 +771,10 @@ trait HasApiControllerBehavior
 
             // Check for overlapping leave requests
             $leaveRequest = LeaveRequest::where('driver_uuid', $driver_uuid)
-                ->where(function ($query) use ($orderStartDate, $orderEndDate) {
-                    $query->where(function ($q) use ($orderStartDate, $orderEndDate) {
-                        $q->where('start_date', '<=', $orderEndDate->format('Y-m-d'))
-                          ->where('end_date', '>=', $orderStartDate->format('Y-m-d'));
+                ->where(function ($query) use ($localOrderStartDate, $localOrderEndDate) {
+                    $query->where(function ($q) use ($localOrderStartDate, $localOrderEndDate) {
+                        $q->where('start_date', '<=', $localOrderEndDate->format('Y-m-d'))
+                          ->where('end_date', '>=', $localOrderStartDate->format('Y-m-d'));
                     });
                 })
                 ->whereNull('deleted_at')
@@ -820,6 +793,7 @@ trait HasApiControllerBehavior
             // Check for overlapping active orders
             $activeOrder = Order::where('driver_assigned_uuid', $driver_uuid)
                 ->whereNotIn('status', ['completed', 'cancelled'])
+                ->whereNull('deleted_at')
                 ->where(function ($query) use ($orderStartDate, $orderEndDate) {
                     $query->where(function ($q) use ($orderStartDate, $orderEndDate) {
                         $q->where('scheduled_at', '<=', $orderEndDate)
