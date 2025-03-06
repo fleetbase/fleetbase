@@ -733,7 +733,6 @@ trait HasApiControllerBehavior
 
         try {
             $driver = Driver::where('uuid', $driver_uuid)
-                    ->where('status', 'active')
                     ->whereNull('deleted_at')->first();
             if (!$driver) {
                 return [
@@ -747,9 +746,11 @@ trait HasApiControllerBehavior
                     $timezone = 'Asia/Kolkata'; // Convert old timezone to the correct one
                 }
                 $localOrderStartDate = Carbon::parse($order->scheduled_at)->setTimezone($timezone);
-                $orderStartDate = Carbon::parse($localOrderStartDate)->setTimezone('UTC');
-                $localOrderEndDate = Carbon::parse($order->estimated_end_date)->setTimezone($timezone);
-                $orderEndDate = Carbon::parse($localOrderEndDate)->setTimezone('UTC');
+                $orderStartDate = $localOrderStartDate->copy()->startOfDay()->setTimezone('UTC');
+                // Convert `estimated_end_date` to local timezone and apply `endOfDay()`
+                $localOrderEndDate = Carbon::parse($order->estimated_end_date)->setTimezone($timezone)->endOfDay();
+                // Convert back to UTC
+                $orderEndDate = $localOrderEndDate->setTimezone('UTC');
             }
             else{
                 $orderStartDate = Carbon::parse($order->scheduled_at);
@@ -758,10 +759,10 @@ trait HasApiControllerBehavior
 
             // Check for overlapping leave requests
             $leaveRequest = LeaveRequest::where('driver_uuid', $driver_uuid)
-                ->where(function ($query) use ($orderStartDate, $orderEndDate) {
-                    $query->where(function ($q) use ($orderStartDate, $orderEndDate) {
-                        $q->where('start_date', '<=', $orderEndDate->format('Y-m-d'))
-                          ->where('end_date', '>=', $orderStartDate->format('Y-m-d'));
+                ->where(function ($query) use ($localOrderStartDate, $localOrderEndDate) {
+                    $query->where(function ($q) use ($localOrderStartDate, $localOrderEndDate) {
+                        $q->where('start_date', '<=', $localOrderEndDate->format('Y-m-d'))
+                          ->where('end_date', '>=', $localOrderStartDate->format('Y-m-d'));
                     });
                 })
                 ->whereNull('deleted_at')
