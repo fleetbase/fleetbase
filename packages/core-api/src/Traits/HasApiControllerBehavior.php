@@ -733,7 +733,6 @@ trait HasApiControllerBehavior
 
         try {
             $driver = Driver::where('uuid', $driver_uuid)
-                    ->where('status', 'active')
                     ->whereNull('deleted_at')->first();
             if (!$driver) {
                 return [
