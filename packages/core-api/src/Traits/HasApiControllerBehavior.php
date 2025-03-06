@@ -514,12 +514,14 @@ trait HasApiControllerBehavior
         try {
             $model_name = str_replace('Controller', '', class_basename($this));
             if ($model_name === 'Order') {
-                echo "Model Name: $model_name<br>";
+                echo "Model Name";
 
                 $order = Order::find($id);
                 if ($order) {
-                    $vehicleAssigned = $request->input('order.vehicle_assigned');
-                    $vehicleAssignedUuid = $request->input('order.vehicle_assigned_uuid');
+                    $vehicleAssigned = $request->input('vehicle_assigned');
+                    echo "vehicleAssigned";
+                    $vehicleAssignedUuid = $request->input('vehicle_assigned_uuid');
+                    echo "vehicleAssignedUuid";
 
                     // Update if either vehicle_assigned or vehicle_assigned_uuid is null
                     if ($vehicleAssigned === null || $vehicleAssignedUuid === null) {
