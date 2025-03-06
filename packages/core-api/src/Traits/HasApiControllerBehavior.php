@@ -759,10 +759,10 @@ trait HasApiControllerBehavior
 
             // Check for overlapping leave requests
             $leaveRequest = LeaveRequest::where('driver_uuid', $driver_uuid)
-                ->where(function ($query) use ($orderStartDate, $orderEndDate) {
-                    $query->where(function ($q) use ($orderStartDate, $orderEndDate) {
-                        $q->where('start_date', '<=', $orderEndDate->format('Y-m-d'))
-                          ->where('end_date', '>=', $orderStartDate->format('Y-m-d'));
+                ->where(function ($query) use ($localOrderStartDate, $localOrderEndDate) {
+                    $query->where(function ($q) use ($localOrderStartDate, $localOrderEndDate) {
+                        $q->where('start_date', '<=', $localOrderEndDate->format('Y-m-d'))
+                          ->where('end_date', '>=', $localOrderStartDate->format('Y-m-d'));
                     });
                 })
                 ->whereNull('deleted_at')
