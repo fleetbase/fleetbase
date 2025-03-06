@@ -325,7 +325,7 @@ trait HasApiControllerBehavior
                     $query->where(function ($q) use ($on, $timezone) {
                         $hasScheduledAt = Schema::hasColumn($this->model->getTable(), 'scheduled_at');
                         $dateColumn = $hasScheduledAt ? 'scheduled_at' : 'created_at';
-                
+                        $on = Carbon::parse($on)->startOfDay();
                         if ($timezone && ($timezone !== 'UTC')) {
                             if ($timezone === 'Asia/Calcutta') {
                                 $timezone = 'Asia/Kolkata'; // Convert old timezone to the correct one
