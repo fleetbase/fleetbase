@@ -1,3 +1,4 @@
+/* Original timeline CSS */
 .timeline {
     display: grid;
     grid-template-columns: repeat(14, 1fr);
@@ -9,9 +10,7 @@
     overflow: hidden;
 }
 
-.timeline *,
-.timeline :after,
-.timeline :before {
+.timeline *, .timeline :after, .timeline :before {
     box-sizing: inherit;
 }
 
@@ -24,8 +23,7 @@
     cursor: default;
 }
 
-.timeline-controls button,
-.timeline-controls a {
+.timeline-controls button, .timeline-controls a {
     cursor: default;
 }
 
@@ -44,8 +42,7 @@
     justify-content: flex-start;
 }
 
-.timeline-arrow-left,
-.timeline-arrow-right {
+.timeline-arrow-left, .timeline-arrow-right {
     border: none;
     border-radius: 6px;
     color: white;
@@ -55,8 +52,7 @@
     z-index: 10;
 }
 
-.timeline-arrow-left[disabled],
-.timeline-arrow-right[disabled] {
+.timeline-arrow-left[disabled], .timeline-arrow-right[disabled] {
     cursor: not-allowed;
     opacity: 0.6;
 }
@@ -118,9 +114,39 @@
     position: absolute;
     top: calc(100% + 20px);
     bottom: 0;
-    left: calc(50% - 20px);
+    left: calc(50% - 10px);
     right: 0;
     transform: translateY(-50%);
     width: 20px;
     z-index: 20;
+}
+
+/* New additions for show all functionality */
+.timeline.show-all .timeline-items-container {
+    grid-auto-flow: row;
+    max-height: none;
+    overflow: visible;
+}
+
+/* Show all button styling */
+.timeline-pagination {
+    grid-column: span 14;
+    text-align: center;
+    margin-top: 10px;
+    padding: 10px 0;
+}
+
+.show-all-btn {
+    margin-left: 10px;
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 5px 10px;
+    font-size: 0.8rem;
+    cursor: pointer;
+    color: #333;
+}
+
+.show-all-btn:hover {
+    background-color: #e0e0e0;
 }
