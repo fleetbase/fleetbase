@@ -512,6 +512,18 @@ trait HasApiControllerBehavior
     {
        
         try {
+            $model_name = str_replace('Controller', '', class_basename($this));
+            if ($model_name === 'Order') {
+                $order = Order::find($id);
+                if ($order) {
+                    $vehicleAssigned = $request->input('order.vehicle_assigned');
+    
+                    if ($vehicleAssigned === null) {
+                        // Ensure vehicle_assigned_uuid is null if no vehicle is assigned
+                        $request->merge(['order.vehicle_assigned_uuid' => null]);
+                    }
+                }            
+            }
             // $model_name = str_replace('Controller', '', class_basename($this));
             // if ($model_name === 'Order') {
             //     $order = Order::find($id);
