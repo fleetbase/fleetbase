@@ -355,7 +355,9 @@ trait HasApiControllerBehavior
         if (get_class($this->model) === 'Fleetbase\FleetOps\Models\Driver' && $request->has('order_uuid')) {
             // Get the order
             // print_r($request->order_uuid);
-            $order = \Fleetbase\FleetOps\Models\Order::where('uuid', $request->order_uuid)->first();
+            $order = \Fleetbase\FleetOps\Models\Order::where('uuid', $request->order_uuid)
+                        ->whereNull('deleted_at')
+                        ->first();
             
             if ($order) {
                 $timezone = $request->timezone ?? 'UTC';
@@ -723,71 +725,14 @@ trait HasApiControllerBehavior
 
         return null;
     }
-    /**
-     * Check if driver is available to take the order
-     * @param Order $order
-     * @param string $driver_uuid
-     * @return bool
-     */
-    private function checkDriverAvailability($order, $driver_uuid)
-    {
-        // Check if driver exists
-        $driver = Driver::where('uuid', $driver_uuid)->first();
-        if (!$driver) {
-            return false;
-        }
-       // Check if the driver has a vehicle assigned
-        if (is_null($driver->vehicle_uuid)) { 
-            return false;
-        }
-        // Calculate order duration in days
-        try {
-            $orderEta = $order->tracker()->eta();
-            $totalSeconds = array_sum(array_values($orderEta));
-            $totalHours = $totalSeconds / 3600;
-            $orderDuration = ceil($totalHours / 9); // in days
-            $orderEndDate = Carbon::parse($order->scheduled_at)->addDays($orderDuration);
-            //2025-08-20
-            // Check for overlapping leave requests
-            $leaveRequest = LeaveRequest::where('driver_uuid', $driver_uuid)
-            ->where(function ($query) use ($order, $orderEndDate) {
-                $query->whereDate('start_date', '<=', $orderEndDate)
-                    ->whereDate('end_date', '>=', $order->scheduled_at);
-            })
-            ->first();
-            if ($leaveRequest) {
-               
-                return false;
-            }
-            // Check for active orders
-            $activeOrder = Order::where('driver_assigned_uuid', $driver_uuid)
-                ->whereNotIn('status', ['completed', 'cancelled'])
-                ->first();
-            if (!$activeOrder) {
-                
-                return true;
-            }
-            // Calculate driver availability based on current active order
-            $etaValues = $activeOrder->tracker()->eta();
-            $totalHours = array_sum(array_values($etaValues)) / 3600;
-            $workingDays = ceil($totalHours / 9);
-            $unavailableDays = $workingDays + 2;
-            $unavailableUntil = now()->addDays($unavailableDays);
-            $scheduledDate = Carbon::parse($order->scheduled_at);
-            $isAvailable = $scheduledDate->greaterThan($unavailableUntil);
-            return $isAvailable;
-
-        } catch (\Exception $e) {
-            return false;
-        }
-    }
-
+   
     private function driverAvailability($order, $driver_uuid, $timezone)
     {
         // Check if driver exists
 
         try {
-            $driver = Driver::where('uuid', $driver_uuid)->first();
+            $driver = Driver::where('uuid', $driver_uuid)
+                    ->whereNull('deleted_at')->first();
             if (!$driver) {
                 return [
                     'status' => false,
@@ -830,6 +775,7 @@ trait HasApiControllerBehavior
             // Check for overlapping active orders
             $activeOrder = Order::where('driver_assigned_uuid', $driver_uuid)
                 ->whereNotIn('status', ['completed', 'cancelled'])
+                ->whereNull('deleted_at')
                 ->where(function ($query) use ($orderStartDate, $orderEndDate) {
                     $query->where(function ($q) use ($orderStartDate, $orderEndDate) {
                         $q->where('scheduled_at', '<=', $orderEndDate)
