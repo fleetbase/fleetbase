@@ -556,11 +556,28 @@ class OrderController extends Controller
 
             if ($request->filled('on')) {
                 $on = Carbon::parse($request->input('on'));
- 
-                $query->where(function ($q) use ($on) {
-                    // $q->whereDate('created_at', $on);
-                    $q->orWhereDate('scheduled_at', $on);
-                });
+                    $timezone = $request->input('timezone', 'UTC');
+                   
+                    $query->where(function ($q) use ($on, $timezone) {
+                        
+                        $dateColumn = 'scheduled_at';
+                        $on = Carbon::parse($on)->startOfDay();
+                        if ($timezone && ($timezone !== 'UTC')) {
+                            if ($timezone === 'Asia/Calcutta') {
+                                $timezone = 'Asia/Kolkata'; // Convert old timezone to the correct one
+                            }
+                            // Convert user's date to UTC start and end of the day
+                            $localDate = Carbon::parse($on)->setTimezone($timezone);
+                            // echo $convertedOn;
+                            $startOfDayUtc =$localDate->copy()->startOfDay()->setTimezone('UTC');
+                            $endOfDayUtc = $localDate->copy()->endOfDay()->setTimezone('UTC');
+                            // Query between the UTC range
+                            $q->whereBetween($dateColumn, [$startOfDayUtc, $endOfDayUtc]);
+                        } else {
+                            // If no timezone specified or it's UTC, use direct date filter
+                            $q->whereDate($dateColumn, $on);
+                        }
+                    });
             }
 
             if ($request->boolean('pod_required')) {
