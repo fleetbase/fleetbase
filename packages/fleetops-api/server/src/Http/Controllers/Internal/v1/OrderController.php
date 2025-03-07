@@ -690,7 +690,7 @@ class OrderController extends FleetOpsController
      *
      * @return \Illuminate\Http\Response
      */
-    public function statuses()
+    public function statuses(Request $request)
     {
         try {
             $statuses = DB::table('orders')
@@ -704,7 +704,15 @@ class OrderController extends FleetOpsController
                 ->get()
                 ->pluck('status')
                 ->filter();
-            
+            if ($request->has('is_filter_status')) {
+                    $formattedStatuses = $statuses->map(function ($status) {
+                        return [
+                            'code' => $status,
+                            'label' => ucfirst(str_replace(['-', '_'], ' ', $status))
+                        ];
+                    });
+                    return response()->json($formattedStatuses);
+                }
             return response()->json($statuses);
         } catch (\Exception $e) {
             return response()->json(['error' => 'Failed to fetch order statuses'], 500);
