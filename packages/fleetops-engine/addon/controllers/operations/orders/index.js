@@ -492,6 +492,8 @@ export default class OperationsOrdersIndexController extends BaseController {
             filterable: true,
             filterComponent: 'filter/multi-option',
             filterOptions: this.statusOptions,
+            filterOptionLabel: 'label', // Specify which property to use as the display label
+            filterOptionValue: 'code',
         },
         {
             label: this.intl.t('fleet-ops.common.created-at'),
@@ -599,7 +601,8 @@ export default class OperationsOrdersIndexController extends BaseController {
 
     @task *getOrderStatusOptions() {
         try {
-            this.statusOptions = yield this.fetch.get('orders/statuses');
+            this.statusOptions = yield this.fetch.get('orders/statuses?is_filter_status=1');
+            return this.statusOptions;
         } catch (error) {
             this.notifications.serverError(error);
         }
