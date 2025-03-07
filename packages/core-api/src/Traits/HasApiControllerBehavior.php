@@ -324,7 +324,8 @@ trait HasApiControllerBehavior
                    
                     $query->where(function ($q) use ($on, $timezone) {
                         $hasScheduledAt = Schema::hasColumn($this->model->getTable(), 'scheduled_at');
-                        $dateColumn = $hasScheduledAt ? 'scheduled_at' : 'created_at';
+                        $dateColumnStart = $hasScheduledAt ? 'scheduled_at' : 'created_at';
+                        $dateColumnEnd = 'estimated_end_date';
                         $on = Carbon::parse($on)->startOfDay();
                         if ($timezone && ($timezone !== 'UTC')) {
                             if ($timezone === 'Asia/Calcutta') {
@@ -332,14 +333,19 @@ trait HasApiControllerBehavior
                             }
                             // Convert user's date to UTC start and end of the day
                             $localDate = Carbon::parse($on)->setTimezone($timezone);
-                            // echo $convertedOn;
                             $startOfDayUtc =$localDate->copy()->startOfDay()->setTimezone('UTC');
                             $endOfDayUtc = $localDate->copy()->endOfDay()->setTimezone('UTC');
                             // Query between the UTC range
-                            $q->whereBetween($dateColumn, [$startOfDayUtc, $endOfDayUtc]);
+                            $q->where(function ($subQuery) use ($dateColumnStart, $dateColumnEnd, $startOfDayUtc, $endOfDayUtc) {
+                                $subQuery->where($dateColumnStart, '<=', $endOfDayUtc)
+                                        ->where($dateColumnEnd, '>=', $startOfDayUtc);
+                            });
                         } else {
                             // If no timezone specified or it's UTC, use direct date filter
-                            $q->whereDate($dateColumn, $on);
+                            $q->where(function ($subQuery) use ($dateColumnStart, $dateColumnEnd, $on) {
+                                $subQuery->where($dateColumnStart, '<=', $on->endOfDay()) 
+                                         ->where($dateColumnEnd, '>=', $on->startOfDay());
+                            });
                         }
                     });
                 }

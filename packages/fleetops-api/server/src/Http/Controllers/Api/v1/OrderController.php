@@ -559,8 +559,8 @@ class OrderController extends Controller
                     $timezone = $request->input('timezone', 'UTC');
                    
                     $query->where(function ($q) use ($on, $timezone) {
-                        
-                        $dateColumn = 'scheduled_at';
+                        $dateColumnStart = 'scheduled_at';
+                        $dateColumnEnd = 'estimated_end_date';
                         $on = Carbon::parse($on)->startOfDay();
                         if ($timezone && ($timezone !== 'UTC')) {
                             if ($timezone === 'Asia/Calcutta') {
@@ -568,14 +568,19 @@ class OrderController extends Controller
                             }
                             // Convert user's date to UTC start and end of the day
                             $localDate = Carbon::parse($on)->setTimezone($timezone);
-                            // echo $convertedOn;
                             $startOfDayUtc =$localDate->copy()->startOfDay()->setTimezone('UTC');
                             $endOfDayUtc = $localDate->copy()->endOfDay()->setTimezone('UTC');
-                            // Query between the UTC range
-                            $q->whereBetween($dateColumn, [$startOfDayUtc, $endOfDayUtc]);
+                            // Check if the requested date falls between scheduled_at and estimated_end_date
+                            $q->where(function ($subQuery) use ($dateColumnStart, $dateColumnEnd, $startOfDayUtc, $endOfDayUtc) {
+                                $subQuery->where($dateColumnStart, '<=', $endOfDayUtc)
+                                        ->where($dateColumnEnd, '>=', $startOfDayUtc);
+                            });
                         } else {
                             // If no timezone specified or it's UTC, use direct date filter
-                            $q->whereDate($dateColumn, $on);
+                            $q->where(function ($subQuery) use ($dateColumnStart, $dateColumnEnd, $on) {
+                                $subQuery->where($dateColumnStart, '<=', $on->endOfDay()) 
+                                         ->where($dateColumnEnd, '>=', $on->startOfDay());
+                            });
                         }
                     });
             }
