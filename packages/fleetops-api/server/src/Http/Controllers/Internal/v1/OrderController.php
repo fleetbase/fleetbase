@@ -692,15 +692,23 @@ class OrderController extends FleetOpsController
      */
     public function statuses()
     {
-        $statuses = DB::table('orders')
-            ->select('status')
-            ->where('company_uuid', session('company'))
-            ->distinct()
-            ->get()
-            ->pluck('status')
-            ->filter();
-
-        return response()->json($statuses);
+        try {
+            $statuses = DB::table('orders')
+                ->select('status')
+                ->where('company_uuid', session('company'))
+                ->whereNull('deleted_at')
+                ->whereNotNull('status')  // Ensure we don't get null statuses
+                ->where('status', '!=', '') // Ensure we don't get empty strings
+                ->distinct()
+                ->orderBy('status', 'asc')  // Sort alphabetically
+                ->get()
+                ->pluck('status')
+                ->filter();
+            
+            return response()->json($statuses);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Failed to fetch order statuses'], 500);
+        }
     }
 
     /**
