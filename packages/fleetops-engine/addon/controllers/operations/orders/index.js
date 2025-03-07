@@ -21,7 +21,7 @@ export default class OperationsOrdersIndexController extends BaseController {
     @service universe;
     @service socket;
     @service abilities;
-
+    @service session;
     /**
      * Queryable parameters for this controller's model
      *
@@ -568,11 +568,16 @@ export default class OperationsOrdersIndexController extends BaseController {
     constructor() {
         super(...arguments);
         this.listenForOrderEvents();
-        this.getOrderStatusOptions.perform();
+        if (this.session?.isAuthenticated) {
+            this.getOrderStatusOptions.perform();
+        }
     }
 
     @task *getOrderStatusOptions() {
         try {
+            if (this.statusOptions.length > 0) {
+                return this.statusOptions;
+            }
             this.statusOptions = yield this.fetch.get('orders/statuses?is_filter_status=1');
             return this.statusOptions;
         } catch (error) {
