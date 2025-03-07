@@ -612,6 +612,8 @@ export default class OperationsOrdersIndexViewController extends BaseController 
                 order.setProperties({
                     driver_assigned: null,
                     driver_assigned_uuid: null,
+                    vehicle_assigned: null,
+                    vehicle_assigned_uuid: null,
                 });
 
                 try {

@@ -67,7 +67,7 @@
                                         <span>{{t "fleet-ops.operations.orders.index.view.unassign-driver"}}</span>
                                     </a>
                                 {{else}}
-                                    <a href="javascript:;" class="next-dd-item" {{on "click" (dropdown-fn dd this.assignDriver @model)}} disabled={{unauthorized}}>
+                                    <a href="javascript:;" class="next-dd-item" {{on "click" (dropdown-fn dd this.editOrder @model)}} disabled={{unauthorized}}>
                                         <div class="w-6">
                                             <FaIcon @icon="user-check" />
                                         </div>
