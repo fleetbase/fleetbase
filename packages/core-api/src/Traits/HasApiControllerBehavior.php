@@ -516,13 +516,14 @@ trait HasApiControllerBehavior
             if ($model_name === 'Order') {
                 $order = Order::find($id);
                 if ($order) {
-                    $vehicleAssigned = $request->input('order.vehicle_assigned');
-    
-                    if ($vehicleAssigned === null) {
-                        // Ensure vehicle_assigned_uuid is null if no vehicle is assigned
+                    $vehicleAssigned = $request->input('vehicle_assigned');
+                    $vehicleAssignedUuid = $request->input('vehicle_assigned_uuid');
+
+                    // Update if either vehicle_assigned or vehicle_assigned_uuid is null
+                    if ($vehicleAssigned === null || $vehicleAssignedUuid === null) {
                         $request->merge(['order.vehicle_assigned_uuid' => null]);
                     }
-                }            
+                }
             }
             // $model_name = str_replace('Controller', '', class_basename($this));
             // if ($model_name === 'Order') {
