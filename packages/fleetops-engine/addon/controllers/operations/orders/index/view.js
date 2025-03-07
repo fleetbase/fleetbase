@@ -470,6 +470,9 @@ export default class OperationsOrdersIndexViewController extends BaseController 
                 } else {
                     // Store the driver assignment for later confirmation
                     driverToAssign = driver;
+                    if (driver.vehicle) {
+                        order.set('vehicle_assigned', driver.vehicle);
+                    }
                 }
             },
             setVehicle: (vehicle) => {
