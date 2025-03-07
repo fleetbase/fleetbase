@@ -521,7 +521,9 @@ trait HasApiControllerBehavior
 
                     // Update if either vehicle_assigned or vehicle_assigned_uuid is null
                     if ($vehicleAssigned === null || $vehicleAssignedUuid === null) {
-                        $request->merge(['vehicle_assigned_uuid' => null]);
+                        if ($order->vehicle_assigned_uuid !== null) {
+                            $order->update(['vehicle_assigned_uuid' => null]);
+                        }
                     }
                 }
             }
