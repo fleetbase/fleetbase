@@ -693,6 +693,9 @@ class OrderController extends FleetOpsController
     public function statuses(Request $request)
     {
         try {
+            if (!session('company')) {
+                return response()->json([]);
+            }
             $statuses = DB::table('orders')
                 ->select('status')
                 ->where('company_uuid', session('company'))
