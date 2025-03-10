@@ -39,7 +39,6 @@ use Spatie\Activitylog\Traits\CausesActivity;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\Sluggable\HasSlug;
 use Spatie\Sluggable\SlugOptions;
-use Fleetbase\FleetOps\Models\Driver;
 
 class User extends Authenticatable
 {
@@ -1373,10 +1372,6 @@ class User extends Authenticatable
         }
 
         return $synced;
-    }
-    public function driver()
-    {
-        return $this->hasOne(Driver::class); // Adjust the relationship type and class as per your schema
     }
 
 }
