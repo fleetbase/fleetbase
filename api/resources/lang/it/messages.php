@@ -21,5 +21,6 @@ return [
         'shift-ended' => 'Turno Terminato',
         'on-break' => 'In Pausa',
         // ... existing code ...
-    ]
+    ],
+    'vehicle_has_active_orders' => 'Impossibile riassegnare il veicolo. Questo veicolo è coinvolto in ordini attivi. Se desideri comunque modificarlo, modifica il veicolo dai relativi ordini.'
 ];

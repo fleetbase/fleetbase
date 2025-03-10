@@ -24,5 +24,6 @@ return [
         'shift-ended' => 'Shift Ended',
         'on-break' => 'On Break',
         // ... other status translations
-    ]
+    ],
+    'vehicle_has_active_orders' => 'Unable to reassign the vehicle. This vehicle is engaged in active orders. If you still wish to change it, please do so from the related orders.'
 ];

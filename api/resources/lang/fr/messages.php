@@ -21,5 +21,6 @@ return [
         'shift-ended' => 'Fin de service',
         'on-break' => 'En Pause',
         // ... existing code ...
-    ]
+    ],
+    'vehicle_has_active_orders' => 'Impossible de réassigner le véhicule. Ce véhicule est impliqué dans des commandes actives. Si vous souhaitez toujours le modifier, veuillez le faire via les commandes associées.'
 ];

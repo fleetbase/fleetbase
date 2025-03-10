@@ -12,5 +12,6 @@ return [
         'shift-ended' => 'Ca làm việc đã kết thúc',
         'on-break' => 'Đang Nghỉ',
         // ... existing code ...
-    ]
+    ],
+    'vehicle_has_active_orders' => 'Không thể gán lại phương tiện. Phương tiện này đang tham gia vào các đơn hàng hoạt động. Nếu bạn vẫn muốn thay đổi nó, vui lòng thay đổi phương tiện từ các đơn hàng liên quan.'
 ];

@@ -218,7 +218,7 @@ class DriverController extends FleetOpsController
     {
         // get input data
         $input = $request->input('driver');
-
+        
         // create validation request
         $updateDriverRequest = UpdateDriverRequest::createFrom($request);
         $rules               = $updateDriverRequest->rules();
@@ -231,6 +231,28 @@ class DriverController extends FleetOpsController
         }
 
         try {
+             // Check if vehicle is being updated
+            if (isset($input['vehicle_uuid']) && !empty($input['vehicle_uuid'])) {
+                // Get current driver's vehicle
+                $driver = $this->model->find($id);
+                $currentVehicleUuid = $driver->vehicle_uuid;
+
+                // Only check if vehicle is actually changing
+                if ($currentVehicleUuid !== $input['vehicle_uuid']) {
+                    // Check if current vehicle has any active orders
+                    $hasActiveOrders = Order::where('vehicle_assigned_uuid', $currentVehicleUuid)
+                        ->whereNotIn('status', ['completed', 'cancelled'])
+                        ->whereNull('deleted_at')
+                        ->exists();
+
+                    if ($hasActiveOrders) {
+                        return response()->json([
+                            'success' => false,
+                            'error' => __('messages.vehicle_has_active_orders')
+                        ], 400);
+                    }
+                }
+            }
             $record = $this->model->updateRecordFromRequest(
                 $request,
                 $id,
