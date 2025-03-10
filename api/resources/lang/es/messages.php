@@ -22,5 +22,5 @@ return [
         'on-break' => 'En Descanso',
         // ... other status translations
     ],
-    'vehicle_has_active_orders' => 'No se puede reasignar el vehículo. Este vehículo está involucrado en pedidos activos. Si todavía desea cambiarlo, haga lo que sea desde los pedidos relacionados.'
+    'vehicle_has_active_orders' => 'No se puede asignar este vehículo ya que actualmente está involucrado en pedidos activos. Si aún necesita continuar, hágalo desde los pedidos relacionados.'
 ];

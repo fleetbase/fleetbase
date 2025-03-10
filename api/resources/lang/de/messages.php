@@ -22,5 +22,5 @@ return [
         'on-break' => 'Pause',
         // ... existing code ...
     ],
-    'vehicle_has_active_orders' => 'Das Fahrzeug kann nicht neu zugewiesen werden. Dieses Fahrzeug ist derzeit in aktiven Aufträgen im Einsatz. Wenn Sie es dennoch ändern möchten, tun Sie dies bitte über die zugehörigen Aufträge.'
+    'vehicle_has_active_orders' => 'Das Fahrzeug kann nicht zugewiesen werden, da es derzeit in aktiven Aufträgen eingesetzt wird. Wenn Sie dennoch fortfahren müssen, tun Sie dies bitte über die zugehörigen Aufträge.'
 ];

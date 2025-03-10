@@ -22,5 +22,5 @@ return [
         'on-break' => 'In Pausa',
         // ... existing code ...
     ],
-    'vehicle_has_active_orders' => 'Impossibile riassegnare il veicolo. Questo veicolo è coinvolto in ordini attivi. Se desideri comunque modificarlo, modifica il veicolo dai relativi ordini.'
+    'vehicle_has_active_orders' => 'Impossibile assegnare questo veicolo poiché è attualmente coinvolto in ordini attivi. Se è ancora necessario procedere, si prega di farlo dagli ordini correlati..'
 ];

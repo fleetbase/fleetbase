@@ -22,5 +22,5 @@ return [
         'on-break' => 'En Pause',
         // ... existing code ...
     ],
-    'vehicle_has_active_orders' => 'Impossible de réassigner le véhicule. Ce véhicule est impliqué dans des commandes actives. Si vous souhaitez toujours le modifier, veuillez le faire via les commandes associées.'
+    'vehicle_has_active_orders' => "Impossible d'assigner ce véhicule car il est actuellement engagé dans des commandes actives. Si vous devez toujours procéder, veuillez le faire à partir des commandes associées."
 ];
