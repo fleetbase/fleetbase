@@ -231,38 +231,46 @@ class DriverController extends FleetOpsController
         }
 
         try {
+            $driver = $this->model->find($id);
+            $currentVehicleUuid = $driver->vehicle_uuid;
              // Check if vehicle is being updated
              if (isset($input['vehicle_uuid']) && !empty($input['vehicle_uuid'])) {
-                // Get current driver's vehicle
-                    $driver = $this->model->find($id);
-                    $currentVehicleUuid = $driver->vehicle_uuid;
-                    if ($currentVehicleUuid !== $input['vehicle_uuid']) {
-                    // ✅ Check if the vehicle is already assigned to another driver
-                    $assignedDriver = Driver::where('vehicle_uuid', $input['vehicle_uuid'])
+                // ✅ If the vehicle is changing
+            if ($currentVehicleUuid !== $input['vehicle_uuid']) {
+
+                // ✅ Check if the current vehicle has active orders (while changing the vehicle)
+                $hasActiveOrdersOnCurrentVehicle = Order::where('vehicle_assigned_uuid', $currentVehicleUuid)
+                    ->whereNotIn('status', ['completed', 'cancelled'])
+                    ->whereNull('deleted_at')
+                    ->exists();
+
+                if ($hasActiveOrdersOnCurrentVehicle) {
+                    return response()->error(
+                        __('messages.current_vehicle_has_active_orders')
+                    );
+                }
+
+                // ✅ Check if the new vehicle is already assigned to another driver
+                $assignedDriver = Driver::where('vehicle_uuid', $input['vehicle_uuid'])
                     ->where('id', '!=', $id)
                     ->whereNull('deleted_at')
                     ->first();
-                    if ($assignedDriver) {
-                        return response()->error(
-                            __('messages.vehicle_already_assigned_to_another_driver')
-                        );
-                    }
-                    // Only check if vehicle is actually changing
-                    if (($currentVehicleUuid !== $input['vehicle_uuid']) || (!empty($currentVehicleUuid) && empty($input['vehicle_uuid']))) {
-                        // Check if current vehicle has any active orders
-                        $hasActiveOrders = Order::where('vehicle_assigned_uuid', $currentVehicleUuid)
-                            ->whereNotIn('status', ['completed', 'cancelled'])
-                            ->whereNull('deleted_at')
-                            ->exists();
 
-                        if ($hasActiveOrders) {
-                            return response()->error(
-                                __('messages.vehicle_has_active_orders')
-                            );
-                        }
+                if ($assignedDriver) {
+                    // ✅ Check if the assigned vehicle has any active orders
+                    $hasActiveOrdersOnAssignedVehicle = Order::where('vehicle_assigned_uuid', $input['vehicle_uuid'])
+                        ->whereNotIn('status', ['completed', 'cancelled'])
+                        ->whereNull('deleted_at')
+                        ->exists();
+
+                    if ($hasActiveOrdersOnAssignedVehicle) {
+                        return response()->error(
+                            __('messages.vehicle_has_active_orders')
+                        );
                     }
                 }
             }
+        }
             $record = $this->model->updateRecordFromRequest(
                 $request,
                 $id,

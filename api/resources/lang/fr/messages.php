@@ -23,5 +23,5 @@ return [
         // ... existing code ...
     ],
     'vehicle_has_active_orders' => "Impossible d'assigner ce véhicule car il est actuellement engagé dans des commandes actives. Si vous devez toujours procéder, veuillez le faire à partir des commandes associées.",
-    'vehicle_already_assigned_to_another_driver' => 'Ce véhicule est déjà assigné à un autre chauffeur'
+    'current_vehicle_has_active_orders' => 'Impossible de modifier ce véhicule car il est actuellement engagé dans des commandes actives. Si vous devez toujours procéder, veuillez le faire à partir des commandes associées.'
 ];

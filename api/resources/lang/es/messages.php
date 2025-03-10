@@ -23,5 +23,5 @@ return [
         // ... other status translations
     ],
     'vehicle_has_active_orders' => 'No se puede asignar este vehículo ya que actualmente está involucrado en pedidos activos. Si aún necesita continuar, hágalo desde los pedidos relacionados.',
-    'vehicle_already_assigned_to_another_driver' => 'Este vehículo ya está asignado a otro conductor'
+    'current_vehicle_has_active_orders' => 'No se puede cambiar este vehículo ya que actualmente está involucrado en pedidos activos. Si aún necesita continuar, hágalo desde los pedidos relacionados.'
 ];

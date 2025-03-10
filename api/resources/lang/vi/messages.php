@@ -14,6 +14,6 @@ return [
         // ... existing code ...
     ],
     'vehicle_has_active_orders' => 'Không thể gán xe này vì hiện tại nó đang tham gia vào các đơn hàng đang hoạt động. Nếu bạn vẫn cần tiếp tục, vui lòng thực hiện từ các đơn hàng liên quan.',
-    'vehicle_already_assigned_to_another_driver' => 'Xe này đã được gán cho một tài xế khác'
+    'current_vehicle_has_active_orders' => 'Không thể gán xe này vì hiện tại nó đang tham gia vào các đơn hàng đang hoạt động. Nếu bạn vẫn cần tiếp tục, vui lòng thực hiện từ các đơn hàng liên quan.'
 ];
 
