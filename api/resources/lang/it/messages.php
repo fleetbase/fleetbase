@@ -22,5 +22,6 @@ return [
         'on-break' => 'In Pausa',
         // ... existing code ...
     ],
-    'vehicle_has_active_orders' => 'Impossibile assegnare questo veicolo poiché è attualmente coinvolto in ordini attivi. Se è ancora necessario procedere, si prega di farlo dagli ordini correlati..'
+    'vehicle_has_active_orders' => 'Impossibile assegnare questo veicolo poiché è attualmente coinvolto in ordini attivi. Se è ancora necessario procedere, si prega di farlo dagli ordini correlati..',
+    'vehicle_already_assigned_to_another_driver' => 'Questo veicolo è già assegnato a un altro driver'
 ];

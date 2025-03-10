@@ -236,9 +236,18 @@ class DriverController extends FleetOpsController
                 // Get current driver's vehicle
                 $driver = $this->model->find($id);
                 $currentVehicleUuid = $driver->vehicle_uuid;
-
+                 // ✅ Check if the vehicle is already assigned to another driver
+                $assignedDriver = Driver::where('vehicle_uuid', $input['vehicle_uuid'])
+                ->where('id', '!=', $id)
+                ->whereNull('deleted_at')
+                ->first();
+                if ($assignedDriver) {
+                    return response()->error(
+                        __('messages.vehicle_already_assigned_to_another_driver')
+                    );
+                }
                 // Only check if vehicle is actually changing
-                if ($currentVehicleUuid !== $input['vehicle_uuid']) {
+                if (($currentVehicleUuid !== $input['vehicle_uuid']) || (!empty($currentVehicleUuid) && empty($input['vehicle_uuid']))) {
                     // Check if current vehicle has any active orders
                     $hasActiveOrders = Order::where('vehicle_assigned_uuid', $currentVehicleUuid)
                         ->whereNotIn('status', ['completed', 'cancelled'])
@@ -246,10 +255,9 @@ class DriverController extends FleetOpsController
                         ->exists();
 
                     if ($hasActiveOrders) {
-                        return response()->json([
-                            'success' => false,
-                            'error' => __('messages.vehicle_has_active_orders')
-                        ], 400);
+                        return response()->error(
+                             __('messages.vehicle_has_active_orders')
+                        );
                     }
                 }
             }

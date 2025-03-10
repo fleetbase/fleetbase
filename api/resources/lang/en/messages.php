@@ -25,5 +25,6 @@ return [
         'on-break' => 'On Break',
         // ... other status translations
     ],
-    'vehicle_has_active_orders' => 'Unable to assign this vehicle as it is currently engaged in active orders. If you still need to proceed, please do so from the related orders.'
+    'vehicle_has_active_orders' => 'Unable to assign this vehicle as it is currently engaged in active orders. If you still need to proceed, please do so from the related orders.',
+    'vehicle_already_assigned_to_another_driver' => 'This vehicle is already assigned to another driver'
 ];
