@@ -21,5 +21,6 @@ return [
         'shift-ended' => 'Schicht Beendet',
         'on-break' => 'Pause',
         // ... existing code ...
-    ]
+    ],
+    'vehicle_has_active_orders' => 'Das Fahrzeug kann nicht neu zugewiesen werden. Dieses Fahrzeug ist derzeit in aktiven Aufträgen im Einsatz. Wenn Sie es dennoch ändern möchten, tun Sie dies bitte über die zugehörigen Aufträge.'
 ];
