@@ -221,56 +221,77 @@ class DriverController extends FleetOpsController
         
         // create validation request
         $updateDriverRequest = UpdateDriverRequest::createFrom($request);
-        $rules               = $updateDriverRequest->rules();
+        $rules = $updateDriverRequest->rules();
 
         // manually validate request
         $validator = Validator::make($input, $rules);
-
         if ($validator->fails()) {
             return $updateDriverRequest->responseWithErrors($validator);
         }
 
         try {
+            // Find the current driver and its vehicle
             $driver = $this->model->find($id);
-            $currentVehicleUuid = $driver->vehicle_uuid;
-             // Check if vehicle is being updated
-             if (isset($input['vehicle_uuid']) && !empty($input['vehicle_uuid'])) {
-                // ✅ If the vehicle is changing
-            if (isset($currentVehicleUuid) && (!empty($currentVehicleUuid) && ($currentVehicleUuid !== $input['vehicle_uuid']))) {
+            $currentVehicleUuid = $driver->vehicle_uuid ?? null;
+            $inputVehicleUuid = $input['vehicle_uuid'] ?? null;
 
-                // ✅ Check if the current vehicle has active orders (while changing the vehicle)
-                $hasActiveOrdersOnCurrentVehicle = Order::where('vehicle_assigned_uuid', $currentVehicleUuid)
-                    ->whereNotIn('status', ['completed', 'cancelled'])
-                    ->whereNull('deleted_at')
-                    ->exists();
+            // ✅ If vehicle is being changed
+            if ($inputVehicleUuid && ($currentVehicleUuid !== $inputVehicleUuid)) {
 
-                if ($hasActiveOrdersOnCurrentVehicle) {
-                    return response()->error(
-                        __('messages.current_vehicle_has_active_orders')
-                    );
+                // ✅ Check if the current vehicle has any active orders
+                if ($currentVehicleUuid) {
+                    $hasActiveOrdersOnCurrentVehicle = Order::where('vehicle_assigned_uuid', $currentVehicleUuid)
+                        ->whereNotIn('status', ['completed', 'cancelled'])
+                        ->whereNull('deleted_at')
+                        ->exists();
+                    
+                    if ($hasActiveOrdersOnCurrentVehicle) {
+                        return response()->error(
+                            __('messages.current_vehicle_has_active_orders')
+                        );
+                    }
                 }
 
                 // ✅ Check if the new vehicle is already assigned to another driver
-                $assignedDriver = Driver::where('vehicle_uuid', $input['vehicle_uuid'])
+                $assignedDriver = Driver::where('vehicle_uuid', $inputVehicleUuid)
                     ->where('id', '!=', $id)
                     ->whereNull('deleted_at')
                     ->first();
 
                 if ($assignedDriver) {
                     // ✅ Check if the assigned vehicle has any active orders
-                    $hasActiveOrdersOnAssignedVehicle = Order::where('vehicle_assigned_uuid', $input['vehicle_uuid'])
+                    $hasActiveOrdersOnAssignedVehicle = Order::where('vehicle_assigned_uuid', $inputVehicleUuid)
                         ->whereNotIn('status', ['completed', 'cancelled'])
                         ->whereNull('deleted_at')
                         ->exists();
 
+                    // ✅ If vehicle has active orders, block the transfer
                     if ($hasActiveOrdersOnAssignedVehicle) {
                         return response()->error(
                             __('messages.vehicle_has_active_orders')
                         );
                     }
+
+                    // ✅ If the vehicle has NO active orders, automatically unassign the old driver
+                    $assignedDriver->update(['vehicle_uuid' => null]);
                 }
             }
-        }
+
+            // ✅ If no current vehicle and input vehicle has active orders, block the assignment
+            if (!$currentVehicleUuid && $inputVehicleUuid) {
+                $hasActiveOrdersOnInputVehicle = Order::where('vehicle_assigned_uuid', $inputVehicleUuid)
+                    ->whereNotIn('status', ['completed', 'cancelled'])
+                    ->whereNull('deleted_at')
+                    ->exists();
+
+                if ($hasActiveOrdersOnInputVehicle) {
+                    return response()->error(
+                        __('messages.vehicle_has_active_orders')
+                    );
+                }
+            }
+
+            // ✅ Update the driver record
             $record = $this->model->updateRecordFromRequest(
                 $request,
                 $id,
@@ -278,11 +299,11 @@ class DriverController extends FleetOpsController
                     $driver->load(['user'])->guard(['user_uuid']);
                     $input     = collect($input);
                     $userInput = $input->only(['name', 'password', 'email', 'phone', 'avatar_uuid'])->toArray();
-                    // handle `photo_uuid`
+
+                    // Handle photo_uuid to avatar_uuid
                     if (isset($input['photo_uuid']) && Str::isUuid($input['photo_uuid'])) {
                         $userInput['avatar_uuid'] = $input['photo_uuid'];
                     }
-                    $input     = $input->except(['name', 'password', 'email', 'phone', 'meta', 'avatar_uuid', 'photo_uuid'])->toArray();
 
                     // Update driver user details
                     $driverUser = $driver->getUser();
@@ -313,6 +334,7 @@ class DriverController extends FleetOpsController
             return response()->error($e->getErrors());
         }
     }
+
 
     /**
      * Get all status options for an driver.
