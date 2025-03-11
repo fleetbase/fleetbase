@@ -22,4 +22,5 @@ return [
    'LIVERPOOL' => 'LIVERPOOL',
    'GLASGOW' => 'GLASGOW',
    'BIRMINGHAM' => 'BIRMINGHAM',
+   "DUSSELDORF" => "DÜSSELDORF",
 ];
