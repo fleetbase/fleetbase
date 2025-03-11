@@ -536,9 +536,9 @@ export default class OperationsOrdersIndexViewController extends BaseController 
                                 order.set('driver_assigned', driverToAssign);
                                 order.set('driver_assigned_uuid', driverToAssign.id);
 
-                                if (driverToAssign.vehicle) {
-                                    order.set('vehicle_assigned', driverToAssign.vehicle);
-                                }
+                                // if (driverToAssign.vehicle) {
+                                //     order.set('vehicle_assigned', driverToAssign.vehicle);
+                                // }
 
                                 confirmModal.startLoading();
                                 await saveOrder();
