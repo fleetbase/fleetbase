@@ -16,7 +16,6 @@ export default class OrderScheduleCardComponent extends Component {
     @service modalsManager;
     @service notifications;
     @service abilities;
-    @service hostRouter;
     @tracked timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
     /**
      * Indicates if a driver is currently being assigned.
@@ -151,33 +150,19 @@ export default class OrderScheduleCardComponent extends Component {
                 button:driver.button_message,
             }),
 
-            confirm: async () => {
+            confirm: () => {
                 order.setProperties({
                     driver_assigned_uuid: driver.id,
                     vehicle_assigned: driver.vehicle || null,
                 });
-                try {
-                    await order.save();
-                    this.isAssigningDriver = false;
-                    // Success message after assigning driver
-                    this.notifications.success(
-                        this.intl.t('fleet-ops.operations.scheduler.index.success-message', { orderId: order.public_id, orderAt:order.scheduledAt})
-                    );
-                    // return this.hostRouter.transitionTo('console.fleet-ops.operations.scheduler');
-                    // window.location.reload();
-                    return this.hostRouter.refresh();                    
-                    // return this.hostRouter.transitionTo('console.operations.scheduler');
-                } catch (error) {
-                    this.notifications.serverError(error);
-                }
-                // return order
-                //     .save()
-                //     .catch((error) => {
-                //         this.notifications.serverError(error);
-                //     })
-                //     .finally(() => {
-                //         this.isAssigningDriver = false;
-                //     });
+                return order
+                    .save()
+                    .catch((error) => {
+                        this.notifications.serverError(error);
+                    })
+                    .finally(() => {
+                        this.isAssigningDriver = false;
+                    });
             },
             decline: (modal) => {
                 this.isAssigningDriver = false;
