@@ -271,9 +271,14 @@ class DriverController extends FleetOpsController
                             __('messages.vehicle_has_active_orders')
                         );
                     }
+                    else{
+                        DB::table('drivers')
+                        ->where('uuid', $assignedDriver->uuid)
+                        ->update(['vehicle_uuid' => null]);
+                    }
 
                     // ✅ If the vehicle has NO active orders, automatically unassign the old driver
-                    $assignedDriver->forceFill(['vehicle_uuid' => null])->save();
+                    // $assignedDriver->forceFill(['vehicle_uuid' => null])->save();
                 }
             }
 
