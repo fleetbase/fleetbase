@@ -47,7 +47,7 @@ export default class FullCalendarComponent extends Component {
             events,
             plugins: [dayGridPlugin, interactionPlugin],
             initialView: 'dayGridWeek',
-            editable: true,
+            editable: false,
             height: 'auto',  // ✅ Automatically adjust height based on data
             contentHeight: 'auto', // ✅ Allow height to expand as needed
             expandRows: true, // ✅ Ensures rows expand instead of shrinking
