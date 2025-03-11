@@ -13,7 +13,7 @@ return [
    'HAMBURG' => 'HAMBURGO',
    'MUNICH' => 'MÚNICH',
    'COLOGNE' => 'COLONIA',
-   
+   'BERLIN' => 'BERLÍN',
    // Cities in United Kingdom
    'MILTON KEYNES' => 'MILTON KEYNES',
    'LONDON' => 'LONDRES',
@@ -22,4 +22,5 @@ return [
    'LIVERPOOL' => 'LIVERPOOL',
    'GLASGOW' => 'GLASGOW',
    'BIRMINGHAM' => 'BIRMINGHAM',
+   "DUSSELDORF" => "DÜSSELDORF",
 ];
