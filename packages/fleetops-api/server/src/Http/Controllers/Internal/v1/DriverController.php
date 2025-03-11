@@ -236,7 +236,7 @@ class DriverController extends FleetOpsController
              // Check if vehicle is being updated
              if (isset($input['vehicle_uuid']) && !empty($input['vehicle_uuid'])) {
                 // ✅ If the vehicle is changing
-            if ($currentVehicleUuid !== $input['vehicle_uuid']) {
+            if (isset($currentVehicleUuid) && (!empty($currentVehicleUuid) && ($currentVehicleUuid !== $input['vehicle_uuid']))) {
 
                 // ✅ Check if the current vehicle has active orders (while changing the vehicle)
                 $hasActiveOrdersOnCurrentVehicle = Order::where('vehicle_assigned_uuid', $currentVehicleUuid)
