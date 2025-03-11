@@ -133,6 +133,7 @@ export default class DriverFormPanelComponent extends Component {
             this.driver = yield this.driver.save();
         } catch (error) {
             this.notifications.serverError(error);
+            this.hostRouter.refresh();
             return;
         }
 

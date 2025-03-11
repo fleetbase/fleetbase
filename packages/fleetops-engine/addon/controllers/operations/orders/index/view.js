@@ -470,6 +470,9 @@ export default class OperationsOrdersIndexViewController extends BaseController 
                 } else {
                     // Store the driver assignment for later confirmation
                     driverToAssign = driver;
+                    if (driver.vehicle) {
+                        order.set('vehicle_assigned', driver.vehicle);
+                    }
                 }
             },
             setVehicle: (vehicle) => {
@@ -612,6 +615,8 @@ export default class OperationsOrdersIndexViewController extends BaseController 
                 order.setProperties({
                     driver_assigned: null,
                     driver_assigned_uuid: null,
+                    vehicle_assigned: null,
+                    vehicle_assigned_uuid: null,
                 });
 
                 try {

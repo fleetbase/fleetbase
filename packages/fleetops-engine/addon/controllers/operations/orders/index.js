@@ -21,7 +21,7 @@ export default class OperationsOrdersIndexController extends BaseController {
     @service universe;
     @service socket;
     @service abilities;
-
+    @service session;
     /**
      * Queryable parameters for this controller's model
      *
@@ -375,20 +375,6 @@ export default class OperationsOrdersIndexController extends BaseController {
             modelNamePath: 'address',
             model: 'place',
         },
-        // {
-        //     label: this.intl.t('fleet-ops.operations.orders.index.customer'),
-        //     valuePath: 'customer.name',
-        //     cellComponent: 'table/cell/base',
-        //     width: '125px',
-        //     resizable: true,
-        //     sortable: true,
-        //     hidden: false,
-        //     filterable: true,
-        //     filterComponent: 'filter/model',
-        //     filterComponentPlaceholder: 'Select order customer',
-        //     filterParam: 'customer',
-        //     model: 'customer',
-        // },
         {
             label: this.intl.t('fleet-ops.operations.orders.index.vehicle-assigned'),
             cellComponent: 'cell/vehicle-name',
@@ -399,26 +385,12 @@ export default class OperationsOrdersIndexController extends BaseController {
             hidden: true,
             resizable: true,
             sortable: true,
-            filterable: true,
+            filterable: false,
             filterComponent: 'filter/model',
             filterComponentPlaceholder: 'Select vehicle for order',
             filterParam: 'vehicle',
             model: 'vehicle',
         },
-        // {
-        //     label: this.intl.t('fleet-ops.operations.orders.index.facilitator'),
-        //     valuePath: 'facilitator.name',
-        //     cellComponent: 'table/cell/base',
-        //     width: '125px',
-        //     resizable: true,
-        //     hidden: true,
-        //     sortable: true,
-        //     filterable: true,
-        //     filterComponent: 'filter/model',
-        //     filterComponentPlaceholder: 'Select order facilitator',
-        //     filterParam: 'facilitator',
-        //     model: 'vendor',
-        // },
         {
             label: this.intl.t('fleet-ops.operations.orders.index.scheduled-at'),
             valuePath: 'scheduledAt',
@@ -486,12 +458,14 @@ export default class OperationsOrdersIndexController extends BaseController {
             label: this.intl.t('fleet-ops.common.status'),
             valuePath: 'status',
             cellComponent: 'table/cell/status',
-            width: '120px',
+            width: '150px',
             resizable: true,
             sortable: true,
             filterable: true,
             filterComponent: 'filter/multi-option',
             filterOptions: this.statusOptions,
+            filterOptionLabel: 'label', // Specify which property to use as the display label
+            filterOptionValue: 'code',
         },
         {
             label: this.intl.t('fleet-ops.common.created-at'),
@@ -594,12 +568,18 @@ export default class OperationsOrdersIndexController extends BaseController {
     constructor() {
         super(...arguments);
         this.listenForOrderEvents();
-        this.getOrderStatusOptions.perform();
+        if (this.session?.isAuthenticated) {
+            this.getOrderStatusOptions.perform();
+        }
     }
 
     @task *getOrderStatusOptions() {
         try {
-            this.statusOptions = yield this.fetch.get('orders/statuses');
+            if (this.statusOptions.length > 0) {
+                return this.statusOptions;
+            }
+            this.statusOptions = yield this.fetch.get('orders/statuses?is_filter_status=1');
+            return this.statusOptions;
         } catch (error) {
             this.notifications.serverError(error);
         }
