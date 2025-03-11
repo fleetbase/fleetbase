@@ -8,6 +8,7 @@ use Fleetbase\Http\Resources\FleetbaseResource;
 use Fleetbase\LaravelMysqlSpatial\Types\Point;
 use Fleetbase\Support\Http;
 use Fleetbase\Support\Resolve;
+use App\Services\LocationTranslatorService;
 
 class Waypoint extends FleetbaseResource
 {
@@ -26,6 +27,9 @@ class Waypoint extends FleetbaseResource
     public function toArray($request)
     {
         $this->waypoint = $waypoint = $this->getWaypoint();
+        $locale = $request->header('X-Locale');
+        $locationService = app(LocationTranslatorService::class);
+
 
         return [
             'id'                     => $this->when(Http::isInternalRequest(), $this->id, $this->public_id),
@@ -38,7 +42,7 @@ class Waypoint extends FleetbaseResource
             'tracking'               => $waypoint->tracking,
             'status'                 => $waypoint->status,
             'status_code'            => $waypoint->status_code,
-            'name'                   => $this->name,
+            'name'                   => $locale ? $locationService->translateLocation($this->name, $locale) : $this->name,
             'location'               => data_get($this, 'location', new Point(0, 0)),
             'address'                => $this->address,
             'address_html'           => $this->when(Http::isInternalRequest(), $this->address_html),
@@ -97,12 +101,14 @@ class Waypoint extends FleetbaseResource
      *
      * @return array
      */
-    public function toWebhookPayload()
+    public function toWebhookPayload($request)
     {
+        $locale = $request->header('X-Locale');
+        $locationService = app(LocationTranslatorService::class);
         return [
             'id'              => $this->public_id,
             'internal_id'     => $this->internal_id,
-            'name'            => $this->name,
+            'name'            => $locale ? $locationService->translateLocation($this->name, $locale) : $this->name,
             'type'            => data_get($this, 'type'),
             'destination'     => $this->destination ? $this->destination->public_id : null,
             'customer'        => Resolve::resourceForMorph($this->customer_type, $this->customer_uuid),
