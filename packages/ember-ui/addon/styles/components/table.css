@@ -177,7 +177,7 @@
 }
 
 [data-theme='dark'] .table-wrapper.table-fluid table tbody tr.is-selected td {
-    @apply text-white bg-[#496453] border-[#3F5747] opacity-75;
+    @apply text-white bg-[black] border-[black];
 }
 
 [data-theme='dark'] .table-wrapper.table-fluid table tbody tr.is-selected td a {
@@ -264,7 +264,7 @@ table .resizer {
 table .resizer.resizer:hover,
 .next-table-wrapper table .resizer.resizing,
 table .resizer.resizing {
-    @apply border-r-4 border-solid border-[#496453] border-opacity-60 opacity-75;
+    @apply border-r-4 border-solid border-[black] border-opacity-60;
 }
 
 body[data-theme='dark'] .table-wrapper.table-fluid > .next-table-wrapper > table > tbody > tr.expandable-row.is-expanded > td,
@@ -273,7 +273,7 @@ body[data-theme='dark'] .table-wrapper.table-fluid > .next-table-wrapper > table
 .next-table-wrapper table > tbody > tr.expandable-row:hover > td,
 table > tbody > tr.expandable-row.is-expanded > td,
 table > tbody > tr.expandable-row:hover > td {
-    @apply bg-[#496453] text-white border-y border-[#3F5747] opacity-75;
+    @apply bg-[black] text-white border-y border-[black];
 }
 
 body[data-theme='dark'] .next-table-wrapper > table.is-expandable > tbody > tr.expandable-row:nth-child(even) > td {
