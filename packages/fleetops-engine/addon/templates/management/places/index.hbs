@@ -30,7 +30,7 @@
         </DropdownButton>
     {{/if}}
     <Button @icon="plus" @iconPrefix="fas" @type="primary" @text={{t "fleet-ops.common.new"}} class="mr-2" @onClick={{this.createPlace}} @permission="fleet-ops create place" />
-    <Button
+    {{!-- <Button
         @icon="upload"
         @type="magic"
         @text={{t "fleet-ops.common.import"}}
@@ -38,7 +38,7 @@
         @onClick={{this.importPlaces}}
         @permission="fleet-ops import place"
         class="mr-2"
-    />
+    /> --}}
     <Button @icon="long-arrow-up" @iconClass="rotate-icon-45" @text={{t "fleet-ops.common.export"}} @onClick={{this.exportPlaces}} @permission="fleet-ops export place" />
 </Layout::Section::Header>
 

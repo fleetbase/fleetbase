@@ -30,7 +30,7 @@
         </DropdownButton>
     {{/if}}
     <Button @icon="plus" @iconPrefix="fas" @type="primary" @text={{t "fleet-ops.common.new"}} class="mr-2" @onClick={{this.createVehicle}} @permission="fleet-ops create vehicle" />
-    <Button
+    {{!-- <Button
         @icon="upload"
         @type="magic"
         @text={{t "fleet-ops.common.import"}}
@@ -38,7 +38,7 @@
         @onClick={{this.importVehicles}}
         @permission="fleet-ops import vehicle"
         class="mr-2"
-    />
+    /> --}}
     <Button
         @icon="long-arrow-up"
         @iconClass="rotate-icon-45"
