@@ -17,7 +17,7 @@ body[data-theme='light'] .next-view-container > nav.next-sidebar {
     @apply bg-white;
 }
 body[data-theme='light'] .next-view-container > nav.next-sidebar a.next-nav-item:hover {
-    @apply bg-[#496453] text-white opacity-75;
+    @apply bg-[black] text-white;
 }
 body[data-theme='light'] .next-view-container > nav.next-sidebar a.next-nav-item:hover .next-nav-item-icon-container svg {
     @apply text-white;
@@ -26,10 +26,10 @@ body[data-theme='light'] .next-dd-menu {
     @apply bg-white;
 }
 body[data-theme='light'] .next-dd-menu a.next-dd-item:hover {
-    @apply bg-[#496453] text-white !important;
+    @apply bg-[black] text-white !important;
 }
 body[data-theme='light'] .next-dd-menu a.next-dd-item.active {
-    @apply bg-[#496453] text-white !important;
+    @apply bg-[black] text-white !important;
 }
 body[data-theme='light'] .form-input {
     @apply shadow-sm text-gray-800;

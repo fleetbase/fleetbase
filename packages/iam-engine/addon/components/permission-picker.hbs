@@ -13,7 +13,7 @@
             <div>
                 {{#if this.isLoading}}
                     <div class="mx-2">
-                        <Spinner @iconClass="text-[#496453] opacity-75" />
+                        <Spinner @iconClass="text-[black]" />
                     </div>
                 {{/if}}
             </div>
@@ -40,7 +40,7 @@
             {{#unless this.isPermissionsLoaded}}
                 <div class="flex text-center items-center justify-center py-4 dark:text-gray-100">
                     <div class="mr-2">
-                        <Spinner @iconClass="text-[#496453] opacity-75" />
+                        <Spinner @iconClass="text-[black]" />
                     </div>
                     <span>{{t "iam.components.permission-picker.loading-permission"}}</span>
                 </div>

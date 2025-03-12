@@ -445,7 +445,7 @@ body[data-theme='dark'] .money-input-currency-selector + .ember-basic-dropdown-c
 body[data-theme='dark'] .country-selector + .ember-basic-dropdown-content-wormhole-origin > .ember-basic-dropdown-content .ember-power-select-search-input,
 body[data-theme='dark'] .ui-money-input .ember-basic-dropdown > .ember-basic-dropdown-trigger .ember-basic-dropdown-content .ember-power-select-search-input,
 body[data-theme='dark'] .money-input-currency-selector .ember-basic-dropdown-content .ember-power-select-search-input {
-    @apply border border-[#496453] opacity-75 bg-gray-900 py-1;
+    @apply border border-[black] bg-gray-900 py-1;
 }
 
 .emberTagInput.form-input,
@@ -488,7 +488,7 @@ body[data-theme='dark'] .emberTagInput.emberTagInput--readOnly,
 
 .emberTagInput .emberTagInput-tag {
     margin-bottom: 0;
-    @apply bg-[#496453] opacity-75 flex items-center px-2 mr-1 opacity-75;
+    @apply bg-[black] flex items-center px-2 mr-1;
 }
 
 .emberTagInput .emberTagInput-tag > .emberTagInput-remove:before {
@@ -588,7 +588,7 @@ body[data-theme='dark'] .iti__divider {
 .fleetbase-console .form-radio[data-checked] {
     outline: 0;
     outline-offset: 0;
-    @apply bg-[#496453] opacity-75 shadow-sm;
+    @apply bg-[black] shadow-sm;
 }
 
 .fleetbase-checkbox {
@@ -641,8 +641,7 @@ body[data-theme='dark'] .coordinates-input-zoom-controls > .coordinates-input-zo
 }
 
 .coordinates-input-zoom-controls > .coordinates-input-zoom-controls-container.toolbar-button.is-action:hover {
-   background-color: #496453;
-   opacity: 0.75;
+   background-color: black;
 }
 
 .coordinates-input-zoom-controls > .coordinates-input-zoom-controls-container .toolbar-button:focus,
@@ -660,8 +659,7 @@ body[data-theme='light'] .coordinates-input-zoom-controls > .coordinates-input-z
 }
 
 body[data-theme='light'] .coordinates-input-zoom-controls > .coordinates-input-zoom-controls-container .toolbar-button.is-action:hover {
-    background-color: #496453;
-    opacity: 0.75;
+    background-color: black;
 }
 
 body[data-theme='light'] .coordinates-input-zoom-controls > .coordinates-input-zoom-controls-container .toolbar-button.is-action:hover svg {

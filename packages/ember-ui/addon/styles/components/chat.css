@@ -252,9 +252,8 @@ body[data-theme='dark'] .chat-window-participants-container {
     white-space: nowrap;
     border-radius: 0.5rem;
     padding: 0.25rem;
-    background-color: #496453;
+    background-color: black;
     box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-    opacity: 0.75;
 }
 
 .chat-window-participants-container .chat-window-participant-bubble-container {
@@ -534,8 +533,7 @@ body[data-theme='dark'] .chat-message-container .chat-message-content-bubble-con
 
 .chat-message-container .chat-message-content-bubble-container .chat-message-attachments-container .chat-attachment-file-preview:hover,
 .chat-message-container .chat-message-content-bubble-container .chat-message-attachments-container .chat-attachment-file-preview:focus {
-    border-color: #496453;
-    opacity: 0.75;
+    border-color: black;
 }
 
 .chat-message-container .chat-message-content-bubble-container .chat-message-attachments-container .chat-attachment-file-preview .chat-attachment-file-preview-filename {
