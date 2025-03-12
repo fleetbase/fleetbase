@@ -23,18 +23,19 @@ class OrderExport implements FromCollection, WithHeadings, WithMapping, WithColu
     {
         $routes = '';
         if ($order->payload && $order->payload->waypoints && count($order->payload->waypoints)) {
-            $waypointStrings = [];
-            foreach ($order->payload->waypoints as $index => $waypoint) {
-                $waypointStrings[] = ($index + 1) . ". " . $waypoint->name . " (" . $waypoint->address . ")";
-            }
-            $routes = implode("\n", $waypointStrings);
+            $locationNames = collect($order->payload->waypoints)
+                ->sortBy('order')
+                ->pluck('name')
+                ->toArray();
+                
+            // Join the location names with arrow symbols
+            $routes = implode('→', $locationNames);
         }
         return [
             $order->public_id,
             $order->internal_id,
             $order->driver_name,
             $order->vehicle_name,
-            $order->customer_name,
             $order->pickup_name,
             $order->dropoff_name,
             $order->scheduled_at,
@@ -73,7 +74,6 @@ class OrderExport implements FromCollection, WithHeadings, WithMapping, WithColu
             'Block ID',
             'Driver',
             'Vehicle',
-            'Customer',
             'Pick Up',
             'Drop Off',
             'Start Date',
@@ -110,7 +110,6 @@ class OrderExport implements FromCollection, WithHeadings, WithMapping, WithColu
         // return Order::where('company_uuid', session('company'))->get();
         return $query->with([
             'trackingNumber', 
-            'customer', 
             'driverAssigned', 
             'payload.waypoints', // Include waypoints relationship
             'createdBy',
