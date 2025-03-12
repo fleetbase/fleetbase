@@ -95,7 +95,7 @@ a.btn.fb-button-primary,
 a.btn.btn-primary,
 .fc-button.btn-primary,
 .ui-full-calendar .fc-button.btn-primary {
-    @apply text-white bg-[#496453] border-[#496453] shadow opacity-75;
+    @apply text-white bg-[black] border-[black] shadow opacity-75;
 }
 
 .btn.fb-button-primary:hover:not(:disabled),
@@ -106,7 +106,7 @@ a.btn.fb-button-primary:hover:not(:disabled),
 a.btn.btn-primary:hover:not(:disabled),
 .fc-button.btn-primary:hover:not(:disabled),
 .ui-full-calendar .fc-button.btn-primary:hover:not(:disabled) {
-    @apply bg-[#5B7765] !important;
+    @apply bg-[black] !important;
 }
 
 .btn.fb-button-primary:focus,
@@ -179,7 +179,7 @@ a.btn.btn-success:active,
 a.btn.btn-magic,
 .fc-button.btn-magic,
 .ui-full-calendar .fc-button.btn-magic {
-    @apply text-white bg-[#496453] border-[#496453] shadow-sm opacity-75;
+    @apply text-white bg-[black] border-[black] shadow-sm;
 }
 
 .btn.btn-magic:hover:not(:disabled),
@@ -193,14 +193,14 @@ a.btn.btn-magic:hover:not(:disabled),
 a.btn.btn-magic:focus,
 .fc-button.btn-magic:focus,
 .ui-full-calendar .fc-button.btn-magic:focus {
-    @apply outline-0 border-[#496453] opacity-75;
+    @apply outline-0 border-[black];
 }
 
 .btn.btn-magic:active,
 a.btn.btn-magic:active,
 .fc-button.btn-magic:active,
 .ui-full-calendar .fc-button.btn-magic:active {
-    @apply bg-[#3F5747] opacity-75;
+    @apply bg-[black];
 }
 
 .btn.btn-black,
@@ -228,35 +228,35 @@ a.btn.btn-black:focus,
 a.btn.btn-black:active,
 .fc-button.btn-black:active,
 .ui-full-calendar .fc-button.btn-black:active {
-    @apply bg-[#496453] opacity-75;
+    @apply bg-[black];
 }
 
 .btn.btn-secondary,
 a.btn.btn-secondary,
 .fc-button.btn-secondary,
 .ui-full-calendar .fc-button.btn-secondary {
-    @apply bg-[#496453] opacity-75;
+    @apply bg-[black];
 }
 
 .btn.btn-secondary:hover:not(:disabled),
 a.btn.btn-secondary:hover:not(:disabled),
 .fc-button.btn-secondary:hover:not(:disabled),
 .ui-full-calendar .fc-button.btn-secondary:hover:not(:disabled) {
-    @apply bg-[#496453] opacity-75;
+    @apply bg-[black];
 }
 
 .btn.btn-secondary:focus,
 a.btn.btn-secondary:focus,
 .fc-button.btn-secondary:focus,
 .ui-full-calendar .fc-button.btn-secondary:focus {
-    @apply bg-[#496453] opacity-75;
+    @apply bg-[black];
 }
 
 .btn.btn-secondary:active,
 a.btn.btn-secondary:active,
 .fc-button.btn-secondary:active,
 .ui-full-calendar .fc-button.btn-secondary:active {
-    @apply bg-[#496453] opacity-75;
+    @apply bg-[black];
 }
 
 .btn.btn-danger,
@@ -387,7 +387,7 @@ button.integrated-vendor-button,
 
 button.integrated-vendor-button.selected,
 .integrated-vendor-button.selected {
-    @apply border-[#496453] opacity-75
+    @apply border-[black]
 }
 
 button.integrated-vendor-button:focus,
@@ -488,7 +488,7 @@ body[data-theme='dark'] .integrated-vendor-button {
 
 body[data-theme='dark'] button.integrated-vendor-button.selected,
 body[data-theme='dark'] .integrated-vendor-button.selected {
-    @apply border-[#496453] outline-offset-2 outline-[#496453];
+    @apply border-[black] outline-offset-2 outline-[black];
 }
 
 body[data-theme='dark'] button.integrated-vendor-button:focus,
