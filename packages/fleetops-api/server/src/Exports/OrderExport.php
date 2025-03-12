@@ -21,6 +21,14 @@ class OrderExport implements FromCollection, WithHeadings, WithMapping, WithColu
 
     public function map($order): array
     {
+        $routes = '';
+        if ($order->payload && $order->payload->waypoints && count($order->payload->waypoints)) {
+            $waypointStrings = [];
+            foreach ($order->payload->waypoints as $index => $waypoint) {
+                $waypointStrings[] = ($index + 1) . ". " . $waypoint->name . " (" . $waypoint->address . ")";
+            }
+            $routes = implode("\n", $waypointStrings);
+        }
         return [
             $order->public_id,
             $order->internal_id,
@@ -30,29 +38,56 @@ class OrderExport implements FromCollection, WithHeadings, WithMapping, WithColu
             $order->pickup_name,
             $order->dropoff_name,
             $order->scheduled_at,
+            $order->estimated_end_date,
+            $routes,
             $order->trackingNumber ? $order->trackingNumber->tracking_number : null,
             $order->status,
+            $order->created_by_name,
+            $order->updated_by_name,
             $order->created_at,
+            $order->updated_at,
+            
         ];
     }
 
+    // public function headings(): array
+    // {
+    //     return [
+    //         'ID',
+    //         'Internal ID',
+    //         'Driver',
+    //         'Vehicle',
+    //         'Customer',
+    //         'Pick Up',
+    //         'Drop Off',
+    //         'Date Scheduled',
+    //         'Tracking Number',
+    //         'Status',
+    //         'Date Created',
+    //     ];
+    // }
     public function headings(): array
     {
         return [
-            'ID',
-            'Internal ID',
+            'Trip ID',
+            'Block ID',
             'Driver',
             'Vehicle',
             'Customer',
             'Pick Up',
             'Drop Off',
-            'Date Scheduled',
+            'Start Date',
+            'End Date',
+            'Routes', // New column for waypoints
             'Tracking Number',
             'Status',
+            'Created By',
+            'Updated By',
             'Date Created',
+            'Date Updated',
+
         ];
     }
-
     public function columnFormats(): array
     {
         return [
@@ -66,10 +101,20 @@ class OrderExport implements FromCollection, WithHeadings, WithMapping, WithColu
      */
     public function collection()
     {
+        $query = Order::where('company_uuid', session('company'));
+        
         if (!empty($this->selections)) {
-            return Order::where('company_uuid', session('company'))->whereIn('uuid', $this->selections)->with(['trackingNumber', 'customer', 'driverAssigned', 'payload'])->get();
+            $query = $query->whereIn('uuid', $this->selections);
         }
 
-        return Order::where('company_uuid', session('company'))->get();
+        // return Order::where('company_uuid', session('company'))->get();
+        return $query->with([
+            'trackingNumber', 
+            'customer', 
+            'driverAssigned', 
+            'payload.waypoints', // Include waypoints relationship
+            'createdBy',
+            'updatedBy'
+        ])->get();
     }
 }
