@@ -154,8 +154,10 @@ body.fleetbase-console .next-content-overlay > .next-content-overlay-panel-conta
     padding: 0.05rem 0.2rem;
     text-overflow: ellipsis;
     font-size: 0.7rem;
-    background-color: black;
-    border-color: black;
+    background-color: #4385f4;
+    border-color: #4385f4;
+    color: black;
+    font-weight: 600;
 }
 
 #fleet-ops-scheduler-sidebar .fleetbase-model-select > .ember-basic-dropdown > .ember-basic-dropdown-trigger {

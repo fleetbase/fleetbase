@@ -268,3 +268,10 @@ body[data-theme='dark'] .ui-full-calendar .fc-view-harness {
     overflow-y: auto !important;  /* Allow vertical scroll */
     max-height: 90vh;  /* Prevents too much height restriction */
 }
+
+body[data-theme='light'] table.fc-col-header {
+    background-color: white;
+}
+body[data-theme='dark'] table.fc-col-header {
+    background-color: black;
+}

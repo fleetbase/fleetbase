@@ -79,7 +79,7 @@
 
 .status-badge.started-status-badge > span,
 .status-badge.cyan-status-badge > span {
-    @apply bg-[black] border-[black] text-white ;
+    @apply bg-[#1d4ed8] border-[#1d4ed8] text-white ;
 }
 
 .status-badge.started-status-badge > span svg,
@@ -150,7 +150,7 @@
 .status-badge.trialing-status-badge > span,
 .status-badge.grace-period-status-badge > span,
 .status-badge.pending-status-badge > span {
-    @apply bg-yellow-700 border-yellow-700 text-yellow-100;
+    @apply bg-[#3730a3] border-[#3730a3] text-white;
 }
 
 .status-badge[class*='4'] > span svg,
@@ -171,11 +171,16 @@
     @apply text-yellow-300;
 }
 
+.status-badge.confirmed-status-badge > span,
+.status-badge.driver-confirmed-status-badge > span {
+    @apply bg-[#0d9488] border-[#0d9488] text-white
+}
+
 .status-badge.indigo-status-badge > span,
 .status-badge.operational-suggestion-status-badge > span,
 .status-badge.dispatched-status-badge > span,
 .status-badge.assigned-status-badge > span {
-    @apply bg-[black] border-[black] text-white ;
+    @apply bg-[#6d28d9] border-[#6d28d9] text-white ;
 }
 
 .status-badge.indigo-status-badge > span svg,
