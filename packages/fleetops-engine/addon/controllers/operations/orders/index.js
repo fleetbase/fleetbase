@@ -1,7 +1,7 @@
 import BaseController from '@fleetbase/fleetops-engine/controllers/base-controller';
 import { inject as service } from '@ember/service';
 import { tracked } from '@glimmer/tracking';
-import { action } from '@ember/object';
+import { action, set } from '@ember/object';
 import { equal } from '@ember/object/computed';
 import { isArray } from '@ember/array';
 import { isBlank } from '@ember/utils';
@@ -632,22 +632,24 @@ export default class OperationsOrdersIndexController extends BaseController {
      * @void
      */
     @task({ restartable: true }) *search({ target: { value } }) {
+
         // if no query don't search
         if (isBlank(value)) {
-            this.query = null;
+            set(this, 'query', null);
+            this.hostRouter.refresh();
             return;
         }
-
         // timeout for typing
-        yield timeout(250);
+        yield timeout(200);
 
         // reset page for results
         if (this.page > 1) {
-            this.page = 1;
+            set(this, 'page', 1);
         }
 
         // update the query param
-        this.query = value;
+        set(this, 'query', value);
+        this.hostRouter.refresh();
     }
 
     /**
@@ -743,7 +745,7 @@ export default class OperationsOrdersIndexController extends BaseController {
         this.layout = mode;
 
         if (mode === 'table') {
-            this.isSearchVisible = false;
+            this.isSearchVisible = true;
         }
 
         this.universe.trigger('fleet-ops.dashboard.layout.changed', mode);
