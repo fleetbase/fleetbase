@@ -705,9 +705,34 @@ trait HasApiControllerBehavior
      */
     public function search(Request $request)
     {
-        $results = $this->model->search($request);
+        // $results = $this->model->search($request);
 
+        // return $this->resource::collection($results);
+        $params = $request->all();
+        $query = $this->model->newQuery();
+        foreach ($params as $key => $value) {
+            // Skip pagination and sorting parameters
+            if (in_array($key, ['page', 'limit', 'sort', 'count', 'contain'])) {
+                continue;
+            }
+    
+            // Check if the key contains 'like' (case-insensitive)
+            if (Str::contains(Str::lower($key), 'like')) {
+                // Remove 'like' from the key to get the actual field name
+                $field = Str::replace(['_like', 'like'], '', Str::lower($key));
+                $query->where($field, 'LIKE', '%' . $value . '%');
+            } else {
+                echo $key;
+                // Default to exact match
+                $query->where($key, '=', $value);
+            }
+        }
+    
+        // Apply any additional query parameters (sorting, pagination, etc.)
+        $results = $query->get();
+    
         return $this->resource::collection($results);
+
     }
 
     /**
