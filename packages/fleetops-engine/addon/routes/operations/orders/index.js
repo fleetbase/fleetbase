@@ -57,13 +57,13 @@ export default class OperationsOrdersIndexRoute extends Route {
             // Ensure refreshModel is enabled for pagination
             set(this.queryParams, 'page.refreshModel', true);
             set(this.queryParams, 'sort.refreshModel', true);
-            set(this.queryParams, 'query.refreshModel', true);
         }
     }
 
     @action model(params) {
         //add timezone also here
         params.timezone = this.timezone;
+        // params.created_by = params.created_by || null; 
         return this.store.query('order', params);
     }
 }
