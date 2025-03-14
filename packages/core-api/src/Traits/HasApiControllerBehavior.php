@@ -352,6 +352,21 @@ trait HasApiControllerBehavior
                 if($request->filled('created_by')){
                     $query->where('created_by_uuid', $request->input('created_by'));
                 }
+                if($request->filled('updated_by')){
+                    $query->where('updated_by_uuid', $request->input('updated_by'));
+                }
+                if($request->filled('created_at')){
+                    // filter by created_at
+                    $query->whereDate('created_at', Carbon::parse($request->input('created_at')));
+                }
+                if($request->filled('updated_at')){
+                    // filter by created_at
+                    $query->whereDate('updated_at', Carbon::parse($request->input('updated_at')));
+                }
+                if($request->filled('public_id')){
+                    // filter by public_id like
+                    $query->where('public_id', 'LIKE', '%'. $request->input('public_id'). '%');
+                }
             };
             $data = $this->model->queryFromRequest($request, $combinedCallback);
         }
