@@ -637,6 +637,10 @@ body[data-theme='dark'] .next-map-container.next-map-container-layout-map .leafl
     @apply bg-[black];
 }
 
+body[data-theme='dark'] .next-map-container.next-map-container-layout-map .next-map-container-toolbar-container .toolbar-button:hover {
+    @apply bg-gray-900;
+}
+
 body[data-theme='light'] .next-map-container.next-map-container-layout-map .next-map-container-toolbar-container .toolbar-button svg {
     @apply text-gray-800;
 }
@@ -664,7 +668,7 @@ body[data-theme='dark'] .next-map-container.next-map-container-layout-map .next-
 body[data-theme='dark'] .next-map-container.next-map-container-layout-map .next-map-container-toolbar-container .next-map-container-toolbar-drivers-panel,
 body[data-theme='dark'] .next-map-container.next-map-container-layout-map .next-map-container-toolbar-container .next-map-container-toolbar-panel,
 body[data-theme='dark'] .next-map-container.next-map-container-layout-map .next-map-container-toolbar-container .next-map-container-toolbar-actions {
-    @apply bg-gray-900;
+    @apply bg-gray-600;
 }
 
 .next-map-container.next-map-container-layout-map .next-map-container-toolbar-container:hover {
@@ -741,11 +745,11 @@ body[data-theme='dark'] .next-map-container.next-map-container-layout-map .next-
 }
 
 body[data-theme='dark'] .next-map-search-bar-container .next-map-search-bar {
-    @apply bg-gray-900;
+    @apply bg-gray-600;
 }
 
 body[data-theme='dark'] .next-map-search-bar-container .next-map-search-bar > input {
-    @apply text-gray-100;
+    @apply text-white;
 }
 
 body[data-theme='dark'] .next-map-search-bar-container .next-map-search-results {
@@ -902,13 +906,15 @@ body[data-theme='dark'] .next-map-container-table-container {
     @apply outline-none;
 }
 
-body[data-theme='dark'] .next-map-container-view-switch > button.active,
+body[data-theme='dark'] .next-map-container-view-switch > button.active{
+    @apply bg-gray-800;
+}
 .next-map-container-view-switch > button.active {
     @apply bg-[black] text-white font-semibold;
 }
 
 body[data-theme='dark'] .next-map-container-view-switch > button {
-    @apply bg-gray-700 text-white;
+    @apply bg-gray-600 text-white;
 }
 
 body[data-theme='dark'] .next-map-container-view-switch > button:hover,
@@ -2290,4 +2296,13 @@ nav.next-sidebar.sidebar-hidden {
 
 .custom-power-select .ember-power-select-placeholder{
     overflow: clip !important;
+}
+
+.ember-power-select-option[aria-current="true"] {
+    background-color: black !important;
+    color: #ffffff;
+}
+
+body[data-theme='dark'] .ember-power-select-option[aria-current="true"] {
+    @apply bg-gray-600 text-white;
 }
