@@ -349,7 +349,9 @@ trait HasApiControllerBehavior
                         }
                     });
                 }
-                
+                if($request->filled('created_by')){
+                    $query->where('created_by_uuid', $request->input('created_by'));
+                }
             };
             $data = $this->model->queryFromRequest($request, $combinedCallback);
         }
