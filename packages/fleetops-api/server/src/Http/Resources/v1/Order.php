@@ -79,6 +79,7 @@ class Order extends FleetbaseResource
             'created_at'            => $this->created_at,
             'created_by_name'        => $this->created_by_name,
             'updated_by_name'        => $this->updated_by_name,
+            'created_by_uuid'        => $this->created_by_uuid,
         ];
     }
 
@@ -149,6 +150,7 @@ class Order extends FleetbaseResource
             'created_at'      => $this->created_at,
             'created_by_name' => $this->created_by_name,
             'updated_by_name' => $this->updated_by_name,
+            'created_by_uuid' => $this->created_by_uuid,
         ];
     }
 }
