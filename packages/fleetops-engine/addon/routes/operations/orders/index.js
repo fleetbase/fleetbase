@@ -6,7 +6,7 @@ import isNestedRouteTransition from '@fleetbase/ember-core/utils/is-nested-route
 
 export default class OperationsOrdersIndexRoute extends Route {
     @service store;
-
+    @tracked timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
     @tracked queryParams = {
         page: { refreshModel: true },
         limit: { refreshModel: true },
@@ -29,8 +29,15 @@ export default class OperationsOrdersIndexRoute extends Route {
         drawerOpen: { refreshModel: false },
         drawerTab: { refreshModel: false },
         orderPanelOpen: { refreshModel: false },
+        on: { refreshModel:true },
+        timezone: { refreshModel: true },
+        created_by: { refreshModel: true },
+        updated_by: { refreshModel: true },
+        created_at: { refreshModel: true },
+        updated_at: { refreshModel: true },
     };
 
+    
     @action willTransition(transition) {
         const shouldReset = typeof transition.to.name === 'string' && !transition.to.name.includes('operations.orders');
     
@@ -50,10 +57,13 @@ export default class OperationsOrdersIndexRoute extends Route {
             // Ensure refreshModel is enabled for pagination
             set(this.queryParams, 'page.refreshModel', true);
             set(this.queryParams, 'sort.refreshModel', true);
+            set(this.queryParams, 'query.refreshModel', true);
         }
     }
 
     @action model(params) {
+        //add timezone also here
+        params.timezone = this.timezone;
         return this.store.query('order', params);
     }
 }

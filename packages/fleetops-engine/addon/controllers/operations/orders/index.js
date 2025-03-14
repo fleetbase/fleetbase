@@ -50,6 +50,7 @@ export default class OperationsOrdersIndexController extends BaseController {
         'drawerOpen',
         'drawerTab',
         'orderPanelOpen',
+        'on'
     ];
 
     /**
@@ -393,9 +394,9 @@ export default class OperationsOrdersIndexController extends BaseController {
         },
         {
             label: this.intl.t('fleet-ops.operations.orders.index.scheduled-at'),
-            valuePath: 'scheduledAt',
+            valuePath: 'on',
             sortParam: 'scheduled_at',
-            filterParam: 'scheduled_at',
+            filterParam: 'on',
             width: '150px',
             resizable: true,
             sortable: true,
@@ -410,7 +411,7 @@ export default class OperationsOrdersIndexController extends BaseController {
             width: '150px',
             resizable: true,
             sortable: true,
-            filterable: true,
+            filterable: false,
             filterComponent: 'filter/date',
         },
         // {
