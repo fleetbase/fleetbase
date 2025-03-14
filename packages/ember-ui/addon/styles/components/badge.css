@@ -193,7 +193,7 @@
 .status-badge.orange-status-badge > span,
 .status-badge.alerted-status-badge > span,
 .status-badge.medium-status-badge > span {
-    @apply bg-orange-700 border-orange-700 text-orange-100;
+    @apply bg-orange-600 border-orange-600 text-orange-100;
 }
 
 .status-badge.orange-status-badge > span svg,
@@ -202,13 +202,27 @@
     @apply text-orange-300;
 }
 
+.status-badge.info-status-badge > span{
+    @apply bg-[black] border-[black] text-white;
+}
+
+body[data-theme='dark'] .status-badge.info-status-badge > span{
+    @apply bg-gray-600 border-gray-600 text-white;
+}
+
+.status-badge.low-status-badge > span{
+    @apply bg-[green] border-[green] text-white;
+}
+
 .status-badge.blue-status-badge > span,
 .status-badge.created-status-badge > span,
-.status-badge.low-status-badge > span,
 .status-badge.approved-status-badge > span,
-.status-badge.info-status-badge > span,
 .status-badge.in-progress-status-badge > span {
-    @apply bg-[black] border-[black] text-white;
+    @apply bg-[#7c3aed] border-[#7c3aed] text-white;
+}
+
+body[data-theme='dark'] .status-badge.created-status-badge > span{
+    @apply bg-[#7c3aed] border-[#7c3aed] text-white
 }
 
 .status-badge.blue-status-badge > span svg,
@@ -228,5 +242,11 @@ body[data-theme='dark'] .status-badge:not(.shadow-none) {
     @apply bg-[black] text-gray-900 text-white w-5 h-5 text-xs flex items-center justify-center text-center shadow-sm flex-shrink-0 mr-2.5;
     height:40px;
     width: 40px;
+    font-weight: 700;
 }
 
+body[data-theme='dark'] .org-badge {
+    background-color: aliceblue;
+    color: black;
+    font-weight: 700;
+}

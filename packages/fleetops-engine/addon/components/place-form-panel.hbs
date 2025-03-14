@@ -89,7 +89,7 @@
                     </InputGroup>
                     <div class="col-span-1"></div>
                     <InputGroup @name={{t "fleet-ops.common.phone"}} @wrapperClass="col-span-2">
-                        <PhoneInput @value={{this.place.phone}} @autocomplete="nope" @onInput={{this.phone}} disabled={{unauthorized}} class="form-input w-full" />
+                        <PhoneInput @value={{this.place.phone}} @onInput={{fn (mut this.place.phone)}} disabled={{unauthorized}} class="form-input w-full" />
                     </InputGroup>
                 </div>
 

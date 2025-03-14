@@ -98,6 +98,21 @@ a.btn.btn-primary,
     @apply text-white bg-[black] border-[black] shadow opacity-75;
 }
 
+body[data-theme='dark'] .btn.btn-primary, a.btn.btn-primary {
+    @apply text-gray-300 bg-gray-700;
+}
+
+body[data-theme='dark'] .btn.fb-button-primary:hover:not(:disabled),
+a.btn.fb-button-primary:hover:not(:disabled),
+.fc-button.fb-button-primary:hover:not(:disabled),
+.ui-full-calendar .fc-button.fb-button-primary:hover:not(:disabled),
+.btn.btn-primary:hover:not(:disabled),
+a.btn.btn-primary:hover:not(:disabled),
+.fc-button.btn-primary:hover:not(:disabled),
+.ui-full-calendar .fc-button.btn-primary:hover:not(:disabled) {
+    @apply text-gray-200 bg-gray-600;
+}
+
 .btn.fb-button-primary:hover:not(:disabled),
 a.btn.fb-button-primary:hover:not(:disabled),
 .fc-button.fb-button-primary:hover:not(:disabled),
@@ -128,7 +143,7 @@ a.btn.fb-button-primary:active,
 a.btn.btn-primary:active,
 .fc-button.btn-primary:active,
 .ui-full-calendar .fc-button.btn-primary:active {
-    @apply bg-[#375747] !important;
+    @apply bg-[black] !important;
 }
 
 .btn.fb-button-success,
