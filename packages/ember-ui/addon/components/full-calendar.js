@@ -125,4 +125,14 @@ export default class FullCalendarComponent extends Component {
             this.calendar.off(eventName, this.triggerCalendarEvent.bind(this, callbackName));
         }
     }
+    @action
+    refreshCalendar(updatedEvents) {
+        if (this.calendar) {
+            this.calendar.removeAllEvents(); // Clear existing events
+            this.calendar.addEventSource(updatedEvents); // Add new events
+            this.calendar.render(); // Render the calendar
+        } else {
+            console.error('FullCalendar instance is not available');
+        }
+    }
 }
