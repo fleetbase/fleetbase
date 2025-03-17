@@ -338,9 +338,14 @@ class DriverController extends FleetOpsController
      */
     public function statuses()
     {
+         if (!session('company')) {
+                return response()->json([]);
+            }
         $statuses = DB::table('drivers')
             ->select('status')
             ->where('company_uuid', session('company'))
+            ->whereNull('deleted_at')
+            ->whereNotNull('status') 
             ->distinct()
             ->get()
             ->pluck('status')

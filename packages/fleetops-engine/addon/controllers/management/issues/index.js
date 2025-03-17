@@ -145,7 +145,7 @@ export default class ManagementIssuesIndexController extends BaseController {
             label: this.intl.t('fleet-ops.common.priority'),
             valuePath: 'priority',
             cellComponent: 'table/cell/status',
-            width: '100px',
+            width: '160px',
             resizable: true,
             sortable: true,
             filterable: true,
