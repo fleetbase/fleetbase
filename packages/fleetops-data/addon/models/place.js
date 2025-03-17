@@ -44,7 +44,7 @@ export default class PlaceModel extends Model {
     @attr('date') deleted_at;
     @attr('date') created_at;
     @attr('date') updated_at;
-
+    @attr('string') code;
     /** @tracked */
     @tracked selected = false;
 
@@ -54,6 +54,7 @@ export default class PlaceModel extends Model {
             uuid: this.id,
             vendor_uuid: this.vendor_uuid,
             name: this.name,
+            code: this.code,
             phone: this.phone,
             type: this.type,
             address: this.address,

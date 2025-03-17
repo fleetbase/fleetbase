@@ -32,11 +32,26 @@ export default class ManagementVehiclesIndexRoute extends Route {
     };
 
     @action willTransition(transition) {
-        if (isNestedRouteTransition(transition)) {
-            set(this.queryParams, 'page.refreshModel', false);
-            set(this.queryParams, 'sort.refreshModel', false);
-        }
-    }
+                const shouldReset = typeof transition.to.name === 'string' && !transition.to.name.includes('operations.orders');
+            
+                if (this.controller && shouldReset) {
+                    this.controller.resetView(transition);
+                }
+            
+                // Check if this is a pagination transition (URL only changes in query params, not path)
+                const isPaginationTransition = transition.to.name === transition.from.name && 
+                                             transition.to.queryParams.page !== transition.from.queryParams.page;
+                
+                // Only disable refreshModel for nested routes that aren't pagination transitions
+                if (isNestedRouteTransition(transition) && !isPaginationTransition) {
+                    set(this.queryParams, 'page.refreshModel', false);
+                    set(this.queryParams, 'sort.refreshModel', false);
+                } else {
+                    // Ensure refreshModel is enabled for pagination
+                    set(this.queryParams, 'page.refreshModel', true);
+                    set(this.queryParams, 'sort.refreshModel', true);
+                }
+            }
 
     model(params) {
         return this.store.query('vehicle', { ...params });
