@@ -59,7 +59,8 @@ class OrderAssigned extends Notification implements ShouldQueue
      */
     public function via($notifiable)
     {
-        return ['mail', FcmChannel::class, ApnChannel::class];
+        // return ['mail', FcmChannel::class, ApnChannel::class];
+        return ['mail', FcmChannel::class];
     }
 
     /**

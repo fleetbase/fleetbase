@@ -20,7 +20,7 @@ export default class ManagementPlacesIndexController extends BaseController {
      *
      * @var {Array}
      */
-    queryParams = ['name', 'page', 'limit', 'sort', 'query', 'public_id', 'country', 'phone', 'created_at', 'updated_at', 'city', 'neighborhood', 'state'];
+    queryParams = ['name', 'page', 'limit', 'sort', 'query', 'public_id', 'country', 'phone', 'created_at', 'updated_at', 'city', 'neighborhood', 'state', 'code'];
 
     /**
      * The current page of data being viewed
@@ -111,6 +111,17 @@ export default class ManagementPlacesIndexController extends BaseController {
             sortable: true,
             filterable: true,
             filterParam: 'name',
+            filterComponent: 'filter/string',
+        },
+        {
+            label: this.intl.t('fleet-ops.common.code'),
+            valuePath: 'code',
+            width: '120px',
+            cellComponent: 'table/cell/anchor',
+            action: this.viewPlace,
+            resizable: true,
+            sortable: true,
+            filterable: false,
             filterComponent: 'filter/string',
         },
         {
@@ -291,20 +302,21 @@ export default class ManagementPlacesIndexController extends BaseController {
     @task({ restartable: true }) *search({ target: { value } }) {
         // if no query don't search
         if (isBlank(value)) {
-            this.query = null;
+            set(this, 'query', null);
+            this.hostRouter.refresh();
             return;
         }
-
         // timeout for typing
-        yield timeout(250);
+        yield timeout(200);
 
         // reset page for results
         if (this.page > 1) {
-            this.page = 1;
+            set(this, 'page', 1);
         }
 
         // update the query param
-        this.query = value;
+        set(this, 'query', value);
+        this.hostRouter.refresh();
     }
 
     /**

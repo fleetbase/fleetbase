@@ -85,6 +85,7 @@ common:
   model-delete-success: The {modelName} has been deleted.
   bulk-delete-success: "{record_count} records deleted."
   single-model-delete-success: The record has been deleted.
+  code: code
 validation:
   required:
     payment_method: Payment method is required
@@ -1327,7 +1328,7 @@ fleet-ops:
       cancel-edit-fuel-report: Cancel edit toll report
       cancel-new-fuel-report: Cancel new toll report
     global-search:
-      search: Search by keyword...
+      search: Search Orders by ID
     integrated-order-details:
       order-id: Order ID
       quotation-id: Quotation ID
@@ -1768,7 +1769,7 @@ fleet-ops:
         facilitator: Facilitator
         pickup: Pickup
         dropoff: Dropoff
-        scheduled-at: Scheduled At
+        scheduled-at: Orders On
         items: Items
         transaction: Transaction Total
         tracking: Tracking Number

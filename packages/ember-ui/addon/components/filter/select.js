@@ -52,4 +52,15 @@ export default class FilterSelectComponent extends Component {
                 this.isLoading = false;
             });
     }
+
+    @action clear() {
+        const { onClear, filter } = this.args;
+
+        this.selectedModel = null;
+
+        if (typeof onClear === 'function') {
+            onClear(filter);
+        }
+    }
+    
 }

@@ -248,7 +248,7 @@ export default class CrudService extends Service {
             acceptButtonText: 'Download',
             modalClass: 'modal-sm',
             format: 'xlsx',
-            formatOptions: ['csv', 'xlsx', 'xls', 'html', 'pdf'],
+            formatOptions: ['csv', 'xlsx', 'xls'],
             setFormat: ({ target }) => {
                 this.modalsManager.setOption('format', target.value || null);
             },

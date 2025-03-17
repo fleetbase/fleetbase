@@ -6,7 +6,7 @@
             </div>
             {{#if this.isLoading}}
                 <div class="mx-2">
-                    <Spinner @iconClass="text-[#496453] opacity-75 fa-spin-800ms" />
+                    <Spinner @iconClass="text-[black] fa-spin-800ms" />
                 </div>
             {{/if}}
         </div>
@@ -41,7 +41,7 @@
         <div class="h-48 overflow-y-scroll">
             {{#unless this.isLoaded}}
                 <div class="flex text-center items-center justify-center p-4 dark:text-gray-100">
-                    <Spinner class="mr-2" @iconClass="text-[#496453] opacity-75" />
+                    <Spinner class="mr-2" @iconClass="text-[black]" />
                     <span>{{t "fleet-ops.component.fleet-vehicle-listing.loading-message"}}</span>
                 </div>
             {{/unless}}

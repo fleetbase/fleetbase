@@ -52,7 +52,7 @@ class Place extends Model
      *
      * @var array
      */
-    protected $searchableColumns = ['name', 'street1', 'street2', 'country', 'province', 'district', 'city', 'postal_code', 'phone'];
+    protected $searchableColumns = ['name', 'street1', 'street2', 'country', 'province', 'district', 'city', 'postal_code', 'phone', 'public_id', 'code'];
 
     /**
      * The attributes that are spatial columns.
@@ -127,7 +127,7 @@ class Place extends Model
      *
      * @var array
      */
-    protected $filterParams = ['vendor', 'contact', 'vendor_uuid', 'vendor_name'];
+    protected $filterParams = ['vendor', 'contact', 'vendor_uuid', 'vendor_name','code'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\MorphTo

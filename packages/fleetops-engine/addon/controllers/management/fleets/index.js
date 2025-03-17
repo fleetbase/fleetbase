@@ -155,7 +155,7 @@ export default class ManagementFleetsIndexController extends BaseController {
             valuePath: 'parent_fleet.name',
             resizable: true,
             width: '130px',
-            filterable: true,
+            filterable: false,
             filterComponent: 'filter/model',
             filterComponentPlaceholder: 'Select fleet',
             filterParam: 'parent_fleet_uuid',
@@ -234,7 +234,7 @@ export default class ManagementFleetsIndexController extends BaseController {
             resizable: true,
             sortable: true,
             filterable: true,
-            filterComponent: 'filter/multi-option',
+            filterComponent: 'filter/select',
             filterOptions: this.statusOptions,
         },
         {
@@ -308,20 +308,21 @@ export default class ManagementFleetsIndexController extends BaseController {
     @task({ restartable: true }) *search({ target: { value } }) {
         // if no query don't search
         if (isBlank(value)) {
-            this.query = null;
+            set(this, 'query', null);
+            this.hostRouter.refresh();
             return;
         }
-
         // timeout for typing
-        yield timeout(250);
+        yield timeout(200);
 
         // reset page for results
         if (this.page > 1) {
-            this.page = 1;
+            set(this, 'page', 1);
         }
 
         // update the query param
-        this.query = value;
+        set(this, 'query', value);
+        this.hostRouter.refresh();
     }
 
     /**

@@ -349,7 +349,40 @@ trait HasApiControllerBehavior
                         }
                     });
                 }
-                
+                if($request->filled('created_by')){
+                    $query->where('created_by_uuid', $request->input('created_by'));
+                }
+                if($request->filled('updated_by')){
+                    $query->where('updated_by_uuid', $request->input('updated_by'));
+                }
+                if($request->filled('created_at')){
+                    // filter by created_at
+                    $query->whereDate('created_at', Carbon::parse($request->input('created_at')));
+                }
+                if($request->filled('updated_at')){
+                    // filter by created_at
+                    $query->whereDate('updated_at', Carbon::parse($request->input('updated_at')));
+                }
+                if($request->filled('public_id')){
+                    // filter by public_id like
+                    $query->where('public_id', 'LIKE', '%'. $request->input('public_id'). '%');
+                }
+            };
+            $data = $this->model->queryFromRequest($request, $combinedCallback);
+        }
+        elseif(get_class($this->model) === 'Fleetbase\FleetOps\Models\Vehicle')
+        {
+            $combinedCallback = function ($query) use ($request, $queryCallback) {
+                // Apply the original callback if it exists
+                if ($queryCallback) {
+                    $queryCallback($query);
+                }
+                if ($request->filled('make')) {
+                    $query->where('make', 'LIKE', '%'. $request->input('make'). '%');
+                }
+                if ($request->filled('model')) {
+                    $query->where('model', 'LIKE', '%'. $request->input('model'). '%');
+                }
             };
             $data = $this->model->queryFromRequest($request, $combinedCallback);
         }
@@ -705,9 +738,34 @@ trait HasApiControllerBehavior
      */
     public function search(Request $request)
     {
-        $results = $this->model->search($request);
+        // $results = $this->model->search($request);
 
+        // return $this->resource::collection($results);
+        $params = $request->all();
+        $query = $this->model->newQuery();
+        foreach ($params as $key => $value) {
+            // Skip pagination and sorting parameters
+            if (in_array($key, ['page', 'limit', 'sort', 'count', 'contain'])) {
+                continue;
+            }
+    
+            // Check if the key contains 'like' (case-insensitive)
+            if (Str::contains(Str::lower($key), 'like')) {
+                // Remove 'like' from the key to get the actual field name
+                $field = Str::replace(['_like', 'like'], '', Str::lower($key));
+                $query->where($field, 'LIKE', '%' . $value . '%');
+            } else {
+                echo $key;
+                // Default to exact match
+                $query->where($key, '=', $value);
+            }
+        }
+    
+        // Apply any additional query parameters (sorting, pagination, etc.)
+        $results = $query->get();
+    
         return $this->resource::collection($results);
+
     }
 
     /**

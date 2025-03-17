@@ -77,6 +77,9 @@ class Order extends FleetbaseResource
             'estimated_end_date'    => $this->estimated_end_date,
             'updated_at'            => $this->updated_at,
             'created_at'            => $this->created_at,
+            'created_by_name'        => $this->created_by_name,
+            'updated_by_name'        => $this->updated_by_name,
+            'created_by_uuid'        => $this->created_by_uuid,
         ];
     }
 
@@ -145,6 +148,10 @@ class Order extends FleetbaseResource
             'estimated_end_date' => $this->estimated_end_date,
             'updated_at'      => $this->updated_at,
             'created_at'      => $this->created_at,
+            'created_by_name' => $this->created_by_name,
+            'updated_by_name' => $this->updated_by_name,
+            'created_by_uuid' => $this->created_by_uuid,
         ];
     }
 }
+

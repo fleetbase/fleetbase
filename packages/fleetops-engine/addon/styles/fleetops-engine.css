@@ -154,9 +154,10 @@ body.fleetbase-console .next-content-overlay > .next-content-overlay-panel-conta
     padding: 0.05rem 0.2rem;
     text-overflow: ellipsis;
     font-size: 0.7rem;
-    background-color: #496453;
-    border-color:#496453;
-    opacity: 0.75;
+    background-color: #4385f4;
+    border-color: #4385f4;
+    /* color: black; */
+    font-weight: 600;
 }
 
 #fleet-ops-scheduler-sidebar .fleetbase-model-select > .ember-basic-dropdown > .ember-basic-dropdown-trigger {
@@ -208,9 +209,8 @@ body.fleetbase-console .next-content-overlay > .next-content-overlay-panel-conta
 }
 
 .fleetops-pill-tabs > nav > a.ui-tab.active {
-    background-color: #496453;
-    border: 1px solid #496453;
-    opacity: 0.75;
+    background-color: black;
+    border: 1px solid black;
 }
 
 .fleetops-pill-tabs > nav > a.ui-tab:hover {
@@ -223,10 +223,9 @@ body[data-theme='light'] .fleetops-pill-tabs > nav > a.ui-tab {
 }
 
 body[data-theme='light'] .fleetops-pill-tabs > nav > a.ui-tab.active {
-    background-color: #496453;
-    border: 1px solid #496453;
+    background-color: black;
+    border: 1px solid black;
     color: #fff;
-    opacity: 0.75;
 }
 
 .next-view-section-subheader .next-view-section-subheader-actions button.btn.order-config-select-button,
@@ -269,8 +268,7 @@ body[data-theme='light'] .flow-activity-status-pill text {
 }
 
 .flow-activity-add-button:hover {
-    fill: #496453;
-    opacity: 0.75;
+    fill: black;
 }
 
 .joint-js-paper {

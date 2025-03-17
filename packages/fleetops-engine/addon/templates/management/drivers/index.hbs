@@ -37,7 +37,7 @@
         </DropdownButton>
     {{/if}}
     <Button @icon="plus" @iconPrefix="fas" @type="primary" @text={{t "fleet-ops.common.new"}} class="mr-2" @onClick={{this.createDriver}} @permission="fleet-ops create driver" />
-    <Button
+    {{!-- <Button
         @icon="upload"
         @type="magic"
         @text={{t "fleet-ops.common.import"}}
@@ -45,7 +45,7 @@
         @onClick={{this.importDrivers}}
         @permission="fleet-ops import driver"
         class="mr-2"
-    />
+    /> --}}
     <Button
         @icon="long-arrow-up"
         @iconClass="rotate-icon-45"

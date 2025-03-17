@@ -193,9 +193,8 @@ body[data-theme='dark'] .ui-tabs > nav .ui-tab:disabled {
 }
 
 .fleetbase-pill-tabs > nav > a.ui-tab.active {
-    background-color: #496453;
-    border: 1px solid #496453;
-    opacity: 0.75;
+    background-color: black;
+    border: 1px solid black;
 }
 
 .fleetbase-pill-tabs > nav > a.ui-tab:hover {
@@ -208,8 +207,8 @@ body[data-theme='light'] .fleetbase-pill-tabs > nav > a.ui-tab {
 }
 
 body[data-theme='light'] .fleetbase-pill-tabs > nav > a.ui-tab.active {
-    background-color: #496453;
-    border: 1px solid #496453;
+    background-color: black;
+    border: 1px solid black;
     color: #fff;
     opacity: 0.75;
 }

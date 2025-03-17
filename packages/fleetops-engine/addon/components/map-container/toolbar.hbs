@@ -1,12 +1,12 @@
 <MapContainer::ToolbarContainer ...attributes>
     <div class="next-map-container-toolbar next-map-container-toolbar-zoom-control">
         <div id="map-toolbar-zoom-in-button-wrapper">
-            <button type="button" id="map-toolbar-zoom-in-button" class="toolbar-button" {{on "click" (fn this.onAction "onZoomIn")}}>
+            <button type="button" id="map-toolbar-zoom-in-button" class="toolbar-button is-action" {{on "click" (fn this.onAction "onZoomIn")}}>
                 <FaIcon @icon="plus" @prefix="fas" class="text-gray-100" />
             </button>
         </div>
         <div id="map-toolbar-zoom-out-button-wrapper">
-            <button type="button" class="toolbar-button" {{on "click" (fn this.onAction "onZoomOut")}}>
+            <button type="button" class="toolbar-button is-action" {{on "click" (fn this.onAction "onZoomOut")}}>
                 <FaIcon @icon="minus" id="map-toolbar-zoom-out-button" @prefix="fas" class="text-gray-100" />
             </button>
         </div>
@@ -32,7 +32,7 @@
             <button
                 type="button"
                 id="map-toolbar-search-button"
-                class="toolbar-button {{if unauthorized 'unauthorized'}}"
+                class="toolbar-button is-action {{if unauthorized 'unauthorized'}}"
                 {{on "click" (fn this.onAction "onPressSearch")}}
                 disabled={{unauthorized}}
             >
@@ -48,13 +48,13 @@
             <button
                 type="button"
                 id="map-toolbar-view-orders-button"
-                class="toolbar-button relative {{if unauthorized 'unauthorized'}}"
+                class="toolbar-button is-action relative {{if unauthorized 'unauthorized'}}"
                 {{on "click" (fn this.onAction "onPressViewOrders")}}
             >
                 <div class="active-orders-count absolute top-0 right-0 -mr-2.5 -mt-1">
                     <div class="relative flex w-5 h-5">
-                        <div class="absolute inset-0 w-5 h-5 text-xs bg-[#496453] opacity-75 {{if @activeOrdersCount 'animate-ping'}}"></div>
-                        <div class="relative inline-flex items-center justify-center w-5 h-5 text-xs bg-[#496453] text-white z-10 opacity-75">{{@activeOrdersCount}}</div>
+                        <div class="absolute inset-0 w-5 h-5 text-xs bg-[black] {{if @activeOrdersCount 'animate-ping'}}"></div>
+                        <div class="relative inline-flex items-center justify-center w-5 h-5 text-xs bg-[black] text-white z-10">{{@activeOrdersCount}}</div>
                     </div>
                 </div>
                 <FaIcon @icon="layer-group" />
@@ -95,7 +95,7 @@
             </BasicDropdown>
         {{/let}} --}}
         <BasicDropdown id="map-toolbar-visibility-controls-button" @horizontalPosition="right" @calculatePosition={{this.calculatePosition}} @renderInPlace={{true}} as |dd|>
-            <dd.Trigger class="toolbar-button">
+            <dd.Trigger class="toolbar-button is-action">
                 <FaIcon @icon="eye" />
                 <Attach::Tooltip @class="clean" @animation="scale" @placement="right">
                     <InputInfo @text={{t "fleet-ops.component.map-container.toolbar.visibility"}} @iconClass="hidden" class="{{if dd.isOpen 'hidden'}} py-1 px-2 bg-gray-900 -mt-1" />

@@ -236,7 +236,7 @@ export default class ManagementVehiclesIndexController extends BaseController {
             resizable: true,
             sortable: true,
             hidden: true,
-            filterable: true,
+            filterable: false,
             filterParam: 'make',
             filterComponent: 'filter/string',
         },
@@ -248,7 +248,7 @@ export default class ManagementVehiclesIndexController extends BaseController {
             resizable: true,
             sortable: true,
             hidden: true,
-            filterable: true,
+            filterable: false,
             filterParam: 'model',
             filterComponent: 'filter/string',
         },
@@ -300,7 +300,7 @@ export default class ManagementVehiclesIndexController extends BaseController {
             width: '120px',
             resizable: true,
             sortable: true,
-            filterable: true,
+            filterable: false,
             filterParam: 'created_at',
             filterLabel: 'Created Between',
             filterComponent: 'filter/date',
@@ -315,7 +315,7 @@ export default class ManagementVehiclesIndexController extends BaseController {
             hidden: true,
             filterParam: 'updated_at',
             filterLabel: 'Last Updated Between',
-            filterable: true,
+            filterable: false,
             filterComponent: 'filter/date',
         },
         {
@@ -394,20 +394,21 @@ export default class ManagementVehiclesIndexController extends BaseController {
     @task({ restartable: true }) *search({ target: { value } }) {
         // if no query don't search
         if (isBlank(value)) {
-            this.query = null;
+            set(this, 'query', null);
+            this.hostRouter.refresh();
             return;
         }
-
         // timeout for typing
-        yield timeout(250);
+        yield timeout(200);
 
         // reset page for results
         if (this.page > 1) {
-            this.page = 1;
+            set(this, 'page', 1);
         }
 
         // update the query param
-        this.query = value;
+        set(this, 'query', value);
+        this.hostRouter.refresh();
     }
 
     /**

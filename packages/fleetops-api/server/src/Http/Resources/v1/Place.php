@@ -50,6 +50,7 @@ class Place extends FleetbaseResource
             'eta'                   => $this->when($this->eta, $this->eta),
             'updated_at'            => $this->updated_at,
             'created_at'            => $this->created_at,
+            'code'                  => $this->code,
         ];
     }
 
@@ -82,6 +83,7 @@ class Place extends FleetbaseResource
             'meta'                 => $this->meta ?? [],
             'updated_at'           => $this->updated_at,
             'created_at'           => $this->created_at,
+            'code'                  => $this->code,
         ];
     }
 }

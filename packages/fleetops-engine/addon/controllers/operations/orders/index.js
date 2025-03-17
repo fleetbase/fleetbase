@@ -1,7 +1,7 @@
 import BaseController from '@fleetbase/fleetops-engine/controllers/base-controller';
 import { inject as service } from '@ember/service';
 import { tracked } from '@glimmer/tracking';
-import { action } from '@ember/object';
+import { action, set } from '@ember/object';
 import { equal } from '@ember/object/computed';
 import { isArray } from '@ember/array';
 import { isBlank } from '@ember/utils';
@@ -50,6 +50,7 @@ export default class OperationsOrdersIndexController extends BaseController {
         'drawerOpen',
         'drawerTab',
         'orderPanelOpen',
+        'on'
     ];
 
     /**
@@ -393,9 +394,9 @@ export default class OperationsOrdersIndexController extends BaseController {
         },
         {
             label: this.intl.t('fleet-ops.operations.orders.index.scheduled-at'),
-            valuePath: 'scheduledAt',
+            valuePath: 'scheduled_at',
             sortParam: 'scheduled_at',
-            filterParam: 'scheduled_at',
+            filterParam: 'on',
             width: '150px',
             resizable: true,
             sortable: true,
@@ -410,26 +411,26 @@ export default class OperationsOrdersIndexController extends BaseController {
             width: '150px',
             resizable: true,
             sortable: true,
-            filterable: true,
+            filterable: false,
             filterComponent: 'filter/date',
         },
-        {
-            label: this.intl.t('fleet-ops.operations.orders.index.items'),
-            cellComponent: 'table/cell/base',
-            valuePath: 'item_count',
-            resizable: true,
-            hidden: true,
-            width: '50px',
-        },
-        {
-            label: this.intl.t('fleet-ops.operations.orders.index.transaction'),
-            cellComponent: 'table/cell/base',
-            valuePath: 'transaction_amount',
-            width: '50px',
-            resizable: true,
-            hidden: true,
-            sortable: true,
-        },
+        // {
+        //     label: this.intl.t('fleet-ops.operations.orders.index.items'),
+        //     cellComponent: 'table/cell/base',
+        //     valuePath: 'item_count',
+        //     resizable: true,
+        //     hidden: true,
+        //     width: '50px',
+        // },
+        // {
+        //     label: this.intl.t('fleet-ops.operations.orders.index.transaction'),
+        //     cellComponent: 'table/cell/base',
+        //     valuePath: 'transaction_amount',
+        //     width: '50px',
+        //     resizable: true,
+        //     hidden: true,
+        //     sortable: true,
+        // },
         {
             label: this.intl.t('fleet-ops.operations.orders.index.tracking'),
             valuePath: 'tracking_number.tracking_number',
@@ -462,7 +463,7 @@ export default class OperationsOrdersIndexController extends BaseController {
             resizable: true,
             sortable: true,
             filterable: true,
-            filterComponent: 'filter/multi-option',
+            filterComponent: 'filter/select',
             filterOptions: this.statusOptions,
             filterOptionLabel: 'label', // Specify which property to use as the display label
             filterOptionValue: 'code',
@@ -493,6 +494,7 @@ export default class OperationsOrdersIndexController extends BaseController {
         {
             label: this.intl.t('fleet-ops.operations.orders.index.created-by'),
             valuePath: 'created_by_name',
+            modelPath: 'created_by_name',
             width: '125px',
             resizable: true,
             hidden: true,
@@ -505,6 +507,7 @@ export default class OperationsOrdersIndexController extends BaseController {
         {
             label: this.intl.t('fleet-ops.operations.orders.index.updated-by'),
             valuePath: 'updated_by_name',
+            modelPath: 'updated_by_name',
             width: '125px',
             resizable: true,
             hidden: true,
@@ -630,22 +633,24 @@ export default class OperationsOrdersIndexController extends BaseController {
      * @void
      */
     @task({ restartable: true }) *search({ target: { value } }) {
+
         // if no query don't search
         if (isBlank(value)) {
-            this.query = null;
+            set(this, 'query', null);
+            this.hostRouter.refresh();
             return;
         }
-
         // timeout for typing
-        yield timeout(250);
+        yield timeout(200);
 
         // reset page for results
         if (this.page > 1) {
-            this.page = 1;
+            set(this, 'page', 1);
         }
 
         // update the query param
-        this.query = value;
+        set(this, 'query', value);
+        this.hostRouter.refresh();
     }
 
     /**
@@ -741,7 +746,7 @@ export default class OperationsOrdersIndexController extends BaseController {
         this.layout = mode;
 
         if (mode === 'table') {
-            this.isSearchVisible = false;
+            this.isSearchVisible = true;
         }
 
         this.universe.trigger('fleet-ops.dashboard.layout.changed', mode);
