@@ -59,7 +59,6 @@ export default class OperationsSchedulerIndexRoute extends Route {
         // Check the response status and log it
         if (response.ok) {
             const data = await response.json();
-            console.log('Driver Unavailability Data:', data);
             driverUnavailability = data;
         } else {
             console.error('Failed to fetch driver unavailability. Status:', response.status);
