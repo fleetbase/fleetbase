@@ -127,7 +127,7 @@ class Place extends Model
      *
      * @var array
      */
-    protected $filterParams = ['vendor', 'contact', 'vendor_uuid', 'vendor_name'];
+    protected $filterParams = ['vendor', 'contact', 'vendor_uuid', 'vendor_name','code'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\MorphTo
