@@ -393,9 +393,10 @@ export default class OperationsOrdersIndexController extends BaseController {
             model: 'vehicle',
         },
         {
-            label: this.intl.t('fleet-ops.operations.orders.index.scheduled-at'),
+            label: this.intl.t('fleet-ops.common.schedule'),
             valuePath: 'scheduled_at',
             sortParam: 'scheduled_at',
+            filterLabel: this.intl.t('fleet-ops.operations.orders.index.scheduled-at'),
             filterParam: 'on',
             width: '150px',
             resizable: true,

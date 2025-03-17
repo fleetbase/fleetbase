@@ -216,12 +216,12 @@
     @apply bg-[#7e22ce] border-[#7e22ce] text-white ;
 }
 
-.status-badge.indigo-status-badge > span svg,
+/* .status-badge.indigo-status-badge > span svg,
 .status-badge.operational-suggestion-status-badge > span svg,
 .status-badge.dispatched-status-badge > span svg,
 .status-badge.assigned-status-badge > span svg {
     @apply bg-[black] 
-}
+} */
 
 .status-badge.orange-status-badge > span,
 .status-badge.alerted-status-badge > span,
@@ -262,13 +262,13 @@ body[data-theme='dark'] .status-badge.created-status-badge > span{
     @apply bg-[#4385f4] border-[#4385f4] text-white
 }
 
-.status-badge.blue-status-badge > span svg,
+/* .status-badge.blue-status-badge > span svg,
 .status-badge.created-status-badge > span svg,
 .status-badge.loq-status-badge > span svg,
 .status-badge.approved-status-badge > span svg,
 .status-badge.info-status-badge > span svg {
     @apply bg-[black];
-}
+} */
 
 body[data-theme='dark'] .status-badge:not(.shadow-none) {
     @apply shadow;
