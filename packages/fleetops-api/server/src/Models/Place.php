@@ -52,7 +52,7 @@ class Place extends Model
      *
      * @var array
      */
-    protected $searchableColumns = ['name', 'street1', 'street2', 'country', 'province', 'district', 'city', 'postal_code', 'phone'];
+    protected $searchableColumns = ['name', 'street1', 'street2', 'country', 'province', 'district', 'city', 'postal_code', 'phone', 'public_id'];
 
     /**
      * The attributes that are spatial columns.
