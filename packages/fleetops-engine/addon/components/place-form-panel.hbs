@@ -39,8 +39,11 @@
         {{#let (cannot this.savePermission) as |unauthorized|}}
             <div class="flex-1 space-y-4">
                 <div class="grid grid-cols-3 gap-1 text-xs dark:text-gray-100">
-                    <InputGroup @name={{t "fleet-ops.common.name"}} @wrapperClass="col-span-2">
+                    <InputGroup @name={{t "fleet-ops.common.name"}} @wrapperClass="col-span-3">
                         <Input @value={{this.place.name}} @type="text" class="w-full form-input" placeholder={{t "fleet-ops.common.name"}} disabled={{unauthorized}} />
+                    </InputGroup>
+                    <InputGroup @name={{t "fleet-ops.common.code"}} @wrapperClass="col-span-3">
+                        <Input @value={{this.place.code}} @type="text" class="w-full form-input" placeholder={{t "fleet-ops.common.code"}} disabled={{unauthorized}} />
                     </InputGroup>
                     <InputGroup @name={{t "fleet-ops.component.place-form-panel.street-1"}} @value={{this.place.street1}} @wrapperClass="col-span-3">
                         <AutocompleteInput

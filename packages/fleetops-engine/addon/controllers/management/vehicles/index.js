@@ -394,20 +394,21 @@ export default class ManagementVehiclesIndexController extends BaseController {
     @task({ restartable: true }) *search({ target: { value } }) {
         // if no query don't search
         if (isBlank(value)) {
-            this.query = null;
+            set(this, 'query', null);
+            this.hostRouter.refresh();
             return;
         }
-
         // timeout for typing
-        yield timeout(250);
+        yield timeout(200);
 
         // reset page for results
         if (this.page > 1) {
-            this.page = 1;
+            set(this, 'page', 1);
         }
 
         // update the query param
-        this.query = value;
+        set(this, 'query', value);
+        this.hostRouter.refresh();
     }
 
     /**

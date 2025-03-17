@@ -131,11 +131,16 @@ export default class LocaleSelectorTrayComponent extends Component {
      */
     _createAvailableLocaleMap() {
         const localeMap = {};
-
+        const excludedCountryCodes = ['AE'];
         for (let i = 0; i < this.locales.length; i++) {
-            const locale = this.locales.objectAt(i);
-
-            localeMap[locale] = this._findCountryDataForLocale(locale);
+            const locale = this.locales.objectAt(i);    
+            const countryData = this._findCountryDataForLocale(locale);
+        
+        // Skip if country is in excluded list
+            if (countryData && excludedCountryCodes.includes(countryData.cca2)) {
+                continue;
+            }
+            localeMap[locale] = countryData;
         }
 
         return localeMap;
