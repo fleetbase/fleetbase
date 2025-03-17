@@ -305,7 +305,7 @@ export default class ManagementDriversIndexController extends BaseController {
             resizable: true,
             sortable: true,
             filterable: true,
-            filterComponent: 'filter/multi-option',
+            filterComponent: 'filter/select',
             filterFetchOptions: 'drivers/statuses',
         },
         {

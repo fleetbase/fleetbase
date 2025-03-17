@@ -22,12 +22,26 @@ export default class ManagementParkingIndexRoute extends Route {
         odometer: { refreshModel: true },
     };
 
-    @action willTransition(transition) {
-        if (isNestedRouteTransition(transition)) {
+     @action willTransition(transition) {
+        const shouldReset = typeof transition.to.name === 'string' && !transition.to.name.includes('operations.orders');
+
+        // Check if controller exists and has resetView function before calling it
+        if (this.controller && shouldReset && typeof this.controller.resetView === 'function') {
+            this.controller.resetView(transition);
+        }
+
+        const isPaginationTransition = transition.to.name === transition.from.name && 
+                                    transition.to.queryParams.page !== transition.from.queryParams.page;
+
+        if (isNestedRouteTransition(transition) && !isPaginationTransition) {
             set(this.queryParams, 'page.refreshModel', false);
             set(this.queryParams, 'sort.refreshModel', false);
+        } else {
+            set(this.queryParams, 'page.refreshModel', true);
+            set(this.queryParams, 'sort.refreshModel', true);
         }
     }
+     
 
     model(params) {
         return this.store.query('fuel-report', { 

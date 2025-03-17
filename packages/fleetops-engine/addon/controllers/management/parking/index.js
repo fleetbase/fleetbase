@@ -189,7 +189,7 @@ export default class ManagementParkingIndexController extends BaseController {
             resizable: true,
             sortable: true,
             filterable: true,
-            filterComponent: 'filter/multi-option',
+            filterComponent: 'filter/select',
             filterOptions: ['draft', 'pending-approval', 'approved', 'rejected', 'revised', 'submitted', 'in-review', 'confirmed', 'processed', 'archived', 'cancelled'],
         },
         {
@@ -258,20 +258,21 @@ export default class ManagementParkingIndexController extends BaseController {
     @task({ restartable: true }) *search({ target: { value } }) {
         // if no query don't search
         if (isBlank(value)) {
-            this.query = null;
+            set(this, 'query', null);
+            this.hostRouter.refresh();
             return;
         }
-
         // timeout for typing
-        yield timeout(250);
+        yield timeout(200);
 
         // reset page for results
         if (this.page > 1) {
-            this.page = 1;
+            set(this, 'page', 1);
         }
 
         // update the query param
-        this.query = value;
+        set(this, 'query', value);
+        this.hostRouter.refresh();
     }
 
     /**

@@ -155,7 +155,7 @@ export default class ManagementFleetsIndexController extends BaseController {
             valuePath: 'parent_fleet.name',
             resizable: true,
             width: '130px',
-            filterable: true,
+            filterable: false,
             filterComponent: 'filter/model',
             filterComponentPlaceholder: 'Select fleet',
             filterParam: 'parent_fleet_uuid',
@@ -234,7 +234,7 @@ export default class ManagementFleetsIndexController extends BaseController {
             resizable: true,
             sortable: true,
             filterable: true,
-            filterComponent: 'filter/multi-option',
+            filterComponent: 'filter/select',
             filterOptions: this.statusOptions,
         },
         {

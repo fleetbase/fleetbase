@@ -267,7 +267,7 @@ export default class ManagementIssuesIndexController extends BaseController {
             resizable: true,
             sortable: true,
             filterable: true,
-            filterComponent: 'filter/multi-option',
+            filterComponent: 'filter/select',
             filterOptions: ['pending', 'in-progress', 'backlogged', 'requires-update', 'in-review', 're-opened', 'duplicate', 'pending-review', 'escalated', 'completed', 'canceled'],
         },
         {
@@ -334,22 +334,23 @@ export default class ManagementIssuesIndexController extends BaseController {
      * @void
      */
     @task({ restartable: true }) *search({ target: { value } }) {
-        // if no query don't search
-        if (isBlank(value)) {
-            this.query = null;
-            return;
-        }
-
-        // timeout for typing
-        yield timeout(250);
-
-        // reset page for results
-        if (this.page > 1) {
-            this.page = 1;
-        }
-
-        // update the query param
-        this.query = value;
+            // if no query don't search
+            if (isBlank(value)) {
+                set(this, 'query', null);
+                this.hostRouter.refresh();
+                return;
+            }
+            // timeout for typing
+            yield timeout(200);
+    
+            // reset page for results
+            if (this.page > 1) {
+                set(this, 'page', 1);
+            }
+    
+            // update the query param
+            set(this, 'query', value);
+            this.hostRouter.refresh();
     }
 
     /**
