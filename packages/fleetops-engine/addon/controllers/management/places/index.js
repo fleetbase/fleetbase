@@ -120,6 +120,7 @@ export default class ManagementPlacesIndexController extends BaseController {
             cellComponent: 'table/cell/anchor',
             action: this.viewPlace,
             resizable: true,
+            hidden: true,
             sortable: true,
             filterable: false,
             filterComponent: 'filter/string',
