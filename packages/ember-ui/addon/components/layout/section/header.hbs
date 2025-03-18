@@ -28,7 +28,8 @@
                     @type="text"
                     @value={{@searchQuery}}
                     aria-label={{t "common.search-input"}}
-                    placeholder={{or @searchPlaceholder (concat (t "common.search") " " (pluralize @title))}}
+                    placeholder={{if (eq @title (t "fleet-ops.common.orders")) (t "fleet-ops.component.global-search.search") (or @searchPlaceholder (concat (t "common.search") " " (pluralize @title)))}}
+                    {{!-- placeholder={{or @searchPlaceholder (concat (t "common.search") " " (pluralize @title))}} --}}
                     class="w-64 ml-3 form-input form-input-sm {{@searchInputClass}}"
                     disabled={{@searchDisabled}}
                     {{on "keyup" @onSearch}}
