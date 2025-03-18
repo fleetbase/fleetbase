@@ -726,6 +726,7 @@ trait HasApiControllerBehavior
         // return $this->resource::collection($results);
         $params = $request->all();
         $query = $this->model->newQuery();
+        $orderModel = get_class($this->model);
         foreach ($params as $key => $value) {
             // Skip pagination and sorting parameters
             if (in_array($key, ['page', 'limit', 'sort', 'count', 'contain'])) {
@@ -735,8 +736,16 @@ trait HasApiControllerBehavior
             // Check if the key contains 'like' (case-insensitive)
             if (Str::contains(Str::lower($key), 'like')) {
                 // Remove 'like' from the key to get the actual field name
+                if($orderModel === 'Fleetbase\FleetOps\Models\Order') {
+                    $field = Str::replace('_like', '', Str::lower($key));
+                    $query->whereHas($field, function ($query) use ($value) {
+                        $query->where($this->model->getTable() . '.public_id', 'LIKE', '%' . $value . '%');
+                    });
+                } 
+                else {
                 $field = Str::replace(['_like', 'like'], '', Str::lower($key));
                 $query->where($field, 'LIKE', '%' . $value . '%');
+                }
             } else {
                 // Default to exact match
                 $query->where($key, '=', $value);
