@@ -200,24 +200,24 @@ export default class ManagementVehiclesIndexController extends BaseController {
             filterComponent: 'filter/string',
             filterParam: 'plate_number',
         },
-        {
-            label: 'Driver Assigned',
-            cellComponent: 'table/cell/anchor',
-            permission: 'fleet-ops view driver',
-            action: async (vehicle) => {
-                const driver = await vehicle.loadDriver();
+        // {
+        //     label: 'Driver Assigned',
+        //     cellComponent: 'table/cell/anchor',
+        //     permission: 'fleet-ops view driver',
+        //     action: async (vehicle) => {
+        //         const driver = await vehicle.loadDriver();
 
-                return this.contextPanel.focus(driver);
-            },
-            valuePath: 'driver_name',
-            width: '120px',
-            resizable: true,
-            filterable: true,
-            filterComponent: 'filter/model',
-            filterComponentPlaceholder: 'Select driver to filter by',
-            filterParam: 'driver',
-            model: 'driver',
-        },
+        //         return this.contextPanel.focus(driver);
+        //     },
+        //     valuePath: 'driver_name',
+        //     width: '120px',
+        //     resizable: true,
+        //     filterable: true,
+        //     filterComponent: 'filter/model',
+        //     filterComponentPlaceholder: 'Select driver to filter by',
+        //     filterParam: 'driver',
+        //     model: 'driver',
+        // },
         {
             label: this.intl.t('fleet-ops.common.id'),
             valuePath: 'public_id',

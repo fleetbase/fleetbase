@@ -355,16 +355,16 @@ export default class ManagementDriversIndexController extends BaseController {
                 {
                     separator: true,
                 },
-                {
-                    label: this.intl.t('fleet-ops.management.drivers.index.assign-order-driver'),
-                    fn: this.assignOrder,
-                    permission: 'fleet-ops assign-order-for driver',
-                },
-                {
-                    label: this.intl.t('fleet-ops.management.drivers.index.assign-vehicle-driver'),
-                    fn: this.assignVehicle,
-                    permission: 'fleet-ops assign-vehicle-for driver',
-                },
+                // {
+                //     label: this.intl.t('fleet-ops.management.drivers.index.assign-order-driver'),
+                //     fn: this.assignOrder,
+                //     permission: 'fleet-ops assign-order-for driver',
+                // },
+                // {
+                //     label: this.intl.t('fleet-ops.management.drivers.index.assign-vehicle-driver'),
+                //     fn: this.assignVehicle,
+                //     permission: 'fleet-ops assign-vehicle-for driver',
+                // },
                 {
                     label: this.intl.t('fleet-ops.management.drivers.index.locate-driver-map'),
                     fn: this.locateDriver,
