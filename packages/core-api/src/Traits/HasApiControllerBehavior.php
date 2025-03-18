@@ -738,7 +738,6 @@ trait HasApiControllerBehavior
                 $field = Str::replace(['_like', 'like'], '', Str::lower($key));
                 $query->where($field, 'LIKE', '%' . $value . '%');
             } else {
-                echo $key;
                 // Default to exact match
                 $query->where($key, '=', $value);
             }
