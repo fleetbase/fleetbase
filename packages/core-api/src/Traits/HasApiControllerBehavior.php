@@ -363,9 +363,8 @@ trait HasApiControllerBehavior
                     // filter by created_at
                     $query->whereDate('updated_at', Carbon::parse($request->input('updated_at')));
                 }
-                if($request->filled('public_id')){
-                    // filter by public_id like
-                    $query->where('public_id', 'LIKE', '%'. $request->input('public_id'). '%');
+                if ($request->filled('public_id')) {
+                    $query->where($this->model->getTable() . '.public_id', 'LIKE', '%' . $request->input('public_id') . '%');
                 }
             };
             $data = $this->model->queryFromRequest($request, $combinedCallback);
