@@ -370,22 +370,6 @@ trait HasApiControllerBehavior
             };
             $data = $this->model->queryFromRequest($request, $combinedCallback);
         }
-        elseif(get_class($this->model) === 'Fleetbase\FleetOps\Models\Vehicle')
-        {
-            $combinedCallback = function ($query) use ($request, $queryCallback) {
-                // Apply the original callback if it exists
-                if ($queryCallback) {
-                    $queryCallback($query);
-                }
-                if ($request->filled('make')) {
-                    $query->where('make', 'LIKE', '%'. $request->input('make'). '%');
-                }
-                if ($request->filled('model')) {
-                    $query->where('model', 'LIKE', '%'. $request->input('model'). '%');
-                }
-            };
-            $data = $this->model->queryFromRequest($request, $combinedCallback);
-        }
         else {
             $data = $this->model->queryFromRequest($request, $queryCallback);
         }
