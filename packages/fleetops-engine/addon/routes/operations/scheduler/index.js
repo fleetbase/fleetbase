@@ -5,6 +5,7 @@ import { isNone } from '@ember/utils';
 import createFullCalendarEventFromOrder from '../../../utils/create-full-calendar-event-from-order';
 import createFullCalendarEventFromLeave from '../../../utils/create-full-calendar-event-from-leave';
 import ENV from '@fleetbase/console/config/environment';
+import { action } from '@ember/object';
 
 const getUnscheduledOrder = (order) => {
     return isNone(order.driver_assigned_uuid) && isNone(order.vehicle_assigned_uuid);
@@ -27,6 +28,15 @@ export default class OperationsSchedulerIndexRoute extends Route {
     @service hostRouter;
     @service abilities;
     @service intl;
+    queryParams = {
+        ref: {
+          refreshModel: true
+        }
+      };
+    // @action
+    // refreshData() {
+    //   this.refresh();
+    // }
 
     beforeModel() {
         if (this.abilities.cannot('fleet-ops list order')) {
@@ -44,34 +54,37 @@ export default class OperationsSchedulerIndexRoute extends Route {
         });
         let driverUnavailability = null; // Initialize with a default value
           // Fetch driver unavailability
-          const authSession = JSON.parse(localStorage.getItem('ember_simple_auth-session'));
-    if (authSession && authSession.authenticated && authSession.authenticated.token) {
-        const apiBaseURL = `${ENV.API.host}`;
-        const token = authSession.authenticated.token;
-        const response = await fetch(`${apiBaseURL}/api/v1/leave-requests/list`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`,
-            },
-        });
+        const authSession = JSON.parse(localStorage.getItem('ember_simple_auth-session'));
+        if (authSession && authSession.authenticated && authSession.authenticated.token) {
+            const apiBaseURL = `${ENV.API.host}`;
+            const token = authSession.authenticated.token;
+            const response = await fetch(`${apiBaseURL}/api/v1/leave-requests/list`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`,
+                },
+            });
 
-        // Check the response status and log it
-        if (response.ok) {
-            const data = await response.json();
-            driverUnavailability = data;
-        } else {
-            console.error('Failed to fetch driver unavailability. Status:', response.status);
+            // Check the response status and log it
+            if (response.ok) {
+                const data = await response.json();
+                console.log('Driver Unavailability Data:', data);
+                driverUnavailability = data;
+            } else {
+                console.error('Failed to fetch driver unavailability. Status:', response.status);
+            }
+
+            
         }
-
-        
-    }
-    else {
-            console.error("No valid token found in session.");
+        else {
+                console.error("No valid token found in session.");
         }
         return { orders, driverUnavailability };
     }
-
+    refreshRoute() {
+        this.refresh(); // This will trigger the model hook again and reload data
+    }
     setupController(controller, model) {
       const orders = model.orders;
         const driverUnavailability = model.driverUnavailability;
