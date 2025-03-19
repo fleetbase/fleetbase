@@ -63,7 +63,7 @@ export default class OperationsSchedulerIndexRoute extends Route {
         }
     }
 
-    async model() {
+    async model(params = {}) {
         const page = params.page || 1;
         const limit = 20;
         const orders = await this.store.query('order', { 
@@ -71,6 +71,7 @@ export default class OperationsSchedulerIndexRoute extends Route {
             with: ['payload', 'driverAssigned.vehicle'], 
             limit: 20, //To do: need to change the limit & do pagination for the scroll
             sort: '-created_at',
+            page: page
         });
         const meta = orders.meta || {};
         const total = meta.total || orders.length;

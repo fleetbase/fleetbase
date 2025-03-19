@@ -12,7 +12,9 @@
                     >
                         <FaIcon @icon="chevron-left" @size="xs" />
                     </button>
-                
+                    <span class="text-xs text-gray-500 dark:text-gray-400">
+                        {{this.currentPageScheduled}} / {{this.totalPages}}
+                    </span>
                     <button 
                         class="btn btn-xs btn-default flex items-center justify-center w-10 h-8 rounded border border-gray-300 dark:border-gray-600"
                         disabled={{this.isLastPage}} 
