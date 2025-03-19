@@ -19,17 +19,16 @@ export default class SelectComponent extends Component {
         this.placeholder = placeholder;
     }
 
-    @action select(event) {
-        const { value } = event.target;
-
-        this.value = value;
-
+    @action select(selectedOption) {
+        // Ensure we always get the right value
+        this.value = selectedOption?.code ?? selectedOption;
+    
         if (typeof this.args.onSelect === 'function') {
-            this.args.onSelect(value);
+            this.args.onSelect(this.value);
         }
-
+    
         if (typeof this.args.onChange === 'function') {
-            this.args.onChange(event, value);
+            this.args.onChange(this.value);
         }
     }
 }
