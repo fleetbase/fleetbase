@@ -316,7 +316,7 @@ export default class ManagementDriversIndexController extends BaseController {
             width: '130px',
             resizable: true,
             sortable: true,
-            filterable: true,
+            filterable: false,
             filterComponent: 'filter/date',
         },
         {
@@ -328,7 +328,7 @@ export default class ManagementDriversIndexController extends BaseController {
             resizable: true,
             sortable: true,
             hidden: true,
-            filterable: true,
+            filterable: false,
             filterComponent: 'filter/date',
         },
         {

@@ -199,7 +199,7 @@ export default class ManagementTollReportsIndexController extends BaseController
             width: '120px',
             resizable: true,
             sortable: true,
-            filterable: true,
+            filterable: false,
             filterComponent: 'filter/date',
         },
         {
@@ -210,7 +210,7 @@ export default class ManagementTollReportsIndexController extends BaseController
             resizable: true,
             sortable: true,
             hidden: true,
-            filterable: true,
+            filterable: false,
             filterComponent: 'filter/date',
         },
         {

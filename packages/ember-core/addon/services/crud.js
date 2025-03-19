@@ -249,8 +249,10 @@ export default class CrudService extends Service {
             modalClass: 'modal-sm',
             format: 'xlsx',
             formatOptions: ['csv', 'xlsx', 'xls'],
-            setFormat: ({ target }) => {
-                this.modalsManager.setOption('format', target.value || null);
+            // setFormat: ({ target }) => {
+            //     this.modalsManager.setOption('format', target.value || null);
+            setFormat: (selectedValue) => {
+                this.modalsManager.setOption('format', selectedValue || null);
             },
             confirm: (modal, done) => {
                 const format = modal.getOption('format') ?? 'xlsx';
