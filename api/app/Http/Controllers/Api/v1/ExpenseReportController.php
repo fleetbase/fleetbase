@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Fleetbase\LaravelMysqlSpatial\Types\Point;
 use Fleetbase\Support\Auth;
+use Fleetbase\FleetOps\Models\Vehicle;
 
 class ExpenseReportController extends Controller
 {
@@ -35,6 +36,16 @@ class ExpenseReportController extends Controller
             }
             else{
                 $input['status'] = __('expense.status.pending_approval');
+            }
+            if($request->has('vehicle_public_id')){
+                //get vehicle uuid from Vehicle model
+                $vehicle = Vehicle::where('public_id', $request->input('vehicle_public_id'))->whereNull('deleted_at')->first();
+                if(isset($vehicle)){
+                    $input['vehicle_uuid'] = $vehicle->uuid;
+                }
+                else{
+                    $input['vehicle_uuid'] = NULL;
+                }
             }
             // Handle location field
             if ($request->has('latitude') && $request->has('longitude')) {
@@ -153,8 +164,15 @@ class ExpenseReportController extends Controller
                 ->where('company_uuid', $company_uuid)
                 ->whereNull('deleted_at')
                 ->firstOrFail();
-
-            $FuelReport->update($request->all());
+            $input = $request->all();
+            if ($request->has('vehicle_public_id')) {
+                $vehicle = Vehicle::where('public_id', $request->input('vehicle_public_id'))
+                    ->whereNull('deleted_at')
+                    ->first();
+    
+                $input['vehicle_uuid'] = $vehicle ? $vehicle->uuid : null;
+            }
+            $FuelReport->update($input);
 
             DB::commit();
 
