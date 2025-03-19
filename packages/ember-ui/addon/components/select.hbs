@@ -1,4 +1,14 @@
-<select
+<PowerSelect class="status-dropdown"
+    @options={{@options}}
+    @selected={{this.value}}
+    @onChange={{this.select}}
+    @disabled={{this.disabled}}
+    @placeholder={{this.placeholder}}
+    as |selectable|
+>
+    {{if (get selectable "label") selectable.label selectable}} 
+</PowerSelect>
+{{!-- <select
     ...attributes
     class="form-select {{if this.value 'has--selection' 'has--placeholder'}} {{if this.disabled 'disabled'}}"
     disabled={{this.disabled}}
@@ -86,4 +96,4 @@
             {{/if}}
         {{/each}}
     {{/if}}
-</select>
+</select> --}}
