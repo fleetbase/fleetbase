@@ -380,24 +380,22 @@ export default class OperationsSchedulerIndexController extends BaseController {
     
     @action
     goToNextPage() {
-    console.log('goToNextPage called',this.totalPages);
+        const nextPage = this.currentPageScheduled + 1;
 
-    const nextPage = this.currentPageScheduled + 1;
+        if (!this.totalPages || nextPage > this.totalPages) {
+            console.warn("No more pages to load.");
+            return;
+        }
+        if(this.totalPages > this.currentPageScheduled)
+        {
+            this.currentPageScheduled = nextPage;
+        }
 
-    if (!this.totalPages || nextPage > this.totalPages) {
-        console.warn("No more pages to load.");
-        return;
+        // Ensure queryParams is defined
+        let queryParams = this.hostRouter.currentRoute.queryParams || {};
+        queryParams = { ...queryParams, page: nextPage };
+        this.hostRouter.transitionTo({ queryParams });
     }
-    if(this.totalPages > this.currentPageScheduled)
-    {
-        this.currentPageScheduled = nextPage;
-    }
-
-    // Ensure queryParams is defined
-    let queryParams = this.hostRouter.currentRoute.queryParams || {};
-    queryParams = { ...queryParams, page: nextPage };
-    this.hostRouter.transitionTo({ queryParams });
-}
 
     
     @action

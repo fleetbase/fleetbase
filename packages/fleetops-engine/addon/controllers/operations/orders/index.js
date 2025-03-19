@@ -439,7 +439,7 @@ export default class OperationsOrdersIndexController extends BaseController {
             width: '170px',
             resizable: true,
             sortable: true,
-            filterable: true,
+            filterable: false,
             filterComponent: 'filter/string',
         },
         // {
