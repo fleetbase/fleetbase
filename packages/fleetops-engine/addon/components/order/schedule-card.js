@@ -7,6 +7,7 @@ import { inject as service } from '@ember/service';
 import FullCalendar from '@fullcalendar/core';  
 import dayGridPlugin from '@fullcalendar/daygrid';  // Day grid plugin for month view
 import interactionPlugin from '@fullcalendar/interaction'; 
+
 // import createFullCalendarEventFromOrder from '@fleetbase/fleetops-engine/utils/create-full-calendar-event-from-order';
 /**
  * Component representing the schedule card of an order.
@@ -20,6 +21,7 @@ export default class OrderScheduleCardComponent extends Component {
     @service store;
     @service contextPanel;
     @service intl;
+    @service eventBus;
     @service modalsManager;
     @service notifications;
     @service abilities;
@@ -36,7 +38,8 @@ export default class OrderScheduleCardComponent extends Component {
     @tracked orders = [];
     @tracked events = [];
     // @service router;
-    @service eventBus;
+    
+    @tracked isModalOpen = false;
 
     router = null;
     calendarInstance = null; 
@@ -52,50 +55,16 @@ export default class OrderScheduleCardComponent extends Component {
 
         // Try looking up router:main as an alternative
         this.router = ownerInstance.lookup('router:main');
-     
+       
+        // this.eventBus.subscribe('calendar-refresh-needed', this.handleCalendarRefresh);
         this.loadDriverFromOrder(order);
         this.loadPayloadFromOrder(order);
         // this.loadDrivers(order.uuid);
     }
-    @action
-    initializeFullCalendar() {
-        const calendarElement = document.getElementById('fleetbase-full-calendar');
-        if (!calendarElement._initialized) {
-            const calendar = new FullCalendar.Calendar(calendarElement, {
-                plugins: [dayGridPlugin, interactionPlugin],  // Register necessary plugins
-                initialView: 'dayGridMonth',  // Example view for month grid
-                events: this.args.events,  // Your events data
-                editable: true,  // Enable editing
-            });
-            calendar.render();  // Render FullCalendar
-            calendarElement._initialized = true;  // Mark it as initialized
-        }
+    get effectiveEventBus() {
+        return this.eventBus || this.args.eventBus;
     }
-    // Assuming you are passing the FullCalendar instance to the component
-    // @action
-    // refreshFullCalendar() {
-    //     const calendarApi = this.getFullCalendarApi();
-    //     console.log(calendarApi)
-    //     if (calendarApi) {
-    //         console.log('Refreshing FullCalendar events');
-    //         calendarApi.refetchEvents();  // This will re-fetch events from the server
-    //     } else {
-    //         console.log('FullCalendar API is not available.');
-    //     }
-    // }
-
-    // // Method to get FullCalendar instance from the DOM (use FullCalendar's vanilla JS API)
-    // getFullCalendarApi() {
-    //     const calendarElement = document.getElementById('fleetbase-full-calendar'); // The FullCalendar container element
-    //     if (calendarElement) {
-    //         // Check if the FullCalendar instance is attached
-    //         const calendar = calendarElement.fullCalendar ? calendarElement.fullCalendar() : null;
-    //         if (calendar) {
-    //             return calendar.getApi ? calendar.getApi() : null;  // Access FullCalendar API if available
-    //         }
-    //     }
-    //     return null;
-    // }
+    
     @action loadDrivers(orderUuid) {
         this.isLoadingDrivers = true;
         // console.log('Fetching drivers for order UUID:', orderUuid);
@@ -137,6 +106,8 @@ export default class OrderScheduleCardComponent extends Component {
      * @memberof OrderScheduleCardComponent
      */
     @action startAssignDriver() { 
+        console.log("EventBus in assignDriver:", this.effectiveEventBus);
+      
         if (this.abilities.cannot('fleet-ops assign-driver-for order')) {
             return;
         }
@@ -146,17 +117,39 @@ export default class OrderScheduleCardComponent extends Component {
             this.loadDrivers(order.id);
           }
     }
-
+    
     /**
      * Action to assign a driver to an order.
      * @action
      * @param {DriverModel} driver - The driver to be assigned.
      * @memberof OrderScheduleCardComponent
      */
-    @action assignDriver(driver) { 
+    @action assignDriver(driver) {
+        console.log("startAssignDriver",this.effectiveEventBus)
+        const eventBus = this.effectiveEventBus;
+        try {
+            // This is a hack to ensure all modals are closed first
+            document.querySelectorAll('.modal.show').forEach(modal => {
+                // Try to find and click the close button
+                const closeBtn = modal.querySelector('.close, .btn-close, [data-dismiss="modal"]');
+                if (closeBtn) {
+                    closeBtn.click();
+                }
+            });
+        } catch (e) {
+            console.error('Error closing modals:', e);
+        }
+        if (this.isModalOpen) {
+            // Prevent opening a new modal if one is already open
+            return;
+        }
         const order = this.args.order;
-
-        if (isBlank(driver)) {
+        this.modalsManager.done().then(() => {
+        setTimeout(() => {
+        this.isModalOpen = true; // Mark that a modal is being shown 
+       
+        // If driver is not selected, confirm to unassign the driver
+        if (isBlank(driver)) { 
             return this.modalsManager.confirm({ 
                 title: this.intl.t('fleet-ops.component.order.schedule-card.unassign-driver'),
                 body: this.intl.t('fleet-ops.component.order.schedule-card.unassign-text', { orderId: order.public_id }),
@@ -179,35 +172,37 @@ export default class OrderScheduleCardComponent extends Component {
                               })
                         })
                         .then(() => {
-
-                            // this.eventBus.publish('calendar-refresh-needed', { orderId: order.id });
-                            if (this.eventBus) {
-                                this.eventBus.publish('calendar-refresh-needed', { orderId: order.id });
-                            } else {
-                                console.error("eventBus is not available.");
+                            console.log("eventBus",eventBus)
+                            if (eventBus) {
+                                eventBus.publish('calendar-refresh-needed', { orderId: order.id });
                             }
                             this.notifications.success(
-                                this.intl.t('fleet-ops.operations.scheduler.index.success-message', { orderId: order.public_id, orderAt:order.scheduledAt})
+                            this.intl.t('fleet-ops.operations.scheduler.index.success-message', { orderId: order.public_id, orderAt:order.scheduledAt})
                             );
                             modal.done();
+                            this.isModalOpen = false;
                         })
                        
                     } catch (error) { 
                         this.notifications.serverError(error);
                         modal.stopLoading();
+                    } finally {
+                        // Close the modal after the action is completed
+                        this.isModalOpen = false;
                     }
                 },
                 decline: (modal) => {
                     this.isAssigningDriver = false;
                     modal.done();
+                    this.isModalOpen = false; 
                 },
             });
-        }
-
-            return this.modalsManager.confirm({
-                title: this.intl.t('fleet-ops.component.order.schedule-card.assign-driver'),
-                // body: this.intl.t('fleet-ops.component.order.schedule-card.assign-text', { driverName: driver.name, orderId: order.public_id }),
-                body: driver.is_available
+        }else {
+       
+            // If driver is available, assign the driver to the order
+        return this.modalsManager.confirm({
+            title: this.intl.t('fleet-ops.component.order.schedule-card.assign-driver'),
+            body: driver.is_available
                 ? this.intl.t('fleet-ops.component.order.schedule-card.assign-text', {
                     driverName: driver.name,
                     orderId: order.public_id,
@@ -215,57 +210,56 @@ export default class OrderScheduleCardComponent extends Component {
                 : this.intl.t('fleet-ops.component.order.schedule-card.assign-busy-text', {
                     driverName: driver.name,
                     orderId: order.public_id,
-                    availability:driver.availability_message,
-                    button:driver.button_message,
+                    availability: driver.availability_message,
+                    button: driver.button_message,
                 }),
-                // acceptButtonText: this.intl.t('fleet-ops.component.order.schedule-card.assign-button'),
-                acceptButtonText: driver.is_available
+            acceptButtonText: driver.is_available
                 ? this.intl.t('fleet-ops.component.order.schedule-card.assign-button')
-                : this.intl.t('fleet-ops.component.order.schedule-card.assign-busy-button',{
-                    button:driver.button_message,
+                : this.intl.t('fleet-ops.component.order.schedule-card.assign-busy-button', {
+                    button: driver.button_message,
                 }),
 
-                confirm: (modal) => {
-                    modal.startLoading();
-                    order.setProperties({
-                        driver_assigned_uuid: driver.id,
-                        vehicle_assigned: driver.vehicle || null,
-                    });
-                    return order
-                        .save()
-                        .then(() => {
-                            this.isAssigningDriver = false;
-                            return this.router.transitionTo('console.fleet-ops.operations.scheduler.index', {
-                                queryParams: { ref: Date.now() }
-                              })
-                        })
-                        // .then(() => {
-                        // })
-                        .catch((error) => {
-                            this.notifications.serverError(error);
-                        })
-                        .finally(() => {
-                            // this.isAssigningDriver = false;
+            confirm: (modal) => {
+                modal.startLoading();
+                order.setProperties({
+                    driver_assigned_uuid: driver.id,
+                    vehicle_assigned: driver.vehicle || null,
+                });
 
-                            // this.eventBus.publish('calendar-refresh-needed', { orderId: order.id });
-                            if (this.eventBus) {
-                                this.eventBus.publish('calendar-refresh-needed', { orderId: order.id });
-                            } else {
-                                console.error("eventBus is not available.");
-                            }
-                            this.notifications.success(
-                                this.intl.t('fleet-ops.operations.scheduler.index.success-message', { orderId: order.public_id, orderAt:order.scheduledAt})
-                            );
-                            modal.done();
-                            
-                            
+                return order.save()
+                    .then(() => {
+                        this.isAssigningDriver = false;
+                        console.log("eventBus then",eventBus)
+                        return this.router.transitionTo('console.fleet-ops.operations.scheduler.index', {
+                            queryParams: { ref: Date.now() }
                         });
-                },
-                decline: (modal) => {
-                    this.isAssigningDriver = false;
-                    modal.done();
-                },
-            });
+                       
+                    })
+                    .catch((error) => {
+                        this.notifications.serverError(error);
+                    })
+                    .finally(() => {
+                        console.log("eventBus",eventBus)
+                        if (eventBus) {
+                            eventBus.publish('calendar-refresh-needed', { orderId: order.id });
+                        } else {
+                            console.error("eventBus is not available.");
+                        }
+                        this.notifications.success(
+                            this.intl.t('fleet-ops.operations.scheduler.index.success-message', { orderId: order.public_id, orderAt: order.scheduledAt })
+                        );
+                        modal.done();
+                        this.isModalOpen = false; // Ensure modal is closed after action is completed
+                    });
+            },
+            decline: (modal) => {
+                modal.done();
+                this.isModalOpen = false; // Close the modal when declined
+            },
+        });
+    }
+    }, 100);
+    });
     }
 
     /**
@@ -288,6 +282,7 @@ export default class OrderScheduleCardComponent extends Component {
      * @memberof OrderScheduleCardComponent
      */
     loadDriverFromOrder(order) { 
+        console.log("loaddriver")
         if (order && typeof order.loadDriver === 'function') {
             order.loadDriver();
         }
@@ -304,40 +299,5 @@ export default class OrderScheduleCardComponent extends Component {
         }
     }
 
-    // Helper function to update the assigned drivers list dynamically
- 
-    // updateAssignedDriversList(order, isAssigned) { alert("update")
-    //     if (!this.assignedDrivers) {
-    //         this.assignedDrivers = []; // Initialize if it's undefined
-    //     }
-    //     if (isAssigned) { alert("isassigned")
-    //         // Add the driver to the list of assigned drivers
-    //         console.log("order",order)
-    //         console.log("public_id",order.public_id)
-    //         this.assignedDrivers.push({
-    //             orderId: order.public_id,
-    //             driverId: order.driver_assigned_uuid,
-    //             driverName: order.driver_assigned ? order.driver_assigned.name : 'N/A',
-    //         });
-    //         console.log("assignedDrivers",this.assignedDrivers)
-    //     } else { alert("not isassigned")
-    //         // Remove the driver from the assigned drivers list
-    //         console.log("order.public_id",order.public_id)
-    //         this.assignedDrivers = this.assignedDrivers.filter(driver => driver.orderId !== order.public_id);
-    //     }
-    // }
-    // async refreshOrders() {
-    //     try {
-    //         console.log("Refreshing orders...");
-    //         this.orders = await this.store.query('order', {
-    //           status: 'created',
-    //           limit: 100,
-    //           sort: '-created_at',
-    //         });
-    //         console.log("Orders fetched:", this.orders);
-    //     } catch (error) {
-    //         console.error('Error refreshing orders:', error);
-    //     }
-    // }
     
 }

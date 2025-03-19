@@ -54,7 +54,19 @@ export default class ModalsManagerService extends Service {
      * @param options options passed to the rendered modal
      */
     @action show(componentToRender, options) {
-        assert('Only one modal may be opened in the same time!', !this.modalIsOpened);
+        if (this.modalIsOpened) {
+            // Set this to false to allow a new modal to open
+            this.modalIsOpened = false;
+            // If there's an active defer, resolve it
+            if (this.modalDefer) {
+                this.modalDefer.resolve(this);
+                this.modalDefer = null;
+            }
+            // Clear existing options
+            this.clearOptions();
+        }
+        // assert('Only one modal may be opened in the same time!', !this.modalIsOpened);
+
         const component = componentToRender;
         const opts = assign({}, this.defaultOptions, options);
         this.componentToRender = component;
