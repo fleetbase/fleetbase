@@ -5,7 +5,8 @@ import { isNone } from '@ember/utils';
 import createFullCalendarEventFromOrder from '../../../utils/create-full-calendar-event-from-order';
 import createFullCalendarEventFromLeave from '../../../utils/create-full-calendar-event-from-leave';
 import ENV from '@fleetbase/console/config/environment';
-import { action } from '@ember/object';
+import { action, set } from '@ember/object';
+import isNestedRouteTransition from '@fleetbase/ember-core/utils/is-nested-route-transition';
 
 const getUnscheduledOrder = (order) => {
     return isNone(order.driver_assigned_uuid) && isNone(order.vehicle_assigned_uuid);
@@ -31,12 +32,29 @@ export default class OperationsSchedulerIndexRoute extends Route {
     queryParams = {
         ref: {
           refreshModel: true
-        }
+        },
+        page: { refreshModel: true }
       };
-    // @action
-    // refreshData() {
-    //   this.refresh();
-    // }
+    @action 
+      willTransition(transition) {
+              const shouldReset = typeof transition.to.name === 'string' && !transition.to.name.includes('operations.orders');
+      
+              // Check if controller exists and has resetView function before calling it
+              if (this.controller && shouldReset && typeof this.controller.resetView === 'function') {
+                  this.controller.resetView(transition);
+              }
+      
+              const isPaginationTransition = transition.to.name === transition.from.name && 
+                                          transition.to.queryParams.page !== transition.from.queryParams.page;
+      
+              if (isNestedRouteTransition(transition) && !isPaginationTransition) {
+                  set(this.queryParams, 'page.refreshModel', false);
+                 
+              } else {
+                  set(this.queryParams, 'page.refreshModel', true);
+                  
+              }
+      }
 
     beforeModel() {
         if (this.abilities.cannot('fleet-ops list order')) {
@@ -46,12 +64,18 @@ export default class OperationsSchedulerIndexRoute extends Route {
     }
 
     async model() {
+        const page = params.page || 1;
+        const limit = 20;
         const orders = await this.store.query('order', { 
             status: 'created', 
             with: ['payload', 'driverAssigned.vehicle'], 
-            limit: 1000, //To do: need to change the limit & do pagination for the scroll
+            limit: 20, //To do: need to change the limit & do pagination for the scroll
             sort: '-created_at',
         });
+        const meta = orders.meta || {};
+        const total = meta.total || orders.length;
+        const currentPage = meta.current_page || parseInt(page);
+        const totalPages = meta.last_page || Math.ceil(total / limit);
         let driverUnavailability = null; // Initialize with a default value
           // Fetch driver unavailability
         const authSession = JSON.parse(localStorage.getItem('ember_simple_auth-session'));
@@ -80,13 +104,22 @@ export default class OperationsSchedulerIndexRoute extends Route {
         else {
                 console.error("No valid token found in session.");
         }
-        return { orders, driverUnavailability };
+        return { 
+            orders, 
+            driverUnavailability,
+            pagination: {
+                currentPage: currentPage,
+        totalPages: totalPages,
+        limit: meta.per_page || limit,
+        total: total
+            }
+        };
     }
     refreshRoute() {
         this.refresh(); // This will trigger the model hook again and reload data
     }
     setupController(controller, model) {
-      const orders = model.orders;
+        const orders = model.orders;
         const driverUnavailability = model.driverUnavailability;
         // set unscheduled orders
         controller.unscheduledOrders = orders.filter(getUnscheduledOrder);
@@ -101,6 +134,24 @@ export default class OperationsSchedulerIndexRoute extends Route {
             );
             controller.events = [...controller.events, ...leaveEvents];
         }
+        controller.totalRecords = model.pagination.total;
+        controller.totalPages = model.pagination.totalPages;
+        controller.currentPage = model.pagination.currentPage;
+        controller.itemsPerPage = model.pagination.limit;
         
+        // Add load more method
+        controller.loadPage = this.loadPage.bind(this);
+        
+    }
+    async loadPage(page) {
+        // Implement page loading logic here
+        const controller = this.controller;
+        controller.currentPageUnscheduled = page;
+        controller.currentPageScheduled = page;
+        console.log(controller.currentPageScheduled);
+        // Redirect to route with new page parameter
+        this.hostRouter.transitionTo('console.fleet-ops.operations.scheduler.index', { 
+            queryParams: { page: page } 
+        });
     }
 }

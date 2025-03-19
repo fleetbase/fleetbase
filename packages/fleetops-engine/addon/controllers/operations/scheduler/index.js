@@ -19,6 +19,10 @@ export default class OperationsSchedulerIndexController extends BaseController {
     @service eventBus;
     queryParams = ['ref'];
     ref = null;
+    @tracked currentPageUnscheduled = 1;
+    @tracked currentPageScheduled = 1;
+    @tracked itemsPerPage = 10;
+    @tracked calendar;
     
     constructor() {
         super(...arguments);
@@ -39,6 +43,33 @@ export default class OperationsSchedulerIndexController extends BaseController {
             this.scheduledOrders = orders;
             this.updateCalendar();  // Call updateCalendar after the orders are fetched
         });
+    }
+
+    // Computed properties for pagination
+    get paginatedUnscheduledOrders() {
+        const start = (this.currentPageUnscheduled - 1) * this.itemsPerPage;
+        return this.unscheduledOrders.slice(start, start + this.itemsPerPage);
+    }
+
+    get paginatedScheduledOrders() {
+        const start = (this.currentPageScheduled - 1) * this.itemsPerPage;
+        return this.scheduledOrders.slice(start, start + this.itemsPerPage);
+    }
+
+    get totalPagesUnscheduled() {
+        return this.totalPages || Math.ceil(this.unscheduledOrders.length / this.itemsPerPage);
+    }
+
+    get totalPagesScheduled() {
+        return Math.ceil(this.scheduledOrders.length / this.itemsPerPage);
+    }
+
+    get isFirstPage() {
+        return this.currentPageScheduled <= 1;
+    }
+
+    get isLastPage() {
+        return this.currentPageUnscheduled >= this.totalPages;
     }
     @action
     async refreshOrders() {
@@ -317,5 +348,65 @@ export default class OperationsSchedulerIndexController extends BaseController {
         }
 
         return false;
+    }
+    @action
+    nextPageUnscheduled() {
+        if (this.currentPageUnscheduled < this.totalPagesUnscheduled) {
+            this.currentPageUnscheduled++;
+        }
+    }
+
+    @action
+    prevPageUnscheduled() {
+        if (this.currentPageUnscheduled > 1) {
+            this.currentPageUnscheduled--;
+        }
+    }
+
+    @action
+    nextPageScheduled() {
+    
+        if (this.currentPageScheduled < this.totalPagesScheduled) {
+            this.currentPageScheduled++;
+        }
+    }
+
+    @action
+    prevPageScheduled() {
+        if (this.currentPageScheduled > 1) {
+            this.currentPageScheduled--;
+        }
+    }
+    
+    @action
+    goToNextPage() {
+    console.log('goToNextPage called',this.totalPages);
+
+    const nextPage = this.currentPageScheduled + 1;
+
+    if (!this.totalPages || nextPage > this.totalPages) {
+        console.warn("No more pages to load.");
+        return;
+    }
+    if(this.totalPages > this.currentPageScheduled)
+    {
+        this.currentPageScheduled = nextPage;
+    }
+
+    // Ensure queryParams is defined
+    let queryParams = this.hostRouter.currentRoute.queryParams || {};
+    queryParams = { ...queryParams, page: nextPage };
+    this.hostRouter.transitionTo({ queryParams });
+}
+
+    
+    @action
+    goToPreviousPage() {
+        const prevPage = this.currentPageScheduled - 1;
+        if (prevPage >= 1) {
+            let queryParams = this.hostRouter.currentRoute.queryParams || {};
+            queryParams = { ...queryParams, page: prevPage };  // Fix: Use prevPage instead of nextPage
+            this.hostRouter.transitionTo({ queryParams });
+        }
     }
 }
