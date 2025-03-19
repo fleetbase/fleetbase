@@ -180,7 +180,12 @@ export default class OrderScheduleCardComponent extends Component {
                         })
                         .then(() => {
 
-                            this.eventBus.publish('calendar-refresh-needed', { orderId: order.id });
+                            // this.eventBus.publish('calendar-refresh-needed', { orderId: order.id });
+                            if (this.eventBus) {
+                                this.eventBus.publish('calendar-refresh-needed', { orderId: order.id });
+                            } else {
+                                console.error("eventBus is not available.");
+                            }
                             this.notifications.success(
                                 this.intl.t('fleet-ops.operations.scheduler.index.success-message', { orderId: order.public_id, orderAt:order.scheduledAt})
                             );
@@ -242,7 +247,12 @@ export default class OrderScheduleCardComponent extends Component {
                         .finally(() => {
                             // this.isAssigningDriver = false;
 
-                            this.eventBus.publish('calendar-refresh-needed', { orderId: order.id });
+                            // this.eventBus.publish('calendar-refresh-needed', { orderId: order.id });
+                            if (this.eventBus) {
+                                this.eventBus.publish('calendar-refresh-needed', { orderId: order.id });
+                            } else {
+                                console.error("eventBus is not available.");
+                            }
                             this.notifications.success(
                                 this.intl.t('fleet-ops.operations.scheduler.index.success-message', { orderId: order.public_id, orderAt:order.scheduledAt})
                             );
