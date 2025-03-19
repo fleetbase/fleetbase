@@ -168,11 +168,10 @@ export default class OrderScheduleCardComponent extends Component {
                         .then(() => {
                             this.isAssigningDriver = false;
                             return this.router.transitionTo('console.fleet-ops.operations.scheduler.index', {
-                                queryParams: { ref: Date.now() }
+                                queryParams: { ref: Date.now() , page: this.args.page}
                               })
                         })
                         .then(() => {
-                            console.log("eventBus",eventBus)
                             if (eventBus) {
                                 eventBus.publish('calendar-refresh-needed', { orderId: order.id });
                             }
@@ -229,9 +228,8 @@ export default class OrderScheduleCardComponent extends Component {
                 return order.save()
                     .then(() => {
                         this.isAssigningDriver = false;
-                        console.log("eventBus then",eventBus)
                         return this.router.transitionTo('console.fleet-ops.operations.scheduler.index', {
-                            queryParams: { ref: Date.now() }
+                            queryParams: { ref: Date.now(), page: this.args.page }
                         });
                        
                     })
@@ -239,7 +237,6 @@ export default class OrderScheduleCardComponent extends Component {
                         this.notifications.serverError(error);
                     })
                     .finally(() => {
-                        console.log("eventBus",eventBus)
                         if (eventBus) {
                             eventBus.publish('calendar-refresh-needed', { orderId: order.id });
                         } else {
