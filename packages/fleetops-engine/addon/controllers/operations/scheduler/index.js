@@ -6,6 +6,7 @@ import { format, isValid as isValidDate } from 'date-fns';
 import isObject from '@fleetbase/ember-core/utils/is-object';
 import isJson from '@fleetbase/ember-core/utils/is-json';
 import createFullCalendarEventFromOrder, { createOrderEventTitle } from '../../../utils/create-full-calendar-event-from-order';
+import { isNone } from '@ember/utils';
 
 export default class OperationsSchedulerIndexController extends BaseController {
     @service modalsManager;
@@ -17,89 +18,87 @@ export default class OperationsSchedulerIndexController extends BaseController {
     @tracked unscheduledOrders = [];
     @tracked events = [];
     @service eventBus;
-    queryParams = ['ref'];
+    
+    // Single pagination approach
+    queryParams = ['ref', 'page'];
     ref = null;
-    @tracked currentPageUnscheduled = 1;
-    @tracked currentPageScheduled = 1;
+    @tracked page = 1;
+    @tracked totalPages = 1;
     @tracked itemsPerPage = 10;
     @tracked calendar;
     
     constructor() {
         super(...arguments);
-        // Add this line to listen for the refresh event
         this.eventBus.subscribe('calendar-refresh-needed', this.handleCalendarRefresh.bind(this));
     }
+    
     didReceiveAttrs() {
         super.didReceiveAttrs();
-        // Assuming `scheduledOrders` is fetched based on the query param `ref`
-        this.fetchScheduledOrders();
+        this.fetchOrders();
     }
     
-      // Fetch the scheduled orders (this can be an API call or state reload)
-    fetchScheduledOrders() {
-        // Logic to fetch scheduled orders, possibly from the backend or store
-        // For example, call an API or service to get the orders
-        this.store.query('order', { scheduled: true }).then(orders => {
-            this.scheduledOrders = orders;
-            this.updateCalendar();  // Call updateCalendar after the orders are fetched
+    // Fetch all orders with a single API call
+    fetchOrders() {
+        this.store.query('order', { 
+            status: 'created',
+            with: ['payload', 'driverAssigned.vehicle'],
+            page: this.page,
+            sort: '-created_at'
+        }).then(orders => {
+            // Split the orders into scheduled and unscheduled
+            this.scheduledOrders = orders.filter(order => !isNone(order.driver_assigned_uuid));
+            this.unscheduledOrders = orders.filter(order => isNone(order.driver_assigned_uuid));
+            this.updateCalendar();
         });
-    }
-
-    // Computed properties for pagination
-    get paginatedUnscheduledOrders() {
-        const start = (this.currentPageUnscheduled - 1) * this.itemsPerPage;
-        return this.unscheduledOrders.slice(start, start + this.itemsPerPage);
-    }
-
-    get paginatedScheduledOrders() {
-        const start = (this.currentPageScheduled - 1) * this.itemsPerPage;
-        return this.scheduledOrders.slice(start, start + this.itemsPerPage);
-    }
-
-    get totalPagesUnscheduled() {
-        return this.totalPages || Math.ceil(this.unscheduledOrders.length / this.itemsPerPage);
-    }
-
-    get totalPagesScheduled() {
-        return Math.ceil(this.scheduledOrders.length / this.itemsPerPage);
     }
 
     get isFirstPage() {
-        return this.currentPageScheduled <= 1;
+        return this.page <= 1;
     }
 
     get isLastPage() {
-        return this.currentPageUnscheduled >= this.totalPages;
+        return this.page >= this.totalPages;
     }
+    
+    // Remaining code remains the same...
+    
     @action
     async refreshOrders() {
-        this.unscheduledOrders = await this.store.query('order', {
-            scheduled: false, // Adjust query based on your API
+        const orders = await this.store.query('order', {
+            status: 'created',
+            with: ['payload', 'driverAssigned.vehicle'],
+            page: this.page,
+            sort: '-created_at'
         });
-        this.scheduledOrders = await this.store.query('order', {
-            scheduled: true, // Adjust query based on your API
-        });
+        
+        this.scheduledOrders = orders.filter(order => !isNone(order.driver_assigned_uuid));
+        this.unscheduledOrders = orders.filter(order => isNone(order.driver_assigned_uuid));
+        this.updateCalendar();
     }
+    
+    
     @action setCalendarApi(calendar) {
         this.calendar = calendar;
-        // setup some custom post initialization stuff here
-        // calendar.setOption('height', 800);
     }
+    
     @action
     handleCalendarRefresh(data) {
-        // Call your update method
+        // Update calendar
         this.updateCalendar();
         
-        // Optionally, refresh the specific order's data
+        // Reload specific order if provided
         if (data && data.orderId) {
             const order = this.store.peekRecord('order', data.orderId);
             if (order) {
                 order.reload();
             }
         }
+        
+        // Refresh orders with current pagination
+        this.refreshOrders();
     }
-    updateCalendar() {
     
+    updateCalendar() {
         if (!this.calendar) {
             console.warn("Calendar instance not available.");
             return;
@@ -136,8 +135,6 @@ export default class OperationsSchedulerIndexController extends BaseController {
                 if (!order.driver_assigned) {
                     // For scheduled orders with no driver, add the hidden-event class
                     if (this.scheduledOrders.includes(order)) {
-                        // console.log(`Hiding event for unassigned driver from scheduled order: ${event.id}`);
-                        // existingEvent.setProp('backgroundColor', 'transparent'); // Remove background color
                         existingEvent.setProp('title', ''); // Remove title or set to something generic
                         existingEvent.setProp('classNames', ['hidden-event']); // Add class to hide but keep event data visible
                     }
@@ -164,15 +161,17 @@ export default class OperationsSchedulerIndexController extends BaseController {
                 }
             }
         });
+        
+        // Clean up events without titles
         this.calendar.getEvents().forEach(event => {
             if (!event.title || event.title.trim() === '') {
                 event.remove();
             }
         });
-        // Step 4: Re-render the calendar
+        
+        // Re-render the calendar
         this.calendar.render();
     }
-    
     
     @action viewEvent(order) {
         // get the event from the calendar
@@ -350,62 +349,29 @@ export default class OperationsSchedulerIndexController extends BaseController {
 
         return false;
     }
-    @action
-    nextPageUnscheduled() {
-        if (this.currentPageUnscheduled < this.totalPagesUnscheduled) {
-            this.currentPageUnscheduled++;
-        }
-    }
-
-    @action
-    prevPageUnscheduled() {
-        if (this.currentPageUnscheduled > 1) {
-            this.currentPageUnscheduled--;
-        }
-    }
-
-    @action
-    nextPageScheduled() {
     
-        if (this.currentPageScheduled < this.totalPagesScheduled) {
-            this.currentPageScheduled++;
+    // Updated pagination methods that use the queryParams
+    @action
+    nextPage() {
+        if (this.page < this.totalPages) {
+            this.transitionToPage(this.page + 1);
         }
     }
 
     @action
-    prevPageScheduled() {
-        if (this.currentPageScheduled > 1) {
-            this.currentPageScheduled--;
+    prevPage() {
+        if (this.page > 1) {
+            this.transitionToPage(this.page - 1);
         }
     }
     
-    @action
-    goToNextPage() {
-        const nextPage = this.currentPageScheduled + 1;
-
-        if (!this.totalPages || nextPage > this.totalPages) {
-            console.warn("No more pages to load.");
-            return;
-        }
-        if(this.totalPages > this.currentPageScheduled)
-        {
-            this.currentPageScheduled = nextPage;
-        }
-
-        // Ensure queryParams is defined
-        let queryParams = this.hostRouter.currentRoute.queryParams || {};
-        queryParams = { ...queryParams, page: nextPage };
+    // Helper method to transition with query params
+    transitionToPage(pageNumber) {
+        const queryParams = {
+            page: pageNumber,
+            ref: Date.now()
+        };
+        
         this.hostRouter.transitionTo({ queryParams });
-    }
-
-    
-    @action
-    goToPreviousPage() {
-        const prevPage = this.currentPageScheduled - 1;
-        if (prevPage >= 1) {
-            let queryParams = this.hostRouter.currentRoute.queryParams || {};
-            queryParams = { ...queryParams, page: prevPage };  // Fix: Use prevPage instead of nextPage
-            this.hostRouter.transitionTo({ queryParams });
-        }
     }
 }
