@@ -235,7 +235,7 @@ export default class ManagementPlacesIndexController extends BaseController {
             width: '10%',
             resizable: true,
             sortable: true,
-            filterable: true,
+            filterable: false,
             filterComponent: 'filter/date',
         },
         {
@@ -246,7 +246,7 @@ export default class ManagementPlacesIndexController extends BaseController {
             resizable: true,
             sortable: true,
             hidden: true,
-            filterable: true,
+            filterable: false,
             filterComponent: 'filter/date',
         },
 

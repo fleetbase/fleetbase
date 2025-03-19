@@ -363,25 +363,8 @@ trait HasApiControllerBehavior
                     // filter by created_at
                     $query->whereDate('updated_at', Carbon::parse($request->input('updated_at')));
                 }
-                if($request->filled('public_id')){
-                    // filter by public_id like
-                    $query->where('public_id', 'LIKE', '%'. $request->input('public_id'). '%');
-                }
-            };
-            $data = $this->model->queryFromRequest($request, $combinedCallback);
-        }
-        elseif(get_class($this->model) === 'Fleetbase\FleetOps\Models\Vehicle')
-        {
-            $combinedCallback = function ($query) use ($request, $queryCallback) {
-                // Apply the original callback if it exists
-                if ($queryCallback) {
-                    $queryCallback($query);
-                }
-                if ($request->filled('make')) {
-                    $query->where('make', 'LIKE', '%'. $request->input('make'). '%');
-                }
-                if ($request->filled('model')) {
-                    $query->where('model', 'LIKE', '%'. $request->input('model'). '%');
+                if ($request->filled('public_id')) {
+                    $query->where($this->model->getTable() . '.public_id', 'LIKE', '%' . $request->input('public_id') . '%');
                 }
             };
             $data = $this->model->queryFromRequest($request, $combinedCallback);
@@ -743,6 +726,7 @@ trait HasApiControllerBehavior
         // return $this->resource::collection($results);
         $params = $request->all();
         $query = $this->model->newQuery();
+        $orderModel = get_class($this->model);
         foreach ($params as $key => $value) {
             // Skip pagination and sorting parameters
             if (in_array($key, ['page', 'limit', 'sort', 'count', 'contain'])) {
@@ -752,10 +736,17 @@ trait HasApiControllerBehavior
             // Check if the key contains 'like' (case-insensitive)
             if (Str::contains(Str::lower($key), 'like')) {
                 // Remove 'like' from the key to get the actual field name
+                if($orderModel === 'Fleetbase\FleetOps\Models\Order') {
+                    $field = Str::replace('_like', '', Str::lower($key));
+                    $query->whereHas($field, function ($query) use ($value) {
+                        $query->where($this->model->getTable() . '.public_id', 'LIKE', '%' . $value . '%');
+                    });
+                } 
+                else {
                 $field = Str::replace(['_like', 'like'], '', Str::lower($key));
                 $query->where($field, 'LIKE', '%' . $value . '%');
+                }
             } else {
-                echo $key;
                 // Default to exact match
                 $query->where($key, '=', $value);
             }

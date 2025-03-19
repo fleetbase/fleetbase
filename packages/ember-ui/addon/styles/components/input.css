@@ -9,7 +9,14 @@
 .ember-power-select-trigger.form-input-sm,
 select.form-input-sm,
 input.form-input.form-input-sm {
-    @apply px-2.5 py-1.5 text-xs leading-4;
+    /* @apply px-2.5 py-1.5 text-xs leading-4; */
+    display: flex;
+    align-items: center;
+    min-height: 1.875rem; 
+    padding: 0.375rem 0.625rem;
+    font-size: 0.75rem;
+    line-height: 1rem;
+    width: 200px;
 }
 
 select.form-select.form-input-sm,

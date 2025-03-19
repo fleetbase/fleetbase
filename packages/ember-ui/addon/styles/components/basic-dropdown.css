@@ -35,3 +35,17 @@ body[data-theme='dark'] .ember-power-select-multiple-option {
 .ember-basic-dropdown.listbox-2xl .ember-power-select-options[role='listbox'] {
     max-height: 40rem;
 }
+
+.custom-power-select .ember-power-select-option:hover {
+    background-color: black !important;
+    color: white !important;
+}
+body[data-theme='dark'] .status-dropdown {
+    background-color: rgba(55, 65, 81, 1);
+    border: none;
+}
+.status-dropdown  {
+    padding: 0.375rem 0.625rem;
+    border-radius: 0px;
+    width:200px;
+}
