@@ -180,6 +180,7 @@ export default class OperationsSchedulerIndexController extends BaseController {
 
         this.modalsManager.show('modals/order-event', {
             title: `Scheduling for ${order.public_id}`,
+            eventBus: this.eventBus,
             acceptButtonText: 'Save Changes',
             acceptButtonIcon: 'save',
             hideDeclineButton: true,
