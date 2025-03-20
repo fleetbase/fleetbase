@@ -1,7 +1,7 @@
 <div class="p-4">
     <div class="flex-1 space-y-4">
         <ContentPanel @title={{t "fleet-ops.component.driver-panel.user-account"}} @open={{true}} @pad={{true}} @panelBodyClass="bg-white dark:bg-gray-900">
-            <div class="grid grid-cols-2 gap-4 text-xs dark:text-gray-100">
+            <div class="flex flex-col gap-2 text-xs dark:text-gray-100">
                 <div class="field-info-container md:col-span-3">
                     <div class="field-name">{{t "fleet-ops.common.name"}}</div>
                     <div class="field-value">{{n-a @driver.name}}</div>
@@ -12,7 +12,9 @@
                 </div>
                 <div class="field-info-container space-y-2">
                     <div class="field-name">{{t "fleet-ops.common.phone"}}</div>
-                    <ClickToCopy @value={{@driver.phone}} class="field-value">{{n-a @driver.phone}}</ClickToCopy>
+                    <div>
+                        <ClickToCopy @value={{@driver.phone}} class="field-value">{{n-a @driver.phone}}</ClickToCopy>
+                    </div>
                 </div>
             </div>
         </ContentPanel>
