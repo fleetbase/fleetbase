@@ -43,7 +43,7 @@ class FuelReport extends Model
      *
      * @var array
      */
-    protected $searchableColumns = ['report', 'vehicle.name', 'driver.name'];
+    protected $searchableColumns = ['driver.user.name', 'public_id', 'reporter.name','vehicle.model'];
 
     /**
      * The attributes that are mass assignable.
