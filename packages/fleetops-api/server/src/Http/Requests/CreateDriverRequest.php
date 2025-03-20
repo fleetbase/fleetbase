@@ -35,7 +35,7 @@ class CreateDriverRequest extends FleetbaseRequest
             'country'   => 'nullable|size:2',
             'city'      => 'nullable|string',
             'vehicle'   => 'nullable|string|starts_with:vehicle_|exists:drivers,public_id',
-            'status'    => 'nullable|string|in:active,inactive',
+            'status'    => 'nullable|string|in:active,inactive,pending',
             'vendor'    => 'nullable|exists:vendors,public_id',
             'job'       => 'nullable|exists:orders,public_id',
             'location'  => ['nullable', new ResolvablePoint()],
