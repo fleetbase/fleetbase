@@ -1,7 +1,7 @@
 import BaseController from '@fleetbase/fleetops-engine/controllers/base-controller';
 import { inject as service } from '@ember/service';
 import { tracked } from '@glimmer/tracking';
-import { action } from '@ember/object';
+import { action, set } from '@ember/object';
 import { isBlank } from '@ember/utils';
 import { equal } from '@ember/object/computed';
 import { timeout } from 'ember-concurrency';
