@@ -129,7 +129,7 @@ class Vehicle extends Model
      *
      * @var array
      */
-    protected $appends = ['display_name', 'photo_url', 'vendor_name'];
+    protected $appends = ['display_name', 'photo_url', 'driver_name', 'vendor_name'];
 
     /**
      * The attributes excluded from the model's JSON form.
