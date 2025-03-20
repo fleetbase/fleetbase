@@ -112,6 +112,7 @@ export default class OrderScheduleCardComponent extends Component {
                         confirm: async (modal) => {
                             order.setProperties({
                                 driver_assigned: null,
+                                is_driver_assigned: false, // A boolean flag
                                 driver_assigned_uuid: null,
                                 vehicle_assigned: null,
                             });
@@ -187,6 +188,8 @@ export default class OrderScheduleCardComponent extends Component {
                         confirm: (modal) => {
                             modal.startLoading();
                             order.setProperties({
+                                driver_assigned: driver,
+                                is_driver_assigned: true, // A boolean flag
                                 driver_assigned_uuid: driver.id,
                                 vehicle_assigned: driver.vehicle || null,
                             });
