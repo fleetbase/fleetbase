@@ -4,26 +4,29 @@
     <div id="fleet-ops-scheduler-container">
        <div class="grid grid-cols-1 lg:grid-cols-3">
             <div id="fleet-ops-scheduler-sidebar" class="scheduler-left-sidebar">
+                {{!-- Single Pagination Control --}}
                 <div class="pagination-container flex justify-start items-center space-x-2 p-2 bg-white dark:bg-gray-800 rounded-md mb-4">
                     <button 
                         class="btn btn-xs btn-default flex items-center justify-center w-10 h-8 rounded border border-gray-300 dark:border-gray-600"
                         disabled={{this.isFirstPage}} 
-                        {{on "click" this.goToPreviousPage}}
+                        {{on "click" this.prevPage}}
                     >
                         <FaIcon @icon="chevron-left" @size="xs" />
                     </button>
                     <span class="text-xs text-gray-500 dark:text-gray-400">
-                        {{this.currentPageScheduled}} / {{this.totalPages}}
+                        {{this.page}} / {{this.totalPages}}
                     </span>
                     <button 
                         class="btn btn-xs btn-default flex items-center justify-center w-10 h-8 rounded border border-gray-300 dark:border-gray-600"
                         disabled={{this.isLastPage}} 
-                        {{on "click" this.goToNextPage}}
+                        {{on "click" this.nextPage}}
                     >
                         <FaIcon @icon="chevron-right" @size="xs" />
                     </button>
                 </div>
-              <ContentPanel
+                
+                {{!-- Unscheduled Orders Panel --}}
+                <ContentPanel
                     @title={{t "fleet-ops.operations.scheduler.index.unscheduled-orders"}}
                     @titleStatuRight={{this.unscheduledOrders.length}}
                     @titleStatuRightClass="info-status-badge"
@@ -40,6 +43,8 @@
                         {{/each}}
                     </div>
                 </ContentPanel>
+                
+                {{!-- Scheduled Orders Panel --}}
                 <ContentPanel
                     @title={{t "fleet-ops.operations.scheduler.index.scheduled-orders"}}
                     @titleStatuRight={{this.scheduledOrders.length}}

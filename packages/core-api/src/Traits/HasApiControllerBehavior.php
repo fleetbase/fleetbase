@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Fleetbase\FleetOps\Models\Order;
 use Fleetbase\FleetOps\Models\Driver;
+use Fleetbase\FleetOps\Models\Vehicle;
 use App\Models\LeaveRequest;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Schema;
@@ -364,7 +365,7 @@ trait HasApiControllerBehavior
                     $query->whereDate('updated_at', Carbon::parse($request->input('updated_at')));
                 }
                 if ($request->filled('public_id')) {
-                    $query->where($this->model->getTable() . '.public_id', 'LIKE', '%' . $request->input('public_id') . '%');
+                    $query->where('public_id', 'LIKE', '%' . $request->input('public_id') . '%');
                 }
             };
             $data = $this->model->queryFromRequest($request, $combinedCallback);
@@ -549,25 +550,15 @@ trait HasApiControllerBehavior
                     }
                 }
             }
-            // $model_name = str_replace('Controller', '', class_basename($this));
-            // if ($model_name === 'Order') {
-            //     $order = Order::find($id);
-            //     $driverAssignedUuid = $request->input('order.driver_assigned_uuid');
-            //     //check if the driver able to take the order
-            //     if (isset($driverAssignedUuid)){
-                    
-            //         if($order->driver_assigned_uuid === null || 
-            //         $order->driver_assigned_uuid !== $driverAssignedUuid) {
-                    
-            //             $check_driver_availability = $this->driverAvailability($order, $driverAssignedUuid);
-            //             if ($check_driver_availability && $check_driver_availability['status'] !== true) {
-            //                 return response()->warning($check_driver_availability['message'], 200);
-            //                 // return response()->error($check_driver_availability['message'], 400);
-            //             }
-
-            //         }
-            //     } 
-            // }
+            if ($model_name === 'Vehicle') {
+                $vehicle = Vehicle::find($id);
+                if ($vehicle) {
+                    $driverName = $request->input('driver_name');
+                    if (!empty($driverName)) {
+                        $vehicle->update(['driver_name' => $driverName]);
+                    }
+                }
+            }
             $onBeforeCallback = $this->getControllerCallback('onBeforeUpdate');
             $onAfterCallback  = $this->getControllerCallback('onAfterUpdate');
 
@@ -735,17 +726,10 @@ trait HasApiControllerBehavior
     
             // Check if the key contains 'like' (case-insensitive)
             if (Str::contains(Str::lower($key), 'like')) {
-                // Remove 'like' from the key to get the actual field name
-                if($orderModel === 'Fleetbase\FleetOps\Models\Order') {
-                    $field = Str::replace('_like', '', Str::lower($key));
-                    $query->whereHas($field, function ($query) use ($value) {
-                        $query->where($this->model->getTable() . '.public_id', 'LIKE', '%' . $value . '%');
-                    });
-                } 
-                else {
+                
                 $field = Str::replace(['_like', 'like'], '', Str::lower($key));
                 $query->where($field, 'LIKE', '%' . $value . '%');
-                }
+                
             } else {
                 // Default to exact match
                 $query->where($key, '=', $value);

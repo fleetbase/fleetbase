@@ -1829,6 +1829,9 @@ body[data-theme='light'] .next-table-wrapper table tfoot tr td {
 
 .field-info-container > .field-value {
     @apply text-gray-700;
+    word-wrap: break-word; 
+    overflow-wrap: break-word;
+    white-space: normal;
 }
 
 body[data-theme='dark'] .field-info-container > .field-name {
