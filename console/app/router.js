@@ -69,7 +69,7 @@ Router.map(function () {
 
         this.mount('@fleetbase/fleetops-engine', {
             as: 'fleet-ops',
-            path: '/'
+            path: 'fleet-ops'
         });
 
         this.mount('@fleetbase/iam-engine', {
