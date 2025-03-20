@@ -38,18 +38,6 @@
                     </div>
                     <div class="flex flex-col">
                         <h1 class="text-gray-900 dark:text-white text-2xl">{{this.vehicle.display_name}}</h1>
-                        <div class="-mt-1">
-                            {{#if this.vehicle.driver}}
-                                <div class="flex flex-row items-center">
-                                    <span class="text-sm dark:text-gray-500 text-gray-700 mr-3">{{this.vehicle.driver.name}}</span>
-                                </div>
-                            {{else}}
-                                <div class="flex flex-row items-center">
-                                    <span class="text-sm dark:text-gray-500 text-gray-700 mr-3">{{t "fleet-ops.component.vehicle-panel.not-assigned"}}</span>
-                                    {{!-- <Button @icon="user-plus" @size="xs" @helpText={{t "fleet-ops.component.vehicle-panel.assign-driver"}} /> --}}
-                                </div>
-                            {{/if}}
-                        </div>
                     </div>
                 </div>
             </div>
