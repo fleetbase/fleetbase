@@ -67,14 +67,14 @@ Router.map(function () {
             path: 'developers'
         });
 
+        this.mount('@fleetbase/fleetops-engine', {
+            as: 'fleet-ops',
+            path: '/'
+        });
+
         this.mount('@fleetbase/iam-engine', {
             as: 'iam',
             path: 'iam'
-        });
-
-        this.mount('@fleetbase/fleetops-engine', {
-            as: 'fleet-ops',
-            path: 'fleet-ops'
         });
 
         this.mount('@fleetbase/registry-bridge-engine', {
