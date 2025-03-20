@@ -726,17 +726,10 @@ trait HasApiControllerBehavior
     
             // Check if the key contains 'like' (case-insensitive)
             if (Str::contains(Str::lower($key), 'like')) {
-                // Remove 'like' from the key to get the actual field name
-                if($orderModel === 'Fleetbase\FleetOps\Models\Order') {
-                    $field = Str::replace('_like', '', Str::lower($key));
-                    $query->whereHas($field, function ($query) use ($value) {
-                        $query->where($this->model->getTable() . '.public_id', 'LIKE', '%' . $value . '%');
-                    });
-                } 
-                else {
+                
                 $field = Str::replace(['_like', 'like'], '', Str::lower($key));
                 $query->where($field, 'LIKE', '%' . $value . '%');
-                }
+                
             } else {
                 // Default to exact match
                 $query->where($key, '=', $value);
