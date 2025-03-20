@@ -9,9 +9,10 @@ export default class VehicleSerializer extends ApplicationSerializer.extend(Embe
      */
     get attrs() {
         return {
-            driver: { embedded: 'always' },
+            driver: { embedded: 'always', serialize: false },  // Add serialize: false
             vendor: { embedded: 'always' },
             devices: { embedded: 'always' },
+            driver_uuid: { serialize: false }  // Also exclude driver_uuid from serialization
         };
     }
 
@@ -23,5 +24,15 @@ export default class VehicleSerializer extends ApplicationSerializer.extend(Embe
         } else {
             super.serializeBelongsTo(...arguments);
         }
+    }
+
+    // You might also need to exclude driver_uuid from the JSON
+    serialize(snapshot, options) {
+        let json = super.serialize(snapshot, options);
+        
+        // Remove driver_uuid from the serialized data
+        delete json.driver_uuid;
+        
+        return json;
     }
 }
