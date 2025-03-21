@@ -253,7 +253,7 @@ handleCalendarRefresh(data) {
                     }
     
                     // Refresh current data without changing page
-                    const currentPage = this.page;
+                    const currentPage = this.args.page;
                     await this.refreshOrders();
                     this.page = currentPage;
                     
