@@ -370,15 +370,17 @@ handleCalendarRefresh(data) {
     // Updated pagination methods that use the queryParams
     @action
     nextPage() {
+        this.page = Number(this.page) + 1;
         if (this.page < this.totalPages) {
-            this.transitionToPage(this.page + 1);
+            this.transitionToPage(this.page);
         }
     }
 
     @action
     prevPage() {
+        this.page = Number(this.page) - 1;
         if (this.page > 1) {
-            this.transitionToPage(this.page - 1);
+            this.transitionToPage(this.page);
         }
     }
     
