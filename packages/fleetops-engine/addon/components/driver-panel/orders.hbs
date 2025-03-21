@@ -28,7 +28,7 @@
                     </div>
                 </div>
                 <div class="rounded-b-lg bg-white dark:bg-gray-800 py-2 px-4">
-                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-2">
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-2">
                         {{!-- <div class="field-info-container space-y-2">
                             {{#if order.isMultipleDropoffOrder}}
                                 <div class="field-name">{{pluralize (t "fleet-ops.operations.orders.index.view.customer")}}</div>
@@ -100,11 +100,11 @@
                                 <a href="javascript:;" class="flex flex-row">
                                     <div>
                                         <Image
-                                            src={{order.vehicle_assigned.avatar_url}}
+                                            src={{order.vehicle_assigned.photo_url}}
                                             @fallbackSrc={{config "defaultValues.vehicleAvatar"}}
                                             width="24"
                                             height="24"
-                                            class="w-6 h-6 rounded-md shadow-sm mr-3 lg:mr-2"
+                                            class="w-5 h-6 rounded-md shadow-sm mr-3 lg:mr-2"
                                             alt={{order.vehicle_assigned.display_name}}
                                         />
                                     </div>
@@ -128,7 +128,7 @@
                                 <div class="field-value">{{n-a (smart-humanize order.pod_method)}}</div>
                             </div>
                         {{/if}}
-                        <div class="field-info-container space-y-2">
+                        <div class="field-info-container space-y-2 col-span-2">
                             <div class="field-name">{{t "fleet-ops.operations.orders.index.view.date-started"}}</div>
                             <div class="field-value">{{n-a order.startedAt}}</div>
                         </div>

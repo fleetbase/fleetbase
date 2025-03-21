@@ -470,6 +470,7 @@ body[data-theme='dark'] .overloader {
 
 .order-route-list .order-route-stop .order-route-stop-index .index-count {
     @apply bg-green-500 rounded-full text-sm text-gray-100 h-6 w-6 flex items-center justify-center shadow-sm;
+    padding-right: 10px !important;
 }
 
 .ember-attacher-tooltip.clean {
