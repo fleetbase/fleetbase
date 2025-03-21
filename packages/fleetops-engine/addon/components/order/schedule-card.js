@@ -112,35 +112,35 @@ export default class OrderScheduleCardComponent extends Component {
                         confirm: async (modal) => {
                             order.setProperties({
                                 driver_assigned: null,
-                                is_driver_assigned: false, // A boolean flag
+                                is_driver_assigned: false,
                                 driver_assigned_uuid: null,
                                 vehicle_assigned: null,
                             });
-
+    
                             modal.startLoading();
-
+    
                             try {
                                 await order.save();
                                 
-                                // Get the current query params to preserve them
+                                // Get the current page from the router
                                 const currentRoute = this.router.currentRoute;
                                 const queryParams = currentRoute.queryParams || {};
+                                const currentPage = queryParams.page || 1;
                                 
-                                // Preserve the pagination params but update the ref timestamp
-                                this.isAssigningDriver = false;
-                                
-                                // Important: Keep the current page parameters
+                                // Update the ref timestamp while keeping the same page
                                 const newQueryParams = {
                                     ref: Date.now(),
-                                    scheduledPage: queryParams.scheduledPage || 1,
-                                    unscheduledPage: queryParams.unscheduledPage || 1
+                                    page: currentPage
                                 };
                                 
                                 return this.router.transitionTo('console.fleet-ops.operations.scheduler.index', {
                                     queryParams: newQueryParams
                                 }).then(() => {
                                     if (eventBus) {
-                                        eventBus.publish('calendar-refresh-needed', { orderId: order.id });
+                                        eventBus.publish('calendar-refresh-needed', { 
+                                            orderId: order.id,
+                                            currentPage: currentPage 
+                                        });
                                     }
                                     this.notifications.success(
                                         this.intl.t('fleet-ops.operations.scheduler.index.success-message', { 
@@ -184,29 +184,29 @@ export default class OrderScheduleCardComponent extends Component {
                             : this.intl.t('fleet-ops.component.order.schedule-card.assign-busy-button', {
                                 button: driver.button_message,
                             }),
-
+    
                         confirm: (modal) => {
                             modal.startLoading();
                             order.setProperties({
                                 driver_assigned: driver,
-                                is_driver_assigned: true, // A boolean flag
+                                is_driver_assigned: true,
                                 driver_assigned_uuid: driver.id,
                                 vehicle_assigned: driver.vehicle || null,
                             });
-
+    
                             return order.save()
                                 .then(() => {
                                     this.isAssigningDriver = false;
                                     
-                                    // Get the current query params to preserve them
+                                    // Get the current query params
                                     const currentRoute = this.router.currentRoute;
                                     const queryParams = currentRoute.queryParams || {};
+                                    const currentPage = queryParams.page || 1;
                                     
-                                    // Important: Keep the current page parameters
+                                    // Update with current page
                                     const newQueryParams = {
                                         ref: Date.now(),
-                                        scheduledPage: queryParams.scheduledPage || 1,
-                                        unscheduledPage: queryParams.unscheduledPage || 1
+                                        page: currentPage
                                     };
                                     
                                     return this.router.transitionTo('console.fleet-ops.operations.scheduler.index', {
@@ -218,7 +218,11 @@ export default class OrderScheduleCardComponent extends Component {
                                 })
                                 .finally(() => {
                                     if (eventBus) {
-                                        eventBus.publish('calendar-refresh-needed', { orderId: order.id });
+                                        // Pass the current page to the refresh handler
+                                        eventBus.publish('calendar-refresh-needed', { 
+                                            orderId: order.id,
+                                            currentPage: currentPage
+                                        });
                                     } else {
                                         console.error("eventBus is not available.");
                                     }

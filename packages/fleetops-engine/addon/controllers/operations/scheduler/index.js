@@ -82,21 +82,37 @@ export default class OperationsSchedulerIndexController extends BaseController {
     }
     
     @action
-    handleCalendarRefresh(data) {
-        // Update calendar
-        this.updateCalendar();
-        
-        // Reload specific order if provided
-        if (data && data.orderId) {
-            const order = this.store.peekRecord('order', data.orderId);
-            if (order) {
-                order.reload();
-            }
+handleCalendarRefresh(data) {
+    // Update calendar
+    this.updateCalendar();
+    
+    // Reload specific order if provided
+    if (data && data.orderId) {
+        const order = this.store.peekRecord('order', data.orderId);
+        if (order) {
+            order.reload();
         }
-        
-        // Refresh orders with current pagination
-        this.refreshOrders();
     }
+    
+    // Make sure we stay on the current page when refreshing
+    const currentPage = data?.currentPage || this.page;
+    this.store.query('order', {
+        status: 'created',
+        with: ['payload', 'driverAssigned.vehicle'],
+        page: currentPage,
+        sort: '-created_at'
+    }).then(orders => {
+        // Split the orders into scheduled and unscheduled
+        this.scheduledOrders = orders.filter(order => !isNone(order.driver_assigned_uuid));
+        this.unscheduledOrders = orders.filter(order => isNone(order.driver_assigned_uuid));
+        
+        // Make sure page is set correctly
+        this.page = currentPage;
+        
+        // Update calendar again after data refreshes
+        this.updateCalendar();
+    });
+}
     
     updateCalendar() {
         if (!this.calendar) {
@@ -104,68 +120,50 @@ export default class OperationsSchedulerIndexController extends BaseController {
             return;
         }
     
-        // Combine unscheduled and scheduled orders to get all orders
-        const allOrders = [...this.unscheduledOrders, ...this.scheduledOrders];
-        // Create an array of valid event IDs from all current orders
-        const validEventIds = allOrders.map(order => createFullCalendarEventFromOrder(order).id);
+        // Get all scheduled orders with drivers assigned
+        const scheduledOrdersWithDrivers = this.scheduledOrders.filter(order => 
+            !isNone(order.driver_assigned_uuid) || !isNone(order.driver_assigned)
+        );
         
-        // Step 2: Remove events that are no longer in any orders or are unassigned
-        const allEvents = this.calendar.getEvents();
-        allEvents.forEach(event => {
-            // Find the corresponding order for each event
-            const order = allOrders.find(o => createFullCalendarEventFromOrder(o).id === event.id);
-           
-            // If the event ID is not valid or the order has no driver assigned (for scheduled orders), remove it
-            if (!validEventIds.includes(event.id) || (order && !order.driver_assigned)) {
-                event.remove(); // Remove the event if it's no longer valid or unassigned
-            }
-        });
-    
-        // Step 3: Add or update events for all orders
-        allOrders.forEach(order => {
+        // First, ensure all these orders have events on the calendar
+        scheduledOrdersWithDrivers.forEach(order => {
             const event = createFullCalendarEventFromOrder(order);
-            const existingEvent = this.calendar.getEventById(event.id);
+            const existingEvent = this.calendar.getEventById(order.id);
     
             if (existingEvent) {
-                // If the event exists, update properties
+                // Update existing event
                 existingEvent.setProp('title', event.title);
                 existingEvent.setProp('backgroundColor', event.backgroundColor);
-    
-                // Adjust visibility if the driver is unassigned for scheduled orders
-                if (!order.driver_assigned) {
-                    // For scheduled orders with no driver, add the hidden-event class
-                    if (this.scheduledOrders.includes(order)) {
-                        existingEvent.setProp('title', ''); // Remove title or set to something generic
-                        existingEvent.setProp('classNames', ['hidden-event']); // Add class to hide but keep event data visible
-                    }
-                } else {
-                    existingEvent.setProp('classNames', []); // Ensure event is visible when driver is assigned
-                }
-    
-                // Update start/end dates for scheduled orders if needed
-                if (this.scheduledOrders.includes(order)) {
-                    existingEvent.setProp('backgroundColor', 'transparent');
-                    existingEvent.setStart(event.start);
-                    existingEvent.setEnd(event.end);
-                }
+                existingEvent.setStart(event.start);
+                existingEvent.setEnd(event.end);
             } else {
-                // If the event does not exist, add it to the calendar
+                // Add new event if it doesn't exist
                 this.calendar.addEvent(event);
-                const newEvent = this.calendar.getEventById(event.id);
-    
-                // Adjust visibility for new events if no driver is assigned
-                if (!order.driver_assigned) {
-                    newEvent.setProp('backgroundColor', 'transparent'); // Remove background color
-                    newEvent.setProp('title', ''); // Remove title or set to something generic
-                    newEvent.setProp('classNames', ['hidden-event']); // Hide unassigned events
-                }
             }
         });
         
-        // Clean up events without titles
-        this.calendar.getEvents().forEach(event => {
-            if (!event.title || event.title.trim() === '') {
-                event.remove();
+        // Now, handle events that might need to be removed
+        // But be careful not to remove events for orders that exist on other pages
+        const currentPageOrderIds = [...this.scheduledOrders, ...this.unscheduledOrders]
+            .map(order => order.id);
+        
+        // Get all calendar events
+        const allEvents = this.calendar.getEvents();
+        
+        // Only remove events if their corresponding orders are on the current page
+        // and no longer have drivers assigned
+        allEvents.forEach(event => {
+            const orderId = event.id;
+            // Only consider removing events for orders on the current page
+            if (currentPageOrderIds.includes(orderId)) {
+                const order = this.scheduledOrders.find(o => o.id === orderId) || 
+                             this.unscheduledOrders.find(o => o.id === orderId);
+                
+                // If the order exists on this page but no longer has a driver assigned,
+                // remove the event
+                if (order && isNone(order.driver_assigned_uuid)) {
+                    event.remove();
+                }
             }
         });
         
@@ -176,7 +174,7 @@ export default class OperationsSchedulerIndexController extends BaseController {
     @action viewEvent(order) {
         // get the event from the calendar
         let event = this.calendar.getEventById(order.id);
-
+    
         this.modalsManager.show('modals/order-event', {
             title: `Scheduling for ${order.public_id}`,
             eventBus: this.eventBus,
@@ -184,24 +182,27 @@ export default class OperationsSchedulerIndexController extends BaseController {
             acceptButtonIcon: 'save',
             hideDeclineButton: true,
             order,
+            // Store original driver info
+            originalDriverUuid: order.driver_assigned_uuid,
+            originalDriver: order.driver_assigned,
             reschedule: (date) => {
                 if (date && typeof date.toDate === 'function') {
                     date = date.toDate();
                 }
-
+    
                 order.set('scheduled_at', date);
             },
             endDateReschedule: (date) => {
                 if (date && typeof date.toDate === 'function') {
                     date = date.toDate();
                 }
-
+    
                 if (order.scheduled_at && date < order.scheduled_at) {
                     this.errorMessage = "End Date cannot be earlier than the start date.";
                     this.notifications.error(this.errorMessage);
                     return;
                 }    
-
+    
                 order.set('estimated_end_date', date);
             },
             unschedule: () => {
@@ -209,11 +210,11 @@ export default class OperationsSchedulerIndexController extends BaseController {
             },
             confirm: async (modal) => {
                 modal.startLoading();
-
+    
                 if (!order.get('hasDirtyAttributes')) {
                     return modal.done();
                 }
-
+    
                 try {
                     if (order.scheduled_at && order.estimated_end_date && order.estimated_end_date < order.scheduled_at) {
                         this.errorMessage = "End Date cannot be earlier than the start date.";
@@ -221,26 +222,42 @@ export default class OperationsSchedulerIndexController extends BaseController {
                         modal.stopLoading();
                         return;
                     }
+                    
+                    // Preserve driver information during the save
+                    const hadDriver = !isNone(order.driver_assigned_uuid);
+                    
                     await order.save();
-                    // remove event from calendar
+                    
+                    // Handle the calendar events
                     if (event) {
-                        this.removeEvent(event);
+                        if (!hadDriver) {
+                            // If there's no driver assigned, remove the event
+                            this.removeEvent(event);
+                        } else {
+                            // Otherwise, update the existing event
+                            const updatedEvent = createFullCalendarEventFromOrder(order);
+                            event.setProp('title', updatedEvent.title);
+                            event.setStart(updatedEvent.start);
+                            event.setEnd(updatedEvent.end);
+                        }
+                    } else if (hadDriver) {
+                        // Create new event if there wasn't one but now there's a driver
+                        event = this.calendar.addEvent(createFullCalendarEventFromOrder(order));
                     }
-
+    
                     if (order.scheduled_at) {
                         // notify order has been scheduled
                         this.notifications.success(this.intl.t('fleet-ops.operations.scheduler.index.info-message', { orderId: order.public_id, orderAt: order.scheduledAt }));
-                        // add event to calendar
-                        event = this.calendar.addEvent(createFullCalendarEventFromOrder(order));
                     } else {
                         this.notifications.info(this.intl.t('fleet-ops.operations.scheduler.index.info-message', { orderId: order.public_id }));
                     }
-
-                    // update event props
-                    this.setEventProperty(event, 'title', createOrderEventTitle(order));
-                    this.updateCalendar();
-                    // refresh route
-                    return this.hostRouter.refresh();
+    
+                    // Refresh current data without changing page
+                    const currentPage = this.page;
+                    await this.refreshOrders();
+                    this.page = currentPage;
+                    
+                    modal.done();
                 } catch (error) {
                     this.notifications.serverError(error);
                     modal.stopLoading();
@@ -353,15 +370,17 @@ export default class OperationsSchedulerIndexController extends BaseController {
     // Updated pagination methods that use the queryParams
     @action
     nextPage() {
+        this.page = Number(this.page) + 1;
         if (this.page < this.totalPages) {
-            this.transitionToPage(this.page + 1);
+            this.transitionToPage(this.page);
         }
     }
 
     @action
     prevPage() {
+        this.page = Number(this.page) - 1;
         if (this.page > 1) {
-            this.transitionToPage(this.page - 1);
+            this.transitionToPage(this.page);
         }
     }
     

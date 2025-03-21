@@ -356,6 +356,9 @@ fleet-ops:
     order: Ordine
     create-order: Crea Ordine
     dispatch-order: Invia Ordine
+    actions: Azioni
+    start-date: Data di inizio
+    tracking-number: Numero di identificazione
   component:
     activity-logic-builder:
       activity-logic: Logica Attività
@@ -990,6 +993,7 @@ fleet-ops:
         select-driver: Seleziona Conducente
         select-vehicle: Seleziona Veicolo
         on-leave: in ferie
+        date-created: Data di Creazione
     widget:
       fleet-ops-quickstart:
         message: Vediamo cosa puoi fare per avviare le operazioni...
@@ -1826,6 +1830,11 @@ fleet-ops:
         unscheduled-orders: Ordini non assegnati
         scheduled-orders: Ordini assegnati
         unauthorized-to-schedule: Non sei autorizzato a programmare ordini.
+      calendar:
+        today: Oggi
+        month: Mese
+        week: Settimana
+        day: Giorno
     service-rates:
       index:
         edit-service: Modifica Tariffa Servizio

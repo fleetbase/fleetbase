@@ -417,6 +417,7 @@ fleet-ops:
     country: Land
     config: Konfiguration
     created-at: Erstellt am
+    erstellt-am: Erstellt am
     date-created: Erstellungsdatum
     delete: Löschen
     destination: Ziel
@@ -453,6 +454,7 @@ fleet-ops:
     orders: Bestellungen
     parent-fleet: Elternflotte
     phone: Telefon
+    Telefon: Telefon
     photos: Fotos
     plate-number: Kennzeichen
     postal-code: Postleitzahl
@@ -504,6 +506,9 @@ fleet-ops:
     order: Bestellung
     create-order: Bestellung erstellen
     dispatch-order: Bestellung versenden
+    actions: Aktionen
+    start-date: Startdatum
+    tracking-number: Tracking-Nummer
   component:
     activity-logic-builder:
       activity-logic: Aktivitätslogik
@@ -1138,6 +1143,7 @@ fleet-ops:
         select-driver: Fahrer auswählen
         select-vehicle: Fahrzeug auswählen
         on-leave: im Urlaub
+        date-created: Erstellungsdatum
     widget:
       fleet-ops-quickstart:
         message: Sehen wir uns an, was Sie tun können, um den Betrieb zu starten...
@@ -1975,6 +1981,11 @@ fleet-ops:
         unscheduled-orders: Nicht zugewiesene Aufträge
         scheduled-orders: Zugewiesene Aufträge
         unauthorized-to-schedule: Sie sind nicht berechtigt, Bestellungen zu planen.
+      calendar:
+        today: Heute
+        month: Monat
+        week: Woche
+        day: Tag
     service-rates:
       index:
         edit-service: Servicegebühr bearbeiten

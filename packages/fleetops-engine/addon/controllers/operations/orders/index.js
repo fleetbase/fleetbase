@@ -357,9 +357,9 @@ export default class OperationsOrdersIndexController extends BaseController {
             filterable: true,
             filterComponent: 'filter/model',
             filterOptionLabel: 'address',
-            filterComponentPlaceholder: 'Select order pickup location',
+            filterComponentPlaceholder: 'Select pickup location',
             filterParam: 'pickup',
-            modelNamePath: 'address',
+            modelNamePath: 'name',
             model: 'place',
         },
         {
@@ -371,9 +371,9 @@ export default class OperationsOrdersIndexController extends BaseController {
             sortable: true,
             filterable: true,
             filterComponent: 'filter/model',
-            filterComponentPlaceholder: 'Select order dropoff location',
+            filterComponentPlaceholder: 'Select dropoff location',
             filterParam: 'dropoff',
-            modelNamePath: 'address',
+            modelNamePath: 'name',
             model: 'place',
         },
         {
