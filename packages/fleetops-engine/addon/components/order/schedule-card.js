@@ -221,7 +221,7 @@ export default class OrderScheduleCardComponent extends Component {
                                         // Pass the current page to the refresh handler
                                         eventBus.publish('calendar-refresh-needed', { 
                                             orderId: order.id,
-                                            currentPage: this.router.currentRoute.queryParams.page || 1
+                                            currentPage: currentPage
                                         });
                                     } else {
                                         console.error("eventBus is not available.");
