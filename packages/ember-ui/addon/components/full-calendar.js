@@ -5,6 +5,7 @@ import { classify } from '@ember/string';
 import { Calendar } from '@fullcalendar/core';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
+import { inject as service } from '@ember/service';
 
 export default class FullCalendarComponent extends Component {
     /**
@@ -30,6 +31,17 @@ export default class FullCalendarComponent extends Component {
      */
     @tracked _listeners = [];
 
+    @service intl;
+
+    get buttonText() {
+        return {
+            today: this.intl.t("fleet-ops.operations.scheduler.calendar.today"),
+            month: this.intl.t("fleet-ops.operations.scheduler.calendar.month"),
+            week: this.intl.t("fleet-ops.operations.scheduler.calendar.week"),
+            day: this.intl.t("fleet-ops.operations.scheduler.calendar.day")
+        };
+    }
+
     /**
      * Initializes and renders the calendar component
      *
@@ -53,12 +65,13 @@ export default class FullCalendarComponent extends Component {
             expandRows: true, // ✅ Ensures rows expand instead of shrinking
             dayMaxEventRows: true,
             nowIndicator: true,
-            buttonText: {
-                today: 'Today',
-                month: 'Month',
-                week: 'Week',
-                day: 'Day'
-            }, // Show current time indicator
+            buttonText: this.buttonText,
+            // buttonText: {
+            //     today: 'Today',
+            //     month: 'Month',
+            //     week: 'Week',
+            //     day: 'Day'
+            // }, // Show current time indicator
             headerToolbar: {
                 left: 'prev,next today',
                 center: 'title',
@@ -125,6 +138,30 @@ export default class FullCalendarComponent extends Component {
             this.calendar.off(eventName, this.triggerCalendarEvent.bind(this, callbackName));
         }
     }
+
+     /**
+     * 🔄 Re-renders when `intl.locale` changes
+     */
+     @action handleLocaleChange() {
+        if (this.calendar) {
+            this.calendar.destroy(); // Destroy existing calendar
+            this.setupCalendar(this.calendarEl); // Reinitialize with new locale
+        }
+    }
+
+    /**
+     * 🔄 Force translation update when locale changes
+     */
+    constructor() {
+        super(...arguments);
+        this.intl.addObserver('locale', this, this.handleLocaleChange);
+    }
+
+    willDestroy() {
+        this.intl.removeObserver('locale', this, this.handleLocaleChange);
+        super.willDestroy(...arguments);
+    }
+    
     @action
     refreshCalendar(updatedEvents) {
         if (this.calendar) {
