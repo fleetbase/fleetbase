@@ -737,7 +737,12 @@ body[data-theme='dark'] .next-map-container.next-map-container-layout-map .next-
 }
 
 .next-map-search-bar-container .next-map-search-results .next-map-search-result .order-route-list .order-route-stop .order-route-stop-index .index-count {
-    @apply h-4 w-4;
+    @apply h-4 w-4 flex items-center justify-center;
+}
+
+.index-count{
+    font-weight: 700;
+    padding-left: 10px;
 }
 
 .next-map-search-bar-container .next-map-search-results .next-map-search-result .order-route-list .order-route-stop .order-route-location {
@@ -2115,7 +2120,7 @@ a.text-danger:hover {
     background: rgba(243, 244, 246, 0.25);
     border: 1px solid #d1d5db;
     backdrop-filter: blur(3.5px);
-    border-radius: 0.5rem;
+    /* border-radius: 0.5rem; */
     padding: 0.25rem 0.85rem;
 }
 

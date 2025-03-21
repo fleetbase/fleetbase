@@ -41,7 +41,22 @@
                         </Table::Th>
                     {{/if}}
                     {{#each this.visibleColumns as |column|}}
-                        <Table::Th @column={{column}} @resizable={{column.resizable}} @sortable={{column.sortable}}>{{column.label}}</Table::Th>
+                        <Table::Th @column={{column}} @resizable={{column.resizable}} @sortable={{column.sortable}}>
+                            {{!-- {{column.label}} --}}
+                            {{#if column.label}}
+                                {{!-- {{t (concat "fleet-ops.common." (lowercase column.label))}} --}}
+                                {{!-- {{t (this.formatTranslationKey column) }} --}}
+                                {{#let (this.formatTranslationKey column) as |translationKey|}}
+                                    {{#if (eq translationKey column.label)}}
+                                        {{column.label}}
+                                    {{else}}
+                                        {{t translationKey}}
+                                    {{/if}}
+                                {{/let}}
+                                
+                            {{/if}}
+                         
+                        </Table::Th>
                     {{/each}}
                 </Table::Row>
             </Table::Head>
