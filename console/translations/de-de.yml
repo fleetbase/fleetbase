@@ -417,6 +417,7 @@ fleet-ops:
     country: Land
     config: Konfiguration
     created-at: Erstellt am
+    erstellt-am: Erstellt am
     date-created: Erstellungsdatum
     delete: Löschen
     destination: Ziel
@@ -453,6 +454,7 @@ fleet-ops:
     orders: Bestellungen
     parent-fleet: Elternflotte
     phone: Telefon
+    Telefon: Telefon
     photos: Fotos
     plate-number: Kennzeichen
     postal-code: Postleitzahl
@@ -504,6 +506,9 @@ fleet-ops:
     order: Bestellung
     create-order: Bestellung erstellen
     dispatch-order: Bestellung versenden
+    actions: Aktionen
+    start-date: Startdatum
+    tracking-number: Tracking-Nummer
   component:
     activity-logic-builder:
       activity-logic: Aktivitätslogik
