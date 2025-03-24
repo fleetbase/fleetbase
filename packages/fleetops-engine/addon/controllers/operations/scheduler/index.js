@@ -82,94 +82,204 @@ export default class OperationsSchedulerIndexController extends BaseController {
     }
     
     @action
-handleCalendarRefresh(data) {
-    // Update calendar
-    this.updateCalendar();
-    
-    // Reload specific order if provided
-    if (data && data.orderId) {
-        const order = this.store.peekRecord('order', data.orderId);
-        if (order) {
-            order.reload();
-        }
-    }
-    
-    // Make sure we stay on the current page when refreshing
-    const currentPage = data?.currentPage || this.page;
-    this.store.query('order', {
-        status: 'created',
-        with: ['payload', 'driverAssigned.vehicle'],
-        page: currentPage,
-        sort: '-created_at'
-    }).then(orders => {
-        // Split the orders into scheduled and unscheduled
-        this.scheduledOrders = orders.filter(order => !isNone(order.driver_assigned_uuid));
-        this.unscheduledOrders = orders.filter(order => isNone(order.driver_assigned_uuid));
-        
-        // Make sure page is set correctly
-        this.page = currentPage;
-        
-        // Update calendar again after data refreshes
+    handleCalendarRefresh(data) {
+        // Update calendar
         this.updateCalendar();
-    });
-}
-    
+        
+        // Reload specific order if provided
+        if (data && data.orderId) {
+            const order = this.store.peekRecord('order', data.orderId);
+            if (order) {
+                order.reload();
+            }
+        }
+        
+        // Make sure we stay on the current page when refreshing
+        const currentPage = data?.currentPage || this.page;
+        this.store.query('order', {
+            status: 'created',
+            with: ['payload', 'driverAssigned.vehicle'],
+            page: currentPage,
+            sort: '-created_at'
+        }).then(orders => {
+            // Split the orders into scheduled and unscheduled
+            this.scheduledOrders = orders.filter(order => !isNone(order.driver_assigned_uuid));
+            this.unscheduledOrders = orders.filter(order => isNone(order.driver_assigned_uuid));
+            
+            // Make sure page is set correctly
+            this.page = currentPage;
+            
+            // Update calendar again after data refreshes
+            this.updateCalendar();
+        });
+    }
+        
     updateCalendar() {
         if (!this.calendar) {
             console.warn("Calendar instance not available.");
             return;
         }
     
-        // Get all scheduled orders with drivers assigned
-        const scheduledOrdersWithDrivers = this.scheduledOrders.filter(order => 
-            !isNone(order.driver_assigned_uuid) || !isNone(order.driver_assigned)
-        );
+        // Combine unscheduled and scheduled orders to get all orders
+        const allOrders = [...this.unscheduledOrders, ...this.scheduledOrders];
+        // Create an array of valid event IDs from all current orders
+        const validOrderEventIds = allOrders.map(order => createFullCalendarEventFromOrder(order).id);
         
-        // First, ensure all these orders have events on the calendar
-        scheduledOrdersWithDrivers.forEach(order => {
-            const event = createFullCalendarEventFromOrder(order);
-            const existingEvent = this.calendar.getEventById(order.id);
+        // Get all current calendar events
+        const allEvents = this.calendar.getEvents();
+        
+        // Identify leave events - important to preserve them
+        const leaveEvents = allEvents.filter(event => {
+            // Identify leave events by class, source, or other property
+            return event.classNames.includes('leave-event') || 
+                   event.extendedProps?.type === 'leave' ||
+                   (event.title && event.title.toLowerCase().includes('leave'));
+        });
+        
+        // Keep track of leave event IDs to preserve them
+        const leaveEventIds = leaveEvents.map(event => event.id);
+        
+        // Step 2: Process non-leave events (order events)
+        allEvents
+            .filter(event => !leaveEventIds.includes(event.id))
+            .forEach(event => {
+                // Find the corresponding order for each event
+                const order = allOrders.find(o => createFullCalendarEventFromOrder(o).id === event.id);
+               
+                // If the event ID is not valid order event ID, remove it
+                if (!validOrderEventIds.includes(event.id)) {
+                    event.remove(); // Remove the event if it's no longer valid
+                } else if (order && !order.driver_assigned) {
+                    // For unassigned drivers, actually hide the event completely
+                    event.setProp('title', '');
+                    event.setProp('backgroundColor', 'transparent');
+                    event.setProp('borderColor', 'transparent'); // Also clear the border color
+                    event.setProp('textColor', 'transparent'); // Also clear the text color
+                    event.setProp('display', 'none'); // Completely hide the event
+                    event.setProp('classNames', ['hidden-event']);
+                }
+            });
     
+        // Step 3: Add or update events for all orders
+        allOrders.forEach(order => {
+            const event = createFullCalendarEventFromOrder(order);
+            const existingEvent = this.calendar.getEventById(event.id);
+            const hasDriverAssigned = order.driver_assigned_uuid || order.driver_assigned;
+            
             if (existingEvent) {
-                // Update existing event
-                existingEvent.setProp('title', event.title);
-                existingEvent.setProp('backgroundColor', event.backgroundColor);
+                // If the event exists, update properties
+                if (hasDriverAssigned) {
+                    // Driver assigned - make visible with title
+                    existingEvent.setProp('title', createOrderEventTitle(order));
+                    existingEvent.setProp('backgroundColor', event.backgroundColor);
+                    existingEvent.setProp('borderColor', event.borderColor || event.backgroundColor);
+                    existingEvent.setProp('textColor', event.textColor || '#FFFFFF');
+                    existingEvent.setProp('display', 'auto'); // Make sure it's displayed
+                    existingEvent.setProp('classNames', []); // Clear any hiding classes
+                } else {
+                    // No driver - completely hide event
+                    existingEvent.setProp('title', '');
+                    existingEvent.setProp('backgroundColor', 'transparent');
+                    existingEvent.setProp('borderColor', 'transparent');
+                    existingEvent.setProp('textColor', 'transparent');
+                    existingEvent.setProp('display', 'none'); // Use display:none to completely hide
+                    existingEvent.setProp('classNames', ['hidden-event']);
+                }
+    
+                // Always update dates
                 existingEvent.setStart(event.start);
                 existingEvent.setEnd(event.end);
             } else {
-                // Add new event if it doesn't exist
+                // If the event does not exist, add it to the calendar
                 this.calendar.addEvent(event);
+                const newEvent = this.calendar.getEventById(event.id);
+    
+                // Adjust visibility for new events if no driver is assigned
+                if (!hasDriverAssigned) {
+                    newEvent.setProp('title', '');
+                    newEvent.setProp('backgroundColor', 'transparent');
+                    newEvent.setProp('borderColor', 'transparent');
+                    newEvent.setProp('textColor', 'transparent');
+                    newEvent.setProp('display', 'none'); // Hide completely
+                    newEvent.setProp('classNames', ['hidden-event']);
+                }
             }
         });
         
-        // Now, handle events that might need to be removed
-        // But be careful not to remove events for orders that exist on other pages
-        const currentPageOrderIds = [...this.scheduledOrders, ...this.unscheduledOrders]
-            .map(order => order.id);
+        // IMPORTANT: Don't remove events just because they don't have titles
+        // This was causing leave events to disappear
+        // Instead, only remove non-leave events that have empty titles AND are not valid order events
+        this.calendar.getEvents().forEach(event => {
+            const isLeaveEvent = leaveEventIds.includes(event.id);
+            const hasEmptyTitle = !event.title || event.title.trim() === '';
+            const isValidOrderEvent = validOrderEventIds.includes(event.id);
+            
+            if (hasEmptyTitle && !isLeaveEvent && !isValidOrderEvent) {
+                event.remove();
+            }
+        });
         
-        // Get all calendar events
-        const allEvents = this.calendar.getEvents();
-        
-        // Only remove events if their corresponding orders are on the current page
-        // and no longer have drivers assigned
-        allEvents.forEach(event => {
-            const orderId = event.id;
-            // Only consider removing events for orders on the current page
-            if (currentPageOrderIds.includes(orderId)) {
-                const order = this.scheduledOrders.find(o => o.id === orderId) || 
-                             this.unscheduledOrders.find(o => o.id === orderId);
-                
-                // If the order exists on this page but no longer has a driver assigned,
-                // remove the event
-                if (order && isNone(order.driver_assigned_uuid)) {
-                    event.remove();
-                }
+        // Make sure leave events are always visible regardless of driver assignments
+        leaveEvents.forEach(event => {
+            event.setProp('classNames', ['leave-event', 'leave-visible']);
+            event.setProp('display', 'auto'); // Ensure display is set to auto for leave events
+            // Ensure leave events have proper styling
+            if (!event.backgroundColor || event.backgroundColor === 'transparent') {
+                event.setProp('backgroundColor', '#FFD700'); // Default leave color
             }
         });
         
         // Re-render the calendar
         this.calendar.render();
+        
+        // Force calendar to refresh leave data
+        this.refreshLeaveDisplay();
     }
+    
+    // Add a new method to ensure leave events remain visible
+    refreshLeaveDisplay() {
+        // Find all leave events and ensure they're visible
+        const leaveEvents = this.calendar.getEvents().filter(event => {
+            return event.classNames.includes('leave-event') || 
+                   event.extendedProps?.type === 'leave' ||
+                   (event.title && event.title.toLowerCase().includes('leave'));
+        });
+        
+        leaveEvents.forEach(event => {
+            // Ensure leave events are visible and styled properly
+            event.setProp('classNames', ['leave-event', 'leave-visible']);
+            event.setProp('display', 'auto');
+            
+            // If backgroundColor is transparent, set a default color
+            if (!event.backgroundColor || event.backgroundColor === 'transparent') {
+                event.setProp('backgroundColor', '#FFD700');
+            }
+        });
+        
+        // Add CSS if it doesn't exist yet to ensure leave events are always visible
+        if (!document.getElementById('leave-events-style')) {
+            const style = document.createElement('style');
+            style.id = 'leave-events-style';
+            style.textContent = `
+                .leave-event, .leave-visible {
+                    display: block !important;
+                    visibility: visible !important;
+                    opacity: 1 !important;
+                }
+                
+                .hidden-event {
+                    display: none !important;
+                    visibility: hidden !important;
+                    opacity: 0 !important;
+                    background-color: transparent !important;
+                    border-color: transparent !important;
+                    color: transparent !important;
+                }
+            `;
+            document.head.appendChild(style);
+        }
+    }
+    
     
     @action viewEvent(order) {
         // get the event from the calendar

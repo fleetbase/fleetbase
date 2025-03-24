@@ -134,6 +134,7 @@ export default class OperationsSchedulerIndexRoute extends Route {
             );
             controller.events = [...controller.events, ...leaveEvents];
         }
+        controller.updateCalendar();
     }
     
     resetController(controller, isExiting) {

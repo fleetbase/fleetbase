@@ -186,6 +186,10 @@ export default class OrderScheduleCardComponent extends Component {
                             }),
     
                         confirm: (modal) => {
+                            // Get the current query params
+                            const currentRoute = this.router.currentRoute;
+                            const queryParams = currentRoute.queryParams || {};
+                            const currentPage = queryParams.page || 1;
                             modal.startLoading();
                             order.setProperties({
                                 driver_assigned: driver,
@@ -198,10 +202,6 @@ export default class OrderScheduleCardComponent extends Component {
                                 .then(() => {
                                     this.isAssigningDriver = false;
                                     
-                                    // Get the current query params
-                                    const currentRoute = this.router.currentRoute;
-                                    const queryParams = currentRoute.queryParams || {};
-                                    const currentPage = queryParams.page || 1;
                                     
                                     // Update with current page
                                     const newQueryParams = {
