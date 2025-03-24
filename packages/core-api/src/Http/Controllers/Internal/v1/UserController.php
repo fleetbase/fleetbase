@@ -129,7 +129,7 @@ class UserController extends FleetbaseController
             $companyUuid = session('company');
 
             // Check if email already exists within the same company
-            if (User::where('email', $email)->where('company_uuid', $companyUuid)->where('id', '!=', $id)->exists()) {
+            if (User::where('email', $email)->where('company_uuid', $companyUuid)->where('uuid', '!=', $id)->exists()) {
                 return response()->error('The email is already exists.');
             }
             $record = $this->model->updateRecordFromRequest($request, $id, function (&$request, &$user) {
