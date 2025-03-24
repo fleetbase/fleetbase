@@ -7,9 +7,10 @@ export default class ConsoleHomeRoute extends Route {
 
   beforeModel() {
     if (this.session.isAuthenticated) {
-        //check the url has /
-        if (window.location.pathname === '/') {
-            this.router.transitionTo('console.fleet-ops');
+        //Redirect to orders page
+        const currentPath = window.location.pathname;
+        if (currentPath === '/' || currentPath === '/auth') {
+          this.router.transitionTo('console.fleet-ops');
         }
       
     }
