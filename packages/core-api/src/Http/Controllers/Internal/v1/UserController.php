@@ -55,8 +55,14 @@ class UserController extends FleetbaseController
      */
     public function createRecord(Request $request)
     {
-        // @TODO Add user creation validation
         try {
+            $email = $request->input('user.email');
+            $companyUuid = session('company');
+
+            // Check if email already exists within the same company
+            if (User::where('email', $email)->where('company_uuid', $companyUuid)->exists()) {
+                return response()->error('The email is already exists.');
+            }
             $record = $this->model->createRecordFromRequest($request, function (&$request, &$input) {
                 // Get user properties
                 $name        = $request->input('user.name');
@@ -119,6 +125,13 @@ class UserController extends FleetbaseController
     public function updateRecord(Request $request, string $id)
     {
         try {
+            $email = $request->input('user.email');
+            $companyUuid = session('company');
+
+            // Check if email already exists within the same company
+            if (User::where('email', $email)->where('company_uuid', $companyUuid)->where('id', '!=', $id)->exists()) {
+                return response()->error('The email is already exists.');
+            }
             $record = $this->model->updateRecordFromRequest($request, $id, function (&$request, &$user) {
                 // Assign role if set
                 if ($request->filled('user.role')) {
