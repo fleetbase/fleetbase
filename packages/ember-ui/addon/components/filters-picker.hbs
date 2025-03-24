@@ -49,8 +49,8 @@
             </div>
         </div>
         <div class="filters-dropdown-footer space-x-2">
-            <Button @text="Clear" @icon="trash" @size="xs" @onClick={{dropdown-fn dd this.clearFilters}} />
-            <Button @text="Apply" @icon="check" @type="primary" @size="xs" @onClick={{dropdown-fn dd this.applyFilters}} />
+            <Button @text={{t "common.clear"}} @icon="trash" @size="xs" @onClick={{dropdown-fn dd this.clearFilters}} />
+            <Button @text={{t "common.apply"}} @icon="check" @type="primary" @size="xs" @onClick={{dropdown-fn dd this.applyFilters}} />
         </div>
     </div>
 </DropdownButton>

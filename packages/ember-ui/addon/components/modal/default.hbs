@@ -29,7 +29,7 @@
                         @size={{or @options.buttonSize "md"}}
                         @icon={{or @options.declineButtonIcon "times"}}
                         @iconPrefix={{@options.declineButtonIconPrefix}}
-                        @text={{or @options.declineButtonText "Cancel"}}
+                        @text={{if (eq (or @options.declineButtonText "Cancel") "Cancel") (t "common.cancel") @options.declineButtonText}}
                         @onClick={{modal.close}}
                         @disabled={{or @options.declineButtonDisabled @options.isLoading}}
                     />
@@ -40,7 +40,8 @@
                         @icon={{or @options.acceptButtonIcon "check"}}
                         @iconPrefix={{@options.acceptButtonIconPrefix}}
                         @isLoading={{@options.isLoading}}
-                        @text={{or @options.acceptButtonText "Confirm"}}
+                        @text={{if (eq (or @options.acceptButtonText "Confirm") "Confirm") 
+                        (t "common.confirm") (if (eq @options.acceptButtonText "Download") (t "common.download") @options.acceptButtonText)}}
                         @onClick={{modal.submit}}
                         @disabled={{or @options.acceptButtonDisabled @options.isLoading}}
                     />

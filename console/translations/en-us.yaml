@@ -86,6 +86,11 @@ common:
   bulk-delete-success: "{record_count} records deleted."
   single-model-delete-success: The record has been deleted.
   code: code
+  format: Format
+  select_export_format: Select Export Format...
+  download: Download
+  clear: Clear
+  apply: Apply
 validation:
   required:
     payment_method: Payment method is required
