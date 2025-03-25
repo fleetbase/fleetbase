@@ -16,6 +16,7 @@ export default class ApplicationRoute extends Route {
     @service router;
     @service universe;
     @tracked defaultTheme;
+    @service requestMiddleware;
 
     /**
      * Handle the transition into the application.
@@ -59,7 +60,7 @@ export default class ApplicationRoute extends Route {
         const { shouldInstall, shouldOnboard, defaultTheme } = await this.checkInstallationStatus();
 
         this.defaultTheme = defaultTheme;
-
+        this.requestMiddleware;
         if (shouldInstall) {
             return this.router.transitionTo('install');
         }
