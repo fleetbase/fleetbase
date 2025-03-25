@@ -25,7 +25,12 @@ return [
         'on-break' => 'On Break',
         'pending' => 'Pending',
         'created' => 'Created',
-        // ... other status translations
+        'started' => 'Started',
+        'completed' => 'Completed',
+        'confirmed' => 'Confirmed',
+        'dispatched' => 'Dispatched',
+        'enroute' => 'Enroute',
+        'incident_reported' => 'Incident Reported',
     ],
     'vehicle_has_active_orders' => 'Unable to assign this vehicle as it is currently engaged in active orders. If you still need to proceed, please do so from the related orders.',
     'current_vehicle_has_active_orders' => 'Unable to change this vehicle as it is currently engaged in active orders. If you still need to proceed, please do so from the related orders.',
