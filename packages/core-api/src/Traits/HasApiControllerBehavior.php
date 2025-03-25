@@ -856,8 +856,8 @@ trait HasApiControllerBehavior
             if (is_null($driver->vehicle_uuid)) { 
                 return [
                     'status' => false,
-                    'message' => 'has no vehicle assigned',
-                    'button' => 'Without Vehicle',
+                    'message' => __('messages.driver_has_no_vehicle'),
+                    'button' => __('messages.without_vehicle'),
                     'have_no_vehicle' => 1,
                  ];
             }

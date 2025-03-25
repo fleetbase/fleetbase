@@ -20,7 +20,7 @@ return [
     'status' => [
         'shift-ended' => 'Turno Terminato',
         'on-break' => 'In Pausa',
-        // ... existing code ...
+        'created' => 'Creato',
     ],
     'vehicle_has_active_orders' => 'Impossibile assegnare questo veicolo poiché è attualmente coinvolto in ordini attivi. Se è ancora necessario procedere, si prega di farlo dagli ordini correlati..',
     'current_vehicle_has_active_orders' => 'Impossibile modificare questo veicolo poiché è attualmente coinvolto in ordini attivi. Se è ancora necessario procedere, si prega di farlo dagli ordini correlati.',
