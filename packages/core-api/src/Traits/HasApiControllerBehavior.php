@@ -848,8 +848,8 @@ trait HasApiControllerBehavior
                 
                 return [
                     'status' => false,
-                    'message' => 'already has another active order assigned',
-                    'button' => 'with Assignment',
+                    'message' => __('messages.assigned_orders_available'),
+                    'button' => __('messages.assigned_orders_available_button'),
                     'have_no_vehicle' => 0,
                 ];
             }
