@@ -23,10 +23,15 @@ return [
     'status' => [
         'shift-ended' => 'Shift Ended',
         'on-break' => 'On Break',
+        'pending' => 'Pending',
+        'created' => 'Created',
         // ... other status translations
     ],
     'vehicle_has_active_orders' => 'Unable to assign this vehicle as it is currently engaged in active orders. If you still need to proceed, please do so from the related orders.',
     'current_vehicle_has_active_orders' => 'Unable to change this vehicle as it is currently engaged in active orders. If you still need to proceed, please do so from the related orders.',
     'assigned_orders_available' => 'already has another active order assigned',
-    'assigned_orders_available_button' => 'with Assignment'
+    'assigned_orders_available_button' => 'with Assignment',
+    'driver_has_no_vehicle' => 'has no vehicle assigned',
+    'without_vehicle' => 'Without Vehicle'
+
 ];

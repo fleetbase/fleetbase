@@ -20,7 +20,7 @@ return [
     'status' => [
         'shift-ended' => 'Fin de service',
         'on-break' => 'En Pause',
-        // ... existing code ...
+        'created' => 'Créé',
     ],
     'vehicle_has_active_orders' => "Impossible d'assigner ce véhicule car il est actuellement engagé dans des commandes actives. Si vous devez toujours procéder, veuillez le faire à partir des commandes associées.",
     'current_vehicle_has_active_orders' => 'Impossible de modifier ce véhicule car il est actuellement engagé dans des commandes actives. Si vous devez toujours procéder, veuillez le faire à partir des commandes associées.',

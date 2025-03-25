@@ -20,7 +20,7 @@ return [
     'status' => [
         'shift-ended' => 'Fin de turno',
         'on-break' => 'En Descanso',
-        // ... other status translations
+        'created' => 'Creado',
     ],
     'vehicle_has_active_orders' => 'No se puede asignar este vehículo ya que actualmente está involucrado en pedidos activos. Si aún necesita continuar, hágalo desde los pedidos relacionados.',
     'current_vehicle_has_active_orders' => 'No se puede cambiar este vehículo ya que actualmente está involucrado en pedidos activos. Si aún necesita continuar, hágalo desde los pedidos relacionados.',
