@@ -119,6 +119,9 @@ export default class LocaleSelectorTrayComponent extends Component {
      */
     @task *saveUserLocale(locale) {
         yield this.fetch.post('users/locale', { locale });
+        const cacheBuster = new Date().getTime();
+        const separator = window.location.href.includes('?') ? '&' : '?';
+        window.location.href = window.location.href + separator + '_=' + cacheBuster;
     }
 
     /**
