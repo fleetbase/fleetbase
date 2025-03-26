@@ -38,3 +38,15 @@ body[data-theme='dark'] .two-fa-enforcement-alert button#two-fa-setup-button.btn
 body.console-admin-organizations-index-index .next-table-wrapper > table {
     table-layout: auto;
 }
+.sticky-pagination {
+    position: sticky;
+    top: 1rem;
+    z-index: 10;
+    background-color: white;
+    max-height: calc(100vh - 100px); /* Adjust based on your header or footer */
+    overflow-y: auto;
+}
+#fleet-ops-scheduler-container {
+    max-height: 80vh; 
+    overflow-y: auto; 
+  }
