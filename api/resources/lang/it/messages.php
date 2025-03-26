@@ -18,10 +18,19 @@ return [
     'status_updated_successfully' => 'Stato aggiornato con successo',
     'order_status_updated_to_by_driver' => 'Stato dell\'ordine aggiornato a :status dall\'autista',
     'status' => [
-        'shift-ended' => 'Turno Terminato',
-        'on-break' => 'In Pausa',
-        // ... existing code ...
+        'shift_ended' => 'Turno Terminato',
+        'on_break' => 'In Pausa',
+        'created' => 'Creato',
+        'started' => 'Iniziato',
+        'completed' => 'Completato',
+        'confirmed' => 'Confermato',
+        'dispatched' => 'Spedito',
+        'enroute' => 'In viaggio',
+        'incident_reported' => 'Incidente segnalato',
+        'pending' => 'In attesa',
     ],
     'vehicle_has_active_orders' => 'Impossibile assegnare questo veicolo poiché è attualmente coinvolto in ordini attivi. Se è ancora necessario procedere, si prega di farlo dagli ordini correlati..',
-    'current_vehicle_has_active_orders' => 'Impossibile modificare questo veicolo poiché è attualmente coinvolto in ordini attivi. Se è ancora necessario procedere, si prega di farlo dagli ordini correlati.'
+    'current_vehicle_has_active_orders' => 'Impossibile modificare questo veicolo poiché è attualmente coinvolto in ordini attivi. Se è ancora necessario procedere, si prega di farlo dagli ordini correlati.',
+    'assigned_orders_available' => 'ha già un altro ordine attivo assegnato',
+    'assigned_orders_available_button' => 'con assegnazione',
 ];

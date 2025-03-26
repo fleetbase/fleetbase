@@ -18,10 +18,21 @@ return [
     'status_updated_successfully' => 'Status erfolgreich aktualisiert',
     'order_status_updated_to_by_driver' => 'Auftragsstatus durch Fahrer auf :status aktualisiert',
     'status' => [
-        'shift-ended' => 'Schicht Beendet',
-        'on-break' => 'Pause',
-        // ... existing code ...
+        'shift_ended' => 'Schicht Beendet',
+        'on_break' => 'Pause',
+        'created' => 'Erstellt',
+        'started' => 'Gestartet',
+        'completed' => 'Abgeschlossen',
+        'confirmed' => 'Bestätigt',
+        'dispatched' => 'Versandt',
+        'enroute' => 'Unterwegs',
+        'incident_reported' => 'Vorfall gemeldet',
+        'pending' => 'Ausstehend',
     ],
     'vehicle_has_active_orders' => 'Das Fahrzeug kann nicht zugewiesen werden, da es derzeit in aktiven Aufträgen eingesetzt wird. Wenn Sie dennoch fortfahren müssen, tun Sie dies bitte über die zugehörigen Aufträge.',
-    'current_vehicle_has_active_orders' => 'Das Fahrzeug kann nicht geändert werden, da es derzeit in aktiven Aufträgen eingesetzt wird. Wenn Sie dennoch fortfahren müssen, tun Sie dies bitte über die zugehörigen Aufträge.'
+    'current_vehicle_has_active_orders' => 'Das Fahrzeug kann nicht geändert werden, da es derzeit in aktiven Aufträgen eingesetzt wird. Wenn Sie dennoch fortfahren müssen, tun Sie dies bitte über die zugehörigen Aufträge.',
+    'assigned_orders_available' => 'hat bereits eine andere aktive Bestellung zugewiesen',
+    'assigned_orders_available_button' => 'mit Zuordnung',
+    'driver_has_no_vehicle' => 'hat kein Fahrzeug zugewiesen',
+    'without_vehicle' => 'Ohne Fahrzeug'
 ];

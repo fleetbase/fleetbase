@@ -78,6 +78,7 @@ export default class OrderScheduleCardComponent extends Component {
             this.loadDrivers(order.id);
         }
     }
+   
     
     @action assignDriver(driver) {
         const eventBus = this.effectiveEventBus;
@@ -100,7 +101,7 @@ export default class OrderScheduleCardComponent extends Component {
         
         const order = this.args.order;
         this.modalsManager.done().then(() => {
-            setTimeout(() => {
+            // setTimeout(() => {
                 this.isModalOpen = true; // Mark that a modal is being shown 
                
                 // If driver is not selected, confirm to unassign the driver
@@ -139,7 +140,8 @@ export default class OrderScheduleCardComponent extends Component {
                                     if (eventBus) {
                                         eventBus.publish('calendar-refresh-needed', { 
                                             orderId: order.id,
-                                            currentPage: currentPage 
+                                            currentPage: currentPage,
+                                            refreshAll: true
                                         });
                                     }
                                     this.notifications.success(
@@ -186,6 +188,10 @@ export default class OrderScheduleCardComponent extends Component {
                             }),
     
                         confirm: (modal) => {
+                            // Get the current query params
+                            const currentRoute = this.router.currentRoute;
+                            const queryParams = currentRoute.queryParams || {};
+                            const currentPage = queryParams.page || 1;
                             modal.startLoading();
                             order.setProperties({
                                 driver_assigned: driver,
@@ -198,10 +204,6 @@ export default class OrderScheduleCardComponent extends Component {
                                 .then(() => {
                                     this.isAssigningDriver = false;
                                     
-                                    // Get the current query params
-                                    const currentRoute = this.router.currentRoute;
-                                    const queryParams = currentRoute.queryParams || {};
-                                    const currentPage = queryParams.page || 1;
                                     
                                     // Update with current page
                                     const newQueryParams = {
@@ -221,7 +223,8 @@ export default class OrderScheduleCardComponent extends Component {
                                         // Pass the current page to the refresh handler
                                         eventBus.publish('calendar-refresh-needed', { 
                                             orderId: order.id,
-                                            currentPage: currentPage
+                                            currentPage: currentPage,
+                                            refreshAll: true
                                         });
                                     } else {
                                         console.error("eventBus is not available.");
@@ -242,7 +245,7 @@ export default class OrderScheduleCardComponent extends Component {
                         },
                     });
                 }
-            }, 100);
+            // }, 100);
         });
     }
 

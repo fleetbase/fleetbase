@@ -18,10 +18,19 @@ return [
     'status_updated_successfully' => 'Estado actualizado correctamente',
     'order_status_updated_to_by_driver' => 'Estado del pedido actualizado a :status por el conductor',
     'status' => [
-        'shift-ended' => 'Fin de turno',
-        'on-break' => 'En Descanso',
-        // ... other status translations
+        'shift_ended' => 'Fin de turno',
+        'on_break' => 'En Descanso',
+        'created' => 'Creado',
+        'started' => 'Iniciado',
+        'completed' => 'Completado',
+        'confirmed' => 'Confirmado',
+        'dispatched' => 'Despachado',
+        'enroute' => 'En camino',
+        'incident_reported' => 'Incidente reportado',
+        'pending' => 'Pendiente',
     ],
     'vehicle_has_active_orders' => 'No se puede asignar este vehículo ya que actualmente está involucrado en pedidos activos. Si aún necesita continuar, hágalo desde los pedidos relacionados.',
-    'current_vehicle_has_active_orders' => 'No se puede cambiar este vehículo ya que actualmente está involucrado en pedidos activos. Si aún necesita continuar, hágalo desde los pedidos relacionados.'
+    'current_vehicle_has_active_orders' => 'No se puede cambiar este vehículo ya que actualmente está involucrado en pedidos activos. Si aún necesita continuar, hágalo desde los pedidos relacionados.',
+    'assigned_orders_available' => 'ya tiene otro pedido activo asignado',
+    'assigned_orders_available_button' => 'con asignación'
 ];

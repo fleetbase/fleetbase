@@ -21,10 +21,22 @@ return [
     'status_updated_successfully' => 'status updated successfully',
     'order_status_updated_to_by_driver' => 'Order status updated to :status by driver',
     'status' => [
-        'shift-ended' => 'Shift Ended',
-        'on-break' => 'On Break',
-        // ... other status translations
+        'shift_ended' => 'Shift Ended',
+        'on_break' => 'On Break',
+        'pending' => 'Pending',
+        'created' => 'Created',
+        'started' => 'Started',
+        'completed' => 'Completed',
+        'confirmed' => 'Confirmed',
+        'dispatched' => 'Dispatched',
+        'enroute' => 'Enroute',
+        'incident_reported' => 'Incident Reported',
     ],
     'vehicle_has_active_orders' => 'Unable to assign this vehicle as it is currently engaged in active orders. If you still need to proceed, please do so from the related orders.',
-    'current_vehicle_has_active_orders' => 'Unable to change this vehicle as it is currently engaged in active orders. If you still need to proceed, please do so from the related orders.'
+    'current_vehicle_has_active_orders' => 'Unable to change this vehicle as it is currently engaged in active orders. If you still need to proceed, please do so from the related orders.',
+    'assigned_orders_available' => 'already has another active order assigned',
+    'assigned_orders_available_button' => 'with Assignment',
+    'driver_has_no_vehicle' => 'has no vehicle assigned',
+    'without_vehicle' => 'Without Vehicle'
+
 ];

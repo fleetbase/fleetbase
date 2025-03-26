@@ -18,10 +18,19 @@ return [
     'status_updated_successfully' => 'Statut mis à jour avec succès',
     'order_status_updated_to_by_driver' => 'Statut de la commande mis à jour à :status par le chauffeur',
     'status' => [
-        'shift-ended' => 'Fin de service',
-        'on-break' => 'En Pause',
-        // ... existing code ...
+        'shift_ended' => 'Fin de service',
+        'on_break' => 'En Pause',
+        'created' => 'Créé',
+        'started' => 'Commencé',
+        'completed' => 'Terminé',
+        'confirmed' => 'Confirmé',
+        'dispatched' => 'Expédié',
+        'enroute' => 'En route',
+        'incident_reported' => 'Incident signalé',
+        'pending' => 'En attente',
     ],
     'vehicle_has_active_orders' => "Impossible d'assigner ce véhicule car il est actuellement engagé dans des commandes actives. Si vous devez toujours procéder, veuillez le faire à partir des commandes associées.",
-    'current_vehicle_has_active_orders' => 'Impossible de modifier ce véhicule car il est actuellement engagé dans des commandes actives. Si vous devez toujours procéder, veuillez le faire à partir des commandes associées.'
+    'current_vehicle_has_active_orders' => 'Impossible de modifier ce véhicule car il est actuellement engagé dans des commandes actives. Si vous devez toujours procéder, veuillez le faire à partir des commandes associées.',
+    'assigned_orders_available' => 'a déjà une autre commande active assignée',
+    'assigned_orders_available_button' => 'avec affectation'
 ];

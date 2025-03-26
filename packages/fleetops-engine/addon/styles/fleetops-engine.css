@@ -1,7 +1,10 @@
 .scheduler-left-sidebar {
     border-right: 1px rgb(229 231 235 / 100%) solid;
-    height: 100vh;
-    overflow-y: scroll;
+    /* height: 100vh;
+    overflow-y: scroll; */
+    height: calc(100vh - 50px); /* Add some padding at the bottom */
+    overflow-y: auto; /* 'auto' instead of 'scroll' */
+    padding-bottom: 80px; /* Add padding at the bottom */
 }
 
 body[data-theme='dark'] .scheduler-left-sidebar {

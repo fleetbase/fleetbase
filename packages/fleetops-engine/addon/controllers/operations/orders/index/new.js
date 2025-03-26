@@ -212,21 +212,20 @@ export default class OperationsOrdersIndexNewController extends BaseController {
     constructor() {
         super(...arguments); // Always call the parent class constructor first
         // Initialize waypoints with a default value
-        this.waypoints = [{ place: 'Default Place' }];   
+       // this.waypoints = [{ place: 'Default Place' }];   
 
         // If needed, you can load waypoints from the store
         this.loadWaypoints();
     }
 
     async loadWaypoints() {
-        let storedWaypoints = await this.store.findAll('waypoint');
-    
-        // Ensure only one waypoint is set initially
-        if (storedWaypoints.length > 0) {
-            this.set('waypoints', [storedWaypoints.firstObject]); // Keep only the first waypoint
-        } else {
-            this.set('waypoints', [{ place: 'Default Place' }]); // Default single waypoint
-        }
+        // Start with one default empty waypoint
+        const defaultWaypoint = this.store.createRecord('waypoint', {
+            place: null,  // Will show the empty dropdown
+            customer: this.order ? this.order.customer : null
+        });
+        
+        this.set('waypoints', [defaultWaypoint]);
     }
 
     @computed('isCustomFieldsValid', 'entities.length', 'isMultipleDropoffOrder', 'isFetchingQuotes', 'isSubscriptionValid', 'payload.{dropoff,pickup}', 'waypoints.length')
@@ -722,7 +721,10 @@ export default class OperationsOrdersIndexNewController extends BaseController {
                 this.setupInterface();
             });
         }
-
+         // Make sure there's at least one waypoint
+    if (this.isMultipleDropoffOrder && (!this.waypoints || this.waypoints.length === 0)) {
+        this.addWaypoint();
+    }
         // switch to map mode
         this.ordersController.setLayoutMode('map');
     }
@@ -763,7 +765,10 @@ export default class OperationsOrdersIndexNewController extends BaseController {
     @action removeRoutingControlPreview() {
         const leafletMap = this.leafletMap;
         const previewRouteControl = this.previewRouteControl;
-
+        // Safety check
+    if (!leafletMap || !previewRouteControl) {
+        return;
+    }
         let removed = false;
 
         if (leafletMap && previewRouteControl instanceof RoutingControl) {
@@ -790,7 +795,10 @@ export default class OperationsOrdersIndexNewController extends BaseController {
 
     @action forceRemoveRoutePreview() {
         const { leafletMap } = this;
-
+        // Safety check
+        if (!leafletMap) {
+            return;
+        }
         leafletMap.eachLayer((layer) => {
             if (layer instanceof L.Polyline || layer instanceof L.Marker) {
                 try {
@@ -821,6 +829,9 @@ export default class OperationsOrdersIndexNewController extends BaseController {
     }
 
     @action clearLayers() {
+        if (!this.leafletMap) {
+            return;
+        }
         if (this.leafletMap) {
             try {
                 this.leafletMap.eachLayer((layer) => {
@@ -892,11 +903,16 @@ export default class OperationsOrdersIndexNewController extends BaseController {
 
     @action previewDraftOrderRoute(payload, waypoints, isMultipleDropoffOrder = false) {
         const leafletMap = this.leafletMap;
-
+        if (!leafletMap) {
+            return;
+        }
         // if existing route preview on the map - remove it
         this.removeRoutingControlPreview();
         this.removeOptimizedRoute();
         this.clearLayers();
+        if (!waypoints.length) {
+            return;
+        }
 
         if (!this.isRoutePreviewAnimationActive) {
             this.previewRoute(true);
@@ -1072,7 +1088,7 @@ export default class OperationsOrdersIndexNewController extends BaseController {
     @action toggleMultiDropOrder(isMultipleDropoffOrder) {
         this.isMultipleDropoffOrder = isMultipleDropoffOrder;
 
-        const { pickup, dropoff } = this.payload;
+        const { pickup, dropoff } = this.payload || {};
 
         if (isMultipleDropoffOrder) {
             if (pickup) {
@@ -1088,22 +1104,32 @@ export default class OperationsOrdersIndexNewController extends BaseController {
                 this.addWaypoint({ customer: this.order.customer });
             }
         } else {
-            const pickup = get(this.waypoints, '0.place');
-            const dropoff = get(this.waypoints, '1.place');
+            if (this.waypoints && this.waypoints.length) {
+                const pickup = get(this.waypoints, '0.place');
+                const dropoff = get(this.waypoints, '1.place');
 
-            if (pickup) {
-                this.setPayloadPlace('pickup', pickup);
+                if (pickup) {
+                    this.setPayloadPlace('pickup', pickup);
+                }
+
+                if (dropoff) {
+                    this.setPayloadPlace('dropoff', dropoff);
+                }
+
+                this.clearWaypoints();
             }
-
-            if (dropoff) {
-                this.setPayloadPlace('dropoff', dropoff);
-            }
-
-            this.clearWaypoints();
         }
     }
 
     @action resetForm() {
+        if (this.isViewingRoutePreview) {
+            this.previewRoute(false);
+        }
+        if (this.leafletMap) {
+            this.removeRoutingControlPreview();
+            this.removeOptimizedRoute();
+            this.clearLayers();
+        }
         const order = this.store.createRecord('order', { meta: [] });
         const payload = this.store.createRecord('payload');
         const driversQuery = {};
@@ -1119,10 +1145,10 @@ export default class OperationsOrdersIndexNewController extends BaseController {
         const selectedServiceRate = undefined;
         const selectedServiceQuote = undefined;
         const servicable = false;
-
-        this.removeRoutingControlPreview();
-        this.removeOptimizedRoute();
         this.set('waypoints', []);
+        // this.removeRoutingControlPreview();
+        // this.removeOptimizedRoute();
+        // this.set('waypoints', []);
         this.setProperties({
             order,
             payload,

@@ -1,5 +1,5 @@
 <DropdownButton
-    @text={{or @text "Columns"}}
+    @text={{if (eq (or @text "Columns") "Columns") (t "common.columns") @text}} 
     @icon={{or @icon "sliders-h"}}
     @type={{@type}}
     @size={{or @size "xs"}}
@@ -22,7 +22,7 @@
     <div class="customize-columns-dropdown-container">
         <div class="customize-columns-dropdown-header justify-between">
             <h4>{{or @dropdownHeaderText "Customize Columns"}}</h4>
-            <Button @text="Done" @icon="check" @type="primary" @size="xs" @onClick={{dropdown-fn dd this.applyChanges}} />
+            <Button @text={{t "common.done"}} @icon="check" @type="primary" @size="xs" @onClick={{dropdown-fn dd this.applyChanges}} />
         </div>
         <div class="customize-columns-dropdown-body">
             <div class="grid grid-cols-3 lg:grid-cols-3 sm:grid-cols-1 gap-2 w-full">

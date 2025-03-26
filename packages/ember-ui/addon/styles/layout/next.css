@@ -1382,11 +1382,11 @@ body[data-theme='dark']
 }
 
 .next-org-button-trigger.has-selections {
-    @apply bg-[black];
+    @apply bg-gray-700 opacity-75;
 }
 
 .next-org-button-trigger.has-selections:hover {
-    @apply bg-[#3E5548] opacity-75;
+    @apply bg-gray-700 opacity-75;
 }
 
 .chat-tray-panel-container.is-mobile > .next-dd-menu,

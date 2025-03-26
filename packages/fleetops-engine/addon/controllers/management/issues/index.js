@@ -149,7 +149,7 @@ export default class ManagementIssuesIndexController extends BaseController {
             resizable: true,
             sortable: true,
             filterable: true,
-            filterComponent: 'filter/multi-option',
+            filterComponent: 'filter/select',
             filterOptions: ['low', 'medium', 'high', 'critical', 'scheduled-maintenance', 'operational-suggestion'],
         },
         {

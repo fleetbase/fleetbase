@@ -3,7 +3,7 @@ app:
 terms:
   new: New
   sort: Sort
-  filter: Filer
+  filter: Filter
   columns: Columns
   settings: Settings
   home: Home
@@ -29,7 +29,7 @@ common:
   delete: Delete
   email: Email
   filesystem: Filesystem
-  filter: Filer
+  filter: Filter
   home: Home
   logout: Logout
   mail: Mail
@@ -86,6 +86,11 @@ common:
   bulk-delete-success: "{record_count} records deleted."
   single-model-delete-success: The record has been deleted.
   code: code
+  format: Format
+  select_export_format: Select Export Format...
+  download: Download
+  clear: Clear
+  apply: Apply
 validation:
   required:
     payment_method: Payment method is required
