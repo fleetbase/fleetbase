@@ -78,6 +78,7 @@ export default class OrderScheduleCardComponent extends Component {
             this.loadDrivers(order.id);
         }
     }
+   
     
     @action assignDriver(driver) {
         const eventBus = this.effectiveEventBus;
@@ -100,7 +101,7 @@ export default class OrderScheduleCardComponent extends Component {
         
         const order = this.args.order;
         this.modalsManager.done().then(() => {
-            setTimeout(() => {
+            // setTimeout(() => {
                 this.isModalOpen = true; // Mark that a modal is being shown 
                
                 // If driver is not selected, confirm to unassign the driver
@@ -139,7 +140,8 @@ export default class OrderScheduleCardComponent extends Component {
                                     if (eventBus) {
                                         eventBus.publish('calendar-refresh-needed', { 
                                             orderId: order.id,
-                                            currentPage: currentPage 
+                                            currentPage: currentPage,
+                                            refreshAll: true
                                         });
                                     }
                                     this.notifications.success(
@@ -221,7 +223,8 @@ export default class OrderScheduleCardComponent extends Component {
                                         // Pass the current page to the refresh handler
                                         eventBus.publish('calendar-refresh-needed', { 
                                             orderId: order.id,
-                                            currentPage: currentPage
+                                            currentPage: currentPage,
+                                            refreshAll: true
                                         });
                                     } else {
                                         console.error("eventBus is not available.");
@@ -242,7 +245,7 @@ export default class OrderScheduleCardComponent extends Component {
                         },
                     });
                 }
-            }, 100);
+            // }, 100);
         });
     }
 
