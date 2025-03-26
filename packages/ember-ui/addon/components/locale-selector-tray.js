@@ -143,6 +143,15 @@ export default class LocaleSelectorTrayComponent extends Component {
             if (countryData && excludedCountryCodes.includes(countryData.cca2)) {
                 continue;
             }
+            // Option with comments explaining the reasoning
+            if(countryData && countryData.language === 'Austro-Bavarian German'){
+                // South Tyrol uses Italian as co-official language
+                countryData.language = 'Italian';
+            }
+            if(countryData && countryData.language === 'Catalan'){
+                // For most Catalan speakers, Spanish is also an official language
+                countryData.language = 'Spanish';
+            }
             localeMap[locale] = countryData;
         }
 
