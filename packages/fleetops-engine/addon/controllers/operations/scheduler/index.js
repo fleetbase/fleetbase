@@ -16,15 +16,19 @@ export default class OperationsSchedulerIndexController extends BaseController {
     @service hostRouter;
     @tracked scheduledOrders = [];
     @tracked unscheduledOrders = [];
+    @tracked calscheduledOrders=[];
     @tracked events = [];
     @service eventBus;
     
     // Single pagination approach
-    queryParams = ['ref', 'page'];
+    queryParams = ['ref', 'page', 'scheduled_limit', 'unscheduled_limit', 'calendar_limit'];
     ref = null;
     @tracked page = 1;
     @tracked totalPages = 1;
     @tracked itemsPerPage = 10;
+    @tracked scheduled_limit = 30;
+    @tracked unscheduled_limit = 30;
+    @tracked calendar_limit = 500;
     @tracked calendar;
     
     constructor() {
@@ -48,8 +52,34 @@ export default class OperationsSchedulerIndexController extends BaseController {
             // Split the orders into scheduled and unscheduled
             this.scheduledOrders = orders.filter(order => !isNone(order.driver_assigned_uuid));
             this.unscheduledOrders = orders.filter(order => isNone(order.driver_assigned_uuid));
+            // If we don't have calendar orders yet, fetch them
+        if (!this.calscheduledOrders || this.calscheduledOrders.length === 0) {
+            this.store.query('order', { 
+                status: 'created',
+                with: ['payload', 'driverAssigned.vehicle'],
+                limit: 500, // Larger limit for calendar
+                sort: '-created_at'
+            }).then(calscheduledOrders => {
+                this.calscheduledOrders = calscheduledOrders;
+                
+                // Filter for scheduled orders in calendar view
+                const scheduledCalendarOrders = calscheduledOrders.filter(order => 
+                    !isNone(order.driver_assigned_uuid)
+                );
+                
+                // Set up events from the calendar orders
+                this.events = scheduledCalendarOrders.map(order => 
+                    createFullCalendarEventFromOrder(order)
+                );
+                
+                this.updateCalendar();
+            });
+        } else {
             this.updateCalendar();
+        }
+            // this.updateCalendar();
         });
+        
     }
 
     get isFirstPage() {
@@ -68,12 +98,16 @@ export default class OperationsSchedulerIndexController extends BaseController {
             status: 'created',
             with: ['payload', 'driverAssigned.vehicle'],
             page: this.page,
+            limit: Math.max(this.scheduled_limit, this.unscheduled_limit, 30),
             sort: '-created_at'
         });
         
         this.scheduledOrders = orders.filter(order => !isNone(order.driver_assigned_uuid));
         this.unscheduledOrders = orders.filter(order => isNone(order.driver_assigned_uuid));
+       
         this.updateCalendar();
+
+        
     }
     
     
@@ -83,8 +117,9 @@ export default class OperationsSchedulerIndexController extends BaseController {
     
     @action
     handleCalendarRefresh(data) {
+        const startTime = performance.now();
         // Update calendar
-        this.updateCalendar();
+        // this.updateCalendar();
         
         // Reload specific order if provided
         if (data && data.orderId) {
@@ -108,12 +143,15 @@ export default class OperationsSchedulerIndexController extends BaseController {
             
             // Make sure page is set correctly
             this.page = currentPage;
-            
             // Update calendar again after data refreshes
             this.updateCalendar();
         });
+        const endTime = performance.now();
     }
-        
+    // Add this method to the controller
+
+    
+
     updateCalendar() {
         if (!this.calendar) {
             console.warn("Calendar instance not available.");
@@ -121,7 +159,8 @@ export default class OperationsSchedulerIndexController extends BaseController {
         }
     
         // Combine unscheduled and scheduled orders to get all orders
-        const allOrders = [...this.unscheduledOrders, ...this.scheduledOrders];
+        // const allOrders = [...this.unscheduledOrders, ...this.scheduledOrders];
+        const allOrders = [...this.calscheduledOrders]
         // Create an array of valid event IDs from all current orders
         const validOrderEventIds = allOrders.map(order => createFullCalendarEventFromOrder(order).id);
         
@@ -499,8 +538,50 @@ export default class OperationsSchedulerIndexController extends BaseController {
         const queryParams = {
             page: pageNumber,
             ref: Date.now()
+           
         };
         
-        this.hostRouter.transitionTo({ queryParams });
+        // this.hostRouter.transitionTo({ queryParams });
+        this.updatePagedLists(pageNumber);
     }
+
+    updatePagedLists(pageNumber) {
+        // Calculate pagination for UI from in-memory data
+        const startIndex = (pageNumber - 1) * this.itemsPerPage;
+        const endIndex = startIndex + this.itemsPerPage;
+        
+        // If we have enough data in memory, just re-slice it
+        const store = this.store;
+        const cachedOrders = store.peekAll('order').filter(order => order.status === 'created');
+        
+        if (cachedOrders.length >= endIndex) {
+            // We have enough data in memory
+            const pageOrders = cachedOrders.slice(startIndex, endIndex);
+            
+            // Update the UI lists
+            this.scheduledOrders = pageOrders.filter(order => !isNone(order.driver_assigned_uuid));
+            this.unscheduledOrders = pageOrders.filter(order => 
+                isNone(order.driver_assigned_uuid) && isNone(order.vehicle_assigned_uuid)
+            );
+        } else {
+            // We need to fetch this page
+            store.query('order', {
+                status: 'created',
+                with: ['payload', 'driverAssigned.vehicle'],
+                page: pageNumber,
+                limit: this.itemsPerPage,
+                sort: '-created_at'
+            }).then(orders => {
+                // Update only the UI lists, not the calendar
+                this.scheduledOrders = orders.filter(order => !isNone(order.driver_assigned_uuid));
+                this.unscheduledOrders = orders.filter(order => 
+                    isNone(order.driver_assigned_uuid) && isNone(order.vehicle_assigned_uuid)
+                );
+            });
+        }
+        
+        // IMPORTANT: Don't update the calendar on pagination!
+        // The calendar should show all events regardless of pagination
+    }
+
 }
