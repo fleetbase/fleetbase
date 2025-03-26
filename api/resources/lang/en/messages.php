@@ -21,8 +21,8 @@ return [
     'status_updated_successfully' => 'status updated successfully',
     'order_status_updated_to_by_driver' => 'Order status updated to :status by driver',
     'status' => [
-        'shift-ended' => 'Shift Ended',
-        'on-break' => 'On Break',
+        'shift_ended' => 'Shift Ended',
+        'on_break' => 'On Break',
         'pending' => 'Pending',
         'created' => 'Created',
         'started' => 'Started',

@@ -9,8 +9,8 @@ return [
     'status_updated_successfully' => 'Trạng thái đã được cập nhật thành công',
     'order_status_updated_to_by_driver' => 'Trạng thái đơn hàng đã được tài xế cập nhật thành :status',
     'status' => [
-        'shift-ended' => 'Ca làm việc đã kết thúc',
-        'on-break' => 'Đang Nghỉ',
+        'shift_ended' => 'Ca làm việc đã kết thúc',
+        'on_break' => 'Đang Nghỉ',
         'created' => 'Đã tạo',
         'started' => 'Đã bắt đầu',
         'completed' => 'Hoàn thành',

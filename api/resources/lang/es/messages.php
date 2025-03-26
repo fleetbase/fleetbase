@@ -18,8 +18,8 @@ return [
     'status_updated_successfully' => 'Estado actualizado correctamente',
     'order_status_updated_to_by_driver' => 'Estado del pedido actualizado a :status por el conductor',
     'status' => [
-        'shift-ended' => 'Fin de turno',
-        'on-break' => 'En Descanso',
+        'shift_ended' => 'Fin de turno',
+        'on_break' => 'En Descanso',
         'created' => 'Creado',
         'started' => 'Iniciado',
         'completed' => 'Completado',
