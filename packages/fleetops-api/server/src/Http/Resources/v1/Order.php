@@ -21,7 +21,7 @@ class Order extends FleetbaseResource
      */
     public function toArray($request)
     {
-        $locale = $request->header('X-locale', 'en');
+        $locale = $request->header('X-Locale', 'en');
         app()->setLocale($locale);
         return [
             'id'                       => $this->when(Http::isInternalRequest(), $this->id, $this->public_id),
