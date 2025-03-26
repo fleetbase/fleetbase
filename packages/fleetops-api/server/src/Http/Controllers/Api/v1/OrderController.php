@@ -1178,10 +1178,13 @@ class OrderController extends Controller
        
         $place = $payload->waypoints->firstWhere('public_id', $placeId);
     
-        if (!$place) {
-            return response()->apiError('Place resource is not a valid destination.');
+        // if (!$place) {
+        //     return response()->apiError('Place resource is not a valid destination.');
+        // }
+        //To avoid deleted waypoints issue
+        if ($place) {
+            $payload->setCurrentWaypoint($place);
         }
-        $payload->setCurrentWaypoint($place);
     
         return new OrderResource($order);
     }
@@ -1516,10 +1519,10 @@ class OrderController extends Controller
      */
     private function completeTrackingStatus($waypoint)
     {
-        $tracking_number_uuid = $waypoint->tracking_number_uuid;
-
-        if ($tracking_number_uuid) {
+        //To avoid deleted waypoints issue
+        if (isset($waypoint) && !empty($waypoint->tracking_number_uuid)) {
             // Bulk update all matching records
+            $tracking_number_uuid = $waypoint->tracking_number_uuid;
             TrackingStatus::where('tracking_number_uuid', $tracking_number_uuid)
                 ->update([
                     'status' => 'Waypoint completed',
