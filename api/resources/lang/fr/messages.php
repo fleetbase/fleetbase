@@ -18,8 +18,8 @@ return [
     'status_updated_successfully' => 'Statut mis à jour avec succès',
     'order_status_updated_to_by_driver' => 'Statut de la commande mis à jour à :status par le chauffeur',
     'status' => [
-        'shift-ended' => 'Fin de service',
-        'on-break' => 'En Pause',
+        'shift_ended' => 'Fin de service',
+        'on_break' => 'En Pause',
         'created' => 'Créé',
         'started' => 'Commencé',
         'completed' => 'Terminé',

@@ -18,8 +18,8 @@ return [
     'status_updated_successfully' => 'Status erfolgreich aktualisiert',
     'order_status_updated_to_by_driver' => 'Auftragsstatus durch Fahrer auf :status aktualisiert',
     'status' => [
-        'shift-ended' => 'Schicht Beendet',
-        'on-break' => 'Pause',
+        'shift_ended' => 'Schicht Beendet',
+        'on_break' => 'Pause',
         'created' => 'Erstellt',
         'started' => 'Gestartet',
         'completed' => 'Abgeschlossen',
