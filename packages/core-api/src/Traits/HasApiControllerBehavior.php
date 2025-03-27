@@ -395,9 +395,13 @@ trait HasApiControllerBehavior
                     return $driver;
                 });
                 //based on the driver availbility sort the list
-                $data = $data->sortByDesc('is_available') // Available first
-                     ->sortBy('have_no_vehicle') // Without vehicle last
-                     ->values(); // Re-index the array
+                $data = $data->sortBy(function ($item) {
+                    return [
+                        $item['is_available'] ? 0 : 2,  // is_available = 1 → 0 (first), is_available = 0 → 2 (last)
+                        $item['have_no_vehicle'] ? 1 : 0 // have_no_vehicle = 1 → 1 (second), else 0
+                    ];
+                })->values();
+                
             }
         }
         if ($single) {
