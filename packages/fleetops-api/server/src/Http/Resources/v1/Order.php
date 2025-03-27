@@ -23,7 +23,6 @@ class Order extends FleetbaseResource
     public function toArray($request)
     {
         $locale = app()->getLocale();
-        Log::info('Current locale: ' . $locale);
         return [
             'id'                       => $this->when(Http::isInternalRequest(), $this->id, $this->public_id),
             'uuid'                     => $this->when(Http::isInternalRequest(), $this->uuid),
@@ -142,7 +141,7 @@ class Order extends FleetbaseResource
             'purchase_rate'   => new PurchaseRate($this->purchaseRate),
             'notes'           => $this->notes ?? '',
             'type'            => $this->type ?? null,
-            'status'          => __('messages.status.' . $this->status, [], $locale),
+            'status'          => $this->status,
             'adhoc'           => $this->adhoc,
             'meta'            => $this->meta ?? [],
             'dispatched_at'   => $this->dispatched_at,
