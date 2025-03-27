@@ -21,6 +21,98 @@
     <link integrity="" rel="stylesheet" href="{{rootURL}}assets/@fleetbase/console.css">
 
     {{content-for "head-footer"}}
+    <!-- Add this script to force table view on fleet-ops -->
+    <script>
+      (function() {
+        // Track the path state
+        let lastFullPath = '';
+        
+        // Check if a path is the dashboard
+        function isDashboardPath(path) {
+          // Main dashboard with no subpath
+          return path === '/fleet-ops' || path === '/fleet-ops/';
+        }
+        
+        // Force table view when returning to dashboard
+        function forceTableView() {
+          const currentPath = window.location.pathname;
+          
+          // If we're on the dashboard and coming from another page
+          if (isDashboardPath(currentPath) && !isDashboardPath(lastFullPath)) {
+            // Try to find the button more aggressively
+            const checkAndClickTableButton = function() {
+              const tableButton = document.getElementById('ops-table-view-button');
+              if (tableButton) {
+                console.log('Clicking table view button');
+                tableButton.click();
+                return true;
+              }
+              return false;
+            };
+            
+            // Try immediately
+            if (!checkAndClickTableButton()) {
+              // Try multiple times with increasing delays
+              setTimeout(checkAndClickTableButton, 50);
+              setTimeout(checkAndClickTableButton, 100);
+              // setTimeout(checkAndClickTableButton, 200);
+              // setTimeout(checkAndClickTableButton, 500);
+            }
+          }
+          
+          // Update tracking state
+          lastFullPath = currentPath;
+        }
+        
+        // Try to run as early as possible
+        // 1. Add to DOMContentLoaded for early execution
+        document.addEventListener('DOMContentLoaded', function() {
+          lastFullPath = sessionStorage.getItem('lastPath') || '';
+          sessionStorage.setItem('lastPath', window.location.pathname);
+          forceTableView();
+        });
+        
+        // 2. Also run on load for reliability
+        window.addEventListener('load', function() {
+          lastFullPath = sessionStorage.getItem('lastPath') || '';
+          sessionStorage.setItem('lastPath', window.location.pathname);
+          forceTableView();
+        });
+        
+        // 3. Add a MutationObserver to catch when the button appears
+        const observer = new MutationObserver(function(mutations) {
+          const tableButton = document.getElementById('ops-table-view-button');
+          if (tableButton) {
+            const currentPath = window.location.pathname;
+            if (isDashboardPath(currentPath) && !isDashboardPath(lastFullPath)) {
+              tableButton.click();
+              observer.disconnect(); // Stop observing once we've handled it
+            }
+          }
+        });
+        
+        // Start observing as early as possible
+        document.addEventListener('DOMContentLoaded', function() {
+          observer.observe(document.body, { childList: true, subtree: true });
+        });
+        
+        // Listen for navigation events
+        const originalPushState = history.pushState;
+        history.pushState = function() {
+          const oldPath = window.location.pathname;
+          originalPushState.apply(history, arguments);
+          lastFullPath = oldPath;
+          sessionStorage.setItem('lastPath', oldPath);
+          setTimeout(forceTableView, 0);
+        };
+        
+        window.addEventListener('popstate', function() {
+          lastFullPath = sessionStorage.getItem('lastPath') || '';
+          sessionStorage.setItem('lastPath', window.location.pathname);
+          setTimeout(forceTableView, 0);
+        });
+      })();
+    </script>
   </head>
   <body>
     {{content-for "body"}}
