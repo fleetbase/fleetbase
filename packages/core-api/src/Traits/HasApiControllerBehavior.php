@@ -397,8 +397,7 @@ trait HasApiControllerBehavior
                 //based on the driver availbility sort the list
                 $data = $data->sortBy(function ($item) {
                     return [
-                        $item['is_available'] ? 0 : 2,  // is_available = 1 → 0 (first), is_available = 0 → 2 (last)
-                        $item['have_no_vehicle'] ? 1 : 0 // have_no_vehicle = 1 → 1 (second), else 0
+                        $item['is_available'] ? 0 : ($item['have_no_vehicle'] ? 1 : 2),  
                     ];
                 })->values();
                 
