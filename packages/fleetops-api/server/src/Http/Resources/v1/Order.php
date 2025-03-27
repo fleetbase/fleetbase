@@ -9,6 +9,7 @@ use Fleetbase\Http\Resources\FleetbaseResource;
 use Fleetbase\Support\Http;
 use Fleetbase\Support\Resolve;
 use Fleetbase\FleetOps\Http\Resources\v1\TrackingStatus;
+use Illuminate\Support\Facades\Log;
 
 class Order extends FleetbaseResource
 {
@@ -21,8 +22,8 @@ class Order extends FleetbaseResource
      */
     public function toArray($request)
     {
-        $locale = $request->header('X-Locale', 'en');
-        app()->setLocale($locale);
+        $locale = app()->getLocale();
+        Log::info('Current locale: ' . $locale);
         return [
             'id'                       => $this->when(Http::isInternalRequest(), $this->id, $this->public_id),
             'uuid'                     => $this->when(Http::isInternalRequest(), $this->uuid),
@@ -141,7 +142,7 @@ class Order extends FleetbaseResource
             'purchase_rate'   => new PurchaseRate($this->purchaseRate),
             'notes'           => $this->notes ?? '',
             'type'            => $this->type ?? null,
-            'status'          => $this->status,
+            'status'          => __('messages.status.' . $this->status, [], $locale),
             'adhoc'           => $this->adhoc,
             'meta'            => $this->meta ?? [],
             'dispatched_at'   => $this->dispatched_at,
