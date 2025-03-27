@@ -394,6 +394,10 @@ trait HasApiControllerBehavior
                     $driver->have_no_vehicle = $availability['have_no_vehicle'] ?? null;
                     return $driver;
                 });
+                //based on the driver availbility sort the list
+                $data = $data->sortByDesc('is_available') // Available first
+                     ->sortBy('have_no_vehicle') // Without vehicle last
+                     ->values(); // Re-index the array
             }
         }
         if ($single) {
