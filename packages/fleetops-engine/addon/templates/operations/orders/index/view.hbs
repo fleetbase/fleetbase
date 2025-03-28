@@ -2,7 +2,7 @@
     <Overlay::Header
         @overlay={{overlay}}
         @title={{@model.public_id}}
-        @status={{@model.status}}
+        @status={{t (concat "statuses." (or @model.status "pending"))}}
         @dispatched={{@model.dispatched}}
         @createdAt={{@model.createdAt}}
         @onPressCancel={{this.transitionBack}}
