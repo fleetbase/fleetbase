@@ -38,16 +38,26 @@ export default class OperationsOrdersIndexRoute extends Route {
     };
 
     
-    @action willTransition(transition) {
-        const shouldReset = typeof transition.to.name === 'string' && !transition.to.name.includes('operations.orders');
+    // Track the last route we were on
+    @tracked isComingFromOutsideOrders = true;
     
+    @action willTransition(transition) {
+        // Check if we're navigating within orders section
+        if (transition.from && transition.from.name && transition.from.name.includes('operations.orders.index')) {
+            this.isComingFromOutsideOrders = false;
+        } else {
+            this.isComingFromOutsideOrders = true;
+        }
+        
+        const shouldReset = typeof transition.to.name === 'string' && !transition.to.name.includes('operations.orders');
+        
         if (this.controller && shouldReset && typeof this.controller.resetView === 'function') {
             this.controller.resetView(transition);
         }
-    
+        
         // Check if this is a pagination transition (URL only changes in query params, not path)
-        const isPaginationTransition = transition.to.name === transition.from.name && 
-                                     transition.to.queryParams.page !== transition.from.queryParams.page;
+        const isPaginationTransition = transition.to.name === transition.from.name &&
+                                       transition.to.queryParams.page !== transition.from.queryParams.page;
         
         // Only disable refreshModel for nested routes that aren't pagination transitions
         if (isNestedRouteTransition(transition) && !isPaginationTransition) {
@@ -65,5 +75,30 @@ export default class OperationsOrdersIndexRoute extends Route {
         params.timezone = this.timezone;
         // params.created_by = params.created_by || null; 
         return this.store.query('order', params);
+    }
+    @action setupController(controller, model) {
+        super.setupController(controller, model);
+        
+        // If coming from outside the orders section, force table view
+        if (this.isComingFromOutsideOrders) {
+            controller.set('layout', 'table');
+            
+            // No need to use replaceWith here since we've already set the controller property
+            // The layout will update in the UI
+        }
+    }
+    // This is called when entering the route
+    beforeModel(transition) {
+        // Check if we're going directly to the orders route from outside
+        if (!transition.from || !transition.from.name || !transition.from.name.includes('operations.orders')) {
+            // We're coming from outside - set a flag to force table view later
+            this.isComingFromOutsideOrders = true;
+            
+            // If there's a 'layout=map' in the URL, update the URL but without using replaceWith
+            if (transition.to.queryParams && transition.to.queryParams.layout === 'map') {
+                // Instead of using replaceWith, we'll handle this in setupController
+                // by just setting the controller property
+            }
+        }
     }
 }
