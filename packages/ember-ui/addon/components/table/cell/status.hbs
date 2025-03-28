@@ -1,12 +1,3 @@
-<Badge  
-  @status={{t (concat "statuses." 
-    (or 
-      (if (eq @value "operational suggestion") "operational_suggestion" 
-        (if (eq @value "pending approval") "pending_approval" 
-          (if (eq @value "scheduled maintenance") "scheduled_maintenance"
-            (if (eq @value "re opened") "re_opened"
-              (if (eq @value "pending review") "pending_review"
-                (if (eq @value "in progress") "in_progress" @value)))))))
-    "pending"
-  )}} 
+<Badge 
+  @status={{t (concat "statuses." (or @value "pending"))}} 
 />

@@ -117,16 +117,18 @@ statuses:
     enroute: Enroute
     incident_reported: Incident Reported
     active: Active
-    pending approval: Pending Approval
     low: Low
     high: High
     critical: Critical
-    operational_suggestion: Operational suggestion
+    operational-suggestion: Operational suggestion
     medium: Medium
-    scheduled_maintenance: Scheduled Maintenance
-    re_opened: Reopened
-    pending_review: Pending Review
-    in_progress: In progress
+    scheduled-maintenance: Scheduled Maintenance
+    re-opened: Reopened
+    pending-review: Pending Review
+    in-progress: In progress
+    escalated: Escalated
+    backlogged: Backlogged
+    requires-update: Requires Update
 fuelReportTypes:
   Fuel: Fuel
   Parking: Parking
