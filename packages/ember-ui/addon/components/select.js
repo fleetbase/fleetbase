@@ -7,22 +7,25 @@ export default class SelectComponent extends Component {
     @tracked placeholder;
     @tracked disabled = false;
 
-    constructor(owner, { value, placeholder, disabled = false }) {
+    constructor() {
         super(...arguments);
-        this.value = value;
-        this.placeholder = placeholder;
-        this.disabled = disabled;
+        this.value = this.args.value;
+        this.placeholder = this.args.placeholder;
+        this.disabled = this.args.disabled ?? false;
     }
 
-    @action changed(el, [value, placeholder]) {
+    @action changed([value, placeholder]) {
         this.value = value;
         this.placeholder = placeholder;
     }
 
     @action select(selectedOption) {
-        // Ensure we always get the right value
-        this.value = selectedOption?.code ?? selectedOption;
-    
+        if (selectedOption && typeof selectedOption === 'object') {
+            this.value = selectedOption.code ?? selectedOption.id; // Prioritize `code`, fallback to `id`
+        } else {
+            this.value = selectedOption;
+        }
+
         if (typeof this.args.onSelect === 'function') {
             this.args.onSelect(this.value);
         }

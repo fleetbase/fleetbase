@@ -65,7 +65,11 @@ export default class RolesIndexController extends Controller {
      *
      * @memberof RolesIndexController
      */
-    @tracked types = this.iam.schemeTypes;
+    // @tracked types = this.iam.schemeTypes;
+    @tracked types = this.iam.schemeTypes.map(type => ({
+        id: type.id,
+        label: type.name // Ensure 'name' is mapped to 'label'
+    }));
 
     /**
      * All columns applicable for roles
