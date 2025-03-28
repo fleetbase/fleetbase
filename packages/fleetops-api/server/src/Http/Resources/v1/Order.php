@@ -22,7 +22,6 @@ class Order extends FleetbaseResource
      */
     public function toArray($request)
     {
-        $locale = app()->getLocale();
         return [
             'id'                       => $this->when(Http::isInternalRequest(), $this->id, $this->public_id),
             'uuid'                     => $this->when(Http::isInternalRequest(), $this->uuid),
@@ -62,7 +61,7 @@ class Order extends FleetbaseResource
             'notes'                    => $this->notes,
             ...$this->getCustomFieldValues(),
             'type'                  => $this->type,
-            'status'                => __('messages.status.' . $this->status, [], $locale),
+            'status'                => $this->status,
             'pod_method'            => $this->pod_method,
             'pod_required'          => (bool) data_get($this, 'pod_required', false),
             'dispatched'            => (bool) data_get($this, 'dispatched', false),

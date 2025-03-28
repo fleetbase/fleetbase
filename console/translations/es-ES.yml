@@ -86,6 +86,27 @@ common:
   download: Descargar
   clear: Borrar
   apply: Aplicar
+statuses:
+    draft: Borrador
+    pending-approval: Pendiente de aprobación
+    approved: Aprobado
+    rejected: Rechazado
+    revised: Revisado
+    submitted: Enviado
+    in-review: En revisión
+    confirmed: Confirmado
+    processed: Procesado
+    archived: Archivado
+    cancelled: Cancelado
+    pending: Pendiente
+    shift_ended: Turno finalizado
+    on_break: En descanso
+    created: Creado
+    started: Iniciado
+    completed: Completado
+    dispatched: Despachado
+    enroute: En camino
+    incident_reported: Incidente reportado
 component:
   file:
     dropdown-label: Acciones de archivos
