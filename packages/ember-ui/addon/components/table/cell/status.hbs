@@ -1,3 +1,1 @@
-<Badge 
-  @status={{t (concat "statuses." (or @value "pending"))}} 
-/>
+<Badge @status={{get-default-value @value "Pending"}} />
