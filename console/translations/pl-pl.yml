@@ -86,6 +86,11 @@ common:
   bulk-delete-success: "Usunięto {record_count} rekordów."
   single-model-delete-success: Rekord został usunięty.
   code: kod
+  fomat: Format
+  select_export_format: Wybierz format eksportu...
+  download: Pobierz
+  clear: Wyczyść
+  apply: Zastosuj
 validation:
   required:
     payment_method: Wymagana jest metoda płatności
@@ -103,6 +108,14 @@ statuses:
   archived: Zarchiwizowany
   cancelled: Anulowany
   pending: Oczekujący
+  shift_ended: Koniec zmiany
+  on_break: Na przerwie
+  created: Utworzono
+  started: Rozpoczęto
+  completed: Zakończono
+  dispatched: Wysłano
+  enroute: W drodze
+  incident_reported: Zgłoszono incydent
 fuelReportTypes:
   Fuel: Paliwo
   Parking: Parking
