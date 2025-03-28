@@ -1,1 +1,10 @@
-<Input @type="tel" @value={{@value}} {{did-insert this.setupIntlTelInput}} class="phone-input" {{on "keyup" this.onInput}} ...attributes />
+<Input 
+    @type="tel" 
+    @value={{this.displayValue}} 
+    {{did-insert this.setupIntlTelInput}} 
+    class="phone-input" 
+    {{on "input" this.onInput}} 
+    {{on "keydown" this.preventPlusRemoval}} 
+    ...attributes
+/>
+{{!-- <Input @type="tel" @value={{@this.displayValue}} {{did-insert this.setupIntlTelInput}} class="phone-input" {{on "keyup" this.onInput}} ...attributes /> --}}
