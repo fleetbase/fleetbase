@@ -1,6 +1,6 @@
 # syntax = docker/dockerfile:1.2
 # Base stage
-FROM dunglas/frankenphp:1.2.3-php8.2-bookworm as base
+FROM dunglas/frankenphp:1.5.0-php8.2-bookworm as base
 
 # Install packages
 RUN apt-get update && apt-get install -y git bind9-utils mycli nodejs npm nano \
@@ -20,10 +20,34 @@ RUN install-php-extensions \
   opcache \
   memcached \
   imagick \
-  geos \
+  # geos \
   sockets \
   pcntl \
   @composer
+
+# Install build dependencies for GEOS
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends \
+       pkg-config \
+       libgeos-dev \
+       libgeos++-dev \
+       autoconf \
+       build-essential \
+       unzip \
+    && rm -rf /var/lib/apt/lists/*
+
+# Download, extract, compile, and enable the php-geos extension
+RUN curl -fsSL -o php-geos.zip \
+      https://github.com/libgeos/php-geos/archive/dfe1ab17b0f155cc315bc13c75689371676e02e1.zip \
+    && unzip php-geos.zip \
+    && rm php-geos.zip \
+    && cd php-geos-* \
+    && ./autogen.sh \
+    && ./configure \
+    && make -j"$(nproc)" install \
+    && docker-php-ext-enable geos \
+    && cd .. \
+    && rm -rf php-geos-*
 
 # Update PHP configurations
 RUN sed -e 's/^expose_php.*/expose_php = Off/' "$PHP_INI_DIR/php.ini-production" > "$PHP_INI_DIR/php.ini" \
