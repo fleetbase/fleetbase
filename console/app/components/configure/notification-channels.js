@@ -32,6 +32,15 @@ export default class ConfigureNotificationChannelsComponent extends Component {
         this.loadConfigValues();
     }
 
+    @action toggleApnProduction(checked) {
+        this.apn = {
+            ...this.apn,
+            production: checked,
+        };
+        console.log('[toggleApnProduction #checked]', checked);
+        console.log('[toggleApnProduction #apn]', this.apn);
+    }
+
     @action removeApnFile() {
         const apnConfig = this.apn;
         apnConfig.private_key_file = null;
