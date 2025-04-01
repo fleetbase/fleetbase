@@ -1103,21 +1103,18 @@ class OrderController extends Controller
         }
         $currentWaypoint = $order->payload->waypointMarkers->firstWhere('place_uuid', $order->payload->current_waypoint_uuid);
 
-        if (!$currentWaypoint) {
+        if (!$currentWaypoint && (!$order->payload->pickup_uuid) && (!$order->payload->dropoff_uuid)) {
             return response()->apiError('Current waypoint not found.');
         }
-        
-        if ($currentWaypoint->status_code !== 'COMPLETED') {
+        if ($currentWaypoint && isset($currentWaypoint->status_code) && $currentWaypoint->status_code !== 'COMPLETED') {
             $this->completeTrackingStatus($currentWaypoint);
         }
-
-        // Ensure all waypoints are completed
-        if (!$order->payload->waypointMarkers->every(fn($waypoint) => $waypoint->status_code === 'COMPLETED')) {
-            return response()->apiError('Not all waypoints completed for order.');
+         // Ensure all waypoints are completed
+        if (!$order->payload->waypointMarkers->every(fn($waypoint) => isset($waypoint->status_code) && $waypoint->status_code === 'COMPLETED')) {
+            return response()->apiError('Not all waypoints are completed for this order.');
         }
-
+       
         $activity = $order->config()->getCompletedActivity();
-
         if ($order->driverAssigned) {
             $order->driverAssigned->unassignCurrentOrder();
         }
