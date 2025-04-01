@@ -16,7 +16,7 @@
         {{/if}}
     </InputGroup>
     <InputGroup @wrapperClass="mb-0i">
-        <Checkbox @label="APN Production" @value={{this.apn.production}} @onToggle={{fn (mut this.apn.production)}} @disabled={{this.isLoading}} />
+        <Checkbox @label="APN Production" @value={{this.apn.production}} @onToggle={{this.toggleApnProduction}} />
     </InputGroup>
 </ContentPanel>
 
