@@ -47,7 +47,13 @@
 .status-badge.terminé-status-badge > span,
 .status-badge.completato-status-badge > span,
 .status-badge.zakończono-status-badge > span,
-.status-badge.đã-hoàn-thành-status-badge > span
+.status-badge.đã-hoàn-thành-status-badge > span,
+.status-badge.aktiv-status-badge > span,
+.status-badge.activo-status-badge > span,
+.status-badge.actif-status-badge > span,
+.status-badge.attivo-status-badge > span,
+.status-badge.aktywny-status-badge > span,
+.status-badge.hoạt-động-status-badge > span
 {
     @apply bg-green-700 border-green-700 text-white;
 }
@@ -103,7 +109,7 @@
 .status-badge.iniciado-status-badge > span,
 .status-badge.iniciado-status-badge > span
 {
-    @apply bg-[#c2410c] border-[#c2410c] text-white ;
+    @apply bg-[#001F3F] border-[#001F3F] text-white;
 }
 
 .status-badge.started-status-badge > span svg,
@@ -172,7 +178,16 @@
 {
     @apply bg-red-800 border-red-800 text-white;
 }
-
+.status-badge.incident-reported-status-badge > span,
+.status-badge.vorfall-gemeldet-status-badge > span,
+.status-badge.incidente-reportado-status-badge > span,
+.status-badge.incident-signalé-status-badge > span,
+.status-badge.incidente-segnalato-status-badge > span,
+.status-badge.zgłoszono-incydent-status-badge > span,
+.status-badge.đã-báo-cáo-sự-cố-status-badge > span
+{
+    @apply bg-red-600 border-red-600 text-white;
+}
 .status-badge[class*='5'] > span svg,
 .status-badge.red-status-badge > span svg,
 .status-badge.high-status-badge > span svg,
@@ -200,13 +215,7 @@
 .status-badge.grace-period-status-badge > span,
 .status-badge.ausstehend-status-badge > span,
 .status-badge.pendiente-status-badge > span,
-.status-badge.en-attente-status-badge > span,
-.status-badge.incident-reported-status-badge > span,
-.status-badge.vorfall-gemeldet-status-badge > span,
-.status-badge.incidente-reportado-status-badge > span,
-.status-badge.đã-báo-cáo-sự-cố-status-badge > span,
-.status-badge.zgłoszono-incydent-status-badge > span,
-.status-badge.đã-báo-cáo-sự-cố-status-badge > span,
+.console-fleet-ops-management-drivers-index-index .status-badge.en-attente-status-badge > span,
 .status-badge.pending-review-status-badge > span,
 .status-badge.pending-approval-status-badge > span,
 .status-badge.ausstehende-genehmigung-status-badge > span,
