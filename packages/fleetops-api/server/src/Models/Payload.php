@@ -122,7 +122,7 @@ class Payload extends Model
      */
     public function waypointMarkers()
     {
-        return $this->hasMany(Waypoint::class)->with(['place']);
+        return $this->hasMany(Waypoint::class)->whereNull('waypoints.deleted_at')->with(['place']);
     }
 
     public function getTotalEntitiesAttribute()
