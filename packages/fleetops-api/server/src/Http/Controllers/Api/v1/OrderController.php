@@ -36,6 +36,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Log;
 use Fleetbase\FleetOps\Models\TrackingStatus;
+use Fleetbase\FleetOps\Models\TrackingNumber;
  
 
 class OrderController extends Controller
@@ -1106,6 +1107,11 @@ class OrderController extends Controller
         if (!$currentWaypoint && (!$order->payload->pickup_uuid) && (!$order->payload->dropoff_uuid)) {
             return response()->apiError('Current waypoint not found.');
         }
+        //complete single route order
+        if ((!$currentWaypoint) && isset($order->tracking_number_uuid)) {
+            $this->completeSingleTrackingStatus($order->tracking_number_uuid);
+        }
+        
         if ($currentWaypoint && isset($currentWaypoint->status_code) && $currentWaypoint->status_code !== 'COMPLETED') {
             $this->completeTrackingStatus($currentWaypoint);
         }
@@ -1521,6 +1527,44 @@ class OrderController extends Controller
             // Bulk update all matching records
             $tracking_number_uuid = $waypoint->tracking_number_uuid;
             TrackingStatus::where('tracking_number_uuid', $tracking_number_uuid)
+                ->update([
+                    'status' => 'Waypoint completed',
+                    'code' => 'COMPLETED',
+                    'details' => 'Waypoint has been completed',
+                    'updated_at' => now()
+                ]);
+        }
+    }
+    /**
+     * Marks a single tracking number as "Waypoint Completed".
+     * 
+     * @param string $tracking_number_uuid The UUID of the tracking number.
+     * @return void
+     */
+    private function completeSingleTrackingStatus($tracking_number_uuid)
+    {
+        // Ensure UUID is provided
+        if (!$tracking_number_uuid) {
+            return;
+        }
+    
+        // Fetch tracking number record, avoiding deleted waypoints
+        $tracking = TrackingNumber::where('uuid', $tracking_number_uuid)
+            ->whereNull('deleted_at')
+            ->first();
+    
+        if (!$tracking || !$tracking->status_uuid) {
+            return;
+        }
+    
+        $status_uuid = $tracking->status_uuid;
+    
+        // Fetch current tracking status
+        $existingStatus = TrackingStatus::where('uuid', $status_uuid)->first();
+    
+        // Only update if the status is not already completed
+        if ($existingStatus && $existingStatus->code !== 'COMPLETED') {
+            TrackingStatus::where('uuid', $status_uuid)
                 ->update([
                     'status' => 'Waypoint completed',
                     'code' => 'COMPLETED',
