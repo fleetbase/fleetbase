@@ -256,7 +256,9 @@
 .status-badge.in-en-revisión-status-badge > span,
 .status-badge.in-revisione-status-badge > span,
 .status-badge.w-trakcie-przeglądu-status-badge > span,
-.status-badge.đang-xem-xét-status-badge > span
+.status-badge.đang-xem-xét-status-badge > span,
+.status-badge.en-revisión-status-badge > span,
+.status-badge.en-révision-status-badge > span 
 {
     @apply bg-[#1E90FF] border-[#1E90FF] text-white;
 }
@@ -454,7 +456,8 @@ body[data-theme='dark'] .status-badge.info-status-badge > span{
 .status-badge.en-cours-status-badge > span,
 .status-badge.in-corso-status-badge > span,
 .status-badge.đang-tiến-hành-status-badge > span,
-.status-badge.w-toku-status-badge > span
+.status-badge.w-toku-status-badge > span,
+.status-badge.en-progreso-status-badge > span
 {
     @apply bg-[#008080] border-[#008080] text-white; 
 }
