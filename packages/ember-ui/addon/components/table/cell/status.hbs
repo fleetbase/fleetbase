@@ -1,1 +1,13 @@
-<Badge @status={{get-default-value @value "Pending"}} />
+<Badge
+  @status={{t (concat "statuses."
+    (or
+      (if (or (eq @value "operational suggestion") (eq @value "Operational suggestion")) "operational-suggestion"
+        (if (or (eq @value "pending approval") (eq @value "Pending approval") (eq @value "Pending Approval")) "pending-approval"
+          (if (or (eq @value "scheduled maintenance") (eq @value "Scheduled maintenance") (eq @value "Scheduled Maintenance")) "scheduled-maintenance"
+            (if (or (eq @value "re opened") (eq @value "Re opened") (eq @value "Re Opened")) "re-opened"
+              (if (or (eq @value "pending review") (eq @value "Pending review") (eq @value "Pending Review")) "pending-review"
+                (if (or (eq @value "in progress") (eq @value "In progress") (eq @value "In Progress")) "in-progress"
+                  (if (or (eq @value "canceled") (eq @value "Canceled")) "cancelled" @value)))))))
+    "pending"
+ ) )}}
+/>

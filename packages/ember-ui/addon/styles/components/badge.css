@@ -41,10 +41,32 @@
 .status-badge.dispatched-status-badge > span,
 .status-badge.operational-status-badge > span,
 .status-badge.active-status-badge > span,
-.status-badge.completed-status-badge > span {
+.status-badge.completed-status-badge > span,
+.status-badge.abgeschlossen-status-badge > span,
+.status-badge.completado-status-badge > span,
+.status-badge.terminé-status-badge > span,
+.status-badge.completato-status-badge > span,
+.status-badge.zakończono-status-badge > span,
+.status-badge.đã-hoàn-thành-status-badge > span,
+.status-badge.aktiv-status-badge > span,
+.status-badge.activo-status-badge > span,
+.status-badge.actif-status-badge > span,
+.status-badge.attivo-status-badge > span,
+.status-badge.aktywny-status-badge > span,
+.status-badge.hoạt-động-status-badge > span
+{
     @apply bg-green-700 border-green-700 text-white;
 }
-
+.status-badge.on-break-status-badge > span,
+.status-badge.in-pause-status-badge > span,
+.status-badge.en-descanso-status-badge > span,
+.status-badge.en-pause-status-badge > span,
+.status-badge.in-pausa-status-badge > span,
+.status-badge.na-przerwie-status-badge > span,
+.status-badge.đang-nghỉ-giải-lao-status-badge > span
+{
+    @apply bg-sky-700 border-sky-700 text-white;
+}
 .status-badge[class*='2'] > span svg,
 .status-badge.green-status-badge > span svg,
 .status-badge.published-status-badge > span svg,
@@ -78,8 +100,16 @@
 }
 
 .status-badge.started-status-badge > span,
-.status-badge.cyan-status-badge > span {
-    @apply bg-[#c2410c] border-[#c2410c] text-white ;
+.status-badge.cyan-status-badge > span,
+.status-badge.gestartet-status-badge > span,
+.status-badge.commencé-status-badge > span,
+.status-badge.avviato-status-badge > span,
+.status-badge.rozpoczęto-status-badge > span,
+.status-badge.đã-bắt-đầu-status-badge > span,
+.status-badge.iniciado-status-badge > span,
+.status-badge.iniciado-status-badge > span
+{
+    @apply bg-[#001F3F] border-[#001F3F] text-white;
 }
 
 .status-badge.started-status-badge > span svg,
@@ -120,10 +150,44 @@
 .status-badge.inactive-status-badge > span,
 .status-badge.failed-status-badge > span,
 .status-badge.canceled-status-badge > span,
-.status-badge.cancelled-status-badge > span {
+.status-badge.abgebrochen-status-badge > span,
+.status-badge.abgelehnt-status-badge > span,
+.status-badge.rechazado-status-badge > span,
+.status-badge.rejeté-status-badge > span,
+.status-badge.rifiutato-status-badge > span,
+.status-badge.odrzucony-status-badge > span,
+.status-badge.bị-từ-chối-status-badge > span,
+.status-badge.cancelado-status-badge > span,
+.status-badge.annulé-status-badge > span,
+.status-badge.annullato-status-badge > span,
+.status-badge.anulowany-status-badge > span,
+.status-badge.đã-hủy-status-badge > span,
+.status-badge.kritisch-status-badge > span,
+.status-badge.crítico-status-badge > span,
+.status-badge.critique-status-badge > span,
+.status-badge.critico-status-badge > span,
+.status-badge.krytyczny-status-badge > span,
+.status-badge.nghiêm-trọng-status-badge > span,
+.status-badge.hoch-status-badge > span,
+.status-badge.alto-status-badge > span,
+.status-badge.élevé-status-badge > span,
+.status-badge.wysoki-status-badge > span,
+.status-badge.cao-status-badge > span,
+.status-badge.cancelled-status-badge > span
+
+{
     @apply bg-red-800 border-red-800 text-white;
 }
-
+.status-badge.incident-reported-status-badge > span,
+.status-badge.vorfall-gemeldet-status-badge > span,
+.status-badge.incidente-reportado-status-badge > span,
+.status-badge.incident-signalé-status-badge > span,
+.status-badge.incidente-segnalato-status-badge > span,
+.status-badge.zgłoszono-incydent-status-badge > span,
+.status-badge.đã-báo-cáo-sự-cố-status-badge > span
+{
+    @apply bg-red-600 border-red-600 text-white;
+}
 .status-badge[class*='5'] > span svg,
 .status-badge.red-status-badge > span svg,
 .status-badge.high-status-badge > span svg,
@@ -149,40 +213,132 @@
 .status-badge.trial-status-badge > span,
 .status-badge.trialing-status-badge > span,
 .status-badge.grace-period-status-badge > span,
-.status-badge.pending-status-badge > span {
-    @apply bg-yellow-600 border-yellow-600 text-white;
-}
-
+.status-badge.ausstehend-status-badge > span,
+.status-badge.pendiente-status-badge > span,
+.console-fleet-ops-management-drivers-index-index .status-badge.en-attente-status-badge > span,
 .status-badge.pending-review-status-badge > span,
-.status-badge.pending-approval-status-badge > span
+.status-badge.pending-approval-status-badge > span,
+.status-badge.ausstehende-genehmigung-status-badge > span,
+.status-badge.pendiente-de-aprobación-status-badge > span,
+.status-badge.en-attente-d\'approbation-status-badge > span,
+.status-badge.in-attesa-di-approvazione-status-badge > span,
+.status-badge.oczekuje-na-zatwierdzenie-status-badge > span,
+.status-badge.chờ-phê-duyệt-status-badge > span,
+.status-badge.geplante-wartung-status-badge > span,
+.status-badge.mantenimiento-programado-status-badge > span,
+.status-badge.maintenance-planifiée-status-badge > span,
+.status-badge.manutenzione-programmata-status-badge > span,
+.status-badge.planowana-konserwacja-status-badge > span,
+.status-badge.bảo-trì-theo-lịch-trình-status-badge > span,
+.status-badge.ausstehende-überprüfung-status-badge > span,
+.status-badge.revisión-pendiente-status-badge > span,
+.status-badge.en-attente-de-status-badge > span,
+.status-badge.in-attesa-di-revisione-status-badge > span,
+.status-badge.oczekuje-na-status-badge > span,
+.status-badge.đang-chờ-xem-xét-status-badge > span,
+.status-badge.pending-status-badge > span,
+.status-badge.en-attente-de-révision-status-badge > span,
+.status-badge.oczekuje-na-przegląd-status-badge > span,
+.status-badge.in-attesa-status-badge > span,
+.status-badge.oczekujący-status-badge > span,
+.status-badge.đang-chờ-status-badge > span,
+.console-iam-users-index .status-badge.en-attente-status-badge > span,
+.console-fleet-ops-management-vehicles-index-index .status-badge.en-attente-status-badge > span,
+.console-fleet-ops-management-fuel-reports-index-index .status-badge.en-attente-status-badge > span
 {
     @apply bg-yellow-600 border-yellow-600 text-white;
 }
+
+.status-badge.shift-ended-status-badge > span,
+.status-badge.schicht-beendet-status-badge > span,
+.status-badge.turno-finalizado-status-badge > span,
+.status-badge.fin-de-service-status-badge > span,
+.status-badge.turno-terminato-status-badge > span,
+.status-badge.koniec-zmiany-status-badge > span,
+.status-badge.ca-làm-việc-đã-kết-thúc-status-badge > span {
+    @apply bg-cyan-600 border-cyan-600 text-white;
+  }
 
 .status-badge.duplicate-status-badge > span{
     @apply bg-gray-500 border-gray-500 text-white;
 }
 
-.status-badge.in-review-status-badge > span{
+.status-badge.in-review-status-badge > span,
+.status-badge.in-überprüfung-status-badge > span,
+.status-badge.in-en-revisión-status-badge > span,
+.status-badge.in-revisione-status-badge > span,
+.status-badge.w-trakcie-przeglądu-status-badge > span,
+.status-badge.đang-xem-xét-status-badge > span,
+.status-badge.en-revisión-status-badge > span,
+.status-badge.en-révision-status-badge > span 
+{
     @apply bg-[#1E90FF] border-[#1E90FF] text-white;
 }
 
-.status-badge.re-opened-status-badge > span{
+.status-badge.re-opened-status-badge > span,
+.status-badge.wieder-geöffnet-status-badge > span,
+.status-badge.reabierto-status-badge > span,
+.status-badge.réouvert-status-badge > span,
+.status-badge.riaperto-status-badge > span,
+.status-badge.ponownie-otwarte-status-badge > span,
+.status-badge.đã-mở-lại-status-badge > span,
+.status-badge.reopened-status-badge > span
+{
     @apply bg-[#FF8C00] border-[#FF8C00] text-white;
 }
 
 .status-badge.escalated-status-badge > span,
-.status-badge.processed-status-badge > span {
+.status-badge.processed-status-badge > span,
+.status-badge.verarbeitet-status-badge > span,
+.status-badge.procesado-status-badge > span,
+.status-badge.traité-status-badge > span,
+.status-badge.elaborato-status-badge > span,
+.status-badge.przetworzony-status-badge > span,
+.status-badge.đã-xử-lý-status-badge > span,
+.status-badge.procesado-status-badge > span,
+.status-badge.eskaliert-status-badge > span,
+.status-badge.escalado-status-badge > span,
+.status-badge.escaladé-status-badge > span,
+.status-badge.escalato-status-badge > span,
+.status-badge.eskalowane-status-badge > span,
+.status-badge.đã-leo-thang-status-badge > span
+{
     @apply bg-[#8B4513] border-[#8B4513] text-white;
 }
 
 .status-badge.backlogged-status-badge > span,
-.status-badge.draft-status-badge > span {
+.status-badge.draft-status-badge > span,
+.status-badge.entwurf-status-badge > span,
+.status-badge.borrador-status-badge > span,
+.status-badge.brouillon-status-badge > span,
+.status-badge.bozza-status-badge > span,
+.status-badge.szkic-status-badge > span,
+.status-badge.bản-nháp-status-badge > span,
+.status-badge.rückstau-status-badge > span,
+.status-badge.atrasado-status-badge > span,
+.status-badge.en-attente-status-badge > span,
+.status-badge.in-arretrato-status-badge > span,
+.status-badge.zaległe-status-badge > span,
+.status-badge.tồn-đọng-status-badge > span
+{
     @apply bg-[#2F4F4F] border-[#2F4F4F] text-white;
 }
 
 .status-badge.requires-update-status-badge > span,
-.status-badge.revised-status-badge > span {
+.status-badge.revised-status-badge > span,
+.status-badge.überarbeitet-status-badge > span,
+.status-badge.revisado-status-badge > span,
+.status-badge.révisé-status-badge > span,
+.status-badge.rivisto-status-badge > span,
+.status-badge.poprawiony-status-badge > span,
+.status-badge.đã-sửa-đổi-status-badge > span,
+.status-badge.aktualisierung-erforderlich-status-badge > span,
+.status-badge.requiere-actualización-status-badge > span,
+.status-badge.nécessite-une-mise-à-jour-status-badge > span,
+.status-badge.richiede-aggiornamento-status-badge > span,
+.status-badge.wymaga-aktualizacji-status-badge > span,
+.status-badge.cần-cập-nhật-status-badge > span
+{
     @apply bg-[#6A0DAD] border-[#6A0DAD] text-white;
 }
 
@@ -205,14 +361,34 @@
 }
 
 .status-badge.confirmed-status-badge > span,
-.status-badge.driver-confirmed-status-badge > span {
+.status-badge.bestätigt-status-badge > span,
+.status-badge.driver-confirmed-status-badge > span,
+.status-badge.confirmado-status-badge > span,
+.status-badge.confirmé-status-badge > span,
+.status-badge.confermato-status-badge > span,
+.status-badge.potwierdzony-status-badge > span,
+.status-badge.đã-xác-nhận-status-badge > span
+{
     @apply bg-[#1D4ED8] border-[#1D4ED8] text-white;
 }
 
 .status-badge.indigo-status-badge > span,
 .status-badge.operational-suggestion-status-badge > span,
 .status-badge.dispatched-status-badge > span,
-.status-badge.assigned-status-badge > span {
+.status-badge.assigned-status-badge > span,
+.status-badge.versendet-status-badge  > span,
+.status-badge.despachado-status-badge  > span,
+.status-badge.expédié-status-badge  > span,
+.status-badge.inviato-status-badge  > span,
+.status-badge.wysłano-status-badge  > span,
+.status-badge.đã-gửi-đi-status-badge  > span,
+.status-badge.betriebsvorschlag-status-badge > span,
+.status-badge.sugerencia-operativa-status-badge > span,
+.status-badge.suggestion-opérationnelle-status-badge > span,
+.status-badge.suggerimento-operativo-status-badge > span,
+.status-badge.sugestia-operacyjna-status-badge > span,
+.status-badge.đề-xuất-hoạt-động-status-badge > span
+{
     @apply bg-[#7e22ce] border-[#7e22ce] text-white ;
 }
 
@@ -225,7 +401,13 @@
 
 .status-badge.orange-status-badge > span,
 .status-badge.alerted-status-badge > span,
-.status-badge.medium-status-badge > span {
+.status-badge.medium-status-badge > span,
+.status-badge.mittel-status-badge > span,
+.status-badge.medio-status-badge > span,
+.status-badge.moyen-status-badge > span,
+.status-badge.średni-status-badge > span,
+.status-badge.trung-bình-status-badge > span
+{
     @apply bg-orange-700 border-orange-700 text-orange-100;
 }
 
@@ -243,18 +425,52 @@ body[data-theme='dark'] .status-badge.info-status-badge > span{
     @apply bg-gray-600 border-gray-600 text-white;
 }
 
-.status-badge.low-status-badge > span{
+.status-badge.low-status-badge > span,
+.status-badge.niedrig-status-badge > span,
+.status-badge.bajo-status-badge > span,
+.status-badge.faible-status-badge > span,
+.status-badge.basso-status-badge > span,
+.status-badge.niski-status-badge > span,
+.status-badge.thấp-status-badge > span
+{
     @apply bg-[green] border-[green] text-white;
 }
 
 .status-badge.blue-status-badge > span,
 .status-badge.created-status-badge > span,
-.status-badge.approved-status-badge > span {
+.status-badge.approved-status-badge > span,
+.status-badge.erstellt-status-badge > span,
+.status-badge.creado-status-badge > span,
+.status-badge.créé-status-badge > span,
+.status-badge.creato-status-badge > span,
+.status-badge.utworzono-status-badge > span,
+.status-badge.đã-tạo-status-badge > span,
+.status-badge.genehmigt-status-badge > span,
+.status-badge.aprobado-status-badge > span,
+.status-badge.approuvé-status-badge > span,
+.status-badge.approvato-status-badge > span,
+.status-badge.zatwierdzony-status-badge > span,
+.status-badge.đã-phê-duyệt-status-badge > span
+{
     @apply bg-[#4385f4] border-[#4385f4] text-white;
 }
 
 .status-badge.in-progress-status-badge > span,
-.status-badge.submitted-status-badge > span {
+.status-badge.submitted-status-badge > span, 
+.status-badge.eingereicht-status-badge > span,
+.status-badge.enviado-status-badge > span,
+.status-badge.soumis-status-badge > span,
+.status-badge.inviato-status-badge > span,
+.status-badge.przesłany-status-badge > span,
+.status-badge.đã-nộp-status-badge > span,
+.status-badge.in-bearbeitung-status-badge > span,
+.status-badge.ien-progreso-status-badge > span,
+.status-badge.en-cours-status-badge > span,
+.status-badge.in-corso-status-badge > span,
+.status-badge.đang-tiến-hành-status-badge > span,
+.status-badge.w-toku-status-badge > span,
+.status-badge.en-progreso-status-badge > span
+{
     @apply bg-[#008080] border-[#008080] text-white; 
 }
 
