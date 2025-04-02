@@ -241,7 +241,10 @@
 .status-badge.oczekuje-na-przegląd-status-badge > span,
 .status-badge.in-attesa-status-badge > span,
 .status-badge.oczekujący-status-badge > span,
-.status-badge.đang-chờ-status-badge > span
+.status-badge.đang-chờ-status-badge > span,
+.console-iam-users-index .status-badge.en-attente-status-badge > span,
+.console-fleet-ops-management-vehicles-index-index .status-badge.en-attente-status-badge > span,
+.console-fleet-ops-management-fuel-reports-index-index .status-badge.en-attente-status-badge > span
 {
     @apply bg-yellow-600 border-yellow-600 text-white;
 }
