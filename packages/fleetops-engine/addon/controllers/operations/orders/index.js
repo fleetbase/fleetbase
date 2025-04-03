@@ -580,9 +580,21 @@ export default class OperationsOrdersIndexController extends BaseController {
     @task *getOrderStatusOptions() {
         try {
             if (this.statusOptions.length > 0) {
-                return this.statusOptions;
+                this.statusOptions = this.statusOptions.map(option => {  
+                    return {  
+                        label: option.label, // Adjust this if the property name is different  
+                        code: option.label // Adjust this if the property name is different  
+                    };  
+                }); 
+                return this.statusOptions; 
             }
             this.statusOptions = yield this.fetch.get('orders/statuses?is_filter_status=1');
+            this.statusOptions = this.statusOptions.map(option => {  
+                return {  
+                    label: option.label, // Adjust this if the property name is different  
+                    code: option.label // Adjust this if the property name is different  
+                };  
+            });
             return this.statusOptions;
         } catch (error) {
             this.notifications.serverError(error);
