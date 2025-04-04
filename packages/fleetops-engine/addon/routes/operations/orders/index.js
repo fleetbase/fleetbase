@@ -73,7 +73,10 @@ export default class OperationsOrdersIndexRoute extends Route {
     @action model(params) {
         //add timezone also here
         params.timezone = this.timezone;
-        // params.created_by = params.created_by || null; 
+        if (params.status) {
+            params.status = params.status.toLowerCase().replace(/\s+/g, '_');
+        }
+        console.log(params);
         return this.store.query('order', params);
     }
     @action setupController(controller, model) {
