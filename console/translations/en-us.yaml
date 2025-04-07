@@ -1157,6 +1157,9 @@ fleet-ops:
         assign-busy-text: The driver ({driverName}) <strong >{availability}</strong>. Do you still want to assign Order {orderId} to them? Click Continue {button} to confirm.
         assign-button: Continue and assign driver
         assign-busy-button: Continue {button}
+        driver-has-no-vehicle: The selected driver does not have an assigned vehicle. Please assign a vehicle or choose another driver with a vehicle before proceeding.
+        driver-no-vehicle-title: Driver has no vehicle
+        ok-button: Okay
         date: Date scheduled
         end-date: Estimated End Date
         driver-assigned: Driver

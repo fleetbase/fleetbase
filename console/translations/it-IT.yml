@@ -1016,6 +1016,9 @@ fleet-ops:
         assign-text: Stai per assegnare un nuovo conducente ({driverName}) all'Ordine {orderId}. Clicca continua per confermare il conducente.
         assign-busy-text: L'autista ({driverName}) <strong >{availability}</strong>. Vuoi comunque assegnargli l'ordine {orderId}? Clicca su "Continua" per confermare.
         assign-button: Continua e assegna il conducente
+        driver-has-no-vehicle: Il conducente selezionato non ha un veicolo assegnato. Si prega di assegnare un veicolo o scegliere un altro conducente con un veicolo prima di procedere.
+        driver-no-vehicle-title: Il conducente non ha un veicolo
+        ok-button: Ok
         date: Data programmata
         end-date: Data di fine stimata
         driver-assigned: Conducente
