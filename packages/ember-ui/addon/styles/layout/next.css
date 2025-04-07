@@ -2314,3 +2314,12 @@ nav.next-sidebar.sidebar-hidden {
 body[data-theme='dark'] .ember-power-select-option[aria-current="true"] {
     @apply bg-gray-600 text-white;
 }
+
+.console-fleet-ops-operations-scheduler-index .driver-has-no-vehicle .modal-footer-actions .btn-wrapper:first-child,
+.console-fleet-ops-operations-orders-index-view .driver-has-no-vehicle .modal-footer-actions .btn-wrapper:first-child {
+    display: none;
+}
+.console-fleet-ops-operations-orders-index-view .flb--modal.flb--default-modal.driver-has-no-vehicle > .flb--modal-dialog > .flb--modal-content,
+.console-fleet-ops-operations-scheduler-index .flb--modal.flb--default-modal.driver-has-no-vehicle > .flb--modal-dialog > .flb--modal-content {
+    width: 50rem;
+}
