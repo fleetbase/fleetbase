@@ -908,10 +908,8 @@ class Payload extends Model
      */
     protected function completeFirstWaypointStatus()
     {
-        $firstWaypoint = $this->waypoints()->first();
         $trackingNumber = optional($this->waypointMarkers()->first())->tracking_number_uuid;
-
-        if ($firstWaypoint && $trackingNumber) {
+        if ($trackingNumber) {
             $status = TrackingStatus::where('tracking_number_uuid', $trackingNumber)
                 ->whereNull('deleted_at')
                 ->first();
