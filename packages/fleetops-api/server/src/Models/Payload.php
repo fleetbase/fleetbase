@@ -15,6 +15,8 @@ use Fleetbase\Traits\HasUuid;
 use Fleetbase\Traits\TracksApiCredential;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
+use Fleetbase\FleetOps\Models\TrackingStatus;
+use Fleetbase\FleetOps\Models\Waypoint;
 
 class Payload extends Model
 {
@@ -731,9 +733,31 @@ class Payload extends Model
         $destination = null;
 
         if ($this->isMultipleDropOrder) {
-            $destination = $this->waypoints->first();
+            //complete first waypoint
+                // Complete the first waypoint
+                $firstWaypoint = $this->waypoints()->first();
+                $tracking_number_uuid = optional($this->waypointMarkers()->first())->tracking_number_uuid;
+        
+                if ($firstWaypoint && $tracking_number_uuid) {
+                    $status = TrackingStatus::where('tracking_number_uuid', $tracking_number_uuid)
+                        ->whereNull('deleted_at')
+                        ->first();
+        
+                    if ($status) {
+                        $status->update([
+                            'status' => 'Waypoint completed',
+                            'code' => 'COMPLETED',
+                            'details' => 'Waypoint has been completed',
+                            'updated_at' => now()
+                        ]);
+                    }
+                }
+            
+            //change second waypoint as current_waypoint while start the order
+            $destination = $this->waypoints()->where('order', 1)->first();
         } else {
-            $destination = $this->pickup ? $this->pickup : $this->waypoints->first();
+            //change dropoff as current_waypoint while start the order
+            $destination = $this->dropoff ? $this->dropoff :$this->waypoints()->where('order', 1)->first();;
         }
 
         if (!$destination) {
