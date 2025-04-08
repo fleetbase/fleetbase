@@ -854,7 +854,7 @@ class SettingController extends Controller
     {
          /** Parking Zone */
          $setting = Setting::where('key', 'system.services.parking_zone')->first();
-         $parkingZoneMaxDistance = 5;
+         $parkingZoneMaxDistance = config('services.parking_radius_meter');
          if ($setting && $setting->value) {
              $rawValue = $setting->value;
              // Only decode if it's a string
