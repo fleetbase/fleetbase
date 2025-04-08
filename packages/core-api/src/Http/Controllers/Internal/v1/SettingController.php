@@ -449,7 +449,11 @@ class SettingController extends Controller
                 $parsed = $rawValue; // Already decoded
             }
 
-            $parkingZoneMaxDistance = isset($parsed['max_distance']) ? (int) $parsed['max_distance'] : 0;
+            $maxDistance = isset($parsed['max_distance']) ? (int) $parsed['max_distance'] : 0;
+            // Validate that maxDistance is a number and within a reasonable range
+            if (is_numeric($maxDistance) && $maxDistance > 0 && $maxDistance <= 1000) { // Example range: 0 to 1000 miles
+                $parkingZoneMaxDistance = (int) $maxDistance;
+            } 
         }
 
         $parkingZoneMaxRadius = min($parkingZoneMaxDistance, 5);
@@ -481,7 +485,12 @@ class SettingController extends Controller
         $twilio     = $request->input('twilio', config('services.twilio'));
         $sentry     = $request->input('sentry', config('sentry.dsn'));
         //add parking zone radious
-        $parkingZone = $request->input('parkingZone', config('services.parking_zone')); 
+        if (is_array($parkingZone) && isset($parkingZone['max_distance']) && is_numeric($parkingZone['max_distance'])) { 
+        $parkingZone = $request->input('parkingZone', config('services.parking_radius_meter')); 
+        }
+        else {
+            $parkingZone = config('services.parking_radius_meter');
+        }
         Setting::configureSystem('services.aws', array_merge(config('services.aws', []), $aws));
         Setting::configureSystem('services.ipinfo', array_merge(config('services.ipinfo', []), $ipinfo));
         Setting::configureSystem('services.google_maps', array_merge(config('services.google_maps', []), $googleMaps));
