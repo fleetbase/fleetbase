@@ -7,6 +7,7 @@ import { task } from 'ember-concurrency';
 export default class ConfigureServicesComponent extends Component {
     @service fetch;
     @service notifications;
+    @service intl;
     @tracked isLoading = false;
 
     /** aws service */
@@ -31,6 +32,9 @@ export default class ConfigureServicesComponent extends Component {
     /** sentry service */
     @tracked sentryDsn = null;
     @tracked sentryTestResponse;
+
+    /** parking zone service */
+    @tracked parkingZoneMaxDistance = null;
 
     /**
      * Creates an instance of ConfigureServicesComponent.
@@ -82,7 +86,11 @@ export default class ConfigureServicesComponent extends Component {
                 sentry: {
                     dsn: this.sentryDsn,
                 },
+                parkingZone: {
+                    max_distance: this.parkingZoneMaxDistance,
+                },
             });
+            this.notifications.success(this.intl.t('common.configure-success-message'));
         } catch (error) {
             this.notifications.serverError(error);
         }

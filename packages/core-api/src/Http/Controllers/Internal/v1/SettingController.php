@@ -437,7 +437,26 @@ class SettingController extends Controller
 
         /** sentry service */
         $sentryDsn = config('sentry.dsn', env('SENTRY_LARAVEL_DSN', env('SENTRY_DSN')));
+        /** Parking Zone */
+        $setting = Setting::where('key', 'system.services.parking_zone')->first();
+        $parkingZoneMaxDistance = 5;
+        if ($setting && $setting->value) {
+            $rawValue = $setting->value;
+            // Only decode if it's a string
+            if (is_string($rawValue)) {
+                $parsed = json_decode($rawValue, true);
+            } else {
+                $parsed = $rawValue; // Already decoded
+            }
 
+            $maxDistance = isset($parsed['max_distance']) ? (int) $parsed['max_distance'] : 0;
+            // Validate that maxDistance is a number and within a reasonable range
+            if (is_numeric($maxDistance) && $maxDistance > 0 && $maxDistance <= 1000) { // Example range: 0 to 1000 miles
+                $parkingZoneMaxDistance = (int) $maxDistance;
+            } 
+        }
+
+        $parkingZoneMaxRadius = min($parkingZoneMaxDistance, 5);
         return response()->json([
             'awsKey'           => $awsKey,
             'awsSecret'        => $awsSecret,
@@ -449,6 +468,7 @@ class SettingController extends Controller
             'twilioToken'      => $twilioToken,
             'twilioFrom'       => $twilioFrom,
             'sentryDsn'        => $sentryDsn,
+            'parkingZoneMaxDistance' => $parkingZoneMaxRadius
         ]);
     }
 
@@ -464,13 +484,19 @@ class SettingController extends Controller
         $googleMaps = $request->input('googleMaps', config('services.google_maps'));
         $twilio     = $request->input('twilio', config('services.twilio'));
         $sentry     = $request->input('sentry', config('sentry.dsn'));
-
+        //add parking zone radious
+        if (is_array($parkingZone) && isset($parkingZone['max_distance']) && is_numeric($parkingZone['max_distance'])) { 
+        $parkingZone = $request->input('parkingZone', config('services.parking_radius_meter')); 
+        }
+        else {
+            $parkingZone = config('services.parking_radius_meter');
+        }
         Setting::configureSystem('services.aws', array_merge(config('services.aws', []), $aws));
         Setting::configureSystem('services.ipinfo', array_merge(config('services.ipinfo', []), $ipinfo));
         Setting::configureSystem('services.google_maps', array_merge(config('services.google_maps', []), $googleMaps));
         Setting::configureSystem('services.twilio', array_merge(config('services.twilio', []), $twilio));
         Setting::configureSystem('services.sentry', array_merge(config('sentry', []), $sentry));
-
+        Setting::configureSystem('services.parking_zone', array_merge(config('services.parking_zone', []), $parkingZone));
         return response()->json(['status' => 'OK']);
     }
 
