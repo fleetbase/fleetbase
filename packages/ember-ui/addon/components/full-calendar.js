@@ -83,6 +83,12 @@ export default class FullCalendarComponent extends Component {
                     // duration: { days: 21 }
                 }
             },
+            eventDidMount: function(info) {
+                const orderId = info.event.extendedProps.order?.public_id;
+                if (orderId) {
+                    info.el.setAttribute('data-order-id', orderId);
+                }}
+
             
         });
 

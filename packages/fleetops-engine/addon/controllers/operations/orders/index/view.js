@@ -461,19 +461,20 @@ export default class OperationsOrdersIndexViewController extends BaseController 
                  // Check if driver has no vehicle
                  if (!driver.is_available && driver.have_no_vehicle) {
                     // Defer modal until after the current UI updates
-                    setTimeout(() => {
-                        this.modalsManager.confirm({
-                            title: this.intl.t('fleet-ops.component.order.schedule-card.driver-no-vehicle-title'),
-                            body: this.intl.t('fleet-ops.component.order.schedule-card.driver-has-no-vehicle'),
-                            acceptButtonText: this.intl.t('fleet-ops.component.order.schedule-card.ok-button'),
-                            hideCancelButton: true,
-                            modalClass: 'driver-has-no-vehicle',
-                            confirm: (modal) => {
-                                modal.done();
-                                this.isModalOpen = false;
+                    this.modalsManager.confirm({
+                        title: this.intl.t('fleet-ops.component.order.schedule-card.driver-no-vehicle-title'),
+                        body: this.intl.t('fleet-ops.component.order.schedule-card.driver-has-no-vehicle'),
+                        acceptButtonText: this.intl.t('fleet-ops.component.order.schedule-card.ok-button'),
+                        hideCancelButton: true,
+                        modalClass: 'driver-has-no-vehicle',
+                        confirm: (modal) => {
+                            modal.done();
+                            // After closing this modal, reopen the edit form if it was closed
+                            if (!this.modalsManager.isModalOpen) {
+                                this.editOrder(order, options);
                             }
-                        });
-                    }, 0); // Ensures the modal appears after UI updates
+                        }
+                    });
                     return;
                 }
                 // If driver is available, assign immediately
