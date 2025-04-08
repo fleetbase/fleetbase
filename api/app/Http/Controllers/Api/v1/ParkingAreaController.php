@@ -91,7 +91,7 @@ class ParkingAreaController extends Controller
                         'area' => $area['locationName'] ?? 'Unknown',
                         'error' => $e->getMessage()
                     ];
-                    \Log::error('Error processing parking area: ' . $e->getMessage(), [
+                    Log::error('Error processing parking area: ' . $e->getMessage(), [
                         'area' => $area,
                         'error' => $e->getMessage()
                     ]);
@@ -133,7 +133,7 @@ class ParkingAreaController extends Controller
             //radius from settings
             $radiusInMiles = SettingController::getParkingRadius();
             $radius = SettingController::convertMilesToMeters($radiusInMiles);//convert miles into meters
-            //$radius = floatval( config('services.parking_radius_meter')); // Default 50km radius
+            //$radius = floatval( config('services.parking_radius_meter')); 
             if (!$latitude || !$longitude) {
                 return response()->json([
                     'status' => 'error',
