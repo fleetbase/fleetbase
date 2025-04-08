@@ -1,5 +1,5 @@
 <div class="order-schedule-card border border-gray-200 dark:border-gray-700" ...attributes>
-    <a href="javascript:;" class="{{@titleClass}} card-title border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900" {{on "click" (fn this.onTitleClick @order)}}>
+    <a href="javascript:;" class="{{@titleClass}} card-title border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900" {{on "click" (fn this.onTitleClick @order)}} data-order-id="{{@order.public_id}}">
         <span>{{@order.public_id}}</span>
         <div>
             <Badge @status={{@order.status}} />
@@ -43,7 +43,8 @@
                     {{#let (cannot "fleet-ops assign-driver-for order") as |unauthorized|}}
                         <a
                             href="javascript:;"
-                            class="text-blue-400 text-xs hover:opacity-75 {{if unauthorized 'opacity-50 disabled'}}"
+                            data-order-id="{{@order.public_id}}"
+                            class="calendar-edit-icon text-blue-400 text-xs hover:opacity-75 {{if unauthorized 'opacity-50 disabled'}}"
                             {{on "click" this.startAssignDriver}}
                             disabled={{unauthorized}}
                         >
