@@ -13,6 +13,7 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Fleetbase\Support\Auth;
+use Fleetbase\Http\Controllers\Internal\v1\SettingController;
 
 class ParkingAreaController extends Controller
 {
@@ -129,8 +130,10 @@ class ParkingAreaController extends Controller
         try {
             $latitude = floatval($request->input('latitude'));
             $longitude = floatval($request->input('longitude'));
-            $radius = floatval( config('services.parking_radius_meter')); // Default 50km radius
-
+            //radius from settings
+            $radiusInMiles = SettingController::getParkingRadius();
+            $radius = SettingController::convertMilesToMeters($radiusInMiles);//convert miles into meters
+            //$radius = floatval( config('services.parking_radius_meter')); // Default 50km radius
             if (!$latitude || !$longitude) {
                 return response()->json([
                     'status' => 'error',
