@@ -438,25 +438,7 @@ class SettingController extends Controller
         /** sentry service */
         $sentryDsn = config('sentry.dsn', env('SENTRY_LARAVEL_DSN', env('SENTRY_DSN')));
         /** Parking Zone */
-        $setting = Setting::where('key', 'system.services.parking_zone')->first();
-        $parkingZoneMaxDistance = 5;
-        if ($setting && $setting->value) {
-            $rawValue = $setting->value;
-            // Only decode if it's a string
-            if (is_string($rawValue)) {
-                $parsed = json_decode($rawValue, true);
-            } else {
-                $parsed = $rawValue; // Already decoded
-            }
-
-            $maxDistance = isset($parsed['max_distance']) ? (int) $parsed['max_distance'] : 0;
-            // Validate that maxDistance is a number and within a reasonable range
-            if (is_numeric($maxDistance) && $maxDistance > 0 && $maxDistance <= 1000) { // Example range: 0 to 1000 miles
-                $parkingZoneMaxDistance = (int) $maxDistance;
-            } 
-        }
-
-        $parkingZoneMaxRadius = min($parkingZoneMaxDistance, 5);
+        $parkingZoneMaxDistance = $this->getParkingRadius();
         return response()->json([
             'awsKey'           => $awsKey,
             'awsSecret'        => $awsSecret,
@@ -468,7 +450,7 @@ class SettingController extends Controller
             'twilioToken'      => $twilioToken,
             'twilioFrom'       => $twilioFrom,
             'sentryDsn'        => $sentryDsn,
-            'parkingZoneMaxDistance' => $parkingZoneMaxRadius
+            'parkingZoneMaxDistance' => $parkingZoneMaxDistance
         ]);
     }
 
@@ -485,6 +467,7 @@ class SettingController extends Controller
         $twilio     = $request->input('twilio', config('services.twilio'));
         $sentry     = $request->input('sentry', config('sentry.dsn'));
         //add parking zone radious
+        $parkingZone = $request->input('parkingZone', config('services.parking_radius_meter'));
         if (is_array($parkingZone) && isset($parkingZone['max_distance']) && is_numeric($parkingZone['max_distance'])) { 
         $parkingZone = $request->input('parkingZone', config('services.parking_radius_meter')); 
         }
@@ -861,5 +844,44 @@ class SettingController extends Controller
                 'response' => $response,
             ]
         );
+    }
+    /**
+     * Gets the maximum distance of the parking zone.
+     * 
+     * @return int maximum distance of the parking zone in miles, defaults to 5 if not set
+     */
+    public static function getParkingRadius()
+    {
+         /** Parking Zone */
+         $setting = Setting::where('key', 'system.services.parking_zone')->first();
+         $parkingZoneMaxDistance = 5;
+         if ($setting && $setting->value) {
+             $rawValue = $setting->value;
+             // Only decode if it's a string
+             if (is_string($rawValue)) {
+                 $parsed = json_decode($rawValue, true);
+             } else {
+                 $parsed = $rawValue; // Already decoded
+             }
+ 
+             $maxDistance = isset($parsed['max_distance']) ? (int) $parsed['max_distance'] : 0;
+             // Validate that maxDistance is a number and within a reasonable range
+             if (is_numeric($maxDistance) && $maxDistance > 0 && $maxDistance <= 1000) { // Example range: 0 to 1000 miles
+                 $parkingZoneMaxDistance = (int) $maxDistance;
+             } 
+         }
+ 
+        return $parkingZoneMaxDistance;
+    }
+    
+    /**
+     * Converts a distance in miles to meters.
+     *
+     * @param float $miles Distance in miles
+     * @return float Distance in meters
+     */
+    public static function convertMilesToMeters(float $miles): float
+    {
+        return $miles * 1609.344;
     }
 }
