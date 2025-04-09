@@ -535,7 +535,7 @@ export default class OperationsOrdersIndexViewController extends BaseController 
                     setTimeout(() => {
                         // Show the error message modal
                         this.modalsManager.confirm({
-                            title: this.intl.t('fleet-ops.component.order.schedule-card.required'),
+                            title: this.intl.t('fleet-ops.component.order.schedule-card.missing-info'),
                             body: this.intl.t('fleet-ops.component.order.schedule-card.driver-no-vehicle-title'),
                             acceptButtonText: this.intl.t('fleet-ops.component.order.schedule-card.ok-button'),
                             hideCancelButton: true,
