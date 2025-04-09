@@ -432,7 +432,13 @@ export default class OperationsOrdersIndexViewController extends BaseController 
      */
     @action editOrder(order, options = {}) {
         options = options === null ? {} : {};
-
+        let originalOrderData = {
+            driver_assigned_uuid: order.driver_assigned_uuid,
+            vehicle_assigned_uuid: order.vehicle_assigned_uuid,
+            scheduled_at: order.scheduled_at,
+            estimated_end_date: order.estimated_end_date
+        };
+        let fieldsChanged = false;
         let driverToAssign = null; // Store the driver assignment until confirmation
 
         this.modalsManager.show('modals/order-form', {
@@ -449,58 +455,53 @@ export default class OperationsOrdersIndexViewController extends BaseController 
                         facilitator: model.id,
                     });
                 }
+                fieldsChanged = true;
             },
             setOrderCustomer: (model) => {
                 order.set('customer', model);
                 order.set('customer_type', `fleet-ops:${model.customer_type}`);
+                fieldsChanged = true;
             },
             setDriver: (driver) => {
                 if (!driver) {
                     order.set('driver_assigned_uuid', null);
-                }
-                 // Check if driver has no vehicle
-                 if (!driver.is_available && driver.have_no_vehicle) {
-                    // Defer modal until after the current UI updates
-                    this.modalsManager.confirm({
-                        title: this.intl.t('fleet-ops.component.order.schedule-card.driver-no-vehicle-title'),
-                        body: this.intl.t('fleet-ops.component.order.schedule-card.driver-has-no-vehicle'),
-                        acceptButtonText: this.intl.t('fleet-ops.component.order.schedule-card.ok-button'),
-                        hideCancelButton: true,
-                        modalClass: 'driver-has-no-vehicle',
-                        confirm: (modal) => {
-                            modal.done();
-                            // After closing this modal, reopen the edit form if it was closed
-                            if (!this.modalsManager.isModalOpen) {
-                                this.editOrder(order, options);
-                            }
-                        }
-                    });
+                    order.set('driver_assigned', null);
                     return;
                 }
+                
+                // Set driver regardless of availability
+                order.set('driver_assigned', driver);
+                order.set('driver_assigned_uuid', driver.id);
+                
                 // If driver is available, assign immediately
                 if (driver.is_available) {
-                    order.set('driver_assigned', driver);
-                    order.set('driver_assigned_uuid', driver.id);
-            
                     if (driver.vehicle) {
                         order.set('vehicle_assigned', driver.vehicle);
+                        order.set('vehicle_assigned_uuid', driver.vehicle.id);
                     }
                 } else {
                     // Store the driver assignment for later confirmation
                     driverToAssign = driver;
                     if (driver.vehicle) {
                         order.set('vehicle_assigned', driver.vehicle);
+                        order.set('vehicle_assigned_uuid', driver.vehicle.id);
                     }
                 }
+                fieldsChanged = true;
             },
             setVehicle: (vehicle) => {
-                order.set('vehicle_assigned', vehicle);
                 if (!vehicle) {
                     order.set('vehicle_assigned_uuid', null);
+                    order.set('vehicle_assigned', null);
+                } else {
+                    order.set('vehicle_assigned', vehicle);
+                    order.set('vehicle_assigned_uuid', vehicle.id);
                 }
+                fieldsChanged = true;
             },
             scheduleOrder: (dateInstance) => {
                 order.scheduled_at = dateInstance;
+                fieldsChanged = true;
             },
             
             EndDateOrder: (dateInstance) => {
@@ -510,18 +511,46 @@ export default class OperationsOrdersIndexViewController extends BaseController 
                     return;
                 }
                 order.estimated_end_date = dateInstance;
+                fieldsChanged = true;
             },
         
             driversQuery: {},
             order,
             confirm: async (modal) => {
                 modal.startLoading();
-                if (!order.estimated_end_date || new Date(order.estimated_end_date) < new Date(order.scheduled_at)) {
-                    this.errorMessage = "End Date cannot be earlier than the start date.";
-                    this.notifications.error(this.errorMessage);
-                    // Stop execution and revert changes
+                // Check if only dates were changed (and not driver/vehicle)
+                const onlyDatesChanged = 
+                    originalOrderData.driver_assigned_uuid === order.driver_assigned_uuid &&
+                    originalOrderData.vehicle_assigned_uuid === order.vehicle_assigned_uuid &&
+                    (originalOrderData.scheduled_at !== order.scheduled_at ||
+                     originalOrderData.estimated_end_date !== order.estimated_end_date);
+                // Only check if fields other than dates were changed
+                if (!onlyDatesChanged && 
+                    ((!order.driver_assigned && !order.driver_assigned_uuid) || 
+                     (!order.vehicle_assigned && !order.vehicle_assigned_uuid))) {
+                    // Stop loading state
                     modal.stopLoading();
-                    return;
+                    modal.done();
+                    // Wait for the first modal to close completely
+                    setTimeout(() => {
+                        // Show the error message modal
+                        this.modalsManager.confirm({
+                            title: this.intl.t('fleet-ops.component.order.schedule-card.required'),
+                            body: this.intl.t('fleet-ops.component.order.schedule-card.driver-no-vehicle-title'),
+                            acceptButtonText: this.intl.t('fleet-ops.component.order.schedule-card.ok-button'),
+                            hideCancelButton: true,
+                            modalClass: 'driver-has-no-vehicle',
+                            confirm: (errorModal) => {
+                                errorModal.done();
+                                // Wait for error modal to close before reopening edit form
+                                setTimeout(() => {
+                                    this.editOrder(order, options);
+                                }, 100);
+                            }
+                        });
+                    }, 300); // Use a longer delay to ensure first modal is closed
+                    
+                    return true; // This will close the first modal
                 }
 
                 const saveOrder = async () => {
@@ -554,16 +583,13 @@ export default class OperationsOrdersIndexViewController extends BaseController 
                                 order.set('driver_assigned', driverToAssign);
                                 order.set('driver_assigned_uuid', driverToAssign.id);
 
-                                // if (driverToAssign.vehicle) {
-                                //     order.set('vehicle_assigned', driverToAssign.vehicle);
-                                // }
-
                                 confirmModal.startLoading();
                                 await saveOrder();
                             },
                             decline: (confirmModal) => {
-                                confirmModal.done();
-                                modal.done();
+                                setTimeout(() => {
+                                    this.editOrder(order, options);
+                                }, 100);
                             },
                         });
                     }, 300);
