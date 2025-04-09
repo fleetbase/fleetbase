@@ -33,9 +33,6 @@ export default class ConfigureServicesComponent extends Component {
     @tracked sentryDsn = null;
     @tracked sentryTestResponse;
 
-    /** parking zone service */
-    @tracked parkingZoneMaxDistance = null;
-
     /**
      * Creates an instance of ConfigureServicesComponent.
      * @memberof ConfigureServicesComponent
@@ -85,10 +82,7 @@ export default class ConfigureServicesComponent extends Component {
                 },
                 sentry: {
                     dsn: this.sentryDsn,
-                },
-                parkingZone: {
-                    max_distance: this.parkingZoneMaxDistance,
-                },
+                }
             });
             this.notifications.success(this.intl.t('common.configure-success-message'));
         } catch (error) {

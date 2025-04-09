@@ -130,9 +130,6 @@ class ParkingAreaController extends Controller
         try {
             $latitude = floatval($request->input('latitude'));
             $longitude = floatval($request->input('longitude'));
-            //radius from settings
-            $radiusInMiles = SettingController::getParkingRadius();
-            $radius = SettingController::convertMilesToMeters($radiusInMiles);//convert miles into meters
             //$radius = floatval( config('services.parking_radius_meter')); 
             if (!$latitude || !$longitude) {
                 return response()->json([
@@ -146,7 +143,12 @@ class ParkingAreaController extends Controller
             $company_uuid = null;
             if($company){
                 $company_uuid = $company->uuid;
+                $radiusInMiles = $company->parking_zone_max_distance;
             }
+            else{
+                $radiusInMiles = config('services.parking_radius_meter');
+            }
+            $radius = SettingController::convertMilesToMeters($radiusInMiles);//convert miles into meters
             // Get the parking areas from the service_areas table
             $parkingAreas = ServiceArea::where('company_uuid', $company_uuid)->where('type', 'parking')
                 ->distanceSphere('location', $currentLocation, $radius) // Convert km to meters
