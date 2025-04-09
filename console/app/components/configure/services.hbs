@@ -39,9 +39,6 @@
 <ContentPanel @title="IP Info" @open={{true}} @pad={{true}} @panelBodyClass="bg-white dark:bg-gray-800">
     <InputGroup @name="IP Info API Key" @value={{this.ipinfoApiKey}} disabled={{this.isLoading}} />
 </ContentPanel>
-<ContentPanel @title={{t "common.parking-zone"}} @open={{true}} @pad={{true}} @panelBodyClass="bg-white dark:bg-gray-800">
-    <InputGroup @name={{t "common.max-distance"}} @placeholder="{{t "common.enter-distance"}}" @value={{this.parkingZoneMaxDistance}} disabled={{this.isLoading}} />
-</ContentPanel>
 <Spacer @height="200px" />
 
 <EmberWormhole @to="next-view-section-subheader-actions">
