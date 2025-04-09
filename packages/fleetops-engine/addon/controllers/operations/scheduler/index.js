@@ -7,18 +7,29 @@ import isObject from '@fleetbase/ember-core/utils/is-object';
 import isJson from '@fleetbase/ember-core/utils/is-json';
 import createFullCalendarEventFromOrder, { createOrderEventTitle } from '../../../utils/create-full-calendar-event-from-order';
 import { isNone } from '@ember/utils';
+import { task } from 'ember-concurrency-decorators';
 
 export default class OperationsSchedulerIndexController extends BaseController {
     @service modalsManager;
     @service notifications;
     @service store;
     @service intl;
+    @service fetch;
     @service hostRouter;
     @tracked scheduledOrders = [];
     @tracked unscheduledOrders = [];
     @tracked calscheduledOrders=[];
     @tracked events = [];
     @service eventBus;
+
+    // Add filter properties
+    @tracked order_id_filter = '';
+    @tracked driver_filter = '';
+    @tracked status_filter = '';
+    @tracked showBusy = true;
+    @tracked showLeave = true;
+    @tracked showTripAssigned = true;
+    @tracked selectedDriver = null;
     
     // Single pagination approach
     queryParams = ['ref', 'page', 'scheduled_limit', 'unscheduled_limit', 'calendar_limit'];
@@ -30,10 +41,100 @@ export default class OperationsSchedulerIndexController extends BaseController {
     @tracked unscheduled_limit = 30;
     @tracked calendar_limit = 500;
     @tracked calendar;
+    @tracked availableDrivers = [];
     
+    @tracked statusOptions = [];
+    @tracked selectedStatus = null;
+
     constructor() {
         super(...arguments);
+        this.loadAvailableDrivers();
+        // this.loadOrderStatusOptions();
+        this.getOrderStatusOptions.perform();
         this.eventBus.subscribe('calendar-refresh-needed', this.handleCalendarRefresh.bind(this));
+        // Initialize selected values if filters are set
+        this.initializeSelectedValues();
+    }
+    @action
+    initializeSelectedValues() {
+    // Wait for drivers to load before trying to select one
+    this.availableDriversLoaded.then(() => {
+        if (this.driver_filter) {
+        this.selectedDriver = this.availableDrivers.find(driver => driver.id === this.driver_filter);
+        }
+    });
+  
+  // Set selected status based on status_filter
+  if (this.status_filter) {
+    this.selectedStatus = this.statusOptions.find(status => status.id === this.status_filter);
+  }
+}
+
+    // Update driver loading to return a promise for initialization
+    @action
+    loadAvailableDrivers() {
+        this.availableDriversLoaded = this.store.findAll('driver').then(drivers => {
+            this.availableDrivers = drivers;
+            return drivers;
+        }).catch(error => {
+            console.error('Error loading drivers:', error);
+            this.notifications.error('Failed to load driver list');
+            return [];
+        });
+        
+        return this.availableDriversLoaded;
+    }
+   
+    @task
+    *getOrderStatusOptions() {
+        try {
+            // Make the API call to get status options
+            const response = yield this.fetch.get('orders/statuses');
+            
+            if (Array.isArray(response)) {
+                // Transform the response into the format we need
+                this.statusOptions = [
+                    { id: '', name: 'All Statuses' },
+                    ...response.map(status => {
+                        // Format the name: capitalize first letter of each word and replace underscores with spaces
+                        const words = status.split('_');
+                        const formattedName = words
+                            .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+                            .join(' ');
+                        
+                        return { 
+                            id: status, 
+                            name: formattedName 
+                        };
+                    })
+                ];
+            } else {
+                console.error("Unexpected response format:", response);
+            }
+            
+        } catch (error) {
+            this.notifications.serverError(error);
+        }
+    }
+    
+
+    // Action to handle status selection
+    @action
+    onStatusChange(selected) {
+        this.selectedStatus = selected;
+        this.status_filter = selected ? selected.id : '';
+    }
+    @action
+    onDriverChange(driver) {
+        this.selectedDriver = driver;
+        this.driver_filter = driver ? driver.id : '';
+    }
+
+    // To initialize the selected driver based on driver_filter (add to constructor or init)
+    initializeSelectedDriver() {
+        if (this.driver_filter) {
+            this.selectedDriver = this.availableDrivers.find(driver => driver.id === this.driver_filter);
+        }
     }
     
     didReceiveAttrs() {
@@ -77,10 +178,11 @@ export default class OperationsSchedulerIndexController extends BaseController {
         } else {
             this.updateCalendar();
         }
-            // this.updateCalendar();
+          
         });
         
     }
+    
 
     get isFirstPage() {
         return this.page <= 1;
@@ -89,9 +191,286 @@ export default class OperationsSchedulerIndexController extends BaseController {
     get isLastPage() {
         return this.page >= this.totalPages;
     }
+
+    // Update your applyFilters method to use updateCalendarWithFilteredData instead of updateCalendar
+    @action
+    applyFilters() {
+        try {
+            let filteredOrders = [...this.calscheduledOrders];
     
+            // Apply driver filter
+            if (this.driver_filter) {
+                filteredOrders = this.filterByDriver(filteredOrders);
+            }
+    
+            // Apply order ID filter
+            if (this.order_id_filter) {
+                filteredOrders = this.filterByOrderId(filteredOrders);
+            }
+    
+            // Apply status filter
+            if (this.status_filter) {
+                filteredOrders = this.filterByStatus(filteredOrders);
+            }
+    
+            // Update the calendar with the filtered data
+            this.updateCalendarWithFilteredData(filteredOrders);
+        } catch (error) {
+            console.error("Error applying filters:", error);
+            this.notifications.error("An error occurred while applying filters.");
+        }
+    }
+    
+    // Filter by driver
+    filterByDriver(orders) {
+        return orders.filter(order => {
+            if (!order.driver_assigned) return false;
+    
+            const driverName = order.driver_assigned.name || '';
+            const driverId = order.driver_assigned_uuid || '';
+            
+            // Match by driver name or ID
+            const match = 
+                driverName.toLowerCase().includes(this.driver_filter.toLowerCase()) ||
+                driverId.toLowerCase().includes(this.driver_filter.toLowerCase());
+    
+            return match;
+        });
+    }
+    
+    // Filter by order ID
+    filterByOrderId(orders) {
+        return orders.filter(order => {
+            const orderId = order.id || '';
+            const publicId = order.public_id || '';
+            
+            // Match by order ID or public ID
+            return orderId.toLowerCase().includes(this.order_id_filter.toLowerCase()) ||
+                publicId.toLowerCase().includes(this.order_id_filter.toLowerCase());
+        });
+    }
+    
+    // Filter by status
+    filterByStatus(orders) {
+        const statusFilter = this.status_filter.toLowerCase();
+    
+        return orders.filter(order => {
+          if (order.status && order.status.toLowerCase() === statusFilter) {
+            return true;
+          }
+    
+          const statusMap = {
+            'confirmed': order.status === 'created' && !order.isDispatched && !order.isCompleted,
+            'created': !order.isDispatched && !order.isCompleted && !order.isCanceled,
+            'dispatched': !!order.isDispatched,
+            'completed': !!order.isCompleted,
+            'cancelled': !!order.isCanceled,
+            'canceled': !!order.isCanceled,
+            'in_progress': !!order.isDispatched && !order.isCompleted
+          };
+    
+          return statusMap[statusFilter] || false;
+        });
+      }
+    
+
+    // Updated clear filters action
+    @action
+    clearFilters() {
+        // Reset filter values
+        this.order_id_filter = '';
+        this.driver_filter = '';
+        this.status_filter = '';
+        this.showBusy = true;
+        this.showLeave = true;
+        this.showTripAssigned = true;
+
+        // Reset selected filter values
+        this.selectedDriver = null;
+        this.selectedStatus = null;
+
+        // Reset calendar filtering to show all events
+        this.calendarFilteredOrders = this.calscheduledOrders; // Reset to the original unsorted list
+        this.updateCalendarWithFilteredData(this.calendarFilteredOrders);
+    }
+
+
+    // New method to apply filtered data to calendar without affecting sidebar
+    // @action
+    // updateCalendarWithFilteredData(filteredOrders) {
+    //     if (!this.calendar) {
+    //         console.warn("Calendar instance not available.");
+    //         return;
+    //     }
+        
+    //     console.log("Updating calendar with filtered data:", filteredOrders.length);
+        
+    //     try {
+    //         // Create an array of valid event IDs from filtered orders
+    //         const validOrderEventIds = filteredOrders.map(order => order.id);
+            
+    //         console.log("Valid order IDs after filtering:", validOrderEventIds);
+            
+    //         // Get all current calendar events
+    //         const allEvents = this.calendar.getEvents();
+    //         console.log("Total calendar events:", allEvents.length);
+            
+    //         let hiddenCount = 0;
+    //         let shownCount = 0;
+            
+    //         // First, let's explicitly hide all non-matching events
+    //         allEvents.forEach(event => {
+    //             const eventId = event.id;
+                
+    //             // Check if this is a leave event (leave events are handled separately)
+    //             const isLeaveEvent = 
+    //                 (event.classNames && event.classNames.includes('leave-event')) || 
+    //                 (event.extendedProps?.type === 'leave') ||
+    //                 (event.title && event.title.toLowerCase().includes('leave'));
+                
+    //             // If it's a leave event, handle it according to the checkbox
+    //             if (isLeaveEvent) {
+    //                 if (this.showLeave) {
+    //                     event.setProp('display', 'auto');
+    //                 } else {
+    //                     event.setProp('display', 'none');
+    //                 }
+    //                 return;
+    //             }
+                
+    //             // For regular order events, check if in filtered results
+    //             const isInFilteredResults = validOrderEventIds.includes(eventId);
+                
+    //             if (!isInFilteredResults) {
+    //                 // This event should be hidden
+    //                 event.setProp('display', 'none'); 
+    //                 event.setProp('classNames', ['hidden-event']);
+    //                 hiddenCount++;
+    //             } else {
+    //                 // This event should be shown
+    //                 event.setProp('display', 'auto');
+                    
+    //                 // Remove any hiding classes
+    //                 const classNames = event.classNames || [];
+    //                 event.setProp('classNames', classNames.filter(c => c !== 'hidden-event'));
+                    
+    //                 shownCount++;
+    //             }
+    //         });
+            
+    //         console.log(`Calendar update complete. Hidden: ${hiddenCount}, Visible: ${shownCount}`);
+            
+    //         // Force re-render of the calendar
+    //         this.calendar.render();
+            
+    //         // If we have exactly one visible event, center the calendar on it
+    //         if (shownCount === 1) {
+    //             const visibleEvent = allEvents.find(event => 
+    //                 event.display !== 'none' && 
+    //                 !event.classNames.includes('hidden-event')
+    //             );
+                
+    //             if (visibleEvent && visibleEvent.start) {
+    //                 this.calendar.gotoDate(visibleEvent.start);
+    //                 console.log("Centering calendar on event:", visibleEvent.title);
+    //             }
+    //         }
+    //     } catch (error) {
+    //         console.error("Error updating calendar with filtered data:", error);
+    //     }
+    // }
+    @action
+    updateCalendarWithFilteredData(filteredOrders) {
+        if (!this.calendar) {
+            console.warn("Calendar instance not available.");
+            return;
+        }
+        
+        try {
+            const validOrderEventIds = new Set(filteredOrders.map(order => order.id));
+            const allEvents = this.calendar.getEvents();
+
+            let hiddenCount = 0;
+            let shownCount = 0;
+
+            // Batch update: hide non-matching events, show matching events
+            allEvents.forEach(event => {
+                const isLeaveEvent = event.classNames?.includes('leave-event') || 
+                    event.extendedProps?.type === 'leave' || 
+                    (event.title && event.title.toLowerCase().includes('leave'));
+
+                if (isLeaveEvent) {
+                    event.setProp('display', this.showLeave ? 'auto' : 'none');
+                    return;
+                }
+
+                const shouldDisplay = validOrderEventIds.has(event.id);
+                if (shouldDisplay) {
+                    event.setProp('display', 'auto');
+                    event.setProp('classNames', event.classNames.filter(c => c !== 'hidden-event'));
+                    shownCount++;
+                } else {
+                    event.setProp('display', 'none');
+                    event.setProp('classNames', ['hidden-event']);
+                    hiddenCount++;
+                }
+            });
+
+            this.calendar.render(); // Re-render the calendar
+
+            // Center on the first visible event if there is only one visible event
+            if (shownCount === 1) {
+                const visibleEvent = allEvents.find(event => event.display !== 'none');
+                if (visibleEvent && visibleEvent.start) {
+                    this.calendar.gotoDate(visibleEvent.start);
+                }
+            }
+        } catch (error) {
+            console.error("Error updating calendar with filtered data:", error);
+        }
+    }
+
+    // Helper method to hide all order events (non-leave events)
+    hideAllOrderEvents() {
+        if (!this.calendar) return;
+        
+        const allEvents = this.calendar.getEvents();
+        
+        allEvents.forEach(event => {
+            const isLeaveEvent = 
+                (event.classNames && event.classNames.includes('leave-event')) || 
+                (event.title && event.title.toLowerCase().includes('leave'));
+            
+            if (!isLeaveEvent) {
+                event.setProp('display', 'none');
+                event.setProp('classNames', ['hidden-event']);
+            }
+        });
+        
+        this.calendar.render();
+    }
+
+    // @action
+    // toggleBusy() {
+    //     this.showBusy = !this.showBusy;
+    //     this.updateCalendarWithFilters();
+    // }
+    
+    // @action
+    // toggleLeave() {
+    //     this.showLeave = !this.showLeave;
+    //     this.updateCalendarWithFilters();
+    // }
+    
+    // @action
+    // toggleTripAssigned() {
+    //     this.showTripAssigned = !this.showTripAssigned;
+    //     this.updateCalendarWithFilters();
+    // }
+    
+
     // Remaining code remains the same...
-    
+   
     @action
     async refreshOrders() {
         const orders = await this.store.query('order', {
@@ -101,15 +480,76 @@ export default class OperationsSchedulerIndexController extends BaseController {
             limit: Math.max(this.scheduled_limit, this.unscheduled_limit, 30),
             sort: '-created_at'
         });
-        
         this.scheduledOrders = orders.filter(order => !isNone(order.driver_assigned_uuid));
         this.unscheduledOrders = orders.filter(order => isNone(order.driver_assigned_uuid));
        
         this.updateCalendar();
-
+        return orders;
         
     }
-    
+    // New method to apply checkbox filters
+    // updateCalendarWithFilters() {
+    //     if (!this.calendar) {
+    //         return;
+    //     }
+        
+    //     // Get all calendar events
+    //     const allEvents = this.calendar.getEvents();
+        
+    //     allEvents.forEach(event => {
+    //         // Get the corresponding order if available
+    //         const order = this.store.peekRecord('order', event.id);
+            
+    //         // Determine event type
+    //         const isLeaveEvent = 
+    //             (event.classNames && event.classNames.includes('leave-event')) || 
+    //             (event.title && event.title.toLowerCase().includes('leave'));
+            
+    //         const isBusyEvent = order && order.status === 'busy';
+            
+    //         const isTripAssignedEvent = order && !isNone(order.driver_assigned_uuid);
+            
+    //         // Apply filters based on event type
+    //         if (isLeaveEvent) {
+    //             if (this.showLeave) {
+    //                 event.setProp('display', 'auto');
+    //                 const classNames = event.classNames || [];
+    //                 event.setProp('classNames', [...classNames.filter(c => c !== 'hidden-event'), 'leave-event', 'leave-visible']);
+    //             } else {
+    //                 event.setProp('display', 'none');
+    //                 const classNames = event.classNames || [];
+    //                 event.setProp('classNames', [...classNames.filter(c => c !== 'leave-visible'), 'leave-event', 'hidden-event']);
+    //             }
+    //         }
+            
+    //         if (isBusyEvent) {
+    //             if (this.showBusy) {
+    //                 event.setProp('display', 'auto');
+    //                 const classNames = event.classNames || [];
+    //                 event.setProp('classNames', [...classNames.filter(c => c !== 'hidden-event'), 'busy-event']);
+    //             } else {
+    //                 event.setProp('display', 'none');
+    //                 const classNames = event.classNames || [];
+    //                 event.setProp('classNames', [...classNames, 'busy-event', 'hidden-event']);
+    //             }
+    //         }
+            
+    //         if (isTripAssignedEvent) {
+    //             if (this.showTripAssigned) {
+    //                 event.setProp('display', 'auto');
+    //                 const classNames = event.classNames || [];
+    //                 event.setProp('classNames', [...classNames.filter(c => c !== 'hidden-event'), 'trip-assigned-event']);
+    //             } else {
+    //                 event.setProp('display', 'none');
+    //                 const classNames = event.classNames || [];
+    //                 event.setProp('classNames', [...classNames, 'trip-assigned-event', 'hidden-event']);
+    //             }
+    //         }
+    //     });
+        
+    //     // Re-render the calendar
+    //     this.calendar.render();
+    // }
     
     @action setCalendarApi(calendar) {
         this.calendar = calendar;
@@ -118,8 +558,6 @@ export default class OperationsSchedulerIndexController extends BaseController {
     @action
     handleCalendarRefresh(data) {
         const startTime = performance.now();
-        // Update calendar
-        // this.updateCalendar();
         
         // Reload specific order if provided
         if (data && data.orderId) {
@@ -132,7 +570,7 @@ export default class OperationsSchedulerIndexController extends BaseController {
         // Make sure we stay on the current page when refreshing
         const currentPage = data?.currentPage || this.page;
         this.store.query('order', {
-            status: 'created',
+            // status: 'created',
             with: ['payload', 'driverAssigned.vehicle'],
             page: currentPage,
             sort: '-created_at'
@@ -267,7 +705,8 @@ export default class OperationsSchedulerIndexController extends BaseController {
                 event.setProp('backgroundColor', '#FFD700'); // Default leave color
             }
         });
-        
+        // Apply checkbox filters
+        // this.updateCalendarWithFilters();
         // Re-render the calendar
         this.calendar.render();
         
