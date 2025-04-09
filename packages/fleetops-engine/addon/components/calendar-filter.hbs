@@ -1,0 +1,59 @@
+{{!-- components/fleet-ops/calendar-filter.hbs --}}
+<div class="flex items-center justify-between mb-4 bg-white dark:bg-gray-800 p-3 rounded-md border border-gray-200 dark:border-gray-700">
+  <div class="flex items-center space-x-4">
+    <div class="flex items-center">
+      <label for="order-id-filter" class="mr-2 text-sm font-medium">Order ID:</label>
+      <Input
+        @type="text"
+        @value={{@order_id_filter}}
+        id="order-id-filter"
+        placeholder="Search by Order ID"
+        class="form-input rounded-md text-sm border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-300"
+      />
+    </div>
+    
+    <div class="flex items-center">
+      <label for="driver-filter" class="mr-2 text-sm font-medium">Driver:</label>
+      <PowerSelect
+        @options={{@availableDrivers}}
+        @selected={{@selectedDriver}}
+        @onChange={{this.handleDriverChange}}
+        @placeholder="All Drivers"
+        @triggerClass="form-input rounded-md text-sm border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-300 w-full"
+        @searchEnabled={{true}}
+        @searchField="name"
+        as |driver|
+      >
+        {{driver.name}}
+      </PowerSelect>
+    </div>
+    
+    <div class="flex items-center">
+      <label for="status-filter" class="mr-2 text-sm font-medium">Status:</label>
+      <PowerSelect
+        @options={{@statusOptions}}
+        @selected={{@selectedStatus}}
+        @onChange={{this.handleStatusChange}}
+        @placeholder="All Statuses"
+        @triggerClass="form-input rounded-md text-sm border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-300 w-full"
+        as |status|
+      >
+        {{status.name}}
+      </PowerSelect>
+    </div>
+    
+    <button
+      class="btn btn-primary btn-sm px-3 py-1 rounded border"
+      {{on "click" this.handleApplyFilters}}
+    >
+      Apply Filter
+    </button>
+    
+    <button
+      class="btn btn-default btn-sm px-3 py-1 rounded border border-gray-300 dark:border-gray-600"
+      {{on "click" this.handleClearFilters}}
+    >
+      Clear Filter
+    </button>
+  </div>
+</div>
