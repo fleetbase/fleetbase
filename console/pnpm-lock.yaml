@@ -35,8 +35,8 @@ importers:
         specifier: latest
         version: 0.1.19(@ember/string@3.1.1)(@ember/test-helpers@3.3.1(@babel/core@7.26.10)(ember-source@5.4.1(@babel/core@7.26.10)(@glimmer/component@1.1.2(@babel/core@7.26.10))(rsvp@4.8.5)(webpack@5.98.0))(webpack@5.98.0))(ember-resolver@11.0.1(ember-source@5.4.1(@babel/core@7.26.10)(@glimmer/component@1.1.2(@babel/core@7.26.10))(rsvp@4.8.5)(webpack@5.98.0)))(ember-source@5.4.1(@babel/core@7.26.10)(@glimmer/component@1.1.2(@babel/core@7.26.10))(rsvp@4.8.5)(webpack@5.98.0))(eslint@8.57.1)(webpack@5.98.0)
       '@fleetbase/fleetops-engine':
-        specifier: ^0.6.2
-        version: 0.6.2(@ember/string@3.1.1)(@ember/test-helpers@3.3.1(@babel/core@7.26.10)(ember-source@5.4.1(@babel/core@7.26.10)(@glimmer/component@1.1.2(@babel/core@7.26.10))(rsvp@4.8.5)(webpack@5.98.0))(webpack@5.98.0))(@glimmer/component@1.1.2(@babel/core@7.26.10))(@glimmer/tracking@1.1.2)(ember-engines@0.9.0(@ember/legacy-built-in-components@0.4.2(ember-source@5.4.1(@babel/core@7.26.10)(@glimmer/component@1.1.2(@babel/core@7.26.10))(rsvp@4.8.5)(webpack@5.98.0)))(ember-source@5.4.1(@babel/core@7.26.10)(@glimmer/component@1.1.2(@babel/core@7.26.10))(rsvp@4.8.5)(webpack@5.98.0)))(ember-resolver@11.0.1(ember-source@5.4.1(@babel/core@7.26.10)(@glimmer/component@1.1.2(@babel/core@7.26.10))(rsvp@4.8.5)(webpack@5.98.0)))(ember-source@5.4.1(@babel/core@7.26.10)(@glimmer/component@1.1.2(@babel/core@7.26.10))(rsvp@4.8.5)(webpack@5.98.0))(eslint@8.57.1)(postcss@8.5.3)(rollup@2.79.2)(tracked-built-ins@3.4.0(@babel/core@7.26.10))(webpack@5.98.0)
+        specifier: ^0.6.3
+        version: 0.6.3(@ember/string@3.1.1)(@ember/test-helpers@3.3.1(@babel/core@7.26.10)(ember-source@5.4.1(@babel/core@7.26.10)(@glimmer/component@1.1.2(@babel/core@7.26.10))(rsvp@4.8.5)(webpack@5.98.0))(webpack@5.98.0))(@glimmer/component@1.1.2(@babel/core@7.26.10))(@glimmer/tracking@1.1.2)(ember-engines@0.9.0(@ember/legacy-built-in-components@0.4.2(ember-source@5.4.1(@babel/core@7.26.10)(@glimmer/component@1.1.2(@babel/core@7.26.10))(rsvp@4.8.5)(webpack@5.98.0)))(ember-source@5.4.1(@babel/core@7.26.10)(@glimmer/component@1.1.2(@babel/core@7.26.10))(rsvp@4.8.5)(webpack@5.98.0)))(ember-resolver@11.0.1(ember-source@5.4.1(@babel/core@7.26.10)(@glimmer/component@1.1.2(@babel/core@7.26.10))(rsvp@4.8.5)(webpack@5.98.0)))(ember-source@5.4.1(@babel/core@7.26.10)(@glimmer/component@1.1.2(@babel/core@7.26.10))(rsvp@4.8.5)(webpack@5.98.0))(eslint@8.57.1)(postcss@8.5.3)(rollup@2.79.2)(tracked-built-ins@3.4.0(@babel/core@7.26.10))(webpack@5.98.0)
       '@fleetbase/flespi-engine':
         specifier: ^0.1.14
         version: 0.1.14(@babel/core@7.26.10)(@ember/string@3.1.1)(@ember/test-helpers@3.3.1(@babel/core@7.26.10)(ember-source@5.4.1(@babel/core@7.26.10)(@glimmer/component@1.1.2(@babel/core@7.26.10))(rsvp@4.8.5)(webpack@5.98.0))(webpack@5.98.0))(@glimmer/component@1.1.2(@babel/core@7.26.10))(@glimmer/tracking@1.1.2)(ember-engines@0.9.0(@ember/legacy-built-in-components@0.4.2(ember-source@5.4.1(@babel/core@7.26.10)(@glimmer/component@1.1.2(@babel/core@7.26.10))(rsvp@4.8.5)(webpack@5.98.0)))(ember-source@5.4.1(@babel/core@7.26.10)(@glimmer/component@1.1.2(@babel/core@7.26.10))(rsvp@4.8.5)(webpack@5.98.0)))(ember-resolver@11.0.1(ember-source@5.4.1(@babel/core@7.26.10)(@glimmer/component@1.1.2(@babel/core@7.26.10))(rsvp@4.8.5)(webpack@5.98.0)))(ember-source@5.4.1(@babel/core@7.26.10)(@glimmer/component@1.1.2(@babel/core@7.26.10))(rsvp@4.8.5)(webpack@5.98.0))(eslint@8.57.1)(postcss@8.5.3)(rollup@2.79.2)(tracked-built-ins@3.4.0(@babel/core@7.26.10))(webpack@5.98.0)
@@ -59,10 +59,10 @@ importers:
         specifier: ^2.0.0
         version: 2.0.0(ember-source@5.4.1(@babel/core@7.26.10)(@glimmer/component@1.1.2(@babel/core@7.26.10))(rsvp@4.8.5)(webpack@5.98.0))(rollup@2.79.2)(webpack@5.98.0)
       ember-changeset:
-        specifier: ^4.1.2
+        specifier: 4.1.2
         version: 4.1.2(ember-data@4.12.8(@babel/core@7.26.10)(@ember/string@3.1.1)(@glimmer/tracking@1.1.2)(ember-source@5.4.1(@babel/core@7.26.10)(@glimmer/component@1.1.2(@babel/core@7.26.10))(rsvp@4.8.5)(webpack@5.98.0))(webpack@5.98.0))(webpack@5.98.0)
       ember-changeset-validations:
-        specifier: ^4.1.1
+        specifier: 4.1.2
         version: 4.1.2(@ember/string@3.1.1)(ember-source@5.4.1(@babel/core@7.26.10)(@glimmer/component@1.1.2(@babel/core@7.26.10))(rsvp@4.8.5)(webpack@5.98.0))(webpack@5.98.0)
       ember-composable-helpers:
         specifier: ^5.0.0
@@ -122,6 +122,9 @@ importers:
       '@ember/test-helpers':
         specifier: ^3.3.1
         version: 3.3.1(@babel/core@7.26.10)(ember-source@5.4.1(@babel/core@7.26.10)(@glimmer/component@1.1.2(@babel/core@7.26.10))(rsvp@4.8.5)(webpack@5.98.0))(webpack@5.98.0)
+      '@embroider/macros':
+        specifier: 1.16.12
+        version: 1.16.12
       '@fleetbase/intl-lint':
         specifier: ^0.0.1
         version: 0.0.1
@@ -318,7 +321,7 @@ importers:
         specifier: ^3.3.0
         version: 3.4.0(@babel/core@7.26.10)
       webpack:
-        specifier: ^5.94.0
+        specifier: ^5.98.0
         version: 5.98.0
 
 packages:
@@ -1518,8 +1521,8 @@ packages:
     resolution: {integrity: sha512-f/265ud0+nNERmjv7f1GHS34PduF902GAQgsTL1tkf26j7GthScmFI6UuRs5+2IItK+8ZchfRxYBUhPqyiTfbA==, tarball: https://npm.pkg.github.com/download/@fleetbase/fleetops-data/0.1.19/15519cdc9e928a0a0ba153aa908a6aa2134fbc3b}
     engines: {node: '>= 18'}
 
-  '@fleetbase/fleetops-engine@0.6.2':
-    resolution: {integrity: sha512-/klYaVoBEff6iHMptJd8SzE9Ihj7kx7cPhAPDmbYLS43+ghIwpAQ9GVk7AH6MWR0RQXxg8YODgn5BKLwf7/qGw==, tarball: https://npm.pkg.github.com/download/@fleetbase/fleetops-engine/0.6.2/2b2940ef338454149ecb53e73d536ef8dbea5717}
+  '@fleetbase/fleetops-engine@0.6.3':
+    resolution: {integrity: sha512-HFfLAt9Wu8xJAUnqSYRMLsyXftbV9+RVHl3tu5zg+Fjzp/6mb1iWmrB+oOEuGk/IPAKk84bZGo6RQNbV33HUzw==, tarball: https://npm.pkg.github.com/download/@fleetbase/fleetops-engine/0.6.3/8ce514045942c3a2b6eb4e8ca9efc0503de48a6f}
     engines: {node: '>= 18'}
     peerDependencies:
       ember-engines: ^0.9.0
@@ -10654,7 +10657,7 @@ snapshots:
       - utf-8-validate
       - webpack
 
-  '@fleetbase/fleetops-engine@0.6.2(@ember/string@3.1.1)(@ember/test-helpers@3.3.1(@babel/core@7.26.10)(ember-source@5.4.1(@babel/core@7.26.10)(@glimmer/component@1.1.2(@babel/core@7.26.10))(rsvp@4.8.5)(webpack@5.98.0))(webpack@5.98.0))(@glimmer/component@1.1.2(@babel/core@7.26.10))(@glimmer/tracking@1.1.2)(ember-engines@0.9.0(@ember/legacy-built-in-components@0.4.2(ember-source@5.4.1(@babel/core@7.26.10)(@glimmer/component@1.1.2(@babel/core@7.26.10))(rsvp@4.8.5)(webpack@5.98.0)))(ember-source@5.4.1(@babel/core@7.26.10)(@glimmer/component@1.1.2(@babel/core@7.26.10))(rsvp@4.8.5)(webpack@5.98.0)))(ember-resolver@11.0.1(ember-source@5.4.1(@babel/core@7.26.10)(@glimmer/component@1.1.2(@babel/core@7.26.10))(rsvp@4.8.5)(webpack@5.98.0)))(ember-source@5.4.1(@babel/core@7.26.10)(@glimmer/component@1.1.2(@babel/core@7.26.10))(rsvp@4.8.5)(webpack@5.98.0))(eslint@8.57.1)(postcss@8.5.3)(rollup@2.79.2)(tracked-built-ins@3.4.0(@babel/core@7.26.10))(webpack@5.98.0)':
+  '@fleetbase/fleetops-engine@0.6.3(@ember/string@3.1.1)(@ember/test-helpers@3.3.1(@babel/core@7.26.10)(ember-source@5.4.1(@babel/core@7.26.10)(@glimmer/component@1.1.2(@babel/core@7.26.10))(rsvp@4.8.5)(webpack@5.98.0))(webpack@5.98.0))(@glimmer/component@1.1.2(@babel/core@7.26.10))(@glimmer/tracking@1.1.2)(ember-engines@0.9.0(@ember/legacy-built-in-components@0.4.2(ember-source@5.4.1(@babel/core@7.26.10)(@glimmer/component@1.1.2(@babel/core@7.26.10))(rsvp@4.8.5)(webpack@5.98.0)))(ember-source@5.4.1(@babel/core@7.26.10)(@glimmer/component@1.1.2(@babel/core@7.26.10))(rsvp@4.8.5)(webpack@5.98.0)))(ember-resolver@11.0.1(ember-source@5.4.1(@babel/core@7.26.10)(@glimmer/component@1.1.2(@babel/core@7.26.10))(rsvp@4.8.5)(webpack@5.98.0)))(ember-source@5.4.1(@babel/core@7.26.10)(@glimmer/component@1.1.2(@babel/core@7.26.10))(rsvp@4.8.5)(webpack@5.98.0))(eslint@8.57.1)(postcss@8.5.3)(rollup@2.79.2)(tracked-built-ins@3.4.0(@babel/core@7.26.10))(webpack@5.98.0)':
     dependencies:
       '@babel/core': 7.26.10
       '@fleetbase/ember-core': 0.2.22(@ember/string@3.1.1)(@ember/test-helpers@3.3.1(@babel/core@7.26.10)(ember-source@5.4.1(@babel/core@7.26.10)(@glimmer/component@1.1.2(@babel/core@7.26.10))(rsvp@4.8.5)(webpack@5.98.0))(webpack@5.98.0))(ember-resolver@11.0.1(ember-source@5.4.1(@babel/core@7.26.10)(@glimmer/component@1.1.2(@babel/core@7.26.10))(rsvp@4.8.5)(webpack@5.98.0)))(ember-source@5.4.1(@babel/core@7.26.10)(@glimmer/component@1.1.2(@babel/core@7.26.10))(rsvp@4.8.5)(webpack@5.98.0))(eslint@8.57.1)(webpack@5.98.0)

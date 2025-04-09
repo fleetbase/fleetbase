@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "78703945e5f8d76175cd355d0a92f036",
+    "content-hash": "6861da9ea68e8a1bad1f97b2b9f34768",
     "packages": [
         {
             "name": "appstract/laravel-opcache",
@@ -124,16 +124,16 @@
         },
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.342.17",
+            "version": "3.342.23",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "110ca44672e59ec3255c693e9e761001f2706b53"
+                "reference": "a5e9ba23ffecf1f71d8cfb177ef5cb3fbe2ecf05"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/110ca44672e59ec3255c693e9e761001f2706b53",
-                "reference": "110ca44672e59ec3255c693e9e761001f2706b53",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/a5e9ba23ffecf1f71d8cfb177ef5cb3fbe2ecf05",
+                "reference": "a5e9ba23ffecf1f71d8cfb177ef5cb3fbe2ecf05",
                 "shasum": ""
             },
             "require": {
@@ -215,9 +215,9 @@
             "support": {
                 "forum": "https://github.com/aws/aws-sdk-php/discussions",
                 "issues": "https://github.com/aws/aws-sdk-php/issues",
-                "source": "https://github.com/aws/aws-sdk-php/tree/3.342.17"
+                "source": "https://github.com/aws/aws-sdk-php/tree/3.342.23"
             },
-            "time": "2025-03-31T18:16:40+00:00"
+            "time": "2025-04-08T18:35:41+00:00"
         },
         {
             "name": "aws/aws-sdk-php-laravel",
@@ -515,16 +515,16 @@
         },
         {
             "name": "beste/json",
-            "version": "1.5.1",
+            "version": "1.6.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/beste/json.git",
-                "reference": "0e9a0dc74fa6d1bb4f9883ef64fa9f36b7b6b934"
+                "reference": "a25b883c71f84aee3709d5635e71286af1fdc8eb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/beste/json/zipball/0e9a0dc74fa6d1bb4f9883ef64fa9f36b7b6b934",
-                "reference": "0e9a0dc74fa6d1bb4f9883ef64fa9f36b7b6b934",
+                "url": "https://api.github.com/repos/beste/json/zipball/a25b883c71f84aee3709d5635e71286af1fdc8eb",
+                "reference": "a25b883c71f84aee3709d5635e71286af1fdc8eb",
                 "shasum": ""
             },
             "require": {
@@ -562,7 +562,7 @@
             ],
             "support": {
                 "issues": "https://github.com/beste/json/issues",
-                "source": "https://github.com/beste/json/tree/1.5.1"
+                "source": "https://github.com/beste/json/tree/1.6.0"
             },
             "funding": [
                 {
@@ -574,7 +574,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-12-19T09:35:08+00:00"
+            "time": "2025-04-07T21:36:08+00:00"
         },
         {
             "name": "brick/geo",
@@ -1690,26 +1690,29 @@
         },
         {
             "name": "doctrine/deprecations",
-            "version": "1.1.4",
+            "version": "1.1.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/deprecations.git",
-                "reference": "31610dbb31faa98e6b5447b62340826f54fbc4e9"
+                "reference": "459c2f5dd3d6a4633d3b5f46ee2b1c40f57d3f38"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/deprecations/zipball/31610dbb31faa98e6b5447b62340826f54fbc4e9",
-                "reference": "31610dbb31faa98e6b5447b62340826f54fbc4e9",
+                "url": "https://api.github.com/repos/doctrine/deprecations/zipball/459c2f5dd3d6a4633d3b5f46ee2b1c40f57d3f38",
+                "reference": "459c2f5dd3d6a4633d3b5f46ee2b1c40f57d3f38",
                 "shasum": ""
             },
             "require": {
                 "php": "^7.1 || ^8.0"
             },
+            "conflict": {
+                "phpunit/phpunit": "<=7.5 || >=13"
+            },
             "require-dev": {
-                "doctrine/coding-standard": "^9 || ^12",
-                "phpstan/phpstan": "1.4.10 || 2.0.3",
+                "doctrine/coding-standard": "^9 || ^12 || ^13",
+                "phpstan/phpstan": "1.4.10 || 2.1.11",
                 "phpstan/phpstan-phpunit": "^1.0 || ^2",
-                "phpunit/phpunit": "^7.5 || ^8.5 || ^9.5",
+                "phpunit/phpunit": "^7.5 || ^8.5 || ^9.6 || ^10.5 || ^11.5 || ^12",
                 "psr/log": "^1 || ^2 || ^3"
             },
             "suggest": {
@@ -1729,9 +1732,9 @@
             "homepage": "https://www.doctrine-project.org/",
             "support": {
                 "issues": "https://github.com/doctrine/deprecations/issues",
-                "source": "https://github.com/doctrine/deprecations/tree/1.1.4"
+                "source": "https://github.com/doctrine/deprecations/tree/1.1.5"
             },
-            "time": "2024-12-07T21:18:45+00:00"
+            "time": "2025-04-07T20:06:18+00:00"
         },
         {
             "name": "doctrine/event-manager",
@@ -2436,7 +2439,7 @@
             "version": "0.1.7",
             "dist": {
                 "type": "tar",
-                "url": "https://s3.ap-southeast-1.amazonaws.com/fleetbase-registry-production/flb/%40fleetbase/billing-engine/billing-engine-0.1.7.tgz?AWSAccessKeyId=ASIA26E6KG6WPISRTKRM&Expires=1743514661&Signature=V4DOIyFgkCJIsJWYZL2oHfSxbVo%3D&x-amz-security-token=IQoJb3JpZ2luX2VjEFUaDmFwLXNvdXRoZWFzdC0xIkcwRQIhALR52tbotMUz0Kpj2iciXupwFrqqZH6ZNCCEbdPZm%2FheAiA%2FzegSBfD7QBgA26Lki1q4KH3rQqDU4bU6Er5JgawiMyqfBAi%2B%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F8BEAAaDDc1MTk1MTI5NjQyOCIMasmHrl6JNmBlmwMCKvMDl%2BNUiYZD4dZH6f9UngIfRmWSPLVDafTVwWTT8zAU%2FV%2BAstGZQVKckMQ%2FYRzKBz2zrGs9pUKjDiuIsf3K03CXHz18Jj8MwkRtlDY6M5WBdflAvxabBcOgvGFC0I9dsa4HTx7AJx5uqnQ%2Fu1ZpzI7e9UWro4Gdx3JTS3inQZL5fYUqwn5T%2BwMf3IN5%2FBTxDnZcxsT8bro7ypjahCc4db24eUxMAmO7aKamvrUUJ6lSeWqEg%2BlU6KPml36L7Ufu6%2BYyTmxkivTfaYKxwzwNC%2BeOWh%2FqspY%2BgETsJ6FfcapHI8YBsqcqhG1I0bDsUMUqUUSjyvOSzOMue%2FVLpDWfG33sPqEKaCDpeNHZsuD0ksNVNZLV8M6PtEj23l4h%2FDAoEGR1mm477BAYYlFYegoViKeKS%2Broz7I2QNxRqVMu4lZoO2z3kiCRvkVHfNqEjOn7M%2Fv2bI1V28izIYuL2RBYUyGdD%2BFK%2FOI6QX0MtrpWzGIhOpGPefTKD62pIvJ4fRUR7mC4xHq0CJIvxJyAdH4C8L3ZodaUVQ41h5SXmqR8t37XDdTKSPj%2FHQ97fKSFi6uWORv8qftlWAz6VTprFcoKK%2BPLXcYa8cA3kf9xf6zE7G4uvJr%2BUFkSmwrwHFdJQNvdmNpSFUrOmX3FZylbuwbrkV59odP9FTDovK%2B%2FBjqmAfsKqQj4BHnre%2BeAo2zlTYQ7qdghmVYjpnw3KDfzsJ9bG3mw7Ggmlq5ePdanINnV8hvhOZmtEAVZ8HiJ0bb6s7NySYrqytVU3xr8DyFAboLE9pWzeVvYlBCowZ5tD5JjeWjK9hhcWowUlrtoK9TnJ9xzlk3z6962W3qzeyzHQ3Rez5yyYLP3yLEv0AqreAAwLGMCRx6cBvMzPhXoeWji%2FQ6B30zhjUE%3D"
+                "url": "https://s3.ap-southeast-1.amazonaws.com/fleetbase-registry-production/flb/%40fleetbase/billing-engine/billing-engine-0.1.7.tgz?AWSAccessKeyId=ASIA26E6KG6WDAIYYCVX&Expires=1744199771&Signature=NpLbV3DVGqrwjcq8yNX5FIZf%2Fes%3D&x-amz-security-token=IQoJb3JpZ2luX2VjEBMaDmFwLXNvdXRoZWFzdC0xIkcwRQIgAb5rNR1uxhca%2FNRddtn1dzJdMmL9oslKN3J0wVmk%2FMECIQCzjvHcqxE3FfSrL3VTq6YcBteRWbDMycRdIIhTJGow4CqfBAiM%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F8BEAAaDDc1MTk1MTI5NjQyOCIMcVQXsj0LBRre%2F3XaKvMDma2%2Fd30fB%2BFLTHAYToNZFaxxHkadk1I9BBzvWVrsoIpUCuzhXj5WA2GTzmwwQ14%2BQLR%2FpBhENWO%2FOUXfaTUuHSS2Qim5vMWGQAQNE%2BaPQZWEm6BAq1TykZfzYnAE%2F2Kh8PN2nXpyv3DyBCFAR%2FCMCyOCyTz%2BrAw0MrcOc8vPAxW5nFV0YmkMLFCZrQ18W1035HEVE0j6UDY4SCQh9V8hGFIZ6WJWLpAReggHjFN1iQq%2ByQnBlpgFEIsCTR8hHK0ZI0EESMXGAULpcChwwHrFrBlMP201TNJyMMe24w4px9IAcX4bMFWrlbB7kqnYjxVrVH4bm2Kaz1Hn1leu8WWhMwL3VoDl7exe%2BA6aE%2FmMsUs9l1GbrXBvFX7eGnAZHNOQ5UAJPZK8FC1jYSCP3HiPfARwRgP3bOgYkJ2KJBK7GvJTySNzcNxZOppkdxdvfXwJStiN3H4LyJHaUqXvhssesLdnELGAxnS4ctwQpxuP77P8%2FnEQxdwJU6rJGRzKYocaVg9eEsYj9rkRMUNPB4k8u7DjfybJis%2Fcd0n9kxsBYzeH0lWubODGY%2F8kXuQ8XN4ubiovFONUpaMk2k6k6JeePCJARJySu9mKUKEeTjuUJvGGWtyLD8TE%2Fpyb3X14VVUoaomcnIfhRnqov4fuin2bXo1q%2BDCZl9m%2FBjqmAWhl3Wuyjeqf709b97GjlUx1bHr1lCMs0y24TMeYya3yN%2BMWGpogT%2BftAHnP%2FTiv9ElekFco4HEcWQv6AIWXOsBI32U8ukjUTpAgw2dY29hiqFeg%2FIP33BL7F8kzNfruu7XgGrvwOXZK98eQ2rqsMe7UK1jtMj76mm49HOOrQ2bSdmQERVgIvB6x9c7rTCvgEXWLazwMkSuuPE4Oh7CUqHLi4PQqv5Y%3D"
             },
             "require": {
                 "fleetbase/core-api": "*",
@@ -2634,7 +2637,7 @@
             "version": "0.0.7",
             "dist": {
                 "type": "tar",
-                "url": "https://s3.ap-southeast-1.amazonaws.com/fleetbase-registry-production/flb/%40fleetbase/customer-portal-engine/customer-portal-engine-0.0.7.tgz?AWSAccessKeyId=ASIA26E6KG6WPISRTKRM&Expires=1743514661&Signature=OuKRTsRy%2B6UpOBjcPBqOP89w8EI%3D&x-amz-security-token=IQoJb3JpZ2luX2VjEFUaDmFwLXNvdXRoZWFzdC0xIkcwRQIhALR52tbotMUz0Kpj2iciXupwFrqqZH6ZNCCEbdPZm%2FheAiA%2FzegSBfD7QBgA26Lki1q4KH3rQqDU4bU6Er5JgawiMyqfBAi%2B%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F8BEAAaDDc1MTk1MTI5NjQyOCIMasmHrl6JNmBlmwMCKvMDl%2BNUiYZD4dZH6f9UngIfRmWSPLVDafTVwWTT8zAU%2FV%2BAstGZQVKckMQ%2FYRzKBz2zrGs9pUKjDiuIsf3K03CXHz18Jj8MwkRtlDY6M5WBdflAvxabBcOgvGFC0I9dsa4HTx7AJx5uqnQ%2Fu1ZpzI7e9UWro4Gdx3JTS3inQZL5fYUqwn5T%2BwMf3IN5%2FBTxDnZcxsT8bro7ypjahCc4db24eUxMAmO7aKamvrUUJ6lSeWqEg%2BlU6KPml36L7Ufu6%2BYyTmxkivTfaYKxwzwNC%2BeOWh%2FqspY%2BgETsJ6FfcapHI8YBsqcqhG1I0bDsUMUqUUSjyvOSzOMue%2FVLpDWfG33sPqEKaCDpeNHZsuD0ksNVNZLV8M6PtEj23l4h%2FDAoEGR1mm477BAYYlFYegoViKeKS%2Broz7I2QNxRqVMu4lZoO2z3kiCRvkVHfNqEjOn7M%2Fv2bI1V28izIYuL2RBYUyGdD%2BFK%2FOI6QX0MtrpWzGIhOpGPefTKD62pIvJ4fRUR7mC4xHq0CJIvxJyAdH4C8L3ZodaUVQ41h5SXmqR8t37XDdTKSPj%2FHQ97fKSFi6uWORv8qftlWAz6VTprFcoKK%2BPLXcYa8cA3kf9xf6zE7G4uvJr%2BUFkSmwrwHFdJQNvdmNpSFUrOmX3FZylbuwbrkV59odP9FTDovK%2B%2FBjqmAfsKqQj4BHnre%2BeAo2zlTYQ7qdghmVYjpnw3KDfzsJ9bG3mw7Ggmlq5ePdanINnV8hvhOZmtEAVZ8HiJ0bb6s7NySYrqytVU3xr8DyFAboLE9pWzeVvYlBCowZ5tD5JjeWjK9hhcWowUlrtoK9TnJ9xzlk3z6962W3qzeyzHQ3Rez5yyYLP3yLEv0AqreAAwLGMCRx6cBvMzPhXoeWji%2FQ6B30zhjUE%3D"
+                "url": "https://s3.ap-southeast-1.amazonaws.com/fleetbase-registry-production/flb/%40fleetbase/customer-portal-engine/customer-portal-engine-0.0.7.tgz?AWSAccessKeyId=ASIA26E6KG6WDAIYYCVX&Expires=1744199771&Signature=8N6EupdbG0GpV73w4TqYJjrTk7s%3D&x-amz-security-token=IQoJb3JpZ2luX2VjEBMaDmFwLXNvdXRoZWFzdC0xIkcwRQIgAb5rNR1uxhca%2FNRddtn1dzJdMmL9oslKN3J0wVmk%2FMECIQCzjvHcqxE3FfSrL3VTq6YcBteRWbDMycRdIIhTJGow4CqfBAiM%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F8BEAAaDDc1MTk1MTI5NjQyOCIMcVQXsj0LBRre%2F3XaKvMDma2%2Fd30fB%2BFLTHAYToNZFaxxHkadk1I9BBzvWVrsoIpUCuzhXj5WA2GTzmwwQ14%2BQLR%2FpBhENWO%2FOUXfaTUuHSS2Qim5vMWGQAQNE%2BaPQZWEm6BAq1TykZfzYnAE%2F2Kh8PN2nXpyv3DyBCFAR%2FCMCyOCyTz%2BrAw0MrcOc8vPAxW5nFV0YmkMLFCZrQ18W1035HEVE0j6UDY4SCQh9V8hGFIZ6WJWLpAReggHjFN1iQq%2ByQnBlpgFEIsCTR8hHK0ZI0EESMXGAULpcChwwHrFrBlMP201TNJyMMe24w4px9IAcX4bMFWrlbB7kqnYjxVrVH4bm2Kaz1Hn1leu8WWhMwL3VoDl7exe%2BA6aE%2FmMsUs9l1GbrXBvFX7eGnAZHNOQ5UAJPZK8FC1jYSCP3HiPfARwRgP3bOgYkJ2KJBK7GvJTySNzcNxZOppkdxdvfXwJStiN3H4LyJHaUqXvhssesLdnELGAxnS4ctwQpxuP77P8%2FnEQxdwJU6rJGRzKYocaVg9eEsYj9rkRMUNPB4k8u7DjfybJis%2Fcd0n9kxsBYzeH0lWubODGY%2F8kXuQ8XN4ubiovFONUpaMk2k6k6JeePCJARJySu9mKUKEeTjuUJvGGWtyLD8TE%2Fpyb3X14VVUoaomcnIfhRnqov4fuin2bXo1q%2BDCZl9m%2FBjqmAWhl3Wuyjeqf709b97GjlUx1bHr1lCMs0y24TMeYya3yN%2BMWGpogT%2BftAHnP%2FTiv9ElekFco4HEcWQv6AIWXOsBI32U8ukjUTpAgw2dY29hiqFeg%2FIP33BL7F8kzNfruu7XgGrvwOXZK98eQ2rqsMe7UK1jtMj76mm49HOOrQ2bSdmQERVgIvB6x9c7rTCvgEXWLazwMkSuuPE4Oh7CUqHLi4PQqv5Y%3D"
             },
             "require": {
                 "fleetbase/core-api": "*",
@@ -2709,16 +2712,16 @@
         },
         {
             "name": "fleetbase/fleetops-api",
-            "version": "0.6.2",
+            "version": "0.6.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fleetbase/fleetops.git",
-                "reference": "4932f0d24927b15b35e528247d3f5da1ae73a483"
+                "reference": "e999ed4c164c46c190431a260ae93c8116b0d17d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fleetbase/fleetops/zipball/4932f0d24927b15b35e528247d3f5da1ae73a483",
-                "reference": "4932f0d24927b15b35e528247d3f5da1ae73a483",
+                "url": "https://api.github.com/repos/fleetbase/fleetops/zipball/e999ed4c164c46c190431a260ae93c8116b0d17d",
+                "reference": "e999ed4c164c46c190431a260ae93c8116b0d17d",
                 "shasum": ""
             },
             "require": {
@@ -2792,16 +2795,16 @@
             ],
             "support": {
                 "issues": "https://github.com/fleetbase/fleetops/issues",
-                "source": "https://github.com/fleetbase/fleetops/tree/v0.6.2"
+                "source": "https://github.com/fleetbase/fleetops/tree/v0.6.3"
             },
-            "time": "2025-04-01T12:48:02+00:00"
+            "time": "2025-04-09T10:45:37+00:00"
         },
         {
             "name": "fleetbase/flespi-integration",
             "version": "0.1.14",
             "dist": {
                 "type": "tar",
-                "url": "https://s3.ap-southeast-1.amazonaws.com/fleetbase-registry-production/flb/%40fleetbase/flespi-engine/flespi-engine-0.1.14.tgz?AWSAccessKeyId=ASIA26E6KG6WPISRTKRM&Expires=1743514661&Signature=sqWALLwKnfsVSKWHuvskre6r5jU%3D&x-amz-security-token=IQoJb3JpZ2luX2VjEFUaDmFwLXNvdXRoZWFzdC0xIkcwRQIhALR52tbotMUz0Kpj2iciXupwFrqqZH6ZNCCEbdPZm%2FheAiA%2FzegSBfD7QBgA26Lki1q4KH3rQqDU4bU6Er5JgawiMyqfBAi%2B%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F8BEAAaDDc1MTk1MTI5NjQyOCIMasmHrl6JNmBlmwMCKvMDl%2BNUiYZD4dZH6f9UngIfRmWSPLVDafTVwWTT8zAU%2FV%2BAstGZQVKckMQ%2FYRzKBz2zrGs9pUKjDiuIsf3K03CXHz18Jj8MwkRtlDY6M5WBdflAvxabBcOgvGFC0I9dsa4HTx7AJx5uqnQ%2Fu1ZpzI7e9UWro4Gdx3JTS3inQZL5fYUqwn5T%2BwMf3IN5%2FBTxDnZcxsT8bro7ypjahCc4db24eUxMAmO7aKamvrUUJ6lSeWqEg%2BlU6KPml36L7Ufu6%2BYyTmxkivTfaYKxwzwNC%2BeOWh%2FqspY%2BgETsJ6FfcapHI8YBsqcqhG1I0bDsUMUqUUSjyvOSzOMue%2FVLpDWfG33sPqEKaCDpeNHZsuD0ksNVNZLV8M6PtEj23l4h%2FDAoEGR1mm477BAYYlFYegoViKeKS%2Broz7I2QNxRqVMu4lZoO2z3kiCRvkVHfNqEjOn7M%2Fv2bI1V28izIYuL2RBYUyGdD%2BFK%2FOI6QX0MtrpWzGIhOpGPefTKD62pIvJ4fRUR7mC4xHq0CJIvxJyAdH4C8L3ZodaUVQ41h5SXmqR8t37XDdTKSPj%2FHQ97fKSFi6uWORv8qftlWAz6VTprFcoKK%2BPLXcYa8cA3kf9xf6zE7G4uvJr%2BUFkSmwrwHFdJQNvdmNpSFUrOmX3FZylbuwbrkV59odP9FTDovK%2B%2FBjqmAfsKqQj4BHnre%2BeAo2zlTYQ7qdghmVYjpnw3KDfzsJ9bG3mw7Ggmlq5ePdanINnV8hvhOZmtEAVZ8HiJ0bb6s7NySYrqytVU3xr8DyFAboLE9pWzeVvYlBCowZ5tD5JjeWjK9hhcWowUlrtoK9TnJ9xzlk3z6962W3qzeyzHQ3Rez5yyYLP3yLEv0AqreAAwLGMCRx6cBvMzPhXoeWji%2FQ6B30zhjUE%3D"
+                "url": "https://s3.ap-southeast-1.amazonaws.com/fleetbase-registry-production/flb/%40fleetbase/flespi-engine/flespi-engine-0.1.14.tgz?AWSAccessKeyId=ASIA26E6KG6WDAIYYCVX&Expires=1744199771&Signature=ildduQ8ZWeFxmP33geZMXvcF2JM%3D&x-amz-security-token=IQoJb3JpZ2luX2VjEBMaDmFwLXNvdXRoZWFzdC0xIkcwRQIgAb5rNR1uxhca%2FNRddtn1dzJdMmL9oslKN3J0wVmk%2FMECIQCzjvHcqxE3FfSrL3VTq6YcBteRWbDMycRdIIhTJGow4CqfBAiM%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F8BEAAaDDc1MTk1MTI5NjQyOCIMcVQXsj0LBRre%2F3XaKvMDma2%2Fd30fB%2BFLTHAYToNZFaxxHkadk1I9BBzvWVrsoIpUCuzhXj5WA2GTzmwwQ14%2BQLR%2FpBhENWO%2FOUXfaTUuHSS2Qim5vMWGQAQNE%2BaPQZWEm6BAq1TykZfzYnAE%2F2Kh8PN2nXpyv3DyBCFAR%2FCMCyOCyTz%2BrAw0MrcOc8vPAxW5nFV0YmkMLFCZrQ18W1035HEVE0j6UDY4SCQh9V8hGFIZ6WJWLpAReggHjFN1iQq%2ByQnBlpgFEIsCTR8hHK0ZI0EESMXGAULpcChwwHrFrBlMP201TNJyMMe24w4px9IAcX4bMFWrlbB7kqnYjxVrVH4bm2Kaz1Hn1leu8WWhMwL3VoDl7exe%2BA6aE%2FmMsUs9l1GbrXBvFX7eGnAZHNOQ5UAJPZK8FC1jYSCP3HiPfARwRgP3bOgYkJ2KJBK7GvJTySNzcNxZOppkdxdvfXwJStiN3H4LyJHaUqXvhssesLdnELGAxnS4ctwQpxuP77P8%2FnEQxdwJU6rJGRzKYocaVg9eEsYj9rkRMUNPB4k8u7DjfybJis%2Fcd0n9kxsBYzeH0lWubODGY%2F8kXuQ8XN4ubiovFONUpaMk2k6k6JeePCJARJySu9mKUKEeTjuUJvGGWtyLD8TE%2Fpyb3X14VVUoaomcnIfhRnqov4fuin2bXo1q%2BDCZl9m%2FBjqmAWhl3Wuyjeqf709b97GjlUx1bHr1lCMs0y24TMeYya3yN%2BMWGpogT%2BftAHnP%2FTiv9ElekFco4HEcWQv6AIWXOsBI32U8ukjUTpAgw2dY29hiqFeg%2FIP33BL7F8kzNfruu7XgGrvwOXZK98eQ2rqsMe7UK1jtMj76mm49HOOrQ2bSdmQERVgIvB6x9c7rTCvgEXWLazwMkSuuPE4Oh7CUqHLi4PQqv5Y%3D"
             },
             "require": {
                 "fleetbase/core-api": "*",
@@ -3898,16 +3901,16 @@
         },
         {
             "name": "google/apiclient",
-            "version": "v2.18.2",
+            "version": "v2.18.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/googleapis/google-api-php-client.git",
-                "reference": "d8d201ba8a189a3cd7fb34e4da569f2ed440eee7"
+                "reference": "4eee42d201eff054428a4836ec132944d271f051"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/googleapis/google-api-php-client/zipball/d8d201ba8a189a3cd7fb34e4da569f2ed440eee7",
-                "reference": "d8d201ba8a189a3cd7fb34e4da569f2ed440eee7",
+                "url": "https://api.github.com/repos/googleapis/google-api-php-client/zipball/4eee42d201eff054428a4836ec132944d271f051",
+                "reference": "4eee42d201eff054428a4836ec132944d271f051",
                 "shasum": ""
             },
             "require": {
@@ -3961,9 +3964,9 @@
             ],
             "support": {
                 "issues": "https://github.com/googleapis/google-api-php-client/issues",
-                "source": "https://github.com/googleapis/google-api-php-client/tree/v2.18.2"
+                "source": "https://github.com/googleapis/google-api-php-client/tree/v2.18.3"
             },
-            "time": "2024-12-16T22:52:40+00:00"
+            "time": "2025-04-08T21:59:36+00:00"
         },
         {
             "name": "google/apiclient-services",
@@ -6168,16 +6171,16 @@
         },
         {
             "name": "laravel/octane",
-            "version": "v2.8.2",
+            "version": "v2.9.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/octane.git",
-                "reference": "74fef270e9f7d2dfbfd8f272de81aac839942c29"
+                "reference": "8288269fab27a6163a2f2bd4f3115bd057432bcd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/octane/zipball/74fef270e9f7d2dfbfd8f272de81aac839942c29",
-                "reference": "74fef270e9f7d2dfbfd8f272de81aac839942c29",
+                "url": "https://api.github.com/repos/laravel/octane/zipball/8288269fab27a6163a2f2bd4f3115bd057432bcd",
+                "reference": "8288269fab27a6163a2f2bd4f3115bd057432bcd",
                 "shasum": ""
             },
             "require": {
@@ -6254,7 +6257,7 @@
                 "issues": "https://github.com/laravel/octane/issues",
                 "source": "https://github.com/laravel/octane"
             },
-            "time": "2025-03-12T14:26:35+00:00"
+            "time": "2025-04-04T02:30:58+00:00"
         },
         {
             "name": "laravel/prompts",
@@ -7667,16 +7670,16 @@
         },
         {
             "name": "moneyphp/money",
-            "version": "v4.6.0",
+            "version": "v4.7.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/moneyphp/money.git",
-                "reference": "ddf6a86b574808f8844777ed4e8c4f92a10dac9b"
+                "reference": "af048f0206d3b39b8fad9de6a230cedf765365fa"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/moneyphp/money/zipball/ddf6a86b574808f8844777ed4e8c4f92a10dac9b",
-                "reference": "ddf6a86b574808f8844777ed4e8c4f92a10dac9b",
+                "url": "https://api.github.com/repos/moneyphp/money/zipball/af048f0206d3b39b8fad9de6a230cedf765365fa",
+                "reference": "af048f0206d3b39b8fad9de6a230cedf765365fa",
                 "shasum": ""
             },
             "require": {
@@ -7698,10 +7701,12 @@
                 "php-http/message": "^1.16.0",
                 "php-http/mock-client": "^1.6.0",
                 "phpbench/phpbench": "^1.2.5",
+                "phpstan/extension-installer": "^1.4",
+                "phpstan/phpstan": "^2.1.9",
+                "phpstan/phpstan-phpunit": "^2.0",
                 "phpunit/phpunit": "^10.5.9",
-                "psalm/plugin-phpunit": "^0.18.4",
                 "psr/cache": "^1.0.1 || ^2.0 || ^3.0",
-                "vimeo/psalm": "~5.20.0"
+                "ticketswap/phpstan-error-formatter": "^1.1"
             },
             "suggest": {
                 "ext-gmp": "Calculate without integer limits",
@@ -7749,9 +7754,9 @@
             ],
             "support": {
                 "issues": "https://github.com/moneyphp/money/issues",
-                "source": "https://github.com/moneyphp/money/tree/v4.6.0"
+                "source": "https://github.com/moneyphp/money/tree/v4.7.0"
             },
-            "time": "2024-11-22T10:59:03+00:00"
+            "time": "2025-04-03T08:26:36+00:00"
         },
         {
             "name": "monolog/monolog",
