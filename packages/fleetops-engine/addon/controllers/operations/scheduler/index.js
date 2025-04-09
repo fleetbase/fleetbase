@@ -252,33 +252,26 @@ export default class OperationsSchedulerIndexController extends BaseController {
     
     // Filter by status
     filterByStatus(orders) {
+        const statusFilter = this.status_filter.toLowerCase();
+    
         return orders.filter(order => {
-            const statusFilter = this.status_filter.toLowerCase();
+          if (order.status && order.status.toLowerCase() === statusFilter) {
+            return true;
+          }
     
-            if (order.status && order.status.toLowerCase() === statusFilter) {
-                return true;
-            }
+          const statusMap = {
+            'confirmed': order.status === 'created' && !order.isDispatched && !order.isCompleted,
+            'created': !order.isDispatched && !order.isCompleted && !order.isCanceled,
+            'dispatched': !!order.isDispatched,
+            'completed': !!order.isCompleted,
+            'cancelled': !!order.isCanceled,
+            'canceled': !!order.isCanceled,
+            'in_progress': !!order.isDispatched && !order.isCompleted
+          };
     
-            // Match based on specific boolean flags
-            switch (statusFilter) {
-                case 'confirmed':
-                    return order.status === 'created' && !order.isDispatched && !order.isCompleted;
-                case 'created':
-                    return !order.isDispatched && !order.isCompleted && !order.isCanceled;
-                case 'dispatched':
-                    return !!order.isDispatched;
-                case 'completed':
-                    return !!order.isCompleted;
-                case 'cancelled':
-                case 'canceled':
-                    return !!order.isCanceled;
-                case 'in_progress':
-                    return !!order.isDispatched && !order.isCompleted;
-                default:
-                    return false;
-            }
+          return statusMap[statusFilter] || false;
         });
-    }
+      }
     
 
     // Updated clear filters action
