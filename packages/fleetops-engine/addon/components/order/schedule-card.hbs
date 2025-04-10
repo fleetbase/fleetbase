@@ -1,8 +1,7 @@
 <div class="order-schedule-card border border-gray-200 dark:border-gray-700" ...attributes>
-    
-    {{!-- <a href="javascript:;" class="{{@titleClass}} card-title border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900" {{on "click" (fn this.onTitleClick @order)}} data-order-id="{{@order.public_id}}"> --}}
-    <a href="javascript:;" class=" card-title" {{on "click" (fn this.onTitleClick @order)}} data-order-id="{{@order.public_id}}">
-        &nbsp;{{!-- <span>{{@order.public_id}}</span> --}}
+    {{!-- {{@titleClass}} --}}
+    <a href="javascript:;" class=" card-title border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900" {{on "click" (fn this.onTitleClick @order)}} data-order-id="{{@order.public_id}}">
+        <span class="{{@titleClass}}">{{@order.public_id}}</span>
         <div>
             <Badge @status={{@order.status}} />
         </div>

@@ -74,8 +74,19 @@ export default class OperationsSchedulerIndexController extends BaseController {
     @action
     loadAvailableDrivers() {
         this.availableDriversLoaded = this.store.findAll('driver').then(drivers => {
-            this.availableDrivers = drivers;
-            return drivers;
+            // Create a copy of the drivers array to avoid modifying the store data
+            const driversArray = drivers.toArray();
+            
+            // Add empty driver option at the beginning
+            const emptyDriver = this.store.createRecord('driver', {
+                id: '',
+                name: this.intl.t('fleet-ops.operations.scheduler.calendar.all-drivers') || 'All Drivers'
+            });
+            
+            // Set the availableDrivers property with the empty option first
+            this.availableDrivers = [emptyDriver, ...driversArray];
+            
+            return this.availableDrivers;
         }).catch(error => {
             console.error('Error loading drivers:', error);
             this.notifications.error('Failed to load driver list');

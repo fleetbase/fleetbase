@@ -1,5 +1,5 @@
 {{!-- components/fleet-ops/calendar-filter.hbs --}}
-<div class="flex items-center justify-between mb-4 bg-white dark:bg-gray-800 p-3 rounded-md border border-gray-200 dark:border-gray-700">
+<div class="flex items-center justify-between mb-4 bg-white dark:bg-gray-800 p-3  border border-gray-200 dark:border-gray-700">
   <div class="flex items-center space-x-4">
     <div class="flex items-center">
       <label for="order-id-filter" class="mr-2 text-sm font-medium">{{t "fleet-ops.operations.scheduler.calendar.order-id"}}:</label>
@@ -9,7 +9,7 @@
         id="order-id-filter"
         placeholder={{t "fleet-ops.operations.scheduler.calendar.search-by-orderid"}}
         style="width: 200px; max-width: 200px;"
-        class="form-input rounded-md text-sm border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-300"
+        class="form-input  text-sm border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-300"
         {{on "input" this.handleOrderIdChange}}
         {{on "blur" this.handleOrderIdBlur}}
         {{on "keydown" this.handleOrderIdKeyDown}}
@@ -53,7 +53,7 @@
     
     <div class="flex items-center space-x-2">
       <button
-        class="btn btn-primary btn-sm px-3 py-1 rounded border flex items-center"
+        class="btn btn-primary btn-sm px-3 py-1 border flex items-center"
         {{on "click" this.handleApplyFilters}}
         disabled={{this.isLoading}}
       >
@@ -69,7 +69,7 @@
       </button>
       
       <button
-        class="btn btn-default btn-sm px-3 py-1 rounded border border-gray-300 dark:border-gray-600"
+        class="btn btn-default btn-sm px-3 py-1  border border-gray-300 dark:border-gray-600"
         {{on "click" this.handleClearFilters}}
         disabled={{this.isLoading}}
       >
