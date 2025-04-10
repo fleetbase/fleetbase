@@ -131,6 +131,8 @@ statuses:
     escalated: Escaladé  
     backlogged: En attente  
     requires-update: Nécessite une mise à jour  
+    order_canceled: Commande annulée
+    all-statuses: Tous les statuts 
 fuelReportTypes:
     Fuel: "Carburant"
     Parking: "Stationnement"
@@ -2020,6 +2022,14 @@ fleet-ops:
         month: Mois
         week: Semaine
         day: Jour
+        order-id: ID de commande  
+        driver: Chauffeur  
+        status: Statut  
+        all-statuses: Tous les statuts  
+        clear-filters: Effacer les filtres  
+        apply-filters: Appliquer les filtres  
+        all-drivers: Tous les chauffeurs  
+        search-by-orderid: Rechercher par ID de commande  
     service-rates:
       index:
         edit-service: Modifier le tarif de service

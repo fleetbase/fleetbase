@@ -133,6 +133,8 @@ statuses:
     escalated: Escalated
     backlogged: Backlogged
     requires-update: Requires Update
+    order_canceled: Order Canceled
+    all-statuses: All Statuses
 fuelReportTypes:
   Fuel: Fuel
   Parking: Parking
@@ -1175,6 +1177,7 @@ fleet-ops:
         select-vehicle: Select Vehicle
         on-leave: on Leave
         date-created: Date created
+        status: Status
     widget:
       fleet-ops-quickstart:
         message: Let's see what you can do to jumpstart operations...
@@ -2011,11 +2014,21 @@ fleet-ops:
         unscheduled-orders: Unassigned Orders
         scheduled-orders: Assigned Orders
         unauthorized-to-schedule: You are not authorized to schedule orders.
+        
       calendar:
         today: Today
         month: Month
         week: Week
         day: Day
+        order-id : Order ID
+        driver: Driver
+        status: Status
+        all-statuses: All Statuses
+        clear-filters: Clear Filter
+        apply-filters: Apply Filter
+        all-drivers: All Driver
+        search-by-orderid: Search by Order ID
+      
     service-rates:
       index:
         edit-service: Edit Service Rate

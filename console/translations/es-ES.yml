@@ -124,6 +124,8 @@ statuses:
     escalated: Escalado  
     backlogged: Atrasado  
     requires-update: Requiere actualización  
+    order_canceled: Pedido cancelado
+    all-statuses: Todos los estados  
 component:
   file:
     dropdown-label: Acciones de archivos
@@ -2208,6 +2210,15 @@ fleet-ops:
         month: Mes
         week: Semana
         day: Día
+        order-id: ID de pedido  
+        driver: Conductor  
+        status: Estado  
+        all-statuses: Todos los estados  
+        clear-filters: Borrar filtros  
+        apply-filters: Aplicar filtros  
+        all-drivers: Todos los conductores  
+        search-by-orderid: Buscar por ID de pedido  
+      
     service-rates:
       index:
         edit-service: Cambiar la tarifa del servicio

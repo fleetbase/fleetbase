@@ -131,6 +131,8 @@ statuses:
     escalated: Eskaliert  
     backlogged: Rückstau  
     requires-update: Aktualisierung erforderlich  
+    order_canceled: Bestellung storniert
+    all-statuses: Alle Status  
 fuelReportTypes:
     Fuel: "Kraftstoff"
     Parking: "Parken"
@@ -2020,6 +2022,14 @@ fleet-ops:
         month: Monat
         week: Woche
         day: Tag
+        order-id: Bestellnummer  
+        driver: Fahrer  
+        status: Status  
+        all-statuses: Alle Status  
+        clear-filters: Filter zurücksetzen  
+        apply-filters: Filter anwenden  
+        all-drivers: Alle Fahrer  
+        search-by-orderid: Nach Bestellnummer suchen  
     service-rates:
       index:
         edit-service: Servicegebühr bearbeiten
