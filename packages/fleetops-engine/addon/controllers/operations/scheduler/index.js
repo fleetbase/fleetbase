@@ -57,18 +57,18 @@ export default class OperationsSchedulerIndexController extends BaseController {
     }
     @action
     initializeSelectedValues() {
-    // Wait for drivers to load before trying to select one
-    this.availableDriversLoaded.then(() => {
-        if (this.driver_filter) {
-        this.selectedDriver = this.availableDrivers.find(driver => driver.id === this.driver_filter);
+        // Wait for drivers to load before trying to select one
+        this.availableDriversLoaded.then(() => {
+            if (this.driver_filter) {
+            this.selectedDriver = this.availableDrivers.find(driver => driver.id === this.driver_filter);
+            }
+        });
+    
+        // Set selected status based on status_filter
+        if (this.status_filter) {
+            this.selectedStatus = this.statusOptions.find(status => status.id === this.status_filter);
         }
-    });
-  
-  // Set selected status based on status_filter
-  if (this.status_filter) {
-    this.selectedStatus = this.statusOptions.find(status => status.id === this.status_filter);
-  }
-}
+    }
 
     // Update driver loading to return a promise for initialization
     @action
@@ -84,27 +84,26 @@ export default class OperationsSchedulerIndexController extends BaseController {
         
         return this.availableDriversLoaded;
     }
-   
+    formatStatusName(status) {
+        const words = status.split('_');
+        return words
+          .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+          .join(' ');
+      }
     @task
     *getOrderStatusOptions() {
         try {
             // Make the API call to get status options
             const response = yield this.fetch.get('orders/statuses');
-            
+           
             if (Array.isArray(response)) {
                 // Transform the response into the format we need
                 this.statusOptions = [
-                    { id: '', name: 'All Statuses' },
+                    { id: '', name: `statuses.all-statuses` },
                     ...response.map(status => {
-                        // Format the name: capitalize first letter of each word and replace underscores with spaces
-                        const words = status.split('_');
-                        const formattedName = words
-                            .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
-                            .join(' ');
-                        
                         return { 
                             id: status, 
-                            name: formattedName 
+                            name: `statuses.${status}`
                         };
                     })
                 ];
@@ -116,7 +115,14 @@ export default class OperationsSchedulerIndexController extends BaseController {
             this.notifications.serverError(error);
         }
     }
-    
+    @action
+    onOrderIdChange(value) {
+        if (!value || value.trim() === '') {
+            this.order_id_filter = '';
+        } else {
+            this.order_id_filter = value;
+        }
+    }
 
     // Action to handle status selection
     @action
@@ -195,30 +201,35 @@ export default class OperationsSchedulerIndexController extends BaseController {
     // Update your applyFilters method to use updateCalendarWithFilteredData instead of updateCalendar
     @action
     applyFilters() {
-        try {
-            let filteredOrders = [...this.calscheduledOrders];
-    
-            // Apply driver filter
-            if (this.driver_filter) {
-                filteredOrders = this.filterByDriver(filteredOrders);
+        return new Promise((resolve) => {
+            try {
+                let filteredOrders = [...this.calscheduledOrders];
+        
+                // Apply driver filter
+                if (this.driver_filter) {
+                    filteredOrders = this.filterByDriver(filteredOrders);
+                }
+        
+                // Apply order ID filter
+                if (this.order_id_filter) {
+                    filteredOrders = this.filterByOrderId(filteredOrders);
+                }
+        
+                // Apply status filter
+                if (this.status_filter) {
+                    filteredOrders = this.filterByStatus(filteredOrders);
+                }
+        
+                // Update the calendar with the filtered data
+                this.updateCalendarWithFilteredData(filteredOrders);
+                setTimeout(() => {
+                    resolve();
+                }, 300); // Small delay to ensure loader is visible
+            } catch (error) {
+                console.error("Error applying filters:", error);
+                this.notifications.error("An error occurred while applying filters.");
             }
-    
-            // Apply order ID filter
-            if (this.order_id_filter) {
-                filteredOrders = this.filterByOrderId(filteredOrders);
-            }
-    
-            // Apply status filter
-            if (this.status_filter) {
-                filteredOrders = this.filterByStatus(filteredOrders);
-            }
-    
-            // Update the calendar with the filtered data
-            this.updateCalendarWithFilteredData(filteredOrders);
-        } catch (error) {
-            console.error("Error applying filters:", error);
-            this.notifications.error("An error occurred while applying filters.");
-        }
+        });
     }
     
     // Filter by driver
@@ -256,20 +267,21 @@ export default class OperationsSchedulerIndexController extends BaseController {
     
         return orders.filter(order => {
           if (order.status && order.status.toLowerCase() === statusFilter) {
-            return true;
+            // return true;
+            return order.status==statusFilter
           }
     
-          const statusMap = {
-            'confirmed': order.status === 'created' && !order.isDispatched && !order.isCompleted,
-            'created': !order.isDispatched && !order.isCompleted && !order.isCanceled,
-            'dispatched': !!order.isDispatched,
-            'completed': !!order.isCompleted,
-            'cancelled': !!order.isCanceled,
-            'canceled': !!order.isCanceled,
-            'in_progress': !!order.isDispatched && !order.isCompleted
-          };
+        //   const statusMap = {
+        //     'confirmed': order.status === 'created' && !order.isDispatched && !order.isStarted && !order.isCompleted && !order.isCanceled,
+        //     'created': !order.isDispatched && !order.isCompleted && !order.isCanceled,
+        //     'dispatched': !!order.isDispatched && !order.isCompleted && !order.isCanceled && !order.isStarted,
+        //     'completed': !!order.isCompleted && !order.isCanceled,
+        //     'cancelled': !!order.isCanceled,
+        //     'canceled': !!order.isCanceled,
+        //     'in_progress': !!order.isDispatched && !order.isCompleted
+        //   };
     
-          return statusMap[statusFilter] || false;
+        //   return statusMap[statusFilter] || false;
         });
       }
     
@@ -277,21 +289,33 @@ export default class OperationsSchedulerIndexController extends BaseController {
     // Updated clear filters action
     @action
     clearFilters() {
-        // Reset filter values
-        this.order_id_filter = '';
-        this.driver_filter = '';
-        this.status_filter = '';
-        this.showBusy = true;
-        this.showLeave = true;
-        this.showTripAssigned = true;
+        return new Promise((resolve) => {
+            try {
+                // Reset filter values
+                this.order_id_filter = '';
+                this.driver_filter = '';
+                this.status_filter = '';
+                this.showBusy = true;
+                this.showLeave = true;
+                this.showTripAssigned = true;
 
-        // Reset selected filter values
-        this.selectedDriver = null;
-        this.selectedStatus = null;
+                // Reset selected filter values
+                this.selectedDriver = null;
+                this.selectedStatus = null;
 
-        // Reset calendar filtering to show all events
-        this.calendarFilteredOrders = this.calscheduledOrders; // Reset to the original unsorted list
-        this.updateCalendarWithFilteredData(this.calendarFilteredOrders);
+                // Reset calendar filtering to show all events
+                this.calendarFilteredOrders = this.calscheduledOrders; // Reset to the original unsorted list
+                this.updateCalendarWithFilteredData(this.calendarFilteredOrders);
+                // Resolve the promise after a short delay to ensure the loading indicator is visible
+                setTimeout(() => {
+                    resolve();
+                }, 300); 
+            } catch (error) {
+                console.error("Error clearing filters:", error);
+                this.notifications.error("An error occurred while clearing filters.");
+                resolve(); // Resolve even on error to ensure loading state is cleared
+              }
+        });
     }
 
 
@@ -707,6 +731,7 @@ export default class OperationsSchedulerIndexController extends BaseController {
         });
         // Apply checkbox filters
         // this.updateCalendarWithFilters();
+        this.applyFilters();
         // Re-render the calendar
         this.calendar.render();
         
@@ -762,13 +787,18 @@ export default class OperationsSchedulerIndexController extends BaseController {
     @action viewEvent(order) {
         // get the event from the calendar
         let event = this.calendar.getEventById(order.id);
-    
+        const isCompleted = order.status === 'completed';
         this.modalsManager.show('modals/order-event', {
-            title: `Scheduling for ${order.public_id}`,
+            // title: `Scheduling for ${order.public_id}`,
+            title: `${order.public_id}`,
             eventBus: this.eventBus,
             acceptButtonText: 'Save Changes',
             acceptButtonIcon: 'save',
             hideDeclineButton: true,
+            // Disable accept button if order is completed
+            disableAcceptButton: isCompleted,
+            // Add a tooltip message for completed orders
+            acceptButtonTooltip: isCompleted ? 'Cannot edit completed orders' : null,
             order,
             // Store original driver info
             originalDriverUuid: order.driver_assigned_uuid,
@@ -797,6 +827,12 @@ export default class OperationsSchedulerIndexController extends BaseController {
                 order.set('scheduled_at', null);
             },
             confirm: async (modal) => {
+                // Don't allow saving if completed
+                if (isCompleted) {
+                    this.notifications.warning('Cannot modify a completed order.');
+                    modal.done();
+                    return;
+                }
                 modal.startLoading();
     
                 if (!order.get('hasDirtyAttributes')) {

@@ -1,9 +1,12 @@
 <div class="order-schedule-card border border-gray-200 dark:border-gray-700" ...attributes>
-    <a href="javascript:;" class="{{@titleClass}} card-title border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900" {{on "click" (fn this.onTitleClick @order)}} data-order-id="{{@order.public_id}}">
-        <span>{{@order.public_id}}</span>
+    
+    {{!-- <a href="javascript:;" class="{{@titleClass}} card-title border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900" {{on "click" (fn this.onTitleClick @order)}} data-order-id="{{@order.public_id}}"> --}}
+    <a href="javascript:;" class=" card-title" {{on "click" (fn this.onTitleClick @order)}} data-order-id="{{@order.public_id}}">
+        &nbsp;{{!-- <span>{{@order.public_id}}</span> --}}
         <div>
             <Badge @status={{@order.status}} />
         </div>
+       
     </a>
     <div class="{{@contentClass}} card-content bg-white dark:bg-gray-900 text-sm space-y-2">
         <div class="flex items-center justify-between">
@@ -31,7 +34,7 @@
                 </div>
                 <span class="font-semibold">{{t "fleet-ops.component.order.schedule-card.date-created"}}</span>
             </div>
-            <span>{{n-a @order.createdAtWithTime}}</span>
+            <span>{{n-a @order.createdAtWithTime}} </span>
         </div>
         <div class="flex items-center justify-between">
             <div class="flex flex-row items-center">
@@ -132,6 +135,7 @@
             </div>
             <span>{{n-a @order.pickupName}}</span>
         </div>
+       
         {{!-- <div class="z-20 relative">
             <RouteList @order={{@order}} />
         </div> --}}

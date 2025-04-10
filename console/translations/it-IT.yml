@@ -131,6 +131,8 @@ statuses:
     escalated: Escalato  
     backlogged: In arretrato  
     requires-update: Richiede aggiornamento  
+    order_canceled: Ordine annullato
+    all-statuses: Tutti gli stati
 fuelReportTypes:
     Fuel: "Carburante"
     Parking: "Parcheggio"
@@ -1874,6 +1876,16 @@ fleet-ops:
         month: Mese
         week: Settimana
         day: Giorno
+        order-id: ID Ordine
+        driver: Autista
+        status: Stato
+        all-statuses: Tutti gli stati
+        clear-filters: Cancella filtri
+        apply-filters: Applica filtri
+        all-drivers: Tutti gli autisti
+        search-by-orderid: Cerca per ID Ordine
+        
+
     service-rates:
       index:
         edit-service: Modifica Tariffa Servizio
