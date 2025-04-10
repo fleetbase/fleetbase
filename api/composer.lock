@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "6861da9ea68e8a1bad1f97b2b9f34768",
+    "content-hash": "a135f666cc7a4e187a4aa5784903174c",
     "packages": [
         {
             "name": "appstract/laravel-opcache",
@@ -124,16 +124,16 @@
         },
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.342.23",
+            "version": "3.342.24",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "a5e9ba23ffecf1f71d8cfb177ef5cb3fbe2ecf05"
+                "reference": "cd7e1cbed4cb52c3aad31a647d1645594ff208eb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/a5e9ba23ffecf1f71d8cfb177ef5cb3fbe2ecf05",
-                "reference": "a5e9ba23ffecf1f71d8cfb177ef5cb3fbe2ecf05",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/cd7e1cbed4cb52c3aad31a647d1645594ff208eb",
+                "reference": "cd7e1cbed4cb52c3aad31a647d1645594ff208eb",
                 "shasum": ""
             },
             "require": {
@@ -215,9 +215,9 @@
             "support": {
                 "forum": "https://github.com/aws/aws-sdk-php/discussions",
                 "issues": "https://github.com/aws/aws-sdk-php/issues",
-                "source": "https://github.com/aws/aws-sdk-php/tree/3.342.23"
+                "source": "https://github.com/aws/aws-sdk-php/tree/3.342.24"
             },
-            "time": "2025-04-08T18:35:41+00:00"
+            "time": "2025-04-09T18:22:32+00:00"
         },
         {
             "name": "aws/aws-sdk-php-laravel",
@@ -2373,16 +2373,16 @@
         },
         {
             "name": "firebase/php-jwt",
-            "version": "v6.11.0",
+            "version": "v6.11.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/firebase/php-jwt.git",
-                "reference": "8f718f4dfc9c5d5f0c994cdfd103921b43592712"
+                "reference": "d1e91ecf8c598d073d0995afa8cd5c75c6e19e66"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/firebase/php-jwt/zipball/8f718f4dfc9c5d5f0c994cdfd103921b43592712",
-                "reference": "8f718f4dfc9c5d5f0c994cdfd103921b43592712",
+                "url": "https://api.github.com/repos/firebase/php-jwt/zipball/d1e91ecf8c598d073d0995afa8cd5c75c6e19e66",
+                "reference": "d1e91ecf8c598d073d0995afa8cd5c75c6e19e66",
                 "shasum": ""
             },
             "require": {
@@ -2430,16 +2430,16 @@
             ],
             "support": {
                 "issues": "https://github.com/firebase/php-jwt/issues",
-                "source": "https://github.com/firebase/php-jwt/tree/v6.11.0"
+                "source": "https://github.com/firebase/php-jwt/tree/v6.11.1"
             },
-            "time": "2025-01-23T05:11:06+00:00"
+            "time": "2025-04-09T20:32:01+00:00"
         },
         {
             "name": "fleetbase/billing-api",
             "version": "0.1.7",
             "dist": {
                 "type": "tar",
-                "url": "https://s3.ap-southeast-1.amazonaws.com/fleetbase-registry-production/flb/%40fleetbase/billing-engine/billing-engine-0.1.7.tgz?AWSAccessKeyId=ASIA26E6KG6WDAIYYCVX&Expires=1744199771&Signature=NpLbV3DVGqrwjcq8yNX5FIZf%2Fes%3D&x-amz-security-token=IQoJb3JpZ2luX2VjEBMaDmFwLXNvdXRoZWFzdC0xIkcwRQIgAb5rNR1uxhca%2FNRddtn1dzJdMmL9oslKN3J0wVmk%2FMECIQCzjvHcqxE3FfSrL3VTq6YcBteRWbDMycRdIIhTJGow4CqfBAiM%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F8BEAAaDDc1MTk1MTI5NjQyOCIMcVQXsj0LBRre%2F3XaKvMDma2%2Fd30fB%2BFLTHAYToNZFaxxHkadk1I9BBzvWVrsoIpUCuzhXj5WA2GTzmwwQ14%2BQLR%2FpBhENWO%2FOUXfaTUuHSS2Qim5vMWGQAQNE%2BaPQZWEm6BAq1TykZfzYnAE%2F2Kh8PN2nXpyv3DyBCFAR%2FCMCyOCyTz%2BrAw0MrcOc8vPAxW5nFV0YmkMLFCZrQ18W1035HEVE0j6UDY4SCQh9V8hGFIZ6WJWLpAReggHjFN1iQq%2ByQnBlpgFEIsCTR8hHK0ZI0EESMXGAULpcChwwHrFrBlMP201TNJyMMe24w4px9IAcX4bMFWrlbB7kqnYjxVrVH4bm2Kaz1Hn1leu8WWhMwL3VoDl7exe%2BA6aE%2FmMsUs9l1GbrXBvFX7eGnAZHNOQ5UAJPZK8FC1jYSCP3HiPfARwRgP3bOgYkJ2KJBK7GvJTySNzcNxZOppkdxdvfXwJStiN3H4LyJHaUqXvhssesLdnELGAxnS4ctwQpxuP77P8%2FnEQxdwJU6rJGRzKYocaVg9eEsYj9rkRMUNPB4k8u7DjfybJis%2Fcd0n9kxsBYzeH0lWubODGY%2F8kXuQ8XN4ubiovFONUpaMk2k6k6JeePCJARJySu9mKUKEeTjuUJvGGWtyLD8TE%2Fpyb3X14VVUoaomcnIfhRnqov4fuin2bXo1q%2BDCZl9m%2FBjqmAWhl3Wuyjeqf709b97GjlUx1bHr1lCMs0y24TMeYya3yN%2BMWGpogT%2BftAHnP%2FTiv9ElekFco4HEcWQv6AIWXOsBI32U8ukjUTpAgw2dY29hiqFeg%2FIP33BL7F8kzNfruu7XgGrvwOXZK98eQ2rqsMe7UK1jtMj76mm49HOOrQ2bSdmQERVgIvB6x9c7rTCvgEXWLazwMkSuuPE4Oh7CUqHLi4PQqv5Y%3D"
+                "url": "https://s3.ap-southeast-1.amazonaws.com/fleetbase-registry-production/flb/%40fleetbase/billing-engine/billing-engine-0.1.7.tgz?AWSAccessKeyId=ASIA26E6KG6WIOFRIDKG&Expires=1744265244&Signature=2hsdh9KfcIURCdfQRBNu%2BFPe7P4%3D&x-amz-security-token=IQoJb3JpZ2luX2VjECQaDmFwLXNvdXRoZWFzdC0xIkYwRAIgLUnvgScoqW55vqqfiZHqW4yLgAIyYktlme3%2F7Sd0tc8CIC5u3ELR1YiLdIZPW2FED%2Bi4XftNwYfK19hc4wUDTBYFKp8ECJ3%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEQABoMNzUxOTUxMjk2NDI4Igw%2FlOcMZ7D8CeAIk8Eq8wMRg9ozUoK2ixUEqNzbLPP0lfHZGN9cnQcFj2vk8njP02RPJDEFqdgEhkf%2B8FvZbRyzJG86Ucy%2Fgn4KGsPhBaCXP9tzb7d1esrP4JtGhTYm5VfMkqNs2zo2TPf49TWSrp9qo8nqVfaY6nImupp66TfKeh7ZfoBFcq6qXpBnlgYKJh1ZQtj3qLZV428IDeSALZkw5Rn712peoU0Fc5LpY3KvFZzNrYQa%2FxK37%2Fx19wU5Egaxq91Hm6xbPEu6Bd4mHCPEIK8RIWjg5HQQlx1tHgAP6%2BGlbCh2ofVwCFgwKA7YqZNgIQTg97zVIwh%2Ft8oX%2FnFRDg6vYnw7lnGSVDl61bMXM2P%2BJTzfzW6XTjK0UXZesmzZcFG9%2B7nNNatEGjDKAeWf%2BM4Ryes6Zmfib7rn1BmRXM2pyefy7sYZo%2FFL%2F9bvaW7GLHbvLpJR4I8JNoEE9Ivg5iCLH47JgGSYT6OGR5K7NgKfvBRdGSN9jAlX9GUcldcE6%2FPH9DOr2qiBYPDEdwhd83Mv2VYMNozhuAlD7%2BL1BFq1M7uHTbZrYSnIE7nv6AJjl27fRIn9qF%2BYNjnF996GhbTKq6ELCoTNUashbe9kQRaHyvmRQznZUTm4pwO8x2FmjlQMgn1gIn3s32SEpXkPNIfuvjzHBkIoYkce6G4W6m4XMI%2BO3b8GOqcBZsoxtx%2B22s%2BsDzUfF9YZnldVdr%2Fc9TpwqapdnbFnff17ycug4jXhTe22cfCzybJ%2BK0Rm1sFKGyu1fWrp%2F78oftyFHdPxBVsY2Ir1rV7r7TONxP9ILNXKChiuwlV%2FQFZr6nyqvtMSVd8x1VGYfjJHrm%2BjitE0yDOj3TVYmhSdbtYS%2F628kSHsmnzStDySW0ceKtR3mvf9fvuKAlSV7r4%2F%2BlC8uXzgeDs%3D"
             },
             "require": {
                 "fleetbase/core-api": "*",
@@ -2637,7 +2637,7 @@
             "version": "0.0.7",
             "dist": {
                 "type": "tar",
-                "url": "https://s3.ap-southeast-1.amazonaws.com/fleetbase-registry-production/flb/%40fleetbase/customer-portal-engine/customer-portal-engine-0.0.7.tgz?AWSAccessKeyId=ASIA26E6KG6WDAIYYCVX&Expires=1744199771&Signature=8N6EupdbG0GpV73w4TqYJjrTk7s%3D&x-amz-security-token=IQoJb3JpZ2luX2VjEBMaDmFwLXNvdXRoZWFzdC0xIkcwRQIgAb5rNR1uxhca%2FNRddtn1dzJdMmL9oslKN3J0wVmk%2FMECIQCzjvHcqxE3FfSrL3VTq6YcBteRWbDMycRdIIhTJGow4CqfBAiM%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F8BEAAaDDc1MTk1MTI5NjQyOCIMcVQXsj0LBRre%2F3XaKvMDma2%2Fd30fB%2BFLTHAYToNZFaxxHkadk1I9BBzvWVrsoIpUCuzhXj5WA2GTzmwwQ14%2BQLR%2FpBhENWO%2FOUXfaTUuHSS2Qim5vMWGQAQNE%2BaPQZWEm6BAq1TykZfzYnAE%2F2Kh8PN2nXpyv3DyBCFAR%2FCMCyOCyTz%2BrAw0MrcOc8vPAxW5nFV0YmkMLFCZrQ18W1035HEVE0j6UDY4SCQh9V8hGFIZ6WJWLpAReggHjFN1iQq%2ByQnBlpgFEIsCTR8hHK0ZI0EESMXGAULpcChwwHrFrBlMP201TNJyMMe24w4px9IAcX4bMFWrlbB7kqnYjxVrVH4bm2Kaz1Hn1leu8WWhMwL3VoDl7exe%2BA6aE%2FmMsUs9l1GbrXBvFX7eGnAZHNOQ5UAJPZK8FC1jYSCP3HiPfARwRgP3bOgYkJ2KJBK7GvJTySNzcNxZOppkdxdvfXwJStiN3H4LyJHaUqXvhssesLdnELGAxnS4ctwQpxuP77P8%2FnEQxdwJU6rJGRzKYocaVg9eEsYj9rkRMUNPB4k8u7DjfybJis%2Fcd0n9kxsBYzeH0lWubODGY%2F8kXuQ8XN4ubiovFONUpaMk2k6k6JeePCJARJySu9mKUKEeTjuUJvGGWtyLD8TE%2Fpyb3X14VVUoaomcnIfhRnqov4fuin2bXo1q%2BDCZl9m%2FBjqmAWhl3Wuyjeqf709b97GjlUx1bHr1lCMs0y24TMeYya3yN%2BMWGpogT%2BftAHnP%2FTiv9ElekFco4HEcWQv6AIWXOsBI32U8ukjUTpAgw2dY29hiqFeg%2FIP33BL7F8kzNfruu7XgGrvwOXZK98eQ2rqsMe7UK1jtMj76mm49HOOrQ2bSdmQERVgIvB6x9c7rTCvgEXWLazwMkSuuPE4Oh7CUqHLi4PQqv5Y%3D"
+                "url": "https://s3.ap-southeast-1.amazonaws.com/fleetbase-registry-production/flb/%40fleetbase/customer-portal-engine/customer-portal-engine-0.0.7.tgz?AWSAccessKeyId=ASIA26E6KG6WIOFRIDKG&Expires=1744265244&Signature=hAjowJZ6ef4xiHreoFkr%2BCP1sco%3D&x-amz-security-token=IQoJb3JpZ2luX2VjECQaDmFwLXNvdXRoZWFzdC0xIkYwRAIgLUnvgScoqW55vqqfiZHqW4yLgAIyYktlme3%2F7Sd0tc8CIC5u3ELR1YiLdIZPW2FED%2Bi4XftNwYfK19hc4wUDTBYFKp8ECJ3%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEQABoMNzUxOTUxMjk2NDI4Igw%2FlOcMZ7D8CeAIk8Eq8wMRg9ozUoK2ixUEqNzbLPP0lfHZGN9cnQcFj2vk8njP02RPJDEFqdgEhkf%2B8FvZbRyzJG86Ucy%2Fgn4KGsPhBaCXP9tzb7d1esrP4JtGhTYm5VfMkqNs2zo2TPf49TWSrp9qo8nqVfaY6nImupp66TfKeh7ZfoBFcq6qXpBnlgYKJh1ZQtj3qLZV428IDeSALZkw5Rn712peoU0Fc5LpY3KvFZzNrYQa%2FxK37%2Fx19wU5Egaxq91Hm6xbPEu6Bd4mHCPEIK8RIWjg5HQQlx1tHgAP6%2BGlbCh2ofVwCFgwKA7YqZNgIQTg97zVIwh%2Ft8oX%2FnFRDg6vYnw7lnGSVDl61bMXM2P%2BJTzfzW6XTjK0UXZesmzZcFG9%2B7nNNatEGjDKAeWf%2BM4Ryes6Zmfib7rn1BmRXM2pyefy7sYZo%2FFL%2F9bvaW7GLHbvLpJR4I8JNoEE9Ivg5iCLH47JgGSYT6OGR5K7NgKfvBRdGSN9jAlX9GUcldcE6%2FPH9DOr2qiBYPDEdwhd83Mv2VYMNozhuAlD7%2BL1BFq1M7uHTbZrYSnIE7nv6AJjl27fRIn9qF%2BYNjnF996GhbTKq6ELCoTNUashbe9kQRaHyvmRQznZUTm4pwO8x2FmjlQMgn1gIn3s32SEpXkPNIfuvjzHBkIoYkce6G4W6m4XMI%2BO3b8GOqcBZsoxtx%2B22s%2BsDzUfF9YZnldVdr%2Fc9TpwqapdnbFnff17ycug4jXhTe22cfCzybJ%2BK0Rm1sFKGyu1fWrp%2F78oftyFHdPxBVsY2Ir1rV7r7TONxP9ILNXKChiuwlV%2FQFZr6nyqvtMSVd8x1VGYfjJHrm%2BjitE0yDOj3TVYmhSdbtYS%2F628kSHsmnzStDySW0ceKtR3mvf9fvuKAlSV7r4%2F%2BlC8uXzgeDs%3D"
             },
             "require": {
                 "fleetbase/core-api": "*",
@@ -2712,16 +2712,16 @@
         },
         {
             "name": "fleetbase/fleetops-api",
-            "version": "0.6.3",
+            "version": "0.6.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fleetbase/fleetops.git",
-                "reference": "e999ed4c164c46c190431a260ae93c8116b0d17d"
+                "reference": "5f2776c1d8530871340a11c0c408f2e6d82611ae"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fleetbase/fleetops/zipball/e999ed4c164c46c190431a260ae93c8116b0d17d",
-                "reference": "e999ed4c164c46c190431a260ae93c8116b0d17d",
+                "url": "https://api.github.com/repos/fleetbase/fleetops/zipball/5f2776c1d8530871340a11c0c408f2e6d82611ae",
+                "reference": "5f2776c1d8530871340a11c0c408f2e6d82611ae",
                 "shasum": ""
             },
             "require": {
@@ -2795,16 +2795,16 @@
             ],
             "support": {
                 "issues": "https://github.com/fleetbase/fleetops/issues",
-                "source": "https://github.com/fleetbase/fleetops/tree/v0.6.3"
+                "source": "https://github.com/fleetbase/fleetops/tree/v0.6.4"
             },
-            "time": "2025-04-09T10:45:37+00:00"
+            "time": "2025-04-10T05:15:05+00:00"
         },
         {
             "name": "fleetbase/flespi-integration",
             "version": "0.1.14",
             "dist": {
                 "type": "tar",
-                "url": "https://s3.ap-southeast-1.amazonaws.com/fleetbase-registry-production/flb/%40fleetbase/flespi-engine/flespi-engine-0.1.14.tgz?AWSAccessKeyId=ASIA26E6KG6WDAIYYCVX&Expires=1744199771&Signature=ildduQ8ZWeFxmP33geZMXvcF2JM%3D&x-amz-security-token=IQoJb3JpZ2luX2VjEBMaDmFwLXNvdXRoZWFzdC0xIkcwRQIgAb5rNR1uxhca%2FNRddtn1dzJdMmL9oslKN3J0wVmk%2FMECIQCzjvHcqxE3FfSrL3VTq6YcBteRWbDMycRdIIhTJGow4CqfBAiM%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F8BEAAaDDc1MTk1MTI5NjQyOCIMcVQXsj0LBRre%2F3XaKvMDma2%2Fd30fB%2BFLTHAYToNZFaxxHkadk1I9BBzvWVrsoIpUCuzhXj5WA2GTzmwwQ14%2BQLR%2FpBhENWO%2FOUXfaTUuHSS2Qim5vMWGQAQNE%2BaPQZWEm6BAq1TykZfzYnAE%2F2Kh8PN2nXpyv3DyBCFAR%2FCMCyOCyTz%2BrAw0MrcOc8vPAxW5nFV0YmkMLFCZrQ18W1035HEVE0j6UDY4SCQh9V8hGFIZ6WJWLpAReggHjFN1iQq%2ByQnBlpgFEIsCTR8hHK0ZI0EESMXGAULpcChwwHrFrBlMP201TNJyMMe24w4px9IAcX4bMFWrlbB7kqnYjxVrVH4bm2Kaz1Hn1leu8WWhMwL3VoDl7exe%2BA6aE%2FmMsUs9l1GbrXBvFX7eGnAZHNOQ5UAJPZK8FC1jYSCP3HiPfARwRgP3bOgYkJ2KJBK7GvJTySNzcNxZOppkdxdvfXwJStiN3H4LyJHaUqXvhssesLdnELGAxnS4ctwQpxuP77P8%2FnEQxdwJU6rJGRzKYocaVg9eEsYj9rkRMUNPB4k8u7DjfybJis%2Fcd0n9kxsBYzeH0lWubODGY%2F8kXuQ8XN4ubiovFONUpaMk2k6k6JeePCJARJySu9mKUKEeTjuUJvGGWtyLD8TE%2Fpyb3X14VVUoaomcnIfhRnqov4fuin2bXo1q%2BDCZl9m%2FBjqmAWhl3Wuyjeqf709b97GjlUx1bHr1lCMs0y24TMeYya3yN%2BMWGpogT%2BftAHnP%2FTiv9ElekFco4HEcWQv6AIWXOsBI32U8ukjUTpAgw2dY29hiqFeg%2FIP33BL7F8kzNfruu7XgGrvwOXZK98eQ2rqsMe7UK1jtMj76mm49HOOrQ2bSdmQERVgIvB6x9c7rTCvgEXWLazwMkSuuPE4Oh7CUqHLi4PQqv5Y%3D"
+                "url": "https://s3.ap-southeast-1.amazonaws.com/fleetbase-registry-production/flb/%40fleetbase/flespi-engine/flespi-engine-0.1.14.tgz?AWSAccessKeyId=ASIA26E6KG6WIOFRIDKG&Expires=1744265244&Signature=eIhaMzqV61S1788HOlL3Ljpy9jg%3D&x-amz-security-token=IQoJb3JpZ2luX2VjECQaDmFwLXNvdXRoZWFzdC0xIkYwRAIgLUnvgScoqW55vqqfiZHqW4yLgAIyYktlme3%2F7Sd0tc8CIC5u3ELR1YiLdIZPW2FED%2Bi4XftNwYfK19hc4wUDTBYFKp8ECJ3%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEQABoMNzUxOTUxMjk2NDI4Igw%2FlOcMZ7D8CeAIk8Eq8wMRg9ozUoK2ixUEqNzbLPP0lfHZGN9cnQcFj2vk8njP02RPJDEFqdgEhkf%2B8FvZbRyzJG86Ucy%2Fgn4KGsPhBaCXP9tzb7d1esrP4JtGhTYm5VfMkqNs2zo2TPf49TWSrp9qo8nqVfaY6nImupp66TfKeh7ZfoBFcq6qXpBnlgYKJh1ZQtj3qLZV428IDeSALZkw5Rn712peoU0Fc5LpY3KvFZzNrYQa%2FxK37%2Fx19wU5Egaxq91Hm6xbPEu6Bd4mHCPEIK8RIWjg5HQQlx1tHgAP6%2BGlbCh2ofVwCFgwKA7YqZNgIQTg97zVIwh%2Ft8oX%2FnFRDg6vYnw7lnGSVDl61bMXM2P%2BJTzfzW6XTjK0UXZesmzZcFG9%2B7nNNatEGjDKAeWf%2BM4Ryes6Zmfib7rn1BmRXM2pyefy7sYZo%2FFL%2F9bvaW7GLHbvLpJR4I8JNoEE9Ivg5iCLH47JgGSYT6OGR5K7NgKfvBRdGSN9jAlX9GUcldcE6%2FPH9DOr2qiBYPDEdwhd83Mv2VYMNozhuAlD7%2BL1BFq1M7uHTbZrYSnIE7nv6AJjl27fRIn9qF%2BYNjnF996GhbTKq6ELCoTNUashbe9kQRaHyvmRQznZUTm4pwO8x2FmjlQMgn1gIn3s32SEpXkPNIfuvjzHBkIoYkce6G4W6m4XMI%2BO3b8GOqcBZsoxtx%2B22s%2BsDzUfF9YZnldVdr%2Fc9TpwqapdnbFnff17ycug4jXhTe22cfCzybJ%2BK0Rm1sFKGyu1fWrp%2F78oftyFHdPxBVsY2Ir1rV7r7TONxP9ILNXKChiuwlV%2FQFZr6nyqvtMSVd8x1VGYfjJHrm%2BjitE0yDOj3TVYmhSdbtYS%2F628kSHsmnzStDySW0ceKtR3mvf9fvuKAlSV7r4%2F%2BlC8uXzgeDs%3D"
             },
             "require": {
                 "fleetbase/core-api": "*",
@@ -11636,16 +11636,16 @@
         },
         {
             "name": "spatie/laravel-permission",
-            "version": "6.16.0",
+            "version": "6.17.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spatie/laravel-permission.git",
-                "reference": "4fa03c06509e037a4d42c131d0f181e3e4bbd483"
+                "reference": "02ada8f638b643713fa2fb543384738e27346ddb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spatie/laravel-permission/zipball/4fa03c06509e037a4d42c131d0f181e3e4bbd483",
-                "reference": "4fa03c06509e037a4d42c131d0f181e3e4bbd483",
+                "url": "https://api.github.com/repos/spatie/laravel-permission/zipball/02ada8f638b643713fa2fb543384738e27346ddb",
+                "reference": "02ada8f638b643713fa2fb543384738e27346ddb",
                 "shasum": ""
             },
             "require": {
@@ -11707,7 +11707,7 @@
             ],
             "support": {
                 "issues": "https://github.com/spatie/laravel-permission/issues",
-                "source": "https://github.com/spatie/laravel-permission/tree/6.16.0"
+                "source": "https://github.com/spatie/laravel-permission/tree/6.17.0"
             },
             "funding": [
                 {
@@ -11715,7 +11715,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-02-28T20:29:57+00:00"
+            "time": "2025-04-08T15:06:14+00:00"
         },
         {
             "name": "spatie/laravel-responsecache",
