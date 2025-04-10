@@ -854,16 +854,24 @@ class OrderController extends Controller
         }
         $status_array = ['shift_ended','on_break', 'incident_reported'];
         if (in_array($order->status ,$status_array)) {
-            $order->status = 'started';
+            $status_new = 'started';
+            $order->status = $status_new;
             $order->save();
             $orderConfig = $order->config();
-
-            // Get the order started activity
-            $activity = $orderConfig->getStartedActivity();
-            $updateActivityRequest = new Request(['activity' => $activity->serialize()]);
-
-            // update activity
-            return $this->updateActivity($order, $updateActivityRequest);
+             //update activity:
+             $existingTrackingStatus = TrackingStatus::where('tracking_number_uuid', $order->tracking_number_uuid)
+             ->whereNull('deleted_at') // Check if the status is also the same
+             ->first();
+             $trackingData = [
+                 'status'       => $status_new,
+                 'details'      => 'Order status updated by the driver',
+                 'code'         => str_replace('-', ' ', $status_new),
+                 'location'     => $existingTrackingStatus['location'],
+                 'tracking_number_uuid' => $existingTrackingStatus['tracking_number_uuid'],
+                 'company_uuid' => $existingTrackingStatus['company_uuid'],
+             ];
+             TrackingStatus::create($trackingData);
+             return new OrderResource($order);
         }
         // if the order is adhoc and the parameter of `assign` is set with a valid driver id, assign the driver and continue
         if ($order->adhoc && $assignAdhocDriver && Str::startsWith($assignAdhocDriver, 'driver_')) {
