@@ -21,7 +21,7 @@ class ChatMessage extends FleetbaseResource
             'chat_channel_uuid'                   => $this->when(Http::isInternalRequest(), $this->chat_channel_uuid),
             'chat_channel'                        => $this->when(Http::isPublicRequest(), $this->chatChannel->public_id),
             'sender_uuid'                         => $this->when(Http::isInternalRequest(), $this->sender_uuid),
-            'sender'                              => $this->when(Http::isPublicRequest(), $this->sender->public_id),
+            'sender'                              => $this->when(Http::isPublicRequest() && $this->sender !== null, optional($this->sender)->public_id),
             'content'                             => $this->content,
             'sender'                              => new ChatParticipant($this->sender),
             'attachments'                         => ChatAttachment::collection($this->attachments),
