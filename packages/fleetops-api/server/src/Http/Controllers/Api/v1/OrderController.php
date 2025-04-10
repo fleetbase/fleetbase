@@ -857,14 +857,14 @@ class OrderController extends Controller
             $status_new = 'started';
             $order->status = $status_new;
             $order->save();
-            $orderConfig = $order->config();
-             //update activity:
-             $existingTrackingStatus = TrackingStatus::where('tracking_number_uuid', $order->tracking_number_uuid)
-             ->whereNull('deleted_at') // Check if the status is also the same
+            // Fetch existing tracking status
+            $existingTrackingStatus = TrackingStatus::where('tracking_number_uuid', $order->tracking_number_uuid)
+             ->whereNull('deleted_at')
              ->first();
-             $trackingData = [
+            //update activity:
+            $trackingData = [
                  'status'       => $status_new,
-                 'details'      => 'Order status updated by the driver',
+                 'details'      => __('messages.order_status_update'), 
                  'code'         => str_replace('-', ' ', $status_new),
                  'location'     => $existingTrackingStatus['location'],
                  'tracking_number_uuid' => $existingTrackingStatus['tracking_number_uuid'],
