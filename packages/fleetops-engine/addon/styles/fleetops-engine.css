@@ -1599,31 +1599,3 @@ body[data-theme='dark']
 .justify-end-i {
     justify-content: end !important;
 }
-.ember-power-select-trigger {
-    min-width: 180px !important;
-    width: 180px !important;
-    max-width: 180px !important;
-  }
-  
-  /* Match regular inputs to the same width */
-  .order-id-input {
-    min-width: 180px !important;
-    width: 180px !important;
-    max-width: 180px !important;
-  }
-  
-  /* Style the dropdowns to look more like selects */
-  .ember-power-select-trigger {
-    display: flex;
-    align-items: center;
-    padding-right: 25px;
-    position: relative;
-  }
-  
-  .ember-power-select-trigger::after {
-    content: "▼";
-    font-size: 0.7em;
-    position: absolute;
-    right: 10px;
-    color: #666;
-  }
