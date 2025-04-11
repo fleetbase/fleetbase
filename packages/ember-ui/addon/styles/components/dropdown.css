@@ -37,3 +37,50 @@ body[data-theme='dark'] .dropdown-menu-item:hover {
 body[data-theme='dark'] .dropdown-menu-item:focus {
     @apply text-gray-100 bg-gray-800;
 }
+
+.dropdown-manual {
+    position: relative;
+    display: inline-block;
+  }
+  
+  .main-waypoint {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 500;
+  }
+  
+  .caret {
+    font-size: 0.75rem;
+    margin-left: 4px;
+  }
+  
+  .dropdown-list {
+    position: relative;
+    top: 100%;
+    left: 40%;
+    transform: translateX(-50%);
+    background: white;
+    padding: 6px 12px;
+    z-index: 1000;
+    white-space: nowrap;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease-in-out;
+  }
+  
+  .dropdown-manual .dropdown-list.transition {
+    transition: all 0.3s ease-in-out;
+    opacity: 1;
+    visibility: visible;
+  }
+  
+  .dropdown-list li {
+    text-align: center;
+    margin: 4px 0;
+  }
+  
+  .down-arrow {
+    font-size: 12px;
+  }
