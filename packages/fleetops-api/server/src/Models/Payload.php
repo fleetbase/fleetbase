@@ -15,6 +15,8 @@ use Fleetbase\Traits\HasUuid;
 use Fleetbase\Traits\TracksApiCredential;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
+use Fleetbase\FleetOps\Models\TrackingStatus;
+use Fleetbase\FleetOps\Models\Waypoint;
 
 class Payload extends Model
 {
@@ -731,9 +733,13 @@ class Payload extends Model
         $destination = null;
 
         if ($this->isMultipleDropOrder) {
-            $destination = $this->waypoints->first();
+             //complete first waypoint
+             $this->completeFirstWaypointStatus();
+             //change second waypoint as current_waypoint while start the order
+             $destination = $this->waypoints()->where('order', 1)->first();
         } else {
-            $destination = $this->pickup ? $this->pickup : $this->waypoints->first();
+            //change dropoff as current_waypoint while start the order
+            $destination = $this->dropoff ? $this->dropoff :$this->waypoints()->where('order', 1)->first();;
         }
 
         if (!$destination) {
@@ -891,4 +897,32 @@ class Payload extends Model
 
         return null;
     }
+    /**
+     * Completes the status of the first waypoint in the payload.
+     *
+     * This function retrieves the first waypoint and its associated tracking number,
+     * then updates the tracking status to indicate that the waypoint has been completed.
+     * It only updates the status if both the waypoint and tracking number exist.
+     *
+     * @return void
+     */
+    protected function completeFirstWaypointStatus()
+    {
+        $trackingNumber = optional($this->waypointMarkers()->first())->tracking_number_uuid;
+        if ($trackingNumber) {
+            $status = TrackingStatus::where('tracking_number_uuid', $trackingNumber)
+                ->whereNull('deleted_at')
+                ->first();
+
+            if ($status) {
+                $status->update([
+                    'status' => 'Waypoint completed',
+                    'code' => 'COMPLETED',
+                    'details' => 'Waypoint has been completed',
+                    'updated_at' => now()
+                ]);
+            }
+        }
+    }
+
 }
