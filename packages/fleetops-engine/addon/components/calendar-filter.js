@@ -32,6 +32,9 @@ export default class CalendarFilterComponent extends Component {
    */
   @action
   handleDriverChange(driver) {
+    if (this.args.isLoading === undefined) {
+      this.isLoading = true;
+    }
     if (this.args.onDriverChange) {
       // If there's a specific handler for driver changes, use it
       this.args.onDriverChange(driver);
@@ -55,6 +58,9 @@ export default class CalendarFilterComponent extends Component {
    */
   @action
   handleStatusChange(status) {
+    if (this.args.isLoading === undefined) {
+      this.isLoading = true;
+    }
     if (this.args.onStatusChange) {
       // If there's a specific handler for status changes, use it
       this.args.onStatusChange(status);
@@ -89,6 +95,9 @@ export default class CalendarFilterComponent extends Component {
   handleOrderIdBlur() {
     // Only update if the value has changed and we have a callback
     if (this.args.order_id_filter !== this.tempOrderId && typeof this.args.onOrderIdChange === 'function') {
+      if (this.args.isLoading === undefined) {
+        this.isLoading = true;
+      }
       this.args.onOrderIdChange(this.tempOrderId);
       this.triggerFilterApply();
     }
@@ -102,6 +111,9 @@ export default class CalendarFilterComponent extends Component {
   handleOrderIdKeyDown(event) {
     // Apply the filter when the user presses Enter
     if (event.key === 'Enter' && typeof this.args.onOrderIdChange === 'function') {
+      if (this.args.isLoading === undefined) {
+        this.isLoading = true;
+      }
       event.preventDefault();
       this.args.onOrderIdChange(this.tempOrderId);
       this.triggerFilterApply();
