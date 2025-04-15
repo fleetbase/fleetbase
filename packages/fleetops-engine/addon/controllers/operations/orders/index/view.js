@@ -434,10 +434,18 @@ export default class OperationsOrdersIndexViewController extends BaseController 
         options = options === null ? {} : {};
         let originalOrderData = {
             driver_assigned_uuid: order.driver_assigned_uuid,
+            driver_assigned: order.driver_assigned,
             vehicle_assigned_uuid: order.vehicle_assigned_uuid,
+            vehicle_assigned: order.vehicle_assigned,
             scheduled_at: order.scheduled_at,
             estimated_end_date: order.estimated_end_date
         };
+        // let originalOrderData = {
+        //     driver_assigned_uuid: order.driver_assigned_uuid,
+        //     vehicle_assigned_uuid: order.vehicle_assigned_uuid,
+        //     scheduled_at: order.scheduled_at,
+        //     estimated_end_date: order.estimated_end_date
+        // };
         let fieldsChanged = false;
         let driverToAssign = null; // Store the driver assignment until confirmation
 
@@ -598,9 +606,19 @@ export default class OperationsOrdersIndexViewController extends BaseController 
                 }
             },
             decline: () => {
-                order.payload.rollbackAttributes();
+                order.set('driver_assigned_uuid', originalOrderData.driver_assigned_uuid);
+                order.set('driver_assigned', originalOrderData.driver_assigned);
+                order.set('vehicle_assigned_uuid', originalOrderData.vehicle_assigned_uuid);
+                order.set('vehicle_assigned', originalOrderData.vehicle_assigned);
+                order.set('scheduled_at', originalOrderData.scheduled_at);
+                order.set('estimated_end_date', originalOrderData.estimated_end_date);
+            
                 this.modalsManager.done();
             },
+            // decline: () => {
+            //     order.payload.rollbackAttributes();
+            //     this.modalsManager.done();
+            // },
             ...options,
         });
     }
