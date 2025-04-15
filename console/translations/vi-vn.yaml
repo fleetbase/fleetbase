@@ -542,7 +542,49 @@ fleet-ops:
     actions: Hành động
     start-date: Ngày bắt đầu
     tracking-number: Số theo dõi
+    end_date_cannot_be_earlier:  Ngày kết thúc không thể sớm hơn.
+    end_date_cannot_be_earlier_than_start_date: Ngày kết thúc không thể sớm hơn ngày bắt đầu.
     component:
+       order:
+        header:
+          dispatched-order: Ausgeliefert um {order}
+          dispatched: Ausgeliefert
+          dispatched-at: Ausgeliefert um
+          edit: Details bearbeiten
+          update: Aktivität aktualisieren
+          assign: Fahrer zuweisen
+          get-order: Bestelllabel abrufen
+          split-order: Bestellung aufteilen
+          reschedule: Bestellung neu planen
+          cancel-order: Bestellung stornieren
+        place-card:
+          show-less: Weniger Details anzeigen
+          show-more: Mehr Details anzeigen
+        schedule-card:
+          destination: Ziel
+          unassign-driver: Fahrer entfernen?
+          unassign-text: Sie sind dabei, den Fahrer für die Bestellung {orderId} zu entfernen. Klicken Sie auf "Weiter", um die Entfernung zu bestätigen.
+          unassign-button: Weiter und Fahrer entfernen
+          assign-driver: Neuen Fahrer zuweisen?
+          assign-text: Sie sind dabei, einen neuen Fahrer ({driverName}) der Bestellung {orderId} zuzuweisen. Klicken Sie auf "Weiter", um die Zuweisung zu bestätigen.
+          assign-busy-text: Der Fahrer ({driverName}) <strong >{availability}</strong>. Möchten Sie ihm trotzdem die Bestellung {orderId} zuweisen? Klicken Sie auf „Weiter“, um zu bestätigen.
+          assign-button: Weiter und Fahrer zuweisen
+          driver-has-no-vehicle: Der ausgewählte Fahrer hat kein zugewiesenes Fahrzeug. Bitte weisen Sie ihm ein Fahrzeug zu oder wählen Sie einen anderen Fahrer mit Fahrzeug, bevor Sie fortfahren.
+          driver-no-vehicle-title: Fahrer hat kein Fahrzeug
+          ok-button: Okay
+          date: Geplantes Datum
+          end-date: Voraussichtliches Enddatum
+          driver-assigned: Fahrer
+          vehicle-assigned: Fahrzeug
+          no-driver: Kein Fahrer
+          no-vehicle: Kein Fahrzeug
+          select-driver: Fahrer auswählen
+          select-vehicle: Fahrzeug auswählen
+          on-leave: im Urlaub
+          date-created: Erstellungsdatum
+          cannot-edit-completed: Không thể chỉnh sửa các đơn hàng đã hoàn thành
+          cannot-modify-complete-order: Không thể sửa một đơn hàng đã hoàn thành.
+    
   activity-logic-builder:
     activity-logic: Logic hoạt động
     activity-logic-help-text: Định nghĩa các điều kiện logic tùy chỉnh xác định khi nào một hoạt động sẽ khả dụng trong quy trình làm việc. Tính năng này cho phép bạn điều chỉnh luồng dựa trên tiêu chí cụ thể, đảm bảo mỗi hoạt động chỉ được kích hoạt khi đáp ứng các điều kiện đã định.

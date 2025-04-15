@@ -892,13 +892,13 @@ async _updateCalendarAsync() {
             // title: `Scheduling for ${order.public_id}`,
             title: `${order.public_id}`,
             eventBus: this.eventBus,
-            acceptButtonText: 'Save Changes',
+            acceptButtonText: this.intl.t('common.save-changes'),
             acceptButtonIcon: 'save',
             hideDeclineButton: true,
             // Disable accept button if order is completed
             disableAcceptButton: isCompleted,
             // Add a tooltip message for completed orders
-            acceptButtonTooltip: isCompleted ? 'Cannot edit completed orders' : null,
+            acceptButtonTooltip: isCompleted ? this.intl.t('fleet-ops.component.order.schedule-card.cannot-edit-completed') : null,
             order,
             // Store original driver info
             originalDriverUuid: order.driver_assigned_uuid,
@@ -916,7 +916,7 @@ async _updateCalendarAsync() {
                 }
     
                 if (order.scheduled_at && date < order.scheduled_at) {
-                    this.errorMessage = "End Date cannot be earlier than the start date.";
+                    this.errorMessage = this.intl.t("fleet-ops.common.end_date_cannot_be_earlier");
                     this.notifications.error(this.errorMessage);
                     return;
                 }    
@@ -929,7 +929,7 @@ async _updateCalendarAsync() {
             confirm: async (modal) => {
                 // Don't allow saving if completed
                 if (isCompleted) {
-                    this.notifications.warning('Cannot modify a completed order.');
+                    this.notifications.warning(this.intl.t("fleet-ops.component.order.schedule-card.cannot-modify-complete-order"));
                     modal.done();
                     return;
                 }
@@ -941,7 +941,7 @@ async _updateCalendarAsync() {
     
                 try {
                     if (order.scheduled_at && order.estimated_end_date && order.estimated_end_date < order.scheduled_at) {
-                        this.errorMessage = "End Date cannot be earlier than the start date.";
+                        this.errorMessage = this.intl.t("fleet-ops.common.end_date_cannot_be_earlier_than_start_date");
                         this.notifications.error(this.errorMessage);
                         modal.stopLoading();
                         return;

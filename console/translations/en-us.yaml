@@ -542,6 +542,9 @@ fleet-ops:
     actions: Actions
     start-date: Start date
     tracking-number: Tracking Number
+    end_date_cannot_be_earlier: End Date cannot be earlier
+    end_date_cannot_be_earlier_than_start_date: End Date cannot be earlier than the start date.
+
   component:
     activity-logic-builder:
       activity-logic: Activity Logic
@@ -1169,7 +1172,7 @@ fleet-ops:
         missing-info: Missing Information!
         date: Date scheduled
         end-date: Estimated End Date
-        driver-assigned: Driver
+        driver-assigned: Drivercard
         vehicle-assigned: Vehicle
         no-driver: No Driver
         no-vehicle: No Vehicle
@@ -1178,6 +1181,8 @@ fleet-ops:
         on-leave: on Leave
         date-created: Date created
         status: Status
+        cannot-edit-completed:  Cannot edit completed orders
+        cannot-modify-complete-order: Cannot modify a completed order.
     widget:
       fleet-ops-quickstart:
         message: Let's see what you can do to jumpstart operations...
@@ -2014,6 +2019,7 @@ fleet-ops:
         unscheduled-orders: Unassigned Orders
         scheduled-orders: Assigned Orders
         unauthorized-to-schedule: You are not authorized to schedule orders.
+        
         
       calendar:
         today: Today
