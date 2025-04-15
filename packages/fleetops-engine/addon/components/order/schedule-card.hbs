@@ -1,12 +1,24 @@
 <div class="order-schedule-card border border-gray-200 dark:border-gray-700" ...attributes>
-    {{!-- {{@titleClass}} --}}
-    <a href="javascript:;" class=" card-title border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900" {{on "click" (fn this.onTitleClick @order)}} data-order-id="{{@order.public_id}}">
-        <span class="{{@titleClass}}">{{@order.public_id}}</span>
+    {{#if @isPopup}}
+        {{!-- {{@titleClass}} --}}
+        <a href="javascript:;" class=" card-title border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900" {{on "click" (fn this.onTitleClick @order)}} data-order-id="{{@order.public_id}}" >
+            {{!-- <span class="{{@titleClass}}">{{@order.public_id}}</span> --}}
+            
+                <span >{{@order.public_id}}</span>
+            <div>
+                <Badge @status={{@order.status}} @isPopup={{@isPopup}}/>
+            </div>
+        
+        </a>
+    {{else}}
+        <a href="javascript:;" class=" card-title " {{on "click" (fn this.onTitleClick @order)}} data-order-id="{{@order.public_id}}" >
+        <span ></span>
         <div>
-            <Badge @status={{@order.status}} />
+            <Badge @status={{@order.status}} @isPopup={{@isPopup}}/>
         </div>
-       
-    </a>
+        </a>
+    {{/if}}
+        
     <div class="{{@contentClass}} card-content bg-white dark:bg-gray-900 text-sm space-y-2">
         <div class="flex items-center justify-between">
             <div class="flex flex-row items-center leading-5">
