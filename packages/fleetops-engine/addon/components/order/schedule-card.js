@@ -40,7 +40,9 @@ export default class OrderScheduleCardComponent extends Component {
         this.loadDriverFromOrder(order);
         this.loadPayloadFromOrder(order);
     }
-    
+    get isCompleted() {
+        return this.args.order.status === 'completed';
+      }
     get effectiveEventBus() {
         return this.eventBus || this.args.eventBus;
     }

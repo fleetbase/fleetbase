@@ -557,6 +557,8 @@ fleet-ops:
     actions: Comportamiento
     start-date: Fecha de inicio
     tracking-number: El número de rastreo
+    end_date_cannot_be_earlier: La fecha de finalización no puede ser anterior.
+    end_date_cannot_be_earlier_than_start_date: La fecha de finalización no puede ser anterior a la fecha de inicio.
   component:
     activity-logic-builder:
       activity-logic: Lógica de la actividad
@@ -1283,6 +1285,8 @@ fleet-ops:
         select-vehicle: Seleccione un vehículo
         on-leave: de permiso
         date-created: Fecha de creación
+        cannot-edit-completed:  No se pueden editar los pedidos completados
+        cannot-modify-complete-order: No se puede modificar un pedido completado.
     widget:
       fleet-ops-quickstart:
         message: Veamos qué puedes hacer para que todo funcione...

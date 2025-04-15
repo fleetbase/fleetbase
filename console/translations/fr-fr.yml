@@ -539,6 +539,8 @@ fleet-ops:
     actions: Actes
     start-date: Date de début
     tracking-number: Numéro de suivi
+    end_date_cannot_be_earlier: La date de fin ne peut pas être antérieure.
+    end_date_cannot_be_earlier_than_start_date: La date de fin ne peut pas être antérieure à la date de début.
   component:
     activity-logic-builder:
       activity-logic: Logique d'Activité
@@ -1179,6 +1181,8 @@ fleet-ops:
         select-vehicle: Sélectionner un véhicule
         on-leave: en congé
         date-created: Date de Création
+        cannot-edit-completed: Impossible de modifier les commandes terminées
+        cannot-modify-complete-order: Impossible de modifier une commande terminée.
     widget:
       fleet-ops-quickstart:
         message: Voyons ce que vous pouvez faire pour lancer les opérations...

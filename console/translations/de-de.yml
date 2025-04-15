@@ -93,6 +93,7 @@ common:
   max-distance: Maximale Entfernung zum nächstgelegenen Parkplatz (Meilen)
   configure-success-message: Konfiguration wurde erfolgreich gespeichert
   enter-distance: "Entfernung in Meilen eingeben"
+  
 validation:
   required:
     payment_method: Zahlungsmethode ist erforderlich
@@ -541,6 +542,8 @@ fleet-ops:
     actions: Aktionen
     start-date: Startdatum
     tracking-number: Tracking-Nummer
+    end_date_cannot_be_earlier:  Das Enddatum kann nicht früher sein.
+    end_date_cannot_be_earlier_than_start_date: Das Enddatum kann nicht früher sein als das Startdatum
   component:
     activity-logic-builder:
       activity-logic: Aktivitätslogik
@@ -1180,6 +1183,8 @@ fleet-ops:
         select-vehicle: Fahrzeug auswählen
         on-leave: im Urlaub
         date-created: Erstellungsdatum
+        cannot-edit-completed: Kann abgeschlossene Bestellungen nicht bearbeiten
+        cannot-modify-complete-order: Kann keine abgeschlossene Bestellung ändern.
     widget:
       fleet-ops-quickstart:
         message: Sehen wir uns an, was Sie tun können, um den Betrieb zu starten...
