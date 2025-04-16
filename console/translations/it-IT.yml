@@ -1661,6 +1661,12 @@ fleet-ops:
           body: Le modifiche non salvate a questo fornitore verranno perse. Clicca su continua per procedere.
         title: Fornitori
         delete-vendors: Elimina fornitori
+    metrics: 
+      title: Metriche IAM
+      users_count: Numero di utenti
+      groups_count: Numero di gruppi
+      roles_count: Numero di ruoli
+      policy_count: Numero di policy
   operations:
     order-config:
       route-loading-message: Caricamento Costruttore Configurazione Ordine

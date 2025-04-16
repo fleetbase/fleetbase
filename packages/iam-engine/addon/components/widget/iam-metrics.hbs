@@ -10,7 +10,7 @@
             {{else}}
                 <div class="grid grid-cols-2 lg:grid-cols-8 gap-4">
                     {{#each-in this.metrics as |title count|}}
-                        <Widget::Count @title={{smart-humanize title}} @value={{count}} class="lg:col-span-2 h-full" />
+                        <Widget::Count @title={{t (concat "fleet-ops.management.metrics." title)}} @value={{count}} class="lg:col-span-2 h-full" />
                     {{/each-in}}
                 </div>
             {{/if}}

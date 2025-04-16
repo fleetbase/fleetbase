@@ -1807,6 +1807,13 @@ fleet-ops:
           body: Nicht gespeicherte Änderungen an diesem Anbieter gehen verloren. Klicken Sie auf Weiter, um fortzufahren.
         title: Anbieter
         delete-vendors: Anbieter löschen
+    metrics: 
+      title: IAM-Metriken
+      users_count: Benutzeranzahl
+      groups_count: Gruppenanzahl
+      roles_count: Rollenanzahl
+      policy_count: Richtlinienanzahl
+
   operations:
     order-config:
       route-loading-message: Lade Bestellkonfigurations-Builder

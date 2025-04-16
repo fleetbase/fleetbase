@@ -584,7 +584,14 @@ fleet-ops:
           date-created: Erstellungsdatum
           cannot-edit-completed: Không thể chỉnh sửa các đơn hàng đã hoàn thành
           cannot-modify-complete-order: Không thể sửa một đơn hàng đã hoàn thành.
-    
+  component:
+  management:
+    metrics: 
+      title: Các chỉ số IAM
+      users_count: Số lượng người dùng
+      groups_count: Số lượng nhóm
+      roles_count: Số lượng vai trò
+      policy_count: Số lượng chính sách
   activity-logic-builder:
     activity-logic: Logic hoạt động
     activity-logic-help-text: Định nghĩa các điều kiện logic tùy chỉnh xác định khi nào một hoạt động sẽ khả dụng trong quy trình làm việc. Tính năng này cho phép bạn điều chỉnh luồng dựa trên tiêu chí cụ thể, đảm bảo mỗi hoạt động chỉ được kích hoạt khi đáp ứng các điều kiện đã định.
