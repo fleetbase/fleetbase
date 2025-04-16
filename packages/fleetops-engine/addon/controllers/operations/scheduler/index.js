@@ -299,7 +299,6 @@ _applyInitialFilters() {
         return new Promise((resolve) => {
             try {
                 let filteredOrders = [...this.calscheduledOrders];
-        
                 // Apply driver filter
                 if (this.driver_filter) {
                     filteredOrders = this.filterByDriver(filteredOrders);
@@ -349,7 +348,6 @@ _applyInitialFilters() {
         return orders.filter(order => {
             const orderId = order.id || '';
             const publicId = order.public_id || '';
-            
             // Match by order ID or public ID
             return orderId.toLowerCase().includes(this.order_id_filter.toLowerCase()) ||
                 publicId.toLowerCase().includes(this.order_id_filter.toLowerCase());
@@ -577,7 +575,6 @@ updateCalendar() {
 _getFilteredOrders() {
     // Get all orders from the calscheduledOrders array
     const allOrders = [...this.calscheduledOrders];
-    
     // Check if any filters are active
     const hasOrderIdFilter = this.order_id_filter && this.order_id_filter.trim() !== '';
     const hasDriverFilter = this.driver_filter && this.driver_filter.trim() !== '';
@@ -587,14 +584,21 @@ _getFilteredOrders() {
     if (!hasOrderIdFilter && !hasDriverFilter && !hasStatusFilter) {
         return allOrders;
     }
-    
     // Apply filters based on the filter criteria
     return allOrders.filter(order => {
         // Filter by order ID if specified
         if (hasOrderIdFilter) {
             // Check if order ID contains the filter text (case insensitive)
             const orderId = order.id || '';
-            if (!orderId.toLowerCase().includes(this.order_id_filter.toLowerCase())) {
+            
+            // IMPORTANT: Check all possible public ID field variations
+            const publicId = order.publicId || order.public_id || '';
+            
+            // Log for debugging
+            
+            // Check if either field matches
+            if (!(orderId.toLowerCase().includes(this.order_id_filter.toLowerCase()) || 
+                  publicId.toLowerCase().includes(this.order_id_filter.toLowerCase()))) {
                 return false;
             }
         }
@@ -616,7 +620,6 @@ _getFilteredOrders() {
                 return false;
             }
         }
-        
         // If we get here, the order passes all filters
         return true;
     });
@@ -629,7 +632,6 @@ _getFilteredOrders() {
 async _updateCalendarAsync() {
     // Get filtered orders based on current filter settings
     const filteredOrders = this._getFilteredOrders();
-    
     // Build efficient data structures for processing
     const orderMap = new Map();
     
