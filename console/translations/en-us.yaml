@@ -1804,6 +1804,12 @@ fleet-ops:
           body: Unsaved changes to this vendor will be lost. Click continue to proceed.
         title: Vendors
         delete-vendors: Delete Vendors
+    metrics: 
+      title: IAM Metrics
+      users_count: Users Count
+      groups_count: Groups Count
+      roles_count: Roles Count
+      policy_count: Policy Count
   operations:
     order-config:
       route-loading-message: Loading Order Config Builder
@@ -2013,8 +2019,8 @@ fleet-ops:
             view-extensions: View extensions
     scheduler:
       index:
-        success-message: Order {orderId} has been scheduled at {orderAt}.
-        info-message: Order {orderId} has been unscheduled.
+        success-message: Order {orderId} has been updated at {orderAt}.
+        info-message: Order {orderId} has been updated.
         title: Calendar
         unscheduled-orders: Unassigned Orders
         scheduled-orders: Assigned Orders

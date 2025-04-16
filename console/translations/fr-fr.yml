@@ -1806,6 +1806,13 @@ fleet-ops:
           body: Les modifications non enregistrées de ce fournisseur seront perdues. Cliquez sur continuer pour procéder.
         title: Fournisseurs
         delete-vendors: Supprimer les fournisseurs
+    metrics: 
+      title: Métriques IAM
+      users_count: Nombre d'utilisateurs
+      groups_count: Nombre de groupes
+      roles_count: Nombre de rôles
+      policy_count: Nombre de politiques
+
   operations:
     order-config:
       route-loading-message: Chargement du générateur de configuration de commande
