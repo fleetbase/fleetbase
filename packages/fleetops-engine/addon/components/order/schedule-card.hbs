@@ -6,7 +6,7 @@
             
                 <span >{{@order.public_id}}</span>
             <div>
-                <Badge @status={{@order.status}} @isPopup={{@isPopup}}/>
+                <Badge @status={{t (concat "statuses." @order.status)}} @isPopup={{@isPopup}}/>
             </div>
         
         </a>
@@ -14,7 +14,7 @@
         <a href="javascript:;" class=" card-title " {{on "click" (fn this.onTitleClick @order)}} data-order-id="{{@order.public_id}}" >
         <span ></span>
         <div>
-            <Badge @status={{@order.status}} @isPopup={{@isPopup}}/>
+            <Badge @status={{t (concat "statuses." @order.status)}} @isPopup={{@isPopup}}/>
         </div>
         </a>
     {{/if}}
