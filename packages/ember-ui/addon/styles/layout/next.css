@@ -2323,3 +2323,26 @@ body[data-theme='dark'] .ember-power-select-option[aria-current="true"] {
 .console-fleet-ops-operations-scheduler-index .flb--modal.flb--default-modal.driver-has-no-vehicle > .flb--modal-dialog > .flb--modal-content {
     width: 50rem;
 }
+.console-fleet-ops-operations-scheduler-index .order-schedule-card .calendar-vehicle-select, 
+.console-fleet-ops-operations-scheduler-index .order-schedule-card .calendar-driver-select,
+.console-fleet-ops-operations-scheduler-index .order-schedule-card .save-driver-assignment {
+    display: none;
+}
+.console-fleet-ops-operations-scheduler-index .flb--modal.fade.show.block.flb--default-modal .order-schedule-card .calendar-vehicle-select, 
+.console-fleet-ops-operations-scheduler-index .flb--modal.fade.show.block.flb--default-modal .order-schedule-card .calendar-driver-select,
+.console-fleet-ops-operations-scheduler-index .flb--modal.fade.show.block.flb--default-modal .order-schedule-card .save-driver-assignment
+{
+    display: block;
+}
+.console-fleet-ops-operations-scheduler-index .flb--modal.fade.show.block.flb--default-modal .order-schedule-card .calendar-driver-select,
+.console-fleet-ops-operations-scheduler-index .flb--modal.fade.show.block.flb--default-modal .order-schedule-card .calendar-vehicle-select
+{
+    width: 265px;
+}
+.flb--modal-content:has(.modal-body-container.border-night-905) .flb--modal-footer .btn-primary.btn-md {
+    display: none !important;
+  }
+
+  .modal-body-container.border-night-905 ~ .flb--modal-footer .btn-wrapper .btn-icon-wrapper {
+    display: none !important;
+  }

@@ -520,8 +520,11 @@ export default class OrderModel extends Model {
         }
 
         const driverAssigned = await store.findRecord('driver', this.driver_assigned_uuid, options);
-        this.set('driver_assigned', driverAssigned);
-        return driverAssigned;
+        if(driverAssigned) {
+            this.set('driver_assigned', driverAssigned);
+            return driverAssigned;
+        }
+       
     }
 
     async loadTrackingNumber(options = {}) {

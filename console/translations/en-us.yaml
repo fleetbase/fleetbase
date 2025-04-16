@@ -1162,9 +1162,10 @@ fleet-ops:
         assign-button: Continue and assign driver
         assign-busy-button: Continue {button}
         driver-has-no-vehicle: The selected driver does not have an assigned vehicle. Please assign a vehicle or choose another driver with a vehicle before proceeding.
-        driver-no-vehicle-title: Both driver and vehicle must be selected to proceed.
+        driver-no-vehicle-title: The driver ({driverName}) has no vehicle!
         ok-button: Okay
         missing-info: Missing Information!
+        required-error: Both driver and vehicle must be selected to proceed.
         date: Date scheduled
         end-date: Estimated End Date
         driver-assigned: Driver
