@@ -240,7 +240,7 @@ export default class OrderScheduleCardComponent extends Component {
                                 .then(() => {
                                     this.isAssigningDriver = false;
                                     
-                                    
+                                    document.body.classList.add('is-loading');
                                     // Update with current page
                                     const newQueryParams = {
                                         ref: Date.now(),
@@ -263,6 +263,7 @@ export default class OrderScheduleCardComponent extends Component {
                                             refreshAll: true
                                         });
                                     } else {
+                                        document.body.classList.remove('is-loading');
                                         console.error("eventBus is not available.");
                                     }
                                     this.notifications.success(

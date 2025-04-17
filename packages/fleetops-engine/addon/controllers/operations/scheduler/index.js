@@ -188,15 +188,25 @@ _applyInitialFilters() {
         } else {
             this.order_id_filter = value;
         }
+        // Show loading indicator
+        this.isLoading = true;
+        
+        // Update calendar with filtered records - THIS IS THE MISSING PART
+        requestAnimationFrame(() => {
+            this._updateCalendarAsync().finally(() => {
+                this.isLoading = false;
+            });
+        });
     }
 
     // Action to handle status selection
     @action
     onStatusChange(selected) {
+        // Show loading indicator
+        this.isLoading = true;
         this.selectedStatus = selected;
         this.status_filter = selected ? selected.id : '';
-         // Show loading indicator
-        this.isLoading = true;
+         
         
         // Update calendar with filtered records
         requestAnimationFrame(() => {
@@ -207,10 +217,10 @@ _applyInitialFilters() {
     }
     @action
     onDriverChange(driver) {
-        this.selectedDriver = driver;
-        this.driver_filter = driver ? driver.id : '';
          // Show loading indicator
         this.isLoading = true;
+        this.selectedDriver = driver;
+        this.driver_filter = driver ? driver.id : '';
         
         // Update calendar with filtered records
         requestAnimationFrame(() => {
@@ -977,12 +987,12 @@ async _updateCalendarAsync() {
                     } else {
                         this.notifications.info(this.intl.t('fleet-ops.operations.scheduler.index.info-message', { orderId: order.public_id }));
                     }
-    
+                    // this.isLoading = true; 
                     // Refresh current data without changing page
                     const currentPage = this.page;
                     await this.refreshOrders();
                     this.page = currentPage;
-                    
+                   
                     modal.done();
                 } catch (error) {
                     this.notifications.serverError(error);
