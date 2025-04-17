@@ -1,10 +1,11 @@
 <Modal::Default @modalIsOpened={{@modalIsOpened}} @options={{@options}} @confirm={{@onConfirm}} @decline={{@onDecline}}>
     <div class="modal-body-container border-night-905 schedule-card-calendar">
+        {{#unless (eq @options.order.status "completed")}}
         <div class="px-3 mb-4">
             <div class="flex justify-between items-start">
                 <div class="flex-1 flex items-center">
                     <label class="dark:text-gray-100 mr-3">{{t "fleet-ops.component.modals.order-event.schedule"}}</label>
-                   
+                     
                     <DateTimeInput
                         class="form-input"
                         @value={{@options.order.scheduled_at}}
@@ -18,6 +19,7 @@
                         disabled={{eq @options.order.status "completed"}}
 
                     />
+                    
                 </div>
                 <div class="flex-1 flex items-center">
                     <label class="dark:text-gray-100 mr-3">{{t "fleet-ops.component.modals.order-event.estimated-end-date"}} </label>
@@ -35,7 +37,7 @@
                 </div> --}}
             </div>
         </div>
-
+        {{/unless}}
         <Order::ScheduleCard  @itemClass="bg-green-600" @contentClass="bg-transparent-i py-3" @titleClass="hidden-i" @order={{@options.order}} @eventBus={{@options.eventBus}} />
     </div>
 </Modal::Default>

@@ -82,7 +82,8 @@
             @triggerClass="form-select form-input"
             @infiniteScroll={{false}}
             @renderInPlace={{true}}
-            @disabled={{@order.isIntegratedVendorOrder}}
+            {{!-- @disabled={{@order.isIntegratedVendorOrder}} --}}
+            @disabled={{or (eq @order.status "completed") @order.isIntegratedVendorOrder}}
             @allowClear={{true}}
             @onChange={{fn this.handleDriverChange @order}}
             as |model|
@@ -134,7 +135,8 @@
             @triggerClass="form-select form-input"
             @infiniteScroll={{false}}
             @renderInPlace={{true}}
-            @disabled={{@order.isIntegratedVendorOrder}}
+            {{!-- @disabled={{@order.isIntegratedVendorOrder}} --}}
+            @disabled={{or (eq @order.status "completed") @order.isIntegratedVendorOrder}}
             @allowClear={{true}}
             @onChange={{fn (mut @order.vehicle_assigned)}}
             as |model|
@@ -163,7 +165,8 @@
         <div class="flex justify-end mt-3 border-t border-gray-200 dark:border-gray-700 pt-3 save-driver-assignment">
             <button 
                 type="button" 
-                class="btn   btn-primary btn-md"
+                class="btn   btn-primary btn-md "
+                disabled={{eq @order.status "completed"}}
               {{on "click" (fn this.saveOrder @order)}}
             >
                 <FaIcon @icon="save" @size="xs" class="mr-2" />
