@@ -38,7 +38,7 @@
                     <div class="space-y-4">
                         {{#each this.unscheduledOrders as |order|}}
                             <FullCalendar::Draggable @eventData={{json-hash id=order.id title=order.eventTitle allDay=true}} @disabled={{cannot "fleet-ops update order"}}>
-                                <Order::ScheduleCard @order={{order}} @titleClass="cursor-move" @onTitleClick={{fn this.viewEvent order}} />
+                                <Order::ScheduleCard @order={{order}} @titleClass="cursor-move" @onTitleClick={{fn this.viewEvent order}}  @isPopup={{true}}/>
                             </FullCalendar::Draggable>
                         {{/each}}
                     </div>
@@ -56,7 +56,7 @@
                 >
                     <div class="space-y-4">
                         {{#each this.scheduledOrders as |order|}}
-                            <Order::ScheduleCard @order={{order}} @titleClass="cursor-pointer" @onTitleClick={{fn this.viewEvent order}} />
+                            <Order::ScheduleCard @order={{order}} @titleClass="cursor-pointer" @onTitleClick={{fn this.viewEvent order}}  @isPopup={{true}}/>
                         {{/each}}
                     </div>
                 </ContentPanel>
@@ -129,6 +129,7 @@
                   @order_id_filter={{this.order_id_filter}}
                   @availableDrivers={{this.availableDrivers}}
                   @selectedDriver={{this.selectedDriver}}
+                  @onOrderIdChange={{this.onOrderIdChange}}
                   @onDriverChange={{this.onDriverChange}}
                   @statusOptions={{this.statusOptions}}
                   @selectedStatus={{this.selectedStatus}}

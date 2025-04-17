@@ -1,10 +1,24 @@
 <div class="order-schedule-card border border-gray-200 dark:border-gray-700" ...attributes>
-    <a href="javascript:;" class="{{@titleClass}} card-title border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900" {{on "click" (fn this.onTitleClick @order)}} data-order-id="{{@order.public_id}}">
-        <span>{{@order.public_id}}</span>
+    {{#if @isPopup}}
+        {{!-- {{@titleClass}} --}}
+        <a href="javascript:;" class=" card-title border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900" {{on "click" (fn this.onTitleClick @order)}} data-order-id="{{@order.public_id}}" >
+            {{!-- <span class="{{@titleClass}}">{{@order.public_id}}</span> --}}
+            
+                <span >{{@order.public_id}}</span>
+            <div>
+                <Badge @status={{t (concat "statuses." @order.status)}} @isPopup={{@isPopup}}/>
+            </div>
+        
+        </a>
+    {{else}}
+        <a href="javascript:;" class=" card-title " {{on "click" (fn this.onTitleClick @order)}} data-order-id="{{@order.public_id}}" >
+        <span ></span>
         <div>
-            <Badge @status={{@order.status}} />
+            <Badge @status={{t (concat "statuses." @order.status)}} @isPopup={{@isPopup}}/>
         </div>
-    </a>
+        </a>
+    {{/if}}
+        
     <div class="{{@contentClass}} card-content bg-white dark:bg-gray-900 text-sm space-y-2">
         <!-- Date section -->
         <div class="flex items-center justify-between">
@@ -36,7 +50,7 @@
                 </div>
                 <span class="font-semibold">{{t "fleet-ops.component.order.schedule-card.date-created"}}</span>
             </div>
-            <span>{{n-a @order.createdAtWithTime}}</span>
+            <span>{{n-a @order.createdAtWithTime}} </span>
         </div>
         
         <!-- Driver assigned section with both text and dropdown -->

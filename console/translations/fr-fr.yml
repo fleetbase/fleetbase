@@ -131,6 +131,8 @@ statuses:
     escalated: Escaladé  
     backlogged: En attente  
     requires-update: Nécessite une mise à jour  
+    order_canceled: Commande annulée
+    all-statuses: Tous les statuts 
 fuelReportTypes:
     Fuel: "Carburant"
     Parking: "Stationnement"
@@ -537,6 +539,8 @@ fleet-ops:
     actions: Actes
     start-date: Date de début
     tracking-number: Numéro de suivi
+    end_date_cannot_be_earlier: La date de fin ne peut pas être antérieure.
+    end_date_cannot_be_earlier_than_start_date: La date de fin ne peut pas être antérieure à la date de début.
   component:
     activity-logic-builder:
       activity-logic: Logique d'Activité
@@ -1177,6 +1181,8 @@ fleet-ops:
         select-vehicle: Sélectionner un véhicule
         on-leave: en congé
         date-created: Date de Création
+        cannot-edit-completed: Impossible de modifier les commandes terminées
+        cannot-modify-complete-order: Impossible de modifier une commande terminée.
     widget:
       fleet-ops-quickstart:
         message: Voyons ce que vous pouvez faire pour lancer les opérations...
@@ -1800,6 +1806,13 @@ fleet-ops:
           body: Les modifications non enregistrées de ce fournisseur seront perdues. Cliquez sur continuer pour procéder.
         title: Fournisseurs
         delete-vendors: Supprimer les fournisseurs
+    metrics: 
+      title: Métriques IAM
+      users_count: Nombre d'utilisateurs
+      groups_count: Nombre de groupes
+      roles_count: Nombre de rôles
+      policy_count: Nombre de politiques
+
   operations:
     order-config:
       route-loading-message: Chargement du générateur de configuration de commande
@@ -2020,6 +2033,14 @@ fleet-ops:
         month: Mois
         week: Semaine
         day: Jour
+        order-id: ID de commande  
+        driver: Chauffeur  
+        status: Statut  
+        all-statuses: Tous les statuts  
+        clear-filters: Effacer les filtres  
+        apply-filters: Appliquer les filtres  
+        all-drivers: Tous les chauffeurs  
+        search-by-orderid: Rechercher par ID de commande  
     service-rates:
       index:
         edit-service: Modifier le tarif de service

@@ -431,15 +431,27 @@ export default class OperationsOrdersIndexViewController extends BaseController 
      * @void
      */
     @action editOrder(order, options = {}) {
-        options = options === null ? {} : {};
-        let originalOrderData = {
+        options = options || {};
+
+        let originalOrderData = options.originalOrderData || {
             driver_assigned_uuid: order.driver_assigned_uuid,
+            driver_assigned: order.driver_assigned,
             vehicle_assigned_uuid: order.vehicle_assigned_uuid,
+            vehicle_assigned: order.vehicle_assigned,
             scheduled_at: order.scheduled_at,
-            estimated_end_date: order.estimated_end_date
+            estimated_end_date: order.estimated_end_date,
         };
         let fieldsChanged = false;
-        let driverToAssign = null; // Store the driver assignment until confirmation
+        let driverToAssign = null;
+
+        const resetOrderToOriginal = () => {
+            order.set('driver_assigned_uuid', originalOrderData.driver_assigned_uuid);
+            order.set('driver_assigned', originalOrderData.driver_assigned);
+            order.set('vehicle_assigned_uuid', originalOrderData.vehicle_assigned_uuid);
+            order.set('vehicle_assigned', originalOrderData.vehicle_assigned);
+            order.set('scheduled_at', originalOrderData.scheduled_at);
+            order.set('estimated_end_date', originalOrderData.estimated_end_date);
+        };
 
         this.modalsManager.show('modals/order-form', {
             title: this.intl.t('fleet-ops.operations.orders.index.view.edit-order-title'),
@@ -472,20 +484,14 @@ export default class OperationsOrdersIndexViewController extends BaseController 
                 // Set driver regardless of availability
                 order.set('driver_assigned', driver);
                 order.set('driver_assigned_uuid', driver.id);
-                
-                // If driver is available, assign immediately
-                if (driver.is_available) {
-                    if (driver.vehicle) {
-                        order.set('vehicle_assigned', driver.vehicle);
-                        order.set('vehicle_assigned_uuid', driver.vehicle.id);
-                    }
-                } else {
-                    // Store the driver assignment for later confirmation
+
+                if (driver.vehicle) {
+                    order.set('vehicle_assigned', driver.vehicle);
+                    order.set('vehicle_assigned_uuid', driver.vehicle.id);
+                }
+
+                if (!driver.is_available) {
                     driverToAssign = driver;
-                    if (driver.vehicle) {
-                        order.set('vehicle_assigned', driver.vehicle);
-                        order.set('vehicle_assigned_uuid', driver.vehicle.id);
-                    }
                 }
                 fieldsChanged = true;
             },
@@ -506,8 +512,7 @@ export default class OperationsOrdersIndexViewController extends BaseController 
             
             EndDateOrder: (dateInstance) => {
                 if (dateInstance < order.scheduled_at) {
-                    this.errorMessage = "End Date cannot be earlier than the start date.";
-                    this.notifications.error(this.errorMessage);
+                    this.notifications.error("End Date cannot be earlier than the start date.");
                     return;
                 }
                 order.estimated_end_date = dateInstance;
@@ -518,22 +523,22 @@ export default class OperationsOrdersIndexViewController extends BaseController 
             order,
             confirm: async (modal) => {
                 modal.startLoading();
-                // Check if only dates were changed (and not driver/vehicle)
-                const onlyDatesChanged = 
+
+                const onlyDatesChanged =
                     originalOrderData.driver_assigned_uuid === order.driver_assigned_uuid &&
                     originalOrderData.vehicle_assigned_uuid === order.vehicle_assigned_uuid &&
                     (originalOrderData.scheduled_at !== order.scheduled_at ||
-                     originalOrderData.estimated_end_date !== order.estimated_end_date);
-                // Only check if fields other than dates were changed
-                if (!onlyDatesChanged && 
-                    ((!order.driver_assigned && !order.driver_assigned_uuid) || 
-                     (!order.vehicle_assigned && !order.vehicle_assigned_uuid))) {
-                    // Stop loading state
+                        originalOrderData.estimated_end_date !== order.estimated_end_date);
+
+                const missingDriverOrVehicle =
+                    (!order.driver_assigned && !order.driver_assigned_uuid) ||
+                    (!order.vehicle_assigned && !order.vehicle_assigned_uuid);
+
+                if (!onlyDatesChanged && missingDriverOrVehicle) {
                     modal.stopLoading();
                     modal.done();
-                    // Wait for the first modal to close completely
+
                     setTimeout(() => {
-                        // Show the error message modal
                         this.modalsManager.confirm({
                             title: this.intl.t('fleet-ops.component.order.schedule-card.missing-info'),
                             body: this.intl.t('fleet-ops.component.order.schedule-card.driver-no-vehicle-title', {
@@ -544,21 +549,27 @@ export default class OperationsOrdersIndexViewController extends BaseController 
                             modalClass: 'driver-has-no-vehicle',
                             confirm: (errorModal) => {
                                 errorModal.done();
-                                // Wait for error modal to close before reopening edit form
                                 setTimeout(() => {
-                                    this.editOrder(order, options);
+                                    this.editOrder(order, {
+                                        ...options,
+                                        originalOrderData,
+                                    });
                                 }, 100);
-                            }
+                            },
                         });
-                    }, 300); // Use a longer delay to ensure first modal is closed
-                    
-                    return true; // This will close the first modal
+                    }, 300);
+
+                    return true;
                 }
 
                 const saveOrder = async () => {
                     try {
                         await order.save();
-                        this.notifications.success(options.successNotification || this.intl.t('fleet-ops.operations.orders.index.view.update-success', { orderId: order.public_id }));
+                        this.notifications.success(
+                            options.successNotification || this.intl.t('fleet-ops.operations.orders.index.view.update-success', {
+                                orderId: order.public_id,
+                            })
+                        );
                         modal.done();
                     } catch (error) {
                         this.notifications.serverError(error);
@@ -589,8 +600,12 @@ export default class OperationsOrdersIndexViewController extends BaseController 
                                 await saveOrder();
                             },
                             decline: (confirmModal) => {
+                                confirmModal.done();
                                 setTimeout(() => {
-                                    this.editOrder(order, options);
+                                    this.editOrder(order, {
+                                        ...options,
+                                        originalOrderData,
+                                    });
                                 }, 100);
                             },
                         });
@@ -600,10 +615,11 @@ export default class OperationsOrdersIndexViewController extends BaseController 
                 }
             },
             decline: () => {
-                order.payload.rollbackAttributes();
+                resetOrderToOriginal();
                 this.modalsManager.done();
             },
             ...options,
+            originalOrderData,
         });
     }
 

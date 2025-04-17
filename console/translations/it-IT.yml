@@ -131,6 +131,8 @@ statuses:
     escalated: Escalato  
     backlogged: In arretrato  
     requires-update: Richiede aggiornamento  
+    order_canceled: Ordine annullato
+    all-statuses: Tutti gli stati
 fuelReportTypes:
     Fuel: "Carburante"
     Parking: "Parcheggio"
@@ -395,6 +397,8 @@ fleet-ops:
     actions: Azioni
     start-date: Data di inizio
     tracking-number: Numero di identificazione
+    end_date_cannot_be_earlier:  La data di fine non può essere precedente.
+    end_date_cannot_be_earlier_than_start_date: La data di fine non può essere precedente alla data di inizio.
   component:
     activity-logic-builder:
       activity-logic: Logica Attività
@@ -1034,6 +1038,8 @@ fleet-ops:
         select-vehicle: Seleziona Veicolo
         on-leave: in ferie
         date-created: Data di Creazione
+        cannot-edit-completed: Impossibile modificare gli ordini completati
+        cannot-modify-complete-order: Impossibile modificare un ordine completato.
     widget:
       fleet-ops-quickstart:
         message: Vediamo cosa puoi fare per avviare le operazioni...
@@ -1655,6 +1661,12 @@ fleet-ops:
           body: Le modifiche non salvate a questo fornitore verranno perse. Clicca su continua per procedere.
         title: Fornitori
         delete-vendors: Elimina fornitori
+    metrics: 
+      title: Metriche IAM
+      users_count: Numero di utenti
+      groups_count: Numero di gruppi
+      roles_count: Numero di ruoli
+      policy_count: Numero di policy
   operations:
     order-config:
       route-loading-message: Caricamento Costruttore Configurazione Ordine
@@ -1875,6 +1887,16 @@ fleet-ops:
         month: Mese
         week: Settimana
         day: Giorno
+        order-id: ID Ordine
+        driver: Autista
+        status: Stato
+        all-statuses: Tutti gli stati
+        clear-filters: Cancella filtri
+        apply-filters: Applica filtri
+        all-drivers: Tutti gli autisti
+        search-by-orderid: Cerca per ID Ordine
+        
+
     service-rates:
       index:
         edit-service: Modifica Tariffa Servizio
