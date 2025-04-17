@@ -2323,3 +2323,49 @@ body[data-theme='dark'] .ember-power-select-option[aria-current="true"] {
 .console-fleet-ops-operations-scheduler-index .flb--modal.flb--default-modal.driver-has-no-vehicle > .flb--modal-dialog > .flb--modal-content {
     width: 50rem;
 }
+.console-fleet-ops-operations-scheduler-index .order-schedule-card .calendar-vehicle-select, 
+.console-fleet-ops-operations-scheduler-index .order-schedule-card .calendar-driver-select,
+.console-fleet-ops-operations-scheduler-index .order-schedule-card .save-driver-assignment {
+    display: none;
+}
+.console-fleet-ops-operations-scheduler-index .flb--modal.fade.show.block.flb--default-modal .order-schedule-card .calendar-vehicle-select, 
+.console-fleet-ops-operations-scheduler-index .flb--modal.fade.show.block.flb--default-modal .order-schedule-card .calendar-driver-select,
+.console-fleet-ops-operations-scheduler-index .flb--modal.fade.show.block.flb--default-modal .order-schedule-card .save-driver-assignment
+{
+    display: block;
+}
+.console-fleet-ops-operations-scheduler-index .flb--modal.fade.show.block.flb--default-modal .order-schedule-card .calendar-driver-select,
+.console-fleet-ops-operations-scheduler-index .flb--modal.fade.show.block.flb--default-modal .order-schedule-card .calendar-vehicle-select
+{
+    width: 265px;
+}
+.flb--modal-content:has(.modal-body-container.border-night-905) .flb--modal-footer .btn-primary.btn-md {
+    display: none !important;
+  }
+
+  .modal-body-container.border-night-905 ~ .flb--modal-footer .btn-wrapper .btn-icon-wrapper {
+    display: none !important;
+  }
+  .save-driver-assignment{
+    text-align: right;
+    padding: 17px;
+}
+/* This CSS can be added to your application's stylesheet */
+
+/* Hide the text value in modals, show only in the regular card view */
+.console-fleet-ops-operations-scheduler-index.flb--modal-open .order-schedule-card .driver-text-display,
+.console-fleet-ops-operations-scheduler-index.flb--modal-open .order-schedule-card .vehicle-text-display {
+  display: none;
+}
+
+/* Hide the dropdown in regular view when value is assigned */
+.order-schedule-card:not(.in-modal) .driver-assigned .calendar-driver-select,
+.order-schedule-card:not(.in-modal) .vehicle-assigned .calendar-vehicle-select {
+  display: none;
+}
+
+/* Always show the dropdown in modal context, even when value is assigned */
+.modal-dialog .order-schedule-card .calendar-driver-select,
+.modal-dialog .order-schedule-card .calendar-vehicle-select {
+  display: block !important;
+}
