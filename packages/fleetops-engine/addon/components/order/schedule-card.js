@@ -759,6 +759,17 @@ saveOrder(order) {
   const isPartiallyAssigned = hasDriver !== hasVehicle;
   console.log(isPartiallyAssigned, "isPartiallyAssigned");
   
+  // Get current route info for redirection
+  const currentRoute = this.router.currentRoute;
+  const queryParams = currentRoute.queryParams || {};
+  const currentPage = queryParams.page || 1;
+  
+  // Update the ref timestamp while keeping the same page
+  const newQueryParams = {
+    ref: Date.now(),
+    page: currentPage
+  };
+  
   // Check if only dates have changed (no changes to driver/vehicle assignments)
   const hasDatesChanged = order.hasDirtyAttributes && (
     order.changedAttributes().scheduledAt || 
@@ -776,13 +787,13 @@ saveOrder(order) {
   const isDatesOnlyChange = hasDatesChanged && !hasDriverVehicleChanged;
   console.log("isDatesOnlyChange:", isDatesOnlyChange);
   
-  // Check if driver is being unassigned (previously had a driver, now it's null)
+  // Check if driver is being unassigned
   const wasDriverAssigned = order.get('driver_assigned_uuid') !== null && order.get('driver_assigned_uuid') !== undefined;
   const isUnassigningDriver = wasDriverAssigned && !hasDriver;
+  console.log("wasDriverAssigned", wasDriverAssigned, "isUnassigningDriver", isUnassigningDriver);
   
-  // Check if we're removing a driver or trying to save with partial assignment
+  // Handle driver unassignment with confirmation dialog
   if (isUnassigningDriver) {
-    // Handle driver unassignment with confirmation dialog
     return this.modalsManager.confirm({ 
       title: this.intl.t('fleet-ops.component.order.schedule-card.unassign-driver'),
       body: this.intl.t('fleet-ops.component.order.schedule-card.unassign-text', { orderId: order.public_id }),
@@ -801,17 +812,6 @@ saveOrder(order) {
         try {
           await order.save();
           
-          // Get the current page from the router
-          const currentRoute = this.router.currentRoute;
-          const queryParams = currentRoute.queryParams || {};
-          const currentPage = queryParams.page || 1;
-          
-          // Update the ref timestamp while keeping the same page
-          const newQueryParams = {
-            ref: Date.now(),
-            page: currentPage
-          };
-          
           this.notifications.success(
             this.intl.t('fleet-ops.operations.scheduler.index.success-message', { 
               orderId: order.public_id, 
@@ -822,16 +822,18 @@ saveOrder(order) {
           modal.done();
           this.isModalOpen = false;
           
+          // Publish calendar update before transition
+          if (this.effectiveEventBus) {
+            this.effectiveEventBus.publish('calendar-refresh-needed', { 
+              orderId: order.id,
+              currentPage: currentPage,
+              refreshAll: true
+            });
+          }
+          
+          // Then transition
           return this.router.transitionTo('console.fleet-ops.operations.scheduler.index', {
             queryParams: newQueryParams
-          }).then(() => {
-            if (this.effectiveEventBus) {
-              this.effectiveEventBus.publish('calendar-refresh-needed', { 
-                orderId: order.id,
-                currentPage: currentPage,
-                refreshAll: true
-              });
-            }
           });
         } catch (error) { 
           this.notifications.serverError(error);
@@ -848,7 +850,7 @@ saveOrder(order) {
     });
   }
   
-  // If partially assigned AND driver/vehicle has been changed (not just dates)
+  // Check for partial assignment only if driver/vehicle fields have changed
   if (isPartiallyAssigned && !isDatesOnlyChange) {
     // Show error if only one of driver/vehicle is selected
     this.notifications.error(
@@ -871,15 +873,23 @@ saveOrder(order) {
   // If it passes validation, save the order
   return order.save()
     .then(() => {
-      // Show success notification first, before closing modal
+      // Show success notification
       this.notifications.success(
         this.intl.t('fleet-ops.operations.orders.index.view.update-success', { 
           orderId: order.public_id 
         })
       );
       
-      // Add a small delay before closing modals and transitioning
-      // This ensures the notification is visible before visual changes
+      // IMPORTANT: Publish calendar refresh event BEFORE closing modals or transitioning
+      if (this.effectiveEventBus) {
+        this.effectiveEventBus.publish('calendar-refresh-needed', { 
+          orderId: order.id,
+          currentPage: currentPage,
+          refreshAll: true
+        });
+      }
+      
+      // Add a small delay for notification visibility
       setTimeout(() => {
         // Close any active modals
         try {
@@ -890,29 +900,11 @@ saveOrder(order) {
           console.error('Error closing modals:', e);
         }
         
-        // Refresh the view
-        if (this.effectiveEventBus) {
-          this.effectiveEventBus.publish('calendar-refresh-needed', { 
-            orderId: order.id,
-            refreshAll: true
-          });
-        }
-        
-        // Get the current route and refresh or transition as needed
-        const currentRoute = this.router.currentRoute;
-        const queryParams = currentRoute.queryParams || {};
-        const currentPage = queryParams.page || 1;
-        
-        // Update with current page and refresh timestamp
-        const newQueryParams = {
-          ref: Date.now(),
-          page: currentPage
-        };
-        
+        // Finally, transition to refresh the page
         this.router.transitionTo('console.fleet-ops.operations.scheduler.index', {
           queryParams: newQueryParams
         });
-      }, 200); // Small delay to ensure notification is visible first
+      }, 200);
     })
     .catch((error) => {
       this.notifications.error(
