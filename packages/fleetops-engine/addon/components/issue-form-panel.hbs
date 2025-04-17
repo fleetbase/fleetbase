@@ -183,7 +183,8 @@
                             @disabled={{unauthorized}}
                             as |priority|
                         >
-                            {{smart-humanize priority}}
+                            {{!-- {{smart-humanize priority}} --}}
+                            {{t (concat "statuses." priority)}}
                         </PowerSelect>
                     </div>
                 </InputGroup>
@@ -199,7 +200,8 @@
                             @disabled={{unauthorized}}
                             as |status|
                         >
-                            {{smart-humanize status}}
+                            {{!-- {{smart-humanize status}} --}}
+                            {{t (concat "statuses." status)}}
                         </PowerSelect>
                     </div>
                 </InputGroup>

@@ -4,17 +4,23 @@
             <div class="flex justify-between items-start">
                 <div class="flex-1 flex items-center">
                     <label class="dark:text-gray-100 mr-3">{{t "fleet-ops.component.modals.order-event.schedule"}}</label>
-
+                   
                     <DateTimeInput
                         class="form-input"
                         @value={{@options.order.scheduled_at}}
                         @minDate={{format-date (now) "yyyy-MM-d"}}
                         @minTime={{format-date (now) "HH:mm"}}
                         @onUpdate={{@options.reschedule}}
+                        
+                        @readOnly={{eq @options.order.status "completed"}}
+                        @disabled={{eq @options.order.status "completed"}}
+                        readonly={{eq @options.order.status "completed"}}
+                        disabled={{eq @options.order.status "completed"}}
+
                     />
                 </div>
                 <div class="flex-1 flex items-center">
-                    <label class="dark:text-gray-100 mr-3">{{t "fleet-ops.component.modals.order-event.estimated-end-date"}}</label>
+                    <label class="dark:text-gray-100 mr-3">{{t "fleet-ops.component.modals.order-event.estimated-end-date"}} </label>
 
                     <DateTimeInput
                         class="form-input"

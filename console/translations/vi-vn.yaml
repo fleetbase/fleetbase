@@ -131,6 +131,7 @@ statuses:
     escalated: Đã leo thang  
     backlogged: Tồn đọng  
     requires-update: Cần cập nhật  
+    order_canceled: Đơn hàng đã hủy
 fuelReportTypes:
     Fuel: "Nhiên liệu"
     Parking: "Đậu xe"
@@ -426,8 +427,295 @@ layout:
         keyboard-shortcuts: Hiển thị phím tắt
         changelog: Nhật ký thay đổi
 fleet-ops:
+
   iam: Người sử dụng Truy cập Sự quản lý
   fleet-ops: Hạm đội Có Dòng chảy
-iam:
-  home:
-    identity-access-management: Người sử dụng Truy cập Sự quản lý
+  # iam:
+  #   home:
+  #     identity-access-management: Người sử dụng Truy cập Sự quản lý
+
+  extension-name: Hoạt động đội xe
+  common:
+    active-manpower: Nhân lực đang hoạt động
+    address: Địa chỉ
+    amount: Số lượng
+    assignee: Người được giao
+    avatar: Hình đại diện
+    building: Tòa nhà
+    bulk-action: Hành động hàng loạt
+    cancel: Hủy
+    category: Danh mục
+    city: Thành phố
+    coordinates: Tọa độ
+    cost: Chi phí
+    code: Mã
+    country: Quốc gia
+    config: Cấu hình
+    created-at: Tạo lúc
+    date-created: Ngày tạo
+    delete: Xóa
+    destination: Điểm đến
+    details: Chi tiết
+    description: Mô tả
+    distance: Khoảng cách
+    driver-license: Giấy phép lái xe
+    driver: Tài xế
+    edit: Chỉnh sửa
+    email: Email
+    export: Xuất khẩu
+    fleet: Đội xe
+    height: Chiều cao
+    host: Máy chủ
+    id: ID
+    internal-id: Mã nội bộ
+    item: Mục
+    key: Khóa
+    label: Nhãn
+    length: Chiều dài
+    license: Giấy phép
+    loading: Đang tải...
+    loading-resource: Đang tải...
+    make: Hãng xe
+    manage-message: Quản lý nhà cung cấp của bạn
+    manpower: Nhân lực
+    model: Mẫu xe
+    name: Tên
+    namespace: Không gian tên
+    neighborhood: Khu phố
+    new: Mới
+    odometer: Công tơ mét
+    options: Tùy chọn
+    orders: Đơn hàng
+    parent-fleet: Đội xe cha
+    phone: Điện thoại
+    photos: Hình ảnh
+    plate-number: Biển số xe
+    postal-code: Mã bưu điện
+    priority: Ưu tiên
+    reload: Tải lại
+    reload-data: Tải lại dữ liệu
+    remove: Gỡ bỏ
+    reporter: Người báo cáo
+    sandbox: Môi trường thử nghiệm
+    save-changes: Lưu thay đổi
+    schedule: Ngày bắt đầu
+    estimated-end-date: Ngày kết thúc dự kiến
+    search: Tìm kiếm
+    security-access-code: Mã truy cập bảo mật
+    service-area: Khu vực dịch vụ
+    service: Dịch vụ
+    state: Bang/Tỉnh
+    status: Trạng thái
+    street-1: Đường 1
+    street-2: Đường 2
+    street: Đường
+    task: Nhiệm vụ
+    title: Tiêu đề
+    type: Loại
+    unit: Đơn vị
+    updated-at: Cập nhật lúc
+    upload-new: Tải lên mới
+    uploading: Đang tải lên...
+    value: Giá trị
+    vehicle: Phương tiện
+    vendor: Nhà cung cấp
+    vin-number: Số VIN
+    volume: Thể tích
+    weight: Trọng lượng
+    website-url: URL trang web
+    website: Trang web
+    width: Chiều rộng
+    year: Năm
+    zone: Khu vực
+    total: Tổng cộng
+    back: Quay lại
+    done: Hoàn tất
+    tracking: Mã theo dõi
+    customer: Khách hàng
+    vehicle-name: Tên phương tiện
+    pickup: Điểm lấy hàng
+    dropoff: Điểm giao hàng
+    import: Nhập khẩu
+    order: Đơn hàng
+    create-order: Tạo đơn hàng
+    dispatch-order: Giao đơn hàng
+    actions: Hành động
+    start-date: Ngày bắt đầu
+    tracking-number: Số theo dõi
+    end_date_cannot_be_earlier:  Ngày kết thúc không thể sớm hơn.
+    end_date_cannot_be_earlier_than_start_date: Ngày kết thúc không thể sớm hơn ngày bắt đầu.
+    component:
+       order:
+        header:
+          dispatched-order: Ausgeliefert um {order}
+          dispatched: Ausgeliefert
+          dispatched-at: Ausgeliefert um
+          edit: Details bearbeiten
+          update: Aktivität aktualisieren
+          assign: Fahrer zuweisen
+          get-order: Bestelllabel abrufen
+          split-order: Bestellung aufteilen
+          reschedule: Bestellung neu planen
+          cancel-order: Bestellung stornieren
+        place-card:
+          show-less: Weniger Details anzeigen
+          show-more: Mehr Details anzeigen
+        schedule-card:
+          destination: Ziel
+          unassign-driver: Fahrer entfernen?
+          unassign-text: Sie sind dabei, den Fahrer für die Bestellung {orderId} zu entfernen. Klicken Sie auf "Weiter", um die Entfernung zu bestätigen.
+          unassign-button: Weiter und Fahrer entfernen
+          assign-driver: Neuen Fahrer zuweisen?
+          assign-text: Sie sind dabei, einen neuen Fahrer ({driverName}) der Bestellung {orderId} zuzuweisen. Klicken Sie auf "Weiter", um die Zuweisung zu bestätigen.
+          assign-busy-text: Der Fahrer ({driverName}) <strong >{availability}</strong>. Möchten Sie ihm trotzdem die Bestellung {orderId} zuweisen? Klicken Sie auf „Weiter“, um zu bestätigen.
+          assign-button: Weiter und Fahrer zuweisen
+          driver-has-no-vehicle: Der ausgewählte Fahrer hat kein zugewiesenes Fahrzeug. Bitte weisen Sie ihm ein Fahrzeug zu oder wählen Sie einen anderen Fahrer mit Fahrzeug, bevor Sie fortfahren.
+          driver-no-vehicle-title: Fahrer hat kein Fahrzeug
+          ok-button: Okay
+          date: Geplantes Datum
+          end-date: Voraussichtliches Enddatum
+          driver-assigned: Fahrer
+          vehicle-assigned: Fahrzeug
+          no-driver: Kein Fahrer
+          no-vehicle: Kein Fahrzeug
+          select-driver: Fahrer auswählen
+          select-vehicle: Fahrzeug auswählen
+          on-leave: im Urlaub
+          date-created: Erstellungsdatum
+          cannot-edit-completed: Không thể chỉnh sửa các đơn hàng đã hoàn thành
+          cannot-modify-complete-order: Không thể sửa một đơn hàng đã hoàn thành.
+  component:
+    layout:
+      fleet-ops-sidebar:
+        payments: Thanh toán
+        navigator-app: Ứng dụng Điều hướng
+        resources: Tài nguyên
+        operations: Vận hành
+        dashboard: Bảng điều khiển
+        service-rates: Biểu phí dịch vụ
+        scheduler: Lịch trình
+        drivers: Tài xế
+        vehicles: Phương tiện
+        fleets: Đội xe
+        vendors: Nhà cung cấp
+        contacts: Danh bạ
+        places: Địa điểm
+        fuel-reports: Theo dõi nhiên liệu
+        parking: Giám sát bãi đỗ xe
+        toll-reports: Chi phí trạm thu phí
+        issues: Vấn đề
+        title: Tạo đơn hàng
+        settings: Cài đặt
+        order-config: Cấu hình đơn hàng
+  management:
+    metrics: 
+      title: Các chỉ số IAM
+      users_count: Số lượng người dùng
+      groups_count: Số lượng nhóm
+      roles_count: Số lượng vai trò
+      policy_count: Số lượng chính sách
+  activity-logic-builder:
+    activity-logic: Logic hoạt động
+    activity-logic-help-text: Định nghĩa các điều kiện logic tùy chỉnh xác định khi nào một hoạt động sẽ khả dụng trong quy trình làm việc. Tính năng này cho phép bạn điều chỉnh luồng dựa trên tiêu chí cụ thể, đảm bảo mỗi hoạt động chỉ được kích hoạt khi đáp ứng các điều kiện đã định.
+    activity-logic-add-logic-help-text: Tạo một tập hợp điều kiện mới xác định khi nào hoạt động nên được kích hoạt. Nhấp vào đây để bắt đầu xây dựng quy tắc logic mới.
+    activity-logic-select-logic-type-help-text: Chọn loại logic mà điều kiện này sẽ tuân theo. Chọn 'If' cho điều kiện trực tiếp, 'And'/'Or' cho điều kiện kết hợp, hoặc 'Not' để phủ định điều kiện.
+    activity-logic-add-condition-help-text: Thêm một yêu cầu cụ thể phải được thỏa mãn trong tập hợp logic này. Dùng để chỉ định thêm tiêu chí kiểm soát tính khả dụng của hoạt động.
+    field: Trường
+    value: Giá trị
+    add-logic: Thêm Logic
+
+  activity-event-selector:
+    activity-events: Sự kiện hoạt động
+    activity-events-select-to-fire: Chọn các sự kiện sẽ được kích hoạt khi hoạt động này diễn ra.
+    activity-events-select-events-info: Chọn sự kiện cụ thể bạn muốn kích hoạt để phản hồi hoạt động này.
+    select-event-to-add: Chọn sự kiện để thêm...
+
+  custom-field-form-panel:
+    meta-col-span: 'Meta: Số cột'
+    col-span-size: Kích thước số cột
+    custom-field-title-concat: 'Trường tùy chỉnh: '
+    new-custom-field: Trường tùy chỉnh mới
+    close-new-custom-field: Hủy thay đổi trường tùy chỉnh
+    save-custom-field: Lưu thay đổi
+    create-custom-field: Tạo trường mới
+    field-name: Tên trường
+    field-label: Nhãn trường
+    field-type: Loại trường
+    select-field-type: Chọn loại trường...
+    field-description: Mô tả trường
+    field-help-text: Văn bản trợ giúp trường
+    field-default-value: Giá trị mặc định
+    field-is-required: Trường bắt buộc
+    field-is-editable: Có thể chỉnh sửa
+    field-options: Tùy chọn trường
+    field-validation-rules: Quy tắc xác thực trường
+    field-model-type: Kiểu mô hình trường
+    field-select-model-type: Chọn kiểu mô hình
+    add-new-option: Thêm tùy chọn mới
+  activity-form-panel:
+    title-concat: 'Hoạt động: '
+    new-activity-title: Tạo hoạt động mới
+    key: Khóa
+    code: Mã
+    status: Trạng thái
+    details: Chi tiết
+    proof-of-delivery: Bằng chứng giao hàng
+    require-pod: Yêu cầu bằng chứng giao hàng
+    require-pod-help-text: Hoạt động này yêu cầu có bằng chứng trước khi áp dụng cho đơn hàng.
+    select-pod-method: Phương thức bằng chứng giao hàng
+    pod-method-placeholder: Chọn phương thức bằng chứng giao hàng
+    completes-order: Hoàn tất đơn hàng
+    complete: Hoàn tất
+    key-help: "Nhập một khóa được dùng để quyết định theo chương trình. Khóa này có thể đại diện cho một hoặc nhiều hoạt động với cùng định danh. Lưu ý: khóa này không cần phải duy nhất."
+    code-help: Nhập một định danh duy nhất cho hoạt động này.
+    status-help: Xác định trạng thái sẽ hiển thị cho người dùng cuối khi hoạt động này được kích hoạt.
+    details-help: Cung cấp mô tả chi tiết về hoạt động để người dùng hiểu rõ.
+
+  custom-entity-issue-form-panel:
+    new-custom-entity: Thực thể tùy chỉnh mới
+    name: Tên
+    description: Mô tả
+    details: Chi tiết
+    type: Loại
+    length: Chiều dài
+    width: Chiều rộng
+    height: Chiều cao
+    weight: Trọng lượng
+    entity-image: Hình ảnh thực thể
+    measurements: Kích thước
+
+  order-config-manager:
+    title: Cấu hình đơn hàng
+    message: Cấu hình đơn hàng cho phép bạn định nghĩa các cấu hình linh hoạt để hướng dẫn FleetYes cách xử lý các loại đơn hàng khác nhau.
+    configuration: Cấu hình
+    new-order-config: Cấu hình đơn hàng mới
+    select-order-config: Chọn cấu hình đơn hàng
+    create-new-title: Tạo một cấu hình đơn hàng mới
+    create-warning-message: Cấu hình đơn hàng cần phải có tên
+    create-success-message: Cấu hình đơn hàng mới đã được tạo thành công.
+    no-order-config-selected: Chưa chọn cấu hình đơn hàng nào.
+    saved-success-message: Đã lưu cấu hình {orderConfigName}.
+    cloned-success-message: Đã sao chép cấu hình đơn hàng thành công.
+    enter-clone-name: Nhập tên cấu hình được sao chép
+    no-config-name-warning-message: Chưa nhập tên cấu hình.
+    delete-warning-message: Sau khi cấu hình đơn hàng này bị xóa, bạn sẽ không thể tạo đơn hàng sử dụng nó nữa. Bạn có chắc không?
+    uninstall-order-config: Gỡ cài đặt cấu hình
+    uninstall-order-config-success-message: Đã gỡ cài đặt tiện ích mở rộng {extensionName}.
+    select-order-config-to-start: Chọn hoặc tạo cấu hình đơn hàng để bắt đầu.
+    details:
+      details: Chi tiết
+      name: Tên
+      description: Mô tả
+      tags: Thẻ
+      add-tags: Thêm thẻ
+      key: Khóa
+      version: Phiên bản
+      namespace: Không gian tên
+      controls: Điều khiển
+      delete-config: Xóa cấu hình
+      delete:
+        delete-title: Xóa cấu hình đơn hàng này?
+        delete-body-message: Sau khi xóa, cấu hình này sẽ không thể khôi phục và bạn sẽ mất toàn bộ dữ liệu cấu hình.
+        confirm-delete: Xóa
+
+

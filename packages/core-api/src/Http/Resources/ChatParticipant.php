@@ -19,7 +19,7 @@ class ChatParticipant extends FleetbaseResource
             'id'                                 => $this->when(Http::isInternalRequest(), $this->id, $this->public_id),
             'uuid'                               => $this->when(Http::isInternalRequest(), $this->uuid),
             'chat_channel_uuid'                  => $this->when(Http::isInternalRequest(), $this->chat_channel_uuid),
-            'chat_channel'                       => $this->when(Http::isPublicRequest(), $this->chatChannel->public_id),
+            'chat_channel'                       => $this->when(Http::isPublicRequest() && $this->chatChannel !== null, optional($this->chatChannel)->public_id),
             'user_uuid'                          => $this->when(Http::isInternalRequest(), $this->user_uuid),
             'user'                               => $this->when(Http::isPublicRequest(), $this->user ? $this->user->public_id : null),
             'name'                               => $this->whenLoaded('user', fn () => $this->user->name),

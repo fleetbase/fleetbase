@@ -19,7 +19,7 @@ class ChatLog extends FleetbaseResource
             'id'                                           => $this->when(Http::isInternalRequest(), $this->id, $this->public_id),
             'uuid'                                         => $this->when(Http::isInternalRequest(), $this->uuid),
             'chat_channel_uuid'                            => $this->when(Http::isInternalRequest(), $this->chat_channel_uuid, $this->chatChannel ? $this->chatChannel->public_id : null),
-            'chat_channel'                                 => $this->when(Http::isPublicRequest(), $this->chatChannel->public_id),
+            'chat_channel'                                 => $this->when(Http::isPublicRequest() && $this->chatChannel !== null, optional($this->chatChannel)->public_id),
             'initiator_uuid'                               => $this->when(Http::isInternalRequest(), $this->initiator_uuid, $this->initiator ? $this->initiator->public_id : null),
             'initiator'                                    => $this->when(Http::isPublicRequest(), $this->initiator ? $this->initiator->public_id : null),
             'content'                                      => $this->content,

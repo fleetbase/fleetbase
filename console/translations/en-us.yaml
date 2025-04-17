@@ -133,6 +133,8 @@ statuses:
     escalated: Escalated
     backlogged: Backlogged
     requires-update: Requires Update
+    order_canceled: Order Canceled
+    all-statuses: All Statuses
 fuelReportTypes:
   Fuel: Fuel
   Parking: Parking
@@ -540,6 +542,9 @@ fleet-ops:
     actions: Actions
     start-date: Start date
     tracking-number: Tracking Number
+    end_date_cannot_be_earlier: End Date cannot be earlier
+    end_date_cannot_be_earlier_than_start_date: End Date cannot be earlier than the start date.
+
   component:
     activity-logic-builder:
       activity-logic: Activity Logic
@@ -1168,7 +1173,7 @@ fleet-ops:
         required-error: Both driver and vehicle must be selected to proceed.
         date: Date scheduled
         end-date: Estimated End Date
-        driver-assigned: Driver
+        driver-assigned: Drivercard
         vehicle-assigned: Vehicle
         no-driver: No Driver
         no-vehicle: No Vehicle
@@ -1176,6 +1181,9 @@ fleet-ops:
         select-vehicle: Select Vehicle
         on-leave: on Leave
         date-created: Date created
+        status: Status
+        cannot-edit-completed:  Cannot edit completed orders
+        cannot-modify-complete-order: Cannot modify a completed order.
     widget:
       fleet-ops-quickstart:
         message: Let's see what you can do to jumpstart operations...
@@ -1797,6 +1805,12 @@ fleet-ops:
           body: Unsaved changes to this vendor will be lost. Click continue to proceed.
         title: Vendors
         delete-vendors: Delete Vendors
+    metrics: 
+      title: IAM Metrics
+      users_count: Users Count
+      groups_count: Groups Count
+      roles_count: Roles Count
+      policy_count: Policy Count
   operations:
     order-config:
       route-loading-message: Loading Order Config Builder
@@ -2006,17 +2020,28 @@ fleet-ops:
             view-extensions: View extensions
     scheduler:
       index:
-        success-message: Order {orderId} has been scheduled at {orderAt}.
-        info-message: Order {orderId} has been unscheduled.
+        success-message: Order {orderId} has been updated at {orderAt}.
+        info-message: Order {orderId} has been updated.
         title: Calendar
         unscheduled-orders: Unassigned Orders
         scheduled-orders: Assigned Orders
         unauthorized-to-schedule: You are not authorized to schedule orders.
+        
+        
       calendar:
         today: Today
         month: Month
         week: Week
         day: Day
+        order-id : Order ID
+        driver: Driver
+        status: Status
+        all-statuses: All Statuses
+        clear-filters: Clear Filter
+        apply-filters: Apply Filter
+        all-drivers: All Driver
+        search-by-orderid: Search by Order ID
+      
     service-rates:
       index:
         edit-service: Edit Service Rate
