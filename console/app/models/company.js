@@ -39,6 +39,7 @@ export default class Company extends Model {
     @attr('date') deleted_at;
     @attr('date') created_at;
     @attr('date') updated_at;
+    @attr('number') parking_zone_max_distance;
 
     /** @computed */
     @computed('phone_country_code', 'country') get phoneCountryCode() {

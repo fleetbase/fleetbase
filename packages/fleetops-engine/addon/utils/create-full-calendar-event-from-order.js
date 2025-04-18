@@ -30,5 +30,8 @@ export default function createFullCalendarEventFromOrder(order) {
         end: endDate.toISOString(),
         allDay: true,
         display: 'block',
+        extendedProps: {
+            order
+        }
     };
 }

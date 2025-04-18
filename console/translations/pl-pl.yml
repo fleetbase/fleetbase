@@ -91,6 +91,10 @@ common:
   download: Pobierz
   clear: Wyczyść
   apply: Zastosuj
+  parking-zone: Strefa parkowania
+  max-distance: Maksymalna odległość do najbliższego parkingu (mile)
+  configure-success-message: Konfiguracja została pomyślnie zapisana
+  enter-distance: "Wprowadź odległość w milach"
 validation:
   required:
     payment_method: Wymagana jest metoda płatności
@@ -129,6 +133,8 @@ statuses:
   escalated: Eskalowane  
   backlogged: Zaległe  
   requires-update: Wymaga aktualizacji  
+  order_canceled: Zamówienie anulowane
+  all-statuses: Wszystkie statusy
 fuelReportTypes:
   Fuel: Paliwo
   Parking: Parking
@@ -536,6 +542,8 @@ fleet-ops:
     actions: Akcje
     start-date: Data rozpoczęcia
     tracking-number: Numer śledzenia
+    end_date_cannot_be_earlier:  Data zakończenia nie może być wcześniejsza.
+    end_date_cannot_be_earlier_than_start_date: Data zakończenia nie może być wcześniejsza niż data rozpoczęcia.
   component:
     activity-logic-builder:
       activity-logic: Logika aktywności
@@ -1157,6 +1165,12 @@ fleet-ops:
         assign-busy-text: Kierowca ({driverName}) <strong>{availability}</strong>. Czy nadal chcesz przypisać zamówienie {orderId} do niego? Kliknij „Kontynuuj” {button}, aby potwierdzić.
         assign-button: Kontynuuj i przypisz kierowcę
         assign-busy-button: Kontynuuj {button}
+        driver-has-no-vehicle: Wybrany kierowca nie ma przypisanego pojazdu. Proszę przypisać pojazd lub wybrać innego kierowcę z pojazdem przed kontynuacją.
+        driver-no-vehicle-title: Kierowca ({driverName}) nie ma pojazdu!
+        missing-info: Brakujące informacje!
+        required-error: Należy wybrać zarówno kierowcę, jak i pojazd, aby kontynuować.
+        no-changes: Nie wprowadzono żadnych zmian w zamówieniu.
+        ok-button: OK
         date: Data zaplanowania
         end-date: Szacowana data zakończenia
         driver-assigned: Kierowca
@@ -1167,6 +1181,8 @@ fleet-ops:
         select-vehicle: Wybierz pojazd
         on-leave: na urlopie
         date-created: Data utworzenia
+        cannot-edit-completed: Nie można edytować zakończonych zamówień
+        cannot-modify-complete-order: Nie można zmienić zakończonego zamówienia.
     widget:
       fleet-ops-quickstart:
         message: Zobacz, co możesz zrobić, aby szybko rozpocząć operacje...
@@ -1788,6 +1804,12 @@ fleet-ops:
           body: Niezapisane zmiany w tym dostawcy zostaną utracone. Kliknij „Kontynuuj”, aby kontynuować.
         title: Dostawcy
         delete-vendors: Usuń dostawców
+    metrics: 
+      title: Metryki IAM
+      users_count: Liczba użytkowników
+      groups_count: Liczba grup
+      roles_count: Liczba ról
+      policy_count: Liczba zasad
   operations:
     order-config:
       route-loading-message: Ładowanie kreatora konfiguracji zamówień
@@ -2008,6 +2030,16 @@ fleet-ops:
         month: Miesiąc
         week: Tydzień
         day: Dzień
+        order-id: ID zamówienia
+        driver: Kierowca
+        status: Status
+        all-statuses: Wszystkie statusy
+        clear-filters: Wyczyść filtry
+        apply-filters: Zastosuj filtry
+        all-drivers: Wszyscy kierowcy
+        search-by-orderid: Szukaj po ID zamówienia
+        
+
     service-rates:
       index:
         edit-service: Edytuj stawkę usługi

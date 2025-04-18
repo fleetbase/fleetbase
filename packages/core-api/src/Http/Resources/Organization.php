@@ -46,6 +46,7 @@ class Organization extends FleetbaseResource
             }),
             'updated_at'         => $this->updated_at,
             'created_at'         => $this->created_at,
+            'parking_zone_max_distance' => $this->parking_zone_max_distance
         ];
     }
 }

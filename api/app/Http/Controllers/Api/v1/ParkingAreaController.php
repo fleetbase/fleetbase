@@ -13,6 +13,7 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Fleetbase\Support\Auth;
+use Fleetbase\Http\Controllers\Internal\v1\SettingController;
 
 class ParkingAreaController extends Controller
 {
@@ -90,7 +91,7 @@ class ParkingAreaController extends Controller
                         'area' => $area['locationName'] ?? 'Unknown',
                         'error' => $e->getMessage()
                     ];
-                    \Log::error('Error processing parking area: ' . $e->getMessage(), [
+                    Log::error('Error processing parking area: ' . $e->getMessage(), [
                         'area' => $area,
                         'error' => $e->getMessage()
                     ]);
@@ -129,8 +130,7 @@ class ParkingAreaController extends Controller
         try {
             $latitude = floatval($request->input('latitude'));
             $longitude = floatval($request->input('longitude'));
-            $radius = floatval( config('services.parking_radius_meter')); // Default 50km radius
-
+            //$radius = floatval( config('services.parking_radius_meter')); 
             if (!$latitude || !$longitude) {
                 return response()->json([
                     'status' => 'error',
@@ -143,7 +143,12 @@ class ParkingAreaController extends Controller
             $company_uuid = null;
             if($company){
                 $company_uuid = $company->uuid;
+                $radiusInMiles = $company->parking_zone_max_distance;
             }
+            else{
+                $radiusInMiles = config('services.parking_radius_meter');
+            }
+            $radius = SettingController::convertMilesToMeters($radiusInMiles);//convert miles into meters
             // Get the parking areas from the service_areas table
             $parkingAreas = ServiceArea::where('company_uuid', $company_uuid)->where('type', 'parking')
                 ->distanceSphere('location', $currentLocation, $radius) // Convert km to meters

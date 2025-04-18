@@ -95,6 +95,7 @@ class Company extends Model
         'status',
         'slug',
         'trial_ends_at',
+        'parking_zone_max_distance'
     ];
 
     /**

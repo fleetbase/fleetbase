@@ -134,17 +134,41 @@ export default class OrderModel extends Model {
         return 'None';
     }
 
+    // get dropoffName() {
+    //     const { payload, meta } = this;
+
+    //     if (payload?.dropoff) {
+    //         return payload.dropoff.name ?? payload.dropoff.street1;
+    //     }
+
+    //     if (payload?.waypoints.lastObject) {
+    //         return payload.waypoints.lastObject.name ?? payload.waypoints.lastObject.street1;
+    //     }
+
+    //     if (meta.pickup_is_driver_location === true) {
+    //         return 'Dynamic';
+    //     }
+
+    //     return 'None';
+    // }
     get dropoffName() {
         const { payload, meta } = this;
 
         if (payload?.dropoff) {
             return payload.dropoff.name ?? payload.dropoff.street1;
         }
-
-        if (payload?.waypoints.lastObject) {
-            return payload.waypoints.lastObject.name ?? payload.waypoints.lastObject.street1;
+    
+        if (payload?.waypoints && payload.waypoints.length > 1) {
+            // Get all waypoints except the first one
+            const remainingWaypoints = payload.waypoints.slice(1);
+            
+            // Map them into names or street1 as fallback
+            return remainingWaypoints
+                .map(wp => wp.name ?? wp.street1)
+                .filter(Boolean) // removes any undefined/null values
+                .join(', ');
         }
-
+    
         if (meta.pickup_is_driver_location === true) {
             return 'Dynamic';
         }
@@ -520,8 +544,11 @@ export default class OrderModel extends Model {
         }
 
         const driverAssigned = await store.findRecord('driver', this.driver_assigned_uuid, options);
-        this.set('driver_assigned', driverAssigned);
-        return driverAssigned;
+        if(driverAssigned) {
+            this.set('driver_assigned', driverAssigned);
+            return driverAssigned;
+        }
+       
     }
 
     async loadTrackingNumber(options = {}) {

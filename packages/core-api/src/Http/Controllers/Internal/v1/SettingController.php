@@ -437,7 +437,6 @@ class SettingController extends Controller
 
         /** sentry service */
         $sentryDsn = config('sentry.dsn', env('SENTRY_LARAVEL_DSN', env('SENTRY_DSN')));
-
         return response()->json([
             'awsKey'           => $awsKey,
             'awsSecret'        => $awsSecret,
@@ -448,7 +447,7 @@ class SettingController extends Controller
             'twilioSid'        => $twilioSid,
             'twilioToken'      => $twilioToken,
             'twilioFrom'       => $twilioFrom,
-            'sentryDsn'        => $sentryDsn,
+            'sentryDsn'        => $sentryDsn
         ]);
     }
 
@@ -464,13 +463,11 @@ class SettingController extends Controller
         $googleMaps = $request->input('googleMaps', config('services.google_maps'));
         $twilio     = $request->input('twilio', config('services.twilio'));
         $sentry     = $request->input('sentry', config('sentry.dsn'));
-
         Setting::configureSystem('services.aws', array_merge(config('services.aws', []), $aws));
         Setting::configureSystem('services.ipinfo', array_merge(config('services.ipinfo', []), $ipinfo));
         Setting::configureSystem('services.google_maps', array_merge(config('services.google_maps', []), $googleMaps));
         Setting::configureSystem('services.twilio', array_merge(config('services.twilio', []), $twilio));
         Setting::configureSystem('services.sentry', array_merge(config('sentry', []), $sentry));
-
         return response()->json(['status' => 'OK']);
     }
 
@@ -835,5 +832,16 @@ class SettingController extends Controller
                 'response' => $response,
             ]
         );
+    }
+   
+    /**
+     * Converts a distance in miles to meters.
+     *
+     * @param float $miles Distance in miles
+     * @return float Distance in meters
+     */
+    public static function convertMilesToMeters(float $miles): float
+    {
+        return $miles * 1609.344;
     }
 }

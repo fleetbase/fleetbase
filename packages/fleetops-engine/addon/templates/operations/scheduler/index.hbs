@@ -38,7 +38,7 @@
                     <div class="space-y-4">
                         {{#each this.unscheduledOrders as |order|}}
                             <FullCalendar::Draggable @eventData={{json-hash id=order.id title=order.eventTitle allDay=true}} @disabled={{cannot "fleet-ops update order"}}>
-                                <Order::ScheduleCard @order={{order}} @titleClass="cursor-move" @onTitleClick={{fn this.viewEvent order}} />
+                                <Order::ScheduleCard @order={{order}} @titleClass="cursor-move" @onTitleClick={{fn this.viewEvent order}}  @isPopup={{true}}/>
                             </FullCalendar::Draggable>
                         {{/each}}
                     </div>
@@ -56,13 +56,89 @@
                 >
                     <div class="space-y-4">
                         {{#each this.scheduledOrders as |order|}}
-                            <Order::ScheduleCard @order={{order}} @titleClass="cursor-pointer" @onTitleClick={{fn this.viewEvent order}} />
+                            <Order::ScheduleCard @order={{order}} @titleClass="cursor-pointer" @onTitleClick={{fn this.viewEvent order}}  @isPopup={{true}}/>
                         {{/each}}
                     </div>
                 </ContentPanel>
             </div>
 
             <div id="fleet-ops-scheduler-calendar" class="col-span-2 py-4 px-2">
+                {{!-- Replace your existing filter code with this --}}
+{{!-- <div class="flex items-center justify-between mb-4 bg-white dark:bg-gray-800 p-3 rounded-md border border-gray-200 dark:border-gray-700">
+  <div class="flex items-center space-x-4">
+    <div class="flex items-center">
+      <label for="order-id-filter" class="mr-2 text-sm font-medium">Order ID:</label>
+      <Input
+      @type="text"
+      @value={{this.order_id_filter}}
+      id="order-id-filter"
+      placeholder="Search by Order ID"
+      class="form-input rounded-md text-sm border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-300"
+    />
+    </div>
+    
+    <div class="flex items-center">
+      <label for="driver-filter" class="mr-2 text-sm font-medium">Driver:</label>
+      <PowerSelect
+        @options={{this.availableDrivers}}
+        @selected={{this.selectedDriver}}
+        @onChange={{this.onDriverChange}}
+        @placeholder="All Drivers"
+        @triggerClass="form-input rounded-md text-sm border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-300 w-full"
+        @searchEnabled={{true}}
+        @searchField="name"
+        as |driver|
+      >
+        {{driver.name}}
+      </PowerSelect>
+    </div>
+    
+    <div class="flex items-center">
+      <label for="status-filter" class="mr-2 text-sm font-medium">Status:</label>
+      <PowerSelect
+        @options={{this.statusOptions}}
+        @selected={{this.selectedStatus}}
+        @onChange={{this.onStatusChange}}
+        @placeholder="All Statuses"
+        @triggerClass="form-input rounded-md text-sm border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-300 w-full"
+        as |status|
+      >
+        {{status.name}}
+      </PowerSelect>
+    </div>
+    
+    <button
+      class="btn btn-primary btn-sm px-3 py-1 rounded border"
+      {{on "click" this.applyFilters}}
+    >
+      Apply Filter
+    </button>
+    
+    <button
+      class="btn btn-default btn-sm px-3 py-1 rounded border border-gray-300 dark:border-gray-600"
+      {{on "click" this.clearFilters}}
+    >
+      Clear Filter
+    </button>
+  </div>
+  
+  
+</div> --}}
+{{!-- Calendar Filter Component - Octane style --}}
+                <CalendarFilter
+                  @order_id_filter={{this.order_id_filter}}
+                  @availableDrivers={{this.availableDrivers}}
+                  @selectedDriver={{this.selectedDriver}}
+                  @onOrderIdChange={{this.onOrderIdChange}}
+                  @onDriverChange={{this.onDriverChange}}
+                  @statusOptions={{this.statusOptions}}
+                  @selectedStatus={{this.selectedStatus}}
+                  @onStatusChange={{this.onStatusChange}}
+                  @applyFilters={{this.applyFilters}}
+                  @clearFilters={{this.clearFilters}}
+                />
+                
+                
                 {{#if (cannot "fleet-ops update order")}}
                     <div class="flex flex-row items-center text-xs bg-yellow-800 border border-yellow-600 px-2 py-2 rounded-md text-yellow-100 mb-4 space-x-2">
                         <FaIcon @icon="triangle-exclamation" @size="sm" />

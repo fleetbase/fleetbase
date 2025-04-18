@@ -14,8 +14,10 @@
             {{#unless @hideText}}
                 {{#if @disableHumanize}}
                     {{or @text @status}}
+                     {{!-- {{t (concat "statuses." (or @text @status)) default=(or @text @status)}} --}}
                 {{else}}
                     {{safe-humanize (or @text @status)}}
+                    {{!-- {{t (concat "statuses." (or @text @status)) default=(safe-humanize (or @text @status))}} --}}
                 {{/if}}
             {{/unless}}
         {{/if}}

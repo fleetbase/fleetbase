@@ -86,6 +86,10 @@ common:
   download: Descargar
   clear: Borrar
   apply: Aplicar
+  parking-zone: Zona de estacionamiento
+  max-distance: Distancia máxima para encontrar el estacionamiento más cercano (millas)
+  configure-success-message: La configuración se ha guardado correctamente
+  enter-distance: "Introduce distancia en millas"
 statuses:
     draft: Borrador
     pending-approval: Pendiente de aprobación
@@ -120,6 +124,8 @@ statuses:
     escalated: Escalado  
     backlogged: Atrasado  
     requires-update: Requiere actualización  
+    order_canceled: Pedido cancelado
+    all-status: All Statuses
 component:
   file:
     dropdown-label: Acciones de archivos
@@ -551,6 +557,8 @@ fleet-ops:
     actions: Comportamiento
     start-date: Fecha de inicio
     tracking-number: El número de rastreo
+    end_date_cannot_be_earlier: La fecha de finalización no puede ser anterior.
+    end_date_cannot_be_earlier_than_start_date: La fecha de finalización no puede ser anterior a la fecha de inicio.
   component:
     activity-logic-builder:
       activity-logic: Lógica de la actividad
@@ -1263,6 +1271,10 @@ fleet-ops:
           confirmar el controlador.
         assign-busy-text: El conductor ({driverName}) <strong >{availability}</strong>. ¿Aún desea asignarle la orden {orderId}? Haga clic en "Continuar" para confirmar.
         assign-button: Continuar y asignar el conductor.
+        driver-has-no-vehicle: El conductor seleccionado no tiene un vehículo asignado. Asigne un vehículo o elija otro conductor con vehículo antes de continuar.
+        driver-no-vehicle-title: Tanto el conductor como el vehículo deben ser seleccionados para continuar.
+        ok-button: De acuerdo
+        missing-info: ¡Falta información!
         date: fecha prevista
         end-date: Fecha estimada de finalización
         driver-assigned: Conductor
@@ -1273,6 +1285,8 @@ fleet-ops:
         select-vehicle: Seleccione un vehículo
         on-leave: de permiso
         date-created: Fecha de creación
+        cannot-edit-completed:  No se pueden editar los pedidos completados
+        cannot-modify-complete-order: No se puede modificar un pedido completado.
     widget:
       fleet-ops-quickstart:
         message: Veamos qué puedes hacer para que todo funcione...
@@ -1939,6 +1953,12 @@ fleet-ops:
             en continuar para continuar.
         title: Proveedores
         delete-vendors: Eliminar proveedores
+    metrics: 
+      title: Métricas de IAM
+      users_count: Conteo de usuarios
+      groups_count: Conteo de grupos
+      roles_count: Conteo de roles
+      policy_count: Conteo de políticas
   operations:
     order-config:
       route-loading-message: Cargando el generador de configuración de comandos
@@ -2200,6 +2220,15 @@ fleet-ops:
         month: Mes
         week: Semana
         day: Día
+        order-id: ID de pedido  
+        driver: Conductor  
+        status: Estado  
+        all-statuses: Todos los estados  
+        clear-filters: Borrar filtros  
+        apply-filters: Aplicar filtros  
+        all-drivers: Todos los conductores  
+        search-by-orderid: Buscar por ID de pedido  
+      
     service-rates:
       index:
         edit-service: Cambiar la tarifa del servicio
