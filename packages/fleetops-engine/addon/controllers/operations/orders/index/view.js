@@ -494,7 +494,7 @@ export default class OperationsOrdersIndexViewController extends BaseController 
     
                 // ALWAYS store the driver reference and track busy state
                 driverToAssign = driver;
-                driverIsBusy = driver.is_available === false; // Explicitly check for false
+                driverIsBusy = (driver.is_available === false && driver.have_no_vehicle === false); // Explicitly check for false
                 
                 fieldsChanged = true;
             },
@@ -601,6 +601,7 @@ export default class OperationsOrdersIndexViewController extends BaseController 
                 }
     
                 // If driver is busy, show the busy confirmation
+                console.log("driverIsBusy", driverIsBusy);
                 if (driverToAssign && driverIsBusy) {
                     modal.done();
                     setTimeout(() => {

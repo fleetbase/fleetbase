@@ -2350,6 +2350,9 @@ body[data-theme='dark'] .ember-power-select-option[aria-current="true"] {
     text-align: right;
     padding: 17px;
 }
+.fleetbase-console.console-fleet-ops-operations-scheduler-index .calendar-filter-scroll-fix .ember-power-select-placeholder{
+    overflow-x: visible !important;
+}
 /* This CSS can be added to your application's stylesheet */
 
 /* Hide the text value in modals, show only in the regular card view */

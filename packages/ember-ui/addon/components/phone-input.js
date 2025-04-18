@@ -81,7 +81,7 @@ export default class PhoneInputComponent extends Component {
         const previousValue = event.target.dataset.previousValue || '+';
         
         // Get the selected country code
-        let dialCode = this.getSelectedDialCode();
+        let dialCode = '';
         
         const selectedCountryButton = document.querySelector('.iti__selected-country');
         if (selectedCountryButton) {

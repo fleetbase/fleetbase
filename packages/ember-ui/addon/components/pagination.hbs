@@ -9,7 +9,7 @@
             aria-label="Previous"
             {{on "click" (fn this.incrementPage -1)}}
         >
-            Previous
+             {{t "common.previous-page"}}
         </a>
         <a
             href="#"
@@ -19,25 +19,25 @@
             aria-label="Next"
             {{on "click" (fn this.incrementPage 1)}}
         >
-            Next
+            {{t "common.next-page"}}
         </a>
     </div>
     <div class="fleetbase-pagination-meta-info-wrapper hidden sm:flex-1 sm:flex sm:items-center sm:justify-between {{@metaInfoWrapperClass}}">
         <div class={{concat "fleetbase-pagination-meta-info" " " @metaInfoClass}}>
             <p class="fleetbase-pagination-meta-info-content text-sm leading-5 text-gray-700 pagination-showing {{@metaInfoParagraph}}">
-                Showing
+                {{t "common.showing"}}
                 <span class="font-medium">
                     {{this.from}}
                 </span>
-                to
+                {{t "common.to-page"}}
                 <span class="font-medium">
                     {{this.to}}
                 </span>
-                of
+                {{t "common.of-page"}}
                 <span class="font-medium">
                     {{this.totalResults}}
                 </span>
-                results
+                {{t "common.results-page"}}
             </p>
         </div>
 
