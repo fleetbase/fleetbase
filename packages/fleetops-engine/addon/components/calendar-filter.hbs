@@ -17,7 +17,7 @@
       />
     </div>
     
-    <div class="flex items-center">
+    <div class="flex items-center calendar-filter-scroll-fix">
       <label for="driver-filter" class="mr-2 text-sm font-medium">{{t "fleet-ops.operations.scheduler.calendar.driver"}}:</label>
       <PowerSelect
         @options={{@availableDrivers}}
@@ -35,7 +35,7 @@
       </PowerSelect>
     </div>
     
-    <div class="flex items-center">
+    <div class="flex items-center calendar-filter-scroll-fix">
       <label for="status-filter" class="mr-2 text-sm font-medium">{{t "fleet-ops.operations.scheduler.calendar.status"}}:</label>
       <PowerSelect
         @options={{@statusOptions}}
