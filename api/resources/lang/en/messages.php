@@ -37,6 +37,6 @@ return [
     'assigned_orders_available' => 'already has another active order assigned',
     'assigned_orders_available_button' => 'with Assignment',
     'driver_has_no_vehicle' => 'has no vehicle assigned',
-    'without_vehicle' => 'Without Vehicle',
+    'without_vehicle' => 'Continue',
     'order_status_update'=>'Order status updated by the driver'
 ];
