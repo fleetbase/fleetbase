@@ -432,7 +432,7 @@ export default class OperationsOrdersIndexViewController extends BaseController 
      */
     @action editOrder(order, options = {}) {
         options = options || {};
-
+    
         let originalOrderData = options.originalOrderData || {
             driver_assigned_uuid: order.driver_assigned_uuid,
             driver_assigned: order.driver_assigned,
@@ -443,7 +443,8 @@ export default class OperationsOrdersIndexViewController extends BaseController 
         };
         let fieldsChanged = false;
         let driverToAssign = null;
-
+        let driverIsBusy = false; // Track busy state separately
+    
         const resetOrderToOriginal = () => {
             order.set('driver_assigned_uuid', originalOrderData.driver_assigned_uuid);
             order.set('driver_assigned', originalOrderData.driver_assigned);
@@ -452,7 +453,7 @@ export default class OperationsOrdersIndexViewController extends BaseController 
             order.set('scheduled_at', originalOrderData.scheduled_at);
             order.set('estimated_end_date', originalOrderData.estimated_end_date);
         };
-
+    
         this.modalsManager.show('modals/order-form', {
             title: this.intl.t('fleet-ops.operations.orders.index.view.edit-order-title'),
             acceptButtonText: 'Save Changes',
@@ -461,7 +462,7 @@ export default class OperationsOrdersIndexViewController extends BaseController 
                 order.set('facilitator', model);
                 order.set('facilitator_type', `fleet-ops:${model.facilitator_type}`);
                 order.set('driver', null);
-
+    
                 if (model) {
                     this.modalsManager.setOptions('driversQuery', {
                         facilitator: model.id,
@@ -484,15 +485,17 @@ export default class OperationsOrdersIndexViewController extends BaseController 
                 // Set driver regardless of availability
                 order.set('driver_assigned', driver);
                 order.set('driver_assigned_uuid', driver.id);
-
+    
+                // Only set vehicle if the driver has one
                 if (driver.vehicle) {
                     order.set('vehicle_assigned', driver.vehicle);
                     order.set('vehicle_assigned_uuid', driver.vehicle.id);
                 }
-
-                if (!driver.is_available) {
-                    driverToAssign = driver;
-                }
+    
+                // ALWAYS store the driver reference and track busy state
+                driverToAssign = driver;
+                driverIsBusy = driver.is_available === false; // Explicitly check for false
+                
                 fieldsChanged = true;
             },
             setVehicle: (vehicle) => {
@@ -523,21 +526,60 @@ export default class OperationsOrdersIndexViewController extends BaseController 
             order,
             confirm: async (modal) => {
                 modal.startLoading();
-
+    
+                // Define the saveOrder function first so it can be used anywhere
+                const saveOrder = async () => {
+                    try {
+                        await order.save();
+                        this.notifications.success(
+                            options.successNotification || this.intl.t('fleet-ops.operations.orders.index.view.update-success', {
+                                orderId: order.public_id,
+                            })
+                        );
+                        modal.done();
+                    } catch (error) {
+                        this.notifications.serverError(error);
+                        modal.stopLoading();
+                    }
+                };
+    
+                // Check if any changes were made at all
+                const hasChanges = 
+                    originalOrderData.driver_assigned_uuid !== order.driver_assigned_uuid ||
+                    originalOrderData.vehicle_assigned_uuid !== order.vehicle_assigned_uuid ||
+                    originalOrderData.scheduled_at !== order.scheduled_at ||
+                    originalOrderData.estimated_end_date !== order.estimated_end_date;
+    
+                // If no changes, allow save
+                if (!hasChanges) {
+                    modal.stopLoading();
+                    modal.done();
+                    this.notifications.info(this.intl.t('fleet-ops.component.order.schedule-card.no-changes', {
+                        defaultValue: 'No changes were made to the order.',
+                        orderId: order.public_id
+                    }));
+                    return true;
+                }
+    
+                // Check if only dates changed (no changes to driver/vehicle assignments)
                 const onlyDatesChanged =
                     originalOrderData.driver_assigned_uuid === order.driver_assigned_uuid &&
                     originalOrderData.vehicle_assigned_uuid === order.vehicle_assigned_uuid &&
                     (originalOrderData.scheduled_at !== order.scheduled_at ||
                         originalOrderData.estimated_end_date !== order.estimated_end_date);
-
-                const missingDriverOrVehicle =
-                    (!order.driver_assigned && !order.driver_assigned_uuid) ||
-                    (!order.vehicle_assigned && !order.vehicle_assigned_uuid);
-
-                if (!onlyDatesChanged && missingDriverOrVehicle) {
+    
+                // Check for partial assignment (one assigned, one not)
+                const hasDriver = order.driver_assigned !== null && order.driver_assigned_uuid !== null;
+                const hasVehicle = order.vehicle_assigned !== null && order.vehicle_assigned_uuid !== null;
+                const isPartiallyAssigned = hasDriver !== hasVehicle;
+    
+                // Allow saving if only dates changed or if we have both driver and vehicle
+                if (!onlyDatesChanged && isPartiallyAssigned) {
+                    console.log("onlyDatesChanged",onlyDatesChanged);
+                    console.log("isPartiallyAssigned",isPartiallyAssigned);
                     modal.stopLoading();
                     modal.done();
-
+    
                     setTimeout(() => {
                         this.modalsManager.confirm({
                             title: this.intl.t('fleet-ops.component.order.schedule-card.missing-info'),
@@ -553,30 +595,15 @@ export default class OperationsOrdersIndexViewController extends BaseController 
                                         originalOrderData,
                                     });
                                 }, 100);
-                            },
+                            }
                         });
                     }, 300);
-
+    
                     return true;
                 }
-
-                const saveOrder = async () => {
-                    try {
-                        await order.save();
-                        this.notifications.success(
-                            options.successNotification || this.intl.t('fleet-ops.operations.orders.index.view.update-success', {
-                                orderId: order.public_id,
-                            })
-                        );
-                        modal.done();
-                    } catch (error) {
-                        this.notifications.serverError(error);
-                        modal.stopLoading();
-                    }
-                };
-
-                // If driver confirmation is needed, show the modal before saving
-                if (driverToAssign) {
+    
+                // If driver is busy, show the busy confirmation
+                if (driverToAssign && driverIsBusy) {
                     modal.done();
                     setTimeout(() => {
                         this.modalsManager.confirm({
@@ -584,16 +611,13 @@ export default class OperationsOrdersIndexViewController extends BaseController 
                             body: this.intl.t('fleet-ops.component.order.schedule-card.assign-busy-text', {
                                 driverName: driverToAssign.name,
                                 orderId: order.public_id,
-                                availability: driverToAssign.availability_message,
-                                button: driverToAssign.button_message,
+                                availability: driverToAssign.availability_message || "This driver is currently busy with other orders.",
+                                button: driverToAssign.button_message || "continue with assignment",
                             }),
                             acceptButtonText: this.intl.t('fleet-ops.component.order.schedule-card.assign-busy-button', {
-                                button: driverToAssign.button_message,
+                                button: driverToAssign.button_message || "Continue With Assignment",
                             }),
                             confirm: async (confirmModal) => {
-                                order.set('driver_assigned', driverToAssign);
-                                order.set('driver_assigned_uuid', driverToAssign.id);
-
                                 confirmModal.startLoading();
                                 await saveOrder();
                             },
@@ -605,10 +629,11 @@ export default class OperationsOrdersIndexViewController extends BaseController 
                                         originalOrderData,
                                     });
                                 }, 100);
-                            },
+                            }
                         });
                     }, 300);
                 } else {
+                    // Normal case - no warnings needed, just save
                     await saveOrder();
                 }
             },
@@ -620,7 +645,6 @@ export default class OperationsOrdersIndexViewController extends BaseController 
             originalOrderData,
         });
     }
-
     /**
      * View order RAW order meta.
      *
