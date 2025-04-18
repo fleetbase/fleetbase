@@ -1165,10 +1165,12 @@ fleet-ops:
         assign-busy-text: Kierowca ({driverName}) <strong>{availability}</strong>. Czy nadal chcesz przypisać zamówienie {orderId} do niego? Kliknij „Kontynuuj” {button}, aby potwierdzić.
         assign-button: Kontynuuj i przypisz kierowcę
         assign-busy-button: Kontynuuj {button}
-        driver-has-no-vehicle: Wybrany kierowca nie ma przypisanego pojazdu. Przypisz pojazd lub wybierz innego kierowcę z pojazdem przed kontynuacją.
-        driver-no-vehicle-title: Aby kontynuować, należy wybrać zarówno kierowcę, jak i pojazd.
-        ok-button: OK
+        driver-has-no-vehicle: Wybrany kierowca nie ma przypisanego pojazdu. Proszę przypisać pojazd lub wybrać innego kierowcę z pojazdem przed kontynuacją.
+        driver-no-vehicle-title: Kierowca ({driverName}) nie ma pojazdu!
         missing-info: Brakujące informacje!
+        required-error: Należy wybrać zarówno kierowcę, jak i pojazd, aby kontynuować.
+        no-changes: Nie wprowadzono żadnych zmian w zamówieniu.
+        ok-button: OK
         date: Data zaplanowania
         end-date: Szacowana data zakończenia
         driver-assigned: Kierowca

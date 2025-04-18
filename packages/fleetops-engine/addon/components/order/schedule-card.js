@@ -30,9 +30,9 @@ export default class OrderScheduleCardComponent extends Component {
     @tracked showValidationErrors = false;
     @tracked originalOrderSnapshot = null;
     @tracked skipNextChangeCheck = false;
+    @tracked isSaving = false;
     router = null;
     calendarInstance = null; 
-    @tracked isSaving = false;
     skipUnassignConfirm = false;
 
     
@@ -87,7 +87,6 @@ export default class OrderScheduleCardComponent extends Component {
             const order = this.args.order;
             this.loadDrivers(order.id);
         }
-        console.log("start assign driver11",this.isAssigningDriver);
     }
    
     
@@ -304,37 +303,7 @@ onTitleClick(order) {
         estimatedEndDate: order.estimatedEndDate,
       };
     }
-
-    let isChanged = this.hasOrderChanged(order);
-    console.log("isChanged", isChanged);
-
-    // if (isChanged && order.vehicle_assigned == null) {
-    //   this.modalsManager.confirm({
-    //     title: this.intl.t('fleet-ops.component.order.schedule-card.missing-info'),
-    //     body: this.intl.t('fleet-ops.component.order.schedule-card.required-error'),
-    //     acceptButtonText: this.intl.t('fleet-ops.component.order.schedule-card.ok-button'),
-    //     hideCancelButton: true,
-    //     modalClass: 'driver-has-no-vehicle',
-    //     confirm: (modal) => {
-    //       modal.done();
-    //       this.isModalOpen = false;
-    //       const orderId = order.public_id;
-
-    //       // ✅ Set skip flag to avoid showing modal again
-    //       this.skipNextChangeCheck = true;
-
-    //       setTimeout(() => {
-    //         const editButton = document.querySelector('a[data-order-id="' + orderId + '"]');
-    //         if (editButton) {
-    //           editButton.click();
-    //         }
-    //       }, 100);
-    //     }
-    //   });
-    //   return;
-    // } else {
-    //   console.log("⚠️ No changes were made.");
-    // }
+    
   }
 }
 
@@ -350,186 +319,10 @@ onTitleClick(order) {
         }
     }
 
-    @action
-    saveDriverAssignment() {
-        const order = this.args.order;
-        const eventBus = this.effectiveEventBus;
-        const driver = order.driver_assigned;
-        
-        if (this.isModalOpen) {
-            // Prevent opening a new modal if one is already open
-            return;
-        }
-        if ((order.driver_assigned_uuid) && isBlank(driver)) { 
-            return this.modalsManager.confirm({ 
-                title: this.intl.t('fleet-ops.component.order.schedule-card.unassign-driver'),
-                body: this.intl.t('fleet-ops.component.order.schedule-card.unassign-text', { orderId: order.public_id }),
-                acceptButtonText: this.intl.t('fleet-ops.component.order.schedule-card.unassign-button'),
-                confirm: async (modal) => {
-                    order.setProperties({
-                        driver_assigned: null,
-                        is_driver_assigned: false,
-                        driver_assigned_uuid: null,
-                        vehicle_assigned: null,
-                    });
-
-                    modal.startLoading();
-
-                    try {
-                        await order.save();
-                        
-                        // Get the current page from the router
-                        const currentRoute = this.router.currentRoute;
-                        const queryParams = currentRoute.queryParams || {};
-                        const currentPage = queryParams.page || 1;
-                        
-                        // Update the ref timestamp while keeping the same page
-                        const newQueryParams = {
-                            ref: Date.now(),
-                            page: currentPage
-                        };
-                        
-                        return this.router.transitionTo('console.fleet-ops.operations.scheduler.index', {
-                            queryParams: newQueryParams
-                        }).then(() => {
-                            if (eventBus) {
-                                eventBus.publish('calendar-refresh-needed', { 
-                                    orderId: order.id,
-                                    currentPage: currentPage,
-                                    refreshAll: true
-                                });
-                            }
-                            this.notifications.success(
-                                this.intl.t('fleet-ops.operations.scheduler.index.success-message', { 
-                                    orderId: order.public_id, 
-                                    orderAt: order.scheduledAt
-                                })
-                            );
-                            modal.done();
-                            this.isModalOpen = false;
-                        });
-                    } catch (error) { 
-                        this.notifications.serverError(error);
-                        modal.stopLoading();
-                    } finally {
-                        this.isModalOpen = false;
-                    }
-                },
-                decline: (modal) => {
-                    this.isAssigningDriver = false;
-                    modal.done();
-                    this.isModalOpen = false; 
-                },
-            });
-        }
-        // Check if both driver and vehicle are selected
-        if (!order.driver_assigned_uuid || !order.vehicle_assigned) {
-            this.isModalOpen = true;
-            this.modalsManager.confirm({
-                title: this.intl.t('fleet-ops.component.order.schedule-card.driver-no-vehicle-title'),
-                body: this.intl.t('fleet-ops.component.order.schedule-card.driver-has-no-vehicle'),
-                acceptButtonText: this.intl.t('fleet-ops.component.order.schedule-card.ok-button'),
-                hideCancelButton: true,
-                modalClass: 'driver-has-no-vehicle',
-                confirm: (modal) => {
-                    modal.done();
-                    this.isModalOpen = false;
-                    const orderId = order.public_id;
-                    // Try to find and click the edit button for this order
-                    setTimeout(() => {
-                        const editButton = document.querySelector('a[data-order-id="' + orderId + '"]');
-                        if (editButton) {
-                            editButton.click();
-                        }
-                    }, 100);
-                }
-            });
-            return;
-        }
-        
-        // If driver is available, show confirmation to assign the driver to the order
-        this.isModalOpen = true;
-        return this.modalsManager.confirm({
-            title: this.intl.t('fleet-ops.component.order.schedule-card.assign-driver'),
-            body: driver.is_available
-                ? this.intl.t('fleet-ops.component.order.schedule-card.assign-text', {
-                    driverName: driver.name,
-                    orderId: order.public_id,
-                })
-                : this.intl.t('fleet-ops.component.order.schedule-card.assign-busy-text', {
-                    driverName: driver.name,
-                    orderId: order.public_id,
-                    availability: driver.availability_message,
-                    button: driver.button_message,
-                }),
-            acceptButtonText: driver.is_available
-                ? this.intl.t('fleet-ops.component.order.schedule-card.assign-button')
-                : this.intl.t('fleet-ops.component.order.schedule-card.assign-busy-button', {
-                    button: driver.button_message,
-                }),
-
-            confirm: (modal) => {
-                // Get the current query params
-                const currentRoute = this.router.currentRoute;
-                const queryParams = currentRoute.queryParams || {};
-                const currentPage = queryParams.page || 1;
-                modal.startLoading();
-                
-                // Set vehicle_assigned_uuid from the vehicle object if it exists
-                if (order.vehicle_assigned && order.vehicle_assigned.id) {
-                    order.set('vehicle_assigned_uuid', order.vehicle_assigned.id);
-                }
-                
-                return order.save()
-                    .then(() => {
-                        this.isAssigningDriver = false;
-                        
-                        // Update with current page
-                        const newQueryParams = {
-                            ref: Date.now(),
-                            page: currentPage
-                        };
-                        
-                        return this.router.transitionTo('console.fleet-ops.operations.scheduler.index', {
-                            queryParams: newQueryParams
-                        });
-                    })
-                    .catch((error) => {
-                        this.notifications.serverError(error);
-                    })
-                    .finally(() => {
-                        if (eventBus) {
-                            // Pass the current page to the refresh handler
-                            eventBus.publish('calendar-refresh-needed', { 
-                                orderId: order.id,
-                                currentPage: currentPage,
-                                refreshAll: true
-                            });
-                        }
-                        this.notifications.success(
-                            this.intl.t('fleet-ops.operations.scheduler.index.success-message', { 
-                                orderId: order.public_id, 
-                                orderAt: order.scheduledAt 
-                            })
-                        );
-                        modal.done();
-                        this.isModalOpen = false;
-                    });
-            },
-            decline: (modal) => {
-                modal.done();
-                this.isModalOpen = false;
-            },
-        });
-    }
-
-    @action
-    setDriver(driver) {
-        const order = this.args.order;
-        order.set('driver_assigned', driver);
-        order.set('driver_assigned_uuid', driver.id);
-    }
-    
+   
+/*
+* Assign Driver to the order
+*/
     
 @action assignDriverNew(driver) {
     const eventBus = this.effectiveEventBus;
@@ -557,7 +350,6 @@ onTitleClick(order) {
         // If driver is not selected, confirm to unassign the driver
         
         if (isBlank(driver)) { 
-            console.log("order11",order);
             return this.modalsManager.confirm({ 
                 title: this.intl.t('fleet-ops.component.order.schedule-card.unassign-driver'),
                 body: this.intl.t('fleet-ops.component.order.schedule-card.unassign-text', { orderId: order.public_id }),
@@ -711,7 +503,6 @@ onTitleClick(order) {
         }
         else{
             const orderId = order.public_id;
-            console.log("driver",driver);
             // Pre-select the driver for the order
             order.setProperties({
                 driver_assigned: driver,
@@ -740,7 +531,6 @@ onTitleClick(order) {
 
   hasOrderChanged(order) {
     const snapshot = this.originalOrderSnapshot;
-    console.log("snapshot",snapshot);
     if (!snapshot) return false;
   
     return (
@@ -752,13 +542,15 @@ onTitleClick(order) {
     );
   }
   
+  /*
+  * Save the order
+  */
   @action
 saveOrder(order) {
   const orderId = order.public_id;
   const hasDriver = order.driver_assigned !== null;
   const hasVehicle = order.vehicle_assigned !== null;
   const isPartiallyAssigned = hasDriver !== hasVehicle;
-  console.log(isPartiallyAssigned, "isPartiallyAssigned");
   
   // Get current route info for redirection
   const currentRoute = this.router.currentRoute;
@@ -786,12 +578,10 @@ saveOrder(order) {
   
   // If only dates have changed, skip driver/vehicle validation
   const isDatesOnlyChange = hasDatesChanged && !hasDriverVehicleChanged;
-  console.log("isDatesOnlyChange:", isDatesOnlyChange);
   
   // Check if driver is being unassigned
   const wasDriverAssigned = order.get('driver_assigned_uuid') !== null && order.get('driver_assigned_uuid') !== undefined;
   const isUnassigningDriver = wasDriverAssigned && !hasDriver;
-  console.log("wasDriverAssigned", wasDriverAssigned, "isUnassigningDriver", isUnassigningDriver);
   
   // Handle driver unassignment with confirmation dialog
   if (isUnassigningDriver) {
@@ -917,6 +707,9 @@ saveOrder(order) {
     });
 }
 
+/*
+ * Handle driver change
+ */
   @action
 handleDriverChange(order, driver) {
     if (!driver) {

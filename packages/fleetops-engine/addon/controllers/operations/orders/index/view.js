@@ -575,8 +575,6 @@ export default class OperationsOrdersIndexViewController extends BaseController 
     
                 // Allow saving if only dates changed or if we have both driver and vehicle
                 if (!onlyDatesChanged && isPartiallyAssigned) {
-                    console.log("onlyDatesChanged",onlyDatesChanged);
-                    console.log("isPartiallyAssigned",isPartiallyAssigned);
                     modal.stopLoading();
                     modal.done();
     

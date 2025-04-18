@@ -1167,10 +1167,12 @@ fleet-ops:
         assign-text: Vous êtes sur le point d'assigner un nouveau chauffeur ({driverName}) à la commande {orderId}. Cliquez sur continuer pour confirmer le chauffeur.
         assign-busy-text: Le chauffeur ({driverName}) <strong >{availability}</strong>. Voulez-vous quand même lui attribuer la commande {orderId} ? Cliquez sur "Continuer" pour confirmer.
         assign-button: Continuer et assigner le chauffeur
-        driver-has-no-vehicle: Le conducteur sélectionné n’a pas de véhicule assigné. Veuillez lui attribuer un véhicule ou choisir un autre conducteur disposant d’un véhicule avant de continuer.
-        driver-no-vehicle-title: Les deux, le conducteur et le véhicule, doivent être sélectionnés pour continuer.
-        ok-button: D’accord
-        missing-info: Informations manquantes !
+        driver-has-no-vehicle: Le conducteur sélectionné n’a pas de véhicule assigné. Veuillez assigner un véhicule ou choisir un autre conducteur avec un véhicule avant de continuer.
+        driver-no-vehicle-title: Le conducteur ({driverName}) n’a pas de véhicule !
+        missing-info: Informations manquantes !
+        required-error: Le conducteur et le véhicule doivent être sélectionnés pour continuer.
+        no-changes: Aucune modification n'a été apportée à la commande.
+        ok-button: D'accord
         date: Date prévue
         end-date: Date de fin estimée
         driver-assigned: Chauffeur

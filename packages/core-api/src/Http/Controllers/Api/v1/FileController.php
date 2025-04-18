@@ -109,7 +109,6 @@ class FileController extends Controller
 
         // Create file record for upload
         try {
-            echo $fullPath;
             $file = File::create([
                 'company_uuid'      => session('company'),
                 'uploader_uuid'     => session('user'),
