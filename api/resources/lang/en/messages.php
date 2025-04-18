@@ -39,5 +39,4 @@ return [
     'driver_has_no_vehicle' => 'has no vehicle assigned',
     'without_vehicle' => 'Without Vehicle',
     'order_status_update'=>'Order status updated by the driver'
-
 ];
