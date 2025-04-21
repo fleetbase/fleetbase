@@ -99,6 +99,14 @@ common:
   results-page: résultats
   next-page: Suivant
   previous-page: Précédent
+  create-user-success: Nouvel utilisateur créé avec succès !
+  select-from-map: Sélectionner depuis la carte
+  online: En ligne
+  offline: Hors ligne
+  start-import: Démarrer l'importation
+  import-warn: Aucune feuille de calcul téléchargée pour le traitement de l'importation.
+  new-order: Nouvelle commande
+  submit: Soumettre
 validation:
   required:
     payment_method: Le mode de paiement est requis
@@ -1284,6 +1292,7 @@ fleet-ops:
       driver-status: Sélectionner le statut du conducteur
       order-history: Historique des commandes
       select-user: Sélectionner l'utilisateur
+      create-user: Créer un nouvel utilisateur
     driver-panel:
       user-account: Compte utilisateur
       driver-details: Détails du conducteur

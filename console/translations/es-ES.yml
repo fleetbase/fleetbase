@@ -96,6 +96,14 @@ common:
   results-page: resultados
   next-page: Siguiente
   previous-page: Anterior
+  create-user-success: ¡Nuevo usuario creado con éxito!
+  select-from-map: Seleccionar desde el mapa
+  online: En línea
+  offline: Desconectado
+  start-import: Iniciar importación
+  import-warn: No se han subido hojas de cálculo para procesar la importación.
+  new-order: Nuevo pedido
+  submit: Enviar
 statuses:
     draft: Borrador
     pending-approval: Pendiente de aprobación
@@ -487,7 +495,7 @@ fleet-ops:
     fleet: Flota
     height: Altura
     host: Anfitrión
-    id: IDENTIFICACIÓN
+    id: Identificación
     internal-id: Identificación interna
     item: Elemento
     key: Llave
@@ -1392,6 +1400,7 @@ fleet-ops:
       driver-status: Seleccionar estado del conductor
       order-history: Historial de pedidos
       select-user: Seleccionar usuario
+      create-user: Crear nuevo usuario
     driver-panel:
       user-account: Cuenta de usuario
       driver-details: Detalles del conductor

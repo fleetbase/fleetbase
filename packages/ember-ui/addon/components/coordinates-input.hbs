@@ -5,7 +5,7 @@
 <div class="my-1">
     <BasicDropdown ...attributes @verticalPosition="top" @horizontalPosition="left" @onClose={{this.onClose}} @renderInPlace={{or @renderInPlace true}} @disabled={{this.disabled}} as |dd|>
         <dd.Trigger class="{{@triggerClass}} {{if this.disabled 'disabled'}}" disabled={{this.disabled}}>
-            <span class="text-sky-500 hover:text-sky-600">Select from map</span>
+            <span class="text-sky-500 hover:text-sky-600">{{t "common.select-from-map"}}</span>
         </dd.Trigger>
         <dd.Content class="bg-transparent min-w-500px">
             <div class="coordinates-input-map-container rounded shadow-md w-60 h-60 relative my-3 {{@mapContainerClass}}">

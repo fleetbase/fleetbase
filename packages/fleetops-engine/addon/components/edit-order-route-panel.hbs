@@ -9,8 +9,8 @@
     @isResizeble={{or this.isResizable @isResizable}}
     @width={{or this.width @width "570px"}}
 >
-    <Overlay::Header @title={{concat "Edit Order: " this.order.public_id " Route"}}>
-        <Button @type="primary" @icon="check" @text="Save" @helpText="Save order route changes" @onClick={{perform this.save}} @isLoading={{this.save.isRunning}} @wrapperClass="mr-2" />
+    <Overlay::Header @title={{t "fleet-ops.operations.orders.index.new.route"}}>
+        <Button @type="primary" @icon="check" @text={{t "common.save"}} @onClick={{perform this.save}} @isLoading={{this.save.isRunning}} @wrapperClass="mr-2" />
         <Button @type="default" @icon="times" @helpText={{t "fleet-ops.common.cancel"}} @onClick={{this.onPressCancel}} />
     </Overlay::Header>
 
