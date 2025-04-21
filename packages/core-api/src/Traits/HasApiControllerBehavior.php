@@ -18,6 +18,8 @@ use Illuminate\Support\Str;
 use Fleetbase\FleetOps\Models\Order;
 use Fleetbase\FleetOps\Models\Driver;
 use Fleetbase\FleetOps\Models\Vehicle;
+use Fleetbase\FleetOps\Models\Waypoint;
+use Fleetbase\FleetOps\Models\Place;
 use App\Models\LeaveRequest;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Schema;
@@ -553,6 +555,35 @@ trait HasApiControllerBehavior
                     if ($vehicleAssigned === null || $vehicleAssignedUuid === null) {
                         if ($order->vehicle_assigned_uuid !== null) {
                             $order->update(['vehicle_assigned_uuid' => null]);
+                        }
+                    }
+                    #Allow inserting duplicate waypoints from in multi drop off
+                    if ($request->has('waypoints')) {
+                        $waypoints = $request->input('waypoints');
+    
+                        if (is_array($waypoints) && !empty($waypoints)) {
+                            $placeIds = [];
+    
+                            foreach ($waypoints as $attributes) {
+                                if (Utils::isset($attributes, 'place') && is_array(Utils::get($attributes, 'place'))) {
+                                    $attributes = Utils::get($attributes, 'place');
+                                }
+    
+                                if (is_array($attributes) && array_key_exists('place_uuid', $attributes)) {
+                                    $placeIds[] = $attributes['place_uuid'];
+                                } else {
+                                    $placeUuid = Place::insertFromMixed($attributes);
+                                    $placeIds[] = $placeUuid;
+                                }
+                            }
+    
+                            // Always insert, don't deduplicate
+                            foreach ($placeIds as $placeId) {
+                                Waypoint::create([
+                                    'payload_uuid' => $order->payload_uuid,
+                                    'place_uuid' => $placeId,
+                                ]);
+                            }
                         }
                     }
                 }

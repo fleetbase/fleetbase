@@ -414,38 +414,26 @@ class Payload extends Model
         $waypointMakers = $this->waypointMarkers()->get();
 
         // remove all waypoints that are not included in the placeids
-        // $waypointMakers = $waypointMakers->filter(function ($waypointMarker) use ($placeIds) {
-        //     if (!in_array($waypointMarker->place_uuid, $placeIds)) {
-        //         $waypointMarker->delete();
-        //     }
+        $waypointMakers = $waypointMakers->filter(function ($waypointMarker) use ($placeIds) {
+            if (!in_array($waypointMarker->place_uuid, $placeIds)) {
+                $waypointMarker->delete();
+            }
 
-        //     return in_array($waypointMarker->place_uuid, $placeIds);
-        // });
-
-        // remove all existing markers (so duplicates can be re-added)
-        foreach ($waypointMakers as $waypointMarker) {
-            $waypointMarker->delete();
-        }
+            return in_array($waypointMarker->place_uuid, $placeIds);
+        });
 
         // update or create waypoint markers
-        // foreach ($placeIds as $placeId) {
-        //     Waypoint::updateOrCreate(
-        //         [
-        //             'payload_uuid' => $this->uuid,
-        //             'place_uuid'   => $placeId,
-        //         ],
-        //         [
-        //             'payload_uuid' => $this->uuid,
-        //             'place_uuid'   => $placeId,
-        //         ]
-        //     );
-
-        // insert waypoints in order (allowing duplicates)
-        foreach ($placeIds as $index => $placeId) {
-            Waypoint::create([
-                'payload_uuid' => $this->uuid,
-                'place_uuid'   => $placeId,
-            ]);
+        foreach ($placeIds as $placeId) {
+            Waypoint::updateOrCreate(
+                [
+                    'payload_uuid' => $this->uuid,
+                    'place_uuid'   => $placeId,
+                ],
+                [
+                    'payload_uuid' => $this->uuid,
+                    'place_uuid'   => $placeId,
+                ]
+            );
         }
 
         return $this->refresh()->load(['waypoints']);
