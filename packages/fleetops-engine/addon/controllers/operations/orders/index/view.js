@@ -63,7 +63,7 @@ export default class OperationsOrdersIndexViewController extends BaseController 
     @tracked detailPanelButtons = [
         {
             type: 'default',
-            text: 'Edit',
+            text: this.intl.t('common.edit'),
             icon: 'pencil',
             iconPrefix: 'fas',
             permission: 'fleet-ops update order',
@@ -77,7 +77,7 @@ export default class OperationsOrdersIndexViewController extends BaseController 
     @tracked routePanelButtons = [
         {
             type: 'default',
-            text: 'Edit',
+            text: this.intl.t('common.edit'),
             icon: 'pencil',
             iconPrefix: 'fas',
             permission: 'fleet-ops update-route-for order',
@@ -91,7 +91,7 @@ export default class OperationsOrdersIndexViewController extends BaseController 
     @tracked notesPanelButtons = [
         {
             type: 'default',
-            text: 'Edit',
+            text: this.intl.t('common.edit'),
             icon: 'pencil',
             iconPrefix: 'fas',
             permission: 'fleet-ops update order',
@@ -653,7 +653,7 @@ export default class OperationsOrdersIndexViewController extends BaseController 
     @action viewOrderMeta(order) {
         this.modalsManager.show('modals/order-meta', {
             title: this.intl.t('fleet-ops.operations.orders.index.view.order-metadata'),
-            acceptButtonText: 'Done',
+            acceptButtonText: this.intl.t('common.done'),
             acceptButtonIcon: 'check',
             acceptButtonIconPrefix: 'fas',
             hideDeclineButton: true,

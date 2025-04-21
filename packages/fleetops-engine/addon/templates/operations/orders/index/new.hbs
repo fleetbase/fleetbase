@@ -1,5 +1,5 @@
 <Overlay @position="right" @noBackdrop={{true}} @isResizable={{true}} @width="570px" @fullHeight={{true}} @onLoad={{this.setupInterface}} as |overlay|>
-    <Overlay::Header @overlay={{overlay}} @title="New Order" @onPressCancel={{this.transitionBack}}>
+    <Overlay::Header @overlay={{overlay}} @title={{t "common.new-order"}} @onPressCancel={{this.transitionBack}}>
         <DropdownButton @icon="ellipsis-h" @size="sm" @iconPrefix="fas" @triggerClass="mr-2 hidden md:flex" as |dd|>
             <div class="next-dd-menu mt-1 mx-0" aria-labelledby="user-menu">
                 <div class="p-1">
@@ -36,8 +36,8 @@
                 </div>
             </div>
         </DropdownButton>
-        <Button @icon="upload" @type="magic" @text={{if (media "isMobile") "" "Import"}} @onClick={{this.importOrder}} @disabled={{this.isCreatingOrder}} @permission="fleet-ops import order" class="mr-2" />
-        <Button @icon="check" @type="primary" @text={{if (media "isMobile") "" "Submit"}} @onClick={{this.createOrder}} @isLoading={{this.isCreatingOrder}} @permission="fleet-ops create order" @disabled={{not this.isValid}} />
+        <Button @icon="upload" @type="magic" @text={{if (media "isMobile") "" (t "fleet-ops.common.import")}} @onClick={{this.importOrder}} @disabled={{this.isCreatingOrder}} @permission="fleet-ops import order" class="mr-2" />
+        <Button @icon="check" @type="primary" @text={{if (media "isMobile") "" (t "common.submit")}} @onClick={{this.createOrder}} @isLoading={{this.isCreatingOrder}} @permission="fleet-ops create order" @disabled={{not this.isValid}} />
     </Overlay::Header>
 
     <Overlay::Body @wrapperClass="new-order-overlay-body">

@@ -50,7 +50,7 @@ export default class DriverFormPanelComponent extends Component {
      */
     userAccountActionButtons = [
         {
-            text: 'Create new user',
+            text: this.intl.t('fleet-ops.component.driver-form-panel.create-user'),
             icon: 'user-plus',
             size: 'xs',
             permission: 'iam create user',
@@ -61,7 +61,7 @@ export default class DriverFormPanelComponent extends Component {
                 });
 
                 this.modalsManager.show('modals/user-form', {
-                    title: 'Create a new user',
+                    title: this.intl.t('fleet-ops.component.driver-form-panel.create-user'),
                     user,
                     formPermission: 'iam create user',
                     uploadNewPhoto: (file) => {
@@ -87,7 +87,7 @@ export default class DriverFormPanelComponent extends Component {
 
                         try {
                             await user.save();
-                            this.notifications.success('New user created successfully!');
+                            this.notifications.success(this.intl.t('common.create-user-success'));
                             modal.done();
                         } catch (error) {
                             this.notifications.serverError(error);

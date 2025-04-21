@@ -99,6 +99,14 @@ common:
   results-page: Ergebnisse
   next-page: Weiter
   previous-page: Zurück
+  create-user-success: Neuer Benutzer erfolgreich erstellt!
+  select-from-map: Von der Karte auswählen
+  online: Online
+  offline: Offline
+  start-import: Import starten
+  import-warn: Keine Tabellen zum Importieren hochgeladen.
+  new-order: Neue Bestellung
+  submit: Einreichen
 validation:
   required:
     payment_method: Zahlungsmethode ist erforderlich
@@ -1285,6 +1293,7 @@ fleet-ops:
       driver-status: Fahrerstatus auswählen
       order-history: Bestellhistorie
       select-user: Benutzer auswählen
+      create-user: Neuen Benutzer erstellen
     driver-panel:
       user-account: Benutzerkonto
       driver-details: Fahrerdetails

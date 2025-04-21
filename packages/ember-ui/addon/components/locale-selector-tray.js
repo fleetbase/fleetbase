@@ -10,7 +10,7 @@ export default class LocaleSelectorTrayComponent extends Component {
     @service intl;
     @service fetch;
     @service media;
-
+    @service router;
     /**
      * Tracks all the available locales.
      *
@@ -82,7 +82,11 @@ export default class LocaleSelectorTrayComponent extends Component {
         this.currentLocale = selectedLocale;
         this.intl.setLocale(selectedLocale);
         // Persist to server
-        this.saveUserLocale.perform(selectedLocale);
+        this.saveUserLocale.perform(selectedLocale).then(() => {
+            // Reload the current route
+            // this.refresh(); // inside a route
+            window.location.reload(); // Reload the page to reflect locale changes
+          });
     }
 
     /**

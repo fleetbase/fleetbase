@@ -101,6 +101,14 @@ common:
   results-page: results
   next-page: Next
   previous-page: Previous
+  create-user-success: New user created successfully!
+  select-from-map: Select from map
+  online: Online
+  offline: Offline
+  start-import: Start Import
+  import-warn: No spreadsheets uploaded for import to process.
+  new-order: New Order
+  submit: Submit
 validation:
   required:
     payment_method: Payment method is required
@@ -1284,6 +1292,7 @@ fleet-ops:
       driver-status: Select driver status
       order-history: Order History
       select-user: Select User
+      create-user: Create new user
     driver-panel:
       user-account: User Account
       driver-details: Driver Details
