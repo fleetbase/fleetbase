@@ -115,6 +115,13 @@ common:
   selection-info:
     single: Sie haben 1 Datensatz für {verb} ausgewählt.
     multiple: Sie haben {count} Datensätze für {verb} ausgewählt.
+  tracking-details:
+    create-order: Neue Bestellung erstellt.
+    accept-order: Bestellung vom Fahrer angenommen.
+    dispacth-order: Bestellung wurde versendet.
+    update-order: Bestellstatus wurde vom Fahrer aktualisiert.
+    start-order: Bestellung wurde gestartet.
+  duplicate-waypoint-error: Doppelter Wegpunkt erkannt. Bitte verwenden Sie eindeutige Orte für jeden Wegpunkt.
 validation:
   required:
     payment_method: Zahlungsmethode ist erforderlich
@@ -154,7 +161,11 @@ statuses:
     backlogged: Rückstau  
     requires-update: Aktualisierung erforderlich  
     order_canceled: Bestellung storniert
-    all-statuses: Alle Status  
+    all-statuses: Alle Status
+    order_created: Erstellt
+    order_dispatched: Versendet
+    order_accepted: Akzeptiert
+    order_started: Gestartet
 fuelReportTypes:
     Fuel: "Kraftstoff"
     Parking: "Parken"

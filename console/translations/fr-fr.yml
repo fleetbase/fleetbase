@@ -115,6 +115,13 @@ common:
   selection-info:
     single: Vous avez sélectionné 1 enregistrement pour {verb}.
     multiple: Vous avez sélectionné {count} enregistrements pour {verb}.
+  tracking-details:
+    create-order: Nouvelle commande créée.
+    accept-order: Commande acceptée par le conducteur.
+    dispacth-order: La commande a été expédiée.
+    update-order: Le statut de la commande a été mis à jour par le conducteur.
+    start-order: La commande a été commencée.
+  duplicate-waypoint-error: Point de passage en double détecté. Veuillez utiliser des emplacements uniques pour chaque point de passage.
 validation:
   required:
     payment_method: Le mode de paiement est requis
@@ -154,7 +161,11 @@ statuses:
     backlogged: En attente  
     requires-update: Nécessite une mise à jour  
     order_canceled: Commande annulée
-    all-statuses: Tous les statuts 
+    all-statuses: Tous les statuts
+    order_created: Créé
+    order_dispatched: Expédié
+    order_accepted: Accepté
+    order_started: Commencé
 fuelReportTypes:
     Fuel: "Carburant"
     Parking: "Stationnement"

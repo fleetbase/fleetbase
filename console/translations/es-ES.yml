@@ -112,6 +112,13 @@ common:
   selection-info:
     single: Ha seleccionado {count} registro para {verb}
     multiple: Ha seleccionado {count} para {verb}
+  tracking-details:
+    create-order: Nuevo pedido creado.
+    accept-order: Pedido aceptado por el conductor.
+    dispacth-order: El pedido ha sido despachado.
+    update-order: Estado del pedido actualizado por el conductor.
+    start-order: El pedido ha sido iniciado.
+  duplicate-waypoint-error: Punto de parada duplicado detectado. Por favor, utilice ubicaciones únicas para cada punto.
 statuses:
     draft: Borrador
     pending-approval: Pendiente de aprobación
@@ -148,6 +155,10 @@ statuses:
     requires-update: Requiere actualización  
     order_canceled: Pedido cancelado
     all-status: All Statuses
+    order_created: Creado
+    order_dispatched: Despachado
+    order_accepted: Aceptado
+    order_started: Iniciado
 component:
   file:
     dropdown-label: Acciones de archivos

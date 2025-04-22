@@ -26,7 +26,10 @@ export default class VehicleFormPanelComponent extends Component {
      * Status options for vehicles.
      * @type {Array}
      */
-    @tracked vehicleStatusOptions = ['active', 'pending'];
+    @tracked vehicleStatusOptions =  [
+        { value: 'active', translationKey: 'statuses.active' },
+        { value: 'pending', translationKey: 'statuses.pending' }
+      ];
 
     /**
      * Permission needed to update or create record.
@@ -191,5 +194,20 @@ export default class VehicleFormPanelComponent extends Component {
         const location = new Point(longitude, latitude);
 
         this.vehicle.setProperties({ location });
+    }
+
+    /**
+     * The selected status option.
+     */
+    get selectedStatus() {
+        return this.vehicleStatusOptions.find(status => status.value === this.vehicle.status);
+    }
+    /**
+     * 
+     * @param {*} selectedStatus 
+     */
+    @action
+    updateStatus(selectedStatus) {
+        this.vehicle.status = selectedStatus.value;
     }
 }

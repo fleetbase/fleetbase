@@ -117,6 +117,13 @@ common:
   selection-info:
     single: You have selected {count} record for {verb}
     multiple: You have selected {count} for {verb}
+  tracking-details:
+    create-order: New order created.
+    accept-order: Order Accepted by the driver.
+    dispacth-order: Order has been dispatched.
+    update-order: Order status updated by the driver
+    start-order: Order has been started
+  duplicate-waypoint-error: Duplicate waypoint detected. Please use unique locations for each waypoint.
 validation:
   required:
     payment_method: Payment method is required
@@ -157,6 +164,10 @@ statuses:
     requires-update: Requires Update
     order_canceled: Order Canceled
     all-statuses: All Statuses
+    order_created: Created
+    order_dispatched: Dispatched
+    order_accepted: Accepted
+    order_started: Started
 fuelReportTypes:
   Fuel: Fuel
   Parking: Parking

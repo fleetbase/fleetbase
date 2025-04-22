@@ -117,6 +117,13 @@ common:
   selection-info:
     single: Wybrałeś 1 rekord do {verb}.
     multiple: Wybrałeś {count} rekordów do {verb}.
+  tracking-details:
+    create-order: Utworzono nowe zamówienie.
+    accept-order: Zamówienie zaakceptowane przez kierowcę.
+    dispacth-order: Zamówienie zostało wysłane.
+    update-order: Status zamówienia zaktualizowany przez kierowcę.
+    start-order: Zamówienie zostało rozpoczęte.
+  duplicate-waypoint-error: Wykryto zduplikowany punkt trasy. Proszę użyć unikalnych lokalizacji dla każdego punktu.
 validation:
   required:
     payment_method: Wymagana jest metoda płatności
@@ -157,6 +164,10 @@ statuses:
   requires-update: Wymaga aktualizacji  
   order_canceled: Zamówienie anulowane
   all-statuses: Wszystkie statusy
+  order_created: Utworzono
+  order_dispatched: Wysłano
+  order_accepted: Zaakceptowano
+  order_started: Rozpoczęto
 fuelReportTypes:
   Fuel: Paliwo
   Parking: Parking
