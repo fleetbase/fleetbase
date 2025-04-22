@@ -4,14 +4,14 @@
 <Layout::Section::Body class="overflow-y-scroll h-full">
     <div class="container mx-auto h-screen">
         <div class="max-w-3xl my-10 mx-auto space-y-6">
-            <ContentPanel @title="Change Password" @open={{true}} @pad={{true}} @panelBodyClass="bg-white dark:bg-gray-800">
+            <ContentPanel @title={{t "fleet-ops.user-management.change-password"}} @open={{true}} @pad={{true}} @panelBodyClass="bg-white dark:bg-gray-800">
                 <form id="change-password-form" aria-label="change-password" {{on "submit" (perform this.changePassword)}}>
-                    <legend class="mb-3">Change Password</legend>
+                    <legend class="mb-3">{{t "fleet-ops.user-management.change-password"}}</legend>
                     <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
-                        <InputGroup @name="Enter new Password" @type="password" @value={{this.newPassword}} />
-                        <InputGroup @name="Confirm Password" @type="password" @value={{this.newConfirmPassword}} />
+                        <InputGroup @name={{t "auth.reset-password.form.password.label" default="New Password"}} @type="password" @value={{this.newPassword}} />
+                        <InputGroup @name={{t "auth.reset-password.form.confirm-password.label" default="Confirm Password"}} @type="password" @value={{this.newConfirmPassword}} />
                     </div>
-                    <Button @type="primary" @buttonType="submit" @text="Confirm & Change Password" @icon="save" {{on "click" (perform this.changePassword)}} />
+                    <Button @type="primary" @buttonType="submit" @text={{t "fleet-ops.user-management.confirm-and-change"}} @icon="save" {{on "click" (perform this.changePassword)}} />
                 </form>
             </ContentPanel>
 

@@ -457,6 +457,38 @@ fleet-ops:
   fleet-ops: FleetYes Flow
   iam: User Access Management
   extension-name: Fleet-Ops
+  user-management:
+    profiles: Profiles
+    networks: Networks
+    role: Role
+    access-control: Access Control
+    user-access-management: User Access Management
+    you-are-about-to-reset-the-password-for : You are about to reset the password for
+    please-enter-new-password : Please enter the new password and confirm it below. You have the option to send the new credentials to the user via email by selecting the checkbox.
+    send-password-credentials : Send password credentials to user
+    reset-user-credentials : Reset User Credentials
+    reset-credentials : Reset Credentials
+    profile-changes-saved : Profile changes saved.
+    change-password : Change Password
+    confirm-and-change : Confirm & Change Password
+    validate-current-password : Validate Current Password
+    validate-password : Validate Password
+    validate-current-password-before-change : You must validate your current password before it can be changed.
+    password-changes-saved : Password change successfully.
+    failed-to-change-password : Failed to change password.
+    your-organization : Your Organizations
+    create-organization : Create Organization
+    member-since : Member Since
+    2fa-settings : 2FA Settings
+    save-2fa-settings : Save 2FA Settings
+    enable-2fa : Enable Two-Factor Authentication
+    require-2fa-setup : Require Users to Set-Up 2FA
+    2fa-settings-saved : 2FA Settings saved successfully.
+    2fa-settings-saved-by-admin : 2FA Settings saved for admin successfully.
+    2fa-settings-saved-for-organization : 2FA Settings saved for organization successfully.
+    view-all-notifications : View all notifications
+    no-unread-notifications : No unread notifications
+    unread-notifications : Unread notification
   common:
     active-manpower: Active Manpower
     address: Address 

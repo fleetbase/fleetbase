@@ -5,15 +5,15 @@
     <div class="container mx-auto h-screen">
         <div class="max-w-3xl my-10 mx-auto space-y-4">
             <div class="flex flex-row justify-end">
-                <Button @type="primary" @icon="plus" @text="Create Organization" @onClick={{this.createOrganization}} />
+                <Button @type="primary" @icon="plus" @text={{t "fleet-ops.user-management.create-organization"}} @onClick={{this.createOrganization}} />
             </div>
-            <ContentPanel @title="Your Organizations" @open={{true}} @pad={{true}} @panelBodyClass="bg-white dark:bg-gray-800">
+            <ContentPanel @title={{t "fleet-ops.user-management.your-organization"}} @open={{true}} @pad={{true}} @panelBodyClass="bg-white dark:bg-gray-800">
                 <div class="space-y-2">
                     {{#each @model as |organization|}}
                         <div class="grid grid-cols-3 border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 rounded-lg px-3 py-2 items-center">
                             <div>
                                 <div class="font-semibold">{{organization.name}}</div>
-                                <div>Member Since: {{format-date organization.joined_at}}</div>
+                                <div>{{t "fleet-ops.user-management.member-since"}}: {{format-date organization.joined_at}}</div>
                             </div>
                             <div class="col-span-2 flex flex-row items-center justify-end space-x-2">
                                 {{#let (eq organization.owner_uuid this.currentUser.id) as |isOwner|}}

@@ -15,7 +15,14 @@
                     {{#if @icon}}
                         <FaIcon @icon={{@icon}} @size={{@iconSize}} @prefix={{@iconPrefix}} class="{{@iconClass}} mr-2" />
                     {{/if}}
-                    <h2 id="next-view-section-subheader-title" class="next-view-section-subheader-title {{@titleClass}}">{{@title}}</h2>
+                    
+                    <h2 id="next-view-section-subheader-title" class="next-view-section-subheader-title {{@titleClass}}">
+                        {{#if (includes @title "Missing translation")}}
+    {{t (concat "fleet-ops.user-management." (dasherize (extract-original-key @title))) default=@title}}
+  {{else}}
+    {{@title}}
+  {{/if}}
+                        </h2>
                     {{#if @subtitle}}
                         <div class={{@subtitleClass}}>
                             {{@subtitle}}

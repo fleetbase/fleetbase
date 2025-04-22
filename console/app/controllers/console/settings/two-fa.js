@@ -12,6 +12,7 @@ export default class ConsoleSettingsTwoFaController extends Controller {
      * @type {fetch}
      */
     @service fetch;
+    @service intl;
 
     /**
      * Service for displaying notifications.
@@ -175,7 +176,7 @@ export default class ConsoleSettingsTwoFaController extends Controller {
         yield this.fetch
             .post('companies/two-fa', { twoFaSettings })
             .then(() => {
-                this.notifications.success('2FA Settings saved for organization successfully.');
+                this.notifications.success(this.intl.t('fleet-ops.user-management.2fa-settings-saved-for-organization'));
             })
             .catch((error) => {
                 this.notifications.serverError(error);

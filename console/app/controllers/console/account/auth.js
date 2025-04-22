@@ -14,6 +14,7 @@ import getTwoFaMethods from '@fleetbase/console/utils/get-two-fa-methods';
 export default class ConsoleAccountAuthController extends Controller {
     @service fetch;
     @service notifications;
+    @service intl;
     @service router;
     @service modalsManager;
 
@@ -130,9 +131,9 @@ export default class ConsoleAccountAuthController extends Controller {
                 password_confirmation: this.newConfirmPassword,
             });
 
-            this.notifications.success('Password change successfully.');
+            this.notifications.success(this.intl.t('fleet-ops.user-management.password-changes-saved'));
         } catch (error) {
-            this.notifications.serverError(error, 'Failed to change password.');
+            this.notifications.serverError(error, this.intl.t('fleet-ops.user-management.failed-to-change-password'));
         }
 
         this.newPassword = undefined;
@@ -148,7 +149,8 @@ export default class ConsoleAccountAuthController extends Controller {
         let isPasswordValid = false;
 
         yield this.modalsManager.show('modals/validate-password', {
-            body: 'You must validate your current password before it can be changed.',
+            body: this.intl.t('fleet-ops.user-management.validate-current-password-before-change'),
+            // 'You must validate your current password before it can be changed.',
             onValidated: (isValid) => {
                 isPasswordValid = isValid;
             },
@@ -166,7 +168,7 @@ export default class ConsoleAccountAuthController extends Controller {
     @task *saveUserTwoFaSettings(twoFaSettings = {}) {
         try {
             yield this.fetch.post('users/two-fa', { twoFaSettings });
-            this.notifications.success('2FA Settings saved successfully.');
+            this.notifications.success(this.intl.t('fleet-ops.user-management.2fa-settings-saved'));
         } catch (error) {
             this.notifications.serverError(error);
         }

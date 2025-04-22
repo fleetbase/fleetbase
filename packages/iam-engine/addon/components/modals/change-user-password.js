@@ -5,6 +5,7 @@ import { inject as service } from '@ember/service';
 export default class ModalsChangeUserPasswordComponent extends Component {
     @service fetch;
     @service notifications;
+    @service intl;
     @tracked options = {};
     @tracked password;
     @tracked confirmPassword;
@@ -19,8 +20,8 @@ export default class ModalsChangeUserPasswordComponent extends Component {
     }
 
     setupOptions() {
-        this.options.title = 'Reset User Credentials';
-        this.options.acceptButtonText = 'Reset Credentials';
+        this.options.title = this.intl.t('fleet-ops.user-management.reset-user-credentials');
+        this.options.acceptButtonText = this.intl.t('fleet-ops.user-management.reset-credentials');
         this.options.declineButtonHidden = true;
         this.options.confirm = async (modal) => {
             modal.startLoading();
