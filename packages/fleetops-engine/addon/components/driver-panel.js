@@ -53,6 +53,11 @@ export default class DriverPanelComponent extends Component {
     @service contextPanel;
 
     /**
+     * Service for managing translation
+     */
+    @service intl;
+
+    /**
      * The current active tab.
      *
      * @type {Object}

@@ -104,6 +104,14 @@ common:
   import-warn: No se han subido hojas de cálculo para procesar la importación.
   new-order: Nuevo pedido
   submit: Enviar
+  new-field: Nuevo campo
+  to: a
+  confirm-action:
+    single: ¿Está seguro de que desea {verb} este registro?
+    multiple: ¿Está seguro de que desea {verb} estos registros?
+  selection-info:
+    single: Ha seleccionado {count} registro para {verb}
+    multiple: Ha seleccionado {count} para {verb}
 statuses:
     draft: Borrador
     pending-approval: Pendiente de aprobación
@@ -1289,6 +1297,7 @@ fleet-ops:
         driver-no-vehicle-title: Tanto el conductor como el vehículo deben ser seleccionados para continuar.
         ok-button: De acuerdo
         missing-info: ¡Falta información!
+        required-error: Se deben seleccionar tanto el conductor como el vehículo para continuar.
         date: fecha prevista
         end-date: Fecha estimada de finalización
         driver-assigned: Conductor

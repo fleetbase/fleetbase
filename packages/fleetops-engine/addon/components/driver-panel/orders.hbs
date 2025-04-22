@@ -23,8 +23,7 @@
                         </div>
                     </div>
                     <div>
-                        <Badge @status={{order.status}} />
-                        <Badge @status="info">{{n-a (humanize order.type)}}</Badge>
+                        <Badge @status={{order.status}}>{{t (concat "statuses." order.status)}}</Badge>
                     </div>
                 </div>
                 <div class="rounded-b-lg bg-white dark:bg-gray-800 py-2 px-4">
@@ -109,7 +108,7 @@
                                         />
                                     </div>
                                     <div class="field-value">
-                                        <div>{{n-a order.vehicle_assigned.display_name "No Vehicle"}}</div>
+                                        <div>{{n-a order.vehicle_assigned.display_name (t "fleet-ops.component.order.schedule-card.no-vehicle")}}</div>
                                     </div>
                                 </a>
                             </div>

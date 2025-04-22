@@ -107,6 +107,14 @@ common:
   import-warn: Keine Tabellen zum Importieren hochgeladen.
   new-order: Neue Bestellung
   submit: Einreichen
+  new-field: Neues Feld
+  to: bis
+  confirm-action:
+    single: Sind Sie sicher, dass Sie diesen Datensatz {verb} möchten?
+    multiple: Sind Sie sicher, dass Sie diese Datensätze {verb} möchten?
+  selection-info:
+    single: Sie haben 1 Datensatz für {verb} ausgewählt.
+    multiple: Sie haben {count} Datensätze für {verb} ausgewählt.
 validation:
   required:
     payment_method: Zahlungsmethode ist erforderlich

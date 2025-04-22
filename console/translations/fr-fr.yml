@@ -107,6 +107,14 @@ common:
   import-warn: Aucune feuille de calcul téléchargée pour le traitement de l'importation.
   new-order: Nouvelle commande
   submit: Soumettre
+  new-field: Nouveau champ
+  to: à
+  confirm-action:
+    single: Êtes-vous sûr de vouloir {verb} cet enregistrement ?
+    multiple: Êtes-vous sûr de vouloir {verb} ces enregistrements ?
+  selection-info:
+    single: Vous avez sélectionné 1 enregistrement pour {verb}.
+    multiple: Vous avez sélectionné {count} enregistrements pour {verb}.
 validation:
   required:
     payment_method: Le mode de paiement est requis
