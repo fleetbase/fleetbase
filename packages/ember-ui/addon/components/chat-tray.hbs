@@ -10,14 +10,14 @@
         @renderInPlace={{or @renderInPlace (not (media "isMobile"))}}
         as |dd|
     >
-        <dd.Trigger class="chat-tray-panel-trigger {{@triggerClass}} {{if (media 'isMobile') 'is-mobile'}}">
+        {{!-- <dd.Trigger class="chat-tray-panel-trigger {{@triggerClass}} {{if (media 'isMobile') 'is-mobile'}}">
             <div class="next-org-button-trigger chat-tray-icon flex-shrink-0 {{if dd.isOpen 'is-open'}}">
                 <FaIcon @icon="message" class="message-icon"/>
                 {{#if this.unreadCount}}
                     <div class="chat-tray-unread-notifications-badge">{{this.unreadCount}}</div>
                 {{/if}}
             </div>
-        </dd.Trigger>
+        </dd.Trigger> --}}
         <dd.Content class="chat-tray-panel-container {{@contentClass}} {{if (media 'isMobile') 'is-mobile'}}">
             <div class="chat-tray-panel">
                 <div class="p-4">
