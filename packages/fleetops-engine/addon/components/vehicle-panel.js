@@ -21,6 +21,10 @@ export default class VehiclePanelComponent extends Component {
      * @type {Service}
      */
     @service fetch;
+    /**
+     * Service for managing translations.
+     */
+    @service intl;
 
     /**
      * Service for managing modals.
@@ -80,7 +84,16 @@ export default class VehiclePanelComponent extends Component {
      */
     get tabs() {
         const registeredTabs = this.universe.getMenuItemsFromRegistry('fleet-ops:component:vehicle-panel');
-        const defaultTabs = [this.universe._createMenuItem('Details', null, { icon: 'circle-info', component: VehiclePanelDetailComponent })];
+        const defaultTabs = [
+            this.universe._createMenuItem(
+              this.intl.t('fleet-ops.common.details'), // using a translation key
+              null,
+              {
+                icon: 'circle-info',
+                component: VehiclePanelDetailComponent
+              }
+            )
+          ];
 
         if (isArray(registeredTabs)) {
             return [...defaultTabs, ...registeredTabs];

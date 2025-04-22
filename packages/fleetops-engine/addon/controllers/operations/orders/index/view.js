@@ -101,6 +101,17 @@ export default class OperationsOrdersIndexViewController extends BaseController 
         },
     ];
 
+    /**
+     * @var trackingDetailKeyMap
+     */
+    @tracked trackingDetailKeyMap = {
+        'New order created.': 'create-order',
+        'Order Accepted by the driver.': 'accept-order',
+        'Order has been dispatched.': 'dispacth-order',
+        'Order status updated by the driver': 'update-order',
+        'Order has been started' : 'start-order'
+      };
+
     @not('isWaypointsCollapsed') waypointsIsNotCollapsed;
     @notEmpty('model.payload.waypoints') isMultiDropOrder;
     @alias('ordersController.leafletMap') leafletMap;
@@ -110,6 +121,16 @@ export default class OperationsOrdersIndexViewController extends BaseController 
         return renderableComponents;
     }
 
+    /**
+     * 
+     * @param {*} details 
+     * @returns 
+     */
+    @action formatTrackingDetails(details) {
+        console.log(details,"details11");
+        const key = this.trackingDetailKeyMap[details];
+        return key ? `common.tracking-details.${key}` : 'common.tracking-details.unknown';
+      }
     /** @var entitiesByDestination */
     @computed('model.payload.{entities.[],waypoints.[]}')
     get entitiesByDestination() {
@@ -1187,5 +1208,16 @@ export default class OperationsOrdersIndexViewController extends BaseController 
         customFieldValue.save().then(() => {
             return file.destroyRecord();
         });
+    }
+
+    /**
+     * 
+     * @param {*} status 
+     * @returns 
+     */
+    @action
+    normalizeStatus(status) {
+      if (!status) return 'pending';
+      return status.toLowerCase().replace(/\s+/g, '_');
     }
 }

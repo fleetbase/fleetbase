@@ -177,14 +177,14 @@
                             <div class="fleetbase-model-select fleetbase-power-select ember-model-select">
                                 <PowerSelect
                                     @options={{this.vehicleStatusOptions}}
-                                    @selected={{this.vehicle.status}}
-                                    @onChange={{fn (mut this.vehicle.status)}}
+                                    @selected={{this.selectedStatus}} 
+                                    @onChange={{this.updateStatus}}
                                     @placeholder={{t "fleet-ops.common.status"}}
                                     @triggerClass="form-select form-input"
                                     @disabled={{unauthorized}}
                                     as |status|
                                 >
-                                    {{smart-humanize status}}
+                                     {{t status.translationKey}}
                                 </PowerSelect>
                             </div>
                         </InputGroup>

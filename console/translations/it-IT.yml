@@ -115,6 +115,13 @@ common:
   selection-info:
     single: Hai selezionato 1 record per {verb}.
     multiple: Hai selezionato {count} record per {verb}.
+  tracking-details:
+    create-order: Nuovo ordine creato.
+    accept-order: Ordine accettato dal conducente.
+    dispacth-order: L'ordine è stato spedito.
+    update-order: Stato dell'ordine aggiornato dal conducente.
+    start-order: L'ordine è stato avviato.
+  duplicate-waypoint-error: Rilevato waypoint duplicato. Si prega di utilizzare posizioni uniche per ogni waypoint.
 validation:
   required:
     payment_method: Il metodo di pagamento è obbligatorio
@@ -155,6 +162,10 @@ statuses:
     requires-update: Richiede aggiornamento  
     order_canceled: Ordine annullato
     all-statuses: Tutti gli stati
+    order_created: Creato
+    order_dispatched: Spedito
+    order_accepted: Accettato
+    order_started: Avviato
 fuelReportTypes:
     Fuel: "Carburante"
     Parking: "Parcheggio"

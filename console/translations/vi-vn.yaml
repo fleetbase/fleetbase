@@ -115,6 +115,13 @@ common:
   selection-info:
     single: Bạn đã chọn 1 bản ghi để {verb}.
     multiple: Bạn đã chọn {count} bản ghi để {verb}.
+  tracking-details:
+    create-order: Đã tạo đơn hàng mới.
+    accept-order: Tài xế đã chấp nhận đơn hàng.
+    dispacth-order: Đơn hàng đã được gửi đi.
+    update-order: Tài xế đã cập nhật trạng thái đơn hàng.
+    start-order: Đơn hàng đã được bắt đầu.
+  duplicate-waypoint-error: Phát hiện điểm dừng trùng lặp. Vui lòng sử dụng vị trí duy nhất cho mỗi điểm dừng.
 validation:
   required:
     payment_method: Phương thức thanh toán là bắt buộc
@@ -154,6 +161,10 @@ statuses:
     backlogged: Tồn đọng  
     requires-update: Cần cập nhật  
     order_canceled: Đơn hàng đã hủy
+    order_created: Đã tạo
+    order_dispatched: Đã gửi
+    order_accepted: Đã chấp nhận
+    order_started: Đã bắt đầu
 fuelReportTypes:
     Fuel: "Nhiên liệu"
     Parking: "Đậu xe"
