@@ -598,6 +598,8 @@ fleet-ops:
     tracking-number: Tracking Number
     end_date_cannot_be_earlier: End Date cannot be earlier
     end_date_cannot_be_earlier_than_start_date: End Date cannot be earlier than the start date.
+    no_driver: No Driver
+    no_phone: No Phone
 
   component:
     activity-logic-builder:
@@ -1901,6 +1903,10 @@ fleet-ops:
         delete-orders: Delete Orders
         dispatch-orders: Dispatch Orders
         estimated-end-date: Estimated End Date
+        select-driver: Select driver for order
+        select-vehicle: Select vehicle for order
+        select-pickup-location: Select pickup location
+        select-dropoff-location: Select dropoff location
         new:
           create-new-customer: Create new customer
           create-new-facilitator: Create new facilitator
