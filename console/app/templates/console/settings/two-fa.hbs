@@ -4,7 +4,7 @@
 <Layout::Section::Body class="overflow-y-scroll h-full">
     <div class="container mx-auto h-screen">
         <div class="max-w-3xl my-10 mx-auto space-y-6">
-            <ContentPanel @title="2FA Settings" @open={{true}} @pad={{true}} @panelBodyClass="bg-white dark:bg-gray-800">
+            <ContentPanel @title={{t "fleet-ops.user-management.2fa-settings"}} @open={{true}} @pad={{true}} @panelBodyClass="bg-white dark:bg-gray-800">
                 <div class="mb-3">
                     {{#if this.loadCompanyTwoFaSettings.isIdle}}
                         <TwoFaSettings
@@ -25,7 +25,7 @@
                 <Button
                     @type="primary"
                     @buttonType="submit"
-                    @text="Save 2FA Settings"
+                    @text={{t "fleet-ops.user-management.save-2fa-settings"}}
                     @icon="save"
                     @onClick={{this.saveTwoFactor}}
                     @isLoading={{this.enforceTwoFaForCompanyUsers.isRunning}}

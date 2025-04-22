@@ -454,6 +454,42 @@ fleet-ops:
   iam: Gestion des accès utilisateurs
   fleet-ops: Flotte Oui Flux
   extension-name: Opérations de Flotte
+  user-management:
+    profiles: Profils
+    networks: Réseaux
+    roles: Rôles
+    access-control: Contrôle d'accès
+    user-access-management: Gestion des accès utilisateurs
+    you-are-about-to-reset-the-password-for: Vous êtes sur le point de réinitialiser le mot de passe pour
+    please-enter-new-password: Veuillez entrer le nouveau mot de passe et le confirmer ci-dessous. Vous avez la possibilité d'envoyer les nouvelles informations d'identification à l'utilisateur par e-mail en sélectionnant la case.
+    send-password-credentials: Envoyer les informations d'identification du mot de passe à l'utilisateur
+    reset-user-credentials: Réinitialiser les informations d'identification de l'utilisateur
+    reset-credentials: Réinitialiser les informations d'identification
+    profile-changes-saved: Modifications du profil enregistrées.
+    change-password: Changer le mot de passe
+    confirm-and-change: Confirmer et changer le mot de passe
+    validate-current-password: Valider le mot de passe actuel
+    validate-password: Valider le mot de passe
+    validate-current-password-before-change: Vous devez valider votre mot de passe actuel avant qu'il puisse être modifié.
+    password-changes-saved: Mot de passe changé avec succès.
+    failed-to-change-password: Échec du changement de mot de passe.
+
+    your-organization: Vos organisations
+    create-organization: Créer une organisation
+    member-since: Membre depuis
+    2fa-settings: Paramètres 2FA
+    save-2fa-settings: Enregistrer les paramètres 2FA
+    enable-2fa: Activer l'authentification à deux facteurs
+    require-2fa-setup: Exiger la configuration de la 2FA par les utilisateurs
+    2fa-settings-saved: Paramètres 2FA enregistrés avec succès.
+    2fa-settings-saved-by-admin: Paramètres 2FA enregistrés avec succès pour l'administrateur.
+    2fa-settings-saved-for-organization: Paramètres 2FA enregistrés avec succès pour l'organisation.
+    view-all-notifications: Voir toutes les notifications
+    no-unread-notifications: Aucune notification non lue
+    unread-notifications: Notification non lue
+
+
+
   common:
     active-manpower: Main-d'œuvre Active
     address: Adresse

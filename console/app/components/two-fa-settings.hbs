@@ -1,5 +1,5 @@
 <div class="flex items-center space-x-4">
-    <label class="text-base font-medium">Enable Two-Factor Authentication</label>
+    <label class="text-base font-medium">{{t "fleet-ops.user-management.enable-2fa"}}</label>
     <Toggle @isToggled={{this.isTwoFaEnabled}} @onToggle={{this.onTwoFaToggled}} />
 </div>
 
@@ -7,7 +7,7 @@
     <div class="mt-6">
         {{#if this.showEnforceOption}}
             <div class="flex items-center space-x-4 mb-6">
-                <label class="text-base font-medium">Require Users to Set-Up 2FA</label>
+                <label class="text-base font-medium">{{t "fleet-ops.user-management.require-2fa-setup"}}</label>
                 <Toggle @isToggled={{this.isTwoFaEnforced}} @onToggle={{this.onTwoFaEnforcedToggled}} />
             </div>
         {{/if}}

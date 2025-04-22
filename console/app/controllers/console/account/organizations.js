@@ -163,7 +163,7 @@ export default class ConsoleAccountOrganizationsController extends Controller {
         const country = this.currentUser.country;
 
         this.modalsManager.show('modals/edit-organization', {
-            title: 'Create Organization',
+            title: this.intl.t('fleet-ops.user-management.create-organization'),
             acceptButtonText: this.intl.t('common.confirm'),
             acceptButtonIcon: 'check',
             acceptButtonIconPrefix: 'fas',

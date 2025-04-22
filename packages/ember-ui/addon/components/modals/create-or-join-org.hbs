@@ -32,14 +32,14 @@
         </InputGroup>
 
         {{#if (eq @options.action "join")}}
-            <InputGroup @name="Organization ID" @value={{@options.next}} @helpText="Enter the ID of the organization you wish to join." />
+            <InputGroup @name={{t "console.settings.index.organization-id"}} @value={{@options.next}} @helpText="Enter the ID of the organization you wish to join." />
         {{else}}
-            <InputGroup @name="Organization name" @value={{@options.name}} />
-            <InputGroup @name="Organization description" @value={{@options.description}} />
-            <InputGroup @name="Organization phone number">
+            <InputGroup @name={{t "console.settings.index.organization-name"}} @value={{@options.name}} />
+            <InputGroup @name={{t "console.settings.index.organization-description"}} @value={{@options.description}} />
+            <InputGroup @name{{t "console.settings.index.organization-phone"}}>
                 <PhoneInput @value={{@options.phone}} @onInput={{fn (mut @options.phone)}} class="form-input w-full" />
             </InputGroup>
-            <InputGroup @name="Organization currency">
+            <InputGroup @name={{t "console.settings.index.organization-currency"}}>
                 <CurrencySelect @value={{@options.currency}} @onSelect={{fn (mut @options.currency)}} @triggerClass="w-full form-select" />
             </InputGroup>
         {{/if}}
