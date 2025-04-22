@@ -88,6 +88,7 @@ export default class EditOrderRoutePanelComponent extends Component {
         contextComponentCallback(this, 'onLoad', ...arguments);
     }
 
+   
     /**
      * Task to save order route.
      *
@@ -96,7 +97,30 @@ export default class EditOrderRoutePanelComponent extends Component {
      */
     @task *save() {
         const { payload } = this.order;
-
+       
+        if (payload.isMultiDrop && payload.waypoints && payload.waypoints.length > 0) {
+            let hasConsecutiveDuplicates = false;
+            
+            // Check for consecutive duplicate waypoints
+            for (let i = 1; i < payload.waypoints.length; i++) {
+                const currentWaypoint = payload.waypoints[i];
+                const previousWaypoint = payload.waypoints[i-1];
+                
+                // Check if current and previous have the same public_id
+                if (currentWaypoint.public_id && 
+                    previousWaypoint.public_id && 
+                    currentWaypoint.public_id === previousWaypoint.public_id) {
+                    hasConsecutiveDuplicates = true;
+                    break;
+                }
+            }
+            
+            if (hasConsecutiveDuplicates) {
+                this.notifications.error(this.intl.t('common.duplicate-waypoint-error'));
+                return;
+            }
+        }
+        
         try {
             this.order = yield this.fetch.patch(
                 `orders/route/${this.order.id}`,
@@ -111,13 +135,36 @@ export default class EditOrderRoutePanelComponent extends Component {
                     normalizeModelType: 'order',
                 }
             );
+           // Clean up waypoints after save
+        if (this.order.payload && this.order.payload.waypoints) {
+            const waypoints = this.order.payload.waypoints;
+            const waypointsToRemove = [];
+            
+            // First identify which waypoints need to be removed
+            waypoints.forEach(waypoint => {
+                if (!waypoint.id) {
+                    waypointsToRemove.push(waypoint);
+                }
+            });
+            console.log("waypointsToRemove",waypointsToRemove);
+            // Then remove them from the array
+            if (waypointsToRemove.length > 0) {
+                console.log("Removing", waypointsToRemove.length, "invalid waypoints");
+                waypointsToRemove.forEach(waypoint => {
+                    waypoints.removeObject(waypoint);
+                });
+            }
+            
+        this.notifications.success(this.intl.t('fleet-ops.operations.orders.index.view.update-success', { orderId: this.order.public_id }));
+        contextComponentCallback(this, 'onAfterSave', this.order);
+        }
+        
+        
         } catch (error) {
             this.notifications.serverError(error);
             return;
         }
-
-        this.notifications.success(this.intl.t('fleet-ops.operations.orders.index.view.update-success', { orderId: this.order.public_id }));
-        contextComponentCallback(this, 'onAfterSave', this.order);
+      
     }
 
     _serializeWaypoints(waypoints = []) {
@@ -240,26 +287,51 @@ export default class EditOrderRoutePanelComponent extends Component {
         const location = new Point(0, 0);
         const place = this.store.createRecord('place', { location });
         const waypoint = this.store.createRecord('waypoint', { place, location });
-
         this.order.payload.waypoints.pushObject(waypoint);
         // fire callback
         contextComponentCallback(this, 'onWaypointAdded', waypoint);
+        
     }
 
     @action setWaypointPlace(index, place) {
         if (isArray(this.order.payload.waypoints) && !this.order.payload.waypoints.objectAt(index)) {
             return;
         }
-
+    
         const json = place.serialize();
+        const publicId = place.id;
+        
+        // Check for consecutive duplicates
+        const previousIndex = index - 1;
+        const nextIndex = index + 1;
+        
+        // Check if previous waypoint has the same public_id
+        if (previousIndex >= 0) {
+            const previousWaypoint = this.order.payload.waypoints.objectAt(previousIndex);
+            if (previousWaypoint && previousWaypoint.public_id === publicId) {
+                this.notifications.error(this.intl.t('common.consecutive-duplicate-waypoint-error'));
+                return;
+            }
+        }
+        
+        // Check if next waypoint has the same public_id
+        if (nextIndex < this.order.payload.waypoints.length) {
+            const nextWaypoint = this.order.payload.waypoints.objectAt(nextIndex);
+            if (nextWaypoint && nextWaypoint.public_id === publicId) {
+                this.notifications.error(this.intl.t('common.consecutive-duplicate-waypoint-error'));
+                return;
+            }
+        }
+        
         this.order.payload.waypoints.objectAt(index).setProperties({
             uuid: place.id,
             place_uuid: place.id,
+            public_id: place.id,
             location: place.location,
             place,
             ...json,
         });
-
+    
         // fire callback waypoint place selected
         contextComponentCallback(this, 'onWaypointPlaceSelected', place);
         contextComponentCallback(this, 'onRouteChanged');
