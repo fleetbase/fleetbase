@@ -107,6 +107,14 @@ common:
   import-warn: Không có bảng tính nào được tải lên để xử lý nhập khẩu.
   new-order: Đơn hàng mới
   submit: Gửi đi
+  new-field: Trường mới
+  to: đến
+  confirm-action:
+    single: Bạn có chắc chắn muốn {verb} bản ghi này không?
+    multiple: Bạn có chắc chắn muốn {verb} các bản ghi này không?
+  selection-info:
+    single: Bạn đã chọn 1 bản ghi để {verb}.
+    multiple: Bạn đã chọn {count} bản ghi để {verb}.
 validation:
   required:
     payment_method: Phương thức thanh toán là bắt buộc

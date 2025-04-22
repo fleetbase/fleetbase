@@ -109,6 +109,14 @@ common:
   import-warn: No spreadsheets uploaded for import to process.
   new-order: New Order
   submit: Submit
+  new-field: New Field
+  to: to
+  confirm-action:
+    single: Are you sure you want to {verb} this record?
+    multiple: Are you sure you want to {verb} these records?
+  selection-info:
+    single: You have selected {count} record for {verb}
+    multiple: You have selected {count} for {verb}
 validation:
   required:
     payment_method: Payment method is required

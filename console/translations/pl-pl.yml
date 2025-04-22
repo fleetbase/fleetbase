@@ -109,6 +109,14 @@ common:
   import-warn: Nie przesłano żadnych arkuszy kalkulacyjnych do przetworzenia importu.
   new-order: Nowe zamówienie
   submit: Zatwierdź
+  new-field: Nowe pole
+  to: do
+  confirm-action:
+    single: Czy na pewno chcesz {verb} ten rekord?
+    multiple: Czy na pewno chcesz {verb} te rekordy?
+  selection-info:
+    single: Wybrałeś 1 rekord do {verb}.
+    multiple: Wybrałeś {count} rekordów do {verb}.
 validation:
   required:
     payment_method: Wymagana jest metoda płatności

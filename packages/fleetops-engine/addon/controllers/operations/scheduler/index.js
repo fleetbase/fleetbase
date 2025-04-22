@@ -272,7 +272,7 @@ _applyInitialFilters() {
                 
                 // Set up events from the calendar orders
                 this.events = scheduledCalendarOrders.map(order => 
-                    createFullCalendarEventFromOrder(order)
+                    createFullCalendarEventFromOrder(order,this.intl)
                 );
                 
                 this.updateCalendar();
@@ -647,7 +647,7 @@ async _updateCalendarAsync() {
     
     // Build order map for O(1) lookups with filtered orders only
     filteredOrders.forEach(order => {
-        const eventId = createFullCalendarEventFromOrder(order).id;
+        const eventId = createFullCalendarEventFromOrder(order,this.intl).id;
         orderMap.set(eventId, order);
     });
     
@@ -723,12 +723,12 @@ async _updateCalendarAsync() {
         const chunk = filteredOrders.slice(i, i + CHUNK_SIZE);
         
         chunk.forEach(order => {
-            const eventId = createFullCalendarEventFromOrder(order).id;
+            const eventId = createFullCalendarEventFromOrder(order,this.intl).id;
             
             if (!existingEventIds.has(eventId)) {
                 // Need to create a new event
                 eventsToAdd.push({
-                    eventData: createFullCalendarEventFromOrder(order),
+                    eventData: createFullCalendarEventFromOrder(order,this.intl),
                     order
                 });
             }
@@ -760,7 +760,7 @@ async _updateCalendarAsync() {
             if (hasDriverAssigned) {
                 // Make visible with title
                 event.setProp('title', createOrderEventTitle(order));
-                const eventData = createFullCalendarEventFromOrder(order);
+                const eventData = createFullCalendarEventFromOrder(order,this.intl);
                 event.setProp('backgroundColor', eventData.backgroundColor);
                 event.setProp('borderColor', eventData.borderColor || eventData.backgroundColor);
                 event.setProp('textColor', eventData.textColor || '#FFFFFF');
@@ -777,7 +777,7 @@ async _updateCalendarAsync() {
             }
             
             // Update dates
-            const eventData = createFullCalendarEventFromOrder(order);
+            const eventData = createFullCalendarEventFromOrder(order,this.intl);
             event.setStart(eventData.start);
             event.setEnd(eventData.end);
         });
@@ -971,14 +971,14 @@ async _updateCalendarAsync() {
                             this.removeEvent(event);
                         } else {
                             // Otherwise, update the existing event
-                            const updatedEvent = createFullCalendarEventFromOrder(order);
+                            const updatedEvent = createFullCalendarEventFromOrder(order, this.intl);
                             event.setProp('title', updatedEvent.title);
                             event.setStart(updatedEvent.start);
                             event.setEnd(updatedEvent.end);
                         }
                     } else if (hadDriver) {
                         // Create new event if there wasn't one but now there's a driver
-                        event = this.calendar.addEvent(createFullCalendarEventFromOrder(order));
+                        event = this.calendar.addEvent(createFullCalendarEventFromOrder(order, this.intl));
                     }
     
                     if (order.scheduled_at) {

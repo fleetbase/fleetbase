@@ -107,6 +107,14 @@ common:
   import-warn: Nessun foglio di calcolo caricato per l'importazione.
   new-order: Nuovo ordine
   submit: Invia
+  new-field: Nuovo campo
+  to: a
+  confirm-action:
+    single: Sei sicuro di voler {verb} questo record?
+    multiple: Sei sicuro di voler {verb} questi record?
+  selection-info:
+    single: Hai selezionato 1 record per {verb}.
+    multiple: Hai selezionato {count} record per {verb}.
 validation:
   required:
     payment_method: Il metodo di pagamento è obbligatorio
@@ -123,7 +131,7 @@ statuses:
     processed: "Elaborato"
     archived: "Archiviato"
     cancelled: "Annullato"
-    pending: "In attesa"
+    pending: In attesa
     shift_ended: Turno terminato
     on_break: In pausa
     created: Creato

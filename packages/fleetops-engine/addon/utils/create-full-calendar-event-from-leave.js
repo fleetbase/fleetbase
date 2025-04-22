@@ -4,7 +4,6 @@ import { inject as service } from '@ember/service';
 export default function createFullCalendarEventFromLeave(unavailability, intl) {
    
     if (!unavailability.start_date || !unavailability.end_date) {
-        console.error('Missing start_date or end_date:', unavailability);
         return null;
     }
 

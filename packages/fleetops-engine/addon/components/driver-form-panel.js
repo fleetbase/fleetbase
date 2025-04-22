@@ -28,7 +28,10 @@ export default class DriverFormPanelComponent extends Component {
      * Status options for drivers.
      * @type {Array}
      */
-    @tracked driverStatusOptions = ['active', 'pending'];
+    @tracked driverStatusOptions = [
+        { value: 'active', translationKey: 'statuses.active' },
+        { value: 'pending', translationKey: 'statuses.pending' }
+      ];
 
     /**
      * The coordinates input component instance.
@@ -232,5 +235,19 @@ export default class DriverFormPanelComponent extends Component {
     @action onCoordinatesChanged({ latitude, longitude }) {
         const location = new Point(longitude, latitude);
         this.driver.setProperties({ location });
+    }
+    /**
+     * The selected status option.
+     */
+    get selectedStatus() {
+        return this.driverStatusOptions.find(status => status.value === this.driver.status);
+    }
+    /**
+     * 
+     * @param {*} selectedStatus 
+     */
+    @action
+    updateStatus(selectedStatus) {
+        this.driver.status = selectedStatus.value;
     }
 }

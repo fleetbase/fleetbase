@@ -347,7 +347,7 @@ export default class OperationsSchedulerIndexRoute extends Route {
         // Create events efficiently
         const events = calendarOrders
             .filter(order => !isNone(order.driver_assigned_uuid))
-            .map(order => createFullCalendarEventFromOrder(order));
+            .map(order => createFullCalendarEventFromOrder(order,this.intl));
         
         // Add leave events if available
         if (Array.isArray(driverUnavailability?.data) && driverUnavailability.data.length > 0) {
