@@ -6,7 +6,12 @@
     @placeholder={{this.placeholder}}
     as |selectable|
 >
-    {{if (get selectable "label") selectable.label selectable}} 
+    {{!-- {{if (get selectable "label") selectable.label selectable}}  --}}
+    {{#if (get selectable "label")}}
+        {{selectable.label}}
+    {{else}}
+        {{t (concat "statuses." (this.formatKey selectable)) default=selectable}}
+    {{/if}}
 </PowerSelect>
 {{!-- <select
     ...attributes

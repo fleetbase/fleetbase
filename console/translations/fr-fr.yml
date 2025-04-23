@@ -155,6 +155,73 @@ statuses:
     requires-update: Nécessite une mise à jour  
     order_canceled: Commande annulée
     all-statuses: Tous les statuts 
+
+    resource-allocation: Allocation des ressources
+    compliance: Conformité
+    cost-overruns: Dépassements de coûts
+    communication: Communication
+    vendor-management-issues: Problèmes de gestion des fournisseurs
+
+    operational: Opérationnel
+    software-technical: Technique logicielle
+    customer: Client
+    security: Sécurité
+    environmental-sustainability: Durabilité environnementale
+    vehicle: Véhicule
+    driver: Conducteur
+    route: Itinéraire
+    payload-cargo: Fret de charge utile
+    mechanical-problems: Problèmes mécaniques
+    cosmetic-damages: Dommages cosmétiques
+    tire-issues: Problèmes de pneus
+    electronics-and-instruments: Électronique et instruments
+    maintanence-alerts: Alertes de maintenance
+    fuel-efficiency-issues: Problèmes d'efficacité énergétique
+    behaviour-concerns: Problèmes de comportement
+    documentation: Documentation
+    time-management: Gestion du temps
+    training-needs: Besoins en formation
+    health-and-safety-violations: Violations de la santé et de la sécurité
+    inefficient-routes: Itinéraires inefficaces
+    safety-concerns: Problèmes de sécurité
+    blocked-routes: Itinéraires bloqués
+    environmental-considerations: Considérations environnementales
+    unfavorable-weather-conditions: Conditions météorologiques défavorables
+    damaged-goods: Marchandises endommagées
+    misplaced-goods: Marchandises égarées
+    documentation-issues: Problèmes de documentation
+    temperature-sensitive-goods: Marchandises sensibles à la température
+    incorrect-cargo-loading: Chargement incorrect des marchandises
+    bugs: Bugs
+    ui/ux-concerns: Problèmes d'UI/UX
+    integration-failures: Échecs d'intégration
+    performance: Performance
+    feature-requests: Demandes de fonctionnalités
+    security-vulnerabilities: Vulnérabilités de sécurité
+    billing-discrepancies: Disparités de facturation
+    service-quality: Qualité du service
+    communication-breakdown: Panne de communication
+    feedback-and-suggestions: Commentaires et suggestions
+    order-errors: Erreurs de commande
+    unauthorized-access: Accès non autorisé
+    data-concerns: Problèmes de données
+    physical-security: Sécurité physique
+    data-integrity-issues: Problèmes d'intégrité des données
+    fuel-consumption: Consommation de carburant
+    carbon-footprint: Empreinte carbone
+    waste-management: Gestion des déchets
+    green-initiatives-opportunities: Opportunités d'initiatives écologiques
+    behavior-concerns: Préoccupations comportementales
+    disabled: Désactivé
+    decommissioned: Retiré de service
+    iam: Développeurs
+    developers: Développeurs
+    fleet-ops: Opérations de flotte
+    registry-bridge: Pont de registre
+    storefront: Vitrine
+
+
+
 fuelReportTypes:
     Fuel: "Carburant"
     Parking: "Stationnement"
@@ -490,6 +557,10 @@ fleet-ops:
     choose-authentication-method: Choisissez une méthode d'authentification
     you-will-enter-code: En plus de votre nom d'utilisateur et de votre mot de passe, vous devrez entrer un code (livré par application ou SMS) pour vous connecter à votre compte.
     loading-2fa-config: Chargement de la configuration 2FA...
+    select-country: Sélectionner le pays
+    upload: Télécharger
+    uploading: Téléchargement en cours...
+
     twofa:
       sms:
         name: "SMS"

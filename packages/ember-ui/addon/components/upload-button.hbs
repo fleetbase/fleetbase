@@ -13,14 +13,14 @@
             <Spinner class={{unless @hideButtonText "mr-2"}} />
             {{#unless @hideButtonText}}
                 <span>
-                    Uploading...
+                    {{t "fleet-ops.user-management.uploading" }}
                 </span>
             {{/unless}}
         {{else}}
             <FaIcon @icon={{or @icon "image"}} class="{{@iconClass}} {{unless @hideButtonText 'mr-2'}}" />
             {{#unless @hideButtonText}}
                 <span>
-                    {{or @buttonText "Upload"}}
+                    {{or @buttonText (t "fleet-ops.user-management.upload" default="Upload")}}
                 </span>
             {{/unless}}
         {{/if}}

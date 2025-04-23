@@ -14,6 +14,13 @@ export default class SelectComponent extends Component {
         this.disabled = this.args.disabled ?? false;
     }
 
+    formatKey(value) {
+        if (typeof value === 'string') {
+          return value.replace(/\s+/g, '-').toLowerCase();
+        }
+        return value;
+      }
+
     @action changed([value, placeholder]) {
         this.value = value;
         this.placeholder = placeholder;

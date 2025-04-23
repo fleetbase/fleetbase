@@ -157,6 +157,73 @@ statuses:
   requires-update: Wymaga aktualizacji  
   order_canceled: Zamówienie anulowane
   all-statuses: Wszystkie statusy
+
+  resource-allocation: Alokacja zasobów
+  compliance: Zgodność
+  cost-overruns: Przekroczenia kosztów
+  communication: Komunikacja
+  vendor-management-issues: Problemy z zarządzaniem dostawcami
+
+  operational: Operacyjne
+  software-technical: Techniczne oprogramowanie
+  customer: Klient
+  security: Bezpieczeństwo
+  environmental-sustainability: Zrównoważony rozwój środowiska
+  vehicle: Pojazd
+  driver: Kierowca
+  route: Trasa
+  payload-cargo: Ładunek użyteczny
+  mechanical-problems: Problemy mechaniczne
+  cosmetic-damages: Uszkodzenia kosmetyczne
+  tire-issues: Problemy z oponami
+  electronics-and-instruments: Elektronika i instrumenty
+  maintanence-alerts: Powiadomienia o konserwacji
+  fuel-efficiency-issues: Problemy z efektywnością paliwową
+  behaviour-concerns: Obawy dotyczące zachowania
+  documentation: Dokumentacja
+  time-management: Zarządzanie czasem
+  training-needs: Potrzeby szkoleniowe
+  health-and-safety-violations: Naruszenia zdrowia i bezpieczeństwa
+  inefficient-routes: Niewydajne trasy
+  safety-concerns: Obawy dotyczące bezpieczeństwa
+  blocked-routes: Zablokowane trasy
+  environmental-considerations: Rozważania środowiskowe
+  unfavorable-weather-conditions: Niekorzystne warunki pogodowe
+  damaged-goods: Uszkodzone towary
+  misplaced-goods: Zgubione towary
+  documentation-issues: Problemy z dokumentacją
+  temperature-sensitive-goods: Towary wrażliwe na temperaturę
+  incorrect-cargo-loading: Nieprawidłowe ładowanie ładunku
+  bugs: Błędy
+  ui/ux-concerns: Problemy z UI/UX
+  integration-failures: Niepowodzenia integracji
+  performance: Wydajność
+  feature-requests: Prośby o funkcje
+  security-vulnerabilities: Luka w zabezpieczeniach
+  billing-discrepancies: Rozbieżności w fakturowaniu
+  service-quality: Jakość usługi
+  communication-breakdown: Zakłócenie komunikacji
+  feedback-and-suggestions: Opinie i sugestie
+  order-errors: Błędy w zamówieniu
+  unauthorized-access: Nieautoryzowany dostęp
+  data-concerns: Problemy z danymi
+  physical-security: Bezpieczeństwo fizyczne
+  data-integrity-issues: Problemy z integralnością danych
+  fuel-consumption: Zużycie paliwa
+  carbon-footprint: Ślad węglowy
+  waste-management: Zarządzanie odpadami
+  green-initiatives-opportunities: Możliwości inicjatyw ekologicznych
+  behavior-concerns: Obawy dotyczące zachowania
+  disabled: Wyłączony
+  decommissioned: Wycofany z użytku
+  iam: Programiści
+  developers: Programiści
+  fleet-ops: Operacje floty
+  registry-bridge: Most rejestru
+  storefront: Witryna
+
+
+
 fuelReportTypes:
   Fuel: Paliwo
   Parking: Parking
@@ -493,6 +560,10 @@ fleet-ops:
     choose-authentication-method: Wybierz metodę uwierzytelniania
     you-will-enter-code: Oprócz nazwy użytkownika i hasła, będziesz musiał wprowadzić kod (wysłany przez aplikację lub SMS), aby zalogować się na swoje konto.
     loading-2fa-config: Ładowanie konfiguracji 2FA...
+    select-country: Wybierz kraj
+    upload: Prześlij
+    uploading: Wysyłanie...
+
     twofa:
       sms:
         name: "SMS"

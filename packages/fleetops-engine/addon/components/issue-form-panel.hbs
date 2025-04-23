@@ -125,7 +125,8 @@
                             @disabled={{unauthorized}}
                             as |type|
                         >
-                            {{smart-humanize type}}
+                            {{!-- {{smart-humanize type}} --}}
+                            {{t (concat "statuses." (this.formatKey type))}}
                         </PowerSelect>
                     </div>
                 </InputGroup>
@@ -141,7 +142,9 @@
                             @disabled={{or unauthorized (not this.issueCategories)}}
                             as |category|
                         >
-                            {{smart-humanize category}}
+                            {{!-- {{smart-humanize category}} --}}
+                            {{t (concat "statuses." (this.formatKey category))}}
+                            
                         </PowerSelect>
                     </div>
                 </InputGroup>
