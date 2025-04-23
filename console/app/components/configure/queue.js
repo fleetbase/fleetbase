@@ -67,7 +67,7 @@ export default class ConfigureQueueComponent extends Component {
                 },
             })
             .then(() => {
-                this.notifications.success('Queue configuration saved.');
+                this.notifications.success(this.intl.t('fleet-ops.user-management.service.queue.queue-success'));
             })
             .finally(() => {
                 this.isLoading = false;

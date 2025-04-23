@@ -629,7 +629,7 @@ export default class CustomerCreateOrderFormComponent extends Component {
     @action editEntity(entity) {
         this.modalsManager.show('modals/entity-form', {
             title: this.intl.t('fleet-ops.operations.orders.index.new.edit-item'),
-            acceptButtonText: 'Save Changes',
+            acceptButtonText: this.intl.t('common.save-changes'),
             entity,
             uploadNewPhoto: (file) => {
                 const fileUrl = URL.createObjectURL(file.file);

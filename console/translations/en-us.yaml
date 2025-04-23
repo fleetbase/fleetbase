@@ -75,6 +75,12 @@ common:
   unauthorized-access-message: Unauthorized Access, you must request permissions to access.
   permissions-required-for-changes: You do not have the required permissions to make changes.
   push-notifications: Push Notifications
+  latitude: Latitude
+  longitude: Longitude
+  upload-file: Upload File
+  upload: Upload
+  select-country: Select country...
+  enter-unit: "Enter {unit}"
   role: Role
   report-type: Report Type
   payment-method: Payment Method
@@ -101,6 +107,29 @@ common:
   results-page: results
   next-page: Next
   previous-page: Previous
+  create-user-success: New user created successfully!
+  select-from-map: Select from map
+  online: Online
+  offline: Offline
+  start-import: Start Import
+  import-warn: No spreadsheets uploaded for import to process.
+  new-order: New Order
+  submit: Submit
+  new-field: New Field
+  to: to
+  confirm-action:
+    single: Are you sure you want to {verb} this record?
+    multiple: Are you sure you want to {verb} these records?
+  selection-info:
+    single: You have selected {count} record for {verb}
+    multiple: You have selected {count} for {verb}
+  tracking-details:
+    create-order: New order created.
+    accept-order: Order Accepted by the driver.
+    dispacth-order: Order has been dispatched.
+    update-order: Order status updated by the driver
+    start-order: Order has been started
+  duplicate-waypoint-error: Duplicate waypoint detected. Please use unique locations for each waypoint.
 validation:
   required:
     payment_method: Payment method is required
@@ -141,6 +170,78 @@ statuses:
     requires-update: Requires Update
     order_canceled: Order Canceled
     all-statuses: All Statuses
+
+    
+    resource-allocation : Resource Allocation
+    compliance : Compliance
+    cost-overruns : Cost Overruns
+    communication : Communication
+    vendor-management-issues : Vendor Management Issues
+
+    operational : Operational
+    software-technical : Software Technical
+    customer : Customer
+    security : Security
+    environmental-sustainability : Environmental Sustainability
+    vehicle : Vehicle
+    driver : Driver
+    route : Route
+    payload-cargo : Payload Cargo
+    mechanical-problems : Mechanical Problems
+    cosmetic-damages : Cosmetic Damages
+    tire-issues : Tire Issues
+    electronics-and-instruments : Electronics and Instruments
+    maintanence-alerts : Maintanence Alerts
+    fuel-efficiency-issues : Fuel Efficiency Issues
+    behaviour-concerns : Behaviour Concerns
+    documentation : Documentation
+    time-management : Time management
+    
+    training-needs : Training Needs
+    health-and-safety-violations : Health and Safety Violations
+    inefficient-routes : Inefficient Routes
+    safety-concerns : Safety Concerns
+    blocked-routes : Blocked Routes
+    environmental-considerations : Environmental Considerations
+    unfavorable-weather-conditions : Unfavorable Weather Conditions
+    damaged-goods : Damaged Goods
+    misplaced-goods : Misplaced Goods
+    documentation-issues : Documentation Issues
+    temperature-sensitive-goods : Temperature-Sensitive Goods
+    incorrect-cargo-loading : Incorrect Cargo Loading
+    bugs : Bugs
+    ui/ux-concerns : UI/UX Concerns
+    integration-failures : Integration Failures
+    performance : Performance
+    feature-requests : Feature Requests
+    security-vulnerabilities : Security Vulnerabilities
+    billing-discrepancies : Billing Discrepancies
+    service-quality : Service Quality
+    communication-breakdown : Communication Breakdown
+    feedback-and-suggestions : Feedback and Suggestions
+    order-errors : Order Errors
+    unauthorized-access : Unauthorized Access
+    data-concerns : Data Concerns
+    physical-security : Physical Security
+    data-integrity-issues : Data Integrity Issues
+    fuel-consumption : Fuel Consumption
+    carbon-footprint : Carbon Footprint
+    waste-management : Waste Management
+    green-initiatives-opportunities : Green Initiatives Opportunities
+    behavior-concerns : Behavior Concerns
+    disabled : Disabled
+    decommissioned : Decommissioned
+    iam : developers
+    developers : Developers
+    fleet-ops : Fleet Ops
+    registry-bridge : Registry Bridge
+    storefront : Store Front
+
+    order_created: Created
+    order_dispatched: Dispatched
+    order_accepted: Accepted
+    order_started: Started
+
 fuelReportTypes:
   Fuel: Fuel
   Parking: Parking
@@ -212,6 +313,7 @@ services:
   dashboard-service:
     create-dashboard-success-notification: New dashboard `{dashboardName}` created succesfully.
     delete-dashboard-success-notification: Dashboard `{dashboardName}` was deleted.
+  
 auth:
   verification:
     header-title: Account Verification
@@ -441,6 +543,147 @@ fleet-ops:
   fleet-ops: FleetYes Flow
   iam: User Access Management
   extension-name: Fleet-Ops
+  user-management:
+    profiles: Profiles
+    networks: Networks
+    role: Role
+    access-control: Access Control
+    user-access-management: User Access Management
+    you-are-about-to-reset-the-password-for : You are about to reset the password for
+    please-enter-new-password : Please enter the new password and confirm it below. You have the option to send the new credentials to the user via email by selecting the checkbox.
+    send-password-credentials : Send password credentials to user
+    reset-user-credentials : Reset User Credentials
+    reset-credentials : Reset Credentials
+    profile-changes-saved : Profile changes saved.
+    change-password : Change Password
+    confirm-and-change : Confirm & Change Password
+    validate-current-password : Validate Current Password
+    validate-password : Validate Password
+    validate-current-password-before-change : You must validate your current password before it can be changed.
+    password-changes-saved : Password change successfully.
+    failed-to-change-password : Failed to change password.
+    your-organization : Your Organizations
+    create-organization : Create Organization
+    member-since : Member Since
+    2fa-settings : 2FA Settings
+    save-2fa-settings : Save 2FA Settings
+    enable-2fa : Enable Two-Factor Authentication
+    require-2fa-setup : Require Users to Set-Up 2FA
+    2fa-settings-saved : 2FA Settings saved successfully.
+    2fa-settings-saved-by-admin : 2FA Settings saved for admin successfully.
+    2fa-settings-saved-for-organization : 2FA Settings saved for organization successfully.
+    view-all-notifications : View all notifications
+    no-unread-notifications : No unread notifications
+    unread-notifications : Unread notification
+    choose-authentication-method : Choose an authentication method
+    you-will-enter-code : In addition to your username and password, you'll have to enter a code (delivered via app or SMS) to sign in to your account
+    loading-2fa-config : Loading 2FA Config...
+    select-country : Select Country
+    upload : Upload
+    uploading : Uploading...
+    twofa:
+      sms:
+        name: "SMS"
+        description: "Receive a unique code via SMS"
+      email:
+        name: "Email"
+        description: "Receive a unique code via Email"
+    service:
+      aws:
+        name : AWS
+        access-key : AWS Access Key
+        access-secret : AWS Access Secret
+        access-region : AWS Region
+      google-map:
+        name : Google Maps
+        api-key : Google Maps API Key
+        locale : Google Maps Locale
+      twilo:
+        name : Twilio
+        sid : Twilio SID
+        token : Twilio Token
+        from : Twilio From
+        test-sms : Send Test SMS Here
+        twilo-config : Test Twilio Config
+      sentry:
+        name : Sentry
+        sentry-dsn : Sentry DSN
+        test-sentry-config : Test Sentry Config
+      ip:
+        name : IP Info
+        key : IP Info API Key
+        save-changes : Save Changes
+      mail:
+        name : Mail
+        mailer : Mailer
+        default-mailer : Select the default mailer for FleetYes to use.
+        smtp-host : SMTP Host
+        smtp-port : SMTP Port
+        smtp-encryption : SMTP Encryption
+        enable-tls : Enabled TLS Encryption
+        smtp-username : SMTP Username
+        smtp-password : SMTP Password
+        smtp-timeout : SMTP Timeout
+        smtp-auth-mode : SMTP Auth Mode
+        mailgun-domain : Mailgun Domain
+        mailgun-endpoint : Mailgun Endpoint
+        mailgun-secret : Mailgun Secret
+        postmark-token : Postmark Token
+        sendgrid-api-key : Sendgrid API Key
+        resend-api-key : Resend API Key
+        from-address : From Address 
+        help-text-from-address : Input the email address for FleetYes to send emails from.
+        from-name : From Name
+        help-text-from-name : Input the name for FleetYes to send emails from.
+        test-config : Test Config
+        select-mailer : Select mailer
+        mail-success : Mail configuration saved.
+      file-system:
+        default-file-system : Select the default filesystem driver for FleetYes to use.  
+        select-filesystem-driver : Select filesystem driver
+        s3-bucket : S3 Bucket
+        s3-url : S3 URL
+        s3-endpoint : S3 Endpoint
+        warning-gcs: Warning! GCS is already configured in the server environment. Changing values below may break this.
+        gcs-bucket : GCS Bucket
+        gcs-account-key : GCS Service Account Key File
+        upload-service-account : Upload Service Account JSON
+        filesystem-saved : Filesystem configuration saved.
+      queue:
+        default-queue-driver : Select the default queue driver for FleetYes to use.
+        select-queue-driver : Select queue driver
+        beanstalk-host : Beanstalk Host
+        beanstalk-queue : Beanstalk Queue
+        sqs-prefix : SQS Prefix
+        sqs-queue : SQS Queue
+        sqs-suffix : SQS Suffix
+        queue-success : Queue configuration saved.
+      socket:
+        sockt-cluster : Socket Cluster Connection
+        sockt-cluster-cannot-change : The SocketCluster configuration cannot be changed at this time.
+        awaiting-events : Awaiting events
+        test-socket : Test Socket Connection
+        socket-connected : Socket is connected
+        socket-subscribed : Socket subscribed to test channel
+        socket-error : Socket connection error!
+      apn:
+        apn-configuration : APN Configutation
+        apn-key-id : APN Key ID
+        apn-team-id : APN Team ID
+        apn-app-bundle-id : APN App Bundle ID
+        upload-p8 : Upload P8 Key File
+        apn-production : APN Production
+      firebase:
+        firebase-configuration : Firebase Configutation
+        test-push-notification : Test Push Notification
+        push-notification-title : Push Notification Title
+        push-notification-message : Push Notification Message
+        apn-device-token : APN Device Token
+        fcm-device-token : FCM Device Token
+        message : Message
+        title : Title
+        notification-success : Notification channel's configuration saved.
+
   common:
     active-manpower: Active Manpower
     address: Address 
@@ -550,6 +793,8 @@ fleet-ops:
     tracking-number: Tracking Number
     end_date_cannot_be_earlier: End Date cannot be earlier
     end_date_cannot_be_earlier_than_start_date: End Date cannot be earlier than the start date.
+    no_driver: No Driver
+    no_phone: No Phone
 
   component:
     activity-logic-builder:
@@ -978,6 +1223,14 @@ fleet-ops:
         button-text: or select spreadsheets to upload
         spreadsheets: spreadsheets
         upload-queue: Upload Queue
+        title: Import order(s) with spreadsheets
+        start-upload-button: Start Upload
+        uploading: Uploading...
+        processing: Processing...
+        type: Type
+        file-name: File Name
+        file-size: File Size
+        upload-date: Upload Date
       order-label:
         loading: Loading Label...
       order-new-activity:
@@ -1284,6 +1537,7 @@ fleet-ops:
       driver-status: Select driver status
       order-history: Order History
       select-user: Select User
+      create-user: Create new user
     driver-panel:
       user-account: User Account
       driver-details: Driver Details
@@ -1413,6 +1667,8 @@ fleet-ops:
       priority: Issue Priority
       select-priority: Select issue priority
       select-status: Select issue status
+      select-assignee : Select assignee
+      
     issue-panel:
       details:
         assigned: Assigned To
@@ -1726,6 +1982,7 @@ fleet-ops:
         assign-driver: Assign driver to fleet...
         delete-fleet: Delete fleet...
         delete-button: Delete Fleets
+        fleet-action: Fleet Actions
         edit:
           body: Unsaved changes to this fleet will be lost. Click continue to proceed.
         title: Fleets
@@ -1790,6 +2047,7 @@ fleet-ops:
           body: Unsaved changes to this place will be lost. Click continue to proceed.
         places-title: Places
         delete-places: Delete Places
+        place-action: Place Actions
     vehicles:
       index:
         view-vehicle: View vehicle details...
@@ -1852,6 +2110,10 @@ fleet-ops:
         delete-orders: Delete Orders
         dispatch-orders: Dispatch Orders
         estimated-end-date: Estimated End Date
+        select-driver: Select driver for order
+        select-vehicle: Select vehicle for order
+        select-pickup-location: Select pickup location
+        select-dropoff-location: Select dropoff location
         new:
           create-new-customer: Create new customer
           create-new-facilitator: Create new facilitator

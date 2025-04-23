@@ -47,7 +47,7 @@
             </div>
             <div class="flex-1 flex items-center pr-1">
                 <Layout::Header::Dropdown @items={{this.organizationMenuItems}} @onAction={{@onAction}} class="flex-shrink-0" @triggerClass="flex-shrink-0" as |dd|>
-                    <div class="next-org-button-trigger flex-shrink-0 {{if dd.isOpen 'is-open'}} ml-4">
+                    <div class="next-org-button-trigger flex-shrink-0 {{if dd.isOpen 'is-open'}} ml-0">
                         <div class="org-badge" style="font-size: 15px;">
                             {{first-char this.currentUser.companyName}}
                         </div>

@@ -9,8 +9,8 @@
     @isResizeble={{or this.isResizable @isResizable}}
     @width={{or this.width @width "570px"}}
 >
-    <Overlay::Header @title={{concat "Edit Order: " this.order.public_id " Route"}}>
-        <Button @type="primary" @icon="check" @text="Save" @helpText="Save order route changes" @onClick={{perform this.save}} @isLoading={{this.save.isRunning}} @wrapperClass="mr-2" />
+    <Overlay::Header @title={{t "fleet-ops.operations.orders.index.new.route"}}>
+        <Button @type="primary" @icon="check" @text={{t "common.save"}} @onClick={{perform this.save}} @isLoading={{this.save.isRunning}} @wrapperClass="mr-2" />
         <Button @type="default" @icon="times" @helpText={{t "fleet-ops.common.cancel"}} @onClick={{this.onPressCancel}} />
     </Overlay::Header>
 
@@ -35,11 +35,12 @@
             </div>
 
             {{#if this.order.payload.isMultiDrop}}
-                <DragSortList class="overflow-visible" @items={{this.order.payload.waypoints}} @dragEndAction={{this.sortWaypoints}} as |waypoint index|>
+                {{#each this.order.payload.waypoints as |waypoint index|}}
+                {{!-- <DragSortList class="overflow-visible" @items={{this.order.payload.waypoints}} @dragEndAction={{this.sortWaypoints}} as |waypoint index|> --}}
                     <div id={{concat "waypoint_" (add index 1)}} class="py-1 mb-3">
                         <div class="flex items-center justify-between">
                             <div class="flex items-center justify-between cursor-move">
-                                <FaIcon @icon="grip-lines" @prefix="fas" class="mr-3 text-gray-100" />
+                                {{!-- <FaIcon @icon="grip-lines" @prefix="fas" class="mr-3 text-gray-100" /> --}}
                                 <label class="waypoint-label dark:text-gray-100 text-sm">
                                     {{waypoint-label (add index 1)}}
                                 </label>
@@ -77,7 +78,8 @@
                             </div>
                         </div>
                     </div>
-                </DragSortList>
+                {{/each}}
+                {{!-- </DragSortList> --}}
             {{else}}
                 <div class="grid grid-cols-1 gap-3 text-xs dark:text-gray-100">
                     <div class="input-group">

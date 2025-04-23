@@ -84,7 +84,12 @@ export default class IssueFormPanelComponent extends Component {
         this.savePermission = issue && issue.isNew ? 'fleet-ops create issue' : 'fleet-ops update issue';
         applyContextComponentArguments(this);
     }
-
+    formatKey(value) {
+        if (typeof value === 'string') {
+          return value.replace(/\s+/g, '-').toLowerCase();
+        }
+        return value;
+      }
     /**
      * Sets the overlay context.
      *

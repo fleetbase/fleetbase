@@ -82,7 +82,11 @@
             {{#if @item.intl}}
                 <span>{{t @item.intl}}</span>
             {{else}}
-                <span>{{@item.text}}</span>
+                <span>
+                    {{!-- {{t (concat "common." (dasherize (extract-original-key @item.text))) }} --}}
+                    {{@item.text}}
+
+                </span>
             {{/if}}
         </a>
     </div>

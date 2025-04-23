@@ -53,6 +53,11 @@ export default class DriverPanelComponent extends Component {
     @service contextPanel;
 
     /**
+     * Service for managing translation
+     */
+    @service intl;
+
+    /**
      * The current active tab.
      *
      * @type {Object}
@@ -77,8 +82,14 @@ export default class DriverPanelComponent extends Component {
         const registeredTabs = this.universe.getMenuItemsFromRegistry('fleet-ops:component:driver-panel');
         // this.universe._createMenuItem('Tracking', null, { icon: 'satellite-dish', component: DriverPanelTrackingComponent }),
         const defaultTabs = [
-            this.universe._createMenuItem('Details', null, { icon: 'circle-info', component: DriverPanelDetailComponent }),
-            this.universe._createMenuItem('Orders', null, { icon: 'bars-progress', component: DriverPanelOrdersComponent }),
+            this.universe._createMenuItem(this.intl.t('fleet-ops.common.details'), null, {
+                icon: 'circle-info',
+                component: DriverPanelDetailComponent,
+            }),
+            this.universe._createMenuItem(this.intl.t('fleet-ops.common.orders'), null, {
+                icon: 'bars-progress',
+                component: DriverPanelOrdersComponent,
+            }),
         ];
         if (isArray(registeredTabs)) {
             return [...defaultTabs, ...registeredTabs];

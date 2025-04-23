@@ -645,9 +645,7 @@ saveOrder(order) {
   if (isPartiallyAssigned && !isDatesOnlyChange) {
     // Show error if only one of driver/vehicle is selected
     this.notifications.error(
-      this.intl.t('fleet-ops.component.order.schedule-card.required-error', {
-        defaultValue: 'Both driver and vehicle must be selected together.'
-      })
+      this.intl.t('fleet-ops.component.order.schedule-card.required-error')
     );
     
     // Option to automatically open the edit form again

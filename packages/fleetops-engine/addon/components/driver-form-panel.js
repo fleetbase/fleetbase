@@ -28,7 +28,10 @@ export default class DriverFormPanelComponent extends Component {
      * Status options for drivers.
      * @type {Array}
      */
-    @tracked driverStatusOptions = ['active', 'pending'];
+    @tracked driverStatusOptions = [
+        { value: 'active', translationKey: 'statuses.active' },
+        { value: 'pending', translationKey: 'statuses.pending' }
+      ];
 
     /**
      * The coordinates input component instance.
@@ -50,7 +53,7 @@ export default class DriverFormPanelComponent extends Component {
      */
     userAccountActionButtons = [
         {
-            text: 'Create new user',
+            text: this.intl.t('fleet-ops.component.driver-form-panel.create-user'),
             icon: 'user-plus',
             size: 'xs',
             permission: 'iam create user',
@@ -61,7 +64,7 @@ export default class DriverFormPanelComponent extends Component {
                 });
 
                 this.modalsManager.show('modals/user-form', {
-                    title: 'Create a new user',
+                    title: this.intl.t('fleet-ops.component.driver-form-panel.create-user'),
                     user,
                     formPermission: 'iam create user',
                     uploadNewPhoto: (file) => {
@@ -87,7 +90,7 @@ export default class DriverFormPanelComponent extends Component {
 
                         try {
                             await user.save();
-                            this.notifications.success('New user created successfully!');
+                            this.notifications.success(this.intl.t('common.create-user-success'));
                             modal.done();
                         } catch (error) {
                             this.notifications.serverError(error);
@@ -232,5 +235,19 @@ export default class DriverFormPanelComponent extends Component {
     @action onCoordinatesChanged({ latitude, longitude }) {
         const location = new Point(longitude, latitude);
         this.driver.setProperties({ location });
+    }
+    /**
+     * The selected status option.
+     */
+    get selectedStatus() {
+        return this.driverStatusOptions.find(status => status.value === this.driver.status);
+    }
+    /**
+     * 
+     * @param {*} selectedStatus 
+     */
+    @action
+    updateStatus(selectedStatus) {
+        this.driver.status = selectedStatus.value;
     }
 }

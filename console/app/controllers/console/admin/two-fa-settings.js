@@ -25,6 +25,7 @@ export default class ConsoleAdminTwoFaSettingsController extends Controller {
      * @type {notifications}
      */
     @service notifications;
+    @service intl;
 
     /**
      * System-wide two-factor authentication configuration.
@@ -160,7 +161,7 @@ export default class ConsoleAdminTwoFaSettingsController extends Controller {
         yield this.fetch
             .post('two-fa/config', { twoFaSettings })
             .then(() => {
-                this.notifications.success('2FA Settings saved for admin successfully.');
+                this.notifications.success(this.intl.t('fleet-ops.user-management.2fa-settings-saved-by-admin'));
             })
             .catch((error) => {
                 this.notifications.serverError(error);

@@ -74,6 +74,12 @@ common:
   unauthorized-access-message: Không có quyền truy cập, bạn phải yêu cầu quyền để truy cập.
   permissions-required-for-changes: Bạn không có quyền cần thiết để thực hiện thay đổi.
   push-notifications: Đẩy thông báo
+  latitude: Vĩ độ
+  longitude: Kinh độ
+  upload-file: Tải tệp lên
+  upload: Tải lên
+  select-country: Chọn quốc gia...
+  enter-unit: "Nhập {unit}"
   role: Vai trò
   report-type: Loại báo cáo
   payment-method: Phương thức thanh toán
@@ -99,6 +105,29 @@ common:
   results-page: kết quả
   next-page: Tiếp
   previous-page: Trước
+  create-user-success: Tạo người dùng mới thành công!
+  select-from-map: Chọn từ bản đồ
+  online: Trực tuyến
+  offline: Ngoại tuyến
+  start-import: Bắt đầu nhập
+  import-warn: Không có bảng tính nào được tải lên để xử lý nhập khẩu.
+  new-order: Đơn hàng mới
+  submit: Gửi đi
+  new-field: Trường mới
+  to: đến
+  confirm-action:
+    single: Bạn có chắc chắn muốn {verb} bản ghi này không?
+    multiple: Bạn có chắc chắn muốn {verb} các bản ghi này không?
+  selection-info:
+    single: Bạn đã chọn 1 bản ghi để {verb}.
+    multiple: Bạn đã chọn {count} bản ghi để {verb}.
+  tracking-details:
+    create-order: Đã tạo đơn hàng mới.
+    accept-order: Tài xế đã chấp nhận đơn hàng.
+    dispacth-order: Đơn hàng đã được gửi đi.
+    update-order: Tài xế đã cập nhật trạng thái đơn hàng.
+    start-order: Đơn hàng đã được bắt đầu.
+  duplicate-waypoint-error: Phát hiện điểm dừng trùng lặp. Vui lòng sử dụng vị trí duy nhất cho mỗi điểm dừng.
 validation:
   required:
     payment_method: Phương thức thanh toán là bắt buộc
@@ -138,6 +167,80 @@ statuses:
     backlogged: Tồn đọng  
     requires-update: Cần cập nhật  
     order_canceled: Đơn hàng đã hủy
+
+
+    resource-allocation: Phân bổ tài nguyên
+    compliance: Tuân thủ
+    cost-overruns: Vượt quá chi phí
+    communication: Giao tiếp
+    vendor-management-issues: Vấn đề quản lý nhà cung cấp
+
+    operational: Vận hành
+    software-technical: Kỹ thuật phần mềm
+    customer: Khách hàng
+    security: An ninh
+    environmental-sustainability: Bền vững môi trường
+    vehicle: Phương tiện
+    driver: Tài xế
+    route: Lộ trình
+    payload-cargo: Cái tải trọng
+    mechanical-problems: Vấn đề cơ khí
+    cosmetic-damages: Hư hỏng mỹ thuật
+    tire-issues: Vấn đề với lốp xe
+    electronics-and-instruments: Điện tử và thiết bị
+    maintanence-alerts: Cảnh báo bảo trì
+    fuel-efficiency-issues: Vấn đề hiệu suất nhiên liệu
+    behaviour-concerns: Quan ngại về hành vi
+    documentation: Tài liệu
+    time-management: Quản lý thời gian
+    training-needs: Nhu cầu đào tạo
+    health-and-safety-violations: Vi phạm sức khỏe và an toàn
+    inefficient-routes: Lộ trình không hiệu quả
+    safety-concerns: Quan ngại về an toàn
+    blocked-routes: Lộ trình bị chặn
+    environmental-considerations: Cân nhắc môi trường
+    unfavorable-weather-conditions: Điều kiện thời tiết không thuận lợi
+    damaged-goods: Hàng hóa bị hư hỏng
+    misplaced-goods: Hàng hóa bị mất
+    documentation-issues: Vấn đề tài liệu
+    temperature-sensitive-goods: Hàng hóa nhạy cảm với nhiệt độ
+    incorrect-cargo-loading: Tải hàng không chính xác
+    bugs: Lỗi
+    ui/ux-concerns: Quan ngại về UI/UX
+    integration-failures: Thất bại trong tích hợp
+    performance: Hiệu suất
+    feature-requests: Yêu cầu tính năng
+    security-vulnerabilities: Lỗ hổng bảo mật
+    billing-discrepancies: Sai lệch thanh toán
+    service-quality: Chất lượng dịch vụ
+    communication-breakdown: Sự cố giao tiếp
+    feedback-and-suggestions: Phản hồi và đề xuất
+    order-errors: Lỗi đơn hàng
+    unauthorized-access: Truy cập trái phép
+    data-concerns: Quan ngại về dữ liệu
+    physical-security: An ninh vật lý
+    data-integrity-issues: Vấn đề về tính toàn vẹn dữ liệu
+    fuel-consumption: Tiêu thụ nhiên liệu
+    carbon-footprint: Dấu chân carbon
+    waste-management: Quản lý chất thải
+    green-initiatives-opportunities: Cơ hội sáng kiến xanh
+    behavior-concerns: Quan ngại về hành vi
+    disabled: Đã tắt
+    decommissioned: Ngừng hoạt động
+    iam: Nhà phát triển
+    developers: Nhà phát triển
+    fleet-ops: Hoạt động đội xe
+    registry-bridge: Cầu đăng ký
+    storefront: Mặt tiền cửa hàng
+
+
+
+
+    order_created: Đã tạo
+    order_dispatched: Đã gửi
+    order_accepted: Đã chấp nhận
+    order_started: Đã bắt đầu
+
 fuelReportTypes:
     Fuel: "Nhiên liệu"
     Parking: "Đậu xe"
@@ -441,6 +544,153 @@ fleet-ops:
   #     identity-access-management: Người sử dụng Truy cập Sự quản lý
 
   extension-name: Hoạt động đội xe
+  user-management:
+    profiles: Hồ sơ
+    networks: Mạng
+    roles: Vai trò
+    access-control: Kiểm soát truy cập
+    user-access-management: Quản lý quyền truy cập người dùng
+    you-are-about-to-reset-the-password-for: Bạn sắp sửa đặt lại mật khẩu cho
+    please-enter-new-password: Vui lòng nhập mật khẩu mới và xác nhận nó bên dưới. Bạn có thể gửi thông tin đăng nhập mới cho người dùng qua email bằng cách chọn hộp kiểm.
+    send-password-credentials: Gửi thông tin đăng nhập mật khẩu cho người dùng
+    reset-user-credentials: Đặt lại thông tin đăng nhập người dùng
+    reset-credentials: Đặt lại thông tin đăng nhập
+    profile-changes-saved: Thay đổi hồ sơ đã được lưu.
+    change-password: Đổi mật khẩu
+    confirm-and-change: Xác nhận và đổi mật khẩu
+    validate-current-password: Xác nhận mật khẩu hiện tại
+    validate-password: Xác nhận mật khẩu
+    validate-current-password-before-change: Bạn phải xác nhận mật khẩu hiện tại trước khi nó có thể được thay đổi.
+    password-changes-saved: Đổi mật khẩu thành công.
+    failed-to-change-password: Đổi mật khẩu không thành công.
+
+    your-organization: Tổ chức của bạn
+    create-organization: Tạo tổ chức
+    member-since: Thành viên từ
+    2fa-settings: Cài đặt 2FA
+    save-2fa-settings: Lưu cài đặt 2FA
+    enable-2fa: Bật xác thực hai yếu tố
+    require-2fa-setup: Yêu cầu người dùng thiết lập 2FA
+    2fa-settings-saved: Cài đặt 2FA đã được lưu thành công.
+    2fa-settings-saved-by-admin: Cài đặt 2FA đã được lưu thành công cho quản trị viên.
+    2fa-settings-saved-for-organization: Cài đặt 2FA đã được lưu thành công cho tổ chức.
+    view-all-notifications: Xem tất cả thông báo
+    no-unread-notifications: Không có thông báo chưa đọc
+    unread-notifications: Thông báo chưa đọc
+    choose-authentication-method: Chọn phương thức xác thực
+    you-will-enter-code: Ngoài tên người dùng và mật khẩu, bạn sẽ phải nhập mã (được gửi qua ứng dụng hoặc SMS) để đăng nhập vào tài khoản của mình.
+    loading-2fa-config: Đang tải cấu hình 2FA...
+    select-country: Chọn quốc gia
+    upload: Tải lên
+    uploading: Đang tải lên...
+
+    twofa:
+      sms:
+        name: "SMS"
+        description: "Nhận mã duy nhất qua SMS"
+      email:
+        name: "Email"
+        description: "Nhận mã duy nhất qua Email"
+    service:
+      aws:
+        name: AWS
+        access-key: Khóa truy cập AWS
+        access-secret: Mật khẩu truy cập AWS
+        access-region: Khu vực AWS
+      google-map:
+          name: Google Maps
+          api-key: Khóa API Google Maps
+          locale: Vùng Google Maps
+      twilo:
+          name: Twilio
+          sid: Twilio SID
+          token: Twilio Token
+          from: Twilio From
+          test-sms: Gửi SMS thử nghiệm tại đây
+          twilo-config: Kiểm tra cấu hình Twilio
+      sentry:
+          name: Sentry
+          sentry-dsn: Sentry DSN
+          test-sentry-config: Kiểm tra cấu hình Sentry
+      ip:
+          name: IP Info
+          key: Khóa API IP Info
+          save-changes: Lưu thay đổi
+      mail:
+        name: Mail
+        mailer: Mailer
+        default-mailer: Chọn mailer mặc định mà FleetYes sử dụng.
+        smtp-host: Máy chủ SMTP
+        smtp-port: Cổng SMTP
+        smtp-encryption: Mã hóa SMTP
+        enable-tls: Mã hóa TLS được kích hoạt
+        smtp-username: Tên người dùng SMTP
+        smtp-password: Mật khẩu SMTP
+        smtp-timeout: Thời gian chờ SMTP
+        smtp-auth-mode: Chế độ xác thực SMTP
+        mailgun-domain: Miền Mailgun
+        mailgun-endpoint: Điểm cuối Mailgun
+        mailgun-secret: Mật khẩu Mailgun
+        postmark-token: Token Postmark
+        sendgrid-api-key: Khóa API Sendgrid
+        resend-api-key: Khóa API Resend
+        from-address: Địa chỉ người gửi
+        help-text-from-address: Nhập địa chỉ email mà FleetYes sẽ gửi email từ đó.
+        from-name: Tên người gửi
+        help-text-from-name: Nhập tên mà FleetYes sẽ gửi email từ đó.
+        test-config: Kiểm tra cấu hình
+        select-mailer: Chọn mailer
+        mail-success: Cấu hình mail đã được lưu.
+      file-system:
+        default-file-system: Chọn trình điều khiển hệ thống tệp mặc định mà FleetYes sẽ sử dụng.
+        select-filesystem-driver: Chọn trình điều khiển hệ thống tệp
+        s3-bucket: S3 Bucket
+        s3-url: URL S3
+        s3-endpoint: Điểm cuối S3
+        warning-gcs: Cảnh báo! GCS đã được cấu hình trong môi trường máy chủ. Thay đổi các giá trị dưới đây có thể gây hỏng điều này.
+        gcs-bucket: GCS Bucket
+        gcs-account-key: Tệp khóa tài khoản dịch vụ GCS
+        upload-service-account: Tải lên tệp JSON tài khoản dịch vụ
+        filesystem-saved: Cấu hình hệ thống tệp đã được lưu.
+      queue:
+          default-queue-driver: Chọn trình điều khiển hàng đợi mặc định mà FleetYes sẽ sử dụng.
+          select-queue-driver: Chọn trình điều khiển hàng đợi
+          beanstalk-host: Máy chủ Beanstalk
+          beanstalk-queue: Hàng đợi Beanstalk
+          sqs-prefix: Tiền tố SQS
+          sqs-queue: Hàng đợi SQS
+          sqs-suffix: Hậu tố SQS
+          queue-success: Cấu hình hàng đợi đã được lưu.
+      socket:
+        sockt-cluster: Kết nối SocketCluster
+        sockt-cluster-cannot-change: Cấu hình SocketCluster không thể thay đổi vào lúc này.
+        awaiting-events: Đang chờ sự kiện
+        test-socket: Kiểm tra kết nối Socket
+        socket-connected: Socket đã kết nối
+        socket-subscribed: Socket đã đăng ký kênh thử nghiệm
+        socket-error: Lỗi kết nối Socket!
+      apn:
+          apn-configuration: Cấu hình APN
+          apn-key-id: ID khóa APN
+          apn-team-id: ID nhóm APN
+          apn-app-bundle-id: ID gói ứng dụng APN
+          upload-p8: Tải lên tệp khóa P8
+          apn-production: Sản xuất APN
+
+      firebase:
+          firebase-configuration: Cấu hình Firebase
+          test-push-notification: Kiểm tra thông báo đẩy
+          push-notification-title: Tiêu đề thông báo đẩy
+          push-notification-message: Tin nhắn thông báo đẩy
+          apn-device-token: Mã thông báo thiết bị APN
+          fcm-device-token: Mã thông báo thiết bị FCM
+          message: Tin nhắn
+          title: Tiêu đề
+          notification-success: Cấu hình kênh thông báo đã được lưu.
+
+
+
+
   common:
     active-manpower: Nhân lực đang hoạt động
     address: Địa chỉ
@@ -550,6 +800,8 @@ fleet-ops:
     tracking-number: Số theo dõi
     end_date_cannot_be_earlier:  Ngày kết thúc không thể sớm hơn.
     end_date_cannot_be_earlier_than_start_date: Ngày kết thúc không thể sớm hơn ngày bắt đầu.
+    no_driver: Không có tài xế
+    no_phone: Không có điện thoại
     component:
        order:
         header:
@@ -620,6 +872,301 @@ fleet-ops:
       groups_count: Số lượng nhóm
       roles_count: Số lượng vai trò
       policy_count: Số lượng chính sách
+  operations:
+    order-config:
+      route-loading-message: Đang tải Trình xây dựng cấu hình đơn hàng
+    orders:
+      index:
+        payload: Tải trọng
+        customer: Khách hàng
+        facilitator: Người hỗ trợ
+        pickup: Lấy hàng
+        dropoff: Giao hàng
+        scheduled-at: Đơn hàng vào lúc
+        items: Mặt hàng
+        transaction: Tổng giao dịch
+        tracking: Số theo dõi
+        driver-assigned: Tài xế
+        vehicle-assigned: Xe
+        created-by: Được tạo bởi
+        updated-by: Được cập nhật bởi
+        view-order: Xem đơn hàng
+        cancel-order: Hủy đơn hàng
+        delete-order: Xóa đơn hàng
+        dispatch-order: Gửi đơn hàng
+        cancel-title: Bạn có chắc chắn muốn hủy đơn hàng này không?
+        cancel-body: Một khi đơn hàng này đã bị hủy, bản ghi đơn hàng vẫn sẽ hiển thị nhưng không thể thêm hoạt động vào đơn hàng này.
+        cancel-success: Đơn hàng {orderId} đã được hủy.
+        dispatch-title: Bạn có chắc chắn muốn gửi đơn hàng này không?
+        dispatch-body: Một khi đơn hàng này đã được gửi, tài xế được chỉ định sẽ nhận thông báo.
+        dispatch-success: Đơn hàng {orderId} đã được gửi.
+        map: Bản đồ
+        table: Bảng
+        cancel-orders: Hủy đơn hàng
+        delete-orders: Xóa đơn hàng
+        dispatch-orders: Gửi đơn hàng
+        estimated-end-date: Ngày kết thúc dự kiến
+        new:
+          create-new-customer: Tạo khách hàng mới
+          create-new-facilitator: Tạo người hỗ trợ mới
+          create-new-place: Tạo địa điểm mới
+          add-order: Thêm thực thể vào đơn hàng
+          edit-order: Chỉnh sửa metadata của đơn hàng
+          add-field: Thêm trường tùy chỉnh
+          order-type: Loại đơn hàng
+          order-type-help-text: Chọn loại đơn hàng sẽ cho FleetYes biết cấu hình đơn hàng cần sử dụng.
+          order-type-placeholder: Chọn loại đơn hàng
+          internal-id: Mã nội bộ
+          internal-id-help-text: Sử dụng trường này để tùy chọn đặt mã định danh tùy chỉnh hoặc mã định danh nội bộ cho đơn hàng.
+          schedule: Ngày bắt đầu
+          estimated-end-date: Ngày kết thúc dự kiến
+          schedule-help-text: Ngày và giờ mà đơn hàng sẽ được giao. Nếu không có tài xế được chỉ định vào thời gian giao hàng, việc giao hàng sẽ thất bại. Nếu đơn hàng là Ad-Hoc, đơn hàng sẽ được gửi đến các tài xế trong khu vực đón hàng.
+          customer: Khách hàng
+          customer-help-text: Tùy chọn chỉ định khách hàng cho đơn hàng này. Nếu là khách hàng mới, hãy sử dụng nút 'Khách hàng mới' ở trên.
+          customer-placeholder: Chọn khách hàng
+          facilitator: Người hỗ trợ
+          facilitator-help-text: Tùy chọn chỉ định người hỗ trợ cho đơn hàng này, người hỗ trợ có thể là nhà thầu phụ bên thứ ba hoặc dịch vụ sẽ hỗ trợ vận chuyển đơn hàng này.
+          facilitator-placeholder: Chọn người hỗ trợ
+          service-type: Loại dịch vụ
+          service-type-placeholder: Chọn loại dịch vụ
+          service-type-help-text: Chọn loại dịch vụ bạn muốn sử dụng cho
+          assign-driver: Chỉ định tài xế
+          assign-driver-help-text: Chỉ định tài xế mà đơn hàng này sẽ được giao cho.
+          assign-driver-placeholder: Chọn tài xế
+          assign-vehicle: Chỉ định xe
+          assign-vehicle-help-text: Chỉ định xe mà đơn hàng này sẽ được thực hiện.
+          assign-vehicle-placeholder: Chọn xe
+          proof-delivery: Bằng chứng giao hàng
+          proof-delivery-help-text: Chọn loại bằng chứng giao hàng yêu cầu. Có thể là quét mã QR hoặc phương pháp ký tên.
+          proof-delivery-placeholder: Chọn phương pháp bằng chứng giao hàng
+          adhoc-ping: Khoảng cách ping Adhoc
+          adhoc-ping-help-text: Cài đặt này xác định khoảng cách ping cho đơn hàng này, nếu không đặt, nó sẽ trở về cài đặt mặc định.
+          adhoc-ping-message: Khoảng cách phải tính bằng mét
+          ad-hoc: Ad-Hoc
+          ad-hoc-help-text: Bật/tắt Ad-Hoc sẽ cho phép đơn hàng gửi thông tin cho tài xế trong khu vực đón hàng về đơn hàng, giúp tài xế đầu tiên có sẵn có thể nhận đơn hàng. Đây là một phương pháp thay thế cho việc chỉ định tài xế thủ công cho các đơn hàng theo thời gian thực.
+          dispatch: Giao ngay
+          dispatch-help-text: Bật/tắt giao hàng sẽ giao đơn hàng này ngay sau khi tạo.
+          require-proof: Yêu cầu bằng chứng giao hàng
+          require-proof-help-text: Bật/tắt sẽ yêu cầu
+        view:
+          purchase-rate-panel-title: Tỷ lệ mua
+          documents-panel-title: Tài liệu & Tệp tin
+          route-panel-title: Lộ trình
+          currency: Tiền tệ
+          comments-title: Bình luận
+          notes-title: Ghi chú
+          dispatch: Giao hàng
+          order-actions: Hành động đơn hàng
+          edit-details: Chỉnh sửa chi tiết
+          update-activity: Cập nhật hoạt động
+          unassign-driver: Hủy gán tài xế
+          assign-driver: Gán tài xế
+          get-order-label: Lấy nhãn đơn hàng
+          listen-socket-channel: Nghe kênh socket
+          view-metadata: Xem metadata
+          cancel-order: Hủy đơn hàng
+          delete-order: Xóa đơn hàng
+          activity: Hoạt động
+          unable-load-order-activity: Không thể tải hoạt động đơn hàng.
+          no-order-activity: Chưa có hoạt động đơn hàng nào.
+          ad-hoc: Ad-Hoc
+          customer: Khách hàng
+          facilitator: Người hỗ trợ
+          driver-assigned: Tài xế đã gán
+          vehicle-assigned: Xe đã gán
+          change-driver: Thay đổi tài xế
+          tracking-number: Số theo dõi
+          date-scheduled: Ngày bắt đầu
+          date-estimated: Ngày kết thúc dự kiến
+          date-dispatched: Ngày giao hàng
+          date-started: Ngày bắt đầu
+          order-details-title: Chi tiết đơn hàng
+          additional-details-title: Chi tiết bổ sung
+          route: Lộ trình
+          pickup: Lấy hàng
+          dropoff: Giao hàng
+          return: Trả lại
+          order-summary: Tóm tắt đơn hàng
+          subtotal: Tổng phụ
+          delivery-fee: Phí giao hàng
+          tip: Tiền boa
+          delivery-tip: Tiền boa giao hàng
+          total: Tổng cộng
+          payload: Tải trọng
+          items-drop: Mặt hàng được thả tại
+          tracking: Theo dõi
+          waypoint-actions: Hành động điểm dừng
+          get-label: Lấy nhãn
+          view-activity: Xem hoạt động
+          add-item-button: Thêm mặt hàng
+          edit-item-button: Chỉnh sửa mặt hàng
+          edit-order-title: Chỉnh sửa chi tiết đơn hàng
+          update-success: Chi tiết '{orderId}' đã được cập nhật.
+          order-metadata: Metadata đơn hàng
+          unassign-title: Bạn có chắc chắn muốn hủy gán tài xế ({driverName}) khỏi đơn hàng này không?
+          unassign-body: Khi tài xế bị hủy gán, tài xế sẽ không còn truy cập vào chi tiết đơn hàng này.
+          unassign-success: Tài xế đã bị hủy gán khỏi đơn hàng này.
+          edit-route-title: Chỉnh sửa lộ trình đơn hàng
+          route-error: Tối ưu hóa lộ trình thất bại, kiểm tra lại thông tin lộ trình và thử lại.
+          route-update-success: Chi tiết lộ trình '{orderId}' đã được cập nhật.
+          add-activity-title: Thêm hoạt động mới vào đơn hàng
+          invalid-warning: Nhập trạng thái tùy chỉnh không hợp lệ.
+          change-order: Thay đổi tài xế đơn hàng
+          assign-order: Gán tài xế cho đơn hàng
+          assign-success: Tài xế đã được cập nhật cho đơn hàng '{orderId}'.
+          order-title: Nhãn đơn hàng
+          waypoint-title: Nhãn điểm dừng
+          proof-of-delivery: Bằng chứng giao hàng
+          notes-placeholder: Nhập ghi chú cho đơn hàng ở đây....
+          save-order-note: Lưu ghi chú đơn hàng
+          order-notes-updated: Ghi chú đơn hàng đã được cập nhật.
+        config:
+          title: Cấu hình đơn hàng
+          message: Cấu hình đơn hàng cho phép bạn định nghĩa các cấu hình động sẽ chỉ cho FleetYes cách thực hiện các loại đơn hàng khác nhau.
+          configuration: Cấu hình
+          types:
+            no-order-installed: Chưa có cấu hình đơn hàng nào được cài đặt!
+            you-have-no-configs: Hiện tại bạn chưa có cấu hình đơn hàng nào được cài đặt, kiểm tra các tiện ích mở rộng để cài đặt cấu hình đơn hàng và bắt đầu.
+            view-extensions: Xem tiện ích mở rộng
+    scheduler:
+      index:
+        success-message: Đơn hàng {orderId} đã được cập nhật vào {orderAt}.
+        info-message: Đơn hàng {orderId} đã được cập nhật.
+        title: Lịch
+        unscheduled-orders: Đơn hàng chưa được phân công
+        scheduled-orders: Đơn hàng đã được phân công
+        unauthorized-to-schedule: Bạn không có quyền lịch để lên lịch đơn hàng.
+      calendar:
+        today: Hôm nay
+        month: Tháng
+        week: Tuần
+        day: Ngày
+        order-id: Mã đơn hàng
+        driver: Tài xế
+        status: Trạng thái
+        all-statuses: Tất cả trạng thái
+        clear-filters: Xóa bộ lọc
+        apply-filters: Áp dụng bộ lọc
+        all-drivers: Tất cả tài xế
+        search-by-orderid: Tìm kiếm theo Mã đơn hàng
+    service-rates:
+      index:
+        edit-service: Chỉnh sửa tỷ lệ dịch vụ
+        delete-service: Xóa tỷ lệ dịch vụ
+        accept-button: Xóa dịch vụ
+        edit:
+          success-message: Tỷ lệ dịch vụ {serviceName} đã được cập nhật
+        title: Tỷ lệ dịch vụ
+        reload-data: Tải lại dữ liệu
+        delete-service-rates: Xóa tỷ lệ dịch vụ
+        new:
+          success-message: Tỷ lệ dịch vụ mới {serviceName} đã được tạo
+          new-service-rate-title: Tỷ lệ dịch vụ mới
+          save-service-button: Lưu tỷ lệ dịch vụ
+          create-service-button: Tạo tỷ lệ dịch vụ
+          service-name: Tên dịch vụ
+          service-name-help-text: Tên hiển thị cho dịch vụ này.
+          service-order-label: Loại đơn hàng dịch vụ
+          service-order-help-text: Chọn một cấu hình đơn hàng mà tỷ lệ dịch vụ này sẽ được áp dụng riêng biệt. Điều này đảm bảo rằng chỉ các đơn hàng được tạo với cấu hình đơn hàng đã chọn mới có thể sử dụng tỷ lệ dịch vụ cụ thể này.
+          service-order-placeholder: Chọn loại đơn hàng để giới hạn dịch vụ
+          base-fee-label: Phí cơ bản
+          base-fee-help-text: Đặt một khoản phí cơ bản đại diện cho chi phí tối thiểu cho dịch vụ này.
+          rate-calculation-label: Phương pháp tính tỷ lệ
+          rate-calculation-help-text: Phương pháp mà dịch vụ này sẽ sử dụng để tính tỷ lệ khi yêu cầu.
+          rate-calculation-placeholder: Chọn phương pháp tính tỷ lệ
+          estimated-days: Số ngày giao hàng ước tính
+          estimated-days-help-text: Số ngày ước tính mà dịch vụ này sẽ mất. Đối với dịch vụ cùng ngày, sử dụng `0`.
+          duration-terms-label: Điều khoản về thời gian
+          duration-terms-help-text: Thêm các điều khoản bổ sung về thời gian cho tỷ lệ dịch vụ này.
+          duration-terms-placeholder: Điều khoản về thời gian nếu có
+          fixed-meter: Tùy chọn Meters Cố định
+          fixed-meter-text: Tùy chọn này xác định một khoản phí cố định mỗi km.
+          fixed-meter-example-text: >-
+            Ví dụ: Mỗi 1 km sẽ có một khoản phí cố định. Nếu khoảng cách di chuyển của đơn hàng là 3.300 mét, phí cố định cho km thứ 3 sẽ được thêm vào tổng phí cơ bản.
+          maximum-distance: Khoảng cách tối đa
+          maximum-distance-help-text: Khoảng cách tối đa có thể phục vụ.
+          distance: Khoảng cách
+          fee: Phí
+          per-drop-off-title: Tùy chọn cho mỗi lần giao hàng
+          per-drop-off-text: Tùy chọn này xác định một khoản phí cố định cho mỗi lần giao hàng.
+          per-drop-off-example-text: >-
+            Ví dụ: 1-5 lần giao hàng trong đơn sẽ có phí $x, 5-10 lần giao hàng mỗi đơn sẽ có phí $x. Phí này sẽ được thêm vào tổng phí cơ bản.
+          add-drop-off-button: Thêm phạm vi giao hàng
+          min-drop: Giao hàng tối thiểu
+          max-drop: Giao hàng tối đa
+          min: Tối thiểu
+          max: Tối đa
+          per-meter: Mỗi mét
+          per-meter-text: Tùy chọn này cho phép dịch vụ được tính toán mỗi km hoặc mỗi mét, có nghĩa là bạn định nghĩa một khoản phí cố định sẽ được nhân với khoảng cách có thể là mét hoặc km.
+          per-meter-example-text: >-
+            Ví dụ: '{fee}' * '{distance}' + '{baseFee}'
+          per-meter-rate-fee: Phí cố định mỗi mét
+          per-meter-rate-fee-help-text: Phí cố định đơn lẻ sẽ được nhân với khoảng cách.
+          distance-unit: Đơn vị khoảng cách
+          distance-unit-help-text: Đơn vị khoảng cách có thể là mỗi km hoặc mỗi mét.
+          distance-unit-placeholder: Chọn đơn vị khoảng cách
+          custom-algorithm-title: Thuật toán tùy chỉnh
+          custom-algorithm-info-message: Tùy chọn này là để định nghĩa một phép tính tùy chỉnh cho phí của dịch vụ này với các biến.
+          custom-algorithm-info-second-message: Lưu ý rằng các biến phải được bao quanh bởi dấu ngoặc nhọn đơn.
+          distance-message: khoảng cách
+          distance-continue-message: >- 
+            - khoảng cách tính bằng mét từ lộ trình đơn hàng.
+          time-message: thời gian
+          time-continue-message: >-
+            - ETA của lộ trình tính bằng giây.
+          example: Ví dụ
+          example-message: Nếu yêu cầu đơn hàng là khoảng cách 2.200 mét với ETA là 30 phút.
+          example-second-message: Sau đó công thức sau sẽ tính phí dịch vụ là $2,50, sẽ được cộng vào phí cơ bản.
+          algorithm-label: Thuật toán
+          algorithm-help-text: Định nghĩa một công thức để được đánh giá cho phép tính tỷ lệ dịch vụ này.
+          algorithm-placeholder: >-
+            (( '{distance}' / 50 ) * .05 ) + (( '{time}' / 60 ) * .01)
+          percel-fee-title: Phí kiện hàng
+          length-label: Chiều dài
+          length-placeholder: Chiều dài trong {parcelFeeDimension}
+          width-label: Chiều rộng
+          width-placeholder: Chiều rộng trong {parcelFeeDimension}
+          height-label: Chiều cao
+          height-placeholder: Chiều cao trong {parcelFeeDimension}
+          weight-label: Trọng lượng
+          weight-placeholder: Trọng lượng trong {parcelFeeWeight}
+          deminsions-unit: Đơn vị kích thước
+          select-unit-placeholder: Chọn đơn vị
+          weight-unit: Đơn vị trọng lượng
+          additional-fee: Phí bổ sung
+          cash-delivery-title: Thanh toán khi giao hàng
+          cash-delivery-label: Bật phí bổ sung cho đơn hàng 'thanh toán khi giao hàng'?
+          calculation-method-label: Phương pháp tính phí COD
+          calculation-method-help-text: Phương pháp được sử dụng để tính phí COD.
+          calculation-method-placeholder: Chọn phương pháp tính phí COD
+          delivery-flat-fee: Phí cố định thanh toán khi giao hàng
+          delivery-flat-fee-help-text: Định nghĩa một khoản phí cố định sẽ được thêm vào trong giờ cao điểm.
+          fee-percentage: Phí thanh toán khi giao hàng theo phần trăm
+          fee-percentage-help-text: Định nghĩa một khoản phí theo phần trăm từ tổng số phụ phí dịch vụ sẽ được cộng vào phí COD.
+          percentage-placeholder: Phần trăm
+          peak-hours-title: Giờ cao điểm
+          peak-hours-label: Bật phí bổ sung cho đơn hàng thực hiện trong 'giờ cao điểm'?
+          peak-hours-start-label: Giờ cao điểm bắt đầu
+          peak-hours-start-help-text: Định nghĩa thời gian bắt đầu phí giờ cao điểm.
+          peak-hours-end-label: Giờ cao điểm kết thúc
+          peak-hours-end-help-text: Định nghĩa thời gian kết thúc phí giờ cao điểm.
+          peak-hours-fee-label: Phương pháp tính phí giờ cao điểm
+          peak-hours-fee-help-text: Phương pháp sử dụng để tính phí giờ cao điểm.
+          peak-hours-fee-placeholder: Chọn phương pháp tính phí giờ cao điểm
+          flat-fee-label: Phí cố định giờ cao điểm
+          flat-fee-help-text: Định nghĩa một khoản phí cố định sẽ được thêm vào trong giờ cao điểm.
+          peak-hours-percentage-label: Phí giờ cao điểm theo phần trăm
+          peak-hours-percentage-help-text: Định nghĩa một khoản phí theo phần trăm từ tổng phí dịch vụ sẽ được thêm vào trong giờ cao điểm.
+          restrict-service-title: Hạn chế dịch vụ
+          service-area-label: Khu vực dịch vụ
+          service-area-help-text: Hạn chế dịch vụ này chỉ cho các yêu cầu đơn hàng từ khu vực dịch vụ.
+          service-area-placeholder: Hạn chế khu vực dịch vụ
+          zone-label: Khu vực
+          zone-help-text: Hạn chế dịch vụ này chỉ cho các yêu cầu đơn hàng từ một khu vực cụ thể.
+          zone-placeholder: Hạn chế khu vực
+
+
+
   activity-logic-builder:
     activity-logic: Logic hoạt động
     activity-logic-help-text: Định nghĩa các điều kiện logic tùy chỉnh xác định khi nào một hoạt động sẽ khả dụng trong quy trình làm việc. Tính năng này cho phép bạn điều chỉnh luồng dựa trên tiêu chí cụ thể, đảm bảo mỗi hoạt động chỉ được kích hoạt khi đáp ứng các điều kiện đã định.

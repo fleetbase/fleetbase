@@ -244,7 +244,7 @@ export default class CrudService extends Service {
         const exportParams = options.params ?? {};
 
         this.modalsManager.show('modals/export-form', {
-            title: `Export ${pluralize(modelName)}`,
+            title: this.intl.t('common.export'),
             acceptButtonText: 'Download',
             modalClass: 'modal-sm',
             format: 'xlsx',
@@ -313,8 +313,8 @@ export default class CrudService extends Service {
         };
 
         this.modalsManager.show('modals/import-form', {
-            title: `Import ${pluralize(modelName)} with spreadsheets`,
-            acceptButtonText: 'Start Import',
+            title: this.intl.t('fleet-ops.common.import'),
+            acceptButtonText: this.intl.t('common.start-import'),
             acceptButtonScheme: 'magic',
             acceptButtonIcon: 'upload',
             acceptButtonDisabled: true,
@@ -363,7 +363,7 @@ export default class CrudService extends Service {
                 };
 
                 if (!uploadQueue.length) {
-                    return this.notifications.warning('No spreadsheets uploaded for import to process.');
+                    return this.notifications.warning(this.intl.t('common.import-warn'));
                 }
 
                 modal.startLoading();

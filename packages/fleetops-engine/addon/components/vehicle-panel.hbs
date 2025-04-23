@@ -42,7 +42,7 @@
                 </div>
             </div>
             <div class="flex justify-end w-1/4">
-                <Badge @status={{or this.vehicle.status "pending"}} />
+            <Badge @status={{this.vehicle.status}}>{{t (concat "statuses." (if this.vehicle.status this.vehicle.status "pending"))}}</Badge>
             </div>
         </div>
     </Overlay::Header>

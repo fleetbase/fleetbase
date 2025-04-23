@@ -1,16 +1,16 @@
-<ContentPanel @title="SocketCluster Connection" @open={{true}} @pad={{true}} @panelBodyClass="bg-white dark:bg-gray-800">
-    <p class="mb-4">The SocketCluster configuration cannot be changed at this time.</p>
+<ContentPanel @title={{t "fleet-ops.user-management.service.socket.sockt-cluster"}} @open={{true}} @pad={{true}} @panelBodyClass="bg-white dark:bg-gray-800">
+    <p class="mb-4">{{t "fleet-ops.user-management.service.socket.sockt-cluster-cannot-change"}}</p>
     <div id="output" class="font-mono rounded-lg max-h-full px-6 py-4 overflow-y-scroll bg-black shadow-inner dark:shadow-none">
         <div class="flex items-center justify-between mb-4">
             <div class="block w-1/2 font-mono text-sm font-semibold text-green-300">
-                Output
+                {{t "console.admin.schedule-monitor.output"}}
             </div>
             {{#if this.events.length}}
                 <div class="flex items-center justify-end w-1/2 text-sm text-green-300">
                     <Spinner @iconClass="green-loader" />
 
                     <span class="ml-2 text-sm font-mono">
-                        Awaiting events...
+                        {{t "fleet-ops.user-management.service.socket.awaiting-events"}}...
                     </span>
                 </div>
             {{/if}}
@@ -30,7 +30,7 @@
                 <div class="flex items-center mt-6 text-green-300">
                     <Spinner @iconClass="green-loader" />
                     <span class="ml-2 text-sm font-mono">
-                        Awaiting events...
+                        {{t "fleet-ops.user-management.service.socket.awaiting-events"}}...
                     </span>
                 </div>
             {{/each}}
@@ -42,5 +42,5 @@
             <span class="text-xs">{{this.this.testResponse.message}}</span>
         </div>
     {{/if}}
-    <Button @wrapperClass="mt-3" @icon="plug" @text="Test Socket Connection" @onClick={{this.testSocketConnection}} @isLoading={{this.isLoading}} />
+    <Button @wrapperClass="mt-3" @icon="plug" @text={{t "fleet-ops.user-management.service.socket.test-socket"}} @onClick={{this.testSocketConnection}} @isLoading={{this.isLoading}} />
 </ContentPanel>

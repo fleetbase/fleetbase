@@ -6,6 +6,7 @@ import { task } from 'ember-concurrency';
 export default class ModalsValidatePasswordComponent extends Component {
     @service fetch;
     @service notifications;
+    @service intl;
     @tracked options = {};
     @tracked password;
     @tracked confirmPassword;
@@ -17,8 +18,8 @@ export default class ModalsValidatePasswordComponent extends Component {
     }
 
     setupOptions() {
-        this.options.title = 'Validate Current Password';
-        this.options.acceptButtonText = 'Validate Password';
+        this.options.title = this.intl.t('fleet-ops.user-management.validate-current-password');
+        this.options.acceptButtonText = this.intl.t('fleet-ops.user-management.validate-password');
         this.options.declineButtonHidden = true;
         this.options.confirm = (modal) => {
             modal.startLoading();

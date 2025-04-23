@@ -75,6 +75,12 @@ common:
   unauthorized-access-message: Brak dostępu, musisz uzyskać odpowiednie uprawnienia.
   permissions-required-for-changes: Nie masz wymaganych uprawnień do wprowadzenia zmian.
   push-notifications: Powiadomienia push
+  latitude: Szerokość geograficzna
+  longitude: Długość geograficzna
+  upload-file: Prześlij plik
+  upload: Prześlij
+  select-country: Wybierz kraj...
+  enter-unit: "Wprowadź {unit}"
   role: Rola
   report-type: Typ raportu
   payment-method: Metoda płatności
@@ -101,6 +107,29 @@ common:
   results-page: wyniki
   next-page: Następna
   previous-page: Poprzednia
+  create-user-success: Nowy użytkownik został pomyślnie utworzony!
+  select-from-map: Wybierz z mapy
+  online: Online
+  offline: Offline
+  start-import: Rozpocznij import
+  import-warn: Nie przesłano żadnych arkuszy kalkulacyjnych do przetworzenia importu.
+  new-order: Nowe zamówienie
+  submit: Zatwierdź
+  new-field: Nowe pole
+  to: do
+  confirm-action:
+    single: Czy na pewno chcesz {verb} ten rekord?
+    multiple: Czy na pewno chcesz {verb} te rekordy?
+  selection-info:
+    single: Wybrałeś 1 rekord do {verb}.
+    multiple: Wybrałeś {count} rekordów do {verb}.
+  tracking-details:
+    create-order: Utworzono nowe zamówienie.
+    accept-order: Zamówienie zaakceptowane przez kierowcę.
+    dispacth-order: Zamówienie zostało wysłane.
+    update-order: Status zamówienia zaktualizowany przez kierowcę.
+    start-order: Zamówienie zostało rozpoczęte.
+  duplicate-waypoint-error: Wykryto zduplikowany punkt trasy. Proszę użyć unikalnych lokalizacji dla każdego punktu.
 validation:
   required:
     payment_method: Wymagana jest metoda płatności
@@ -141,6 +170,80 @@ statuses:
   requires-update: Wymaga aktualizacji  
   order_canceled: Zamówienie anulowane
   all-statuses: Wszystkie statusy
+
+
+  resource-allocation: Alokacja zasobów
+  compliance: Zgodność
+  cost-overruns: Przekroczenia kosztów
+  communication: Komunikacja
+  vendor-management-issues: Problemy z zarządzaniem dostawcami
+
+  operational: Operacyjne
+  software-technical: Techniczne oprogramowanie
+  customer: Klient
+  security: Bezpieczeństwo
+  environmental-sustainability: Zrównoważony rozwój środowiska
+  vehicle: Pojazd
+  driver: Kierowca
+  route: Trasa
+  payload-cargo: Ładunek użyteczny
+  mechanical-problems: Problemy mechaniczne
+  cosmetic-damages: Uszkodzenia kosmetyczne
+  tire-issues: Problemy z oponami
+  electronics-and-instruments: Elektronika i instrumenty
+  maintanence-alerts: Powiadomienia o konserwacji
+  fuel-efficiency-issues: Problemy z efektywnością paliwową
+  behaviour-concerns: Obawy dotyczące zachowania
+  documentation: Dokumentacja
+  time-management: Zarządzanie czasem
+  training-needs: Potrzeby szkoleniowe
+  health-and-safety-violations: Naruszenia zdrowia i bezpieczeństwa
+  inefficient-routes: Niewydajne trasy
+  safety-concerns: Obawy dotyczące bezpieczeństwa
+  blocked-routes: Zablokowane trasy
+  environmental-considerations: Rozważania środowiskowe
+  unfavorable-weather-conditions: Niekorzystne warunki pogodowe
+  damaged-goods: Uszkodzone towary
+  misplaced-goods: Zgubione towary
+  documentation-issues: Problemy z dokumentacją
+  temperature-sensitive-goods: Towary wrażliwe na temperaturę
+  incorrect-cargo-loading: Nieprawidłowe ładowanie ładunku
+  bugs: Błędy
+  ui/ux-concerns: Problemy z UI/UX
+  integration-failures: Niepowodzenia integracji
+  performance: Wydajność
+  feature-requests: Prośby o funkcje
+  security-vulnerabilities: Luka w zabezpieczeniach
+  billing-discrepancies: Rozbieżności w fakturowaniu
+  service-quality: Jakość usługi
+  communication-breakdown: Zakłócenie komunikacji
+  feedback-and-suggestions: Opinie i sugestie
+  order-errors: Błędy w zamówieniu
+  unauthorized-access: Nieautoryzowany dostęp
+  data-concerns: Problemy z danymi
+  physical-security: Bezpieczeństwo fizyczne
+  data-integrity-issues: Problemy z integralnością danych
+  fuel-consumption: Zużycie paliwa
+  carbon-footprint: Ślad węglowy
+  waste-management: Zarządzanie odpadami
+  green-initiatives-opportunities: Możliwości inicjatyw ekologicznych
+  behavior-concerns: Obawy dotyczące zachowania
+  disabled: Wyłączony
+  decommissioned: Wycofany z użytku
+  iam: Programiści
+  developers: Programiści
+  fleet-ops: Operacje floty
+  registry-bridge: Most rejestru
+  storefront: Witryna
+
+
+
+
+  order_created: Utworzono
+  order_dispatched: Wysłano
+  order_accepted: Zaakceptowano
+  order_started: Rozpoczęto
+
 fuelReportTypes:
   Fuel: Paliwo
   Parking: Parking
@@ -441,6 +544,154 @@ fleet-ops:
   fleet-ops: FleetYes Flow
   iam: Zarządzanie dostępem użytkowników
   extension-name: Fleet-Ops
+  user-management:
+    profiles: Profile
+    networks: Sieci
+    roles: Role
+    access-control: Kontrola dostępu
+    user-access-management: Zarządzanie dostępem użytkownika
+    you-are-about-to-reset-the-password-for: Zaraz zresetujesz hasło do
+    please-enter-new-password: Proszę wprowadzić nowe hasło i potwierdzić je poniżej. Masz możliwość wysłania nowych danych logowania do użytkownika za pomocą e-maila, zaznaczając pole wyboru.
+    send-password-credentials: Wyślij dane logowania do hasła do użytkownika
+    reset-user-credentials: Zresetuj dane logowania użytkownika
+    reset-credentials: Zresetuj dane logowania
+    profile-changes-saved: Zmiany w profilu zapisane.
+    change-password: Zmień hasło
+    confirm-and-change: Potwierdź i zmień hasło
+    validate-current-password: Zweryfikuj bieżące hasło
+    validate-password: Zweryfikuj hasło
+    validate-current-password-before-change: Musisz zweryfikować swoje bieżące hasło, zanim będzie można je zmienić.
+    password-changes-saved: Hasło zostało pomyślnie zmienione.
+    failed-to-change-password: Nie udało się zmienić hasła.
+
+    your-organization: Twoje organizacje
+    create-organization: Utwórz organizację
+    member-since: Członek od
+    2fa-settings: Ustawienia 2FA
+    save-2fa-settings: Zapisz ustawienia 2FA
+    enable-2fa: Włącz uwierzytelnianie dwuetapowe
+    require-2fa-setup: Wymagaj od użytkowników ustawienia 2FA
+    2fa-settings-saved: Ustawienia 2FA zapisane pomyślnie.
+    2fa-settings-saved-by-admin: Ustawienia 2FA zapisane pomyślnie dla administratora.
+    2fa-settings-saved-for-organization: Ustawienia 2FA zapisane pomyślnie dla organizacji.
+    view-all-notifications: Zobacz wszystkie powiadomienia
+    no-unread-notifications: Brak nieprzeczytanych powiadomień
+    unread-notifications: Nieprzeczytane powiadomienie
+    choose-authentication-method: Wybierz metodę uwierzytelniania
+    you-will-enter-code: Oprócz nazwy użytkownika i hasła, będziesz musiał wprowadzić kod (wysłany przez aplikację lub SMS), aby zalogować się na swoje konto.
+    loading-2fa-config: Ładowanie konfiguracji 2FA...
+    select-country: Wybierz kraj
+    upload: Prześlij
+    uploading: Wysyłanie...
+
+    twofa:
+      sms:
+        name: "SMS"
+        description: "Otrzymaj unikalny kod przez SMS"
+      email:
+        name: "Email"
+        description: "Otrzymaj unikalny kod przez e-mail"
+    service:
+      aws:
+        name: AWS
+        access-key: Klucz dostępu AWS
+        access-secret: Sekret dostępu AWS
+        access-region: Region AWS
+      google-map:
+          name: Google Maps
+          api-key: Klucz API Google Maps
+          locale: Lokacja Google Maps
+      twilo:
+          name: Twilio
+          sid: Twilio SID
+          token: Twilio Token
+          from: Twilio From
+          test-sms: Wyślij SMS testowy tutaj
+          twilo-config: Testuj konfigurację Twilio
+      sentry:
+          name: Sentry
+          sentry-dsn: Sentry DSN
+          test-sentry-config: Testuj konfigurację Sentry
+      ip:
+          name: IP Info
+          key: Klucz API IP Info
+          save-changes: Zapisz zmiany
+      mail:
+        name: Mail
+        mailer: Mailer
+        default-mailer: Wybierz domyślny mailer, który FleetYes ma używać.
+        smtp-host: Host SMTP
+        smtp-port: Port SMTP
+        smtp-encryption: Szyfrowanie SMTP
+        enable-tls: Włączone szyfrowanie TLS
+        smtp-username: Nazwa użytkownika SMTP
+        smtp-password: Hasło SMTP
+        smtp-timeout: Limit czasu SMTP
+        smtp-auth-mode: Tryb uwierzytelniania SMTP
+        mailgun-domain: Domen Mailgun
+        mailgun-endpoint: Punkt końcowy Mailgun
+        mailgun-secret: Sekret Mailgun
+        postmark-token: Token Postmark
+        sendgrid-api-key: Klucz API Sendgrid
+        resend-api-key: Klucz API Resend
+        from-address: Adres nadawcy
+        help-text-from-address: Wprowadź adres e-mail, z którego FleetYes będzie wysyłać e-maile.
+        from-name: Nazwa nadawcy
+        help-text-from-name: Wprowadź nazwę, z której FleetYes będzie wysyłać e-maile.
+        test-config: Testuj konfigurację
+        select-mailer: Wybierz mailer
+        mail-success: Konfiguracja poczty zapisana.
+      file-system:
+        default-file-system: Wybierz domyślny sterownik systemu plików, który FleetYes ma używać.
+        select-filesystem-driver: Wybierz sterownik systemu plików
+        s3-bucket: S3 Bucket
+        s3-url: URL S3
+        s3-endpoint: Endpoint S3
+        warning-gcs: Ostrzeżenie! GCS jest już skonfigurowany w środowisku serwera. Zmiana poniższych wartości może to uszkodzić.
+        gcs-bucket: GCS Bucket
+        gcs-account-key: Plik klucza konta usługi GCS
+        upload-service-account: Prześlij plik JSON konta usługi
+        filesystem-saved: Konfiguracja systemu plików zapisana.
+      queue:
+          default-queue-driver: Wybierz domyślny sterownik kolejki, który FleetYes ma używać.
+          select-queue-driver: Wybierz sterownik kolejki
+          beanstalk-host: Host Beanstalk
+          beanstalk-queue: Kolejka Beanstalk
+          sqs-prefix: Prefiks SQS
+          sqs-queue: Kolejka SQS
+          sqs-suffix: Sufiks SQS
+          queue-success: Konfiguracja kolejki zapisana.
+      socket:
+        sockt-cluster: Połączenie SocketCluster
+        sockt-cluster-cannot-change: Konfiguracja SocketCluster nie może być teraz zmieniona.
+        awaiting-events: Oczekiwanie na zdarzenia
+        test-socket: Testowanie połączenia Socket
+        socket-connected: Socket jest połączony
+        socket-subscribed: Socket subskrybował kanał testowy
+        socket-error: Błąd połączenia Socket!
+      apn:
+          apn-configuration: Konfiguracja APN
+          apn-key-id: ID klucza APN
+          apn-team-id: ID zespołu APN
+          apn-app-bundle-id: ID pakietu aplikacji APN
+          upload-p8: Prześlij plik klucza P8
+          apn-production: Produkcja APN
+
+      firebase:
+          firebase-configuration: Konfiguracja Firebase
+          test-push-notification: Przetestuj powiadomienie push
+          push-notification-title: Tytuł powiadomienia push
+          push-notification-message: Wiadomość powiadomienia push
+          apn-device-token: Token urządzenia APN
+          fcm-device-token: Token urządzenia FCM
+          message: Wiadomość
+          title: Tytuł
+          notification-success: Konfiguracja kanału powiadomień została zapisana.
+
+
+
+
+    
   common:
     active-manpower: Aktywna siła robocza
     address: Adres 
@@ -550,6 +801,8 @@ fleet-ops:
     tracking-number: Numer śledzenia
     end_date_cannot_be_earlier:  Data zakończenia nie może być wcześniejsza.
     end_date_cannot_be_earlier_than_start_date: Data zakończenia nie może być wcześniejsza niż data rozpoczęcia.
+    no_driver: Brak kierowcy
+    no_phone: Brak telefonu
   component:
     activity-logic-builder:
       activity-logic: Logika aktywności
@@ -976,7 +1229,15 @@ fleet-ops:
         drag-drop: Przeciągnij i upuść pliki arkuszy kalkulacyjnych na tę strefę
         button-text: lub wybierz arkusze do przesłania
         spreadsheets: arkusze kalkulacyjne
-        upload-queue: Kolejka przesyłania
+        upload-queue: Kolejka przesyłania     
+        title: Importuj zamówienie(a) za pomocą arkuszy kalkulacyjnych
+        start-upload-button: Rozpocznij przesyłanie
+        uploading: Przesyłanie...
+        processing: Przetwarzanie...
+        type: Typ
+        file-name: Nazwa pliku
+        file-size: Rozmiar pliku
+        upload-date: Data przesłania
       order-label:
         loading: Ładowanie etykiety...
       order-new-activity:
@@ -1282,6 +1543,7 @@ fleet-ops:
       driver-status: Wybierz status kierowcy
       order-history: Historia zamówień
       select-user: Wybierz użytkownika
+      create-user: Utwórz nowego użytkownika
     driver-panel:
       user-account: Konto użytkownika
       driver-details: Szczegóły kierowcy
@@ -1462,78 +1724,79 @@ fleet-ops:
       body: Po usunięciu tej konfiguracji zamówień nie będzie można już tworzyć zamówień na jej podstawie. Czy na pewno chcesz kontynuować?
       uninstall-title: Odinstaluj konfigurację
       uninstall-success: Rozszerzenie {extensionName} zostało odinstalowane.
-    activity-flow-editor:
-      add-status: Dodaj nowy status do przepływu
-      no-status: Nie wprowadzono statusu.
-      overwrite: To zastąpi istniejący status!
-      overwrite-text: Status {statusName} już istnieje w tym przepływie. Jeśli kontynuujesz, status zostanie nadpisany. Czy chcesz zastąpić poprzedni status {statusName}?
-      overwrite-button: Tak, zastąp!
-      remove: Usuń status
-      remove-text: Czy na pewno chcesz usunąć ten status? Wszystkie powiązane aktywności i logika zostaną usunięte wraz z nim.
-      delete-button: Tak, usuń
-      unable-warning: Status {status} musi być w tej kolejności, nie można go przesunąć.
-      order-warning: Utworzony status musi zawsze być pierwszą sekwencją w przepływie zamówienia.
-      title: Przepływ aktywności
-      message: Konfiguracja przepływu aktywności pozwala określić różne typy statusów śledzenia aktywności dla tego typu zamówienia. Można również skonfigurować logikę przepływu aktywności.
-      order-flow: Przepływ zamówienia
-      waypoint-flow: Przepływ punktów trasy
-      new-activity: Nowa aktywność
-      activity-details: Szczegóły aktywności
-      logic-stack: Stos logiki
-      add-logic: Dodaj warunek logiczny
-      select-field: Wybierz pole
-      select-operator: Wybierz operator
-      enter-value: Wprowadź wartość do porównania
-      no-logic: Brak zastosowanych warunków logicznych
-    details-editor:
-      success: Zainstalowano
-      key-text: Przekaż ten klucz do swojego typu zamówienia, aby skonfigurować zamówienie przy użyciu tej konfiguracji.
-      namespace-text: Unikalna przestrzeń nazw dla tego rozszerzenia.
-      id: ID rozszerzenia
-      id-text: Unikalny identyfikator tego rozszerzenia.
-      version: Wersja rozszerzenia
-      version-text: Wersja tego rozszerzenia.
-      clone: Sklonuj konfigurację
-      uninstall: Odinstaluj konfigurację
-      delete: Usuń konfigurację
-    entities-editor:
-      warning-message: Nie wprowadzono nazwy klucza metapola.
-      title: Jednostki
-      message: Konfiguracja jednostek pozwala określić różne typy jednostek, które powinny być dostępne do wyboru dla tego typu zamówienia. Powinny one działać jak szablony, aby przyspieszyć ręczne tworzenie zamówień.
-      type: Typ jednostki
-      add-meta: Dodaj metapole
-    fields-editor:
-      text-field: Pole tekstowe
-      boolean: Wartość logiczna (Boolean)
-      boolean-text: Pozwala użytkownikowi przełączać wartość prawda/fałsz za pomocą pola wyboru
-      dropdown: Lista rozwijana
-      dropdown-text: Pozwala użytkownikowi wybrać opcję z listy rozwijanej
-      datetime: Wybór daty i godziny
-      datetime-text: Pozwala użytkownikowi wybrać datę i godzinę
-      port: Wybór portu
-      port-text: Pozwala użytkownikowi wybrać port
-      vessel: Wybór statku
-      vessel-text: Pozwala użytkownikowi wybrać statek
-      warning-message: Nie wprowadzono nazwy grupy.
-      field-title: Metapola
-      new-field: Nowe niestandardowe pole
-      new-custom-field: Nowa grupa niestandardowych pól
-      field-text: Konfiguracja metapól pozwala określić niestandardowe pola wejściowe, które będą stosowane do zamówień.
-      custom-field-group: Grupa niestandardowych pól
-      default-field: Domyślne pola
-      custom-field: Niestandardowe pole
-      type: Typ pola
-      select-type: Wybierz typ pola
-      add-option: Dodaj opcję
-    select-message: Wybierz konfigurację zamówienia do modyfikacji lub kliknij „Nowa konfiguracja”, aby utworzyć nową konfigurację zamówienia.
-    new-config: Nowa konfiguracja
-    loading-configuration: Ładowanie konfiguracji zamówień...
-    select-order: Wybierz konfigurację zamówienia
-    save-changes: Zapisz zmiany
-    details: Szczegóły
-    fields: Niestandardowe pola
-    flow: Przepływ aktywności
-    entities: Jednostki
+      activity-flow-editor:
+        add-status: Dodaj nowy status do przepływu
+        no-status: Nie wprowadzono statusu.
+        overwrite: To zastąpi istniejący status!
+        overwrite-text: Status {statusName} już istnieje w tym przepływie. Jeśli kontynuujesz, status zostanie nadpisany. Czy chcesz zastąpić poprzedni status {statusName}?
+        overwrite-button: Tak, zastąp!
+        remove: Usuń status
+        remove-text: Czy na pewno chcesz usunąć ten status? Wszystkie powiązane aktywności i logika zostaną usunięte wraz z nim.
+        delete-button: Tak, usuń
+        unable-warning: Status {status} musi być w tej kolejności, nie można go przesunąć.
+        order-warning: Utworzony status musi zawsze być pierwszą sekwencją w przepływie zamówienia.
+        title: Przepływ aktywności
+        message: Konfiguracja przepływu aktywności pozwala określić różne typy statusów śledzenia aktywności dla tego typu zamówienia. Można również skonfigurować logikę przepływu aktywności.
+        order-flow: Przepływ zamówienia
+        waypoint-flow: Przepływ punktów trasy
+        new-activity: Nowa aktywność
+        activity-details: Szczegóły aktywności
+        logic-stack: Stos logiki
+        add-logic: Dodaj warunek logiczny
+        select-field: Wybierz pole
+        select-operator: Wybierz operator
+        enter-value: Wprowadź wartość do porównania
+        no-logic: Brak zastosowanych warunków logicznych
+      details-editor:
+        success: Zainstalowano
+        key-text: Przekaż ten klucz do swojego typu zamówienia, aby skonfigurować zamówienie przy użyciu tej konfiguracji.
+        namespace-text: Unikalna przestrzeń nazw dla tego rozszerzenia.
+        id: ID rozszerzenia
+        id-text: Unikalny identyfikator tego rozszerzenia.
+        version: Wersja rozszerzenia
+        version-text: Wersja tego rozszerzenia.
+        clone: Sklonuj konfigurację
+        uninstall: Odinstaluj konfigurację
+        delete: Usuń konfigurację
+      entities-editor:
+        warning-message: Nie wprowadzono nazwy klucza metapola.
+        title: Jednostki
+        message: Konfiguracja jednostek pozwala określić różne typy jednostek, które powinny być dostępne do wyboru dla tego typu zamówienia. Powinny one działać jak szablony, aby przyspieszyć ręczne tworzenie zamówień.
+        type: Typ jednostki
+        add-meta: Dodaj metapole
+      fields-editor:
+        text-field: Pole tekstowe
+        boolean: Wartość logiczna (Boolean)
+        boolean-text: Pozwala użytkownikowi przełączać wartość prawda/fałsz za pomocą pola wyboru
+        dropdown: Lista rozwijana
+        dropdown-text: Pozwala użytkownikowi wybrać opcję z listy rozwijanej
+        datetime: Wybór daty i godziny
+        datetime-text: Pozwala użytkownikowi wybrać datę i godzinę
+        port: Wybór portu
+        port-text: Pozwala użytkownikowi wybrać port
+        vessel: Wybór statku
+        vessel-text: Pozwala użytkownikowi wybrać statek
+        warning-message: Nie wprowadzono nazwy grupy.
+        field-title: Metapola
+        new-field: Nowe niestandardowe pole
+        new-custom-field: Nowa grupa niestandardowych pól
+        field-text: Konfiguracja metapól pozwala określić niestandardowe pola wejściowe, które będą stosowane do zamówień.
+        custom-field-group: Grupa niestandardowych pól
+        default-field: Domyślne pola
+        custom-field: Niestandardowe pole
+        type: Typ pola
+        select-type: Wybierz typ pola
+        add-option: Dodaj opcję
+      
+      select-message: Wybierz konfigurację zamówienia do modyfikacji lub kliknij „Nowa konfiguracja”, aby utworzyć nową konfigurację zamówienia.
+      new-config: Nowa konfiguracja
+      loading-configuration: Ładowanie konfiguracji zamówień...
+      select-order: Wybierz konfigurację zamówienia
+      save-changes: Zapisz zmiany
+      details: Szczegóły
+      fields: Niestandardowe pola
+      flow: Przepływ aktywności
+      entities: Jednostki
     order-list-overlay:
       search: Wyszukaj zamówienia...
       selected: Wybrane
@@ -1724,6 +1987,7 @@ fleet-ops:
         assign-driver: Przypisz kierowcę do floty...
         delete-fleet: Usuń flotę...
         delete-button: Usuń floty
+        fleet-action: Działania floty
         edit:
           body: Niezapisane zmiany w tej flocie zostaną utracone. Kliknij „Kontynuuj”, aby kontynuować.
         title: Floty
@@ -1788,6 +2052,7 @@ fleet-ops:
           body: Niezapisane zmiany w tym miejscu zostaną utracone. Kliknij „Kontynuuj”, aby kontynuować.
         places-title: Miejsca
         delete-places: Usuń miejsca
+        place-action: Działania miejsca
     vehicles:
       index:
         view-vehicle: Zobacz szczegóły pojazdu...
@@ -1850,6 +2115,10 @@ fleet-ops:
         delete-orders: Usuń zamówienia
         dispatch-orders: Wyślij zamówienia
         estimated-end-date: Szacowana data zakończenia
+        select-driver: Wybierz kierowcę do zamówienia
+        select-vehicle: Wybierz pojazd do zamówienia
+        select-pickup-location: Wybierz miejsce odbioru
+        select-dropoff-location: Wybierz miejsce dostawy
         new:
           create-new-customer: Utwórz nowego klienta
           create-new-facilitator: Utwórz nowego pośrednika
@@ -2167,3 +2436,166 @@ fleet-ops:
     payments:
       payments: Płatności
       payment-settings: Ustawienia płatności
+iam:
+  extension-name: IAM
+  common:
+    address: Adres
+    bulk-action: Operacje zbiorcze
+    country: Kraj
+    create: Utworzono
+    dashboard: Przegląd
+    description: Opis
+    email: E-mail
+    export: Eksportuj
+    group: Sieci
+    member: Członkowie
+    name: Nazwa
+    new: Nowy
+    permission: Uprawnienie
+    phone: Telefon
+    photo: Zdjęcie
+    policy: Polityka
+    policies: Kontrola dostępu
+    attach-policies: Dołącz polityki
+    select-policy: Wybierz politykę
+    attach-permissions: Dołącz uprawnienia
+    attach-inline-permissions: Dołącz wbudowane uprawnienia
+    select-permissions: Wybierz uprawnienia
+    primary: Główny
+    role: Rola
+    roles: Role
+    status: Status
+    type: Typ
+    user: Profile
+    service: Usługa
+    reload: Przeładuj
+    reload-data: Przeładuj dane
+  components:
+    widget:
+      metrics:
+        title: Statystyki IAM
+    modals:
+      group-details:    
+        group-name: Nazwa grupy
+      group-form:
+        group-name: Nazwa grupy
+        group-description: Opis grupy
+        select-users-add-group: Wybierz użytkowników do dodania do grupy
+        search-select-users-add-group: Wyszukaj i wybierz użytkowników do dodania do tej grupy.
+        select-user-add-group: Wybierz użytkownika do dodania do grupy
+        no-user-add-group: Nie dodano użytkowników do grupy
+      policy-form:
+        policy-name: Nazwa polityki
+        enter-name-your-policy: Wprowadź nazwę polityki
+        policy-description: Opis polityki
+        enter-description-your-policy: Wprowadź opis polityki
+        select-permissions: Wybierz uprawnienia
+      view-policy-permissions:
+        view-permissions: >-
+          Polityka: {policyName} Uprawnienia
+      view-role-permissions:
+        view-permissions: >-
+          Rola: {roleName} Uprawnienia
+      view-user-permissions:
+        view-permissions: >-
+          Użytkownik: {userName} Uprawnienia
+      role-form:
+        role-name: Nazwa roli
+        enter-name-for-this-role: Wprowadź nazwę roli
+        role-description: Opis roli
+        enter-description-your-role: Wprowadź opis roli
+        select-permission: Wybierz uprawnienia
+    table:
+      group-members:
+        no-member: Brak członków
+    permission-picker:
+      selected: >-
+        Wybrane: 
+      search-permissions-keyword: Wyszukaj uprawnienia po słowach kluczowych
+      loading-permission: Ładowanie uprawnień...
+  groups:
+    index:
+      untitled: Bez tytułu
+      delete-group-title: Usuń grupę {groupName}
+      delete-group-success-message: Grupa {name} została usunięta.
+      delete-group: Usuń grupy
+      created: Utworzono
+      edit-group: Edytuj grupę...
+      delete-group-label: Usuń grupę...
+      new-group: Nowa grupa
+      new-group-created: Nowa grupa została utworzona.
+      edit-group-title: Edytuj grupę
+      group-actions: Akcje grupy
+      changes-group-save: Zmiany w grupie zostały zapisane.
+      data-assosciated-this-group-deleted: Czy na pewno chcesz usunąć tę grupę? Wszystkie dane powiązane z tą grupą również zostaną usunięte. Tej operacji nie można cofnąć.
+  policies:
+    index:
+      title: Kontrola dostępu
+      delete-policies: Usuń polityki
+      contact-action: Akcje kontaktowe
+      edit-policy: Edytuj politykę...
+      delete-policy: Usuń politykę...
+      new-policy: Nowa polityka
+      new-policy-created: Nowa polityka została utworzona.
+      unable-changes-policy-warning: Nie można wprowadzać zmian w polityce typu {policyType}.
+      edit-policy-title: Edytuj politykę
+      policy-actions: Akcje polityki
+      changes-policy-saved-success: Zmiany w polityce zostały zapisane.
+      unable-delete-policy-warning: Nie można usunąć polityki typu {policyType}.
+      data-assosciated-this-policy-deleted: Czy na pewno chcesz usunąć tę politykę? Wszystkie dane powiązane z tą polityką również zostaną usunięte. Tej operacji nie można cofnąć.
+      policy-deleted: Polityka {policyName} została usunięta.
+  roles:
+    index:
+      delete-roles: Usuń role
+      contact-action: Akcje kontaktowe
+      edit-role: Edytuj rolę...
+      delete-role: Usuń rolę...
+      new-role: Nowa rola
+      new-role-create: Nowa rola została utworzona
+      edit-role-title: Edytuj rolę
+      role-actions: Akcje roli
+      changes-role-saved: Zmiany w roli zostały zapisane.
+      data-assosciated-this-role-deleted: Czy na pewno chcesz usunąć tę rolę? Wszystkie dane powiązane z tą rolą również zostaną usunięte. Tej operacji nie można cofnąć.
+      role-deleted: Rola {roleName} została usunięta.
+      unable-changes-role-warning: Nie można wprowadzać zmian w roli typu {roleType}.
+      unable-delete-role-warning: Nie można usunąć roli typu {roleType}.
+  users:
+    index:
+      delete-user-title: Usuń użytkownika {userName}
+      delete-user-success-message: Użytkownik {userName} został usunięty.
+      deactivate-user-title: Dezaktywuj konto użytkownika {userName}
+      deactivate-user-success-message: Użytkownik {userName} został dezaktywowany.
+      re-activate-user-title: Ponownie aktywuj konto użytkownika {userName}
+      re-activate-user-success-message: Użytkownik {userName} został ponownie aktywowany.
+      verify-user-title: Ręczna weryfikacja konta użytkownika {userName}
+      verify-user-manually-prompt: Klikając potwierdź, ręcznie zweryfikujesz adres e-mail użytkownika. Czy na pewno chcesz pominąć weryfikację dla tego użytkownika?
+      user-verified-success-message: Użytkownik {userName} został zweryfikowany.
+      delete-users: Usuń użytkowników
+      last-login: Ostatnie logowanie
+      created-at: Utworzono dnia
+      updated-at: Zaktualizowano dnia
+      user-actions: Akcje użytkownika
+      edit-user: Edytuj użytkownika...
+      view-user-permissions: Wyświetl uprawnienia...
+      re-send-invitation: Wyślij zaproszenie ponownie...
+      deactivate-user: Dezaktywuj użytkownika...
+      activate-user: Aktywuj użytkownika...
+      delete-user: Usuń użytkownika...
+      verify-user: Zweryfikuj użytkownika...
+      change-user-password: Zmień hasło użytkownika...
+      new-user: Nowy użytkownik
+      user-invited-join-your-organization-success: Użytkownik został zaproszony do dołączenia do Twojej organizacji.
+      edit-user-title: Edytuj użytkownika
+      user-changes-saved-success: Zmiany użytkownika zostały zapisane.
+      error-you-cant-delete-yourself: Nie możesz usunąć samego siebie
+      data-assosciated-user-delete: Czy na pewno chcesz usunąć tego użytkownika? Wszystkie dane powiązane z tym użytkownikiem również zostaną usunięte. Tej operacji nie można cofnąć.
+      access-account-or-resources-unless-re-activated: Czy na pewno chcesz dezaktywować tego użytkownika? Nie będzie on mógł uzyskać dostępu do konta ani zasobów, dopóki nie zostanie ponownie aktywowany.
+      this-user-will-regain-access-to-your-organization: Czy na pewno chcesz ponownie aktywować tego użytkownika? Użytkownik odzyska dostęp do Twojej organizacji.
+      resend-invitation-to-join-organization: Wyślij zaproszenie do organizacji ponownie
+      confirming-fleetbase-will-re-send-invitation-for-user-to-join-your-organization: Po potwierdzeniu FleetYes ponownie wyśle zaproszenie dla tego użytkownika do dołączenia do Twojej organizacji.
+      invitation-resent: Zaproszenie zostało ponownie wysłane.
+  application:
+      access-management: Zarządzanie dostępem
+  home:
+      identity-access-management: Zarządzanie dostępem użytkowników
+

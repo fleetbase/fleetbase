@@ -18,9 +18,9 @@
                     {{else}}
                         {{#if @options.count}}
                             {{#if (eq @options.count 1)}}
-                                Are you sure you want to {{@options.verb}} this record?
+                                {{t "common.confirm-action.single" verb=@options.verb}}
                             {{else}}
-                                Are you sure you want to {{@options.verb}} these records?
+                               {{t "common.confirm-action.multiple" verb=@options.verb}}
                             {{/if}}
                         {{/if}}
                     {{/if}}
@@ -31,9 +31,9 @@
                         {{@options.message}}
                     {{else}}
                         {{#if (eq @options.count 1)}}
-                            You have selected 1 record for {{@options.verb}}.
+                           {{t "common.selection-info.single" count=1 verb=@options.verb}}
                         {{else}}
-                            You have selected {{@options.count}} records for {{@options.verb}}.
+                           {{t "common.selection-info.multiple" count=@options.count verb=@options.verb}}
                         {{/if}}
                     {{/if}}
                 </p>

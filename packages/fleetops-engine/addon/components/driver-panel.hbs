@@ -59,7 +59,7 @@
                 </div>
             </div>
             <div class="flex justify-end w-1/4">
-                <Badge @status={{if this.driver.online "online" "offline"}}>{{if this.driver.online "Online" "Offline"}}</Badge>
+                <Badge @status={{if this.driver.online "online" "offline"}}> {{t (if this.driver.online "common.online" "common.offline")}}</Badge>
             </div>
         </div>
     </Overlay::Header>

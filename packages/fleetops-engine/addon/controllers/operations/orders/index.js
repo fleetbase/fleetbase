@@ -343,7 +343,7 @@ export default class OperationsOrdersIndexController extends BaseController {
             sortable: true,
             filterable: true,
             filterComponent: 'filter/model',
-            filterComponentPlaceholder: 'Select driver for order',
+            filterComponentPlaceholder: this.intl.t('fleet-ops.operations.orders.index.select-driver'),
             filterParam: 'driver',
             model: 'driver',
         },
@@ -357,7 +357,7 @@ export default class OperationsOrdersIndexController extends BaseController {
             filterable: true,
             filterComponent: 'filter/model',
             filterOptionLabel: 'address',
-            filterComponentPlaceholder: 'Select pickup location',
+            filterComponentPlaceholder: this.intl.t('fleet-ops.operations.orders.index.select-pickup-location'),
             filterParam: 'pickup',
             modelNamePath: 'name',
             model: 'place',
@@ -371,7 +371,7 @@ export default class OperationsOrdersIndexController extends BaseController {
             sortable: true,
             filterable: true,
             filterComponent: 'filter/model',
-            filterComponentPlaceholder: 'Select dropoff location',
+            filterComponentPlaceholder: this.intl.t('fleet-ops.operations.orders.index.select-dropoff-location'),
             filterParam: 'dropoff',
             modelNamePath: 'name',
             model: 'place',
@@ -388,7 +388,7 @@ export default class OperationsOrdersIndexController extends BaseController {
             sortable: true,
             filterable: false,
             filterComponent: 'filter/model',
-            filterComponentPlaceholder: 'Select vehicle for order',
+            filterComponentPlaceholder: this.intl.t('fleet-ops.operations.orders.index.select-vehicle'),
             filterParam: 'vehicle',
             model: 'vehicle',
         },
@@ -582,7 +582,7 @@ export default class OperationsOrdersIndexController extends BaseController {
             if (this.statusOptions.length > 0) {
                 this.statusOptions = this.statusOptions.map(option => {  
                     return {  
-                        label: option.label, // Adjust this if the property name is different  
+                        label: `statuses.${option.label.toLowerCase().replace(/\s+/g, '_')}`,
                         code: option.label // Adjust this if the property name is different  
                     };  
                 }); 
@@ -591,7 +591,7 @@ export default class OperationsOrdersIndexController extends BaseController {
             this.statusOptions = yield this.fetch.get('orders/statuses?is_filter_status=1');
             this.statusOptions = this.statusOptions.map(option => {  
                 return {  
-                    label: option.label, // Adjust this if the property name is different  
+                    label: `statuses.${option.label.toLowerCase().replace(/\s+/g, '_')}`,
                     code: option.label // Adjust this if the property name is different  
                 };  
             });
@@ -909,7 +909,7 @@ export default class OperationsOrdersIndexController extends BaseController {
             title: this.intl.t('fleet-ops.operations.orders.index.dispatch-title'),
             body: this.intl.t('fleet-ops.operations.orders.index.dispatch-body'),
             acceptButtonScheme: 'primary',
-            acceptButtonText: 'Dispatch',
+            acceptButtonText: this.intl.t('fleet-ops.operations.orders.index.view.dispatch'),
             acceptButtonIcon: 'paper-plane',
             order,
             confirm: async (modal) => {
@@ -956,7 +956,7 @@ export default class OperationsOrdersIndexController extends BaseController {
 
         this.crud.bulkDelete(selected, {
             modelNamePath: `public_id`,
-            acceptButtonText: 'Delete Orders',
+            acceptButtonText: this.intl.t('fleet-ops.operations.orders.index.delete-orders'),
             onSuccess: async () => {
                 await this.hostRouter.refresh();
                 this.table.untoggleSelectAll();
@@ -1012,7 +1012,7 @@ export default class OperationsOrdersIndexController extends BaseController {
         }
 
         this.crud.bulkAction('dispatch', selected, {
-            acceptButtonText: 'Dispatch Orders',
+            acceptButtonText: this.intl.t('fleet-ops.operations.orders.index.dispatch-orders'),
             acceptButtonScheme: 'magic',
             acceptButtonIcon: 'rocket',
             modelNamePath: 'public_id',

@@ -18,6 +18,7 @@ export default class ConsoleAccountIndexController extends Controller {
      * @memberof ConsoleAccountIndexController
      */
     @service fetch;
+    @service intl;
 
     /**
      * Inject the `notifications` service.
@@ -87,7 +88,7 @@ export default class ConsoleAccountIndexController extends Controller {
         if (canUpdateProfile === true) {
             try {
                 const user = yield this.user.save();
-                this.notifications.success('Profile changes saved.');
+                this.notifications.success(this.intl.t('fleet-ops.user-management.profile-changes-saved'));
                 this.currentUser.set('user', user);
             } catch (error) {
                 this.notifications.serverError(error);

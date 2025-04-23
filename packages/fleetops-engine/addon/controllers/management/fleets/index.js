@@ -264,7 +264,7 @@ export default class ManagementFleetsIndexController extends BaseController {
             ddButtonText: false,
             ddButtonIcon: 'ellipsis-h',
             ddButtonIconPrefix: 'fas',
-            ddMenuLabel: 'Fleet Actions',
+            ddMenuLabel: this.intl.t('fleet-ops.management.fleets.index.fleet-action'),
             cellClassNames: 'overflow-visible',
             wrapperClass: 'flex items-center justify-end mx-2',
             width: '10%',

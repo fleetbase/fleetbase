@@ -1,25 +1,25 @@
-<ContentPanel @title="Filesystem" @open={{true}} @pad={{true}} @panelBodyClass="bg-white dark:bg-gray-800">
-    <InputGroup @name="Driver" @helpText="Select the default filesystem driver for FleetYes to use.">
-        <Select @options={{this.disks}} @value={{this.driver}} @onSelect={{this.setDriver}} @placeholder="Select filesystem driver" class="w-full" disabled={{this.isLoading}} />
+<ContentPanel @title={{t "common.filesystem"}} @open={{true}} @pad={{true}} @panelBodyClass="bg-white dark:bg-gray-800">
+    <InputGroup @name={{t "fleet-ops.common.driver"}} @helpText={{t "fleet-ops.user-management.service.file-system.default-file-system"}}>
+        <Select @options={{this.disks}} @value={{this.driver}} @onSelect={{this.setDriver}} @placeholder={{t "fleet-ops.user-management.service.file-system.select-filesystem-driver"}} class="w-full" disabled={{this.isLoading}} />
     </InputGroup>
     {{#if (eq this.driver "s3")}}
-        <InputGroup @name="S3 Bucket" @value={{this.s3Bucket}} disabled={{this.isLoading}} />
-        <InputGroup @name="S3 URL" @value={{this.s3Url}} disabled={{this.isLoading}} />
-        <InputGroup @name="S3 Endpoint" @value={{this.s3Endpoint}} disabled={{this.isLoading}} />
+        <InputGroup @name={{t "fleet-ops.user-management.service.file-system.s3-bucket"}} @value={{this.s3Bucket}} disabled={{this.isLoading}} />
+        <InputGroup @name={{t "fleet-ops.user-management.service.file-system.s3-url"}} @value={{this.s3Url}} disabled={{this.isLoading}} />
+        <InputGroup @name={{t "fleet-ops.user-management.service.file-system.s3-endpoint"}} @value={{this.s3Endpoint}} disabled={{this.isLoading}} />
     {{/if}}
     {{#if (eq this.driver "gcs")}}
         {{#if this.isGoogleCloudStorageEnvConfigued}}
             <div class="border border-yellow-900 shadow-sm rounded-lg bg-yellow-200 mb-4">
                 <div class="px-3 py-2 text-sm text-yellow-900 flex items-center">
                     <FaIcon @icon="triangle-exclamation" @size="md" class="mr-1.5" />
-                    Warning! GCS is already configured in the server environment. Changing values below may break this.
+                    {{t "fleet-ops.user-management.service.file-system.warning-gcs"}}
                 </div>
             </div>
         {{/if}}
-        <InputGroup @name="GCS Bucket" @value={{this.gcsBucket}} disabled={{this.isLoading}} />
-        <InputGroup @name="GCS Service Account Key File" @wrapperClass="">
+        <InputGroup @name={{t "fleet-ops.user-management.service.file-system.gcs-bucket"}} @value={{this.gcsBucket}} disabled={{this.isLoading}} />
+        <InputGroup @name={{t "fleet-ops.user-management.service.file-system.gcs-account-key"}} @wrapperClass="">
             <div class="flex flex-row items-center mb-0i">
-                <UploadButton @name="firebase-service-account" @accept="text/plain,text/javascript,application/json" @onFileAdded={{this.uploadGcsCredentialsFile}} @buttonText="Upload Service Account JSON" @icon="upload" class="w-auto m-0i mt-0i" />
+                <UploadButton @name="firebase-service-account" @accept="text/plain,text/javascript,application/json" @onFileAdded={{this.uploadGcsCredentialsFile}} @buttonText={{t "fleet-ops.user-management.service.file-system.upload-service-account"}} @icon="upload" class="w-auto m-0i mt-0i" />
                 {{#if this.gcsCredentialsFile}}
                     <div class="ml-2.5 text-sm dark:text-white text-black flex flex-row items-center border border-blue-500 rounded-lg px-2 py-0.5 -mt-1">
                         <FaIcon @icon="file-text" @size="sm" class="mr-2 dark:text-white text-black" />
@@ -38,9 +38,9 @@
             <span class="text-xs">{{this.this.testResponse.message}}</span>
         </div>
     {{/if}}
-    <Button @wrapperClass="mt-3" @icon="plug" @text="Test Config" @onClick={{this.test}} @isLoading={{this.isLoading}} />
+    <Button @wrapperClass="mt-3" @icon="plug" @text={{t "fleet-ops.user-management.service.mail.test-config"}} @onClick={{this.test}} @isLoading={{this.isLoading}} />
 </ContentPanel>
 
 <EmberWormhole @to="next-view-section-subheader-actions">
-    <Button @type="primary" @size="sm" @icon="save" @text="Save Changes" @onClick={{this.save}} @disabled={{this.isLoading}} @isLoading={{this.isLoading}} />
+    <Button @type="primary" @size="sm" @icon="save" @text={{t "common.save-changes"}} @onClick={{this.save}} @disabled={{this.isLoading}} @isLoading={{this.isLoading}} />
 </EmberWormhole>

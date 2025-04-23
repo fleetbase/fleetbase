@@ -76,6 +76,12 @@ common:
   permissions-required-for-changes: No tienes los permisos necesarios para realizar
     cambios.
   push-notifications: Notificaciones push
+  latitude: Latitud
+  longitude: Longitud
+  upload-file: Subir archivo
+  upload: Subir
+  select-country: Seleccionar país...
+  enter-unit: "Introducir {unit}"
   role: Role
   model-delete-confirmation: ¿Estás seguro de que quieres eliminar este {modelName}?
   model-delete-success: El {modelName} ha sido eliminado.
@@ -96,6 +102,29 @@ common:
   results-page: resultados
   next-page: Siguiente
   previous-page: Anterior
+  create-user-success: ¡Nuevo usuario creado con éxito!
+  select-from-map: Seleccionar desde el mapa
+  online: En línea
+  offline: Desconectado
+  start-import: Iniciar importación
+  import-warn: No se han subido hojas de cálculo para procesar la importación.
+  new-order: Nuevo pedido
+  submit: Enviar
+  new-field: Nuevo campo
+  to: a
+  confirm-action:
+    single: ¿Está seguro de que desea {verb} este registro?
+    multiple: ¿Está seguro de que desea {verb} estos registros?
+  selection-info:
+    single: Ha seleccionado {count} registro para {verb}
+    multiple: Ha seleccionado {count} para {verb}
+  tracking-details:
+    create-order: Nuevo pedido creado.
+    accept-order: Pedido aceptado por el conductor.
+    dispacth-order: El pedido ha sido despachado.
+    update-order: Estado del pedido actualizado por el conductor.
+    start-order: El pedido ha sido iniciado.
+  duplicate-waypoint-error: Punto de parada duplicado detectado. Por favor, utilice ubicaciones únicas para cada punto.
 statuses:
     draft: Borrador
     pending-approval: Pendiente de aprobación
@@ -132,6 +161,79 @@ statuses:
     requires-update: Requiere actualización  
     order_canceled: Pedido cancelado
     all-status: All Statuses
+
+
+    resource-allocation: Asignación de recursos
+    compliance: Cumplimiento
+    cost-overruns: Sobrecostos
+    communication: Comunicación
+    vendor-management-issues: Problemas de gestión de proveedores
+
+    operational: Operacional
+    software-technical: Técnico de software
+    customer: Cliente
+    security: Seguridad
+    environmental-sustainability: Sostenibilidad ambiental
+    vehicle: Vehículo
+    driver: Conductor
+    route: Ruta
+    payload-cargo: Carga útil
+
+    mechanical-problems: Problemas mecánicos
+    cosmetic-damages: Daños cosméticos
+    tire-issues: Problemas con llantas
+    electronics-and-instruments: Electrónica e instrumentos
+    maintanence-alerts: Alertas de mantenimiento
+    fuel-efficiency-issues: Problemas de eficiencia de combustible
+    behaviour-concerns: Preocupaciones de comportamiento
+    documentation: Documentación
+    time-management: Gestión del tiempo
+    training-needs: Necesidades de formación
+    health-and-safety-violations: Violaciones de salud y seguridad
+    inefficient-routes: Rutas ineficientes
+    safety-concerns: Preocupaciones de seguridad
+    blocked-routes: Rutas bloqueadas
+    environmental-considerations: Consideraciones ambientales
+    unfavorable-weather-conditions: Condiciones climáticas desfavorables
+    damaged-goods: Mercancías dañadas
+    misplaced-goods: Mercancías extraviadas
+    documentation-issues: Problemas de documentación
+    temperature-sensitive-goods: Mercancías sensibles a la temperatura
+    incorrect-cargo-loading: Carga incorrecta de mercancías
+    bugs: Errores
+    ui/ux-concerns: Preocupaciones de UI/UX
+    integration-failures: Fallos de integración
+    performance: Rendimiento
+    feature-requests: Solicitudes de características
+    security-vulnerabilities: Vulnerabilidades de seguridad
+    billing-discrepancies: Discrepancias de facturación
+    service-quality: Calidad del servicio
+    communication-breakdown: Fallo en la comunicación
+    feedback-and-suggestions: Comentarios y sugerencias
+    order-errors: Errores en el pedido
+    unauthorized-access: Acceso no autorizado
+    data-concerns: Preocupaciones sobre los datos
+    physical-security: Seguridad física
+    data-integrity-issues: Problemas de integridad de los datos
+    fuel-consumption: Consumo de combustible
+    carbon-footprint: Huella de carbono
+    waste-management: Gestión de residuos
+    green-initiatives-opportunities: Oportunidades de iniciativas ecológicas
+    behavior-concerns: Preocupaciones de comportamiento
+    disabled: Deshabilitado
+    decommissioned: Fuera de servicio
+    iam: Desarrolladores
+    developers: Desarrolladores
+    fleet-ops: Operaciones de flota
+    registry-bridge: Puente de registro
+    storefront: Vitrina
+
+
+    order_created: Creado
+    order_dispatched: Despachado
+    order_accepted: Aceptado
+    order_started: Iniciado
+
 component:
   file:
     dropdown-label: Acciones de archivos
@@ -456,6 +558,154 @@ fleet-ops:
   iam: Gestión de acceso de usuarios
   fleet-ops: Flota Sí Flujo
   extension-name: Operaciones de flota
+  user-management:
+    profiles: Perfiles
+    networks: Redes
+    roles: Role
+    access-control: Control de acceso
+    user-access-management: Gestión de acceso de usuario
+    you-are-about-to-reset-the-password-for: Estás a punto de restablecer la contraseña para
+    please-enter-new-password: Por favor ingresa la nueva contraseña y confírmala a continuación. Tienes la opción de enviar las nuevas credenciales al usuario por correo electrónico seleccionando la casilla.
+    send-password-credentials: Enviar credenciales de contraseña al usuario
+    reset-user-credentials: Restablecer las credenciales del usuario
+    reset-credentials: Restablecer las credenciales
+    profile-changes-saved: Cambios en el perfil guardados.
+    change-password: Cambiar la contraseña
+    confirm-and-change: Confirmar y cambiar la contraseña
+    validate-current-password: Validar la contraseña actual
+    validate-password: Validar la contraseña
+    validate-current-password-before-change: Debes validar tu contraseña actual antes de que pueda ser cambiada.
+    password-changes-saved: Contraseña cambiada con éxito.
+    failed-to-change-password: No se pudo cambiar la contraseña.
+
+    your-organization: Tus organizaciones
+    create-organization: Crear organización
+    member-since: Miembro desde
+    2fa-settings: Configuración de 2FA
+    save-2fa-settings: Guardar configuración de 2FA
+    enable-2fa: Habilitar la autenticación de dos factores
+    require-2fa-setup: Requerir que los usuarios configuren 2FA
+    2fa-settings-saved: Configuración de 2FA guardada con éxito.
+    2fa-settings-saved-by-admin: Configuración de 2FA guardada con éxito para el administrador.
+    2fa-settings-saved-for-organization: Configuración de 2FA guardada con éxito para la organización.
+    view-all-notifications: Ver todas las notificaciones
+    no-unread-notifications: No hay notificaciones no leídas
+    unread-notifications: Notificación no leída
+    choose-authentication-method: Elija un método de autenticación
+    you-will-enter-code: Además de su nombre de usuario y contraseña, deberá ingresar un código (enviado por aplicación o SMS) para iniciar sesión en su cuenta.
+    loading-2fa-config: Cargando la configuración de 2FA...
+    select-country: Seleccionar país
+    upload: Subir
+    uploading: Subiendo...
+
+    twofa:
+      sms:
+        name: "SMS"
+        description: "Reciba un código único por SMS"
+      email:
+        name: "Correo electrónico"
+        description: "Reciba un código único por correo electrónico"
+    service:
+      aws:
+        name: AWS
+        access-key: Clave de acceso AWS
+        access-secret: Secreto de acceso AWS
+        access-region: Región AWS
+      google-map:
+          name: Google Maps
+          api-key: Clave API Google Maps
+          locale: Localización Google Maps
+      twilo:
+          name: Twilio
+          sid: Twilio SID
+          token: Twilio Token
+          from: Twilio From
+          test-sms: Enviar SMS de prueba aquí
+          twilo-config: Probar configuración Twilio
+      sentry:
+          name: Sentry
+          sentry-dsn: Sentry DSN
+          test-sentry-config: Probar configuración Sentry
+      ip:
+        name: IP Info
+        key: Clave API IP Info
+        save-changes: Guardar cambios
+      mail:
+        name: Mail
+        mailer: Mailer
+        default-mailer: Seleccione el mailer predeterminado que FleetYes debe usar.
+        smtp-host: Host SMTP
+        smtp-port: Puerto SMTP
+        smtp-encryption: Cifrado SMTP
+        enable-tls: Cifrado TLS activado
+        smtp-username: Nombre de usuario SMTP
+        smtp-password: Contraseña SMTP
+        smtp-timeout: Tiempo de espera SMTP
+        smtp-auth-mode: Modo de autenticación SMTP
+        mailgun-domain: Dominio Mailgun
+        mailgun-endpoint: Endpoint Mailgun
+        mailgun-secret: Secreto Mailgun
+        postmark-token: Token Postmark
+        sendgrid-api-key: Clave API Sendgrid
+        resend-api-key: Clave API Resend
+        from-address: Dirección del remitente
+        help-text-from-address: Ingrese la dirección de correo electrónico desde la cual FleetYes enviará correos.
+        from-name: Nombre del remitente
+        help-text-from-name: Ingrese el nombre desde el cual FleetYes enviará correos.
+        test-config: Probar configuración
+        select-mailer: Seleccionar mailer
+        mail-success: Configuración de correo guardada.
+      file-system:
+        default-file-system: Seleccione el controlador de sistema de archivos predeterminado que FleetYes debe usar.
+        select-filesystem-driver: Seleccionar controlador de sistema de archivos
+        s3-bucket: S3 Bucket
+        s3-url: URL S3
+        s3-endpoint: Endpoint S3
+        warning-gcs: ¡Advertencia! GCS ya está configurado en el entorno del servidor. Cambiar los valores a continuación podría romper esto.
+        gcs-bucket: GCS Bucket
+        gcs-account-key: Archivo de clave de cuenta de servicio GCS
+        upload-service-account: Subir el archivo JSON del cuenta de servicio
+        filesystem-saved: Configuración del sistema de archivos guardada.
+      queue:
+          default-queue-driver: Seleccione el controlador de cola predeterminado que FleetYes debe usar.
+          select-queue-driver: Seleccionar controlador de cola
+          beanstalk-host: Host de Beanstalk
+          beanstalk-queue: Cola de Beanstalk
+          sqs-prefix: Prefijo SQS
+          sqs-queue: Cola SQS
+          sqs-suffix: Sufijo SQS
+          queue-success: Configuración de cola guardada.
+      socket:
+        sockt-cluster: Conexión SocketCluster
+        sockt-cluster-cannot-change: La configuración de SocketCluster no se puede cambiar en este momento.
+        awaiting-events: Esperando eventos
+        test-socket: Probar conexión Socket
+        socket-connected: Socket conectado
+        socket-subscribed: Socket suscrito al canal de prueba
+        socket-error: ¡Error de conexión Socket!
+      apn:
+          apn-configuration: Configuración APN
+          apn-key-id: ID de la clave APN
+          apn-team-id: ID del equipo APN
+          apn-app-bundle-id: ID del paquete de la aplicación APN
+          upload-p8: Subir archivo de clave P8
+          apn-production: Producción APN
+
+      firebase:
+          firebase-configuration: Configuración de Firebase
+          test-push-notification: Probar notificación push
+          push-notification-title: Título de la notificación push
+          push-notification-message: Mensaje de la notificación push
+          apn-device-token: Token de dispositivo APN
+          fcm-device-token: Token de dispositivo FCM
+          message: Mensaje
+          title: Título
+          notification-success: La configuración del canal de notificación ha sido guardada.
+
+
+
+
+
   common:
     active-manpower: Fuerza laboral activa
     address: DIRECCIÓN
@@ -487,7 +737,7 @@ fleet-ops:
     fleet: Flota
     height: Altura
     host: Anfitrión
-    id: IDENTIFICACIÓN
+    id: Identificación
     internal-id: Identificación interna
     item: Elemento
     key: Llave
@@ -565,6 +815,8 @@ fleet-ops:
     tracking-number: El número de rastreo
     end_date_cannot_be_earlier: La fecha de finalización no puede ser anterior.
     end_date_cannot_be_earlier_than_start_date: La fecha de finalización no puede ser anterior a la fecha de inicio.
+    no_driver: Sin conductor
+    no_phone: Sin teléfono
   component:
     activity-logic-builder:
       activity-logic: Lógica de la actividad
@@ -1060,6 +1312,14 @@ fleet-ops:
         button-text: o seleccione hojas de trabajo para descargar
         spreadsheets: hojas de cálculo
         upload-queue: Cola de descarga
+        title: Importar pedido(s) con hojas de cálculo
+        start-upload-button: Iniciar carga
+        uploading: Subiendo...
+        processing: Procesando...
+        type: Tipo
+        file-name: Nombre del archivo
+        file-size: Tamaño del archivo
+        upload-date: Fecha de carga
       order-label:
         loading: Cargando la etiqueta...
       order-new-activity:
@@ -1281,6 +1541,7 @@ fleet-ops:
         driver-no-vehicle-title: Tanto el conductor como el vehículo deben ser seleccionados para continuar.
         ok-button: De acuerdo
         missing-info: ¡Falta información!
+        required-error: Se deben seleccionar tanto el conductor como el vehículo para continuar.
         date: fecha prevista
         end-date: Fecha estimada de finalización
         driver-assigned: Conductor
@@ -1392,6 +1653,7 @@ fleet-ops:
       driver-status: Seleccionar estado del conductor
       order-history: Historial de pedidos
       select-user: Seleccionar usuario
+      create-user: Crear nuevo usuario
     driver-panel:
       user-account: Cuenta de usuario
       driver-details: Detalles del conductor
@@ -1866,6 +2128,7 @@ fleet-ops:
         assign-driver: Asignar un conductor a la flota...
         delete-fleet: Eliminar la flota...
         delete-button: Eliminar flotas
+        fleet-action: Acciones de flota
         edit:
           body: Los cambios no guardados en esta flota se perderán. Haga clic en continuar
             para proceder.
@@ -1935,6 +2198,7 @@ fleet-ops:
             en continuar para continuar.
         places-title: Lugares
         delete-places: Eliminar ubicaciones
+        place-action: Acciones del lugar
     vehicles:
       index:
         view-vehicle: Ver detalles del vehículo...
@@ -2001,6 +2265,10 @@ fleet-ops:
         delete-orders: Eliminar pedidos
         dispatch-orders: Enviar pedidos
         estimated-end-date: Fecha estimada de finalización
+        select-driver: Seleccionar conductor para el pedido
+        select-vehicle: Seleccionar vehículo para el pedido
+        select-pickup-location: Seleccionar lugar de recogida
+        select-dropoff-location: Seleccionar lugar de entrega
         new:
           create-new-customer: Crear un nuevo cliente
           create-new-facilitator: Crear un nuevo facilitador

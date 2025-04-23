@@ -8,7 +8,9 @@
         @onChange={{this.selectCountry}}
         @triggerClass="form-select form-input {{@triggerClass}}"
         @dropdownClass={{or @dropdownClass "ember-model-select__dropdown"}}
-        @placeholder={{or @placeholder "Select country..."}}
+
+        @placeholder={{or @placeholder (t "common.select-country")}}
+
         @disabled={{or this.disabled this.fetchCountries.isRunning}}
         @allowClear={{@allowClear}}
         ...attributes
