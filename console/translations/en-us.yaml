@@ -239,6 +239,7 @@ services:
   dashboard-service:
     create-dashboard-success-notification: New dashboard `{dashboardName}` created succesfully.
     delete-dashboard-success-notification: Dashboard `{dashboardName}` was deleted.
+  
 auth:
   verification:
     header-title: Account Verification
@@ -500,6 +501,112 @@ fleet-ops:
     view-all-notifications : View all notifications
     no-unread-notifications : No unread notifications
     unread-notifications : Unread notification
+    choose-authentication-method : Choose an authentication method
+    you-will-enter-code : In addition to your username and password, you'll have to enter a code (delivered via app or SMS) to sign in to your account
+    loading-2fa-config : Loading 2FA Config...
+    twofa:
+      sms:
+        name: "SMS"
+        description: "Receive a unique code via SMS"
+      email:
+        name: "Email"
+        description: "Receive a unique code via Email"
+    service:
+      aws:
+        name : AWS
+        access-key : AWS Access Key
+        access-secret : AWS Access Secret
+        access-region : AWS Region
+      google-map:
+        name : Google Maps
+        api-key : Google Maps API Key
+        locale : Google Maps Locale
+      twilo:
+        name : Twilio
+        sid : Twilio SID
+        token : Twilio Token
+        from : Twilio From
+        test-sms : Send Test SMS Here
+        twilo-config : Test Twilio Config
+      sentry:
+        name : Sentry
+        sentry-dsn : Sentry DSN
+        test-sentry-config : Test Sentry Config
+      ip:
+        name : IP Info
+        key : IP Info API Key
+        save-changes : Save Changes
+      mail:
+        name : Mail
+        mailer : Mailer
+        default-mailer : Select the default mailer for FleetYes to use.
+        smtp-host : SMTP Host
+        smtp-port : SMTP Port
+        smtp-encryption : SMTP Encryption
+        enable-tls : Enabled TLS Encryption
+        smtp-username : SMTP Username
+        smtp-password : SMTP Password
+        smtp-timeout : SMTP Timeout
+        smtp-auth-mode : SMTP Auth Mode
+        mailgun-domain : Mailgun Domain
+        mailgun-endpoint : Mailgun Endpoint
+        mailgun-secret : Mailgun Secret
+        postmark-token : Postmark Token
+        sendgrid-api-key : Sendgrid API Key
+        resend-api-key : Resend API Key
+        from-address : From Address 
+        help-text-from-address : Input the email address for FleetYes to send emails from.
+        from-name : From Name
+        help-text-from-name : Input the name for FleetYes to send emails from.
+        test-config : Test Config
+        select-mailer : Select mailer
+        mail-success : Mail configuration saved.
+      file-system:
+        default-file-system : Select the default filesystem driver for FleetYes to use.  
+        select-filesystem-driver : Select filesystem driver
+        s3-bucket : S3 Bucket
+        s3-url : S3 URL
+        s3-endpoint : S3 Endpoint
+        warning-gcs: Warning! GCS is already configured in the server environment. Changing values below may break this.
+        gcs-bucket : GCS Bucket
+        gcs-account-key : GCS Service Account Key File
+        upload-service-account : Upload Service Account JSON
+        filesystem-saved : Filesystem configuration saved.
+      queue:
+        default-queue-driver : Select the default queue driver for FleetYes to use.
+        select-queue-driver : Select queue driver
+        beanstalk-host : Beanstalk Host
+        beanstalk-queue : Beanstalk Queue
+        sqs-prefix : SQS Prefix
+        sqs-queue : SQS Queue
+        sqs-suffix : SQS Suffix
+        queue-success : Queue configuration saved.
+      socket:
+        sockt-cluster : Socket Cluster Connection
+        sockt-cluster-cannot-change : The SocketCluster configuration cannot be changed at this time.
+        awaiting-events : Awaiting events
+        test-socket : Test Socket Connection
+        socket-connected : Socket is connected
+        socket-subscribed : Socket subscribed to test channel
+        socket-error : Socket connection error!
+      apn:
+        apn-configuration : APN Configutation
+        apn-key-id : APN Key ID
+        apn-team-id : APN Team ID
+        apn-app-bundle-id : APN App Bundle ID
+        upload-p8 : Upload P8 Key File
+        apn-production : APN Production
+      firebase:
+        firebase-configuration : Firebase Configutation
+        test-push-notification : Test Push Notification
+        push-notification-title : Push Notification Title
+        push-notification-message : Push Notification Message
+        apn-device-token : APN Device Token
+        fcm-device-token : FCM Device Token
+        message : Message
+        title : Title
+        notification-success : Notification channel's configuration saved.
+
   common:
     active-manpower: Active Manpower
     address: Address 

@@ -68,7 +68,7 @@ export default class ConfigureFilesystemComponent extends Component {
                 gcsBucket: this.gcsBucket,
             })
             .then(() => {
-                this.notifications.success('Filesystem configuration saved.');
+                this.notifications.success(this.intl.t('fleet-ops.user-management.service.file-system.filesystem-saved'));
             })
             .finally(() => {
                 this.isLoading = false;

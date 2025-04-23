@@ -136,7 +136,7 @@ export default class ConfigureNotificationChannelsComponent extends Component {
                 firebase: firebaseConfig,
             })
             .then(() => {
-                this.notifications.success("Notification channel's configuration saved.");
+                this.notifications.success(this.intl.t('fleet-ops.user-management.service.firebase.notification-success'));
             })
             .finally(() => {
                 this.isLoading = false;

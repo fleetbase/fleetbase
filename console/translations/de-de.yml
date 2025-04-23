@@ -237,6 +237,8 @@ services:
   dashboard-service:
     create-dashboard-success-notification: Neues Dashboard `{dashboardName}` erfolgreich erstellt.
     delete-dashboard-success-notification: Dashboard `{dashboardName}` wurde gelöscht.
+  
+
 auth:
   verification:
     header-title: Konto-Verifizierung
@@ -498,6 +500,111 @@ fleet-ops:
     view-all-notifications: Alle Benachrichtigungen anzeigen
     no-unread-notifications: Keine ungelesenen Benachrichtigungen
     unread-notifications: Ungelesene Benachrichtigung
+    choose-authentication-method: Wählen Sie eine Authentifizierungsmethode
+    you-will-enter-code: Zusätzlich zu Ihrem Benutzernamen und Passwort müssen Sie einen Code eingeben (der über die App oder SMS zugestellt wird), um sich bei Ihrem Konto anzumelden.
+    loading-2fa-config: Lade 2FA-Konfiguration...
+    twofa:
+      sms:
+        name: SMS
+        description: Erhalten Sie einen einzigartigen Code per SMS
+      email:
+        name: E-Mail
+        description: Erhalten Sie einen einzigartigen Code per E-Mail
+    service:
+      aws:
+        name: AWS
+        access-key: AWS Access Key
+        access-secret: AWS Access Secret
+        access-region: AWS Region
+      google-map:
+          name: Google Maps
+          api-key: Google Maps API Key
+          locale: Google Maps Locale
+      twilo:
+          name: Twilio
+          sid: Twilio SID
+          token: Twilio Token
+          from: Twilio From
+          test-sms: Send Test SMS Here
+          twilo-config: Test Twilio Config
+      sentry:
+          name: Sentry
+          sentry-dsn: Sentry DSN
+          test-sentry-config: Test Sentry Config
+      ip:
+        name: IP Info
+        key: IP Info API Key
+        save-changes: Save Changes
+      mail:
+        name: Mail
+        mailer: Mailer
+        default-mailer: Wählen Sie den Standard-Mailer, den FleetYes verwenden soll.
+        smtp-host: SMTP-Host
+        smtp-port: SMTP-Port
+        smtp-encryption: SMTP-Verschlüsselung
+        enable-tls: Aktivierte TLS-Verschlüsselung
+        smtp-username: SMTP-Benutzername
+        smtp-password: SMTP-Passwort
+        smtp-timeout: SMTP-Timeout
+        smtp-auth-mode: SMTP-Authentifizierungsmodus
+        mailgun-domain: Mailgun-Domain
+        mailgun-endpoint: Mailgun-Endpunkt
+        mailgun-secret: Mailgun-Geheimnis
+        postmark-token: Postmark-Token
+        sendgrid-api-key: Sendgrid API-Schlüssel
+        resend-api-key: Resend API-Schlüssel
+        from-address: Absenderadresse
+        help-text-from-address: Geben Sie die E-Mail-Adresse ein, von der FleetYes E-Mails senden soll.
+        from-name: Absendername
+        help-text-from-name: Geben Sie den Namen ein, von dem FleetYes E-Mails senden soll.
+        test-config: Testkonfiguration
+        select-mailer: Wählen Sie den Mailer
+        mail-success: Mail-Konfiguration gespeichert.
+      file-system:
+        default-file-system: Wählen Sie den Standard-Dateisystemtreiber, den FleetYes verwenden soll.
+        select-filesystem-driver: Wählen Sie den Dateisystemtreiber
+        s3-bucket: S3-Bucket
+        s3-url: S3-URL
+        s3-endpoint: S3-Endpunkt
+        warning-gcs: Warnung! GCS ist bereits in der Serverumgebung konfiguriert. Das Ändern der untenstehenden Werte kann dies beeinträchtigen.
+        gcs-bucket: GCS-Bucket
+        gcs-account-key: GCS Service-Kontodatei
+        filesystem-saved: Dateisystemkonfiguration gespeichert.
+      queue:
+          default-queue-driver: Wählen Sie den Standardwarteschlangen-Treiber, den FleetYes verwenden soll.
+          select-queue-driver: Wählen Sie den Warteschlangen-Treiber
+          beanstalk-host: Beanstalk-Host
+          beanstalk-queue: Beanstalk-Warteschlange
+          sqs-prefix: SQS-Präfix
+          sqs-queue: SQS-Warteschlange
+          sqs-suffix: SQS-Suffix
+          queue-success: Warteschlangen-Konfiguration gespeichert.
+      socket:
+        sockt-cluster: SocketCluster-Verbindung
+        sockt-cluster-cannot-change: Die SocketCluster-Konfiguration kann derzeit nicht geändert werden.
+        awaiting-events: Warten auf Ereignisse
+        test-socket: Test Socket-Verbindung
+        socket-connected: Socket ist verbunden
+        socket-subscribed: Socket abonniert den Testkanal
+        socket-error: Fehler bei der Socket-Verbindung!
+      apn:
+          apn-configuration: APN-Konfiguration
+          apn-key-id: APN Key ID
+          apn-team-id: APN Team ID
+          apn-app-bundle-id: APN App Bundle ID
+          upload-p8: P8-Schlüsseldatei hochladen
+          apn-production: APN-Produktion
+
+      firebase:
+          firebase-configuration: Firebase-Konfiguration
+          test-push-notification: Test-Push-Benachrichtigung
+          push-notification-title: Titel der Push-Benachrichtigung
+          push-notification-message: Nachricht der Push-Benachrichtigung
+          apn-device-token: APN-Gerätetoken
+          fcm-device-token: FCM-Gerätetoken
+          message: Nachricht
+          title: Titel
+          notification-success: Die Konfiguration des Benachrichtigungskanals wurde gespeichert.
 
 
 
