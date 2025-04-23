@@ -171,13 +171,14 @@
                     <TimelineItem @activeStatus={{@model.status}} as |trackingStatus|>
                         <div class="flex flex-col px-3 py-2 rounded text-sm leading-4 space-y-2 bg-gray-100 dark:bg-gray-900 dark:text-white">
                             <div class="flex flex-col space-y-1">
-                                <div class="text-xs font-semibold truncate">{{trackingStatus.status}}</div>
-                                <div class="text-xs truncate">{{n-a trackingStatus.details}}</div>
+                                <div class="text-xs font-semibold truncate"> {{t (concat "statuses." (this.normalizeStatus trackingStatus.status))}}
+                                </div>
+                                <div class="text-xs truncate">{{t (this.formatTrackingDetails trackingStatus.details)}}</div>
                                 <div class="text-xs">{{trackingStatus.createdAtShortWithTime}}</div>
                             </div>
                             <Attach::Tooltip @class="clean" @animation="scale" @placement="top">
                                 <InputInfo>
-                                    <div class="text-xs">{{or trackingStatus.details trackingStatus.status}}</div>
+                                    <div class="text-xs">{{t (this.formatTrackingDetails trackingStatus.details trackingStatus.status)}}</div>
                                     <div class="text-xs">{{trackingStatus.createdAtShortWithTime}}</div>
                                 </InputInfo>
                             </Attach::Tooltip>
@@ -191,7 +192,7 @@
             {{/if}}
         </ContentPanel>
 
-        <ContentPanel @title="Details" @open={{true}} @pad={{true}} @panelBodyClass="bg-white dark:bg-gray-800" @actionButtons={{this.detailPanelButtons}}>
+        <ContentPanel @title={{t "fleet-ops.common.details"}} @open={{true}} @pad={{true}} @panelBodyClass="bg-white dark:bg-gray-800" @actionButtons={{this.detailPanelButtons}}>
             <div class="flex mb-4 space-x-2">
                 {{#if @model.dispatched}}
                     <Badge @hideStatusDot={{false}} @status="Dispatched" />

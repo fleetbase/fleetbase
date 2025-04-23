@@ -1,5 +1,5 @@
 <div class="p-4 space-y-4">
-    <ContentPanel @title="Map" @open={{true}}>
+    <ContentPanel @title={{t "fleet-ops.operations.orders.index.map"}} @open={{true}}>
         <LeafletMap class="w-full h-48 rounded-b-md shadow-md" @lat={{@place.latitude}} @lng={{@place.longitude}} @zoom={{17}} @zoomControl={{false}} as |layers|>
             <layers.tile @url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png" />
             <layers.marker
@@ -19,7 +19,7 @@
             </layers.marker>
         </LeafletMap>
     </ContentPanel>
-    <ContentPanel @title="Details" @open={{true}} @pad={{true}} @panelBodyClass="bg-white dark:bg-gray-900">
+    <ContentPanel @title={{t "fleet-ops.common.details"}} @open={{true}} @pad={{true}} @panelBodyClass="bg-white dark:bg-gray-900">
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-2 text-xs dark:text-gray-100">
             <div class="field-info-container col-span-3">
                 <div class="field-name">{{t "fleet-ops.common.name"}}</div>

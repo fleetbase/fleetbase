@@ -12,6 +12,7 @@ import findActiveTab from '../utils/find-active-tab';
 
 export default class LiveMapDrawerComponent extends Component {
     @service universe;
+    @service intl;
 
     /**
      * The current active tab.
@@ -37,9 +38,9 @@ export default class LiveMapDrawerComponent extends Component {
     get tabs() {
         const registeredTabs = this.universe.getMenuItemsFromRegistry('fleet-ops:component:live-map-drawer');
         const defaultTabs = [
-            this.universe._createMenuItem('Vehicles', null, { icon: 'car', component: LiveMapDrawerVehicleListingComponent }),
-            this.universe._createMenuItem('Drivers', null, { icon: 'id-card', component: LiveMapDrawerDriverListingComponent }),
-            this.universe._createMenuItem('Places', null, { icon: 'building', component: LiveMapDrawerPlaceListingComponent }),
+            this.universe._createMenuItem(this.intl.t('fleet-ops.component.layout.fleet-ops-sidebar.vehicles'), null, { icon: 'car', component: LiveMapDrawerVehicleListingComponent }),
+            this.universe._createMenuItem(this.intl.t('fleet-ops.component.layout.fleet-ops-sidebar.drivers'), null, { icon: 'id-card', component: LiveMapDrawerDriverListingComponent }),
+            this.universe._createMenuItem(this.intl.t('fleet-ops.component.layout.fleet-ops-sidebar.places'), null, { icon: 'building', component: LiveMapDrawerPlaceListingComponent }),
         ];
 
         if (isArray(registeredTabs)) {

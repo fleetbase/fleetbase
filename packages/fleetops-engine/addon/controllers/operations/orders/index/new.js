@@ -424,18 +424,18 @@ export default class OperationsOrdersIndexNewController extends BaseController {
         };
 
         this.modalsManager.show('modals/order-import', {
-            title: 'Import order(s) with spreadsheets',
-            acceptButtonText: 'Start Upload',
+            title: this.intl.t('fleet-ops.component.modals.order-import.title'),
+            acceptButtonText: this.intl.t('fleet-ops.component.modals.order-import.start-upload-button'),
             acceptButtonScheme: 'magic',
             acceptButtonIcon: 'upload',
             acceptButtonDisabled: true,
             isProcessing: false,
             uploadQueue: [],
             fileQueueColumns: [
-                { name: 'Type', valuePath: 'extension', key: 'type' },
-                { name: 'File Name', valuePath: 'name', key: 'fileName' },
-                { name: 'File Size', valuePath: 'size', key: 'fileSize' },
-                { name: 'Upload Date', valuePath: 'file.lastModifiedDate', key: 'uploadDate' },
+                { name: this.intl.t('fleet-ops.component.modals.order-import.type'), valuePath: 'extension', key: 'type' },
+                { name: this.intl.t('fleet-ops.component.modals.order-import.file-name'), valuePath: 'name', key: 'fileName' },
+                { name: this.intl.t('fleet-ops.component.modals.order-import.file-size'), valuePath: 'size', key: 'fileSize' },
+                { name: this.intl.t('fleet-ops.component.modals.order-import.upload-date'), valuePath: 'file.lastModifiedDate', key: 'uploadDate' },
                 { name: '', valuePath: '', key: 'delete' },
             ],
             acceptedFileTypes: ['application/vnd.ms-excel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'text/csv'],
@@ -478,7 +478,7 @@ export default class OperationsOrdersIndexNewController extends BaseController {
                 }
 
                 modal.startLoading();
-                modal.setOption('acceptButtonText', 'Uploading...');
+                modal.setOption('acceptButtonText', this.intl.t('fleet-ops.component.modals.order-import.uploading'));
 
                 for (let i = 0; i < uploadQueue.length; i++) {
                     const file = uploadQueue.objectAt(i);
@@ -486,7 +486,7 @@ export default class OperationsOrdersIndexNewController extends BaseController {
                     await uploadTask(file);
                 }
 
-                this.modalsManager.setOption('acceptButtonText', 'Processing...');
+                this.modalsManager.setOption('acceptButtonText', this.intl.t('fleet-ops.component.modals.order-import.processing'));
                 this.modalsManager.setOption('isProcessing', true);
 
                 const files = uploadedFiles.map((file) => file.id);
@@ -1291,7 +1291,7 @@ export default class OperationsOrdersIndexNewController extends BaseController {
             title: this.intl.t('fleet-ops.operations.orders.index.new.custom-field-title'),
             acceptButtonIcon: 'check',
             acceptButtonIconPrefix: 'fas',
-            acceptButtonText: 'Done',
+            acceptButtonText: this.intl.t('common.done'),
             declineButtonIcon: 'times',
             declineButtonIconPrefix: 'fas',
             label,

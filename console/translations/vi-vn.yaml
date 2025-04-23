@@ -74,6 +74,12 @@ common:
   unauthorized-access-message: Không có quyền truy cập, bạn phải yêu cầu quyền để truy cập.
   permissions-required-for-changes: Bạn không có quyền cần thiết để thực hiện thay đổi.
   push-notifications: Đẩy thông báo
+  latitude: Vĩ độ
+  longitude: Kinh độ
+  upload-file: Tải tệp lên
+  upload: Tải lên
+  select-country: Chọn quốc gia...
+  enter-unit: "Nhập {unit}"
   role: Vai trò
   report-type: Loại báo cáo
   payment-method: Phương thức thanh toán
@@ -115,6 +121,13 @@ common:
   selection-info:
     single: Bạn đã chọn 1 bản ghi để {verb}.
     multiple: Bạn đã chọn {count} bản ghi để {verb}.
+  tracking-details:
+    create-order: Đã tạo đơn hàng mới.
+    accept-order: Tài xế đã chấp nhận đơn hàng.
+    dispacth-order: Đơn hàng đã được gửi đi.
+    update-order: Tài xế đã cập nhật trạng thái đơn hàng.
+    start-order: Đơn hàng đã được bắt đầu.
+  duplicate-waypoint-error: Phát hiện điểm dừng trùng lặp. Vui lòng sử dụng vị trí duy nhất cho mỗi điểm dừng.
 validation:
   required:
     payment_method: Phương thức thanh toán là bắt buộc
@@ -154,6 +167,7 @@ statuses:
     backlogged: Tồn đọng  
     requires-update: Cần cập nhật  
     order_canceled: Đơn hàng đã hủy
+
 
     resource-allocation: Phân bổ tài nguyên
     compliance: Tuân thủ
@@ -220,6 +234,12 @@ statuses:
     storefront: Mặt tiền cửa hàng
 
 
+
+
+    order_created: Đã tạo
+    order_dispatched: Đã gửi
+    order_accepted: Đã chấp nhận
+    order_started: Đã bắt đầu
 
 fuelReportTypes:
     Fuel: "Nhiên liệu"
@@ -780,6 +800,8 @@ fleet-ops:
     tracking-number: Số theo dõi
     end_date_cannot_be_earlier:  Ngày kết thúc không thể sớm hơn.
     end_date_cannot_be_earlier_than_start_date: Ngày kết thúc không thể sớm hơn ngày bắt đầu.
+    no_driver: Không có tài xế
+    no_phone: Không có điện thoại
     component:
        order:
         header:

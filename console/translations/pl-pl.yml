@@ -75,6 +75,12 @@ common:
   unauthorized-access-message: Brak dostępu, musisz uzyskać odpowiednie uprawnienia.
   permissions-required-for-changes: Nie masz wymaganych uprawnień do wprowadzenia zmian.
   push-notifications: Powiadomienia push
+  latitude: Szerokość geograficzna
+  longitude: Długość geograficzna
+  upload-file: Prześlij plik
+  upload: Prześlij
+  select-country: Wybierz kraj...
+  enter-unit: "Wprowadź {unit}"
   role: Rola
   report-type: Typ raportu
   payment-method: Metoda płatności
@@ -117,6 +123,13 @@ common:
   selection-info:
     single: Wybrałeś 1 rekord do {verb}.
     multiple: Wybrałeś {count} rekordów do {verb}.
+  tracking-details:
+    create-order: Utworzono nowe zamówienie.
+    accept-order: Zamówienie zaakceptowane przez kierowcę.
+    dispacth-order: Zamówienie zostało wysłane.
+    update-order: Status zamówienia zaktualizowany przez kierowcę.
+    start-order: Zamówienie zostało rozpoczęte.
+  duplicate-waypoint-error: Wykryto zduplikowany punkt trasy. Proszę użyć unikalnych lokalizacji dla każdego punktu.
 validation:
   required:
     payment_method: Wymagana jest metoda płatności
@@ -157,6 +170,7 @@ statuses:
   requires-update: Wymaga aktualizacji  
   order_canceled: Zamówienie anulowane
   all-statuses: Wszystkie statusy
+
 
   resource-allocation: Alokacja zasobów
   compliance: Zgodność
@@ -223,6 +237,12 @@ statuses:
   storefront: Witryna
 
 
+
+
+  order_created: Utworzono
+  order_dispatched: Wysłano
+  order_accepted: Zaakceptowano
+  order_started: Rozpoczęto
 
 fuelReportTypes:
   Fuel: Paliwo
@@ -781,6 +801,8 @@ fleet-ops:
     tracking-number: Numer śledzenia
     end_date_cannot_be_earlier:  Data zakończenia nie może być wcześniejsza.
     end_date_cannot_be_earlier_than_start_date: Data zakończenia nie może być wcześniejsza niż data rozpoczęcia.
+    no_driver: Brak kierowcy
+    no_phone: Brak telefonu
   component:
     activity-logic-builder:
       activity-logic: Logika aktywności
@@ -1207,7 +1229,15 @@ fleet-ops:
         drag-drop: Przeciągnij i upuść pliki arkuszy kalkulacyjnych na tę strefę
         button-text: lub wybierz arkusze do przesłania
         spreadsheets: arkusze kalkulacyjne
-        upload-queue: Kolejka przesyłania
+        upload-queue: Kolejka przesyłania     
+        title: Importuj zamówienie(a) za pomocą arkuszy kalkulacyjnych
+        start-upload-button: Rozpocznij przesyłanie
+        uploading: Przesyłanie...
+        processing: Przetwarzanie...
+        type: Typ
+        file-name: Nazwa pliku
+        file-size: Rozmiar pliku
+        upload-date: Data przesłania
       order-label:
         loading: Ładowanie etykiety...
       order-new-activity:
@@ -1957,6 +1987,7 @@ fleet-ops:
         assign-driver: Przypisz kierowcę do floty...
         delete-fleet: Usuń flotę...
         delete-button: Usuń floty
+        fleet-action: Działania floty
         edit:
           body: Niezapisane zmiany w tej flocie zostaną utracone. Kliknij „Kontynuuj”, aby kontynuować.
         title: Floty
@@ -2021,6 +2052,7 @@ fleet-ops:
           body: Niezapisane zmiany w tym miejscu zostaną utracone. Kliknij „Kontynuuj”, aby kontynuować.
         places-title: Miejsca
         delete-places: Usuń miejsca
+        place-action: Działania miejsca
     vehicles:
       index:
         view-vehicle: Zobacz szczegóły pojazdu...
@@ -2083,6 +2115,10 @@ fleet-ops:
         delete-orders: Usuń zamówienia
         dispatch-orders: Wyślij zamówienia
         estimated-end-date: Szacowana data zakończenia
+        select-driver: Wybierz kierowcę do zamówienia
+        select-vehicle: Wybierz pojazd do zamówienia
+        select-pickup-location: Wybierz miejsce odbioru
+        select-dropoff-location: Wybierz miejsce dostawy
         new:
           create-new-customer: Utwórz nowego klienta
           create-new-facilitator: Utwórz nowego pośrednika

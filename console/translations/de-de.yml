@@ -74,6 +74,12 @@ common:
   unauthorized-access-message: Unbefugter Zugriff, Sie müssen Berechtigungen anfordern, um Zugriff zu erhalten.
   permissions-required-for-changes: Sie haben nicht die erforderlichen Berechtigungen, um Änderungen vorzunehmen.
   push-notifications: Push-Benachrichtigungen
+  latitude: Breitengrad
+  longitude: Längengrad
+  upload-file: Datei hochladen
+  upload: Hochladen
+  select-country: Land auswählen...
+  enter-unit: "{unit} eingeben"
   role: Rolle
   report-type: Berichtstyp
   payment-method: Zahlungsmethode
@@ -115,6 +121,13 @@ common:
   selection-info:
     single: Sie haben 1 Datensatz für {verb} ausgewählt.
     multiple: Sie haben {count} Datensätze für {verb} ausgewählt.
+  tracking-details:
+    create-order: Neue Bestellung erstellt.
+    accept-order: Bestellung vom Fahrer angenommen.
+    dispacth-order: Bestellung wurde versendet.
+    update-order: Bestellstatus wurde vom Fahrer aktualisiert.
+    start-order: Bestellung wurde gestartet.
+  duplicate-waypoint-error: Doppelter Wegpunkt erkannt. Bitte verwenden Sie eindeutige Orte für jeden Wegpunkt.
 validation:
   required:
     payment_method: Zahlungsmethode ist erforderlich
@@ -154,6 +167,7 @@ statuses:
     backlogged: Rückstau  
     requires-update: Aktualisierung erforderlich  
     order_canceled: Bestellung storniert
+
     all-statuses: Alle Status  
 
     resource-allocation: Ressourcenallokation
@@ -220,6 +234,11 @@ statuses:
     registry-bridge: Registrierungsbrücke
     storefront: Ladengeschäft
 
+
+    order_created: Erstellt
+    order_dispatched: Versendet
+    order_accepted: Akzeptiert
+    order_started: Gestartet
 
 fuelReportTypes:
     Fuel: "Kraftstoff"
@@ -688,7 +707,7 @@ fleet-ops:
     date-created: Erstellungsdatum
     delete: Löschen
     destination: Ziel
-    details: Details
+    details: Einzelheiten
     description: Beschreibung
     distance: Entfernung
     driver-license: Führerschein
@@ -778,6 +797,8 @@ fleet-ops:
     tracking-number: Tracking-Nummer
     end_date_cannot_be_earlier:  Das Enddatum kann nicht früher sein.
     end_date_cannot_be_earlier_than_start_date: Das Enddatum kann nicht früher sein als das Startdatum
+    no_driver: Kein Fahrer
+    no_phone: Kein Telefon
   component:
     activity-logic-builder:
       activity-logic: Aktivitätslogik
@@ -1210,6 +1231,14 @@ fleet-ops:
         button-text: oder wählen Sie Tabellenkalkulationen zum Hochladen aus
         spreadsheets: Tabellenkalkulationen
         upload-queue: Upload-Warteschlange
+        title: Bestellungen mit Tabellenkalkulationen importieren
+        start-upload-button: Upload starten
+        uploading: Hochladen...
+        processing: Verarbeite...
+        type: Typ
+        file-name: Dateiname
+        file-size: Dateigröße
+        upload-date: Upload-Datum
       order-label:
         loading: Etikett wird geladen...
       order-new-activity:
@@ -1959,6 +1988,7 @@ fleet-ops:
         assign-driver: Fahrer zur Flotte zuweisen...
         delete-fleet: Flotte löschen...
         delete-button: Flotten löschen
+        fleet-action: Flottenaktionen
         edit:
           body: Nicht gespeicherte Änderungen an dieser Flotte gehen verloren. Klicken Sie auf Weiter, um fortzufahren.
         title: Flotten
@@ -2024,6 +2054,7 @@ fleet-ops:
           body: Nicht gespeicherte Änderungen an diesem Platz gehen verloren. Klicken Sie auf Weiter, um fortzufahren.
         places-title: Plätze
         delete-places: Plätze löschen
+        place-action: Ortsaktionen
     vehicles:
       index:
         view-vehicle: Fahrzeugdetails anzeigen...
@@ -2087,6 +2118,10 @@ fleet-ops:
         delete-orders: Bestellungen löschen
         dispatch-orders: Bestellungen versenden
         estimated-end-date: Voraussichtliches Enddatum
+        select-driver: Fahrer für die Bestellung auswählen
+        select-vehicle: Fahrzeug für die Bestellung auswählen
+        select-pickup-location: Abholort auswählen
+        select-dropoff-location: Zielort auswählen
         new:
           create-new-customer: Neuen Kunden erstellen
           create-new-facilitator: Neuen Vermittler erstellen

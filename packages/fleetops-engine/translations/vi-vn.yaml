@@ -533,6 +533,14 @@ fleet-ops:
         button-text: hoặc chọn bảng tính để tải lên
         spreadsheets: bảng tính
         upload-queue: Danh sách Tải lên
+        title: Nhập đơn hàng bằng bảng tính
+        start-upload-button: Bắt đầu tải lên
+        uploading: Đang tải lên...
+        processing: Đang xử lý...
+        type: Loại
+        file-name: Tên tệp
+        file-size: Kích thước tệp
+        upload-date: Ngày tải lên
       order-label:
         loading: Đang tải Nhãn...
       order-new-activity:
@@ -1239,6 +1247,7 @@ fleet-ops:
         assign-driver: Gán tài xế cho đội xe...
         delete-fleet: Xóa đội xe...
         delete-button: Xóa Đội Xe
+        fleet-action: Hành động đội xe
         edit:
           body: Các thay đổi chưa được lưu cho đội xe này sẽ bị mất. Nhấp vào tiếp tục để tiếp tục.
         title: Đội Xe
@@ -1304,6 +1313,7 @@ fleet-ops:
           body: Các thay đổi chưa được lưu cho địa điểm này sẽ bị mất. Nhấp vào tiếp tục để tiếp tục.
         places-title: Địa điểm
         delete-places: Xóa Địa điểm
+        place-action: Hành động địa điểm
     vehicles:
       index:
         view-vehicle: Xem chi tiết xe...
@@ -1358,6 +1368,10 @@ fleet-ops:
         cancel-orders: Hủy Đơn Hàng
         delete-orders: Xóa Đơn Hàng
         estimated-end-date: Ngày kết thúc dự kiến
+        select-driver: Chọn tài xế cho đơn hàng
+        select-vehicle: Chọn phương tiện cho đơn hàng
+        select-pickup-location: Chọn địa điểm đón
+        select-dropoff-location: Chọn địa điểm trả
         new:
           create-new-customer: Tạo khách hàng mới
           create-new-facilitator: Tạo người điều phối mới

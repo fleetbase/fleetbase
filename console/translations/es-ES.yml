@@ -76,6 +76,12 @@ common:
   permissions-required-for-changes: No tienes los permisos necesarios para realizar
     cambios.
   push-notifications: Notificaciones push
+  latitude: Latitud
+  longitude: Longitud
+  upload-file: Subir archivo
+  upload: Subir
+  select-country: Seleccionar país...
+  enter-unit: "Introducir {unit}"
   role: Role
   model-delete-confirmation: ¿Estás seguro de que quieres eliminar este {modelName}?
   model-delete-success: El {modelName} ha sido eliminado.
@@ -112,6 +118,13 @@ common:
   selection-info:
     single: Ha seleccionado {count} registro para {verb}
     multiple: Ha seleccionado {count} para {verb}
+  tracking-details:
+    create-order: Nuevo pedido creado.
+    accept-order: Pedido aceptado por el conductor.
+    dispacth-order: El pedido ha sido despachado.
+    update-order: Estado del pedido actualizado por el conductor.
+    start-order: El pedido ha sido iniciado.
+  duplicate-waypoint-error: Punto de parada duplicado detectado. Por favor, utilice ubicaciones únicas para cada punto.
 statuses:
     draft: Borrador
     pending-approval: Pendiente de aprobación
@@ -148,6 +161,7 @@ statuses:
     requires-update: Requiere actualización  
     order_canceled: Pedido cancelado
     all-status: All Statuses
+
 
     resource-allocation: Asignación de recursos
     compliance: Cumplimiento
@@ -215,7 +229,10 @@ statuses:
     storefront: Vitrina
 
 
-
+    order_created: Creado
+    order_dispatched: Despachado
+    order_accepted: Aceptado
+    order_started: Iniciado
 
 component:
   file:
@@ -798,6 +815,8 @@ fleet-ops:
     tracking-number: El número de rastreo
     end_date_cannot_be_earlier: La fecha de finalización no puede ser anterior.
     end_date_cannot_be_earlier_than_start_date: La fecha de finalización no puede ser anterior a la fecha de inicio.
+    no_driver: Sin conductor
+    no_phone: Sin teléfono
   component:
     activity-logic-builder:
       activity-logic: Lógica de la actividad
@@ -1293,6 +1312,14 @@ fleet-ops:
         button-text: o seleccione hojas de trabajo para descargar
         spreadsheets: hojas de cálculo
         upload-queue: Cola de descarga
+        title: Importar pedido(s) con hojas de cálculo
+        start-upload-button: Iniciar carga
+        uploading: Subiendo...
+        processing: Procesando...
+        type: Tipo
+        file-name: Nombre del archivo
+        file-size: Tamaño del archivo
+        upload-date: Fecha de carga
       order-label:
         loading: Cargando la etiqueta...
       order-new-activity:
@@ -2101,6 +2128,7 @@ fleet-ops:
         assign-driver: Asignar un conductor a la flota...
         delete-fleet: Eliminar la flota...
         delete-button: Eliminar flotas
+        fleet-action: Acciones de flota
         edit:
           body: Los cambios no guardados en esta flota se perderán. Haga clic en continuar
             para proceder.
@@ -2170,6 +2198,7 @@ fleet-ops:
             en continuar para continuar.
         places-title: Lugares
         delete-places: Eliminar ubicaciones
+        place-action: Acciones del lugar
     vehicles:
       index:
         view-vehicle: Ver detalles del vehículo...
@@ -2236,6 +2265,10 @@ fleet-ops:
         delete-orders: Eliminar pedidos
         dispatch-orders: Enviar pedidos
         estimated-end-date: Fecha estimada de finalización
+        select-driver: Seleccionar conductor para el pedido
+        select-vehicle: Seleccionar vehículo para el pedido
+        select-pickup-location: Seleccionar lugar de recogida
+        select-dropoff-location: Seleccionar lugar de entrega
         new:
           create-new-customer: Crear un nuevo cliente
           create-new-facilitator: Crear un nuevo facilitador

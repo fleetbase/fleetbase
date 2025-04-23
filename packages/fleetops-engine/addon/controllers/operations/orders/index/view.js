@@ -101,6 +101,17 @@ export default class OperationsOrdersIndexViewController extends BaseController 
         },
     ];
 
+    /**
+     * @var trackingDetailKeyMap
+     */
+    @tracked trackingDetailKeyMap = {
+        'New order created.': 'create-order',
+        'Order Accepted by the driver.': 'accept-order',
+        'Order has been dispatched.': 'dispacth-order',
+        'Order status updated by the driver': 'update-order',
+        'Order has been started' : 'start-order'
+      };
+
     @not('isWaypointsCollapsed') waypointsIsNotCollapsed;
     @notEmpty('model.payload.waypoints') isMultiDropOrder;
     @alias('ordersController.leafletMap') leafletMap;
@@ -110,6 +121,16 @@ export default class OperationsOrdersIndexViewController extends BaseController 
         return renderableComponents;
     }
 
+    /**
+     * 
+     * @param {*} details 
+     * @returns 
+     */
+    @action formatTrackingDetails(details) {
+        console.log(details,"details11");
+        const key = this.trackingDetailKeyMap[details];
+        return key ? `common.tracking-details.${key}` : 'common.tracking-details.unknown';
+      }
     /** @var entitiesByDestination */
     @computed('model.payload.{entities.[],waypoints.[]}')
     get entitiesByDestination() {
@@ -348,7 +369,8 @@ export default class OperationsOrdersIndexViewController extends BaseController 
     @action displayOrderRoute() {
         const leafletMap = this.leafletMap;
         const payload = this.model.payload;
-        const waypoints = this.getPayloadCoordinates(payload);
+        let waypoints = this.getPayloadCoordinates(payload);
+        waypoints = this.filterConsecutiveDuplicates(waypoints);//remove duplicate coordinates waypoints this will be removed after do backend to allow multiple waypoints
         const routingHost = getRoutingHost(payload, this.getPayloadWaypointsAsArray());
 
         if (!waypoints || waypoints.length < 2 || !leafletMap) {
@@ -965,7 +987,7 @@ export default class OperationsOrdersIndexViewController extends BaseController 
         this.modalsManager.show(`modals/order-label`, {
             title: 'Order Label',
             modalClass: 'modal-xl',
-            acceptButtonText: 'Done',
+            acceptButtonText: this.intl.t('common.done'),
             hideDeclineButton: true,
             order,
         });
@@ -1000,7 +1022,7 @@ export default class OperationsOrdersIndexViewController extends BaseController 
         this.modalsManager.show(`modals/order-label`, {
             title: 'Waypoint Label',
             modalClass: 'modal-xl',
-            acceptButtonText: 'Done',
+            acceptButtonText: this.intl.t('common.done'),
             hideDeclineButton: true,
         });
 
@@ -1188,4 +1210,42 @@ export default class OperationsOrdersIndexViewController extends BaseController 
             return file.destroyRecord();
         });
     }
+
+    /**
+     * 
+     * @param {*} status 
+     * @returns 
+     */
+    @action
+    normalizeStatus(status) {
+      if (!status) return 'pending';
+      return status.toLowerCase().replace(/\s+/g, '_');
+    }
+
+    /**
+     * 
+     * @param {*} waypoints 
+     * @returns 
+     */
+    filterConsecutiveDuplicates(waypoints) {
+        if (!waypoints || waypoints.length <= 1) {
+          return waypoints;
+        }
+        
+        const result = [waypoints[0]];
+        
+        for (let i = 1; i < waypoints.length; i++) {
+          const current = waypoints[i];
+          const previous = result[result.length - 1];
+          
+          // Compare lat/lng values (as arrays) to detect duplicates
+          // Format: [lat, lng]
+          if (current[0] !== previous[0] || current[1] !== previous[1]) {
+            result.push(current);
+          }
+        }
+        
+        return result;
+      }
+    
 }

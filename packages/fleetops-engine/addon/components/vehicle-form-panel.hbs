@@ -101,7 +101,7 @@
     <Overlay::Body @wrapperClass="new-service-rate-overlay-body px-4 space-y-4 pt-4">
         {{#let (cannot this.savePermission) as |unauthorized|}}
             <div class="flex-1 space-y-4">
-                <ContentPanel @title="Details" @open={{true}} @pad={{true}} @panelBodyClass="bg-white dark:bg-gray-800">
+                <ContentPanel @title={{t "fleet-ops.common.details"}} @open={{true}} @pad={{true}} @panelBodyClass="bg-white dark:bg-gray-800">
                     <div class="grid grid-cols-1 gap-4 lg:grid-cols-2 lg:gap-2">
                         <InputGroup @name={{t "fleet-ops.common.internal-id"}}>
                             <Input @value={{this.vehicle.internal_id}} @type="text" class="w-full form-input" placeholder={{t "fleet-ops.common.internal-id"}} disabled={{unauthorized}} />
@@ -177,14 +177,14 @@
                             <div class="fleetbase-model-select fleetbase-power-select ember-model-select">
                                 <PowerSelect
                                     @options={{this.vehicleStatusOptions}}
-                                    @selected={{this.vehicle.status}}
-                                    @onChange={{fn (mut this.vehicle.status)}}
+                                    @selected={{this.selectedStatus}} 
+                                    @onChange={{this.updateStatus}}
                                     @placeholder={{t "fleet-ops.common.status"}}
                                     @triggerClass="form-select form-input"
                                     @disabled={{unauthorized}}
                                     as |status|
                                 >
-                                    {{smart-humanize status}}
+                                     {{t status.translationKey}}
                                 </PowerSelect>
                             </div>
                         </InputGroup>

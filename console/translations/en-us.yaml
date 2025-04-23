@@ -75,6 +75,12 @@ common:
   unauthorized-access-message: Unauthorized Access, you must request permissions to access.
   permissions-required-for-changes: You do not have the required permissions to make changes.
   push-notifications: Push Notifications
+  latitude: Latitude
+  longitude: Longitude
+  upload-file: Upload File
+  upload: Upload
+  select-country: Select country...
+  enter-unit: "Enter {unit}"
   role: Role
   report-type: Report Type
   payment-method: Payment Method
@@ -117,6 +123,13 @@ common:
   selection-info:
     single: You have selected {count} record for {verb}
     multiple: You have selected {count} for {verb}
+  tracking-details:
+    create-order: New order created.
+    accept-order: Order Accepted by the driver.
+    dispacth-order: Order has been dispatched.
+    update-order: Order status updated by the driver
+    start-order: Order has been started
+  duplicate-waypoint-error: Duplicate waypoint detected. Please use unique locations for each waypoint.
 validation:
   required:
     payment_method: Payment method is required
@@ -157,6 +170,7 @@ statuses:
     requires-update: Requires Update
     order_canceled: Order Canceled
     all-statuses: All Statuses
+
     
     resource-allocation : Resource Allocation
     compliance : Compliance
@@ -223,6 +237,10 @@ statuses:
     registry-bridge : Registry Bridge
     storefront : Store Front
 
+    order_created: Created
+    order_dispatched: Dispatched
+    order_accepted: Accepted
+    order_started: Started
 
 fuelReportTypes:
   Fuel: Fuel
@@ -775,6 +793,8 @@ fleet-ops:
     tracking-number: Tracking Number
     end_date_cannot_be_earlier: End Date cannot be earlier
     end_date_cannot_be_earlier_than_start_date: End Date cannot be earlier than the start date.
+    no_driver: No Driver
+    no_phone: No Phone
 
   component:
     activity-logic-builder:
@@ -1203,6 +1223,14 @@ fleet-ops:
         button-text: or select spreadsheets to upload
         spreadsheets: spreadsheets
         upload-queue: Upload Queue
+        title: Import order(s) with spreadsheets
+        start-upload-button: Start Upload
+        uploading: Uploading...
+        processing: Processing...
+        type: Type
+        file-name: File Name
+        file-size: File Size
+        upload-date: Upload Date
       order-label:
         loading: Loading Label...
       order-new-activity:
@@ -1954,6 +1982,7 @@ fleet-ops:
         assign-driver: Assign driver to fleet...
         delete-fleet: Delete fleet...
         delete-button: Delete Fleets
+        fleet-action: Fleet Actions
         edit:
           body: Unsaved changes to this fleet will be lost. Click continue to proceed.
         title: Fleets
@@ -2018,6 +2047,7 @@ fleet-ops:
           body: Unsaved changes to this place will be lost. Click continue to proceed.
         places-title: Places
         delete-places: Delete Places
+        place-action: Place Actions
     vehicles:
       index:
         view-vehicle: View vehicle details...
@@ -2080,6 +2110,10 @@ fleet-ops:
         delete-orders: Delete Orders
         dispatch-orders: Dispatch Orders
         estimated-end-date: Estimated End Date
+        select-driver: Select driver for order
+        select-vehicle: Select vehicle for order
+        select-pickup-location: Select pickup location
+        select-dropoff-location: Select dropoff location
         new:
           create-new-customer: Create new customer
           create-new-facilitator: Create new facilitator

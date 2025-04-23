@@ -19,7 +19,7 @@
             </div>
             <div class="order-listing-row-subheader">
                 <div class="order-listing-row-header-title truncate">{{@order.tracking}}</div>
-                <Badge @status={{@order.status}} />
+                <Badge @status={{t (concat "statuses." @order.status)}} />
             </div>
         </div>
         <div class="order-listing-row-details">
@@ -33,7 +33,7 @@
             </div>
             <div class="order-listing-row-body">
                 <div class="order-listing-row-body-address start">
-                    <div class="font-semibold">Pickup</div>
+                    <div class="font-semibold">{{t "fleet-ops.common.pickup"}}</div>
                     <div class="address-text">
                         {{#if @order.payload.isMultiDrop}}
                             {{@order.payload.firstWaypoint.address}}
@@ -43,7 +43,7 @@
                     </div>
                 </div>
                 <div class="order-listing-row-body-address end">
-                    <div class="font-semibold">Dropoff</div>
+                    <div class="font-semibold">{{t "fleet-ops.common.dropoff"}}</div>
                     <div class="address-text">
                         {{#if @order.payload.isMultiDrop}}
                             {{@order.payload.lastWaypoint.address}}
@@ -92,9 +92,9 @@
                                 />
                             </div>
                             <div class="resource-assigned-details">
-                                <div class="font-semibold">Driver Assigned</div>
-                                <div>{{n-a @order.driver_assigned.name "No Driver"}}</div>
-                                <div>{{n-a @order.driver_assigned.phone "No Phone"}}</div>
+                                <div class="font-semibold">{{t "fleet-ops.component.modals.vehicle-details.driver-assigned"}}</div>
+                                <div>{{n-a @order.driver_assigned.name (t "fleet-ops.common.no_driver")}}</div>
+                                <div>{{n-a @order.driver_assigned.phone (t "fleet-ops.common.no_phone")}}</div>
                             </div>
                         </div>
                     </div>

@@ -15,7 +15,7 @@ export default class VehicleActionsService extends Service {
 
         this.modalsManager.show('modals/point-map', {
             title: this.intl.t('fleet-ops.management.vehicles.index.locate-title', { vehicleName: vehicle.displayName }),
-            acceptButtonText: 'Done',
+            acceptButtonText: this.intl.t('common.done'),
             acceptButtonIcon: 'check',
             acceptButtonIconPrefix: 'fas',
             modalClass: 'modal-md',

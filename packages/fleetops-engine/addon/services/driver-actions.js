@@ -80,7 +80,7 @@ export default class DriverActionsService extends Service {
 
         this.modalsManager.show('modals/point-map', {
             title: this.intl.t('fleet-ops.management.drivers.index.locate-driver', { driverName: driver.name }),
-            acceptButtonText: 'Done',
+            acceptButtonText: this.intl.t('common.done'),
             acceptButtonIcon: 'check',
             acceptButtonIconPrefix: 'fas',
             modalClass: 'modal-md',
