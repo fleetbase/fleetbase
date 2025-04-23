@@ -21,6 +21,7 @@ export default class LayoutHeaderComponent extends Component {
     @service currentUser;
     @service abilities;
     @service fetch;
+    @service intl;
     @tracked company;
     @tracked menuItems = [];
     @tracked organizationMenuItems = [];
@@ -108,7 +109,7 @@ export default class LayoutHeaderComponent extends Component {
             {
                 id: 'organization-settings',
                 route: 'console.settings.index',
-                text: 'Organization settings',
+                text: this.intl.t('layout.header.menus.organization.settings'),
                 icon: 'gear',
             },
             // {
@@ -170,7 +171,7 @@ export default class LayoutHeaderComponent extends Component {
                 },
                 {
                     route: 'console.admin',
-                    text: 'Admin',
+                    text: this.intl.t('common.admin'),
                     icon: 'toolbox',
                 },
             ]);
@@ -183,7 +184,7 @@ export default class LayoutHeaderComponent extends Component {
             },
             {
                 href: 'javascript:;',
-                text: 'Logout',
+                text: this.intl.t('common.logout'),
                 action: 'invalidateSession',
                 icon: 'person-running',
             },
@@ -212,7 +213,7 @@ export default class LayoutHeaderComponent extends Component {
                 id: 'view-profile-user-nav-item',
                 wrapperClass: 'view-profile-user-nav-item',
                 route: 'console.account.index',
-                text: 'View Profile',
+                text: this.intl.t('fleet-ops.common.view-profile'),
             },
             // {
             //     id: 'show-keyboard-shortcuts-user-nav-item',
@@ -287,7 +288,7 @@ export default class LayoutHeaderComponent extends Component {
             },
             {
                 href: 'javascript:;',
-                text: 'Logout',
+                text: this.intl.t('common.logout'),
                 action: 'invalidateSession',
                 icon: 'person-running',
             },
