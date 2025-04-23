@@ -582,7 +582,7 @@ export default class OperationsOrdersIndexController extends BaseController {
             if (this.statusOptions.length > 0) {
                 this.statusOptions = this.statusOptions.map(option => {  
                     return {  
-                        label: option.label, // Adjust this if the property name is different  
+                        label: `statuses.${option.label.toLowerCase().replace(/\s+/g, '_')}`,
                         code: option.label // Adjust this if the property name is different  
                     };  
                 }); 
@@ -591,7 +591,7 @@ export default class OperationsOrdersIndexController extends BaseController {
             this.statusOptions = yield this.fetch.get('orders/statuses?is_filter_status=1');
             this.statusOptions = this.statusOptions.map(option => {  
                 return {  
-                    label: option.label, // Adjust this if the property name is different  
+                    label: `statuses.${option.label.toLowerCase().replace(/\s+/g, '_')}`,
                     code: option.label // Adjust this if the property name is different  
                 };  
             });

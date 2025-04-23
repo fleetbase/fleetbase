@@ -192,7 +192,7 @@
             {{/if}}
         </ContentPanel>
 
-        <ContentPanel @title="Details" @open={{true}} @pad={{true}} @panelBodyClass="bg-white dark:bg-gray-800" @actionButtons={{this.detailPanelButtons}}>
+        <ContentPanel @title={{t "fleet-ops.common.details"}} @open={{true}} @pad={{true}} @panelBodyClass="bg-white dark:bg-gray-800" @actionButtons={{this.detailPanelButtons}}>
             <div class="flex mb-4 space-x-2">
                 {{#if @model.dispatched}}
                     <Badge @hideStatusDot={{false}} @status="Dispatched" />
