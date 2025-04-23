@@ -170,10 +170,78 @@ statuses:
     requires-update: Requires Update
     order_canceled: Order Canceled
     all-statuses: All Statuses
+
+    
+    resource-allocation : Resource Allocation
+    compliance : Compliance
+    cost-overruns : Cost Overruns
+    communication : Communication
+    vendor-management-issues : Vendor Management Issues
+
+    operational : Operational
+    software-technical : Software Technical
+    customer : Customer
+    security : Security
+    environmental-sustainability : Environmental Sustainability
+    vehicle : Vehicle
+    driver : Driver
+    route : Route
+    payload-cargo : Payload Cargo
+    mechanical-problems : Mechanical Problems
+    cosmetic-damages : Cosmetic Damages
+    tire-issues : Tire Issues
+    electronics-and-instruments : Electronics and Instruments
+    maintanence-alerts : Maintanence Alerts
+    fuel-efficiency-issues : Fuel Efficiency Issues
+    behaviour-concerns : Behaviour Concerns
+    documentation : Documentation
+    time-management : Time management
+    
+    training-needs : Training Needs
+    health-and-safety-violations : Health and Safety Violations
+    inefficient-routes : Inefficient Routes
+    safety-concerns : Safety Concerns
+    blocked-routes : Blocked Routes
+    environmental-considerations : Environmental Considerations
+    unfavorable-weather-conditions : Unfavorable Weather Conditions
+    damaged-goods : Damaged Goods
+    misplaced-goods : Misplaced Goods
+    documentation-issues : Documentation Issues
+    temperature-sensitive-goods : Temperature-Sensitive Goods
+    incorrect-cargo-loading : Incorrect Cargo Loading
+    bugs : Bugs
+    ui/ux-concerns : UI/UX Concerns
+    integration-failures : Integration Failures
+    performance : Performance
+    feature-requests : Feature Requests
+    security-vulnerabilities : Security Vulnerabilities
+    billing-discrepancies : Billing Discrepancies
+    service-quality : Service Quality
+    communication-breakdown : Communication Breakdown
+    feedback-and-suggestions : Feedback and Suggestions
+    order-errors : Order Errors
+    unauthorized-access : Unauthorized Access
+    data-concerns : Data Concerns
+    physical-security : Physical Security
+    data-integrity-issues : Data Integrity Issues
+    fuel-consumption : Fuel Consumption
+    carbon-footprint : Carbon Footprint
+    waste-management : Waste Management
+    green-initiatives-opportunities : Green Initiatives Opportunities
+    behavior-concerns : Behavior Concerns
+    disabled : Disabled
+    decommissioned : Decommissioned
+    iam : developers
+    developers : Developers
+    fleet-ops : Fleet Ops
+    registry-bridge : Registry Bridge
+    storefront : Store Front
+
     order_created: Created
     order_dispatched: Dispatched
     order_accepted: Accepted
     order_started: Started
+
 fuelReportTypes:
   Fuel: Fuel
   Parking: Parking
@@ -510,6 +578,9 @@ fleet-ops:
     choose-authentication-method : Choose an authentication method
     you-will-enter-code : In addition to your username and password, you'll have to enter a code (delivered via app or SMS) to sign in to your account
     loading-2fa-config : Loading 2FA Config...
+    select-country : Select Country
+    upload : Upload
+    uploading : Uploading...
     twofa:
       sms:
         name: "SMS"
@@ -1596,6 +1667,8 @@ fleet-ops:
       priority: Issue Priority
       select-priority: Select issue priority
       select-status: Select issue status
+      select-assignee : Select assignee
+      
     issue-panel:
       details:
         assigned: Assigned To

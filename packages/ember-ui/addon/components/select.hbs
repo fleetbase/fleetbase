@@ -6,10 +6,13 @@
     @placeholder={{this.placeholder}}
     as |selectable|
 >
+
+    {{!-- {{if (get selectable "label") selectable.label selectable}}  --}}
     {{#if (get selectable "label")}}
-        {{t selectable.label}}
+        {{selectable.label}}
     {{else}}
-        {{selectable}}
+        {{t (concat "statuses." (this.formatKey selectable)) default=selectable}}
+
     {{/if}}
 </PowerSelect>
 {{!-- <PowerSelect class="status-dropdown"

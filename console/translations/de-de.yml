@@ -167,11 +167,79 @@ statuses:
     backlogged: Rückstau  
     requires-update: Aktualisierung erforderlich  
     order_canceled: Bestellung storniert
-    all-statuses: Alle Status
+
+    all-statuses: Alle Status  
+
+    resource-allocation: Ressourcenallokation
+    compliance: Compliance
+    cost-overruns: Kostenüberschreitungen
+    communication: Kommunikation
+    vendor-management-issues: Probleme im Lieferantenmanagement
+
+    operational: Operativ
+    software-technical: Softwaretechnisch
+    customer: Kunde
+    security: Sicherheit
+    environmental-sustainability: Umweltverträglichkeit
+    vehicle: Fahrzeug
+    driver: Fahrer
+    route: Route
+    payload-cargo: Nutzlastfracht
+    mechanical-problems: Mechanische Probleme
+    cosmetic-damages: Kosmetische Schäden
+    tire-issues: Reifenprobleme
+    electronics-and-instruments: Elektronik und Instrumente
+    maintanence-alerts: Wartungswarnungen
+    fuel-efficiency-issues: Probleme mit der Kraftstoffeffizienz
+    behaviour-concerns: Verhaltensprobleme
+    documentation: Dokumentation
+    time-management: Zeitmanagement
+    training-needs: Schulungsbedarf
+    health-and-safety-violations: Verstöße gegen Gesundheits- und Sicherheitsvorschriften
+    inefficient-routes: Unwirtschaftliche Routen
+    safety-concerns: Sicherheitsbedenken
+    blocked-routes: Blockierte Routen
+    environmental-considerations: Umweltüberlegungen
+    unfavorable-weather-conditions: Ungünstige Wetterbedingungen
+    damaged-goods: Beschädigte Waren
+    misplaced-goods: Falsch platzierte Waren
+    documentation-issues: Dokumentationsprobleme
+    temperature-sensitive-goods: Temperaturempfindliche Waren
+    incorrect-cargo-loading: Falsche Ladeplanung
+    bugs: Fehler
+    ui/ux-concerns: UI/UX-Anliegen
+    integration-failures: Integrationsfehler
+    performance: Leistung
+    feature-requests: Funktionsanforderungen
+    security-vulnerabilities: Sicherheitslücken
+    billing-discrepancies: Abrechnungsdifferenzen
+    service-quality: Servicequalität
+    communication-breakdown: Kommunikationsausfall
+    feedback-and-suggestions: Feedback und Vorschläge
+    order-errors: Bestellfehler
+    unauthorized-access: Unbefugter Zugriff
+    data-concerns: Datenschutzprobleme
+    physical-security: Physische Sicherheit
+    data-integrity-issues: Probleme mit der Datenintegrität
+    fuel-consumption: Kraftstoffverbrauch
+    carbon-footprint: CO2-Fußabdruck
+    waste-management: Abfallwirtschaft
+    green-initiatives-opportunities: Chancen für grüne Initiativen
+    behavior-concerns: Verhaltensbedenken
+    disabled: Deaktiviert
+    decommissioned: Außer Betrieb
+    iam: Entwickler
+    developers: Entwickler
+    fleet-ops: Flottenbetrieb
+    registry-bridge: Registrierungsbrücke
+    storefront: Ladengeschäft
+
+
     order_created: Erstellt
     order_dispatched: Versendet
     order_accepted: Akzeptiert
     order_started: Gestartet
+
 fuelReportTypes:
     Fuel: "Kraftstoff"
     Parking: "Parken"
@@ -509,6 +577,10 @@ fleet-ops:
     choose-authentication-method: Wählen Sie eine Authentifizierungsmethode
     you-will-enter-code: Zusätzlich zu Ihrem Benutzernamen und Passwort müssen Sie einen Code eingeben (der über die App oder SMS zugestellt wird), um sich bei Ihrem Konto anzumelden.
     loading-2fa-config: Lade 2FA-Konfiguration...
+    select-country: Wählen Sie Land
+    upload: Hochladen
+    uploading: Wird hochgeladen...
+
     twofa:
       sms:
         name: SMS
@@ -1601,6 +1673,8 @@ fleet-ops:
       priority: Problempriorität
       select-priority: Priorität des Problems auswählen
       select-status: Problemstatus auswählen
+      select-assignee: Wählen Sie den Zuweiser
+
     issue-panel:
       details:
         assigned: Zugewiesen an
