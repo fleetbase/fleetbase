@@ -345,6 +345,114 @@ fleet-ops:
     view-all-notifications: Visualizza tutte le notifiche
     no-unread-notifications: Nessuna notifica non letta
     unread-notifications: Notifica non letta
+    choose-authentication-method: Scegli un metodo di autenticazione
+    you-will-enter-code: Oltre al nome utente e alla password, dovrai inserire un codice (inviato tramite app o SMS) per accedere al tuo account.
+    loading-2fa-config: Caricamento della configurazione 2FA...
+    twofa:
+      sms:
+        name: "SMS"
+        description: "Ricevi un codice unico tramite SMS"
+      email:
+        name: "Email"
+        description: "Ricevi un codice unico tramite email"
+    service:
+      aws:
+        name: AWS
+        access-key: Chiave di accesso AWS
+        access-secret: Segreto di accesso AWS
+        access-region: Regione AWS
+      google-map:
+          name: Google Maps
+          api-key: Chiave API Google Maps
+          locale: Localizzazione Google Maps
+      twilo:
+          name: Twilio
+          sid: Twilio SID
+          token: Twilio Token
+          from: Twilio From
+          test-sms: Invia SMS di test qui
+          twilo-config: Testa la configurazione Twilio
+      sentry:
+          name: Sentry
+          sentry-dsn: Sentry DSN
+          test-sentry-config: Testa la configurazione Sentry
+      ip:
+          name: IP Info
+          key: Chiave API IP Info
+          save-changes: Salva modifiche
+      mail:
+        name: Mail
+        mailer: Mailer
+        default-mailer: Seleziona il mailer predefinito che FleetYes deve utilizzare.
+        smtp-host: Host SMTP
+        smtp-port: Porta SMTP
+        smtp-encryption: Crittografia SMTP
+        enable-tls: Crittografia TLS abilitata
+        smtp-username: Nome utente SMTP
+        smtp-password: Password SMTP
+        smtp-timeout: Timeout SMTP
+        smtp-auth-mode: Modalità di autenticazione SMTP
+        mailgun-domain: Dominio Mailgun
+        mailgun-endpoint: Endpoint Mailgun
+        mailgun-secret: Segreto Mailgun
+        postmark-token: Token Postmark
+        sendgrid-api-key: Chiave API Sendgrid
+        resend-api-key: Chiave API Resend
+        from-address: Indirizzo del mittente
+        help-text-from-address: Inserisci l'indirizzo email da cui FleetYes invierà le email.
+        from-name: Nome del mittente
+        help-text-from-name: Inserisci il nome da cui FleetYes invierà le email.
+        test-config: Testa la configurazione
+        select-mailer: Seleziona il mailer
+        mail-success: Configurazione della posta salvata.
+      file-system:
+        default-file-system: Seleziona il driver di sistema di file predefinito che FleetYes deve usare.
+        select-filesystem-driver: Seleziona il driver del sistema di file
+        s3-bucket: S3 Bucket
+        s3-url: URL S3
+        s3-endpoint: Endpoint S3
+        warning-gcs: Attenzione! GCS è già configurato nell'ambiente del server. Modificare i valori sottostanti potrebbe interrompere questo.
+        gcs-bucket: Bucket GCS
+        gcs-account-key: File della chiave dell'account del servizio GCS
+        upload-service-account: Carica il file JSON dell'account di servizio
+        filesystem-saved: Configurazione del file system salvata.
+      queue:
+          default-queue-driver: Seleziona il driver della coda predefinito che FleetYes deve utilizzare.
+          select-queue-driver: Seleziona il driver della coda
+          beanstalk-host: Host di Beanstalk
+          beanstalk-queue: Coda di Beanstalk
+          sqs-prefix: Prefisso SQS
+          sqs-queue: Coda SQS
+          sqs-suffix: Suffisso SQS
+          queue-success: Configurazione della coda salvata.
+      socket:
+        sockt-cluster: Connessione SocketCluster
+        sockt-cluster-cannot-change: La configurazione di SocketCluster non può essere modificata in questo momento.
+        awaiting-events: In attesa di eventi
+        test-socket: Testa la connessione Socket
+        socket-connected: Socket connesso
+        socket-subscribed: Socket iscritto al canale di prova
+        socket-error: Errore di connessione Socket!
+      apn:
+          apn-configuration: Configurazione APN
+          apn-key-id: ID della chiave APN
+          apn-team-id: ID del team APN
+          apn-app-bundle-id: ID del bundle dell'app APN
+          upload-p8: Carica il file della chiave P8
+          apn-production: Produzione APN
+
+      firebase:
+          firebase-configuration: Configurazione Firebase
+          test-push-notification: Testa la notifica push
+          push-notification-title: Titolo della notifica push
+          push-notification-message: Messaggio della notifica push
+          apn-device-token: Token del dispositivo APN
+          fcm-device-token: Token del dispositivo FCM
+          message: Messaggio
+          title: Titolo
+          notification-success: La configurazione del canale di notifica è stata salvata.
+
+
 
 
   common:

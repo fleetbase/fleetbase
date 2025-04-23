@@ -132,7 +132,7 @@ export default class ConfigureMailComponent extends Component {
                 sendgrid: this.serializeSendgridConfig(),
                 resend: this.serializeResendConfig(),
             });
-            this.notifications.success('Mail configuration saved.');
+            this.notifications.success(this.intl.t('fleet-ops.user-management.service.mail.mail-success'));
         } catch (error) {
             this.notifications.serverError(error);
         }

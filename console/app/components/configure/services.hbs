@@ -1,18 +1,18 @@
-<ContentPanel @title="AWS" @open={{true}} @pad={{true}} @panelBodyClass="bg-white dark:bg-gray-800">
-    <InputGroup @name="AWS Access Key" @value={{this.awsKey}} disabled={{this.isLoading}} />
-    <InputGroup @name="AWS Access Secret" @value={{this.awsSecret}} disabled={{this.isLoading}} />
-    <InputGroup @name="AWS Region" @value={{this.awsRegion}} disabled={{this.isLoading}} />
+<ContentPanel @title={{t "fleet-ops.user-management.service.aws.name"}} @open={{true}} @pad={{true}} @panelBodyClass="bg-white dark:bg-gray-800">
+    <InputGroup @name={{t "fleet-ops.user-management.service.aws.access-key"}} @value={{this.awsKey}} disabled={{this.isLoading}} />
+    <InputGroup @name={{t "fleet-ops.user-management.service.aws.access-secret"}} @value={{this.awsSecret}} disabled={{this.isLoading}} />
+    <InputGroup @name={{t "fleet-ops.user-management.service.aws.access-region"}} @value={{this.awsRegion}} disabled={{this.isLoading}} />
 </ContentPanel>
 
-<ContentPanel @title="Google Maps" @open={{true}} @pad={{true}} @panelBodyClass="bg-white dark:bg-gray-800">
-    <InputGroup @name="Google Maps API Key" @value={{this.googleMapsApiKey}} disabled={{this.isLoading}} />
-    <InputGroup @name="Google Maps Locale" @value={{this.googleMapsLocale}} disabled={{this.isLoading}} />
+<ContentPanel @title={{t "fleet-ops.user-management.service.google-map.name"}}  @open={{true}} @pad={{true}} @panelBodyClass="bg-white dark:bg-gray-800">
+    <InputGroup @name={{t "fleet-ops.user-management.service.google-map.api-key"}} @value={{this.googleMapsApiKey}} disabled={{this.isLoading}} />
+    <InputGroup @name={{t "fleet-ops.user-management.service.google-map.locale"}} @value={{this.googleMapsLocale}} disabled={{this.isLoading}} />
 </ContentPanel>
 
-<ContentPanel @title="Twilio" @open={{true}} @pad={{true}} @panelBodyClass="bg-white dark:bg-gray-800">
-    <InputGroup @name="Twilio SID" @value={{this.twilioSid}} disabled={{this.isLoading}} />
-    <InputGroup @name="Twilio Token" @value={{this.twilioToken}} disabled={{this.isLoading}} />
-    <InputGroup @name="Twilio From" @value={{this.twilioFrom}} disabled={{this.isLoading}} />
+<ContentPanel @title={{t "fleet-ops.user-management.service.twilo.name"}} @open={{true}} @pad={{true}} @panelBodyClass="bg-white dark:bg-gray-800">
+    <InputGroup @name={{t "fleet-ops.user-management.service.twilo.sid"}} @value={{this.twilioSid}} disabled={{this.isLoading}} />
+    <InputGroup @name={{t "fleet-ops.user-management.service.twilo.token"}} @value={{this.twilioToken}} disabled={{this.isLoading}} />
+    <InputGroup @name={{t "fleet-ops.user-management.service.twilo.from"}} @value={{this.twilioFrom}} disabled={{this.isLoading}} />
     {{#if this.twilioTestResponse}}
         <div class="flex flex-row items-center rounded-lg border {{if (eq this.twilioTestResponse.status 'error') 'border-red-900 bg-red-800 text-red-100' 'border-green-900 bg-green-800 text-green-100'}} shadow-sm my-2 px-4 py-2">
             <FaIcon @icon={{if (eq this.twilioTestResponse.status 'error') 'triangle-exclamation' 'circle-check'}} class="mr-1.5 {{if (eq this.twilioTestResponse.status 'error') 'text-red-200' 'text-green-200'}}" />
@@ -20,27 +20,27 @@
         </div>
     {{/if}}
     <div class="flex flex-row items-center mt-3">
-        <Input @value={{this.twilioTestPhone}} @type="tel" placeholder="Send Test SMS Here" class="form-input form-input-sm" />
-        <Button @wrapperClass="ml-2" @icon="plug" @text="Test Twilio Config" @onClick={{perform this.testTwilio}} @isLoading={{this.testTwilio.isRunning}} @disabled={{not this.twilioTestPhone}} />
+        <Input @value={{this.twilioTestPhone}} @type="tel" placeholder={{t "fleet-ops.user-management.service.twilo.test-sms"}} class="form-input form-input-sm" />
+        <Button @wrapperClass="ml-2" @icon="plug" @text={{t "fleet-ops.user-management.service.twilo.twilo-config"}} @onClick={{perform this.testTwilio}} @isLoading={{this.testTwilio.isRunning}} @disabled={{not this.twilioTestPhone}} />
     </div>
 </ContentPanel>
 
-<ContentPanel @title="Sentry" @open={{true}} @pad={{true}} @panelBodyClass="bg-white dark:bg-gray-800">
-    <InputGroup @name="Sentry DSN" @value={{this.sentryDsn}} disabled={{this.isLoading}} />
+<ContentPanel @title={{t "fleet-ops.user-management.service.sentry.name"}} @open={{true}} @pad={{true}} @panelBodyClass="bg-white dark:bg-gray-800">
+    <InputGroup @name={{t "fleet-ops.user-management.service.sentry.sentry-dsn"}} @value={{this.sentryDsn}} disabled={{this.isLoading}} />
     {{#if this.sentryTestResponse}}
         <div class="flex flex-row items-center rounded-lg border {{if (eq this.sentryTestResponse.status 'error') 'border-red-900 bg-red-800 text-red-100' 'border-green-900 bg-green-800 text-green-100'}} shadow-sm my-2 px-4 py-2">
             <FaIcon @icon={{if (eq this.sentryTestResponse.status 'error') 'triangle-exclamation' 'circle-check'}} class="mr-1.5 {{if (eq this.sentryTestResponse.status 'error') 'text-red-200' 'text-green-200'}}" />
             <span class="text-xs">{{this.this.sentryTestResponse.message}}</span>
         </div>
     {{/if}}
-    <Button @wrapperClass="mt-3" @icon="plug" @text="Test Sentry Config" @onClick={{perform this.testSentry}} @isLoading={{this.testSentry.isRunning}} @disabled={{not this.sentryDsn}} />
+    <Button @wrapperClass="mt-3" @icon="plug" @text={{t "fleet-ops.user-management.service.sentry.test-sentry-config"}} @onClick={{perform this.testSentry}} @isLoading={{this.testSentry.isRunning}} @disabled={{not this.sentryDsn}} />
 </ContentPanel>
 
-<ContentPanel @title="IP Info" @open={{true}} @pad={{true}} @panelBodyClass="bg-white dark:bg-gray-800">
-    <InputGroup @name="IP Info API Key" @value={{this.ipinfoApiKey}} disabled={{this.isLoading}} />
+<ContentPanel @title={{t "fleet-ops.user-management.service.ip.name"}} @open={{true}} @pad={{true}} @panelBodyClass="bg-white dark:bg-gray-800">
+    <InputGroup @name={{t "fleet-ops.user-management.service.ip.key"}} @value={{this.ipinfoApiKey}} disabled={{this.isLoading}} />
 </ContentPanel>
 <Spacer @height="200px" />
 
 <EmberWormhole @to="next-view-section-subheader-actions">
-    <Button @type="primary" @size="sm" @icon="save" @text="Save Changes" @onClick={{perform this.save}} @disabled={{or this.save.isRunning this.loadConfigValues.isRunning}} @isLoading={{or this.save.isRunning this.loadConfigValues.isRunning}} />
+    <Button @type="primary" @size="sm" @icon="save" @text={{t "fleet-ops.user-management.service.ip.save-changes"}} @onClick={{perform this.save}} @disabled={{or this.save.isRunning this.loadConfigValues.isRunning}} @isLoading={{or this.save.isRunning this.loadConfigValues.isRunning}} />
 </EmberWormhole>

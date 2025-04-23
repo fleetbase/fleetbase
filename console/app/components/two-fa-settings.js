@@ -3,6 +3,7 @@ import { tracked } from '@glimmer/tracking';
 import { action } from '@ember/object';
 import { isArray } from '@ember/array';
 import { inject as service } from '@ember/service';
+import getTwoFaMethods from '../utils/get-two-fa-methods';
 
 /**
  * Default Two-Factor Authentication method when not explicitly selected.
@@ -26,6 +27,7 @@ export default class TwoFaSettingsComponent extends Component {
      * @public
      */
     @service fetch;
+    @service intl;
 
     /**
      * The notifications service for displaying user notifications.
@@ -97,7 +99,15 @@ export default class TwoFaSettingsComponent extends Component {
         this.isTwoFaEnforced = twoFaSettings.enforced === true;
         this.selectedTwoFaMethod = userSelectedMethod ? userSelectedMethod.key : DEFAULT_2FA_METHOD;
     }
-
+    get translatedMethods() {
+        const methods = getTwoFaMethods();
+        
+        return methods.map(method => ({
+          ...method,
+          name: this.intl.t(`fleet-ops.user-management.twofa.${method.key}.name`, { defaultMessage: method.name }),
+          description: this.intl.t(`fleet-ops.user-management.twofa.${method.key}.description`, { defaultMessage: method.description })
+        }));
+      }
     /**
      * Action handler for toggling Two-Factor Authentication.
      *

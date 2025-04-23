@@ -1,15 +1,15 @@
-<ContentPanel @title="Queue" @open={{true}} @pad={{true}} @panelBodyClass="bg-white dark:bg-gray-800">
-    <InputGroup @name="Driver" @helpText="Select the default queue driver for FleetYes to use.">
-        <Select @options={{this.connections}} @value={{this.driver}} @onSelect={{this.setDriver}} @placeholder="Select queue driver" disabled={{this.isLoading}} class="w-full" />
+<ContentPanel @title={{t "common.queue"}} @open={{true}} @pad={{true}} @panelBodyClass="bg-white dark:bg-gray-800">
+    <InputGroup @name={{t "fleet-ops.common.driver"}} @helpText={{t "fleet-ops.user-management.service.queue.default-queue-driver"}}>
+        <Select @options={{this.connections}} @value={{this.driver}} @onSelect={{this.setDriver}} @placeholder={{t "fleet-ops.user-management.service.queue.select-queue-driver"}} disabled={{this.isLoading}} class="w-full" />
     </InputGroup>
     {{#if (eq this.driver "beanstalkd")}}
-        <InputGroup @name="Beanstalk Host" @value={{this.beanstalkdHost}} disabled={{this.isLoading}} />
-        <InputGroup @name="Beanstalk Queue" @value={{this.beanstalkdQueue}} />
+        <InputGroup @name={{t "fleet-ops.user-management.service.queue.beanstalk-host"}} @value={{this.beanstalkdHost}} disabled={{this.isLoading}} />
+        <InputGroup @name={{t "fleet-ops.user-management.service.queue.beanstalk-queue"}} @value={{this.beanstalkdQueue}} />
     {{/if}}
     {{#if (eq this.driver "sqs")}}
-        <InputGroup @name="SQS Prefix" @value={{this.sqsPrefix}} disabled={{this.isLoading}} />
-        <InputGroup @name="SQS Queue" @value={{this.sqsQueue}} disabled={{this.isLoading}} />
-        <InputGroup @name="SQS Suffix" @value={{this.sqsSuffix}} disabled={{this.isLoading}} />
+        <InputGroup @name={{t "fleet-ops.user-management.service.queue.sqs-prefix"}} @value={{this.sqsPrefix}} disabled={{this.isLoading}} />
+        <InputGroup @name={{t "fleet-ops.user-management.service.queue.sqs-queue"}} @value={{this.sqsQueue}} disabled={{this.isLoading}} />
+        <InputGroup @name={{t "fleet-ops.user-management.service.queue.sqs-suffix"}} @value={{this.sqsSuffix}} disabled={{this.isLoading}} />
     {{/if}}
     {{#if this.testResponse}}
         <div class="flex flex-row items-center rounded-lg border {{if (eq this.testResponse.status 'error') 'border-red-900 bg-red-800 text-red-100' 'border-green-900 bg-green-800 text-green-100'}} shadow-sm my-2 px-4 py-2">
@@ -17,9 +17,9 @@
             <span class="text-xs">{{this.this.testResponse.message}}</span>
         </div>
     {{/if}}
-    <Button @wrapperClass="mt-3" @icon="plug" @text="Test Config" @onClick={{this.test}} @isLoading={{this.isLoading}} />
+    <Button @wrapperClass="mt-3" @icon="plug" @text={{t "fleet-ops.user-management.service.mail.test-config"}} @onClick={{this.test}} @isLoading={{this.isLoading}} />
 </ContentPanel>
 
 <EmberWormhole @to="next-view-section-subheader-actions">
-    <Button @type="primary" @size="sm" @icon="save" @text="Save Changes" @onClick={{this.save}} @disabled={{this.isLoading}} @isLoading={{this.isLoading}} />
+    <Button @type="primary" @size="sm" @icon="save" @text={{t "common.save-changes"}} @onClick={{this.save}} @disabled={{this.isLoading}} @isLoading={{this.isLoading}} />
 </EmberWormhole>

@@ -1,40 +1,40 @@
-<ContentPanel @title="Mail" @open={{true}} @pad={{true}} @panelBodyClass="bg-white dark:bg-gray-800">
-    <InputGroup @name="Mailer" @helpText="Select the default mailer for FleetYes to use.">
-        <Select @options={{this.mailers}} @value={{this.mailer}} @onSelect={{this.setMailer}} @placeholder="Select mailer" class="w-full" />
+<ContentPanel @title={{t "fleet-ops.user-management.service.mail.name"}} @open={{true}} @pad={{true}} @panelBodyClass="bg-white dark:bg-gray-800">
+    <InputGroup @name={{t "fleet-ops.user-management.service.mail.mailer"}} @helpText={{t "fleet-ops.user-management.service.mail.default-mailer"}}>
+        <Select @options={{this.mailers}} @value={{this.mailer}} @onSelect={{this.setMailer}} @placeholder={{t "fleet-ops.user-management.service.mail.select-mailer"}} class="w-full" />
     </InputGroup>
     {{#if (eq this.mailer "smtp")}}
-        <InputGroup @name="SMTP Host" @value={{this.smtpHost}} disabled={{this.loadConfigValues.isRunning}} />
-        <InputGroup @name="SMTP Port" @type="number" @value={{this.smtpPort}} disabled={{this.loadConfigValues.isRunning}} />
+        <InputGroup @name={{t "fleet-ops.user-management.service.mail.smtp-host"}} @value={{this.smtpHost}} disabled={{this.loadConfigValues.isRunning}} />
+        <InputGroup @name={{t "fleet-ops.user-management.service.mail.smtp-port"}} @type="number" @value={{this.smtpPort}} disabled={{this.loadConfigValues.isRunning}} />
         <InputGroup>
-            <Toggle @isToggled={{eq this.smtpEncryption "tls"}} @onToggle={{this.enableSmtpEncryption}} @label="SMTP Encryption" @helpText="Enabled TLS Encryption" />
+            <Toggle @isToggled={{eq this.smtpEncryption "tls"}} @onToggle={{this.enableSmtpEncryption}} @label={{t "fleet-ops.user-management.service.mail.smtp-encryption"}} @helpText={{t "fleet-ops.user-management.service.mail.enable-tls"}} />
         </InputGroup>
-        <InputGroup @name="SMTP Username" @value={{this.smtpUsername}} disabled={{this.loadConfigValues.isRunning}} />
-        <InputGroup @name="SMTP Password" @value={{this.smtpPassword}} disabled={{this.loadConfigValues.isRunning}} />
-        <InputGroup @name="SMTP Timeout" @value={{this.smtpTimeout}} disabled={{this.loadConfigValues.isRunning}} />
-        <InputGroup @name="SMTP Auth Mode" @value={{this.smtpAuth_mode}} disabled={{this.loadConfigValues.isRunning}} />
+        <InputGroup @name={{t "fleet-ops.user-management.service.mail.smtp-username"}} @value={{this.smtpUsername}} disabled={{this.loadConfigValues.isRunning}} />
+        <InputGroup @name={{t "fleet-ops.user-management.service.mail.smtp-password"}} @value={{this.smtpPassword}} disabled={{this.loadConfigValues.isRunning}} />
+        <InputGroup @name={{t "fleet-ops.user-management.service.mail.smtp-timeout"}} @value={{this.smtpTimeout}} disabled={{this.loadConfigValues.isRunning}} />
+        <InputGroup @name={{t "fleet-ops.user-management.service.mail.smtp-auth-mode"}} @value={{this.smtpAuth_mode}} disabled={{this.loadConfigValues.isRunning}} />
     {{/if}}
     {{#if (eq this.mailer "mailgun")}}
-        <InputGroup @name="Mailgun Domain" @value={{this.mailgunDomain}} disabled={{this.loadConfigValues.isRunning}} />
-        <InputGroup @name="Mailgun Endpoint" @value={{this.mailgunEndpoint}} disabled={{this.loadConfigValues.isRunning}} />
-        <InputGroup @name="Mailgun Secret" @value={{this.mailgunSecret}} disabled={{this.loadConfigValues.isRunning}} />
+        <InputGroup @name={{t "fleet-ops.user-management.service.mail.mailgun-domain"}} @value={{this.mailgunDomain}} disabled={{this.loadConfigValues.isRunning}} />
+        <InputGroup @name={{t "fleet-ops.user-management.service.mail.mailgun-endpoint"}} @value={{this.mailgunEndpoint}} disabled={{this.loadConfigValues.isRunning}} />
+        <InputGroup @name={{t "fleet-ops.user-management.service.mail.mailgun-secret"}} @value={{this.mailgunSecret}} disabled={{this.loadConfigValues.isRunning}} />
     {{/if}}
     {{#if (eq this.mailer "postmark")}}
-        <InputGroup @name="Postmark Token" @value={{this.postmarkToken}} disabled={{this.loadConfigValues.isRunning}} />
+        <InputGroup @name={{t "fleet-ops.user-management.service.mail.postmark-token"}} @value={{this.postmarkToken}} disabled={{this.loadConfigValues.isRunning}} />
     {{/if}}
     {{#if (eq this.mailer "sendgrid")}}
-        <InputGroup @name="Sendgrid API Key" @value={{this.sendgridApi_key}} disabled={{this.loadConfigValues.isRunning}} />
+        <InputGroup @name={{t "fleet-ops.user-management.service.mail.sendgrid-api-key"}} @value={{this.sendgridApi_key}} disabled={{this.loadConfigValues.isRunning}} />
     {{/if}}
     {{#if (eq this.mailer "resend")}}
-        <InputGroup @name="Resend API Key" @value={{this.resendKey}} disabled={{this.loadConfigValues.isRunning}} />
+        <InputGroup @name={{t "fleet-ops.user-management.service.mail.resend-api-key"}} @value={{this.resendKey}} disabled={{this.loadConfigValues.isRunning}} />
     {{/if}}
     <InputGroup
-        @name="From Address"
-        @helpText="Input the email address for FleetYes to send emails from."
+        @name={{t "fleet-ops.user-management.service.mail.from-address"}}
+        @helpText={{t "fleet-ops.user-management.service.mail.help-text-from-address"}}
         @value={{this.fromAddress}}
-        @placeholder="From Address"
+        @placeholder={{t "fleet-ops.user-management.service.mail.from-address"}}
         disabled={{this.isLoading}}
     />
-    <InputGroup @name="From Name" @helpText="Input the name for FleetYes to send emails from." @value={{this.fromName}} @placeholder="From Name" disabled={{this.isLoading}} />
+    <InputGroup @name={{t "fleet-ops.user-management.service.mail.from-name"}} @helpText={{t "fleet-ops.user-management.service.mail.help-text-from-name"}} @value={{this.fromName}} @placeholder="From Name" disabled={{this.isLoading}} />
     {{#if this.testResponse}}
         <div
             class="flex flex-row items-center rounded-lg border
@@ -48,9 +48,9 @@
             <span class="text-xs">{{this.testResponse.message}}</span>
         </div>
     {{/if}}
-    <Button @wrapperClass="mt-3" @icon="plug" @text="Test Config" @onClick={{perform this.test}} @isLoading={{this.test.isRunning}} />
+    <Button @wrapperClass="mt-3" @icon="plug" @text={{t "fleet-ops.user-management.service.mail.test-config"}} @onClick={{perform this.test}} @isLoading={{this.test.isRunning}} />
 </ContentPanel>
 
 <EmberWormhole @to="next-view-section-subheader-actions">
-    <Button @type="primary" @size="sm" @icon="save" @text="Save Changes" @onClick={{perform this.save}} @disabled={{this.save.isRunning}} @isLoading={{this.save.isRunning}} />
+    <Button @type="primary" @size="sm" @icon="save" @text={{t "common.save-changes"}} @onClick={{perform this.save}} @disabled={{this.save.isRunning}} @isLoading={{this.save.isRunning}} />
 </EmberWormhole>

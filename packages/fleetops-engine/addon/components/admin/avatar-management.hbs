@@ -12,7 +12,7 @@
                     <div class="w-6">
                         <FaIcon @icon={{category.icon}} @size="sm" />
                     </div>
-                    <div>{{category.name}}</div>
+                    <div>{{t (concat "fleet-ops.component.admin.avatar-management." (lowercase category.name )) default=category.name}}</div>
                 </a>
             {{/each}}
         </div>

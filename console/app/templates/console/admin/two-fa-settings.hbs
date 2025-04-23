@@ -1,12 +1,12 @@
-{{page-title "2FA Config"}}
-<Layout::Section::Header @title="2FA Config">
+{{page-title (t "common.2fa-config")}}
+<Layout::Section::Header @title={{t "common.2fa-config"}}>
     <Button @type="primary" @size="sm" @icon="save" @text="Save Changes" @onClick={{this.saveSettings}} @disabled={{this.isLoading}} @isLoading={{this.isLoading}} />
 </Layout::Section::Header>
 
 <Layout::Section::Body class="overflow-y-scroll h-full">
     <div class="container mx-auto h-screen">
         <div class="max-w-3xl my-10 mx-auto space-y-4">
-            <ContentPanel @title="2FA Config" @open={{true}} @pad={{true}} @panelBodyClass="bg-white dark:bg-gray-800">
+            <ContentPanel @title={{t "common.2fa-config"}} @open={{true}} @pad={{true}} @panelBodyClass="bg-white dark:bg-gray-800">
                 {{#if this.loadSystemTwoFaConfig.isIdle}}
                     <TwoFaSettings
                         @showEnforceOption={{true}}
@@ -19,7 +19,7 @@
                     />
                 {{else}}
                     <div class="flex items-center justify-center p-4">
-                        <Spinner @loadingMessage="Loading 2FA Config..." @wrapperClass="flex flex-row" @iconClass="mr-2" />
+                        <Spinner @loadingMessage={{t "fleetops.user-management.loading-2fa-config"}} @wrapperClass="flex flex-row" @iconClass="mr-2" />
                     </div>
                 {{/if}}
             </ContentPanel>

@@ -12,9 +12,9 @@
             </div>
         {{/if}}
         {{#if this.showMethodSelection}}
-            <label class="text-base font-medium">Choose an authentication method</label>
-            <p class="text-sm text-gray-600 dark:text-gray-300 mt-1">In addition to your username and password, you'll have to enter a code (delivered via app or SMS) to sign in to your account</p>
-            {{#each @twoFaMethods as |method|}}
+            <label class="text-base font-medium">{{t "fleet-ops.user-management.choose-authentication-method"}}</label>
+            <p class="text-sm text-gray-600 dark:text-gray-300 mt-1">{{t "fleet-ops.user-management.you-will-enter-code"}}</p>
+            {{#each this.translatedMethods as |method|}}
                 <div class="border rounded-lg px-4 py-3 mt-2 transition duration-300 {{if (eq this.selectedTwoFaMethod method.key) 'border-blue-500' 'border-gray-200 dark:border-gray-700'}}">
                     <input type="radio" name="2fa-method" id="{{method.name}}" checked={{eq this.selectedTwoFaMethod method.key}} {{on "change" (fn this.onTwoFaSelected method.key)}} />
                     <label for="{{method.name}}">
