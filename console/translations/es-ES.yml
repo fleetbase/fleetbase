@@ -76,6 +76,12 @@ common:
   permissions-required-for-changes: No tienes los permisos necesarios para realizar
     cambios.
   push-notifications: Notificaciones push
+  latitude: Latitud
+  longitude: Longitud
+  upload-file: Subir archivo
+  upload: Subir
+  select-country: Seleccionar país...
+  enter-unit: "Introducir {unit}"
   role: Role
   model-delete-confirmation: ¿Estás seguro de que quieres eliminar este {modelName}?
   model-delete-success: El {modelName} ha sido eliminado.
@@ -2049,6 +2055,7 @@ fleet-ops:
         assign-driver: Asignar un conductor a la flota...
         delete-fleet: Eliminar la flota...
         delete-button: Eliminar flotas
+        fleet-action: Acciones de flota
         edit:
           body: Los cambios no guardados en esta flota se perderán. Haga clic en continuar
             para proceder.
@@ -2118,6 +2125,7 @@ fleet-ops:
             en continuar para continuar.
         places-title: Lugares
         delete-places: Eliminar ubicaciones
+        place-action: Acciones del lugar
     vehicles:
       index:
         view-vehicle: Ver detalles del vehículo...

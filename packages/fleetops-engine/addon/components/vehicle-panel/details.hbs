@@ -1,5 +1,5 @@
 <div class="p-4 space-y-4">
-    <ContentPanel @title="Details" @open={{true}} @pad={{true}} @panelBodyClass="bg-white dark:bg-gray-900">
+    <ContentPanel @title={{t "fleet-ops.common.details"}} @open={{true}} @pad={{true}} @panelBodyClass="bg-white dark:bg-gray-900">
         <div class="grid grid-cols-2 gap-4 text-xs dark:text-gray-100">
             <div class="field-info-container space-y-2">
                 <div class="field-name">{{t "fleet-ops.common.name"}}</div>
@@ -36,7 +36,7 @@
         </div>
     </ContentPanel>
 
-    <ContentPanel @title="Avatar" @open={{true}} @pad={{true}} @panelBodyClass="bg-white dark:bg-gray-800">
+    <ContentPanel @title={{t "fleet-ops.common.avatar"}} @open={{true}} @pad={{true}} @panelBodyClass="bg-white dark:bg-gray-800">
         <div class="p-4">
             <img alt={{@vehicle.displayName}} src={{@vehicle.avatar_url}} class="w-24 h-24" />
         </div>

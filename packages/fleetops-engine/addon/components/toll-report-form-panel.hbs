@@ -132,7 +132,7 @@
 
             {{!-- {{#if this.fuelReport.id}} --}}
             <!-- Add the FileUpload component here -->
-            <InputGroup @name="Upload File" @wrapperClass="w-full">
+            <InputGroup @name={{t "common.upload-file"}} @wrapperClass="w-full">
                 {{#if this.fuelReport.id}} 
                     <FileUpload @name="fuel-report-file" @accept="application/pdf" @label="Document"
                         @onFileAdded={{this.uploadFuelReportFile}} as |queue|>
@@ -144,7 +144,7 @@
                             <span>{{t "common.uploading"}}</span>
                             {{else}}
                             <FaIcon @icon="upload" class="mr-1" />
-                            <span>Upload</span>
+                            <span>{{t "common.upload"}}</span>
                             {{/if}}
                         </a>
                     </FileUpload>
@@ -157,7 +157,7 @@
                         @onFileAdded={{perform this.queueFile}}
                         @disabled={{cannot "fleet-ops create order"}}
                     >
-                        <a tabindex={{0}} class="btn btn-magic cursor-pointer ml-1">Upload</a>
+                        <a tabindex={{0}} class="btn btn-magic cursor-pointer ml-1">{{t "common.upload"}}</a>
                     </FileUpload>
                    
                 {{/if}}

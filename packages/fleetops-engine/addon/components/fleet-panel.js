@@ -17,6 +17,7 @@ export default class FleetPanelComponent extends Component {
     @service store;
     @service hostRouter;
     @service contextPanel;
+    @service intl;
 
     /**
      * The current active tab.
@@ -42,16 +43,16 @@ export default class FleetPanelComponent extends Component {
     get tabs() {
         const registeredTabs = this.universe.getMenuItemsFromRegistry('fleet-ops:component:fleet-panel');
         const defaultTabs = [
-            this.universe._createMenuItem('Details', null, {
+            this.universe._createMenuItem(this.intl.t('fleet-ops.common.details'), null, {
                 icon: 'circle-info',
                 component: FleetPanelDetailComponent,
             }),
-            this.universe._createMenuItem('Vehicles', null, {
+            this.universe._createMenuItem(this.intl.t('fleet-ops.component.layout.fleet-ops-sidebar.vehicles'), null, {
                 icon: 'car',
                 component: FleetPanelVehicleListingComponent,
                 componentParams: { wrapperClass: 'px-4 pt-6', selectable: true },
             }),
-            this.universe._createMenuItem('Drivers', null, {
+            this.universe._createMenuItem(this.intl.t('fleet-ops.component.layout.fleet-ops-sidebar.drivers'), null, {
                 icon: 'id-card',
                 component: FleetPanelDriverListingComponent,
                 componentParams: { wrapperClass: 'px-4 pt-6', selectable: true },
