@@ -987,7 +987,7 @@ export default class OperationsOrdersIndexViewController extends BaseController 
         this.modalsManager.show(`modals/order-label`, {
             title: 'Order Label',
             modalClass: 'modal-xl',
-            acceptButtonText: 'Done',
+            acceptButtonText: this.intl.t('common.done'),
             hideDeclineButton: true,
             order,
         });
@@ -1022,7 +1022,7 @@ export default class OperationsOrdersIndexViewController extends BaseController 
         this.modalsManager.show(`modals/order-label`, {
             title: 'Waypoint Label',
             modalClass: 'modal-xl',
-            acceptButtonText: 'Done',
+            acceptButtonText: this.intl.t('common.done'),
             hideDeclineButton: true,
         });
 

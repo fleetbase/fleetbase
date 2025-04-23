@@ -2,8 +2,10 @@ import Component from '@glimmer/component';
 import { tracked } from '@glimmer/tracking';
 import { computed, action } from '@ember/object';
 import { equal } from '@ember/object/computed';
+import { inject as service } from '@ember/service';
 
 export default class UnitInputComponent extends Component {
+    @service intl;
     /**
      * Units of weight
      *
@@ -145,7 +147,8 @@ export default class UnitInputComponent extends Component {
             return placeholder;
         }
 
-        return `Enter ${this.unitName}`;
+        return this.intl.t('common.enter-unit', { unit: this.unitName });
+        // return `Enter ${this.unitName}`;
     }
 
     /**

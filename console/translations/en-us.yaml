@@ -75,6 +75,12 @@ common:
   unauthorized-access-message: Unauthorized Access, you must request permissions to access.
   permissions-required-for-changes: You do not have the required permissions to make changes.
   push-notifications: Push Notifications
+  latitude: Latitude
+  longitude: Longitude
+  upload-file: Upload File
+  upload: Upload
+  select-country: Select country...
+  enter-unit: "Enter {unit}"
   role: Role
   report-type: Report Type
   payment-method: Payment Method
@@ -1903,6 +1909,7 @@ fleet-ops:
         assign-driver: Assign driver to fleet...
         delete-fleet: Delete fleet...
         delete-button: Delete Fleets
+        fleet-action: Fleet Actions
         edit:
           body: Unsaved changes to this fleet will be lost. Click continue to proceed.
         title: Fleets
@@ -1967,6 +1974,7 @@ fleet-ops:
           body: Unsaved changes to this place will be lost. Click continue to proceed.
         places-title: Places
         delete-places: Delete Places
+        place-action: Place Actions
     vehicles:
       index:
         view-vehicle: View vehicle details...

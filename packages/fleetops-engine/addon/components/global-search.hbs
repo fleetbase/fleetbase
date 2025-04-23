@@ -27,7 +27,8 @@
                                 </div>
                             </div>
                             <div>
-                                <Badge @status={{result.status}} />
+                                {{!-- <Badge @status={{result.status}} /> --}}
+                                <Badge @status={{t (concat "statuses." result.status)}} />
                             </div>
                         </div>
                         <div class="text-xs">

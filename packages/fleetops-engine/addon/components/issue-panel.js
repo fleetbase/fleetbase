@@ -50,6 +50,7 @@ export default class IssuePanelComponent extends Component {
      * @type {Service}
      */
     @service contextPanel;
+    @service intl;
 
     /**
      * The current active tab.
@@ -75,7 +76,7 @@ export default class IssuePanelComponent extends Component {
     get tabs() {
         const registeredTabs = this.universe.getMenuItemsFromRegistry('fleet-ops:component:issue-panel');
         // this.universe._createMenuItem('Tracking', null, { icon: 'satellite-dish', component: IssuePanelTrackingComponent }),
-        const defaultTabs = [this.universe._createMenuItem('Details', null, { icon: 'circle-info', component: IssuePanelDetailComponent })];
+        const defaultTabs = [this.universe._createMenuItem(this.intl.t('fleet-ops.common.details'), null, { icon: 'circle-info', component: IssuePanelDetailComponent })];
 
         if (isArray(registeredTabs)) {
             return [...defaultTabs, ...registeredTabs];

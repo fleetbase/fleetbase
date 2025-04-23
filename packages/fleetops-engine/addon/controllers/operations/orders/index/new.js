@@ -1291,7 +1291,7 @@ export default class OperationsOrdersIndexNewController extends BaseController {
             title: this.intl.t('fleet-ops.operations.orders.index.new.custom-field-title'),
             acceptButtonIcon: 'check',
             acceptButtonIconPrefix: 'fas',
-            acceptButtonText: 'Done',
+            acceptButtonText: this.intl.t('common.done'),
             declineButtonIcon: 'times',
             declineButtonIconPrefix: 'fas',
             label,

@@ -74,6 +74,12 @@ common:
   unauthorized-access-message: Accesso non autorizzato, devi richiedere i permessi per accedere.
   permissions-required-for-changes: Non hai i permessi necessari per apportare modifiche.
   push-notifications: Notifiche push
+  latitude: Latitudine
+  longitude: Longitudine
+  upload-file: Carica file
+  upload: Carica
+  select-country: Seleziona un paese...
+  enter-unit: "Inserisci {unit}"
   role: Ruolo
   report-type: Tipo di rapporto
   payment-method: Metodo di pagamento
@@ -1763,6 +1769,7 @@ fleet-ops:
         assign-driver: Assegna conducente alla flotta...
         delete-fleet: Elimina flotta...
         delete-button: Elimina flotte
+        fleet-action: Azioni della flotta
         edit:
           body: Le modifiche non salvate a questa flotta verranno perse. Clicca su continua per procedere.
         title: Flotte
@@ -1828,6 +1835,7 @@ fleet-ops:
           body: Le modifiche non salvate a questo luogo verranno perse. Clicca su continua per procedere.
         places-title: Luoghi
         delete-places: Elimina luoghi
+        place-action: Azioni del luogo
     vehicles:
       index:
         view-vehicle: Visualizza dettagli veicolo...

@@ -909,7 +909,7 @@ export default class OperationsOrdersIndexController extends BaseController {
             title: this.intl.t('fleet-ops.operations.orders.index.dispatch-title'),
             body: this.intl.t('fleet-ops.operations.orders.index.dispatch-body'),
             acceptButtonScheme: 'primary',
-            acceptButtonText: 'Dispatch',
+            acceptButtonText: this.intl.t('fleet-ops.operations.orders.index.view.dispatch'),
             acceptButtonIcon: 'paper-plane',
             order,
             confirm: async (modal) => {
@@ -956,7 +956,7 @@ export default class OperationsOrdersIndexController extends BaseController {
 
         this.crud.bulkDelete(selected, {
             modelNamePath: `public_id`,
-            acceptButtonText: 'Delete Orders',
+            acceptButtonText: this.intl.t('fleet-ops.operations.orders.index.delete-orders'),
             onSuccess: async () => {
                 await this.hostRouter.refresh();
                 this.table.untoggleSelectAll();
@@ -1012,7 +1012,7 @@ export default class OperationsOrdersIndexController extends BaseController {
         }
 
         this.crud.bulkAction('dispatch', selected, {
-            acceptButtonText: 'Dispatch Orders',
+            acceptButtonText: this.intl.t('fleet-ops.operations.orders.index.dispatch-orders'),
             acceptButtonScheme: 'magic',
             acceptButtonIcon: 'rocket',
             modelNamePath: 'public_id',
