@@ -149,7 +149,7 @@ statuses:
     on_break: In Pause
     created: Erstellt
     started: Gestartet
-    completed: Abgeschlossen
+    completed : Abgeschlossen
     dispatched: Versendet
     enroute: Unterwegs
     incident_reported: Vorfall gemeldet
@@ -167,8 +167,32 @@ statuses:
     backlogged: Rückstau  
     requires-update: Aktualisierung erforderlich  
     order_canceled: Bestellung storniert
-
+    incident-reported : Vorfall gemeldet
+    on-break: In Pause
+    order-canceled: Bestellung storniert
+    shift-ended: Schicht beendet
     all-statuses: Alle Status  
+    smtp: SMTP
+    mailgun: Mailgun
+    postmark: Postmark
+    sendgrid: SendGrid
+    sendmail: SendMail
+    resend: Erneut senden
+    ses: SES
+    failover: Failover
+    array: Array
+    log: Protokoll
+    local: Lokal
+    public: Öffentlich
+    s3: S3
+    gcs: GCS
+    light: Hell
+    dark: Dunkel
+    sync: Synchronisieren
+    database: Datenbank
+    beanstalkd: Beanstalkd
+    sqs: SQS
+    redis: Redis
 
     resource-allocation: Ressourcenallokation
     compliance: Compliance
@@ -580,6 +604,14 @@ fleet-ops:
     select-country: Wählen Sie Land
     upload: Hochladen
     uploading: Wird hochgeladen...
+    user-created: Benutzer erstellt
+    user-accepted-company-invite: Benutzer hat die Einladung des Unternehmens akzeptiert
+    order-assigned: Bestellung zugewiesen
+    order-canceled: Bestellung storniert
+    order-dispatched: Bestellung versendet
+    order-dispatch-failed: Versand der Bestellung fehlgeschlagen
+    order-ping: Bestell-Ping
+    select-notifiables: Wählen Sie Benachrichtigbare aus...
 
     twofa:
       sms:

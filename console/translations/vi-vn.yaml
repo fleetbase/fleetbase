@@ -153,6 +153,11 @@ statuses:
     dispatched: Đã gửi đi
     enroute: Đang trên đường
     incident_reported: Đã báo cáo sự cố
+    incident-reported: Báo cáo sự cố
+    on-break: Đang nghỉ
+    order-canceled: Đơn hàng đã hủy
+    shift-ended: Ca làm việc kết thúc
+    all-statuses: Tất cả trạng thái
     active: Hoạt động
     low: Thấp  
     high: Cao  
@@ -167,6 +172,27 @@ statuses:
     backlogged: Tồn đọng  
     requires-update: Cần cập nhật  
     order_canceled: Đơn hàng đã hủy
+    smtp: SMTP
+    mailgun: Mailgun
+    postmark: Postmark
+    sendgrid: SendGrid
+    sendmail: SendMail
+    resend: Gửi lại
+    ses: SES
+    failover: Chuyển đổi dự phòng
+    array: Mảng
+    log: Nhật ký
+    local: Cục bộ
+    public: Công khai
+    s3: S3
+    gcs: GCS
+    light: Sáng
+    dark: Tối
+    sync: Đồng bộ
+    database: Cơ sở dữ liệu
+    beanstalkd: Beanstalkd
+    sqs: SQS
+    redis: Redis
 
 
     resource-allocation: Phân bổ tài nguyên
@@ -583,6 +609,14 @@ fleet-ops:
     select-country: Chọn quốc gia
     upload: Tải lên
     uploading: Đang tải lên...
+    user-created: Người dùng đã tạo
+    user-accepted-company-invite: Người dùng đã chấp nhận lời mời của công ty
+    order-assigned: Đơn hàng đã được chỉ định
+    order-canceled: Đơn hàng đã hủy
+    order-dispatched: Đơn hàng đã gửi
+    order-dispatch-failed: Gửi đơn hàng thất bại
+    order-ping: Ping đơn hàng
+    select-notifiables: Chọn những người có thể nhận thông báo...
 
     twofa:
       sms:
