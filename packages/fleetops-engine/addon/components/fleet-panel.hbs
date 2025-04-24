@@ -10,7 +10,7 @@
     @width={{or this.width @width "570px"}}
 >
     <Overlay::Header @title={{this.fleet.name}} @disableBadgeHumanize={{true}} @hideStatusDot={{true}} @createdAt={{this.fleet.createdAt}}>
-        <Button @type="default" @icon="pen" @helpText="Edit fleet" @onClick={{this.onEdit}} @wrapperClass="mr-2" @permission="fleet-ops update fleet" />
+        <Button @type="default" @icon="pen" @helpText={{t "fleet-ops.common.edit"}} @onClick={{this.onEdit}} @wrapperClass="mr-2" @permission="fleet-ops update fleet" />
         <Button @type="default" @icon="times" @helpText={{if this.fleet.id "Cancel edit fleet" "Cancel new fleet"}} @onClick={{this.onPressCancel}} />
     </Overlay::Header>
 

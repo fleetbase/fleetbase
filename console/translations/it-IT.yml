@@ -34,6 +34,11 @@ common:
   mail: Posta
   name: Nome
   new: Nuovo
+  lookup: Ricerca
+  creating-order: Creazione dell'ordine...
+  ending: Chiusura della sessione...
+  starting: Avvio della sessione...
+  track-order: Traccia ordine
   notification-channels: Canali di notifica
   notifications: Notifiche
   organization: Organizzazione
@@ -697,6 +702,8 @@ fleet-ops:
     search-by-currency-code: Cerca per codice valuta
     view-profile: Visualizza profilo
     dark-mode: Modalità scura
+    select-fleet: Seleziona flotta
+    edit-fleet: Modifica flotta
   component:
     activity-logic-builder:
       activity-logic: Logica Attività

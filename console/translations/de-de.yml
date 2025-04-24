@@ -34,6 +34,11 @@ common:
   mail: E-Mail
   name: Name
   new: Neu
+  lookup: Nachschlagen
+  creating-order: Auftrag wird erstellt...
+  ending: Sitzung wird beendet...
+  starting: Sitzung wird gestartet...
+  track-order: Bestellung verfolgen
   notification-channels: Benachrichtigungskanäle
   notifications: Benachrichtigungen
   organization: Organisation
@@ -838,6 +843,8 @@ fleet-ops:
     search-by-currency-code: Nach Währungscode suchen
     view-profile: Profil anzeigen
     dark-mode: Dunkler Modus
+    select-fleet: Flotte auswählen
+    edit-fleet: Flotte bearbeiten
   component:
     activity-logic-builder:
       activity-logic: Aktivitätslogik

@@ -335,7 +335,7 @@ export default class OperationsOrdersIndexNewController extends BaseController {
         }
 
         this.previewRoute(false);
-        this.loader.showLoader('body', { loadingMessage: 'Creating Order...' });
+        this.loader.showLoader('body', { loadingMessage: this.intl.t('common.creating-order')});
 
         const { order, groupedMetaFields, payload, entities, waypoints } = this;
         const route = this.leafletOptimizedRoute ? this.getOptimizedRoute() : this.getRoute();

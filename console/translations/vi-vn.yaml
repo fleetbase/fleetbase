@@ -34,6 +34,11 @@ common:
   mail: Mail
   name: Tên
   new: Mới
+  lookup: Tra cứu
+  creating-order: Đang tạo đơn hàng...
+  ending: Kết thúc phiên làm việc...
+  starting: Bắt đầu phiên làm việc...
+  track-order: Theo dõi đơn hàng
   notification-channels: Kênh thông báo
   notifications: Thông báo
   organization: Tổ chức
@@ -843,6 +848,8 @@ fleet-ops:
     search-by-currency-code: Tìm theo mã tiền tệ
     view-profile: Xem hồ sơ
     dark-mode: Chế độ tối
+    select-fleet: Chọn đội xe
+    edit-fleet: Chỉnh sửa đội xe
     component:
        order:
         header:

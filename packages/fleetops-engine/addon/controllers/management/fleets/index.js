@@ -157,7 +157,7 @@ export default class ManagementFleetsIndexController extends BaseController {
             width: '130px',
             filterable: false,
             filterComponent: 'filter/model',
-            filterComponentPlaceholder: 'Select fleet',
+            filterComponentPlaceholder: this.intl.t('fleet-ops.common.select-fleet'),
             filterParam: 'parent_fleet_uuid',
             model: 'fleet',
         },
