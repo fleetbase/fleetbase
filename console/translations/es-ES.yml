@@ -87,6 +87,11 @@ common:
   upload: Subir
   select-country: Seleccionar país...
   enter-unit: "Introducir {unit}"
+  document: Documento
+  file-upload-success: "Archivo subido con éxito."
+  file-delete-failed: "No se pudo eliminar el archivo."
+  file-delete-success: "¡Archivo eliminado con éxito!"
+  file-delete-confirmation: "¿Está seguro de que desea eliminar el archivo \"{filename}\"?"
   role: Role
   model-delete-confirmation: ¿Estás seguro de que quieres eliminar este {modelName}?
   model-delete-success: El {modelName} ha sido eliminado.
@@ -1033,8 +1038,8 @@ fleet-ops:
       select-avatar: Selecciona un avatar
     admin:
       navigator-app:
-        title: Aplicación Navigator
-        name: URL de enlace de instancia
+        title: Aplicación de Navegación
+        avatar-management: Gestión de Avatares
         message: Utilice esta URL para vincular la aplicación oficial de Navigator
           a esta instancia{companyName}Utilice esta URL para vincular la aplicación
           oficial de Navigator a esta instancia. Al abrir esta URL en un dispositivo

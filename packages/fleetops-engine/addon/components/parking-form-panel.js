@@ -379,7 +379,7 @@ export default class ParkingFormPanelComponent extends Component {
                 }
             );
             
-            this.notifications.success('File uploaded successfully.');
+            this.notifications.success(this.intl.t('common.file-upload-success'));
         } catch (error) {
             this.notifications.serverError(error);
         } 
@@ -393,7 +393,14 @@ export default class ParkingFormPanelComponent extends Component {
      */
     @action 
     async removeFile(file) {
-        if (!confirm(`Are you sure you want to delete the file "${file.original_filename}"?`)) {
+        // if (!confirm(`Are you sure you want to delete the file "${file.original_filename}"?`)) {
+        //     return;
+        // }
+        const message = this.intl.t('common.file-delete-confirmation', {
+            filename: file.original_filename
+        });
+        
+        if (!confirm(message)) {
             return;
         }
        
@@ -416,12 +423,12 @@ export default class ParkingFormPanelComponent extends Component {
 
             if (!response.ok) {
                 const errorData = await response.json();
-                throw new Error(errorData.message || 'Failed to delete the file.');
+                throw new Error(errorData.message || this.intl.t('common.file-delete-failed'));
             }
 
             // let data = await response.json();
             // Trigger a success notification
-            this.notifications.success('File deleted successfully!', {
+            this.notifications.success(this.intl.t('common.file-delete-success'), {
                 autoClear: true,
                 clearDuration: 3000, // Duration in milliseconds
             });
@@ -434,7 +441,7 @@ export default class ParkingFormPanelComponent extends Component {
             // Revert the UI change
             // this.fuelReport.files.pushObject(file);
             // Optionally, show an error notification to the user
-            this.notifications.serverError(error.message || 'Failed to delete the file.');
+            this.notifications.serverError(error.message || this.intl.t('common.file-delete-failed'));
           }
     }
     
