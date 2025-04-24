@@ -34,6 +34,11 @@ common:
   mail: E-Mail
   name: Name
   new: Neu
+  lookup: Nachschlagen
+  creating-order: Auftrag wird erstellt...
+  ending: Sitzung wird beendet...
+  starting: Sitzung wird gestartet...
+  track-order: Bestellung verfolgen
   notification-channels: Benachrichtigungskanäle
   notifications: Benachrichtigungen
   organization: Organisation
@@ -80,6 +85,11 @@ common:
   upload: Hochladen
   select-country: Land auswählen...
   enter-unit: "{unit} eingeben"
+  document: Dokument
+  file-upload-success: "Datei erfolgreich hochgeladen."
+  file-delete-failed: "Löschen der Datei fehlgeschlagen."
+  file-delete-success: "Datei erfolgreich gelöscht!"
+  file-delete-confirmation: "Sind Sie sicher, dass Sie die Datei \"{filename}\" löschen möchten?"
   role: Rolle
   report-type: Berichtstyp
   payment-method: Zahlungsmethode
@@ -149,7 +159,7 @@ statuses:
     on_break: In Pause
     created: Erstellt
     started: Gestartet
-    completed: Abgeschlossen
+    completed : Abgeschlossen
     dispatched: Versendet
     enroute: Unterwegs
     incident_reported: Vorfall gemeldet
@@ -167,8 +177,32 @@ statuses:
     backlogged: Rückstau  
     requires-update: Aktualisierung erforderlich  
     order_canceled: Bestellung storniert
-
+    incident-reported : Vorfall gemeldet
+    on-break: In Pause
+    order-canceled: Bestellung storniert
+    shift-ended: Schicht beendet
     all-statuses: Alle Status  
+    smtp: SMTP
+    mailgun: Mailgun
+    postmark: Postmark
+    sendgrid: SendGrid
+    sendmail: SendMail
+    resend: Erneut senden
+    ses: SES
+    failover: Failover
+    array: Array
+    log: Protokoll
+    local: Lokal
+    public: Öffentlich
+    s3: S3
+    gcs: GCS
+    light: Hell
+    dark: Dunkel
+    sync: Synchronisieren
+    database: Datenbank
+    beanstalkd: Beanstalkd
+    sqs: SQS
+    redis: Redis
 
     resource-allocation: Ressourcenallokation
     compliance: Compliance
@@ -580,6 +614,17 @@ fleet-ops:
     select-country: Wählen Sie Land
     upload: Hochladen
     uploading: Wird hochgeladen...
+    user-created: Benutzer erstellt
+    user-accepted-company-invite: Benutzer hat die Einladung des Unternehmens akzeptiert
+    order-assigned: Bestellung zugewiesen
+    order-canceled: Bestellung storniert
+    order-dispatched: Bestellung versendet
+    order-dispatch-failed: Versand der Bestellung fehlgeschlagen
+    order-ping: Bestell-Ping
+    select-notifiables: Wählen Sie Benachrichtigbare aus...
+    branding-settings-saved: Branding-Einstellungen gespeichert.
+    notification-settings-saved: Benachrichtigungseinstellungen erfolgreich gespeichert.
+    organization-changes-saved: Änderungen an der Organisation erfolgreich gespeichert.
 
     twofa:
       sms:
@@ -806,6 +851,8 @@ fleet-ops:
     search-by-currency-code: Nach Währungscode suchen
     view-profile: Profil anzeigen
     dark-mode: Dunkler Modus
+    select-fleet: Flotte auswählen
+    edit-fleet: Flotte bearbeiten
   component:
     activity-logic-builder:
       activity-logic: Aktivitätslogik
@@ -949,7 +996,10 @@ fleet-ops:
       select-avatar: Avatar auswählen
     admin:
       navigator-app:
-        title: Navigator App
+        title: Navigator-App
+
+        avatar-management: Avatar-Verwaltung
+
         name: Instanz-Link-URL
         message: Verwenden Sie diese URL, um die offizielle Navigator-App mit dieser {companyName}-Instanz zu verknüpfen. Das Öffnen dieser URL auf einem mobilen Gerät öffnet die Navigator-App und aktualisiert deren Konfiguration und Branding.
         settings: Entitätseinstellungen
@@ -1005,7 +1055,9 @@ fleet-ops:
     layout:
       fleet-ops-sidebar:
         payments: Zahlungen
-        navigator-app: Navigator App
+
+        navigator-app: Navigator-App
+
         resources: Ressourcen
         operations: Operationen
         dashboard: Dashboard

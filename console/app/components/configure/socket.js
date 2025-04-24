@@ -36,7 +36,7 @@ export default class ConfigureSocketComponent extends Component {
      * @memberof ConfigureSocketComponent
      */
     @service socket;
-
+    @service intl;
     /**
      * State of the test request.
      *

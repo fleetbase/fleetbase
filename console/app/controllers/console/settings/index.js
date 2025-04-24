@@ -24,7 +24,7 @@ export default class ConsoleSettingsIndexController extends Controller {
      * @memberof ConsoleSettingsIndexController
      */
     @service fetch;
-
+    @service intl;
     /**
      * The request loading state.
      *
@@ -58,7 +58,7 @@ export default class ConsoleSettingsIndexController extends Controller {
         this.model
             .save()
             .then(() => {
-                this.notifications.success('Organization changes successfully saved.');
+                this.notifications.success(this.intl.t('fleet-ops.user-management.organization-changes-saved'));
             })
             .finally(() => {
                 this.isLoading = false;

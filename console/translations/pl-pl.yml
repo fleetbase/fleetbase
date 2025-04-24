@@ -35,6 +35,11 @@ common:
   mail: Poczta
   name: Imię
   new: Nowy
+  lookup: Wyszukiwanie
+  creating-order: Tworzenie zamówienia...
+  ending: Kończenie sesji...
+  starting: Rozpoczynanie sesji...
+  track-order: Śledź zamówienie
   notification-channels: Kanały powiadomień
   notifications: Powiadomienia
   organization: Organizacja
@@ -81,6 +86,11 @@ common:
   upload: Prześlij
   select-country: Wybierz kraj...
   enter-unit: "Wprowadź {unit}"
+  document: Dokument
+  file-upload-success: "Plik został pomyślnie przesłany."
+  file-delete-failed: "Nie udało się usunąć pliku."
+  file-delete-success: "Plik został pomyślnie usunięty!"
+  file-delete-confirmation: "Czy na pewno chcesz usunąć plik \"{filename}\"?"
   role: Rola
   report-type: Typ raportu
   payment-method: Metoda płatności
@@ -155,6 +165,11 @@ statuses:
   dispatched: Wysłano
   enroute: W drodze
   incident_reported: Zgłoszono incydent
+  incident-reported: Zgłoszono incydent
+  on-break: Na przerwie
+  order-canceled: Zamówienie anulowane
+  shift-ended: Zmiana zakończona
+
   active: Aktywny
   low: Niski  
   high: Wysoki  
@@ -170,6 +185,27 @@ statuses:
   requires-update: Wymaga aktualizacji  
   order_canceled: Zamówienie anulowane
   all-statuses: Wszystkie statusy
+  smtp: SMTP
+  mailgun: Mailgun
+  postmark: Postmark
+  sendgrid: SendGrid
+  sendmail: SendMail
+  resend: Wyślij ponownie
+  ses: SES
+  failover: Failover
+  array: Tablica
+  log: Dziennik
+  local: Lokalny
+  public: Publiczny
+  s3: S3
+  gcs: GCS
+  light: Jasny
+  dark: Ciemny
+  sync: Synchronizuj
+  database: Baza danych
+  beanstalkd: Beanstalkd
+  sqs: SQS
+  redis: Redis
 
 
   resource-allocation: Alokacja zasobów
@@ -583,6 +619,17 @@ fleet-ops:
     select-country: Wybierz kraj
     upload: Prześlij
     uploading: Wysyłanie...
+    user-created: Użytkownik utworzony
+    user-accepted-company-invite: Użytkownik zaakceptował zaproszenie firmy
+    order-assigned: Zamówienie przypisane
+    order-canceled: Zamówienie anulowane
+    order-dispatched: Zamówienie wysłane
+    order-dispatch-failed: Wysłanie zamówienia nie powiodło się
+    order-ping: Ping zamówienia
+    select-notifiables: Wybierz powiadamianych...
+    branding-settings-saved: Ustawienia marki zapisane.
+    notification-settings-saved: Ustawienia powiadomień zapisane pomyślnie.
+    organization-changes-saved: Zmiany w organizacji zostały pomyślnie zapisane.
 
     twofa:
       sms:
@@ -810,6 +857,8 @@ fleet-ops:
     search-by-currency-code: Szukaj według kodu waluty
     view-profile: Zobacz profil
     dark-mode: Tryb ciemny
+    select-fleet: Wybierz flotę
+    edit-fleet: Edytuj flotę
   component:
     activity-logic-builder:
       activity-logic: Logika aktywności
@@ -948,7 +997,8 @@ fleet-ops:
       select-avatar: Wybierz awatar
     admin:
       navigator-app:
-        title: Aplikacja Navigator
+        title: Aplikacja Nawigacyjna
+        avatar-management: Zarządzanie awatarami
         name: URL łączenia instancji
         message: Użyj tego URL-a, aby połączyć oficjalną aplikację Navigator z instancją {companyName}. Otwarcie tego URL-a na urządzeniu mobilnym uruchomi aplikację Navigator i zaktualizuje jej konfigurację oraz branding.
         settings: Ustawienia jednostki

@@ -31,9 +31,14 @@ common:
   filter: Lọc
   home: Trang chủ
   logout: Đăng xuất
-  mail: Mail
+  mail: Thư
   name: Tên
   new: Mới
+  lookup: Tra cứu
+  creating-order: Đang tạo đơn hàng...
+  ending: Kết thúc phiên làm việc...
+  starting: Bắt đầu phiên làm việc...
+  track-order: Theo dõi đơn hàng
   notification-channels: Kênh thông báo
   notifications: Thông báo
   organization: Tổ chức
@@ -47,7 +52,7 @@ common:
   search: Tìm kiếm
   services: Dịch vụ
   settings: Cài đặt
-  socket: Socket
+  socket: Ổ cắm
   sort: Sắp xếp
   two-factor: Hai yếu tố
   uploading: Đang tải lên...
@@ -80,6 +85,11 @@ common:
   upload: Tải lên
   select-country: Chọn quốc gia...
   enter-unit: "Nhập {unit}"
+  document: Tài liệu
+  file-upload-success: "Tải tệp lên thành công."
+  file-delete-failed: "Xoá tệp không thành công."
+  file-delete-success: "Xoá tệp thành công!"
+  file-delete-confirmation: "Bạn có chắc chắn muốn xoá tệp \"{filename}\" không?"
   role: Vai trò
   report-type: Loại báo cáo
   payment-method: Phương thức thanh toán
@@ -153,6 +163,11 @@ statuses:
     dispatched: Đã gửi đi
     enroute: Đang trên đường
     incident_reported: Đã báo cáo sự cố
+    incident-reported: Báo cáo sự cố
+    on-break: Đang nghỉ
+    order-canceled: Đơn hàng đã hủy
+    shift-ended: Ca làm việc kết thúc
+    all-statuses: Tất cả trạng thái
     active: Hoạt động
     low: Thấp  
     high: Cao  
@@ -167,6 +182,27 @@ statuses:
     backlogged: Tồn đọng  
     requires-update: Cần cập nhật  
     order_canceled: Đơn hàng đã hủy
+    smtp: SMTP
+    mailgun: Mailgun
+    postmark: Postmark
+    sendgrid: SendGrid
+    sendmail: SendMail
+    resend: Gửi lại
+    ses: SES
+    failover: Chuyển đổi dự phòng
+    array: Mảng
+    log: Nhật ký
+    local: Cục bộ
+    public: Công khai
+    s3: S3
+    gcs: GCS
+    light: Sáng
+    dark: Tối
+    sync: Đồng bộ
+    database: Cơ sở dữ liệu
+    beanstalkd: Beanstalkd
+    sqs: SQS
+    redis: Redis
 
 
     resource-allocation: Phân bổ tài nguyên
@@ -583,6 +619,17 @@ fleet-ops:
     select-country: Chọn quốc gia
     upload: Tải lên
     uploading: Đang tải lên...
+    user-created: Người dùng đã tạo
+    user-accepted-company-invite: Người dùng đã chấp nhận lời mời của công ty
+    order-assigned: Đơn hàng đã được chỉ định
+    order-canceled: Đơn hàng đã hủy
+    order-dispatched: Đơn hàng đã gửi
+    order-dispatch-failed: Gửi đơn hàng thất bại
+    order-ping: Ping đơn hàng
+    select-notifiables: Chọn những người có thể nhận thông báo...
+    branding-settings-saved: Cài đặt thương hiệu đã được lưu.
+    notification-settings-saved: Cài đặt thông báo đã được lưu thành công.
+    organization-changes-saved: Thay đổi tổ chức đã được lưu thành công.
 
     twofa:
       sms:
@@ -809,6 +856,8 @@ fleet-ops:
     search-by-currency-code: Tìm theo mã tiền tệ
     view-profile: Xem hồ sơ
     dark-mode: Chế độ tối
+    select-fleet: Chọn đội xe
+    edit-fleet: Chỉnh sửa đội xe
     component:
        order:
         header:

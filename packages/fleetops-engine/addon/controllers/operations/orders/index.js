@@ -255,7 +255,7 @@ export default class OperationsOrdersIndexController extends BaseController {
      * @type {Array}
      */
     @tracked statusOptions = [];
-
+    @tracked sta_op;
     /**
      * Flag to determine if the layout is 'map'
      *
@@ -465,7 +465,8 @@ export default class OperationsOrdersIndexController extends BaseController {
             sortable: true,
             filterable: true,
             filterComponent: 'filter/select',
-            filterOptions: this.statusOptions,
+            filterOptions: this.sta_op,
+            // filterOptions : ['completed',],
             filterOptionLabel: 'label', // Specify which property to use as the display label
             filterOptionValue: 'code',
         },
@@ -576,30 +577,52 @@ export default class OperationsOrdersIndexController extends BaseController {
             this.getOrderStatusOptions.perform();
         }
     }
-
     @task *getOrderStatusOptions() {
         try {
-            if (this.statusOptions.length > 0) {
-                this.statusOptions = this.statusOptions.map(option => {  
-                    return {  
-                        label: `${option.label.toLowerCase().replace(/\s+/g, '_')}`,
-                        code: option.label // Adjust this if the property name is different  
-                    };  
-                }); 
-                return this.statusOptions; 
-            }
-            this.statusOptions = yield this.fetch.get('orders/statuses?is_filter_status=1');
-            this.statusOptions = this.statusOptions.map(option => {  
-                return {  
-                    label: `${option.label.toLowerCase().replace(/\s+/g, '_')}`,
-                    code: option.label // Adjust this if the property name is different  
-                };  
-            });
-            return this.statusOptions;
+          if (this.statusOptions.length > 0) {
+            this.sta_op=this.statusOptions.map(option => 
+                option.label.toLowerCase().replace(/\s+/g, '-')
+              );
+            // Convert existing statusOptions to array of strings
+            return this.sta_op;
+          }
+          // Fetch statuses from API
+          this.statusOptions = yield this.fetch.get('orders/statuses?is_filter_status=1');
+          this.sta_op=this.statusOptions.map(option => 
+            option.label.toLowerCase().replace(/\s+/g, '-')
+          );
+
+         
+          return this.sta_op;
         } catch (error) {
-            this.notifications.serverError(error);
+          this.notifications.serverError(error);
+          // Return empty array in case of error
+          return [];
         }
-    }
+      }
+    // @task *getOrderStatusOptions() {
+    //     try {
+    //         if (this.statusOptions.length > 0) {
+    //             this.statusOptions = this.statusOptions.map(option => {  
+    //                 return {  
+    //                     label: `${option.label.toLowerCase().replace(/\s+/g, '_')}`,
+    //                     code: `${option.label.toLowerCase().replace(/\s+/g, '_')}`, // Adjust this if the property name is different  
+    //                 };  
+    //             }); 
+    //             return this.statusOptions; 
+    //         }
+    //         this.statusOptions = yield this.fetch.get('orders/statuses?is_filter_status=1');
+    //         this.statusOptions = this.statusOptions.map(option => {  
+    //             return {  
+    //                 label: `${option.label.toLowerCase().replace(/\s+/g, '_')}`,
+    //                 code: `${option.label.toLowerCase().replace(/\s+/g, '_')}`,// Adjust this if the property name is different  
+    //             };  
+    //         });
+    //         return this.statusOptions;
+    //     } catch (error) {
+    //         this.notifications.serverError(error);
+    //     }
+    // }
 
     /**
      * Listen for incoming order events to refresh listing.

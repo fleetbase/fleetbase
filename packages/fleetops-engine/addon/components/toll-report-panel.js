@@ -156,9 +156,16 @@ export default class TollReportPanelComponent extends Component {
      */
     @action 
         async removeFile(file) {
-            if (!confirm(`Are you sure you want to delete the file "${file.original_filename}"?`)) {
+            const message = this.intl.t('common.file-delete-confirmation', {
+                filename: file.original_filename
+            });
+            
+            if (!confirm(message)) {
                 return;
             }
+            // if (!confirm(`Are you sure you want to delete the file "${file.original_filename}"?`)) {
+            //     return;
+            // }
            
             this.fuelReport.files.removeObject(file);
             
@@ -180,11 +187,11 @@ export default class TollReportPanelComponent extends Component {
     
                 if (!response.ok) {
                     const errorData = await response.json();
-                    throw new Error(errorData.message || 'Failed to delete the file.');
+                    throw new Error(errorData.message || this.intl.t('common.file-delete-failed'));
                 }
           
                 // Trigger a success notification
-                this.notifications.success('File deleted successfully!', {
+                this.notifications.success(this.intl.t('common.file-delete-success'), {
                     autoClear: true,
                     clearDuration: 3000, // Duration in milliseconds
                 });
@@ -194,7 +201,7 @@ export default class TollReportPanelComponent extends Component {
               } catch (error) {
                 // Revert the UI change
                 this.fuelReport.files.pushObject(file);
-                this.notifications.error('Failed to delete file. Please try again.', {
+                this.notifications.error(this.intl.t('common.file-delete-failed'), {
                     autoClear: true,
                     clearDuration: 5000,
                 });

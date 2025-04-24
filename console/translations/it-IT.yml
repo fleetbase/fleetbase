@@ -34,6 +34,11 @@ common:
   mail: Posta
   name: Nome
   new: Nuovo
+  lookup: Ricerca
+  creating-order: Creazione dell'ordine...
+  ending: Chiusura della sessione...
+  starting: Avvio della sessione...
+  track-order: Traccia ordine
   notification-channels: Canali di notifica
   notifications: Notifiche
   organization: Organizzazione
@@ -47,7 +52,7 @@ common:
   search: Cerca
   services: Servizi
   settings: Impostazioni
-  socket: Socket
+  socket: Presa
   sort: Ordina
   two-factor: Autenticazione a due fattori
   uploading: Caricamento in corso...
@@ -80,6 +85,11 @@ common:
   upload: Carica
   select-country: Seleziona un paese...
   enter-unit: "Inserisci {unit}"
+  document: Documento
+  file-upload-success: "File caricato con successo."
+  file-delete-failed: "Eliminazione del file non riuscita."
+  file-delete-success: "File eliminato con successo!"
+  file-delete-confirmation: "Sei sicuro di voler eliminare il file \"{filename}\"?"
   role: Ruolo
   report-type: Tipo di rapporto
   payment-method: Metodo di pagamento
@@ -153,6 +163,11 @@ statuses:
     dispatched: Inviato
     enroute: In viaggio
     incident_reported: Incidente segnalato
+    incident-reported: Incidente segnalato
+    on-break: In pausa
+    order-canceled: Ordine annullato
+    shift-ended: Fine turno
+
     active: Attivo
     low: Basso  
     high: Alto  
@@ -168,6 +183,27 @@ statuses:
     requires-update: Richiede aggiornamento  
     order_canceled: Ordine annullato
     all-statuses: Tutti gli stati
+    smtp: SMTP
+    mailgun: Mailgun
+    postmark: Postmark
+    sendgrid: SendGrid
+    sendmail: SendMail
+    resend: Reinvia
+    ses: SES
+    failover: Failover
+    array: Array
+    log: Registro
+    local: Locale
+    public: Pubblico
+    s3: S3
+    gcs: GCS
+    light: Chiaro
+    dark: Scuro
+    sync: Sincronizzare
+    database: Database
+    beanstalkd: Beanstalkd
+    sqs: SQS
+    redis: Redis
 
 
     resource-allocation: Allocazione delle risorse
@@ -437,6 +473,17 @@ fleet-ops:
     select-country: Seleziona il paese
     upload: Carica
     uploading: Caricamento in corso...
+    user-created: Utente creato
+    user-accepted-company-invite: L'utente ha accettato l'invito dell'azienda
+    order-assigned: Ordine assegnato
+    order-canceled: Ordine annullato
+    order-dispatched: Ordine spedito
+    order-dispatch-failed: Invio dell'ordine fallito
+    order-ping: Ping dell'ordine
+    select-notifiables: Seleziona notificabili...
+    branding-settings-saved: Impostazioni del branding salvate.
+    notification-settings-saved: Impostazioni delle notifiche salvate con successo.
+    organization-changes-saved: Modifiche all'organizzazione salvate con successo.
 
     twofa:
       sms:
@@ -663,6 +710,8 @@ fleet-ops:
     search-by-currency-code: Cerca per codice valuta
     view-profile: Visualizza profilo
     dark-mode: Modalità scura
+    select-fleet: Seleziona flotta
+    edit-fleet: Modifica flotta
   component:
     activity-logic-builder:
       activity-logic: Logica Attività
@@ -806,7 +855,8 @@ fleet-ops:
       select-avatar: Seleziona avatar
     admin:
       navigator-app:
-        title: App Navigator
+        title: App di Navigazione
+        avatar-management: Gestione Avatar
         name: URL di collegamento istanza
         message: Usa questo URL per collegare l'app ufficiale Navigator a questa istanza di {companyName}. Aprendo questo URL su un dispositivo mobile, si aprirà l'app Navigator e aggiornerà la sua configurazione e il suo marchio.
         settings: Impostazioni entità

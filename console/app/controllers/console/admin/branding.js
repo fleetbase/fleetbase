@@ -18,7 +18,7 @@ export default class ConsoleAdminBrandingController extends Controller {
      * @memberof ConsoleAdminBrandingController
      */
     @service notifications;
-
+    @service intl;
     /**
      * Inject the `theme` service.
      *
@@ -103,7 +103,7 @@ export default class ConsoleAdminBrandingController extends Controller {
         return this.model
             .save()
             .then(() => {
-                this.notifications.success('Branding settings saved.');
+                this.notifications.success(this.intl.t('fleet-ops.user-management.branding-settings-saved'));
 
                 // if logo url is null
                 if (this.model.logo_url === null) {
