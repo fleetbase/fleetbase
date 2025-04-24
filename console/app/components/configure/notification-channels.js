@@ -7,6 +7,7 @@ export default class ConfigureNotificationChannelsComponent extends Component {
     @service fetch;
     @service notifications;
     @service currentUser;
+    @service intl;
     @tracked isLoading = false;
     @tracked testResponse;
     @tracked testTitle = 'Hello World from FleetYes 🚀';

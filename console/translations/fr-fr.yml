@@ -31,7 +31,7 @@ common:
   filter: Filtrer
   home: Accueil
   logout: Déconnexion
-  mail: Mail
+  mail: Courrier
   name: Nom
   new: Nouveau
   lookup: Rechercher
@@ -52,7 +52,7 @@ common:
   search: Recherche
   services: Services
   settings: Paramètres
-  socket: Socket
+  socket: Prise
   sort: Trier
   two-factor: Authentification à deux facteurs
   uploading: Téléchargement en cours...
@@ -623,6 +623,9 @@ fleet-ops:
     order-dispatch-failed: Échec de l'expédition de la commande
     order-ping: Ping de commande
     select-notifiables: Sélectionner les notifiables...
+    branding-settings-saved: Paramètres de branding enregistrés.
+    notification-settings-saved: Paramètres de notification enregistrés avec succès.
+    organization-changes-saved: Modifications de l'organisation enregistrées avec succès.
 
     twofa:
       sms:

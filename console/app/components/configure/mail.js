@@ -7,6 +7,7 @@ import { task } from 'ember-concurrency';
 export default class ConfigureMailComponent extends Component {
     @service fetch;
     @service notifications;
+    @service intl;
     @tracked isLoading = false;
     @tracked testResponse;
     @tracked mailers = [];

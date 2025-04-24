@@ -18,7 +18,7 @@ export default class ConsoleAdminNotificationsController extends Controller {
      * @memberof ConsoleAdminNotificationsController
      */
     @service fetch;
-
+    @service intl;
     /**
      * The notification settings value JSON.
      *
@@ -108,7 +108,7 @@ export default class ConsoleAdminNotificationsController extends Controller {
         return this.fetch
             .post('notifications/save-settings', { notificationSettings })
             .then(() => {
-                this.notifications.success('Notification settings successfully saved.');
+                this.notifications.success(this.intl.t('fleet-ops.user-management.notification-settings-saved'));
             })
             .catch((error) => {
                 this.notifications.serverError(error);

@@ -7,6 +7,7 @@ export default class ConfigureFilesystemComponent extends Component {
     @service fetch;
     @service notifications;
     @service currentUser;
+    @service intl;
     @tracked isLoading = false;
     @tracked testResponse;
     @tracked disks = [];
