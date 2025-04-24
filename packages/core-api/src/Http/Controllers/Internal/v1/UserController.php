@@ -83,9 +83,8 @@ class UserController extends FleetbaseController
                 $company = Auth::getCompany();
 
                 // Set user type
-                $role = Role::where('id', $request->input('user.role_uuid'))
-                        ->whereNull('deleted_at')
-                        ->first();
+                $roleId = $request->input('user.role.id');
+                $role = Role::where('id', $roleId)->whereNull('deleted_at')->first();
                 if ($role) {
                     $user->setUserType($role->name === 'Administrator' ? 'admin' : 'user');
                 }
