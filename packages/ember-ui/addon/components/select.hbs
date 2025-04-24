@@ -11,7 +11,7 @@
     {{#if (get selectable "label")}}
         {{selectable.label}}
     {{else}}
-        {{t (concat "statuses." (this.formatKey selectable)) default=selectable}}
+        {{t (concat "statuses." (this.formatKey selectable)) default=selectable fallback=selectable}}
 
     {{/if}}
 </PowerSelect>

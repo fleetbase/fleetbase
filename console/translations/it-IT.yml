@@ -153,6 +153,11 @@ statuses:
     dispatched: Inviato
     enroute: In viaggio
     incident_reported: Incidente segnalato
+    incident-reported: Incidente segnalato
+    on-break: In pausa
+    order-canceled: Ordine annullato
+    shift-ended: Fine turno
+
     active: Attivo
     low: Basso  
     high: Alto  
@@ -168,6 +173,27 @@ statuses:
     requires-update: Richiede aggiornamento  
     order_canceled: Ordine annullato
     all-statuses: Tutti gli stati
+    smtp: SMTP
+    mailgun: Mailgun
+    postmark: Postmark
+    sendgrid: SendGrid
+    sendmail: SendMail
+    resend: Reinvia
+    ses: SES
+    failover: Failover
+    array: Array
+    log: Registro
+    local: Locale
+    public: Pubblico
+    s3: S3
+    gcs: GCS
+    light: Chiaro
+    dark: Scuro
+    sync: Sincronizzare
+    database: Database
+    beanstalkd: Beanstalkd
+    sqs: SQS
+    redis: Redis
 
 
     resource-allocation: Allocazione delle risorse
@@ -437,6 +463,14 @@ fleet-ops:
     select-country: Seleziona il paese
     upload: Carica
     uploading: Caricamento in corso...
+    user-created: Utente creato
+    user-accepted-company-invite: L'utente ha accettato l'invito dell'azienda
+    order-assigned: Ordine assegnato
+    order-canceled: Ordine annullato
+    order-dispatched: Ordine spedito
+    order-dispatch-failed: Invio dell'ordine fallito
+    order-ping: Ping dell'ordine
+    select-notifiables: Seleziona notificabili...
 
     twofa:
       sms:

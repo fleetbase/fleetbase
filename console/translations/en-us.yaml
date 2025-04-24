@@ -151,10 +151,14 @@ statuses:
     on_break: On Break
     created: Created
     started: Started
-    completed: Completed
+    completed : Completed
     dispatched: Dispatched
     enroute: Enroute
-    incident_reported: Incident Reported
+    incident_reported : Incident Reported
+    incident-reported : Incident Reported
+    on-break: On Break
+    order-canceled: Order Canceled
+    shift-ended: Shift Ended
     active: Active
     low: Low
     high: High
@@ -170,8 +174,27 @@ statuses:
     requires-update: Requires Update
     order_canceled: Order Canceled
     all-statuses: All Statuses
-
-    
+    smtp : SMTP
+    mailgun : Mailgun
+    postmark : Postmark
+    sendgrid : SendGrid
+    sendmail : SendMail
+    resend : Resend
+    ses : SES
+    failover : Fail Over
+    array : Array
+    log : Log
+    local : Local
+    public : Public
+    s3 : S3
+    gcs : GCS
+    light : Light
+    dark : Dark
+    sync : Sync
+    database : Database
+    beanstalkd : Beanstalkd
+    sqs : SQS
+    redis : Redis
     resource-allocation : Resource Allocation
     compliance : Compliance
     cost-overruns : Cost Overruns
@@ -581,6 +604,15 @@ fleet-ops:
     select-country : Select Country
     upload : Upload
     uploading : Uploading...
+    user-created : User Created
+    user-accepted-company-invite : User Accepted Company Invite
+    order-assigned : Order Assigned
+    order-canceled : Order Canceled
+    order-dispatched : Order Dispatched
+    order-dispatch-failed : Order Dispatch Failed
+    order-ping : Order Ping
+    select-notifiables : Select notifiables...
+    smtp : SMTP
     twofa:
       sms:
         name: "SMS"
@@ -614,6 +646,11 @@ fleet-ops:
         key : IP Info API Key
         save-changes : Save Changes
       mail:
+        smtp : SMTP
+        mailgun : Mailgun
+        postmark : Postmark
+        sendgrid : SendGrid
+        resend : Resend
         name : Mail
         mailer : Mailer
         default-mailer : Select the default mailer for FleetYes to use.

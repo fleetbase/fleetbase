@@ -9,14 +9,14 @@
             {{#each-in this.groupedNotifications as |groupName notifications|}}
                 <ContentPanel @title={{concat (smart-humanize groupName) " " (t "console.admin.notifications.notification-settings") }} @open={{true}} @pad={{true}} @panelBodyClass="bg-white dark:bg-gray-800">
                     {{#each notifications as |notification|}}
-                        <InputGroup @name={{titleize notification.name}} @helpText={{notification.description}}>
+                        <InputGroup @name={{ t (dasherize (lowercase (concat "fleet-ops.user-management." notification.name)))}}  @helpText={{notification.description}}>
                             <div class="fleetbase-model-select fleetbase-power-select ember-model-select">
                                 <PowerSelectMultiple
                                     @searchEnabled={{true}}
                                     @options={{this.notifiables}}
                                     @selected={{get this.notificationSettings (concat (get-notification-key notification.definition notification.name) ".notifiables")}}
                                     @onChange={{fn this.onSelectNotifiable notification}}
-                                    @placeholder="Select notifiables..."
+                                    @placeholder={{ t (dasherize (lowercase (concat "fleet-ops.user-management.select-notifiables" )))}}
                                     @triggerClass="form-select form-input form-input-sm flex-1"
                                     as |notifiable|
                                 >
