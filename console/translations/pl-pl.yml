@@ -86,6 +86,11 @@ common:
   upload: Prześlij
   select-country: Wybierz kraj...
   enter-unit: "Wprowadź {unit}"
+  document: Dokument
+  file-upload-success: "Plik został pomyślnie przesłany."
+  file-delete-failed: "Nie udało się usunąć pliku."
+  file-delete-success: "Plik został pomyślnie usunięty!"
+  file-delete-confirmation: "Czy na pewno chcesz usunąć plik \"{filename}\"?"
   role: Rola
   report-type: Typ raportu
   payment-method: Metoda płatności
@@ -989,7 +994,8 @@ fleet-ops:
       select-avatar: Wybierz awatar
     admin:
       navigator-app:
-        title: Aplikacja Navigator
+        title: Aplikacja Nawigacyjna
+        avatar-management: Zarządzanie awatarami
         name: URL łączenia instancji
         message: Użyj tego URL-a, aby połączyć oficjalną aplikację Navigator z instancją {companyName}. Otwarcie tego URL-a na urządzeniu mobilnym uruchomi aplikację Navigator i zaktualizuje jej konfigurację oraz branding.
         settings: Ustawienia jednostki

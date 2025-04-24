@@ -85,6 +85,11 @@ common:
   upload: Télécharger
   select-country: Sélectionner un pays...
   enter-unit: "Saisir {unit}"
+  document: Document
+  file-upload-success: "Fichier téléchargé avec succès."
+  file-delete-failed: "Échec de la suppression du fichier."
+  file-delete-success: "Fichier supprimé avec succès!"
+  file-delete-confirmation: "Êtes-vous sûr de vouloir supprimer le fichier \"{filename}\" ?"
   role: Rôle
   report-type: Type de rapport
   payment-method: Mode de paiement
@@ -990,7 +995,8 @@ fleet-ops:
       select-avatar: Sélectionnez un avatar
     admin:
       navigator-app:
-        title: Application Navigator
+        title: Application de Navigation
+        avatar-management: Gestion des avatars
         name: URL de Liaison de l'Instance
         message: Utilisez cette URL pour lier l'application Navigator officielle à cette instance {companyName}. L'ouverture de cette URL sur un appareil mobile ouvrira l'application Navigator et mettra à jour sa configuration et son branding.
         settings: Paramètres de l'Entité
