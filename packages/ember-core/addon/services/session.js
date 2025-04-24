@@ -10,6 +10,7 @@ export default class SessionService extends SimpleAuthSessionService {
     @service currentUser;
     @service fetch;
     @service notifications;
+    @service intl;
 
     /**
      * Set where to transition to
@@ -53,7 +54,7 @@ export default class SessionService extends SimpleAuthSessionService {
             return;
         }
 
-        const loaderNode = this.showLoader('Starting session...');
+        const loaderNode = this.showLoader(this.intl.t('common.starting'));
         const removeLoaderNode = () => {
             later(
                 this,
@@ -154,7 +155,7 @@ export default class SessionService extends SimpleAuthSessionService {
      * @param {String} loadingMessage
      * @return {Promise}
      */
-    invalidateWithLoader(loadingMessage = 'Ending session...') {
+    invalidateWithLoader(loadingMessage = this.intl.t('common.ending')) {
         // if loader node is open already just invalidate
         if (this.isLoaderNodeOpen === true) {
             return this.session.invalidate();

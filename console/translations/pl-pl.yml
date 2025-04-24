@@ -35,6 +35,11 @@ common:
   mail: Poczta
   name: Imię
   new: Nowy
+  lookup: Wyszukiwanie
+  creating-order: Tworzenie zamówienia...
+  ending: Kończenie sesji...
+  starting: Rozpoczynanie sesji...
+  track-order: Śledź zamówienie
   notification-channels: Kanały powiadomień
   notifications: Powiadomienia
   organization: Organizacja
@@ -844,6 +849,8 @@ fleet-ops:
     search-by-currency-code: Szukaj według kodu waluty
     view-profile: Zobacz profil
     dark-mode: Tryb ciemny
+    select-fleet: Wybierz flotę
+    edit-fleet: Edytuj flotę
   component:
     activity-logic-builder:
       activity-logic: Logika aktywności

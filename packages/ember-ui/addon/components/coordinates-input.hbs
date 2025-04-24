@@ -43,8 +43,8 @@
             <div class="flex flex-col">
                 <div class="flex flex-row items-center pb-4">
                     <Input @type="text" class="form-input mr-2" @value={{this.lookupQuery}} aria-label="Address Search" disabled={{or this.disabled this.isLoading}} placeholder="Enter address" />
-                    <Button @wrapperClass="mr-2" @icon="search-location" @type="primary" @size="sm" @text="Lookup" @onClick={{this.reverseLookup}} @isLoading={{this.isLoading}} />
-                    <Button @type="default" @iconPrefix="fas" @icon="times" @size="sm" @text="Done" @onClick={{dd.actions.close}} />
+                    <Button @wrapperClass="mr-2" @icon="search-location" @type="primary" @size="sm" @text={{t "common.lookup"}} @onClick={{this.reverseLookup}} @isLoading={{this.isLoading}} />
+                    <Button @type="default" @iconPrefix="fas" @icon="times" @size="sm" @text={{t "common.done"}} @onClick={{dd.actions.close}} />
                 </div>
             </div>
         </dd.Content>
