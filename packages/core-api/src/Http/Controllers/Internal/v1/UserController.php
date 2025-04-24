@@ -83,11 +83,7 @@ class UserController extends FleetbaseController
                 $company = Auth::getCompany();
 
                 // Set user type
-                $roleId = $request->input('user.role.id');
-                $role = Role::where('id', $roleId)->whereNull('deleted_at')->first();
-                if ($role) {
-                    $user->setUserType($role->name === 'Administrator' ? 'admin' : 'user');
-                }
+                $user->setUserType('user');
 
                 // Assign to user
                 $user->assignCompany($company, $request->input('user.role_uuid'));
@@ -138,13 +134,6 @@ class UserController extends FleetbaseController
                 return response()->error('The email is already exists.');
             }
             $record = $this->model->updateRecordFromRequest($request, $id, function (&$request, &$user) {
-                // based on the role assign user's type
-                $role = Role::where('id', $request->input('user.role'))
-                    ->whereNull('deleted_at')
-                    ->first();
-                if($role){
-                    $user->setUserType($role->name === 'Administrator' ? 'admin' : 'user');
-                }
                 if ($request->filled('user.role')) {
                     $user->assignSingleRole($request->input('user.role'));
                 }
