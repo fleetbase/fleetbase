@@ -34,6 +34,11 @@ common:
   mail: Posta
   name: Nome
   new: Nuovo
+  lookup: Ricerca
+  creating-order: Creazione dell'ordine...
+  ending: Chiusura della sessione...
+  starting: Avvio della sessione...
+  track-order: Traccia ordine
   notification-channels: Canali di notifica
   notifications: Notifiche
   organization: Organizzazione
@@ -80,6 +85,11 @@ common:
   upload: Carica
   select-country: Seleziona un paese...
   enter-unit: "Inserisci {unit}"
+  document: Documento
+  file-upload-success: "File caricato con successo."
+  file-delete-failed: "Eliminazione del file non riuscita."
+  file-delete-success: "File eliminato con successo!"
+  file-delete-confirmation: "Sei sicuro di voler eliminare il file \"{filename}\"?"
   role: Ruolo
   report-type: Tipo di rapporto
   payment-method: Metodo di pagamento
@@ -700,6 +710,8 @@ fleet-ops:
     search-by-currency-code: Cerca per codice valuta
     view-profile: Visualizza profilo
     dark-mode: Modalità scura
+    select-fleet: Seleziona flotta
+    edit-fleet: Modifica flotta
   component:
     activity-logic-builder:
       activity-logic: Logica Attività
@@ -843,7 +855,8 @@ fleet-ops:
       select-avatar: Seleziona avatar
     admin:
       navigator-app:
-        title: App Navigator
+        title: App di Navigazione
+        avatar-management: Gestione Avatar
         name: URL di collegamento istanza
         message: Usa questo URL per collegare l'app ufficiale Navigator a questa istanza di {companyName}. Aprendo questo URL su un dispositivo mobile, si aprirà l'app Navigator e aggiornerà la sua configurazione e il suo marchio.
         settings: Impostazioni entità

@@ -35,6 +35,11 @@ common:
   mail: Mail
   name: Name
   new: New
+  lookup: Lookup
+  creating-order: Creating Order...
+  ending: Ending session...
+  starting: Starting session...
+  track-order: Track Order
   notification-channels: Notification Channels
   notifications: Notifications
   organization: Organization
@@ -77,6 +82,11 @@ common:
   push-notifications: Push Notifications
   latitude: Latitude
   longitude: Longitude
+  document: Document
+  file-upload-success: File uploaded successfully.
+  file-delete-failed: Failed to delete the file. 
+  file-delete-success: File deleted successfully!
+  file-delete-confirmation: "Are you sure you want to delete the file {filename}?"
   upload-file: Upload File
   upload: Upload
   select-country: Select country...
@@ -842,7 +852,8 @@ fleet-ops:
     search-by-currency-code: Search by currency code
     view-profile: View Profile
     dark-mode: Dark Mode
-
+    select-fleet: Select fleet
+    edit-fleet: Edit fleet
   component:
     activity-logic-builder:
       activity-logic: Activity Logic
@@ -982,6 +993,7 @@ fleet-ops:
     admin:
       navigator-app:
         title: Navigator App
+        avatar-management: Avatar Management
         name: Instance Linking URL
         message: Use this URL to link the official Navigator app to this {companyName} instance. Opening this URL on a mobile device will open the Navigator app and update it's configuration and branding.
         settings: Entity Settings

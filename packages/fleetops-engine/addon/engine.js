@@ -9,11 +9,13 @@ import AdminAvatarManagementComponent from './components/admin/avatar-management
 import CustomerOrdersComponent from './components/customer/orders';
 import CustomerAdminSettingsComponent from './components/customer/admin-settings';
 import OrderTrackingLookupComponent from './components/order-tracking-lookup';
+import { inject as service } from '@ember/service';
 
 const { modulePrefix } = config;
 const externalRoutes = ['console', 'extensions'];
 
 export default class FleetOpsEngine extends Engine {
+    @service intl;
     modulePrefix = modulePrefix;
     Resolver = Resolver;
     dependencies = {
@@ -45,7 +47,7 @@ export default class FleetOpsEngine extends Engine {
         );
 
         // register menu item for tracking order
-        universe.registerMenuItem('auth:login', 'Track Order', {
+        universe.registerMenuItem('auth:login', this.intl.t('common.track-order'), {
             route: 'virtual',
             slug: 'track-order',
             icon: 'barcode',

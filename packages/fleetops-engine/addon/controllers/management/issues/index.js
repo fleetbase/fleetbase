@@ -155,7 +155,8 @@ export default class ManagementIssuesIndexController extends BaseController {
         {
             label: this.intl.t('fleet-ops.common.type'),
             valuePath: 'type',
-            width: '100px',
+            cellComponent: 'table/cell/issue-type',
+            width: '135px',
             resizable: true,
             sortable: true,
             filterable: true,
@@ -166,7 +167,8 @@ export default class ManagementIssuesIndexController extends BaseController {
         {
             label: this.intl.t('fleet-ops.common.category'),
             valuePath: 'category',
-            width: '120px',
+            cellComponent: 'table/cell/issue-category',
+            width: '150px',
             resizable: true,
             sortable: true,
             filterable: true,

@@ -32,7 +32,7 @@
         </div>
         <div class="field-info-container content-start space-y-2">
             {{#if @fuelReport.files}}
-                <div class="header" style="font-weight: bold; font-size: 1.2rem; margin-bottom: 0.5rem;">Documents</div>
+                <div class="header" style="font-weight: bold; font-size: 1.2rem; margin-bottom: 0.5rem;">{{t "common.document"}}</div>
                 <div class="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-4" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem;">
                     {{#each @fuelReport.files as |file|}}
                         <div class="file-item" style="text-align: center; padding: 0.5rem; border: 1px solid #ddd; border-radius: 4px; background-color: #f9f9f9;">

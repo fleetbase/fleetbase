@@ -34,6 +34,11 @@ common:
   mail: E-Mail
   name: Name
   new: Neu
+  lookup: Nachschlagen
+  creating-order: Auftrag wird erstellt...
+  ending: Sitzung wird beendet...
+  starting: Sitzung wird gestartet...
+  track-order: Bestellung verfolgen
   notification-channels: Benachrichtigungskanäle
   notifications: Benachrichtigungen
   organization: Organisation
@@ -80,6 +85,11 @@ common:
   upload: Hochladen
   select-country: Land auswählen...
   enter-unit: "{unit} eingeben"
+  document: Dokument
+  file-upload-success: "Datei erfolgreich hochgeladen."
+  file-delete-failed: "Löschen der Datei fehlgeschlagen."
+  file-delete-success: "Datei erfolgreich gelöscht!"
+  file-delete-confirmation: "Sind Sie sicher, dass Sie die Datei \"{filename}\" löschen möchten?"
   role: Rolle
   report-type: Berichtstyp
   payment-method: Zahlungsmethode
@@ -841,6 +851,8 @@ fleet-ops:
     search-by-currency-code: Nach Währungscode suchen
     view-profile: Profil anzeigen
     dark-mode: Dunkler Modus
+    select-fleet: Flotte auswählen
+    edit-fleet: Flotte bearbeiten
   component:
     activity-logic-builder:
       activity-logic: Aktivitätslogik
@@ -985,6 +997,9 @@ fleet-ops:
     admin:
       navigator-app:
         title: Navigator-App
+
+        avatar-management: Avatar-Verwaltung
+
         name: Instanz-Link-URL
         message: Verwenden Sie diese URL, um die offizielle Navigator-App mit dieser {companyName}-Instanz zu verknüpfen. Das Öffnen dieser URL auf einem mobilen Gerät öffnet die Navigator-App und aktualisiert deren Konfiguration und Branding.
         settings: Entitätseinstellungen
@@ -1040,7 +1055,9 @@ fleet-ops:
     layout:
       fleet-ops-sidebar:
         payments: Zahlungen
+
         navigator-app: Navigator-App
+
         resources: Ressourcen
         operations: Operationen
         dashboard: Dashboard

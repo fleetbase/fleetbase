@@ -34,6 +34,11 @@ common:
   mail: Correo electrónico
   name: Nombre
   new: Nuevo
+  lookup: Buscar
+  creating-order: Creando pedido...
+  ending: Finalizando sesión...
+  starting: Iniciando sesión...
+  track-order: Rastrear pedido
   notification-channels: Canales de notificación
   notifications: Notificaciones
   organization: Organización
@@ -82,6 +87,11 @@ common:
   upload: Subir
   select-country: Seleccionar país...
   enter-unit: "Introducir {unit}"
+  document: Documento
+  file-upload-success: "Archivo subido con éxito."
+  file-delete-failed: "No se pudo eliminar el archivo."
+  file-delete-success: "¡Archivo eliminado con éxito!"
+  file-delete-confirmation: "¿Está seguro de que desea eliminar el archivo \"{filename}\"?"
   role: Role
   model-delete-confirmation: ¿Estás seguro de que quieres eliminar este {modelName}?
   model-delete-success: El {modelName} ha sido eliminado.
@@ -861,6 +871,8 @@ fleet-ops:
     search-by-currency-code: Buscar por código de moneda
     view-profile: Ver perfil
     dark-mode: Modo oscuro
+    select-fleet: Seleccionar flota
+    edit-fleet: Editar flota
   component:
     activity-logic-builder:
       activity-logic: Lógica de la actividad
@@ -1029,8 +1041,8 @@ fleet-ops:
       select-avatar: Selecciona un avatar
     admin:
       navigator-app:
-        title: Aplicación Navigator
-        name: URL de enlace de instancia
+        title: Aplicación de Navegación
+        avatar-management: Gestión de Avatares
         message: Utilice esta URL para vincular la aplicación oficial de Navigator
           a esta instancia{companyName}Utilice esta URL para vincular la aplicación
           oficial de Navigator a esta instancia. Al abrir esta URL en un dispositivo

@@ -31,6 +31,7 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
 use Maatwebsite\Excel\Facades\Excel;
+use Fleetbase\Models\Role;
 
 class UserController extends FleetbaseController
 {
@@ -133,11 +134,9 @@ class UserController extends FleetbaseController
                 return response()->error('The email is already exists.');
             }
             $record = $this->model->updateRecordFromRequest($request, $id, function (&$request, &$user) {
-                // Assign role if set
                 if ($request->filled('user.role')) {
                     $user->assignSingleRole($request->input('user.role'));
                 }
-
                 // Sync Permissions
                 if ($request->isArray('user.permissions')) {
                     $permissions = Permission::whereIn('id', $request->array('user.permissions'))->get();
