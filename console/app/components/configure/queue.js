@@ -6,6 +6,7 @@ import { action } from '@ember/object';
 export default class ConfigureQueueComponent extends Component {
     @service fetch;
     @service notifications;
+    @service intl;
     @tracked isLoading = false;
     @tracked testResponse;
     @tracked connections = [];

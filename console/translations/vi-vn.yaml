@@ -31,7 +31,7 @@ common:
   filter: Lọc
   home: Trang chủ
   logout: Đăng xuất
-  mail: Mail
+  mail: Thư
   name: Tên
   new: Mới
   notification-channels: Kênh thông báo
@@ -47,7 +47,7 @@ common:
   search: Tìm kiếm
   services: Dịch vụ
   settings: Cài đặt
-  socket: Socket
+  socket: Ổ cắm
   sort: Sắp xếp
   two-factor: Hai yếu tố
   uploading: Đang tải lên...
@@ -617,6 +617,9 @@ fleet-ops:
     order-dispatch-failed: Gửi đơn hàng thất bại
     order-ping: Ping đơn hàng
     select-notifiables: Chọn những người có thể nhận thông báo...
+    branding-settings-saved: Cài đặt thương hiệu đã được lưu.
+    notification-settings-saved: Cài đặt thông báo đã được lưu thành công.
+    organization-changes-saved: Thay đổi tổ chức đã được lưu thành công.
 
     twofa:
       sms:
