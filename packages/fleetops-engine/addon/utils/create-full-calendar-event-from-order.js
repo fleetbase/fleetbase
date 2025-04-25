@@ -3,14 +3,18 @@ import { get } from '@ember/object';
 export function createOrderEventTitle(order, intl) {
     const scheduledAtTime = get(order, 'scheduledAtTime');
     const driverAssignedName = get(order, 'driver_assigned.name');
-    const vehicleAssignedName = get(order, 'driver_assigned.vehicle_name') || intl.t('fleet-ops.component.order.schedule-card.no-vehicle');
+    const noVehicleText = intl ? intl.t('fleet-ops.component.order.schedule-card.no-vehicle') : 'No vehicle';
+    const vehicleAssignedName = get(order, 'driver_assigned.vehicle_name') || noVehicleText;
+    //const vehicleAssignedName = get(order, 'driver_assigned.vehicle_name') || intl.t('fleet-ops.component.order.schedule-card.no-vehicle');
     const destination = get(order, 'pickupName');
 
     let title = [];
     if (driverAssignedName) {
         title.push(`${driverAssignedName} @ ${scheduledAtTime}`);
         title.push(vehicleAssignedName);
-        title.push(`${intl.t('common.to')} ${destination}`);
+        // Add null check here too
+        const toText = intl ? intl.t('common.to') : 'to';
+        title.push(`${toText} ${destination}`);
     } else {
         title.push(`${scheduledAtTime} to ${destination}`);
         title.push(vehicleAssignedName);
