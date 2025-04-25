@@ -24,8 +24,8 @@ export default class InviteForUserController extends Controller {
                 this.notifications.success('Invitation accepted, welcome to FleetYes!');
 
                 this.isLoading = false;
-
-                return this.router.transitionTo('console').then(() => {
+                //redirect to orders page
+                return this.router.transitionTo('console.fleet-ops').then(() => {
                     if (response.needs_password && response.needs_password === true) {
                         this.setPassword();
                     }
