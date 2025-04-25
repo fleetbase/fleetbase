@@ -12,7 +12,7 @@ export default class AuthLoginRoute extends Route {
      * @void
      */
     beforeModel(transition) {
-        this.session.prohibitAuthentication('console');
+        this.session.prohibitAuthentication('console.fleet-ops');
         return this.universe.virtualRouteRedirect(transition, 'auth:login', 'virtual', { restoreQueryParams: true });
     }
 }
