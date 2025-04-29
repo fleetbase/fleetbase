@@ -22,15 +22,17 @@ class FleetOps
      */
     public static function createTransportConfig(Company $company): OrderConfig
     {
+        $pod_method = 'scan';
+
         return OrderConfig::firstOrCreate(
             [
             'company_uuid' => $company->uuid,
-            'key'          => 'order-create',
+            'key'          => 'transport',
             'namespace'    => 'system:order-config:transport',
         ],
             [
             'name'         => 'Transport',
-            'key'          => 'order-create',
+            'key'          => 'transport',
             'namespace'    => 'system:order-config:transport',
             'description'  => 'Default order configuration for transport',
             'core_service' => 1,
@@ -55,7 +57,7 @@ class FleetOps
                     'sequence'    => 0,
                     'activities'  => ['confirmed'],
                     'internalId'  => Str::uuid(),
-                    'pod_method'  => 'scan',
+                    'pod_method'  => $pod_method,
                     'require_pod' => false,
                 ],
                 'confirmed' => [
@@ -73,7 +75,7 @@ class FleetOps
                     'sequence' => 1,
                     'activities' => ['dispatched'],
                     'internalId' => 'c69770f9-2a8b-4654-a83c-e29ae1dedb7d',
-                    'pod_method' => 'scan',
+                    'pod_method' => $pod_method,
                     'require_pod' => false,
                 ],
                 'dispatched' => [
@@ -91,7 +93,7 @@ class FleetOps
                     'sequence'    => 2,
                     'activities'  => ['started'],
                     'internalId'  => Str::uuid(),
-                    'pod_method'  => 'scan',
+                    'pod_method'  => $pod_method,
                     'require_pod' => false,
                 ],
                 'started' => [
@@ -109,7 +111,7 @@ class FleetOps
                     'sequence'    => 3,
                     'activities'  => ['enroute'],
                     'internalId'  => Str::uuid(),
-                    'pod_method'  => 'scan',
+                    'pod_method'  => $pod_method,
                     'require_pod' => false,
                 ],
                 'enroute' => [
@@ -127,7 +129,7 @@ class FleetOps
                     'sequence'    => 4,
                     'activities'  => ['completed'],
                     'internalId'  => Str::uuid(),
-                    'pod_method'  => 'scan',
+                    'pod_method'  => $pod_method,
                     'require_pod' => false,
                 ],
                 'completed' => [
@@ -145,7 +147,7 @@ class FleetOps
                     'sequence'    => 5,
                     'activities'  => [],
                     'internalId'  => Str::uuid(),
-                    'pod_method'  => 'scan',
+                    'pod_method'  => $pod_method,
                     'require_pod' => false,
                 ],
             ],
