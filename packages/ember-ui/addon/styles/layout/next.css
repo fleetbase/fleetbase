@@ -702,7 +702,11 @@ body[data-theme='dark'] .next-map-container.next-map-container-layout-map .next-
 }
 
 .next-map-search-bar-container .next-map-search-results {
-    @apply mt-2 bg-white flex items-center justify-center w-96 shadow-next-nav py-3 transition-all duration-300 opacity-0;
+    @apply mt-2 bg-white flex items-center w-96 shadow-next-nav py-3 transition-all duration-300 opacity-0;
+    flex-direction: column;
+    justify-content: flex-start;
+    max-height: 600px;
+    overflow-y: auto;
 }
 
 .next-map-search-bar-container .next-map-search-results.has-results {
