@@ -236,7 +236,6 @@ export default class OperationsOrdersIndexNewController extends BaseController {
         const isPickupSet = isNotEmpty(this.payload?.pickup);
         const isDropoffSet = isNotEmpty(this.payload?.dropoff);
         // const isPayloadSet = this.entities?.length > 0;
-
         if (isFetchingQuotes) {
             return false;
         }
@@ -246,6 +245,9 @@ export default class OperationsOrdersIndexNewController extends BaseController {
         }
 
         if (isMultipleDropoffOrder) {
+            if (!this.waypoints || this.waypoints.length < 2) {
+                return false;
+            }
             return isWaypointsSet;
         }
 
@@ -329,6 +331,27 @@ export default class OperationsOrdersIndexNewController extends BaseController {
             this.errorMessage = "End Date cannot be earlier than the start date.";
             this.notifications.error(this.errorMessage);
             return;
+        }
+       if (this.isMultipleDropoffOrder) {
+            // Check if we have at least 2 waypoints
+            if (!this.waypoints || this.waypoints.length < 2) {
+                this.errorMessage = this.intl.t('common.valid-waypoints-error');
+                this.notifications.error(this.errorMessage);
+                return;
+            }
+            //show errors when waypoints doesn't have valid places
+            const validWaypoints = this.waypoints.filter(waypoint => 
+                waypoint.place && 
+                waypoint.place.latitude && 
+                waypoint.place.longitude && 
+                !waypoint.place.hasInvalidCoordinates
+            );
+            
+            if (validWaypoints.length < 2) {
+                this.errorMessage = this.intl.t('common.valid-waypoints-error');
+                this.notifications.error(this.errorMessage);
+                return;
+            }
         }
         if (!this.isValid) {
             return;
