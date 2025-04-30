@@ -939,11 +939,11 @@ body[data-theme='dark'] .next-map-container-view-switch > button:active {
     flex-direction: row;
     flex-grow: 1;
     position: relative;
-    overflow: auto;
+    overflow-y: auto;
     align-items: stretch;
     justify-items: stretch;
     place-items: stretch;
-    overflow: hidden;
+    /* overflow: hidden; */
 }
 
 .next-view-section-container {
@@ -2379,4 +2379,8 @@ body[data-theme='dark'] .ember-power-select-option[aria-current="true"] {
 .calendar-vehicle-select .ember-power-select-placeholder,  .calendar-driver-select .ember-power-select-placeholder{
     visibility: hidden !important;
 } */
+
+.ember-power-select-placeholder {
+    overflow-x: unset !important;
+}
   
