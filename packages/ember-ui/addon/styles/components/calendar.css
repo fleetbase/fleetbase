@@ -275,3 +275,25 @@ body[data-theme='light'] table.fc-col-header {
 body[data-theme='dark'] table.fc-col-header {
     background-color: black;
 }
+
+/* Hide grid layout on small screens */
+.calendar-filter-grid {
+    display: none !important;
+}
+  
+/* Show inline layout on small screens */
+.calendar-filter-inline {
+    display: block !important;
+}
+  
+/* From 1700px and up, reverse it */
+@media (max-width: 1700px) {
+    .calendar-filter-grid {
+      display: block !important;
+    }
+  
+    .calendar-filter-inline {
+      display: none !important;
+    }
+}
+  
