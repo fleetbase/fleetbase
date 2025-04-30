@@ -939,11 +939,11 @@ body[data-theme='dark'] .next-map-container-view-switch > button:active {
     flex-direction: row;
     flex-grow: 1;
     position: relative;
-    overflow-y: auto;
+    overflow: auto;
     align-items: stretch;
     justify-items: stretch;
     place-items: stretch;
-    /* overflow: hidden; */
+    overflow: hidden;
 }
 
 .next-view-section-container {
