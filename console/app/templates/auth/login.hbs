@@ -90,7 +90,7 @@
             @isLoading={{this.isLoading}}
             @onClick={{this.login}}
         />
-        {{!-- <Button @text={{t "auth.login.form.create-account-button"}} @icon="briefcase" @wrapperClass="btn-block" @disabled={{this.isLoading}} @onClick={{fn (transition-to "onboard")}} /> --}}
+        <Button @text={{t "auth.login.form.create-account-button"}} @icon="briefcase" @wrapperClass="btn-block" @disabled={{this.isLoading}} @onClick={{fn (transition-to "onboard")}} />
         <RegistryYield @type="menu" @registry="auth:login" as |menuItem|>
             <Button
                 @text={{menuItem.title}}
