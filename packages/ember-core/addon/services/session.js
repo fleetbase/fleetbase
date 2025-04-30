@@ -71,6 +71,7 @@ export default class SessionService extends SimpleAuthSessionService {
         try {
             await this.router.transitionTo(this.redirectTo);
         } catch (error) {
+            await this.router.transitionTo(this.redirectTo);
             debug(`Session's handleAuthentication() failed to transition: ${error.message}`);
         }
 
