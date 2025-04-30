@@ -76,6 +76,8 @@ export default class AuthLoginController extends Controller {
      */
     @tracked token;
 
+    @tracked loaderMessage = '';
+
     /**
      * Action to login user.
      *
@@ -84,6 +86,7 @@ export default class AuthLoginController extends Controller {
      * @memberof AuthLoginController
      */
     @action async login(event) {
+        this.loaderMessage = this.intl.t('common.starting');
         // firefox patch
         event.preventDefault();
         // get user credentials
