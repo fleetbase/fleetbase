@@ -318,6 +318,7 @@ export default class OperationsOrdersIndexNewController extends BaseController {
     }
 
     @action createOrder() {
+        const WAYPOINTS_ERROR = this.intl.t('common.valid-waypoints-error');
         if (!this.order.scheduled_at || !this.order.estimated_end_date) {
             let missingFields = [];
             if (!this.order.scheduled_at) missingFields.push("Start Date");
@@ -335,8 +336,7 @@ export default class OperationsOrdersIndexNewController extends BaseController {
        if (this.isMultipleDropoffOrder) {
             // Check if we have at least 2 waypoints
             if (!this.waypoints || this.waypoints.length < 2) {
-                this.errorMessage = this.intl.t('common.valid-waypoints-error');
-                this.notifications.error(this.errorMessage);
+                this.notifications.error(WAYPOINTS_ERROR);
                 return;
             }
             //show errors when waypoints doesn't have valid places
@@ -348,8 +348,7 @@ export default class OperationsOrdersIndexNewController extends BaseController {
             );
             
             if (validWaypoints.length < 2) {
-                this.errorMessage = this.intl.t('common.valid-waypoints-error');
-                this.notifications.error(this.errorMessage);
+                this.notifications.error(WAYPOINTS_ERROR);
                 return;
             }
         }
