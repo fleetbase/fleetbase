@@ -6,6 +6,7 @@ import createFullCalendarEventFromLeave from '../../../utils/create-full-calenda
 import ENV from '@fleetbase/console/config/environment';
 import { action, set } from '@ember/object';
 import isNestedRouteTransition from '@fleetbase/ember-core/utils/is-nested-route-transition';
+import { tracked } from '@glimmer/tracking';
 
 export default class OperationsSchedulerIndexRoute extends Route {
     @service store;
@@ -35,6 +36,7 @@ export default class OperationsSchedulerIndexRoute extends Route {
             orders: 'id,driver_assigned_uuid,public_id,scheduled_at,scheduled_end,status'
         }
     };
+    @tracked _lockedPagination=null;
     
     _cache = {
         calendar: null,
@@ -49,7 +51,19 @@ export default class OperationsSchedulerIndexRoute extends Route {
         },
         page: { 
             refreshModel: true 
-        }
+        },
+        order_id_filter: {
+            refreshModel: false,
+            replace: true 
+         },
+        driver_filter: {
+            refreshModel: false,
+            replace: true,
+         },
+        status_filter: {
+             refreshModel: false,
+             replace: true 
+         }
     };
 
     @action 
@@ -258,12 +272,11 @@ export default class OperationsSchedulerIndexRoute extends Route {
         const startTime = performance.now();
         const page = params.page || 1;
         const { listLimit } = this.REQUEST_CONFIG;
-
         try {
             // Parallel fetch of paginated orders and driver unavailability
             const [paginatedOrders, driverUnavailability] = await Promise.all([
                 this.store.query('order', {
-                    status: 'created',
+                    // status: 'created',
                     with: ['payload', 'driverAssigned.vehicle'],
                     limit: listLimit,
                     sort: '-created_at',
@@ -321,16 +334,26 @@ export default class OperationsSchedulerIndexRoute extends Route {
         }
     }
 
+    
     setupController(controller, model) {
         const { paginatedOrders, calendarOrders, driverUnavailability } = model;
-        
-        // Set pagination data
         controller.setProperties({
             page: model.pagination.currentPage,
             totalPages: model.pagination.totalPages,
             itemsPerPage: model.pagination.limit
         });
+        // Set the filter properties from the query params if they exist
+        if (this.paramsFor(this.routeName).driver_filter) {
+            controller.driver_filter = this.paramsFor(this.routeName).driver_filter;
+        }
         
+        if (this.paramsFor(this.routeName).order_id_filter) {
+            controller.order_id_filter = this.paramsFor(this.routeName).order_id_filter;
+        }
+        
+        if (this.paramsFor(this.routeName).status_filter) {
+            controller.status_filter = this.paramsFor(this.routeName).status_filter;
+        }
         // Split orders efficiently
         controller.setProperties({
             unscheduledOrders: paginatedOrders.filter(order => 
@@ -339,11 +362,16 @@ export default class OperationsSchedulerIndexRoute extends Route {
             scheduledOrders: paginatedOrders.filter(order => 
                 !isNone(order.driver_assigned_uuid)
             ),
-            calscheduledOrders: calendarOrders.filter(order => 
-                !isNone(order.driver_assigned_uuid)
-            )
+            // calscheduledOrders: calendarOrders.filter(order => 
+            //     !isNone(order.driver_assigned_uuid)
+            // )
+            calscheduledOrders: calendarOrders
         });
-        
+         // Apply any active filters immediately
+        if (controller.driver_filter || controller.order_id_filter || controller.status_filter) {
+            controller.filterScheduledAndUnscheduledOrders();
+            controller.applyFilters();
+        }
         // Create events efficiently
         const events = calendarOrders
             .filter(order => !isNone(order.driver_assigned_uuid))
@@ -362,6 +390,14 @@ export default class OperationsSchedulerIndexRoute extends Route {
     resetController(controller, isExiting) {
         if (isExiting) {
             controller.page = 1;
+            // Clear filter values when navigating away
+            controller.set('order_id_filter', '');
+            controller.set('driver_filter', '');
+            controller.set('status_filter', '');
+            
+            // Also clear selected values
+            controller.set('selectedDriver', null);
+            controller.set('selectedStatus', null);
         }
     }
 
