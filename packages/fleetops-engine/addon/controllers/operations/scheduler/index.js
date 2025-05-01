@@ -57,13 +57,86 @@ export default class OperationsSchedulerIndexController extends BaseController {
 
         // Set up a hook to apply filters after the calendar is initialized
         this.eventBus.subscribe('calendar-initialized', this._applyInitialFilters.bind(this));
-        
+        // Initialize filter values from URL parameters
+        setTimeout(() => {
+            this.initializeFromQueryParams();
+        }, 0);
         // Check if we're returning to the page with existing filters
         if (this.page > 0 && (this.driver_filter || this.status_filter || this.order_id_filter)) {
             // Flag that we need to apply filters on didReceiveAttrs
             this._needInitialFiltering = true;
         }
     }
+    // Add or update this method in your controller to properly initialize from query params
+    @action
+initializeFromQueryParams() {
+  // Get parameters directly from URL (more reliable than router)
+  try {
+    const urlParams = new URLSearchParams(window.location.search);
+    const driverFilterParam = urlParams.get('driver_filter');
+    const statusFilterParam = urlParams.get('status_filter');
+    
+    // Set the filter values if they exist
+    if (driverFilterParam) {
+      this.driver_filter = driverFilterParam;
+      // Flag that we need to sync the dropdown
+      this._needDriverSync = true;
+    }
+    
+    if (statusFilterParam) {
+      this.status_filter = statusFilterParam;
+      // Flag that we need to sync the dropdown
+      this._needStatusSync = true;
+    }
+    
+    // If any filters are active, flag that we need to apply them
+    if (urlParams.get('order_id_filter') || driverFilterParam || statusFilterParam) {
+      this._needInitialFiltering = true;
+    }
+    
+    // Schedule syncing of dropdowns with filter values
+    this._scheduleDropdownSync();
+  } catch (error) {
+    console.error('Error initializing from query params:', error);
+  }
+}
+_scheduleDropdownSync() {
+    // Wait for dependencies to load
+    Promise.all([
+      this.availableDriversLoaded,
+      this.getOrderStatusOptions.last
+    ]).then(() => {
+      // Sync the driver dropdown with the driver_filter value
+      if (this._needDriverSync && this.driver_filter && this.availableDrivers?.length) {
+        const matchingDriver = this.availableDrivers.find(driver => driver.id === this.driver_filter);
+        if (matchingDriver) {
+        //   console.log('Syncing driver dropdown with URL filter:', matchingDriver.name);
+          this.selectedDriver = matchingDriver;
+          this._needDriverSync = false;
+        }
+      }
+      
+      // Sync the status dropdown with the status_filter value
+      if (this._needStatusSync && this.status_filter && this.statusOptions?.length) {
+        const matchingStatus = this.statusOptions.find(status => status.id === this.status_filter);
+        if (matchingStatus) {
+          this.selectedStatus = matchingStatus;
+          this._needStatusSync = false;
+        }
+      }
+      
+      // Apply filters if needed
+      if (this._needInitialFiltering) {
+        this.isLoading = true;
+        Promise.all([
+          this.filterScheduledAndUnscheduledOrders(),
+          this._updateCalendarAsync()
+        ]).finally(() => {
+          this.isLoading = false;
+        });
+      }
+    });
+  }
     @action
 _applyInitialFilters() {
     // Check if we have any active filters
@@ -95,7 +168,13 @@ _applyInitialFilters() {
         } else {
             // Apply the filters to existing orders
             requestAnimationFrame(() => {
-                this.applyFilters().finally(() => {
+                // this.applyFilters().finally(() => {
+                //     this.isLoading = false;
+                // });
+                Promise.all([
+                    this.applyFilters(),
+                    this.filterScheduledAndUnscheduledOrders()
+                ]).finally(() => {
                     this.isLoading = false;
                 });
             });
@@ -140,7 +219,14 @@ _applyInitialFilters() {
             
             // Set the availableDrivers property with the empty option first
             this.availableDrivers = [emptyDriver, ...driversArray];
-            
+            // Check if we need to select a driver from URL parameters
+            if (this._needDriverSync && this.driver_filter) {
+                const matchingDriver = this.availableDrivers.find(driver => driver.id === this.driver_filter);
+                if (matchingDriver) {
+                this.selectedDriver = matchingDriver;
+                this._needDriverSync = false;
+                }
+            }
             return this.availableDrivers;
         }).catch(error => {
             console.error('Error loading drivers:', error);
@@ -193,7 +279,14 @@ _applyInitialFilters() {
         
         // Update calendar with filtered records - THIS IS THE MISSING PART
         requestAnimationFrame(() => {
-            this._updateCalendarAsync().finally(() => {
+            // this._updateCalendarAsync().finally(() => {
+                
+            //     this.isLoading = false;
+            // });
+            Promise.all([
+                this._updateCalendarAsync(),
+                this.filterScheduledAndUnscheduledOrders() // Add this call
+            ]).finally(() => {
                 this.isLoading = false;
             });
         });
@@ -206,14 +299,40 @@ _applyInitialFilters() {
         this.isLoading = true;
         this.selectedStatus = selected;
         this.status_filter = selected ? selected.id : '';
-         
+        setTimeout(() => {
+            // Apply the filter to both lists
+            this.filterScheduledAndUnscheduledOrders();
+            
+            // Update the calendar
+            this._updateCalendarAsync().finally(() => {
+              // Clear loading state when done
+              this.isLoading = false;
+            });
+            
+            // Update URL params
+            this.hostRouter.transitionTo({ 
+              queryParams: { 
+                page: this.page,
+                driver_filter: this.driver_filter,
+                status_filter: this.status_filter,
+                order_id_filter: this.order_id_filter
+              } 
+            });
+          }, 0);
         
         // Update calendar with filtered records
-        requestAnimationFrame(() => {
-            this._updateCalendarAsync().finally(() => {
-                this.isLoading = false;
-            });
-        });
+        // requestAnimationFrame(() => {
+        //     // this._updateCalendarAsync().finally(() => {
+                
+        //     //     this.isLoading = false;
+        //     // });
+        //     Promise.all([
+        //         this._updateCalendarAsync(),
+        //         this.filterScheduledAndUnscheduledOrders() // Add this call
+        //     ]).finally(() => {
+        //         this.isLoading = false;
+        //     });
+        // });
     }
     @action
     onDriverChange(driver) {
@@ -221,13 +340,42 @@ _applyInitialFilters() {
         this.isLoading = true;
         this.selectedDriver = driver;
         this.driver_filter = driver ? driver.id : '';
-        
-        // Update calendar with filtered records
-        requestAnimationFrame(() => {
+         // Add loading class to Apply Filter button if it exists
+       
+        setTimeout(() => {
+            // Apply the filter to both lists
+            this.filterScheduledAndUnscheduledOrders();
+            
+            // Update the calendar
             this._updateCalendarAsync().finally(() => {
-                this.isLoading = false;
+              // Clear loading state
+              this.isLoading = false;
+             
+             
             });
-        });
+            // Update URL params
+            this.hostRouter.transitionTo({ 
+                queryParams: { 
+                page: this.page,
+                driver_filter: this.driver_filter,
+                status_filter: this.status_filter,
+                order_id_filter: this.order_id_filter
+                } 
+            });
+        }, 0);
+        // Update calendar with filtered records
+        // requestAnimationFrame(() => {
+        //     // this._updateCalendarAsync().finally(() => {
+                
+        //     //     this.isLoading = false;
+        //     // });
+        //     Promise.all([
+        //         this._updateCalendarAsync(),
+        //         this.filterScheduledAndUnscheduledOrders() // Add this call
+        //     ]).finally(() => {
+        //         this.isLoading = false;
+        //     });
+        // });
     }
 
     // To initialize the selected driver based on driver_filter (add to constructor or init)
@@ -247,7 +395,7 @@ _applyInitialFilters() {
     fetchOrders() {
         Promise.resolve(this.initializationCompleted).then(() => {
         this.store.query('order', { 
-            status: 'created',
+            // status: 'created',
             with: ['payload', 'driverAssigned.vehicle'],
             page: this.page,
             sort: '-created_at'
@@ -258,7 +406,7 @@ _applyInitialFilters() {
             // If we don't have calendar orders yet, fetch them
         if (!this.calscheduledOrders || this.calscheduledOrders.length === 0) {
             this.store.query('order', { 
-                status: 'created',
+                // status: 'created',
                 with: ['payload', 'driverAssigned.vehicle'],
                 limit: 500, // Larger limit for calendar
                 sort: '-created_at'
@@ -306,34 +454,51 @@ _applyInitialFilters() {
     // Update your applyFilters method to use updateCalendarWithFilteredData instead of updateCalendar
     @action
     applyFilters() {
-        return new Promise((resolve) => {
-            try {
-                let filteredOrders = [...this.calscheduledOrders];
-                // Apply driver filter
-                if (this.driver_filter) {
-                    filteredOrders = this.filterByDriver(filteredOrders);
-                }
+        // return new Promise((resolve) => {
+        //     try {
+        //         let filteredOrders = [...this.calscheduledOrders];
+        //         // Apply driver filter
+        //         if (this.driver_filter) {
+        //             filteredOrders = this.filterByDriver(filteredOrders);
+        //         }
         
-                // Apply order ID filter
-                if (this.order_id_filter) {
-                    filteredOrders = this.filterByOrderId(filteredOrders);
-                }
+        //         // Apply order ID filter
+        //         if (this.order_id_filter) {
+        //             filteredOrders = this.filterByOrderId(filteredOrders);
+        //         }
         
-                // Apply status filter
-                if (this.status_filter) {
-                    filteredOrders = this.filterByStatus(filteredOrders);
-                }
-        
-                // Update the calendar with the filtered data
-                this.updateCalendarWithFilteredData(filteredOrders);
-                setTimeout(() => {
-                    resolve();
-                }, 300); // Small delay to ensure loader is visible
-            } catch (error) {
-                console.error("Error applying filters:", error);
-                this.notifications.error("An error occurred while applying filters.");
-            }
-        });
+        //         // Apply status filter
+        //         if (this.status_filter) {
+        //             filteredOrders = this.filterByStatus(filteredOrders);
+        //         }
+        //         this.totalPages = Math.ceil(filteredOrders.length / this.itemsPerPage);
+        //         // Update the calendar with the filtered data
+        //         this.updateCalendarWithFilteredData(filteredOrders);
+        //         this.filterScheduledAndUnscheduledOrders();
+        //         setTimeout(() => {
+        //             resolve();
+        //         }, 300); // Small delay to ensure loader is visible
+        //     } catch (error) {
+        //         console.error("Error applying filters:", error);
+        //         this.notifications.error("An error occurred while applying filters.");
+        //     }
+        // });
+        const hasOrderIdFilter = this.order_id_filter && this.order_id_filter.trim() !== '';
+        const hasDriverFilter = this.driver_filter && this.driver_filter.trim() !== '';
+        const hasStatusFilter = this.status_filter && this.status_filter.trim() !== '';
+    
+        // If filters are applied, update the filtered orders
+        let filteredOrders = this.calscheduledOrders;
+    
+        if (hasOrderIdFilter || hasDriverFilter || hasStatusFilter) {
+            filteredOrders = this._getFilteredOrders(); // Filter the data based on the criteria
+        }
+    
+        // Calculate totalPages based on filtered data
+        this.totalPages = Math.ceil(filteredOrders.length / this.itemsPerPage);
+    
+        this.updateCalendarWithFilteredData(filteredOrders);
+        this.filterScheduledAndUnscheduledOrders(filteredOrders);
     }
     
     // Filter by driver
@@ -392,10 +557,57 @@ _applyInitialFilters() {
         this.isLoading = true;
         
         // Update calendar with all records
-        requestAnimationFrame(() => {
-            this._updateCalendarAsync().finally(() => {
-                this.isLoading = false;
+        // requestAnimationFrame(() => {
+            // this._updateCalendarAsync().finally(() => {
+            //     this.isLoading = false;
+            // });
+             // Reset pagination and fetch fresh data without filters
+    this.store.query('order', { 
+        with: ['payload', 'driverAssigned.vehicle'],
+        page: 1, // Reset to first page
+        limit: this.itemsPerPage,
+        count: true, // Request total count from server
+        sort: '-created_at'
+    }).then(orders => {
+        // Update the scheduled and unscheduled orders lists with fresh data
+        this.scheduledOrders = orders.filter(order => !isNone(order.driver_assigned_uuid));
+        this.unscheduledOrders = orders.filter(order => isNone(order.driver_assigned_uuid));
+        
+        // Update pagination based on total count from metadata
+        if (orders.meta && orders.meta.count) {
+            this.totalPages = Math.ceil(orders.meta.count / this.itemsPerPage);
+        } else {
+            // Fallback if metadata isn't available
+            this.store.findAll('order', { 
+                resetCache: true  // Force a refresh of the cache
+            }).then(allOrders => {
+                const totalCount = allOrders.length;
+                this.totalPages = Math.ceil(totalCount / this.itemsPerPage);
             });
+        }
+        
+        // Also reset page to 1
+        this.page = 1;
+        
+        // Update URL to reflect cleared filters
+        this.hostRouter.transitionTo({ 
+            queryParams: { 
+                page: 1, 
+                ref: Date.now(),
+                order_id_filter: undefined,
+                driver_filter: undefined,
+                status_filter: undefined
+            } 
+        });
+        
+        // Update the calendar
+        this._updateCalendarAsync().finally(() => {
+            this.isLoading = false;
+        });
+        }).catch(error => {
+            console.error('Error clearing filters:', error);
+            this.notifications.error('Error clearing filters');
+            this.isLoading = false;
         });
         
         // Return a promise that resolves when the operation is complete
@@ -403,7 +615,139 @@ _applyInitialFilters() {
             setTimeout(resolve, 100);
         });
     }
+    /**
+ * Filter scheduled and unscheduled orders based on the current filter criteria
+ * This will update the respective arrays without making a new API call when possible
+ */
+// @action
+// filterScheduledAndUnscheduledOrders() {
+//     // Show loading indicator
+//     this.isLoading = true;
+    
+//     try {
+//         // Get all orders (use the larger set to filter from)
+//         const allOrders = this.store.peekAll('order').filter(order => order.status === 'created');
+        
+//         // Check if any filters are active
+//         const hasOrderIdFilter = this.order_id_filter && this.order_id_filter.trim() !== '';
+//         const hasDriverFilter = this.driver_filter && this.driver_filter.trim() !== '';
+//         const hasStatusFilter = this.status_filter && this.status_filter.trim() !== '';
+        
+//         // If we have no orders or no active filters, fetch fresh data
+//         if (allOrders.length === 0 || (!hasOrderIdFilter && !hasDriverFilter && !hasStatusFilter)) {
+//             return this.refreshOrders().finally(() => {
+//                 this.isLoading = false;
+//             });
+//         }
+        
+//         // Apply filters to get filtered orders
+//         const filteredOrders = allOrders.filter(order => {
+//             // Filter by order ID if specified
+//             if (hasOrderIdFilter) {
+//                 const orderId = order.id || '';
+//                 const publicId = order.publicId || order.public_id || '';
+                
+//                 if (!(orderId.toLowerCase().includes(this.order_id_filter.toLowerCase()) || 
+//                       publicId.toLowerCase().includes(this.order_id_filter.toLowerCase()))) {
+//                     return false;
+//                 }
+//             }
+            
+//             // Filter by driver if specified
+//             if (hasDriverFilter) {
+//                 const driverId = order.driver_assigned_uuid || '';
+//                 if (driverId !== this.driver_filter) {
+//                     return false;
+//                 }
+//             }
+            
+//             // Filter by status if specified
+//             if (hasStatusFilter) {
+//                 const status = order.status || '';
+//                 if (status !== this.status_filter) {
+//                     return false;
+//                 }
+//             }
+            
+//             // If we get here, the order passes all filters
+//             return true;
+//         });
+        
+//         // Split the filtered orders into scheduled and unscheduled
+//         this.scheduledOrders = filteredOrders.filter(order => !isNone(order.driver_assigned_uuid));
+//         this.unscheduledOrders = filteredOrders.filter(order => isNone(order.driver_assigned_uuid));
+        
+//         // Update pagination
+//         this.totalPages = Math.ceil(filteredOrders.length / this.itemsPerPage);
+//         // Also update the calendar if it exists
+//         if (this.calendar) {
+//             this.updateCalendarWithFilteredData(filteredOrders);
+//         }
+//     } catch (error) {
+//         console.error('Error filtering orders:', error);
+//         this.notifications.error(this.intl.t('fleet-ops.operations.scheduler.filter.error'));
+//     } finally {
+//         // Hide loading indicator
+//         this.isLoading = false;
+//     }
+// }
+@action
+filterScheduledAndUnscheduledOrders() {
+    // Show loading indicator
+    this.isLoading = true;
 
+    try {
+        // Apply filters to get all filtered orders
+        const filteredOrders = this._getFilteredOrders();
+        
+        // Calculate total pages based on filtered orders length
+        const totalFilteredPages = Math.ceil(filteredOrders.length / this.itemsPerPage);
+        
+        // Update totalPages based on filtered data
+        this.totalPages = totalFilteredPages;
+        
+        // Check if current page is now beyond the available pages
+        if (this.page > totalFilteredPages && totalFilteredPages > 0) {
+            // If so, reset to the last available page
+            this.page = totalFilteredPages;
+        }
+        
+        // Apply pagination to filtered data
+        const startIndex = (this.page - 1) * this.itemsPerPage;
+        const endIndex = startIndex + this.itemsPerPage;
+        const pageOrders = filteredOrders.slice(startIndex, endIndex);
+        
+        // Update the displayed orders
+        this.scheduledOrders = pageOrders.filter(order => !isNone(order.driver_assigned_uuid));
+        this.unscheduledOrders = pageOrders.filter(order => isNone(order.driver_assigned_uuid) && isNone(order.vehicle_assigned_uuid));
+        
+        // Also update URL to reflect the current filter state
+        const queryParams = {
+            page: this.page
+        };
+        
+        if (this.order_id_filter) {
+            queryParams.order_id_filter = this.order_id_filter;
+        }
+        
+        if (this.driver_filter) {
+            queryParams.driver_filter = this.driver_filter;
+        }
+        
+        if (this.status_filter) {
+            queryParams.status_filter = this.status_filter;
+        }
+        
+        // Update the URL without triggering a full refresh
+        this.hostRouter.transitionTo({ queryParams });
+        
+    } catch (error) {
+        console.error('Error filtering orders:', error);
+        this.notifications.error(this.intl.t('fleet-ops.operations.scheduler.filter.error') || 'Error filtering orders');
+    } finally {
+        this.isLoading = false;
+    }
+}
     @action
     updateCalendarWithFilteredData(filteredOrders) {
         if (!this.calendar) {
@@ -412,7 +756,8 @@ _applyInitialFilters() {
         }
         
         try {
-            const validOrderEventIds = new Set(filteredOrders.map(order => order.id));
+            const ordersWithDrivers = filteredOrders.filter(order => !isNone(order.driver_assigned_uuid));
+            const validOrderEventIds = new Set(ordersWithDrivers.map(order => order.id));
             const allEvents = this.calendar.getEvents();
 
             let hiddenCount = 0;
@@ -644,9 +989,9 @@ async _updateCalendarAsync() {
     const filteredOrders = this._getFilteredOrders();
     // Build efficient data structures for processing
     const orderMap = new Map();
-    
+    const ordersWithDrivers = filteredOrders.filter(order => !isNone(order.driver_assigned_uuid));
     // Build order map for O(1) lookups with filtered orders only
-    filteredOrders.forEach(order => {
+    ordersWithDrivers.forEach(order => {
         const eventId = createFullCalendarEventFromOrder(order,this.intl).id;
         orderMap.set(eventId, order);
     });
@@ -719,8 +1064,8 @@ async _updateCalendarAsync() {
     // Step 3: Identify orders that need new events
     const existingEventIds = new Set(allEvents.map(event => event.id));
     
-    for (let i = 0; i < filteredOrders.length; i += CHUNK_SIZE) {
-        const chunk = filteredOrders.slice(i, i + CHUNK_SIZE);
+    for (let i = 0; i < ordersWithDrivers.length; i += CHUNK_SIZE) {
+        const chunk = ordersWithDrivers.slice(i, i + CHUNK_SIZE);
         
         chunk.forEach(order => {
             const eventId = createFullCalendarEventFromOrder(order,this.intl).id;
@@ -1105,33 +1450,70 @@ async _updateCalendarAsync() {
     
     // Updated pagination methods that use the queryParams
     @action
-    nextPage() {
+    nextPage() { 
         this.page = Number(this.page) + 1;
-        if (this.page < this.totalPages) {
+        if (this.page <= this.totalPages) {
             this.transitionToPage(this.page);
+            // this.updatePagedListsWithFilters(this.page);
         }
     }
 
     @action
-    prevPage() {
+    prevPage() { 
         this.page = Number(this.page) - 1;
-        if (this.page > 1) {
+        if (this.page >= 1) {
             this.transitionToPage(this.page);
+            // this.updatePagedListsWithFilters(this.page);
         }
     }
     
     // Helper method to transition with query params
-    transitionToPage(pageNumber) {
+    transitionToPage(pageNumber) { 
         const queryParams = {
             page: pageNumber,
             ref: Date.now()
            
         };
+        if (this.order_id_filter) {
+            queryParams.order_id_filter = this.order_id_filter;
+        }
         
-        // this.hostRouter.transitionTo({ queryParams });
-        this.updatePagedLists(pageNumber);
+        if (this.driver_filter) {
+            queryParams.driver_filter = this.driver_filter;
+        }
+        
+        if (this.status_filter) {
+            queryParams.status_filter = this.status_filter;
+        }
+        this.hostRouter.transitionTo({ queryParams });
+        this.updatePagedListsWithFilters(pageNumber);
     }
+    updatePagedListsWithFilters(pageNumber) {
+        // Show loading indicator
+        this.isLoading = true;
+        
+        // Apply filters to cached orders
+        // const filteredCachedOrders = this.applyFiltersToOrders(this.store.peekAll('order').filter(order => order.status === 'created'));
+        
+        // // Recalculate totalPages based on the filtered data
+        // this.totalPages = Math.ceil(filteredCachedOrders.length / this.itemsPerPage);
+        const filteredOrders = this._getFilteredOrders();
 
+        // Recalculate totalPages based on the filtered orders
+        this.totalPages = Math.ceil(filteredOrders.length / this.itemsPerPage);
+        // Apply pagination logic
+        const startIndex = (pageNumber - 1) * this.itemsPerPage;
+        const endIndex = startIndex + this.itemsPerPage;
+        
+        // Slice the filtered data for the current page
+        // const pageOrders = filteredCachedOrders.slice(startIndex, endIndex);
+        const pageOrders = filteredOrders.slice(startIndex, endIndex);
+        this.scheduledOrders = pageOrders.filter(order => !isNone(order.driver_assigned_uuid));
+        this.unscheduledOrders = pageOrders.filter(order => isNone(order.driver_assigned_uuid) && isNone(order.vehicle_assigned_uuid));
+    
+        this.isLoading = false;
+    }
+    
     updatePagedLists(pageNumber) {
         // Calculate pagination for UI from in-memory data
         const startIndex = (pageNumber - 1) * this.itemsPerPage;
@@ -1169,5 +1551,43 @@ async _updateCalendarAsync() {
         
         
     }
-
+    // Helper method to apply all active filters to a collection of orders
+applyFiltersToOrders(orders) {
+    const hasOrderIdFilter = this.order_id_filter && this.order_id_filter.trim() !== '';
+    const hasDriverFilter = this.driver_filter && this.driver_filter.trim() !== '';
+    const hasStatusFilter = this.status_filter && this.status_filter.trim() !== '';
+    
+    return orders.filter(order => {
+        // Filter by order ID if specified
+        if (hasOrderIdFilter) {
+            const orderId = order.id || '';
+            const publicId = order.public_id || '';
+            
+            if (!(orderId.toLowerCase().includes(this.order_id_filter.toLowerCase()) || 
+                  publicId.toLowerCase().includes(this.order_id_filter.toLowerCase()))) {
+                return false;
+            }
+        }
+        
+        // Filter by driver if specified
+        if (hasDriverFilter) {
+            const driverId = order.driver_assigned_uuid || '';
+            if (driverId !== this.driver_filter) {
+                return false;
+            }
+        }
+        
+        // Filter by status if specified
+        if (hasStatusFilter) {
+            const status = order.status || '';
+            if (status !== this.status_filter) {
+                return false;
+            }
+        }
+        
+        // If we get here, the order passes all filters
+        return true;
+    });
 }
+}
+
