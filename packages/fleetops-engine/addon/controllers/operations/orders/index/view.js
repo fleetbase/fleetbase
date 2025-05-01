@@ -615,7 +615,13 @@ export default class OperationsOrdersIndexViewController extends BaseController 
                                         originalOrderData,
                                     });
                                 }, 100);
-                            }
+                            },
+                            decline: (errorModal) => {
+                                errorModal.done();
+                                setTimeout(() => {
+                                    resetOrderToOriginal();
+                                }, 100);
+                            }    
                         });
                     }, 300);
     
@@ -649,6 +655,12 @@ export default class OperationsOrdersIndexViewController extends BaseController 
                                         ...options,
                                         originalOrderData,
                                     });
+                                }, 100);
+                            },
+                            decline: (confirmModal) => {
+                                confirmModal.done();
+                                setTimeout(() => {
+                                    resetOrderToOriginal();
                                 }, 100);
                             }
                         });
