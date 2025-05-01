@@ -109,7 +109,8 @@ export default class OperationsOrdersIndexViewController extends BaseController 
         'Order Accepted by the driver.': 'accept-order',
         'Order has been dispatched.': 'dispacth-order',
         'Order status updated by the driver': 'update-order',
-        'Order has been started' : 'start-order'
+        'Order has been started' : 'start-order',
+        'Driver completes the order' : 'complete-order',
       };
 
     @not('isWaypointsCollapsed') waypointsIsNotCollapsed;
@@ -127,7 +128,6 @@ export default class OperationsOrdersIndexViewController extends BaseController 
      * @returns 
      */
     @action formatTrackingDetails(details) {
-        console.log(details,"details11");
         const key = this.trackingDetailKeyMap[details];
         return key ? `common.tracking-details.${key}` : 'common.tracking-details.unknown';
       }
