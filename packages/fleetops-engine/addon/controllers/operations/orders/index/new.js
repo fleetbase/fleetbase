@@ -543,7 +543,25 @@ export default class OperationsOrdersIndexNewController extends BaseController {
                 modal.done();
             },
             decline: (modal) => {
+                const uploadQueue = this.modalsManager.getOption('uploadQueue');
+                // Remove each file individually from both queues
+                if (uploadQueue && uploadQueue.length) {
+                    // Create a copy to avoid modification during iteration
+                    const files = [...uploadQueue];
+                    // Use the existing removeFile function to properly clean up each file
+                    files.forEach(file => {
+                        const { queue } = file;
+                        // Remove from upload queue
+                        uploadQueue.removeObject(file);
+                        // Remove from file queue if possible
+                        if (queue && typeof queue.remove === 'function') {
+                            queue.remove(file);
+                        }
+                    });
+                }
+                // Set empty array to be certain
                 this.modalsManager.setOption('uploadQueue', []);
+                // Close the modal
                 modal.done();
             },
         });
