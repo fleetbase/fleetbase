@@ -638,11 +638,11 @@ export default class OperationsOrdersIndexViewController extends BaseController 
                             body: this.intl.t('fleet-ops.component.order.schedule-card.assign-busy-text', {
                                 driverName: driverToAssign.name,
                                 orderId: order.public_id,
-                                availability: driverToAssign.availability_message || "This driver is currently busy with other orders.",
-                                button: driverToAssign.button_message || "continue with assignment",
+                                availability: driverToAssign.availability_message,
+                                button: driverToAssign.button_message,
                             }),
                             acceptButtonText: this.intl.t('fleet-ops.component.order.schedule-card.assign-busy-button', {
-                                button: driverToAssign.button_message || "Continue With Assignment",
+                                button: driverToAssign.button_message,
                             }),
                             confirm: async (confirmModal) => {
                                 confirmModal.startLoading();

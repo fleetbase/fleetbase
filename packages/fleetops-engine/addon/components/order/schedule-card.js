@@ -425,8 +425,8 @@ onTitleClick(order) {
                     : this.intl.t('fleet-ops.component.order.schedule-card.assign-busy-text', {
                         driverName: driver.name,
                         orderId: order.public_id,
-                        availability: driver.availability_message || 'This driver is currently busy with other orders.',
-                        button: driver.button_message || 'continue with assignment',
+                        availability: driver.availability_message,
+                        button: driver.button_message,
                     }),
                 acceptButtonText: driver.is_available
                     ? this.intl.t('fleet-ops.component.order.schedule-card.assign-button')
