@@ -1,6 +1,6 @@
 # syntax = docker/dockerfile:1.2
 # Base stage
-FROM dunglas/frankenphp:1.5.0-php8.2-bookworm as base
+FROM dunglas/frankenphp:1.5.0-php8.2-bookworm AS base
 
 # Install packages
 RUN apt-get update && apt-get install -y git bind9-utils mycli nodejs npm nano \
@@ -62,10 +62,10 @@ COPY --from=ghcr.io/springload/ssm-parent:1.8 /usr/bin/ssm-parent /sbin/ssm-pare
 
 # Create the pnpm directory and set the PNPM_HOME environment variable
 RUN mkdir -p ~/.pnpm
-ENV PNPM_HOME /root/.pnpm
+ENV PNPM_HOME=/root/.pnpm
 
 # Add the pnpm global bin to the PATH
-ENV PATH /root/.pnpm/bin:$PATH
+ENV PATH=/root/.pnpm/bin:$PATH
 
 # Set some build ENV variables
 ENV LOG_CHANNEL=stdout
@@ -123,7 +123,7 @@ RUN chmod -R 755 /fleetbase/api/storage
 RUN chmod +x /fleetbase/api/deploy.sh
 
 # Scheduler base stage
-FROM base as scheduler-base
+FROM base AS scheduler-base
 
 # Install go-crond
 RUN curl -L https://github.com/webdevops/go-crond/releases/download/23.12.0/go-crond.linux.amd64 > /usr/local/bin/go-crond && chmod +x /usr/local/bin/go-crond
@@ -131,31 +131,31 @@ COPY docker/crontab ./crontab
 RUN chmod 0600 ./crontab
 
 # Scheduler dev stage
-FROM scheduler-base as scheduler-dev
+FROM scheduler-base AS scheduler-dev
 ENTRYPOINT []
 CMD ["go-crond", "--verbose", "root:./crontab"]
 
 # Scheduler stage
-FROM scheduler-base as scheduler
+FROM scheduler-base AS scheduler
 ENTRYPOINT ["/sbin/ssm-parent", "-c", ".ssm-parent.yaml", "run", "--"]
 CMD ["go-crond", "--verbose", "root:./crontab"]
 
 # Events stage
-FROM base as events
+FROM base AS events
 ENTRYPOINT ["/sbin/ssm-parent", "-c", ".ssm-parent.yaml", "run", "--", "docker-php-entrypoint"]
 CMD ["php", "artisan", "queue:work"]
 
 # Events stage
-FROM base as events-dev
+FROM base AS events-dev
 ENTRYPOINT []
 CMD ["php", "artisan", "queue:work"]
 
 # Application dev stage
-FROM base as app-dev
+FROM base AS app-dev
 ENTRYPOINT ["docker-php-entrypoint"]
 CMD ["sh", "-c", "php artisan octane:frankenphp --max-requests=250 --port=8000 --host=0.0.0.0 --watch"] 
 
 # Application stage
-FROM base as app
+FROM base AS app
 ENTRYPOINT ["/sbin/ssm-parent", "-c", ".ssm-parent.yaml", "run", "--", "docker-php-entrypoint"]
 CMD ["sh", "-c", "php artisan octane:frankenphp --max-requests=250 --port=8000 --host=0.0.0.0"]
