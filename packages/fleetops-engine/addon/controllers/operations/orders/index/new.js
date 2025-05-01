@@ -333,24 +333,47 @@ export default class OperationsOrdersIndexNewController extends BaseController {
             this.notifications.error(this.errorMessage);
             return;
         }
-       if (this.isMultipleDropoffOrder) {
+        if (this.isMultipleDropoffOrder) {
             // Check if we have at least 2 waypoints
             if (!this.waypoints || this.waypoints.length < 2) {
                 this.notifications.error(WAYPOINTS_ERROR);
                 return;
             }
-            //show errors when waypoints doesn't have valid places
-            const validWaypoints = this.waypoints.filter(waypoint => 
-                waypoint.place && 
-                waypoint.place.latitude && 
-                waypoint.place.longitude && 
-                !waypoint.place.hasInvalidCoordinates
+             // Validate that all non-empty waypoints are valid
+            const hasInvalidWaypoint = this.waypoints.some(waypoint => 
+                !waypoint.place || 
+                !waypoint.place.latitude || 
+                !waypoint.place.longitude || 
+                waypoint.place.hasInvalidCoordinates
             );
             
-            if (validWaypoints.length < 2) {
+            if (hasInvalidWaypoint) {
                 this.notifications.error(WAYPOINTS_ERROR);
                 return;
             }
+            // Check for consecutive duplicate waypoints
+            let hasConsecutiveDuplicates = false;
+    
+            for (let i = 1; i < this.waypoints.length; i++) {
+                const currentWaypoint = this.waypoints[i];
+                const previousWaypoint = this.waypoints[i-1];
+                
+                // Check if current and previous have the same public_id
+                if (currentWaypoint.place && 
+                    previousWaypoint.place && 
+                    currentWaypoint.place.public_id && 
+                    previousWaypoint.place.public_id && 
+                    currentWaypoint.place.public_id === previousWaypoint.place.public_id) {
+                    hasConsecutiveDuplicates = true;
+                    break;
+                }
+            }
+            //Show error if duplicates present
+            if (hasConsecutiveDuplicates) {
+                this.notifications.error(this.intl.t('common.duplicate-waypoint-error'));
+                return;
+            }
+
         }
         if (!this.isValid) {
             return;
