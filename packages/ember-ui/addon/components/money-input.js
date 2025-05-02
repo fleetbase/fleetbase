@@ -30,6 +30,10 @@ export default class MoneyInputComponent extends Component {
     @action autoNumerize(element) {
         const { onCurrencyChange } = this.args;
         let currency = this.currencyData;
+        if (!currency) {
+            console.error('Currency data is missing.');
+            return;
+        }
         let value = numbersOnly(this.value);
         let amount = !currency.decimalSeparator ? value : value / 100;
         // Add these options to make zero values editable
