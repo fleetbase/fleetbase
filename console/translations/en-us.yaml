@@ -141,6 +141,8 @@ common:
     start-order: Order has been started
     complete-order: Driver completes the order
   duplicate-waypoint-error: Duplicate waypoint detected. Please use unique locations for each waypoint.
+  valid-waypoints-error: Please add waypoints
+  pickup-dropoff-error: Please provide both pickup and dropoff locations.
 validation:
   required:
     payment_method: Payment method is required
@@ -1504,6 +1506,10 @@ fleet-ops:
         status: Status
         cannot-edit-completed:  Cannot edit completed orders
         cannot-modify-complete-order: Cannot modify a completed order.
+        start-end-required: Start Date and End Date are required.
+        start-date-required: Start Date is required.
+        end-date-required: End Date is required.
+        end-date-earlier: End Date cannot be earlier than the Start Date.
     widget:
       fleet-ops-quickstart:
         message: Let's see what you can do to jumpstart operations...
@@ -2355,6 +2361,7 @@ fleet-ops:
         unscheduled-orders: Unassigned Orders
         scheduled-orders: Assigned Orders
         unauthorized-to-schedule: You are not authorized to schedule orders.
+
         
         
       calendar:

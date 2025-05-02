@@ -139,6 +139,8 @@ common:
     start-order: La commande a été commencée.
     complete-order: Le chauffeur termine la commande
   duplicate-waypoint-error: Point de passage en double détecté. Veuillez utiliser des emplacements uniques pour chaque point de passage.
+  valid-waypoints-error: Veuillez ajouter des points de passage
+  pickup-dropoff-error: Veuillez fournir les lieux de prise en charge et de dépose.
 validation:
   required:
     payment_method: Le mode de paiement est requis
@@ -1508,6 +1510,10 @@ fleet-ops:
         date-created: Date de Création
         cannot-edit-completed: Impossible de modifier les commandes terminées
         cannot-modify-complete-order: Impossible de modifier une commande terminée.
+        start-end-required: La date de début et la date de fin sont requises.
+        start-date-required: La date de début est requise.
+        end-date-required: La date de fin est requise.
+        end-date-earlier: La date de fin ne peut pas être antérieure à la date de début.
     widget:
       fleet-ops-quickstart:
         message: Voyons ce que vous pouvez faire pour lancer les opérations...

@@ -139,6 +139,8 @@ common:
     start-order: Bestellung wurde gestartet.
     complete-order: Der Fahrer hat die Bestellung abgeschlossen
   duplicate-waypoint-error: Doppelter Wegpunkt erkannt. Bitte verwenden Sie eindeutige Orte für jeden Wegpunkt.
+  valid-waypoints-error: Bitte fügen Sie Wegpunkte hinzu
+  pickup-dropoff-error: Bitte geben Sie sowohl den Abhol- als auch den Abgabeort an.
 validation:
   required:
     payment_method: Zahlungsmethode ist erforderlich
@@ -1510,6 +1512,10 @@ fleet-ops:
         date-created: Erstellungsdatum
         cannot-edit-completed: Kann abgeschlossene Bestellungen nicht bearbeiten
         cannot-modify-complete-order: Kann keine abgeschlossene Bestellung ändern.
+        start-end-required: Startdatum und Enddatum sind erforderlich.
+        start-date-required: Startdatum ist erforderlich.
+        end-date-required: Enddatum ist erforderlich.
+        end-date-earlier: Das Enddatum darf nicht vor dem Startdatum liegen.
     widget:
       fleet-ops-quickstart:
         message: Sehen wir uns an, was Sie tun können, um den Betrieb zu starten...

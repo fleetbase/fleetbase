@@ -139,6 +139,8 @@ common:
     start-order: Đơn hàng đã được bắt đầu.
     complete-order: Tài xế đã hoàn thành đơn hàng
   duplicate-waypoint-error: Phát hiện điểm dừng trùng lặp. Vui lòng sử dụng vị trí duy nhất cho mỗi điểm dừng.
+  valid-waypoints-error: Vui lòng thêm điểm dừng
+  pickup-dropoff-error: Vui lòng cung cấp cả điểm đón và điểm trả.
 validation:
   required:
     payment_method: Phương thức thanh toán là bắt buộc
@@ -899,6 +901,10 @@ fleet-ops:
           date-created: Erstellungsdatum
           cannot-edit-completed: Không thể chỉnh sửa các đơn hàng đã hoàn thành
           cannot-modify-complete-order: Không thể sửa một đơn hàng đã hoàn thành.
+          start-end-required: Cần nhập ngày bắt đầu và ngày kết thúc.
+          start-date-required: Cần nhập ngày bắt đầu.
+          end-date-required: Cần nhập ngày kết thúc.
+          end-date-earlier: Ngày kết thúc không được sớm hơn ngày bắt đầu.
   component:
     layout:
       fleet-ops-sidebar:

@@ -236,7 +236,6 @@ export default class OperationsOrdersIndexNewController extends BaseController {
         const isPickupSet = isNotEmpty(this.payload?.pickup);
         const isDropoffSet = isNotEmpty(this.payload?.dropoff);
         // const isPayloadSet = this.entities?.length > 0;
-
         if (isFetchingQuotes) {
             return false;
         }
@@ -246,6 +245,9 @@ export default class OperationsOrdersIndexNewController extends BaseController {
         }
 
         if (isMultipleDropoffOrder) {
+            if (!this.waypoints || this.waypoints.length < 2) {
+                return false;
+            }
             return isWaypointsSet;
         }
 
@@ -316,6 +318,7 @@ export default class OperationsOrdersIndexNewController extends BaseController {
     }
 
     @action createOrder() {
+        const WAYPOINTS_ERROR = this.intl.t('common.valid-waypoints-error');
         if (!this.order.scheduled_at || !this.order.estimated_end_date) {
             let missingFields = [];
             if (!this.order.scheduled_at) missingFields.push("Start Date");
@@ -329,6 +332,48 @@ export default class OperationsOrdersIndexNewController extends BaseController {
             this.errorMessage = "End Date cannot be earlier than the start date.";
             this.notifications.error(this.errorMessage);
             return;
+        }
+        if (this.isMultipleDropoffOrder) {
+            // Check if we have at least 2 waypoints
+            if (!this.waypoints || this.waypoints.length < 2) {
+                this.notifications.error(WAYPOINTS_ERROR);
+                return;
+            }
+             // Validate that all non-empty waypoints are valid
+            const hasInvalidWaypoint = this.waypoints.some(waypoint => 
+                !waypoint.place || 
+                !waypoint.place.latitude || 
+                !waypoint.place.longitude || 
+                waypoint.place.hasInvalidCoordinates
+            );
+            
+            if (hasInvalidWaypoint) {
+                this.notifications.error(WAYPOINTS_ERROR);
+                return;
+            }
+            // Check for consecutive duplicate waypoints
+            let hasConsecutiveDuplicates = false;
+    
+            for (let i = 1; i < this.waypoints.length; i++) {
+                const currentWaypoint = this.waypoints[i];
+                const previousWaypoint = this.waypoints[i-1];
+                
+                // Check if current and previous have the same public_id
+                if (currentWaypoint.place && 
+                    previousWaypoint.place && 
+                    currentWaypoint.place.public_id && 
+                    previousWaypoint.place.public_id && 
+                    currentWaypoint.place.public_id === previousWaypoint.place.public_id) {
+                    hasConsecutiveDuplicates = true;
+                    break;
+                }
+            }
+            //Show error if duplicates present
+            if (hasConsecutiveDuplicates) {
+                this.notifications.error(this.intl.t('common.duplicate-waypoint-error'));
+                return;
+            }
+
         }
         if (!this.isValid) {
             return;
@@ -521,9 +566,32 @@ export default class OperationsOrdersIndexNewController extends BaseController {
                 modal.done();
             },
             decline: (modal) => {
-                this.modalsManager.setOption('uploadQueue', []);
-                modal.done();
+                const uploadQueue = this.modalsManager.getOption('uploadQueue');
+                try {
+                    if (Array.isArray(uploadQueue) && uploadQueue.length) {
+                        // Copy to avoid mutation during iteration
+                        const files = [...uploadQueue];
+                        files.forEach(file => {
+                            const { queue } = file;
+                            // Remove from upload queue if method exists
+                            if (typeof uploadQueue.removeObject === 'function') {
+                                uploadQueue.removeObject(file);
+                            }
+                            // Remove from file-specific queue if possible
+                            if (queue && typeof queue.remove === 'function') {
+                                queue.remove(file);
+                            }
+                        });
+                    }
+                } catch (error) {
+                    console.error('Error during upload queue cleanup:', error);
+                } finally {
+                    // Ensure the queue is reset and modal is closed
+                    this.modalsManager.setOption('uploadQueue', []);
+                    modal.done();
+                }
             },
+            
         });
     }
 

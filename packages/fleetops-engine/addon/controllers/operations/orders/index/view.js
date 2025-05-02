@@ -475,6 +475,40 @@ export default class OperationsOrdersIndexViewController extends BaseController 
             order.set('scheduled_at', originalOrderData.scheduled_at);
             order.set('estimated_end_date', originalOrderData.estimated_end_date);
         };
+        const resetOrderToOriginalDates = () => {
+            order.set('scheduled_at', originalOrderData.scheduled_at);
+            order.set('estimated_end_date', originalOrderData.estimated_end_date);
+        };
+        const validateOrderDates = () => {
+            const startDate = order.scheduled_at;
+            const endDate = order.estimated_end_date;
+    
+            if (!startDate && !endDate) {
+                this.notifications.error(this.intl.t('fleet-ops.component.order.schedule-card.start-end-required'));
+                resetOrderToOriginalDates();
+                return false;
+            }
+    
+            if (!startDate) {
+                this.notifications.error(this.intl.t('fleet-ops.component.order.schedule-card.start-date-required'));
+                resetOrderToOriginalDates();
+                return false;
+            }
+    
+            if (!endDate) {
+                this.notifications.error(this.intl.t('fleet-ops.component.order.schedule-card.end-date-required'));
+                resetOrderToOriginalDates();
+                return false;
+            }
+    
+            if (endDate < startDate) {
+                this.notifications.error(this.intl.t('fleet-ops.component.order.schedule-card.end-date-earlier'));
+                resetOrderToOriginalDates();
+                return false;
+            }
+    
+            return true;
+        };    
     
         this.modalsManager.show('modals/order-form', {
             title: this.intl.t('fleet-ops.operations.orders.index.view.edit-order-title'),
@@ -533,21 +567,23 @@ export default class OperationsOrdersIndexViewController extends BaseController 
             scheduleOrder: (dateInstance) => {
                 order.scheduled_at = dateInstance;
                 fieldsChanged = true;
+                validateOrderDates();
             },
             
             EndDateOrder: (dateInstance) => {
-                if (dateInstance < order.scheduled_at) {
-                    this.notifications.error("End Date cannot be earlier than the start date.");
-                    return;
-                }
                 order.estimated_end_date = dateInstance;
                 fieldsChanged = true;
+                validateOrderDates();
             },
         
             driversQuery: {},
             order,
             confirm: async (modal) => {
                 modal.startLoading();
+                if (!validateOrderDates()) {
+                    modal.stopLoading();
+                    return;
+                }
     
                 // Define the saveOrder function first so it can be used anywhere
                 const saveOrder = async () => {
@@ -615,7 +651,13 @@ export default class OperationsOrdersIndexViewController extends BaseController 
                                         originalOrderData,
                                     });
                                 }, 100);
-                            }
+                            },
+                            decline: (errorModal) => {
+                                errorModal.done();
+                                setTimeout(() => {
+                                    resetOrderToOriginal();
+                                }, 100);
+                            }    
                         });
                     }, 300);
     
@@ -632,11 +674,11 @@ export default class OperationsOrdersIndexViewController extends BaseController 
                             body: this.intl.t('fleet-ops.component.order.schedule-card.assign-busy-text', {
                                 driverName: driverToAssign.name,
                                 orderId: order.public_id,
-                                availability: driverToAssign.availability_message || "This driver is currently busy with other orders.",
-                                button: driverToAssign.button_message || "continue with assignment",
+                                availability: driverToAssign.availability_message,
+                                button: driverToAssign.button_message,
                             }),
                             acceptButtonText: this.intl.t('fleet-ops.component.order.schedule-card.assign-busy-button', {
-                                button: driverToAssign.button_message || "Continue With Assignment",
+                                button: driverToAssign.button_message,
                             }),
                             confirm: async (confirmModal) => {
                                 confirmModal.startLoading();
@@ -649,6 +691,12 @@ export default class OperationsOrdersIndexViewController extends BaseController 
                                         ...options,
                                         originalOrderData,
                                     });
+                                }, 100);
+                            },
+                            decline: (confirmModal) => {
+                                confirmModal.done();
+                                setTimeout(() => {
+                                    resetOrderToOriginal();
                                 }, 100);
                             }
                         });

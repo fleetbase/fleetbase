@@ -30,18 +30,28 @@ export default class MoneyInputComponent extends Component {
     @action autoNumerize(element) {
         const { onCurrencyChange } = this.args;
         let currency = this.currencyData;
+        if (!currency) {
+            console.error('Currency data is missing.');
+            return;
+        }
         let value = numbersOnly(this.value);
         let amount = !currency.decimalSeparator ? value : value / 100;
+        // Add these options to make zero values editable
+        const options = this.getCurrencyFormatOptions(currency);
+        options.emptyInputBehavior = "focus";  // Clear on focus if empty
+        options.selectOnFocus = true; 
+        this.autonumeric = new AutoNumeric(element, amount, options);
+        // Add event listener for focusing
+         element.addEventListener('focus', this.handleFocus.bind(this));
 
-        this.autonumeric = new AutoNumeric(element, amount, this.getCurrencyFormatOptions(currency));
+         // default the currency from currency data
+         if (typeof onCurrencyChange === 'function') {
+             onCurrencyChange(currency.code, currency);
+         }
+ 
+         element.addEventListener('autoNumeric:formatted', this.onFormatCompleted.bind(this));
+     }
 
-        // default the currency from currency data
-        if (typeof onCurrencyChange === 'function') {
-            onCurrencyChange(currency.code, currency);
-        }
-
-        element.addEventListener('autoNumeric:formatted', this.onFormatCompleted.bind(this));
-    }
 
     @action setCurrency(currency) {
         const { onCurrencyChange } = this.args;
@@ -84,6 +94,9 @@ export default class MoneyInputComponent extends Component {
             decimalCharacter: isNone(currency.decimalSeperator) ? '.' : currency.decimalSeparator,
             decimalPlaces: isNone(currency.precision) ? 2 : currency.precision,
             digitGroupSeparator: isNone(currency.thousandSeparator) ? ',' : currency.thousandSeparator,
+            // Add these additional options
+            selectOnFocus: true,            // Select entire field on focus
+            emptyInputBehavior: "focus"     // Clear on focus if empty
         };
 
         // decimal and thousand seperator cannot be the same, if they are revert the thousand seperator
@@ -92,5 +105,16 @@ export default class MoneyInputComponent extends Component {
         }
 
         return options;
+    }
+
+    /**
+     * 
+     * @param {*} event 
+     */
+    @action handleFocus(event) {
+        // If the value is zero, clear it for easier editing
+        if (parseFloat(this.autonumeric.getNumericString()) === 0) {
+            this.autonumeric.set('');
+        }
     }
 }

@@ -141,6 +141,8 @@ common:
     start-order: Zamówienie zostało rozpoczęte.
     complete-order: Kierowca zakończył zamówienie
   duplicate-waypoint-error: Wykryto zduplikowany punkt trasy. Proszę użyć unikalnych lokalizacji dla każdego punktu.
+  valid-waypoints-error: Proszę dodać punkty trasy
+  pickup-dropoff-error: Proszę podać miejsce odbioru i miejsce dostawy.
 validation:
   required:
     payment_method: Wymagana jest metoda płatności
@@ -1508,6 +1510,10 @@ fleet-ops:
         date-created: Data utworzenia
         cannot-edit-completed: Nie można edytować zakończonych zamówień
         cannot-modify-complete-order: Nie można zmienić zakończonego zamówienia.
+        start-end-required: Wymagane są data rozpoczęcia i data zakończenia.
+        start-date-required: Wymagana jest data rozpoczęcia.
+        end-date-required: Wymagana jest data zakończenia.
+        end-date-earlier: Data zakończenia nie może być wcześniejsza niż data rozpoczęcia.
     widget:
       fleet-ops-quickstart:
         message: Zobacz, co możesz zrobić, aby szybko rozpocząć operacje...

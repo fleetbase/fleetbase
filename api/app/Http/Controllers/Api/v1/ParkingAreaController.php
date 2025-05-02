@@ -141,7 +141,7 @@ class ParkingAreaController extends Controller
             $currentLocation = new Point($latitude, $longitude);
             $company = $request->has('company') ? Auth::getCompanyFromRequest($request) : Auth::getCompany();
             $company_uuid = null;
-            if($company){
+            if($company && $company->parking_zone_max_distance){
                 $company_uuid = $company->uuid;
                 $radiusInMiles = $company->parking_zone_max_distance;
             }

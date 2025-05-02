@@ -76,6 +76,8 @@ export default class AuthLoginController extends Controller {
      */
     @tracked token;
 
+    @tracked loaderMessage = '';
+
     /**
      * Action to login user.
      *
@@ -84,23 +86,24 @@ export default class AuthLoginController extends Controller {
      * @memberof AuthLoginController
      */
     @action async login(event) {
+        this.loaderMessage = this.intl.t('fleet-ops.common.loading');
         // firefox patch
         event.preventDefault();
         // get user credentials
         const { identity, password, rememberMe } = this;
 
-        // If no password error
+        // If no identity error
         if (!identity) {
             return this.notifications.warning(this.intl.t('auth.login.no-identity-notification'));
         }
 
         // If no password error
         if (!password) {
-            return this.notifications.warning(this.intl.t('auth.login.no-identity-notification'));
+            return this.notifications.warning(this.intl.t('auth.login.no-password-notification'));
         }
 
         // start loader
-        this.set('isLoading', true);
+        this.isLoading = true;
         // set where to redirect on login
         this.setRedirect();
 
@@ -124,6 +127,7 @@ export default class AuthLoginController extends Controller {
                     });
             }
         } catch (error) {
+            this.isLoading = false;
             return this.notifications.serverError(error);
         }
 
@@ -162,8 +166,8 @@ export default class AuthLoginController extends Controller {
      */
     @action forgotPassword() {
         return this.router.transitionTo('auth.forgot-password').then(() => {
-            if (this.email) {
-                this.forgotPasswordController.email = this.email;
+            if (this.identity) {
+                this.forgotPasswordController.email = this.identity;
             }
         });
     }
@@ -180,7 +184,7 @@ export default class AuthLoginController extends Controller {
             return this.session.store.persist({ email }).then(() => {
                 this.notifications.warning(this.intl.t('auth.login.unverified-notification'));
                 return this.router.transitionTo('auth.verification', { queryParams: { token, hello: session } }).then(() => {
-                    this.reset('error');
+                    this.reset('error', false); // Don't clear identity field
                 });
             });
         });
@@ -196,7 +200,7 @@ export default class AuthLoginController extends Controller {
     @action sendUserForPasswordReset(email) {
         this.notifications.warning(this.intl.t('auth.login.password-reset-required'));
         return this.router.transitionTo('auth.forgot-password', { queryParams: { email } }).then(() => {
-            this.reset('error');
+            this.reset('error', false); // Don't clear identity field
         });
     }
 
@@ -246,16 +250,20 @@ export default class AuthLoginController extends Controller {
      * Reset the login form
      *
      * @param {String} type
+     * @param {Boolean} clearIdentity - Whether to clear the identity field
      * @void
      */
-    reset(type) {
+    reset(type, clearIdentity = true) {
         // reset login form state
         this.isLoading = false;
         this.isSlowConnection = false;
+        
         // reset login form state depending on type of reset
         switch (type) {
             case 'success':
-                this.identity = null;
+                if (clearIdentity) {
+                    this.identity = null;
+                }
                 this.password = null;
                 this.isValidating = false;
                 break;

@@ -12,6 +12,11 @@ export default class AuthLoginRoute extends Route {
      * @void
      */
     beforeModel(transition) {
+        // Check if already authenticated before showing login
+        if (this.session.isAuthenticated) {
+            return this.router.transitionTo('console.fleet-ops');
+        }
+        // Only check prohibition if not already authenticated
         this.session.prohibitAuthentication('console');
         return this.universe.virtualRouteRedirect(transition, 'auth:login', 'virtual', { restoreQueryParams: true });
     }

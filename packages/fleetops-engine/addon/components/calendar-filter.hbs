@@ -1,5 +1,5 @@
-{{!-- components/fleet-ops/calendar-filter.hbs --}}
-<div class="flex items-center justify-between mb-4 bg-white dark:bg-gray-800 p-3  border border-gray-200 dark:border-gray-700">
+{{!-- Compact Inline Layout for Small Screens --}}
+<div class="calendar-filter-inline flex items-center justify-between mb-4 bg-white dark:bg-gray-800 p-3 border border-gray-200 dark:border-gray-700">
   <div class="flex items-center space-x-4">
     <div class="flex items-center">
       <label for="order-id-filter" class="mr-2 text-sm font-medium">{{t "fleet-ops.operations.scheduler.calendar.order-id"}}:</label>
@@ -8,8 +8,8 @@
         @value={{this.tempOrderId}}
         id="order-id-filter"
         placeholder={{t "fleet-ops.operations.scheduler.calendar.search-by-orderid"}}
-        style="width: 200px; max-width: 200px;"
-        class="form-input  text-sm border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-300"
+        class="form-input text-sm border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-300"
+        style="width: 200px;"
         {{on "input" this.handleOrderIdChange}}
         {{on "blur" this.handleOrderIdBlur}}
         {{on "keydown" this.handleOrderIdKeyDown}}
@@ -25,9 +25,7 @@
         @onChange={{this.handleDriverChange}}
         @placeholder={{t "fleet-ops.operations.scheduler.calendar.all-drivers"}}
         @triggerClass="form-input truncate"
-        style="width: 200px; max-width: 200px;"
-        {{!-- @searchEnabled={{true}} --}}
-        {{!-- @searchField="name" --}}
+        style="width: 200px;"
         @disabled={{this.loading}}
         as |driver|
       >
@@ -43,7 +41,88 @@
         @onChange={{this.handleStatusChange}}
         @placeholder={{t "fleet-ops.operations.scheduler.calendar.all-statuses"}}
         @triggerClass="form-input truncate"
-        style="width: 200px; max-width: 200px;"
+        style="width: 200px;"
+        @disabled={{this.loading}}
+        as |status|
+      >
+        {{t status.name}}
+      </PowerSelect>
+    </div>
+
+    <div class="flex items-center space-x-2">
+      <button
+        class="btn btn-primary btn-sm px-3 py-1 border flex items-center"
+        {{on "click" this.handleApplyFilters}}
+        disabled={{this.isLoading}}
+      >
+        {{#if this.isLoading}}
+          <span class="inline-block mr-2">
+            <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" />
+              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+            </svg>
+          </span>
+        {{/if}}
+        {{t "fleet-ops.operations.scheduler.calendar.apply-filters"}}
+      </button>
+
+      <button
+        class="btn btn-default btn-sm px-3 py-1 border border-gray-300 dark:border-gray-600"
+        {{on "click" this.handleClearFilters}}
+        disabled={{this.isLoading}}
+      >
+        {{t "fleet-ops.operations.scheduler.calendar.clear-filters"}}
+      </button>
+    </div>
+
+  </div>
+</div>
+
+{{!-- Grid Layout for Large Screens --}}
+<div class="calendar-filter-grid flex flex-wrap justify-between mb-4 bg-white dark:bg-gray-800 p-3 border border-gray-200 dark:border-gray-700">
+  <div class="grid w-full grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-4">
+
+    <div class="flex flex-col lg:flex-row lg:items-center lg:space-x-2">
+      <label for="order-id-filter-lg" class="text-sm font-medium mb-1 lg:mb-0">{{t "fleet-ops.operations.scheduler.calendar.order-id"}}:</label>
+      <Input
+        @type="text"
+        @value={{this.tempOrderId}}
+        id="order-id-filter-lg"
+        placeholder={{t "fleet-ops.operations.scheduler.calendar.search-by-orderid"}}
+        class="form-input text-sm border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-300 w-full lg:w-[200px]"
+        style="margin-left: 20px;"
+        {{on "input" this.handleOrderIdChange}}
+        {{on "blur" this.handleOrderIdBlur}}
+        {{on "keydown" this.handleOrderIdKeyDown}}
+        disabled={{this.loading}}
+      />
+    </div>
+
+    <div class="flex flex-col lg:flex-row lg:items-center lg:space-x-2">
+      <label for="driver-filter-lg" class="text-sm font-medium mb-1 lg:mb-0">{{t "fleet-ops.operations.scheduler.calendar.driver"}}:</label>
+      <PowerSelect
+        @options={{@availableDrivers}}
+        @selected={{@selectedDriver}}
+        @onChange={{this.handleDriverChange}}
+        @placeholder={{t "fleet-ops.operations.scheduler.calendar.all-drivers"}}
+        @triggerClass="form-input truncate"
+        class="w-full lg:w-[200px]"
+        @disabled={{this.loading}}
+        as |driver|
+      >
+        {{driver.name}}
+      </PowerSelect>
+    </div>
+
+    <div class="flex flex-col lg:flex-row lg:items-center lg:space-x-2">
+      <label for="status-filter-lg" class="text-sm font-medium mb-1 lg:mb-0">{{t "fleet-ops.operations.scheduler.calendar.status"}}:</label>
+      <PowerSelect
+        @options={{@statusOptions}}
+        @selected={{@selectedStatus}}
+        @onChange={{this.handleStatusChange}}
+        @placeholder={{t "fleet-ops.operations.scheduler.calendar.all-statuses"}}
+        @triggerClass="form-input truncate"
+        class="w-full lg:w-[200px]"
         @disabled={{this.loading}}
         as |status|
       >
@@ -60,8 +139,8 @@
         {{#if this.isLoading}}
           <span class="inline-block mr-2">
             <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" />
+              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
             </svg>
           </span>
         {{/if}}
@@ -69,7 +148,7 @@
       </button>
       
       <button
-        class="btn btn-default btn-sm px-3 py-1  border border-gray-300 dark:border-gray-600"
+        class="btn btn-default btn-sm px-3 py-1 border border-gray-300 dark:border-gray-600"
         {{on "click" this.handleClearFilters}}
         disabled={{this.isLoading}}
       >

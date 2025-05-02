@@ -1,3 +1,10 @@
+{{#if this.isLoading}}
+<div class="flex justify-center items-center my-4">
+    <FaIcon @icon="spinner" @spin={{true}} @size="2x" class="text-sky-500" />
+    <span class="ml-2 text-gray-700 dark:text-gray-300">{{this.loaderMessage}}</span>
+  </div>
+{{/if}}
+{{#unless this.isLoading}}
 <div>
     <LinkTo @route="console" class="flex items-center justify-center">
         <LogoIcon @brand={{@brand}} @size="12" class="" />
@@ -90,7 +97,7 @@
             @isLoading={{this.isLoading}}
             @onClick={{this.login}}
         />
-        {{!-- <Button @text={{t "auth.login.form.create-account-button"}} @icon="briefcase" @wrapperClass="btn-block" @disabled={{this.isLoading}} @onClick={{fn (transition-to "onboard")}} /> --}}
+        {{!-- <Button @text={{t "auth.login.form.create-account-button"}} @icon="briefcase" @wrapperClass="btn-block" @disabled={{this.isLoading}} @onClick={{fn (transition-to "onboard")}} />--}}
         <RegistryYield @type="menu" @registry="auth:login" as |menuItem|>
             <Button
                 @text={{menuItem.title}}
@@ -104,3 +111,4 @@
         </RegistryYield>
     </div>
 </form>
+{{/unless}}
