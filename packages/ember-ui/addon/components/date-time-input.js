@@ -12,44 +12,48 @@ export default class DateTimeInputComponent extends Component {
 
     constructor() {
         super(...arguments);
-
-        this.date = this.args.value instanceof Date ? format(this.args.value, this.dateFormat) : null;
-        this.time = this.args.value instanceof Date ? format(this.args.value, this.timeFormat) : null;
+        this.initializeFromValue();
     }
 
-    /**
-     * Update component value
-     *
-     * @param {*} prop
-     * @param {*} { target }
-     * @memberof DateTimeInputComponent
-     */
-    @action update(prop, { target }) {
-        const { onUpdate } = this.args;
-        let { dateTimeFormat, date, time } = this;
-        let { value } = target;
-        let dateTime, dateTimeInstance;
+    initializeFromValue() {
+        if (this.args.value instanceof Date && !isNaN(this.args.value.getTime())) {
+        this.date = format(this.args.value, this.dateFormat);
+        this.time = format(this.args.value, this.timeFormat);
+        } else {
+        this.date = null;
+        this.time = null;
+        }
+    }
 
-        if (prop === 'time') {
-            if (date) {
-                dateTimeInstance = parse(`${date} ${value}`, dateTimeFormat, new Date());
-            } else {
-                dateTimeInstance = parse(`${value}`, this.timeFormat, new Date());
-            }
+    @action
+    update(prop, { target }) {
+        const { value } = target;
+
+        this[prop] = value;
+
+        // If date is missing, it's invalid input
+        if (!this.date) {
+        this.args.onUpdate?.(null, null);
+        return;
         }
 
-        if (prop === 'date') {
-            if (time) {
-                dateTimeInstance = parse(`${value} ${time}`, dateTimeFormat, new Date());
-            } else {
-                dateTimeInstance = parse(`${value}`, this.dateFormat, new Date());
-            }
+        // Use "00:00" (12 AM) as default if time is not set
+        let timeToUse = this.time || '00:00';
+        let dateTimeString = `${this.date} ${timeToUse}`;
+        let dateTimeInstance = parse(dateTimeString, this.dateTimeFormat, new Date());
+
+        if (isNaN(dateTimeInstance.getTime())) {
+        this.args.onUpdate?.(null, null);
+        } else {
+        this.args.onUpdate?.(dateTimeInstance, format(dateTimeInstance, this.dateTimeFormat));
         }
+    }
 
-        dateTime = format(dateTimeInstance, dateTimeFormat);
-
-        if (typeof onUpdate === 'function') {
-            onUpdate(dateTimeInstance, dateTime);
+    @action
+    didReceiveArguments() {
+        if (!(this.args.value instanceof Date) || isNaN(this.args.value.getTime())) {
+        this.date = null;
+        this.time = null;
         }
     }
 }
