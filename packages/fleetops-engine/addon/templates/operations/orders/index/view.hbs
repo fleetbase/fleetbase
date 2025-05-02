@@ -24,10 +24,13 @@
                         {{t "fleet-ops.operations.orders.index.view.order-actions"}}
                     </div>
                 </div>
+                {{#if (not-eq @model.status "completed")}}
                 <div class="next-dd-menu-seperator"></div>
+                {{/if}}
                 <div class="px-1">
                     {{#let (cannot "fleet-ops update order") as |unauthorized|}}
                         <div>
+                            {{#if (not-eq @model.status "completed")}}
                             <a href="javascript:;" class="next-dd-item" {{on "click" (dropdown-fn dd this.editOrder @model)}} disabled={{unauthorized}}>
                                 <div class="w-6">
                                     <FaIcon @icon="edit" />
@@ -38,6 +41,7 @@
                                 <Attach::Tooltip @class="clean" @animation="scale" @placement="right">
                                     <InputInfo @text={{t "common.unauthorized"}} />
                                 </Attach::Tooltip>
+                            {{/if}}
                             {{/if}}
                         </div>
                     {{/let}}
@@ -59,25 +63,27 @@
                         {{/let}} --}}
                         {{#let (cannot "fleet-ops assign-driver-for order") as |unauthorized|}}
                             <div>
-                                {{#if @model.driver_assigned_uuid}}
-                                    <a href="javascript:;" class="next-dd-item" {{on "click" (dropdown-fn dd this.unassignDriver @model)}} disabled={{unauthorized}}>
-                                        <div class="w-6">
-                                            <FaIcon @icon="user-xmark" />
-                                        </div>
-                                        <span>{{t "fleet-ops.operations.orders.index.view.unassign-driver"}}</span>
-                                    </a>
-                                {{else}}
-                                    <a href="javascript:;" class="next-dd-item" {{on "click" (dropdown-fn dd this.editOrder @model)}} disabled={{unauthorized}}>
-                                        <div class="w-6">
-                                            <FaIcon @icon="user-check" />
-                                        </div>
-                                        <span>{{t "fleet-ops.operations.orders.index.view.assign-driver"}}</span>
-                                    </a>
-                                {{/if}}
-                                {{#if unauthorized}}
-                                    <Attach::Tooltip @class="clean" @animation="scale" @placement="right">
-                                        <InputInfo @text={{t "common.unauthorized"}} />
-                                    </Attach::Tooltip>
+                                {{#if (not-eq @model.status "completed")}}
+                                    {{#if @model.driver_assigned_uuid}}
+                                        <a href="javascript:;" class="next-dd-item" {{on "click" (dropdown-fn dd this.unassignDriver @model)}} disabled={{unauthorized}}>
+                                            <div class="w-6">
+                                                <FaIcon @icon="user-xmark" />
+                                            </div>
+                                            <span>{{t "fleet-ops.operations.orders.index.view.unassign-driver"}}</span>
+                                        </a>
+                                    {{else}}
+                                        <a href="javascript:;" class="next-dd-item" {{on "click" (dropdown-fn dd this.editOrder @model)}} disabled={{unauthorized}}>
+                                            <div class="w-6">
+                                                <FaIcon @icon="user-check" />
+                                            </div>
+                                            <span>{{t "fleet-ops.operations.orders.index.view.assign-driver"}}</span>
+                                        </a>
+                                    {{/if}}
+                                    {{#if unauthorized}}
+                                        <Attach::Tooltip @class="clean" @animation="scale" @placement="right">
+                                            <InputInfo @text={{t "common.unauthorized"}} />
+                                        </Attach::Tooltip>
+                                    {{/if}}
                                 {{/if}}
                             </div>
                         {{/let}}
@@ -192,7 +198,7 @@
             {{/if}}
         </ContentPanel>
 
-        <ContentPanel @title={{t "fleet-ops.common.details"}} @open={{true}} @pad={{true}} @panelBodyClass="bg-white dark:bg-gray-800" @actionButtons={{this.detailPanelButtons}}>
+        <ContentPanel @title={{t "fleet-ops.common.details"}} @open={{true}} @pad={{true}} @panelBodyClass="bg-white dark:bg-gray-800" @actionButtons={{if (not-eq @model.status "completed") this.detailPanelButtons}}>
             <div class="flex mb-4 space-x-2">
                 {{#if @model.dispatched}}
                     <Badge @hideStatusDot={{false}} @status="Dispatched" />
@@ -547,7 +553,7 @@
             @open={{true}}
             @pad={{true}}
             @panelBodyClass="bg-white dark:bg-gray-800"
-            @actionButtons={{this.routePanelButtons}}
+            @actionButtons={{if (not-eq @model.status "completed") this.routePanelButtons}}
         >
             {{#if @model.payload.isMultiDrop}}
                 <div>

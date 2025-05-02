@@ -97,8 +97,19 @@ export default class EditOrderRoutePanelComponent extends Component {
      */
     @task *save() {
         const { payload } = this.order;
-       
+        const WAYPOINTS_ERROR = this.intl.t('common.valid-waypoints-error');
         if (payload.isMultiDrop && payload.waypoints && payload.waypoints.length > 0) {
+            // Check for empty waypoints
+            const hasEmptyWaypoint = payload.waypoints.some(waypoint => 
+                !waypoint.public_id || // Check if waypoint has a public_id
+                !waypoint.latitude ||  // Or check directly for coordinates if that's how they're stored
+                !waypoint.longitude ||
+                waypoint.hasInvalidCoordinates
+            );
+            if (hasEmptyWaypoint) {
+                this.notifications.error(WAYPOINTS_ERROR);
+                return;
+            }
             let hasConsecutiveDuplicates = false;
             
             // Check for consecutive duplicate waypoints
@@ -119,8 +130,14 @@ export default class EditOrderRoutePanelComponent extends Component {
                 this.notifications.error(this.intl.t('common.duplicate-waypoint-error'));
                 return;
             }
+           
         }
-        
+        else{
+            if(!payload.pickup || !payload.dropoff){
+                this.notifications.error(this.intl.t('common.pickup-dropoff-error'));
+                return;
+            }
+        }
         try {
             this.order = yield this.fetch.patch(
                 `orders/route/${this.order.id}`,
