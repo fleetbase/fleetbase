@@ -68,6 +68,7 @@ export default class OperationsSchedulerIndexRoute extends Route {
 
     @action 
     willTransition(transition) {
+       
         const shouldReset = typeof transition.to.name === 'string' && !transition.to.name.includes('operations.orders');
 
         if (this.controller && shouldReset && typeof this.controller.resetView === 'function') {
@@ -82,9 +83,12 @@ export default class OperationsSchedulerIndexRoute extends Route {
         } else {
             set(this.queryParams, 'page.refreshModel', true);
         }
+      
+        
     }
 
     beforeModel() {
+        this.controllerFor('application').set('page', 1);
         if (this.abilities.cannot('fleet-ops list order')) {
             this.notifications.warning(this.intl.t('common.unauthorized-access'));
             return this.hostRouter.transitionTo('console.fleet-ops');
@@ -389,7 +393,8 @@ export default class OperationsSchedulerIndexRoute extends Route {
 
     resetController(controller, isExiting) {
         if (isExiting) {
-            controller.page = 1;
+            // controller.page = 1;
+            controller.set('page', 1);
             // Clear filter values when navigating away
             controller.set('order_id_filter', '');
             controller.set('driver_filter', '');
@@ -398,9 +403,15 @@ export default class OperationsSchedulerIndexRoute extends Route {
             // Also clear selected values
             controller.set('selectedDriver', null);
             controller.set('selectedStatus', null);
+            // Also reset query params in the URL if possible
+            try {
+                this.hostRouter.transitionTo({ queryParams: { page: 1 } });
+            } catch (e) {
+                // Ignore errors - this is just a safety measure
+            }
         }
     }
-
+    
     refreshRoute() {
         // Clear caches
         this._cache = {
