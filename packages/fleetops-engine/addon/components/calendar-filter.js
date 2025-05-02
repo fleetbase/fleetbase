@@ -32,24 +32,49 @@ export default class CalendarFilterComponent extends Component {
    */
   @action
   handleDriverChange(driver) {
-    if (this.args.isLoading === undefined) {
-      this.isLoading = true;
-    }
-    if (this.args.onDriverChange) {
-      // If there's a specific handler for driver changes, use it
-      this.args.onDriverChange(driver);
-    } else {
-      if (driver) {
-        // Set the driver filter to the name or id based on your parent component's expectations
-        this.args.driver_filter = driver.name || driver.id;
-        this.args.selectedDriver = driver;
-      } else {
-        this.args.driver_filter = '';
-        this.args.selectedDriver = null;
-      }
-    }
+    // Force set the loading state to true
+    this.isLoading = true;
     
-    this.triggerFilterApply();
+    // Add a small delay to ensure the loading state is applied
+    // This helps with the browser's render cycle
+    setTimeout(() => {
+      if (this.args.onDriverChange) {
+        try {
+          // Call the parent's handler
+          const result = this.args.onDriverChange(driver);
+          
+          // Handle both promise and non-promise returns
+          if (result && typeof result.then === 'function') {
+            // It's a promise
+            result.finally(() => {
+              this.isLoading = false;
+            });
+          } else {
+            // Not a promise, manually set loading to false after a delay
+            setTimeout(() => {
+              this.isLoading = false;
+            }, 500);
+          }
+        } catch (error) {
+          console.error('Error in handleDriverChange:', error);
+          this.isLoading = false;
+        }
+      } else {
+        // Handle the change locally
+        if (driver) {
+          this.args.driver_filter = driver.id || '';
+          this.args.selectedDriver = driver;
+        } else {
+          this.args.driver_filter = '';
+          this.args.selectedDriver = null;
+        }
+        
+        // Apply filters with a delay to ensure the loading spinner appears
+        setTimeout(() => {
+          this.triggerFilterApply();
+        }, 100);
+      }
+    }, 0);
   }
 
   /**
@@ -58,24 +83,48 @@ export default class CalendarFilterComponent extends Component {
    */
   @action
   handleStatusChange(status) {
-    if (this.args.isLoading === undefined) {
-      this.isLoading = true;
-    }
-    if (this.args.onStatusChange) {
-      // If there's a specific handler for status changes, use it
-      this.args.onStatusChange(status);
-    } else {
-      if (status) {
-        this.args.status_filter = status.id || status.name;
-        this.args.selectedStatus = status;
-      } else {
-        this.args.status_filter = '';
-        this.args.selectedStatus = null;
-      }
-    }
+    // Force set the loading state to true
+    this.isLoading = true;
     
-    // Apply filters after changing the status
-    this.triggerFilterApply();
+    // Add a small delay to ensure the loading state is applied
+    setTimeout(() => {
+      if (this.args.onStatusChange) {
+        try {
+          // Call the parent's handler
+          const result = this.args.onStatusChange(status);
+          
+          // Handle both promise and non-promise returns
+          if (result && typeof result.then === 'function') {
+            // It's a promise
+            result.finally(() => {
+              this.isLoading = false;
+            });
+          } else {
+            // Not a promise, manually set loading to false after a delay
+            setTimeout(() => {
+              this.isLoading = false;
+            }, 500);
+          }
+        } catch (error) {
+          console.error('Error in handleStatusChange:', error);
+          this.isLoading = false;
+        }
+      } else {
+        // Handle the change locally
+        if (status) {
+          this.args.status_filter = status.id || status.name;
+          this.args.selectedStatus = status;
+        } else {
+          this.args.status_filter = '';
+          this.args.selectedStatus = null;
+        }
+        
+        // Apply filters with a delay to ensure the loading spinner appears
+        setTimeout(() => {
+          this.triggerFilterApply();
+        }, 100);
+      }
+    }, 0);
   }
 
   /**
@@ -95,28 +144,66 @@ export default class CalendarFilterComponent extends Component {
   handleOrderIdBlur() {
     // Only update if the value has changed and we have a callback
     if (this.args.order_id_filter !== this.tempOrderId && typeof this.args.onOrderIdChange === 'function') {
-      if (this.args.isLoading === undefined) {
-        this.isLoading = true;
-      }
-      this.args.onOrderIdChange(this.tempOrderId);
-      this.triggerFilterApply();
+      // Force set the loading state to true
+      this.isLoading = true;
+      
+      // Add a small delay to ensure the loading state is applied
+      setTimeout(() => {
+        try {
+          // Call the parent's handler
+          const result = this.args.onOrderIdChange(this.tempOrderId);
+          
+          // Handle both promise and non-promise returns
+          if (result && typeof result.then === 'function') {
+            // It's a promise
+            result.finally(() => {
+              this.isLoading = false;
+            });
+          } else {
+            // Not a promise, manually set loading to false after a delay
+            setTimeout(() => {
+              this.isLoading = false;
+            }, 500);
+          }
+        } catch (error) {
+          console.error('Error in handleOrderIdBlur:', error);
+          this.isLoading = false;
+        }
+      }, 0);
     }
   }
 
-  /**
-   * Action to handle order ID input key down event
-   * @param {KeyboardEvent} event - The keyboard event
-   */
   @action
   handleOrderIdKeyDown(event) {
     // Apply the filter when the user presses Enter
     if (event.key === 'Enter' && typeof this.args.onOrderIdChange === 'function') {
-      if (this.args.isLoading === undefined) {
-        this.isLoading = true;
-      }
+      // Force set the loading state to true
+      this.isLoading = true;
       event.preventDefault();
-      this.args.onOrderIdChange(this.tempOrderId);
-      this.triggerFilterApply();
+      
+      // Add a small delay to ensure the loading state is applied
+      setTimeout(() => {
+        try {
+          // Call the parent's handler
+          const result = this.args.onOrderIdChange(this.tempOrderId);
+          
+          // Handle both promise and non-promise returns
+          if (result && typeof result.then === 'function') {
+            // It's a promise
+            result.finally(() => {
+              this.isLoading = false;
+            });
+          } else {
+            // Not a promise, manually set loading to false after a delay
+            setTimeout(() => {
+              this.isLoading = false;
+            }, 500);
+          }
+        } catch (error) {
+          console.error('Error in handleOrderIdKeyDown:', error);
+          this.isLoading = false;
+        }
+      }, 0);
     }
   }
 
