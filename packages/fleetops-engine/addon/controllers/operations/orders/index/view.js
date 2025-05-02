@@ -475,6 +475,40 @@ export default class OperationsOrdersIndexViewController extends BaseController 
             order.set('scheduled_at', originalOrderData.scheduled_at);
             order.set('estimated_end_date', originalOrderData.estimated_end_date);
         };
+        const resetOrderToOriginalDates = () => {
+            order.set('scheduled_at', originalOrderData.scheduled_at);
+            order.set('estimated_end_date', originalOrderData.estimated_end_date);
+        };
+        const validateOrderDates = () => {
+            const startDate = order.scheduled_at;
+            const endDate = order.estimated_end_date;
+    
+            if (!startDate && !endDate) {
+                this.notifications.error(this.intl.t('fleet-ops.component.order.schedule-card.start-end-required'));
+                resetOrderToOriginalDates();
+                return false;
+            }
+    
+            if (!startDate) {
+                this.notifications.error(this.intl.t('fleet-ops.component.order.schedule-card.start-date-required'));
+                resetOrderToOriginalDates();
+                return false;
+            }
+    
+            if (!endDate) {
+                this.notifications.error(this.intl.t('fleet-ops.component.order.schedule-card.end-date-required'));
+                resetOrderToOriginalDates();
+                return false;
+            }
+    
+            if (endDate < startDate) {
+                this.notifications.error(this.intl.t('fleet-ops.component.order.schedule-card.end-date-earlier'));
+                resetOrderToOriginalDates();
+                return false;
+            }
+    
+            return true;
+        };    
     
         this.modalsManager.show('modals/order-form', {
             title: this.intl.t('fleet-ops.operations.orders.index.view.edit-order-title'),
@@ -533,21 +567,23 @@ export default class OperationsOrdersIndexViewController extends BaseController 
             scheduleOrder: (dateInstance) => {
                 order.scheduled_at = dateInstance;
                 fieldsChanged = true;
+                validateOrderDates();
             },
             
             EndDateOrder: (dateInstance) => {
-                if (dateInstance < order.scheduled_at) {
-                    this.notifications.error("End Date cannot be earlier than the start date.");
-                    return;
-                }
                 order.estimated_end_date = dateInstance;
                 fieldsChanged = true;
+                validateOrderDates();
             },
         
             driversQuery: {},
             order,
             confirm: async (modal) => {
                 modal.startLoading();
+                if (!validateOrderDates()) {
+                    modal.stopLoading();
+                    return;
+                }
     
                 // Define the saveOrder function first so it can be used anywhere
                 const saveOrder = async () => {

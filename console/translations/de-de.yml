@@ -1511,6 +1511,10 @@ fleet-ops:
         date-created: Erstellungsdatum
         cannot-edit-completed: Kann abgeschlossene Bestellungen nicht bearbeiten
         cannot-modify-complete-order: Kann keine abgeschlossene Bestellung ändern.
+        start-end-required: Startdatum und Enddatum sind erforderlich.
+        start-date-required: Startdatum ist erforderlich.
+        end-date-required: Enddatum ist erforderlich.
+        end-date-earlier: Das Enddatum darf nicht vor dem Startdatum liegen.
     widget:
       fleet-ops-quickstart:
         message: Sehen wir uns an, was Sie tun können, um den Betrieb zu starten...
