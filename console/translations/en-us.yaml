@@ -142,7 +142,7 @@ common:
     complete-order: Driver completes the order
   duplicate-waypoint-error: Duplicate waypoint detected. Please use unique locations for each waypoint.
   valid-waypoints-error: Please add waypoints
-  pickup-dropoff-error: Both pickup and dropoff locations are required to create an order.
+  pickup-dropoff-error: Please provide both pickup and dropoff locations.
 validation:
   required:
     payment_method: Payment method is required
