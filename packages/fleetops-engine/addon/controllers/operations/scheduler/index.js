@@ -69,38 +69,38 @@ export default class OperationsSchedulerIndexController extends BaseController {
     }
     // Add or update this method in your controller to properly initialize from query params
     @action
-initializeFromQueryParams() {
-  // Get parameters directly from URL (more reliable than router)
-  try {
-    const urlParams = new URLSearchParams(window.location.search);
-    const driverFilterParam = urlParams.get('driver_filter');
-    const statusFilterParam = urlParams.get('status_filter');
-    
-    // Set the filter values if they exist
-    if (driverFilterParam) {
-      this.driver_filter = driverFilterParam;
-      // Flag that we need to sync the dropdown
-      this._needDriverSync = true;
+    initializeFromQueryParams() {
+    // Get parameters directly from URL (more reliable than router)
+    try {
+        const urlParams = new URLSearchParams(window.location.search);
+        const driverFilterParam = urlParams.get('driver_filter');
+        const statusFilterParam = urlParams.get('status_filter');
+        
+        // Set the filter values if they exist
+        if (driverFilterParam) {
+        this.driver_filter = driverFilterParam;
+        // Flag that we need to sync the dropdown
+        this._needDriverSync = true;
+        }
+        
+        if (statusFilterParam) {
+        this.status_filter = statusFilterParam;
+        // Flag that we need to sync the dropdown
+        this._needStatusSync = true;
+        }
+        
+        // If any filters are active, flag that we need to apply them
+        if (urlParams.get('order_id_filter') || driverFilterParam || statusFilterParam) {
+        this._needInitialFiltering = true;
+        }
+        
+        // Schedule syncing of dropdowns with filter values
+        this._scheduleDropdownSync();
+    } catch (error) {
+        console.error('Error initializing from query params:', error);
     }
-    
-    if (statusFilterParam) {
-      this.status_filter = statusFilterParam;
-      // Flag that we need to sync the dropdown
-      this._needStatusSync = true;
     }
-    
-    // If any filters are active, flag that we need to apply them
-    if (urlParams.get('order_id_filter') || driverFilterParam || statusFilterParam) {
-      this._needInitialFiltering = true;
-    }
-    
-    // Schedule syncing of dropdowns with filter values
-    this._scheduleDropdownSync();
-  } catch (error) {
-    console.error('Error initializing from query params:', error);
-  }
-}
-_scheduleDropdownSync() {
+    _scheduleDropdownSync() {
     // Wait for dependencies to load
     Promise.all([
       this.availableDriversLoaded,
@@ -137,6 +137,7 @@ _scheduleDropdownSync() {
       }
     });
   }
+  
     @action
 _applyInitialFilters() {
     // Check if we have any active filters
@@ -335,47 +336,37 @@ _applyInitialFilters() {
         // });
     }
     @action
-    onDriverChange(driver) {
-         // Show loading indicator
+    onDriverChange(driver) { 
+        
+        // Show loading indicator
         this.isLoading = true;
         this.selectedDriver = driver;
         this.driver_filter = driver ? driver.id : '';
-         // Add loading class to Apply Filter button if it exists
-       
-        setTimeout(() => {
-            // Apply the filter to both lists
-            this.filterScheduledAndUnscheduledOrders();
-            
-            // Update the calendar
-            this._updateCalendarAsync().finally(() => {
-              // Clear loading state
-              this.isLoading = false;
-             
-             
-            });
-            // Update URL params
-            this.hostRouter.transitionTo({ 
-                queryParams: { 
-                page: this.page,
-                driver_filter: this.driver_filter,
-                status_filter: this.status_filter,
-                order_id_filter: this.order_id_filter
-                } 
-            });
-        }, 0);
-        // Update calendar with filtered records
-        // requestAnimationFrame(() => {
-        //     // this._updateCalendarAsync().finally(() => {
+        
+        // Return a promise that resolves when all operations are complete
+        return new Promise((resolve) => {
+            setTimeout(() => {
+                // Apply the filter to both lists
+                this.filterScheduledAndUnscheduledOrders();
                 
-        //     //     this.isLoading = false;
-        //     // });
-        //     Promise.all([
-        //         this._updateCalendarAsync(),
-        //         this.filterScheduledAndUnscheduledOrders() // Add this call
-        //     ]).finally(() => {
-        //         this.isLoading = false;
-        //     });
-        // });
+                // Update the calendar
+                this._updateCalendarAsync().finally(() => {
+                    // Clear loading state
+                    this.isLoading = false;
+                    resolve();
+                });
+                
+                // Update URL params
+                this.hostRouter.transitionTo({ 
+                    queryParams: { 
+                        page: this.page,
+                        driver_filter: this.driver_filter,
+                        status_filter: this.status_filter,
+                        order_id_filter: this.order_id_filter
+                    } 
+                });
+            }, 0);
+        });
     }
 
     // To initialize the selected driver based on driver_filter (add to constructor or init)
@@ -1454,7 +1445,6 @@ async _updateCalendarAsync() {
         this.page = Number(this.page) + 1;
         if (this.page <= this.totalPages) {
             this.transitionToPage(this.page);
-            // this.updatePagedListsWithFilters(this.page);
         }
     }
 
@@ -1463,7 +1453,6 @@ async _updateCalendarAsync() {
         this.page = Number(this.page) - 1;
         if (this.page >= 1) {
             this.transitionToPage(this.page);
-            // this.updatePagedListsWithFilters(this.page);
         }
     }
     
@@ -1514,80 +1503,80 @@ async _updateCalendarAsync() {
         this.isLoading = false;
     }
     
-    updatePagedLists(pageNumber) {
-        // Calculate pagination for UI from in-memory data
-        const startIndex = (pageNumber - 1) * this.itemsPerPage;
-        const endIndex = startIndex + this.itemsPerPage;
+    // updatePagedLists(pageNumber) {
+    //     // Calculate pagination for UI from in-memory data
+    //     const startIndex = (pageNumber - 1) * this.itemsPerPage;
+    //     const endIndex = startIndex + this.itemsPerPage;
         
-        // If we have enough data in memory, just re-slice it
-        const store = this.store;
-        const cachedOrders = store.peekAll('order').filter(order => order.status === 'created');
+    //     // If we have enough data in memory, just re-slice it
+    //     const store = this.store;
+    //     const cachedOrders = store.peekAll('order').filter(order => order.status === 'created');
         
-        if (cachedOrders.length >= endIndex) {
-            // We have enough data in memory
-            const pageOrders = cachedOrders.slice(startIndex, endIndex);
+    //     if (cachedOrders.length >= endIndex) {
+    //         // We have enough data in memory
+    //         const pageOrders = cachedOrders.slice(startIndex, endIndex);
             
-            // Update the UI lists
-            this.scheduledOrders = pageOrders.filter(order => !isNone(order.driver_assigned_uuid));
-            this.unscheduledOrders = pageOrders.filter(order => 
-                isNone(order.driver_assigned_uuid) && isNone(order.vehicle_assigned_uuid)
-            );
-        } else {
-            // We need to fetch this page
-            store.query('order', {
-                status: 'created',
-                with: ['payload', 'driverAssigned.vehicle'],
-                page: pageNumber,
-                limit: this.itemsPerPage,
-                sort: '-created_at'
-            }).then(orders => {
-                // Update only the UI lists, not the calendar
-                this.scheduledOrders = orders.filter(order => !isNone(order.driver_assigned_uuid));
-                this.unscheduledOrders = orders.filter(order => 
-                    isNone(order.driver_assigned_uuid) && isNone(order.vehicle_assigned_uuid)
-                );
-            });
-        }
+    //         // Update the UI lists
+    //         this.scheduledOrders = pageOrders.filter(order => !isNone(order.driver_assigned_uuid));
+    //         this.unscheduledOrders = pageOrders.filter(order => 
+    //             isNone(order.driver_assigned_uuid) && isNone(order.vehicle_assigned_uuid)
+    //         );
+    //     } else {
+    //         // We need to fetch this page
+    //         store.query('order', {
+    //             status: 'created',
+    //             with: ['payload', 'driverAssigned.vehicle'],
+    //             page: pageNumber,
+    //             limit: this.itemsPerPage,
+    //             sort: '-created_at'
+    //         }).then(orders => {
+    //             // Update only the UI lists, not the calendar
+    //             this.scheduledOrders = orders.filter(order => !isNone(order.driver_assigned_uuid));
+    //             this.unscheduledOrders = orders.filter(order => 
+    //                 isNone(order.driver_assigned_uuid) && isNone(order.vehicle_assigned_uuid)
+    //             );
+    //         });
+    //     }
         
         
-    }
+    // }
     // Helper method to apply all active filters to a collection of orders
-applyFiltersToOrders(orders) {
-    const hasOrderIdFilter = this.order_id_filter && this.order_id_filter.trim() !== '';
-    const hasDriverFilter = this.driver_filter && this.driver_filter.trim() !== '';
-    const hasStatusFilter = this.status_filter && this.status_filter.trim() !== '';
+// applyFiltersToOrders(orders) {
+//     const hasOrderIdFilter = this.order_id_filter && this.order_id_filter.trim() !== '';
+//     const hasDriverFilter = this.driver_filter && this.driver_filter.trim() !== '';
+//     const hasStatusFilter = this.status_filter && this.status_filter.trim() !== '';
     
-    return orders.filter(order => {
-        // Filter by order ID if specified
-        if (hasOrderIdFilter) {
-            const orderId = order.id || '';
-            const publicId = order.public_id || '';
+//     return orders.filter(order => {
+//         // Filter by order ID if specified
+//         if (hasOrderIdFilter) {
+//             const orderId = order.id || '';
+//             const publicId = order.public_id || '';
             
-            if (!(orderId.toLowerCase().includes(this.order_id_filter.toLowerCase()) || 
-                  publicId.toLowerCase().includes(this.order_id_filter.toLowerCase()))) {
-                return false;
-            }
-        }
+//             if (!(orderId.toLowerCase().includes(this.order_id_filter.toLowerCase()) || 
+//                   publicId.toLowerCase().includes(this.order_id_filter.toLowerCase()))) {
+//                 return false;
+//             }
+//         }
         
-        // Filter by driver if specified
-        if (hasDriverFilter) {
-            const driverId = order.driver_assigned_uuid || '';
-            if (driverId !== this.driver_filter) {
-                return false;
-            }
-        }
+//         // Filter by driver if specified
+//         if (hasDriverFilter) {
+//             const driverId = order.driver_assigned_uuid || '';
+//             if (driverId !== this.driver_filter) {
+//                 return false;
+//             }
+//         }
         
-        // Filter by status if specified
-        if (hasStatusFilter) {
-            const status = order.status || '';
-            if (status !== this.status_filter) {
-                return false;
-            }
-        }
+//         // Filter by status if specified
+//         if (hasStatusFilter) {
+//             const status = order.status || '';
+//             if (status !== this.status_filter) {
+//                 return false;
+//             }
+//         }
         
-        // If we get here, the order passes all filters
-        return true;
-    });
-}
+//         // If we get here, the order passes all filters
+//         return true;
+//     });
+// }
 }
 
