@@ -86,7 +86,7 @@ export default class AuthLoginController extends Controller {
      * @memberof AuthLoginController
      */
     @action async login(event) {
-        this.loaderMessage = this.intl.t('common.starting');
+        this.loaderMessage = this.intl.t('fleet-ops.common.loading');
         // firefox patch
         event.preventDefault();
         // get user credentials
