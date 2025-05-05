@@ -14,7 +14,7 @@
                         </span>
                     {{/unless}}
                     {{#if @isLoading}}
-                        <Spinner @iconClass="text-sky-500 fa-spin-800ms" class="flex mr-2i" />
+                        <Spinner @iconClass="text-black fa-spin-800ms" class="flex mr-2i" />
                     {{/if}}
                     {{#if @titleIcon}}
                         <span class="icon-container {{@titleIconWrapperClass}}" {{did-insert this.trackIconContainer}}>
@@ -164,7 +164,7 @@
                         {{#if @isLoading}}
                             <div class="absolute w-full h-full inset-0 bg-opacity-50 bg-gray-900 flex items-center justify-center">
                                 <div class="flex flex-row items-center">
-                                    <Spinner @iconClass="text-sky-500 fa-spin-800ms" class="flex mr-2i" />
+                                    <Spinner @iconClass="text-black fa-spin-800ms" class="flex mr-2i" />
                                     <span>Loading...</span>
                                 </div>
                             </div>
