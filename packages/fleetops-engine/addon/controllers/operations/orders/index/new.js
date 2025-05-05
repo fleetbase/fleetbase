@@ -16,6 +16,7 @@ import isNotEmpty from '@fleetbase/ember-core/utils/is-not-empty';
 import getRoutingHost from '@fleetbase/ember-core/utils/get-routing-host';
 import getWithDefault from '@fleetbase/ember-core/utils/get-with-default';
 import isModel from '@fleetbase/ember-core/utils/is-model';
+import ENV from '@fleetbase/console/config/environment';
 
 L.Bounds.prototype.intersects = function (bounds) {
     var min = this.min,
@@ -458,6 +459,9 @@ export default class OperationsOrdersIndexNewController extends BaseController {
     }
 
     @action importOrder() {
+        let path = `${ENV.AWS.FILE_PATH}/order-imports/${this.currentUser.companyId}`;
+        let disk = ENV.AWS.DISK;
+        let bucket = ENV.AWS.BUCKET;
         const checkQueue = () => {
             const uploadQueue = this.modalsManager.getOption('uploadQueue');
 
@@ -506,7 +510,10 @@ export default class OperationsOrdersIndexNewController extends BaseController {
                         this.fetch.uploadFile.perform(
                             file,
                             {
-                                path: `uploads/fleet-ops/order-imports/${this.currentUser.companyId}`,
+                                path: path,
+                                disk: disk,
+                                bucket: bucket,
+                                path: path,
                                 type: `order_import`,
                             },
                             (uploadedFile) => {
