@@ -88,7 +88,7 @@ export default class OperationsSchedulerIndexRoute extends Route {
     }
 
     beforeModel() {
-        this.controllerFor('application').set('page', 1);
+        // this.controllerFor('application').set('page', 1);
         if (this.abilities.cannot('fleet-ops list order')) {
             this.notifications.warning(this.intl.t('common.unauthorized-access'));
             return this.hostRouter.transitionTo('console.fleet-ops');
@@ -404,11 +404,11 @@ export default class OperationsSchedulerIndexRoute extends Route {
             controller.set('selectedDriver', null);
             controller.set('selectedStatus', null);
             // Also reset query params in the URL if possible
-            try {
-                this.hostRouter.transitionTo({ queryParams: { page: 1 } });
-            } catch (e) {
-                // Ignore errors - this is just a safety measure
-            }
+            // try {
+            //     this.hostRouter.transitionTo({ queryParams: { page: 1 } });
+            // } catch (e) {
+            //     // Ignore errors - this is just a safety measure
+            // }
         }
     }
     
