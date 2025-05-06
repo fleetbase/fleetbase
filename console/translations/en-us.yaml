@@ -146,7 +146,7 @@ common:
 validation:
   required:
     payment_method: Payment method is required
-  form_invalid: "Please Fill the fields."
+  form_invalid: "Please fill the required fields."
 statuses: 
     draft: Draft
     pending-approval: Pending Approval
