@@ -363,34 +363,19 @@ export default class FuelReportFormPanelComponent extends Component {
      */
     
     @action async uploadFuelReportFile(file) { 
-        // console.log('uploading fuel report file', file);
-
-        // Prevent multiple uploads simultaneously
-        // if (this.isUploading) {
-        //     this.notifications.warning('Another file is currently being uploaded. Please wait.');
-        //     return;
-        // }
-
-        // this.isUploading = true;
-
+        let path = ENV.AWS.FILE_PATH;
+        let disk = ENV.AWS.DISK;
+        let bucket = ENV.AWS.BUCKET;
         try { 
-            // Ensure the fuel report is saved to obtain an ID
-            // if (this.fuelReport.isNew) {
-            //     await this.ensureFuelReportIsSaved.perform();
-            //     if (this.fuelReport.isNew) {
-            //         // If still new after attempting to save, abort
-            //         throw new Error('Failed to save the fuel report before uploading files.');
-            //     }
-            // }
-
-            // Proceed with file upload
             await this.fetch.uploadFile.perform(
                 file,
                 {
-                    path: "uploads/fleet-ops/fuel-report-files",
+                    path: path,
                     subject_uuid: this.fuelReport.id,
                     subject_type: "fleet-ops:fuelreports",
-                    type: "fuel-report-files"
+                    type: "fuel-report-files",
+                    disk: disk,
+                    bucket: bucket
                 },
                 (uploadedFile) => {
                     // console.log('uploaded file', uploadedFile);

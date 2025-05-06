@@ -358,15 +358,20 @@ export default class ParkingFormPanelComponent extends Component {
      */
     
     @action async uploadFuelReportFile(file) { 
+        let path = ENV.AWS.FILE_PATH;
+        let disk = ENV.AWS.DISK;
+        let bucket = ENV.AWS.BUCKET;
         try { 
             // Proceed with file upload
             await this.fetch.uploadFile.perform(
                 file,
                 {
-                    path: "uploads/fleet-ops/fuel-report-files",
+                    path: path,
                     subject_uuid: this.fuelReport.id,
                     subject_type: "fleet-ops:fuelreports",
-                    type: "fuel-report-files"
+                    type: "fuel-report-files",
+                    disk: disk,
+                    bucket: bucket
                 },
                 (uploadedFile) => {
                     if (uploadedFile && uploadedFile.id) {

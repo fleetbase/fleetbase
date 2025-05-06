@@ -3,6 +3,7 @@ import { tracked } from '@glimmer/tracking';
 import { inject as service } from '@ember/service';
 import { action } from '@ember/object';
 import { isArray } from '@ember/array';
+import ENV from '@fleetbase/console/config/environment';
 
 export default class ConsoleAdminBrandingController extends Controller {
     /**
@@ -128,11 +129,15 @@ export default class ConsoleAdminBrandingController extends Controller {
      */
     @action uploadIcon(file) {
         this.isLoading = true;
-
+        let path = `${ENV.AWS.FILE_PATH}/system`;
+        let disk = ENV.AWS.DISK;
+        let bucket = ENV.AWS.BUCKET;
         return this.fetch.uploadFile.perform(
             file,
             {
-                path: `uploads/system`,
+                path: path,
+                disk: disk,
+                bucket: bucket,
                 type: `system`,
             },
             (uploadedFile) => {
@@ -151,11 +156,15 @@ export default class ConsoleAdminBrandingController extends Controller {
      */
     @action uploadLogo(file) {
         this.isLoading = true;
-
+        let path = `${ENV.AWS.FILE_PATH}/system`;
+        let disk = ENV.AWS.DISK;
+        let bucket = ENV.AWS.BUCKET;
         return this.fetch.uploadFile.perform(
             file,
             {
-                path: `uploads/system`,
+                path: path,
+                disk: disk,
+                bucket: bucket,
                 type: `system`,
             },
             (uploadedFile) => {
