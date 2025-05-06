@@ -103,7 +103,7 @@ export default class TollReportFormPanelComponent extends Component {
         'image/svg',
         'image/jpg',
     ];
-
+    @tracked lastErrorMessage = null;
     constructor(owner, { fuelReport = null }) {
         super(...arguments);
         this.fuelReport = fuelReport;
@@ -112,19 +112,36 @@ export default class TollReportFormPanelComponent extends Component {
         this.savePermission = fuelReport && fuelReport.isNew ? 'fleet-ops create fuel-report' : 'fleet-ops update fuel-report';
         applyContextComponentArguments(this);
     }
-    @action
-        validateFields() {
-        let isValid = true;
-
-        // Validate Payment Method
-        if (!this.fuelReport.payment_method) {
-            this.errors.payment_method = this.intl.t('validation.required.payment_method');
-            isValid = false;
-        } else {
-            this.errors.payment_method = null;
+    showErrorOnce(message) {
+        if (message !== this.lastErrorMessage) {
+            this.notifications.error(message);
+            this.lastErrorMessage = message;
+            setTimeout(() => {
+                if (this.lastErrorMessage === message) {
+                    this.lastErrorMessage = null;
+                }
+            }, 4000);
         }
+    }
+    requiredFields = [
+        // { key: 'reported_by_uuid', labelKey: 'fleet-ops.common.reporter' },
+        // { key: 'driver_uuid', labelKey: 'fleet-ops.common.driver' },
+        // { key: 'vehicle_uuid', labelKey: 'fleet-ops.common.vehicle' },
+        // { key: 'amount', labelKey: 'fleet-ops.common.cost' },
+        // { key: 'volume', labelKey: 'fleet-ops.common.volume' },
+        { key: 'payment_method', labelKey: 'fleet-ops.common.payment_method' }
+    ];
 
-    return isValid;
+    validateFields() {
+        for (let field of this.requiredFields) {
+            if (!this.fuelReport[field.key]) {
+                const label = this.intl.t(field.labelKey);
+                const message = (this.intl.t('validation.form_invalid'));
+                this.showErrorOnce(message);
+                return false;
+            }
+        }
+        return true;
     }
     /**
      * Sets the overlay context.
@@ -235,9 +252,7 @@ export default class TollReportFormPanelComponent extends Component {
    
     @task *save() {
         // Perform validation
-        const isValid = this.validateFields();
-        if (!isValid) {
-            this.notifications.warning(this.intl.t('validation.form_invalid')); // Notify the user
+        if (!this.validateFields()) {
             return;
         }
     
