@@ -5,6 +5,7 @@ import { isArray } from '@ember/array';
 import { tracked } from '@glimmer/tracking';
 import { task } from 'ember-concurrency';
 import { pluralize } from 'ember-inflector';
+import ENV from '@fleetbase/console/config/environment';
 
 export default class AdminAvatarManagementComponent extends Component {
     /**
@@ -125,16 +126,20 @@ export default class AdminAvatarManagementComponent extends Component {
         if (['queued', 'failed', 'timed_out', 'aborted'].indexOf(file.state) === -1) {
             return;
         }
-
+      
         // Get the current category
         const category = this.currentCategory;
-
+        let path = `${ENV.AWS.FILE_PATH}/custom-avatars/${pluralize(category.type)}/${this.currentUser.companyId}`;
+        let disk = ENV.AWS.DISK;
+        let bucket = ENV.AWS.BUCKET;
         // Queue and upload immediatley
         this.uploadQueue.pushObject(file);
         this.fetch.uploadFile.perform(
             file,
             {
-                path: `custom-avatars/${pluralize(category.type)}/${this.currentUser.companyId}`,
+                path: path,
+                disk: disk,
+                bucket: bucket,
                 type: `${category.type}-avatar`,
             },
             (uploadedFile) => {
