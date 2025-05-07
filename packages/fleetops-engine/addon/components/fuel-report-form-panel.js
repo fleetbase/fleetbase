@@ -201,6 +201,9 @@ export default class FuelReportFormPanelComponent extends Component {
      * @memberof FuelReportFormPanelComponent
      */
     @task *queueFile(file) { 
+        let path = ENV.AWS.FILE_PATH;
+        let disk = ENV.AWS.DISK;
+        let bucket = ENV.AWS.BUCKET;
         // since we have dropzone and upload button within dropzone validate the file state first
         // as this method can be called twice from both functions
         if (['queued', 'failed', 'timed_out', 'aborted'].indexOf(file.state) === -1) {
@@ -224,7 +227,9 @@ export default class FuelReportFormPanelComponent extends Component {
         yield this.fetch.uploadFile.perform(
             queuedFile.file,
             {
-                path: "uploads/fleet-ops/fuel-report-files",
+                path: path,
+                disk: disk,
+                bucket: bucket,
                 type: 'fuel-report-files',
             },
             (uploadedFile) => {
@@ -487,6 +492,9 @@ export default class FuelReportFormPanelComponent extends Component {
      */
     @task
     *uploadFile(file) {
+        let path = ENV.AWS.FILE_PATH;
+        let disk = ENV.AWS.DISK;
+        let bucket = ENV.AWS.BUCKET;
         try {
         // Generate a preview for the image
         const preview = yield this.generatePreview(file);
@@ -495,7 +503,9 @@ export default class FuelReportFormPanelComponent extends Component {
         const uploadedFilePath = yield this.fetch.uploadFile.perform(
             file,
             {
-            path: "uploads/fleet-ops/fuel-report-files",
+            path: path,
+            disk: disk,
+            bucket: bucket,
             type: 'fuel-report-files',
             },
             (uploadedFile) => {
