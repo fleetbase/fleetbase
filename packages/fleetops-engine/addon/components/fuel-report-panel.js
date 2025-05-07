@@ -77,7 +77,7 @@ export default class FuelReportPanelComponent extends Component {
     get tabs() {
         const registeredTabs = this.universe.getMenuItemsFromRegistry('fleet-ops:component:fuel-report-panel');
         // this.universe._createMenuItem('Tracking', null, { icon: 'satellite-dish', component: VehiclePanelTrackingComponent }),
-        const defaultTabs = [this.universe._createMenuItem(this.intl.t('fleet-ops.common.details'), null, { icon: 'circle-info', component: FuelReportPanelDetailsComponent })];
+        const defaultTabs = [this.universe._createMenuItem(this.intl.t('fleet-ops.common.details'), null, {id: 'details', icon: 'circle-info', component: FuelReportPanelDetailsComponent })];
 
         if (isArray(registeredTabs)) {
             return [...defaultTabs, ...registeredTabs];

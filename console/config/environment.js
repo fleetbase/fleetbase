@@ -6,6 +6,12 @@ const asArray = require('./utils/as-array');
 const { version } = require('../package');
 
 module.exports = function (environment) {
+    let awsFilePath = 'fleetyes/dev';
+    // Change the FILE_PATH if environment is production
+    if (environment === 'production') {
+        awsFilePath = 'fleetyes/live';
+    }
+    
     const ENV = {
         modulePrefix: '@fleetbase/console',
         version,
@@ -59,7 +65,12 @@ module.exports = function (environment) {
             placeAvatar: getenv('DEFAULT_PLACE_AVATAR', 'https://flb-assets.s3-ap-southeast-1.amazonaws.com/static/place-icons/basic-building.png'),
             extensionIcon: getenv('DEFAULT_EXTENSION_ICON', 'https://flb-assets.s3.ap-southeast-1.amazonaws.com/static/default-extension-icon.svg'),
         },
-
+        AWS: {
+            FILE_PATH: awsFilePath,
+            DISK: 's3',
+            BUCKET: 'acsdevbucket'
+          },
+        
         'ember-simple-auth': {
             routeAfterAuthentication: 'console',
         },

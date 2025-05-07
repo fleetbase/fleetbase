@@ -83,6 +83,7 @@ export default class DriverPanelComponent extends Component {
         // this.universe._createMenuItem('Tracking', null, { icon: 'satellite-dish', component: DriverPanelTrackingComponent }),
         const defaultTabs = [
             this.universe._createMenuItem(this.intl.t('fleet-ops.common.details'), null, {
+                id: 'details',
                 icon: 'circle-info',
                 component: DriverPanelDetailComponent,
             }),

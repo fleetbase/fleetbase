@@ -103,7 +103,7 @@ export default class TollReportFormPanelComponent extends Component {
         'image/svg',
         'image/jpg',
     ];
-
+    @tracked lastErrorMessage = null;
     constructor(owner, { fuelReport = null }) {
         super(...arguments);
         this.fuelReport = fuelReport;
@@ -112,19 +112,36 @@ export default class TollReportFormPanelComponent extends Component {
         this.savePermission = fuelReport && fuelReport.isNew ? 'fleet-ops create fuel-report' : 'fleet-ops update fuel-report';
         applyContextComponentArguments(this);
     }
-    @action
-        validateFields() {
-        let isValid = true;
-
-        // Validate Payment Method
-        if (!this.fuelReport.payment_method) {
-            this.errors.payment_method = this.intl.t('validation.required.payment_method');
-            isValid = false;
-        } else {
-            this.errors.payment_method = null;
+    showErrorOnce(message) {
+        if (message !== this.lastErrorMessage) {
+            this.notifications.error(message);
+            this.lastErrorMessage = message;
+            setTimeout(() => {
+                if (this.lastErrorMessage === message) {
+                    this.lastErrorMessage = null;
+                }
+            }, 4000);
         }
+    }
+    requiredFields = [
+        // { key: 'reported_by_uuid', labelKey: 'fleet-ops.common.reporter' },
+        // { key: 'driver_uuid', labelKey: 'fleet-ops.common.driver' },
+        // { key: 'vehicle_uuid', labelKey: 'fleet-ops.common.vehicle' },
+        // { key: 'amount', labelKey: 'fleet-ops.common.cost' },
+        // { key: 'volume', labelKey: 'fleet-ops.common.volume' },
+        { key: 'payment_method', labelKey: 'fleet-ops.common.payment_method' }
+    ];
 
-    return isValid;
+    validateFields() {
+        for (let field of this.requiredFields) {
+            if (!this.fuelReport[field.key]) {
+                const label = this.intl.t(field.labelKey);
+                const message = (this.intl.t('validation.form_invalid'));
+                this.showErrorOnce(message);
+                return false;
+            }
+        }
+        return true;
     }
     /**
      * Sets the overlay context.
@@ -186,6 +203,9 @@ export default class TollReportFormPanelComponent extends Component {
      * @memberof FuelReportFormPanelComponent
      */
     @task *queueFile(file) { 
+        let path = ENV.AWS.FILE_PATH;
+        let disk = ENV.AWS.DISK;
+        let bucket = ENV.AWS.BUCKET;
         // since we have dropzone and upload button within dropzone validate the file state first
         // as this method can be called twice from both functions
         if (['queued', 'failed', 'timed_out', 'aborted'].indexOf(file.state) === -1) {
@@ -209,7 +229,9 @@ export default class TollReportFormPanelComponent extends Component {
         yield this.fetch.uploadFile.perform(
             queuedFile.file,
             {
-                path: "uploads/fleet-ops/fuel-report-files",
+                path: path,
+                disk: disk,
+                bucket: bucket,
                 type: 'fuel-report-files',
             },
             (uploadedFile) => {
@@ -235,9 +257,7 @@ export default class TollReportFormPanelComponent extends Component {
    
     @task *save() {
         // Perform validation
-        const isValid = this.validateFields();
-        if (!isValid) {
-            this.notifications.warning(this.intl.t('validation.form_invalid')); // Notify the user
+        if (!this.validateFields()) {
             return;
         }
     
@@ -264,9 +284,12 @@ export default class TollReportFormPanelComponent extends Component {
                     // Assuming file.path is the path obtained after moving the file
                     name: file.uploadedFile.original_filename || file.uploadedFile.name || 'Unnamed file',
                     path: file.uploadedFile.path, // Path to the uploaded file
+                    disk: file.uploadedFile.disk,
                     subject_uuid: this.fuelReport.id, // Associate with fuelReport ID
                     subject_type: 'fleet-ops:fuelreports', // Ensure this matches backend expectations
                     type: "fuel-report-files",
+                    file_size: file.uploadedFile.size,
+                    content_type: file.uploadedFile.content_type,
                     original_filename: file.uploadedFile.original_filename || file.uploadedFile.name || 'Unnamed file'
                 }));
     
@@ -359,14 +382,19 @@ export default class TollReportFormPanelComponent extends Component {
     
     @action async uploadFuelReportFile(file) { 
         try { 
+            let path = ENV.AWS.FILE_PATH;
+            let disk = ENV.AWS.DISK;
+            let bucket = ENV.AWS.BUCKET;
             // Proceed with file upload
             await this.fetch.uploadFile.perform(
                 file,
                 {
-                    path: "uploads/fleet-ops/fuel-report-files",
+                    path: path,
                     subject_uuid: this.fuelReport.id,
                     subject_type: "fleet-ops:fuelreports",
-                    type: "fuel-report-files"
+                    type: "fuel-report-files",
+                    disk: disk,
+                    bucket: bucket
                 },
                 (uploadedFile) => {
                     if (uploadedFile && uploadedFile.id) {
@@ -461,6 +489,9 @@ export default class TollReportFormPanelComponent extends Component {
      */
     @task
     *uploadFile(file) {
+        let path = ENV.AWS.FILE_PATH;
+        let disk = ENV.AWS.DISK;
+        let bucket = ENV.AWS.BUCKET;
         try {
         // Generate a preview for the image
         const preview = yield this.generatePreview(file);
@@ -469,8 +500,10 @@ export default class TollReportFormPanelComponent extends Component {
         const uploadedFilePath = yield this.fetch.uploadFile.perform(
             file,
             {
-            path: "uploads/fleet-ops/fuel-report-files",
-            type: 'fuel-report-files',
+                path: path,
+                disk: disk,
+                bucket: bucket,
+                type: 'fuel-report-files',
             },
             (uploadedFile) => {
             // console.log("Uploaded File:", uploadedFile);

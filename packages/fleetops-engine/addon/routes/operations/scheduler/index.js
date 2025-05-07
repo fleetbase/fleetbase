@@ -14,6 +14,7 @@ export default class OperationsSchedulerIndexRoute extends Route {
     @service hostRouter;
     @service abilities;
     @service intl;
+   
     
     // Cache configuration
     CACHE_CONFIG = {
@@ -87,8 +88,10 @@ export default class OperationsSchedulerIndexRoute extends Route {
         
     }
 
+
     beforeModel() {
-        this.controllerFor('application').set('page', 1);
+
+        // this.controllerFor('application').set('page', 1);
         if (this.abilities.cannot('fleet-ops list order')) {
             this.notifications.warning(this.intl.t('common.unauthorized-access'));
             return this.hostRouter.transitionTo('console.fleet-ops');

@@ -16,6 +16,7 @@ import isNotEmpty from '@fleetbase/ember-core/utils/is-not-empty';
 import getRoutingHost from '@fleetbase/ember-core/utils/get-routing-host';
 import getWithDefault from '@fleetbase/ember-core/utils/get-with-default';
 import isModel from '@fleetbase/ember-core/utils/is-model';
+import ENV from '@fleetbase/console/config/environment';
 
 L.Bounds.prototype.intersects = function (bounds) {
     var min = this.min,
@@ -162,6 +163,7 @@ export default class OperationsOrdersIndexNewController extends BaseController {
     @tracked isUsingIntegratedVendor = false;
     @tracked integratedVendorServiceType;
     @tracked invalidReason;
+    @tracked lastErrorMessage = null;
     @tracked metadataButtons = [
         {
             type: 'default',
@@ -316,7 +318,17 @@ export default class OperationsOrdersIndexNewController extends BaseController {
             return customFieldValue && !isBlank(customFieldValue.value);
         });
     }
-
+    showErrorOnce(message) {
+        if (message !== this.lastErrorMessage) {
+            this.notifications.error(message);
+            this.lastErrorMessage = message;
+            setTimeout(() => {
+                if (this.lastErrorMessage === message) {
+                    this.lastErrorMessage = null;
+                }
+            }, 4000);
+        }
+    }
     @action createOrder() {
         const WAYPOINTS_ERROR = this.intl.t('common.valid-waypoints-error');
         if (!this.order.scheduled_at || !this.order.estimated_end_date) {
@@ -325,18 +337,18 @@ export default class OperationsOrdersIndexNewController extends BaseController {
             if (!this.order.estimated_end_date) missingFields.push("End Date");
         
             this.errorMessage = `${missingFields.join(" and ")} ${missingFields.length > 1 ? "are" : "is"} required.`;
-            this.notifications.error(this.errorMessage);
+            this.showErrorOnce(this.errorMessage);
             return;
         }
         if (new Date(this.order.estimated_end_date) < new Date(this.order.scheduled_at)) {
             this.errorMessage = "End Date cannot be earlier than the start date.";
-            this.notifications.error(this.errorMessage);
+            this.showErrorOnce(this.errorMessage);
             return;
         }
         if (this.isMultipleDropoffOrder) {
             // Check if we have at least 2 waypoints
             if (!this.waypoints || this.waypoints.length < 2) {
-                this.notifications.error(WAYPOINTS_ERROR);
+                this.showErrorOnce(WAYPOINTS_ERROR);
                 return;
             }
              // Validate that all non-empty waypoints are valid
@@ -348,7 +360,7 @@ export default class OperationsOrdersIndexNewController extends BaseController {
             );
             
             if (hasInvalidWaypoint) {
-                this.notifications.error(WAYPOINTS_ERROR);
+                this.showErrorOnce(WAYPOINTS_ERROR);
                 return;
             }
             // Check for consecutive duplicate waypoints
@@ -370,7 +382,7 @@ export default class OperationsOrdersIndexNewController extends BaseController {
             }
             //Show error if duplicates present
             if (hasConsecutiveDuplicates) {
-                this.notifications.error(this.intl.t('common.duplicate-waypoint-error'));
+                this.showErrorOnce(this.intl.t('common.duplicate-waypoint-error'));
                 return;
             }
 
@@ -458,6 +470,9 @@ export default class OperationsOrdersIndexNewController extends BaseController {
     }
 
     @action importOrder() {
+        let path = `${ENV.AWS.FILE_PATH}/order-imports/${this.currentUser.companyId}`;
+        let disk = ENV.AWS.DISK;
+        let bucket = ENV.AWS.BUCKET;
         const checkQueue = () => {
             const uploadQueue = this.modalsManager.getOption('uploadQueue');
 
@@ -506,7 +521,10 @@ export default class OperationsOrdersIndexNewController extends BaseController {
                         this.fetch.uploadFile.perform(
                             file,
                             {
-                                path: `uploads/fleet-ops/order-imports/${this.currentUser.companyId}`,
+                                path: path,
+                                disk: disk,
+                                bucket: bucket,
+                                path: path,
                                 type: `order_import`,
                             },
                             (uploadedFile) => {
@@ -1038,7 +1056,7 @@ export default class OperationsOrdersIndexNewController extends BaseController {
                 });
             }
         } else {
-            this.notifications.warning(this.intl.t('fleet-ops.operations.orders.index.new.no-route-warning'));
+            this.showErrorOnce(this.intl.t('fleet-ops.operations.orders.index.new.no-route-warning'));
         }
     }
 
@@ -1066,7 +1084,7 @@ export default class OperationsOrdersIndexNewController extends BaseController {
         const routingHost = getRoutingHost(this.payload, this.waypoints);
 
         const response = await this.fetch.routing(coordinates, { source: 'any', destination: 'any', annotations: true }, { host: routingHost }).catch(() => {
-            this.notifications.error(this.intl.t('fleet-ops.operations.orders.index.new.route-error'));
+            this.showErrorOnce(this.intl.t('fleet-ops.operations.orders.index.new.route-error'));
             this.isOptimizingRoute = false;
         });
 
@@ -1122,7 +1140,7 @@ export default class OperationsOrdersIndexNewController extends BaseController {
                 maxZoom: 13,
             });
         } else {
-            this.notifications.error(this.intl.t('fleet-ops.operations.orders.index.new.route-error'));
+            this.showErrorOnce(this.intl.t('fleet-ops.operations.orders.index.new.route-error'));
             this.isOptimizingRoute = false;
         }
     }

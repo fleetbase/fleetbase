@@ -2112,12 +2112,17 @@ a.text-danger:hover {
 .fleetbase-loader {
     width: 16px;
     height: 16px;
-    border: 3px solid rgba(37, 99, 235, 0.75);
-    border-bottom-color: rgb(96, 165, 250);
+    border: 3px solid rgba(0, 0, 0, 0.75);
+    border-bottom-color: black;
     border-radius: 50%;
     display: inline-block;
     box-sizing: border-box;
     animation: rotation 1s linear infinite;
+}
+
+body[data-theme='dark'] .fleetbase-loader {
+    border: 3px solid rgba(255, 255, 255, 0.75);
+    border-bottom-color: white;
 }
 
 .overloader > .loader-container {

@@ -37,7 +37,7 @@ export default class ManagementIssuesIndexController extends BaseController {
         'updated_by',
         'status',
         'priority',
-        'cateogry',
+        'category',
         'type',
     ];
 

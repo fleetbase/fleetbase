@@ -291,7 +291,8 @@ export default class ManagementVehiclesIndexController extends BaseController {
             sortable: true,
             filterable: true,
             filterComponent: 'filter/multi-option',
-            filterFetchOptions: 'vehicles/statuses',
+            // filterFetchOptions: 'vehicles/statuses',
+            filterOptions: ['pending', 'active'],
         },
         {
             label: this.intl.t('fleet-ops.common.created-at'),
@@ -359,7 +360,7 @@ export default class ManagementVehiclesIndexController extends BaseController {
             searchable: false,
         },
     ];
-
+    
     /**
      * Reload layout view.
      */

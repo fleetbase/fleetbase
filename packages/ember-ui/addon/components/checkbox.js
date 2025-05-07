@@ -34,7 +34,7 @@ export default class CheckboxComponent extends Component {
      *
      * @param {String} colorClass
      */
-    @tracked colorClass = 'text-sky-500';
+    @tracked colorClass = 'text-black';
 
     /**
      * The permission required.

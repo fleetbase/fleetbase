@@ -3,6 +3,7 @@ import { inject as service } from '@ember/service';
 import { action } from '@ember/object';
 import { alias } from '@ember/object/computed';
 import { task } from 'ember-concurrency';
+import ENV from '@fleetbase/console/config/environment';
 
 export default class ConsoleAccountIndexController extends Controller {
     /**
@@ -48,10 +49,15 @@ export default class ConsoleAccountIndexController extends Controller {
      * @memberof ConsoleAccountIndexController
      */
     @action uploadNewPhoto(file) {
+        let path = `${ENV.AWS.FILE_PATH}/${this.user.company_uuid}/users/${this.user.slug}`;
+        let disk = ENV.AWS.DISK;
+        let bucket = ENV.AWS.BUCKET;
         return this.fetch.uploadFile.perform(
             file,
             {
-                path: `uploads/${this.user.company_uuid}/users/${this.user.slug}`,
+                path: path,
+                disk: disk,
+                bucket: bucket,
                 subject_uuid: this.user.id,
                 subject_type: 'user',
                 type: 'user_avatar',

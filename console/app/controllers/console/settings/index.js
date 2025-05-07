@@ -2,6 +2,7 @@ import Controller from '@ember/controller';
 import { tracked } from '@glimmer/tracking';
 import { inject as service } from '@ember/service';
 import { action } from '@ember/object';
+import ENV from '@fleetbase/console/config/environment';
 
 export default class ConsoleSettingsIndexController extends Controller {
     /**
@@ -74,11 +75,16 @@ export default class ConsoleSettingsIndexController extends Controller {
      * @memberof ConsoleSettingsIndexController
      */
     @action uploadFile(type, file) {
+        let path = `${ENV.AWS.FILE_PATH}/companies/${this.currentUser.companyId}/${type}`;
+        let disk = ENV.AWS.DISK;
+        let bucket = ENV.AWS.BUCKET;
         return this.fetch.uploadFile.perform(
             file,
             {
-                path: `uploads/companies/${this.currentUser.companyId}/${type}`,
+                path: path,
                 key_uuid: this.currentUser.companyId,
+                disk:disk,
+                bucket:bucket,
                 key_type: `company`,
                 type,
             },
