@@ -40,7 +40,7 @@ export default class PlacePanelComponent extends Component {
      */
     get tabs() {
         const registeredTabs = this.universe.getMenuItemsFromRegistry('fleet-ops:component:place-panel');
-        const defaultTabs = [this.universe._createMenuItem(this.intl.t('fleet-ops.common.details'), null, { icon: 'circle-info', component: PlacePanelDetailComponent })];
+        const defaultTabs = [this.universe._createMenuItem(this.intl.t('fleet-ops.common.details'), null, {id: 'details', icon: 'circle-info', component: PlacePanelDetailComponent })];
 
         if (isArray(registeredTabs)) {
             return [...defaultTabs, ...registeredTabs];
