@@ -51,7 +51,29 @@ export default class ManagementParkingIndexNewController extends BaseController 
      *
      * @var {FuelReportModel}
      */
-    @tracked fuelReport = this.store.createRecord('fuelReport');
+    get fuelReport() {
+        if (!this._fuelReport) {
+            this._fuelReport = this.store.createRecord('fuelReport');
+        }
+        return this._fuelReport;
+    }
+    
+    /**
+     * Track the fuel report privately
+     *
+     * @private
+     */
+    @tracked _fuelReport;
+
+    /**
+     * Initialize a new fuel report when the controller is created
+     *
+     * @method init
+     */
+    init() {
+        super.init(...arguments);
+        this.resetForm();
+    }
 
     /**
      * Set the overlay component context object.
@@ -70,6 +92,7 @@ export default class ManagementParkingIndexNewController extends BaseController 
      * @memberof ManagementFuelReportsIndexNewController
      */
     @action transitionBack() {
+        this.resetForm();
         return this.hostRouter.transitionTo('console.fleet-ops.management.parking.index');
     }
 
@@ -84,7 +107,8 @@ export default class ManagementParkingIndexNewController extends BaseController 
         if (this.overlay) {
             this.overlay.close();
         }
-
+        // Reset the form immediately after save
+        this.resetForm();
         this.hostRouter.refresh();
         return this.hostRouter.transitionTo('console.fleet-ops.management.parking.index.details', fuelReport.public_id).then(() => {
             this.resetForm();
@@ -96,7 +120,13 @@ export default class ManagementParkingIndexNewController extends BaseController 
      *
      * @memberof ManagementFuelReportsIndexNewController
      */
-    resetForm() {
-        this.fuelReport = this.store.createRecord('fuelReport');
+    @action resetForm() {
+        // Unload any existing fuel report
+        if (this._fuelReport && this._fuelReport.isNew) {
+            this._fuelReport.unloadRecord();
+        }
+        
+        // Create a fresh record
+        this._fuelReport = this.store.createRecord('fuelReport');
     }
 }
