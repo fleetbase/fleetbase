@@ -72,6 +72,11 @@ export default class PlaceFormPanelComponent extends Component {
     @task *save() {
         contextComponentCallback(this, 'onBeforeSave', this.place);
 
+        const phone = this.place.phone;
+        if (typeof phone === 'string' && /^\+\d{1,4}$/.test(phone.trim())) {
+            this.place.phone = '';
+        }
+
         try {
             this.place = yield this.place.save();
         } catch (error) {
