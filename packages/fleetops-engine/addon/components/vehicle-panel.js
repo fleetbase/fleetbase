@@ -89,6 +89,7 @@ export default class VehiclePanelComponent extends Component {
               this.intl.t('fleet-ops.common.details'), // using a translation key
               null,
               {
+                id: 'details',
                 icon: 'circle-info',
                 component: VehiclePanelDetailComponent
               }

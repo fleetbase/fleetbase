@@ -44,15 +44,18 @@ export default class FleetPanelComponent extends Component {
         const registeredTabs = this.universe.getMenuItemsFromRegistry('fleet-ops:component:fleet-panel');
         const defaultTabs = [
             this.universe._createMenuItem(this.intl.t('fleet-ops.common.details'), null, {
+                id: 'details',
                 icon: 'circle-info',
                 component: FleetPanelDetailComponent,
             }),
             this.universe._createMenuItem(this.intl.t('fleet-ops.component.layout.fleet-ops-sidebar.vehicles'), null, {
+                id: 'vehicles',
                 icon: 'car',
                 component: FleetPanelVehicleListingComponent,
                 componentParams: { wrapperClass: 'px-4 pt-6', selectable: true },
             }),
             this.universe._createMenuItem(this.intl.t('fleet-ops.component.layout.fleet-ops-sidebar.drivers'), null, {
+                id: 'drivers',
                 icon: 'id-card',
                 component: FleetPanelDriverListingComponent,
                 componentParams: { wrapperClass: 'px-4 pt-6', selectable: true },
