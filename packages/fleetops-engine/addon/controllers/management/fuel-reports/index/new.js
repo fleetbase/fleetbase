@@ -51,7 +51,29 @@ export default class ManagementFuelReportsIndexNewController extends BaseControl
      *
      * @var {FuelReportModel}
      */
-    @tracked fuelReport = this.store.createRecord('fuelReport');
+    get fuelReport() {
+        if (!this._fuelReport) {
+            this._fuelReport = this.store.createRecord('fuelReport');
+        }
+        return this._fuelReport;
+    }
+
+    /**
+     * Track the fuel report privately
+     *
+     * @private
+     */
+    @tracked _fuelReport;
+
+    /**
+     * Initialize a new fuel report when the controller is created
+     *
+     * @method init
+     */
+    init() {
+        super.init(...arguments);
+        this.resetForm();
+    }
 
     /**
      * Set the overlay component context object.
@@ -70,6 +92,8 @@ export default class ManagementFuelReportsIndexNewController extends BaseControl
      * @memberof ManagementFuelReportsIndexNewController
      */
     @action transitionBack() {
+        // Reset the form before transitioning
+        this.resetForm();
         return this.hostRouter.transitionTo('console.fleet-ops.management.fuel-reports.index');
     }
 
@@ -85,10 +109,11 @@ export default class ManagementFuelReportsIndexNewController extends BaseControl
             this.overlay.close();
         }
 
+        // Reset the form immediately after save
+        this.resetForm();
+        
         this.hostRouter.refresh();
-        return this.hostRouter.transitionTo('console.fleet-ops.management.fuel-reports.index.details', fuelReport.public_id).then(() => {
-            this.resetForm();
-        });
+        return this.hostRouter.transitionTo('console.fleet-ops.management.fuel-reports.index.details', fuelReport.public_id);
     }
 
     /**
@@ -96,7 +121,13 @@ export default class ManagementFuelReportsIndexNewController extends BaseControl
      *
      * @memberof ManagementFuelReportsIndexNewController
      */
-    resetForm() {
-        this.fuelReport = this.store.createRecord('fuelReport');
+    @action resetForm() {
+        // Unload any existing fuel report
+        if (this._fuelReport && this._fuelReport.isNew) {
+            this._fuelReport.unloadRecord();
+        }
+        
+        // Create a fresh record
+        this._fuelReport = this.store.createRecord('fuelReport');
     }
 }
