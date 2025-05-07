@@ -284,9 +284,12 @@ export default class TollReportFormPanelComponent extends Component {
                     // Assuming file.path is the path obtained after moving the file
                     name: file.uploadedFile.original_filename || file.uploadedFile.name || 'Unnamed file',
                     path: file.uploadedFile.path, // Path to the uploaded file
+                    disk: file.uploadedFile.disk,
                     subject_uuid: this.fuelReport.id, // Associate with fuelReport ID
                     subject_type: 'fleet-ops:fuelreports', // Ensure this matches backend expectations
                     type: "fuel-report-files",
+                    file_size: file.uploadedFile.size,
+                    content_type: file.uploadedFile.content_type,
                     original_filename: file.uploadedFile.original_filename || file.uploadedFile.name || 'Unnamed file'
                 }));
     
