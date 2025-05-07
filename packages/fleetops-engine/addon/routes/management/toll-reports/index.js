@@ -25,9 +25,11 @@ export default class ManagementTollReportsIndexRoute extends Route {
      @action willTransition(transition) {
         const shouldReset = typeof transition.to.name === 'string' && !transition.to.name.includes('operations.orders');
     
-        if (this.controller && shouldReset) {
+       // Check if controller exists and has resetView function before calling it
+       if (this.controller && shouldReset && typeof this.controller.resetView === 'function') {
             this.controller.resetView(transition);
         }
+
     
         // Check if this is a pagination transition (URL only changes in query params, not path)
         const isPaginationTransition = transition.to.name === transition.from.name && 
