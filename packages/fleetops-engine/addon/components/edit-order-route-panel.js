@@ -88,6 +88,17 @@ export default class EditOrderRoutePanelComponent extends Component {
         contextComponentCallback(this, 'onLoad', ...arguments);
     }
 
+    showErrorOnce(message) {
+        if (message !== this.lastErrorMessage) {
+            this.notifications.error(message);
+            this.lastErrorMessage = message;
+            setTimeout(() => {
+                if (this.lastErrorMessage === message) {
+                    this.lastErrorMessage = null;
+                }
+            }, 4000);
+        }
+    }
    
     /**
      * Task to save order route.
@@ -100,7 +111,7 @@ export default class EditOrderRoutePanelComponent extends Component {
         const WAYPOINTS_ERROR = this.intl.t('common.valid-waypoints-error');
         if (payload.isMultiDrop && payload.waypoints && payload.waypoints.length > 0) {
             if(payload.waypoints.length < 2){
-                this.notifications.error(this.intl.t('common.valid-waypoints-error'));
+                this.showErrorOnce(WAYPOINTS_ERROR);
                 return;
             }
             // Check for empty waypoints
@@ -111,7 +122,7 @@ export default class EditOrderRoutePanelComponent extends Component {
                 waypoint.hasInvalidCoordinates
             );
             if (hasEmptyWaypoint) {
-                this.notifications.error(WAYPOINTS_ERROR);
+                this.showErrorOnce(WAYPOINTS_ERROR);
                 return;
             }
             // Initialize the Set before using it
@@ -128,14 +139,14 @@ export default class EditOrderRoutePanelComponent extends Component {
                 }
             }
             if (hasDuplicates) {
-                this.notifications.error(this.intl.t('common.duplicate-waypoint-error'));
+                this.showErrorOnce(this.intl.t('common.duplicate-waypoint-error'));
                 return;
             }
            
         }
         else{
             if(!payload.pickup || !payload.dropoff){
-                this.notifications.error(this.intl.t('common.pickup-dropoff-error'));
+                this.showErrorOnce(this.intl.t('common.pickup-dropoff-error'));
                 return;
             }
         }
@@ -217,8 +228,6 @@ export default class EditOrderRoutePanelComponent extends Component {
     @action onPressCancel() {
         // First clean up empty waypoints before server reload
         if (this.order?.payload?.waypoints && this.order.payload.waypoints.length > 0) {
-            console.log('Cleaning up empty waypoints on cancel');
-            
             // Identify waypoints to remove
             const waypointsToRemove = [];
             
@@ -238,15 +247,12 @@ export default class EditOrderRoutePanelComponent extends Component {
             
             // Remove the empty waypoints
             if (waypointsToRemove.length > 0) {
-                console.log(`Removing ${waypointsToRemove.length} empty waypoints`);
-                
                 waypointsToRemove.forEach(waypoint => {
                     this.order.payload.waypoints.removeObject(waypoint);
                 });
                 
                 // If multi-drop mode is enabled but no waypoints remain, disable multi-drop
                 if (this.order.payload.isMultiDrop && this.order.payload.waypoints.length === 0) {
-                    console.log('No waypoints remain, disabling multi-drop mode');
                     this.order.payload.isMultiDrop = false;
                 }
             }
