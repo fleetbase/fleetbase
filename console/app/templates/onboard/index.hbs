@@ -1,9 +1,11 @@
 <div class="bg-white dark:bg-gray-800 py-5 px-4 shadow rounded-lg w-full">
     <div class="mb-4">
-        <Image src={{@model.logo_url}} @fallbackSrc="/images/fleetbase-logo-svg.svg" alt={{t "app.name"}} width="160" height="56" class="w-40 h-14 mx-auto" />
-        <h2 class="text-center text-lg font-extrabold text-gray-900 dark:text-white truncate">
-            {{t "onboard.index.title"}}
-        </h2>
+        <Image src={{@model.logo_url}} @fallbackSrc="/images/fleetbase-logo-svg.svg" alt={{t "app.name"}} height="56" class="h-10 object-contain mx-auto" />
+        <div class="mt-2">
+            <h2 class="text-center text-lg font-extrabold text-gray-900 dark:text-white truncate">
+                {{t "onboard.index.title"}}
+            </h2>
+        </div>
     </div>
 
     <div class="flex px-3 py-2 mb-4 rounded-md shadow-sm bg-blue-200">
