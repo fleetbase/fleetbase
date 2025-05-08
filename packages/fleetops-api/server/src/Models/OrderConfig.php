@@ -471,6 +471,6 @@ class OrderConfig extends Model
     public static function default(?Company $company = null): self
     {
         // return static::where(['namespace' => 'system:order-config:transport', 'company_uuid' => $company ? $company->uuid : session('company')])->first();
-        return static::where(['key' => 'order-create', 'company_uuid' => $company ? $company->uuid : session('company')])->whereNUll('deleted_at')->first();
+        return static::where(['key' => 'transport', 'company_uuid' => $company ? $company->uuid : session('company')])->whereNUll('deleted_at')->first();
     }
 }
