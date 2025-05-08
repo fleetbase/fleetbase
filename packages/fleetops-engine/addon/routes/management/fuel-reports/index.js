@@ -50,4 +50,9 @@ export default class ManagementFuelReportsIndexRoute extends Route {
             with: ['driver', 'vehicle', 'reporter'] 
         });
     }
+    resetController(controller, isExiting) {
+        if (isExiting) {
+            controller.set('page', 1);
+        }
+    }
 }

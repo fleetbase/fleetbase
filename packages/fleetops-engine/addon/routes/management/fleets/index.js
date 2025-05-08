@@ -49,4 +49,9 @@ export default class ManagementFleetsIndexRoute extends Route {
     model(params) {
         return this.store.query('fleet', { ...params, with: ['parent_fleet', 'service_area', 'zone'] });
     }
+    resetController(controller, isExiting) {
+        if (isExiting) {
+            controller.set('page', 1);
+        }
+    }
 }

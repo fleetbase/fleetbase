@@ -47,4 +47,9 @@ export default class ManagementIssuesIndexRoute extends Route {
     model(params) {
         return this.store.query('issue', { ...params, with: ['driver', 'vehicle', 'assignee', 'reporter'] });
     }
+    resetController(controller, isExiting) {
+        if (isExiting) {
+            controller.set('page', 1);
+        }
+    }
 }

@@ -48,4 +48,9 @@ export default class ManagementPlacesIndexRoute extends Route {
     model(params) {
         return this.store.query('place', { ...params });
     }
+    resetController(controller, isExiting) {
+        if (isExiting) {
+            controller.set('page', 1);
+        }
+    }
 }
