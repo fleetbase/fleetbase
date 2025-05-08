@@ -665,7 +665,6 @@ export default class OperationsOrdersIndexViewController extends BaseController 
                 }
     
                 // If driver is busy, show the busy confirmation
-                console.log("driverIsBusy", driverIsBusy);
                 if (driverToAssign && driverIsBusy) {
                     modal.done();
                     setTimeout(() => {

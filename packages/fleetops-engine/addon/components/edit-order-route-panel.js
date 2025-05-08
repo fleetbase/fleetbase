@@ -99,6 +99,10 @@ export default class EditOrderRoutePanelComponent extends Component {
         const { payload } = this.order;
         const WAYPOINTS_ERROR = this.intl.t('common.valid-waypoints-error');
         if (payload.isMultiDrop && payload.waypoints && payload.waypoints.length > 0) {
+            if(payload.waypoints.length < 2){
+                this.notifications.error(this.intl.t('common.valid-waypoints-error'));
+                return;
+            }
             // Check for empty waypoints
             const hasEmptyWaypoint = payload.waypoints.some(waypoint => 
                 !waypoint.public_id || // Check if waypoint has a public_id
@@ -110,23 +114,20 @@ export default class EditOrderRoutePanelComponent extends Component {
                 this.notifications.error(WAYPOINTS_ERROR);
                 return;
             }
-            let hasConsecutiveDuplicates = false;
-            
-            // Check for consecutive duplicate waypoints
-            for (let i = 1; i < payload.waypoints.length; i++) {
-                const currentWaypoint = payload.waypoints[i];
-                const previousWaypoint = payload.waypoints[i-1];
-                
-                // Check if current and previous have the same public_id
-                if (currentWaypoint.public_id && 
-                    previousWaypoint.public_id && 
-                    currentWaypoint.public_id === previousWaypoint.public_id) {
-                    hasConsecutiveDuplicates = true;
-                    break;
+            // Initialize the Set before using it
+            const waypointSet = new Set();
+            let hasDuplicates = false;
+            for (const waypoint of payload.waypoints) {
+                if (waypoint.public_id && waypoint.name) {
+                    const key = `${waypoint.public_id}-${waypoint.name}`;
+                    if (waypointSet.has(key)) {
+                        hasDuplicates = true;
+                        break;
+                    }
+                    waypointSet.add(key);
                 }
             }
-            
-            if (hasConsecutiveDuplicates) {
+            if (hasDuplicates) {
                 this.notifications.error(this.intl.t('common.duplicate-waypoint-error'));
                 return;
             }
@@ -159,23 +160,22 @@ export default class EditOrderRoutePanelComponent extends Component {
             
             // First identify which waypoints need to be removed
             waypoints.forEach(waypoint => {
-                if (!waypoint.id) {
+                if (!waypoint.id && !waypoint.place_uuid) {
                     waypointsToRemove.push(waypoint);
                 }
             });
-            console.log("waypointsToRemove",waypointsToRemove);
             // Then remove them from the array
             if (waypointsToRemove.length > 0) {
-                console.log("Removing", waypointsToRemove.length, "invalid waypoints");
                 waypointsToRemove.forEach(waypoint => {
                     waypoints.removeObject(waypoint);
                 });
             }
-            
+            // Now remove all duplicates (not just consecutive ones)
+            this.removeDuplicateWaypoints(waypoints);
+       
+        }
         this.notifications.success(this.intl.t('fleet-ops.operations.orders.index.view.update-success', { orderId: this.order.public_id }));
         contextComponentCallback(this, 'onAfterSave', this.order);
-        }
-        
         
         } catch (error) {
             this.notifications.serverError(error);
@@ -211,9 +211,72 @@ export default class EditOrderRoutePanelComponent extends Component {
      * @action
      * @returns {Boolean} Indicates whether the cancel action was overridden.
      */
+   /**
+ * Enhanced onPressCancel method that handles both server reload and empty waypoint removal
+ */
     @action onPressCancel() {
+        // First clean up empty waypoints before server reload
+        if (this.order?.payload?.waypoints && this.order.payload.waypoints.length > 0) {
+            console.log('Cleaning up empty waypoints on cancel');
+            
+            // Identify waypoints to remove
+            const waypointsToRemove = [];
+            
+            this.order.payload.waypoints.forEach(waypoint => {
+                // Check if waypoint is empty/invalid
+                const isEmpty = !waypoint.public_id || 
+                                !waypoint.place_uuid || 
+                                !waypoint.name ||
+                                !waypoint.latitude ||
+                                !waypoint.longitude ||
+                                waypoint.hasInvalidCoordinates;
+                                
+                if (isEmpty) {
+                    waypointsToRemove.push(waypoint);
+                }
+            });
+            
+            // Remove the empty waypoints
+            if (waypointsToRemove.length > 0) {
+                console.log(`Removing ${waypointsToRemove.length} empty waypoints`);
+                
+                waypointsToRemove.forEach(waypoint => {
+                    this.order.payload.waypoints.removeObject(waypoint);
+                });
+                
+                // If multi-drop mode is enabled but no waypoints remain, disable multi-drop
+                if (this.order.payload.isMultiDrop && this.order.payload.waypoints.length === 0) {
+                    console.log('No waypoints remain, disabling multi-drop mode');
+                    this.order.payload.isMultiDrop = false;
+                }
+            }
+        }
+
+        // Then reload the order from the server to discard any other changes
+        if (this.order && this.order.id) {
+            console.log(`Reloading order ${this.order.id} from server on cancel`);
+            
+            this.store.findRecord('order', this.order.id, { reload: true })
+                .then((freshOrder) => {
+                    console.log('Successfully reloaded order from server');
+                    this.order = freshOrder;
+                    
+                    // Notify about route change
+                    contextComponentCallback(this, 'onRouteChanged');
+                })
+                .catch((error) => {
+                    console.error('Error reloading order from server:', error);
+                    this.notifications.error(this.intl.t('fleet-ops.errors.unable-to-reload-order'));
+                });
+        } else {
+            // If no server reload, still notify about the route change
+            contextComponentCallback(this, 'onRouteChanged');
+        }
+        
+        // Call the original cancel callback
         return contextComponentCallback(this, 'onPressCancel', this.order);
     }
+
 
     @action async editPlace(place) {
         await this.modalsManager.done();
@@ -294,7 +357,6 @@ export default class EditOrderRoutePanelComponent extends Component {
 
     @action removeWaypoint(waypoint) {
         this.order.payload.waypoints.removeObject(waypoint);
-
         // fire callback
         contextComponentCallback(this, 'onWaypointRemoved', waypoint);
         contextComponentCallback(this, 'onRouteChanged');
@@ -408,4 +470,66 @@ export default class EditOrderRoutePanelComponent extends Component {
 
         contextComponentCallback(this, 'onRouteChanged');
     }
+
+    /**
+     * 
+     * @param {*} waypoints 
+     * @returns 
+     */
+    removeDuplicateWaypoints(waypoints) {
+        if (!waypoints || waypoints.length <= 1) {
+            return waypoints;
+        }
+        const uniqueMap = new Map();
+        const duplicatesToRemove = [];
+        
+        // First pass: identify duplicates
+        waypoints.forEach((waypoint, index) => {
+            // Create a unique key for each waypoint based on available data
+            let key;
+            
+            if (waypoint.name) {
+                // If there's a displayed name like "LEIPZIG - 04103, GERMANY", use that
+                key = waypoint.name;
+            } else if (waypoint.location && waypoint.location.address) {
+                // If there's a full address, use that
+                key = waypoint.location.address;
+            } else if (waypoint.place_uuid) {
+                // Use place_uuid if available
+                key = waypoint.place_uuid;
+            } else if (waypoint.id) {
+                // Use id if available
+                key = waypoint.id;
+            } else if (waypoint.latitude !== undefined && waypoint.longitude !== undefined) {
+                // If latitude and longitude are available, use those
+                key = `${waypoint.latitude},${waypoint.longitude}`;
+            } else if (waypoint.lat !== undefined && waypoint.lng !== undefined) {
+                // Alternative format for lat/lng
+                key = `${waypoint.lat},${waypoint.lng}`;
+            } else if (Array.isArray(waypoint) && waypoint.length >= 2) {
+                // For array format [lat, lng]
+                key = `${waypoint[0]},${waypoint[1]}`;
+            } else {
+                // Skip waypoints with no identifiable information
+                return;
+            }
+            if (uniqueMap.has(key)) {
+                // This is a duplicate, mark for removal
+                duplicatesToRemove.push(waypoint);
+            } else {
+                // First occurrence, add to map
+                uniqueMap.set(key, waypoint);
+            }
+        });
+        
+        // Second pass: remove duplicates
+        if (duplicatesToRemove.length > 0) {
+            duplicatesToRemove.forEach(waypoint => {
+                waypoints.removeObject(waypoint);
+            });
+        }
+        
+        return waypoints;
+    }
+    
 }
