@@ -125,5 +125,10 @@ export default class ManagementVehiclesIndexRoute extends Route {
               }
             }
           }
+          resetController(controller, isExiting) {
+            if (isExiting) {
+                controller.set('page', 1);
+            }
+        }
     
 }

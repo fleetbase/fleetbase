@@ -104,4 +104,9 @@ export default class OperationsOrdersIndexRoute extends Route {
             }
         }
     }
+    resetController(controller, isExiting) {
+        if (isExiting) {
+            controller.set('page', 1);
+        }
+    }
 }

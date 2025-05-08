@@ -53,4 +53,9 @@ export default class ManagementDriversIndexRoute extends Route {
     model(params) {
         return this.store.query('driver', { ...params });
     }
+    resetController(controller, isExiting) {
+        if (isExiting) {
+            controller.set('page', 1);
+        }
+    }
 }
