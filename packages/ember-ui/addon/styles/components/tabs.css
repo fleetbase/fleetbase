@@ -24,7 +24,8 @@
     line-height: 1.25rem;
     white-space: nowrap;
     z-index: 50;
-    @apply bg-white border border-gray-200 text-gray-500 px-3 py-2 truncate inline-block w-32 text-center rounded-t-lg;
+    @apply bg-white border border-gray-200 text-gray-500 px-3 py-2 truncate inline-block text-center rounded-t-lg;
+    width: 13rem;
 }
 
 .ui-tabs > ul .nav-item:first-child,
