@@ -298,6 +298,11 @@ export default class UsersIndexController extends Controller {
                     return this.notifications.warning(this.intl.t('common.permissions-required-for-changes'));
                 }
 
+                // Phone number validation
+                const phone = user.phone?.trim();
+                if (typeof phone === 'string' && /^\+\d{1,4}$/.test(phone)) {
+                    user.phone = '';
+                }
                 try {
                     await user.save();
                     this.notifications.success(this.intl.t('iam.users.index.user-changes-saved-success'));
@@ -349,6 +354,11 @@ export default class UsersIndexController extends Controller {
 
                 if (this.abilities.cannot(formPermission)) {
                     return this.notifications.warning(this.intl.t('common.permissions-required-for-changes'));
+                }
+                // Phone number validation
+                const phone = user.phone?.trim();
+                if (typeof phone === 'string' && /^\+\d{1,4}$/.test(phone)) {
+                    user.phone = '';
                 }
 
                 try {
