@@ -4,7 +4,7 @@ import { inject as service } from '@ember/service';
 export default class AuthLoginRoute extends Route {
     @service session;
     @service universe;
-
+    @service router; // Inject the router service
     /**
      * If user is authentication redirect to console.
      *
