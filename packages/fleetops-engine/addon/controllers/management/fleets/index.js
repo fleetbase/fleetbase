@@ -183,7 +183,7 @@ export default class ManagementFleetsIndexController extends BaseController {
             valuePath: 'zone.name',
             resizable: true,
             width: '130px',
-            filterable: true,
+            filterable: false,
             filterComponent: 'filter/model',
             filterComponentPlaceholder: 'Select zone',
             filterParam: 'zone',

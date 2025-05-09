@@ -84,7 +84,7 @@ common:
   longitude: Długość geograficzna
   upload-file: Prześlij plik
   upload: Prześlij
-  select-country: Wybierz kraj...
+  select-country: Kraj
   enter-unit: "Wprowadź {unit}"
   document: Dokument
   file-upload-success: "Plik został pomyślnie przesłany."
@@ -140,6 +140,7 @@ common:
     update-order: Status zamówienia zaktualizowany przez kierowcę.
     start-order: Zamówienie zostało rozpoczęte.
     complete-order: Kierowca zakończył zamówienie
+    reject-order: Zlecenie odrzucone przez kierowcę. Przydziel nowego kierowcę.
   duplicate-waypoint-error: Wykryto zduplikowany punkt trasy. Proszę użyć unikalnych lokalizacji dla każdego punktu.
   valid-waypoints-error: Proszę dodać punkty trasy
   pickup-dropoff-error: Proszę podać miejsce odbioru i miejsce dostawy.
@@ -279,7 +280,7 @@ statuses:
 
 
 
-
+  order_rejected: Odrzucono
   order_created: Utworzono
   order_dispatched: Wysłano
   order_accepted: Zaakceptowano
@@ -302,7 +303,7 @@ component:
     ready-upload: gotowy do przesłania.
     upload-spreadsheets: Prześlij arkusze kalkulacyjne
     drag-drop: Przeciągnij i upuść pliki arkuszy kalkulacyjnych na tę strefę
-    button-text: Wybierz plik do przesłania
+    button-text: Wybierz plik
     spreadsheets: arkusze kalkulacyjne
     upload-queue: Kolejka przesyłania
   dropzone:
@@ -855,14 +856,14 @@ fleet-ops:
     end_date_cannot_be_earlier_than_start_date: Data zakończenia nie może być wcześniejsza niż data rozpoczęcia.
     no_driver: Brak kierowcy
     no_phone: Brak telefonu
-    select-reporter: Wybierz zgłaszającego
-    select-driver: Wybierz kierowcę
-    select-vehicle: Wybierz pojazd
-    select-assignee: Wybierz osobę odpowiedzialną
+    select-reporter: Zgłaszający
+    select-driver: Kierowca
+    select-vehicle: Pojazd
+    select-assignee: Przypisany
     search-by-currency-code: Szukaj według kodu waluty
     view-profile: Zobacz profil
     dark-mode: Tryb ciemny
-    select-fleet: Wybierz flotę
+    select-fleet: Flota
     edit-fleet: Edytuj flotę
   component:
     activity-logic-builder:
@@ -1289,7 +1290,7 @@ fleet-ops:
         ready-upload: gotowe do przesłania.
         upload-spreadsheets: Prześlij arkusze kalkulacyjne
         drag-drop: Przeciągnij i upuść pliki arkuszy kalkulacyjnych na tę strefę
-        button-text: Wybierz plik do przesłania
+        button-text: Wybierz plik
         spreadsheets: arkusze kalkulacyjne
         upload-queue: Kolejka przesyłania     
         title: Importuj zamówienie(a) za pomocą arkuszy kalkulacyjnych
@@ -2181,10 +2182,10 @@ fleet-ops:
         delete-orders: Usuń zamówienia
         dispatch-orders: Wyślij zamówienia
         estimated-end-date: Szacowana data zakończenia
-        select-driver: Wybierz kierowcę do zamówienia
-        select-vehicle: Wybierz pojazd do zamówienia
-        select-pickup-location: Wybierz miejsce odbioru
-        select-dropoff-location: Wybierz miejsce dostawy
+        select-driver: Kierowca
+        select-vehicle: Pojazd
+        select-pickup-location: Miejsce odbioru
+        select-dropoff-location: Miejsce dostawy	
         new:
           create-new-customer: Utwórz nowego klienta
           create-new-facilitator: Utwórz nowego pośrednika
