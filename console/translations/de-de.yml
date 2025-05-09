@@ -83,7 +83,7 @@ common:
   longitude: Längengrad
   upload-file: Datei hochladen
   upload: Hochladen
-  select-country: Land auswählen...
+  select-country: Land
   enter-unit: "{unit} eingeben"
   document: Dokument
   file-upload-success: "Datei erfolgreich hochgeladen."
@@ -137,6 +137,7 @@ common:
     dispacth-order: Bestellung wurde versendet.
     update-order: Bestellstatus wurde vom Fahrer aktualisiert.
     start-order: Bestellung wurde gestartet.
+    reject-order: Auftrag vom Fahrer abgelehnt. Bitte neuen Fahrer zuweisen.
     complete-order: Der Fahrer hat die Bestellung abgeschlossen
   duplicate-waypoint-error: Doppelter Wegpunkt erkannt. Bitte verwenden Sie eindeutige Orte für jeden Wegpunkt.
   valid-waypoints-error: Bitte fügen Sie Wegpunkte hinzu
@@ -273,7 +274,7 @@ statuses:
     registry-bridge: Registrierungsbrücke
     storefront: Ladengeschäft
 
-
+    order_rejected: Abgelehnt
     order_created: Erstellt
     order_dispatched: Versendet
     order_accepted: Akzeptiert
@@ -296,7 +297,7 @@ component:
     ready-upload: Bereit zum Hochladen
     upload-spreadsheets: Tabellenkalkulationen hochladen
     drag-drop: Ziehen Sie Tabellenkalkulationsdateien hierher, um sie hochzuladen
-    button-text: Datei auswählen, um sie hochzuladen
+    button-text: Datei auswählen
     spreadsheets: Tabellenkalkulationen
     upload-queue: Hochlade-Warteschlange
   dropzone:
@@ -849,14 +850,14 @@ fleet-ops:
     end_date_cannot_be_earlier_than_start_date: Das Enddatum kann nicht früher sein als das Startdatum
     no_driver: Kein Fahrer
     no_phone: Kein Telefon
-    select-reporter: Melder auswählen
-    select-driver: Fahrer auswählen
-    select-vehicle: Fahrzeug auswählen
-    select-assignee: Zuständigen auswählen
+    select-reporter: Melder
+    select-driver: Fahrer
+    select-vehicle: Fahrzeug
+    select-assignee: Zuständiger
     search-by-currency-code: Nach Währungscode suchen
     view-profile: Profil anzeigen
     dark-mode: Dunkler Modus
-    select-fleet: Flotte auswählen
+    select-fleet: Flotte
     edit-fleet: Flotte bearbeiten
   component:
     activity-logic-builder:
@@ -1292,7 +1293,7 @@ fleet-ops:
         ready-upload: Bereit zum Hochladen.
         upload-spreadsheets: Tabellenkalkulationen hochladen
         drag-drop: Ziehen Sie Tabellenkalkulationsdateien in diese Ablagezone
-        button-text: Datei auswählen, um sie hochzuladen
+        button-text: Datei auswählen
         spreadsheets: Tabellenkalkulationen
         upload-queue: Upload-Warteschlange
         title: Bestellungen mit Tabellenkalkulationen importieren
@@ -2186,10 +2187,10 @@ fleet-ops:
         delete-orders: Bestellungen löschen
         dispatch-orders: Bestellungen versenden
         estimated-end-date: Voraussichtliches Enddatum
-        select-driver: Fahrer für die Bestellung auswählen
-        select-vehicle: Fahrzeug für die Bestellung auswählen
-        select-pickup-location: Abholort auswählen
-        select-dropoff-location: Zielort auswählen
+        select-driver: Fahrer
+        select-vehicle: Fahrzeug
+        select-pickup-location: Abholort
+        select-dropoff-location: Zielort
         new:
           create-new-customer: Neuen Kunden erstellen
           create-new-facilitator: Neuen Vermittler erstellen

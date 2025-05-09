@@ -83,7 +83,7 @@ common:
   longitude: Longitudine
   upload-file: Carica file
   upload: Carica
-  select-country: Seleziona un paese...
+  select-country: Paese
   enter-unit: "Inserisci {unit}"
   document: Documento
   file-upload-success: "File caricato con successo."
@@ -138,6 +138,7 @@ common:
     update-order: Stato dell'ordine aggiornato dal conducente.
     start-order: L'ordine è stato avviato.
     complete-order: Il conducente ha completato l'ordine
+    reject-order: 	Ordine rifiutato dal conducente. Assegna un nuovo autista.
   duplicate-waypoint-error: Rilevato waypoint duplicato. Si prega di utilizzare posizioni uniche per ogni waypoint.
   valid-waypoints-error: Si prega di aggiungere dei punti di passaggio
   pickup-dropoff-error: Si prega di fornire sia il punto di ritiro che quello di consegna.
@@ -276,7 +277,7 @@ statuses:
     registry-bridge: Ponte del registro
     storefront: Vetrina
 
-
+    order_rejected: Rifiutato
     order_created: Creato
     order_dispatched: Spedito
     order_accepted: Accettato
@@ -300,7 +301,7 @@ component:
     ready-upload: pronto per il caricamento.
     upload-spreadsheets: Carica fogli di calcolo
     drag-drop: Trascina e rilascia i file dei fogli di calcolo in questa area di rilascio
-    button-text: Seleziona un file da caricare
+    button-text: Seleziona file
     spreadsheets: fogli di calcolo
     upload-queue: Coda di caricamento
   dropzone:
@@ -708,14 +709,14 @@ fleet-ops:
     end_date_cannot_be_earlier_than_start_date: La data di fine non può essere precedente alla data di inizio.
     no_driver: Nessun autista
     no_phone: Nessun telefono
-    select-reporter: Seleziona segnalatore
-    select-driver: Seleziona conducente
-    select-vehicle: Seleziona veicolo
-    select-assignee: Seleziona assegnatario
+    select-reporter: Segnalante
+    select-driver: Autista
+    select-vehicle: Veicolo
+    select-assignee: Assegnatario
     search-by-currency-code: Cerca per codice valuta
     view-profile: Visualizza profilo
     dark-mode: Modalità scura
-    select-fleet: Seleziona flotta
+    select-fleet: Flotta
     edit-fleet: Modifica flotta
   component:
     activity-logic-builder:
@@ -1147,7 +1148,7 @@ fleet-ops:
         ready-upload: pronto per il caricamento.
         upload-spreadsheets: Carica fogli di calcolo
         drag-drop: Trascina e rilascia i file dei fogli di calcolo su questa zona di rilascio
-        button-text: Seleziona un file da caricare
+        button-text: Seleziona file
         spreadsheets: fogli di calcolo
         upload-queue: Coda di caricamento
         title: Importa ordine(i) con fogli di calcolo
@@ -2037,10 +2038,10 @@ fleet-ops:
         delete-orders: Elimina Ordini
         dispatch-orders: Spedisci Ordini
         estimated-end-date: Data di fine stimata
-        select-driver: Seleziona il conducente per l'ordine
-        select-vehicle: Seleziona il veicolo per l'ordine
-        select-pickup-location: Seleziona il luogo di ritiro
-        select-dropoff-location: Seleziona il luogo di consegna
+        select-driver: Autista
+        select-vehicle: Veicolo
+        select-pickup-location: Punto di ritiro
+        select-dropoff-location: Punto di consegna
         new:
           create-new-customer: Crea nuovo cliente
           create-new-facilitator: Crea nuovo facilitatore

@@ -83,7 +83,7 @@ common:
   longitude: Longitude
   upload-file: Télécharger le fichier
   upload: Télécharger
-  select-country: Sélectionner un pays...
+  select-country: Pays
   enter-unit: "Saisir {unit}"
   document: Document
   file-upload-success: "Fichier téléchargé avec succès."
@@ -138,6 +138,7 @@ common:
     update-order: Le statut de la commande a été mis à jour par le conducteur.
     start-order: La commande a été commencée.
     complete-order: Le chauffeur termine la commande
+    reject-order: Commande refusée par le conducteur. Veuillez en assigner un autre.
   duplicate-waypoint-error: Point de passage en double détecté. Veuillez utiliser des emplacements uniques pour chaque point de passage.
   valid-waypoints-error: Veuillez ajouter des points de passage
   pickup-dropoff-error: Veuillez fournir les lieux de prise en charge et de dépose.
@@ -275,7 +276,7 @@ statuses:
     storefront: Vitrine
 
 
-
+    order_rejected: Rejeté
     order_created: Créé
     order_dispatched: Expédié
     order_accepted: Accepté
@@ -298,7 +299,7 @@ component:
     ready-upload: prêt pour le téléchargement.
     upload-spreadsheets: Télécharger des tableurs
     drag-drop: Faites glisser et déposez des fichiers de tableurs dans cette zone de dépôt
-    button-text: Sélectionnez un fichier à téléverser
+    button-text: Choisir un fichier
     spreadsheets: tableurs
     upload-queue: File d'attente de téléchargement
   dropzone:
@@ -849,14 +850,14 @@ fleet-ops:
     end_date_cannot_be_earlier_than_start_date: La date de fin ne peut pas être antérieure à la date de début.
     no_driver: Pas de conducteur
     no_phone: Pas de téléphone
-    select-reporter: Sélectionner le rapporteur
-    select-driver: Sélectionner le conducteur
-    select-vehicle: Sélectionner le véhicule
-    select-assignee: Sélectionner l’attributaire
+    select-reporter: Déclarant
+    select-driver: Chauffeur
+    select-vehicle: Véhicule
+    select-assignee: Assigné
     search-by-currency-code: Rechercher par code de devise
     view-profile: Voir le profil
     dark-mode: Mode sombre
-    select-fleet: Sélectionner une flotte
+    select-fleet: Flotte
     edit-fleet: Modifier la flotte
   component:
     activity-logic-builder:
@@ -1289,7 +1290,7 @@ fleet-ops:
         ready-upload: prêt pour téléchargement.
         upload-spreadsheets: Télécharger des feuilles de calcul
         drag-drop: Faites glisser et déposez des fichiers de feuille de calcul dans cette zone de dépôt
-        button-text: Sélectionnez un fichier à téléverser
+        button-text: Choisir un fichier
         spreadsheets: feuilles de calcul
         upload-queue: File d'attente de téléchargement
         title: Importer la/les commande(s) avec des feuilles de calcul
@@ -2182,10 +2183,10 @@ fleet-ops:
         delete-orders: Supprimer les commandes
         dispatch-orders: Expédier les commandes
         estimated-end-date: Date de fin estimée
-        select-driver: Sélectionner un conducteur pour la commande
-        select-vehicle: Sélectionner un véhicule pour la commande
-        select-pickup-location: Sélectionner le lieu de prise en charge
-        select-dropoff-location: Sélectionner le lieu de dépose
+        select-driver: Chauffeur
+        select-vehicle: Véhicule
+        select-pickup-location: Lieu de prise en charge
+        select-dropoff-location: 	Lieu de dépôt
         new:
           create-new-customer: Créer un nouveau client
           create-new-facilitator: Créer un nouveau facilitateur

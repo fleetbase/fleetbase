@@ -111,6 +111,7 @@ export default class OperationsOrdersIndexViewController extends BaseController 
         'Order status updated by the driver': 'update-order',
         'Order has been started' : 'start-order',
         'Driver completes the order' : 'complete-order',
+        'Order Rejected by the driver.Please assign a new driver.': 'reject-order',
       };
 
     @not('isWaypointsCollapsed') waypointsIsNotCollapsed;

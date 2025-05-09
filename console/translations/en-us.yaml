@@ -92,7 +92,7 @@ common:
   file-delete-confirmation: "Are you sure you want to delete the file {filename}?"
   upload-file: Upload File
   upload: Upload
-  select-country: Select country...
+  select-country: Country
   enter-unit: "Enter {unit}"
   role: Role
   report-type: Report Type
@@ -143,6 +143,7 @@ common:
     update-order: Order status updated by the driver
     start-order: Order has been started
     complete-order: Driver completes the order
+    reject-order: Order Rejected by the driver.Please assign a new driver.
   duplicate-waypoint-error: Duplicate waypoint detected. Please use unique locations for each waypoint.
   valid-waypoints-error: Please add waypoints
   pickup-dropoff-error: Please provide both pickup and dropoff locations.
@@ -277,7 +278,7 @@ statuses:
     fleet-ops : Fleet Ops
     registry-bridge : Registry Bridge
     storefront : Store Front
-
+    order_rejected: Rejected
     order_created: Created
     order_dispatched: Dispatched
     order_accepted: Accepted
@@ -853,14 +854,14 @@ fleet-ops:
     end_date_cannot_be_earlier_than_start_date: End Date cannot be earlier than the start date.
     no_driver: No Driver
     no_phone: No Phone
-    select-reporter: Select reporter
-    select-driver: Select driver
-    select-vehicle: Select vehicle
-    select-assignee: Select assignee
+    select-reporter: Reporter
+    select-driver: Driver
+    select-vehicle: Vehicle
+    select-assignee: Assignee
     search-by-currency-code: Search by currency code
     view-profile: View Profile
     dark-mode: Dark Mode
-    select-fleet: Select fleet
+    select-fleet: Fleet
     edit-fleet: Edit fleet
   component:
     activity-logic-builder:
@@ -2181,10 +2182,10 @@ fleet-ops:
         delete-orders: Delete Orders
         dispatch-orders: Dispatch Orders
         estimated-end-date: Estimated End Date
-        select-driver: Select driver for order
-        select-vehicle: Select vehicle for order
-        select-pickup-location: Select pickup location
-        select-dropoff-location: Select dropoff location
+        select-driver: Driver
+        select-vehicle: vehicle
+        select-pickup-location: Pickup
+        select-dropoff-location: Dropoff
         new:
           create-new-customer: Create new customer
           create-new-facilitator: Create new facilitator
