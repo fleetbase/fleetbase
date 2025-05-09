@@ -83,7 +83,7 @@ common:
   longitude: Kinh độ
   upload-file: Tải tệp lên
   upload: Tải lên
-  select-country: Chọn quốc gia...
+  select-country: Quốc gia
   enter-unit: "Nhập {unit}"
   document: Tài liệu
   file-upload-success: "Tải tệp lên thành công."
@@ -138,6 +138,7 @@ common:
     update-order: Tài xế đã cập nhật trạng thái đơn hàng.
     start-order: Đơn hàng đã được bắt đầu.
     complete-order: Tài xế đã hoàn thành đơn hàng
+    reject-order: Tài xế đã từ chối đơn hàng. Vui lòng chỉ định tài xế mới.
   duplicate-waypoint-error: Phát hiện điểm dừng trùng lặp. Vui lòng sử dụng vị trí duy nhất cho mỗi điểm dừng.
   valid-waypoints-error: Vui lòng thêm điểm dừng
   pickup-dropoff-error: Vui lòng cung cấp cả điểm đón và điểm trả.
@@ -274,7 +275,7 @@ statuses:
 
 
 
-
+    order_rejected: Đã từ chối
     order_created: Đã tạo
     order_dispatched: Đã gửi
     order_accepted: Đã chấp nhận
@@ -297,7 +298,7 @@ component:
     ready-upload: sẵn sàng tải lên.
     upload-spreadsheets: Tải lên Bảng tính
     drag-drop: Kéo và thả các tệp bảng tính vào vùng thả này
-    button-text: hoặc chọn bảng tính để tải lên
+    button-text: Chọn tệp
     spreadsheets: bảng tính
     upload-queue: Tải lên hàng đợi
   dropzone:
@@ -854,14 +855,14 @@ fleet-ops:
     end_date_cannot_be_earlier_than_start_date: Ngày kết thúc không thể sớm hơn ngày bắt đầu.
     no_driver: Không có tài xế
     no_phone: Không có điện thoại
-    select-reporter: Chọn người báo cáo
-    select-driver: Chọn tài xế
-    select-vehicle: Chọn phương tiện
-    select-assignee: Chọn người được giao
+    select-reporter: Người báo cáo
+    select-driver: Tài xế
+    select-vehicle: Phương tiện
+    select-assignee: Người được giao
     search-by-currency-code: Tìm theo mã tiền tệ
     view-profile: Xem hồ sơ
     dark-mode: Chế độ tối
-    select-fleet: Chọn đội xe
+    select-fleet: Đội xe
     edit-fleet: Chỉnh sửa đội xe
     component:
        order:
