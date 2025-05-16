@@ -2,27 +2,28 @@ import Controller from '@ember/controller';
 import { tracked } from '@glimmer/tracking';
 import { action } from '@ember/object';
 import { inject as service } from '@ember/service';
-import createNotificationKey from '../../../utils/create-notification-key';
+import createNotificationKey from '@fleetbase/ember-core/utils/create-notification-key';
+import { task } from 'ember-concurrency';
 
-export default class ConsoleAdminNotificationsController extends Controller {
+export default class ConsoleSettingsNotificationsController extends Controller {
     /**
      * Inject the notifications service.
      *
-     * @memberof ConsoleAdminNotificationsController
+     * @memberof ConsoleSettingsNotificationsController
      */
     @service notifications;
 
     /**
      * Inject the fetch service.
      *
-     * @memberof ConsoleAdminNotificationsController
+     * @memberof ConsoleSettingsNotificationsController
      */
     @service fetch;
 
     /**
      * The notification settings value JSON.
      *
-     * @memberof ConsoleAdminNotificationsController
+     * @memberof ConsoleSettingsNotificationsController
      * @var {Object}
      */
     @tracked notificationSettings = {};
@@ -30,26 +31,18 @@ export default class ConsoleAdminNotificationsController extends Controller {
     /**
      * Notification transport methods enabled.
      *
-     * @memberof ConsoleAdminNotificationsController
+     * @memberof ConsoleSettingsNotificationsController
      * @var {Array}
      */
     @tracked notificationTransportMethods = ['email', 'sms'];
 
     /**
-     * Tracked property for the loading state
-     *
-     * @memberof ConsoleAdminNotificationsController
-     * @var {Boolean}
-     */
-    @tracked isLoading = false;
-
-    /**
-     * Creates an instance of ConsoleAdminNotificationsController.
-     * @memberof ConsoleAdminNotificationsController
+     * Creates an instance of ConsoleSettingsNotificationsController.
+     * @memberof ConsoleSettingsNotificationsController
      */
     constructor() {
         super(...arguments);
-        this.getSettings();
+        this.getSettings.perform();
     }
 
     /**
@@ -57,7 +50,7 @@ export default class ConsoleAdminNotificationsController extends Controller {
      *
      * @param {Object} notification
      * @param {Array} notifiables
-     * @memberof ConsoleAdminNotificationsController
+     * @memberof ConsoleSettingsNotificationsController
      */
     @action onSelectNotifiable(notification, notifiables) {
         const notificationKey = createNotificationKey(notification.definition, notification.name);
@@ -83,7 +76,7 @@ export default class ConsoleAdminNotificationsController extends Controller {
      * Mutates the notification settings property.
      *
      * @param {Object} [_notificationSettings={}]
-     * @memberof ConsoleAdminNotificationsController
+     * @memberof ConsoleSettingsNotificationsController
      */
     mutateNotificationSettings(_notificationSettings = {}) {
         this.notificationSettings = {
@@ -93,44 +86,32 @@ export default class ConsoleAdminNotificationsController extends Controller {
     }
 
     /**
-     * Save notification settings to the server.
+     * Save notification settings.
      *
-     * @action
-     * @method saveSettings
-     * @returns {Promise}
-     * @memberof ConsoleAdminNotificationsController
+     * @memberof ConsoleSettingsNotificationsController
      */
-    @action saveSettings() {
+    @task *saveSettings() {
         const { notificationSettings } = this;
 
-        this.isLoading = true;
-
-        return this.fetch
-            .post('notifications/save-settings', { notificationSettings })
-            .then(() => {
-                this.notifications.success('Notification settings successfully saved.');
-            })
-            .catch((error) => {
-                this.notifications.serverError(error);
-            })
-            .finally(() => {
-                this.isLoading = false;
-            });
+        try {
+            yield this.fetch.post('notifications/save-settings', { notificationSettings });
+            this.notifications.success('Notification settings successfully saved.');
+        } catch (error) {
+            this.notifications.serverError(error);
+        }
     }
 
     /**
-     * Fetches and updates notification settings asynchronously.
+     * Get notification settings.
      *
-     * @returns {Promise<void>} A promise for successful retrieval and update, or an error on failure.
+     * @memberof ConsoleSettingsNotificationsController
      */
-    getSettings() {
-        return this.fetch
-            .get('notifications/get-settings')
-            .then(({ notificationSettings }) => {
-                this.notificationSettings = notificationSettings;
-            })
-            .catch((error) => {
-                this.notifications.serverError(error);
-            });
+    @task *getSettings() {
+        try {
+            const { notificationSettings } = yield this.fetch.get('notifications/get-settings');
+            this.notificationSettings = notificationSettings;
+        } catch (error) {
+            this.notifications.serverError(error);
+        }
     }
 }

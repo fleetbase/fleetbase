@@ -3,7 +3,7 @@ import { inject as service } from '@ember/service';
 import { hash } from 'rsvp';
 import groupBy from '@fleetbase/ember-core/utils/group-by';
 
-export default class ConsoleAdminNotificationsRoute extends Route {
+export default class ConsoleSettingsNotificationsRoute extends Route {
     @service fetch;
 
     model() {
@@ -14,6 +14,8 @@ export default class ConsoleAdminNotificationsRoute extends Route {
     }
 
     setupController(controller, { registry, notifiables }) {
+        super.setupController(...arguments);
+
         controller.groupedNotifications = groupBy(registry, 'package');
         controller.notifiables = notifiables;
     }
