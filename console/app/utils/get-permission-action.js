@@ -19,6 +19,8 @@ export default function getPermissionAction(permissionName) {
         'notify',
         'assign_vehicle',
         'assign_order_to',
+        'assign_driver_to',
+        'assign_vehicle_to',
         'dispatch_order_to',
         'dispatch',
         'assign',
