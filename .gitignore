@@ -35,3 +35,14 @@ packages/customer-portal
 packages/solid
 solid
 verdaccio
+# asdf
+.tools-versions
+# binary build resources
+builds/osx/frankenphp
+# build artifacts
+/builds/dist/
+/builds/linux/spc/downloads/*
+*.exe
+*.dll
+*.so
+*.dylib
