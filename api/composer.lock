@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "eef7a85b82bd6b5db83144d2c1942666",
+    "content-hash": "4883ee7304cb6ef77ebc39c4debf6d28",
     "packages": [
         {
             "name": "appstract/laravel-opcache",
@@ -124,16 +124,16 @@
         },
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.343.6",
+            "version": "3.343.12",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "3746aca8cbed5f46beba850e0a480ef58e71b197"
+                "reference": "d4b21990410d023e9c5303487d3248e8d7c8c2b6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/3746aca8cbed5f46beba850e0a480ef58e71b197",
-                "reference": "3746aca8cbed5f46beba850e0a480ef58e71b197",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/d4b21990410d023e9c5303487d3248e8d7c8c2b6",
+                "reference": "d4b21990410d023e9c5303487d3248e8d7c8c2b6",
                 "shasum": ""
             },
             "require": {
@@ -215,9 +215,9 @@
             "support": {
                 "forum": "https://github.com/aws/aws-sdk-php/discussions",
                 "issues": "https://github.com/aws/aws-sdk-php/issues",
-                "source": "https://github.com/aws/aws-sdk-php/tree/3.343.6"
+                "source": "https://github.com/aws/aws-sdk-php/tree/3.343.12"
             },
-            "time": "2025-05-07T18:10:08+00:00"
+            "time": "2025-05-15T18:14:32+00:00"
         },
         {
             "name": "aws/aws-sdk-php-laravel",
@@ -2546,16 +2546,16 @@
         },
         {
             "name": "fleetbase/core-api",
-            "version": "1.6.4",
+            "version": "1.6.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fleetbase/core-api.git",
-                "reference": "6ed65bceac1c760ddb3529835872276cab005390"
+                "reference": "377f05b3f7d30c739b91541369971c0ba350b97f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fleetbase/core-api/zipball/6ed65bceac1c760ddb3529835872276cab005390",
-                "reference": "6ed65bceac1c760ddb3529835872276cab005390",
+                "url": "https://api.github.com/repos/fleetbase/core-api/zipball/377f05b3f7d30c739b91541369971c0ba350b97f",
+                "reference": "377f05b3f7d30c739b91541369971c0ba350b97f",
                 "shasum": ""
             },
             "require": {
@@ -2640,9 +2640,9 @@
             ],
             "support": {
                 "issues": "https://github.com/fleetbase/core-api/issues",
-                "source": "https://github.com/fleetbase/core-api/tree/v1.6.4"
+                "source": "https://github.com/fleetbase/core-api/tree/v1.6.5"
             },
-            "time": "2025-05-08T03:42:47+00:00"
+            "time": "2025-05-16T06:53:38+00:00"
         },
         {
             "name": "fleetbase/customer-portal-api",
@@ -2736,16 +2736,16 @@
         },
         {
             "name": "fleetbase/fleetops-api",
-            "version": "0.6.7",
+            "version": "0.6.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fleetbase/fleetops.git",
-                "reference": "9a8447c735a86a6f1153c9ed4883c333a9eb9705"
+                "reference": "dfff83b3f10b657fd0edb27890ae3caa19b4211f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fleetbase/fleetops/zipball/9a8447c735a86a6f1153c9ed4883c333a9eb9705",
-                "reference": "9a8447c735a86a6f1153c9ed4883c333a9eb9705",
+                "url": "https://api.github.com/repos/fleetbase/fleetops/zipball/dfff83b3f10b657fd0edb27890ae3caa19b4211f",
+                "reference": "dfff83b3f10b657fd0edb27890ae3caa19b4211f",
                 "shasum": ""
             },
             "require": {
@@ -2819,16 +2819,16 @@
             ],
             "support": {
                 "issues": "https://github.com/fleetbase/fleetops/issues",
-                "source": "https://github.com/fleetbase/fleetops/tree/v0.6.7"
+                "source": "https://github.com/fleetbase/fleetops/tree/v0.6.8"
             },
-            "time": "2025-05-08T03:51:45+00:00"
+            "time": "2025-05-16T07:20:45+00:00"
         },
         {
             "name": "fleetbase/flespi-integration",
             "version": "0.1.14",
             "dist": {
                 "type": "tar",
-                "url": "https://s3.ap-southeast-1.amazonaws.com/fleetbase-registry-qa/flb/%40fleetbase/flespi-engine/flespi-engine-0.1.14.tgz?AWSAccessKeyId=ASIA26E6KG6WDIVYYOCD&Expires=1746707425&Signature=nRtCfdMYK%2B26pKYid218ICOBoTI%3D&x-amz-security-token=IQoJb3JpZ2luX2VjEMz%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaDmFwLXNvdXRoZWFzdC0xIkYwRAIgbQvWvpQx1W4ncqN37dAM2cCyxs2CkKe3t2PWpD29%2BKMCID5Q2ROWc0rGBr91Y8%2BVPrF8SF9yEz9Cuz6PMwzL%2FtedKoYECHUQABoMNzUxOTUxMjk2NDI4Igw8JeYtCDkq75u5O6Iq4wOJ7Tnh%2F9waN2InkV2wS1gBA4QFfau8cOFAzl4PFiB0jTI2tbAq3BOOLPjMldxCAHwqMh5D%2BIwuf821QBA8uXLYuY7rCC3p347oNqM7UQn%2F%2Bj3Oz1FBlKbxhdyL%2FfvL0WH3ew%2F5cWE1ntqEluw1sK3SgP%2BchP99hmfxwbHgAs1Lsfl8ABdN8B7IZhb%2FgmtcIOHuUz10YN7PgSxXmfVhxY27yrQRcGne4DNGhg940XtmwLkUEDdyKQ2J%2B9awJeUJt0xAt8aBpZkghZ%2Bhz4xhyttmsw%2FJsfn3wZ1ZZrCOfySUYbb4EqrDptIGshJkI%2Fp61cYfRIko3QYijA%2BvojsaRI9iwEMwcvA84obOOB8BBViJy8BTeoHpG3%2B5dga1VqOgh9SoryfvvWdcxo0gxXVjQ4L%2BCsHbqGw4LZvojas637CETU0UTRaI6mv%2BEAVu%2FA99R0hddX9qjpROZWnbCEJwj9LrhliYkukqht4W0rywmpJfSlChbw9gnYZXAQ9jyRdTIzvaC0PWB66SE4SW5uK0QUzUzXIEJiZZF9KMTmXCe2JpU3MlEsTtRSQxGjv4Z7HvenCZhKqqdNreqhZXcVE2qOAeTv0XLTKD1UsoodowTAjilfkyxoHhTFM8k7n5klgTbe2weWUw47nywAY6pgEW53gFDrVsLQEKRf4EZdMFLxGAD%2BK0k1sWJX0%2BZXugFebWGqoFoCqvTcxs4kvbD0VM55FNPJynZPJa4hoJ3bae5t3QFQUU%2BCNhCnKxdL8v79iQFRR0b2SvG33uEWvitNDUimIwzkIHgFYWtNeRcKyf40fE7TlleGwJhP%2BBeVeB8Ju6sElS391BJaIEPAmIKNCEA7T41Ot%2FYrxWRXoWxStLqBWp2iXu"
+                "url": "https://s3.ap-southeast-1.amazonaws.com/fleetbase-registry-qa/flb/%40fleetbase/flespi-engine/flespi-engine-0.1.14.tgz?AWSAccessKeyId=ASIA26E6KG6WMF7UHW23&Expires=1747390312&Signature=39wK6ma1fHfhVs33G0tIn2%2BX3e0%3D&x-amz-security-token=IQoJb3JpZ2luX2VjEIr%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaDmFwLXNvdXRoZWFzdC0xIkYwRAIgZ6jrKi3tniN1v1VQSg5fFORPTJA9eakgnjG0ioTCzYQCIHlllfMLCZpQlPB6I8Ok%2F0%2Fft0uAvOJh9m%2FhWdWuQcx5KoYECEMQABoMNzUxOTUxMjk2NDI4IgwvjkKHqnv9iAXUCBMq4wPXZojvNPFqCJqAk8QPZAcv3GBJUHLM8HPgsRYRaqKAYEsXCL1IAiWlYK50Nhv1ArR796DGaN05dJHRmOYiIZLqmsg9hr%2BJx7PfDZpWCbiTNyW70x3kANXmfc%2FGlA%2B0L8X4daZ9k0VrfTDmGvYeWWlCMtcbDQcjrsa%2BuqU4X33HoRa%2BK70XuxDb9Nf37mzhIVPxNqZAGWl%2F3FhrbEYXzZSh2Onz71isKYxLoQzk3zBmAMxPS6sUc%2FJiaulIT1XmU3vqWSyD1mx9gZjX3eZHSs3SoS9SwX4Yj5dcZB8X4PlKBM8OgPMP24W02uggVC63eKFSIlZh8k3WnRkKQQAcIjTNnNTmb9gG7WOAF3UGbLPI20vAS7KXpQXl26R7WLKdr5725xvjEDqOuw78uT5EI%2FT4cUVVLdNWeGxjFXY8Qc2%2F%2FbuzCzTOHhjaJAfaQda%2Bp%2FLg0GhpY4ceYNJPVRxk5yaEt%2BBsXfiHZFJFdM3QDRu0MjcpY7CD%2F%2F8qBa2StbjL44%2BGcvsIVdqZCmzs8JpsEITaX%2FArSPaAonY4SIO9NkdjD4k6rjkgQeegmJAhvEzosa4mD6dtj%2B82aYNBC%2FU1j1WiKBg7U6%2FxAevHB0khC8Yg%2FIqjAxaHB8VDRvhKL%2BPIHZ%2BR4Oww7YycwQY6pgGjSH6WLLwBeCWSgCgmeBnyjwc2175qhr3E7Pwvhq6WiNCHsTaNx0YCAAiJ3dMRBcfUb5OjBi2WBjnchbarJUA89fFqCSSUZIsLtWDldRlWnnUdwe23hL%2FF5%2FxguvW0u%2BAlPUvPZZRc%2F2QTe%2BIBR83VRzq1xq%2B52Sr1LLs6iP6SQGbsTL%2FaaDD%2ByETIwyYsQrxX4FHbGgb7stirWDFBk5rRNKpfRWdm"
             },
             "require": {
                 "fleetbase/core-api": "*",
@@ -4096,28 +4096,28 @@
         },
         {
             "name": "google/cloud-core",
-            "version": "v1.62.1",
+            "version": "v1.62.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/googleapis/google-cloud-php-core.git",
-                "reference": "824a617d5c2b1b571673d1111856f5c2f064a0fd"
+                "reference": "506b69e9e13eaac1656edd0bfc7ea5d81cf870d9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/googleapis/google-cloud-php-core/zipball/824a617d5c2b1b571673d1111856f5c2f064a0fd",
-                "reference": "824a617d5c2b1b571673d1111856f5c2f064a0fd",
+                "url": "https://api.github.com/repos/googleapis/google-cloud-php-core/zipball/506b69e9e13eaac1656edd0bfc7ea5d81cf870d9",
+                "reference": "506b69e9e13eaac1656edd0bfc7ea5d81cf870d9",
                 "shasum": ""
             },
             "require": {
                 "google/auth": "^1.34",
                 "google/gax": "^1.36.0",
-                "guzzlehttp/guzzle": "^6.5.8|^7.4.4",
+                "guzzlehttp/guzzle": "^6.5.8||^7.4.4",
                 "guzzlehttp/promises": "^1.4||^2.0",
                 "guzzlehttp/psr7": "^2.6",
-                "monolog/monolog": "^2.9|^3.0",
+                "monolog/monolog": "^2.9||^3.0",
                 "php": "^8.0",
-                "psr/http-message": "^1.0|^2.0",
-                "rize/uri-template": "~0.3"
+                "psr/http-message": "^1.0||^2.0",
+                "rize/uri-template": "~0.3||~0.4"
             },
             "require-dev": {
                 "erusev/parsedown": "^1.6",
@@ -4156,9 +4156,9 @@
             ],
             "description": "Google Cloud PHP shared dependency, providing functionality useful to all components.",
             "support": {
-                "source": "https://github.com/googleapis/google-cloud-php-core/tree/v1.62.1"
+                "source": "https://github.com/googleapis/google-cloud-php-core/tree/v1.62.2"
             },
-            "time": "2025-02-22T00:57:16+00:00"
+            "time": "2025-05-09T21:18:44+00:00"
         },
         {
             "name": "google/cloud-storage",
@@ -4424,16 +4424,16 @@
         },
         {
             "name": "google/protobuf",
-            "version": "v4.30.2",
+            "version": "v4.31.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/protocolbuffers/protobuf-php.git",
-                "reference": "a4c4d8565b40b9f76debc9dfeb221412eacb8ced"
+                "reference": "d59e31ce4bf0e4b48728e90c4d880839edb5be07"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/protocolbuffers/protobuf-php/zipball/a4c4d8565b40b9f76debc9dfeb221412eacb8ced",
-                "reference": "a4c4d8565b40b9f76debc9dfeb221412eacb8ced",
+                "url": "https://api.github.com/repos/protocolbuffers/protobuf-php/zipball/d59e31ce4bf0e4b48728e90c4d880839edb5be07",
+                "reference": "d59e31ce4bf0e4b48728e90c4d880839edb5be07",
                 "shasum": ""
             },
             "require": {
@@ -4462,9 +4462,9 @@
                 "proto"
             ],
             "support": {
-                "source": "https://github.com/protocolbuffers/protobuf-php/tree/v4.30.2"
+                "source": "https://github.com/protocolbuffers/protobuf-php/tree/v4.31.0"
             },
-            "time": "2025-03-26T18:01:50+00:00"
+            "time": "2025-05-14T16:17:23+00:00"
         },
         {
             "name": "graham-campbell/result-type",
@@ -6192,16 +6192,16 @@
         },
         {
             "name": "laravel/octane",
-            "version": "v2.9.1",
+            "version": "v2.9.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/octane.git",
-                "reference": "445002b2551c837d60cda4324259063c356dfb56"
+                "reference": "8278bdb3ae7a9a7380841e18e9cf52d909502647"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/octane/zipball/445002b2551c837d60cda4324259063c356dfb56",
-                "reference": "445002b2551c837d60cda4324259063c356dfb56",
+                "url": "https://api.github.com/repos/laravel/octane/zipball/8278bdb3ae7a9a7380841e18e9cf52d909502647",
+                "reference": "8278bdb3ae7a9a7380841e18e9cf52d909502647",
                 "shasum": ""
             },
             "require": {
@@ -6278,7 +6278,7 @@
                 "issues": "https://github.com/laravel/octane/issues",
                 "source": "https://github.com/laravel/octane"
             },
-            "time": "2025-04-13T21:10:35+00:00"
+            "time": "2025-05-14T14:05:50+00:00"
         },
         {
             "name": "laravel/prompts",
@@ -11261,16 +11261,16 @@
         },
         {
             "name": "sentry/sentry",
-            "version": "4.11.0",
+            "version": "4.11.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/getsentry/sentry-php.git",
-                "reference": "ebf67deb9902b6da58a4b3383cbd12fed3f4f555"
+                "reference": "53dc0bcb6a667cac5b760b46f98d5380e63e02ca"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/getsentry/sentry-php/zipball/ebf67deb9902b6da58a4b3383cbd12fed3f4f555",
-                "reference": "ebf67deb9902b6da58a4b3383cbd12fed3f4f555",
+                "url": "https://api.github.com/repos/getsentry/sentry-php/zipball/53dc0bcb6a667cac5b760b46f98d5380e63e02ca",
+                "reference": "53dc0bcb6a667cac5b760b46f98d5380e63e02ca",
                 "shasum": ""
             },
             "require": {
@@ -11334,7 +11334,7 @@
             ],
             "support": {
                 "issues": "https://github.com/getsentry/sentry-php/issues",
-                "source": "https://github.com/getsentry/sentry-php/tree/4.11.0"
+                "source": "https://github.com/getsentry/sentry-php/tree/4.11.1"
             },
             "funding": [
                 {
@@ -11346,7 +11346,7 @@
                     "type": "custom"
                 }
             ],
-            "time": "2025-04-14T09:04:23+00:00"
+            "time": "2025-05-12T11:30:33+00:00"
         },
         {
             "name": "sentry/sentry-laravel",
@@ -11664,16 +11664,16 @@
         },
         {
             "name": "spatie/laravel-permission",
-            "version": "6.17.0",
+            "version": "6.18.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spatie/laravel-permission.git",
-                "reference": "02ada8f638b643713fa2fb543384738e27346ddb"
+                "reference": "3c05f04d12275dfbe462c8b4aae3290e586c2dde"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spatie/laravel-permission/zipball/02ada8f638b643713fa2fb543384738e27346ddb",
-                "reference": "02ada8f638b643713fa2fb543384738e27346ddb",
+                "url": "https://api.github.com/repos/spatie/laravel-permission/zipball/3c05f04d12275dfbe462c8b4aae3290e586c2dde",
+                "reference": "3c05f04d12275dfbe462c8b4aae3290e586c2dde",
                 "shasum": ""
             },
             "require": {
@@ -11735,7 +11735,7 @@
             ],
             "support": {
                 "issues": "https://github.com/spatie/laravel-permission/issues",
-                "source": "https://github.com/spatie/laravel-permission/tree/6.17.0"
+                "source": "https://github.com/spatie/laravel-permission/tree/6.18.0"
             },
             "funding": [
                 {
@@ -11743,7 +11743,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-04-08T15:06:14+00:00"
+            "time": "2025-05-14T03:32:23+00:00"
         },
         {
             "name": "spatie/laravel-responsecache",
@@ -16403,16 +16403,16 @@
         },
         {
             "name": "laravel/sail",
-            "version": "v1.42.0",
+            "version": "v1.43.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/sail.git",
-                "reference": "2edaaf77f3c07a4099965bb3d7dfee16e801c0f6"
+                "reference": "71a509b14b2621ce58574274a74290f933c687f7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/sail/zipball/2edaaf77f3c07a4099965bb3d7dfee16e801c0f6",
-                "reference": "2edaaf77f3c07a4099965bb3d7dfee16e801c0f6",
+                "url": "https://api.github.com/repos/laravel/sail/zipball/71a509b14b2621ce58574274a74290f933c687f7",
+                "reference": "71a509b14b2621ce58574274a74290f933c687f7",
                 "shasum": ""
             },
             "require": {
@@ -16462,7 +16462,7 @@
                 "issues": "https://github.com/laravel/sail/issues",
                 "source": "https://github.com/laravel/sail"
             },
-            "time": "2025-04-29T14:26:46+00:00"
+            "time": "2025-05-13T13:34:34+00:00"
         },
         {
             "name": "mockery/mockery",
@@ -18232,16 +18232,16 @@
         },
         {
             "name": "spatie/backtrace",
-            "version": "1.7.3",
+            "version": "1.7.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spatie/backtrace.git",
-                "reference": "80ae5fabe2a1e3bc7df5c7ca5d91b094dc314b20"
+                "reference": "cd37a49fce7137359ac30ecc44ef3e16404cccbe"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spatie/backtrace/zipball/80ae5fabe2a1e3bc7df5c7ca5d91b094dc314b20",
-                "reference": "80ae5fabe2a1e3bc7df5c7ca5d91b094dc314b20",
+                "url": "https://api.github.com/repos/spatie/backtrace/zipball/cd37a49fce7137359ac30ecc44ef3e16404cccbe",
+                "reference": "cd37a49fce7137359ac30ecc44ef3e16404cccbe",
                 "shasum": ""
             },
             "require": {
@@ -18279,7 +18279,7 @@
                 "spatie"
             ],
             "support": {
-                "source": "https://github.com/spatie/backtrace/tree/1.7.3"
+                "source": "https://github.com/spatie/backtrace/tree/1.7.4"
             },
             "funding": [
                 {
@@ -18291,7 +18291,7 @@
                     "type": "other"
                 }
             ],
-            "time": "2025-05-07T07:20:00+00:00"
+            "time": "2025-05-08T15:41:09+00:00"
         },
         {
             "name": "spatie/error-solutions",

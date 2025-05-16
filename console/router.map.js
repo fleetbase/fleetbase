@@ -35,6 +35,7 @@ Router.map(function () {
         this.route('settings', function () {
             this.route('virtual', { path: '/:slug' });
             this.route('two-fa');
+            this.route('notifications');
         });
         this.route('virtual', { path: '/:slug' });
         this.route('admin', function () {
@@ -49,7 +50,6 @@ Router.map(function () {
                 this.route('socket');
             });
             this.route('branding');
-            this.route('notifications');
             this.route('two-fa-settings');
             this.route('virtual', { path: '/:slug' });
             this.route('organizations', function () {
