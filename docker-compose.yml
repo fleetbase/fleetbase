@@ -59,8 +59,6 @@ services:
         ENVIRONMENT: development
     ports:
       - "4200:4200"
-    volumes:
-      - console-build:/console
 
   application:
     build:
@@ -69,9 +67,6 @@ services:
       target: app-dev
       args:
         ENVIRONMENT: development
-        GITHUB_AUTH_KEY: ${GITHUB_AUTH_KEY}
-    volumes:
-      - console-build:/fleetbase/console
     environment:
       ENVIRONMENT: development
       DATABASE_URL: "mysql://root@database/fleetbase"
@@ -101,6 +96,3 @@ services:
       - "8000:80"
     depends_on:
       - application
-
-volumes:
-  console-build:

@@ -1,6 +1,6 @@
-{{page-title "Push Notifications"}}
-<Layout::Section::Header @title={{t "console.admin.notifications.title"}}>
-     <Button @type="primary" @size="sm" @icon="save" @text={{t "common.save-button-text"}} @onClick={{this.saveSettings}} @disabled={{this.isLoading}} @isLoading={{this.isLoading}} />
+{{page-title "Notifications"}}
+<Layout::Section::Header @title={{t "common.notifications"}}>
+     <Button @type="primary" @size="sm" @icon="save" @text={{t "common.save-button-text"}} @onClick={{perform this.saveSettings}} @disabled={{this.saveSettings.isRunning}} @isLoading={{or this.saveSettings.isRunning this.getSettings.isRunning}} />
 </Layout::Section::Header>
 
 <Layout::Section::Body class="overflow-y-scroll h-full">
