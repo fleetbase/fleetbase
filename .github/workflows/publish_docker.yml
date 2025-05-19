@@ -3,8 +3,13 @@ name: Publish Fleetbase Docker Images
 on:
   push:
     tags:
-      - 'v*' # Runs on version tags like v1.2.3
-  workflow_dispatch: # Allows manual run
+      - 'v*'
+  workflow_dispatch: # 👈 enables manual trigger
+    inputs:
+      branch:
+        description: 'Branch to build from'
+        required: false
+        default: 'main'
 
 jobs:
   docker-release:
@@ -13,11 +18,14 @@ jobs:
 
     env:
       REGISTRY: fleetbase
-      VERSION: ${{ github.ref_name || 'manual' }}
+      VERSION: ${{ github.event.inputs.branch || github.ref_name || 'manual' }}
 
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v3
+        with:
+          ref: ${{ github.event.inputs.branch || github.ref_name }}
+          submodules: recursive
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
