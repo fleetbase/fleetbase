@@ -53,8 +53,8 @@ services:
 
   console:
     build:
-      context: .
-      dockerfile: console/Dockerfile.server-build
+      context: ./console
+      dockerfile: Dockerfile
       args:
         ENVIRONMENT: development
     ports:

@@ -9,6 +9,10 @@ group "default" {
   targets = ["app", "app-httpd"]
 }
 
+group "release" {
+  targets = ["fleetbase-console", "fleetbase-api"]
+}
+
 target "app" {
   name = "app-${tgt}"
 
@@ -46,6 +50,28 @@ target "app-httpd" {
 
   tags = notequal("", REGISTRY) ? formatlist(
     GCP ? "${REGISTRY}/app-httpd:%s" : "${REGISTRY}:app-httpd-%s",
+    compact(["latest", VERSION])
+  ) : []
+}
+
+target "fleetbase-console" {
+  context    = "./console"
+  dockerfile = "Dockerfile"
+  platforms  = ["linux/amd64"]
+
+  tags = notequal("", REGISTRY) ? formatlist(
+    "${REGISTRY}/fleetbase-console:%s",
+    compact(["latest", VERSION])
+  ) : []
+}
+
+target "fleetbase-api" {
+  context    = "./"
+  dockerfile = "docker/Dockerfile"
+  platforms  = ["linux/amd64"]
+
+  tags = notequal("", REGISTRY) ? formatlist(
+    "${REGISTRY}/fleetbase-api:%s",
     compact(["latest", VERSION])
   ) : []
 }

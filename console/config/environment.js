@@ -21,6 +21,7 @@ module.exports = function (environment) {
         },
 
         APP: {
+            autoboot: false,
             extensions: asArray(getenv('EXTENSIONS')),
         },
 
