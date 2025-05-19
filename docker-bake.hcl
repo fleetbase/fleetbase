@@ -68,6 +68,7 @@ target "fleetbase-console" {
 target "fleetbase-api" {
   context    = "./"
   dockerfile = "docker/Dockerfile"
+  target     = "app-release"
   platforms  = ["linux/amd64"]
 
   tags = notequal("", REGISTRY) ? formatlist(

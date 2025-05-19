@@ -75,6 +75,7 @@ ENV QUEUE_CONNECTION=redis
 ENV CADDYFILE_PATH=/fleetbase/Caddyfile
 ENV CONSOLE_PATH=/fleetbase/console
 ENV OCTANE_SERVER=frankenphp
+ENV FLEETBASE_VERSION=0.7.1
 
 # Set environment
 ARG ENVIRONMENT=production
@@ -88,6 +89,16 @@ COPY --chown=www-data:www-data ./Caddyfile $CADDYFILE_PATH
 
 # Create /fleetbase directory and set correct permissions
 RUN mkdir -p /fleetbase/api && mkdir -p /fleetbase/console && chown -R www-data:www-data /fleetbase
+
+# Generate and store a UUID in .fleetbase-id
+RUN uuidgen > /fleetbase/api/.fleetbase-id
+
+# Export the same ID as an environment variable for use in the container
+RUN export FLEETBASE_INSTANCE_ID=$(cat /fleetbase/api/.fleetbase-id) && \
+    echo "FLEETBASE_INSTANCE_ID=$FLEETBASE_INSTANCE_ID" >> /etc/environment
+
+# Track commit hash
+RUN git rev-parse HEAD > /fleetbase/CURRENT_HASH
 
 # Set working directory
 WORKDIR /fleetbase/api
@@ -153,7 +164,12 @@ CMD ["php", "artisan", "queue:work"]
 # Application dev stage
 FROM base AS app-dev
 ENTRYPOINT ["docker-php-entrypoint"]
-CMD ["sh", "-c", "php artisan octane:frankenphp --max-requests=250 --port=8000 --host=0.0.0.0 --watch"] 
+CMD ["sh", "-c", "php artisan octane:frankenphp --max-requests=250 --port=8000 --host=0.0.0.0 --watch"]
+
+# Application release stage
+FROM base AS app-release
+ENTRYPOINT ["docker-php-entrypoint"]
+CMD ["sh", "-c", "php artisan octane:frankenphp --max-requests=250 --port=8000 --host=0.0.0.0"] 
 
 # Application stage
 FROM base AS app
