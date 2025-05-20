@@ -33,7 +33,7 @@ function coerceValue(key, value) {
             return toBoolean(value);
 
         case 'EXTENSIONS':
-            return typeof value === 'string' ? value.split(',') : [value];
+            return typeof value === 'string' ? value.split(',') : Array.from(value);
 
         default:
             return value;

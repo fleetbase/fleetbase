@@ -3,7 +3,7 @@
 FROM dunglas/frankenphp:1.5.0-php8.2-bookworm AS base
 
 # Install packages
-RUN apt-get update && apt-get install -y git bind9-utils mycli nodejs npm nano \
+RUN apt-get update && apt-get install -y git bind9-utils mycli nodejs npm nano uuid-runtime \
   && mkdir -p /root/.ssh \
   && ssh-keyscan github.com >> /root/.ssh/known_hosts
 
@@ -133,21 +133,18 @@ RUN chmod -R 755 /fleetbase/api/storage
 # Set permissions for deploy script
 RUN chmod +x /fleetbase/api/deploy.sh
 
-# Scheduler base stage
-FROM base AS scheduler-base
-
 # Install go-crond
 RUN curl -L https://github.com/webdevops/go-crond/releases/download/23.12.0/go-crond.linux.amd64 > /usr/local/bin/go-crond && chmod +x /usr/local/bin/go-crond
 COPY docker/crontab ./crontab
 RUN chmod 0600 ./crontab
 
 # Scheduler dev stage
-FROM scheduler-base AS scheduler-dev
+FROM base AS scheduler-dev
 ENTRYPOINT []
 CMD ["go-crond", "--verbose", "root:./crontab"]
 
 # Scheduler stage
-FROM scheduler-base AS scheduler
+FROM base AS scheduler
 ENTRYPOINT ["/sbin/ssm-parent", "-c", ".ssm-parent.yaml", "run", "--"]
 CMD ["go-crond", "--verbose", "root:./crontab"]
 

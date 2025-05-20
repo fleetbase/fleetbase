@@ -4,12 +4,15 @@ on:
   push:
     tags:
       - 'v*'
-  workflow_dispatch: # 👈 enables manual trigger
+  workflow_dispatch:
     inputs:
       branch:
         description: 'Branch to build from'
         required: false
         default: 'main'
+      version:
+        description: 'Image version tag (e.g., v0.7.1-beta)'
+        required: false
 
 jobs:
   docker-release:
@@ -18,7 +21,7 @@ jobs:
 
     env:
       REGISTRY: fleetbase
-      VERSION: ${{ github.event.inputs.branch || github.ref_name || 'manual' }}
+      VERSION: ${{ github.event.inputs.version || (github.ref_type == 'tag' && startsWith(github.ref_name, 'v') && github.ref_name) || 'manual' }}
 
     steps:
       - name: Checkout Repo
