@@ -97,11 +97,6 @@ RUN uuidgen > /fleetbase/api/.fleetbase-id
 RUN export FLEETBASE_INSTANCE_ID=$(cat /fleetbase/api/.fleetbase-id) && \
     echo "FLEETBASE_INSTANCE_ID=$FLEETBASE_INSTANCE_ID" >> /etc/environment
 
-# Track commit hash
-COPY .git /fleetbase/.git
-RUN git rev-parse HEAD > /fleetbase/CURRENT_HASH
-RUN rm -rf .git
-
 # Set working directory
 WORKDIR /fleetbase/api
 
