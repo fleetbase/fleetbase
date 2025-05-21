@@ -89,10 +89,10 @@ else
     else
         log "asdf already has PHP 8.4.0 installed, skipping"
     fi
-fi
 
-log "Switching to PHP 8.4.0 with asdf set..."
-asdf set php 8.4.0 --home 
+    log "Switching to PHP 8.4.0 with asdf set..."
+    asdf set php 8.4.0 --home 
+fi
 
 # Clone FrankenPHP
 if [ ! -d "$OSX_DIR/frankenphp" ]; then
