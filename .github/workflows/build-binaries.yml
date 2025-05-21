@@ -64,15 +64,10 @@ jobs:
       - name: Install PHP build dependencies
         run: |
           brew update
-          brew install autoconf automake bison re2c \
-                       icu4c libpng libzip oniguruma \
-                       openssl@3 pkg-config
+          brew install autoconf automake
 
-      - name: Install asdf & PHP 8.4
+      - name: Install asdf
         uses: asdf-vm/actions/install@v4
-        with:
-          tool_versions: |
-            php 8.4.0
 
       - name: Run macOS build
         run: |
