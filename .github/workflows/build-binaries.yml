@@ -27,7 +27,7 @@ jobs:
       #   if: ${{ github.event_name == 'pull_request' }}
       #   uses: actions/upload-artifact@v4
       #   with:
-      #     name: linux-binary
+      #     name: fleetbase-api-linux-binary
       #     path: ${{ env.DIST_DIR }}/fleetbase-linux-x86_64
 
     #   - name: Create GitHub Release
@@ -61,13 +61,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Install PHP build dependencies
+      - name: Install build dependencies
         run: |
           brew update
-          brew install autoconf automake
-
-      - name: Install asdf
-        uses: asdf-vm/actions/install@v4
+          brew install autoconf automake asdf
 
       - name: Run macOS build
         run: |
@@ -78,7 +75,7 @@ jobs:
         if: ${{ github.event_name == 'pull_request' }}
         uses: actions/upload-artifact@v4
         with:
-          name: macos-binary
+          name: fleetbase-api-macos-binary
           path: ${{ env.DIST_DIR }}/fleetbase-$(uname -s)-$(uname -m)
 
     #   - name: Upload macOS to Release
