@@ -57,27 +57,37 @@ trap 'if [ "$IS_ASDF_MANAGED" = true ]; then
 log "Detected PHP version: $ORIGINAL_PHP_VERSION"
 log "Detected PHP binary: $ORIGINAL_PHP_PATH"
 
-if ! asdf list php | grep -q "8.4.0"; then
-    # Use brew to install required dependencies for asdf php management
-    log "Checking and installing Homebrew packages required for PHP 8.4 build..."
+# ───────────────────────────────────────────────────────────────────────────────
+# If the *current* php is already 8.4.x, we skip the entire asdf install step
+# ───────────────────────────────────────────────────────────────────────────────
+if php -r 'exit (PHP_MAJOR_VERSION == 8 && PHP_MINOR_VERSION == 4) ? 0 : 1;' >/dev/null 2>&1; then
+    log "System PHP is already 8.4.x, skipping asdf install"
+else
+    # Only install under asdf if we don’t already have 8.4.0 installed
+    if ! asdf list php | grep -q "8.4.0"; then
+        # Use brew to install required dependencies for asdf php management
+        log "Checking and installing Homebrew packages required for PHP 8.4 build..."
 
-    for pkg in autoconf automake bison freetype gd gettext icu4c krb5 libedit libiconv libjpeg libpng libxml2 libzip pkg-config re2c zlib sqlite3 libsodium oniguruma openssl@3 nasm; do
-        if ! brew list "$pkg" &>/dev/null; then
-            log_warn "$pkg not found. Installing..."
-            arch -arm64 brew install "$pkg"
-        else
-            log "$pkg already installed. Skipping."
-        fi
-    done
+        for pkg in autoconf automake bison freetype gd gettext icu4c krb5 libedit libiconv libjpeg libpng libxml2 libzip pkg-config re2c zlib sqlite3 libsodium oniguruma openssl@3 nasm; do
+            if ! brew list "$pkg" &>/dev/null; then
+                log_warn "$pkg not found. Installing..."
+                arch -arm64 brew install "$pkg"
+            else
+                log "$pkg already installed. Skipping."
+            fi
+        done
 
-    # Set necessary env flags/paths for PHP build on OSX ARM64
-    export CPPFLAGS="-I$BREW_PREFIX/opt/oniguruma/include -I$BREW_PREFIX/opt/libsodium/include -I$BREW_PREFIX/opt/bzip2/include -I$BREW_PREFIX/opt/zlib/include -I$BREW_PREFIX/opt/openssl@3/include -I$BREW_PREFIX/opt/libxml2/include -I$BREW_PREFIX/opt/libedit/include -I$BREW_PREFIX/opt/curl/include -I$BREW_PREFIX/opt/sqlite3/include -I$BREW_PREFIX/opt/freetype/include -I$BREW_PREFIX/opt/jpeg/include -I$BREW_PREFIX/opt/libpng/include -I$BREW_PREFIX/opt/libzip/include"
-    export LDFLAGS="-L$BREW_PREFIX/opt/openssl@3/lib -lssl -lcrypto -lz -L$BREW_PREFIX/opt/oniguruma/lib -lonig -L$BREW_PREFIX/opt/libsodium/lib -lsodium -L$BREW_PREFIX/opt/bzip2/lib -Wl,-rpath,$BREW_PREFIX/opt/bzip2/lib -lbz2 -L$BREW_PREFIX/opt/zlib/lib -L$BREW_PREFIX/opt/openssl@3/lib -L$BREW_PREFIX/opt/libxml2/lib -L$BREW_PREFIX/opt/libedit/lib -L$BREW_PREFIX/opt/sqlite3/lib -lsqlite3 -L$BREW_PREFIX/opt/curl/lib -lcurl -L$BREW_PREFIX/opt/freetype/lib -L$BREW_PREFIX/opt/jpeg/lib -L$BREW_PREFIX/opt/libpng/lib -L$BREW_PREFIX/opt/libzip/lib -lzip -lz"
-    export PKG_CONFIG_PATH="$BREW_PREFIX/opt/openssl/lib/pkgconfig:$BREW_PREFIX/opt/oniguruma/lib/pkgconfig:$BREW_PREFIX/opt/libsodium/lib/pkgconfig:$BREW_PREFIX/opt/libzip/lib/pkgconfig:$BREW_PREFIX/opt/gd/lib/pkgconfig:$BREW_PREFIX/opt/zlib/lib/pkgconfig:$BREW_PREFIX/opt/openssl@3/lib/pkgconfig:$BREW_PREFIX/opt/libxml2/lib/pkgconfig:$BREW_PREFIX/opt/curl/lib/pkgconfig:$BREW_PREFIX/opt/sqlite3/lib/pkgconfig:$BREW_PREFIX/opt/freetype/lib/pkgconfig:$BREW_PREFIX/opt/jpeg/lib/pkgconfig:$BREW_PREFIX/opt/libpng/lib/pkgconfig"
-    export PHP_CONFIGURE_OPTIONS="--with-openssl=$(brew --prefix openssl) --with-iconv=$(brew --prefix libiconv)"
+        # Set necessary env flags/paths for PHP build on OSX ARM64
+        export CPPFLAGS="-I$BREW_PREFIX/opt/oniguruma/include -I$BREW_PREFIX/opt/libsodium/include -I$BREW_PREFIX/opt/bzip2/include -I$BREW_PREFIX/opt/zlib/include -I$BREW_PREFIX/opt/openssl@3/include -I$BREW_PREFIX/opt/libxml2/include -I$BREW_PREFIX/opt/libedit/include -I$BREW_PREFIX/opt/curl/include -I$BREW_PREFIX/opt/sqlite3/include -I$BREW_PREFIX/opt/freetype/include -I$BREW_PREFIX/opt/jpeg/include -I$BREW_PREFIX/opt/libpng/include -I$BREW_PREFIX/opt/libzip/include"
+        export LDFLAGS="-L$BREW_PREFIX/opt/openssl@3/lib -lssl -lcrypto -lz -L$BREW_PREFIX/opt/oniguruma/lib -lonig -L$BREW_PREFIX/opt/libsodium/lib -lsodium -L$BREW_PREFIX/opt/bzip2/lib -Wl,-rpath,$BREW_PREFIX/opt/bzip2/lib -lbz2 -L$BREW_PREFIX/opt/zlib/lib -L$BREW_PREFIX/opt/openssl@3/lib -L$BREW_PREFIX/opt/libxml2/lib -L$BREW_PREFIX/opt/libedit/lib -L$BREW_PREFIX/opt/sqlite3/lib -lsqlite3 -L$BREW_PREFIX/opt/curl/lib -lcurl -L$BREW_PREFIX/opt/freetype/lib -L$BREW_PREFIX/opt/jpeg/lib -L$BREW_PREFIX/opt/libpng/lib -L$BREW_PREFIX/opt/libzip/lib -lzip -lz"
+        export PKG_CONFIG_PATH="$BREW_PREFIX/opt/openssl/lib/pkgconfig:$BREW_PREFIX/opt/oniguruma/lib/pkgconfig:$BREW_PREFIX/opt/libsodium/lib/pkgconfig:$BREW_PREFIX/opt/libzip/lib/pkgconfig:$BREW_PREFIX/opt/gd/lib/pkgconfig:$BREW_PREFIX/opt/zlib/lib/pkgconfig:$BREW_PREFIX/opt/openssl@3/lib/pkgconfig:$BREW_PREFIX/opt/libxml2/lib/pkgconfig:$BREW_PREFIX/opt/curl/lib/pkgconfig:$BREW_PREFIX/opt/sqlite3/lib/pkgconfig:$BREW_PREFIX/opt/freetype/lib/pkgconfig:$BREW_PREFIX/opt/jpeg/lib/pkgconfig:$BREW_PREFIX/opt/libpng/lib/pkgconfig"
+        export PHP_CONFIGURE_OPTIONS="--with-openssl=$(brew --prefix openssl) --with-iconv=$(brew --prefix libiconv)"
 
-    log "Installing PHP 8.4.0 with asdf..."
-    asdf install php 8.4.0 --verbose
+        log "Installing PHP 8.4.0 with asdf..."
+        asdf install php 8.4.0 --verbose
+    else
+        log "asdf already has PHP 8.4.0 installed, skipping"
+    fi
 fi
 
 log "Switching to PHP 8.4.0 with asdf set..."
