@@ -18,17 +18,17 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Run Linux build
-        run: |
-          chmod +x ./builds/linux/build-linux.sh
-          ./builds/linux/build-linux.sh
+      # - name: Run Linux build
+      #   run: |
+      #     chmod +x ./builds/linux/build-linux.sh
+      #     ./builds/linux/build-linux.sh
 
-      - name: Upload for PR testing
-        if: ${{ github.event_name == 'pull_request' }}
-        uses: actions/upload-artifact@v4
-        with:
-          name: linux-binary
-          path: ${{ env.DIST_DIR }}/fleetbase-linux-x86_64
+      # - name: Upload for PR testing
+      #   if: ${{ github.event_name == 'pull_request' }}
+      #   uses: actions/upload-artifact@v4
+      #   with:
+      #     name: linux-binary
+      #     path: ${{ env.DIST_DIR }}/fleetbase-linux-x86_64
 
     #   - name: Create GitHub Release
     #     if: ${{ github.event_name == 'push' }}
@@ -60,6 +60,17 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+
+      - name: Install asdf & tools
+        uses: asdf-vm/actions/install@v4
+
+      - name: Add PHP plugin & version
+        uses: asdf-vm/actions/plugins-add@v4
+        with:
+          tool_versions: |
+            php 8.4.0
+      - name: Install tools via asdf
+        uses: asdf-vm/actions/install@v4
 
       - name: Run macOS build
         run: |
