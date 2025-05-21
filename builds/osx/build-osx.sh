@@ -60,10 +60,11 @@ log "Detected PHP binary: $ORIGINAL_PHP_PATH"
 # ───────────────────────────────────────────────────────────────────────────────
 # If the *current* php is already 8.4.x, we skip the entire asdf install step
 # ───────────────────────────────────────────────────────────────────────────────
-if php -r 'exit (PHP_MAJOR_VERSION == 8 && PHP_MINOR_VERSION == 4) ? 0 : 1;' >/dev/null 2>&1; then
-    log "System PHP is already 8.4.x, skipping asdf install"
+if [[ "$ORIGINAL_PHP_PATH" == "$BREW_PREFIX/bin/php" && "$ORIGINAL_PHP_VERSION" =~ ^8\.4\. ]]; then
+    log "Homebrew PHP $ORIGINAL_PHP_VERSION detected at $ORIGINAL_PHP_PATH — skipping asdf build/install."
 else
     # Only install under asdf if we don’t already have 8.4.0 installed
+    log "No Homebrew PHP 8.4 detected (found $ORIGINAL_PHP_PATH $ORIGINAL_PHP_VERSION), using asdf to build/install."
     if ! asdf list php | grep -q "8.4.0"; then
         # Use brew to install required dependencies for asdf php management
         log "Checking and installing Homebrew packages required for PHP 8.4 build..."
