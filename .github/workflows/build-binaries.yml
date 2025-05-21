@@ -64,9 +64,8 @@ jobs:
       - name: Install build dependencies
         run: |
           brew update
-          brew install autoconf automake coreutils asdf
-          ASDF_SH="$(brew --prefix asdf)/libexec/asdf.sh"
-          source "$ASDF_SH"
+          brew install autoconf automake coreutils asdf php@8.4
+          source "$(brew --prefix asdf)/libexec/asdf.sh"
           asdf plugin add php https://github.com/asdf-community/asdf-php.git
 
       - name: Run macOS build
