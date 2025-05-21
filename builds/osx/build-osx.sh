@@ -46,11 +46,11 @@ fi
 # 🔁 Trap to restore PHP when script exits
 trap 'if [ "$IS_ASDF_MANAGED" = true ]; then
           log "Restoring asdf-managed PHP version: $ORIGINAL_PHP_VERSION"
-          asdf set php "$ORIGINAL_PHP_VERSION"
+          asdf set php "$ORIGINAL_PHP_VERSION" || true
           log "Reverted to PHP $(php -v | head -n 1)"
       else
           log "Unsetting asdf set to restore system PHP"
-          asdf set php system
+          asdf set php system || true
           log "Reverted to PHP $(php -v | head -n 1)"
       fi' EXIT
 
