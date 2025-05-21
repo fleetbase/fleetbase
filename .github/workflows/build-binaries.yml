@@ -61,6 +61,13 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
+      - name: Install PHP build dependencies
+        run: |
+          brew update
+          brew install autoconf automake bison re2c \
+                       icu4c libpng libzip oniguruma \
+                       openssl@3 pkg-config
+
       - name: Install asdf & PHP 8.4
         uses: asdf-vm/actions/install@v4
         with:
