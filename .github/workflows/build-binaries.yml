@@ -25,7 +25,7 @@ jobs:
 
       - name: Upload for PR testing
         if: ${{ github.event_name == 'pull_request' }}
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: linux-binary
           path: ${{ env.DIST_DIR }}/fleetbase-linux-x86_64
@@ -68,7 +68,7 @@ jobs:
 
       - name: Upload for PR testing
         if: ${{ github.event_name == 'pull_request' }}
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: macos-binary
           path: ${{ env.DIST_DIR }}/fleetbase-$(uname -s)-$(uname -m)
