@@ -67,7 +67,7 @@ jobs:
           brew install autoconf automake coreutils asdf
           ASDF_SH="$(brew --prefix asdf)/libexec/asdf.sh"
           source "$ASDF_SH"
-          asdf plugin-add php https://github.com/asdf-community/asdf-php.git
+          asdf plugin add php https://github.com/asdf-community/asdf-php.git
 
       - name: Run macOS build
         run: |
