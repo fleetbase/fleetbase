@@ -16,37 +16,43 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    # 1️⃣ Resolve which tag we’re talking about
+    # 1️⃣  Figure out which tag we’re talking about
     - id: vars
+      shell: bash
       run: |
         if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
-          echo "tag=${{ github.event.inputs.tag }}" >> "$GITHUB_OUTPUT"
+          TAG="${{ github.event.inputs.tag }}"
         else
-          echo "tag=${{ github.event.workflow_run.head_branch }}" >> "$GITHUB_OUTPUT"
+          TAG="${{ github.event.workflow_run.head_branch }}"
         fi
+        echo "TAG=$TAG"   >> "$GITHUB_ENV"
 
-    # 2️⃣ Check out the exact commit that tag points to
+    # 2️⃣  Check out the exact commit for that tag
     - uses: actions/checkout@v3
       with:
-        ref: ${{ steps.vars.outputs.tag }}
-        fetch-depth: 1
+        ref: ${{ env.TAG }}
+        fetch-depth: 1          # we only need this one commit
 
-    # 3️⃣ Store RELEASE.md as a *multi-line* output, using heredoc syntax
+    # 3️⃣  Stash RELEASE.md in an env var (one atomic write → no EOF error)
     - id: notes
+      shell: bash
       run: |
-        echo "body<<EOF" >> "$GITHUB_OUTPUT"
-        cat RELEASE.md >> "$GITHUB_OUTPUT"
-        echo "EOF" >> "$GITHUB_OUTPUT"
+        # Trim to 1900 chars so Discord never rejects the message
+        body=$(<RELEASE.md)
+        [[ ${#body} -gt 1900 ]] && body="${body:0:1900}…"
+        {
+          printf 'RELEASE_BODY<<EOF\n%s\nEOF\n' "$body"
+        } >> "$GITHUB_ENV"
 
-    # 4️⃣ Post to Discord
+    # 4️⃣  Fire the webhook
     - uses: tsickert/discord-webhook@v5.3.0
       with:
         webhook-url: ${{ secrets.DISCORD_WEBHOOK_URL }}
         username: Fleetbase
         content: |
           @everyone
-          📦 **Fleetbase ${{ steps.vars.outputs.tag }} released!**
+          📦 **Fleetbase ${{ env.TAG }} released!**
 
-          ${{ steps.notes.outputs.body }}
+          ${{ env.RELEASE_BODY }}
 
-          <https://github.com/${{ github.repository }}/releases/tag/${{ steps.vars.outputs.tag }}>
+          <https://github.com/${{ github.repository }}/releases/tag/${{ env.TAG }}>
