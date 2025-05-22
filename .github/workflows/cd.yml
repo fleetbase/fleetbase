@@ -157,6 +157,7 @@ jobs:
           echo "STRIPE_KEY=${{ secrets.STRIPE_KEY }}" >> ./environments/.env.production
           echo "LOGROCKET_APP_ID=${{ secrets.LOGROCKET_APP_ID }}" >> ./environments/.env.production
           echo "EXTENSIONS=@fleetbase/billing-engine,@fleetbase/internals-engine" >> ./environments/.env.production
+          echo "DISABLE_RUNTIME_CONFIG=true" >> ./environments/.env.production
         working-directory: ./console
 
       - name: Install dependencies
