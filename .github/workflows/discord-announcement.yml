@@ -1,8 +1,14 @@
 name: Discord Announcement
 
 on:
-  release:
-    types: [published]
+  workflow_run:
+    workflows: ["Create Release"]
+    types: [completed]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Release tag (e.g. v1.0.0)'
+        required: true
 
 jobs:
   discord_announcement:
