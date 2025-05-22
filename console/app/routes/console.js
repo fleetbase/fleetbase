@@ -39,9 +39,6 @@ export default class ConsoleRoute extends Route {
     async afterModel(model, transition) {
         this.universe.callHooks('console:after-model', this.session, this.router, model, transition);
         removeBootLoader();
-
-        // Reboot extensions
-        this.universe.bootEngines();
     }
 
     /**

@@ -1,7 +1,9 @@
 import Controller from '@ember/controller';
+import { tracked } from '@glimmer/tracking';
 import { inject as service } from '@ember/service';
 import { action } from '@ember/object';
 import { alias } from '@ember/object/computed';
+import { debug } from '@ember/debug';
 import { task } from 'ember-concurrency';
 
 export default class ConsoleAccountIndexController extends Controller {
@@ -39,6 +41,18 @@ export default class ConsoleAccountIndexController extends Controller {
      * @memberof ConsoleAccountIndexController
      */
     @alias('currentUser.user') user;
+
+    /**
+     * Available timezones for selection.
+     *
+     * @memberof ConsoleAccountIndexController
+     */
+    @tracked timezones = [];
+
+    constructor() {
+        super(...arguments);
+        this.loadTimezones.perform();
+    }
 
     /**
      * Handle upload of new photo
@@ -114,6 +128,19 @@ export default class ConsoleAccountIndexController extends Controller {
         });
 
         return isPasswordValid;
+    }
+
+    /**
+     * Load all available timezones from lookup.
+     *
+     * @memberof ConsoleAccountIndexController
+     */
+    @task *loadTimezones() {
+        try {
+            this.timezones = yield this.fetch.get('lookup/timezones');
+        } catch (error) {
+            debug(`Unable to load timezones : ${error.message}`);
+        }
     }
 
     /**
