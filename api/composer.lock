@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "4883ee7304cb6ef77ebc39c4debf6d28",
+    "content-hash": "9312afd73d4b5d68341206717e24d7f9",
     "packages": [
         {
             "name": "appstract/laravel-opcache",
@@ -124,16 +124,16 @@
         },
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.343.12",
+            "version": "3.343.16",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "d4b21990410d023e9c5303487d3248e8d7c8c2b6"
+                "reference": "138f07d30607af225aefbb794b90d76ea3a67831"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/d4b21990410d023e9c5303487d3248e8d7c8c2b6",
-                "reference": "d4b21990410d023e9c5303487d3248e8d7c8c2b6",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/138f07d30607af225aefbb794b90d76ea3a67831",
+                "reference": "138f07d30607af225aefbb794b90d76ea3a67831",
                 "shasum": ""
             },
             "require": {
@@ -215,9 +215,9 @@
             "support": {
                 "forum": "https://github.com/aws/aws-sdk-php/discussions",
                 "issues": "https://github.com/aws/aws-sdk-php/issues",
-                "source": "https://github.com/aws/aws-sdk-php/tree/3.343.12"
+                "source": "https://github.com/aws/aws-sdk-php/tree/3.343.16"
             },
-            "time": "2025-05-15T18:14:32+00:00"
+            "time": "2025-05-21T18:03:53+00:00"
         },
         {
             "name": "aws/aws-sdk-php-laravel",
@@ -2546,16 +2546,16 @@
         },
         {
             "name": "fleetbase/core-api",
-            "version": "1.6.5",
+            "version": "1.6.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fleetbase/core-api.git",
-                "reference": "377f05b3f7d30c739b91541369971c0ba350b97f"
+                "reference": "5e267dc8c74f9a2126c00d955188eb5b77793c25"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fleetbase/core-api/zipball/377f05b3f7d30c739b91541369971c0ba350b97f",
-                "reference": "377f05b3f7d30c739b91541369971c0ba350b97f",
+                "url": "https://api.github.com/repos/fleetbase/core-api/zipball/5e267dc8c74f9a2126c00d955188eb5b77793c25",
+                "reference": "5e267dc8c74f9a2126c00d955188eb5b77793c25",
                 "shasum": ""
             },
             "require": {
@@ -2640,9 +2640,9 @@
             ],
             "support": {
                 "issues": "https://github.com/fleetbase/core-api/issues",
-                "source": "https://github.com/fleetbase/core-api/tree/v1.6.5"
+                "source": "https://github.com/fleetbase/core-api/tree/v1.6.6"
             },
-            "time": "2025-05-16T06:53:38+00:00"
+            "time": "2025-05-22T01:32:02+00:00"
         },
         {
             "name": "fleetbase/customer-portal-api",
@@ -2736,16 +2736,16 @@
         },
         {
             "name": "fleetbase/fleetops-api",
-            "version": "0.6.8",
+            "version": "0.6.9",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fleetbase/fleetops.git",
-                "reference": "dfff83b3f10b657fd0edb27890ae3caa19b4211f"
+                "reference": "b422dbb30980478d6048ed48c8633743f8fd0e3c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fleetbase/fleetops/zipball/dfff83b3f10b657fd0edb27890ae3caa19b4211f",
-                "reference": "dfff83b3f10b657fd0edb27890ae3caa19b4211f",
+                "url": "https://api.github.com/repos/fleetbase/fleetops/zipball/b422dbb30980478d6048ed48c8633743f8fd0e3c",
+                "reference": "b422dbb30980478d6048ed48c8633743f8fd0e3c",
                 "shasum": ""
             },
             "require": {
@@ -2819,16 +2819,16 @@
             ],
             "support": {
                 "issues": "https://github.com/fleetbase/fleetops/issues",
-                "source": "https://github.com/fleetbase/fleetops/tree/v0.6.8"
+                "source": "https://github.com/fleetbase/fleetops/tree/v0.6.9"
             },
-            "time": "2025-05-16T07:20:45+00:00"
+            "time": "2025-05-22T01:33:22+00:00"
         },
         {
             "name": "fleetbase/flespi-integration",
             "version": "0.1.14",
             "dist": {
                 "type": "tar",
-                "url": "https://s3.ap-southeast-1.amazonaws.com/fleetbase-registry-qa/flb/%40fleetbase/flespi-engine/flespi-engine-0.1.14.tgz?AWSAccessKeyId=ASIA26E6KG6WMF7UHW23&Expires=1747391336&Signature=b44gf9zntpV4%2BPBgCcRotQiQ7fA%3D&x-amz-security-token=IQoJb3JpZ2luX2VjEIr%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaDmFwLXNvdXRoZWFzdC0xIkYwRAIgZ6jrKi3tniN1v1VQSg5fFORPTJA9eakgnjG0ioTCzYQCIHlllfMLCZpQlPB6I8Ok%2F0%2Fft0uAvOJh9m%2FhWdWuQcx5KoYECEMQABoMNzUxOTUxMjk2NDI4IgwvjkKHqnv9iAXUCBMq4wPXZojvNPFqCJqAk8QPZAcv3GBJUHLM8HPgsRYRaqKAYEsXCL1IAiWlYK50Nhv1ArR796DGaN05dJHRmOYiIZLqmsg9hr%2BJx7PfDZpWCbiTNyW70x3kANXmfc%2FGlA%2B0L8X4daZ9k0VrfTDmGvYeWWlCMtcbDQcjrsa%2BuqU4X33HoRa%2BK70XuxDb9Nf37mzhIVPxNqZAGWl%2F3FhrbEYXzZSh2Onz71isKYxLoQzk3zBmAMxPS6sUc%2FJiaulIT1XmU3vqWSyD1mx9gZjX3eZHSs3SoS9SwX4Yj5dcZB8X4PlKBM8OgPMP24W02uggVC63eKFSIlZh8k3WnRkKQQAcIjTNnNTmb9gG7WOAF3UGbLPI20vAS7KXpQXl26R7WLKdr5725xvjEDqOuw78uT5EI%2FT4cUVVLdNWeGxjFXY8Qc2%2F%2FbuzCzTOHhjaJAfaQda%2Bp%2FLg0GhpY4ceYNJPVRxk5yaEt%2BBsXfiHZFJFdM3QDRu0MjcpY7CD%2F%2F8qBa2StbjL44%2BGcvsIVdqZCmzs8JpsEITaX%2FArSPaAonY4SIO9NkdjD4k6rjkgQeegmJAhvEzosa4mD6dtj%2B82aYNBC%2FU1j1WiKBg7U6%2FxAevHB0khC8Yg%2FIqjAxaHB8VDRvhKL%2BPIHZ%2BR4Oww7YycwQY6pgGjSH6WLLwBeCWSgCgmeBnyjwc2175qhr3E7Pwvhq6WiNCHsTaNx0YCAAiJ3dMRBcfUb5OjBi2WBjnchbarJUA89fFqCSSUZIsLtWDldRlWnnUdwe23hL%2FF5%2FxguvW0u%2BAlPUvPZZRc%2F2QTe%2BIBR83VRzq1xq%2B52Sr1LLs6iP6SQGbsTL%2FaaDD%2ByETIwyYsQrxX4FHbGgb7stirWDFBk5rRNKpfRWdm"
+                "url": "https://s3.ap-southeast-1.amazonaws.com/fleetbase-registry-qa/flb/%40fleetbase/flespi-engine/flespi-engine-0.1.14.tgz?AWSAccessKeyId=ASIA26E6KG6WAEHEB7OE&Expires=1747890922&Signature=yZLHk81FwMYQkSg78CY8E3HGSrQ%3D&x-amz-security-token=IQoJb3JpZ2luX2VjEBUaDmFwLXNvdXRoZWFzdC0xIkcwRQIhAPgUzHa18nCSl%2BZs86d3AQCk3Z%2FP1jes8fKxthJttxL3AiBoR%2BYHSCMp%2F%2BKlsmX8fajo8WcCNuJ6aGu4YZzc0UpKWyqPBAjO%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F8BEAAaDDc1MTk1MTI5NjQyOCIMOJPaDmYY9Md23P7CKuMDHUTxD4xIDQ0FZ9x68swdEkOZ4jG0GezMtGA8PhG1ffVHWXcWcB3EggJ5El3iYz3MfqLT0vsG0Usw%2Fj1Bzd6HyibEvNNnMu9Ywd2hYiPwg1eWSQ7ux2jNUcE%2FjxWUgyG4tFJxQAnzqYGEUO05shXCM6dXAsJyo6vhohdF5bOeGZZqwleg6wVUcokfDt2HJS2otvRi%2BIex2AIlB19oQujGHxo9Hcia6gEA5qGfAHZd8MbVBFEmUVDMQ9Ek8TGj1Hsn1Xpjr5wkzTVIL9ZuxM5xYGg1EfLBTsz37W2mF4pIX%2F4wdwvFmRJhqU5EitFLMZAmRIPbQ050XNKdVK%2B%2BlgJ7CLX%2FcDKHVElSUvwfyugasNhIXdWVsRddknV7%2FcK51NN3N9%2BxnuvqjpzrkgeuB%2FGQhirhYIiKsEwF%2Bjui7vq%2FjhO8SEclelVcAzVUMxTfmLKSecGr2Ta%2BVR0rQLx2hOllatIxPzYU7cq7zRyXVvHjjcLjBsht7JNndVDvlE%2FRfwyJhcsHX7N3p7wGNoun%2BNFojlTT%2FjZU7y3VzE5Ls%2BCHhtkVTfrosnvXeMMpWLK3J35NGa4KXGi163LCmt%2FjCHHowSgLFuLMbgRb7dQYPFien%2BPw2cIvuX0x3sZ628TTkkAxyFgOMMHSusEGOqUBr6vCgC5RzOPgg739KTF0Yd34rNV5u6DMhShIkiK4%2BucvlTrTvOHrgD3cP1iieYFSQt%2FcaBV8iwQfVSJBxVYCFyyJ2Bp8W1uxmeZl%2FqRi%2BbkwQm5DkHLAeowOFqh2Xh0zHsJvX14hkWVj3IMhETWsiBtJeNFIwJa9ZKzacuPILY4XH8lzcZNe8DWS%2BbrKQ%2FOeHBzVgG19kBZtuMnKkqJOwcV0uulE"
             },
             "require": {
                 "fleetbase/core-api": "*",
@@ -4096,16 +4096,16 @@
         },
         {
             "name": "google/cloud-core",
-            "version": "v1.62.2",
+            "version": "v1.62.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/googleapis/google-cloud-php-core.git",
-                "reference": "506b69e9e13eaac1656edd0bfc7ea5d81cf870d9"
+                "reference": "0c19d76e7f3b6810c4f2cc1330c693af2681c601"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/googleapis/google-cloud-php-core/zipball/506b69e9e13eaac1656edd0bfc7ea5d81cf870d9",
-                "reference": "506b69e9e13eaac1656edd0bfc7ea5d81cf870d9",
+                "url": "https://api.github.com/repos/googleapis/google-cloud-php-core/zipball/0c19d76e7f3b6810c4f2cc1330c693af2681c601",
+                "reference": "0c19d76e7f3b6810c4f2cc1330c693af2681c601",
                 "shasum": ""
             },
             "require": {
@@ -4156,22 +4156,22 @@
             ],
             "description": "Google Cloud PHP shared dependency, providing functionality useful to all components.",
             "support": {
-                "source": "https://github.com/googleapis/google-cloud-php-core/tree/v1.62.2"
+                "source": "https://github.com/googleapis/google-cloud-php-core/tree/v1.62.3"
             },
-            "time": "2025-05-09T21:18:44+00:00"
+            "time": "2025-05-20T19:49:54+00:00"
         },
         {
             "name": "google/cloud-storage",
-            "version": "v1.48.0",
+            "version": "v1.48.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/googleapis/google-cloud-php-storage.git",
-                "reference": "e2d7a59290ab7fb69208c45058efa3946edbb793"
+                "reference": "509b095c3ea44db92c9e62a94b5773563c831821"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/googleapis/google-cloud-php-storage/zipball/e2d7a59290ab7fb69208c45058efa3946edbb793",
-                "reference": "e2d7a59290ab7fb69208c45058efa3946edbb793",
+                "url": "https://api.github.com/repos/googleapis/google-cloud-php-storage/zipball/509b095c3ea44db92c9e62a94b5773563c831821",
+                "reference": "509b095c3ea44db92c9e62a94b5773563c831821",
                 "shasum": ""
             },
             "require": {
@@ -4213,22 +4213,22 @@
             ],
             "description": "Cloud Storage Client for PHP",
             "support": {
-                "source": "https://github.com/googleapis/google-cloud-php-storage/tree/v1.48.0"
+                "source": "https://github.com/googleapis/google-cloud-php-storage/tree/v1.48.1"
             },
-            "time": "2025-04-18T20:49:28+00:00"
+            "time": "2025-05-20T19:49:54+00:00"
         },
         {
             "name": "google/common-protos",
-            "version": "4.12.0",
+            "version": "4.12.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/googleapis/common-protos-php.git",
-                "reference": "96f6873c65fb0289fcdb6ac3d5239f9c9e5750b0"
+                "reference": "70c4eb1abab5484a23c17a43b0d455259f5d8c1b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/googleapis/common-protos-php/zipball/96f6873c65fb0289fcdb6ac3d5239f9c9e5750b0",
-                "reference": "96f6873c65fb0289fcdb6ac3d5239f9c9e5750b0",
+                "url": "https://api.github.com/repos/googleapis/common-protos-php/zipball/70c4eb1abab5484a23c17a43b0d455259f5d8c1b",
+                "reference": "70c4eb1abab5484a23c17a43b0d455259f5d8c1b",
                 "shasum": ""
             },
             "require": {
@@ -4272,22 +4272,22 @@
                 "google"
             ],
             "support": {
-                "source": "https://github.com/googleapis/common-protos-php/tree/v4.12.0"
+                "source": "https://github.com/googleapis/common-protos-php/tree/v4.12.1"
             },
-            "time": "2025-04-18T20:49:28+00:00"
+            "time": "2025-05-20T19:49:54+00:00"
         },
         {
             "name": "google/gax",
-            "version": "v1.36.0",
+            "version": "v1.36.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/googleapis/gax-php.git",
-                "reference": "140599cf5eae2432363ce6198e9fdff851625a7a"
+                "reference": "afdac3bc38a3b17d70668115d7b1a97289ac4d72"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/googleapis/gax-php/zipball/140599cf5eae2432363ce6198e9fdff851625a7a",
-                "reference": "140599cf5eae2432363ce6198e9fdff851625a7a",
+                "url": "https://api.github.com/repos/googleapis/gax-php/zipball/afdac3bc38a3b17d70668115d7b1a97289ac4d72",
+                "reference": "afdac3bc38a3b17d70668115d7b1a97289ac4d72",
                 "shasum": ""
             },
             "require": {
@@ -4329,9 +4329,9 @@
             ],
             "support": {
                 "issues": "https://github.com/googleapis/gax-php/issues",
-                "source": "https://github.com/googleapis/gax-php/tree/v1.36.0"
+                "source": "https://github.com/googleapis/gax-php/tree/v1.36.1"
             },
-            "time": "2024-12-11T02:47:43+00:00"
+            "time": "2025-05-20T19:50:43+00:00"
         },
         {
             "name": "google/grpc-gcp",
@@ -11747,16 +11747,16 @@
         },
         {
             "name": "spatie/laravel-responsecache",
-            "version": "7.6.5",
+            "version": "7.7.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spatie/laravel-responsecache.git",
-                "reference": "c7a155d96579194e4e7c092d080d45896e638cc2"
+                "reference": "d551f0498dbb2d98df47359364e5a1c8203a6376"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spatie/laravel-responsecache/zipball/c7a155d96579194e4e7c092d080d45896e638cc2",
-                "reference": "c7a155d96579194e4e7c092d080d45896e638cc2",
+                "url": "https://api.github.com/repos/spatie/laravel-responsecache/zipball/d551f0498dbb2d98df47359364e5a1c8203a6376",
+                "reference": "d551f0498dbb2d98df47359364e5a1c8203a6376",
                 "shasum": ""
             },
             "require": {
@@ -11814,7 +11814,7 @@
                 "spatie"
             ],
             "support": {
-                "source": "https://github.com/spatie/laravel-responsecache/tree/7.6.5"
+                "source": "https://github.com/spatie/laravel-responsecache/tree/7.7.0"
             },
             "funding": [
                 {
@@ -11826,7 +11826,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-04-10T16:20:10+00:00"
+            "time": "2025-05-20T08:39:19+00:00"
         },
         {
             "name": "spatie/laravel-schedule-monitor",

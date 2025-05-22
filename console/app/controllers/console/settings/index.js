@@ -2,6 +2,8 @@ import Controller from '@ember/controller';
 import { tracked } from '@glimmer/tracking';
 import { inject as service } from '@ember/service';
 import { action } from '@ember/object';
+import { debug } from '@ember/debug';
+import { task } from 'ember-concurrency';
 
 export default class ConsoleSettingsIndexController extends Controller {
     /**
@@ -26,13 +28,6 @@ export default class ConsoleSettingsIndexController extends Controller {
     @service fetch;
 
     /**
-     * The request loading state.
-     *
-     * @memberof ConsoleSettingsIndexController
-     */
-    @tracked isLoading = false;
-
-    /**
      * the upload queue.
      *
      * @memberof ConsoleSettingsIndexController
@@ -47,22 +42,31 @@ export default class ConsoleSettingsIndexController extends Controller {
     @tracked uploadedFiles = [];
 
     /**
+     * Available timezones for selection.
+     *
+     * @memberof ConsoleAccountIndexController
+     */
+    @tracked timezones = [];
+
+    constructor() {
+        super(...arguments);
+        this.loadTimezones.perform();
+    }
+
+    /**
      * Save the organization settings.
      *
      * @memberof ConsoleSettingsIndexController
      */
-    @action saveSettings(event) {
-        event.preventDefault();
-        this.isLoading = true;
+    @task *saveSettings(event) {
+        event?.preventDefault();
 
-        this.model
-            .save()
-            .then(() => {
-                this.notifications.success('Organization changes successfully saved.');
-            })
-            .finally(() => {
-                this.isLoading = false;
-            });
+        try {
+            yield this.model.save();
+            this.notifications.success('Organization changes successfully saved.');
+        } catch (error) {
+            debug(`Unable to save organization settings : ${error.message}`);
+        }
     }
 
     /**
@@ -90,5 +94,18 @@ export default class ConsoleSettingsIndexController extends Controller {
                 });
             }
         );
+    }
+
+    /**
+     * Load all available timezones from lookup.
+     *
+     * @memberof ConsoleAccountIndexController
+     */
+    @task *loadTimezones() {
+        try {
+            this.timezones = yield this.fetch.get('lookup/timezones');
+        } catch (error) {
+            debug(`Unable to load timezones : ${error.message}`);
+        }
     }
 }

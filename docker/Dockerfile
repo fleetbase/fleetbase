@@ -3,7 +3,7 @@
 FROM dunglas/frankenphp:1.5.0-php8.2-bookworm AS base
 
 # Install packages
-RUN apt-get update && apt-get install -y git bind9-utils mycli nodejs npm nano \
+RUN apt-get update && apt-get install -y git bind9-utils mycli nodejs npm nano uuid-runtime \
   && mkdir -p /root/.ssh \
   && ssh-keyscan github.com >> /root/.ssh/known_hosts
 
@@ -75,6 +75,7 @@ ENV QUEUE_CONNECTION=redis
 ENV CADDYFILE_PATH=/fleetbase/Caddyfile
 ENV CONSOLE_PATH=/fleetbase/console
 ENV OCTANE_SERVER=frankenphp
+ENV FLEETBASE_VERSION=0.7.1
 
 # Set environment
 ARG ENVIRONMENT=production
@@ -88,6 +89,13 @@ COPY --chown=www-data:www-data ./Caddyfile $CADDYFILE_PATH
 
 # Create /fleetbase directory and set correct permissions
 RUN mkdir -p /fleetbase/api && mkdir -p /fleetbase/console && chown -R www-data:www-data /fleetbase
+
+# Generate and store a UUID in .fleetbase-id
+RUN uuidgen > /fleetbase/api/.fleetbase-id
+
+# Export the same ID as an environment variable for use in the container
+RUN export FLEETBASE_INSTANCE_ID=$(cat /fleetbase/api/.fleetbase-id) && \
+    echo "FLEETBASE_INSTANCE_ID=$FLEETBASE_INSTANCE_ID" >> /etc/environment
 
 # Set working directory
 WORKDIR /fleetbase/api
@@ -122,21 +130,18 @@ RUN chmod -R 755 /fleetbase/api/storage
 # Set permissions for deploy script
 RUN chmod +x /fleetbase/api/deploy.sh
 
-# Scheduler base stage
-FROM base AS scheduler-base
-
 # Install go-crond
 RUN curl -L https://github.com/webdevops/go-crond/releases/download/23.12.0/go-crond.linux.amd64 > /usr/local/bin/go-crond && chmod +x /usr/local/bin/go-crond
 COPY docker/crontab ./crontab
 RUN chmod 0600 ./crontab
 
 # Scheduler dev stage
-FROM scheduler-base AS scheduler-dev
+FROM base AS scheduler-dev
 ENTRYPOINT []
 CMD ["go-crond", "--verbose", "root:./crontab"]
 
 # Scheduler stage
-FROM scheduler-base AS scheduler
+FROM base AS scheduler
 ENTRYPOINT ["/sbin/ssm-parent", "-c", ".ssm-parent.yaml", "run", "--"]
 CMD ["go-crond", "--verbose", "root:./crontab"]
 
@@ -153,7 +158,12 @@ CMD ["php", "artisan", "queue:work"]
 # Application dev stage
 FROM base AS app-dev
 ENTRYPOINT ["docker-php-entrypoint"]
-CMD ["sh", "-c", "php artisan octane:frankenphp --max-requests=250 --port=8000 --host=0.0.0.0 --watch"] 
+CMD ["sh", "-c", "php artisan octane:frankenphp --max-requests=250 --port=8000 --host=0.0.0.0 --watch"]
+
+# Application release stage
+FROM base AS app-release
+ENTRYPOINT ["docker-php-entrypoint"]
+CMD ["sh", "-c", "php artisan octane:frankenphp --max-requests=250 --port=8000 --host=0.0.0.0"] 
 
 # Application stage
 FROM base AS app
