@@ -31,13 +31,20 @@ services:
       SOCKETCLUSTER_WORKERS: 10
       SOCKETCLUSTER_BROKERS: 10
 
+  scheduler:
+    image: fleetbase/fleetbase-api:latest
+    command: ["go-crond", "--verbose", "root:./crontab"]
+    environment:
+      DATABASE_URL: "mysql://root@database/fleetbase"
+      QUEUE_CONNECTION: redis
+      CACHE_DRIVER: redis
+      CACHE_PATH: /fleetbase/api/storage/framework/cache
+      CACHE_URL: tcp://cache
+      REDIS_URL: tcp://cache
+
   queue:
-    build:
-      context: .
-      dockerfile: docker/Dockerfile
-      target: events-dev
-      args:
-        ENVIRONMENT: development
+    image: fleetbase/fleetbase-api:latest
+    command: ["php", "artisan", "queue:work"]
     healthcheck:
       test: ["CMD", "php", "artisan", "queue:status"]
       interval: 30s
@@ -52,21 +59,14 @@ services:
       REDIS_URL: tcp://cache
 
   console:
-    build:
-      context: .
-      dockerfile: console/Dockerfile.server-build
-      args:
-        ENVIRONMENT: development
+    image: fleetbase/fleetbase-console:latest
     ports:
       - "4200:4200"
+    volumes:
+      - ./console/fleetbase.config.json:/usr/share/nginx/html/fleetbase.config.json
 
   application:
-    build:
-      context: .
-      dockerfile: docker/Dockerfile
-      target: app-dev
-      args:
-        ENVIRONMENT: development
+    image: fleetbase/fleetbase-api:latest
     environment:
       ENVIRONMENT: development
       DATABASE_URL: "mysql://root@database/fleetbase"

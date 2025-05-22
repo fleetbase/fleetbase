@@ -75,6 +75,7 @@ common:
   permissions-required-for-changes: You do not have the required permissions to make changes.
   push-notifications: Push Notifications
   role: Role
+  timezone: Timezone
 component:
   file:
     dropdown-label: File actions
@@ -229,6 +230,7 @@ console:
       upload-new: Upload new
       phone: Your phone number.
       photos: photos
+      timezone: Select your timezone.
   admin:
     schedule-monitor:
       schedule-monitor: Schedule Monitor
@@ -301,6 +303,8 @@ console:
       backdrop: Backdrop
       backdrop-help-text: Optional banner or background image for your organization.
       upload-new-backdrop: Upload new backdrop
+      organization-timezone: Select the default timezone for your organization.
+      select-timezone: Select timezone.
   extensions:
     title: Extensions are coming soon!
     message: Please check back in the upcoming versions as we prepare to launch the Extensions repository and marketplace.

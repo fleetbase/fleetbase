@@ -3,6 +3,7 @@
 /** eslint-disable node/no-unpublished-require */
 const EmberApp = require('ember-cli/lib/broccoli/ember-app');
 const FleetbaseExtensionsIndexer = require('fleetbase-extensions-indexer');
+const Funnel = require('broccoli-funnel');
 const postcssImport = require('postcss-import');
 const postcssPresetEnv = require('postcss-preset-env');
 const postcssEach = require('postcss-each');
@@ -11,6 +12,7 @@ const postcssConditionals = require('postcss-conditionals-renewed');
 const postcssAtRulesVariables = require('postcss-at-rules-variables');
 const autoprefixer = require('autoprefixer');
 const tailwind = require('tailwindcss');
+const environment = process.env.EMBER_ENV;
 
 module.exports = function (defaults) {
     const app = new EmberApp(defaults, {
@@ -59,19 +61,13 @@ module.exports = function (defaults) {
     });
 
     let extensions = new FleetbaseExtensionsIndexer();
+    let config;
+    if (environment === 'development') {
+        config = new Funnel('.', {
+            files: ['fleetbase.config.json'],
+            destDir: '/',
+        });
+    }
 
-    // Use `app.import` to add additional libraries to the generated
-    // output files.
-    //
-    // If you need to use different assets in different
-    // environments, specify an object as the first parameter. That
-    // object's keys should be the environment name and the values
-    // should be the asset to use in that environment.
-    //
-    // If the library that you are including contains AMD or ES6
-    // modules that you would like to import into your application
-    // please specify an object with the list of modules as keys
-    // along with the exports of each module as its value.
-
-    return app.toTree([extensions]);
+    return app.toTree([extensions, config].filter(Boolean));
 };
