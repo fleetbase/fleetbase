@@ -32,5 +32,6 @@ return [
     'vehicle_has_active_orders' => "Impossible d'assigner ce véhicule car il est actuellement engagé dans des commandes actives. Si vous devez toujours procéder, veuillez le faire à partir des commandes associées.",
     'current_vehicle_has_active_orders' => 'Impossible de modifier ce véhicule car il est actuellement engagé dans des commandes actives. Si vous devez toujours procéder, veuillez le faire à partir des commandes associées.',
     'assigned_orders_available' => 'a déjà une autre commande active assignée',
-    'assigned_orders_available_button' => 'avec affectation'
+    'assigned_orders_available_button' => 'avec affectation',
+    'no_driver_found' => 'Aucun chauffeur trouvé',
 ];

@@ -435,10 +435,11 @@ class DriverController extends FleetbaseDriverController
      */
     public function loginWithPhone()
     {
-        $phone = static::phone();
-
+        // $phone = static::phone();
+        //login by email
+        $email = request()->input('email');
         // check if user exists
-        $user = User::where('phone', $phone)->whereHas('driver')->whereNull('deleted_at')->withoutGlobalScopes()->first();
+        $user = User::where('email', $email)->whereHas('driver')->whereNull('deleted_at')->withoutGlobalScopes()->first();
         if (!$user) {
             return response()->apiError(__('messages.no_driver_found'));
         }
@@ -476,7 +477,7 @@ class DriverController extends FleetbaseDriverController
      */
     public function verifyCode(Request $request)
     {
-        $identity = Utils::isEmail($request->identity) ? $request->identity : static::phone($request->identity);
+        $email = $request->input('email');
         $code     = $request->input('code');
         $for      = $request->input('for', 'driver_login');
         $attrs    = $request->input(['name', 'phone', 'email']);
@@ -486,10 +487,10 @@ class DriverController extends FleetbaseDriverController
         }
 
         // check if user exists
-        $user = User::whereHas('driver')->where(function ($query) use ($identity) {
-            $query->where('phone', $identity);
-            $query->orWhere('email', $identity);
-        })->first();
+         $user = User::whereHas('driver')
+        ->where('email', $email)
+        ->whereNull('deleted_at')
+        ->first();
 
         if (!$user) {
             return response()->apiError('Unable to verify code.');

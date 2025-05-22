@@ -33,4 +33,5 @@ return [
     'current_vehicle_has_active_orders' => 'Impossibile modificare questo veicolo poiché è attualmente coinvolto in ordini attivi. Se è ancora necessario procedere, si prega di farlo dagli ordini correlati.',
     'assigned_orders_available' => 'ha già un altro ordine attivo assegnato',
     'assigned_orders_available_button' => 'con assegnazione',
+    'no_driver_found' => 'Autista non trovato',
 ];

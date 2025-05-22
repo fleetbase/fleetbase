@@ -34,5 +34,6 @@ return [
     'assigned_orders_available' => 'hat bereits eine andere aktive Bestellung zugewiesen',
     'assigned_orders_available_button' => 'mit Zuordnung',
     'driver_has_no_vehicle' => 'hat kein Fahrzeug zugewiesen',
-    'without_vehicle' => 'Ohne Fahrzeug'
+    'without_vehicle' => 'Ohne Fahrzeug',
+    'no_driver_found' => 'Kein Fahrer gefunden',
 ];
