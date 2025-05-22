@@ -20,20 +20,20 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Build Linux binary
-        run: |
-          chmod +x ./builds/linux/build-linux.sh
-          ./builds/linux/build-linux.sh
+      # - name: Build Linux binary
+      #   run: |
+      #     chmod +x ./builds/linux/build-linux.sh
+      #     ./builds/linux/build-linux.sh
 
-      - name: Upload Linux binary
-        uses: softprops/action-gh-release@v2
-        with:
-          tag_name: ${{ github.event.workflow_run.head_branch }}
-          files: |
-            ${{ env.DIST_DIR }}/fleetbase-linux-x86_64
-          draft: false
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      # - name: Upload Linux binary
+      #   uses: softprops/action-gh-release@v2
+      #   with:
+      #     tag_name: ${{ github.event.workflow_run.head_branch }}
+      #     files: |
+      #       ${{ env.DIST_DIR }}/fleetbase-linux-x86_64
+      #     draft: false
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   build-macos:
     name: macOS (ARM64) Build
