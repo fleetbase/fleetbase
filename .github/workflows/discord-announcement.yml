@@ -1,9 +1,8 @@
 name: Discord Announcement
 
 on:
-  push:
-    tags:
-      - "v*"
+  release:
+    types: [published]
 
 jobs:
   discord_announcement:
@@ -11,38 +10,30 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           fetch-depth: 0
-
-      - name: Get tag message
-        id: tag
+      - name: Read release notes
+        id: notes
         run: |
-          echo "::set-output name=version::$(git describe --tags --abbrev=0)"
-          if [[ "${ACT}" == "true" ]]; then
-            # If running with act, use an environment variable for the tag message
-            echo "::set-output name=message::$(echo -e "${TAG_MESSAGE}" | base64)"
-          else
-            # If running on GitHub, use git to get the tag message
-            echo "::set-output name=message::$(git tag -l --format='%(contents)' $(git describe --tags --abbrev=0) | base64)"
-          fi
-
-      - name: Print tag message
-        run: echo "${{ steps.tag.outputs.message }}"
-      
+          body="$(cat RELEASE.md)"
+          echo "::set-output name=message::$(echo "${body}" | base64 -w0)"
       - name: Get tag name
-        id: get_tag
-        run: echo "::set-output name=tag::${GITHUB_REF/refs\/tags\//}"
-
-      - name: Decode message
+        id: tag
+        run: echo "::set-output name=tag::${GITHUB_REF#refs/tags/}"
+      - name: Decode notes
         id: decode
         run: |
-          echo "Decoding message..."
-          echo "::set-output name=message::$(echo '${{ steps.tag.outputs.message }}' | base64 --decode)"
-
+          echo "::set-output name=text::$(echo '${{ steps.notes.outputs.message }}' | base64 --decode)"
       - name: Send message to Discord
         uses: tsickert/discord-webhook@v5.3.0
         with:
           webhook-url: ${{ secrets.DISCORD_WEBHOOK_URL }}
-          content: "@everyone \n📦 New Fleetbase Version ${{ steps.get_tag.outputs.tag }} Released!\n${{ steps.decode.outputs.message }} \nVersion: ${{ steps.get_tag.outputs.tag }} \n[Release Notes for ${{ steps.get_tag.outputs.tag }}](https://github.com/fleetbase/fleetbase/releases/tag/${{ steps.get_tag.outputs.tag }})"
           username: Fleetbase
+          content: |
+            @everyone
+            📦 **Fleetbase ${{ steps.tag.outputs.tag }} released!**
+
+            ${{ steps.decode.outputs.text }}
+
+            [View full notes on GitHub](https://github.com/fleetbase/fleetbase/releases/tag/${{ steps.tag.outputs.tag }})
