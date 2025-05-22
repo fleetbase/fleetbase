@@ -113,7 +113,8 @@ log "Exporting build environment variables..."
 export PHP_VERSION=8.2
 export PHP_EXTENSIONS="pdo_mysql,gd,bcmath,redis,intl,zip,gmp,apcu,opcache,imagick,sockets,pcntl,geos,iconv,mbstring,fileinfo,ctype,tokenizer,simplexml,dom,filter,session"
 export PHP_EXTENSION_LIBS="libgeos,libzip,bzip2,libxml2,openssl,zlib"
-export SPC_REL_TYPE=binary # use binary on osx build instead of `source`
+export SPC_REL_TYPE=source
+export SPC_OPT_DOWNLOAD_ARGS="--ignore-cache-sources=php-src --retry 5 --prefer-pre-built"
 export NO_COMPRESS=1
 export SPC_OPT_BUILD_ARGS="--debug"
 export CMAKE_OSX_ARCHITECTURES=arm64
