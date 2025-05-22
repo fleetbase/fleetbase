@@ -114,7 +114,6 @@ export PHP_VERSION=8.2
 export PHP_EXTENSIONS="pdo_mysql,gd,bcmath,redis,intl,zip,gmp,apcu,opcache,imagick,sockets,pcntl,geos,iconv,mbstring,fileinfo,ctype,tokenizer,simplexml,dom,filter,session"
 export PHP_EXTENSION_LIBS="libgeos,libzip,bzip2,libxml2,openssl,zlib"
 export SPC_REL_TYPE=source
-export SPC_OPT_DOWNLOAD_ARGS="--ignore-cache-sources=php-src --retry 5 --prefer-pre-built"
 export NO_COMPRESS=1
 export SPC_OPT_BUILD_ARGS="--debug"
 export CMAKE_OSX_ARCHITECTURES=arm64
@@ -165,6 +164,13 @@ sed -i '' 's/^[[:space:]]*git pull/# git pull/' "$OSX_DIR/frankenphp/build-stati
 
 # Patch add CoreServices framework for Caddy build on OSX
 sed -i '' 's/-framework CoreFoundation -framework SystemConfiguration/& -framework CoreServices/' "$OSX_DIR/frankenphp/build-static.sh"
+
+# ── work around 403 on GH macOS runners ────────────────────────────────────────
+log "Patching curl to use a browser-like User-Agent (to avoid 403s)…"
+curl() {
+  command curl -sSL -A "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/15.6 Safari/605.1.15" "$@"
+}
+export -f curl
 
 # Build the binary
 log "⚙️ Running FrankenPHP build-static.sh..."
