@@ -65,6 +65,10 @@ export function applyRuntimeConfig(rawConfig = {}) {
  * @return {void}
  */
 export default async function loadRuntimeConfig() {
+    if (config.APP.disableRuntimeConfig) {
+        return;
+    }
+
     try {
         const response = await fetch(`/fleetbase.config.json?_t=${Date.now()}`, { cache: 'no-cache' });
         if (!response.ok) {

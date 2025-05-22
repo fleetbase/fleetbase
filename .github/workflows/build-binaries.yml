@@ -1,9 +1,13 @@
-name: Build & Publish Binaries
+name: Fleetbase Binaries
 
 on:
   pull_request:
-  release:
-    types: [published]
+  workflow_run:
+    workflows: ["Create Release"]
+    types: [completed]
+
+permissions:
+  contents: write
 
 env:
   DIST_DIR: builds/dist
@@ -22,11 +26,12 @@ jobs:
           ./builds/linux/build-linux.sh
 
       - name: Upload Linux binary
-        if: github.event_name == 'release'
         uses: softprops/action-gh-release@v2
         with:
+          tag_name: ${{ github.event.workflow_run.head_branch }}
           files: |
             ${{ env.DIST_DIR }}/fleetbase-linux-x86_64
+          draft: false
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -50,11 +55,12 @@ jobs:
           chmod +x ./builds/osx/build-osx.sh
           ./builds/osx/build-osx.sh
 
-      - name: Upload macOS binary
-        if: github.event_name == 'release'
+      - name: Upload Linux binary
         uses: softprops/action-gh-release@v2
         with:
+          tag_name: ${{ github.event.workflow_run.head_branch }}
           files: |
             ${{ env.DIST_DIR }}/fleetbase-darwin-arm64
+          draft: false
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
