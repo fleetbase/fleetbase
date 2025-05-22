@@ -1,12 +1,10 @@
 name: Discord Announcement
 
 on:
-  # automatic announcement after the “Create Release” workflow finishes
   workflow_run:
     workflows: ["Create Release"]
     types: [completed]
 
-  # manual resend / missed-release button
   workflow_dispatch:
     inputs:
       tag:
@@ -18,40 +16,30 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    # 1️⃣ Decide which tag we’re talking about
-    - name: Resolve tag name
-      id: vars
+    # 1️⃣ Resolve which tag we’re talking about
+    - id: vars
       run: |
-        if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+        if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
           echo "tag=${{ github.event.inputs.tag }}" >> "$GITHUB_OUTPUT"
         else
           echo "tag=${{ github.event.workflow_run.head_branch }}" >> "$GITHUB_OUTPUT"
         fi
-        echo "TAG is ${{ steps.vars.outputs.tag }}"
 
     # 2️⃣ Check out the exact commit that tag points to
-    - name: Checkout release source
-      uses: actions/checkout@v3
+    - uses: actions/checkout@v3
       with:
         ref: ${{ steps.vars.outputs.tag }}
         fetch-depth: 1
 
-    # 3️⃣ Read RELEASE.md and base-64 encode so multiline text survives
-    - name: Read release notes
-      id: notes
+    # 3️⃣ Store RELEASE.md as a *multi-line* output, using heredoc syntax
+    - id: notes
       run: |
-        body="$(cat RELEASE.md)"
-        echo "b64=$(echo "$body" | base64 -w0)" >> "$GITHUB_OUTPUT"
+        echo "body<<EOF" >> "$GITHUB_OUTPUT"
+        cat RELEASE.md >> "$GITHUB_OUTPUT"
+        echo "EOF" >> "$GITHUB_OUTPUT"
 
-    # 4️⃣ Decode for Discord
-    - name: Decode notes
-      id: decode
-      run: |
-        echo "text=$(echo '${{ steps.notes.outputs.b64 }}' | base64 --decode)" >> "$GITHUB_OUTPUT"
-
-    # 5️⃣ Send the message
-    - name: Send announcement to Discord
-      uses: tsickert/discord-webhook@v5.3.0
+    # 4️⃣ Post to Discord
+    - uses: tsickert/discord-webhook@v5.3.0
       with:
         webhook-url: ${{ secrets.DISCORD_WEBHOOK_URL }}
         username: Fleetbase
@@ -59,6 +47,6 @@ jobs:
           @everyone
           📦 **Fleetbase ${{ steps.vars.outputs.tag }} released!**
 
-          ${{ steps.decode.outputs.text }}
+          ${{ steps.notes.outputs.body }}
 
-          <https://github.com/fleetbase/fleetbase/releases/tag/${{ steps.vars.outputs.tag }}>
+          <https://github.com/${{ github.repository }}/releases/tag/${{ steps.vars.outputs.tag }}>
