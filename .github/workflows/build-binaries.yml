@@ -1,7 +1,6 @@
 name: Fleetbase Binaries
 
 on:
-  pull_request:
   workflow_run:
     workflows: ["Create Release"]
     types: [completed]
@@ -19,10 +18,10 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
-      # - name: Build Linux binary
-      #   run: |
-      #     chmod +x ./builds/linux/build-linux.sh
-      #     ./builds/linux/build-linux.sh
+      - name: Build Linux binary
+        run: |
+          chmod +x ./builds/linux/build-linux.sh
+          ./builds/linux/build-linux.sh
       - name: Upload Linux binary
         if: github.event_name == 'workflow_run'  
         uses: softprops/action-gh-release@v2
