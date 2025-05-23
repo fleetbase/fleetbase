@@ -1,6 +1,6 @@
 # 🚀 Fleetbase v0.7.2 — 2025-05-22
 
-> “Patched route optimization, telemetry and storefront networks.”
+> “Patched route optimization, telemetry, and storefront networks.”
 
 ---
 
@@ -9,6 +9,9 @@
 - Improved builds for `DISABLE_RUNTIME_CONFIG=true`
 - Patched and fixed OSRM route optimization
 - Patched and fixed Storefront network store management & category management
+- Upgraded `ember-basic-dropdown` and `ember-power-select` to v8
+- Upgraded `ember-concurrency` to v4.0.4
+- In process of removing `ember-concurrency-decorators`
 
 ---
 
