@@ -247,7 +247,7 @@ export default class CrudService extends Service {
             title: this.intl.t('common.export'),
             acceptButtonText: 'Download',
             modalClass: 'modal-sm',
-            format: 'xlsx',
+            format: 'csv',
             formatOptions: ['csv', 'xlsx', 'xls'],
             // setFormat: ({ target }) => {
             //     this.modalsManager.setOption('format', target.value || null);
@@ -255,7 +255,7 @@ export default class CrudService extends Service {
                 this.modalsManager.setOption('format', selectedValue || null);
             },
             confirm: (modal, done) => {
-                const format = modal.getOption('format') ?? 'xlsx';
+                const format = modal.getOption('format') ?? 'csv';
                 modal.startLoading();
                 return this.fetch
                     .download(
