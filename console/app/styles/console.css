@@ -67,3 +67,11 @@ body.console-admin-organizations-index-index .next-table-wrapper > table {
 body[data-theme='dark'] #boot-loader > .loader-container > .loading-message {
     color: #fff;
 }
+
+/** hotfix: ember-power-select-trigger broken padding after upgrade - @todo move to ember-ui */
+body.fleetbase-console .ember-power-select-trigger {
+    padding-top: 0.5rem;
+    padding-right: 2.5rem;
+    padding-bottom: 0.5rem;
+    padding-left: 0.75rem;
+}

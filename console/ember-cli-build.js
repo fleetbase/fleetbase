@@ -4,6 +4,7 @@
 const EmberApp = require('ember-cli/lib/broccoli/ember-app');
 const FleetbaseExtensionsIndexer = require('fleetbase-extensions-indexer');
 const Funnel = require('broccoli-funnel');
+const writeFile = require('broccoli-file-creator');
 const postcssImport = require('postcss-import');
 const postcssPresetEnv = require('postcss-preset-env');
 const postcssEach = require('postcss-each');
@@ -12,6 +13,7 @@ const postcssConditionals = require('postcss-conditionals-renewed');
 const postcssAtRulesVariables = require('postcss-at-rules-variables');
 const autoprefixer = require('autoprefixer');
 const tailwind = require('tailwindcss');
+const toBoolean = require('./config/utils/to-boolean');
 const environment = process.env.EMBER_ENV;
 
 module.exports = function (defaults) {
@@ -61,13 +63,15 @@ module.exports = function (defaults) {
     });
 
     let extensions = new FleetbaseExtensionsIndexer();
-    let config;
-    if (environment === 'development') {
-        config = new Funnel('.', {
+    let runtimeConfigTree;
+    if (toBoolean(process.env.DISABLE_RUNTIME_CONFIG)) {
+        runtimeConfigTree = writeFile('fleetbase.config.json', '{}');
+    } else {
+        runtimeConfigTree = new Funnel('.', {
             files: ['fleetbase.config.json'],
             destDir: '/',
         });
     }
 
-    return app.toTree([extensions, config].filter(Boolean));
+    return app.toTree([extensions, runtimeConfigTree].filter(Boolean));
 };
