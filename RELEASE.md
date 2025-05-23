@@ -1,4 +1,4 @@
-# 🚀 Fleetbase v0.7.2 — 2025-05-22
+# 🚀 Fleetbase v0.7.2 — 2025-05-23
 
 > “Patched route optimization, telemetry, and storefront networks.”
 
