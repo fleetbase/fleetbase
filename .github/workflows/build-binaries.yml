@@ -1,6 +1,7 @@
 name: Build Fleetbase Binaries
 
 on:
+  workflow_dispatch:
   workflow_run:
     workflows: ["Create Release"]
     types: [completed]
@@ -10,6 +11,7 @@ permissions:
 
 env:
   DIST_DIR: builds/dist
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 jobs:
   build-linux:
