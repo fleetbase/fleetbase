@@ -1,17 +1,12 @@
-# 🚀 Fleetbase v0.7.2 — 2025-05-23
+# 🚀 Fleetbase v0.7.3 — 2025-05-24
 
-> “Patched route optimization, telemetry, and storefront networks.”
+> “Hotfix: route optimization without driver, fleetbase seeder command”
 
 ---
 
-## ✨ Highlights
-- Minor tweak for Telemetry support.
-- Improved builds for `DISABLE_RUNTIME_CONFIG=true`
-- Patched and fixed OSRM route optimization
-- Patched and fixed Storefront network store management & category management
-- Upgraded `ember-basic-dropdown` and `ember-power-select` to v8
-- Upgraded `ember-concurrency` to v4.0.4
-- In process of removing `ember-concurrency-decorators`
+## 🐛 Fixes
+- Improved the Fleetbase seeder command
+- Patched route optimization to work without driver as starting position
 
 ---
 
@@ -20,18 +15,6 @@
 
 ---
 
-## 🆕 Features
-- **Telemetry** — tweak patch for improvement.
-- **Route Optimization** — improved route optimization on create order.
-
----
-
-## 🐛 Fixes
-- `DISABLE_RUNTIME_CONFIG` works at build time in addition to boot process.
-- OSRM route optimization fixed.
-- Edit, delete categories for network stores
-- Remove stores from network, re-assign or remove store from category
-
 ## 🔧 Upgrade Steps
 ```bash
 # Pull latest version
@@ -39,6 +22,10 @@ git pull origin main --no-rebase
 
 # Update docker
 docker compose down && docker compose up -d
+
+# Run deploy script
+docker exec -ti fleetbase-application-1 bash
+sh deploy.sh
 ```
 
 ## Need help? 

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "4a3585701ad704de2d7ad976b9b563f5",
+    "content-hash": "e193a66c470665efa50838f4e9f4e243",
     "packages": [
         {
             "name": "appstract/laravel-opcache",
@@ -124,16 +124,16 @@
         },
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.343.17",
+            "version": "3.343.18",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "e14b2f6ede131ef79796ff814d87126578f90e9b"
+                "reference": "ae98d503173740cce23b30d2ba2737c49b0d9876"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/e14b2f6ede131ef79796ff814d87126578f90e9b",
-                "reference": "e14b2f6ede131ef79796ff814d87126578f90e9b",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/ae98d503173740cce23b30d2ba2737c49b0d9876",
+                "reference": "ae98d503173740cce23b30d2ba2737c49b0d9876",
                 "shasum": ""
             },
             "require": {
@@ -215,9 +215,9 @@
             "support": {
                 "forum": "https://github.com/aws/aws-sdk-php/discussions",
                 "issues": "https://github.com/aws/aws-sdk-php/issues",
-                "source": "https://github.com/aws/aws-sdk-php/tree/3.343.17"
+                "source": "https://github.com/aws/aws-sdk-php/tree/3.343.18"
             },
-            "time": "2025-05-22T18:03:05+00:00"
+            "time": "2025-05-23T18:08:18+00:00"
         },
         {
             "name": "aws/aws-sdk-php-laravel",
@@ -2546,16 +2546,16 @@
         },
         {
             "name": "fleetbase/core-api",
-            "version": "1.6.8",
+            "version": "1.6.9",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fleetbase/core-api.git",
-                "reference": "f7d44d90cb06ea6ddd92d9d21581eb26ed66f606"
+                "reference": "63f68ae083f09d9397b78e19b2cad31d1dc9dbc3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fleetbase/core-api/zipball/f7d44d90cb06ea6ddd92d9d21581eb26ed66f606",
-                "reference": "f7d44d90cb06ea6ddd92d9d21581eb26ed66f606",
+                "url": "https://api.github.com/repos/fleetbase/core-api/zipball/63f68ae083f09d9397b78e19b2cad31d1dc9dbc3",
+                "reference": "63f68ae083f09d9397b78e19b2cad31d1dc9dbc3",
                 "shasum": ""
             },
             "require": {
@@ -2640,9 +2640,9 @@
             ],
             "support": {
                 "issues": "https://github.com/fleetbase/core-api/issues",
-                "source": "https://github.com/fleetbase/core-api/tree/v1.6.8"
+                "source": "https://github.com/fleetbase/core-api/tree/v1.6.9"
             },
-            "time": "2025-05-23T11:20:43+00:00"
+            "time": "2025-05-24T04:54:38+00:00"
         },
         {
             "name": "fleetbase/customer-portal-api",
@@ -2736,16 +2736,16 @@
         },
         {
             "name": "fleetbase/fleetops-api",
-            "version": "0.6.10",
+            "version": "0.6.11",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fleetbase/fleetops.git",
-                "reference": "c8e45a1ff22779866f2a9d748d41ec5aa9989e2c"
+                "reference": "7c8e38204dfcd6e63860f88a3b9e58201cfa730f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fleetbase/fleetops/zipball/c8e45a1ff22779866f2a9d748d41ec5aa9989e2c",
-                "reference": "c8e45a1ff22779866f2a9d748d41ec5aa9989e2c",
+                "url": "https://api.github.com/repos/fleetbase/fleetops/zipball/7c8e38204dfcd6e63860f88a3b9e58201cfa730f",
+                "reference": "7c8e38204dfcd6e63860f88a3b9e58201cfa730f",
                 "shasum": ""
             },
             "require": {
@@ -2819,16 +2819,16 @@
             ],
             "support": {
                 "issues": "https://github.com/fleetbase/fleetops/issues",
-                "source": "https://github.com/fleetbase/fleetops/tree/v0.6.10"
+                "source": "https://github.com/fleetbase/fleetops/tree/v0.6.11"
             },
-            "time": "2025-05-23T11:23:26+00:00"
+            "time": "2025-05-24T04:52:27+00:00"
         },
         {
             "name": "fleetbase/flespi-integration",
             "version": "0.1.14",
             "dist": {
                 "type": "tar",
-                "url": "https://s3.ap-southeast-1.amazonaws.com/fleetbase-registry-qa/flb/%40fleetbase/flespi-engine/flespi-engine-0.1.14.tgz?AWSAccessKeyId=ASIA26E6KG6WBTRUGMDS&Expires=1748004973&Signature=Y0k2WWNfXDhOb9pEWbzF7IlPKXc%3D&x-amz-security-token=IQoJb3JpZ2luX2VjEDUaDmFwLXNvdXRoZWFzdC0xIkYwRAIgX4ndarB4Roi8KgVJwBVHf9GRx%2BuPRlpz%2F4s0utE7J2QCIAJG4b6NGPVxOe1pi1AVQh3iHydILP4EDHvxxrwt7roRKo8ECO7%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEQABoMNzUxOTUxMjk2NDI4IgygENxttDvKuIrcsrsq4wOARVsS2VuSRELkuQMeIt7oZNUrXhN60%2FWtcp2HBKU9w%2BPFmUZ233r4dVkoiAsojHqQK4Wl8pMYK7OrHIx%2FNzoHTSMZzbxpvifjGe0DsG3tTEfcIIO%2Bj1t85mL5Fiop2V2jyow6qrilRLndbfkz%2BWdzXTuG9u7Ao1IweKkZymCzALHkx3cRimS9HooG09nEjUcVjcDgdpSzEPZze8v8j00cQO3a5Wl38ARfIL%2BvfeVwa%2BDXFNkp4AOPLGtiTmZ8nHFLz1lVDjWd%2FcDXRQeFMaHTM07%2BGGEIZ2ngC1iCLNYpFUKT85Pqwv7%2F3Jhwo1BUzSLF6yG5W2TEc13EkcqoVX3UY7vexV78oVeoR%2F1BZ5OGpGy71AyUf8xSijzASciS4cDzM3sGoMb1Q9wt7jYt8unk%2BLjYandD45HCQMFTcmDPNlSjCFrNL%2B1%2FQv6hxROMYBXW2E5%2Ba%2FRKZ8lpnTYh2dmDE38QWYLygw87UasI5OUI3tyHLIMqQbsgjqn5PB6CseRALme30g%2BmA83%2FrE5KIWfnzVpSurLB%2BrAotjnyzQl6uIvJ0%2BgezSHkBvkZLgDOwQVplK%2FeHYIEi8kbobA5eBUZpz3ezLtrM7AH5hxPSOSWEFPg%2B9ugkCgy0YbLQe%2B0qnhZPzowtdfBwQY6pgGWpv4vUCg0edkPDNXd2ZIjZd5IOiP5zKzYoH7sIgPE%2BvTzQB56AEQcTSOD7aHVbl3dH5bTkFzj42p%2F0u9Xvb7jPInsrHFU1uuhlLATikPlJwi3Sn4Onu18TfGkCmzKvli%2FpiP4DJOGZzR7mnbvKmIwmbXHhv7eU6CrDX42scDafhSOq2LK%2FHJHfr1tmTHgSo86lYuIpXylF3t6bFUwGlF0bnAX4Wkd"
+                "url": "https://s3.ap-southeast-1.amazonaws.com/fleetbase-registry-qa/flb/%40fleetbase/flespi-engine/flespi-engine-0.1.14.tgz?AWSAccessKeyId=ASIA26E6KG6WAD5RM5VF&Expires=1748069944&Signature=HlV0CXIs78qlg1fA9e9wSQgRCYI%3D&x-amz-security-token=IQoJb3JpZ2luX2VjEEcaDmFwLXNvdXRoZWFzdC0xIkcwRQIhAJEnGzHfQOH17zVqavoiufmpjLm5PO70GoNTkjY8wyC8AiAkrLdhFjMSqVtq5Uw6qRoDBHlY7pCQm7MDJl0AYnupByqGBAgQEAAaDDc1MTk1MTI5NjQyOCIMNJBQrT5tK8O9%2Fx6lKuMDEiww97TbRDBOvaZDL%2FRHWT%2FbHzXEhSe9twVqJSSLfm%2BKp48lHTUkArPOuO2YJ5RE0dz%2FfrSxd5ndgXPaFsam%2BigAImypttaYtF2oKuzXc0SXNs6iDLuTVwBQrj4fVPnZnr%2BB%2BQnTyDfT2RLU1%2Ba6%2FZHhcFDDjkLQbN64tuFCCgHFcmc%2FE289VAHzHQhiMeZi2Q6QbGyl8cyN8WPcDdVmiZXSmsROr%2B%2FXZrI2WTB1rmhBpVYquhThawSJnJdMz08Skt6o%2F8p%2BnBNJMEz7U6b555LZhiP8qaG%2BXLv5sgjDYFM1KGtEoIzb4V7EIzfA2KEGgKtGmbB9kUFjUXYP590MAiN4e2LqjKijsbA388gf3jCoIYlj4J%2FeecCV6rDn1vRnJvu%2Fr%2Flv0gvyYCJwbuXVYssGxSsZnIysmUQ4KZn54Ol3BzKWswARxOP%2B8BMINpV844I51muHFi1eJK7HuYrSgQK7%2FZrUfRh8LFN3%2Be8yZLNh75gzvSPpQESlF%2F1yRdBFGzuULK8lrbeunPfYNot72IwDxlHQePVs%2BplR8stqq3328WrkqhG7trBPbJuEhUJeOg3Vr0qFRxc9fWRQUISbO4b8Wj3A6repsmULBbjB2S%2BG7zoBCzcb25QyTHXLmZV7fA6cMPLOxcEGOqUBO87vLtBh5790ZSiWRakXoo5Equ%2Fw23f1zTwiSEdC64kGiWn8zn25v9DFL6NDZegos%2Bms%2BqXKvzTZJMym3g2mHbPTCW72J2bPdyItdzFgwvAHiDHnd8LGyiShEgjApFISGt%2FgIq674q3cQOK5Y%2Fwt3DikkLnrAH9Afol6B54Ohsohs57KsnmKeXf2IG10Qx6DS%2FCUwuoljEnq5sFfVAmyvRZxXBTV"
             },
             "require": {
                 "fleetbase/core-api": "*",
