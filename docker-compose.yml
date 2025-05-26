@@ -67,6 +67,8 @@ services:
 
   application:
     image: fleetbase/fleetbase-api:latest
+    volumes:
+      - ./api/.env:/fleetbase/api/.env
     environment:
       ENVIRONMENT: development
       DATABASE_URL: "mysql://root@database/fleetbase"
