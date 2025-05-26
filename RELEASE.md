@@ -1,12 +1,16 @@
-# 🚀 Fleetbase v0.7.3 — 2025-05-24
+# 🚀 Fleetbase v0.7.4 — 2025-05-26
 
-> “Hotfix: route optimization without driver, fleetbase seeder command”
+> “Added an official docker install script”
+
+---
+
+## ✨ Highlights
+- Added logic condition property shortcuts for `pickup`, `dropoff`, and `currentWaypoint` (with aliases `waypoint` and `currentWaypointMarker`)
 
 ---
 
 ## 🐛 Fixes
-- Improved the Fleetbase seeder command
-- Patched route optimization to work without driver as starting position
+- Patched: Saving Fleet-Ops notification settings 
 
 ---
 
@@ -24,8 +28,7 @@ git pull origin main --no-rebase
 docker compose down && docker compose up -d
 
 # Run deploy script
-docker exec -ti fleetbase-application-1 bash
-sh deploy.sh
+docker compose exec application bash -c "./deploy.sh"
 ```
 
 ## Need help? 
