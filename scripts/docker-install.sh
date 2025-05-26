@@ -114,11 +114,51 @@ mv -f "${CONFIG_PATH}.tmp" "$CONFIG_PATH"
 echo "✔  $CONFIG_PATH updated"
 
 ###############################################################################
-# 7. Start stack & run deploy
+# 7. Start stack, wait for DB, then run deploy
 ###############################################################################
 echo "⏳  Starting Fleetbase containers..."
 docker compose up -d
 
+###############################################################################
+# 7a. Wait for the database container to be ready
+###############################################################################
+DB_SERVICE="database"     # ← change if your docker‑compose uses a different name
+DB_WAIT_TIMEOUT=60        # seconds
+
+echo "⏳  Waiting for “$DB_SERVICE” to become ready (timeout: ${DB_WAIT_TIMEOUT}s)…"
+DB_CONTAINER=$(docker compose ps -q "$DB_SERVICE")
+
+if [ -z "$DB_CONTAINER" ]; then
+  echo "✖  Cannot find a running container for service \"$DB_SERVICE\". Check docker‑compose.yml."
+  exit 1
+fi
+
+# If the service defines a HEALTHCHECK we can rely on it…
+if docker inspect -f '{{.State.Health.Status}}' "$DB_CONTAINER" &>/dev/null; then
+  SECONDS=0
+  until [ "$(docker inspect -f '{{.State.Health.Status}}' "$DB_CONTAINER")" = "healthy" ]; do
+    if [ "$SECONDS" -ge "$DB_WAIT_TIMEOUT" ]; then
+      echo "✖  Timed out waiting for the database to become healthy."
+      exit 1
+    fi
+    sleep 2
+  done
+else
+  # Fallback: use mysqladmin ping (works for MySQL / MariaDB)
+  SECONDS=0
+  until docker compose exec "$DB_SERVICE" sh -c "mysqladmin --silent --wait=1 -uroot -h127.0.0.1 ping" &>/dev/null; do
+    if [ "$SECONDS" -ge "$DB_WAIT_TIMEOUT" ]; then
+      echo "✖  Timed out waiting for the database to accept connections."
+      exit 1
+    fi
+    sleep 2
+  done
+fi
+echo "✔  Database is ready."
+
+###############################################################################
+# 7b. Run the deploy script inside the application container
+###############################################################################
 echo "⏳  Running deploy script inside the application container..."
 docker compose exec application bash -c "./deploy.sh"
 docker compose up -d
