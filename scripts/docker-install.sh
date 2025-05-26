@@ -1,57 +1,84 @@
 #!/usr/bin/env bash
 # scripts/docker-install.sh
-# Fleetbase “one‑liner” Docker installer
-# --------------------------------------
+# Fleetbase Docker installer (dev / prod aware)
+# --------------------------------------------
 set -euo pipefail
 
-# ────────────────────────────────────────────────────────────
-# 1. Get host value (CLI arg → prompt → default)
-# ────────────────────────────────────────────────────────────
-if [[ $# -ge 1 && -n "$1" ]]; then
-  HOST="$1"
-else
-  read -rp "Enter host or IP address to bind to [localhost]: " HOST_INPUT
-  HOST="${HOST_INPUT:-localhost}"
-fi
+###############################################################################
+# 1. Ask for host (default: localhost)
+###############################################################################
+read -rp "Enter host or IP address to bind to [localhost]: " HOST_INPUT
+HOST=${HOST_INPUT:-localhost}
 echo "➜  Using host: $HOST"
 
-# Resolve project root no matter where the script is called from
+###############################################################################
+# 2. Ask for environment (development | production)
+###############################################################################
+while true; do
+  read -rp "Choose environment (development / production) [development]: " ENV_INPUT
+  ENV_INPUT=$(echo "$ENV_INPUT" | tr '[:upper:]' '[:lower:]')
+  case "$ENV_INPUT" in
+    ""|d|dev|development) ENVIRONMENT=development; break ;;
+    p|prod|production)    ENVIRONMENT=production;  break ;;
+    *) echo "Please type either 'development' or 'production'." ;;
+  esac
+done
+echo "➜  Environment: $ENVIRONMENT"
+
+USE_HTTPS=false
+APP_DEBUG=true
+SC_SECURE=false
+if [[ "$ENVIRONMENT" == "production" ]]; then
+  USE_HTTPS=true
+  APP_DEBUG=false
+  SC_SECURE=true
+fi
+
+###############################################################################
+# 3. Determine project root no matter where script is called from
+###############################################################################
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 PROJECT_ROOT="$( cd "$SCRIPT_DIR/.." && pwd )"
 cd "$PROJECT_ROOT"
 
-# ────────────────────────────────────────────────────────────
-# 2. Generate a fresh Laravel APP_KEY
-# ────────────────────────────────────────────────────────────
+###############################################################################
+# 4. Generate a fresh Laravel APP_KEY
+###############################################################################
 if ! command -v openssl >/dev/null 2>&1; then
-    echo "✖ openssl is required but not found. Install it and retry." >&2
-    exit 1
+  echo "✖ openssl is required but not found. Install it and retry." >&2
+  exit 1
 fi
 APP_KEY="base64:$(openssl rand -base64 32 | tr -d '\n')"
 echo "✔  Generated APP_KEY"
 
-# ────────────────────────────────────────────────────────────
-# 3. Ensure docker‑compose.override.yml has the right values
-# ────────────────────────────────────────────────────────────
+###############################################################################
+# 5. Ensure docker‑compose.override.yml is present & updated
+###############################################################################
 OVERRIDE_FILE="docker-compose.override.yml"
 
-# We’ll use yq if available (best for YAML‑safe edits)
+# url helpers
+SCHEME_API=$([[ "$USE_HTTPS" == true ]] && echo "https" || echo "http")
+SCHEME_CONSOLE=$([[ "$USE_HTTPS" == true ]] && echo "https" || echo "http")
+
 update_override_with_yq() {
   yq -i "
-    .services.application.environment.APP_KEY       = \"$APP_KEY\" |
-    .services.application.environment.CONSOLE_HOST  = \"http://$HOST:4200\"
+    .services.application.environment.APP_KEY         = \"$APP_KEY\" |
+    .services.application.environment.CONSOLE_HOST    = \"$SCHEME_CONSOLE://$HOST:4200\" |
+    .services.application.environment.ENVIRONMENT     = \"$ENVIRONMENT\" |
+    .services.application.environment.APP_DEBUG       = \"$APP_DEBUG\"
   " "$OVERRIDE_FILE"
   echo "✔  $OVERRIDE_FILE updated (yq)"
 }
 
-# Fallback: create or append the section with plain Bash if yq isn’t installed
-create_or_append_override() {
+create_override() {
   cat > "$OVERRIDE_FILE" <<YML
 services:
   application:
     environment:
       APP_KEY: "$APP_KEY"
-      CONSOLE_HOST: "http://$HOST:4200"
+      CONSOLE_HOST: "$SCHEME_CONSOLE://$HOST:4200"
+      ENVIRONMENT: "$ENVIRONMENT"
+      APP_DEBUG: "$APP_DEBUG"
 YML
   echo "✔  $OVERRIDE_FILE written"
 }
@@ -60,33 +87,35 @@ if [[ -f "$OVERRIDE_FILE" ]]; then
   if command -v yq >/dev/null 2>&1; then
     update_override_with_yq
   else
-    # simple backup, then naive append‑or‑overwrite section
     cp "$OVERRIDE_FILE" "${OVERRIDE_FILE}.bak.$(date +%Y%m%d%H%M%S)"
     echo "ℹ︎  Existing $OVERRIDE_FILE backed up (no yq found — recreating)"
-    create_or_append_override
+    create_override
   fi
 else
-  create_or_append_override
+  create_override
 fi
 
-# ────────────────────────────────────────────────────────────
-# 4. Update ./console/fleetbase.config.json
-# ────────────────────────────────────────────────────────────
-CONFIG_PATH="console/fleetbase.config.json"
-mkdir -p "$(dirname "$CONFIG_PATH")"
+###############################################################################
+# 6. Write console/fleetbase.config.json atomically
+###############################################################################
+CONFIG_DIR="console"
+CONFIG_PATH="$CONFIG_DIR/fleetbase.config.json"
+mkdir -p "$CONFIG_DIR"
 
-cat > "$CONFIG_PATH" <<JSON
+cat > "${CONFIG_PATH}.tmp" <<JSON
 {
-  "API_HOST": "http://$HOST:8000",
+  "API_HOST": "$SCHEME_API://$HOST:8000",
   "SOCKETCLUSTER_HOST": "$HOST",
-  "SOCKETCLUSTER_PORT": "38000"
+  "SOCKETCLUSTER_PORT": "38000",
+  "SOCKETCLUSTER_SECURE": "$SC_SECURE"
 }
 JSON
+mv -f "${CONFIG_PATH}.tmp" "$CONFIG_PATH"
 echo "✔  $CONFIG_PATH updated"
 
-# ────────────────────────────────────────────────────────────
-# 5. Start the stack & run the deploy script
-# ────────────────────────────────────────────────────────────
+###############################################################################
+# 7. Start stack & run deploy
+###############################################################################
 echo "⏳  Starting Fleetbase containers..."
 docker compose up -d
 
@@ -94,4 +123,7 @@ echo "⏳  Running deploy script inside the application container..."
 docker compose exec application bash -c "./deploy.sh"
 docker compose up -d
 
-echo "🏁  Fleetbase is up!  API → http://$HOST:8000 | Console → http://$HOST:4200"
+echo
+echo "🏁  Fleetbase is up!"
+printf "    API     → %s://%s:8000\n"    "$SCHEME_API"     "$HOST"
+printf "    Console → %s://%s:4200\n\n" "$SCHEME_CONSOLE" "$HOST"

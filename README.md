@@ -32,8 +32,7 @@ Fleetbase is a modular logistics and supply chain operating system designed to s
 
 ```bash
 git clone git@github.com:fleetbase/fleetbase.git  
-cd fleetbase  
-sh scripts/docker-install.sh
+cd fleetbase && ./scripts/docker-install.sh
 ```
 
 ## 📖 Table of contents
@@ -73,8 +72,7 @@ Make sure you have both the latest versions of docker and docker-compose install
 
 ```bash
 git clone git@github.com:fleetbase/fleetbase.git  
-cd fleetbase  
-sh scripts/docker-install.sh
+cd fleetbase && ./scripts/docker-install.sh
 ```
 
 ### Accessing Fleetbase
