@@ -143,6 +143,7 @@ if docker inspect -f '{{.State.Health.Status}}' "$DB_CONTAINER" &>/dev/null; the
     fi
     sleep 2
   done
+  sleep 12
 else
   # Fallback: use mysqladmin ping (works for MySQL / MariaDB)
   SECONDS=0
