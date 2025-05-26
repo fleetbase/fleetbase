@@ -19,6 +19,13 @@
 
 ---
 
+## 📦 How to use the new installer script
+```bash
+sh ./scripts/docker-install.sh
+```
+
+---
+
 ## 🔧 Upgrade Steps
 ```bash
 # Pull latest version
