@@ -32,10 +32,7 @@ Fleetbase is a modular logistics and supply chain operating system designed to s
 
 ```bash
 git clone git@github.com:fleetbase/fleetbase.git  
-cd fleetbase  
-docker-compose up -d  
-docker exec -ti fleetbase-application-1 bash  
-sh deploy.sh
+cd fleetbase && ./scripts/docker-install.sh
 ```
 
 ## 📖 Table of contents
@@ -75,10 +72,7 @@ Make sure you have both the latest versions of docker and docker-compose install
 
 ```bash
 git clone git@github.com:fleetbase/fleetbase.git  
-cd fleetbase  
-docker-compose up -d  
-docker exec -ti fleetbase-application-1 bash  
-sh deploy.sh
+cd fleetbase && ./scripts/docker-install.sh
 ```
 
 ### Accessing Fleetbase
@@ -89,7 +83,17 @@ Fleetbase API: http://localhost:8000
 
 ### Additional Configurations
 
-**CORS:** If you’re installing directly on a server you may need to add your IP address or domain to the `api/config/cors.php` file in the `allowed_hosts` array.  
+**CORS:** If you’re installing directly on a server you will need to configure the environment variables to the application container:
+```
+CONSOLE_HOST=http://{yourhost}:4200
+```
+If you have additional applications or frontends you can use the environment variable `FRONTEND_HOSTS` to add a comma delimited list of additioal frontend hosts.
+
+**Application Key** If you get an issue about a missing application key just run:
+```bash
+docker compose exec application bash -c "php artisan key:generate --show"
+```
+Next copy this value to the `APP_KEY` environment variable in the application container and restart.
   
 **Routing:** Fleetbase ships with a default OSRM server hosted by `[router.project-osrm.org](https://router.project-osrm.org)` but you’re able to use your own or any other OSRM compatible server. You can modify this in the `console/environments` directory by modifying the .env file of the environment you’re deploying and setting the `OSRM_HOST` to the OSRM server for Fleetbase to use.  
   
@@ -100,6 +104,7 @@ version: “3.8”
 services:  
   application:  
     environment:  
+      CONSOLE_HOST: http://localhost:4200
       MAIL_MAILER: (ses, smtp, mailgun, postmark, sendgrid)
       OSRM_HOST: https://router.project-osrm.org
       IPINFO_API_KEY:
@@ -108,7 +113,6 @@ services:
       TWILIO_SID:  
       TWILIO_TOKEN:
       TWILIO_FROM:
-      CONSOLE_HOST: http://localhost:4200
 ```
 
 You can learn more about full installation, and configuration in the [official documentation](https://docs.fleetbase.io/getting-started/install).
@@ -145,9 +149,8 @@ Fleetbase offers a few open sourced apps which are built on Fleetbase which can 
 ## 🛣️ Roadmap
 1.  **Inventory and Warehouse Management** ~ Pallet will be Fleetbase’s first official extension for WMS & Inventory.
 2.  **Accounting and Invoicing** ~ Ledger will be Fleetbase’s first official extension accounting and invoicing.
-3.  **Binary Builds** ~ Run Fleetbase from a single binary.
-4.  **Fleetbase for Desktop** ~ Desktop builds for OSX and Windows.
-5. **Custom Maps and Routing Engines** ~ Feature to enable easy integrations with custom maps and routing engines like Google Maps or Mapbox etc…
+3.  **Fleetbase for Desktop** ~ Desktop builds for OSX and Windows.
+4. **Custom Maps and Routing Engines** ~ Feature to enable easy integrations with custom maps and routing engines like Google Maps or Mapbox etc…
 
 ## 🪲 Bugs and 💡 Feature Requests
 
