@@ -1,28 +1,20 @@
-# 🚀 Fleetbase v0.7.4 — 2025-05-26
+# 🚀 Fleetbase v0.7.5 — 2025-05-30
 
-> “Added an official docker install script”
+> “Route optimizationan and routing control advancements”
 
 ---
 
 ## ✨ Highlights
-- Added logic condition property shortcuts for `pickup`, `dropoff`, and `currentWaypoint` (with aliases `waypoint` and `currentWaypointMarker`)
-
----
-
-## 🐛 Fixes
-- Patched: Saving Fleet-Ops notification settings 
+- Added route optimization and routing control services for registering additional routing engines and route optimization services.
+- Added settings for Routing (Next release will be able to set unit "Miles" or "Kilometers")
+- Improved and optimized environment and settings mapper.
+- Added entity activity events
+- Patched multiple waypoint order creation via API
 
 ---
 
 ## ⚠️ Breaking Changes
 - None 🙂
-
----
-
-## 📦 How to use the new installer script
-```bash
-sh ./scripts/docker-install.sh
-```
 
 ---
 
