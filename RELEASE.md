@@ -1,6 +1,6 @@
 # 🚀 Fleetbase v0.7.5 — 2025-05-30
 
-> “Route optimizationan and routing control advancements”
+> “Route optimization and routing control advancements”
 
 ---
 
