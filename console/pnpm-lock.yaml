@@ -1514,7 +1514,7 @@ packages:
       ember-source: '>= 4.0.0'
 
   '@fleetbase/ember-core@0.3.2':
-    resolution: {integrity: sha512-1emNLCnmC5cqkJjpLYvxDr/zGDcBCHuJ9v9mpoAC8NKJB43P14gj/ZXjy6aiINgU1HSteRgolv7ilC/GVoPDqA==}
+    resolution: {integrity: sha512-1emNLCnmC5cqkJjpLYvxDr/zGDcBCHuJ9v9mpoAC8NKJB43P14gj/ZXjy6aiINgU1HSteRgolv7ilC/GVoPDqA==, tarball: https://npm.pkg.github.com/download/@fleetbase/ember-core/0.3.2/f6a2f0fd3d7781bae6723a2301c7e63438250aaf}
     engines: {node: '>= 18'}
 
   '@fleetbase/ember-ui@0.3.2':
@@ -1526,7 +1526,7 @@ packages:
     engines: {node: '>= 18'}
 
   '@fleetbase/fleetops-engine@0.6.14':
-    resolution: {integrity: sha512-e/Ysuvu3CMIs23jMoQa7wtnItNEx7TQ4BIRkcuTWZntJN3yYHaQ/lzznBlYjBDNuvwmL/auGq8DOMxiCo2QI/Q==}
+    resolution: {integrity: sha512-e/Ysuvu3CMIs23jMoQa7wtnItNEx7TQ4BIRkcuTWZntJN3yYHaQ/lzznBlYjBDNuvwmL/auGq8DOMxiCo2QI/Q==, tarball: https://npm.pkg.github.com/download/@fleetbase/fleetops-engine/0.6.14/9aeaccdb4ebe05c4e1f40ccc6022cd0af9f86e80}
     engines: {node: '>= 18'}
     peerDependencies:
       ember-engines: ^0.9.0
@@ -1553,11 +1553,8 @@ packages:
     resolution: {integrity: sha512-LkjxJr15hSiGmqh3JwixcpjmkhXNieNAEgQUVv1Duo50jTr/D5WXEyOaeI8wuVnVFhT+FS/DMqm403DgSKlsEg==, tarball: https://npm.pkg.github.com/download/@fleetbase/intl-lint/0.0.1/67e9e36bb4ef871efe0e0424d3da64509adf97b9}
     hasBin: true
 
-  '@fleetbase/leaflet-routing-machine@3.2.16':
-    resolution: {integrity: sha512-sd+Cn3TmWQKyx3Wtx+nFfkejV0f/3ugY6Gl71NUBhaEZ5SlwiR/npibHWXXXQWA377TFSXTc3MKjY+MnpO2uAA==, tarball: https://npm.pkg.github.com/download/@fleetbase/leaflet-routing-machine/3.2.16/f5c1d638b5d1ebd0a81544ae49740005eec27a92}
-
   '@fleetbase/leaflet-routing-machine@3.2.17':
-    resolution: {integrity: sha512-2S/XLPzf25ZKV7cFJwfeu4voYQboF9JiDfpRUTrif4XCfgdrQ2Zim7O5iTpoNv2l8Ne8D+Ed7BGJsKWjJFLcsw==}
+    resolution: {integrity: sha512-DAg9BP5UebOSfxbL3A5zeJwPQWRUc1uPcCBvpEV0Dk4zY588o9Ai9xQOTWaaUFy5b+NT2KI6E1ujuZ1rHUKlIQ==, tarball: https://npm.pkg.github.com/download/@fleetbase/leaflet-routing-machine/3.2.17/2116bab4292dd7ad284c53cf2f3f0ac4d7bcda92}
 
   '@fleetbase/registry-bridge-engine@0.0.19':
     resolution: {integrity: sha512-tG9QetcyfB9xZtT7CE+y4IXuVN3g7vQO0bJtGt68jiKpqGEddZTtHld/I1AjrozyfP/EMPHfbRDzI/SaLwW1BQ==, tarball: https://npm.pkg.github.com/download/@fleetbase/registry-bridge-engine/0.0.19/9d957eda2208119b83b87c2bcbfeb3e129e06a43}
@@ -10451,7 +10448,7 @@ snapshots:
       '@babel/core': 7.27.3
       '@fleetbase/ember-core': 0.3.2(@ember/string@3.1.1)(@ember/test-helpers@3.3.1(@babel/core@7.27.3)(ember-source@5.4.1(@babel/core@7.27.3)(@glimmer/component@1.1.2(@babel/core@7.27.3))(rsvp@4.8.5)(webpack@5.99.9))(webpack@5.99.9))(ember-resolver@11.0.1(ember-source@5.4.1(@babel/core@7.27.3)(@glimmer/component@1.1.2(@babel/core@7.27.3))(rsvp@4.8.5)(webpack@5.99.9)))(ember-source@5.4.1(@babel/core@7.27.3)(@glimmer/component@1.1.2(@babel/core@7.27.3))(rsvp@4.8.5)(webpack@5.99.9))(eslint@8.57.1)(webpack@5.99.9)
       '@fleetbase/ember-ui': 0.3.2(@ember/test-helpers@3.3.1(@babel/core@7.27.3)(ember-source@5.4.1(@babel/core@7.27.3)(@glimmer/component@1.1.2(@babel/core@7.27.3))(rsvp@4.8.5)(webpack@5.99.9))(webpack@5.99.9))(@glimmer/component@1.1.2(@babel/core@7.27.3))(@glimmer/tracking@1.1.2)(ember-resolver@11.0.1(ember-source@5.4.1(@babel/core@7.27.3)(@glimmer/component@1.1.2(@babel/core@7.27.3))(rsvp@4.8.5)(webpack@5.99.9)))(ember-source@5.4.1(@babel/core@7.27.3)(@glimmer/component@1.1.2(@babel/core@7.27.3))(rsvp@4.8.5)(webpack@5.99.9))(postcss@8.5.4)(rollup@2.79.2)(tracked-built-ins@3.4.0(@babel/core@7.27.3))(webpack@5.99.9)
-      '@fleetbase/leaflet-routing-machine': 3.2.16
+      '@fleetbase/leaflet-routing-machine': 3.2.17
       '@fortawesome/ember-fontawesome': 2.0.0(ember-source@5.4.1(@babel/core@7.27.3)(@glimmer/component@1.1.2(@babel/core@7.27.3))(rsvp@4.8.5)(webpack@5.99.9))(rollup@2.79.2)(webpack@5.99.9)
       '@fortawesome/fontawesome-svg-core': 6.4.0
       '@fortawesome/free-brands-svg-icons': 6.4.0
@@ -10888,12 +10885,6 @@ snapshots:
     dependencies:
       js-yaml: 4.1.0
       yargs: 17.7.2
-
-  '@fleetbase/leaflet-routing-machine@3.2.16':
-    dependencies:
-      '@mapbox/corslite': 0.0.7
-      '@mapbox/polyline': 0.2.0
-      osrm-text-instructions: 0.13.4
 
   '@fleetbase/leaflet-routing-machine@3.2.17':
     dependencies:
