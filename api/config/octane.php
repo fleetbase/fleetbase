@@ -1,5 +1,6 @@
 <?php
 
+use Fleetbase\Support\Utils;
 use Laravel\Octane\Contracts\OperationTerminated;
 use Laravel\Octane\Events\RequestHandled;
 use Laravel\Octane\Events\RequestReceived;
@@ -192,6 +193,7 @@ return [
         'routes',
         'composer.lock',
         '.env',
+        ...Utils::arrayFrom(env('OCTANE_WATCH_DIRS'))
     ],
 
     /*

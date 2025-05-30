@@ -14,5 +14,6 @@ export function initialize(application) {
 }
 
 export default {
+    name: 'load-leaflet',
     initialize,
 };
