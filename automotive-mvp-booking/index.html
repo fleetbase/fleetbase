@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Automotive Service - MVP</title>
+    <link rel="stylesheet" href="style.css"> <!-- Link to CSS file -->
+</head>
+<body>
+    <div id="app">
+        <header>
+            <h1>Mobile Auto Service Booking</h1>
+        </header>
+
+        <main>
+            <!-- Booking Form (shown if bookingSubmitted is false) -->
+            <div v-if="!bookingSubmitted">
+                <form id="bookingForm" @submit.prevent="submitBooking">
+                    <!-- All current form sections (Your Information, Vehicle Information, Select Service, Service Location, Select Date & Time, Service Quote, Submit Button) go here -->
+
+                    <div class="form-section">
+                        <h2>Your Information</h2>
+                    <div>
+                        <label for="customerName">Full Name:</label>
+                        <input type="text" id="customerName" v-model="customer.name" required>
+                    </div>
+                    <div>
+                        <label for="customerEmail">Email:</label>
+                        <input type="email" id="customerEmail" v-model="customer.email" required>
+                    </div>
+                    <div>
+                        <label for="customerPhone">Phone Number:</label>
+                        <input type="tel" id="customerPhone" v-model="customer.phone" required>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h2>Vehicle Information</h2>
+                    <div>
+                        <label for="vehicleMake">Make:</label>
+                        <input type="text" id="vehicleMake" v-model="vehicle.make" required>
+                    </div>
+                    <div>
+                        <label for="vehicleModel">Model:</label>
+                        <input type="text" id="vehicleModel" v-model="vehicle.model" required>
+                    </div>
+                    <div>
+                        <label for="vehicleYear">Year:</label>
+                        <input type="number" id="vehicleYear" v-model.number="vehicle.year" required min="1900" max="2025">
+                        <!-- Using .number modifier for year -->
+                    </div>
+                    <div>
+                        <label for="vehicleColor">Color (Optional):</label>
+                        <input type="text" id="vehicleColor" v-model="vehicle.color">
+                    </div>
+                    <div>
+                        <label for="vehicleLicensePlate">License Plate (Optional):</label>
+                        <input type="text" id="vehicleLicensePlate" v-model="vehicle.licensePlate">
+                    </div>
+                    <div>
+                        <label for="vehicleNotes">Notes for Technician (Optional):</label>
+                        <textarea id="vehicleNotes" v-model="vehicle.notes" rows="3"></textarea>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h2>Select Service</h2>
+                    <div v-if="!availableServices.length">
+                        <p>Loading services...</p>
+                    </div>
+                    <div v-for="service in availableServices" :key="service.id" class="service-option">
+                        <input type="radio" :id="'service-' + service.id" :value="service.id" v-model="selectedServiceId" name="serviceSelection">
+                        <label :for="'service-' + service.id">
+                            {{ service.name }} - ${{ service.price.toFixed(2) }}
+                        </label>
+                    </div>
+                    <div v-if="selectedServiceId === null && availableServices.length">
+                         <p style="color: red; font-size: 0.9em;">Please select a service.</p> <!-- Basic 'required' message if needed -->
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h2>Service Location</h2>
+                    <div>
+                        <label for="streetAddress">Street Address:</label>
+                        <input type="text" id="streetAddress" v-model="location.street" required>
+                    </div>
+                    <div>
+                        <label for="city">City:</label>
+                        <input type="text" id="city" v-model="location.city" required>
+                    </div>
+                    <div>
+                        <label for="state">State:</label>
+                        <select id="state" v-model="location.state" required>
+                            <option value="" disabled>Select State</option>
+                            <option value="AL">Alabama</option>
+                            <option value="AK">Alaska</option>
+                            <option value="AZ">Arizona</option>
+                            <option value="AR">Arkansas</option>
+                            <option value="CA">California</option>
+                            <!-- Add other states as needed for MVP -->
+                            <option value="FL">Florida</option>
+                            <option value="GA">Georgia</option>
+                            <option value="NY">New York</option>
+                            <option value="TX">Texas</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="zipCode">Zip Code:</label>
+                        <input type="text" id="zipCode" v-model="location.zip" required pattern="[0-9]{5}">
+                    </div>
+                    <div>
+                        <label for="locationNotes">Special Instructions (e.g., gate code, parking):</label>
+                        <textarea id="locationNotes" v-model="location.notes" rows="3"></textarea>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h2>Select Date & Time Slot</h2>
+                    <div>
+                        <label for="serviceDate">Preferred Date:</label>
+                        <input type="date" id="serviceDate" v-model="bookingDateTime.date" :min="minDate" required>
+                    </div>
+                    <div>
+                        <label>Preferred Time Slot:</label>
+                        <div class="time-slot-options">
+                            <div v-for="slot in availableTimeSlots" :key="slot.id">
+                                <input type="radio" :id="'slot-' + slot.id" :value="slot.id" v-model="bookingDateTime.selectedTimeSlotId" name="timeSlotSelection" required>
+                                <label :for="'slot-' + slot.id">{{ slot.name }}</label>
+                            </div>
+                        </div>
+                         <div v-if="!bookingDateTime.selectedTimeSlotId && availableTimeSlots.length">
+                            <p style="color: red; font-size: 0.9em;">Please select a time slot.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-section" id="quoteSection">
+                    <h2>Service Quote</h2>
+                    <div v-if="selectedServiceDetails">
+                        <p><strong>Selected Service:</strong> {{ selectedServiceDetails.name }}</p>
+                        <p><strong>Price:</strong> ${{ selectedServiceDetails.price.toFixed(2) }}</p>
+                        <hr>
+                        <p><strong>Total MVP Quote: ${{ totalQuote.toFixed(2) }}</strong></p>
+                    </div>
+                    <div v-else>
+                        <p>Please select a service to see the price.</p>
+                        <p><strong>Total MVP Quote: $0.00</strong></p>
+                    </div>
+                </div>
+
+                <div class="form-section"> <!-- Placeholder for Submit Button -->
+                    <button type="submit">Submit Booking Request</button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Confirmation Message (shown if bookingSubmitted is true) -->
+            <div v-if="bookingSubmitted" id="confirmationSection">
+                <h2>Booking Request Submitted!</h2>
+                <p>Thank you for your booking. We have received your request and our dispatcher will contact you shortly to confirm your appointment details and technician assignment.</p>
+                <p><strong>Your Booking ID (Simulated):</strong> {{ simulatedBookingId }}</p> <!-- ADD THIS LINE -->
+                <p><strong>Your Booking Details:</strong></p>
+                <ul>
+                    <li><strong>Service:</strong> {{ selectedServiceDetails ? selectedServiceDetails.name : 'N/A' }}</li>
+                    <li><strong>Price:</strong> ${{ totalQuote.toFixed(2) }}</li>
+                    <li><strong>Date:</strong> {{ bookingDateTime.date }}</li>
+                    <li><strong>Time Slot:</strong> {{ bookingDateTime.selectedTimeSlotId ? (availableTimeSlots.find(slot => slot.id === bookingDateTime.selectedTimeSlotId) || {}).name : 'N/A' }}</li>
+                    <li><strong>Name:</strong> {{ customer.name }}</li>
+                    <li><strong>Vehicle:</strong> {{ vehicle.make }} {{ vehicle.model }} ({{ vehicle.year }})</li>
+                </ul>
+                <p><strong>Payment:</strong> Payment will be collected by the technician upon service completion. (Further details can be provided by the dispatcher).</p> <!-- MODIFIED/ADDED LINE -->
+                <p>If you have any urgent questions, please call us at [Your Phone Number].</p>
+                <button @click="resetFormForNewBooking">Make Another Booking</button>
+            </div>
+        </main>
+
+        <footer>
+            <p>&copy; 2023 Your Auto Service Co.</p>
+        </footer>
+    </div>
+
+    <!-- Include Vue.js from CDN -->
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="app.js"></script> <!-- Link to our main app.js file -->
+</body>
+</html>

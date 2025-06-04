@@ -1,0 +1,157 @@
+body {
+    font-family: sans-serif;
+    line-height: 1.6;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+    color: #333;
+}
+
+#app {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px; /* Added border-radius */
+}
+
+header {
+    background-color: #333;
+    color: #fff;
+    padding: 1rem 0;
+    text-align: center;
+    margin-bottom: 20px;
+    border-top-left-radius: 8px; /* Match app container */
+    border-top-right-radius: 8px; /* Match app container */
+}
+
+header h1 {
+    margin: 0;
+    font-size: 1.8em; /* Slightly larger header text */
+}
+
+main {
+    padding: 10px;
+}
+
+footer {
+    text-align: center;
+    margin-top: 30px;
+    padding-top: 20px; /* Increased padding */
+    padding-bottom: 10px; /* Added padding */
+    border-top: 1px solid #eee;
+    font-size: 0.9em;
+    color: #777;
+}
+
+.form-section { /* Targeting the grouping div */
+    margin-bottom: 25px; /* Increased space between sections */
+    padding-bottom: 15px; /* Added padding within section */
+    border-bottom: 1px dashed #eee; /* Separator line */
+}
+
+.form-section:last-of-type {
+    border-bottom: none; /* No border for the last section (submit button) */
+}
+
+.form-section h2 {
+    font-size: 1.3em;
+    color: #333;
+    margin-top: 0; /* Remove default top margin for h2 within section */
+    margin-bottom: 15px;
+    border-bottom: 2px solid #5cb85c; /* Accent line for section titles */
+    padding-bottom: 5px;
+}
+
+
+.form-section > div { /* Targeting divs directly containing label+input */
+    margin-bottom: 15px;
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="tel"],
+input[type="number"], /* Added number type */
+input[type="date"],
+select,
+textarea {
+    width: 100%;
+    padding: 10px; /* Increased padding */
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-sizing: border-box;
+    font-size: 1em; /* Ensure consistent font size */
+}
+
+textarea {
+    min-height: 80px; /* Give textarea a bit more default height */
+}
+
+button {
+    background-color: #5cb85c;
+    color: white;
+    padding: 12px 20px; /* Increased padding */
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1.1em; /* Slightly larger button text */
+    transition: background-color 0.3s ease; /* Smooth hover transition */
+}
+
+button:hover {
+    background-color: #4cae4c;
+}
+
+/* Styling for radio button groups (services, time slots) */
+.service-option, .time-slot-options div {
+    margin-bottom: 8px;
+    display: flex; /* Align radio button and label nicely */
+    align-items: center;
+}
+
+.service-option input[type="radio"],
+.time-slot-options input[type="radio"] {
+    width: auto; /* Override full width for radios */
+    margin-right: 8px;
+}
+
+.service-option label,
+.time-slot-options label {
+    font-weight: normal; /* Labels for radio options might not need to be bold */
+}
+
+#confirmationSection h2 {
+    color: #5cb85c;
+}
+
+#confirmationSection ul {
+    list-style-type: none;
+    padding-left: 0;
+}
+#confirmationSection ul li {
+    margin-bottom: 8px;
+    font-size: 1.05em;
+}
+
+#quoteSection {
+    background-color: #f9f9f9;
+    padding: 15px;
+    border-radius: 5px;
+    border: 1px solid #eee;
+}
+#quoteSection p {
+    margin: 8px 0;
+    font-size: 1.1em;
+}
+#quoteSection hr {
+    margin: 10px 0;
+    border: 0;
+    border-top: 1px solid #ddd;
+}
