@@ -1,4 +1,4 @@
-# 🚀 Fleetbase v0.7.5 — 2025-05-30
+# 🚀 Fleetbase v0.7.6 — 2025-06-04
 
 > “Minor patches and route optimization overhaul progress”
 
