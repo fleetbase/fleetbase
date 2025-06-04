@@ -1,15 +1,13 @@
 # 🚀 Fleetbase v0.7.5 — 2025-05-30
 
-> “Route optimization and routing control advancements”
+> “Minor patches and route optimization overhaul progress”
 
 ---
 
 ## ✨ Highlights
-- Added route optimization and routing control services for registering additional routing engines and route optimization services.
-- Added settings for Routing (Next release will be able to set unit "Miles" or "Kilometers")
-- Improved and optimized environment and settings mapper.
-- Added entity activity events
-- Patched multiple waypoint order creation via API
+- Preparing to implement full multi-order/payload route optimization and managed routes.
+- Patched scheduler to not run in CI environments or without database connection established.
+- 2 New route optimization extensions published! VROOM & Valhalla
 
 ---
 

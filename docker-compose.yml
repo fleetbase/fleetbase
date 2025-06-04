@@ -41,6 +41,9 @@ services:
       CACHE_PATH: /fleetbase/api/storage/framework/cache
       CACHE_URL: tcp://cache
       REDIS_URL: tcp://cache
+    depends_on:
+      - database
+      - cache
 
   queue:
     image: fleetbase/fleetbase-api:latest
@@ -57,6 +60,9 @@ services:
       CACHE_PATH: /fleetbase/api/storage/framework/cache
       CACHE_URL: tcp://cache
       REDIS_URL: tcp://cache
+    depends_on:
+        - database
+        - cache
 
   console:
     image: fleetbase/fleetbase-console:latest
