@@ -179,6 +179,7 @@ jobs:
     - name: Deploy Console 🚀
       run: |
           set -eu
+          rm console/fleetbase.config.json
 
           gcloud app deploy --appyaml console/app.yaml console/dist
           # leave 2 versions
