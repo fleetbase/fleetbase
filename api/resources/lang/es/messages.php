@@ -34,4 +34,6 @@ return [
     'assigned_orders_available' => 'ya tiene otro pedido activo asignado',
     'assigned_orders_available_button' => 'con asignación',
     'no_driver_found' => 'No se encontró conductor',
+    'email_exists_with_in_company' => 'Este correo electrónico ya está registrado en su organización.',
+    'email_exists_all_companies' => 'Este correo electrónico ya está asociado con otra organización.',
 ];

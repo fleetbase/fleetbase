@@ -34,4 +34,6 @@ return [
     'assigned_orders_available' => 'a déjà une autre commande active assignée',
     'assigned_orders_available_button' => 'avec affectation',
     'no_driver_found' => 'Aucun chauffeur trouvé',
+    'email_exists_with_in_company' => 'Cet e-mail est déjà enregistré dans votre organisation.',
+    'email_exists_all_companies' => 'Cet e-mail est déjà associé à une autre organisation.',
 ];

@@ -59,10 +59,15 @@ class UserController extends FleetbaseController
         try {
             $email = $request->input('user.email');
             $companyUuid = session('company');
-
             // Check if email already exists within the same company
-            if (User::where('email', $email)->where('company_uuid', $companyUuid)->exists()) {
-                return response()->error('The email is already exists.');
+            if (User::where('email', $email)->where('company_uuid', $companyUuid)->whereNull('deleted_at')->exists()) {
+                return response()->error((__('messages.email_exists_with_in_company')));
+            }
+            else{
+                // Check if email already exists for all companies
+                if (User::where('email', $email)->whereNull('deleted_at')->exists()) {
+                   return response()->error((__('messages.email_exists_all_companies')));
+                }
             }
             $record = $this->model->createRecordFromRequest($request, function (&$request, &$input) {
                 // Get user properties
