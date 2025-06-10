@@ -170,6 +170,7 @@ jobs:
         SOCKETCLUSTER_SECURE: "true"
         SOCKETCLUSTER_PORT: "443"
         API_HOST: ${{ env.API_HOST }}
+        DISABLE_RUNTIME_CONFIG: "true"
       run: |
         set -eu
 
@@ -179,7 +180,6 @@ jobs:
     - name: Deploy Console 🚀
       run: |
           set -eu
-          rm console/fleetbase.config.json
 
           gcloud app deploy --appyaml console/app.yaml console/dist
           # leave 2 versions
