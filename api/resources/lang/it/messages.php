@@ -34,4 +34,6 @@ return [
     'assigned_orders_available' => 'ha già un altro ordine attivo assegnato',
     'assigned_orders_available_button' => 'con assegnazione',
     'no_driver_found' => 'Autista non trovato',
+    'email_exists_with_in_company' => 'Questa email è già registrata nella tua organizzazione.',
+    'email_exists_all_companies' => 'Questa email è già associata a un\'altra organizzazione.',
 ];

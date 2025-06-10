@@ -36,4 +36,6 @@ return [
     'driver_has_no_vehicle' => 'hat kein Fahrzeug zugewiesen',
     'without_vehicle' => 'Ohne Fahrzeug',
     'no_driver_found' => 'Kein Fahrer gefunden',
+    'email_exists_with_in_company' => 'Diese E-Mail ist bereits in Ihrer Organisation registriert.',
+    'email_exists_all_companies' => 'Diese E-Mail ist bereits mit einer anderen Organisation verbunden.',
 ];

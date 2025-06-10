@@ -23,6 +23,8 @@ return [
     'vehicle_has_active_orders' => 'Không thể gán xe này vì hiện tại nó đang tham gia vào các đơn hàng đang hoạt động. Nếu bạn vẫn cần tiếp tục, vui lòng thực hiện từ các đơn hàng liên quan.',
     'current_vehicle_has_active_orders' => 'Không thể gán xe này vì hiện tại nó đang tham gia vào các đơn hàng đang hoạt động. Nếu bạn vẫn cần tiếp tục, vui lòng thực hiện từ các đơn hàng liên quan.',
     'assigned_orders_available' => 'đã được chỉ định một đơn hàng đang hoạt động khác',
-    'assigned_orders_available_button' => 'với phân cấp'
+    'assigned_orders_available_button' => 'với phân cấp',
+    'email_exists_with_in_company' => 'Email này đã được đăng ký trong tổ chức của bạn.',
+    'email_exists_all_companies' => 'Email này đã được liên kết với một tổ chức khác.',
 ];
 
