@@ -31,8 +31,15 @@ services:
       SOCKETCLUSTER_WORKERS: 10
       SOCKETCLUSTER_BROKERS: 10
 
+  # Scheduler Service - Development Configuration
+  # Builds from local docker/Dockerfile (scheduler-dev target) and mounts ./api for live code changes.
   scheduler:
-    image: fleetbase/fleetbase-api:latest
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+      target: scheduler-dev
+    volumes:
+      - ./api:/fleetbase/api
     command: ["go-crond", "--verbose", "root:./crontab"]
     environment:
       DATABASE_URL: "mysql://root@database/fleetbase"
@@ -45,8 +52,15 @@ services:
       - database
       - cache
 
+  # Queue Service (Events) - Development Configuration
+  # Builds from local docker/Dockerfile (events-dev target) and mounts ./api for live code changes.
   queue:
-    image: fleetbase/fleetbase-api:latest
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+      target: events-dev
+    volumes:
+      - ./api:/fleetbase/api
     command: ["php", "artisan", "queue:work"]
     healthcheck:
       test: ["CMD", "php", "artisan", "queue:status"]
@@ -64,17 +78,27 @@ services:
         - database
         - cache
 
+  # Console UI - Development Configuration
+  # Uses Node.js image for Ember development server (ember serve / pnpm start) and mounts ./console for live code changes.
   console:
-    image: fleetbase/fleetbase-console:latest
+    image: node:18-alpine
     ports:
       - "4200:4200"
     volumes:
-      - ./console/fleetbase.config.json:/usr/share/nginx/html/fleetbase.config.json
+      - ./console:/console
+    working_dir: /console
+    command: sh -c "pnpm install && pnpm start --port 4200 --host 0.0.0.0"
 
+  # Application API - Development Configuration
+  # Builds from local docker/Dockerfile (app-dev target) and mounts ./api for live code changes.
   application:
-    image: fleetbase/fleetbase-api:latest
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+      target: app-dev
     volumes:
       - ./api/.env:/fleetbase/api/.env
+      - ./api:/fleetbase/api
     environment:
       ENVIRONMENT: development
       DATABASE_URL: "mysql://root@database/fleetbase"
