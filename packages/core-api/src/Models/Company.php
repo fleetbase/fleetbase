@@ -95,7 +95,10 @@ class Company extends Model
         'status',
         'slug',
         'trial_ends_at',
-        'parking_zone_max_distance'
+        'parking_zone_max_distance',
+        'language_id',
+        'number_of_drivers',    // Number of drivers in the company
+        'number_of_web_users',  // Number of web users in the company
     ];
 
     /**
