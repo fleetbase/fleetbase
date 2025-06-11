@@ -29,14 +29,10 @@
             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 {{t "onboard.index.language"}}
             </label>
-            <select class="form-input input-lg w-full" {{on "change" (fn (mut this.language) value="target.value")}}>
-                <option value="en-us">English</option>
-                <option value="de-de">German</option>
-                <option value="es-es">Spanish</option>
-                <option value="fr-fr">French</option>
-                <option value="it-it">Italian</option>
-                <option value="pl-pl">Polish</option>
-                <option value="vi-vn">Vietnamese</option>
+            <select class="form-input input-lg w-full" {{on "change" this.onLanguageChange}}>
+                {{#each this.languages as |lang|}}
+                    <option value={{lang.id}} selected={{eq this.language lang.id}}>{{lang.name}}</option>
+                {{/each}}
             </select>
             <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
                 {{t "onboard.index.language-help-text"}}
