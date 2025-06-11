@@ -29,7 +29,9 @@ class FleetbaseOverrideServiceProvider extends ServiceProvider
             ->group(function () {
                 Route::prefix('v1')->group(function () {
                     // Override the specific route you want to customize
-                   
+                        //language routes
+                    Route::get('/languages', 'App\Http\Controllers\Api\v1\LanguageController@index')
+                        ->name('languages.index');
                     Route::prefix('drivers')->group(function () {
                         Route::post('/login-with-sms', 'App\Http\Controllers\Api\v1\DriverController@loginWithPhone')
                             ->name('drivers.login-with-sms');
@@ -74,9 +76,7 @@ class FleetbaseOverrideServiceProvider extends ServiceProvider
                         Route::delete('/{id}', 'App\Http\Controllers\Api\v1\LeaveRequestController@destroy')
                         ->name('leave-requests.destroy');
                     });
-                    //language routes
-                    Route::get('/languages', 'App\Http\Controllers\Api\v1\LanguageController@index')
-                        ->name('languages.index');
+               
                 });
                     
                 });

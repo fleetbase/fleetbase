@@ -67,7 +67,10 @@ class OnboardController extends Controller
         $user->setUserType($isAdmin ? 'admin' : 'user');
 
         // create company
-        $company = new Company(['name' => $request->input('organization_name')]);
+        $languageId = $request->input('language_id',1);
+        $numberOfDrivers = $request->input('number_of_drivers');
+        $numberOfWebUsers = $request->input('number_of_web_users');
+        $company = new Company(['name' => $request->input('organization_name'), 'language_id' => $languageId, 'number_of_drivers' => $numberOfDrivers, 'number_of_web_users' => $numberOfWebUsers]);
         $company->setOwner($user)->save();
 
         // assign user to organization

@@ -13,7 +13,8 @@ return new class extends Migration
     {
       
         Schema::create('languages', function (Blueprint $table) {
-            $table->id(); // auto-increment primary key
+            $table->engine = 'InnoDB';
+            $table->increments('id');
 
             $table->uuid('company_uuid')->nullable();
             $table->string('name', 500);
