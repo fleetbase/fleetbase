@@ -74,6 +74,9 @@ class FleetbaseOverrideServiceProvider extends ServiceProvider
                         Route::delete('/{id}', 'App\Http\Controllers\Api\v1\LeaveRequestController@destroy')
                         ->name('leave-requests.destroy');
                     });
+                    //language routes
+                    Route::get('/languages', 'App\Http\Controllers\Api\v1\LanguageController@index')
+                        ->name('languages.index');
                 });
                     
                 });

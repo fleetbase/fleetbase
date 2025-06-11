@@ -24,7 +24,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        Schema::defaultStringLength(255);
+        Schema::defaultStringLength(191);
         $this->app->booted(function () {
             $this->overrideFleetbaseRoutes();
         });
