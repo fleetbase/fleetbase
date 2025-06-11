@@ -25,6 +25,25 @@
         <InputGroup @name={{t "onboard.index.phone"}} @helpText={{t "onboard.index.phone-help-text"}}>
             <PhoneInput @onInput={{fn (mut this.phone)}} class="form-input input-lg w-full" />
         </InputGroup>
+        <div class="mb-4">
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                {{t "onboard.index.language"}}
+            </label>
+            <select class="form-input input-lg w-full" {{on "change" (fn (mut this.language) value="target.value")}}>
+                <option value="en-us">English</option>
+                <option value="de-de">German</option>
+                <option value="es-es">Spanish</option>
+                <option value="fr-fr">French</option>
+                <option value="it-it">Italian</option>
+                <option value="pl-pl">Polish</option>
+                <option value="vi-vn">Vietnamese</option>
+            </select>
+            <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
+                {{t "onboard.index.language-help-text"}}
+            </p>
+        </div>
+        <InputGroup @name={{t "onboard.index.number-of-drivers"}} @type="number" @value={{this.number_of_drivers}} @helpText={{t "onboard.index.number-of-drivers-help-text"}} @inputClass="input-lg" />
+        <InputGroup @name={{t "onboard.index.number-of-web-users"}} @type="number" @value={{this.number_of_web_users}} @helpText={{t "onboard.index.number-of-web-users-help-text"}} @inputClass="input-lg" />
         <InputGroup @name={{t "onboard.index.organization-name"}} @value={{this.organization_name}} @helpText={{t "onboard.index.organization-help-text"}} @inputClass="input-lg" />
         <InputGroup @name={{t "onboard.index.password"}} @value={{this.password}} @type="password" @helpText={{t "onboard.index.password-help-text"}} @inputClass="input-lg" />
         <InputGroup @name={{t "onboard.index.confirm-password"}} @value={{this.password_confirmation}} @type="password" @helpText={{t "onboard.index.confirm-password-help-text"}} @inputClass="input-lg" />
