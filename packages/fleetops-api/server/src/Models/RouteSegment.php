@@ -18,7 +18,7 @@ class RouteSegment extends Model
         'payload_id',
         'from_waypoint_id',
         'to_waypoint_id',
-        'route_id',
+        'public_id',
         'record_status',
         'deleted',
         'created_by_id',
