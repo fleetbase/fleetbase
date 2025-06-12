@@ -2,7 +2,7 @@
 
 <div class="bg-white dark:bg-gray-800 py-8 px-4 shadow rounded-lg w-full">
     <div class="mb-8">
-        <img class="mx-auto h-12 w-auto " src="/images/fleetbase-logo-svg.svg" alt={{t "app.name"}}>
+        <Image src={{@model.logo_url}} @fallbackSrc="/images/fleetbase-logo-svg.svg" alt={{t "app.name"}} width="160" height="56" class="w-40 h-14 mx-auto" />
         <h2 class="mt-6 text-center text-lg font-extrabold text-gray-900 dark:text-white truncate">
             {{t "onboard.verify-email.title"}}
         </h2>
