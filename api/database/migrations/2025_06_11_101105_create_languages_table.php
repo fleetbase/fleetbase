@@ -21,9 +21,9 @@ return new class extends Migration
             $table->string('code', 200);
             $table->tinyInteger('sort_order')->nullable();
             $table->tinyInteger('record_status')->default(1);
-            $table->integer('deleted')->default(value: 0);
-            $table->unsignedInteger('created_by_id')->nullable();
-            $table->unsignedInteger('updated_by_id')->nullable();
+            $table->tinyInteger('deleted')->default(value: 0);
+            $table->integer('created_by_id')->nullable();
+            $table->integer('updated_by_id')->nullable();
             $table->softDeletes();
             $table->timestamp('created_at')->nullable()->index();
             $table->timestamp('updated_at')->nullable();
