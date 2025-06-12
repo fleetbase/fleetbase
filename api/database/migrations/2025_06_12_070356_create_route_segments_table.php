@@ -22,9 +22,9 @@ return new class extends Migration
             $table->string('route_id')->unique(); // VR ID like VR001
 
             $table->tinyInteger('record_status')->default(1);
-            $table->tinyInteger('deleted')->default(0);
-            $table->integer('created_by_id')->nullable();
-            $table->integer('updated_by_id')->nullable();
+            $table->unsignedTinyInteger('deleted')->default(value: 0);
+            $table->unsignedInteger('created_by_id')->nullable();
+            $table->unsignedInteger('updated_by_id')->nullable();
 
             $table->softDeletes();
             $table->timestamp('created_at')->nullable()->index();

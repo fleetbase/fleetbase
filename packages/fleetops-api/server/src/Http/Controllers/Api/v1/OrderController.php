@@ -293,7 +293,7 @@ class OrderController extends Controller
                         $routeSegment = new \Fleetbase\FleetOps\Models\RouteSegment();
                         $routeSegment->order_id = $order->uuid; // Set later when order is created
                         $routeSegment->payload_id = $payload_uuid;
-                        $routeSegment->from_waypoint_id = $index === 0 ? null : $payload->waypoints[$index - 1]->uuid;
+                        $routeSegment->from_waypoint_id = $index > 0 ? $payload->waypoints[$index - 1]->uuid : null;
                         $routeSegment->to_waypoint_id = $waypoint->uuid;
                         $routeSegment->route_id = 'VR' . str_pad($index + 1, 3, '0', STR_PAD_LEFT); // Example VR001, VR002, etc.
                         $routeSegment->save();
