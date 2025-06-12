@@ -167,7 +167,6 @@ class OrderController extends Controller
                 $payload->setCurrentWaypoint($firstWaypoint);
             }
         }
-
         // driver assignment
         if ($request->has('driver') && $integratedVendorOrder === null) {
             $driver = Driver::where(['public_id' => $request->input('driver'), 'company_uuid' => session('company')])->first();
@@ -284,7 +283,24 @@ class OrderController extends Controller
 
         // create the order
         $order = Order::create($input);
-
+        //if payload waypoints are set, create entries in route_segments table
+        if ($request->has('payload') && isset($order)) {
+            $payload_uuid = $input['payload_uuid'] ?? null;
+            if ($payload_uuid) {
+                if ($payload && $payload->waypoints->count() > 0) {
+                    foreach ($payload->waypoints as $index => $waypoint) {
+                        // Create route segment for each waypoint
+                        $routeSegment = new \Fleetbase\FleetOps\Models\RouteSegment();
+                        $routeSegment->order_id = $order->uuid; // Set later when order is created
+                        $routeSegment->payload_id = $payload_uuid;
+                        $routeSegment->from_waypoint_id = $index === 0 ? null : $payload->waypoints[$index - 1]->uuid;
+                        $routeSegment->to_waypoint_id = $waypoint->uuid;
+                        $routeSegment->route_id = 'VR' . str_pad($index + 1, 3, '0', STR_PAD_LEFT); // Example VR001, VR002, etc.
+                        $routeSegment->save();
+                    }
+                }
+            }
+        }
         // notify driver if assigned
         $order->notifyDriverAssigned();
 
