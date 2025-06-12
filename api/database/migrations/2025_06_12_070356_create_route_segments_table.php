@@ -16,10 +16,10 @@ return new class extends Migration
             $table->increments('id'); // Auto-incrementing primary key
             $table->string('uuid', 191)->nullable()->index();
             $table->unsignedInteger('order_id')->index();
-            $table->unsignedInteger('payload_id')->index();
-            $table->unsignedInteger('from_waypoint_id')->index();
-            $table->unsignedInteger('to_waypoint_id')->index();
-            $table->string('route_id')->unique(); // VR ID like VR001
+            $table->string('payload_id')->index();
+            $table->string('from_waypoint_id')->index();
+            $table->string('to_waypoint_id')->index();
+            $table->string('public_id')->unique(); // VR ID like VR001
 
             $table->tinyInteger('record_status')->default(1);
             $table->unsignedTinyInteger('deleted')->default(value: 0);
@@ -30,11 +30,8 @@ return new class extends Migration
             $table->timestamp('created_at')->nullable()->index();
             $table->timestamp('updated_at')->nullable();
 
-            // Foreign key constraints
-            $table->foreign('order_id')->references('id')->on('orders')->onDelete('cascade');
-            $table->foreign('payload_id')->references('id')->on('payloads')->onDelete('cascade');
-            $table->foreign('from_waypoint_id')->references('id')->on('waypoints')->onDelete('cascade');
-            $table->foreign('to_waypoint_id')->references('id')->on('waypoints')->onDelete('cascade');
+             $table->foreign('order_id')->references('id')->on('orders')->onDelete('cascade');
+
         });
     }
 
@@ -46,9 +43,6 @@ return new class extends Migration
         // Drop the foreign key constraints first
         Schema::table('route_segments', function (Blueprint $table) {
             $table->dropForeign(['order_id']);
-            $table->dropForeign(['payload_id']);
-            $table->dropForeign(['from_waypoint_id']);
-            $table->dropForeign(['to_waypoint_id']);
         });
         Schema::dropIfExists('route_segments');
     }

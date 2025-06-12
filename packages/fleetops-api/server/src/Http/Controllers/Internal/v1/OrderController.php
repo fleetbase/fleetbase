@@ -22,7 +22,6 @@ use Fleetbase\FleetOps\Models\Payload;
 use Fleetbase\FleetOps\Models\Place;
 use Fleetbase\FleetOps\Models\ServiceQuote;
 use Fleetbase\FleetOps\Models\TrackingStatus;
-use Fleetbase\FleetOps\Models\Waypoint;
 use Fleetbase\FleetOps\Support\Utils;
 use Fleetbase\Http\Requests\ExportRequest;
 use Fleetbase\Http\Requests\Internal\BulkActionRequest;
@@ -37,6 +36,8 @@ use Illuminate\Support\Str;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
+use Fleetbase\FleetOps\Models\Waypoint;
+use Fleetbase\FleetOps\Models\RouteSegment;
 
 class OrderController extends FleetOpsController
 {
@@ -54,7 +55,7 @@ class OrderController extends FleetOpsController
      */
     public function createRecord(Request $request)
     {
-        // Create validation request
+       // Create validation request
         $createOrderRequest  = CreateOrderRequest::createFrom($request);
         $rules               = $createOrderRequest->rules();
 
@@ -161,29 +162,58 @@ class OrderController extends FleetOpsController
                             ]
                         );
                     }
+                
+                //if payload waypoints are set, create entries in route_segments table
+                 if (isset($payload) && isset($order)) {
+                            $payload_uuid = $order->payload_uuid ?? null;
+
+                            if (!empty($payload_uuid)) {
+                                // Fetch waypoints from DB using payload_uuid
+                                $waypoints = Waypoint::where('payload_uuid', $payload_uuid)
+                                                    ->whereNull('deleted_at')
+                                                    ->orderBy('order') // optional, if you want them in order
+                                                    ->get();
+
+                                if ($waypoints->count() > 1) {
+                                    foreach ($waypoints as $index => $waypoint) {
+                                        if ($index === 0) {
+                                            // Skip the first waypoint as it has no previous waypoint
+                                            continue;
+                                        }
+                                        $routeSegment = new RouteSegment();
+                                        $routeSegment->order_id = $order->id;
+                                        $routeSegment->payload_id = $order->payload_uuid;
+                                        $routeSegment->from_waypoint_id = $index > 0 ? $waypoints[$index - 1]->uuid : null;
+                                        $routeSegment->to_waypoint_id = $waypoint->uuid;
+                                        $routeSegment->public_id = 'VR_' . Str::upper(Str::random(5));
+                                        $routeSegment->save();
+                                    }
+                                }
+                            }
+                        }
+
+                        // Notify driver if assigned
+                        $order->notifyDriverAssigned();
+                
+                        // Set driving distance and time
+                        $order->setPreliminaryDistanceAndTime();
+                
+                        // If service quote attached purchase
+                        $order->purchaseServiceQuote($serviceQuote);
+                
+                        // Dispatch if flagged true
+                        $order->firstDispatchWithActivity();
+                
+                        // Load tracking number
+                        $order->load(['trackingNumber']);
+                    }
+                );
+                // Trigger order created event
             
-                    // Notify driver if assigned
-                    $order->notifyDriverAssigned();
-            
-                    // Set driving distance and time
-                    $order->setPreliminaryDistanceAndTime();
-            
-                    // If service quote attached purchase
-                    $order->purchaseServiceQuote($serviceQuote);
-            
-                    // Dispatch if flagged true
-                    $order->firstDispatchWithActivity();
-            
-                    // Load tracking number
-                    $order->load(['trackingNumber']);
-                }
-            );
-            // Trigger order created event
-           
-            event(new OrderReady($record));
-            // Return response
-            return ['order' => new $this->resource($record)];
-        }
+                event(new OrderReady($record));
+                // Return response
+                return ['order' => new $this->resource($record)];
+            }
             
         catch (\Exception $e) {
             // Log the exception with the message and trace for debugging purposes
@@ -191,6 +221,7 @@ class OrderController extends FleetOpsController
                 'message' => $e->getMessage(),
                 'trace'   => $e->getTraceAsString()
             ]);
+            return response()->error($e->getMessage());
         }
         catch (\Illuminate\Database\QueryException $e) {
             return response()->error($e->getMessage());
