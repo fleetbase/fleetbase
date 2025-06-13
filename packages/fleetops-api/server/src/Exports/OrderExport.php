@@ -24,20 +24,20 @@ class OrderExport implements FromCollection, WithHeadings, WithColumnFormatting,
         return [
             'Trip ID',
             'Block ID',
+            'VR ID',
             'Driver',
             'Vehicle',
             'Pick Up',
             'Drop Off',
             'Start Date',
             'End Date',
-            'Routes',
+            'Sequence',
             'Tracking Number',
             'Status',
             'Created By',
             'Updated By',
             'Date Created',
-            'Date Updated',
-            'VR ID',
+            'Date Updated'
         ];
     }
 
@@ -88,56 +88,69 @@ class OrderExport implements FromCollection, WithHeadings, WithColumnFormatting,
             $updatedAt = $order->updated_at;
 
             // Route A→B→C
-            $routes = '';
-            if ($order->payload && $order->payload->waypoints && count($order->payload->waypoints)) {
-                $locationNames = collect($order->payload->waypoints)
-                    ->sortBy('order')
-                    ->pluck('name')
-                    ->toArray();
-                $routes = implode('→', $locationNames);
-            }
-
+            // $routes = '';
+            // if ($order->payload && $order->payload->waypoints && count($order->payload->waypoints)) {
+            //     $locationNames = collect($order->payload->waypoints)
+            //         ->sortBy('order')
+            //         ->pluck('name')
+            //         ->toArray();
+            //     $routes = implode('→', $locationNames);
+            // }
+            $waypoints = $order->payload?->waypoints;
             // For each segment, create a row
-            if ($order->routeSegments && count($order->routeSegments)) {
-                foreach ($order->routeSegments as $segment) {
-                    $rows->push([
-                        $tripId,
-                        $blockId,
-                        $driver,
-                        $vehicle,
-                        $pickup,
-                        $dropoff,
-                        $startDate,
-                        $endDate,
-                        $routes,
-                        $trackingNumber,
-                        $status,
-                        $createdBy,
-                        $updatedBy,
-                        $createdAt,
-                        $updatedAt,
-                        $segment->route_id, // One row per VR ID
-                    ]);
+         if ($order->routeSegments && $waypoints && count($waypoints) >= 2) {
+                $sortedWaypoints = $waypoints->sortBy('order')->values(); // reindex
+                foreach ($order->routeSegments as $index => $segment) {
+                // Get waypoint pairs for the sequence A→B, B→C, etc.
+                $from = $sortedWaypoints[$index]->name ?? '';
+                $to = $sortedWaypoints[$index + 1]->name ?? '';
+
+                // Skip if to/from is missing (safety check)
+                if (!$from || !$to) {
+                    continue;
                 }
-            } else {
-                // Fallback if no segments — show 1 row with empty VR ID
+
+                $sequence = "{$from}→{$to}";
+
                 $rows->push([
                     $tripId,
                     $blockId,
+                    $segment->public_id, // VR ID
                     $driver,
                     $vehicle,
                     $pickup,
                     $dropoff,
                     $startDate,
                     $endDate,
-                    $routes,
+                    $sequence, // Updated here
                     $trackingNumber,
                     $status,
                     $createdBy,
                     $updatedBy,
                     $createdAt,
                     $updatedAt,
+                    ]);
+                    }
+            } else {
+                // Fallback if no segments — show 1 row with empty VR ID
+                $rows->push([
+                    $tripId,
+                    $blockId,
                     '', // No VR
+                    $driver,
+                    $vehicle,
+                    $pickup,
+                    $dropoff,
+                    $startDate,
+                    $endDate,
+                    '',
+                    $trackingNumber,
+                    $status,
+                    $createdBy,
+                    $updatedBy,
+                    $createdAt,
+                    $updatedAt,
+                   
                 ]);
             }
         }
