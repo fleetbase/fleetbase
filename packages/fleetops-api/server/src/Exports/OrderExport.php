@@ -9,8 +9,9 @@ use Maatwebsite\Excel\Concerns\WithColumnFormatting;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMapping;
 use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
+use Maatwebsite\Excel\Concerns\FromArray;
 
-class OrderExport implements FromCollection, WithHeadings, WithMapping, WithColumnFormatting, ShouldAutoSize
+class OrderExport implements FromArray, WithHeadings, WithColumnFormatting, ShouldAutoSize, WithMapping
 {
     protected array $selections = [];
 
@@ -19,6 +20,51 @@ class OrderExport implements FromCollection, WithHeadings, WithMapping, WithColu
         $this->selections = $selections;
     }
 
+     public function array(): array
+    {
+        $rows = [];
+
+        $orders = Order::with([
+            'trackingNumber',
+            'driverAssigned',
+            'payload.waypoints',
+            'routeSegments',
+            'createdBy',
+            'updatedBy'
+        ])
+        ->where('company_uuid', session('company'));
+
+        if (!empty($this->selections)) {
+            $orders = $orders->whereIn('uuid', $this->selections);
+        }
+
+        $orders = $orders->get();
+
+        foreach ($orders as $order) {
+            foreach ($order->routeSegments as $segment) {
+                $rows[] = [
+                    $order->public_id,                       // Trip ID
+                    $order->internal_id,                     // Block ID
+                    $order->driver_name,
+                    $order->vehicle_name,
+                    $order->pickup_name,
+                    $order->dropoff_name,
+                    $order->scheduled_at,
+                    $order->estimated_end_date,
+                    $segment->from_waypoint_id . '→' . $segment->to_waypoint_id,  // Routes
+                    optional($order->trackingNumber)->tracking_number,
+                    $order->status,
+                    $order->created_by_name,
+                    $order->updated_by_name,
+                    $order->created_at,
+                    $order->updated_at,
+                    $segment->route_id                       // VR ID
+                ];
+            }
+        }
+
+        return $rows;
+    }
     public function map($order): array
     {
         $routes = '';
@@ -51,22 +97,6 @@ class OrderExport implements FromCollection, WithHeadings, WithMapping, WithColu
         ];
     }
 
-    // public function headings(): array
-    // {
-    //     return [
-    //         'ID',
-    //         'Internal ID',
-    //         'Driver',
-    //         'Vehicle',
-    //         'Customer',
-    //         'Pick Up',
-    //         'Drop Off',
-    //         'Date Scheduled',
-    //         'Tracking Number',
-    //         'Status',
-    //         'Date Created',
-    //     ];
-    // }
     public function headings(): array
     {
         return [
@@ -91,8 +121,10 @@ class OrderExport implements FromCollection, WithHeadings, WithMapping, WithColu
     public function columnFormats(): array
     {
         return [
+            'G' => NumberFormat::FORMAT_DATE_DDMMYYYY,
             'H' => NumberFormat::FORMAT_DATE_DDMMYYYY,
-            'K' => NumberFormat::FORMAT_DATE_DDMMYYYY,
+            'N' => NumberFormat::FORMAT_DATE_DDMMYYYY,
+            'O' => NumberFormat::FORMAT_DATE_DDMMYYYY,
         ];
     }
 
