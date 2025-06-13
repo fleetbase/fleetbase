@@ -169,12 +169,8 @@ class OrderController extends FleetOpsController
 
                             if (!empty($payload_uuid)) {
                                 // Fetch waypoints from DB using payload_uuid
-                                $waypoints = Waypoint::where('payload_uuid', $payload_uuid)
-                                                    ->whereNull('deleted_at')
-                                                    ->orderBy('order') // optional, if you want them in order
-                                                    ->get();
-
-                                if ($waypoints->count() > 1) {
+                                $waypoints = $this->getWaypoints($payload_uuid);
+                                if ($waypoints &&  $waypoints->count() > 1) {
                                     foreach ($waypoints as $index => $waypoint) {
                                         if ($index === 0) {
                                             // Skip the first waypoint as it has no previous waypoint
@@ -254,6 +250,34 @@ class OrderController extends FleetOpsController
         if ($waypoints) {
             $order->payload->updateWaypoints($waypoints);
             $order->payload->removePlace(['pickup', 'dropoff', 'return'], ['save' => true]);
+            //update route segments
+            $payload_uuid = $order->payload_uuid ?? null;
+            if (!empty($payload_uuid)) {
+                //fetch route segments from DB using payload_uuid & deleted them
+                RouteSegment::where('payload_id', $payload_uuid)
+                    ->where('deleted', 0)
+                    ->update([
+                        'record_status' => config('params.record_status_archived'),
+                        'deleted'       => config('params.deleted')
+                    ]);
+                // Fetch waypoints from DB using payload_uuid
+                $waypoints = $this->getWaypoints($payload_uuid);
+                if ($waypoints &&  $waypoints->count() > 1) {
+                    foreach ($waypoints as $index => $waypoint) {
+                        if ($index === 0) {
+                            // Skip the first waypoint as it has no previous waypoint
+                            continue;
+                        }
+                        $routeSegment = new RouteSegment();
+                        $routeSegment->order_id = $order->id;
+                        $routeSegment->payload_id = $order->payload_uuid;
+                        $routeSegment->from_waypoint_id = $index > 0 ? $waypoints[$index - 1]->uuid : null;
+                        $routeSegment->to_waypoint_id = $waypoint->uuid;
+                        $routeSegment->public_id = 'VR_' . Str::upper(Str::random(5));
+                        $routeSegment->save();
+                    }
+                }
+            }
         } else {
             // Update pickup
             if ($pickup) {
@@ -1006,5 +1030,18 @@ class OrderController extends FleetOpsController
             ]);
             return response()->json(data: ['success' => false, 'errors' => $e->getMessage()],status: 400);
         }
+    }
+    /*
+        * Get the wayppoints for the payload of an order.
+        *
+        * @return \Illuminate\Http\Response
+        */
+    public function getWaypoints($payload_uuid)
+    {
+        $waypoints = Waypoint::where('payload_uuid', $payload_uuid)
+                      ->whereNull('deleted_at')
+                      ->orderBy('order') // optional, if you want them in order
+                      ->get();
+        return $waypoints;
     }
 }
