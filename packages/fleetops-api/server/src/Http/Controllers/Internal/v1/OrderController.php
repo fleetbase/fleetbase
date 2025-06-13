@@ -981,13 +981,14 @@ class OrderController extends FleetOpsController
     
                             // Get waypoints data
                             $waypoints = Utils::get($input, 'payload.waypoints', []);
-    
+                            if ($waypoints && count($waypoints) > 2) {
                             // Create waypoints
-                            foreach ($waypoints as $waypointData) {
-                                Waypoint::create(array_merge($waypointData, [
-                                    'company_uuid' => session('company'),
-                                    'payload_uuid' => $payload->uuid
-                                ]));
+                                foreach ($waypoints as $waypointData) {
+                                    Waypoint::create(array_merge($waypointData, [
+                                        'company_uuid' => session('company'),
+                                        'payload_uuid' => $payload->uuid
+                                    ]));
+                                }
                             }
                             //create route segments
                             $payload_uuid = $payload->uuid ?? null;
