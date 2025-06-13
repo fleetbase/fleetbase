@@ -3,58 +3,20 @@
 namespace Fleetbase\FleetOps\Exports;
 
 use Fleetbase\FleetOps\Models\Order;
+use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 use Maatwebsite\Excel\Concerns\WithColumnFormatting;
 use Maatwebsite\Excel\Concerns\WithHeadings;
-use Maatwebsite\Excel\Concerns\WithMapping;
 use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
 
-class OrderExport implements FromCollection, WithHeadings, WithMapping, WithColumnFormatting, ShouldAutoSize
+class OrderExport implements FromCollection, WithHeadings, WithColumnFormatting, ShouldAutoSize
 {
     protected array $selections = [];
 
     public function __construct(array $selections = [])
     {
         $this->selections = $selections;
-    }
-
-    public function map($order): array
-    {
-        // Get waypoint route
-        $routes = '';
-        if ($order->payload && $order->payload->waypoints && count($order->payload->waypoints)) {
-            $locationNames = collect($order->payload->waypoints)
-                ->sortBy('order')
-                ->pluck('name')
-                ->toArray();
-            $routes = implode('→', $locationNames);
-        }
-
-        // Get all route segment (VR) IDs
-        $vrIds = '';
-        if ($order->routeSegments && count($order->routeSegments)) {
-            $vrIds = $order->routeSegments->pluck('route_id')->implode(', ');
-        }
-
-        return [
-            $order->public_id,                  // Trip ID
-            $order->internal_id,                // Block ID
-            $order->driver_name,
-            $order->vehicle_name,
-            $order->pickup_name,
-            $order->dropoff_name,
-            $order->scheduled_at,
-            $order->estimated_end_date,
-            $routes,                            // Route A→B→C
-            $order->trackingNumber?->tracking_number,
-            $order->status,
-            $order->created_by_name,
-            $order->updated_by_name,
-            $order->created_at,
-            $order->updated_at,
-            $vrIds                               // NEW: VR ID(s)
-        ];
     }
 
     public function headings(): array
@@ -75,7 +37,7 @@ class OrderExport implements FromCollection, WithHeadings, WithMapping, WithColu
             'Updated By',
             'Date Created',
             'Date Updated',
-            'VR ID(s)', // New column
+            'VR ID',
         ];
     }
 
@@ -89,7 +51,7 @@ class OrderExport implements FromCollection, WithHeadings, WithMapping, WithColu
         ];
     }
 
-    public function collection()
+    public function collection(): Collection
     {
         $query = Order::where('company_uuid', session('company'));
 
@@ -97,13 +59,89 @@ class OrderExport implements FromCollection, WithHeadings, WithMapping, WithColu
             $query = $query->whereIn('uuid', $this->selections);
         }
 
-        return $query->with([
+        $orders = $query->with([
             'trackingNumber',
             'driverAssigned',
             'payload.waypoints',
-            'routeSegments', // Ensure route segments are loaded
+            'routeSegments',
             'createdBy',
-            'updatedBy'
+            'updatedBy',
         ])->get();
+
+        $rows = collect();
+
+        foreach ($orders as $order) {
+            // Prepare the shared fields
+            $tripId = $order->public_id;
+            $blockId = $order->internal_id;
+            $driver = $order->driver_name;
+            $vehicle = $order->vehicle_name;
+            $pickup = $order->pickup_name;
+            $dropoff = $order->dropoff_name;
+            $startDate = $order->scheduled_at;
+            $endDate = $order->estimated_end_date;
+            $trackingNumber = $order->trackingNumber?->tracking_number;
+            $status = $order->status;
+            $createdBy = $order->created_by_name;
+            $updatedBy = $order->updated_by_name;
+            $createdAt = $order->created_at;
+            $updatedAt = $order->updated_at;
+
+            // Route A→B→C
+            $routes = '';
+            if ($order->payload && $order->payload->waypoints && count($order->payload->waypoints)) {
+                $locationNames = collect($order->payload->waypoints)
+                    ->sortBy('order')
+                    ->pluck('name')
+                    ->toArray();
+                $routes = implode('→', $locationNames);
+            }
+
+            // For each segment, create a row
+            if ($order->routeSegments && count($order->routeSegments)) {
+                foreach ($order->routeSegments as $segment) {
+                    $rows->push([
+                        $tripId,
+                        $blockId,
+                        $driver,
+                        $vehicle,
+                        $pickup,
+                        $dropoff,
+                        $startDate,
+                        $endDate,
+                        $routes,
+                        $trackingNumber,
+                        $status,
+                        $createdBy,
+                        $updatedBy,
+                        $createdAt,
+                        $updatedAt,
+                        $segment->route_id, // One row per VR ID
+                    ]);
+                }
+            } else {
+                // Fallback if no segments — show 1 row with empty VR ID
+                $rows->push([
+                    $tripId,
+                    $blockId,
+                    $driver,
+                    $vehicle,
+                    $pickup,
+                    $dropoff,
+                    $startDate,
+                    $endDate,
+                    $routes,
+                    $trackingNumber,
+                    $status,
+                    $createdBy,
+                    $updatedBy,
+                    $createdAt,
+                    $updatedAt,
+                    '', // No VR
+                ]);
+            }
+        }
+
+        return $rows;
     }
 }
