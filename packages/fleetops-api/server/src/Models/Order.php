@@ -1777,4 +1777,10 @@ class Order extends Model
 
         return false;
     }
+    public function routeSegments()
+    {
+        return $this->hasMany(\Fleetbase\FleetOps\Models\RouteSegment::class, 'order_id', 'id');
+    }
+
+
 }
