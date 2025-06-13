@@ -55,7 +55,8 @@ class OrderController extends FleetOpsController
      */
     public function createRecord(Request $request)
     {
-       // Create validation request
+        set_time_limit(0); // Allow script to run indefinitely for large imports
+        // Create validation request
         $createOrderRequest  = CreateOrderRequest::createFrom($request);
         $rules               = $createOrderRequest->rules();
 
@@ -164,30 +165,16 @@ class OrderController extends FleetOpsController
                     }
                 
                 //if payload waypoints are set, create entries in route_segments table
-                 if (isset($payload) && isset($order)) {
-                            $payload_uuid = $order->payload_uuid ?? null;
-
-                            if (!empty($payload_uuid)) {
-                                // Fetch waypoints from DB using payload_uuid
-                                $waypoints = $this->getWaypoints($payload_uuid);
-                                if ($waypoints &&  $waypoints->count() > 1) {
-                                    foreach ($waypoints as $index => $waypoint) {
-                                        if ($index === 0) {
-                                            // Skip the first waypoint as it has no previous waypoint
-                                            continue;
-                                        }
-                                        $routeSegment = new RouteSegment();
-                                        $routeSegment->order_id = $order->id;
-                                        $routeSegment->payload_id = $order->payload_uuid;
-                                        $routeSegment->from_waypoint_id = $index > 0 ? $waypoints[$index - 1]->uuid : null;
-                                        $routeSegment->to_waypoint_id = $waypoint->uuid;
-                                        $routeSegment->public_id = 'VR_' . Str::upper(Str::random(5));
-                                        $routeSegment->save();
-                                    }
+                    if (isset($payload) && isset($order)) {
+                                $payload_uuid = $order->payload_uuid ?? null;
+                                if (!empty($payload_uuid)) {
+                                    // Fetch waypoints from DB using payload_uuid
+                                    $waypoints = $this->getWaypoints($payload_uuid);
+                                    if ($waypoints &&  $waypoints->count() > 1) {
+                                    $this->createRouteSegments($waypoints, $order->id, $payload_uuid);
                                 }
                             }
                         }
-
                         // Notify driver if assigned
                         $order->notifyDriverAssigned();
                 
@@ -262,21 +249,9 @@ class OrderController extends FleetOpsController
                     ]);
                 // Fetch waypoints from DB using payload_uuid
                 $waypoints = $this->getWaypoints($payload_uuid);
-                if ($waypoints &&  $waypoints->count() > 1) {
-                    foreach ($waypoints as $index => $waypoint) {
-                        if ($index === 0) {
-                            // Skip the first waypoint as it has no previous waypoint
-                            continue;
-                        }
-                        $routeSegment = new RouteSegment();
-                        $routeSegment->order_id = $order->id;
-                        $routeSegment->payload_id = $order->payload_uuid;
-                        $routeSegment->from_waypoint_id = $index > 0 ? $waypoints[$index - 1]->uuid : null;
-                        $routeSegment->to_waypoint_id = $waypoint->uuid;
-                        $routeSegment->public_id = 'VR_' . Str::upper(Str::random(5));
-                        $routeSegment->save();
-                    }
-                }
+                // If waypoints are set, create entries in route_segments table
+                $createRouteSegments = $this->createRouteSegments($waypoints, $order->id, $payload_uuid);
+              
             }
         } else {
             // Update pickup
@@ -1014,7 +989,14 @@ class OrderController extends FleetOpsController
                                     'payload_uuid' => $payload->uuid
                                 ]));
                             }
+                            //create route segments
+                            $payload_uuid = $payload->uuid ?? null;
+                            if (!empty($payload_uuid)) {
+                                $waypoints = $this->getWaypoints($payload_uuid);
+                                $this->createRouteSegments($waypoints, $order->id, $payload_uuid);
+                            }
     
+                            // Set status
                             $order->setStatus($input['status'], false);
                             $order->setPreliminaryDistanceAndTime();
                         }
@@ -1048,5 +1030,33 @@ class OrderController extends FleetOpsController
                       ->orderBy('order') // optional, if you want them in order
                       ->get();
         return $waypoints;
+    }
+
+    /**
+     * Create route segments from waypoints.
+     *
+     * @param array $waypoints
+     * @param int $orderId
+     * @param string $payloadUuid
+     * @return void
+     */
+    public function createRouteSegments($waypoints, $orderId, $payloadUuid): void
+    {
+         if ($waypoints && count($waypoints) > 1) {
+            foreach ($waypoints as $index => $waypoint) {
+                if ($index === 0) {
+                    // Skip the first waypoint as it has no previous waypoint
+                    continue;
+                }
+                $routeSegment = new RouteSegment();
+                $routeSegment->order_id = $orderId;
+                $routeSegment->payload_id = $payloadUuid;
+                $routeSegment->from_waypoint_id = $index > 0 ? $waypoints[$index - 1]->uuid : null;
+                $routeSegment->to_waypoint_id = $waypoint->uuid;
+                $routeSegment->public_id = 'VR_' . Str::upper(Str::random(5));
+                $routeSegment->company_uuid = session('company');
+                $routeSegment->save();
+            }
+        }
     }
 }

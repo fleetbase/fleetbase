@@ -1779,7 +1779,7 @@ class Order extends Model
     }
     public function routeSegments()
     {
-        return $this->hasMany(\Fleetbase\FleetOps\Models\RouteSegment::class, 'order_id', 'id');
+        return $this->hasMany(\Fleetbase\FleetOps\Models\RouteSegment::class, 'order_id', 'id')->where('deleted', 0);;
     }
 
 

@@ -23,6 +23,7 @@ class RouteSegment extends Model
         'deleted',
         'created_by_id',
         'updated_by_id',
+        'company_uuid',
     ];
 
     protected static function boot()
