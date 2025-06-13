@@ -863,8 +863,13 @@ class OrderController extends FleetOpsController
         $format       = $request->input('format', 'xlsx');
         $selections   = $request->array('selections');
         $fileName     = trim(Str::slug('order-' . date('Y-m-d-H:i')) . '.' . $format);
-
-        return Excel::download(new OrderExport($selections), $fileName);
+        try{
+             return Excel::download(new OrderExport($selections), $fileName);
+        }
+        catch (\Exception $e) {
+            return response()->error('Failed to export orders: ' . $e->getMessage());
+        }
+       
     }
 
     public function getDefaultOrderConfig()

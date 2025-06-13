@@ -9,9 +9,8 @@ use Maatwebsite\Excel\Concerns\WithColumnFormatting;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMapping;
 use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
-use Maatwebsite\Excel\Concerns\FromArray;
 
-class OrderExport implements FromArray, WithHeadings, WithColumnFormatting, ShouldAutoSize, WithMapping
+class OrderExport implements FromCollection, WithHeadings, WithMapping, WithColumnFormatting, ShouldAutoSize
 {
     protected array $selections = [];
 
@@ -20,80 +19,41 @@ class OrderExport implements FromArray, WithHeadings, WithColumnFormatting, Shou
         $this->selections = $selections;
     }
 
-     public function array(): array
-    {
-        $rows = [];
-
-        $orders = Order::with([
-            'trackingNumber',
-            'driverAssigned',
-            'payload.waypoints',
-            'routeSegments',
-            'createdBy',
-            'updatedBy'
-        ])
-        ->where('company_uuid', session('company'));
-
-        if (!empty($this->selections)) {
-            $orders = $orders->whereIn('uuid', $this->selections);
-        }
-
-        $orders = $orders->get();
-
-        foreach ($orders as $order) {
-            foreach ($order->routeSegments as $segment) {
-                $rows[] = [
-                    $order->public_id,                       // Trip ID
-                    $order->internal_id,                     // Block ID
-                    $order->driver_name,
-                    $order->vehicle_name,
-                    $order->pickup_name,
-                    $order->dropoff_name,
-                    $order->scheduled_at,
-                    $order->estimated_end_date,
-                    $segment->from_waypoint_id . '→' . $segment->to_waypoint_id,  // Routes
-                    optional($order->trackingNumber)->tracking_number,
-                    $order->status,
-                    $order->created_by_name,
-                    $order->updated_by_name,
-                    $order->created_at,
-                    $order->updated_at,
-                    $segment->route_id                       // VR ID
-                ];
-            }
-        }
-
-        return $rows;
-    }
     public function map($order): array
     {
+        // Get waypoint route
         $routes = '';
         if ($order->payload && $order->payload->waypoints && count($order->payload->waypoints)) {
             $locationNames = collect($order->payload->waypoints)
                 ->sortBy('order')
                 ->pluck('name')
                 ->toArray();
-                
-            // Join the location names with arrow symbols
             $routes = implode('→', $locationNames);
         }
+
+        // Get all route segment (VR) IDs
+        $vrIds = '';
+        if ($order->routeSegments && count($order->routeSegments)) {
+            $vrIds = $order->routeSegments->pluck('route_id')->implode(', ');
+        }
+
         return [
-            $order->public_id,
-            $order->internal_id,
+            $order->public_id,                  // Trip ID
+            $order->internal_id,                // Block ID
             $order->driver_name,
             $order->vehicle_name,
             $order->pickup_name,
             $order->dropoff_name,
             $order->scheduled_at,
             $order->estimated_end_date,
-            $routes,
-            $order->trackingNumber ? $order->trackingNumber->tracking_number : null,
+            $routes,                            // Route A→B→C
+            $order->trackingNumber?->tracking_number,
             $order->status,
             $order->created_by_name,
             $order->updated_by_name,
             $order->created_at,
             $order->updated_at,
-            
+            $vrIds                               // NEW: VR ID(s)
         ];
     }
 
@@ -108,16 +68,17 @@ class OrderExport implements FromArray, WithHeadings, WithColumnFormatting, Shou
             'Drop Off',
             'Start Date',
             'End Date',
-            'Routes', // New column for waypoints
+            'Routes',
             'Tracking Number',
             'Status',
             'Created By',
             'Updated By',
             'Date Created',
             'Date Updated',
-
+            'VR ID(s)', // New column
         ];
     }
+
     public function columnFormats(): array
     {
         return [
@@ -128,22 +89,19 @@ class OrderExport implements FromArray, WithHeadings, WithColumnFormatting, Shou
         ];
     }
 
-    /**
-     * @return \Illuminate\Support\Collection
-     */
     public function collection()
     {
         $query = Order::where('company_uuid', session('company'));
-        
+
         if (!empty($this->selections)) {
             $query = $query->whereIn('uuid', $this->selections);
         }
 
-        // return Order::where('company_uuid', session('company'))->get();
         return $query->with([
-            'trackingNumber', 
-            'driverAssigned', 
-            'payload.waypoints', // Include waypoints relationship
+            'trackingNumber',
+            'driverAssigned',
+            'payload.waypoints',
+            'routeSegments', // Ensure route segments are loaded
             'createdBy',
             'updatedBy'
         ])->get();
