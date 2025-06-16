@@ -1,0 +1,32 @@
+name: Deploy Backend to Dev
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Deployment Environment'
+        required: true
+        type: choice
+        options:
+          - dev
+          - test
+          - live
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.environment }}
+    steps:
+      - name: Deploy the Ember.js App
+        uses: appleboy/ssh-action@v1.2.1
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_KEY }}
+          port: 22
+          script: |
+            cd /home/ubuntu/fleetbase_agilecyber/fleetbase
+            git pull
+            cd /home/ubuntu/fleetbase_agilecyber/fleetbase/api
+            php artisan migrate
+            php artisan cache:clear
