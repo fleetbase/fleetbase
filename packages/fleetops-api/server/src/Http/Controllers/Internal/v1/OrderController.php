@@ -1077,7 +1077,7 @@ class OrderController extends FleetOpsController
             ->first();
 
         if (!$order) {
-            return response()->error('No order found.');
+            return response()->json(['error' => 'No order found.'], 404);
         }
 
         // Get route segments
