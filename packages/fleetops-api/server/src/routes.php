@@ -369,7 +369,7 @@ Route::prefix(config('fleetops.api.routing.prefix', null))->namespace('Fleetbase
                                 $router->patch('start', $controller('start'));
                                 $router->delete('bulk-delete', $controller('bulkDelete'));
                                 $router->match(['get', 'post'], 'export', $controller('export'))->middleware([Spatie\ResponseCache\Middlewares\DoNotCacheResponse::class]);
-                                //get Order route segments
+                                //get Order route segments-id-> payload_uuid
                                 $router->get('{id}/route-segments', 'OrderController@getOrderRouteSegments');
                             }
                         );
