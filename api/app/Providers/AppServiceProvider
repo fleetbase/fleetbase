@@ -1,0 +1,22 @@
+<?php
+
+namespace App\Providers;
+
+use Illuminate\Support\ServiceProvider;
+use App\Services\GoCardlessService;
+
+class AppServiceProvider extends ServiceProvider
+{
+    public function register()
+    {
+        // Register GoCardless Service
+        $this->app->singleton(GoCardlessService::class, function ($app) {
+            return new GoCardlessService();
+        });
+    }
+
+    public function boot()
+    {
+        //
+    }
+}
