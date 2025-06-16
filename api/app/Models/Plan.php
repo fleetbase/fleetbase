@@ -114,7 +114,7 @@ class Plan extends Model
      */
     public function creator()
     {
-        return $this->belongsTo(User::class, 'created_by');
+        return $this->belongsTo(User::class, 'created_by_id');
     }
 
     /**
@@ -122,7 +122,7 @@ class Plan extends Model
      */
     public function updater()
     {
-        return $this->belongsTo(User::class, 'updated_by');
+        return $this->belongsTo(User::class, 'updated_by_id');
     }
 
     /**
@@ -135,14 +135,14 @@ class Plan extends Model
         // Automatically set created_by and updated_by
         static::creating(function ($model) {
             if (auth()->check()) {
-                $model->created_by = auth()->id();
-                $model->updated_by = auth()->id();
+                $model->created_by_id = optional(auth()->user())->id();
+                $model->updated_by_id = optional(auth()->user())->id();
             }
         });
 
         static::updating(function ($model) {
             if (auth()->check()) {
-                $model->updated_by = auth()->id();
+                $model->updated_by_id = optional(auth()->user())->id();
             }
         });
 
@@ -162,7 +162,7 @@ class Plan extends Model
         $this->deleted = 1;
         $this->record_status = 0;
         if (auth()->check()) {
-            $this->updated_by = auth()->id();
+            $this->updated_by_id =  optional(auth()->user())->id();
         }
         return $this->save();
     }
@@ -177,7 +177,7 @@ class Plan extends Model
         $this->deleted = 0;
         $this->record_status = 1;
         if (auth()->check()) {
-            $this->updated_by = auth()->id();
+            $this->updated_by_id = optional(auth()->user())->id();
         }
         return $this->save();
     }

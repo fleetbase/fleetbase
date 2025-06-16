@@ -129,14 +129,14 @@ class Payment extends Model
         // Automatically set created_by and updated_by
         static::creating(function ($model) {
             if (auth()->check()) {
-                $model->created_by = auth()->id();
-                $model->updated_by = auth()->id();
+                $model->created_by_id = optional(auth()->user())->id();
+                $model->updated_by_id = optional(auth()->user())->id();
             }
         });
 
         static::updating(function ($model) {
             if (auth()->check()) {
-                $model->updated_by = auth()->id();
+                $model->updated_by_id = optional(auth()->user())->id();
             }
         });
 
@@ -300,7 +300,7 @@ class Payment extends Model
      */
     public function creator()
     {
-        return $this->belongsTo(User::class, 'created_by');
+        return $this->belongsTo(User::class, 'created_by_id');
     }
 
     /**
@@ -308,7 +308,7 @@ class Payment extends Model
      */
     public function updater()
     {
-        return $this->belongsTo(User::class, 'updated_by');
+        return $this->belongsTo(User::class, 'updated_by_id');
     }
 
     /**
@@ -320,7 +320,7 @@ class Payment extends Model
     {
         $this->deleted = 1;
         if (auth()->check()) {
-            $this->updated_by = auth()->id();
+            $this->updated_by_id = optional(auth()->user())->id();
         }
         return $this->save();
     }
@@ -334,7 +334,7 @@ class Payment extends Model
     {
         $this->deleted = 0;
         if (auth()->check()) {
-            $this->updated_by = auth()->id();
+            $this->updated_by_id = optional(auth()->user())->id();
         }
         return $this->save();
     }
@@ -348,7 +348,7 @@ class Payment extends Model
     {
         $this->record_status = $this->record_status == 1 ? 0 : 1;
         if (auth()->check()) {
-            $this->updated_by = auth()->id();
+            $this->updated_by_id = optional(auth()->user())->id();
         }
         return $this->save();
     }
@@ -496,7 +496,7 @@ class Payment extends Model
         $this->failure_reason = null;
         
         if (auth()->check()) {
-            $this->updated_by = auth()->id();
+            $this->updated_by_id = optional(auth()->user())->id();
         }
         
         return $this->save();
@@ -516,7 +516,7 @@ class Payment extends Model
         $this->paid_at = null;
         
         if (auth()->check()) {
-            $this->updated_by = auth()->id();
+            $this->updated_by_id = optional(auth()->user())->id();
         }
         
         return $this->save();
@@ -532,7 +532,7 @@ class Payment extends Model
         $this->status = 'processing';
         
         if (auth()->check()) {
-            $this->updated_by = auth()->id();
+            $this->updated_by_id = optional(auth()->user())->id();
         }
         
         return $this->save();
@@ -548,7 +548,7 @@ class Payment extends Model
         $this->status = 'cancelled';
         
         if (auth()->check()) {
-            $this->updated_by = auth()->id();
+            $this->updated_by_id = optional(auth()->user())->id();
         }
         
         return $this->save();
@@ -581,7 +581,7 @@ class Payment extends Model
         $this->refund_details = $refundDetails;
         
         if (auth()->check()) {
-            $this->updated_by = auth()->id();
+            $this->updated_by_id = optional(auth()->user())->id();
         }
         
         return $this->save();

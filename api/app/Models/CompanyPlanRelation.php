@@ -46,7 +46,6 @@ class CompanyPlanRelation extends Model
      * @var array<string, string>
      */
     protected $casts = [
-        'company_id' => 'integer',
         'company_uuid' => 'string',
         'user_uuid' => 'string',
         'plan_pricing_id' => 'integer',
@@ -93,14 +92,14 @@ class CompanyPlanRelation extends Model
         // Automatically set created_by and updated_by
         static::creating(function ($model) {
             if (auth()->check()) {
-                $model->created_by = auth()->id();
-                $model->updated_by = auth()->id();
+                $model->created_by_id = optional(auth()->user())->id;
+                $model->updated_by_id = optional(auth()->user())->id;
             }
         });
 
         static::updating(function ($model) {
             if (auth()->check()) {
-                $model->updated_by = auth()->id();
+                $model->updated_by_id = optional(auth()->user())->id;
             }
         });
     }
@@ -221,7 +220,7 @@ class CompanyPlanRelation extends Model
      */
     public function creator()
     {
-        return $this->belongsTo(User::class, 'created_by');
+        return $this->belongsTo(User::class, 'created_by_id');
     }
 
     /**
@@ -229,7 +228,7 @@ class CompanyPlanRelation extends Model
      */
     public function updater()
     {
-        return $this->belongsTo(User::class, 'updated_by');
+        return $this->belongsTo(User::class, 'updated_by_id');
     }
 
     /**
@@ -241,7 +240,7 @@ class CompanyPlanRelation extends Model
     {
         $this->deleted = 1;
         if (auth()->check()) {
-            $this->updated_by = auth()->id();
+            $this->updated_by_id = auth()->id();
         }
         return $this->save();
     }
@@ -255,7 +254,7 @@ class CompanyPlanRelation extends Model
     {
         $this->deleted = 0;
         if (auth()->check()) {
-            $this->updated_by = auth()->id();
+            $this->updated_by_id = auth()->id();
         }
         return $this->save();
     }
@@ -269,7 +268,7 @@ class CompanyPlanRelation extends Model
     {
         $this->record_status = $this->record_status == 1 ? 0 : 1;
         if (auth()->check()) {
-            $this->updated_by = auth()->id();
+            $this->updated_by_id = auth()->id();
         }
         return $this->save();
     }
@@ -380,7 +379,7 @@ class CompanyPlanRelation extends Model
         $this->auto_renew = false;
         
         if (auth()->check()) {
-            $this->updated_by = auth()->id();
+            $this->updated_by_id = optional(auth()->user())->id();
         }
         
         return $this->save();
@@ -396,7 +395,7 @@ class CompanyPlanRelation extends Model
         $this->status = 'suspended';
         
         if (auth()->check()) {
-            $this->updated_by = auth()->id();
+            $this->updated_by_id = optional(auth()->user())->id();
         }
         
         return $this->save();
@@ -412,7 +411,7 @@ class CompanyPlanRelation extends Model
         $this->status = 'active';
         
         if (auth()->check()) {
-            $this->updated_by = auth()->id();
+            $this->updated_by_id = auth()->id();
         }
         
         return $this->save();
@@ -429,7 +428,7 @@ class CompanyPlanRelation extends Model
         $this->expires_at = $this->expires_at->addMonths($months);
         
         if (auth()->check()) {
-            $this->updated_by = auth()->id();
+            $this->updated_by_id = optional(auth()->user())->id();
         }
         
         return $this->save();
@@ -462,7 +461,7 @@ class CompanyPlanRelation extends Model
         $this->status = 'active';
         
         if (auth()->check()) {
-            $this->updated_by = auth()->id();
+            $this->updated_by_id = optional(auth()->user())->id();
         }
         
         return $this->save();

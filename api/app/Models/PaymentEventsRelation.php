@@ -108,7 +108,7 @@ class PaymentEventsRelation extends Model
         // Automatically set created_by
         static::creating(function ($model) {
             if (auth()->check()) {
-                $model->created_by = auth()->id();
+                $model->created_by_id = optional(auth()->user())->id();
             }
         });
 
@@ -249,7 +249,7 @@ class PaymentEventsRelation extends Model
      */
     public function creator()
     {
-        return $this->belongsTo(User::class, 'created_by');
+        return $this->belongsTo(User::class, 'created_by_id');
     }
 
     /**
