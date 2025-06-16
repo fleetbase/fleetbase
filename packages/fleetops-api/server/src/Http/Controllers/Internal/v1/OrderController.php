@@ -1060,4 +1060,33 @@ class OrderController extends FleetOpsController
             }
         }
     }
+    /**
+     * Get the order route segments .
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function getOrderRouteSegments(string $id)
+    {
+        $order = Order::withoutGlobalScopes()
+            ->where('id', $id)
+            ->whereNull('deleted_at')
+            ->with([
+                'routeSegments.fromWaypoint.place',
+                'routeSegments.toWaypoint.place'
+            ])
+            ->first();
+
+        if (!$order) {
+            return response()->json(['error' => 'No order found.'], 404);
+        }
+
+        // Get route segments
+        $routeSegments = $order->routeSegments->map(function ($segment) {
+        // Add from_place_name and to_place_name
+            $segment->from_place_name = $segment->fromWaypoint->place->name ?? null;
+            $segment->to_place_name = $segment->toWaypoint->place->name ?? null;
+            return $segment;
+        });
+        return response()->json($routeSegments);
+    }
 }
