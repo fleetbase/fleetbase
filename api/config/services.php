@@ -47,4 +47,9 @@ return [
         'url' => env('SNAP_API_URL'),
     ],
     'parking_radius_meter' => env('PARKING_RADIUS_METER', 500),
+    'gocardless' => [
+        'access_token' => env('GOCARDLESS_ACCESS_TOKEN'),
+        'environment' => env('GOCARDLESS_ENVIRONMENT', 'sandbox'), // 'sandbox' or 'live'
+        'webhook_secret' => env('GOCARDLESS_WEBHOOK_SECRET'),
+    ],
 ];
