@@ -1068,7 +1068,7 @@ class OrderController extends FleetOpsController
     public function getOrderRouteSegments(string $id)
     {
         $order = Order::withoutGlobalScopes()
-            ->where('id', $id)
+            ->where('payload_uuid', $id)
             ->whereNull('deleted_at')
             ->with([
                 'routeSegments.fromWaypoint.place',
