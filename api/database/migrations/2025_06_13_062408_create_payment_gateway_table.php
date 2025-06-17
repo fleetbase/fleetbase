@@ -11,18 +11,28 @@ return new class extends Migration
      */
     public function up(): void
     {
+        
         Schema::create('payment_gateway', function (Blueprint $table) {
-           $table->id();
+            $table->engine = 'InnoDB';
+            $table->increments('id');
             $table->string('name');
-            $table->integer('created_by_id')->nullable();
-            $table->integer('updated_by_id')->nullable();
-            $table->timestamp('created_at')->useCurrent();
+            $table->unsignedInteger('created_by_id')->nullable();
+            $table->unsignedInteger('updated_by_id')->nullable();
+            $table->timestamp('created_at')->useCurrent()->index();
             $table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate();
             $table->tinyInteger('deleted')->default(0);
             $table->tinyInteger('record_status')->default(1);
             
             $table->index('name');
             $table->index(['deleted', 'record_status']);
+            $table->foreign('created_by_id')
+                  ->references('id')
+                  ->on('users')
+                  ->onDelete('cascade');
+            $table->foreign('updated_by_id')
+                  ->references('id')
+                  ->on('users')
+                  ->onDelete('cascade');
           
         });
     }

@@ -11,25 +11,33 @@ return new class extends Migration
      */
     public function up(): void
     {
-       Schema::create('payment_events_relation', function (Blueprint $table) {
-            $table->id();
-            $table->unsignedBigInteger('payment_id');
+        Schema::create('payment_events_relation', function (Blueprint $table) {
+            $table->engine = 'InnoDB';
+            $table->increments('id');
+            $table->unsignedInteger('payment_id');
             $table->string('event_type');
             $table->text('event_data');
             $table->timestamp('event_date');
             $table->string('gateway_event_id');
             $table->string('event_status');
             $table->text('error_message');
-            $table->unsignedBigInteger('created_by_id');
-            $table->unsignedBigInteger('updated_by_id');
-            $table->timestamp('created_at');
-            $table->timestamp('updated_at');
+            $table->unsignedInteger('created_by_id')->nullable();
+            $table->unsignedInteger('updated_by_id')->nullable(); 
+            $table->timestamp('created_at')->useCurrent()->index();
+            $table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate();
             $table->tinyInteger('deleted')->default(0);
             $table->tinyInteger('record_status')->default(1);
             
             // Foreign key constraint
             $table->foreign('payment_id')->references('id')->on('payments');
-            
+            $table->foreign('created_by_id')
+                  ->references('id')
+                  ->on('users')
+                  ->onDelete('cascade');
+            $table->foreign('updated_by_id')
+                  ->references('id')
+                  ->on('users')
+                  ->onDelete('cascade');
             // Indexes
             $table->index(['deleted', 'record_status']);
             $table->index('event_status');

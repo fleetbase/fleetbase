@@ -19,9 +19,6 @@ class PlanPricingSeeder extends Seeder
             'price_per_driver' => 10.00,
             'currency' => 'GBP',
             'created_by_id' => 1,
-            'updated_by_id' => 1,
-            'created_at' => now(),
-            'updated_at' => now(),
             'deleted' => 0,
             'record_status' => 1
         ]);

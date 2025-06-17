@@ -12,22 +12,23 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('company_plan_relation', function (Blueprint $table) {
-            $table->id();
+            $table->engine = 'InnoDB';
+            $table->increments('id');
             $table->uuid('company_uuid'); // Add the column first
             $table->uuid('user_uuid'); // Add the column first
-            $table->unsignedBigInteger('plan_pricing_id'); // Add this field
+            $table->unsignedInteger('plan_pricing_id'); // Add this field
             $table->integer('no_of_web_users');
             $table->integer('no_of_app_users');
             $table->decimal('total_amount', 10, 2);
             $table->timestamp('cancelled_at')->nullable();
             $table->json('cancellation_reason')->nullable();
-            $table->boolean('auto_renew'); // Fixed: is_bool() -> boolean()
+            $table->boolean('auto_renew')->default(false); // Fixed: is_bool() -> boolean()
             $table->timestamp('expires_at');
             $table->enum('status', ['pending','active','expired','cancelled','suspended'])->default('pending');
-            $table->unsignedBigInteger('created_by_id');
-            $table->unsignedBigInteger('updated_by_id');
-            $table->timestamp('created_at');
-            $table->timestamp('updated_at');
+            $table->unsignedInteger('created_by_id')->nullable();
+            $table->unsignedInteger('updated_by_id')->nullable(); 
+            $table->timestamp('created_at')->useCurrent()->index();
+            $table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate();
             $table->tinyInteger('deleted')->default(0);
             $table->tinyInteger('record_status')->default(1);
             
@@ -35,6 +36,14 @@ return new class extends Migration
             $table->foreign('company_uuid')->references('uuid')->on('companies')->onDelete('cascade');
             $table->foreign('user_uuid')->references('uuid')->on('users')->onDelete('cascade');
             $table->foreign('plan_pricing_id')->references('id')->on('plan_pricing_relation');
+            $table->foreign('created_by_id')
+                  ->references('id')
+                  ->on('users')
+                  ->onDelete('cascade');
+            $table->foreign('updated_by_id')
+                  ->references('id')
+                  ->on('users')
+                  ->onDelete('cascade');
         });
     }
 
