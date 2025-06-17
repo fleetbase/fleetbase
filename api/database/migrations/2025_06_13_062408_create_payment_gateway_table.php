@@ -14,12 +14,12 @@ return new class extends Migration
         Schema::create('payment_gateway', function (Blueprint $table) {
            $table->id();
             $table->string('name');
-            $table->integer('created_by')->nullable();
-            $table->integer('updated_by')->nullable();
+            $table->integer('created_by_id')->nullable();
+            $table->integer('updated_by_id')->nullable();
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate();
-            $table->boolean('deleted')->default(false);
-            $table->boolean('record_status')->default(true);
+            $table->tinyInteger('deleted')->default(0);
+            $table->tinyInteger('record_status')->default(1);
             
             $table->index('name');
             $table->index(['deleted', 'record_status']);

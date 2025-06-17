@@ -13,7 +13,6 @@ return new class extends Migration
     {
         Schema::create('company_plan_relation', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('company_id');
             $table->uuid('company_uuid'); // Add the column first
             $table->uuid('user_uuid'); // Add the column first
             $table->unsignedBigInteger('plan_pricing_id'); // Add this field
@@ -25,8 +24,8 @@ return new class extends Migration
             $table->boolean('auto_renew'); // Fixed: is_bool() -> boolean()
             $table->timestamp('expires_at');
             $table->enum('status', ['pending','active','expired','cancelled','suspended'])->default('pending');
-            $table->unsignedBigInteger('created_by');
-            $table->unsignedBigInteger('updated_by');
+            $table->unsignedBigInteger('created_by_id');
+            $table->unsignedBigInteger('updated_by_id');
             $table->timestamp('created_at');
             $table->timestamp('updated_at');
             $table->tinyInteger('deleted')->default(0);

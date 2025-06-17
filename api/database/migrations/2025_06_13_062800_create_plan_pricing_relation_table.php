@@ -18,8 +18,8 @@ return new class extends Migration
             $table->decimal('price_per_user', 8, 2);
             $table->decimal('price_per_driver', 8, 2);
             $table->string('currency');
-            $table->unsignedBigInteger('created_by'); // Changed from integer and removed nullable()
-            $table->unsignedBigInteger('updated_by'); // Changed from integer and removed nullable()
+            $table->unsignedBigInteger('created_by_id'); // Changed from integer and removed nullable()
+            $table->unsignedBigInteger('updated_by_id'); // Changed from integer and removed nullable()
             $table->timestamp('created_at');
             $table->timestamp('updated_at');
             $table->tinyInteger('deleted')->default(0); // Changed from boolean

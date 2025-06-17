@@ -20,7 +20,8 @@ return new class extends Migration
             $table->string('gateway_event_id');
             $table->string('event_status');
             $table->text('error_message');
-            $table->unsignedBigInteger('created_by');
+            $table->unsignedBigInteger('created_by_id');
+            $table->unsignedBigInteger('updated_by_id');
             $table->timestamp('created_at');
             $table->timestamp('updated_at');
             $table->tinyInteger('deleted')->default(0);

@@ -16,8 +16,8 @@ class PlanSeeder extends Seeder
         DB::table('plan')->insert([
             'name' => 'Basic Plan',
             'payment_gateway_id' => 1, // Assuming GoCardless has ID 1
-            'created_by' => 1,
-            'updated_by' => 1,
+            'created_by_id' => 1,
+            'updated_by_id' => 1,
             'created_at' => now(),
             'updated_at' => now(),
             'deleted' => 0,

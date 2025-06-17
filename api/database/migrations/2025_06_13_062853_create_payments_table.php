@@ -38,8 +38,8 @@ return new class extends Migration
             $table->timestamp('updated_at');
             $table->tinyInteger('deleted')->default(0);
             $table->tinyInteger('record_status')->default(1);
-            $table->unsignedBigInteger('created_by'); // Changed from integer and removed nullable
-            $table->unsignedBigInteger('updated_by'); // Changed from integer and removed nullable
+            $table->unsignedBigInteger('created_by_id'); // Changed from integer and removed nullable
+            $table->unsignedBigInteger('updated_by_id'); // Changed from integer and removed nullable
 
             // Foreign key constraints - define after all columns
             $table->foreign('company_plan_id')->references('id')->on('company_plan_relation')->onDelete('cascade');
