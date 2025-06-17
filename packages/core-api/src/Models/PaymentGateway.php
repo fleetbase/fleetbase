@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models;
+namespace Fleetbase\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -77,8 +77,8 @@ class PaymentGateway extends Model
      */
     public function scopeActive(Builder $query): Builder
     {
-        return $query->where('deleted', false)
-                    ->where('record_status', true);
+        return $query->where('deleted', 0)
+                    ->where('record_status', 1);
     }
 
     /**
@@ -89,7 +89,7 @@ class PaymentGateway extends Model
      */
     public function scopeNotDeleted(Builder $query): Builder
     {
-        return $query->where('deleted', false);
+        return $query->where('deleted', 0);
     }
 
     /**
@@ -129,7 +129,7 @@ class PaymentGateway extends Model
      */
     public function restore(): bool
     {
-        $this->deleted = false;
+        $this->deleted = 0;
         if (auth()->check()) {
             $this->updated_by_id = optional(auth()->user())->id();
         }
