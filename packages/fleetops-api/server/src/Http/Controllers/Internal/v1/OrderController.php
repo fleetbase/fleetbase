@@ -1081,10 +1081,12 @@ class OrderController extends FleetOpsController
         }
 
         // Get route segments
-        $routeSegments = $order->routeSegments->map(function ($segment) {
+        $routeSegments = $order->routeSegments->map(function ($segment) use ($order) {
         // Add from_place_name and to_place_name
             $segment->from_place_name = $segment->fromWaypoint->place->name ?? null;
             $segment->to_place_name = $segment->toWaypoint->place->name ?? null;
+            // Add order public_id
+            $segment->order_public_id = $order->public_id;
             return $segment;
         });
         return response()->json($routeSegments);
