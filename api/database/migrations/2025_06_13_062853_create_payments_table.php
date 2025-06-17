@@ -11,10 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
+        
         Schema::create('payments', function (Blueprint $table) {
-            $table->id();
-            $table->unsignedBigInteger('company_plan_id');
-            $table->unsignedBigInteger('plan_id');
+            $table->engine = 'InnoDB';
+            $table->increments('id');
+            $table->unsignedInteger('company_plan_id');
+            $table->unsignedInteger('plan_id');
             $table->enum('payment_type', ['subscription','one_time','setup_fee','upgrade','refund'])->default('one_time');
             $table->enum('status', ['pending', 'processing', 'completed', 'failed', 'cancelled', 'refunded', 'partially_refunded'])->default('pending'); // Fixed default
             $table->decimal('amount', 10, 2);
@@ -34,16 +36,23 @@ return new class extends Migration
             $table->timestamp('checkout_expires_at')->nullable();
             $table->json('refund_details')->nullable();
             $table->string('invoice_number')->nullable();
-            $table->timestamp('created_at');
-            $table->timestamp('updated_at');
+            $table->unsignedInteger('created_by_id')->nullable();
+            $table->unsignedInteger('updated_by_id')->nullable(); 
+            $table->timestamp('created_at')->useCurrent()->index();
+            $table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate();
             $table->tinyInteger('deleted')->default(0);
             $table->tinyInteger('record_status')->default(1);
-            $table->unsignedBigInteger('created_by'); // Changed from integer and removed nullable
-            $table->unsignedBigInteger('updated_by'); // Changed from integer and removed nullable
-
             // Foreign key constraints - define after all columns
             $table->foreign('company_plan_id')->references('id')->on('company_plan_relation')->onDelete('cascade');
             $table->foreign('plan_id')->references('id')->on('plan')->onDelete('cascade');
+            $table->foreign('created_by_id')
+                  ->references('id')
+                  ->on('users')
+                  ->onDelete('cascade');
+            $table->foreign('updated_by_id')
+                  ->references('id')
+                  ->on('users')
+                  ->onDelete('cascade');
 
             // Indexes
             $table->index('gocardless_payment_id');
