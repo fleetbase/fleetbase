@@ -21,10 +21,9 @@ return new class extends Migration
             $table->string('to_waypoint_id')->index();
             $table->string('public_id')->unique(); // VR ID like VR001
             $table->tinyInteger('record_status')->default(1);
-            $table->unsignedTinyInteger('deleted')->default(value: 0);
-            $table->unsignedInteger('created_by_id');
-            $table->unsignedInteger('updated_by_id')->nullable();
-            $table->softDeletes();
+            $table->tinyInteger('deleted')->default(value: 0);
+            $table->integer('created_by_id');
+            $table->integer('updated_by_id')->nullable();
             $table->timestamp('created_at')->useCurrent()->index();
             $table->timestamp('updated_at')->nullable()->useCurrent()->useCurrentOnUpdate();
 
