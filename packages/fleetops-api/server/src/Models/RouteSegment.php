@@ -3,13 +3,11 @@
 namespace Fleetbase\FleetOps\Models;
 
 use Fleetbase\Models\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
+
 use Illuminate\Support\Str;
 
 class RouteSegment extends Model
 {
-    use SoftDeletes;
-
     protected $table = 'route_segments';
 
     protected $fillable = [
