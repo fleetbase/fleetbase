@@ -1,13 +1,13 @@
 import Route from '@ember/routing/route';
 import { inject as service } from '@ember/service';
 import { action, set } from '@ember/object';
-import { observer } from '@ember/object';
 
 export default class FleetOpsRoutesSegmentsRoute extends Route {
   @service fetch;
   @service notifications;
   @service store;
   
+  // Query parameters that trigger a model refresh when changed
   queryParams = {
     page: { refreshModel: true },
     limit: { refreshModel: true },
@@ -25,63 +25,42 @@ export default class FleetOpsRoutesSegmentsRoute extends Route {
     updated_by: { refreshModel: true },
   };
 
-  // Add debugging observer
-routeSegmentsObserver = observer('routeSegments', function() {
-  console.log('=== ROUTE SEGMENTS CHANGED ===');
-  console.log('New value:', this.routeSegments);
-  console.log('Length:', this.routeSegments ? this.routeSegments.length : 'null');
-  console.log('Type:', typeof this.routeSegments);
-  console.log('Is array:', Array.isArray(this.routeSegments));
-});
+  // Override the routeSegments setter to debug
+  _routeSegments = [];
 
-// Override the routeSegments setter to debug
-_routeSegments = [];
+  // Setter for routeSegments property, triggers property change notification
+  set routeSegments(value) {
+    this._routeSegments = value;
+    this.notifyPropertyChange('routeSegments');
+  }
 
-set routeSegments(value) {
-  console.log('Setting routeSegments to:', value);
-  this._routeSegments = value;
-  this.notifyPropertyChange('routeSegments');
-}
+  // Getter for routeSegments property
+  get routeSegments() {
+    return this._routeSegments;
+  }
 
-get routeSegments() {
-  console.log('Getting routeSegments:', this._routeSegments);
-  return this._routeSegments;
-}
-  // Add action to refresh route data
+  /**
+   * Action to refresh the current route.
+   */
   @action refreshRoute() {
     return this.refresh();
   }
 
+  /**
+   * Fetches the model data for the route segments page.
+   * @param {Object} params - Route parameters, including payload_uuid.
+   * @returns {Object} Model data containing payload_uuid, routeSegments, and meta info.
+   */
   async model(params) {
     try {
-      console.log('=== ROUTE MODEL DEBUG ===');
-      console.log('Params:', params);
-      
       const response = await this.fetch.get(`orders/${params.payload_uuid}/route-segments`);
-      console.log('Raw API response:', response);
-      console.log('Response type:', typeof response);
-      console.log('Response keys:', Object.keys(response || {}));
-      
-      // Check all possible data locations
-      console.log('response.data:', response.data);
-      console.log('response.routeSegments:', response.routeSegments);
-      console.log('response (as array):', Array.isArray(response) ? response : 'not array');
-      
       const modelData = {
         payload_uuid: params.payload_uuid,
         routeSegments: response.data || response.routeSegments || response || [],
         meta: response.meta || {}
       };
-      
-      console.log('=== FINAL MODEL DATA ===');
-      console.log('modelData:', modelData);
-      console.log('modelData.routeSegments:', modelData.routeSegments);
-      console.log('modelData.routeSegments.length:', modelData.routeSegments.length);
-      console.log('First segment:', modelData.routeSegments[0]);
-      
       return modelData;
     } catch (error) {
-      console.error('Model error:', error);
       this.notifications.serverError(error);
       return {
         payload_uuid: params.payload_uuid,
@@ -91,64 +70,48 @@ get routeSegments() {
     }
   }
 
+  /**
+   * Sets up the controller with the model data after the model hook resolves.
+   * @param {Ember.Controller} controller - The controller instance for this route.
+   * @param {Object} model - The resolved model data.
+   */
   setupController(controller, model) {
-    console.log('=== SETUP CONTROLLER DEBUG ===');
-    console.log('Controller:', controller);
-    console.log('Model passed to setupController:', model);
-    console.log('Model.routeSegments:', model.routeSegments);
-    
-    // Call parent first
     super.setupController(controller, model);
-    
-    // Force set properties using Ember.set for older versions
     const routeSegments = model.routeSegments || [];
-    console.log('Setting routeSegments:', routeSegments);
-    
-    // Try multiple ways to set the data
     controller.set('routeSegments', routeSegments);
     controller.set('payloadUuid', model.payload_uuid);
     controller.set('meta', model.meta || {});
-    
-    // Force property notification
-    controller.notifyPropertyChange('routeSegments');
-    
-    // Verify it was set
-    console.log('After setting - controller.routeSegments:', controller.get('routeSegments'));
-    console.log('After setting - controller.routeSegments.length:', controller.get('routeSegments').length);
-    
-    // Alternative: Set on next run loop
-    setTimeout(() => {
-      controller.set('routeSegments', routeSegments);
-      controller.notifyPropertyChange('routeSegments');
-      console.log('Delayed set - controller.routeSegments:', controller.get('routeSegments'));
-    }, 100);
-    
-    console.log('=== END SETUP CONTROLLER DEBUG ===');
   }
 
-  // Add beforeModel hook to ensure fresh data
+  /**
+   * Lifecycle hook called before the model is fetched.
+   * @param {Ember.Transition} transition - The transition object.
+   */
   beforeModel(transition) {
-    console.log('beforeModel called');
     super.beforeModel(transition);
   }
 
-  // Add afterModel hook for debugging
+  /**
+   * Lifecycle hook called after the model is fetched.
+   * @param {Object} model - The resolved model data.
+   * @param {Ember.Transition} transition - The transition object.
+   */
   afterModel(model, transition) {
-    console.log('afterModel called with:', model);
     super.afterModel(model, transition);
   }
 
+  /**
+   * Handles logic before transitioning away from this route.
+   * Resets the view if needed and manages pagination query param refresh behavior.
+   * @param {Ember.Transition} transition - The transition object.
+   */
   @action willTransition(transition) {
     const shouldReset = typeof transition.to.name === 'string' && !transition.to.name.includes('operations.orders');
-
-    // Check if controller exists and has resetView function before calling it
     if (this.controller && shouldReset && typeof this.controller.resetView === 'function') {
         this.controller.resetView(transition);
     }
-
     const isPaginationTransition = transition.to.name === transition.from.name &&
                                  transition.to.queryParams.page !== transition.from.queryParams.page;
-
     if (isPaginationTransition) {
       set(this.queryParams, 'page.refreshModel', false);
       set(this.queryParams, 'sort.refreshModel', false);
@@ -158,6 +121,11 @@ get routeSegments() {
     }
   }
 
+  /**
+   * Resets the controller state when exiting the route.
+   * @param {Ember.Controller} controller - The controller instance for this route.
+   * @param {boolean} isExiting - Whether the route is being exited.
+   */
   resetController(controller, isExiting) {
     if (isExiting) {
       controller.set('page', 1);

@@ -65,31 +65,6 @@ export default class RouteSegmentsListComponent extends Component {
         filterable: true,
         filterComponent: 'filter/string',
       },
-    //   {
-    //     label: this.intl.t('fleet-ops.common.created-at'),
-    //     valuePath: 'created_at',
-    //     sortParam: 'created_at',
-    //     filterParam: 'created_at',
-    //     width: '140px',
-    //     resizable: true,
-    //     sortable: true,
-    //     filterable: false,
-    //     filterComponent: 'filter/date',
-    // },
-      // {
-      //   label: this.intl.t('fleet-ops.operations.orders.index.driver-assigned'),
-      //   cellComponent: 'cell/driver-name',
-      //   valuePath: 'driver_assigned',
-      //   modelPath: 'driver_assigned',
-      //   width: '200px',
-      //   resizable: true,
-      //   sortable: true,
-      //   filterable: true,
-      //   filterComponent: 'filter/model',
-      //   filterComponentPlaceholder: this.intl.t('fleet-ops.operations.orders.index.select-driver'),
-      //   filterParam: 'driver',
-      //   model: 'driver',
-      // }
     ];
   }
 
@@ -98,9 +73,6 @@ export default class RouteSegmentsListComponent extends Component {
    */
   @task({ restartable: true })
   *loadData() {
-    console.log('=== COMPONENT LOADING DATA ===');
-    console.log('Payload UUID:', this.args.payloadUuid);
-
     this.isLoading = true;
     this.error = null;
 
@@ -108,10 +80,7 @@ export default class RouteSegmentsListComponent extends Component {
       if (!this.args.payloadUuid) {
         throw new Error('No payload UUID provided');
       }
-
       const url = `orders/${this.args.payloadUuid}/route-segments`;
-      console.log('Fetching from URL:', url);
-
       // Add cache busting
       const response = yield this.fetch.get(url, {
         cache: 'no-cache',
@@ -121,8 +90,6 @@ export default class RouteSegmentsListComponent extends Component {
           'X-Timestamp': Date.now()
         }
       });
-
-      console.log('Component API Response:', response);
 
       // Extract data from various possible structures
       let segments = [];
@@ -136,17 +103,11 @@ export default class RouteSegmentsListComponent extends Component {
         segments = response.route_segments;
       }
 
-      console.log('Extracted segments:', segments);
-      console.log('Segments length:', segments.length);
-
       this.routeSegments = segments;
       this.meta = response?.meta || response?.pagination || {};
       this.isLoading = false;
 
-      console.log('Component data loaded successfully');
-
     } catch (error) {
-      console.error('Component load error:', error);
       this.error = error.message || 'Failed to load route segments';
       this.routeSegments = [];
       this.isLoading = false;
@@ -158,7 +119,6 @@ export default class RouteSegmentsListComponent extends Component {
    * Refresh data
    */
   @action refresh() {
-    console.log('Component refresh triggered');
     this.loadData.perform();
   }
 
@@ -166,8 +126,6 @@ export default class RouteSegmentsListComponent extends Component {
    * Handle search
    */
   @action handleSearch(searchTerm) {
-    console.log('Component search:', searchTerm);
-    // You can add search logic here or pass it up to parent
     if (this.args.onSearch) {
       this.args.onSearch(searchTerm);
     }

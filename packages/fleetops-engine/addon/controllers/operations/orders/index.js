@@ -353,7 +353,6 @@ export default class OperationsOrdersIndexController extends BaseController {
             linkIconPrefix: 'fas',
             linkIconSize: 'xs',
             linkIconClass: 'text-blue-400 group-hover:text-blue-600 ml-2 transition-colors duration-150', // ml-2 = margin-left to space it from text
-            
             onLinkClick: this.viewRouteSegments,
             permission: 'fleet-ops view routes-segments',
             resizable: true,
@@ -1062,10 +1061,7 @@ export default class OperationsOrdersIndexController extends BaseController {
 
     @action
     viewRouteSegments(order) {
-    // Optional: Add any additional logic before navigation
-    console.log('Viewing route segments for payload:', order.payload_uuid);
-    
     // Navigate to the route segments page using payload_uuid
-    this.router.transitionTo('fleet-ops.routes-segments', order.payload_uuid);
+        this.router.transitionTo('operations.orders.routes-segments', order.payload_uuid);
     }
 }
