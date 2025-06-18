@@ -2359,6 +2359,16 @@ fleet-ops:
             no-order-installed: Brak zainstalowanych konfiguracji zamówień!
             you-have-no-configs: Obecnie nie masz żadnych zainstalowanych konfiguracji zamówień. Sprawdź sekcję rozszerzeń, aby zainstalować konfigurację zamówienia i rozpocząć pracę.
             view-extensions: Zobacz rozszerzenia
+    route-segments:
+      order-id: Identyfikator zamówienia
+      title: Segmenty trasy
+      segment: Segment
+      from-location: Od
+      to-location: Do
+      no-segments: Nie znaleziono tras
+      no-segments-description: Brak dostępnych segmentów trasy dla tego ładunku.
+      loading: Ładowanie segmentów trasy...
+      loading-description: Proszę czekać, trwa pobieranie danych segmentów trasy.
     scheduler:
       index:
         success-message: Zamówienie {orderId} zostało zaplanowane na {orderAt}.
