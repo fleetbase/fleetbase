@@ -310,29 +310,6 @@ export default class OperationsOrdersIndexController extends BaseController {
             filterable: true,
             filterComponent: 'filter/string',
         },
-        // {
-        //     label: this.intl.t('fleet-ops.common.internal-id'),
-        //     valuePath: 'internal_id',
-        //     cellComponent: 'click-to-copy',
-        //     width: '125px',
-        //     hidden: true,
-        //     resizable: true,
-        //     sortable: true,
-        //     filterable: true,
-        //     filterComponent: 'filter/string',
-        // },
-        // {
-        //     label: this.intl.t('fleet-ops.operations.orders.index.payload'),
-        //     valuePath: 'payload.public_id',
-        //     cellComponent: 'click-to-copy',
-        //     resizable: true,
-        //     hidden: true,
-        //     width: '125px',
-        //     filterable: true,
-        //     filterLabel: 'Payload ID',
-        //     filterParam: 'payload',
-        //     filterComponent: 'filter/string',
-        // },
         {
             label: this.intl.t('fleet-ops.operations.orders.index.driver-assigned'),
             cellComponent: 'cell/driver-name',
@@ -363,18 +340,27 @@ export default class OperationsOrdersIndexController extends BaseController {
             model: 'place',
         },
         {
-            label: this.intl.t('fleet-ops.operations.orders.index.dropoff'),
+            label: this.intl.t('fleet-ops.common.dropoff'),
             valuePath: 'dropoffName',
-            cellComponent: 'table/cell/dropoff',
-            width: '150px',
+            width: '180px',
+            cellComponent: 'table/cell/link-to',
+            route: 'operations.orders.routes-segments',
+            routeParam: 'payload_uuid',
+            // Link styling with flex to align text and icon
+            linkClass: 'text-blue-600 hover:text-blue-800 hover:underline cursor-pointer font-medium transition-colors duration-150 flex items-center group',
+            // Icon configuration - will appear AFTER the text
+            linkIcon: 'external-link-alt',
+            linkIconPrefix: 'fas',
+            linkIconSize: 'xs',
+            linkIconClass: 'text-blue-400 group-hover:text-blue-600 ml-2 transition-colors duration-150', // ml-2 = margin-left to space it from text
+            onLinkClick: this.viewRouteSegments,
+            permission: 'fleet-ops view routes-segments',
             resizable: true,
             sortable: true,
             filterable: true,
-            filterComponent: 'filter/model',
-            filterComponentPlaceholder: this.intl.t('fleet-ops.operations.orders.index.select-dropoff-location'),
-            filterParam: 'dropoff',
-            modelNamePath: 'name',
-            model: 'place',
+            filterComponent: 'filter/string',
+            // Enable waypoint check for conditional link behavior
+            waypointCheck: true,
         },
         {
             label: this.intl.t('fleet-ops.operations.orders.index.vehicle-assigned'),
@@ -1071,5 +1057,11 @@ export default class OperationsOrdersIndexController extends BaseController {
         this.fetch.get('fleet-ops/metrics', { discover: ['orders_in_progress'] }).then((response) => {
             this.activeOrdersCount = response.orders_in_progress;
         });
+    }
+
+    @action
+    viewRouteSegments(order) {
+    // Navigate to the route segments page using payload_uuid
+        this.router.transitionTo('operations.orders.routes-segments', order.payload_uuid);
     }
 }

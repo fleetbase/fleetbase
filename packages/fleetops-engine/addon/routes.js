@@ -24,11 +24,14 @@ export default buildRoutes(function () {
             this.route('index', { path: '/' }, function () {
                 this.route('new');
                 this.route('view', { path: '/:public_id' });
+              
                 this.route('config', function () {
                     this.route('types', { path: '/' });
                 });
             });
+            this.route('routes-segments', { path: '/routes-segments/:payload_uuid' });
         });
+     
     });
     this.route('management', { path: '/manage' }, function () {
         this.route('fleets', function () {
