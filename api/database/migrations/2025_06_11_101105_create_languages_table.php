@@ -15,10 +15,9 @@ return new class extends Migration
         Schema::create('languages', function (Blueprint $table) {
             $table->engine = 'InnoDB';
             $table->increments('id');
-
             $table->uuid('company_uuid')->nullable();
-            $table->string('name', 500);
-            $table->string('code', 200);
+            $table->string('name', 255);
+            $table->string('code', length: 50)->unique();
             $table->tinyInteger('sort_order')->nullable();
             $table->tinyInteger('record_status')->default(1);
             $table->tinyInteger('deleted')->default(value: 0);
