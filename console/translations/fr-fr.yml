@@ -2360,6 +2360,16 @@ fleet-ops:
             no-order-installed: Aucune configuration de commande installée !
             you-have-no-configs: Vous n'avez actuellement aucune configuration de commande installée, vérifiez les extensions pour installer une configuration de commande afin de commencer.
             view-extensions: Voir les extensions
+      route-segments:
+        order-id: ID de commande
+        title: Segments de route
+        segment: Segment
+        from-location: De
+        to-location: À
+        no-segments: Aucune route trouvée
+        no-segments-description: Aucun segment de route disponible pour cette charge utile.
+        loading: Chargement des segments de route...
+        loading-description: Veuillez patienter pendant que nous récupérons les données des segments de route.
     scheduler:
       index:
         success-message: La commande {orderId} a été planifiée pour le {orderAt}.

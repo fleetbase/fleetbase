@@ -2546,6 +2546,16 @@ fleet-ops:
               instalada, verifique las extensiones para instalar una configuración
               de comando para comenzar.
             view-extensions: Ver extensiones
+      route-segments:
+        order-id: ID de pedido
+        title: Segmentos de ruta
+        segment: Segmento
+        from-location: Desde
+        to-location: Hasta
+        no-segments: No se encontraron rutas
+        no-segments-description: No hay segmentos de ruta disponibles para esta carga útil.
+        loading: Cargando segmentos de ruta...
+        loading-description: Espere mientras obtenemos los datos de los segmentos de ruta.
     scheduler:
       index:
         success-message: el orden{orderId}La orden estaba prevista para{orderAt}El

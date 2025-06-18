@@ -2364,6 +2364,16 @@ fleet-ops:
             no-order-installed: Keine Bestellkonfigurationen installiert!
             you-have-no-configs: Derzeit sind keine Bestellkonfigurationen installiert. Überprüfen Sie die Erweiterungen, um eine Bestellkonfiguration zu installieren und zu starten.
             view-extensions: Erweiterungen anzeigen
+      route-segments:
+        order-id: Bestell-ID
+        title: Routenabschnitte
+        segment: Abschnitt
+        from-location: Von
+        to-location: Nach
+        no-segments: Keine Routen gefunden
+        no-segments-description: Für diese Nutzlast sind keine Routenabschnitte verfügbar.
+        loading: Routenabschnitte werden geladen...
+        loading-description: Bitte warten Sie, während wir die Routensegmentdaten abrufen.
     scheduler:
       index:
         success-message: Bestellung {orderId} wurde für {orderAt} geplant.

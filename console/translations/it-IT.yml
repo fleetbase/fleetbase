@@ -2215,6 +2215,16 @@ fleet-ops:
             no-order-installed: Nessuna configurazione ordine installata!
             you-have-no-configs: Al momento non hai configurazioni di ordine installate, controlla le estensioni per installare una configurazione di ordine e iniziare.
             view-extensions: Visualizza estensioni
+      route-segments:
+        order-id: ID Ordine
+        title: Segmenti di percorso
+        segment: Segmento
+        from-location: Da
+        to-location: A
+        no-segments: Nessun percorso trovato
+        no-segments-description: Non ci sono segmenti di percorso disponibili per questo payload.
+        loading: Caricamento segmenti di percorso...
+        loading-description: Attendere mentre recuperiamo i dati dei segmenti di percorso.
     scheduler:
       index:
         success-message: L'ordine {orderId} è stato programmato per {orderAt}.
