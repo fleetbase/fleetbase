@@ -125,7 +125,6 @@ export default class OnboardIndexController extends Controller {
      */
     @action onLanguageChange(event) {
         const selectedLanguageId = event.target.value;
-        console.log('Selected language ID:', selectedLanguageId);
         this.language = selectedLanguageId;
     }
 
@@ -153,7 +152,6 @@ export default class OnboardIndexController extends Controller {
             // Set default language if available
             if (this.languages.length > 0) {
                 this.language = this.languages[0].id;
-                console.log('Default language set to:', this.language);
             }
         } catch (error) {
             this.notifications.error('Failed to load languages');
