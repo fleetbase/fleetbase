@@ -1,0 +1,42 @@
+{{!-- app/components/route-segments-list.hbs --}}
+
+{{#if this.isLoading}}
+  <div class="flex items-center justify-center py-12">
+    <Spinner @loadingMessage={{t "fleet-ops.common.loading"}} @loadingMessageClass="ml-2 text-black dark:text-white" class="flex flex-row items-center" />
+  </div>
+{{else if this.error}}
+  <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+    <strong>Error:</strong> {{this.error}}
+    <button {{on "click" this.refresh}} class="ml-4 px-3 py-1 bg-red-600 text-white rounded text-sm">
+      Retry
+    </button>
+  </div>
+{{else}}
+  {{!-- Route Segments Table --}}
+  <Table
+    @rows={{this.routeSegments}}
+    @columns={{this.columns}}
+    @selectable={{false}}
+    @canSelectAll={{false}}
+    @noDataMessage="No route segments found"
+    @loadingMessage="Loading segments..."
+  />
+
+  {{!-- Summary Statistics --}}
+  {{#if this.meta.total}}
+    <div class="mt-4 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+      <div class="flex flex-wrap gap-4 text-sm text-blue-700 dark:text-blue-300">
+        <div>
+          <span class="font-medium">Total Records:</span>
+          <span class="ml-1">{{this.meta.total}}</span>
+        </div>
+        {{#if this.meta.current_page}}
+          <div>
+            <span class="font-medium">Current Page:</span>
+            <span class="ml-1">{{this.meta.current_page}} of {{this.meta.last_page}}</span>
+          </div>
+        {{/if}}
+      </div>
+    </div>
+  {{/if}}
+{{/if}}

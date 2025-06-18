@@ -2362,6 +2362,17 @@ fleet-ops:
             no-order-installed: No order configurations installed!
             you-have-no-configs: You currently have no order configs installed, check at the extensions to install an order configuration to get started.
             view-extensions: View extensions
+      route-segments:
+        order-id: TRIP ID
+        title: Route Segments
+        segment: Segment
+        from-location: From
+        to-location: To
+        no-segments: No Routes Found
+        no-segments-description: There are no route segments available for this payload.
+        loading: Loading Route Segments...
+        loading-description: Please wait while we fetch the route segment data.
+
     scheduler:
       index:
         success-message: Order {orderId} has been updated at {orderAt}.

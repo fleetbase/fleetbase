@@ -1,0 +1,17 @@
+{{!-- Route Segments Listing Template --}}
+<Layout::Section::Header @title="Route Segments">
+  <Button 
+    @icon="arrow-left" 
+    @text="Back" 
+    @onClick={{this.goBack}} 
+    @type="primary"
+    class="mr-2"
+  />
+</Layout::Section::Header>
+
+<Layout::Section::Body>
+  {{!-- Use the component instead of trying to manage data in route/controller --}}
+  <RouteSegmentsList @payloadUuid={{@model.payload_uuid}} />
+</Layout::Section::Body>
+
+{{outlet}}

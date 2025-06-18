@@ -1,20 +1,39 @@
-<LinkTo @route={{@column.route}} @model={{@row}} @disabled={{and @column.permission (cannot @column.permission)}} class={{@column.linkClass}} ...attributes>
-    {{#if @column.linkIcon}}
-        <span class="btn-icon-wrapper" data-icon-prefix={{@column.linkIconPrefix}}>
-            <FaIcon
-                @prefix={{@column.linkIconPrefix}}
-                @icon={{@column.linkIcon}}
-                @size={{@column.linkIconSize}}
-                @rotation={{@column.linkIconRotation}}
-                @flip={{@column.linkIconFlip}}
-                @spin={{@column.linkIconSpin}}
-                class={{@column.linkIconClass}}
-            />
-        </span>
-    {{/if}}
-    {{#if (has-block)}}
-        {{yield}}
-    {{else}}
-        {{or @value @column.linkText "-"}}
-    {{/if}}
-</LinkTo>
+{{!-- Updated table/cell/link-to.hbs --}}
+
+{{#if this.shouldShowLink}}
+    {{!-- Show link with icon when waypoints > 2 --}}
+    <LinkTo @route={{@column.route}} @model={{@row}} @disabled={{and @column.permission (cannot @column.permission)}} class={{@column.linkClass}} ...attributes>
+        
+        {{!-- Text content FIRST --}}
+        {{#if (has-block)}}
+            {{yield}}
+        {{else}}
+            {{or @value @column.linkText "-"}}
+        {{/if}}
+        
+        {{!-- Icon AFTER the text --}}
+        {{#if @column.linkIcon}}
+            <span class="btn-icon-wrapper" data-icon-prefix={{@column.linkIconPrefix}}>
+                <FaIcon
+                    @prefix={{@column.linkIconPrefix}}
+                    @icon={{@column.linkIcon}}
+                    @size={{@column.linkIconSize}}
+                    @rotation={{@column.linkIconRotation}}
+                    @flip={{@column.linkIconFlip}}
+                    @spin={{@column.linkIconSpin}}
+                    class={{@column.linkIconClass}}
+                />
+            </span>
+        {{/if}}
+        
+    </LinkTo>
+{{else}}
+    {{!-- Show just text when waypoints <= 2 --}}
+    <span class="text-gray-900">
+        {{#if (has-block)}}
+            {{yield}}
+        {{else}}
+            {{or @value @column.linkText "-"}}
+        {{/if}}
+    </span>
+{{/if}}
