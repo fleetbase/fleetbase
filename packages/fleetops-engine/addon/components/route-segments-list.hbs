@@ -1,11 +1,8 @@
 {{!-- app/components/route-segments-list.hbs --}}
 
 {{#if this.isLoading}}
-  <div class="flex justify-center items-center py-12">
-    <div class="text-gray-500">
-      <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-2"></div>
-      Loading
-    </div>
+  <div class="flex items-center justify-center py-12">
+    <Spinner @loadingMessage={{t "fleet-ops.common.loading"}} @loadingMessageClass="ml-2 text-black dark:text-white" class="flex flex-row items-center" />
   </div>
 {{else if this.error}}
   <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">

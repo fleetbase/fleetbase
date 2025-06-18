@@ -360,6 +360,8 @@ export default class OperationsOrdersIndexController extends BaseController {
             sortable: true,
             filterable: true,
             filterComponent: 'filter/string',
+            // Enable waypoint check for conditional link behavior
+            waypointCheck: true,
         },
         {
             label: this.intl.t('fleet-ops.operations.orders.index.vehicle-assigned'),
