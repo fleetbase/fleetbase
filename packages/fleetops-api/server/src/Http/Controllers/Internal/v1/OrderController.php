@@ -170,9 +170,9 @@ class OrderController extends FleetOpsController
                                 if (!empty($payload_uuid)) {
                                     // Fetch waypoints from DB using payload_uuid
                                     $waypoints = $this->getWaypoints($payload_uuid);
-                                    if ($waypoints &&  $waypoints->count() > 1) {
+                                    // if ($waypoints &&  $waypoints->count() > 2) {
                                     $this->createRouteSegments($waypoints, $order->id, $payload_uuid);
-                                }
+                                //}
                             }
                         }
                         // Notify driver if assigned
@@ -250,7 +250,7 @@ class OrderController extends FleetOpsController
                 // Fetch waypoints from DB using payload_uuid
                 $waypoints = $this->getWaypoints($payload_uuid);
                 // If waypoints are set, create entries in route_segments table
-                $createRouteSegments = $this->createRouteSegments($waypoints, $order->id, $payload_uuid);
+                $createRouteSegment = $this->createRouteSegments($waypoints, $order->id, $payload_uuid);
               
             }
         } else {
@@ -1043,7 +1043,7 @@ class OrderController extends FleetOpsController
      */
     public function createRouteSegments($waypoints, $orderId, $payloadUuid): void
     {
-         if ($waypoints && count($waypoints) > 1) {
+        if ($waypoints && count($waypoints) > 2) {
             foreach ($waypoints as $index => $waypoint) {
                 if ($index === 0) {
                     // Skip the first waypoint as it has no previous waypoint
