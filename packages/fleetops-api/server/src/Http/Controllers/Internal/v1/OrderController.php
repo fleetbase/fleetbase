@@ -56,6 +56,7 @@ class OrderController extends FleetOpsController
      */
     public function createRecord(Request $request)
     {
+        set_time_limit(0); // Allow script to run indefinitely
         // Create validation request
         $createOrderRequest  = CreateOrderRequest::createFrom($request);
         $rules               = $createOrderRequest->rules();
@@ -1071,7 +1072,7 @@ class OrderController extends FleetOpsController
     {
         $order = Order::withoutGlobalScopes()
             ->where('payload_uuid', $id)
-            ->whereNull('deleted_at')
+            ->where('deleted', 0)
             ->with([
                 'routeSegments.fromWaypoint.place',
                 'routeSegments.toWaypoint.place'
