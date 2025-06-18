@@ -1072,7 +1072,7 @@ class OrderController extends FleetOpsController
     {
         $order = Order::withoutGlobalScopes()
             ->where('payload_uuid', $id)
-            ->where('deleted', 0)
+            ->whereNull('deleted_at')
             ->with([
                 'routeSegments.fromWaypoint.place',
                 'routeSegments.toWaypoint.place'
