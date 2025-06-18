@@ -247,7 +247,8 @@ class OrderController extends FleetOpsController
                     ->update([
                         'record_status' => config('params.record_status_archived'),
                         'deleted'       => config('params.deleted'),
-                        'updated_by_id' => UserHelper::getIdFromUuid(auth()->id())
+                        'updated_by_id' => UserHelper::getIdFromUuid(auth()->id()),
+                        'deleted_at'   => now()
                     ]);
                 // Fetch waypoints from DB using payload_uuid
                 $waypoints = $this->getWaypoints($payload_uuid);

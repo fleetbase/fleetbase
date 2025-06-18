@@ -26,7 +26,7 @@ return new class extends Migration
             $table->integer('updated_by_id')->nullable();
             $table->timestamp('created_at')->useCurrent()->index();
             $table->timestamp('updated_at')->nullable()->useCurrent()->useCurrentOnUpdate();
-
+            $table->softDeletes(); // For soft delete functionality
             $table->foreign('order_id')->references('id')->on('orders')->onDelete('cascade');
 
         });
