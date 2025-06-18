@@ -40,6 +40,7 @@ use Fleetbase\FleetOps\Models\Waypoint;
 use Fleetbase\FleetOps\Models\RouteSegment;
 use App\Helpers\UserHelper;
 
+
 class OrderController extends FleetOpsController
 {
     /**
@@ -1046,24 +1047,35 @@ class OrderController extends FleetOpsController
      */
     public function createRouteSegments($waypoints, $orderId, $payloadUuid): void
     {
-        if ($waypoints && count($waypoints) > 2) {
-            foreach ($waypoints as $index => $waypoint) {
-                if ($index === 0) {
-                    // Skip the first waypoint as it has no previous waypoint
-                    continue;
+        try {
+            if ($waypoints && count($waypoints) > 2) {
+                foreach ($waypoints as $index => $waypoint) {
+                    if ($index === 0) {
+                        // Skip the first waypoint as it has no previous waypoint
+                        continue;
+                    }
+
+                    $routeSegment = new RouteSegment();
+                    $routeSegment->order_id = $orderId;
+                    $routeSegment->payload_id = $payloadUuid;
+                    $routeSegment->from_waypoint_id = $index > 0 ? $waypoints[$index - 1]->uuid : null;
+                    $routeSegment->to_waypoint_id = $waypoint->uuid;
+                    $routeSegment->public_id = 'VR_' . Str::upper(Str::random(5));
+                    $routeSegment->company_uuid = session('company');
+                    $routeSegment->created_by_id = UserHelper::getIdFromUuid(auth()->id());
+                    $routeSegment->save();
                 }
-                $routeSegment = new RouteSegment();
-                $routeSegment->order_id = $orderId;
-                $routeSegment->payload_id = $payloadUuid;
-                $routeSegment->from_waypoint_id = $index > 0 ? $waypoints[$index - 1]->uuid : null;
-                $routeSegment->to_waypoint_id = $waypoint->uuid;
-                $routeSegment->public_id = 'VR_' . Str::upper(Str::random(5));
-                $routeSegment->company_uuid = session('company');
-                $routeSegment->created_by_id =  UserHelper::getIdFromUuid(auth()->id());
-                $routeSegment->save();
             }
+            } catch (\Exception $e) {
+            Log::error('Failed to create route segments', [
+                'order_id' => $orderId,
+                'payload_uuid' => $payloadUuid,
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
         }
     }
+
     /**
      * Get the order route segments .
      *
