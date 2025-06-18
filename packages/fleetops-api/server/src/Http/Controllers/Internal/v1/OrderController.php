@@ -56,7 +56,6 @@ class OrderController extends FleetOpsController
      */
     public function createRecord(Request $request)
     {
-        set_time_limit(0); // Allow script to run indefinitely for large imports
         // Create validation request
         $createOrderRequest  = CreateOrderRequest::createFrom($request);
         $rules               = $createOrderRequest->rules();
@@ -1092,9 +1091,4 @@ class OrderController extends FleetOpsController
         });
         return response()->json($routeSegments);
     }
-    /**
-     * Get the user details from auth
-     *
-     * @return \Illuminate\Http\Response
-     */
 }
