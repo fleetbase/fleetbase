@@ -1,0 +1,34 @@
+name: Deploy Frontend App to Dev 
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Deployment Environment'
+        required: true
+        type: choice
+        options:
+          - dev
+          - uat
+          - live
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.environment }}
+    steps:
+      - name: Deploy the Ember.js App
+        uses: appleboy/ssh-action@v1.2.1
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_KEY }}
+          port: 22
+          script: |
+            cd /home/ubuntu/fleetbase_agilecyber/fleetbase
+            git fetch origin
+            git pull origin 
+            cd /home/ubuntu/fleetbase_agilecyber/fleetbase/console
+            pnpm install
+            chmod +x build.sh
+            sh build.sh
