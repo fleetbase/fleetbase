@@ -24,9 +24,8 @@ return new class extends Migration
             $table->tinyInteger('deleted')->default(value: 0);
             $table->integer('created_by_id')->nullable();
             $table->integer('updated_by_id')->nullable();
-            $table->softDeletes();
-            $table->timestamp('created_at')->nullable()->index();
-            $table->timestamp('updated_at')->nullable();
+            $table->timestamp('created_at')->useCurrent()->index();
+            $table->timestamp('updated_at')->nullable()->useCurrent()->useCurrentOnUpdate();
         });
     }
 
