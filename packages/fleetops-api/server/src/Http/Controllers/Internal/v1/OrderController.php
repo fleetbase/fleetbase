@@ -38,6 +38,7 @@ use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
 use Fleetbase\FleetOps\Models\Waypoint;
 use Fleetbase\FleetOps\Models\RouteSegment;
+use App\Helpers\UserHelper;
 
 class OrderController extends FleetOpsController
 {
@@ -245,7 +246,8 @@ class OrderController extends FleetOpsController
                     ->where('deleted', 0)
                     ->update([
                         'record_status' => config('params.record_status_archived'),
-                        'deleted'       => config('params.deleted')
+                        'deleted'       => config('params.deleted'),
+                        'updated_by_id' => UserHelper::getIdFromUuid(auth()->id())
                     ]);
                 // Fetch waypoints from DB using payload_uuid
                 $waypoints = $this->getWaypoints($payload_uuid);
@@ -1043,7 +1045,7 @@ class OrderController extends FleetOpsController
      */
     public function createRouteSegments($waypoints, $orderId, $payloadUuid): void
     {
-         if ($waypoints && count($waypoints) > 1) {
+        if ($waypoints && count($waypoints) > 1) {
             foreach ($waypoints as $index => $waypoint) {
                 if ($index === 0) {
                     // Skip the first waypoint as it has no previous waypoint
@@ -1056,6 +1058,7 @@ class OrderController extends FleetOpsController
                 $routeSegment->to_waypoint_id = $waypoint->uuid;
                 $routeSegment->public_id = 'VR_' . Str::upper(Str::random(5));
                 $routeSegment->company_uuid = session('company');
+                $routeSegment->created_by_id =  UserHelper::getIdFromUuid(auth()->id());
                 $routeSegment->save();
             }
         }
@@ -1089,4 +1092,9 @@ class OrderController extends FleetOpsController
         });
         return response()->json($routeSegments);
     }
+    /**
+     * Get the user details from auth
+     *
+     * @return \Illuminate\Http\Response
+     */
 }
