@@ -173,7 +173,7 @@ class OrderController extends FleetOpsController
                                     // Fetch waypoints from DB using payload_uuid
                                     $waypoints = $this->getWaypoints($payload_uuid);
                                     // if ($waypoints &&  $waypoints->count() > 2) {
-                                    $this->createRouteSegments($waypoints, $order->id, $payload_uuid, $vrId = null);
+                                    $this->createRouteSegments($waypoints, $order->id, $payload_uuid);
                                 //}
                             }
                         }
@@ -254,7 +254,7 @@ class OrderController extends FleetOpsController
                 // Fetch waypoints from DB using payload_uuid
                 $waypoints = $this->getWaypoints($payload_uuid);
                 // If waypoints are set, create entries in route_segments table
-                $createRouteSegment = $this->createRouteSegments($waypoints, $order->id, $payload_uuid, $vrId = null);
+                $createRouteSegment = $this->createRouteSegments($waypoints, $order->id, $payload_uuid);
               
             }
         } else {
@@ -998,7 +998,7 @@ class OrderController extends FleetOpsController
                             $payload_uuid = $payload->uuid ?? null;
                             if (!empty($payload_uuid)) {
                                 $waypoints = $this->getWaypoints($payload_uuid);
-                                $this->createRouteSegments($waypoints, $order->id, $payload_uuid, $row['vr_id'] ?? null);
+                                $this->createRouteSegments($waypoints, $order->id, $payload_uuid);
                             }
     
                             // Set status
@@ -1045,7 +1045,7 @@ class OrderController extends FleetOpsController
      * @param string $payloadUuid
      * @return void
      */
-    public function createRouteSegments($waypoints, $orderId, $payloadUuid, $vrId): void
+    public function createRouteSegments($waypoints, $orderId, $payloadUuid): void
     {
         try {
             if ($waypoints && count($waypoints) > 2) {
@@ -1060,7 +1060,7 @@ class OrderController extends FleetOpsController
                     $routeSegment->payload_id = $payloadUuid;
                     $routeSegment->from_waypoint_id = $index > 0 ? $waypoints[$index - 1]->uuid : null;
                     $routeSegment->to_waypoint_id = $waypoint->uuid;
-                    $routeSegment->public_id = !empty($vrId)? $vrId : 'VR_' . Str::upper(Str::random(5));
+                    $routeSegment->public_id = 'RI_' . Str::upper(Str::random(5));
                     $routeSegment->company_uuid = session('company');
                     $routeSegment->created_by_id = UserHelper::getIdFromUuid(auth()->id());
                     $routeSegment->save();
