@@ -24,7 +24,7 @@ class OrderExport implements FromCollection, WithHeadings, WithColumnFormatting,
         return [
             'Trip ID',
             'Block ID',
-            'VR ID',
+            'Route ID',
             'Driver',
             'Vehicle',
             'Pick Up',
