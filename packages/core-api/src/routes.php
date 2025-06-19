@@ -96,8 +96,33 @@ Route::prefix(config('fleetbase.api.routing.prefix', '/'))->namespace('Fleetbase
                                 $router->post('verify-email', 'OnboardController@verifyEmail');
                                 $router->post('send-verification-sms', 'OnboardController@sendVerificationSms');
                                 $router->post('send-verification-email', 'OnboardController@sendVerificationEmail');
+                                $router->post('checkout', 'BillingRequestController@createBillingRequest');
+                                // $router->post('checkout_new', 'CheckoutController@initiateFlow');
+                                $router->get('checkout/{billing_request_id}', 'BillingRequestController@getBillingRequest');
+
+                                // Optional: Simplified status endpoint
+                                $router->get('checkout/{billing_request_id}/status', 'BillingRequestController@getBillingRequestStatus');
+                                // $router->post('checkout/success', 'CheckoutController@handleSuccess');
+                                // $router->post('checkout/failure', 'CheckoutController@handleFailure');
+
+                                // $router->post('gocardless/webhook', 'GoCardlessWebhookController@handleWebhook');
                             }
                         );
+                        
+                        // $router->group(
+                        //     ['prefix' => 'plan'],
+                        //     function ($router) {
+                        //         $router->get('', 'PlanController@index');
+                        //         $router->get('tiers/{id}', 'PlanController@getTiers');
+                        //     }
+                        // );
+                        // $router->group(
+                        //     ['prefix' => 'payment'],
+                        //     function ($router) {
+                        //         $router->get('', 'PlanController@index');
+                        //         $router->get('status/{user_id}', 'PlanController@getUserPaymentStatus');
+                        //     }
+                        // );
                         $router->group(
                             ['prefix' => 'lookup'],
                             function ($router) {
