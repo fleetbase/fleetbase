@@ -1048,7 +1048,7 @@ class OrderController extends FleetOpsController
     public function createRouteSegments($waypoints, $orderId, $payloadUuid, $vrId): void
     {
         try {
-            if ($waypoints && count($waypoints) > 1) {
+            if ($waypoints && count($waypoints) > 2) {
                 foreach ($waypoints as $index => $waypoint) {
                     if ($index === 0) {
                         // Skip the first waypoint as it has no previous waypoint
