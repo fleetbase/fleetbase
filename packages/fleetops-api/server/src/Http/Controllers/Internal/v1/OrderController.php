@@ -322,11 +322,11 @@ class OrderController extends FleetOpsController
                         ], 422);
                     }
 
-                    return response()->json([
-                        'status' => 'error',
-                        'message' => __('messages.import_failed'),
-                        'errors' => $errors
-                    ], 422);
+                    // return response()->json([
+                    //     'status' => 'error',
+                    //     'message' => __('messages.import_failed'),
+                    //     'errors' => $errors
+                    // ], 422);
                 }
             } catch (\Exception $e) {
                 return response()->error(__('messages.invalid_file'));
