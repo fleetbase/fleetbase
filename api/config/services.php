@@ -51,5 +51,8 @@ return [
         'access_token' => env('GOCARDLESS_ACCESS_TOKEN'),
         'environment' => env('GOCARDLESS_ENVIRONMENT', 'sandbox'), // 'sandbox' or 'live'
         'webhook_secret' => env('GOCARDLESS_WEBHOOK_SECRET'),
+        'api_url' => env('GOCARDLESS_API_URL', 'https://api-sandbox.gocardless.com'),
+        'ssl_verify' => env('GOCARDLESS_SSL_VERIFY', true), // Set to false in development
+        'timeout' => env('GOCARDLESS_TIMEOUT', 30),
     ],
 ];
