@@ -911,9 +911,13 @@ class OrderController extends FleetOpsController
                         $departureKey = "stop_" . $i . "_yard_departure";
 
                         if (!empty($row[$stopKey])) {
-                            $place = Place::where('code', $row[$stopKey])->first();
+                         $place = Place::where([
+                                    ['code', '=', $row[$stopKey]],
+                                    ['company_uuid', '=', session('company')],
+                                    ['deleted_at', '=', null]
+                                ])->first();
 
-                            if ($place) {
+                        if ($place) {
                                 $waypoints[] = [
                                     'place_uuid' => $place->uuid,
                                     // 'public_id' => $i === 1 ? $row['vr_id'] : null,
@@ -960,7 +964,11 @@ class OrderController extends FleetOpsController
                         $orderRequest,
                         function ($request, &$input) {
                             if (!isset($input['order_config_uuid'])) {
-                                $defaultOrderConfig = OrderConfig::where('key', 'transport')->first();
+                                $defaultOrderConfig = OrderConfig::where([
+                                    ['key', '=', 'transport'],
+                                    ['company_uuid', '=', session('company')],
+                                    ['deleted_at', '=', null]
+                                ])->first();
                                 if ($defaultOrderConfig) {
                                     $input['order_config_uuid'] = $defaultOrderConfig->uuid;
                                 }
