@@ -21,7 +21,7 @@ export default class AuthVerificationRoute extends Route {
 
     beforeModel(transition) {
         let { token } = transition.to.queryParams;
-
+        console.log(token);
         return this.session.store.restore().then(({ email }) => {
             return this.fetch.post('auth/validate-verification-session', { email, token }).then(({ valid }) => {
                 if (!valid) {
