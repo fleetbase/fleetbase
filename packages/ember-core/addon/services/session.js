@@ -110,7 +110,6 @@ export default class SessionService extends SimpleAuthSessionService {
         try {
             
             const user = await this.currentUser.promiseUser();
-            console.log(user,"session user");
             
             if (!user) {
                 if (transition) {
