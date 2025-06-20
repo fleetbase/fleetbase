@@ -18,11 +18,30 @@
     </div>
 
     <form class="mt-8 space-y-6" {{on "submit" this.verifyCode}}>
-        <InputGroup @type="tel" @name={{t "onboard.verify-email.verification-input-label"}} @value={{this.code}} @helpText={{t "onboard.verify-email.verification-code-text"}} @inputClass="input-lg" {{on "input" this.validateInput}} {{did-insert this.validateInitInput}} />
+        <InputGroup 
+            @type="tel" 
+            @name={{t "onboard.verify-email.verification-input-label"}} 
+            @value={{this.code}} 
+            @helpText={{t "onboard.verify-email.verification-code-text"}} 
+            @inputClass="input-lg" 
+            {{on "input" this.validateInput}} 
+            {{did-insert this.validateInitInput}} 
+        />
 
         <div class="flex flex-row items-center space-x-4">
-            <Button @icon="check" @iconPrefix="fas" @buttonType="submit" @type="primary" @size="lg" @text="Verify & Continue" @isLoading={{this.isLoading}} @disabled={{this.isNotReadyToSubmit}} @onClick={{this.verifyCode}} />
-            <a href="#" {{on "click" this.onDidntReceiveCode}} class="text-sm text-blue-400 hover:text-blue-300">{{t "onboard.verify-email.didnt-receive-a-code"}}</a>
+            <Button 
+                @icon="check" 
+                @iconPrefix="fas" 
+                @buttonType="submit" 
+                @type="primary" 
+                @size="lg" 
+                @text="Verify & Continue" 
+                @isLoading={{this.isLoading}} 
+                @disabled={{this.isNotReadyToSubmit}} 
+            />
+            <a href="#" {{on "click" this.onDidntReceiveCode}} class="text-sm text-blue-400 hover:text-blue-300">
+                {{t "onboard.verify-email.didnt-receive-a-code"}}
+            </a>
         </div>
 
         {{#if this.stillWaiting}}
