@@ -66,7 +66,8 @@ class FleetbaseOverrideServiceProvider extends ServiceProvider
                     ->name('orders.driverAcceptance'); // Give it the same name as Fleetbase's route
                     Route::post('/orders/{id}/update-activity', 'App\Http\Controllers\Api\v1\CustomOrderController@driverActivity')
                     ->name('orders.driverActivity');
-                    Route::prefix('leave-requests')->group(function () {
+                    Route::middleware('auth:sanctum')->group(function () {
+                        Route::prefix('leave-requests')->group(function () {
                         Route::post('/create', 'App\Http\Controllers\Api\v1\LeaveRequestController@store')
                         ->name('leave-requests.create');
                         Route::put('/{id}', 'App\Http\Controllers\Api\v1\LeaveRequestController@update')
@@ -76,7 +77,7 @@ class FleetbaseOverrideServiceProvider extends ServiceProvider
                         Route::delete('/{id}', 'App\Http\Controllers\Api\v1\LeaveRequestController@destroy')
                         ->name('leave-requests.destroy');
                     });
-               
+                    });
                 });
                     
                 });
