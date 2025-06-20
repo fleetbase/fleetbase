@@ -32,7 +32,9 @@ class LeaveRequest extends Model
         'status',
         'approved_by',
         'meta',
-        'leave_type'
+        'leave_type',
+        'created_by_id',
+        'updated_by_id',
     ];
 
     protected $casts = [

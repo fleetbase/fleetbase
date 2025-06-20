@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Models\LeaveRequest;
 use Illuminate\Support\Str;
 use Fleetbase\Support\Auth;
+use App\Helpers\UserHelper;
 class LeaveRequestController extends Controller
 {
     /**
@@ -17,8 +18,13 @@ class LeaveRequestController extends Controller
         // Get all leave requests
         $userUuid = request()->input('user_uuid');
         $query = LeaveRequest::with('user')
-        ->whereNull('deleted_at')
-        ->orderBy('id', 'desc');
+                ->whereNull('deleted_at')
+                ->where([
+                    ['company_uuid', '=', Auth::getCompany()->uuid],
+                    ['record_status', '=', 1],
+                    ['deleted', '=', 0],
+                    ])
+                ->orderBy('id', 'desc');
         if ($userUuid) {
             $query->where('user_uuid', $userUuid);
         }
@@ -42,7 +48,6 @@ class LeaveRequestController extends Controller
             $company_uuid = $company->uuid;
         }
         $input = $request->all();
-
         // Set end_date equal to start_date if not provided
         if (empty($input['end_date'])) {
             $input['end_date'] = $input['start_date'];
@@ -58,7 +63,12 @@ class LeaveRequestController extends Controller
         }
 
         // Check for overlapping leave requests
-        $duplicateRequest = LeaveRequest::where('user_uuid', $input['user_uuid'])
+        $duplicateRequest = LeaveRequest::where([
+                    ['user_uuid', '=', $input['user_uuid']],
+                    ['company_uuid', '=', Auth::getCompany()->uuid],
+                    ['record_status', '=', 1],
+                    ['deleted', '=', 0],
+            ])
             ->where(function ($query) use ($input) {
                 // Check if any existing leave request overlaps with the new request
                 $query->where('start_date', '<=', $input['end_date'])
@@ -76,6 +86,7 @@ class LeaveRequestController extends Controller
         $input['public_id'] = Str::random(6);
         $input['company_uuid'] = $company_uuid;
         $input['uuid'] = Str::uuid();
+        $input['created_by_id'] = UserHelper::getIdFromUuid(auth()->id());
         $leaveRequest = LeaveRequest::create($input);
 
         return response()->json([
@@ -126,7 +137,12 @@ class LeaveRequestController extends Controller
             $input['end_date'] !== $leaveRequest->end_date) {
             
             // Check for overlapping leave requests
-            $existingLeaveRequest = LeaveRequest::where('user_uuid', $input['user_uuid'])
+            $existingLeaveRequest = LeaveRequest::where([
+                    ['user_uuid', '=', $input['user_uuid']],
+                    ['company_uuid', '=', Auth::getCompany()->uuid],
+                    ['record_status', '=', 1],
+                    ['deleted', '=', 0],
+            ])
                 ->where(function ($query) use ($input) {
                     // Check if any existing leave request overlaps with the new request
                     $query->where('start_date', '<=', $input['end_date'])
@@ -143,7 +159,8 @@ class LeaveRequestController extends Controller
                 ], 400);
             }
         }
-
+        //update updated_by_id
+        $input['updated_by_id'] = UserHelper::getIdFromUuid(auth()->id());
         // Update the leave request only if data is dirty
         $leaveRequest->update($input);
     
@@ -160,15 +177,23 @@ class LeaveRequestController extends Controller
     public function destroy($id)
     {
         // Find the leave request by UUID
-        $leaveRequest = LeaveRequest::where('id', $id)->whereNull('deleted_at')->firstOrFail();
+        $leaveRequest = LeaveRequest::where([
+                    ['id', '=', $id],
+                    ['company_uuid', '=', Auth::getCompany()->uuid],
+                    ['record_status', '=', 1],
+                    ['deleted', '=', 0],
+            ])->whereNull('deleted_at')->firstOrFail();
         if(isset($leaveRequest) && !empty($leaveRequest)) {
-        // Delete the leave request
-        $leaveRequest->deleted_at = time();
-        $leaveRequest->save();
-        return response()->json(['success' => true,'message' => __('messages.request_deleted_success')]);
+            // Delete the leave request
+            $leaveRequest->deleted_at = now();
+            $leaveRequest->record_status = config('params.record_status_archived');
+            $leaveRequest->deleted       = config('params.deleted');
+            $leaveRequest->updated_by_id = UserHelper::getIdFromUuid(auth()->id());
+            $leaveRequest->save();
+            return response()->json(['success' => true,'message' => __('messages.request_deleted_success')]);
         }
         else{
-            return response()->json(['success' => false, 'message' => __('messages.request_not_found')]);
+            return response()->json(['success' => false, 'message' => __('messages.request_not_found')],400);
         }
         
     }
