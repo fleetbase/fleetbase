@@ -86,7 +86,7 @@ class LeaveRequestController extends Controller
         $input['public_id'] = Str::random(6);
         $input['company_uuid'] = $company_uuid;
         $input['uuid'] = Str::uuid();
-        $input['created_by_id'] = UserHelper::getIdFromUuid($input['user_uuid']);
+        $input['created_by_id'] = UserHelper::getIdFromUuid(auth()->id());
         $leaveRequest = LeaveRequest::create($input);
 
         return response()->json([
@@ -185,7 +185,7 @@ class LeaveRequestController extends Controller
             ])->whereNull('deleted_at')->firstOrFail();
         if(isset($leaveRequest) && !empty($leaveRequest)) {
             // Delete the leave request
-            $leaveRequest->deleted_at = time();
+            $leaveRequest->deleted_at = now();
             $leaveRequest->record_status = config('params.record_status_archived');
             $leaveRequest->deleted       = config('params.deleted');
             $leaveRequest->updated_by_id = UserHelper::getIdFromUuid(auth()->id());
