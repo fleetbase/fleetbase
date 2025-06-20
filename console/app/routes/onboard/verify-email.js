@@ -17,8 +17,6 @@ export default class OnboardVerifyEmailRoute extends Route {
     beforeModel(transition) {
         let { hello } = transition.to.queryParams;
         
-        console.log('Onboard beforeModel - Hello:', hello?.substring(0, 10) + '...');
-        
         // Simple validation - just check if hello exists
         if (!hello) {
             console.error('Missing hello parameter in onboard flow');
@@ -36,7 +34,5 @@ export default class OnboardVerifyEmailRoute extends Route {
             code: params.code,
             hello: params.hello
         });
-        
-        console.log('Onboard setupController - Code:', params.code, 'Hello:', params.hello?.substring(0, 10) + '...');
     }
 }
