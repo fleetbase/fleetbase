@@ -104,10 +104,14 @@ export default class SessionService extends SimpleAuthSessionService {
      * @void
      */
     async promiseCurrentUser(transition = null) {
+        
         const invalidateWithLoader = this.invalidateWithLoader.bind(this);
 
         try {
+            
             const user = await this.currentUser.promiseUser();
+            console.log(user,"session user");
+            
             if (!user) {
                 if (transition) {
                     transition.abort();
@@ -164,7 +168,6 @@ export default class SessionService extends SimpleAuthSessionService {
 
         const loaderNode = this.showLoader(loadingMessage);
         this.isLoaderNodeOpen = true;
-
         return this.session.invalidate().then(() => {
             later(
                 this,
