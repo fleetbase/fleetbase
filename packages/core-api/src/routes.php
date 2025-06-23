@@ -108,21 +108,36 @@ Route::prefix(config('fleetbase.api.routing.prefix', '/'))->namespace('Fleetbase
                                 // $router->post('gocardless/webhook', 'GoCardlessWebhookController@handleWebhook');
                             }
                         );
-                        
-                        // $router->group(
-                        //     ['prefix' => 'plan'],
-                        //     function ($router) {
-                        //         $router->get('', 'PlanController@index');
-                        //         $router->get('tiers/{id}', 'PlanController@getTiers');
-                        //     }
-                        // );
-                        // $router->group(
-                        //     ['prefix' => 'payment'],
-                        //     function ($router) {
-                        //         $router->get('', 'PlanController@index');
-                        //         $router->get('status/{user_id}', 'PlanController@getUserPaymentStatus');
-                        //     }
-                        // );
+                        $router->group(
+                            ['prefix' => 'gocardless'],
+                            function ($router) {
+                                $router->post('webhooks', 'GoCardlessWebhookController@handle');
+
+                                // Optionally keep GET for testing
+                                $router->get('webhooks', function() {
+                                    return response()->json([
+                                        'message' => 'GoCardless webhook endpoint is accessible',
+                                        'note' => 'Use POST for actual webhooks',
+                                        'timestamp' => now()
+                                    ]);
+                                });
+                            }
+                        );
+                       
+                        $router->group(
+                            ['prefix' => 'plan'],
+                            function ($router) {
+                                $router->get('', 'PlanController@index');
+                                $router->get('tiers/{id}', 'PlanController@getTiers');
+                            }
+                        );
+                        $router->group(
+                            ['prefix' => 'payment'],
+                            function ($router) {
+                                $router->get('', 'PlanController@index');
+                                $router->get('status/{user_id}', 'PlanController@getUserPaymentStatus');
+                            }
+                        );
                         $router->group(
                             ['prefix' => 'lookup'],
                             function ($router) {

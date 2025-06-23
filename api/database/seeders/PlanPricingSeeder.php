@@ -12,8 +12,14 @@ class PlanPricingSeeder extends Seeder
      */
     public function run(): void
     {
+        $plan = DB::table('plan')->where('name', 'Basic Plan')->first();
+    
+        if (!$plan) {
+            // If plan doesn't exist, log error or throw exception
+            throw new Exception('Basic Plan not found in plan table');
+        }
         DB::table('plan_pricing_relation')->insert([
-            'plan_id' => 1, // Assuming your Basic Plan has ID 1
+            'plan_id' => $plan->id, // Assuming your Basic Plan has ID 1
             'billing_cycle' => 'monthly',
             'price_per_user' => 25.00,
             'price_per_driver' => 10.00,
