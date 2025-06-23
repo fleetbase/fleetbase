@@ -22,14 +22,13 @@ class GoCardlessWebhookController extends Controller
         try {
             // Verify webhook signature
             if (!$this->verifyWebhookSignature($request)) {
-                echo "Inside GoCardless webhook signature verification failed";
                 Log::warning('GoCardless webhook signature verification failed');
                 return response('Unauthorized', 401);
             }
 
             // Process webhook events
             $events = $request->json('events', []);
-            print_r($events);
+            // print_r($events);
             foreach ($events as $event) {
                 $this->webhookService->processEvent($event);
             }

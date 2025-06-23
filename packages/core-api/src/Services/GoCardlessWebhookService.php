@@ -386,11 +386,6 @@ class GoCardlessWebhookService
         Log::info("Mandate event: {$action}");
     }
 
-    private function createSubscriptionFromBillingRequest(BillingRequest $billingRequest, array $event): void
-    {
-        // Create subscription based on billing request
-        // This would depend on your specific subscription model
-    }
     /**
      * Save billing request event to payment_events_relation table
      */
