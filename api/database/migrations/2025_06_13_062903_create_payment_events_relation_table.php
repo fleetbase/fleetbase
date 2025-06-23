@@ -20,7 +20,7 @@ return new class extends Migration
             $table->timestamp('event_date');
             $table->string('gateway_event_id');
             $table->string('event_status');
-            $table->text('error_message');
+            $table->text('error_message')->nullable();
             $table->unsignedInteger('created_by_id')->nullable();
             $table->unsignedInteger('updated_by_id')->nullable(); 
             $table->timestamp('created_at')->useCurrent()->index();

@@ -16,7 +16,6 @@ class PaymentGatewaySeeder extends Seeder
         DB::table('payment_gateway')->insert([
             'name' => 'GoCardless',
             'created_by_id' => 1,
-          
             'deleted' => 0,
             'record_status' => 1
         ]);

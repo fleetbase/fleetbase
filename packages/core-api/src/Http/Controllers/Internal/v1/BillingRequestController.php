@@ -222,40 +222,40 @@ class BillingRequestController extends Controller
                 ], 500);
             }
         }catch (ValidationException $e) {
-        \Log::warning('Business validation failed for billing request', [
-            'error' => $e->getMessage(),
-            'payment_id' => $payment->id ?? null
-        ]);
-
-        return response()->json([
-            'success' => false,
-            'error' => 'Validation error',
-            'message' => $e->getMessage()
-        ], 422);
-
-    } catch (Exception $e) {
-        \Log::error('GoCardless Billing Request Error', [
-            'error' => $e->getMessage(),
-            'trace' => $e->getTraceAsString(),
-            'payment_id' => $payment->id ?? null,
-            'request_data' => $request->except(['customer.email'])
-        ]);
-        
-        // Update payment status to failed if payment was created
-        if (isset($payment)) {
-            $payment->update([
-                'status' => 'failed',
-                'failure_reason' => $e->getMessage()
+            \Log::warning('Business validation failed for billing request', [
+                'error' => $e->getMessage(),
+                'payment_id' => $payment->id ?? null
             ]);
+
+            return response()->json([
+                'success' => false,
+                'error' => 'Validation error',
+                'message' => $e->getMessage()
+            ], 422);
+
+        } catch (Exception $e) {
+            \Log::error('GoCardless Billing Request Error', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+                'payment_id' => $payment->id ?? null,
+                'request_data' => $request->except(['customer.email'])
+            ]);
+            
+            // Update payment status to failed if payment was created
+            if (isset($payment)) {
+                $payment->update([
+                    'status' => 'failed',
+                    'failure_reason' => $e->getMessage()
+                ]);
+            }
+            
+            return response()->json([
+                'success' => false,
+                'error' => 'Failed to create billing request',
+                'message' => 'An error occurred while processing your request. Please try again.',
+                'payment_id' => $payment->id ?? null
+            ], 500);
         }
-        
-        return response()->json([
-            'success' => false,
-            'error' => 'Failed to create billing request',
-            'message' => 'An error occurred while processing your request. Please try again.',
-            'payment_id' => $payment->id ?? null
-        ], 500);
-    }
     }
     
     /**
