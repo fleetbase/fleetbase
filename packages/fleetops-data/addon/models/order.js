@@ -134,24 +134,24 @@ export default class OrderModel extends Model {
         return 'None';
     }
 
+    // get dropoffName() {
+    //     const { payload, meta } = this;
+
+    //     if (payload?.dropoff) {
+    //         return payload.dropoff.name ?? payload.dropoff.street1;
+    //     }
+
+    //     if (payload?.waypoints.lastObject) {
+    //         return payload.waypoints.lastObject.name ?? payload.waypoints.lastObject.street1;
+    //     }
+
+    //     if (meta.pickup_is_driver_location === true) {
+    //         return 'Dynamic';
+    //     }
+
+    //     return 'None';
+    // }
     get dropoffName() {
-        const { payload, meta } = this;
-
-        if (payload?.dropoff) {
-            return payload.dropoff.name ?? payload.dropoff.street1;
-        }
-
-        if (payload?.waypoints.lastObject) {
-            return payload.waypoints.lastObject.name ?? payload.waypoints.lastObject.street1;
-        }
-
-        if (meta.pickup_is_driver_location === true) {
-            return 'Dynamic';
-        }
-
-        return 'None';
-    }
-    /*get dropoffName() {
         const { payload, meta } = this;
 
         if (payload?.dropoff) {
@@ -174,7 +174,7 @@ export default class OrderModel extends Model {
         }
 
         return 'None';
-    }*/
+    }
 
     @computed('public_id', 'scheduledAtTime') get eventTitle() {
         return `${this.scheduledAtTime} - ${this.public_id}`;
