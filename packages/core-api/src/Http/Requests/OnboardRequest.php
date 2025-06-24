@@ -39,7 +39,7 @@ class OnboardRequest extends FleetbaseRequest
             'phone'                 => ['required', new ValidPhoneNumber(), Rule::unique('users', 'phone')->whereNull('deleted_at')],
             'password'              => ['required', 'confirmed', 'min:4', 'max:24'],
             'password_confirmation' => ['required', 'min:4', 'max:24'],
-            'organization_name'     => ['required', 'min:4', new ExcludeWords($this->excludedWords)],
+            'organization_name'     => ['required', 'min:4'],
         ];
     }
 
