@@ -147,6 +147,7 @@ common:
   duplicate-waypoint-error: Duplicate waypoint detected. Please use unique locations for each waypoint.
   valid-waypoints-error: Please add waypoints
   pickup-dropoff-error: Please provide both pickup and dropoff locations.
+  valid-number-error: Please enter a valid number
 validation:
   required:
     payment_method: Payment method is required
@@ -552,8 +553,8 @@ onboard:
     confirm-password-help-text: Just to confirm the password you entered above.
     continue-button-text: Continue
     language: Language
-    number-of-drivers: How many drivers would you like to add?
-    number-of-web-users: How many web users would you like to add?
+    number-of-drivers: Number of drivers
+    number-of-web-users: Number of web users
   verify-email:
     header-title: Account Verification
     title: Verify your email address

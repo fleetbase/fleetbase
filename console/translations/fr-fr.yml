@@ -548,6 +548,9 @@ onboard:
     confirm-password: Confirmer votre mot de passe
     confirm-password-help-text: Juste pour confirmer le mot de passe que vous avez saisi ci-dessus.
     continue-button-text: Continuer
+    language: Langue
+    number-of-drivers: Nombre de conducteurs
+    number-of-web-users: Nombre d'utilisateurs web
   verify-email:
     header-title: Vérification du compte
     title: Vérifiez votre adresse email
@@ -961,22 +964,22 @@ fleet-ops:
         controls: Contrôles
         delete-config: Supprimer la Configuration
         delete:
-          delete-title: Supprimer cette configuration de commande ?
+          delete-title: Supprimer cette configuration de commande ?
           delete-body-message: Une fois cette configuration de commande supprimée, elle ne sera plus récupérable et vous perdrez toutes les configurations.
           confirm-delete: Supprimer
       activity-flow:
         save-activity-flow: Enregistrer le Flux d'Activité
-        edit-activity-unique-code-warning: Le code de l'activité doit être unique !
+        edit-activity-unique-code-warning: Le code de l'activité doit être unique !
       custom-fields:
         new-field-group: Nouveau groupe de champs
         new-custom-field: Créer un nouveau champ personnalisé
         grid-size: Taille de la Grille
         delete-custom-field-prompt:
-          modal-title: Supprimer ce champ personnalisé ?
+          modal-title: Supprimer ce champ personnalisé ?
           delete-body-message: Une fois ce champ personnalisé supprimé, il ne sera pas récupérable et vous perdrez toutes les configurations.
           confirm-delete: Supprimer
         delete-custom-field-group-prompt:
-          modal-title: Supprimer ce groupe de champs ?
+          modal-title: Supprimer ce groupe de champs ?
           delete-body-message: Une fois ce groupe de champs supprimé, il ne sera pas récupérable et vous perdrez tous les champs personnalisés qu'il contient.
           confirm-delete: Supprimer
       entities:
@@ -989,11 +992,11 @@ fleet-ops:
         width: Largeur
         height: Hauteur
         weight: Poids
-        delete-custom-entity-title: Supprimer cette entité personnalisée ?
+        delete-custom-entity-title: Supprimer cette entité personnalisée ?
         delete-custom-entity-body: Une fois cette entité personnalisée supprimée, elle ne sera pas récupérable et vous perdrez toutes les configurations.
         confirm-delete: Confirmer
       types:
-        no-order-installed: Aucune configuration de commande installée !
+        no-order-installed: Aucune configuration de commande installée !
         you-have-no-configs: Vous n'avez actuellement aucune configuration de commande installée. Consultez les extensions pour installer une configuration de commande et commencer.
         view-extensions: Voir les extensions
     avatar-picker:
@@ -1324,7 +1327,7 @@ fleet-ops:
         pickup: Ramassage
         edit-address: Modifier l'adresse
         select-pickup: Sélectionner un point de ramassage
-        invalid: Coordonnées invalides !
+        invalid: Coordonnées invalides !
         dropoff: Livraison
         select-dropoff: Sélectionner un point de livraison
         return: Retour
@@ -1358,12 +1361,12 @@ fleet-ops:
         country: Pays de la zone de service
         country-text: Facultativement, définissez le pays où cette zone de service est située ou basée.
       set-password:
-        message: Bienvenue sur FleetYes ! Avant de commencer, définissez un nouveau mot de passe pour continuer ci-dessous.
+        message: Bienvenue sur FleetYes ! Avant de commencer, définissez un nouveau mot de passe pour continuer ci-dessous.
         new-password: Nouveau mot de passe
         confirm-password: Confirmez le mot de passe
         help-text: Entrez un mot de passe d'au moins 8 caractères pour continuer.
       uninstall-prompt:
-        message: Vous êtes sur le point de désinstaller l'extension "{options}". Êtes-vous sûr de vouloir continuer cette désinstallation ?
+        message: Vous êtes sur le point de désinstaller l'extension "{options}". Êtes-vous sûr de vouloir continuer cette désinstallation ?
         sub-message: Toutes les configurations et paramètres personnalisés seront perdus.
       vehicle-details:
         make: Marque
@@ -1487,7 +1490,7 @@ fleet-ops:
         show-more: Montrer plus de détails
       schedule-card:
         destination: Destination
-        unassign-driver: Retirer le chauffeur ?
+        unassign-driver: Retirer le chauffeur ?
         unassign-text: Vous êtes sur le point de retirer le chauffeur pour la commande {orderId}. Cliquez sur continuer pour confirmer la suppression du chauffeur.
         unassign-button: Continuer et retirer le chauffeur
         assign-driver: Assigner un nouveau chauffeur ?
