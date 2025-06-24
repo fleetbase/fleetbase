@@ -1,11 +1,14 @@
 import Controller from '@ember/controller';
 import { inject as service } from '@ember/service';
 import { tracked } from '@glimmer/tracking';
-import { action, getProperties } from '@ember/object';
+import { action, getProperties, set} from '@ember/object';
 import OnboardValidations from '../../validations/onboard';
 import lookupValidator from 'ember-changeset-validations';
 import Changeset from 'ember-changeset';
 import ENV from '@fleetbase/console/config/environment';
+import showErrorOnce from '@fleetbase/console/utils/show-error-once';
+import { inject as intlService } from '@ember/service';
+
 export default class OnboardIndexController extends Controller {
     /**
      * Inject the `fetch` service
@@ -34,6 +37,13 @@ export default class OnboardIndexController extends Controller {
      * @memberof OnboardIndexController
      */
     @service notifications;
+
+    /**
+     * Inject the `intl` service
+     *
+     * @memberof OnboardIndexController
+     */
+    @service intl;
 
     /**
      * The name input field.
@@ -184,14 +194,20 @@ export default class OnboardIndexController extends Controller {
         const changeset = new Changeset(input, lookupValidator(OnboardValidations), OnboardValidations);
 
         await changeset.validate();
-
         if (changeset.get('isInvalid')) {
-            const errorMessage = changeset.errors.firstObject.validation.firstObject;
-
+            // Check if any required field is empty
+            const requiredFields = ['name', 'email', 'phone', 'organization_name', 'password', 'password_confirmation', 'language'];
+            const hasEmptyRequired = requiredFields.some(field => !this[field] || this[field].toString().trim() === '');
+            if (hasEmptyRequired) {
+                showErrorOnce(this, this.notifications, this.intl.t('validation.form_invalid'));
+                return;
+            }
+            // Otherwise, show the exact error
+            const errorMessage = changeset.errors.firstObject?.validation?.firstObject || 'Please fix the errors in the form.';
             this.notifications.error(errorMessage);
             return;
         }
-
+        else{
         // Set user timezone
         input.timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
         // Rename language to language_id for API
@@ -222,5 +238,42 @@ export default class OnboardIndexController extends Controller {
             .finally(() => {
                 this.isLoading = false;
             });
+        }
+    }
+
+    /**
+     * 
+     * @param {*} event 
+     * Validate Number of driver field
+     * @returns 
+     */
+    @action
+    validateNumberOfDrivers(event) {
+        let value = event.target.value.replace(/[^0-9]/g, '');
+        let parsedValue = parseInt(value, 10);
+        if (value === '' || parsedValue < 1 || isNaN(parsedValue)) {
+            showErrorOnce(this, this.notifications, this.intl.t('common.valid-number-error'));
+            return;
+        }
+        this.set('error', null);
+        this.set('number_of_drivers', parsedValue);
+    }
+    
+    /**
+     * 
+     * @param {*} event 
+     * Validate Number of web users field
+     * @returns 
+     */
+    @action
+    validateNumberOfWebUsers(event) {
+        let value = event.target.value.replace(/[^0-9]/g, '');
+        let parsedValue = parseInt(value, 10);
+        if (value === '' || parsedValue < 1 || isNaN(parsedValue)) {
+            showErrorOnce(this, this.notifications, this.intl.t('common.valid-number-error'));
+            return;
+        }
+        this.set('error', null);
+        this.set('number_of_web_users', parsedValue);
     }
 }

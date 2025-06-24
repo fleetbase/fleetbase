@@ -2393,4 +2393,10 @@ body[data-theme='dark'] .ember-power-select-option[aria-current="true"] {
 .ember-power-select-placeholder {
     overflow-x: unset !important;
 }
-  
+
+.onbord-form .input-group label::after,
+label:has(+ input[required])::after {
+    content: " *";
+    color: #ef4444; /* red color */
+    font-weight: bold;
+}

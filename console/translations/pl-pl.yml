@@ -552,6 +552,9 @@ onboard:
     confirm-password: Potwierdź hasło
     confirm-password-help-text: Wprowadź ponownie hasło, aby je potwierdzić.
     continue-button-text: Kontynuuj
+    language: Język
+    number-of-drivers: Liczba kierowców
+    number-of-web-users: Liczba użytkowników webowych
   verify-email:
     header-title: Weryfikacja konta
     title: Zweryfikuj swój adres e-mail
@@ -870,7 +873,7 @@ fleet-ops:
       activity-logic: Logika aktywności
       activity-logic-help-text: Zdefiniuj niestandardowe warunki logiczne, które określają, kiedy aktywność staje się dostępna w przepływie pracy. Ta funkcja pozwala dostosować przepływ na podstawie określonych kryteriów, zapewniając, że każda aktywność jest uruchamiana tylko wtedy, gdy spełnione są jej predefiniowane warunki.
       activity-logic-add-logic-help-text: Utwórz nowy zestaw warunków określających, kiedy aktywność powinna zostać aktywowana. Kliknij tutaj, aby rozpocząć tworzenie nowej reguły logicznej.
-      activity-logic-select-logic-type-help-text: Wybierz typ logiki, według której będzie działać ten warunek. Wybierz „If” dla bezpośredniego warunku, „And”/„Or” dla warunków złożonych lub „Not”, aby zanegować warunek.
+      activity-logic-select-logic-type-help-text: Wybierz typ logiki, według której będzie działać ten warunek. Wybierz „If" dla bezpośredniego warunku, „And"/„Or" dla warunków złożonych lub „Not", aby zanegować warunek.
       activity-logic-add-condition-help-text: Dodaj konkretny wymóg, który musi zostać spełniony w ramach tego zestawu logicznego. Użyj tego, aby określić dodatkowe kryteria kontrolujące dostępność aktywności.
       field: Pole
       value: Wartość
@@ -1036,11 +1039,11 @@ fleet-ops:
       enable-driver-onboard-from-app: Włącz rejestrację kierowcy z aplikacji Navigator
       enable-driver-onboard-from-app-help-text: Włączenie tej opcji pozwala kierowcom na samodzielną rejestrację (tworzenie własnego konta) za pomocą aplikacji Navigator.
       select-onboard-method: Wybierz metodę rejestracji kierowcy
-      select-onboard-method-help-text: To ustawienie określa sposób, w jaki kierowcy mogą tworzyć swoje konta w aplikacji Navigator. Wybierz „Zaproszenie”, jeśli kierowcy muszą otrzymać zaproszenie e-mailowe do utworzenia konta. Wybierz „Przycisk”, jeśli chcesz umożliwić utworzenie konta kierowcy poprzez przycisk w aplikacji.
+      select-onboard-method-help-text: To ustawienie określa sposób, w jaki kierowcy mogą tworzyć swoje konta w aplikacji Navigator. Wybierz „Zaproszenie", jeśli kierowcy muszą otrzymać zaproszenie e-mailowe do utworzenia konta. Wybierz „Przycisk", jeśli chcesz umożliwić utworzenie konta kierowcy poprzez przycisk w aplikacji.
       require-driver-to-upload-onboard-documents: Wymagaj przesłania dokumentów rejestracyjnych przez kierowcę
       require-driver-to-upload-onboard-documents-help-text: To ustawienie wymusza przesłanie dokumentów, które kierowca musi dostarczyć przed utworzeniem konta.
       required-onboard-documents: Wymagane dokumenty rejestracyjne
-      required-onboard-documents-help-text: Wprowadź wszystkie dokumenty wymagane od kierowcy do rejestracji, korzystając z przycisku „Dodaj dokument rejestracyjny”.
+      required-onboard-documents-help-text: Wprowadź wszystkie dokumenty wymagane od kierowcy do rejestracji, korzystając z przycisku „Dodaj dokument rejestracyjny".
       enter-document-name: Wprowadź nazwę dokumentu
       add-onboard-document: Dodaj dokument rejestracyjny
     cell:
@@ -1272,7 +1275,7 @@ fleet-ops:
         schedule-text: Data i godzina wysyłki zamówienia. Jeśli w momencie wysyłki nie zostanie przypisany kierowca, wysyłka nie powiedzie się. Jeśli zamówienie jest ad hoc, zostanie wysłane do kierowców w pobliżu miejsca odbioru.
         end-date-text: Data i godzina zakończenia zamówienia. Określa przewidywane zakończenie procesu dostawy. Jeśli zamówienie nie zostanie zakończone do tego czasu, może wymagać dodatkowych działań lub ponownego przypisania.
         customer: Klient
-        customer-text: Opcjonalnie przypisz klienta do tego zamówienia. Jeśli to nowy klient, użyj przycisku „Nowy klient” powyżej.
+        customer-text: Opcjonalnie przypisz klienta do tego zamówienia. Jeśli to nowy klient, użyj przycisku „Nowy klient" powyżej.
         select-customer: Wybierz klienta
         facilitator: Pośrednik
         facilitator-text: Opcjonalnie przypisz pośrednika do tego zamówienia. Pośrednik może być podwykonawcą lub usługą ułatwiającą transport zamówienia.
@@ -1319,7 +1322,7 @@ fleet-ops:
         optimize: Optymalizuj trasę
         optimize-text: FleetYes automatycznie zoptymalizuje trasę.
         add: Dodaj punkt trasy
-        add-text: Użyj przycisku „Dodaj punkt trasy”, aby dodać więcej przystanków do zamówienia. Silnik routingu FleetYes automatycznie zoptymalizuje trasę po dodaniu lub usunięciu przystanków.
+        add-text: Użyj przycisku „Dodaj punkt trasy", aby dodać więcej przystanków do zamówienia. Silnik routingu FleetYes automatycznie zoptymalizuje trasę po dodaniu lub usunięciu przystanków.
         select-waypoint: Wybierz punkt trasy
         pickup: Odbiór
         edit-address: Edytuj adres
@@ -1488,11 +1491,11 @@ fleet-ops:
       schedule-card:
         destination: Cel podróży
         unassign-driver: Usunąć przypisanie kierowcy?
-        unassign-text: Zaraz usuniesz przypisanie kierowcy dla zamówienia {orderId}. Kliknij „Kontynuuj”, aby potwierdzić usunięcie kierowcy.
+        unassign-text: Zaraz usuniesz przypisanie kierowcy dla zamówienia {orderId}. Kliknij „Kontynuuj", aby potwierdzić usunięcie kierowcy.
         unassign-button: Kontynuuj i usuń przypisanie kierowcy
         assign-driver: Przypisać nowego kierowcę?
-        assign-text: Zaraz przypiszesz nowego kierowcę ({driverName}) do zamówienia {orderId}. Kliknij „Kontynuuj”, aby potwierdzić.
-        assign-busy-text: Kierowca ({driverName}) <strong>{availability}</strong>. Czy nadal chcesz przypisać zamówienie {orderId} do niego? Kliknij „Kontynuuj” {button}, aby potwierdzić.
+        assign-text: Zaraz przypiszesz nowego kierowcę ({driverName}) do zamówienia {orderId}. Kliknij „Kontynuuj", aby potwierdzić.
+        assign-busy-text: Kierowca ({driverName}) <strong>{availability}</strong>. Czy nadal chcesz przypisać zamówienie {orderId} do niego? Kliknij „Kontynuuj" {button}, aby potwierdzić.
         assign-button: Kontynuuj i przypisz kierowcę
         assign-busy-button: Kontynuuj {button}
         driver-has-no-vehicle: Wybrany kierowca nie ma przypisanego pojazdu. Proszę przypisać pojazd lub wybrać innego kierowcę z pojazdem przed kontynuacją.
@@ -1855,7 +1858,7 @@ fleet-ops:
         select-type: Wybierz typ pola
         add-option: Dodaj opcję
       
-      select-message: Wybierz konfigurację zamówienia do modyfikacji lub kliknij „Nowa konfiguracja”, aby utworzyć nową konfigurację zamówienia.
+      select-message: Wybierz konfigurację zamówienia do modyfikacji lub kliknij „Nowa konfiguracja", aby utworzyć nową konfigurację zamówienia.
       new-config: Nowa konfiguracja
       loading-configuration: Ładowanie konfiguracji zamówień...
       select-order: Wybierz konfigurację zamówienia
@@ -2001,7 +2004,7 @@ fleet-ops:
         delete-contact: Usuń kontakt
         edit:
           title: Kontynuować bez zapisywania?
-          body: Niezapisane zmiany w tym kontakcie zostaną utracone. Kliknij „Kontynuuj”, aby kontynuować.
+          body: Niezapisane zmiany w tym kontakcie zostaną utracone. Kliknij „Kontynuuj", aby kontynuować.
           button: Kontynuuj bez zapisywania
         title: Kontakty
         delete-contacts: Usuń kontakty
@@ -2014,7 +2017,7 @@ fleet-ops:
         delete-customer: Usuń klienta
         edit:
           title: Kontynuować bez zapisywania?
-          body: Niezapisane zmiany w tym kliencie zostaną utracone. Kliknij „Kontynuuj”, aby kontynuować.
+          body: Niezapisane zmiany w tym kliencie zostaną utracone. Kliknij „Kontynuuj", aby kontynuować.
           button: Kontynuuj bez zapisywania
         title: Klienci
         delete-customers: Usuń klientów
@@ -2038,7 +2041,7 @@ fleet-ops:
         locate-driver: Aktualna lokalizacja {driverName}
         edit:
           title: Kontynuować bez zapisywania?
-          body: Niezapisane zmiany w tym kierowcy zostaną utracone. Kliknij „Kontynuuj”, aby kontynuować.
+          body: Niezapisane zmiany w tym kierowcy zostaną utracone. Kliknij „Kontynuuj", aby kontynuować.
           button: Kontynuuj bez zapisywania
         title: Kierowcy
         delete-drivers: Usuń kierowców  
@@ -2056,7 +2059,7 @@ fleet-ops:
         delete-button: Usuń floty
         fleet-action: Działania floty
         edit:
-          body: Niezapisane zmiany w tej flocie zostaną utracone. Kliknij „Kontynuuj”, aby kontynuować.
+          body: Niezapisane zmiany w tej flocie zostaną utracone. Kliknij „Kontynuuj", aby kontynuować.
         title: Floty
         delete-fleets: Usuń floty
     fuel-reports:
@@ -2066,7 +2069,7 @@ fleet-ops:
         delete: Usuń raport paliwowy
         delete-button: Usuń raporty paliwowe
         edit:
-          body: Niezapisane zmiany w tym raporcie wydatków zostaną utracone. Kliknij „Kontynuuj”, aby kontynuować.
+          body: Niezapisane zmiany w tym raporcie wydatków zostaną utracone. Kliknij „Kontynuuj", aby kontynuować.
         title: Raporty paliwowe
         delete-fuel-reports: Usuń raporty paliwowe
     parking:
@@ -2076,7 +2079,7 @@ fleet-ops:
         delete: Usuń raport parkingowy
         delete-button: Usuń raporty parkingowe
         edit:
-          body: Niezapisane zmiany w tym raporcie parkingowym zostaną utracone. Kliknij „Kontynuuj”, aby kontynuować.
+          body: Niezapisane zmiany w tym raporcie parkingowym zostaną utracone. Kliknij „Kontynuuj", aby kontynuować.
         title: Raporty parkingowe
         delete-parking-report: Usuń raporty parkingowe
         delete-parking-report-confirm: Czy na pewno chcesz usunąć ten raport parkingowy?
@@ -2089,7 +2092,7 @@ fleet-ops:
         delete: Usuń raport opłat drogowych
         delete-button: Usuń raporty opłat drogowych
         edit:
-          body: Niezapisane zmiany w tym raporcie opłat drogowych zostaną utracone. Kliknij „Kontynuuj”, aby kontynuować.
+          body: Niezapisane zmiany w tym raporcie opłat drogowych zostaną utracone. Kliknij „Kontynuuj", aby kontynuować.
         title: Raporty opłat drogowych
         delete-toll-report-confirm: Czy na pewno chcesz usunąć ten raport opłat drogowych?
         delete-toll-report-success: Raport opłat drogowych został usunięty.
@@ -2101,7 +2104,7 @@ fleet-ops:
         delete: Usuń problemy
         delete-button: Usuń problemy
         edit:
-          body: Niezapisane zmiany w tym problemie zostaną utracone. Kliknij „Kontynuuj”, aby kontynuować.
+          body: Niezapisane zmiany w tym problemie zostaną utracone. Kliknij „Kontynuuj", aby kontynuować.
         title: Problemy
         delete-issues: Usuń problemy
     places:
@@ -2116,7 +2119,7 @@ fleet-ops:
         success-message: 'Szczegóły {placeName} zostały zaktualizowane.'
         locate-title: Lokalizacja {placeName}
         edit:
-          body: Niezapisane zmiany w tym miejscu zostaną utracone. Kliknij „Kontynuuj”, aby kontynuować.
+          body: Niezapisane zmiany w tym miejscu zostaną utracone. Kliknij „Kontynuuj", aby kontynuować.
         places-title: Miejsca
         delete-places: Usuń miejsca
         place-action: Działania miejsca
@@ -2129,7 +2132,7 @@ fleet-ops:
         locate-action-title: Zlokalizuj pojazdy
         locate-title: Aktualna lokalizacja {vehicleName}
         edit:
-          body: Niezapisane zmiany w tym pojeździe zostaną utracone. Kliknij „Kontynuuj”, aby kontynuować.
+          body: Niezapisane zmiany w tym pojeździe zostaną utracone. Kliknij „Kontynuuj", aby kontynuować.
         title: Pojazdy
         delete-vehicles: Usuń pojazdy
     vendors:
@@ -2139,7 +2142,7 @@ fleet-ops:
         edit-vendor: Edytuj dostawcę
         delete-vendor: Usuń dostawcę
         edit:
-          body: Niezapisane zmiany w tym dostawcy zostaną utracone. Kliknij „Kontynuuj”, aby kontynuować.
+          body: Niezapisane zmiany w tym dostawcy zostaną utracone. Kliknij „Kontynuuj", aby kontynuować.
         title: Dostawcy
         delete-vendors: Usuń dostawców
     metrics: 
@@ -2202,7 +2205,7 @@ fleet-ops:
           estimated-end-date: Szacowana data zakończenia
           schedule-help-text: Data i godzina wysyłki zamówienia. Jeśli nie przypisano kierowcy, wysyłka nie powiedzie się. W przypadku zamówień Ad-Hoc powiadomienie zostanie wysłane do kierowców w pobliżu miejsca odbioru.
           customer: Klient
-          customer-help-text: Opcjonalnie przypisz klienta do zamówienia. Jeśli to nowy klient, użyj przycisku „Nowy klient” powyżej.
+          customer-help-text: Opcjonalnie przypisz klienta do zamówienia. Jeśli to nowy klient, użyj przycisku „Nowy klient" powyżej.
           customer-placeholder: Wybierz klienta
           facilitator: Pośrednik
           facilitator-help-text: Opcjonalnie przypisz pośrednika, który może być podwykonawcą lub usługą wspomagającą transport zamówienia.
@@ -2235,7 +2238,7 @@ fleet-ops:
           optimize-route: Optymalizuj trasę
           optimize-route-help-text: FleetYes automatycznie zoptymalizuje trasę.
           add-waypoint: Dodaj punkt pośredni
-          add-waypoint-help-text: Użyj przycisku „Dodaj punkt pośredni”, aby dodać więcej przystanków dla tego zamówienia. Silnik trasowania FleetYes automatycznie zoptymalizuje trasę po dodaniu lub usunięciu punktów.
+          add-waypoint-help-text: Użyj przycisku „Dodaj punkt pośredni", aby dodać więcej przystanków dla tego zamówienia. Silnik trasowania FleetYes automatycznie zoptymalizuje trasę po dodaniu lub usunięciu punktów.
           select-waypoint-placeholder: Wybierz punkt pośredni
           infoblock-text: nie obsługuje tej lokalizacji.
           invalid-coordinates: Nieprawidłowe współrzędne!
