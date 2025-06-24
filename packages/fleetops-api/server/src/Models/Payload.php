@@ -75,7 +75,7 @@ class Payload extends Model
      *
      * @var array
      */
-    protected $with = ['entities', 'waypoints']; // 'pickup', 'dropoff', 'return',
+    protected $with = ['entities', 'waypoints', 'routeSegments']; // 'pickup', 'dropoff', 'return',
 
     /**
      * Dynamic attributes that are appended to object.
@@ -925,4 +925,19 @@ class Payload extends Model
         }
     }
 
+    /**
+     * Get the route segments for the payload.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function routeSegments()
+    {
+        return $this->hasMany(RouteSegment::class, 'payload_id', 'uuid')
+            ->whereNull('deleted_at')
+              ->where([
+                ['record_status', '=', 1],
+                ['deleted', '=', 0],
+            ])
+            ->withoutGlobalScopes();
+    }
 }
