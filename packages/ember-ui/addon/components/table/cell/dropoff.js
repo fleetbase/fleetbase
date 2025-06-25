@@ -31,7 +31,6 @@ export default class TableCellWaypointsComponent extends Component {
   }
 
   get routeSegments() {
-    console.log("welell", this.args.row.payload);
     return this.args.row?.payload?.route_segments || [];
   }
 
