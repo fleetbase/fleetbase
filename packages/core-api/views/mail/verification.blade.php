@@ -18,11 +18,11 @@ Welcome to {{ $appName }}, use the code below to verify your email address and c
 Your verification code: `{{ $code }}`
 <br />
 @endif
-
-@if($type === 'email_verification')
+<!-- removed beause code only needed after onboard -->
+<!-- @if($type === 'email_verification')
     @component('mail::button', ['url' => \Fleetbase\Support\Utils::consoleUrl('onboard/verify-email', ['hello' => base64_encode($user->uuid), 'code' => $code ])])
         Verify Email
     @endcomponent
-@endif
+@endif -->
 
 </x-mail-layout>
