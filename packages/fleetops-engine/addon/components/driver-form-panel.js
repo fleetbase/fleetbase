@@ -6,6 +6,7 @@ import { task } from 'ember-concurrency';
 import Point from '@fleetbase/fleetops-data/utils/geojson/point';
 import contextComponentCallback from '@fleetbase/ember-core/utils/context-component-callback';
 import applyContextComponentArguments from '@fleetbase/ember-core/utils/apply-context-component-arguments';
+import showErrorOnce from '@fleetbase/console/utils/show-error-once';
 
 export default class DriverFormPanelComponent extends Component {
     @service store;
@@ -130,6 +131,11 @@ export default class DriverFormPanelComponent extends Component {
      * @memberof DriverFormPanelComponent
      */
     @task *save() {
+        // Validate before saving
+        if (!this.validate()) {
+            showErrorOnce(this, this.notifications, this.intl.t('validation.form_invalid'));
+            return;
+        }
         contextComponentCallback(this, 'onBeforeSave', this.driver);
 
         try {
@@ -145,6 +151,28 @@ export default class DriverFormPanelComponent extends Component {
         this.universe.trigger('fleet-ops.driver.saved', this.driver);
         contextComponentCallback(this, 'onAfterSave', this.driver);
     }
+
+     /**
+     * Validates required fields and sets errors.
+     * @returns {boolean} true if valid, false otherwise
+     */
+     validate() {
+        const requiredFields = [
+            'user',
+            'drivers_license_number',
+            'vehicle',
+            'city',
+            'country',
+            'status'
+        ];
+        const hasEmptyRequired = requiredFields.some(field => !this.driver[field] || this.driver[field].toString().trim() === '');
+        if (hasEmptyRequired) {
+            showErrorOnce(this, this.notifications, this.intl.t('validation.form_invalid'));
+            return false;
+        }
+        return true;
+    }
+
 
     /**
      * Uploads a new photo for the driver.

@@ -6,6 +6,7 @@ import { underscore } from '@ember/string';
 import { task } from 'ember-concurrency';
 import contextComponentCallback from '@fleetbase/ember-core/utils/context-component-callback';
 import applyContextComponentArguments from '@fleetbase/ember-core/utils/apply-context-component-arguments';
+import showErrorOnce from '@fleetbase/console/utils/show-error-once';
 
 export default class FleetFormPanelComponent extends Component {
     @service store;
@@ -65,6 +66,11 @@ export default class FleetFormPanelComponent extends Component {
      * @memberof FleetFormPanelComponent
      */
     @task *save() {
+        // Validate before saving
+        if (!this.validate()) {
+            showErrorOnce(this, this.notifications, this.intl.t('validation.form_invalid'));
+            return;
+        }
         contextComponentCallback(this, 'onBeforeSave', this.fleet);
 
         try {
@@ -76,6 +82,23 @@ export default class FleetFormPanelComponent extends Component {
 
         this.notifications.success(this.intl.t('fleet-ops.component.fleet-form-panel.success-message', { fleetName: this.fleet.name }));
         contextComponentCallback(this, 'onAfterSave', this.fleet);
+    }
+
+    /**
+     * Validates required fields and sets errors.
+     * @returns {boolean} true if valid, false otherwise
+     */
+    validate() {
+        const requiredFields = [
+            'name',
+            'status',
+        ];
+        const hasEmptyRequired = requiredFields.some(field => !this.fleet[field] || this.fleet[field].toString().trim() === '');
+        if (hasEmptyRequired) {
+            showErrorOnce(this, this.notifications, this.intl.t('validation.form_invalid'));
+            return false;
+        }
+        return true;
     }
 
     /**
