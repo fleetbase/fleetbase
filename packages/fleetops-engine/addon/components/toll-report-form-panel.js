@@ -259,7 +259,7 @@ export default class TollReportFormPanelComponent extends Component {
     @task *save() {
          // Validate before saving
          if (!this.validate()) {
-            showErrorOnce(this, this.notifications, this.intl.t('validation.form_invalid'));
+            //showErrorOnce(this, this.notifications, this.intl.t('validation.form_invalid'));
             return;
         }
     
