@@ -107,7 +107,7 @@
                 @actionButtons={{this.userAccountActionButtons}}
             >
                 <div class="mb-4">
-                    <InputGroup @name={{t "fleet-ops.component.driver-form-panel.user-account"}} @helpText={{t "fleet-ops.component.driver-form-panel.user-account-help-text"}}>
+                    <InputGroup @name={{t "fleet-ops.component.driver-form-panel.user-account"}} @helpText={{t "fleet-ops.component.driver-form-panel.user-account-help-text"}} @required={{true}}>
                         <ModelSelect
                             @modelName="user"
                             @selectedModel={{this.driver.user}}
@@ -155,7 +155,7 @@
                         <Input @value={{this.driver.internal_id}} @type="text" class="w-full form-input" placeholder={{t "fleet-ops.common.internal-id"}} disabled={{cannot this.savePermission}} />
                     </InputGroup> --}}
 
-                    <InputGroup @name={{t "fleet-ops.common.driver-license"}}>
+                    <InputGroup @name={{t "fleet-ops.common.driver-license"}} @required={{true}}>
                         <Input @value={{this.driver.drivers_license_number}} @type="text" class="w-full form-input" placeholder={{t "fleet-ops.common.driver-license"}} disabled={{cannot this.savePermission}} />
                     </InputGroup>
 
@@ -175,7 +175,7 @@
                         </ModelSelect>
                     </InputGroup> --}}
 
-                    <InputGroup @name={{t "fleet-ops.common.vehicle"}}>
+                    <InputGroup @name={{t "fleet-ops.common.vehicle"}} @required={{true}}>
                         <ModelSelect
                             @modelName="vehicle"
                             @selectedModel={{this.driver.vehicle}}
@@ -191,11 +191,11 @@
                         </ModelSelect>
                     </InputGroup>
 
-                    <InputGroup @name={{t "fleet-ops.common.city"}}>
+                    <InputGroup @name={{t "fleet-ops.common.city"}} @required={{true}}>
                         <Input @value={{this.driver.city}} @type="text" class="w-full form-input" placeholder={{t "fleet-ops.common.city"}} disabled={{cannot this.savePermission}} />
                     </InputGroup>
 
-                    <InputGroup @name={{t "fleet-ops.common.country"}}>
+                    <InputGroup @name={{t "fleet-ops.common.country"}} @required={{true}}>
                         <CountrySelect
                             class="w-full form-input form-select form-datalist"
                             @value={{this.driver.country}}
@@ -205,7 +205,7 @@
                         />
                     </InputGroup>
 
-                    <InputGroup @name={{t "fleet-ops.common.status"}}>
+                    <InputGroup @name={{t "fleet-ops.common.status"}} @required={{true}}>
                         <div class="fleetbase-model-select fleetbase-power-select ember-model-select">
                             <PowerSelect
                                 @options={{this.driverStatusOptions}}
