@@ -108,8 +108,6 @@ export default class ParkingFormPanelComponent extends Component {
     constructor(owner, { fuelReport = null }) {
         super(...arguments);
         this.fuelReport = fuelReport;
-       
-        // console.log('fuel report', fuelReport);
         this.savePermission = fuelReport && fuelReport.isNew ? 'fleet-ops create fuel-report' : 'fleet-ops update fuel-report';
         applyContextComponentArguments(this);
     }
@@ -631,15 +629,8 @@ export default class ParkingFormPanelComponent extends Component {
         const hasEmptyRequired = requiredFields.some(field => {
             const value = this.fuelReport[field];
             if (field === 'amount') {
-                console.log("inside 000");
-                return (
-                    value === undefined ||
-                    value === null ||
-                    value.toString().trim() === '' ||
-                    value === 0 ||
-                    value === '0' ||
-                    value === '0.00'
-                );
+                // A value is considered empty if it's null, undefined, an empty string, or zero.
+                return value == null || String(value).trim() === '' || Number(value) === 0;
             }
             return !value || value.toString().trim() === '';
         });

@@ -4,7 +4,7 @@ import { tracked } from '@glimmer/tracking';
 import { action } from '@ember/object';
 import { isBlank } from '@ember/utils';
 import { timeout, task } from 'ember-concurrency';
-
+import showErrorOnce from '@fleetbase/console/utils/show-error-once';
 export default class UsersIndexController extends Controller {
     @service store;
     @service intl;
@@ -367,6 +367,14 @@ export default class UsersIndexController extends Controller {
                 if (this.abilities.cannot(formPermission)) {
                     return this.notifications.warning(this.intl.t('common.permissions-required-for-changes'));
                 }
+                 // Required field validation
+                const requiredFields = ['name', 'email', 'phone', 'role'];
+                const hasEmptyRequired = requiredFields.some(field => !user[field] || user[field].toString().trim() === '');
+                if (hasEmptyRequired) {
+                     showErrorOnce(this, this.notifications, this.intl.t('validation.form_invalid'));
+                     modal.stopLoading();
+                     return;
+                 }
                 // Phone number validation
                 const phone = user.phone?.trim();
                 if (typeof phone === 'string' && /^\+\d{1,4}$/.test(phone)) {
