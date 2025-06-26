@@ -4,6 +4,8 @@ import { tracked } from '@glimmer/tracking';
 import { action, set } from '@ember/object';
 import { isBlank } from '@ember/utils';
 import { task, timeout } from 'ember-concurrency';
+import { driver } from 'driver.js';
+import 'driver.js/dist/driver.css';
 
 export default class ManagementPlacesIndexController extends BaseController {
     @service notifications;
@@ -319,6 +321,59 @@ export default class ManagementPlacesIndexController extends BaseController {
         set(this, 'query', value);
         this.hostRouter.refresh();
     }
+
+    /**
+     * Starts the Driver.js product tour
+     */
+    @action
+    startTour() {
+        const driverObj = driver({
+          showProgress: true,
+          nextBtnText: this.intl.t('Next'),
+          prevBtnText: this.intl.t('Previous'),
+          doneBtnText: this.intl.t('Done'),
+          closeBtnText: this.intl.t('Close'),
+          steps: [ // you can pass steps directly here
+            {
+                element: 'header',
+                popover: {
+                    title: this.intl.t('Places Management'),
+                    description: this.intl.t('This is the main header for managing places.'),
+                },
+            },
+            {
+                element: '.places-management-index .table',
+                popover: {
+                    title: this.intl.t('Places Table'),
+                    description: this.intl.t('Here you can view, filter, and manage all places.'),
+                },
+            },
+            {
+                element: '.places-management-index .mr-2 .fa-plus',
+                popover: {
+                    title: this.intl.t('Add New Place'),
+                    description: this.intl.t('Click here to add a new place.'),
+                },
+            },
+            {
+                element: '.places-management-index .fa-upload',
+                popover: {
+                    title: this.intl.t('Import Places'),
+                    description: this.intl.t('Import places in bulk using a spreadsheet.'),
+                },
+            },
+            {
+                element: '.places-management-index .fa-long-arrow-up',
+                popover: {
+                    title: this.intl.t('Export Places'),
+                    description: this.intl.t('Export your places data.'),
+                },
+            },
+          ]
+        });
+      
+        driverObj.drive(); // <-- start the tour
+      }
 
     /**
      * Toggles dialog to export `place`
