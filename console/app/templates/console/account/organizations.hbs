@@ -4,9 +4,9 @@
 <Layout::Section::Body class="overflow-y-scroll h-full">
     <div class="container mx-auto h-screen">
         <div class="max-w-3xl my-10 mx-auto space-y-4">
-            <div class="flex flex-row justify-end">
+            <!--<div class="flex flex-row justify-end">
                 <Button @type="primary" @icon="plus" @text={{t "fleet-ops.user-management.create-organization"}} @onClick={{this.createOrganization}} />
-            </div>
+            </div>-->
             <ContentPanel @title={{t "fleet-ops.user-management.your-organization"}} @open={{true}} @pad={{true}} @panelBodyClass="bg-white dark:bg-gray-800">
                 <div class="space-y-2">
                     {{#each @model as |organization|}}
