@@ -4,6 +4,7 @@ namespace Fleetbase\FleetOps\Http\Requests;
 
 use Fleetbase\FleetOps\Rules\ResolvablePoint;
 use Fleetbase\Http\Requests\FleetbaseRequest;
+use Illuminate\Validation\Rule;
 
 class CreateVehicleRequest extends FleetbaseRequest
 {
@@ -24,6 +25,8 @@ class CreateVehicleRequest extends FleetbaseRequest
      */
     public function rules()
     {
+        $isCreating = $this->isMethod('POST');
+        $driverId = $this->route('driver')?->id ?? null; // works with route-model binding or fallback
         return [
             'status'    => 'nullable|in:operational,maintenance,decommissioned',
             'vendor'    => 'nullable|exists:vendors,public_id',
@@ -31,6 +34,11 @@ class CreateVehicleRequest extends FleetbaseRequest
             'location'  => ['nullable', new ResolvablePoint()],
             'latitude'  => ['nullable', 'required_with:longitude'],
             'longitude' => ['nullable', 'required_with:latitude'],
+            'plate_number' => [
+            'required',
+            'string',
+            Rule::unique('vehicles', 'plate_number')->ignore($driverId)
+            ],
         ];
     }
 }
