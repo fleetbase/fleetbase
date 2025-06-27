@@ -88,7 +88,14 @@ export default class DriverFormPanelComponent extends Component {
                     },
                     confirm: async (modal) => {
                         modal.startLoading();
-
+                         // Required field validation
+                        const requiredFields = ['name', 'email', 'phone', 'role'];
+                        const hasEmptyRequired = requiredFields.some(field => !user[field] || user[field].toString().trim() === '');
+                        if (hasEmptyRequired) {
+                            showErrorOnce(this, this.notifications, this.intl.t('validation.form_invalid'));
+                            modal.stopLoading();
+                            return;
+                        }
                         try {
                             await user.save();
                             this.notifications.success(this.intl.t('common.create-user-success'));
