@@ -1,8 +1,11 @@
 import Component from '@glimmer/component';
 import { tracked } from '@glimmer/tracking';
 import { action } from '@ember/object';
+import { inject as service } from '@ember/service';
 
 export default class TableCellWaypointsComponent extends Component {
+  @service dropdownManager;
+  
   @tracked isDropdownOpen = false;
   @tracked _dropdownElement = null;
 
@@ -27,15 +30,27 @@ export default class TableCellWaypointsComponent extends Component {
     return this.waypoints;
   }
 
+  get routeSegments() {
+    return this.args.row?.payload?.route_segments || [];
+  }
+
   @action
   toggleDropdown(event) {
     event.stopPropagation();
-    this.isDropdownOpen = !this.isDropdownOpen;
+    
+    if (this.isDropdownOpen) {
+      this.closeDropdown();
+    } else {
+      // Notify the service to close other dropdowns and open this one
+      this.dropdownManager.openDropdown(this);
+      this.isDropdownOpen = true;
+    }
   }
 
   @action
   closeDropdown() {
     this.isDropdownOpen = false;
+    this.dropdownManager.closeDropdown(this);
   }
 
   @action
@@ -48,7 +63,6 @@ export default class TableCellWaypointsComponent extends Component {
     };
 
     document.addEventListener('click', handleClick);
-    // element.__clickOutsideHandler__ = handleClick;
     this._clickOutsideHandler = handleClick;
   }
 
@@ -58,8 +72,7 @@ export default class TableCellWaypointsComponent extends Component {
       document.removeEventListener('click', this._clickOutsideHandler);
       this._clickOutsideHandler = null;
     }
-    // if (this.element && this.element.__clickOutsideHandler__) {
-    //   document.removeEventListener('click', this.element.__clickOutsideHandler__);
-    // }
+    // Clean up from the service when component is destroyed
+    this.dropdownManager.closeDropdown(this);
   }
 }

@@ -27,6 +27,7 @@ export default class PayloadModel extends Model {
     @attr('date') deleted_at;
     @attr('date') created_at;
     @attr('date') updated_at;
+    @attr({ defaultValue: () => [] }) route_segments;
 
     /** @computed */
     @notEmpty('entities') hasEntities;

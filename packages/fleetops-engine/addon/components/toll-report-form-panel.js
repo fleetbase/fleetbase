@@ -7,6 +7,7 @@ import contextComponentCallback from '@fleetbase/ember-core/utils/context-compon
 import applyContextComponentArguments from '@fleetbase/ember-core/utils/apply-context-component-arguments';
 import ENV from '@fleetbase/console/config/environment';
 import Point from '@fleetbase/fleetops-data/utils/geojson/point'; 
+import showErrorOnce from '@fleetbase/console/utils/show-error-once';
 
 export default class TollReportFormPanelComponent extends Component {
     @service session;
@@ -256,8 +257,9 @@ export default class TollReportFormPanelComponent extends Component {
     }
    
     @task *save() {
-        // Perform validation
-        if (!this.validateFields()) {
+         // Validate before saving
+         if (!this.validate()) {
+            //showErrorOnce(this, this.notifications, this.intl.t('validation.form_invalid'));
             return;
         }
     
@@ -618,4 +620,34 @@ export default class TollReportFormPanelComponent extends Component {
     
             this.fuelReport.setProperties({ location });
         }
+
+
+        /**
+     * Validates required fields and sets errors.
+     * @returns {boolean} true if valid, false otherwise
+     */
+    validate() {
+        const requiredFields = [
+            'reporter',
+            'driver',
+            'vehicle',
+            'status',
+            'payment_method',
+            'amount',
+        ];
+        const hasEmptyRequired = requiredFields.some(field => {
+            const value = this.fuelReport[field];
+            if (field === 'amount') {
+                // A value is considered empty if it's null, undefined, an empty string, or zero.
+                return value == null || String(value).trim() === '' || Number(value) === 0;
+            }
+            return !value || value.toString().trim() === '';
+        });
+        if (hasEmptyRequired) {
+            showErrorOnce(this, this.notifications, this.intl.t('validation.form_invalid'));
+            return false;
+        }
+        return true;
+     }
+    
     }

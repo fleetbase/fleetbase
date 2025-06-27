@@ -135,12 +135,12 @@ class UserController extends FleetbaseController
             $companyUuid = session('company');
 
             // Check if email already exists within the same company
-            if (User::where('email', $email)->where('company_uuid', $companyUuid)->whereNull('deleted_at')->exists()) {
+            if (User::where('email', $email)->where('company_uuid', $companyUuid)->whereNull('deleted_at')->where('uuid', '!=', $id)->exists()) {
                 return response()->error((__('messages.email_exists_with_in_company')));
             }
             else{
                 // Check if email already exists for all companies
-                if (User::where('email', $email)->whereNull('deleted_at')->exists()) {
+                if (User::where('email', $email)->whereNull('deleted_at')->where('uuid', '!=', $id)->exists()) {
                    return response()->error((__('messages.email_exists_all_companies')));
                 }
             }

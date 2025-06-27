@@ -16,7 +16,12 @@
             <li>
               {{waypoint}}
               {{#if (not-eq index (dec this.displayWaypoints.length))}}
-                <div class="down-arrow">↓</div>
+                <div class="route-segment-public-id"></div>
+                <div class="down-arrow">↓
+                  {{#if this.routeSegments.length}}
+                    <span class="route-segment">({{get (get this.routeSegments index) "public_id"}})</span>
+                  {{/if}}
+                </div>
               {{/if}}
             </li>
           {{/each}}

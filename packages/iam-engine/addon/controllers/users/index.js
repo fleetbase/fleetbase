@@ -4,7 +4,7 @@ import { tracked } from '@glimmer/tracking';
 import { action } from '@ember/object';
 import { isBlank } from '@ember/utils';
 import { timeout, task } from 'ember-concurrency';
-
+import showErrorOnce from '@fleetbase/console/utils/show-error-once';
 export default class UsersIndexController extends Controller {
     @service store;
     @service intl;
@@ -291,11 +291,21 @@ export default class UsersIndexController extends Controller {
             acceptButtonDisabled: this.abilities.cannot(formPermission),
             acceptButtonHelpText: this.abilities.cannot(formPermission) ? this.intl.t('common.unauthorized') : null,
             formPermission,
+            keepOpen:true,
             confirm: async (modal) => {
                 modal.startLoading();
 
                 if (this.abilities.cannot(formPermission)) {
                     return this.notifications.warning(this.intl.t('common.permissions-required-for-changes'));
+                }
+
+                // Required field validation
+                const requiredFields = ['name', 'email', 'phone', 'role'];
+                const hasEmptyRequired = requiredFields.some(field => !user[field] || user[field].toString().trim() === '');
+                if (hasEmptyRequired) {
+                    showErrorOnce(this, this.notifications, this.intl.t('validation.form_invalid'));
+                    modal.stopLoading();
+                    return;
                 }
 
                 // Phone number validation
@@ -306,6 +316,7 @@ export default class UsersIndexController extends Controller {
                 try {
                     await user.save();
                     this.notifications.success(this.intl.t('iam.users.index.user-changes-saved-success'));
+                    modal.done();
                     return this.hostRouter.refresh();
                 } catch (error) {
                     this.notifications.serverError(error);
@@ -331,6 +342,7 @@ export default class UsersIndexController extends Controller {
             acceptButtonHelpText: this.abilities.cannot(formPermission) ? this.intl.t('common.unauthorized') : null,
             formPermission,
             user,
+            keepOpen:true,
             uploadNewPhoto: (file) => {
                 this.fetch.uploadFile.perform(
                     file,
@@ -355,6 +367,14 @@ export default class UsersIndexController extends Controller {
                 if (this.abilities.cannot(formPermission)) {
                     return this.notifications.warning(this.intl.t('common.permissions-required-for-changes'));
                 }
+                 // Required field validation
+                const requiredFields = ['name', 'email', 'phone', 'role'];
+                const hasEmptyRequired = requiredFields.some(field => !user[field] || user[field].toString().trim() === '');
+                if (hasEmptyRequired) {
+                     showErrorOnce(this, this.notifications, this.intl.t('validation.form_invalid'));
+                     modal.stopLoading();
+                     return;
+                 }
                 // Phone number validation
                 const phone = user.phone?.trim();
                 if (typeof phone === 'string' && /^\+\d{1,4}$/.test(phone)) {
@@ -364,6 +384,7 @@ export default class UsersIndexController extends Controller {
                 try {
                     await user.save();
                     this.notifications.success(this.intl.t('iam.users.index.user-changes-saved-success'));
+                    modal.done();
                     return this.hostRouter.refresh();
                 } catch (error) {
                     this.notifications.serverError(error);
@@ -373,6 +394,7 @@ export default class UsersIndexController extends Controller {
             ...options,
         });
     }
+
 
     /**
      * Toggles dialog to delete API key

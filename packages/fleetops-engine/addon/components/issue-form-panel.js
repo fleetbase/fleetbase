@@ -11,6 +11,7 @@ import getIssueTypes from '../utils/get-issue-types';
 import getIssueCategories from '../utils/get-issue-categories';
 import Point from '@fleetbase/fleetops-data/utils/geojson/point';
 import { isBlank } from '@ember/utils';
+import showErrorOnce from '@fleetbase/console/utils/show-error-once';
 
 export default class IssueFormPanelComponent extends Component {
     @service store;
@@ -108,6 +109,11 @@ export default class IssueFormPanelComponent extends Component {
      * @memberof IssueFormPanelComponent
      */
     @task *save() {
+        // Validate before saving
+         if (!this.validate()) {
+            //showErrorOnce(this, this.notifications, this.intl.t('validation.form_invalid'));
+            return;
+        }
         contextComponentCallback(this, 'onBeforeSave', this.issue);
 
         try {
@@ -119,6 +125,29 @@ export default class IssueFormPanelComponent extends Component {
 
         this.notifications.success(this.intl.t('fleet-ops.component.issue-form-panel.success-message', { publicId: this.issue.public_id }));
         contextComponentCallback(this, 'onAfterSave', this.issue);
+    }
+
+     /**
+     * Validates required fields and sets errors.
+     * @returns {boolean} true if valid, false otherwise
+     */
+     validate() {
+        const requiredFields = [
+            'reporter',
+            'driver',
+            'vehicle',
+            'type',
+            'category',
+            'report',
+            'priority',
+            'status',
+        ];
+        const hasEmptyRequired = requiredFields.some(field => !this.issue[field] || this.issue[field].toString().trim() === '');
+        if (hasEmptyRequired) {
+            showErrorOnce(this, this.notifications, this.intl.t('validation.form_invalid'));
+            return false;
+        }
+        return true;
     }
 
     /**

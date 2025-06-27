@@ -107,7 +107,7 @@
                             <Input @value={{this.vehicle.internal_id}} @type="text" class="w-full form-input" placeholder={{t "fleet-ops.common.internal-id"}} disabled={{unauthorized}} />
                         </InputGroup>
 
-                        <InputGroup @name={{t "fleet-ops.component.vehicle-form-panel.plate-number"}}>
+                        <InputGroup @name={{t "fleet-ops.component.vehicle-form-panel.plate-number"}} @required={{true}}>
                             <Input
                                 @value={{this.vehicle.plate_number}}
                                 @type="text"
@@ -117,7 +117,7 @@
                             />
                         </InputGroup>
 
-                        <InputGroup @name={{t "fleet-ops.component.vehicle-form-panel.vin-number"}}>
+                        <InputGroup @name={{t "fleet-ops.component.vehicle-form-panel.vin-number"}} @required={{true}}>
                             <Input
                                 @value={{this.vehicle.vin}}
                                 @type="text"
@@ -127,7 +127,7 @@
                             />
                         </InputGroup>
 
-                        <InputGroup @name={{t "fleet-ops.component.vehicle-form-panel.make"}}>
+                        <InputGroup @name={{t "fleet-ops.component.vehicle-form-panel.make"}} @required={{true}}>
                             <Input
                                 @value={{this.vehicle.make}}
                                 @type="text"
@@ -137,7 +137,7 @@
                             />
                         </InputGroup>
 
-                        <InputGroup @name={{t "fleet-ops.component.vehicle-form-panel.model"}}>
+                        <InputGroup @name={{t "fleet-ops.component.vehicle-form-panel.model"}} @required={{true}}>
                             <Input
                                 @value={{this.vehicle.model}}
                                 @type="text"
@@ -147,7 +147,7 @@
                             />
                         </InputGroup>
 
-                        <InputGroup @name={{t "fleet-ops.component.vehicle-form-panel.year"}}>
+                        <InputGroup @name={{t "fleet-ops.component.vehicle-form-panel.year"}} @required={{true}}>
                             <Input
                                 @value={{this.vehicle.year}}
                                 @type="text"
@@ -173,7 +173,7 @@
                             </ModelSelect>
                         </InputGroup> --}}
 
-                        <InputGroup @name={{t "fleet-ops.common.status"}}>
+                        <InputGroup @name={{t "fleet-ops.common.status"}} @required={{true}}>
                             <div class="fleetbase-model-select fleetbase-power-select ember-model-select">
                                 <PowerSelect
                                     @options={{this.vehicleStatusOptions}}
@@ -188,7 +188,7 @@
                                 </PowerSelect>
                             </div>
                         </InputGroup>
-                        <InputGroup @name={{t "fleet-ops.common.coordinates"}} @wrapperClass="col-span-2">
+                        <InputGroup @name={{t "fleet-ops.common.coordinates"}} @wrapperClass="col-span-2" @required={{true}}>
                             <CoordinatesInput
                                 @value={{this.vehicle.location}}
                                 @onChange={{this.onCoordinatesChanged}}

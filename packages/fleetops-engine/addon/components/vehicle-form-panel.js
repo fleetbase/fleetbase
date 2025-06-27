@@ -6,6 +6,7 @@ import { task } from 'ember-concurrency';
 import contextComponentCallback from '@fleetbase/ember-core/utils/context-component-callback';
 import applyContextComponentArguments from '@fleetbase/ember-core/utils/apply-context-component-arguments';
 import Point from '@fleetbase/fleetops-data/utils/geojson/point';
+import showErrorOnce from '@fleetbase/console/utils/show-error-once';
 
 export default class VehicleFormPanelComponent extends Component {
     @service store;
@@ -93,6 +94,11 @@ export default class VehicleFormPanelComponent extends Component {
      * @memberof VehicleFormPanelComponent
      */
     @task *save() {
+         // Validate before saving
+         if (!this.validate()) {
+            showErrorOnce(this, this.notifications, this.intl.t('validation.form_invalid'));
+            return;
+        }
         contextComponentCallback(this, 'onBeforeSave', this.vehicle);
 
         try {
@@ -104,6 +110,28 @@ export default class VehicleFormPanelComponent extends Component {
 
         this.notifications.success(this.intl.t('fleet-ops.component.vehicle-form-panel.success-message', { vehicleName: this.vehicle.displayName }));
         contextComponentCallback(this, 'onAfterSave', this.vehicle);
+    }
+
+    /**
+     * Validates required fields and sets errors.
+     * @returns {boolean} true if valid, false otherwise
+     */
+    validate() {
+        const requiredFields = [
+            'plate_number',
+            'vin',
+            'make',
+            'model',
+            'year',
+            'status',
+            'location',
+        ];
+        const hasEmptyRequired = requiredFields.some(field => !this.vehicle[field] || this.vehicle[field].toString().trim() === '');
+        if (hasEmptyRequired) {
+            showErrorOnce(this, this.notifications, this.intl.t('validation.form_invalid'));
+            return false;
+        }
+        return true;
     }
 
     /**
