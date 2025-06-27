@@ -26,5 +26,7 @@ return [
     'assigned_orders_available_button' => 'với phân cấp',
     'email_exists_with_in_company' => 'Email này đã được đăng ký trong tổ chức của bạn.',
     'email_exists_all_companies' => 'Email này đã được liên kết với một tổ chức khác.',
+    'duplicate_order_import' => 'Một số hàng đã bị bỏ qua do ID khối hoặc ID chuyến đi trùng lặp đã tồn tại trong hệ thống.',
+    'import_failed_invalid_location' => 'Một số hàng chứa dữ liệu vị trí không hợp lệ. Vui lòng xem xét và sửa chữa chúng trước khi tiếp tục.',
 ];
 

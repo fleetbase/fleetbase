@@ -316,14 +316,14 @@ class OrderController extends FleetOpsController
                     if (is_string($errors) && str_contains($errors, 'SQLSTATE[23000]') && str_contains($errors, 'Duplicate entry') && str_contains($errors, 'orders.orders_public_id_unique')) {
                         return response()->json([
                             'status' => 'error',
-                            'message' => 'Order exists with same block ID or trip ID',
+                            'message' => __('messages.duplicate_order_import'),
                             'errors' => $errors
                         ], 422);
                     }
 
                     return response()->json([
                         'status' => 'error',
-                        'message' => __('messages.import_failed'),
+                        'message' => __('messages.import_failed_invalid_location'),
                         'errors' => $errors
                     ], 422);
                 }
@@ -937,12 +937,14 @@ class OrderController extends FleetOpsController
                             'public_id' => isset($row['trip_id']) && !empty($row['trip_id']) ? $row['trip_id'] : null,
                             'status' => $row['status'] ? strtolower($row['status']) : null,
                             'type' => 'transport',
-                            'scheduled_at' => isset($row['start_date']) && !empty($row['start_date']) 
-                                ? Carbon::parse(str_replace('/', '-', $row['start_date']))->format('Y-m-d H:i:s')
-                                : null,
-                            'estimated_end_date' => isset($row['end_date']) && !empty($row['end_date']) 
-                                ? Carbon::parse(str_replace('/', '-', $row['end_date']))->format('Y-m-d H:i:s')
-                                : null,
+                            // 'scheduled_at' => isset($row['start_date']) && !empty($row['start_date']) 
+                            //     ? Carbon::parse(str_replace('/', '-', $row['start_date']))->format('Y-m-d H:i:s')
+                            //     : null,
+                            // 'estimated_end_date' => isset($row['end_date']) && !empty($row['end_date']) 
+                            //     ? Carbon::parse(str_replace('/', '-', $row['end_date']))->format('Y-m-d H:i:s')
+                            //     : null,
+                            'scheduled_at' => !empty($row['start_date']) ? $this->parseExcelDate($row['start_date']) : null,
+                            'estimated_end_date' => !empty($row['end_date']) ? $this->parseExcelDate($row['end_date']) : null,
                             'meta' => [
                                 'vehicle_id' => isset($row['vehicle_id']) && !empty($row['vehicle_id']) ? $row['vehicle_id'] : null,
                                 'carrier' => isset($row['carrier']) && !empty($row['carrier']) ? $row['carrier'] : null,
@@ -1113,5 +1115,26 @@ class OrderController extends FleetOpsController
             return $segment;
         });
         return response()->json($routeSegments);
+    }
+
+    /**
+     * Parse an Excel date value into a standard datetime string.
+     *
+     * @param mixed $value The Excel cell value (could be a serial number or string).
+     * @return string|null Formatted datetime string ('Y-m-d H:i:s') or null on failure.
+     */
+    private function parseExcelDate($value)
+    {
+        try {
+            // If it's a number, treat it as Excel serial date
+            if (is_numeric($value)) {
+                return \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($value)->format('Y-m-d H:i:s');
+            }
+
+            // Try parsing as string
+            return Carbon::parse(str_replace('/', '-', $value))->format('Y-m-d H:i:s');
+        } catch (\Exception $e) {
+            return null; // Or optionally throw or log error
+        }
     }
 }

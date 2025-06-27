@@ -36,4 +36,6 @@ return [
     'no_driver_found' => 'Autista non trovato',
     'email_exists_with_in_company' => 'Questa email è già registrata nella tua organizzazione.',
     'email_exists_all_companies' => 'Questa email è già associata a un\'altra organizzazione.',
+    'duplicate_order_import' => 'Alcune righe sono state saltate a causa di ID blocco o ID viaggio duplicati già esistenti nel sistema.',
+    'import_failed_invalid_location' => 'Alcune righe contengono dati di posizione non validi. Si prega di rivederli e correggerli prima di procedere.',
 ];

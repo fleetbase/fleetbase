@@ -38,4 +38,6 @@ return [
     'no_driver_found' => 'Kein Fahrer gefunden',
     'email_exists_with_in_company' => 'Diese E-Mail ist bereits in Ihrer Organisation registriert.',
     'email_exists_all_companies' => 'Diese E-Mail ist bereits mit einer anderen Organisation verbunden.',
+    'duplicate_order_import' => 'Einige Zeilen wurden aufgrund von doppelten Block-IDs oder Reise-IDs, die bereits im System existieren, übersprungen.',
+    'import_failed_invalid_location' => 'Einige Zeilen enthalten ungültige Standortdaten. Bitte überprüfen und korrigieren Sie diese, bevor Sie fortfahren.',
 ];

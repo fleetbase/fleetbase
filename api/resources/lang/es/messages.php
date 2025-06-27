@@ -36,4 +36,6 @@ return [
     'no_driver_found' => 'No se encontró conductor',
     'email_exists_with_in_company' => 'Este correo electrónico ya está registrado en su organización.',
     'email_exists_all_companies' => 'Este correo electrónico ya está asociado con otra organización.',
+    'duplicate_order_import' => 'Algunas filas se omitieron debido a que existen ID de bloque o ID de viaje duplicados en el sistema.',
+    'import_failed_invalid_location' => 'Algunas filas contienen datos de ubicación no válidos. Por favor, revíselos y corríjalos antes de continuar.',
 ];
