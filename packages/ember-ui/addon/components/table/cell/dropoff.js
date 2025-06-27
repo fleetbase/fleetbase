@@ -10,6 +10,7 @@ export default class TableCellWaypointsComponent extends Component {
   @tracked _dropdownElement = null;
 
   get waypoints() {
+    //console.log(this.args.row.payload.waypoints,"all-waypoints");
     const dropoffName = this.args.value || '';
     return dropoffName.split(',').map(w => w.trim()).filter(Boolean);
   }
