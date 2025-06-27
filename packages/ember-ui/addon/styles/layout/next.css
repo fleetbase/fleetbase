@@ -2401,6 +2401,11 @@ label:has(+ input[required])::after {
     font-weight: bold;
 }
 .route-segment {
-    font-size: 9px;
-    color: #22c55e;
+    font-size: 12px;
+    color: #0e100e;
+}
+.dropdown-list.transition .down-arrow{
+    display: block;
+    width: 100%;
+    margin: 4px 0;
 }
