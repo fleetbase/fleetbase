@@ -123,8 +123,7 @@ export default class VehicleFormPanelComponent extends Component {
             'make',
             'model',
             'year',
-            'status',
-            'location',
+            'status'
         ];
         const hasEmptyRequired = requiredFields.some(field => !this.vehicle[field] || this.vehicle[field].toString().trim() === '');
         if (hasEmptyRequired) {
