@@ -102,10 +102,14 @@ Route::prefix(config('fleetbase.api.routing.prefix', '/'))->namespace('Fleetbase
 
                                 // Optional: Simplified status endpoint
                                 $router->get('checkout/{billing_request_id}/status', 'BillingRequestController@getBillingRequestStatus');
-                                // $router->post('checkout/success', 'CheckoutController@handleSuccess');
+                                $router->get('checkout/success', 'BillingRequestController@handleRecurringBillingSuccess');
+                                $router->post('billing/success', 'BillingRequestController@handleRecurringBillingSuccess');
                                 // $router->post('checkout/failure', 'CheckoutController@handleFailure');
 
-                                // $router->post('gocardless/webhook', 'GoCardlessWebhookController@handleWebhook');
+                                $router->post('subscription', 'BillingRequestController@createRecurringBillingRequest');
+                                $router->post('test/createsubscription', 'BillingRequestController@testCreateSubscription');
+                                $router->get('debug/billing/{billingRequestId}', 'BillingRequestController@debugBillingRequest');
+                                $router->post('manual/conversion/{billingRequestId}', 'BillingRequestController@manualConversion');
                             }
                         );
                         $router->group(
@@ -134,7 +138,8 @@ Route::prefix(config('fleetbase.api.routing.prefix', '/'))->namespace('Fleetbase
                         $router->group(
                             ['prefix' => 'payment'],
                             function ($router) {
-                                $router->get('', 'PlanController@index');
+                                // $router->get('', 'PlanController@index');
+                                Route::get('', 'PaymentController@index');   
                                 $router->get('status/{user_id}', 'PlanController@getUserPaymentStatus');
                             }
                         );

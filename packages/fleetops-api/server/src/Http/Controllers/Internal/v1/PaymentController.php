@@ -134,11 +134,11 @@ class PaymentController extends Controller
                 $query->without(['payload', 'serviceRate']);
             }
         )
-        ->whereHas('order',
-            function ($query) {
-                $query->whereNull('deleted_at');
-            }
-        )
+        // ->whereHas('order',
+        //     function ($query) {
+        //         $query->whereNull('deleted_at');
+        //     }
+        // )
         ->without(['company', 'payload'])
         ->with(
             [
