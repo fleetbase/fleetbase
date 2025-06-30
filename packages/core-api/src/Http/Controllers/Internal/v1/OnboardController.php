@@ -37,7 +37,6 @@ class OnboardController extends Controller
     {
         // if first user make admin
         $isAdmin = !User::exists();
-
         // Get user properties
         $name        = $request->input('name');
         $email       = $request->input('email');
@@ -90,6 +89,8 @@ class OnboardController extends Controller
             'session'          => base64_encode($user->uuid),
             'token'            => $isAdmin ? $token->plainTextToken : null,
             'skipVerification' => $isAdmin,
+            'user_uuid'        => $user->uuid,
+            'company_uuid'     => $company->uuid,
         ]);
     }
 

@@ -4,16 +4,27 @@ namespace Fleetbase\Services;
 use Illuminate\Support\Facades\Log;
 // use Fleetbase\Models\BillingRequest;
 use Fleetbase\Models\Payment;
-// use Fleetbase\Models\Subscription;
+use Fleetbase\Models\Subscription;
+use Fleetbase\Models\CompanyPlanRelation;
+use Fleetbase\Models\PaymentEventsRelation;
 use Fleetbase\Events\BillingRequestCompleted;
 use Illuminate\Support\Facades\DB;
 // use Fleetbase\Events\PaymentFailed;
+use Fleetbase\Services\GoCardlessBillingRequestService;
+use Illuminate\Support\Carbon;
 
 class GoCardlessWebhookService
 {
+    protected $billingRequestService;
+
+    public function __construct(GoCardlessBillingRequestService $billingRequestService)
+    {
+        $this->billingRequestService = $billingRequestService;
+    }
     public function processEvent(array $event): void
     {
         $eventType = $event['resource_type'] ?? null;
+ 
         $action = $event['action'] ?? null;
         
         Log::info("Processing GoCardless webhook: {$eventType}.{$action}", $event);
@@ -22,15 +33,16 @@ class GoCardlessWebhookService
             case 'billing_requests':
                 $this->handleBillingRequestEvent($event);
                 break;
-            // case 'payments':
-            //     $this->handlePaymentEvent($event);
-            //     break;
-            // case 'subscriptions':
-            //     $this->handleSubscriptionEvent($event);
-            //     break;
-            case 'mandates':
-                $this->handleMandateEvent($event);
+            case 'payments':
+                Log::info("Inside payment flow");
+                $this->handlePaymentEvent($event);
                 break;
+            case 'subscriptions':
+                $this->handleSubscriptionEvent($event);
+                break;
+            // case 'mandates':
+            //     $this->handleMandateEvent($event);
+            //     break;
             default:
                 Log::info("Unhandled webhook event type: {$eventType}");
         }
@@ -85,7 +97,7 @@ class GoCardlessWebhookService
                 Log::warning("No billing request ID found in fulfilled event", $event);
                 return;
             }
-    
+            
             // If $payment is an ID, get the payment object
             if (is_numeric($payment)) {
                 $payment = DB::table('payments')->where('checkout_session_id', $payment->checkout_session_id)->first();
@@ -96,6 +108,25 @@ class GoCardlessWebhookService
                     'billing_request_id' => $billingRequestId
                 ]);
                 return;
+            }
+
+            // if ($payment && !$payment->gocardless_subscription_id) {
+            if ($payment) {
+                
+            
+                // Create subscription now that billing request is fulfilled
+                
+                $billingRequest = $this->billingRequestService->getBillingRequest($billingRequestId);
+                $mandateId = $billingRequest['mandate_request']['links']['mandate'];
+                Log::info("webhook fulfilled Mandate ID: {$mandateId}");
+                $subscription = $this->billingRequestService->createSubscriptionFromPayment($payment, $mandateId);
+                
+                if ($subscription) {
+                    $payment->update([
+                        'gocardless_subscription_id' => $subscription['id'],
+                        'status' => 'subscription_active'
+                    ]);
+                }
             }
     
             Log::info("Processing billing request fulfilled", [
@@ -108,8 +139,8 @@ class GoCardlessWebhookService
     
             // Prepare update data for payment
             $paymentUpdateData = [
-                'status' => 'completed',
-                'paid_at' => now(),
+                'status' => 'subscription_active',
+                // 'paid_at' => now(),
                 'updated_at' => now()
             ];
     
@@ -319,6 +350,7 @@ class GoCardlessWebhookService
 
     private function handlePaymentEvent(array $event): void
     {
+        Log::info("Handling payment event");
         $action = $event['action'];
         $paymentId = $event['links']['payment'] ?? null;
         
@@ -326,59 +358,363 @@ class GoCardlessWebhookService
             return;
         }
 
-        $payment = Payment::where('billing_request_id', $paymentId)->first();
+        $payment = Payment::where('gocardless_payment_id', $paymentId)->first();
         
-        if (!$payment) {
-            Log::warning("Payment not found: {$paymentId}");
+        $existingPayment = Payment::where('gocardless_payment_id', $paymentId)->first();
+    
+        if (!$existingPayment && in_array($action, ['submitted', 'confirmed', 'paid_out'])) {
+            // NEW monthly payment - create record
+            $this->createMonthlyPaymentRecord($event);
             return;
         }
+        
+        // if ($existingPayment) {
+        //     // EXISTING payment - update status
+        //     $this->updatePaymentStatus($existingPayment, $event);
+        // }
 
         switch ($action) {
             case 'confirmed':
                 $payment->update(['status' => 'confirmed']);
                 break;
             case 'paid_out':
-                $payment->update(['status' => 'paid_out']);
+                $payment->update(['status' => 'confirmed']);
                 break;
-            // case 'failed':
-            //     $payment->update(['status' => 'failed']);
-            //     event(new PaymentFailed($payment));
-            //     break;
+            case 'failed':
+                $payment->update(['status' => 'failed']);
+                // event(new PaymentFailed($payment));
+                break;
             case 'cancelled':
                 $payment->update(['status' => 'cancelled']);
                 break;
         }
     }
+    /**
+ * Create new monthly payment record
+ */
+private function createMonthlyPaymentRecord(array $event): void
+{
+    try {
+        DB::beginTransaction();
+        
+        $paymentId = $event['links']['payment'];
+        $subscriptionId = $event['links']['subscription'] ?? null;
+        if (!$subscriptionId && isset($event['links']['billing_request'])) {
+            $billingRequestId = $event['links']['billing_request'];
+            
+        }
+        // if (!$subscriptionId) {
+        //     throw new Exception("No subscription ID found for payment: {$paymentId}");
+        // }
 
+        // Get payment details from GoCardless API
+        // $paymentDetails = $this->getPaymentDetailsFromGoCardless($paymentId);
+        if (!$subscriptionId && isset($event['links']['billing_request'])) {
+        // // Find original subscription payment to get company details
+            $originalPayment = Payment::where('subscription_id', $subscriptionId)
+                                    // ->where('transaction_type', 'subscription_setup')
+                                    ->first();
+        }else{
+            $originalPayment = Payment::where('checkout_session_id', $billingRequestId)->first();
+        }
+        
+        if (!$originalPayment) {
+            throw new Exception("Original subscription payment not found for: {$subscriptionId}");
+        }
+
+        // Determine status based on webhook action
+        $status = match($event['action']) {
+            'submitted' => 'processing',
+            // 'confirmed' => 'payment_confirmed',
+            'confirmed' => 'completed',
+            'paid_out' => 'completed',
+            default => 'pending'
+        };
+
+        $monthlyPayment = Payment::create([
+            // 'session_id' => $sessionId,
+            'company_plan_id' => $originalPayment->company_plan_id,
+            'company_uuid' => $originalPayment->company_uuid,
+            'user_uuid' => $originalPayment->user_uuid,
+            'plan_id' => $originalPayment->plan_id,
+            'gocardless_payment_id' => $paymentId,
+            'subscription_id' => $subscriptionId,
+            'total_amount' => $originalPayment->total_amount,
+            // 'transaction_id' => $sessionId,
+            'status' => $status,
+            'amount' => $originalPayment->total_amount,
+            'currency' => $originalPayment->currency,
+            'payment_gateway_id' => 1,
+            'payment_method' => 'direct_debit',
+            // 'success_url' => $data['success_url'],
+            // 'cancel_url' => $data['cancel_url'],
+            'payment_metadata' => json_encode($event),
+            // 'expires_at' => $expiresAt,
+            // 'created_by_id' => 1,
+            // 'updated_by_id' => 1
+        ]);
+        Log::info("Monthly payment record created", [
+            'monthly_payment_id' => $monthlyPayment->id,
+            'gocardless_payment_id' => $paymentId,
+        ]);
+        // Save payment event
+        $this->saveMonthlyPaymentEvent($monthlyPayment, $event, $originalPayment);
+        
+        // Update subscription billing dates
+        // $this->updateSubscriptionAfterPayment($originalPayment, $originalPayment);
+        
+        DB::commit();
+        
+        Log::info("Monthly payment record created", [
+            'monthly_payment_id' => $monthlyPayment->id,
+            'gocardless_payment_id' => $paymentId,
+            'subscription_id' => $subscriptionId,
+            'amount' => $monthlyPayment->amount,
+            'status' => $status,
+            // 'billing_date' => $paymentDetails['charge_date']
+        ]);
+
+    } catch (Exception $e) {
+        DB::rollBack();
+        
+        Log::error("Error creating monthly payment record", [
+            'payment_id' => $event['links']['payment'] ?? null,
+            'subscription_id' => $event['links']['subscription'] ?? null,
+            'error' => $e->getMessage()
+        ]);
+        
+        throw $e;
+    }
+}
+private function saveMonthlyPaymentEvent($monthlyPayment, $event, $paymentDetails)
+{
+    try {
+        PaymentEventsRelation::create([
+            'payment_id' => $monthlyPayment->id,
+            'event_type' => $event['action'] ?? 'payment_event',
+            'event_data' => json_encode([
+                'event' => $event,
+                'payment_details' => $paymentDetails
+            ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE),
+            'event_date' => now()->format('Y-m-d H:i:s'),
+            'gateway_event_id' => $event['id'] ?? uniqid('event_'),
+            'event_status' => $paymentDetails['status'] ?? 'pending',
+            'error_message' => $this->getErrorMessage($paymentDetails),
+            'created_by_id' => 1,
+           
+            'record_status' => 1,
+        ]);
+
+        return true;
+
+    } catch (\Exception $e) {
+        \Log::error('Failed to save payment event', [
+            'payment_id' => $monthlyPayment->id,
+            'error' => $e->getMessage()
+        ]);
+        
+        throw $e;
+    }
+}
+private function getErrorMessage($paymentDetails)
+{
+    if (isset($paymentDetails['status']) && in_array($paymentDetails['status'], ['failed', 'cancelled'])) {
+        return $paymentDetails['failure_reason'] ?? 
+               $paymentDetails['cancellation_reason'] ?? 
+               'Payment ' . $paymentDetails['status'];
+    }
+    
+    return null;
+}
+    // private function handlePaymentSuccess($payment, array $event): void
+    // {
+    //     Log::info("Processing payment success", [
+    //         'payment_id' => $payment->id,
+    //         'gocardless_payment_id' => $event['links']['payment'] ?? null,
+    //         'action' => $event['action']
+    //     ]);
+    //     Log::info("Event details: " . json_encode($event));
+
+    //     try {
+    //         // Determine the appropriate status based on action
+    //         $status = match($event['action']) {
+    //             'confirmed' => 'payment_confirmed',
+    //             'paid_out' => 'completed',
+    //             default => 'completed'
+    //         };
+
+    //         // Get payment details from GoCardless if needed
+    //         $paymentDetails = $event['details'] ?? [];
+            
+    //         // Update payment record
+    //         $updateData = [
+    //             'status' => $status,
+    //             'paid_at' => now(),
+    //             'updated_at' => now()
+    //         ];
+
+    //         // Update metadata with payment details
+    //         $paymentMetadata = json_decode($payment->payment_metadata ?? '{}', true);
+    //         $paymentMetadata['payment_confirmed_at'] = now()->toISOString();
+    //         $paymentMetadata['gocardless_action'] = $event['action'];
+            
+    //         if (isset($paymentDetails['amount'])) {
+    //             $paymentMetadata['confirmed_amount'] = $paymentDetails['amount'];
+    //         }
+    //         if (isset($paymentDetails['currency'])) {
+    //             $paymentMetadata['confirmed_currency'] = $paymentDetails['currency'];
+    //         }
+    //         if (isset($paymentDetails['charge_date'])) {
+    //             $paymentMetadata['charge_date'] = $paymentDetails['charge_date'];
+    //         }
+
+    //         $updateData['payment_metadata'] = json_encode($paymentMetadata);
+
+    //         // Update payment
+    //         DB::table('payments')
+    //             ->where('id', $payment->id)
+    //             ->update($updateData);
+
+    //         // Save event to payment_events_relation
+    //         $this->saveBillingRequestEvent(
+    //             $payment->id, 
+    //             $event, 
+    //             'payment_success',
+    //             "Payment {$event['action']} successfully"
+    //         );
+
+    //         // If this is a subscription payment, update subscription status
+    //         if ($payment->is_recurring && $payment->gocardless_subscription_id) {
+    //             $this->updateSubscriptionPaymentStatus($payment, 'active', $event);
+    //         }
+
+    //         // Send success notification if needed
+    //         $this->sendPaymentSuccessNotification($payment, $event);
+
+    //         Log::info("Payment success processed successfully", [
+    //             'payment_id' => $payment->id,
+    //             'new_status' => $status,
+    //             'gocardless_payment_id' => $event['links']['payment'] ?? null
+    //         ]);
+
+    //     } catch (Exception $e) {
+    //         Log::error("Error handling payment success", [
+    //             'payment_id' => $payment->id,
+    //             'gocardless_payment_id' => $event['links']['payment'] ?? null,
+    //             'error' => $e->getMessage(),
+    //             'trace' => $e->getTraceAsString()
+    //         ]);
+
+    //         // Save error event
+    //         $this->saveBillingRequestEvent(
+    //             $payment->id, 
+    //             $event, 
+    //             'payment_success_processing_error', 
+    //             $e->getMessage()
+    //         );
+
+    //         throw $e;
+    //     }
+    // }
+    private function calculateStartDate($billingCycle)
+    {
+        // Start subscription tomorrow or next business day
+        $startDate = now()->addDay();
+        
+        // If it's weekend, move to next Monday
+        if ($startDate->isWeekend()) {
+            $startDate = $startDate->next('Monday');
+        }
+        
+        return $startDate->format('Y-m-d');
+    }
+    private function createSubscriptionRecord($event,$payment)
+    {
+        $paymentMetadata = [];
+        if (isset($payment->payment_metadata)) {
+            $paymentMetadata = is_string($payment->payment_metadata) 
+                ? json_decode($payment->payment_metadata, true) 
+                : $payment->payment_metadata;
+        }
+        $startDate = null;
+        $calculatedStartDate = $startDate ?: $this->calculateStartDate('monthly');
+        if ($startDate && $startDate <= date('Y-m-d')) {
+            $calculatedStartDate = date('Y-m-d', strtotime('+1 day'));
+        }
+        $companyplan=CompanyPlanRelation::where('id', $payment->company_plan_id)
+            ->where('deleted',0)
+            ->where('record_status','1')
+            ->first();
+        return Subscription::create([
+            
+            'company_uuid' => $companyplan['company_uuid'],
+            'user_uuid' => $companyplan['user_uuid'],
+            'payment_id' => $payment->id,
+            'gocardless_subscription_id' => $event['links']['subscription'],
+            'gocardless_mandate_id' => $paymentMetadata['mandate_id'] ?? null,
+            'interval_unit' => 'monthly',
+            'interval' => 1,
+            'day_of_month' => $this->billingRequestService->calculateDayOfMonth($calculatedStartDate),
+            'status' => "active",
+            'start_date' => $calculatedStartDate,
+            // 'end_date' => $event['end_date'],
+            'billing_request_id' => $payment->checkout_session_id,
+
+        ]);
+    }
+    private function getPaymentDetails($paymentId)
+    {
+        $payment    =   Payment::where('id', $paymentId)
+                        ->where('deleted',0)
+                        ->where('record_status','1')
+                        ->first();
+        return $payment;
+    }
     private function handleSubscriptionEvent(array $event): void
     {
+        Log::info("Handling subscription event");
+        Log::info("subscription Event details: " . json_encode($event));
         $action = $event['action'];
         $subscriptionId = $event['links']['subscription'] ?? null;
         
-        if (!$subscriptionId) {
-            return;
+        $paymentId = $event['metadata']['payment_id'] ?? null;
+        $planId = $event['metadata']['plan_id'] ?? null;
+
+        if (!$subscriptionId || !$paymentId) {
+            throw new Exception("Missing required data: subscription_id or payment_id");
         }
 
-        $subscription = Subscription::where('gocardless_id', $subscriptionId)->first();
+        // Get payment details from payments table
+        $payment = $this->getPaymentDetails($paymentId);
+        Log::info("Payment details: " . json_encode($payment));
+
+        // Get subscription details from subscriptions table
+        $subscription = Subscription::where('gocardless_subscription_id',$subscriptionId)
+            ->where('deleted',0)
+            ->where('record_status','1')
+            ->first();
+        Log::info("Subscription details: " . json_encode($subscription));
         
-        if (!$subscription) {
-            Log::warning("Subscription not found: {$subscriptionId}");
-            return;
-        }
-
+        
         switch ($action) {
             case 'created':
-                $subscription->update(['status' => 'active']);
+                Log::info("Creating subscription record");
+                // $subscription->update(['status' => 'active']);
+                $newsub=$this->createSubscriptionRecord($event,$payment);
+                $payment->update(['status' => 'subscription_active','subscription_id' => $newsub->id]);
+                Log::info("Creating subscription completed");
                 break;
             case 'cancelled':
                 $subscription->update(['status' => 'cancelled']);
+                $payment->update(['status' => 'subscription_cancelled']);
                 break;
             case 'finished':
                 $subscription->update(['status' => 'finished']);
+                $payment->update(['status' => 'subscription_expired']);
                 break;
         }
     }
-
+    
     private function handleMandateEvent(array $event): void
     {
         // Handle mandate-related events

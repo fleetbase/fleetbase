@@ -106,6 +106,22 @@ class Payment extends Model
         'cancelled' => 'Cancelled',
         'refunded' => 'Refunded',
         'partially_refunded' => 'Partially Refunded',
+        'mandate_pending' => 'Mandate Pending',
+        'mandate_approved' => 'Mandate Approved',
+        'mandate_failed' => 'Mandate Failed',
+        'mandate_cancelled' => 'Mandate Cancelled',
+        'subscription_cancelled' => 'Subscription Cancelled',
+        'subscription_paused' => 'Subscription Paused',
+        'subscription_resumed' => 'Subscription Resumed',
+        'subscription_creating' => 'Subscription Creating',
+        'subscription_expired' => 'Subscription Expired',
+        'subscription_active' => 'Subscription Active',
+        'payment_failed' => 'Payment Failed',
+        'insufficient_funds' => 'Insufficient Funds',
+        'disputed' => 'Disputed',
+        'on_hold' => 'On Hold',
+        'expired' => 'Expired',
+
     ];
 
     /**
