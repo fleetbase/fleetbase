@@ -506,19 +506,78 @@ class GoCardlessBillingRequestService
     public function findCustomerByEmail(string $email): ?array
     {
         try {
-            // Fetch customers created in the last 2 years (adjust as needed)
+            Log::info('Searching for customer by email', ['email' => $email]);
+            
+            // GoCardless doesn't support email filtering in API, so we need to fetch and search manually
             $date = now()->subYears(2)->toIso8601String();
-            $response = Http::withHeaders($this->headers)
-                ->get($this->baseUrl . '/customers', [
-                    'created_at[gt]' => $date
+            $pageCount = 0;
+            $maxPages = 10; // Limit to prevent infinite loops
+            
+            do {
+                $pageCount++;
+                Log::info("Fetching customers page {$pageCount}", [
+                    'date_filter' => $date,
+                    'searching_for_email' => $email
                 ]);
-
-            if ($response->successful()) {
-                $data = $response->json();
-                return !empty($data['customers']) ? $data['customers'][0] : null;
-            }
                 
+                $queryParams = [
+                    'created_at[gt]' => $date,
+                    'limit' => 50 // Maximum allowed by GoCardless
+                ];
+                
+                $response = Http::withHeaders($this->headers)
+                    ->get($this->baseUrl . '/customers', $queryParams);
+                
+
+                if (!$response->successful()) {
+                    Log::error('Failed to fetch customers from GoCardless', [
+                        'status_code' => $response->status(),
+                        'response' => $response->body()
+                    ]);
+                    return null;
+                }
+
+                $data = $response->json();
+                $customers = $data['customers'] ?? [];
+                
+                Log::info("Retrieved customers from page {$pageCount}", [
+                    'customer_count' => count($customers),
+                    'searching_for_email' => $email
+                ]);
+                
+                // Search for the specific email in this batch
+                foreach ($customers as $customer) {
+                    if (strtolower(trim($customer['email'])) === strtolower(trim($email))) {
+                        Log::info('Found matching customer', [
+                            'customer_id' => $customer['id'],
+                            'email' => $customer['email'],
+                            'found_on_page' => $pageCount
+                        ]);
+                        return $customer;
+                    }
+                }
+                
+                // Check if there are more pages
+                $meta = $data['meta'] ?? [];
+                $cursors = $meta['cursors'] ?? [];
+                $afterCursor = $cursors['after'] ?? null;
+                
+                if ($afterCursor && $pageCount < $maxPages) {
+                    // Update query params for next page
+                    $queryParams['after'] = $afterCursor;
+                } else {
+                    break; // No more pages or reached max pages
+                }
+                
+            } while ($pageCount < $maxPages);
+            
+            Log::info('Customer not found after searching all pages', [
+                'email' => $email,
+                'pages_searched' => $pageCount
+            ]);
+            
             return null;
+            
         } catch (Exception $e) {
             Log::error('Error searching customer by email: ' . $e->getMessage());
             return null;
