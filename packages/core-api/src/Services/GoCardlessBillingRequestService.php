@@ -506,17 +506,18 @@ class GoCardlessBillingRequestService
     public function findCustomerByEmail(string $email): ?array
     {
         try {
+            // Fetch customers created in the last 2 years (adjust as needed)
+            $date = now()->subYears(2)->toIso8601String();
             $response = Http::withHeaders($this->headers)
                 ->get($this->baseUrl . '/customers', [
-                    'email' => $email,
-                    'limit' => 1
+                    'created_at[gt]' => $date
                 ]);
 
             if ($response->successful()) {
                 $data = $response->json();
                 return !empty($data['customers']) ? $data['customers'][0] : null;
             }
-
+                
             return null;
         } catch (Exception $e) {
             Log::error('Error searching customer by email: ' . $e->getMessage());
