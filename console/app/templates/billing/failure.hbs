@@ -1,2 +1,62 @@
-{{page-title "Failure"}}
-{{outlet}}
+{{page-title "Payment Failed"}}
+
+<div class="min-h-screen bg-gray-50 dark:bg-gray-900 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+    <div class="sm:mx-auto sm:w-full sm:max-w-md">
+        <div class="text-center">
+            <Image src={{@model.logo_url}} @fallbackSrc="/images/fleetbase-logo-svg.svg" alt={{t "app.name"}} width="160" height="56" class="w-40 h-14 mx-auto" />
+        </div>
+        <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900 dark:text-white">
+            Payment Failed
+        </h2>
+        <p class="mt-2 text-center text-sm text-gray-600 dark:text-gray-400">
+            There was an issue processing your payment. Please try again.
+        </p>
+    </div>
+
+    <div class="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
+        <div class="bg-white dark:bg-gray-800 py-8 px-4 shadow sm:rounded-lg sm:px-10">
+            <div class="text-center">
+                <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-red-100 dark:bg-red-900">
+                    <svg class="h-6 w-6 text-red-600 dark:text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </div>
+                
+                <h3 class="mt-4 text-lg font-medium text-gray-900 dark:text-white">
+                    Payment Unsuccessful
+                </h3>
+                
+                <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">
+                    Your payment could not be processed. This could be due to insufficient funds, incorrect bank details, or other issues.
+                </p>
+
+                <div class="mt-6 space-y-3">
+                    <button 
+                        type="button" 
+                        class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                        {{on "click" this.retryPayment}}
+                    >
+                        Try Again
+                    </button>
+                    
+                    <button 
+                        type="button" 
+                        class="w-full flex justify-center py-2 px-4 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                        {{on "click" this.goToOnboard}}
+                    >
+                        Back to Onboarding
+                    </button>
+                </div>
+
+                <div class="mt-6 text-center">
+                    <p class="text-xs text-gray-500 dark:text-gray-400">
+                        Need help? Contact our support team at
+                        <a href="mailto:support@fleetyes.com" class="text-blue-600 dark:text-blue-400 hover:underline">
+                            support@fleetyes.com
+                        </a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

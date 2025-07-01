@@ -43,8 +43,13 @@
     {{/if}}
 
     <div class="bg-white rounded-lg shadow-lg overflow-hidden border">
-        <iframe src={{this.paymentUrl}} class="w-full h-96 md:h-[600px] border-0" frameborder="0"
-            allow="payment"></iframe>
+        <iframe 
+            src={{this.paymentUrl}} 
+            class="w-full h-96 md:h-[600px] border-0" 
+            frameborder="0"
+            allow="payment"
+            {{on "load" this.handleIframeLoad}}
+        ></iframe>
     </div>
 
     <div class="mt-4 text-center">

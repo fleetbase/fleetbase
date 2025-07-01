@@ -312,7 +312,9 @@ class GoCardlessBillingRequestService
                 'exit_uri' => $data['exit_uri'] ?? $data['success_redirect_url'],
                 'links' => [
                     'billing_request' => $billingRequestId
-                ]
+                ],
+                // Limited customization options
+                'language' => $data['language'] ?? 'en'
             ]
         ];
 

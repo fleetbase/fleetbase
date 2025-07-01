@@ -124,10 +124,156 @@ export default class OnboardIndexController extends Controller {
     @tracked showPaymentFrame = false;
     @tracked paymentUrl = null;
     @tracked subscriptionDetails = null;
+    @tracked iframePollingInterval = null;
 
     constructor() {
         super(...arguments);
         this.loadLanguages();
+        this.setupIframeMessageListener();
+    }
+
+    /**
+     * Setup message listener for iframe communication
+     */
+    setupIframeMessageListener() {
+        window.addEventListener('message', (event) => {
+            // Check if the message is from our payment iframe
+            if (event.origin !== window.location.origin) {
+                return;
+            }
+
+            console.log('📨 Received message from iframe:', event.data);
+
+            // Handle payment success
+            if (event.data && event.data.type === 'payment_success') {
+                console.log('✅ Payment success message received from iframe');
+                this.handlePaymentSuccess();
+            }
+
+            // Handle payment failure
+            if (event.data && event.data.type === 'payment_failure') {
+                console.log('❌ Payment failure message received from iframe');
+                this.handlePaymentFailure();
+            }
+
+            // Handle iframe URL changes
+            if (event.data && event.data.type === 'iframe_url_change') {
+                console.log('🔄 Iframe URL changed:', event.data.url);
+                this.handleIframeUrlChange(event.data.url);
+            }
+        });
+    }
+
+    /**
+     * Start polling for iframe URL changes
+     */
+    startIframePolling() {
+        if (this.iframePollingInterval) {
+            clearInterval(this.iframePollingInterval);
+        }
+
+        this.iframePollingInterval = setInterval(() => {
+            this.checkIframeUrl();
+        }, 1000); // Check every second
+    }
+
+    /**
+     * Stop polling for iframe URL changes
+     */
+    stopIframePolling() {
+        if (this.iframePollingInterval) {
+            clearInterval(this.iframePollingInterval);
+            this.iframePollingInterval = null;
+        }
+    }
+
+    /**
+     * Check iframe URL for success/failure indicators
+     */
+    checkIframeUrl() {
+        const iframe = document.querySelector('iframe[src*="gocardless"]');
+        if (!iframe) {
+            this.stopIframePolling();
+            return;
+        }
+
+        try {
+            // Try to access iframe URL (may fail due to cross-origin)
+            const iframeUrl = iframe.contentWindow.location.href;
+            this.handleIframeUrlChange(iframeUrl);
+        } catch (e) {
+            // Cross-origin restrictions - try alternative methods
+            console.log('Cannot access iframe URL due to cross-origin restrictions');
+            
+            // Check if we can detect success/failure through other means
+            this.checkIframeContent();
+        }
+    }
+
+    /**
+     * Check iframe content for success/failure indicators
+     */
+    checkIframeContent() {
+        const iframe = document.querySelector('iframe[src*="gocardless"]');
+        if (!iframe) return;
+
+        try {
+            // Try to access iframe document
+            const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+            
+            // Look for success indicators in the iframe content
+            const successIndicators = [
+                'payment successful',
+                'payment completed',
+                'success',
+                'completed',
+                'thank you'
+            ];
+
+            const failureIndicators = [
+                'payment failed',
+                'payment cancelled',
+                'error',
+                'failed',
+                'cancelled'
+            ];
+
+            const iframeText = iframeDoc.body ? iframeDoc.body.textContent.toLowerCase() : '';
+            
+            // Check for success indicators
+            const hasSuccess = successIndicators.some(indicator => 
+                iframeText.includes(indicator)
+            );
+            
+            // Check for failure indicators
+            const hasFailure = failureIndicators.some(indicator => 
+                iframeText.includes(indicator)
+            );
+
+            if (hasSuccess) {
+                console.log('🎯 Detected success indicators in iframe content');
+                this.handlePaymentSuccess();
+            } else if (hasFailure) {
+                console.log('💥 Detected failure indicators in iframe content');
+                this.handlePaymentFailure();
+            }
+        } catch (e) {
+            // Cross-origin restrictions prevent access
+            console.log('Cannot access iframe content due to cross-origin restrictions');
+        }
+    }
+
+    /**
+     * Handle iframe URL changes to detect success/failure redirects
+     */
+    handleIframeUrlChange(url) {
+        if (url.includes('/billing/success')) {
+            console.log('🎯 Detected billing success URL in iframe');
+            this.handlePaymentSuccess();
+        } else if (url.includes('/billing/failure')) {
+            console.log('💥 Detected billing failure URL in iframe');
+            this.handlePaymentFailure();
+        }
     }
 
     /**
@@ -230,12 +376,15 @@ export default class OnboardIndexController extends Controller {
     }
     @action
     closePaymentFrame() {
+        this.stopIframePolling();
         this.showPaymentFrame = false;
         this.paymentUrl = null;
     }
 
     @action
     handlePaymentSuccess() {
+        console.log('🎯 Payment success handler triggered');
+        this.stopIframePolling();
         this.showPaymentFrame = false;
         this.paymentUrl = null;
 
@@ -273,9 +422,30 @@ export default class OnboardIndexController extends Controller {
 
     @action
     handlePaymentFailure() {
+        this.stopIframePolling();
         this.showPaymentFrame = false;
         this.notifications.error('Payment setup failed. Please try again.');
     }
+
+    @action
+    handleIframeLoad() {
+        console.log('🔄 Payment iframe loaded');
+        // Start polling for iframe URL changes
+        this.startIframePolling();
+        
+        // Check if the iframe URL indicates success or failure
+        const iframe = document.querySelector('iframe[src*="gocardless"]');
+        if (iframe) {
+            try {
+                const iframeUrl = iframe.contentWindow.location.href;
+                this.handleIframeUrlChange(iframeUrl);
+            } catch (e) {
+                // Cross-origin restrictions might prevent access
+                console.log('Cannot access iframe URL due to cross-origin restrictions');
+            }
+        }
+    }
+
     /**
      * Start the onboard process.
      *
@@ -430,5 +600,13 @@ export default class OnboardIndexController extends Controller {
         }
         this.set('error', null);
         this.set('number_of_web_users', parsedValue);
+    }
+
+    /**
+     * Clean up when controller is destroyed
+     */
+    willDestroy() {
+        this.stopIframePolling();
+        super.willDestroy();
     }
 }

@@ -22,7 +22,7 @@ export default class BillingFailureRoute extends Route {
 
         // Redirect back to onboarding after showing error
         setTimeout(() => {
-            this.router.replaceWith('onboarding');
+            this.router.replaceWith('onboard');
         }, 3000);
     }
 }
