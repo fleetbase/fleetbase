@@ -508,26 +508,26 @@ class GoCardlessBillingRequestService
         try {
             Log::info('Searching for customer by email', ['email' => $email]);
             
-            // GoCardless doesn't support email filtering in API, so we need to fetch and search manually
             $date = now()->subYears(2)->toIso8601String();
             $pageCount = 0;
-            $maxPages = 10; // Limit to prevent infinite loops
+            $maxPages = 50; // Increased limit or make configurable
+            
+            // Initialize query params BEFORE the loop
+            $queryParams = [
+                'created_at[gt]' => $date,
+                'limit' => 50
+            ];
             
             do {
                 $pageCount++;
                 Log::info("Fetching customers page {$pageCount}", [
                     'date_filter' => $date,
-                    'searching_for_email' => $email
+                    'searching_for_email' => $email,
+                    'query_params' => $queryParams // Log current params
                 ]);
-                
-                $queryParams = [
-                    'created_at[gt]' => $date,
-                    'limit' => 50 // Maximum allowed by GoCardless
-                ];
                 
                 $response = Http::withHeaders($this->headers)
                     ->get($this->baseUrl . '/customers', $queryParams);
-                
 
                 if (!$response->successful()) {
                     Log::error('Failed to fetch customers from GoCardless', [
@@ -562,11 +562,11 @@ class GoCardlessBillingRequestService
                 $cursors = $meta['cursors'] ?? [];
                 $afterCursor = $cursors['after'] ?? null;
                 
-                if ($afterCursor && $pageCount < $maxPages) {
-                    // Update query params for next page
+                // Simplified condition (removed redundant check)
+                if ($afterCursor) {
                     $queryParams['after'] = $afterCursor;
                 } else {
-                    break; // No more pages or reached max pages
+                    break; // No more pages
                 }
                 
             } while ($pageCount < $maxPages);
