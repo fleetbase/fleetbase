@@ -5,6 +5,7 @@ export default class BillingSuccessRoute extends Route {
     @service fetch;
     @service notifications;
     @service router;
+    @service session;
 
     async model(params) {
         try {
@@ -126,14 +127,6 @@ export default class BillingSuccessRoute extends Route {
                     sessionStorage.removeItem('subscription_details');
                     sessionStorage.removeItem('account_details');
                     console.log('🧹 Cleared session storage');
-
-                    // Redirect to verification page
-                    setTimeout(() => {
-                        this.router.replaceWith('onboard.verify-email', {
-                            queryParams: { hello: session }
-                        });
-                        this.notifications.success('Payment completed! Please verify your email to complete setup.');
-                    }, 1000);
                 }
             }
 
@@ -201,52 +194,15 @@ export default class BillingSuccessRoute extends Route {
         }
     }
 
-    // afterModel(model) {
-    //     if (model && model.apiResponse) {
-    //         // Show success notification
-    //         this.notifications.success('Payment completed successfully! Welcome to FleetYes!');
-    //     }
-    // }
     afterModel(model) {
-        console.log('🎯 Payment success page loaded, preparing auto-redirect...');
+        console.log('🎯 Payment success page loaded');
 
         // Show success notification immediately
         if (model && model.apiResponse) {
             this.notifications.success('Payment completed successfully!');
         }
 
-        // Get account details for verification redirect
-        const accountDetails = sessionStorage.getItem('account_details');
-
-        if (accountDetails) {
-            const parsedDetails = JSON.parse(accountDetails);
-            const { session } = parsedDetails;
-
-            console.log('📋 Found session for verification redirect:', session ? 'exists' : 'missing');
-
-            // Auto-redirect to verification page after 3 seconds
-            setTimeout(() => {
-                console.log('🚀 Auto-redirecting to verification page...');
-
-                this.router.replaceWith('onboard.verify-email', {
-                    queryParams: { hello: session }
-                }).then(() => {
-                    console.log('✅ Successfully redirected to verification');
-                    this.notifications.info('Please verify your email to complete your account setup.');
-                }).catch((error) => {
-                    console.error('❌ Redirect failed:', error);
-                    this.notifications.error('Redirect failed. Please try again.');
-                });
-            }, 3000); // 3 second delay to show payment success details
-
-        } else {
-            console.warn('⚠️ No account details found for verification redirect');
-
-            // Fallback: redirect to onboard if no session data
-            setTimeout(() => {
-                this.notifications.warning('Session expired. Please complete onboarding again.');
-                this.router.replaceWith('onboard');
-            }, 3000);
-        }
+        // Let the controller handle the redirect logic to avoid conflicts
+        // The controller will handle the countdown and redirect to verification page
     }
 }
