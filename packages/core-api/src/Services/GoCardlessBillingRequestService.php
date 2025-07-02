@@ -797,11 +797,11 @@ public function createSubscriptionFromPayment($payment, $mandateId, $startDate =
         
 
         // Calculate start date
-        $calculatedStartDate = $startDate ?: date('Y-m-d', strtotime('+1 day'));
+        $calculatedStartDate = $startDate ?: date('Y-m-d', strtotime('+5 day'));
         if ($startDate && $startDate <= date('Y-m-d')) {
-            $calculatedStartDate = date('Y-m-d', strtotime('+1 day'));
+            $calculatedStartDate = date('Y-m-d', strtotime('+5 day'));
         }
-
+        $validStartDate = $this->calculateValidStartDate($mandateId, $startDate);
         // Build subscription data
         $subscriptionData = [
             'amount' => $payment->amount * 100, // Convert to pence
@@ -809,8 +809,8 @@ public function createSubscriptionFromPayment($payment, $mandateId, $startDate =
             'name' => $planPricing->plan->name . ' Subscription',
             'interval_unit' => $this->mapBillingCycleToInterval($planPricing->billing_cycle),
             'interval' => $this->calculateIntervalCount($planPricing->billing_cycle),
-            'day_of_month' => $this->calculateDayOfMonth($calculatedStartDate),
-            'start_date' => $calculatedStartDate,
+            // 'day_of_month' => $this->calculateDayOfMonth($calculatedStartDate),
+            'start_date' => $validStartDate,
             'end_date' => $endDate,
             'metadata' => [
                 'payment_id' => (string) $payment->id,
@@ -914,9 +914,9 @@ public function calculateDayOfMonth($startDate = null)
             ];
 
             // Add optional parameters
-            if (isset($subscriptionData['day_of_month'])) {
-                $params['day_of_month'] = $subscriptionData['day_of_month'];
-            }
+            // if (isset($subscriptionData['day_of_month'])) {
+            //     $params['day_of_month'] = $subscriptionData['day_of_month'];
+            // }
 
             if (isset($subscriptionData['start_date'])) {
                 $params['start_date'] = $validStartDate;
@@ -1027,7 +1027,27 @@ public function calculateDayOfMonth($startDate = null)
                 'mandate_id' => $mandateId,
                 'next_possible_charge_date' => $nextPossibleChargeDate
             ]);
-            
+            $earliestStartDate = Carbon::now()->addDays(3);
+            // if ($nextPossibleChargeDate) {
+            //     // Use mandate's next possible charge date as minimum
+            //     $minimumStartDate = Carbon::parse($nextPossibleChargeDate);
+                
+            //     // If user requested a specific date, use the later of the two
+            //     if ($requestedStartDate) {
+            //         $requestedDate = Carbon::parse($requestedStartDate);
+            //         $finalStartDate = $requestedDate->greaterThan($minimumStartDate) ? 
+            //             $requestedDate : $minimumStartDate;
+            //     } else {
+            //         $finalStartDate = $minimumStartDate;
+            //     }
+            // } else {
+            //     // Fallback if no next_possible_charge_date
+            //     $fallbackDate = Carbon::now()->addWorkingDays(5);
+            //     $finalStartDate = $requestedStartDate ? 
+            //         Carbon::parse($requestedStartDate)->greaterThan($fallbackDate) ? 
+            //             Carbon::parse($requestedStartDate) : $fallbackDate 
+            //         : $fallbackDate;
+            // }
             if ($nextPossibleChargeDate) {
                 // Use mandate's next possible charge date as minimum
                 $minimumStartDate = Carbon::parse($nextPossibleChargeDate);
@@ -1035,18 +1055,22 @@ public function calculateDayOfMonth($startDate = null)
                 // If user requested a specific date, use the later of the two
                 if ($requestedStartDate) {
                     $requestedDate = Carbon::parse($requestedStartDate);
-                    $finalStartDate = $requestedDate->greaterThan($minimumStartDate) ? 
-                        $requestedDate : $minimumStartDate;
+                    
+                    // If requested date is within 7 days of mandate date, use requested date
+                    if ($requestedDate->diffInDays($minimumStartDate, false) <= 7) {
+                        $finalStartDate = $requestedDate;  // Use July 2nd instead of July 8th
+                    } else {
+                        $finalStartDate = $minimumStartDate;  // Only fall back if dates are far apart
+                    }
                 } else {
                     $finalStartDate = $minimumStartDate;
                 }
-            } else {
-                // Fallback if no next_possible_charge_date
-                $fallbackDate = Carbon::now()->addWorkingDays(5);
-                $finalStartDate = $requestedStartDate ? 
-                    Carbon::parse($requestedStartDate)->greaterThan($fallbackDate) ? 
-                        Carbon::parse($requestedStartDate) : $fallbackDate 
-                    : $fallbackDate;
+                Log::info('Calculated valid start date new', [
+                    'mandate_id' => $mandateId,
+                    'next_possible_charge_date' => $nextPossibleChargeDate,
+                    'requested_start_date' => $requestedStartDate,
+                    'calculated_start_date' => $finalStartDate
+                ]);
             }
             
             $calculatedStartDate = $finalStartDate->toDateString();
