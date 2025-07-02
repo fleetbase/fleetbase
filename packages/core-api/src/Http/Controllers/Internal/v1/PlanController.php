@@ -356,4 +356,46 @@ class PlanController extends Controller
 
         return $status;
     }
+    public function getLatest(): JsonResponse
+    {
+        try {
+            $latestPlan = PlanPricingRelation::with(['plan'])
+                ->where('deleted', 0) // Only active plans
+                ->where('record_status', 1)
+                // ->latest('created_at')
+                ->first();
+
+            if (!$latestPlan) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'No pricing plans available',
+                    'data' => null
+                ], 404);
+            }
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Latest pricing plan retrieved successfully',
+                'data' => [
+                    'id' => $latestPlan->id,
+                    'plan_id' => $latestPlan->plan_id,
+                    'plan_name' => $latestPlan->plan->name ?? null,
+                    'price' => $latestPlan->price,
+                    'currency' => $latestPlan->currency,
+                    'billing_interval' => $latestPlan->billing_interval,
+                    'features' => $latestPlan->features,
+                    'is_active' => $latestPlan->is_active,
+                    'created_at' => $latestPlan->created_at,
+                    'updated_at' => $latestPlan->updated_at,
+                ]
+            ], 200);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error retrieving latest pricing plan',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
 }

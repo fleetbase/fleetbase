@@ -12,10 +12,6 @@ Router.map(function () {
     this.route('onboard', function () {
         this.route('verify-email');
     });
-    this.route('billing', function () {
-        this.route('success');
-        this.route('failure');
-    });
     this.route('auth', function () {
         this.route('login', { path: '/' });
         this.route('forgot-password');
