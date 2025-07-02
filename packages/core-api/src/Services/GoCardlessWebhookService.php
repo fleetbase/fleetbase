@@ -591,40 +591,44 @@ private function getErrorMessage($paymentDetails)
         $subscriptionId = $event['links']['subscription'] ?? null;
         
         $paymentId = $event['metadata']['payment_id'] ?? null;
-        $planId = $event['metadata']['plan_id'] ?? null;
+        if ($paymentId) {
+            $planId = $event['metadata']['plan_id'] ?? null;
 
-        if (!$subscriptionId || !$paymentId) {
-            throw new Exception("Missing required data: subscription_id or payment_id");
-        }
+            if (!$subscriptionId || !$paymentId) {
+                throw new Exception("Missing required data: subscription_id or payment_id");
+            }
 
-        // Get payment details from payments table
-        $payment = $this->getPaymentDetails($paymentId);
-        // Log::info("Payment details: " . json_encode($payment));
+            // Get payment details from payments table
+            $payment = $this->getPaymentDetails($paymentId);
+            // Log::info("Payment details: " . json_encode($payment));
 
-        // Get subscription details from subscriptions table
-        $subscription = Subscription::where('gocardless_subscription_id',$subscriptionId)
-            ->where('deleted',0)
-            ->where('record_status','1')
-            ->first();
-        // Log::info("Subscription details: " . json_encode($subscription));
-        
-        
-        switch ($action) {
-            case 'created':
-                Log::info("Creating subscription record");
-                // $subscription->update(['status' => 'active']);
-                $newsub=$this->createSubscriptionRecord($event,$payment);
-                $payment->update(['status' => 'subscription_active','subscription_id' => $newsub->id]);
-                Log::info("Creating subscription completed");
-                break;
-            case 'cancelled':
-                $subscription->update(['status' => 'cancelled']);
-                $payment->update(['status' => 'subscription_cancelled']);
-                break;
-            case 'finished':
-                $subscription->update(['status' => 'finished']);
-                $payment->update(['status' => 'subscription_expired']);
-                break;
+            // Get subscription details from subscriptions table
+            $subscription = Subscription::where('gocardless_subscription_id',$subscriptionId)
+                ->where('deleted',0)
+                ->where('record_status','1')
+                ->first();
+            // Log::info("Subscription details: " . json_encode($subscription));
+            
+            
+            switch ($action) {
+                case 'created':
+                    Log::info("Creating subscription record");
+                    // $subscription->update(['status' => 'active']);
+                    $newsub=$this->createSubscriptionRecord($event,$payment);
+                    $payment->update(['status' => 'subscription_active','subscription_id' => $newsub->id]);
+                    Log::info("Creating subscription completed");
+                    break;
+                case 'cancelled':
+                    $subscription->update(['status' => 'cancelled']);
+                    $payment->update(['status' => 'subscription_cancelled']);
+                    break;
+                case 'finished':
+                    $subscription->update(['status' => 'finished']);
+                    $payment->update(['status' => 'subscription_expired']);
+                    break;
+            }
+        }else{
+            Log::info("No payment id found for subscription event");
         }
     }
     
