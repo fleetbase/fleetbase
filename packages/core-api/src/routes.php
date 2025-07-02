@@ -105,6 +105,7 @@ Route::prefix(config('fleetbase.api.routing.prefix', '/'))->namespace('Fleetbase
                                 $router->get('checkout/success', 'BillingRequestController@handleRecurringBillingSuccess');
                                 $router->post('billing/success', 'BillingRequestController@handleRecurringBillingSuccess');
                                 // $router->post('checkout/failure', 'CheckoutController@handleFailure');
+                                Route::get('pricing-plans/latest', 'PlanController@getLatest');
 
                                 $router->post('subscription', 'BillingRequestController@createRecurringBillingRequest');
                                 $router->post('test/createsubscription', 'BillingRequestController@testCreateSubscription');

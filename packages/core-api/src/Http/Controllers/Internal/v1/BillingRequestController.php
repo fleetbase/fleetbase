@@ -193,8 +193,16 @@ class BillingRequestController extends Controller
                     $billingRequestData['metadata'] = $metadata;
                 }
 
-                // Create billing request with flow
-                $response = $this->billingRequestService->createBillingRequestWithFlow($billingRequestData);
+                // Create checkout session instead of billing request flow for better customization
+                // $response = $this->goCardlessService->createCheckoutSession([
+                //     'amount' => $totalAmount,
+                //     'currency' => $request->currency ?? 'GBP',
+                //     'customer' => $billingRequestData['customer'],
+                //     'description' => $request->description ?? 'Payment',
+                //     'success_redirect_url' => $request->success_url,
+                //     'cancel_redirect_url' => $request->exit_uri ?? $request->success_url,
+                //     'metadata' => $metadata ?? []
+                // ]);
                 // Update payment record with billing request details
                 $this->updatePaymentWithBillingRequestData($payment, $response);
                
@@ -338,6 +346,7 @@ class BillingRequestController extends Controller
             'amount' => $totalAmount,
             'currency' => $planPricing->currency,
             'payment_gateway_id' => $paymentGateway->id,
+            'next_payment_date' => $this->calculateNextBillingDate($planPricing->billing_cycle),
             'payment_method' => 'direct_debit',
             'success_url' => $data['success_url'],
             'cancel_url' => $data['cancel_url'],
@@ -406,17 +415,17 @@ class BillingRequestController extends Controller
             $mandateId = $billingRequest['mandate_request']['links']['mandate'] ?? null;
             $customerId = $billingRequest['mandate_request']['links']['customer'] ?? null;
 
-            $responseData = [
-                'billing_request_id' => $billingRequestId,
-                'payment_id' => $paymentId,
-                'mandate_id' => $mandateId,
-                'customer_id' => $customerId,
-                'customer_email' => $customerEmail,
-                'amount' => $billingRequest['payment_request']['amount'] / 100, // Convert back to pounds
-                'currency' => $billingRequest['payment_request']['currency'],
-                'description' => $billingRequest['payment_request']['description'],
-                'status' => $billingRequest['status']
-            ];
+            // $responseData = [
+            //     'billing_request_id' => $billingRequestId,
+            //     'payment_id' => $paymentId,
+            //     'mandate_id' => $mandateId,
+            //     'customer_id' => $customerId,
+            //     // 'customer_email' => $customerEmail,
+            //     'amount' => $billingRequest['payment_request']['amount'] / 100, // Convert back to pounds
+            //     'currency' => $billingRequest['payment_request']['currency'],
+            //     'description' => $billingRequest['payment_request']['description'],
+            //     'status' => $billingRequest['status']
+            // ];
 
             // Clear session data
             session()->forget([
@@ -873,7 +882,14 @@ class BillingRequestController extends Controller
         
         try {
             $planPricing = PlanPricingRelation::with('plan')->findOrFail($request->plan_pricing_id);
-            
+            if (!$planPricing) {
+                // If plan_pricing_id doesn't exist, get the latest record
+                $planPricing = PlanPricingRelation::with('plan')->latest()->first();
+                
+                if (!$planPricing) {
+                    return response()->json(['error' => 'No plan pricing records found'], 404);
+                }
+            }
             // Calculate total amount based on users
             $totalAmount = $planPricing->calculateTotalPrice(
                 $request->no_of_web_users, 
@@ -1079,15 +1095,15 @@ class BillingRequestController extends Controller
             'amount' => $totalAmount,
             
             // 'currency' => $planPricing->currency,
-            // 'payment_gateway_id' => $paymentGateway->id,
+            'payment_gateway_id' => $paymentGateway->id,
             'payment_method' => 'direct_debit',
             'is_recurring' => true,
             // 'success_url' => $data['success_url'],
             // 'cancel_url' => $data['cancel_url'] ?? $data['exit_uri'],
             // 'expires_at' => $expiresAt,
-            'is_recurring' => true, // Add this field to your payments table
+            // 'is_recurring' => true, // Add this field to your payments table
             // 'billing_cycle' => $planPricing->billing_cycle,
-            // 'next_billing_date' => $this->calculateNextBillingDate($planPricing->billing_cycle),
+            'next_payment_date' => $this->calculateNextBillingDate($planPricing->billing_cycle),
             
             'checkout_data' => $checkoutData,
             'created_by_id' => 1,
@@ -1240,156 +1256,43 @@ public function handleRecurringBillingSuccess(Request $request)
             'status' => $billingRequest['status']
         ]);
 
-        // Step 6: Check if billing request is fulfilled
-        // if ($billingRequest['status'] !== 'fulfilled') {
-        //     Log::warning('Billing request not yet fulfilled', [
-        //         'status' => $billingRequest['status'],
-        //         'billing_request_id' => $billingRequestId
-        //     ]);
-            
-        //     return response()->json([
-        //         'success' => false,
-        //         'error' => 'Payment not yet completed',
-        //         'status' => $billingRequest['status'],
-        //         'message' => 'Payment is still being processed. Please wait a moment and try again.',
-        //         'payment_id' => $payment->id,
-        //         'billing_request_id' => $billingRequestId
-        //     ], 202); // 202 Accepted - still processing
-        // }
-        // if (!in_array($billingRequest['status'], ['fulfilled', 'fulfilling'])) {
-        //     Log::warning('Billing request not in acceptable status', [
-        //         'status' => $billingRequest['status'],
-        //         'billing_request_id' => $billingRequestId
-        //     ]);
-            
-        //     return response()->json([
-        //         'success' => false,
-        //         'error' => 'Payment not yet completed',
-        //         'status' => $billingRequest['status'],
-        //         'message' => 'Payment is still being processed. Please wait a moment and try again.',
-        //         'payment_id' => $payment->id,
-        //         'billing_request_id' => $billingRequestId
-        //     ], 202);
-        // }
-        
-        // // If status is 'fulfilling', wait a moment and recheck
-        // if ($billingRequest['status'] === 'fulfilling') {
-        //     Log::info('Status is fulfilling, waiting and rechecking', [
-        //         'billing_request_id' => $billingRequestId
-        //     ]);
-            
-        //     // Wait 3 seconds for webhook to complete
-        //     sleep(3);
-            
-        //     // Re-fetch billing request
-        //     $billingRequest = $this->billingRequestService->getBillingRequest($billingRequestId);
-        //     Log::info('Rechecked billing request status', [
-        //         'billing_request_id' => $billingRequestId,
-        //         'new_status' => $billingRequest['status']
-        //     ]);
-            
-        //     // If still not fulfilled after waiting, proceed anyway for webhook-fulfilled cases
-        //     if ($billingRequest['status'] === 'fulfilling') {
-        //         Log::warning('Status still fulfilling after wait - proceeding cautiously as webhook may have processed');
-        //         // Continue with subscription creation
-        //     }
-        // }
-        
-        // Log::info('Proceeding with subscription creation', [
+        // Extract created resources
+        $paymentId = $billingRequest['payment_request']['links']['payment'] ?? null;
+        $mandateId = $billingRequest['mandate_request']['links']['mandate'] ?? null;
+        $customerId = $billingRequest['mandate_request']['links']['customer'] ?? null;
+
+        // $responseData = [
         //     'billing_request_id' => $billingRequestId,
-        //     'final_status' => $billingRequest['status'],
-        //     'full_structure' => $billingRequest
-        // ]);
-
-        // // Step 7: Extract GoCardless resource IDs
-        // $mandateId = $billingRequest['mandate_request']['links']['mandate'] ?? null;
-        // $firstPaymentId = $billingRequest['payment_request']['links']['payment'] ?? null;
-        // $customerId = $billingRequest['mandate_request']['links']['customer'] ?? null;
-        
-        // if (!$mandateId) {
-        //     throw new Exception('Could not retrieve mandate ID from billing request');
-        // }
-
-        // Log::info('Extracted GoCardless resource IDs', [
+        //     'payment_id' => $paymentId,
         //     'mandate_id' => $mandateId,
-        //     'first_payment_id' => $firstPaymentId,
-        //     'customer_id' => $customerId
-        // ]);
-
-        // // Step 8: Update payment record with GoCardless IDs
-        // $payment->update([
-        //     'gocardless_payment_id' => $firstPaymentId,
-        //     'gocardless_mandate_id' => $mandateId,
-        //     'gocardless_customer_id' => $customerId,
-        //     'status' => 'completed'
-        // ]);
-
-        // Log::info('Payment updated with GoCardless IDs', [
-        //     'payment_id' => $payment->id
-        // ]);
-
-        // // Step 9: Get conversion data from DATABASE (not session)
-        // $checkoutData = $payment->checkout_data ?? [];
-        // $conversionIntent = $checkoutData['convert_to_subscription'] ?? false;
-        // $subscriptionStartDate = $checkoutData['subscription_start_date'] ?? $checkoutData['start_date'] ?? null;
-        // $subscriptionEndDate = $checkoutData['subscription_end_date'] ?? $checkoutData['end_date'] ?? null;
-
-        // // Also check session data for backward compatibility
-        // $sessionSubscriptionData = session('gocardless_subscription_data');
-        // $sessionCustomerEmail = session('gocardless_customer_email');
-
-        // Log::info('Checking conversion and subscription data', [
-        //     'conversion_intent_from_db' => $conversionIntent,
-        //     'has_session_subscription_data' => !empty($sessionSubscriptionData),
-        //     'start_date' => $subscriptionStartDate,
-        //     'end_date' => $subscriptionEndDate
-        // ]);
-
-        // $subscription = null;
-
-        // // Step 10: Create subscription
-        // if ($sessionSubscriptionData) {
-        //     // Method 1: Use session subscription data (for createRecurringBillingRequest)
-        //     Log::info('Creating subscription from session data');
-        //     $subscription = $this->billingRequestService->createSubscription($mandateId, $sessionSubscriptionData,$payment);
-            
-        // } elseif ($conversionIntent) {
-        //     // Method 2: Create subscription from conversion intent (for converted one-time payments)
-        //     Log::info('Creating subscription from conversion intent in checkout_data');
-        //     $subscription = $this->billingRequestService->createSubscriptionFromPayment($payment, $mandateId, $subscriptionStartDate, $subscriptionEndDate);
-            
-        // } else {
-        //     Log::warning('No subscription data found - neither session data nor conversion intent');
-        // }
-
-        // if ($subscription) {
-        //     Log::info('Subscription created successfully', [
-        //         'subscription_id' => $subscription['id'],
-        //         'subscription_status' => $subscription['status'],
-        //         'amount' => $subscription['amount'],
-        //         'currency' => $subscription['currency'],
-        //         'next_charge_date' => $subscription['upcoming_payments']->charge_date ?? null 
-        //     ]);
-
-        //     // Step 11: Update payment record with subscription details
-        //     // $payment->update([
-        //     //     'gocardless_subscription_id' => $subscription['id'],
-        //     //     'is_recurring' => true,
-        //     //     'status' => 'active'
-        //     // ]);
-
-        //     // Step 12: Update company plan relation
-        //     // if ($payment->companyPlanRelation) {
-        //     //     $payment->companyPlanRelation->update([
-        //     //         'status' => 'active',
-        //     //         'auto_renew' => true,
-        //     //         'activated_at' => now()
-        //     //     ]);
-        //     // }
-
-        // } else {
-        //     Log::error('Subscription creation failed');
-        // }
+        //     'customer_id' => $customerId,
+        //     'customer_email' => $customerEmail,
+        //     'amount' => $billingRequest['payment_request']['amount'] / 100, // Convert back to pounds
+        //     'currency' => $billingRequest['payment_request']['currency'],
+        //     'description' => $billingRequest['payment_request']['description'],
+        //     'status' => $billingRequest['status']
+        // ];
+        
+        $companyPlanRelation = CompanyPlanRelation::where('id', $payment->company_plan_id)->first();
+        $planPricing = PlanPricingRelation::where('id', $companyPlanRelation->plan_pricing_id)->first();
+        $calculatedStartDate = $this->calculateStartDate($planPricing->billing_cycle);
+        $endDate = $this->calculateEndDate($planPricing->billing_cycle, $calculatedStartDate);
+        $subscriptionData = [
+            'amount' => $payment->amount * 100, // Convert to pence
+            'currency' => $payment->currency,
+            'name' => $planPricing->plan->name . ' Subscription',
+            'interval_unit' => $this->billingRequestService->mapBillingCycleToInterval($planPricing->billing_cycle),
+            'interval' => $this->billingRequestService->calculateIntervalCount($planPricing->billing_cycle),
+            'day_of_month' => $this->billingRequestService->calculateDayOfMonth($calculatedStartDate),
+            'start_date' => $calculatedStartDate,
+            'end_date' => $endDate,
+            'metadata' => [
+                'payment_id' => (string) $payment->id,
+                'plan_id' => (string) $planPricing->plan_id,
+                'created_from' => 'payment_conversion'
+            ]
+        ];
+        $this->billingRequestService->createSubscription($mandateId, $subscriptionData, $payment);
 
         // Step 13: Build response data
         $responseData = [
@@ -1452,6 +1355,21 @@ public function handleRecurringBillingSuccess(Request $request)
             'payment_id' => $paymentId,
             'billing_request_flow_id' => $billingRequestFlowId
         ], 500);
+    }
+}
+protected function calculateEndDate($billingCycle, $startDate)
+{
+    $date = \Carbon\Carbon::parse($startDate);
+
+    switch ($billingCycle) {
+        case 'monthly':
+            return $date->addMonth()->toDateString();
+        case 'quarterly':
+            return $date->addMonths(3)->toDateString();
+        case 'annual':
+            return $date->addYear()->toDateString();
+        default:
+            return $date->addMonth()->toDateString();
     }
 }
 

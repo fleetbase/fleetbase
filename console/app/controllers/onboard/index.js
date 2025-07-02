@@ -286,7 +286,21 @@ export default class OnboardIndexController extends Controller {
         const selectedLanguageId = event.target.value;
         this.language = selectedLanguageId;
     }
-
+    async getLatestPricingPlan() {
+        try {
+            const response = await this.fetch.get('onboard/pricing-plans/latest');
+            // If your fetch service returns { success, data }
+            if (response.success && response.data) {
+                return response.data;
+            } else {
+                throw new Error(response.message || 'Failed to fetch latest pricing plan');
+            }
+        } catch (error) {
+            console.error('Error fetching latest pricing plan:', error);
+            // Fallback to default plan ID if API fails
+            return { id: 1 };
+        }
+    }
     /**
      * Load available languages from the API.
      *
@@ -339,13 +353,14 @@ export default class OnboardIndexController extends Controller {
         };
     }
     async callSubscriptionAPI(user_uuid, company_uuid, userInput) {
+        const latestPlan = await this.getLatestPricingPlan();
         const dates = this.getSubscriptionDates();
         const fullName = userInput.name.split(' ');
         const givenName = fullName[0] || '';
         const familyName = fullName.slice(1).join(' ') || '';
 
         const payload = {
-            plan_pricing_id: 1,
+            plan_pricing_id: latestPlan.id,
             company_uuid: company_uuid,
             user_uuid: user_uuid,
             no_of_web_users: parseInt(userInput.number_of_web_users),
@@ -403,15 +418,16 @@ export default class OnboardIndexController extends Controller {
 
             // Always redirect to verification page after payment success
             console.log('🚀 Redirecting to verification page...');
-            return this.router.transitionTo('onboard.verify-email', {
-                queryParams: { hello: session }
-            }).then(() => {
-                console.log('✅ Successfully redirected to verification page');
-                this.notifications.success('Payment setup completed! Please verify your email to continue.');
-            }).catch((error) => {
+            console.log('🚀 Redirecting to verification page...');
+            this.router.transitionTo('onboard.verify-email', { queryParams: { hello: session } })
+            .then(() => {
+                this.notifications.success('Payment setup completed successfully!');
+            })
+            .catch((error) => {
                 console.error('❌ Failed to redirect to verification page:', error);
                 this.notifications.error('Redirect failed. Please try again.');
-            });
+            });  
+            // this.router.transitionTo('billing.success');
         } else {
             console.warn('⚠️ No account details found in session storage');
             this.notifications.error('Session data missing. Please try the onboarding process again.');
