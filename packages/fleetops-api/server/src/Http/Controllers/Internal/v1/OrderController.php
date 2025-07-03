@@ -39,7 +39,8 @@ use Carbon\Carbon;
 use Fleetbase\FleetOps\Models\Waypoint;
 use Fleetbase\FleetOps\Models\RouteSegment;
 use App\Helpers\UserHelper;
-
+use Fleetbase\FleetOps\Exports\OrderImportErrorsExport;
+use Illuminate\Support\Facades\Storage;
 
 class OrderController extends FleetOpsController
 {
@@ -193,7 +194,7 @@ class OrderController extends FleetOpsController
                     }
                 );
                 // Trigger order created event
-            
+                
                 event(new OrderReady($record));
                 // Return response
                 return ['order' => new $this->resource($record)];
@@ -284,63 +285,147 @@ class OrderController extends FleetOpsController
      *
      * @return \Illuminate\Http\Response
      */
-    public function importFromFiles(Request $request)
-    {
-        $info    = Utils::lookupIp();
-        $disk    = $request->input('disk', config('filesystems.default'));
-        $files   = $request->input('files');
-        $files   = File::whereIn('uuid', $files)->get();
-        // $country = $request->input('country', Utils::or($info, ['country_name', 'region'], 'Singapore'));
+  public function importFromFiles(Request $request) 
+  {
+    $info    = Utils::lookupIp();
+    $disk    = $request->input('disk', config('filesystems.default'));
+    $files   = $request->input('files');
+    $files   = File::whereIn('uuid', $files)->get();
 
-        $validFileTypes = ['csv', 'tsv', 'xls', 'xlsx'];
-        // $imports        = collect();
+    $validFileTypes = ['csv', 'tsv', 'xls', 'xlsx'];
+    $allErrors = [];
+    $totalSuccessfulImports = 0;
+    $totalCreatedOrders = 0;
+    $totalUpdatedOrders = 0;
+    $hasPartialSuccess = false;
 
-        foreach ($files as $file) {
-            // validate file type
-            if (!Str::endsWith($file->path, $validFileTypes)) {
-                return response()->error('Invalid file uploaded, must be one of the following: ' . implode(', ', $validFileTypes));
-            }
-
-            try {
-                $data = Excel::toArray(new OrdersImport(), $file->path, $disk);
-                $data_import = $this->orderImport($data);
-               // Convert JsonResponse to array
-               if ($data_import instanceof \Illuminate\Http\JsonResponse) {
-                $data_import = json_decode($data_import->getContent(), true);
-                }
-            
-                if (!empty($data_import) && isset($data_import['errors'])) {
-                    $errors = $data_import['errors'];
-                    
-                    // Check for duplicate entry error
-                    if (is_string($errors) && str_contains($errors, 'SQLSTATE[23000]') && str_contains($errors, 'Duplicate entry') && str_contains($errors, 'orders.orders_public_id_unique')) {
-                        return response()->json([
-                            'status' => 'error',
-                            'message' => __('messages.duplicate_order_import'),
-                            'errors' => $errors
-                        ], 422);
-                    }
-
-                    return response()->json([
-                        'status' => 'error',
-                        'message' => __('messages.import_failed_invalid_location'),
-                        'errors' => $errors
-                    ], 422);
-                }
-            } catch (\Exception $e) {
-                return response()->error(__('messages.invalid_file'));
-            }
-
+    foreach ($files as $file) {
+        // validate file type
+        if (!Str::endsWith($file->path, $validFileTypes)) {
+            $allErrors[] = ['N/A', 'Invalid file uploaded: ' . $file->name, 'N/A'];
+            continue;
         }
-        
-        return response()->json(
-            [
-                'succeed' => true,
-                'message' => __('messages.order_import_success')
-            ]
-        );
+
+        try {
+            $data = Excel::toArray(new OrdersImport(), $file->path, $disk);
+            $data_import = $this->orderImport($data);
+
+            // Convert JsonResponse to array
+            if ($data_import instanceof \Illuminate\Http\JsonResponse) {
+                $data_import = json_decode($data_import->getContent(), true);
+            }
+
+            if (!empty($data_import) && isset($data_import['errors'])) {
+                $errors = $data_import['errors'];
+                
+                // Track partial success information
+                if (isset($data_import['partial_success']) && $data_import['partial_success']) {
+                    $hasPartialSuccess = true;
+                    $totalSuccessfulImports += $data_import['successful_imports'] ?? 0;
+                    $totalCreatedOrders += $data_import['created_orders'] ?? 0;
+                    $totalUpdatedOrders += $data_import['updated_orders'] ?? 0;
+                }
+
+                // Append detailed errors - ensure they're in the correct format
+                if (is_array($errors)) {
+                    foreach ($errors as $error) {
+                        if (is_array($error)) {
+                            // Error is already in array format [row, message, trip_id]
+                            $allErrors[] = $error;
+                        } else {
+                            // Error is a string, format it properly
+                            $allErrors[] = ['N/A', $error, 'N/A'];
+                        }
+                    }
+                } else {
+                    $allErrors[] = ['N/A', $errors, 'N/A'];
+                }
+            } else if (!empty($data_import) && isset($data_import['summary'])) {
+                // Handle successful import with summary
+                $summary = $data_import['summary'];
+                $totalSuccessfulImports += $summary['total_processed'] ?? 0;
+                $totalCreatedOrders += $summary['created'] ?? 0;
+                $totalUpdatedOrders += $summary['updated'] ?? 0;
+            }
+        } catch (\Exception $e) {
+            \Log::error('File import failed', [
+                'file' => $file->name,
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+
+            $allErrors[] = ['N/A', 'File import failed for ' . $file->name . ': ' . $e->getMessage(), 'N/A'];
+        }
     }
 
+    // Return appropriate response based on results
+    if (!empty($allErrors)) {
+        if ($hasPartialSuccess) {
+            $timestamp = date('Y_m_d_H_i_s');
+            $fileName = "order_import_errors_{$timestamp}.xlsx";
+            $fullPath = storage_path("logs/{$fileName}");
+
+            // Ensure directory exists
+            if (!file_exists(storage_path('logs'))) {
+                mkdir(storage_path('logs'), 0755, true);
+            }
+
+            $tempRelativePath = "temp/{$fileName}";
+            
+            // Don't use array_values() - pass the errors directly
+            Excel::store(new OrderImportErrorsExport($allErrors), $tempRelativePath, 'local');
+            
+            // Move it manually to storage/logs
+            copy(storage_path("app/{$tempRelativePath}"), $fullPath);
+
+            return response()->json([
+                'error_log_url' => $fullPath,
+                'message' =>  "Import partially completed. {$totalCreatedOrders} trip(s) created, {$totalUpdatedOrders} updated. However, some rows contain errors and have been logged.",
+                'status' => 'partial_success',
+                'successful_imports' => $totalSuccessfulImports,
+                'created_orders' => $totalCreatedOrders,
+                'updated_orders' => $totalUpdatedOrders,
+                'total_errors' => count($allErrors),
+                'errors' => $allErrors,
+                'success' => false,
+            ]);
+        } else {
+            $timestamp = date('Y_m_d_H_i_s');
+            $fileName = "order_import_errors_{$timestamp}.xlsx";
+            $fullPath = storage_path("logs/{$fileName}");
+
+            // Ensure directory exists
+            if (!file_exists(storage_path('logs'))) {
+                mkdir(storage_path('logs'), 0755, true);
+            }
+
+            $tempRelativePath = "temp/{$fileName}";
+            
+            // Don't use array_values() - pass the errors directly
+            Excel::store(new OrderImportErrorsExport($allErrors), $tempRelativePath, 'local');
+
+            // Move it manually to storage/logs
+            copy(storage_path("app/{$tempRelativePath}"), $fullPath);
+
+            return response()->json([
+                'error_log_url' => $fullPath,
+                'message' => 'Import failed. No trips were imported due to errors. Please review the attached error log for details.',
+                'status' => 'error',
+                'total_errors' => count($allErrors),
+                'errors' => $allErrors,
+                'success' => false,
+            ],400);
+        }
+    }
+
+    return response()->json([
+        'succeed' => true,
+        'message' => "Import completed successfully. {$totalCreatedOrders} trips created, {$totalUpdatedOrders} trips updated.",
+        'created_orders' => $totalCreatedOrders,
+        'updated_orders' => $totalUpdatedOrders,
+        'total_processed' => $totalSuccessfulImports
+    ]);
+}
     /**
      * Updates a order to canceled and updates order activity.
      *
@@ -885,91 +970,120 @@ class OrderController extends FleetOpsController
 
     
 
-    public function orderImport($excelData)
-    {
-        
-        try {
-            $records = [];
-    
-            // Print excelData for debugging
-            Log::info('Excel Data:', ['data' => $excelData]);
-    
-            // Process all rows in excelData (both rows)
-            foreach ($excelData as $rowData) {
-                foreach ($rowData as $row) {
-                    $waypoints = [];
-                    $order = 0;
-                    $i = 1;
-                    // Debug log for each row
-                    Log::info('Processing Row:', ['block_id' => $row['block_id'], 'trip_id' => $row['trip_id']]);
-    
-                    // Process waypoints for each stop
-                    while (array_key_exists("stop_" . $i, $row)) {
-                        $stopKey = "stop_" . $i;
-                        $arrivalKey = "stop_" . $i . "_yard_arrival";
-                        $departureKey = "stop_" . $i . "_yard_departure";
+   public function orderImport($excelData)
+{
+    try {
+        if (!class_exists('\DB')) {
+            throw new \Exception('DB facade not available for transactions');
+        }
+        $records = [];
+        $ordersCache = [];
+        $importErrors = [];
+        $updatedOrders = [];
+        $createdOrders = [];
 
-                        if (!empty($row[$stopKey])) {
-                         $place = Place::where([
-                                    ['code', '=', $row[$stopKey]],
-                                    ['company_uuid', '=', session('company')],
-                                    ['deleted_at', '=', null]
-                                ])->first();
+        foreach ($excelData as $sheetIndex => $sheetRows) {
+            $sheetRowsWithIndex = collect($sheetRows)->map(function ($row, $originalIndex) {
+                $row['_original_row_index'] = $originalIndex;
+                return $row;
+            });
 
-                        if ($place) {
+            $grouped = $sheetRowsWithIndex->groupBy(fn ($row) => $row['trip_id'] ?? Str::uuid());
+
+            foreach ($grouped as $tripId => $rows) {
+                $yardArrivalDates = [];
+                $waypoints = [];
+                $routeRows = [];
+                $order = 0;
+                $tripHasErrors = false;
+
+                foreach ($rows as $groupIndex => $row) {
+                    $originalRowIndex = $row['_original_row_index'];
+
+                    foreach ($row as $key => $value) {
+                        if (Str::endsWith(Str::lower($key), '_yard_arrival') && !empty($value)) {
+                            try {
+                                $yardArrivalDates[] = $this->parseExcelDate($value);
+                            } catch (\Exception $e) {
+                                continue;
+                            }
+                        }
+                    }
+
+                    foreach (['stop_1', 'stop_2'] as $stopKey) {
+                        $placeCode = $row[$stopKey] ?? null;
+                        if (!empty($placeCode)) {
+                            $place = Place::where('code', $placeCode)->first();
+
+                            if (!$place) {
+                                $displayRowIndex = $originalRowIndex + 1;
+                                $importErrors[] = [
+                                    (string)$displayRowIndex,
+                                    "Invalid place code '{$placeCode}' in column '{$stopKey}'",
+                                    (string)$tripId
+                                ];
+                                $tripHasErrors = true;
+                            } else {
                                 $waypoints[] = [
                                     'place_uuid' => $place->uuid,
-                                    // 'public_id' => $i === 1 ? $row['vr_id'] : null,
                                     'order' => $order++,
                                     'meta' => [
-                                        'yard_arrival' => $row[$arrivalKey] ?? null,
-                                        'yard_departure' => $row[$departureKey] ?? null
+                                        'row_index' => $originalRowIndex,
+                                        'stop_key' => $stopKey,
+                                        'place_code' => $placeCode
                                     ]
                                 ];
                             }
                         }
-                        $i++;
                     }
-    
-                    $orderInput = [
-                        'order' => [
-                            'internal_id' => isset($row['block_id']) && !empty($row['block_id']) ? $row['block_id'] : null,
-                            'public_id' => isset($row['trip_id']) && !empty($row['trip_id']) ? $row['trip_id'] : null,
-                            'status' => $row['status'] ? strtolower($row['status']) : null,
-                            'type' => 'transport',
-                            // 'scheduled_at' => isset($row['start_date']) && !empty($row['start_date']) 
-                            //     ? Carbon::parse(str_replace('/', '-', $row['start_date']))->format('Y-m-d H:i:s')
-                            //     : null,
-                            // 'estimated_end_date' => isset($row['end_date']) && !empty($row['end_date']) 
-                            //     ? Carbon::parse(str_replace('/', '-', $row['end_date']))->format('Y-m-d H:i:s')
-                            //     : null,
-                            'scheduled_at' => !empty($row['start_date']) ? $this->parseExcelDate($row['start_date']) : null,
-                            'estimated_end_date' => !empty($row['end_date']) ? $this->parseExcelDate($row['end_date']) : null,
-                            'meta' => [
-                                'vehicle_id' => isset($row['vehicle_id']) && !empty($row['vehicle_id']) ? $row['vehicle_id'] : null,
-                                'carrier' => isset($row['carrier']) && !empty($row['carrier']) ? $row['carrier'] : null,
-                                'subcarrier' => isset($row['subcarrier']) && !empty($row['subcarrier']) ? $row['subcarrier'] : null,
-                                'equipment_type' => isset($row['equipment_type']) && !empty($row['equipment_type']) ? $row['equipment_type'] : null,
-                                'cpt' => isset($row['cpt']) && !empty($row['cpt']) ? $row['cpt'] : null
-                            ],
-                            'payload' => [
-                                'waypoints' => $waypoints
-                            ]
+                     \Log::error('waypoints meta data check in order import', [
+                           "waypoints" => $waypoints
+                        ]);
+                    $row['_original_row_index'] = $originalRowIndex;
+                    $routeRows[] = $row;
+                }
+
+                if ($tripHasErrors) {
+                    continue;
+                }
+
+                $firstRow = $rows[0];
+                $scheduledAt = !empty($firstRow['cpt']) ? $this->parseExcelDate($firstRow['cpt']) : null;
+                $estimatedEndDate = !empty($yardArrivalDates) ? collect($yardArrivalDates)->sortDesc()->first() : null;
+
+                $orderInput = [
+                    'order' => [
+                        'internal_id' => $firstRow['block_id'] ?? null,
+                        'public_id' => $tripId,
+                        'status' => strtolower($firstRow['status'] ?? 'planned'),
+                        'type' => 'transport',
+                        'scheduled_at' => $scheduledAt,
+                        'estimated_end_date' => $estimatedEndDate,
+                        'meta' => [
+                            'vehicle_id' => $firstRow['vehicle_id'] ?? null,
+                            'carrier' => $firstRow['carrier'] ?? null,
+                            'subcarrier' => $firstRow['subcarrier'] ?? null,
+                            'equipment_type' => $firstRow['equipment_type'] ?? null,
+                            'cpt' => $firstRow['cpt'] ?? null
+                        ],
+                        'payload' => [
+                            'waypoints' => []
                         ]
-                    ];
-    
+                    ]
+                ];
+
+                try {
                     $orderRequest = new Request();
                     $orderRequest->merge($orderInput);
-    
-                    $record = $this->model->createRecordFromRequest(
+
+                    $order = $this->model->createRecordFromRequest(
                         $orderRequest,
                         function ($request, &$input) {
                             if (!isset($input['order_config_uuid'])) {
-                                $defaultOrderConfig = OrderConfig::where([
-                                    ['key', '=', 'transport'],
-                                    ['company_uuid', '=', session('company')],
-                                    ['deleted_at', '=', null]
-                                ])->first();
+                                $defaultOrderConfig = OrderConfig::where('key', 'transport')
+                                    ->where('company_uuid', session('company'))
+                                    ->whereNull('deleted_at')
+                                    ->first();
                                 if ($defaultOrderConfig) {
                                     $input['order_config_uuid'] = $defaultOrderConfig->uuid;
                                 }
@@ -977,61 +1091,116 @@ class OrderController extends FleetOpsController
                         },
                         function (&$request, Order &$order, &$requestInput) {
                             $input = $request->input('order');
-                            
-                            // Save order first
                             $order->save();
-    
-                            // Create payload
+
                             $payload = new Payload([
                                 'company_uuid' => session('company'),
                                 'type' => 'transport'
                             ]);
                             $payload->save();
-    
-                            // Associate payload with order
+
                             $order->payload_uuid = $payload->uuid;
                             $order->save();
-    
-                            // Get waypoints data
-                            $waypoints = Utils::get($input, 'payload.waypoints', []);
-                            if ($waypoints && count($waypoints) > 2) {
-                            // Create waypoints
-                                foreach ($waypoints as $waypointData) {
-                                    Waypoint::create(array_merge($waypointData, [
-                                        'company_uuid' => session('company'),
-                                        'payload_uuid' => $payload->uuid
-                                    ]));
-                                }
-                            }
-                            //create route segments
-                            $payload_uuid = $payload->uuid ?? null;
-                            if (!empty($payload_uuid)) {
-                                $waypoints = $this->getWaypoints($payload_uuid);
-                                $this->createRouteSegments($waypoints, $order->id, $payload_uuid);
-                            }
-    
-                            // Set status
+
                             $order->setStatus($input['status'], false);
-                            $order->setPreliminaryDistanceAndTime();
                         }
                     );
-    
-                    $records[] = $record;
-                    event(new OrderReady($record));
+                     \Log::error('After created waypoints meta data', [
+                           "waypoints" => $waypoints
+                        ]);
+                    $savedWaypoints = [];
+                    $waypointMeta = []; // Store meta separately
+                    foreach ($waypoints as $wpData) {
+                        $saved = Waypoint::create([
+                            'company_uuid' => session('company'),
+                            'payload_uuid' => $order->payload_uuid,
+                            'place_uuid' => $wpData['place_uuid'],
+                            'order' => $wpData['order'],
+                            'meta' => $wpData['meta'],
+                        ]);
+                        $savedWaypoints[] = $saved;
+                        // Store meta data separately using waypoint UUID as key
+                        $waypointMeta[$saved->uuid] = $wpData['meta'];
+                    }
+
+                    try {
+                        $this->createRouteSegmentsFromRows($routeRows, $order, $savedWaypoints, $waypointMeta);
+                        $ordersCache[$tripId] = $order;
+                        $records[] = $order;
+                        event(new OrderReady($order));
+                    } catch (\Exception $e) {
+                        $importErrors[] = [
+                            '-',
+                            "Trip {$tripId}: Route segment creation failed - " . $e->getMessage(),
+                            $tripId
+                        ];
+                        \Log::error('Route segment creation failed', [
+                            'trip_id' => $tripId,
+                            'order_id' => $order->id,
+                            'error' => $e->getMessage(),
+                            'trace' => $e->getTraceAsString()
+                        ]);
+                        $ordersCache[$tripId] = $order;
+                        $records[] = $order;
+                    }
+
+                } catch (\Exception $e) {
+                    $importErrors[] = ['-', "Trip {$tripId}: Order creation failed - " . $e->getMessage(), $tripId];
+                    \Log::error('Order creation failed', [
+                        'trip_id' => $tripId,
+                        'error' => $e->getMessage(),
+                        'trace' => $e->getTraceAsString()
+                    ]);
                 }
             }
-    
-            // return ['orders' => $records];
-    
-        } 
-        catch (\Exception $e) {
-            Log::error('An exception occurred.', [
-                'message' => $e->getMessage(),
-                'trace' => $e->getTraceAsString()
-            ]);
-            return response()->json(data: ['success' => false, 'errors' => $e->getMessage()],status: 400);
         }
+
+        if (!empty($importErrors)) {
+            $successCount = count($records);
+            $errorCount = count($importErrors);
+            $createdCount = count($createdOrders);
+            $updatedCount = count($updatedOrders);
+
+            return response()->json([
+                'success' => false,
+                'partial_success' => $successCount > 0,
+                'successful_imports' => $successCount,
+                'created_orders' => $createdCount,
+                'updated_orders' => $updatedCount,
+                'total_errors' => $errorCount,
+                'errors' => $importErrors,
+                'message' => $successCount > 0
+                    ? "Partial import completed. {$createdCount} trips created, {$updatedCount} trips updated, {$errorCount} errors found."
+                    : "Import failed. No trips were imported due to validation errors."
+            ], 422);
+        }
+
+        $successCount = count($records);
+        $createdCount = count($createdOrders);
+        $updatedCount = count($updatedOrders);
+
+        return [
+            'records' => $records,
+            'summary' => [
+                'total_processed' => $successCount,
+                'created' => $createdCount,
+                'updated' => $updatedCount,
+                'created_trips' => $createdOrders,
+                'updated_trips' => $updatedOrders
+            ]
+        ];
+
+    } catch (\Exception $e) {
+        \Log::error('Order import failed', [
+            'message' => $e->getMessage(),
+            'trace' => $e->getTraceAsString()
+        ]);
+
+        return response()->json(['success' => false, 'errors' => [[$e->getMessage()]]], 400);
     }
+}
+
+
     /*
         * Get the wayppoints for the payload of an order.
         *
@@ -1054,7 +1223,7 @@ class OrderController extends FleetOpsController
      * @param string $payloadUuid
      * @return void
      */
-    public function createRouteSegments($waypoints, $orderId, $payloadUuid): void
+   public function createRouteSegments($waypoints, $orderId, $payloadUuid): void
     {
         try {
             if ($waypoints && count($waypoints) > 2) {
@@ -1084,6 +1253,253 @@ class OrderController extends FleetOpsController
             ]);
         }
     }
+/**
+ * Create route segments from rows (each row = 1 segment).
+ * Handles duplicate waypoints by matching them based on row index and position.
+ * If any error occurs, detailed error information is returned.
+ *
+ * @param array $rows
+ * @param Order $order
+ * @param array $savedWaypoints - Array of saved waypoints with metadata
+ * @return void
+ * @throws \Exception
+ */
+public function createRouteSegmentsFromRows(array $rows, Order $order, array $savedWaypoints = [], array $waypointMeta = []): void
+{
+    $errors = [];
+    $createdSegments = [];
+    
+    foreach ($rows as $groupIndex => $row) {
+        $originalRowIndex = $row['_original_row_index'] ?? $groupIndex; // Get original row index or fallback
+        $fromCode = $row['stop_1'] ?? null;
+        $toCode = $row['stop_2'] ?? null;
+
+        if (!$fromCode || !$toCode) {
+            $displayRowIndex = $originalRowIndex + 1;
+            $errors[] = [$displayRowIndex, "Missing stop_1 or stop_2", $order->public_id];
+            continue;
+        }
+
+        // Find the correct waypoints for this specific row
+        $fromWaypoint = null;
+        $toWaypoint = null;
+          \Log::info('Saved Waypoints', [
+               'Saved Waypoint' => $savedWaypoints,
+            ]);
+          if (!empty($savedWaypoints) && !empty($waypointMeta)) {
+            \Log::info('Searching waypoints via metadata', [
+                'total_waypoints' => count($savedWaypoints),
+                'looking_for_row' => $originalRowIndex,
+                'from_code' => $fromCode,
+                'to_code' => $toCode
+            ]);
+
+            // Use saved waypoints with metadata for precise matching
+            foreach ($savedWaypoints as $waypoint) {
+                // FIX: Ensure meta is properly handled as array
+                $meta = $waypointMeta[$waypoint->uuid] ?? [];
+                // if (is_string($meta)) {
+                //     $meta = json_decode($meta, true) ?? [];
+                // } elseif (!is_array($meta)) {
+                //     $meta = [];
+                // }
+                
+                \Log::info('Checking waypoint metadata check', [
+                    'waypoint_id' => $waypoint->uuid,
+                    'waypoint_meta' => $meta,
+                    'target_row' => $originalRowIndex
+                ]);
+                
+                if (isset($meta['row_index']) && $meta['row_index'] == $originalRowIndex) {
+                    if (isset($meta['stop_key']) && $meta['stop_key'] === 'stop_1' && 
+                        isset($meta['place_code']) && $meta['place_code'] === $fromCode) {
+                        $fromWaypoint = $waypoint;
+                        \Log::info('Found FROM waypoint via metadata', [
+                            'waypoint_id' => $waypoint->uuid,
+                            'place_code' => $fromCode,
+                            'row_index' => $originalRowIndex
+                        ]);
+                    }
+                    if (isset($meta['stop_key']) && $meta['stop_key'] === 'stop_2' && 
+                        isset($meta['place_code']) && $meta['place_code'] === $toCode) {
+                        $toWaypoint = $waypoint;
+                        \Log::info('Found TO waypoint via metadata', [
+                            'waypoint_id' => $waypoint->uuid,
+                            'place_code' => $toCode,
+                            'row_index' => $originalRowIndex
+                        ]);
+                    }
+                }
+            }
+
+            // If metadata matching fails, try alternative matching
+            if (!$fromWaypoint || !$toWaypoint) {
+                \Log::warning('Metadata matching failed, trying alternative approach', [
+                    'from_found' => !is_null($fromWaypoint),
+                    'to_found' => !is_null($toWaypoint),
+                    'row_index' => $originalRowIndex
+                ]);
+
+                // Get places for the codes
+                $fromPlace = Place::where('code', $fromCode)->first();
+                $toPlace = Place::where('code', $toCode)->first();
+
+                if ($fromPlace && $toPlace) {
+                    // Try to find waypoints by place and order sequence
+                    foreach ($savedWaypoints as $waypoint) {
+                        if (!$fromWaypoint && $waypoint->place_uuid === $fromPlace->uuid) {
+                            // Find the FROM waypoint for this row (even numbered positions for stop_1)
+                            $meta = $waypoint->meta;
+                            if (is_string($meta)) {
+                                $meta = json_decode($meta, true) ?? [];
+                            } elseif (!is_array($meta)) {
+                                $meta = [];
+                            }
+                            
+                            if (isset($meta['stop_key']) && $meta['stop_key'] === 'stop_1') {
+                                $fromWaypoint = $waypoint;
+                                \Log::info('Found FROM waypoint via alternative matching', [
+                                    'waypoint_id' => $waypoint->uuid,
+                                    'place_code' => $fromCode
+                                ]);
+                            }
+                        }
+                        if (!$toWaypoint && $waypoint->place_uuid === $toPlace->uuid) {
+                            // Find the TO waypoint for this row (odd numbered positions for stop_2)
+                            $meta = $waypoint->meta;
+                            if (is_string($meta)) {
+                                $meta = json_decode($meta, true) ?? [];
+                            } elseif (!is_array($meta)) {
+                                $meta = [];
+                            }
+                            
+                            if (isset($meta['stop_key']) && $meta['stop_key'] === 'stop_2') {
+                                $toWaypoint = $waypoint;
+                                \Log::info('Found TO waypoint via alternative matching', [
+                                    'waypoint_id' => $waypoint->uuid,
+                                    'place_code' => $toCode
+                                ]);
+                            }
+                        }
+                    }
+                }
+            }
+        } else {
+            // Fallback to database lookup (less precise with duplicates)
+            $fromPlace = Place::where('code', $fromCode)->first();
+            $toPlace = Place::where('code', $toCode)->first();
+
+            if (!$fromPlace || !$toPlace) {
+                $displayRowIndex = $originalRowIndex + 1;
+                $errors[] = [$displayRowIndex, "Invalid place code from: {$fromCode}, to: {$toCode}", $order->public_id];
+                continue;
+            }
+
+            // Get waypoints by order (sequence) - this helps with duplicates
+            $waypoints = Waypoint::where('payload_uuid', $order->payload_uuid)
+                ->orderBy('order')
+                ->get();
+            print_r($waypoints,true);
+            $fromWaypoint = $waypoints->firstWhere('place_uuid', $fromPlace->uuid);
+            $toWaypoint = $waypoints->firstWhere('place_uuid', $toPlace->uuid);
+            // Try to match waypoints based on their sequence and the row position
+            // $waypointsByPlace = $waypoints->groupBy('place_uuid');
+            
+            // $fromWaypoints = $waypointsByPlace->get($fromPlace->uuid, collect());
+            // $toWaypoints = $waypointsByPlace->get($toPlace->uuid, collect());
+
+            // For duplicates, try to match by position in the sequence
+            // $fromWaypoint = $fromWaypoints->skip($originalRowIndex % $fromWaypoints->count())->first();
+            // $toWaypoint = $toWaypoints->skip($originalRowIndex % $toWaypoints->count())->first();
+        }
+
+        if (!$fromWaypoint || !$toWaypoint) {
+            $displayRowIndex = $originalRowIndex + 1;
+            $errors[] = [$displayRowIndex, "Missing waypoint for from/to place (from: {$fromCode}, to: {$toCode})", $order->public_id];
+            continue;
+        }
+
+        try {
+            $routeSegment = new RouteSegment();
+            $routeSegment->order_id = $order->id;
+            $routeSegment->payload_id = $order->payload_uuid;
+            $routeSegment->from_waypoint_id = $fromWaypoint->uuid;
+            $routeSegment->to_waypoint_id = $toWaypoint->uuid;
+            $routeSegment->public_id = 'RI_' . Str::upper(Str::random(5));
+            $routeSegment->company_uuid = session('company');
+            $routeSegment->created_by_id = UserHelper::getIdFromUuid(auth()->id());
+
+            // FIX: Handle potential array values from Excel
+            $routeSegment->cr_id = is_array($row['cr_id'] ?? null) ? null : ($row['cr_id'] ?? null);
+            $routeSegment->shipper_accounts = is_array($row['shipper_accounts'] ?? null) ? null : ($row['shipper_accounts'] ?? null);
+            $routeSegment->equipment_type = is_array($row['equipment_type'] ?? null) ? null : ($row['equipment_type'] ?? null);
+            $routeSegment->trailer_id = is_array($row['trailer_id'] ?? null) ? null : ($row['trailer_id'] ?? null);
+            $routeSegment->operator_id = is_array($row['operator_id'] ?? null) ? null : ($row['operator_id'] ?? null);
+            
+            // FIX: Handle date parsing more safely
+            $routeSegment->vr_creation_date_time = null;
+            if (!empty($row['vr_creation_date_time']) && !is_array($row['vr_creation_date_time'])) {
+                try {
+                    $routeSegment->vr_creation_date_time = $this->parseExcelDate($row['vr_creation_date_time']);
+                } catch (\Exception $e) {
+                    \Log::warning('Failed to parse vr_creation_date_time', [
+                        'value' => $row['vr_creation_date_time'],
+                        'error' => $e->getMessage()
+                    ]);
+                }
+            }
+            
+            $routeSegment->vr_cancellation_date_time = null;
+            if (!empty($row['vr_cancellation_date_time']) && !is_array($row['vr_cancellation_date_time'])) {
+                try {
+                    $routeSegment->vr_cancellation_date_time = $this->parseExcelDate($row['vr_cancellation_date_time']);
+                } catch (\Exception $e) {
+                    \Log::warning('Failed to parse vr_cancellation_date_time', [
+                        'value' => $row['vr_cancellation_date_time'],
+                        'error' => $e->getMessage()
+                    ]);
+                }
+            }
+
+            $routeSegment->save();
+            $createdSegments[] = $routeSegment->id;
+            
+            // Verify the route segment was saved
+            $verifySegment = RouteSegment::find($routeSegment->uuid);
+            if (!$verifySegment) {
+                $displayRowIndex = $originalRowIndex + 1;
+                $errors[] = [$displayRowIndex, "Route segment creation verification failed", $order->public_id];
+            } else {
+                \Log::info('Route segment verified in database', [
+                    'segment_id' => $verifySegment->id,
+                    'from_waypoint_id' => $verifySegment->from_waypoint_id,
+                    'to_waypoint_id' => $verifySegment->to_waypoint_id
+                ]);
+            }
+            
+        } catch (\Exception $e) {
+            $displayRowIndex = $originalRowIndex + 1;
+            $errors[] = [$displayRowIndex, $e->getMessage(), $order->public_id];
+            
+            \Log::error('Route segment creation error', [
+                'row_index' => $originalRowIndex,
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+                'row_data' => $row
+            ]);
+        }
+    }
+
+    if (!empty($errors)) {
+        // Create a more descriptive error message
+        $errorMessages = array_map(function($error) {
+            return "Row {$error[0]}: {$error[1]}";
+        }, $errors);
+        
+        throw new \Exception("Route Segment Import Failed: " . implode("; ", $errorMessages));
+    }
+}
+
 
     /**
      * Get the order route segments .
