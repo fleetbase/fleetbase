@@ -360,9 +360,9 @@ class OrderController extends FleetOpsController
 
     // Return appropriate response based on results
     if (!empty($allErrors)) {
-        if ($hasPartialSuccess) {
             $timestamp = date('Y_m_d_H_i_s');
-            $fileName = "order_import_errors_{$timestamp}.xlsx";
+            $company = session('company');
+            $fileName = "{$company}_order_import_errors_{$timestamp}.xlsx";
             $fullPath = storage_path("logs/{$fileName}");
 
             // Ensure directory exists
@@ -377,7 +377,7 @@ class OrderController extends FleetOpsController
             
             // Move it manually to storage/logs
             copy(storage_path("app/{$tempRelativePath}"), $fullPath);
-
+        if ($hasPartialSuccess) {
             return response()->json([
                 'error_log_url' => $fullPath,
                 'message' =>  "Import partially completed. {$totalCreatedOrders} trip(s) created, {$totalUpdatedOrders} updated. However, some rows contain errors and have been logged.",
@@ -390,24 +390,7 @@ class OrderController extends FleetOpsController
                 'success' => false,
             ]);
         } else {
-            $timestamp = date('Y_m_d_H_i_s');
-            $fileName = "order_import_errors_{$timestamp}.xlsx";
-            $fullPath = storage_path("logs/{$fileName}");
-
-            // Ensure directory exists
-            if (!file_exists(storage_path('logs'))) {
-                mkdir(storage_path('logs'), 0755, true);
-            }
-
-            $tempRelativePath = "temp/{$fileName}";
-            
-            // Don't use array_values() - pass the errors directly
-            Excel::store(new OrderImportErrorsExport($allErrors), $tempRelativePath, 'local');
-
-            // Move it manually to storage/logs
-            copy(storage_path("app/{$tempRelativePath}"), $fullPath);
-
-            return response()->json([
+           return response()->json([
                 'error_log_url' => $fullPath,
                 'message' => 'Import failed. No trips were imported due to errors. Please review the attached error log for details.',
                 'status' => 'error',
@@ -1005,15 +988,27 @@ class OrderController extends FleetOpsController
                             try {
                                 $yardArrivalDates[] = $this->parseExcelDate($value);
                             } catch (\Exception $e) {
+                                $displayRowIndex = $originalRowIndex + 1;
+                                $importErrors[] = [
+                                    (string)$displayRowIndex,
+                                    "Invalid date format for column '{$key}'",
+                                    (string)$tripId
+                                ];
+                                $tripHasErrors = true;
                                 continue;
                             }
                         }
                     }
-
+                    $allPlaceCodes = $sheetRowsWithIndex->pluck('stop_1')->merge($sheetRowsWithIndex->pluck('stop_2'))->filter()->unique();
+                    $placesByCode = Place::whereIn('code', $allPlaceCodes)
+                                    ->where('company_uuid', session('company'))
+                                    ->whereNull('deleted_at')
+                                    ->get()
+                                    ->keyBy('code');
                     foreach (['stop_1', 'stop_2'] as $stopKey) {
                         $placeCode = $row[$stopKey] ?? null;
                         if (!empty($placeCode)) {
-                            $place = Place::where('code', $placeCode)->first();
+                            $place = $placesByCode->get($placeCode);
 
                             if (!$place) {
                                 $displayRowIndex = $originalRowIndex + 1;
@@ -1172,7 +1167,7 @@ class OrderController extends FleetOpsController
                 'message' => $successCount > 0
                     ? "Partial import completed. {$createdCount} trips created, {$updatedCount} trips updated, {$errorCount} errors found."
                     : "Import failed. No trips were imported due to validation errors."
-            ], 422);
+            ], 400);
         }
 
         $successCount = count($records);
@@ -1298,18 +1293,6 @@ public function createRouteSegmentsFromRows(array $rows, Order $order, array $sa
             foreach ($savedWaypoints as $waypoint) {
                 // FIX: Ensure meta is properly handled as array
                 $meta = $waypointMeta[$waypoint->uuid] ?? [];
-                // if (is_string($meta)) {
-                //     $meta = json_decode($meta, true) ?? [];
-                // } elseif (!is_array($meta)) {
-                //     $meta = [];
-                // }
-                
-                \Log::info('Checking waypoint metadata check', [
-                    'waypoint_id' => $waypoint->uuid,
-                    'waypoint_meta' => $meta,
-                    'target_row' => $originalRowIndex
-                ]);
-                
                 if (isset($meta['row_index']) && $meta['row_index'] == $originalRowIndex) {
                     if (isset($meta['stop_key']) && $meta['stop_key'] === 'stop_1' && 
                         isset($meta['place_code']) && $meta['place_code'] === $fromCode) {
@@ -1341,8 +1324,10 @@ public function createRouteSegmentsFromRows(array $rows, Order $order, array $sa
                 ]);
 
                 // Get places for the codes
-                $fromPlace = Place::where('code', $fromCode)->first();
-                $toPlace = Place::where('code', $toCode)->first();
+                $fromPlace = Place::where('code', $fromCode)->where('company_uuid', session('company'))
+                                    ->whereNull('deleted_at')->first();
+                $toPlace = Place::where('code', $toCode)->where('company_uuid', session('company'))
+                                    ->whereNull('deleted_at')->first();
 
                 if ($fromPlace && $toPlace) {
                     // Try to find waypoints by place and order sequence
@@ -1386,8 +1371,10 @@ public function createRouteSegmentsFromRows(array $rows, Order $order, array $sa
             }
         } else {
             // Fallback to database lookup (less precise with duplicates)
-            $fromPlace = Place::where('code', $fromCode)->first();
-            $toPlace = Place::where('code', $toCode)->first();
+            $fromPlace = Place::where('code', $fromCode)->where('company_uuid', session('company'))
+                                    ->whereNull('deleted_at')->first();
+            $toPlace = Place::where('code', $toCode)->where('company_uuid', session('company'))
+                                    ->whereNull('deleted_at')->first();
 
             if (!$fromPlace || !$toPlace) {
                 $displayRowIndex = $originalRowIndex + 1;
@@ -1399,18 +1386,9 @@ public function createRouteSegmentsFromRows(array $rows, Order $order, array $sa
             $waypoints = Waypoint::where('payload_uuid', $order->payload_uuid)
                 ->orderBy('order')
                 ->get();
-            print_r($waypoints,true);
+            
             $fromWaypoint = $waypoints->firstWhere('place_uuid', $fromPlace->uuid);
             $toWaypoint = $waypoints->firstWhere('place_uuid', $toPlace->uuid);
-            // Try to match waypoints based on their sequence and the row position
-            // $waypointsByPlace = $waypoints->groupBy('place_uuid');
-            
-            // $fromWaypoints = $waypointsByPlace->get($fromPlace->uuid, collect());
-            // $toWaypoints = $waypointsByPlace->get($toPlace->uuid, collect());
-
-            // For duplicates, try to match by position in the sequence
-            // $fromWaypoint = $fromWaypoints->skip($originalRowIndex % $fromWaypoints->count())->first();
-            // $toWaypoint = $toWaypoints->skip($originalRowIndex % $toWaypoints->count())->first();
         }
 
         if (!$fromWaypoint || !$toWaypoint) {
