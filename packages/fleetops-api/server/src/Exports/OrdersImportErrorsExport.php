@@ -9,7 +9,7 @@ use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 use Maatwebsite\Excel\Concerns\WithStyles;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
-class OrderImportErrorsExport implements FromCollection, WithHeadings, ShouldAutoSize, WithStyles
+class OrdersImportErrorsExport implements FromCollection, WithHeadings, ShouldAutoSize, WithStyles
 {
     protected $errors;
 

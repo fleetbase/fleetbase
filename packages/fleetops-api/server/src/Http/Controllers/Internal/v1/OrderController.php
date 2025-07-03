@@ -39,7 +39,7 @@ use Carbon\Carbon;
 use Fleetbase\FleetOps\Models\Waypoint;
 use Fleetbase\FleetOps\Models\RouteSegment;
 use App\Helpers\UserHelper;
-use Fleetbase\FleetOps\Exports\OrderImportErrorsExport;
+use Fleetbase\FleetOps\Exports\OrdersImportErrorsExport;
 use Illuminate\Support\Facades\Storage;
 
 class OrderController extends FleetOpsController
@@ -373,7 +373,7 @@ class OrderController extends FleetOpsController
             $tempRelativePath = "temp/{$fileName}";
             
             // Don't use array_values() - pass the errors directly
-            Excel::store(new OrderImportErrorsExport($allErrors), $tempRelativePath, 'local');
+            Excel::store(new OrdersImportErrorsExport($allErrors), $tempRelativePath, 'local');
             
             // Move it manually to storage/logs
             copy(storage_path("app/{$tempRelativePath}"), $fullPath);
