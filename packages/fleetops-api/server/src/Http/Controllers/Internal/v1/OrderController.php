@@ -42,6 +42,7 @@ use App\Helpers\UserHelper;
 use Fleetbase\FleetOps\Exports\OrdersImportErrorsExport;
 use Illuminate\Support\Facades\Storage;
 use Fleetbase\FleetOps\Models\Fleet;
+use Fleetbase\FleetOps\Models\ImportLog;
 
 class OrderController extends FleetOpsController
 {
@@ -309,6 +310,16 @@ class OrderController extends FleetOpsController
 
         try {
             $data = Excel::toArray(new OrdersImport(), $file->path, $disk);
+            // Flatten all rows from all sheets
+            $totalRows = collect($data)->flatten(1)->count();
+            \Log::info('Total rows: ' . $totalRows .", Company: ". session('company'));
+            if ($totalRows > 500) {
+                return response()->json([
+                    'success' => false,
+                    'message' => "Import failed: Maximum of 500 rows allowed. Your file contains {$totalRows} rows.",
+                    'status' => 'limit_exceeded'
+                ], 400);
+            }
             $data_import = $this->orderImport($data);
 
             // Convert JsonResponse to array
@@ -367,6 +378,7 @@ class OrderController extends FleetOpsController
             Excel::store(new OrdersImportErrorsExport($allErrors), $fileName, 's3');
             $url = Storage::url($fileName);
         if ($hasPartialSuccess) {
+            $this->logImportResult($file->uuid, 'order', 'PARTIALLY_COMPLETED', $fileName);
             return response()->json([
                 'error_log_url' => $url,
                 'message' =>  "Import partially completed. {$totalCreatedOrders} trip(s) created, {$totalUpdatedOrders} updated. However, some rows contain errors and have been logged.",
@@ -379,7 +391,8 @@ class OrderController extends FleetOpsController
                 'success' => false,
             ]);
         } else {
-           return response()->json([
+            $this->logImportResult($file->uuid, 'order', 'ERROR', $fileName);
+            return response()->json([
                 'error_log_url' => $url,
                 'message' => 'Import failed. No trips were imported due to errors. Please review the attached error log for details.',
                 'status' => 'error',
@@ -389,7 +402,7 @@ class OrderController extends FleetOpsController
             ]);
         }
     }
-
+    $this->logImportResult($file->uuid, 'order', 'COMPLETED', Null);
     return response()->json([
         'succeed' => true,
         'message' => "Import completed successfully. {$totalCreatedOrders} trips created, {$totalUpdatedOrders} trips updated.",
@@ -974,7 +987,27 @@ class OrderController extends FleetOpsController
                     $order = 0;
                     $tripHasErrors = false;
 
-                    // PRE-VALIDATION: Check for duplicate VR IDs before processing
+                    // PRE-VALIDATION: Check for duplicate Order id  &VR IDs before processing
+                    $trip_id = $rows[0]['trip_id'] ?? null;
+                    //check duplicates for trip_id
+                    if (!empty($trip_id)) {
+                        $exists = Order::where('public_id', $trip_id)
+                            ->where('company_uuid', session('company'))
+                            ->whereNull('deleted_at')
+                            ->exists();
+
+                        if ($exists) {
+                            $originalRowIndex = $rows[0]['_original_row_index'] ?? 0;
+                            $importErrors[] = [
+                                (string)($originalRowIndex + 1),
+                                "Trip {$tripId}: Trip ID '{$trip_id}' already exists.",
+                                (string)$tripId
+                            ];
+                            DB::rollback();
+                            continue;
+                        }
+                    }
+                    
                     $vrIds = [];
                     foreach ($rows as $row) {
                         if (!empty($row['vr_id'])) {
@@ -987,7 +1020,7 @@ class OrderController extends FleetOpsController
                         if (!empty($existingVrIds)) {
                             $importErrors[] = [
                                 '-',
-                                "Trip {$tripId}: Duplicate VR IDs found in database: " . implode(', ', $existingVrIds),
+                                "Trip {$tripId}: VR ID already exists: " . implode(', ', $existingVrIds),
                                 (string)$tripId
                             ];
                             DB::rollback();
@@ -1297,7 +1330,7 @@ public function createRouteSegmentsFromRows(array $rows, Order $order, array $sa
         $existingSegments = RouteSegment::whereIn('public_id', $vrIds)->get();
         if ($existingSegments->count() > 0) {
             $existingIds = $existingSegments->pluck('public_id')->toArray();
-            throw new \Exception("Duplicate VR IDs found in database: " . implode(', ', $existingIds));
+            throw new \Exception("VR ID already exists for the order:" . implode(', ', $existingIds));
         }
     }
     
@@ -1399,7 +1432,7 @@ public function createRouteSegmentsFromRows(array $rows, Order $order, array $sa
             // Double-check for uniqueness
             $exists = RouteSegment::where('public_id', $publicId)->exists();
             if ($exists) {
-                throw new \Exception("Route segment with VR ID '{$publicId}' already exists in database");
+                throw new \Exception("VR ID '{$publicId}' already exists");
             }
 
             $routeSegment = new RouteSegment();
@@ -1545,5 +1578,27 @@ public function createRouteSegmentsFromRows(array $rows, Order $order, array $sa
         } catch (\Exception $e) {
             return null; // Or optionally throw or log error
         }
+    }
+
+    /**
+     * Log the import result to the import_logs table.
+     *
+     * @param string $fileUuid
+     * @param string $module
+     * @param string $status (COMPLETED, PARTIALLY COMPLETED, ERROR)
+     * @param string|null $errorLogPath
+     * @return void
+     */
+    public function logImportResult(string $fileUuid, string $module, string $status, ?string $errorLogPath = null): void
+    {
+        ImportLog::create([
+            'uuid' => Str::uuid(),
+            'imported_file_uuid' => $fileUuid,
+            'module' => $module,
+            'status' => $status,
+            'error_log_file_path' => $errorLogPath,
+            'company_uuid' => session('company'),
+            'created_by_id' => UserHelper::getIdFromUuid(auth()->id()),
+        ]);
     }
 }
