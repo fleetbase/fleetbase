@@ -116,7 +116,9 @@ class Order extends Model
         'meta',
         'notes',
         'type',
-        'status'
+        'status',
+        'fleet_uuid',
+        'sub_fleet_uuid',
     ];
 
     /**

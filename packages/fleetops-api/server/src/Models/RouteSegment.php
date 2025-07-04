@@ -29,6 +29,14 @@ class RouteSegment extends Model
         'created_by_id',
         'updated_by_id',
         'company_uuid',
+        'tender_status',
+        'facility_sequence',
+        'stop_1_yard_arrival',
+        'stop_1_yard_departure',
+        'stop_2_yard_arrival',
+        'stop_2_yard_departure',
+        'stop_3_yard_arrival',
+        'stop_3_yard_departure',
     ];
 
     protected static function boot()
