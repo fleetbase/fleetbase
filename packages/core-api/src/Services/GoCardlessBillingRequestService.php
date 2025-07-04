@@ -624,13 +624,24 @@ class GoCardlessBillingRequestService
     {
         
         try {
+            Log::info('Creating billing request with subscription', $data);
             // Step 1: Create billing request for mandate only (no subscription_request)
             $payload = [
                 'billing_requests' => [
                     'mandate_request' => [
-                        'currency' => $data['currency'],
-                        'scheme' => $this->getSchemeForCurrency($data['currency']),
+                        'currency' => $data['currency'] ?? config('services.gocardless.currency'), // Force EUR
+                        'scheme' => $this->getSchemeForCurrency($data['currency'] ?? config('services.gocardless.currency')),
+                        // 'currency' => 'EUR',
+                        // 'scheme' => 'sepa_core',
                     ],
+                    // 'subscription_request' => [
+                    //     'amount' => (int) $data['subscription_request']['amount'],
+                    //     'currency' => "EUR",
+                    //     "name" => "My Subscription",
+                    //     "interval_unit" => "monthly",
+                    //     "interval" => 1,
+                    //     "start_date" => now()->toDateString()
+                    // ]
                     // 'payment_request' => [
                     //     'amount' => (int) $data['subscription_request']['amount'], // First payment amount
                     //     'currency' => $data['subscription_request']['currency'],
@@ -638,7 +649,7 @@ class GoCardlessBillingRequestService
                     // ]
                 ]
             ];
-            
+            Log::info('Payload', $payload); 
             // Add billing request metadata if provided
             if (isset($data['metadata']) && !empty($data['metadata'])) {
                 $metadata = [];
@@ -802,10 +813,24 @@ public function createSubscriptionFromPayment($payment, $mandateId, $startDate =
             $calculatedStartDate = date('Y-m-d', strtotime('+5 day'));
         }
         $validStartDate = $this->calculateValidStartDate($mandateId, $startDate);
+        $mandate = $this->client->mandates()->get($mandateId);
+        $scheme = $mandate->scheme;
+
+        switch ($scheme) {
+            case 'sepa_core':
+                $currency = 'EUR';
+                break;
+            case 'bacs':
+                $currency = 'GBP';
+                break;
+            // ... other schemes
+            default:
+                $currency = config('services.gocardless.currency');
+        }
         // Build subscription data
         $subscriptionData = [
             'amount' => $payment->amount * 100, // Convert to pence
-            'currency' => $payment->currency,
+            'currency' => $currency,
             'name' => $planPricing->plan->name . ' Subscription',
             'interval_unit' => $this->mapBillingCycleToInterval($planPricing->billing_cycle),
             'interval' => $this->calculateIntervalCount($planPricing->billing_cycle),

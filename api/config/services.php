@@ -54,5 +54,6 @@ return [
         'api_url' => env('GOCARDLESS_API_URL', 'https://api-sandbox.gocardless.com'),
         'ssl_verify' => env('GOCARDLESS_SSL_VERIFY', true), // Set to false in development
         'timeout' => env('GOCARDLESS_TIMEOUT', 30),
+        'currency' => env('GOCARDLESS_CURRENCY', 'EUR'),
     ],
 ];
