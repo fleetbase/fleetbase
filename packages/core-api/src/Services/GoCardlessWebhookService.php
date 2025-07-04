@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\DB;
 // use Fleetbase\Events\PaymentFailed;
 use Fleetbase\Services\GoCardlessBillingRequestService;
 use Illuminate\Support\Carbon;
+use Exception;
 
 class GoCardlessWebhookService
 {
@@ -390,6 +391,30 @@ class GoCardlessWebhookService
                 break;
         }
     }
+    private function getSubscriptionDetailsFromGoCardless($subscriptionId)
+    {
+        try {
+            $subscription = $this->client->subscriptions()->get($subscriptionId);
+            
+            return [
+                'id' => $subscription->id,
+                'status' => $subscription->status,
+                'amount' => $subscription->amount,
+                'currency' => $subscription->currency,
+                'start_date' => $subscription->start_date,
+                'end_date' => $subscription->end_date,
+                'upcoming_payments' => $subscription->upcoming_payments,
+                'metadata' => $subscription->metadata,
+                'links' => $subscription->links
+            ];
+        } catch (\GoCardlessPro\Core\Exception\ApiException $e) {
+            Log::error('GoCardless API error getting subscription details', [
+                'subscription_id' => $subscriptionId,
+                'error' => $e->getMessage()
+            ]);
+            return [];
+        }
+    }
     /**
  * Create new monthly payment record
  */
@@ -431,6 +456,18 @@ private function createMonthlyPaymentRecord(array $event): void
             'paid_out' => 'completed',
             default => 'pending'
         };
+        $nextPaymentDate = null;
+        if ($subscriptionId) {
+            $subscriptionDetails = $this->getSubscriptionDetailsFromGoCardless($subscriptionId);
+            if ($subscriptionDetails && isset($subscriptionDetails['upcoming_payments'][0])) {
+                $nextPaymentDate = $subscriptionDetails['upcoming_payments'][0]['charge_date'];
+            }
+        }
+        $paymentGateway = DB::table('payment_gateway')
+        ->where('name', 'GoCardless')
+        ->first();
+        
+        $paymentGatewayId = $paymentGateway ? $paymentGateway->id : 1; 
 
         $monthlyPayment = Payment::create([
             // 'session_id' => $sessionId,
@@ -445,8 +482,9 @@ private function createMonthlyPaymentRecord(array $event): void
             'status' => $status,
             'amount' => $originalPayment->total_amount,
             'currency' => $originalPayment->currency,
-            'payment_gateway_id' => 1,
+            'payment_gateway_id' =>  $paymentGatewayId,
             'payment_method' => 'direct_debit',
+            'next_payment_date' => $nextPaymentDate,
             // 'success_url' => $data['success_url'],
             // 'cancel_url' => $data['cancel_url'],
             'payment_metadata' => json_encode($event),
@@ -634,21 +672,46 @@ private function getErrorMessage($paymentDetails)
     
     private function handleMandateEvent(array $event): void
     {
-        // Handle mandate-related events
+        Log::info("Handling mandate event", [
+            'action' => $event['action'] ?? 'unknown',
+            'mandate_id' => $event['links']['mandate'] ?? null
+        ]);
+        
         $action = $event['action'];
         $mandateId = $event['links']['mandate'] ?? null;
         $billingRequestId = $event['links']['billing_request'] ?? null;
+        
+        if (!$billingRequestId) {
+            Log::warning('No billing request ID found in mandate event', $event);
+            return;
+        }
+        
         $originalPayment = Payment::where('checkout_session_id', $billingRequestId)->first();
-        $eventType="mandate_".$action;
+        
+        if (!$originalPayment) {
+            Log::warning("No payment found for billing request in mandate event: {$billingRequestId}");
+            return;
+        }
+        
+        $eventType = "mandate_" . $action;
+        $errorMessage = null;
+        
+        // Determine if this is an error event
+        if (isset($event['details']['cause'])) {
+            $cause = $event['details']['cause'];
+            if (in_array($cause, ['mandate_failed', 'mandate_cancelled', 'mandate_expired'])) {
+                $errorMessage = $event['details']['description'] ?? "Mandate {$cause}";
+            }
+        }
+        
         try {
             $eventData = [
                 'payment_id' => $originalPayment->id,
                 'event_type' => $eventType,
                 'event_data' => json_encode([
                     'original_event' => $event,
-                    'billing_request_id' => $event['links']['billing_request'] ?? null,
-                    'mandate_id' => $event['links']['mandate'] ?? null,
-                    
+                    'billing_request_id' => $billingRequestId,
+                    'mandate_id' => $mandateId,
                     'processed_at' => now()->toISOString(),
                     'event_details' => $event['details'] ?? [],
                     'event_metadata' => $event['metadata'] ?? []
@@ -664,15 +727,20 @@ private function getErrorMessage($paymentDetails)
             ];
 
             $eventId = DB::table('payment_events_relation')->insertGetId($eventData);
-
+            
+            Log::info("Saved mandate event", [
+                'event_id' => $eventId,
+                'payment_id' => $originalPayment->id,
+                'event_type' => $eventType
+            ]);
 
         } catch (Exception $e) {
-            Log::error("Failed to save billing request event", [
-                'payment_id' => $paymentId,
+            Log::error("Failed to save mandate event", [
+                'payment_id' => $originalPayment->id,
                 'event_type' => $eventType,
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
             ]);
-           
         }
     }
 
