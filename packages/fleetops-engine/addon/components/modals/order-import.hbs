@@ -1,6 +1,26 @@
 <Modal::Default @modalIsOpened={{@modalIsOpened}} @options={{@options}} @confirm={{@onConfirm}} @decline={{@onDecline}}>
     <div class="modal-body-container my-5">
-        {{#if @options.isProcessing}}
+        {{#if @options.isErrorState}}
+            {{!-- Error State - Show error message and download option --}}
+            <div class="min-h-56 w-full rounded px-4 py-8 text-center flex flex-col items-center justify-center border-2 border-dashed border-red-200 dark:border-red-500">
+                <div class="text-center py-4">
+                    <FaIcon @icon="exclamation-triangle" @size="3x" class="text-red-500 mb-4" />
+                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+                        {{t "fleet-ops.component.modals.order-import.import-failed"}}
+                    </h3>
+                  
+                    <div class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-700 rounded-md p-4 max-w-md mx-auto">
+                        <div class="flex items-start">
+                            <FaIcon @icon="info-circle" class="text-red-400 mr-2 mt-0.5 flex-shrink-0" />
+                            <div class="text-sm text-red-700 dark:text-red-300 text-left">
+                                {{t "fleet-ops.component.modals.order-import.error-log-instruction"}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {{else if @options.isProcessing}}
+            {{!-- Processing State --}}
             <div
                 class="min-h-56 dropzone w-full rounded px-4 py-8 min-h text-gray-900 dark:text-white text-center flex flex-col items-center justify-center border-2 border-dashed border-gray-200 dark:border-indigo-500"
             >
@@ -9,6 +29,7 @@
                 </div>
             </div>
         {{else}}
+            {{!-- Normal Upload State --}}
             {{#let (file-queue name="spreadsheets" onFileAdded=this.queueFile accept=(join "," @options.acceptedFileTypes)) as |queue|}}
                 <FileDropzone
                     @queue={{queue}}
@@ -54,6 +75,7 @@
                 </FileDropzone>
             {{/let}}
 
+            {{!-- Upload Queue - Only show when not in error state --}}
             {{#if @options.uploadQueue}}
                 <div class="mx-0 my-6">
                     <div class="flex items-center justify-between mb-4">
@@ -97,6 +119,5 @@
                 </div>
             {{/if}}
         {{/if}}
-
     </div>
 </Modal::Default>

@@ -148,6 +148,8 @@ common:
   valid-waypoints-error: Please add waypoints
   pickup-dropoff-error: Please provide both pickup and dropoff locations.
   valid-number-error: Please enter a valid number
+  download-error-log: Download
+  try-again: Try Again
 validation:
   required:
     payment_method: Payment method is required
@@ -220,7 +222,7 @@ statuses:
     cost-overruns : Cost Overruns
     communication : Communication
     vendor-management-issues : Vendor Management Issues
-
+    planned: Planned
     operational : Operational
     software-technical : Software Technical
     customer : Customer
@@ -1303,6 +1305,9 @@ fleet-ops:
         file-name: File Name
         file-size: File Size
         upload-date: Upload Date
+        import-failed: Import Failed
+        import-failed-message: No trips were imported due to errors. Please review the attached error log for details.
+        error-log-instruction: Some issues were found in your file. Click below to download details and fix them before trying again.
       order-label:
         loading: Loading Label...
       order-new-activity:
