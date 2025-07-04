@@ -669,7 +669,8 @@ export default class OperationsOrdersIndexNewController extends BaseController {
     
         this.notifications.success(this.intl.t('fleet-ops.operations.orders.index.new.import-success'));
         this.isCsvImportedOrder = true;
-        this.previewDraftOrderRoute(this.payload, this.waypoints, this.isMultipleDropoffOrder);
+        //this.previewDraftOrderRoute(this.payload, this.waypoints, this.isMultipleDropoffOrder);
+        this.hostRouter.transitionTo('console.fleet-ops.operations.orders.index', { queryParams: { layout: 'table', t: Date.now() } });
         modal.done();
     }
     
