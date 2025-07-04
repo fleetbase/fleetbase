@@ -13,7 +13,7 @@ class ImportLog extends Model
 
     protected $fillable = [
         'uuid',
-        'file_uuid',
+        'imported_file_uuid',
         'module',
         'status',
         'error_log_file_path',

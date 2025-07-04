@@ -313,7 +313,7 @@ class OrderController extends FleetOpsController
             // Flatten all rows from all sheets
             $totalRows = collect($data)->flatten(1)->count();
             \Log::info('Total rows: ' . $totalRows .", Company: ". session('company'));
-            if ($totalRows > 500) {
+            if ($totalRows > config('params.maximum_import_row_size')) {
                 return response()->json([
                     'success' => false,
                     'message' => "Import failed: Maximum of 500 rows allowed. Your file contains {$totalRows} rows.",
@@ -402,7 +402,7 @@ class OrderController extends FleetOpsController
             ]);
         }
     }
-    $this->logImportResult($file->uuid, 'order', 'COMPLETED', Null);
+    $this->logImportResult($file->uuid, 'order', 'COMPLETED', null);
     return response()->json([
         'succeed' => true,
         'message' => "Import completed successfully. {$totalCreatedOrders} trips created, {$totalUpdatedOrders} trips updated.",

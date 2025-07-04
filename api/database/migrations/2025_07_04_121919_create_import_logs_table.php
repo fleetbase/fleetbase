@@ -25,7 +25,7 @@ return new class extends Migration
             $table->integer('updated_by_id')->nullable();
             $table->timestamp('created_at')->useCurrent()->index();
             $table->timestamp('updated_at')->nullable()->useCurrent()->useCurrentOnUpdate();
-            
+            $table->softDeletes();
             $table->index('company_uuid');
             $table->index('module');
             $table->index('status');
