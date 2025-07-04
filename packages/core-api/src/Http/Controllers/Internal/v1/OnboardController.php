@@ -8,9 +8,12 @@ use Fleetbase\Http\Requests\OnboardRequest;
 use Fleetbase\Models\Company;
 use Fleetbase\Models\User;
 use Fleetbase\Models\VerificationCode;
+use App\Models\CompanyPlanRelation;
+use App\Models\PlanPricingRelation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
+use Illuminate\Http\JsonResponse;
 
 class OnboardController extends Controller
 {
@@ -233,5 +236,316 @@ class OnboardController extends Controller
             'verified_at' => $verifiedAt,
             'token'       => $token->plainTextToken,
         ]);
+    }
+
+    /**
+     * Get subscription status for a user and company.
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function getSubscriptionStatus(Request $request): JsonResponse
+    {
+        try {
+            $request->validate([
+                'user_id' => 'required|string|uuid',
+                'company_id' => 'required|string|uuid',
+            ]);
+
+            $userId = $request->input('user_id');
+            $companyId = $request->input('company_id');
+
+            // Check if user exists
+            $user = User::where('uuid', $userId)->first();
+            if (!$user) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'User not found',
+                    'data' => null
+                ], 404);
+            }
+
+            // Check if company exists
+            $company = Company::where('uuid', $companyId)->first();
+            if (!$company) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Company not found',
+                    'data' => null
+                ], 404);
+            }
+
+            // Check for existing subscription
+            $subscription = CompanyPlanRelation::where('user_uuid', $userId)
+                ->where('company_uuid', $companyId)
+                ->where('deleted', 0)
+                ->first();
+
+            if ($subscription) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Subscription found',
+                    'data' => [
+                        'subscription' => $subscription,
+                        'status' => $subscription->status,
+                        'verification_pending' => !$user->email_verified_at,
+                        'user_verified' => $user->email_verified_at ? true : false,
+                    ]
+                ], 200);
+            }
+
+            // No subscription found
+            return response()->json([
+                'success' => true,
+                'message' => 'No subscription found',
+                'data' => null
+            ], 200);
+
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Validation failed',
+                'errors' => $e->errors()
+            ], 422);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to check subscription status',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    /**
+     * Create a subscription for a user and company with comprehensive billing details.
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function createSubscription(Request $request): JsonResponse
+    {
+        try {
+            $request->validate([
+                'plan_pricing_id' => 'required|integer|exists:plan_pricing_relation,id',
+                'company_uuid' => 'required|string|uuid',
+                'user_uuid' => 'required|string|uuid',
+                'no_of_web_users' => 'required|integer|min:1',
+                'no_of_app_users' => 'required|integer|min:0',
+                'description' => 'nullable|string',
+                'success_url' => 'required|url',
+                'exit_uri' => 'required|url',
+                'customer' => 'required|array',
+                'customer.given_name' => 'required|string',
+                'customer.family_name' => 'required|string',
+                'customer.email' => 'required|email',
+                'convert_to_subscription' => 'boolean',
+                'subscription_start_date' => 'nullable|date',
+                'subscription_end_date' => 'nullable|date',
+            ]);
+
+            $planPricingId = $request->input('plan_pricing_id');
+            $companyUuid = $request->input('company_uuid');
+            $userUuid = $request->input('user_uuid');
+            $noOfWebUsers = $request->input('no_of_web_users');
+            $noOfAppUsers = $request->input('no_of_app_users');
+            $description = $request->input('description');
+            $successUrl = $request->input('success_url');
+            $exitUri = $request->input('exit_uri');
+            $customer = $request->input('customer');
+            $convertToSubscription = $request->input('convert_to_subscription', true);
+            $subscriptionStartDate = $request->input('subscription_start_date');
+            $subscriptionEndDate = $request->input('subscription_end_date');
+
+            // Check if user exists
+            $user = User::where('uuid', $userUuid)->first();
+            if (!$user) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'User not found',
+                    'data' => null
+                ], 404);
+            }
+
+            // Check if company exists
+            $company = Company::where('uuid', $companyUuid)->first();
+            if (!$company) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Company not found',
+                    'data' => null
+                ], 404);
+            }
+
+            // Check if plan pricing exists
+            $planPricing = PlanPricingRelation::where('id', $planPricingId)
+                ->where('deleted', 0)
+                ->where('record_status', 1)
+                ->first();
+
+            if (!$planPricing) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Plan pricing not found',
+                    'data' => null
+                ], 404);
+            }
+
+            // Check if subscription already exists
+            $existingSubscription = CompanyPlanRelation::where('user_uuid', $userUuid)
+                ->where('company_uuid', $companyUuid)
+                ->where('deleted', 0)
+                ->first();
+
+            if ($existingSubscription) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Subscription already exists',
+                    'data' => [
+                        'subscription' => $existingSubscription,
+                        'status' => $existingSubscription->status,
+                        'verification_pending' => !$user->email_verified_at,
+                    ]
+                ], 200);
+            }
+
+            // Calculate total amount based on plan pricing and user counts
+            $totalAmount = ($planPricing->price_per_user * $noOfWebUsers) + 
+                          ($planPricing->price_per_driver * $noOfAppUsers);
+
+            // Set subscription dates
+            $startDate = $subscriptionStartDate ? Carbon::parse($subscriptionStartDate) : now();
+            $endDate = $subscriptionEndDate ? Carbon::parse($subscriptionEndDate) : $startDate->copy()->addMonth();
+
+            // Create subscription
+            $subscription = CompanyPlanRelation::create([
+                'company_uuid' => $companyUuid,
+                'user_uuid' => $userUuid,
+                'plan_pricing_id' => $planPricingId,
+                'no_of_web_users' => $noOfWebUsers,
+                'no_of_app_users' => $noOfAppUsers,
+                'total_amount' => $totalAmount,
+                'status' => 'pending',
+                'auto_renew' => $convertToSubscription,
+                'expires_at' => $endDate,
+                'created_by_id' => $user->id,
+                'updated_by_id' => $user->id,
+            ]);
+
+            // Update company user counts
+            $company->update([
+                'number_of_web_users' => $noOfWebUsers,
+                'number_of_drivers' => $noOfAppUsers,
+            ]);
+
+            // Create billing request for payment
+            try {
+                $billingRequestData = [
+                    'plan_pricing_id' => $planPricingId,
+                    'company_uuid' => $companyUuid,
+                    'user_uuid' => $userUuid,
+                    'no_of_web_users' => $noOfWebUsers,
+                    'no_of_app_users' => $noOfAppUsers,
+                    'description' => $description,
+                    'success_url' => $successUrl,
+                    'exit_uri' => $exitUri,
+                    'customer' => $customer,
+                    'convert_to_subscription' => $convertToSubscription,
+                    'subscription_start_date' => $subscriptionStartDate,
+                    'subscription_end_date' => $subscriptionEndDate,
+                ];
+
+                // Call billing request controller to create payment flow
+                $billingRequestController = new \Fleetbase\Http\Controllers\Internal\v1\BillingRequestController();
+                $billingRequest = $billingRequestController->createBillingRequest(new \Illuminate\Http\Request($billingRequestData));
+
+                if ($billingRequest && isset($billingRequest->getData()->redirect_url)) {
+                    $paymentUrl = $billingRequest->getData()->redirect_url;
+                    
+                    return response()->json([
+                        'success' => true,
+                        'message' => 'Subscription created, payment required',
+                        'data' => [
+                            'subscription' => $subscription,
+                            'plan_details' => [
+                                'plan_id' => $planPricing->plan->id ?? null,
+                                'plan_name' => $planPricing->plan->name ?? null,
+                                'billing_cycle' => $planPricing->billing_cycle,
+                                'price_per_user' => $planPricing->price_per_user,
+                                'price_per_driver' => $planPricing->price_per_driver,
+                                'currency' => $planPricing->currency,
+                                'total_amount' => $totalAmount,
+                            ],
+                            'payment_url' => $paymentUrl,
+                            'billing_request_id' => $billingRequest->getData()->billing_request_id ?? null,
+                            // Don't set verification_pending here - verification happens after payment
+                        ]
+                    ], 200);
+                }
+            } catch (\Exception $e) {
+                \Log::error('Failed to create billing request: ' . $e->getMessage());
+            }
+
+            // Check if user needs verification
+            $verificationPending = !$user->email_verified_at;
+
+            if ($verificationPending) {
+                // Create verification session
+                $session = base64_encode($user->uuid);
+                VerificationCode::generateEmailVerificationFor($user);
+                
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Subscription created, verification required',
+                    'data' => [
+                        'subscription' => $subscription,
+                        'plan_details' => [
+                            'plan_id' => $planPricing->plan->id ?? null,
+                            'plan_name' => $planPricing->plan->name ?? null,
+                            'billing_cycle' => $planPricing->billing_cycle,
+                            'price_per_user' => $planPricing->price_per_user,
+                            'price_per_driver' => $planPricing->price_per_driver,
+                            'currency' => $planPricing->currency,
+                            'total_amount' => $totalAmount,
+                        ],
+                        'verification_pending' => true,
+                        'requires_verification' => true,
+                        'token' => $session,
+                        'session' => $session,
+                    ]
+                ], 200);
+            }
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Subscription created successfully',
+                'data' => [
+                    'subscription' => $subscription,
+                    'plan_details' => [
+                        'plan_id' => $planPricing->plan->id ?? null,
+                        'plan_name' => $planPricing->plan->name ?? null,
+                        'billing_cycle' => $planPricing->billing_cycle,
+                        'price_per_user' => $planPricing->price_per_user,
+                        'price_per_driver' => $planPricing->price_per_driver,
+                        'currency' => $planPricing->currency,
+                        'total_amount' => $totalAmount,
+                    ],
+                    'verification_pending' => false,
+                    'requires_verification' => false,
+                ]
+            ], 200);
+
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Validation failed',
+                'errors' => $e->errors()
+            ], 422);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to create subscription',
+                'error' => $e->getMessage()
+            ], 500);
+        }
     }
 }

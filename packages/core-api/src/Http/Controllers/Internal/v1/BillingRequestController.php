@@ -146,7 +146,7 @@ class BillingRequestController extends Controller
                 $billingRequestData = [
                     'description' => $request->description,
                     'amount' => $totalAmount, // Will be converted to pence in service
-                    'currency' => $request->currency ?? 'GBP',
+                    'currency' => $request->currency ?? config('services.gocardless.currency'),
                     'customer' => [
                         'given_name' => $request->input('customer.given_name'),
                         'family_name' => $request->input('customer.family_name'),
@@ -220,7 +220,7 @@ class BillingRequestController extends Controller
                     'billing_request_id' => $response['billing_request']['id'],
                     'billing_request_flow_id' => $response['billing_request_flow']['id'],
                     'amount' => $totalAmount,
-                    'currency' => $request->currency ?? 'GBP',
+                    'currency' => $request->currency ?? config('services.gocardless.currency'),
                     'message' => 'Billing request created - amount will be displayed on payment page'
                 ]);
 
@@ -938,7 +938,7 @@ class BillingRequestController extends Controller
             try {
                 // Create billing request for mandate setup first
                 $billingRequestData = [
-                    'currency' => $request->currency ?? 'GBP',
+                    'currency' => $request->currency ?? config('services.gocardless.currency'),
                     // 'customer' => [
                     //     'given_name' => $request->input('customer.given_name'),
                     //     'family_name' => $request->input('customer.family_name'),
@@ -954,7 +954,7 @@ class BillingRequestController extends Controller
                     // Subscription data for later use
                     'subscription_request' => [
                         'amount' => $totalAmount * 100, // Convert to pence
-                        'currency' => $request->currency ?? 'GBP',
+                        'currency' => $request->currency ?? config('services.gocardless.currency'),
                         'name' => $planPricing->plan->name ?? 'Subscription Plan',
                         'interval_unit' => $this->billingRequestService->mapBillingCycleToInterval($planPricing->billing_cycle),
                         'interval' => $this->billingRequestService->calculateIntervalCount($planPricing->billing_cycle),
@@ -1010,7 +1010,7 @@ class BillingRequestController extends Controller
                     'billing_request_id' => $response['billing_request']['id'],
                     'billing_request_flow_id' => $response['billing_request_flow']['id'],
                     'subscription_amount' => $totalAmount,
-                    'currency' => $request->currency ?? 'GBP',
+                    'currency' => $request->currency ?? config('services.gocardless.currency'),
                     'billing_cycle' => $planPricing->billing_cycle,
                     'start_date' => $billingRequestData['subscription_request']['start_date'],
                     'is_recurring' => true,

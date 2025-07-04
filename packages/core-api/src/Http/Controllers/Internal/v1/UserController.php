@@ -648,4 +648,96 @@ class UserController extends FleetbaseController
 
         return response()->json(['permissions' => $permissions]);
     }
+
+    /**
+     * Find user by email address.
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    #[SkipAuthorizationCheck]
+    public function findUserByEmail(Request $request)
+    {
+        try {
+            $request->validate([
+                'email' => 'required|email',
+            ]);
+
+            $email = $request->input('email');
+
+            $user = User::where('email', $email)
+                ->whereNull('deleted_at')
+                ->with(['company','companies'])
+                ->first();
+
+            // Get the active company plan relation for this user's company
+            $companyPlanRelation = null;
+            if ($user && $user->company_uuid) {
+                $companyPlanRelation = \Fleetbase\Models\CompanyPlanRelation::where('company_uuid', $user->company_uuid)
+                    // ->where('status', 'active')
+                    // ->where('expires_at', '>', now())
+                    ->with(['planPricing.plan'])
+                    ->first();
+            }
+
+            if (!$user) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'User not found with this email address',
+                    'data' => null
+                ], 404);
+            }
+
+            return response()->json([
+                'success' => true,
+                'message' => 'User found successfully',
+                'data' => [
+                    'uuid' => $user->uuid,
+                    'id' => $user->id,
+                    'name' => $user->name,
+                    'email' => $user->email,
+                    'phone' => $user->phone,
+                    'company_uuid' => $user->company_uuid,
+                    'company_name' => $user->company ? $user->company->name : null,
+                    'number_of_drivers' => $user->company ? $user->company->number_of_drivers : null,
+                    'number_of_web_users' => $user->company ? $user->company->number_of_web_users : null,
+                    'role_name' => $user->role ? $user->role->name : null,
+                    'email_verified_at' => $user->email_verified_at,
+                    'phone_verified_at' => $user->phone_verified_at,
+                    'status' => $user->status,
+                    'created_at' => $user->created_at,
+                    'updated_at' => $user->updated_at,
+                    'plan_details' => $companyPlanRelation ? [
+                        'plan_id' => $companyPlanRelation->planPricing->plan->id ?? null,
+                        'plan_name' => $companyPlanRelation->planPricing->plan->name ?? null,
+                        'plan_pricing_id' => $companyPlanRelation->plan_pricing_id,
+                        'billing_cycle' => $companyPlanRelation->planPricing->billing_cycle ?? null,
+                        'price_per_user' => $companyPlanRelation->planPricing->price_per_user ?? null,
+                        'price_per_driver' => $companyPlanRelation->planPricing->price_per_driver ?? null,
+                        'currency' => $companyPlanRelation->planPricing->currency ?? null,
+                        'no_of_web_users' => $companyPlanRelation->no_of_web_users,
+                        'no_of_app_users' => $companyPlanRelation->no_of_app_users,
+                        'total_amount' => $companyPlanRelation->total_amount,
+                        'auto_renew' => $companyPlanRelation->auto_renew,
+                        'expires_at' => $companyPlanRelation->expires_at,
+                        'status' => $companyPlanRelation->status,
+                        'subscription_id' => $companyPlanRelation->id,
+                    ] : null,
+                ]
+            ], 200);
+
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Validation failed',
+                'errors' => $e->errors()
+            ], 422);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to find user by email',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
 }

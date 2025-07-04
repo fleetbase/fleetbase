@@ -96,6 +96,8 @@ Route::prefix(config('fleetbase.api.routing.prefix', '/'))->namespace('Fleetbase
                                 $router->post('verify-email', 'OnboardController@verifyEmail');
                                 $router->post('send-verification-sms', 'OnboardController@sendVerificationSms');
                                 $router->post('send-verification-email', 'OnboardController@sendVerificationEmail');
+                                // $router->get('subscription/status', 'OnboardController@getSubscriptionStatus');
+                                $router->post('subscription', 'OnboardController@createSubscription');
                                 $router->post('checkout', 'BillingRequestController@createBillingRequest');
                                 // $router->post('checkout_new', 'CheckoutController@initiateFlow');
                                 $router->get('checkout/{billing_request_id}', 'BillingRequestController@getBillingRequest');
@@ -105,8 +107,8 @@ Route::prefix(config('fleetbase.api.routing.prefix', '/'))->namespace('Fleetbase
                                 $router->get('checkout/success', 'BillingRequestController@handleRecurringBillingSuccess');
                                 $router->post('billing/success', 'BillingRequestController@handleRecurringBillingSuccess');
                                 // $router->post('checkout/failure', 'CheckoutController@handleFailure');
-                                Route::get('pricing-plans/latest', 'PlanController@getLatest');
-
+                                $router->get('pricing-plans/latest', 'PlanController@getLatest');
+                                $router->get('subscription/status', 'PlanController@getSubscriptionStatus');
                                 $router->post('subscription', 'BillingRequestController@createRecurringBillingRequest');
                                 $router->post('test/createsubscription', 'BillingRequestController@testCreateSubscription');
                                 $router->get('debug/billing/{billingRequestId}', 'BillingRequestController@debugBillingRequest');
@@ -159,6 +161,7 @@ Route::prefix(config('fleetbase.api.routing.prefix', '/'))->namespace('Fleetbase
                             ['prefix' => 'users'],
                             function ($router) {
                                 $router->post('accept-company-invite', 'UserController@acceptCompanyInvite');
+                                $router->get('find-by-email', 'UserController@findUserByEmail');
                             }
                         );
                         $router->group(

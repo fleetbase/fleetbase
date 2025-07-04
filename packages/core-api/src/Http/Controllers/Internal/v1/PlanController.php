@@ -7,6 +7,7 @@ use Fleetbase\Models\Plan;
 use Fleetbase\Models\PlanPricingRelation;
 use Fleetbase\Models\Payment;
 use Fleetbase\Models\CompanyPlanRelation;
+use Fleetbase\Models\Subscription;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -396,6 +397,31 @@ class PlanController extends Controller
                 'message' => 'Error retrieving latest pricing plan',
                 'error' => $e->getMessage()
             ], 500);
+        }
+    }
+    public function getSubscriptionStatus(Request $request): JsonResponse
+    {
+        $userId = $request->input('user_id');
+        $companyId = $request->input('company_id');
+
+        $subscriptionStatus = Subscription::where('user_uuid', $userId)
+            ->where('company_uuid', $companyId)
+            ->where('status', 'active')
+            ->where('deleted', 0)
+            ->where('record_status', 1)
+            ->first();
+        if (!$subscriptionStatus) {
+            return response()->json([
+                'success' => true,
+                'message' => 'No subscription found',
+                'data' => null
+            ], 200);
+        }else{
+            return response()->json([
+                'success' => true,
+                'message' => 'Subscription status retrieved successfully',
+                'data' => $subscriptionStatus
+            ], 200);
         }
     }
 }
