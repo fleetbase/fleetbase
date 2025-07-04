@@ -363,23 +363,11 @@ class OrderController extends FleetOpsController
             $timestamp = date('Y_m_d_H_i_s');
             $company = session('company');
             $fileName = "{$company}_order_import_errors_{$timestamp}.xlsx";
-            $fullPath = storage_path("logs/{$fileName}");
-
-            // Ensure directory exists
-            if (!file_exists(storage_path('logs'))) {
-                mkdir(storage_path('logs'), 0755, true);
-            }
-
-            $tempRelativePath = "temp/{$fileName}";
-            
-            // Don't use array_values() - pass the errors directly
-            Excel::store(new OrdersImportErrorsExport($allErrors), $tempRelativePath, 'local');
-            
-            // Move it manually to storage/logs
-            copy(storage_path("app/{$tempRelativePath}"), $fullPath);
+            Excel::store(new OrdersImportErrorsExport($allErrors), $fileName, 's3');
+            $url = Storage::url($fileName);
         if ($hasPartialSuccess) {
             return response()->json([
-                'error_log_url' => $fullPath,
+                'error_log_url' => $url,
                 'message' =>  "Import partially completed. {$totalCreatedOrders} trip(s) created, {$totalUpdatedOrders} updated. However, some rows contain errors and have been logged.",
                 'status' => 'partial_success',
                 'successful_imports' => $totalSuccessfulImports,
@@ -391,13 +379,13 @@ class OrderController extends FleetOpsController
             ]);
         } else {
            return response()->json([
-                'error_log_url' => $fullPath,
+                'error_log_url' => $url,
                 'message' => 'Import failed. No trips were imported due to errors. Please review the attached error log for details.',
                 'status' => 'error',
                 'total_errors' => count($allErrors),
                 'errors' => $allErrors,
                 'success' => false,
-            ],400);
+            ]);
         }
     }
 
