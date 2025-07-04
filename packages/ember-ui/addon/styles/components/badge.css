@@ -473,6 +473,13 @@ body[data-theme='dark'] .status-badge.info-status-badge > span{
 {
     @apply bg-[#008080] border-[#008080] text-white; 
 }
+.status-badge.planned-status-badge > span{
+    @apply bg-[#54104c] border-[#54104c] text-white;
+}
+
+body[data-theme='dark'] .status-badge.planned-status-badge > span{
+    @apply bg-[#54104c] border-[#54104c] text-white;
+}
 
 body[data-theme='dark'] .status-badge.created-status-badge > span{
     @apply bg-[#4385f4] border-[#4385f4] text-white
