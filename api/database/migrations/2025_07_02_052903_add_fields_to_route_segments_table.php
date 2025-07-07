@@ -13,12 +13,12 @@ return new class extends Migration
     {
        Schema::table('route_segments', function (Blueprint $table) {
             $table->text('cr_id')->nullable();
-            $table->string('shipper_accounts')->nullable();
-            $table->string('equipment_type')->nullable();
+            $table->string('shipper_accounts')->nullable()->index();
+            $table->string('equipment_type')->nullable()->index();
             $table->dateTime('vr_creation_date_time')->nullable();
             $table->dateTime('vr_cancellation_date_time')->nullable();
-            $table->string('trailer_id')->nullable();
-            $table->string('operator_id')->nullable();
+            $table->string('trailer_id')->nullable()->index();
+            $table->string('operator_id')->nullable()->index();
         });
     }
 
