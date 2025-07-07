@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::table('orders', function (Blueprint $table) {
             $table->boolean('is_cpt_truck')->default(false);
-            $table->uuid('fleet_uuid')->nullable();
-            $table->uuid('sub_fleet_uuid')->nullable();
+            $table->uuid('fleet_uuid')->nullable()->index();
+            $table->uuid('sub_fleet_uuid')->nullable()->index();
             $table->decimal('estimated_cost', 10, 2)->nullable();
 
             // Add FK constraint if needed

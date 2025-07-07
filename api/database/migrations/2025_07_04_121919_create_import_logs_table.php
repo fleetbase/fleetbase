@@ -21,8 +21,14 @@ return new class extends Migration
             $table->string('error_log_file_path')->nullable();
             $table->tinyInteger('record_status')->default(1);
             $table->tinyInteger('deleted')->default(value: 0);
-            $table->integer('created_by_id')->nullable();
-            $table->integer('updated_by_id')->nullable();
+            $table->foreign('created_by_id')
+                  ->references('id')
+                  ->on('users')
+                  ->onDelete('cascade');
+            $table->foreign('updated_by_id')
+                  ->references('id')
+                  ->on('users')
+                  ->onDelete('cascade');
             $table->timestamp('created_at')->useCurrent()->index();
             $table->timestamp('updated_at')->nullable()->useCurrent()->useCurrentOnUpdate();
             $table->softDeletes();
