@@ -30,14 +30,6 @@ return new class extends Migration
             $table->index('company_uuid');
             $table->index('module');
             $table->index('status');
-            $table->foreign('created_by_id')
-                  ->references('id')
-                  ->on('users')
-                  ->onDelete('cascade');
-            $table->foreign('updated_by_id')
-                  ->references('id')
-                  ->on('users')
-                  ->onDelete('cascade');
         });
     }
 
