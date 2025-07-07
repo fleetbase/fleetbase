@@ -23,6 +23,13 @@ return new class extends Migration
             $table->tinyInteger('deleted')->default(value: 0);
             $table->unsignedBigInteger('created_by_id')->nullable();
             $table->unsignedBigInteger('updated_by_id')->nullable();
+            $table->timestamp('created_at')->useCurrent()->index();
+            $table->timestamp('updated_at')->nullable()->useCurrent()->useCurrentOnUpdate();
+            $table->softDeletes();
+            
+            $table->index('company_uuid');
+            $table->index('module');
+            $table->index('status');
             $table->foreign('created_by_id')
                   ->references('id')
                   ->on('users')
@@ -31,12 +38,6 @@ return new class extends Migration
                   ->references('id')
                   ->on('users')
                   ->onDelete('cascade');
-            $table->timestamp('created_at')->useCurrent()->index();
-            $table->timestamp('updated_at')->nullable()->useCurrent()->useCurrentOnUpdate();
-            $table->softDeletes();
-            $table->index('company_uuid');
-            $table->index('module');
-            $table->index('status');
         });
     }
 
