@@ -21,6 +21,8 @@ return new class extends Migration
             $table->string('error_log_file_path')->nullable();
             $table->tinyInteger('record_status')->default(1);
             $table->tinyInteger('deleted')->default(value: 0);
+            $table->unsignedBigInteger('created_by_id')->nullable();
+            $table->unsignedBigInteger('updated_by_id')->nullable();
             $table->foreign('created_by_id')
                   ->references('id')
                   ->on('users')
