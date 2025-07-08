@@ -1269,7 +1269,7 @@ public function calculateDayOfMonth($startDate = null)
                 'subscription_id' => $subscriptionId,
                 'error' => $e->getMessage()
             ]);
-            return [];
+            return null;
         }
     }
 
