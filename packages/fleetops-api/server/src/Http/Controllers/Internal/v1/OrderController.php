@@ -955,7 +955,7 @@ class OrderController extends FleetOpsController
 
     
 
-   public function orderImport($excelData)
+    public function orderImport($excelData)
 {
     try {
         if (!class_exists('\DB')) {
@@ -1091,10 +1091,85 @@ class OrderController extends FleetOpsController
                         continue;
                     }
 
+                    // FIXED DATE LOGIC: Get scheduled_at from FIRST row's cpt
                     $firstRow = $rows[0];
-                    $scheduledAt = !empty($firstRow['cpt']) ? $this->parseExcelDate($firstRow['cpt']) : null;
-                    $estimatedEndDate = !empty($yardArrivalDates) ? collect($yardArrivalDates)->sortDesc()->first() : null;
-                     //carrier details
+                    $scheduledAt = null;
+                    if (!empty($firstRow['cpt'])) {
+                        try {
+                            $scheduledAt = $this->parseExcelDate($firstRow['cpt']);
+                            // Ensure it's a Carbon instance
+                            if (is_string($scheduledAt)) {
+                                $scheduledAt = \Carbon\Carbon::parse($scheduledAt);
+                            }
+                        } catch (\Exception $e) {
+                            \Log::warning('Failed to parse cpt from first row', [
+                                'trip_id' => $tripId,
+                                'cpt_value' => $firstRow['cpt'],
+                                'error' => $e->getMessage()
+                            ]);
+                        }
+                    }
+
+                    // If no cpt in first row, look for any cpt in the trip as fallback
+                    if (!$scheduledAt) {
+                        foreach ($rows as $row) {
+                            if (!empty($row['cpt'])) {
+                                try {
+                                    $scheduledAt = $this->parseExcelDate($row['cpt']);
+                                    // Ensure it's a Carbon instance
+                                    if (is_string($scheduledAt)) {
+                                        $scheduledAt = \Carbon\Carbon::parse($scheduledAt);
+                                    }
+                                    \Log::info("Using cpt from row other than first for trip {$tripId}");
+                                    break;
+                                } catch (\Exception $e) {
+                                    continue;
+                                }
+                            }
+                        }
+                    }
+
+                    // FIXED DATE LOGIC: Get estimated_end_date from LAST row's stop_2_yard_arrival
+                    $lastRow = $rows[count($rows) - 1];
+                    $estimatedEndDate = null;
+                    
+                    if (!empty($lastRow['stop_2_yard_arrival'])) {
+                        try {
+                            $estimatedEndDate = $this->parseExcelDate($lastRow['stop_2_yard_arrival']);
+                            // Ensure it's a Carbon instance
+                            if (is_string($estimatedEndDate)) {
+                                $estimatedEndDate = \Carbon\Carbon::parse($estimatedEndDate);
+                            }
+                        } catch (\Exception $e) {
+                            \Log::warning('Failed to parse stop_2_yard_arrival from last row', [
+                                'trip_id' => $tripId,
+                                'stop_2_yard_arrival_value' => $lastRow['stop_2_yard_arrival'],
+                                'error' => $e->getMessage()
+                            ]);
+                        }
+                    }
+                    
+                    // Fallback: use the latest yard arrival date if stop_2_yard_arrival is empty or failed to parse
+                    if (!$estimatedEndDate && !empty($yardArrivalDates)) {
+                        $estimatedEndDate = collect($yardArrivalDates)->sortDesc()->first();
+                        // Ensure it's a Carbon instance
+                        if (is_string($estimatedEndDate)) {
+                            $estimatedEndDate = \Carbon\Carbon::parse($estimatedEndDate);
+                        }
+                        \Log::info("Using fallback yard arrival date for estimated_end_date in trip {$tripId}");
+                    }
+
+                    // Enhanced logging for debugging
+                    \Log::info("Trip {$tripId} final dates", [
+                        'scheduled_at' => $scheduledAt ? $scheduledAt->format('Y-m-d H:i:s') : 'null',
+                        'estimated_end_date' => $estimatedEndDate ? $estimatedEndDate->format('Y-m-d H:i:s') : 'null',
+                        'first_row_cpt' => $firstRow['cpt'] ?? 'empty',
+                        'last_row_stop_2_yard_arrival' => $lastRow['stop_2_yard_arrival'] ?? 'empty',
+                        'total_rows_in_trip' => count($rows),
+                        'yard_arrival_dates_found' => count($yardArrivalDates)
+                    ]);
+
+                    //carrier details
                     $carrier = $firstRow['carrier'] ?? null;
                     if($carrier) {
                         $carrier_uuid = Fleet::where('name', $carrier)
@@ -1251,6 +1326,7 @@ class OrderController extends FleetOpsController
         return response()->json(['success' => false, 'errors' => [[$e->getMessage()]]]);
     }
 }
+
 
 
     /*
