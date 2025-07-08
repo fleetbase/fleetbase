@@ -31,8 +31,9 @@ export default class PhoneInputComponent extends Component {
     
     // IMPORTANT: Use a timeout to ensure the plugin is fully initialized
     setTimeout(() => {
-        if (!phoneInput.value || phoneInput.value === '+' || phoneInput.value === '') {
-            // Set country first
+        let initialNumber = phoneInput.value;
+        if (!initialNumber || initialNumber === '+' || initialNumber === '') {
+            // Default to +44
             iti.setCountry('gb');
             
             // Then set number with the plugin's method
@@ -40,9 +41,14 @@ export default class PhoneInputComponent extends Component {
             
             // Also set the input value directly as a fallback
             phoneInput.value = '+44';
-            
-            // Trigger event to update bindings
-            phoneInput.dispatchEvent(new Event('input', { bubbles: true }));
+        } else {
+            // Check and fix number format if needed
+            if (!initialNumber.startsWith('+')) {
+                const dialCode = iti.getSelectedCountryData().dialCode;
+                initialNumber = `+${dialCode}${initialNumber.replace(/^0+/, '')}`;
+            }
+            iti.setNumber(initialNumber);
+            phoneInput.value = initialNumber;
         }
     }, 100); // 100ms delay should be enough
          // Set the default country and number after initialization
