@@ -12,7 +12,7 @@ export default class PhoneInputComponent extends Component {
         this.iti = intlTelInput(element, {
             containerClass: `w-full ${this.args.wrapperClass ?? ''}`,
             initialCountry: 'gb',
-            separateDialCode: true,
+            separateDialCode: false,
             formatAsYouType: true,
             geoIpLookup: (success, failure) => {
                 this.fetch
@@ -112,6 +112,7 @@ export default class PhoneInputComponent extends Component {
         }
         // Case 3: Already has + - just ensure only numbers after it
         else {
+            this.iti.setNumber(dialCode);
             inputValue = '+' + inputValue.substring(1).replace(/[^0-9]/g, '');
         }
         
