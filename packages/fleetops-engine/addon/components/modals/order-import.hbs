@@ -24,19 +24,19 @@
                     {{else if queue.files.length}}
                         <div class="my-2">
                             <FaIcon @icon="file-import" class="text-indigo-500 mr-2" />
-                            {{pluralize queue.files.length "spreadsheet"}}
+                            
                             {{t "fleet-ops.component.modals.order-import.ready-upload"}}
                         </div>
                         <div class="my-2">({{queue.progress}}%)</div>
                     {{else}}
-                        <h4 class="font-semibold mb-8">
+                        {{!-- <h4 class="font-semibold mb-8">
                             <FaIcon @icon="file-import" class="text-indigo-500 mr-2" />
                             {{t "fleet-ops.component.modals.order-import.upload-spreadsheets"}}
-                        </h4>
+                        </h4> --}}
                         <div>
-                            {{#if dropzone.supported}}
+                            {{!-- {{#if dropzone.supported}}
                                 <p class="text-base font-semibold my-5">{{t "fleet-ops.component.modals.order-import.drag-drop"}}</p>
-                            {{/if}}
+                            {{/if}} --}}
 
                             <UploadButton
                                 @buttonText={{t "fleet-ops.component.modals.order-import.button-text"}}
@@ -45,7 +45,7 @@
                                 @name={{t "fleet-ops.component.modals.order-import.spreadsheets"}}
                                 @for="spreadsheets"
                                 @accept={{join "," @options.acceptedFileTypes}}
-                                @multiple={{true}}
+                                {{!-- @multiple={{true}} --}}
                                 @onFileAdded={{@options.queueFile}}
                                 class="w-72 justify-center"
                             />
