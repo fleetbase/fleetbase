@@ -4,7 +4,8 @@
     <span class="ml-2 text-gray-700 dark:text-gray-300">{{this.loaderMessage}}</span>
   </div>
 {{/if}}
-{{#unless this.isLoading}}
+{{!-- {{#unless this.isLoading }} --}}
+{{#unless (or this.isLoading this.showPaymentFrame)}}
 <div>
     <LinkTo @route="console" class="flex items-center justify-center">
         <LogoIcon @brand={{@brand}} @size="12" class="" />
@@ -112,3 +113,13 @@
     </div>
 </form>
 {{/unless}}
+
+{{#if this.showPaymentFrame}}
+<div style="display: flex; justify-content: center; align-items: flex-start; min-height: 80vh;">
+  <iframe
+    src={{this.paymentUrl}}
+    style="width:1200px; height:800px; border:none; box-shadow:0 2px 16px rgba(0,0,0,0.15); border-radius:12px; background:#fff;"
+    title="Payment Setup" {{on "load" this.handleIframeLoad}}
+  ></iframe>
+</div>
+{{/if}}
