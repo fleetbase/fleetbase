@@ -426,9 +426,9 @@ export default class AuthLoginController extends Controller {
             }
         } catch (error) {
             // If API fails, fallback to default behavior
-            console.error('Subscription check failed:', error);
-            this.notifications.warning('Unable to verify subscription status. Proceeding to app...');
-            return this.router.transitionTo('console');
+            // console.error('Subscription check failed:', error);
+            // this.notifications.warning('Unable to verify subscription status. Proceeding to app...');
+            return this.router.transitionTo('console.fleet-ops');
         }
     }
 
