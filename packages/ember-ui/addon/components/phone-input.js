@@ -112,8 +112,19 @@ export default class PhoneInputComponent extends Component {
         }
         // Case 3: Already has + - just ensure only numbers after it
         else {
-            this.iti.setNumber(dialCode);
             inputValue = '+' + inputValue.substring(1).replace(/[^0-9]/g, '');
+
+            const countryData = this.iti.getSelectedCountryData();
+            const dialCode = countryData.dialCode;
+            const stripped = inputValue.replace(/^\+/, '');
+
+            if (stripped.startsWith(dialCode)) {
+                const nationalNumber = stripped.substring(dialCode.length).replace(/^0+/, '');
+                inputValue = `+${dialCode}${nationalNumber}`;
+            }
+
+            event.target.value = inputValue;
+            this.iti.setNumber(inputValue);
         }
         
         // Store current value for next comparison
