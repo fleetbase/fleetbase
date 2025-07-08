@@ -494,6 +494,14 @@ trait HasApiControllerBehavior
             $onAfterCallback  = $this->getControllerCallback('onAfterCreate');
 
             $this->validateRequest($request);
+            $model_name = str_replace('Controller', '', class_basename($this));
+            if ($model_name == "Vehicle") {
+                $plateNumber = $request['vehicle']['plate_number'] ?? null;
+                if ($this->model->where('plate_number', $plateNumber)->exists()) {
+                    return response()->error("A vehicle with plate number already exists.");
+                }
+            }
+
             $record = $this->model->createRecordFromRequest($request, $onBeforeCallback, $onAfterCallback);
 
             if (Http::isInternalRequest($request)) {
@@ -591,6 +599,21 @@ trait HasApiControllerBehavior
             if ($model_name === 'Vehicle') {
                 $vehicle = Vehicle::find($id);
                 if ($vehicle) {
+                    // Manual unique check for plate_number
+                    $plateNumber =  $request['vehicle']['plate_number'] ?? null;
+                    if (!empty($plateNumber)) {
+                        $duplicate = Vehicle::where('plate_number', $plateNumber)
+                            ->where('uuid', '!=', $vehicle->uuid) // exclude current vehicle
+                            ->exists();
+
+                        if ($duplicate) {
+                            return response()->error("A vehicle with plate number '{$plateNumber}' already exists.");
+                        }
+
+                        $vehicle->update(['plate_number' => $plateNumber]);
+                    }
+
+                    // Optional: update driver name too
                     $driverName = $request->input('driver_name');
                     if (!empty($driverName)) {
                         $vehicle->update(['driver_name' => $driverName]);
