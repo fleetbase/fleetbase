@@ -36,6 +36,8 @@ return [
     'no_driver_found' => 'Aucun chauffeur trouvé',
     'email_exists_with_in_company' => 'Cet e-mail est déjà enregistré dans votre organisation.',
     'email_exists_all_companies' => 'Cet e-mail est déjà associé à une autre organisation.',
+    'phone_exists_within_company' => 'Ce numéro de téléphone est déjà enregistré dans votre organisation.',
+    'phone_exists_all_companies' => 'Ce numéro de téléphone est associé à une autre organisation.',
     'duplicate_order_import' => 'Certaines lignes ont été ignorées en raison de l\'existence d\'ID de bloc ou d\'ID de voyage en double dans le système.',
     'import_failed_invalid_location' => 'Certaines lignes contiennent des données de localisation invalides. Veuillez les examiner et les corriger avant de continuer.',
 ];
