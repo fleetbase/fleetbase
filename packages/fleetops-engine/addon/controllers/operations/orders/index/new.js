@@ -552,7 +552,7 @@ export default class OperationsOrdersIndexNewController extends BaseController {
                 this.downloadFile(errorLogUrl);
                 // Optionally close modal after download
                 modal.done();
-                  this.hostRouter.refresh(); // ✅ Refresh list
+                this.hostRouter.refresh(); // ✅ Refresh list
             }
         };
     
@@ -625,7 +625,7 @@ export default class OperationsOrdersIndexNewController extends BaseController {
                 } finally {
                     this.modalsManager.setOption('uploadQueue', []);
                     modal.done();
-                      this.hostRouter.refresh(); // ✅ Refresh list after closing
+                    this.hostRouter.refresh(); // ✅ Refresh list after closing
                 }
             },
         });
