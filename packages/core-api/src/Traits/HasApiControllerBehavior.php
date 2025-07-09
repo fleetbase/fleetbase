@@ -607,7 +607,7 @@ trait HasApiControllerBehavior
                             ->exists();
 
                         if ($duplicate) {
-                            return response()->error("A vehicle with plate number '{$plateNumber}' already exists.");
+                            return response()->error("A vehicle with plate number this already exists.");
                         }
 
                         $vehicle->update(['plate_number' => $plateNumber]);
