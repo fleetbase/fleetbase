@@ -42,6 +42,8 @@ return [
     'no_driver_found' => 'No driver found',
     'email_exists_with_in_company' => 'This email is already registered in your organisation.',
     'email_exists_all_companies' => 'This email is already associated with another organisation.',
+    'phone_exists_within_company' => 'This Phone number already registered in your organisation.',
+    'phone_exists_all_companies' => 'This Phone number associated with another organisation.',
     'duplicate_order_import' => 'Some rows were skipped due to duplicate block IDs or trip IDs already existing in the system..',
     'import_failed_invalid_location' => 'Some rows contain invalid location data. Please review and correct them before proceeding',
 ];
