@@ -17,6 +17,7 @@ use GoCardlessPro\Core\Exception\ValidationFailedException;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Carbon;
+
 use Exception;
 
 class GoCardlessBillingRequestService
@@ -932,6 +933,7 @@ public function calculateDayOfMonth($startDate = null)
                 'currency' => $subscriptionData['currency'] ?? 'GBP',
                 'name' => $subscriptionData['name'] ?? 'Subscription',
                 'interval_unit' => $subscriptionData['interval_unit'] ?? 'monthly',
+                // 'interval_unit' =>"weekly",
                 'interval' => $subscriptionData['interval'] ?? 1,
                 'links' => [
                     'mandate' => $mandateId
@@ -1160,5 +1162,116 @@ public function calculateDayOfMonth($startDate = null)
             throw new Exception('GoCardless API error: ' . $e->getMessage());
         }
     }
+    public function getSubscription($subscriptionId)
+    {
+        try {
+            return $this->client->subscriptions()->get($subscriptionId);
+        } catch (\Exception $e) {
+            \Log::error('Failed to get subscription from GoCardless', [
+                'subscription_id' => $subscriptionId,
+                'error' => $e->getMessage()
+            ]);
+            throw $e;
+        }
+    }
+    public function getPayment($paymentId)
+    {
+        try {
+            return $this->client->payments()->get($paymentId);
+        } catch (\Exception $e) {
+            \Log::error('Failed to get payment from GoCardless', [
+                'payment_id' => $paymentId,
+                'error' => $e->getMessage()
+            ]);
+            throw $e;
+        }
+    }
+
+    public function getPaymentDetailsFromGoCardless(string $paymentId): ?array
+    {
+        try {
+            // Cache key for payment details (cache for 5 minutes)
+            // $cacheKey = "gocardless_payment_{$paymentId}";
+            
+            // Check cache first
+            // if (Cache::has($cacheKey)) {
+            //     Log::info("Payment details retrieved from cache", ['payment_id' => $paymentId]);
+            //     return Cache::get($cacheKey);
+            // }
+
+            $response = Http::withHeaders($this->headers)
+            ->get($this->baseUrl . '/payments/' . $paymentId);
+            
+            // Check if request was successful
+            if (!$response->successful()) {
+                Log::error("GoCardless API request failed", [
+                    'payment_id' => $paymentId,
+                    'status' => $response->status(),
+                    'response' => $response->body(),
+                ]);
+                
+                if ($response->status() === 404) {
+                    throw new Exception("Payment not found in GoCardless: {$paymentId}");
+                }
+                
+                throw new Exception("GoCardless API error: " . $response->status() . " - " . $response->body());
+            }
+
+            $responseData = $response->json();
+            
+            // Validate response structure
+            if (!isset($responseData['payments'])) {
+                throw new Exception("Invalid response structure from GoCardless API");
+            }
+
+            $paymentDetails = $responseData['payments'];
+            
+            Log::info("Payment details successfully retrieved", [
+                'payment_id' => $paymentId,
+                'amount' => $paymentDetails['amount'] ?? null,
+                'currency' => $paymentDetails['currency'] ?? null,
+                'status' => $paymentDetails['status'] ?? null,
+            ]);
+
+            // Cache the result for 5 minutes
+            // Cache::put($cacheKey, $paymentDetails, now()->addMinutes(5));
+
+            return $paymentDetails;
+
+        } catch (Exception $e) {
+            Log::error("Error fetching payment details from GoCardless", [
+                'payment_id' => $paymentId,
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+            
+            throw $e;
+        }
+    }
+    public function getSubscriptionDetailsFromGoCardless($subscriptionId)
+    {
+        try {
+            $subscription = $this->client->subscriptions()->get($subscriptionId);
+            
+            return [
+                'id' => $subscription->id,
+                'status' => $subscription->status,
+                'amount' => $subscription->amount,
+                'currency' => $subscription->currency,
+                'start_date' => $subscription->start_date,
+                'end_date' => $subscription->end_date,
+                'upcoming_payments' => $subscription->upcoming_payments,
+                'metadata' => $subscription->metadata,
+                'links' => $subscription->links
+            ];
+        } catch (\GoCardlessPro\Core\Exception\ApiException $e) {
+            Log::error('GoCardless API error getting subscription details', [
+                'subscription_id' => $subscriptionId,
+                'error' => $e->getMessage()
+            ]);
+            return null;
+        }
+    }
+
         
 }

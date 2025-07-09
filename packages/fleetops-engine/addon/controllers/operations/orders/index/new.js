@@ -657,7 +657,8 @@ export default class OperationsOrdersIndexNewController extends BaseController {
     handleSuccessfulImport(results, modal) {
         const places = get(results, 'places');
         const entities = get(results, 'entities');
-    
+        const message = get(results, 'message'); // Get the message from results
+        const errorLogUrl = get(results, 'error_log_url'); // Get the error log URL from results
         if (isArray(places)) {
             this.isMultipleDropoffOrder = true;
             this.waypoints = places.map((_place) => {
@@ -671,11 +672,21 @@ export default class OperationsOrdersIndexNewController extends BaseController {
                 return this.store.createRecord('entity', entity);
             });
         }
-    
-        this.notifications.success(this.intl.t('fleet-ops.operations.orders.index.new.import-success'));
+        // Show the message from results or fallback to default
+        if (errorLogUrl && message) {
+            this.notifications.error(message);
+        } else {
+            this.notifications.success(this.intl.t('fleet-ops.operations.orders.index.new.import-success'));
+        }
+        //this.notifications.success(this.intl.t('fleet-ops.operations.orders.index.new.import-success'));
         this.isCsvImportedOrder = true;
         //this.previewDraftOrderRoute(this.payload, this.waypoints, this.isMultipleDropoffOrder);
-        this.hostRouter.transitionTo('console.fleet-ops.operations.orders.index', { queryParams: { layout: 'table', t: Date.now() } });
+        this.hostRouter.transitionTo('console.fleet-ops.operations.orders.index', { queryParams: { layout: 'table', t: Date.now() } })
+        .then(() => {
+            // Force route refresh
+            this.hostRouter.refresh();
+        });
+    
         modal.done();
     }
     
