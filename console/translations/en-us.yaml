@@ -45,8 +45,8 @@ common:
   track-order: Track Order
   notification-channels: Notification Channels
   notifications: Notifications
-  organization: Organization
-  organizations: Organizations
+  organization: Organisation
+  organizations: Organisations
   overview: Overview
   phone: Your phone number
   profile: Profile
@@ -324,7 +324,7 @@ component:
     upload-queue: Upload Queue
     uploading: Uploading...
   two-fa-enforcement-alert:
-    message: To enhance the security of your account, your organization requires Two-Factor Authentication (2FA). Enable 2FA in your account settings for an additional layer of protection.
+    message: To enhance the security of your account, your organisation requires Two-Factor Authentication (2FA). Enable 2FA in your account settings for an additional layer of protection.
     button-text: Setup 2FA
   comment-thread:
     publish-comment-button-text: Publish comment
@@ -436,14 +436,14 @@ auth:
       back-button: Back
 console:
   create-or-join-organization:
-    modal-title: Create or join a organization
-    join-success-notification: You have joined a new organization!
-    create-success-notification: You have created a new organization!
+    modal-title: Create or join a organisation
+    join-success-notification: You have joined a new organisation!
+    create-success-notification: You have created a new organisation!
   switch-organization:
-    modal-title: Are you sure you want to switch organization to {organizationName}?
-    modal-body: By confirming your account will remain logged in, but your primary organization will be switched.
-    modal-accept-button-text: Yes, I want to switch organization
-    success-notification: You have switched organizations
+    modal-title: Are you sure you want to switch organisation to {organisationName}?
+    modal-body: By confirming your account will remain logged in, but your primary organisation will be switched.
+    modal-accept-button-text: Yes, I want to switch organisation
+    success-notification: You have switched organisations
   account:
     index: 
       upload-new: Upload
@@ -490,14 +490,14 @@ console:
       theme: Default Theme
     index:
       total-users: Total Users
-      total-organizations: Total Organizations
+      total-organizations: Total Organisations
       total-transactions: Total Transactions
     notifications:
       title: Notifications
       notification-settings: Notification Settings
     organizations:
       index:
-        title: Organizations
+        title: Organisations
         owner-name-column: Owner
         owner-phone-column: Owner Phone
         owner-email-column: Owner Phone
@@ -508,18 +508,18 @@ console:
         title: Users
   settings:
     index:
-      title: Organization Settings
-      organization-name: Organization name
-      organization-description: Organization description
-      organization-phone: Organization phone number
-      organization-currency: Organization currency
-      organization-id: Organization ID
-      organization-branding: Organization Branding
+      title: Organisation Settings
+      organization-name: Organisation name
+      organization-description: Organisation description
+      organization-phone: Organisation phone number
+      organization-currency: Organisation currency
+      organization-id: Organisation ID
+      organization-branding: Organisation Branding
       logo: Logo
-      logo-help-text: Logo for your organization.
+      logo-help-text: Logo for your organisation.
       upload-new-logo: Upload new logo
       backdrop: Backdrop
-      backdrop-help-text: Optional banner or background image for your organization.
+      backdrop-help-text: Optional banner or background image for your organisation.
       upload-new-backdrop: Upload new backdrop
   extensions:
     title: Extensions are coming soon!
@@ -533,7 +533,7 @@ console:
 invite:
   for-users:
     invitation-message: You've been invited to join {companyName}
-    invitation-sent-message: You've been invited to join the {companyName} organization on {appName}. To accept this invitation, input your invitation code received by email and click continue.
+    invitation-sent-message: You've been invited to join the {companyName} organisation on {appName}. To accept this invitation, input your invitation code received by email and click continue.
     invitation-code-sent-text: Your invitiation code
     accept-invitation-text: Accept Invitation
 onboard:
@@ -550,8 +550,8 @@ onboard:
     phone-required: Phone number is required.
     phone-min-validation: Phone number is too short (minimum is 7 digits)
     phone-max-validation: Phone number is too long (maximum is 15 digits)
-    organization-name: Organization name
-    organization-help-text: Your organization name, all your services and resources will be managed under this organization, later you can create as many organizations as you want or need.
+    organization-name: Organisation name
+    organization-help-text: Your organisation name, all your services and resources will be managed under this organisation, later you can create as many organisations as you want or need.
     password: Enter a password
     password-help-text: Your password, make sure it's a good one.
     confirm-password: Confirm your password
@@ -582,8 +582,8 @@ layout:
   header:
     menus:
       organization:
-        settings: Organization settings
-        create-or-join: Create or join organizations
+        settings: Organisation settings
+        create-or-join: Create or join organisations
         explore-extensions: Explore extensions
       user:
         view-profile: View profile
@@ -613,8 +613,8 @@ fleet-ops:
     validate-current-password-before-change : You must validate your current password before it can be changed.
     password-changes-saved : Password change successfully.
     failed-to-change-password : Failed to change password.
-    your-organization : Your Organizations
-    create-organization : Create Organization
+    your-organization : Your Organisations
+    create-organization : Create Organisation
     member-since : Member Since
     2fa-settings : 2FA Settings
     save-2fa-settings : Save 2FA Settings
@@ -622,7 +622,7 @@ fleet-ops:
     require-2fa-setup : Require Users to Set-Up 2FA
     2fa-settings-saved : 2FA Settings saved successfully.
     2fa-settings-saved-by-admin : 2FA Settings saved for admin successfully.
-    2fa-settings-saved-for-organization : 2FA Settings saved for organization successfully.
+    2fa-settings-saved-for-organization : 2FA Settings saved for organisation successfully.
     view-all-notifications : View all notifications
     no-unread-notifications : No unread notifications
     unread-notifications : Unread notification
@@ -642,7 +642,7 @@ fleet-ops:
     select-notifiables : Select notifiables...
     branding-settings-saved : Branding settings saved.
     notification-settings-saved : Notification settings successfully saved.
-    organization-changes-saved : Organization changes successfully saved.
+    organization-changes-saved : Organisation changes successfully saved.
     smtp : SMTP
     twofa:
       sms:
