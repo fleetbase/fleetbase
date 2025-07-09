@@ -620,6 +620,26 @@ trait HasApiControllerBehavior
                     }
                 }
             }
+            if ($model_name === 'Place') {
+                $place = Place::find($id);
+                if ($place) {
+                    $code = $request->input('code'); // 'code' is a top-level key
+
+                    if (!empty($code)) {
+                        $duplicate = Place::where('code', $code)
+                            ->where('uuid', '!=', $place->uuid) // ignore the current record
+                            ->exists();
+
+                        if ($duplicate) {
+                            return response()->error('A place with this code already exists.');
+                        }
+
+                        // Update only the code if needed (optional)
+                        $place->update(['code' => $code]);
+                    }
+                }
+            }
+
             $onBeforeCallback = $this->getControllerCallback('onBeforeUpdate');
             $onAfterCallback  = $this->getControllerCallback('onAfterUpdate');
 

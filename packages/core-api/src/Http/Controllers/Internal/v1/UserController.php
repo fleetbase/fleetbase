@@ -58,17 +58,29 @@ class UserController extends FleetbaseController
     {
         try {
             $email = $request->input('user.email');
+            $phone = $request->input('user.phone');
+
             $companyUuid = session('company');
             // Check if email already exists within the same company
-            if (User::where('email', $email)->where('company_uuid', $companyUuid)->whereNull('deleted_at')->exists()) {
-                return response()->error((__('messages.email_exists_with_in_company')));
+            $emailBaseQuery = User::where('email', $email)->whereNull('deleted_at');
+            $phoneBaseQuery = User::where('phone', $phone)->whereNull('deleted_at');
+
+            if ((clone $emailBaseQuery)->where('company_uuid', $companyUuid)->exists()) {
+                return response()->error(__('messages.email_exists_with_in_company'));
             }
-            else{
-                // Check if email already exists for all companies
-                if (User::where('email', $email)->whereNull('deleted_at')->exists()) {
-                   return response()->error((__('messages.email_exists_all_companies')));
-                }
+
+            if ($emailBaseQuery->exists()) {
+                return response()->error(__('messages.email_exists_all_companies'));
             }
+
+            if ((clone $phoneBaseQuery)->where('company_uuid', $companyUuid)->exists()) {
+                return response()->error(__('messages.phone_exists_within_company'));
+            }
+
+            if ($phoneBaseQuery->exists()) {
+                return response()->error(__('messages.phone_exists_all_companies'));
+            }
+
             $record = $this->model->createRecordFromRequest($request, function (&$request, &$input) {
                 // Get user properties
                 $name        = $request->input('user.name');
@@ -133,17 +145,31 @@ class UserController extends FleetbaseController
         try {
             $email = $request->input('user.email');
             $companyUuid = session('company');
+            $id = $request->input('user.uuid'); // Assumes you have the UUID of the current user
+            $phone = $request->input('user.phone');
 
-            // Check if email already exists within the same company
-            if (User::where('email', $email)->where('company_uuid', $companyUuid)->whereNull('deleted_at')->where('uuid', '!=', $id)->exists()) {
-                return response()->error((__('messages.email_exists_with_in_company')));
+            $emailQuery = User::where('email', $email)
+                ->whereNull('deleted_at')
+                ->where('uuid', '!=', $id);
+                        // Check if email already exists within the same company
+            if ($emailQuery->where('company_uuid', $companyUuid)->exists()) {
+                return response()->error(__('messages.email_exists_with_in_company'));
             }
-            else{
-                // Check if email already exists for all companies
-                if (User::where('email', $email)->whereNull('deleted_at')->where('uuid', '!=', $id)->exists()) {
-                   return response()->error((__('messages.email_exists_all_companies')));
-                }
+
+            // Check if email exists in other companies
+            if ($emailQuery->exists()) {
+                return response()->error(__('messages.email_exists_all_companies'));
             }
+
+            // Check if phone exists within the same company
+            $phoneQuery = User::where('phone', $phone)
+                ->whereNull('deleted_at')
+                ->where('uuid', '!=', $id);
+
+            if ($phoneQuery->where('company_uuid', $companyUuid)->exists()) {
+                return response()->error(__('messages.phone_exists_within_company'));
+            }
+
             $record = $this->model->updateRecordFromRequest($request, $id, function (&$request, &$user) {
                 if ($request->filled('user.role')) {
                     $user->assignSingleRole($request->input('user.role'));
