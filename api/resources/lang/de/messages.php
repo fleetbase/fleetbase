@@ -42,4 +42,6 @@ return [
     'phone_exists_all_companies' => 'Diese Telefonnummer ist mit einer anderen Organisation verbunden.',
     'duplicate_order_import' => 'Einige Zeilen wurden aufgrund von doppelten Block-IDs oder Reise-IDs, die bereits im System existieren, übersprungen.',
     'import_failed_invalid_location' => 'Einige Zeilen enthalten ungültige Standortdaten. Bitte überprüfen und korrigieren Sie diese, bevor Sie fortfahren.',
+    'duplicate_check_place' => 'Ein Ort mit diesem Code existiert bereits.',
+    'duplicate_check_vehicle' => 'Ein Fahrzeug mit diesem Kennzeichen existiert bereits.',
 ];

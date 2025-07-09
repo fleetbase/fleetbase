@@ -40,4 +40,6 @@ return [
     'phone_exists_all_companies' => 'Questo numero di telefono è associato a un’altra organizzazione.',
     'duplicate_order_import' => 'Alcune righe sono state saltate a causa di ID blocco o ID viaggio duplicati già esistenti nel sistema.',
     'import_failed_invalid_location' => 'Alcune righe contengono dati di posizione non validi. Si prega di rivederli e correggerli prima di procedere.',
+    'duplicate_check_place' => 'Esiste già un luogo con questo codice.',
+    'duplicate_check_vehicle' => 'Esiste già un veicolo con questa targa.',
 ];

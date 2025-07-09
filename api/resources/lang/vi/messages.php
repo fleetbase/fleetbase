@@ -30,5 +30,7 @@ return [
     'phone_exists_all_companies' => 'Số điện thoại này đang liên kết với tổ chức khác.',
     'duplicate_order_import' => 'Một số hàng đã bị bỏ qua do ID khối hoặc ID chuyến đi trùng lặp đã tồn tại trong hệ thống.',
     'import_failed_invalid_location' => 'Một số hàng chứa dữ liệu vị trí không hợp lệ. Vui lòng xem xét và sửa chữa chúng trước khi tiếp tục.',
+    'duplicate_check_place' => 'Đã tồn tại một địa điểm với mã này.',
+    'duplicate_check_vehicle' => 'Đã tồn tại một phương tiện với biển số này.',
 ];
 

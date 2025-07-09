@@ -497,8 +497,13 @@ trait HasApiControllerBehavior
             $model_name = str_replace('Controller', '', class_basename($this));
             if ($model_name == "Vehicle") {
                 $plateNumber = $request['vehicle']['plate_number'] ?? null;
-                if ($this->model->where('plate_number', $plateNumber)->exists()) {
-                    return response()->error("A vehicle with plate number already exists.");
+                if ($this->model->where('plate_number', $plateNumber)->whereNull('deleted_at')->exists()) {
+                    return response()->error(__('messages.duplicate_check_vehicle'));
+                }
+            } else if($model_name == "Place"){
+                $code = $request->input('code'); // preferred
+                if ($this->model->where('code', $code)->whereNull('deleted_at')->exists()) {
+                    return response()->error(__('messages.duplicate_check_place'));
                 }
             }
 
@@ -603,11 +608,12 @@ trait HasApiControllerBehavior
                     $plateNumber =  $request['vehicle']['plate_number'] ?? null;
                     if (!empty($plateNumber)) {
                         $duplicate = Vehicle::where('plate_number', $plateNumber)
+                            ->whereNull('deleted_at') // Exclude soft-deleted records
                             ->where('uuid', '!=', $vehicle->uuid) // exclude current vehicle
                             ->exists();
 
                         if ($duplicate) {
-                            return response()->error("A vehicle with plate number this already exists.");
+                            return response()->error(__('messages.duplicate_check_vehicle'));
                         }
 
                         $vehicle->update(['plate_number' => $plateNumber]);
@@ -628,10 +634,11 @@ trait HasApiControllerBehavior
                     if (!empty($code)) {
                         $duplicate = Place::where('code', $code)
                             ->where('uuid', '!=', $place->uuid) // ignore the current record
+                            ->whereNull('deleted_at') // Exclude soft-deleted records
                             ->exists();
 
                         if ($duplicate) {
-                            return response()->error('A place with this code already exists.');
+                            return response()->error(__('messages.duplicate_check_place'));
                         }
 
                         // Update only the code if needed (optional)

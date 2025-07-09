@@ -40,4 +40,6 @@ return [
     'phone_exists_all_companies' => 'Ce numéro de téléphone est associé à une autre organisation.',
     'duplicate_order_import' => 'Certaines lignes ont été ignorées en raison de l\'existence d\'ID de bloc ou d\'ID de voyage en double dans le système.',
     'import_failed_invalid_location' => 'Certaines lignes contiennent des données de localisation invalides. Veuillez les examiner et les corriger avant de continuer.',
+    'duplicate_check_place' => 'Un lieu avec ce code existe déjà.',
+    'duplicate_check_vehicle' => 'Un véhicule avec ce numéro de plaque existe déjà.',
 ];
