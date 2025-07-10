@@ -45,7 +45,7 @@ export default class ThemeService extends Service {
         }
 
         if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-            return 'dark';
+            return 'light';
         }
 
         // default to dark theme
