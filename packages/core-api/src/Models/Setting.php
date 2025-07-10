@@ -40,6 +40,9 @@ class Setting extends EloquentModel
      * @var bool
      */
     public $timestamps = false;
+    
+    // Added a default light theme 
+    public const THEME_LIGHT = 'light';
 
     /**
      * The database table used by the model.
@@ -327,8 +330,7 @@ class Setting extends EloquentModel
         // set branding settings
         $brandingSettings['icon_uuid']     = $iconUuid;
         $brandingSettings['logo_uuid']     = $logoUuid;
-        $brandingSettings['default_theme'] = $defaultTheme ?? 'dark';
-
+        $brandingSettings['default_theme'] = $defaultTheme ?? self::THEME_LIGHT;
         return $brandingSettings;
     }
 
