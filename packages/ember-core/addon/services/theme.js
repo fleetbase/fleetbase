@@ -65,7 +65,7 @@ export default class ThemeService extends Service {
      *
      * @var {String}
      */
-    @tracked currentTheme = 'dark';
+    @tracked currentTheme = 'light';
 
     /**
      * The initially set theme

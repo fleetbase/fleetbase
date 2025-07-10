@@ -19,7 +19,7 @@ class InstallerController extends Controller
     {
         $shouldInstall = false;
         $shouldOnboard = false;
-        $defaultTheme  = Setting::lookup('branding.default_theme', 'dark');
+        $defaultTheme  = Setting::lookup('branding.default_theme', 'light');
 
         try {
             DB::connection()->getPdo();
