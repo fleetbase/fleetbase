@@ -494,6 +494,19 @@ trait HasApiControllerBehavior
             $onAfterCallback  = $this->getControllerCallback('onAfterCreate');
 
             $this->validateRequest($request);
+            $model_name = str_replace('Controller', '', class_basename($this));
+            if ($model_name == "Vehicle") {
+                $plateNumber = $request['vehicle']['plate_number'] ?? null;
+                if ($this->model->where('plate_number', $plateNumber)->whereNull('deleted_at')->exists()) {
+                    return response()->error(__('messages.duplicate_check_vehicle'));
+                }
+            } else if($model_name == "Place"){
+                $code = $request->input('code'); // preferred
+                if ($this->model->where('code', $code)->whereNull('deleted_at')->exists()) {
+                    return response()->error(__('messages.duplicate_check_place'));
+                }
+            }
+
             $record = $this->model->createRecordFromRequest($request, $onBeforeCallback, $onAfterCallback);
 
             if (Http::isInternalRequest($request)) {
@@ -591,12 +604,49 @@ trait HasApiControllerBehavior
             if ($model_name === 'Vehicle') {
                 $vehicle = Vehicle::find($id);
                 if ($vehicle) {
+                    // Manual unique check for plate_number
+                    $plateNumber =  $request['vehicle']['plate_number'] ?? null;
+                    if (!empty($plateNumber)) {
+                        $duplicate = Vehicle::where('plate_number', $plateNumber)
+                            ->whereNull('deleted_at') // Exclude soft-deleted records
+                            ->where('uuid', '!=', $vehicle->uuid) // exclude current vehicle
+                            ->exists();
+
+                        if ($duplicate) {
+                            return response()->error(__('messages.duplicate_check_vehicle'));
+                        }
+
+                        $vehicle->update(['plate_number' => $plateNumber]);
+                    }
+
+                    // Optional: update driver name too
                     $driverName = $request->input('driver_name');
                     if (!empty($driverName)) {
                         $vehicle->update(['driver_name' => $driverName]);
                     }
                 }
             }
+            if ($model_name === 'Place') {
+                $place = Place::find($id);
+                if ($place) {
+                    $code = $request->input('code'); // 'code' is a top-level key
+
+                    if (!empty($code)) {
+                        $duplicate = Place::where('code', $code)
+                            ->where('uuid', '!=', $place->uuid) // ignore the current record
+                            ->whereNull('deleted_at') // Exclude soft-deleted records
+                            ->exists();
+
+                        if ($duplicate) {
+                            return response()->error(__('messages.duplicate_check_place'));
+                        }
+
+                        // Update only the code if needed (optional)
+                        $place->update(['code' => $code]);
+                    }
+                }
+            }
+
             $onBeforeCallback = $this->getControllerCallback('onBeforeUpdate');
             $onAfterCallback  = $this->getControllerCallback('onAfterUpdate');
 
