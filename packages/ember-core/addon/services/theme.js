@@ -45,7 +45,7 @@ export default class ThemeService extends Service {
         }
 
         if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-            return 'light';
+            return 'dark';
         }
 
         // default to dark theme
@@ -65,7 +65,7 @@ export default class ThemeService extends Service {
      *
      * @var {String}
      */
-    @tracked currentTheme = 'dark';
+    @tracked currentTheme = 'light';
 
     /**
      * The initially set theme
