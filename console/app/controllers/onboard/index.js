@@ -129,7 +129,7 @@ export default class OnboardIndexController extends Controller {
     constructor() {
         super(...arguments);
         this.loadLanguages();
-        this.setupIframeMessageListener();
+        // this.setupIframeMessageListener();
     }
 
     /**
@@ -366,8 +366,7 @@ export default class OnboardIndexController extends Controller {
             no_of_web_users: parseInt(userInput.number_of_web_users),
             no_of_app_users: parseInt(userInput.number_of_drivers),
             description: `${userInput.organization_name} fleet management subscription`,
-            // success_url: 'http://127.0.0.1:8000/int/v1/onboard/billing/success',
-            // exit_uri: 'http://127.0.0.1:8000/int/v1/onboard/checkout/failure',
+           
             success_url: `${window.location.origin}/billing/success`,
             exit_uri: `${window.location.origin}/billing/failure`,
             customer: {
@@ -400,9 +399,10 @@ export default class OnboardIndexController extends Controller {
     handlePaymentSuccess() {
         console.log('🎯 Payment success handler triggered');
         this.stopIframePolling();
-        this.showPaymentFrame = false;
-        this.paymentUrl = null;
-
+        
+        // Show success message and loader
+        this.notifications.success('Subscription created successfully! Redirecting to verification...');
+        
         // Get stored account details from the original onboard response
         const accountDetails = sessionStorage.getItem('account_details');
         console.log('Account details:', accountDetails);
@@ -416,24 +416,35 @@ export default class OnboardIndexController extends Controller {
             console.log('🔍 token:', token ? 'exists' : 'missing');
             console.log('🔍 session:', session ? 'exists' : 'missing');
 
-            // Always redirect to verification page after payment success
-            console.log('🚀 Redirecting to verification page...');
-            console.log('🚀 Redirecting to verification page...');
-            this.router.transitionTo('onboard.verify-email', { queryParams: { hello: session } })
-            .then(() => {
-                this.notifications.success('Payment setup completed successfully!');
-            })
-            .catch((error) => {
-                console.error('❌ Failed to redirect to verification page:', error);
-                this.notifications.error('Redirect failed. Please try again.');
-            });  
-            // this.router.transitionTo('billing.success');
+            // Show loading state
+            this.isLoading = true;
+            
+            // Small delay to show the success message
+            setTimeout(() => {
+                // Always redirect to verification page after payment success
+                console.log('🚀 Redirecting to verification page...');
+                this.router.transitionTo('onboard.verify-email', { queryParams: { hello: session } })
+                .then(() => {
+                    this.notifications.success('Payment completed successfully! Please verify your email.');
+                    this.showPaymentFrame = false;
+                    this.paymentUrl = null;
+                })
+                .catch((error) => {
+                    console.error('❌ Failed to redirect to verification page:', error);
+                    this.notifications.error('Redirect failed. Please try again.');
+                    this.showPaymentFrame = false;
+                    this.paymentUrl = null;
+                })
+                .finally(() => {
+                    this.isLoading = false;
+                });
+            }, 1500); // 1.5 second delay to show success message
         } else {
             console.warn('⚠️ No account details found in session storage');
             this.notifications.error('Session data missing. Please try the onboarding process again.');
+            this.showPaymentFrame = false;
+            this.paymentUrl = null;
         }
-        this.notifications.success('Payment setup completed successfully!');
-        // this.router.transitionTo('console');
     }
 
     @action
@@ -445,6 +456,7 @@ export default class OnboardIndexController extends Controller {
 
     @action
     handleIframeLoad() {
+        this.isLoading = false;
         console.log('🔄 Payment iframe loaded');
         // Start polling for iframe URL changes
         this.startIframePolling();
@@ -510,69 +522,91 @@ export default class OnboardIndexController extends Controller {
                             user_uuid,
                             company_uuid
                         };
-                        sessionStorage.setItem('account_details', JSON.stringify(accountDetails));
-                        try {
-                            console.log('Account created successfully, now creating subscription...', user_uuid, company_uuid);
-                            const subscriptionResponse = await this.callSubscriptionAPI(user_uuid, company_uuid, input);
-
-                            if (subscriptionResponse.success && subscriptionResponse.redirect_url) {
-                                // Show success message and redirect to payment
-                                this.notifications.success('Account created! Redirecting to payment setup...');
-
-                                // Store subscription details if needed
-                                const subscriptionDetails = {
-                                    billing_request_id: subscriptionResponse.billing_request_id,
-                                    billing_request_flow_id: subscriptionResponse.billing_request_flow_id,
-                                    subscription_amount: subscriptionResponse.subscription_amount,
-                                    currency: subscriptionResponse.currency,
-                                    billing_cycle: subscriptionResponse.billing_cycle,
-                                    start_date: subscriptionResponse.start_date,
-                                    is_recurring: subscriptionResponse.is_recurring,
-                                };
-
-                                // Store in session or local storage if needed
-                                sessionStorage.setItem('subscription_details', JSON.stringify(subscriptionDetails));
-
-                                // Redirect to GoCardless payment flow
-                                // setTimeout(() => {
-                                //     window.location.href = subscriptionResponse.redirect_url;
-                                // }, 1500);
-
-                                // return;
-                                console.log('Loading payment frame with URL:', subscriptionResponse.redirect_url);
-
-                                // Show payment iframe instead of redirecting
-                                this.paymentUrl = subscriptionResponse.redirect_url;
-                                this.showPaymentFrame = true;
-                                console.log('Payment frame shown', this.showPaymentFrame, this.paymentUrl);
-                                return;
-                            } else {
-                                throw new Error('Subscription creation failed - no redirect URL received');
-                            }
-                        } catch (subscriptionError) {
-                            console.error('Subscription creation failed:', subscriptionError);
-                            this.notifications.error('Account created but subscription setup failed. Please contact support.');
-
-                            // Still continue with normal flow since account was created
-                            // if (skipVerification === true && token) {
-                            //     this.session.isOnboarding().manuallyAuthenticate(token);
-                            //     return this.router.transitionTo('console').then(() => {
-                            //         this.notifications.warning('Welcome to FleetYes! Please complete your subscription setup.');
-                            //     });
-                            // }
-
-                            // return this.router.transitionTo('onboard.verify-email', { queryParams: { hello: session } });
-                        }
-                        // if (skipVerification === true && token) {
-                        //     // only manually authenticate if skip verification
-                        //     this.session.isOnboarding().manuallyAuthenticate(token);
-
-                        //     return this.router.transitionTo('console').then(() => {
-                        //         this.notifications.success('Welcome to FleetYes!');
+                        // sessionStorage.setItem('account_details', JSON.stringify(accountDetails));
+                        // try {
+                        //     // console.log('Account created successfully, now creating subscription...', user_uuid, company_uuid);
+                        //     // const subscriptionResponse = await this.callSubscriptionAPI(user_uuid, company_uuid, input);
+                        //     this.notifications.success('Account created! Redirecting to payment setup...');
+                            
+                        //     // Construct payment URL with user data
+                        //     const baseUrl = "https://agilecyber-test.chargebee.com/hosted_pages/checkout";
+                        //     const params = new URLSearchParams({
+                        //         'subscription_items[item_price_id][0]': 'Premium-1-EUR-Monthly',
+                        //         'subscription_items[quantity][0]': '1',
+                        //         'subscription_items[item_price_id][1]': 'no_of_drivers-EUR-Monthly',
+                        //         'subscription_items[quantity][1]': input.number_of_drivers?.toString() || '1',
+                        //         'subscription_items[item_price_id][2]': 'users-EUR-Monthly',
+                        //         'subscription_items[quantity][2]': input.number_of_web_users?.toString() || '1',
+                        //         'layout': 'in_app',
+                        //         'embed': 'true',
+                        //         'customer[email]': input.email,
+                        //         'customer[first_name]': input.name?.split(' ')[0] || '',
+                        //         'customer[last_name]': input.name?.split(' ').slice(1).join(' ') || '',
+                        //         'company': input.organization_name || '',
+                        //         'redirect_url': `${window.location.origin}/billing/success`,
                         //     });
-                        // }
+                            
+                        //     this.paymentUrl = `${baseUrl}?${params.toString()}`;
+                        //     this.showPaymentFrame = true;
+                        //     return;
+                        //     // if (subscriptionResponse.success && subscriptionResponse.redirect_url) {
+                        //     //     // Show success message and redirect to payment
+                        //     //     this.notifications.success('Account created! Redirecting to payment setup...');
 
-                        // return this.router.transitionTo('onboard.verify-email', { queryParams: { hello: session } });
+                        //     //     // Store subscription details if needed
+                        //     //     const subscriptionDetails = {
+                        //     //         billing_request_id: subscriptionResponse.billing_request_id,
+                        //     //         billing_request_flow_id: subscriptionResponse.billing_request_flow_id,
+                        //     //         subscription_amount: subscriptionResponse.subscription_amount,
+                        //     //         currency: subscriptionResponse.currency,
+                        //     //         billing_cycle: subscriptionResponse.billing_cycle,
+                        //     //         start_date: subscriptionResponse.start_date,
+                        //     //         is_recurring: subscriptionResponse.is_recurring,
+                        //     //     };
+
+                        //     //     // Store in session or local storage if needed
+                        //     //     sessionStorage.setItem('subscription_details', JSON.stringify(subscriptionDetails));
+
+                        //     //     // Redirect to GoCardless payment flow
+                        //     //     // setTimeout(() => {
+                        //     //     //     window.location.href = subscriptionResponse.redirect_url;
+                        //     //     // }, 1500);
+
+                        //     //     // return;
+                        //     //     console.log('Loading payment frame with URL:', subscriptionResponse.redirect_url);
+
+                        //     //     // Show payment iframe instead of redirecting
+                        //     //     this.paymentUrl = subscriptionResponse.redirect_url;
+                        //     //     this.showPaymentFrame = true;
+                        //     //     console.log('Payment frame shown', this.showPaymentFrame, this.paymentUrl);
+                        //     //     return;
+                        //     // } else {
+                        //     //     throw new Error('Subscription creation failed - no redirect URL received');
+                        //     // }
+                        // } catch (subscriptionError) {
+                        //     console.error('Subscription creation failed:', subscriptionError);
+                        //     this.notifications.error('Account created but subscription setup failed. Please contact support.');
+
+                        //     // Still continue with normal flow since account was created
+                        //     // if (skipVerification === true && token) {
+                        //     //     this.session.isOnboarding().manuallyAuthenticate(token);
+                        //     //     return this.router.transitionTo('console').then(() => {
+                        //     //         this.notifications.warning('Welcome to FleetYes! Please complete your subscription setup.');
+                        //     //     });
+                        //     // }
+
+                        //     // return this.router.transitionTo('onboard.verify-email', { queryParams: { hello: session } });
+                        // }
+                        if (skipVerification === true && token) {
+                            // only manually authenticate if skip verification
+                            this.session.isOnboarding().manuallyAuthenticate(token);
+
+                            return this.router.transitionTo('console').then(() => {
+                                this.notifications.success('Welcome to FleetYes!');
+                            });
+                        }
+
+                        return this.router.transitionTo('onboard.verify-email', { queryParams: { hello: session } });
                     }
                 })
                 .catch((error) => {
@@ -623,8 +657,8 @@ export default class OnboardIndexController extends Controller {
     /**
      * Clean up when controller is destroyed
      */
-    willDestroy() {
-        this.stopIframePolling();
-        super.willDestroy();
-    }
+    // willDestroy() {
+    //     this.stopIframePolling();
+    //     super.willDestroy();
+    // }
 }
