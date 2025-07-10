@@ -40,6 +40,8 @@ return [
     'phone_exists_all_companies' => 'Questo numero di telefono è associato a un’altra organizzazione.',
     'duplicate_order_import' => 'Alcune righe sono state saltate a causa di ID blocco o ID viaggio duplicati già esistenti nel sistema.',
     'import_failed_invalid_location' => 'Alcune righe contengono dati di posizione non validi. Si prega di rivederli e correggerli prima di procedere.',
+    'partial_success' => 'Importazione parzialmente completata. Alcune righe contenevano errori e sono state registrate. Clicca qui sotto per scaricare i dettagli degli errori e correggerli prima di riprovare.',
+    'full_import_error' => 'Importazione non riuscita. Nessun viaggio è stato importato a causa di errori. Controlla il registro degli errori allegato per ulteriori dettagli.',
     'duplicate_check_place' => 'Esiste già un luogo con questo codice.',
     'duplicate_check_vehicle' => 'Esiste già un veicolo con questa targa.',
 ];

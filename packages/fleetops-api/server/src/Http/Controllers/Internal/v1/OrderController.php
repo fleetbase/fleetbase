@@ -381,7 +381,7 @@ class OrderController extends FleetOpsController
             $this->logImportResult($file->uuid, 'order', 'PARTIALLY_COMPLETED', $fileName);
             return response()->json([
                 'error_log_url' => $url,
-                'message' =>  "Import partially completed. {$totalCreatedOrders} trip(s) created, {$totalUpdatedOrders} updated. However, some rows contain errors and have been logged.",
+                'message' => __('messages.partial_success'),
                 'status' => 'partial_success',
                 'successful_imports' => $totalSuccessfulImports,
                 'created_orders' => $totalCreatedOrders,
@@ -394,7 +394,7 @@ class OrderController extends FleetOpsController
             $this->logImportResult($file->uuid, 'order', 'ERROR', $fileName);
             return response()->json([
                 'error_log_url' => $url,
-                'message' => 'Import failed. No trips were imported due to errors. Please review the attached error log for details.',
+                'message' => __('messages.full_import_error'),
                 'status' => 'error',
                 'total_errors' => count($allErrors),
                 'errors' => $allErrors,

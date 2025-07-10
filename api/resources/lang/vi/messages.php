@@ -30,6 +30,8 @@ return [
     'phone_exists_all_companies' => 'Số điện thoại này đang liên kết với tổ chức khác.',
     'duplicate_order_import' => 'Một số hàng đã bị bỏ qua do ID khối hoặc ID chuyến đi trùng lặp đã tồn tại trong hệ thống.',
     'import_failed_invalid_location' => 'Một số hàng chứa dữ liệu vị trí không hợp lệ. Vui lòng xem xét và sửa chữa chúng trước khi tiếp tục.',
+    'partial_success' => 'Nhập dữ liệu thành công một phần. Một số dòng có lỗi và đã được ghi lại. Nhấn vào bên dưới để tải chi tiết lỗi và sửa trước khi thử lại.',
+    'full_import_error' => 'Nhập dữ liệu thất bại. Không có chuyến đi nào được nhập do lỗi. Vui lòng xem nhật ký lỗi đính kèm để biết thêm chi tiết.',
     'duplicate_check_place' => 'Đã tồn tại một địa điểm với mã này.',
     'duplicate_check_vehicle' => 'Đã tồn tại một phương tiện với biển số này.',
 ];
