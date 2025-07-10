@@ -327,7 +327,7 @@ class Setting extends EloquentModel
         // set branding settings
         $brandingSettings['icon_uuid']     = $iconUuid;
         $brandingSettings['logo_uuid']     = $logoUuid;
-        $brandingSettings['default_theme'] = $defaultTheme ?? 'dark';
+        $brandingSettings['default_theme'] = $defaultTheme ?? 'light';
 
         return $brandingSettings;
     }
