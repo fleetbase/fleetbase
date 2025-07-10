@@ -38,9 +38,12 @@ return [
     'no_driver_found' => 'Kein Fahrer gefunden',
     'email_exists_with_in_company' => 'Diese E-Mail ist bereits in Ihrer Organisation registriert.',
     'email_exists_all_companies' => 'Diese E-Mail ist bereits mit einer anderen Organisation verbunden.',
+    'phone_exists_within_company' => 'Diese Telefonnummer ist bereits in Ihrer Organisation registriert.',
+    'phone_exists_all_companies' => 'Diese Telefonnummer ist mit einer anderen Organisation verbunden.',
     'duplicate_order_import' => 'Einige Zeilen wurden aufgrund von doppelten Block-IDs oder Reise-IDs, die bereits im System existieren, übersprungen.',
     'import_failed_invalid_location' => 'Einige Zeilen enthalten ungültige Standortdaten. Bitte überprüfen und korrigieren Sie diese, bevor Sie fortfahren.',
     'partial_success' => 'Import teilweise abgeschlossen. Einige Zeilen enthielten Fehler und wurden protokolliert. Klicken Sie unten, um die Fehlerdetails herunterzuladen und sie vor einem neuen Versuch zu beheben.',
     'full_import_error' => 'Import fehlgeschlagen. Keine Fahrten wurden importiert, da Fehler aufgetreten sind. Bitte überprüfen Sie das beigefügte Fehlerprotokoll für weitere Details.',
-
+    'duplicate_check_place' => 'Ein Ort mit diesem Code existiert bereits.',
+    'duplicate_check_vehicle' => 'Ein Fahrzeug mit diesem Kennzeichen existiert bereits.',
 ];

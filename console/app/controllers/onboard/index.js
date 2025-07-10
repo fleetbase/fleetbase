@@ -472,8 +472,10 @@ export default class OnboardIndexController extends Controller {
         event.preventDefault();
 
         // eslint-disable-next-line ember/no-get
+        const validations = OnboardValidations(this.intl);
+
         const input = getProperties(this, 'name', 'email', 'phone', 'organization_name', 'password', 'password_confirmation', 'language', 'number_of_drivers', 'number_of_web_users');
-        const changeset = new Changeset(input, lookupValidator(OnboardValidations), OnboardValidations);
+        const changeset = new Changeset(input, lookupValidator(validations), validations);
 
         await changeset.validate();
         if (changeset.get('isInvalid')) {

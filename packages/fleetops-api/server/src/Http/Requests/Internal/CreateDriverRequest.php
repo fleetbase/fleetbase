@@ -26,8 +26,7 @@ class CreateDriverRequest extends CreateDriverApiRequest
     public function rules()
     {
       $isCreating = $this->isMethod('POST');
-      $driverId = $this->route('driver')?->id ?? null; // works with route-model binding or fallback
-
+      $driverId = $this->route('driver') ?? null; // works with route-model binding or fallback
         return [
             'password' => 'nullable|string',
             'country'  => 'nullable|size:2',
@@ -37,7 +36,7 @@ class CreateDriverRequest extends CreateDriverApiRequest
             'drivers_license_number' => [
             'required',
             'string',
-            Rule::unique('drivers', 'drivers_license_number')->ignore($driverId),
+            Rule::unique('drivers', 'drivers_license_number')->ignore($driverId, 'uuid'),
         ],
         ];
     }
