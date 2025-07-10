@@ -552,6 +552,7 @@ export default class OperationsOrdersIndexNewController extends BaseController {
                 this.downloadFile(errorLogUrl);
                 // Optionally close modal after download
                 modal.done();
+                this.hostRouter.refresh(); // ✅ Refresh list
             }
         };
     
@@ -591,6 +592,7 @@ export default class OperationsOrdersIndexNewController extends BaseController {
                 const isErrorState = this.modalsManager.getOption('isErrorState');
                 if (isErrorState) {
                     downloadErrorLog(modal);
+                    this.hostRouter.refresh();
                 } else {
                     originalConfirm(modal);
                 }
@@ -623,6 +625,7 @@ export default class OperationsOrdersIndexNewController extends BaseController {
                 } finally {
                     this.modalsManager.setOption('uploadQueue', []);
                     modal.done();
+                    this.hostRouter.refresh(); // ✅ Refresh list after closing
                 }
             },
         });
@@ -637,6 +640,7 @@ export default class OperationsOrdersIndexNewController extends BaseController {
         // }
         
         // Set modal to error state
+        let errorMessage = results?.message;
         this.modalsManager.setOption('errorLogUrl', results.error_log_url);
         this.modalsManager.setOption('acceptButtonText', this.intl.t('common.download-error-log'));
         this.modalsManager.setOption('acceptButtonIcon', 'download');
@@ -644,6 +648,7 @@ export default class OperationsOrdersIndexNewController extends BaseController {
         this.modalsManager.setOption('keepOpen', true);
         this.modalsManager.setOption('isProcessing', false);
         this.modalsManager.setOption('isErrorState', true);
+        this.modalsManager.setOption('errorMessage', errorMessage)
         
         modal.stopLoading();
     }
