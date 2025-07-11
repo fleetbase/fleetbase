@@ -33,6 +33,7 @@ return [
     'partial_success' => 'Nhập dữ liệu thành công một phần. Một số dòng có lỗi và đã được ghi lại. Nhấn vào bên dưới để tải chi tiết lỗi và sửa trước khi thử lại.',
     'full_import_error' => 'Nhập dữ liệu thất bại. Không có chuyến đi nào được nhập do lỗi. Vui lòng xem nhật ký lỗi đính kèm để biết thêm chi tiết.',
     'duplicate_check_place' => 'Đã tồn tại một địa điểm với mã này.',
+    'invalid_coordinates' => 'Vui lòng nhập tọa độ địa lý hợp lệ. Các giá trị như [0, 0] hoặc nằm ngoài phạm vi không được chấp nhận.',
     'duplicate_check_vehicle' => 'Đã tồn tại một phương tiện với biển số này.',
 ];
 
