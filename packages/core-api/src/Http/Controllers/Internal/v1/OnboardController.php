@@ -14,6 +14,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Log;
 
 class OnboardController extends Controller
 {
@@ -546,6 +547,46 @@ class OnboardController extends Controller
                 'message' => 'Failed to create subscription',
                 'error' => $e->getMessage()
             ], 500);
+        }
+    }
+    public function handleBillingSuccess(Request $request)
+    {
+        try {
+            $sessionToken = $request->input('session');
+            $subscriptionId = $request->input('subscription_id');
+            $customerId = $request->input('customer_id');
+            $invoiceId = $request->input('invoice_id');
+            $paymentStatus = $request->input('payment_status');
+            $userUuid = $request->input('user_uuid');
+            $companyUuid = $request->input('company_uuid');
+            
+            // if (!$sessionToken) {
+            //     return response()->json(['error' => 'Session token required'], 400);
+            // }
+
+            // Find user by session token (adjust this logic based on your session handling)
+            $user = User::where('uuid', $userUuid)->first();
+            
+            if (!$user) {
+                return response()->json(['error' => 'User not found'], 404);
+            }
+
+            // Update user with Chargebee details
+            $user->update([
+                'chargebee_subscription_id' => $subscriptionId,
+                'chargebee_customer_id' => $customerId,
+                'subscription_status' => 'active',
+                'subscribed_at' => now()
+            ]);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Billing information updated successfully'
+            ]);
+
+        } catch (\Exception $e) {
+            Log::error('Billing success handling failed: ' . $e->getMessage());
+            return response()->json(['error' => 'Failed to update billing information'], 500);
         }
     }
 }
