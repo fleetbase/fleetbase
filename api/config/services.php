@@ -47,6 +47,7 @@ return [
         'url' => env('SNAP_API_URL'),
     ],
     'parking_radius_meter' => env('PARKING_RADIUS_METER', 500),
+    'parking_radius_in_miles' => env('PARKING_RADIUS_MILES', 5), //if we change both meter & miles should b updated
     'gocardless' => [
         'access_token' => env('GOCARDLESS_ACCESS_TOKEN'),
         'environment' => env('GOCARDLESS_ENVIRONMENT', 'sandbox'), // 'sandbox' or 'live'
