@@ -73,19 +73,81 @@ class ChargebeeWebhookController extends Controller
     /**
      * Verify webhook signature
      */
+    
+    // private function verifyWebhookSignature(Request $request): bool
+    // {
+    //     $signature = $request->header('X-Chargebee-Signature');
+    //     $payload = $request->getContent();
+    //     $webhookSecret = config('services.chargebee.webhook_secret');
+
+    //     if (!$signature || !$webhookSecret) {
+    //         return false;
+    //     }
+
+    //     $computedSignature = hash_hmac('sha256', $payload, $webhookSecret);
+
+    //     return hash_equals($signature, $computedSignature);
+    // }
     private function verifyWebhookSignature(Request $request): bool
     {
         $signature = $request->header('X-Chargebee-Signature');
         $payload = $request->getContent();
         $webhookSecret = config('services.chargebee.webhook_secret');
 
+        // Debug logging
+        Log::info('Webhook Signature Debug', [
+            'received_signature' => $signature,
+            'payload_length' => strlen($payload),
+            'payload_preview' => substr($payload, 0, 100) . '...',
+            'secret_configured' => !empty($webhookSecret),
+            'secret_length' => $webhookSecret ? strlen($webhookSecret) : 0,
+            'headers' => $request->headers->all()
+        ]);
+
         if (!$signature || !$webhookSecret) {
+            Log::warning('Missing signature or secret', [
+                'has_signature' => !empty($signature),
+                'has_secret' => !empty($webhookSecret)
+            ]);
             return false;
         }
 
+        // Method 1: Standard HMAC (your current approach)
         $computedSignature = hash_hmac('sha256', $payload, $webhookSecret);
+        
+        // Method 2: Base64 encoded HMAC (some services use this)
+        $computedSignatureBase64 = base64_encode(hash_hmac('sha256', $payload, $webhookSecret, true));
+        
+        // Method 3: Hex encoded HMAC
+        $computedSignatureHex = hash_hmac('sha256', $payload, $webhookSecret);
 
-        return hash_equals($signature, $computedSignature);
+        Log::info('Signature Comparison', [
+            'received' => $signature,
+            'computed_standard' => $computedSignature,
+            'computed_base64' => $computedSignatureBase64,
+            'computed_hex' => $computedSignatureHex,
+            'match_standard' => hash_equals($signature, $computedSignature),
+            'match_base64' => hash_equals($signature, $computedSignatureBase64),
+            'match_hex' => hash_equals($signature, $computedSignatureHex)
+        ]);
+
+        // Try different comparison methods
+        $isValid = hash_equals($signature, $computedSignature) ||
+                   hash_equals($signature, $computedSignatureBase64) ||
+                   hash_equals($signature, $computedSignatureHex);
+
+        if (!$isValid) {
+            Log::warning('Signature verification failed', [
+                'expected_any_of' => [
+                    'standard' => $computedSignature,
+                    'base64' => $computedSignatureBase64,
+                    'hex' => $computedSignatureHex
+                ],
+                'received' => $signature
+            ]);
+        }
+
+        return $isValid;
     }
 
     /**
