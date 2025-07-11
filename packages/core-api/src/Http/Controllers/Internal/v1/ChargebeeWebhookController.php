@@ -13,6 +13,7 @@ use Fleetbase\Models\User;
 use Fleetbase\Models\Subscription;
 use Fleetbase\Models\PlanPricingRelation;
 use Fleetbase\Models\CompanyPlanRelation;
+use Fleetbase\Models\ProcessedWebhook;
 // use App\Models\Transaction;
 // use App\Mail\WelcomeMail;
 // use App\Mail\PaymentFailedMail;
@@ -49,16 +50,16 @@ class ChargebeeWebhookController extends Controller
             ]);
 
             // Check for duplicate webhooks
-            // if ($this->isDuplicateWebhook($request->header('X-Chargebee-Webhook-Id'))) {
-            //     Log::info('Duplicate Chargebee webhook ignored');
-            //     return response('Already processed', 200);
-            // }
+            if ($this->isDuplicateWebhook($request->header('X-Chargebee-Webhook-Id'))) {
+                Log::info('Duplicate Chargebee webhook ignored');
+                return response('Already processed', 200);
+            }
 
             // Handle the event
             $this->handleWebhookEvent($event);
 
             // Store webhook ID to prevent duplicates
-            // $this->storeWebhookId($request->header('X-Chargebee-Webhook-Id'));
+            $this->storeWebhookId($request->header('X-Chargebee-Webhook-Id'), $event);
 
             return response('OK', 200);
 
@@ -270,11 +271,13 @@ class ChargebeeWebhookController extends Controller
     /**
      * Store webhook ID
      */
-    private function storeWebhookId(string $webhookId): void
+    private function storeWebhookId(string $webhookId, array $event): void
     {
         DB::table('processed_webhooks')->insert([
             'webhook_id' => $webhookId,
-            'processed_at' => now()
+            'processed_at' => now(),
+            'event_id' => $event['id'] ?? null,
+            'event_data' => json_encode($event)
         ]);
     }
 
@@ -449,9 +452,9 @@ class ChargebeeWebhookController extends Controller
                         'start_date' => $subscription['activated_at'] ?? null,
                         'end_date' => $subscription['current_term_end'] ?? null,
                         'status' => $subscription['status'],
-                        'current_term_start' => $subscription['current_term_start'] ?? null,
-                        'current_term_end' => $subscription['current_term_end'] ?? null,
-                        'next_billing_at' => $subscription['next_billing_at'] ?? null,
+                        // 'current_term_start' => $subscription['current_term_start'] ?? null,
+                        // 'current_term_end' => $subscription['current_term_end'] ?? null,
+                        'next_payment_date' => $subscription['next_billing_at'] ?? null,
                         
                     ]
                 );
@@ -551,12 +554,13 @@ class ChargebeeWebhookController extends Controller
         // $user = User::where('chargebee_customer_id', $transaction['customer_id'])->first();
         try {
             $plan = DB::table('plan')->where('name', 'Basic Plan')->first();
+            $subscription = Subscription::where('gocardless_subscription_id', $transaction['subscription_id'])->first();
             // Store transaction record
             Payment::updateOrCreate(
                 ['gocardless_payment_id' => $transaction['id']],
                 [
                     'gocardless_customer_id' => $transaction['customer_id'],
-                    'chargebee_subscription_id' => $transaction['subscription_id'] ?? null,
+                    'subscription_id' => $subscription->id ?? null ,
                     'amount' => $transaction['amount'],
                     'company_plan_id' => 1,
                     'plan_id' => $plan->id,
@@ -575,6 +579,24 @@ class ChargebeeWebhookController extends Controller
 
             // Update user payment status - try multiple ways to find user
             $user = User::where('chargebee_customer_id', $transaction['customer_id'])->first();
+            
+            // If user not found by customer ID, try to find by subscription ID
+            if (!$user && isset($transaction['subscription_id'])) {
+                Log::info('User not found by customer ID for payment, trying to find by subscription ID', [
+                    'customer_id' => $transaction['customer_id'],
+                    'subscription_id' => $transaction['subscription_id']
+                ]);
+                $user = User::where('chargebee_subscription_id', $transaction['subscription_id'])->first();
+                
+                // If found by subscription ID, update the user with the customer ID
+                if ($user) {
+                    $user->update(['chargebee_customer_id' => $transaction['customer_id']]);
+                    Log::info('Updated user with chargebee_customer_id from payment', [
+                        'user_id' => $user->id,
+                        'customer_id' => $transaction['customer_id']
+                    ]);
+                }
+            }
             
             // If user not found by customer ID, try to find by email from transaction metadata
             if (!$user && isset($transaction['customer_email'])) {
@@ -625,6 +647,20 @@ class ChargebeeWebhookController extends Controller
                             'attempts_taken' => $attempt
                         ]);
                         break;
+                    }
+                    
+                    // Also try by subscription ID on each retry
+                    if (isset($transaction['subscription_id'])) {
+                        $user = User::where('chargebee_subscription_id', $transaction['subscription_id'])->first();
+                        if ($user) {
+                            $user->update(['chargebee_customer_id' => $transaction['customer_id']]);
+                            Log::info('User found by subscription ID for payment on retry attempt ' . $attempt, [
+                                'user_id' => $user->id,
+                                'customer_id' => $transaction['customer_id'],
+                                'attempts_taken' => $attempt
+                            ]);
+                            break;
+                        }
                     }
                     
                     // Also try by email on each retry
