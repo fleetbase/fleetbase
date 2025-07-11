@@ -283,6 +283,16 @@ export default class BillingSuccessRoute extends Route {
 
             console.log('✅ All required parameters present for API call');
 
+            // Test the fetch service first
+            try {
+                console.log('🧪 Testing fetch service...');
+                const testResponse = await this.fetch.get('onboard/pricing-plans/latest');
+                console.log('✅ Fetch service test successful:', testResponse ? 'YES' : 'NO');
+            } catch (testError) {
+                console.error('❌ Fetch service test failed:', testError);
+                console.error('❌ This might indicate a network or service issue');
+            }
+
             // Log the exact payload being sent
             console.log('🚀 About to send to API:', {
                 url: 'onboard/billing-success',
@@ -295,14 +305,17 @@ export default class BillingSuccessRoute extends Route {
             let response;
             try {
                 console.log('🚀 Making API call to onboard/billing-success...');
+                console.log('🚀 API call starting at:', new Date().toISOString());
                 response = await this.fetch.post('onboard/billing-success', cleanParams);
                 console.log('✅ Billing success API response:', JSON.stringify(response, null, 2));
+                console.log('✅ API call completed at:', new Date().toISOString());
             } catch (apiError) {
                 console.error('❌ API call failed:', apiError);
                 console.error('❌ Error message:', apiError.message);
                 console.error('❌ Error status:', apiError.status);
                 console.error('❌ Error response:', apiError.response);
                 console.error('❌ Full error object:', apiError);
+                console.error('❌ API call failed at:', new Date().toISOString());
                 
                 // Re-throw the error to be caught by the outer catch block
                 throw apiError;
@@ -348,6 +361,7 @@ export default class BillingSuccessRoute extends Route {
                 response: error.response,
                 stack: error.stack
             });
+            console.error('❌ Error occurred at:', new Date().toISOString());
 
             // Handle different types of errors
             if (error.status >= 400 && error.status < 500) {
@@ -400,6 +414,13 @@ export default class BillingSuccessRoute extends Route {
 
     afterModel(model) {
         console.log('🎯 Payment success page loaded');
+        console.log('🎯 Model data received:', model ? 'YES' : 'NO');
+        if (model) {
+            console.log('🎯 Model has apiResponse:', model.apiResponse ? 'YES' : 'NO');
+            console.log('🎯 Model has subscriptionDetails:', model.subscriptionDetails ? 'YES' : 'NO');
+            console.log('🎯 Model has accountDetails:', model.accountDetails ? 'YES' : 'NO');
+            console.log('🎯 Model has queryParams:', model.queryParams ? 'YES' : 'NO');
+        }
 
         // Show success notification immediately
         if (model && model.apiResponse) {
