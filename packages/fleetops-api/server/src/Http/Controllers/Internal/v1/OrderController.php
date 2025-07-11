@@ -1406,7 +1406,8 @@ public function createRouteSegmentsFromRows(array $rows, Order $order, array $sa
     }, $rows));
     
     if (!empty($vrIds)) {
-        $existingSegments = RouteSegment::whereIn('public_id', $vrIds)->get();
+        $existingSegments = RouteSegment::whereIn('public_id', $vrIds)
+          ->whereNull('deleted_at')->get();
         if ($existingSegments->count() > 0) {
             $existingIds = $existingSegments->pluck('public_id')->toArray();
             throw new \Exception("VR ID already exists for the order:" . implode(', ', $existingIds));
