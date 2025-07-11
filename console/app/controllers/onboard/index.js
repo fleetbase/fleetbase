@@ -268,8 +268,12 @@ export default class OnboardIndexController extends Controller {
      */
     handleIframeUrlChange(url) { 
         if (url.includes('/billing/success')) {
-            console.log('🎯 Detected billing success URL in iframe');
-            this.handlePaymentSuccess();
+            console.log('🎯 Detected billing success URL in iframe - letting billing success route handle it');
+            // Don't call handlePaymentSuccess here - let the billing success route handle it
+            // Just stop polling and close the iframe
+            this.stopIframePolling();
+            this.showPaymentFrame = false;
+            this.paymentUrl = null;
         } else if (url.includes('/billing/failure')) {
             console.log('💥 Detected billing failure URL in iframe');
             this.handlePaymentFailure();
@@ -448,7 +452,21 @@ export default class OnboardIndexController extends Controller {
     // }
     @action
     async handlePaymentSuccess() {
-        console.log('🎯 Payment success handler triggered');
+        // DISABLED: This method is disabled to prevent conflicts with the billing success route
+        // The billing success route should handle all payment success cases
+        console.log('🎯 ONBOARD CONTROLLER: Payment success handler DISABLED - letting billing success route handle it');
+        this.stopIframePolling();
+        this.showPaymentFrame = false;
+        this.paymentUrl = null;
+        return;
+        
+        // Original code commented out below
+        /*
+        console.log('🎯 ONBOARD CONTROLLER: Payment success handler triggered');
+        console.log('🎯 ONBOARD CONTROLLER: Current URL:', window.location.href);
+        console.log('🎯 ONBOARD CONTROLLER: Session storage keys:', Object.keys(sessionStorage));
+        console.log('🎯 ONBOARD CONTROLLER: Account details:', sessionStorage.getItem('account_details'));
+        
         this.stopIframePolling();
         
         // Show success message and loader
@@ -537,6 +555,7 @@ export default class OnboardIndexController extends Controller {
             this.paymentUrl = null;
             this.isLoading = false;
         }
+        */
     }
     async extractSubscriptionDetails() {
         // Method 1: Try to get from URL parameters if Chargebee redirects with them
@@ -669,6 +688,14 @@ export default class OnboardIndexController extends Controller {
                             company_uuid
                         };
                         sessionStorage.setItem('account_details', JSON.stringify(accountDetails));
+                        
+                        // Also store in localStorage as backup for server environments
+                        try {
+                            localStorage.setItem('account_details', JSON.stringify(accountDetails));
+                            console.log('📋 Account details stored in both sessionStorage and localStorage');
+                        } catch (e) {
+                            console.warn('⚠️ Failed to store in localStorage:', e);
+                        }
                         try {
                             // console.log('Account created successfully, now creating subscription...', user_uuid, company_uuid);
                             // const subscriptionResponse = await this.callSubscriptionAPI(user_uuid, company_uuid, input);
@@ -689,7 +716,7 @@ export default class OnboardIndexController extends Controller {
                                 'customer[first_name]': input.name?.split(' ')[0] || '',
                                 'customer[last_name]': input.name?.split(' ').slice(1).join(' ') || '',
                                 'company': input.organization_name || '',
-                                'redirect_url': `${window.location.origin}/billing/success`,
+                                'redirect_url': `${window.location.origin}/billing/success?user_uuid=${user_uuid}&company_uuid=${company_uuid}&session=${session}`,
                             });
                             
                             this.paymentUrl = `${baseUrl}?${params.toString()}`;

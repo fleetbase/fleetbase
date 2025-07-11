@@ -11,6 +11,24 @@ export default class BillingSuccessRoute extends Route {
         console.log('🎯 BILLING SUCCESS ROUTE HIT!');
         console.log('🎯 URL:', window.location.href);
         console.log('🎯 Params:', params);
+        console.log('🎯 User Agent:', navigator.userAgent);
+        console.log('🎯 Domain:', window.location.hostname);
+        console.log('🎯 Protocol:', window.location.protocol);
+        
+        // Debug session storage immediately
+        console.log('🔍 Session storage keys:', Object.keys(sessionStorage));
+        console.log('🔍 Account details from session storage:', sessionStorage.getItem('account_details'));
+        console.log('🔍 Subscription details from session storage:', sessionStorage.getItem('subscription_details'));
+        
+        // Check if session storage is working
+        try {
+            sessionStorage.setItem('test_key', 'test_value');
+            const testValue = sessionStorage.getItem('test_key');
+            console.log('🔍 Session storage test:', testValue === 'test_value' ? 'WORKING' : 'FAILED');
+            sessionStorage.removeItem('test_key');
+        } catch (e) {
+            console.error('❌ Session storage not working:', e);
+        }
         
         try {
             console.log('🎯 Billing success route started');
@@ -105,6 +123,45 @@ export default class BillingSuccessRoute extends Route {
                         console.error('Failed to parse account details from session storage:', e);
                     }
                 }
+                
+                // Fallback: Try localStorage if session storage failed
+                if (!mappedParams.user_uuid || !mappedParams.company_uuid) {
+                    console.log('🔍 Trying localStorage as fallback...');
+                    const localAccountDetails = localStorage.getItem('account_details');
+                    if (localAccountDetails) {
+                        try {
+                            const parsedLocalDetails = JSON.parse(localAccountDetails);
+                            mappedParams.user_uuid = mappedParams.user_uuid || parsedLocalDetails.user_uuid;
+                            mappedParams.company_uuid = mappedParams.company_uuid || parsedLocalDetails.company_uuid;
+                            mappedParams.session = mappedParams.session || parsedLocalDetails.session;
+                            console.log('📋 Retrieved account details from localStorage:', {
+                                user_uuid: mappedParams.user_uuid,
+                                company_uuid: mappedParams.company_uuid
+                            });
+                        } catch (e) {
+                            console.error('Failed to parse account details from localStorage:', e);
+                        }
+                    }
+                }
+                
+                // Fallback: Try to get from URL parameters if still missing
+                if (!mappedParams.user_uuid || !mappedParams.company_uuid) {
+                    console.log('🔍 Trying URL parameters as fallback...');
+                    const urlParams = new URLSearchParams(window.location.search);
+                    const urlUserUuid = urlParams.get('user_uuid');
+                    const urlCompanyUuid = urlParams.get('company_uuid');
+                    const urlSession = urlParams.get('session');
+                    
+                    if (urlUserUuid && urlCompanyUuid) {
+                        mappedParams.user_uuid = mappedParams.user_uuid || urlUserUuid;
+                        mappedParams.company_uuid = mappedParams.company_uuid || urlCompanyUuid;
+                        mappedParams.session = mappedParams.session || urlSession;
+                        console.log('📋 Retrieved account details from URL parameters:', {
+                            user_uuid: mappedParams.user_uuid,
+                            company_uuid: mappedParams.company_uuid
+                        });
+                    }
+                }
             }
 
             // Ensure user_uuid and company_uuid are always included
@@ -187,7 +244,41 @@ export default class BillingSuccessRoute extends Route {
             if (missingParams.length > 0) {
                 console.error('❌ Missing required parameters for API call:', missingParams);
                 console.log('❌ Available parameters:', Object.keys(cleanParams));
-                throw new Error(`Missing required parameters: ${missingParams.join(', ')}`);
+                console.log('❌ Server environment detected - trying alternative approaches...');
+                
+                // For server environments, try to get missing params from alternative sources
+                if (missingParams.includes('user_uuid') || missingParams.includes('company_uuid')) {
+                    console.log('🔍 Attempting to recover user_uuid and company_uuid...');
+                    
+                    // Try to get from localStorage
+                    const localAccountDetails = localStorage.getItem('account_details');
+                    if (localAccountDetails) {
+                        try {
+                            const parsedLocal = JSON.parse(localAccountDetails);
+                            if (!cleanParams.user_uuid && parsedLocal.user_uuid) {
+                                cleanParams.user_uuid = parsedLocal.user_uuid;
+                                console.log('✅ Recovered user_uuid from localStorage');
+                            }
+                            if (!cleanParams.company_uuid && parsedLocal.company_uuid) {
+                                cleanParams.company_uuid = parsedLocal.company_uuid;
+                                console.log('✅ Recovered company_uuid from localStorage');
+                            }
+                        } catch (e) {
+                            console.error('Failed to parse localStorage account details:', e);
+                        }
+                    }
+                    
+                    // Re-check after recovery
+                    const stillMissing = requiredParams.filter(param => !cleanParams[param]);
+                    if (stillMissing.length > 0) {
+                        console.error('❌ Still missing parameters after recovery:', stillMissing);
+                        throw new Error(`Missing required parameters: ${stillMissing.join(', ')}`);
+                    } else {
+                        console.log('✅ All required parameters recovered successfully');
+                    }
+                } else {
+                    throw new Error(`Missing required parameters: ${missingParams.join(', ')}`);
+                }
             }
 
             console.log('✅ All required parameters present for API call');
