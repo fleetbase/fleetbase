@@ -329,16 +329,74 @@ class ChargebeeWebhookController extends Controller
      */
     private function handleSubscriptionCreated(array $subscription): void
     {
-        
         Log::info('Processing subscription created', ['subscription_id' => $subscription['id']]);
 
         try {
             DB::transaction(function () use ($subscription) {
-                // Find user by customer ID
+                // Find user by customer ID first
                 $user = User::where('chargebee_customer_id', $subscription['customer_id'])->first();
 
+                // If user not found by customer ID, try to find by email from subscription metadata
+                if (!$user && isset($subscription['customer_email'])) {
+                    Log::info('User not found by customer ID, trying to find by email', [
+                        'customer_id' => $subscription['customer_id'],
+                        'email' => $subscription['customer_email']
+                    ]);
+                    $user = User::where('email', $subscription['customer_email'])->first();
+                    
+                    // If found by email, update the user with the customer ID
+                    if ($user) {
+                        $user->update(['chargebee_customer_id' => $subscription['customer_id']]);
+                        Log::info('Updated user with chargebee_customer_id', [
+                            'user_id' => $user->id,
+                            'customer_id' => $subscription['customer_id']
+                        ]);
+                    }
+                }
+
+                // If still no user found, try to find by subscription metadata or other fields
                 if (!$user) {
-                    Log::warning('User not found for customer ID: ' . $subscription['customer_id']);
+                    Log::warning('User not found for customer ID or email', [
+                        'customer_id' => $subscription['customer_id'],
+                        'customer_email' => $subscription['customer_email'] ?? 'not provided',
+                        'subscription_id' => $subscription['id']
+                    ]);
+                    
+                    // Try to find user by subscription metadata if available
+                    if (isset($subscription['metadata']) && isset($subscription['metadata']['user_uuid'])) {
+                        $user = User::where('uuid', $subscription['metadata']['user_uuid'])->first();
+                        if ($user) {
+                            $user->update(['chargebee_customer_id' => $subscription['customer_id']]);
+                            Log::info('Found user by UUID from metadata and updated customer ID', [
+                                'user_id' => $user->id,
+                                'customer_id' => $subscription['customer_id']
+                            ]);
+                        }
+                    }
+                }
+
+                // If still no user found, wait a bit and retry (race condition handling)
+                if (!$user) {
+                    Log::info('User still not found, waiting 3 seconds and retrying...', [
+                        'customer_id' => $subscription['customer_id']
+                    ]);
+                    
+                    // Wait 3 seconds for the billing success API to complete
+                    sleep(3);
+                    
+                    // Retry finding user by customer ID
+                    $user = User::where('chargebee_customer_id', $subscription['customer_id'])->first();
+                    
+                    if ($user) {
+                        Log::info('User found after retry', [
+                            'user_id' => $user->id,
+                            'customer_id' => $subscription['customer_id']
+                        ]);
+                    }
+                }
+
+                if (!$user) {
+                    Log::warning('User not found for customer ID after retry: ' . $subscription['customer_id']);
                     return;
                 }
 
@@ -480,10 +538,38 @@ class ChargebeeWebhookController extends Controller
                 ]
             );
 
-            // Update user payment status
+            // Update user payment status - try multiple ways to find user
             $user = User::where('chargebee_customer_id', $transaction['customer_id'])->first();
+            
+            // If user not found by customer ID, try to find by email from transaction metadata
+            if (!$user && isset($transaction['customer_email'])) {
+                Log::info('User not found by customer ID for payment, trying to find by email', [
+                    'customer_id' => $transaction['customer_id'],
+                    'email' => $transaction['customer_email']
+                ]);
+                $user = User::where('email', $transaction['customer_email'])->first();
+                
+                // If found by email, update the user with the customer ID
+                if ($user) {
+                    $user->update(['chargebee_customer_id' => $transaction['customer_id']]);
+                    Log::info('Updated user with chargebee_customer_id from payment', [
+                        'user_id' => $user->id,
+                        'customer_id' => $transaction['customer_id']
+                    ]);
+                }
+            }
+
             if ($user) {
                 $user->update(['payment_status' => 'success']);
+                Log::info('Updated user payment status to success', [
+                    'user_id' => $user->id,
+                    'transaction_id' => $transaction['id']
+                ]);
+            } else {
+                Log::warning('User not found for payment transaction', [
+                    'customer_id' => $transaction['customer_id'],
+                    'transaction_id' => $transaction['id']
+                ]);
             }
 
             Log::info('Payment processed successfully', [
