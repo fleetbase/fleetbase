@@ -143,6 +143,45 @@ export default class CoordinatesInputComponent extends Component {
     isPoint(point) {
         return typeof point === 'object' && !isBlank(point.type) && point.type === 'Point' && isArray(point.coordinates);
     }
+    /**
+     * Handles input changes to the latitude field.
+     * Parses the value, updates the latitude, and calls updateCoordinates
+     * only if both latitude and longitude are valid numbers.
+     *
+     * @param {InputEvent} event - The input event triggered by typing in the latitude field.
+     * @memberof CoordinatesInputComponent
+     */
+    @action
+    onLatitudeInput(event) {
+        const rawValue = event.target.value;
+        const lat = parseFloat(rawValue);
+        const lng = parseFloat(this.longitude);
+
+        // Only assign if value is a valid number
+        if (!isNaN(lat)) {
+            this.latitude = lat;
+        }
+
+        // Only update coordinates if both are valid
+        if (!isNaN(lat) && !isNaN(lng)) {
+            this.updateCoordinates(lat, lng);
+        }
+    }
+
+    @action
+    onLongitudeInput(event) {
+        const rawValue = event.target.value;
+        const lng = parseFloat(rawValue);
+        const lat = parseFloat(this.latitude);
+
+        if (!isNaN(lng)) {
+            this.longitude = lng;
+        }
+
+        if (!isNaN(lat) && !isNaN(lng)) {
+            this.updateCoordinates(lat, lng);
+        }
+    }
 
     /**
      * Sets the initial value of the map's coordinates from a geographical point.
