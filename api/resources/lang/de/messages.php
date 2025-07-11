@@ -45,5 +45,6 @@ return [
     'partial_success' => 'Import teilweise abgeschlossen. Einige Zeilen enthielten Fehler und wurden protokolliert. Klicken Sie unten, um die Fehlerdetails herunterzuladen und sie vor einem neuen Versuch zu beheben.',
     'full_import_error' => 'Import fehlgeschlagen. Keine Fahrten wurden importiert, da Fehler aufgetreten sind. Bitte überprüfen Sie das beigefügte Fehlerprotokoll für weitere Details.',
     'duplicate_check_place' => 'Ein Ort mit diesem Code existiert bereits.',
+    'invalid_coordinates' => 'Bitte geben Sie gültige geografische Koordinaten an. Werte wie [0, 0] oder außerhalb des gültigen Bereichs sind nicht erlaubt.',
     'duplicate_check_vehicle' => 'Ein Fahrzeug mit diesem Kennzeichen existiert bereits.',
 ];

@@ -43,5 +43,6 @@ return [
     'partial_success' => 'Importation partielle. Certaines lignes contenaient des erreurs et ont été enregistrées. Cliquez ci-dessous pour télécharger les détails des erreurs et les corriger avant de réessayer.',
     'full_import_error' => 'Échec de l\'importation. Aucun trajet n\'a été importé en raison d\'erreurs. Veuillez consulter le journal des erreurs ci-joint pour plus de détails.',
     'duplicate_check_place' => 'Un lieu avec ce code existe déjà.',
+    'invalid_coordinates' => 'Veuillez fournir des coordonnées géographiques valides. Les valeurs comme [0, 0] ou en dehors des limites autorisées ne sont pas acceptées.',
     'duplicate_check_vehicle' => 'Un véhicule avec ce numéro de plaque existe déjà.',
 ];
