@@ -72,7 +72,7 @@ class OnboardController extends Controller
         $languageId = $request->input('language_id',1);
         $numberOfDrivers = $request->input('number_of_drivers');
         $numberOfWebUsers = $request->input('number_of_web_users');
-        $company = new Company(['name' => $request->input('organization_name'), 'language_id' => $languageId, 'number_of_drivers' => $numberOfDrivers, 'number_of_web_users' => $numberOfWebUsers]);
+        $company = new Company(['name' => $request->input('organization_name'), 'parking_zone_max_distance' => config('services.parking_radius_meter'), 'language_id' => $languageId, 'number_of_drivers' => $numberOfDrivers, 'number_of_web_users' => $numberOfWebUsers]);
         $company->setOwner($user)->save();
 
         // assign user to organization
