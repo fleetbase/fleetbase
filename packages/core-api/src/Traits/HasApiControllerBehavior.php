@@ -501,9 +501,11 @@ trait HasApiControllerBehavior
                     return response()->error(__('messages.duplicate_check_vehicle'));
                 }
             } else if($model_name == "Place"){
-                $coordinates = $request['location']['coordinates'] ?? [];
-                if (!is_array($coordinates) || !$this->is_valid_coordinates($coordinates)) {
-                    return response()->error(__('messages.invalid_coordinates'));
+                if (isset($request['location']['coordinates'])) {
+                    $coordinates = $request['location']['coordinates'];
+                    if (!is_array($coordinates) || !$this->isValidCoordinates($coordinates)) {
+                        return response()->error(__('messages.invalid_coordinates'));
+                    }
                 }
                 $code = $request->input('code'); // preferred
                 if ($this->model->where('code', $code)->whereNull('deleted_at')->exists()) {
@@ -634,10 +636,12 @@ trait HasApiControllerBehavior
                 $place = Place::find($id);
                 if ($place) {
                     $code = $request->input('code'); // 'code' is a top-level key
-                    $coordinates = $request['location']['coordinates'] ?? [];
+                    if (isset($request['location']['coordinates'])) {
+                        $coordinates = $request['location']['coordinates'];
 
-                    if (!is_array($coordinates) || !$this->is_valid_coordinates($coordinates)) {
-                        return response()->error(__('messages.invalid_coordinates'));
+                        if (!is_array($coordinates) || !$this->isValidCoordinates($coordinates)) {
+                            return response()->error(__('messages.invalid_coordinates'));
+                        }
                     }
                     if (!empty($code)) {
                         $duplicate = Place::where('code', $code)
@@ -677,22 +681,15 @@ trait HasApiControllerBehavior
         }
     }
     /**
-     * The function `is_valid_coordinates` in PHP checks if a given array of coordinates represents a valid
-     * geographical location.
-     * 
-     * @param coordinates The `is_valid_coordinates` function is designed to validate a set of coordinates
-     * provided as an array. The function checks if the input array meets the following criteria to be
-     * considered valid coordinates:
-     * 
-     * @return bool The function `is_valid_coordinates` returns a boolean value. It returns `true` if the
-     * input coordinates are valid longitude and latitude values within the ranges (-180, 180) for
-     * longitude and (-90, 90) for latitude. Otherwise, it returns `false` if the input is empty, not an
-     * array of length 2, or if the values are not numeric or fall outside the
+     * Validate if the given coordinates are within valid latitude/longitude ranges.
+     *
+     * @param array|null $coordinates An array in the format [longitude, latitude]
+     * @return bool True if valid, false otherwise
      */
-    function is_valid_coordinates(?array $coordinates): bool
+    public function isValidCoordinates(?array $coordinates): bool
     {
         if (
-            empty($coordinates) ||
+            !is_array($coordinates) ||
             count($coordinates) !== 2 ||
             !is_numeric($coordinates[0]) ||
             !is_numeric($coordinates[1])
@@ -703,7 +700,7 @@ trait HasApiControllerBehavior
         [$lng, $lat] = $coordinates;
 
         return !(
-            $lng == 0 || $lat == 0 ||
+            ($lng == 0 && $lat == 0) ||
             $lng < -180 || $lng > 180 ||
             $lat < -90 || $lat > 90
         );
