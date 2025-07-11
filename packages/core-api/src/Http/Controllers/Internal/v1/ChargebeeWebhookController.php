@@ -50,7 +50,8 @@ class ChargebeeWebhookController extends Controller
             ]);
 
             // Check for duplicate webhooks
-            if ($this->isDuplicateWebhook($request->header('X-Chargebee-Webhook-Id'))) {
+            $webhookId = $request->header('X-Chargebee-Webhook-Id');
+            if ($webhookId && $this->isDuplicateWebhook($webhookId)) {
                 Log::info('Duplicate Chargebee webhook ignored');
                 return response('Already processed', 200);
             }
@@ -59,7 +60,9 @@ class ChargebeeWebhookController extends Controller
             $this->handleWebhookEvent($event);
 
             // Store webhook ID to prevent duplicates
-            $this->storeWebhookId($request->header('X-Chargebee-Webhook-Id'), $event);
+            if ($webhookId) {
+                $this->storeWebhookId($webhookId, $event);
+            }
 
             return response('OK', 200);
 
@@ -261,8 +264,12 @@ class ChargebeeWebhookController extends Controller
     /**
      * Check if webhook is duplicate
      */
-    private function isDuplicateWebhook(string $webhookId): bool
+    private function isDuplicateWebhook(?string $webhookId): bool
     {
+        if (!$webhookId) {
+            return false; // If no webhook ID, assume it's not a duplicate
+        }
+
         return DB::table('processed_webhooks')
             ->where('webhook_id', $webhookId)
             ->exists();
