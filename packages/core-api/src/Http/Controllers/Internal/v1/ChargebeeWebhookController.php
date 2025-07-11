@@ -335,7 +335,7 @@ class ChargebeeWebhookController extends Controller
             Log::info('Processing subscription created', ['subscription_id' => $subscription['id']]);
             DB::transaction(function () use ($subscription) {
                 // Find user by customer ID first
-                $user = User::where('chargebee_customer_id', $subscription['customer_id'])->first();
+                $user = User::where('chargebee_subscription_id', $subscription['id'])->first();
 
                 // If user not found by customer ID, try to find by email from subscription metadata
                 if (!$user && isset($subscription['customer_email'])) {
@@ -398,7 +398,7 @@ class ChargebeeWebhookController extends Controller
                         sleep($waitTime);
                         
                         // Retry finding user by customer ID
-                        $user = User::where('chargebee_customer_id', $subscription['customer_id'])->first();
+                        $user = User::where('chargebee_subscription_id', $subscription['id'])->first();
                         
                         if ($user) {
                             Log::info('User found after retry attempt ' . $attempt, [
