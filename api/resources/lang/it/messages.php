@@ -43,5 +43,6 @@ return [
     'partial_success' => 'Importazione parzialmente completata. Alcune righe contenevano errori e sono state registrate. Clicca qui sotto per scaricare i dettagli degli errori e correggerli prima di riprovare.',
     'full_import_error' => 'Importazione non riuscita. Nessun viaggio è stato importato a causa di errori. Controlla il registro degli errori allegato per ulteriori dettagli.',
     'duplicate_check_place' => 'Esiste già un luogo con questo codice.',
+    'invalid_coordinates' => 'Fornisci coordinate geografiche valide. Valori come [0, 0] o posizioni fuori limite non sono consentiti.',
     'duplicate_check_vehicle' => 'Esiste già un veicolo con questa targa.',
 ];
