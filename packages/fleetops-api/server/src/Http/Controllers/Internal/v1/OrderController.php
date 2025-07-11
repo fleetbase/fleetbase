@@ -1027,7 +1027,23 @@ class OrderController extends FleetOpsController
                             continue;
                         }
                     }
+                    $facility_sequence = $row['facility_sequence'] ?? null;
+                    if ($facility_sequence !== '') {
+                        $facilities = array_filter(explode('->', $facility_sequence)); // Removes empty segments
 
+                        if (count($facilities) > 2) {
+                            $originalRowIndex = $row['_original_row_index'] ?? 0;
+
+                            $importErrors[] = [
+                                (string)($originalRowIndex + 1),
+                                "Trip {$tripId}: Found " . count($facilities) . " facilities, but only the first 2 will be imported. Full sequence: " . implode(' -> ', $facilities),
+                                (string)$tripId
+                            ];
+                            DB::rollback();
+                            $tripHasErrors = true; 
+                            // break;
+                        }
+                    }
                     foreach ($rows as $groupIndex => $row) {
                         $originalRowIndex = $row['_original_row_index'];
 
