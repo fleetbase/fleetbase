@@ -507,7 +507,7 @@ trait HasApiControllerBehavior
                         return response()->error(__('messages.invalid_coordinates'));
                     }
                 }
-                $code = $request->input('code'); // preferred
+                $code = $request['place']['code']; // 'code' is a top-level key
                 if ($this->model->where('code', $code)->whereNull('deleted_at')->exists()) {
                     return response()->error(__('messages.duplicate_check_place'));
                 }
@@ -635,7 +635,7 @@ trait HasApiControllerBehavior
             if ($model_name === 'Place') {
                 $place = Place::find($id);
                 if ($place) {
-                    $code = $request->input('code'); // 'code' is a top-level key
+                    $code = $request['place']['code']; // 'code' is a top-level key
                     if (isset($request['location']['coordinates'])) {
                         $coordinates = $request['location']['coordinates'];
 
