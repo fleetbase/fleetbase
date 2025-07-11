@@ -8,16 +8,10 @@
             {{t "onboard.index.title"}}
         </h2> --}}
 
-        <div class="flex items-center justify-between mb-4">
-            {{!-- <button type="button" class="text-blue-600 hover:text-blue-700 dark:text-blue-400" {{on "click"
-                this.closePaymentFrame}}>
-                ← Back to Form
-            </button> --}}
-            <h2 class="text-center text-lg font-extrabold text-gray-900 dark:text-white">
-                Complete Your Subscription
-            </h2>
-            <div></div>
-        </div>
+        <h2 class="text-center text-lg font-extrabold text-gray-900 dark:text-white">
+            Complete Your Subscription
+        </h2>
+            
     </div>
 
     {{#if this.subscriptionDetails}}
@@ -42,7 +36,7 @@
     </div>
     {{/if}}
 
-    <div class="bg-white rounded-lg shadow-lg overflow-hidden border">
+    <div class="bg-white rounded-lg shadow-lg overflow-hidden border relative">
         <iframe 
             src={{this.paymentUrl}} 
             class="w-full h-96 md:h-[600px] border-0" 
@@ -50,6 +44,19 @@
             allow="payment"
             {{on "load" this.handleIframeLoad}}
         ></iframe>
+        
+        {{!-- Loading overlay for payment success --}}
+        {{#if this.isLoading}}
+        <div class="absolute inset-0 bg-white bg-opacity-95 flex flex-col items-center justify-center z-10">
+            <div class="flex flex-col items-center space-y-4">
+                <FaIcon @icon="spinner" @spin={{true}} @size="3x" class="text-green-600" />
+                <div class="text-center">
+                    <h3 class="text-xl font-semibold text-gray-900 mb-2">Subscription Created Successfully!</h3>
+                    <p class="text-gray-700">Redirecting to verification page...</p>
+                </div>
+            </div>
+        </div>
+        {{/if}}
     </div>
 
     <div class="mt-4 text-center">

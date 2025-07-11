@@ -2,7 +2,32 @@
 
 <div class="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
     <div class="max-w-md w-full space-y-8">
-        <!-- Success Icon and Header -->
+        {{#if this.isLoading}}
+        <!-- Loading State -->
+        <div class="text-center">
+            <div class="mx-auto flex items-center justify-center h-20 w-20 rounded-full bg-blue-100 dark:bg-blue-900">
+                <FaIcon @icon="spinner" @prefix="fas" @spin={{true}} class="h-10 w-10 text-blue-600 dark:text-blue-400" />
+            </div>
+
+            <h2 class="mt-6 text-3xl font-extrabold text-gray-900 dark:text-white">
+                Processing Payment...
+            </h2>
+
+            <p class="mt-2 text-sm text-gray-600 dark:text-gray-400">
+                Please wait while we activate your subscription
+            </p>
+
+            <!-- Loading Progress Bar -->
+            <div class="mt-6 w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+                <div class="bg-blue-600 h-2 rounded-full transition-all duration-1000 animate-pulse" style="width: 60%"></div>
+            </div>
+
+            <p class="mt-4 text-xs text-gray-500 dark:text-gray-400">
+                This may take a few seconds...
+            </p>
+        </div>
+        {{else}}
+        <!-- Success State -->
         <div class="text-center">
             <div class="mx-auto flex items-center justify-center h-20 w-20 rounded-full bg-green-100 dark:bg-green-900">
                 <FaIcon @icon="check" @prefix="fas" class="h-10 w-10 text-green-600 dark:text-green-400" />
@@ -80,29 +105,18 @@
         </div>
         {{/if}}
 
-        <!-- Countdown and Redirect Notice -->
-        {{#if this.redirecting}}
+        <!-- Redirect Notice -->
         <div class="bg-yellow-50 dark:bg-yellow-900/30 border border-yellow-200 dark:border-yellow-700 rounded-lg p-4">
-            <div class="flex items-center justify-between">
-                <div class="flex items-center">
-                    <FaIcon @icon="clock" @prefix="fas" class="text-yellow-500 mr-2" />
-                    <span class="text-sm font-medium text-yellow-800 dark:text-yellow-200">
-                        Redirecting to email verification in {{this.countdown}} seconds...
-                    </span>
-                </div>
-                <button 
-                    type="button"
-                    class="text-sm text-yellow-600 dark:text-yellow-400 hover:text-yellow-800 dark:hover:text-yellow-200 underline"
-                    {{on "click" this.skipCountdown}}
-                >
-                    Skip
-                </button>
+            <div class="flex items-center">
+                <FaIcon @icon="clock" @prefix="fas" class="text-yellow-500 mr-2" />
+                <span class="text-sm font-medium text-yellow-800 dark:text-yellow-200">
+                    Redirecting to email verification in 2 seconds...
+                </span>
             </div>
             <div class="mt-2 w-full bg-yellow-200 dark:bg-yellow-700 rounded-full h-2">
-                <div class="bg-yellow-500 h-2 rounded-full transition-all duration-1000" style="width: {{multiply (subtract 3 this.countdown) 33.33}}%"></div>
+                <div class="bg-yellow-500 h-2 rounded-full transition-all duration-2000" style="width: 100%"></div>
             </div>
         </div>
-        {{/if}}
 
         <!-- Action Buttons -->
         <div class="space-y-4">
@@ -129,6 +143,15 @@
                 <FaIcon @icon="download" @prefix="fas" class="mr-2" />
                 Download Receipt
             </button>
+
+            <button 
+                type="button"
+                class="w-full flex justify-center items-center px-4 py-2 border border-gray-300 dark:border-gray-600 text-sm font-medium rounded-md text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors"
+                {{on "click" this.skipCountdown}}
+            >
+                <FaIcon @icon="envelope" @prefix="fas" class="mr-2" />
+                Go to Email Verification Now
+            </button>
         </div>
 
         <!-- Footer -->
@@ -140,5 +163,6 @@
                 </a>
             </p>
         </div>
+        {{/if}}
     </div>
 </div>
