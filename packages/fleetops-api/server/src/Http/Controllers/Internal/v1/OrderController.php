@@ -1027,21 +1027,17 @@ class OrderController extends FleetOpsController
                             continue;
                         }
                     }
-                    $facility_sequence = $row['facility_sequence'] ?? null;
-                    if ($facility_sequence !== '') {
-                        $facilities = array_filter(explode('->', $facility_sequence)); // Removes empty segments
+                    // Validate facility_sequence
+                    if (!empty($row['facility_sequence'])) {
+                        $facility_sequence = $row['facility_sequence'];
+                        $facilities = array_filter(array_map('trim', explode('->', $facility_sequence)));
 
                         if (count($facilities) > 2) {
-                            $originalRowIndex = $row['_original_row_index'] ?? 0;
-
                             $importErrors[] = [
                                 (string)($originalRowIndex + 1),
-                                "Trip {$tripId}: Found " . count($facilities) . " facilities, but only the first 2 will be imported. Full sequence: " . implode(' -> ', $facilities),
+                                "Trip {$tripId}: Facility sequence has " . count($facilities) . " items. Only 2 are importes. Sequence: " . implode(' -> ', $facilities),
                                 (string)$tripId
                             ];
-                            DB::rollback();
-                            $tripHasErrors = true; 
-                            // break;
                         }
                     }
                     foreach ($rows as $groupIndex => $row) {
