@@ -145,9 +145,10 @@ class UserController extends FleetbaseController
         try {
             $email = $request->input('user.email');
             $companyUuid = session('company');
-            $id = $request->input('user.uuid'); // Assumes you have the UUID of the current user
             $phone = $request->input('user.phone');
-
+            if(!$id){
+                 $id = $request->input('user.uuid');
+            }
             $emailQuery = User::where('email', $email)
                 ->whereNull('deleted_at')
                 ->where('uuid', '!=', $id);

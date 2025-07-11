@@ -883,16 +883,14 @@ class Order extends Model
      */
     public function getCurrentDestinationLocation()
     {
-        if (isset($this->payload) && isset($this->payload->dropoff)) {
+        if ($this->payload && $this->payload->dropoff) {
             return $this->payload->dropoff->location;
         }
-        if ($this->payload && $this->payload->waypoints->count()!=0 && $this->payload->current_waypoint_uuid) {
-            $waypoint = $this->payload->waypoints->firstWhere ('uuid', $this->payload->current_waypoint_uuid);
-            if ($waypoint) {
-                return $waypoint->location;
-            }
+ 
+        if ($this->payload && $this->payload->waypoints->count() && $this->payload->current_waypoint_uuid) {
+            return $this->payload->waypoints->firstWhere('uuid', $this->payload->current_waypoint_uuid)->location;
         }
-        if ($this->payload && $this->payload->waypoints->count()!=0) {
+        if ($this->payload && $this->payload->waypoints->count()) {
             return $this->payload->waypoints->first()->location;
         }
         return new Point(0, 0);
