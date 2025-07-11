@@ -1016,7 +1016,10 @@ class OrderController extends FleetOpsController
                     }
                     
                     if (!empty($vrIds)) {
-                        $existingVrIds = RouteSegment::whereIn('public_id', $vrIds)->pluck('public_id')->toArray();
+                        $existingVrIds = RouteSegment::whereIn('public_id', $vrIds)
+                        ->whereNull('deleted_at')
+                        ->pluck('public_id')
+                        ->toArray();
                         if (!empty($existingVrIds)) {
                             $importErrors[] = [
                                 '-',
