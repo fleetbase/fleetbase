@@ -84,12 +84,76 @@ export default class BillingSuccessRoute extends Route {
                 mappedParams.user_uuid = storedAccountDetails.user_uuid;
                 mappedParams.company_uuid = storedAccountDetails.company_uuid;
                 mappedParams.session = storedAccountDetails.session;
+                console.log('📋 Using stored account details:', {
+                    user_uuid: storedAccountDetails.user_uuid,
+                    company_uuid: storedAccountDetails.company_uuid
+                });
+            } else {
+                // If no stored account details, try to get from session storage
+                const accountDetails = sessionStorage.getItem('account_details');
+                if (accountDetails) {
+                    try {
+                        const parsedDetails = JSON.parse(accountDetails);
+                        mappedParams.user_uuid = parsedDetails.user_uuid;
+                        mappedParams.company_uuid = parsedDetails.company_uuid;
+                        mappedParams.session = parsedDetails.session;
+                        console.log('📋 Retrieved account details from session storage:', {
+                            user_uuid: parsedDetails.user_uuid,
+                            company_uuid: parsedDetails.company_uuid
+                        });
+                    } catch (e) {
+                        console.error('Failed to parse account details from session storage:', e);
+                    }
+                }
+            }
+
+            // Ensure user_uuid and company_uuid are always included
+            if (!mappedParams.user_uuid || !mappedParams.company_uuid) {
+                console.error('❌ Missing user_uuid or company_uuid');
+                console.log('❌ Current mappedParams:', mappedParams);
+                console.log('❌ Stored account details:', storedAccountDetails);
+                console.log('❌ Session storage account details:', sessionStorage.getItem('account_details'));
+                
+                // Try to get from session storage as fallback
+                const fallbackAccountDetails = sessionStorage.getItem('account_details');
+                if (fallbackAccountDetails) {
+                    try {
+                        const parsedFallback = JSON.parse(fallbackAccountDetails);
+                        mappedParams.user_uuid = mappedParams.user_uuid || parsedFallback.user_uuid;
+                        mappedParams.company_uuid = mappedParams.company_uuid || parsedFallback.company_uuid;
+                        console.log('📋 Using fallback account details:', {
+                            user_uuid: mappedParams.user_uuid,
+                            company_uuid: mappedParams.company_uuid
+                        });
+                    } catch (e) {
+                        console.error('Failed to parse fallback account details:', e);
+                    }
+                }
             }
 
             // Remove any undefined or null values
             const cleanParams = Object.fromEntries(
                 Object.entries(mappedParams).filter(([key, value]) => value !== undefined && value !== null && value !== '')
             );
+
+            // Debug: Check if user_uuid and company_uuid are still present after filtering
+            console.log('🔍 After filtering - user_uuid:', cleanParams.user_uuid);
+            console.log('🔍 After filtering - company_uuid:', cleanParams.company_uuid);
+            console.log('🔍 All cleanParams keys:', Object.keys(cleanParams));
+
+            // Ensure user_uuid and company_uuid are in cleanParams
+            if (!cleanParams.user_uuid || !cleanParams.company_uuid) {
+                console.error('❌ user_uuid or company_uuid missing from cleanParams after filtering');
+                console.log('❌ Original mappedParams:', mappedParams);
+                console.log('❌ CleanParams after filtering:', cleanParams);
+                
+                // Force add them if they exist in mappedParams
+                if (mappedParams.user_uuid) cleanParams.user_uuid = mappedParams.user_uuid;
+                if (mappedParams.company_uuid) cleanParams.company_uuid = mappedParams.company_uuid;
+                
+                console.log('🔧 Forced addition - user_uuid:', cleanParams.user_uuid);
+                console.log('🔧 Forced addition - company_uuid:', cleanParams.company_uuid);
+            }
 
             console.log('📋 Clean parameters to send:', JSON.stringify(cleanParams, null, 2));
             console.log('📋 Clean parameters keys:', Object.keys(cleanParams));
@@ -116,6 +180,18 @@ export default class BillingSuccessRoute extends Route {
                 });
             }
 
+            // Validate required parameters for API call
+            const requiredParams = ['user_uuid', 'company_uuid', 'subscription_id', 'customer_id'];
+            const missingParams = requiredParams.filter(param => !cleanParams[param]);
+            
+            if (missingParams.length > 0) {
+                console.error('❌ Missing required parameters for API call:', missingParams);
+                console.log('❌ Available parameters:', Object.keys(cleanParams));
+                throw new Error(`Missing required parameters: ${missingParams.join(', ')}`);
+            }
+
+            console.log('✅ All required parameters present for API call');
+
             // Log the exact payload being sent
             console.log('🚀 About to send to API:', {
                 url: 'onboard/billing-success',
@@ -125,9 +201,21 @@ export default class BillingSuccessRoute extends Route {
             });
 
             // Call the billing success API with the mapped parameters
-            const response = await this.fetch.post('onboard/billing-success', cleanParams);
-
-            console.log('✅ Billing success API response:', JSON.stringify(response, null, 2));
+            let response;
+            try {
+                console.log('🚀 Making API call to onboard/billing-success...');
+                response = await this.fetch.post('onboard/billing-success', cleanParams);
+                console.log('✅ Billing success API response:', JSON.stringify(response, null, 2));
+            } catch (apiError) {
+                console.error('❌ API call failed:', apiError);
+                console.error('❌ Error message:', apiError.message);
+                console.error('❌ Error status:', apiError.status);
+                console.error('❌ Error response:', apiError.response);
+                console.error('❌ Full error object:', apiError);
+                
+                // Re-throw the error to be caught by the outer catch block
+                throw apiError;
+            }
 
             // If successful and we have account details, authenticate the user
             if (response && response.success && storedAccountDetails) {
