@@ -254,8 +254,11 @@ export default class PlaceFormPanelComponent extends Component {
      * @memberof PlaceFormPanelComponent
      */
     @action updatePlaceCoordinates({ latitude, longitude }) {
-        const location = new Point(longitude, latitude);
-
-        this.place.setProperties({ location });
+        if (!isNaN(latitude) && !isNaN(longitude)) {
+            const location = new Point(longitude, latitude);
+            this.place.set('location', location);
+        } else {
+            this.place.set('location', null);
+        }
     }
 }
