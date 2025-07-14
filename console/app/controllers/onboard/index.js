@@ -704,11 +704,11 @@ export default class OnboardIndexController extends Controller {
                             // Construct payment URL with user data
                             const baseUrl = "https://agilecyber-test.chargebee.com/hosted_pages/checkout";
                             const params = new URLSearchParams({
-                                'subscription_items[item_price_id][0]': 'Premium-1-EUR-Monthly',
+                                'subscription_items[item_price_id][0]': 'Basic-GBP-Monthly',
                                 'subscription_items[quantity][0]': '1',
-                                'subscription_items[item_price_id][1]': 'no_of_drivers-EUR-Monthly',
+                                'subscription_items[item_price_id][1]': 'No-of-App-User-GBP-Monthly',
                                 'subscription_items[quantity][1]': input.number_of_drivers?.toString() || '1',
-                                'subscription_items[item_price_id][2]': 'users-EUR-Monthly',
+                                'subscription_items[item_price_id][2]': 'no_of_webusers-GBP-Monthly',
                                 'subscription_items[quantity][2]': input.number_of_web_users?.toString() || '1',
                                 'layout': 'in_app',
                                 'embed': 'true',
