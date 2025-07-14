@@ -25,6 +25,7 @@
                 @isLoading={{this.save.isRunning}}
                 @permission={{this.savePermission}}
                 @wrapperClass="mr-2"
+                @customClass="create-issue-btn"
             />
             {{#if this.issue.id}}
                 <Button
@@ -45,7 +46,7 @@
         </div>
     </Overlay::Header>
 
-    <Overlay::Body @wrapperClass="new-service-rate-overlay-body px-4 pt-4">
+    <Overlay::Body @wrapperClass="new-service-rate-overlay-body px-4 pt-4 issue-form-panel">
         {{#let (cannot this.savePermission) as |unauthorized|}}
             <div class="grid grid-cols-1 text-xs dark:text-gray-100">
                 <InputGroup @name={{t "fleet-ops.component.issue-form-panel.reported-by"}}>
@@ -53,7 +54,7 @@
                         @modelName="user"
                         @selectedModel={{this.issue.reporter}}
                         @placeholder={{t "fleet-ops.component.issue-form-panel.select-reporter"}}
-                        @triggerClass="form-select form-input"
+                        @triggerClass="form-select form-input reporter"
                         @infiniteScroll={{false}}
                         @renderInPlace={{true}}
                         @onChange={{fn (mut this.issue.reporter)}}
@@ -70,7 +71,7 @@
                         @modelName="user"
                         @selectedModel={{this.issue.assignee}}
                         @placeholder={{t "fleet-ops.component.issue-form-panel.select-assign"}}
-                        @triggerClass="form-select form-input"
+                        @triggerClass="form-select form-input assignee"
                         @infiniteScroll={{false}}
                         @renderInPlace={{true}}
                         @onChange={{fn (mut this.issue.assignee)}}
@@ -87,7 +88,7 @@
                         @modelName="driver"
                         @selectedModel={{this.issue.driver}}
                         @placeholder={{t "fleet-ops.component.issue-form-panel.select-driver"}}
-                        @triggerClass="form-select form-input"
+                        @triggerClass="form-select form-input driver"
                         @infiniteScroll={{false}}
                         @renderInPlace={{true}}
                         @onChange={{fn (mut this.issue.driver)}}
@@ -103,7 +104,7 @@
                         @modelName="vehicle"
                         @selectedModel={{this.issue.vehicle}}
                         @placeholder={{t "fleet-ops.component.issue-form-panel.select-vehicle"}}
-                        @triggerClass="form-select form-input"
+                        @triggerClass="form-select form-input vehicle"
                         @infiniteScroll={{false}}
                         @renderInPlace={{true}}
                         @onChange={{fn (mut this.issue.vehicle)}}
@@ -121,7 +122,7 @@
                             @selected={{this.issue.type}}
                             @onChange={{this.onSelectIssueType}}
                             @placeholder={{t "fleet-ops.component.issue-form-panel.select-type"}}
-                            @triggerClass="form-select form-input"
+                            @triggerClass="form-select form-input issue-type"
                             @disabled={{unauthorized}}
                             as |type|
                         >
@@ -138,7 +139,7 @@
                             @selected={{this.issue.category}}
                             @onChange={{fn (mut this.issue.category)}}
                             @placeholder={{t "fleet-ops.component.issue-form-panel.select-category"}}
-                            @triggerClass="form-select form-input"
+                            @triggerClass="form-select form-input issue-category"
                             @disabled={{or unauthorized (not this.issueCategories)}}
                             as |category|
                         >
@@ -153,7 +154,7 @@
                     <Textarea
                         @value={{this.issue.report}}
                         aria-label="Issue Report"
-                        class="w-full form-input"
+                        class="w-full form-input report"
                         disabled={{unauthorized}}
                         placeholder={{t "fleet-ops.component.issue-form-panel.report"}}
                         rows={{5}}
@@ -182,7 +183,7 @@
                             @selected={{this.issue.priority}}
                             @onChange={{fn (mut this.issue.priority)}}
                             @placeholder={{t "fleet-ops.component.issue-form-panel.select-priority"}}
-                            @triggerClass="form-select form-input"
+                            @triggerClass="form-select form-input priority"
                             @disabled={{unauthorized}}
                             as |priority|
                         >
@@ -199,7 +200,7 @@
                             @selected={{this.issue.status}}
                             @onChange={{fn (mut this.issue.status)}}
                             @placeholder={{t "fleet-ops.component.issue-form-panel.select-status"}}
-                            @triggerClass="form-select form-input"
+                            @triggerClass="form-select form-input status"
                             @disabled={{unauthorized}}
                             as |status|
                         >
@@ -209,7 +210,7 @@
                     </div>
                 </InputGroup>
 
-                <InputGroup @name={{t "fleet-ops.common.coordinates"}}>
+                <InputGroup @name={{t "fleet-ops.common.coordinates"}} @wrapperClass="coordinates">
                     <CoordinatesInput
                         @value={{this.issue.location}}
                         @onChange={{this.updateIssueCoordinates}}

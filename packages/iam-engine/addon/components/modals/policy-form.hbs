@@ -1,12 +1,14 @@
 <Modal::Default @modalIsOpened={{@modalIsOpened}} @options={{@options}} @confirm={{@onConfirm}} @decline={{@onDecline}}>
     <div class="modal-body-container" ...attributes>
         <InputGroup
+            class="policy-name"
             @value={{@options.policy.name}}
             @name={{t "iam.components.modals.policy-form.policy-name"}}
             @placeholder={{t "iam.components.modals.policy-form.enter-name-your-policy"}}
             @disabled={{cannot @options.formPermission}}
         />
         <InputGroup
+            class="policy-description"
             @value={{@options.policy.description}}
             @name={{t "iam.components.modals.policy-form.policy-description"}}
             @placeholder={{t "iam.components.modals.policy-form.enter-description-your-policy"}}

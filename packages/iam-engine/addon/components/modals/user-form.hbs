@@ -7,14 +7,14 @@
             </div>
             <div class="flex-1">
                 <div class="grid grid-cols-2 gap-2 text-xs dark:text-gray-100 mb-2">
-                    <InputGroup @name={{t "iam.common.name"}} @value={{@options.user.name}} @disabled={{cannot @options.formPermission}} />
-                    <InputGroup @name={{t "iam.common.email"}} @type="email" @value={{@options.user.email}} @disabled={{cannot @options.formPermission}} />
+                    <InputGroup class="user-name" @name={{t "iam.common.name"}} @value={{@options.user.name}} @disabled={{cannot @options.formPermission}} />
+                    <InputGroup class="user-email" @name={{t "iam.common.email"}} @type="email" @value={{@options.user.email}} @disabled={{cannot @options.formPermission}} />
                     <InputGroup @name={{t "iam.common.phone"}}>
                         <PhoneInput @value={{@options.user.phone}} @onInput={{fn (mut @options.user.phone)}} disabled={{cannot @options.formPermission}} class="form-input w-full" />
                     </InputGroup>
                     <InputGroup @name={{t "iam.common.country"}}>
                         <CountrySelect
-                            class="w-full form-input form-select form-datalist"
+                            class="w-full form-input form-select form-datalist user-country"
                             @value={{@options.user.country}}
                             @onChange={{fn (mut @options.user.country)}}
                             @disabled={{cannot @options.formPermission}}
@@ -26,7 +26,7 @@
                             @modelName="role"
                             @selectedModel={{@options.user.role}}
                             @placeholder={{t "iam.common.role"}}
-                            @triggerClass="form-select form-input truncate max-w-300px"
+                            @triggerClass="form-select form-input truncate max-w-300px user-role"
                             @infiniteScroll={{false}}
                             @renderInPlace={{true}}
                             @onChange={{fn (mut @options.user.role)}}
@@ -42,7 +42,7 @@
                         <PolicyAttacher @onChange={{fn (mut @options.user.policies)}} @value={{@options.user.policies}} @disabled={{cannot @options.formPermission}} />
                     </InputGroup>
                     <InputGroup @name={{t "iam.common.select-permissions"}}>
-                        <PermissionPicker @selected={{@options.user.permissions}} @onChange={{fn (mut @options.user.permissions)}} />
+                        <PermissionPicker class="user-permissions" @selected={{@options.user.permissions}} @onChange={{fn (mut @options.user.permissions)}} />
                     </InputGroup>
                 {{/if}}
             </div>

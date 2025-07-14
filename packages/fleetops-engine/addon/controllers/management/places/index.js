@@ -6,6 +6,7 @@ import { isBlank } from '@ember/utils';
 import { task, timeout } from 'ember-concurrency';
 import { driver } from 'driver.js';
 import 'driver.js/dist/driver.css';
+import { later } from '@ember/runloop';
 
 export default class ManagementPlacesIndexController extends BaseController {
     @service notifications;
@@ -329,41 +330,92 @@ export default class ManagementPlacesIndexController extends BaseController {
     startTour() {
         const driverObj = driver({
           showProgress: true,
-          nextBtnText: this.intl.t('Next'),
-          prevBtnText: this.intl.t('Previous'),
-          doneBtnText: this.intl.t('Done'),
-          closeBtnText: this.intl.t('Close'),
+          nextBtnText: this.intl.t('fleetbase.common.next'),
+            prevBtnText: this.intl.t('fleetbase.common.previous'),
+            doneBtnText: this.intl.t('fleetbase.common.done'),
+            closeBtnText: this.intl.t('fleetbase.common.close'),
           steps: [ // you can pass steps directly here
             {
-                element: 'header',
+                element: '#next-view-section-subheader-actions .btn-wrapper .new-place-button',
+                onHighlightStarted: (element) => {
+                    element.style.setProperty('pointer-events', 'none', 'important');
+                    element.disabled = true;
+                    },
+                    onDeselected: (element) => {
+                    element.style.pointerEvents = 'auto';
+                    element.disabled = false;
+                    },
                 popover: {
-                    title: this.intl.t('Places Management'),
-                    description: this.intl.t('This is the main header for managing places.'),
+                    title: this.intl.t('fleetbase.orders.tour.add.title'),
+                    description: this.intl.t('fleetbase.orders.tour.add.description'),
+                    onNextClick: () => {
+                        this.createPlace();
+
+                        later(this, () => {
+                            const el = document.querySelector('.next-content-overlay > .next-content-overlay-panel-container > .next-content-overlay-panel');
+
+                            if (el) {
+                                const onTransitionEnd = () => {
+                                    el.removeEventListener('transitionend', onTransitionEnd);
+                                    driverObj.moveNext();
+                                };
+
+                                el.addEventListener('transitionend', onTransitionEnd);
+                            }
+                        }, 100);
+                        
+                    },
                 },
             },
             {
-                element: '.places-management-index .table',
+                element: '.place-form-panel .next-content-overlay-panel',
                 popover: {
-                    title: this.intl.t('Places Table'),
-                    description: this.intl.t('Here you can view, filter, and manage all places.'),
+                    title: this.intl.t('fleetbase.orders.tour.dates.title'),
+                    description: this.intl.t('fleetbase.orders.tour.dates.description'),
+                    side: 'left',
+                    align: 'start',
                 },
             },
             {
-                element: '.places-management-index .mr-2 .fa-plus',
+                element: '.create-place-button',
                 popover: {
                     title: this.intl.t('Add New Place'),
                     description: this.intl.t('Click here to add a new place.'),
+                    onNextClick: () => {
+                        const onRouteChange = () => {
+                            this.hostRouter.off('routeDidChange', onRouteChange);
+                    
+                            // Wait for the button to appear in the DOM
+                            const waitForButton = () => {
+                                if (document.querySelector('button.create-user-button')) {
+                                    driverObj.moveNext();
+                                } else {
+                                    setTimeout(waitForButton, 100); // Check again after 100ms
+                                }
+                            };
+                    
+                            waitForButton();
+                        };
+                    
+                        this.hostRouter.on('routeDidChange', onRouteChange);
+                        this.hostRouter.transitionTo('console.iam.users');
+                    }
+                    
                 },
+
             },
             {
-                element: '.places-management-index .fa-upload',
+                element: 'button.create-user-button',
                 popover: {
                     title: this.intl.t('Import Places'),
                     description: this.intl.t('Import places in bulk using a spreadsheet.'),
+                    onNextClick: () => {
+                        this.createUser();
+                    },
                 },
             },
             {
-                element: '.places-management-index .fa-long-arrow-up',
+                element: '.create-user-modal',
                 popover: {
                     title: this.intl.t('Export Places'),
                     description: this.intl.t('Export your places data.'),
@@ -374,6 +426,107 @@ export default class ManagementPlacesIndexController extends BaseController {
       
         driverObj.drive(); // <-- start the tour
       }
+
+      @action
+    startPlacesTour() {
+        const driverObj = driver({
+            showProgress: true,
+            nextBtnText: this.intl.t('fleetbase.common.next'),
+            prevBtnText: this.intl.t('fleetbase.common.previous'),
+            doneBtnText: this.intl.t('fleetbase.common.done'),
+            closeBtnText: this.intl.t('fleetbase.common.close'),
+            allowClose: false,
+            disableActiveInteraction: true,
+            onPopoverRender: (popover) => {
+                const closeBtn = popover.wrapper.querySelector('.driver-popover-close-btn');
+                if (closeBtn) {
+                    closeBtn.style.display = 'inline-block';
+                }
+            },  
+            steps: [
+                {
+                    element: '#next-view-section-subheader-actions .btn-wrapper .new-place-button',
+                    onHighlightStarted: (element) => {
+                        element.style.setProperty('pointer-events', 'none', 'important');
+                        element.disabled = true;
+                    },
+                    onDeselected: (element) => {
+                        element.style.pointerEvents = 'auto';
+                        element.disabled = false;
+                    },
+                    popover: {
+                        title: this.intl.t('fleetbase.places.tour.new_button.title'),
+                        description: this.intl.t('fleetbase.places.tour.new_button.description'),
+                        onNextClick: () => {
+                            this.createPlace();
+
+                            later(this, () => {
+                                const el = document.querySelector('.next-content-overlay > .next-content-overlay-panel-container > .next-content-overlay-panel');
+
+                                if (el) {
+                                    const onTransitionEnd = () => {
+                                        el.removeEventListener('transitionend', onTransitionEnd);
+                                        driverObj.moveNext();
+                                    };
+
+                                    el.addEventListener('transitionend', onTransitionEnd);
+                                }
+                            }, 100);
+                        },
+                    },
+                },
+                {
+                    element: '.place-form-panel .next-content-overlay-panel',
+                    popover: {
+                        title: this.intl.t('fleetbase.places.tour.form_panel.title'),
+                        description: this.intl.t('fleetbase.places.tour.form_panel.description'),
+                    },
+                },
+                {
+                    element: '.place-form-panel .input-group:has(.place-name)',
+                    popover: {
+                        title: this.intl.t('fleetbase.places.tour.name_field.title'),
+                        description: this.intl.t('fleetbase.places.tour.name_field.description'),
+                    },
+                    onHighlightStarted: (element) => {
+                        element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    },
+                },
+                {
+                    element: '.place-form-panel .input-group:has(.place-code)',
+                    popover: {
+                        title: this.intl.t('fleetbase.places.tour.code_field.title'),
+                        description: this.intl.t('fleetbase.places.tour.code_field.description'),
+                    },
+                    onHighlightStarted: (element) => {
+                        element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    },
+                },
+                {
+                    element: '.place-form-panel .input-group:has(.coordinates-input)',
+                    popover: {
+                        title: this.intl.t('fleetbase.places.tour.coordinates_field.title'),
+                        description: this.intl.t('fleetbase.places.tour.coordinates_field.description'),
+                    },
+                    onHighlightStarted: (element) => {
+                        element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    },
+                },
+                {
+                    element: '.create-place-button',
+                    popover: {
+                        title: this.intl.t('fleetbase.places.tour.submit.title'),
+                        description: this.intl.t('fleetbase.places.tour.submit.description'),
+                    },
+                    onHighlightStarted: (element) => {
+                        element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    },
+                },
+            ]
+        });
+
+        driverObj.drive();
+    }
 
     /**
      * Toggles dialog to export `place`

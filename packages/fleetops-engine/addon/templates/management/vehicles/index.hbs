@@ -1,4 +1,12 @@
 <Layout::Section::Header @title={{t "fleet-ops.management.vehicles.index.title"}} @searchQuery={{this.query}} @onSearch={{perform this.search}}>
+    <Button
+        @customClass="start-vehicles-tour"
+        @type="default"
+        @icon="question-circle"
+        @text={{t "fleetbase.common.help"}}
+        class="mr-2"
+        {{on "click" this.startVehiclesTour}}
+    />
     <Button @icon="refresh" @onClick={{this.reload}} @helpText={{t "fleet-ops.common.reload-data"}} class="mr-2" />
     <FiltersPicker
         @columns={{this.columns}}
@@ -29,7 +37,7 @@
             </div>
         </DropdownButton>
     {{/if}}
-    <Button @icon="plus" @iconPrefix="fas" @type="primary" @text={{t "fleet-ops.common.new"}} class="mr-2" @onClick={{this.createVehicle}} @permission="fleet-ops create vehicle" />
+    <Button @customClass="new-vehicle-button" @icon="plus" @iconPrefix="fas" @type="primary" @text={{t "fleet-ops.common.new"}} class="mr-2" @onClick={{this.createVehicle}} @permission="fleet-ops create vehicle" />
     {{!-- <Button
         @icon="upload"
         @type="magic"

@@ -5,6 +5,9 @@ import { action, set } from '@ember/object';
 import { isBlank } from '@ember/utils';
 import { timeout } from 'ember-concurrency';
 import { task } from 'ember-concurrency-decorators';
+import { driver } from 'driver.js';
+import 'driver.js/dist/driver.css';
+import { later } from '@ember/runloop';
 
 export default class ManagementVehiclesIndexController extends BaseController {
     @service contextPanel;
@@ -502,5 +505,100 @@ export default class ManagementVehiclesIndexController extends BaseController {
      */
     @action locateVehicle(vehicle, options = {}) {
         this.vehicleActions.locate(vehicle, options);
+    }
+
+    /**
+     * Start the vehicles tour to guide users through the vehicle creation process
+     *
+     * @void
+     */
+    @action
+    startVehiclesTour() {
+        const driverObj = driver({
+            showProgress: true,
+            nextBtnText: this.intl.t('fleetbase.common.next'),
+            prevBtnText: this.intl.t('fleetbase.common.previous'),
+            doneBtnText: this.intl.t('fleetbase.common.done'),
+            closeBtnText: this.intl.t('fleetbase.common.close'),
+            allowClose: false,
+            disableActiveInteraction: true,
+            onPopoverRender: (popover) => {
+                const closeBtn = popover.wrapper.querySelector('.driver-popover-close-btn');
+                if (closeBtn) {
+                    closeBtn.style.display = 'inline-block';
+                }
+            },
+            steps: [
+                {
+                    element: 'button.new-vehicle-button',
+                    onHighlightStarted: (element) => {
+                        element.style.setProperty('pointer-events', 'none', 'important');
+                        element.disabled = true;
+                    },
+                    onDeselected: (element) => {
+                        element.style.pointerEvents = 'auto';
+                        element.disabled = false;
+                    },
+                    popover: {
+                        title: this.intl.t('fleetbase.vehicles.tour.new_button.title'),
+                        description: this.intl.t('fleetbase.vehicles.tour.new_button.description'),
+                        onNextClick: () => {
+                            this.createVehicle();
+    
+                            // Wait for the overlay to appear and then move to next step
+                            const waitForElement = () => {
+                                const el = document.querySelector('.vehicle-details-panel');
+                                if (el) {
+                                    // Element found, wait a bit more for it to be fully rendered
+                                    later(this, () => {
+                                        driverObj.moveNext();
+                                    }, 300);
+                                } else {
+                                    // Element not found yet, try again
+                                    later(this, waitForElement, 100);
+                                }
+                            };
+                            
+                            later(this, waitForElement, 200);
+                        },
+                    },
+                    onHighlightStarted: (element) => {
+                        element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    },
+                },
+                {
+                    element: '.vehicle-details-panel .next-content-panel-container .next-content-panel',
+                    popover: {
+                        title: this.intl.t('fleetbase.vehicles.tour.vehicle_details.title'),
+                        description: this.intl.t('fleetbase.vehicles.tour.vehicle_details.description'),
+                    },
+                    onHighlightStarted: (element) => {
+                        element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    },
+                },
+                {
+                    element: '.vehicle-avatar-panel',
+                    popover: {
+                        title: this.intl.t('fleetbase.vehicles.tour.vehicle_avatar.title'),
+                        description: this.intl.t('fleetbase.vehicles.tour.vehicle_avatar.description'),
+                    },
+                    onHighlightStarted: (element) => {
+                        element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    },
+                },
+                {
+                    element: '.new-vehicle-submit',
+                    popover: {
+                        title: this.intl.t('fleetbase.vehicles.tour.submit.title'),
+                        description: this.intl.t('fleetbase.vehicles.tour.submit.description'),
+                    },
+                    onHighlightStarted: (element) => {
+                        element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    },
+                }
+            ],
+        });
+
+        driverObj.drive();
     }
 }

@@ -4,6 +4,9 @@ import { tracked } from '@glimmer/tracking';
 import { action } from '@ember/object';
 import { isBlank } from '@ember/utils';
 import { timeout, task } from 'ember-concurrency';
+import { driver } from 'driver.js';
+import { later } from '@ember/runloop';
+import 'driver.js/dist/driver.css';
 
 export default class RolesIndexController extends Controller {
     @service store;
@@ -212,6 +215,7 @@ export default class RolesIndexController extends Controller {
 
         this.editRole(role, {
             title: this.intl.t('iam.roles.index.new-role'),
+            modalClass: 'create-role-modal',
             acceptButtonText: this.intl.t('common.confirm'),
             acceptButtonIcon: 'check',
             acceptButtonDisabled: this.abilities.cannot(formPermission),
@@ -363,4 +367,92 @@ export default class RolesIndexController extends Controller {
     @action reload() {
         return this.hostRouter.refresh();
     }
+
+    @action CreateRoleTour() {
+    const driverObj = driver({
+      showProgress: true,
+      nextBtnText: this.intl.t('fleetbase.common.next'),
+      prevBtnText: this.intl.t('fleetbase.common.previous'),
+      doneBtnText: this.intl.t('fleetbase.common.done'),
+      closeBtnText: this.intl.t('fleetbase.common.close'),
+      allowClose: false,
+      disableActiveInteraction: true,
+        onPopoverRender: (popover) => {
+            const closeBtn = popover.wrapper.querySelector('.driver-popover-close-btn');
+            if (closeBtn) {
+                closeBtn.style.display = 'inline-block';
+            }
+        },
+      steps: [
+        {
+          element: '.create-role-button',
+          onHighlightStarted: (element) => {
+            element.style.setProperty('pointer-events', 'none', 'important');
+            element.disabled = true;
+          },
+          onDeselected: (element) => {
+            element.style.pointerEvents = 'auto';
+            element.disabled = false;
+          },
+          popover: {
+            title: this.intl.t('fleetbase.roles.tour.new_button.title'),
+            description: this.intl.t('fleetbase.roles.tour.new_button.description', { htmlSafe: true }),
+            onNextClick: () => {
+              this.createRole();
+ 
+               const checkModal = setInterval(() => {
+            const modal = document.querySelector('.create-role-modal');
+            if (modal && modal.classList.contains('show')) {
+            clearInterval(checkModal);
+            driverObj.moveNext(); // Move to the next step
+            }
+        }, 100);
+            },
+          },
+        },
+        {   
+          element: '.create-role-modal .input-group:has(.role-name)',
+          popover: {
+            title: this.intl.t('fleetbase.roles.tour.name_field.title'),
+            description: this.intl.t('fleetbase.roles.tour.name_field.description', { htmlSafe: true }),
+           
+          },
+        },
+        {
+          element: '.create-role-modal .input-group:has(.role-description)',
+          popover: {
+            title: this.intl.t('fleetbase.roles.tour.description_field.title'),
+            description: this.intl.t('fleetbase.roles.tour.description_field.description', { htmlSafe: true }),
+           
+          },
+        },
+        {
+          element: '.create-role-modal .input-group:has(.policy-attacher)',
+          popover: {
+            title: this.intl.t('fleetbase.roles.tour.policies_field.title'),
+            description: this.intl.t('fleetbase.roles.tour.policies_field.description', { htmlSafe: true }),
+           
+          },
+        },
+        {
+          element: '.create-role-modal .input-group:has(.permissions-picker)',
+          popover: {
+            title: this.intl.t('fleetbase.roles.tour.permissions_field.title'),
+            description: this.intl.t('fleetbase.roles.tour.permissions_field.description', { htmlSafe: true }),
+           
+          },
+        },
+        {
+          element: '.create-role-modal .btn-primary',
+          popover: {
+            title: this.intl.t('fleetbase.roles.tour.submit.title'),
+            description: this.intl.t('fleetbase.roles.tour.submit.description', { htmlSafe: true }),
+           
+          },
+        },
+      ],
+    });
+
+    driverObj.drive();
+  }
 }

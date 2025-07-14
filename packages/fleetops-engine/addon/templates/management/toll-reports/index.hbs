@@ -1,4 +1,5 @@
 <Layout::Section::Header @title={{t "fleet-ops.management.toll-reports.index.title"}} @searchQuery={{this.query}} @onSearch={{perform this.search}}>
+    <Button @icon="question-circle" @type="default" @text={{t "fleetbase.common.help"}} @onClick={{this.startTollReportsTour}} class="mr-2" />
     <Button @icon="refresh" @onClick={{this.reload}} @helpText={{t "fleet-ops.common.reload-data"}} class="mr-2" />
     <FiltersPicker
         @columns={{this.columns}}
@@ -30,7 +31,7 @@
         </DropdownButton>
     {{/if}}
 
-    <Button @icon="plus" @iconPrefix="fas" @type="primary" @text={{t "fleet-ops.common.new"}} class="mr-2" @onClick={{this.createFuelReport}} @permission="fleet-ops create fuel-report" />
+    <Button @icon="plus" @iconPrefix="fas" @type="primary" @text={{t "fleet-ops.common.new"}} class="mr-2 new-toll-report-btn" @onClick={{this.createFuelReport}} @permission="fleet-ops create fuel-report" />
     {{!-- <Button
         @icon="upload"
         @type="magic"

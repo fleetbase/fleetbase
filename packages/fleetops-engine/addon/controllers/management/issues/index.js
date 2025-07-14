@@ -5,6 +5,9 @@ import { action, set } from '@ember/object';
 import { isBlank } from '@ember/object';
 import { timeout } from 'ember-concurrency';
 import { task } from 'ember-concurrency-decorators';
+import { driver } from 'driver.js';
+import 'driver.js/dist/driver.css';
+import { later } from '@ember/runloop';
 import getIssueTypes from '../../../utils/get-issue-types';
 import getIssueCategories from '../../../utils/get-issue-categories';
 
@@ -450,5 +453,191 @@ export default class ManagementIssuesIndexController extends BaseController {
                 this.table.untoggleSelectAll();
             },
         });
+    }
+
+    /**
+     * Starts the guided tour for the issues management page
+     *
+     * @void
+     */
+    @action startIssuesTour() {
+        const driverObj = driver({
+            showProgress: true,
+            nextBtnText: this.intl.t('fleetbase.common.next'),
+            prevBtnText: this.intl.t('fleetbase.common.previous'),
+            doneBtnText: this.intl.t('fleetbase.common.done'),
+            closeBtnText: this.intl.t('fleetbase.common.close'),
+            allowClose: false,
+            disableActiveInteraction: true,
+            onPopoverRender: (popover) => {
+                const closeBtn = popover.wrapper.querySelector('.driver-popover-close-btn');
+                if (closeBtn) {
+                    closeBtn.style.display = 'inline-block';
+                }
+            },
+            steps: [
+                {
+                    element: '.new-issue-btn',
+                    popover: {
+                        title: this.intl.t('fleetbase.issues.tour.new_button.title'),
+                        description: this.intl.t('fleetbase.issues.tour.new_button.description'),
+                        onNextClick: () => {
+                            this.createIssue();
+                            later(this, () => {
+                                const el = document.querySelector('.next-content-overlay > .next-content-overlay-panel-container > .next-content-overlay-panel');
+                                if (el) {
+                                    const onTransitionEnd = () => {
+                                        el.removeEventListener('transitionend', onTransitionEnd);
+                                        driverObj.moveNext();
+                                    };
+                                    el.addEventListener('transitionend', onTransitionEnd);
+                                }
+                            }, 100);
+                        },
+                    },
+                    onHighlightStarted: (element) => {
+                        element.style.setProperty('pointer-events', 'none', 'important');
+                        element.disabled = true;
+                    },
+                    onDeselected: (element) => {
+                        element.style.pointerEvents = 'auto';
+                        element.disabled = false;
+                    },
+                },
+                {
+                    element: '.next-content-overlay-panel:has(.issue-form-panel)',
+                    popover: {
+                        title: this.intl.t('fleetbase.issues.tour.form_panel.title'),
+                        description: this.intl.t('fleetbase.issues.tour.form_panel.description'),
+                    },
+                    // onHighlightStarted: (element) => {
+                    //     element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    // },
+                },
+                {
+                    element: '.issue-form-panel .input-group:has(.reporter)',
+                    popover: {
+                        title: this.intl.t('fleetbase.issues.tour.reporter_field.title'),
+                        description: this.intl.t('fleetbase.issues.tour.reporter_field.description'),
+                    },
+                    onHighlightStarted: (element) => {
+                        element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    },
+                },
+                {
+                    element: '.issue-form-panel .input-group:has(.assignee)',
+                    popover: {
+                        title: this.intl.t('fleetbase.issues.tour.assigned_to_field.title'),
+                        description: this.intl.t('fleetbase.issues.tour.assigned_to_field.description'),
+                    },
+                    onHighlightStarted: (element) => {
+                        element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    },
+                },
+                {
+                    element: '.issue-form-panel .input-group:has(.driver)',
+                    popover: {
+                        title: this.intl.t('fleetbase.issues.tour.driver_field.title'),
+                        description: this.intl.t('fleetbase.issues.tour.driver_field.description'),
+                    },
+                    onHighlightStarted: (element) => {
+                        element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    },
+                },
+                {
+                    element: '.issue-form-panel .input-group:has(.vehicle)',
+                    popover: {
+                        title: this.intl.t('fleetbase.issues.tour.vehicle_field.title'),
+                        description: this.intl.t('fleetbase.issues.tour.vehicle_field.description'),
+                    },
+                    onHighlightStarted: (element) => {
+                        element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    },
+                },
+                {
+                    element: '.issue-form-panel .input-group:has(.issue-type)',
+                    popover: {
+                        title: this.intl.t('fleetbase.issues.tour.type_field.title'),
+                        description: this.intl.t('fleetbase.issues.tour.type_field.description'),
+                    },
+                    onHighlightStarted: (element) => {
+                        element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    },
+                },
+                {
+                    element: '.issue-form-panel .input-group:has(.issue-category)',
+                    popover: {
+                        title: this.intl.t('fleetbase.issues.tour.category_field.title'),
+                        description: this.intl.t('fleetbase.issues.tour.category_field.description'),
+                    },
+                    onHighlightStarted: (element) => {
+                        element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    },
+                },
+                {
+                    element: '.issue-form-panel .input-group:has(.report)',
+                    popover: {
+                        title: this.intl.t('fleetbase.issues.tour.report_field.title'),
+                        description: this.intl.t('fleetbase.issues.tour.report_field.description'),
+                    },
+                    onHighlightStarted: (element) => {
+                        element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    },
+                },
+                {
+                    element: '.issue-form-panel .input-group:has(.emberTagInput)',
+                    popover: {
+                        title: this.intl.t('fleetbase.issues.tour.tags_field.title'),
+                        description: this.intl.t('fleetbase.issues.tour.tags_field.description'),
+                    },
+                    onHighlightStarted: (element) => {
+                        element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    },
+                },
+                {
+                    element: '.issue-form-panel .input-group:has(.priority)',
+                    popover: {
+                        title: this.intl.t('fleetbase.issues.tour.priority_field.title'),
+                        description: this.intl.t('fleetbase.issues.tour.priority_field.description'),
+                    },
+                    onHighlightStarted: (element) => {
+                        element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    },
+                },
+                {
+                    element: '.issue-form-panel .input-group:has(.status)',
+                    popover: {
+                        title: this.intl.t('fleetbase.issues.tour.status_field.title'),
+                        description: this.intl.t('fleetbase.issues.tour.status_field.description'),
+                    },
+                    onHighlightStarted: (element) => {
+                        element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    },
+                },
+                {
+                    element: '.issue-form-panel .input-group.coordinates',
+                    popover: {
+                        title: this.intl.t('fleetbase.issues.tour.coordinates_field.title'),
+                        description: this.intl.t('fleetbase.issues.tour.coordinates_field.description'),
+                    },
+                    onHighlightStarted: (element) => {
+                        element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    },
+                },
+                {
+                    element: '.create-issue-btn',
+                    popover: {
+                        title: this.intl.t('fleetbase.issues.tour.submit.title'),
+                        description: this.intl.t('fleetbase.issues.tour.submit.description'),
+                    },
+                    onHighlightStarted: (element) => {
+                        element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    },
+                },
+            ],
+        });
+
+        // Start the tour
+        driverObj.drive();
     }
 }
