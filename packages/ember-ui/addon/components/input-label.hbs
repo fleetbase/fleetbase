@@ -3,7 +3,7 @@
     {{#if @helpText}}
         <div class="ml-2">
             <FaIcon @icon={{or @icon "info-circle"}} @size="xs" class="text-gray-300 dark:text-gray-100 {{@iconClass}}" />
-            <Attach::Tooltip @class="clean" @animation="scale" @placement={{or @tooltipPlacement "right"}}>
+            <Attach::Tooltip @class="clean" @animation="scale" @placement={{or @tooltipPlacement "top"}} >
                 <InputInfo @text={{@helpText}} @exampleText={{@exampleText}} />
             </Attach::Tooltip>
         </div>

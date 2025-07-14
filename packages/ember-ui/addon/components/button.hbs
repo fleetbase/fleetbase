@@ -1,7 +1,7 @@
 {{#if this.visible}}
     <span class="btn-wrapper {{@wrapperClass}} inline-flex {{if this.isNotSecondary 'shadow-sm'}} {{if @isLoading 'is-loading'}}" {{did-insert this.setupComponent}}>
         <button
-            class="btn {{if @isLoading 'btn-is-loading'}} {{if @outline 'btn-outline'}} btn-{{or @type 'default'}} btn-{{or @size 'sm'}}"
+            class="btn {{if @isLoading 'btn-is-loading'}} {{if @outline 'btn-outline'}} btn-{{or @type 'default'}} btn-{{or @size 'sm'}} {{@customClass}}"
             disabled={{this.isDisabled}}
             ...attributes
             type={{or @buttonType "button"}}
