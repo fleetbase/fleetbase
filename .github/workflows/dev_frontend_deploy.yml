@@ -1,4 +1,4 @@
-name: Deploy Frontend App to Dev 
+name: Frontend Deployment Workflow 
 
 on:
   workflow_dispatch:
@@ -9,7 +9,7 @@ on:
         type: choice
         options:
           - dev
-          - uat
+          - test
           - live
 
 jobs:
@@ -17,7 +17,8 @@ jobs:
     runs-on: ubuntu-latest
     environment: ${{ inputs.environment }}
     steps:
-      - name: Deploy the Ember.js App
+      - name: Deploy to Dev/Live environment(SSH Key)
+        if: ${{ inputs.environment == 'dev' || inputs.environment == 'live' }}
         uses: appleboy/ssh-action@v1.2.1
         with:
           host: ${{ secrets.SSH_HOST }}
@@ -25,10 +26,25 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           port: 22
           script: |
-            cd /home/ubuntu/fleetbase_agilecyber/fleetbase
-            git fetch origin
-            git pull origin 
-            cd /home/ubuntu/fleetbase_agilecyber/fleetbase/console
+            cd ${{ inputs.environment == 'dev' && '/home/ubuntu/fleetbase_agilecyber/fleetbase/' || '/var/www/html/afp.fleetyes.com/htdocs/' }}
+            git pull 
+            cd ${{ inputs.environment == 'dev' && '/home/ubuntu/fleetbase_agilecyber/fleetbase/console/' || '/var/www/html/afp.fleetyes.com/htdocs/console/' }}
             pnpm install
             chmod +x build.sh
             sh build.sh
+
+      - name: Deploy to Test environment (SSH Password)
+        if: ${{ inputs.environment == 'test' }}
+        uses: appleboy/ssh-action@v1.2.1
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          password: ${{ secrets.SSH_PASSWORD }}
+          port: 22
+          script: |
+            cd /var/www/html/fleetyes.com/domains/dashboard/
+            git pull
+            cd /var/www/html/fleetyes.com/domains/dashboard/console/
+            pnpm install
+            chmod +x build.sh
+            sh build.sh    
