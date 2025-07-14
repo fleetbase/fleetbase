@@ -65,7 +65,7 @@ class Driver extends FleetbaseResource
             'availability_message'          => $this->availability_message,
             'button_message'                => $this->button_message,
             'have_no_vehicle'               => $this->have_no_vehicle,
-            'leave_balance'                 => $this->leave_balance, // Include leave balance in the response
+            'leave_balance'                 => (int) $this->leave_balance,
         ];
     }
 

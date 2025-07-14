@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('drivers', function (Blueprint $table) {
-            $table->integer('leave_balance')->default(0);
+            $table->unsignedInteger('leave_balance')->default(0);
         });
     }
 
