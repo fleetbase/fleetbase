@@ -31,6 +31,7 @@ jobs:
             cd ${{ inputs.environment == 'dev' && '/home/ubuntu/fleetbase_agilecyber/fleetbase/api' || '/var/www/html/afp.fleetyes.com/htdocs/api/' }}
             php artisan migrate
             php artisan cache:clear
+            php artisan route:cache
 
       - name: Deploy to Test environment (SSH Password)
         if: ${{ inputs.environment == 'test' }}
@@ -46,3 +47,4 @@ jobs:
             cd /var/www/html/fleetyes.com/domains/dashboard/api/
             php artisan migrate
             php artisan cache:clear
+            php artisan route:cache
