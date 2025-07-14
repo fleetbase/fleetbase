@@ -75,7 +75,7 @@
                     />
                 </InputGroup>
                 <InputGroup>
-                    <InputLabel @labelText={{html-safe (concat (t "fleet-ops.operations.orders.index.new.estimated-end-date") " <span style='color: red;'>*</span>")}} />
+                    <InputLabel @labelText={{t "fleet-ops.operations.orders.index.new.estimated-end-date"}} />
                     <DateTimeInput
                         class="form-input"
                         @value={{this.order.estimated_end_date}}
@@ -310,6 +310,14 @@
                 </div>
                 <div class="flex flex-1 justify-end space-x-2">
                     {{#if this.isMultipleDropoffOrder}}
+                        {{!--
+                            Renders a "magic" type Button component for optimizing a route in the Orders page.
+                            - Displays a magic icon and localized text for "Optimize Route".
+                            - Button is small-sized and triggers the `optimizeRoute` action on click.
+                            - Requires "fleet-ops optimize order" permission to be enabled.
+                            - Shows a localized help text tooltip.
+                            - Disabled unless there are at least 3 waypoints.
+                            - Shows a loading state when `isOptimizingRoute` is true.
                         <Button
                             @type="magic"
                             @icon="magic"
@@ -321,6 +329,7 @@
                             @disabled={{lt this.waypoints.length 3}}
                             @isLoading={{this.isOptimizingRoute}}
                         />
+                        --}}
                         <Button
                             @icon="map-marked-alt"
                             @text={{t "fleet-ops.operations.orders.index.new.add-waypoint"}}
