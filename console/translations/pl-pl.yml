@@ -173,7 +173,6 @@ statuses:
   on-break: Na przerwie
   order-canceled: Zamówienie anulowane
   shift-ended: Zmiana zakończona
-
   active: Aktywny
   low: Niski  
   high: Wysoki  
@@ -212,14 +211,12 @@ statuses:
   beanstalkd: Beanstalkd
   sqs: SQS
   redis: Redis
-
-
   resource-allocation: Alokacja zasobów
   compliance: Zgodność
   cost-overruns: Przekroczenia kosztów
   communication: Komunikacja
   vendor-management-issues: Problemy z zarządzaniem dostawcami
-
+  planned: Planowane
   operational: Operacyjne
   software-technical: Techniczne oprogramowanie
   customer: Klient
@@ -545,6 +542,9 @@ onboard:
     your-email-help-text: Twój adres e-mail
     phone: Numer telefonu
     phone-help-text: Twój numer telefonu
+    phone-required: Wymagany numer telefonu
+    phone-min-validation: Numer za krótki (minimum 7 cyfr)
+    phone-max-validation: Numer za długi (maksymalnie 15 cyfr)
     organization-name: Nazwa organizacji
     organization-help-text: Nazwa Twojej organizacji – wszystkie Twoje usługi i zasoby będą zarządzane w jej ramach. Później będziesz mógł tworzyć dowolną liczbę organizacji według potrzeb.
     password: Wprowadź hasło

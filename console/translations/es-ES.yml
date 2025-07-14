@@ -203,14 +203,12 @@ statuses:
     beanstalkd: Beanstalkd
     sqs: SQS
     redis: Redis
-
-
     resource-allocation: Asignación de recursos
     compliance: Cumplimiento
     cost-overruns: Sobrecostos
     communication: Comunicación
     vendor-management-issues: Problemas de gestión de proveedores
-
+    planned: Planeado
     operational: Operacional
     software-technical: Técnico de software
     customer: Cliente
@@ -554,6 +552,9 @@ onboard:
     your-email-help-text: Su dirección de correo electrónico
     phone: Número de teléfono
     phone-help-text: Tu número de teléfono
+    phone-required: Número de teléfono requerido
+    phone-min-validation: Número demasiado corto (mínimo 7 dígitos)
+    phone-max-validation: Número demasiado largo (máximo 15 dígitos)
     organization-name: Nombre de la organización
     organization-help-text: El nombre de tu organización, todos tus servicios y recursos
       serán administrados bajo esta organización, podrás crear tantas organizaciones

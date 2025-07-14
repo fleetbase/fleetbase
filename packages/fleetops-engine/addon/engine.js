@@ -47,17 +47,17 @@ export default class FleetOpsEngine extends Engine {
         );
 
         // register menu item for tracking order
-        universe.registerMenuItem('auth:login', this.intl.t('common.track-order'), {
-            route: 'virtual',
-            slug: 'track-order',
-            icon: 'barcode',
-            type: 'link',
-            wrapperClass: 'btn-block py-1 border dark:border-gray-700 border-gray-200 hover:opacity-50',
-            component: OrderTrackingLookupComponent,
-            onClick: (menuItem) => {
-                universe.transitionMenuItem('virtual', menuItem);
-            },
-        });
+        // universe.registerMenuItem('auth:login', this.intl.t('common.track-order'), {
+        //     route: 'virtual',
+        //     slug: 'track-order',
+        //     icon: 'barcode',
+        //     type: 'link',
+        //     wrapperClass: 'btn-block py-1 border dark:border-gray-700 border-gray-200 hover:opacity-50',
+        //     component: OrderTrackingLookupComponent,
+        //     onClick: (menuItem) => {
+        //         universe.transitionMenuItem('virtual', menuItem);
+        //     },
+        // });
 
         // widgets for registry
         const KeyMetricsWidgetDefinition = {

@@ -23,7 +23,7 @@ class PlanPricingSeeder extends Seeder
             'billing_cycle' => 'monthly',
             'price_per_user' => 25.00,
             'price_per_driver' => 10.00,
-            'currency' => 'GBP',
+            'currency' => 'EUR',
             'created_by_id' => 1,
             'deleted' => 0,
             'record_status' => 1

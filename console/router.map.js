@@ -62,5 +62,9 @@ Router.map(function () {
             });
         });
     });
+    this.route('billing', function () {
+        this.route('success');
+        this.route('failure');
+    });
     this.route('catch', { path: '/*' });
 });

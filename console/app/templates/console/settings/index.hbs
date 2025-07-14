@@ -22,9 +22,10 @@
                     <InputGroup @name={{t "console.settings.index.organization-currency"}}>
                         <CurrencySelect @value={{@model.currency}} @onSelect={{fn (mut @model.currency)}} @triggerClass="w-full form-select org-currency" />
                     </InputGroup>
+
                    <InputGroup class="org-id" @name={{t "console.settings.index.organization-id"}} @value={{@model.public_id}} @disabled={{true}} />
                    <ContentPanel @title={{t "common.parking-zone"}} @open={{true}} @pad={{true}} @panelBodyClass="bg-white dark:bg-gray-800 parking-zone">
-                    <InputGroup @name={{t "common.max-distance"}} @placeholder="{{t "common.enter-distance"}}" @value={{@model.parking_zone_max_distance}}  @type="number" min="1" disabled={{this.isLoading}} />
+                    <InputGroup @name={{t "common.max-distance"}} @placeholder="{{t "common.enter-distance"}}" @value={{or @model.parking_zone_max_distance 5}} @type="number" min="1" disabled={{this.isLoading}} />
                     </ContentPanel> 
                    <div class="mt-3 flex items-center justify-end save-button">
                         <Button @buttonType="submit" @type="primary" @size="lg" @icon="save" @text="{{t "common.save-button-text"}}" @isLoading={{this.isLoading}} />

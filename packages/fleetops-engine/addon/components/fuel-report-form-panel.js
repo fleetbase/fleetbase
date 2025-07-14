@@ -7,6 +7,7 @@ import contextComponentCallback from '@fleetbase/ember-core/utils/context-compon
 import applyContextComponentArguments from '@fleetbase/ember-core/utils/apply-context-component-arguments';
 import ENV from '@fleetbase/console/config/environment';
 import Point from '@fleetbase/fleetops-data/utils/geojson/point'; 
+import showErrorOnce from '@fleetbase/console/utils/show-error-once';
 
 export default class FuelReportFormPanelComponent extends Component {
     @service session;
@@ -254,8 +255,9 @@ export default class FuelReportFormPanelComponent extends Component {
     }
    
     @task *save() {
-        // Perform validation
-        if (!this.validateFields()) {
+        // Validate before saving
+        if (!this.validate()) {
+            //showErrorOnce(this, this.notifications, this.intl.t('validation.form_invalid'));
             return;
         }
     
@@ -324,6 +326,27 @@ export default class FuelReportFormPanelComponent extends Component {
         }
     }
     
+    /**
+     * Validates required fields and sets errors.
+     * @returns {boolean} true if valid, false otherwise
+     */
+    validate() {
+        const requiredFields = [
+            'reporter',
+            'driver',
+            'vehicle',
+            'status',
+            'amount',
+            'volume',
+            'payment_method'
+        ];
+        const hasEmptyRequired = requiredFields.some(field => !this.fuelReport[field] || this.fuelReport[field].toString().trim() === '');
+        if (hasEmptyRequired) {
+            showErrorOnce(this, this.notifications, this.intl.t('validation.form_invalid'));
+            return false;
+        }
+        return true;
+    }
     
      /**
      * Task to save the fuel report if it's new.

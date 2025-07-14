@@ -7,6 +7,7 @@ import { task } from 'ember-concurrency';
 import Point from '@fleetbase/fleetops-data/utils/geojson/point';
 import contextComponentCallback from '@fleetbase/ember-core/utils/context-component-callback';
 import applyContextComponentArguments from '@fleetbase/ember-core/utils/apply-context-component-arguments';
+import showErrorOnce from '@fleetbase/console/utils/show-error-once';
 
 export default class PlaceFormPanelComponent extends Component {
     @service store;
@@ -43,6 +44,11 @@ export default class PlaceFormPanelComponent extends Component {
     @tracked savePermission;
 
     /**
+     * Validation errors for the form fields.
+     */
+    @tracked errors = {};
+
+    /**
      * Constructs the component and applies initial state.
      */
     constructor(owner, { place = null }) {
@@ -64,12 +70,41 @@ export default class PlaceFormPanelComponent extends Component {
     }
 
     /**
+     * Validates required fields and sets errors.
+     * @returns {boolean} true if valid, false otherwise
+     */
+    validate() {
+        const errors = {};
+        const requiredFields = [
+            { key: 'name', label: this.intl?.t?.('fleet-ops.common.name') || 'Name' },
+            { key: 'code', label: this.intl?.t?.('fleet-ops.common.code') || 'Code' },
+            { key: 'street1', label: this.intl?.t?.('fleet-ops.component.place-form-panel.street-1') || 'Street 1' },
+            { key: 'postal_code', label: this.intl?.t?.('fleet-ops.component.place-form-panel.postal-code') || 'Postal Code' },
+            { key: 'province', label: this.intl?.t?.('fleet-ops.component.place-form-panel.state') || 'State' },
+            { key: 'country', label: this.intl?.t?.('fleet-ops.common.country') || 'Country' },
+            { key: 'location', label: this.intl?.t?.('fleet-ops.common.coordinates') || 'Coordinates' },
+        ];
+        requiredFields.forEach(({ key, label }) => {
+            if (isBlank(this.place[key])) {
+                errors[key] = `${label} is required.`;
+            }
+        });
+        this.errors = errors;
+        return Object.keys(errors).length === 0;
+    }
+
+    /**
      * Task to save place.
      *
      * @return {void}
      * @memberof PlaceFormPanelComponent
      */
     @task *save() {
+        // Validate before saving
+        if (!this.validate()) {
+            showErrorOnce(this, this.notifications, this.intl.t('validation.form_invalid'));
+            return;
+        }
         contextComponentCallback(this, 'onBeforeSave', this.place);
 
         const phone = this.place.phone;

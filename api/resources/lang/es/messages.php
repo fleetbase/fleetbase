@@ -36,4 +36,12 @@ return [
     'no_driver_found' => 'No se encontró conductor',
     'email_exists_with_in_company' => 'Este correo electrónico ya está registrado en su organización.',
     'email_exists_all_companies' => 'Este correo electrónico ya está asociado con otra organización.',
+    'phone_exists_within_company' => 'Este número de teléfono ya está registrado en tu organización.',
+    'phone_exists_all_companies' => 'Este número de teléfono está asociado a otra organización.',
+    'duplicate_order_import' => 'Algunas filas se omitieron debido a que existen ID de bloque o ID de viaje duplicados en el sistema.',
+    'import_failed_invalid_location' => 'Algunas filas contienen datos de ubicación no válidos. Por favor, revíselos y corríjalos antes de continuar.',
+    'partial_success' => 'Importación completada parcialmente. Algunas filas contenían errores y se han registrado. Haz clic abajo para descargar los detalles del error y corregirlos antes de intentarlo de nuevo.',
+    'full_import_error' => 'Falló la importación. No se importaron viajes debido a errores. Revisa el archivo de errores adjunto para más detalles.',
+    'duplicate_check_place' => 'Ya existe un lugar con este código.',
+    'duplicate_check_vehicle' => 'Ya existe un vehículo con esta matrícula.',
 ];

@@ -25,7 +25,7 @@
         {{#let (cannot this.savePermission) as |unauthorized|}}
         <div class="grid grid-cols-1 text-xs dark:text-gray-100">
             
-           <InputGroup @name={{t "fleet-ops.common.reporter" }}>
+           <InputGroup @name={{t "fleet-ops.common.reporter" }} @required={{true}}>
                 <ModelSelect 
                     @modelName="user" 
                     @selectedModel={{this.fuelReport.reporter}}
@@ -39,7 +39,7 @@
                     {{model.name}}
                 </ModelSelect>
             </InputGroup>
-            <InputGroup @name={{t "fleet-ops.common.driver" }}>
+            <InputGroup @name={{t "fleet-ops.common.driver" }} @required={{true}}>
                 <ModelSelect @modelName="driver" @selectedModel={{this.fuelReport.driver}}
                     @placeholder={{t "fleet-ops.component.toll-report-form-panel.select-driver" }}
                     @triggerClass="form-select form-input driver" @infiniteScroll={{false}} @renderInPlace={{true}}
@@ -48,7 +48,7 @@
                     {{model.name}}
                 </ModelSelect>
             </InputGroup>
-            <InputGroup @name={{t "fleet-ops.common.vehicle" }}>
+            <InputGroup @name={{t "fleet-ops.common.vehicle" }} @required={{true}}>
                 <ModelSelect @modelName="vehicle" @selectedModel={{this.fuelReport.vehicle}}
                     @placeholder={{t "fleet-ops.component.toll-report-form-panel.select-vehicle" }}
                     @triggerClass="form-select form-input vehicle" @infiniteScroll={{false}} @renderInPlace={{true}}
@@ -66,7 +66,7 @@
                     </PowerSelect>
                 </div>
             </InputGroup> --}}
-            <InputGroup @name={{t "fleet-ops.common.status"}}>
+            <InputGroup @name={{t "fleet-ops.common.status"}} @required={{true}}>
                 <div class="fleetbase-model-select fleetbase-power-select ember-model-select">
                     <PowerSelect
                     @options={{this.statusOptions}}
@@ -82,7 +82,7 @@
                 </div>
             </InputGroup>
             <!-- Payment Method -->
-            <InputGroup @name={{t "common.payment-method" }}>
+            <InputGroup @name={{t "common.payment-method" }} @required={{true}}>
                 <div class="fleetbase-model-select fleetbase-power-select ember-model-select toll-payment-method-field">
                     <PowerSelect @options={{this.reportPaymentOptions}} 
                         @selected={{this.selectedpaymentOptions}} 
@@ -106,7 +106,7 @@
                 </div>
             </InputGroup> --}}
             {{/if}}
-            <InputGroup @name={{t "fleet-ops.component.toll-report-form-panel.cost" }}>
+            <InputGroup @name={{t "fleet-ops.component.toll-report-form-panel.cost" }} @required={{true}}>
                 <MoneyInput class="w-full toll-cost-field" @value={{this.fuelReport.amount}} @currency={{this.fuelReport.currency}}
                     @canSelectCurrency={{true}} @onCurrencyChange={{fn (mut this.fuelReport.currency)}}
                     @disabled={{unauthorized}} />

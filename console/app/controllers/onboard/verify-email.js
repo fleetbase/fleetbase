@@ -81,12 +81,14 @@ export default class OnboardVerifyEmailController extends AuthVerificationContro
             this.notifications.success('Email successfully verified!');
 
             if (token) {
-                this.notifications.info('Welcome to FleetYes!');
+                // this.notifications.info('Welcome to FleetYes!');
                 
                 try {
-                    this.session.manuallyAuthenticate(token);
-                    return this.router.transitionTo('console');
+                    console.log('Manually authenticating with token:', token);
+                    return this.session.manuallyAuthenticate(token);
+                    //return this.router.transitionTo('console');
                 } catch (authError) {
+                    console.error('Authentication error:', authError);
                     this.notifications.error('Authentication failed. Please try logging in manually.');
                     return this.router.transitionTo('auth.login');
                 }

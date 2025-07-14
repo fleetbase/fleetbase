@@ -96,16 +96,24 @@ Route::prefix(config('fleetbase.api.routing.prefix', '/'))->namespace('Fleetbase
                                 $router->post('verify-email', 'OnboardController@verifyEmail');
                                 $router->post('send-verification-sms', 'OnboardController@sendVerificationSms');
                                 $router->post('send-verification-email', 'OnboardController@sendVerificationEmail');
+                                // $router->get('subscription/status', 'OnboardController@getSubscriptionStatus');
+                                $router->post('subscription', 'OnboardController@createSubscription');
                                 $router->post('checkout', 'BillingRequestController@createBillingRequest');
                                 // $router->post('checkout_new', 'CheckoutController@initiateFlow');
                                 $router->get('checkout/{billing_request_id}', 'BillingRequestController@getBillingRequest');
 
                                 // Optional: Simplified status endpoint
                                 $router->get('checkout/{billing_request_id}/status', 'BillingRequestController@getBillingRequestStatus');
-                                // $router->post('checkout/success', 'CheckoutController@handleSuccess');
+                                $router->get('checkout/success', 'BillingRequestController@handleRecurringBillingSuccess');
+                                // $router->post('billing/success', 'BillingRequestController@handleRecurringBillingSuccess');
+                                $router->post('billing-success', 'OnboardController@handleBillingSuccess');
                                 // $router->post('checkout/failure', 'CheckoutController@handleFailure');
-
-                                // $router->post('gocardless/webhook', 'GoCardlessWebhookController@handleWebhook');
+                                $router->get('pricing-plans/latest', 'PlanController@getLatest');
+                                $router->get('subscription/status', 'PlanController@getSubscriptionStatus');
+                                $router->post('subscription', 'BillingRequestController@createRecurringBillingRequest');
+                                $router->post('test/createsubscription', 'BillingRequestController@testCreateSubscription');
+                                $router->get('debug/billing/{billingRequestId}', 'BillingRequestController@debugBillingRequest');
+                                $router->post('manual/conversion/{billingRequestId}', 'BillingRequestController@manualConversion');
                             }
                         );
                         $router->group(
@@ -123,7 +131,20 @@ Route::prefix(config('fleetbase.api.routing.prefix', '/'))->namespace('Fleetbase
                                 });
                             }
                         );
-                       
+                        $router->group(
+                            ['prefix' => 'webhook'],
+                            function ($router) {
+                                $router->post('chargebee', 'ChargebeeWebhookController@handle');
+
+                            }
+                        );
+                        $router->group(
+                            ['prefix' => 'test-webhooks'],
+                            function ($router) {
+                                $router->get('subscription-created', 'WebhookTestController@testSubscriptionCreated');
+                                $router->get('payment_succeeded', 'WebhookTestController@testPaymentSucceeded');
+                            }
+                        );
                         $router->group(
                             ['prefix' => 'plan'],
                             function ($router) {
@@ -134,10 +155,22 @@ Route::prefix(config('fleetbase.api.routing.prefix', '/'))->namespace('Fleetbase
                         $router->group(
                             ['prefix' => 'payment'],
                             function ($router) {
-                                $router->get('', 'PlanController@index');
+                                // $router->get('', 'PlanController@index');
+                                Route::get('', 'PaymentController@index');   
                                 $router->get('status/{user_id}', 'PlanController@getUserPaymentStatus');
                             }
                         );
+                        $router->group(
+                            ['prefix' => 'test'],
+                            function ($router) {
+                                $router->post('subscription/change-charge-date', 'TestChargeController@changeChargeDate');
+                            }
+                        );
+                        // Route::prefix('test')->group(function () {
+                        //     Route::post('/subscription/change-charge-date', [TestChargeController::class, 'changeChargeDate']);
+                        //     Route::post('/payment/create-with-date', [TestChargeController::class, 'createTestPaymentWithDate']);
+                        //     Route::post('/payment/schedule-today', [TestChargeController::class, 'schedulePaymentForToday']);
+                        // });
                         $router->group(
                             ['prefix' => 'lookup'],
                             function ($router) {
@@ -153,6 +186,7 @@ Route::prefix(config('fleetbase.api.routing.prefix', '/'))->namespace('Fleetbase
                             ['prefix' => 'users'],
                             function ($router) {
                                 $router->post('accept-company-invite', 'UserController@acceptCompanyInvite');
+                                $router->get('find-by-email', 'UserController@findUserByEmail');
                             }
                         );
                         $router->group(

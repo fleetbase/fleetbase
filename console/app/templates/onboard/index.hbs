@@ -1,3 +1,69 @@
+{{#if this.showPaymentFrame}}
+{{!-- Payment iframe section --}}
+<div class="bg-white dark:bg-gray-1200 py-5 px-4 shadow rounded-lg w-full max-w-7xl mx-auto">
+    <div class="mb-4">
+        <Image src={{@model.logo_url}} @fallbackSrc="/images/fleetbase-logo-svg.svg" alt={{t "app.name" }} width="160"
+            height="56" class="w-40 h-14 mx-auto" />
+        {{!-- <h2 class="text-center text-lg font-extrabold text-gray-900 dark:text-white truncate">
+            {{t "onboard.index.title"}}
+        </h2> --}}
+
+        <h2 class="text-center text-lg font-extrabold text-gray-900 dark:text-white">
+            Complete Your Subscription
+        </h2>
+            
+    </div>
+
+    {{#if this.subscriptionDetails}}
+    <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-4 mb-6">
+        <h3 class="text-md font-semibold text-gray-900 dark:text-white mb-3">Subscription Details</h3>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+            <div>
+                <span class="font-medium text-gray-700 dark:text-gray-300">Amount:</span>
+                <div class="text-lg font-bold text-green-600">
+                    {{this.subscriptionDetails.subscription_amount}} {{this.subscriptionDetails.currency}}
+                </div>
+            </div>
+            <div>
+                <span class="font-medium text-gray-700 dark:text-gray-300">Billing:</span>
+                <div class="text-gray-900 dark:text-white capitalize">{{this.subscriptionDetails.billing_cycle}}</div>
+            </div>
+            <div>
+                <span class="font-medium text-gray-700 dark:text-gray-300">Start Date:</span>
+                <div class="text-gray-900 dark:text-white">{{this.subscriptionDetails.start_date}}</div>
+            </div>
+        </div>
+    </div>
+    {{/if}}
+
+    <div class="bg-white rounded-lg shadow-lg overflow-hidden border relative">
+        <iframe 
+            src={{this.paymentUrl}} 
+            class="w-full h-96 md:h-[600px] border-0" 
+            frameborder="0"
+            allow="payment"
+            {{on "load" this.handleIframeLoad}}
+        ></iframe>
+        
+        {{!-- Loading overlay for payment success --}}
+        {{#if this.isLoading}}
+        <div class="absolute inset-0 bg-white bg-opacity-95 flex flex-col items-center justify-center z-10">
+            <div class="flex flex-col items-center space-y-4">
+                <FaIcon @icon="spinner" @spin={{true}} @size="3x" class="text-green-600" />
+                <div class="text-center">
+                    <h3 class="text-xl font-semibold text-gray-900 mb-2">Subscription Created Successfully!</h3>
+                    <p class="text-gray-700">Redirecting to verification page...</p>
+                </div>
+            </div>
+        </div>
+        {{/if}}
+    </div>
+
+    <div class="mt-4 text-center">
+        <p class="text-green-600 text-sm">🔒 Secure payment powered by GoCardless</p>
+    </div>
+</div>
+{{else}}
 <div class="bg-white dark:bg-gray-800 py-5 px-4 shadow rounded-lg w-full max-w-5xl mx-auto">
     <div class="mb-4">
         <Image src={{@model.logo_url}} @fallbackSrc="/images/fleetbase-logo-svg.svg" alt={{t "app.name"}} width="160" height="56" class="w-40 h-14 mx-auto" />
@@ -11,7 +77,7 @@
             <InfoBlock @icon="exclamation-triangle" @text={{this.error}} class="mb-6 px-3 py-2 bg-red-300 text-red-900" @textClass="text-red-900" />
         {{/if}}
 
-        <!-- Personal Information - Two Column Layout -->
+        {{!-- Personal Information - Two Column Layout --}}
         <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-2">
             <InputGroup @name="{{t 'onboard.index.full-name'}}" @value={{this.name}} @inputClass="input-lg" @placeholder="" />
             <InputGroup @name={{t "onboard.index.organization-name"}} @value={{this.organization_name}} @inputClass="input-lg" @placeholder="" />
@@ -19,7 +85,7 @@
         <div class="mb-2">
         <InputGroup @name={{t "onboard.index.your-email"}} @type="email" @value={{this.email}} @inputClass="input-lg" @placeholder="" />
         </div>
-        <!-- Phone and Language - Two Column Layout -->
+        {{!-- Phone and Language - Two Column Layout --}}
         <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-4">
             <InputGroup @name={{t "onboard.index.phone"}}>
                 <PhoneInput @onInput={{fn (mut this.phone)}} class="form-input input-lg w-full" placeholder="" />
@@ -37,7 +103,7 @@
             </div>
         </div>
 
-        <!-- Driver and Web Users - Two Column Layout -->
+        {{!-- Driver and Web Users - Two Column Layout --}}
         <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-4">
             <InputGroup
                 @name="{{t 'onboard.index.number-of-drivers'}}"
@@ -61,7 +127,7 @@
 
       
 
-        <!-- Password Fields - Two Column Layout -->
+        {{!-- Password Fields - Two Column Layout --}}
         <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-4">
             <InputGroup @name={{t "onboard.index.password"}} @value={{this.password}} @type="password" @inputClass="input-lg" @placeholder="" />
             <InputGroup @name={{t "onboard.index.confirm-password"}} @value={{this.password_confirmation}} @type="password" @inputClass="input-lg" @placeholder="" />
@@ -72,3 +138,4 @@
         </div>
     </form>
 </div>
+{{/if}}

@@ -49,17 +49,8 @@
         <div class="modal-body-container fleet-form-panel">
             {{#let (cannot this.savePermission) as |unauthorized|}}
                 <div class="flex flex-col text-xs dark:text-gray-100">
-                    <InputGroup 
-                        @name={{t "fleet-ops.component.fleet-form-panel.fleet-name"}} 
-                        @value={{this.fleet.name}} 
-                        @disabled={{unauthorized}} 
-                        @wrapperClass="fleet-name-field"
-                    />
-                    <InputGroup 
-                        @name={{t "fleet-ops.component.fleet-form-panel.parent-fleet"}} 
-                        @value={{this.fleet.parent_fleet}}
-                        @wrapperClass="parent-fleet-field"
-                    >
+                    <InputGroup @wrapperClass="fleet-name-field" @name={{t "fleet-ops.component.fleet-form-panel.fleet-name"}} @value={{this.fleet.name}} @disabled={{unauthorized}} @required={{true}} />
+                    <InputGroup @wrapperClass="parent-fleet-field" @name={{t "fleet-ops.component.fleet-form-panel.parent-fleet"}} @value={{this.fleet.parent_fleet}}>
                         <ModelSelect
                             @modelName="fleet"
                             @selectedModel={{this.fleet.parent_fleet}}
@@ -130,11 +121,8 @@
                             </ModelSelect>
                         </InputGroup>
                     {{/if}}
-                    <InputGroup 
-                        @name={{t "fleet-ops.common.status"}} 
-                        @helpText={{t "fleet-ops.component.fleet-form-panel.select-status-fleet"}}
-                        @wrapperClass="status-field"
-                    >
+
+                    <InputGroup @wrapperClass="status-field" @name={{t "fleet-ops.common.status"}} @helpText={{t "fleet-ops.component.fleet-form-panel.select-status-fleet"}} @required={{true}}>
                         <Select
                             @options={{this.statusOptions}}
                             @value={{this.fleet.status}}

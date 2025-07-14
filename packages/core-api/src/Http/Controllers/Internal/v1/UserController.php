@@ -58,17 +58,29 @@ class UserController extends FleetbaseController
     {
         try {
             $email = $request->input('user.email');
+            $phone = $request->input('user.phone');
+
             $companyUuid = session('company');
             // Check if email already exists within the same company
-            if (User::where('email', $email)->where('company_uuid', $companyUuid)->whereNull('deleted_at')->exists()) {
-                return response()->error((__('messages.email_exists_with_in_company')));
+            $emailBaseQuery = User::where('email', $email)->whereNull('deleted_at');
+            $phoneBaseQuery = User::where('phone', $phone)->whereNull('deleted_at');
+
+            if ((clone $emailBaseQuery)->where('company_uuid', $companyUuid)->exists()) {
+                return response()->error(__('messages.email_exists_with_in_company'));
             }
-            else{
-                // Check if email already exists for all companies
-                if (User::where('email', $email)->whereNull('deleted_at')->exists()) {
-                   return response()->error((__('messages.email_exists_all_companies')));
-                }
+
+            if ($emailBaseQuery->exists()) {
+                return response()->error(__('messages.email_exists_all_companies'));
             }
+
+            if ((clone $phoneBaseQuery)->where('company_uuid', $companyUuid)->exists()) {
+                return response()->error(__('messages.phone_exists_within_company'));
+            }
+
+            if ($phoneBaseQuery->exists()) {
+                return response()->error(__('messages.phone_exists_all_companies'));
+            }
+
             $record = $this->model->createRecordFromRequest($request, function (&$request, &$input) {
                 // Get user properties
                 $name        = $request->input('user.name');
@@ -133,17 +145,31 @@ class UserController extends FleetbaseController
         try {
             $email = $request->input('user.email');
             $companyUuid = session('company');
+            $id = $request->input('user.uuid'); // Assumes you have the UUID of the current user
+            $phone = $request->input('user.phone');
 
-            // Check if email already exists within the same company
-            if (User::where('email', $email)->where('company_uuid', $companyUuid)->whereNull('deleted_at')->exists()) {
-                return response()->error((__('messages.email_exists_with_in_company')));
+            $emailQuery = User::where('email', $email)
+                ->whereNull('deleted_at')
+                ->where('uuid', '!=', $id);
+                        // Check if email already exists within the same company
+            if ($emailQuery->where('company_uuid', $companyUuid)->exists()) {
+                return response()->error(__('messages.email_exists_with_in_company'));
             }
-            else{
-                // Check if email already exists for all companies
-                if (User::where('email', $email)->whereNull('deleted_at')->exists()) {
-                   return response()->error((__('messages.email_exists_all_companies')));
-                }
+
+            // Check if email exists in other companies
+            if ($emailQuery->exists()) {
+                return response()->error(__('messages.email_exists_all_companies'));
             }
+
+            // Check if phone exists within the same company
+            $phoneQuery = User::where('phone', $phone)
+                ->whereNull('deleted_at')
+                ->where('uuid', '!=', $id);
+
+            if ($phoneQuery->where('company_uuid', $companyUuid)->exists()) {
+                return response()->error(__('messages.phone_exists_within_company'));
+            }
+
             $record = $this->model->updateRecordFromRequest($request, $id, function (&$request, &$user) {
                 if ($request->filled('user.role')) {
                     $user->assignSingleRole($request->input('user.role'));
@@ -647,5 +673,97 @@ class UserController extends FleetbaseController
         $permissions = $user->getAllPermissions();
 
         return response()->json(['permissions' => $permissions]);
+    }
+
+    /**
+     * Find user by email address.
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    #[SkipAuthorizationCheck]
+    public function findUserByEmail(Request $request)
+    {
+        try {
+            $request->validate([
+                'email' => 'required|email',
+            ]);
+
+            $email = $request->input('email');
+
+            $user = User::where('email', $email)
+                ->whereNull('deleted_at')
+                ->with(['company','companies'])
+                ->first();
+
+            // Get the active company plan relation for this user's company
+            $companyPlanRelation = null;
+            if ($user && $user->company_uuid) {
+                $companyPlanRelation = \Fleetbase\Models\CompanyPlanRelation::where('company_uuid', $user->company_uuid)
+                    // ->where('status', 'active')
+                    // ->where('expires_at', '>', now())
+                    ->with(['planPricing.plan'])
+                    ->first();
+            }
+
+            if (!$user) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'User not found with this email address',
+                    'data' => null
+                ], 404);
+            }
+
+            return response()->json([
+                'success' => true,
+                'message' => 'User found successfully',
+                'data' => [
+                    'uuid' => $user->uuid,
+                    'id' => $user->id,
+                    'name' => $user->name,
+                    'email' => $user->email,
+                    'phone' => $user->phone,
+                    'company_uuid' => $user->company_uuid,
+                    'company_name' => $user->company ? $user->company->name : null,
+                    'number_of_drivers' => $user->company ? $user->company->number_of_drivers : null,
+                    'number_of_web_users' => $user->company ? $user->company->number_of_web_users : null,
+                    'role_name' => $user->role ? $user->role->name : null,
+                    'email_verified_at' => $user->email_verified_at,
+                    'phone_verified_at' => $user->phone_verified_at,
+                    'status' => $user->status,
+                    'created_at' => $user->created_at,
+                    'updated_at' => $user->updated_at,
+                    'plan_details' => $companyPlanRelation ? [
+                        'plan_id' => $companyPlanRelation->planPricing->plan->id ?? null,
+                        'plan_name' => $companyPlanRelation->planPricing->plan->name ?? null,
+                        'plan_pricing_id' => $companyPlanRelation->plan_pricing_id,
+                        'billing_cycle' => $companyPlanRelation->planPricing->billing_cycle ?? null,
+                        'price_per_user' => $companyPlanRelation->planPricing->price_per_user ?? null,
+                        'price_per_driver' => $companyPlanRelation->planPricing->price_per_driver ?? null,
+                        'currency' => $companyPlanRelation->planPricing->currency ?? null,
+                        'no_of_web_users' => $companyPlanRelation->no_of_web_users,
+                        'no_of_app_users' => $companyPlanRelation->no_of_app_users,
+                        'total_amount' => $companyPlanRelation->total_amount,
+                        'auto_renew' => $companyPlanRelation->auto_renew,
+                        'expires_at' => $companyPlanRelation->expires_at,
+                        'status' => $companyPlanRelation->status,
+                        'subscription_id' => $companyPlanRelation->id,
+                    ] : null,
+                ]
+            ], 200);
+
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Validation failed',
+                'errors' => $e->errors()
+            ], 422);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to find user by email',
+                'error' => $e->getMessage()
+            ], 500);
+        }
     }
 }

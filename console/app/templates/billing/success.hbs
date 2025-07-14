@@ -1,0 +1,168 @@
+{{page-title "Payment Success"}}
+
+<div class="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-md w-full space-y-8">
+        {{#if this.isLoading}}
+        <!-- Loading State -->
+        <div class="text-center">
+            <div class="mx-auto flex items-center justify-center h-20 w-20 rounded-full bg-blue-100 dark:bg-blue-900">
+                <FaIcon @icon="spinner" @prefix="fas" @spin={{true}} class="h-10 w-10 text-blue-600 dark:text-blue-400" />
+            </div>
+
+            <h2 class="mt-6 text-3xl font-extrabold text-gray-900 dark:text-white">
+                Processing Payment...
+            </h2>
+
+            <p class="mt-2 text-sm text-gray-600 dark:text-gray-400">
+                Please wait while we activate your subscription
+            </p>
+
+            <!-- Loading Progress Bar -->
+            <div class="mt-6 w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+                <div class="bg-blue-600 h-2 rounded-full transition-all duration-1000 animate-pulse" style="width: 60%"></div>
+            </div>
+
+            <p class="mt-4 text-xs text-gray-500 dark:text-gray-400">
+                This may take a few seconds...
+            </p>
+        </div>
+        {{else}}
+        <!-- Success State -->
+        <div class="text-center">
+            <div class="mx-auto flex items-center justify-center h-20 w-20 rounded-full bg-green-100 dark:bg-green-900">
+                <FaIcon @icon="check" @prefix="fas" class="h-10 w-10 text-green-600 dark:text-green-400" />
+            </div>
+
+            <h2 class="mt-6 text-3xl font-extrabold text-gray-900 dark:text-white">
+                Payment Successful!
+            </h2>
+
+            <p class="mt-2 text-sm text-gray-600 dark:text-gray-400">
+                Your subscription has been activated successfully
+            </p>
+        </div>
+
+        <!-- Subscription Details -->
+        {{#if this.model.subscriptionDetails}}
+        <div class="bg-white dark:bg-gray-800 shadow rounded-lg p-6">
+            <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-4">
+                Subscription Details
+            </h3>
+
+            <div class="space-y-3">
+                <div class="flex justify-between">
+                    <span class="text-sm font-medium text-gray-500 dark:text-gray-400">Amount:</span>
+                    <span class="text-sm text-gray-900 dark:text-white font-semibold">
+                        {{this.model.subscriptionDetails.subscription_amount}}
+                        {{this.model.subscriptionDetails.currency}}
+                    </span>
+                </div>
+
+                <div class="flex justify-between">
+                    <span class="text-sm font-medium text-gray-500 dark:text-gray-400">Billing Cycle:</span>
+                    <span class="text-sm text-gray-900 dark:text-white capitalize">
+                        {{this.model.subscriptionDetails.billing_cycle}}
+                    </span>
+                </div>
+
+                <div class="flex justify-between">
+                    <span class="text-sm font-medium text-gray-500 dark:text-gray-400">Start Date:</span>
+                    <span class="text-sm text-gray-900 dark:text-white">
+                        {{this.model.subscriptionDetails.start_date}}
+                    </span>
+                </div>
+
+                {{#if this.model.subscriptionDetails.billing_request_id}}
+                <div class="flex justify-between">
+                    <span class="text-sm font-medium text-gray-500 dark:text-gray-400">Transaction ID:</span>
+                    <span class="text-sm text-gray-900 dark:text-white font-mono">
+                        {{this.model.subscriptionDetails.billing_request_id}}
+                    </span>
+                </div>
+                {{/if}}
+            </div>
+        </div>
+        {{/if}}
+
+        <!-- API Response Details (if needed for debugging) -->
+        {{#if this.model.apiResponse}}
+        <div class="bg-blue-50 dark:bg-blue-900/30 border border-blue-200 dark:border-blue-700 rounded-lg p-4">
+            <div class="flex items-start">
+                <FaIcon @icon="info-circle" @prefix="fas" class="text-blue-500 mr-2 mt-0.5 flex-shrink-0" />
+                <div>
+                    <h4 class="text-sm font-medium text-blue-800 dark:text-blue-200">
+                        Account Status
+                    </h4>
+                    <p class="mt-1 text-sm text-blue-700 dark:text-blue-300">
+                        {{#if this.model.apiResponse.message}}
+                        {{this.model.apiResponse.message}}
+                        {{else}}
+                        Your account has been successfully activated and is ready to use.
+                        {{/if}}
+                    </p>
+                </div>
+            </div>
+        </div>
+        {{/if}}
+
+        <!-- Redirect Notice -->
+        <div class="bg-yellow-50 dark:bg-yellow-900/30 border border-yellow-200 dark:border-yellow-700 rounded-lg p-4">
+            <div class="flex items-center">
+                <FaIcon @icon="clock" @prefix="fas" class="text-yellow-500 mr-2" />
+                <span class="text-sm font-medium text-yellow-800 dark:text-yellow-200">
+                    Redirecting to email verification in 2 seconds...
+                </span>
+            </div>
+            <div class="mt-2 w-full bg-yellow-200 dark:bg-yellow-700 rounded-full h-2">
+                <div class="bg-yellow-500 h-2 rounded-full transition-all duration-2000" style="width: 100%"></div>
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="space-y-4">
+            <button 
+                type="button"
+                class="w-full flex justify-center items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
+                {{on "click" this.goToDashboard}}
+                disabled={{this.isRedirecting}}
+            >
+                {{#if this.isRedirecting}}
+                <FaIcon @icon="spinner" @prefix="fas" class="animate-spin mr-2" />
+                Loading...
+                {{else}}
+                <FaIcon @icon="arrow-right" @prefix="fas" class="mr-2" />
+                Continue to Dashboard
+                {{/if}}
+            </button>
+
+            <button 
+                type="button"
+                class="w-full flex justify-center items-center px-4 py-2 border border-gray-300 dark:border-gray-600 text-sm font-medium rounded-md text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors"
+                {{on "click" this.downloadReceipt}}
+            >
+                <FaIcon @icon="download" @prefix="fas" class="mr-2" />
+                Download Receipt
+            </button>
+
+            <button 
+                type="button"
+                class="w-full flex justify-center items-center px-4 py-2 border border-gray-300 dark:border-gray-600 text-sm font-medium rounded-md text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors"
+                {{on "click" this.skipCountdown}}
+            >
+                <FaIcon @icon="envelope" @prefix="fas" class="mr-2" />
+                Go to Email Verification Now
+            </button>
+        </div>
+
+        <!-- Footer -->
+        <div class="text-center">
+            <p class="text-xs text-gray-500 dark:text-gray-400">
+                Questions? Contact our support team at
+                <a href="mailto:support@fleetyes.com" class="text-blue-600 dark:text-blue-400 hover:underline">
+                    support@fleetyes.com
+                </a>
+            </p>
+        </div>
+        {{/if}}
+    </div>
+</div>

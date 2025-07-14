@@ -473,16 +473,89 @@ export default class OperationsOrdersIndexNewController extends BaseController {
         let path = `${ENV.AWS.FILE_PATH}/order-imports/${this.currentUser.companyId}`;
         let disk = ENV.AWS.DISK;
         let bucket = ENV.AWS.BUCKET;
+        
         const checkQueue = () => {
             const uploadQueue = this.modalsManager.getOption('uploadQueue');
-
             if (uploadQueue.length) {
                 this.modalsManager.setOption('acceptButtonDisabled', false);
             } else {
                 this.modalsManager.setOption('acceptButtonDisabled', true);
             }
         };
-
+    
+        // Store reference to original confirm function
+        const originalConfirm = async (modal) => {
+            const uploadQueue = this.modalsManager.getOption('uploadQueue');
+            const uploadedFiles = [];
+            
+            const uploadTask = (file) => {
+                return new Promise((resolve) => {
+                    this.fetch.uploadFile.perform(
+                        file,
+                        {
+                            path: path,
+                            disk: disk,
+                            bucket: bucket,
+                            type: `order_import`,
+                        },
+                        (uploadedFile) => {
+                            uploadedFiles.pushObject(uploadedFile);
+                            resolve(uploadedFile);
+                        }
+                    );
+                });
+            };
+    
+            if (!uploadQueue.length) {
+                return this.notifications.warning(this.intl.t('fleet-ops.operations.orders.index.new.warning-message'));
+            }
+    
+            modal.startLoading();
+            modal.setOption('acceptButtonText', this.intl.t('fleet-ops.component.modals.order-import.uploading'));
+    
+            // Upload all files
+            for (let i = 0; i < uploadQueue.length; i++) {
+                const file = uploadQueue.objectAt(i);
+                await uploadTask(file);
+            }
+    
+            this.modalsManager.setOption('acceptButtonText', this.intl.t('fleet-ops.component.modals.order-import.processing'));
+            this.modalsManager.setOption('isProcessing', true);
+    
+            const files = uploadedFiles.map((file) => file.id);
+            let results;
+    
+            try {
+                results = await this.fetch.post('orders/process-imports', { files });
+                console.log(results);
+                
+                // Handle error log case
+                if (results && results.error_log_url) {
+                    this.handleErrorLogDownload(modal, results);
+                    return;
+                }
+            } catch (error) {
+                console.log("Processing error:", error);
+                modal.stopLoading();
+                this.modalsManager.setOption('isProcessing', false);
+                return this.notifications.serverError(error);
+            }
+    
+            // Success case - process the results
+            this.handleSuccessfulImport(results, modal);
+        };
+    
+        // Error log download handler
+        const downloadErrorLog = (modal) => {
+            const errorLogUrl = this.modalsManager.getOption('errorLogUrl');
+            if (errorLogUrl) {
+                this.downloadFile(errorLogUrl);
+                // Optionally close modal after download
+                modal.done();
+                this.hostRouter.refresh(); // ✅ Refresh list
+            }
+        };
+    
         this.modalsManager.show('modals/order-import', {
             title: this.intl.t('fleet-ops.component.modals.order-import.title'),
             acceptButtonText: this.intl.t('fleet-ops.component.modals.order-import.start-upload-button'),
@@ -491,6 +564,9 @@ export default class OperationsOrdersIndexNewController extends BaseController {
             acceptButtonDisabled: true,
             isProcessing: false,
             uploadQueue: [],
+            keepOpen: true,
+            errorLogUrl: null,
+            isErrorState: false,
             fileQueueColumns: [
                 { name: this.intl.t('fleet-ops.component.modals.order-import.type'), valuePath: 'extension', key: 'type' },
                 { name: this.intl.t('fleet-ops.component.modals.order-import.file-name'), valuePath: 'name', key: 'fileName' },
@@ -501,101 +577,44 @@ export default class OperationsOrdersIndexNewController extends BaseController {
             acceptedFileTypes: ['application/vnd.ms-excel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'text/csv'],
             queueFile: (file) => {
                 const uploadQueue = this.modalsManager.getOption('uploadQueue');
-
                 uploadQueue.pushObject(file);
                 checkQueue();
             },
             removeFile: (file) => {
                 const { queue } = file;
                 const uploadQueue = this.modalsManager.getOption('uploadQueue');
-
                 uploadQueue.removeObject(file);
                 queue.remove(file);
                 checkQueue();
             },
-            confirm: async (modal) => {
-                const uploadQueue = this.modalsManager.getOption('uploadQueue');
-                const uploadedFiles = [];
-                const uploadTask = (file) => {
-                    return new Promise((resolve) => {
-                        this.fetch.uploadFile.perform(
-                            file,
-                            {
-                                path: path,
-                                disk: disk,
-                                bucket: bucket,
-                                path: path,
-                                type: `order_import`,
-                            },
-                            (uploadedFile) => {
-                                uploadedFiles.pushObject(uploadedFile);
-
-                                resolve(uploadedFile);
-                            }
-                        );
-                    });
-                };
-
-                if (!uploadQueue.length) {
-                    return this.notifications.warning(this.intl.t('fleet-ops.operations.orders.index.new.warning-message'));
+            confirm: (modal) => {
+                // Check if we're in error state (download mode)
+                const isErrorState = this.modalsManager.getOption('isErrorState');
+                if (isErrorState) {
+                    downloadErrorLog(modal);
+                    this.hostRouter.refresh();
+                } else {
+                    originalConfirm(modal);
                 }
-
-                modal.startLoading();
-                modal.setOption('acceptButtonText', this.intl.t('fleet-ops.component.modals.order-import.uploading'));
-
-                for (let i = 0; i < uploadQueue.length; i++) {
-                    const file = uploadQueue.objectAt(i);
-
-                    await uploadTask(file);
+            },
+            // Add a secondary action for "Try Again" when in error state
+            secondaryAction: (modal) => {
+                const isErrorState = this.modalsManager.getOption('isErrorState');
+                if (isErrorState) {
+                    // Reset modal to initial state
+                    this.resetModalToInitialState();
                 }
-
-                this.modalsManager.setOption('acceptButtonText', this.intl.t('fleet-ops.component.modals.order-import.processing'));
-                this.modalsManager.setOption('isProcessing', true);
-
-                const files = uploadedFiles.map((file) => file.id);
-                let results;
-
-                try {
-                    results = await this.fetch.post('orders/process-imports', { files });
-                } catch (error) {
-                    return this.notifications.serverError(error);
-                }
-
-                const places = get(results, 'places');
-                const entities = get(results, 'entities');
-
-                if (isArray(places)) {
-                    this.isMultipleDropoffOrder = true;
-                    this.waypoints = places.map((_place) => {
-                        const place = this.store.createRecord('place', _place);
-                        return this.store.createRecord('waypoint', { place });
-                    });
-                }
-
-                if (isArray(entities)) {
-                    this.entities = entities.map((entity) => {
-                        return this.store.createRecord('entity', entity);
-                    });
-                }
-
-                this.notifications.success(this.intl.t('fleet-ops.operations.orders.index.new.import-success'));
-                this.isCsvImportedOrder = true;
-                this.previewDraftOrderRoute(this.payload, this.waypoints, this.isMultipleDropoffOrder);
-                modal.done();
             },
             decline: (modal) => {
                 const uploadQueue = this.modalsManager.getOption('uploadQueue');
                 try {
                     if (Array.isArray(uploadQueue) && uploadQueue.length) {
-                        // Copy to avoid mutation during iteration
                         const files = [...uploadQueue];
                         files.forEach(file => {
                             const { queue } = file;
-                            // Remove from upload queue if method exists
                             if (typeof uploadQueue.removeObject === 'function') {
                                 uploadQueue.removeObject(file);
                             }
-                            // Remove from file-specific queue if possible
                             if (queue && typeof queue.remove === 'function') {
                                 queue.remove(file);
                             }
@@ -604,13 +623,127 @@ export default class OperationsOrdersIndexNewController extends BaseController {
                 } catch (error) {
                     console.error('Error during upload queue cleanup:', error);
                 } finally {
-                    // Ensure the queue is reset and modal is closed
                     this.modalsManager.setOption('uploadQueue', []);
                     modal.done();
+                    this.hostRouter.refresh(); // ✅ Refresh list after closing
                 }
             },
-            
         });
+    }
+    
+    // Helper method to handle error log download setup
+    handleErrorLogDownload(modal, results) {
+        // if (results.message) {
+        //     this.notifications.warning(results.message);
+        // } else {
+        //     this.notifications.warning(this.intl.t('fleet-ops.operations.orders.index.new.import-error-log-warning'));
+        // }
+        
+        // Set modal to error state
+        let errorMessage = results?.message;
+        this.modalsManager.setOption('errorLogUrl', results.error_log_url);
+        this.modalsManager.setOption('acceptButtonText', this.intl.t('common.download-error-log'));
+        this.modalsManager.setOption('acceptButtonIcon', 'download');
+        this.modalsManager.setOption('acceptButtonScheme', 'primary');
+        this.modalsManager.setOption('keepOpen', true);
+        this.modalsManager.setOption('isProcessing', false);
+        this.modalsManager.setOption('isErrorState', true);
+        this.modalsManager.setOption('errorMessage', errorMessage)
+        
+        modal.stopLoading();
+    }
+    
+    // Helper method to handle successful import
+    handleSuccessfulImport(results, modal) {
+        const places = get(results, 'places');
+        const entities = get(results, 'entities');
+        const message = get(results, 'message'); // Get the message from results
+        const errorLogUrl = get(results, 'error_log_url'); // Get the error log URL from results
+        if (isArray(places)) {
+            this.isMultipleDropoffOrder = true;
+            this.waypoints = places.map((_place) => {
+                const place = this.store.createRecord('place', _place);
+                return this.store.createRecord('waypoint', { place });
+            });
+        }
+    
+        if (isArray(entities)) {
+            this.entities = entities.map((entity) => {
+                return this.store.createRecord('entity', entity);
+            });
+        }
+        // Show the message from results or fallback to default
+        if (errorLogUrl && message) {
+            this.notifications.error(message);
+        } else {
+            this.notifications.success(this.intl.t('fleet-ops.operations.orders.index.new.import-success'));
+        }
+        //this.notifications.success(this.intl.t('fleet-ops.operations.orders.index.new.import-success'));
+        this.isCsvImportedOrder = true;
+        //this.previewDraftOrderRoute(this.payload, this.waypoints, this.isMultipleDropoffOrder);
+        this.hostRouter.transitionTo('console.fleet-ops.operations.orders.index', { queryParams: { layout: 'table', t: Date.now() } })
+        .then(() => {
+            // Force route refresh
+            this.hostRouter.refresh();
+        });
+    
+        modal.done();
+    }
+    
+    // Improved download method
+    downloadFile(url) {
+        try {
+            // Method 1: Try using fetch for better browser support
+            fetch(url)
+                .then(response => response.blob())
+                .then(blob => {
+                    const downloadUrl = window.URL.createObjectURL(blob);
+                    const link = document.createElement('a');
+                    link.href = downloadUrl;
+                    
+                    // Extract filename from URL or use default
+                    const filename = url.split('/').pop() || 'error_log.xlsx';
+                    link.download = filename;
+                    
+                    // Append to body, click, and cleanup
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                    
+                    // Release the blob URL
+                    window.URL.revokeObjectURL(downloadUrl);
+                })
+                .catch(error => {
+                    console.error('Fetch download failed, trying direct method:', error);
+                    this.directDownload(url);
+                });
+        } catch (error) {
+            console.error('Download error:', error);
+            this.directDownload(url);
+        }
+    }
+    
+    // Fallback direct download method
+    directDownload(url) {
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = url.split('/').pop() || 'error_log.xlsx';
+        link.target = '_blank'; // Open in new tab as fallback
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    }
+    
+    // Helper method to reset modal to initial state
+    resetModalToInitialState() {
+        this.modalsManager.setOption('isErrorState', false);
+        this.modalsManager.setOption('errorLogUrl', null);
+        this.modalsManager.setOption('uploadQueue', []);
+        this.modalsManager.setOption('acceptButtonText', this.intl.t('fleet-ops.component.modals.order-import.start-upload-button'));
+        this.modalsManager.setOption('acceptButtonIcon', 'upload');
+        this.modalsManager.setOption('acceptButtonScheme', 'magic');
+        this.modalsManager.setOption('acceptButtonDisabled', true);
+        this.modalsManager.setOption('isProcessing', false);
     }
 
     @action async toggleAdhoc(on) {

@@ -30,6 +30,13 @@ class GoCardlessWebhookController extends Controller
             $events = $request->json('events', []);
             // print_r($events);
             foreach ($events as $event) {
+                Log::info("Processing event", [
+                    'event' => $event,
+                    'resource_type' => $event['resource_type'] ?? 'NOT_SET',
+                    'action' => $event['action'] ?? 'NOT_SET',
+                    'links' => $event['links'] ?? []
+                ]);
+
                 $this->webhookService->processEvent($event);
             }
 

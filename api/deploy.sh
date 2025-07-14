@@ -24,6 +24,9 @@ php artisan queue:restart
 # Sync scheduler
 php artisan schedule-monitor:sync
 
+#additional seeders
+php artisan db:seed --class=LanguageSeeder
+
 # Clear cache
 php artisan cache:clear
 

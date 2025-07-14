@@ -171,7 +171,6 @@ statuses:
     on-break: In pausa
     order-canceled: Ordine annullato
     shift-ended: Fine turno
-
     active: Attivo
     low: Basso  
     high: Alto  
@@ -210,14 +209,12 @@ statuses:
     beanstalkd: Beanstalkd
     sqs: SQS
     redis: Redis
-
-
     resource-allocation: Allocazione delle risorse
     compliance: Conformità
     cost-overruns: Superamento dei costi
     communication: Comunicazione
     vendor-management-issues: Problemi di gestione fornitori
-
+    planned: Programmato
     operational: Operativo
     software-technical: Tecnico del software
     customer: Cliente
@@ -2531,6 +2528,11 @@ iam:
     access-management: Gestione Accessi
   home:
     identity-access-management: Gestione degli accessi degli utenti
+onboard:
+  index:
+    phone-required: Numero di telefono richiesto
+    phone-min-validation: Numero troppo corto (minimo 7 cifre)
+    phone-max-validation: Numero troppo lungo (massimo 15 cifre)
 registry-bridge:
   extension-name: Ponte Registro
   common:

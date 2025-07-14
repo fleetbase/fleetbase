@@ -207,14 +207,12 @@ statuses:
     beanstalkd: Beanstalkd
     sqs: SQS
     redis: Redis
-
-
     resource-allocation: Phân bổ tài nguyên
     compliance: Tuân thủ
     cost-overruns: Vượt quá chi phí
     communication: Giao tiếp
     vendor-management-issues: Vấn đề quản lý nhà cung cấp
-
+    planned: Kế hoạch
     operational: Vận hành
     software-technical: Kỹ thuật phần mềm
     customer: Khách hàng
@@ -539,6 +537,9 @@ onboard:
     your-email-help-text: Địa chỉ email của bạn
     phone: Số điện thoại
     phone-help-text: Số điện thoại của bạn
+    phone-required: Bắt buộc số điện thoại
+    phone-min-validation: Số quá ngắn (tối thiểu 7 chữ số)
+    phone-max-validation: Số quá dài (tối đa 15 chữ số)
     organization-name: Tên tổ chức
     organization-help-text: Tên tổ chức của bạn, tất cả các dịch vụ và tài nguyên của bạn sẽ được quản lý theo tổ chức này, sau đó bạn có thể tạo nhiều tổ chức tùy ý hoặc theo nhu cầu.
     password: Nhập mật khẩu

@@ -12,6 +12,12 @@ export default class AuthLoginController extends Controller {
     @service router;
     @service intl;
     @service fetch;
+    @service currentUser;
+
+    constructor() {
+        super(...arguments);
+        this.setupIframeMessageListener();
+    }
 
     /**
      * Whether or not to remember the users session
@@ -77,6 +83,10 @@ export default class AuthLoginController extends Controller {
     @tracked token;
 
     @tracked loaderMessage = '';
+    @tracked showPaymentLoginFrame = false;
+    @tracked paymentUrl = null;
+    @tracked iframePollingInterval = null;
+    @tracked isProcessingPaymentSuccess = false;
 
     /**
      * Action to login user.
@@ -174,11 +184,132 @@ export default class AuthLoginController extends Controller {
 
     /**
      * Creates an email verification session and transitions user to verification route.
+     * First checks subscription status before proceeding with verification.
      *
      * @param {String} email
      * @return {Promise<Transition>}
      * @memberof AuthLoginController
      */
+    // @action async sendUserForEmailVerification(email) { 
+        
+    //     try {
+    //         // Get user details from database using email
+    //         const userResponse = await this.fetch.get('users/find-by-email', { email: email });
+            
+    //         if (!userResponse || !userResponse.success || !userResponse.data) {
+    //             this.notifications.error('Failed to get user details. Please try again.');
+    //             return this.router.transitionTo('console');
+    //         }
+            
+    //         const user = userResponse.data;
+    //         const userId = user.uuid || user.id;
+    //         const companyId = user.company_uuid;
+            
+    //         // First check subscription status
+    //         const subscriptionResponse = await this.fetch.get('onboard/subscription/status', { user_id: userId, company_id: companyId });
+            
+    //         if (subscriptionResponse.success && subscriptionResponse.data) {
+    //             this.isLoading = false;
+    //             // Subscription exists, proceed with verification
+    //             return this.fetch.post('auth/create-verification-session', { email, send: true }).then(({ token, session }) => {
+    //                 return this.session.store.persist({ email }).then(() => {
+    //                     this.notifications.warning(this.intl.t('auth.login.unverified-notification'));
+    //                     return this.router.transitionTo('auth.verification', { queryParams: { token, hello: session } }).then(() => {
+    //                         this.reset('error', false); // Don't clear identity field
+    //                     });
+    //                 });
+    //             });
+    //         } else {
+                
+    //             // Get the latest pricing plan first
+    //             const latestPlanResponse = await this.fetch.get('onboard/pricing-plans/latest');
+    //             if (!latestPlanResponse || !latestPlanResponse.success) {
+    //                 this.notifications.error('Failed to get pricing plan. Please try again.');
+    //                 return this.router.transitionTo('console');
+    //             }
+
+    //             const latestPlan = latestPlanResponse.data;
+    //             const dates = this.getSubscriptionDates();
+    //             const fullName = user.name ? user.name.split(' ') : ['', ''];
+    //             const givenName = fullName[0] || '';
+    //             const familyName = fullName.slice(1).join(' ') || fullName[0];
+
+    //             const createResponse = await this.fetch.post('onboard/subscription', { 
+    //                 plan_pricing_id: latestPlan.id,
+    //                 company_uuid: companyId, 
+    //                 user_uuid: userId, 
+    //                 no_of_web_users: user.number_of_web_users || 1,
+    //                 no_of_app_users: user.number_of_drivers || 0,
+    //                 description: `${user.company_name || 'Company'} fleet management subscription`,
+    //                 success_url: `${window.location.origin}/billing/success`,
+    //                 exit_uri: `${window.location.origin}/billing/failure`,
+    //                 customer: {
+    //                     given_name: givenName,
+    //                     family_name: familyName,
+    //                     email: email,
+    //                 },
+    //                 convert_to_subscription: true,
+    //                 subscription_start_date: dates.start,
+    //                 subscription_end_date: dates.end,
+    //             });
+                
+                
+    //             if (createResponse && createResponse.success) {
+    //                 // Check if payment URL is provided in response
+    //                 const paymentUrl = createResponse.redirect_url;
+    //                 if (paymentUrl) {
+    //                     this.paymentUrl = paymentUrl;
+    //                     this.showPaymentLoginFrame = true;
+    //                     this.startIframePolling();
+    //                     this.notifications.success('Please complete payment setup.');
+    //                     this.isLoading = false;
+    //                     return;
+    //                 }
+                    
+    //                 // If no payment URL, construct one with user data
+    //                 const baseUrl = "https://agilecyber-test.chargebee.com/hosted_pages/checkout";
+    //                 const params = new URLSearchParams({
+    //                     'subscription_items[item_price_id][0]': 'Premium-1-EUR-Monthly',
+    //                     'subscription_items[quantity][0]': '1',
+    //                     'subscription_items[item_price_id][1]': 'no_of_drivers-EUR-Monthly',
+    //                     'subscription_items[quantity][1]': (user.number_of_drivers || 1).toString(),
+    //                     'subscription_items[item_price_id][2]': 'users-EUR-Monthly',
+    //                     'subscription_items[quantity][2]': (user.number_of_web_users || 1).toString(),
+    //                     'layout': 'in_app',
+    //                     'embed': 'true',
+    //                     'customer[email]': email,
+    //                     'customer[first_name]': givenName,
+    //                     'customer[last_name]': familyName,
+    //                     'company': user.company_name || ''
+    //                 });
+                    
+    //                 this.paymentUrl = `${baseUrl}?${params.toString()}`;
+    //                 this.showPaymentLoginFrame = true;
+    //                 this.startIframePolling();
+    //                 this.notifications.success('Please complete payment setup.');
+    //                 this.isLoading = false;
+    //                 return;
+                    
+    //                 // If no payment URL, proceed with verification flow
+    //                 return this.proceedWithVerification(email, createResponse || {});
+    //             } else {
+    //                 // Handle subscription creation failure
+    //                 this.notifications.error('Failed to create subscription. Please contact support.');
+    //                 return this.router.transitionTo('console');
+    //             }
+    //         }
+    //     } catch (error) {
+    //         // If API fails, fallback to default verification behavior
+    //         return this.fetch.post('auth/create-verification-session', { email, send: true }).then(({ token, session }) => {
+    //             return this.session.store.persist({ email }).then(() => {
+    //                 this.notifications.warning(this.intl.t('auth.login.unverified-notification'));
+    //                 return this.router.transitionTo('auth.verification', { queryParams: { token, hello: session } }).then(() => {
+    //                     this.reset('error', false); // Don't clear identity field
+    //                 });
+    //             });
+    //         });
+    //     }
+    // }
     @action sendUserForEmailVerification(email) {
         return this.fetch.post('auth/create-verification-session', { email, send: true }).then(({ token, session }) => {
             return this.session.store.persist({ email }).then(() => {
@@ -189,7 +320,6 @@ export default class AuthLoginController extends Controller {
             });
         });
     }
-
     /**
      * Sends user to forgot password flow.
      *
@@ -222,8 +352,111 @@ export default class AuthLoginController extends Controller {
      *
      * @void
      */
-    success() {
+    async success() {
         this.reset('success');
+        // Wait for current user to load
+        await this.currentUser.load();
+        // Use the aliases from currentUser service
+        const email = this.currentUser.email;
+        const userId = this.currentUser.id;
+        const companyId = this.currentUser.companyId;
+
+        // First check if subscription is created
+        try {
+            const subscriptionResponse = await this.fetch.get('onboard/subscription/status', { user_id: userId, company_id: companyId });
+            
+            if (subscriptionResponse.success && subscriptionResponse.data) {
+                // Subscription exists, check if verification is pending
+                const subscription = subscriptionResponse.data;
+                // Check if verification is pending
+                if (subscription.verification_pending || !user.email_verified_at) {
+                    // Verification is pending, redirect to verification page
+                    return this.sendUserForEmailVerification(email);
+                }
+                
+                return this.router.transitionTo('console');
+            } else {
+               
+                // Get the latest pricing plan first
+                const latestPlanResponse = await this.fetch.get('onboard/pricing-plans/latest');
+                if (!latestPlanResponse || !latestPlanResponse.success) {
+                    this.notifications.error('Failed to get pricing plan. Please try again.');
+                    return this.router.transitionTo('console');
+                }
+
+                const latestPlan = latestPlanResponse.data;
+                const dates = this.getSubscriptionDates();
+                const fullName = user.name ? user.name.split(' ') : ['', ''];
+                const givenName = fullName[0] || '';
+                const familyName = fullName.slice(1).join(' ') || '';
+
+                const createResponse = await this.fetch.post('onboard/subscription', { 
+                    plan_pricing_id: latestPlan.id,
+                    company_uuid: companyId, 
+                    user_uuid: userId, 
+                    no_of_web_users: user.number_of_web_users || 1,
+                    no_of_app_users: user.number_of_drivers || 0,
+                    description: `${user.company_name || 'Company'} fleet management subscription`,
+                    success_url: `${window.location.origin}/billing/success`,
+                    exit_uri: `${window.location.origin}/billing/failure`,
+                    customer: {
+                        given_name: givenName,
+                        family_name: familyName,
+                        email: email,
+                    },
+                    convert_to_subscription: true,
+                    subscription_start_date: dates.start,
+                    subscription_end_date: dates.end,
+                });
+                
+                
+                if (createResponse && createResponse.success) {
+                    // Check if payment URL is provided in response
+                    const paymentUrl = createResponse.redirect_url || createResponse.data?.redirect_url;
+                    if (paymentUrl) {
+                        this.paymentUrl = paymentUrl;
+                        this.showPaymentLoginFrame = true;
+                        this.startIframePolling();
+                        this.notifications.success('Subscription created! Please complete payment setup.');
+                        return;
+                    }
+                    
+                    // If no payment URL, construct one with user data
+                    const baseUrl = "https://agilecyber-test.chargebee.com/hosted_pages/checkout";
+                    const params = new URLSearchParams({
+                        'subscription_items[item_price_id][0]': 'Premium-1-EUR-Monthly',
+                        'subscription_items[quantity][0]': '1',
+                        'subscription_items[item_price_id][1]': 'no_of_drivers-EUR-Monthly',
+                        'subscription_items[quantity][1]': (user.number_of_drivers || 1).toString(),
+                        'subscription_items[item_price_id][2]': 'users-EUR-Monthly',
+                        'subscription_items[quantity][2]': (user.number_of_web_users || 1).toString(),
+                        'layout': 'in_app',
+                        'embed': 'true',
+                        'customer[email]': email,
+                        'customer[first_name]': givenName,
+                        'customer[last_name]': familyName,
+                        'company': user.company_name || ''
+                    });
+                    
+                    this.paymentUrl = `${baseUrl}?${params.toString()}`;
+                    this.showPaymentLoginFrame = true;
+                    this.startIframePolling();
+                    this.notifications.success('Subscription created! Please complete payment setup.');
+                    return;
+                    
+                    // If no payment URL, proceed with verification flow
+                    return this.proceedWithVerification(email, createResponse || {});
+                } else {
+                    // Handle subscription creation failure
+                    this.notifications.error('Failed to create subscription. Please contact support.');
+                    return this.router.transitionTo('console');
+                }
+            }
+        } catch (error) {
+            // If API fails, fallback to default behavior
+            // this.notifications.warning('Unable to verify subscription status. Proceeding to app...');
+            return this.router.transitionTo('console.fleet-ops');
+        }
     }
 
     /**
@@ -244,6 +477,251 @@ export default class AuthLoginController extends Controller {
      */
     slowConnection() {
         this.notifications.error(this.intl.t('auth.login.slow-connection-message'));
+    }
+
+    /**
+     * Get subscription start and end dates
+     *
+     * @return {Object}
+     */
+    getSubscriptionDates() {
+        const startDate = new Date();
+        const endDate = new Date();
+        endDate.setMonth(endDate.getMonth() + 1);
+
+        return {
+            start: startDate.toISOString().split('T')[0],
+            end: endDate.toISOString().split('T')[0],
+        };
+    }
+
+    /**
+     * Handle iframe message events from payment provider
+     *
+     * @param {MessageEvent} event
+     */
+    handleIframeMessage(event) {
+        // Handle payment completion
+        if (event.data && event.data.type === 'payment_completed') {
+            this.handlePaymentSuccess();
+        }
+        
+        // Handle payment failure
+        if (event.data && event.data.type === 'payment_failed') {
+            this.closePaymentFrame();
+            this.notifications.error('Payment failed. Please try again.');
+        }
+        
+        // Handle payment cancellation
+        if (event.data && event.data.type === 'payment_cancelled') {
+            this.closePaymentFrame();
+            this.notifications.warning('Payment was cancelled.');
+        }
+    }
+
+    /**
+     * Handle payment success - redirect to verification page
+     */
+    @action async handlePaymentSuccess() {
+        // Keep payment frame visible but show processing overlay
+        this.isProcessingPaymentSuccess = true;
+        this.loaderMessage = 'Payment successful! Setting up verification...';
+
+        // Don't close the payment frame yet - keep it visible with overlay
+        this.stopIframePolling(); // Stop polling to prevent multiple calls
+
+        // Since user is already authenticated, use current user data
+        const email = this.currentUser.email || this.identity;
+        const userId = this.currentUser.id;
+        const companyId = this.currentUser.companyId;
+
+        try {
+            // Create verification session for the authenticated user
+            const verificationResponse = await this.fetch.post('auth/create-verification-session', {
+                email,
+                send: true
+            });
+
+            if (verificationResponse && verificationResponse.token && verificationResponse.session) {
+                // Store email in session
+                await this.session.store.persist({ email });
+
+                this.notifications.success('Payment completed successfully! Please verify your email.');
+
+                // Update loader message before redirect
+                this.loaderMessage = 'Redirecting to verification...';
+
+                // Small delay to ensure the message is visible
+                await new Promise(resolve => setTimeout(resolve, 1500));
+
+                // Redirect directly to verification page
+                return this.router.transitionTo('auth.verification', {
+                    queryParams: {
+                        token: verificationResponse.token,
+                        hello: verificationResponse.session
+                    }
+                }).then(() => {
+                    // Only close the payment frame after successful transition
+                    this.closePaymentFrame();
+                }).catch((error) => {
+                    this.closePaymentFrame();
+                });
+            } else {
+                throw new Error('Invalid verification session response');
+            }
+        } catch (error) {
+            // Reset processing state
+            this.isProcessingPaymentSuccess = false;
+
+            // Fallback: check if user needs verification at all
+            try {
+                const userResponse = await this.fetch.get('users/find-by-email', { email: email });
+
+                if (userResponse && userResponse.success && userResponse.data) {
+                    const user = userResponse.data;
+
+                    // If already verified, go to console
+                    if (user.email_verified_at) {
+                        this.notifications.success('Payment completed successfully!');
+                        this.closePaymentFrame();
+                        return this.router.transitionTo('console');
+                    }
+                }
+            } catch (fallbackError) {
+                console.error('Fallback verification check failed:', fallbackError);
+            }
+
+            // Last resort
+            this.closePaymentFrame();
+            this.notifications.error('Payment completed but verification setup failed. Please contact support.');
+            return this.router.transitionTo('console');
+        }
+    }
+    
+
+    /**
+     * Check if verification is needed after payment completion
+     */
+    async checkVerificationAfterPayment() {
+        try {
+            const email = this.currentUser.email || this.identity;
+            const userId = this.currentUser.id;
+            const companyId = this.currentUser.companyId;
+
+            // Get user details to check verification status
+            const userResponse = await this.fetch.get('users/find-by-email', { email: email });
+            
+            if (userResponse && userResponse.success && userResponse.data) {
+                const user = userResponse.data;
+                
+                // Check if user needs verification
+                if (!user.email_verified_at) {
+                    return this.proceedWithVerification(email, { verification_pending: true });
+                } else {
+                    return this.router.transitionTo('console');
+                }
+            } else {
+                return this.router.transitionTo('console');
+            }
+        } catch (error) {
+            this.notifications.warning('Payment completed. Please verify your email if needed.');
+            return this.router.transitionTo('console');
+        }
+    }
+
+    /**
+     * Proceed with verification flow
+     *
+     * @param {String} email
+     * @param {Object} subscriptionData
+     */
+    async proceedWithVerification(email, subscriptionData) {
+        // Check if verification is pending from subscription data
+        if (subscriptionData && subscriptionData.verification_pending) {
+            return this.router.transitionTo('auth.verification', { 
+                queryParams: { 
+                    token: subscriptionData.token, 
+                    hello: subscriptionData.session 
+                } 
+            });
+        }
+        
+        // Create verification session
+        return this.fetch.post('auth/create-verification-session', { email, send: true }).then(({ token, session }) => {
+            return this.session.store.persist({ email }).then(() => {
+                this.notifications.warning(this.intl.t('auth.login.unverified-notification'));
+                return this.router.transitionTo('auth.verification', { queryParams: { token, hello: session } }).then(() => {
+                    this.reset('error', false); // Don't clear identity field
+                });
+            });
+        });
+    }
+
+    /**
+     * Close the payment frame
+     */
+    @action closePaymentFrame() {
+        this.showPaymentLoginFrame = false;
+        this.paymentUrl = null;
+        this.isProcessingPaymentSuccess = false; // Reset processing state
+        this.loaderMessage = '';
+        this.stopIframePolling();
+    }
+
+    /**
+     * Start polling iframe for URL changes
+     */
+    startIframePolling() {
+        this.stopIframePolling(); // Clear any existing interval
+        
+        this.iframePollingInterval = setInterval(() => {
+            const iframe = document.querySelector('iframe[src*="gocardless"]');
+            if (iframe && iframe.contentWindow) {
+                try {
+                    const currentUrl = iframe.contentWindow.location.href;
+                    this.handleIframeUrlChange(currentUrl);
+                } catch (e) {
+                    // Cross-origin restrictions, ignore
+                }
+            }
+        }, 1000); // Check every second
+    }
+
+    /**
+     * Stop polling iframe
+     */
+    stopIframePolling() {
+        if (this.iframePollingInterval) {
+            clearInterval(this.iframePollingInterval);
+            this.iframePollingInterval = null;
+        }
+    }
+
+    /**
+     * Handle iframe URL changes to detect success/failure redirects
+     */
+    handleIframeUrlChange(url) {
+        if (url.includes('/billing/success')) {
+            this.handlePaymentSuccess();
+        } else if (url.includes('/billing/failure')) {
+            this.handlePaymentFailure();
+        }
+    }
+
+    /**
+     * Handle payment failure
+     */
+    @action handlePaymentFailure() {
+        this.stopIframePolling();
+        this.closePaymentFrame();
+        this.notifications.error('Payment failed. Please try again.');
+    }
+
+    /**
+     * Setup iframe message listener
+     */
+    setupIframeMessageListener() {
+        window.addEventListener('message', this.handleIframeMessage.bind(this));
     }
 
     /**
