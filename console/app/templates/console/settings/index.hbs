@@ -1,23 +1,32 @@
-<Layout::Section::Header @title={{t "console.settings.index.title"}} />
+<Layout::Section::Header @title={{t "console.settings.index.title"}}>
+    <Button
+        @icon="question-circle"
+        @iconPrefix="fas"
+        @type="default"
+        @text={{t "fleetbase.common.help"}}
+        @onClick={{this.OrganizationSettingsTour}}
+        class="help-button mr-2"
+    />
+</Layout::Section::Header>
 
 <Layout::Section::Body class="overflow-y-scroll h-full">
     <div class="container mx-auto h-screen">
         <div class="max-w-3xl my-10 mx-auto space-y-6">
             <ContentPanel @title={{t "console.settings.index.title"}} @open={{true}} @pad={{true}} @panelBodyClass="bg-white dark:bg-gray-800">
                 <form {{on "submit" this.saveSettings}}>
-                    <InputGroup @name={{t "console.settings.index.organization-name"}} @value={{@model.name}} />
-                    <InputGroup @name={{t "console.settings.index.organization-description"}} @value={{@model.description}} />
+                    <InputGroup class="org-name" @name={{t "console.settings.index.organization-name"}} @value={{@model.name}} />
+                    <InputGroup class="org-description" @name={{t "console.settings.index.organization-description"}} @value={{@model.description}} />
                     <InputGroup @name={{t "console.settings.index.organization-phone"}}>
-                        <PhoneInput @value={{@model.phone}} @onInput={{fn (mut @model.phone)}} class="form-input w-full" />
+                        <PhoneInput @value={{@model.phone}} @onInput={{fn (mut @model.phone)}} class="form-input w-full org-phone" />
                     </InputGroup>
                     <InputGroup @name={{t "console.settings.index.organization-currency"}}>
-                        <CurrencySelect @value={{@model.currency}} @onSelect={{fn (mut @model.currency)}} @triggerClass="w-full form-select" />
+                        <CurrencySelect @value={{@model.currency}} @onSelect={{fn (mut @model.currency)}} @triggerClass="w-full form-select org-currency" />
                     </InputGroup>
-                   <InputGroup @name={{t "console.settings.index.organization-id"}} @value={{@model.public_id}} @disabled={{true}} />
-                   <ContentPanel @title={{t "common.parking-zone"}} @open={{true}} @pad={{true}} @panelBodyClass="bg-white dark:bg-gray-800">
+                   <InputGroup class="org-id" @name={{t "console.settings.index.organization-id"}} @value={{@model.public_id}} @disabled={{true}} />
+                   <ContentPanel @title={{t "common.parking-zone"}} @open={{true}} @pad={{true}} @panelBodyClass="bg-white dark:bg-gray-800 parking-zone">
                     <InputGroup @name={{t "common.max-distance"}} @placeholder="{{t "common.enter-distance"}}" @value={{@model.parking_zone_max_distance}}  @type="number" min="1" disabled={{this.isLoading}} />
                     </ContentPanel> 
-                   <div class="mt-3 flex items-center justify-end">
+                   <div class="mt-3 flex items-center justify-end save-button">
                         <Button @buttonType="submit" @type="primary" @size="lg" @icon="save" @text="{{t "common.save-button-text"}}" @isLoading={{this.isLoading}} />
                     </div>
                 </form>
@@ -26,7 +35,7 @@
             <ContentPanel @title={{t "console.settings.index.organization-branding"}} @open={{true}} @pad={{true}} @panelBodyClass="bg-white dark:bg-gray-800">
                 <InputGroup @name={{t "console.settings.index.logo"}} @helpText={{t "console.settings.index.logo-help-text"}}>
                     <div class="flex flex-row items-center">
-                        <Image src={{@model.logo_url}} @fallbackSrc={{config "defaultValues.placeholderImage"}} alt={{concat @model.name " logo"}} class="h-20 w-64 border dark:border-gray-900 rounded-md mr-4" />
+                        <Image src={{@model.logo_url}} @fallbackSrc={{config "defaultValues.placeholderImage"}} alt={{concat @model.name " logo"}} class="h-20 w-64 border dark:border-gray-900 rounded-md mr-4 org-logo" />
                         <FileUpload @name={{t "console.settings.index.logo"}} @accept="image/*" @onFileAdded={{fn this.uploadFile "logo"}} as |queue|>
                             <a tabindex={{0}} class="flex items-center px-0 mt-2 text-xs no-underline truncate btn btn-sm btn-default">
                                 {{#if queue.files.length}}
@@ -47,7 +56,7 @@
 
                 <InputGroup @name={{t "console.settings.index.backdrop"}} @helpText={{t "console.settings.index.backdrop-help-text"}}>
                     <div class="flex flex-row items-center">
-                        <Image src={{@model.backdrop_url}} @fallbackSrc={{config "defaultValues.placeholderImage"}} alt={{concat @model.name " backdrop"}} class="h-20 w-64 border dark:border-gray-900 rounded-md mr-4" />
+                        <Image src={{@model.backdrop_url}} @fallbackSrc={{config "defaultValues.placeholderImage"}} alt={{concat @model.name " backdrop"}} class="h-20 w-64 border dark:border-gray-900 rounded-md mr-4 org-backdrop" />
                         <FileUpload @name={{t "console.settings.index.backdrop"}} @accept="image/*" @onFileAdded={{fn this.uploadFile "backdrop"}} as |queue|>
                             <a tabindex={{0}} class="flex items-center px-0 mt-2 text-xs no-underline truncate btn btn-sm btn-default">
                                 {{#if queue.files.length}}
