@@ -44,6 +44,7 @@ export default class OnboardIndexController extends Controller {
      * @memberof OnboardIndexController
      */
     @service intl;
+    // @service chargebee;
 
     /**
      * The name input field.
@@ -702,13 +703,13 @@ export default class OnboardIndexController extends Controller {
                             this.notifications.success('Account created! Redirecting to payment setup...');
                             
                             // Construct payment URL with user data
-                            const baseUrl = "https://agilecyber-test.chargebee.com/hosted_pages/checkout";
+                            const baseUrl = ENV.chargebee.baseUrl;
                             const params = new URLSearchParams({
-                                'subscription_items[item_price_id][0]': 'Basic-GBP-Monthly',
+                                'subscription_items[item_price_id][0]': ENV.chargebee.itemPriceIds.basic,
                                 'subscription_items[quantity][0]': '1',
-                                'subscription_items[item_price_id][1]': 'No-of-App-User-GBP-Monthly',
+                                'subscription_items[item_price_id][1]': ENV.chargebee.itemPriceIds.appUser,
                                 'subscription_items[quantity][1]': input.number_of_drivers?.toString() || '1',
-                                'subscription_items[item_price_id][2]': 'no_of_webusers-GBP-Monthly',
+                                'subscription_items[item_price_id][2]': ENV.chargebee.itemPriceIds.webUser,
                                 'subscription_items[quantity][2]': input.number_of_web_users?.toString() || '1',
                                 'layout': 'in_app',
                                 'embed': 'true',
