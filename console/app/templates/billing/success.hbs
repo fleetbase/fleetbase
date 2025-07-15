@@ -120,7 +120,7 @@
 
         <!-- Action Buttons -->
         <div class="space-y-4">
-            <button 
+            {{!-- <button 
                 type="button"
                 class="w-full flex justify-center items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
                 {{on "click" this.goToDashboard}}
@@ -151,7 +151,7 @@
             >
                 <FaIcon @icon="envelope" @prefix="fas" class="mr-2" />
                 Go to Email Verification Now
-            </button>
+            </button> --}}
         </div>
 
         <!-- Footer -->
@@ -166,3 +166,10 @@
         {{/if}}
     </div>
 </div>
+
+{{#if this.isRedirecting}}
+  <div class="fixed inset-0 flex items-center justify-center bg-white bg-opacity-80 z-50">
+    <FaIcon @icon="spinner" @spin={{true}} @size="2x" class="text-green-600" />
+    <span class="ml-2">Redirecting…</span>
+  </div>
+{{/if}}
