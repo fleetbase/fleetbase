@@ -131,6 +131,18 @@ Route::prefix(config('fleetbase.api.routing.prefix', '/'))->namespace('Fleetbase
                                 });
                             }
                         );
+
+                        // Chargebee subscription management routes
+                        $router->group(
+                            ['prefix' => 'chargebee'],
+                            function ($router) {
+                                $router->put('subscriptions/{subscriptionId}', 'SubscriptionController@updateSubscription');
+                                $router->delete('subscriptions/{subscriptionId}', 'SubscriptionController@cancelSubscription');
+                                $router->put('subscriptions/{subscriptionId}/amount', 'SubscriptionController@updateSubscriptionQuantity');
+                                $router->get('subscriptions/{subscriptionId}/addon-quantities', 'SubscriptionController@getCurrentAddonQuantities');
+                                $router->get('subscriptions/{subscriptionId}/raw-data', 'SubscriptionController@getRawSubscriptionData');
+                            }
+                        );
                         $router->group(
                             ['prefix' => 'webhook'],
                             function ($router) {
