@@ -40,8 +40,15 @@ export default async function fleetbaseApiFetch(method, uri, params = {}, fetchO
     }
 
     try {
-        // Make the fetch request
-        const response = await fetch(`${baseUrl}/${uri}`, options);
+        // Create a timeout promise
+        const timeout = fetchOptions.timeout || 5000; // 5 second timeout
+        const timeoutPromise = new Promise((_, reject) => {
+            setTimeout(() => reject(new Error('Request timeout')), timeout);
+        });
+
+        // Make the fetch request with timeout
+        const fetchPromise = fetch(`${baseUrl}/${uri}`, options);
+        const response = await Promise.race([fetchPromise, timeoutPromise]);
 
         // Check if the response is OK (status in the range 200-299)
         if (!response.ok) {
@@ -53,6 +60,7 @@ export default async function fleetbaseApiFetch(method, uri, params = {}, fetchO
     } catch (error) {
         // If a fallback response is provided use it instead
         if (fetchOptions && fetchOptions.fallbackResponse !== undefined) {
+            console.warn(`⚠️ API request failed, using fallback response: ${error.message}`);
             return fetchOptions.fallbackResponse;
         }
 

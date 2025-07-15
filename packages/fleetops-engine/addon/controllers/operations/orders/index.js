@@ -8,6 +8,11 @@ import { isBlank } from '@ember/utils';
 import { timeout } from 'ember-concurrency';
 import { task } from 'ember-concurrency-decorators';
 import fromStore from '@fleetbase/ember-core/decorators/from-store';
+import { driver } from 'driver.js';
+import 'driver.js/dist/driver.css';
+import { later } from '@ember/runloop';
+import { getOwner } from '@ember/application';
+import { on } from '@ember/object/evented';
 
 export default class OperationsOrdersIndexController extends BaseController {
     @service currentUser;
@@ -1078,4 +1083,230 @@ export default class OperationsOrdersIndexController extends BaseController {
     // Navigate to the route segments page using payload_uuid
         this.router.transitionTo('operations.orders.routes-segments', order.payload_uuid);
     }
+
+    @action startOrdersTour(skipFirstStep = false) {
+        const sidebarSelector = '.next-content-overlay-panel-body:has(new-order-route)';
+
+    const scrollElementIntoView = (element) => {
+    const sidebar = document.querySelector(sidebarSelector);
+    if (sidebar && sidebar.contains(element)) {
+                const sidebarRect = sidebar.getBoundingClientRect();
+                const elementRect = element.getBoundingClientRect();
+                const offset = elementRect.top - sidebarRect.top + sidebar.scrollTop;
+                const centerOffset = offset - (sidebar.clientHeight / 2) + (element.clientHeight / 2);
+                sidebar.scrollTo({ top: centerOffset, behavior: 'smooth' });
+            }
+        };
+
+        const driverObj = driver({
+            showProgress: false,
+            nextBtnText: this.intl.t('fleetbase.common.next'),
+            prevBtnText: this.intl.t('fleetbase.common.previous'),
+            doneBtnText: this.intl.t('fleetbase.common.done'),
+            closeBtnText: this.intl.t('fleetbase.common.close'),
+            allowClose: false,
+            disableActiveInteraction: true,
+            onPopoverRender: (popover) => {
+                const closeBtn = popover.wrapper.querySelector('.driver-popover-close-btn');
+                if (closeBtn) {
+                    closeBtn.style.display = 'inline-block';
+                }
+            },
+            steps: [
+                {
+                    element: '#next-view-section-subheader-actions .btn-wrapper button.btn-primary',
+                    onHighlightStarted: (element) => {
+                        element.style.setProperty('pointer-events', 'none', 'important');
+                        element.disabled = true;
+                      },
+                      onDeselected: (element) => {
+                        element.style.pointerEvents = 'auto';
+                        element.disabled = false;
+                      },
+                    popover: {
+                        title: this.intl.t('fleetbase.orders.tour.add.title'),
+                        description: this.intl.t('fleetbase.orders.tour.add.description'),
+                        onNextClick: () => {
+                            this.createOrder();
+    
+                            later(this, () => {
+                                const el = document.querySelector('.next-content-overlay > .next-content-overlay-panel-container > .next-content-overlay-panel');
+    
+                                if (el) {
+                                    const onTransitionEnd = () => {
+                                        el.removeEventListener('transitionend', onTransitionEnd);
+                                        driverObj.moveNext();
+                                    };
+    
+                                    el.addEventListener('transitionend', onTransitionEnd);
+                                }
+                            }, 100);
+                        },
+                    },
+                },
+                                {
+                    element: '.import-order', // import button
+                    popover: {
+                        title: this.intl.t('fleetbase.orders.tour.import_button.title'),
+                        description: this.intl.t('fleetbase.orders.tour.import_button.description'),
+                        onNextClick: () => {
+                            const newOrderController = getOwner(this).lookup('controller:operations.orders.index.new');
+                            newOrderController.importOrder();
+                            const checkModal = setInterval(() => {
+                            const modal = document.querySelector('.flb--modal');
+                            if (modal && modal.classList.contains('show')) {
+                            clearInterval(checkModal);
+                            driverObj.moveNext(); // Move to the next step
+                            }
+                        }, 100);
+                        }
+                    },
+                    disableButtons: ['previous'] 
+                },
+                {
+                    element: '.flb--modal .dropzone', // upload spreadsheets popup
+                    popover: {
+                        title: this.intl.t('fleetbase.orders.tour.upload_spreadsheets.title'),
+                        description: this.intl.t('fleetbase.orders.tour.upload_spreadsheets.description'),
+                    },
+                },
+                {
+                    element: '.flb--modal .modal-footer-actions .btn-magic', // start upload button
+                    popover: {
+                        title: this.intl.t('fleetbase.orders.tour.start_upload.title'),
+                        description: this.intl.t('fleetbase.orders.tour.start_upload.description'),
+                        onNextClick: () => {
+                            this.modalsManager.done();
+                            const checkModalClosed = setInterval(() => {
+                                const modal = document.querySelector('.flb--modal');
+                                if (!modal || !modal.classList.contains('show')) {
+                                    clearInterval(checkModalClosed);
+                                    driverObj.moveNext();
+                                }
+                            }, 100);
+                        },
+                    },
+                },
+                {
+                    element: '.next-content-panel-body-inner.next-content-panel-body-wrapper',
+                    popover: {
+                        title: this.intl.t('fleetbase.orders.tour.dates.title'),
+                        description: this.intl.t('fleetbase.orders.tour.dates.description'),
+                        onPrevClick: () => {
+                            driverObj.moveTo(1);
+                        } 
+                    },
+
+                },
+                {
+                    element: '.new-order-route-toggle span[role="checkbox"]',
+                    popover: {
+                        title: this.intl.t('fleetbase.orders.tour.multiple_dropoff.title'),
+                        description: this.intl.t('fleetbase.orders.tour.multiple_dropoff.description'),
+                    },
+                },
+                {
+                    element: '.add-waypoint-btn',
+                    popover: {
+                        title: this.intl.t('fleetbase.orders.tour.add_waypoint.title'),
+                        description: this.intl.t('fleetbase.orders.tour.add_waypoint.description'),
+                        onNextClick: () => {
+                            const newOrderController = getOwner(this).lookup('controller:operations.orders.index.new');
+                            const waypoint2 = document.querySelector('#waypoint_2');
+
+                            // Only add waypoints if both are missing
+                            if (!waypoint2) {
+                                newOrderController.addWaypoint();
+                            }
+                            driverObj.moveNext();
+                        },
+                    },
+                },
+                {
+                    element: '.dragSortList.multi-drop-select-container',
+                    popover: {
+                        title: this.intl.t('fleetbase.orders.tour.select_waypoint.title'),
+                        description: this.intl.t('fleetbase.orders.tour.select_waypoint.description'),
+                        onNextClick: () => {
+                            const newOrderController = getOwner(this).lookup('controller:operations.orders.index.new');
+                            newOrderController.toggleMultiDropOrder(false);
+                            driverObj.moveNext();
+                        },
+                    },
+                },
+                {
+                    element: '.new-order-route-toggle span[role="checkbox"]',
+                    popover: {
+                        title: this.intl.t('fleetbase.orders.tour.multiple_dropoff_disabled.title'),
+                        description: this.intl.t('fleetbase.orders.tour.multiple_dropoff_disabled.description'),
+                        onPrevClick: () => {
+                            const newOrderController = getOwner(this).lookup('controller:operations.orders.index.new');
+                            newOrderController.toggleMultiDropOrder(true);
+                            newOrderController.addWaypoint();
+                             (function waitForEl() {
+                            if (document.querySelector('.dragSortList.multi-drop-select-container')) {
+                                driverObj.movePrevious();
+                            } else {
+                                setTimeout(waitForEl, 100);
+                            }
+                        })();
+                        },
+                    },
+                },
+                {
+                    element: '.grid.grid-cols-1.lg\\:grid-cols-2.gap-4.lg\\:gap-2.text-xs.dark\\:text-gray-100',
+                    popover: {
+                        title: this.intl.t('fleetbase.orders.tour.pickup_dropoff_section.title', 'Pickup/Dropoff/Return'),
+                        description: this.intl.t('fleetbase.orders.tour.pickup_dropoff_section.description', 'Set the pickup, dropoff, and return locations for the order.'),
+                    },
+                    onHighlightStarted: scrollElementIntoView,
+                },
+                {
+                    element: '.new-order-notes .next-content-panel-container ',
+                    popover: {
+                        title: this.intl.t('fleetbase.orders.tour.notes.title'),
+                        description: this.intl.t('fleetbase.orders.tour.notes.description'),
+                    },
+                    onHighlightStarted: scrollElementIntoView,
+                },
+                {
+                    element: '.new-order-documents .next-content-panel-container ',
+                    popover: {
+                        title: this.intl.t('fleetbase.orders.tour.documents.title'),
+                        description: this.intl.t('fleetbase.orders.tour.documents.description'),
+                    },
+                    onHighlightStarted: scrollElementIntoView,
+                },
+                {
+                    element: '.new-order-submit',
+                    popover: {
+                        title: this.intl.t('fleetbase.orders.tour.submit.title'),
+                        description: this.intl.t('fleetbase.orders.tour.submit.description'),
+                    },
+                    onHighlightStarted: (element) => {
+                         element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    },
+                }
+            ],
+        });
+
+        // Defensive: handle case where skipFirstStep is an event or pointer, not a boolean
+        if (typeof skipFirstStep !== 'boolean') {
+            skipFirstStep = false;
+        }
+        if (skipFirstStep) {
+            driverObj.drive(1); // Start from step 1 (skip first)
+        } else {
+            driverObj.drive();
+        }
+    }
+
+    @action startOrdersTourFromHelp() {
+        this.startOrdersTour(true);
+    }
+    
+    
+    
+
 }
+

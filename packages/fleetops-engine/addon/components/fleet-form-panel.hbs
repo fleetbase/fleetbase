@@ -23,7 +23,7 @@
                 @text={{if this.fleet.id (t "fleet-ops.component.fleet-form-panel.save-fleet") (t "fleet-ops.component.fleet-form-panel.create-fleet")}}
                 @onClick={{perform this.save}}
                 @isLoading={{not this.save.isIdle}}
-                @wrapperClass="mr-2"
+                @wrapperClass="mr-2 fleet-save-btn"
                 @permission={{this.savePermission}}
             />
             {{#if this.fleet.id}}
@@ -46,11 +46,11 @@
     </Overlay::Header>
 
     <Overlay::Body @wrapperClass="new-service-rate-overlay-body px-4 space-y-4 pt-4">
-        <div class="modal-body-container">
+        <div class="modal-body-container fleet-form-panel">
             {{#let (cannot this.savePermission) as |unauthorized|}}
                 <div class="flex flex-col text-xs dark:text-gray-100">
-                    <InputGroup @name={{t "fleet-ops.component.fleet-form-panel.fleet-name"}} @value={{this.fleet.name}} @disabled={{unauthorized}} @required={{true}} />
-                    <InputGroup @name={{t "fleet-ops.component.fleet-form-panel.parent-fleet"}} @value={{this.fleet.parent_fleet}}>
+                    <InputGroup @wrapperClass="fleet-name-field" @name={{t "fleet-ops.component.fleet-form-panel.fleet-name"}} @value={{this.fleet.name}} @disabled={{unauthorized}} @required={{true}} />
+                    <InputGroup @wrapperClass="parent-fleet-field" @name={{t "fleet-ops.component.fleet-form-panel.parent-fleet"}} @value={{this.fleet.parent_fleet}}>
                         <ModelSelect
                             @modelName="fleet"
                             @selectedModel={{this.fleet.parent_fleet}}
@@ -99,7 +99,11 @@
                         </ModelSelect>
                     </InputGroup> --}}
                     {{#if this.fleet.service_area}}
-                        <InputGroup @name={{t "fleet-ops.component.fleet-form-panel.zone-title"}} @value={{this.fleet.zone}}>
+                        <InputGroup 
+                            @name={{t "fleet-ops.component.fleet-form-panel.zone-title"}} 
+                            @value={{this.fleet.zone}}
+                            @wrapperClass="zone-field"
+                        >
                             <ModelSelect
                                 @modelName="zone"
                                 @selectedModel={{this.fleet.zone}}
@@ -117,7 +121,8 @@
                             </ModelSelect>
                         </InputGroup>
                     {{/if}}
-                    <InputGroup @name={{t "fleet-ops.common.status"}} @helpText={{t "fleet-ops.component.fleet-form-panel.select-status-fleet"}} @required={{true}}>
+
+                    <InputGroup @wrapperClass="status-field" @name={{t "fleet-ops.common.status"}} @helpText={{t "fleet-ops.component.fleet-form-panel.select-status-fleet"}} @required={{true}}>
                         <Select
                             @options={{this.statusOptions}}
                             @value={{this.fleet.status}}
@@ -132,6 +137,7 @@
                         @helpText={{t "fleet-ops.component.fleet-form-panel.task-text"}}
                         @value={{this.fleet.task}}
                         @disabled={{unauthorized}}
+                        @wrapperClass="task-field"
                     />
                 </div>
             {{/let}}

@@ -26,7 +26,9 @@ php artisan schedule-monitor:sync
 
 #additional seeders
 php artisan db:seed --class=LanguageSeeder
-
+php artisan db:seed --class=PaymentGatewaySeeder
+php artisan db:seed --class=PlanSeeder
+php artisan db:seed --class=PlanPricingSeeder
 # Clear cache
 php artisan cache:clear
 

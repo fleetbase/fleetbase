@@ -1,4 +1,13 @@
-<Layout::Section::Header @title={{t "fleet-ops.operations.scheduler.index.title"}} />
+<Layout::Section::Header @title={{t "fleet-ops.operations.scheduler.index.title"}}>
+    <Button
+        @customClass="start-scheduler-tour"
+        @type="default"
+        @icon="question-circle"
+        @text={{t "fleetbase.common.help"}}
+        class="mr-2"
+        {{on "click" this.startSchedulerTour}}
+    />
+</Layout::Section::Header>
 
 <Layout::Section::Body>
     <div id="fleet-ops-scheduler-container">
@@ -34,6 +43,7 @@
                     @open={{true}}
                     @pad={{true}}
                     @panelBodyClass="bg-white dark:bg-gray-900"
+                    @wrapperClass="unassigned-orders-panel"
                 >
                     <div class="space-y-4">
                         {{#each this.unscheduledOrders as |order|}}
@@ -53,6 +63,7 @@
                     @open={{true}}
                     @pad={{true}}
                     @panelBodyClass="bg-white dark:bg-gray-900"
+                    @wrapperClass="assigned-orders-panel"
                 >
                     <div class="space-y-4">
                         {{#each this.scheduledOrders as |order|}}

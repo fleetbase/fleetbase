@@ -46,6 +46,9 @@ importers:
       '@fortawesome/ember-fontawesome':
         specifier: ^2.0.0
         version: 2.0.0(ember-source@5.4.1(@babel/core@7.25.7)(@glimmer/component@1.1.2(@babel/core@7.25.7))(rsvp@4.8.5)(webpack@5.95.0))(rollup@2.79.2)(webpack@5.95.0)
+      driver.js:
+        specifier: ^1.3.6
+        version: 1.3.6
       ember-changeset:
         specifier: ^4.1.2
         version: 4.1.2(ember-data@4.12.8(@babel/core@7.25.7)(@ember/string@3.1.1)(@glimmer/tracking@1.1.2)(ember-source@5.4.1(@babel/core@7.25.7)(@glimmer/component@1.1.2(@babel/core@7.25.7))(rsvp@4.8.5)(webpack@5.95.0))(webpack@5.95.0))(webpack@5.95.0)
@@ -3898,6 +3901,9 @@ packages:
 
   dragula@3.7.3:
     resolution: {integrity: sha512-/rRg4zRhcpf81TyDhaHLtXt6sEywdfpv1cRUMeFFy7DuypH2U0WUL0GTdyAQvXegviT4PJK4KuMmOaIDpICseQ==}
+
+  driver.js@1.3.6:
+    resolution: {integrity: sha512-g2nNuu+tWmPpuoyk3ffpT9vKhjPz4NrJzq6mkRDZIwXCrFhrKdDJ9TX5tJOBpvCTBrBYjgRQ17XlcQB15q4gMg==}
 
   duplexify@3.7.1:
     resolution: {integrity: sha512-07z8uv2wMyS51kKhD1KsdXJg5WQ6t93RneqRxUHnskXVtlYYkLqM0gqStQZ3pj073g687jPCHrqNfCzawLYh5g==}
@@ -10636,6 +10642,7 @@ snapshots:
       '@zestia/ember-dragula': 12.1.0(@babel/core@7.25.7)(ember-source@5.4.1(@babel/core@7.25.7)(@glimmer/component@1.1.2(@babel/core@7.25.7))(rsvp@4.8.5)(webpack@5.95.0))(webpack@5.95.0)
       broccoli-funnel: 3.0.8
       broccoli-merge-trees: 4.2.0
+      driver.js: 1.3.6
       ember-auto-import: 2.8.1(webpack@5.95.0)
       ember-cli-babel: 8.2.0(@babel/core@7.25.7)
       ember-cli-htmlbars: 6.3.0
@@ -13738,6 +13745,8 @@ snapshots:
     dependencies:
       contra: 1.9.4
       crossvent: 1.5.5
+
+  driver.js@1.3.6: {}
 
   duplexify@3.7.1:
     dependencies:
