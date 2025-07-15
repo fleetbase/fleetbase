@@ -809,6 +809,7 @@ export default class OnboardIndexController extends Controller {
         let parsedValue = parseInt(value, 10);
         if (value === '' || parsedValue < 1 || isNaN(parsedValue)) {
             showErrorOnce(this, this.notifications, this.intl.t('common.valid-number-error'));
+            this.set('number_of_drivers', null); // Clear the value if invalid
             return;
         }
         this.set('error', null);
@@ -827,6 +828,7 @@ export default class OnboardIndexController extends Controller {
         let parsedValue = parseInt(value, 10);
         if (value === '' || parsedValue < 1 || isNaN(parsedValue)) {
             showErrorOnce(this, this.notifications, this.intl.t('common.valid-number-error'));
+            this.set('number_of_web_users', null); // Clear the value if invalid
             return;
         }
         this.set('error', null);

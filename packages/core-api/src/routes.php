@@ -155,6 +155,7 @@ Route::prefix(config('fleetbase.api.routing.prefix', '/'))->namespace('Fleetbase
                             function ($router) {
                                 $router->get('subscription-created', 'WebhookTestController@testSubscriptionCreated');
                                 $router->get('payment_succeeded', 'WebhookTestController@testPaymentSucceeded');
+                                $router->get('payment_failed', 'WebhookTestController@testPaymentFailed');
                             }
                         );
                         $router->group(

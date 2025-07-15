@@ -462,6 +462,7 @@ class ChargebeeWebhookController extends Controller
                         // 'current_term_start' => $subscription['current_term_start'] ?? null,
                         // 'current_term_end' => $subscription['current_term_end'] ?? null,
                         'next_payment_date' => $subscription['next_billing_at'] ?? null,
+                        'created_by_id' => $user->id,
                         
                     ]
                 );
@@ -579,6 +580,8 @@ class ChargebeeWebhookController extends Controller
                     'payment_metadata' => json_encode($transaction),
                     'payment_method' => 'direct_debit',
                     'payment_type' => 'subscription',
+                    'created_by_id' => $user->id,
+                    'is_recurring' => 1,
 
                     // 'gateway_transaction_id' => $transaction['gateway_transaction_id'] ?? null,
                 ]
@@ -735,6 +738,7 @@ class ChargebeeWebhookController extends Controller
         Log::info('Processing payment failed', ['transaction_id' => $transaction['id']]);
 
         try {
+            $user = User::where('chargebee_subscription_id', $transaction['subscription_id'])->first();
             $plan = DB::table('plan')->where('name', 'Basic Plan')->first();
             $subscriptionRecord = Subscription::where('gocardless_subscription_id', $transaction['subscription_id'])->first();
             // Store failed transaction
@@ -754,14 +758,15 @@ class ChargebeeWebhookController extends Controller
                     'payment_metadata' => json_encode($transaction),
                     'payment_method' => 'direct_debit',
                     'payment_type' => 'subscription',
+                    'created_by_id' => $user->id,
                     'failure_reason' => $transaction['failure_reason'] ?? null,
-
+                    'is_recurring' => 1,
                     // 'gateway_transaction_id' => $transaction['gateway_transaction_id'] ?? null,
                 ]
             );
 
             // // Update user payment status
-            $user = User::where('chargebee_subscription_id', $transaction['subscription_id'])->first();
+            
             if ($user) {
                 $user->update(['payment_status' => 'failed']);
 

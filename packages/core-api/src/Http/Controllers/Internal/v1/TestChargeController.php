@@ -72,7 +72,7 @@ class TestChargeController extends Controller
             // Create a payment using the mandate
             $payment = $this->goCardlessService->createPayment([
                 'amount' => $request->amount,
-                'currency' => 'EUR', // or get from subscription
+                'currency' => 'GBP', // or get from subscription
                 'charge_date' => $request->charge_date,
                 'mandate_id' => $request->mandate_id,
                 'description' => 'Test payment'
@@ -106,7 +106,7 @@ class TestChargeController extends Controller
         try {
             $payment = $this->goCardlessService->createPayment([
                 'amount' => $subscription->amount ?? 3500, // Default amount if not set
-                'currency' => 'EUR', // or get from subscription
+                'currency' => 'GBP', // or get from subscription
                 'charge_date' => now()->format('Y-m-d'), // today
                 'mandate_id' => $subscription->gocardless_mandate_id, // Use the mandate ID from subscription
                 'description' => 'Test payment for today'
