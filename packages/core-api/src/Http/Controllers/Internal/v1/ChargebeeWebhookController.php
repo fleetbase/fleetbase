@@ -735,15 +735,17 @@ class ChargebeeWebhookController extends Controller
         Log::info('Processing payment failed', ['transaction_id' => $transaction['id']]);
 
         try {
+            $plan = DB::table('plan')->where('name', 'Basic Plan')->first();
+            $subscriptionRecord = Subscription::where('gocardless_subscription_id', $transaction['subscription_id'])->first();
             // Store failed transaction
             Payment::updateOrCreate(
                 ['gocardless_payment_id' => $transaction['id']],
                 [
                     'gocardless_customer_id' => $transaction['customer_id'],
-                    'chargebee_subscription_id' => $transaction['subscription_id'] ?? null,
+                    'subscription_id' => $subscriptionRecord->id ?? null ,
                     'amount' => $transaction['amount'],
                     'company_plan_id' => 1,
-                    'plan_id' => 1,
+                    'plan_id' => $plan->id,
                     'total_amount' => $transaction['amount'],
                     'currency_code' => $transaction['currency_code'],
                     'status' => $transaction['status'],
@@ -757,27 +759,14 @@ class ChargebeeWebhookController extends Controller
                     // 'gateway_transaction_id' => $transaction['gateway_transaction_id'] ?? null,
                 ]
             );
-            Transaction::updateOrCreate(
-                ['chargebee_transaction_id' => $transaction['id']],
-                [
-                    'chargebee_customer_id' => $transaction['customer_id'],
-                    'chargebee_subscription_id' => $transaction['subscription_id'] ?? null,
-                    'amount' => $transaction['amount'],
-                    'currency_code' => $transaction['currency_code'],
-                    'status' => $transaction['status'],
-                    'type' => $transaction['type'],
-                    'date' => $transaction['date'] ?? now(),
-                    'failure_reason' => $transaction['failure_reason'] ?? null,
-                ]
-            );
 
-            // Update user payment status
-            $user = User::where('chargebee_customer_id', $transaction['customer_id'])->first();
+            // // Update user payment status
+            $user = User::where('chargebee_subscription_id', $transaction['subscription_id'])->first();
             if ($user) {
                 $user->update(['payment_status' => 'failed']);
 
                 // Send payment failed email
-                Mail::to($user->email)->send(new PaymentFailedMail($user, $transaction));
+                // Mail::to($user->email)->send(new PaymentFailedMail($user, $transaction));
             }
 
             Log::info('Payment failure processed', [
