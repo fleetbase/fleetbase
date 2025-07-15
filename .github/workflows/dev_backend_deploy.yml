@@ -1,4 +1,4 @@
-name: Deploy Backend to Dev
+name: Backend Deployment Workflow
 
 on:
   workflow_dispatch:
@@ -17,7 +17,8 @@ jobs:
     runs-on: ubuntu-latest
     environment: ${{ inputs.environment }}
     steps:
-      - name: Deploy the Ember.js App
+      - name: Deploy to Dev/Live environment(SSH Key)
+        if: ${{ inputs.environment == 'dev' || inputs.environment == 'live' }}
         uses: appleboy/ssh-action@v1.2.1
         with:
           host: ${{ secrets.SSH_HOST }}
@@ -25,8 +26,25 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           port: 22
           script: |
-            cd /home/ubuntu/fleetbase_agilecyber/fleetbase
+            cd ${{ inputs.environment == 'dev' && '/home/ubuntu/fleetbase_agilecyber/fleetbase' || '/var/www/html/afp.fleetyes.com/htdocs/' }}
             git pull
-            cd /home/ubuntu/fleetbase_agilecyber/fleetbase/api
+            cd ${{ inputs.environment == 'dev' && '/home/ubuntu/fleetbase_agilecyber/fleetbase/api' || '/var/www/html/afp.fleetyes.com/htdocs/api/' }}
             php artisan migrate
             php artisan cache:clear
+            php artisan route:clear
+
+      - name: Deploy to Test environment (SSH Password)
+        if: ${{ inputs.environment == 'test' }}
+        uses: appleboy/ssh-action@v1.2.1
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          password: ${{ secrets.SSH_PASSWORD }}
+          port: 22
+          script: |
+            cd /var/www/html/fleetyes.com/domains/dashboard/
+            git pull
+            cd /var/www/html/fleetyes.com/domains/dashboard/api/
+            php artisan migrate
+            php artisan cache:clear
+            php artisan route:clear

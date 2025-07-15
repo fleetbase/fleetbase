@@ -98,7 +98,9 @@ class Driver extends Model
         'current_status',
         'slug',
         'status',
-        'meta,',
+        'meta',
+        'leave_balance', // New attribute added for leave balance
+
     ];
 
     /**

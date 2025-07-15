@@ -43,5 +43,6 @@ return [
     'partial_success' => 'Importación completada parcialmente. Algunas filas contenían errores y se han registrado. Haz clic abajo para descargar los detalles del error y corregirlos antes de intentarlo de nuevo.',
     'full_import_error' => 'Falló la importación. No se importaron viajes debido a errores. Revisa el archivo de errores adjunto para más detalles.',
     'duplicate_check_place' => 'Ya existe un lugar con este código.',
+    'invalid_coordinates' => 'Por favor, proporciona coordenadas geográficas válidas. Valores como [0, 0] o posiciones fuera de rango no están permitidos.',
     'duplicate_check_vehicle' => 'Ya existe un vehículo con esta matrícula.',
 ];

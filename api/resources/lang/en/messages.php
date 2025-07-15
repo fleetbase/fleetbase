@@ -49,5 +49,10 @@ return [
     'partial_success' => 'Import partially completed. Some rows contained errors and have been logged. Click below to download the error details and fix them before trying again.',
     'full_import_error' => 'Import failed. No trips were imported due to errors. Please review the attached error log for details.',
     'duplicate_check_place' => 'A place with this code already exists.',
+    'invalid_coordinates' => 'Please provide valid geographic coordinates. Values like [0, 0] or out-of-range positions are not allowed.',
     'duplicate_check_vehicle' => 'A vehicle with this plate number already exists.',
+    'request_approve_success' => 'Leave request has been successfully approved.',
+    'request_reject_success' => 'Leave request has been successfully rejected.',
+    'leave_balance_insufficient' => 'Leave balance is insufficient, still you want to proceed?',
+    'leave_request_action_failed' => 'Leave request action could not be processed',
 ];

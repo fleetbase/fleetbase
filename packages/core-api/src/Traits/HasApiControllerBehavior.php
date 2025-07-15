@@ -501,7 +501,13 @@ trait HasApiControllerBehavior
                     return response()->error(__('messages.duplicate_check_vehicle'));
                 }
             } else if($model_name == "Place"){
-                $code = $request->input('code'); // preferred
+                if (isset($request['location']['coordinates'])) {
+                    $coordinates = $request['location']['coordinates'];
+                    if (!is_array($coordinates) || !$this->isValidCoordinates($coordinates)) {
+                        return response()->error(__('messages.invalid_coordinates'));
+                    }
+                }
+                $code = $request['place']['code']; // 'code' is a top-level key
                 if ($this->model->where('code', $code)->whereNull('deleted_at')->exists()) {
                     return response()->error(__('messages.duplicate_check_place'));
                 }
@@ -629,8 +635,14 @@ trait HasApiControllerBehavior
             if ($model_name === 'Place') {
                 $place = Place::find($id);
                 if ($place) {
-                    $code = $request->input('code'); // 'code' is a top-level key
+                    $code = $request['place']['code']; // 'code' is a top-level key
+                    if (isset($request['location']['coordinates'])) {
+                        $coordinates = $request['location']['coordinates'];
 
+                        if (!is_array($coordinates) || !$this->isValidCoordinates($coordinates)) {
+                            return response()->error(__('messages.invalid_coordinates'));
+                        }
+                    }
                     if (!empty($code)) {
                         $duplicate = Place::where('code', $code)
                             ->where('uuid', '!=', $place->uuid) // ignore the current record
@@ -667,6 +679,31 @@ trait HasApiControllerBehavior
         } catch (FleetbaseRequestValidationException $e) {
             return response()->error($e->getErrors());
         }
+    }
+    /**
+     * Validate if the given coordinates are within valid latitude/longitude ranges.
+     *
+     * @param array|null $coordinates An array in the format [longitude, latitude]
+     * @return bool True if valid, false otherwise
+     */
+    public function isValidCoordinates(?array $coordinates): bool
+    {
+        if (
+            !is_array($coordinates) ||
+            count($coordinates) !== 2 ||
+            !is_numeric($coordinates[0]) ||
+            !is_numeric($coordinates[1])
+        ) {
+            return false;
+        }
+
+        [$lng, $lat] = $coordinates;
+
+        return !(
+            ($lng == 0 && $lat == 0) ||
+            $lng < -180 || $lng > 180 ||
+            $lat < -90 || $lat > 90
+        );
     }
 
     /**
