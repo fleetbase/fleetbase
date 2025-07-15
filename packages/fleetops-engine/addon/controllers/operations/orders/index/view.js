@@ -484,11 +484,6 @@ export default class OperationsOrdersIndexViewController extends BaseController 
             const startDate = order.scheduled_at;
             const endDate = order.estimated_end_date;
     
-            if (!startDate && !endDate) {
-                this.notifications.error(this.intl.t('fleet-ops.component.order.schedule-card.start-end-required'));
-                resetOrderToOriginalDates();
-                return false;
-            }
     
             if (!startDate) {
                 this.notifications.error(this.intl.t('fleet-ops.component.order.schedule-card.start-date-required'));
@@ -496,13 +491,8 @@ export default class OperationsOrdersIndexViewController extends BaseController 
                 return false;
             }
     
-            if (!endDate) {
-                this.notifications.error(this.intl.t('fleet-ops.component.order.schedule-card.end-date-required'));
-                resetOrderToOriginalDates();
-                return false;
-            }
     
-            if (endDate < startDate) {
+            if (endDate && endDate < startDate) {
                 this.notifications.error(this.intl.t('fleet-ops.component.order.schedule-card.end-date-earlier'));
                 resetOrderToOriginalDates();
                 return false;
