@@ -61,7 +61,7 @@ class WebhookTestController extends Controller
                     'subscription_id' => 'test_sub_123',
                     'amount' => 2999,
                     'currency_code' => 'USD',
-                    'status' => 'failure',
+                    'status' => 'failed',
                     'type' => 'payment',
                     'date' => time(),
                     'failure_reason' => 'Card declined',
