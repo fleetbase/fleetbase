@@ -1,4 +1,5 @@
 <Layout::Section::Header @title={{t "fleet-ops.management.issues.index.title"}} @searchQuery={{this.query}} @onSearch={{perform this.search}}>
+        <Button @icon="question-circle" @type="default" @text={{t "fleetbase.common.help"}} @onClick={{this.startIssuesTour}} class="mr-2" />
     <Button @icon="refresh" @onClick={{this.reload}} @helpText={{t "fleet-ops.common.reload-data"}} class="mr-2" />
     <FiltersPicker
         @columns={{this.columns}}
@@ -29,7 +30,7 @@
             </div>
         </DropdownButton>
     {{/if}}
-    <Button @icon="plus" @iconPrefix="fas" @type="primary" @text={{t "fleet-ops.common.new"}} class="mr-2" @onClick={{this.createIssue}} @permission="fleet-ops create issue" />
+    <Button @customClass="new-issue-btn" @icon="plus" @iconPrefix="fas" @type="primary" @text={{t "fleet-ops.common.new"}} class="mr-2" @onClick={{this.createIssue}} @permission="fleet-ops create issue" />
     {{!-- <Button
         @icon="upload"
         @type="magic"

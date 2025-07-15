@@ -5,6 +5,9 @@ import { action, set} from '@ember/object';
 import { isBlank } from '@ember/utils';
 import { timeout } from 'ember-concurrency';
 import { task } from 'ember-concurrency-decorators';
+import { driver } from 'driver.js';
+import { later } from '@ember/runloop';
+import 'driver.js/dist/driver.css';
 
 export default class ManagementParkingIndexController extends BaseController {
     @service notifications;
@@ -367,5 +370,157 @@ export default class ManagementParkingIndexController extends BaseController {
                 this.table.untoggleSelectAll();
             },
         });
+    }
+
+    /**
+     * Start the guided tour for parking management
+     *
+     * @void
+     */
+    @action startParkingTour() {
+        const driverObj = driver({
+            showProgress: true,
+            nextBtnText: this.intl.t('fleetbase.common.next'),
+            prevBtnText: this.intl.t('fleetbase.common.previous'),
+            doneBtnText: this.intl.t('fleetbase.common.done'),
+            closeBtnText: this.intl.t('fleetbase.common.close'),
+            allowClose: false,
+            disableActiveInteraction: true,
+            onPopoverRender: (popover) => {
+                const closeBtn = popover.wrapper.querySelector('.driver-popover-close-btn');
+                if (closeBtn) {
+                    closeBtn.style.display = 'inline-block';
+                }
+            },
+            steps: [
+                {
+                    element: '.new-parking-report-btn',
+                    onHighlightStarted: (element) => {
+                        element.style.setProperty('pointer-events', 'none', 'important');
+                        element.disabled = true;
+                    },
+                    onDeselected: (element) => {
+                        element.style.pointerEvents = 'auto';
+                        element.disabled = false;
+                    },
+                    popover: {
+                        title: this.intl.t('fleetbase.parking.tour.new_button.title'),
+                        description: this.intl.t('fleetbase.parking.tour.new_button.description'),
+                        onNextClick: () => {
+                            this.createFuelReport();
+                            later(this, () => {
+                                const el = document.querySelector('.next-content-overlay > .next-content-overlay-panel-container > .next-content-overlay-panel');
+                                if (el) {
+                                    const onTransitionEnd = () => {
+                                        el.removeEventListener('transitionend', onTransitionEnd);
+                                        driverObj.moveNext();
+                                    };
+                                    el.addEventListener('transitionend', onTransitionEnd);
+                                }
+                            }, 100);
+                        },
+                    },
+                },
+                {
+                    element: '.next-content-overlay-panel:has(.parking-form-panel )',
+                    popover: {
+                        title: this.intl.t('fleetbase.parking.tour.form_panel.title'),
+                        description: this.intl.t('fleetbase.parking.tour.form_panel.description'),
+                    },
+                },
+                {
+                    element: '.parking-form-panel .input-group:has(.reporter)',
+                    popover: {
+                        title: this.intl.t('fleetbase.parking.tour.reporter_field.title'),
+                        description: this.intl.t('fleetbase.parking.tour.reporter_field.description'),
+                    },
+                    onHighlightStarted: (element) => {
+                        element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    },
+                },
+                {
+                    element: '.parking-form-panel .input-group:has(.driver)',
+                    popover: {
+                        title: this.intl.t('fleetbase.parking.tour.driver_field.title'),
+                        description: this.intl.t('fleetbase.parking.tour.driver_field.description'),
+                    },
+                    onHighlightStarted: (element) => {
+                        element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    },
+                },
+                {
+                    element: '.parking-form-panel .input-group:has(.vehicle)',
+                    popover: {
+                        title: this.intl.t('fleetbase.parking.tour.vehicle_field.title'),
+                        description: this.intl.t('fleetbase.parking.tour.vehicle_field.description'),
+                    },
+                    onHighlightStarted: (element) => {
+                        element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    },
+                },
+                {
+                    element: '.parking-form-panel .input-group:has(.status)',
+                    popover: {
+                        title: this.intl.t('fleetbase.parking.tour.status_field.title'),
+                        description: this.intl.t('fleetbase.parking.tour.status_field.description'),
+                    },
+                    onHighlightStarted: (element) => {
+                        element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    },
+                },
+                {
+                    element: '.parking-form-panel  .input-group:has(.parking-payment-method-field)',
+                    popover: {
+                        title: this.intl.t('fleetbase.parking.tour.payment_method_field.title'),
+                        description: this.intl.t('fleetbase.parking.tour.payment_method_field.description'),
+                    },
+                    onHighlightStarted: (element) => {
+                        element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    },
+                },
+                {
+                    element: '.parking-form-panel .input-group:has(.parking-cost-field)',
+                    popover: {
+                        title: this.intl.t('fleetbase.parking.tour.cost_field.title'),
+                        description: this.intl.t('fleetbase.parking.tour.cost_field.description'),
+                    },
+                    onHighlightStarted: (element) => {
+                        element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    },
+                },
+                {
+                    element: '.parking-form-panel .parking-coordinates-field',
+                    popover: {
+                        title: this.intl.t('fleetbase.parking.tour.coordinates_field.title'),
+                        description: this.intl.t('fleetbase.parking.tour.coordinates_field.description'),
+                    },
+                    onHighlightStarted: (element) => {
+                        element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    },
+                },
+                {
+                    element: '.parking-form-panel .parking-upload-field',
+                    popover: {
+                        title: this.intl.t('fleetbase.parking.tour.upload_field.title'),
+                        description: this.intl.t('fleetbase.parking.tour.upload_field.description'),
+                    },
+                    onHighlightStarted: (element) => {
+                        element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    },
+                },
+                {
+                    element: '.create-parking-report-btn',
+                    popover: {
+                        title: this.intl.t('fleetbase.parking.tour.submit.title'),
+                        description: this.intl.t('fleetbase.parking.tour.submit.description'),
+                    },
+                    onHighlightStarted: (element) => {
+                        element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    },
+                },
+            ],
+        });
+
+        driverObj.drive();
     }
 }

@@ -1,17 +1,38 @@
 <Modal::Default @modalIsOpened={{@modalIsOpened}} @options={{@options}} @confirm={{@onConfirm}} @decline={{@onDecline}}>
-    <div class="modal-body-container" ...attributes>
-        <InputGroup @name={{t "iam.components.modals.role-form.role-name"}} @value={{@options.role.name}} @placeholder={{t "iam.components.modals.role-form.enter-name-for-this-role"}} @disabled={{cannot @options.formPermission}} />
-        <InputGroup
-            @name={{t "iam.components.modals.role-form.role-description"}}
-            @value={{@options.role.description}}
-            @placeholder={{t "iam.components.modals.role-form.enter-description-your-role"}}
-            @disabled={{cannot @options.formPermission}}
-        />
-        <InputGroup @name={{t "iam.common.attach-policies"}}>
-            <PolicyAttacher @onChange={{fn (mut @options.role.policies)}} @value={{@options.role.policies}} @disabled={{cannot @options.formPermission}} />
-        </InputGroup>
-        <InputGroup @name={{t "iam.components.modals.role-form.select-permission"}}>
-            <PermissionPicker @selected={{@options.role.permissionsArray}} @onChange={{@options.setPermissions}} @disabled={{cannot @options.formPermission}} />
-        </InputGroup>
+    <div class="modal-body-container">
+        <div class="flex-1">
+            <div class="grid grid-cols-2 gap-2 text-xs dark:text-gray-100 mb-2">
+                <InputGroup
+                    class="role-name"
+                    @name={{t "iam.components.modals.role-form.role-name"}}
+                    @value={{@options.role.name}}
+                    @placeholder={{t "iam.components.modals.role-form.enter-name-for-this-role"}}
+                    @disabled={{cannot @options.formPermission}}
+                />
+                <InputGroup @name={{t "iam.components.modals.role-form.role-description"}}>
+                    <Textarea
+                        @value={{@options.role.description}}
+                        rows="5"
+                        class="w-full form-input role-description"
+                        placeholder={{t "iam.components.modals.role-form.enter-description-your-role"}}
+                        disabled={{cannot @options.formPermission}}
+                    />
+                </InputGroup>
+                <InputGroup @name={{t "iam.common.attach-policies"}}>
+                    <PolicyAttacher
+                        @onChange={{fn (mut @options.role.policies)}}
+                        @value={{@options.role.policies}}
+                        @disabled={{cannot @options.formPermission}}
+                    />
+                </InputGroup>
+                <InputGroup class="role-permissions" @name={{t "iam.components.modals.role-form.select-permission"}}>
+                    <PermissionPicker
+                        @selected={{@options.role.permissionsArray}}
+                        @onChange={{@options.setPermissions}}
+                        @disabled={{cannot @options.formPermission}}
+                    />
+                </InputGroup>
+            </div>
+        </div>
     </div>
 </Modal::Default>

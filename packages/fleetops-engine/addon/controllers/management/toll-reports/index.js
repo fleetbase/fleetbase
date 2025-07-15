@@ -5,6 +5,9 @@ import { action, set } from '@ember/object';
 import { isBlank } from '@ember/utils';
 import { timeout } from 'ember-concurrency';
 import { task } from 'ember-concurrency-decorators';
+import { driver } from 'driver.js';
+import 'driver.js/dist/driver.css';
+import { later } from '@ember/runloop';
 
 export default class ManagementTollReportsIndexController extends BaseController {
     @service notifications;
@@ -367,5 +370,163 @@ export default class ManagementTollReportsIndexController extends BaseController
                 this.table.untoggleSelectAll();
             },
         });
+    }
+
+    /**
+     * Start the guided tour for toll reports management
+     *
+     * @action
+     * @memberof ManagementTollReportsIndexController
+     */
+    @action startTollReportsTour() {
+        const driverObj = driver({
+            showProgress: true,
+            nextBtnText: this.intl.t('fleetbase.common.next'),
+            prevBtnText: this.intl.t('fleetbase.common.previous'),
+            doneBtnText: this.intl.t('fleetbase.common.done'),
+            closeBtnText: this.intl.t('fleetbase.common.close'),
+            allowClose: false,
+            disableActiveInteraction: true,
+            onPopoverRender: (popover) => {
+                const closeBtn = popover.wrapper.querySelector('.driver-popover-close-btn');
+                if (closeBtn) {
+                    closeBtn.style.display = 'inline-block';
+                }
+            },
+            steps: [
+                {
+                    element: '.new-toll-report-btn',
+                    onHighlightStarted: (element) => {
+                                            element.style.setProperty('pointer-events', 'none', 'important');
+                                            element.disabled = true;
+                                        },
+                                        onDeselected: (element) => {
+                                            element.style.pointerEvents = 'auto';
+                                            element.disabled = false;
+                                        },
+                                        popover: {
+                                            title: this.intl.t('fleetbase.toll-reports.tour.new_button.title'),
+                                            description: this.intl.t('fleetbase.toll-reports.tour.new_button.description'),
+                                            onNextClick: () => {
+                                                this.createFuelReport();
+                                                later(this, () => {
+                                                    const el = document.querySelector('.next-content-overlay > .next-content-overlay-panel-container > .next-content-overlay-panel');
+                                                    if (el) {
+                                                        const onTransitionEnd = () => {
+                                                            el.removeEventListener('transitionend', onTransitionEnd);
+                                                            driverObj.moveNext();
+                                                        };
+                                                        el.addEventListener('transitionend', onTransitionEnd);
+                                                    }
+                                                }, 100);
+                                            },
+                                        },
+                },
+                {
+                    element: '.next-content-overlay-panel:has(.toll-report-form-panel)',
+                    popover: {
+                        title: this.intl.t('fleetbase.toll-reports.tour.form_panel.title'),
+                        description: this.intl.t('fleetbase.toll-reports.tour.form_panel.description'),
+                    },
+                    onHighlightStarted: async (element) => {
+                        // Wait for overlay to fully open
+                        await new Promise(resolve => setTimeout(resolve, 500));
+                        element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    },
+                },
+                {
+                    element: '.toll-report-form-panel .input-group:has(.reporter)',
+                    popover: {
+                        title: this.intl.t('fleetbase.toll-reports.tour.reporter_field.title'),
+                        description: this.intl.t('fleetbase.toll-reports.tour.reporter_field.description'),
+                    },
+                    onHighlightStarted: (element) => {
+                        element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    },
+                },
+                {
+                    element: '.toll-report-form-panel .input-group:has(.driver)',
+                    popover: {
+                        title: this.intl.t('fleetbase.toll-reports.tour.driver_field.title'),
+                        description: this.intl.t('fleetbase.toll-reports.tour.driver_field.description'),
+                    },
+                    onHighlightStarted: (element) => {
+                        element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    },
+                },
+                {
+                    element: '.toll-report-form-panel .input-group:has(.vehicle)',
+                    popover: {
+                        title: this.intl.t('fleetbase.toll-reports.tour.vehicle_field.title'),
+                        description: this.intl.t('fleetbase.toll-reports.tour.vehicle_field.description'),
+                    },
+                    onHighlightStarted: (element) => {
+                        element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    },
+                },
+                {
+                    element: '.toll-report-form-panel .input-group:has(.status)',
+                    popover: {
+                        title: this.intl.t('fleetbase.toll-reports.tour.status_field.title'),
+                        description: this.intl.t('fleetbase.toll-reports.tour.status_field.description'),
+                    },
+                    onHighlightStarted: (element) => {
+                        element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    },
+                },
+                {
+                    element: '.toll-report-form-panel .input-group:has(.toll-payment-method-field)',
+                    popover: {
+                        title: this.intl.t('fleetbase.toll-reports.tour.payment_method_field.title'),
+                        description: this.intl.t('fleetbase.toll-reports.tour.payment_method_field.description'),
+                    },
+                    onHighlightStarted: (element) => {
+                        element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    },
+                },
+                {
+                    element: '.toll-report-form-panel .input-group:has(.toll-cost-field)',
+                    popover: {
+                        title: this.intl.t('fleetbase.toll-reports.tour.cost_field.title'),
+                        description: this.intl.t('fleetbase.toll-reports.tour.cost_field.description'),
+                    },
+                    onHighlightStarted: (element) => {
+                        element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    },
+                },
+                {
+                    element: '.toll-report-form-panel .toll-coordinates-field',
+                    popover: {
+                        title: this.intl.t('fleetbase.toll-reports.tour.coordinates_field.title'),
+                        description: this.intl.t('fleetbase.toll-reports.tour.coordinates_field.description'),
+                    },
+                    onHighlightStarted: (element) => {
+                        element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    },
+                },
+                {
+                    element: '.toll-report-form-panel .toll-upload-field',
+                    popover: {
+                        title: this.intl.t('fleetbase.toll-reports.tour.upload_field.title'),
+                        description: this.intl.t('fleetbase.toll-reports.tour.upload_field.description'),
+                    },
+                    onHighlightStarted: (element) => {
+                        element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    },
+                },
+                {
+                    element: '.create-toll-report-btn',
+                    popover: {
+                        title: this.intl.t('fleetbase.toll-reports.tour.submit.title'),
+                        description: this.intl.t('fleetbase.toll-reports.tour.submit.description'),
+                    },
+                    onHighlightStarted: (element) => {
+                        element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    },
+                },
+            ],
+        });
+
+        driverObj.drive();
     }
 }

@@ -3,6 +3,8 @@ import { tracked } from '@glimmer/tracking';
 import { inject as service } from '@ember/service';
 import { action } from '@ember/object';
 import ENV from '@fleetbase/console/config/environment';
+import { driver } from 'driver.js'; 
+import 'driver.js/dist/driver.css';
 
 export default class ConsoleSettingsIndexController extends Controller {
     /**
@@ -96,5 +98,100 @@ export default class ConsoleSettingsIndexController extends Controller {
                 });
             }
         );
+    }
+
+    @action OrganizationSettingsTour() {
+        const sectionBody = document.querySelector('.next-view-section-body');
+        const scrollElementIntoView = (element) => {
+            if (sectionBody) {
+                const elementRect = element.getBoundingClientRect();
+                const sectionBodyRect = sectionBody.getBoundingClientRect();
+                const scrollTop = sectionBody.scrollTop + elementRect.top - sectionBodyRect.top - (sectionBodyRect.height - elementRect.height) / 2;
+                sectionBody.scrollTo({ top: scrollTop, behavior: 'smooth' });
+            }
+        };
+        const driverObj = driver({
+            showProgress: true,
+            nextBtnText: this.intl.t('fleetbase.common.next'),
+            prevBtnText: this.intl.t('fleetbase.common.previous'),
+            doneBtnText: this.intl.t('fleetbase.common.done'),
+            closeBtnText: this.intl.t('fleetbase.common.close'),
+            steps: [
+                {
+                    element: '.input-group:has(.org-name)',
+                    popover: {
+                        title: this.intl.t('fleetbase.organization_settings.tour.name_field.title'),
+                        description: this.intl.t('fleetbase.organization_settings.tour.name_field.description'),
+                    },
+                    onHighlightStarted: scrollElementIntoView,
+                },
+                {
+                    element: '.input-group:has(.org-description)',
+                    popover: {
+                        title: this.intl.t('fleetbase.organization_settings.tour.description_field.title'),
+                        description: this.intl.t('fleetbase.organization_settings.tour.description_field.description'),
+                    },
+                    onHighlightStarted: scrollElementIntoView,
+                },
+                {
+                    element: '.input-group:has(.org-phone)',
+                    popover: {
+                        title: this.intl.t('fleetbase.organization_settings.tour.phone_field.title'),
+                        description: this.intl.t('fleetbase.organization_settings.tour.phone_field.description'),
+                    },
+                    onHighlightStarted: scrollElementIntoView,
+                },
+                {
+                    element: '.input-group:has(.org-currency)',
+                    popover: {
+                        title: this.intl.t('fleetbase.organization_settings.tour.currency_field.title'),
+                        description: this.intl.t('fleetbase.organization_settings.tour.currency_field.description'),
+                    },
+                    onHighlightStarted: scrollElementIntoView,
+                },
+                {
+                    element: '.input-group:has(.org-id)',
+                    popover: {
+                        title: this.intl.t('fleetbase.organization_settings.tour.id_field.title'),
+                        description: this.intl.t('fleetbase.organization_settings.tour.id_field.description'),
+                    },
+                    onHighlightStarted: scrollElementIntoView,
+                },
+                {
+                    element: '.parking-zone .input-group',
+                    popover: {
+                        title: this.intl.t('fleetbase.organization_settings.tour.parking_zone.title'),
+                        description: this.intl.t('fleetbase.organization_settings.tour.parking_zone.description'),
+                    },
+                    onHighlightStarted: scrollElementIntoView,
+                },
+                {
+                    element: '.save-button .btn',
+                    popover: {
+                        title: this.intl.t('fleetbase.organization_settings.tour.save_button.title'),
+                        description: this.intl.t('fleetbase.organization_settings.tour.save_button.description'),
+                    },
+                    onHighlightStarted: scrollElementIntoView,
+                },
+                {
+                    element: '.input-group:has(.org-logo)',
+                    popover: {
+                        title: this.intl.t('fleetbase.organization_settings.tour.logo_field.title'),
+                        description: this.intl.t('fleetbase.organization_settings.tour.logo_field.description'),
+                    },
+                    onHighlightStarted: scrollElementIntoView,
+                },
+                {
+                    element: '.input-group:has(.org-backdrop)',
+                    popover: {
+                        title: this.intl.t('fleetbase.organization_settings.tour.backdrop_field.title'),
+                        description: this.intl.t('fleetbase.organization_settings.tour.backdrop_field.description'),
+                    },
+                    onHighlightStarted: scrollElementIntoView,
+                },
+            ],
+        });
+
+        driverObj.drive();
     }
 }

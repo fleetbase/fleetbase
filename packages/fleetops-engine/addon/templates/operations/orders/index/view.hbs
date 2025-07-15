@@ -7,8 +7,17 @@
         @createdAt={{@model.createdAt}}
         @onPressCancel={{this.transitionBack}}
     >
+    <Button
+            @customClass="start-view-order-tour"
+            @type="default"
+            @icon="question-circle"
+            @text={{t "fleetbase.common.help"}}
+            class="mr-2"
+            {{on "click" this.startViewOrderTour}}
+        />
         {{#if @model.canBeDispatched}}
             <Button
+                @customClass="dispatch-order"
                 @type="primary"
                 @icon="paper-plane"
                 @text={{t "fleet-ops.operations.orders.index.view.dispatch"}}
@@ -165,6 +174,7 @@
 
     <Overlay::Body @wrapperClass="new-order-overlay-body">
         <ContentPanel
+            @wrapperClass="new-order-activity"
             @title={{t "fleet-ops.operations.orders.index.view.activity"}}
             @open={{true}}
             @pad={{false}}
@@ -198,7 +208,7 @@
             {{/if}}
         </ContentPanel>
 
-        <ContentPanel @title={{t "fleet-ops.common.details"}} @open={{true}} @pad={{true}} @panelBodyClass="bg-white dark:bg-gray-800" @actionButtons={{if (not-eq @model.status "completed") this.detailPanelButtons}}>
+        <ContentPanel @wrapperClass="new-order-details" @title={{t "fleet-ops.common.details"}} @open={{true}} @pad={{true}} @panelBodyClass="bg-white dark:bg-gray-800" @actionButtons={{if (not-eq @model.status "completed") this.detailPanelButtons}}>
             <div class="flex mb-4 space-x-2">
                 {{#if @model.dispatched}}
                     <Badge @hideStatusDot={{false}} @status="Dispatched" />
@@ -457,6 +467,7 @@
 
         {{#if @model.tracking_number}}
             <ContentPanel
+                @wrapperClass="new-order-tracking"
                 @title={{t "fleet-ops.operations.orders.index.view.tracking"}}
                 @prefixTitleRight={{@model.tracking}}
                 @isLoading={{not this.loadOrderRelations.isIdle}}
@@ -507,6 +518,7 @@
         {{/if}}
 
         <ContentPanel
+            @wrapperClass="new-order-notes"
             @title={{t "fleet-ops.operations.orders.index.view.notes-title"}}
             @open={{true}}
             @pad={{true}}
@@ -549,6 +561,7 @@
         {{/if}}
 
         <ContentPanel
+        @wrapperClass="new-order-route"
             @title={{t "fleet-ops.operations.orders.index.view.route-panel-title"}}
             @open={{true}}
             @pad={{true}}
@@ -753,7 +766,7 @@
             {{/if}}
         </ContentPanel> --}}
 
-        <ContentPanel @title={{t "fleet-ops.operations.orders.index.view.documents-panel-title"}} @open={{true}} @pad={{true}} @panelBodyClass="bg-white dark:bg-gray-800">
+        <ContentPanel @wrapperClass="new-order-documents" @title={{t "fleet-ops.operations.orders.index.view.documents-panel-title"}} @open={{true}} @pad={{true}} @panelBodyClass="bg-white dark:bg-gray-800">
             <div class="space-y-4">
                 {{#if this.isUploading}}
                     <div
@@ -830,7 +843,7 @@
             </div>
         </ContentPanel>
 
-        <ContentPanel @title={{t "fleet-ops.operations.orders.index.view.comments-title"}} @open={{true}} @pad={{true}} @panelBodyClass="bg-white dark:bg-gray-800" @wrapperClass="mb-20">
+        <ContentPanel @wrapperClass="new-order-comments" @title={{t "fleet-ops.operations.orders.index.view.comments-title"}} @open={{true}} @pad={{true}} @panelBodyClass="bg-white dark:bg-gray-800" @wrapperClass="mb-20">
             <CommentThread @subject={{@model}} @subjectType="fleet-ops:order" />
         </ContentPanel>
 

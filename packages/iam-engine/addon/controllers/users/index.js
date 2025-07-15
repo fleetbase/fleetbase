@@ -4,7 +4,11 @@ import { tracked } from '@glimmer/tracking';
 import { action } from '@ember/object';
 import { isBlank } from '@ember/utils';
 import { timeout, task } from 'ember-concurrency';
+import { driver } from 'driver.js';
+import { later } from '@ember/runloop';
+import 'driver.js/dist/driver.css';
 import showErrorOnce from '@fleetbase/console/utils/show-error-once';
+
 export default class UsersIndexController extends Controller {
     @service store;
     @service intl;
@@ -286,6 +290,7 @@ export default class UsersIndexController extends Controller {
 
         this.editUser(user, {
             title: this.intl.t('iam.users.index.new-user'),
+            modalClass: 'modal-lg create-user-modal',
             acceptButtonText: this.intl.t('common.confirm'),
             acceptButtonIcon: 'check',
             acceptButtonDisabled: this.abilities.cannot(formPermission),
@@ -533,4 +538,119 @@ export default class UsersIndexController extends Controller {
     @action reload() {
         return this.hostRouter.refresh();
     }
+
+    
+    @action CreateUserTour() {
+    const driverObj = driver({
+      showProgress: true,
+      nextBtnText: this.intl.t('fleetbase.common.next'),
+      prevBtnText: this.intl.t('fleetbase.common.previous'),
+      doneBtnText: this.intl.t('fleetbase.common.done'),
+      closeBtnText: this.intl.t('fleetbase.common.close'),
+      allowClose: false,
+      disableActiveInteraction: true,
+        onPopoverRender: (popover) => {
+            const closeBtn = popover.wrapper.querySelector('.driver-popover-close-btn');
+            if (closeBtn) {
+                closeBtn.style.display = 'inline-block';
+            }
+        },
+      steps: [
+        {
+          element: '.create-user-button',
+          onHighlightStarted: (element) => {
+            element.style.setProperty('pointer-events', 'none', 'important');
+            element.disabled = true;
+          },
+          onDeselected: (element) => {
+            element.style.pointerEvents = 'auto';
+            element.disabled = false;
+          },
+          popover: {
+            title: this.intl.t('fleetbase.users.tour.new-user.title'),
+            description: this.intl.t('fleetbase.users.tour.new-user.description', { htmlSafe: true }),
+            onNextClick: () => {
+              this.createUser();
+
+             const checkModal = setInterval(() => {
+            const modal = document.querySelector('.create-user-modal');
+            if (modal && modal.classList.contains('show')) {
+            clearInterval(checkModal);
+            driverObj.moveNext(); // Move to the next step
+            }
+        }, 100);
+
+            },
+          },
+        },
+            // {
+            //   element: '.create-user-modal',
+            //   popover: {
+            //     title: this.intl.t('iam.users.tour.modal.title'),
+            //     description: this.intl.t('fleetbase.users.tour.modal.description', { htmlSafe: true }),
+            //     side: 'left',
+            //     align: 'start',
+            //   },
+            // },
+        {
+          element: '.create-user-modal .input-group:has(.form-input.user-name)',
+          popover: {
+            title: this.intl.t('fleetbase.users.tour.name.title'),
+            description: this.intl.t('fleetbase.users.tour.name.description', { htmlSafe: true }),
+          },
+        },
+        {
+          element: '.create-user-modal .input-group:has(.form-input.user-email)',
+          popover: {
+            title: this.intl.t('fleetbase.users.tour.email.title'),
+            description: this.intl.t('fleetbase.users.tour.email.description', { htmlSafe: true }),
+          },
+        },
+        {
+          element: '.create-user-modal .input-group:has(.form-input.phone-input)',
+          popover: {
+            title: this.intl.t('fleetbase.users.tour.phone.title'),
+            description: this.intl.t('fleetbase.users.tour.phone.description', { htmlSafe: true }),
+          },
+        },
+        {
+          element: '.create-user-modal .input-group:has(.form-input.user-country)',
+          popover: {
+            title: this.intl.t('fleetbase.users.tour.country.title'),
+            description: this.intl.t('fleetbase.users.tour.country.description', { htmlSafe: true }),
+          },
+        },
+        {
+          element: '.create-user-modal .input-group:has(.form-input.user-role)',
+          popover: {
+            title: this.intl.t('fleetbase.users.tour.role.title'),
+            description: this.intl.t('fleetbase.users.tour.role.description', { htmlSafe: true }),
+          },
+        },
+        {
+          element: '.create-user-modal .input-group:has(.policy-attacher)',
+          popover: {
+            title: this.intl.t('fleetbase.users.tour.policies.title'),
+            description: this.intl.t('fleetbase.users.tour.policies.description', { htmlSafe: true }),
+          },
+        },
+        {
+          element: '.create-user-modal .input-group:has(.user-permissions)',
+          popover: {
+            title: this.intl.t('fleetbase.users.tour.permissions.title'),
+            description: this.intl.t('fleetbase.users.tour.permissions.description', { htmlSafe: true }),
+          },
+        },
+        {
+          element: '.create-user-modal .modal-footer-actions .btn-primary',
+          popover: {
+            title: this.intl.t('fleetbase.users.tour.confirm.title'),
+            description: this.intl.t('fleetbase.users.tour.confirm.description', { htmlSafe: true }),
+          },
+        },
+      ],
+    });
+
+    driverObj.drive();
+  }
 }
