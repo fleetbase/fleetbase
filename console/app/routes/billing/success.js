@@ -7,6 +7,7 @@ export default class BillingSuccessRoute extends Route {
     @service router;
     @service session;
 
+    
     async model(params) {
         console.log('🎯 BILLING SUCCESS ROUTE HIT!');
         console.log('🎯 URL:', window.location.href);
@@ -85,7 +86,7 @@ export default class BillingSuccessRoute extends Route {
                 // Map Chargebee parameters to expected API parameters
                 subscription_id: queryParams.sub_id,
                 invoice_id: queryParams.invoice_id,
-                customer_id: queryParams.cus_id || queryParams.id, // Handle both cus_id and id
+                customer_id:  queryParams.id, // Handle both cus_id and id
                 payment_status: queryParams.state || 'succeeded', // Default to succeeded if not provided
                 // Keep original parameters if they exist
                 ...routeParams,
@@ -421,7 +422,7 @@ export default class BillingSuccessRoute extends Route {
             console.log('🎯 Model has accountDetails:', model.accountDetails ? 'YES' : 'NO');
             console.log('🎯 Model has queryParams:', model.queryParams ? 'YES' : 'NO');
         }
-
+        
         // Show success notification immediately
         if (model && model.apiResponse) {
             this.notifications.success('Payment completed successfully!');
@@ -446,25 +447,26 @@ export default class BillingSuccessRoute extends Route {
                 const parsedDetails = JSON.parse(accountDetails);
                 const { session } = parsedDetails;
 
-                console.log('📋 Parsed account details:', parsedDetails);
-                console.log('📋 Session for verification redirect:', session ? 'exists' : 'missing');
-                console.log('📋 Session value:', session);
+                // Show loader before redirect
+                if (controller) {
+                    controller.isRedirecting = true;
+                }
 
                 // Redirect to verification page after a short delay
                 setTimeout(() => {
-                    console.log('🚀 Redirecting to verification with session:', session);
                     this.router.transitionTo('onboard.verify-email', {
                         queryParams: { hello: session }
                     }).then(() => {
-                        console.log('✅ Successfully redirected to verification');
+                        if (controller) {
+                            controller.isRedirecting = false;
+                        }
                         this.notifications.info('Please verify your email to complete your account setup.');
-                        
-                        // Clean up session storage after successful redirect
                         sessionStorage.removeItem('subscription_details');
                         sessionStorage.removeItem('account_details');
-                        console.log('🧹 Cleared session storage after successful redirect');
                     }).catch((error) => {
-                        console.error('❌ Redirect failed:', error);
+                        if (controller) {
+                            controller.isRedirecting = false;
+                        }
                         this.notifications.error('Redirect failed. Please try again.');
                     });
                 }, 2000); // 2 second delay to show success message
