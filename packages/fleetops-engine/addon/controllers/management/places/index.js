@@ -327,105 +327,105 @@ export default class ManagementPlacesIndexController extends BaseController {
      * Starts the Driver.js product tour
      */
     @action
-    startTour() {
-        const driverObj = driver({
-          showProgress: true,
-          nextBtnText: this.intl.t('fleetbase.common.next'),
-            prevBtnText: this.intl.t('fleetbase.common.previous'),
-            doneBtnText: this.intl.t('fleetbase.common.done'),
-            closeBtnText: this.intl.t('fleetbase.common.close'),
-          steps: [ // you can pass steps directly here
-            {
-                element: '#next-view-section-subheader-actions .btn-wrapper .new-place-button',
-                onHighlightStarted: (element) => {
-                    element.style.setProperty('pointer-events', 'none', 'important');
-                    element.disabled = true;
-                    },
-                    onDeselected: (element) => {
-                    element.style.pointerEvents = 'auto';
-                    element.disabled = false;
-                    },
-                popover: {
-                    title: this.intl.t('fleetbase.orders.tour.add.title'),
-                    description: this.intl.t('fleetbase.orders.tour.add.description'),
-                    onNextClick: () => {
-                        this.createPlace();
+    // startTour() {
+    //     const driverObj = driver({
+    //       showProgress: true,
+    //       nextBtnText: this.intl.t('fleetbase.common.next'),
+    //         prevBtnText: this.intl.t('fleetbase.common.previous'),
+    //         doneBtnText: this.intl.t('fleetbase.common.done'),
+    //         closeBtnText: this.intl.t('fleetbase.common.close'),
+    //       steps: [ // you can pass steps directly here
+    //         {
+    //             element: '#next-view-section-subheader-actions .btn-wrapper .new-place-button',
+    //             onHighlightStarted: (element) => {
+    //                 element.style.setProperty('pointer-events', 'none', 'important');
+    //                 element.disabled = true;
+    //                 },
+    //                 onDeselected: (element) => {
+    //                 element.style.pointerEvents = 'auto';
+    //                 element.disabled = false;
+    //                 },
+    //             popover: {
+    //                 title: this.intl.t('fleetbase.orders.tour.add.title'),
+    //                 description: this.intl.t('fleetbase.orders.tour.add.description'),
+    //                 onNextClick: () => {
+    //                     this.createPlace();
 
-                        later(this, () => {
-                            const el = document.querySelector('.next-content-overlay > .next-content-overlay-panel-container > .next-content-overlay-panel');
+    //                     later(this, () => {
+    //                         const el = document.querySelector('.next-content-overlay > .next-content-overlay-panel-container > .next-content-overlay-panel');
 
-                            if (el) {
-                                const onTransitionEnd = () => {
-                                    el.removeEventListener('transitionend', onTransitionEnd);
-                                    driverObj.moveNext();
-                                };
+    //                         if (el) {
+    //                             const onTransitionEnd = () => {
+    //                                 el.removeEventListener('transitionend', onTransitionEnd);
+    //                                 driverObj.moveNext();
+    //                             };
 
-                                el.addEventListener('transitionend', onTransitionEnd);
-                            }
-                        }, 100);
+    //                             el.addEventListener('transitionend', onTransitionEnd);
+    //                         }
+    //                     }, 100);
                         
-                    },
-                },
-            },
-            {
-                element: '.place-form-panel .next-content-overlay-panel',
-                popover: {
-                    title: this.intl.t('fleetbase.orders.tour.dates.title'),
-                    description: this.intl.t('fleetbase.orders.tour.dates.description'),
-                    side: 'left',
-                    align: 'start',
-                },
-            },
-            {
-                element: '.create-place-button',
-                popover: {
-                    title: this.intl.t('Add New Place'),
-                    description: this.intl.t('Click here to add a new place.'),
-                    onNextClick: () => {
-                        const onRouteChange = () => {
-                            this.hostRouter.off('routeDidChange', onRouteChange);
+    //                 },
+    //             },
+    //         },
+    //         {
+    //             element: '.place-form-panel .next-content-overlay-panel',
+    //             popover: {
+    //                 title: this.intl.t('fleetbase.orders.tour.dates.title'),
+    //                 description: this.intl.t('fleetbase.orders.tour.dates.description'),
+    //                 side: 'left',
+    //                 align: 'start',
+    //             },
+    //         },
+    //         {
+    //             element: '.create-place-button',
+    //             popover: {
+    //                 title: this.intl.t('Add New Place'),
+    //                 description: this.intl.t('Click here to add a new place.'),
+    //                 onNextClick: () => {
+    //                     const onRouteChange = () => {
+    //                         this.hostRouter.off('routeDidChange', onRouteChange);
                     
-                            // Wait for the button to appear in the DOM
-                            const waitForButton = () => {
-                                if (document.querySelector('button.create-user-button')) {
-                                    driverObj.moveNext();
-                                } else {
-                                    setTimeout(waitForButton, 100); // Check again after 100ms
-                                }
-                            };
+    //                         // Wait for the button to appear in the DOM
+    //                         const waitForButton = () => {
+    //                             if (document.querySelector('button.create-user-button')) {
+    //                                 driverObj.moveNext();
+    //                             } else {
+    //                                 setTimeout(waitForButton, 100); // Check again after 100ms
+    //                             }
+    //                         };
                     
-                            waitForButton();
-                        };
+    //                         waitForButton();
+    //                     };
                     
-                        this.hostRouter.on('routeDidChange', onRouteChange);
-                        this.hostRouter.transitionTo('console.iam.users');
-                    }
+    //                     this.hostRouter.on('routeDidChange', onRouteChange);
+    //                     this.hostRouter.transitionTo('console.iam.users');
+    //                 }
                     
-                },
+    //             },
 
-            },
-            {
-                element: 'button.create-user-button',
-                popover: {
-                    title: this.intl.t('Import Places'),
-                    description: this.intl.t('Import places in bulk using a spreadsheet.'),
-                    onNextClick: () => {
-                        this.createUser();
-                    },
-                },
-            },
-            {
-                element: '.create-user-modal',
-                popover: {
-                    title: this.intl.t('Export Places'),
-                    description: this.intl.t('Export your places data.'),
-                },
-            },
-          ]
-        });
+    //         },
+    //         {
+    //             element: 'button.create-user-button',
+    //             popover: {
+    //                 title: this.intl.t('Import Places'),
+    //                 description: this.intl.t('Import places in bulk using a spreadsheet.'),
+    //                 onNextClick: () => {
+    //                     this.createUser();
+    //                 },
+    //             },
+    //         },
+    //         {
+    //             element: '.create-user-modal',
+    //             popover: {
+    //                 title: this.intl.t('Export Places'),
+    //                 description: this.intl.t('Export your places data.'),
+    //             },
+    //         },
+    //       ]
+    //     });
       
-        driverObj.drive(); // <-- start the tour
-      }
+    //     driverObj.drive(); // <-- start the tour
+    //   }
 
       @action
     startPlacesTour() {
