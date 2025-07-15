@@ -15,13 +15,13 @@
         @onChange={{this.filters.set}}
         @buttonWrapperClass="mr-2"
     />
-    <Button
+    {{!-- <Button
         @icon="question-circle"
         @type="magic"
         @text="Tour"
         class="mr-2"
         {{on "click" this.startTour}}
-    />
+    /> --}}
       
     <VisibleColumnPicker @columns={{this.columns}} @onChange={{fn (mut this.columns)}} class="mr-2" />
     {{#if (safe-has this.table "selectedRows")}}
