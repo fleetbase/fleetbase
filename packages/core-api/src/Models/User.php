@@ -151,6 +151,10 @@ class User extends Authenticatable
         'phone_verified_at',
         'slug',
         'status',
+        'chargebee_subscription_id',
+        'chargebee_customer_id',
+        'subscription_status',
+        'subscribed_at',
     ];
 
     /**

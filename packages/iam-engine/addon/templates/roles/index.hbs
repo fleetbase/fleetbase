@@ -1,4 +1,5 @@
 <Layout::Section::Header @title={{t "iam.common.role"}} @searchQuery={{this.query}} @onSearch={{perform this.search}} @searchDisabled={{cannot "iam list role"}}>
+        <Button @icon="question-circle" @type="default" @text={{t "fleetbase.common.help"}} @onClick={{this.CreateRoleTour}} class="mr-2" />
     <Button @icon="refresh" @onClick={{this.reload}} @helpText={{t "iam.common.reload-data"}} class="mr-2" />
     <FiltersPicker
         @columns={{this.columns}}
@@ -20,7 +21,7 @@
             </div>
         </DropdownButton>
     {{/if}}
-    <Button @icon="plus" @iconPrefix="fas" @type="primary" @text={{t "iam.common.new"}} class="mr-2" @onClick={{this.createRole}} @permission="iam create role" />
+    <Button @customClass="create-role-button" @icon="plus" @iconPrefix="fas" @type="primary" @text={{t "iam.common.new"}} class="mr-2" @onClick={{this.createRole}} @permission="iam create role" />
 </Layout::Section::Header>
 
 <Layout::Section::Body>

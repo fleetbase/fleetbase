@@ -8,6 +8,8 @@ use App\Models\LeaveRequest;
 use Illuminate\Support\Str;
 use Fleetbase\Support\Auth;
 use App\Helpers\UserHelper;
+use Fleetbase\FleetOps\Models\Driver;
+use App\Helpers\LeaveHelper;
 class LeaveRequestController extends Controller
 {
     /**
@@ -114,9 +116,27 @@ class LeaveRequestController extends Controller
      */
     public function update(Request $request, $id)
     {
-        // Find the leave request by UUID
-        $leaveRequest = LeaveRequest::where('id', $id)->firstOrFail();
+        // Find the leave request by ID
+        $leaveRequest = LeaveRequest::where('id', $id)->whereNull('deleted_at')->first();
+        if (!$leaveRequest) {
+            return response()->json([
+                'success' => false,
+                'message' => __('messages.request_not_found'),
+            ], 400);
+        }
         $input = $request->all();
+
+        // Handle approve/reject actions
+        if (isset($input['action']) && in_array($input['action'], ['approve', 'reject'])) {
+            $leaveRequestProcess = $this->processLeaveRequestAction(
+                $leaveRequest,
+                $input['action'],
+                $input['is_confirmed'] ?? 0, // default to 0 if not set
+                $leaveRequest['driver_uuid'],
+                $leaveRequest['total_days']
+            );
+            return $leaveRequestProcess;
+        }
 
         // Set end_date equal to start_date if not provided
         if (empty($input['end_date'])) {
@@ -133,9 +153,10 @@ class LeaveRequestController extends Controller
         }
 
         // Only check for overlaps if dates are being changed
-        if ($input['start_date'] !== $leaveRequest->start_date || 
-            $input['end_date'] !== $leaveRequest->end_date) {
-            
+        if (
+            (isset($input['start_date']) && $input['start_date'] !== $leaveRequest->start_date) ||
+            (isset($input['end_date']) && $input['end_date'] !== $leaveRequest->end_date)
+        ) {
             // Check for overlapping leave requests
             $existingLeaveRequest = LeaveRequest::where([
                     ['user_uuid', '=', $input['user_uuid']],
@@ -144,12 +165,11 @@ class LeaveRequestController extends Controller
                     ['deleted', '=', 0],
             ])
                 ->where(function ($query) use ($input) {
-                    // Check if any existing leave request overlaps with the new request
                     $query->where('start_date', '<=', $input['end_date'])
                           ->where('end_date', '>=', $input['start_date']);
                 })
                 ->whereNull('deleted_at')
-                ->where('id', '!=', $leaveRequest->id) // Exclude the current record
+                ->where('id', '!=', $leaveRequest->id)
                 ->first();
 
             if ($existingLeaveRequest) {
@@ -159,14 +179,14 @@ class LeaveRequestController extends Controller
                 ], 400);
             }
         }
-        //update updated_by_id
+
+        // Update updated_by_id
         $input['updated_by_id'] = UserHelper::getIdFromUuid(auth()->id());
-        // Update the leave request only if data is dirty
         $leaveRequest->update($input);
-    
+
         return response()->json([
             'success' => true,
-            'message' => __('messages.request_update_success'), // Add a proper translation key
+            'message' => __('messages.request_update_success'),
             'data' => $leaveRequest,
         ]);
     }
@@ -196,5 +216,57 @@ class LeaveRequestController extends Controller
             return response()->json(['success' => false, 'message' => __('messages.request_not_found')],400);
         }
         
+    }
+
+    /**
+     * Process the approve/reject action for a leave request.
+     */
+    protected function processLeaveRequestAction($leaveRequest, $action, $isConfirmed = 0, $driverUuid = null, $totalDays = null)
+    {
+        if ($action === 'approve') {
+            // Check leave balance only if not confirmed yet
+            // if (!$isConfirmed) {
+            //     $warning = LeaveHelper::checkLeaveBalanceWarning($driverUuid, $totalDays);
+               
+            //     if ($warning) {
+            //         return $warning;
+            //     }
+             
+            // }
+
+            $leaveRequest->approved_at = now();
+            $leaveRequest->status = 'Approved';
+        } else {
+            $leaveRequest->status = 'Rejected';
+        }
+
+        $leaveRequest->updated_by_id = UserHelper::getIdFromUuid(auth()->id());
+        $leaveRequest->processed_by = UserHelper::getIdFromUuid(auth()->id());
+        $leaveRequest->save();
+
+        // Only update leave balance if approved and confirmed
+        // if ($action === 'approve' && $isConfirmed) {
+        //     $driver = Driver::where('uuid', $driverUuid)->first();
+        //     if ($driver && isset($leaveRequest->total_days)) {
+        //         $driver->leave_balance = max(0, $driver->leave_balance - $leaveRequest->total_days);
+        //         $driver->save();
+        //     }
+        // }
+        // Return the updated leave request with proper response
+        if ($action === 'approve') {
+            //include leave_balance in response
+            // $leaveRequest['leave_balance'] = $driver ? $driver->leave_balance : null;
+            return response()->json([
+                'success' => true,
+                'message' => __('messages.request_approve_success'),
+                'data' => $leaveRequest
+            ]);
+        } else {
+            return response()->json([
+                'success' => true,
+                'message' => __('messages.request_reject_success'),
+                'data' => $leaveRequest
+            ]);
+        }    
     }
 }

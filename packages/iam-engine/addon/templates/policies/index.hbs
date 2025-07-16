@@ -1,4 +1,5 @@
 <Layout::Section::Header @title={{t "iam.policies.index.title"}} @searchQuery={{this.query}} @onSearch={{perform this.search}} @searchDisabled={{cannot "iam list policy"}}>
+            <Button @icon="question-circle" @type="default" @text={{t "fleetbase.common.help"}} @onClick={{this.CreatePolicyTour}} class="mr-2" />
     <Button @icon="refresh" @onClick={{this.reload}} @helpText={{t "iam.common.reload-data"}} class="mr-2" />
     <FiltersPicker
         @columns={{this.columns}}
@@ -20,7 +21,7 @@
             </div>
         </DropdownButton>
     {{/if}}
-    <Button @icon="plus" @iconPrefix="fas" @type="primary" @text={{t "iam.common.new"}} class="mr-2" @onClick={{this.createPolicy}} @permission="iam create policy" />
+    <Button @customClass="create-policy-button" @icon="plus" @iconPrefix="fas" @type="primary" @text={{t "iam.common.new"}} class="mr-2" @onClick={{this.createPolicy}} @permission="iam create policy" />
 </Layout::Section::Header>
 
 <Layout::Section::Body>

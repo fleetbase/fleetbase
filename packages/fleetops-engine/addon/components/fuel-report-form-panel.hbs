@@ -5,7 +5,7 @@
         (t "fleet-ops.component.fuel-report-form-panel.fuel-report" )}} @status={{this.fuelReport.public_id}}
         @hideStatusDot={{true}} @createdAt={{this.fuelReport.createdAt}} @titleWrapperClass="leading-5">
         <div class="flex flex-1 justify-end">
-            <Button @icon={{if this.fuelReport.id "save" "check" }} @type="primary" @text={{if this.fuelReport.id
+            <Button @customClass="fuel-report-btn" @icon={{if this.fuelReport.id "save" "check" }} @type="primary" @text={{if this.fuelReport.id
                 (t "fleet-ops.component.fuel-report-form-panel.save-fuel-report" )
                 (t "fleet-ops.component.fuel-report-form-panel.create-fuel-report" )}} @onClick={{perform this.save}}
                 @isLoading={{this.save.isRunning}} @wrapperClass="mr-2" @permission={{this.savePermission}} />
@@ -14,14 +14,14 @@
                 @helpText={{t "fleet-ops.component.fuel-report-form-panel.view-details" }}
                 @onClick={{this.onViewDetails}} @wrapperClass="mr-2" @permission="fleet-ops view fuel-report" />
             {{/if}}
-            <Button @type="default" @icon="times" @helpText={{if this.fuelReport.id
+            <Button @customClass="fuel-report-form-cancel-button" @type="default" @icon="times" @helpText={{if this.fuelReport.id
                 (t "fleet-ops.component.fuel-report-form-panel.cancel-edit-fuel-report" )
                 (t "fleet-ops.component.fuel-report-form-panel.cancel-new-fuel-report" ) }}
                 @onClick={{this.onPressCancel}} />
         </div>
     </Overlay::Header>
 
-    <Overlay::Body @wrapperClass="new-service-rate-overlay-body px-4 space-y-4 pt-4">
+    <Overlay::Body @wrapperClass="new-service-rate-overlay-body px-4 space-y-4 pt-4 fuel-report-form-panel">
         {{#let (cannot this.savePermission) as |unauthorized|}}
         <div class="grid grid-cols-1 text-xs dark:text-gray-100">
             <!-- Fuel Report Type -->
@@ -46,7 +46,7 @@
                     @modelName="user" 
                     @selectedModel={{this.fuelReport.reporter}}
                     @placeholder={{t "fleet-ops.component.fuel-report-form-panel.select-reporter" }}
-                    @triggerClass="form-select form-input" 
+                    @triggerClass="form-select form-input reporter" 
                     @infiniteScroll={{false}} 
                     @renderInPlace={{true}}
                     @onChange={{fn (mut this.fuelReport.reporter)}} 
@@ -58,7 +58,7 @@
             <InputGroup @name={{t "fleet-ops.common.driver" }} @required={{true}}>
                 <ModelSelect @modelName="driver" @selectedModel={{this.fuelReport.driver}}
                     @placeholder={{t "fleet-ops.component.fuel-report-form-panel.select-driver" }}
-                    @triggerClass="form-select form-input" @infiniteScroll={{false}} @renderInPlace={{true}}
+                    @triggerClass="form-select form-input driver" @infiniteScroll={{false}} @renderInPlace={{true}}
                     @onChange={{fn (mut this.fuelReport.driver)}} @onChangeId={{fn (mut this.fuelReport.driver_uuid)}}
                     @disabled={{unauthorized}} as |model|>
                     {{model.name}}
@@ -67,7 +67,7 @@
             <InputGroup @name={{t "fleet-ops.common.vehicle" }} @required={{true}}>
                 <ModelSelect @modelName="vehicle" @selectedModel={{this.fuelReport.vehicle}}
                     @placeholder={{t "fleet-ops.component.fuel-report-form-panel.select-vehicle" }}
-                    @triggerClass="form-select form-input" @infiniteScroll={{false}} @renderInPlace={{true}}
+                    @triggerClass="form-select form-input vehicle" @infiniteScroll={{false}} @renderInPlace={{true}}
                     @onChange={{fn (mut this.fuelReport.vehicle)}} @onChangeId={{fn (mut this.fuelReport.vehicle_uuid)}}
                     @disabled={{unauthorized}} as |model|>
                     {{model.display_name}}
@@ -89,7 +89,7 @@
                     @selected={{this.selectedStatus}} 
                     @onChange={{this.updateStatus}}
                     @placeholder={{t "fleet-ops.component.fuel-report-form-panel.select-fuel-report"}}
-                    @triggerClass="form-select form-input"
+                    @triggerClass="form-select form-input status"
                     @disabled={{this.unauthorized}}
                     as |status|
                     >
@@ -100,19 +100,19 @@
             <InputGroup @name={{t "fleet-ops.component.fuel-report-form-panel.odometer" }} @type="number"
                 @value={{this.fuelReport.odometer}} />
             <InputGroup @name={{t "fleet-ops.component.fuel-report-form-panel.cost" }} @required={{true}}>
-                <MoneyInput class="w-full" @value={{this.fuelReport.amount}} @currency={{this.fuelReport.currency}}
+                <MoneyInput class="w-full fuel-cost-field" @value={{this.fuelReport.amount}} @currency={{this.fuelReport.currency}}
                     @canSelectCurrency={{true}} @onCurrencyChange={{fn (mut this.fuelReport.currency)}}
                     @disabled={{unauthorized}} />
             </InputGroup>
             <InputGroup @name={{t "fleet-ops.component.fuel-report-form-panel.volume" }}
-                @helpText={{t "fleet-ops.component.fuel-report-form-panel.select-volume-text" }} @wrapperClass="w-full" @required={{true}}>
+                @helpText={{t "fleet-ops.component.fuel-report-form-panel.select-volume-text" }} @wrapperClass="w-full fuel-volume-field" @required={{true}}>
                 <UnitInput class="w-full" @measurement="volume" @value={{this.fuelReport.volume}}
                     @unit={{this.fuelReport.metric_unit}} @canSelectUnit={{true}} @onUnitChange={{fn (mut
                     this.fuelReport.metric_unit)}} @disabled={{unauthorized}} onblur="{{fn (mut this.fuelReport.report_type)}}"/>
             </InputGroup>
             <!-- Payment Method -->
             <InputGroup @name={{t "common.payment-method" }} @required={{true}}>
-                <div class="fleetbase-model-select fleetbase-power-select ember-model-select">
+                <div class="fleetbase-model-select fleetbase-power-select ember-model-select fuel-payment-method-field">
                     <PowerSelect @options={{this.reportPaymentOptions}} 
                         @selected={{this.selectedpaymentOptions}} 
                         @onChange={{this.updatepaymentOptions}}
@@ -140,7 +140,7 @@
                 <CoordinatesInput @value={{this.fuelReport.location}} @onChange={{fn (mut this.fuelReport.location)}}
                     @disabled={{unauthorized}} />
             </InputGroup> --}}
-            <InputGroup @name={{t "fleet-ops.common.coordinates"}}>
+            <InputGroup @name={{t "fleet-ops.common.coordinates"}} @wrapperClass="fuel-coordinates-field">
                 <CoordinatesInput
                     @value={{this.place.location}}
                     @onChange={{this.updateFuelCoordinates}}
@@ -154,7 +154,7 @@
 
             {{!-- {{#if this.fuelReport.id}} --}}
             <!-- Add the FileUpload component here -->
-            <InputGroup @name={{t "common.upload-file"}} @wrapperClass="w-full">
+            <InputGroup @name={{t "common.upload-file"}} @wrapperClass="w-full fuel-upload-field">
                 {{#if this.fuelReport.id}} 
                     <FileUpload @name="fuel-report-file" @accept="application/pdf" @label="Document"
                         @onFileAdded={{this.uploadFuelReportFile}} as |queue|>

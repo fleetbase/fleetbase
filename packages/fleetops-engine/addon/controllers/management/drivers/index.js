@@ -6,6 +6,11 @@ import { isBlank } from '@ember/utils';
 import { equal } from '@ember/object/computed';
 import { timeout } from 'ember-concurrency';
 import { task } from 'ember-concurrency-decorators';
+import { driver } from 'driver.js';
+import 'driver.js/dist/driver.css';
+import { later } from '@ember/runloop';
+import { getOwner } from '@ember/application';
+
 
 export default class ManagementDriversIndexController extends BaseController {
     @service notifications;
@@ -551,4 +556,122 @@ export default class ManagementDriversIndexController extends BaseController {
     @action locateDriver(driver, options = {}) {
         this.driverActions.locate(driver, options);
     }
+    /**
+     * Start the drivers tour to guide users through the driver creation process
+     *
+     * @void
+     */
+
+
+@action
+startDriversTour() {
+    const driverObj = driver({
+        showProgress: true,
+        nextBtnText: this.intl.t('fleetbase.common.next'),
+        prevBtnText: this.intl.t('fleetbase.common.previous'),
+        doneBtnText: this.intl.t('fleetbase.common.done'),
+        closeBtnText: this.intl.t('fleetbase.common.close'),
+        allowClose: false,
+        disableActiveInteraction: true,
+        onPopoverRender: (popover) => {
+            const closeBtn = popover.wrapper.querySelector('.driver-popover-close-btn');
+            if (closeBtn) {
+                closeBtn.style.display = 'inline-block';
+            }
+        },
+        onDestroyStarted: () => {
+            // Close the sidebar when the tour is destroyed
+            const sidebar = document.querySelector('.next-content-overlay-panel');
+            if (sidebar) {
+                const driverFormPanel = document.querySelector('.driver-form-panel');
+                if (driverFormPanel) {
+                    const cancelButton = document.querySelector('.driver-form-cancel-button');
+                    if (cancelButton) {
+                        cancelButton.click(); // Simulate click to trigger onPressCancel
+                    }
+                }
+            }
+            driverObj.destroy();
+        },
+        steps: [
+            {
+                element: 'button.new-driver-button',
+                onHighlightStarted: (element) => {
+                    element.style.setProperty('pointer-events', 'none', 'important');
+                    element.disabled = true;
+                },
+                onDeselected: (element) => {
+                    element.style.pointerEvents = 'auto';
+                    element.disabled = false;
+                },
+                popover: {
+                    title: this.intl.t('fleetbase.drivers.tour.new_button.title'),
+                    description: this.intl.t('fleetbase.drivers.tour.new_button.description'),
+                    onNextClick: () => {
+                        this.createDriver();
+                        later(this, () => {
+                            driverObj.moveNext();
+                        }, 500); // Adjust delay based on createDriver completion
+                    },
+                },
+            },
+            {
+                element: '.user-account-panel',
+                popover: {
+                    title: this.intl.t('fleetbase.drivers.tour.user_account.title'),
+                    description: this.intl.t('fleetbase.drivers.tour.user_account.description'),
+                    onPrevClick: () => {
+                        // Attempt to close the sidebar by clicking the cancel button before moving to the previous step
+                        const cancelButton = document.querySelector('.driver-form-cancel-button');
+                        if (cancelButton) {
+                            cancelButton.click();
+                            later(this, () => {
+                                driverObj.movePrevious();
+                            }, 500); // Wait for sidebar to close
+                        } else {
+                            driverObj.movePrevious();
+                        }
+                    }
+                },
+            },
+            {
+                element: '.driver-details-panel',
+                popover: {
+                    title: this.intl.t('fleetbase.drivers.tour.driver_details.title'),
+                    description: this.intl.t('fleetbase.drivers.tour.driver_details.description'),
+                },
+            },
+            {
+                element: '.new-driver-submit',
+                popover: {
+                    title: this.intl.t('fleetbase.drivers.tour.submit.title'),
+                    description: this.intl.t('fleetbase.drivers.tour.submit.description'),
+                    onHighlightStarted: (element) => {
+                        element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    },
+                },
+            },
+        ],
+    });
+
+    // Check if sidebar is open before starting the tour
+    const sidebar = document.querySelector('.next-content-overlay-panel');
+    if (sidebar && window.getComputedStyle(sidebar).display !== 'none') {
+        const driverFormPanel = document.querySelector('.driver-form-panel');
+        if (driverFormPanel) {
+            const cancelButton = document.querySelector('.driver-form-cancel-button');
+            if (cancelButton) {
+                cancelButton.click(); // Simulate click to trigger onPressCancel
+                later(this, () => {
+                    driverObj.drive();
+                }, 500); // Wait for sidebar to close
+                return;
+            }
+        }
+        // Fallback if cancel button not found
+        driverObj.drive();
+    } else {
+        driverObj.drive();
+    }
+}
 }

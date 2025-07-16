@@ -36,8 +36,16 @@
                 </div>
             </div>
         </DropdownButton>
-        <Button @icon="upload" @type="magic" @text={{if (media "isMobile") "" (t "fleet-ops.common.import")}} @onClick={{this.importOrder}} @disabled={{this.isCreatingOrder}} @permission="fleet-ops import order" class="mr-2" />
-        <Button @icon="check" @type="primary" @text={{if (media "isMobile") "" (t "common.submit")}} @onClick={{this.createOrder}} @isLoading={{this.isCreatingOrder}} @permission="fleet-ops create order" @disabled={{not this.isValid}} />
+        <Button
+            @icon="question-circle"
+            @type="default"
+            @text={{t "fleetbase.common.help"}}
+            {{on "click" (fn this.ordersController.startOrdersTourFromHelp)}}
+            class="mr-2"
+            title={{t "fleetbase.common.help"}}
+        />
+        <Button @customClass="import-order" @icon="upload" @type="magic" @text={{if (media "isMobile") "" (t "fleet-ops.common.import")}} @onClick={{this.importOrder}} @disabled={{this.isCreatingOrder}} @permission="fleet-ops import order" class="mr-2" />
+        <Button @customClass="new-order-submit" @icon="check" @type="primary" @text={{if (media "isMobile") "" (t "common.submit")}} @onClick={{this.createOrder}} @isLoading={{this.isCreatingOrder}} @permission="fleet-ops create order" @disabled={{not this.isValid}} />
     </Overlay::Header>
 
     <Overlay::Body @wrapperClass="new-order-overlay-body">
@@ -303,10 +311,10 @@
             {{/each}}
         {{/if}}
 
-        <ContentPanel @title={{t "fleet-ops.operations.orders.index.new.route"}} @open={{true}} @pad={{true}} @panelBodyClass="bg-white dark:bg-gray-800">
+        <ContentPanel @wrapperClass="new-order-route" @title={{t "fleet-ops.operations.orders.index.new.route"}} @open={{true}} @pad={{true}} @panelBodyClass="bg-white dark:bg-gray-800">
             <div class="flex flex-row justify-between mb-4">
                 <div class="flex">
-                    <Toggle @isToggled={{this.isMultipleDropoffOrder}} @onToggle={{this.toggleMultiDropOrder}} @label={{t "fleet-ops.operations.orders.index.new.route-label"}} />
+                    <Toggle @wrapperClass="new-order-route-toggle" @isToggled={{this.isMultipleDropoffOrder}} @onToggle={{this.toggleMultiDropOrder}} @label={{t "fleet-ops.operations.orders.index.new.route-label"}} />
                 </div>
                 <div class="flex flex-1 justify-end space-x-2">
                     {{#if this.isMultipleDropoffOrder}}
@@ -331,6 +339,7 @@
                         />
                         --}}
                         <Button
+                            @customClass="add-waypoint-btn"
                             @icon="map-marked-alt"
                             @text={{t "fleet-ops.operations.orders.index.new.add-waypoint"}}
                             @size="sm"
@@ -830,11 +839,11 @@
             {{/if}}
         </ContentPanel> --}}
 
-        <ContentPanel @title={{t "fleet-ops.operations.orders.index.new.notes-title"}} @open={{true}} @pad={{true}} @panelBodyClass="bg-white dark:bg-gray-800">
+        <ContentPanel @wrapperClass="new-order-notes" @title={{t "fleet-ops.operations.orders.index.new.notes-title"}} @open={{true}} @pad={{true}} @panelBodyClass="bg-white dark:bg-gray-800">
             <Textarea @value={{this.order.notes}} class="form-input w-full" placeholder={{t "fleet-ops.operations.orders.index.new.notes-placeholder"}} disabled={{cannot "fleet-ops create order"}} rows={{4}} />
         </ContentPanel>
 
-        <ContentPanel @title={{t "fleet-ops.operations.orders.index.view.documents-panel-title"}} @open={{true}} @pad={{true}} @panelBodyClass="bg-white dark:bg-gray-800">
+        <ContentPanel @wrapperClass="new-order-documents" @title={{t "fleet-ops.operations.orders.index.view.documents-panel-title"}} @open={{true}} @pad={{true}} @panelBodyClass="bg-white dark:bg-gray-800">
             <div class="space-y-4">
                 {{#if this.isUploading}}
                     <div

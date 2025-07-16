@@ -65,6 +65,14 @@
 
 {{#if this.isTableLayout}}
     <Layout::Section::Header @title={{t "fleet-ops.common.orders"}} @onSearch={{perform this.search}}>
+        <Button
+            @customClass="start-order-tour-btn"
+            @icon="question-circle"
+            @type="default"
+            @text={{t "fleetbase.common.help"}}   
+            class="mr-2"
+            {{on "click" this.startOrdersTour}}
+        />
         <Button @icon="refresh" @onClick={{this.reload}} @helpText={{t "fleet-ops.common.reload-data"}} class="mr-2" />
         <FiltersPicker
             @columns={{this.columns}}

@@ -105,7 +105,8 @@ Route::prefix(config('fleetbase.api.routing.prefix', '/'))->namespace('Fleetbase
                                 // Optional: Simplified status endpoint
                                 $router->get('checkout/{billing_request_id}/status', 'BillingRequestController@getBillingRequestStatus');
                                 $router->get('checkout/success', 'BillingRequestController@handleRecurringBillingSuccess');
-                                $router->post('billing/success', 'BillingRequestController@handleRecurringBillingSuccess');
+                                // $router->post('billing/success', 'BillingRequestController@handleRecurringBillingSuccess');
+                                $router->post('billing-success', 'OnboardController@handleBillingSuccess');
                                 // $router->post('checkout/failure', 'CheckoutController@handleFailure');
                                 $router->get('pricing-plans/latest', 'PlanController@getLatest');
                                 $router->get('subscription/status', 'PlanController@getSubscriptionStatus');
@@ -130,7 +131,33 @@ Route::prefix(config('fleetbase.api.routing.prefix', '/'))->namespace('Fleetbase
                                 });
                             }
                         );
-                       
+
+                        // Chargebee subscription management routes
+                        $router->group(
+                            ['prefix' => 'chargebee'],
+                            function ($router) {
+                                $router->put('subscriptions/{subscriptionId}', 'SubscriptionController@updateSubscription');
+                                $router->delete('subscriptions/{subscriptionId}', 'SubscriptionController@cancelSubscription');
+                                $router->put('subscriptions/{subscriptionId}/amount', 'SubscriptionController@updateSubscriptionQuantity');
+                                $router->get('subscriptions/{subscriptionId}/addon-quantities', 'SubscriptionController@getCurrentAddonQuantities');
+                                $router->get('subscriptions/{subscriptionId}/raw-data', 'SubscriptionController@getRawSubscriptionData');
+                            }
+                        );
+                        $router->group(
+                            ['prefix' => 'webhook'],
+                            function ($router) {
+                                $router->post('chargebee', 'ChargebeeWebhookController@handle');
+
+                            }
+                        );
+                        $router->group(
+                            ['prefix' => 'test-webhooks'],
+                            function ($router) {
+                                $router->get('subscription-created', 'WebhookTestController@testSubscriptionCreated');
+                                $router->get('payment_succeeded', 'WebhookTestController@testPaymentSucceeded');
+                                $router->get('payment_failed', 'WebhookTestController@testPaymentFailed');
+                            }
+                        );
                         $router->group(
                             ['prefix' => 'plan'],
                             function ($router) {
@@ -146,6 +173,17 @@ Route::prefix(config('fleetbase.api.routing.prefix', '/'))->namespace('Fleetbase
                                 $router->get('status/{user_id}', 'PlanController@getUserPaymentStatus');
                             }
                         );
+                        $router->group(
+                            ['prefix' => 'test'],
+                            function ($router) {
+                                $router->post('subscription/change-charge-date', 'TestChargeController@changeChargeDate');
+                            }
+                        );
+                        // Route::prefix('test')->group(function () {
+                        //     Route::post('/subscription/change-charge-date', [TestChargeController::class, 'changeChargeDate']);
+                        //     Route::post('/payment/create-with-date', [TestChargeController::class, 'createTestPaymentWithDate']);
+                        //     Route::post('/payment/schedule-today', [TestChargeController::class, 'schedulePaymentForToday']);
+                        // });
                         $router->group(
                             ['prefix' => 'lookup'],
                             function ($router) {

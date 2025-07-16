@@ -8,6 +8,10 @@ import { not, notEmpty, alias } from '@ember/object/computed';
 import { task } from 'ember-concurrency-decorators';
 import { OSRMv1, Control as RoutingControl } from '@fleetbase/leaflet-routing-machine';
 import getRoutingHost from '@fleetbase/ember-core/utils/get-routing-host';
+import { driver } from 'driver.js';
+import 'driver.js/dist/driver.css';
+import { on } from '@ember/object/evented';
+
 
 export default class OperationsOrdersIndexViewController extends BaseController {
     @controller('operations.orders.index') ordersController;
@@ -444,6 +448,163 @@ export default class OperationsOrdersIndexViewController extends BaseController 
         const _isWaypointsCollapsed = this.isWaypointsCollapsed;
 
         this.isWaypointsCollapsed = !_isWaypointsCollapsed;
+    }
+    
+    /**
+     * Start the view order tour.
+     *
+     * @void
+     */
+    @action
+    startViewOrderTour() {
+        const sectionBody = document.querySelector('.new-order-overlay-body');
+
+        const scrollElementIntoView = (element) => {
+            if (sectionBody) {
+                const elementRect = element.getBoundingClientRect();
+                const sectionBodyRect = sectionBody.getBoundingClientRect();
+                const scrollTop = sectionBody.scrollTop + elementRect.top - sectionBodyRect.top - (sectionBodyRect.height - elementRect.height) / 2;
+                sectionBody.scrollTo({ top: scrollTop, behavior: 'smooth' });
+            }
+        };
+        const driverObj = driver({
+            showProgress: true,
+            nextBtnText: this.intl.t('fleetbase.common.next'),
+            prevBtnText: this.intl.t('fleetbase.common.previous'),
+            doneBtnText: this.intl.t('fleetbase.common.done'),
+            closeBtnText: this.intl.t('fleetbase.common.close'),
+            allowClose: false,
+            disableActiveInteraction: true,
+            onPopoverRender: (popover) => {
+            const closeBtn = popover.wrapper.querySelector('.driver-popover-close-btn');
+            if (closeBtn) {
+                closeBtn.style.display = 'inline-block';
+            }
+            },
+            steps: [
+                {
+                    element: '.new-order-activity',
+                    popover: {
+                        title: this.intl.t('fleetbase.orders.tour.activity_tab.title'),
+                        description: this.intl.t('fleetbase.orders.tour.activity_tab.description'),
+                    },
+                },
+                {
+                    element: '.new-order-details',
+                    popover: {
+                        title: this.intl.t('fleetbase.orders.tour.details_tab.title'),
+                        description: this.intl.t('fleetbase.orders.tour.details_tab.description'),
+                    },
+                },
+                {
+                    element: '.new-order-details .next-content-panel-header-right button',
+                    popover: {
+                        title: this.intl.t('fleetbase.orders.tour.details_edit.title'),
+                        description: this.intl.t('fleetbase.orders.tour.details_edit.description'),
+                        onNextClick: () => {
+                            const order = this.model;
+                            this.editOrder(order);
+                            const checkModal = setInterval(() => {
+                            const modal = document.querySelector('.flb--modal');
+                            if (modal && modal.classList.contains('show')) {
+                            clearInterval(checkModal);
+                            driverObj.moveNext(); // Move to the next step
+                            }
+                        }, 100);  
+                        }
+                    },
+                    
+                    onHighlightStarted: (element) => {
+                        element.scrollIntoView({ behavior: 'smooth' });
+                      },
+                },
+                 {
+                    element: '.flb--modal .flb--modal-content',
+                    popover: {
+                        title: this.intl.t('fleetbase.orders.tour.edit_modal.title'),
+                        description: this.intl.t('fleetbase.orders.tour.edit_modal.description'),
+                        onNextClick: () => {
+                            this.modalsManager.done();
+                            driverObj.moveNext();
+                        },
+                        onPrevClick: () => {
+                            this.modalsManager.done();
+                            driverObj.movePrevious();
+                        }
+                    },
+                },
+                {
+                    element: '.new-order-tracking .next-content-panel-container',
+                    popover: {
+                        title: this.intl.t('fleetbase.orders.tour.tracking_tab.title'),
+                        description: this.intl.t('fleetbase.orders.tour.tracking_tab.description'),
+                        onPrevClick: () => {
+                            const order = this.model;
+                            this.editOrder(order);
+                            const checkModal = setInterval(() => {
+                            const modal = document.querySelector('.flb--modal');
+                            if (modal && modal.classList.contains('show')) {
+                            clearInterval(checkModal);
+                            driverObj.movePrevious(); // Move to the next step
+                            }
+                        }, 100); 
+                        }
+                    },
+                     onHighlightStarted: (element) => {
+                        // Ensure the element is scrolled into view before highlighting
+                        element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                      },
+                },
+                {
+                    element: '.new-order-notes .next-content-panel-container',
+                    popover: {
+                        title: this.intl.t('fleetbase.orders.tour.notes_tab.title'),
+                        description: this.intl.t('fleetbase.orders.tour.notes_tab.description'),
+                    },
+                    onHighlightStarted: (element) => {
+                        // Ensure the element is scrolled into view before highlighting
+                        element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                      },
+                },
+                {
+                    element: '.new-order-route .next-content-panel-container',
+                    popover: {
+                        title: this.intl.t('fleetbase.orders.tour.route_tab.title'),
+                        description: this.intl.t('fleetbase.orders.tour.route_tab.description'),
+                    },
+                    onHighlightStarted: scrollElementIntoView,
+                },
+                {
+                    element: '.new-order-documents .next-content-panel-container',
+                    popover: {
+                        title: this.intl.t('fleetbase.orders.tour.documents_tab.title'),
+                        description: this.intl.t('fleetbase.orders.tour.documents_tab.description'),
+                    },
+                    onHighlightStarted: scrollElementIntoView,
+                },
+                {
+                    element: '.new-order-comments .next-content-panel-container',
+                    popover: {
+                        title: this.intl.t('fleetbase.orders.tour.comments_tab.title'),
+                        description: this.intl.t('fleetbase.orders.tour.comments_tab.description'),
+                    },
+                    onHighlightStarted: scrollElementIntoView,
+                },
+                {
+                    element: '.dispatch-order',
+                    popover: {
+                        title: this.intl.t('fleetbase.orders.tour.dispatch.title'),
+                        description: this.intl.t('fleetbase.orders.tour.dispatch.description'),
+                    },
+                    onHighlightStarted: (element) => {
+                        // Ensure the element is scrolled into view before highlighting
+                        element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                      },
+                }
+            ],
+        });
+    
+        driverObj.drive();
     }
 
     /**

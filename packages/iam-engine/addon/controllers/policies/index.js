@@ -4,6 +4,9 @@ import { tracked } from '@glimmer/tracking';
 import { action } from '@ember/object';
 import { isBlank } from '@ember/utils';
 import { timeout, task } from 'ember-concurrency';
+import { driver } from 'driver.js';
+import { later } from '@ember/runloop';
+import 'driver.js/dist/driver.css';
 
 export default class PoliciesIndexController extends Controller {
     @service store;
@@ -214,6 +217,7 @@ export default class PoliciesIndexController extends Controller {
 
         this.editPolicy(policy, {
             title: this.intl.t('iam.policies.index.new-policy'),
+            modalClass: 'create-policy-modal',
             acceptButtonText: this.intl.t('common.confirm'),
             acceptButtonIcon: 'check',
             acceptButtonDisabled: this.abilities.cannot(formPermission),
@@ -338,4 +342,97 @@ export default class PoliciesIndexController extends Controller {
     @action reload() {
         return this.hostRouter.refresh();
     }
+
+    @action CreatePolicyTour() {
+    const driverObj = driver({
+      showProgress: true,
+      nextBtnText: this.intl.t('fleetbase.common.next'),
+      prevBtnText: this.intl.t('fleetbase.common.previous'),
+      doneBtnText: this.intl.t('fleetbase.common.done'),
+      closeBtnText: this.intl.t('fleetbase.common.close'),
+      allowClose: false,
+      disableActiveInteraction: true,
+       onPopoverRender: (popover, { driver }) => {
+        const closeBtn = popover.wrapper.querySelector('.driver-popover-close-btn');
+            if (closeBtn) {
+                closeBtn.style.display = 'inline-block';
+            }
+    // Create the Skip button
+    const skipButton = document.createElement("button");
+    skipButton.innerText = "Skip";
+    skipButton.className = "driverjs-skip-btn"; // Optional: for styling
+
+    // Define what happens when Skip is clicked
+    skipButton.addEventListener("click", () => {
+      driver.destroy(); // Ends the tour
+    });
+
+    // Add the button to the popover footer
+    // popover.footerButtons.appendChild(skipButton);
+  },
+      steps: [
+        {
+          element: '.create-policy-button',
+          onHighlightStarted: (element) => {
+            element.style.setProperty('pointer-events', 'none', 'important');
+            element.disabled = true;
+          },
+          onDeselected: (element) => {
+            element.style.pointerEvents = 'auto';
+            element.disabled = false;
+          },
+          popover: {
+            title: this.intl.t('fleetbase.policies.tour.new_button.title'),
+            description: this.intl.t('fleetbase.policies.tour.new_button.description', { htmlSafe: true }),
+            onNextClick: () => {
+              this.createPolicy();
+              const checkModal = setInterval(() => {
+                const modal = document.querySelector('.create-policy-modal');
+                if (modal && modal.classList.contains('show')) {
+                clearInterval(checkModal);
+                driverObj.moveNext(); // Move to the next step
+                }
+            }, 100);
+            },
+          },
+        },
+        {
+          element: '.create-policy-modal .input-group:has(.policy-name)',
+          popover: {
+            title: this.intl.t('fleetbase.policies.tour.name_field.title'),
+            description: this.intl.t('fleetbase.policies.tour.name_field.description', { htmlSafe: true }),
+          },
+        },
+        {
+          element: '.create-policy-modal .input-group:has(.policy-description)',
+          popover: {
+            title: this.intl.t('fleetbase.policies.tour.description_field.title'),
+            description: this.intl.t('fleetbase.policies.tour.description_field.description', { htmlSafe: true }),
+          },
+        },
+        {
+          element: '.create-policy-modal .input-group:has(.permissions-picker)',
+          popover: {
+            title: this.intl.t('fleetbase.policies.tour.permissions_field.title'),
+            description: this.intl.t('fleetbase.policies.tour.permissions_field.description', { htmlSafe: true }),
+          },
+        },
+        {
+          element: '.create-policy-modal .btn-primary',
+          popover: {
+            title: this.intl.t('fleetbase.policies.tour.submit.title'),
+            description: this.intl.t('fleetbase.policies.tour.submit.description', { htmlSafe: true }),
+        //     onDestroyed: () => this.modalsManager.close(),
+        //     onExit: () => this.modalsManager.close(),
+        //     onCompleted: () => {
+        //         console.log('Tour completed');
+        //     this.modalsManager.closeAll();
+        // }
+            },
+        },
+      ],
+    });
+
+    driverObj.drive();
+  }
 }

@@ -2,6 +2,8 @@ import BaseController from '@fleetbase/fleetops-engine/controllers/base-controll
 import { tracked } from '@glimmer/tracking';
 import { inject as service } from '@ember/service';
 import { action } from '@ember/object';
+import { driver } from 'driver.js';
+import 'driver.js/dist/driver.css';
 
 export default class ManagementDriversIndexNewController extends BaseController {
     /**

@@ -19,6 +19,7 @@
             <div class="flex flex-1 justify-end">
                 <div class="mr-2">
                     <Button
+                        @customClass="new-driver-submit"
                         @icon={{if this.driver.id "save" "check"}}
                         @type="primary"
                         @text={{if this.driver.id (t "fleet-ops.component.driver-form-panel.save-driver") (t "fleet-ops.component.driver-form-panel.create-driver")}}
@@ -28,6 +29,7 @@
                     />
                 </div>
                 <Button
+                    @customClass="driver-form-cancel-button"
                     @type="default"
                     @icon="times"
                     @helpText={{if this.driver.id (t "fleet-ops.component.driver-form-panel.cancel-edit-driver") (t "fleet-ops.component.driver-form-panel.cancel-new-driver")}}
@@ -97,9 +99,10 @@
         </div>
     </Overlay::Header>
 
-    <Overlay::Body @wrapperClass="new-service-rate-overlay-body px-4 space-y-4 pt-4">
+    <Overlay::Body @wrapperClass="driver-form-panel new-service-rate-overlay-body px-4 space-y-4 pt-4">
         <div class="flex-1 space-y-4">
             <ContentPanel
+                @wrapperClass="user-account-panel"
                 @title={{t "fleet-ops.component.driver-form-panel.user-account"}}
                 @open={{true}}
                 @pad={{true}}
@@ -149,7 +152,7 @@
                 {{/if}}
             </ContentPanel>
 
-            <ContentPanel @title={{t "fleet-ops.component.driver-form-panel.driver-details"}} @open={{true}} @pad={{true}} @panelBodyClass="bg-white dark:bg-gray-800">
+            <ContentPanel @wrapperClass="driver-details-panel" @title={{t "fleet-ops.component.driver-form-panel.driver-details"}} @open={{true}} @pad={{true}} @panelBodyClass="bg-white dark:bg-gray-800">
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 text-xs dark:text-gray-100">
                     {{!-- <InputGroup @name={{t "fleet-ops.common.internal-id"}}>
                         <Input @value={{this.driver.internal_id}} @type="text" class="w-full form-input" placeholder={{t "fleet-ops.common.internal-id"}} disabled={{cannot this.savePermission}} />

@@ -2,6 +2,7 @@
     <div class="modal-body-container">
         <div class="text-xs dark:text-gray-100">
             <InputGroup
+                class="group-name" 
                 @name={{t "iam.components.modals.group-form.group-name"}}
                 @value={{@options.group.name}}
                 @placeholder={{t "iam.components.modals.group-form.group-name"}}
@@ -11,7 +12,7 @@
                 <Textarea
                     @value={{@options.group.description}}
                     rows="5"
-                    class="w-full form-input"
+                    class="w-full form-input group-description"
                     placeholder={{t "iam.components.modals.group-form.group-description"}}
                     disabled={{cannot @options.formPermission}}
                 />
@@ -31,7 +32,7 @@
                             @selectedModel={{@options.lastSelectedUser}}
                             @placeholder={{t "iam.components.modals.group-form.select-user-add-group"}}
                             class="w-64"
-                            @triggerClass="form-select form-input"
+                            @triggerClass="form-select form-input group-users"
                             @infiniteScroll={{false}}
                             @renderInPlace={{true}}
                             @onChange={{@options.addUser}}

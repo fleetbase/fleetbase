@@ -1,4 +1,5 @@
 <Layout::Section::Header @title={{t "iam.common.user"}} @searchQuery={{this.query}} @onSearch={{perform this.search}} @searchDisabled={{cannot "iam list user"}}>
+    <Button @icon="question-circle" @type="default" @text={{t "fleetbase.common.help"}} @onClick={{this.CreateUserTour}} class="mr-2" />
     <Button @icon="refresh" @onClick={{this.reload}} @helpText={{t "iam.common.reload-data"}} class="mr-2" />
     <FiltersPicker
         @columns={{this.columns}}
@@ -20,7 +21,7 @@
             </div>
         </DropdownButton>
     {{/if}}
-    <Button @icon="plus" @iconPrefix="fas" @type="primary" @text={{t "iam.common.new"}} @permission="iam delete user" class="mr-2" @onClick={{this.createUser}} />
+    <Button @customClass="create-user-button" @icon="plus" @iconPrefix="fas" @type="primary" @text={{t "iam.common.new"}} @permission="iam delete user" class="mr-2" @onClick={{this.createUser}} />
     <Button @icon="long-arrow-up" @iconClass="rotate-icon-45" @text={{t "iam.common.export"}} @permission="iam export user" @onClick={{this.exportUsers}} />
 </Layout::Section::Header>
 

@@ -11,7 +11,7 @@ module.exports = function (environment) {
     if (environment === 'production') {
         awsFilePath = 'fleetyes/live';
     }
-    
+
     const ENV = {
         modulePrefix: '@fleetbase/console',
         version,
@@ -68,9 +68,9 @@ module.exports = function (environment) {
         AWS: {
             FILE_PATH: awsFilePath,
             DISK: 's3',
-            BUCKET: 'acsdevbucket'
-          },
-        
+            BUCKET: 'acsdevbucket',
+        },
+
         'ember-simple-auth': {
             routeAfterAuthentication: 'console',
         },
@@ -84,6 +84,14 @@ module.exports = function (environment) {
         'ember-cli-notifications': {
             autoClear: true,
             clearDuration: 1000 * 3.5,
+        },
+        chargebee: {
+            baseUrl: "https://agilecyber-test.chargebee.com/hosted_pages/checkout",
+            itemPriceIds: {
+              basic: "Basic-GBP-Monthly",
+              appUser: "No-of-App-User-GBP-Monthly",
+              webUser: "no_of_webusers-GBP-Monthly"
+            }
         },
     };
 
