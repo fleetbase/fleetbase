@@ -145,6 +145,9 @@ return [
         'attribute-name' => [
             'rule-name' => 'custom-message',
         ],
+        'drivers_license_number' => [
+            'unique' => 'Driver with this license number already exists.',
+        ],
     ],
 
     /*

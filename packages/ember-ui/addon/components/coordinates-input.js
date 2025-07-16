@@ -51,14 +51,14 @@ export default class CoordinatesInputComponent extends Component {
      * @type {number}
      * @memberof CoordinatesInputComponent
      */
-    @tracked latitude;
+    @tracked latitude = '';
 
     /**
      * Current longitude of the map center.
      * @type {number}
      * @memberof CoordinatesInputComponent
      */
-    @tracked longitude;
+    @tracked longitude = '';
 
     /**
      * Latitude for map positioning.
@@ -115,6 +115,8 @@ export default class CoordinatesInputComponent extends Component {
      * @memberof CoordinatesInputComponent
      */
     @tracked disabled = false;
+    @tracked latitudeInput = '';
+    @tracked longitudeInput = '';
 
     /**
      * Constructor for CoordinatesInputComponent. Sets initial map coordinates and values.
@@ -153,34 +155,24 @@ export default class CoordinatesInputComponent extends Component {
      */
     @action
     onLatitudeInput(event) {
-        const rawValue = event.target.value;
-        const lat = parseFloat(rawValue);
-        const lng = parseFloat(this.longitude);
-
-        // Only assign if value is a valid number
-        if (!isNaN(lat)) {
-            this.latitude = lat;
-        }
-
-        // Only update coordinates if both are valid
-        if (!isNaN(lat) && !isNaN(lng)) {
-            this.updateCoordinates(lat, lng);
-        }
+        this.latitudeInput = event.target.value;
+        this._handleCoordinateInput();
     }
 
     @action
     onLongitudeInput(event) {
-        const rawValue = event.target.value;
-        const lng = parseFloat(rawValue);
-        const lat = parseFloat(this.latitude);
+        this.longitudeInput = event.target.value;
+        this._handleCoordinateInput();
+    }
 
-        if (!isNaN(lng)) {
-            this.longitude = lng;
-        }
+    _handleCoordinateInput() {
+        const parsedLat = parseFloat(this.latitudeInput);
+        const parsedLng = parseFloat(this.longitudeInput);
 
-        if (!isNaN(lat) && !isNaN(lng)) {
-            this.updateCoordinates(lat, lng);
-        }
+        const lat = isNaN(parsedLat) ? null : parsedLat;
+        const lng = isNaN(parsedLng) ? null : parsedLng;
+
+        this.updateCoordinates(lat, lng);
     }
 
     /**
@@ -219,15 +211,21 @@ export default class CoordinatesInputComponent extends Component {
      * @memberof CoordinatesInputComponent
      */
     updateCoordinates(lat, lng, options = {}) {
-        if (this.isPoint(lat)) {
-            const [longitude, latitude] = lat.coordinates;
-
-            return this.updateCoordinates(latitude, longitude);
-        }
-
-        const { onChange } = this.args;
+        // Allow updating null/undefined coordinates
         const fireCallback = getWithDefault(options, 'fireCallback', true);
         const updateMap = getWithDefault(options, 'updateMap', true);
+        const { onChange } = this.args;
+
+        if (typeof lat !== 'number' || isNaN(lat) || typeof lng !== 'number' || isNaN(lng)) {
+            console.warn('[updateCoordinates] Invalid or incomplete coordinates:', lat, lng);
+
+            if (fireCallback && typeof onChange === 'function') {
+                onChange({ latitude: lat, longitude: lng }); // ✅ Fire callback even when invalid
+                console.log('[updateCoordinates] Firing onChange with INVALID values');
+            }
+
+            return;
+        }
 
         this.latitude = lat;
         this.longitude = lng;
@@ -302,6 +300,36 @@ export default class CoordinatesInputComponent extends Component {
 
         if (typeof onUpdatedFromMap === 'function') {
             onUpdatedFromMap({ latitude: lat, longitude: lng });
+        }
+    }
+    
+    /**
+     * Restricts input to valid float-compatible characters for latitude and longitude fields.
+     * Allows numbers, a single dot for decimals, and a minus sign (only at the start).
+     * Prevents invalid characters and duplicate dots or misplaced minus signs.
+     *
+     * @param {KeyboardEvent} event - The keydown event triggered by the input field.
+     * @memberof CoordinatesInputComponent
+     */
+    @action
+    allowOnlyFloatKeys(event) {
+        const allowedKeys = [
+            '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
+            '.', '-', 'Backspace', 'Tab', 'ArrowLeft', 'ArrowRight', 'Delete'
+        ];
+
+        if (!allowedKeys.includes(event.key)) {
+            event.preventDefault();
+        }
+
+        // Prevent duplicate dot
+        if (event.key === '.' && event.target.value.includes('.')) {
+            event.preventDefault();
+        }
+
+        // Prevent invalid minus sign
+        if (event.key === '-' && (event.target.selectionStart !== 0 || event.target.value.includes('-'))) {
+            event.preventDefault();
         }
     }
 
