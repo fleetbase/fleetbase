@@ -1,6 +1,9 @@
 [submodule "packages/fleetops"]
 	path = packages/fleetops
 	url = git@github.com:fleetbase/fleetops.git
+[submodule "packages/storefront"]
+	path = packages/storefront
+	url = git@github.com:fleetbase/storefront.git
 [submodule "packages/pallet"]
 	path = packages/pallet
 	url = git@github.com:fleetbase/pallet.git
@@ -14,6 +17,9 @@
 [submodule "docs"]
 	path = docs
 	url = git@github.com:fleetbase/docs.git
+[submodule "packages/registry-bridge"]
+	path = packages/registry-bridge
+	url = git@github.com:fleetbase/registry-bridge.git
 [submodule "packages/ledger"]
 	path = packages/ledger
 	url = git@github.com:fleetbase/ledger.git
