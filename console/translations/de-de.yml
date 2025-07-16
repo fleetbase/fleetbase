@@ -1900,6 +1900,8 @@ fleet-ops:
       security-code: Sicherheitszugangscode
       postal-code: Postleitzahl
       state: Bundesland
+      coordinates-required: "Standortkoordinaten sind erforderlich."
+      coordinates-invalid: "Standortkoordinaten sind ungültig. Bitte geben Sie eine gültige Breiten- und Längengrad ein."
     place-panel:
       edit-place: Ort bearbeiten
       cancel-edit-place: Bearbeitung des Ortes abbrechen
@@ -2820,3 +2822,473 @@ registry-bridge:
         upload-new-bundle: Neues Bundle hochladen
         self-managed: Selbstverwaltet
         self-managed-help-text: Aktivieren Sie diese Option, wenn Ihr Modul nur für selbstgehostete Instanzen gedacht ist. Durch die Auswahl wird das Modul nicht für die Installation in der Cloud-/SaaS-Version von FleetYes verfügbar sein und muss vom Benutzer manuell auf seinem eigenen Server installiert werden.
+fleetbase:
+  common:
+    next: "Weiter"
+    previous: "Zurück"
+    done: "Fertig"
+    close: "Schließen"
+    help: "Hilfe"
+
+  orders:
+    tour:
+      add:
+        title: "Neue Bestellung erstellen"
+        description: "Starten Sie die Bestellungserstellung mit einem Klick auf 'Neu'."
+      import_button:
+        title: "Bestellungen importieren"
+        description: "Importieren Sie Bestellungen aus einer Tabellenkalkulation für eine effiziente Massenverarbeitung."
+      upload_spreadsheets:
+        title: "Tabellen hochladen"
+        description: "Laden Sie Tabellenkalkulationsdateien per Drag & Drop hoch oder wählen Sie sie auf Ihrem Gerät aus."
+      start_upload:
+        title: "Upload starten"
+        description: "Starten Sie den Upload und die Verarbeitung der ausgewählten Tabellenkalkulationsdateien."
+      dates:
+        title: "Bestellplanung"
+        description: "Legen Sie Start- und voraussichtliches Fertigstellungsdatum fest, um den Zeitplan der Bestellung zu skizzieren."
+      multiple_dropoff:
+        title: "Mehrere Abgabeorte"
+        description: "Standardmäßig sind mehrere Lieferziele für eine Bestellung aktiviert."
+      multiple_dropoff_disabled:
+        title: "Mehrere Abgabeorte deaktiviert"
+        description: "In der aktuellen Einstellung ist für diese Bestellung nur ein Abgabeort zulässig."
+      add_waypoint:
+        title: "Wegpunkte hinzufügen"
+        description: "Fügen Sie zusätzliche Zwischenstopps entlang der Route hinzu, um mehrere Orte für die Lieferung zu ermöglichen."
+      pickup_dropoff_section:
+        title: "Abhol-/Abgabe-/Rückgabebereich"
+        description: "Geben Sie die Abhol-, Abgabe- und Rückgabeorte für die Bestellung an."
+      select_waypoint:
+        title: "Wegpunktstandort"
+        description: "Definieren Sie den Standort für jeden Wegpunkt, um eine genaue Zuordnung der Lieferroute zu gewährleisten."
+      notes:
+        title: "Bestellhinweise"
+        description: "Fügen Sie spezielle Anweisungen oder Hinweise hinzu, um eine reibungslose Auftragsabwicklung zu gewährleisten."
+      documents:
+        title: "Dokumenten-Upload"
+        description: "Fügen Sie relevante Dokumente wie Lieferanweisungen, Rechnungen oder Verträge zur Dokumentation bei."
+      submit:
+        title: "Bestellung absenden"
+        description: "Schließen Sie den Bestellvorgang ab, indem Sie die letzten Details zur Bearbeitung übermitteln."
+      activity_tab:
+        title: "Bestellaktivität"
+        description: "Verfolgen Sie alle Aktionen und Statusänderungen im Zusammenhang mit der Bestellung während ihres gesamten Lebenszyklus."
+      details_tab:
+        title: "Bestelldetails"
+        description: "Sehen Sie umfassende Bestelldetails ein, einschließlich zugewiesenem Fahrer, Fahrzeug, Startdatum und voraussichtlichem Enddatum."
+      details_edit:
+        title: "Bestellung bearbeiten"
+        description: "Ändern Sie Bestelldetails wie Datum, Fahrerzuweisung und Fahrzeugauswahl."
+      edit_modal:
+        title: "Bestelldetails bearbeiten"
+        description: "Ändern Sie Startdatum, Enddatum, Fahrer- und Fahrzeugzuweisung in den Bestelldetails."
+      tracking_tab:
+        title: "Auftragsverfolgung"
+        description: "Verfolgen Sie den aktuellen Status und Standort der Bestellung während des gesamten Auftragsabwicklungsprozesses."
+      notes_tab:
+        title: "Bestellhinweise"
+        description: "Speichern und überprüfen Sie alle Notizen und besonderen Bearbeitungsanweisungen zur Bestellung."
+      route_tab:
+        title: "Routenübersicht"
+        description: "Überprüfen Sie die verbundenen Standorte der Lieferroute und zeigen Sie alle Haltestellen und Wegpunkte der Reihe nach an."
+      documents_tab:
+        title: "Dokumente & Dateien"
+        description: "Greifen Sie auf eine übersichtliche Sammlung aller mit der Bestellung verbundenen Dokumente zu, einschließlich Rechnungen und Lieferscheinen."
+      comments_tab:
+        title: "Auftragskommunikation"
+        description: "Sehen Sie sich die chronologische Liste der Kommentare, Diskussionen und Aktualisierungen zur Bestellung an."
+      dispatch_button:
+        title: "Steuerung der Auftragsabwicklung"
+        description: "Starten Sie den Auftragsabwicklungsprozess, indem Sie die Bestellung an die zuständigen Logistikressourcen versenden."
+      dispatch:
+        title: "Auftragsabwicklung"
+        description: "Führen Sie die Auftragsabwicklung durch, indem Sie die Bestellung an das zugewiesene Team oder den Dienstleister versenden."
+
+  scheduler:
+    tour:
+      unscheduled_orders:
+        title: "Bereich 'Nicht zugewiesene Aufträge'"
+        description: "Dieser Bereich zeigt alle Aufträge an, die zur Planung anstehen. Überprüfen Sie die Auftragsdetails und verschieben Sie sie zur Planung in den Kalender."
+      edit_order_modal:
+        title: "Details nicht zugewiesener Aufträge bearbeiten"
+        description: "Ändern Sie Liefertermine, weisen Sie Fahrer und Fahrzeuge zu und passen Sie weitere Planungsdetails für nicht zugewiesene Aufträge an."
+      edit_assigned_order_modal:
+        title: "Details zugewiesener Aufträge bearbeiten"
+        description: "Passen Sie die Planungsdetails für bereits zugewiesene Aufträge an, einschließlich Aktualisierung von Terminen, Neuzuweisung von Fahrern oder Änderung der Fahrzeugzuweisung."
+      scheduled_orders:
+        title: "Bereich 'Zugewiesene Aufträge'"
+        description: "Überprüfen Sie alle Aufträge, die Fahrern zugewiesen und für bestimmte Zeitfenster geplant sind. Behalten Sie den Überblick über alle geplanten Lieferungen in einer Ansicht."
+      filters:
+        title: "Filter"
+        description: "Verwenden Sie Filter, um Aufträge nach Auftragsnummer, Fahrerzuweisung oder Status zu suchen. Setzen Sie die Filter zurück, um die Ansicht zu leeren."
+      time_period:
+        title: "Kalenderansicht"
+        description: "Wählen Sie zwischen Tages-, Wochen-, Monats- und Jahresansichten, um Ihren Zeitplan aus verschiedenen Perspektiven zu visualisieren."
+      calendar:
+        title: "Planungskalender"
+        description: "Verschieben Sie Aufträge aus dem Bereich 'Nicht zugewiesen', um sie zu planen, oder wählen Sie bestehende Ereignisse aus, um deren Details zu überprüfen und zu ändern."
+      assigned_order_event:
+        title: "Zugewiesenes Auftragsereignis"
+        description: "Dieser Block stellt einen zugewiesenen Auftrag im Kalender dar. Bewegen Sie den Mauszeiger, um Auftragsdetails und Planungsoptionen anzuzeigen."
+      leave_event:
+        title: "Abwesenheitsereignis"
+        description: "Dieser Block stellt einen geplanten Urlaub oder eine Abwesenheit eines Fahrers dar. Abwesenheitsereignisse sind immer im Kalender sichtbar."
+      click_order_link:
+        Titel: "Bestelldetails öffnen"
+        Beschreibung: "Klicken Sie auf diesen Link, um das Modalfenster zu öffnen und die Details einer nicht zugewiesenen Bestellung zu bearbeiten."
+      click_assigned_order_link:
+        Titel: "Zugewiesene Bestelldetails öffnen"
+        Beschreibung: "Klicken Sie auf diesen Link, um das Modalfenster zu öffnen und die Details einer zugewiesenen Bestellung zu bearbeiten."
+
+  drivers:
+    tour:
+      new_button:
+        title: "Neuen Fahrer erstellen"
+        description: "Öffnet das Formular zum Erstellen eines neuen Fahrerprofils und zur Eingabe der Fahrerdaten."
+      user_account:
+        title: "Bereich 'Benutzerkonto'"
+        description: "Wählen Sie ein bestehendes Benutzerkonto aus, das mit diesem Fahrerprofil verknüpft werden soll. Dadurch wird der Fahrer mit einem Benutzer verknüpft, der auf die mobile Fahrer-App zugreifen kann."
+      driver_details:
+        title: "Bereich 'Fahrerdetails'"
+        description: "Geben Sie wichtige Fahrerdaten wie Kennzeichen, zugewiesenes Fahrzeug und Standortangaben ein."
+      submit:
+        title: "Fahrer erstellen"
+        description: "Schließen Sie den Fahrererstellungsprozess ab, indem Sie das Formular mit allen eingegebenen Daten absenden."
+
+  vehicles:
+    tour:
+      new_button:
+        title: "Neues Fahrzeug anlegen"
+        description: "Öffnet das Formular zur Erstellung eines neuen Fahrzeugprofils und zur Eingabe fahrzeugspezifischer Informationen."
+      vehicle_details:
+        title: "Bereich 'Fahrzeugdetails'"
+        description: "Geben Sie wichtige Fahrzeuginformationen ein, darunter interne ID, Kennzeichen, Fahrgestellnummer, Marke, Modell, Baujahr und weitere Spezifikationen."
+      vehicle_avatar:
+        title: "Bereich 'Fahrzeug-Avatar'"
+        description: "Laden Sie ein Foto oder Bild hoch, um das Fahrzeug im System visuell darzustellen."
+      submit:
+        title: "Fahrzeug anlegen"
+        description: "Schließen Sie die Fahrzeugerstellung ab, indem Sie das Formular mit allen eingegebenen Daten absenden."
+
+  places:
+    tour:
+      new_button:
+        title: "Schaltfläche 'Neuer Ort'"
+        description: "Öffnet das Formular zur Ortserstellung, in dem Sie die Standortdetails für einen neuen Ort festlegen können."
+      form_panel:
+        title: "Formular zur Ortserstellung"
+        description: "Definieren Sie alle wichtigen Details für einen neuen Ort, einschließlich Standortinformationen und Koordinaten."
+      name_field:
+        title: "Ortsname"
+        description: "Geben Sie einen beschreibenden Namen für diesen Ort ein, der zur systemweiten Identifizierung verwendet wird."
+      code_field:
+        title: "Ortscode"
+        description: "Vergeben Sie einen eindeutigen Code oder eine Kennung für diesen Ort, um die schnelle Referenz und die Systemintegration zu erleichtern."
+      coordinates_field:
+        title: "Standortkoordinaten"
+        description: "Legen Sie die genauen geografischen Koordinaten für diesen Ort fest, entweder manuell oder über die Kartenoberfläche."
+      submit:
+        title: "Ort erstellen"
+        description: "Schließen Sie die Ortserstellung ab, indem Sie das Formular mit allen eingegebenen Standortdetails absenden."
+
+  fuel-reports:
+    tour:
+      new_button:
+        title: "Schaltfläche 'Neuer Tankbericht'"
+        description: "Öffnet das Formular zur Tankberichtserstellung, um den Kraftstoffverbrauch und die damit verbundenen Kosten zu erfassen."
+      form_panel:
+        title: "Formular zur Tankberichtserstellung"
+        description: "Erfassen Sie wichtige Details des Tankberichts, einschließlich Meldender, Fahrer, Fahrzeug, Kosten und unterstützende Unterlagen."
+      reporter_field:
+        title: "Auswahl des Meldenden"
+        description: "Wählen Sie die Person aus, die für die Meldung dieser Tanktransaktion verantwortlich ist."
+      driver_field:
+        title: "Auswahl des Fahrers"
+        description: "Wählen Sie den Fahrer aus, der während dieser Tanktransaktion für das Fahrzeug verantwortlich war."
+      vehicle_field:
+        title: "Fahrzeugauswahl"
+        description: "Wählen Sie das betankte Fahrzeug aus, um eine genaue Erfassung pro Fahrzeug zu gewährleisten."
+      status_field:
+        title: "Berichtsstatus"
+        description: "Verfolgen Sie den aktuellen Status dieses Tankberichts, um dessen Bearbeitungsablauf zu steuern."
+      cost_field:
+        title: "Kraftstoffkosten"
+        description: "Erfassen Sie die Gesamtkosten des Kraftstoffkaufs, um die Kraftstoffkosten zu verfolgen und das Budget zu verwalten."
+      volume_field:
+        title: "Kraftstoffmenge"
+        description: "Erfassen Sie die gekaufte Kraftstoffmenge für die Analyse der Kraftstoffeffizienz und die Verbrauchsverfolgung."
+      payment_method_field:
+        title: "Zahlungsmethode"
+        description: "Geben Sie die Zahlungsmethode für den Kraftstoffkauf an, um genaue Finanzunterlagen zu führen."
+      coordinates_field:
+        title: "Standortkoordinaten"
+        description: "Erfassen Sie den geografischen Standort des Kraftstoffkaufs, um Routen zu optimieren."
+      upload_field:
+        title: "Dokumenten-Upload"
+        description: "Laden Sie Belege wie Quittungen oder Fotos hoch, um diesen Bericht zu verifizieren."
+      submit:
+        title: "Kraftstoffbericht erstellen"
+        description: "Schließen Sie den Erstellungsprozess des Tankberichts ab, indem Sie das Formular mit allen eingegebenen Daten absenden."
+
+  parking:
+    tour:
+      help_button_tooltip: "Geführte Tour zur Parkraumverwaltung starten"
+      new_button:
+        title: "Neuen Parkbericht erstellen"
+        description: "Öffnet das Parkberichtsformular, in dem Sie Parkgebühren, Standorte und zugehörige Details zu Ihren Flottenfahrzeugen erfassen können."
+      form_panel:
+        title: "Parkberichtsformular"
+        description: "In diesem Formular können Sie umfassende Parkberichte erstellen, indem Sie Informationen zu Meldendem, Fahrer, Fahrzeug, Zahlungsdetails und Standort eingeben."
+      reporter_field:
+        title: "Berichterstatter auswählen"
+        description: "Hier können Sie die Person auswählen, die für die Meldung dieses Parkvorgangs verantwortlich ist, um die Verantwortlichkeit zu gewährleisten."
+      driver_field:
+        title: "Fahrer auswählen"
+        description: "Sie können den Fahrer auswählen, der für den Parkvorgang verantwortlich war, um die Parkkosten einzelner Fahrer zu erfassen."
+      vehicle_field:
+        title: "Fahrzeug auswählen"
+        description: "In diesem Feld können Sie das geparkte Fahrzeug auswählen, um die Parkkosten pro Fahrzeug zu erfassen und das Parkverhalten der Flotte zu analysieren."
+      status_field:
+        title: "Berichtsstatus"
+        description: "Hier können Sie den aktuellen Status dieses Parkberichts festlegen, um den Workflow und den Genehmigungsprozess zu verfolgen."
+      payment_method_field:
+        title: "Zahlungsmethode"
+        description: "Sie können auswählen, wie die Parkgebühr bezahlt wurde, um die Abrechnung der Spesen mit der Fluggesellschaft und die Finanzbuchhaltung zu ermöglichen."
+      cost_field:
+        title: "Parkkosten"
+        description: "In diesem Feld können Sie den Gesamtbetrag für das Parken eingeben, um eine genaue Finanzbuchhaltung und Kostenverfolgung zu gewährleisten."
+      coordinates_field:
+        title: "Parkort"
+        description: "Hier können Sie den genauen Ort angeben, an dem geparkt wurde, um die Routenoptimierung und Standortanalyse zu unterstützen."
+      upload_field:
+        title: "Dokumente hochladen"
+        description: "In diesem Bereich können Sie Belege wie Parkscheine, Tickets oder Fotos zur Verifizierung hochladen."
+      submit:
+        title: "Parkbericht erstellen"
+        description: "Sie können die Erstellung des Parkberichts abschließen, indem Sie das Formular mit allen eingegebenen Daten absenden."
+
+  toll-reports:
+    tour:
+      new_button:
+        title: "Neuen Mautbericht erstellen"
+        description: "Öffnet das Mautberichtsformular, in dem Sie alle notwendigen Angaben zu Mautkosten und deren Dokumentation eingeben können."
+      form_panel:
+        title: "Mautberichtsformular"
+        description: "In diesem Formular erfassen Sie alle wichtigen Informationen zu Mautkosten, einschließlich Meldendem, Fahrer, Fahrzeug, Zahlungsdetails und Belegen."
+      reporter_field:
+        title: "Melder auswählen"
+        description: "Wählen Sie hier die Person aus, die für die Meldung dieser Mautkosten verantwortlich ist, um eine ordnungsgemäße Rechenschaftslegung zu gewährleisten."
+      driver_field:
+        title: "Fahrer auswählen"
+        description: "Identifizieren Sie den Fahrer, der die Mautkosten verursacht hat, für die Fahrerkostenverfolgung und Routenanalyse."
+      vehicle_field:
+        title: "Fahrzeug auswählen"
+        description: "Wählen Sie hier das Fahrzeug aus, das die mautpflichtige Straße benutzt hat, um fahrzeugspezifische Mautkosten zu verfolgen und Kostenmuster zu analysieren."
+      status_field:
+        title: "Berichtsstatus"
+        description: "Legen Sie hier den aktuellen Status dieses Mautberichts fest, um den Genehmigungsworkflow zu verwalten und den Bearbeitungsstatus zu verfolgen."
+      payment_method_field:
+        title: "Zahlungsmethode"
+        description: "Sie können angeben, wie die Maut bezahlt wurde, um den Finanzabgleich und die Kostenkategorisierung zu ermöglichen."
+      cost_field:
+        title: "Mautbetrag"
+        description: "Geben Sie hier den Gesamtbetrag der Maut ein, um eine genaue Finanzbuchhaltung und Kostenverfolgung zu gewährleisten."
+      coordinates_field:
+        title: "Mautstandort"
+        description: "Geben Sie hier den Standort der Mautstelle an, um die Routenoptimierung und Kostenanalyse zu erleichtern."
+      upload_field:
+        title: "Dokumente hochladen"
+        description: "Hier können Sie Belege wie Mautbelege oder Fotos hochladen, um diese Spesenabrechnung zu belegen."
+      submit:
+        title: "Mautabrechnung erstellen"
+        description: "Sie können die Erstellung der Mautabrechnung abschließen, indem Sie das Formular mit allen eingegebenen Daten absenden."
+
+  issues:
+    tour:
+      new_button:
+        title: "Neues Problem erstellen"
+        description: "Öffnet das Formular zur Problemerstellung, in dem Sie Probleme, Wartungsbedarf oder andere Anliegen im Zusammenhang mit Ihrem Fuhrparkbetrieb dokumentieren können."
+      form_panel:
+        title: "Problemberichtsformular"
+        description: "In diesem Formular können Sie detaillierte Problemberichte erstellen, indem Sie Informationen zu Problemtyp, Priorität, zugewiesenem Personal und relevanten Details angeben."
+      reporter_field:
+        title: "Gemeldet von"
+        description: "Hier können Sie die Person auswählen, die dieses Problem meldet, um nachzuverfolgen, wer das Problem ursprünglich erkannt und gemeldet hat."
+      assigned_to_field:
+        title: "Zugewiesen an"
+        description: "Sie können dieses Problem dem zuständigen Teammitglied oder der zuständigen Abteilung zuweisen."
+      driver_field:
+        title: "Zugehöriger Fahrer"
+        description: "Wenn dieses Problem einen bestimmten Fahrer betrifft, können Sie ihn hier auswählen, um fahrerspezifische Anliegen und Muster zu verfolgen."
+      vehicle_field:
+        title: "Zugehöriges Fahrzeug"
+        description: "Hier können Sie das mit diesem Problem verbundene Fahrzeug auswählen, um Wartungsbedarf oder fahrzeugspezifische Anliegen zu verfolgen."
+      type_field:
+        title: "Problemtyp"
+        description: "Sie können das Problem kategorisieren, indem Sie den Typ auswählen, um die Weiterleitung und Priorisierung zu erleichtern."
+      category_field:
+        title: "Problemkategorie"
+        description: "In diesem Feld können Sie das Problem weiter klassifizieren, indem Sie eine bestimmte Kategorie auswählen, um die Analyse und Lösungsverfolgung zu verbessern."
+      report_field:
+        title: "Problembeschreibung"
+        description: "Hier können Sie das Problem detailliert beschreiben, einschließlich der Ursache, des Zeitpunkts der Störung und der relevanten Umstände."
+      tags_field:
+        title: "Problem-Tags"
+        description: "Sie können relevante Tags hinzufügen, um das Problem zu kategorisieren und zu suchen. So lassen sich verwandte Probleme leichter filtern und finden."
+      priority_field:
+        title: "Prioritätsstufe"
+        description: "In diesem Feld können Sie die Prioritätsstufe für das Problem festlegen, um festzulegen, wie schnell es behoben werden muss."
+      status_field:
+        title: "Problemstatus"
+        description: "Hier können Sie den aktuellen Status des Problems verfolgen und im Laufe seines Lebenszyklus aktualisieren."
+      coordinates_field:
+        title: "Problemort"
+        description: "Sie können den geografischen Ort angeben, an dem das Problem aufgetreten ist. Dies ist wichtig für standortspezifische Probleme oder die Entsendung von Unterstützung."
+      submit:
+        title: "Problem erstellen"
+        description: "Sie können diesen Problembericht einreichen, um ihn im System zu protokollieren. Das zuständige Personal wird benachrichtigt und kann mit der Lösungsarbeit beginnen."
+
+  fleets:
+    tour:
+      new_button:
+        title: "Schaltfläche 'Neue Flotte'"
+        description: "Öffnet das Formular zur Flottenerstellung, in dem Sie Flottendetails festlegen können."
+      form_panel:
+        title: "Formular zur Flottenerstellung"
+        description: "In diesem Formular können Sie wichtige Details zum Erstellen oder Bearbeiten einer Flotte eingeben, darunter Name, Hierarchie, Status und Aufgaben."
+      name_field:
+        title: "Flottenname"
+        description: "Hier können Sie den Namen der Flotte eingeben, um sie innerhalb Ihrer Organisation zu identifizieren."
+      parent_fleet_field:
+        title: "Auswahl der übergeordneten Flotte"
+        description: "Sie können die übergeordnete Flotte auswählen, wenn diese Teil einer größeren Flottenhierarchie ist, um die Flottenstruktur zu organisieren."
+      status_field:
+        title: "Flottenstatus"
+        description: "In diesem Feld können Sie den Status der Flotte festlegen, um ihren Betriebszustand zu verwalten."
+      task_field:
+        title: "Flottenaufgabe"
+        description: "Hier können Sie die Aufgabe oder Mission für diese Flotte festlegen, um ihre Hauptfunktion oder ihr Ziel zu definieren."
+      submit:
+        title: "Flotte speichern"
+        description: "Sie können die Flottenerstellung oder -aktualisierung abschließen, indem Sie alle eingegebenen Daten speichern."
+
+  users:
+    tour:
+      new-user:
+        title: "Schaltfläche 'Neuer Benutzer'"
+        description: "Öffnet das Formular zur Benutzererstellung, in dem Sie Benutzerdaten festlegen können."
+      name:
+        title: "Benutzername"
+        description: "Hier können Sie den vollständigen Namen des Benutzers eingeben, um ihn in Ihrem System zu identifizieren."
+      email:
+        title: "Benutzer-E-Mail"
+        description: "Sie können die E-Mail-Adresse des Benutzers für Kommunikations- und Anmeldezwecke angeben."
+      phone:
+        title: "Benutzertelefon"
+        description: "In diesem Feld können Sie die Telefonnummer des Benutzers für Kontakt- und Verifizierungszwecke eingeben."
+      country:
+        title: "Benutzerland"
+        description: "Hier können Sie das Land des Benutzers auswählen, um ihn einer bestimmten Region zuzuordnen."
+      role:
+        title: "Benutzerrolle"
+        description: "Sie können dem Benutzer eine Rolle zuweisen, um dessen Verantwortlichkeiten und Zugriffsrechte festzulegen."
+      policies:
+        title: "Richtlinien anfügen"
+        description: "In diesem Bereich können Sie dem Benutzer Richtlinien zuweisen, um dessen Berechtigungen und Zugriffsrechte festzulegen."
+      permissions:
+        title: "Berechtigungen auswählen"
+        description: "Hier können Sie spezifische Berechtigungen auswählen, um dem Benutzer Zugriff auf bestimmte Funktionen oder Aktionen zu gewähren."
+      confirm:
+        title: "Benutzer speichern"
+        description: "Sie können die Benutzererstellung oder -aktualisierung abschließen, indem Sie alle eingegebenen Daten speichern."
+
+  groups:
+    tour:
+      new_button:
+        title: "Schaltfläche 'Neue Gruppe'"
+        description: "Öffnet das Formular zur Gruppenerstellung, in dem Sie Gruppendetails festlegen können."
+      name_field:
+        title: "Gruppenname"
+        description: "Hier können Sie den Namen der Gruppe eingeben, um sie in Ihrem System zu identifizieren."
+      description_field:
+        title: "Gruppenbeschreibung"
+        description: "Sie können eine Beschreibung für die Gruppe eingeben, um ihren Zweck oder ihre Funktion zu beschreiben."
+      users_field:
+        title: "Benutzer auswählen"
+        description: "In diesem Bereich können Sie Benutzer auswählen, die dieser Gruppe hinzugefügt werden sollen, um ihre Mitgliedschaft festzulegen."
+      submit:
+        title: "Gruppe speichern"
+        description: "Sie können die Gruppenerstellung oder -aktualisierung abschließen, indem Sie alle eingegebenen Daten speichern."
+
+  roles:
+    tour:
+      new_button:
+        title: "Schaltfläche 'Neue Rolle'"
+        description: "Öffnet das Formular zur Rollenerstellung, in dem Sie Rollendetails festlegen können."
+      name_field:
+        title: "Rollenname"
+        description: "Hier können Sie den Namen der Rolle eingeben, um sie in Ihrem System zu identifizieren."
+      description_field:
+        title: "Rollenbeschreibung"
+        description: "Sie können eine Beschreibung für die Rolle eingeben, um ihren Zweck oder ihre Funktion zu erläutern."
+      policies_field:
+        title: "Richtlinien anhängen"
+        description: "In diesem Bereich können Sie der Rolle Richtlinien anhängen, um ihre Berechtigungen und Zugriffsrechte festzulegen."
+      permissions_field:
+        title: "Berechtigungen auswählen"
+        description: "Hier können Sie spezifische Berechtigungen auswählen, um der Rolle Zugriff auf bestimmte Funktionen oder Aktionen zu gewähren."
+      submit:
+        title: "Rolle speichern"
+        description: "Sie können die Rollenerstellung oder -aktualisierung abschließen, indem Sie alle eingegebenen Daten speichern."
+
+  policies:
+    tour:
+      new_button:
+        title: "Schaltfläche 'Neue Richtlinie'"
+        description: "Öffnet das Formular zur Richtlinienerstellung, in dem Sie Richtliniendetails festlegen können."
+      form_panel:
+        title: "Formular zur Richtlinienerstellung"
+        description: "In diesem Formular können Sie wichtige Details zum Erstellen oder Bearbeiten einer Richtlinie eingeben, darunter Name, Beschreibung und Berechtigungen."
+      name_field:
+        title: "Richtlinienname"
+        description: "Hier geben Sie den Namen der Richtlinie ein, um sie in Ihrem System zu identifizieren."
+      description_field:
+        title: "Richtlinienbeschreibung"
+        description: "Sie können eine Beschreibung für die Richtlinie eingeben, um ihren Zweck oder ihre Funktion zu beschreiben."
+      permissions_field:
+        title: "Berechtigungen auswählen"
+        description: "In diesem Abschnitt können Sie bestimmte Berechtigungen für die Richtlinie auswählen, um ihre Zugriffsrechte zu definieren."
+      submit:
+        title: "Richtlinie speichern"
+        description: "Sie können die Richtlinienerstellung oder -aktualisierung abschließen, indem Sie alle eingegebenen Daten speichern."
+
+  organization_settings:
+    tour:
+      name_field:
+        title: "Organisationsname"
+        description: "Hier geben Sie den Namen Ihrer Organisation ein, um sie im System zu identifizieren."
+      description_field:
+        title: "Organisationsbeschreibung"
+        description: "Sie können eine Beschreibung für Ihre Organisation eingeben, um ihren Zweck oder ihre Details zu beschreiben."
+      phone_field:
+        title: "Organisationstelefon"
+        description: "In diesem Feld können Sie die Telefonnummer Ihrer Organisation für Kontaktzwecke eingeben."
+      currency_field:
+        title: "Organisationswährung"
+        description: "Hier wählen Sie die Währung Ihrer Organisation für Finanztransaktionen."
+      id_field:
+        title: "Organisations-ID"
+        description: "Hier wird die eindeutige Kennung Ihrer Organisation angezeigt, die nicht bearbeitet werden kann."
+      parking_zone:
+        title: "Parkzone"
+        description: "Sie können die maximale Entfernung für die Parkzone festlegen, um die Betriebsgrenzen zu konfigurieren."
+      save_button:
+        title: "Änderungen speichern"
+        description: "Sie können alle Änderungen an den Organisationseinstellungen speichern, indem Sie auf diese Schaltfläche klicken."
+      logo_field:
+        title: "Organisationslogo"
+        description: "Hier können Sie das Logo Ihrer Organisation hochladen oder anzeigen, um deren Markenauftritt anzupassen."
+      backdrop_field:
+        title: "Organisationshintergrund"
+        description: "Hier können Sie das Hintergrundbild Ihrer Organisation hochladen oder anzeigen, um deren visuelle Identität zu verbessern."
