@@ -2641,6 +2641,10 @@ fleetbase:
         title: "Unassigned Orders Panel"
         description: "This panel displays all orders awaiting scheduling. Review order details and move them to the calendar for scheduling."
 
+      click_order_link:
+        title: "Open Order Details"
+        description: "Click this link to open the modal and edit the details of an unassigned order."
+
       edit_order_modal:
         title: "Edit Unassigned Order Details"
         description: "Modify delivery dates, assign drivers and vehicles, and adjust other scheduling details for the unassigned orders."
@@ -2652,6 +2656,10 @@ fleetbase:
       scheduled_orders:
         title: "Assigned Orders Panel"
         description: "Review all orders assigned to drivers and scheduled for specific time slots. Keep track of all scheduled deliveries in one view."
+
+      click_assigned_order_link:
+        title: "Open Assigned Order Details"
+        description: "Click this link to open the modal and edit the details of an assigned order."
 
       filters:
         title: "Filters"

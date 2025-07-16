@@ -2669,3 +2669,473 @@ registry-bridge:
         upload-new-bundle: Carica nuovo Pacchetto
         self-managed: Autogestita
         self-managed-help-text: Abilita questa opzione se il tuo modulo è destinato esclusivamente a istanze self-hosted. Se selezioni questa opzione, il modulo non sarà disponibile per l'installazione sulla versione cloud/SaaS di FleetYes e dovrà essere installato manualmente dall'utente sul proprio server.
+fleetbase:
+  common:
+    next: "Avanti"
+    previous: "Precedente"
+    done: "Fatto"
+    close: "Chiudi"
+    help: "Aiuto"
+
+  orders:
+    tour:
+      add:
+        title: "Creazione nuovo ordine"
+        description: "Avvia il processo di creazione dell'ordine cliccando sul pulsante 'Nuovo'."
+      import_button:
+        title: "Importa ordini"
+        description: "Importa gli ordini da un file di foglio di calcolo per un'elaborazione efficiente in blocco."
+      upload_spreadsheets:
+        title: "Carica fogli di calcolo"
+        description: "Carica i file di foglio di calcolo trascinandoli e rilasciandoli o selezionandoli dal tuo dispositivo."
+      start_upload:
+        title: "Avvia caricamento"
+        description: "Avvia il caricamento e l'elaborazione dei file di foglio di calcolo selezionati."
+      dates:
+        title: "Pianificazione ordine"
+        description: "Definisci le date di inizio e di completamento stimate per definire la tempistica dell'ordine."
+      multiple_dropoff:
+        title: "Luoghi di consegna multipli"
+        description: "Per impostazione predefinita, più destinazioni di consegna sono abilitate per un singolo ordine."
+      multiple_dropoff_disabled:
+        title: "Luoghi di consegna multipli disabilitati"
+        description: "È consentita una sola località di consegna per questo ordine con le impostazioni correnti."
+      add_waypoint:
+        title: "Aggiungi punti di passaggio"
+        description: "Includi fermate aggiuntive lungo il percorso, consentendo più località nella consegna."
+      pickup_dropoff_section:
+        title: "Sezione Ritiro/Consegna/Restituzione"
+        description: "Specifica i luoghi di ritiro, consegna e restituzione dell'ordine."
+      select_waypoint:
+        title: "Posizione del punto di passaggio"
+        description: "Definisci la posizione di ogni punto di passaggio per garantire che il percorso di consegna sia mappato accuratamente."
+      notes:
+        title: "Note sull'ordine"
+        description: "Aggiungi eventuali istruzioni o note speciali per facilitare la gestione dell'ordine."
+      documents:
+        title: "Caricamento documenti"
+        description: "Allega documenti pertinenti, come istruzioni di consegna, fatture o contratti, per la conservazione dei dati."
+      submit:
+        title: "Invia l'ordine"
+        description: "Completa il processo di creazione dell'ordine inviando i dettagli finali per l'elaborazione."
+      activity_tab:
+        title: "Attività dell'ordine"
+        description: "Monitora tutte le azioni e le modifiche di stato relative all'ordine durante il suo ciclo di vita."
+      details_tab:
+        title: "Dettagli dell'ordine"
+        description: "Visualizza i dettagli completi dell'ordine, inclusi autista assegnato, veicolo, data di inizio e data di fine stimata."
+      details_edit:
+        title: "Modifica ordine"
+        description: "Modifica i dettagli dell'ordine, come date, assegnazioni degli autisti e selezione dei veicoli."
+      edit_modal:
+        title: "Modifica dettagli dell'ordine"
+        description: "Modifica la data di inizio, la data di fine, le assegnazioni degli autisti e dei veicoli all'interno dei dettagli dell'ordine."
+      tracking_tab:
+        title: "Monitoraggio dell'ordine"
+        description: "Monitora lo stato attuale e la posizione dell'ordine durante l'avanzamento del processo di evasione."
+      notes_tab:
+        title: "Note sull'ordine"
+        description: "Memorizza e rivedi tutte le note e le istruzioni di gestione speciali relative all'ordine."
+      route_tab:
+        title: "Panoramica del percorso"
+        description: "Esplora le posizioni collegate nel percorso di consegna, mostrando tutte le fermate e i punti di passaggio in sequenza."
+      documents_tab:
+        title: "Documenti e file"
+        description: "Accedi a una raccolta organizzata di tutti i documenti associati all'ordine, incluse fatture e bolle di consegna."
+      comments_tab:
+        title: "Comunicazione ordine"
+        description: "Visualizza l'elenco cronologico di commenti, discussioni e aggiornamenti relativi all'ordine."
+      dispatch_button:
+        title: "Controlli di spedizione ordine"
+        description: "Avvia il processo di evasione inviando l'ordine alle risorse logistiche designate."
+      dispatch:
+        title: "Spedizione ordine"
+        description: "Esegui l'evasione dell'ordine inviandolo al team o al fornitore di servizi assegnato."
+
+  scheduler:
+    tour:
+      unscheduled_orders:
+        title: "Pannello ordini non assegnati"
+        description: "Questo pannello mostra tutti gli ordini in attesa di pianificazione. Esamina i dettagli dell'ordine e spostali nel calendario per la pianificazione."
+      edit_order_modal:
+        title: "Modifica dettagli ordine non assegnato"
+        description: "Modifica le date di consegna, assegna autisti e veicoli e modifica altri dettagli di pianificazione per gli ordini non assegnati."
+      edit_assigned_order_modal:
+        title: "Modifica dettagli ordine assegnato"
+        description: "Modifica i dettagli di pianificazione per gli ordini già assegnati, inclusi l'aggiornamento delle date, la riassegnazione degli autisti o la modifica delle assegnazioni dei veicoli."
+      scheduled_orders:
+        title: "Pannello ordini assegnati"
+        description: "Esamina tutti gli ordini assegnati agli autisti e pianificati per fasce orarie specifiche. Tieni traccia di tutte le consegne pianificate in un'unica vista."
+      filters:
+        title: "Filtri"
+        description: "Utilizza i filtri per cercare gli ordini in base a ID ordine, assegnazione autista o stato. Reimposta i filtri per cancellare la visualizzazione."
+      time_period:
+        title: "Opzioni di visualizzazione calendario"
+        description: "Scegli tra le visualizzazioni Giorno, Settimana, Mese e Anno per visualizzare la tua pianificazione da diverse prospettive."
+      calendar:
+        title: "Calendario di pianificazione"
+        description: "Sposta gli ordini dal pannello 'Non assegnati' per pianificarli o seleziona eventi esistenti per rivederne e modificarne i dettagli."
+      assigned_order_event:
+        title: "Evento ordine assegnato"
+        description: "Questo blocco rappresenta un ordine assegnato sul calendario. Passa il mouse sopra per visualizzare i dettagli dell'ordine e le opzioni di pianificazione."
+      leave_event:
+        title: "Evento di congedo"
+        description: "Questo blocco rappresenta un congedo o un'assenza programmata per un autista. Gli eventi di congedo sono sempre visibili sul calendario."
+      click_order_link:
+        title: "Apri dettagli ordine"
+        description: "Clicca su questo link per aprire la finestra modale e modificare i dettagli di un ordine non assegnato."
+      click_assigned_order_link:
+        title: "Apri dettagli ordine assegnato"
+        description: "Clicca su questo link per aprire la finestra modale e modificare i dettagli di un ordine assegnato."
+
+  drivers:
+    tour:
+      new_button:
+        title: "Crea nuovo autista"
+        description: "Apre il modulo per creare un nuovo profilo autista e inserire i dettagli dell'autista."
+      user_account:
+        title: "Sezione Account utente"
+        description: "Seleziona un account utente esistente da collegare a questo profilo autista. Questo collega l'autista a un sviatore che può accedere all'app mobile per autisti."
+      driver_details:
+        title: "Sezione Dettagli autista"
+        description: "Inserisci i dettagli chiave dell'autista, come il numero di patente, il veicolo assegnato e le specifiche della sede."
+      submit:
+        title: "Crea autista"
+        description: "Completa la procedura di creazione dell'autista inviando il modulo con tutti i dettagli inseriti."
+
+  vehicles:
+    tour:
+      new_button:
+        title: "Crea nuovo veicolo"
+        description: "Apre il modulo per creare un nuovo profilo veicolo e inserire informazioni specifiche."
+      vehicle_details:
+        title: "Sezione Dettagli veicolo"
+        description: "Inserisci le informazioni essenziali del veicolo, tra cui ID interno, numero di targa, VIN, marca, modello, anno e altre specifiche."
+      vehicle_avatar:
+        title: "Sezione Avatar veicolo"
+        description: "Carica una foto o un'immagine per rappresentare visivamente il veicolo nel sistema."
+      submit:
+        title: "Crea veicolo"
+        description: "Completa la procedura di creazione del veicolo inviando il modulo con tutti i dettagli inseriti."
+
+  places:
+    tour:
+      new_button:
+        title: "Pulsante Nuovo Luogo"
+        description: "Apre il modulo di creazione del luogo, dove è possibile definire i dettagli della posizione per un nuovo luogo."
+      form_panel:
+        title: "Modulo di creazione del luogo"
+        description: "Definire tutti i dettagli essenziali per un nuovo luogo, incluse le informazioni sulla posizione e le coordinate."
+      name_field:
+        title: "Nome del luogo"
+        description: "Inserire un nome descrittivo per questo luogo che verrà utilizzato per identificarlo in tutto il sistema."
+      code_field:
+        title: "Codice del luogo"
+        description: "Assegnare un codice o un identificatore univoco a questo luogo per facilitare la consultazione rapida e l'integrazione del sistema."
+      coordinates_field:
+        title: "Coordinate della posizione"
+        description: "Impostare le coordinate geografiche precise per questo luogo, manualmente o utilizzando l'interfaccia della mappa."
+      submit:
+        title: "Crea luogo"
+        description: "Completare la procedura di creazione del luogo inviando il modulo con tutti i dettagli della posizione inseriti."
+
+  fuel-reports:
+    tour:
+      new_button:
+        title: "Pulsante Nuovo rapporto carburante"
+        description: "Apre il modulo di creazione del rapporto carburante per registrare il consumo di carburante e i relativi costi."
+      form_panel:
+        title: "Modulo di creazione del rapporto carburante"
+        description: "Registrare i dettagli essenziali del rapporto carburante, inclusi il segnalante, l'autista, il veicolo, i costi e la documentazione di supporto."
+      reporter_field:
+        title: "Selezione del segnalante"
+        description: "Selezionare la persona responsabile della segnalazione di questa transazione di carburante per la responsabilità."
+      driver_field:
+        title: "Selezione dell'autista"
+        description: "Selezionare l'autista responsabile del veicolo durante questa transazione di carburante."
+      vehicle_field:
+        title: "Selezione del veicolo"
+        description: "Seleziona il veicolo che ha effettuato il rifornimento per garantire un monitoraggio accurato per ogni veicolo."
+      status_field:
+        title: "Stato del report"
+        description: "Monitora lo stato attuale di questo report carburante per gestirne il flusso di lavoro."
+      cost_field:
+        title: "Costo del carburante"
+        description: "Registra il costo totale dell'acquisto di carburante per monitorare le spese e gestire il budget."
+      volume_field:
+        title: "Volume di carburante"
+        description: "Registra la quantità di carburante acquistata per l'analisi dell'efficienza e il monitoraggio dei consumi."
+      payment_method_field:
+        title: "Metodo di pagamento"
+        description: "Specifica la modalità di pagamento del carburante per mantenere una contabilità finanziaria accurata."
+      coordinates_field:
+        title: "Coordinate della posizione"
+        description: "Monitora la posizione geografica in cui è stato acquistato il carburante per ottimizzare i percorsi."
+      upload_field:
+        title: "Caricamento documenti"
+        description: "Carica documenti di supporto come ricevute o foto per verificare questo report."
+      submit:
+        title: "Crea report carburante"
+        description: "Completa la procedura di creazione del report carburante inviando il modulo con tutti i dettagli inseriti."
+
+  parking:
+    tour:
+      help_button_tooltip: "Avvia la visita guidata per la gestione dei parcheggi"
+      new_button:
+        title: "Crea nuovo report parcheggio"
+        description: "Apre il modulo del report parcheggio in cui puoi registrare tariffe di parcheggio, posizioni e dettagli correlati per i veicoli della tua flotta."
+      form_panel:
+        title: "Modulo report parcheggio"
+        description: "In questo modulo puoi creare report parcheggio completi inserendo le informazioni relative a segnalatore, conducente, veicolo, dettagli di pagamento e posizione."
+      reporter_field:
+        title: "Seleziona Segnalatore"
+        description: "Qui puoi scegliere la persona responsabile della segnalazione di questa transazione di parcheggio per mantenere la contabilità."
+      driver_field:
+        title: "Seleziona Autista"
+        description: "Puoi selezionare l'autista responsabile della transazione di parcheggio per monitorare le spese di parcheggio di ogni singolo autista."
+      vehicle_field:
+        title: "Seleziona Veicolo"
+        description: "In questo campo, puoi scegliere il veicolo parcheggiato per monitorare i costi di parcheggio per veicolo e analizzare i modelli di parcheggio della flotta."
+      status_field:
+        title: "Stato del Report"
+        description: "Qui puoi impostare lo stato attuale di questo report di parcheggio per monitorare il flusso di lavoro e il processo di approvazione."
+      payment_method_field:
+        title: "Metodo di Pagamento"
+        description: "Puoi selezionare la modalità di pagamento della tariffa di parcheggio per la riconciliazione delle spese aeree e la tenuta dei registri finanziari."
+      cost_field:
+        title: "Costo del Parcheggio"
+        description: "In questo campo, puoi inserire l'importo totale pagato per il parcheggio per mantenere registri finanziari accurati e il monitoraggio delle spese."
+      coordinates_field:
+        title: "Posizione del Parcheggio"
+        description: "Qui puoi specificare la posizione esatta in cui è avvenuto il parcheggio per facilitare l'ottimizzazione del percorso e l'analisi della posizione."
+      upload_field:
+        title: "Carica Documenti"
+        description: "In questa sezione, puoi caricare documenti giustificativi come ricevute di parcheggio, biglietti o foto per fornire una verifica."
+      submit:
+        title: "Crea Report di Parcheggio"
+        description: "Puoi completare la procedura di creazione del report di parcheggio inviando il modulo con tutti i dettagli inseriti."
+
+  toll-reports:
+    tour:
+      new_button:
+        title: "Crea nuovo report pedaggio"
+        description: "Apre il modulo del report pedaggio in cui è possibile inserire tutti i dettagli necessari per le spese di pedaggio e la relativa documentazione."
+      form_panel:
+        title: "Modulo report pedaggio"
+        description: "In questo modulo è possibile acquisire tutte le informazioni essenziali sulle spese di pedaggio, inclusi il segnalante, l'autista, il veicolo, i dettagli di pagamento e la documentazione di supporto."
+      reporter_field:
+        title: "Seleziona segnalante"
+        description: "Qui è possibile scegliere la persona responsabile della segnalazione di questa spesa di pedaggio per garantire una corretta contabilizzazione."
+      driver_field:
+        title: "Seleziona autista"
+        description: "È possibile identificare l'autista che ha sostenuto la spesa di pedaggio per il monitoraggio delle spese e l'analisi del percorso."
+      vehicle_field:
+        title: "Seleziona veicolo"
+        description: "In questo campo è possibile scegliere il veicolo che ha utilizzato la strada a pedaggio per monitorare le spese di pedaggio specifiche del veicolo e analizzare l'andamento dei costi."
+      status_field:
+        title: "Stato report"
+        description: "Qui è possibile impostare lo stato corrente di questo report pedaggio per gestire il flusso di lavoro di approvazione e monitorare lo stato di elaborazione."
+      payment_method_field:
+        title: "Metodo di pagamento"
+        description: "È possibile specificare la modalità di pagamento del pedaggio per la riconciliazione finanziaria e la categorizzazione delle spese."
+      cost_field:
+        title: "Importo pedaggio"
+        description: "In questo campo è possibile inserire l'importo totale pagato per i pedaggi per mantenere una contabilità finanziaria accurata e un monitoraggio delle spese."
+      coordinates_field:
+        title: "Ubicazione del pedaggio"
+        description: "Qui puoi specificare l'ubicazione dell'impianto di pedaggio per ottimizzare il percorso e analizzare i costi."
+      upload_field:
+        title: "Carica documenti"
+        description: "In questa sezione puoi caricare documenti giustificativi, come ricevute di pedaggio o foto, per fornire una verifica a supporto di questa nota spese."
+      submit:
+        title: "Crea resoconto pedaggio"
+        description: "Puoi completare la creazione del resoconto pedaggio inviando il modulo con tutti i dettagli inseriti."
+
+  issues:
+    tour:
+      new_button:
+        title: "Crea nuovo problema"
+        description: "Apre il modulo/webpage di creazione del problema, dove puoi documentare problemi, esigenze di manutenzione o altre problematiche relative alle operazioni della tua flotta."
+      form_panel:
+        title: "Modulo di segnalazione del problema"
+        description: "In questo modulo, puoi creare report dettagliati sui problemi fornendo informazioni sul tipo di problema, la priorità, il personale assegnato e i dettagli pertinenti."
+      reporter_field:
+        title: "Segnalato da"
+        description: "Qui puoi selezionare la persona che segnala questo problema per tenere traccia di chi lo ha inizialmente identificato e segnalato."
+      assigned_to_field:
+        title: "Assegnato a"
+        description: "Puoi assegnare questo problema al membro del team o al reparto appropriato responsabile della sua risoluzione."
+      driver_field:
+        title: "Conducente correlato"
+        description: "Se questo problema è correlato a un conducente specifico, puoi selezionarlo qui per tenere traccia delle problematiche e degli schemi specifici del conducente."
+      vehicle_field:
+        title: "Veicolo correlato"
+        description: "Qui puoi selezionare il veicolo associato a questo problema per tenere traccia delle esigenze di manutenzione o delle problematiche specifiche del veicolo."
+      type_field:
+        title: "Tipo di problema"
+        description: "Puoi categorizzare il problema selezionandone il tipo per facilitare un corretto instradamento e una corretta definizione della priorità."
+      category_field:
+        title: "Categoria del problema"
+        description: "In questo campo, puoi classificare ulteriormente il problema selezionando una categoria specifica per una migliore analisi e un monitoraggio della risoluzione."
+      report_field:
+        title: "Descrizione del problema"
+        description: "Qui puoi fornire una descrizione dettagliata del problema, incluso il problema riscontrato, quando è stato notato e le circostanze rilevanti."
+      tags_field:
+        title: "Tag del problema"
+        description: "Puoi aggiungere tag pertinenti per categorizzare e cercare il problema, semplificando il filtraggio e l'individuazione dei problemi correlati."
+      priority_field:
+        title: "Livello di priorità"
+        description: "In questo campo, puoi impostare il livello di priorità per questo problema per determinare la rapidità con cui deve essere risolto."
+      status_field:
+        title: "Stato del problema"
+        description: "Qui puoi monitorare lo stato attuale del problema e aggiornarlo man mano che il problema avanza nel suo ciclo di vita."
+      coordinates_field:
+        title: "Posizione del problema"
+        description: "Puoi specificare la posizione geografica in cui si è verificato il problema, importante per problemi specifici della posizione o per l'assistenza di dispatching."
+      submit:
+        title: "Crea problema"
+        description: "Puoi inviare questo rapporto sul problema per registrarlo nel sistema e il personale assegnato verrà avvisato per iniziare a lavorare alla risoluzione."
+
+  fleets:
+    tour:
+      new_button:
+        title: "Pulsante Nuova flotta"
+        description: "Apre il modulo di creazione della flotta in cui puoi definire i dettagli della flotta."
+      form_panel:
+        title: "Modulo di creazione flotta"
+        description: "In questo modulo puoi inserire i dettagli essenziali per la creazione o la modifica di una flotta, inclusi nome, gerarchia, stato e attività."
+      name_field:
+        title: "Nome flotta"
+        description: "Qui puoi inserire il nome della flotta per identificarla all'interno della tua organizzazione."
+      parent_fleet_field:
+        title: "Selezione flotta principale"
+        description: "Puoi selezionare la flotta principale se questa flotta fa parte di una gerarchia più ampia per organizzarne la struttura."
+      status_field:
+        title: "Stato flotta"
+        description: "In questo campo puoi impostare lo stato della flotta per gestirne lo stato operativo."
+      task_field:
+        title: "Attività flotta"
+        description: "Qui puoi specificare l'attività o la missione di questa flotta per definirne la funzione o l'obiettivo principale."
+      submit:
+        title: "Salva flotta"
+        description: "Puoi completare il processo di creazione o aggiornamento/classi/creazione flotta salvando tutti i dettagli inseriti."
+
+  users:
+    tour:
+      new-user:
+        title: "Pulsante Nuovo utente"
+        description: "Apre il modulo di creazione utente in cui puoi definire i dettagli dell'utente."
+      name:
+        title: "Nome utente"
+        description: "Qui puoi inserire il nome completo dell'utente per identificarlo all'interno del tuo sistema."
+      email:
+        title: "Email utente"
+        description: "Puoi fornire l'indirizzo email dell'utente per comunicazioni e accesso."
+      phone:
+        title: "Telefono utente"
+        description: "In questo campo puoi inserire il numero di telefono dell'utente per contatti e verifiche."
+      country:
+        title: "Paese utente"
+        description: "Qui puoi selezionare il Paese dell'utente per associarlo a una regione specifica."
+      role:
+        title: "Ruolo utente"
+        description: "Puoi assegnare un ruolo all'utente per definirne le responsabilità e il livello di accesso."
+      policies:
+        title: "Allega policy"
+        description: "In questa sezione puoi allegare policy all'utente per specificarne le autorizzazioni e i diritti di accesso."
+      permissions:
+        title: "Seleziona autorizzazioni"
+        description: "Qui puoi scegliere autorizzazioni specifiche per concedere all'utente l'accesso a determinate funzionalità o azioni."
+      confirm:
+        title: "Salva utente"
+        description: "Puoi completare il processo di creazione o aggiornamento dell'utente salvando tutti i dettagli inseriti."
+
+  groups:
+    tour:
+      new_button:
+        title: "Pulsante Nuovo gruppo"
+        description: "Apre il modulo di creazione del gruppo in cui è possibile definire i dettagli del gruppo."
+      name_field:
+        title: "Nome gruppo"
+        description: "Qui è possibile inserire il nome del gruppo per identificarlo all'interno del sistema."
+      description_field:
+        title: "Descrizione gruppo"
+        description: "Puoi fornire una descrizione del gruppo per delinearne lo scopo o la funzione."
+      users_field:
+        title: "Seleziona utenti"
+        description: "In questa sezione è possibile scegliere gli utenti da aggiungere a questo gruppo per definirne l'appartenenza."
+      submit:
+        title: "Salva gruppo"
+        description: "Puoi completare il processo di creazione o aggiornamento del gruppo salvando tutti i dettagli inseriti."
+
+  roles:
+    tour:
+      new_button:
+        title: "Pulsante Nuovo ruolo"
+        description: "Apre il modulo di creazione del ruolo in cui è possibile definire i dettagli del ruolo."
+      name_field:
+        title: "Nome ruolo"
+        description: "Qui è possibile inserire il nome del ruolo per identificarlo all'interno del sistema."
+      description_field:
+        title: "Descrizione del ruolo"
+        description: "Puoi fornire una descrizione del ruolo per delinearne lo scopo o la funzione."
+      policies_field:
+        title: "Allega policy"
+        description: "In questa sezione è possibile allegare policy al ruolo per specificarne le autorizzazioni e i diritti di accesso."
+      permissions_field:
+        title: "Seleziona autorizzazioni"
+        description: "Qui è possibile scegliere autorizzazioni specifiche per concedere al ruolo l'accesso a determinate funzionalità o azioni."
+      submit:
+        title: "Salva ruolo"
+        description: "Puoi completare il processo di creazione o aggiornamento del ruolo salvando tutti i dettagli inseriti."
+
+  policies:
+    tour:
+      new_button:
+        title: "Pulsante Nuova Policy"
+        description: "Apre il modulo di creazione della policy, dove è possibile definirne i dettagli."
+      form_panel:
+        title: "Modulo di creazione della policy"
+        description: "In questo modulo è possibile inserire i dettagli essenziali per la creazione o la modifica di una policy, inclusi nome, descrizione e autorizzazioni."
+      name_field:
+        title: "Nome Policy"
+        description: "Qui è possibile inserire il nome della policy per identificarla all'interno del sistema."
+      description_field:
+        title: "Descrizione Policy"
+        description: "Puoi fornire una descrizione della policy per delinearne lo scopo o la funzione."
+      permissions_field:
+        title: "Seleziona Autorizzazioni"
+        description: "In questa sezione è possibile scegliere autorizzazioni specifiche da includere nella policy per definirne i diritti di accesso."
+      submit:
+        title: "Salva Policy"
+        description: "Puoi completare il processo di creazione o aggiornamento della policy salvando tutti i dettagli inseriti."
+
+  organization_settings:
+    tour:
+      name_field:
+        title: "Nome dell'organizzazione"
+        description: "Qui è possibile inserire il nome della propria organizzazione per identificarla all'interno del sistema."
+      description_field:
+        title: "Descrizione dell'organizzazione"
+        description: "Puoi fornire una descrizione della tua organizzazione per delinearne lo scopo o i dettagli."
+      phone_field:
+        title: "Telefono dell'organizzazione"
+        description: "In questo campo è possibile inserire il numero di telefono della tua organizzazione per eventuali contatti."
+      currency_field:
+        title: "Valuta dell'organizzazione"
+        description: "Qui è possibile selezionare la valuta utilizzata dalla tua organizzazione per le transazioni finanziarie."
+      id_field:
+        title: "ID Organizzazione"
+        description: "Visualizza l'identificativo univoco della tua organizzazione, che non può essere modificato."
+      parking_zone:
+        title: "Zona di parcheggio"
+        description: "È possibile specificare la distanza massima per la zona di parcheggio per configurare i confini operativi."
+      save_button:
+        title: "Salva modifiche"
+        description: "È possibile salvare tutte le modifiche apportate alle impostazioni dell'organizzazione facendo clic su questo pulsante."
+      logo_field:
+        title: "Logo dell'organizzazione"
+        description: "In questa sezione è possibile caricare o visualizzare il logo della tua organizzazione per personalizzarne il branding."
+      backdrop_field:
+        title: "Sfondo dell'organizzazione"
+        description: "Qui è possibile caricare o visualizzare l'immagine di sfondo della tua organizzazione per migliorarne l'identità visiva."

@@ -1350,5 +1350,474 @@ fleet-ops:
         delete-title: Xóa cấu hình đơn hàng này?
         delete-body-message: Sau khi xóa, cấu hình này sẽ không thể khôi phục và bạn sẽ mất toàn bộ dữ liệu cấu hình.
         confirm-delete: Xóa
+fleetbase:
+  common:
+    next: "Tiếp theo"
+    previous: "Trước đó"
+    done: "Hoàn tất"
+    close: "Đóng"
+    help: "Trợ giúp"
 
+  orders:
+    tour:
+      add:
+        title: "Tạo đơn hàng mới"
+        description: "Bắt đầu quy trình tạo đơn hàng bằng cách nhấp vào nút 'Mới'."
+      import_button:
+        title: "Nhập đơn hàng"
+        description: "Nhập đơn hàng từ tệp bảng tính để xử lý hàng loạt hiệu quả."
+      upload_spreadsheets:
+        title: "Tải lên bảng tính"
+        description: "Tải lên tệp bảng tính bằng cách kéo và thả hoặc chọn từ thiết bị của bạn."
+      start_upload:
+        title: "Bắt đầu tải lên"
+        description: "Bắt đầu tải lên và xử lý các tệp bảng tính đã chọn."
+      dates:
+        title: "Lên lịch đơn hàng"
+        description: "Xác định ngày bắt đầu và ngày hoàn thành dự kiến để phác thảo tiến độ của đơn hàng."
+      multiple_dropoff:
+        title: "Nhiều địa điểm giao hàng"
+        description: "Nhiều điểm đến giao hàng được bật theo mặc định cho một đơn hàng."
+      multiple_dropoff_disabled:
+        title: "Nhiều điểm đến giao hàng bị vô hiệu hóa"
+        description: "Chỉ cho phép một địa điểm giao hàng cho đơn hàng này theo cài đặt hiện tại."
+      add_waypoint:
+        title: "Thêm điểm dừng"
+        description: "Thêm các điểm dừng bổ sung dọc theo tuyến đường, cho phép nhiều địa điểm giao hàng."
+      pickup_dropoff_section:
+        title: "Phần Nhận/Trả/Trả hàng"
+        description: "Chỉ định địa điểm nhận, trả và trả hàng cho đơn hàng."
+      select_waypoint:
+        title: "Vị trí điểm dừng"
+        description: "Xác định vị trí cho từng điểm dừng để đảm bảo tuyến đường giao hàng được lập bản đồ chính xác."
+      notes:
+        title: "Ghi chú Đơn hàng"
+        description: "Thêm bất kỳ hướng dẫn hoặc ghi chú đặc biệt nào để đơn hàng được xử lý suôn sẻ."
+      documents:
+        title: "Tải lên Tài liệu"
+        description: "Đính kèm các tài liệu liên quan, chẳng hạn như hướng dẫn giao hàng, hóa đơn hoặc hợp đồng, để lưu trữ hồ sơ."
+      submit:
+        title: "Gửi Đơn hàng"
+        description: "Hoàn tất quy trình tạo đơn hàng bằng cách gửi các thông tin chi tiết cuối cùng để xử lý."
+      activity_tab:
+        title: "Hoạt động Đơn hàng"
+        description: "Theo dõi tất cả các hành động và thay đổi trạng thái liên quan đến đơn hàng trong suốt vòng đời của đơn hàng."
+      details_tab:
+        title: "Chi tiết Đơn hàng"
+        description: "Xem chi tiết đơn hàng đầy đủ, bao gồm tài xế, phương tiện được chỉ định, ngày bắt đầu và ngày kết thúc dự kiến."
+      details_edit:
+        title: "Chỉnh sửa Đơn hàng"
+        description: "Sửa đổi chi tiết đơn hàng, chẳng hạn như ngày, phân công tài xế và lựa chọn phương tiện."
+      edit_modal:
+        title: "Chỉnh sửa Chi tiết Đơn hàng"
+        description: "Sửa đổi ngày bắt đầu, ngày kết thúc, phân công tài xế và phương tiện trong chi tiết đơn hàng."
+      tracking_tab:
+        title: "Theo dõi Đơn hàng"
+        description: "Theo dõi trạng thái và vị trí hiện tại của đơn hàng trong quá trình thực hiện."
+      notes_tab:
+        title: "Ghi chú Đơn hàng"
+        description: "Lưu trữ và xem lại tất cả ghi chú và hướng dẫn xử lý đặc biệt liên quan đến đơn hàng."
+      route_tab:
+        title: "Tổng quan Tuyến đường"
+        description: "Xem lại các vị trí được kết nối trong tuyến đường giao hàng, hiển thị tất cả các điểm dừng và điểm dừng theo thứ tự."
+      documents_tab:
+        title: "Tài liệu & Tệp"
+        description: "Truy cập bộ sưu tập được sắp xếp hợp lý tất cả các tài liệu liên quan đến đơn hàng, bao gồm hóa đơn và biên bản giao hàng."
+      comments_tab:
+        title: "Trao đổi về Đơn hàng"
+        description: "Xem danh sách theo thứ tự thời gian các bình luận, thảo luận và cập nhật liên quan đến đơn hàng."
+      dispatch_button:
+        title: "Kiểm soát Điều phối Đơn hàng"
+        description: "Bắt đầu quy trình thực hiện bằng cách điều phối đơn hàng đến các nguồn lực hậu cần được chỉ định."
+      dispatch:
+        title: "Điều phối Đơn hàng"
+        description: "Thực hiện việc thực hiện đơn hàng bằng cách điều phối đến nhóm hoặc nhà cung cấp dịch vụ được chỉ định."
+
+  scheduler:
+    tour:
+      unscheduled_orders:
+        title: "Bảng Đơn hàng Chưa được Chỉ định"
+        description: "Bảng này hiển thị tất cả các đơn hàng đang chờ lên lịch. Xem lại chi tiết đơn hàng và di chuyển chúng vào lịch để lên lịch."
+      edit_order_modal:
+        title: "Chỉnh sửa Chi tiết Đơn hàng Chưa được Chỉ định"
+        description: "Sửa đổi ngày giao hàng, chỉ định tài xế và phương tiện, và điều chỉnh các chi tiết lịch trình khác cho các đơn hàng chưa được chỉ định."
+      edit_assigned_order_modal:
+        title: "Chỉnh sửa Chi tiết Đơn hàng Đã được Chỉ định"
+        description: "Điều chỉnh chi tiết lịch trình cho các đơn hàng đã được chỉ định, bao gồm cập nhật ngày, chỉ định lại tài xế hoặc thay đổi chỉ định xe."
+      scheduled_orders:
+        title: "Bảng Đơn hàng Đã được Chỉ định"
+        description: "Xem lại tất cả các đơn hàng đã được chỉ định cho tài xế và đã lên lịch cho các khung giờ cụ thể. Theo dõi tất cả các lần giao hàng đã lên lịch trong một chế độ xem."
+      filters:
+        title: "Bộ lọc"
+        description: "Sử dụng bộ lọc để tìm kiếm đơn hàng theo ID Đơn hàng, chỉ định tài xế hoặc trạng thái. Đặt lại bộ lọc để xóa chế độ xem của bạn."
+      time_period:
+        title: "Tùy chọn Chế độ xem Lịch"
+        description: "Chọn giữa chế độ xem Ngày, Tuần, Tháng và Năm để trực quan hóa lịch trình của bạn từ các góc nhìn khác nhau."
+      calendar:
+        title: "Lịch Lập lịch"
+        description: "Di chuyển các đơn hàng từ bảng chưa được chỉ định để lên lịch hoặc chọn các sự kiện hiện có để xem lại và sửa đổi chi tiết."
+      assigned_order_event:
+        title: "Sự kiện Đơn hàng Đã Chỉ định"
+        description: "Khối này biểu thị một đơn hàng đã được chỉ định trên lịch. Di chuột để xem chi tiết đơn hàng và các tùy chọn lên lịch."
+      leave_event:
+        title: "Sự kiện Rời khỏi"
+        description: "Khối này biểu thị một chuyến đi nghỉ hoặc vắng mặt đã lên lịch của tài xế. Các sự kiện rời khỏi luôn hiển thị trên lịch."
+      click_order_link:
+        title: "Mở Chi tiết Đơn hàng"
+        description: "Nhấp vào liên kết này để mở hộp thoại và chỉnh sửa chi tiết của đơn hàng chưa được chỉ định."
+      click_assigned_order_link:
+        title: "Mở Chi tiết Đơn hàng đã Chỉ định"
+        description: "Nhấp vào liên kết này để mở hộp thoại và chỉnh sửa chi tiết của đơn hàng đã chỉ định."
+
+  drivers:
+    tour:
+      new_button:
+        title: "Tạo Tài xế Mới"
+        description: "Mở biểu mẫu để tạo hồ sơ tài xế mới và nhập thông tin tài xế."
+      user_account:
+        title: "Phần Tài khoản Người dùng"
+        description: "Chọn một tài khoản người dùng hiện có để liên kết với hồ sơ tài xế này. Thao tác này sẽ liên kết tài xế với người dùng có thể truy cập ứng dụng di động dành cho tài xế."
+      driver_details:
+        title: "Phần Thông tin Tài xế"
+        description: "Nhập các thông tin chính về tài xế như số giấy phép, xe được chỉ định và thông tin vị trí."
+      submit:
+        title: "Tạo Tài xế"
+        description: "Hoàn tất quy trình tạo tài xế bằng cách gửi biểu mẫu với tất cả các thông tin đã nhập."
+
+  vehicles:
+    tour:
+      new_button:
+        title: "Tạo Xe Mới"
+        description: "Mở biểu mẫu để tạo hồ sơ xe mới và nhập thông tin cụ thể của xe."
+      vehicle_details:
+        title: "Phần Chi tiết Xe"
+        description: "Nhập thông tin cần thiết về xe, bao gồm ID nội bộ, biển số, số VIN, hãng, mẫu xe, năm sản xuất và các thông số kỹ thuật khác."
+      vehicle_avatar:
+        title: "Phần Ảnh đại diện Xe"
+        description: "Tải lên ảnh hoặc hình ảnh để đại diện trực quan cho xe trong hệ thống."
+      submit:
+        title: "Tạo Xe"
+        description: "Hoàn tất quy trình tạo xe bằng cách gửi biểu mẫu với tất cả thông tin đã nhập."
+
+  places:
+    tour:
+      new_button:
+        title: "Nút Địa điểm Mới"
+        description: "Mở biểu mẫu tạo địa điểm, nơi bạn có thể xác định chi tiết vị trí cho một địa điểm mới."
+      form_panel:
+        title: "Biểu mẫu Tạo Địa điểm"
+        description: "Xác định tất cả các chi tiết cần thiết cho một địa điểm mới, bao gồm thông tin vị trí và tọa độ."
+      name_field:
+        title: "Tên Địa điểm"
+        description: "Nhập tên mô tả cho địa điểm này để được sử dụng để nhận dạng địa điểm trong toàn hệ thống."
+      code_field:
+        title: "Mã Địa điểm"
+        description: "Gán mã hoặc mã định danh duy nhất cho địa điểm này để giúp tham chiếu nhanh và tích hợp hệ thống."
+      coordinates_field:
+        title: "Tọa độ Địa điểm"
+        description: "Đặt tọa độ địa lý chính xác cho địa điểm này, bằng cách nhập thủ công hoặc sử dụng giao diện bản đồ."
+      submit:
+        title: "Tạo Địa điểm"
+        description: "Hoàn tất quy trình tạo địa điểm bằng cách gửi biểu mẫu với tất cả chi tiết vị trí đã nhập."
+
+  fuel-reports:
+    tour:
+      new_button:
+        title: "Nút Báo cáo Nhiên liệu Mới"
+        description: "Mở biểu mẫu tạo báo cáo nhiên liệu để ghi lại mức tiêu thụ nhiên liệu và các chi phí liên quan."
+      form_panel:
+        title: "Biểu mẫu Tạo Báo cáo Nhiên liệu"
+        description: "Ghi lại các chi tiết cần thiết của báo cáo nhiên liệu bao gồm người báo cáo, tài xế, phương tiện, chi phí và tài liệu hỗ trợ."
+      reporter_field:
+        title: "Lựa chọn Người báo cáo"
+        description: "Chọn người chịu trách nhiệm báo cáo giao dịch nhiên liệu này để đảm bảo tính minh bạch."
+      driver_field:
+        title: "Lựa chọn Tài xế"
+        description: "Chọn tài xế chịu trách nhiệm về phương tiện trong giao dịch nhiên liệu này."
+      vehicle_field:
+        title: "Chọn Xe"
+        description: "Chọn xe đã được tiếp nhiên liệu để đảm bảo theo dõi chính xác từng xe."
+      status_field:
+        title: "Trạng thái Báo cáo"
+        description: "Theo dõi trạng thái hiện tại của báo cáo nhiên liệu này để quản lý quy trình xử lý."
+      cost_field:
+        title: "Chi phí Nhiên liệu"
+        description: "Ghi lại tổng chi phí mua nhiên liệu để theo dõi chi phí nhiên liệu và quản lý ngân sách."
+      volume_field:
+        title: "Lượng Nhiên liệu"
+        description: "Ghi lại lượng nhiên liệu đã mua để phân tích hiệu quả nhiên liệu và theo dõi mức tiêu thụ."
+      payment_method_field:
+        title: "Phương thức Thanh toán"
+        description: "Ghi rõ cách thức thanh toán nhiên liệu để duy trì hồ sơ tài chính chính xác."
+      coordinates_field:
+        title: "Tọa độ Vị trí"
+        description: "Theo dõi vị trí địa lý nơi nhiên liệu được mua để giúp tối ưu hóa tuyến đường."
+      upload_field:
+        title: "Tải lên Tài liệu"
+        description: "Tải lên các tài liệu hỗ trợ như biên lai hoặc ảnh để xác minh báo cáo này."
+      submit:
+        title: "Tạo Báo cáo Nhiên liệu"
+        description: "Hoàn tất quy trình tạo báo cáo nhiên liệu bằng cách gửi biểu mẫu với tất cả thông tin đã nhập."
+
+  parking:
+    tour:
+      help_button_tooltip: "Bắt đầu hướng dẫn quản lý bãi đậu xe"
+      new_button:
+        title: "Tạo Báo cáo Bãi đậu xe Mới"
+        description: "Mở biểu mẫu báo cáo bãi đậu xe, nơi bạn có thể ghi lại phí đỗ xe, vị trí và các thông tin liên quan cho đội xe của mình."
+      form_panel:
+        title: "Biểu mẫu Báo cáo Bãi đậu xe"
+        description: "Trong biểu mẫu này, bạn có thể tạo báo cáo bãi đậu xe toàn diện bằng cách điền thông tin người báo cáo, tài xế, xe, chi tiết thanh toán và vị trí."
+      reporter_field:
+        title: "Chọn Người báo cáo"
+        description: "Tại đây, bạn có thể chọn người chịu trách nhiệm báo cáo giao dịch đỗ xe này để duy trì trách nhiệm giải trình."
+      driver_field:
+        title: "Chọn Tài xế"
+        description: "Bạn có thể chọn tài xế chịu trách nhiệm cho giao dịch đỗ xe để theo dõi chi phí đỗ xe của từng tài xế."
+      vehicle_field:
+        title: "Chọn Xe"
+        description: "Trong trường này, bạn có thể chọn xe đã đỗ để theo dõi chi phí đỗ xe cho từng xe và phân tích các mô hình đỗ xe của đội xe."
+      status_field:
+        title: "Trạng thái Báo cáo"
+        description: "Tại đây, bạn có thể thiết lập trạng thái hiện tại của báo cáo đỗ xe này để theo dõi quy trình làm việc và quy trình phê duyệt."
+      payment_method_field:
+        title: "Phương thức Thanh toán"
+        description: "Bạn có thể chọn cách thanh toán phí đỗ xe để đối chiếu chi phí hãng hàng không và lưu giữ hồ sơ tài chính."
+      cost_field:
+        title: "Chi phí Đỗ xe"
+        description: "Trong trường này, bạn có thể nhập tổng số tiền đã trả cho việc đỗ xe để duy trì hồ sơ tài chính và theo dõi chi phí chính xác."
+      coordinates_field:
+        title: "Vị trí Đỗ xe"
+        description: "Tại đây, bạn có thể chỉ định vị trí chính xác nơi đỗ xe để giúp tối ưu hóa tuyến đường và phân tích vị trí."
+      upload_field:
+        title: "Tải lên Tài liệu"
+        description: "Trong phần này, bạn có thể tải lên các tài liệu hỗ trợ như biên lai đỗ xe, vé đỗ xe hoặc ảnh để xác minh."
+      submit:
+        title: "Tạo Báo cáo Đỗ xe"
+        description: "Bạn có thể hoàn tất quy trình tạo báo cáo đỗ xe bằng cách gửi biểu mẫu với tất cả các thông tin đã nhập."
+
+  toll-reports:
+    tour:
+      new_button:
+        title: "Tạo Báo cáo Phí cầu đường Mới"
+        description: "Mở biểu mẫu báo cáo phí cầu đường, nơi bạn có thể nhập tất cả thông tin cần thiết về chi phí cầu đường và chứng từ."
+      form_panel:
+        title: "Biểu mẫu Báo cáo Phí cầu đường"
+        description: "Trong biểu mẫu này, bạn có thể thu thập tất cả thông tin chi phí cầu đường cần thiết, bao gồm người báo cáo, tài xế, phương tiện, chi tiết thanh toán và chứng từ hỗ trợ."
+      reporter_field:
+        title: "Chọn Người báo cáo"
+        description: "Tại đây, bạn có thể chọn người chịu trách nhiệm báo cáo chi phí cầu đường này để đảm bảo trách nhiệm giải trình phù hợp."
+      driver_field:
+        title: "Chọn Tài xế"
+        description: "Bạn có thể xác định tài xế đã phát sinh chi phí cầu đường để theo dõi chi phí tài xế và phân tích tuyến đường."
+      vehicle_field:
+        title: "Chọn Phương tiện"
+        description: "Trong trường này, bạn có thể chọn phương tiện đã sử dụng đường thu phí để theo dõi chi phí cầu đường cụ thể của từng phương tiện và phân tích các mô hình chi phí."
+      status_field:
+        title: "Trạng thái Báo cáo"
+        description: "Tại đây, bạn có thể thiết lập trạng thái hiện tại của báo cáo phí cầu đường này để quản lý quy trình phê duyệt và theo dõi trạng thái xử lý."
+      payment_method_field:
+        title: "Phương thức Thanh toán"
+        description: "Bạn có thể chỉ định cách thức thanh toán phí cầu đường để đối chiếu tài chính và phân loại chi phí."
+      cost_field:
+        title: "Số tiền Phí cầu đường"
+        description: "Trong trường này, bạn có thể nhập tổng số tiền đã trả cho phí cầu đường để duy trì hồ sơ tài chính chính xác và theo dõi chi phí."
+      coordinates_field:
+        title: "Vị trí thu phí"
+        description: "Tại đây, bạn có thể chỉ định vị trí trạm thu phí để hỗ trợ tối ưu hóa tuyến đường và phân tích chi phí."
+      upload_field:
+        title: "Tải lên tài liệu"
+        description: "Trong phần này, bạn có thể tải lên các tài liệu hỗ trợ như biên lai thu phí hoặc ảnh để xác minh cho báo cáo chi phí này."
+      submit:
+        title: "Tạo báo cáo thu phí"
+        description: "Bạn có thể hoàn tất quy trình tạo báo cáo thu phí bằng cách gửi biểu mẫu kèm theo tất cả thông tin đã nhập."
+
+  issues:
+    tour:
+      new_button:
+        title: "Tạo Sự cố Mới"
+        description: "Mở biểu mẫu tạo sự cố, nơi bạn có thể ghi lại các sự cố, nhu cầu bảo trì hoặc các mối quan tâm khác liên quan đến hoạt động của đội xe."
+      form_panel:
+        title: "Biểu mẫu Báo cáo Sự cố"
+        description: "Trong biểu mẫu này, bạn có thể tạo báo cáo sự cố chi tiết bằng cách cung cấp thông tin về loại sự cố, mức độ ưu tiên, nhân sự được phân công và các chi tiết liên quan."
+      reporter_field:
+        title: "Người báo cáo"
+        description: "Tại đây, bạn có thể chọn người báo cáo sự cố này để theo dõi người đã xác định và báo cáo sự cố ban đầu."
+      assigned_to_field:
+        title: "Được phân công cho"
+        description: "Bạn có thể phân công sự cố này cho thành viên nhóm hoặc bộ phận phù hợp chịu trách nhiệm giải quyết."
+      driver_field:
+        title: "Tài xế Liên quan"
+        description: "Nếu sự cố này liên quan đến một tài xế cụ thể, bạn có thể chọn họ tại đây để theo dõi các mối quan tâm và mô hình cụ thể của tài xế đó."
+      vehicle_field:
+        title: "Xe Liên quan"
+        description: "Tại đây, bạn có thể chọn xe liên quan đến sự cố này để theo dõi nhu cầu bảo trì hoặc các mối quan tâm cụ thể của xe."
+      type_field:
+        title: "Loại Sự cố"
+        description: "Bạn có thể phân loại sự cố bằng cách chọn loại của nó để giúp định tuyến và sắp xếp thứ tự ưu tiên phù hợp."
+      category_field:
+        title: "Loại Sự cố"
+        description: "Trong trường này, bạn có thể phân loại thêm sự cố bằng cách chọn một loại cụ thể để phân tích và theo dõi giải quyết tốt hơn."
+      report_field:
+        title: "Mô tả Sự cố"
+        description: "Tại đây, bạn có thể cung cấp mô tả chi tiết về sự cố, bao gồm lỗi xảy ra, thời điểm phát hiện và các tình huống liên quan."
+      tags_field:
+        title: "Thẻ Sự cố"
+        description: "Bạn có thể thêm các thẻ liên quan để giúp phân loại và tìm kiếm sự cố này, giúp việc lọc và tìm kiếm các sự cố liên quan dễ dàng hơn."
+      priority_field:
+        title: "Mức độ Ưu tiên"
+        description: "Trong trường này, bạn có thể đặt mức độ ưu tiên cho sự cố này để xác định tốc độ cần giải quyết."
+      status_field:
+        title: "Trạng thái Sự cố"
+        description: "Tại đây, bạn có thể theo dõi trạng thái hiện tại của sự cố này và cập nhật khi sự cố diễn ra."
+      coordinates_field:
+        title: "Vị trí Sự cố"
+        description: "Bạn có thể chỉ định vị trí địa lý nơi sự cố xảy ra, điều này rất quan trọng đối với các sự cố cụ thể về vị trí hoặc hỗ trợ điều phối."
+      submit:
+        title: "Tạo Sự cố"
+        description: "Bạn có thể gửi báo cáo sự cố này để ghi vào hệ thống và nhân viên được phân công sẽ được thông báo để bắt đầu giải quyết."
+
+  fleets:
+    tour:
+      new_button:
+        title: "Nút Đội xe Mới"
+        description: "Mở biểu mẫu tạo đội xe, nơi bạn có thể xác định chi tiết đội xe."
+      form_panel:
+        title: "Biểu mẫu Tạo Đội xe"
+        description: "Trong biểu mẫu này, bạn có thể nhập các thông tin cần thiết để tạo hoặc chỉnh sửa đội xe, bao gồm tên, hệ thống phân cấp, trạng thái và nhiệm vụ."
+      name_field:
+        title: "Tên Đội xe"
+        description: "Tại đây, bạn có thể nhập tên đội xe để nhận dạng trong tổ chức của mình."
+      parent_fleet_field:
+        title: "Lựa chọn Đội xe mẹ"
+        description: "Bạn có thể chọn đội xe mẹ nếu đội xe này là một phần của hệ thống phân cấp đội xe lớn hơn để tổ chức cấu trúc đội xe."
+      status_field:
+        title: "Trạng thái Đội xe"
+        description: "Trong trường này, bạn có thể thiết lập trạng thái của đội xe để quản lý trạng thái hoạt động của đội xe."
+      task_field:
+        title: "Nhiệm vụ Đội xe"
+        description: "Tại đây, bạn có thể chỉ định nhiệm vụ hoặc sứ mệnh cho đội xe này để xác định chức năng hoặc mục tiêu chính của nó."
+      submit:
+        title: "Lưu Đội xe"
+        description: "Bạn có thể hoàn tất quy trình tạo hoặc cập nhật đội xe bằng cách lưu tất cả thông tin đã nhập."
+
+  users:
+    tour:
+      new-user:
+        title: "Nút Người dùng Mới"
+        description: "Mở biểu mẫu tạo người dùng, nơi bạn có thể xác định thông tin người dùng."
+      name:
+        title: "Tên Người dùng"
+        description: "Tại đây, bạn có thể nhập tên đầy đủ của người dùng để nhận dạng họ trong hệ thống của bạn."
+      email:
+        title: "Email Người dùng"
+        description: "Bạn có thể cung cấp địa chỉ email của người dùng cho mục đích liên lạc và đăng nhập."
+      phone:
+        title: "Số điện thoại Người dùng"
+        description: "Trong trường này, bạn có thể nhập số điện thoại của người dùng cho mục đích liên hệ và xác minh."
+      country:
+        title: "Quốc gia của Người dùng"
+        description: "Tại đây, bạn có thể chọn quốc gia của người dùng để liên kết họ với một khu vực cụ thể."
+      role:
+        title: "Vai trò người dùng"
+        description: "Bạn có thể chỉ định vai trò cho người dùng để xác định trách nhiệm và cấp độ truy cập của họ."
+      policies:
+        title: "Đính kèm Chính sách"
+        description: "Trong phần này, bạn có thể đính kèm chính sách cho người dùng để chỉ định quyền và quyền truy cập của họ."
+      permissions:
+        title: "Chọn Quyền"
+        description: "Tại đây, bạn có thể chọn các quyền cụ thể để cấp cho người dùng quyền truy cập vào một số tính năng hoặc hành động nhất định."
+      confirm:
+        title: "Lưu Người dùng"
+        description: "Bạn có thể hoàn tất quá trình tạo hoặc cập nhật người dùng bằng cách lưu tất cả thông tin đã nhập."
+
+  groups:
+    tour:
+      new_button:
+        title: "Nút Nhóm Mới"
+        description: "Mở biểu mẫu tạo nhóm, nơi bạn có thể xác định thông tin nhóm."
+      name_field:
+        title: "Tên Nhóm"
+        description: "Tại đây, bạn có thể nhập tên nhóm để xác định nhóm trong hệ thống của mình."
+      description_field:
+        title: "Mô tả Nhóm"
+        description: "Bạn có thể cung cấp mô tả cho nhóm để phác thảo mục đích hoặc chức năng của nhóm."
+      users_field:
+        title: "Chọn Người dùng"
+        description: "Trong phần này, bạn có thể chọn người dùng để thêm vào nhóm này để xác định tư cách thành viên."
+      submit:
+        title: "Lưu Nhóm"
+        description: "Bạn có thể hoàn tất quá trình tạo hoặc cập nhật nhóm bằng cách lưu tất cả thông tin đã nhập."
+
+  roles:
+    tour:
+      new_button:
+        title: "Nút Vai trò Mới"
+        description: "Mở biểu mẫu tạo vai trò, nơi bạn có thể xác định thông tin vai trò."
+      name_field:
+        title: "Tên Vai trò"
+        description: "Tại đây, bạn có thể nhập tên vai trò để xác định vai trò trong hệ thống của mình."
+      description_field:
+        title: "Mô tả Vai trò"
+        description: "Bạn có thể cung cấp mô tả cho vai trò để nêu rõ mục đích hoặc chức năng của nó."
+      policies_field:
+        title: "Đính kèm Chính sách"
+        description: "Trong phần này, bạn có thể đính kèm chính sách vào vai trò để chỉ định quyền và quyền truy cập."
+      permissions_field:
+        title: "Chọn Quyền"
+        description: "Tại đây, bạn có thể chọn các quyền cụ thể để cấp cho vai trò quyền truy cập vào một số tính năng hoặc hành động nhất định."
+      submit:
+        title: "Lưu Vai trò"
+        description: "Bạn có thể hoàn tất quá trình tạo hoặc cập nhật vai trò bằng cách lưu tất cả thông tin đã nhập."
+
+  policies:
+    tour:
+      new_button:
+        title: "Nút Chính sách Mới"
+        description: "Mở biểu mẫu tạo chính sách, nơi bạn có thể xác định chi tiết chính sách."
+      form_panel:
+        title: "Biểu mẫu Tạo Chính sách"
+        description: "Trong biểu mẫu này, bạn có thể nhập các thông tin cần thiết để tạo hoặc chỉnh sửa chính sách, bao gồm tên, mô tả và quyền."
+      name_field:
+        title: "Tên Chính sách"
+        description: "Tại đây, bạn có thể nhập tên chính sách để xác định chính sách đó trong hệ thống của mình."
+      description_field:
+        title: "Mô tả Chính sách"
+        description: "Bạn có thể cung cấp mô tả cho chính sách để phác thảo mục đích hoặc chức năng của chính sách."
+      permissions_field:
+        title: "Chọn Quyền"
+        description: "Trong phần này, bạn có thể chọn các quyền cụ thể để đưa vào chính sách nhằm xác định quyền truy cập của chính sách."
+      submit:
+        title: "Lưu Chính sách"
+        description: "Bạn có thể hoàn tất quá trình tạo hoặc cập nhật chính sách bằng cách lưu tất cả các thông tin đã nhập."
+
+  organization_settings:
+    tour:
+      name_field:
+        title: "Tên Tổ chức"
+        description: "Tại đây, bạn có thể nhập tên tổ chức của mình để xác định tổ chức đó trong hệ thống."
+      description_field:
+        title: "Mô tả Tổ chức"
+        description: "Bạn có thể cung cấp mô tả cho tổ chức của mình để phác thảo mục đích hoặc chi tiết."
+      phone_field:
+        title: "Số điện thoại Tổ chức"
+        description: "Trong trường này, bạn có thể nhập số điện thoại của tổ chức để liên hệ."
+      currency_field:
+        title: "Tiền tệ của Tổ chức"
+        description: "Tại đây, bạn có thể chọn loại tiền tệ mà tổ chức của bạn sử dụng cho các giao dịch tài chính."
+      id_field:
+        title: "ID Tổ chức"
+        description: "Mã định danh duy nhất của tổ chức bạn sẽ không thể chỉnh sửa."
+      parking_zone:
+        title: "Khu vực đỗ xe"
+        description: "Bạn có thể chỉ định khoảng cách tối đa cho khu vực đỗ xe để cấu hình ranh giới hoạt động."
+      save_button:
+        title: "Lưu thay đổi"
+        description: "Bạn có thể lưu tất cả các thay đổi đã thực hiện đối với cài đặt tổ chức bằng cách nhấp vào nút này."
+      logo_field:
+        title: "Logo tổ chức"
+        description: "Trong phần này, bạn có thể tải lên hoặc xem logo của tổ chức để tùy chỉnh thương hiệu."
+      backdrop_field:
+        title: "Hình nền tổ chức"
+        description: "Tại đây, bạn có thể tải lên hoặc xem hình ảnh nền cho tổ chức của mình để nâng cao nhận diện thương hiệu."
 
