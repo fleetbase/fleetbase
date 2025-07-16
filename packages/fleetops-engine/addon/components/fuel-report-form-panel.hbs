@@ -14,7 +14,7 @@
                 @helpText={{t "fleet-ops.component.fuel-report-form-panel.view-details" }}
                 @onClick={{this.onViewDetails}} @wrapperClass="mr-2" @permission="fleet-ops view fuel-report" />
             {{/if}}
-            <Button @type="default" @icon="times" @helpText={{if this.fuelReport.id
+            <Button @customClass="fuel-report-form-cancel-button" @type="default" @icon="times" @helpText={{if this.fuelReport.id
                 (t "fleet-ops.component.fuel-report-form-panel.cancel-edit-fuel-report" )
                 (t "fleet-ops.component.fuel-report-form-panel.cancel-new-fuel-report" ) }}
                 @onClick={{this.onPressCancel}} />

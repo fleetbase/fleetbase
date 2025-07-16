@@ -353,6 +353,10 @@ export default class PoliciesIndexController extends Controller {
       allowClose: false,
       disableActiveInteraction: true,
        onPopoverRender: (popover, { driver }) => {
+        const closeBtn = popover.wrapper.querySelector('.driver-popover-close-btn');
+            if (closeBtn) {
+                closeBtn.style.display = 'inline-block';
+            }
     // Create the Skip button
     const skipButton = document.createElement("button");
     skipButton.innerText = "Skip";
@@ -364,7 +368,7 @@ export default class PoliciesIndexController extends Controller {
     });
 
     // Add the button to the popover footer
-    popover.footerButtons.appendChild(skipButton);
+    // popover.footerButtons.appendChild(skipButton);
   },
       steps: [
         {

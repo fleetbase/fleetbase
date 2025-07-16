@@ -1112,6 +1112,11 @@ export default class OperationsOrdersIndexController extends BaseController {
                     closeBtn.style.display = 'inline-block';
                 }
             },
+            onDestroyStarted: () => {
+                const newOrderController = getOwner(this).lookup('controller:operations.orders.index.new');
+                newOrderController.toggleMultiDropOrder(true);
+                driverObj.destroy();
+            },
             steps: [
                 {
                     element: '#next-view-section-subheader-actions .btn-wrapper button.btn-primary',
@@ -1196,6 +1201,9 @@ export default class OperationsOrdersIndexController extends BaseController {
                             driverObj.moveTo(1);
                         } 
                     },
+                    onHighlightStarted: (element) => {
+                        element?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }
 
                 },
                 {
@@ -1204,6 +1212,9 @@ export default class OperationsOrdersIndexController extends BaseController {
                         title: this.intl.t('fleetbase.orders.tour.multiple_dropoff.title'),
                         description: this.intl.t('fleetbase.orders.tour.multiple_dropoff.description'),
                     },
+                    onHighlightStarted: (element) => {
+                        element?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }
                 },
                 {
                     element: '.add-waypoint-btn',
@@ -1221,6 +1232,9 @@ export default class OperationsOrdersIndexController extends BaseController {
                             driverObj.moveNext();
                         },
                     },
+                   onHighlightStarted: (element) => {
+                        element?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }
                 },
                 {
                     element: '.dragSortList.multi-drop-select-container',
@@ -1233,6 +1247,9 @@ export default class OperationsOrdersIndexController extends BaseController {
                             driverObj.moveNext();
                         },
                     },
+                    onHighlightStarted: (element) => {
+                        element?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }
                 },
                 {
                     element: '.new-order-route-toggle span[role="checkbox"]',
@@ -1252,6 +1269,9 @@ export default class OperationsOrdersIndexController extends BaseController {
                         })();
                         },
                     },
+                    onHighlightStarted: (element) => {
+                        element?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }
                 },
                 {
                     element: '.grid.grid-cols-1.lg\\:grid-cols-2.gap-4.lg\\:gap-2.text-xs.dark\\:text-gray-100',
@@ -1259,7 +1279,9 @@ export default class OperationsOrdersIndexController extends BaseController {
                         title: this.intl.t('fleetbase.orders.tour.pickup_dropoff_section.title', 'Pickup/Dropoff/Return'),
                         description: this.intl.t('fleetbase.orders.tour.pickup_dropoff_section.description', 'Set the pickup, dropoff, and return locations for the order.'),
                     },
-                    onHighlightStarted: scrollElementIntoView,
+                    onHighlightStarted: (element) => {
+                        element?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }
                 },
                 {
                     element: '.new-order-notes .next-content-panel-container ',
