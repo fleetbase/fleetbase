@@ -47,7 +47,15 @@ class OnboardController extends Controller
         $phone       = $request->input('phone');
         $timezone    = $request->input('timezone', date_default_timezone_get());
         $username    = Str::slug($name . '_' . Str::random(4), '_');
+        $numberOfDrivers = $request->input('number_of_drivers');
+        $numberOfWebUsers = $request->input('number_of_web_users');
 
+        if (empty($numberOfDrivers) || empty($numberOfWebUsers) || empty($name) || empty($email) || empty($phone)) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Please fill the required fields'
+            ], 422);
+        }
         // Prepare user attributes
         $attributes = User::applyUserInfoFromRequest($request, [
             'name'       => $name,
