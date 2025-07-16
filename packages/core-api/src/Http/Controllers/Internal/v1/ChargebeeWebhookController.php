@@ -561,6 +561,7 @@ class ChargebeeWebhookController extends Controller
         Log::info('Processing payment succeeded', ['transaction_id' => $transaction['id']]);
         // $user = User::where('chargebee_customer_id', $transaction['customer_id'])->first();
         try {
+            $user_new = User::where('chargebee_subscription_id', $subscription['id'])->first();
             $plan = DB::table('plan')->where('name', 'Basic Plan')->first();
             $subscriptionRecord = Subscription::where('gocardless_subscription_id', $transaction['subscription_id'])->first();
             // Store transaction record
@@ -580,7 +581,7 @@ class ChargebeeWebhookController extends Controller
                     'payment_metadata' => json_encode($transaction),
                     'payment_method' => 'direct_debit',
                     'payment_type' => 'subscription',
-                    'created_by_id' => $user->id,
+                    'created_by_id' => $user_new->id,
                     'is_recurring' => 1,
 
                     // 'gateway_transaction_id' => $transaction['gateway_transaction_id'] ?? null,

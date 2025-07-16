@@ -514,10 +514,9 @@ export default class OperationsOrdersIndexViewController extends BaseController 
                         }
                     },
                     
-                    // onHighlightStarted: (element) => {
-                    //     // Ensure the element is scrolled into view before highlighting
-                    //     element.scrollIntoView({ behavior: 'smooth' });
-                    //   },
+                    onHighlightStarted: (element) => {
+                        element.scrollIntoView({ behavior: 'smooth' });
+                      },
                 },
                  {
                     element: '.flb--modal .flb--modal-content',
@@ -530,7 +529,7 @@ export default class OperationsOrdersIndexViewController extends BaseController 
                         },
                         onPrevClick: () => {
                             this.modalsManager.done();
-                            driverObj.moveNext();
+                            driverObj.movePrevious();
                         }
                     },
                 },

@@ -326,7 +326,7 @@ export default class ManagementPlacesIndexController extends BaseController {
     /**
      * Starts the Driver.js product tour
      */
-    @action
+    // @action
     // startTour() {
     //     const driverObj = driver({
     //       showProgress: true,
@@ -480,6 +480,18 @@ export default class ManagementPlacesIndexController extends BaseController {
                     popover: {
                         title: this.intl.t('fleetbase.places.tour.form_panel.title'),
                         description: this.intl.t('fleetbase.places.tour.form_panel.description'),
+                        onPrevClick: () => {
+                            // Attempt to close the sidebar by clicking the cancel button before moving to the previous step
+                            const cancelButton = document.querySelector('.place-form-cancel-button');
+                            if (cancelButton) {
+                                cancelButton.click();
+                                later(this, () => {
+                                    driverObj.movePrevious();
+                                }, 500); // Wait for sidebar to close
+                            } else {
+                                driverObj.movePrevious();
+                            }
+                        }
                     },
                 },
                 {
@@ -525,7 +537,25 @@ export default class ManagementPlacesIndexController extends BaseController {
             ]
         });
 
-        driverObj.drive();
+        // Check if sidebar is open before starting the tour
+        const sidebar = document.querySelector('.next-content-overlay-panel');
+        if (sidebar && window.getComputedStyle(sidebar).display !== 'none') {
+            const placeFormPanel = document.querySelector('.place-form-panel');
+            if (placeFormPanel) {
+                const cancelButton = document.querySelector('.place-form-cancel-button');
+                if (cancelButton) {
+                    cancelButton.click(); // Simulate click to close sidebar
+                    later(this, () => {
+                        driverObj.drive();
+                    }, 500); // Wait for sidebar to close
+                    return;
+                }
+            }
+            // Fallback if cancel button not found
+            driverObj.drive();
+        } else {
+            driverObj.drive();
+        }
     }
 
     /**

@@ -620,6 +620,18 @@ startDriversTour() {
                 popover: {
                     title: this.intl.t('fleetbase.drivers.tour.user_account.title'),
                     description: this.intl.t('fleetbase.drivers.tour.user_account.description'),
+                    onPrevClick: () => {
+                        // Attempt to close the sidebar by clicking the cancel button before moving to the previous step
+                        const cancelButton = document.querySelector('.driver-form-cancel-button');
+                        if (cancelButton) {
+                            cancelButton.click();
+                            later(this, () => {
+                                driverObj.movePrevious();
+                            }, 500); // Wait for sidebar to close
+                        } else {
+                            driverObj.movePrevious();
+                        }
+                    }
                 },
             },
             {

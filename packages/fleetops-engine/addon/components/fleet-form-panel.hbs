@@ -37,6 +37,7 @@
                 />
             {{/if}}
             <Button
+                @customClass="fleet-form-cancel-button"
                 @type="default"
                 @icon="times"
                 @helpText={{if this.fleet.id (t "fleet-ops.component.fleet-form-panel.cancel-edit-fleet") (t "fleet-ops.component.fleet-form-panel.cancel-new-fleet")}}
