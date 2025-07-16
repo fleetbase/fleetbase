@@ -331,15 +331,13 @@ export default class OperationsOrdersIndexNewController extends BaseController {
     }
     @action createOrder() {
         const WAYPOINTS_ERROR = this.intl.t('common.valid-waypoints-error');
-        if (!this.order.scheduled_at || !this.order.estimated_end_date) {
-            let missingFields = [];
-            if (!this.order.scheduled_at) missingFields.push("Start Date");
-            if (!this.order.estimated_end_date) missingFields.push("End Date");
-        
-            this.errorMessage = `${missingFields.join(" and ")} ${missingFields.length > 1 ? "are" : "is"} required.`;
+        // only require scheduled_at now
+        if (!this.order.scheduled_at) {
+            this.errorMessage = this.intl.t('fleet-ops.component.order.schedule-card.start-date-required');
             this.showErrorOnce(this.errorMessage);
             return;
-        }
+        } 
+
         if (new Date(this.order.estimated_end_date) < new Date(this.order.scheduled_at)) {
             this.errorMessage = "End Date cannot be earlier than the start date.";
             this.showErrorOnce(this.errorMessage);
