@@ -35,5 +35,11 @@ return [
     'duplicate_check_place' => 'Đã tồn tại một địa điểm với mã này.',
     'invalid_coordinates' => 'Vui lòng nhập tọa độ địa lý hợp lệ. Các giá trị như [0, 0] hoặc nằm ngoài phạm vi không được chấp nhận.',
     'duplicate_check_vehicle' => 'Đã tồn tại một phương tiện với biển số này.',
+    'request_approve_success' => 'Yêu cầu nghỉ phép đã được phê duyệt thành công.',
+    'request_reject_success' => 'Yêu cầu nghỉ phép đã bị từ chối thành công.',
+    'leave_balance_insufficient' => 'Số dư nghỉ phép không đủ, bạn có muốn tiếp tục không?',
+    'leave_request_action_failed' => 'Không thể xử lý hành động yêu cầu nghỉ phép',
+    'leave_already_approved' => 'Yêu cầu nghỉ phép đã được phê duyệt trước đó.',
+    'leave_already_rejected' => 'Yêu cầu nghỉ phép đã bị từ chối trước đó.',
 ];
 

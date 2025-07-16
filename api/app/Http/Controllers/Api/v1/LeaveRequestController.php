@@ -223,6 +223,18 @@ class LeaveRequestController extends Controller
      */
     protected function processLeaveRequestAction($leaveRequest, $action, $isConfirmed = 0, $driverUuid = null, $totalDays = null)
     {
+        if ($leaveRequest->status === 'Approved' && $action === 'approve') {
+            return response()->json([
+                'success' => false,
+                'message' => __('messages.leave_already_approved'),
+            ], 400);
+        }
+        if ($leaveRequest->status === 'Rejected' && $action === 'reject') {
+            return response()->json([
+                'success' => false,
+                'message' => __('messages.leave_already_rejected'),
+            ], 400);
+        }
         if ($action === 'approve') {
             // Check leave balance only if not confirmed yet
             // if (!$isConfirmed) {

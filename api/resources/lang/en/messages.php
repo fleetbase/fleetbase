@@ -55,4 +55,6 @@ return [
     'request_reject_success' => 'Leave request has been successfully rejected.',
     'leave_balance_insufficient' => 'Leave balance is insufficient, still you want to proceed?',
     'leave_request_action_failed' => 'Leave request action could not be processed',
+    'leave_already_approved' => 'Leave request has already been approved.',
+    'leave_already_rejected' => 'Leave request has already been rejected.',
 ];

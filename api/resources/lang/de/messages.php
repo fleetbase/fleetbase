@@ -47,4 +47,10 @@ return [
     'duplicate_check_place' => 'Ein Ort mit diesem Code existiert bereits.',
     'invalid_coordinates' => 'Bitte geben Sie gültige geografische Koordinaten an. Werte wie [0, 0] oder außerhalb des gültigen Bereichs sind nicht erlaubt.',
     'duplicate_check_vehicle' => 'Ein Fahrzeug mit diesem Kennzeichen existiert bereits.',
+    'request_approve_success' => 'Der Urlaubsantrag wurde erfolgreich genehmigt.',
+    'request_reject_success' => 'Der Urlaubsantrag wurde erfolgreich abgelehnt.',
+    'leave_balance_insufficient' => 'Der Urlaubsanspruch ist unzureichend, möchten Sie dennoch fortfahren?',
+    'leave_request_action_failed' => 'Die Aktion des Urlaubsantrags konnte nicht verarbeitet werden',
+    'leave_already_approved' => 'Der Urlaubsantrag wurde bereits genehmigt.',
+    'leave_already_rejected' => 'Der Urlaubsantrag wurde bereits abgelehnt.',
 ];

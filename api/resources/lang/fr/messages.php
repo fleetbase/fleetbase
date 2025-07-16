@@ -45,4 +45,10 @@ return [
     'duplicate_check_place' => 'Un lieu avec ce code existe déjà.',
     'invalid_coordinates' => 'Veuillez fournir des coordonnées géographiques valides. Les valeurs comme [0, 0] ou en dehors des limites autorisées ne sont pas acceptées.',
     'duplicate_check_vehicle' => 'Un véhicule avec ce numéro de plaque existe déjà.',
+    'request_approve_success' => 'La demande de congé a été approuvée avec succès.',
+    'request_reject_success' => 'La demande de congé a été rejetée avec succès.',
+    'leave_balance_insufficient' => 'Le solde de congé est insuffisant, souhaitez-vous quand même continuer ?',
+    'leave_request_action_failed' => 'L\'action de la demande de congé n\'a pas pu être traitée',
+    'leave_already_approved' => 'La demande de congé a déjà été approuvée.',
+    'leave_already_rejected' => 'La demande de congé a déjà été rejetée.',
 ];

@@ -45,4 +45,10 @@ return [
     'duplicate_check_place' => 'Ya existe un lugar con este código.',
     'invalid_coordinates' => 'Por favor, proporciona coordenadas geográficas válidas. Valores como [0, 0] o posiciones fuera de rango no están permitidos.',
     'duplicate_check_vehicle' => 'Ya existe un vehículo con esta matrícula.',
+    'request_approve_success' => 'La solicitud de permiso ha sido aprobada con éxito.',
+    'request_reject_success' => 'La solicitud de permiso ha sido rechazada con éxito.',
+    'leave_balance_insufficient' => 'El saldo de permisos es insuficiente, ¿aún así desea continuar?',
+    'leave_request_action_failed' => 'No se pudo procesar la acción de la solicitud de permiso',
+    'leave_already_approved' => 'La solicitud de permiso ya ha sido aprobada.',
+    'leave_already_rejected' => 'La solicitud de permiso ya ha sido rechazada.'
 ];
