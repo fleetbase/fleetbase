@@ -11,11 +11,11 @@
             </div>
             <div class="field-info-container space-y-2">
                 <div class="field-name">Start Date</div>
-                <div class="field-value">{{n-a @leave.startDateFormatted}}</div>
+                <div class="field-value">{{format-date @leave.start_date}}</div>
             </div>
             <div class="field-info-container space-y-2">
                 <div class="field-name">End Date</div>
-                <div class="field-value">{{n-a @leave.end_date}}</div>
+                <div class="field-value">{{@leave.formattedEndDate}}</div>
             </div>
             <div class="field-info-container space-y-2">
                 <div class="field-name">Total Days</div>

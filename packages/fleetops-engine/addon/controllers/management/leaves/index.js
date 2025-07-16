@@ -5,6 +5,7 @@ import { action, set } from '@ember/object';
 import { timeout } from 'ember-concurrency';
 import { task } from 'ember-concurrency-decorators';
 import ENV from '@fleetbase/console/config/environment';
+import { getOwner } from '@ember/application';
 
 export default class ManagementLeavesIndexController extends BaseController {
     @service notifications;
@@ -14,6 +15,7 @@ export default class ManagementLeavesIndexController extends BaseController {
     @service store;
     @service hostRouter;
     @service filters;
+
 
     queryParams = [
         'page',
@@ -54,13 +56,12 @@ export default class ManagementLeavesIndexController extends BaseController {
         },
         {
             label: 'Driver Name',
-            valuePath: 'driver.name',
-            cellComponent: 'table/cell/anchor',
-            permission: 'fleet-ops view driver',
+            valuePath: 'user.name',
+            permission: 'fleet-ops view user',
             onClick: async (leave) => {
-                let driver = await leave.driver;
-                if (driver) {
-                    this.contextPanel.focus(driver);
+                let user = await leave.user;
+                if (user) {
+                    this.contextPanel.focus(user);
                 }
             },
             width: '120px',
@@ -75,6 +76,7 @@ export default class ManagementLeavesIndexController extends BaseController {
         {
             label: 'Start Date',
             valuePath: 'start_date',
+            cellComponent: 'table/cell/date',
             width: '120px',
             resizable: true,
             sortable: true,
@@ -84,6 +86,7 @@ export default class ManagementLeavesIndexController extends BaseController {
         {
             label: 'End Date',
             valuePath: 'end_date',
+            cellComponent: 'table/cell/date',
             width: '120px',
             resizable: true,
             sortable: true,
@@ -117,7 +120,6 @@ export default class ManagementLeavesIndexController extends BaseController {
         {
             label: 'Status',
             valuePath: 'status',
-            cellComponent: 'table/cell/status',
             width: '100px',
             resizable: true,
             sortable: true,
@@ -128,7 +130,6 @@ export default class ManagementLeavesIndexController extends BaseController {
         {
             label: 'Processed By',
             valuePath: 'processed_by_user.name',
-            cellComponent: 'table/cell/anchor',
             permission: 'iam view user',
             onClick: async (leave) => {
                 let user = await leave.processed_by_user;
@@ -148,19 +149,20 @@ export default class ManagementLeavesIndexController extends BaseController {
         {
             label: 'Created At',
             valuePath: 'created_at',
+            cellComponent: 'table/cell/date',
             width: '120px',
             resizable: true,
             sortable: true,
             filterable: true,
             filterComponent: 'filter/date',
         },
-        {
-            label: 'Leave Balance',
-            valuePath: 'driver.leave_balance',
-            width: '100px',
-            resizable: true,
-            sortable: false,
-        },
+        // {
+        //     label: 'Leave Balance',
+        //     valuePath: 'driver.leave_balance',
+        //     width: '100px',
+        //     resizable: true,
+        //     sortable: false,
+        // },
         {
             label: '',
             cellComponent: 'table/cell/dropdown',
@@ -204,6 +206,7 @@ export default class ManagementLeavesIndexController extends BaseController {
         this.hostRouter.refresh();
     }
 
+
     async _updateLeaveStatus(leave, action) {
         try {
             const authSession = JSON.parse(localStorage.getItem('ember_simple_auth-session'));
@@ -227,7 +230,14 @@ export default class ManagementLeavesIndexController extends BaseController {
                 return false;
             }
 
-            this.notifications.success(`Leave ${action}d!`);
+            this.notifications.success(`Leave ${action}!`);
+            // Get the route instance and clear its cache
+            const owner = getOwner(this);
+            const route = owner.lookup('route:management.leaves.index');
+            if (route && route._cache) {
+                route._cache.unavailability = null;
+            }
+            // Now refresh the model (SPA-style)
             this.hostRouter.refresh();
             return true;
         } catch (error) {

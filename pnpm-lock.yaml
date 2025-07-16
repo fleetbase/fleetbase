@@ -8,15 +8,24 @@ importers:
 
   .:
     dependencies:
+      chargebee:
+        specifier: ^3.10.0
+        version: 3.10.0
       date-fns:
         specifier: ^4.1.0
         version: 4.1.0
 
 packages:
 
+  chargebee@3.10.0:
+    resolution: {integrity: sha512-Rny1w8cRXMfGbV4vxpGcsz9RsdLhUtrdpTisQASgqoZW0C3Ff4KVi2wCOEltc+536cqMqDml57s0X9bQRoDVVQ==}
+    engines: {node: '>=18.*'}
+
   date-fns@4.1.0:
     resolution: {integrity: sha512-Ukq0owbQXxa/U3EGtsdVBkR1w7KOQ5gIBqdH2hkvknzZPYvBxb/aa6E8L7tmjFtkwZBu3UXBbjIgPo/Ez4xaNg==}
 
 snapshots:
+
+  chargebee@3.10.0: {}
 
   date-fns@4.1.0: {}
