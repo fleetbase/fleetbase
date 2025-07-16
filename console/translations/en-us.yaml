@@ -2541,45 +2541,47 @@ fleetbase:
     tour:
       add:
         title: "New Order Creation"
-        description: "You can start the process of creating an order by clicking this 'New' button."
-   
+        description: "Start the order creation process by clicking the 'New' button."
+
       import_button:
         title: "Import Orders"
-        description: "Click here to import orders from a spreadsheet file."
+        description: "Import orders from a spreadsheet file for efficient bulk processing."
+
       upload_spreadsheets:
         title: "Upload Spreadsheets"
-        description: "Drag and drop or select spreadsheet files to upload for order import."
+        description: "Upload spreadsheet files by dragging and dropping or selecting from your device."
+
       start_upload:
         title: "Start Upload"
-        description: "Click this button to start uploading and processing your spreadsheets."
+        description: "Initiate the upload and processing of the selected spreadsheet files."
 
       dates:
         title: "Order Scheduling"
-        description: "Set the start and estimated completion dates to define the timeline for the order."
+        description: "Define the start and estimated completion dates to outline the order's timeline."
 
       multiple_dropoff:
         title: "Multiple Drop-Off Locations"
-        description: "Multi-drop-off functionality is enabled by default, allowing multiple delivery destinations for a single order."
+        description: "Multiple delivery destinations are enabled by default for a single order."
 
       multiple_dropoff_disabled:
         title: "Multiple Drop-Off Disabled"
-        description: "Multiple drop-off is disabled. With this setting, you can set only one drop-off location for the order."
+        description: "Only one drop-off location is allowed for this order under the current setting."
 
       add_waypoint:
         title: "Add Waypoints"
-        description: "Add intermediate stops to the route, allowing for multiple locations to be included in the delivery."
+        description: "Include additional stops along the route, allowing multiple locations in the delivery."
 
       pickup_dropoff_section:
         title: "Pickup/Dropoff/Return Section"
-        description: "Set the pickup, dropoff, and return locations for the order."
+        description: "Specify the pickup, drop-off, and return locations for the order."
 
       select_waypoint:
-        title: "Select Waypoint Location"
-        description: "Choose the location for each waypoint, ensuring the delivery route is mapped accurately."
+        title: "Waypoint Location"
+        description: "Define the location for each waypoint to ensure the delivery route is mapped accurately."
 
       notes:
         title: "Order Notes"
-        description: "Enter any special instructions or notes related to the order to ensure smooth handling."
+        description: "Add any special instructions or notes to facilitate smooth order handling."
 
       documents:
         title: "Document Upload"
@@ -2589,26 +2591,25 @@ fleetbase:
         title: "Submit the Order"
         description: "Complete the order creation process by submitting the final details for processing."
 
-      # After submission, for the view order flow:
       activity_tab:
         title: "Order Activity"
         description: "Track all actions and status changes related to the order throughout its lifecycle."
 
       details_tab:
         title: "Order Details"
-        description: "View the order details, including assigned driver, vehicle, start date, and estimated end date."
+        description: "View comprehensive order details, including assigned driver, vehicle, start date, and estimated end date."
 
       details_edit:
         title: "Edit Order"
-        description: "You can click this button to open the edit form for the selected order."
-      
+        description: "Modify order details, such as dates, driver assignments, and vehicle selections."
+
       edit_modal:
         title: "Edit Order Details"
-        description: "You can edit start date, end date, assign driver, and assign vehicle here."
+        description: "Modify the start date, end date, driver, and vehicle assignments within the order details."
 
       tracking_tab:
         title: "Order Tracking"
-        description: "Monitor the current status and location of the order as it moves through the fulfillment process."
+        description: "Monitor the order's current status and location as it progresses through the fulfilment process."
 
       notes_tab:
         title: "Order Notes"
@@ -2616,11 +2617,11 @@ fleetbase:
 
       route_tab:
         title: "Route Overview"
-        description: "View the connected locations in the delivery route, showing all stops and waypoints in sequence."
+        description: "Review the connected locations in the delivery route, showing all stops and waypoints in sequence."
 
       documents_tab:
         title: "Documents & Files"
-        description: "Access an organized collection of all documents associated with the order, including invoices and delivery notes."
+        description: "Access an organised collection of all documents associated with the order, including invoices and delivery notes."
 
       comments_tab:
         title: "Order Communication"
@@ -2628,147 +2629,167 @@ fleetbase:
 
       dispatch_button:
         title: "Order Dispatch Controls"
-        description: "Start the fulfillment process by dispatching the order to the designated logistics resources."
+        description: "Start the fulfilment process by dispatching the order to the designated logistics resources."
 
       dispatch:
         title: "Order Dispatch"
-        description: "Execute the order fulfillment by dispatching it to the assigned team or service provider for processing."
+        description: "Execute the order fulfilment by dispatching it to the assigned team or service provider."
 
   scheduler:
     tour:
       unscheduled_orders:
         title: "Unassigned Orders Panel"
-        description: "This panel displays all orders waiting to be scheduled. You can view order details and drag them to the calendar or click to assign them manually."
-
-      click_order_link:
-        title: "Open Order Details"
-        description: "Click this link to open the modal and edit the details of an unassigned order."
+        description: "This panel displays all orders awaiting scheduling. Review order details and move them to the calendar for scheduling."
 
       edit_order_modal:
         title: "Edit Unassigned Order Details"
-        description: "In this modal, you can edit delivery dates, assign drivers and vehicles, and update other scheduling details for your order."
+        description: "Modify delivery dates, assign drivers and vehicles, and adjust other scheduling details for the unassigned orders."
 
       edit_assigned_order_modal:
         title: "Edit Assigned Order Details"
-        description: "Modify scheduling details for orders that are already assigned. Update dates, reassign drivers, or change vehicle assignments."
+        description: "Adjust scheduling details for orders already assigned, including updating dates, reassigning drivers, or changing vehicle assignments."
 
       scheduled_orders:
         title: "Assigned Orders Panel"
-        description: "View all orders that have been assigned to drivers and scheduled for specific time slots. Track your scheduled deliveries at a glance."
-
-      click_assigned_order_link:
-        title: "Open Assigned Order Details"
-        description: "Click this link to open the modal and edit the details of an assigned order."
+        description: "Review all orders assigned to drivers and scheduled for specific time slots. Keep track of all scheduled deliveries in one view."
 
       filters:
         title: "Filters"
-        description: "Here you can filter orders by Order ID, driver assignment, or status. You can apply filters to search or clear them to reset your view."
+        description: "Use filters to search orders by Order ID, driver assignment, or status. Reset filters to clear your view."
 
       time_period:
         title: "Calendar View Options"
-        description: "Switch between Day, Week, Month, and Year views to get the perfect perspective for your scheduling needs."
+        description: "Select between Day, Week, Month, and Year views to visualise your schedule from different perspectives."
 
       calendar:
         title: "Scheduling Calendar"
-        description: "Drag and drop orders from the unassigned panel to schedule them, or click existing events to view details and make adjustments."
+        description: "Move orders from the unassigned panel to schedule them or select existing events to review and modify their details."
+
       assigned_order_event:
         title: "Assigned Order Event"
-        description: "This block represents an assigned order on the calendar. Click or hover to view order details and scheduling options."
+        description: "This block represents an assigned order on the calendar. Hover to view order details and scheduling options."
+
       leave_event:
         title: "Leave Event"
         description: "This block represents a scheduled leave or absence for a driver. Leave events are always visible on the calendar."
+
   drivers:
     tour:
       new_button:
         title: "Create New Driver"
-        description: "This button opens a form where you can create a new driver profile and enter driver details."
+        description: "Opens the form to create a new driver profile and enter driver details."
+
       user_account:
         title: "User Account Section"
-        description: "Here you can select an existing user account to associate with this driver profile. This links the driver to a user who can access the driver mobile app."
+        description: "Select an existing user account to link with this driver profile. This links the driver to a user who can access the driver mobile app."
+
       driver_details:
         title: "Driver Details Section"
-        description: "In this section, you can enter additional driver information including license number, assigned vehicle, and location details."
+        description: "Enter key driver details such as license number, assigned vehicle, and location specifics."
+
       submit:
         title: "Create Driver"
-        description: "You can complete the driver creation process by submitting the form with all the entered details."
+        description: "Complete the driver creation process by submitting the form with all the entered details."
+
   vehicles:
     tour:
       new_button:
         title: "Create New Vehicle"
-        description: "This button opens a form where you can create a new vehicle profile and enter vehicle details."
+        description: "Opens the form to create a new vehicle profile and input vehicle-specific information."
+
       vehicle_details:
         title: "Vehicle Details Section"
-        description: "Here you can enter essential vehicle information including internal ID, plate number, VIN, make, model, year, and other specifications."
+        description: "Enter essential vehicle information including internal ID, plate number, VIN, make, model, year, and other specifications."
+
       vehicle_avatar:
         title: "Vehicle Avatar Section"
-        description: "In this section, you can upload a photo or image to represent this vehicle in the system for visual identification."
+        description: "Upload a photo or image to visually represent the vehicle within the system."
+
       submit:
         title: "Create Vehicle"
-        description: "You can complete the vehicle creation process by submitting the form with all the entered details."
+        description: "Complete the vehicle creation process by submitting the form with all the entered details."
+
   places:
     tour:
       new_button:
         title: "New Place Button"
-        description: "This button opens the place creation form where you can define location details for a new place."
+        description: "Opens the place creation form where you can define location details for a new place."
+
       form_panel:
         title: "Place Creation Form"
-        description: "In this form, you can define all the essential details for a new place, including location information and coordinates."
+        description: "Define all the essential details for a new place, including location information and coordinates."
+
       name_field:
         title: "Place Name"
-        description: "Here you can enter a descriptive name for this place that will be used to identify the location throughout the system."
+        description: "Enter a descriptive name for this place that will be used to identify it throughout the system."
+
       code_field:
         title: "Place Code"
-        description: "You can assign a unique code or identifier for this place to help with quick reference and system integration."
+        description: "Assign a unique code or identifier for this place to help with quick reference and system integration."
+
       coordinates_field:
         title: "Location Coordinates"
-        description: "In this field, you can set the precise geographical coordinates for this place manually or using the map interface."
+        description: "Set the precise geographical coordinates for this place, either manually or by using the map interface."
+
       submit:
         title: "Create Place"
-        description: "You can complete the place creation process by submitting the form with all the entered location details."
+        description: "Complete the place creation process by submitting the form with all the entered location details."
+
   fuel-reports:
     tour:
       new_button:
         title: "New Fuel Report Button"
-        description: "This button opens the fuel report creation form where you can record fuel consumption and costs."
+        description: "Opens the fuel report creation form to record fuel consumption and related costs."
+
       form_panel:
         title: "Fuel Report Creation Form"
-        description: "In this form, you can record all essential fuel report details including reporter, driver, vehicle, costs, and supporting documentation."
+        description: "Record essential fuel report details including reporter, driver, vehicle, costs, and supporting documentation."
+
       reporter_field:
         title: "Reporter Selection"
-        description: "Here you can select the person who is reporting this fuel transaction for accountability tracking."
+        description: "Select the person responsible for reporting this fuel transaction for accountability."
+
       driver_field:
         title: "Driver Selection"
-        description: "You can choose the driver who was responsible for the vehicle during this fuel transaction."
+        description: "Select the driver who was responsible for the vehicle during this fuel transaction."
+
       vehicle_field:
         title: "Vehicle Selection"
-        description: "In this field, you can select the specific vehicle that was refueled to ensure accurate tracking per vehicle."
+        description: "Select the vehicle that was refueled to ensure accurate tracking per vehicle."
+
       status_field:
         title: "Report Status"
-        description: "Here you can set the current status of this fuel report to track its processing workflow."
+        description: "Track the current status of this fuel report to manage its processing workflow."
+
       cost_field:
         title: "Fuel Cost"
-        description: "You can enter the total cost of the fuel purchase to help track fuel expenses and budget management."
+        description: "Record the total cost of the fuel purchase to track fuel expenses and manage the budget."
+
       volume_field:
         title: "Fuel Volume"
-        description: "In this field, you can record the amount of fuel purchased for fuel efficiency analysis and consumption tracking."
+        description: "Record the amount of fuel purchased for fuel efficiency analysis and consumption tracking."
+
       payment_method_field:
         title: "Payment Method"
-        description: "Here you can specify how the fuel was paid for to maintain accurate financial records."
+        description: "Specify how the fuel was paid for to maintain accurate financial records."
+
       coordinates_field:
         title: "Location Coordinates"
-        description: "You can set the geographical location where the fuel was purchased to help track fuel stops and optimize routes."
+        description: "Track the geographical location where the fuel was purchased to help optimize routes."
+
       upload_field:
         title: "Document Upload"
-        description: "In this section, you can upload supporting documents such as receipts or photos to provide verification for this report."
+        description: "Upload supporting documents such as receipts or photos to verify this report."
+
       submit:
         title: "Create Fuel Report"
-        description: "You can complete the fuel report creation process by submitting the form with all the entered details."
+        description: "Complete the fuel report creation process by submitting the form with all entered details."
   parking:
     tour:
       help_button_tooltip: "Start guided tour for parking management"
       new_button:
         title: "Create New Parking Report"
-        description: "This button opens the parking report form where you can record parking fees, locations, and related details for your fleet vehicles."
+        description: "Opens the parking report form where you can record parking fees, locations, and related details for your fleet vehicles."
       form_panel:
         title: "Parking Report Form"
         description: "In this form, you can create comprehensive parking reports by filling in reporter, driver, vehicle, payment details, and location information."
@@ -2780,7 +2801,7 @@ fleetbase:
         description: "You can select the driver who was responsible for the parking transaction to track individual driver parking expenses."
       vehicle_field:
         title: "Select Vehicle"
-        description: "In this field, you can choose the vehicle that was parked to track parking costs per vehicle and analyze fleet parking patterns."
+        description: "In this field, you can choose the vehicle that was parked to track parking costs per vehicle and analyse fleet parking patterns."
       status_field:
         title: "Report Status"
         description: "Here you can set the current status of this parking report to track the workflow and approval process."
@@ -2792,18 +2813,19 @@ fleetbase:
         description: "In this field, you can enter the total amount paid for parking to maintain accurate financial records and expense tracking."
       coordinates_field:
         title: "Parking Location"
-        description: "Here you can specify the exact location where parking occurred to help with route optimization and location analysis."
+        description: "Here you can specify the exact location where parking occurred to help with route optimisation and location analysis."
       upload_field:
         title: "Upload Documents"
         description: "In this section, you can upload supporting documents such as parking receipts, tickets, or photos to provide verification."
       submit:
         title: "Create Parking Report"
         description: "You can complete the parking report creation process by submitting the form with all the entered details."
+
   toll-reports:
     tour:
       new_button:
         title: "Create New Toll Report"
-        description: "This button opens the toll report form where you can enter all necessary details for toll expenses and documentation."
+        description: "Opens the toll report form where you can enter all necessary details for toll expenses and documentation."
       form_panel:
         title: "Toll Report Form"
         description: "In this form, you can capture all essential toll expense information including reporter, driver, vehicle, payment details, and supporting documentation."
@@ -2815,30 +2837,31 @@ fleetbase:
         description: "You can identify the driver who incurred the toll expense for driver expense tracking and route analysis."
       vehicle_field:
         title: "Select Vehicle"
-        description: "In this field, you can choose the vehicle that used the toll road to track vehicle-specific toll expenses and analyze cost patterns."
+        description: "In this field, you can choose the vehicle that used the toll road to track vehicle-specific toll expenses and analyse cost patterns."
       status_field:
         title: "Report Status"
         description: "Here you can set the current status of this toll report to manage the approval workflow and track processing state."
       payment_method_field:
         title: "Payment Method"
-        description: "You can specify how the toll was paid for financial reconciliation and expense categorization."
+        description: "You can specify how the toll was paid for financial reconciliation and expense categorisation."
       cost_field:
         title: "Toll Amount"
         description: "In this field, you can enter the total amount paid for tolls to maintain accurate financial records and expense tracking."
       coordinates_field:
         title: "Toll Location"
-        description: "Here you can specify the location of the toll facility to help with route optimization and cost analysis."
+        description: "Here you can specify the location of the toll facility to help with route optimisation and cost analysis."
       upload_field:
         title: "Upload Documents"
         description: "In this section, you can upload supporting documents such as toll receipts or photos to provide verification for this expense report."
       submit:
         title: "Create Toll Report"
         description: "You can complete the toll report creation process by submitting the form with all the entered details."
+
   issues:
     tour:
       new_button:
         title: "Create New Issue"
-        description: "This button opens the issue creation form where you can document problems, maintenance needs, or other concerns related to your fleet operations."
+        description: "Opens the issue creation form where you can document problems, maintenance needs, or other concerns related to your fleet operations."
       form_panel:
         title: "Issue Report Form"
         description: "In this form, you can create detailed issue reports by providing information about the issue type, priority, assigned personnel, and relevant details."
@@ -2856,7 +2879,7 @@ fleetbase:
         description: "Here you can select the vehicle associated with this issue to track maintenance needs or vehicle-specific concerns."
       type_field:
         title: "Issue Type"
-        description: "You can categorize the issue by selecting its type to help with proper routing and prioritization."
+        description: "You can categorise the issue by selecting its type to help with proper routing and prioritisation."
       category_field:
         title: "Issue Category"
         description: "In this field, you can further classify the issue by selecting a specific category for better analysis and resolution tracking."
@@ -2865,7 +2888,7 @@ fleetbase:
         description: "Here you can provide a detailed description of the issue, including what's wrong, when it was noticed, and relevant circumstances."
       tags_field:
         title: "Issue Tags"
-        description: "You can add relevant tags to help categorize and search for this issue, making it easier to filter and find related issues."
+        description: "You can add relevant tags to help categorise and search for this issue, making it easier to filter and find related issues."
       priority_field:
         title: "Priority Level"
         description: "In this field, you can set the priority level for this issue to determine how quickly it needs to be addressed."
@@ -2878,20 +2901,21 @@ fleetbase:
       submit:
         title: "Create Issue"
         description: "You can submit this issue report to log it in the system, and the assigned personnel will be notified to begin working on a resolution."
+
   fleets:
     tour:
       new_button:
         title: "New Fleet Button"
-        description: "This button opens the fleet creation form where you can define fleet details."
+        description: "Opens the fleet creation form where you can define fleet details."
       form_panel:
         title: "Fleet Creation Form"
         description: "In this form, you can input essential details for creating or editing a fleet, including its name, hierarchy, status, and tasks."
       name_field:
         title: "Fleet Name"
-        description: "Here you can enter the name of the fleet to identify it within your organization."
+        description: "Here you can enter the name of the fleet to identify it within your organisation."
       parent_fleet_field:
         title: "Parent Fleet Selection"
-        description: "You can select the parent fleet if this fleet is part of a larger fleet hierarchy to organize fleet structure."
+        description: "You can select the parent fleet if this fleet is part of a larger fleet hierarchy to organise fleet structure."
       status_field:
         title: "Fleet Status"
         description: "In this field, you can set the status of the fleet to manage its operational state."
@@ -2901,11 +2925,12 @@ fleetbase:
       submit:
         title: "Save Fleet"
         description: "You can complete the fleet creation or update process by saving all entered details."
+
   users:
     tour:
       new-user:
         title: "New User Button"
-        description: "This button opens the user creation form where you can define user details."
+        description: "Opens the user creation form where you can define user details."
       name:
         title: "User Name"
         description: "Here you can enter the full name of the user to identify them within your system."
@@ -2930,11 +2955,12 @@ fleetbase:
       confirm:
         title: "Save User"
         description: "You can complete the user creation or update process by saving all entered details."
+
   groups:
     tour:
       new_button:
         title: "New Group Button"
-        description: "This button opens the group creation form where you can define group details."
+        description: "Opens the group creation form where you can define group details."
       name_field:
         title: "Group Name"
         description: "Here you can enter the name of the group to identify it within your system."
@@ -2947,11 +2973,12 @@ fleetbase:
       submit:
         title: "Save Group"
         description: "You can complete the group creation or update process by saving all entered details."
+
   roles:
     tour:
       new_button:
         title: "New Role Button"
-        description: "This button opens the role creation form where you can define role details."
+        description: "Opens the role creation form where you can define role details."
       name_field:
         title: "Role Name"
         description: "Here you can enter the name of the role to identify it within your system."
@@ -2967,11 +2994,12 @@ fleetbase:
       submit:
         title: "Save Role"
         description: "You can complete the role creation or update process by saving all entered details."
+
   policies:
     tour:
       new_button:
         title: "New Policy Button"
-        description: "This button opens the policy creation form where you can define policy details."
+        description: "Opens the policy creation form where you can define policy details."
       form_panel:
         title: "Policy Creation Form"
         description: "In this form, you can input essential details for creating or editing a policy, including its name, description, and permissions."
@@ -2987,23 +3015,24 @@ fleetbase:
       submit:
         title: "Save Policy"
         description: "You can complete the policy creation or update process by saving all entered details."
+
   organization_settings:
     tour:
       name_field:
         title: "Organization Name"
-        description: "Here you can enter the name of your organization to identify it within the system."
+        description: "Here you can enter the name of your organisation to identify it within the system."
       description_field:
         title: "Organization Description"
-        description: "You can provide a description for your organization to outline its purpose or details."
+        description: "You can provide a description for your organisation to outline its purpose or details."
       phone_field:
         title: "Organization Phone"
-        description: "In this field, you can enter the phone number for your organization for contact purposes."
+        description: "In this field, you can enter the phone number for your organisation for contact purposes."
       currency_field:
         title: "Organization Currency"
-        description: "Here you can select the currency used by your organization for financial transactions."
+        description: "Here you can select the currency used by your organisation for financial transactions."
       id_field:
         title: "Organization ID"
-        description: "This displays the unique identifier for your organization, which cannot be edited."
+        description: "This displays the unique identifier for your organisation, which cannot be edited."
       parking_zone:
         title: "Parking Zone"
         description: "You can specify the maximum distance for the parking zone to configure operational boundaries."
@@ -3012,7 +3041,7 @@ fleetbase:
         description: "You can save all changes made to the organization settings by clicking this button."
       logo_field:
         title: "Organization Logo"
-        description: "In this section, you can upload or view the logo for your organization to customize its branding."
+        description: "In this section, you can upload or view the logo for your organisation to customise its branding."
       backdrop_field:
         title: "Organization Backdrop"
-        description: "Here you can upload or view the backdrop image for your organization to enhance its visual identity."
+        description: "Here you can upload or view the backdrop image for your organisation to enhance its visual identity."

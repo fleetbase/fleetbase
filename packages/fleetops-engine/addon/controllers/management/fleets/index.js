@@ -501,6 +501,18 @@ export default class ManagementFleetsIndexController extends BaseController {
                     popover: {
                         title: this.intl.t('fleetbase.fleets.tour.form_panel.title'),
                         description: this.intl.t('fleetbase.fleets.tour.form_panel.description'),
+                        onPrevClick: () => {
+                            // Attempt to close the sidebar by clicking the cancel button before moving to the previous step
+                            const cancelButton = document.querySelector('.fleet-form-cancel-button');
+                            if (cancelButton) {
+                                cancelButton.click();
+                                later(this, () => {
+                                    driverObj.movePrevious();
+                                }, 500); // Wait for sidebar to close
+                            } else {
+                                driverObj.movePrevious();
+                            }
+                        }
                     },
                 },
                 {
@@ -556,6 +568,24 @@ export default class ManagementFleetsIndexController extends BaseController {
             ],
         });
 
-        driverObj.drive();
+        // Check if sidebar is open before starting the tour
+        const sidebar = document.querySelector('.next-content-overlay-panel');
+        if (sidebar && window.getComputedStyle(sidebar).display !== 'none') {
+            const fleetFormPanel = document.querySelector('.fleet-form-panel');
+            if (fleetFormPanel) {
+                const cancelButton = document.querySelector('.fleet-form-cancel-button');
+                if (cancelButton) {
+                    cancelButton.click(); // Simulate click to close sidebar
+                    later(this, () => {
+                        driverObj.drive();
+                    }, 500); // Wait for sidebar to close
+                    return;
+                }
+            }
+            // Fallback if cancel button not found
+            driverObj.drive();
+        } else {
+            driverObj.drive();
+        }
     }
 }

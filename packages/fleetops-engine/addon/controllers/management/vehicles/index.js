@@ -563,7 +563,7 @@ export default class ManagementVehiclesIndexController extends BaseController {
                         },
                     },
                     onHighlightStarted: (element) => {
-                        element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                        element.scrollIntoView({ behavior: 'smooth', block: 'center' });
                     },
                 },
                 {
@@ -571,6 +571,18 @@ export default class ManagementVehiclesIndexController extends BaseController {
                     popover: {
                         title: this.intl.t('fleetbase.vehicles.tour.vehicle_details.title'),
                         description: this.intl.t('fleetbase.vehicles.tour.vehicle_details.description'),
+                        onPrevClick: () => {
+                            // Attempt to close the sidebar by clicking the cancel button before moving to the previous step
+                            const cancelButton = document.querySelector('.vehicle-form-cancel-button');
+                            if (cancelButton) {
+                                cancelButton.click();
+                                later(this, () => {
+                                    driverObj.movePrevious();
+                                }, 500); // Wait for sidebar to close
+                            } else {
+                                driverObj.movePrevious();
+                            }
+                        }
                     },
                     onHighlightStarted: (element) => {
                         element.scrollIntoView({ behavior: 'smooth', block: 'start' });

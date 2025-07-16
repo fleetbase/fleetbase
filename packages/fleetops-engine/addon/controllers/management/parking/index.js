@@ -426,6 +426,18 @@ export default class ManagementParkingIndexController extends BaseController {
                     popover: {
                         title: this.intl.t('fleetbase.parking.tour.form_panel.title'),
                         description: this.intl.t('fleetbase.parking.tour.form_panel.description'),
+                        onPrevClick: () => {
+                            // Attempt to close the sidebar by clicking the cancel button before moving to the previous step
+                            const cancelButton = document.querySelector('.parking-form-cancel-button');
+                            if (cancelButton) {
+                                cancelButton.click();
+                                later(this, () => {
+                                    driverObj.movePrevious();
+                                }, 500); // Wait for sidebar to close
+                            } else {
+                                driverObj.movePrevious();
+                            }
+                        }
                     },
                 },
                 {

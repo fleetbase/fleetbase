@@ -509,6 +509,18 @@ export default class ManagementIssuesIndexController extends BaseController {
                     popover: {
                         title: this.intl.t('fleetbase.issues.tour.form_panel.title'),
                         description: this.intl.t('fleetbase.issues.tour.form_panel.description'),
+                        onPrevClick: () => {
+                            // Attempt to close the sidebar by clicking the cancel button before moving to the previous step
+                            const cancelButton = document.querySelector('.issue-form-cancel-button');
+                            if (cancelButton) {
+                                cancelButton.click();
+                                later(this, () => {
+                                    driverObj.movePrevious();
+                                }, 500); // Wait for sidebar to close
+                            } else {
+                                driverObj.movePrevious();
+                            }
+                        }
                     },
                     // onHighlightStarted: (element) => {
                     //     element.scrollIntoView({ behavior: 'smooth', block: 'center' });
