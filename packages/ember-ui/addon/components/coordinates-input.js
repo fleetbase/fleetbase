@@ -156,35 +156,23 @@ export default class CoordinatesInputComponent extends Component {
     @action
     onLatitudeInput(event) {
         this.latitudeInput = event.target.value;
-
-        const parsedLat = parseFloat(this.latitudeInput);
-        const parsedLng = parseFloat(this.longitudeInput);
-
-        if (!isNaN(parsedLat) && !isNaN(parsedLng)) {
-            this.updateCoordinates(parsedLat, parsedLng);
-        } else {
-            this.updateCoordinates(
-                isNaN(parsedLat) ? null : parsedLat,
-                isNaN(parsedLng) ? null : parsedLng
-            );
-        }
+        this._handleCoordinateInput();
     }
 
     @action
     onLongitudeInput(event) {
         this.longitudeInput = event.target.value;
+        this._handleCoordinateInput();
+    }
 
+    _handleCoordinateInput() {
         const parsedLat = parseFloat(this.latitudeInput);
         const parsedLng = parseFloat(this.longitudeInput);
 
-        if (!isNaN(parsedLat) && !isNaN(parsedLng)) {
-            this.updateCoordinates(parsedLat, parsedLng);
-        } else {
-            this.updateCoordinates(
-                isNaN(parsedLat) ? null : parsedLat,
-                isNaN(parsedLng) ? null : parsedLng
-            );
-        }
+        const lat = isNaN(parsedLat) ? null : parsedLat;
+        const lng = isNaN(parsedLng) ? null : parsedLng;
+
+        this.updateCoordinates(lat, lng);
     }
 
     /**
@@ -223,9 +211,6 @@ export default class CoordinatesInputComponent extends Component {
      * @memberof CoordinatesInputComponent
      */
     updateCoordinates(lat, lng, options = {}) {
-        console.log('[updateCoordinates] Called with:', lat, lng);
-
-
         // Allow updating null/undefined coordinates
         const fireCallback = getWithDefault(options, 'fireCallback', true);
         const updateMap = getWithDefault(options, 'updateMap', true);

@@ -70,12 +70,6 @@ export default class PlaceFormPanelComponent extends Component {
     }
     isValidCoordinate(lat, lng) {
         const isNumber = (val) => typeof val === 'number' && !isNaN(val);
-        const isValidFloat = (str) => /^-?\d*\.?\d+$/.test(str);
-
-        // Accept both string and number, but validate structure first
-        if (!isValidFloat(lat) || !isValidFloat(lng)) {
-            return false;
-        }
 
         const latNum = parseFloat(lat);
         const lngNum = parseFloat(lng);
@@ -151,7 +145,6 @@ export default class PlaceFormPanelComponent extends Component {
                     this.intl.t('fleet-ops.component.place-form-panel.coordinates-invalid') || 'Coordinates are invalid.'
                 );
             } else {
-                showErrorOnce(this, this.notifications, this.intl.t('validation.form_invalid'));
             }
             return;
         }

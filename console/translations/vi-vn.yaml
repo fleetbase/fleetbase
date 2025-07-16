@@ -912,10 +912,9 @@ fleet-ops:
           start-date-required: Cần nhập ngày bắt đầu.
           end-date-required: Cần nhập ngày kết thúc.
           end-date-earlier: Ngày kết thúc không được sớm hơn ngày bắt đầu.
-  component:
-    place-form-panel:
-      coordinates-required: "Yêu cầu nhập tọa độ vị trí."
-      coordinates-invalid: "Tọa độ vị trí không hợp lệ. Vui lòng nhập vĩ độ và kinh độ hợp lệ."
+        place-form-panel:
+          coordinates-required: "Yêu cầu nhập tọa độ vị trí."
+          coordinates-invalid: "Tọa độ vị trí không hợp lệ. Vui lòng nhập vĩ độ và kinh độ hợp lệ."
     layout:
       fleet-ops-sidebar:
         payments: Thanh toán
