@@ -12,4 +12,4 @@ export default class CustomerContactAdapter extends ApplicationAdapter {
 
         return baseUrl;
     }
-}
+} 

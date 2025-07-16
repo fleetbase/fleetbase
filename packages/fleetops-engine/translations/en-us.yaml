@@ -315,6 +315,7 @@ fleet-ops:
         settings: Settings
         order-config: Order Config
         parking: Parking Reports
+        leaves: Leaves
     live-map-drawer:
       driver-listing:
         location: Location
@@ -1313,6 +1314,12 @@ fleet-ops:
           body: Unsaved changes to this vendor will be lost. Click continue to proceed.
         title: Vendors
         delete-vendors: Delete Vendors
+    leaves:
+      index:
+        title: Leaves
+        view: View Details
+        edit-leaves-report: Edit Leave Report
+        delete: Delete Parking Report
   operations:
     order-config:
       route-loading-message: Loading Order Config Builder
