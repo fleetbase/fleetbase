@@ -68,6 +68,18 @@ export default class PlaceFormPanelComponent extends Component {
         this.context = overlayContext;
         contextComponentCallback(this, 'onLoad', ...arguments);
     }
+    isValidCoordinate(lat, lng) {
+        const isNumber = (val) => typeof val === 'number' && !isNaN(val);
+
+        const latNum = parseFloat(lat);
+        const lngNum = parseFloat(lng);
+
+        const isLatValid = isNumber(latNum) && latNum >= -90 && latNum <= 90;
+        const isLngValid = isNumber(lngNum) && lngNum >= -180 && lngNum <= 180;
+
+        return isLatValid && isLngValid;
+    }
+
 
     /**
      * Validates required fields and sets errors.
@@ -86,9 +98,27 @@ export default class PlaceFormPanelComponent extends Component {
         ];
         requiredFields.forEach(({ key, label }) => {
             if (isBlank(this.place[key])) {
+                errors['is_required'] = 'isrequired';
+
                 errors[key] = `${label} is required.`;
             }
         });
+        const location = this.place.location;
+        if (
+            location?.coordinates?.length === 2 &&
+            location.coordinates[0] != null &&
+            location.coordinates[1] != null &&
+            !(location.coordinates[0] === 0 && location.coordinates[1] === 0)
+        ) {
+            const [lng, lat] = location.coordinates;
+            const valid = this.isValidCoordinate(lat, lng);
+
+            if (!valid) {
+                errors['location'] = 'invalid';
+            }
+        } else {
+            errors['location'] = 'missing';
+        }
         this.errors = errors;
         return Object.keys(errors).length === 0;
     }
@@ -103,6 +133,19 @@ export default class PlaceFormPanelComponent extends Component {
         // Validate before saving
         if (!this.validate()) {
             showErrorOnce(this, this.notifications, this.intl.t('validation.form_invalid'));
+            if (this.errors?.is_required === 'isrequired') {
+                showErrorOnce(this, this.notifications, this.intl.t('validation.form_invalid'));
+
+            } else if (this.errors?.location === 'missing') {
+                this.notifications.error(
+                    this.intl.t('fleet-ops.component.place-form-panel.coordinates-required') || 'Coordinates are required.'
+                );
+            } else if (this.errors?.location === 'invalid') {
+                this.notifications.error(
+                    this.intl.t('fleet-ops.component.place-form-panel.coordinates-invalid') || 'Coordinates are invalid.'
+                );
+            } else {
+            }
             return;
         }
         contextComponentCallback(this, 'onBeforeSave', this.place);
@@ -204,8 +247,11 @@ export default class PlaceFormPanelComponent extends Component {
      * @memberof PlaceFormPanelComponent
      */
     @action updatePlaceCoordinates({ latitude, longitude }) {
-        const location = new Point(longitude, latitude);
-
-        this.place.setProperties({ location });
+        if (!isNaN(latitude) && !isNaN(longitude)) {
+            const location = new Point(longitude, latitude);
+            this.place.set('location', location);
+        } else {
+            this.place.set('location', null);
+        }
     }
 }

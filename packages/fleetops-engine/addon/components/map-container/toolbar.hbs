@@ -44,7 +44,7 @@
                 </Attach::Tooltip>
             </button>
         {{/let}}
-        {{#let (cannot "fleet-ops list order") as |unauthorized|}}
+        {{!-- {{#let (cannot "fleet-ops list order") as |unauthorized|}}
             <button
                 type="button"
                 id="map-toolbar-view-orders-button"
@@ -71,7 +71,7 @@
                     {{/let}}
                 </Attach::Tooltip>
             </button>
-        {{/let}}
+        {{/let}} --}}
         {{!-- {{#let (cannot "fleet-ops list service-area") as |unauthorized|}}
             <BasicDropdown id="map-toolbar-service-areas-button" @horizontalPosition="right" @calculatePosition={{this.calculatePosition}} @renderInPlace={{true}} as |dd|>
                 <dd.Trigger class="toolbar-button {{if unauthorized 'unauthorized'}}">
@@ -94,7 +94,7 @@
                 </dd.Content>
             </BasicDropdown>
         {{/let}} --}}
-        <BasicDropdown id="map-toolbar-visibility-controls-button" @horizontalPosition="right" @calculatePosition={{this.calculatePosition}} @renderInPlace={{true}} as |dd|>
+        {{!-- <BasicDropdown id="map-toolbar-visibility-controls-button" @horizontalPosition="right" @calculatePosition={{this.calculatePosition}} @renderInPlace={{true}} as |dd|>
             <dd.Trigger class="toolbar-button is-action">
                 <FaIcon @icon="eye" />
                 <Attach::Tooltip @class="clean" @animation="scale" @placement="right">
@@ -104,7 +104,7 @@
             <dd.Content>
                 <MapContainer::Toolbar::VisibilityControlPanel @dd={{dd}} @liveMap={{@liveMap}} @map={{@map}} />
             </dd.Content>
-        </BasicDropdown>
+        </BasicDropdown> --}}
         <button type="button" id="map-toolbar-live-map-drawer-button" class="toolbar-button is-action mb-0i" {{on "click" (fn this.onAction "onPressLiveMapDrawerToggle")}}>
             <FaIcon @icon="binoculars" />
             <Attach::Tooltip @class="clean" @animation="scale" @placement="right">
