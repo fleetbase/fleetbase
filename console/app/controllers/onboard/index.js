@@ -658,7 +658,7 @@ export default class OnboardIndexController extends Controller {
         await changeset.validate();
         if (changeset.get('isInvalid')) {
             // Check if any required field is empty
-            const requiredFields = ['name', 'email', 'phone', 'organization_name', 'password', 'password_confirmation', 'language'];
+            const requiredFields = ['name', 'email', 'phone', 'organization_name', 'password', 'password_confirmation', 'language','number_of_drivers', 'number_of_web_users'];
             const hasEmptyRequired = requiredFields.some((field) => !this[field] || this[field].toString().trim() === '');
             if (hasEmptyRequired) {
                 showErrorOnce(this, this.notifications, this.intl.t('validation.form_invalid'));
