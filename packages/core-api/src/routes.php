@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-
+use Fleetbase\Http\Controllers\Internal\v1\UserController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
