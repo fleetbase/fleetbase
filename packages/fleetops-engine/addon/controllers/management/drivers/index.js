@@ -610,8 +610,15 @@ startDriversTour() {
                     onNextClick: () => {
                         this.createDriver();
                         later(this, () => {
-                            driverObj.moveNext();
-                        }, 500); // Adjust delay based on createDriver completion
+                                const el = document.querySelector('.next-content-overlay > .next-content-overlay-panel-container > .next-content-overlay-panel');
+                                if (el) {
+                                    const onTransitionEnd = () => {
+                                        el.removeEventListener('transitionend', onTransitionEnd);
+                                        driverObj.moveNext();
+                                    };
+                                    el.addEventListener('transitionend', onTransitionEnd);
+                                }
+                            }, 100);// Adjust delay based on createDriver completion
                     },
                 },
             },
