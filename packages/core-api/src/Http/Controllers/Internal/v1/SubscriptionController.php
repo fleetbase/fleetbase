@@ -244,7 +244,7 @@ class SubscriptionController extends Controller
      * @param string $subscriptionId
      * @return JsonResponse
      */
-    public function updateSubscriptionQuantity(Request $request, string $subscriptionId = null): JsonResponse
+    public function updateSubscriptionQuantity(Request $request): JsonResponse
     {
         try {
             // Delegate to the service class

@@ -29,34 +29,80 @@ class SubscriptionUpdateService
     public function updateSubscription(string $subscriptionId, array $updateData): array
     {
         try {
-            $url = "https://{$this->site}.chargebee.com/api/v2/subscriptions/{$subscriptionId}";
+            // Use the correct endpoint for subscription updates
+            $url = "https://{$this->site}.chargebee.com/api/v2/subscriptions/{$subscriptionId}/update_for_items";
             
-            Log::info('Updating subscription in Chargebee', [
+            // Format the payload correctly for Chargebee API v2
+            $formattedPayload = [];
+            
+            // Handle subscription_items if present
+            if (isset($updateData['subscription_items']) && is_array($updateData['subscription_items'])) {
+                foreach ($updateData['subscription_items'] as $index => $item) {
+                    if (isset($item['id'])) {
+                        $formattedPayload["subscription_items[id][$index]"] = $item['id'];
+                    }
+                    if (isset($item['item_price_id'])) {
+                        $formattedPayload["subscription_items[item_price_id][$index]"] = $item['item_price_id'];
+                    }
+                    if (isset($item['quantity'])) {
+                        $formattedPayload["subscription_items[quantity][$index]"] = $item['quantity'];
+                    }
+                    if (isset($item['unit_price'])) {
+                        $formattedPayload["subscription_items[unit_price][$index]"] = $item['unit_price'];
+                    }
+                }
+                
+                // Remove the original subscription_items array
+                unset($updateData['subscription_items']);
+            }
+            
+            // Add any remaining parameters
+            $formattedPayload = array_merge($formattedPayload, $updateData);
+            
+            // Log the formatted payload for debugging
+            Log::debug('Formatted Chargebee update payload', [
                 'subscription_id' => $subscriptionId,
-                'update_data' => $updateData
+                'payload' => $formattedPayload
             ]);
-
-            $response = Http::asForm()
-                ->withBasicAuth($this->apiKey, '')
-                ->post($url, $updateData);
+            
+            // Make the API request with the correct content type and robust error handling
+            try {
+                $response = Http::asForm()
+                    ->withBasicAuth($this->apiKey, '')
+                    ->withOptions([
+                        'timeout' => 30,
+                        'connect_timeout' => 10
+                    ])
+                    ->post($url, $formattedPayload);
+            } catch (\Exception $e) {
+                Log::error('Exception during Chargebee API request in updateSubscription', [
+                    'subscription_id' => $subscriptionId,
+                    'error' => $e->getMessage(),
+                    'trace' => $e->getTraceAsString()
+                ]);
+                
+                return [
+                    'success' => false,
+                    'message' => 'Failed to update subscription',
+                    'error' => 'API request failed: ' . $e->getMessage()
+                ];
+            }
 
             if ($response->successful()) {
-                $data = $response->json();
                 Log::info('Subscription updated successfully', [
                     'subscription_id' => $subscriptionId,
-                    'response_status' => $response->status()
+                    'status' => $response->status()
                 ]);
 
                 return [
                     'success' => true,
-                    'message' => 'Subscription updated successfully',
-                    'subscription' => $data
+                    'subscription' => $response->json()
                 ];
             } else {
                 Log::error('Failed to update subscription', [
                     'subscription_id' => $subscriptionId,
                     'status' => $response->status(),
-                    'response' => $response->json()
+                    'error' => $response->json()
                 ]);
 
                 return [
@@ -65,16 +111,14 @@ class SubscriptionUpdateService
                     'error' => $response->json()
                 ];
             }
-
         } catch (\Exception $e) {
-            Log::error('Exception while updating subscription', [
+            Log::error('Exception when updating subscription', [
                 'subscription_id' => $subscriptionId,
                 'error' => $e->getMessage()
             ]);
 
             return [
                 'success' => false,
-                'message' => 'Exception occurred while updating subscription',
                 'error' => $e->getMessage()
             ];
         }
@@ -88,40 +132,57 @@ class SubscriptionUpdateService
      */
     public function getSubscription(string $subscriptionId): array
     {
+        // Implement caching to avoid repeated API calls for the same subscription
+        static $subscriptionCache = [];
+        
+        // Return cached result if available
+        if (isset($subscriptionCache[$subscriptionId])) {
+            return $subscriptionCache[$subscriptionId];
+        }
+        
         try {
             $url = "https://{$this->site}.chargebee.com/api/v2/subscriptions/{$subscriptionId}";
             
-            Log::info('Getting subscription from Chargebee', [
-                'subscription_id' => $subscriptionId
-            ]);
-
+            // Optimize HTTP request with shorter timeouts and better error handling
             $response = Http::withBasicAuth($this->apiKey, '')
+                ->withOptions([
+                    'timeout' => 15,
+                    'connect_timeout' => 5,
+                    'http_errors' => false,
+                    'verify' => true
+                ])
                 ->get($url);
 
             if ($response->successful()) {
                 $data = $response->json();
-                Log::info('Subscription retrieved successfully', [
-                    'subscription_id' => $subscriptionId,
-                    'response_status' => $response->status()
+                Log::info('Subscription retrieved', [
+                    'subscription_id' => $subscriptionId
                 ]);
 
-                return [
+                $result = [
                     'success' => true,
                     'message' => 'Subscription retrieved successfully',
                     'subscription' => $data
                 ];
+                
+                // Cache the successful result
+                $subscriptionCache[$subscriptionId] = $result;
+                return $result;
             } else {
                 Log::error('Failed to get subscription', [
                     'subscription_id' => $subscriptionId,
-                    'status' => $response->status(),
-                    'response' => $response->json()
+                    'status' => $response->status()
                 ]);
 
-                return [
+                $result = [
                     'success' => false,
                     'message' => 'Failed to get subscription',
                     'error' => $response->json()
                 ];
+                
+                // Cache the error result to prevent repeated failed calls
+                $subscriptionCache[$subscriptionId] = $result;
+                return $result;
             }
 
         } catch (\Exception $e) {
@@ -130,11 +191,15 @@ class SubscriptionUpdateService
                 'error' => $e->getMessage()
             ]);
 
-            return [
+            $result = [
                 'success' => false,
                 'message' => 'Exception occurred while getting subscription',
                 'error' => $e->getMessage()
             ];
+            
+            // Cache the error result
+            $subscriptionCache[$subscriptionId] = $result;
+            return $result;
         }
     }
 
@@ -207,15 +272,27 @@ class SubscriptionUpdateService
      */
     public function getCurrentAddonQuantities(string $subscriptionId): array
     {
+        // Implement caching to avoid repeated API calls for the same subscription
+        static $addonQuantitiesCache = [];
+        
+        // Return cached result if available
+        if (isset($addonQuantitiesCache[$subscriptionId])) {
+            return $addonQuantitiesCache[$subscriptionId];
+        }
+        
         try {
             $subscription = $this->getSubscription($subscriptionId);
             
             if (!$subscription['success']) {
-                return [
+                $result = [
                     'success' => false,
                     'message' => 'Failed to get subscription data',
                     'error' => $subscription['error'] ?? 'Unknown error'
                 ];
+                
+                // Cache even failed results to prevent repeated failures
+                $addonQuantitiesCache[$subscriptionId] = $result;
+                return $result;
             }
 
             $subscriptionData = $subscription['subscription'];
@@ -225,31 +302,44 @@ class SubscriptionUpdateService
             if (isset($subscriptionData['subscription'])) {
                 $subscriptionData = $subscriptionData['subscription'];
             }
-
-            // Extract addon quantities
+            
+            $webUsersAddonId = config('services.chargebee.web_users_addon_id');
+            $appUsersAddonId = config('services.chargebee.app_users_addon_id');
+            
+            // Extract addon quantities - optimize by reducing log calls
             if (isset($subscriptionData['subscription_items']) && is_array($subscriptionData['subscription_items'])) {
-                foreach ($subscriptionData['subscription_items'] as $item) {
-                    if ($item['item_type'] === 'addon') {
+                // Product Catalog 2.0
+                foreach ($subscriptionData['subscription_items'] as $item) {                    
+                    if (isset($item['item_type']) && $item['item_type'] === 'addon' && isset($item['item_price_id'])) {
                         $addonQuantities[$item['item_price_id']] = $item['quantity'] ?? 0;
                     }
                 }
             } elseif (isset($subscriptionData['addons']) && is_array($subscriptionData['addons'])) {
-                foreach ($subscriptionData['addons'] as $addon) {
-                    $addonQuantities[$addon['id']] = $addon['quantity'] ?? 0;
+                // Product Catalog 1.0
+                foreach ($subscriptionData['addons'] as $addon) {                    
+                    if (isset($addon['id'])) {
+                        $addonQuantities[$addon['id']] = $addon['quantity'] ?? 0;
+                    }
                 }
             }
 
-            Log::info('Addon quantities retrieved successfully', [
+            // Only log essential information
+            Log::info('Addon quantities retrieved', [
                 'subscription_id' => $subscriptionId,
-                'addon_quantities' => $addonQuantities
+                'web_users_quantity' => $addonQuantities[$webUsersAddonId] ?? 0,
+                'app_users_quantity' => $addonQuantities[$appUsersAddonId] ?? 0
             ]);
 
-            return [
+            $result = [
                 'success' => true,
                 'message' => 'Addon quantities retrieved successfully',
-                'addon_quantities' => $addonQuantities,
+                'addons' => $addonQuantities,
                 'subscription_data' => $subscriptionData
             ];
+            
+            // Cache the result
+            $addonQuantitiesCache[$subscriptionId] = $result;
+            return $result;
 
         } catch (\Exception $e) {
             Log::error('Exception while getting addon quantities', [
@@ -335,22 +425,27 @@ class SubscriptionUpdateService
     public function processSubscriptionUpdates(): array
     {
         try {
-            $tomorrow = Carbon::tomorrow()->toDateString();
-            $subscriptionsDueTomorrow = $this->getSubscriptionsDueTomorrow($tomorrow);
+            // For testing: Use August 16, 2025 instead of tomorrow
+            $testDate = '2025-08-16';
+            $subscriptionsDueTomorrow = $this->getSubscriptionsDueTomorrow($testDate);
 
             if ($subscriptionsDueTomorrow->isEmpty()) {
-                return $this->createEmptyResponse($tomorrow);
+                return $this->createEmptyResponse($testDate);
             }
-
-            $subscriptionUserMapping = $this->mapSubscriptionsToUsers($subscriptionsDueTomorrow);
+            
+            $mappingResult = $this->mapSubscriptionsToUsers($subscriptionsDueTomorrow);
+            
+            // Extract just the subscription mapping for processing
+            $subscriptionUserMapping = $mappingResult['subscription_mapping'] ?? [];
+            
+            // Process subscriptions
             $processedResults = $this->processSubscriptions($subscriptionUserMapping);
-
-            return $this->createSuccessResponse($tomorrow, $subscriptionsDueTomorrow, $subscriptionUserMapping, $processedResults);
+            
+            return $this->createSuccessResponse($testDate, $subscriptionsDueTomorrow, $mappingResult, $processedResults);
 
         } catch (\Exception $e) {
             Log::error('Failed to process subscription updates', [
-                'error' => $e->getMessage(),
-                'trace' => $e->getTraceAsString()
+                'error' => $e->getMessage()
             ]);
 
             return [
@@ -363,21 +458,115 @@ class SubscriptionUpdateService
 
     /**
      * Get subscriptions due tomorrow
+     * 
+     * TEMPORARY MODIFICATION FOR TESTING: Returns all active subscriptions
      *
      * @param string $tomorrow
      * @return \Illuminate\Database\Eloquent\Collection
      */
     private function getSubscriptionsDueTomorrow(string $tomorrow)
     {
-        $subscriptions = Subscription::whereDate('next_payment_date', $tomorrow)->get();
-
-        Log::info('Found subscriptions due tomorrow', [
-            'tomorrow_date' => $tomorrow,
-            'subscription_count' => $subscriptions->count(),
-            'subscription_ids' => $subscriptions->pluck('gocardless_subscription_id')->toArray()
-        ]);
-
-        return $subscriptions;
+        // Get subscriptions due tomorrow directly from Chargebee
+        $chargebeeSite = config('services.chargebee.site');
+        $apiKey = config('services.chargebee.api_key');
+        
+        try {
+            // Convert date to Unix timestamp format (seconds since epoch)
+            // Start of the day
+            $startTimestamp = strtotime($tomorrow . ' 00:00:00');
+            // End of the day
+            $endTimestamp = strtotime($tomorrow . ' 23:59:59');
+            
+            Log::info('Fetching subscriptions with billing date', [
+                'date' => $tomorrow,
+                'start_timestamp' => $startTimestamp,
+                'end_timestamp' => $endTimestamp
+            ]);
+            
+            $url = 'https://' . config('services.chargebee.site') . '.chargebee.com/api/v2/subscriptions';
+            
+            // Optimize HTTP request with shorter timeouts and better error handling
+            $response = Http::withBasicAuth(
+                config('services.chargebee.api_key'), 
+                ''
+            )
+                ->timeout(15) // Reduced timeout
+                ->withOptions([
+                    'timeout' => 15,
+                    'connect_timeout' => 5,
+                    'http_errors' => false, // Don't throw exceptions for HTTP errors
+                    'verify' => true // Verify SSL certificates
+                ])
+                ->get($url, [
+                    // Use Unix timestamp format as required by Chargebee API
+                    'next_billing_at[after]' => $startTimestamp,
+                    'next_billing_at[before]' => $endTimestamp,
+                    'status' => 'active',
+                    'limit' => 100
+                ]);
+            
+            if (!$response->successful()) {
+                Log::error('Failed to fetch subscriptions from Chargebee', [
+                    'status' => $response->status(),
+                    'response' => $response->json()
+                ]);
+                return collect([]);
+            }
+            
+            $chargebeeSubscriptions = $response->json()['list'] ?? [];
+            
+            // Optimize database queries by fetching all subscriptions at once
+            $subscriptionIds = collect($chargebeeSubscriptions)
+                ->pluck('subscription.id')
+                ->filter()
+                ->values()
+                ->toArray();
+                
+            // Get all matching local subscriptions in a single query
+            $localSubscriptions = Subscription::whereIn('gocardless_subscription_id', $subscriptionIds)
+                ->get()
+                ->keyBy('gocardless_subscription_id');
+                
+            // Map Chargebee subscriptions to our local subscription model with fewer DB queries
+            $subscriptions = collect($chargebeeSubscriptions)->map(function($item) use ($localSubscriptions) {
+                $subscription = $item['subscription'] ?? [];
+                $subscriptionId = $subscription['id'] ?? null;
+                
+                if (!$subscriptionId) {
+                    return null;
+                }
+                
+                // Check if we already have this subscription in our local cache
+                $localSubscription = $localSubscriptions->get($subscriptionId);
+                
+                // If found, use the local subscription
+                if ($localSubscription) {
+                    return $localSubscription;
+                }
+                
+                // Otherwise, create a temporary subscription object with the necessary fields
+                $tempSubscription = new Subscription();
+                $tempSubscription->gocardless_subscription_id = $subscriptionId;
+                $tempSubscription->customer_id = $subscription['customer_id'] ?? null;
+                
+                return $tempSubscription;
+            })->filter(); // Remove any null values
+            
+            Log::info('Found subscriptions due tomorrow from Chargebee', [
+                'tomorrow_date' => $tomorrow,
+                'subscription_count' => $subscriptions->count()
+            ]);
+            
+            return $subscriptions;
+            
+        } catch (\Exception $e) {
+            Log::error('Exception while fetching subscriptions from Chargebee', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+            
+            return collect([]);
+        }
     }
 
     /**
@@ -390,20 +579,56 @@ class SubscriptionUpdateService
     {
         $subscriptionUserMapping = [];
         $companyUsersMapping = [];
+        
+        // Extract all subscription user UUIDs for a single query
+        $userUuids = $subscriptions->pluck('user_uuid')->filter()->unique()->values()->toArray();
+        
+        // Get all users in a single query
+        $users = DB::table('users')
+            ->whereIn('uuid', $userUuids)
+            ->select('id', 'uuid', 'name', 'email', 'phone', 'company_uuid')
+            ->get()
+            ->keyBy('uuid');
+            
+        // Get all company UUIDs from the users
+        $companyUuids = $users->pluck('company_uuid')->filter()->unique()->values()->toArray();
+        
+        // Get all company users in a single query
+        $allCompanyUsers = DB::table('users')
+            ->whereIn('company_uuid', $companyUuids)
+            ->select('id', 'uuid', 'name', 'email', 'phone', 'company_uuid')
+            ->get();
+            
+        // Group company users by company UUID
+        $companyUsersGrouped = $allCompanyUsers->groupBy('company_uuid');
+        
+        // Get all drivers in a single query
+        $allDrivers = DB::table('users')
+            ->join('drivers', 'users.uuid', '=', 'drivers.user_uuid')
+            ->whereIn('users.company_uuid', $companyUuids)
+            ->select('users.id', 'users.uuid', 'users.company_uuid', 'users.name', 'users.email', 'users.phone')
+            ->get();
+            
+        // Group drivers by company UUID
+        $driversGrouped = $allDrivers->groupBy('company_uuid');
 
         foreach ($subscriptions as $subscription) {
-            $user = $this->getUserForSubscription($subscription);
+            $userUuid = $subscription->user_uuid;
+            $user = $users[$userUuid] ?? null;
 
             if ($user) {
-                $companyUsers = $this->getCompanyUsers($user->company_uuid);
-                $drivers = $this->getCompanyDrivers($user->company_uuid);
+                $companyUuid = $user->company_uuid;
+                $companyUsers = $companyUsersGrouped[$companyUuid] ?? collect([]);
+                $drivers = $driversGrouped[$companyUuid] ?? collect([]);
                 $regularUsers = $this->filterRegularUsers($companyUsers, $drivers);
 
                 $subscriptionUserMapping[$subscription->gocardless_subscription_id] = $this->createSubscriptionMapping(
                     $subscription, $user, $companyUsers, $regularUsers, $drivers
                 );
 
-                $companyUsersMapping[$user->company_uuid] = $this->createCompanyMapping($user, $companyUsers, $regularUsers, $drivers);
+                if (!isset($companyUsersMapping[$companyUuid])) {
+                    $companyUsersMapping[$companyUuid] = $this->createCompanyMapping($user, $companyUsers, $regularUsers, $drivers);
+                }
             } else {
                 $this->logUserNotFound($subscription);
             }
@@ -500,9 +725,6 @@ class SubscriptionUpdateService
                 'total_users' => $companyUsers->count(),
                 'regular_users' => $regularUsers->count(),
                 'drivers' => $drivers->count(),
-                'user_details' => $this->formatUserDetails($companyUsers),
-                'regular_user_details' => $this->formatUserDetails($regularUsers),
-                'driver_details' => $this->formatUserDetails($drivers)
             ]
         ];
     }
@@ -550,20 +772,43 @@ class SubscriptionUpdateService
     }
 
     /**
-     * Process individual subscriptions
+     * Process subscriptions based on the mapping data
      *
-     * @param array $mappingData
+     * @param array $subscriptionUserMapping
      * @return array
      */
-    private function processSubscriptions(array $mappingData): array
+    private function processSubscriptions(array $subscriptionUserMapping): array
     {
         $processedSubscriptions = [];
         $errors = [];
-
-        foreach ($mappingData['subscription_mapping'] as $subscriptionId => $mapping) {
+        
+        foreach ($subscriptionUserMapping as $subscriptionId => $mapping) {
+            // Validate that the mapping has all required keys before processing
+            if (!isset($mapping['subscription']) || !isset($mapping['user']) || !isset($mapping['company_users'])) {
+                $errorMessage = 'Missing required data for subscription processing';
+                if (!isset($mapping['subscription'])) {
+                    $errorMessage = 'Subscription data missing';
+                } elseif (!isset($mapping['user'])) {
+                    $errorMessage = 'User data missing';
+                } elseif (!isset($mapping['company_users'])) {
+                    $errorMessage = 'Company users data missing';
+                }
+                
+                $error = $this->createErrorEntry($subscriptionId, $mapping, $errorMessage);
+                $errors[] = $error;
+                $this->logProcessingError($subscriptionId, $mapping, $errorMessage);
+                continue;
+            }
+            
+            // Process subscription with all required data
             try {
                 $result = $this->processIndividualSubscription($mapping['subscription'], $mapping['user'], $mapping['company_users']);
                 $processedSubscriptions[] = $result;
+                
+                Log::info('Successfully processed subscription', [
+                    'subscription_id' => $subscriptionId,
+                    'company_uuid' => $mapping['company_uuid'] ?? 'unknown'
+                ]);
             } catch (\Exception $e) {
                 $error = $this->createErrorEntry($subscriptionId, $mapping, $e->getMessage());
                 $errors[] = $error;
@@ -578,185 +823,172 @@ class SubscriptionUpdateService
     }
 
     /**
-     * Process individual subscription update
      *
-     * @param Subscription $subscription
+     * @param string $subscriptionId
+     * @param object $subscription
      * @param object $user
      * @param array $companyUsers
+     * @param int $regularUserCount
+     * @param int $driverCount
      * @return array
      */
-    private function processIndividualSubscription($subscription, $user, $companyUsers): array
+    /**
+     * Process an individual subscription for updating
+     *
+     * @param object $subscription The subscription object
+     * @param object $user The user object
+     * @param array $companyUsers The company users data
+     * @return array The processed subscription result
+     */
+    private function processIndividualSubscription($subscription, $user, array $companyUsers): array
     {
+        // Extract necessary data
+        $subscriptionId = $subscription->gocardless_subscription_id;
         $regularUserCount = $companyUsers['regular_users'];
         $driverCount = $companyUsers['drivers'];
         $totalUserCount = $companyUsers['total_users'];
-
-        $this->logSubscriptionProcessing($subscription, $user, $regularUserCount, $driverCount, $totalUserCount);
-
-        $currentChargebeeCounts = $this->getCurrentChargebeeCounts($subscription->gocardless_subscription_id);
-        $updateDecision = $this->determineUpdateNeeded($regularUserCount, $driverCount, $currentChargebeeCounts);
-
-        if (!$updateDecision['should_update']) {
-            return $this->createNoUpdateResponse($subscription, $user, $companyUsers, $regularUserCount, $driverCount, $totalUserCount, $currentChargebeeCounts, $updateDecision);
-        }
-
-        return $this->performChargebeeUpdate($subscription, $user, $companyUsers, $regularUserCount, $driverCount, $totalUserCount, $currentChargebeeCounts, $updateDecision);
-    }
-
-    /**
-     * Get current Chargebee counts
-     *
-     * @param string $subscriptionId
-     * @return array
-     */
-    private function getCurrentChargebeeCounts(string $subscriptionId): array
-    {
-        try {
-            $chargebeeSubscription = $this->getSubscription($subscriptionId);
-            
-            if (!$chargebeeSubscription['success']) {
-                Log::warning('Failed to get current Chargebee subscription data', [
-                    'subscription_id' => $subscriptionId,
-                    'error' => $chargebeeSubscription['error'] ?? 'Unknown error'
-                ]);
-                
-                return ['addons' => [], 'error' => 'Failed to get current counts'];
-            }
-
-            $subscriptionData = $chargebeeSubscription['subscription'];
-            
-            if (isset($subscriptionData['subscription'])) {
-                $subscriptionData = $subscriptionData['subscription'];
-            }
-
-            return $this->extractAddonQuantities($subscriptionData, $subscriptionId);
-
-        } catch (\Exception $e) {
-            Log::error('Failed to get current Chargebee counts', [
-                'subscription_id' => $subscriptionId,
-                'error' => $e->getMessage()
-            ]);
-
-            return ['addons' => [], 'error' => $e->getMessage()];
-        }
-    }
-
-    /**
-     * Extract addon quantities from subscription data
-     *
-     * @param array $subscriptionData
-     * @param string $subscriptionId
-     * @return array
-     */
-    private function extractAddonQuantities(array $subscriptionData, string $subscriptionId): array
-    {
-        $addonQuantities = [];
-
-        if (isset($subscriptionData['subscription_items']) && is_array($subscriptionData['subscription_items'])) {
-            foreach ($subscriptionData['subscription_items'] as $item) {
-                if ($item['item_type'] === 'addon') {
-                    $addonQuantities[$item['item_price_id']] = $item['quantity'] ?? 0;
-                }
-            }
-        } elseif (isset($subscriptionData['addons']) && is_array($subscriptionData['addons'])) {
-            foreach ($subscriptionData['addons'] as $addon) {
-                $addonQuantities[$addon['id']] = $addon['quantity'] ?? 0;
-            }
-        }
-
-        Log::info('Extracted current Chargebee addon quantities', [
+        
+        // Log subscription processing with minimal data
+        Log::info('Processing subscription', [
             'subscription_id' => $subscriptionId,
-            'addon_quantities' => $addonQuantities
+            'regular_users' => $regularUserCount,
+            'drivers' => $driverCount
         ]);
-
-        return ['addons' => $addonQuantities];
-    }
-
-    /**
-     * Determine if update is needed
-     *
-     * @param int $regularUserCount
-     * @param int $driverCount
-     * @param array $currentChargebeeCounts
-     * @return array
-     */
-    private function determineUpdateNeeded(int $regularUserCount, int $driverCount, array $currentChargebeeCounts): array
-    {
-        $addonQuantities = $currentChargebeeCounts['addons'] ?? [];
         
-        $webUsersAddonKey = config('services.chargebee.web_users_addon_id');
-        $appUsersAddonKey = config('services.chargebee.app_users_addon_id');
+        // Get current counts from Chargebee
+        $addonQuantities = $this->getCurrentAddonQuantities($subscriptionId);
+        $webUsersAddonId = config('services.chargebee.web_users_addon_id');
+        $appUsersAddonId = config('services.chargebee.app_users_addon_id');
         
-        $currentWebUsers = $addonQuantities[$webUsersAddonKey] ?? 0;
-        $currentAppUsers = $addonQuantities[$appUsersAddonKey] ?? 0;
-
+        // Determine if update is needed
+        $currentWebUsers = $addonQuantities['addons'][$webUsersAddonId] ?? 0;
+        $currentAppUsers = $addonQuantities['addons'][$appUsersAddonId] ?? 0;
+        
+        $currentChargebeeCounts = [
+            'web_users' => $currentWebUsers,
+            'app_users' => $currentAppUsers
+        ];
+        
+        // Determine if we need to update
         $shouldUpdateWebUsers = $regularUserCount > $currentWebUsers;
         $shouldUpdateAppUsers = $driverCount > $currentAppUsers;
         $shouldUpdate = $shouldUpdateWebUsers || $shouldUpdateAppUsers;
-
-        Log::info('Count comparison and update decision', [
-            'calculated_regular_users' => $regularUserCount,
-            'current_web_users' => $currentWebUsers,
-            'calculated_drivers' => $driverCount,
-            'current_app_users' => $currentAppUsers,
-            'should_update_web_users' => $shouldUpdateWebUsers,
-            'should_update_app_users' => $shouldUpdateAppUsers,
-            'should_update' => $shouldUpdate
-        ]);
-
-        return [
+        
+        $updateDecision = [
             'should_update' => $shouldUpdate,
+            'reason' => $shouldUpdate ? 'Calculated counts are greater than current counts' : 'Current counts are greater than or equal to calculated counts',
             'should_update_web_users' => $shouldUpdateWebUsers,
             'should_update_app_users' => $shouldUpdateAppUsers,
             'current_web_users' => $currentWebUsers,
             'current_app_users' => $currentAppUsers
         ];
+        
+        // If no update is needed, return early
+        if (!$shouldUpdate) {
+            return $this->createNoUpdateResponse($subscription, $user, $companyUsers, $regularUserCount, $driverCount, $totalUserCount, $currentChargebeeCounts, $updateDecision);
+        }
+        
+        // Make API call to Chargebee
+        try {
+            $chargebeeSite = config('services.chargebee.site');
+            $chargebeeApiKey = config('services.chargebee.api_key');
+            $chargebeeUrl = "https://{$chargebeeSite}.chargebee.com/api/v2/subscriptions/{$subscriptionId}";
+            
+            // First, get the subscription to find the subscription item IDs for Product Catalog 2.0
+            // Use cached subscription data if available to reduce API calls
+            static $subscriptionCache = [];
+            
+            if (!isset($subscriptionCache[$subscriptionId])) {
+                $subscriptionResponse = $this->getSubscription($subscriptionId);
+                
+                if (!$subscriptionResponse['success']) {
+                    Log::error('Failed to fetch subscription details', [
+                        'subscription_id' => $subscriptionId,
+                        'error' => $subscriptionResponse['error'] ?? 'Unknown error'
+                    ]);
+                    throw new \Exception('Failed to fetch subscription details: ' . ($subscriptionResponse['error'] ?? 'Unknown error'));
+                }
+                
+                // Extract subscription data
+                $subscriptionData = $subscriptionResponse['subscription'];
+                if (isset($subscriptionData['subscription'])) {
+                    $subscriptionData = $subscriptionData['subscription'];
+                }
+                
+                // Cache the subscription data
+                $subscriptionCache[$subscriptionId] = $subscriptionData;
+            } else {
+                $subscriptionData = $subscriptionCache[$subscriptionId];
+            }
+            
+            $subscriptionItems = $subscriptionData['subscription_items'] ?? [];
+            
+            // Prepare the payload for Product Catalog 2.0
+            $pc2Payload = [];
+            $index = 0;
+            
+            // Based on Chargebee support example, we need to use item_price_id instead of id
+            // The correct format is: subscription_items[item_price_id][0] and subscription_items[quantity][0]
+            
+            if ($shouldUpdateWebUsers) {
+                $pc2Payload["subscription_items[item_price_id][$index]"] = $webUsersAddonId;
+                $pc2Payload["subscription_items[quantity][$index]"] = $regularUserCount;
+                $index++;
+            }
+            
+            if ($shouldUpdateAppUsers) {
+                $pc2Payload["subscription_items[item_price_id][$index]"] = $appUsersAddonId;
+                $pc2Payload["subscription_items[quantity][$index]"] = $driverCount;
+                $index++;
+            }
+            
+            // Always use the Product Catalog 2.0 endpoint as per Chargebee support's example
+            if (empty($pc2Payload)) {
+                // Return early if no updates are needed
+                return $this->createNoUpdateResponse($subscription, $user, $companyUsers, $regularUserCount, $driverCount, $totalUserCount, $currentChargebeeCounts, $updateDecision);
+            }
+            
+            $updateUrl = $chargebeeUrl . '/update_for_items';
+            
+            // Optimize HTTP request with shorter timeouts and better error handling
+            $response = Http::asForm()
+                ->withBasicAuth($chargebeeApiKey, '')
+                ->withOptions([
+                    'timeout' => 15,
+                    'connect_timeout' => 5,
+                    'http_errors' => false,
+                    'verify' => true
+                ])
+                ->post($updateUrl, $pc2Payload);
+            
+            // Log the response with minimal data
+            if ($response->successful()) {
+                Log::info('Chargebee update successful', [
+                    'subscription_id' => $subscriptionId,
+                    'status' => $response->status()
+                ]);
+            } else {
+                Log::error('Chargebee update failed', [
+                    'subscription_id' => $subscriptionId,
+                    'status' => $response->status(),
+                    'response' => $response->json()
+                ]);
+            }
+            
+            // Return formatted response
+            return $this->createUpdateResponse($subscription, $user, $companyUsers, $regularUserCount, $driverCount, $totalUserCount, $currentChargebeeCounts, $updateDecision, $response);
+        } catch (\Exception $e) {
+            Log::error('Exception during Chargebee API request', [
+                'subscription_id' => $subscriptionId,
+                'error' => $e->getMessage()
+            ]);
+            
+            throw $e;
+        }
     }
-
-    /**
-     * Perform Chargebee update
-     *
-     * @param Subscription $subscription
-     * @param object $user
-     * @param array $companyUsers
-     * @param int $regularUserCount
-     * @param int $driverCount
-     * @param int $totalUserCount
-     * @param array $currentChargebeeCounts
-     * @param array $updateDecision
-     * @return array
-     */
-    private function performChargebeeUpdate($subscription, $user, $companyUsers, $regularUserCount, $driverCount, $totalUserCount, $currentChargebeeCounts, $updateDecision): array
-    {
-        $chargebeeSite = config('services.chargebee.site');
-        $chargebeeUrl = "https://{$chargebeeSite}.chargebee.com/api/v2/subscriptions/{$subscription->gocardless_subscription_id}/update_for_items";
-        $apiKey = config('services.chargebee.api_key');
-
-        $webUsersAddonKey = config('services.chargebee.web_users_addon_id');
-        $appUsersAddonKey = config('services.chargebee.app_users_addon_id');
-
-        $payload = [
-            'subscription_items[item_price_id][0]' => $webUsersAddonKey,
-            'subscription_items[quantity][0]' => $regularUserCount,
-            'subscription_items[item_price_id][1]' => $appUsersAddonKey,
-            'subscription_items[quantity][1]' => $driverCount,
-            'invoice_immediately' => 'true'
-        ];
-
-        Log::info('Chargebee update payload', [
-            'subscription_id' => $subscription->gocardless_subscription_id,
-            'payload' => $payload
-        ]);
-
-        $response = Http::asForm()
-            ->withBasicAuth($apiKey, '')
-            ->post($chargebeeUrl, $payload);
-
-        $this->logChargebeeResponse($subscription, $user, $response, $regularUserCount, $driverCount, $totalUserCount, $currentChargebeeCounts, $updateDecision);
-
-        return $this->createUpdateResponse($subscription, $user, $companyUsers, $regularUserCount, $driverCount, $totalUserCount, $currentChargebeeCounts, $updateDecision, $response);
-    }
-
+    
+    // Removed problematic subscription handling method
+    
     /**
      * Create response for no update needed
      *
@@ -933,11 +1165,28 @@ class SubscriptionUpdateService
      */
     private function createErrorEntry(string $subscriptionId, array $mapping, string $errorMessage): array
     {
+        // Safely access user information from the mapping
+        $userName = 'unknown';
+        $userEmail = 'unknown';
+        
+        // Try to get user name and email from different possible locations in the mapping
+        if (isset($mapping['user_name'])) {
+            $userName = $mapping['user_name'];
+        } elseif (isset($mapping['user']) && isset($mapping['user']->name)) {
+            $userName = $mapping['user']->name;
+        }
+        
+        if (isset($mapping['user_email'])) {
+            $userEmail = $mapping['user_email'];
+        } elseif (isset($mapping['user']) && isset($mapping['user']->email)) {
+            $userEmail = $mapping['user']->email;
+        }
+        
         return [
             'subscription_id' => $subscriptionId,
-            'user_name' => $mapping['user_name'],
-            'user_email' => $mapping['user_email'],
-            'company_uuid' => $mapping['company_uuid'],
+            'user_name' => $userName,
+            'user_email' => $userEmail,
+            'company_uuid' => $mapping['company_uuid'] ?? 'unknown',
             'error' => $errorMessage
         ];
     }
@@ -1053,11 +1302,35 @@ class SubscriptionUpdateService
      */
     private function logProcessingError(string $subscriptionId, array $mapping, string $errorMessage): void
     {
+        // Safely access user information from the mapping
+        $userName = 'unknown';
+        $userEmail = 'unknown';
+        $companyUuid = 'unknown';
+        
+        // Try to get user name and email from different possible locations in the mapping
+        if (isset($mapping['user_name'])) {
+            $userName = $mapping['user_name'];
+        } elseif (isset($mapping['user']) && isset($mapping['user']->name)) {
+            $userName = $mapping['user']->name;
+        }
+        
+        if (isset($mapping['user_email'])) {
+            $userEmail = $mapping['user_email'];
+        } elseif (isset($mapping['user']) && isset($mapping['user']->email)) {
+            $userEmail = $mapping['user']->email;
+        }
+        
+        if (isset($mapping['company_uuid'])) {
+            $companyUuid = $mapping['company_uuid'];
+        } elseif (isset($mapping['user']) && isset($mapping['user']->company_uuid)) {
+            $companyUuid = $mapping['user']->company_uuid;
+        }
+        
         Log::error('Failed to process subscription update', [
             'subscription_id' => $subscriptionId,
-            'user_name' => $mapping['user_name'],
-            'user_email' => $mapping['user_email'],
-            'company_uuid' => $mapping['company_uuid'],
+            'user_name' => $userName,
+            'user_email' => $userEmail,
+            'company_uuid' => $companyUuid,
             'error' => $errorMessage
         ]);
     }
