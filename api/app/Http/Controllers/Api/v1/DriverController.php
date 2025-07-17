@@ -450,7 +450,6 @@ class DriverController extends FleetbaseDriverController
         // generate verification token
         try {
             if ($email ===  config('bypass_email')) {
-                $staticOtp = '456321';
                 VerificationCode::updateOrCreate(
                     [
                         'subject_uuid' => $user->uuid,
