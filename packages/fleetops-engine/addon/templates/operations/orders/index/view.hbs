@@ -7,6 +7,7 @@
         @createdAt={{@model.createdAt}}
         @onPressCancel={{this.transitionBack}}
     >
+    {{#if (eq this.currentUser.roleName "Administrator")}}
     <Button
             @customClass="start-view-order-tour"
             @type="default"
@@ -15,6 +16,7 @@
             class="mr-2"
             {{on "click" this.startViewOrderTour}}
         />
+        {{/if}}
         {{#if @model.canBeDispatched}}
             <Button
                 @customClass="dispatch-order"
