@@ -172,6 +172,7 @@ leaves:
   leave: leave
   leave_uppercase: Leave
   leave_actions: Leave Actions
+  view: View Leave
   error_fetching_leaves: Error fetching driver unavailability
 validation:
   required:
@@ -2029,6 +2030,11 @@ fleet-ops:
         search-driver: Search vendor drivers
         add-driver: Assign driver to vendor
         loading-driver: Loading vendor drivers...
+    leaves-report-panel:
+      title: Leaves Report
+      edit-button: Edit Leaves Report
+      cancel-edit-leaves-report: Cancel edit Leaves Report
+      cancel-new-leaves-report: Cancel new Leaves Report
   management:
     contacts:
       index:

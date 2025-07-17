@@ -9,7 +9,12 @@
     @isResizable={{or this.isResizable @isResizable}}
     @width={{or this.width @width "570px"}}
 >
-    <Overlay::Header @title={{t "fleet-ops.component.leaves-report-panel.title"}} @status={{this.leaves.public_id}} @hideStatusDot={{true}} @createdAt={{this.leaves.createdAt}}>
+    <Overlay::Header
+        @title={{t "fleet-ops.component.leaves-report-panel.title"}}
+        @status={{this.leaves.public_id}}
+        @hideStatusDot={{true}}
+        @createdAt={{this.leaves.createdAt}}
+    >
         <Button
             @type="default"
             @icon="pen"
@@ -41,6 +46,11 @@
         <div class="tab-content tab-{{this.tab.slug}}">
             {{component this.tab.component leaves=this.leaves tabOptions=this.tab options=this.tab.componentParams}}
         </div>
+        {{component "leaves-panel/details"
+            leave=this.leave
+            approveLeave=this.approveLeave
+            rejectLeave=this.rejectLeave
+        }}
         <Spacer @height="300px" />
     </Overlay::Body>
 </Overlay>
