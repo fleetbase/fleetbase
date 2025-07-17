@@ -502,6 +502,36 @@ trait HasApiControllerBehavior
                 }
             } else if($model_name == "Place"){
                $place = $request['place'] ?? [];
+                $validator = Validator::make(
+                    $place,
+                    [
+                        'name'        => 'required|string',
+                        'code'        => 'required|string',
+                        'street1'     => 'required|string',
+                        'postal_code' => 'required|string',
+                        'province'    => 'required|string',
+                        'country'     => 'required|string',
+                        'location.coordinates' => [
+                            'required',
+                            'array',
+                            function ($attribute, $value, $fail) {
+                                if (!is_array($value) || count($value) !== 2 || ($value[0] == 0 && $value[1] == 0)) {
+                                    $fail('Please provide valid geographic coordinates.');
+                                }
+                            },
+                        ],
+                    ],
+                    [
+                        'required' => 'Please fill the required fields.',
+                    ]
+                );
+
+                if ($validator->fails()) {
+                    return response()->json([
+                        'errors' => [$validator->errors()->first()],
+                    ], 422);
+                }
+                $code = $place['code'] ?? null;
                 if (isset($place['location']['coordinates'])) {
                     $coordinates = $place['location']['coordinates'];
 
@@ -509,9 +539,6 @@ trait HasApiControllerBehavior
                         return response()->error(__('messages.invalid_coordinates'));
                     }
                 }
-
-                $code = $place['code'] ?? null;
-
                 if ($code && $this->model->where('code', $code)->whereNull('deleted_at')->exists()) {
                     return response()->error(__('messages.duplicate_check_place'));
                 }

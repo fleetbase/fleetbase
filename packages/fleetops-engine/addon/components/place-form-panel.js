@@ -131,23 +131,23 @@ export default class PlaceFormPanelComponent extends Component {
      */
     @task *save() {
         // Validate before saving
-        if (!this.validate()) {
-            showErrorOnce(this, this.notifications, this.intl.t('validation.form_invalid'));
-            if (this.errors?.is_required === 'isrequired') {
-                showErrorOnce(this, this.notifications, this.intl.t('validation.form_invalid'));
+        // if (!this.validate()) {
+        //     showErrorOnce(this, this.notifications, this.intl.t('validation.form_invalid'));
+        //     if (this.errors?.is_required === 'isrequired') {
+        //         showErrorOnce(this, this.notifications, this.intl.t('validation.form_invalid'));
 
-            } else if (this.errors?.location === 'missing') {
-                this.notifications.error(
-                    this.intl.t('fleet-ops.component.place-form-panel.coordinates-required') || 'Coordinates are required.'
-                );
-            } else if (this.errors?.location === 'invalid') {
-                this.notifications.error(
-                    this.intl.t('fleet-ops.component.place-form-panel.coordinates-invalid') || 'Coordinates are invalid.'
-                );
-            } else {
-            }
-            return;
-        }
+        //     } else if (this.errors?.location === 'missing') {
+        //         this.notifications.error(
+        //             this.intl.t('fleet-ops.component.place-form-panel.coordinates-required') || 'Coordinates are required.'
+        //         );
+        //     } else if (this.errors?.location === 'invalid') {
+        //         this.notifications.error(
+        //             this.intl.t('fleet-ops.component.place-form-panel.coordinates-invalid') || 'Coordinates are invalid.'
+        //         );
+        //     } else {
+        //     }
+        //     return;
+        // }
         contextComponentCallback(this, 'onBeforeSave', this.place);
 
         const phone = this.place.phone;
