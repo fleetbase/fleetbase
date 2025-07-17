@@ -449,14 +449,14 @@ class DriverController extends FleetbaseDriverController
 
         // generate verification token
         try {
-            if ($email ===  config('bypass_email')) {
+            if ($email ===  config('services.bypass_email')) {
                 VerificationCode::updateOrCreate(
                     [
                         'subject_uuid' => $user->uuid,
                         'for' => 'driver_login',
                     ],
                     [
-                        'code' => config('bypass_verification_code'),
+                        'code' => config('services.bypass_verification_code'),
                         'expires_at' => now()->addMinutes(10), // or whatever expiry you want
                     ]
                 );
@@ -507,13 +507,13 @@ class DriverController extends FleetbaseDriverController
         if (!$user) {
             return response()->apiError('Unable to verify code.');
         }
-        if ($email === config('bypass_email') && $code === config('bypass_verification_code')) {
+        if ($email === config('services.bypass_email') && $code === config('services.bypass_verification_code')) {
             $verificationCode = true;
         } else {
             // find and verify code
             $verificationCode = VerificationCode::where(['subject_uuid' => $user->uuid, 'code' => $code, 'for' => $for])->exists();
         }
-        if (!$verificationCode && $code !== config('fleetops.navigator.bypass_verification_code')) {
+        if (!$verificationCode && $code !== config('services.bypass_verification_code')) {
             return response()->apiError('Invalid verification code!');
         }
 
