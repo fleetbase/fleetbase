@@ -298,7 +298,7 @@ class SubscriptionUpdateService
                 ];
                 
                 // Cache even failed results to prevent repeated failures
-                $addonQuantitiesCache[$subscriptionId] = $result;
+                $this->addonQuantitiesCache[$subscriptionId] = $result;
                 return $result;
             }
 
@@ -432,12 +432,12 @@ class SubscriptionUpdateService
     public function processSubscriptionUpdates(): array
     {
         try {
-            // Use tomorrow's date dynamically
-            $tomorrow = Carbon::tomorrow()->format('Y-m-d');
-            $subscriptionsDueTomorrow = $this->getSubscriptionsDueTomorrow($tomorrow);
+            // Use test date of August 17, 2025
+            $testDate = '2025-08-17';
+            $subscriptionsDueTomorrow = $this->getSubscriptionsDueTomorrow($testDate);
 
             if ($subscriptionsDueTomorrow->isEmpty()) {
-                return $this->createEmptyResponse($tomorrow);
+                return $this->createEmptyResponse($testDate);
             }
             
             $mappingResult = $this->mapSubscriptionsToUsers($subscriptionsDueTomorrow);
@@ -448,7 +448,7 @@ class SubscriptionUpdateService
             // Process subscriptions
             $processedResults = $this->processSubscriptions($subscriptionUserMapping);
             
-            return $this->createSuccessResponse($tomorrow, $subscriptionsDueTomorrow, $mappingResult, $processedResults);
+            return $this->createSuccessResponse($testDate, $subscriptionsDueTomorrow, $mappingResult, $processedResults);
 
         } catch (\Exception $e) {
             Log::error('Failed to process subscription updates', [
@@ -474,19 +474,22 @@ class SubscriptionUpdateService
      */
     private function getSubscriptionsDueTomorrow(string $tomorrow)
     {
-        // Get subscriptions due tomorrow directly from Chargebee
+        // Get subscriptions due on test date directly from Chargebee
         $chargebeeSite = config('services.chargebee.site_name');
         $apiKey = config('services.chargebee.api_key');
         
         try {
+            // Use test date of August 17, 2025 instead of the passed date
+            $testDate = '2025-08-17';
+            
             // Convert date to Unix timestamp format (seconds since epoch)
             // Start of the day
-            $startTimestamp = strtotime($tomorrow . ' 00:00:00');
+            $startTimestamp = strtotime($testDate . ' 00:00:00');
             // End of the day
-            $endTimestamp = strtotime($tomorrow . ' 23:59:59');
+            $endTimestamp = strtotime($testDate . ' 23:59:59');
             
-            Log::info('Fetching subscriptions with billing date', [
-                'date' => $tomorrow,
+            Log::info('Fetching subscriptions with test billing date', [
+                'date' => $testDate,
                 'start_timestamp' => $startTimestamp,
                 'end_timestamp' => $endTimestamp
             ]);
@@ -862,8 +865,8 @@ class SubscriptionUpdateService
         $appUsersAddonId = config('services.chargebee.app_users_addon_id');
         
         // Determine if update is needed
-        $currentWebUsers = $addonQuantities['addons'][$webUsersAddonId] ?? 0;
-        $currentAppUsers = $addonQuantities['addons'][$appUsersAddonId] ?? 0;
+        $currentWebUsers = $addonQuantities['addon_quantities'][$webUsersAddonId] ?? 0;
+        $currentAppUsers = $addonQuantities['addon_quantities'][$appUsersAddonId] ?? 0;
         
         $currentChargebeeCounts = [
             'web_users' => $currentWebUsers,
@@ -915,9 +918,9 @@ class SubscriptionUpdateService
                 }
                 
                 // Cache the subscription data
-                $subscriptionCache[$subscriptionId] = $subscriptionData;
+                $this->subscriptionCache[$subscriptionId] = $subscriptionData;
             } else {
-                $subscriptionData = $subscriptionCache[$subscriptionId];
+                $subscriptionData = $this->subscriptionCache[$subscriptionId];
             }
             
             $subscriptionItems = $subscriptionData['subscription_items'] ?? [];
