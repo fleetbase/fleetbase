@@ -87,7 +87,7 @@ module.exports = function (environment) {
             clearDuration: 1000 * 3.5,
         },
         chargebee: {
-            baseUrl: chargebeeSite + '/hosted_pages/checkout',
+            baseUrl: chargebeeSite + 'hosted_pages/checkout',
             itemPriceIds: {
               basic: getenv('CHARGEBEE_BASIC_PLAN_ID', 'Basic-GBP-Monthly'),
               appUser: getenv('CHARGEBEE_WEB_USERS_ADDON_ID', 'no_of_webusers-GBP-Monthly'),
