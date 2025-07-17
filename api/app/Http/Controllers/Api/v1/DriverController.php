@@ -532,8 +532,8 @@ class DriverController extends FleetbaseDriverController
         }
 
         try {
-            DB::table('drivers')->where('uuid', $driver->uuid)->update(['auth_token' => $token->plainTextToken]);
-            $driver->token = $token->plainTextToken;
+            $driver->auth_token = $token->plainTextToken;
+            $driver->save();   
         } catch (\Throwable $e) {
             if (app()->bound('sentry')) {
                 app('sentry')->captureException($e);

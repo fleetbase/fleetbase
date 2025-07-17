@@ -175,6 +175,11 @@ class Driver extends Model
     /**
      * Get the activity log options for the model.
      */
+    public function getTokenAttribute()
+    {
+        return $this->auth_token;
+    }
+
     public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults()->logOnly(['*'])->logOnlyDirty();
