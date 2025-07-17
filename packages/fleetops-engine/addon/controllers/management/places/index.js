@@ -17,6 +17,7 @@ export default class ManagementPlacesIndexController extends BaseController {
     @service filters;
     @service hostRouter;
     @service crud;
+    @service currentUser;
 
     /**
      * Queryable parameters for this controller's model

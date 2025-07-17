@@ -10,7 +10,9 @@
             </div>
         </DropdownButton>
     {{/if}}
+    {{#if (eq this.currentUser.roleName "Administrator")}}
         <Button @icon="question-circle" @type="default" @text={{t "fleetbase.common.help"}} @onClick={{this.createGroupTour}} class="mr-2" />
+    {{/if}}
     <Button @customClass="create-group-button" @icon="plus" @iconPrefix="fas" @type="primary" @text={{t "iam.common.new"}} class="mr-2" @onClick={{this.createGroup}} @permission="iam create group" />
     <Button @icon="long-arrow-up" @iconClass="rotate-icon-45" @text={{t "iam.common.export"}} @onClick={{this.exportGroups}} @permission="iam export group" />
 </Layout::Section::Header>

@@ -19,6 +19,7 @@ export default class ManagementTollReportsIndexController extends BaseController
     @service contextPanel;
     @service filters;
     @service loader;
+    @service currentUser;
 
     /**
      * Queryable parameters for this controller's model

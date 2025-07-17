@@ -1,4 +1,5 @@
 <Layout::Section::Header @title={{t "fleet-ops.operations.scheduler.index.title"}}>
+    {{#if (eq this.currentUser.roleName "Administrator")}}
     <Button
         @customClass="start-scheduler-tour"
         @type="default"
@@ -7,6 +8,8 @@
         class="mr-2"
         {{on "click" this.startSchedulerTour}}
     />
+    {{/if}}
+
 </Layout::Section::Header>
 
 <Layout::Section::Body>
