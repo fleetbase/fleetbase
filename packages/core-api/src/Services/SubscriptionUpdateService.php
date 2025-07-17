@@ -10,6 +10,19 @@ use Fleetbase\Models\Subscription;
 
 class SubscriptionUpdateService
 {
+    /**
+     * Cache for subscription data
+     *
+     * @var array
+     */
+    private $subscriptionCache = [];
+    
+    /**
+     * Cache for addon quantities
+     *
+     * @var array
+     */
+    private $addonQuantitiesCache = [];
     protected $site;
     protected $apiKey;
 
@@ -132,12 +145,9 @@ class SubscriptionUpdateService
      */
     public function getSubscription(string $subscriptionId): array
     {
-        // Implement caching to avoid repeated API calls for the same subscription
-        static $subscriptionCache = [];
-        
         // Return cached result if available
-        if (isset($subscriptionCache[$subscriptionId])) {
-            return $subscriptionCache[$subscriptionId];
+        if (isset($this->subscriptionCache[$subscriptionId])) {
+            return $this->subscriptionCache[$subscriptionId];
         }
         
         try {
@@ -166,7 +176,7 @@ class SubscriptionUpdateService
                 ];
                 
                 // Cache the successful result
-                $subscriptionCache[$subscriptionId] = $result;
+                $this->subscriptionCache[$subscriptionId] = $result;
                 return $result;
             } else {
                 Log::error('Failed to get subscription', [
@@ -272,12 +282,9 @@ class SubscriptionUpdateService
      */
     public function getCurrentAddonQuantities(string $subscriptionId): array
     {
-        // Implement caching to avoid repeated API calls for the same subscription
-        static $addonQuantitiesCache = [];
-        
         // Return cached result if available
-        if (isset($addonQuantitiesCache[$subscriptionId])) {
-            return $addonQuantitiesCache[$subscriptionId];
+        if (isset($this->addonQuantitiesCache[$subscriptionId])) {
+            return $this->addonQuantitiesCache[$subscriptionId];
         }
         
         try {
@@ -333,12 +340,12 @@ class SubscriptionUpdateService
             $result = [
                 'success' => true,
                 'message' => 'Addon quantities retrieved successfully',
-                'addons' => $addonQuantities,
+                'addon_quantities' => $addonQuantities,
                 'subscription_data' => $subscriptionData
             ];
             
             // Cache the result
-            $addonQuantitiesCache[$subscriptionId] = $result;
+            $this->addonQuantitiesCache[$subscriptionId] = $result;
             return $result;
 
         } catch (\Exception $e) {
@@ -425,12 +432,12 @@ class SubscriptionUpdateService
     public function processSubscriptionUpdates(): array
     {
         try {
-            // For testing: Use August 16, 2025 instead of tomorrow
-            $testDate = '2025-08-16';
-            $subscriptionsDueTomorrow = $this->getSubscriptionsDueTomorrow($testDate);
+            // Use tomorrow's date dynamically
+            $tomorrow = Carbon::tomorrow()->format('Y-m-d');
+            $subscriptionsDueTomorrow = $this->getSubscriptionsDueTomorrow($tomorrow);
 
             if ($subscriptionsDueTomorrow->isEmpty()) {
-                return $this->createEmptyResponse($testDate);
+                return $this->createEmptyResponse($tomorrow);
             }
             
             $mappingResult = $this->mapSubscriptionsToUsers($subscriptionsDueTomorrow);
@@ -441,11 +448,12 @@ class SubscriptionUpdateService
             // Process subscriptions
             $processedResults = $this->processSubscriptions($subscriptionUserMapping);
             
-            return $this->createSuccessResponse($testDate, $subscriptionsDueTomorrow, $mappingResult, $processedResults);
+            return $this->createSuccessResponse($tomorrow, $subscriptionsDueTomorrow, $mappingResult, $processedResults);
 
         } catch (\Exception $e) {
             Log::error('Failed to process subscription updates', [
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
             ]);
 
             return [
@@ -826,13 +834,6 @@ class SubscriptionUpdateService
      *
      * @param string $subscriptionId
      * @param object $subscription
-     * @param object $user
-     * @param array $companyUsers
-     * @param int $regularUserCount
-     * @param int $driverCount
-     * @return array
-     */
-    /**
      * Process an individual subscription for updating
      *
      * @param object $subscription The subscription object
@@ -896,9 +897,7 @@ class SubscriptionUpdateService
             
             // First, get the subscription to find the subscription item IDs for Product Catalog 2.0
             // Use cached subscription data if available to reduce API calls
-            static $subscriptionCache = [];
-            
-            if (!isset($subscriptionCache[$subscriptionId])) {
+            if (!isset($this->subscriptionCache[$subscriptionId])) {
                 $subscriptionResponse = $this->getSubscription($subscriptionId);
                 
                 if (!$subscriptionResponse['success']) {
