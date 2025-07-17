@@ -25,7 +25,12 @@ export default class InviteForUserController extends Controller {
 
                 this.isLoading = false;
                 //redirect to orders page
-                return this.router.transitionTo('console.fleet-ops').then(() => {
+                // return this.router.transitionTo('console.fleet-ops').then(() => {
+                //     if (response.needs_password && response.needs_password === true) {
+                //         this.setPassword();
+                //     }
+                // });
+                 return this.router.transitionTo('console').then(() => {
                     if (response.needs_password && response.needs_password === true) {
                         this.setPassword();
                     }
