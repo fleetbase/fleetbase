@@ -142,6 +142,27 @@ common:
   duplicate-waypoint-error: Phát hiện điểm dừng trùng lặp. Vui lòng sử dụng vị trí duy nhất cho mỗi điểm dừng.
   valid-waypoints-error: Vui lòng thêm điểm dừng
   pickup-dropoff-error: Vui lòng cung cấp cả điểm đón và điểm trả.
+leaves:
+  driver_name: Tên tài xế
+  start_date: Ngày bắt đầu
+  end_date: Ngày kết thúc
+  total_days: Tổng số ngày
+  leave_type: Loại nghỉ phép
+  reason: Lý do
+  status: Trạng thái
+  processed_by: Xử lý bởi
+  created_at: Được tạo lúc
+  approve: Duyệt
+  reject: Từ chối
+  submitted: Đã gửi
+  sick: Nghỉ ốm
+  vacation: Kỳ nghỉ
+  other: Khác
+  failed_to: Không thể
+  leave: nghỉ
+  leave_uppercase: Nghỉ
+  leave_actions: Hành động nghỉ phép
+  error_fetching_leaves: Lỗi khi lấy thông tin tài xế vắng mặt
 validation:
   required:
     payment_method: Phương thức thanh toán là bắt buộc

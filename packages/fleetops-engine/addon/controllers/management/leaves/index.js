@@ -46,7 +46,7 @@ export default class ManagementLeavesIndexController extends BaseController {
     @tracked columns = [
         {
             label: this.intl.t('fleet-ops.common.id'),
-            valuePath: 'id',
+            valuePath: 'public_id',
             cellComponent: 'table/cell/anchor',
             action: this.viewLeave,
             permission: 'fleet-ops view leaves',
@@ -55,8 +55,9 @@ export default class ManagementLeavesIndexController extends BaseController {
             sortable: true,
         },
         {
-            label: 'Driver Name',
+            label: this.intl.t('leaves.driver_name'),
             valuePath: 'user.name',
+            cellComponent: 'table/cell/anchor',
             permission: 'fleet-ops view user',
             onClick: async (leave) => {
                 let user = await leave.user;
@@ -74,7 +75,7 @@ export default class ManagementLeavesIndexController extends BaseController {
             model: 'driver',
         },
         {
-            label: 'Start Date',
+            label: this.intl.t('leaves.start_date'),
             valuePath: 'start_date',
             cellComponent: 'table/cell/date',
             width: '120px',
@@ -84,7 +85,7 @@ export default class ManagementLeavesIndexController extends BaseController {
             filterComponent: 'filter/date',
         },
         {
-            label: 'End Date',
+            label: this.intl.t('leaves.end_date'),
             valuePath: 'end_date',
             cellComponent: 'table/cell/date',
             width: '120px',
@@ -94,38 +95,38 @@ export default class ManagementLeavesIndexController extends BaseController {
             filterComponent: 'filter/date',
         },
         {
-            label: 'Total Days',
+            label: this.intl.t('leaves.total_days'),
             valuePath: 'total_days',
             width: '80px',
             resizable: true,
             sortable: true,
         },
         {
-            label: 'Leave Type',
+            label: this.intl.t('leaves.leave_type'),
             valuePath: 'leave_type',
             width: '120px',
             resizable: true,
             sortable: true,
             filterable: true,
             filterComponent: 'filter/select',
-            filterOptions: ['sick', 'casual', 'annual', 'unpaid', 'other'], // adjust as needed
+            filterOptions: [this.intl.t('leaves.sick'), this.intl.t('leaves.vacation'), this.intl.t('leaves.other')], // adjust as needed
         },
         {
-            label: 'Reason',
+            label: this.intl.t('leaves.reason'),
             valuePath: 'reason',
             width: '150px',
             resizable: true,
             sortable: false,
         },
         {
-            label: 'Status',
+            label: this.intl.t('leaves.status'),
             valuePath: 'status',
             width: '100px',
             resizable: true,
             sortable: true,
             filterable: true,
             filterComponent: 'filter/select',
-            filterOptions: ['pending', 'approved', 'rejected', 'cancelled'], // adjust as needed
+            filterOptions: [this.intl.t('leaves.submitted'), this.intl.t('leaves.approve'), this.intl.t('leaves.reject')], // adjust as needed
         },
         {
             label: 'Processed By',
@@ -147,7 +148,7 @@ export default class ManagementLeavesIndexController extends BaseController {
             model: 'user',
         },
         {
-            label: 'Created At',
+            label: this.intl.t('leaves.created_at'),
             valuePath: 'created_at',
             cellComponent: 'table/cell/date',
             width: '120px',
@@ -169,18 +170,18 @@ export default class ManagementLeavesIndexController extends BaseController {
             ddButtonText: false,
             ddButtonIcon: 'ellipsis-h',
             ddButtonIconPrefix: 'fas',
-            ddMenuLabel: 'Leave Actions',
+            ddMenuLabel: this.intl.t('leaves.leave_actions'),
             cellClassNames: 'overflow-visible',
             wrapperClass: 'flex items-center justify-end mx-2',
             width: '10%',
             actions: [
                 {
-                    label: 'Approve',
+                    label: this.intl.t('leaves.approve'),
                     fn: this.approveLeave,
                     permission: 'fleet-ops view leaves',
                 },
                 {
-                    label: 'Reject',
+                    label: this.intl.t('leaves.reject'),
                     fn: this.rejectLeave,
                     permission: 'fleet-ops delete leaves',
                 },
@@ -192,19 +193,19 @@ export default class ManagementLeavesIndexController extends BaseController {
         },
     ];
 
-    @task({ restartable: true }) *search({ target: { value } }) {
-        if (!value) {
-            set(this, 'query', null);
-            this.hostRouter.refresh();
-            return;
-        }
-        yield timeout(200);
-        if (this.page > 1) {
-            set(this, 'page', 1);
-        }
-        set(this, 'query', value);
-        this.hostRouter.refresh();
-    }
+    // @task({ restartable: true }) *search({ target: { value } }) {
+    //     if (!value) {
+    //         set(this, 'query', null);
+    //         this.hostRouter.refresh();
+    //         return;
+    //     }
+    //     yield timeout(200);
+    //     if (this.page > 1) {
+    //         set(this, 'page', 1);
+    //     }
+    //     set(this, 'query', value);
+    //     this.hostRouter.refresh();
+    // }
 
 
     async _updateLeaveStatus(leave, action) {
@@ -226,11 +227,11 @@ export default class ManagementLeavesIndexController extends BaseController {
 
             if (!response.ok) {
                 const error = await response.json();
-                this.notifications.error(error.message || `Failed to ${action} leave.`);
+                this.notifications.error(error.message || `${this.intl.t('leaves.failed_to')} ${action} ${this.intl.t('leaves.leave')}.`);
                 return false;
             }
 
-            this.notifications.success(`Leave ${action}!`);
+            this.notifications.success(`${this.intl.t('leaves.leave_uppercase')} ${action}!`);
             // Get the route instance and clear its cache
             const owner = getOwner(this);
             const route = owner.lookup('route:management.leaves.index');
@@ -241,7 +242,7 @@ export default class ManagementLeavesIndexController extends BaseController {
             this.hostRouter.refresh();
             return true;
         } catch (error) {
-            this.notifications.error(`Failed to ${action} leave.`);
+            this.notifications.error(`${this.intl.t('leaves.failed_to')} ${action} ${this.intl.t('leaves.leave')}.`);
             console.error(error);
             return false;
         }
@@ -274,4 +275,46 @@ export default class ManagementLeavesIndexController extends BaseController {
             },
         });
     }
+
+    /**
+    * Reload layout view.
+    */
+    @action reload() {
+        return this.hostRouter.refresh();
+    }
+
+    /**
+     * The search task.
+     *
+     * @void
+     */
+    @task({ restartable: true }) *search({ target: { value } }) {
+        // if no query don't search
+        if (isBlank(value)) {
+            set(this, 'query', null);
+            this.hostRouter.refresh();
+            return;
+        }
+        // timeout for typing
+        yield timeout(200);
+
+        // reset page for results
+        if (this.page > 1) {
+            set(this, 'page', 1);
+        }
+
+        // update the query param
+        set(this, 'query', value);
+        this.hostRouter.refresh();
+    }
+
+    /**
+     * Toggles dialog to export a issue
+     *
+     * @void
+     */
+    // @action exportLeaves() {
+    //     const selections = this.table.selectedRows.map((_) => _.id);
+    //     this.crud.export('leaves', { params: { selections } });
+    // }
 }

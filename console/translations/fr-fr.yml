@@ -142,6 +142,27 @@ common:
   duplicate-waypoint-error: Point de passage en double détecté. Veuillez utiliser des emplacements uniques pour chaque point de passage.
   valid-waypoints-error: Veuillez ajouter des points de passage
   pickup-dropoff-error: Veuillez fournir les lieux de prise en charge et de dépose.
+leaves:
+  driver_name: Nom du conducteur
+  start_date: Date de début
+  end_date: Date de fin
+  total_days: Nombre total de jours
+  leave_type: Type de congé
+  reason: Raison
+  status: Statut
+  processed_by: Traité par
+  created_at: Créé le
+  approve: Approuver
+  reject: Rejeter
+  submitted: Soumis
+  sick: Maladie
+  vacation: Vacances
+  other: Autre
+  failed_to: Échec de
+  leave: congé
+  leave_uppercase: Congé
+  leave_actions: Actions de congé
+  error_fetching_leaves: Erreur lors de la récupération des indisponibilités du conducteur
 validation:
   required:
     payment_method: Le mode de paiement est requis

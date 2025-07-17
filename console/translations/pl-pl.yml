@@ -144,6 +144,27 @@ common:
   duplicate-waypoint-error: Wykryto zduplikowany punkt trasy. Proszę użyć unikalnych lokalizacji dla każdego punktu.
   valid-waypoints-error: Proszę dodać punkty trasy
   pickup-dropoff-error: Proszę podać miejsce odbioru i miejsce dostawy.
+leaves:
+  driver_name: Imię kierowcy
+  start_date: Data rozpoczęcia
+  end_date: Data zakończenia
+  total_days: Łączna liczba dni
+  leave_type: Typ urlopu
+  reason: Powód
+  status: Status
+  processed_by: Przetworzone przez
+  created_at: Utworzono
+  approve: Zatwierdź
+  reject: Odrzuć
+  submitted: Przesłano
+  sick: Chorobowe
+  vacation: Urlop
+  other: Inne
+  failed_to: Nie udało się
+  leave: urlop
+  leave_uppercase: Urlop
+  leave_actions: Działania urlopowe
+  error_fetching_leaves: Błąd podczas pobierania nieobecności kierowcy
 validation:
   required:
     payment_method: Wymagana jest metoda płatności

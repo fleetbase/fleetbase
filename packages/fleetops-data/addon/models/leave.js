@@ -6,6 +6,7 @@ import { parseISO, format } from 'date-fns';
 export default class LeavesModel extends Model {
     // Primary Key
     @attr('string') id;
+    @attr('string') public_id;
 
     // Foreign Keys
     @attr('string') driver_uuid;

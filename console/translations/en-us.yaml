@@ -150,6 +150,27 @@ common:
   valid-number-error: Please enter a valid number
   download-error-log: Download
   try-again: Try Again
+leaves:
+  driver_name: Driver Name
+  start_date: Start Date
+  end_date: End Date
+  total_days: Total Days
+  leave_type: Leave Type
+  reason: Reason
+  status: Status
+  processed_by: Processed By
+  created_at: Created At
+  approve: Approve
+  reject: Reject
+  submitted: Submitted
+  sick: Sick
+  vacation: Vacation
+  other: Other
+  failed_to: Failed to
+  leave: leave
+  leave_uppercase: Leave
+  leave_actions: Leave Actions
+  error_fetching_leaves: Error fetching driver unavailability
 validation:
   required:
     payment_method: Payment method is required

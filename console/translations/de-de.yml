@@ -142,6 +142,27 @@ common:
   duplicate-waypoint-error: Doppelter Wegpunkt erkannt. Bitte verwenden Sie eindeutige Orte für jeden Wegpunkt.
   valid-waypoints-error: Bitte fügen Sie Wegpunkte hinzu
   pickup-dropoff-error: Bitte geben Sie sowohl den Abhol- als auch den Abgabeort an.
+leaves:
+  driver_name: Fahrername
+  start_date: Startdatum
+  end_date: Enddatum
+  total_days: Gesamttage
+  leave_type: Urlaubsart
+  reason: Grund
+  status: Status
+  processed_by: Bearbeitet von
+  created_at: Erstellt am
+  approve: Genehmigen
+  reject: Ablehnen
+  submitted: Eingereicht
+  sick: Krank
+  vacation: Urlaub
+  other: Andere
+  failed_to: Fehler beim
+  leave: urlaub
+  leave_uppercase: Urlaub
+  leave_actions: Urlaubsaktionen
+  error_fetching_leaves: Fehler beim Abrufen der Fahrerabwesenheiten
 validation:
   required:
     payment_method: Zahlungsmethode ist erforderlich
