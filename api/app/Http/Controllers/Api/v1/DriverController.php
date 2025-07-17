@@ -31,6 +31,7 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Log;
 
 class DriverController extends FleetbaseDriverController
 {
@@ -516,13 +517,23 @@ class DriverController extends FleetbaseDriverController
         // generate auth token
         try {
             $token = $user->createToken($driver->uuid);
+            // Logging the token
+            Log::info('Auth token generated for user.', [
+                'user_uuid' => $user->uuid,
+                'driver_uuid' => $driver->uuid,
+                'token' => $token // ← log the token string
+            ]);
         } catch (\Exception $e) {
+            Log::error('An exception occurred.', [
+                'message' => $e->getMessage(),
+                'trace'   => $e->getTraceAsString()
+            ]);
             return response()->apiError($e->getMessage());
         }
 
         try {
-            DB::table('drivers')->where('uuid', $driver->uuid)->update(['auth_token' => $token->plainTextToken]);
-            $driver->token = $token->plainTextToken;
+            $driver->auth_token = $token->plainTextToken;
+            $driver->save();   
         } catch (\Throwable $e) {
             if (app()->bound('sentry')) {
                 app('sentry')->captureException($e);
