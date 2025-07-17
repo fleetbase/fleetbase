@@ -58,6 +58,7 @@ return [
     ],
     'chargebee' => [
         'site' => env('CHARGEBEE_SITE'),
+        'site_name' => env('CHARGEBEE_SITE_NAME'),
         'api_key' => env('CHARGEBEE_API_KEY'),
         'webhook_secret' => env('CHARGEBEE_WEBHOOK_SECRET'),
         'web_users_addon_id' => env('CHARGEBEE_WEB_USERS_ADDON_ID'),

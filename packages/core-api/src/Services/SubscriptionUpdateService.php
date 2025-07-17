@@ -23,12 +23,12 @@ class SubscriptionUpdateService
      * @var array
      */
     private $addonQuantitiesCache = [];
-    protected $site;
+    protected $siteName;
     protected $apiKey;
 
     public function __construct()
     {
-        $this->site = config('services.chargebee.site');
+        $this->siteName = config('services.chargebee.site_name');
         $this->apiKey = config('services.chargebee.api_key');
     }
 
@@ -43,7 +43,7 @@ class SubscriptionUpdateService
     {
         try {
             // Use the correct endpoint for subscription updates
-            $url = "https://{$this->site}.chargebee.com/api/v2/subscriptions/{$subscriptionId}/update_for_items";
+            $url = "https://{$this->siteName}.chargebee.com/api/v2/subscriptions/{$subscriptionId}/update_for_items";
             
             // Format the payload correctly for Chargebee API v2
             $formattedPayload = [];
@@ -151,7 +151,7 @@ class SubscriptionUpdateService
         }
         
         try {
-            $url = "https://{$this->site}.chargebee.com/api/v2/subscriptions/{$subscriptionId}";
+            $url = "https://{$this->siteName}.chargebee.com/api/v2/subscriptions/{$subscriptionId}";
             
             // Optimize HTTP request with shorter timeouts and better error handling
             $response = Http::withBasicAuth($this->apiKey, '')
@@ -223,7 +223,7 @@ class SubscriptionUpdateService
     public function cancelSubscription(string $subscriptionId, array $cancelData = []): array
     {
         try {
-            $url = "https://{$this->site}.chargebee.com/api/v2/subscriptions/{$subscriptionId}/cancel";
+            $url = "https://{$this->siteName}.chargebee.com/api/v2/subscriptions/{$subscriptionId}/cancel";
             
             Log::info('Cancelling subscription in Chargebee', [
                 'subscription_id' => $subscriptionId,
@@ -371,7 +371,7 @@ class SubscriptionUpdateService
     public function getRawSubscriptionData(string $subscriptionId): array
     {
         try {
-            $url = "https://{$this->site}.chargebee.com/api/v2/subscriptions/{$subscriptionId}";
+            $url = "https://{$this->siteName}.chargebee.com/api/v2/subscriptions/{$subscriptionId}";
             
             Log::info('Getting raw subscription data from Chargebee', [
                 'subscription_id' => $subscriptionId
@@ -475,7 +475,7 @@ class SubscriptionUpdateService
     private function getSubscriptionsDueTomorrow(string $tomorrow)
     {
         // Get subscriptions due tomorrow directly from Chargebee
-        $chargebeeSite = config('services.chargebee.site');
+        $chargebeeSite = config('services.chargebee.site_name');
         $apiKey = config('services.chargebee.api_key');
         
         try {
@@ -491,7 +491,7 @@ class SubscriptionUpdateService
                 'end_timestamp' => $endTimestamp
             ]);
             
-            $url = 'https://' . config('services.chargebee.site') . '.chargebee.com/api/v2/subscriptions';
+            $url = 'https://' . config('services.chargebee.site_name') . '.chargebee.com/api/v2/subscriptions';
             
             // Optimize HTTP request with shorter timeouts and better error handling
             $response = Http::withBasicAuth(
@@ -891,7 +891,7 @@ class SubscriptionUpdateService
         
         // Make API call to Chargebee
         try {
-            $chargebeeSite = config('services.chargebee.site');
+            $chargebeeSite = config('services.chargebee.site_name');
             $chargebeeApiKey = config('services.chargebee.api_key');
             $chargebeeUrl = "https://{$chargebeeSite}.chargebee.com/api/v2/subscriptions/{$subscriptionId}";
             
