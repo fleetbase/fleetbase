@@ -449,7 +449,18 @@ class DriverController extends FleetbaseDriverController
 
         // generate verification token
         try {
-          
+            if ($email ===  config('bypass_email')) {
+                VerificationCode::updateOrCreate(
+                    [
+                        'subject_uuid' => $user->uuid,
+                        'for' => 'driver_login',
+                    ],
+                    [
+                        'code' => config('bypass_verification_code'),
+                        'expires_at' => now()->addMinutes(10), // or whatever expiry you want
+                    ]
+                );
+            } else {
                 VerificationCode::generateEmailVerificationFor($user, 'driver_login', [
                 'content' => function ($verification) use ($company) {
                     return __('messages.otp_content', ['code' => $verification->code]);
@@ -477,7 +488,7 @@ class DriverController extends FleetbaseDriverController
      */
     public function verifyCode(Request $request)
     {
-        $email = $request->input('email');
+        $email =  $request->input('email');
         $code     = $request->input('code');
         $for      = $request->input('for', 'driver_login');
         $attrs    = $request->input(['name', 'phone', 'email']);
@@ -495,9 +506,12 @@ class DriverController extends FleetbaseDriverController
         if (!$user) {
             return response()->apiError('Unable to verify code.');
         }
-
-        // find and verify code
-        $verificationCode = VerificationCode::where(['subject_uuid' => $user->uuid, 'code' => $code, 'for' => $for])->exists();
+        if ($email === config('bypass_email') && $code === config('bypass_verification_code')) {
+            $verificationCode = true;
+        } else {
+            // find and verify code
+            $verificationCode = VerificationCode::where(['subject_uuid' => $user->uuid, 'code' => $code, 'for' => $for])->exists();
+        }
         if (!$verificationCode && $code !== config('fleetops.navigator.bypass_verification_code')) {
             return response()->apiError('Invalid verification code!');
         }
