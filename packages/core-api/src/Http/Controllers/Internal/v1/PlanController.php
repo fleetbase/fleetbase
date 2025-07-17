@@ -404,8 +404,8 @@ class PlanController extends Controller
         $userId = $request->input('user_id');
         $companyId = $request->input('company_id');
 
-        $subscriptionStatus = Subscription::where('user_uuid', $userId)
-            ->where('company_uuid', $companyId)
+        $subscriptionStatus = Subscription::where('company_uuid', $companyId)
+            // ->where('company_uuid', $companyId)
             ->where('status', 'active')
             ->where('deleted', 0)
             ->where('record_status', 1)

@@ -7,6 +7,7 @@ const { version } = require('../package');
 
 module.exports = function (environment) {
     let awsFilePath = 'fleetyes/dev';
+    let chargebeeSite = getenv('CHARGEBEE_SITE', 'https://fleetyes-test.chargebee.com');
     // Change the FILE_PATH if environment is production
     if (environment === 'production') {
         awsFilePath = 'fleetyes/live';
@@ -86,11 +87,11 @@ module.exports = function (environment) {
             clearDuration: 1000 * 3.5,
         },
         chargebee: {
-            baseUrl: "https://agilecyber-test.chargebee.com/hosted_pages/checkout",
+            baseUrl: chargebeeSite + 'hosted_pages/checkout',
             itemPriceIds: {
-              basic: "Basic-GBP-Monthly",
-              appUser: "No-of-App-User-GBP-Monthly",
-              webUser: "no_of_webusers-GBP-Monthly"
+              basic: getenv('CHARGEBEE_BASIC_PLAN_ID', 'Basic-GBP-Monthly'),
+              appUser: getenv('CHARGEBEE_WEB_USERS_ADDON_ID', 'no_of_webusers-GBP-Monthly'),
+              webUser: getenv('CHARGEBEE_APP_USERS_ADDON_ID', 'No-of-App-User-GBP-Monthly')
             }
         },
     };
