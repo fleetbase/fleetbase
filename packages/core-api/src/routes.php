@@ -137,7 +137,6 @@ Route::prefix(config('fleetbase.api.routing.prefix', '/'))->namespace('Fleetbase
                             ['prefix' => 'chargebee'],
                             function ($router) {
                                 $router->put('subscriptions/quantity', 'SubscriptionController@updateSubscriptionQuantity');
-                                // $router->put('subscriptions/{subscriptionId}', 'SubscriptionController@updateSubscription');
                                 $router->delete('subscriptions/{subscriptionId}', 'SubscriptionController@cancelSubscription');
                                 $router->get('subscriptions/{subscriptionId}/addon-quantities', 'SubscriptionController@getCurrentAddonQuantities');
                                 $router->get('subscriptions/{subscriptionId}/raw-data', 'SubscriptionController@getRawSubscriptionData');
