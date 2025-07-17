@@ -131,6 +131,7 @@ export default class ManagementLeavesIndexController extends BaseController {
         {
             label: 'Processed By',
             valuePath: 'processed_by_user.name',
+            cellComponent: 'table/cell/anchor',
             permission: 'iam view user',
             onClick: async (leave) => {
                 let user = await leave.processed_by_user;
@@ -208,6 +209,20 @@ export default class ManagementLeavesIndexController extends BaseController {
     // }
 
 
+    /**
+     * The function `_updateLeaveStatus` asynchronously updates the status of a leave request by
+     * sending a PUT request to the API with the specified action and handles success and error
+     * responses accordingly.
+     * @param leave - The `_updateLeaveStatus` function you provided is responsible for updating the
+     * status of a leave request by sending a PUT request to the API endpoint. It also handles success
+     * and error scenarios, displaying notifications accordingly.
+     * @param action - The `action` parameter in the `_updateLeaveStatus` function represents the
+     * action that will be performed on a leave request. This action could be approving, rejecting,
+     * cancelling, or any other action that can be taken on a leave request. The function sends a PUT
+     * request to update the status of the
+     * @returns The `_updateLeaveStatus` function returns a boolean value (`true`, `false`, or `null`)
+     * based on the outcome of the leave status update operation.
+     */
     async _updateLeaveStatus(leave, action) {
         try {
             const authSession = JSON.parse(localStorage.getItem('ember_simple_auth-session'));
@@ -242,16 +257,36 @@ export default class ManagementLeavesIndexController extends BaseController {
             this.hostRouter.refresh();
             return true;
         } catch (error) {
-            this.notifications.error(`${this.intl.t('leaves.failed_to')} ${action} ${this.intl.t('leaves.leave')}.`);
+            this.notifications.error(`${this.intl.t('leaves.failed_to')} ${action === 'approve' ? this.intl.t('leaves.approved') : this.intl.t('leaves.rejected')} ${this.intl.t('leaves.leave')}.`);
             console.error(error);
             return false;
         }
     }
 
+    /**
+     * The `approveLeave` function asynchronously updates the status of a leave request to 'approve'.
+     * @param leave - The `leave` parameter likely refers to an object or data structure that
+     * represents a leave request or leave application. It may contain information such as the
+     * employee's name, leave dates, reason for leave, and any other relevant details related to the
+     * leave request.
+     * @param [options] - The `options` parameter in the `approveLeave` function is an optional object
+     * that allows you to provide additional configuration or settings for the approval process. It can
+     * be used to pass in any extra information or flags that may be needed for the approval logic.
+     * This parameter is not required for the function to
+     */
     @action async approveLeave(leave, options = {}) {
         await this._updateLeaveStatus(leave, 'approve');
     }
 
+    /**
+     * The function `rejectLeave` asynchronously updates the status of a leave request to 'reject'.
+     * @param leave - Leave object that contains information about the leave request, such as leave
+     * type, start date, end date, and employee details.
+     * @param [options] - The `options` parameter in the `rejectLeave` function is an optional object
+     * that can be passed to provide additional configuration or settings for the rejection of the
+     * leave request. It allows for customization of the rejection process by specifying various
+     * options as key-value pairs within the object. These options could include things like
+     */
     @action async rejectLeave(leave, options = {}) {
         await this._updateLeaveStatus(leave, 'reject');
     }
