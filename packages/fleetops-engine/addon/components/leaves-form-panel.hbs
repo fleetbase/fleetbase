@@ -1,1 +1,48 @@
-<div style="background: #e0e7ff; color: #1a237e; padding: 8px; text-align: center; font-weight: bold;">This is the Leaves Form Panel Page</div>
+<Overlay @onClose={{this.cancel}} @position="right" @noBackdrop={{true}} @fullHeight={{true}} @width="570px">
+    <Overlay::Header @title={{if this.leave.public_id this.leave.public_id (t "leaves.new_leave" )}}
+        @status={{this.leave.status}} @hideStatusDot={{true}} @createdAt={{this.leave.created_at}}>
+        <div class="flex flex-1 justify-end">
+            <Button @icon="save" @type="primary" @text={{t "leaves.save_leave" }} @onClick={{this.saveLeave}}
+                @isLoading={{this.isSaving}} class="mr-2" />
+            <Button @type="default" @icon="times" @text={{t "leaves.cancel" }} @onClick={{this.cancel}} />
+        </div>
+    </Overlay::Header>
+
+    <Overlay::Body class="px-4 pt-4">
+        <InputGroup @name={{t "leaves.driver_name" }} @required={{true}}>
+            <ModelSelect @modelName="driver" @selectedModel={{this.leave.driver}}
+                @placeholder={{t "leaves.select_driver" }} @onChange={{fn (mut this.leave.driver)}} as |model|>
+                {{model.name}}
+            </ModelSelect>
+        </InputGroup>
+
+        <InputGroup @name={{t "leaves.start_date" }} @required={{true}}>
+            <Input @type="datetime-local" @value={{this.leave.start_date}} @onInput={{fn (mut this.leave.start_date)
+                value="target.value" }} />
+        </InputGroup>
+
+        <InputGroup @name={{t "leaves.end_date" }} @required={{true}}>
+            <Input @type="datetime-local" @value={{this.leave.end_date}} @onInput={{fn (mut this.leave.end_date)
+                value="target.value" }} />
+        </InputGroup>
+
+        <InputGroup @name={{t "leaves.leave_type" }} @required={{true}}>
+            <PowerSelect @options={{this.leaveTypes}} @selected={{this.leave.leave_type}} @onChange={{fn (mut
+                this.leave.leave_type)}} @placeholder={{t "leaves.select_leave_type" }} as |type|>
+                {{type}}
+            </PowerSelect>
+        </InputGroup>
+
+        <InputGroup @name={{t "leaves.reason" }}>
+            <Textarea @value={{this.leave.reason}} @onInput={{fn (mut this.leave.reason) value="target.value" }}
+                rows="3" />
+        </InputGroup>
+
+        <InputGroup @name={{t "leaves.status" }}>
+            <PowerSelect @options={{this.statusOptions}} @selected={{this.leave.status}} @onChange={{fn (mut
+                this.leave.status)}} @placeholder={{t "leaves.select_status" }} as |status|>
+                {{status}}
+            </PowerSelect>
+        </InputGroup>
+    </Overlay::Body>
+</Overlay>
