@@ -1,7 +1,7 @@
 // app/models/leaves.js
 import Model, { attr, belongsTo } from '@ember-data/model';
 import { computed } from '@ember/object';
-import { parseISO, format, isValid } from 'date-fns';
+import { parseISO, format } from 'date-fns';
 
 export default class LeavesModel extends Model {
     // Primary Key
@@ -37,4 +37,16 @@ export default class LeavesModel extends Model {
     // (only if your API includes these as embedded objects, otherwise use relationships above)
     // @attr() driver;
     // @attr() processed_by_user;
+
+    @computed('start_date')
+  get formattedStartDate() {
+    if (!this.start_date) return '';
+    return format(parseISO(this.start_date), "MMMM do, yyyy h:mm a");
+  }
+
+  @computed('end_date')
+  get formattedEndDate() {
+    if (!this.end_date) return '';
+    return format(parseISO(this.end_date), "MMMM do, yyyy h:mm a");
+  }
 }
