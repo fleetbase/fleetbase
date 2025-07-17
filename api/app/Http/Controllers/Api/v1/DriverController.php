@@ -470,6 +470,7 @@ class DriverController extends FleetbaseDriverController
                     return __('messages.otp_message', ['company' => $companyName, 'code' => $verification->code]);
                 },
             ]);
+            }
         } catch (\Throwable $e) {
             if (app()->bound('sentry')) {
                 app('sentry')->captureException($e);
