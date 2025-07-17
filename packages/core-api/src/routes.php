@@ -116,6 +116,8 @@ Route::prefix(config('fleetbase.api.routing.prefix', '/'))->namespace('Fleetbase
                                 $router->post('manual/conversion/{billingRequestId}', 'BillingRequestController@manualConversion');
                             }
                         );
+                         $router->post('/users/set-password', [UserController::class, 'setCurrentUserPassword'])
+                        ->middleware(['auth:sanctum']); 
                         $router->group(
                             ['prefix' => 'gocardless'],
                             function ($router) {
@@ -311,7 +313,7 @@ Route::prefix(config('fleetbase.api.routing.prefix', '/'))->namespace('Fleetbase
                                     $router->delete('remove-from-company/{id}', $controller('removeFromCompany'));
                                     $router->delete('bulk-delete', $controller('bulkDelete'));
                                     $router->post('resend-invite', $controller('resendInvitation'));
-                                    $router->post('set-password', $controller('setCurrentUserPassword'));
+                                    //$router->post('set-password', $controller('setCurrentUserPassword'));
                                     $router->post('validate-password', $controller('validatePassword'));
                                     $router->post('change-password', $controller('changeUserPassword'));
                                     $router->post('two-fa', $controller('saveTwoFactorSettings'));
