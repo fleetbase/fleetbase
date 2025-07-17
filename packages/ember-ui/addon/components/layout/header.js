@@ -94,24 +94,39 @@ export default class LayoutHeaderComponent extends Component {
 
             menuItems.pushObject(organizationMenuItem);
         }
-
-        // Push static menu items
         const staticMenuItems = [
             {
                 seperator: true,
             },
+        ];
+
+        // Push "organization-settings" only if user is NOT a driver
+        if (this.currentUser.roleName?.toLowerCase() !== 'driver') {
+            staticMenuItems.pushObject({
+                id: 'organization-settings',
+                route: 'console.settings.index',
+                text: this.intl.t('layout.header.menus.organization.settings'),
+                icon: 'gear',
+            });
+        }
+
+        // Push static menu items
+        // const staticMenuItems = [
+        //     {
+        //         seperator: true,
+        //     },
             // {
             //     id: 'console-home',
             //     route: 'console.home',
             //     text: 'Home',
             //     icon: 'house',
             // },
-            {
-                id: 'organization-settings',
-                route: 'console.settings.index',
-                text: this.intl.t('layout.header.menus.organization.settings'),
-                icon: 'gear',
-            },
+            // {
+            //     id: 'organization-settings',
+            //     route: 'console.settings.index',
+            //     text: this.intl.t('layout.header.menus.organization.settings'),
+            //     icon: 'gear',
+            // },
             // {
             //     id: 'create-or-join-organizations',
             //     href: 'javascript:;',
@@ -119,7 +134,7 @@ export default class LayoutHeaderComponent extends Component {
             //     action: 'createOrJoinOrg',
             //     icon: 'building',
             // },
-        ];
+        // ];
 
         // If registry bridge is booted add to static items
         // if (this.hasExtension('@fleetbase/registry-bridge-engine')) {
