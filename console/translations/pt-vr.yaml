@@ -68,6 +68,29 @@ common:
   export: Exportar
   reload: Recarregar
   reload-data: Recarregar dados
+leaves:
+  driver_name: Nome do motorista
+  start_date: Data de início
+  end_date: Data de término
+  total_days: Total de dias
+  leave_type: Tipo de licença
+  reason: Motivo
+  status: Status
+  processed_by: Processado por
+  created_at: Criado em
+  approve: Aprovar
+  approved: Aprovado
+  reject: Rejeitar
+  rejected: Rejeitado
+  submitted: Enviado
+  sick: Doença
+  vacation: Férias
+  other: Outro
+  failed_to: Falha ao
+  leave: licença
+  leave_uppercase: Licença
+  leave_actions: Ações de licença
+  error_fetching_leaves: Erro ao buscar indisponibilidade do motorista
 component:
   file:
     dropdown-label: Ações do Arquivo

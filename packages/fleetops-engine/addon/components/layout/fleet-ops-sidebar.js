@@ -154,7 +154,7 @@ export default class LayoutFleetOpsSidebarComponent extends Component {
             {
                 intl: 'fleet-ops.component.layout.fleet-ops-sidebar.leaves',
                 title: this.intl.t('fleet-ops.component.layout.fleet-ops-sidebar.leaves'),
-                icon: 'leaf',
+                icon: 'person-circle-exclamation',
                 route: 'management.leaves',
                 permission: 'fleet-ops list leaves',
                 visible: this.abilities.can('fleet-ops see leaves'),

@@ -3,9 +3,10 @@ import Model, { attr, belongsTo } from '@ember-data/model';
 import { computed } from '@ember/object';
 import { parseISO, format } from 'date-fns';
 
-export default class LeavesModel extends Model {
+export default class LeaveModel extends Model {
     // Primary Key
     @attr('string') id;
+    @attr('string') public_id;
 
     // Foreign Keys
     @attr('string') driver_uuid;
