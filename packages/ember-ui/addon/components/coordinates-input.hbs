@@ -1,9 +1,9 @@
 <div class="grid grid-cols-2 gap-2 coordinates-input" ...attributes>
 <Input class="w-full form-input" @type="text" placeholder={{t "common.latitude" }} aria-label={{t "common.latitude" }}
-    @value={{this.latitude}} {{on "input" this.onLatitudeInput}} {{on "keydown" this.allowOnlyFloatKeys}}
+    @value={{this.latitude}} {{on "input" this.onLatitudeInput}}
     disabled={{this.disabled}} />
 <Input class="w-full form-input" @type="text" placeholder={{t "common.longitude" }} aria-label={{t "common.longitude" }}
-    @value={{this.longitude}} {{on "input" this.onLongitudeInput}} {{on "keydown" this.allowOnlyFloatKeys}}
+    @value={{this.longitude}} {{on "input" this.onLongitudeInput}}
     disabled={{this.disabled}} />
 </div>
 <div class="my-1">
