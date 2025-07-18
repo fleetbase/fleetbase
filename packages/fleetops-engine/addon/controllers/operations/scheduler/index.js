@@ -680,7 +680,7 @@ _applyInitialFilters() {
 //         }
 //     } catch (error) {
 //         console.error('Error filtering orders:', error);
-//         this.notifications.error(this.intl.t('fleetbase.scheduler.filter.error'));
+//         this.notifications.error(this.intl.t('fleet-ops.operations.scheduler.filter.error'));
 //     } finally {
 //         // Hide loading indicator
 //         this.isLoading = false;
@@ -738,7 +738,7 @@ filterScheduledAndUnscheduledOrders() {
         
     } catch (error) {
         console.error('Error filtering orders:', error);
-        this.notifications.error(this.intl.t('fleetbase.scheduler.filter.error') || 'Error filtering orders');
+        this.notifications.error(this.intl.t('fleet-ops.operations.scheduler.filter.error') || 'Error filtering orders');
     } finally {
         this.isLoading = false;
     }
@@ -1323,9 +1323,9 @@ async _updateCalendarAsync() {
     
                     if (order.scheduled_at) {
                         // notify order has been scheduled
-                        this.notifications.success(this.intl.t('fleetbase.scheduler.index.info-message', { orderId: order.public_id, orderAt: order.scheduledAt }));
+                        this.notifications.success(this.intl.t('fleet-ops.operations.scheduler.index.info-message', { orderId: order.public_id, orderAt: order.scheduledAt }));
                     } else {
-                        this.notifications.info(this.intl.t('fleetbase.scheduler.index.info-message', { orderId: order.public_id }));
+                        this.notifications.info(this.intl.t('fleet-ops.operations.scheduler.index.info-message', { orderId: order.public_id }));
                     }
                     // this.isLoading = true; 
                     // Refresh current data without changing page
@@ -1589,27 +1589,31 @@ async _updateCalendarAsync() {
      * @void
      */
     @action
-startSchedulerTour() {
+    startSchedulerTour() {
     const scrollContainer = document.querySelector('#fleet-ops-scheduler-sidebar');
 
     const scrollElementIntoView = (element) => {
-    if (!scrollContainer || !element) return;
+        if (!scrollContainer || !element) return;
 
-    const elementRect = element.getBoundingClientRect();
-    const containerRect = scrollContainer.getBoundingClientRect();
+        const offset = element.offsetTop;
+        const scrollTop = offset - (scrollContainer.clientHeight / 2) + (element.offsetHeight / 2);
+        scrollContainer.scrollTo({ top: scrollTop, behavior: 'smooth' });
+    };
 
-    // Distance from container's top scroll edge to the element's top
-    const offset = element.offsetTop;
-
-    // Center position: element's top minus half the visible container height, plus half element height
-    const scrollTop = offset - (scrollContainer.clientHeight / 2) + (element.offsetHeight / 2);
-
-    scrollContainer.scrollTo({ top: scrollTop, behavior: 'smooth' });
-};
-
+    const waitForModal = () => new Promise((resolve, reject) => {
+        const timeout = 5000;
+        const start = Date.now();
+        const checkModal = () => {
+            const modal = document.querySelector('.flb--modal');
+            if (modal) resolve(modal);
+            else if (Date.now() - start > timeout) reject();
+            else setTimeout(checkModal, 100);
+        };
+        checkModal();
+    });
 
     const driverObj = driver({
-        showProgress: true,
+        showProgress: false,
         nextBtnText: this.intl.t('fleetbase.common.next'),
         prevBtnText: this.intl.t('fleetbase.common.previous'),
         doneBtnText: this.intl.t('fleetbase.common.done'),
@@ -1622,39 +1626,37 @@ startSchedulerTour() {
                 closeBtn.style.display = 'inline-block';
             }
         },
-
+        onDestroy: () => {
+            if (scrollContainer) {
+                scrollContainer.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        },
         steps: [
             {
                 element: '.unassigned-orders-panel .next-content-panel-header',
                 popover: {
                     title: this.intl.t('fleetbase.scheduler.tour.unscheduled_orders.title'),
-                    description: this.intl.t('fleetbase.scheduler.tour.unscheduled_orders.description'),    
+                    description: this.intl.t('fleetbase.scheduler.tour.unscheduled_orders.description'),
+                    onNextClick: async (element, step, driver) => {
+                    const nextElement = document.querySelector('.unassigned-orders-panel .order-schedule-card a[data-order-id]');
+                    if (nextElement) {
+                        driverObj.moveNext();
+                    } else {
+                        driverObj.moveTo(3); // Move to step 4 (0-based index 3)
+                    }
                 },
-                onHighlightStarted:scrollElementIntoView
-                
+                },
+                onHighlightStarted: scrollElementIntoView,
             },
             {
                 element: '.unassigned-orders-panel .order-schedule-card a[data-order-id]',
                 popover: {
                     title: this.intl.t('fleetbase.scheduler.tour.click_order_link.title'),
-                    description: this.intl.t('fleetbase.scheduler.tour.click_order_link.description'), 
+                    description: this.intl.t('fleetbase.scheduler.tour.click_order_link.description'),
                     onNextClick: async (element, step, driver) => {
                         const orderLink = document.querySelector('.unassigned-orders-panel .order-schedule-card a[data-order-id]');
                         if (orderLink) {
                             orderLink.click();
-                            const waitForModal = () =>
-                                new Promise((resolve, reject) => {
-                                    const timeout = 5000;
-                                    const start = Date.now();
-                                    const checkModal = () => {
-                                        const modal = document.querySelector('.flb--modal');
-                                        if (modal) resolve(modal);
-                                        else if (Date.now() - start > timeout) reject();
-                                        else setTimeout(checkModal, 100);
-                                    };
-                                    checkModal();
-                                });
-
                             try {
                                 await waitForModal();
                                 driverObj.refresh();
@@ -1663,8 +1665,11 @@ startSchedulerTour() {
                                 driverObj.moveNext();
                             }
                         } else {
-                            driverObj.moveNext();
+                            driverObj.moveTo(3); // Move to step 4
                         }
+                    },
+                    onPrevClick: () => {
+                        driverObj.movePrevious();
                     },
                 },
                 // onHighlightStarted:scrollElementIntoView
@@ -1675,13 +1680,8 @@ startSchedulerTour() {
                 popover: {
                     title: this.intl.t('fleetbase.scheduler.tour.edit_order_modal.title'),
                     description: this.intl.t('fleetbase.scheduler.tour.edit_order_modal.description'),
-                    
                     onNextClick: async () => {
-                        this.modalsManager.done();
-
                         const target = document.querySelector('.assigned-orders-panel .next-content-panel-header');
-                        const scrollContainer = document.querySelector('#fleet-ops-scheduler-sidebar');
-
                         if (target && scrollContainer) {
                             const offset = target.offsetTop;
                             const scrollTop = offset - (scrollContainer.clientHeight / 2) + (target.offsetHeight / 2);
@@ -1704,6 +1704,7 @@ startSchedulerTour() {
                         }
 
                         // Now safely continue
+                        this.modalsManager.done();
                         driverObj.refresh();
                         driverObj.moveNext();
                     },
@@ -1713,40 +1714,33 @@ startSchedulerTour() {
                             driverObj.movePrevious();
                         }
                 },
-                // onHighlightStarted:scrollElementIntoView
             },
             {
                 element: '.assigned-orders-panel .next-content-panel-header',
                 popover: {
                     title: this.intl.t('fleetbase.scheduler.tour.scheduled_orders.title'),
-                    description: this.intl.t('fleetbase.scheduler.tour.scheduled_orders.description'),   
-                    
-                    onPrevClick: async (element, step, driver) => {
+                    description: this.intl.t('fleetbase.scheduler.tour.scheduled_orders.description'),
+                    onPrevClick: async () => {
                         const unassignedLink = document.querySelector('.unassigned-orders-panel .order-schedule-card a[data-order-id]');
                         if (unassignedLink) {
                             unassignedLink.click();
-                            const waitForModal = () =>
-                                new Promise((resolve, reject) => {
-                                    const timeout = 5000;
-                                    const start = Date.now();
-                                    const checkModal = () => {
-                                        const modal = document.querySelector('.flb--modal');
-                                        if (modal) resolve(modal);
-                                        else if (Date.now() - start > timeout) reject();
-                                        else setTimeout(checkModal, 100);
-                                    };
-                                    checkModal();
-                                });
-
                             try {
                                 await waitForModal();
                                 driverObj.refresh();
-                                driverObj.movePrevious();
+                                driverObj.moveTo(2); // Move to step 3
                             } catch {
-                                driverObj.movePrevious();
+                                driverObj.moveTo(1); // Move to step 2
                             }
                         } else {
-                            driverObj.movePrevious();
+                            driverObj.moveTo(0); // Move to step 1
+                        }
+                    },
+                    onNextClick: async () => {
+                        const assignedLink = document.querySelector('.assigned-orders-panel .order-schedule-card a[data-order-id]');
+                        if (assignedLink) {
+                            driverObj.moveNext();
+                        } else {
+                            driverObj.moveTo(5); // Move to step 7
                         }
                     },
                 },
@@ -1762,19 +1756,6 @@ startSchedulerTour() {
                         const assignedLink = document.querySelector('.assigned-orders-panel .order-schedule-card a[data-order-id]');
                         if (assignedLink) {
                             assignedLink.click();
-                            const waitForModal = () =>
-                                new Promise((resolve, reject) => {
-                                    const timeout = 5000;
-                                    const start = Date.now();
-                                    const checkModal = () => {
-                                        const modal = document.querySelector('.flb--modal');
-                                        if (modal) resolve(modal);
-                                        else if (Date.now() - start > timeout) reject();
-                                        else setTimeout(checkModal, 100);
-                                    };
-                                    checkModal();
-                                });
-
                             try {
                                 await waitForModal();
                                 driverObj.refresh();
@@ -1810,62 +1791,43 @@ startSchedulerTour() {
                             driverObj.movePrevious();
                         }
                     },
-                    // onHighlightStarted:scrollElementIntoView
                 }]
                 : []),
             {
                 element: '#fleet-ops-scheduler-calendar .calendar-filter-inline',
                 popover: {
                     title: this.intl.t('fleetbase.scheduler.tour.filters.title'),
-                    description: this.intl.t('fleetbase.scheduler.tour.filters.description'),   
-                    onPrevClick: async (element, step, driver) => {
+                    description: this.intl.t('fleetbase.scheduler.tour.filters.description'),
+                    onPrevClick: async () => {
                         const assignedLink = document.querySelector('.assigned-orders-panel .order-schedule-card a[data-order-id]');
                         if (assignedLink) {
                             assignedLink.click();
-                            const waitForModal = () =>
-                                new Promise((resolve, reject) => {
-                                    const timeout = 5000;
-                                    const start = Date.now();
-                                    const checkModal = () => {
-                                        const modal = document.querySelector('.flb--modal');
-                                        if (modal) resolve(modal);
-                                        else if (Date.now() - start > timeout) reject();
-                                        else setTimeout(checkModal, 100);
-                                    };
-                                    checkModal();
-                                });
-
                             try {
                                 await waitForModal();
                                 driverObj.refresh();
-                                driverObj.movePrevious();
+                                driverObj.moveTo(5); // Move to step 6 (modal)
                             } catch {
-                                driverObj.movePrevious();
+                                driverObj.moveTo(4); // Move to step 5
                             }
                         } else {
-                            driverObj.movePrevious();
+                            driverObj.moveTo(3); // Move to step 4
                         }
                     },
                 },
-                
             },
             {
                 element: '#fleetbase-full-calendar .fc-header-toolbar.fc-toolbar',
                 popover: {
                     title: this.intl.t('fleetbase.scheduler.tour.time_period.title'),
                     description: this.intl.t('fleetbase.scheduler.tour.time_period.description'),
-                    
                 },
-                
             },
             {
                 element: '#fleetbase-full-calendar .fc-view-harness',
                 popover: {
                     title: this.intl.t('fleetbase.scheduler.tour.calendar.title'),
                     description: this.intl.t('fleetbase.scheduler.tour.calendar.description'),
-                    
                 },
-                
             },
             ...(document.querySelector('.fc-daygrid-event-harness .fc-event-title')
                 ? [{
@@ -1873,9 +1835,7 @@ startSchedulerTour() {
                     popover: {
                         title: this.intl.t('fleetbase.scheduler.tour.assigned_order_event.title'),
                         description: this.intl.t('fleetbase.scheduler.tour.assigned_order_event.description'),
-                        
                     },
-                    
                 }]
                 : []),
             ...(document.querySelector('.fc-daygrid-event-harness .leave-event .fc-event-title')
@@ -1886,7 +1846,6 @@ startSchedulerTour() {
                         description: this.intl.t('fleetbase.scheduler.tour.leave_event.description'),
                         
                     },
-                    
                 }]
                 : []),
         ],
