@@ -17,14 +17,6 @@
     >
         <Button
             @type="default"
-            @icon="pen"
-            @helpText={{t "fleet-ops.component.leaves-report-panel.edit-button"}}
-            @onClick={{this.onEdit}}
-            @wrapperClass="mr-2"
-            @permission="fleet-ops update leaves"
-        />
-        <Button
-            @type="default"
             @icon="times"
             @helpText={{if this.leaves.id (t "fleet-ops.component.leaves-report-panel.cancel-edit-leaves-report") (t "fleet-ops.component.leaves-report-panel.cancel-new-leaves-report")}}
             @onClick={{this.onPressCancel}}

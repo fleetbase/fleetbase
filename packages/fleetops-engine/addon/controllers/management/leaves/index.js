@@ -250,8 +250,13 @@ export default class ManagementLeavesIndexController extends BaseController {
                 this.notifications.error(error.message || `${this.intl.t('leaves.failed_to')} ${action} ${this.intl.t('leaves.leave')}.`);
                 return false;
             }
+            const actionText = action === 'approve'
+            ? this.intl.t('leaves.approved')
+            : action === 'reject'
+                ? this.intl.t('leaves.rejected')
+                : action;
 
-            this.notifications.success(`${this.intl.t('leaves.leave_uppercase')} ${action}!`);
+            this.notifications.success(`${this.intl.t('leaves.leave_uppercase')} ${actionText}!`);
             // Get the route instance and clear its cache
             const owner = getOwner(this);
             const route = owner.lookup('route:management.leaves.index');

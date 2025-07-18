@@ -7,7 +7,8 @@ const { version } = require('../package');
 
 module.exports = function (environment) {
     let awsFilePath = 'fleetyes/dev';
-    let chargebeeSite = getenv('CHARGEBEE_SITE', 'https://fleetyes-test.chargebee.com');
+    let chargebeeSite = getenv('CHARGEBEE_SITE', 'https://fleetyes-test.chargebee.com/');
+    // console.log('chargebeeSite', getenv('CHARGEBEE_SITE'));
     // Change the FILE_PATH if environment is production
     if (environment === 'production') {
         awsFilePath = 'fleetyes/live';
@@ -51,7 +52,7 @@ module.exports = function (environment) {
         stripe: {
             publishableKey: getenv('STRIPE_KEY'),
         },
-
+        
         defaultValues: {
             categoryImage: getenv('DEFAULT_CATEGORY_IMAGE', 'https://flb-assets.s3.ap-southeast-1.amazonaws.com/images/fallback-placeholder-1.png'),
             placeholderImage: getenv('DEFAULT_PLACEHOLDER_IMAGE', 'https://flb-assets.s3.ap-southeast-1.amazonaws.com/images/fallback-placeholder-2.png'),
