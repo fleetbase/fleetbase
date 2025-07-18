@@ -2,11 +2,11 @@
     <ContentPanel @title={{t "fleet-ops.common.details" }} @open={{true}} @pad={{true}}
         @panelBodyClass="bg-white dark:bg-gray-900">
         <div class="grid grid-cols-2 gap-4 text-xs md:mb-6 dark:text-gray-100">
-            <div class="field-info-container space-y-2">
+            {{!-- <div class="field-info-container space-y-2">
                 <div class="field-name">{{t "fleet-ops.common.id"}}</div>
                 <div class="field-name">{{log @leave}}</div>
                 <div class="field-value">{{n-a @leave.id}}</div>
-            </div>
+            </div> --}}
             <div class="field-info-container space-y-2">
                 <div class="field-name">{{t "leaves.driver_name"}}</div>
                 <div class="field-value">{{n-a @leave.user.name}}</div>
@@ -35,10 +35,10 @@
                 <div class="field-name">{{t "leaves.status"}}</div>
                 <div class="field-value">{{n-a @leave.status}}</div>
             </div>
-            <div class="field-info-container space-y-2">
+            {{!-- <div class="field-info-container space-y-2">
                 <div class="field-name">{{t "leaves.processed_by"}}</div>
                 <div class="field-value">{{n-a @leave.processed_by_user.name}}</div>
-            </div>
+            </div> --}}
             <div class="field-info-container space-y-2">
                 <div class="field-name">{{t "leaves.created_at"}}</div>
                 <div class="field-value">{{format-date @leave.created_at}}</div>

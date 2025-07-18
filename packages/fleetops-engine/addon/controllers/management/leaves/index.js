@@ -128,26 +128,26 @@ export default class ManagementLeavesIndexController extends BaseController {
             filterComponent: 'filter/select',
             filterOptions: [this.intl.t('leaves.submitted'), this.intl.t('leaves.approve'), this.intl.t('leaves.reject')], // adjust as needed
         },
-        {
-            label: 'Processed By',
-            valuePath: 'processed_by_user.name',
-            cellComponent: 'table/cell/anchor',
-            permission: 'iam view user',
-            onClick: async (leave) => {
-                let user = await leave.processed_by_user;
-                if (user) {
-                    this.contextPanel.focus(user);
-                }
-            },
-            width: '120px',
-            resizable: true,
-            sortable: true,
-            filterable: true,
-            filterComponent: 'filter/model',
-            filterComponentPlaceholder: 'Select user',
-            filterParam: 'processed_by',
-            model: 'user',
-        },
+        // {
+        //     label: 'Processed By',
+        //     valuePath: 'processed_by_user.name',
+        //     cellComponent: 'table/cell/anchor',
+        //     permission: 'iam view user',
+        //     onClick: async (leave) => {
+        //         let user = await leave.processed_by_user;
+        //         if (user) {
+        //             this.contextPanel.focus(user);
+        //         }
+        //     },
+        //     width: '120px',
+        //     resizable: true,
+        //     sortable: true,
+        //     filterable: true,
+        //     filterComponent: 'filter/model',
+        //     filterComponentPlaceholder: 'Select user',
+        //     filterParam: 'processed_by',
+        //     model: 'user',
+        // },
         {
             label: this.intl.t('leaves.created_at'),
             valuePath: 'created_at',
