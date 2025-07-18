@@ -2,6 +2,7 @@ import Controller from '@ember/controller';
 import { tracked } from '@glimmer/tracking';
 import { inject as service } from '@ember/service';
 import { action } from '@ember/object';
+import { next } from '@ember/runloop';
 
 export default class InviteForUserController extends Controller {
     @service fetch;
@@ -30,19 +31,26 @@ export default class InviteForUserController extends Controller {
                 //         this.setPassword();
                 //     }
                 // });
-                return this.router.transitionTo('console.fleet-ops').then(() => {
-                    // Use next() to ensure the transition is complete before opening modal
-                    if (response.needs_password && response.needs_password === true) {
-                        next(() => {
-                            this.setPassword();
-                        });
-                    }
-                });
+
+                // return this.router.transitionTo('console.fleet-ops').then(() => {
+                //     // Use next() to ensure the transition is complete before opening modal
+                //     if (response.needs_password && response.needs_password === true) {
+                //         next(() => {
+                //             this.setPassword();
+                //         });
+                //     }
+                // });
                 // return this.router.transitionTo('console').then(() => {
                 //     if (response.needs_password && response.needs_password === true) {
                 //         this.setPassword();
                 //     }
                 // });
+                if (response.needs_password && response.needs_password === true) {
+                    this.setPassword();
+                } else {
+                    this.router.transitionTo('console.fleet-ops');
+                }
+
             })
             .catch((error) => {
                 this.notifications.serverError(error);

@@ -8,7 +8,7 @@ export default class ConsoleAdminRoute extends Route {
 
     beforeModel() {
         if (!this.currentUser.isAdmin) {
-            return this.router.transitionTo('console').then(() => {
+            return this.router.transitionTo('console.fleet-ops').then(() => {
                 this.notifications.error('You do not have authorization to access admin!');
             });
         }

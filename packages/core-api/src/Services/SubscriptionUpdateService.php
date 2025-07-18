@@ -432,8 +432,8 @@ class SubscriptionUpdateService
     public function processSubscriptionUpdates(): array
     {
         try {
-            // Use test date of August 17, 2025
-            $testDate = '2025-08-17';
+            // Use test date of August 18, 2025
+            $testDate = '2025-08-18';
             $subscriptionsDueTomorrow = $this->getSubscriptionsDueTomorrow($testDate);
 
             if ($subscriptionsDueTomorrow->isEmpty()) {
