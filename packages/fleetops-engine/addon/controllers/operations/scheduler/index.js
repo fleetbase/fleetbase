@@ -259,8 +259,8 @@ _applyInitialFilters() {
                     { id: '', name: `statuses.all-statuses` },
                     ...response.map(status => {
                         return { 
-                            id: status, 
-                            name: `statuses.${status}`
+                            id: status.code, 
+                            name: `statuses.${status.code}`
                         };
                     })
                 ];
