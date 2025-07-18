@@ -547,13 +547,7 @@ onTitleClick(order) {
   */
   @action
 saveOrder(order) {
-
-      if (!order.scheduled_at) {
-          this.notifications.error(
-              this.intl.t('fleet-ops.component.order.schedule-card.start-date-required')
-          );
-          return;
-      }
+                
   const orderId = order.public_id;
   const hasDriver = order.driver_assigned !== null;
   const hasVehicle = order.vehicle_assigned !== null;
@@ -589,6 +583,13 @@ saveOrder(order) {
   // Check if driver is being unassigned
   const wasDriverAssigned = order.get('driver_assigned_uuid') !== null && order.get('driver_assigned_uuid') !== undefined;
   const isUnassigningDriver = wasDriverAssigned && !hasDriver;
+  
+  if (!order.scheduled_at) {
+          this.notifications.error(
+              this.intl.t('fleet-ops.component.order.schedule-card.start-date-required')
+          );
+          return;
+  }
   
   // Handle driver unassignment with confirmation dialog
   if (isUnassigningDriver) {
