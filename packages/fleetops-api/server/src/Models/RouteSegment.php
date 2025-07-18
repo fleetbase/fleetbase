@@ -37,6 +37,8 @@ class RouteSegment extends Model
         'stop_2_yard_departure',
         'stop_3_yard_arrival',
         'stop_3_yard_departure',
+        'driver_type',
+        'truck_filter'
     ];
 
     protected static function boot()

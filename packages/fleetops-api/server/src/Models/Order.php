@@ -119,6 +119,8 @@ class Order extends Model
         'status',
         'fleet_uuid',
         'sub_fleet_uuid',
+        'bid_id',
+        'spot_work'
     ];
 
     /**
