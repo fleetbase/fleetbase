@@ -65,6 +65,19 @@ class UserController extends FleetbaseController
             // Check if email already exists within the same company
             $emailBaseQuery = User::where('email', $email)->whereNull('deleted_at');
             $phoneBaseQuery = User::where('phone', $phone)->whereNull('deleted_at');
+            $validated = Validator::make($request->input('user'), [
+                    'name' => 'required|string',
+                    'phone' => 'required|string',
+                    'country' => 'required|string',
+                    'role' => 'required|string',
+                ]);
+
+            if ($validated->fails()) {
+                return response()->json([
+                    'errors' => [__('messages.required_field')]
+                ], 422);
+            }
+
             $validator = Validator::make(
                 ['email' => $email],
                 ['email' => ['required', 'email']],
@@ -164,6 +177,19 @@ class UserController extends FleetbaseController
             $emailQuery = User::where('email', $email)
                 ->whereNull('deleted_at')
                 ->where('uuid', '!=', $id);
+            $validated = Validator::make($request->input('user'), [
+                    'name' => 'required|string',
+                    'phone' => 'required|string',
+                    'country' => 'required|string',
+                    'role' => 'required|string',
+                ]);
+
+            if ($validated->fails()) {
+                return response()->json([
+                    'errors' => [__('messages.required_field')]
+                ], 422);
+            }
+
             $validator = Validator::make(
                 ['email' => $email],
                 ['email' => ['required', 'email']],
