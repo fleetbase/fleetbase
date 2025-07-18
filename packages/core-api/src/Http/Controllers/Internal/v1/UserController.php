@@ -69,7 +69,7 @@ class UserController extends FleetbaseController
                     'name' => 'required|string',
                     'phone' => 'required|string',
                     'email' => 'required|email',
-                    'country' => 'required',
+                    'country' => 'required|string',
                     'role' => 'required|string',
                 ]);
 
