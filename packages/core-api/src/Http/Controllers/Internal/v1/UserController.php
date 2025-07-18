@@ -68,7 +68,6 @@ class UserController extends FleetbaseController
             $validated = Validator::make($request->input('user'), [
                     'name' => 'required|string',
                     'phone' => 'required|string',
-                    'email' => 'required|email',
                     'country' => 'required|string',
                     'role' => 'required|string',
                 ]);
