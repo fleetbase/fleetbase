@@ -41,5 +41,7 @@ return [
     'leave_request_action_failed' => 'Không thể xử lý hành động yêu cầu nghỉ phép',
     'leave_already_approved' => 'Yêu cầu nghỉ phép đã được phê duyệt trước đó.',
     'leave_already_rejected' => 'Yêu cầu nghỉ phép đã bị từ chối trước đó.',
+    'email_address_validation' => 'Vui lòng nhập địa chỉ email hợp lệ.',
+    'required_field' => 'Vui lòng điền các trường bắt buộc.',
 ];
 

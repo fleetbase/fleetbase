@@ -19,6 +19,7 @@ export default class OperationsSchedulerIndexController extends BaseController {
     @service intl;
     @service fetch;
     @service hostRouter;
+    @service currentUser;
     @tracked scheduledOrders = [];
     @tracked unscheduledOrders = [];
     @tracked calscheduledOrders=[];

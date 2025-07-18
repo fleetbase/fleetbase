@@ -19,6 +19,7 @@ export default class ManagementIssuesIndexController extends BaseController {
     @service store;
     @service hostRouter;
     @service filters;
+    @service currentUser;
 
     /**
      * Queryable parameters for this controller's model

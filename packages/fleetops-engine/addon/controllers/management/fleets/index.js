@@ -20,6 +20,7 @@ export default class ManagementFleetsIndexController extends BaseController {
     @service universe;
     @service filters;
     @service serviceAreas;
+    @service currentUser;
 
     /**
      * Queryable parameters for this controller's model

@@ -51,4 +51,6 @@ return [
     'leave_request_action_failed' => 'L\'action de la demande de congé n\'a pas pu être traitée',
     'leave_already_approved' => 'La demande de congé a déjà été approuvée.',
     'leave_already_rejected' => 'La demande de congé a déjà été rejetée.',
+    'email_address_validation' => 'Veuillez entrer une adresse e-mail valide.',
+    'required_field' => 'Veuillez remplir les champs obligatoires.',
 ];

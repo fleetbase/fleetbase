@@ -1,4 +1,5 @@
 <Layout::Section::Header @title={{t "fleet-ops.management.parking.index.title"}} @searchQuery={{this.query}} @onSearch={{perform this.search}}>
+    {{#if (eq this.currentUser.roleName "Administrator")}}
         <Button 
         @icon="question-circle" 
         @type="default" 
@@ -6,7 +7,8 @@
         @onClick={{this.startParkingTour}} 
         @wrapperClass="mr-2" 
         @helpText={{t "fleetbase.parking.tour.help_button_tooltip"}} 
-    />
+        />
+    {{/if}}
     <Button @icon="refresh" @onClick={{this.reload}} @helpText={{t "fleet-ops.common.reload-data"}} class="mr-2" />
     <FiltersPicker
         @columns={{this.columns}}

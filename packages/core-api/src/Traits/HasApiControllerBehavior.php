@@ -501,14 +501,45 @@ trait HasApiControllerBehavior
                     return response()->error(__('messages.duplicate_check_vehicle'));
                 }
             } else if($model_name == "Place"){
-                if (isset($request['location']['coordinates'])) {
-                    $coordinates = $request['location']['coordinates'];
+               $place = $request['place'] ?? [];
+                $validator = Validator::make(
+                    $place,
+                    [
+                        'name'        => 'required|string',
+                        'code'        => 'required|string',
+                        'street1'     => 'required|string',
+                        'postal_code' => 'required|string',
+                        'province'    => 'required|string',
+                        'country'     => 'required|string',
+                        'location.coordinates' => [
+                            'required',
+                            'array',
+                            function ($attribute, $value, $fail) {
+                                if (!is_array($value) || count($value) !== 2 || ($value[0] == 0 && $value[1] == 0)) {
+                                    $fail(__('messages.invalid_coordinates'));
+                                }
+                            },
+                        ],
+                    ],
+                    [
+                        'required' => __('messages.required_field'),
+                    ]
+                );
+
+                if ($validator->fails()) {
+                    return response()->json([
+                        'errors' => [$validator->errors()->first()],
+                    ], 422);
+                }
+                $code = $place['code'] ?? null;
+                if (isset($place['location']['coordinates'])) {
+                    $coordinates = $place['location']['coordinates'];
+
                     if (!is_array($coordinates) || !$this->isValidCoordinates($coordinates)) {
                         return response()->error(__('messages.invalid_coordinates'));
                     }
                 }
-                $code = $request['place']['code']; // 'code' is a top-level key
-                if ($this->model->where('code', $code)->whereNull('deleted_at')->exists()) {
+                if ($code && $this->model->where('code', $code)->whereNull('deleted_at')->exists()) {
                     return response()->error(__('messages.duplicate_check_place'));
                 }
             }
@@ -635,9 +666,40 @@ trait HasApiControllerBehavior
             if ($model_name === 'Place') {
                 $place = Place::find($id);
                 if ($place) {
-                    $code = $request['place']['code']; // 'code' is a top-level key
-                    if (isset($request['location']['coordinates'])) {
-                        $coordinates = $request['location']['coordinates'];
+                    $placeData = $request['place'] ?? [];
+                    $validator = Validator::make(
+                        $placeData,
+                        [
+                            'name'        => 'required|string',
+                            'code'        => 'required|string',
+                            'street1'     => 'required|string',
+                            'postal_code' => 'required|string',
+                            'province'    => 'required|string',
+                            'country'     => 'required|string',
+                            'location.coordinates' => [
+                                'required',
+                                'array',
+                                function ($attribute, $value, $fail) {
+                                    if (!is_array($value) || count($value) !== 2 || ($value[0] == 0 && $value[1] == 0)) {
+                                        $fail(__('messages.invalid_coordinates'));
+                                    }
+                                },
+                            ],
+                        ],
+                        [
+                            'required' => __('messages.required_field'),
+                        ]
+                    );
+
+                    if ($validator->fails()) {
+                        return response()->json([
+                            'errors' => [$validator->errors()->first()],
+                        ], 422);
+                    }
+                    $code = $placeData['code'] ?? null;
+                    // ✅ Correct path to coordinates
+                    if (isset($placeData['location']['coordinates'])) {
+                        $coordinates = $placeData['location']['coordinates'];
 
                         if (!is_array($coordinates) || !$this->isValidCoordinates($coordinates)) {
                             return response()->error(__('messages.invalid_coordinates'));

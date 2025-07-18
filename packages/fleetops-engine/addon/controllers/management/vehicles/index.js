@@ -544,26 +544,26 @@ export default class ManagementVehiclesIndexController extends BaseController {
                         description: this.intl.t('fleetbase.vehicles.tour.new_button.description'),
                         onNextClick: () => {
                             this.createVehicle();
-    
-                            // Wait for the overlay to appear and then move to next step
-                            const waitForElement = () => {
-                                const el = document.querySelector('.vehicle-details-panel');
+
+                            const tryAttach = () => {
+                                const el = document.querySelector('.next-content-overlay > .next-content-overlay-panel-container > .next-content-overlay-panel');
                                 if (el) {
-                                    // Element found, wait a bit more for it to be fully rendered
-                                    later(this, () => {
+                                    const onTransitionEnd = () => {
+                                        el.removeEventListener('transitionend', onTransitionEnd);
                                         driverObj.moveNext();
-                                    }, 300);
+                                    };
+                                    el.addEventListener('transitionend', onTransitionEnd);
                                 } else {
-                                    // Element not found yet, try again
-                                    later(this, waitForElement, 100);
+                                    setTimeout(tryAttach, 100); // Try again after 50ms
                                 }
                             };
-                            
-                            later(this, waitForElement, 200);
+
+                            tryAttach();
                         },
+
                     },
                     onHighlightStarted: (element) => {
-                        element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        element.scrollIntoView({ behavior: 'smooth', block: 'start' });
                     },
                 },
                 {

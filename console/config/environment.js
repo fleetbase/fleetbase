@@ -7,8 +7,10 @@ const { version } = require('../package');
 
 module.exports = function (environment) {
     let awsFilePath = 'fleetyes/dev';
+
     let chargebeeSite = getenv('CHARGEBEE_SITE', 'https://fleetyes-test.chargebee.com/');
     // console.log('chargebeeSite', getenv('CHARGEBEE_SITE'));
+
     // Change the FILE_PATH if environment is production
     if (environment === 'production') {
         awsFilePath = 'fleetyes/live';

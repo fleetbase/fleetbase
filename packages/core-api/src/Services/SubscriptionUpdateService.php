@@ -23,7 +23,9 @@ class SubscriptionUpdateService
      * @var array
      */
     private $addonQuantitiesCache = [];
+
     protected $siteName;
+
     protected $apiKey;
 
     public function __construct()
@@ -43,7 +45,9 @@ class SubscriptionUpdateService
     {
         try {
             // Use the correct endpoint for subscription updates
+
             $url = "https://{$this->siteName}.chargebee.com/api/v2/subscriptions/{$subscriptionId}/update_for_items";
+
             
             // Format the payload correctly for Chargebee API v2
             $formattedPayload = [];
@@ -298,7 +302,9 @@ class SubscriptionUpdateService
                 ];
                 
                 // Cache even failed results to prevent repeated failures
+
                 $this->addonQuantitiesCache[$subscriptionId] = $result;
+
                 return $result;
             }
 
@@ -432,9 +438,11 @@ class SubscriptionUpdateService
     public function processSubscriptionUpdates(): array
     {
         try {
+
             // Use test date of August 18, 2025
             $testDate = '2025-08-18';
             $subscriptionsDueTomorrow = $this->getSubscriptionsDueTomorrow($testDate);
+
 
             if ($subscriptionsDueTomorrow->isEmpty()) {
                 return $this->createEmptyResponse($testDate);
@@ -447,8 +455,9 @@ class SubscriptionUpdateService
             
             // Process subscriptions
             $processedResults = $this->processSubscriptions($subscriptionUserMapping);
-            
+
             return $this->createSuccessResponse($testDate, $subscriptionsDueTomorrow, $mappingResult, $processedResults);
+
 
         } catch (\Exception $e) {
             Log::error('Failed to process subscription updates', [
@@ -474,6 +483,7 @@ class SubscriptionUpdateService
      */
     private function getSubscriptionsDueTomorrow(string $tomorrow)
     {
+
         // Get subscriptions due on test date directly from Chargebee
         $chargebeeSite = config('services.chargebee.site_name');
         $apiKey = config('services.chargebee.api_key');
@@ -490,11 +500,14 @@ class SubscriptionUpdateService
             
             Log::info('Fetching subscriptions with test billing date', [
                 'date' => $testDate,
+
                 'start_timestamp' => $startTimestamp,
                 'end_timestamp' => $endTimestamp
             ]);
             
+
             $url = 'https://' . config('services.chargebee.site_name') . '.chargebee.com/api/v2/subscriptions';
+
             
             // Optimize HTTP request with shorter timeouts and better error handling
             $response = Http::withBasicAuth(
@@ -865,8 +878,10 @@ class SubscriptionUpdateService
         $appUsersAddonId = config('services.chargebee.app_users_addon_id');
         
         // Determine if update is needed
+
         $currentWebUsers = $addonQuantities['addon_quantities'][$webUsersAddonId] ?? 0;
         $currentAppUsers = $addonQuantities['addon_quantities'][$appUsersAddonId] ?? 0;
+
         
         $currentChargebeeCounts = [
             'web_users' => $currentWebUsers,
@@ -894,7 +909,9 @@ class SubscriptionUpdateService
         
         // Make API call to Chargebee
         try {
+
             $chargebeeSite = config('services.chargebee.site_name');
+
             $chargebeeApiKey = config('services.chargebee.api_key');
             $chargebeeUrl = "https://{$chargebeeSite}.chargebee.com/api/v2/subscriptions/{$subscriptionId}";
             
@@ -918,9 +935,11 @@ class SubscriptionUpdateService
                 }
                 
                 // Cache the subscription data
+
                 $this->subscriptionCache[$subscriptionId] = $subscriptionData;
             } else {
                 $subscriptionData = $this->subscriptionCache[$subscriptionId];
+
             }
             
             $subscriptionItems = $subscriptionData['subscription_items'] ?? [];
