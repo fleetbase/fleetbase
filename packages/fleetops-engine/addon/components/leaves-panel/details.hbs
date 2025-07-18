@@ -1,50 +1,59 @@
 <div class="p-4">
-    <ContentPanel @title={{t "fleet-ops.common.details"}} @open={{true}} @pad={{true}} @panelBodyClass="bg-white dark:bg-gray-900">
+    <ContentPanel @title={{t "fleet-ops.common.details" }} @open={{true}} @pad={{true}}
+        @panelBodyClass="bg-white dark:bg-gray-900">
         <div class="grid grid-cols-2 gap-4 text-xs md:mb-6 dark:text-gray-100">
             <div class="field-info-container space-y-2">
                 <div class="field-name">{{t "fleet-ops.common.id"}}</div>
+                <div class="field-name">{{log @leave}}</div>
                 <div class="field-value">{{n-a @leave.id}}</div>
             </div>
             <div class="field-info-container space-y-2">
-                <div class="field-name">{{t "fleet-ops.leaves.driver_name"}}</div>
-                <div class="field-value">{{n-a @leave.driver.name}}</div>
+                <div class="field-name">{{t "leaves.driver_name"}}</div>
+                <div class="field-value">{{n-a @leave.user.name}}</div>
             </div>
             <div class="field-info-container space-y-2">
-                <div class="field-name">Start Date</div>
+                <div class="field-name">{{t "leaves.start_date"}}</div>
                 <div class="field-value">{{format-date @leave.start_date}}</div>
             </div>
             <div class="field-info-container space-y-2">
-                <div class="field-name">End Date</div>
-                <div class="field-value">{{@leave.formattedEndDate}}</div>
+                <div class="field-name">{{t "leaves.end_date"}}</div>
+                <div class="field-value">{{format-date @leave.end_date}}</div>
             </div>
             <div class="field-info-container space-y-2">
-                <div class="field-name">Total Days</div>
+                <div class="field-name">{{t "leaves.total_days"}}</div>
                 <div class="field-value">{{n-a @leave.total_days}}</div>
             </div>
             <div class="field-info-container space-y-2">
-                <div class="field-name">Leave Type</div>
+                <div class="field-name">{{t "leaves.leave_type"}}</div>
                 <div class="field-value">{{n-a @leave.leave_type}}</div>
             </div>
             <div class="field-info-container space-y-2">
-                <div class="field-name">Reason</div>
+                <div class="field-name">{{t "leaves.reason"}}</div>
                 <div class="field-value">{{n-a @leave.reason}}</div>
             </div>
             <div class="field-info-container space-y-2">
-                <div class="field-name">Status</div>
+                <div class="field-name">{{t "leaves.status"}}</div>
                 <div class="field-value">{{n-a @leave.status}}</div>
             </div>
             <div class="field-info-container space-y-2">
-                <div class="field-name">Processed By</div>
+                <div class="field-name">{{t "leaves.processed_by"}}</div>
                 <div class="field-value">{{n-a @leave.processed_by_user.name}}</div>
             </div>
             <div class="field-info-container space-y-2">
-                <div class="field-name">Created At</div>
-                <div class="field-value">{{n-a @leave.created_at}}</div>
+                <div class="field-name">{{t "leaves.created_at"}}</div>
+                <div class="field-value">{{format-date @leave.created_at}}</div>
             </div>
-            <div class="field-info-container space-y-2">
-                <div class="field-name">Leave Balance</div>
+            {{!-- <div class="field-info-container space-y-2">
+                <div class="field-name">{{t "leaves.leave_balance"}}</div>
                 <div class="field-value">{{n-a @leave.driver.leave_balance}}</div>
-            </div>
+            </div> --}}
+        </div>
+
+        <div class="flex flex-row space-x-4 justify-end">
+            <Button @type="success" @icon="check" @text={{t "leaves.approve" }} @onClick={{fn @approveLeave @leave}}
+                @disabled={{eq @leave.status "approved" }} />
+            <Button @type="danger" @icon="times" @text={{t "leaves.reject" }} @onClick={{fn @rejectLeave @leave}}
+                @disabled={{eq @leave.status "rejected" }} />
         </div>
     </ContentPanel>
 </div>

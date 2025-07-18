@@ -432,8 +432,8 @@ class SubscriptionUpdateService
     public function processSubscriptionUpdates(): array
     {
         try {
-            // Use test date of August 17, 2025
-            $testDate = '2025-08-17';
+            // Use test date of August 18, 2025
+            $testDate = '2025-08-18';
             $subscriptionsDueTomorrow = $this->getSubscriptionsDueTomorrow($testDate);
 
             if ($subscriptionsDueTomorrow->isEmpty()) {
@@ -479,8 +479,8 @@ class SubscriptionUpdateService
         $apiKey = config('services.chargebee.api_key');
         
         try {
-            // Use test date of August 17, 2025 instead of the passed date
-            $testDate = '2025-08-17';
+            // Use test date of August 18, 2025 instead of the passed date
+            $testDate = '2025-08-18';
             
             // Convert date to Unix timestamp format (seconds since epoch)
             // Start of the day
