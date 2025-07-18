@@ -753,6 +753,17 @@ class UserController extends FleetbaseController
                     ->with(['planPricing.plan'])
                     ->first();
             }
+            if ($user->chargebee_subscription_id == null || empty($user->chargebee_customer_id)) {
+                $chargebeeSubscriptionId = User::where('company_uuid', $user->company_uuid)
+                ->whereNotNull('chargebee_subscription_id')
+                ->whereNull('deleted_at') // if you want to exclude deleted users
+                ->value('chargebee_subscription_id','chargebee_customer_id');
+                $chargebeeSubscriptionId=$chargebeeSubscriptionId->chargebee_subscription_id;
+                $chargebeeCustomerId=$chargebeeSubscriptionId->chargebee_customer_id;
+            }else{
+                $chargebeeSubscriptionId=$user->chargebee_subscription_id;
+                $chargebeeCustomerId=$user->chargebee_customer_id;
+            }
 
             if (!$user) {
                 return response()->json([
@@ -781,8 +792,8 @@ class UserController extends FleetbaseController
                     'status' => $user->status,
                     'created_at' => $user->created_at,
                     'updated_at' => $user->updated_at,
-                    'chargebee_customer_id' => $user->chargebee_customer_id,
-                    'chargebee_subscription_id' => $user->chargebee_subscription_id,
+                    'chargebee_customer_id' => $chargebeeCustomerId,
+                    'chargebee_subscription_id' => $chargebeeSubscriptionId,
                     'plan_details' => $companyPlanRelation ? [
                         'plan_id' => $companyPlanRelation->planPricing->plan->id ?? null,
                         'plan_name' => $companyPlanRelation->planPricing->plan->name ?? null,
