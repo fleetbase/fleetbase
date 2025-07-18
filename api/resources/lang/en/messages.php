@@ -57,4 +57,6 @@ return [
     'leave_request_action_failed' => 'Leave request action could not be processed',
     'leave_already_approved' => 'Leave request has already been approved.',
     'leave_already_rejected' => 'Leave request has already been rejected.',
+    'email_address_validation' => 'Please enter a valid email address.',
+    'required_field' => 'Please fill the required fields.'
 ];

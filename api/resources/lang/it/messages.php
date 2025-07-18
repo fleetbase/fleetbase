@@ -51,4 +51,6 @@ return [
     'leave_request_action_failed' => 'L\'azione della richiesta di permesso non può essere elaborata',
     'leave_already_approved' => 'La richiesta di permesso è già stata approvata.',
     'leave_already_rejected' => 'La richiesta di permesso è già stata rifiuta.',
+    'email_address_validation' => 'Per favore inserisci un indirizzo email valido.',
+    'required_field' => 'Per favore compila i campi obbligatori.',
 ];

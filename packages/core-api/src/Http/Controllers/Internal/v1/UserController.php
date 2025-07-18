@@ -32,6 +32,7 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
 use Maatwebsite\Excel\Facades\Excel;
 use Fleetbase\Models\Role;
+use Illuminate\Support\Facades\Validator;
 
 class UserController extends FleetbaseController
 {
@@ -64,6 +65,17 @@ class UserController extends FleetbaseController
             // Check if email already exists within the same company
             $emailBaseQuery = User::where('email', $email)->whereNull('deleted_at');
             $phoneBaseQuery = User::where('phone', $phone)->whereNull('deleted_at');
+            $validator = Validator::make(
+                ['email' => $email],
+                ['email' => ['required', 'email']],
+                ['email.email' => (__('messages.email_address_validation'))]
+            );
+
+            if ($validator->fails()) {
+                return response()->json([
+                    'errors' => [$validator->errors()->first()],
+                ], 422);
+            }
 
             if ((clone $emailBaseQuery)->where('company_uuid', $companyUuid)->exists()) {
                 return response()->error(__('messages.email_exists_with_in_company'));
@@ -152,11 +164,20 @@ class UserController extends FleetbaseController
             $emailQuery = User::where('email', $email)
                 ->whereNull('deleted_at')
                 ->where('uuid', '!=', $id);
+            $validator = Validator::make(
+                ['email' => $email],
+                ['email' => ['required', 'email']],
+                ['email.email' => (__('messages.email_address_validation'))]
+            );
+            if ($validator->fails()) {
+                return response()->json([
+                    'errors' => [$validator->errors()->first()],
+                ], 422);
+            }
                         // Check if email already exists within the same company
             if ($emailQuery->where('company_uuid', $companyUuid)->exists()) {
                 return response()->error(__('messages.email_exists_with_in_company'));
             }
-
             // Check if email exists in other companies
             if ($emailQuery->exists()) {
                 return response()->error(__('messages.email_exists_all_companies'));

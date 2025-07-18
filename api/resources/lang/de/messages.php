@@ -53,4 +53,6 @@ return [
     'leave_request_action_failed' => 'Die Aktion des Urlaubsantrags konnte nicht verarbeitet werden',
     'leave_already_approved' => 'Der Urlaubsantrag wurde bereits genehmigt.',
     'leave_already_rejected' => 'Der Urlaubsantrag wurde bereits abgelehnt.',
+    'email_address_validation' => 'Bitte geben Sie eine gültige E-Mail-Adresse ein.',
+    'required_field' => 'Bitte füllen Sie die erforderlichen Felder aus.',
 ];

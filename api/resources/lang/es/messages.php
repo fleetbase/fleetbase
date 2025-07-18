@@ -50,5 +50,7 @@ return [
     'leave_balance_insufficient' => 'El saldo de permisos es insuficiente, ¿aún así desea continuar?',
     'leave_request_action_failed' => 'No se pudo procesar la acción de la solicitud de permiso',
     'leave_already_approved' => 'La solicitud de permiso ya ha sido aprobada.',
-    'leave_already_rejected' => 'La solicitud de permiso ya ha sido rechazada.'
+    'leave_already_rejected' => 'La solicitud de permiso ya ha sido rechazada.',
+    'email_address_validation' => 'Por favor ingrese una dirección de correo electrónico válida.',
+    'required_field' => 'Por favor complete los campos obligatorios.',
 ];

@@ -516,13 +516,13 @@ trait HasApiControllerBehavior
                             'array',
                             function ($attribute, $value, $fail) {
                                 if (!is_array($value) || count($value) !== 2 || ($value[0] == 0 && $value[1] == 0)) {
-                                    $fail('Please provide valid geographic coordinates.');
+                                    $fail(__('messages.invalid_coordinates'));
                                 }
                             },
                         ],
                     ],
                     [
-                        'required' => 'Please fill the required fields.',
+                        'required' => __('messages.required_field'),
                     ]
                 );
 
@@ -681,13 +681,13 @@ trait HasApiControllerBehavior
                                 'array',
                                 function ($attribute, $value, $fail) {
                                     if (!is_array($value) || count($value) !== 2 || ($value[0] == 0 && $value[1] == 0)) {
-                                        $fail('Please provide valid geographic coordinates.');
+                                        $fail(__('messages.invalid_coordinates'));
                                     }
                                 },
                             ],
                         ],
                         [
-                            'required' => 'Please fill the required fields.',
+                            'required' => __('messages.required_field'),
                         ]
                     );
 
