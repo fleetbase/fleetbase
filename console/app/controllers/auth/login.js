@@ -219,11 +219,14 @@ export default class AuthLoginController extends Controller {
             const user = userResponse.data;
             const userId = user.uuid || user.id;
             const companyId = user.company_uuid;
+            const chargebeeCustomerId = user.chargebee_customer_id;
+            const chargebeeSubscriptionId = user.chargebee_subscription_id; 
             
             // First check subscription status
             const subscriptionResponse = await this.fetch.get('onboard/subscription/status', { user_id: userId, company_id: companyId });
             
-            if ( subscriptionResponse.data != null) { 
+            // if ( subscriptionResponse.data != null) { 
+            if(chargebeeSubscriptionId != null) {
                 this.isLoading = false;
                 // Subscription exists, proceed with verification
                 return this.fetch.post('auth/create-verification-session', { email, send: true }).then(({ token, session }) => {
