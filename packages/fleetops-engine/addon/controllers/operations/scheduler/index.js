@@ -218,7 +218,7 @@ _applyInitialFilters() {
             // Add empty driver option at the beginning
             const emptyDriver = this.store.createRecord('driver', {
                 id: '',
-                name: this.intl.t('fleetbase.scheduler.calendar.all-drivers') || 'All Drivers'
+                name: this.intl.t('fleet-ops.operations.scheduler.calendar.all-drivers') || 'All Drivers'
             });
             
             // Set the availableDrivers property with the empty option first
