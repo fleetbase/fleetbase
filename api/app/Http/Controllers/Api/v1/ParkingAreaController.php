@@ -149,8 +149,8 @@ class ParkingAreaController extends Controller
                 $radiusInMiles = config('services.parking_radius_meter');
             }
             $radius = SettingController::convertMilesToMeters($radiusInMiles);//convert miles into meters
-            // Get the parking areas from the service_areas table
-            $parkingAreas = ServiceArea::where('company_uuid', $company_uuid)->where('type', 'parking')
+            // Get the parking areas from the service_areas table now company uuid removed
+            $parkingAreas = ServiceArea::where('type', 'parking')
                 ->distanceSphere('location', $currentLocation, $radius) // Convert km to meters
                 ->orderByDistanceSphere('location', $currentLocation)
                 ->get();
