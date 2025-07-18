@@ -734,6 +734,8 @@ class UserController extends FleetbaseController
                     'status' => $user->status,
                     'created_at' => $user->created_at,
                     'updated_at' => $user->updated_at,
+                    'chargebee_customer_id' => $user->chargebee_customer_id,
+                    'chargebee_subscription_id' => $user->chargebee_subscription_id,
                     'plan_details' => $companyPlanRelation ? [
                         'plan_id' => $companyPlanRelation->planPricing->plan->id ?? null,
                         'plan_name' => $companyPlanRelation->planPricing->plan->name ?? null,
