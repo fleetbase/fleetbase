@@ -127,6 +127,12 @@ export default class ContextPanelService extends Service {
                 componentArguments: [{ isResizable: true }, { width: '500px' }],
             },
         },
+        leave: {
+            viewing: {
+                component: 'leaves-panel',
+                componentArguments: [{ isResizable: true }, { width: '570px' }],
+            },
+        },
         orderConfigManager: {
             component: 'order-config-manager-overlay',
             componentArguments: [{ isResizable: true }, { width: '500px' }],
