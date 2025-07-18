@@ -1782,6 +1782,12 @@ class Order extends Model
     {
         return $this->hasMany(\Fleetbase\FleetOps\Models\RouteSegment::class, 'order_id', 'id')->where('deleted', 0);;
     }
+    //get fleets [order.fleet_uuid = fleet.uuid]
+    public function fleets()
+    {
+        //one order has one fleet
+        return $this->belongsTo(\Fleetbase\FleetOps\Models\Fleet::class, 'fleet_uuid', 'uuid');
+    }
 
 
 }
