@@ -177,6 +177,19 @@ class UserController extends FleetbaseController
             $emailQuery = User::where('email', $email)
                 ->whereNull('deleted_at')
                 ->where('uuid', '!=', $id);
+            $validated = Validator::make($request->input('user'), [
+                    'name' => 'required|string',
+                    'phone' => 'required|string',
+                    'country' => 'required|string',
+                    'role' => 'required|string',
+                ]);
+
+            if ($validated->fails()) {
+                return response()->json([
+                    'errors' => [__('messages.required_field')]
+                ], 422);
+            }
+
             $validator = Validator::make(
                 ['email' => $email],
                 ['email' => ['required', 'email']],
