@@ -13,6 +13,7 @@ use Fleetbase\Models\User;
 use Fleetbase\Models\Subscription;
 use Fleetbase\Models\PlanPricingRelation;
 use Fleetbase\Models\CompanyPlanRelation;
+use Fleetbase\Models\FailedWebhook;
 use Fleetbase\Models\ProcessedWebhook;
 // use App\Models\Transaction;
 // use App\Mail\WelcomeMail;
@@ -67,6 +68,13 @@ class ChargebeeWebhookController extends Controller
             return response('OK', 200);
 
         } catch (\Exception $e) {
+            DB::table('failed_webhooks')->insert([
+                'event_type'    => $event['event_type'] ?? 'unknown',
+                'event_data'    => json_encode($event ?? []),
+                'error_message' => $e->getMessage(),
+                'created_at'    => now(),
+                'updated_at'    => now(),
+            ]);
             Log::error('Chargebee webhook error: ' . $e->getMessage(), [
                 'trace' => $e->getTraceAsString()
             ]);
@@ -450,7 +458,7 @@ class ChargebeeWebhookController extends Controller
                     [
                         'user_uuid' => $user->uuid,
                         'company_uuid' => $user->company_uuid,
-                        'payment_id' => '1',
+                        'payment_id' => null,
                         'gocardless_mandate_id' => $subscription['customer_id'],
                         // 'chargebee_customer_id' => $subscription['customer_id'],
                         'interval_unit' => 'monthly',
@@ -558,12 +566,40 @@ class ChargebeeWebhookController extends Controller
      */
     private function handlePaymentSucceeded(array $transaction, ?array $subscription = null): void
     {
-        Log::info('Processing payment succeeded', ['transaction_id' => $transaction['id']]);
-        // $user = User::where('chargebee_customer_id', $transaction['customer_id'])->first();
+        Log::info('Processing payment succeeded', ['transaction_id' => $transaction['id']],$subscription);
         try {
-            $user_new = User::where('chargebee_subscription_id', $subscription['id'])->first();
+            $user_new = null;
+            if (is_array($subscription) && isset($subscription['id'])) {
+                $user_new = User::where('chargebee_subscription_id', $subscription['id'])->first();
+            }
+            Log::info('user_new', ['user_new' => $user_new]);
             $plan = DB::table('plan')->where('name', 'Basic Plan')->first();
+            Log::info('plan', ['plan' => $plan]);
             $subscriptionRecord = Subscription::where('gocardless_subscription_id', $transaction['subscription_id'])->first();
+            Log::info('subscriptionRecord', ['subscriptionRecord' => $subscriptionRecord]);
+            // If user has subscription_id but subscription record does not exist, create it
+            if (!$subscriptionRecord && $user_new && $subscription) {
+                $subscriptionRecord = Subscription::create([
+                    'gocardless_subscription_id' => $subscription['id'],
+                    'user_uuid' => $user_new->uuid,
+                    'company_uuid' => $user_new->company_uuid,
+                    'payment_id' => null,
+                    'gocardless_mandate_id' => $subscription['customer_id'],
+                    'interval_unit' => 'monthly',
+                    'interval' => $subscription['billing_period'],
+                    'day_of_month' => 1,
+                    'start_date' => $subscription['activated_at'] ?? null,
+                    'end_date' => $subscription['current_term_end'] ?? null,
+                    'status' => $subscription['status'],
+                    'next_payment_date' => $subscription['next_billing_at'] ?? null,
+                    'created_by_id' => $user_new->id,
+                ]);
+                Log::info('Recovered missing subscription in payment_succeeded', [
+                    'subscription_id' => $subscription['id'],
+                    'user_id' => $user_new->id,
+                ]);
+            }
+
             // Store transaction record
             Payment::updateOrCreate(
                 ['gocardless_payment_id' => $transaction['id']],
@@ -571,7 +607,7 @@ class ChargebeeWebhookController extends Controller
                     'gocardless_customer_id' => $transaction['customer_id'],
                     'subscription_id' => $subscriptionRecord->id ?? null ,
                     'amount' => $transaction['amount'],
-                    'company_plan_id' => 1,
+                    'company_plan_id' => null,
                     'plan_id' => $plan->id,
                     'total_amount' => $transaction['amount'],
                     'currency_code' => $transaction['currency_code'],
@@ -583,8 +619,6 @@ class ChargebeeWebhookController extends Controller
                     'payment_type' => 'subscription',
                     'created_by_id' => $user_new->id,
                     'is_recurring' => 1,
-
-                    // 'gateway_transaction_id' => $transaction['gateway_transaction_id'] ?? null,
                 ]
             );
 
