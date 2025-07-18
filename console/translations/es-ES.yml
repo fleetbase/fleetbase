@@ -139,6 +139,29 @@ common:
   duplicate-waypoint-error: Punto de parada duplicado detectado. Por favor, utilice ubicaciones únicas para cada punto.
   valid-waypoints-error: Por favor, agregue puntos de paso
   pickup-dropoff-error: Por favor, indique los puntos de recogida y entrega.
+leaves:
+  driver_name: Nombre del conductor
+  start_date: Fecha de inicio
+  end_date: Fecha de finalización
+  total_days: Días totales
+  leave_type: Tipo de ausencia
+  reason: Motivo
+  status: Estado
+  processed_by: Procesado por
+  created_at: Creado en
+  approve: Aprobar
+  approved: Aprobado
+  reject: Rechazar
+  rejected: Rechazado
+  submitted: Enviado
+  sick: Enfermedad
+  vacation: Vacaciones
+  other: Otro
+  failed_to: Error al
+  leave: permiso
+  leave_uppercase: Permiso
+  leave_actions: Acciones de permiso
+  error_fetching_leaves: Error al obtener la indisponibilidad del conductor
 statuses:
     draft: Borrador
     pending-approval: Pendiente de aprobación

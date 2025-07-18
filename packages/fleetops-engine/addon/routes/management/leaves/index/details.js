@@ -1,8 +1,10 @@
 import Route from '@ember/routing/route';
+import { inject as service } from '@ember/service';
 
 export default class ManagementLeavesIndexDetailsRoute extends Route {
-    model() {
-        // Return a dummy object for testing
-        return {};
+    @service store;
+
+    model(params) {
+        return this.store.findRecord('leave', params.public_id);
     }
 } 

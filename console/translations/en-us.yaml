@@ -150,6 +150,30 @@ common:
   valid-number-error: Please enter a valid number
   download-error-log: Download
   try-again: Try Again
+leaves:
+  driver_name: Driver Name
+  start_date: Start Date
+  end_date: End Date
+  total_days: Total Days
+  leave_type: Leave Type
+  reason: Reason
+  status: Status
+  processed_by: Processed By
+  created_at: Created At
+  approve: Approve
+  reject: Reject
+  approved: Approved
+  rejected: Rejected
+  submitted: Submitted
+  sick: Sick
+  vacation: Vacation
+  other: Other
+  failed_to: Failed to
+  leave: leave
+  leave_uppercase: Leave
+  leave_actions: Leave Actions
+  view: View Leave
+  error_fetching_leaves: Error fetching driver unavailability
 validation:
   required:
     payment_method: Payment method is required
@@ -2006,6 +2030,11 @@ fleet-ops:
         search-driver: Search vendor drivers
         add-driver: Assign driver to vendor
         loading-driver: Loading vendor drivers...
+    leaves-report-panel:
+      title: Leaves Report
+      edit-button: Edit Leaves Report
+      cancel-edit-leaves-report: Cancel edit Leaves Report
+      cancel-new-leaves-report: Cancel new Leaves Report
   management:
     contacts:
       index:

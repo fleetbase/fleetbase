@@ -142,6 +142,29 @@ common:
   duplicate-waypoint-error: Rilevato waypoint duplicato. Si prega di utilizzare posizioni uniche per ogni waypoint.
   valid-waypoints-error: Si prega di aggiungere dei punti di passaggio
   pickup-dropoff-error: Si prega di fornire sia il punto di ritiro che quello di consegna.
+leaves:
+  driver_name: Nome dell'autista
+  start_date: Data di inizio
+  end_date: Data di fine
+  total_days: Giorni totali
+  leave_type: Tipo di permesso
+  reason: Motivo
+  status: Stato
+  processed_by: Elaborato da
+  created_at: Creato il
+  approve: Approva
+  approved: Approvato
+  reject: Rifiuta
+  rejected: Rifiutato
+  submitted: Inviato
+  sick: Malattia
+  vacation: Vacanza
+  other: Altro
+  failed_to: Impossibile
+  leave: permesso
+  leave_uppercase: Permesso
+  leave_actions: Azioni permesso
+  error_fetching_leaves: Errore durante il recupero delle indisponibilità del conducente
 validation:
   required:
     payment_method: Il metodo di pagamento è obbligatorio

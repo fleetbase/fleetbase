@@ -7,7 +7,7 @@
     disabled={{this.disabled}} />
 </div>
 <div class="my-1">
-    <BasicDropdown ...attributes @verticalPosition="top" @horizontalPosition="left" @onClose={{this.onClose}} @renderInPlace={{or @renderInPlace true}} @disabled={{this.disabled}} as |dd|>
+    <BasicDropdown ...attributes @verticalPosition="above" @horizontalPosition="left" @onClose={{this.onClose}} @renderInPlace={{or @renderInPlace true}} @disabled={{this.disabled}} as |dd|>
         <dd.Trigger class="{{@triggerClass}} {{if this.disabled 'disabled'}}" disabled={{this.disabled}}>
             <span class="text-black hover:text-black">{{t "common.select-from-map"}}</span>
         </dd.Trigger>

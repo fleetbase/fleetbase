@@ -5,6 +5,7 @@ import { action, set } from '@ember/object';
 import { timeout } from 'ember-concurrency';
 import { task } from 'ember-concurrency-decorators';
 import ENV from '@fleetbase/console/config/environment';
+import { getOwner } from '@ember/application';
 
 export default class ManagementLeavesIndexController extends BaseController {
     @service notifications;
@@ -14,6 +15,7 @@ export default class ManagementLeavesIndexController extends BaseController {
     @service store;
     @service hostRouter;
     @service filters;
+
 
     queryParams = [
         'page',
@@ -44,7 +46,7 @@ export default class ManagementLeavesIndexController extends BaseController {
     @tracked columns = [
         {
             label: this.intl.t('fleet-ops.common.id'),
-            valuePath: 'id',
+            valuePath: 'public_id',
             cellComponent: 'table/cell/anchor',
             action: this.viewLeave,
             permission: 'fleet-ops view leaves',
@@ -53,14 +55,14 @@ export default class ManagementLeavesIndexController extends BaseController {
             sortable: true,
         },
         {
-            label: 'Driver Name',
-            valuePath: 'driver.name',
+            label: this.intl.t('leaves.driver_name'),
+            valuePath: 'user.name',
             cellComponent: 'table/cell/anchor',
-            permission: 'fleet-ops view driver',
+            permission: 'fleet-ops view user',
             onClick: async (leave) => {
-                let driver = await leave.driver;
-                if (driver) {
-                    this.contextPanel.focus(driver);
+                let user = await leave.user;
+                if (user) {
+                    this.contextPanel.focus(user);
                 }
             },
             width: '120px',
@@ -73,8 +75,9 @@ export default class ManagementLeavesIndexController extends BaseController {
             model: 'driver',
         },
         {
-            label: 'Start Date',
+            label: this.intl.t('leaves.start_date'),
             valuePath: 'start_date',
+            cellComponent: 'table/cell/date',
             width: '120px',
             resizable: true,
             sortable: true,
@@ -82,8 +85,9 @@ export default class ManagementLeavesIndexController extends BaseController {
             filterComponent: 'filter/date',
         },
         {
-            label: 'End Date',
+            label: this.intl.t('leaves.end_date'),
             valuePath: 'end_date',
+            cellComponent: 'table/cell/date',
             width: '120px',
             resizable: true,
             sortable: true,
@@ -91,39 +95,38 @@ export default class ManagementLeavesIndexController extends BaseController {
             filterComponent: 'filter/date',
         },
         {
-            label: 'Total Days',
+            label: this.intl.t('leaves.total_days'),
             valuePath: 'total_days',
             width: '80px',
             resizable: true,
             sortable: true,
         },
         {
-            label: 'Leave Type',
+            label: this.intl.t('leaves.leave_type'),
             valuePath: 'leave_type',
             width: '120px',
             resizable: true,
             sortable: true,
             filterable: true,
             filterComponent: 'filter/select',
-            filterOptions: ['sick', 'casual', 'annual', 'unpaid', 'other'], // adjust as needed
+            filterOptions: [this.intl.t('leaves.sick'), this.intl.t('leaves.vacation'), this.intl.t('leaves.other')], // adjust as needed
         },
         {
-            label: 'Reason',
+            label: this.intl.t('leaves.reason'),
             valuePath: 'reason',
             width: '150px',
             resizable: true,
             sortable: false,
         },
         {
-            label: 'Status',
+            label: this.intl.t('leaves.status'),
             valuePath: 'status',
-            cellComponent: 'table/cell/status',
             width: '100px',
             resizable: true,
             sortable: true,
             filterable: true,
             filterComponent: 'filter/select',
-            filterOptions: ['pending', 'approved', 'rejected', 'cancelled'], // adjust as needed
+            filterOptions: [this.intl.t('leaves.submitted'), this.intl.t('leaves.approve'), this.intl.t('leaves.reject')], // adjust as needed
         },
         {
             label: 'Processed By',
@@ -146,39 +149,45 @@ export default class ManagementLeavesIndexController extends BaseController {
             model: 'user',
         },
         {
-            label: 'Created At',
+            label: this.intl.t('leaves.created_at'),
             valuePath: 'created_at',
+            cellComponent: 'table/cell/date',
             width: '120px',
             resizable: true,
             sortable: true,
             filterable: true,
             filterComponent: 'filter/date',
         },
-        {
-            label: 'Leave Balance',
-            valuePath: 'driver.leave_balance',
-            width: '100px',
-            resizable: true,
-            sortable: false,
-        },
+        // {
+        //     label: 'Leave Balance',
+        //     valuePath: 'driver.leave_balance',
+        //     width: '100px',
+        //     resizable: true,
+        //     sortable: false,
+        // },
         {
             label: '',
             cellComponent: 'table/cell/dropdown',
             ddButtonText: false,
             ddButtonIcon: 'ellipsis-h',
             ddButtonIconPrefix: 'fas',
-            ddMenuLabel: 'Leave Actions',
+            ddMenuLabel: this.intl.t('leaves.leave_actions'),
             cellClassNames: 'overflow-visible',
             wrapperClass: 'flex items-center justify-end mx-2',
             width: '10%',
             actions: [
                 {
-                    label: 'Approve',
-                    fn: this.approveLeave,
+                    label: this.intl.t('leaves.view'),
+                    fn: this.viewLeaves,
                     permission: 'fleet-ops view leaves',
                 },
                 {
-                    label: 'Reject',
+                    label: this.intl.t('leaves.approve'),
+                    fn: this.approveLeave,
+                    permission: 'fleet-ops approve leaves',
+                },
+                {
+                    label: this.intl.t('leaves.reject'),
                     fn: this.rejectLeave,
                     permission: 'fleet-ops delete leaves',
                 },
@@ -190,20 +199,35 @@ export default class ManagementLeavesIndexController extends BaseController {
         },
     ];
 
-    @task({ restartable: true }) *search({ target: { value } }) {
-        if (!value) {
-            set(this, 'query', null);
-            this.hostRouter.refresh();
-            return;
-        }
-        yield timeout(200);
-        if (this.page > 1) {
-            set(this, 'page', 1);
-        }
-        set(this, 'query', value);
-        this.hostRouter.refresh();
-    }
+    // @task({ restartable: true }) *search({ target: { value } }) {
+    //     if (!value) {
+    //         set(this, 'query', null);
+    //         this.hostRouter.refresh();
+    //         return;
+    //     }
+    //     yield timeout(200);
+    //     if (this.page > 1) {
+    //         set(this, 'page', 1);
+    //     }
+    //     set(this, 'query', value);
+    //     this.hostRouter.refresh();
+    // }
 
+
+    /**
+     * The function `_updateLeaveStatus` asynchronously updates the status of a leave request by
+     * sending a PUT request to the API with the specified action and handles success and error
+     * responses accordingly.
+     * @param leave - The `_updateLeaveStatus` function you provided is responsible for updating the
+     * status of a leave request by sending a PUT request to the API endpoint. It also handles success
+     * and error scenarios, displaying notifications accordingly.
+     * @param action - The `action` parameter in the `_updateLeaveStatus` function represents the
+     * action that will be performed on a leave request. This action could be approving, rejecting,
+     * cancelling, or any other action that can be taken on a leave request. The function sends a PUT
+     * request to update the status of the
+     * @returns The `_updateLeaveStatus` function returns a boolean value (`true`, `false`, or `null`)
+     * based on the outcome of the leave status update operation.
+     */
     async _updateLeaveStatus(leave, action) {
         try {
             const authSession = JSON.parse(localStorage.getItem('ember_simple_auth-session'));
@@ -223,26 +247,62 @@ export default class ManagementLeavesIndexController extends BaseController {
 
             if (!response.ok) {
                 const error = await response.json();
-                this.notifications.error(error.message || `Failed to ${action} leave.`);
+                this.notifications.error(error.message || `${this.intl.t('leaves.failed_to')} ${action} ${this.intl.t('leaves.leave')}.`);
                 return false;
             }
+            const actionText = action === 'approve'
+            ? this.intl.t('leaves.approved')
+            : action === 'reject'
+                ? this.intl.t('leaves.rejected')
+                : action;
 
-            this.notifications.success(`Leave ${action}d!`);
+            this.notifications.success(`${this.intl.t('leaves.leave_uppercase')} ${actionText}!`);
+            // Get the route instance and clear its cache
+            const owner = getOwner(this);
+            const route = owner.lookup('route:management.leaves.index');
+            if (route && route._cache) {
+                route._cache.unavailability = null;
+            }
+            // Now refresh the model (SPA-style)
             this.hostRouter.refresh();
             return true;
         } catch (error) {
-            this.notifications.error(`Failed to ${action} leave.`);
+            this.notifications.error(`${this.intl.t('leaves.failed_to')} ${action === 'approve' ? this.intl.t('leaves.approved') : this.intl.t('leaves.rejected')} ${this.intl.t('leaves.leave')}.`);
             console.error(error);
             return false;
         }
     }
 
+    /**
+     * The `approveLeave` function asynchronously updates the status of a leave request to 'approve'.
+     * @param leave - The `leave` parameter likely refers to an object or data structure that
+     * represents a leave request or leave application. It may contain information such as the
+     * employee's name, leave dates, reason for leave, and any other relevant details related to the
+     * leave request.
+     * @param [options] - The `options` parameter in the `approveLeave` function is an optional object
+     * that allows you to provide additional configuration or settings for the approval process. It can
+     * be used to pass in any extra information or flags that may be needed for the approval logic.
+     * This parameter is not required for the function to
+     */
     @action async approveLeave(leave, options = {}) {
         await this._updateLeaveStatus(leave, 'approve');
     }
 
+    /**
+     * The function `rejectLeave` asynchronously updates the status of a leave request to 'reject'.
+     * @param leave - Leave object that contains information about the leave request, such as leave
+     * type, start date, end date, and employee details.
+     * @param [options] - The `options` parameter in the `rejectLeave` function is an optional object
+     * that can be passed to provide additional configuration or settings for the rejection of the
+     * leave request. It allows for customization of the rejection process by specifying various
+     * options as key-value pairs within the object. These options could include things like
+     */
     @action async rejectLeave(leave, options = {}) {
         await this._updateLeaveStatus(leave, 'reject');
+    }
+
+    @action async viewLeaves(leave, options = {}) {
+        return this.transitionToRoute('management.leaves.index.details', leave);
     }
 
     @action createLeave() {
@@ -264,4 +324,46 @@ export default class ManagementLeavesIndexController extends BaseController {
             },
         });
     }
+
+    /**
+    * Reload layout view.
+    */
+    @action reload() {
+        return this.hostRouter.refresh();
+    }
+
+    /**
+     * The search task.
+     *
+     * @void
+     */
+    @task({ restartable: true }) *search({ target: { value } }) {
+        // if no query don't search
+        if (isBlank(value)) {
+            set(this, 'query', null);
+            this.hostRouter.refresh();
+            return;
+        }
+        // timeout for typing
+        yield timeout(200);
+
+        // reset page for results
+        if (this.page > 1) {
+            set(this, 'page', 1);
+        }
+
+        // update the query param
+        set(this, 'query', value);
+        this.hostRouter.refresh();
+    }
+
+    /**
+     * Toggles dialog to export a issue
+     *
+     * @void
+     */
+    // @action exportLeaves() {
+    //     const selections = this.table.selectedRows.map((_) => _.id);
+    //     this.crud.export('leaves', { params: { selections } });
+    // }
 }
