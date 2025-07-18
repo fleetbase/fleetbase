@@ -19,7 +19,7 @@ export default class ConsoleAccountOrganizationsController extends Controller {
         const willBeDeleted = isOwner && organization.users_count === 1;
 
         if (this.model.length === 1) {
-            return this.notifications.warning('Unable to leave your only organization.');
+            return this.notifications.warning('Unable to leave your only organisation.');
         }
 
         if (hasOtherMembers) {
@@ -27,8 +27,8 @@ export default class ConsoleAccountOrganizationsController extends Controller {
         }
 
         this.modalsManager.show('modals/leave-organization', {
-            title: isOwner ? (willBeDeleted ? 'Delete Organization' : 'Transfer Ownership and Leave') : 'Leave Organization',
-            acceptButtonText: isOwner ? (willBeDeleted ? 'Delete Organization' : 'Transfer Ownership and Leave') : 'Leave Organization',
+            title: isOwner ? (willBeDeleted ? 'Delete Organisation' : 'Transfer Ownership and Leave') : 'Leave Organisation',
+            acceptButtonText: isOwner ? (willBeDeleted ? 'Delete Organisation' : 'Transfer Ownership and Leave') : 'Leave Organisation',
             acceptButtonScheme: 'danger',
             acceptButtonIcon: isOwner ? (willBeDeleted ? 'trash' : 'person-walking-arrow-right') : 'person-walking-arrow-right',
             acceptButtonDisabled: isOwner && hasOtherMembers,
@@ -110,19 +110,19 @@ export default class ConsoleAccountOrganizationsController extends Controller {
         const isOwner = this.currentUser.id === organization.owner_uuid;
 
         if (this.model.length === 1) {
-            return this.notifications.warning('Unable to delete your only organization.');
+            return this.notifications.warning('Unable to delete your only organisation.');
         }
 
         if (!isOwner) {
-            return this.notifications.warning('You do not have rights to delete this organization.');
+            return this.notifications.warning('You do not have rights to delete this organisation.');
         }
 
         this.crud.delete(organization, {
-            title: `Are you sure you want to delete the organization ${organization.name}?`,
+            title: `Are you sure you want to delete the organisation ${organization.name}?`,
             body: htmlSafe(
-                `This action will permanently remove all data, including orders, members, and settings associated with the organization. <br /><br /><strong>This action cannot be undone.</strong>`
+                `This action will permanently remove all data, including orders, members, and settings associated with the organisation. <br /><br /><strong>This action cannot be undone.</strong>`
             ),
-            acceptButtonText: 'Delete Organization',
+            acceptButtonText: 'Delete Organisation',
             acceptButtonScheme: 'danger',
             acceptButtonIcon: 'trash',
             confirm: async (modal) => {
@@ -140,7 +140,7 @@ export default class ConsoleAccountOrganizationsController extends Controller {
 
     @action editOrganization(organization) {
         this.modalsManager.show('modals/edit-organization', {
-            title: 'Edit Organization',
+            title: 'Edit Organisation',
             acceptButtonText: 'Save Changes',
             acceptButtonIcon: 'save',
             isOwner: this.currentUser.id === organization.owner_uuid,

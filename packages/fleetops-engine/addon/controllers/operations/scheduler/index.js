@@ -1259,6 +1259,11 @@ async _updateCalendarAsync() {
                 if (date && typeof date.toDate === 'function') {
                     date = date.toDate();
                 }
+                if (order.estimated_end_date && date > order.estimated_end_date) {
+                    this.errorMessage = this.intl.t("fleet-ops.common.start_date_cannot_be_later");
+                    this.notifications.error(this.errorMessage);
+                    return;
+                }
     
                 order.set('scheduled_at', date);
             },

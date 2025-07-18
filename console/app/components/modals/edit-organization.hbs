@@ -2,7 +2,7 @@
     <div class="modal-body-container pt-0i text-gray-900 dark:text-white">
         <InputGroup @name={{t "console.settings.index.organization-name"}} @value={{@options.organization.name}} />
         <InputGroup @name={{t "console.settings.index.organization-phone"}} @value={{@options.organization.description}} />
-        <InputGroup @name="Organization phone number">
+        <InputGroup @name="Organisation phone number">
             <PhoneInput @value={{@options.organization.phone}} @onInput={{fn (mut @options.organization.phone)}} class="form-input w-full" />
         </InputGroup>
         <InputGroup @name={{t "console.settings.index.organization-currency"}}>
