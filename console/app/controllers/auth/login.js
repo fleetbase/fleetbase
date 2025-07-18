@@ -223,7 +223,7 @@ export default class AuthLoginController extends Controller {
             const chargebeeSubscriptionId = user.chargebee_subscription_id; 
             
             // First check subscription status
-            const subscriptionResponse = await this.fetch.get('onboard/subscription/status', { user_id: userId, company_id: companyId });
+            // const subscriptionResponse = await this.fetch.get('onboard/subscription/status', { user_id: userId, company_id: companyId });
             
             // if ( subscriptionResponse.data != null) { 
             if(chargebeeSubscriptionId != null) {
@@ -407,16 +407,20 @@ export default class AuthLoginController extends Controller {
         const email = this.currentUser.email;
         const userId = this.currentUser.id;
         const companyId = this.currentUser.companyId;
+        const chargebeeCustomerId = user.chargebee_customer_id;
+        const chargebeeSubscriptionId = user.chargebee_subscription_id; 
 
         // First check if subscription is created
         try {
-            const subscriptionResponse = await this.fetch.get('onboard/subscription/status', { user_id: userId, company_id: companyId });
+            // const subscriptionResponse = await this.fetch.get('onboard/subscription/status', { user_id: userId, company_id: companyId });
             
-            if (subscriptionResponse.success && subscriptionResponse.data != null) {
+            // if (subscriptionResponse.success && subscriptionResponse.data != null) {
+            if(chargebeeSubscriptionId != null) {
                 // Subscription exists, check if verification is pending
-                const subscription = subscriptionResponse.data;
+                // const subscription = subscriptionResponse.data;
                 // Check if verification is pending
-                if (subscription.verification_pending || !user.email_verified_at) {
+                // if (subscription.verification_pending || !user.email_verified_at) {
+                if (!user.email_verified_at) {
                     // Verification is pending, redirect to verification page
                     return this.sendUserForEmailVerification(email);
                 }
