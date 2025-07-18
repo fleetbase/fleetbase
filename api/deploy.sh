@@ -29,6 +29,7 @@ php artisan db:seed --class=LanguageSeeder
 php artisan db:seed --class=PaymentGatewaySeeder
 php artisan db:seed --class=PlanSeeder
 php artisan db:seed --class=PlanPricingSeeder
+php artisan db:seed --class=OrderStatusSeeder
 # Clear cache
 php artisan cache:clear
 
