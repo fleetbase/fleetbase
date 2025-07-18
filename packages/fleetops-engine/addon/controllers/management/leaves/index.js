@@ -177,9 +177,14 @@ export default class ManagementLeavesIndexController extends BaseController {
             width: '10%',
             actions: [
                 {
+                    label: this.intl.t('leaves.view'),
+                    fn: this.viewLeaves,
+                    permission: 'fleet-ops view leaves',
+                },
+                {
                     label: this.intl.t('leaves.approve'),
                     fn: this.approveLeave,
-                    permission: 'fleet-ops view leaves',
+                    permission: 'fleet-ops approve leaves',
                 },
                 {
                     label: this.intl.t('leaves.reject'),
@@ -289,6 +294,10 @@ export default class ManagementLeavesIndexController extends BaseController {
      */
     @action async rejectLeave(leave, options = {}) {
         await this._updateLeaveStatus(leave, 'reject');
+    }
+
+    @action async viewLeaves(leave, options = {}) {
+        return this.transitionToRoute('management.leaves.index.details', leave);
     }
 
     @action createLeave() {
