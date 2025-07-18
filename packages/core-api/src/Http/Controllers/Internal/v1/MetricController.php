@@ -21,7 +21,7 @@ class MetricController extends Controller
         // get number of users
         $metrics['users_count'] = CompanyUser::where('company_uuid', session('company'))->whereNull('deleted_at')->whereHas('user', function ($query) {
             $query->whereNull('deleted_at');
-        })->count();
+        })->distinct('user_uuid')->count();
         // get number of groups
         $metrics['groups_count'] = Group::where('company_uuid', session('company'))->count();
         // get number of iams

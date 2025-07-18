@@ -23,32 +23,30 @@ export default class UsersIndexRoute extends Route {
         
         // Ensure page and limit params exist
         const page = parseInt(queryParams.page || 1, 10);
-        const limit = parseInt(queryParams.limit || 20, 10);
+        const limit = parseInt(queryParams.limit || 30, 10);
         
-        // Keep page and limit in queryParams
+        // Set page and limit in queryParams
         queryParams.page = page;
         queryParams.limit = limit;
         
-        return this.store.query('user', queryParams).then(users => {
-            // Apply client-side status filtering
-            let filteredUsers = users;
-            
-            if (statusFilter) {
-                filteredUsers = users.filter(user => user.get('session_status') === statusFilter);
+        return this.store.query('user', queryParams).then((response) => {
+            // If the response already has meta data from the API, use it
+            if (response.meta) {
+                return response;
             }
             
-            // Create pagination metadata
+            // Otherwise, create pagination metadata on the client side
             const meta = {
                 current_page: page,
-                total_pages: Math.ceil(filteredUsers.length / limit),
-                total: filteredUsers.length,
-                // Include any other pagination properties needed
+                total_pages: Math.ceil(response.length / limit),
+                total: response.length,
+                per_page: limit
             };
             
             // Set meta on the result
-            filteredUsers.meta = meta; // Directly set property instead of using set()
+            response.meta = meta;
             
-            return filteredUsers;
+            return response;
         });
     }
 }
