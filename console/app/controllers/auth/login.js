@@ -399,115 +399,115 @@ export default class AuthLoginController extends Controller {
      *
      * @void
      */
-    async success() {
+    success() {
         this.reset('success');
         // Wait for current user to load
-        await this.currentUser.load();
-        // Use the aliases from currentUser service
-        const email = this.currentUser.email;
-        const userId = this.currentUser.id;
-        const companyId = this.currentUser.companyId;
-        const chargebeeCustomerId = user.chargebee_customer_id;
-        const chargebeeSubscriptionId = user.chargebee_subscription_id; 
+        // await this.currentUser.load();
+        // // Use the aliases from currentUser service
+        // const email = this.currentUser.email;
+        // const userId = this.currentUser.id;
+        // const companyId = this.currentUser.companyId;
+        // // const chargebeeCustomerId = this.currentUser.chargebee_customer_id;
+        // // const chargebeeSubscriptionId = this.currentUser.chargebee_subscription_id; 
 
-        // First check if subscription is created
-        try {
-            // const subscriptionResponse = await this.fetch.get('onboard/subscription/status', { user_id: userId, company_id: companyId });
+        // // First check if subscription is created
+        // try {
+        //     const subscriptionResponse = await this.fetch.get('onboard/subscription/status', { user_id: userId, company_id: companyId });
             
-            // if (subscriptionResponse.success && subscriptionResponse.data != null) {
-            if(chargebeeSubscriptionId != null) {
-                // Subscription exists, check if verification is pending
-                // const subscription = subscriptionResponse.data;
-                // Check if verification is pending
-                // if (subscription.verification_pending || !user.email_verified_at) {
-                if (!user.email_verified_at) {
-                    // Verification is pending, redirect to verification page
-                    return this.sendUserForEmailVerification(email);
-                }
+        //     if (subscriptionResponse.success && subscriptionResponse.data != null) {
+        //     // if(chargebeeSubscriptionId != null) {
+        //         // Subscription exists, check if verification is pending
+        //         const subscription = subscriptionResponse.data;
+        //         // Check if verification is pending
+        //         // if (subscription.verification_pending || !user.email_verified_at) {
+        //         if (!user.email_verified_at) {
+        //             // Verification is pending, redirect to verification page
+        //             return this.sendUserForEmailVerification(email);
+        //         }
                 
-                return this.router.transitionTo('console');
-            } else {
+        //         return this.router.transitionTo('console');
+        //     } else {
                
-                // Get the latest pricing plan first
-                const latestPlanResponse = await this.fetch.get('onboard/pricing-plans/latest');
-                if (!latestPlanResponse || !latestPlanResponse.success) {
-                    this.notifications.error('Failed to get pricing plan. Please try again.');
-                    return this.router.transitionTo('console');
-                }
+        //         // Get the latest pricing plan first
+        //         const latestPlanResponse = await this.fetch.get('onboard/pricing-plans/latest');
+        //         if (!latestPlanResponse || !latestPlanResponse.success) {
+        //             this.notifications.error('Failed to get pricing plan. Please try again.');
+        //             return this.router.transitionTo('console');
+        //         }
 
-                const latestPlan = latestPlanResponse.data;
-                const dates = this.getSubscriptionDates();
-                const fullName = user.name ? user.name.split(' ') : ['', ''];
-                const givenName = fullName[0] || '';
-                const familyName = fullName.slice(1).join(' ') || '';
+        //         const latestPlan = latestPlanResponse.data;
+        //         const dates = this.getSubscriptionDates();
+        //         const fullName = user.name ? user.name.split(' ') : ['', ''];
+        //         const givenName = fullName[0] || '';
+        //         const familyName = fullName.slice(1).join(' ') || '';
 
-                const createResponse = await this.fetch.post('onboard/subscription', { 
-                    plan_pricing_id: latestPlan.id,
-                    company_uuid: companyId, 
-                    user_uuid: userId, 
-                    no_of_web_users: user.number_of_web_users || 1,
-                    no_of_app_users: user.number_of_drivers || 0,
-                    description: `${user.company_name || 'Company'} fleet management subscription`,
-                    success_url: `${window.location.origin}/billing/success`,
-                    exit_uri: `${window.location.origin}/billing/failure`,
-                    customer: {
-                        given_name: givenName,
-                        family_name: familyName,
-                        email: email,
-                    },
-                    convert_to_subscription: true,
-                    subscription_start_date: dates.start,
-                    subscription_end_date: dates.end,
-                });
+        //         const createResponse = await this.fetch.post('onboard/subscription', { 
+        //             plan_pricing_id: latestPlan.id,
+        //             company_uuid: companyId, 
+        //             user_uuid: userId, 
+        //             no_of_web_users: user.number_of_web_users || 1,
+        //             no_of_app_users: user.number_of_drivers || 0,
+        //             description: `${user.company_name || 'Company'} fleet management subscription`,
+        //             success_url: `${window.location.origin}/billing/success`,
+        //             exit_uri: `${window.location.origin}/billing/failure`,
+        //             customer: {
+        //                 given_name: givenName,
+        //                 family_name: familyName,
+        //                 email: email,
+        //             },
+        //             convert_to_subscription: true,
+        //             subscription_start_date: dates.start,
+        //             subscription_end_date: dates.end,
+        //         });
                 
                 
-                if (createResponse && createResponse.success) {
-                    // Check if payment URL is provided in response
-                    const paymentUrl = createResponse.redirect_url || createResponse.data?.redirect_url;
-                    if (paymentUrl) {
-                        this.paymentUrl = paymentUrl;
-                        this.showPaymentLoginFrame = true;
-                        this.startIframePolling();
-                        this.notifications.success('Subscription created! Please complete payment setup.');
-                        return;
-                    }
+        //         if (createResponse && createResponse.success) {
+        //             // Check if payment URL is provided in response
+        //             const paymentUrl = createResponse.redirect_url || createResponse.data?.redirect_url;
+        //             if (paymentUrl) {
+        //                 this.paymentUrl = paymentUrl;
+        //                 this.showPaymentLoginFrame = true;
+        //                 this.startIframePolling();
+        //                 this.notifications.success('Subscription created! Please complete payment setup.');
+        //                 return;
+        //             }
                     
-                    // If no payment URL, construct one with user data
-                    const baseUrl = "https://agilecyber-test.chargebee.com/hosted_pages/checkout";
-                    const params = new URLSearchParams({
-                        'subscription_items[item_price_id][0]': 'Premium-1-EUR-Monthly',
-                        'subscription_items[quantity][0]': '1',
-                        'subscription_items[item_price_id][1]': 'no_of_drivers-EUR-Monthly',
-                        'subscription_items[quantity][1]': (user.number_of_drivers || 1).toString(),
-                        'subscription_items[item_price_id][2]': 'users-EUR-Monthly',
-                        'subscription_items[quantity][2]': (user.number_of_web_users || 1).toString(),
-                        'layout': 'in_app',
-                        'embed': 'true',
-                        'customer[email]': email,
-                        'customer[first_name]': givenName,
-                        'customer[last_name]': familyName,
-                        'company': user.company_name || ''
-                    });
+        //             // If no payment URL, construct one with user data
+        //             const baseUrl = "https://agilecyber-test.chargebee.com/hosted_pages/checkout";
+        //             const params = new URLSearchParams({
+        //                 'subscription_items[item_price_id][0]': 'Premium-1-EUR-Monthly',
+        //                 'subscription_items[quantity][0]': '1',
+        //                 'subscription_items[item_price_id][1]': 'no_of_drivers-EUR-Monthly',
+        //                 'subscription_items[quantity][1]': (user.number_of_drivers || 1).toString(),
+        //                 'subscription_items[item_price_id][2]': 'users-EUR-Monthly',
+        //                 'subscription_items[quantity][2]': (user.number_of_web_users || 1).toString(),
+        //                 'layout': 'in_app',
+        //                 'embed': 'true',
+        //                 'customer[email]': email,
+        //                 'customer[first_name]': givenName,
+        //                 'customer[last_name]': familyName,
+        //                 'company': user.company_name || ''
+        //             });
                     
-                    this.paymentUrl = `${baseUrl}?${params.toString()}`;
-                    this.showPaymentLoginFrame = true;
-                    this.startIframePolling();
-                    this.notifications.success('Subscription created! Please complete payment setup.');
-                    return;
+        //             this.paymentUrl = `${baseUrl}?${params.toString()}`;
+        //             this.showPaymentLoginFrame = true;
+        //             this.startIframePolling();
+        //             this.notifications.success('Subscription created! Please complete payment setup.');
+        //             return;
                     
-                    // If no payment URL, proceed with verification flow
-                    return this.proceedWithVerification(email, createResponse || {});
-                } else {
-                    // Handle subscription creation failure
-                    this.notifications.error('Failed to create subscription. Please contact support.');
-                    return this.router.transitionTo('console');
-                }
-            }
-        } catch (error) {
-            // If API fails, fallback to default behavior
-            // this.notifications.warning('Unable to verify subscription status. Proceeding to app...');
-            return this.router.transitionTo('console.fleet-ops');
-        }
+        //             // If no payment URL, proceed with verification flow
+        //             return this.proceedWithVerification(email, createResponse || {});
+        //         } else {
+        //             // Handle subscription creation failure
+        //             this.notifications.error('Failed to create subscription. Please contact support.');
+        //             return this.router.transitionTo('console');
+        //         }
+        //     }
+        // } catch (error) {
+        //     // If API fails, fallback to default behavior
+        //     // this.notifications.warning('Unable to verify subscription status. Proceeding to app...');
+        //     return this.router.transitionTo('console.fleet-ops');
+        // }
     }
 
     /**
