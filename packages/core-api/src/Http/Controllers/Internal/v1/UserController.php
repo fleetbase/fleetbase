@@ -758,11 +758,17 @@ class UserController extends FleetbaseController
                 ->whereNotNull('chargebee_subscription_id')
                 ->whereNull('deleted_at') // if you want to exclude deleted users
                 ->value('chargebee_subscription_id','chargebee_customer_id');
-                $chargebeeSubscriptionId=$chargebeeSubscription->chargebee_subscription_id;
-                $chargebeeCustomerId=$chargebeeSubscription->chargebee_customer_id;
+                if($chargebeeSubscription){
+                    $chargebeeSubscriptionId=$chargebeeSubscription->chargebee_subscription_id;
+                    $chargebeeCustomerId=$chargebeeSubscription->chargebee_customer_id;
+                }else{
+                    $chargebeeSubscriptionId=null;
+                    $chargebeeCustomerId=null;
+                }
             }else{
                 $chargebeeSubscriptionId=$user->chargebee_subscription_id;
                 $chargebeeCustomerId=$user->chargebee_customer_id;
+    
             }
 
             if (!$user) {
