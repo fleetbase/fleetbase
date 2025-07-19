@@ -3,6 +3,7 @@
 namespace Fleetbase\Http\Controllers\Internal\v1;
 
 use Fleetbase\Http\Controllers\Controller;
+use Fleetbase\Models\User;
 use Fleetbase\Models\Plan;
 use Fleetbase\Models\PlanPricingRelation;
 use Fleetbase\Models\Payment;
@@ -407,8 +408,13 @@ class PlanController extends Controller
                 ->whereNotNull('chargebee_subscription_id')
                 ->whereNull('deleted_at') // if you want to exclude deleted users
                 ->value('chargebee_subscription_id','chargebee_customer_id');
-        $chargebeeSubscriptionId=$chargebeeSubscription->chargebee_subscription_id;
-        $chargebeeCustomerId=$chargebeeSubscription->chargebee_customer_id;
+        if($chargebeeSubscription){     
+            $chargebeeSubscriptionId=$chargebeeSubscription->chargebee_subscription_id;
+            $chargebeeCustomerId=$chargebeeSubscription->chargebee_customer_id;
+        }else{
+            $chargebeeSubscriptionId=null;
+            $chargebeeCustomerId=null;
+        }
 
         $subscriptionStatus = Subscription::where('company_uuid', $companyId)
             // ->where('company_uuid', $companyId)
