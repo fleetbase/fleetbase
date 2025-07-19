@@ -763,6 +763,7 @@ class UserController extends FleetbaseController
             }else{
                 $chargebeeSubscriptionId=$user->chargebee_subscription_id;
                 $chargebeeCustomerId=$user->chargebee_customer_id;
+    
             }
 
             if (!$user) {
