@@ -754,12 +754,12 @@ class UserController extends FleetbaseController
                     ->first();
             }
             if ($user->chargebee_subscription_id == null || empty($user->chargebee_customer_id)) {
-                $chargebeeSubscriptionId = User::where('company_uuid', $user->company_uuid)
+                $chargebeeSubscription = User::where('company_uuid', $user->company_uuid)
                 ->whereNotNull('chargebee_subscription_id')
                 ->whereNull('deleted_at') // if you want to exclude deleted users
                 ->value('chargebee_subscription_id','chargebee_customer_id');
-                $chargebeeSubscriptionId=$chargebeeSubscriptionId->chargebee_subscription_id;
-                $chargebeeCustomerId=$chargebeeSubscriptionId->chargebee_customer_id;
+                $chargebeeSubscriptionId=$chargebeeSubscription->chargebee_subscription_id;
+                $chargebeeCustomerId=$chargebeeSubscription->chargebee_customer_id;
             }else{
                 $chargebeeSubscriptionId=$user->chargebee_subscription_id;
                 $chargebeeCustomerId=$user->chargebee_customer_id;

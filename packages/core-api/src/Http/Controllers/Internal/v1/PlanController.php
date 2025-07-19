@@ -403,6 +403,12 @@ class PlanController extends Controller
     {
         $userId = $request->input('user_id');
         $companyId = $request->input('company_id');
+        $chargebeeSubscription = User::where('company_uuid', $companyId)
+                ->whereNotNull('chargebee_subscription_id')
+                ->whereNull('deleted_at') // if you want to exclude deleted users
+                ->value('chargebee_subscription_id','chargebee_customer_id');
+        $chargebeeSubscriptionId=$chargebeeSubscription->chargebee_subscription_id;
+        $chargebeeCustomerId=$chargebeeSubscription->chargebee_customer_id;
 
         $subscriptionStatus = Subscription::where('company_uuid', $companyId)
             // ->where('company_uuid', $companyId)
@@ -414,6 +420,8 @@ class PlanController extends Controller
             return response()->json([
                 'success' => true,
                 'message' => 'No subscription found',
+                'chargebee_subscription_id' => $chargebeeSubscriptionId,
+                'chargebee_customer_id' => $chargebeeCustomerId,
                 'data' => null
             ], 200);
         }else{
