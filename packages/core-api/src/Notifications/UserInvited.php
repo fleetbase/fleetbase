@@ -73,7 +73,7 @@ class UserInvited extends Notification implements ShouldQueue
         return (new MailMessage())
             ->subject('You\'ve been invited to join ' . $this->company->name . ' on FleetYes!')
             ->greeting('Hello, ' . $notifiable->name . '!')
-            ->line($this->sender->name . ' has invited you to join their organization on FleetYes. Click the button below to accept this invitation and enable access to ' . $this->company->name . ' on FleetYes.')
+            ->line($this->sender->name . ' has invited you to join their organisation on FleetYes. Click the button below to accept this invitation and enable access to ' . $this->company->name . ' on FleetYes.')
             ->line('Your invitiation code: ' . $this->invite->code)
             ->action('Accept Invitation', $this->url);
     }
