@@ -1469,6 +1469,14 @@ public function createRouteSegmentsFromRows(array $rows, Order $order, array $sa
         $originalRowIndex = $row['_original_row_index'] ?? $groupIndex;
         $fromCode = $row['stop_1'] ?? null;
         $toCode = $row['stop_2'] ?? null;
+        // Fallback to facility_sequence if stop_1 or stop_2 are null
+        if ((empty($fromCode) || empty($toCode)) && !empty($row['facility_sequence'])) {
+            $facilities = array_filter(array_map('trim', explode('->', $row['facility_sequence'])));
+            if (count($facilities) >= 2) {
+                $fromCode = $fromCode ?? $facilities[0];
+                $toCode = $toCode ?? $facilities[1];
+            }
+        }
 
         if (!$fromCode || !$toCode) {
             $displayRowIndex = $originalRowIndex + 1;
