@@ -390,6 +390,8 @@ export default class OperationsSchedulerIndexRoute extends Route {
                 createFullCalendarEventFromLeave(leave, this.intl)
             ));
         }
+        controller.loadAvailableDrivers.perform();
+        controller.getOrderStatusOptions.perform();
         
         controller.events = events;
     }

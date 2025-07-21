@@ -11,6 +11,7 @@ import { task } from 'ember-concurrency-decorators';
 import { driver } from 'driver.js';
 import 'driver.js/dist/driver.css';
 import { on } from '@ember/object/evented';
+import { observer } from '@ember/object';
 
 export default class OperationsSchedulerIndexController extends BaseController {
     @service modalsManager;
@@ -25,6 +26,7 @@ export default class OperationsSchedulerIndexController extends BaseController {
     @tracked calscheduledOrders=[];
     @tracked events = [];
     @service eventBus;
+    @service session;
 
     // Add filter properties
     @tracked order_id_filter = '';
@@ -52,8 +54,8 @@ export default class OperationsSchedulerIndexController extends BaseController {
 
     constructor() {
         super(...arguments);
-        this.loadAvailableDrivers();
-        // this.loadOrderStatusOptions();
+        
+        this.loadAvailableDrivers.perform();
         this.getOrderStatusOptions.perform();
         this.eventBus.subscribe('calendar-refresh-needed', this.handleCalendarRefresh.bind(this));
         // Initialize selected values if filters are set
@@ -188,42 +190,87 @@ _applyInitialFilters() {
 }
     @action
     initializeSelectedValues() {
-        // Wait for drivers to load before trying to select one
-        this.initializationCompleted = Promise.all([
-            // Wait for drivers to load
-            this.availableDriversLoaded.then(() => {
-                if (this.driver_filter) {
-                    this.selectedDriver = this.availableDrivers.find(driver => driver.id === this.driver_filter);
-                }
-            }),
-            
-            // Wait for status options to load
-            this.getOrderStatusOptions.last.then(() => {
-                if (this.status_filter) {
-                    this.selectedStatus = this.statusOptions.find(status => status.id === this.status_filter);
-                }
-            })
-        ]);
+        // Check if user is authenticated before initializing
+        if (!this.session.isAuthenticated) {
+            // console.log('User not authenticated, skipping initialization');
+            this.initializationCompleted = Promise.resolve();
+            return this.initializationCompleted;
+        }
+
+        const promises = [];
+        
+        // Only add driver loading promise if it exists
+        if (this.availableDriversLoaded) {
+            promises.push(
+                this.availableDriversLoaded.then(() => {
+                    if (this.session.isAuthenticated && this.driver_filter) {
+                        this.selectedDriver = this.availableDrivers.find(driver => driver.id === this.driver_filter);
+                    }
+                }).catch(error => {
+                    console.log('Error in driver loading promise:', error);
+                })
+            );
+        }
+        
+        // Only add status options promise if it exists
+        if (this.getOrderStatusOptions && this.getOrderStatusOptions.last) {
+            promises.push(
+                this.getOrderStatusOptions.last.then(() => {
+                    if (this.session.isAuthenticated && this.status_filter) {
+                        this.selectedStatus = this.statusOptions.find(status => status.id === this.status_filter);
+                    }
+                }).catch(error => {
+                    console.log('Error in status options promise:', error);
+                })
+            );
+        }
+        
+        // If no promises to wait for, resolve immediately
+        if (promises.length === 0) {
+            this.initializationCompleted = Promise.resolve();
+        } else {
+            this.initializationCompleted = Promise.all(promises).catch(error => {
+                // console.log('Error in initialization:', error);
+            });
+        }
         
         return this.initializationCompleted;
-        
     }
 
     // Update driver loading to return a promise for initialization
-    @action
+    @task
     loadAvailableDrivers() {
+        // Check if user is authenticated before making API call
+        if (!this.session.isAuthenticated) {
+            // console.log('User not authenticated, skipping driver loading');
+            this.availableDrivers = [];
+            return Promise.resolve([]);
+        }
+
+        // console.log('Loading available drivers...');
         this.availableDriversLoaded = this.store.findAll('driver').then(drivers => {
+            // Double-check authentication state in case it changed during the request
+            if (!this.session.isAuthenticated) {
+                // console.log('User logged out during driver loading, aborting');
+                return [];
+            }
+
             // Create a copy of the drivers array to avoid modifying the store data
             const driversArray = drivers.toArray();
             
-            // Add empty driver option at the beginning
-            const emptyDriver = this.store.createRecord('driver', {
+            // Filter out any existing drivers with empty id to avoid duplicates
+            const filteredDrivers = driversArray.filter(driver => driver.id !== '');
+            
+            // Create a plain object for the empty driver (to avoid polluting the Ember Data store)
+            const emptyDriver = {
                 id: '',
                 name: this.intl.t('fleet-ops.operations.scheduler.calendar.all-drivers') || 'All Drivers'
-            });
+            };
             
-            // Set the availableDrivers property with the empty option first
-            this.availableDrivers = [emptyDriver, ...driversArray];
+            // Set the availableDrivers property with exactly one empty option first
+            this.availableDrivers = [emptyDriver, ...filteredDrivers];
+            // console.log('Loaded', filteredDrivers.length, 'drivers');
+            
             // Check if we need to select a driver from URL parameters
             if (this._needDriverSync && this.driver_filter) {
                 const matchingDriver = this.availableDrivers.find(driver => driver.id === this.driver_filter);
@@ -249,6 +296,13 @@ _applyInitialFilters() {
       }
     @task
     *getOrderStatusOptions() {
+        // Check if user is authenticated before making API call
+        if (!this.session.isAuthenticated) {
+            // console.log('User not authenticated, skipping status options loading');
+            this.statusOptions = [];
+            return;
+        }
+
         try {
             // Make the API call to get status options
             const response = yield this.fetch.get('orders/statuses');
@@ -880,6 +934,8 @@ filterScheduledAndUnscheduledOrders() {
             this.page = currentPage;
             // Update calendar again after data refreshes
             this.updateCalendar();
+        }).catch(error => {
+            console.error('Error during calendar refresh:', error);
         });
         const endTime = performance.now();
     }
