@@ -119,6 +119,8 @@ class Order extends Model
         'status',
         'fleet_uuid',
         'sub_fleet_uuid',
+        'bid_id',
+        'spot_work'
     ];
 
     /**
@@ -205,6 +207,7 @@ class Order extends Model
         'estimated_end_date'  => 'datetime',
         'dispatched_at'    => 'datetime',
         'started_at'       => 'datetime',
+        'spot_work'       => 'boolean',
     ];
 
     /**

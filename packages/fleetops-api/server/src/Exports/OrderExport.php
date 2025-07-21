@@ -26,9 +26,11 @@ class OrderExport implements FromCollection, WithHeadings, ShouldAutoSize
             'Block ID',
             'Trip ID',
             'VR ID',
+            'Bid ID',
             'Status',
             'Facility Sequence',
-            'Arrival Start Time',//CPT(start date)
+            'Truck Filter',
+            'CPT',//CPT(start date)
             'Is CPT Truck',
             'Carrier',
             'SubCarrier',
@@ -42,6 +44,8 @@ class OrderExport implements FromCollection, WithHeadings, ShouldAutoSize
             'Vehicle',
             'VR Creation Date Time (UTC)',
             'VR Cancellation Date Time (UTC)',
+            'Transit Operator Type',
+            'Spot Work',
             'Created By',
             'Updated By',
             'Date Created',
@@ -83,6 +87,8 @@ class OrderExport implements FromCollection, WithHeadings, ShouldAutoSize
             // Prepare the shared fields
             $tripId = $order->public_id;
             $blockId = $order->internal_id;
+            $bidId = $order->bid_id;
+            $spot_work = ($order->spot_work == 1) ? 'true' : 'false';
             $driver = $order->driver_name;
             $vehicle = $order->vehicle_name;
             // $pickup = $order->pickup_name;
@@ -116,13 +122,16 @@ class OrderExport implements FromCollection, WithHeadings, ShouldAutoSize
                 $vrId = $segment->public_id ?? '';
                 $vr_creation_date_time = $segment->vr_creation_date_time ?? '';
                 $vr_cancellation_date_time = $segment->vr_cancellation_date_time ?? '';
-                
+                $driver_type = $segment->driver_type;
+                $truck_filter = $segment->truck_filter;
                 $rows->push([
                     $blockId,
                     $tripId,
                     $vrId, // VR ID
+                    $bidId,
                     $status,
                     $sequence,
+                    $truck_filter,
                     $startDate,
                     $isCPTTruck,
                     $carrier,
@@ -137,6 +146,8 @@ class OrderExport implements FromCollection, WithHeadings, ShouldAutoSize
                     $vehicle,
                     $vr_creation_date_time,
                     $vr_cancellation_date_time,
+                    $driver_type,
+                    $spot_work,
                     $createdBy,
                     $updatedBy,
                     $createdAt,
@@ -149,7 +160,9 @@ class OrderExport implements FromCollection, WithHeadings, ShouldAutoSize
                     $tripId,
                     $blockId,
                     '', // No VR
+                    $bidId,
                     $status,
+                    '',
                     '',
                     $startDate,
                     $isCPTTruck,
@@ -165,6 +178,8 @@ class OrderExport implements FromCollection, WithHeadings, ShouldAutoSize
                     $vehicle,
                     '',
                     '',
+                    '',
+                    $spot_work,
                     $createdBy,
                     $updatedBy,
                     $createdAt,
