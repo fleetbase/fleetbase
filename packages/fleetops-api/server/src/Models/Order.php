@@ -207,6 +207,7 @@ class Order extends Model
         'estimated_end_date'  => 'datetime',
         'dispatched_at'    => 'datetime',
         'started_at'       => 'datetime',
+        'spot_work'       => 'boolean',
     ];
 
     /**

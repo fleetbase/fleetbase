@@ -23,7 +23,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('route_segments', function (Blueprint $table) {
-            $table->dropColumn('driver_type');
+            $table->dropColumn(['driver_type', 'truck_filter']);
         });
     }
 };
