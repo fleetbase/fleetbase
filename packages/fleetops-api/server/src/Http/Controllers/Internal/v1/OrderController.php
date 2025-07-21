@@ -983,7 +983,18 @@ class OrderController extends FleetOpsController
                     $tripHasErrors = false;
 
                     // PRE-VALIDATION: Check for duplicate Order id  &VR IDs before processing
+                    // Generate trip_id if not present using HasPublicId trait
                     $trip_id = $rows[0]['trip_id'] ?? null;
+                    if (empty($trip_id)) {
+                         $originalRowIndex = $rows[0]['_original_row_index'] ?? 0;
+                            $importErrors[] = [
+                                (string)($originalRowIndex + 1),
+                                "Trip {$tripId}: Trip ID is required.",
+                                ""
+                            ];
+                            DB::rollback();
+                            continue;
+                    }
                     //check duplicates for trip_id
                     if (!empty($trip_id)) {
                         $exists = Order::where('public_id', $trip_id)
@@ -1031,9 +1042,19 @@ class OrderController extends FleetOpsController
                         $facilities = array_filter(array_map('trim', explode('->', $facility_sequence)));
 
                         if (count($facilities) > 2) {
+                            $originalRowIndex = $rows[0]['_original_row_index'] ?? 0;
                             $importErrors[] = [
                                 (string)($originalRowIndex + 1),
                                 "Trip {$tripId}: Facility sequence has " . count($facilities) . " items. Only 2 are importes. Sequence: " . implode(' -> ', $facilities),
+                                (string)$tripId
+                            ];
+                        }
+                        // Check if first and second facility are the same
+                        if (count($facilities) >= 2 && $facilities[0] === $facilities[1]) {
+                            $originalRowIndex = $rows[0]['_original_row_index'] ?? 0;
+                            $importErrors[] = [
+                                (string)($originalRowIndex + 1),
+                                "Trip {$tripId}: First and second facility in sequence are the same ('{$facilities[0]}'). Sequence: " . implode(' -> ', $facilities),
                                 (string)$tripId
                             ];
                         }
@@ -1104,22 +1125,42 @@ class OrderController extends FleetOpsController
                     // FIXED DATE LOGIC: Get scheduled_at from FIRST row's cpt
                     $firstRow = $rows[0];
                     $scheduledAt = null;
+                    // if (!empty($firstRow['cpt'])) {
+                    //     try {
+                    //         $scheduledAt = $this->parseExcelDate($firstRow['cpt']);
+                    //         // Ensure it's a Carbon instance
+                    //         if (is_string($scheduledAt)) {
+                    //             $scheduledAt = \Carbon\Carbon::parse($scheduledAt);
+                    //         }
+                    //     } catch (\Exception $e) {
+                    //         \Log::warning('Failed to parse cpt from first row', [
+                    //             'trip_id' => $tripId,
+                    //             'cpt_value' => $firstRow['cpt'],
+                    //             'error' => $e->getMessage()
+                    //         ]);
+                    //     }
+                    // }
                     if (!empty($firstRow['cpt'])) {
+                        Log::info("Using cpt from first row for trip {$firstRow['cpt']}");
                         try {
-                            $scheduledAt = $this->parseExcelDate($firstRow['cpt']);
+
+                            $parsedDate = $this->parseExcelDate($firstRow['cpt']);
+                            Log::info("parsedDate {$parsedDate} for trip {$tripId}");
                             // Ensure it's a Carbon instance
-                            if (is_string($scheduledAt)) {
-                                $scheduledAt = \Carbon\Carbon::parse($scheduledAt);
+                          if (!empty($parsedDate)) {
+                                $scheduledAt = $parsedDate instanceof Carbon
+                                    ? $parsedDate
+                                    : Carbon::parse($parsedDate);
                             }
                         } catch (\Exception $e) {
-                            \Log::warning('Failed to parse cpt from first row', [
+                            Log::warning('Failed to parse cpt from first row', [
                                 'trip_id' => $tripId,
                                 'cpt_value' => $firstRow['cpt'],
                                 'error' => $e->getMessage()
                             ]);
+                            $scheduledAt = null;
                         }
                     }
-
                     // If no cpt in first row, look for any cpt in the trip as fallback
                     if (!$scheduledAt) {
                         foreach ($rows as $row) {
@@ -1138,7 +1179,7 @@ class OrderController extends FleetOpsController
                             }
                         }
                     }
-
+                     Log::info("Using cpt from first row for trip {$scheduledAt}");
                     // FIXED DATE LOGIC: Get estimated_end_date from LAST row's stop_2_yard_arrival
                     $lastRow = $rows[count($rows) - 1];
                     $estimatedEndDate = null;
@@ -1557,7 +1598,7 @@ public function createRouteSegmentsFromRows(array $rows, Order $order, array $sa
                 ? $this->parseExcelDate($row['stop_3_yard_arrival']) : null;
             $routeSegment->stop_3_yard_departure = !empty($row['stop_3_yard_departure']) 
                 ? $this->parseExcelDate($row['stop_3_yard_departure']) : null;
-            $routeSegment->driver_type = $row['driver_type'] ?? null;
+            $routeSegment->driver_type = $row['transit_operator_type'] ?? null;
             $routeSegment->truck_filter = $row['truck_filter'] ?? null;
             // Handle date parsing safely
             $routeSegment->vr_creation_date_time = null;
@@ -1656,18 +1697,45 @@ public function createRouteSegmentsFromRows(array $rows, Order $order, array $sa
      * @param mixed $value The Excel cell value (could be a serial number or string).
      * @return string|null Formatted datetime string ('Y-m-d H:i:s') or null on failure.
      */
+    // private function parseExcelDate($value)
+    // {
+    //     try {
+    //         // If it's a number, treat it as Excel serial date
+    //         if (is_numeric($value)) {
+    //             return \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($value)->format('Y-m-d H:i:s');
+    //         }
+
+    //         // Try parsing as string
+    //         return Carbon::parse(str_replace('/', '-', $value))->format('Y-m-d H:i:s');
+    //     } catch (\Exception $e) {
+    //         return null; // Or optionally throw or log error
+    //     }
+    // }
     private function parseExcelDate($value)
     {
         try {
+            // Trim and clean value
+            $value = trim($value);
+
             // If it's a number, treat it as Excel serial date
             if (is_numeric($value)) {
                 return \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($value)->format('Y-m-d H:i:s');
             }
 
-            // Try parsing as string
-            return Carbon::parse(str_replace('/', '-', $value))->format('Y-m-d H:i:s');
+            // Replace slashes and try parsing as string
+            $value = str_replace('/', '-', $value);
+
+            // Log before parsing
+            Log::info('Trying to parse date string:', ['value' => $value]);
+
+            return Carbon::createFromFormat('m-d-Y H:i', $value)->format('Y-m-d H:i:s');
+
         } catch (\Exception $e) {
-            return null; // Or optionally throw or log error
+            Log::warning('Failed to parse Excel date', [
+                'input' => $value,
+                'error' => $e->getMessage()
+            ]);
+            return null;
         }
     }
 
