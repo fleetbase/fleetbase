@@ -1081,7 +1081,7 @@ class OrderController extends FleetOpsController
                         
                         $allPlaceCodes = $sheetRowsWithIndex->pluck('stop_1')->merge($sheetRowsWithIndex->pluck('stop_2'))->filter()->unique();
                         $placesByCode = Place::whereIn('code', $allPlaceCodes)
-                                        ->where('company_uuid', session('company'))
+                                        // ->where('company_uuid', session('company'))
                                         ->whereNull('deleted_at')
                                         ->get()
                                         ->keyBy('code');
