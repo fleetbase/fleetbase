@@ -1512,9 +1512,9 @@ public function createRouteSegmentsFromRows(array $rows, Order $order, array $sa
 
             // Fallback if metadata matching fails
             if (!$fromWaypoint || !$toWaypoint) {
-                $fromPlace = Place::where('code', $fromCode)->where('company_uuid', session('company'))
+                $fromPlace = Place::where('code', $fromCode)
                                     ->whereNull('deleted_at')->first();
-                $toPlace = Place::where('code', $toCode)->where('company_uuid', session('company'))
+                $toPlace = Place::where('code', $toCode)
                                     ->whereNull('deleted_at')->first();
 
                 if ($fromPlace && $toPlace) {
@@ -1536,9 +1536,9 @@ public function createRouteSegmentsFromRows(array $rows, Order $order, array $sa
             }
         } else {
             // Database lookup fallback
-            $fromPlace = Place::where('code', $fromCode)->where('company_uuid', session('company'))
+            $fromPlace = Place::where('code', $fromCode)
                                     ->whereNull('deleted_at')->first();
-            $toPlace = Place::where('code', $toCode)->where('company_uuid', session('company'))
+            $toPlace = Place::where('code', $toCode)
                                     ->whereNull('deleted_at')->first();
 
             if (!$fromPlace || !$toPlace) {
