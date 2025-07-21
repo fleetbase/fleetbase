@@ -1204,6 +1204,9 @@ class OrderController extends FleetOpsController
                             'estimated_end_date' => $estimatedEndDate,
                             'fleet_uuid' => $carrier_uuid ?? null,
                             'sub_fleet_uuid' => $subcarrier_uuid ?? null,
+                            'bid_id' => $firstRow['bid_id'] ?? null,
+                            // Convert 'yes' to 1, anything else to 0/null
+                            'spot_work' => (isset($firstRow['spot_work']) && strtolower(trim($firstRow['spot_work'])) === 'yes') ? 1 : 0,
                             'meta' => [
                                 'vehicle_id' => $firstRow['vehicle_id'] ?? null,
                                 'carrier' => $firstRow['carrier'] ?? null,
@@ -1554,7 +1557,8 @@ public function createRouteSegmentsFromRows(array $rows, Order $order, array $sa
                 ? $this->parseExcelDate($row['stop_3_yard_arrival']) : null;
             $routeSegment->stop_3_yard_departure = !empty($row['stop_3_yard_departure']) 
                 ? $this->parseExcelDate($row['stop_3_yard_departure']) : null;
-
+            $routeSegment->driver_type = $row['driver_type'] ?? null;
+            $routeSegment->truck_filter = $row['truck_filter'] ?? null;
             // Handle date parsing safely
             $routeSegment->vr_creation_date_time = null;
             if (!empty($row['vr_creation_date_time']) && !is_array($row['vr_creation_date_time'])) {
