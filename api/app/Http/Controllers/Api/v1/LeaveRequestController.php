@@ -19,6 +19,7 @@ class LeaveRequestController extends Controller
     {
         // Get all leave requests
         $userUuid = request()->input('user_uuid');
+        $status = request()->input('status');
         $query = LeaveRequest::with('user')
                 ->whereNull('deleted_at')
                 ->where([
@@ -29,6 +30,9 @@ class LeaveRequestController extends Controller
                 ->orderBy('id', 'desc');
         if ($userUuid) {
             $query->where('user_uuid', $userUuid);
+        }
+        if ($status) {
+            $query->where('status', $status);
         }
         $leaveRequests = $query->get();
         return response()->json([
