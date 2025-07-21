@@ -32,6 +32,7 @@ jobs:
             php artisan migrate
             php artisan cache:clear
             php artisan route:clear
+            php artisan db:seed
 
       - name: Deploy to Test environment (SSH Password)
         if: ${{ inputs.environment == 'test' }}
@@ -48,3 +49,4 @@ jobs:
             php artisan migrate
             php artisan cache:clear
             php artisan route:clear
+            php artisan db:seed
