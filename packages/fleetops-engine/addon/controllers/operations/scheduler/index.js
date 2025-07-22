@@ -236,8 +236,7 @@ _applyInitialFilters() {
     }
     
     // Update driver loading to return a promise for initialization
-    @task
-    loadAvailableDrivers() {
+    @task *loadAvailableDrivers() {
         // Check if user is authenticated before making API call
         if (!this.session.isAuthenticated) {
             // console.log('User not authenticated, skipping driver loading');
@@ -292,8 +291,7 @@ _applyInitialFilters() {
           .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
           .join(' ');
       }
-    @task
-    *getOrderStatusOptions() {
+    @task *getOrderStatusOptions() {
         // Check if user is authenticated before making API call
         if (!this.session.isAuthenticated) {
             // console.log('User not authenticated, skipping status options loading');
