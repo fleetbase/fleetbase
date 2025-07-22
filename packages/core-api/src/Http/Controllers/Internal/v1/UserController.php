@@ -682,7 +682,7 @@ class UserController extends FleetbaseController
     #[SkipAuthorizationCheck]
     public function setUserLocale(Request $request)
     {
-        $locale           = $request->input('locale', 'en-us');
+        $locale           = $request->input('locale', 'en-gb');
         $user             = $request->user();
         $localeSettingKey = 'user.' . $user->uuid . '.locale';
 
@@ -704,7 +704,7 @@ class UserController extends FleetbaseController
         $localeSettingKey = 'user.' . $user->uuid . '.locale';
 
         // Get from database
-        $locale = Setting::lookup($localeSettingKey, 'en-us');
+        $locale = Setting::lookup($localeSettingKey, 'en-gb');
 
         return response()->json(['status' => 'ok', 'locale' => $locale]);
     }
