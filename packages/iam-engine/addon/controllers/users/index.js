@@ -322,7 +322,7 @@ export default class UsersIndexController extends Controller {
                         return;
                     }
                     // Remove the + sign to count only digits
-                    const digitsOnly = phone.substring(1);
+                    const digitsOnly = phone.startsWith('+') ? phone.substring(1) : phone;
 
                     // Check for minimum length (7 digits)
                     if (digitsOnly.length < 7) {
@@ -411,7 +411,7 @@ export default class UsersIndexController extends Controller {
                         return;
                     }
                     // Remove the + sign to count only digits
-                    const digitsOnly = phone.substring(1);
+                    const digitsOnly = phone.startsWith('+') ? phone.substring(1) : phone;
 
                     // Check for minimum length (7 digits)
                     if (digitsOnly.length < 7) {
