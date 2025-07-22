@@ -34,7 +34,6 @@ export default class OperationsSchedulerIndexController extends BaseController {
     @tracked showLeave = true;
     @tracked showTripAssigned = true;
     @tracked selectedDriver = null;
-    
     // Single pagination approach
     queryParams = ['ref', 'page', 'scheduled_limit', 'unscheduled_limit', 'calendar_limit'];
     ref = null;
@@ -58,7 +57,6 @@ export default class OperationsSchedulerIndexController extends BaseController {
         this.eventBus.subscribe('calendar-refresh-needed', this.handleCalendarRefresh.bind(this));
         // Initialize selected values if filters are set
         this.initializeSelectedValues();
-
         // Set up a hook to apply filters after the calendar is initialized
         this.eventBus.subscribe('calendar-initialized', this._applyInitialFilters.bind(this));
         // Initialize filter values from URL parameters
@@ -208,7 +206,7 @@ _applyInitialFilters() {
         return this.initializationCompleted;
         
     }
-
+    
     // Update driver loading to return a promise for initialization
     @action
     loadAvailableDrivers() {
@@ -566,7 +564,7 @@ _applyInitialFilters() {
     }).then(orders => {
         // Update the scheduled and unscheduled orders lists with fresh data
         this.scheduledOrders = orders.filter(order => !isNone(order.driver_assigned_uuid));
-        this.unscheduledOrders = orders.filter(order => isNone(order.driver_assigned_uuid));
+        this.unscheduledOrders = orders.filter(order => isNone(order.driver_assigned_uuid) && isNone(order.vehicle_assigned_uuid));
         
         // Update pagination based on total count from metadata
         if (orders.meta && orders.meta.count) {
@@ -814,7 +812,6 @@ filterScheduledAndUnscheduledOrders() {
         
         this.calendar.render();
     }
-
     // Remaining code remains the same...
    
     @action
@@ -850,10 +847,11 @@ filterScheduledAndUnscheduledOrders() {
         
         // Notify that calendar is initialized and ready for filtering
         this.eventBus.publish('calendar-initialized');
+        
     }
     
     @action
-    handleCalendarRefresh(data) {
+    handleCalendarRefresh(data) { 
         const startTime = performance.now();
         
         // Reload specific order if provided
@@ -883,9 +881,7 @@ filterScheduledAndUnscheduledOrders() {
         });
         const endTime = performance.now();
     }
-    // Add this method to the controller
-
-    
+   
 
     // High Performance Calendar Implementation
 
@@ -1153,7 +1149,7 @@ async _updateCalendarAsync() {
     }
     
     // Step 7: Process leave events
-    if (leaveEventsMap.size > 0) {
+    if (leaveEventsMap.size > 0) { 
         const leaveEvents = Array.from(leaveEventsMap.values());
         
         for (let i = 0; i < leaveEvents.length; i += CHUNK_SIZE) {
@@ -1191,50 +1187,49 @@ async _updateCalendarAsync() {
     this.calendar.render();
 }
     
-    // Add a new method to ensure leave events remain visible
-    refreshLeaveDisplay() {
-        // Find all leave events and ensure they're visible
-        const leaveEvents = this.calendar.getEvents().filter(event => {
-            return event.classNames.includes('leave-event') || 
-                   event.extendedProps?.type === 'leave' ||
-                   (event.title && event.title.toLowerCase().includes('leave'));
-        });
-        
-        leaveEvents.forEach(event => {
-            // Ensure leave events are visible and styled properly
-            event.setProp('classNames', ['leave-event', 'leave-visible']);
-            event.setProp('display', 'auto');
-            
-            // If backgroundColor is transparent, set a default color
-            if (!event.backgroundColor || event.backgroundColor === 'transparent') {
-                event.setProp('backgroundColor', '#FFD700');
-            }
-        });
-        
-        // Add CSS if it doesn't exist yet to ensure leave events are always visible
-        if (!document.getElementById('leave-events-style')) {
-            const style = document.createElement('style');
-            style.id = 'leave-events-style';
-            style.textContent = `
-                .leave-event, .leave-visible {
-                    display: block !important;
-                    visibility: visible !important;
-                    opacity: 1 !important;
-                }
-                
-                .hidden-event {
-                    display: none !important;
-                    visibility: hidden !important;
-                    opacity: 0 !important;
-                    background-color: transparent !important;
-                    border-color: transparent !important;
-                    color: transparent !important;
-                }
-            `;
-            document.head.appendChild(style);
-        }
-    }
+refreshLeaveDisplay() {
+    // Find all leave events and ensure they're visible
+    const leaveEvents = this.calendar.getEvents().filter(event => {
+        return event.classNames.includes('leave-event') || 
+               event.extendedProps?.type === 'leave' ||
+               (event.title && event.title.toLowerCase().includes('leave'));
+    });
     
+    leaveEvents.forEach(event => {
+        // Ensure leave events are visible and styled properly
+        event.setProp('classNames', ['leave-event', 'leave-visible']);
+        event.setProp('display', 'auto');
+        
+        // If backgroundColor is transparent, set a default color
+        if (!event.backgroundColor || event.backgroundColor === 'transparent') {
+            event.setProp('backgroundColor', '#FFD700');
+        }
+    });
+    
+    // Add CSS if it doesn't exist yet to ensure leave events are always visible
+    if (!document.getElementById('leave-events-style')) {
+        const style = document.createElement('style');
+        style.id = 'leave-events-style';
+        style.textContent = `
+            .leave-event, .leave-visible {
+                display: block !important;
+                visibility: visible !important;
+                opacity: 1 !important;
+            }
+            
+            .hidden-event {
+                display: none !important;
+                visibility: hidden !important;
+                opacity: 0 !important;
+                background-color: transparent !important;
+                border-color: transparent !important;
+                color: transparent !important;
+            }
+        `;
+        document.head.appendChild(style);
+    }
+}
+
     
     @action viewEvent(order) {
         // get the event from the calendar
