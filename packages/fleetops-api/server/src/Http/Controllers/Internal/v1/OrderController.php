@@ -1724,20 +1724,51 @@ public function createRouteSegmentsFromRows(array $rows, Order $order, array $sa
         try {
             // Trim and clean value
             $value = trim($value);
-
+            
             // If it's a number, treat it as Excel serial date
             if (is_numeric($value)) {
                 return \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($value)->format('Y-m-d H:i:s');
             }
-
-            // Replace slashes and try parsing as string
-            $value = str_replace('/', '-', $value);
-
-            // Log before parsing
-            Log::info('Trying to parse date string:', ['value' => $value]);
-
-            return Carbon::createFromFormat('m-d-Y H:i', $value)->format('Y-m-d H:i:s');
-
+            
+            // Try multiple formats for string dates
+            $formats = [
+                // Excel formats (M/d/Y)
+                'n/j/Y H:i',    // 7/17/2025 14:23
+                'm/d/Y H:i',    // 07/17/2025 14:23
+                
+                // CPT formats (d-m-Y)
+                'j-n-Y H:i',    // 21-5-2025 13:45
+                'd-m-Y H:i',    // 21-05-2025 13:45
+                
+                // After slash-to-dash conversion
+                'n-j-Y H:i',    // 7-17-2025 14:23 (converted from Excel)
+                'm-d-Y H:i',    // 07-17-2025 14:23 (converted from Excel)
+                
+                // Standard formats
+                'Y-m-d H:i:s',  // 2025-05-21 13:45:00
+                'Y-m-d H:i'     // 2025-05-21 13:45
+            ];
+            
+            foreach ($formats as $format) {
+                try {
+                    // For slash formats, use original value
+                    // For dash formats, use dash-converted value
+                    $testValue = (strpos($format, '/') !== false) ? $value : str_replace('/', '-', $value);
+                    
+                    $date = Carbon::createFromFormat($format, $testValue);
+                    Log::info('Successfully parsed date', [
+                        'input' => $value,
+                        'format' => $format,
+                        'result' => $date->format('Y-m-d H:i:s')
+                    ]);
+                    return $date->format('Y-m-d H:i:s');
+                } catch (\Exception $e) {
+                    continue;
+                }
+            }
+            
+            throw new \Exception('No valid format found for: ' . $value);
+            
         } catch (\Exception $e) {
             Log::warning('Failed to parse Excel date', [
                 'input' => $value,
@@ -1746,6 +1777,7 @@ public function createRouteSegmentsFromRows(array $rows, Order $order, array $sa
             return null;
         }
     }
+
 
     /**
      * Log the import result to the import_logs table.
