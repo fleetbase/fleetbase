@@ -989,7 +989,7 @@ class OrderController extends FleetOpsController
                          $originalRowIndex = $rows[0]['_original_row_index'] ?? 0;
                             $importErrors[] = [
                                 (string)($originalRowIndex + 1),
-                                "Trip {$tripId}: Trip ID is required.",
+                                "Trip ID is required.",
                                 ""
                             ];
                             DB::rollback();
@@ -1006,7 +1006,7 @@ class OrderController extends FleetOpsController
                             $originalRowIndex = $rows[0]['_original_row_index'] ?? 0;
                             $importErrors[] = [
                                 (string)($originalRowIndex + 1),
-                                "Trip {$tripId}: Trip ID '{$trip_id}' already exists.",
+                                "Trip ID '{$trip_id}' already exists.",
                                 (string)$tripId
                             ];
                             DB::rollback();
