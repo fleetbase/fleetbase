@@ -1,0 +1,3317 @@
+app:
+  name: FleetYes
+auth:
+  forgot-password:
+    form:
+      email-label: Your email address
+      nevermind-button: Nevermind
+      submit-button: OK, Send me a magic link!
+    is-sent:
+      message: <strong>Check your email!</strong><br> We've sent you a magic link
+        to your email which will allow you to reset your password. The link expires
+        in 15 minutes.
+      title: Almost Done!
+    not-sent:
+      message: <strong>Don't worry, we've got your back.</strong><br> Enter the email
+        you use to login to {appName} and we will send you a secure link to reset
+        your password.
+      title: Forgot your password?
+    success-message: Check your email to continue!
+  login:
+    failed-attempt:
+      button-text: Ok, help me reset!
+      message: <strong>Forgot your password?</strong><br> Click the button below to
+        reset your password.
+    form:
+      create-account-button: Create a new Account
+      email-label: Email address
+      forgot-password-label: Forgot your password?
+      password-label: Password
+      remember-me-label: Remember me
+      sign-in-button: Sign in
+    no-identity-notification: Did you forget to enter your email?
+    no-password-notification: Did you forget to enter your password?
+    password-reset-required: A password reset is required to continue.
+    slow-connection-message: Experiencing connectivity issues.
+    title: Sign in to your account
+    unverified-notification: Your account needs to be verified to proceed.
+  reset-password:
+    form:
+      back-button: Back
+      code:
+        help-text: The verification code you received in your email.
+        label: Your reset code
+      confirm-password:
+        help-text: Enter a password at-least 6 characters to continue.
+        label: Confirm new Password
+      password:
+        help-text: Enter a password at-least 6 characters to continue.
+        label: New Password
+      submit-button: Reset Password
+    invalid-verification-code: This reset password link is invalid or expired.
+    success-message: Your password has been reset! Login to continue.
+    title: Reset your password
+  two-fa:
+    resend-code:
+      verification-code-resent-error-notification: Error resending verification code.
+        Please try again.
+      verification-code-resent-notification: New verification code sent.
+    verify-code:
+      cancel-two-factor: Cancel Two-Factor
+      check-subtitle: We've sent you a verification code. Enter the code below to
+        complete the login process.
+      check-title: Check your email or phone
+      expired-help-text: Your 2FA authentication code has expired. You can request
+        another code if you need more time.
+      invalid-session-error-notification: Invalid session. Please try again.
+      resend-code: Resend Code
+      verification-code: Verification Code
+      verification-code-expired-notification: Verification code has expired. Please
+        request a new one.
+      verification-code-failed-notification: Verification failed. Please try again.
+      verification-successful-notification: Verification successful!
+      verify-code: Verify Code
+  verification:
+    didnt-receive-a-code: Didn't receive a code yet?
+    header-title: Account Verification
+    message-text: <strong>Almost done!</strong><br> Check your email for a verification
+      code.
+    not-sent:
+      alternative-choice: Use alternaitve options below to verify your account.
+      message: Didn't receive a code yet?
+      resend-email: Resend Email
+      send-by-sms: Send by SMS
+    title: Verify your email address
+    verification-code-text: Enter the verification code you received via email.
+    verification-input-label: Verification Code
+    verify-button-text: Verify & Continue
+common:
+  2fa-config: 2FA Config
+  account: Account
+  admin: Admin
+  apply: Apply
+  back: Back
+  branding: Branding
+  bulk-delete-success: '{record_count} records deleted.'
+  cancel: Cancel
+  card-type: Card Type
+  changelog: Changelog
+  clear: Clear
+  close-and-save: Close and Save
+  code: code
+  columns: Columns
+  configure-success-message: Configuration has been saved successfully
+  confirm: Confirm
+  confirm-action:
+    multiple: Are you sure you want to {verb} these records?
+    single: Are you sure you want to {verb} this record?
+  continue: Continue
+  country: Country
+  create-user-success: New user created successfully!
+  created-at: Created At
+  creating-order: Creating Order...
+  dashboard: Dashboard
+  date-of-birth: Date of Birth
+  delete: Delete
+  document: Document
+  done: Done
+  download: Download
+  download-error-log: Download
+  duplicate-waypoint-error: Duplicate waypoint detected. Please use unique locations
+    for each waypoint.
+  edit: Edit
+  email: Email
+  ending: Ending session...
+  enter-distance: Enter distance in miles
+  enter-unit: Enter {unit}
+  export: Export
+  file-delete-confirmation: Are you sure you want to delete the file {filename}?
+  file-delete-failed: Failed to delete the file.
+  file-delete-success: File deleted successfully!
+  file-upload-success: File uploaded successfully.
+  filesystem: Filesystem
+  filter: Filter
+  format: Format
+  home: Home
+  import-warn: No spreadsheets uploaded for import to process.
+  latitude: Latitude
+  logout: Logout
+  longitude: Longitude
+  lookup: Lookup
+  mail: Mail
+  max-distance: Maximum distance to find nearest parking(miles)
+  model-delete-confirmation: Are you sure to delete this {modelName}?
+  model-delete-success: The {modelName} has been deleted.
+  name: Name
+  new: New
+  new-field: New Field
+  new-order: New Order
+  next: Next
+  next-page: Next
+  notification-channels: Notification Channels
+  notifications: Notifications
+  of-page: of
+  offline: Offline
+  ok: OK
+  online: Online
+  organization: Organisation
+  organizations: Organisations
+  overview: Overview
+  parking-zone: Parking zone
+  payment-method: Payment Method
+  permissions-required-for-changes: You do not have the required permissions to make
+    changes.
+  phone: Your phone number
+  phone-number: Phone
+  pickup-dropoff-error: Please provide both pickup and dropoff locations.
+  previous-page: Previous
+  profile: Profile
+  push-notifications: Push Notifications
+  queue: Queue
+  reload: Reload
+  reload-data: Reload data
+  report-type: Report Type
+  results-page: results
+  role: Role
+  save: Save
+  save-button-text: Save Changes
+  save-changes: Save Changes
+  search: Search
+  search-input: Search Input
+  select-country: Country
+  select-file: Select File
+  select-from-map: Select from map
+  select-payment-method: Select Payment Method
+  select-report-type: Select Report Type
+  select_export_format: Select Export Format...
+  selection-info:
+    multiple: You have selected {count} for {verb}
+    single: You have selected {count} record for {verb}
+  services: Services
+  settings: Settings
+  showing: Showing
+  single-model-delete-success: The record has been deleted.
+  socket: Socket
+  sort: Sort
+  start-import: Start Import
+  starting: Starting session...
+  status: Status
+  submit: Submit
+  to: to
+  to-page: to
+  track-order: Track Order
+  tracking-details:
+    accept-order: Order Accepted by the driver.
+    complete-order: Driver completes the order
+    create-order: New order created.
+    dispacth-order: Order has been dispatched.
+    reject-order: Order Rejected by the driver.Please assign a new driver.
+    start-order: Order has been started
+    update-order: Order status updated by the driver
+  try-again: Try Again
+  two-factor: Two Factor
+  unauthorized: Unauthorized
+  unauthorized-access: Unauthorized Access
+  unauthorized-access-message: Unauthorized Access, you must request permissions to
+    access.
+  unauthorized-to: Unauthorized to
+  upload: Upload
+  upload-file: Upload File
+  uploading: Uploading...
+  users: Users
+  valid-number-error: Please enter a valid number
+  valid-waypoints-error: Please add waypoints
+  view: View
+  your-profile: Your Profile
+component:
+  comment-thread:
+    comment-input-empty-notification: You cannot publish empty comments...
+    comment-input-placeholder: Input a new comment...
+    comment-min-length-notification: Comment must be atleast 2 characters
+    comment-published-ago: '{createdAgo} ago'
+    comment-reply-placeholder: Input your reply...
+    delete-comment-button-text: Delete
+    edit-comment-button-text: Edit
+    publish-comment-button-text: Publish comment
+    publish-reply-button-text: Publish reply
+    reply-comment-button-text: Reply
+  dashboard:
+    add-widgets: Add widgets
+    are-you-sure-you-want-delete-dashboard: Are you sure to delete this {dashboardName}?
+    confirm-create-dashboard: Create Dashboard!
+    create-a-new-dashboard: Create a new Dashboard
+    create-new-dashboard: Create new Dashboard
+    delete-dashboard: Delete dashboard
+    edit-layout: Edit layout
+    save-dashboard: Save Dashboard
+    select-dashboard: Select Dashboard
+    you-cannot-delete-this-dashboard: You cannot delete this dashboard.
+  dashboard-widget-panel:
+    close-and-save: Close and Save
+    select-widgets: Select Widgets
+    widget-name: '{widgetName} Widget'
+  dropzone:
+    drop-to-upload: Drop to upload
+    dropzone-supported-avatars: Drag and drop SVG or PNG files
+    dropzone-supported-files: Drag and drop files onto this dropzone
+    dropzone-supported-images-videos: Drag and drop image and video files onto this
+      dropzone
+    file: file
+    files-ready-for-upload: '{numOfFiles} ready for upload.'
+    invalid: Invalid
+    or-select-button-text: or select files to upload.
+    upload-avatar-files: Upload Custom Avatars
+    upload-documents: Upload Documents
+    upload-documents-files: Upload Documents & Files
+    upload-images-videos: Upload Images & Videos
+    upload-queue: Upload Queue
+    uploading: Uploading...
+  file:
+    dropdown-label: File actions
+  import-modal:
+    button-text: select file to upload
+    drag-drop: Drag and drop spreadsheet files onto this dropzone
+    drop-upload: Drop to upload
+    invalid: Invalid
+    loading-message: Processing import...
+    ready-upload: ready for upload.
+    spreadsheets: spreadsheets
+    upload-queue: Upload Queue
+    upload-spreadsheets: Upload Spreadsheets
+  two-fa-enforcement-alert:
+    button-text: Setup 2FA
+    message: To enhance the security of your account, your organisation requires Two-Factor
+      Authentication (2FA). Enable 2FA in your account settings for an additional
+      layer of protection.
+console:
+  account:
+    index:
+      phone: Your phone number.
+      photos: photos
+      upload-new: Upload
+  admin:
+    branding:
+      icon-text: Icon
+      logo-text: Logo
+      reset-default: Reset to default
+      theme: Default Theme
+      title: Branding
+      upload-new: Upload new
+    config:
+      database:
+        title: Database Configuration
+      filesystem:
+        title: Filesystem Configuration
+      mail:
+        title: Mail Configuration
+      notification-channels:
+        title: Push Notifications Configuration
+      queue:
+        title: Queue Configuration
+      services:
+        title: Services Configuration
+      socket:
+        title: Socket Configuration
+    index:
+      total-organizations: Total Organisations
+      total-transactions: Total Transactions
+      total-users: Total Users
+    notifications:
+      notification-settings: Notification Settings
+      title: Notifications
+    organizations:
+      index:
+        email-column: Email
+        owner-email-column: Owner Phone
+        owner-name-column: Owner
+        owner-phone-column: Owner Phone
+        phone-column: Phone
+        title: Organisations
+        users-count-column: Users
+      users:
+        title: Users
+    schedule-monitor:
+      date: Date
+      last-failure: Last Failure
+      last-finished: Last Finished
+      last-started: Last Started
+      memory: Memory
+      name: Name
+      no-output: No output
+      output: Output
+      runtime: Runtime
+      schedule-monitor: Schedule Monitor
+      showing-last-count: Showing last {count} logs
+      task-logs-for: 'Task Logs For: '
+      timezone: Timezone
+      type: Type
+  create-or-join-organization:
+    create-success-notification: You have created a new organisation!
+    join-success-notification: You have joined a new organisation!
+    modal-title: Create or join a organisation
+  extensions:
+    message: Please check back in the upcoming versions as we prepare to launch the
+      Extensions repository and marketplace.
+    title: Extensions are coming soon!
+  notifications:
+    mark-as-read: Mark as Read
+    message: No notifications to display.
+    received: 'Received:'
+    select-all: Select All
+  settings:
+    index:
+      backdrop: Backdrop
+      backdrop-help-text: Optional banner or background image for your organisation.
+      logo: Logo
+      logo-help-text: Logo for your organisation.
+      organization-branding: Organisation Branding
+      organization-currency: Organisation currency
+      organization-description: Organisation description
+      organization-id: Organisation ID
+      organization-name: Organisation name
+      organization-phone: Organisation phone number
+      title: Organisation Settings
+      upload-new-backdrop: Upload new backdrop
+      upload-new-logo: Upload new logo
+  switch-organization:
+    modal-accept-button-text: Yes, I want to switch organisation
+    modal-body: By confirming your account will remain logged in, but your primary
+      organisation will be switched.
+    modal-title: Are you sure you want to switch organisation to {organisationName}?
+    success-notification: You have switched organisations
+csv: csv
+fleet-ops:
+  common:
+    actions: Actions
+    active-manpower: Active Manpower
+    address: Address
+    amount: Amount
+    assignee: Assignee
+    avatar: Avatar
+    back: Back
+    building: Building
+    bulk-action: Bulk Action
+    cancel: Cancel
+    category: Category
+    city: City
+    code: Code
+    config: Config
+    coordinates: Coordinates
+    cost: Cost
+    country: Country
+    create-order: Create Order
+    created-at: Created At
+    customer: Customer
+    dark-mode: Dark Mode
+    date-created: Date Created
+    delete: Delete
+    description: Description
+    destination: Destination
+    details: Details
+    dispatch-order: Dispatch Order
+    distance: Distance
+    done: Done
+    driver: Driver
+    driver-license: Driver License
+    dropoff: Dropoff
+    edit: Edit
+    edit-fleet: Edit fleet
+    email: Email
+    end_date_cannot_be_earlier: End Date cannot be earlier
+    end_date_cannot_be_earlier_than_start_date: End Date cannot be earlier than the
+      start date.
+    estimated-end-date: Estimated End Date
+    export: Export
+    fleet: Fleet
+    height: Height
+    host: Host
+    id: ID
+    import: Import
+    internal-id: Internal ID
+    item: Item
+    key: Key
+    label: Label
+    length: Length
+    license: License
+    loading: Loading...
+    loading-resource: Loading...
+    make: Make
+    manage-message: Manage your vendors
+    manpower: Manpower
+    model: Model
+    name: Name
+    namespace: Namespace
+    neighborhood: Neighborhood
+    new: New
+    no_driver: No Driver
+    no_phone: No Phone
+    odometer: Odometer
+    options: Options
+    order: Order
+    orders: Orders
+    parent-fleet: Parent Fleet
+    phone: Phone
+    photos: photos
+    pickup: Pickup
+    plate-number: Plate number
+    postal-code: Postal code
+    priority: Priority
+    reload: Reload
+    reload-data: Reload data
+    remove: Remove
+    reporter: Reporter
+    sandbox: Sandbox
+    save-changes: Save changes
+    schedule: Start Date
+    search: Search
+    search-by-currency-code: Search by currency code
+    security-access-code: Security access code
+    select-assignee: Assignee
+    select-driver: Driver
+    select-fleet: Fleet
+    select-reporter: Reporter
+    select-vehicle: Vehicle
+    service: Service
+    service-area: Service area
+    start-date: Start date
+    start_date_cannot_be_later: Start Date cannot be later than the end date.
+    state: State
+    status: Status
+    street: Street
+    street-1: Street 1
+    street-2: Street 2
+    task: Task
+    title: Title
+    total: Total
+    tracking: Tracking Number
+    tracking-number: Tracking Number
+    type: Type
+    unit: Unit
+    updated-at: Updated At
+    upload-new: Upload new
+    uploading: Uploading...
+    value: Value
+    vehicle: Vehicle
+    vehicle-name: Vehicle Name
+    vendor: Vendor
+    view-profile: View Profile
+    vin-number: VIN Number
+    volume: Volume
+    website: Website
+    website-url: Website URL
+    weight: Weight
+    width: Width
+    year: Year
+    zone: Zone
+  component:
+    activity-event-selector:
+      activity-events: Activity Events
+      activity-events-select-events-info: Select the specific event you want to trigger
+        in response to this activity.
+      activity-events-select-to-fire: Select which events will be activated when this
+        activity occurs.
+      select-event-to-add: Select event to add...
+    activity-form-panel:
+      code: Code
+      code-help: Enter a unique identifier specific to this activity.
+      complete: Complete
+      completes-order: Completes Order
+      details: Details
+      details-help: Provide a detailed description of the activity for the end-user's
+        understanding.
+      key: Key
+      key-help: 'Enter a key used for programmatic decision-making. This key can represent
+        one or several activities with the same identifier. Note: This key is not
+        required to be unique.'
+      new-activity-title: Create new activity
+      pod-method-placeholder: Select Proof of Delivery Method
+      proof-of-delivery: Proof of Delivery
+      require-pod: Requires Proof of Delivery
+      require-pod-help-text: This activity requires a proof to be created before it
+        can be applied to the order.
+      select-pod-method: Proof of Delivery Method
+      status: Status
+      status-help: Specify the status displayed to the end-user when this activity
+        is triggered.
+      title-concat: 'Activity: '
+    activity-logic-builder:
+      activity-logic: Activity Logic
+      activity-logic-add-condition-help-text: Add a specific requirement that must
+        be satisfied within this logic set. Use this to specify additional criteria
+        that control the activity's availability.
+      activity-logic-add-logic-help-text: Create a new set of conditions that will
+        define when an activity should be activated. Click this to start crafting
+        a new logical rule.
+      activity-logic-help-text: Define custom logic conditions that determine when
+        an activity becomes available in the workflow. This feature allows you to
+        tailor the flow based on specific criteria, ensuring that each activity is
+        triggered only when its predefined conditions are met.
+      activity-logic-select-logic-type-help-text: Choose the type of logic that this
+        condition will follow. Select 'If' for a direct condition, 'And'/'Or' for
+        compound conditions, or 'Not' to negate a condition.
+      add-logic: Add Logic
+      field: Field
+      value: Value
+    admin:
+      avatar-management:
+        drivers: Drivers
+        places: Places
+        upload-avatar: Upload Avatar
+        vehicles: Vehicles
+        view-avatar: View Avatar
+      navigator-app:
+        avatar-management: Avatar Management
+        description: Enable driver on-board
+        document: Document
+        driver-settings: Driver Settings
+        message: Use this URL to link the official Navigator app to this {companyName}
+          instance. Opening this URL on a mobile device will open the Navigator app
+          and update it's configuration and branding.
+        name: Instance Linking URL
+        select-input: Allow driver to update entity details
+        settings: Entity Settings
+        title: Navigator App
+        upload-body: Add documents
+        upload-document: Require driver to upload documents
+      visibility-controls:
+        checkbox-text: Enable or disable visibility for this section in Fleet-Ops.
+        message: Visibility controls allow you to disable sections of Fleet-Ops. Toggle
+          the checkbox to enable or disable sections to hide in Fleet-ops.
+        title: Visibility Controls
+    avatar-picker:
+      avatar: Avatar
+      select-avatar: Select avatar
+      select-avatar-rendering: Select an avatar to be used for rendering on maps when
+        using geolocation tracking features.
+      select-map-avatar: Select map avatar
+    cell:
+      driver-name:
+        not-assigned: No driver assigned
+    contact-form-panel:
+      cancel-edit-button: Cancel edit contact
+      cancel-new-button: Cancel new contact
+      contact-details: Contact Details
+      create-contact: Create Contact
+      edit: Edit
+      new-address: New Address
+      new-contact: New Contact
+      save-contact: Save Contact
+      select-address: Select Address
+      success-message: contact {contactName} saved successfully.
+      view-contact-button: View contact details
+    contact-panel:
+      cancel-edit-button: Cancel edit contact
+      cancel-new-button: Cancel new contact
+      details:
+        web-url: Website URL
+      edit-button: Edit contact
+    custom-entity-issue-form-panel:
+      description: Description
+      details: Details
+      entity-image: Entity Image
+      height: Height
+      length: Length
+      measurements: Measurements
+      name: Name
+      new-custom-entity: New Custom Entity
+      type: Type
+      weight: Weight
+      width: Width
+    custom-field-form-panel:
+      add-new-option: Add new option
+      close-new-custom-field: Cancel custom field changes
+      col-span-size: Column Span Size
+      create-custom-field: Create New Field
+      custom-field-title-concat: 'Custom Field: '
+      field-default-value: Field Default Value
+      field-description: Field Description
+      field-help-text: Field Help Text
+      field-is-editable: Field is Editable
+      field-is-required: Field is Required
+      field-label: Field Label
+      field-model-type: Field Model Type
+      field-name: Field Name
+      field-options: Field Options
+      field-select-model-type: Select model type
+      field-type: Field Type
+      field-validation-rules: Field Validation Rules
+      meta-col-span: 'Meta: Column-Span'
+      new-custom-field: New custom field
+      save-custom-field: Save Changes
+      select-field-type: Select field type...
+    customer-form-panel:
+      cancel-edit-button: Cancel edit customer
+      cancel-new-button: Cancel new customer
+      create-customer: Create Customer
+      customer-details: Customer Details
+      edit: Edit
+      new-address: New Address
+      new-customer: New Customer
+      save-customer: Save Customer
+      select-address: Select Address
+      success-message: Customer {customerName} saved successfully.
+      view-customer-button: View customer details
+    customer-panel:
+      cancel-edit-button: Cancel edit customer
+      cancel-new-button: Cancel new customer
+      details:
+        web-url: Website URL
+      edit-button: Edit customer
+    display-panel:
+      no-address: No {type} address!
+      no-address-message: No address!
+    driver-card:
+      no-fleets: No fleets
+    driver-form-panel:
+      cancel-edit-driver: Cancel edit driver
+      cancel-new-driver: Cancel new driver
+      create-driver: Create Driver
+      create-user: Create new user
+      driver-detail: View driver details
+      driver-details: Driver Details
+      driver-status: Select driver status
+      new-driver: New Driver
+      order-history: Order History
+      save-driver: Save Driver
+      select-user: Select User
+      select-vehicle: Select Vehicle
+      success-message: Driver ({driverName}) saved successfully.
+      upload-new-photo: Upload new photo
+      user-account: User Account
+      user-account-help-text: Each driver profile needs to be connected to a specific
+        user account. This association is essential for handling the authentication
+        process, ensuring that each driver can securely access and manage their profile.
+      vendor: Vendor
+    driver-onboard-settings:
+      add-onboard-document: Add onboard document
+      driver-onboard-settings: Driver Onboard Settings
+      enable-driver-onboard-from-app: Enable driver onboard from Navigator App
+      enable-driver-onboard-from-app-help-text: Enabling this setting allows drivers
+        to independently onboard (create their own account) via the Navigator App.
+      enter-document-name: Enter document name
+      require-driver-to-upload-onboard-documents: Require driver to upload onboard
+        documents
+      require-driver-to-upload-onboard-documents-help-text: This setting enforces
+        documents that a driver must provide before their account can be created.
+      required-onboard-documents: Required onboard documents
+      required-onboard-documents-help-text: Input all the onboard documents required
+        for a driver to provide below using the "Add onboard document" button.
+      select-onboard-method: Select driver onboard method
+      select-onboard-method-help-text: This setting determines how drivers are permitted
+        to create their accounts through the Navigator App. Choose 'Invite' if drivers
+        need to receive an email invitation to create their account. Select 'Button'
+        if you wish to enable a button within the app that allows anyone to create
+        a driver account.
+    driver-panel:
+      assign-vehicle-button: Assign a vehicle to driver
+      close-button-text: Close driver details
+      driver-details: Driver Details
+      edit-button-text: Edit driver
+      locate-button-text: Locate driver
+      no-vehicle-message: No vehicle assigned
+      user-account: User Account
+    entity-field-editing-settings:
+      enable-driver-to-edit-entity-fields: Allow driver to edit entity details
+      enable-driver-to-edit-entity-fields-help-text: Enabling this toggle grants the
+        driver permission to modify specific entity fields chosen below.
+      entitiy-field-editing-settings: Entity Field Editing Settings
+      entity-field-editing-settings-help-text: These settings determine which fields
+        of an entity are editable by a driver via Navigator App
+      select-order-config: Select Order Config
+      select-order-config-help-text: Select an order config which these settings will
+        apply to
+    fleet-driver-listing:
+      add-driver: Add driver to fleet
+      loading-message: Loading fleet drivers...
+      search-driver: Search drivers in fleet
+    fleet-form-panel:
+      cancel-edit-fleet: Cancel edit fleet
+      cancel-new-fleet: Cancel new fleet
+      create-fleet: Create Fleet
+      fleet-name: Fleet Name
+      parent-fleet: Parent Fleet
+      save-fleet: Save Fleet
+      select-parent-fleet: Select parent fleet to assign fleet to
+      select-service: Select service area to assign fleet to
+      select-status: Select status
+      select-status-fleet: Select the status of the fleet.
+      select-vendor: Select vendor to assign fleet to
+      select-zone: Select zone to assign fleet to
+      service-title: Assign to Service Area
+      success-message: Fleet ({fleetName}) saved successfully.
+      task-mission-title: Task/ Mission
+      task-text: Give a description of this fleet's primary task or mission if applicable.
+      title: New Fleet
+      view-details: View fleet details
+      zone-title: Assign to Zone
+    fleet-panel:
+      details:
+        active-manpower: Active Manpower
+      driver-listing:
+        add-driver: Add driver to fleet
+        loading-driver: Loading fleet drivers...
+        search-driver: Search drivers in fleet
+      vehicle-listing:
+        add-vehicle: Add vehicle to fleet
+        loading-vehicle: Loading fleet vehicles...
+        search-vehicle: Search vehicle's in fleet
+    fleet-vehicle-listing:
+      add-vehicle: Add vehicle to fleet
+      loading-message: Loading fleet vehicle...
+      search-vehicle: Search vehicle in fleet
+    fuel-report-form-panel:
+      cancel-edit-fuel-report: Cancel edit Fuel report
+      cancel-new-fuel-report: Cancel new Fuel report
+      cost: Cost
+      create-fuel-report: Create Fuel Report
+      file-delete-message: Fuel report image deleted successfully.
+      fuel-report: New Fuel Report
+      odometer: Odometer
+      save-fuel-report: Save Fuel Report
+      select-driver: Select Driver
+      select-fuel-report: Select Fuel-report status
+      select-reporter: Select Reporter
+      select-vehicle: Select Vehicle
+      select-volume-text: Select the metric unit and volume of fuel to report.
+      success-message: Fuel report saved successfully.
+      view-details: View Fuel report details
+      volume: Volume
+    fuel-report-panel:
+      cancel-edit-fuel-report: Cancel edit Fuel report
+      cancel-new-fuel-report: Cancel new Fuel report
+      details:
+        fuel: Fuel/ Volume
+      edit-button: Edit Fuel report
+      title: Fuel Report Details
+    global-search:
+      search: Search Orders by ID
+    integrated-order-details:
+      driver-id: Driver ID
+      link: Shareable Link
+      metadata: Metadata
+      order-id: Order ID
+      price-breakdown: Price Breakdown
+      quotation-id: Quotation ID
+    issue-form-panel:
+      add-tags: Add tags
+      assigned: Assigned To
+      cancel-edit-issue: Cancel edit issue
+      cancel-new-issue: Cancel new issue
+      category: Issue Category
+      create-issue: Create Issue
+      issue: New Issue
+      priority: Issue Priority
+      report: Issue Report
+      reported-by: Reported By
+      save-issue: Save Issue
+      select-assign: Select Assignee
+      select-assignee: Select assignee
+      select-category: Select issue category
+      select-driver: Select Driver
+      select-priority: Select issue priority
+      select-reporter: Select Reporter
+      select-status: Select issue status
+      select-type: Select issue type
+      select-vehicle: Select Vehicle
+      success-message: Issue ({publicId}) saved successfully.
+      tags: Issue Tags
+      type: Issue Type
+      view-details: View issue details
+    issue-panel:
+      cancel-edit-issue: Cancel edit issue
+      cancel-new-issue: Cancel new issue
+      details:
+        assigned: Assigned To
+        category: Issue Category
+        priority: Issue Priority
+        report: Report
+        type: Issue Type
+      edit-issue: Edit Issue
+      title: Issue Details
+    layout:
+      fleet-ops-sidebar:
+        contacts: Contacts
+        dashboard: Dashboard
+        drivers: Drivers
+        fleets: Fleets
+        fuel-reports: Fuel Tracking
+        issues: Issues
+        leaves: Leaves
+        navigator-app: Navigator App
+        operations: Operations
+        order-config: Order Config
+        parking: Parking Monitoring
+        payments: Payments
+        places: Places
+        resources: Resources
+        scheduler: Calendar
+        service-rates: Service Rates
+        settings: Settings
+        title: Create Order
+        toll-reports: Toll Expenses
+        vehicles: Vehicles
+        vendors: Vendors
+    leaves-report-panel:
+      cancel-edit-leaves-report: Cancel edit Leaves Report
+      cancel-new-leaves-report: Cancel new Leaves Report
+      edit-button: Edit Leaves Report
+      title: Leaves Report
+    live-map:
+      assign-fleet: 'Assign Fleet to Service Area: {serviceName}'
+      assign-zone: 'Assign Fleet to Zone: {zoneName}'
+      blur-service: 'Hide Service Area: {serviceName}'
+      center-map: Center map here...
+      create-new-service: Create new Service Area...
+      create-zone: 'Create Zone within: {serviceName}'
+      delete-driver: 'Delete Driver: {driverName}'
+      delete-service: 'Delete Service Area: {serviceName}'
+      delete-vehicle: 'Delete vehicle: {vehicleName}'
+      delete-zone: 'Delete zone: {zoneName}'
+      edit-driver: 'Edit Driver: {driverName}'
+      edit-service: 'Edit Service Area: {serviceName}'
+      edit-vehicle: 'Edit vehicle: {vehicleName}'
+      edit-zone: 'Edit zone: {zoneName}'
+      enable-draw: Enable draw controls...
+      focus-service: 'Focus Service Area: {serviceName}'
+      hide-draw: Hide draw controls...
+      offText: Enable draw controls...
+      onText: Hide draw controls...
+      service-area: Service Area
+      show-coordinates: Show coordinates...
+      view-driver: 'View Driver: {driverName}'
+      view-vehicle: 'View vehicle: {vehicleName}'
+      view-vehicle-for: 'View Vehicle for: {driverName}'
+      zone: Zone
+      zoom-in: Zoom in...
+      zoom-out: Zoom out...
+    live-map-drawer:
+      driver-listing:
+        current-job: Current Job
+        delete-driver: Delete driver...
+        edit-driver: Edit driver...
+        last-seen: Last Seen
+        locate-driver: Locate driver...
+        location: Location
+        message: Filter drivers by keyword...
+        view-driver: View driver details...
+        warning-message: Unable to locate driver.
+      place-listing:
+        delete-place: Delete place...
+        edit-place: Edit place...
+        locate-place: Locate place...
+        location: Location
+        message: Filter places by keyword...
+        place: Place
+        view-place: View place details...
+        warning-message: Unable to locate place.
+      vehicle-listing:
+        delete-vehicle: Delete vehicle...
+        edit-vehicle: Edit vehicle...
+        last-seen: Last Seen
+        locate-vehicle: Locate vehicle...
+        location: Location
+        message: Filter vehicles by keyword...
+        view-vehicle: View vehicle details...
+        warning-message: Unable to locate vehicle.
+    map-container:
+      toolbar:
+        create: Create Order
+        scope: Scope
+        view-order: View Orders
+        view-service-area: View Service Areas
+        visibility: Visibility Controls
+      visibility-control-panel:
+        hide-places: Hide all places...
+        hide-vehicles: Hide all vehicles...
+        offline-vehicles: Only show offline vehicles...
+        online-vehicles: Only show online vehicles...
+        show-places: Show all places...
+        show-vehicles: Show all vehicles...
+        title: Visibility Controls
+        vehicle-controls: Vehicle Visibility Controls...
+        vehicles: Vehicles
+      zones-panel:
+        action: Actions...
+        blur: Hide service area...
+        create-service: Create new service area...
+        create-zone: Create zone inside...
+        focus: Focus
+        hide: Hide all service areas
+        show: Show all service areas
+        title: Service Areas
+    modals:
+      assign-driver:
+        select-assign: Select Driver to Assign
+        select-driver: Select Driver
+      clone-config-form:
+        description: Config Description
+        name: Config Name
+      driver-assign-order:
+        assign-order: Select Order to Assign
+        order: Select Order
+      driver-assign-vehicle:
+        assign-vehicle: Select Vehicle to Assign
+        vehicle: Select Vehicle
+      driver-assign-vendor:
+        vendor: Select Vendor
+      driver-details:
+        job: Current Job
+        view: View on map
+      driver-form:
+        select-vehicle: Select Vehicle
+        select-vendor: Select Vendor
+      edit-meta-form:
+        add: Add metafield
+      entity-form:
+        declare: Declared Value
+        declare-text: Declared value of entity, useful is insurable.
+        description: Description
+        description-text: Additional description text of entity.
+        height: Height
+        height-text: The height of the entity.
+        id-text: Use this field to optionally set a custom identifier or internal
+          identifier for the entity.
+        length: Length
+        length-text: The length of the entity.
+        measurement-title: Measurements & Weight
+        name-text: Name of item or entity.
+        price: Price
+        price-text: Price of entity.
+        price-title: Pricing & Value
+        sale-price: Sale Price
+        sale-price-text: Sale price or discounted price of entity.
+        sku: SKU
+        sku-text: Stock keeping unit number if applicable.
+        weight: Weight
+        weight-text: The weight of the entity.
+        width: Width
+        width-text: The width of the entity.
+      entity-meta-field-prompt:
+        name: Meta Field Key
+      fleet-form:
+        assign: Assign to Service Area
+        assign-text: Select service area to assign fleet to
+        select-status: Select status
+        select-task: Select task
+        status-text: Select the status of the fleet.
+        task: Task/ Mission
+        task-text: Give a description of this fleet's primary task or mission if applicable.
+        title: Fleet Name
+        zone: Assign to Zone
+        zone-text: Select zone to assign fleet to
+      fuel-report-details:
+        fuel: Fuel/ Volume
+      fuel-report-form:
+        select-driver: Select Driver
+        select-vehicle: Select Vehicle
+        volume: Volume
+        volume-text: Select the metric unit and volume of fuel to report.
+      group-details:
+        address: Address
+        member: Members
+        name: Group Name
+      group-form:
+        no-users: No users added to group
+        search: Search and select users to add to this group.
+        select-user: Select user to add to group
+        title: Group Name
+        users-add: Select users to add to group
+      install-prompt:
+        message: You are attempting to install the extension {extensionName}. Are
+          you sure you wish to proceed with this installation?
+        sub-message: Some extensions require access to your resources.
+      issue-details:
+        assigned: Assigned To
+        category: Issue Category
+        type: Issue Type
+      issue-form:
+        add-tags: Add tags
+        assigned: Assigned To
+        category: Issue Category
+        category-text: Select issue category
+        report: Issue Report
+        reported: Reported By
+        select-assignee: Select Assignee
+        select-category: Select Category
+        select-driver: Select Driver
+        select-reporter: Select Reporter
+        select-status: Select issue status
+        select-type: Select Type
+        select-vehicle: Select Vehicle
+        tags: Issue tags
+        type: Issue Type
+        type-text: Select issue type
+      map-layer-form:
+        customize-border: Customize the border color for this {options}.
+        customize-fill-color: Customize the fill color for this {options}.
+        layer-type: Layer Type
+        layer-type-text: Select the type of layer you wish to create.
+        select-layer-type: Select layer type...
+        select-service-area: Select service area to assign fleet to
+        select-service-type: Select service area type...
+        service-area: Service Area
+        service-area-country: Service Area Country
+        service-area-country-text: Optionally set the country in which this Service
+          Area is located or based in.
+        service-area-text: Select the Service Area to attribute this Zone to.
+        service-type: Service Area Type
+        service-type-text: Select the type definition for this service area .
+        set-name: Set a display name for the {options}.
+      new-custom-field-group:
+        group-name: Group Name
+        modal-title: Create a new custom field group
+      new-order-config:
+        add-tags: Add tags
+        description: Config Description
+        name: Config Name
+        tags: Config Tags
+      order-assign-driver:
+        select-assign: Select Driver to Assign
+        select-driver: Select Driver
+      order-config-new-status:
+        new-status: New Status
+        status-text: Enter a new activity status to add to the flow
+      order-event:
+        estimated-end-date: Estimated End Date
+        schedule: Start Date
+        unschedule: Unschedule
+      order-form:
+        assign-driver: Assign Driver
+        assign-driver-text: Assign the driver this order will be dispatched to.
+        assign-vehicle: Assign Vehicle
+        assign-vehicle-text: Assign the vehicle this order will be performed with.
+        customer: Customer
+        customer-text: Optionally assign the customer of this order. If it's a new
+          customer, use the 'New Customer' button above.
+        end-date-text: The date and time the order is scheduled to be completed. This
+          marks the expected end of the delivery process. If the order is not completed
+          by this time, it may require further action or reassignment.
+        facilitator: Facilitator
+        facilitator-text: Optionally assign a facilitator for this order, a facilitator
+          can be a 3rd party subcontractor or service that will facilitate the transport
+          of this order.
+        id-text: Use this field to optionally set a custom identifier or internal
+          identifier for the order.
+        schedule-text: The date and time the order will be dispatched. If no driver
+          is assigned at time of dispatch, the dispatch will fail. If the order is
+          Ad-Hoc the order will be pinged to drivers in vicinity of pickup.
+        select-customer: Select Customer
+        select-driver: Select Driver
+        select-facilitator: Select Facilitator
+        select-vehicle: Select Vehicle
+      order-import:
+        button-text: select file to upload
+        drag-drop: Drag and drop spreadsheet files onto this dropzone
+        drop-upload: Drop to upload
+        error-log-instruction: Some issues were found in your file. Click below to
+          download details and fix them before trying again.
+        file-name: File Name
+        file-size: File Size
+        import-failed: Import Failed
+        import-failed-message: No trips were imported due to errors. Please review
+          the attached error log for details.
+        invalid: Invalid
+        loading-message: Processing import...
+        processing: Processing...
+        ready-upload: ready for upload.
+        spreadsheets: spreadsheets
+        start-upload-button: Start Upload
+        title: Import order(s) with spreadsheet
+        type: Type
+        upload-date: Upload Date
+        upload-queue: Upload Queue
+        upload-spreadsheets: Upload Spreadsheets
+        uploading: Uploading...
+      order-label:
+        loading: Loading Label...
+      order-new-activity:
+        activity: activity
+        activity-options: Activity Options
+        code: Custom activity code
+        details: Custom activity details
+        dispatch: This will trigger the order to dispatch.
+        fleetbase-message: FleetYes does not recommend this unless you absolutely
+          know what you're doing.
+        not-recommend-message: FleetYes does not recommend this unless you absolutely
+          know what you're doing.
+        order-currently-message: This order is currently {options}, additional activity
+          will overwrite this status.
+        select-message: Select an activity status to update order tracking activity,
+          or input a custom activity.
+        status: Custom activity status
+      order-route-form:
+        add: Add Waypoint
+        add-text: Use the `Add Waypoint` button to add more stops for this order.
+          The FleetYes routing engine will automatically optimize the route as each
+          stop is added or removed.
+        dropoff: Dropoff
+        edit-address: Edit Address
+        invalid: Invalid coordinates!
+        optimize: Optimize Route
+        optimize-text: FleetYes will automatically optimize the route.
+        pickup: Pickup
+        return: Return
+        select-dropoff: Select Dropoff
+        select-pickup: Select Pickup
+        select-return: Select Return
+        select-waypoint: Select Waypoint
+        toggle: Toggle Multiple Dropoff's
+      place-assign-vendor:
+        select-vendor: Select Vendor
+      place-details:
+        view: View on map
+      policy-form:
+        description: Policy Description
+        description-text: Enter a description for your policy
+        name: Policy Name
+        name-text: Enter a name for your policy
+        permissions: Select Permissions
+      role-form:
+        name: Role name
+        name-text: Enter a name for this role
+        permissions: Select Permissions
+      select-payment-method:
+        card-ending: Card ending in {method}
+      service-area-form:
+        area-color: Service Area Color
+        border-color: Service Area Border Color
+        country: Service Area Country
+        country-text: Optionally set the country in which this service area is located
+          or based in.
+        customize-area-color: Customize the fill color for this service area.
+        customize-border-color: Customize the border color for this service area.
+        name: Service Area Name
+        name-text: Set a display name for the service area.
+        select-type: Select service area type...
+        type: Service Area Type
+        type-text: Select the type definition for this service area .
+      set-password:
+        confirm-password: Confirm Password
+        help-text: Enter a password at-least 8 characters to continue.
+        message: Welcome to FleetYes! Before you get started, set a new password to
+          continue below.
+        new-password: New Password
+      uninstall-prompt:
+        message: You are attempting to uninstall the extension "{options}". Are you
+          sure you wish to proceed with this uninstallation?
+        sub-message: All configuration and customized settings will be lost.
+      vehicle-details:
+        acceleration: 0 to 100 Kph
+        avatar: Avatar
+        body: Body
+        cc: CC
+        compression: Compression
+        cylinder: Cylinders
+        doors: Doors
+        driver-assigned: Driver Assigned
+        engine-bore: Engine Bore (mm)
+        engine-information: Engine Information
+        fuel: Fuel
+        fuel-cap: Fuel Cap (l)
+        fuel-information: Fuel Information
+        length: Length (mm)
+        liters-city: Liters Per km City
+        liters-highway: Liters Per km Highway
+        liters-mixed: Liters Per km Mixed
+        make: Make
+        model: Model
+        model-information: Model Information
+        no-driver-assigned: No driver assigned
+        no-vehicle-assigned: No vehicle assigned
+        position: Position
+        power-ps: Power (ps)
+        power-rpm: Power (rpm)
+        seats: Seats
+        stroke: Stroke (mm)
+        top-speed: Top Speed (kph)
+        torque-nm: Torque (nm)
+        torque-rpm: Torque (rpm)
+        transmission: Transmission Type
+        valves: Valves Per Cylinder
+        vehicle-assigned: Vehicle Assigned
+        weight: Weight (kg)
+        wheelbase: Wheelbase (mm)
+        width: Width (mm)
+        year: Year
+      vehicle-form:
+        body: Vehicle Body Type
+        cc: CC
+        compression: Engine Compression
+        cylinder: Engine Cylinders
+        doors: Number of Doors
+        engine-bore: Engine Bore (mm)
+        fuel-cap: Fuel Cap Volume (L)
+        fuel-type: Fuel Type
+        length: Vehicle Length (mm)
+        make: Vehicle Make
+        map-avatar: Select map avatar
+        map-avatar-text: Select an avatar to be used for rendering on maps when using
+          geolocation tracking features.
+        model: Vehicle Model
+        position: Engine Position
+        power-ps: Engine Power (ps)
+        power-rpm: Engine Power (rpm)
+        seats: Number of Seats
+        select-avatar: Select avatar
+        select-driver: Select Driver
+        stroke: Stroke Length (mm)
+        top-speed: Vehicle Top Speed (kph)
+        torque-nm: Engine Torque (nm)
+        torque-rpm: Engine Torque (rpm)
+        transmission: Vehicle Transmission Type
+        type: Vehicle Drive Type
+        weight: Vehicle Weight (kg)
+        wheelbase: Vehicle Wheelbase (mm)
+        width: Vehicle Width (mm)
+        year: Vehicle Year
+      vendor-details:
+        host: Host
+        namespace: Namespace
+        sandbox: Sandbox
+      vendor-form:
+        cancel-credentials: Cancel credentials reset
+        choose-vendor: Choose Integrated Vendor
+        configure-vendor: to configure this vendor.
+        create-vendor: Create Custom Vendor
+        credentials: Credentials
+        custom-host: Custom Host
+        custom-namespace: Custom Namespace
+        email-text: The vendor's email, this can be used to trigger emails to the
+          vendor.
+        hide-advanced: Hide Advanced
+        host-text: Optionally provide a custom host that should be used for this integration.
+        name-text: The vendor's name, typically the name of a business.
+        namespace-text: Optionally provide a custom namespace or api version that
+          should be used for the integration.
+        optionally: Optionally supply your own
+        options: Options
+        phone-text: The vendor's phone \#, this can be used to trigger SMS or messages
+          to the vendor.
+        reset-message: Sensitive credentials can only be reset, to update credentials
+          you must re-enter the credentials.
+        sandbox: Sandbox
+        select: Select
+        select-address: Select Address
+        show-advanced: Show Advanced
+        webhook: Webhook URL
+        webhook-text: Integrated vendors will typically require this so that FleetYes
+          can receive activity updates on the order. Do not change unless you know
+          what you are doing! Changing this may break your order updates!
+        website-text: The vendor's website, optionally add the vendors website for
+          reference.
+      zone-form:
+        border-color: Zone Border Color
+        customize-border: Customize the border color for this zone.
+        customize-fill-color: Customize the fill color for this zone.
+        description-zone: Description of Zone
+        name: Zone Name
+        name-text: Set a display name for the zone.
+        optionally: Optionally give the zone a description.
+        zone-color: Zone color
+    order:
+      header:
+        assign: Assign Driver
+        cancel-order: Cancel Order
+        dispatched: Dispatched
+        dispatched-at: Dispatched at
+        dispatched-order: Dispatched at {order}
+        edit: Edit Details
+        get-order: Get Order Label
+        reschedule: Reschedule Order
+        split-order: Split Order
+        update: Update Activity
+      place-card:
+        show-less: Show less details
+        show-more: Show more details
+      schedule-card:
+        assign-busy-button: Continue {button}
+        assign-busy-text: The driver ({driverName}) <strong >{availability}</strong>.
+          Do you still want to assign Order {orderId} to them? Click Continue {button}
+          to confirm.
+        assign-button: Continue and assign driver
+        assign-driver: Assign New Driver?
+        assign-text: You are about to assign a new driver ({driverName}) to Order
+          {orderId}. Click continue to confirm driver.
+        cannot-edit-completed: Cannot edit completed orders
+        cannot-modify-complete-order: Cannot modify a completed order.
+        date: Date scheduled
+        date-created: Date created
+        destination: Destination
+        driver-assigned: Driver
+        driver-has-no-vehicle: The selected driver does not have an assigned vehicle.
+          Please assign a vehicle or choose another driver with a vehicle before proceeding.
+        driver-no-vehicle-title: The driver ({driverName}) has no vehicle!
+        end-date: Estimated End Date
+        end-date-earlier: End Date cannot be earlier than the Start Date.
+        end-date-required: End Date is required.
+        missing-info: Missing Information!
+        no-changes: No changes were made to the order
+        no-driver: No Driver
+        no-vehicle: No Vehicle
+        ok-button: Okay
+        on-leave: on Leave
+        required-error: Both driver and vehicle must be selected to proceed.
+        select-driver: Select Driver
+        select-vehicle: Select Vehicle
+        start-date-required: Start Date is required.
+        start-end-required: Start Date and End Date are required.
+        status: Status
+        unassign-button: Continue and unassign driver
+        unassign-driver: Unassign Driver?
+        unassign-text: You are about to unassign the driver for Order {orderId}. Click
+          continue to confirm removal of driver.
+        vehicle-assigned: Vehicle
+    order-config:
+      activity-flow-editor:
+        activity-details: Activity Details
+        add-logic: Add logic condition
+        add-status: Add new status to flow
+        delete-button: Yes, delete
+        enter-value: Enter value to compare
+        logic-stack: Logic Stack
+        message: Activity flow configuration will allow you to define the different
+          types of tracking status activities that apply for this order type. Logic
+          of the activity flow can also be configured.
+        new-activity: New Activity
+        no-logic: No logic conditions applied
+        no-status: No status entered.
+        order-flow: Order Flow
+        order-warning: The created status must always be the first sequence of an
+          order flow.
+        overwrite: This will overwrite an existing status!
+        overwrite-button: Yes, overwrite!
+        overwrite-text: There is another {statusName} status already existing in this
+          flow, if you continue this status will be overwritten. Would you like to
+          overwrite the previous {statusName} status?
+        remove: Remove status
+        remove-text: Are you sure you wish to delete this status? All related activites
+          and logic will be deleted along with the status.
+        select-field: Select field
+        select-operator: Select operator
+        title: Activity Flow
+        unable-warning: The {status} must be in this order of sequence, unable to
+          shift.
+        waypoint-flow: Waypoint Flow
+      body: Once this order configuration is deleted you will not be able to create
+        orders using it anymore. Are you sure?
+      cloned-success: Order config successfully cloned.
+      create-new-title: Create a new order configuration
+      details: Details
+      details-editor:
+        clone: Clone Configuration
+        delete: Delete Configuration
+        id: Extension ID
+        id-text: Unique ID for this extension.
+        key-text: Pass this key into your order type to configure the order using
+          this config.
+        namespace-text: Unique namespace for this extension.
+        success: Installed
+        uninstall: Uninstall Configuration
+        version: Extension Version
+        version-text: Version of this extension.
+      enter-name-title: Enter name of cloned configuration
+      entities: Entities
+      entities-editor:
+        add-meta: Add meta field
+        message: Entities configuration will allow you to define the different type
+          of entities that should be selectable for this order type. These should
+          be used like templates to make manual order creation faster.
+        title: Entities
+        type: Entity Type
+        warning-message: No meta field key name entered.
+      fields: Custom Fields
+      fields-editor:
+        add-option: Add Option
+        boolean: Boolean
+        boolean-text: Allows user to toggle a true or false property by checkbox
+        custom-field: Custom Field
+        custom-field-group: Custom Fields Group
+        datetime: Datetime Selector
+        datetime-text: Allows user to select a date & time
+        default-field: Default Fields
+        dropdown: Dropdown Select
+        dropdown-text: Allows user to select an option from a dropdown of options
+        field-text: Meta fields configuration will allow you to define custom input
+          fields that will be applied to orders.
+        field-title: Meta Fields
+        new-custom-field: New Custom Fields Group
+        new-field: New Custom Field
+        port: Port Selector
+        port-text: Allows user to select a port
+        select-type: Select field type
+        text-field: Text Field
+        type: Field Type
+        vessel: Vessel Selector
+        vessel-text: Allows user to select a vessel
+        warning-message: No group name entered.
+      flow: Activity Flow
+      loading-configuration: Loading your order configurations...
+      new-config: New Config
+      no-config-warning: No config name entered.
+      no-order-warning: No order configuration selected.
+      save-changes: Save Changes
+      saved-success: '{orderName} order configuration saved.'
+      select-message: Select an order configuration to modify, or click "New Config"
+        to create a new order configuration.
+      select-order: Select order configuration
+      success-message: New order config created successfully.
+      uninstall-success: Extension {extensionName} uninstalled.
+      uninstall-title: Uninstall Configuration
+      warning-message: Order configuration requires a name
+    order-config-manager:
+      activity-flow:
+        edit-activity-unique-code-warning: Activity code must be unique!
+        save-activity-flow: Save Activity Flow
+      cloned-success-message: Order config successfully cloned.
+      configuration: Configuration
+      create-new-title: Create a new order configuration
+      create-success-message: New order config created successfully.
+      create-warning-message: Order configuration requires a name
+      custom-fields:
+        delete-custom-field-group-prompt:
+          confirm-delete: Delete
+          delete-body-message: Once this field group is deleted it will not be recoverable
+            and you will lose all custom fields inside.
+          modal-title: Delete this field group?
+        delete-custom-field-prompt:
+          confirm-delete: Delete
+          delete-body-message: Once this custom field is deleted it will not be recoverable
+            and you will lose all configurations.
+          modal-title: Delete this custom field?
+        grid-size: Grid Size
+        new-custom-field: Create new custom field
+        new-field-group: New field group
+      delete-warning-message: Once this order configuration is deleted you will not
+        be able to create orders using it anymore. Are you sure?
+      details:
+        add-tags: Add Tags
+        controls: Controls
+        delete:
+          confirm-delete: Delete
+          delete-body-message: Once this order config is deleted it will not be recoverable
+            and you will lose all configurations.
+          delete-title: Delete this order config?
+        delete-config: Delete Config
+        description: Description
+        details: Details
+        key: Key
+        name: Name
+        namespace: Namespace
+        tags: Tags
+        version: Version
+      enter-clone-name: Enter name of cloned configuration
+      entities:
+        confirm-delete: Confirm
+        delete-custom-entity-body: Once this custom entity is deleted it will not
+          be recoverable and you will lose all configurations.
+        delete-custom-entity-title: Delete this custom entity?
+        description: Description
+        height: Height
+        length: Length
+        name: Name
+        new-custom-entity: New Custom Entity
+        type: Type
+        weight: Weight
+        width: Width
+      message: Order configurations allow you to define dynamic configurations which
+        will tell FleetYes how different types of orders should be executed.
+      new-order-config: New Order Config
+      no-config-name-warning-message: No config name entered.
+      no-order-config-selected: No order configuration selected.
+      saved-success-message: '{orderConfigName} configuration saved.'
+      select-order-config: Select Order Config
+      select-order-config-to-start: Select or create an order config to start.
+      title: Orders Configuration
+      types:
+        no-order-installed: No order configurations installed!
+        view-extensions: View extensions
+        you-have-no-configs: You currently have no order configs installed, check
+          at the extensions to install an order configuration to get started.
+      uninstall-order-config: Uninstall Configuration
+      uninstall-order-config-success-message: Extension {extensionName} uninstalled.
+    order-list-overlay:
+      actions: Actions
+      active-orders: Active Orders
+      assign: Assign to driver...
+      cancel: Cancel orders...
+      create-fleet: Create new fleet...
+      create-order: Create new order...
+      delete: Delete orders...
+      dispatch: Dispatch orders...
+      search: Search orders...
+      selected: Selected
+      unassigned-orders: Unassigned Orders
+    parking-form-panel:
+      cancel-edit-parking-report: Cancel edit parking report
+      cancel-new-parking-report: Cancel new parking report
+      cost: Cost
+      create-parking-report: Create Parking Report
+      parking-report: New Parking Report
+      save-parking-report: Save Parking Report
+      select-driver: Select Driver
+      select-parking-report: Select parking-report status
+      select-reporter: Select Reporter
+      select-vehicle: Select Vehicle
+      success-message: Parking report saved successfully.
+      view-details: View parking report details
+    parking-report-panel:
+      cancel-edit-parking-report: Cancel edit parking report
+      cancel-new-parking-report: Cancel new parking report
+      edit-button: Edit parking report
+      title: Parking Report Details
+    place-form-panel:
+      building: Building
+      cancel-edit-place: Cancel edit place
+      cancel-new-place: Cancel new place
+      coordinates-invalid: Coordinates are invalid. Please enter a valid latitude
+        and longitude.
+      coordinates-required: Coordinates are required.
+      create-place: Create Place
+      neighborhood: Neighborhood
+      place: New Place
+      postal-code: Postal Code
+      save-place: Save Place
+      security-code: Security Access Code
+      state: State
+      street-1: Street 1
+      street-2: Street 2
+      success-message: place ({placeAddress}) saved successfully.
+      view-details: View place details
+    place-panel:
+      cancel-edit-place: Cancel edit place
+      cancel-new-place: Cancel new place
+      edit-place: Edit place
+    route-list:
+      collapse: Tap to collapse
+      expand: Tap to expand
+      more-waypoints: more waypoints
+    settings-window:
+      message: Distance must be in meters
+      name: Default Adhoc Ping Distance
+      name-text: This setting determines the default distance in meters adhoc orders
+        should ping drivers within vicinity of the order pickup point.
+      save: Save Changes
+      success-message: Settings successfully saved.
+      title: FleetOps Settings
+    toll-report-form-panel:
+      cancel-edit-parking-report: Cancel edit Toll report
+      cancel-new-parking-report: Cancel new Toll report
+      cost: Cost
+      create-parking-report: Create Toll Report
+      parking-report: New Toll Report
+      save-parking-report: Save Toll Report
+      select-driver: Select Driver
+      select-parking-report: Select toll-report status
+      select-reporter: Select Reporter
+      select-vehicle: Select Vehicle
+      success-message: Toll report saved successfully.
+      view-details: View Toll report details
+    toll-report-panel:
+      cancel-edit-fuel-report: Cancel edit toll report
+      cancel-new-fuel-report: Cancel new toll report
+      edit-button: Edit Toll report
+      title: Toll Report Details
+    vehicle-form-panel:
+      avatar: Avatar
+      cancel-edit-vehicle: Cancel edit vehicle
+      cancel-new-vehicle: Cancel new vehicle
+      create-vehicle: Create Vehicle
+      driver-assigned: Driver Assigned
+      make: Make
+      model: Model
+      new-vehicle: New Vehicle
+      not-assigned: No driver assigned
+      plate-number: Plate Number
+      save-vehicle: Save Vehicle
+      select-avatar: Select avatar
+      select-avatar-rendering: Select an avatar to be used for rendering on maps when
+        using geolocation tracking features.
+      select-driver: Select Driver
+      select-map-avatar: Select map avatar
+      select-vehicle: Select Vehicle
+      success-message: Vehicle ({vehicleName}) saved successfully.
+      upload-photo: Upload new photo
+      vehicle-assigned: Vehicle Assigned
+      vehicle-make: Vehicle make
+      vehicle-model: Vehicle model
+      vehicle-year: Vehicle year
+      view-details: View vehicle details
+      vin-number: VIN Number
+      year: Year
+    vehicle-panel:
+      assign-driver: Assign a driver to vehicle
+      close: Close vehicle details
+      edit: Edit vehicle
+      not-assigned: No driver assigned
+    vendor-form-panel:
+      cancel-edit-vendor: Cancel edit vendor
+      cancel-new-vendor: Cancel new vendor
+      create-form:
+        advanced-options: Advanced Options
+        choose-vendor: Choose integrated vendor provider
+        configure-vendor: to configure this vendor.
+        credentials: Credentials
+        custom-vendor: Create a custom vendor
+        edit: Edit
+        email-text: The vendor's email, this can be used to trigger emails to the
+          vendor.
+        hide-advanced-options: Hide Advanced Options
+        host: Custom Host
+        host-text: Optionally provide a custom host that should be used for this integration.
+        integrated-vendor: Choose a integrated vendor
+        name-text: The vendor's name, typically the name of a business.
+        namespace: Custom Namespace
+        namespace-text: Optionally provide a custom namespace or api version that
+          should be used for the integration.
+        new-address: New Address
+        optionally: Optionally supply your own
+        phone-text: 'The vendor''s phone #, this can be used to trigger SMS or messages
+          to the vendor.'
+        provider: Provider
+        select: Select
+        select-address: Select Address
+        select-integrated: Select an integrated vendor provider.
+        select-vendor-status: Select vendor status
+        select-vendor-type: Select vendor type
+        show-advanced-options: Show Advanced Options
+        title: Setup
+        vendor-details: Vendor Details
+        webhook: Webhook URL
+        webhook-text: Integrated vendors will typically require this so that FleetYes
+          can receive activity updates on the order. Do not change unless you know
+          what you are doing! Changing this may break your order updates!
+        website-text: The vendor's website, optionally add the vendors website for
+          reference.
+      create-vendor: Create Vendor
+      edit-form:
+        cancel-credentials: Cancel credentials reset
+        reset-credentials: Click here to reset credentials
+        select-address: Select Address
+        sensitive-credentials: Sensitive credentials can only be reset, to update
+          credentials you must re-enter the credentials.
+      new-vendor: New Vendor
+      save-vendor: Save Vendor
+      success-message: Vendor ({vendorName}) saved successfully.
+      upload-photo: Upload new photo
+      view-details: View vendor details
+    vendor-panel:
+      close: Close vendor details
+      drivers:
+        add-driver: Assign driver to vendor
+        loading-driver: Loading vendor drivers...
+        search-driver: Search vendor drivers
+      edit: Edit vendor
+      new-vendor: New Vendor
+    widget:
+      fleet-ops-quickstart:
+        message: Let's see what you can do to jumpstart operations...
+        start-task: Start Task
+      key-metrics:
+        closed-issues: Closed Issues
+        customers: Customers
+        driver-online: Drivers Online
+        earnings: Earnings
+        fuel-expenses: Fuel Expenses
+        open-issue: Open Issue
+        order-canceled: Orders Canceled
+        order-completed: Orders Completed
+        order-progress: Orders In Progress
+        order-scheduled: Orders Scheduled
+        title: Fleet-Ops Metrics
+        total-time: Total Time
+        traveled: Distance Traveled
+      live-order-map:
+        assigned: Driver Assigned
+        loading: Loading orders in progress...
+        message: When orders are in progress they will display in this widget and
+          show real time activity.
+        no-order: No orders in progress
+      recent-orders:
+        loading: Loading recent orders...
+        message-part-1: There hasn't been any orders this week, get movement going
+          by
+        message-part-2: creating a new order
+        message-part-3: or allow your customers to submit orders via API.
+        no-orders: No orders for this week
+        title: Recent Orders
+      transactions:
+        loading: Loading recent transactions...
+        message: When orders are going through with service rates, FleetYes tracks
+          transactions automatically.
+        no-transactions: No transactions this week
+        title: Recent Transactions
+  extension-name: Fleet-Ops
+  fleet-ops: FleetYes Flow
+  iam: User Access Management
+  management:
+    contacts:
+      customers:
+        created: Created At
+        delete-button: Delete Customers
+        delete-customer: Delete Customer
+        delete-customers: Delete Customers
+        edit:
+          body: Unsaved changes to this customer will be lost. Click continue to proceed.
+          button: Continue without saving
+          title: Continue Without Saving?
+        edit-customer: Edit Customer
+        title: Customers
+        updated: Updated At
+        view-customer: View Customer Details
+      index:
+        created: Created At
+        delete-button: Delete Contacts
+        delete-contact: Delete Contact
+        delete-contacts: Delete Contacts
+        edit:
+          body: Unsaved changes to this contact will be lost. Click continue to proceed.
+          button: Continue without saving
+          title: Continue Without Saving?
+        edit-contact: Edit Contact
+        title: Contacts
+        updated: Updated At
+        view-contact: View Contact Details
+    drivers:
+      index:
+        assign-driver: Assign Driver
+        assign-order: Assign Order
+        assign-order-driver: Assign order to driver...
+        assign-success: '{driverName} assigned to order.'
+        assign-vehicle: '{driverName} assigned to vehicle.'
+        assign-vehicle-driver: Assign vehicle to driver...
+        confirm-button: Confirm & Create
+        delete-button: Delete Drivers
+        delete-driver: Delete driver...
+        delete-drivers: Delete Drivers
+        edit:
+          body: Unsaved changes to this driver will be lost. Click continue to proceed.
+          button: Continue without saving
+          title: Continue Without Saving?
+        edit-details: Edit driver details...
+        locate-driver: Current Location of {driverName}
+        locate-driver-map: Locate driver on map...
+        no-order-warning: No order selected!
+        order-driver: Assign Order to this Driver
+        search-placeholder: Search Drivers
+        title: Drivers
+        title-vehicle: Assign Vehicle to this Driver
+        view-details: View driver details...
+      new:
+        import-success: Import completed.
+        warning-message: No files in queue to upload!
+    fleets:
+      index:
+        assign-driver: Assign driver to fleet...
+        delete-button: Delete Fleets
+        delete-fleet: Delete fleet...
+        delete-fleets: Delete Fleets
+        edit:
+          body: Unsaved changes to this fleet will be lost. Click continue to proceed.
+        edit-fleet: Edit fleet details...
+        fleet-action: Fleet Actions
+        title: Fleets
+        view-fleet: View fleet details...
+    fuel-reports:
+      index:
+        delete: Delete Fuel Report
+        delete-button: Delete Fuel Reports
+        delete-fuel-reports: Delete Fuel Reports
+        edit:
+          body: Unsaved changes to this expense-report will be lost. Click continue
+            to proceed.
+        edit-fuel: Edit Fuel Report
+        title: Fuel Reports
+        view: View Details
+    issues:
+      index:
+        delete: Delete Issues
+        delete-button: Delete Issues
+        delete-issues: Delete Issues
+        edit:
+          body: Unsaved changes to this issue will be lost. Click continue to proceed.
+        edit-issues: Edit Issues
+        title: Issues
+        view: View Details
+    metrics:
+      groups_count: Groups Count
+      policy_count: Policy Count
+      roles_count: Roles Count
+      title: IAM Metrics
+      users_count: Users Count
+    parking:
+      index:
+        delete: Delete Parking Report
+        delete-button: Delete Parking Reports
+        delete-parking-report: Delete Parking Reports
+        delete-parking-report-confirm: Are you sure to delete this Parking Report?
+        delete-parking-report-success: The Parking Report has been deleted.
+        delete-parking-reports: Delete Parking Reports
+        edit:
+          body: Unsaved changes to this parking report will be lost. Click continue
+            to proceed.
+        edit-parking-report: Edit Parking Report
+        title: Parking Reports
+        view: View Details
+    places:
+      index:
+        confirm-button: Confirm & Create
+        delete: Delete Place
+        delete-button: Delete Places
+        delete-places: Delete Places
+        edit:
+          body: Unsaved changes to this place will be lost. Click continue to proceed.
+        edit-place: Edit Place
+        locate-title: Location of {placeName}
+        place-action: Place Actions
+        places-title: Places
+        success-message: '{placeName} details has been updated.'
+        title: Assign this Place to a Vendor
+        view-details: View Place Details
+        view-place: View Place on Map
+    toll-reports:
+      index:
+        delete: Delete Toll Report
+        delete-button: Delete Toll Reports
+        delete-toll-report-confirm: Are you sure to delete this Toll Report?
+        delete-toll-report-success: The Toll Report has been deleted.
+        delete-toll-reports: Delete Toll Reports
+        edit:
+          body: Unsaved changes to this toll report will be lost. Click continue to
+            proceed.
+        edit-toll-report: Edit Toll Report
+        title: Toll Reports
+        view: View Details
+    vehicles:
+      index:
+        delete-button: Delete Vehicles
+        delete-vehicle: Delete vehicle...
+        delete-vehicles: Delete Vehicles
+        edit:
+          body: Unsaved changes to this vehicle will be lost. Click continue to proceed.
+        edit-vehicle: Edit vehicle details...
+        locate-action-title: Locate Vehicles
+        locate-title: Current Location of {vehicleName}
+        title: Vehicles
+        view-vehicle: View vehicle details...
+    vendors:
+      index:
+        delete-button: Delete Vendors
+        delete-vendor: Delete vendor
+        delete-vendors: Delete Vendors
+        edit:
+          body: Unsaved changes to this vendor will be lost. Click continue to proceed.
+        edit-vendor: Edit vendor
+        title: Vendors
+        view-vendor: View vendor Details
+  operations:
+    order-config:
+      route-loading-message: Loading Order Config Builder
+    orders:
+      index:
+        cancel-body: Once this order is canceled, the order record will still be visible
+          but activity cannot be added to this order.
+        cancel-order: Cancel Order
+        cancel-orders: Cancel Orders
+        cancel-success: Order {orderId} has been canceled.
+        cancel-title: Are you sure you wish to cancel this order?
+        config:
+          configuration: Configuration
+          message: Order configurations allow you to define dynamic configurations
+            which will tell FleetYes how different types of orders should be executed.
+          title: Orders Configuration
+          types:
+            no-order-installed: No order configurations installed!
+            view-extensions: View extensions
+            you-have-no-configs: You currently have no order configs installed, check
+              at the extensions to install an order configuration to get started.
+        created-by: Created By
+        customer: Customer
+        delete-order: Delete Order
+        delete-orders: Delete Orders
+        dispatch-body: Once this order is dispatched the assigned driver will be notified.
+        dispatch-order: Dispatch Order
+        dispatch-orders: Dispatch Orders
+        dispatch-success: Order {orderId} has been dispatched.
+        dispatch-title: Are you sure you want to dispatch this order?
+        driver-assigned: Driver
+        dropoff: Dropoff
+        estimated-end-date: Estimated End Date
+        facilitator: Facilitator
+        items: Items
+        map: Map
+        new:
+          ad-hoc: Ad-Hoc
+          ad-hoc-help-text: Toggling Ad-Hoc will enable the order to intelligently
+            ping drivers within the order pickup vicinity about the order allowing
+            the first available driver to accept the order. This is an alternative
+            to manually assigning the driver for real-time orders.
+          add-entity: Add Entity
+          add-field: Add custom field
+          add-item-button: Add Item
+          add-item-order: Add Item to Order
+          add-order: Add entity to order
+          add-waypoint: Add Waypoint
+          add-waypoint-help-text: Use the `Add Waypoint` button to add more stops
+            for this order. The FleetYes routing engine will automatically optimize
+            the route as each stop is added or removed.
+          additional-details: Additional Details
+          adhoc-ping: Adhoc Ping Distance
+          adhoc-ping-help-text: This setting determines the adhoc distance to ping
+            for this order, if unset it will fallback to the default setting.
+          adhoc-ping-message: Distance must be in meters
+          apply-service-rate: Apply service rate
+          assign-driver: Assign Driver
+          assign-driver-help-text: Assign the driver this order will be dispatched
+            to.
+          assign-driver-placeholder: Select Driver
+          assign-vehicle: Assign Vehicle
+          assign-vehicle-help-text: Assign the vehicle this order will be performed
+            with.
+          assign-vehicle-placeholder: Select Vehicle
+          breakdown: Breakdown
+          create-new-customer: Create new customer
+          create-new-facilitator: Create new facilitator
+          create-new-place: Create new place
+          custom-field-title: Add custom field to order
+          customer: Customer
+          customer-help-text: Optionally assign the customer of this order. If it's
+            a new customer, use the 'New Customer' button above.
+          customer-placeholder: Select Customer
+          dispatch: Dispatch Immediately
+          dispatch-help-text: Toggling dispatch will dispatch this order immediatley
+            following creation.
+          dropoff: Dropoff
+          edit-address: Edit Address
+          edit-field-title: Edit custom field
+          edit-item: Edit Item
+          edit-metadata: Edit Metadata
+          edit-order: Edit order metadata
+          estimated-end-date: Estimated End Date
+          facilitator: Facilitator
+          facilitator-help-text: Optionally assign a facilitator for this order, a
+            facilitator can be a 3rd party subcontractor or service that will facilitate
+            the transport of this order.
+          facilitator-placeholder: Select Facilitator
+          import-success: Import completed.
+          info-text: Select a real time service quote to apply to this order. Once
+            a quote is applied to the order, it will become a purchased rate. Transactions
+            will be tracked within the FleetYes ledger.
+          infoblock-text: is not able to support this location.
+          input-field-required: The {inputFieldName} is required.
+          input-order-info-text: Input order route to view service quotes.
+          internal-id: Internal ID
+          internal-id-help-text: Use this field to optionally set a custom identifier
+            or internal identifier for the order.
+          invalid-coordinates: Invalid coordinates!
+          items-drop: Items drop at
+          label-warning: Custom field must have a label
+          loading-message: Loading service quotes...
+          metadata: Metadata
+          no-route-warning: No route to preview.
+          no-service-info-text: No service quotes.
+          notes-placeholder: Enter order notes here....
+          notes-title: Notes
+          optimize-route: Optimize Route
+          optimize-route-help-text: FleetYes will automatically optimize the route.
+          order-type: Order Type
+          order-type-help-text: Selecting the order type will tell FleetYes what order
+            configurations to use.
+          order-type-placeholder: Select Order Type
+          payload-entities: Payload / Entities
+          pickup: Pickup
+          proof-delivery: Proof of Delivery
+          proof-delivery-help-text: Select the type of proof of delivery to require.
+            This can either be QR code scan or Signature method.
+          proof-delivery-placeholder: Select Proof of Delivery Method
+          refresh-button: Refresh
+          require-proof: Require Proof of Delivery
+          require-proof-help-text: Toggling this will require driver to complete a
+            proof of delivery.
+          return: Return
+          route: Route
+          route-error: Route optimization failed, check route entry and try again.
+          route-label: Multiple Dropoff's
+          schedule: Start Date
+          schedule-help-text: The date and time the order will be dispatched. If no
+            driver is assigned at time of dispatch, the dispatch will fail. If the
+            order is Ad-Hoc the order will be pinged to drivers in vicinity of pickup.
+          select-destination: Select Destination
+          select-dropoff: Select Dropoff
+          select-pickup: Select Pickup
+          select-return: Select Return
+          select-service-rate: Select Service Rate
+          select-waypoint-placeholder: Select Waypoint
+          service-help-text: Select a defined service rate to generate real time service
+            quotations to apply to this order.
+          service-quotes: Service Quotes
+          service-quotes-help-text: Select which service rate to fetch quotes for.
+          service-type: Service Type
+          service-type-help-text: Select the service type you wish to use for
+          service-type-placeholder: Select service Type
+          service-warning: Failed to fetch service quotes for this order.
+          sku: SKU
+          success-message: New Order {orderId} Created
+          value-warning: Custom field must have a value
+          warning-message: No files in queue to upload!
+        payload: Payload
+        pickup: Pickup
+        scheduled-at: Orders On
+        select-driver: Driver
+        select-dropoff-location: Dropoff
+        select-pickup-location: Pickup
+        select-vehicle: vehicle
+        table: Table
+        tracking: Tracking Number
+        transaction: Transaction Total
+        updated-by: Updated By
+        vehicle-assigned: Vehicle
+        view:
+          activity: Activity
+          ad-hoc: Ad-Hoc
+          add-activity-title: Add new activity to order
+          add-item-button: Add Item
+          additional-details-title: Additional Details
+          assign-driver: Assign Driver
+          assign-order: Assign driver to order
+          assign-success: '{orderId} assigned driver updated.'
+          cancel-order: Cancel Order
+          change-driver: Change Driver
+          change-order: Change order driver
+          comments-title: Comments
+          currency: Currency
+          customer: Customer
+          date-dispatched: Date Dispatched
+          date-estimated: Estimated End Date
+          date-scheduled: Start Date
+          date-started: Date Started
+          delete-order: Delete Order
+          delivery-fee: Delivery fee
+          delivery-tip: Delivery Tip
+          dispatch: Dispatch
+          documents-panel-title: Documents & Files
+          driver-assigned: Driver Assigned
+          dropoff: Dropoff
+          edit-details: Edit Details
+          edit-item-button: Edit Item
+          edit-order-title: Edit Order Details
+          edit-route-title: Edit Order Route
+          facilitator: Facilitator
+          get-label: Get Label
+          get-order-label: Get Order Label
+          invalid-warning: Invalid custom status entry.
+          items-drop: Items drop at
+          listen-socket-channel: Listen to socket channel
+          no-order-activity: No order activity yet.
+          notes-placeholder: Enter order notes here....
+          notes-title: Notes
+          order-actions: Order Actions
+          order-details-title: Order Details
+          order-metadata: Order Metadata
+          order-notes-updated: Order notes updated.
+          order-summary: Order Summary
+          order-title: Order Label
+          payload: Payload
+          pickup: Pickup
+          proof-of-delivery: Proof of Delivery
+          purchase-rate-panel-title: Purchase Rate
+          return: Return
+          route: Route
+          route-error: Route optimization failed, check route entry and try again.
+          route-panel-title: Route
+          route-update-success: '{orderId} route details updated.'
+          save-order-note: Save Order Note
+          start-tour: Start Tour
+          subtotal: Subtotal
+          tip: Tip
+          total: Total
+          tracking: Tracking
+          tracking-number: Tracking Number
+          unable-load-order-activity: Unable to load order activity.
+          unassign-body: Once the driver is unassigned, the driver will no longer
+            have access to this orders details.
+          unassign-driver: Unassign Driver
+          unassign-success: Driver has been unassigned from this order.
+          unassign-title: Are you sure you wish to unassing the driver ({driverName})
+            from this order?
+          update-activity: Update Activity
+          update-success: '{orderId} details has been updated.'
+          vehicle-assigned: Vehicle Assigned
+          view-activity: View Activity
+          view-metadata: View metadata
+          waypoint-actions: Waypoint Actions
+          waypoint-title: Waypoint Label
+        view-order: View Order
+      route-segments:
+        from-location: From
+        loading: Loading Route Segments...
+        loading-description: Please wait while we fetch the route segment data.
+        no-segments: No Routes Found
+        no-segments-description: There are no route segments available for this payload.
+        order-id: Order Id
+        segment: Segment
+        title: Route Segments
+        to-location: To
+    scheduler:
+      calendar:
+        all-drivers: All Driver
+        all-statuses: All Statuses
+        apply-filters: Apply Filter
+        clear-filters: Clear Filter
+        day: Day
+        driver: Driver
+        month: Month
+        order-id: Order ID
+        search-by-orderid: Search by Order ID
+        status: Trip Status
+        today: Today
+        week: Week
+      index:
+        info-message: Order {orderId} has been updated.
+        scheduled-orders: Assigned Orders
+        success-message: Order {orderId} has been updated at {orderAt}.
+        title: Calendar
+        unauthorized-to-schedule: You are not authorized to schedule orders.
+        unscheduled-orders: Unassigned Orders
+    service-rates:
+      index:
+        accept-button: Delete Service's
+        delete-service: Delete Service Rate
+        delete-service-rates: Delete Service Rates
+        edit:
+          success-message: Service rate {serviceName} updated
+        edit-service: Edit Service Rate
+        new:
+          add-drop-off-button: Add drop-off range
+          additional-fee: Additional Fee
+          algorithm-help-text: Define a formula to be evaluated for this service rate
+            calculation.
+          algorithm-label: Algorithm
+          algorithm-placeholder: (( '{distance}' / 50 ) * .05 ) + (( '{time}' / 60
+            ) * .01)
+          base-fee-help-text: Set a base fee which represents the minimum cost for
+            this serice.
+          base-fee-label: Base Fee
+          calculation-method-help-text: Method used to calculate the COD fee.
+          calculation-method-label: Cash on Delivery Fee Calculation Method
+          calculation-method-placeholder: Select COD fee calculation method
+          cash-delivery-label: Enable additional fee for `cash on delivery` orders?
+          cash-delivery-title: Cash on Delivery
+          create-service-button: Create Service Rate
+          custom-algorithm-info-message: This option is to define a custom calculation
+            for this service's fee with variables.
+          custom-algorithm-info-second-message: Note that variables must be wrapped
+            in a single curly brace.
+          custom-algorithm-title: Custom Algorithm
+          delivery-flat-fee: Cash on Delivery Flat Fee
+          delivery-flat-fee-help-text: Defines a flat fee to be added during peak
+            hours.
+          deminsions-unit: Dimensions Unit
+          distance: Distance
+          distance-continue-message: '- the distance in meters from the order route.'
+          distance-message: distance
+          distance-unit: Distance Unit
+          distance-unit-help-text: The unit of distance can be either per kilometer
+            or meter.
+          distance-unit-placeholder: Select distance unit.
+          duration-terms-help-text: Add additional terms of service regarding duration
+            for this serice rate.
+          duration-terms-label: Duration Terms
+          duration-terms-placeholder: Duration terms if applicable
+          estimated-days: Estimated Delivery Days
+          estimated-days-help-text: The estimated number of days this service will
+            take. For a same-day service use `0`.
+          example: Example
+          example-message: If the order request is a distance of 2,200 meters with
+            an ETA of 30 minutes.
+          example-second-message: Then the following formula will calculate a service
+            fee of $2.50, which will be added to the base fee.
+          fee: Fee
+          fee-percentage: Cash on Delivery Fee Percentage
+          fee-percentage-help-text: Defines a percentage based fee from the service
+            rate subtotal to be added as the COD fee.
+          fixed-meter: Fixed Meter Options
+          fixed-meter-example-text: 'For example: Every 1 kilometer a fixed fee is
+            defined. If the distance traveled by the order is 3,300 meters the fixed
+            fee for the 3rd kilometer will be added to the sum of the base fee.'
+          fixed-meter-text: This option defines a fixed fee per kilometer.
+          flat-fee-help-text: Defines a flat fee to be added during peak hours.
+          flat-fee-label: Peak Hours Flat Fee
+          height-label: Height
+          height-placeholder: Height in {parcelFeeDimension}
+          length-label: Length
+          length-placeholder: Length in {parcelFeeDimension}
+          max: Max
+          max-drop: Max Drop
+          maximum-distance: Maximum Distance
+          maximum-distance-help-text: The maximum distance servicable.
+          min: Min
+          min-drop: Min Drop
+          new-service-rate-title: New service rate
+          peak-hours-end-help-text: Defines the what time the peak hour fee ends.
+          peak-hours-end-label: Peak Hours End
+          peak-hours-fee-help-text: Method used to calculate the peak hours fee.
+          peak-hours-fee-label: Peak Hours Fee Calculation Method
+          peak-hours-fee-placeholder: Select peak hours fee calculation method
+          peak-hours-label: Enable additional fee for order made during service defined
+            `peak hours`?
+          peak-hours-percentage-help-text: Defines a percentage based fee from the
+            service rate subtotal to be added during peak hours.
+          peak-hours-percentage-label: Peak Hours Fee Percentage
+          peak-hours-start-help-text: Defines the what time the peak hour fee starts.
+          peak-hours-start-label: Peak Hours Start
+          peak-hours-title: Peak Hours
+          per-drop-off-example-text: 'For example: 1-5 dropoffs in the order will
+            cost $x amount, 5-10 dropoffs per order will cost $x amount. This will
+            be added to the sum of the base fee.'
+          per-drop-off-text: This option defines a fixed fee per drop-offs.
+          per-drop-off-title: Per Drop-off Options
+          per-meter: Per Meter
+          per-meter-example-text: 'For example: ''{fee}'' * ''{distance}'' + ''{baseFee}'''
+          per-meter-rate-fee: Per Meter Flat Rate Fee
+          per-meter-rate-fee-help-text: The single flat fee which will be multipled
+            by the distance.
+          per-meter-text: This option allows the service to be calculated per kilometer
+            or meter, that means you define a flat fee which is then multiplied by
+            the distance which can be either meter or kilometer.
+          percel-fee-title: Parcel Fee's
+          percentage-placeholder: Percentage
+          rate-calculation-help-text: The method this service will use to calculate
+            rates when queried.
+          rate-calculation-label: Rate Calculation Method
+          rate-calculation-placeholder: Select rate calculation method
+          restrict-service-title: Restrict Service
+          save-service-button: Save Service Rate
+          select-unit-placeholder: Select unit
+          service-area-help-text: Restrict this service to order request originating
+            from a service area.
+          service-area-label: Service Area
+          service-area-placeholder: Restrict to service area
+          service-name: Service Name
+          service-name-help-text: Display name for this service.
+          service-order-help-text: Select an order configuration to which this service
+            rate will be exclusively applied. This ensures that only orders created
+            with the selected order configuration can utilize this specific service
+            rate.
+          service-order-label: Service Order Type
+          service-order-placeholder: Select order type to restrict service to
+          success-message: New Service Rate {serviceName} Created
+          time-continue-message: '- the route ETA in seconds.'
+          time-message: time
+          weight-label: Weight
+          weight-placeholder: Weight in {parcelFeeWeight}
+          weight-unit: Weight Unit
+          width-label: Width
+          width-placeholder: Width in {parcelFeeDimension}
+          zone-help-text: Restrict this service to order request originating from
+            a specific zone.
+          zone-label: Zone
+          zone-placeholder: Restrict to zone
+        reload-data: Reload data
+        title: Service Rates
+  settings:
+    navigator-app:
+      navigator-app-settings: Navigator App Settings
+    payments:
+      payment-settings: Payment Settings
+      payments: Payments
+  user-management:
+    2fa-settings: 2FA Settings
+    2fa-settings-saved: 2FA Settings saved successfully.
+    2fa-settings-saved-by-admin: 2FA Settings saved for admin successfully.
+    2fa-settings-saved-for-organization: 2FA Settings saved for organisation successfully.
+    access-control: Access Control
+    branding-settings-saved: Branding settings saved.
+    change-password: Change Password
+    choose-authentication-method: Choose an authentication method
+    confirm-and-change: Confirm & Change Password
+    create-organization: Create Organisation
+    enable-2fa: Enable Two-Factor Authentication
+    failed-to-change-password: Failed to change password.
+    loading-2fa-config: Loading 2FA Config...
+    member-since: Member Since
+    networks: Networks
+    no-unread-notifications: No unread notifications
+    notification-settings-saved: Notification settings successfully saved.
+    order-assigned: Order Assigned
+    order-canceled: Order Canceled
+    order-dispatch-failed: Order Dispatch Failed
+    order-dispatched: Order Dispatched
+    order-ping: Order Ping
+    organization-changes-saved: Organisation changes successfully saved.
+    password-changes-saved: Password change successfully.
+    please-enter-new-password: Please enter the new password and confirm it below.
+      You have the option to send the new credentials to the user via email by selecting
+      the checkbox.
+    profile-changes-saved: Profile changes saved.
+    profiles: Profiles
+    require-2fa-setup: Require Users to Set-Up 2FA
+    reset-credentials: Reset Credentials
+    reset-user-credentials: Reset User Credentials
+    role: Role
+    save-2fa-settings: Save 2FA Settings
+    select-country: Select Country
+    select-notifiables: Select notifiables...
+    send-password-credentials: Send password credentials to user
+    service:
+      apn:
+        apn-app-bundle-id: APN App Bundle ID
+        apn-configuration: APN Configutation
+        apn-key-id: APN Key ID
+        apn-production: APN Production
+        apn-team-id: APN Team ID
+        upload-p8: Upload P8 Key File
+      aws:
+        access-key: AWS Access Key
+        access-region: AWS Region
+        access-secret: AWS Access Secret
+        name: AWS
+      file-system:
+        default-file-system: Select the default filesystem driver for FleetYes to
+          use.
+        filesystem-saved: Filesystem configuration saved.
+        gcs-account-key: GCS Service Account Key File
+        gcs-bucket: GCS Bucket
+        s3-bucket: S3 Bucket
+        s3-endpoint: S3 Endpoint
+        s3-url: S3 URL
+        select-filesystem-driver: Select filesystem driver
+        upload-service-account: Upload Service Account JSON
+        warning-gcs: Warning! GCS is already configured in the server environment.
+          Changing values below may break this.
+      firebase:
+        apn-device-token: APN Device Token
+        fcm-device-token: FCM Device Token
+        firebase-configuration: Firebase Configutation
+        message: Message
+        notification-success: Notification channel's configuration saved.
+        push-notification-message: Push Notification Message
+        push-notification-title: Push Notification Title
+        test-push-notification: Test Push Notification
+        title: Title
+      google-map:
+        api-key: Google Maps API Key
+        locale: Google Maps Locale
+        name: Google Maps
+      ip:
+        key: IP Info API Key
+        name: IP Info
+        save-changes: Save Changes
+      mail:
+        default-mailer: Select the default mailer for FleetYes to use.
+        enable-tls: Enabled TLS Encryption
+        from-address: From Address
+        from-name: From Name
+        help-text-from-address: Input the email address for FleetYes to send emails
+          from.
+        help-text-from-name: Input the name for FleetYes to send emails from.
+        mail-success: Mail configuration saved.
+        mailer: Mailer
+        mailgun: Mailgun
+        mailgun-domain: Mailgun Domain
+        mailgun-endpoint: Mailgun Endpoint
+        mailgun-secret: Mailgun Secret
+        name: Mail
+        postmark: Postmark
+        postmark-token: Postmark Token
+        resend: Resend
+        resend-api-key: Resend API Key
+        select-mailer: Select mailer
+        sendgrid: SendGrid
+        sendgrid-api-key: Sendgrid API Key
+        smtp: SMTP
+        smtp-auth-mode: SMTP Auth Mode
+        smtp-encryption: SMTP Encryption
+        smtp-host: SMTP Host
+        smtp-password: SMTP Password
+        smtp-port: SMTP Port
+        smtp-timeout: SMTP Timeout
+        smtp-username: SMTP Username
+        test-config: Test Config
+      queue:
+        beanstalk-host: Beanstalk Host
+        beanstalk-queue: Beanstalk Queue
+        default-queue-driver: Select the default queue driver for FleetYes to use.
+        queue-success: Queue configuration saved.
+        select-queue-driver: Select queue driver
+        sqs-prefix: SQS Prefix
+        sqs-queue: SQS Queue
+        sqs-suffix: SQS Suffix
+      sentry:
+        name: Sentry
+        sentry-dsn: Sentry DSN
+        test-sentry-config: Test Sentry Config
+      socket:
+        awaiting-events: Awaiting events
+        socket-connected: Socket is connected
+        socket-error: Socket connection error!
+        socket-subscribed: Socket subscribed to test channel
+        sockt-cluster: Socket Cluster Connection
+        sockt-cluster-cannot-change: The SocketCluster configuration cannot be changed
+          at this time.
+        test-socket: Test Socket Connection
+      twilo:
+        from: Twilio From
+        name: Twilio
+        sid: Twilio SID
+        test-sms: Send Test SMS Here
+        token: Twilio Token
+        twilo-config: Test Twilio Config
+    smtp: SMTP
+    twofa:
+      email:
+        description: Receive a unique code via Email
+        name: Email
+      sms:
+        description: Receive a unique code via SMS
+        name: SMS
+    unread-notifications: Unread notification
+    upload: Upload
+    uploading: Uploading...
+    user-accepted-company-invite: User Accepted Company Invite
+    user-access-management: User Access Management
+    user-created: User Created
+    validate-current-password: Validate Current Password
+    validate-current-password-before-change: You must validate your current password
+      before it can be changed.
+    validate-password: Validate Password
+    view-all-notifications: View all notifications
+    you-are-about-to-reset-the-password-for: You are about to reset the password for
+    you-will-enter-code: In addition to your username and password, you'll have to
+      enter a code (delivered via app or SMS) to sign in to your account
+    your-organization: Your Organisations
+fleetbase:
+  common:
+    close: Close
+    done: Done
+    help: Help
+    next: Next
+    previous: Previous
+  drivers:
+    tour:
+      driver_details:
+        description: Enter key driver details such as license number, assigned vehicle,
+          and location specifics.
+        title: Driver Details Section
+      new_button:
+        description: Opens the form to create a new driver profile and enter driver
+          details.
+        title: Create New Driver
+      submit:
+        description: Complete the driver creation process by submitting the form with
+          all the entered details.
+        title: Create Driver
+      user_account:
+        description: Select an existing user account to link with this driver profile.
+          This links the driver to a user who can access the driver mobile app.
+        title: User Account Section
+  fleets:
+    tour:
+      form_panel:
+        description: In this form, you can input essential details for creating or
+          editing a fleet, including its name, hierarchy, status, and tasks.
+        title: Fleet Creation Form
+      name_field:
+        description: Here you can enter the name of the fleet to identify it within
+          your organisation.
+        title: Fleet Name
+      new_button:
+        description: Opens the fleet creation form where you can define fleet details.
+        title: New Fleet Button
+      parent_fleet_field:
+        description: You can select the parent fleet if this fleet is part of a larger
+          fleet hierarchy to organise fleet structure.
+        title: Parent Fleet Selection
+      status_field:
+        description: In this field, you can set the status of the fleet to manage
+          its operational state.
+        title: Fleet Status
+      submit:
+        description: You can complete the fleet creation or update process by saving
+          all entered details.
+        title: Save Fleet
+      task_field:
+        description: Here you can specify the task or mission for this fleet to define
+          its primary function or objective.
+        title: Fleet Task
+  fuel-reports:
+    tour:
+      coordinates_field:
+        description: Track the geographical location where the fuel was purchased
+          to help optimize routes.
+        title: Location Coordinates
+      cost_field:
+        description: Record the total cost of the fuel purchase to track fuel expenses
+          and manage the budget.
+        title: Fuel Cost
+      driver_field:
+        description: Select the driver who was responsible for the vehicle during
+          this fuel transaction.
+        title: Driver Selection
+      form_panel:
+        description: Record essential fuel report details including reporter, driver,
+          vehicle, costs, and supporting documentation.
+        title: Fuel Report Creation Form
+      new_button:
+        description: Opens the fuel report creation form to record fuel consumption
+          and related costs.
+        title: New Fuel Report Button
+      payment_method_field:
+        description: Specify how the fuel was paid for to maintain accurate financial
+          records.
+        title: Payment Method
+      reporter_field:
+        description: Select the person responsible for reporting this fuel transaction
+          for accountability.
+        title: Reporter Selection
+      status_field:
+        description: Track the current status of this fuel report to manage its processing
+          workflow.
+        title: Report Status
+      submit:
+        description: Complete the fuel report creation process by submitting the form
+          with all entered details.
+        title: Create Fuel Report
+      upload_field:
+        description: Upload supporting documents such as receipts or photos to verify
+          this report.
+        title: Document Upload
+      vehicle_field:
+        description: Select the vehicle that was refueled to ensure accurate tracking
+          per vehicle.
+        title: Vehicle Selection
+      volume_field:
+        description: Record the amount of fuel purchased for fuel efficiency analysis
+          and consumption tracking.
+        title: Fuel Volume
+  groups:
+    tour:
+      description_field:
+        description: You can provide a description for the group to outline its purpose
+          or function.
+        title: Group Description
+      name_field:
+        description: Here you can enter the name of the group to identify it within
+          your system.
+        title: Group Name
+      new_button:
+        description: Opens the group creation form where you can define group details.
+        title: New Group Button
+      submit:
+        description: You can complete the group creation or update process by saving
+          all entered details.
+        title: Save Group
+      users_field:
+        description: In this section, you can choose users to add to this group to
+          define its membership.
+        title: Select Users
+  issues:
+    tour:
+      assigned_to_field:
+        description: You can assign this issue to the appropriate team member or department
+          responsible for addressing it.
+        title: Assigned To
+      category_field:
+        description: In this field, you can further classify the issue by selecting
+          a specific category for better analysis and resolution tracking.
+        title: Issue Category
+      coordinates_field:
+        description: You can specify the geographical location where the issue occurred,
+          which is important for location-specific issues or dispatching assistance.
+        title: Issue Location
+      driver_field:
+        description: If this issue is related to a specific driver, you can select
+          them here to track driver-specific concerns and patterns.
+        title: Related Driver
+      form_panel:
+        description: In this form, you can create detailed issue reports by providing
+          information about the issue type, priority, assigned personnel, and relevant
+          details.
+        title: Issue Report Form
+      new_button:
+        description: Opens the issue creation form where you can document problems,
+          maintenance needs, or other concerns related to your fleet operations.
+        title: Create New Issue
+      priority_field:
+        description: In this field, you can set the priority level for this issue
+          to determine how quickly it needs to be addressed.
+        title: Priority Level
+      report_field:
+        description: Here you can provide a detailed description of the issue, including
+          what's wrong, when it was noticed, and relevant circumstances.
+        title: Issue Description
+      reporter_field:
+        description: Here you can select the person who is reporting this issue to
+          track who initially identified and reported the problem.
+        title: Reported By
+      status_field:
+        description: Here you can track the current status of this issue and update
+          it as the issue progresses through its lifecycle.
+        title: Issue Status
+      submit:
+        description: You can submit this issue report to log it in the system, and
+          the assigned personnel will be notified to begin working on a resolution.
+        title: Create Issue
+      tags_field:
+        description: You can add relevant tags to help categorise and search for this
+          issue, making it easier to filter and find related issues.
+        title: Issue Tags
+      type_field:
+        description: You can categorise the issue by selecting its type to help with
+          proper routing and prioritisation.
+        title: Issue Type
+      vehicle_field:
+        description: Here you can select the vehicle associated with this issue to
+          track maintenance needs or vehicle-specific concerns.
+        title: Related Vehicle
+  orders:
+    tour:
+      activity_tab:
+        description: Track all actions and status changes related to the order throughout
+          its lifecycle.
+        title: Order Activity
+      add:
+        description: Start the order creation process by clicking the 'New' button.
+        title: New Order Creation
+      add_waypoint:
+        description: Include additional stops along the route, allowing multiple locations
+          in the delivery.
+        title: Add Waypoints
+      comments_tab:
+        description: View the chronological list of comments, discussions, and updates
+          related to the order.
+        title: Order Communication
+      dates:
+        description: Define the start and estimated completion dates to outline the
+          order's timeline.
+        title: Order Scheduling
+      details_edit:
+        description: Modify order details, such as dates, driver assignments, and
+          vehicle selections.
+        title: Edit Order
+      details_tab:
+        description: View comprehensive order details, including assigned driver,
+          vehicle, start date, and estimated end date.
+        title: Order Details
+      dispatch:
+        description: Execute the order fulfilment by dispatching it to the assigned
+          team or service provider.
+        title: Order Dispatch
+      dispatch_button:
+        description: Start the fulfilment process by dispatching the order to the
+          designated logistics resources.
+        title: Order Dispatch Controls
+      documents:
+        description: Attach relevant documents, such as delivery instructions, invoices,
+          or contracts, for record-keeping.
+        title: Document Upload
+      documents_tab:
+        description: Access an organised collection of all documents associated with
+          the order, including invoices and delivery notes.
+        title: Documents & Files
+      edit_modal:
+        description: Modify the start date, end date, driver, and vehicle assignments
+          within the order details.
+        title: Edit Order Details
+      import_button:
+        description: Import orders from a spreadsheet file for efficient bulk processing.
+        title: Import Orders
+      multiple_dropoff:
+        description: Multiple delivery destinations are enabled by default for a single
+          order.
+        title: Multiple Drop-Off Locations
+      multiple_dropoff_disabled:
+        description: Only one drop-off location is allowed for this order under the
+          current setting.
+        title: Multiple Drop-Off Disabled
+      notes:
+        description: Add any special instructions or notes to facilitate smooth order
+          handling.
+        title: Order Notes
+      notes_tab:
+        description: Store and review all notes and special handling instructions
+          related to the order.
+        title: Order Notes
+      pickup_dropoff_section:
+        description: Specify the pickup, drop-off, and return locations for the order.
+        title: Pickup/Dropoff/Return Section
+      route_tab:
+        description: Review the connected locations in the delivery route, showing
+          all stops and waypoints in sequence.
+        title: Route Overview
+      select_waypoint:
+        description: Define the location for each waypoint to ensure the delivery
+          route is mapped accurately.
+        title: Waypoint Location
+      start_upload:
+        description: Initiate the upload and processing of the selected spreadsheet
+          files.
+        title: Start Upload
+      submit:
+        description: Complete the order creation process by submitting the final details
+          for processing.
+        title: Submit the Order
+      tracking_tab:
+        description: Monitor the order's current status and location as it progresses
+          through the fulfilment process.
+        title: Order Tracking
+      upload_spreadsheets:
+        description: Upload spreadsheet files by dragging and dropping or selecting
+          from your device.
+        title: Upload Spreadsheets
+  organization_settings:
+    tour:
+      backdrop_field:
+        description: Here you can upload or view the backdrop image for your organisation
+          to enhance its visual identity.
+        title: Organisation Backdrop
+      currency_field:
+        description: Here you can select the currency used by your organisation for
+          financial transactions.
+        title: Organisation Currency
+      description_field:
+        description: You can provide a description for your organisation to outline
+          its purpose or details.
+        title: Organisation Description
+      id_field:
+        description: This displays the unique identifier for your organisation, which
+          cannot be edited.
+        title: Organisation ID
+      logo_field:
+        description: In this section, you can upload or view the logo for your organisation
+          to customise its branding.
+        title: Organisation Logo
+      name_field:
+        description: Here you can enter the name of your organisation to identify
+          it within the system.
+        title: Organisation Name
+      parking_zone:
+        description: You can specify the maximum distance for the parking zone to
+          configure operational boundaries.
+        title: Parking Zone
+      phone_field:
+        description: In this field, you can enter the phone number for your organisation
+          for contact purposes.
+        title: Organisation Phone
+      save_button:
+        description: You can save all changes made to the organisation settings by
+          clicking this button.
+        title: Save Changes
+  parking:
+    tour:
+      coordinates_field:
+        description: Here you can specify the exact location where parking occurred
+          to help with route optimisation and location analysis.
+        title: Parking Location
+      cost_field:
+        description: In this field, you can enter the total amount paid for parking
+          to maintain accurate financial records and expense tracking.
+        title: Parking Cost
+      driver_field:
+        description: You can select the driver who was responsible for the parking
+          transaction to track individual driver parking expenses.
+        title: Select Driver
+      form_panel:
+        description: In this form, you can create comprehensive parking reports by
+          filling in reporter, driver, vehicle, payment details, and location information.
+        title: Parking Report Form
+      help_button_tooltip: Start guided tour for parking management
+      new_button:
+        description: Opens the parking report form where you can record parking fees,
+          locations, and related details for your fleet vehicles.
+        title: Create New Parking Report
+      payment_method_field:
+        description: You can select how the parking fee was paid for expense reconciliation
+          and financial record keeping.
+        title: Payment Method
+      reporter_field:
+        description: Here you can choose the person responsible for reporting this
+          parking transaction to maintain accountability.
+        title: Select Reporter
+      status_field:
+        description: Here you can set the current status of this parking report to
+          track the workflow and approval process.
+        title: Report Status
+      submit:
+        description: You can complete the parking report creation process by submitting
+          the form with all the entered details.
+        title: Create Parking Report
+      upload_field:
+        description: In this section, you can upload supporting documents such as
+          parking receipts, tickets, or photos to provide verification.
+        title: Upload Documents
+      vehicle_field:
+        description: In this field, you can choose the vehicle that was parked to
+          track parking costs per vehicle and analyse fleet parking patterns.
+        title: Select Vehicle
+  places:
+    tour:
+      code_field:
+        description: Assign a unique code or identifier for this place to help with
+          quick reference and system integration.
+        title: Place Code
+      coordinates_field:
+        description: Set the precise geographical coordinates for this place, either
+          manually or by using the map interface.
+        title: Location Coordinates
+      form_panel:
+        description: Define all the essential details for a new place, including location
+          information and coordinates.
+        title: Place Creation Form
+      name_field:
+        description: Enter a descriptive name for this place that will be used to
+          identify it throughout the system.
+        title: Place Name
+      new_button:
+        description: Opens the place creation form where you can define location details
+          for a new place.
+        title: New Place Button
+      submit:
+        description: Complete the place creation process by submitting the form with
+          all the entered location details.
+        title: Create Place
+  policies:
+    tour:
+      description_field:
+        description: You can provide a description for the policy to outline its purpose
+          or function.
+        title: Policy Description
+      form_panel:
+        description: In this form, you can input essential details for creating or
+          editing a policy, including its name, description, and permissions.
+        title: Policy Creation Form
+      name_field:
+        description: Here you can enter the name of the policy to identify it within
+          your system.
+        title: Policy Name
+      new_button:
+        description: Opens the policy creation form where you can define policy details.
+        title: New Policy Button
+      permissions_field:
+        description: In this section, you can choose specific permissions to include
+          in the policy to define its access rights.
+        title: Select Permissions
+      submit:
+        description: You can complete the policy creation or update process by saving
+          all entered details.
+        title: Save Policy
+  roles:
+    tour:
+      description_field:
+        description: You can provide a description for the role to outline its purpose
+          or function.
+        title: Role Description
+      name_field:
+        description: Here you can enter the name of the role to identify it within
+          your system.
+        title: Role Name
+      new_button:
+        description: Opens the role creation form where you can define role details.
+        title: New Role Button
+      permissions_field:
+        description: Here you can choose specific permissions to grant the role access
+          to certain features or actions.
+        title: Select Permissions
+      policies_field:
+        description: In this section, you can attach policies to the role to specify
+          its permissions and access rights.
+        title: Attach Policies
+      submit:
+        description: You can complete the role creation or update process by saving
+          all entered details.
+        title: Save Role
+  scheduler:
+    tour:
+      assigned_order_event:
+        description: This block represents an assigned order on the calendar. Hover
+          to view order details and scheduling options.
+        title: Assigned Order Event
+      calendar:
+        description: Move orders from the unassigned panel to schedule them or select
+          existing events to review and modify their details.
+        title: Scheduling Calendar
+      click_assigned_order_link:
+        description: Click this link to open the modal and edit the details of an
+          assigned order.
+        title: Open Assigned Order Details
+      click_order_link:
+        description: Click this link to open the modal and edit the details of an
+          unassigned order.
+        title: Open Order Details
+      edit_assigned_order_modal:
+        description: Adjust scheduling details for orders already assigned, including
+          updating dates, reassigning drivers, or changing vehicle assignments.
+        title: Edit Assigned Order Details
+      edit_order_modal:
+        description: Modify delivery dates, assign drivers and vehicles, and adjust
+          other scheduling details for the unassigned orders.
+        title: Edit Unassigned Order Details
+      filters:
+        description: Use filters to search orders by Order ID, driver assignment,
+          or status. Reset filters to clear your view.
+        title: Filters
+      leave_event:
+        description: This block represents a scheduled leave or absence for a driver.
+          Leave events are always visible on the calendar.
+        title: Leave Event
+      scheduled_orders:
+        description: Review all orders assigned to drivers and scheduled for specific
+          time slots. Keep track of all scheduled deliveries in one view.
+        title: Assigned Orders Panel
+      time_period:
+        description: Select between Day, Week, Month, and Year views to visualise
+          your schedule from different perspectives.
+        title: Calendar View Options
+      unscheduled_orders:
+        description: This panel displays all orders awaiting scheduling. Review order
+          details and move them to the calendar for scheduling.
+        title: Unassigned Orders Panel
+  toll-reports:
+    tour:
+      coordinates_field:
+        description: Here you can specify the location of the toll facility to help
+          with route optimisation and cost analysis.
+        title: Toll Location
+      cost_field:
+        description: In this field, you can enter the total amount paid for tolls
+          to maintain accurate financial records and expense tracking.
+        title: Toll Amount
+      driver_field:
+        description: You can identify the driver who incurred the toll expense for
+          driver expense tracking and route analysis.
+        title: Select Driver
+      form_panel:
+        description: In this form, you can capture all essential toll expense information
+          including reporter, driver, vehicle, payment details, and supporting documentation.
+        title: Toll Report Form
+      new_button:
+        description: Opens the toll report form where you can enter all necessary
+          details for toll expenses and documentation.
+        title: Create New Toll Report
+      payment_method_field:
+        description: You can specify how the toll was paid for financial reconciliation
+          and expense categorisation.
+        title: Payment Method
+      reporter_field:
+        description: Here you can choose the person responsible for reporting this
+          toll expense to ensure proper accountability.
+        title: Select Reporter
+      status_field:
+        description: Here you can set the current status of this toll report to manage
+          the approval workflow and track processing state.
+        title: Report Status
+      submit:
+        description: You can complete the toll report creation process by submitting
+          the form with all the entered details.
+        title: Create Toll Report
+      upload_field:
+        description: In this section, you can upload supporting documents such as
+          toll receipts or photos to provide verification for this expense report.
+        title: Upload Documents
+      vehicle_field:
+        description: In this field, you can choose the vehicle that used the toll
+          road to track vehicle-specific toll expenses and analyse cost patterns.
+        title: Select Vehicle
+  users:
+    tour:
+      confirm:
+        description: You can complete the user creation or update process by saving
+          all entered details.
+        title: Save User
+      country:
+        description: Here you can select the user's country to associate them with
+          a specific region.
+        title: User Country
+      email:
+        description: You can provide the user's email address for communication and
+          login purposes.
+        title: User Email
+      name:
+        description: Here you can enter the full name of the user to identify them
+          within your system.
+        title: User Name
+      new-user:
+        description: Opens the user creation form where you can define user details.
+        title: New User Button
+      permissions:
+        description: Here you can choose specific permissions to grant the user access
+          to certain features or actions.
+        title: Select Permissions
+      phone:
+        description: In this field, you can enter the user's phone number for contact
+          and verification purposes.
+        title: User Phone
+      policies:
+        description: In this section, you can attach policies to the user to specify
+          their permissions and access rights.
+        title: Attach Policies
+      role:
+        description: You can assign a role to the user to define their responsibilities
+          and access level.
+        title: User Role
+  vehicles:
+    tour:
+      new_button:
+        description: Opens the form to create a new vehicle profile and input vehicle-specific
+          information.
+        title: Create New Vehicle
+      submit:
+        description: Complete the vehicle creation process by submitting the form
+          with all the entered details.
+        title: Create Vehicle
+      vehicle_avatar:
+        description: Upload a photo or image to visually represent the vehicle within
+          the system.
+        title: Vehicle Avatar Section
+      vehicle_details:
+        description: Enter essential vehicle information including internal ID, plate
+          number, VIN, make, model, year, and other specifications.
+        title: Vehicle Details Section
+fuelReportTypes:
+  Fuel: Fuel
+  Parking: Parking
+  Toll: Toll
+install:
+  failed-message-sent: The install failed! Click the button below to retry the install.
+  installer-header: Installer
+  retry-install: Retry Install
+  start-install: Start Install
+invite:
+  for-users:
+    accept-invitation-text: Accept Invitation
+    invitation-code-sent-text: Your invitiation code
+    invitation-message: You've been invited to join {companyName}
+    invitation-sent-message: You've been invited to join the {companyName} organisation
+      on {appName}. To accept this invitation, input your invitation code received
+      by email and click continue.
+layout:
+  header:
+    menus:
+      organization:
+        create-or-join: Create or join organisations
+        explore-extensions: Explore extensions
+        settings: Organisation settings
+      user:
+        changelog: Changelog
+        keyboard-shortcuts: Show keyboard shortcuts
+        view-profile: View profile
+leaves:
+  approve: Approve
+  approved: Approved
+  created_at: Created At
+  driver_name: Driver Name
+  end_date: End Date
+  error_fetching_leaves: Error fetching driver unavailability
+  failed_to: Failed to
+  leave: leave
+  leave_actions: Leave Actions
+  leave_type: Leave Type
+  leave_uppercase: Leave
+  other: Other
+  processed_by: Processed By
+  reason: Reason
+  reject: Reject
+  rejected: Rejected
+  sick: Sick
+  start_date: Start Date
+  status: Status
+  submitted: Submitted
+  total_days: Total Days
+  vacation: Vacation
+  view: View Leave
+onboard:
+  index:
+    confirm-password: Confirm your password
+    confirm-password-help-text: Just to confirm the password you entered above.
+    continue-button-text: Continue
+    full-name: Full name
+    full-name-help-text: Your full name
+    language: Language
+    number-of-drivers: Number of drivers
+    number-of-web-users: Number of web users
+    organization-help-text: Your organisation name, all your services and resources
+      will be managed under this organisation, later you can create as many organisations
+      as you want or need.
+    organization-name: Organisation name
+    password: Enter a password
+    password-help-text: Your password, make sure it's a good one.
+    phone: Phone number
+    phone-help-text: Your phone number
+    phone-max-validation: Phone number is too long (maximum is 15 digits)
+    phone-min-validation: Phone number is too short (minimum is 7 digits)
+    phone-required: Phone number is required.
+    title: Create your account
+    welcome-text: Complete the details required below to get started.
+    welcome-title: <strong>Welcome to {companyName}!</strong><br />
+    your-email: Email address
+    your-email-help-text: Your email address
+  verify-email:
+    didnt-receive-a-code: Didn't receive a code yet?
+    header-title: Account Verification
+    message-text: <strong>Almost done!</strong><br> Check your email for a verification
+      code.
+    not-sent:
+      alternative-choice: Use alternaitve options below to verify your account.
+      message: Didn't receive a code yet?
+      resend-email: Resend Email
+      send-by-sms: Send by SMS
+    title: Verify your email address
+    verification-code-text: Enter the verification code you received via email.
+    verification-input-label: Verification Code
+    verify-button-text: Verify & Continue
+paymentOptions:
+  Card: Card
+  Other: Other
+services:
+  dashboard-service:
+    create-dashboard-success-notification: New dashboard `{dashboardName}` created
+      succesfully.
+    delete-dashboard-success-notification: Dashboard `{dashboardName}` was deleted.
+statuses:
+  active: Active
+  all-statuses: All Statuses
+  approved: Approved
+  archived: Archived
+  array: Array
+  backlogged: Backlogged
+  beanstalkd: Beanstalkd
+  behavior-concerns: Behavior Concerns
+  behaviour-concerns: Behaviour Concerns
+  billing-discrepancies: Billing Discrepancies
+  blocked-routes: Blocked Routes
+  bugs: Bugs
+  canceled: Canceled
+  cancelled: Cancelled
+  carbon-footprint: Carbon Footprint
+  communication: Communication
+  communication-breakdown: Communication Breakdown
+  completed: Completed
+  compliance: Compliance
+  confirmed: Confirmed
+  cosmetic-damages: Cosmetic Damages
+  cost-overruns: Cost Overruns
+  created: Created
+  critical: Critical
+  customer: Customer
+  damaged-goods: Damaged Goods
+  dark: Dark
+  data-concerns: Data Concerns
+  data-integrity-issues: Data Integrity Issues
+  database: Database
+  decommissioned: Decommissioned
+  developers: Developers
+  disabled: Disabled
+  dispatched: Dispatched
+  documentation: Documentation
+  documentation-issues: Documentation Issues
+  draft: Draft
+  driver: Driver
+  duplicate: Duplicate
+  electronics-and-instruments: Electronics and Instruments
+  enroute: Enroute
+  environmental-considerations: Environmental Considerations
+  environmental-sustainability: Environmental Sustainability
+  escalated: Escalated
+  failover: Fail Over
+  feature-requests: Feature Requests
+  feedback-and-suggestions: Feedback and Suggestions
+  fleet-ops: Fleet Ops
+  fuel-consumption: Fuel Consumption
+  fuel-efficiency-issues: Fuel Efficiency Issues
+  gcs: GCS
+  green-initiatives-opportunities: Green Initiatives Opportunities
+  health-and-safety-violations: Health and Safety Violations
+  high: High
+  iam: developers
+  in-progress: In progress
+  in-review: In Review
+  incident-reported: Incident Reported
+  incident_reported: Incident Reported
+  incorrect-cargo-loading: Incorrect Cargo Loading
+  inefficient-routes: Inefficient Routes
+  integration-failures: Integration Failures
+  light: Light
+  local: Local
+  log: Log
+  low: Low
+  mailgun: Mailgun
+  maintenance-alerts: Maintenance Alerts
+  mechanical-problems: Mechanical Problems
+  medium: Medium
+  misplaced-goods: Misplaced Goods
+  on-break: On Break
+  on_break: On Break
+  operational: Operational
+  operational-suggestion: Operational suggestion
+  order-canceled: Order Canceled
+  order-errors: Order Errors
+  order_accepted: Accepted
+  order_canceled: Order Canceled
+  order_created: Created
+  order_dispatched: Dispatched
+  order_rejected: Rejected
+  order_started: Started
+  payload-cargo: Payload Cargo
+  pending: Pending
+  pending-approval: Pending Approval
+  pending-review: Pending Review
+  performance: Performance
+  physical-security: Physical Security
+  planned: Planned
+  postmark: Postmark
+  processed: Processed
+  public: Public
+  re-opened: Reopened
+  redis: Redis
+  registry-bridge: Registry Bridge
+  rejected: Rejected
+  requires-update: Requires Update
+  resend: Resend
+  resource-allocation: Resource Allocation
+  revised: Revised
+  route: Route
+  s3: S3
+  safety-concerns: Safety Concerns
+  scheduled-maintenance: Scheduled Maintenance
+  security: Security
+  security-vulnerabilities: Security Vulnerabilities
+  sendgrid: SendGrid
+  sendmail: SendMail
+  service-quality: Service Quality
+  ses: SES
+  shift-ended: Shift Ended
+  shift_ended: Shift Ended
+  smtp: SMTP
+  software-technical: Software Technical
+  sqs: SQS
+  started: Started
+  storefront: Store Front
+  submitted: Submitted
+  sync: Sync
+  temperature-sensitive-goods: Temperature-Sensitive Goods
+  time-management: Time management
+  tire-issues: Tire Issues
+  training-needs: Training Needs
+  ui/ux-concerns: UI/UX Concerns
+  unauthorized-access: Unauthorized Access
+  unfavorable-weather-conditions: Unfavorable Weather Conditions
+  vehicle: Vehicle
+  vendor-management-issues: Vendor Management Issues
+  waste-management: Waste Management
+terms:
+  admin: Admin
+  columns: Columns
+  dashboard: Dashboard
+  filter: Filter
+  home: Home
+  logout: Logout
+  new: New
+  search: Search
+  search-input: Search Input
+  settings: Settings
+  sort: Sort
+validation:
+  form_invalid: Please fill the required fields.
+  required:
+    payment_method: Payment method is required
+xls: xls
+xlsx: xlsx

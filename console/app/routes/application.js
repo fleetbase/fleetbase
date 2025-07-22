@@ -115,7 +115,10 @@ export default class ApplicationRoute extends Route {
      * the `setLocale` method of the `intl` service with the retrieved locale.
      */
     initializeLocale() {
-        const locale = this.currentUser.getOption('locale', 'en-us');
+        let locale = this.currentUser.getOption('locale', 'en-gb');
+        if(locale == 'en-us'){
+            locale = 'en-gb';
+        }
         this.intl.setLocale([locale]);
     }
 

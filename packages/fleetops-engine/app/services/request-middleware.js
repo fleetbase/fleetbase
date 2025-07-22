@@ -24,7 +24,10 @@ export default class RequestMiddlewareService extends Service {
   async applyMiddleware(url, options = {}) {
     options = options || {};
     options.headers = options.headers || {};
-    const fullLocale = this.currentUser.getOption('locale', 'en-us');
+    let fullLocale = this.currentUser.getOption('locale', 'en-gb');
+    if (fullLocale == 'en-us') {
+      fullLocale = 'en-gb'; 
+    }
     const shortLocale = fullLocale.substring(0, 2);
     // Add X-locale header
     options.headers['X-Locale'] = shortLocale;

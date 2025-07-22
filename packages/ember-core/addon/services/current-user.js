@@ -21,7 +21,7 @@ export default class CurrentUserService extends Service.extend(Evented) {
     @tracked permissions = [];
     @tracked organizations = [];
     @tracked whoisData = {};
-    @tracked locale = 'en-us';
+    @tracked locale = 'en-gb';
 
     @storageFor('user-options') options;
     @alias('user.id') id;
