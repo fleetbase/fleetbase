@@ -1209,7 +1209,11 @@ class User extends Authenticatable
         }
 
         if ($info) {
-            $attributes['country']    = data_get($info, 'country_code');
+            $userProvidedCountry = $attributes['country'] ?? $request->input('user.country');
+            
+            if (empty($userProvidedCountry)) {
+                $attributes['country'] = data_get($info, 'country_code');
+            }
             $attributes['ip_address'] = data_get($info, 'ip', $request->ip());
             $tzInfo                   = data_get($info, 'time_zone.name', $request->input('timezone'));
             if ($tzInfo) {
