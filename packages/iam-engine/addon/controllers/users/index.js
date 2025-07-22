@@ -313,11 +313,32 @@ export default class UsersIndexController extends Controller {
                     return;
                 }
 
-                // Phone number validation
                 const phone = user.phone?.trim();
-                if (typeof phone === 'string' && /^\+\d{1,4}$/.test(phone)) {
-                    user.phone = '';
+                if (typeof phone === 'string') {
+                    // If phone is just '+', treat it as empty and show required field error
+                    if (phone === '+') {
+                        showErrorOnce(this, this.notifications, this.intl.t('onboard.index.phone-required'));
+                        modal.stopLoading();
+                        return;
+                    }
+                    // Remove the + sign to count only digits
+                    const digitsOnly = phone.substring(1);
+
+                    // Check for minimum length (7 digits)
+                    if (digitsOnly.length < 7) {
+                        showErrorOnce(this, this.notifications, this.intl.t('onboard.index.phone-min-validation'));
+                        modal.stopLoading();
+                        return;
+                    }
+
+                    // Check for maximum length (15 digits)
+                    if (digitsOnly.length > 15) {
+                        showErrorOnce(this, this.notifications, this.intl.t('onboard.index.phone-max-validation'));
+                        modal.stopLoading();
+                        return;
+                    }
                 }
+                
                 try {
                     await user.save();
                     this.notifications.success(this.intl.t('iam.users.index.user-changes-saved-success'));
@@ -382,8 +403,29 @@ export default class UsersIndexController extends Controller {
                  }
                 // Phone number validation
                 const phone = user.phone?.trim();
-                if (typeof phone === 'string' && /^\+\d{1,4}$/.test(phone)) {
-                    user.phone = '';
+                if (typeof phone === 'string') {
+                    // If phone is just '+', treat it as empty and show required field error
+                    if (phone === '+') {
+                        showErrorOnce(this, this.notifications, this.intl.t('onboard.index.phone-required'));
+                        modal.stopLoading();
+                        return;
+                    }
+                    // Remove the + sign to count only digits
+                    const digitsOnly = phone.substring(1);
+
+                    // Check for minimum length (7 digits)
+                    if (digitsOnly.length < 7) {
+                        showErrorOnce(this, this.notifications, this.intl.t('onboard.index.phone-min-validation'));
+                        modal.stopLoading();
+                        return;
+                    }
+
+                    // Check for maximum length (15 digits)
+                    if (digitsOnly.length > 15) {
+                        showErrorOnce(this, this.notifications, this.intl.t('onboard.index.phone-max-validation'));
+                        modal.stopLoading();
+                        return;
+                    }
                 }
 
                 try {
