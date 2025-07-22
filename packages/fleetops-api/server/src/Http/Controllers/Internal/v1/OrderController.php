@@ -312,13 +312,13 @@ class OrderController extends FleetOpsController
             $data = Excel::toArray(new OrdersImport(), $file->path, $disk);
             // Flatten all rows from all sheets
             $totalRows = collect($data)->flatten(1)->count();
-            \Log::info('Total rows: ' . $totalRows .", Company: ". session('company'));
+            Log::info('Total rows: ' . $totalRows .", Company: ". session('company'));
             if ($totalRows > config('params.maximum_import_row_size')) {
-                return response()->json([
+                return response(response()->json([
                     'success' => false,
                     'message' => "Import failed: Maximum of 500 rows allowed. Your file contains {$totalRows} rows.",
                     'status' => 'limit_exceeded'
-                ], 400);
+                ], 400));
             }
             $data_import = $this->orderImport($data);
 
@@ -360,7 +360,7 @@ class OrderController extends FleetOpsController
                 $totalUpdatedOrders += $summary['updated'] ?? 0;
             }
         } catch (\Exception $e) {
-            \Log::error('File import failed', [
+            Log::error('File import failed', [
                 'file' => $file->name,
                 'error' => $e->getMessage(),
                 'trace' => $e->getTraceAsString()
@@ -379,7 +379,7 @@ class OrderController extends FleetOpsController
             $url = Storage::url($fileName);
         if ($hasPartialSuccess) {
             $this->logImportResult($file->uuid, 'order', 'PARTIALLY_COMPLETED', $fileName);
-            return response()->json([
+            return response([
                 'error_log_url' => $url,
                 'message' => __('messages.partial_success'),
                 'status' => 'partial_success',
@@ -392,7 +392,7 @@ class OrderController extends FleetOpsController
             ]);
         } else {
             $this->logImportResult($file->uuid, 'order', 'ERROR', $fileName);
-            return response()->json([
+            return response([
                 'error_log_url' => $url,
                 'message' => __('messages.full_import_error'),
                 'status' => 'error',
@@ -403,7 +403,7 @@ class OrderController extends FleetOpsController
         }
     }
     $this->logImportResult($file->uuid, 'order', 'COMPLETED', null);
-    return response()->json([
+    return response([
         'succeed' => true,
         'message' => "Import completed successfully. {$totalCreatedOrders} trips created, {$totalUpdatedOrders} trips updated.",
         'created_orders' => $totalCreatedOrders,
@@ -1125,27 +1125,10 @@ class OrderController extends FleetOpsController
                     // FIXED DATE LOGIC: Get scheduled_at from FIRST row's cpt
                     $firstRow = $rows[0];
                     $scheduledAt = null;
-                    // if (!empty($firstRow['cpt'])) {
-                    //     try {
-                    //         $scheduledAt = $this->parseExcelDate($firstRow['cpt']);
-                    //         // Ensure it's a Carbon instance
-                    //         if (is_string($scheduledAt)) {
-                    //             $scheduledAt = \Carbon\Carbon::parse($scheduledAt);
-                    //         }
-                    //     } catch (\Exception $e) {
-                    //         \Log::warning('Failed to parse cpt from first row', [
-                    //             'trip_id' => $tripId,
-                    //             'cpt_value' => $firstRow['cpt'],
-                    //             'error' => $e->getMessage()
-                    //         ]);
-                    //     }
-                    // }
                     if (!empty($firstRow['cpt'])) {
-                        Log::info("Using cpt from first row for trip {$firstRow['cpt']}");
                         try {
 
                             $parsedDate = $this->parseExcelDate($firstRow['cpt']);
-                            Log::info("parsedDate {$parsedDate} for trip {$tripId}");
                             // Ensure it's a Carbon instance
                           if (!empty($parsedDate)) {
                                 $scheduledAt = $parsedDate instanceof Carbon
@@ -1169,9 +1152,8 @@ class OrderController extends FleetOpsController
                                     $scheduledAt = $this->parseExcelDate($row['cpt']);
                                     // Ensure it's a Carbon instance
                                     if (is_string($scheduledAt)) {
-                                        $scheduledAt = \Carbon\Carbon::parse($scheduledAt);
+                                        $scheduledAt = Carbon::parse($scheduledAt);
                                     }
-                                    \Log::info("Using cpt from row other than first for trip {$tripId}");
                                     break;
                                 } catch (\Exception $e) {
                                     continue;
@@ -1189,10 +1171,10 @@ class OrderController extends FleetOpsController
                             $estimatedEndDate = $this->parseExcelDate($lastRow['stop_2_yard_arrival']);
                             // Ensure it's a Carbon instance
                             if (is_string($estimatedEndDate)) {
-                                $estimatedEndDate = \Carbon\Carbon::parse($estimatedEndDate);
+                                $estimatedEndDate = Carbon::parse($estimatedEndDate);
                             }
                         } catch (\Exception $e) {
-                            \Log::warning('Failed to parse stop_2_yard_arrival from last row', [
+                            Log::warning('Failed to parse stop_2_yard_arrival from last row', [
                                 'trip_id' => $tripId,
                                 'stop_2_yard_arrival_value' => $lastRow['stop_2_yard_arrival'],
                                 'error' => $e->getMessage()
@@ -1205,13 +1187,13 @@ class OrderController extends FleetOpsController
                         $estimatedEndDate = collect($yardArrivalDates)->sortDesc()->first();
                         // Ensure it's a Carbon instance
                         if (is_string($estimatedEndDate)) {
-                            $estimatedEndDate = \Carbon\Carbon::parse($estimatedEndDate);
+                            $estimatedEndDate = Carbon::parse($estimatedEndDate);
                         }
-                        \Log::info("Using fallback yard arrival date for estimated_end_date in trip {$tripId}");
+                        Log::info("Using fallback yard arrival date for estimated_end_date in trip {$tripId}");
                     }
 
                     // Enhanced logging for debugging
-                    \Log::info("Trip {$tripId} final dates", [
+                    Log::info("Trip {$tripId} final dates", [
                         'scheduled_at' => $scheduledAt ? $scheduledAt->format('Y-m-d H:i:s') : 'null',
                         'estimated_end_date' => $estimatedEndDate ? $estimatedEndDate->format('Y-m-d H:i:s') : 'null',
                         'first_row_cpt' => $firstRow['cpt'] ?? 'empty',
@@ -1326,12 +1308,6 @@ class OrderController extends FleetOpsController
                         "Trip {$tripId}: " . $e->getMessage(),
                         $tripId
                     ];
-                    
-                    \Log::error('Trip import failed', [
-                        'trip_id' => $tripId,
-                        'error' => $e->getMessage(),
-                        'trace' => $e->getTraceAsString()
-                    ]);
                 }
             }
         }
@@ -1372,7 +1348,7 @@ class OrderController extends FleetOpsController
         ];
 
     } catch (\Exception $e) {
-        \Log::error('Order import failed', [
+        Log::error('Order import failed', [
             'message' => $e->getMessage(),
             'trace' => $e->getTraceAsString()
         ]);
@@ -1489,7 +1465,7 @@ public function createRouteSegmentsFromRows(array $rows, Order $order, array $sa
         $toWaypoint = null;
         
         if (!empty($savedWaypoints) && !empty($waypointMeta)) {
-            \Log::info('Searching waypoints via metadata', [
+            Log::info('Searching waypoints via metadata', [
                 'total_waypoints' => count($savedWaypoints),
                 'looking_for_row' => $originalRowIndex,
                 'from_code' => $fromCode,
@@ -1614,7 +1590,7 @@ public function createRouteSegmentsFromRows(array $rows, Order $order, array $sa
                 try {
                     $routeSegment->vr_creation_date_time = $this->parseExcelDate($row['vr_creation_date_time']);
                 } catch (\Exception $e) {
-                    \Log::warning('Failed to parse vr_creation_date_time', [
+                    Log::warning('Failed to parse vr_creation_date_time', [
                         'value' => $row['vr_creation_date_time'],
                         'error' => $e->getMessage()
                     ]);
@@ -1626,7 +1602,7 @@ public function createRouteSegmentsFromRows(array $rows, Order $order, array $sa
                 try {
                     $routeSegment->vr_cancellation_date_time = $this->parseExcelDate($row['vr_cancellation_date_time']);
                 } catch (\Exception $e) {
-                    \Log::warning('Failed to parse vr_cancellation_date_time', [
+                    Log::warning('Failed to parse vr_cancellation_date_time', [
                         'value' => $row['vr_cancellation_date_time'],
                         'error' => $e->getMessage()
                     ]);
@@ -1636,7 +1612,7 @@ public function createRouteSegmentsFromRows(array $rows, Order $order, array $sa
             $routeSegment->save();
             $createdSegments[] = $routeSegment->id;
             
-            \Log::info('Route segment created successfully', [
+            Log::info('Route segment created successfully', [
                 'segment_id' => $routeSegment->uuid,
                 'public_id' => $routeSegment->public_id,
                 'from_waypoint_id' => $routeSegment->from_waypoint_id,
@@ -1647,7 +1623,7 @@ public function createRouteSegmentsFromRows(array $rows, Order $order, array $sa
             $displayRowIndex = $originalRowIndex + 1;
             $errors[] = [$displayRowIndex, $e->getMessage(), $order->public_id];
             
-            \Log::error('Route segment creation error', [
+            Log::error('Route segment creation error', [
                 'row_index' => $originalRowIndex,
                 'vr_id' => $row['vr_id'] ?? 'N/A',
                 'error' => $e->getMessage(),
