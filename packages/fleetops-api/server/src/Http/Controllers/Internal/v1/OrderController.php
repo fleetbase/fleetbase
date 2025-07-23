@@ -1016,46 +1016,50 @@ class OrderController extends FleetOpsController
                         if (!empty($row['vr_id'])) {
                             $vrIds[] = $row['vr_id'];
                         }
-                    }
+                    
 
-                    if (!empty($vrIds)) {
-                        $existingVrIds = RouteSegment::whereIn('public_id', $vrIds)
-                            ->whereNull('deleted_at')
-                            ->pluck('public_id')
-                            ->toArray();
-                        if (!empty($existingVrIds)) {
-                            $importErrors[] = [
-                                '-',
-                                "Trip {$tripId}: VR ID already exists: " . implode(', ', $existingVrIds),
-                                (string)$tripId
-                            ];
-                            DB::rollback();
-                            continue;
+                        if (!empty($vrIds)) {
+                            $existingVrIds = RouteSegment::whereIn('public_id', $vrIds)
+                                ->whereNull('deleted_at')
+                                ->pluck('public_id')
+                                ->toArray();
+                            if (!empty($existingVrIds)) {
+                                $importErrors[] = [
+                                    '-',
+                                    "Trip {$tripId}: VR ID already exists: " . implode(', ', $existingVrIds),
+                                    (string)$tripId
+                                ];
+                                DB::rollback();
+                                continue;
+                            }
                         }
-                    }
 
-                    // Validate facility_sequence
-                    $firstRow = $rows[0];
-                    if (!empty($firstRow['facility_sequence'])) {
-                        $facility_sequence = $firstRow['facility_sequence'];
-                        $facilities = array_filter(array_map('trim', explode('->', $facility_sequence)));
+                        // Validate facility_sequence
+                        $firstRow = $rows[0];
+                        if (!empty($firstRow['facility_sequence'])) {
+                            $facility_sequence = $firstRow['facility_sequence'];
+                            $facilities = array_filter(array_map('trim', explode('->', $facility_sequence)));
 
-                        if (count($facilities) > 2) {
-                            $originalRowIndex = $rows[0]['_original_row_index'] ?? 0;
-                            $importErrors[] = [
-                                (string)($originalRowIndex + 1),
-                                "Trip {$tripId}: Facility sequence has " . count($facilities) . " items. Only 2 are imported. Sequence: " . implode(' -> ', $facilities),
-                                (string)$tripId
-                            ];
-                        }
-                        // Check if first and second facility are the same
-                        if (count($facilities) >= 2 && $facilities[0] === $facilities[1]) {
-                            $originalRowIndex = $rows[0]['_original_row_index'] ?? 0;
-                            $importErrors[] = [
-                                (string)($originalRowIndex + 1),
-                                "Trip {$tripId}: First and second facility in sequence are the same ('{$facilities[0]}'). Sequence: " . implode(' -> ', $facilities),
-                                (string)$tripId
-                            ];
+                            if (count($facilities) > 2) {
+                                $originalRowIndex = $rows[0]['_original_row_index'] ?? 0;
+                                $importErrors[] = [
+                                    (string)($originalRowIndex + 1),
+                                    "Trip {$tripId}: Facility sequence has " . count($facilities) . " items. Only 2 are imported. Sequence: " . implode(' -> ', $facilities),
+                                    (string)$tripId
+                                ];
+                                $tripHasErrors = true;
+
+                            }
+                            // Check if first and second facility are the same
+                            if (count($facilities) >= 2 && $facilities[0] === $facilities[1]) {
+                                $originalRowIndex = $rows[0]['_original_row_index'] ?? 0;
+                                $importErrors[] = [
+                                    (string)($originalRowIndex + 1),
+                                    "Trip {$tripId}: First and second facility in sequence are the same ('{$facilities[0]}'). Sequence: " . implode(' -> ', $facilities),
+                                    (string)$tripId
+                                ];
+                                $tripHasErrors = true;
+                            }
                         }
                     }
 
