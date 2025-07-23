@@ -38,9 +38,9 @@
                     </InputGroup>
                 </div>
                 {{#if (can @options.formPermission)}}
-                    <InputGroup @name={{t "iam.common.attach-policies"}}>
+                    {{!-- <InputGroup @name={{t "iam.common.attach-policies"}}>
                         <PolicyAttacher @onChange={{fn (mut @options.user.policies)}} @value={{@options.user.policies}} @disabled={{cannot @options.formPermission}} />
-                    </InputGroup>
+                    </InputGroup> --}}
                     <InputGroup @name={{t "iam.common.select-permissions"}}>
                         <PermissionPicker class="user-permissions" @selected={{@options.user.permissions}} @onChange={{fn (mut @options.user.permissions)}} />
                     </InputGroup>
