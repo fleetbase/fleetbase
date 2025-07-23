@@ -7,40 +7,23 @@ import ENV from '@fleetbase/console/config/environment';
 export default class ManagementLeavesIndexRoute extends Route {
     @service store;
 
-    // Cache configuration
-    CACHE_CONFIG = {
-        duration: 15 * 60 * 1000, // 15 minutes
-        threshold: 0.75 // Refresh when 75% of cache duration has passed
-    };
-    // 
-    _cache = {
-        calendar: null,
-        unavailability: null,
-        lastFetch: 0,
-        inProgress: false
-    };
-
     queryParams = {
         page: { refreshModel: true },
-        limit: { refreshModel: true },
+        per_page: { refreshModel: true },
         sort: { refreshModel: true },
         query: { refreshModel: true },
-        priority: { refreshModel: true },
-        status: { refreshModel: true },
-        vehicle: { refreshModel: true },
         driver: { refreshModel: true },
-        assignee: { refreshModel: true },
-        reporter: { refreshModel: true },
-        type: { refreshModel: true },
-        category: { refreshModel: true },
-        updatedAt: { refreshModel: true },
-        createdAt: { refreshModel: true },
+        status: { refreshModel: true },
+        leave_type: { refreshModel: true },
+        processed_by: { refreshModel: true },
+        created_at: { refreshModel: true },
+        start_date: { refreshModel: true },
+        end_date: { refreshModel: true },
     };
 
     @action willTransition(transition) {
-        const shouldReset = typeof transition.to.name === 'string' && !transition.to.name.includes('operations.orders');
+        const shouldReset = typeof transition.to.name === 'string' && !transition.to.name.includes('management.leaves');
 
-        // Check if controller exists and has resetView function before calling it
         if (this.controller && shouldReset && typeof this.controller.resetView === 'function') {
             this.controller.resetView(transition);
         }
@@ -57,57 +40,136 @@ export default class ManagementLeavesIndexRoute extends Route {
         }
     }
 
-    async _fetchDriverUnavailability() {
-        if (this._cache.unavailability) {
-            return this._cache.unavailability;
-        }
-
+    async model(params) {
         try {
+            // Get authentication token
             const authSession = JSON.parse(localStorage.getItem('ember_simple_auth-session'));
             if (!authSession?.authenticated?.token) {
-                return null;
+                console.error('No authentication token found');
+                return {
+                    data: [],
+                    meta: {
+                        current_page: 1,
+                        last_page: 1,
+                        total: 0,
+                        per_page: params.per_page || 25,
+                        from: 0,
+                        to: 0
+                    }
+                };
             }
 
-            const response = await fetch(`${ENV.API.host}/api/v1/leave-requests/list`, {
+            // Build query string
+            const searchParams = new URLSearchParams();
+            
+            // Add pagination
+            searchParams.append('page', params.page || 1);
+            searchParams.append('per_page', params.per_page || 25);
+            
+            // Add sorting
+            if (params.sort) {
+                searchParams.append('sort', params.sort);
+            }
+            
+            // Add search
+            if (params.query) {
+                searchParams.append('query', params.query);
+            }
+            
+            // Add filters
+            if (params.driver) {
+                searchParams.append('driver_uuid', params.driver);
+            }
+            if (params.status) {
+                searchParams.append('status', params.status);
+            }
+            if (params.leave_type) {
+                searchParams.append('leave_type', params.leave_type);
+            }
+            if (params.processed_by) {
+                searchParams.append('processed_by', params.processed_by);
+            }
+            if (params.created_at) {
+                searchParams.append('created_at', params.created_at);
+            }
+            if (params.start_date) {
+                searchParams.append('start_date', params.start_date);
+            }
+            if (params.end_date) {
+                searchParams.append('end_date', params.end_date);
+            }
+
+            // Make API request
+            const response = await fetch(`${ENV.API.host}/api/v1/leave-requests/list?${searchParams.toString()}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${authSession.authenticated.token}`,
                 },
-                cache: 'default'
             });
 
-            if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
 
-            const unavailability = await response.json();
-            this._cache.unavailability = unavailability;
+            const result = await response.json();
+            
+            // Handle response
+            if (result.success && result.pagination) {
+                // Paginated response
+                return {
+                    data: result.data || [],
+                    meta: {
+                        current_page: result.pagination.current_page,
+                        last_page: result.pagination.last_page,
+                        total: result.pagination.total,
+                        per_page: result.pagination.per_page,
+                        from: result.pagination.from,
+                        to: result.pagination.to
+                    }
+                };
+            } else if (result.success) {
+                // Non-paginated response - create pagination meta
+                const total = result.total || result.data?.length || 0;
+                const perPage = params.per_page || 25;
+                const currentPage = params.page || 1;
+                const lastPage = Math.ceil(total / perPage);
+                const from = ((currentPage - 1) * perPage) + 1;
+                const to = Math.min(currentPage * perPage, total);
 
-            // Clear cache after duration
-            setTimeout(() => {
-                this._cache.unavailability = null;
-            }, this.CACHE_CONFIG.duration);
+                return {
+                    data: result.data || [],
+                    meta: {
+                        current_page: currentPage,
+                        last_page: lastPage,
+                        total: total,
+                        per_page: perPage,
+                        from: total > 0 ? from : 0,
+                        to: total > 0 ? to : 0
+                    }
+                };
+            } else {
+                throw new Error(result.message || 'API request failed');
+            }
 
-            return unavailability;
         } catch (error) {
-            console.error('Error fetching driver unavailability:', error);
-            return null;
+            console.error('Error fetching leaves:', error);
+            
+            // Return empty result on error
+            return {
+                data: [],
+                meta: {
+                    current_page: 1,
+                    last_page: 1,
+                    total: 0,
+                    per_page: params.per_page || 30,
+                    from: 0,
+                    to: 0
+                }
+            };
         }
     }
 
-
-    async model(params) {
-        const leaves = await this._fetchDriverUnavailability();
-
-        // Patch: add a meta object for pagination
-        leaves.meta = {
-            current_page: params.page || 1,
-            last_page: Math.ceil(leaves.total / (params.limit || 25)),
-            total: leaves.total,
-            per_page: params.limit || 25,
-        };
-
-        return leaves;
-    }
     resetController(controller, isExiting) {
         if (isExiting) {
             controller.set('page', 1);
