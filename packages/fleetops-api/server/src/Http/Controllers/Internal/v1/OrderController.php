@@ -950,7 +950,7 @@ class OrderController extends FleetOpsController
 
     
 
-    public function orderImport($excelData)
+  public function orderImport($excelData)
 {
     try {
         if (!class_exists('\DB')) {
@@ -974,28 +974,25 @@ class OrderController extends FleetOpsController
             foreach ($grouped as $tripId => $rows) {
                 // Use database transaction for each trip
                 DB::beginTransaction();
-                
                 try {
                     $yardArrivalDates = [];
-                    $waypoints = [];
                     $routeRows = [];
-                    $order = 0;
                     $tripHasErrors = false;
 
-                    // PRE-VALIDATION: Check for duplicate Order id  &VR IDs before processing
-                    // Generate trip_id if not present using HasPublicId trait
+                    // PRE-VALIDATION: Check for duplicate Order id & VR IDs before processing
                     $trip_id = $rows[0]['trip_id'] ?? null;
                     if (empty($trip_id)) {
-                         $originalRowIndex = $rows[0]['_original_row_index'] ?? 0;
-                            $importErrors[] = [
-                                (string)($originalRowIndex + 1),
-                                "Trip ID is required.",
-                                ""
-                            ];
-                            DB::rollback();
-                            continue;
+                        $originalRowIndex = $rows[0]['_original_row_index'] ?? 0;
+                        $importErrors[] = [
+                            (string)($originalRowIndex + 1),
+                            "Trip ID is required.",
+                            ""
+                        ];
+                        DB::rollback();
+                        continue;
                     }
-                    //check duplicates for trip_id
+
+                    // Check duplicates for trip_id
                     if (!empty($trip_id)) {
                         $exists = Order::where('public_id', $trip_id)
                             ->where('company_uuid', session('company'))
@@ -1013,19 +1010,19 @@ class OrderController extends FleetOpsController
                             continue;
                         }
                     }
-                    
+
                     $vrIds = [];
                     foreach ($rows as $row) {
                         if (!empty($row['vr_id'])) {
                             $vrIds[] = $row['vr_id'];
                         }
                     }
-                    
+
                     if (!empty($vrIds)) {
                         $existingVrIds = RouteSegment::whereIn('public_id', $vrIds)
-                        ->whereNull('deleted_at')
-                        ->pluck('public_id')
-                        ->toArray();
+                            ->whereNull('deleted_at')
+                            ->pluck('public_id')
+                            ->toArray();
                         if (!empty($existingVrIds)) {
                             $importErrors[] = [
                                 '-',
@@ -1036,16 +1033,18 @@ class OrderController extends FleetOpsController
                             continue;
                         }
                     }
+
                     // Validate facility_sequence
-                    if (!empty($row['facility_sequence'])) {
-                        $facility_sequence = $row['facility_sequence'];
+                    $firstRow = $rows[0];
+                    if (!empty($firstRow['facility_sequence'])) {
+                        $facility_sequence = $firstRow['facility_sequence'];
                         $facilities = array_filter(array_map('trim', explode('->', $facility_sequence)));
 
                         if (count($facilities) > 2) {
                             $originalRowIndex = $rows[0]['_original_row_index'] ?? 0;
                             $importErrors[] = [
                                 (string)($originalRowIndex + 1),
-                                "Trip {$tripId}: Facility sequence has " . count($facilities) . " items. Only 2 are importes. Sequence: " . implode(' -> ', $facilities),
+                                "Trip {$tripId}: Facility sequence has " . count($facilities) . " items. Only 2 are imported. Sequence: " . implode(' -> ', $facilities),
                                 (string)$tripId
                             ];
                         }
@@ -1059,78 +1058,116 @@ class OrderController extends FleetOpsController
                             ];
                         }
                     }
-                    foreach ($rows as $groupIndex => $row) {
-                        $originalRowIndex = $row['_original_row_index'];
 
-                        foreach ($row as $key => $value) {
-                            if (Str::endsWith(Str::lower($key), '_yard_arrival') && !empty($value)) {
-                                try {
-                                    $yardArrivalDates[] = $this->parseExcelDate($value);
-                                } catch (\Exception $e) {
-                                    $displayRowIndex = $originalRowIndex + 1;
-                                    $importErrors[] = [
-                                        (string)$displayRowIndex,
-                                        "Invalid date format for column '{$key}'",
-                                        (string)$tripId
-                                    ];
-                                    $tripHasErrors = true;
-                                    continue;
-                                }
-                            }
-                        }
-                        
-                        $allPlaceCodes = $sheetRowsWithIndex->pluck('stop_1')->merge($sheetRowsWithIndex->pluck('stop_2'))->filter()->unique();
-                        $placesByCode = Place::whereIn('code', $allPlaceCodes)
-                                        // ->where('company_uuid', session('company'))
-                                        ->whereNull('deleted_at')
-                                        ->get()
-                                        ->keyBy('code');
-                                        
-                        foreach (['stop_1', 'stop_2'] as $stopKey) {
-                            $placeCode = $row[$stopKey] ?? null;
-                            if (!empty($placeCode)) {
-                                $place = $placesByCode->get($placeCode);
+                    // NEW LOGIC: Build proper waypoint sequence without duplicates
+                    $uniqueWaypointSequence = [];
 
-                                if (!$place) {
-                                    $displayRowIndex = $originalRowIndex + 1;
-                                    $importErrors[] = [
-                                        (string)$displayRowIndex,
-                                        "Invalid place code '{$placeCode}' in column '{$stopKey}'",
-                                        (string)$tripId
-                                    ];
-                                    $tripHasErrors = true;
-                                } else {
-                                    $waypoints[] = [
-                                        'place_uuid' => $place->uuid,
-                                        'order' => $order++,
-                                        'meta' => [
-                                            'row_index' => $originalRowIndex,
-                                            'stop_key' => $stopKey,
-                                            'place_code' => $placeCode
-                                        ]
-                                    ];
-                                }
-                            }
-                        }
+                    if (count($rows) === 1) {
+                        // Single-row trip: simple case
+                        $row = $rows[0];
+                        $stop1 = $row['stop_1'] ?? null;
+                        $stop2 = $row['stop_2'] ?? null;
                         
-                        $row['_original_row_index'] = $originalRowIndex;
+                        if ($stop1) $uniqueWaypointSequence[] = $stop1;
+                        if ($stop2 && $stop2 !== $stop1) $uniqueWaypointSequence[] = $stop2;
+                        
+                        $row['_original_row_index'] = $row['_original_row_index'] ?? 0;
                         $routeRows[] = $row;
-                    }
-
-                    if ($tripHasErrors) {
-                        DB::rollback();
-                        continue;
+                    } else {
+                        // Multi-row trip: build chain by following route connections
+                        $routeMap = [];
+                        $allStops = [];
+                        
+                        foreach ($rows as $groupIndex => $row) {
+                            $originalRowIndex = $row['_original_row_index'];
+                            
+                            // Parse dates for validation
+                            foreach ($row as $key => $value) {
+                                if (Str::endsWith(Str::lower($key), '_yard_arrival') && !empty($value)) {
+                                    try {
+                                        $yardArrivalDates[] = $this->parseExcelDate($value);
+                                    } catch (\Exception $e) {
+                                        $displayRowIndex = $originalRowIndex + 1;
+                                        $importErrors[] = [
+                                            (string)$displayRowIndex,
+                                            "Invalid date format for column '{$key}'",
+                                            (string)$tripId
+                                        ];
+                                        $tripHasErrors = true;
+                                        continue;
+                                    }
+                                }
+                            }
+                            
+                            $stop1 = $row['stop_1'] ?? null;
+                            $stop2 = $row['stop_2'] ?? null;
+                            
+                            if ($stop1 && $stop2) {
+                                $routeMap[] = ['from' => $stop1, 'to' => $stop2, 'row_index' => $groupIndex];
+                                $allStops[] = $stop1;
+                                $allStops[] = $stop2;
+                            }
+                            
+                            $row['_original_row_index'] = $originalRowIndex;
+                            $routeRows[] = $row;
+                        }
+                        
+                        if ($tripHasErrors) {
+                            DB::rollback();
+                            continue;
+                        }
+                        
+                        // Validate all places exist
+                        $allUniquePlaceCodes = array_unique($allStops);
+                        $placesByCode = Place::whereIn('code', $allUniquePlaceCodes)
+                                            ->whereNull('deleted_at')
+                                            ->get()
+                                            ->keyBy('code');
+                                            
+                        foreach ($allUniquePlaceCodes as $placeCode) {
+                            if (!$placesByCode->has($placeCode)) {
+                                $importErrors[] = [
+                                    '-',
+                                    "Invalid place code '{$placeCode}' in trip",
+                                    (string)$tripId
+                                ];
+                                $tripHasErrors = true;
+                            }
+                        }
+                        
+                        if ($tripHasErrors) {
+                            DB::rollback();
+                            continue;
+                        }
+                        
+                        // Build the correct sequence by following the route chain
+                        $uniqueWaypointSequence = $this->buildWaypointSequence($routeMap);
+                        
+                        if (empty($uniqueWaypointSequence)) {
+                            $importErrors[] = [
+                                '-',
+                                "Trip {$tripId}: Could not determine waypoint sequence from routes",
+                                (string)$tripId
+                            ];
+                            DB::rollback();
+                            continue;
+                        }
+                        
+                        Log::info("Trip {$tripId} waypoint sequence", [
+                            'routes' => $routeMap,
+                            'sequence' => $uniqueWaypointSequence,
+                            'total_unique_waypoints' => count($uniqueWaypointSequence),
+                            'total_route_rows' => count($rows)
+                        ]);
                     }
 
                     // FIXED DATE LOGIC: Get scheduled_at from FIRST row's cpt
-                    $firstRow = $rows[0];
                     $scheduledAt = null;
                     if (!empty($firstRow['cpt'])) {
                         try {
-
                             $parsedDate = $this->parseExcelDate($firstRow['cpt']);
                             // Ensure it's a Carbon instance
-                          if (!empty($parsedDate)) {
+                            if (!empty($parsedDate)) {
                                 $scheduledAt = $parsedDate instanceof Carbon
                                     ? $parsedDate
                                     : Carbon::parse($parsedDate);
@@ -1144,6 +1181,7 @@ class OrderController extends FleetOpsController
                             $scheduledAt = null;
                         }
                     }
+
                     // If no cpt in first row, look for any cpt in the trip as fallback
                     if (!$scheduledAt) {
                         foreach ($rows as $row) {
@@ -1161,7 +1199,8 @@ class OrderController extends FleetOpsController
                             }
                         }
                     }
-                     Log::info("Using cpt from first row for trip {$scheduledAt}");
+                    Log::info("Using cpt from first row for trip {$scheduledAt}");
+
                     // FIXED DATE LOGIC: Get estimated_end_date from LAST row's stop_2_yard_arrival
                     $lastRow = $rows[count($rows) - 1];
                     $estimatedEndDate = null;
@@ -1202,8 +1241,9 @@ class OrderController extends FleetOpsController
                         'yard_arrival_dates_found' => count($yardArrivalDates)
                     ]);
 
-                    //carrier details
+                    // Carrier details
                     $carrier = $firstRow['carrier'] ?? null;
+                    $carrier_uuid = null;
                     if($carrier) {
                         $carrier_uuid = Fleet::where('name', $carrier)
                             ->where('company_uuid', session('company'))
@@ -1211,12 +1251,14 @@ class OrderController extends FleetOpsController
                             ->value('uuid');
                     }
                     $subcarrier = $firstRow['subcarrier'] ?? null;
+                    $subcarrier_uuid = null;
                     if($subcarrier){
                         $subcarrier_uuid = Fleet::where('name', $subcarrier)
                             ->where('company_uuid', session('company'))
                             ->whereNull('deleted_at')
                             ->value('uuid');
                     }
+
                     $orderInput = [
                         'order' => [
                             'internal_id' => $firstRow['block_id'] ?? null,
@@ -1275,34 +1317,64 @@ class OrderController extends FleetOpsController
                         }
                     );
 
+                    // Create waypoints based on unique sequence
                     $savedWaypoints = [];
                     $waypointMeta = [];
-                    foreach ($waypoints as $wpData) {
-                        $saved = Waypoint::create([
-                            'company_uuid' => session('company'),
-                            'payload_uuid' => $order->payload_uuid,
-                            'place_uuid' => $wpData['place_uuid'],
-                            'order' => $wpData['order'],
-                            'meta' => $wpData['meta'],
-                        ]);
-                        $savedWaypoints[] = $saved;
-                        $waypointMeta[$saved->uuid] = $wpData['meta'];
+                    $orderIndex = 0;
+
+                    // Get place models for the unique sequence
+                    $placesByCode = Place::whereIn('code', $uniqueWaypointSequence)
+                        ->whereNull('deleted_at')
+                        ->get()
+                        ->keyBy('code');
+
+                    foreach ($uniqueWaypointSequence as $placeCode) {
+                        $placeModel = $placesByCode->get($placeCode);
+                        if ($placeModel && isset($placeModel->uuid)) {
+                            $meta = [
+                                'place_code' => $placeCode
+                            ];
+                            try {
+                                $saved = Waypoint::create([
+                                    'company_uuid' => session('company'),
+                                    'payload_uuid' => $order->payload_uuid ?? ($order->payload->uuid ?? null),
+                                    'place_uuid' => $placeModel->uuid,
+                                    'order' => $orderIndex++,
+                                    'meta' => $meta,
+                                ]);
+                                $saved = $saved->fresh();
+                                $savedWaypoints[] = $saved;
+                                if (isset($saved->uuid)) {
+                                    $waypointMeta[$saved->uuid] = $meta;
+                                }
+                            } catch (\Exception $e) {
+                                Log::error('Failed to create waypoint', [
+                                    'place_code' => $placeCode,
+                                    'error' => $e->getMessage()
+                                ]);
+                                continue;
+                            }
+                        }
                     }
+
+                    Log::info("Created waypoints for trip {$tripId}", [
+                        'waypoint_sequence' => $uniqueWaypointSequence,
+                        'created_waypoints' => count($savedWaypoints),
+                        'waypoint_ids' => array_map(function($wp) { return $wp->uuid; }, $savedWaypoints)
+                    ]);
 
                     // Create route segments - this can now fail safely within transaction
                     $this->createRouteSegmentsFromRows($routeRows, $order, $savedWaypoints, $waypointMeta);
-                    
+
                     // If we reach here, everything succeeded
                     DB::commit();
-                    
+
                     $ordersCache[$tripId] = $order;
                     $records[] = $order;
                     event(new OrderReady($order));
-                    
                 } catch (\Exception $e) {
                     // Rollback the entire trip if anything fails
                     DB::rollback();
-                    
                     $importErrors[] = [
                         '-',
                         "Trip {$tripId}: " . $e->getMessage(),
@@ -1357,6 +1429,123 @@ class OrderController extends FleetOpsController
     }
 }
 
+/**
+ * Build the correct waypoint sequence by following the route chain
+ * This ensures we get unique waypoints in the correct order
+ */
+// private function buildWaypointSequence(array $routeMap): array
+// {
+//     if (empty($routeMap)) {
+//         return [];
+//     }
+    
+//     $sequence = [];
+//     $usedRoutes = [];
+    
+//     // Sort routes by their row index to maintain order
+//     usort($routeMap, function($a, $b) {
+//         return $a['row_index'] <=> $b['row_index'];
+//     });
+    
+//     // Start with the first route
+//     $firstRoute = $routeMap[0];
+//     $sequence[] = $firstRoute['from'];
+//     $sequence[] = $firstRoute['to'];
+//     $usedRoutes[] = 0;
+    
+//     $currentEnd = $firstRoute['to'];
+    
+//     // Follow the chain
+//     while (count($usedRoutes) < count($routeMap)) {
+//         $foundNext = false;
+        
+//         // Look for next route that starts where current ends
+//         for ($i = 0; $i < count($routeMap); $i++) {
+//             if (in_array($i, $usedRoutes)) {
+//                 continue;
+//             }
+            
+//             $route = $routeMap[$i];
+//             if ($route['from'] === $currentEnd) {
+//                 // Only add the 'to' since 'from' is already in sequence
+//                 if (!in_array($route['to'], $sequence)) {
+//                     $sequence[] = $route['to'];
+//                 }
+//                 $currentEnd = $route['to'];
+//                 $usedRoutes[] = $i;
+//                 $foundNext = true;
+//                 break;
+//             }
+//         }
+        
+//         // If no connecting route found, handle disconnected segments
+//         if (!$foundNext) {
+//             // Find any unused route and start a new segment
+//             for ($i = 0; $i < count($routeMap); $i++) {
+//                 if (!in_array($i, $usedRoutes)) {
+//                     $route = $routeMap[$i];
+                    
+//                     // Add 'from' if not already in sequence
+//                     if (!in_array($route['from'], $sequence)) {
+//                         $sequence[] = $route['from'];
+//                     }
+                    
+//                     // Add 'to' if not already in sequence
+//                     if (!in_array($route['to'], $sequence)) {
+//                         $sequence[] = $route['to'];
+//                     }
+                    
+//                     $currentEnd = $route['to'];
+//                     $usedRoutes[] = $i;
+//                     break;
+//                 }
+//             }
+            
+//             // If still no route found, we're done
+//             if (!$foundNext) {
+//                 break;
+//             }
+//         }
+//     }
+    
+//     return $sequence;
+// }
+    /**
+ * Build the correct waypoint sequence by following the route chain
+ * This ensures we get unique waypoints in the correct order
+ */
+private function buildWaypointSequence(array $routeMap): array
+{
+    if (empty($routeMap)) {
+        return [];
+    }
+    
+    // Sort routes by their row index to maintain order
+    usort($routeMap, function($a, $b) {
+        return $a['row_index'] <=> $b['row_index'];
+    });
+    
+    $sequence = [];
+    
+    // For ordered route segments, simply follow each route in sequence
+    // Add the first route's origin
+    if (isset($routeMap[0])) {
+        $sequence[] = $routeMap[0]['from'];
+    }
+    
+    // Add each route's destination in order
+    foreach ($routeMap as $route) {
+        $sequence[] = $route['to'];
+    }
+    
+    Log::info('Waypoint sequence building', [
+        'route_map' => $routeMap,
+        'final_sequence' => $sequence,
+        'total_waypoints' => count($sequence)
+    ]);
+    
+    return $sequence;
+}
 
 
     /*
@@ -1456,7 +1645,8 @@ public function createRouteSegmentsFromRows(array $rows, Order $order, array $sa
 
         if (!$fromCode || !$toCode) {
             $displayRowIndex = $originalRowIndex + 1;
-            $errors[] = [$displayRowIndex, "Missing stop_1 or stop_2", $order->public_id];
+            $orderPublicId = $order->public_id ?? ($order->id ?? '');
+            $errors[] = [$displayRowIndex, "Missing stop_1 or stop_2", $orderPublicId];
             continue;
         }
 
@@ -1465,49 +1655,14 @@ public function createRouteSegmentsFromRows(array $rows, Order $order, array $sa
         $toWaypoint = null;
         
         if (!empty($savedWaypoints) && !empty($waypointMeta)) {
-            Log::info('Searching waypoints via metadata', [
-                'total_waypoints' => count($savedWaypoints),
-                'looking_for_row' => $originalRowIndex,
-                'from_code' => $fromCode,
-                'to_code' => $toCode
-            ]);
-
+            // Match by place_code only (unique waypoints per place)
             foreach ($savedWaypoints as $waypoint) {
-                $meta = $waypointMeta[$waypoint->uuid] ?? [];
-                if (isset($meta['row_index']) && $meta['row_index'] == $originalRowIndex) {
-                    if (isset($meta['stop_key']) && $meta['stop_key'] === 'stop_1' && 
-                        isset($meta['place_code']) && $meta['place_code'] === $fromCode) {
-                        $fromWaypoint = $waypoint;
-                    }
-                    if (isset($meta['stop_key']) && $meta['stop_key'] === 'stop_2' && 
-                        isset($meta['place_code']) && $meta['place_code'] === $toCode) {
-                        $toWaypoint = $waypoint;
-                    }
+                $meta = isset($waypoint->uuid) ? ($waypointMeta[$waypoint->uuid] ?? []) : [];
+                if (isset($meta['place_code']) && $meta['place_code'] === $fromCode) {
+                    $fromWaypoint = $waypoint;
                 }
-            }
-
-            // Fallback if metadata matching fails
-            if (!$fromWaypoint || !$toWaypoint) {
-                $fromPlace = Place::where('code', $fromCode)
-                                    ->whereNull('deleted_at')->first();
-                $toPlace = Place::where('code', $toCode)
-                                    ->whereNull('deleted_at')->first();
-
-                if ($fromPlace && $toPlace) {
-                    foreach ($savedWaypoints as $waypoint) {
-                        if (!$fromWaypoint && $waypoint->place_uuid === $fromPlace->uuid) {
-                            $meta = $waypointMeta[$waypoint->uuid] ?? [];
-                            if (isset($meta['stop_key']) && $meta['stop_key'] === 'stop_1') {
-                                $fromWaypoint = $waypoint;
-                            }
-                        }
-                        if (!$toWaypoint && $waypoint->place_uuid === $toPlace->uuid) {
-                            $meta = $waypointMeta[$waypoint->uuid] ?? [];
-                            if (isset($meta['stop_key']) && $meta['stop_key'] === 'stop_2') {
-                                $toWaypoint = $waypoint;
-                            }
-                        }
-                    }
+                if (isset($meta['place_code']) && $meta['place_code'] === $toCode) {
+                    $toWaypoint = $waypoint;
                 }
             }
         } else {
@@ -1519,11 +1674,12 @@ public function createRouteSegmentsFromRows(array $rows, Order $order, array $sa
 
             if (!$fromPlace || !$toPlace) {
                 $displayRowIndex = $originalRowIndex + 1;
-                $errors[] = [$displayRowIndex, "Invalid place code from: {$fromCode}, to: {$toCode}", $order->public_id];
+                $orderPublicId = $order->public_id ?? ($order->id ?? '');
+                $errors[] = [$displayRowIndex, "Invalid place code from: {$fromCode}, to: {$toCode}", $orderPublicId];
                 continue;
             }
 
-            $waypoints = Waypoint::where('payload_uuid', $order->payload_uuid)
+            $waypoints = Waypoint::where('payload_uuid', $order->payload_uuid ?? ($order->payload->uuid ?? null))
                 ->orderBy('order')
                 ->get();
             
@@ -1533,7 +1689,8 @@ public function createRouteSegmentsFromRows(array $rows, Order $order, array $sa
 
         if (!$fromWaypoint || !$toWaypoint) {
             $displayRowIndex = $originalRowIndex + 1;
-            $errors[] = [$displayRowIndex, "Missing waypoint for from/to place (from: {$fromCode}, to: {$toCode})", $order->public_id];
+            $orderPublicId = $order->public_id ?? ($order->id ?? '');
+            $errors[] = [$displayRowIndex, "Missing waypoint for from/to place (from: {$fromCode}, to: {$toCode})", $orderPublicId];
             continue;
         }
 
