@@ -1035,9 +1035,8 @@ class OrderController extends FleetOpsController
                         }
 
                         // Validate facility_sequence
-                        $firstRow = $rows[0];
-                        if (!empty($firstRow['facility_sequence'])) {
-                            $facility_sequence = $firstRow['facility_sequence'];
+                        if (!empty($row['facility_sequence'])) {
+                            $facility_sequence = $row['facility_sequence'];
                             $facilities = array_filter(array_map('trim', explode('->', $facility_sequence)));
 
                             if (count($facilities) > 2) {
