@@ -114,7 +114,7 @@ export default class ManagementLeavesIndexDetailsController extends BaseControll
             // Now refresh the model (SPA-style)
             this.hostRouter.refresh();
             return true;
-        } catch (error) { alert('error');
+        } catch (error) { 
             this.notifications.error(`${this.intl.t('leaves.failed_to')} ${action === 'approve' ? this.intl.t('leaves.approved') : this.intl.t('leaves.rejected')} ${this.intl.t('leaves.leave')}.`);
             console.error(error);
             return false;
