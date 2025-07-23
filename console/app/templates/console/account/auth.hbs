@@ -8,8 +8,14 @@
                 <form id="change-password-form" aria-label="change-password" {{on "submit" (perform this.changePassword)}}>
                     <legend class="mb-3">{{t "fleet-ops.user-management.change-password"}}</legend>
                     <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
-                        <InputGroup @name={{t "auth.reset-password.form.password.label" default="New Password"}} @type="password" @value={{this.newPassword}} />
-                        <InputGroup @name={{t "auth.reset-password.form.confirm-password.label" default="Confirm Password"}} @type="password" @value={{this.newConfirmPassword}} />
+                        <div class="mb-4">
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{{t "auth.reset-password.form.password.label" default="New Password" }}</label>
+                            <PasswordField @value={{this.newPassword}} @type="password" @required={{false}} @placeholder="New Password"/>
+                        </div>
+                        <div class="mb-4">
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{{t "auth.reset-password.form.confirm-password.label" default="Confirm Password" }}</label>
+                            <PasswordField @value={{this.newConfirmPassword}} @type="password" @required={{false}} @placeholder="Confirm Password"/>
+                        </div>
                     </div>
                     <Button @type="primary" @buttonType="submit" @text={{t "fleet-ops.user-management.confirm-and-change"}} @icon="save" {{on "click" (perform this.changePassword)}} />
                 </form>
