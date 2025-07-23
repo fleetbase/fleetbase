@@ -36,13 +36,14 @@ class FileController extends Controller
 
         // Upload the file to storage disk
         try {
-            $path = $request->file->storeAs(
-                $path,
-                $fileName,
-                [
-                    'disk' => 'public',
-                ]
-            );
+            // $path = $request->file->storeAs(
+            //     $path,
+            //     $fileName,
+            //     [
+            //         'disk' => 'public',
+            //     ]
+            // );
+            $path = $request->file->storeAs($path, $fileName, ['disk' => $disk]);
         } catch (\Throwable $e) {
             return response()->apiError($e->getMessage());
         }

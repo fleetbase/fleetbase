@@ -4,6 +4,7 @@ import { tracked } from '@glimmer/tracking';
 import { action } from '@ember/object';
 import pathToRoute from '@fleetbase/ember-core/utils/path-to-route';
 import ENV from '@fleetbase/console/config/environment';
+import { empty } from '@ember/object/computed';
 
 export default class AuthLoginController extends Controller {
     @controller('auth.forgot-password') forgotPasswordController;
@@ -421,7 +422,7 @@ export default class AuthLoginController extends Controller {
                 const subscription = subscriptionResponse.data;
                 // Check if verification is pending
                 // if (subscription.verification_pending || !user.email_verified_at) {
-                if (!this.currentUser.email_verified_at) { alert("verification is pending")
+                if (!this.currentUser.email_verified_at) { 
                     // Verification is pending, redirect to verification page
                     return this.sendUserForEmailVerification(email);
                 }
@@ -472,7 +473,7 @@ export default class AuthLoginController extends Controller {
                 //         this.notifications.success('Subscription created! Please complete payment setup.');
                 //         return;
                 //     }
-                    
+                if (this.currentUser.email_verified_at == null || empty(this.currentUser.email_verified_at)) {   
                     // If no payment URL, construct one with user data
                     const baseUrl = ENV.chargebee.baseUrl;
                     const params = new URLSearchParams({
@@ -496,9 +497,13 @@ export default class AuthLoginController extends Controller {
                     this.startIframePolling();  
                     this.notifications.success('Subscription created! Please complete payment setup.');
                     // return;
-                    
-                    // If no payment URL, proceed with verification flow
                     return this.proceedWithVerification(email, createResponse || {});
+                }
+                else{
+                    return this.router.transitionTo('console.fleet-ops');
+                }
+                    // If no payment URL, proceed with verification flow
+                    // return this.proceedWithVerification(email, createResponse || {});
                 // } else {
                 //     // Handle subscription creation failure
                 //     this.notifications.error('Failed to create subscription. Please contact support.');

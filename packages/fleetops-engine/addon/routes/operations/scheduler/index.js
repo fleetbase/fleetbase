@@ -18,7 +18,7 @@ export default class OperationsSchedulerIndexRoute extends Route {
     
     // Cache configuration
     CACHE_CONFIG = {
-        duration: 15 * 60 * 1000, // 15 minutes
+        duration: 2 * 60 * 1000, // 15 minutes
         threshold: 0.75 // Refresh when 75% of cache duration has passed
     };
 
@@ -429,8 +429,12 @@ export default class OperationsSchedulerIndexRoute extends Route {
                 createFullCalendarEventFromLeave(leave, this.intl)
             ));
         }
-        controller.loadAvailableDrivers.perform();
-        controller.getOrderStatusOptions.perform();
+        if (controller.loadAvailableDrivers?.perform) {
+            controller.loadAvailableDrivers.perform();
+        }
+        if (controller.getOrderStatusOptions?.perform) {
+            controller.getOrderStatusOptions.perform();
+        }
         
         controller.events = events;
         // controller._needCalendarRefresh = true;
@@ -491,5 +495,11 @@ export default class OperationsSchedulerIndexRoute extends Route {
         };
         
         this.refresh();
+    }
+
+    @action
+    refreshDriverUnavailability() {
+        this._cache.unavailability = null;
+        this.controller.refreshLeaveEvents(); // or whatever method triggers a reload in your controller
     }
 }
