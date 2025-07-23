@@ -1040,7 +1040,7 @@ class OrderController extends FleetOpsController
                             $facilities = array_filter(array_map('trim', explode('->', $facility_sequence)));
 
                             if (count($facilities) > 2) {
-                                $originalRowIndex = $rows[0]['_original_row_index'] ?? 0;
+                                $originalRowIndex = $row['_original_row_index'] ?? 0;
                                 $importErrors[] = [
                                     (string)($originalRowIndex + 1),
                                     "Trip {$tripId}: Facility sequence has " . count($facilities) . " items. Only 2 are imported. Sequence: " . implode(' -> ', $facilities),
@@ -1051,7 +1051,7 @@ class OrderController extends FleetOpsController
                             }
                             // Check if first and second facility are the same
                             if (count($facilities) >= 2 && $facilities[0] === $facilities[1]) {
-                                $originalRowIndex = $rows[0]['_original_row_index'] ?? 0;
+                                $originalRowIndex = $row['_original_row_index'] ?? 0;
                                 $importErrors[] = [
                                     (string)($originalRowIndex + 1),
                                     "Trip {$tripId}: First and second facility in sequence are the same ('{$facilities[0]}'). Sequence: " . implode(' -> ', $facilities),
