@@ -32,7 +32,7 @@ class Payload extends FleetbaseResource
             'pickup'                => $this->getPlace($this->pickup),
             'dropoff'               => $this->getPlace($this->dropoff),
             'return'                => new Place($this->return),
-            'waypoints'             => Waypoint::collection($this->getWaypoints($withRouteETA)),
+            'waypoints'             => $this->getWaypointsWithProperIds($withRouteETA),
             'entities'              => Entity::collection($this->entities),
             'route_segments'        => $this->when(Http::isInternalRequest(), $this->routeSegments),
             'cod_amount'            => $this->cod_amount ?? null,
@@ -53,6 +53,33 @@ class Payload extends FleetbaseResource
         return new Place($place);
     }
 
+    /**
+     * Get waypoints with proper IDs by working directly with waypoint models
+     */
+    private function getWaypointsWithProperIds(bool $withRouteETA = false): Collection
+    {
+        // Fetch all waypoint models for this payload, ordered by their order field
+        $waypointModels = \Fleetbase\FleetOps\Models\Waypoint::where('payload_uuid', $this->uuid)
+            ->whereNull('deleted_at') // Exclude soft-deleted waypoints
+            ->with(['place', 'trackingNumber']) // Load relationships
+            ->orderBy('order') // Order by waypoint order
+            ->get();
+
+        // Convert waypoint models to resources
+        return $waypointModels->map(function ($waypointModel) use ($withRouteETA) {
+            // Create a new resource using the waypoint model directly
+            $resource = new WaypointDirect($waypointModel);
+            
+            // Add ETA if requested
+            if ($withRouteETA && $waypointModel->place) {
+                $resource->eta = $this->tracker()->getWaypointETA($waypointModel->place);
+            }
+            
+            return $resource;
+        });
+    }
+
+    // Keep the old method for backward compatibility if needed
     private function getWaypoints(bool $withRouteETA = false): Collection
     {
         if ($this->waypoints instanceof Collection) {
