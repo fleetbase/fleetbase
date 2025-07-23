@@ -106,7 +106,11 @@ class IssueFilter extends Filter
             } elseif (Utils::isPublicId($assignee)) {
                 $q->where('public_id', $assignee);
             } else {
-                $q->search($assignee);
+                // $q->search($assignee);
+                $q->where(function ($subQuery) use ($assignee) {
+                    $subQuery->where('name', 'like', '%' . $assignee . '%')
+                             ->orWhere('email', 'like', '%' . $assignee . '%');
+                });
             }
         });
     }
@@ -119,7 +123,11 @@ class IssueFilter extends Filter
             } elseif (Utils::isPublicId($reporter)) {
                 $q->where('public_id', $reporter);
             } else {
-                $q->search($reporter);
+                // $q->search($reporter);
+                $q->where(function ($subQuery) use ($reporter) {
+                    $subQuery->where('name', 'like', '%' . $reporter . '%')
+                             ->orWhere('email', 'like', '%' . $reporter . '%');
+                });
             }
         });
     }
@@ -132,7 +140,8 @@ class IssueFilter extends Filter
             } elseif (Utils::isPublicId($driver)) {
                 $q->where('public_id', $driver);
             } else {
-                $q->search($driver);
+                // $q->search($driver);
+                $q->where('name', 'like', '%' . $driver . '%');
             }
         });
     }
@@ -145,7 +154,12 @@ class IssueFilter extends Filter
             } elseif (Utils::isPublicId($vehicle)) {
                 $q->where('public_id', $vehicle);
             } else {
-                $q->search($vehicle);
+                // $q->search($vehicle);
+                $q->where(function ($subQuery) use ($vehicle) {
+                    $subQuery->where('plate_number', 'like', '%' . $vehicle . '%')
+                             ->orWhere('make', 'like', '%' . $vehicle . '%')
+                             ->orWhere('model', 'like', '%' . $vehicle . '%');
+                });
             }
         });
     }
