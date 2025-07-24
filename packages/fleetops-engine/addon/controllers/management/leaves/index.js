@@ -6,6 +6,9 @@ import { timeout } from 'ember-concurrency';
 import { task } from 'ember-concurrency-decorators';
 import ENV from '@fleetbase/console/config/environment';
 import { getOwner } from '@ember/application';
+import { driver } from 'driver.js';
+import 'driver.js/dist/driver.css';
+import { later } from '@ember/runloop';
 
 export default class ManagementLeavesIndexController extends BaseController {
     @service notifications;
@@ -434,4 +437,143 @@ export default class ManagementLeavesIndexController extends BaseController {
     //     const selections = this.table.selectedRows.map((_) => _.id);
     //     this.crud.export('leaves', { params: { selections } });
     // }
+
+    /**
+     * Starts the guided tour for the leaves management page.
+     *
+     * This tour will highlight:
+     * 1. The three dots dropdown button in the first row.
+     * 2. The "View Leave" button in the actions menu.
+     * 3. The sidebar with leave details including the approve/reject buttons.
+     *
+     * @void
+     */
+    @action startLeavesTour() {
+        const driverObj = driver({
+            showProgress: true,
+            nextBtnText: this.intl.t('fleetbase.common.next'),
+            prevBtnText: this.intl.t('fleetbase.common.previous'),
+            doneBtnText: this.intl.t('fleetbase.common.done'),
+            closeBtnText: this.intl.t('fleetbase.common.close'),
+            allowClose: false,
+            disableActiveInteraction: true,
+            onPopoverRender: (popover) => {
+                const closeBtn = popover.wrapper.querySelector('.driver-popover-close-btn');
+                if (closeBtn) {
+                    closeBtn.style.display = 'inline-block';
+                }
+            },
+            steps: [
+                {
+                    element: 'table tbody tr:first-child td:last-child .ember-basic-dropdown button',
+                    popover: {
+                        title: this.intl.t('fleetbase.leaves.tour.dropdown.title'),
+                        description: this.intl.t('fleetbase.leaves.tour.dropdown.description'),
+                        onNextClick: () => {
+                            const menuBtn = document.querySelector('table tbody tr:first-child td:last-child .ember-basic-dropdown button');
+                            if (menuBtn) {
+                                menuBtn.click();
+                                const waitForMenu = () => {
+                                    const menu = document.querySelector('.next-dd-menu-table-dd');
+                                    if (menu) {
+                                        driverObj.moveNext();
+                                    } else {
+                                        setTimeout(waitForMenu, 100);
+                                    }
+                                };
+                                waitForMenu();
+                            }
+                        },
+                    },
+                },
+                {
+                    element: '.next-dd-menu-table-dd',
+                    popover: {
+                        title: this.intl.t('fleetbase.leaves.tour.actions_menu.title'),
+                        description: this.intl.t('fleetbase.leaves.tour.actions_menu.description'),
+                        onPrevClick: () => {
+                            const menuBtn = document.querySelector('table tbody tr:first-child td:last-child .ember-basic-dropdown button');
+                            if (menuBtn) {
+                                menuBtn.click();
+                                driverObj.movePrevious()
+                            }
+                        },
+                    },
+                },
+                {
+                    element: '.next-dd-menu div[role="group"]:nth-child(3) > a',
+                    popover: {
+                        title: this.intl.t('fleetbase.leaves.tour.view_button.title'),
+                        description: this.intl.t('fleetbase.leaves.tour.view_button.description'),
+                    },
+                },
+                {
+                    element: '.next-dd-menu div[role="group"]:nth-child(4) > a',
+                    popover: {
+                        title: this.intl.t('fleetbase.leaves.tour.approve_button.title'),
+                        description: this.intl.t('fleetbase.leaves.tour.approve_button.description'),
+                    },
+                },
+                {
+                    element: '.next-dd-menu div[role="group"]:nth-child(5) > a',
+                    popover: {
+                        title: this.intl.t('fleetbase.leaves.tour.reject_button.title'),
+                        description: this.intl.t('fleetbase.leaves.tour.reject_button.description'),
+                        onNextClick: () => {
+                            const viewBtn = document.querySelector('.next-dd-menu div[role="group"]:nth-child(3) > a');
+                            if (viewBtn) {
+                                viewBtn.click();
+                                later(this, () => {
+                                    const el = document.querySelector('.next-content-overlay > .next-content-overlay-panel-container > .next-content-overlay-panel');
+                                    if (el) {
+                                        const onTransitionEnd = () => {
+                                            el.removeEventListener('transitionend', onTransitionEnd);
+                                            driverObj.moveNext();
+                                        };
+                                        el.addEventListener('transitionend', onTransitionEnd);
+                                    }
+                                }, 100);
+                            }
+                        },
+                    },
+                },
+                {
+                    element: '.leaves-panel-details .grid',
+                    popover: {
+                        title: this.intl.t('fleetbase.leaves.tour.details.title'),
+                        description: this.intl.t('fleetbase.leaves.tour.details.description'),
+                        onPrevClick: () => {
+                            // Attempt to close the sidebar by clicking the cancel/close button before moving to previous step
+                            const closeBtn = document.querySelector('.next-content-overlay-panel:has(.leaves-panel-details) .next-view-header-right button');
+                            if (closeBtn) {
+                                closeBtn.click();
+                                 const menuBtn = document.querySelector('table tbody tr:first-child td:last-child .ember-basic-dropdown button');
+                            if (menuBtn) {
+                                menuBtn.click();
+                                const waitForMenu = () => {
+                                    const menu = document.querySelector('.next-dd-menu-table-dd');
+                                    if (menu) {
+                                         driverObj.moveTo(2);
+                                    } else {
+                                        setTimeout(waitForMenu, 100);
+                                    }
+                                };
+                                waitForMenu();
+                            }
+                               
+                            }
+                        },
+                    },
+                },
+                {
+                    element: '.leaves-panel-details .flex:has(.btn-wrapper)',
+                    popover: {
+                        title: this.intl.t('fleetbase.leaves.tour.sidebar_approve.title'),
+                        description: this.intl.t('fleetbase.leaves.tour.sidebar_approve.description'),
+                    },
+                }
+            ],
+        });
+        driverObj.drive();
+    }
 }
