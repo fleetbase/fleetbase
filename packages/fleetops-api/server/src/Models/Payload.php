@@ -59,7 +59,7 @@ class Payload extends Model
      *
      * @var array
      */
-    protected $fillable = ['_key', 'company_uuid', 'pickup_uuid', 'dropoff_uuid', 'return_uuid', 'current_waypoint_uuid', 'meta', 'payment_method', 'cod_amount', 'cod_currency', 'cod_payment_method', 'type'];
+    protected $fillable = ['_key', 'company_uuid', 'pickup_uuid', 'dropoff_uuid', 'return_uuid', 'current_waypoint_uuid', 'meta', 'payment_method', 'cod_amount', 'cod_currency', 'cod_payment_method', 'type', 'current_waypoint_table_id'];
 
     /**
      * The attributes that should be cast to native types.
@@ -847,6 +847,8 @@ class Payload extends Model
         }
 
         $this->current_waypoint_uuid = $destination->uuid;
+        //update public_id for current waypoint
+        $this->current_waypoint_table_id = $destination->public_id;
         $this->saveQuietly();
         $this->updateWaypointActivity($activity, $location);
 
