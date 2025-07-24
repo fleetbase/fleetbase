@@ -347,9 +347,16 @@ class OrderTracker
      */
     public function getCompletedDestinationPoints(): Collection
     {
-        return $this->getCompletedDestinations()->map(function (Place $place) {
-            return $place->location;
-        })->filter()->values();
+        // return $this->getCompletedDestinations()->map(function (Place $place) {
+        //     return $place->location;
+        // })->filter()->values();
+         return $this->getCompletedDestinations()
+            ->filter() // removes nulls
+            ->map(function (Place $place) {
+                return $place->location;
+            })
+            ->filter()
+            ->values();
     }
 
     /**
