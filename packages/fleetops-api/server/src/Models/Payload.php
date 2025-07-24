@@ -395,41 +395,47 @@ class Payload extends Model
      * @return $this
      */
     public function updateWaypoints($waypoints = [])
-    {
-        if (!is_array($waypoints)) {
-            return $this;
-        }
+{
+    if (!is_array($waypoints)) {
+        return $this;
+    }
 
-        $placeIds = [];
+    // Start a database transaction to ensure data consistency
+    DB::beginTransaction();
+    
+    try {
         $waypointDataList = [];
-
-        foreach ($waypoints as $attributes) {
+        $processedPublicIds = [];
+        
+        foreach ($waypoints as $index => $attributes) {
             $originalAttributes = $attributes;
-
+            
             // Extract nested place data if present
             if (Utils::isset($attributes, 'place') && is_array(Utils::get($attributes, 'place'))) {
                 $attributes = Utils::get($attributes, 'place');
             }
-
+            
             // Resolve or insert place UUID
             $placeUuid = array_key_exists('place_uuid', $attributes)
                 ? $attributes['place_uuid']
                 : Place::insertFromMixed($attributes);
-
-            $placeIds[] = $placeUuid;
-
-            // Build waypoint data
+            
+            // Build waypoint data - use order from request payload, fallback to index
             $waypointData = [
                 'payload_uuid' => $this->uuid,
                 'place_uuid'   => $placeUuid,
+                'order'        => array_key_exists('order', $originalAttributes) && is_numeric($originalAttributes['order'])
+                    ? (int) $originalAttributes['order']
+                    : $index, // Fallback to array index if order not provided
             ];
-
-            // Add 'order' if available
-            if (array_key_exists('order', $originalAttributes)) {
-                $waypointData['order'] = $originalAttributes['order'];
+            
+            // If waypoint has a public_id, include it for tracking
+            if (array_key_exists('public_id', $originalAttributes)) {
+                $waypointData['public_id'] = $originalAttributes['public_id'];
+                $processedPublicIds[] = $originalAttributes['public_id'];
             }
-
-            // Add 'customer_uuid' and 'customer_type' if valid
+            
+            // Add customer data if valid
             if (
                 array_key_exists('customer_uuid', $originalAttributes) &&
                 array_key_exists('customer_type', $originalAttributes) &&
@@ -437,41 +443,101 @@ class Payload extends Model
                 Utils::notEmpty($originalAttributes['customer_type'])
             ) {
                 $customerTypeNamespace = Utils::getMutationType($originalAttributes['customer_type']);
-
-                // Check if the customer exists in that namespace
+                
                 if (class_exists($customerTypeNamespace)) {
-                    $customerExists = app($customerTypeNamespace)->where('uuid', $originalAttributes['customer_uuid'])->exists();
+                    $customerExists = app($customerTypeNamespace)
+                        ->where('uuid', $originalAttributes['customer_uuid'])
+                        ->exists();
+                    
                     if ($customerExists) {
                         $waypointData['customer_uuid'] = $originalAttributes['customer_uuid'];
                         $waypointData['customer_type'] = $customerTypeNamespace;
                     }
                 }
             }
-
+            
             $waypointDataList[] = $waypointData;
         }
-
-        // Delete waypoints that are no longer present
-        $existingWaypointMakers = $this->waypointMarkers()->get();
-        $existingWaypointMakers->each(function ($waypointMarker) use ($placeIds) {
-            if (!in_array($waypointMarker->place_uuid, $placeIds)) {
-                $waypointMarker->delete();
+        
+        // Get all existing waypoints for this payload
+        $existingWaypoints = $this->waypointMarkers()->get();
+        
+        // Step 1: Soft delete waypoints that are no longer in the request
+        // or have the same order as new waypoints (to handle order conflicts)
+        $ordersInRequest = array_column($waypointDataList, 'order');
+        $publicIdsInRequest = array_filter($processedPublicIds);
+        
+        foreach ($existingWaypoints as $existingWaypoint) {
+            $shouldDelete = false;
+            
+            // Delete if waypoint public_id is not in the new request
+            if ($existingWaypoint->public_id && 
+                !empty($publicIdsInRequest) && 
+                !in_array($existingWaypoint->public_id, $publicIdsInRequest)) {
+                $shouldDelete = true;
             }
-        });
-
-        // Insert or update all waypoints
-        foreach ($waypointDataList as $data) {
-            Waypoint::updateOrCreate(
-                [
-                    'payload_uuid' => $data['payload_uuid'],
-                    'place_uuid'   => $data['place_uuid'],
-                ],
-                $data
-            );
+            
+            // Delete if order position is being taken by a new/different waypoint
+            if (in_array($existingWaypoint->order, $ordersInRequest)) {
+                // Check if this is the same waypoint (by public_id) staying in the same position
+                $isSameWaypointSamePosition = false;
+                foreach ($waypointDataList as $newWaypoint) {
+                    if (isset($newWaypoint['public_id']) && 
+                        $newWaypoint['public_id'] === $existingWaypoint->public_id &&
+                        $newWaypoint['order'] == $existingWaypoint->order) {
+                        $isSameWaypointSamePosition = true;
+                        break;
+                    }
+                }
+                
+                if (!$isSameWaypointSamePosition) {
+                    $shouldDelete = true;
+                }
+            }
+            
+            if ($shouldDelete) {
+                $existingWaypoint->delete(); // This will soft delete if using SoftDeletes trait
+            }
         }
-
-        return $this->refresh()->load(['waypoints']);
+        
+        // Step 2: Insert or update waypoints from the request payload
+        foreach ($waypointDataList as $data) {
+            // Try to find existing waypoint by public_id first, then by place and payload
+            $existingWaypoint = null;
+            
+            if (isset($data['public_id'])) {
+                $existingWaypoint = Waypoint::where('payload_uuid', $data['payload_uuid'])
+                    ->where('public_id', $data['public_id'])
+                    ->first();
+            }
+            
+            if (!$existingWaypoint) {
+                $existingWaypoint = Waypoint::where('payload_uuid', $data['payload_uuid'])
+                    ->where('place_uuid', $data['place_uuid'])
+                    ->where('order', $data['order'])
+                    ->first();
+            }
+            
+            if ($existingWaypoint) {
+                // Update existing waypoint
+                $existingWaypoint->update($data);
+            } else {
+                // Create new waypoint
+                Waypoint::create($data);
+            }
+        }
+        
+        DB::commit();
+        
+    } catch (\Exception $e) {
+        DB::rollback();
+        throw $e;
     }
+    
+    return $this->refresh()->load(['waypoints' => function($query) {
+        $query->orderBy('order', 'asc');
+    }]);
+}
 
     public function _findCorrectDestinationForEntity($entityAttributes = []): ?Place
     {

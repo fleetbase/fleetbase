@@ -364,16 +364,18 @@ export default class OperationsOrdersIndexNewController extends BaseController {
             // Check for consecutive duplicate waypoints
             let hasConsecutiveDuplicates = false;
     
-            for (let i = 1; i < this.waypoints.length; i++) {
+             for (let i = 1; i < this.waypoints.length; i++) {
                 const currentWaypoint = this.waypoints[i];
                 const previousWaypoint = this.waypoints[i-1];
                 
                 // Check if current and previous have the same public_id
-                if (currentWaypoint.place && 
-                    previousWaypoint.place && 
-                    currentWaypoint.place.public_id && 
-                    previousWaypoint.place.public_id && 
-                    currentWaypoint.place.public_id === previousWaypoint.place.public_id) {
+                const currentPlaceId = currentWaypoint?.place?.public_id;
+                const previousPlaceId = previousWaypoint?.place?.public_id;
+                
+                // Check if both waypoints have valid place public_ids and they match
+                if (currentPlaceId && 
+                    previousPlaceId && 
+                    currentPlaceId === previousPlaceId) {
                     hasConsecutiveDuplicates = true;
                     break;
                 }
