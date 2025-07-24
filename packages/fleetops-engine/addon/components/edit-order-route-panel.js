@@ -125,20 +125,19 @@ export default class EditOrderRoutePanelComponent extends Component {
                 this.showErrorOnce(WAYPOINTS_ERROR);
                 return;
             }
-            // Initialize the Set before using it
-            const waypointSet = new Set();
-            let hasDuplicates = false;
-            for (const waypoint of payload.waypoints) {
-                if (waypoint.public_id && waypoint.name) {
-                    const key = `${waypoint.public_id}-${waypoint.name}`;
-                    if (waypointSet.has(key)) {
-                        hasDuplicates = true;
-                        break;
-                    }
-                    waypointSet.add(key);
+            let hasConsecutiveDuplicates = false;
+            for (let i = 1; i < payload.waypoints.length; i++) {
+                const prev = payload.waypoints[i - 1];
+                const curr = payload.waypoints[i];
+                if (
+                    prev.public_id === curr.public_id ||
+                    prev.name === curr.name
+                ) {
+                    hasConsecutiveDuplicates = true;
+                    break;
                 }
             }
-            if (hasDuplicates) {
+            if (hasConsecutiveDuplicates) {
                 this.showErrorOnce(this.intl.t('common.duplicate-waypoint-error'));
                 return;
             }
@@ -151,9 +150,11 @@ export default class EditOrderRoutePanelComponent extends Component {
             }
         }
         try {
+            // Before serializing waypoints in save()
             payload.waypoints.forEach((waypoint, idx) => {
                 waypoint.order = idx;
             });
+            console.log("editorderRoute",payload.waypoints);
             this.order = yield this.fetch.patch(
                 `orders/route/${this.order.id}`,
                 {
@@ -489,55 +490,20 @@ export default class EditOrderRoutePanelComponent extends Component {
         if (!waypoints || waypoints.length <= 1) {
             return waypoints;
         }
-        const uniqueMap = new Map();
-        const duplicatesToRemove = [];
-        
-        // First pass: identify duplicates
-        waypoints.forEach((waypoint, index) => {
-            // Create a unique key for each waypoint based on available data
-            let key;
-            
-            if (waypoint.name) {
-                // If there's a displayed name like "LEIPZIG - 04103, GERMANY", use that
-                key = waypoint.name;
-            } else if (waypoint.location && waypoint.location.address) {
-                // If there's a full address, use that
-                key = waypoint.location.address;
-            } else if (waypoint.place_uuid) {
-                // Use place_uuid if available
-                key = waypoint.place_uuid;
-            } else if (waypoint.id) {
-                // Use id if available
-                key = waypoint.id;
-            } else if (waypoint.latitude !== undefined && waypoint.longitude !== undefined) {
-                // If latitude and longitude are available, use those
-                key = `${waypoint.latitude},${waypoint.longitude}`;
-            } else if (waypoint.lat !== undefined && waypoint.lng !== undefined) {
-                // Alternative format for lat/lng
-                key = `${waypoint.lat},${waypoint.lng}`;
-            } else if (Array.isArray(waypoint) && waypoint.length >= 2) {
-                // For array format [lat, lng]
-                key = `${waypoint[0]},${waypoint[1]}`;
-            } else {
-                // Skip waypoints with no identifiable information
-                return;
+        const toRemove = [];
+        for (let i = 1; i < waypoints.length; i++) {
+            const prev = waypoints[i - 1];
+            const curr = waypoints[i];
+            if (
+                prev.public_id === curr.public_id ||
+                prev.name === curr.name
+            ) {
+                toRemove.push(curr);
             }
-            if (uniqueMap.has(key)) {
-                // This is a duplicate, mark for removal
-                duplicatesToRemove.push(waypoint);
-            } else {
-                // First occurrence, add to map
-                uniqueMap.set(key, waypoint);
-            }
-        });
-        
-        // Second pass: remove duplicates
-        if (duplicatesToRemove.length > 0) {
-            duplicatesToRemove.forEach(waypoint => {
-                waypoints.removeObject(waypoint);
-            });
         }
-        
+        toRemove.forEach(waypoint => {
+            waypoints.removeObject(waypoint);
+        });
         return waypoints;
     }
     
