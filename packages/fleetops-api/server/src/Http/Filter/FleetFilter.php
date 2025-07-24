@@ -19,13 +19,17 @@ class FleetFilter extends Filter
 
     public function query(?string $searchQuery)
     {
+        // $this->builder->where(function ($query) use ($searchQuery) {
+        //     $query->orWhereHas(
+        //         'user',
+        //         function ($query) use ($searchQuery) {
+        //             $query->searchWhere(['name', 'email', 'phone'], $searchQuery);
+        //         }
+        //     );
+        // });
         $this->builder->where(function ($query) use ($searchQuery) {
-            $query->orWhereHas(
-                'user',
-                function ($query) use ($searchQuery) {
-                    $query->searchWhere(['name', 'email', 'phone'], $searchQuery);
-                }
-            );
+            $query->orWhere('name', 'like', "%{$searchQuery}%");
+            // Add other fleet fields you want to search
         });
     }
 
