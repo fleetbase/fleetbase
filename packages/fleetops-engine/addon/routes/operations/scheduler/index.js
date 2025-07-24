@@ -18,7 +18,7 @@ export default class OperationsSchedulerIndexRoute extends Route {
     
     // Cache configuration
     CACHE_CONFIG = {
-        duration: 15 * 60 * 1000, // 15 minutes
+        duration: 2 * 60 * 1000, // 15 minutes
         threshold: 0.75 // Refresh when 75% of cache duration has passed
     };
 
@@ -82,12 +82,41 @@ export default class OperationsSchedulerIndexRoute extends Route {
         if (isNestedRouteTransition(transition) && !isPaginationTransition) {
             set(this.queryParams, 'page.refreshModel', false);
         } else {
+            // this._cache.calendar = null;
+            // this._cache.lastFetch = 0;
+            // this._cache.inProgress = false;
+            // this._needCalendarRefresh =true;
             set(this.queryParams, 'page.refreshModel', true);
+            // Force a data refresh when returning to the scheduler
+            // if (transition.to.name && transition.to.name.includes('operations.scheduler')) {
+            //     // Clear store cache for orders
+            //     this.store.unloadAll('order');
+            // }
         }
-      
+        // if (transition.to.name !== this.routeName) {
+        //     // Flag that we left the scheduler
+        //     this._leftScheduler = true;
+        // }
         
     }
-
+    // @action
+    // didTransition() {
+    //     // If we're coming back to the scheduler after leaving
+    //     if (this._leftScheduler) {
+    //         this._leftScheduler = false;
+            
+    //         // Force refresh of driver unavailability cache
+    //         this._cache.unavailability = null;
+    //         this._cache.lastUnavailabilityFetch = 0;
+            
+    //         // Schedule a refresh once the controller is set up
+    //         setTimeout(() => {
+    //             if (this.controller) {
+    //                 this.controller.refreshLeaveEvents();
+    //             }
+    //         }, 100);
+    //     }
+    // }
 
     beforeModel() {
 
@@ -174,24 +203,25 @@ export default class OperationsSchedulerIndexRoute extends Route {
         return allOrders;
     }
 
-    async _fetchDriverUnavailability() {
+    async _fetchDriverUnavailability() { 
         if (this._cache.unavailability) {
             return this._cache.unavailability;
         }
-
+        // If we're coming back from another menu, ignore the cache
+        // if (this._leftScheduler || !this._cache.unavailability) {
         try {
             const authSession = JSON.parse(localStorage.getItem('ember_simple_auth-session'));
             if (!authSession?.authenticated?.token) {
                 return null;
             }
             
-            const response = await fetch(`${ENV.API.host}/api/v1/leave-requests/list`, {
+            const response = await fetch(`${ENV.API.host}/api/v1/leave-requests/list?timestamp=${Date.now()}&status=Approved`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${authSession.authenticated.token}`,
                 },
-                cache: 'default'
+                cache: 'default' // Force fresh data
             });
             
             if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
@@ -209,6 +239,10 @@ export default class OperationsSchedulerIndexRoute extends Route {
             console.error('Error fetching driver unavailability:', error);
             return null;
         }
+        // }
+        
+        // Return cached data if available
+        // return this._cache.unavailability;
     }
     // async model(params = {}) {
     //     const startTime = performance.now();
@@ -279,6 +313,7 @@ export default class OperationsSchedulerIndexRoute extends Route {
         const startTime = performance.now();
         const page = params.page || 1;
         const { listLimit } = this.REQUEST_CONFIG;
+        
         try {
             // Parallel fetch of paginated orders and driver unavailability
             const [paginatedOrders, driverUnavailability] = await Promise.all([
@@ -342,7 +377,7 @@ export default class OperationsSchedulerIndexRoute extends Route {
     }
 
     
-    setupController(controller, model) {
+    setupController(controller, model) { 
         const { paginatedOrders, calendarOrders, driverUnavailability } = model;
         controller.setProperties({
             page: model.pagination.currentPage,
@@ -374,6 +409,10 @@ export default class OperationsSchedulerIndexRoute extends Route {
             // )
             calscheduledOrders: calendarOrders
         });
+        // Add a flag to refresh leaves if we came back from another menu
+        // if (this._leftScheduler) {
+        //     controller._needLeaveRefresh = true;
+        // }
          // Apply any active filters immediately
         if (controller.driver_filter || controller.order_id_filter || controller.status_filter) {
             controller.filterScheduledAndUnscheduledOrders();
@@ -390,10 +429,15 @@ export default class OperationsSchedulerIndexRoute extends Route {
                 createFullCalendarEventFromLeave(leave, this.intl)
             ));
         }
-        controller.loadAvailableDrivers.perform();
-        controller.getOrderStatusOptions.perform();
+        if (controller.loadAvailableDrivers?.perform) {
+            controller.loadAvailableDrivers.perform();
+        }
+        if (controller.getOrderStatusOptions?.perform) {
+            controller.getOrderStatusOptions.perform();
+        }
         
         controller.events = events;
+        // controller._needCalendarRefresh = true;
     }
 
     resetController(controller, isExiting) {
@@ -409,11 +453,35 @@ export default class OperationsSchedulerIndexRoute extends Route {
             controller.set('selectedDriver', null);
             controller.set('selectedStatus', null);
             // Also reset query params in the URL if possible
-            try {
-                this.hostRouter.transitionTo({ queryParams: { page: 1 } });
-            } catch (e) {
-                // Ignore errors - this is just a safety measure
+            if (controller.refreshTimer) {
+                clearInterval(controller.refreshTimer);
+                controller.set('refreshTimer', null);
             }
+            
+            // Clear any event listeners
+            if (controller.calendarEventListeners) {
+                controller.calendarEventListeners.forEach(listener => {
+                    if (typeof listener.teardown === 'function') {
+                        listener.teardown();
+                    }
+                });
+                controller.set('calendarEventListeners', []);
+            }
+            
+            // Cancel any in-flight requests
+            if (controller.pendingRequests) {
+                controller.pendingRequests.forEach(request => {
+                    if (request && typeof request.abort === 'function') {
+                        request.abort();
+                    }
+                });
+                controller.set('pendingRequests', []);
+            }
+            // try {
+            //     this.hostRouter.transitionTo({ queryParams: { page: 1 } });
+            // } catch (e) {
+            //     // Ignore errors - this is just a safety measure
+            // }
         }
     }
     
@@ -427,5 +495,11 @@ export default class OperationsSchedulerIndexRoute extends Route {
         };
         
         this.refresh();
+    }
+
+    @action
+    refreshDriverUnavailability() {
+        this._cache.unavailability = null;
+        this.controller.refreshLeaveEvents(); // or whatever method triggers a reload in your controller
     }
 }

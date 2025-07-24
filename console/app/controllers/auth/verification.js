@@ -146,8 +146,11 @@ export default class AuthVerificationController extends Controller {
                 if (token) {
                     this.notifications.info(`Welcome to ${this.intl.t('app.name')}`);
                     this.session.manuallyAuthenticate(token);
-
-                    return this.router.transitionTo('console');
+                   
+                    // return this.router.transitionTo('console.fleet-ops');
+                    Ember.run.next(this, function() {
+                        this.router.transitionTo('console.fleet-ops');
+                    });
                 }
 
                 return this.router.transitionTo('auth.login');

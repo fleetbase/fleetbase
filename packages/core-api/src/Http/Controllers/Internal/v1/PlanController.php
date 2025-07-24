@@ -407,13 +407,14 @@ class PlanController extends Controller
         $chargebeeSubscription = User::where('company_uuid', $companyId)
                 ->whereNotNull('chargebee_subscription_id')
                 ->whereNull('deleted_at') // if you want to exclude deleted users
-                ->value('chargebee_subscription_id','chargebee_customer_id');
-        if($chargebeeSubscription){     
-            $chargebeeSubscriptionId=$chargebeeSubscription->chargebee_subscription_id;
-            $chargebeeCustomerId=$chargebeeSubscription->chargebee_customer_id;
-        }else{
-            $chargebeeSubscriptionId=null;
-            $chargebeeCustomerId=null;
+                ->first(['chargebee_subscription_id', 'chargebee_customer_id']);
+
+        if ($chargebeeSubscription) {     
+            $chargebeeSubscriptionId = $chargebeeSubscription->chargebee_subscription_id;
+            $chargebeeCustomerId = $chargebeeSubscription->chargebee_customer_id;
+        } else {
+            $chargebeeSubscriptionId = null;
+            $chargebeeCustomerId = null;
         }
 
         $subscriptionStatus = Subscription::where('company_uuid', $companyId)

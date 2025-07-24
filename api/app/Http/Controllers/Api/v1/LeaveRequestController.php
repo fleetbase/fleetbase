@@ -10,6 +10,7 @@ use Fleetbase\Support\Auth;
 use App\Helpers\UserHelper;
 use Fleetbase\FleetOps\Models\Driver;
 use App\Helpers\LeaveHelper;
+// use Fleetbase\FleetOps\Http\Filter\LeaveRequestFilter;
 class LeaveRequestController extends Controller
 {
     /**
@@ -18,7 +19,22 @@ class LeaveRequestController extends Controller
     public function list()
     {
         // Get all leave requests
+        $perPage = request()->input('per_page', 500); // Default 15 items per page
+        $page = request()->input('page', 1);
+        // Get search query
+        $leave_request_query = request()->input('query', '');
+        
+        // Get filter parameters
+        $filters = request()->only([
+            'status',
+            'leave_type', 
+            'driver_name',
+            'start_date',
+            'end_date',
+            'created_at'
+        ]);
         $userUuid = request()->input('user_uuid');
+        $status = request()->input('status');
         $query = LeaveRequest::with('user')
                 ->whereNull('deleted_at')
                 ->where([
@@ -27,15 +43,70 @@ class LeaveRequestController extends Controller
                     ['deleted', '=', 0],
                     ])
                 ->orderBy('id', 'desc');
-        if ($userUuid) {
-            $query->where('user_uuid', $userUuid);
+        if (!empty($leave_request_query)) {
+            $query->where(function($q) use ($leave_request_query) {
+                $q->where('reason', 'like', '%' . $leave_request_query . '%')
+                    ->orWhere('leave_type', 'like', '%' . $leave_request_query . '%')
+                    ->orWhere('status', 'like', '%' . $leave_request_query . '%')
+                    ->orWhere('public_id', 'like', '%' . $leave_request_query . '%')
+                    ->orWhereHas('user', function($userQuery) use ($leave_request_query) {
+                        $userQuery->where('name', 'like', '%' . $leave_request_query . '%');
+                    });
+            });
         }
-        $leaveRequests = $query->get();
-        return response()->json([
-            'success' => true,
-            'data' => $leaveRequests,
-            "total" => $leaveRequests->count(),
-        ]);
+        // if ($userUuid) {
+        //     $query->where('user_uuid', $userUuid);
+        // }
+        // if ($status) {
+        //     $query->where('status', $status);
+        // }
+        if (!empty($filters['status'])) {
+            $query->where('status', $filters['status']);
+        }
+        
+        if (!empty($filters['leave_type'])) {
+            $query->where('leave_type', $filters['leave_type']);
+        }
+        
+        if (!empty($filters['driver_name'])) {
+            $query->whereHas('user', function($q) use ($filters) {
+                $q->where('name', 'like', '%' . $filters['driver_name'] . '%');
+            });
+        }
+
+        // Date filters
+        if (!empty($filters['start_date'])) {
+            $query->whereDate('start_date', '>=', $filters['start_date']);
+        }
+        
+        if (!empty($filters['end_date'])) {
+            $query->whereDate('end_date', '<=', $filters['end_date']);
+        }
+        // $leaveRequests = $query->get();
+        
+        if (request()->has('per_page') && $perPage > 0) {
+            $leaveRequests = $query->paginate($perPage, ['*'], 'page', $page);
+            
+            return response()->json([
+                'success' => true,
+                'data' => $leaveRequests->items(),
+                'pagination' => [
+                    'current_page' => $leaveRequests->currentPage(),
+                    'per_page' => $leaveRequests->perPage(),
+                    'total' => $leaveRequests->total(),
+                    'last_page' => $leaveRequests->lastPage(),
+                    'from' => $leaveRequests->firstItem(),
+                    'to' => $leaveRequests->lastItem(),
+                ]
+            ]);
+        } else {
+            $leaveRequests = $query->get();
+            return response()->json([
+                'success' => true,
+                'data' => $leaveRequests,
+                "total" => $leaveRequests->count(),
+            ]);
+        }
         
     }
 

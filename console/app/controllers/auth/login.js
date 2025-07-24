@@ -4,6 +4,7 @@ import { tracked } from '@glimmer/tracking';
 import { action } from '@ember/object';
 import pathToRoute from '@fleetbase/ember-core/utils/path-to-route';
 import ENV from '@fleetbase/console/config/environment';
+import { empty } from '@ember/object/computed';
 
 export default class AuthLoginController extends Controller {
     @controller('auth.forgot-password') forgotPasswordController;
@@ -399,118 +400,133 @@ export default class AuthLoginController extends Controller {
      *
      * @void
      */
-    async success() {
+   success() {
         this.reset('success');
-        // Wait for current user to load
-        await this.currentUser.load();
-        // Use the aliases from currentUser service
-        const email = this.currentUser.email;
-        const userId = this.currentUser.id;
-        const companyId = this.currentUser.companyId;
-        console.log("this.currentUser",this.currentUser.number_of_drivers)
-        // const chargebeeCustomerId = this.currentUser.chargebee_customer_id;
-        // const chargebeeSubscriptionId = this.currentUser.chargebee_subscription_id; 
-
-        // First check if subscription is created
-        try {
-            const subscriptionResponse = await this.fetch.get('onboard/subscription/status', { user_id: userId, company_id: companyId });
-            
-            // if (subscriptionResponse.success && subscriptionResponse.data != null) {
-            if(this.currentUser.chargebee_subscription_id != null) {
-                // Subscription exists, check if verification is pending
-                const subscription = subscriptionResponse.data;
-                // Check if verification is pending
-                // if (subscription.verification_pending || !user.email_verified_at) {
-                if (!this.currentUser.email_verified_at) { alert("verification is pending")
-                    // Verification is pending, redirect to verification page
-                    return this.sendUserForEmailVerification(email);
-                }
-                
-                return this.router.transitionTo('console');
-            } else {
-               
-                // Get the latest pricing plan first
-                // const latestPlanResponse = await this.fetch.get('onboard/pricing-plans/latest');
-                // if (!latestPlanResponse || !latestPlanResponse.success) {
-                //     this.notifications.error('Failed to get pricing plan. Please try again.');
-                //     return this.router.transitionTo('console');
-                // }
-
-                // const latestPlan = latestPlanResponse.data;
-                // const dates = this.getSubscriptionDates();
-                // const fullName = user.name ? user.name.split(' ') : ['', ''];
-                // const givenName = fullName[0] || '';
-                // const familyName = fullName.slice(1).join(' ') || '';
-
-                // const createResponse = await this.fetch.post('onboard/subscription', { 
-                //     plan_pricing_id: latestPlan.id,
-                //     company_uuid: companyId, 
-                //     user_uuid: userId, 
-                //     no_of_web_users: user.number_of_web_users || 1,
-                //     no_of_app_users: user.number_of_drivers || 0,
-                //     description: `${user.company_name || 'Company'} fleet management subscription`,
-                //     success_url: `${window.location.origin}/billing/success`,
-                //     exit_uri: `${window.location.origin}/billing/failure`,
-                //     customer: {
-                //         given_name: givenName,
-                //         family_name: familyName,
-                //         email: email,
-                //     },
-                //     convert_to_subscription: true,
-                //     subscription_start_date: dates.start,
-                //     subscription_end_date: dates.end,
-                // });
-                
-                
-                // if (createResponse && createResponse.success) {
-                //     // Check if payment URL is provided in response
-                //     const paymentUrl = createResponse.redirect_url || createResponse.data?.redirect_url;
-                //     if (paymentUrl) {
-                //         this.paymentUrl = paymentUrl;
-                //         this.showPaymentLoginFrame = true;
-                //         this.startIframePolling();
-                //         this.notifications.success('Subscription created! Please complete payment setup.');
-                //         return;
-                //     }
-                    
-                    // If no payment URL, construct one with user data
-                    const baseUrl = ENV.chargebee.baseUrl;
-                    const params = new URLSearchParams({
-                        'subscription_items[item_price_id][0]': ENV.chargebee.itemPriceIds.basic,
-                        'subscription_items[quantity][0]': '1',
-                        'subscription_items[item_price_id][1]': ENV.chargebee.itemPriceIds.appUser,
-                        'subscription_items[quantity][1]': this.currentUser.number_of_drivers?.toString() || '1',
-                        'subscription_items[item_price_id][2]': ENV.chargebee.itemPriceIds.webUser,
-                        'subscription_items[quantity][2]': this.currentUser.number_of_web_users?.toString() || '1',
-                        'layout': 'in_app',
-                        'embed': 'true',
-                        'customer[email]': this.currentUser.email,
-                        'customer[first_name]': this.currentUser.name?.split(' ')[0] || '',
-                        'customer[last_name]': this.currentUser.name?.split(' ').slice(1).join(' ') || '',
-                        'company': this.currentUser.company_name || '',
-                        'redirect_url': `${window.location.origin}/billing/success?user_uuid=${this.currentUser.uuid}&company_uuid=${this.currentUser.company_uuid}`,
-                    });
-                
-                    this.paymentUrl = `${baseUrl}?${params.toString()}`;
-                    this.showPaymentLoginFrame = true;
-                    this.startIframePolling();  
-                    this.notifications.success('Subscription created! Please complete payment setup.');
-                    // return;
-                    
-                    // If no payment URL, proceed with verification flow
-                    return this.proceedWithVerification(email, createResponse || {});
-                // } else {
-                //     // Handle subscription creation failure
-                //     this.notifications.error('Failed to create subscription. Please contact support.');
-                //     return this.router.transitionTo('console');
-                // }
-            }
-        } catch (error) {
-            // If API fails, fallback to default behavior
-            // this.notifications.warning('Unable to verify subscription status. Proceeding to app...');
-            return this.router.transitionTo('console.fleet-ops');
-        }
     }
+    // async success() {
+    //     this.reset('success');
+    //     // Wait for current user to load
+    //     await this.currentUser.load();
+    //     // Use the aliases from currentUser service
+    //     const email = this.currentUser.email;
+    //     const userId = this.currentUser.id;
+    //     const companyId = this.currentUser.companyId;
+    //     // console.log("this.currentUser",this.currentUser.number_of_drivers)
+    //     // const chargebeeCustomerId = this.currentUser.chargebee_customer_id;
+    //     // const chargebeeSubscriptionId = this.currentUser.chargebee_subscription_id; 
+        
+    //     // First check if subscription is created
+    //     try {
+    //         // const subscriptionResponse = await this.fetch.get('onboard/subscription/status', { user_id: userId, company_id: companyId });
+            
+    //         // if (subscriptionResponse.success && subscriptionResponse.data != null) {
+    //         if(this.currentUser.chargebee_subscription_id == null) {
+    //             // Subscription exists, check if verification is pending
+    //             // const subscription = subscriptionResponse.data;
+    //             // Check if verification is pending
+    //             // if (subscription.verification_pending || !user.email_verified_at) {
+    //             // if (!this.currentUser.email_verified_at) { 
+    //                 // Verification is pending, redirect to verification page
+    //                 return this.sendUserForEmailVerification(email);
+    //             // }
+                
+    //             // return this.router.transitionTo('console');
+    //         } else {
+               
+    //             // Get the latest pricing plan first
+    //             // const latestPlanResponse = await this.fetch.get('onboard/pricing-plans/latest');
+    //             // if (!latestPlanResponse || !latestPlanResponse.success) {
+    //             //     this.notifications.error('Failed to get pricing plan. Please try again.');
+    //             //     return this.router.transitionTo('console');
+    //             // }
+
+    //             // const latestPlan = latestPlanResponse.data;
+    //             // const dates = this.getSubscriptionDates();
+    //             // const fullName = user.name ? user.name.split(' ') : ['', ''];
+    //             // const givenName = fullName[0] || '';
+    //             // const familyName = fullName.slice(1).join(' ') || '';
+
+    //             // const createResponse = await this.fetch.post('onboard/subscription', { 
+    //             //     plan_pricing_id: latestPlan.id,
+    //             //     company_uuid: companyId, 
+    //             //     user_uuid: userId, 
+    //             //     no_of_web_users: user.number_of_web_users || 1,
+    //             //     no_of_app_users: user.number_of_drivers || 0,
+    //             //     description: `${user.company_name || 'Company'} fleet management subscription`,
+    //             //     success_url: `${window.location.origin}/billing/success`,
+    //             //     exit_uri: `${window.location.origin}/billing/failure`,
+    //             //     customer: {
+    //             //         given_name: givenName,
+    //             //         family_name: familyName,
+    //             //         email: email,
+    //             //     },
+    //             //     convert_to_subscription: true,
+    //             //     subscription_start_date: dates.start,
+    //             //     subscription_end_date: dates.end,
+    //             // });
+                
+                
+    //             // if (createResponse && createResponse.success) {
+    //             //     // Check if payment URL is provided in response
+    //             //     const paymentUrl = createResponse.redirect_url || createResponse.data?.redirect_url;
+    //             //     if (paymentUrl) {
+    //             //         this.paymentUrl = paymentUrl;
+    //             //         this.showPaymentLoginFrame = true;
+    //             //         this.startIframePolling();
+    //             //         this.notifications.success('Subscription created! Please complete payment setup.');
+    //             //         return;
+    //             //     }
+    //             if (this.currentUser.email_verified_at == null || empty(this.currentUser.email_verified_at)) {   
+    //                 // If no payment URL, construct one with user data
+    //                 const userResponse = await this.fetch.get('users/find-by-email', { email: email });
+            
+    //                 if (!userResponse || !userResponse.success || !userResponse.data) {
+    //                     this.notifications.error('Failed to get user details. Please try again.');
+    //                     return this.router.transitionTo('console');
+    //                 }
+            
+    //                 const user = userResponse.data;
+    //                 const baseUrl = ENV.chargebee.baseUrl;
+    //                 const params = new URLSearchParams({
+    //                     'subscription_items[item_price_id][0]': ENV.chargebee.itemPriceIds.basic,
+    //                     'subscription_items[quantity][0]': '1',
+    //                     'subscription_items[item_price_id][1]': ENV.chargebee.itemPriceIds.appUser,
+    //                     'subscription_items[quantity][1]': user.number_of_drivers?.toString() || '1',
+    //                     'subscription_items[item_price_id][2]': ENV.chargebee.itemPriceIds.webUser,
+    //                     'subscription_items[quantity][2]': user.number_of_web_users?.toString() || '1',
+    //                     'layout': 'in_app',
+    //                     'embed': 'true',
+    //                     'customer[email]': this.currentUser.email,
+    //                     'customer[first_name]': this.currentUser.name?.split(' ')[0] || '',
+    //                     'customer[last_name]': this.currentUser.name?.split(' ').slice(1).join(' ') || '',
+    //                     'company': this.currentUser.company_name || '',
+    //                     'redirect_url': `${window.location.origin}/billing/success?user_uuid=${this.currentUser.uuid}&company_uuid=${this.currentUser.company_uuid}`,
+    //                 });
+                
+    //                 this.paymentUrl = `${baseUrl}?${params.toString()}`;
+    //                 this.showPaymentLoginFrame = true;
+    //                 this.startIframePolling();  
+    //                 this.notifications.success('Subscription created! Please complete payment setup.');
+    //                 // return;
+    //                 return this.proceedWithVerification(email, createResponse || {});
+    //             }
+    //             else{
+    //                 return this.router.transitionTo('console.fleet-ops');
+    //             }
+    //                 // If no payment URL, proceed with verification flow
+    //                 // return this.proceedWithVerification(email, createResponse || {});
+    //             // } else {
+    //             //     // Handle subscription creation failure
+    //             //     this.notifications.error('Failed to create subscription. Please contact support.');
+    //             //     return this.router.transitionTo('console');
+    //             // }
+    //         }
+    //     } catch (error) {
+    //         // If API fails, fallback to default behavior
+    //         // this.notifications.warning('Unable to verify subscription status. Proceeding to app...');
+    //         return this.router.transitionTo('console.fleet-ops');
+    //     }
+    // }
 
     /**
      * Handles the authentication failure

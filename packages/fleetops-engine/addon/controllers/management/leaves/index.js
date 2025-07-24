@@ -22,7 +22,7 @@ export default class ManagementLeavesIndexController extends BaseController {
 
     queryParams = [
         'page',
-        'limit',
+        'per_page',
         'sort',
         'query',
         'driver',
@@ -35,7 +35,7 @@ export default class ManagementLeavesIndexController extends BaseController {
     ];
 
     @tracked page = 1;
-    @tracked limit;
+    @tracked per_page;
     @tracked sort = '-created_at';
     @tracked query;
     @tracked driver;
@@ -56,6 +56,9 @@ export default class ManagementLeavesIndexController extends BaseController {
             width: '110px',
             resizable: true,
             sortable: true,
+            filterable: true,
+            hidden: false,
+            filterComponent: 'filter/string',
         },
         {
             label: this.intl.t('leaves.driver_name'),
@@ -201,7 +204,72 @@ export default class ManagementLeavesIndexController extends BaseController {
             searchable: false,
         },
     ];
+    @task({ restartable: true }) *search({ target: { value } }) {
+        // if no query don't search
+        if (isBlank(value)) {
+            set(this, 'query', null);
+            this.hostRouter.refresh();
+            return;
+        }
+        // timeout for typing
+        yield timeout(200);
 
+        // reset page for results
+        if (this.page > 1) {
+            set(this, 'page', 1);
+        }
+
+        // update the query param
+        set(this, 'query', value);
+        this.hostRouter.refresh();
+    }
+    @action onPageChange(page) {
+        set(this, 'page', page);
+        this.hostRouter.refresh();
+    }
+
+    /**
+     * Handle limit changes
+     */
+    @action onLimitChange(limit) {
+        set(this, 'per_page', limit);
+        set(this, 'page', 1); // Reset to first page
+        this.hostRouter.refresh();
+    }
+
+    /**
+     * Handle sort changes
+     */
+    @action onSortChange(sort) {
+        set(this, 'sort', sort);
+        set(this, 'page', 1); // Reset to first page
+        this.hostRouter.refresh();
+    }
+
+    /**
+     * Handle filter changes
+     */
+    @action onFilterChange(filterName, value) {
+        set(this, filterName, value);
+        set(this, 'page', 1); // Reset to first page
+        this.hostRouter.refresh();
+    }
+
+    /**
+     * Clear all filters
+     */
+    @action clearFilters() {
+        set(this, 'query', null);
+        set(this, 'driver', null);
+        set(this, 'status', null);
+        set(this, 'leave_type', null);
+        set(this, 'processed_by', null);
+        set(this, 'created_at', null);
+        set(this, 'start_date', null);
+        set(this, 'end_date', null);
+        set(this, 'page', 1);
+        this.hostRouter.refresh();
+    }
     // @task({ restartable: true }) *search({ target: { value } }) {
     //     if (!value) {
     //         set(this, 'query', null);
@@ -340,25 +408,25 @@ export default class ManagementLeavesIndexController extends BaseController {
      *
      * @void
      */
-    @task({ restartable: true }) *search({ target: { value } }) {
-        // if no query don't search
-        if (isBlank(value)) {
-            set(this, 'query', null);
-            this.hostRouter.refresh();
-            return;
-        }
-        // timeout for typing
-        yield timeout(200);
+    // @task({ restartable: true }) *search({ target: { value } }) {
+    //     // if no query don't search
+    //     if (isBlank(value)) {
+    //         set(this, 'query', null);
+    //         this.hostRouter.refresh();
+    //         return;
+    //     }
+    //     // timeout for typing
+    //     yield timeout(200);
 
-        // reset page for results
-        if (this.page > 1) {
-            set(this, 'page', 1);
-        }
+    //     // reset page for results
+    //     if (this.page > 1) {
+    //         set(this, 'page', 1);
+    //     }
 
-        // update the query param
-        set(this, 'query', value);
-        this.hostRouter.refresh();
-    }
+    //     // update the query param
+    //     set(this, 'query', value);
+    //     this.hostRouter.refresh();
+    // }
 
     /**
      * Toggles dialog to export a issue

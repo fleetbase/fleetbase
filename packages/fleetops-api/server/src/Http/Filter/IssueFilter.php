@@ -5,6 +5,7 @@ namespace Fleetbase\FleetOps\Http\Filter;
 use Fleetbase\FleetOps\Support\Utils;
 use Fleetbase\Http\Filter\Filter;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Schema;
 
 class IssueFilter extends Filter
 {
@@ -18,11 +19,54 @@ class IssueFilter extends Filter
         $this->builder->where('company_uuid', $this->session->get('company'));
     }
 
+    // public function query(?string $searchQuery)
+    // {
+    //     $this->builder->search($searchQuery);
+    // }
     public function query(?string $searchQuery)
     {
-        $this->builder->search($searchQuery);
-    }
+        if (!empty($searchQuery)) {
+            $this->builder->where(function ($query) use ($searchQuery) {
+                // Get the table name
+                $table = $this->builder->getModel()->getTable();
+                
+                // Define columns that might exist in issues table
+                $searchableColumns = [
+                    'subject',           // Often used instead of 'title'
+                    'description',
+                    'public_id',
+                    'internal_id',
+                    'status',
+                    'priority',
+                    'type',
+                    'category',
+                    'reporter_name',     // Common in issue tracking
+                    'assignee_name',
+                    'tags',
+                    'resolution',
+                    'comments'
+                ];
 
+                $firstColumn = true;
+                foreach ($searchableColumns as $column) {
+                    // Only add to query if column exists
+                    if (Schema::hasColumn($table, $column)) {
+                        if ($firstColumn) {
+                            $query->where($column, 'like', '%' . $searchQuery . '%');
+                            $firstColumn = false;
+                        } else {
+                            $query->orWhere($column, 'like', '%' . $searchQuery . '%');
+                        }
+                    }
+                }
+                
+                // Fallback: if no columns found, search in public_id at least
+                if ($firstColumn) {
+                    $query->where('public_id', 'like', '%' . $searchQuery . '%');
+                }
+            });
+        }
+    }
     public function publicId(?string $publicId)
     {
         $this->builder->searchWhere('public_id', $publicId);
@@ -62,7 +106,11 @@ class IssueFilter extends Filter
             } elseif (Utils::isPublicId($assignee)) {
                 $q->where('public_id', $assignee);
             } else {
-                $q->search($assignee);
+                // $q->search($assignee);
+                $q->where(function ($subQuery) use ($assignee) {
+                    $subQuery->where('name', 'like', '%' . $assignee . '%')
+                             ->orWhere('email', 'like', '%' . $assignee . '%');
+                });
             }
         });
     }
@@ -75,7 +123,11 @@ class IssueFilter extends Filter
             } elseif (Utils::isPublicId($reporter)) {
                 $q->where('public_id', $reporter);
             } else {
-                $q->search($reporter);
+                // $q->search($reporter);
+                $q->where(function ($subQuery) use ($reporter) {
+                    $subQuery->where('name', 'like', '%' . $reporter . '%')
+                             ->orWhere('email', 'like', '%' . $reporter . '%');
+                });
             }
         });
     }
@@ -88,7 +140,8 @@ class IssueFilter extends Filter
             } elseif (Utils::isPublicId($driver)) {
                 $q->where('public_id', $driver);
             } else {
-                $q->search($driver);
+                // $q->search($driver);
+                $q->where('name', 'like', '%' . $driver . '%');
             }
         });
     }
@@ -101,7 +154,12 @@ class IssueFilter extends Filter
             } elseif (Utils::isPublicId($vehicle)) {
                 $q->where('public_id', $vehicle);
             } else {
-                $q->search($vehicle);
+                // $q->search($vehicle);
+                $q->where(function ($subQuery) use ($vehicle) {
+                    $subQuery->where('plate_number', 'like', '%' . $vehicle . '%')
+                             ->orWhere('make', 'like', '%' . $vehicle . '%')
+                             ->orWhere('model', 'like', '%' . $vehicle . '%');
+                });
             }
         });
     }

@@ -30,11 +30,10 @@ class Waypoint extends FleetbaseResource
         $locale = $request->header('X-Locale');
         $locationService = app(LocationTranslatorService::class);
 
-
         return [
-            'id'                     => $this->when(Http::isInternalRequest(), $this->id, $this->public_id),
-            'uuid'                   => $this->when(Http::isInternalRequest(), $this->uuid),
-            'public_id'              => $this->when(Http::isInternalRequest(), $this->public_id),
+            'id'                     => $this->when(Http::isInternalRequest(), $waypoint->id, $waypoint->public_id),
+            'uuid'                   => $this->when(Http::isInternalRequest(), $waypoint->uuid),
+            'public_id'              => $this->when(Http::isInternalRequest(), $waypoint->public_id),
             'waypoint_public_id'     => $this->when(Http::isInternalRequest(), $waypoint->public_id),
             'customer_uuid'          => $this->when(Http::isInternalRequest(), $waypoint->customer_uuid),
             'customer_type'          => $this->when(Http::isInternalRequest(), $waypoint->customer_type),
@@ -70,11 +69,32 @@ class Waypoint extends FleetbaseResource
     }
 
     /**
-     * Finds the waypoint got a payload and place.
+     * Finds the specific waypoint by its UUID if available, otherwise fallback to place-based lookup.
      */
     private function getWaypoint(): ?WaypointModel
     {
-        return WaypointModel::where(['payload_uuid' => $this->payload_uuid, 'place_uuid' => $this->uuid])->without(['place'])->with(['trackingNumber'])->first();
+        // If this resource was created with a waypoint UUID, use it directly
+        if (isset($this->waypoint_uuid)) {
+            return WaypointModel::where('uuid', $this->waypoint_uuid)
+                ->without(['place'])
+                ->with(['trackingNumber'])
+                ->first();
+        }
+        
+        // If we have an order number, use it with payload_uuid and place_uuid for more specificity
+        if (isset($this->waypoint_order)) {
+            return WaypointModel::where([
+                'payload_uuid' => $this->payload_uuid, 
+                'place_uuid' => $this->uuid,
+                'order' => $this->waypoint_order
+            ])->without(['place'])->with(['trackingNumber'])->first();
+        }
+        
+        // Fallback to original method (this might still cause duplicates)
+        return WaypointModel::where(['payload_uuid' => $this->payload_uuid, 'place_uuid' => $this->uuid])
+            ->without(['place'])
+            ->with(['trackingNumber'])
+            ->first();
     }
 
     /**
