@@ -388,6 +388,12 @@ class Payload extends Model
         return $this;
     }
 
+    /**
+     * Update waypoints for the payload.
+     *
+     * @param array $waypoints
+     * @return $this
+     */
     public function updateWaypoints($waypoints = [])
     {
         if (!is_array($waypoints)) {
@@ -395,44 +401,72 @@ class Payload extends Model
         }
 
         $placeIds = [];
+        $waypointDataList = [];
 
-        // collect all place ids to insert
-        foreach ($waypoints as $index => $attributes) {
+        foreach ($waypoints as $attributes) {
+            $originalAttributes = $attributes;
+
+            // Extract nested place data if present
             if (Utils::isset($attributes, 'place') && is_array(Utils::get($attributes, 'place'))) {
                 $attributes = Utils::get($attributes, 'place');
             }
 
-            if (is_array($attributes) && array_key_exists('place_uuid', $attributes)) {
-                $placeIds[] = $attributes['place_uuid'];
-            } else {
-                $placeUuid  = Place::insertFromMixed($attributes);
-                $placeIds[] = $placeUuid;
+            // Resolve or insert place UUID
+            $placeUuid = array_key_exists('place_uuid', $attributes)
+                ? $attributes['place_uuid']
+                : Place::insertFromMixed($attributes);
+
+            $placeIds[] = $placeUuid;
+
+            // Build waypoint data
+            $waypointData = [
+                'payload_uuid' => $this->uuid,
+                'place_uuid'   => $placeUuid,
+            ];
+
+            // Add 'order' if available
+            if (array_key_exists('order', $originalAttributes)) {
+                $waypointData['order'] = $originalAttributes['order'];
             }
+
+            // Add 'customer_uuid' and 'customer_type' if valid
+            if (
+                array_key_exists('customer_uuid', $originalAttributes) &&
+                array_key_exists('customer_type', $originalAttributes) &&
+                Utils::notEmpty($originalAttributes['customer_uuid']) &&
+                Utils::notEmpty($originalAttributes['customer_type'])
+            ) {
+                $customerTypeNamespace = Utils::getMutationType($originalAttributes['customer_type']);
+
+                // Check if the customer exists in that namespace
+                if (class_exists($customerTypeNamespace)) {
+                    $customerExists = app($customerTypeNamespace)->where('uuid', $originalAttributes['customer_uuid'])->exists();
+                    if ($customerExists) {
+                        $waypointData['customer_uuid'] = $originalAttributes['customer_uuid'];
+                        $waypointData['customer_type'] = $customerTypeNamespace;
+                    }
+                }
+            }
+
+            $waypointDataList[] = $waypointData;
         }
 
-        /** @return \Illuminate\Database\Eloquent\Collection $waypointMakers */
-        $waypointMakers = $this->waypointMarkers()->get();
-
-        // remove all waypoints that are not included in the placeids
-        $waypointMakers = $waypointMakers->filter(function ($waypointMarker) use ($placeIds) {
+        // Delete waypoints that are no longer present
+        $existingWaypointMakers = $this->waypointMarkers()->get();
+        $existingWaypointMakers->each(function ($waypointMarker) use ($placeIds) {
             if (!in_array($waypointMarker->place_uuid, $placeIds)) {
                 $waypointMarker->delete();
             }
-
-            return in_array($waypointMarker->place_uuid, $placeIds);
         });
 
-        // update or create waypoint markers
-        foreach ($placeIds as $placeId) {
+        // Insert or update all waypoints
+        foreach ($waypointDataList as $data) {
             Waypoint::updateOrCreate(
                 [
-                    'payload_uuid' => $this->uuid,
-                    'place_uuid'   => $placeId,
+                    'payload_uuid' => $data['payload_uuid'],
+                    'place_uuid'   => $data['place_uuid'],
                 ],
-                [
-                    'payload_uuid' => $this->uuid,
-                    'place_uuid'   => $placeId,
-                ]
+                $data
             );
         }
 
