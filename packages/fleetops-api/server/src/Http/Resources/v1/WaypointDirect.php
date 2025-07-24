@@ -65,7 +65,7 @@ class WaypointDirect extends FleetbaseResource
             'phone'                  => $place ? $place->phone : null,
             'owner'                  => $this->when(!Http::isInternalRequest() && $place, Resolve::resourceForMorph($place->owner_type ?? null, $place->owner_uuid ?? null)),
             
-            'tracking_number'        => $this->whenLoaded('trackingNumber', $waypoint->trackingNumber),
+            //'tracking_number'        => $this->whenLoaded('trackingNumber', $waypoint->trackingNumber),
             'customer'               => $this->setCustomerType(Resolve::resourceForMorph($waypoint->customer_type, $waypoint->customer_uuid)),
             'type'                   => $waypoint->type,
             'meta'                   => $place ? ($place->meta ?? []) : [],
