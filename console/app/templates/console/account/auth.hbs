@@ -9,12 +9,10 @@
                     <legend class="mb-3">{{t "fleet-ops.user-management.change-password"}}</legend>
                     <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
                         <div class="mb-4">
-                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{{t "auth.reset-password.form.password.label" default="New Password" }}</label>
-                            <PasswordField @value={{this.newPassword}} @type="password" @required={{false}} @placeholder="New Password"/>
+                            <PasswordField @value={{this.newPassword}} @type="password" @required={{false}} @placeholder="New Password" @labeltext="New Password"/>
                         </div>
                         <div class="mb-4">
-                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{{t "auth.reset-password.form.confirm-password.label" default="Confirm Password" }}</label>
-                            <PasswordField @value={{this.newConfirmPassword}} @type="password" @required={{false}} @placeholder="Confirm Password"/>
+                            <PasswordField @value={{this.newConfirmPassword}} @type="password" @required={{false}} @placeholder="Confirm Password" @labeltext   ="Confirm Password"/>
                         </div>
                     </div>
                     <Button @type="primary" @buttonType="submit" @text={{t "fleet-ops.user-management.confirm-and-change"}} @icon="save" {{on "click" (perform this.changePassword)}} />
