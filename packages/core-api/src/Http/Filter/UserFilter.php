@@ -49,6 +49,10 @@ class UserFilter extends Filter
         $this->builder->searchWhere('email', $email);
     }
 
+    /**
+     * Filter users based on their company user status and current company context.
+     * Applies only if a status is provided.
+     */
     public function status(?string $status)
     {
         if (!$status) {
