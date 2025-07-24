@@ -33,13 +33,6 @@ class WaypointDirect extends FleetbaseResource
         $waypoint = $this->resource;
         $place = $waypoint->place; // Related place model
 
-        Log::error('waypoint check.', [
-            'waypoint_id' => $waypoint->id,
-            'waypoint_uuid' => $waypoint->uuid,
-            'place_uuid' => $waypoint->place_uuid,
-            'order' => $waypoint->order,
-        ]);
-
         return [
             // Use the actual waypoint data, not place-based lookup
             'id'                     => $this->when(Http::isInternalRequest(), $waypoint->id, $waypoint->public_id),

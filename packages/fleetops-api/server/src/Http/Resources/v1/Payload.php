@@ -33,6 +33,7 @@ class Payload extends FleetbaseResource
             'dropoff'               => $this->getPlace($this->dropoff),
             'return'                => new Place($this->return),
             'waypoints'             => $this->getWaypointsWithProperIds($withRouteETA),
+            //'waypoints'             => Waypoint::collection($this->getWaypoints($withRouteETA)),
             'entities'              => Entity::collection($this->entities),
             'route_segments'        => $this->when(Http::isInternalRequest(), $this->routeSegments),
             'cod_amount'            => $this->cod_amount ?? null,

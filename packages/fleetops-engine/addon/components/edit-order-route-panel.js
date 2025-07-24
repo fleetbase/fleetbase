@@ -151,6 +151,9 @@ export default class EditOrderRoutePanelComponent extends Component {
             }
         }
         try {
+            payload.waypoints.forEach((waypoint, idx) => {
+                waypoint.order = idx;
+            });
             this.order = yield this.fetch.patch(
                 `orders/route/${this.order.id}`,
                 {
