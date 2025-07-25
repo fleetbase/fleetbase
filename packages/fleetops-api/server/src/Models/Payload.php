@@ -276,11 +276,13 @@ class Payload extends Model
         return $this;
     }
 
-    public function setCurrentWaypoint(Place $destination, bool $save = true): Payload
+    public function setCurrentWaypoint(Place $destination, bool $save = true, ?string $waypointPublicId = null): Payload
     {
         $this->current_waypoint_uuid = $destination->uuid;
-
-        if ($save) {
+        if($waypointPublicId && $save === true){
+              DB::table($this->getTable())->where('uuid', $this->uuid)->update(['current_waypoint_uuid' => $destination->uuid, 'current_waypoint_table_id' => $waypointPublicId]);
+        }
+        if (!$waypointPublicId && $save) {
             DB::table($this->getTable())->where('uuid', $this->uuid)->update(['current_waypoint_uuid' => $destination->uuid]);
         }
 
@@ -837,6 +839,9 @@ class Payload extends Model
              $this->completeFirstWaypointStatus();
              //change second waypoint as current_waypoint while start the order
              $destination = $this->waypoints()->where('order', 1)->first();
+             $waypointsData = Waypoint::where('place_uuid', $destination->uuid)->where('order', 1)
+                        ->where('payload_uuid', $this->uuid)->whereNull('deleted_at')->first();
+             $this->current_waypoint_table_id = $waypointsData->public_id;
         } else {
             //change dropoff as current_waypoint while start the order
             $destination = $this->dropoff ? $this->dropoff :$this->waypoints()->where('order', 1)->first();;
@@ -847,8 +852,6 @@ class Payload extends Model
         }
 
         $this->current_waypoint_uuid = $destination->uuid;
-        //update public_id for current waypoint
-        $this->current_waypoint_table_id = $destination->public_id;
         $this->saveQuietly();
         $this->updateWaypointActivity($activity, $location);
 
