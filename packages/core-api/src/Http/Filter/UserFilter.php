@@ -49,6 +49,27 @@ class UserFilter extends Filter
         $this->builder->searchWhere('email', $email);
     }
 
+    /**
+     * Filter users based on their company user status and current company context.
+     * Applies only if a status is provided.
+     */
+    public function status(?string $status)
+    {
+        if (!$status) {
+            return;
+        }
+
+        // Use whereHas to filter users who have a companyUser record with the given status
+        $this->builder->whereHas('companyUsers', function ($query) use ($status) {
+            $query->where('status', $status);
+
+            // Ensure we're filtering within the current company context
+            if ($companyUuid = $this->session->get('company')) {
+                $query->where('company_uuid', $companyUuid);
+            }
+        });
+    }
+
     public function role(?string $roleId)
     {
         if (!$roleId) {
