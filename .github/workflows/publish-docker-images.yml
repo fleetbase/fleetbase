@@ -72,8 +72,10 @@ jobs:
                   aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
                   aws-region: ${{ secrets.AWS_REGION }}
 
-            - name: Log in to Amazon ECR
-              uses: aws-actions/amazon-ecr-login@v2
+            - name: Manually log in to Amazon ECR (Marketplace-style)
+              run: |
+                aws ecr get-login-password --region ${{ secrets.AWS_ECR_REGION }} | \
+                docker login --username AWS --password-stdin ${{ secrets.AWS_ECR_REGISTRY }}
 
             - name: Set up Docker Buildx
               uses: docker/setup-buildx-action@v2
@@ -87,7 +89,7 @@ jobs:
                   targets: |
                       fleetbase-api
                       fleetbase-console
-                      
+
             - name: Verify ECR Images
               run: |
                   aws ecr describe-images \
