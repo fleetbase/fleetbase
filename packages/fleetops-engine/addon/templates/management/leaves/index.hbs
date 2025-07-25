@@ -1,6 +1,7 @@
 <Layout::Section::Header @title={{t "fleet-ops.management.leaves.index.title" }} @searchQuery={{this.query}}
     @onSearch={{perform this.search}}>
     <Button @icon="refresh" @onClick={{this.reload}} @helpText={{t "fleet-ops.common.reload-data" }} class="mr-2" />
+    <Button @icon="question-circle" @type="magic" @text={{t "fleetbase.common.help"}} class="mr-2 help-tour-btn" @onClick={{this.startLeavesTour}} />
     {{!--
     <FiltersPicker @columns={{this.columns}} @onApply={{fn this.filters.apply this}} @onClear={{fn this.filters.reset
         this}} @onFilterClear={{this.filters.clear}} @onChange={{this.filters.set}} @buttonWrapperClass="mr-2" /> --}}

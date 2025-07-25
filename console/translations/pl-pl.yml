@@ -394,7 +394,7 @@ auth:
   two-fa:
     verify-code:
       verification-code: Kod weryfikacyjny
-      check-title: Sprawdź swój e-mail lub telefon
+      check-title: Sprawdź swój e-mail
       check-subtitle: Wysłaliśmy Ci kod weryfikacyjny. Wprowadź go poniżej, aby zakończyć proces logowania.
       expired-help-text: Twój kod uwierzytelniania 2FA wygasł. Możesz poprosić o nowy, jeśli potrzebujesz więcej czasu.
       resend-code: Wyślij kod ponownie
@@ -3174,3 +3174,26 @@ fleetbase:
       backdrop_field:
         title: "Tło organizacji"
         description: "W tym miejscu możesz przesłać lub wyświetlić obraz tła swojej organizacji, aby poprawić jej identyfikację wizualną."
+  leaves:
+    tour:
+      dropdown:
+        title: "Menu działań"
+        description: "Kliknij trzy kropki, aby otworzyć menu działań dla tego rekordu urlopu."
+      actions_menu:
+        title: "Działania urlopowe"
+        description: "To menu zawiera działania dotyczące urlopu: Wyświetl, Zatwierdź i Odrzuć."
+      view_button:
+        title: "Wyświetl urlop"
+        description: "Kliknij, aby wyświetlić szczegóły tego wniosku urlopowego."
+      approve_button:
+        title: "Zatwierdź urlop"
+        description: "Kliknij, aby zatwierdzić ten wniosek urlopowy."
+      reject_button:
+        title: "Odrzuć urlop"
+        description: "Kliknij, aby odrzucić ten wniosek urlopowy."
+      details:
+        title: "Szczegóły urlopu"
+        description: "Ten panel wyświetla wszystkie szczegóły wybranego wniosku urlopowego."
+      sidebar_approve:
+        title: "Zatwierdź/Odrzuć"
+        description: "Użyj tych przycisków, aby zatwierdzić lub odrzucić wniosek urlopowy."

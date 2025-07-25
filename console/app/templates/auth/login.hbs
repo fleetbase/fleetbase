@@ -44,11 +44,15 @@
                 this.showPaymentLoginFrame}} />
         </div>
         <div class="-mt-px">
-            <Input @value={{this.password}} aria-label={{t "auth.login.form.password-label" }} name="password"
-                @type="password" autocomplete="current-password" required
-                class="relative block w-full px-3 py-2 text-gray-900 placeholder-gray-500 border border-gray-300 rounded-none appearance-none focus:outline-none focus:shadow-outline-blue focus:border-blue-300 focus:z-10 sm:text-sm sm:leading-5 dark:text-white dark:bg-gray-700 dark:border-gray-900"
-                placeholder={{t "auth.login.form.password-label" }} disabled={{or this.isLoading
-                this.showPaymentLoginFrame}} />
+            <PasswordField 
+                @value={{this.password}} 
+                @label={{t "auth.login.form.password-label" }}
+                @name="password"
+                @autocomplete="current-password" 
+                @placeholder={{t "auth.login.form.password-label" }}
+                @required={{true}}
+                @disabled={{or this.isLoading this.showPaymentLoginFrame}}
+            />
         </div>
     </div>
 

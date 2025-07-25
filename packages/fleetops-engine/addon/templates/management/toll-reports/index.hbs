@@ -1,7 +1,5 @@
 <Layout::Section::Header @title={{t "fleet-ops.management.toll-reports.index.title"}} @searchQuery={{this.query}} @onSearch={{perform this.search}}>
-    {{#if (eq this.currentUser.roleName "Administrator")}}
-    <Button @icon="question-circle" @type="default" @text={{t "fleetbase.common.help"}} @onClick={{this.startTollReportsTour}} class="mr-2" />
-    {{/if}}
+    <Button @icon="question-circle" @type="default" @text={{t "fleetbase.common.help"}} @onClick={{this.startTollReportsTour}} class="mr-2" @permission="fleet-ops create fuel-report"/>
     <Button @icon="refresh" @onClick={{this.reload}} @helpText={{t "fleet-ops.common.reload-data"}} class="mr-2" />
     <FiltersPicker
         @columns={{this.columns}}
