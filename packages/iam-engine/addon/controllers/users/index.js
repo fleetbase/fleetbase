@@ -313,6 +313,14 @@ export default class UsersIndexController extends Controller {
                     return;
                 }
 
+                const userName = user.name;
+                // Name validation - only allow alphabets and special characters (hyphens, apostrophes)
+                if (userName && /\d/.test(userName)) {
+                    showErrorOnce(this, this.notifications, this.intl.t('iam.users.index.name-validation-error'));
+                    modal.stopLoading();
+                    return;
+                }
+
                 const phone = user.phone?.trim();
                 if (typeof phone === 'string') {
                     // If phone is just '+', treat it as empty and show required field error
@@ -401,6 +409,14 @@ export default class UsersIndexController extends Controller {
                      modal.stopLoading();
                      return;
                  }
+
+                const userName = user.name;
+                // Name validation - only allow alphabets and special characters (hyphens, apostrophes)
+                if (userName && /\d/.test(userName)) {
+                    showErrorOnce(this, this.notifications, this.intl.t('iam.users.index.name-validation-error'));
+                    modal.stopLoading();
+                    return;
+                }
                 // Phone number validation
                 const phone = user.phone?.trim();
                 if (typeof phone === 'string') {
