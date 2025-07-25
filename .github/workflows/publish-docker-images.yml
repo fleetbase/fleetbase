@@ -48,6 +48,7 @@ jobs:
             fleetbase-api
           files: |
             ./docker-bake.hcl
+            
   aws-marketplace-ecr-release:
     name: Build and Push to AWS ECR
     runs-on: ubuntu-latest
