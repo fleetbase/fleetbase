@@ -1188,6 +1188,7 @@ class OrderController extends Controller
      */
     public function setDestination(string $id, string $placeId)
     {
+        //$placeId = waypoints public_id
         try {
             $order = Order::findRecordOrFail($id);
         } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $exception) {
@@ -1196,21 +1197,30 @@ class OrderController extends Controller
     
         $payload = $order->payload;
         $previousWaypoint = $payload->current_waypoint_uuid;
+        //get previous waypoint's public_id
+        $previousWaypointPublicId = $payload->current_waypoint_table_id;
 
-        if ($previousWaypoint) {
-            $waypoint = $payload->waypointMarkers()->where('place_uuid', $previousWaypoint)->first();
-            // return $waypoint;
+        if ($previousWaypoint && $previousWaypointPublicId) {
+           // $waypoint = $payload->waypointMarkers()->where('place_uuid', $previousWaypoint)->first();
+            $waypoint = $payload->waypointMarkers()->where('public_id', $previousWaypointPublicId)->first();
             $this->completeTrackingStatus($waypoint);
+            $waypoint_public_id = $placeId;
+            $futureWaypoint = Waypoint::where('public_id', $waypoint_public_id)->whereNull('deleted_at')->first();
+            if($futureWaypoint) {
+                $place = $futureWaypoint->place;
+            }
         }
-       
-        $place = $payload->waypoints->firstWhere('public_id', $placeId);
-    
+        if($previousWaypoint && !$previousWaypointPublicId) {
+            $waypoint = $payload->waypointMarkers()->where('place_uuid', $previousWaypoint)->first();
+            $this->completeTrackingStatus($waypoint);
+            $place = $payload->waypoints->firstWhere('public_id', $placeId);
+        }
         // if (!$place) {
         //     return response()->apiError('Place resource is not a valid destination.');
         // }
         //To avoid deleted waypoints issue
         if ($place) {
-            $payload->setCurrentWaypoint($place);
+            $payload->setCurrentWaypoint($place, true, $waypoint_public_id);
         }
     
         return new OrderResource($order);
