@@ -1018,20 +1018,21 @@ class OrderController extends FleetOpsController
                         }
                     
 
-                    if (!empty($vrIds)) {
-                        $existingVrIds = RouteSegment::whereIn('public_id', $vrIds)
-                            ->whereNull('deleted_at')
-                            ->pluck('public_id')
-                            ->toArray();
-                        if (!empty($existingVrIds)) {
-                            $originalRowIndex = $row['_original_row_index'] ?? 0;
-                            $importErrors[] = [
-                                (string)($originalRowIndex + 1),
-                                "Trip {$tripId}: VR ID already exists: " . implode(', ', $existingVrIds),
-                                (string)$tripId
-                            ];
-                            DB::rollback();
-                            continue;
+                        if (!empty($vrIds)) {
+                            $existingVrIds = RouteSegment::whereIn('public_id', $vrIds)
+                                ->whereNull('deleted_at')
+                                ->pluck('public_id')
+                                ->toArray();
+                            if (!empty($existingVrIds)) {
+                                $originalRowIndex = $row['_original_row_index'] ?? 0;
+                                $importErrors[] = [
+                                   (string)($originalRowIndex + 1),
+                                    "Trip {$tripId}: VR ID already exists: " . implode(', ', $existingVrIds),
+                                    (string)$tripId
+                                ];
+                                DB::rollback();
+                                continue;
+                            }
                         }
 
                         // Validate facility_sequence
@@ -1126,33 +1127,32 @@ class OrderController extends FleetOpsController
                                             ->whereNull('deleted_at')
                                             ->get()
                                             ->keyBy('code');
-                                            
-                            $placeCodeToRowIndex = []; 
-                            foreach ($routeRows as $row) {
-                                $originalRowIndex = $row['_original_row_index'];
-                                $stop1 = $row['stop_1'] ?? null;
-                                $stop2 = $row['stop_2'] ?? null;
-                                
-                                if ($stop1 && !isset($placeCodeToRowIndex[$stop1])) {
-                                    $placeCodeToRowIndex[$stop1] = $originalRowIndex;
-                                }
-                                if ($stop2 && !isset($placeCodeToRowIndex[$stop2])) {
-                                    $placeCodeToRowIndex[$stop2] = $originalRowIndex;
-                                }
-                            }                   
-                            foreach ($allUniquePlaceCodes as $placeCode) {
-                                if (!$placesByCode->has($placeCode)) {
-                                    $rowIndex = isset($placeCodeToRowIndex[$placeCode]) 
-                                    ? (string)($placeCodeToRowIndex[$placeCode] + 1) 
-                                    : '-';
-                                    $importErrors[] = [
-                                        $rowIndex,
-                                        "Invalid place code '{$placeCode}' in trip",
-                                        (string)$tripId
-                                    ];
-                                    $tripHasErrors = true;
-                                }
+                        $placeCodeToRowIndex = []; 
+                        foreach ($routeRows as $row) {
+                            $originalRowIndex = $row['_original_row_index'];
+                            $stop1 = $row['stop_1'] ?? null;
+                            $stop2 = $row['stop_2'] ?? null;
+                            
+                            if ($stop1 && !isset($placeCodeToRowIndex[$stop1])) {
+                                $placeCodeToRowIndex[$stop1] = $originalRowIndex;
                             }
+                            if ($stop2 && !isset($placeCodeToRowIndex[$stop2])) {
+                                $placeCodeToRowIndex[$stop2] = $originalRowIndex;
+                            }
+                        }                   
+                        foreach ($allUniquePlaceCodes as $placeCode) {
+                            if (!$placesByCode->has($placeCode)) {
+                                $rowIndex = isset($placeCodeToRowIndex[$placeCode]) 
+                                ? (string)($placeCodeToRowIndex[$placeCode] + 1) 
+                                : '-';
+                                $importErrors[] = [
+                                    $rowIndex,
+                                    "Invalid place code '{$placeCode}' in trip",
+                                    (string)$tripId
+                                ];
+                                $tripHasErrors = true;
+                            }
+                        }
                         
                         if ($tripHasErrors) {
                             DB::rollback();
@@ -1165,7 +1165,7 @@ class OrderController extends FleetOpsController
                         if (empty($uniqueWaypointSequence)) {
                             $firstRowIndex = ($rows[0]['_original_row_index'] ?? 0) + 1;
                             $importErrors[] = [
-                                (string)$firstRowIndex,
+                               (string)$firstRowIndex,
                                 "Trip {$tripId}: Could not determine waypoint sequence from routes",
                                 (string)$tripId
                             ];
@@ -1219,7 +1219,7 @@ class OrderController extends FleetOpsController
                             }
                         }
                     }
-                    
+                    Log::info("Using cpt from first row for trip {$scheduledAt}");
 
                     // FIXED DATE LOGIC: Get estimated_end_date from LAST row's stop_2_yard_arrival
                     $lastRow = $rows[count($rows) - 1];
@@ -1250,6 +1250,17 @@ class OrderController extends FleetOpsController
                         }
                         Log::info("Using fallback yard arrival date for estimated_end_date in trip {$tripId}");
                     }
+
+                    // Enhanced logging for debugging
+                    Log::info("Trip {$tripId} final dates", [
+                        'scheduled_at' => $scheduledAt ? $scheduledAt->format('Y-m-d H:i:s') : 'null',
+                        'estimated_end_date' => $estimatedEndDate ? $estimatedEndDate->format('Y-m-d H:i:s') : 'null',
+                        'first_row_cpt' => $firstRow['cpt'] ?? 'empty',
+                        'last_row_stop_2_yard_arrival' => $lastRow['stop_2_yard_arrival'] ?? 'empty',
+                        'total_rows_in_trip' => count($rows),
+                        'yard_arrival_dates_found' => count($yardArrivalDates)
+                    ]);
+
                     // Carrier details
                     $carrier = $firstRow['carrier'] ?? null;
                     $carrier_uuid = null;
@@ -1383,7 +1394,6 @@ class OrderController extends FleetOpsController
                         DB::rollback(); // This will rollback the entire trip including order and waypoints
                         continue; // Skip to next trip
                     }
-
                     // If we reach here, everything succeeded
                     DB::commit();
 
@@ -1555,6 +1565,12 @@ private function buildWaypointSequence(array $routeMap): array
     foreach ($routeMap as $route) {
         $sequence[] = $route['to'];
     }
+    
+    Log::info('Waypoint sequence building', [
+        'route_map' => $routeMap,
+        'final_sequence' => $sequence,
+        'total_waypoints' => count($sequence)
+    ]);
     
     return $sequence;
 }
@@ -1803,14 +1819,7 @@ public function createRouteSegmentsFromRows(array $rows, Order $order, array $sa
         } catch (\Exception $e) {
             $displayRowIndex = $originalRowIndex + 1;
             $errors[] = [$displayRowIndex, $e->getMessage(), $order->public_id];
-            
-            Log::error('Route segment creation error', [
-                'row_index' => $originalRowIndex,
-                'vr_id' => $row['vr_id'] ?? 'N/A',
-                'error' => $e->getMessage(),
-                'trace' => $e->getTraceAsString(),
-                'row_data' => $row
-            ]);
+
         }
     }
 
@@ -1858,25 +1867,11 @@ public function createRouteSegmentsFromRows(array $rows, Order $order, array $sa
     }
 
     /**
-     * Parse an Excel date value into a standard datetime string.
+     * Parse Excel date formats, including serial numbers and various string formats.
      *
-     * @param mixed $value The Excel cell value (could be a serial number or string).
-     * @return string|null Formatted datetime string ('Y-m-d H:i:s') or null on failure.
+     * @param mixed $value
+     * @return string|null
      */
-    // private function parseExcelDate($value)
-    // {
-    //     try {
-    //         // If it's a number, treat it as Excel serial date
-    //         if (is_numeric($value)) {
-    //             return \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($value)->format('Y-m-d H:i:s');
-    //         }
-
-    //         // Try parsing as string
-    //         return Carbon::parse(str_replace('/', '-', $value))->format('Y-m-d H:i:s');
-    //     } catch (\Exception $e) {
-    //         return null; // Or optionally throw or log error
-    //     }
-    // }
     private function parseExcelDate($value)
     {
         try {
@@ -1914,11 +1909,6 @@ public function createRouteSegmentsFromRows(array $rows, Order $order, array $sa
                     $testValue = (strpos($format, '/') !== false) ? $value : str_replace('/', '-', $value);
                     
                     $date = Carbon::createFromFormat($format, $testValue);
-                    Log::info('Successfully parsed date', [
-                        'input' => $value,
-                        'format' => $format,
-                        'result' => $date->format('Y-m-d H:i:s')
-                    ]);
                     return $date->format('Y-m-d H:i:s');
                 } catch (\Exception $e) {
                     continue;
