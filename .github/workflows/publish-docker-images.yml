@@ -48,3 +48,61 @@ jobs:
             fleetbase-api
           files: |
             ./docker-bake.hcl
+  aws-marketplace-ecr-release:
+    name: Build and Push to AWS ECR
+    runs-on: ubuntu-latest
+    needs: docker-release
+
+    env:
+      VERSION: ${{ github.event.inputs.version || (github.ref_type == 'tag' && startsWith(github.ref_name, 'v') && github.ref_name) || 'manual' }}
+
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ github.event.inputs.branch || github.ref_name }}
+          submodules: recursive
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v3
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Log in to Amazon ECR
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Set up image names for ECR
+        run: |
+          echo "ECR_API_IMAGE=${{ secrets.AWS_ECR_REGISTRY }}/fleetbase/fleetbase-api:${{ env.VERSION }}" >> $GITHUB_ENV
+          echo "ECR_CONSOLE_IMAGE=${{ secrets.AWS_ECR_REGISTRY }}/fleetbase/fleetbase-console:${{ env.VERSION }}" >> $GITHUB_ENV
+
+      - name: Bake and Push to ECR
+        uses: docker/bake-action@v2
+        with:
+          push: true
+          files: |
+            ./docker-bake.hcl
+          targets: |
+            fleetbase-api
+            fleetbase-console
+        env:
+          # Overrides for ECR
+          IMAGE_API: ${{ env.ECR_API_IMAGE }}
+          IMAGE_CONSOLE: ${{ env.ECR_CONSOLE_IMAGE }}
+
+      - name: Verify ECR Images
+        run: |
+          aws ecr describe-images \
+            --registry-id ${{ secrets.AWS_ECR_REGISTRY_ID }} \
+            --repository-name fleetbase/fleetbase-api \
+            --region ${{ secrets.AWS_ECR_REGION }}
+      
+          aws ecr describe-images \
+            --registry-id ${{ secrets.AWS_ECR_REGISTRY_ID }} \
+            --repository-name fleetbase/fleetbase-console \
+            --region ${{ secrets.AWS_ECR_REGION }}
