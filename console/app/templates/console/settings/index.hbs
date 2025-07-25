@@ -1,5 +1,4 @@
 <Layout::Section::Header @title={{t "console.settings.index.title"}}>
-    {{#if (eq this.currentUser.roleName "Administrator")}}
     <Button
         @icon="question-circle"
         @iconPrefix="fas"
@@ -8,7 +7,6 @@
         @onClick={{this.OrganizationSettingsTour}}
         class="help-button mr-2"
     />
-    {{/if}}
 </Layout::Section::Header>
 
 <Layout::Section::Body class="overflow-y-scroll h-full">

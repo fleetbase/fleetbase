@@ -1,7 +1,5 @@
 <Layout::Section::Header @title={{t "iam.common.user"}} @searchQuery={{this.query}} @onSearch={{perform this.search}} @searchDisabled={{cannot "iam list user"}}>
-    {{#if (eq this.currentUser.roleName "Administrator")}}
-    <Button @icon="question-circle" @type="default" @text={{t "fleetbase.common.help"}} @onClick={{this.CreateUserTour}} class="mr-2" />
-    {{/if}}
+    <Button @icon="question-circle" @type="default" @text={{t "fleetbase.common.help"}} @onClick={{this.CreateUserTour}} class="mr-2" @permission="iam delete user"/>
     <Button @icon="refresh" @onClick={{this.reload}} @helpText={{t "iam.common.reload-data"}} class="mr-2" />
     <FiltersPicker
         @columns={{this.columns}}

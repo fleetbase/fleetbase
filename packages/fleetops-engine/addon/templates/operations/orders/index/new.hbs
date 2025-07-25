@@ -36,7 +36,6 @@
                 </div>
             </div>
         </DropdownButton>
-        {{#if (eq this.currentUser.roleName "Administrator")}}
         <Button
             @icon="question-circle"
             @type="default"
@@ -45,7 +44,6 @@
             class="mr-2"
             title={{t "fleetbase.common.help"}}
         />
-        {{/if}}
         <Button @customClass="import-order" @icon="upload" @type="magic" @text={{if (media "isMobile") "" (t "fleet-ops.common.import")}} @onClick={{this.importOrder}} @disabled={{this.isCreatingOrder}} @permission="fleet-ops import order" class="mr-2" />
         <Button @customClass="new-order-submit" @icon="check" @type="primary" @text={{if (media "isMobile") "" (t "common.submit")}} @onClick={{this.createOrder}} @isLoading={{this.isCreatingOrder}} @permission="fleet-ops create order" @disabled={{not this.isValid}} />
     </Overlay::Header>

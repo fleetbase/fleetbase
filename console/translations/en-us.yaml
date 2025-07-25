@@ -400,7 +400,7 @@ auth:
   two-fa:
     verify-code:
       verification-code: Verification Code
-      check-title: Check your email or phone
+      check-title: Check your email
       check-subtitle: We've sent you a verification code. Enter the code below to complete the login process.
       expired-help-text: Your 2FA authentication code has expired. You can request another code if you need more time.
       resend-code: Resend Code
@@ -3087,3 +3087,26 @@ fleetbase:
       backdrop_field:
         title: "Organisation Backdrop"
         description: "Here you can upload or view the backdrop image for your organisation to enhance its visual identity."
+  leaves:
+    tour:
+      dropdown:
+        title: "Actions Menu"
+        description: "Click the three dots to open the actions menu for this leave record."
+      actions_menu:
+        title: "Leave Actions"
+        description: "This menu contains actions for the leave: View, Approve, and Reject."
+      view_button:
+        title: "View Leave"
+        description: "Click to view the details of this leave request."
+      approve_button:
+        title: "Approve Leave"
+        description: "Click to approve this leave request."
+      reject_button:
+        title: "Reject Leave"
+        description: "Click to reject this leave request."
+      details:
+        title: "Leave Details"
+        description: "This panel shows all details of the selected leave request."
+      sidebar_approve:
+        title: "Approve/Reject"
+        description: "Use these buttons to approve or reject the leave request."

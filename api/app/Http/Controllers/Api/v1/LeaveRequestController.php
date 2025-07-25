@@ -83,12 +83,30 @@ class LeaveRequestController extends Controller
             $query->whereDate('end_date', '<=', $filters['end_date']);
         }
         // $leaveRequests = $query->get();
-        $leaveRequests = $query->paginate($perPage);
-        return response()->json([
-            'success' => true,
-            'data' => $leaveRequests,
-            "total" => $leaveRequests->count(),
-        ]);
+        
+        if (request()->has('per_page') && $perPage > 0) {
+            $leaveRequests = $query->paginate($perPage, ['*'], 'page', $page);
+            
+            return response()->json([
+                'success' => true,
+                'data' => $leaveRequests->items(),
+                'pagination' => [
+                    'current_page' => $leaveRequests->currentPage(),
+                    'per_page' => $leaveRequests->perPage(),
+                    'total' => $leaveRequests->total(),
+                    'last_page' => $leaveRequests->lastPage(),
+                    'from' => $leaveRequests->firstItem(),
+                    'to' => $leaveRequests->lastItem(),
+                ]
+            ]);
+        } else {
+            $leaveRequests = $query->get();
+            return response()->json([
+                'success' => true,
+                'data' => $leaveRequests,
+                "total" => $leaveRequests->count(),
+            ]);
+        }
         
     }
 

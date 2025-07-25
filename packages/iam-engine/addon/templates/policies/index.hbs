@@ -1,7 +1,5 @@
 <Layout::Section::Header @title={{t "iam.policies.index.title"}} @searchQuery={{this.query}} @onSearch={{perform this.search}} @searchDisabled={{cannot "iam list policy"}}>
-    {{#if (eq this.currentUser.roleName "Administrator")}}
-    <Button @icon="question-circle" @type="default" @text={{t "fleetbase.common.help"}} @onClick={{this.CreatePolicyTour}} class="mr-2" />
-    {{/if}}
+    <Button @icon="question-circle" @type="default" @text={{t "fleetbase.common.help"}} @onClick={{this.CreatePolicyTour}} class="mr-2" @permission="iam create policy" />
     <Button @icon="refresh" @onClick={{this.reload}} @helpText={{t "iam.common.reload-data"}} class="mr-2" />
     <FiltersPicker
         @columns={{this.columns}}

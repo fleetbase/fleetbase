@@ -1666,6 +1666,23 @@ refreshLeaveDisplay() {
         checkModal();
     });
 
+    // Helper function to check which filter element is visible
+    const getVisibleFilterElement = () => {
+        const inlineFilter = document.querySelector('#fleet-ops-scheduler-calendar .calendar-filter-inline');
+        const gridFilter = document.querySelector('#fleet-ops-scheduler-calendar .calendar-filter-grid');
+        
+        const isElementVisible = (element) => {
+            if (!element) return false;
+            const style = window.getComputedStyle(element);
+            const rect = element.getBoundingClientRect();
+            return style.display !== 'none' && style.visibility !== 'hidden' && rect.width > 0 && rect.height > 0;
+        };
+
+        if (isElementVisible(inlineFilter)) return inlineFilter;
+        if (isElementVisible(gridFilter)) return gridFilter;
+        return null; // Fallback if neither is visible
+    };
+
     const driverObj = driver({
         showProgress: false,
         nextBtnText: this.intl.t('fleetbase.common.next'),
@@ -1684,6 +1701,8 @@ refreshLeaveDisplay() {
             if (scrollContainer) {
                 scrollContainer.scrollTo({ top: 0, behavior: 'smooth' });
             }
+            // Remove resize listener when tour is destroyed
+            window.removeEventListener('resize', handleResize);
         },
         steps: [
             {
@@ -1737,24 +1756,32 @@ refreshLeaveDisplay() {
                     onNextClick: async () => {
                         const target = document.querySelector('.assigned-orders-panel .next-content-panel-header');
                         if (target && scrollContainer) {
-                            const offset = target.offsetTop;
-                            const scrollTop = offset - (scrollContainer.clientHeight / 2) + (target.offsetHeight / 2);
+                            const containerRect = scrollContainer.getBoundingClientRect();
+                            const targetRect = target.getBoundingClientRect();
+                            const containerTop = containerRect.top + scrollContainer.scrollTop;
+                            const containerBottom = containerTop + containerRect.height;
+                            const targetTop = targetRect.top + scrollContainer.scrollTop;
+                            const targetBottom = targetTop + targetRect.height;
 
-                            // Scroll the sidebar
-                            scrollContainer.scrollTo({ top: scrollTop, behavior: 'smooth' });
+                            const isVisible = targetTop >= containerTop && targetBottom <= containerBottom;
 
-                            // ✅ Wait for the scroll to complete via 'scroll' event
-                            await new Promise((resolve) => {
-                                let timeout;
-                                const onScroll = () => {
-                                    clearTimeout(timeout);
-                                    timeout = setTimeout(() => {
-                                        scrollContainer.removeEventListener('scroll', onScroll);
-                                        resolve();
-                                    }, 100); // Wait until scroll stops for 100ms
-                                };
-                                scrollContainer.addEventListener('scroll', onScroll);
-                            });
+                            if (!isVisible) {
+                                const offset = target.offsetTop;
+                                const scrollTop = offset - (scrollContainer.clientHeight / 2) + (target.offsetHeight / 2);
+                                scrollContainer.scrollTo({ top: scrollTop, behavior: 'smooth' });
+
+                                await new Promise((resolve) => {
+                                    let timeout;
+                                    const onScroll = () => {
+                                        clearTimeout(timeout);
+                                        timeout = setTimeout(() => {
+                                            scrollContainer.removeEventListener('scroll', onScroll);
+                                            resolve();
+                                        }, 100);
+                                    };
+                                    scrollContainer.addEventListener('scroll', onScroll);
+                                });
+                            }
                         }
 
                         // Now safely continue
@@ -1847,8 +1874,9 @@ refreshLeaveDisplay() {
                     },
                 }]
                 : []),
+            // Modified step 7: Dynamic filter element selection
             {
-                element: '#fleet-ops-scheduler-calendar .calendar-filter-inline',
+                element: () => getVisibleFilterElement(),
                 popover: {
                     title: this.intl.t('fleetbase.scheduler.tour.filters.title'),
                     description: this.intl.t('fleetbase.scheduler.tour.filters.description'),
@@ -1868,6 +1896,17 @@ refreshLeaveDisplay() {
                         }
                     },
                 },
+                onHighlightStarted: (element) => {
+                    if (element) {
+                        scrollElementIntoView(element);
+                    }
+                    // Add resize event listener when highlighting starts
+                    window.addEventListener('resize', handleResize);
+                },
+                onHighlightEnded: () => {
+                    // Remove resize listener when leaving the step
+                    window.removeEventListener('resize', handleResize);
+                }
             },
             {
                 element: '#fleetbase-full-calendar .fc-header-toolbar.fc-toolbar',
@@ -1904,6 +1943,17 @@ refreshLeaveDisplay() {
                 : []),
         ],
     });
+
+    // Handle resize/zoom changes to refresh the tour if filter visibility changes
+    const handleResize = () => {
+        const currentStep = driverObj.getActiveIndex();
+        if (currentStep === 6) { // Step 7 (0-based index 6)
+            const visibleElement = getVisibleFilterElement();
+            if (visibleElement && visibleElement !== driverObj.getActiveElement()) {
+                driverObj.refresh();
+            }
+        }
+    };
 
     driverObj.drive();
 }

@@ -390,7 +390,7 @@ auth:
   two-fa:
     verify-code:
       verification-code: Mã xác thực
-      check-title: Kiểm tra email hoặc điện thoại của bạn.
+      check-title: Kiểm tra email của bạn.
       check-subtitle: Chúng tôi đã gửi cho bạn mã xác thực. Nhập mã bên dưới để hoàn tất quá trình đăng nhập.
       expired-help-text: Mã xác thực 2FA của bạn đã hết hạn. Bạn có thể yêu cầu mã khác nếu cần thêm thời gian.
       resend-code: Gửi lại mã
@@ -1846,4 +1846,26 @@ fleetbase:
       backdrop_field:
         title: "Hình nền tổ chức"
         description: "Tại đây, bạn có thể tải lên hoặc xem hình ảnh nền cho tổ chức của mình để nâng cao nhận diện thương hiệu."
-
+  leaves:
+    tour:
+      dropdown:
+        title: "Menu Hành động"
+        description: "Nhấp vào ba dấu chấm để mở menu hành động cho hồ sơ nghỉ phép này."
+      actions_menu:
+        title: "Hành động Nghỉ phép"
+        description: "Menu này bao gồm các hành động cho việc nghỉ phép: Xem, Phê duyệt và Từ chối."
+      view_button:
+        title: "Xem Nghỉ phép"
+        description: "Nhấp để xem chi tiết yêu cầu nghỉ phép này."
+      approve_button:
+        title: "Phê duyệt Nghỉ phép"
+        description: "Nhấp để phê duyệt yêu cầu nghỉ phép này."
+      reject_button:
+        title: "Từ chối Nghỉ phép"
+        description: "Nhấp để từ chối yêu cầu nghỉ phép này."
+      details:
+        title: "Chi tiết Nghỉ phép"
+        description: "Bảng điều khiển này hiển thị tất cả chi tiết của yêu cầu nghỉ phép đã chọn."
+      sidebar_approve:
+        title: "Phê duyệt/Từ chối"
+        description: "Sử dụng các nút này để phê duyệt hoặc từ chối yêu cầu nghỉ phép."
