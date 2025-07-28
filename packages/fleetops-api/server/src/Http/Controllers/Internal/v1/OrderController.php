@@ -1178,12 +1178,6 @@ class OrderController extends FleetOpsController
                             continue;
                         }
                         
-                        Log::info("Trip {$tripId} waypoint sequence", [
-                            'routes' => $routeMap,
-                            'sequence' => $uniqueWaypointSequence,
-                            'total_unique_waypoints' => count($uniqueWaypointSequence),
-                            'total_route_rows' => count($rows)
-                        ]);
                     }
 
                     // FIXED DATE LOGIC: Get scheduled_at from FIRST row's cpt
@@ -1224,7 +1218,7 @@ class OrderController extends FleetOpsController
                             }
                         }
                     }
-                    Log::info("Using cpt from first row for trip {$scheduledAt}");
+                    
 
                     // FIXED DATE LOGIC: Get estimated_end_date from LAST row's stop_2_yard_arrival
                     $lastRow = $rows[count($rows) - 1];
@@ -1253,18 +1247,8 @@ class OrderController extends FleetOpsController
                         if (is_string($estimatedEndDate)) {
                             $estimatedEndDate = Carbon::parse($estimatedEndDate);
                         }
-                        Log::info("Using fallback yard arrival date for estimated_end_date in trip {$tripId}");
+                       
                     }
-
-                    // Enhanced logging for debugging
-                    Log::info("Trip {$tripId} final dates", [
-                        'scheduled_at' => $scheduledAt ? $scheduledAt->format('Y-m-d H:i:s') : 'null',
-                        'estimated_end_date' => $estimatedEndDate ? $estimatedEndDate->format('Y-m-d H:i:s') : 'null',
-                        'first_row_cpt' => $firstRow['cpt'] ?? 'empty',
-                        'last_row_stop_2_yard_arrival' => $lastRow['stop_2_yard_arrival'] ?? 'empty',
-                        'total_rows_in_trip' => count($rows),
-                        'yard_arrival_dates_found' => count($yardArrivalDates)
-                    ]);
 
                     // Carrier details
                     $carrier = $firstRow['carrier'] ?? null;
@@ -1381,12 +1365,6 @@ class OrderController extends FleetOpsController
                             }
                         }
                     }
-
-                    Log::info("Created waypoints for trip {$tripId}", [
-                        'waypoint_sequence' => $uniqueWaypointSequence,
-                        'created_waypoints' => count($savedWaypoints),
-                        'waypoint_ids' => array_map(function($wp) { return $wp->uuid; }, $savedWaypoints)
-                    ]);
 
                     // Create route segments - this can now fail safely within transaction
                     $routeSegmentErrors = $this->createRouteSegmentsFromRows($routeRows, $order, $savedWaypoints, $waypointMeta);
@@ -1570,12 +1548,6 @@ private function buildWaypointSequence(array $routeMap): array
     foreach ($routeMap as $route) {
         $sequence[] = $route['to'];
     }
-    
-    Log::info('Waypoint sequence building', [
-        'route_map' => $routeMap,
-        'final_sequence' => $sequence,
-        'total_waypoints' => count($sequence)
-    ]);
     
     return $sequence;
 }
@@ -1923,10 +1895,6 @@ public function createRouteSegmentsFromRows(array $rows, Order $order, array $sa
             throw new \Exception('No valid format found for: ' . $value);
             
         } catch (\Exception $e) {
-            Log::warning('Failed to parse Excel date', [
-                'input' => $value,
-                'error' => $e->getMessage()
-            ]);
             return null;
         }
     }
