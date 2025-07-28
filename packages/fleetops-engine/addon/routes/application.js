@@ -13,9 +13,10 @@ export default class ApplicationRoute extends Route {
 
     @action loading(transition) {
         const resourceName = getResourceNameFromTransition(transition, { humanize: true });
-        this.loader.showOnInitialTransition(transition, 'section.next-view-section', {
-            loadingMessage: resourceName ? this.intl.t('fleet-ops.common.loading-resource', { resourceName }) : this.intl.t('fleet-ops.common.loading'),
-        });
+        // commented the loader call to prevent showing loader on every route transition from here and used common loader instead this.
+        // this.loader.showOnInitialTransition(transition, 'section.next-view-section', {
+        //     loadingMessage: resourceName ? this.intl.t('fleet-ops.common.loading-resource', { resourceName }) : this.intl.t('fleet-ops.common.loading'),
+        // });
     }
 
     beforeModel() {
