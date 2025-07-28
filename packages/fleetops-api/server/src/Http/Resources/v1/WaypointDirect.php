@@ -46,6 +46,7 @@ class WaypointDirect extends FleetbaseResource
             'status'                 => $this->getWaypointStatus($waypoint),
             'status_code'            => $this->getWaypointStatusCode($waypoint),
             'place_public_id'        => $place ? $place->public_id : null,
+            'place_uuid'             => $place ? $place->uuid : null,
             // Place-related data (if place exists)
             'name'                   => $place ? ($locale ? $locationService->translateLocation($place->name, $locale) : $place->name) : null,
             'location'               => $place ? ($place->location ?? new Point(0, 0)) : new Point(0, 0),
