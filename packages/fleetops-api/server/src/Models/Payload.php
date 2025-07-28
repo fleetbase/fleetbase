@@ -422,12 +422,8 @@ class Payload extends Model
             // $placeUuid = array_key_exists('place_uuid', $attributes)
             //     ? $attributes['place_uuid']
             //     : Place::insertFromMixed($attributes);
-            $placeUuid = array_key_exists('place_uuid', $attributes)
-            ? $attributes['place_uuid']
-            : null;
-            Log::info("Update Waypoints", [
-                            'placeUuid' => $placeUuid,
-                        ]);
+            $placeUuid = null;
+            $placeUuid = $attributes['place_uuid'] ?? $originalAttributes['place_uuid'];
             if (!$placeUuid) {
                 throw new \Exception('Invalid or missing place reference.');
             }
