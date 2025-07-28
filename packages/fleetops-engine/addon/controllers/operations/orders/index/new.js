@@ -527,7 +527,6 @@ export default class OperationsOrdersIndexNewController extends BaseController {
     
             try {
                 results = await this.fetch.post('orders/process-imports', { files });
-                console.log(results);
                 
                 // Handle error log case
                 if (results && results.error_log_url) {
@@ -549,10 +548,11 @@ export default class OperationsOrdersIndexNewController extends BaseController {
         const downloadErrorLog = (modal) => {
             const errorLogUrl = this.modalsManager.getOption('errorLogUrl');
             if (errorLogUrl) {
-                this.downloadFile(errorLogUrl);
-                // Optionally close modal after download
-                modal.done();
-                this.hostRouter.refresh(); // ✅ Refresh list
+                // Pass callback to refresh page after download
+                this.downloadFile(errorLogUrl, () => {
+                    modal.done();
+                    this.hostRouter.refresh(); // ✅ Refresh after download completes
+                });
             }
         };
     
@@ -592,7 +592,7 @@ export default class OperationsOrdersIndexNewController extends BaseController {
                 const isErrorState = this.modalsManager.getOption('isErrorState');
                 if (isErrorState) {
                     downloadErrorLog(modal);
-                    this.hostRouter.refresh();
+                    // this.hostRouter.refresh();
                 } else {
                     originalConfirm(modal);
                 }
@@ -691,7 +691,7 @@ export default class OperationsOrdersIndexNewController extends BaseController {
     }
     
     // Improved download method
-    downloadFile(url) {
+    downloadFile(url, onComplete = null) {
         try {
             // Method 1: Try using fetch for better browser support
             fetch(url)
@@ -712,19 +712,25 @@ export default class OperationsOrdersIndexNewController extends BaseController {
                     
                     // Release the blob URL
                     window.URL.revokeObjectURL(downloadUrl);
+                    
+                    // Execute callback after download
+                    if (onComplete && typeof onComplete === 'function') {
+                        // Small delay to ensure download starts
+                        setTimeout(onComplete, 500);
+                    }
                 })
                 .catch(error => {
                     console.error('Fetch download failed, trying direct method:', error);
-                    this.directDownload(url);
+                    this.directDownload(url, onComplete);
                 });
         } catch (error) {
             console.error('Download error:', error);
-            this.directDownload(url);
+            this.directDownload(url, onComplete);
         }
     }
     
-    // Fallback direct download method
-    directDownload(url) {
+    // Updated fallback direct download method with callback support
+    directDownload(url, onComplete = null) {
         const link = document.createElement('a');
         link.href = url;
         link.download = url.split('/').pop() || 'error_log.xlsx';
@@ -732,6 +738,12 @@ export default class OperationsOrdersIndexNewController extends BaseController {
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
+        
+        // Execute callback after download attempt
+        if (onComplete && typeof onComplete === 'function') {
+            // Small delay to ensure download starts
+            setTimeout(onComplete, 500);
+        }
     }
     
     // Helper method to reset modal to initial state

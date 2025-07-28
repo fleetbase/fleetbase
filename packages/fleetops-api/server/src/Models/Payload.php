@@ -715,9 +715,6 @@ class Payload extends Model
     public function removeWaypoints()
     {
         Waypoint::where('payload_uuid', $this->uuid)->delete();
-        Log::info("Remove Waypoints", [
-                            'payload_uuid' => $$this->uuid,
-                        ]);
         $this->setRelation('waypoints', collect());
 
         return $this;
