@@ -449,6 +449,32 @@ export default class ManagementLeavesIndexController extends BaseController {
      * @void
      */
     @action startLeavesTour() {
+        // UTILITY: Ensures dropdown menu is open before calling callback (for Next/Prev)
+        const ensureMenuOpen = (callback) => {
+            const menuSelector = '.next-dd-menu-table-dd';
+            const menuBtnSelector = 'table tbody tr:first-child td:last-child .ember-basic-dropdown button';
+
+            // If already open, proceed
+            if (document.querySelector(menuSelector)) {
+                callback();
+                return;
+            }
+            // Try to open the menu
+            const menuBtn = document.querySelector(menuBtnSelector);
+            if (menuBtn) {
+                menuBtn.click();
+            }
+            // Poll until menu is visible
+            const waitForMenu = () => {
+                if (document.querySelector(menuSelector)) {
+                    callback();
+                } else {
+                    setTimeout(waitForMenu, 100);
+                }
+            };
+            waitForMenu();
+        };
+
         const driverObj = driver({
             showProgress: true,
             nextBtnText: this.intl.t('fleetbase.common.next'),
@@ -491,13 +517,9 @@ export default class ManagementLeavesIndexController extends BaseController {
                     popover: {
                         title: this.intl.t('fleetbase.leaves.tour.actions_menu.title'),
                         description: this.intl.t('fleetbase.leaves.tour.actions_menu.description'),
-                        onPrevClick: () => {
-                            const menuBtn = document.querySelector('table tbody tr:first-child td:last-child .ember-basic-dropdown button');
-                            if (menuBtn) {
-                                menuBtn.click();
-                                driverObj.movePrevious()
-                            }
-                        },
+                        // Keep menu open before going next/prev
+                        onNextClick: () => ensureMenuOpen(() => driverObj.moveNext()),
+                        onPrevClick: () => ensureMenuOpen(() => driverObj.movePrevious()),
                     },
                 },
                 {
@@ -505,6 +527,8 @@ export default class ManagementLeavesIndexController extends BaseController {
                     popover: {
                         title: this.intl.t('fleetbase.leaves.tour.view_button.title'),
                         description: this.intl.t('fleetbase.leaves.tour.view_button.description'),
+                        onNextClick: () => ensureMenuOpen(() => driverObj.moveNext()),
+                        onPrevClick: () => ensureMenuOpen(() => driverObj.movePrevious()),
                     },
                 },
                 {
@@ -512,6 +536,8 @@ export default class ManagementLeavesIndexController extends BaseController {
                     popover: {
                         title: this.intl.t('fleetbase.leaves.tour.approve_button.title'),
                         description: this.intl.t('fleetbase.leaves.tour.approve_button.description'),
+                        onNextClick: () => ensureMenuOpen(() => driverObj.moveNext()),
+                        onPrevClick: () => ensureMenuOpen(() => driverObj.movePrevious()),
                     },
                 },
                 {
@@ -520,7 +546,8 @@ export default class ManagementLeavesIndexController extends BaseController {
                         title: this.intl.t('fleetbase.leaves.tour.reject_button.title'),
                         description: this.intl.t('fleetbase.leaves.tour.reject_button.description'),
                         onNextClick: () => {
-                            const viewBtn = document.querySelector('.next-dd-menu div[role="group"]:nth-child(3) > a');
+                            ensureMenuOpen(() => {
+                               const viewBtn = document.querySelector('.next-dd-menu div[role="group"]:nth-child(3) > a');
                             if (viewBtn) {
                                 viewBtn.click();
                                 later(this, () => {
@@ -534,8 +561,10 @@ export default class ManagementLeavesIndexController extends BaseController {
                                     }
                                 }, 100);
                             }
+                            });
                         },
-                    },
+                        onPrevClick: () => ensureMenuOpen(() => driverObj.movePrevious()),
+                    }
                 },
                 {
                     element: '.leaves-panel-details .grid',
@@ -547,20 +576,7 @@ export default class ManagementLeavesIndexController extends BaseController {
                             const closeBtn = document.querySelector('.next-content-overlay-panel:has(.leaves-panel-details) .next-view-header-right button');
                             if (closeBtn) {
                                 closeBtn.click();
-                                 const menuBtn = document.querySelector('table tbody tr:first-child td:last-child .ember-basic-dropdown button');
-                            if (menuBtn) {
-                                menuBtn.click();
-                                const waitForMenu = () => {
-                                    const menu = document.querySelector('.next-dd-menu-table-dd');
-                                    if (menu) {
-                                         driverObj.moveTo(2);
-                                    } else {
-                                        setTimeout(waitForMenu, 100);
-                                    }
-                                };
-                                waitForMenu();
-                            }
-                               
+                                ensureMenuOpen(() => driverObj.moveTo(4)); // Go back to Reject button
                             }
                         },
                     },
