@@ -39,7 +39,21 @@ export default class LocaleSelectorTrayComponent extends Component {
     constructor() {
         super(...arguments);
 
-        this.locales = this.intl.locales;
+        const hiddenLocales = ['en-us'];
+        const defaultLocale = 'en-gb'; 
+
+        // Step 1: Filter visible locales (exclude hidden ones)
+        const visibleLocales = this.intl.locales.filter(locale => !hiddenLocales.includes(locale));
+
+        // Step 2: Ensure defaultLocale comes first
+        const sortedLocales = [
+            defaultLocale,
+            ...visibleLocales.filter(locale => locale !== defaultLocale)
+        ];
+
+        this.locales = sortedLocales;
+
+        // Step 3: Set current locale and listen for changes
         this.currentLocale = this.intl.primaryLocale;
         this.loadAvailableCountries.perform();
 

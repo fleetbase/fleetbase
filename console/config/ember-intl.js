@@ -14,7 +14,7 @@ module.exports = function (/* environment */) {
          * @type {String?}
          * @default "null"
          */
-        fallbackLocale: 'en-us',
+        fallbackLocale: 'en-gb',
 
         /**
          * Path where translations are stored.  This is relative to the project root.
@@ -92,6 +92,6 @@ module.exports = function (/* environment */) {
             return true;
         },
 
-        includeLocales: ['en-us', 'fr-fr', 'es-es', 'de-de', 'it-it', 'pt-br','ar-ae', 'vi-vn', 'pl-pl'],
+        includeLocales: ['en-gb', 'fr-fr', 'es-es', 'de-de', 'it-it', 'pt-br','ar-ae', 'vi-vn', 'pl-pl', 'en-us'],
     };
 };
