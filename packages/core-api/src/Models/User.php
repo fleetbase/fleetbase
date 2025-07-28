@@ -404,7 +404,7 @@ class User extends Authenticatable
     public function getLocale(): string
     {
         try {
-            return Setting::lookup('user.' . $this->uuid . '.locale', 'en-us');
+            return Setting::lookup('user.' . $this->uuid . '.locale', 'en-gb');
         } catch (\Exception $e) {
             throw new \Exception('Unable to retrieve user locale setting at this time.', 0, $e);
         }
