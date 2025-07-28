@@ -21,4 +21,6 @@ export default class WaypointModel extends PlaceModel {
     @attr('string') status_code;
     @attr('string') type;
     @attr('number') order;
+    @attr('string') place_uuid;
 }
+

@@ -239,7 +239,12 @@ class OrderController extends FleetOpsController
 
         // Handle update of multiple waypoints
         if ($waypoints) {
+            try{
             $order->payload->updateWaypoints($waypoints);
+            }
+            catch (\Exception $e) {
+                return response()->error('Failed to update waypoints: ' . $e->getMessage());
+            }
             $order->payload->removePlace(['pickup', 'dropoff', 'return'], ['save' => true]);
             //update route segments
             $payload_uuid = $order->payload_uuid ?? null;
