@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Fleetbase\FleetOps\Models\TrackingStatus;
 use Fleetbase\FleetOps\Models\Waypoint;
+use Illuminate\Support\Facades\Log;
 
 class Payload extends Model
 {
@@ -418,10 +419,18 @@ class Payload extends Model
             }
             
             // Resolve or insert place UUID
+            // $placeUuid = array_key_exists('place_uuid', $attributes)
+            //     ? $attributes['place_uuid']
+            //     : Place::insertFromMixed($attributes);
             $placeUuid = array_key_exists('place_uuid', $attributes)
-                ? $attributes['place_uuid']
-                : Place::insertFromMixed($attributes);
-            
+            ? $attributes['place_uuid']
+            : null;
+            Log::info("Update Waypoints", [
+                            'placeUuid' => $placeUuid,
+                        ]);
+            if (!$placeUuid) {
+                throw new \Exception('Invalid or missing place reference.');
+            }
             // Build waypoint data - use order from request payload, fallback to index
             $waypointData = [
                 'payload_uuid' => $this->uuid,
@@ -710,6 +719,9 @@ class Payload extends Model
     public function removeWaypoints()
     {
         Waypoint::where('payload_uuid', $this->uuid)->delete();
+        Log::info("Remove Waypoints", [
+                            'payload_uuid' => $$this->uuid,
+                        ]);
         $this->setRelation('waypoints', collect());
 
         return $this;
