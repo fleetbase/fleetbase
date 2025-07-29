@@ -27,6 +27,8 @@
         @triggerClass="form-input truncate"
         style="width: 200px;"
         @disabled={{this.loading}}
+        @allowClear={{true}}
+        @onClear={{this.clear}}
         as |driver|
       >
         {{driver.name}}
@@ -43,6 +45,8 @@
         @triggerClass="form-input truncate"
         style="width: 200px;"
         @disabled={{this.loading}}
+        @allowClear={{true}}
+        @onClear={{this.clear}}
         as |status|
       >
         {{t status.name}}
@@ -108,6 +112,8 @@
         @triggerClass="form-input truncate"
         class="w-full lg:w-[200px]"
         @disabled={{this.loading}}
+        @allowClear={{true}}
+        @onClear={{this.clear}}
         as |driver|
       >
         {{driver.name}}
@@ -124,6 +130,8 @@
         @triggerClass="form-input truncate"
         class="w-full lg:w-[200px]"
         @disabled={{this.loading}}
+        @allowClear={{true}}
+        @onClear={{this.clear}}
         as |status|
       >
         {{t status.name}}

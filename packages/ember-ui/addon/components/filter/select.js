@@ -53,14 +53,14 @@ export default class FilterSelectComponent extends Component {
             });
     }
 
-    @action clear() {
-        const { onClear, filter } = this.args;
+    // @action clear() {
+    //     const { onClear, filter } = this.args;
 
-        this.selectedModel = null;
+    //     this.selectedModel = null;
 
-        if (typeof onClear === 'function') {
-            onClear(filter);
-        }
-    }
+    //     if (typeof onClear === 'function') {
+    //         onClear(filter);
+    //     }
+    // }
     
 }
