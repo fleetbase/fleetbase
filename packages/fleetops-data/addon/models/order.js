@@ -131,7 +131,7 @@ export default class OrderModel extends Model {
             return 'Dynamic';
         }
 
-        return 'None';
+        return '';
     }
 
     // get dropoffName() {
@@ -173,7 +173,7 @@ export default class OrderModel extends Model {
             return 'Dynamic';
         }
 
-        return 'None';
+        return '';
     }
 
     @computed('public_id', 'scheduledAtTime') get eventTitle() {
