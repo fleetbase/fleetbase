@@ -367,13 +367,26 @@ class ChargebeeWebhookController extends Controller
      */
     private function handleSubscriptionCreated(array $subscription): void
     {
-        
+        Log::info('Processing subscription created', ['subscription_id' => $subscription['id'] ?? 'unknown']);
 
         try {
-            Log::info('Processing subscription created', ['subscription_id' => $subscription['id']]);
+            // Validate required subscription data
+            if (!isset($subscription['id']) || !isset($subscription['customer_id'])) {
+                throw new \InvalidArgumentException('Missing required subscription data: id or customer_id', 400);
+            }
+
             DB::transaction(function () use ($subscription) {
-                // Find user by customer ID first
+                // Find user by subscription ID first
                 $user = User::where('chargebee_subscription_id', $subscription['id'])->first();
+
+                // If user not found by subscription ID, try to find by customer ID
+                if (!$user) {
+                    Log::info('User not found by subscription ID, trying to find by customer ID', [
+                        'customer_id' => $subscription['customer_id'],
+                        'subscription_id' => $subscription['id']
+                    ]);
+                    $user = User::where('chargebee_customer_id', $subscription['customer_id'])->first();
+                }
 
                 // If user not found by customer ID, try to find by email from subscription metadata
                 if (!$user && isset($subscription['customer_email'])) {
@@ -394,19 +407,40 @@ class ChargebeeWebhookController extends Controller
                 }
 
                 // If still no user found, try to find by subscription metadata or other fields
+                if (!$user && isset($subscription['metadata']) && isset($subscription['metadata']['user_uuid'])) {
+                    Log::info('User not found by email, trying to find by UUID from metadata', [
+                        'user_uuid' => $subscription['metadata']['user_uuid']
+                    ]);
+                    $user = User::where('uuid', $subscription['metadata']['user_uuid'])->first();
+                    if ($user) {
+                        $user->update(['chargebee_customer_id' => $subscription['customer_id']]);
+                        Log::info('Found user by UUID from metadata and updated customer ID', [
+                            'user_id' => $user->id,
+                            'customer_id' => $subscription['customer_id']
+                        ]);
+                    }
+                }
+
+                // If still no user found, make final attempts without delays
                 if (!$user) {
-                    Log::warning('User not found for customer ID or email', [
-                        'customer_id' => $subscription['customer_id'],
-                        'customer_email' => $subscription['customer_email'] ?? 'not provided',
-                        'subscription_id' => $subscription['id']
+                    Log::info('User still not found, making final attempts...', [
+                        'customer_id' => $subscription['customer_id']
                     ]);
                     
-                    // Try to find user by subscription metadata if available
-                    if (isset($subscription['metadata']) && isset($subscription['metadata']['user_uuid'])) {
-                        $user = User::where('uuid', $subscription['metadata']['user_uuid'])->first();
+                    // Try one more time by customer ID
+                    $user = User::where('chargebee_customer_id', $subscription['customer_id'])->first();
+                    
+                    // Try one more time by subscription ID
+                    if (!$user) {
+                        $user = User::where('chargebee_subscription_id', $subscription['id'])->first();
+                    }
+                    
+                    // Try one more time by email
+                    if (!$user && isset($subscription['customer_email'])) {
+                        $user = User::where('email', $subscription['customer_email'])->first();
                         if ($user) {
                             $user->update(['chargebee_customer_id' => $subscription['customer_id']]);
-                            Log::info('Found user by UUID from metadata and updated customer ID', [
+                            Log::info('User found by email on final attempt', [
                                 'user_id' => $user->id,
                                 'customer_id' => $subscription['customer_id']
                             ]);
@@ -414,92 +448,59 @@ class ChargebeeWebhookController extends Controller
                     }
                 }
 
-                // If still no user found, wait a bit and retry (race condition handling)
+                // If no user found after all attempts, throw exception
                 if (!$user) {
-                    Log::info('User still not found, starting retry mechanism...', [
-                        'customer_id' => $subscription['customer_id']
-                    ]);
-                    
-                    // Retry mechanism with exponential backoff
-                    $maxRetries = 5;
-                    $baseWaitTime = 2; // Start with 2 seconds
-                    
-                    for ($attempt = 1; $attempt <= $maxRetries; $attempt++) {
-                        $waitTime = $baseWaitTime * $attempt; // 2, 4, 6, 8, 10 seconds
-                        
-                        Log::info("Retry attempt {$attempt}/{$maxRetries}, waiting {$waitTime} seconds...", [
-                            'customer_id' => $subscription['customer_id'],
-                            'wait_time' => $waitTime
-                        ]);
-                        
-                        // Wait before retry
-                        sleep($waitTime);
-                        
-                        // Retry finding user by customer ID
-                        $user = User::where('chargebee_subscription_id', $subscription['id'])->first();
-                        
-                        if ($user) {
-                            Log::info('User found after retry attempt ' . $attempt, [
-                                'user_id' => $user->id,
-                                'customer_id' => $subscription['customer_id'],
-                                'attempts_taken' => $attempt
-                            ]);
-                            break;
-                        }
-                        
-                        // Also try by email on each retry
-                        if (isset($subscription['customer_email'])) {
-                            $user = User::where('email', $subscription['customer_email'])->first();
-                            if ($user) {
-                                $user->update(['chargebee_customer_id' => $subscription['customer_id']]);
-                                Log::info('User found by email on retry attempt ' . $attempt, [
-                                    'user_id' => $user->id,
-                                    'customer_id' => $subscription['customer_id'],
-                                    'attempts_taken' => $attempt
-                                ]);
-                                break;
-                            }
-                        }
-                        
-                        Log::info("Retry attempt {$attempt} failed, user still not found", [
-                            'customer_id' => $subscription['customer_id']
-                        ]);
-                    }
-                }
-
-                if (!$user) {
-                    Log::warning('User not found for customer ID after retry: ' . $subscription['customer_id']);
-                    return;
+                    $errorMessage = 'User not found for subscription creation. Customer ID: ' . ($subscription['customer_id'] ?? 'unknown') . '. Subscription ID: ' . ($subscription['id'] ?? 'unknown');
+                    Log::error('Subscription creation failed: ' . $errorMessage);
+                    throw new \InvalidArgumentException($errorMessage, 400);
                 }
 
                 // Create or update subscription record
-                Subscription::updateOrCreate(
-                    ['gocardless_subscription_id' => $subscription['id']],
-                    [
-                        'user_uuid' => $user->uuid,
-                        'company_uuid' => $user->company_uuid,
-                        'payment_id' => null,
-                        'gocardless_mandate_id' => $subscription['customer_id'],
-                        // 'chargebee_customer_id' => $subscription['customer_id'],
-                        'interval_unit' => 'monthly',
-                        'interval' => $subscription['billing_period'],
-                        'day_of_month' => 1,
-                        'start_date' => $subscription['activated_at'] ?? null,
-                        'end_date' => $subscription['current_term_end'] ?? null,
-                        'status' => $subscription['status'],
-                        // 'current_term_start' => $subscription['current_term_start'] ?? null,
-                        // 'current_term_end' => $subscription['current_term_end'] ?? null,
-                        'next_payment_date' => $subscription['next_billing_at'] ?? null,
-                        'created_by_id' => $user->id,
-                        
-                    ]
-                );
+                try {
+                    Subscription::updateOrCreate(
+                        ['gocardless_subscription_id' => $subscription['id']],
+                        [
+                            'user_uuid' => $user->uuid ?? null,
+                            'company_uuid' => $user->company_uuid ?? null,
+                            'payment_id' => null,
+                            'gocardless_mandate_id' => $subscription['customer_id'] ?? null,
+                            // 'chargebee_customer_id' => $subscription['customer_id'],
+                            'interval_unit' => 'monthly',
+                            'interval' => $subscription['billing_period'] ?? 1,
+                            'day_of_month' => 1,
+                            'start_date' => $subscription['activated_at'] ?? null,
+                            'end_date' => $subscription['current_term_end'] ?? null,
+                            'status' => $subscription['status'] ?? 'active',
+                            // 'current_term_start' => $subscription['current_term_start'] ?? null,
+                            // 'current_term_end' => $subscription['current_term_end'] ?? null,
+                            'next_payment_date' => $subscription['next_billing_at'] ?? null,
+                            'created_by_id' => $user->id,
+                        ]
+                    );
+                } catch (\Exception $e) {
+                    Log::error('Failed to create/update subscription record: ' . $e->getMessage(), [
+                        'subscription_id' => $subscription['id'] ?? 'unknown',
+                        'user_id' => $user->id ?? 'unknown'
+                    ]);
+                    throw new \InvalidArgumentException('Failed to process subscription record: ' . $e->getMessage(), 400);
+                }
 
                 // Update user subscription status
-                $user->update([
-                    'subscription_status' => 'active',
-                    'subscribed_at' => now()
-                ]);
+                try {
+                    $user->update([
+                        'subscription_status' => 'active',
+                        'subscribed_at' => now()
+                    ]);
+                    Log::info('Updated user subscription status', [
+                        'user_id' => $user->id,
+                        'subscription_status' => 'active'
+                    ]);
+                } catch (\Exception $e) {
+                    Log::error('Failed to update user subscription status: ' . $e->getMessage(), [
+                        'user_id' => $user->id ?? 'unknown'
+                    ]);
+                    // Continue processing even if user update fails
+                }
 
                 // Send welcome email
                 // Mail::to($user->email)->send(new WelcomeMail($user, $subscription));
@@ -510,6 +511,9 @@ class ChargebeeWebhookController extends Controller
                 ]);
             });
 
+        } catch (\InvalidArgumentException $e) {
+            // Re-throw the custom exception to be handled by the calling webhook handler
+            throw $e;
         } catch (\Exception $e) {
             Log::error('Failed to handle subscription created: ' . $e->getMessage());
             throw $e;
