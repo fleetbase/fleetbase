@@ -35,7 +35,7 @@ class LeaveRequestController extends Controller
         ]);
         $userUuid = request()->input('user_uuid');
         $status = request()->input('status');
-        $query = LeaveRequest::with('user')
+        $query = LeaveRequest::with(['user', 'processedBy'])
                 ->whereNull('deleted_at')
                 ->where([
                     ['company_uuid', '=', Auth::getCompany()->uuid],

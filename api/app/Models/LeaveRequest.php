@@ -43,10 +43,21 @@ class LeaveRequest extends Model
         'meta' => 'array', // Cast JSON meta field to array
     ];
 
+    protected $appends = ['processed_by_name'];
+
     protected $dates = ['deleted_at']; // Enable soft deletes
 
     public function user()
-{
-    return $this->belongsTo(User::class, 'user_uuid', 'uuid'); // Assuming 'user_uuid' in leave_requests maps to 'uuid' in users table
-}
+    {
+        return $this->belongsTo(User::class, 'user_uuid', 'uuid'); // Assuming 'user_uuid' in leave_requests maps to 'uuid' in users table
+    }
+    public function processedBy()
+    {
+        return $this->belongsTo(User::class, 'processed_by', 'id');
+    }
+
+    public function getProcessedByNameAttribute()
+    {
+        return $this->processedBy?->name ?? null;
+    }
 }
