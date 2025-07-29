@@ -785,49 +785,131 @@ class ChargebeeWebhookController extends Controller
      */
     private function handlePaymentFailed(array $transaction): void
     {
-        Log::info('Processing payment failed', ['transaction_id' => $transaction['id']]);
+        Log::info('Processing payment failed', ['transaction_id' => $transaction['id'] ?? 'unknown']);
 
         try {
-            $user = User::where('chargebee_subscription_id', $transaction['subscription_id'])->first();
-            $plan = DB::table('plan')->where('name', 'Basic Plan')->first();
-            $subscriptionRecord = Subscription::where('gocardless_subscription_id', $transaction['subscription_id'])->first();
-            // Store failed transaction
-            Payment::updateOrCreate(
-                ['gocardless_payment_id' => $transaction['id']],
-                [
-                    'gocardless_customer_id' => $transaction['customer_id'],
-                    'subscription_id' => $subscriptionRecord->id ?? null ,
-                    'amount' => $transaction['amount'],
-                    'company_plan_id' => null,
-                    'plan_id' => $plan->id,
-                    'total_amount' => $transaction['amount'],
-                    'currency_code' => $transaction['currency_code'],
-                    'status' => "failed",
-                    // 'type' => $transaction['type'],
-                    'failed_at' => $transaction['date'] ?? now(),
-                    'payment_metadata' => json_encode($transaction),
-                    'payment_method' => 'direct_debit',
-                    'payment_type' => 'subscription',
-                    'created_by_id' => $user->id,
-                    'failure_reason' => $transaction['failure_reason'] ?? null,
-                    'is_recurring' => 1,
-                    // 'gateway_transaction_id' => $transaction['gateway_transaction_id'] ?? null,
-                ]
-            );
+            // Validate required transaction data
+            if (!isset($transaction['id']) || !isset($transaction['customer_id'])) {
+                throw new \InvalidArgumentException('Missing required transaction data: id or customer_id', 400);
+            }
 
-            // // Update user payment status
+            // Find user by subscription ID first
+            $user = null;
+            if (isset($transaction['subscription_id'])) {
+                $user = User::where('chargebee_subscription_id', $transaction['subscription_id'])->first();
+            }
+
+            // If user not found by subscription ID, try to find by customer ID
+            if (!$user) {
+                Log::info('User not found by subscription ID for failed payment, trying to find by customer ID', [
+                    'customer_id' => $transaction['customer_id'],
+                    'subscription_id' => $transaction['subscription_id'] ?? 'not provided'
+                ]);
+                $user = User::where('chargebee_customer_id', $transaction['customer_id'])->first();
+            }
+
+            // If user not found by customer ID, try to find by email from transaction metadata
+            if (!$user && isset($transaction['customer_email'])) {
+                Log::info('User not found by customer ID for failed payment, trying to find by email', [
+                    'customer_id' => $transaction['customer_id'],
+                    'email' => $transaction['customer_email']
+                ]);
+                $user = User::where('email', $transaction['customer_email'])->first();
+                
+                // If found by email, update the user with the customer ID
+                if ($user) {
+                    $user->update(['chargebee_customer_id' => $transaction['customer_id']]);
+                    Log::info('Updated user with chargebee_customer_id from failed payment', [
+                        'user_id' => $user->id,
+                        'customer_id' => $transaction['customer_id']
+                    ]);
+                }
+            }
+
+            // If still no user found, throw exception
+            if (!$user) {
+                $errorMessage = 'User not found for failed payment. Customer ID: ' . ($transaction['customer_id'] ?? 'unknown') . '. Transaction ID: ' . ($transaction['id'] ?? 'unknown');
+                Log::error('Failed payment processing failed: ' . $errorMessage);
+                throw new \InvalidArgumentException($errorMessage, 400);
+            }
+
+            // Find plan
+            $plan = DB::table('plan')->where('name', 'Basic Plan')->first();
+            if (!$plan) {
+                $errorMessage = 'Basic Plan not found for failed payment processing. Transaction ID: ' . ($transaction['id'] ?? 'unknown');
+                Log::error('Failed payment processing failed: ' . $errorMessage);
+                throw new \InvalidArgumentException($errorMessage, 400);
+            }
+
+            // Find subscription record
+            $subscriptionRecord = null;
+            if (isset($transaction['subscription_id'])) {
+                $subscriptionRecord = Subscription::where('gocardless_subscription_id', $transaction['subscription_id'])->first();
+            }
             
-            if ($user) {
+            Log::info('Found data for failed payment processing', [
+                'user_id' => $user->id,
+                'plan_id' => $plan->id,
+                'subscription_record' => $subscriptionRecord ? $subscriptionRecord->id : null
+            ]);
+
+            // Store failed transaction
+            try {
+                Payment::updateOrCreate(
+                    ['gocardless_payment_id' => $transaction['id']],
+                    [
+                        'gocardless_customer_id' => $transaction['customer_id'] ?? null,
+                        'subscription_id' => $subscriptionRecord ? $subscriptionRecord->id : null,
+                        'amount' => $transaction['amount'] ?? 0,
+                        'company_plan_id' => null,
+                        'plan_id' => $plan->id,
+                        'total_amount' => $transaction['amount'] ?? 0,
+                        'currency_code' => $transaction['currency_code'] ?? 'USD',
+                        'status' => 'failed',
+                        // 'type' => $transaction['type'],
+                        'failed_at' => isset($transaction['date']) ? $transaction['date'] : now(),
+                        'payment_metadata' => json_encode($transaction),
+                        'payment_method' => 'direct_debit',
+                        'payment_type' => 'subscription',
+                        'created_by_id' => $user->id,
+                        'failure_reason' => $transaction['failure_reason'] ?? null,
+                        'is_recurring' => 1,
+                        // 'gateway_transaction_id' => $transaction['gateway_transaction_id'] ?? null,
+                    ]
+                );
+            } catch (\Exception $e) {
+                Log::error('Failed to create/update failed payment record: ' . $e->getMessage(), [
+                    'transaction_id' => $transaction['id'] ?? 'unknown'
+                ]);
+                throw new \InvalidArgumentException('Failed to process failed payment record: ' . $e->getMessage(), 400);
+            }
+
+            // Update user payment status
+            try {
                 $user->update(['payment_status' => 'failed']);
+                Log::info('Updated user payment status to failed', [
+                    'user_id' => $user->id,
+                    'transaction_id' => $transaction['id']
+                ]);
 
                 // Send payment failed email
                 // Mail::to($user->email)->send(new PaymentFailedMail($user, $transaction));
+            } catch (\Exception $e) {
+                Log::error('Failed to update user payment status: ' . $e->getMessage(), [
+                    'user_id' => $user->id ?? 'unknown',
+                    'transaction_id' => $transaction['id'] ?? 'unknown'
+                ]);
+                // Continue processing even if user update fails
             }
 
-            Log::info('Payment failure processed', [
-                'transaction_id' => $transaction['id']
+            Log::info('Payment failure processed successfully', [
+                'transaction_id' => $transaction['id'],
+                'user_id' => $user->id
             ]);
 
+        } catch (\InvalidArgumentException $e) {
+            // Re-throw the custom exception to be handled by the calling webhook handler
+            throw $e;
         } catch (\Exception $e) {
             Log::error('Failed to handle payment failed: ' . $e->getMessage());
             throw $e;
