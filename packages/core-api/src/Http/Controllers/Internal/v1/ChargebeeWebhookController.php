@@ -575,7 +575,10 @@ class ChargebeeWebhookController extends Controller
             Log::info('user_new', ['user_new' => $user_new]);
             $plan = DB::table('plan')->where('name', 'Basic Plan')->first();
             Log::info('plan', ['plan' => $plan]);
-            $subscriptionRecord = Subscription::where('gocardless_subscription_id', $transaction['subscription_id'])->first();
+            $subscriptionRecord = null;
+            if (isset($transaction['subscription_id'])) {
+                $subscriptionRecord = Subscription::where('gocardless_subscription_id', $transaction['subscription_id'])->first();
+            }
             Log::info('subscriptionRecord', ['subscriptionRecord' => $subscriptionRecord]);
             // If user has subscription_id but subscription record does not exist, create it
             if (!$subscriptionRecord && $user_new && $subscription) {
