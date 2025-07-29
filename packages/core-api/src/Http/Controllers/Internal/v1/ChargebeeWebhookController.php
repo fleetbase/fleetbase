@@ -322,7 +322,15 @@ class ChargebeeWebhookController extends Controller
             //     break;
 
             case 'payment_succeeded':
-                $this->handlePaymentSucceeded($content['transaction'], $content['subscription'] ?? null);
+                try {
+                    $this->handlePaymentSucceeded($content['transaction'], $content['subscription'] ?? null);
+                } catch (\InvalidArgumentException $e) {
+                    Log::error('Invalid webhook data: ' . $e->getMessage());
+                    throw $e;
+                } catch (\Exception $e) {
+                    Log::error('Unexpected webhook error: ' . $e->getMessage());
+                    throw $e;
+                }
                 break;
 
             case 'payment_failed':
