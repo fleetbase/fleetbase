@@ -41,4 +41,16 @@ export default class SelectComponent extends Component {
             this.args.onChange(this.value);
         }
     }
+
+    @action clear() {
+        this.value = null;
+        
+        if (typeof this.args.onSelect === 'function') {
+            this.args.onSelect(null);
+        }
+    
+        if (typeof this.args.onChange === 'function') {
+            this.args.onChange(null);
+        }
+    }
 }

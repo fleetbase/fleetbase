@@ -6,11 +6,9 @@
     @value={{this.value}}
     @onSelect={{this.onChange}}
     @placeholder={{this.placeholder}}
+    @allowClear={{true}}
+    @onClear={{this.clear}}
     class="w-full form-input form-input-sm pr-8"
     ...attributes
   />
-  
-  {{#if this.value}}
-   {{!-- <span class="ember-power-select-clear-btn" role="button" {{on "click" this.clear}}>×</span> --}}
-  {{/if}}
 </div>

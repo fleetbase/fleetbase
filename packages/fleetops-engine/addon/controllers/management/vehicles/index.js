@@ -293,7 +293,7 @@ export default class ManagementVehiclesIndexController extends BaseController {
             resizable: true,
             sortable: true,
             filterable: true,
-            filterComponent: 'filter/multi-option',
+            filterComponent: 'filter/select',
             // filterFetchOptions: 'vehicles/statuses',
             filterOptions: ['pending', 'active'],
         },
