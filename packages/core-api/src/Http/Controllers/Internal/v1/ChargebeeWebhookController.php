@@ -678,70 +678,37 @@ class ChargebeeWebhookController extends Controller
                 }
             }
 
-            // If still no user found, retry with exponential backoff
+            // If still no user found, try one more time without delays
             if (!$user) {
-                Log::info('User still not found for payment, starting retry mechanism...', [
+                Log::info('User still not found for payment, making final attempts...', [
                     'customer_id' => $transaction['customer_id']
                 ]);
                 
-                // Retry mechanism with exponential backoff
-                $maxRetries = 5;
-                $baseWaitTime = 2; // Start with 2 seconds
+                // Try one more time by customer ID
+                $user = User::where('chargebee_customer_id', $transaction['customer_id'])->first();
                 
-                for ($attempt = 1; $attempt <= $maxRetries; $attempt++) {
-                    $waitTime = $baseWaitTime * $attempt; // 2, 4, 6, 8, 10 seconds
-                    
-                    Log::info("Payment retry attempt {$attempt}/{$maxRetries}, waiting {$waitTime} seconds...", [
-                        'customer_id' => $transaction['customer_id'],
-                        'wait_time' => $waitTime
-                    ]);
-                    
-                    // Wait before retry
-                    sleep($waitTime);
-                    
-                    // Retry finding user by customer ID
-                    $user = User::where('chargebee_customer_id', $transaction['customer_id'])->first();
-                    
+                // Try one more time by subscription ID
+                if (!$user && isset($transaction['subscription_id'])) {
+                    $user = User::where('chargebee_subscription_id', $transaction['subscription_id'])->first();
                     if ($user) {
-                        Log::info('User found for payment after retry attempt ' . $attempt, [
+                        $user->update(['chargebee_customer_id' => $transaction['customer_id']]);
+                        Log::info('User found by subscription ID on final attempt', [
                             'user_id' => $user->id,
-                            'customer_id' => $transaction['customer_id'],
-                            'attempts_taken' => $attempt
+                            'customer_id' => $transaction['customer_id']
                         ]);
-                        break;
                     }
-                    
-                    // Also try by subscription ID on each retry
-                    if (isset($transaction['subscription_id'])) {
-                        $user = User::where('chargebee_subscription_id', $transaction['subscription_id'])->first();
-                        if ($user) {
-                            $user->update(['chargebee_customer_id' => $transaction['customer_id']]);
-                            Log::info('User found by subscription ID for payment on retry attempt ' . $attempt, [
-                                'user_id' => $user->id,
-                                'customer_id' => $transaction['customer_id'],
-                                'attempts_taken' => $attempt
-                            ]);
-                            break;
-                        }
+                }
+                
+                // Try one more time by email
+                if (!$user && isset($transaction['customer_email'])) {
+                    $user = User::where('email', $transaction['customer_email'])->first();
+                    if ($user) {
+                        $user->update(['chargebee_customer_id' => $transaction['customer_id']]);
+                        Log::info('User found by email on final attempt', [
+                            'user_id' => $user->id,
+                            'customer_id' => $transaction['customer_id']
+                        ]);
                     }
-                    
-                    // Also try by email on each retry
-                    if (isset($transaction['customer_email'])) {
-                        $user = User::where('email', $transaction['customer_email'])->first();
-                        if ($user) {
-                            $user->update(['chargebee_customer_id' => $transaction['customer_id']]);
-                            Log::info('User found by email for payment on retry attempt ' . $attempt, [
-                                'user_id' => $user->id,
-                                'customer_id' => $transaction['customer_id'],
-                                'attempts_taken' => $attempt
-                            ]);
-                            break;
-                        }
-                    }
-                    
-                    Log::info("Payment retry attempt {$attempt} failed, user still not found", [
-                        'customer_id' => $transaction['customer_id']
-                    ]);
                 }
             }
 
