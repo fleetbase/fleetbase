@@ -299,15 +299,20 @@ class ChargebeeWebhookController extends Controller
     /**
      * Handle different webhook events
      */
-    private function handleWebhookEvent(array $event): void
+    private function handleWebhookEvent(array $event)
     {
         $eventType = $event['event_type'];
         $content = $event['content'];
 
         switch ($eventType) {
             case 'subscription_created':
-                $this->handleSubscriptionCreated($content['subscription']);
-                break;
+                try {
+                    $this->handleSubscriptionCreated($content['subscription']);
+                    return response()->json(['status' => 'success'], 200);
+                } catch (\Exception $e) {
+                    Log::error('Subscription creation failed: ' . $e->getMessage());
+                    return response()->json(['error' => 'Failed to process subscription'], 500);
+                }
 
             // case 'subscription_cancelled':
             //     $this->handleSubscriptionCancelled($content['subscription']);
@@ -324,18 +329,23 @@ class ChargebeeWebhookController extends Controller
             case 'payment_succeeded':
                 try {
                     $this->handlePaymentSucceeded($content['transaction'], $content['subscription'] ?? null);
+                    return response()->json(['status' => 'success'], 200);
                 } catch (\InvalidArgumentException $e) {
-                    Log::error('Invalid webhook data: ' . $e->getMessage());
-                    throw $e;
+                    Log::error('Invalid payment data: ' . $e->getMessage());
+                    return response()->json(['error' => $e->getMessage()], 400);
                 } catch (\Exception $e) {
-                    Log::error('Unexpected webhook error: ' . $e->getMessage());
-                    throw $e;
+                    Log::error('Payment processing failed: ' . $e->getMessage());
+                    return response()->json(['error' => 'Failed to process payment'], 500);
                 }
-                break;
 
-            case 'payment_failed':
-                $this->handlePaymentFailed($content['transaction']);
-                break;
+                case 'payment_failed':
+                    try {
+                        $this->handlePaymentFailed($content['transaction']);
+                        return response()->json(['status' => 'success'], 200);
+                    } catch (\Exception $e) {
+                        Log::error('Payment failure processing failed: ' . $e->getMessage());
+                        return response()->json(['error' => 'Failed to process payment failure'], 500);
+                    }
 
             // case 'invoice_generated':
             //     $this->handleInvoiceGenerated($content['invoice']);
@@ -346,7 +356,8 @@ class ChargebeeWebhookController extends Controller
             //     break;
 
             default:
-                Log::info('Unhandled Chargebee event type: ' . $eventType);
+            Log::info('Unhandled Chargebee event type: ' . $eventType);
+            return response()->json(['status' => 'ignored'], 200);
         }
     }
 
