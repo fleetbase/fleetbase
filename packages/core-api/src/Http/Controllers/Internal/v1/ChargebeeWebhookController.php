@@ -65,7 +65,8 @@ class ChargebeeWebhookController extends Controller
                 $this->storeWebhookId($webhookId, $event);
             }
 
-            return response('OK', 200);
+            // return response('OK', 200);
+            return $response;
 
         } catch (\Exception $e) {
             DB::table('failed_webhooks')->insert([
