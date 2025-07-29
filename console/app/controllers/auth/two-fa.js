@@ -2,6 +2,7 @@ import Controller from '@ember/controller';
 import { tracked } from '@glimmer/tracking';
 import { action } from '@ember/object';
 import { inject as service } from '@ember/service';
+import { next } from '@ember/runloop';
 
 /**
  * Controller responsible for handling two-factor authentication.
@@ -150,7 +151,11 @@ export default class AuthTwoFaController extends Controller {
 
             // authenticate user
             return this.session.authenticate('authenticator:fleetbase', { authToken }).then(() => {
-                return this.router.transitionTo('console');
+                
+                // return this.router.transitionTo('console');
+                next(this, function() {
+                    this.router.transitionTo('console.fleet-ops');
+                });
             });
         } catch (error) {
             if (error.message.includes('Verification code has expired')) {
