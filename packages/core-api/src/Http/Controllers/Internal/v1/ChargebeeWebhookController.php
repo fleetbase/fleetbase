@@ -602,16 +602,16 @@ class ChargebeeWebhookController extends Controller
                     'user_id' => $user_new->id,
                 ]);
             }
-    
+
             // Store transaction record
             Payment::updateOrCreate(
                 ['gocardless_payment_id' => $transaction['id']],
                 [
                     'gocardless_customer_id' => $transaction['customer_id'],
-                    'subscription_id' => $subscriptionRecord->id ?? null ,
+                    'subscription_id' => $subscriptionRecord ? $subscriptionRecord->id : null,
                     'amount' => $transaction['amount'],
                     'company_plan_id' => null,
-                    'plan_id' => $plan->id,
+                    'plan_id' => $plan ? $plan->id : null,
                     'total_amount' => $transaction['amount'],
                     'currency_code' => $transaction['currency_code'],
                     'status' => 'completed',
@@ -620,11 +620,11 @@ class ChargebeeWebhookController extends Controller
                     'payment_metadata' => json_encode($transaction),
                     'payment_method' => 'direct_debit',
                     'payment_type' => 'subscription',
-                    'created_by_id' => $user_new->id,
+                    'created_by_id' => $user_new ? $user_new->id : null,
                     'is_recurring' => 1,
                 ]
             );
-    
+
             if ($subscription) {
                 $subscriptionRecord = Subscription::where('gocardless_subscription_id', $subscription['id'])->first();
                 if ($subscriptionRecord) {
@@ -638,7 +638,7 @@ class ChargebeeWebhookController extends Controller
                     ]);
                 }
             }
-    
+
             // Update user payment status - try multiple ways to find user
             $user = User::where('chargebee_customer_id', $transaction['customer_id'])->first();
             
@@ -677,7 +677,7 @@ class ChargebeeWebhookController extends Controller
                     ]);
                 }
             }
-    
+
             // If still no user found, retry with exponential backoff
             if (!$user) {
                 Log::info('User still not found for payment, starting retry mechanism...', [
@@ -744,7 +744,7 @@ class ChargebeeWebhookController extends Controller
                     ]);
                 }
             }
-    
+
             if ($user) {
                 $user->update(['payment_status' => 'success']);
                 Log::info('Updated user payment status to success', [
@@ -765,11 +765,11 @@ class ChargebeeWebhookController extends Controller
                 // and return a 400 status code
                 throw new \InvalidArgumentException($errorMessage, 400);
             }
-    
+
             Log::info('Payment processed successfully', [
                 'transaction_id' => $transaction['id']
             ]);
-    
+
         } catch (\InvalidArgumentException $e) {
             // Re-throw the custom exception to be handled by the calling webhook handler
             throw $e;
