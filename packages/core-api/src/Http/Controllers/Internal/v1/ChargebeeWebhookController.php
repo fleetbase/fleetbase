@@ -58,10 +58,10 @@ class ChargebeeWebhookController extends Controller
             }
 
             // Handle the event
-            $this->handleWebhookEvent($event);
+            $response =$this->handleWebhookEvent($event);
 
             // Store webhook ID to prevent duplicates
-            if ($webhookId) {
+            if ($webhookId && $response->getStatusCode() === 200) {
                 $this->storeWebhookId($webhookId, $event);
             }
 
