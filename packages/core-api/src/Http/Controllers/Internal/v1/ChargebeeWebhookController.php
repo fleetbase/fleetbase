@@ -602,7 +602,7 @@ class ChargebeeWebhookController extends Controller
                     'user_id' => $user_new->id,
                 ]);
             }
-
+    
             // Store transaction record
             Payment::updateOrCreate(
                 ['gocardless_payment_id' => $transaction['id']],
@@ -624,7 +624,7 @@ class ChargebeeWebhookController extends Controller
                     'is_recurring' => 1,
                 ]
             );
-
+    
             if ($subscription) {
                 $subscriptionRecord = Subscription::where('gocardless_subscription_id', $subscription['id'])->first();
                 if ($subscriptionRecord) {
@@ -638,7 +638,7 @@ class ChargebeeWebhookController extends Controller
                     ]);
                 }
             }
-
+    
             // Update user payment status - try multiple ways to find user
             $user = User::where('chargebee_customer_id', $transaction['customer_id'])->first();
             
@@ -677,7 +677,7 @@ class ChargebeeWebhookController extends Controller
                     ]);
                 }
             }
-
+    
             // If still no user found, retry with exponential backoff
             if (!$user) {
                 Log::info('User still not found for payment, starting retry mechanism...', [
@@ -744,7 +744,7 @@ class ChargebeeWebhookController extends Controller
                     ]);
                 }
             }
-
+    
             if ($user) {
                 $user->update(['payment_status' => 'success']);
                 Log::info('Updated user payment status to success', [
@@ -752,22 +752,32 @@ class ChargebeeWebhookController extends Controller
                     'transaction_id' => $transaction['id']
                 ]);
             } else {
-                Log::warning('User not found for payment transaction', [
+                Log::warning('User not found for payment transaction after all retry attempts', [
                     'customer_id' => $transaction['customer_id'],
                     'transaction_id' => $transaction['id']
                 ]);
+                
+                // Return 400 status with specific error message instead of continuing
+                $errorMessage = 'User not found for customer ID: ' . $transaction['customer_id'] . '. Transaction ID: ' . $transaction['id'];
+                Log::error('Payment processing failed: ' . $errorMessage);
+                
+                // Throw a custom exception that should be caught by your webhook handler
+                // and return a 400 status code
+                throw new \InvalidArgumentException($errorMessage, 400);
             }
-
+    
             Log::info('Payment processed successfully', [
                 'transaction_id' => $transaction['id']
             ]);
-
+    
+        } catch (\InvalidArgumentException $e) {
+            // Re-throw the custom exception to be handled by the calling webhook handler
+            throw $e;
         } catch (\Exception $e) {
             Log::error('Failed to handle payment succeeded: ' . $e->getMessage());
             throw $e;
         }
     }
-
     /**
      * Handle payment failed
      */
