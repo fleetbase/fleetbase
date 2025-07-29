@@ -310,6 +310,9 @@ class ChargebeeWebhookController extends Controller
                 try {
                     $this->handleSubscriptionCreated($content['subscription']);
                     return response()->json(['status' => 'success'], 200);
+                } catch (\InvalidArgumentException $e) {
+                    Log::error('Invalid subscription data: ' . $e->getMessage());
+                    return response()->json(['error' => $e->getMessage()], 400);
                 } catch (\Exception $e) {
                     Log::error('Subscription creation failed: ' . $e->getMessage());
                     return response()->json(['error' => 'Failed to process subscription'], 500);
