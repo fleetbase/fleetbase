@@ -192,6 +192,25 @@ export default class OperationsOrdersIndexViewController extends BaseController 
         return coordinates;
     }
 
+    /**
+     * Checks if the order meta object has any non-null values
+     * 
+     * @computed hasNonNullMetaValues
+     * @return {Boolean}
+     */
+    @computed('model.meta')
+    get hasNonNullMetaValues() {
+        const meta = this.model?.meta;
+
+        if (!meta || typeof meta !== 'object') {
+            return false;
+        }
+
+        // Check if any value in the meta object is not null
+        return Object.values(meta).some(value => value !== null);
+    }
+
+
     @task *loadOrderRelations(order) {
         yield order.loadTrackerData({}, { fromCache: true, expirationInterval: 10, expirationIntervalUnit: 'minute' });
         yield order.loadETA();

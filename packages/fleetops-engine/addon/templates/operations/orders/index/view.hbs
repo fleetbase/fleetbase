@@ -119,7 +119,7 @@
                         </div>
                         <span>{{t "fleet-ops.operations.orders.index.view.listen-socket-channel"}}</span>
                     </a> --}}
-                    {{#if @model.meta}}
+                    {{#if (and @model.meta this.hasNonNullMetaValues)}}
                     {{#let (cannot "fleet-ops view order") as |unauthorized|}}
                         <div>
                                 <a href="javascript:;" class="next-dd-item" {{on "click" (dropdown-fn dd this.viewOrderMeta @model)}} disabled={{unauthorized}}>
