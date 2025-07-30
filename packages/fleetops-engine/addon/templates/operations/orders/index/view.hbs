@@ -119,13 +119,14 @@
                         </div>
                         <span>{{t "fleet-ops.operations.orders.index.view.listen-socket-channel"}}</span>
                     </a> --}}
+                    {{#if @model.meta}}
                     {{#let (cannot "fleet-ops view order") as |unauthorized|}}
                         <div>
-                            <a href="javascript:;" class="next-dd-item" {{on "click" (dropdown-fn dd this.viewOrderMeta @model)}} disabled={{unauthorized}}>
-                                <div class="w-6">
-                                    <FaIcon @icon="table" />
-                                </div>
-                                <span>{{t "fleet-ops.operations.orders.index.view.view-metadata"}}</span>
+                                <a href="javascript:;" class="next-dd-item" {{on "click" (dropdown-fn dd this.viewOrderMeta @model)}} disabled={{unauthorized}}>
+                                    <div class="w-6">
+                                        <FaIcon @icon="table" />
+                                    </div>
+                                    <span>{{t "fleet-ops.operations.orders.index.view.view-metadata"}}</span>
                             </a>
                             {{#if unauthorized}}
                                 <Attach::Tooltip @class="clean" @animation="scale" @placement="right">
@@ -134,6 +135,7 @@
                             {{/if}}
                         </div>
                     {{/let}}
+                    {{/if}}
                     {{#unless @model.isCanceled}}
                         {{#let (cannot "fleet-ops cancel order") as |unauthorized|}}
                             <div class="next-dd-menu-seperator"></div>
