@@ -91,7 +91,6 @@ class OnboardController extends Controller
         $user->assignSingleRole('Administrator');
 
         // send account created event
-        event(new AccountCreated($user, $company));
 
         // create auth token
         $token = $user->createToken($user->uuid);
