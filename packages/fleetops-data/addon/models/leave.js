@@ -10,7 +10,8 @@ export default class LeaveModel extends Model {
 
     // Foreign Keys
     @attr('string') driver_uuid;
-    @attr('string') processed_by; // UUID of the user who processed
+    @attr('string') processed_by; // ID of the user who processed
+    @attr('string') processed_by_name;
 
     // Relationships (if your API includes these as relationships)
     @belongsTo('driver', { async: true, inverse: null }) driver;
