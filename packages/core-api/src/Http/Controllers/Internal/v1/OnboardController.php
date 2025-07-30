@@ -586,7 +586,8 @@ class OnboardController extends Controller
                 'subscription_status' => 'active',
                 'subscribed_at' => now()
             ]);
-
+            // send account created event
+            event(new AccountCreated($user, $user->company));
             return response()->json([
                 'success' => true,
                 'message' => 'Billing information updated successfully'
