@@ -971,7 +971,7 @@ trait HasApiControllerBehavior
     private function driverAvailability($order, $driver_uuid, $timezone)
     {
         // Check if driver exists
-
+        $leaveStatus = config('services.leave_status', 'Approved');
         try {
             $driver = Driver::where('uuid', $driver_uuid)
                     ->whereNull('deleted_at')->first();
@@ -1007,6 +1007,7 @@ trait HasApiControllerBehavior
                     });
                 })
                 ->whereNull('deleted_at')
+                ->where('status', $leaveStatus)
                 ->exists();
         
             if ($leaveRequest) {
