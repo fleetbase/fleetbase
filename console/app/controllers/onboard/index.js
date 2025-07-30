@@ -8,6 +8,7 @@ import Changeset from 'ember-changeset';
 import ENV from '@fleetbase/console/config/environment';
 import showErrorOnce from '@fleetbase/console/utils/show-error-once';
 import { inject as intlService } from '@ember/service';
+import { parsePhoneNumberFromString } from 'libphonenumber-js';
 
 export default class OnboardIndexController extends Controller {
     /**
@@ -662,6 +663,24 @@ export default class OnboardIndexController extends Controller {
             const hasEmptyRequired = requiredFields.some((field) => !this[field] || this[field].toString().trim() === '');
             if (hasEmptyRequired) {
                 showErrorOnce(this, this.notifications, this.intl.t('validation.form_invalid'));
+                return;
+            }
+            const rawPhone = this.phone?.toString().trim();
+            // Step 1: Check if phone is empty
+            if (!rawPhone) {
+                showErrorOnce(this, this.notifications, this.intl.t('validation.form_invalid'));
+                return;
+            }
+            // Step 2: Check if phone starts with '+' (country code presence)
+            if (!rawPhone.startsWith('+')) {
+                showErrorOnce(this, this.notifications, this.intl.t('validation.invalid_country_code'));
+                return;
+            }
+            // Step 3: Parse phone number using libphonenumber-js
+            const phoneNumber = parsePhoneNumberFromString(rawPhone);
+            // Step 4: Validate phone number
+            if (!phoneNumber) {
+                showErrorOnce(this, this.notifications, this.intl.t('validation.invalid_country_code'));
                 return;
             }
             // Otherwise, show the exact error
