@@ -93,8 +93,8 @@ module.exports = function (environment) {
             baseUrl: chargebeeSite + 'hosted_pages/checkout',
             itemPriceIds: {
               basic: getenv('CHARGEBEE_BASIC_PLAN_ID', 'Basic-GBP-Monthly'),
-              appUser: getenv('CHARGEBEE_WEB_USERS_ADDON_ID', 'no_of_webusers-GBP-Monthly'),
-              webUser: getenv('CHARGEBEE_APP_USERS_ADDON_ID', 'No-of-App-User-GBP-Monthly')
+              appUser: getenv('CHARGEBEE_APP_USERS_ADDON_ID', 'No-of-App-User-GBP-Monthly'),
+              webUser: getenv('CHARGEBEE_WEB_USERS_ADDON_ID', 'no_of_webusers-GBP-Monthly')
             }
         },
     };
