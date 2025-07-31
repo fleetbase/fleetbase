@@ -18,75 +18,47 @@ class LeaveRequestController extends Controller
      */
     public function list()
     {
-        // Get all leave requests
-        $perPage = request()->input('per_page', 500); // Default 15 items per page
+        $perPage = request()->input('per_page', 500);
         $page = request()->input('page', 1);
-        // Get search query
-        $leave_request_query = request()->input('query', '');
-        
-        // Get filter parameters
-        $filters = request()->only([
-            'status',
-            'leave_type', 
-            'driver_name',
-            'start_date',
-            'end_date',
-            'created_at'
-        ]);
-        $userUuid = request()->input('user_uuid');
-        $status = request()->input('status');
-        $query = LeaveRequest::with(['user', 'processedBy'])
-                ->whereNull('deleted_at')
-                ->where([
-                    ['company_uuid', '=', Auth::getCompany()->uuid],
-                    ['record_status', '=', 1],
-                    ['deleted', '=', 0],
-                    ])
-                ->orderBy('id', 'desc');
-        if (!empty($leave_request_query)) {
-            $query->where(function($q) use ($leave_request_query) {
-                $q->where('reason', 'like', '%' . $leave_request_query . '%')
-                    ->orWhere('leave_type', 'like', '%' . $leave_request_query . '%')
-                    ->orWhere('status', 'like', '%' . $leave_request_query . '%')
-                    ->orWhere('public_id', 'like', '%' . $leave_request_query . '%')
-                    ->orWhereHas('user', function($userQuery) use ($leave_request_query) {
-                        $userQuery->where('name', 'like', '%' . $leave_request_query . '%');
-                    });
-            });
-        }
-        // if ($userUuid) {
-        //     $query->where('user_uuid', $userUuid);
-        // }
-        // if ($status) {
-        //     $query->where('status', $status);
-        // }
-        if (!empty($filters['status'])) {
-            $query->where('status', $filters['status']);
-        }
-        
-        if (!empty($filters['leave_type'])) {
-            $query->where('leave_type', $filters['leave_type']);
-        }
-        
-        if (!empty($filters['driver_name'])) {
-            $query->whereHas('user', function($q) use ($filters) {
-                $q->where('name', 'like', '%' . $filters['driver_name'] . '%');
-            });
-        }
 
-        // Date filters
-        if (!empty($filters['start_date'])) {
-            $query->whereDate('start_date', '>=', $filters['start_date']);
+        // Request filters and their actual DB column mappings
+        $filterMap = [
+            'status'      => 'status',
+            'leave_type'  => 'leave_type',
+            'driver'      => 'driver_uuid',  // Map 'driver' → 'driver_uuid'
+            'start_date'  => 'start_date',
+            'end_date'    => 'end_date',
+            'created_at'  => 'created_at',
+        ];
+
+    $dateFields = [ 'created_at'];
+
+
+        $query = LeaveRequest::with(['user', 'processedBy'])
+            ->whereNull('deleted_at')
+            ->where([
+                ['company_uuid', '=', Auth::getCompany()->uuid],
+                ['record_status', '=', 1],
+                ['deleted', '=', 0],
+            ])
+            ->orderBy('id', 'desc');
+
+        // 🔍 Apply filters with mapped columns
+    foreach ($filterMap as $requestKey => $columnName) {
+        $value = request()->input($requestKey);
+        if (!is_null($value)) {
+            if (in_array($requestKey, $dateFields)) {
+                $query->whereDate($columnName, $value);  // compare only the date part
+            } else {
+                $query->where($columnName, $value);
+            }
         }
-        
-        if (!empty($filters['end_date'])) {
-            $query->whereDate('end_date', '<=', $filters['end_date']);
-        }
-        // $leaveRequests = $query->get();
-        
-        if (request()->has('per_page') && $perPage > 0) {
+    }
+
+
+        // 📄 Paginate or return all
+        if ($perPage > 0) {
             $leaveRequests = $query->paginate($perPage, ['*'], 'page', $page);
-            
             return response()->json([
                 'success' => true,
                 'data' => $leaveRequests->items(),
@@ -104,7 +76,7 @@ class LeaveRequestController extends Controller
             return response()->json([
                 'success' => true,
                 'data' => $leaveRequests,
-                "total" => $leaveRequests->count(),
+                'total' => $leaveRequests->count(),
             ]);
         }
         
