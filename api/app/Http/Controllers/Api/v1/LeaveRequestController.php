@@ -39,6 +39,7 @@ class LeaveRequestController extends Controller
             ->where([
                 ['company_uuid', '=', Auth::getCompany()->uuid],
                 ['record_status', '=', 1],
+                ['deleted', '=', 0],
             ])
             ->orderBy('id', 'desc');
 
