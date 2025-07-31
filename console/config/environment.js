@@ -6,13 +6,15 @@ const asArray = require('./utils/as-array');
 const { version } = require('../package');
 
 module.exports = function (environment) {
+    let awsFilePath = 'fleetyes/dev';
+
     let chargebeeSite = getenv('CHARGEBEE_SITE', 'https://fleetyes-test.chargebee.com/');
-    let awsFilePath = getenv('AWS_FILE_PATH', 'fleetyes/dev');
-    if (!awsFilePath) {
-        // Fallback to environment-based logic if not explicitly set
-        awsFilePath = environment === 'production' ? 'fleetyes/live' : 'fleetyes/dev'; // or whatever default you want
+    // console.log('chargebeeSite', getenv('CHARGEBEE_SITE'));
+
+    // Change the FILE_PATH if environment is production
+    if (environment === 'production') {
+        awsFilePath = 'fleetyes/live';
     }
-    const awsBucket = getenv('AWS_BUCKET', 'acsdevbucket');
 
     const ENV = {
         modulePrefix: '@fleetbase/console',
@@ -70,7 +72,7 @@ module.exports = function (environment) {
         AWS: {
             FILE_PATH: awsFilePath,
             DISK: 's3',
-            BUCKET: awsBucket,
+            BUCKET: 'acsdevbucket',
         },
 
         'ember-simple-auth': {
