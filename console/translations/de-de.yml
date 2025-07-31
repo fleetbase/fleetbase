@@ -248,6 +248,11 @@ statuses:
     vehicle: Fahrzeug
     driver: Fahrer
     route: Route
+    approve: Genehmigen
+    reject: Ablehnen
+    vacation: Urlaub
+    sick: Krank
+    other: Andere
     payload-cargo: Nutzlastfracht
     mechanical-problems: Mechanische Probleme
     cosmetic-damages: Kosmetische Schäden
@@ -1108,6 +1113,7 @@ fleet-ops:
         places: Orte
         fuel-reports: Kraftstoffverfolgung
         issues: Probleme
+        leaves: Abwesenheiten
         title: Neue Bestellung erstellen
         settings: Einstellungen
         order-config: Bestellkonfiguration

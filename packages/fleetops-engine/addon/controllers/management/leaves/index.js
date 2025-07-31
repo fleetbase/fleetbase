@@ -115,7 +115,7 @@ export default class ManagementLeavesIndexController extends BaseController {
             sortable: true,
             filterable: true,
             filterComponent: 'filter/select',
-            filterOptions: [this.intl.t('leaves.sick'), this.intl.t('leaves.vacation'), this.intl.t('leaves.other')], // adjust as needed
+            filterOptions: ['sick', 'vacation', 'other'], // adjust as needed
         },
         {
             label: this.intl.t('leaves.status'),
@@ -125,7 +125,7 @@ export default class ManagementLeavesIndexController extends BaseController {
             sortable: true,
             filterable: true,
             filterComponent: 'filter/select',
-            filterOptions: [this.intl.t('leaves.submitted'), this.intl.t('leaves.approve'), this.intl.t('leaves.reject')], // adjust as needed
+            filterOptions: ['submitted', 'approve', 'reject'], // adjust as needed
         },
         {
             label: this.intl.t('leaves.processed_by_name'),

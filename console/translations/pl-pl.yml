@@ -307,6 +307,12 @@ statuses:
   order_accepted: Zaakceptowano
   order_started: Rozpoczęto
 
+  approve: zatwierdzić
+  reject: odrzucić
+  vacation: urlop
+  sick: choroba
+  other: inny
+
 fuelReportTypes:
   Fuel: Paliwo
   Parking: Parking
@@ -1104,6 +1110,7 @@ fleet-ops:
         parking: Monitorowanie parkingu
         toll-reports: Koszty opłat drogowych
         issues: Problemy
+        leaves: Abwesenheiten
         title: Utwórz zamówienie
         settings: Ustawienia
         order-config: Konfiguracja zamówienia
