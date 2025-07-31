@@ -304,6 +304,12 @@ statuses:
     order_accepted: Accettato
     order_started: Avviato
 
+    approve: Approvare
+    reject: Rifiutare
+    vacation: Vacanze
+    sick: Malattia
+    other: Altro
+
 fuelReportTypes:
     Fuel: "Carburante"
     Parking: "Parcheggio"
@@ -954,6 +960,7 @@ fleet-ops:
         places: Luoghi
         fuel-reports: Monitoraggio Carburante
         issues: Problemi
+        leaves: Permessi
         title: Crea nuovo ordine
         settings: Impostazioni
         order-config: Configurazione Ordine

@@ -303,6 +303,12 @@ statuses:
     order_accepted: Đã chấp nhận
     order_started: Đã bắt đầu
 
+    approve: chấp thuận
+    reject: từ chối
+    vacation: nghỉ phép
+    sick: ốm
+    other: khác
+
 fuelReportTypes:
     Fuel: "Nhiên liệu"
     Parking: "Đậu xe"
@@ -959,6 +965,7 @@ fleet-ops:
         parking: Giám sát bãi đỗ xe
         toll-reports: Chi phí trạm thu phí
         issues: Vấn đề
+        leaves: Nghỉ phép
         title: Tạo đơn hàng
         settings: Cài đặt
         order-config: Cấu hình đơn hàng
