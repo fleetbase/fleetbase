@@ -122,7 +122,7 @@
                     <ModelSelect
                         @modelName="vehicle"
                         @selectedModel={{@order.vehicle_assigned}}
-                        @query={{this.driversQuery}}
+                        @query={{hash order_uuid=@options.order.id}}
                         @placeholder={{t "fleet-ops.component.modals.order-form.select-vehicle"}}
                         @triggerClass="form-select form-input"
                         @infiniteScroll={{false}}
