@@ -1,7 +1,6 @@
 <div class="waypoint-cell">
-  {{#if this.hasMultipleWaypoints}}
+  {{#if (and this.displayWaypoints.length this.routeSegments.length)}}
     <div class="dropdown-manual" {{did-insert this.registerClickOutside}}>
-      
       {{!-- Collapsed view (last waypoint + caret) --}}
       {{#unless this.isDropdownOpen}}
         <span class="main-waypoint" {{on "click" this.toggleDropdown}}>
@@ -9,14 +8,13 @@
         </span>
       {{/unless}}
 
-      {{!-- Dropdown list (with all waypoints) --}}
+      {{!-- Dropdown list (with all waypoints, even if only one) --}}
       {{#if this.isDropdownOpen}}
         <ul class="dropdown-list transition">
           {{#each this.displayWaypoints as |waypoint index|}}
             <li>
-              {{waypoint}}{{#if this.routeSegments.length}}
-                    <span class="route-segment">({{get (get this.routeSegments index) "public_id"}})</span>
-                  {{/if}}
+              {{waypoint}}
+              <span class="route-segment">({{get (get this.routeSegments index) "public_id"}})</span>
               {{#if (not-eq index (dec this.displayWaypoints.length))}}
                 <div class="down-arrow">↓</div>
               {{/if}}
@@ -24,9 +22,8 @@
           {{/each}}
         </ul>
       {{/if}}
-
     </div>
-  {{else if this.singleWaypoint}}
-    <span class="waypoint-single">{{this.singleWaypoint}}</span>
+  {{else if this.displayWaypoints.length}}
+    <span class="main-waypoint">{{this.lastWaypoint}}</span>
   {{/if}}
 </div>
