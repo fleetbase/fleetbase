@@ -72,7 +72,7 @@
         </h2>
     </div>
 
-    <form {{on "submit" this.startOnboard}} class="onbord-form">
+    <form {{on "submit" this.startOnboard}} class="onbord-form" autocomplete="on">
         {{#if this.error}}
             <InfoBlock @icon="exclamation-triangle" @text={{this.error}} class="mb-6 px-3 py-2 bg-red-300 text-red-900" @textClass="text-red-900" />
         {{/if}}
@@ -83,7 +83,7 @@
             <InputGroup @name={{t "onboard.index.organization-name"}} @value={{this.organization_name}} @inputClass="input-lg" @placeholder="" />
         </div>
         <div class="mb-2">
-        <InputGroup @name={{t "onboard.index.your-email"}} @type="email" @value={{this.email}} @inputClass="input-lg" @placeholder="" />
+        <InputGroup @name={{t "onboard.index.your-email"}} @type="email" @value={{this.email}} @inputClass="input-lg" @placeholder="" autocomplete="username" />
         </div>
         {{!-- Phone and Language - Two Column Layout --}}
         <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-4">
@@ -129,10 +129,10 @@
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-4">
            <div>
-                <PasswordField @value={{this.password}} @type="password" @required={{true}} @placeholder="" @labeltext="{{t "onboard.index.password"}}" class="input-lg" />
+                <PasswordField @value={{this.password}} @type="password" @required={{true}} @placeholder="" @labeltext="{{t "onboard.index.password"}}" class="input-lg" autocomplete="new-password" />
             </div>
             <div>
-                <PasswordField @value={{this.password_confirmation}} @type="password" @required={{true}} @placeholder="" @labeltext="{{t "onboard.index.confirm-password"}}" class="input-lg" />
+                <PasswordField @value={{this.password_confirmation}} @type="password" @required={{true}} @placeholder="" @labeltext="{{t "onboard.index.confirm-password"}}" class="input-lg" autocomplete="new-password" />
             </div>
         </div>
 
