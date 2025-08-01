@@ -682,6 +682,9 @@ class Place extends Model
             'location'      => ['alias' => ['position']],
             'latitude'      => ['alias' => ['lat', 'x']],
             'longitude'     => ['alias' => ['lon', 'lng', 'long', 'y']],
+            'code'          => ['alias' => ['code']],
+            'country'       => ['alias' => ['country']],
+            'name'          => ['alias' => ['name']],   
         ];
         $address   = '';
         $latitude  = null;
