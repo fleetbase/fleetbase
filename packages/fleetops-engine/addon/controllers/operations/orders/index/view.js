@@ -601,14 +601,14 @@ export default class OperationsOrdersIndexViewController extends BaseController 
                     },
                     onHighlightStarted: scrollElementIntoView,
                 },
-                {
-                    element: '.new-order-comments .next-content-panel-container',
-                    popover: {
-                        title: this.intl.t('fleetbase.orders.tour.comments_tab.title'),
-                        description: this.intl.t('fleetbase.orders.tour.comments_tab.description'),
-                    },
-                    onHighlightStarted: scrollElementIntoView,
-                },
+                // {
+                //     element: '.new-order-comments .next-content-panel-container',
+                //     popover: {
+                //         title: this.intl.t('fleetbase.orders.tour.comments_tab.title'),
+                //         description: this.intl.t('fleetbase.orders.tour.comments_tab.description'),
+                //     },
+                //     onHighlightStarted: scrollElementIntoView,
+                // },
                 {
                     element: '.dispatch-order',
                     popover: {

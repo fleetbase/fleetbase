@@ -125,7 +125,7 @@ export default class ManagementLeavesIndexController extends BaseController {
             sortable: true,
             filterable: true,
             filterComponent: 'filter/select',
-            filterOptions: ['submitted', 'approve', 'reject'], // adjust as needed
+            filterOptions: ['submitted', 'approved', 'rejected'], // adjust as needed
         },
         {
             label: this.intl.t('leaves.processed_by_name'),

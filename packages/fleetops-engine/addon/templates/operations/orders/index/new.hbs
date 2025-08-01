@@ -21,12 +21,12 @@
                         </div>
                         <span>{{t "fleet-ops.operations.orders.index.new.create-new-place"}}</span>
                     </a>
-                    <a href="javascript:;" class="next-dd-item" {{on "click" (dropdown-fn dd this.addEntity)}} disabled={{cannot "fleet-ops create entity"}}>
+                    {{!-- <a href="javascript:;" class="next-dd-item" {{on "click" (dropdown-fn dd this.addEntity)}} disabled={{cannot "fleet-ops create entity"}}>
                         <div class="w-7 flex-grow-0 flex-shrink-0">
                             <FaIcon @icon="box" />
                         </div>
                         <span>{{t "fleet-ops.operations.orders.index.new.add-order"}}</span>
-                    </a>
+                    </a> --}}
                     <a href="javascript:;" class="next-dd-item" {{on "click" (dropdown-fn dd this.editMetaData)}}>
                         <div class="w-7 flex-grow-0 flex-shrink-0">
                             <FaIcon @icon="table" />
