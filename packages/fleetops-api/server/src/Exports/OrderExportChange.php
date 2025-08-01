@@ -124,7 +124,7 @@ class OrderExportChange implements FromCollection, WithHeadings, ShouldAutoSize,
             // Prepare the shared fields
             $tripId = $order->public_id;
             $blockId = $order->internal_id;
-            $driverName = $order->driver_name ?? '';
+            $driverName = ucwords(strtolower($order->driver_name ?? ''));
             $vehiclePlateNumber = $order->vehicleAssigned?->plate_number ?? '';
             $vehicleType = $order->vehicleAssigned?->type ?? '';
             $startDate = $order->scheduled_at ? Carbon::parse($order->scheduled_at)->format('d/m/Y H:i') : '';
@@ -133,7 +133,7 @@ class OrderExportChange implements FromCollection, WithHeadings, ShouldAutoSize,
 
             // Create lane information from waypoints
             $segmentLane = '';
-            if ($waypoints->isEmpty()) {
+            if ($waypoints instanceof Collection && $waypoints->isEmpty()) {
                 $segmentLane = ($order->payload->pickup->code ?? '') . '->' . ($order->payload->dropoff->code ?? '');
             }
 
