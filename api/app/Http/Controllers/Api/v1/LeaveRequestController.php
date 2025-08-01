@@ -29,9 +29,10 @@ class LeaveRequestController extends Controller
             'start_date'  => 'start_date',
             'end_date'    => 'end_date',
             'created_at'  => 'created_at',
+            'user_uuid'   => 'user_uuid',
         ];
 
-    $dateFields = [ 'created_at'];
+        $dateFields = [ 'created_at'];
 
 
         $query = LeaveRequest::with(['user', 'processedBy'])
