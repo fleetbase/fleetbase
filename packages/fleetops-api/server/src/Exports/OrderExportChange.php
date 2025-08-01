@@ -101,7 +101,7 @@ class OrderExportChange implements FromCollection, WithHeadings, ShouldAutoSize,
 
     public function collection(): Collection
     {
-        $query = Order::where('company_uuid', session('company'));
+        $query = Order::where('company_uuid', session('company'))->whereNull('deleted_at');
 
         if (!empty($this->selections)) {
             $query = $query->whereIn('uuid', $this->selections);
@@ -116,7 +116,7 @@ class OrderExportChange implements FromCollection, WithHeadings, ShouldAutoSize,
             'fleets',
             'createdBy',
             'updatedBy',
-        ])->get();
+        ])->OrderBy('created_at', 'desc')->get();
 
         $rows = collect();
 
@@ -126,19 +126,17 @@ class OrderExportChange implements FromCollection, WithHeadings, ShouldAutoSize,
             $blockId = $order->internal_id;
             $driverName = $order->driver_name ?? '';
             $vehiclePlateNumber = $order->vehicleAssigned?->plate_number ?? '';
-            $vehicleType = $order->vehicleAssigned?->type ?? 'Tractor';
+            $vehicleType = $order->vehicleAssigned?->type ?? '';
             $startDate = $order->scheduled_at ? Carbon::parse($order->scheduled_at)->format('d/m/Y H:i') : '';
             $waypoints = $order->payload?->waypoints;
             $driver_type = $order->driver_type ?? 'SINGLE_DRIVER';
 
             // Create lane information from waypoints
-            $lane = '';
-            if ($waypoints && count($waypoints) >= 2) {
-                $sortedWaypoints = $waypoints->sortBy('order')->values();
-                $firstWaypoint = $sortedWaypoints->first();
-                $lastWaypoint = $sortedWaypoints->last();
-                $lane = ($firstWaypoint->address ?? '') . '->' . ($lastWaypoint->address ?? '');
+            $segmentLane = '';
+            if ($waypoints->isEmpty()) {
+                $segmentLane = ($order->payload->pickup->code ?? '') . '->' . ($order->payload->dropoff->code ?? '');
             }
+
 
             // For each route segment, create a row
             if ($order->routeSegments && $waypoints && count($waypoints) >= 2) {
@@ -148,7 +146,7 @@ class OrderExportChange implements FromCollection, WithHeadings, ShouldAutoSize,
                     $trailer_id = $segment->trailer_id ?? '';
                     
                     // Create segment-specific lane if available
-                    $segmentLane = $lane; // Use default lane or create segment-specific
+                    $segmentLane = $segment->facility_sequence ?? '';
                     
                     $rows->push([
                         $blockId,                    // Block ID
@@ -161,7 +159,7 @@ class OrderExportChange implements FromCollection, WithHeadings, ShouldAutoSize,
                         '',                          // Driver 2 (if team)
                         $vehicleType,                // Vehicle Type
                         $vehiclePlateNumber,         // License Plate #
-                        'GB',                        // Country Code
+                        '',                        // Country Code
                         $equipment_type,             // Equipment Type
                         $trailer_id,                 // Trailer ID
                         ''                           // Unscheduled Drop (Yes/No)
@@ -173,14 +171,14 @@ class OrderExportChange implements FromCollection, WithHeadings, ShouldAutoSize,
                     $blockId,                    // Block ID
                     $tripId,                     // Trip ID
                     '',                          // Load ID
-                    $lane,                       // Lane
+                    $segmentLane,                       // Lane
                     $startDate,                  // Arrival Start Time
                     $driver_type,                // Driver type
                     $driverName,                 // Driver 1
                     '',                          // Driver 2 (if team)
                     $vehicleType,                // Vehicle Type
                     $vehiclePlateNumber,         // License Plate #
-                    'GB',                        // Country Code (default)
+                    '',                        // Country Code (default)
                     '',                          // Equipment Type
                     '',                          // Trailer ID
                     ''                           // Unscheduled Drop (Yes/No)
