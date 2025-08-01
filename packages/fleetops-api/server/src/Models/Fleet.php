@@ -223,12 +223,15 @@ class Fleet extends Model
 
         // Get fleet columns
         $name  = Utils::or($row, ['name', 'fleet', 'fleet_name']);
+        $task  = Utils::or($row, ['task', 'fleet_task']);
 
         // Create fleet
         $fleet = new static([
             'company_uuid' => session('company'),
             'name'         => $name,
             'status'       => 'active',
+            'task'         => $task,
+            'parent_fleet_uuid' => Utils::or($row, ['parent_fleet']),
         ]);
 
         if ($saveInstance === true) {

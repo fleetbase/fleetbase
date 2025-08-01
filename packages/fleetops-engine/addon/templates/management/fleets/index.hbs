@@ -31,7 +31,7 @@
         </DropdownButton>
     {{/if}}
     <Button @customClass="create-fleet-btn" @icon="plus" @iconPrefix="fas" @type="primary" @text={{t "fleet-ops.common.new"}} class="mr-2" @onClick={{this.createFleet}} @permission="fleet-ops create fleet" />
-    {{!-- <Button
+    <Button
         @icon="upload"
         @type="magic"
         @text={{t "fleet-ops.common.import"}}
@@ -39,7 +39,7 @@
         @onClick={{this.importFleets}}
         @permission="fleet-ops import fleet"
         class="mr-2"
-    /> --}}
+    />
     <Button @icon="long-arrow-up" @iconClass="rotate-icon-45" @text={{t "fleet-ops.common.export"}} @onClick={{this.exportFleets}} @permission="fleet-ops export fleet" />
 </Layout::Section::Header>
 
