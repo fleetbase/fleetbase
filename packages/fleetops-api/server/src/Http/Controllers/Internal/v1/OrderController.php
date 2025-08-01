@@ -1038,6 +1038,7 @@ class OrderController extends FleetOpsController
                                     "Trip {$tripId}: VR ID already exists: " . implode(', ', $existingVrIds),
                                     (string)$tripId
                                 ];
+                                $tripHasErrors = true;
                                 DB::rollback();
                                 continue;
                             }
@@ -1070,7 +1071,10 @@ class OrderController extends FleetOpsController
                             }
                         }
                     }
-
+                    if ($tripHasErrors) {
+                        DB::rollback();
+                        continue;
+                    }
                     // NEW LOGIC: Build proper waypoint sequence without duplicates
                     $uniqueWaypointSequence = [];
 
