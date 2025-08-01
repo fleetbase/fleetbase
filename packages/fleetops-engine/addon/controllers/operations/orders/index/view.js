@@ -207,7 +207,8 @@ export default class OperationsOrdersIndexViewController extends BaseController 
         }
 
         // Check if any value in the meta object is not null
-        return Object.values(meta).some(value => value !== null);
+        return Object.values(meta).some(value => value != null); // != catches both null and undefined
+
     }
 
 
