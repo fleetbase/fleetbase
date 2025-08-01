@@ -23,6 +23,7 @@ class LeaveRequestController extends Controller
 
         // Request filters and their actual DB column mappings
         $filterMap = [
+            'id'          => 'public_id',
             'status'      => 'status',
             'leave_type'  => 'leave_type',
             'driver'      => 'driver_uuid',  // Map 'driver' → 'driver_uuid'
