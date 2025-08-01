@@ -44,6 +44,7 @@ use Illuminate\Support\Facades\Storage;
 use Fleetbase\FleetOps\Models\Fleet;
 use Fleetbase\FleetOps\Models\ImportLog;
 use Fleetbase\FleetOps\Models\OrderStatus;
+use Fleetbase\FleetOps\Exports\OrderExportChange;
 class OrderController extends FleetOpsController
 {
     /**
@@ -912,7 +913,8 @@ class OrderController extends FleetOpsController
         $selections   = $request->array('selections');
         $fileName     = trim(Str::slug('order-' . date('Y-m-d-H:i')) . '.' . $format);
         try{
-             return Excel::download(new OrderExport($selections), $fileName);
+            //  return Excel::download(new OrderExport($selections), $fileName);
+             return Excel::download(new OrderExportChange($selections), $fileName);
         }
         catch (\Exception $e) {
             return response()->error('Failed to export orders: ' . $e->getMessage());
@@ -980,6 +982,7 @@ class OrderController extends FleetOpsController
                 // Use database transaction for each trip
                 DB::beginTransaction();
                 try {
+                    $firstRow = $rows[0]; // or $firstRow = $rows->first();
                     $yardArrivalDates = [];
                     $routeRows = [];
                     $tripHasErrors = false;
