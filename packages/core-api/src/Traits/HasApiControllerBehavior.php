@@ -386,13 +386,15 @@ trait HasApiControllerBehavior
                         ->first();
             if ($order) {
                 $timezone = $request->timezone ?? 'UTC';
+                if (!empty($order->fleet_uuid) || !empty($order->sub_fleet_uuid)) {
                     $data = $data->filter(function ($driver) use ($order) {
-                    // Get fleet_uuids that this driver belongs to using ORM relationship
-                    $driverFleetUuids = $driver->fleets()->pluck('fleet_uuid')->toArray();
-                    // Check if any of the driver's fleets match order's fleet_uuid or sub_fleet_uuid
-                    return in_array($order->fleet_uuid, $driverFleetUuids) || 
-                        in_array($order->sub_fleet_uuid, $driverFleetUuids);
-                });
+                        // Get fleet_uuids that this driver belongs to using ORM relationship
+                        $driverFleetUuids = $driver->fleets()->pluck('fleet_uuid')->toArray();
+                        // Check if any of the driver's fleets match order's fleet_uuid or sub_fleet_uuid
+                        return in_array($order->fleet_uuid, $driverFleetUuids) || 
+                            in_array($order->sub_fleet_uuid, $driverFleetUuids);
+                    });
+                }
                 // Filter drivers based on availability
                 $data = $data->map(function ($driver) use ($order, $timezone) {
                     $availability = $this->driverAvailability($order, $driver->uuid, $timezone);
@@ -419,14 +421,16 @@ trait HasApiControllerBehavior
         
             if ($order) {
                 // Filter vehicles based on the order's fleet_uuid or sub_fleet_uuid
-                $data = $data->filter(function ($vehicle) use ($order) {
-                    // Get fleet_uuids that this vehicle belongs to using ORM relationship
-                    $vehicleFleetUuids = $vehicle->fleets()->pluck('fleet_uuid')->toArray();
-                    
-                    // Check if any of the vehicle's fleets match order's fleet_uuid or sub_fleet_uuid
-                    return in_array($order->fleet_uuid, $vehicleFleetUuids) || 
-                        in_array($order->sub_fleet_uuid, $vehicleFleetUuids);
-                });
+                if (!empty($order->fleet_uuid) || !empty($order->sub_fleet_uuid)) {
+                    $data = $data->filter(function ($vehicle) use ($order) {
+                        // Get fleet_uuids that this vehicle belongs to using ORM relationship
+                        $vehicleFleetUuids = $vehicle->fleets()->pluck('fleet_uuid')->toArray();
+                        
+                        // Check if any of the vehicle's fleets match order's fleet_uuid or sub_fleet_uuid
+                        return in_array($order->fleet_uuid, $vehicleFleetUuids) || 
+                            in_array($order->sub_fleet_uuid, $vehicleFleetUuids);
+                    });
+                }
             }    
         }
         if ($single) {
