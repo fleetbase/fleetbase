@@ -1284,13 +1284,13 @@ class OrderController extends FleetOpsController
                             'bid_id' => $firstRow['bid_id'] ?? null,
                             // Convert 'yes' to 1, anything else to 0/null
                             'spot_work' => (isset($firstRow['spot_work']) && strtolower(trim($firstRow['spot_work'])) === 'yes') ? 1 : 0,
-                            'meta' => [
-                                'vehicle_id' => $firstRow['vehicle_id'] ?? null,
-                                'carrier' => $firstRow['carrier'] ?? null,
-                                'subcarrier' => $firstRow['subcarrier'] ?? null,
-                                'equipment_type' => $firstRow['equipment_type'] ?? null,
-                                'cpt' => $firstRow['cpt'] ?? null
-                            ],
+                            // 'meta' => [
+                            //     'vehicle_id' => $firstRow['vehicle_id'] ?? null,
+                            //     'carrier' => $firstRow['carrier'] ?? null,
+                            //     'subcarrier' => $firstRow['subcarrier'] ?? null,
+                            //     'equipment_type' => $firstRow['equipment_type'] ?? null,
+                            //     'cpt' => $firstRow['cpt'] ?? null
+                            // ],
                             'payload' => [
                                 'waypoints' => []
                             ]
