@@ -432,13 +432,21 @@ class SubscriptionUpdateService
 
     /**
      * Process subscription updates for subscriptions due in 3 days
-     *
+     * 
+     * @param string|null $testDate Optional date in Y-m-d format for testing (e.g., '2025-08-29')
      * @return array
      */
-    public function processSubscriptionUpdates(): array
+    public function processSubscriptionUpdates(string $testDate = null): array
     {
         try {
-            $dateIn3Days = Carbon::now()->addDays(3)->format('Y-m-d');
+            // Use test date if provided, otherwise calculate 3 days from now
+            $dateIn3Days = $testDate ?? Carbon::now()->addDays(3)->format('Y-m-d');
+            
+            Log::info('Processing subscriptions', [
+                'target_date' => $dateIn3Days,
+                'is_test_date' => $testDate !== null,
+                'current_date' => Carbon::now()->format('Y-m-d')
+            ]);
             $subscriptionsDue = $this->getSubscriptionsDueIn3Days($dateIn3Days);
 
             if ($subscriptionsDue->isEmpty()) {
