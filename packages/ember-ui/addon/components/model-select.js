@@ -243,8 +243,13 @@ export default class ModelSelectComponent extends Component {
 
             _options = yield customQuery(this.args.customSearchEndpoint, query);
         } else {
-            set(query, this.pageParam, 1);
-            set(query, this.perPageParam, this.pageSize);
+            if (this.infiniteScroll) {
+                set(query, this.pageParam, 1);
+                set(query, this.perPageParam, this.pageSize);
+            } else {
+                // For dropdowns/popups, use a large limit instead of pagination
+                set(query, this.perPageParam, 500);
+            }
 
             _options = yield this.source.query(this.args.modelName, query);
         }
