@@ -26,7 +26,7 @@ class LeaveRequestController extends Controller
             'public_id'   => 'public_id',
             'status'      => 'status',
             'leave_type'  => 'leave_type',
-            'driver_uuid'      => 'driver_uuid',  // Map 'driver' → 'driver_uuid'
+            'driver_uuid' => 'driver_uuid', 
             'start_date'  => 'start_date',
             'end_date'    => 'end_date',
             'created_at'  => 'created_at',

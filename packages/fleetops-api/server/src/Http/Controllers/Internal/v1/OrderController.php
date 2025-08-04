@@ -1008,43 +1008,56 @@ class OrderController extends FleetOpsController
                             ->exists();
 
                         if ($exists) {
-                            $originalRowIndex = $rows[0]['_original_row_index'] ?? 0;
-                            $importErrors[] = [
-                                (string)($originalRowIndex + 1),
-                                "Trip ID '{$trip_id}' already exists.",
-                                (string)$tripId
-                            ];
+                            // Add error for each row with this trip_id
+                            foreach ($rows as $row) {
+                                $originalRowIndex = $row['_original_row_index'] ?? 0;
+                                $importErrors[] = [
+                                    (string)($originalRowIndex + 1),
+                                    "Trip ID '{$trip_id}' already exists.",
+                                    (string)$tripId
+                                ];
+                            }
                             DB::rollback();
                             continue;
                         }
                     }
 
+                    // Collect all VR IDs from all rows first
                     $vrIds = [];
+                    $vrIdToRowIndex = [];
                     foreach ($rows as $row) {
                         if (!empty($row['vr_id'])) {
                             $vrIds[] = $row['vr_id'];
+                            $originalRowIndex = $row['_original_row_index'] ?? 0;
+                            $vrIdToRowIndex[$row['vr_id']] = $originalRowIndex;
                         }
-                    
+                    }
 
-                        if (!empty($vrIds)) {
-                            $existingVrIds = RouteSegment::whereIn('public_id', $vrIds)
-                                ->whereNull('deleted_at')
-                                ->pluck('public_id')
-                                ->toArray();
-                            if (!empty($existingVrIds)) {
-                                $originalRowIndex = $row['_original_row_index'] ?? 0;
+                    // Check for existing VR IDs
+                    if (!empty($vrIds)) {
+                        $existingVrIds = RouteSegment::whereIn('public_id', $vrIds)
+                            ->whereNull('deleted_at')
+                            ->pluck('public_id')
+                            ->toArray();
+                        
+                        if (!empty($existingVrIds)) {
+                            // Add error for each existing VR ID
+                            foreach ($existingVrIds as $existingVrId) {
+                                $originalRowIndex = $vrIdToRowIndex[$existingVrId] ?? 0;
                                 $importErrors[] = [
-                                   (string)($originalRowIndex + 1),
-                                    "Trip {$tripId}: VR ID already exists: " . implode(', ', $existingVrIds),
+                                    (string)($originalRowIndex + 1),
+                                    "VR ID '{$existingVrId}' already exists.",
                                     (string)$tripId
                                 ];
-                                $tripHasErrors = true;
-                                DB::rollback();
-                                continue;
                             }
+                            $tripHasErrors = true;
+                            DB::rollback();
+                            continue;
                         }
+                    }
 
-                        // Validate facility_sequence
+                    // Validate facility_sequence for each row
+                    foreach ($rows as $row) {
                         if (!empty($row['facility_sequence'])) {
                             $facility_sequence = $row['facility_sequence'];
                             $facilities = array_filter(array_map('trim', explode('->', $facility_sequence)));
@@ -1057,7 +1070,6 @@ class OrderController extends FleetOpsController
                                     (string)$tripId
                                 ];
                                 $tripHasErrors = true;
-
                             }
                             // Check if first and second facility are the same
                             if (count($facilities) >= 2 && $facilities[0] === $facilities[1]) {
@@ -1448,87 +1460,6 @@ class OrderController extends FleetOpsController
 }
 
 /**
- * Build the correct waypoint sequence by following the route chain
- * This ensures we get unique waypoints in the correct order
- */
-// private function buildWaypointSequence(array $routeMap): array
-// {
-//     if (empty($routeMap)) {
-//         return [];
-//     }
-    
-//     $sequence = [];
-//     $usedRoutes = [];
-    
-//     // Sort routes by their row index to maintain order
-//     usort($routeMap, function($a, $b) {
-//         return $a['row_index'] <=> $b['row_index'];
-//     });
-    
-//     // Start with the first route
-//     $firstRoute = $routeMap[0];
-//     $sequence[] = $firstRoute['from'];
-//     $sequence[] = $firstRoute['to'];
-//     $usedRoutes[] = 0;
-    
-//     $currentEnd = $firstRoute['to'];
-    
-//     // Follow the chain
-//     while (count($usedRoutes) < count($routeMap)) {
-//         $foundNext = false;
-        
-//         // Look for next route that starts where current ends
-//         for ($i = 0; $i < count($routeMap); $i++) {
-//             if (in_array($i, $usedRoutes)) {
-//                 continue;
-//             }
-            
-//             $route = $routeMap[$i];
-//             if ($route['from'] === $currentEnd) {
-//                 // Only add the 'to' since 'from' is already in sequence
-//                 if (!in_array($route['to'], $sequence)) {
-//                     $sequence[] = $route['to'];
-//                 }
-//                 $currentEnd = $route['to'];
-//                 $usedRoutes[] = $i;
-//                 $foundNext = true;
-//                 break;
-//             }
-//         }
-        
-//         // If no connecting route found, handle disconnected segments
-//         if (!$foundNext) {
-//             // Find any unused route and start a new segment
-//             for ($i = 0; $i < count($routeMap); $i++) {
-//                 if (!in_array($i, $usedRoutes)) {
-//                     $route = $routeMap[$i];
-                    
-//                     // Add 'from' if not already in sequence
-//                     if (!in_array($route['from'], $sequence)) {
-//                         $sequence[] = $route['from'];
-//                     }
-                    
-//                     // Add 'to' if not already in sequence
-//                     if (!in_array($route['to'], $sequence)) {
-//                         $sequence[] = $route['to'];
-//                     }
-                    
-//                     $currentEnd = $route['to'];
-//                     $usedRoutes[] = $i;
-//                     break;
-//                 }
-//             }
-            
-//             // If still no route found, we're done
-//             if (!$foundNext) {
-//                 break;
-//             }
-//         }
-//     }
-    
-//     return $sequence;
-// }
-    /**
  * Build the correct waypoint sequence by following the route chain
  * This ensures we get unique waypoints in the correct order
  */
