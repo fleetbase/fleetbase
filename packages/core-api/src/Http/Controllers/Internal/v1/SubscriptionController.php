@@ -246,18 +246,8 @@ class SubscriptionController extends Controller
     public function updateSubscriptionQuantity(Request $request): JsonResponse
     {
         try {
-            // Get test date from request if provided
-            $testDate = $request->input('test_date');
-            
-            // Log the test date if provided
-            if ($testDate) {
-                Log::info('Processing subscription updates with test date', [
-                    'test_date' => $testDate
-                ]);
-            }
-            
-            // Delegate to the service class with optional test date
-            $result = $this->subscriptionUpdateService->processSubscriptionUpdates($testDate);
+            // Delegate to the service class
+            $result = $this->subscriptionUpdateService->processSubscriptionUpdates();
 
             // Return appropriate HTTP status based on result
             $statusCode = $result['success'] ? 200 : 500;
