@@ -714,6 +714,10 @@ class Place extends Model
 
         $address = rtrim($address);
 
+
+        // Store the original street1 value before geocoding
+        $originalStreet1 = Utils::or($row, array_merge(['street1'], $addressFields['street1']['alias']));
+
         // if latitude and longitude provided
         // if ($latitude && $longitude) {
         //     $address = $latitude . ', ' . $longitude;
@@ -725,6 +729,9 @@ class Place extends Model
         }
 
         $place = Place::createFromGeocodingLookup($address, false);
+        if ($originalStreet1) {
+            $place->street1 = $originalStreet1;
+        }
         foreach ($addressFields as $field => $options) {
             if ($place->isFillable($field) && empty($place->{$field})) {
                 $value = Utils::or($row, array_merge([$field], $options['alias']));
