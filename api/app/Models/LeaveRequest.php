@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Fleetbase\Models\User;
+use Fleetbase\FleetOps\Models\Driver;
 class LeaveRequest extends Model
 {
     use HasFactory, SoftDeletes;
@@ -59,5 +60,10 @@ class LeaveRequest extends Model
     public function getProcessedByNameAttribute()
     {
         return $this->processedBy?->name ?? null;
+    }
+
+    public function driver()
+    {
+        return $this->belongsTo(Driver::class, 'driver_uuid', 'uuid'); 
     }
 }
