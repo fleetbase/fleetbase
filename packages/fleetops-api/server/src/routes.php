@@ -378,7 +378,7 @@ Route::prefix(config('fleetops.api.routing.prefix', null))->namespace('Fleetbase
                         $router->fleetbaseRoutes(
                             'places',
                             function ($router, $controller) {
-                                $router->get('search', $controller('search'))->middleware(['cache.headers:private;max_age=3600', Spatie\ResponseCache\Middlewares\DoNotCacheResponse::class]);
+                                $router->get('search', $controller('search'));
                                 $router->get('lookup', $controller('geocode'))->middleware(['cache.headers:private;max_age=3600', Spatie\ResponseCache\Middlewares\DoNotCacheResponse::class]);
                                 $router->get('avatars', $controller('avatars'));
                                 $router->match(['get', 'post'], 'export', $controller('export'));
