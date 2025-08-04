@@ -241,14 +241,23 @@ class SubscriptionController extends Controller
      * Update subscription amount in Chargebee
      *
      * @param Request $request
-     * @param string $subscriptionId
      * @return JsonResponse
      */
     public function updateSubscriptionQuantity(Request $request): JsonResponse
     {
         try {
-            // Delegate to the service class
-            $result = $this->subscriptionUpdateService->processSubscriptionUpdates();
+            // Get test date from request if provided
+            $testDate = $request->input('test_date');
+            
+            // Log the test date if provided
+            if ($testDate) {
+                Log::info('Processing subscription updates with test date', [
+                    'test_date' => $testDate
+                ]);
+            }
+            
+            // Delegate to the service class with optional test date
+            $result = $this->subscriptionUpdateService->processSubscriptionUpdates($testDate);
 
             // Return appropriate HTTP status based on result
             $statusCode = $result['success'] ? 200 : 500;
