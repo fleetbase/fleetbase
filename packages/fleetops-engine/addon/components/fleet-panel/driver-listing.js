@@ -58,7 +58,7 @@ export default class FleetPanelDriverListingComponent extends Component {
      * @memberof FleetPanelDriverListringComponent
      */
     fetchFleetDrivers(params = {}) {
-        return this.store.query('driver', { fleet: this.fleet.id, ...params }).then((drivers) => {
+        return this.store.query('driver', { fleet: this.fleet.id, ...params, limit: 500 }).then((drivers) => {
             set(this, 'drivers', drivers.toArray());
             contextComponentCallback(this, 'onLoaded', drivers);
 

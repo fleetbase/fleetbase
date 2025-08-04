@@ -58,7 +58,7 @@ export default class VendorPanelDriversComponent extends Component {
      * @memberof VendorPanelDriversComponent
      */
     fetchVendorDrivers(params = {}) {
-        return this.store.query('driver', { facilitator: this.vendor.id, ...params }).then((drivers) => {
+        return this.store.query('driver', { facilitator: this.vendor.id, ...params, limit: 500 }).then((drivers) => {
             set(this, 'drivers', drivers.toArray());
             contextComponentCallback(this, 'onLoaded', drivers);
 

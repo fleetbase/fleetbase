@@ -60,7 +60,8 @@ export default class OrderScheduleCardComponent extends Component {
         try {
             this.drivers = this.store.query('driver', { 
                 order_uuid: orderUuid,
-                timezone: this.timezone
+                timezone: this.timezone,
+                limit: 500
             });
         } catch (error) {
             console.error('Failed to load drivers:', error);

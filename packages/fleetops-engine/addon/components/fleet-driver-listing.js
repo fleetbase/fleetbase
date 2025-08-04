@@ -81,7 +81,7 @@ export default class FleetDriverListingComponent extends Component {
         // }
 
         return new Promise((resolve) => {
-            this.store.query('driver', { query, fleet: fleet.id }).then((drivers) => {
+            this.store.query('driver', { query, fleet: fleet.id, limit: 500 }).then((drivers) => {
                 this.isLoading = false;
                 this.isLoaded = true;
 

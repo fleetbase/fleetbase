@@ -162,7 +162,7 @@ export default class LayoutFleetOpsSidebarDriverListingComponent extends Compone
 
     @task *fetchDrivers() {
         try {
-            this.drivers = yield this.store.query('driver', { limit: 20, without: ['vendor'] });
+            this.drivers = yield this.store.query('driver', { limit: 500, without: ['vendor'] });
         } catch (error) {
             this.notifications.serverError(error);
         }
