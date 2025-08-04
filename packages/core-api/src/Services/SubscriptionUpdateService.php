@@ -431,109 +431,98 @@ class SubscriptionUpdateService
     }
 
     /**
-     * Process subscription updates for subscriptions due tomorrow
+     * Process subscription updates for subscriptions due in 3 days
      *
      * @return array
      */
     public function processSubscriptionUpdates(): array
     {
         try {
+            $dateIn3Days = Carbon::now()->addDays(3)->format('Y-m-d');
+            $subscriptionsDue = $this->getSubscriptionsDueIn3Days($dateIn3Days);
 
-            // Use test date of August 18, 2025
-            $testDate = '2025-08-18';
-            $subscriptionsDueTomorrow = $this->getSubscriptionsDueTomorrow($testDate);
-
-
-            if ($subscriptionsDueTomorrow->isEmpty()) {
-                return $this->createEmptyResponse($testDate);
+            if ($subscriptionsDue->isEmpty()) {
+                return $this->createEmptyResponse($dateIn3Days);
             }
             
-            $mappingResult = $this->mapSubscriptionsToUsers($subscriptionsDueTomorrow);
+            $mappingResult = $this->mapSubscriptionsToUsers($subscriptionsDue);
             
             // Extract just the subscription mapping for processing
             $subscriptionUserMapping = $mappingResult['subscription_mapping'] ?? [];
             
             // Process subscriptions
             $processedResults = $this->processSubscriptions($subscriptionUserMapping);
+            
+            return $this->createSuccessResponse($dateIn3Days, $subscriptionsDue, $mappingResult, $processedResults);
 
-            return $this->createSuccessResponse($testDate, $subscriptionsDueTomorrow, $mappingResult, $processedResults);
+    } catch (\Exception $e) {
+        Log::error('Failed to process subscription updates', [
+            'error' => $e->getMessage(),
+            'trace' => $e->getTraceAsString()
+        ]);
 
-
-        } catch (\Exception $e) {
-            Log::error('Failed to process subscription updates', [
-                'error' => $e->getMessage(),
-                'trace' => $e->getTraceAsString()
-            ]);
-
-            return [
-                'success' => false,
-                'message' => 'Failed to process subscription updates',
-                'error' => $e->getMessage()
-            ];
-        }
+        return [
+            'success' => false,
+            'message' => 'Failed to process subscription updates',
+            'error' => $e->getMessage()
+        ];
     }
+}
 
-    /**
-     * Get subscriptions due tomorrow
-     * 
-     * TEMPORARY MODIFICATION FOR TESTING: Returns all active subscriptions
-     *
-     * @param string $tomorrow
-     * @return \Illuminate\Database\Eloquent\Collection
-     */
-    private function getSubscriptionsDueTomorrow(string $tomorrow)
-    {
-
-        // Get subscriptions due on test date directly from Chargebee
-        $chargebeeSite = config('services.chargebee.site_name');
-        $apiKey = config('services.chargebee.api_key');
+/**
+ * Get subscriptions due in 3 days
+ *
+ * @param string $dateIn3Days
+ * @return \Illuminate\Database\Eloquent\Collection
+ */
+private function getSubscriptionsDueIn3Days(string $dateIn3Days)
+{
+    // Get subscriptions due in 3 days directly from Chargebee
+    $chargebeeSite = config('services.chargebee.site_name');
+    $apiKey = config('services.chargebee.api_key');
+    
+    try {
         
-        try {
-            // Use test date of August 18, 2025 instead of the passed date
-            $testDate = '2025-08-18';
-            
-            // Convert date to Unix timestamp format (seconds since epoch)
-            // Start of the day
-            $startTimestamp = strtotime($testDate . ' 00:00:00');
-            // End of the day
-            $endTimestamp = strtotime($testDate . ' 23:59:59');
-            
-            Log::info('Fetching subscriptions with test billing date', [
-                'date' => $testDate,
-
-                'start_timestamp' => $startTimestamp,
-                'end_timestamp' => $endTimestamp
+        // Convert date to Unix timestamp format (seconds since epoch)
+        // Start of the day
+        $startTimestamp = strtotime($dateIn3Days . ' 00:00:00');
+        // End of the day
+        $endTimestamp = strtotime($dateIn3Days . ' 23:59:59');
+        
+        Log::info('Fetching active subscriptions with next billing date in 3 days', [
+            'target_date' => $dateIn3Days,
+            'start_timestamp' => $startTimestamp,
+            'end_timestamp' => $endTimestamp,
+            'timezone' => date_default_timezone_get()
+        ]);
+        
+        $url = 'https://' . config('services.chargebee.site_name') . '.chargebee.com/api/v2/subscriptions';
+        
+        // Optimize HTTP request with shorter timeouts and better error handling
+        $response = Http::withBasicAuth(
+            config('services.chargebee.api_key'), 
+            ''
+        )
+            ->timeout(15) // Reduced timeout
+            ->withOptions([
+                'timeout' => 15,
+                'connect_timeout' => 5,
+                'http_errors' => false, // Don't throw exceptions for HTTP errors
+                'verify' => true // Verify SSL certificates
+            ])
+            ->get($url, [
+                // Use Unix timestamp format as required by Chargebee API
+                'next_billing_at[after]' => $startTimestamp,
+                'next_billing_at[before]' => $endTimestamp,
+                'status' => 'active',
+                'limit' => 100
             ]);
-            
-
-            $url = 'https://' . config('services.chargebee.site_name') . '.chargebee.com/api/v2/subscriptions';
-
-            
-            // Optimize HTTP request with shorter timeouts and better error handling
-            $response = Http::withBasicAuth(
-                config('services.chargebee.api_key'), 
-                ''
-            )
-                ->timeout(15) // Reduced timeout
-                ->withOptions([
-                    'timeout' => 15,
-                    'connect_timeout' => 5,
-                    'http_errors' => false, // Don't throw exceptions for HTTP errors
-                    'verify' => true // Verify SSL certificates
-                ])
-                ->get($url, [
-                    // Use Unix timestamp format as required by Chargebee API
-                    'next_billing_at[after]' => $startTimestamp,
-                    'next_billing_at[before]' => $endTimestamp,
-                    'status' => 'active',
-                    'limit' => 100
-                ]);
-            
-            if (!$response->successful()) {
-                Log::error('Failed to fetch subscriptions from Chargebee', [
-                    'status' => $response->status(),
-                    'response' => $response->json()
-                ]);
+        
+        if (!$response->successful()) {
+            Log::error('Failed to fetch subscriptions from Chargebee', [
+                'status' => $response->status(),
+                'response' => $response->json()
+            ]);
                 return collect([]);
             }
             
@@ -576,8 +565,8 @@ class SubscriptionUpdateService
                 return $tempSubscription;
             })->filter(); // Remove any null values
             
-            Log::info('Found subscriptions due tomorrow from Chargebee', [
-                'tomorrow_date' => $tomorrow,
+            Log::info('Found subscriptions due in 3 days from Chargebee', [
+                'target_date' => $dateIn3Days,
                 'subscription_count' => $subscriptions->count()
             ]);
             
@@ -1110,16 +1099,16 @@ class SubscriptionUpdateService
     /**
      * Create empty response when no subscriptions found
      *
-     * @param string $tomorrow
+     * @param string $targetDate
      * @return array
      */
-    private function createEmptyResponse(string $tomorrow): array
+    private function createEmptyResponse(string $targetDate): array
     {
         return [
             'success' => true,
-            'message' => 'No subscriptions due tomorrow',
+            'message' => 'No subscriptions due in 3 days',
             'data' => [
-                'tomorrow_date' => $tomorrow,
+                'target_date' => $targetDate,
                 'processed_count' => 0,
                 'subscriptions' => []
             ]
@@ -1129,20 +1118,20 @@ class SubscriptionUpdateService
     /**
      * Create success response
      *
-     * @param string $tomorrow
-     * @param \Illuminate\Database\Eloquent\Collection $subscriptionsDueTomorrow
+     * @param string $dateIn3Days
+     * @param \Illuminate\Database\Eloquent\Collection $subscriptionsDue
      * @param array $mappingData
      * @param array $processedResults
      * @return array
      */
-    private function createSuccessResponse(string $tomorrow, $subscriptionsDueTomorrow, array $mappingData, array $processedResults): array
+    private function createSuccessResponse(string $dateIn3Days, $subscriptionsDue, array $mappingData, array $processedResults): array
     {
         return [
             'success' => true,
-            'message' => 'Subscription updates processed',
+            'message' => 'Subscription updates processed for subscriptions due in 3 days',
             'data' => [
-                'tomorrow_date' => $tomorrow,
-                'total_subscriptions' => $subscriptionsDueTomorrow->count(),
+                'target_date' => $dateIn3Days,
+                'total_subscriptions' => $subscriptionsDue->count(),
                 'mapped_subscriptions' => count($mappingData['subscription_mapping']),
                 'unique_companies' => count($mappingData['company_mapping']),
                 'processed_count' => count($processedResults['processed']),
