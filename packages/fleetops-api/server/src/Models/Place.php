@@ -685,6 +685,7 @@ class Place extends Model
             'code'          => ['alias' => ['code']],
             'country'       => ['alias' => ['country']],
             'name'          => ['alias' => ['name']],   
+            'street1'       => ['alias' => ['street1']],
         ];
         $address   = '';
         $latitude  = null;
@@ -714,9 +715,9 @@ class Place extends Model
         $address = rtrim($address);
 
         // if latitude and longitude provided
-        if ($latitude && $longitude) {
-            $address = $latitude . ', ' . $longitude;
-        }
+        // if ($latitude && $longitude) {
+        //     $address = $latitude . ', ' . $longitude;
+        // }
 
         // if no address
         if (!$address) {
