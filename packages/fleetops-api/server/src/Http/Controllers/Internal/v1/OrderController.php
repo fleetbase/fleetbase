@@ -45,8 +45,12 @@ use Fleetbase\FleetOps\Models\Fleet;
 use Fleetbase\FleetOps\Models\ImportLog;
 use Fleetbase\FleetOps\Models\OrderStatus;
 use Fleetbase\FleetOps\Exports\OrderExportChange;
+use Fleetbase\FleetOps\Traits\ImportErrorHandler;
+
 class OrderController extends FleetOpsController
 {
+    use ImportErrorHandler;
+
     /**
      * The resource to query.
      *
@@ -325,6 +329,32 @@ class OrderController extends FleetOpsController
                     'message' => "Import failed: Maximum of 500 rows allowed. Your file contains {$totalRows} rows.",
                     'status' => 'limit_exceeded'
                 ], 400));
+            }
+            $requiredHeaders = [
+                "block_id",
+                "trip_id",
+                "vr_id",
+                "bid_id",
+                "status",
+                "facility_sequence",
+                "truck_filter",
+                "cpt",
+                "is_cpt_truck",
+                "carrier",
+                "subcarrier",
+                "cr_id",
+                "shipper_accounts",
+                "equipment_type",
+                "trailer_id",
+                "tender_status",
+                "vehicle_id",
+                "transit_operator_type",
+                "operator_id",
+                "spot_work"
+            ];
+            $validation = $this->validateImportHeaders($data, $requiredHeaders);
+            if (!$validation['success']) {
+                return response()->json($validation);
             }
             $data_import = $this->orderImport($data);
 
