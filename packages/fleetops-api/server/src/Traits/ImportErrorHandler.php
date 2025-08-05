@@ -179,4 +179,44 @@ trait ImportErrorHandler
             'created_by_id' => UserHelper::getIdFromUuid(auth()->id()),
         ]);
     }
+    /**
+     * The function `validateImportHeaders` checks if all required headers are present in the data and
+     * returns a success status or error message accordingly.
+     * 
+     * @param array data The `data` parameter in the `validateImportHeaders` function is expected to be a
+     * multidimensional array containing the data to be validated. The function assumes that the headers
+     * are located in the first row of the first element of the array. Each element in the array represents
+     * a row of data, and
+     * @param array requiredHeaders The `validateImportHeaders` function takes in two parameters:
+     * 
+     * @return array An array is being returned. If there are missing required headers, the returned array
+     * will have the following structure:
+     */
+    protected function validateImportHeaders(array $data, array $requiredHeaders): array
+    {
+        // Extract headers
+        $headers = array_keys(collect($data[0][0] ?? [])->toArray());
+
+        // Normalize headers
+        $normalizedHeaders = array_map(function ($header) {
+            return str_replace(' ', '_', strtolower(trim($header)));
+        }, $headers);
+
+        // Check for missing headers
+        $missingHeaders = array_diff($requiredHeaders, $normalizedHeaders);
+
+        if (!empty($missingHeaders)) {
+            return [
+                'success' => false,
+                'errors' => [[
+                    'N/A',
+                    'Import failed: Missing required headers: ' . implode(', ', $missingHeaders),
+                    'N/A'
+                ]]
+            ];
+        }
+
+        return ['success' => true];
+    }
+
 } 

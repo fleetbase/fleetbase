@@ -212,8 +212,8 @@ class FleetController extends FleetOpsController
     public function import(ImportRequest $request)
     {
         $files = File::whereIn('uuid', $request->input('files'))->get();
-        
-        $result = $this->processImportWithErrorHandling($files, 'fleet', function($file) {
+        $requiredHeaders = ['name', 'task'];
+        $result = $this->processImportWithErrorHandling($files, 'fleet', function($file) use ($requiredHeaders) {
             $disk = config('filesystems.default');
             $data = Excel::toArray(new FleetImport(), $file->path, $disk);
             $totalRows = collect($data)->flatten(1)->count();
@@ -225,7 +225,10 @@ class FleetController extends FleetOpsController
                     'errors' => [['N/A', "Import failed: Maximum of ". config('params.maximum_import_row_size') ." rows allowed. Your file contains {$totalRows} rows.", 'N/A']]
                 ];
             }
-            
+            $validation = $this->validateImportHeaders($data, $requiredHeaders);
+            if (!$validation['success']) {
+                return response()->json($validation);
+            }
             return $this->fleetImportWithValidation($data);
         });
         

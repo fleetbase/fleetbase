@@ -79,20 +79,22 @@ class VehicleController extends FleetOpsController
     public function import(ImportRequest $request)
     {
         $files = File::whereIn('uuid', $request->input('files'))->get();
-        
-        $result = $this->processImportWithErrorHandling($files, 'vehicle', function($file) {
+        $requiredHeaders = ['name', 'make', 'model', 'year', 'plate_number', 'vin_number'];
+        $result = $this->processImportWithErrorHandling($files, 'vehicle', function($file) use ($requiredHeaders) {
             $disk = config('filesystems.default');
             $data = Excel::toArray(new VehicleImport(), $file->path, $disk);
             $totalRows = collect($data)->flatten(1)->count();
             Log::info('Total rows: ' . $totalRows .", Company: ". session('company'));
-            
             if ($totalRows > config('params.maximum_import_row_size')) {
                 return [
                     'success' => false,
                     'errors' => [['N/A', "Import failed: Maximum of ". config('params.maximum_import_row_size') ." rows allowed. Your file contains {$totalRows} rows.", 'N/A']]
                 ];
             }
-            
+            $validation = $this->validateImportHeaders($data, $requiredHeaders);
+            if (!$validation['success']) {
+                return response()->json($validation);
+            }
             return $this->vehicleImportWithValidation($data);
         });
         

@@ -536,8 +536,8 @@ class DriverController extends FleetOpsController
     public function import(ImportRequest $request)
     {
         $files = File::whereIn('uuid', $request->input('files'))->get();
-        
-        $result = $this->processImportWithErrorHandling($files, 'driver', function($file) {
+        $requiredHeaders = ['name', 'phone', 'license', 'country', 'city', 'email'];
+        $result = $this->processImportWithErrorHandling($files, 'driver', function($file) use ($requiredHeaders) {
             $disk = config('filesystems.default');
             $data = Excel::toArray(new DriverImport(), $file->path, $disk);
             $totalRows = collect($data)->flatten(1)->count();
@@ -549,7 +549,12 @@ class DriverController extends FleetOpsController
                     'errors' => [['N/A', "Import failed: Maximum of ". config('params.maximum_import_row_size') ." rows allowed. Your file contains {$totalRows} rows.", 'N/A']]
                 ];
             }
-            
+
+            $validation = $this->validateImportHeaders($data, $requiredHeaders);
+
+            if (!$validation['success']) {
+                return response()->json($validation);
+            }
             return $this->driverImportWithValidation($data);
         });
         
