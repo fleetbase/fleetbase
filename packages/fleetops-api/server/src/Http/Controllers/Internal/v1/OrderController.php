@@ -333,24 +333,8 @@ class OrderController extends FleetOpsController
             $requiredHeaders = [
                 "block_id",
                 "trip_id",
-                "vr_id",
-                "bid_id",
-                "status",
-                "facility_sequence",
-                "truck_filter",
-                "cpt",
-                "is_cpt_truck",
-                "carrier",
-                "subcarrier",
-                "cr_id",
-                "shipper_accounts",
-                "equipment_type",
-                "trailer_id",
-                "tender_status",
-                "vehicle_id",
-                "transit_operator_type",
-                "operator_id",
-                "spot_work"
+                "stop_1",
+                "stop_2"
             ];
             $validation = $this->validateImportHeaders($data, $requiredHeaders);
             if (!$validation['success']) {
