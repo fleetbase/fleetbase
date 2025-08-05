@@ -48,9 +48,11 @@ export default class InviteForUserController extends Controller {
                 if (response.needs_password && response.needs_password === true) {
                     this.setPassword();
                 } else {
-                    this.router.transitionTo('console.fleet-ops');
+                    this.isLoading = true;
+                    this.router.transitionTo('console.fleet-ops').finally(() => {
+                        this.isLoading = false;
+                    });
                 }
-
             })
             .catch((error) => {
                 this.notifications.serverError(error);
@@ -72,7 +74,14 @@ export default class InviteForUserController extends Controller {
 
                 const input = modal.getOptions(['password', 'password_confirmation']);
 
-                return this.fetch.post('users/set-password', input);
+                return this.fetch.post('users/set-password', input).then(() => {
+                    modal.done();
+                    this.isLoading = true;
+                    // Redirect after password is set
+                    this.router.transitionTo('console.fleet-ops').finally(() => {
+                        this.isLoading = false;
+                    });
+                });
             },
         });
     }

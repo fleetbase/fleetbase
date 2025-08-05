@@ -21,6 +21,7 @@ export default class ManagementLeavesIndexController extends BaseController {
 
 
     queryParams = [
+        'public_id',
         'page',
         'per_page',
         'sort',
@@ -34,6 +35,7 @@ export default class ManagementLeavesIndexController extends BaseController {
         'end_date',
     ];
 
+    @tracked public_id;
     @tracked page = 1;
     @tracked per_page;
     @tracked sort = '-created_at';
@@ -239,6 +241,7 @@ export default class ManagementLeavesIndexController extends BaseController {
      * Clear all filters
      */
     @action clearFilters() {
+        set(this, 'public_id', null);
         set(this, 'query', null);
         set(this, 'driver', null);
         set(this, 'status', null);
