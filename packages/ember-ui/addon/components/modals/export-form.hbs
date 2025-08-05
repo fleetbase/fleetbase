@@ -8,7 +8,7 @@
             <label class="block text-sm font-bold text-gray-800 mb-2">Filter by</label>
 
             <PowerSelect @options={{this.filterOptions}} @selected={{this.filterBy}} @onChange={{this.setFilterBy}}
-                @placeholder="Select filter" @triggerClass="form-input text-lg py-3 px-4 h-12" as |opt|>
+                @placeholder={{t "common.select-filter" }} @triggerClass="form-input text-lg py-3 px-4 h-12" as |opt|>
                 {{smart-humanize opt}}
             </PowerSelect>
         </div>
