@@ -536,8 +536,8 @@ class DriverController extends FleetOpsController
     public function import(ImportRequest $request)
     {
         $files = File::whereIn('uuid', $request->input('files'))->get();
-        
-        $result = $this->processImportWithErrorHandling($files, 'driver', function($file) {
+        $requiredHeaders = ['name', 'phone', 'license', 'country', 'city', 'email'];
+        $result = $this->processImportWithErrorHandling($files, 'driver', function($file) use ($requiredHeaders) {
             $disk = config('filesystems.default');
             $data = Excel::toArray(new DriverImport(), $file->path, $disk);
             $totalRows = collect($data)->flatten(1)->count();
@@ -549,7 +549,24 @@ class DriverController extends FleetOpsController
                     'errors' => [['N/A', "Import failed: Maximum of ". config('params.maximum_import_row_size') ." rows allowed. Your file contains {$totalRows} rows.", 'N/A']]
                 ];
             }
-            
+            $headers = array_keys(collect($data[0][0] ?? [])->toArray());
+            // Normalize headers (optional: if Excel headers are in Title Case or spaced)
+            $normalizedHeaders = array_map(function ($header) {
+                return str_replace(' ', '_', strtolower(trim($header)));
+            }, $headers);
+
+            // Check for missing headers
+            $missingHeaders = array_diff($requiredHeaders, $normalizedHeaders);
+            if (!empty($missingHeaders)) {
+                return [
+                    'success' => false,
+                    'errors' => [[
+                        'N/A',
+                        'Import failed: Missing required headers: ' . implode(', ', $missingHeaders),
+                        'N/A'
+                    ]]
+                ];
+            }
             return $this->driverImportWithValidation($data);
         });
         
