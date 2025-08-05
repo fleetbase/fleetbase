@@ -6,6 +6,7 @@ import { dasherize } from '@ember/string';
 import { later } from '@ember/runloop';
 import { pluralize } from 'ember-inflector';
 import { format as formatDate } from 'date-fns';
+import { parse as parseDate } from 'date-fns';
 import getModelName from '../utils/get-model-name';
 import getWithDefault from '../utils/get-with-default';
 import humanize from '../utils/humanize';
@@ -235,15 +236,16 @@ export default class CrudService extends Service {
      *
      * @void
      */
-    @action export(modelName, options = {}) {
-        // always lowercase modelname
+    @action export(modelName, options = {}, includeDateFilters = false) {
         modelName = modelName.toLowerCase();
 
         // set the model uri endpoint
         const modelEndpoint = dasherize(pluralize(modelName));
         const exportParams = options.params ?? {};
 
-        this.modalsManager.show('modals/export-form', {
+        const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+
+        const modalOptions = {
             title: this.intl.t('common.export'),
             acceptButtonText: 'Download',
             modalClass: 'modal-sm',
@@ -254,14 +256,73 @@ export default class CrudService extends Service {
             setFormat: (selectedValue) => {
                 this.modalsManager.setOption('format', selectedValue || null);
             },
+            includeFilters: includeDateFilters,
+            startDate: null,
+            createdAt: null,
+            setStartDate: (input) => {
+                let dateStr = input.formattedDate;
+                this.modalsManager.setOption('createdAt', null);
+                this.modalsManager.setOption('startDate', dateStr);
+            },
+            setCreatedAt: (input) => {
+                let dateStr = input.formattedDate;
+                this.modalsManager.setOption('startDate', null);
+                this.modalsManager.setOption('createdAt', dateStr);
+            },
             confirm: (modal, done) => {
                 const format = modal.getOption('format') ?? 'csv';
+                let from_date = null;
+                let to_date = null;
+                let filter_by = null;
+
+                if (includeDateFilters) {
+                    const startDateValue = modal.getOption('startDate');
+                    const createdAtValue = modal.getOption('createdAt');
+
+                    let dateValue;
+                    if (startDateValue) {
+                        filter_by = 'start_date';
+                        dateValue = startDateValue;
+                    } else if (createdAtValue) {
+                        filter_by = 'created_at';
+                        dateValue = createdAtValue;
+                    }
+
+                    if (dateValue) {
+                        let dates;
+                        if (Array.isArray(dateValue)) {
+                            dates = dateValue;
+                        } else if (typeof dateValue === 'string') {
+                            dates = dateValue.split(',').map(d => d.trim());
+                        } else {
+                            dates = [dateValue];
+                        }
+
+                        from_date = dates.length > 0 ? dates[0] : null;
+                        to_date = dates.length > 1 ? dates[1] : null;
+                    }
+                }
+
+                const filters = {
+                    filter_by,
+                    from_date,
+                    to_date,
+                };
+
                 modal.startLoading();
+
+                const now = new Date();
+                const timestamp = formatDate(now, 'yyyy-MM-dd-HH:mm');
+
+                // Pass timezone as query param in URL
+                const exportUrl = `${modelEndpoint}/export?timezone=${encodeURIComponent(timezone)}`;
+
                 return this.fetch
                     .download(
-                        `${modelEndpoint}/export`,
+                        exportUrl,
                         {
                             format,
+                            ...filters,
                             ...exportParams,
                         },
                         {
@@ -270,13 +331,7 @@ export default class CrudService extends Service {
                         }
                     )
                     .then(() => {
-                        later(
-                            this,
-                            () => {
-                                return done();
-                            },
-                            600
-                        );
+                        later(this, () => done(), 600);
                     })
                     .catch((error) => {
                         modal.stopLoading();
@@ -284,7 +339,9 @@ export default class CrudService extends Service {
                     });
             },
             ...options,
-        });
+        };
+
+        this.modalsManager.show('modals/export-form', modalOptions);
     }
 
     /**
