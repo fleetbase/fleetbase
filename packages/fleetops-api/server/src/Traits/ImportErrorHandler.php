@@ -31,7 +31,7 @@ trait ImportErrorHandler
 
         foreach ($files as $file) {
             // validate file type
-            if (!Str::endsWith($file->path, $validFileTypes)) {
+            if (!in_array(pathinfo($file->path, PATHINFO_EXTENSION), $validFileTypes)) {
                 $allErrors[] = ['N/A', 'Invalid file uploaded: ' . $file->name, 'N/A'];
                 continue;
             }
@@ -150,7 +150,7 @@ trait ImportErrorHandler
     {
         $this->logImportResult($fileUuid, $module, 'COMPLETED', null);
         return [
-            'succeed' => true,
+            'success' => true,
             'message' => "Import completed successfully. {$stats['totalCreated']} {$module} created, {$stats['totalUpdated']} {$module} updated.",
             'created_' . $module => $stats['totalCreated'],
             'updated_' . $module => $stats['totalUpdated'],

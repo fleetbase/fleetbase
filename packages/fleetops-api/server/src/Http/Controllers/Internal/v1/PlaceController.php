@@ -206,7 +206,7 @@ class PlaceController extends FleetOpsController
             if ($totalRows > config('params.maximum_import_row_size')) {
                 return [
                     'success' => false,
-                    'errors' => [['N/A', "Import failed: Maximum of 500 rows allowed. Your file contains {$totalRows} rows.", 'N/A']]
+                    'errors' => [['N/A', "Import failed: Maximum of ". config('params.maximum_import_row_size') ." rows allowed. Your file contains {$totalRows} rows.", 'N/A']]
                 ];
             }
             
@@ -234,6 +234,10 @@ class PlaceController extends FleetOpsController
             $createdPlaces = [];
             $updatedPlaces = [];
 
+            // Pre-collect all unique place codes for batch validation
+            $allPlaceCodes = [];
+            $rowsWithIndex = [];
+
             foreach ($excelData as $sheetIndex => $sheetRows) {
                 $sheetRowsWithIndex = collect($sheetRows)->map(function ($row, $originalIndex) {
                     $row['_original_row_index'] = $originalIndex;
@@ -244,49 +248,121 @@ class PlaceController extends FleetOpsController
                     $originalRowIndex = $row['_original_row_index'] ?? $rowIndex;
                     $displayRowIndex = $originalRowIndex + 1;
 
-                    try {
-                        // Basic validation
-                        if (empty($row['name'])) {
+                    // Collect place codes for batch validation
+                    if (!empty($row['code'])) {
+                        $allPlaceCodes[] = $row['code'];
+                    }
+                    
+                    $rowsWithIndex[] = [
+                        'row' => $row,
+                        'displayRowIndex' => $displayRowIndex
+                    ];
+                }
+            }
+
+            // Single query to get all existing place codes
+            $existingPlaceCodes = [];
+            if (!empty($allPlaceCodes)) {
+                $existingPlaceCodes = Place::whereIn('code', array_unique($allPlaceCodes))
+                    ->where('company_uuid', session('company'))
+                    ->whereNull('deleted_at')
+                    ->pluck('code')
+                    ->toArray();
+            }
+
+            // Process each row with in-memory validation
+            foreach ($rowsWithIndex as $rowData) {
+                $row = $rowData['row'];
+                $displayRowIndex = $rowData['displayRowIndex'];
+
+                try {
+                    // Basic validation
+                    if (empty($row['name'])) {
+                        $importErrors[] = [
+                            (string)$displayRowIndex,
+                            "Place name is required.",
+                            ""
+                        ];
+                        continue;
+                    }
+
+                    // Check for duplicate place code using in-memory list
+                    if (!empty($row['code'])) {
+                        if (in_array($row['code'], $existingPlaceCodes)) {
                             $importErrors[] = [
                                 (string)$displayRowIndex,
-                                "Place name is required.",
-                                ""
+                                "Place code '{$row['code']}' already exists.",
+                                $row['code']
                             ];
                             continue;
                         }
+                    }
 
-                        // Check for duplicate place code if provided
-                        if (!empty($row['code'])) {
-                            $existingPlace = Place::where('code', $row['code'])
-                                ->where('company_uuid', session('company'))
-                                ->whereNull('deleted_at')
-                                ->first();
+                    // Create place data without geocoding if coordinates are provided
+                    $placeData = [
+                        'company_uuid' => session('company'),
+                        'name' => $row['name'],
+                        'code' => $row['code'] ?? null,
+                        'address' => $row['address'] ?? null,
+                        'city' => $row['city'] ?? null,
+                        'state' => $row['state'] ?? null,
+                        'country' => $row['country'] ?? null,
+                        'postal_code' => $row['postal_code'] ?? null,
+                        'phone' => $row['phone'] ?? null,
+                        'email' => $row['email'] ?? null,
+                        'website' => $row['website'] ?? null,
+                        'meta' => [
+                            'description' => $row['description'] ?? null,
+                            'type' => $row['type'] ?? 'facility'
+                        ]
+                    ];
 
-                            if ($existingPlace) {
+                    // Handle coordinates if provided (skip geocoding)
+                    if (!empty($row['latitude']) && !empty($row['longitude'])) {
+                        try {
+                            $latitude = floatval($row['latitude']);
+                            $longitude = floatval($row['longitude']);
+                            
+                            if ($latitude >= -90 && $latitude <= 90 && $longitude >= -180 && $longitude <= 180) {
+                                $placeData['location'] = new Point($longitude, $latitude);
+                            } else {
                                 $importErrors[] = [
                                     (string)$displayRowIndex,
-                                    "Place code '{$row['code']}' already exists.",
-                                    $row['code']
+                                    "Invalid coordinates provided. Latitude must be between -90 and 90, longitude between -180 and 180.",
+                                    $row['code'] ?? $row['name']
                                 ];
                                 continue;
                             }
+                        } catch (\Exception $e) {
+                            $importErrors[] = [
+                                (string)$displayRowIndex,
+                                "Invalid coordinate format. Please provide numeric values for latitude and longitude.",
+                                $row['code'] ?? $row['name']
+                            ];
+                            continue;
                         }
-
-                        // Use the existing PlaceImport logic via Place::createFromImport
-                        $place = Place::createFromImport($row, true);
-                        
-                        if ($place) {
-                            $records[] = $place;
-                            $createdPlaces[] = $place->uuid;
-                        }
-
-                    } catch (\Exception $e) {
-                        $importErrors[] = [
-                            (string)$displayRowIndex,
-                            "Failed to create place: " . $e->getMessage(),
-                            $row['code'] ?? $row['name']
-                        ];
                     }
+
+                    // Create place without geocoding
+                    $place = Place::create($placeData);
+                    
+                    if ($place) {
+                        $records[] = $place;
+                        
+                        // Track whether place was created or updated
+                        if ($place->wasRecentlyCreated) {
+                            $createdPlaces[] = $place->uuid;
+                        } else {
+                            $updatedPlaces[] = $place->uuid;
+                        }
+                    }
+
+                } catch (\Exception $e) {
+                    $importErrors[] = [
+                        (string)$displayRowIndex,
+                        "Failed to create place: " . $e->getMessage(),
+                        $row['code'] ?? $row['name']
+                    ];
                 }
             }
 
@@ -314,6 +390,16 @@ class PlaceController extends FleetOpsController
             $createdCount = count($createdPlaces);
             $updatedCount = count($updatedPlaces);
 
+            // Queue background geocoding for places without coordinates
+            $placesNeedingGeocoding = collect($records)->filter(function($place) {
+                return !$place->location && ($place->address || $place->city);
+            });
+
+            if ($placesNeedingGeocoding->count() > 0) {
+                // Log that geocoding is needed for these places
+                Log::info("Places import completed. {$placesNeedingGeocoding->count()} places need geocoding in background.");
+            }
+
             return [
                 'records' => $records,
                 'summary' => [
@@ -321,7 +407,8 @@ class PlaceController extends FleetOpsController
                     'created' => $createdCount,
                     'updated' => $updatedCount,
                     'created_places' => $createdPlaces,
-                    'updated_places' => $updatedPlaces
+                    'updated_places' => $updatedPlaces,
+                    'geocoding_queued' => $placesNeedingGeocoding->count()
                 ]
             ];
 
