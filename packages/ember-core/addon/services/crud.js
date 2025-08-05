@@ -243,6 +243,8 @@ export default class CrudService extends Service {
         const modelEndpoint = dasherize(pluralize(modelName));
         const exportParams = options.params ?? {};
 
+        const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+
         const modalOptions = {
             title: this.intl.t('common.export'),
             acceptButtonText: 'Download',
@@ -269,22 +271,55 @@ export default class CrudService extends Service {
             },
             confirm: (modal, done) => {
                 const format = modal.getOption('format') ?? 'csv';
-                let filters = {};
+                let from_date = null;
+                let to_date = null;
+                let filter_by = null;
+
                 if (includeDateFilters) {
-                    filters = {
-                        start_date: modal.getOption('startDate') || null,
-                        created_at: modal.getOption('createdAt') || null,
-                    };
+                    const startDateValue = modal.getOption('startDate');
+                    const createdAtValue = modal.getOption('createdAt');
+
+                    let dateValue;
+                    if (startDateValue) {
+                        filter_by = 'start_date';
+                        dateValue = startDateValue;
+                    } else if (createdAtValue) {
+                        filter_by = 'created_at';
+                        dateValue = createdAtValue;
+                    }
+
+                    if (dateValue) {
+                        let dates;
+                        if (Array.isArray(dateValue)) {
+                            dates = dateValue;
+                        } else if (typeof dateValue === 'string') {
+                            dates = dateValue.split(',').map(d => d.trim());
+                        } else {
+                            dates = [dateValue];
+                        }
+
+                        from_date = dates.length > 0 ? dates[0] : null;
+                        to_date = dates.length > 1 ? dates[1] : null;
+                    }
                 }
+
+                const filters = {
+                    filter_by,
+                    from_date,
+                    to_date,
+                };
 
                 modal.startLoading();
 
                 const now = new Date();
                 const timestamp = formatDate(now, 'yyyy-MM-dd-HH:mm');
 
+                // Pass timezone as query param in URL
+                const exportUrl = `${modelEndpoint}/export?timezone=${encodeURIComponent(timezone)}`;
+
                 return this.fetch
                     .download(
-                        `${modelEndpoint}/export`,
+                        exportUrl,
                         {
                             format,
                             ...filters,

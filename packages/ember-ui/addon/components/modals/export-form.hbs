@@ -2,15 +2,6 @@
     as |options|>
 
     <div class="export-form modal-body-container p-4 grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div class="input-group">
-            <label class="block text-sm font-bold text-gray-800 mb-2">
-                {{t "common.format"}}
-            </label>
-
-            <Select @value={{options.format}} @options={{options.formatOptions}}
-                @placeholder={{t "common.select_export_format" }} @onChange={{options.setFormat}} class="w-full border border-gray-300 rounded-md p-2
-            focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-50" />
-        </div>
         {{#if options.includeFilters}}
         {{! dropdown }}
         <div class="input-group">
@@ -45,5 +36,14 @@
         </div>
         {{/if}}
         {{/if}}
+        <div class="input-group">
+            <label class="block text-sm font-bold text-gray-800 mb-2">
+                {{t "common.format"}}
+            </label>
+
+            <Select @value={{options.format}} @options={{options.formatOptions}}
+                @placeholder={{t "common.select_export_format" }} @onChange={{options.setFormat}} class="w-full border border-gray-300 rounded-md p-2
+            focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-50" />
+        </div>
     </div>
 </Modal::Default>
