@@ -18,6 +18,7 @@ class ImportLog extends Model
         'status',
         'error_log_file_path',
         'company_uuid',
+        'created_by_id',
     ];
 
     protected $casts = [
