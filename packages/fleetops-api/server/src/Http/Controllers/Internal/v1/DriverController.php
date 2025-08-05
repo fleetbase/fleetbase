@@ -549,23 +549,11 @@ class DriverController extends FleetOpsController
                     'errors' => [['N/A', "Import failed: Maximum of ". config('params.maximum_import_row_size') ." rows allowed. Your file contains {$totalRows} rows.", 'N/A']]
                 ];
             }
-            $headers = array_keys(collect($data[0][0] ?? [])->toArray());
-            // Normalize headers (optional: if Excel headers are in Title Case or spaced)
-            $normalizedHeaders = array_map(function ($header) {
-                return str_replace(' ', '_', strtolower(trim($header)));
-            }, $headers);
 
-            // Check for missing headers
-            $missingHeaders = array_diff($requiredHeaders, $normalizedHeaders);
-            if (!empty($missingHeaders)) {
-                return [
-                    'success' => false,
-                    'errors' => [[
-                        'N/A',
-                        'Import failed: Missing required headers: ' . implode(', ', $missingHeaders),
-                        'N/A'
-                    ]]
-                ];
+            $validation = $this->validateImportHeaders($data, $requiredHeaders);
+
+            if (!$validation['success']) {
+                return response()->json($validation);
             }
             return $this->driverImportWithValidation($data);
         });
