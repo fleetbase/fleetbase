@@ -34,6 +34,8 @@ class DriverController extends FleetOpsController
      * @var string
      */
     public $resource = 'driver';
+    public bool $disableResponseCache = true;
+
 
     /**
      * Creates a record with request payload.

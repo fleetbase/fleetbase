@@ -20,6 +20,7 @@ class VehicleController extends FleetOpsController
      * @var string
      */
     public $resource = 'vehicle';
+    public bool $disableResponseCache = true;
 
     /**
      * Get all status options for an vehicle.
