@@ -264,7 +264,7 @@ class PlaceController extends FleetOpsController
             $existingPlaceCodes = [];
             if (!empty($allPlaceCodes)) {
                 $existingPlaceCodes = Place::whereIn('code', array_unique($allPlaceCodes))
-                    ->where('company_uuid', session('company'))
+                    // ->where('company_uuid', session('company'))
                     ->whereNull('deleted_at')
                     ->pluck('code')
                     ->toArray();

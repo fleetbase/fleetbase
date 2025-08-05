@@ -108,7 +108,7 @@ trait ImportErrorHandler
         $company = session('company');
         $fileName = "{$company}_{$module}_import_errors_{$timestamp}.xlsx";
         
-        $headings = ['Row', 'Error', ucfirst($module) . ' ID'];
+        $headings = ['Row', 'Error', ucfirst($module) . ' Identifier'];
         Excel::store(new ImportErrorsExport($allErrors, $headings), $fileName, 's3');
         $url = Storage::url($fileName);
         
