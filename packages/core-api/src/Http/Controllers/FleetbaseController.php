@@ -22,5 +22,8 @@ abstract class FleetbaseController extends BaseController
     {
         $this->setApiModel($model, $this->namespace);
         $this->setApiResource($resource, $this->namespace);
+        if (property_exists($this, 'disableResponseCache') && $this->disableResponseCache === true) {
+            $this->middleware(\Spatie\ResponseCache\Middlewares\DoNotCacheResponse::class);
+        }
     }
 }

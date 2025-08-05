@@ -18,6 +18,15 @@ class ClearCacheAfterDelete
             ResponseCache::clear();
         }
 
+        $route = $request->route();
+
+        if ($route) {
+            $controller = $route->getController();
+
+            if (property_exists($controller, 'disableResponseCache') && $controller->disableResponseCache) {
+                return $next($request); // Skip caching
+            }
+        }
         return $response;
     }
 }
