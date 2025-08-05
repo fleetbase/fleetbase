@@ -14,10 +14,17 @@ use Carbon\Carbon;
 class OrderExportChange implements FromCollection, WithHeadings, ShouldAutoSize, WithEvents
 {
     protected array $selections = [];
-
-    public function __construct(array $selections = [])
+    protected ?string $filterBy;
+    protected ?string $fromDate;
+    protected ?string $toDate;
+    protected ?string $timezone;
+    public function __construct(array $selections = [], ?string $filterBy = null, ?string $fromDate = null, ?string $toDate = null, ?string $timezone = null)
     {
         $this->selections = $selections;
+        $this->filterBy = $filterBy;
+        $this->fromDate = $fromDate;
+        $this->toDate = $toDate;
+        $this->timezone = $timezone;
     }
 
     public function headings(): array
@@ -106,7 +113,30 @@ class OrderExportChange implements FromCollection, WithHeadings, ShouldAutoSize,
         if (!empty($this->selections)) {
             $query = $query->whereIn('uuid', $this->selections);
         }
+        $filterMap = [
+            'start_date'  => 'scheduled_at',
+            'created_at'  => 'created_at',
+        ];
+        if(isset($this->timezone) && $this->filterBy)
+        {
+            $column = $filterMap[$this->filterBy] ?? null;
+            $timezone = $this->timezone;
+            if ($column && $this->fromDate) {
+                if ($timezone === 'Asia/Calcutta') {
+                    $timezone = 'Asia/Kolkata'; // Convert old timezone
+                }
+                $fromDateUtc = Carbon::parse($this->fromDate, $timezone)->startOfDay()->setTimezone('UTC');
+                if ($this->toDate) {
+                    $toDateUtc   = Carbon::parse($this->toDate, $timezone)->endOfDay()->setTimezone('UTC');
+                    $query->whereBetween($column, [$fromDateUtc, $toDateUtc]);
+                }
+                else {
+                    $query->whereDate($column, $fromDateUtc->toDateString());
+                }
 
+            }
+        }
+        
         $orders = $query->with([
             'trackingNumber',
             'driverAssigned',
