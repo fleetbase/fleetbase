@@ -933,7 +933,7 @@ class OrderController extends FleetOpsController
         try{
             //  return Excel::download(new OrderExport($selections), $fileName);
             return Excel::download(
-                new OrderExportChange($selections, $fileName, $filterBy, $fromDate, $toDate, $timezone),
+                new OrderExportChange($selections, $filterBy, $fromDate, $toDate, $timezone),
                 $fileName
             );
             

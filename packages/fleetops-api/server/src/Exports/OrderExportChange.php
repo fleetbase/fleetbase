@@ -117,8 +117,7 @@ class OrderExportChange implements FromCollection, WithHeadings, ShouldAutoSize,
             'start_date'  => 'scheduled_at',
             'created_at'  => 'created_at',
         ];
-        if(isset($this->timezone) && $this->filterBy)
-        {
+        if(isset($this->timezone) && $this->filterBy){
             $column = $filterMap[$this->filterBy] ?? null;
             $timezone = $this->timezone;
             if ($column && $this->fromDate) {
