@@ -27,8 +27,11 @@
                     </div>
                 </div>
 
-                <div>
-                    <Button @icon="check" @size="lg" @type="primary" @buttonType="submit" @text={{t "invite.for-users.accept-invitation-text"}} @onClick={{this.acceptInvite}} @isLoading={{this.isLoading}} />
+                <div class="flex items-center">
+                    <Button @customClass="mr-4" @icon="check" @size="lg" @type="primary" @buttonType="submit" @text={{t "invite.for-users.accept-invitation-text"}} @onClick={{this.acceptInvite}} @isLoading={{this.isLoading}} />
+                     {{#if this.isLoading}}
+                        <Spinner />
+                     {{/if}}
                 </div>
             </form>
         </div>

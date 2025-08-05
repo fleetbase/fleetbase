@@ -12,6 +12,7 @@ export default class ManagementLeavesIndexRoute extends Route {
         per_page: { refreshModel: true },
         sort: { refreshModel: true },
         query: { refreshModel: true },
+        public_id: { refreshModel: true },
         driver: { refreshModel: true },
         status: { refreshModel: true },
         leave_type: { refreshModel: true },
@@ -77,6 +78,9 @@ export default class ManagementLeavesIndexRoute extends Route {
             }
             
             // Add filters
+            if (params.public_id) {
+                searchParams.append('public_id', params.public_id);
+            }
             if (params.driver) {
                 searchParams.append('driver_uuid', params.driver);
             }
