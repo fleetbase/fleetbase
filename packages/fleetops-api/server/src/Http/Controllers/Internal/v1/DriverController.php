@@ -25,9 +25,13 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Support\Facades\Log;
+use Fleetbase\FleetOps\Traits\ImportErrorHandler;
+use Fleetbase\Models\File;
 
 class DriverController extends FleetOpsController
 {
+    use ImportErrorHandler;
     /**
      * The resource to query.
      *
@@ -529,24 +533,387 @@ class DriverController extends FleetOpsController
         return $phone;
     }
 
-    /**
-     * Process import files (excel,csv) into Fleetbase order data.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function import(ImportRequest $request)
     {
-        $disk           = $request->input('disk', config('filesystems.default'));
-        $files          = $request->resolveFilesFromIds();
+        $files = File::whereIn('uuid', $request->input('files'))->get();
+        
+        $result = $this->processImportWithErrorHandling($files, 'driver', function($file) {
+            $disk = config('filesystems.default');
+            $data = Excel::toArray(new DriverImport(), $file->path, $disk);
+            $totalRows = collect($data)->flatten(1)->count();
+            Log::info('Total rows: ' . $totalRows .", Company: ". session('company'));
+            
+            if ($totalRows > config('params.maximum_import_row_size')) {
+                return [
+                    'success' => false,
+                    'errors' => [['N/A', "Import failed: Maximum of ". config('params.maximum_import_row_size') ." rows allowed. Your file contains {$totalRows} rows.", 'N/A']]
+                ];
+            }
+            
+            return $this->driverImportWithValidation($data);
+        });
+        
+        if (!empty($result['allErrors'])) {
+            return response($this->generateErrorResponse($result['allErrors'], 'driver', $files->first()->uuid, $result));
+        }
+        
+        return response($this->generateSuccessResponse('driver', $files->first()->uuid, $result));
+    }
 
-        foreach ($files as $file) {
-            try {
-                Excel::import(new DriverImport(), $file->path, $disk);
-            } catch (\Throwable $e) {
-                return response()->error('Invalid file, unable to proccess.');
+    public function driverImportWithValidation($excelData)
+    {
+        try {
+            $records = [];
+            $importErrors = [];
+            $createdDrivers = [];
+            $updatedDrivers = [];
+
+            // Pre-collect all unique emails and license numbers for batch validation
+            $allEmails = [];
+            $allLicenseNumbers = [];
+            $rowsWithIndex = [];
+
+            foreach ($excelData as $sheetIndex => $sheetRows) {
+                $sheetRowsWithIndex = collect($sheetRows)->map(function ($row, $originalIndex) {
+                    $row['_original_row_index'] = $originalIndex;
+                    return $row;
+                });
+
+                foreach ($sheetRowsWithIndex as $rowIndex => $row) {
+                    $originalRowIndex = $row['_original_row_index'] ?? $rowIndex;
+                    $displayRowIndex = $originalRowIndex + 1;
+
+                    // Collect emails and license numbers for batch validation using same column mapping as createFromImport
+                    $email = $this->getDriverValue($row, ['email', 'email_address']);
+                    $driversLicenseNumber = $this->getDriverValue($row, ['drivers_license', 'driver_license', 'drivers_license_number', 'driver_license_number', 'license', 'driver_id', 'driver_identification', 'driver_identification_number', 'license_number']);
+                    
+                    if (!empty($email)) {
+                        $allEmails[] = strtolower(trim($email));
+                    }
+                    if (!empty($driversLicenseNumber)) {
+                        $allLicenseNumbers[] = trim($driversLicenseNumber);
+                    }
+                    
+                    $rowsWithIndex[] = [
+                        'row' => $row,
+                        'displayRowIndex' => $displayRowIndex
+                    ];
+                }
+            }
+
+            // Single query to get all existing emails and license numbers
+            $existingEmails = [];
+            $existingLicenseNumbers = [];
+            
+            if (!empty($allEmails)) {
+                // Query both Driver table directly and through User relationship
+                $driverEmails = Driver::join('users', 'drivers.user_uuid', '=', 'users.uuid')
+                    ->whereIn('users.email', array_unique($allEmails))
+                    ->where('drivers.company_uuid', session('company'))
+                    ->whereNull('drivers.deleted_at')
+                    ->pluck('users.email')
+                    ->map('strtolower')
+                    ->toArray();
+                    
+                $existingEmails = $driverEmails;
+            }
+
+            if (!empty($allLicenseNumbers)) {
+                $existingLicenseNumbers = Driver::whereIn('drivers_license_number', array_unique($allLicenseNumbers))
+                    ->where('company_uuid', session('company'))
+                    ->whereNull('deleted_at')
+                    ->pluck('drivers_license_number')
+                    ->toArray();
+            }
+
+            // Track duplicates within the import file itself
+            $seenEmails = [];
+            $seenLicenseNumbers = [];
+
+            // Process each row with pre-validation before calling createFromImport
+            foreach ($rowsWithIndex as $rowData) {
+                $row = $rowData['row'];
+                $displayRowIndex = $rowData['displayRowIndex'];
+
+                try {
+                    // Pre-validation before calling createFromImport
+                    $validationErrors = $this->validateDriverRow($row, $displayRowIndex, 
+                        $existingEmails, $existingLicenseNumbers, $seenEmails, $seenLicenseNumbers);
+                    
+                    if (!empty($validationErrors)) {
+                        $importErrors = array_merge($importErrors, $validationErrors);
+                        continue;
+                    }
+
+                    // Clean the row data before passing to createFromImport
+                    $cleanedRow = $this->cleanRowData($row);
+
+                    // Use your existing createFromImport method
+                    $driver = Driver::createFromImport($cleanedRow, true);
+                    
+                    if ($driver) {
+                        $records[] = $driver;
+                        
+                        // Track whether driver was created or updated
+                        if ($driver->wasRecentlyCreated) {
+                            $createdDrivers[] = $driver->uuid;
+                        } else {
+                            $updatedDrivers[] = $driver->uuid;
+                        }
+
+                        // Add to seen arrays to prevent future duplicates in the same import
+                        if (!empty($driver->user->email)) {
+                            $seenEmails[] = strtolower($driver->user->email);
+                            $existingEmails[] = strtolower($driver->user->email);
+                        }
+                        if (!empty($driver->drivers_license_number)) {
+                            $seenLicenseNumbers[] = $driver->drivers_license_number;
+                            $existingLicenseNumbers[] = $driver->drivers_license_number;
+                        }
+                    } else {
+                        $name = $this->getDriverValue($row, ['name', 'full_name', 'first_name', 'driver', 'person']);
+                        $email = $this->getDriverValue($row, ['email', 'email_address']);
+                        $driversLicenseNumber = $this->getDriverValue($row, ['drivers_license', 'driver_license', 'drivers_license_number', 'driver_license_number', 'license', 'driver_id', 'driver_identification', 'driver_identification_number', 'license_number']);
+                        
+                        $importErrors[] = [
+                            (string)$displayRowIndex,
+                            "Failed to create driver - createFromImport returned null",
+                            $email ?? $driversLicenseNumber ?? $name ?? 'Unknown'
+                        ];
+                    }
+
+                } catch (\Exception $e) {
+                    $name = $this->getDriverValue($row, ['name', 'full_name', 'first_name', 'driver', 'person']);
+                    $email = $this->getDriverValue($row, ['email', 'email_address']);
+                    $driversLicenseNumber = $this->getDriverValue($row, ['drivers_license', 'driver_license', 'drivers_license_number', 'driver_license_number', 'license', 'driver_id', 'driver_identification', 'driver_identification_number', 'license_number']);
+                    
+                    $importErrors[] = [
+                        (string)$displayRowIndex,
+                        "Failed to create driver: " . $e->getMessage(),
+                        $email ?? $driversLicenseNumber ?? $name ?? 'Unknown'
+                    ];
+                }
+            }
+
+            if (!empty($importErrors)) {
+                $successCount = count($records);
+                $errorCount = count($importErrors);
+                $createdCount = count($createdDrivers);
+                $updatedCount = count($updatedDrivers);
+
+                return [
+                    'success' => false,
+                    'partial_success' => $successCount > 0,
+                    'successful_imports' => $successCount,
+                    'created_drivers' => $createdCount,
+                    'updated_drivers' => $updatedCount,
+                    'total_errors' => $errorCount,
+                    'errors' => $importErrors,
+                    'message' => $successCount > 0
+                        ? "Partial import completed. {$createdCount} drivers created, {$updatedCount} drivers updated, {$errorCount} errors found."
+                        : "Import failed. No drivers were imported due to validation errors."
+                ];
+            }
+
+            $successCount = count($records);
+            $createdCount = count($createdDrivers);
+            $updatedCount = count($updatedDrivers);
+
+            return [
+                'records' => $records,
+                'summary' => [
+                    'total_processed' => $successCount,
+                    'created' => $createdCount,
+                    'updated' => $updatedCount,
+                    'created_drivers' => $createdDrivers,
+                    'updated_drivers' => $updatedDrivers
+                ]
+            ];
+
+        } catch (\Exception $e) {
+            Log::error('Driver import failed', [
+                'message' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+
+            return ['success' => false, 'errors' => [[$e->getMessage()]]];
+        }
+    }
+
+    /**
+     * Validate a single driver row before processing
+     * Collects ALL validation errors for the row instead of stopping at the first error
+     *
+     * @param array $row
+     * @param int $displayRowIndex
+     * @param array $existingEmails
+     * @param array $existingLicenseNumbers
+     * @param array $seenEmails
+     * @param array $seenLicenseNumbers
+     * @return array
+     */
+    private function validateDriverRow($row, $displayRowIndex, $existingEmails, $existingLicenseNumbers, &$seenEmails, &$seenLicenseNumbers)
+    {
+        $errors = [];
+        $hasValidationErrors = false;
+
+        // Extract values using the same logic as createFromImport
+        $name = $this->getDriverValue($row, ['name', 'full_name', 'first_name', 'driver', 'person']);
+        $email = $this->getDriverValue($row, ['email', 'email_address']);
+        $phone = $this->getDriverValue($row, ['phone', 'mobile', 'phone_number', 'number', 'cell', 'cell_phone', 'mobile_number', 'contact_number', 'tel', 'telephone', 'telephone_number']);
+        $driversLicenseNumber = $this->getDriverValue($row, ['drivers_license', 'driver_license', 'drivers_license_number', 'driver_license_number', 'license', 'driver_id', 'driver_identification', 'driver_identification_number', 'license_number']);
+
+        // Basic validation - name is required
+        if (empty($name)) {
+            $errors[] = [
+                (string)$displayRowIndex,
+                "Driver name is required.",
+                ""
+            ];
+            $hasValidationErrors = true;
+        }
+
+        // Email validation
+        if (!empty($email)) {
+            $email = strtolower(trim($email));
+            
+            // Check email format
+            if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                $errors[] = [
+                    (string)$displayRowIndex,
+                    "Invalid email format: '{$email}'",
+                    $email
+                ];
+                $hasValidationErrors = true;
+            } else {
+                // Only check duplicates if email format is valid
+                
+                // Check for duplicate email in existing database
+                if (in_array($email, $existingEmails)) {
+                    $errors[] = [
+                        (string)$displayRowIndex,
+                        "Email '{$email}' already exists in the system.",
+                        $email
+                    ];
+                    $hasValidationErrors = true;
+                }
+
+                // Check for duplicate email within the import file
+                if (in_array($email, $seenEmails)) {
+                    $errors[] = [
+                        (string)$displayRowIndex,
+                        "Duplicate email '{$email}' found in import file.",
+                        $email
+                    ];
+                    $hasValidationErrors = true;
+                }
+
+                // Only add to seen emails if no validation errors for this email
+                if (!$hasValidationErrors || (!in_array($email, $existingEmails) && !in_array($email, $seenEmails))) {
+                    $seenEmails[] = $email;
+                }
             }
         }
 
-        return response()->json(['status' => 'ok', 'message' => 'Import completed']);
+        // License number validation
+        if (!empty($driversLicenseNumber)) {
+            $licenseNumber = trim($driversLicenseNumber);
+            
+            // Check for duplicate license number in existing database
+            if (in_array($licenseNumber, $existingLicenseNumbers)) {
+                $errors[] = [
+                    (string)$displayRowIndex,
+                    "License number '{$licenseNumber}' already exists in the system.",
+                    $licenseNumber
+                ];
+                $hasValidationErrors = true;
+            }
+
+            // Check for duplicate license number within the import file
+            if (in_array($licenseNumber, $seenLicenseNumbers)) {
+                $errors[] = [
+                    (string)$displayRowIndex,
+                    "Duplicate license number '{$licenseNumber}' found in import file.",
+                    $licenseNumber
+                ];
+                $hasValidationErrors = true;
+            }
+
+            // Only add to seen license numbers if no validation errors for this license
+            if (!in_array($licenseNumber, $existingLicenseNumbers) && !in_array($licenseNumber, $seenLicenseNumbers)) {
+                $seenLicenseNumbers[] = $licenseNumber;
+            }
+        }
+
+        // Phone number validation (basic format check)
+        if (!empty($phone)) {
+            $phone = trim($phone);
+            // Allow various phone formats but ensure it has reasonable length and contains numbers
+            if (strlen($phone) < 7 || !preg_match('/[0-9]/', $phone)) {
+                $errors[] = [
+                    (string)$displayRowIndex,
+                    "Invalid phone number format: '{$phone}'",
+                    $email ?? $driversLicenseNumber ?? $name
+                ];
+                $hasValidationErrors = true;
+            }
+        }
+
+        return $errors;
+    }
+
+    /**
+     * Get driver value using the same logic as createFromImport
+     * This mimics the Utils::or() method behavior
+     *
+     * @param array $row
+     * @param array $keys
+     * @return mixed
+     */
+    private function getDriverValue($row, $keys)
+    {
+        foreach ($keys as $key) {
+            if (isset($row[$key]) && !empty($row[$key])) {
+                return $row[$key];
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Clean row data before passing to createFromImport
+     *
+     * @param array $row
+     * @return array
+     */
+    private function cleanRowData($row)
+    {
+        // Remove our internal tracking field
+        unset($row['_original_row_index']);
+        
+        // Trim and clean string values
+        foreach ($row as $key => $value) {
+            if (is_string($value)) {
+                $row[$key] = trim($value);
+                // Convert empty strings to null
+                if ($row[$key] === '') {
+                    $row[$key] = null;
+                }
+            }
+        }
+
+        // Normalize email to lowercase
+        $email = $this->getDriverValue($row, ['email', 'email_address']);
+        if (!empty($email)) {
+            // Set email in all possible column names to ensure consistency
+            if (isset($row['email'])) {
+                $row['email'] = strtolower($email);
+            }
+            if (isset($row['email_address'])) {
+                $row['email_address'] = strtolower($email);
+            }
+        }
+
+        return $row;
     }
 }

@@ -16,9 +16,13 @@ use Fleetbase\Http\Requests\ImportRequest;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Support\Facades\Log;
+use Fleetbase\FleetOps\Traits\ImportErrorHandler;
+use Fleetbase\Models\File;
 
 class FleetController extends FleetOpsController
 {
+    use ImportErrorHandler;
     /**
      * The resource to query.
      *
@@ -207,17 +211,340 @@ class FleetController extends FleetOpsController
 
     public function import(ImportRequest $request)
     {
-        $disk           = $request->input('disk', config('filesystems.default'));
-        $files          = $request->resolveFilesFromIds();
+        $files = File::whereIn('uuid', $request->input('files'))->get();
+        
+        $result = $this->processImportWithErrorHandling($files, 'fleet', function($file) {
+            $disk = config('filesystems.default');
+            $data = Excel::toArray(new FleetImport(), $file->path, $disk);
+            $totalRows = collect($data)->flatten(1)->count();
+            Log::info('Total rows: ' . $totalRows .", Company: ". session('company'));
+            
+            if ($totalRows > config('params.maximum_import_row_size')) {
+                return [
+                    'success' => false,
+                    'errors' => [['N/A', "Import failed: Maximum of ". config('params.maximum_import_row_size') ." rows allowed. Your file contains {$totalRows} rows.", 'N/A']]
+                ];
+            }
+            
+            return $this->fleetImportWithValidation($data);
+        });
+        
+        if (!empty($result['allErrors'])) {
+            return response($this->generateErrorResponse($result['allErrors'], 'fleet', $files->first()->uuid, $result));
+        }
+        
+        return response($this->generateSuccessResponse('fleet', $files->first()->uuid, $result));
+    }
 
-        foreach ($files as $file) {
-            try {
-                Excel::import(new FleetImport(), $file->path, $disk);
-            } catch (\Throwable $e) {
-                return response()->error('Invalid file, unable to proccess.');
+    /**
+     * Process fleet import data with pre-validation before calling createFromImport.
+     *
+     * @param array $excelData
+     * @return array
+     */
+    public function fleetImportWithValidation($excelData)
+    {
+        try {
+            $records = [];
+            $importErrors = [];
+            $createdFleets = [];
+            $updatedFleets = [];
+
+            // Pre-collect all unique fleet names for batch validation
+            $allFleetNames = [];
+            $rowsWithIndex = [];
+
+            foreach ($excelData as $sheetIndex => $sheetRows) {
+                $sheetRowsWithIndex = collect($sheetRows)->map(function ($row, $originalIndex) {
+                    $row['_original_row_index'] = $originalIndex;
+                    return $row;
+                });
+
+                foreach ($sheetRowsWithIndex as $rowIndex => $row) {
+                    $originalRowIndex = $row['_original_row_index'] ?? $rowIndex;
+                    $displayRowIndex = $originalRowIndex + 1;
+
+                    // Collect fleet names for batch validation using same column mapping as createFromImport
+                    $fleetName = $this->getFleetValue($row, ['name', 'fleet', 'fleet_name']);
+                    
+                    if (!empty($fleetName)) {
+                        $allFleetNames[] = trim($fleetName);
+                    }
+                    
+                    $rowsWithIndex[] = [
+                        'row' => $row,
+                        'displayRowIndex' => $displayRowIndex
+                    ];
+                }
+            }
+
+            // Single query to get all existing fleet names
+            $existingFleetNames = [];
+            
+            if (!empty($allFleetNames)) {
+                $existingFleetNames = Fleet::whereIn('name', array_unique($allFleetNames))
+                    ->where('company_uuid', session('company'))
+                    ->whereNull('deleted_at')
+                    ->pluck('name')
+                    ->toArray();
+            }
+
+            // Track duplicates within the import file itself
+            $seenFleetNames = [];
+
+            // Process each row with pre-validation before calling createFromImport
+            foreach ($rowsWithIndex as $rowData) {
+                $row = $rowData['row'];
+                $displayRowIndex = $rowData['displayRowIndex'];
+
+                try {
+                    // Pre-validation before calling createFromImport
+                    $validationErrors = $this->validateFleetRow($row, $displayRowIndex, 
+                        $existingFleetNames, $seenFleetNames);
+                    
+                    if (!empty($validationErrors)) {
+                        $importErrors = array_merge($importErrors, $validationErrors);
+                        continue;
+                    }
+
+                    // Clean the row data before passing to createFromImport
+                    $cleanedRow = $this->cleanRowData($row);
+
+                    // Use your existing createFromImport method
+                    $fleet = Fleet::createFromImport($cleanedRow, true);
+                    
+                    if ($fleet) {
+                        $records[] = $fleet;
+                        
+                        // Track whether fleet was created or updated
+                        if ($fleet->wasRecentlyCreated) {
+                            $createdFleets[] = $fleet->uuid;
+                        } else {
+                            $updatedFleets[] = $fleet->uuid;
+                        }
+
+                        // Add to seen arrays to prevent future duplicates in the same import
+                        if (!empty($fleet->name)) {
+                            $seenFleetNames[] = $fleet->name;
+                            $existingFleetNames[] = $fleet->name;
+                        }
+                    } else {
+                        $fleetName = $this->getFleetValue($row, ['name', 'fleet', 'fleet_name']);
+                        
+                        $importErrors[] = [
+                            (string)$displayRowIndex,
+                            "Failed to create fleet - createFromImport returned null",
+                            $fleetName ?? 'Unknown'
+                        ];
+                    }
+
+                } catch (\Exception $e) {
+                    $fleetName = $this->getFleetValue($row, ['name', 'fleet', 'fleet_name']);
+                    
+                    $importErrors[] = [
+                        (string)$displayRowIndex,
+                        "Failed to create fleet: " . $e->getMessage(),
+                        $fleetName ?? 'Unknown'
+                    ];
+                }
+            }
+
+            if (!empty($importErrors)) {
+                $successCount = count($records);
+                $errorCount = count($importErrors);
+                $createdCount = count($createdFleets);
+                $updatedCount = count($updatedFleets);
+
+                return [
+                    'success' => false,
+                    'partial_success' => $successCount > 0,
+                    'successful_imports' => $successCount,
+                    'created_fleets' => $createdCount,
+                    'updated_fleets' => $updatedCount,
+                    'total_errors' => $errorCount,
+                    'errors' => $importErrors,
+                    'message' => $successCount > 0
+                        ? "Partial import completed. {$createdCount} fleets created, {$updatedCount} fleets updated, {$errorCount} errors found."
+                        : "Import failed. No fleets were imported due to validation errors."
+                ];
+            }
+
+            $successCount = count($records);
+            $createdCount = count($createdFleets);
+            $updatedCount = count($updatedFleets);
+
+            return [
+                'records' => $records,
+                'summary' => [
+                    'total_processed' => $successCount,
+                    'created' => $createdCount,
+                    'updated' => $updatedCount,
+                    'created_fleets' => $createdFleets,
+                    'updated_fleets' => $updatedFleets
+                ]
+            ];
+
+        } catch (\Exception $e) {
+            Log::error('Fleet import failed', [
+                'message' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+
+            return ['success' => false, 'errors' => [[$e->getMessage()]]];
+        }
+    }
+
+    /**
+     * Validate a single fleet row before processing
+     * Collects ALL validation errors for the row instead of stopping at the first error
+     *
+     * @param array $row
+     * @param int $displayRowIndex
+     * @param array $existingFleetNames
+     * @param array $seenFleetNames
+     * @return array
+     */
+    private function validateFleetRow($row, $displayRowIndex, $existingFleetNames, &$seenFleetNames)
+    {
+        $errors = [];
+        $hasValidationErrors = false;
+
+        // Extract values using the same logic as createFromImport
+        $fleetName = $this->getFleetValue($row, ['name', 'fleet', 'fleet_name']);
+        $task = $this->getFleetValue($row, ['task', 'fleet_task']);
+
+        // Basic validation - fleet name is required
+        if (empty($fleetName)) {
+            $errors[] = [
+                (string)$displayRowIndex,
+                "Fleet name is required.",
+                ""
+            ];
+            $hasValidationErrors = true;
+        } else {
+            $fleetName = trim($fleetName);
+            
+            // Fleet name format validation - no special characters except spaces, hyphens, and underscores
+            if (!preg_match('/^[a-zA-Z0-9\s\-_]+$/', $fleetName)) {
+                $errors[] = [
+                    (string)$displayRowIndex,
+                    "Fleet name '{$fleetName}' contains invalid characters. Only letters, numbers, spaces, hyphens, and underscores are allowed.",
+                    $fleetName
+                ];
+                $hasValidationErrors = true;
+            }
+
+            // Fleet name length validation
+            if (strlen($fleetName) < 2) {
+                $errors[] = [
+                    (string)$displayRowIndex,
+                    "Fleet name '{$fleetName}' is too short. Minimum 2 characters required.",
+                    $fleetName
+                ];
+                $hasValidationErrors = true;
+            } elseif (strlen($fleetName) > 100) {
+                $errors[] = [
+                    (string)$displayRowIndex,
+                    "Fleet name '{$fleetName}' is too long. Maximum 100 characters allowed.",
+                    $fleetName
+                ];
+                $hasValidationErrors = true;
+            }
+
+            // Check for duplicate fleet name in existing database
+            if (in_array($fleetName, $existingFleetNames)) {
+                $errors[] = [
+                    (string)$displayRowIndex,
+                    "Fleet name '{$fleetName}' already exists in the system.",
+                    $fleetName
+                ];
+                $hasValidationErrors = true;
+            }
+
+            // Check for duplicate fleet name within the import file
+            if (in_array($fleetName, $seenFleetNames)) {
+                $errors[] = [
+                    (string)$displayRowIndex,
+                    "Duplicate fleet name '{$fleetName}' found in import file.",
+                    $fleetName
+                ];
+                $hasValidationErrors = true;
+            }
+
+            // Only add to seen fleet names if no validation errors for this name
+            if (!in_array($fleetName, $existingFleetNames) && !in_array($fleetName, $seenFleetNames)) {
+                $seenFleetNames[] = $fleetName;
             }
         }
 
-        return response()->json(['status' => 'ok', 'message' => 'Import completed']);
+        // Task validation (optional field)
+        if (!empty($task)) {
+            $task = trim($task);
+            
+            // Task length validation
+            if (strlen($task) > 255) {
+                $errors[] = [
+                    (string)$displayRowIndex,
+                    "Task description is too long. Maximum 255 characters allowed.",
+                    $fleetName ?? 'Unknown'
+                ];
+                $hasValidationErrors = true;
+            }
+
+            // Task format validation - allow letters, numbers, spaces, and common punctuation
+            if (!preg_match('/^[a-zA-Z0-9\s\-_.,;:()\/&]+$/', $task)) {
+                $errors[] = [
+                    (string)$displayRowIndex,
+                    "Task description contains invalid characters.",
+                    $fleetName ?? 'Unknown'
+                ];
+                $hasValidationErrors = true;
+            }
+        }
+
+        return $errors;
+    }
+
+    /**
+     * Get fleet value using the same logic as createFromImport
+     * This mimics the Utils::or() method behavior
+     *
+     * @param array $row
+     * @param array $keys
+     * @return mixed
+     */
+    private function getFleetValue($row, $keys)
+    {
+        foreach ($keys as $key) {
+            if (isset($row[$key]) && !empty($row[$key])) {
+                return $row[$key];
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Clean row data before passing to createFromImport
+     *
+     * @param array $row
+     * @return array
+     */
+    private function cleanRowData($row)
+    {
+        // Remove our internal tracking field
+        unset($row['_original_row_index']);
+        
+        // Trim and clean string values
+        foreach ($row as $key => $value) {
+            if (is_string($value)) {
+                $row[$key] = trim($value);
+                // Convert empty strings to null
+                if ($row[$key] === '') {
+                    $row[$key] = null;
+                }
+            }
+        }
+
+        return $row;
     }
 }
