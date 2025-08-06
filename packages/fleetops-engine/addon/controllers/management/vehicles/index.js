@@ -8,10 +8,17 @@ import { task } from 'ember-concurrency-decorators';
 import { driver } from 'driver.js';
 import 'driver.js/dist/driver.css';
 import { later } from '@ember/runloop';
+import ENV from '@fleetbase/console/config/environment';
+import { 
+    handleErrorLogDownload, 
+    handleSuccessfulImport, 
+    downloadFile 
+  } from '@fleetbase/fleetops-engine/utils/import-utils';
 
 export default class ManagementVehiclesIndexController extends BaseController {
     @service contextPanel;
     @service notifications;
+    @service modalsManager;
     @service vehicleActions;
     @service intl;
     @service store;
@@ -478,13 +485,144 @@ export default class ManagementVehiclesIndexController extends BaseController {
      *
      * @void
      */
-    @action importVehicles() {
-        this.crud.import('vehicle', {
-            onImportCompleted: () => {
-                this.hostRouter.refresh();
+    @action
+    importVehicles() {
+        const path = `${ENV.AWS.FILE_PATH}/vehicle-imports/${this.currentUser.companyId}`;
+        const disk = ENV.AWS.DISK;
+        const bucket = ENV.AWS.BUCKET;
+
+        const checkQueue = () => {
+            const uploadQueue = this.modalsManager.getOption('uploadQueue');
+            this.modalsManager.setOption('acceptButtonDisabled', !uploadQueue.length);
+        };
+
+        const originalConfirm = async (modal) => {
+            const uploadQueue = this.modalsManager.getOption('uploadQueue');
+            const uploadedFiles = [];
+
+            if (!uploadQueue.length) {
+                return this.notifications.warning(this.intl.t('fleet-ops.operations.orders.index.new.warning-message'));
+            }
+
+            const uploadTask = (file) => {
+                return new Promise((resolve) => {
+                    this.fetch.uploadFile.perform(
+                        file,
+                        { path, disk, bucket, type: 'vehicle_import' },
+                        (uploadedFile) => {
+                            uploadedFiles.pushObject(uploadedFile);
+                            resolve(uploadedFile);
+                        }
+                    );
+                });
+            };
+
+            modal.startLoading();
+            modal.setOption('acceptButtonText', this.intl.t('fleet-ops.component.modals.order-import.uploading'));
+
+            for (let i = 0; i < uploadQueue.length; i++) {
+                await uploadTask(uploadQueue.objectAt(i));
+            }
+
+            modal.setOption('acceptButtonText', this.intl.t('fleet-ops.component.modals.order-import.processing'));
+            modal.setOption('isProcessing', true);
+
+            const files = uploadedFiles.map((file) => file.id);
+
+            try {
+                const results = await this.fetch.post('vehicles/import', { files });
+                if (results?.error_log_url) {
+                    handleErrorLogDownload(this, modal, results);
+                    return;
+                }
+                handleSuccessfulImport(this, results, modal);
+            } catch (error) {
+                console.error('Processing error:', error);
+                modal.stopLoading();
+                modal.setOption('isProcessing', false);
+                this.notifications.serverError(error);
+            }
+        };
+
+        const downloadErrorLog = (modal) => {
+            const errorLogUrl = this.modalsManager.getOption('errorLogUrl');
+            if (errorLogUrl) {
+                downloadFile(errorLogUrl, () => {
+                    modal.done();
+                    this.hostRouter.refresh();
+                });
+            }
+        };
+
+        this.modalsManager.show('modals/import-modal', {
+            title: this.intl.t('fleet-ops.component.modals.place-import.title'),
+            acceptButtonText: this.intl.t('fleet-ops.component.modals.order-import.start-upload-button'),
+            acceptButtonScheme: 'magic',
+            acceptButtonIcon: 'upload',
+            acceptButtonDisabled: true,
+            isProcessing: false,
+            uploadQueue: [],
+            keepOpen: true,
+            errorLogUrl: null,
+            isErrorState: false,
+            acceptedFileTypes: ['application/vnd.ms-excel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'text/csv'],
+            fileQueueColumns: [
+                { name: this.intl.t('fleet-ops.component.modals.order-import.type'), valuePath: 'extension', key: 'type' },
+                { name: this.intl.t('fleet-ops.component.modals.order-import.file-name'), valuePath: 'name', key: 'fileName' },
+                { name: this.intl.t('fleet-ops.component.modals.order-import.file-size'), valuePath: 'size', key: 'fileSize' },
+                { name: this.intl.t('fleet-ops.component.modals.order-import.upload-date'), valuePath: 'file.lastModifiedDate', key: 'uploadDate' },
+                { name: '', valuePath: '', key: 'delete' },
+            ],
+            queueFile: (file) => {
+                const uploadQueue = this.modalsManager.getOption('uploadQueue');
+                uploadQueue.pushObject(file);
+                checkQueue();
+            },
+            removeFile: (file) => {
+                const { queue } = file;
+                const uploadQueue = this.modalsManager.getOption('uploadQueue');
+                uploadQueue.removeObject(file);
+                queue.remove(file);
+                checkQueue();
+            },
+            confirm: (modal) => {
+                if (this.modalsManager.getOption('isErrorState')) {
+                    downloadErrorLog(modal);
+                } else {
+                    originalConfirm(modal);
+                }
+            },
+            secondaryAction: (modal) => {
+                if (this.modalsManager.getOption('isErrorState')) {
+                    this.resetModalToInitialState();
+                }
+            },
+            decline: (modal) => {
+                try {
+                    const uploadQueue = this.modalsManager.getOption('uploadQueue') || [];
+                    uploadQueue.forEach(file => {
+                        file.queue?.remove(file);
+                    });
+                } catch (e) {
+                    console.error('Error during upload queue cleanup:', e);
+                } finally {
+                    this.modalsManager.setOption('uploadQueue', []);
+                    modal.done();
+                    this.hostRouter.refresh();
+                }
             },
         });
     }
+
+    onImportSuccess() {
+        this.hostRouter.transitionTo('console.fleet-ops.operations.vehicles.index', {
+            queryParams: { layout: 'table', t: Date.now() },
+        }).then(() => {
+            this.hostRouter.refresh();
+        });
+    }
+    
+
 
     /**
      * Allow user to assign driver to a `vehicle` via prompt

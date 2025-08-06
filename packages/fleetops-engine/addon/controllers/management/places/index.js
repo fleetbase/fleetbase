@@ -7,6 +7,12 @@ import { task, timeout } from 'ember-concurrency';
 import { driver } from 'driver.js';
 import 'driver.js/dist/driver.css';
 import { later } from '@ember/runloop';
+import ENV from '@fleetbase/console/config/environment';
+import { 
+    handleErrorLogDownload, 
+    handleSuccessfulImport, 
+    downloadFile 
+  } from '@fleetbase/fleetops-engine/utils/import-utils';
 
 export default class ManagementPlacesIndexController extends BaseController {
     @service notifications;
@@ -670,12 +676,156 @@ export default class ManagementPlacesIndexController extends BaseController {
      *
      * @void
      */
-    @action importPlaces() {
-        this.crud.import('place', {
-            onImportCompleted: () => {
-                this.hostRouter.refresh();
+    @action
+    importPlaces() {
+        let path = `${ENV.AWS.FILE_PATH}/place-imports/${this.currentUser.companyId}`;
+        let disk = ENV.AWS.DISK;
+        let bucket = ENV.AWS.BUCKET;
+
+        const checkQueue = () => {
+            const uploadQueue = this.modalsManager.getOption('uploadQueue');
+            this.modalsManager.setOption('acceptButtonDisabled', !uploadQueue.length);
+        };
+
+        const originalConfirm = async (modal) => {
+            const uploadQueue = this.modalsManager.getOption('uploadQueue');
+            const uploadedFiles = [];
+
+            if (!uploadQueue.length) {
+                return this.notifications.warning(this.intl.t('fleet-ops.operations.orders.index.new.warning-message'));
+            }
+
+            const uploadTask = (file) => {
+                return new Promise((resolve) => {
+                    this.fetch.uploadFile.perform(
+                        file,
+                        {
+                            path,
+                            disk,
+                            bucket,
+                            type: 'place_import',
+                        },
+                        (uploadedFile) => {
+                            uploadedFiles.pushObject(uploadedFile);
+                            resolve(uploadedFile);
+                        }
+                    );
+                });
+            };
+
+            modal.startLoading();
+            modal.setOption('acceptButtonText', this.intl.t('fleet-ops.component.modals.order-import.processing'));
+            modal.setOption('isProcessing', true);
+
+            for (let file of uploadQueue) {
+                await uploadTask(file);
+            }
+
+            const files = uploadedFiles.map((file) => file.id);
+            let results;
+
+            try {
+                results = await this.fetch.post('places/import', { files });
+
+                if (results?.error_log_url) {
+                    handleErrorLogDownload(this, modal, results);
+                    return;
+                }
+
+                handleSuccessfulImport(this, results, modal, this.onImportSuccess.bind(this));
+
+            } catch (error) {
+                console.error('Import failed:', error);
+                modal.stopLoading();
+                this.modalsManager.setOption('isProcessing', false);
+                this.notifications.serverError(error);
+            }
+        };
+
+        const downloadErrorLog = (modal) => {
+            const errorLogUrl = this.modalsManager.getOption('errorLogUrl');
+            if (errorLogUrl) {
+                downloadFile(errorLogUrl, () => {
+                    modal.done();
+                    this.hostRouter.refresh();
+                });
+            }
+        };
+
+        this.modalsManager.show('modals/import-modal', {
+            title: this.intl.t('fleet-ops.component.modals.place-import.title'),
+            acceptButtonText: this.intl.t('fleet-ops.component.modals.order-import.start-upload-button'),
+            acceptButtonScheme: 'magic',
+            acceptButtonIcon: 'upload',
+            acceptButtonDisabled: true,
+            isProcessing: false,
+            uploadQueue: [],
+            keepOpen: true,
+            errorLogUrl: null,
+            isErrorState: false,
+            acceptedFileTypes: [
+                'application/vnd.ms-excel',
+                'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                'text/csv',
+            ],
+            fileQueueColumns: [
+                { name: this.intl.t('fleet-ops.component.modals.order-import.type'), valuePath: 'extension', key: 'type' },
+                { name: this.intl.t('fleet-ops.component.modals.order-import.file-name'), valuePath: 'name', key: 'fileName' },
+                { name: this.intl.t('fleet-ops.component.modals.order-import.file-size'), valuePath: 'size', key: 'fileSize' },
+                { name: this.intl.t('fleet-ops.component.modals.order-import.upload-date'), valuePath: 'file.lastModifiedDate', key: 'uploadDate' },
+                { name: '', valuePath: '', key: 'delete' },
+            ],
+            queueFile: (file) => {
+                this.modalsManager.getOption('uploadQueue').pushObject(file);
+                checkQueue();
+            },
+            removeFile: (file) => {
+                const uploadQueue = this.modalsManager.getOption('uploadQueue');
+                uploadQueue.removeObject(file);
+                file.queue.remove(file);
+                checkQueue();
+            },
+            confirm: (modal) => {
+                const isErrorState = this.modalsManager.getOption('isErrorState');
+                if (isErrorState) {
+                    downloadErrorLog(modal);
+                } else {
+                    originalConfirm(modal);
+                }
+            },
+            secondaryAction: (modal) => {
+                if (this.modalsManager.getOption('isErrorState')) {
+                    this.resetModalToInitialState();
+                }
+            },
+            decline: (modal) => {
+                const uploadQueue = this.modalsManager.getOption('uploadQueue');
+                try {
+                    if (Array.isArray(uploadQueue) && uploadQueue.length) {
+                        const files = [...uploadQueue];
+                        files.forEach(file => {
+                            if (uploadQueue.removeObject) {
+                                uploadQueue.removeObject(file);
+                            }
+                            file.queue?.remove?.(file);
+                        });
+                    }
+                } catch (error) {
+                    console.error('Upload queue cleanup error:', error);
+                } finally {
+                    this.modalsManager.setOption('uploadQueue', []);
+                    modal.done();
+                    this.hostRouter.refresh();
+                }
             },
         });
+    }
+
+
+    onImportSuccess(results) {
+        this.hostRouter.transitionTo('console.fleet-ops.operations.places.index', {
+            queryParams: { layout: 'table', t: Date.now() },
+        }).then(() => this.hostRouter.refresh());
     }
 
     /**
