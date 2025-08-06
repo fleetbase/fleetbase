@@ -1340,6 +1340,21 @@ fleet-ops:
         file-name: Nom du fichier
         file-size: Taille du fichier
         upload-date: Date de téléchargement
+      place-import:
+        title: Importer
+        upload-spreadsheets: "Télécharger des feuilles de calcul"
+        drag-drop: "Faites glisser et déposez des fichiers de feuille de calcul dans cette zone de dépôt"
+        drop-instructions: "Sélectionnez un fichier à télécharger"
+        files-to-upload: "Fichiers à télécharger"
+        import-failed: "Importation échouée"
+        error-message: "Importation échouée. Aucun lieu n'a été importé en raison d'erreurs. Veuillez examiner le fichier de journal d'erreur joint pour plus de détails."
+        loading-message: "Traitement de l'importation des lieux..."
+        start-upload-button: "Démarrer le téléchargement"
+        try-again: "Réessayer"
+        type: "Type"
+        file-name: "Nom du fichier"
+        file-size: "Taille du fichier"
+        upload-date: "Date de téléchargement"
       order-label:
         loading: Chargement de l'étiquette...
       order-new-activity:

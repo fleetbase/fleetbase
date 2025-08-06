@@ -487,13 +487,14 @@ export default class ManagementDriversIndexController extends BaseController {
                 this.modalsManager.setOption('acceptButtonDisabled', true);
             }
         };
+    
         this.crud.import('driver', {
             onImportCompleted: () => {
                 results = this.fetch.post('drivers/import', { files });
                 
                 // Handle error log case
                 if (results && results.error_log_url) {
-                    this.handleErrorLogDownload(modal, results);
+                    handleErrorLogDownload(this, modal, results);
                     return;
                 }
                 this.hostRouter.refresh();
@@ -503,17 +504,16 @@ export default class ManagementDriversIndexController extends BaseController {
                 const isErrorState = this.modalsManager.getOption('isErrorState');
                 if (isErrorState) {
                     downloadErrorLog(modal);
-                    // this.hostRouter.refresh();
                 } else {
                     originalConfirm(modal);
                 }
             },
-            
         });
+    
         const originalConfirm = async (modal) => {
             const uploadQueue = this.modalsManager.getOption('uploadQueue');
             const uploadedFiles = [];
-            
+    
             const uploadTask = (file) => {
                 return new Promise((resolve) => {
                     this.fetch.uploadFile.perform(
@@ -553,10 +553,10 @@ export default class ManagementDriversIndexController extends BaseController {
     
             try {
                 results = await this.fetch.post('drivers/import', { files });
-                
+    
                 // Handle error log case
                 if (results && results.error_log_url) {
-                    this.handleErrorLogDownload(modal, results);
+                    handleErrorLogDownload(this, modal, results);
                     return;
                 }
             } catch (error) {
@@ -566,21 +566,20 @@ export default class ManagementDriversIndexController extends BaseController {
                 return this.notifications.serverError(error);
             }
     
-            // Success case - process the results
-            this.handleSuccessfulImport(results, modal);
+            // Success case - process the results, passing onImportSuccess callback
+            handleSuccessfulImport(this, results, modal, this.onImportSuccess.bind(this));
         };
-
+    
         const downloadErrorLog = (modal) => {
             const errorLogUrl = this.modalsManager.getOption('errorLogUrl');
             if (errorLogUrl) {
-                // Pass callback to refresh page after download
-                this.downloadFile(errorLogUrl, () => {
+                downloadFile(errorLogUrl, () => {
                     modal.done();
-                    this.hostRouter.refresh(); // ✅ Refresh after download completes
+                    this.hostRouter.refresh();
                 });
             }
         };
-
+    
         this.modalsManager.show('modals/import-modal', {
             title: this.intl.t('fleet-ops.component.modals.place-import.title'),
             acceptButtonText: this.intl.t('fleet-ops.component.modals.order-import.start-upload-button'),
@@ -599,7 +598,11 @@ export default class ManagementDriversIndexController extends BaseController {
                 { name: this.intl.t('fleet-ops.component.modals.order-import.upload-date'), valuePath: 'file.lastModifiedDate', key: 'uploadDate' },
                 { name: '', valuePath: '', key: 'delete' },
             ],
-            acceptedFileTypes: ['application/vnd.ms-excel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'text/csv'],
+            acceptedFileTypes: [
+                'application/vnd.ms-excel', 
+                'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 
+                'text/csv'
+            ],
             queueFile: (file) => {
                 const uploadQueue = this.modalsManager.getOption('uploadQueue');
                 uploadQueue.pushObject(file);
@@ -613,20 +616,16 @@ export default class ManagementDriversIndexController extends BaseController {
                 checkQueue();
             },
             confirm: (modal) => {
-                // Check if we're in error state (download mode)
                 const isErrorState = this.modalsManager.getOption('isErrorState');
                 if (isErrorState) {
                     downloadErrorLog(modal);
-                    // this.hostRouter.refresh();
                 } else {
                     originalConfirm(modal);
                 }
             },
-            // Add a secondary action for "Try Again" when in error state
             secondaryAction: (modal) => {
                 const isErrorState = this.modalsManager.getOption('isErrorState');
                 if (isErrorState) {
-                    // Reset modal to initial state
                     this.resetModalToInitialState();
                 }
             },
@@ -650,26 +649,21 @@ export default class ManagementDriversIndexController extends BaseController {
                 } finally {
                     this.modalsManager.setOption('uploadQueue', []);
                     modal.done();
-                    this.hostRouter.refresh(); // ✅ Refresh list after closing
+                    this.hostRouter.refresh();
                 }
             },
         });
-        
     }
-
-    handleErrorLogDownload(modal, results) {
-        return handleErrorLogDownload(this, modal, results);
-    }
-
-    handleSuccessfulImport(results, modal) {
-        return handleSuccessfulImport(this, results, modal);
-    }
-
-    downloadFile(url, onComplete = null) {
-        return downloadFile(url, onComplete);
-    }
-
     
+    // Add this method to handle post-import success behavior for drivers:
+    onImportSuccess() {
+        this.hostRouter.transitionTo('console.fleet-ops.operations.drivers.index', {
+            queryParams: { layout: 'table', t: Date.now() },
+        }).then(() => {
+            this.hostRouter.refresh();
+        });
+    }
+
 
     /**
      * View a `driver` details in modal

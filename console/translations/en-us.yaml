@@ -1339,6 +1339,21 @@ fleet-ops:
         import-failed: Import Failed
         import-failed-message: No trips were imported due to errors. Please review the attached error log for details.
         error-log-instruction: Some issues were found in your file. Click below to download details and fix them before trying again.
+      place-import:
+        title: Import
+        upload-spreadsheets: "Upload Spreadsheets"
+        drag-drop: "Drag and drop spreadsheet files onto this dropzone"
+        drop-instructions: "select file to upload"
+        files-to-upload: "Files to upload"
+        import-failed: "Import Failed"
+        error-message: "Import failed. No places were imported due to errors. Please review the attached error log for details."
+        loading-message: "Processing your places import..."
+        start-upload-button: "Start Upload"
+        try-again: "Try Again"
+        type: "Type"
+        file-name: "File Name"
+        file-size: "File Size"
+        upload-date: "Upload Date"
       order-label:
         loading: Loading Label...
       order-new-activity:

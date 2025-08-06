@@ -26,44 +26,33 @@ export function handleErrorLogDownload(context, modal, results) {
  * Handles successful import of data
  * @param {Object} context - The controller/component context
  * @param {Object} results - The import results
- * @param {Object} modal - The modal instance
+ * @param {Object} options - Configuration options
+ * @param {Function} [options.onSuccess] - Callback function to execute on successful import
+ * @param {Function} [options.onError] - Callback function to handle errors
+ * @param {String} [options.successMessage] - Custom success message
+ * @param {String} [options.redirectTo] - Route to redirect to after import
+ * @param {Object} [options.redirectParams] - Parameters for the redirect
  */
-export function handleSuccessfulImport(context, results, modal) {
-    const places = get(results, 'places');
-    const entities = get(results, 'entities');
+// utils/import-utils.js
+export function handleSuccessfulImport(context, results, modal, onSuccess) {
     const message = get(results, 'message');
     const errorLogUrl = get(results, 'error_log_url');
-    
-    if (isArray(places)) {
-        context.isMultipleDropoffOrder = true;
-        context.waypoints = places.map((_place) => {
-            const place = context.store.createRecord('place', _place);
-            return context.store.createRecord('waypoint', { place });
-        });
+
+    // Delegate module-specific logic to callback
+    if (typeof onSuccess === 'function') {
+        onSuccess(results);
     }
 
-    if (isArray(entities)) {
-        context.entities = entities.map((entity) => {
-            return context.store.createRecord('entity', entity);
-        });
-    }
-    
+    // Handle message + notify
     if (errorLogUrl && message) {
         context.notifications.error(message);
     } else {
-        context.notifications.success(context.intl.t('fleet-ops.operations.orders.index.new.import-success'));
+        context.notifications.success(context.intl.t('common.import-success'));
     }
-    
-    context.isCsvImportedOrder = true;
-    
-    context.hostRouter.transitionTo('console.fleet-ops.operations.orders.index', { 
-        queryParams: { layout: 'table', t: Date.now() } 
-    }).then(() => {
-        context.hostRouter.refresh();
-    });
 
     modal.done();
 }
+
 
 /**
  * Downloads a file from a URL
