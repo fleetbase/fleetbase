@@ -13,6 +13,8 @@ import 'driver.js/dist/driver.css';
 import { later } from '@ember/runloop';
 import { getOwner } from '@ember/application';
 import { on } from '@ember/object/evented';
+import Controller from '@ember/controller';
+import { inject as controller } from '@ember/controller';
 
 export default class OperationsOrdersIndexController extends BaseController {
     @service currentUser;
@@ -27,6 +29,7 @@ export default class OperationsOrdersIndexController extends BaseController {
     @service socket;
     @service abilities;
     @service session;
+    @controller('operations/orders/index/new') newController;
     /**
      * Queryable parameters for this controller's model
      *
@@ -1327,8 +1330,11 @@ export default class OperationsOrdersIndexController extends BaseController {
         this.startOrdersTour(true);
     }
     
-    
-    
+    @action
+    importOrder() {
+      return this.newController.importOrder();
+    }
+  
 
 }
 
