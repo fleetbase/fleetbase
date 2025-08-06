@@ -68,4 +68,5 @@ return [
     'bypass_email' => env('BYPASS_EMAIL'),
     'bypass_verification_code' => env('BYPASS_VERIFICATION_CODE'),
     'leave_status' => 'Approved', // Default leave status for driver availability checks
+    'order_export_limit' => env('ORDER_EXPORT_LIMIT', 1000),
 ];
