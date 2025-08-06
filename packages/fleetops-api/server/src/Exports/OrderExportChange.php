@@ -38,72 +38,72 @@ class OrderExportChange implements FromCollection, WithHeadings, ShouldAutoSize,
     }
 
     public function registerEvents(): array
-{
-    return [
-        AfterSheet::class => function(AfterSheet $event) {
-            $sheet = $event->sheet->getDelegate();
+    {
+        return [
+            AfterSheet::class => function(AfterSheet $event) {
+                $sheet = $event->sheet->getDelegate();
 
-            // Merge cells for main headers
-            $sheet->mergeCells('G1:H1'); // Driver(s) use first name and surname
-            $sheet->mergeCells('I1:K1'); // Tractor
-            $sheet->mergeCells('L1:N1'); // Trailer
+                // Merge cells for main headers
+                $sheet->mergeCells('G1:H1'); // Driver(s) use first name and surname
+                $sheet->mergeCells('I1:K1'); // Tractor
+                $sheet->mergeCells('L1:N1'); // Trailer
 
-            // Style main headers (row 1)
-            $sheet->getStyle('A1:N1')->applyFromArray([
-                'font' => ['bold' => true],
-                'fill' => [
-                    'fillType' => 'solid',
-                    'startColor' => ['rgb' => '70C0E7'] // Light blue/cyan
-                ],
-                'alignment' => ['horizontal' => 'center'],
-                'borders' => [
-                    'allBorders' => [
-                        'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
-                        'color' => ['rgb' => '000000']
-                    ]
-                ]
-            ]);
-
-            // Style sub headers (row 2)
-            $sheet->getStyle('A2:N2')->applyFromArray([
-                'font' => ['bold' => true, 'size' => 9],
-                'fill' => [
-                    'fillType' => 'solid',
-                    'startColor' => ['rgb' => 'E8F4F8'] // Very light blue
-                ],
-                'alignment' => ['horizontal' => 'center'],
-                'borders' => [
-                    'allBorders' => [
-                        'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
-                        'color' => ['rgb' => '000000']
-                    ]
-                ]
-            ]);
-
-            // Set row heights
-            $sheet->getRowDimension(1)->setRowHeight(20);
-            $sheet->getRowDimension(2)->setRowHeight(20);
-
-            // Auto-size columns A to N
-            foreach (range('A', 'N') as $column) {
-                $sheet->getColumnDimension($column)->setAutoSize(true);
-            }
-
-            // Add border to data rows (starting from A3)
-            $lastRow = $sheet->getHighestRow(); // Get last used row
-            if ($lastRow >= 3) {
-                $sheet->getStyle("A3:N{$lastRow}")->applyFromArray([
+                // Style main headers (row 1)
+                $sheet->getStyle('A1:N1')->applyFromArray([
+                    'font' => ['bold' => true],
+                    'fill' => [
+                        'fillType' => 'solid',
+                        'startColor' => ['rgb' => '70C0E7'] // Light blue/cyan
+                    ],
+                    'alignment' => ['horizontal' => 'center'],
                     'borders' => [
                         'allBorders' => [
                             'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
-                            'color' => ['rgb' => 'CCCCCC'] // Light gray border
+                            'color' => ['rgb' => '000000']
                         ]
                     ]
                 ]);
+
+                // Style sub headers (row 2)
+                $sheet->getStyle('A2:N2')->applyFromArray([
+                    'font' => ['bold' => true, 'size' => 9],
+                    'fill' => [
+                        'fillType' => 'solid',
+                        'startColor' => ['rgb' => 'E8F4F8'] // Very light blue
+                    ],
+                    'alignment' => ['horizontal' => 'center'],
+                    'borders' => [
+                        'allBorders' => [
+                            'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
+                            'color' => ['rgb' => '000000']
+                        ]
+                    ]
+                ]);
+
+                // Set row heights
+                $sheet->getRowDimension(1)->setRowHeight(20);
+                $sheet->getRowDimension(2)->setRowHeight(20);
+
+                // Auto-size columns A to N
+                foreach (range('A', 'N') as $column) {
+                    $sheet->getColumnDimension($column)->setAutoSize(true);
+                }
+
+                // Add border to data rows (starting from A3)
+                $lastRow = $sheet->getHighestRow(); // Get last used row
+                if ($lastRow >= 3) {
+                    $sheet->getStyle("A3:N{$lastRow}")->applyFromArray([
+                        'borders' => [
+                            'allBorders' => [
+                                'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
+                                'color' => ['rgb' => 'CCCCCC'] // Light gray border
+                            ]
+                        ]
+                    ]);
+                }
             }
-        }
-    ];
-}
+        ];
+    }
 
 
     public function collection(): Collection
@@ -117,25 +117,45 @@ class OrderExportChange implements FromCollection, WithHeadings, ShouldAutoSize,
             'start_date'  => 'scheduled_at',
             'created_at'  => 'created_at',
         ];
-        if(isset($this->timezone) && $this->filterBy){
+        if(isset($this->timezone) && $this->filterBy)
+        {
             $column = $filterMap[$this->filterBy] ?? null;
             $timezone = $this->timezone;
             if ($column && $this->fromDate) {
                 if ($timezone === 'Asia/Calcutta') {
                     $timezone = 'Asia/Kolkata'; // Convert old timezone
                 }
-                $fromDateUtc = Carbon::parse($this->fromDate, $timezone)->startOfDay()->setTimezone('UTC');
+                
+                // Parse fromDate and convert to local timezone
+                $fromDateLocal = Carbon::parse($this->fromDate)->setTimezone($timezone);
+                $startOfDayUtc = $fromDateLocal->copy()->startOfDay()->setTimezone('UTC');
+                
                 if ($this->toDate) {
-                    $toDateUtc   = Carbon::parse($this->toDate, $timezone)->endOfDay()->setTimezone('UTC');
-                    $query->whereBetween($column, [$fromDateUtc, $toDateUtc]);
+                    // Both fromDate and toDate provided
+                    $toDateLocal = Carbon::parse($this->toDate)->setTimezone($timezone);
+                    $endOfDayUtc = $toDateLocal->copy()->endOfDay()->setTimezone('UTC');
+                    
+                    $query->whereBetween($column, [$startOfDayUtc, $endOfDayUtc]);
+                    
+                } else {
+                    // Only fromDate provided - filter for that specific day
+                    $endOfDayUtc = $fromDateLocal->copy()->endOfDay()->setTimezone('UTC');
+                    
+                    $query->whereBetween($column, [$startOfDayUtc, $endOfDayUtc]);
+                    
                 }
-                else {
-                    $query->whereDate($column, $fromDateUtc->toDateString());
-                }
-
             }
         }
+       
+        // Apply limit only if no filters are provided
+        $hasFilters = !empty($this->selections) || 
+                     (isset($this->timezone) && $this->filterBy && $this->fromDate);
         
+        if (!$hasFilters) {
+            $limit = config('services.order_export_limit', 1000);
+            $query->limit($limit);
+        } 
+       
         $orders = $query->with([
             'trackingNumber',
             'driverAssigned',
@@ -148,7 +168,6 @@ class OrderExportChange implements FromCollection, WithHeadings, ShouldAutoSize,
         ])->OrderBy('created_at', 'desc')->get();
 
         $rows = collect();
-
         foreach ($orders as $order) {
             // Prepare the shared fields
             $tripId = $order->public_id;
@@ -163,7 +182,17 @@ class OrderExportChange implements FromCollection, WithHeadings, ShouldAutoSize,
             // Create lane information from waypoints
             $segmentLane = '';
             if ($waypoints instanceof Collection && $waypoints->isEmpty()) {
-                $segmentLane = ($order->payload->pickup->code ?? '') . '->' . ($order->payload->dropoff->code ?? '');
+                $pickupCode = $order->payload->pickup->code ?? '';
+                $dropoffCode = $order->payload->dropoff->code ?? '';
+                
+                // Only create lane if both codes exist
+                if (!empty($pickupCode) && !empty($dropoffCode)) {
+                    $segmentLane = $pickupCode . '->' . $dropoffCode;
+                } elseif (!empty($pickupCode)) {
+                    $segmentLane = $pickupCode;
+                } elseif (!empty($dropoffCode)) {
+                    $segmentLane = $dropoffCode;
+                }
             }
 
 
