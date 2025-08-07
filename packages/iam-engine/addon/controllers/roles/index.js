@@ -68,11 +68,19 @@ export default class RolesIndexController extends Controller {
      *
      * @memberof RolesIndexController
      */
-    // @tracked types = this.iam.schemeTypes;
+    
+     // @tracked types = this.iam.schemeTypes;
     @tracked types = this.iam.schemeTypes.map(type => ({
         id: type.id,
         label: type.name // Ensure 'name' is mapped to 'label'
     }));
+
+    get typeFilterOptions() {
+        return [
+            { id: 'flb-managed', label: this.intl.t('statuses.flb-managed'), value: 'flb-managed' },
+            { id: 'org-managed', label: this.intl.t('statuses.org-managed'), value: 'org-managed' }
+        ];
+    }
 
     /**
      * All columns applicable for roles
@@ -104,6 +112,18 @@ export default class RolesIndexController extends Controller {
             filterComponent: 'filter/select',
             filterOptions: this.services,
         },
+        // {
+        //     label: this.intl.t('iam.common.type'),
+        //     valuePath: 'type',
+        //     sortable: false,
+        //     width: '13%',
+        //     filterable: true,
+        //     filterComponent: 'filter/select',
+        //     filterOptionLabel: 'label',
+        //     filterOptionValue: 'id',
+        //     filterOptions: this.types,
+        // },
+        // In your RolesIndexController columns array
         {
             label: this.intl.t('iam.common.type'),
             valuePath: 'type',
@@ -111,9 +131,22 @@ export default class RolesIndexController extends Controller {
             width: '13%',
             filterable: true,
             filterComponent: 'filter/select',
-            filterOptionLabel: 'name',
+            filterOptionLabel: 'label',
             filterOptionValue: 'id',
-            filterOptions: this.types,
+            filterOptions: this.typeFilterOptions,
+            formatter: (cell, row) => {
+                let normalizedValue;
+        
+                if (cell === 'organization managed' || cell === 'Organization managed' || cell === 'Organization Managed') {
+                    normalizedValue = 'org-managed';
+                } else if (cell === 'flb managed' || cell === 'Flb managed' || cell === 'FLB managed' || cell === 'FLB Managed') {
+                    normalizedValue = 'flb-managed';
+                } else {
+                    normalizedValue = cell;
+                }
+                console.log('normalizedValue', normalizedValue);
+                return this.intl.t(`statuses.${normalizedValue}`);
+            }
         },
         {
             label: this.intl.t('iam.common.create'),
