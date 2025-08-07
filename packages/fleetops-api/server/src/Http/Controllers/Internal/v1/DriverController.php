@@ -28,6 +28,7 @@ use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Log;
 use Fleetbase\FleetOps\Traits\ImportErrorHandler;
 use Fleetbase\Models\File;
+use App\Helpers\FieldValidator;
 
 class DriverController extends FleetOpsController
 {
@@ -641,6 +642,14 @@ class DriverController extends FleetOpsController
                 $displayRowIndex = $rowData['displayRowIndex'];
 
                 try {
+
+                    $fieldsToValidate = ['name', 'license', 'phone', 'country', 'city', 'email'];
+                    foreach ($fieldsToValidate as $field) {
+                        if (isset($row[$field])) {
+                            $fieldErrors = FieldValidator::validateField($field, $row[$field], $displayRowIndex);
+                            $importErrors = array_merge($importErrors, $fieldErrors);
+                        }
+                    }
                     // Pre-validation before calling createFromImport
                     $validationErrors = $this->validateDriverRow($row, $displayRowIndex, 
                         $existingEmails, $existingLicenseNumbers, $seenEmails, $seenLicenseNumbers);
