@@ -34,6 +34,23 @@ class PlaceController extends FleetOpsController
      * @var string
      */
     public $resource = 'place';
+    private const PLACE_IMPORT_VALIDATION_FIELDS = [
+        'name',
+        'code',
+        'street1',
+        'street2',
+        'neighborhood',
+        'building',
+        'security_access_code',
+        'postal_code',
+        'city',
+        'state',
+        'latitude',
+        'longitude',
+        'phone',
+        'country'
+    ];
+
 
     /**
      * Quick search places for selection.
@@ -304,33 +321,18 @@ class PlaceController extends FleetOpsController
                         }
                     }
 
-                    // Add field validations
-                    $fieldsToValidate = [
-                        'name',
-                        'code',
-                        'street1',
-                        'street2',
-                        'neighborhood',
-                        'building',
-                        'security_access_code',
-                        'postal_code',
-                        'city',
-                        'state',
-                        'latitude',
-                        'longitude',
-                        'phone',
-                        'country'
-                    ];
+                    $fieldsToValidate = self::PLACE_IMPORT_VALIDATION_FIELDS;
 
+                    $rowErrors = [];
                     foreach ($fieldsToValidate as $field) {
                         if (isset($row[$field])) {
                             $fieldErrors = $this->validatePlaceField($field, $row[$field], $displayRowIndex);
-                            $importErrors = array_merge($importErrors, $fieldErrors);
+                            $rowErrors = array_merge($rowErrors, $fieldErrors);
                         }
                     }
 
-                    // If there were validation errors, skip to next row
-                    if (!empty($importErrors)) {
+                    if (!empty($rowErrors)) {
+                        $importErrors = array_merge($importErrors, $rowErrors);
                         continue;
                     }
 
@@ -464,7 +466,7 @@ class PlaceController extends FleetOpsController
         $errors = [];
 
         // Skip validation if value is empty
-        if (empty($value)) {
+        if ($value === null || $value === '') {
             return $errors;
         }
 
@@ -603,7 +605,7 @@ class PlaceController extends FleetOpsController
                 break;
 
             case 'country':
-                if (!preg_match('/^[A-Z]{2}$/i', $value)) {
+                if (!\Fleetbase\Types\Country::has(strtoupper($value))) {
                     $errors[] = [
                         (string)$rowIndex,
                         "Country must be a valid 2-letter ISO code (e.g., US, GB).",
