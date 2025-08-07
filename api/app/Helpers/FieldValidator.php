@@ -149,7 +149,7 @@ class FieldValidator
                 break;
 
             case 'country':
-                if (!preg_match('/^[A-Z]{2}$/i', $value)) {
+                if (!\Fleetbase\Types\Country::has(strtoupper($value))) {
                     $errors[] = [
                         (string) $rowIndex,
                         "Country must be a valid 2-letter ISO code (e.g., US, GB).",
@@ -159,15 +159,13 @@ class FieldValidator
                 break;
 
             case 'license':
-                // UK driving license format: 16 alphanumeric characters, no spaces or special characters
-                if (!preg_match('/^[A-Z0-9]{16}$/', strtoupper($value))) {
+                if (!preg_match('/^[A-Z0-9\s\-]{5,20}$/i', $value)) {
                     $errors[] = [
                         (string) $rowIndex,
-                        "Invalid license number format. Driving license must be 16 alphanumeric characters, no spaces or special characters allowed.",
+                        "Invalid license number format. Only alphanumeric characters, spaces, and hyphens are allowed. License number must be between 5 and 20 characters.",
                         $value
                     ];
                 }
-                break;
         }
 
         return $errors;
