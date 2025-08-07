@@ -1538,7 +1538,7 @@ private function buildWaypointSequence(array $routeMap): array
    public function createRouteSegments($waypoints, $orderId, $payloadUuid): void
     {
         try {
-            if ($waypoints && count($waypoints) > 2) {
+            if ($waypoints && !empty($waypoints)) {
                 foreach ($waypoints as $index => $waypoint) {
                     if ($index === 0) {
                         // Skip the first waypoint as it has no previous waypoint
@@ -1546,11 +1546,14 @@ private function buildWaypointSequence(array $routeMap): array
                     }
 
                     $routeSegment = new RouteSegment();
+                    $prevCode = $waypoints[$index - 1]->place->code ?? null;
+                    $currCode = $waypoint->place->code ?? null;
                     $routeSegment->order_id = $orderId;
                     $routeSegment->payload_id = $payloadUuid;
                     $routeSegment->from_waypoint_id = $index > 0 ? $waypoints[$index - 1]->uuid : null;
                     $routeSegment->to_waypoint_id = $waypoint->uuid;
-                    $routeSegment->public_id = 'RI_' . Str::upper(Str::random(5));
+                    $routeSegment->public_id = 'VR_' . Str::upper(Str::random(5));
+                    $routeSegment->facility_sequence = ($prevCode && $currCode) ? "$prevCode->$currCode" : null;
                     $routeSegment->company_uuid = session('company');
                     $routeSegment->created_by_id = UserHelper::getIdFromUuid(auth()->id());
                     $routeSegment->save();
