@@ -236,7 +236,6 @@ statuses:
     beanstalkd: Beanstalkd
     sqs: SQS
     redis: Redis
-
     resource-allocation: Ressourcenallokation
     compliance: Compliance
     cost-overruns: Kostenüberschreitungen
@@ -305,12 +304,13 @@ statuses:
     fleet-ops: Flottenbetrieb
     registry-bridge: Registrierungsbrücke
     storefront: Ladengeschäft
-
     order_rejected: Abgelehnt
     order_created: Erstellt
     order_dispatched: Versendet
     order_accepted: Akzeptiert
     order_started: Gestartet
+    flb-managed: FLB Verwaltet
+    org-managed: Organisation Verwaltet
 
 fuelReportTypes:
     Fuel: "Kraftstoff"
