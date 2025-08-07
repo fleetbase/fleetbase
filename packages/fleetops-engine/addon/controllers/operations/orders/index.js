@@ -1122,7 +1122,49 @@ export default class OperationsOrdersIndexController extends BaseController {
             },
             steps: [
                 {
-                    element: '#next-view-section-subheader-actions .btn-wrapper button.btn-primary',
+                    element: '.import-order', // import button
+                    popover: {
+                        title: this.intl.t('fleetbase.orders.tour.import_button.title'),
+                        description: this.intl.t('fleetbase.orders.tour.import_button.description'),
+                        onNextClick: () => {
+                            const newOrderController = getOwner(this).lookup('controller:operations.orders.index.new');
+                            newOrderController.importOrder();
+                            const checkModal = setInterval(() => {
+                            const modal = document.querySelector('.flb--modal');
+                            if (modal && modal.classList.contains('show')) {
+                            clearInterval(checkModal);
+                            driverObj.moveNext(); // Move to the next step
+                            }
+                        }, 100);
+                        }
+                    },
+                },
+                {
+                    element: '.flb--modal .dropzone', // upload spreadsheets popup
+                    popover: {
+                        title: this.intl.t('fleetbase.common.upload_spreadsheets.title'),
+                        description: this.intl.t('fleetbase.common.upload_spreadsheets.description'),
+                    },
+                },
+                {
+                    element: '.flb--modal .modal-footer-actions .btn-magic', // start upload button
+                    popover: {
+                        title: this.intl.t('fleetbase.common.start_upload.title'),
+                        description: this.intl.t('fleetbase.common.start_upload.description'),
+                        onNextClick: () => {
+                            this.modalsManager.done();
+                            const checkModalClosed = setInterval(() => {
+                                const modal = document.querySelector('.flb--modal');
+                                if (!modal || !modal.classList.contains('show')) {
+                                    clearInterval(checkModalClosed);
+                                    driverObj.moveNext();
+                                }
+                            }, 100);
+                        },
+                    },
+                },
+                {
+                    element: '#next-view-section-subheader-actions .new-order button',
                     onHighlightStarted: (element) => {
                         element.style.setProperty('pointer-events', 'none', 'important');
                         element.disabled = true;
@@ -1150,63 +1192,30 @@ export default class OperationsOrdersIndexController extends BaseController {
                                 }
                             }, 100);
                         },
-                    },
-                },
-                                {
-                    element: '.import-order', // import button
-                    popover: {
-                        title: this.intl.t('fleetbase.orders.tour.import_button.title'),
-                        description: this.intl.t('fleetbase.orders.tour.import_button.description'),
-                        onNextClick: () => {
-                            const newOrderController = getOwner(this).lookup('controller:operations.orders.index.new');
-                            newOrderController.importOrder();
-                            const checkModal = setInterval(() => {
-                            const modal = document.querySelector('.flb--modal');
-                            if (modal && modal.classList.contains('show')) {
-                            clearInterval(checkModal);
-                            driverObj.moveNext(); // Move to the next step
-                            }
-                        }, 100);
+                        onPrevClick: () => {
+                            driverObj.moveTo(0);
                         }
                     },
-                    disableButtons: ['previous'] 
                 },
-                {
-                    element: '.flb--modal .dropzone', // upload spreadsheets popup
-                    popover: {
-                        title: this.intl.t('fleetbase.orders.tour.upload_spreadsheets.title'),
-                        description: this.intl.t('fleetbase.orders.tour.upload_spreadsheets.description'),
-                    },
-                },
-                {
-                    element: '.flb--modal .modal-footer-actions .btn-magic', // start upload button
-                    popover: {
-                        title: this.intl.t('fleetbase.orders.tour.start_upload.title'),
-                        description: this.intl.t('fleetbase.orders.tour.start_upload.description'),
-                        onNextClick: () => {
-                            this.modalsManager.done();
-                            const checkModalClosed = setInterval(() => {
-                                const modal = document.querySelector('.flb--modal');
-                                if (!modal || !modal.classList.contains('show')) {
-                                    clearInterval(checkModalClosed);
-                                    driverObj.moveNext();
-                                }
-                            }, 100);
-                        },
-                    },
-                },
+                
                 {
                     element: '.next-content-panel-body-inner.next-content-panel-body-wrapper',
                     popover: {
                         title: this.intl.t('fleetbase.orders.tour.dates.title'),
                         description: this.intl.t('fleetbase.orders.tour.dates.description'),
-                        onPrevClick: () => {
-                            driverObj.moveTo(1);
-                        } 
+                        onPrevClick: async () => {
+                            // Click the ops table view button
+                            document.querySelector('#ops-table-view-button')?.click();
+                            await new Promise(resolve => setTimeout(resolve, 300));
+                            document.querySelector('.next-content-overlay-panel-cancel-button')?.click();
+                                driverObj.drive(0);
+                        }
+
                     },
                     onHighlightStarted: (element) => {
                         element?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                    }
+                    },
+                    disableButtons: ['previous'],
 
                 },
                 {
@@ -1320,7 +1329,7 @@ export default class OperationsOrdersIndexController extends BaseController {
             skipFirstStep = false;
         }
         if (skipFirstStep) {
-            driverObj.drive(1); // Start from step 1 (skip first)
+            driverObj.drive(4); // Start from step 4 (skip first)
         } else {
             driverObj.drive();
         }

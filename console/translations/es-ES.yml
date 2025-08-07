@@ -3164,6 +3164,12 @@ fleetbase:
     done: "Listo"
     close: "Cerrar"
     help: "Ayuda"
+    upload_spreadsheets:
+      title: "Cargar hojas de cálculo"
+      description: "Cargue archivos de hoja de cálculo arrastrándolos y soltándolos o seleccionándolos desde su dispositivo."
+    start_upload:
+      title: "Iniciar carga"
+      description: "Inicie la carga y el procesamiento de los archivos de hoja de cálculo seleccionados."
 
   orders:
     tour:
@@ -3173,12 +3179,6 @@ fleetbase:
       import_button:
         title: "Importar pedidos"
         description: "Importe pedidos desde una hoja de cálculo para un procesamiento masivo eficiente."
-      upload_spreadsheets:
-        title: "Cargar hojas de cálculo"
-        description: "Cargue archivos de hoja de cálculo arrastrándolos y soltándolos o seleccionándolos desde su dispositivo."
-      start_upload:
-        title: "Iniciar carga"
-        description: "Inicie la carga y el procesamiento de los archivos de hoja de cálculo seleccionados."
       dates:
         title: "Programación de pedidos"
         description: "Defina las fechas de inicio y finalización estimadas para definir el cronograma del pedido."

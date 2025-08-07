@@ -2503,6 +2503,13 @@ fleetbase:
     done: "Done"
     close: "Close"
     help: "Help"
+    upload_spreadsheets:
+      title: "Upload Spreadsheets"
+      description: "Upload spreadsheet files by dragging and dropping or selecting from your device."
+
+    start_upload:
+      title: "Start Upload"
+      description: "Initiate the upload and processing of the selected spreadsheet files."
 
   orders:
     tour:
@@ -2513,14 +2520,6 @@ fleetbase:
       import_button:
         title: "Import Orders"
         description: "Import orders from a spreadsheet file for efficient bulk processing."
-
-      upload_spreadsheets:
-        title: "Upload Spreadsheets"
-        description: "Upload spreadsheet files by dragging and dropping or selecting from your device."
-
-      start_upload:
-        title: "Start Upload"
-        description: "Initiate the upload and processing of the selected spreadsheet files."
 
       dates:
         title: "Order Scheduling"
@@ -2650,6 +2649,10 @@ fleetbase:
 
   drivers:
     tour:
+      import_button:
+        title: "Import Drivers"
+        description: "Import drivers from a spreadsheet file for efficient bulk processing."
+
       new_button:
         title: "Create New Driver"
         description: "Opens the form to create a new driver profile and enter driver details."
@@ -2668,6 +2671,10 @@ fleetbase:
 
   vehicles:
     tour:
+      import_button:
+        title: "Import Vehicles"
+        description: "Import vehicles from a spreadsheet file for efficient bulk processing."
+
       new_button:
         title: "Create New Vehicle"
         description: "Opens the form to create a new vehicle profile and input vehicle-specific information."
@@ -2686,6 +2693,10 @@ fleetbase:
 
   places:
     tour:
+      import_button:
+        title: "Import places"
+        description: "Import places from a spreadsheet file for efficient bulk processing."
+
       new_button:
         title: "New Place Button"
         description: "Opens the place creation form where you can define location details for a new place."
@@ -2879,6 +2890,10 @@ fleetbase:
 
   fleets:
     tour:
+      import_button:
+        title: "Import Fleets"
+        description: "Import fleets from a spreadsheet file for efficient bulk processing."
+
       new_button:
         title: "New Fleet Button"
         description: "Opens the fleet creation form where you can define fleet details."
