@@ -324,6 +324,30 @@ class VehicleController extends FleetOpsController
             ];
             $hasValidationErrors = true;
         }
+         // Validate fields using FieldValidator
+         $fieldsToValidate = [
+            'plate_number' => $plateNumber,
+            'vin' => $vin,
+            'make' => $make,
+            'model' => $model,
+            'year' => $year
+        ];
+
+        foreach ($fieldsToValidate as $field => $value) {
+            if (!empty($value)) {
+                $fieldErrors = \App\Helpers\FieldValidator::validateField($field, $value, $displayRowIndex);
+                $errors = array_merge($errors, $fieldErrors);
+            }
+        }
+
+        if (empty($make) && empty($vehicleName)) {
+            $errors[] = [
+                (string)$displayRowIndex,
+                "Vehicle make or vehicle name is required.",
+                ""
+            ];
+            $hasValidationErrors = true;
+        }
 
         // Year validation
         if (!empty($year)) {
