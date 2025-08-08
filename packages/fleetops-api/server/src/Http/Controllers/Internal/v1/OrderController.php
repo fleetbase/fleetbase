@@ -1710,7 +1710,14 @@ public function createRouteSegmentsFromRows(array $rows, Order $order, array $sa
             $routeSegment->trailer_id = is_array($row['trailer_id'] ?? null) ? null : ($row['trailer_id'] ?? null);
             $routeSegment->operator_id = is_array($row['operator_id'] ?? null) ? null : ($row['operator_id'] ?? null);
             $routeSegment->tender_status = $row['tender_status'] ?? null;
-            $routeSegment->facility_sequence = $row['facility_sequence'] ?? null;
+            // Set facility_sequence: use fromCode->toCode if row facility_sequence is null
+            if (!empty($row['facility_sequence'])) {
+                $routeSegment->facility_sequence = $row['facility_sequence'];
+            } elseif (!empty($fromCode) && !empty($toCode)) {
+                $routeSegment->facility_sequence = $fromCode . '->' . $toCode;
+            } else {
+                $routeSegment->facility_sequence = null;
+            }
 
             $routeSegment->stop_1_yard_arrival = !empty($row['stop_1_yard_arrival']) 
                 ? $this->parseExcelDate($row['stop_1_yard_arrival']) : null;
