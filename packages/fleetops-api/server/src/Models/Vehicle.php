@@ -21,6 +21,7 @@ use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\Sluggable\HasSlug;
 use Spatie\Sluggable\SlugOptions;
 
+
 class Vehicle extends Model
 {
     use HasUuid;
@@ -129,7 +130,7 @@ class Vehicle extends Model
      *
      * @var array
      */
-    protected $appends = ['display_name', 'photo_url', 'driver_name', 'vendor_name'];
+    protected $appends = ['display_name', 'photo_url', 'driver_name', 'vendor_name', 'is_vehicle_available', 'availability_message'];
 
     /**
      * The attributes excluded from the model's JSON form.
@@ -551,5 +552,9 @@ class Vehicle extends Model
                     ->orWhereRaw("CONCAT(make, ' ', model, ' ', year) LIKE ?", ["%{$vehicleName}%"])
                     ->orWhereRaw("CONCAT(year, ' ', make, ' ', model) LIKE ?", ["%{$vehicleName}%"]);
         })->first();
+    }
+    public function getIsVehicleAvailableAttribute()
+    {
+        return $this->attributes['is_vehicle_available'] ?? null;
     }
 }

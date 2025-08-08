@@ -420,6 +420,7 @@ trait HasApiControllerBehavior
                     ->first();
         
             if ($order) {
+                $timezone = $request->timezone ?? 'UTC';
                 // Filter vehicles based on the order's fleet_uuid or sub_fleet_uuid
                 if (!empty($order->fleet_uuid) || !empty($order->sub_fleet_uuid)) {
                     $data = $data->filter(function ($vehicle) use ($order) {
@@ -431,6 +432,19 @@ trait HasApiControllerBehavior
                             in_array($order->sub_fleet_uuid, $vehicleFleetUuids);
                     });
                 }
+                // Filter vehicles based on availability
+                $data = $data->map(function ($vehicle) use ($order, $timezone) {
+                    $availability = $this->vehicleAvailability($order, $vehicle->uuid, $timezone);
+                    $vehicle->is_vehicle_available = $availability['is_vehicle_available'] ?? 0;
+                    $vehicle->availability_message = $availability['message'] ?? null;
+                    return $vehicle;
+                });
+                //based on the vehicle availability sort the list
+                $data = $data->sortBy(function ($item) {
+                    return [
+                        $item['is_vehicle_available'] ? 0 : 1,  
+                    ];
+                })->values();
             }    
         }
         if ($single) {
@@ -1089,6 +1103,70 @@ trait HasApiControllerBehavior
                 'status' => false,
                 'error' => 'Error checking driver availability',
                 'have_no_vehicle' => 0,
+            ];
+        }
+    }
+
+    private function vehicleAvailability($order, $vehicle_uuid, $timezone)
+    {
+        try {
+            // Check if vehicle exists
+            $vehicle = Vehicle::where('uuid', $vehicle_uuid)
+                    ->whereNull('deleted_at')->first();
+            if (!$vehicle) {
+                return [
+                    'status' => false,
+                    'error' => 'Vehicle not found',
+                ];
+            }
+
+            // Handle timezone conversion similar to driverAvailability
+            if($timezone && $timezone !== 'UTC'){
+                if ($timezone === 'Asia/Calcutta') {
+                    $timezone = 'Asia/Kolkata'; // Convert old timezone to the correct one
+                }
+                $localOrderStartDate = Carbon::parse($order->scheduled_at)->setTimezone($timezone);
+                $orderStartDate = $localOrderStartDate->copy()->startOfDay()->setTimezone('UTC');
+                // Convert `estimated_end_date` to local timezone and apply `endOfDay()`
+                $localOrderEndDate = Carbon::parse($order->estimated_end_date)->setTimezone($timezone)->endOfDay();
+                // Convert back to UTC
+                $orderEndDate = $localOrderEndDate->setTimezone('UTC');
+            }
+            else{
+                $orderStartDate = Carbon::parse($order->scheduled_at);
+                $orderEndDate = Carbon::parse($order->estimated_end_date);
+            }
+
+            // Check for overlapping active orders with the same vehicle
+            $activeOrder = Order::where('vehicle_uuid', $vehicle_uuid)
+                ->whereNotIn('status', ['completed', 'cancelled'])
+                ->whereNull('deleted_at')
+                ->where(function ($query) use ($orderStartDate, $orderEndDate) {
+                    $query->where(function ($q) use ($orderStartDate, $orderEndDate) {
+                        $q->where('scheduled_at', '<=', $orderEndDate)
+                          ->where('estimated_end_date', '>=', $orderStartDate);
+                    });
+                })
+                ->exists();
+
+            if ($activeOrder) {
+                return [
+                    'status' => false,
+                    'message' => 'Vehicle is already assigned to another order during this time period.',
+                    'is_vehicle_available' => 0,
+                ];
+            }
+
+            return [
+                'status' => true,
+                'error' => 'Vehicle is available',
+                'is_vehicle_available' => 1,
+            ];
+
+        } catch (\Exception $e) {
+            return [
+                'status' => false,
+                'error' => 'Error checking vehicle availability',
             ];
         }
     }
