@@ -144,7 +144,7 @@ export default class RolesIndexController extends Controller {
                 } else {
                     normalizedValue = cell;
                 }
-                console.log('normalizedValue', normalizedValue);
+                
                 return this.intl.t(`statuses.${normalizedValue}`);
             }
         },
