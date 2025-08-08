@@ -310,6 +310,19 @@ class FleetController extends FleetOpsController
                         continue;
                     }
 
+                    // Add field validation for name and task
+                    $fieldsToValidate = ['name', 'task'];
+                    foreach ($fieldsToValidate as $field) {
+                        if (isset($row[$field])) {
+                            $fieldErrors = \App\Helpers\FieldValidator::validateField($field, $row[$field], $displayRowIndex);
+                            $importErrors = array_merge($importErrors, $fieldErrors);
+                        }
+                    }
+                    // If there were field validation errors, skip to next row
+                    if (!empty($fieldErrors)) {
+                        continue;
+                    }
+
                     // Clean the row data before passing to createFromImport
                     $cleanedRow = $this->cleanRowData($row);
 

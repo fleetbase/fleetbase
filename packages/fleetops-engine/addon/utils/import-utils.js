@@ -47,7 +47,7 @@ export function handleSuccessfulImport(context, results, modal, onSuccess) {
     if (errorLogUrl && message) {
         context.notifications.error(message);
     } else {
-        context.notifications.success(context.intl.t('common.import-success'));
+        context.notifications.success(context.intl.t('fleet-ops.operations.orders.index.new.import-success'));
     }
 
     modal.done();

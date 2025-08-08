@@ -615,10 +615,8 @@ export default class ManagementVehiclesIndexController extends BaseController {
     }
 
     onImportSuccess() {
-        this.hostRouter.transitionTo('console.fleet-ops.operations.vehicles.index', {
-            queryParams: { layout: 'table', t: Date.now() },
-        }).then(() => {
-            this.hostRouter.refresh();
+        this.hostRouter.transitionTo('console.fleet-ops.management.fleets.index', {
+            queryParams: { refresh: true }
         });
     }
     

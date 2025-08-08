@@ -821,10 +821,10 @@ export default class ManagementPlacesIndexController extends BaseController {
     }
 
 
-    onImportSuccess(results) {
-        this.hostRouter.transitionTo('console.fleet-ops.operations.places.index', {
-            queryParams: { layout: 'table', t: Date.now() },
-        }).then(() => this.hostRouter.refresh());
+    onImportSuccess() {
+        this.hostRouter.transitionTo('console.fleet-ops.management.fleets.index', {
+            queryParams: { refresh: true }
+        });
     }
 
     /**

@@ -657,10 +657,8 @@ export default class ManagementDriversIndexController extends BaseController {
     
     // Add this method to handle post-import success behavior for drivers:
     onImportSuccess() {
-        this.hostRouter.transitionTo('console.fleet-ops.operations.drivers.index', {
-            queryParams: { layout: 'table', t: Date.now() },
-        }).then(() => {
-            this.hostRouter.refresh();
+        this.hostRouter.transitionTo('console.fleet-ops.management.fleets.index', {
+            queryParams: { refresh: true }
         });
     }
 
