@@ -149,7 +149,7 @@ class FieldValidator
                 break;
 
             case 'country':
-                if (!\Fleetbase\Types\Country::has(strtoupper($value))) {
+                 if (!preg_match('/^[A-Z]{2}$/i', $value)) {
                     $errors[] = [
                         (string) $rowIndex,
                         "Country must be a valid 2-letter ISO code (e.g., US, GB).",
