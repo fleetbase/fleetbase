@@ -17,14 +17,14 @@
       />
     </div>
     
-    <div class="flex items-center calendar-filter-scroll-fix">
+    <div class="flex items-center calendar-filter-scroll-fix fleetbase-power-select">
       <label for="driver-filter" class="mr-2 text-sm font-medium">{{t "fleet-ops.operations.scheduler.calendar.driver"}}:</label>
       <PowerSelect
         @options={{@availableDrivers}}
         @selected={{@selectedDriver}}
         @onChange={{this.handleDriverChange}}
         @placeholder={{t "fleet-ops.operations.scheduler.calendar.all-drivers"}}
-        @triggerClass="form-input truncate"
+        @triggerClass="form-select form-input truncate"
         style="width: 200px;"
         @disabled={{this.loading}}
         @allowClear={{true}}
@@ -35,14 +35,14 @@
       </PowerSelect>
     </div>
     
-    <div class="flex items-center calendar-filter-scroll-fix">
+    <div class="flex items-center calendar-filter-scroll-fix fleetbase-power-select">
       <label for="status-filter" class="mr-2 text-sm font-medium">{{t "fleet-ops.operations.scheduler.calendar.status"}}:</label>
       <PowerSelect
         @options={{@statusOptions}}
         @selected={{@selectedStatus}}
         @onChange={{this.handleStatusChange}}
         @placeholder={{t "fleet-ops.operations.scheduler.calendar.all-statuses"}}
-        @triggerClass="form-input truncate"
+        @triggerClass="form-select form-input truncate"
         style="width: 200px;"
         @disabled={{this.loading}}
         @allowClear={{true}}
@@ -102,14 +102,14 @@
       />
     </div>
 
-    <div class="flex flex-col lg:flex-row lg:items-center lg:space-x-2">
+    <div class="flex flex-col lg:flex-row lg:items-center lg:space-x-2 fleetbase-power-select">
       <label for="driver-filter-lg" class="text-sm font-medium mb-1 lg:mb-0">{{t "fleet-ops.operations.scheduler.calendar.driver"}}:</label>
       <PowerSelect
         @options={{@availableDrivers}}
         @selected={{@selectedDriver}}
         @onChange={{this.handleDriverChange}}
         @placeholder={{t "fleet-ops.operations.scheduler.calendar.all-drivers"}}
-        @triggerClass="form-input truncate"
+        @triggerClass="form-select form-input truncate"
         class="w-full lg:w-[200px]"
         @disabled={{this.loading}}
         @allowClear={{true}}
@@ -120,14 +120,14 @@
       </PowerSelect>
     </div>
 
-    <div class="flex flex-col lg:flex-row lg:items-center lg:space-x-2">
+    <div class="flex flex-col lg:flex-row lg:items-center lg:space-x-2 fleetbase-power-select">
       <label for="status-filter-lg" class="text-sm font-medium mb-1 lg:mb-0">{{t "fleet-ops.operations.scheduler.calendar.status"}}:</label>
       <PowerSelect
         @options={{@statusOptions}}
         @selected={{@selectedStatus}}
         @onChange={{this.handleStatusChange}}
         @placeholder={{t "fleet-ops.operations.scheduler.calendar.all-statuses"}}
-        @triggerClass="form-input truncate"
+        @triggerClass="form-select form-input truncate"
         class="w-full lg:w-[200px]"
         @disabled={{this.loading}}
         @allowClear={{true}}

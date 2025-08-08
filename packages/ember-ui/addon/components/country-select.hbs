@@ -6,7 +6,7 @@
         @searchField="name"
         @options={{this.countries}}
         @onChange={{this.selectCountry}}
-        @triggerClass="form-select form-input {{@triggerClass}}"
+        @triggerClass="form-select form-input form-input-sm {{@triggerClass}}"
         @dropdownClass={{or @dropdownClass "ember-model-select__dropdown"}}
 
         @placeholder={{or @placeholder (t "common.select-country")}}
