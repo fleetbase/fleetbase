@@ -1058,6 +1058,7 @@ class OrderController extends FleetOpsController
                     // Check for existing VR IDs
                     if (!empty($vrIds)) {
                         $existingVrIds = RouteSegment::whereIn('public_id', $vrIds)
+                            ->where('company_uuid', session('company'))
                             ->whereNull('deleted_at')
                             ->pluck('public_id')
                             ->toArray();
@@ -1170,6 +1171,7 @@ class OrderController extends FleetOpsController
                         // Validate all places exist
                         $allUniquePlaceCodes = array_unique($allStops);
                         $placesByCode = Place::whereIn('code', $allUniquePlaceCodes)
+                                            ->where('company_uuid', session('company'))
                                             ->whereNull('deleted_at')
                                             ->get()
                                             ->keyBy('code');
@@ -1374,6 +1376,7 @@ class OrderController extends FleetOpsController
 
                     // Get place models for the unique sequence
                     $placesByCode = Place::whereIn('code', $uniqueWaypointSequence)
+                        ->where('company_uuid', session('company'))
                         ->whereNull('deleted_at')
                         ->get()
                         ->keyBy('code');
@@ -1521,6 +1524,7 @@ private function buildWaypointSequence(array $routeMap): array
     public function getWaypoints($payload_uuid)
     {
         $waypoints = Waypoint::where('payload_uuid', $payload_uuid)
+                      ->where('company_uuid', session('company'))
                       ->whereNull('deleted_at')
                       ->orderBy('order') // optional, if you want them in order
                       ->get();
@@ -1591,6 +1595,7 @@ public function createRouteSegmentsFromRows(array $rows, Order $order, array $sa
     
     if (!empty($vrIds)) {
         $existingSegments = RouteSegment::whereIn('public_id', $vrIds)
+          ->where('company_uuid', session('company'))
           ->whereNull('deleted_at')->get();
         if ($existingSegments->count() > 0) {
             $existingIds = $existingSegments->pluck('public_id')->toArray();
@@ -1650,8 +1655,10 @@ public function createRouteSegmentsFromRows(array $rows, Order $order, array $sa
         } else {
             // Database lookup fallback
             $fromPlace = Place::where('code', $fromCode)
+                                    ->where('company_uuid', session('company'))
                                     ->whereNull('deleted_at')->first();
             $toPlace = Place::where('code', $toCode)
+                                    ->where('company_uuid', session('company'))
                                     ->whereNull('deleted_at')->first();
 
             if (!$fromPlace || !$toPlace) {
@@ -1664,6 +1671,7 @@ public function createRouteSegmentsFromRows(array $rows, Order $order, array $sa
             }
 
             $waypoints = Waypoint::where('payload_uuid', $order->payload_uuid ?? ($order->payload->uuid ?? null))
+                ->where('company_uuid', session('company'))
                 ->orderBy('order')
                 ->get();
             
@@ -1688,7 +1696,9 @@ public function createRouteSegmentsFromRows(array $rows, Order $order, array $sa
             }
             
             // Double-check for uniqueness
-            $exists = RouteSegment::where('public_id', $publicId)->exists();
+            $exists = RouteSegment::where('public_id', $publicId)
+                ->where('company_uuid', session('company'))
+                ->exists();
             if ($exists) {
                 $errors[] = [$displayRowIndex, "VR ID '{$publicId}' already exists", $order->public_id];
                 continue;
@@ -1790,6 +1800,7 @@ public function createRouteSegmentsFromRows(array $rows, Order $order, array $sa
     {
         $order = Order::withoutGlobalScopes()
             ->where('payload_uuid', $id)
+            ->where('company_uuid', session('company'))
             ->whereNull('deleted_at')
             ->with([
                 'routeSegments.fromWaypoint.place',
