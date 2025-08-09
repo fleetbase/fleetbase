@@ -53,7 +53,7 @@ module.exports = function (defaults) {
             },
             filter: {
                 enabled: true,
-                plugins: [postcssAtRulesVariables, postcssMixins, postcssEach, postcssConditionals, tailwind('./tailwind.js')],
+                plugins: [postcssAtRulesVariables, postcssMixins, postcssEach, postcssConditionals, tailwind('./tailwind.config.js')],
             },
         },
 
