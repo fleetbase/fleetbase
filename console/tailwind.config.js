@@ -1,19 +1,21 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
     darkMode: ['class', '[data-theme="dark"]'],
-    content: [
-        './app/**/*.{hbs,js}',
-        './node_modules/@fleetbase/ember-ui/addon/**/*.{hbs,js}',
-        './node_modules/@fleetbase/ember-ui/addon/templates/*.{hbs,js}',
-        './node_modules/@fleetbase/ember-ui/addon/templates/**/*.{hbs,js}',
-        './node_modules/@fleetbase/ember-ui/addon/components/*.{hbs,js}',
-        './node_modules/@fleetbase/ember-ui/addon/components/**/*.{hbs,js}',
-        './node_modules/@fleetbase/ember-core/addon/**/*.{hbs,js}',
-        './node_modules/@fleetbase/fleetops-engine/addon/**/*.{hbs,js}',
-        './node_modules/@fleetbase/storefront-engine/addon/**/*.{hbs,js}',
-        './node_modules/@fleetbase/*-engine/addon/**/*.{hbs,js}',
-        './node_modules/**/*-engine/addon/**/*.{hbs,js}',
-        '../packages/*-engine/addon/**/*.{hbs,js}',
+    content: {
+        relative: true,
+        files: [
+            './app/**/*.{hbs,js}',
+            './node_modules/.pnpm/@fleetbase+*/**/addon/**/*.{hbs,js}',
+            './node_modules/@fleetbase+*/addon/**/*.{hbs,js}',
+            './node_modules/@fleetbase/ember-ui/addon/templates/**/*.{hbs,js}',
+            './node_modules/@fleetbase/ember-ui/addon/components/**/*.{hbs,js}',
+            './node_modules/**/*-engine/addon/**/*.{hbs,js}'
+        ],
+    },
+    safelist: [
+        {
+            pattern: /(py|px|mx|my|gap)-[1-9][0-9]?/,
+        },
     ],
     theme: {
         extend: {
@@ -94,7 +96,22 @@ module.exports = {
                 86: '30rem',
             },
             spacing: {
-                70: '18rem',
+                6: '1.5rem',
+                8: '2rem',
+                10: '2.5rem',
+                12: '3rem',
+                16: '4rem',
+                20: '5rem',
+                24: '6rem',
+                32: '8rem',
+                40: '10rem',
+                44: '11rem',
+                48: '12rem',
+                52: '13rem',
+                56: '14rem',
+                60: '15rem',
+                64: '16rem',
+                72: '18rem',
                 74: '22rem',
                 78: '26rem',
                 82: '28rem',

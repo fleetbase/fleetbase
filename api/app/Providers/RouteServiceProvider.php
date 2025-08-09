@@ -2,10 +2,8 @@
 
 namespace App\Providers;
 
-use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\Route;
 
 class RouteServiceProvider extends ServiceProvider
@@ -17,36 +15,19 @@ class RouteServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        $this->configureRateLimiting();
-
         $this->routes(
             function () {
                 Route::get(
-                    '/status',
-                    function () {
+                    '/health',
+                    function (Request $request) {
                         return response()->json(
                             [
                                 'status' => 'ok',
-                                'time' => microtime(true) - LARAVEL_START
+                                'time' => microtime(true) - $request->attributes->get('request_start_time')
                             ]
                         );
                     }
                 );
-            }
-        );
-    }
-
-    /**
-     * Configure the rate limiters for the application.
-     *
-     * @return void
-     */
-    protected function configureRateLimiting()
-    {
-        RateLimiter::for(
-            'api',
-            function (Request $request) {
-                return Limit::perMinute(60)->by(optional($request->user())->id ?: $request->ip());
             }
         );
     }
