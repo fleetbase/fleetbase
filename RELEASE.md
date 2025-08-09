@@ -1,13 +1,11 @@
-# 🚀 Fleetbase v0.7.6 — 2025-06-04
+# 🚀 Fleetbase v0.7.7 — 2025-08-09
 
-> “Minor patches and route optimization overhaul progress”
+> “Added ability to configure rate limiting”
 
 ---
 
 ## ✨ Highlights
-- Preparing to implement full multi-order/payload route optimization and managed routes.
-- Patched scheduler to not run in CI environments or without database connection established.
-- 2 New route optimization extensions published! VROOM & Valhalla
+- Ability to configure rate limiting
 
 ---
 
