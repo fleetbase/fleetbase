@@ -23,6 +23,7 @@ export default class UserModel extends Model {
     @attr('string') timezone;
     @attr('string') country;
     @attr('string') ip_address;
+    @attr('string') aws_customer_id;
     @attr('string') slug;
     @attr('string') role_name;
     @attr('string') type;
