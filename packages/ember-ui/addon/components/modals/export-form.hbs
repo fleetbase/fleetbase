@@ -1,15 +1,15 @@
 <Modal::Default @modalIsOpened={{@modalIsOpened}} @options={{@options}} @confirm={{@onConfirm}} @decline={{@onDecline}}
     as |options|>
 
-    <div class="export-form modal-body-container p-4 grid grid-cols-1 md:grid-cols-3 gap-4">
+    <div class="export-form modal-body-container p-4 flex gap-4">
         {{#if options.includeFilters}}
         {{! dropdown }}
-        <div class="input-group">
-            <label class="block text-sm font-bold text-gray-800 mb-2">Filter by</label>
+        <div class="input-group fleetbase-power-select">
+            <label class="block text-sm font-bold text-gray-800 mb-2">{{t "common.filter-by"}}</label>
 
             <PowerSelect @options={{this.filterOptions}} @selected={{this.filterBy}} @onChange={{this.setFilterBy}}
-                @placeholder={{t "common.select-filter" }} @triggerClass="form-input text-lg py-3 px-4 h-12" as |opt|>
-                {{smart-humanize opt}}
+                @placeholder={{t "common.select-filter" }} @triggerClass="form-select form-input form-input-sm" as |opt|>
+                {{t opt.label}}
             </PowerSelect>
         </div>
 
@@ -17,21 +17,41 @@
         {{#if this.filterBy}}
         <div class="input-group">
             {{#if (eq this.filterBy "startDate")}}
-            <label class="block text-sm text-gray-800 mb-2">
+            {{!-- <label class="block text-sm text-gray-800 mb-2">
                 {{t "fleet-ops.common.start-date"}}
-            </label>
-            <DatePicker @value={{options.startDate}} @onSelect={{options.setStartDate}}
-                @placeholder={{t "common.select-date" }} @range={{true}} @toggleSelected={{false}} @autoClose={{true}}
-                class="filter-date-input form-input-lg w-full border
-                     border-gray-300 rounded-md p-2 bg-gray-50 text-gray-600" />
+            </label> --}}
+            <div class="flex gap-4">
+                <div>
+                    <label class="block text-sm text-gray-800 mb-2">{{t "common.from"}}</label>
+                    <DatePicker @value={{this.fromDate}} @onSelect={{this.setFromDate}}
+                        @placeholder={{t "common.select-date" }} @range={{false}} @toggleSelected={{false}} @autoClose={{true}}
+                        class="filter-date-input form-input-sm w-full" />
+                </div>
+                <div>
+                    <label class="block text-sm text-gray-800 mb-2">{{t "common.to"}}</label>
+                    <DatePicker @value={{this.toDate}} @onSelect={{this.setToDate}}
+                        @placeholder={{t "common.select-date" }} @range={{false}} @toggleSelected={{false}} @autoClose={{true}}
+                        class="filter-date-input form-input-sm w-full" />
+                </div>
+            </div>
             {{else}} {{! createdAt }}
-            <label class="block text-sm text-gray-800 mb-2">
+            {{!-- <label class="block text-sm text-gray-800 mb-2">
                 {{t "common.created-at"}}
-            </label>
-            <DatePicker @value={{options.createdAt}} @onSelect={{options.setCreatedAt}}
-                @placeholder={{t "common.select-date" }} @range={{true}} @toggleSelected={{false}} @autoClose={{true}}
-                class="filter-date-input form-input-lg w-full border
-                     border-gray-300 rounded-md p-2 bg-gray-50 text-gray-600" />
+            </label> --}}
+            <div class="flex gap-4">
+                <div>
+                    <label class="block text-sm text-gray-800 mb-2">{{t "common.from"}}</label>
+                    <DatePicker @value={{this.fromDate}} @onSelect={{this.setFromDate}}
+                        @placeholder={{t "common.select-date" }} @range={{false}} @toggleSelected={{false}} @autoClose={{true}}
+                        class="filter-date-input form-input-sm w-full" />
+                </div>
+                <div>
+                    <label class="block text-sm text-gray-800 mb-2">{{t "common.to"}}</label>
+                    <DatePicker @value={{this.toDate}} @onSelect={{this.setToDate}}
+                        @placeholder={{t "common.select-date" }} @range={{false}} @toggleSelected={{false}} @autoClose={{true}}
+                        class="filter-date-input form-input-sm w-full" />
+                </div>
+            </div>
             {{/if}}
         </div>
         {{/if}}
@@ -46,4 +66,9 @@
             focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-50" />
         </div>
     </div>
+    {{#if this.dateError}}
+    <div class="flex justify-center p-4">
+        <p class="text-red-600 text-sm mb-2">{{t "common.to_date_before_from_date_error"}}</p>
+    </div>
+    {{/if}}
 </Modal::Default>

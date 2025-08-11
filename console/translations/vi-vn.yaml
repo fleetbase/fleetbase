@@ -142,6 +142,11 @@ common:
   duplicate-waypoint-error: Phát hiện điểm dừng trùng lặp. Vui lòng sử dụng vị trí duy nhất cho mỗi điểm dừng.
   valid-waypoints-error: Vui lòng thêm điểm dừng
   pickup-dropoff-error: Vui lòng cung cấp cả điểm đón và điểm trả.
+  select-date: Chọn ngày
+  select-filter: Chọn bộ lọc
+  from: từ
+  filter-by: Lọc theo
+  to_date_before_from_date_error: Ngày "Đến" không thể sớm hơn ngày "Từ".
 leaves:
   driver_name: Tên tài xế
   start_date: Ngày bắt đầu
@@ -901,8 +906,6 @@ fleet-ops:
     dark-mode: Chế độ tối
     select-fleet: Đội xe
     edit-fleet: Chỉnh sửa đội xe
-    select-date: Chọn ngày
-    select-filter: Chọn bộ lọc
     component:
        order:
         header:
