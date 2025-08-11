@@ -732,8 +732,8 @@ export default class OperationsOrdersIndexViewController extends BaseController 
                 if (!vehicle) {
                     order.set('vehicle_assigned_uuid', null);
                     order.set('vehicle_assigned', null);
-                 vehicleToAssign = null;
-                 vehicleIsBusy = false;
+                    vehicleToAssign = null;
+                    vehicleIsBusy = false;
                 } else {
                     order.set('vehicle_assigned', vehicle);
                     order.set('vehicle_assigned_uuid', vehicle.id);
@@ -1141,7 +1141,6 @@ export default class OperationsOrdersIndexViewController extends BaseController 
      * @void
      */
     @action async assignDriver(order) {
-        debugger;
         if (order.canLoadDriver) {
             this.modalsManager.displayLoader();
 
