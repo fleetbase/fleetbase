@@ -844,8 +844,6 @@ export default class OperationsOrdersIndexViewController extends BaseController 
                 }
                 // If vehicle is busy, show the busy confirmation
                 if (vehicleToAssign && vehicleIsBusy) {
-                    debugger;
-
                     setTimeout(() => {
                         this.modalsManager.confirm({
                             title: this.intl.t('fleet-ops.component.order.schedule-card.assign-vehicle'),
@@ -874,8 +872,6 @@ export default class OperationsOrdersIndexViewController extends BaseController 
 
                 // If driver is busy, show the busy confirmation
                 if (driverToAssign && driverIsBusy) {
-                    debugger;
-
                     modal.done();
                     setTimeout(() => {
                         this.modalsManager.confirm({
