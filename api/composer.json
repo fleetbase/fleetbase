@@ -10,12 +10,13 @@
     "require": {
         "php": "^8.0",
         "appstract/laravel-opcache": "^4.0",
-        "fleetbase/core-api": "^1.6.12",
-        "fleetbase/fleetops-api": "^0.6.15",
+        "fleetbase/core-api": "^1.6.13",
+        "fleetbase/fleetops-api": "^0.6.16",
         "fleetbase/registry-bridge": "^0.0.19",
         "fleetbase/storefront-api": "^0.4.0",
-        "fleetbase/billing-api": "^0.1.7",
-        "fleetbase/internals-api": "^0.0.18",
+        "fleetbase/billing-api": "^0.1.8",
+        "fleetbase/internals-api": "^0.0.19",
+        "fleetbase/aws-marketplace": "^0.0.2",
         "fleetbase/flespi-integration": "^0.1.14",
         "fleetbase/customer-portal-api": "^0.0.7",
         "fleetbase/valhalla-api": "^0.0.1",
@@ -27,6 +28,7 @@
         "league/flysystem-aws-s3-v3": "^3.0",
         "maatwebsite/excel": "^3.1",
         "phpoffice/phpspreadsheet": "^1.28",
+        "maennchen/zipstream-php": "3.1.2",
         "predis/predis": "^2.1",
         "psr/http-factory-implementation": "*",
         "resend/resend-php": "^0.14.0",
@@ -44,6 +46,10 @@
         "phpunit/phpunit": "^10.0"
     },
     "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/fleetbase/aws-marketplace"
+        },
         {
             "type": "vcs",
             "url": "https://github.com/fleetbase/internals"

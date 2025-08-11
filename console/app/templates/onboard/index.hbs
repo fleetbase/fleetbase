@@ -35,4 +35,8 @@
             <Button @icon="check" @iconPrefix="fas" @type="primary" @size="lg" @text={{t "onboard.index.continue-button-text"}} @isLoading={{this.isLoading}} @disabled={{this.readyToSubmit}} @onClick={{this.startOnboard}} />
         </div>
     </form>
+
+    <RegistryYield @registry="onboard" as |YieldedComponent ctx|>
+        <YieldedComponent @context={{ctx}} />
+    </RegistryYield>
 </div>
