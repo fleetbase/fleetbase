@@ -122,6 +122,13 @@ export default class OperationsOrdersIndexViewController extends BaseController 
     @notEmpty('model.payload.waypoints') isMultiDropOrder;
     @alias('ordersController.leafletMap') leafletMap;
 
+    // Set errorWaitTime to match the app's notification clearDuration (3.5 seconds) from console/config/environment.js.
+    // This ensures the throttling delay equals the time a notification is visible, preventing multiple errors
+    // from stacking during the display period while allowing resets to occur silently if needed.
+    lastErrorTime = null;
+    errorWaitTime = 3500; // 3.5 seconds in milliseconds
+
+
     get renderableComponents() {
         const renderableComponents = this.universe.getRenderableComponentsFromRegistry('fleet-ops:template:operations:orders:view');
         return renderableComponents;
@@ -664,17 +671,25 @@ export default class OperationsOrdersIndexViewController extends BaseController 
         const validateOrderDates = () => {
             const startDate = order.scheduled_at;
             const endDate = order.estimated_end_date;
-    
-    
+
+            const now = Date.now();
+            const canShowError = this.lastErrorTime === null || (now - this.lastErrorTime) >= this.errorWaitTime;
+
             if (!startDate) {
-                this.notifications.error(this.intl.t('fleet-ops.component.order.schedule-card.start-date-required'));
+                if (canShowError) {
+                    this.lastErrorTime = now;
+                    this.notifications.error(this.intl.t('fleet-ops.component.order.schedule-card.start-date-required'));
+                }
                 resetOrderToOriginalDates();
                 return false;
             }
     
     
             if (endDate && endDate < startDate) {
-                this.notifications.error(this.intl.t('fleet-ops.component.order.schedule-card.end-date-earlier'));
+                if (canShowError) {
+                    this.lastErrorTime = now;
+                    this.notifications.error(this.intl.t('fleet-ops.component.order.schedule-card.end-date-earlier'));
+                }
                 resetOrderToOriginalDates();
                 return false;
             }
