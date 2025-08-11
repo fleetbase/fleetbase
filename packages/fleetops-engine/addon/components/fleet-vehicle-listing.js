@@ -69,19 +69,24 @@ export default class FleetVehicleListingComponent extends Component {
         this.vehicles.removeObject(vehicle);
     }
 
-    @action queryFleetVehicles(fleet, query = null) {
+    @action queryFleetVehicles(fleet, orderUuid = null, timezone = null, query = null) {
         this.isLoading = true;
-
         const cacheKey = `${fleet.id}:fleetVehicles`;
-        // const cachedResults = this.appCache.getEmberData(cacheKey, 'vehicle');
-
-        // if (cachedResults) {
-        //     this.vehicles = this.toggleSelected(cachedResults);
-        //     this.isLoaded = true;
-        // }
-
+        const params = {
+            fleet: fleet.id,
+            limit: 500,
+        };
+        if (orderUuid) {
+            params.order_uuid = orderUuid;
+        }
+        if (timezone) {
+            params.timezone = timezone;
+        }
+        if (query) {
+            params.query = query;
+        }
         return new Promise((resolve) => {
-            this.store.query('vehicle', { query, fleet: fleet.id }).then((vehicles) => {
+            this.store.query('vehicle', params).then((vehicles) => {
                 this.isLoading = false;
                 this.isLoaded = true;
 
