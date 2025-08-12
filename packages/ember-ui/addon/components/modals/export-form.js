@@ -34,12 +34,12 @@ export default class ExportFormComponent extends Component {
     }
 
     validateDates() {
-        this.dateError = null;
+        this.dateError = false;
         if (this.fromDate && this.toDate) {
             const from = new Date(this.fromDate);
             const to = new Date(this.toDate);
             if (to < from) {
-                this.dateError = 'The "To" date cannot be before the "From" date.';
+                this.dateError = true;
             }
         }
     }
