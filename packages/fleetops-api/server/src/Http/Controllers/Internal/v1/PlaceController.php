@@ -24,7 +24,7 @@ use Illuminate\Support\Facades\Storage;
 use Fleetbase\FleetOps\Support\Utils;
 use Fleetbase\FleetOps\Exports\ImportErrorsExport;
 use Fleetbase\FleetOps\Traits\ImportErrorHandler;
-use App\Helpers\FieldValidator;
+// use App\Helpers\FieldValidator;
 
 class PlaceController extends FleetOpsController
 {
@@ -35,22 +35,22 @@ class PlaceController extends FleetOpsController
      * @var string
      */
     public $resource = 'place';
-    private const PLACE_IMPORT_VALIDATION_FIELDS = [
-        'name',
-        'code',
-        'street1',
-        'street2',
-        'neighborhood',
-        'building',
-        'security_access_code',
-        'postal_code',
-        'city',
-        'state',
-        'latitude',
-        'longitude',
-        'phone',
-        'country'
-    ];
+    // private const PLACE_IMPORT_VALIDATION_FIELDS = [
+    //     'name',
+    //     'code',
+    //     'street1',
+    //     'street2',
+    //     'neighborhood',
+    //     'building',
+    //     'security_access_code',
+    //     'postal_code',
+    //     'city',
+    //     'state',
+    //     'latitude',
+    //     'longitude',
+    //     'phone',
+    //     'country'
+    // ];
 
 
     /**
@@ -322,20 +322,20 @@ class PlaceController extends FleetOpsController
                         }
                     }
 
-                    $fieldsToValidate = self::PLACE_IMPORT_VALIDATION_FIELDS;
+                    // $fieldsToValidate = self::PLACE_IMPORT_VALIDATION_FIELDS;
 
-                    $rowErrors = [];
-                    foreach ($fieldsToValidate as $field) {
-                        if (isset($row[$field])) {
-                            $fieldErrors = FieldValidator::validateField($field, $row[$field], $displayRowIndex);
-                            $rowErrors = array_merge($rowErrors, $fieldErrors);
-                        }
-                    }
+                    // $rowErrors = [];
+                    // foreach ($fieldsToValidate as $field) {
+                    //     if (isset($row[$field])) {
+                    //         $fieldErrors = FieldValidator::validateField($field, $row[$field], $displayRowIndex);
+                    //         $rowErrors = array_merge($rowErrors, $fieldErrors);
+                    //     }
+                    // }
 
-                    if (!empty($rowErrors)) {
-                        $importErrors = array_merge($importErrors, $rowErrors);
-                        continue;
-                    }
+                    // if (!empty($rowErrors)) {
+                    //     $importErrors = array_merge($importErrors, $rowErrors);
+                    //     continue;
+                    // }
 
                     // Create place data without geocoding if coordinates are provided
                     $placeData = [
