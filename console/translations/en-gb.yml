@@ -1349,6 +1349,9 @@ fleet-ops:
         assign-driver: Assign New Driver?
         assign-text: You are about to assign a new driver ({driverName}) to Order
           {orderId}. Click continue to confirm driver.
+        assign-vehicle: Assign Vehicle?
+        assign-vehicle-busy-text: The vehicle {vehicleName} is <strong>currently assigned to another active order</strong>. Are you sure you want to assign it to order {orderId}?
+        assign-anyway: Continue with Assignment
         cannot-edit-completed: Cannot edit completed orders
         cannot-modify-complete-order: Cannot modify a completed order.
         date: Date scheduled
