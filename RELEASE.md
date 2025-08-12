@@ -1,11 +1,12 @@
-# 🚀 Fleetbase v0.7.7 — 2025-08-09
+# 🚀 Fleetbase v0.7.8 — 2025-08-12
 
-> “Added ability to configure rate limiting”
+> “Improved system maintenance”
 
 ---
 
 ## ✨ Highlights
-- Ability to configure rate limiting
+- Improved and optimizes maintenance scripts
+- Patched OSX binary build
 
 ---
 
@@ -20,6 +21,7 @@
 git pull origin main --no-rebase
 
 # Update docker
+docker compose pull
 docker compose down && docker compose up -d
 
 # Run deploy script
