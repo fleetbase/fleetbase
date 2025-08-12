@@ -122,7 +122,7 @@ export CMAKE_OSX_ARCHITECTURES=arm64
 STATIC_PHP_CLI_DIR="$OSX_DIR/frankenphp/dist/static-php-cli"
 if [ ! -d "$STATIC_PHP_CLI_DIR" ]; then
     log "Cloning static-php-cli into dist/..."
-    git clone https://github.com/crazywhalecc/static-php-cli.git "$STATIC_PHP_CLI_DIR"
+    git clone --depth 1 --branch 2.5.2 https://github.com/crazywhalecc/static-php-cli.git "$STATIC_PHP_CLI_DIR"
 else
     log_warn "static-php-cli already exists in dist/. Skipping clone."
 fi
