@@ -139,6 +139,11 @@ common:
   duplicate-waypoint-error: Punto de parada duplicado detectado. Por favor, utilice ubicaciones únicas para cada punto.
   valid-waypoints-error: Por favor, agregue puntos de paso
   pickup-dropoff-error: Por favor, indique los puntos de recogida y entrega.
+  select-date: Seleccionar fecha
+  select-filter: Seleccionar filtro
+  from: Desde
+  filter-by: Filtrar por
+  to_date_before_from_date_error: La fecha “Hasta” no puede ser anterior a la fecha “Desde”.
 leaves:
   driver_name: Nombre del conductor
   start_date: Fecha de inicio
@@ -917,8 +922,6 @@ fleet-ops:
     dark-mode: Modo oscuro
     select-fleet: Flota
     edit-fleet: Editar flota
-    select-date: Seleccionar fecha
-    select-filter: Seleccionar filtro
   component:
     activity-logic-builder:
       activity-logic: Lógica de la actividad

@@ -225,6 +225,10 @@ common:
   your-profile: Your Profile
   select-date: Select Date
   select-filter: Select Filter
+  from: From
+  filter-by: Filter by
+  to_date_before_from_date_error: The 'To' date cannot be earlier than the 'From' date.
+  
 component:
   comment-thread:
     comment-input-empty-notification: You cannot publish empty comments...
