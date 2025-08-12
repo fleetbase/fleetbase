@@ -26,6 +26,7 @@ export default class VehicleModel extends Model {
         defaultValue: get(config, 'defaultValues.vehicleImage'),
     })
     photo_url;
+    @attr('number') is_vehicle_available;
     @attr('string') driver_name;
     @attr('string') vendor_name;
     @attr('string') display_name;

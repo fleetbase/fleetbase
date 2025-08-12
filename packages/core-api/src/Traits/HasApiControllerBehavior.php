@@ -1138,7 +1138,7 @@ trait HasApiControllerBehavior
             }
 
             // Check for overlapping active orders with the same vehicle
-            $activeOrder = Order::where('vehicle_uuid', $vehicle_uuid)
+            $activeOrder = Order::where('vehicle_assigned_uuid', $vehicle_uuid)
                 ->whereNotIn('status', ['completed', 'cancelled'])
                 ->whereNull('deleted_at')
                 ->where(function ($query) use ($orderStartDate, $orderEndDate) {
