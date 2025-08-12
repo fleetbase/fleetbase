@@ -126,8 +126,12 @@ export default class OrderModel extends Model {
         if (payload?.waypoints.firstObject) {
             return payload.waypoints.firstObject.name ?? payload.waypoints.firstObject.street1;
         }
-
-        if (meta.pickup_is_driver_location === true) {
+        if (
+            meta &&
+            meta !== null &&
+            !(Array.isArray(meta) && meta.length === 0) &&
+            meta.pickup_is_driver_location === true
+        ) {
             return 'Dynamic';
         }
 
@@ -168,8 +172,12 @@ export default class OrderModel extends Model {
                 .filter(Boolean) // removes any undefined/null values
                 .join(', ');
         }
-    
-        if (meta.pickup_is_driver_location === true) {
+        if (
+            meta &&
+            meta !== null &&
+            !(Array.isArray(meta) && meta.length === 0) &&
+            meta.pickup_is_driver_location === true
+        ) {
             return 'Dynamic';
         }
 
