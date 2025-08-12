@@ -4,46 +4,43 @@
     <div class="export-form modal-body-container p-4 grid grid-cols-1 md:grid-cols-3 gap-4">
         {{#if options.includeFilters}}
         {{! dropdown }}
-        <div class="input-group">
+        <div class="input-group fleetbase-power-select">
             <label class="block text-sm font-bold text-gray-800 mb-2">Filter by</label>
 
             <PowerSelect @options={{this.filterOptions}} @selected={{this.filterBy}} @onChange={{this.setFilterBy}}
-                @placeholder={{t "common.select-filter" }} @triggerClass="form-input text-lg py-3 px-4 h-12" as |opt|>
+                @placeholder={{t "common.select-filter" }} @triggerClass="form-select form-input form-input-sm" as |opt|>
                 {{smart-humanize opt}}
             </PowerSelect>
         </div>
 
         {{! show ONE date picker after a choice is made }}
         {{#if this.filterBy}}
-        <div class="input-group">
+        <div class="input-group fleetbase-power-select">
             {{#if (eq this.filterBy "startDate")}}
             <label class="block text-sm text-gray-800 mb-2">
                 {{t "fleet-ops.common.start-date"}}
             </label>
             <DatePicker @value={{options.startDate}} @onSelect={{options.setStartDate}}
                 @placeholder={{t "common.select-date" }} @range={{true}} @toggleSelected={{false}} @autoClose={{true}}
-                class="filter-date-input form-input-lg w-full border
-                     border-gray-300 rounded-md p-2 bg-gray-50 text-gray-600" />
+                class="filter-date-input form-input-sm w-full" />
             {{else}} {{! createdAt }}
             <label class="block text-sm text-gray-800 mb-2">
                 {{t "common.created-at"}}
             </label>
             <DatePicker @value={{options.createdAt}} @onSelect={{options.setCreatedAt}}
                 @placeholder={{t "common.select-date" }} @range={{true}} @toggleSelected={{false}} @autoClose={{true}}
-                class="filter-date-input form-input-lg w-full border
-                     border-gray-300 rounded-md p-2 bg-gray-50 text-gray-600" />
+                class="filter-date-input form-input-sm w-full" />
             {{/if}}
         </div>
         {{/if}}
         {{/if}}
-        <div class="input-group">
+        <div class="input-group fleetbase-power-select">
             <label class="block text-sm font-bold text-gray-800 mb-2">
                 {{t "common.format"}}
             </label>
 
             <Select @value={{options.format}} @options={{options.formatOptions}}
-                @placeholder={{t "common.select_export_format" }} @onChange={{options.setFormat}} class="w-full border border-gray-300 rounded-md p-2
-            focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-50" />
+                @placeholder={{t "common.select_export_format" }} @onChange={{options.setFormat}} class="w-full form-select form-input form-select-sm" />
         </div>
     </div>
 </Modal::Default>
