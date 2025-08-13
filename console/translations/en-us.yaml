@@ -2589,6 +2589,13 @@ fleetbase:
     done: "Done"
     close: "Close"
     help: "Help"
+    upload_spreadsheets:
+      title: "Upload Spreadsheets"
+      description: "Upload spreadsheet files by dragging and dropping or selecting from your device."
+
+    start_upload:
+      title: "Start Upload"
+      description: "Initiate the upload and processing of the selected spreadsheet files."
 
   orders:
     tour:
@@ -2599,14 +2606,6 @@ fleetbase:
       import_button:
         title: "Import Orders"
         description: "Import orders from a spreadsheet file for efficient bulk processing."
-
-      upload_spreadsheets:
-        title: "Upload Spreadsheets"
-        description: "Upload spreadsheet files by dragging and dropping or selecting from your device."
-
-      start_upload:
-        title: "Start Upload"
-        description: "Initiate the upload and processing of the selected spreadsheet files."
 
       dates:
         title: "Order Scheduling"

@@ -32,6 +32,7 @@
     {{/if}}
     <Button @customClass="create-fleet-btn" @icon="plus" @iconPrefix="fas" @type="primary" @text={{t "fleet-ops.common.new"}} class="mr-2" @onClick={{this.createFleet}} @permission="fleet-ops create fleet" />
     <Button
+        @customClass="import-btn"
         @icon="upload"
         @type="magic"
         @text={{t "fleet-ops.common.import"}}
