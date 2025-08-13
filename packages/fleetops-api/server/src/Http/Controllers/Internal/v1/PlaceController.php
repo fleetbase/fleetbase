@@ -288,7 +288,7 @@ class PlaceController extends FleetOpsController
             $existingPlaceCodes = [];
             if (!empty($allPlaceCodes)) {
                 $existingPlaceCodes = Place::whereIn('code', array_unique($allPlaceCodes))
-                    // ->where('company_uuid', session('company'))
+                    ->where('company_uuid', session('company'))
                     ->whereNull('deleted_at')
                     ->pluck('code')
                     ->toArray();
@@ -344,12 +344,13 @@ class PlaceController extends FleetOpsController
                         'code' => $row['code'] ?? null,
                         'address' => $row['address'] ?? null,
                         'city' => $row['city'] ?? null,
-                        'state' => $row['state'] ?? null,
+                        'province' => $row['state'] ?? null,
                         'country' => $row['country'] ?? null,
                         'postal_code' => $row['postal_code'] ?? null,
                         'phone' => $row['phone'] ?? null,
                         'email' => $row['email'] ?? null,
                         'website' => $row['website'] ?? null,
+                        'street1' => $row['street1'] ?? null,
                         'meta' => [
                             'description' => $row['description'] ?? null,
                             'type' => $row['type'] ?? 'facility'
@@ -363,7 +364,7 @@ class PlaceController extends FleetOpsController
                             $longitude = floatval($row['longitude']);
                             
                             if ($latitude >= -90 && $latitude <= 90 && $longitude >= -180 && $longitude <= 180) {
-                                $placeData['location'] = new Point($longitude, $latitude);
+                                $placeData['location'] = new Point($latitude, $longitude);
                             } else {
                                 $importErrors[] = [
                                     (string)$displayRowIndex,
