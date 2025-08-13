@@ -148,7 +148,7 @@ jobs:
         run: |
           echo "STRIPE_KEY=${{ secrets.STRIPE_TEST_KEY }}" >> ./environments/.env.production
           echo "LOGROCKET_APP_ID=${{ secrets.LOGROCKET_APP_ID }}" >> ./environments/.env.production
-          echo "EXTENSIONS=@fleetbase/billing-engine,@fleetbase/internals-engine" >> ./environments/.env.production
+          echo "EXTENSIONS=@fleetbase/billing-engine,@fleetbase/internals-engine,@fleetbase/aws-marketplace" >> ./environments/.env.production
         working-directory: ./console
 
       - name: Set Env Variables for Production
@@ -156,7 +156,7 @@ jobs:
         run: |
           echo "STRIPE_KEY=${{ secrets.STRIPE_KEY }}" >> ./environments/.env.production
           echo "LOGROCKET_APP_ID=${{ secrets.LOGROCKET_APP_ID }}" >> ./environments/.env.production
-          echo "EXTENSIONS=@fleetbase/billing-engine,@fleetbase/internals-engine" >> ./environments/.env.production
+          echo "EXTENSIONS=@fleetbase/billing-engine,@fleetbase/internals-engine,@fleetbase/aws-marketplace" >> ./environments/.env.production
           echo "DISABLE_RUNTIME_CONFIG=true" >> ./environments/.env.production
         working-directory: ./console
 
