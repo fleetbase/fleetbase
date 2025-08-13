@@ -534,7 +534,7 @@ class DriverController extends FleetOpsController
         return $phone;
     }
 
-    public function import(ImportRequest $request)
+    /*public function import(ImportRequest $request)
     {
         $files = File::whereIn('uuid', $request->input('files'))->get();
         $requiredHeaders = ['name', 'license', 'country', 'city', 'email'];
@@ -564,6 +564,21 @@ class DriverController extends FleetOpsController
         }
         
         return response($this->generateSuccessResponse('driver', $files->first()->uuid, $result));
+    }*/
+    public function import(ImportRequest $request)
+    {
+        $disk           = $request->input('disk', config('filesystems.default'));
+        $files          = $request->resolveFilesFromIds();
+
+        foreach ($files as $file) {
+            try {
+                Excel::import(new DriverImport(), $file->path, $disk);
+            } catch (\Throwable $e) {
+                return response()->error('Invalid file, unable to proccess.');
+            }
+        }
+
+        return response()->json(['status' => 'ok', 'message' => 'Import completed']);
     }
 
     public function driverImportWithValidation($excelData)
