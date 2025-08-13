@@ -734,5 +734,171 @@ handleDriverChange(order, driver) {
     this.assignDriverNew(driver);
   }
 }
+    @action
+    handleVehicleChange(order, vehicle) {
+        if (!vehicle) {
+            order.set('vehicle_assigned', null);
+            order.set('vehicle_assigned_uuid', null);
+            return;
+        }
 
+        if (vehicle.is_unassigned) {
+            // Assign directly if vehicle is free
+            order.set('vehicle_assigned', vehicle);
+            order.set('vehicle_assigned_uuid', vehicle.id);
+        } else {
+            // Go through assign modal logic (like driver)
+            this.assignVehicleNew(vehicle);
+        }
+    }
+
+    @action
+    assignVehicleNew(vehicle) {
+        const eventBus = this.effectiveEventBus;
+        try {
+            // Close any open modals
+            document.querySelectorAll('.modal.show').forEach(modal => {
+                const closeBtn = modal.querySelector('.close, .btn-close, [data-dismiss="modal"]');
+                if (closeBtn) closeBtn.click();
+            });
+        } catch (e) {
+            console.error('Error closing modals:', e);
+        }
+
+        if (this.isModalOpen) {
+            return;
+        }
+
+        const order = this.args.order;
+        this.modalsManager.done().then(() => {
+            this.isModalOpen = true;
+            this.isAssigningVehicle = true;
+
+            if (isBlank(vehicle)) {
+                // Unassign vehicle
+                return this.modalsManager.confirm({
+                    title: this.intl.t('fleet-ops.component.order.schedule-card.unassign-vehicle', { default: 'Unassign Vehicle' }),
+                    body: this.intl.t('fleet-ops.component.order.schedule-card.unassign-vehicle-text', { orderId: order.public_id }),
+                    acceptButtonText: this.intl.t('fleet-ops.component.order.schedule-card.unassign-button', { default: 'Unassign' }),
+                    confirm: async (modal) => {
+                        order.setProperties({
+                            vehicle_assigned: null,
+                            vehicle_assigned_uuid: null
+                        });
+
+                        modal.startLoading();
+                        try {
+                            await order.save();
+
+                            const currentRoute = this.router.currentRoute;
+                            const queryParams = currentRoute.queryParams || {};
+                            const currentPage = queryParams.page || 1;
+
+                            const newQueryParams = {
+                                ref: Date.now(),
+                                page: currentPage
+                            };
+
+                            return this.router.transitionTo('console.fleet-ops.operations.scheduler.index', {
+                                queryParams: newQueryParams
+                            }).then(() => {
+                                if (eventBus) {
+                                    eventBus.publish('calendar-refresh-needed', {
+                                        orderId: order.id,
+                                        currentPage: currentPage,
+                                        refreshAll: true
+                                    });
+                                }
+                                this.notifications.success(
+                                    this.intl.t('fleet-ops.operations.scheduler.index.success-message', {
+                                        orderId: order.public_id,
+                                        orderAt: order.scheduledAt
+                                    })
+                                );
+                                modal.done();
+                                this.isModalOpen = false;
+                            });
+                        } catch (error) {
+                            this.notifications.serverError(error);
+                            modal.stopLoading();
+                        } finally {
+                            this.isModalOpen = false;
+                        }
+                    },
+                    decline: (modal) => {
+                        this.isAssigningVehicle = false;
+                        modal.done();
+                        this.isModalOpen = false;
+                    },
+                });
+            } else {
+                // Assign vehicle with confirmation if already assigned
+                return this.modalsManager.confirm({
+                    title: this.intl.t('fleet-ops.component.order.schedule-card.assign-vehicle', { default: 'Assign Vehicle' }),
+                    body: vehicle.is_unassigned
+                        ? this.intl.t('fleet-ops.component.order.schedule-card.assign-vehicle-text', {
+                            vehicleName: vehicle.display_name,
+                            orderId: order.public_id,
+                        })
+                        : this.intl.t('fleet-ops.component.order.schedule-card.assign-vehicle-busy-text', {
+                            vehicleName: vehicle.display_name,
+                            orderId: order.public_id,
+                            availability: vehicle.availability_message || 'Assigned to another order',
+                        }),
+                    acceptButtonText: this.intl.t('fleet-ops.component.order.schedule-card.assign-button', { default: 'Assign' }),
+
+                    confirm: (modal) => {
+                        const currentRoute = this.router.currentRoute;
+                        const queryParams = currentRoute.queryParams || {};
+                        const currentPage = queryParams.page || 1;
+
+                        modal.startLoading();
+
+                        order.setProperties({
+                            vehicle_assigned: vehicle,
+                            vehicle_assigned_uuid: vehicle.id
+                        });
+
+                        return order.save()
+                            .then(() => {
+                                this.isAssigningVehicle = false;
+
+                                const newQueryParams = {
+                                    ref: Date.now(),
+                                    page: currentPage
+                                };
+
+                                return this.router.transitionTo('console.fleet-ops.operations.scheduler.index', {
+                                    queryParams: newQueryParams
+                                });
+                            })
+                            .catch((error) => {
+                                this.notifications.serverError(error);
+                            })
+                            .finally(() => {
+                                if (eventBus) {
+                                    eventBus.publish('calendar-refresh-needed', {
+                                        orderId: order.id,
+                                        currentPage: currentPage,
+                                        refreshAll: true
+                                    });
+                                }
+                                this.notifications.success(
+                                    this.intl.t('fleet-ops.operations.scheduler.index.success-message', {
+                                        orderId: order.public_id,
+                                        orderAt: order.scheduledAt
+                                    })
+                                );
+                                modal.done();
+                                this.isModalOpen = false;
+                            });
+                    },
+                    decline: (modal) => {
+                        modal.done();
+                        this.isModalOpen = false;
+                    },
+                });
+            }
+        });
+    }
 }
