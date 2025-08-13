@@ -196,7 +196,6 @@ class VehicleController extends FleetOpsController
                         // Add to seen arrays to prevent future duplicates in the same import
                         if (!empty($vehicle->plate_number)) {
                             $seenPlateNumbers[] = strtoupper($vehicle->plate_number);
-                            $existingPlateNumbers[] = strtoupper($vehicle->plate_number);
                         }
                     } else {
                         $vehicleName = $this->getVehicleValue($row, ['vehicle', 'vehicle_name', 'name']);
