@@ -643,13 +643,13 @@ class DriverController extends FleetOpsController
 
                 try {
 
-                    $fieldsToValidate = ['name', 'license', 'country', 'city', 'email'];
-                    foreach ($fieldsToValidate as $field) {
-                        if (isset($row[$field])) {
-                            $fieldErrors = FieldValidator::validateField($field, $row[$field], $displayRowIndex);
-                            $importErrors = array_merge($importErrors, $fieldErrors);
-                        }
-                    }
+                    // $fieldsToValidate = ['name', 'license', 'country', 'city', 'email'];
+                    // foreach ($fieldsToValidate as $field) {
+                    //     if (isset($row[$field])) {
+                    //         $fieldErrors = FieldValidator::validateField($field, $row[$field], $displayRowIndex);
+                    //         $importErrors = array_merge($importErrors, $fieldErrors);
+                    //     }
+                    // }
                     // Pre-validation before calling createFromImport
                     $validationErrors = $this->validateDriverRow($row, $displayRowIndex, 
                         $existingEmails, $existingLicenseNumbers, $seenEmails, $seenLicenseNumbers);
