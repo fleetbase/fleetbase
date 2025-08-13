@@ -119,21 +119,13 @@ class VehicleController extends FleetOpsController
             $createdVehicles = [];
             $updatedVehicles = [];
 
-            // Pre-collect all unique plate numbers for batch validation
+            // First, collect all plate numbers from the import file to check against existing database
             $allPlateNumbers = [];
             $rowsWithIndex = [];
 
             foreach ($excelData as $sheetIndex => $sheetRows) {
-                $sheetRowsWithIndex = collect($sheetRows)->map(function ($row, $originalIndex) {
-                    $row['_original_row_index'] = $originalIndex;
-                    return $row;
-                });
-
-                foreach ($sheetRowsWithIndex as $rowIndex => $row) {
-                    $originalRowIndex = $row['_original_row_index'] ?? $rowIndex;
-                    $displayRowIndex = $originalRowIndex + 1;
-
-                    // Collect plate numbers for batch validation using same column mapping as createFromImport
+                foreach ($sheetRows as $rowIndex => $row) {
+                    $displayRowIndex = $rowIndex + 1;
                     $plateNumber = $this->getVehicleValue($row, ['plate_number', 'license_plate', 'license_place_number', 'vehicle_plate', 'registration_plate', 'tag_number', 'tail_number', 'head_number']);
                     
                     if (!empty($plateNumber)) {
@@ -147,30 +139,29 @@ class VehicleController extends FleetOpsController
                 }
             }
 
-            // Single query to get all existing plate numbers
+            // Get existing plate numbers from database (only check once at the beginning)
             $existingPlateNumbers = [];
-            
             if (!empty($allPlateNumbers)) {
                 $existingPlateNumbers = Vehicle::whereIn('plate_number', array_unique($allPlateNumbers))
                     ->where('company_uuid', session('company'))
-                    ->whereNull('deleted_at')
                     ->pluck('plate_number')
-                    ->map('strtoupper')
+                    ->map(function($plate) {
+                        return strtoupper($plate);
+                    })
                     ->toArray();
             }
 
             // Track duplicates within the import file itself
             $seenPlateNumbers = [];
 
-            // Process each row with pre-validation before calling createFromImport
+            // Process each row
             foreach ($rowsWithIndex as $rowData) {
                 $row = $rowData['row'];
                 $displayRowIndex = $rowData['displayRowIndex'];
 
                 try {
-                    // Pre-validation before calling createFromImport
-                    $validationErrors = $this->validateVehicleRow($row, $displayRowIndex, 
-                        $existingPlateNumbers, $seenPlateNumbers);
+                    // Basic validation first (including database duplicate check)
+                    $validationErrors = $this->validateVehicleRowWithDatabaseCheck($row, $displayRowIndex, $seenPlateNumbers, $existingPlateNumbers);
                     
                     if (!empty($validationErrors)) {
                         $importErrors = array_merge($importErrors, $validationErrors);
@@ -267,20 +258,19 @@ class VehicleController extends FleetOpsController
         }
     }
 
-    /**
-     * Validate a single vehicle row before processing
-     * Collects ALL validation errors for the row instead of stopping at the first error
+        /**
+     * Validation for a single vehicle row including database duplicate check
+     * Checks format, duplicates within import file, and existing data in database
      *
      * @param array $row
      * @param int $displayRowIndex
-     * @param array $existingPlateNumbers
      * @param array $seenPlateNumbers
+     * @param array $existingPlateNumbers
      * @return array
      */
-    private function validateVehicleRow($row, $displayRowIndex,$existingPlateNumbers,&$seenPlateNumbers)
+    private function validateVehicleRowWithDatabaseCheck($row, $displayRowIndex, &$seenPlateNumbers, $existingPlateNumbers)
     {
         $errors = [];
-        $hasValidationErrors = false;
 
         // Extract values using the same logic as createFromImport
         $vehicleName = $this->getVehicleValue($row, ['vehicle', 'vehicle_name', 'name']);
@@ -296,30 +286,6 @@ class VehicleController extends FleetOpsController
                 "Vehicle make or vehicle name is required.",
                 ""
             ];
-            $hasValidationErrors = true;
-        }
-         // Validate fields using FieldValidator
-        //  $fieldsToValidate = [
-        //     'plate_number' => $plateNumber,
-        //     'make' => $make,
-        //     'model' => $model,
-        //     'year' => $year
-        // ];
-
-        // foreach ($fieldsToValidate as $field => $value) {
-        //     if (!empty($value)) {
-        //         $fieldErrors = \App\Helpers\FieldValidator::validateField($field, $value, $displayRowIndex);
-        //         $errors = array_merge($errors, $fieldErrors);
-        //     }
-        // }
-
-        if (empty($make) && empty($vehicleName)) {
-            $errors[] = [
-                (string)$displayRowIndex,
-                "Vehicle make or vehicle name is required.",
-                ""
-            ];
-            $hasValidationErrors = true;
         }
 
         // Year validation
@@ -331,13 +297,10 @@ class VehicleController extends FleetOpsController
                     "Invalid year: '{$year}'. Year must be between 1900 and " . (date('Y') + 2),
                      $plateNumber ?? $make ?? $vehicleName
                 ];
-                $hasValidationErrors = true;
             }
         }
 
-
-
-        // Plate number validation
+        // Plate number validation - format, duplicates within import file, and database duplicates
         if (!empty($plateNumber)) {
             $plateNumber = strtoupper(trim($plateNumber));
             
@@ -348,18 +311,7 @@ class VehicleController extends FleetOpsController
                     "Invalid plate number format: '{$plateNumber}'. Plate number must be between 2 and 20 characters.",
                     $plateNumber
                 ];
-                $hasValidationErrors = true;
             } else {
-                // Check for duplicate plate number in existing database
-                if (in_array($plateNumber, $existingPlateNumbers)) {
-                    $errors[] = [
-                        (string)$displayRowIndex,
-                        "Plate number '{$plateNumber}' already exists in the system.",
-                        $plateNumber
-                    ];
-                    $hasValidationErrors = true;
-                }
-
                 // Check for duplicate plate number within the import file
                 if (in_array($plateNumber, $seenPlateNumbers)) {
                     $errors[] = [
@@ -367,12 +319,18 @@ class VehicleController extends FleetOpsController
                         "Duplicate plate number '{$plateNumber}' found in import file.",
                         $plateNumber
                     ];
-                    $hasValidationErrors = true;
-                }
-
-                // Only add to seen plate numbers if no validation errors for this plate
-                if (!in_array($plateNumber, $existingPlateNumbers) && !in_array($plateNumber, $seenPlateNumbers)) {
-                    $seenPlateNumbers[] = $plateNumber;
+                } else {
+                    // Check for existing plate number in database
+                    if (in_array($plateNumber, $existingPlateNumbers)) {
+                        $errors[] = [
+                            (string)$displayRowIndex,
+                            "Plate number '{$plateNumber}' already exists in the system.",
+                            $plateNumber
+                        ];
+                    } else {
+                        // Add to seen plate numbers if no validation errors
+                        $seenPlateNumbers[] = $plateNumber;
+                    }
                 }
             }
         }
