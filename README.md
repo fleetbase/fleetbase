@@ -7,11 +7,11 @@
     <p align="center" dir="auto">
       Modular logistics and supply chain operating system
       <br>
-      <a href="https://docs.fleetbase.io/" rel="nofollow">Documentation</a>
+      <a href="https://docs.fleetbase.io/" rel="nofollow" target="_fleetbase_docs">Documentation</a>
       ·
-      <a href="https://console.fleetbase.io" rel="nofollow">Cloud Version</a>
+      <a href="https://console.fleetbase.io" rel="nofollow" target="_fleetbase_console">Cloud Version</a>
       ·
-      <a href="https://fleetbase.apichecker.com" target="_api_status" rel="nofollow">API Status</a>
+      <a href="https://console.fleetbase.io/aws-marketplace" rel="nofollow" target="_aws_marketplace">Deploy on AWS</a>
       ·
       <a href="https://tally.so/r/3NBpAW" rel="nofollow">Book a Demo</a>
       ·
@@ -39,6 +39,7 @@ cd fleetbase && ./scripts/docker-install.sh
 
   - [Features](#-features)
   - [Install](#-install)
+  - [Deploy on AWS](#-deploy-on-aws-in-one-click)
   - [Extensions](#-extensions)
   - [Apps](#-apps)
   - [Roadmap](#-roadmap)
@@ -117,6 +118,36 @@ services:
 
 You can learn more about full installation, and configuration in the [official documentation](https://docs.fleetbase.io/getting-started/install).
 
+## 🚀 Deploy on AWS in One Click
+
+Deploy your complete Fleetbase logistics platform on AWS with enterprise-grade security, scalability, and reliability. No DevOps expertise required!
+
+[![Deploy to AWS](https://img.shields.io/badge/Deploy%20to%20AWS-FF9900?style=for-the-badge&logo=amazon-aws&logoColor=white)](https://console.fleetbase.io/aws-marketplace)
+
+### ✨ What You Get
+
+- **Complete AWS Infrastructure**: ECS Fargate, RDS MySQL, ElastiCache Redis, S3, CloudFront, and more  
+- **25-Minute Setup**: From zero to production-ready logistics platform  
+- **Enterprise Security**: VPC isolation, encrypted storage, secrets management  
+- **Auto-Scaling**: Handle traffic spikes with ECS Fargate auto-scaling  
+- **High Availability**: Multi-AZ deployment with 99.9% uptime SLA  
+- **Cost Optimized**: Pay-as-you-use with optimized resource allocation  
+
+### 🏗️ Infrastructure Included
+
+Your AWS deployment includes a complete, production-ready infrastructure stack:
+
+- **Compute**: ECS Fargate cluster with auto-scaling services  
+- **Database**: RDS MySQL 8.0 with automated backups and Multi-AZ support  
+- **Cache**: ElastiCache Redis for high-performance caching  
+- **Storage**: S3 object storage with CloudFront CDN for global distribution  
+- **Networking**: VPC with private subnets, NAT gateways, and security groups  
+- **Load Balancing**: Application Load Balancer with SSL certificates  
+- **Monitoring**: CloudWatch logs, container insights, and health monitoring  
+- **Messaging**: SQS message queues for background job processing  
+
+[**🚀 Deploy Now**](https://console.fleetbase.io/aws-marketplace) | [**📖 Learn More**](https://docs.fleetbase.io/category/deploying/aws)
+
 # 🧩 Extensions 
 
 Extensions are modular components that enhance the functionality of your Fleetbase instance. They allow you to add new features, customize existing behavior, or integrate with external systems.
@@ -186,3 +217,4 @@ Get updates on Fleetbase's development and chat with the project maintainers and
 # License & Copyright
 
 Fleetbase is made available under the terms of the <a href="https://www.gnu.org/licenses/agpl-3.0.html" target="_blank">GNU Affero General Public License 3.0 (AGPL 3.0)</a>. For other licenses <a href="mailto:hello@fleetbase.io" target="_blank">contact us</a>.
+
