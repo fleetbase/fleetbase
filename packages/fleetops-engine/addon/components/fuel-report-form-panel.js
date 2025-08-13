@@ -17,6 +17,7 @@ export default class FuelReportFormPanelComponent extends Component {
     @service hostRouter;
     @service contextPanel;
     @service fetch;
+    @service modalsManager;
     // @service fileService; // Inject the file-service
 
     @tracked uploadQueue = [];
@@ -452,50 +453,70 @@ export default class FuelReportFormPanelComponent extends Component {
         const message = this.intl.t('common.file-delete-confirmation', {
             filename: file.original_filename
         });
-        
-        if (!confirm(message)) {
-            return;
-        }
-       
-        this.fuelReport.files.removeObject(file);
+
         try {
-            const apiUrl = `${ENV.API_HOST}/v1/files/${file.public_id}`;
-            const authToken = this.session.data?.authenticated?.token; // Safely access nested properties
+            this.modalsManager.show('modals/delete-confirmation', {  // Use a generic confirmation modal; customize the name if needed
+                body: message,  // The confirmation message with filename
+                acceptButtonText: this.intl.t('common.delete'),  // e.g., "Delete"
+                acceptButtonScheme: 'danger',  // Optional: Red button for delete actions
+                acceptButtonIcon: 'trash',  // Optional: Icon for the button
+                declineButtonText: this.intl.t('common.cancel'),  // e.g., "Cancel"
+                modalClass: 'modal-sm',  // Small modal like in your export example
+                confirm: async (modal) => {
+                    modal.startLoading();  // Show loading state
 
-            if (!authToken) {
-                throw new Error('Authentication token not found.');
-            }
+                    this.fuelReport.files.removeObject(file);  // Optimistically remove from UI
 
-            const response = await fetch(apiUrl, {
-                method: 'DELETE',
-                headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${authToken}`, // Include auth header if required
+                    try {
+                        const apiUrl = `${ENV.API_HOST}/v1/files/${file.public_id}`;
+                        const authToken = this.session.data?.authenticated?.token; // Safely access nested properties
+
+                        if (!authToken) {
+                            throw new Error('Authentication token not found.');
+                        }
+
+                        const response = await fetch(apiUrl, {
+                            method: 'DELETE',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Authorization': `Bearer ${authToken}`, // Include auth header if required
+                            },
+                        });
+
+                        if (!response.ok) {
+                            const errorData = await response.json();
+                            throw new Error(errorData.message || this.intl.t('common.file-delete-failed'));
+                        }
+
+                        // let data = await response.json();
+                        // Trigger a success notification
+                        this.notifications.success(this.intl.t('common.file-delete-success'), {
+                            autoClear: true,
+                            clearDuration: 3000, // Duration in milliseconds
+                        });
+
+                        // return data;
+
+                        // Optionally, show a success notification to the user
+
+                        modal.stopLoading();
+                        modal.done();  // Close the modal
+                    } catch (error) {
+                        // console.error('Failed to delete file:', error);
+                        // Revert the UI change
+                        // this.fuelReport.files.pushObject(file);
+                        // Optionally, show an error notification to the user
+                        this.notifications.serverError(error.message || this.intl.t('common.file-delete-failed'));
+                        modal.stopLoading();
+                    }
+                },
+                decline: (modal) => {
+                    modal.done();  // Close without action
                 },
             });
-
-            if (!response.ok) {
-                const errorData = await response.json();
-                throw new Error(errorData.message || this.intl.t('common.file-delete-failed'));
-            }
-
-            // let data = await response.json();
-            // Trigger a success notification
-            this.notifications.success(this.intl.t('common.file-delete-success'), {
-                autoClear: true,
-                clearDuration: 3000, // Duration in milliseconds
-            });
-
-            // return data;
-            
-            // Optionally, show a success notification to the user
-          } catch (error) {
-            // console.error('Failed to delete file:', error);
-            // Revert the UI change
-            // this.fuelReport.files.pushObject(file);
-            // Optionally, show an error notification to the user
-            this.notifications.serverError(error.message || this.intl.t('common.file-delete-failed'));
-          }
+        } catch (error) {
+            console.error('Modal resolution failed:', error);
+        }
     }
     
     @action
