@@ -47,7 +47,7 @@ return [
     'duplicate_order_import' => 'Some rows were skipped due to duplicate block IDs or trip IDs already existing in the system..',
     'import_failed_invalid_location' => 'Some rows contain invalid location data. Please review and correct them before proceeding',
     'partial_success' => 'Import partially completed. Some rows contained errors and have been logged. Click below to download the error details and fix them before trying again.',
-    'full_import_error' => 'Import failed. No trips were imported due to errors. Please review the attached error log for details.',
+    'full_import_error' => 'Import failed. No records were imported due to errors. Please review the attached error log for details.',
     'duplicate_check_place' => 'A place with this code already exists.',
     'invalid_coordinates' => 'Please provide valid geographic coordinates. Values like [0, 0] or out-of-range positions are not allowed.',
     'duplicate_check_vehicle' => 'A vehicle with this plate number already exists.',

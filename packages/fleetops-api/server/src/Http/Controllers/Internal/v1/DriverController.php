@@ -537,7 +537,7 @@ class DriverController extends FleetOpsController
     public function import(ImportRequest $request)
     {
         $files = File::whereIn('uuid', $request->input('files'))->get();
-        $requiredHeaders = ['name', 'phone', 'license', 'country', 'city', 'email'];
+        $requiredHeaders = ['name', 'license', 'country', 'city', 'email'];
         $result = $this->processImportWithErrorHandling($files, 'driver', function($file) use ($requiredHeaders) {
             $disk = config('filesystems.default');
             $data = Excel::toArray(new DriverImport(), $file->path, $disk);
@@ -643,7 +643,7 @@ class DriverController extends FleetOpsController
 
                 try {
 
-                    $fieldsToValidate = ['name', 'license', 'phone', 'country', 'city', 'email'];
+                    $fieldsToValidate = ['name', 'license', 'country', 'city', 'email'];
                     foreach ($fieldsToValidate as $field) {
                         if (isset($row[$field])) {
                             $fieldErrors = FieldValidator::validateField($field, $row[$field], $displayRowIndex);
@@ -859,19 +859,7 @@ class DriverController extends FleetOpsController
             }
         }
 
-        // Phone number validation (basic format check)
-        if (!empty($phone)) {
-            $phone = trim($phone);
-            // Allow various phone formats but ensure it has reasonable length and contains numbers
-            if (strlen($phone) < 7 || !preg_match('/[0-9]/', $phone)) {
-                $errors[] = [
-                    (string)$displayRowIndex,
-                    "Invalid phone number format: '{$phone}'",
-                    $email ?? $driversLicenseNumber ?? $name
-                ];
-                $hasValidationErrors = true;
-            }
-        }
+
 
         return $errors;
     }
