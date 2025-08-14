@@ -1162,6 +1162,9 @@ fleet-ops:
         schedule: Data di inizio
         unschedule: Annulla pianificazione
       order-form:
+        assign-fleet: Assegna Flotta
+        assign-fleet-text: Assegna la flotta con cui verrà eseguito questo ordine.
+        assign-fleet-placeholder: Seleziona Flotta
         id-text: Usa questo campo per impostare facoltativamente un identificatore personalizzato o un identificatore interno per l'ordine.
         end-date-text: La data e l'ora in cui l'ordine è previsto per essere completato. Questo segna la fine prevista del processo di consegna. Se l'ordine non viene completato entro tale momento, potrebbe essere necessaria un'ulteriore azione o una riassegnazione.
         schedule-text: La data e l'ora in cui l'ordine verrà inviato. Se non viene assegnato alcun conducente al momento della spedizione, la spedizione fallirà. Se l'ordine è Ad-Hoc, l'ordine verrà inviato ai conducenti nelle vicinanze del punto di ritiro.
@@ -1393,6 +1396,7 @@ fleet-ops:
         show-less: Mostra meno dettagli
         show-more: Mostra più dettagli
       schedule-card:
+        fleet-required: La flotta è richiesta
         destination: Destinazione
         unassign-driver: Rimuovere Conducente?
         unassign-text: Stai per rimuovere il conducente dall'Ordine {orderId}. Clicca continua per confermare la rimozione del conducente.
@@ -2111,6 +2115,10 @@ fleet-ops:
           customer: Cliente
           customer-help-text: Assegna opzionalmente il cliente a questo ordine. Se è un nuovo cliente, usa il pulsante 'Nuovo Cliente' sopra.
           customer-placeholder: Seleziona Cliente
+          fleet: Flotta
+          fleet-help-text: Assegna la flotta per questo ordine.
+          fleet-placeholder: Seleziona Flotta
+          select-fleet: Seleziona Flotta
           facilitator: Facilitatore
           facilitator-help-text: Assegna opzionalmente un facilitatore per questo ordine, un facilitatore può essere un subappaltatore o un servizio che faciliterà il trasporto di questo ordine.
           facilitator-placeholder: Seleziona Facilitatore
@@ -2238,6 +2246,7 @@ fleet-ops:
           view-activity: Visualizza Attività
           add-item-button: Aggiungi Articolo
           edit-item-button: Modifica Articolo
+          fleet: Flotta
           edit-order-title: Modifica Dettagli Ordine
           update-success: 'I dettagli di {orderId} sono stati aggiornati.'
           order-metadata: Metadati Ordine

@@ -1328,6 +1328,9 @@ fleet-ops:
         select-driver: Fahrer auswählen
         assign-vehicle: Fahrzeug zuweisen
         assign-vehicle-text: Weisen Sie das Fahrzeug zu, mit dem diese Bestellung ausgeführt wird.
+        assign-fleet: Flotte zuweisen
+        assign-fleet-text: Weisen Sie die Flotte zu, mit der diese Bestellung ausgeführt wird.
+        assign-fleet-placeholder: Flotte auswählen
         select-vehicle: Fahrzeug auswählen
       order-import:
         loading-message: Import wird verarbeitet...
@@ -1550,6 +1553,7 @@ fleet-ops:
         show-less: Weniger Details anzeigen
         show-more: Mehr Details anzeigen
       schedule-card:
+        fleet-required: Flotte ist erforderlich
         destination: Ziel
         unassign-driver: Fahrer entfernen?
         unassign-text: Sie sind dabei, den Fahrer für die Bestellung {orderId} zu entfernen. Klicken Sie auf "Weiter", um die Entfernung zu bestätigen.
@@ -2272,6 +2276,10 @@ fleet-ops:
           customer: Kunde
           customer-help-text: Weisen Sie dieser Bestellung optional einen Kunden zu. Wenn es sich um einen neuen Kunden handelt, verwenden Sie die Schaltfläche „Neuer Kunde“ oben.
           customer-placeholder: Kunden auswählen
+          fleet: Flotte
+          fleet-help-text: Weisen Sie die Flotte für diese Bestellung zu.
+          fleet-placeholder: Flotte auswählen
+          select-fleet: Flotte auswählen
           facilitator: Vermittler
           facilitator-help-text: Weisen Sie dieser Bestellung optional einen Vermittler zu, der ein Subunternehmer oder Dienstleister für den Transport dieser Bestellung sein kann.
           facilitator-placeholder: Vermittler auswählen
@@ -2405,6 +2413,7 @@ fleet-ops:
           unassign-title: Möchten Sie den Fahrer ({driverName}) von dieser Bestellung abbestellen?
           unassign-body: Sobald der Fahrer abbestellt wurde, hat er keinen Zugriff mehr auf die Bestelldetails.
           unassign-success: Fahrer wurde von dieser Bestellung abbestellt.
+          fleet: Flotte
           edit-route-title: Bestellroute bearbeiten
           route-error: Fehler bei der Routenoptimierung, überprüfen Sie die Routenangabe und versuchen Sie es erneut.
           route-update-success: '{orderId} Routenangaben wurden aktualisiert.'

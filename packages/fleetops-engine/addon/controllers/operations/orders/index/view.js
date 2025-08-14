@@ -658,6 +658,9 @@ export default class OperationsOrdersIndexViewController extends BaseController 
     
         let vehicleToAssign = null;
         let vehicleIsBusy = false;
+
+        let fleetToAssign = null;
+        let fleetIsBusy = false;
         const resetOrderToOriginal = () => {
             order.set('driver_assigned_uuid', originalOrderData.driver_assigned_uuid);
             order.set('driver_assigned', originalOrderData.driver_assigned);
@@ -756,7 +759,22 @@ export default class OperationsOrdersIndexViewController extends BaseController 
                     vehicleIsBusy = (vehicleToAssign.is_vehicle_available == 0) ? true : false; // Adjust condition to your availability logic
                     }
                     fieldsChanged = true;
-                },
+            },
+
+            setFleet: (fleet) => {
+                if (!fleet) {
+                    order.set('fleet_uuid', null);
+                    order.set('fleet', null);
+                    fleetToAssign = null;
+                    fleetIsBusy = false;
+                } else {
+                    order.set('fleet', fleet);
+                    order.set('fleet_uuid', fleet.id);
+                    fleetToAssign = fleet;
+                    fleetIsBusy = (fleetToAssign.is_fleet_available == 0) ? true : false;
+                }
+                fieldsChanged = true;
+            },
 
             scheduleOrder: (dateInstance) => {
                 order.scheduled_at = dateInstance;

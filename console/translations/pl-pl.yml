@@ -1310,6 +1310,9 @@ fleet-ops:
         schedule: Data rozpoczęcia
         unschedule: Anuluj harmonogram
       order-form:
+        assign-fleet: Przypisz flotę
+        assign-fleet-text: Przypisz flotę, z którą zostanie zrealizowane to zamówienie.
+        assign-fleet-placeholder: Wybierz flotę
         id-text: Użyj tego pola, aby opcjonalnie ustawić niestandardowy identyfikator lub wewnętrzny identyfikator zamówienia.
         schedule-text: Data i godzina wysyłki zamówienia. Jeśli w momencie wysyłki nie zostanie przypisany kierowca, wysyłka nie powiedzie się. Jeśli zamówienie jest ad hoc, zostanie wysłane do kierowców w pobliżu miejsca odbioru.
         end-date-text: Data i godzina zakończenia zamówienia. Określa przewidywane zakończenie procesu dostawy. Jeśli zamówienie nie zostanie zakończone do tego czasu, może wymagać dodatkowych działań lub ponownego przypisania.
@@ -1542,6 +1545,7 @@ fleet-ops:
         show-less: Pokaż mniej szczegółów
         show-more: Pokaż więcej szczegółów
       schedule-card:
+        fleet-required: Flota jest wymagana
         destination: Cel podróży
         unassign-driver: Usunąć przypisanie kierowcy?
         unassign-text: Zaraz usuniesz przypisanie kierowcy dla zamówienia {orderId}. Kliknij „Kontynuuj", aby potwierdzić usunięcie kierowcy.
@@ -2262,6 +2266,10 @@ fleet-ops:
           customer: Klient
           customer-help-text: Opcjonalnie przypisz klienta do zamówienia. Jeśli to nowy klient, użyj przycisku „Nowy klient" powyżej.
           customer-placeholder: Wybierz klienta
+          fleet: flotę
+          fleet-help-text: Przypisz flotę dla tego zamówienia.
+          fleet-placeholder: Wybierz flotę
+          select-fleet: Wybierz flotę
           facilitator: Pośrednik
           facilitator-help-text: Opcjonalnie przypisz pośrednika, który może być podwykonawcą lub usługą wspomagającą transport zamówienia.
           facilitator-placeholder: Wybierz pośrednika
@@ -2389,6 +2397,7 @@ fleet-ops:
           view-activity: Zobacz aktywność
           add-item-button: Dodaj przedmiot
           edit-item-button: Edytuj przedmiot
+          fleet: Flota
           edit-order-title: Edytuj szczegóły zamówienia
           update-success: 'Szczegóły zamówienia {orderId} zostały zaktualizowane.'
           order-metadata: Metadane zamówienia
