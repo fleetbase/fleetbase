@@ -2855,6 +2855,9 @@ fleetbase:
 
   drivers:
     tour:
+      import_button: 
+        title: "Importuj sterowniki"
+        description: "Importuj sterowniki z pliku arkusza kalkulacyjnego, aby wydajnie przetwarzać zbiorczo."
       new_button:
         title: "Utwórz nowego kierowcę"
         description: "Otwiera formularz umożliwiający utworzenie nowego profilu kierowcy i wprowadzenie danych kierowcy."
@@ -2870,6 +2873,9 @@ fleetbase:
 
   vehicles:
     tour:
+      import_button: 
+        title: "Importuj pojazdy"
+        description: "Importuj pojazdy z pliku arkusza kalkulacyjnego, aby zapewnić wydajne przetwarzanie zbiorcze."
       new_button:
         title: "Utwórz nowy pojazd"
         description: "Otwiera formularz, aby utworzyć nowy profil pojazdu i wprowadzić informacje dotyczące pojazdu."
@@ -2885,6 +2891,9 @@ fleetbase:
 
   places:
     tour:
+      import_button: 
+        title: "Importuj miejsca"
+        description: "Importuj miejsca z pliku arkusza kalkulacyjnego, aby wydajnie przetwarzać zbiorczo."
       new_button:
         title: "Przycisk 'Nowe miejsce'"
         description: "Otwiera formularz tworzenia miejsca, w którym można zdefiniować szczegóły lokalizacji nowego miejsca."
@@ -3063,6 +3072,9 @@ fleetbase:
 
   fleets:
     tour:
+      import_button:
+        title: "Importuj floty"
+        description: "Importuj floty z pliku arkusza kalkulacyjnego, aby wydajnie przetwarzać zbiorczo."
       new_button:
         title: "Przycisk Nowa flota"
         description: "Otwiera formularz tworzenia floty, w którym możesz zdefiniować szczegóły floty."
