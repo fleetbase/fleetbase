@@ -232,7 +232,8 @@ class FleetController extends FleetOpsController
         }
         $requiredHeaders = ['name', 'task'];
         $validation = [];
-        $result = $this->processImportWithErrorHandling($files, 'fleet', function($file) use ($requiredHeaders, $validation) {
+      
+        $result = $this->processImportWithErrorHandling($files, 'fleet', function($file) use ($requiredHeaders, &$validation) {
             $disk = config('filesystems.default');
             $data = Excel::toArray(new FleetImport(), $file->path, $disk);
             $totalRows = collect($data)->flatten(1)->count();
