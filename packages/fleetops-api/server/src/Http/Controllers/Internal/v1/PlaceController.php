@@ -229,6 +229,13 @@ class PlaceController extends FleetOpsController
                 ]);
 
             }
+            if($alreadyProcessed->status == 'COMPLETED')
+            {
+                return response()->json([
+                'success' => true,
+                'message' => "Import completed successfully.",
+                ]);
+            }
         }
         $requiredHeaders = [
             'name', 'phone', 'code', 'street1', 'street2', 'city', 'postal_code',

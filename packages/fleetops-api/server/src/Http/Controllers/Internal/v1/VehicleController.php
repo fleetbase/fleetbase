@@ -95,6 +95,13 @@ class VehicleController extends FleetOpsController
                 ]);
 
             }
+            if($alreadyProcessed->status == 'COMPLETED')
+            {
+                return response()->json([
+                'success' => true,
+                'message' => "Import completed successfully.",
+                ]);
+            }
         }
         $validation = [];
         $requiredHeaders = ['name', 'make', 'model', 'year', 'plate_number', 'vin_number'];
