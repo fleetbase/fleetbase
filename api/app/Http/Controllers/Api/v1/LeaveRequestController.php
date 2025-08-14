@@ -36,7 +36,7 @@ class LeaveRequestController extends Controller
         $dateFields = [ 'created_at'];
         $unavailability_type = request()->input('unavailability_type');
 
-        $query = LeaveRequest::with(['user', 'processedBy'])
+        $query = LeaveRequest::with(['user', 'processedBy', 'vehicle'])
             ->whereNull('deleted_at')
             ->where([
                 ['company_uuid', '=', Auth::getCompany()->uuid],
