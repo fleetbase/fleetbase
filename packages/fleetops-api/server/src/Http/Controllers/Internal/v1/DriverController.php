@@ -542,10 +542,13 @@ class DriverController extends FleetOpsController
         if($alreadyProcessed){
             if($alreadyProcessed->status == 'ERROR' || $alreadyProcessed->status == 'PARTIALLY_COMPLETED'){
                 $url = Storage::url($alreadyProcessed['error_log_file_path']);
+                $message = $alreadyProcessed->status == 'ERROR'
+                    ? __('messages.full_import_error')
+                    : __('messages.partial_success');
                 return response()->json([
                     'error_log_url' => $url,
-                    'message' => __('messages.partial_success'),
-                    'status' => 'partial_success',
+                    'message' => $message,
+                     'status' => $alreadyProcessed->status == 'ERROR' ? 'error' : 'partial_success',
                     'success' => false,
                 ]);
 
