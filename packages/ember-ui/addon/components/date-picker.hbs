@@ -1,5 +1,5 @@
 <div class="date-picker-container relative">
-    <Input @value={{@value}} placeholder={{@placeholder}} autocomplete="off" class="fleetbase-date-picker form-input {{@class}}" ...attributes {{did-insert this.setupComponent}} />
+    <Input @value={{@value}} placeholder={{@placeholder}} autocomplete="off" class="fleetbase-date-picker form-input {{@class}}" ...attributes {{did-insert this.setupComponent}} {{on "input" this.handleInput}} />
 
     {{#if this.hasValue}}
         <span class="ember-power-select-clear-btn absolute" role="button" {{on "click" this.clear}}>×</span>
