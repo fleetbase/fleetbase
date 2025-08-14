@@ -12,7 +12,7 @@ return [
     'load_rejected' => 'L\'ordine è stato rifiutato.',
     'duplicate_leave_requests' => 'Esiste già una richiesta di permesso per lo stesso periodo.',
     'request_update_success' => 'La richiesta di permesso è stata aggiornata con successo.',
-    'request_deleted_success' => 'La richiesta di permesso è stata eliminata con successo.',
+    'request_deleted_success' => 'La richiesta è stata eliminata con successo.',
     'request_not_found' => 'La richiesta di permesso non è stata trovata.',
     'invalid_activity_status' => 'Stato di attività non valido.',
     'status_updated_successfully' => 'Stato aggiornato con successo',
@@ -53,4 +53,8 @@ return [
     'leave_already_rejected' => 'La richiesta di permesso è già stata rifiuta.',
     'email_address_validation' => 'Per favore inserisci un indirizzo email valido.',
     'required_field' => 'Per favore compila i campi obbligatori.',
+    'past_date_message' => 'La richiesta di permesso non può essere inviata per date passate',
+    'overlap_message_vehicle' => 'Il veicolo è già non disponibile per il periodo selezionato',
+    'leave_request_update_success' => 'La richiesta di permesso è stata aggiornata con successo',
+    'request_update_success_vehicle' => 'La richiesta di veicolo è stata aggiornata con successo'
 ];

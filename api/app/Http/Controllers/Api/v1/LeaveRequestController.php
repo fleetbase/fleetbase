@@ -34,7 +34,7 @@ class LeaveRequestController extends Controller
         ];
 
         $dateFields = [ 'created_at'];
-
+        $unavailability_type = request()->input('unavailability_type');
 
         $query = LeaveRequest::with(['user', 'processedBy'])
             ->whereNull('deleted_at')
@@ -42,9 +42,16 @@ class LeaveRequestController extends Controller
                 ['company_uuid', '=', Auth::getCompany()->uuid],
                 ['record_status', '=', 1],
                 ['deleted', '=', 0],
-            ])
-            ->orderBy('id', 'desc');
-
+            ]);
+        
+        if(isset($unavailability_type))
+        {
+            $query->where('unavailability_type', 'vehicle');
+        }
+        else{
+            $query->whereNull('unavailability_type');
+        }
+        $query->orderBy('id', 'desc');
         // 🔍 Apply filters with mapped columns
     foreach ($filterMap as $requestKey => $columnName) {
         $value = request()->input($requestKey);
@@ -105,31 +112,58 @@ class LeaveRequestController extends Controller
         if ($input['start_date'] < $today || $input['end_date'] < $today) {
             return response()->json([
                 'success' => false,
-                'message' => 'Cannot submit leave request for past dates',
+                'message' => __('messages.past_date_message')
             ], 400);
         }
-
-        // Check for overlapping leave requests
-        $duplicateRequest = LeaveRequest::where([
-                    ['user_uuid', '=', $input['user_uuid']],
-                    ['company_uuid', '=', Auth::getCompany()->uuid],
-                    ['record_status', '=', 1],
-                    ['deleted', '=', 0],
+        if(isset($input['unavailability_type']))
+        {
+            $input['unavailability_type'] = 'vehicle';
+            $input['status'] = 'Approved';
+            $vehcileRequestDuplicate = LeaveRequest::where([
+                ['vehicle_uuid', '=', $input['vehicle_uuid']],
+                ['company_uuid', '=', Auth::getCompany()->uuid],
+                ['record_status', '=', 1],
+                ['deleted', '=', 0],
             ])
             ->where(function ($query) use ($input) {
                 // Check if any existing leave request overlaps with the new request
                 $query->where('start_date', '<=', $input['end_date'])
-                      ->where('end_date', '>=', $input['start_date']);
+                    ->where('end_date', '>=', $input['start_date']);
             })
             ->whereNull('deleted_at')
             ->first();
-
-        if ($duplicateRequest) {
-            return response()->json([
-                'success' => false,
-                'message' => 'You already have a leave request for these dates',
-            ], 400);
+            if($vehcileRequestDuplicate)
+            {
+                return response()->json([
+                    'success' => false,
+                    'message' => __('messages.overlap_message_vehicle')
+                ], 400);
+            }
         }
+        else{
+            $duplicateRequest = LeaveRequest::where([
+                ['user_uuid', '=', $input['user_uuid']],
+                ['company_uuid', '=', Auth::getCompany()->uuid],
+                ['record_status', '=', 1],
+                ['deleted', '=', 0],
+                ])
+                ->where(function ($query) use ($input) {
+                    // Check if any existing leave request overlaps with the new request
+                    $query->where('start_date', '<=', $input['end_date'])
+                        ->where('end_date', '>=', $input['start_date']);
+                })
+                ->whereNull('deleted_at')
+                ->first();
+
+            if ($duplicateRequest) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'You already have a leave request for these dates',
+                ], 400);
+            }
+        }
+        // Check for overlapping leave requests
+        
         $input['public_id'] = Str::random(6);
         $input['company_uuid'] = $company_uuid;
         $input['uuid'] = Str::uuid();
@@ -193,7 +227,7 @@ class LeaveRequestController extends Controller
         if ($input['start_date'] < $today || $input['end_date'] < $today) {
             return response()->json([
                 'success' => false,
-                'message' => 'Cannot submit leave request for past dates',
+                'message' => __('messages.past_date_message')
             ], 400);
         }
 
@@ -202,6 +236,17 @@ class LeaveRequestController extends Controller
             (isset($input['start_date']) && $input['start_date'] !== $leaveRequest->start_date) ||
             (isset($input['end_date']) && $input['end_date'] !== $leaveRequest->end_date)
         ) {
+            if(isset($input['unavailability_type']))
+            {
+                $check_overlap = $this->checkOverlap($input, $leaveRequest);
+                if($check_overlap)
+                {
+                    return response()->json([
+                        'success' => false,
+                        'message' => __('messages.overlap_message_vehicle')
+                    ], 400);
+                }
+            }
             // Check for overlapping leave requests
             $existingLeaveRequest = LeaveRequest::where([
                     ['user_uuid', '=', $input['user_uuid']],
@@ -228,10 +273,10 @@ class LeaveRequestController extends Controller
         // Update updated_by_id
         $input['updated_by_id'] = UserHelper::getIdFromUuid(auth()->id());
         $leaveRequest->update($input);
-
+        $message = (isset($input['unavailability_type']) && $input['unavailability_type'] == 'vehicle') ? __('messages.request_update_success_vehicle') : __('messages.leave_request_update_success');
         return response()->json([
             'success' => true,
-            'message' => __('messages.request_update_success'),
+            'message' => $message,
             'data' => $leaveRequest,
         ]);
     }
@@ -325,5 +370,22 @@ class LeaveRequestController extends Controller
                 'data' => $leaveRequest
             ]);
         }    
+    }
+
+    protected function checkOverlap($input, $leaveRequest)
+    {
+        $existingLeaveRequest = LeaveRequest::where([
+            ['vehicle_uuid', '=', $input['vehicle_uuid']],
+            ['company_uuid', '=', Auth::getCompany()->uuid],
+            ['record_status', '=', 1],
+            ['deleted', '=', 0],
+        ])->where(function ($query) use ($input) {
+            $query->where('start_date', '<=', $input['end_date'])
+                  ->where('end_date', '>=', $input['start_date']);
+        })
+        ->whereNull('deleted_at')
+        ->where('id', '!=', $leaveRequest->id)
+        ->first();
+        return $existingLeaveRequest;
     }
 }

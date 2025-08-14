@@ -36,6 +36,8 @@ class LeaveRequest extends Model
         'leave_type',
         'created_by_id',
         'updated_by_id',
+        'unavailability_type',
+        'vehicle_uuid'
     ];
 
     protected $casts = [
