@@ -51,6 +51,13 @@ export default class OperationsSchedulerIndexController extends BaseController {
     @tracked statusOptions = [];
     @tracked selectedStatus = null;
 
+    // Set errorWaitTime to match the app's notification clearDuration (3.5 seconds) from console/config/environment.js.
+    // This ensures the throttling delay equals the time a notification is visible, preventing multiple errors
+    // from stacking during the display period while allowing resets to occur silently if needed.
+    errorWaitTime = 3500;
+    errorTimer = null;
+    errorMessage = null;
+
     constructor() {
         super(...arguments);
         
@@ -1322,8 +1329,15 @@ refreshLeaveDisplay() {
                 }
     
                 if (order.scheduled_at && date < order.scheduled_at) {
-                    this.errorMessage = this.intl.t("fleet-ops.common.end_date_cannot_be_earlier");
-                    this.notifications.error(this.errorMessage);
+                    // Show error only once for a short period
+                    if (!this.errorTimer) {
+                        this.errorMessage = this.intl.t("fleet-ops.common.end_date_cannot_be_earlier");
+                        this.notifications.error(this.errorMessage);
+                        this.errorTimer = setTimeout(() => {
+                            this.errorMessage = null;
+                            this.errorTimer = null;
+                        }, this.errorWaitTime);
+                    }
                     return;
                 }    
     
@@ -1347,8 +1361,15 @@ refreshLeaveDisplay() {
     
                 try {
                     if (order.scheduled_at && order.estimated_end_date && order.estimated_end_date < order.scheduled_at) {
-                        this.errorMessage = this.intl.t("fleet-ops.common.end_date_cannot_be_earlier_than_start_date");
-                        this.notifications.error(this.errorMessage);
+                        // Show error only once for a short period
+                        if (!this.errorTimer) {
+                            this.errorMessage = this.intl.t("fleet-ops.common.end_date_cannot_be_earlier_than_start_date");
+                            this.notifications.error(this.errorMessage);
+                            this.errorTimer = setTimeout(() => {
+                                this.errorMessage = null;
+                                this.errorTimer = null;
+                            }, this.errorWaitTime);
+                        }
                         modal.stopLoading();
                         return;
                     }
