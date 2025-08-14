@@ -417,10 +417,9 @@ trait HasApiControllerBehavior
         // Driver filtering by fleet_uuid (add this)
         if (get_class($this->model) === 'Fleetbase\FleetOps\Models\Driver' && $request->has('fleet_uuid')) {
             $fleetUuid = $request->input('fleet_uuid');
-            $data = $data->filter(function ($driver) use ($fleetUuid) {
-                $driverFleetUuids = $driver->fleets()->pluck('fleet_uuid')->toArray();
-                return in_array($fleetUuid, $driverFleetUuids);
-            });
+            $data = $this->model::whereHas('fleets', function ($query) use ($fleetUuid) {
+                $query->where('fleet_uuid', $fleetUuid);
+            })->get();
         }
 
         //Vehicle list Customization
@@ -460,10 +459,9 @@ trait HasApiControllerBehavior
 
         if (get_class($this->model) === 'Fleetbase\FleetOps\Models\Vehicle' && $request->has('fleet_uuid')) {
             $fleetUuid = $request->input('fleet_uuid');
-            $data = $data->filter(function ($vehicle) use ($fleetUuid) {
-                $vehicleFleetUuids = $vehicle->fleets()->pluck('fleet_uuid')->toArray();
-                return in_array($fleetUuid, $vehicleFleetUuids);
-            });
+            $data = $this->model::whereHas('fleets', function ($query) use ($fleetUuid) {
+                $query->where('fleet_uuid', $fleetUuid);
+            })->get();
         }
         
         if ($single) {
