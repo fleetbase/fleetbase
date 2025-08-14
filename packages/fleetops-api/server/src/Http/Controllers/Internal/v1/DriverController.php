@@ -556,7 +556,7 @@ class DriverController extends FleetOpsController
         }
         $requiredHeaders = ['name', 'phone', 'license', 'country', 'city', 'email'];
         $validation = [];
-        $result = $this->processImportWithErrorHandling($files, 'driver', function($file) use ($requiredHeaders, $validation) {
+        $result = $this->processImportWithErrorHandling($files, 'driver', function($file) use ($requiredHeaders, &$validation) {
             $disk = config('filesystems.default');
             $data = Excel::toArray(new DriverImport(), $file->path, $disk);
             $totalRows = collect($data)->flatten(1)->count();

@@ -235,7 +235,7 @@ class PlaceController extends FleetOpsController
             'country', 'state', 'latitude', 'longitude'
         ];
         $validation = null;
-        $result = $this->processImportWithErrorHandling($files, 'place', function($file) use ($requiredHeaders, $validation) {
+        $result = $this->processImportWithErrorHandling($files, 'place', function($file) use ($requiredHeaders, &$validation) {
             $disk = config('filesystems.default');
             $data = Excel::toArray(new PlaceImport(), $file->path, $disk);
             $totalRows = collect($data)->flatten(1)->count();
