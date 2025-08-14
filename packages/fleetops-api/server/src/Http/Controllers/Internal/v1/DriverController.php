@@ -575,7 +575,7 @@ class DriverController extends FleetOpsController
             return $this->driverImportWithValidation($data);
         });
         if (!$validation['success']) {
-            return response()->json($validation);
+            return response()->error($validation['errors']);
         }
         if (!empty($result['allErrors'])) {
             return response($this->generateErrorResponse($result['allErrors'], 'driver', $files->first()->uuid, $result));
