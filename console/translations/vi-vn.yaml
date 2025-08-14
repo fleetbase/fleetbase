@@ -1512,6 +1512,9 @@ fleetbase:
 
   drivers:
     tour:
+      import_button:
+        title: "Nhập trình điều khiển"
+        description: "Nhập trình điều khiển từ tệp bảng tính để xử lý hàng loạt hiệu quả."
       new_button:
         title: "Tạo Tài xế Mới"
         description: "Mở biểu mẫu để tạo hồ sơ tài xế mới và nhập thông tin tài xế."
@@ -1527,6 +1530,9 @@ fleetbase:
 
   vehicles:
     tour:
+      import_button:
+        title: "Nhập xe"
+        description: "Nhập xe từ tệp bảng tính để xử lý hàng loạt hiệu quả."
       new_button:
         title: "Tạo Xe Mới"
         description: "Mở biểu mẫu để tạo hồ sơ xe mới và nhập thông tin cụ thể của xe."
@@ -1542,6 +1548,9 @@ fleetbase:
 
   places:
     tour:
+      import_button:
+        title: "Nhập địa điểm"
+        description: "Nhập địa điểm từ tệp bảng tính để xử lý hàng loạt hiệu quả."
       new_button:
         title: "Nút Địa điểm Mới"
         description: "Mở biểu mẫu tạo địa điểm, nơi bạn có thể xác định chi tiết vị trí cho một địa điểm mới."
@@ -1720,6 +1729,9 @@ fleetbase:
 
   fleets:
     tour:
+      import_button:
+        title: "Nhập đội xe"
+        description: "Nhập đội xe từ tệp bảng tính để xử lý hàng loạt hiệu quả."
       new_button:
         title: "Nút Đội xe Mới"
         description: "Mở biểu mẫu tạo đội xe, nơi bạn có thể xác định chi tiết đội xe."

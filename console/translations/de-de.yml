@@ -2999,6 +2999,9 @@ fleetbase:
 
   drivers:
     tour:
+      import_button:
+        title: "Treiber importieren"
+        description: "Importieren Sie Treiber aus einer Tabelle für eine effiziente Massenverarbeitung."
       new_button:
         title: "Neuen Fahrer erstellen"
         description: "Öffnet das Formular zum Erstellen eines neuen Fahrerprofils und zur Eingabe der Fahrerdaten."
@@ -3014,6 +3017,9 @@ fleetbase:
 
   vehicles:
     tour:
+      import_button:
+        title: "Fahrzeuge importieren"
+        description: "Importieren Sie Fahrzeuge aus einer Tabellenkalkulationsdatei für eine effiziente Massenverarbeitung."
       new_button:
         title: "Neues Fahrzeug anlegen"
         description: "Öffnet das Formular zur Erstellung eines neuen Fahrzeugprofils und zur Eingabe fahrzeugspezifischer Informationen."
@@ -3029,6 +3035,9 @@ fleetbase:
 
   places:
     tour:
+      import_button:
+        title: "Orte importieren"
+        description: "Importieren Sie Orte aus einer Tabellenkalkulationsdatei für eine effiziente Massenverarbeitung."
       new_button:
         title: "Schaltfläche 'Neuer Ort'"
         description: "Öffnet das Formular zur Ortserstellung, in dem Sie die Standortdetails für einen neuen Ort festlegen können."
@@ -3207,6 +3216,9 @@ fleetbase:
 
   fleets:
     tour:
+      import_button:
+        title: "Flotten importieren"
+        description: "Importieren Sie Flotten aus einer Tabellenkalkulationsdatei für eine effiziente Massenverarbeitung."
       new_button:
         title: "Schaltfläche 'Neue Flotte'"
         description: "Öffnet das Formular zur Flottenerstellung, in dem Sie Flottendetails festlegen können."

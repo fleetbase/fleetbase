@@ -2994,6 +2994,9 @@ fleetbase:
 
   drivers:
     tour:
+      import_button:
+        title: "Importez des pilotes"
+        description: "Importez des pilotes depuis une feuille de calcul pour un traitement efficace en masse."
       new_button:
         title: "Créer un nouveau chauffeur"
         description: "Ouvre le formulaire pour créer un nouveau profil de chauffeur et saisir les informations du chauffeur."
@@ -3009,6 +3012,9 @@ fleetbase:
 
   vehicles:
     tour:
+      import_button:
+        title: "Importez des véhicules"
+        description: "Importez des véhicules depuis un tableur pour un traitement efficace en masse."
       new_button:
         title: "Créer un nouveau véhicule"
         description: "Ouvre le formulaire pour créer un nouveau profil de véhicule et saisir les informations spécifiques au véhicule."
@@ -3024,6 +3030,9 @@ fleetbase:
 
   places:
     tour:
+      import_button:
+        title: "Importez des lieux"
+        description: "Importez des lieux depuis une feuille de calcul pour un traitement efficace en masse."
       new_button:
         title: "Bouton 'Nouveau lieu'"
         description: "Ouvre le formulaire de création de lieu où vous pouvez définir les détails de localisation d'un nouveau lieu."
@@ -3202,6 +3211,9 @@ fleetbase:
 
   fleets:
     tour:
+      import_button: 
+        title: "Importez des flottes"
+        description: "Importez des flottes depuis un tableur pour un traitement efficace en masse."
       new_button:
         title: "Bouton 'Nouvelle flotte'"
         description: "Ouvre le formulaire de création de flotte où vous pouvez définir les détails de la flotte."
