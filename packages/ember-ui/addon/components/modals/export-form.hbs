@@ -3,31 +3,66 @@
 
     <div class="export-form modal-body-container p-4 flex gap-4">
         {{#if options.includeFilters}}
-        {{! dropdown }}
         <div class="input-group fleetbase-power-select">
             <label class="block text-sm font-bold text-gray-800 mb-2">{{t "common.filter-by"}}</label>
-
             <PowerSelect @options={{this.filterOptions}} @selected={{this.filterBy}} @onChange={{this.setFilterBy}}
                 @placeholder={{t "common.select-filter" }} @triggerClass="form-select form-input form-input-sm" as |opt|>
                 {{t opt.label}}
             </PowerSelect>
         </div>
 
-        {{! show ONE date picker after a choice is made }}
         {{#if this.filterBy}}
         <div class="input-group fleetbase-power-select">
             <div class="flex gap-4">
                 <div>
                     <label class="block text-sm text-gray-800 mb-2">{{t "common.from"}}</label>
-                    <DatePicker @value={{this.fromDate}} @onSelect={{this.setFromDate}}
-                        @placeholder={{t "common.select-date" }} @range={{false}} @toggleSelected={{false}} @autoClose={{true}}
-                        class="filter-date-input form-input-sm w-full" />
+                    {{#if (eq this.filterBy.value "createdAt")}}
+                        <DatePicker
+                            @value={{this.fromDate}}
+                            @onSelect={{this.setFromDate}}
+                            @placeholder={{t "common.select-date" }}
+                            @range={{false}}
+                            @toggleSelected={{false}}
+                            @autoClose={{true}}
+                            class="filter-date-input form-input-sm w-full"
+                            @maxDate={{this.today}}
+                        />
+                    {{else}}
+                        <DatePicker
+                            @value={{this.fromDate}}
+                            @onSelect={{this.setFromDate}}
+                            @placeholder={{t "common.select-date" }}
+                            @range={{false}}
+                            @toggleSelected={{false}}
+                            @autoClose={{true}}
+                            class="filter-date-input form-input-sm w-full"
+                        />
+                    {{/if}}
                 </div>
                 <div>
                     <label class="block text-sm text-gray-800 mb-2">{{t "common.to"}}</label>
-                    <DatePicker @value={{this.toDate}} @onSelect={{this.setToDate}}
-                        @placeholder={{t "common.select-date" }} @range={{false}} @toggleSelected={{false}} @autoClose={{true}}
-                        class="filter-date-input form-input-sm w-full" />
+                    {{#if (eq this.filterBy.value "createdAt")}}
+                        <DatePicker
+                            @value={{this.toDate}}
+                            @onSelect={{this.setToDate}}
+                            @placeholder={{t "common.select-date" }}
+                            @range={{false}}
+                            @toggleSelected={{false}}
+                            @autoClose={{true}}
+                            class="filter-date-input form-input-sm w-full"
+                            @maxDate={{this.today}}
+                        />
+                    {{else}}
+                        <DatePicker
+                            @value={{this.toDate}}
+                            @onSelect={{this.setToDate}}
+                            @placeholder={{t "common.select-date" }}
+                            @range={{false}}
+                            @toggleSelected={{false}}
+                            @autoClose={{true}}
+                            class="filter-date-input form-input-sm w-full"
+                        />
+                    {{/if}}
                 </div>
             </div>
         </div>
@@ -37,14 +72,16 @@
             <label class="block text-sm font-bold text-gray-800 mb-2">
                 {{t "common.format"}}
             </label>
-
-            <Select @value={{options.format}} @options={{options.formatOptions}}
-                @placeholder={{t "common.select_export_format" }} @onChange={{options.setFormat}} class="w-full form-select form-input form-select-sm" />
+            <PowerSelect
+                @options={{this.formatOptions}}
+                @selected={{this.format}}
+                @onChange={{this.setFormat}}
+                @placeholder={{t "common.select_export_format" }}
+                @triggerClass="form-select form-input form-input-sm"
+                as |opt|
+            >
+                {{opt}}
+            </PowerSelect>
         </div>
     </div>
-    {{#if this.dateError}}
-    <div class="flex justify-center p-4">
-        <p class="text-red-600 text-sm mb-2">{{t "common.to_date_before_from_date_error"}}</p>
-    </div>
-    {{/if}}
 </Modal::Default>

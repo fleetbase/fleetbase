@@ -1,8 +1,12 @@
 import Component            from '@glimmer/component';
 import { tracked }          from '@glimmer/tracking';
 import { action }           from '@ember/object';
+import { inject as service } from '@ember/service';
 
 export default class ExportFormComponent extends Component {
+    @service notifications;
+    @service intl;
+
     filterOptions = [
         { label: 'fleet-ops.common.start-date', value: 'startDate' },
         { label: 'fleet-ops.common.created-at', value: 'createdAt' }
@@ -12,13 +16,26 @@ export default class ExportFormComponent extends Component {
     @tracked fromDate = null;
     @tracked toDate = null;
     @tracked dateError = null;
+    @tracked format = null;
+
+    get formatOptions() {
+        return this.args.options.formatOptions || [];
+    }
+
+    get today() {
+        return new Date().toISOString().split('T')[0];
+    }
+
+    get maxDate() {
+        return this.filterBy?.value === 'createdAt' ? this.today : undefined;
+    }
 
     @action setFilterBy(option) {
-        this.filterBy = option; // store the whole object
+        this.filterBy = option;
         this.fromDate = null;
         this.toDate = null;
-        this.args.options.startDate = null;
-        this.args.options.createdAt = null;
+        this.args.options.filterBy = this.filterBy?.value || null;
+        this.updateOptionsDate();
     }
 
     @action setFromDate(dateObj) {
@@ -33,6 +50,13 @@ export default class ExportFormComponent extends Component {
         this.updateOptionsDate();
     }
 
+    @action setFormat(format) {
+        this.format = format;
+        if (this.args.options) {
+            this.args.options.format = format;
+        }
+    }
+
     validateDates() {
         this.dateError = false;
         if (this.fromDate && this.toDate) {
@@ -40,6 +64,7 @@ export default class ExportFormComponent extends Component {
             const to = new Date(this.toDate);
             if (to < from) {
                 this.dateError = true;
+                this.notifications.error(this.intl.t('common.to_date_before_from_date_error'));
             }
         }
     }
@@ -57,4 +82,25 @@ export default class ExportFormComponent extends Component {
             this.args.options.startDate = null;
         }
     }
+
+    constructor() {
+        super(...arguments);
+        // Set default format to first option if not set
+        const opts = this.args.options?.formatOptions || [];
+        this.format = opts.length > 0 ? opts[0] : null;
+        if (this.args.options) {
+            this.args.options.format = this.format;
+            const originalConfirm = this.args.options.confirm;
+            this.args.options.confirm = (...args) => {
+                if (this.dateError) {
+                    this.notifications.error(this.intl.t('common.to_date_before_from_date_error'));
+                    return;
+                }
+                if (typeof originalConfirm === 'function') {
+                    return originalConfirm(...args);
+                }
+            };
+        }
+    }
 }
+

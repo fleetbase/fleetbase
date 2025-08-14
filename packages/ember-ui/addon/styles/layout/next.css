@@ -2416,3 +2416,6 @@ label:has(+ input[required])::after {
 .console-fleet-ops-management-places-index-index    :not(body):has(>.driver-active-element) {
     overflow: visible !important;
 }
+.date-picker-container {
+    width:fit-content
+}
