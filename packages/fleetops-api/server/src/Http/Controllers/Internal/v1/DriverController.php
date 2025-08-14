@@ -555,7 +555,8 @@ class DriverController extends FleetOpsController
             }
         }
         $requiredHeaders = ['name', 'phone', 'license', 'country', 'city', 'email'];
-        $result = $this->processImportWithErrorHandling($files, 'driver', function($file) use ($requiredHeaders) {
+        $validation = [];
+        $result = $this->processImportWithErrorHandling($files, 'driver', function($file) use ($requiredHeaders, $validation) {
             $disk = config('filesystems.default');
             $data = Excel::toArray(new DriverImport(), $file->path, $disk);
             $totalRows = collect($data)->flatten(1)->count();
@@ -570,12 +571,12 @@ class DriverController extends FleetOpsController
 
             $validation = $this->validateImportHeaders($data, $requiredHeaders);
 
-            if (!$validation['success']) {
-                return response()->json($validation);
-            }
+
             return $this->driverImportWithValidation($data);
         });
-        
+        if (!$validation['success']) {
+            return response()->json($validation);
+        }
         if (!empty($result['allErrors'])) {
             return response($this->generateErrorResponse($result['allErrors'], 'driver', $files->first()->uuid, $result));
         }

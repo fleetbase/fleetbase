@@ -218,7 +218,8 @@ class PlaceController extends FleetOpsController
             'name', 'phone', 'code', 'street1', 'street2', 'city', 'postal_code',
             'country', 'state', 'latitude', 'longitude'
         ];
-        $result = $this->processImportWithErrorHandling($files, 'place', function($file) use ($requiredHeaders) {
+        $validation = null;
+        $result = $this->processImportWithErrorHandling($files, 'place', function($file) use ($requiredHeaders, $validation) {
             $disk = config('filesystems.default');
             $data = Excel::toArray(new PlaceImport(), $file->path, $disk);
             $totalRows = collect($data)->flatten(1)->count();
@@ -231,12 +232,11 @@ class PlaceController extends FleetOpsController
                 ];
             }
             $validation = $this->validateImportHeaders($data, $requiredHeaders);
-            if (!$validation['success']) {
-                return response()->json($validation);
-            }
             return $this->placeImport($data);
         });
-        
+        if (!$validation['success']) {
+            return response()->json($validation);
+        }
         if (!empty($result['allErrors'])) {
             return response($this->generateErrorResponse($result['allErrors'], 'place', $files->first()->uuid, $result));
         }

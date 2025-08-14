@@ -96,8 +96,9 @@ class VehicleController extends FleetOpsController
 
             }
         }
+        $validation = [];
         $requiredHeaders = ['name', 'make', 'model', 'year', 'plate_number', 'vin_number'];
-        $result = $this->processImportWithErrorHandling($files, 'vehicle', function($file) use ($requiredHeaders) {
+        $result = $this->processImportWithErrorHandling($files, 'vehicle', function($file) use ($requiredHeaders, $validation) {
             $disk = config('filesystems.default');
             $data = Excel::toArray(new VehicleImport(), $file->path, $disk);
             $totalRows = collect($data)->flatten(1)->count();
@@ -109,12 +110,11 @@ class VehicleController extends FleetOpsController
                 ];
             }
             $validation = $this->validateImportHeaders($data, $requiredHeaders);
-            if (!$validation['success']) {
-                return response()->json($validation);
-            }
             return $this->vehicleImportWithValidation($data);
         });
-        
+        if (!$validation['success']) {
+            return response()->json($validation);
+        }
         if (!empty($result['allErrors'])) {
             return response($this->generateErrorResponse($result['allErrors'], 'vehicle', $files->first()->uuid, $result));
         }
