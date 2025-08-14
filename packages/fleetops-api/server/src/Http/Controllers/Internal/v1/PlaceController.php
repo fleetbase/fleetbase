@@ -214,6 +214,22 @@ class PlaceController extends FleetOpsController
     public function import(ImportRequest $request)
     {
         $files = File::whereIn('uuid', $request->input('files'))->get();
+        $alreadyProcessed = ImportLog::where('imported_file_uuid', $files[0]->uuid)->first();
+        if($alreadyProcessed){
+            if($alreadyProcessed->status == 'ERROR' || $alreadyProcessed->status == 'PARTIALLY_COMPLETED'){
+                $url = Storage::url($alreadyProcessed['error_log_file_path']);
+                $message = $alreadyProcessed->status == 'ERROR'
+                    ? __('messages.full_import_error')
+                    : __('messages.partial_success');
+                return response()->json([
+                    'error_log_url' => $url,
+                    'message' => $message,
+                     'status' => $alreadyProcessed->status == 'ERROR' ? 'error' : 'partial_success',
+                    'success' => false,
+                ]);
+
+            }
+        }
         $requiredHeaders = [
             'name', 'phone', 'code', 'street1', 'street2', 'city', 'postal_code',
             'country', 'state', 'latitude', 'longitude'

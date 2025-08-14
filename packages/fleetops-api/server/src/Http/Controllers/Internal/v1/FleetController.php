@@ -19,6 +19,8 @@ use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Log;
 use Fleetbase\FleetOps\Traits\ImportErrorHandler;
 use Fleetbase\Models\File;
+use Fleetbase\FleetOps\Models\ImportLog;
+use Illuminate\Support\Facades\Storage;
 
 class FleetController extends FleetOpsController
 {
@@ -212,6 +214,22 @@ class FleetController extends FleetOpsController
     public function import(ImportRequest $request)
     {
         $files = File::whereIn('uuid', $request->input('files'))->get();
+        $alreadyProcessed = ImportLog::where('imported_file_uuid', $files[0]->uuid)->first();
+        if($alreadyProcessed){
+            if($alreadyProcessed->status == 'ERROR' || $alreadyProcessed->status == 'PARTIALLY_COMPLETED'){
+                $url = Storage::url($alreadyProcessed['error_log_file_path']);
+                $message = $alreadyProcessed->status == 'ERROR'
+                    ? __('messages.full_import_error')
+                    : __('messages.partial_success');
+                return response()->json([
+                    'error_log_url' => $url,
+                    'message' => $message,
+                     'status' => $alreadyProcessed->status == 'ERROR' ? 'error' : 'partial_success',
+                    'success' => false,
+                ]);
+
+            }
+        }
         $requiredHeaders = ['name', 'task'];
         $validation = [];
         $result = $this->processImportWithErrorHandling($files, 'fleet', function($file) use ($requiredHeaders, $validation) {
