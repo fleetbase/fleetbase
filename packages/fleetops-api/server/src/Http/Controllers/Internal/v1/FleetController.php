@@ -213,7 +213,8 @@ class FleetController extends FleetOpsController
     {
         $files = File::whereIn('uuid', $request->input('files'))->get();
         $requiredHeaders = ['name', 'task'];
-        $result = $this->processImportWithErrorHandling($files, 'fleet', function($file) use ($requiredHeaders) {
+        $validation = [];
+        $result = $this->processImportWithErrorHandling($files, 'fleet', function($file) use ($requiredHeaders, $validation) {
             $disk = config('filesystems.default');
             $data = Excel::toArray(new FleetImport(), $file->path, $disk);
             $totalRows = collect($data)->flatten(1)->count();
@@ -226,12 +227,11 @@ class FleetController extends FleetOpsController
                 ];
             }
             $validation = $this->validateImportHeaders($data, $requiredHeaders);
-            if (!$validation['success']) {
-                return response()->json($validation);
-            }
             return $this->fleetImportWithValidation($data);
         });
-        
+        if (!$validation['success']) {
+                return response()->json($validation);
+        }
         if (!empty($result['allErrors'])) {
             return response($this->generateErrorResponse($result['allErrors'], 'fleet', $files->first()->uuid, $result));
         }
