@@ -28,7 +28,8 @@ use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Log;
 use Fleetbase\FleetOps\Traits\ImportErrorHandler;
 use Fleetbase\Models\File;
-use App\Helpers\FieldValidator;
+use Fleetbase\FleetOps\Models\ImportLog;
+use Illuminate\Support\Facades\Storage;
 
 class DriverController extends FleetOpsController
 {
@@ -534,10 +535,23 @@ class DriverController extends FleetOpsController
         return $phone;
     }
 
-    /*public function import(ImportRequest $request)
+    public function import(ImportRequest $request)
     {
         $files = File::whereIn('uuid', $request->input('files'))->get();
-        $requiredHeaders = ['name', 'license', 'country', 'city', 'email'];
+        $alreadyProcessed = ImportLog::where('imported_file_uuid', $files[0]->uuid)->first();
+        if($alreadyProcessed){
+            if($alreadyProcessed->status == 'ERROR' || $alreadyProcessed->status == 'PARTIALLY_COMPLETED'){
+                $url = Storage::url($alreadyProcessed['error_log_file_path']);
+                return response()->json([
+                    'error_log_url' => $url,
+                    'message' => __('messages.partial_success'),
+                    'status' => 'partial_success',
+                    'success' => false,
+                ]);
+
+            }
+        }
+        $requiredHeaders = ['name', 'phone', 'license', 'country', 'city', 'email'];
         $result = $this->processImportWithErrorHandling($files, 'driver', function($file) use ($requiredHeaders) {
             $disk = config('filesystems.default');
             $data = Excel::toArray(new DriverImport(), $file->path, $disk);
@@ -564,21 +578,6 @@ class DriverController extends FleetOpsController
         }
         
         return response($this->generateSuccessResponse('driver', $files->first()->uuid, $result));
-    }*/
-    public function import(ImportRequest $request)
-    {
-        $disk           = $request->input('disk', config('filesystems.default'));
-        $files          = $request->resolveFilesFromIds();
-
-        foreach ($files as $file) {
-            try {
-                Excel::import(new DriverImport(), $file->path, $disk);
-            } catch (\Throwable $e) {
-                return response()->error('Invalid file, unable to proccess.');
-            }
-        }
-
-        return response()->json(['status' => 'ok', 'message' => 'Import completed']);
     }
 
     public function driverImportWithValidation($excelData)
@@ -657,14 +656,6 @@ class DriverController extends FleetOpsController
                 $displayRowIndex = $rowData['displayRowIndex'];
 
                 try {
-
-                    // $fieldsToValidate = ['name', 'license', 'country', 'city', 'email'];
-                    // foreach ($fieldsToValidate as $field) {
-                    //     if (isset($row[$field])) {
-                    //         $fieldErrors = FieldValidator::validateField($field, $row[$field], $displayRowIndex);
-                    //         $importErrors = array_merge($importErrors, $fieldErrors);
-                    //     }
-                    // }
                     // Pre-validation before calling createFromImport
                     $validationErrors = $this->validateDriverRow($row, $displayRowIndex, 
                         $existingEmails, $existingLicenseNumbers, $seenEmails, $seenLicenseNumbers);
@@ -873,9 +864,6 @@ class DriverController extends FleetOpsController
                 $seenLicenseNumbers[] = $licenseNumber;
             }
         }
-
-
-
         return $errors;
     }
 
