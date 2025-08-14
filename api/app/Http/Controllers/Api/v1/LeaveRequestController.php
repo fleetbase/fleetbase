@@ -273,7 +273,7 @@ class LeaveRequestController extends Controller
         // Update updated_by_id
         $input['updated_by_id'] = UserHelper::getIdFromUuid(auth()->id());
         $leaveRequest->update($input);
-        $message = $input['unavailability_type'] == 'vehicle' ? __('messages.request_update_success_vehicle') : __('messages.leave_request_update_success');
+        $message = (isset($input['unavailability_type']) && $input['unavailability_type'] == 'vehicle') ? __('messages.request_update_success_vehicle') : __('messages.leave_request_update_success');
         return response()->json([
             'success' => true,
             'message' => $message,
