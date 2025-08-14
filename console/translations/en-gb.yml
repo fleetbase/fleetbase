@@ -1086,6 +1086,9 @@ fleet-ops:
         assign-driver-text: Assign the driver this order will be dispatched to.
         assign-vehicle: Assign Vehicle
         assign-vehicle-text: Assign the vehicle this order will be performed with.
+        assign-fleet: Assign Fleet
+        assign-fleet-text: Assign the fleet this order will be performed with.
+        assign-fleet-placeholder: Select Fleet
         customer: Customer
         customer-text: Optionally assign the customer of this order. If it's a new
           customer, use the 'New Customer' button above.
@@ -1345,6 +1348,7 @@ fleet-ops:
         show-less: Show less details
         show-more: Show more details
       schedule-card:
+        fleet-required: Fleet is required
         assign-busy-button: Continue {button}
         assign-busy-text: The driver ({driverName}) <strong >{availability}</strong>.
           Do you still want to assign Order {orderId} to them? Click Continue {button}
@@ -2011,6 +2015,10 @@ fleet-ops:
           edit-metadata: Edit Metadata
           edit-order: Edit order metadata
           estimated-end-date: Estimated End Date
+          fleet: Fleet
+          fleet-help-text: Assign the fleet for this order.
+          fleet-placeholder: Select Fleet
+          select-fleet: Select Fleet
           facilitator: Facilitator
           facilitator-help-text: Optionally assign a facilitator for this order, a
             facilitator can be a 3rd party subcontractor or service that will facilitate
@@ -2119,6 +2127,7 @@ fleet-ops:
           edit-item-button: Edit Item
           edit-order-title: Edit Order Details
           edit-route-title: Edit Order Route
+          fleet: Fleet
           facilitator: Facilitator
           get-label: Get Label
           get-order-label: Get Order Label
