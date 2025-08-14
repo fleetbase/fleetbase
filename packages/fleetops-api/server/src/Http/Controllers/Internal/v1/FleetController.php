@@ -249,7 +249,7 @@ class FleetController extends FleetOpsController
             return $this->fleetImportWithValidation($data);
         });
         if (!$validation['success']) {
-                return response()->json($validation);
+            return response()->error($validation['errors']);
         }
         if (!empty($result['allErrors'])) {
             return response($this->generateErrorResponse($result['allErrors'], 'fleet', $files->first()->uuid, $result));

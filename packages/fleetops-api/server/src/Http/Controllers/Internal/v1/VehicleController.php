@@ -113,7 +113,7 @@ class VehicleController extends FleetOpsController
             return $this->vehicleImportWithValidation($data);
         });
         if (!$validation['success']) {
-            return response()->json($validation);
+            return response()->error($validation['errors']);
         }
         if (!empty($result['allErrors'])) {
             return response($this->generateErrorResponse($result['allErrors'], 'vehicle', $files->first()->uuid, $result));
