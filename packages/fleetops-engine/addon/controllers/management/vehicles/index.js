@@ -536,7 +536,7 @@ export default class ManagementVehiclesIndexController extends BaseController {
                     handleErrorLogDownload(this, modal, results);
                     return;
                 }
-                handleSuccessfulImport(this, results, modal);
+                handleSuccessfulImport(this, results, modal, this.onImportSuccess.bind(this));
             } catch (error) {
                 console.error('Processing error:', error);
                 modal.stopLoading();
@@ -616,7 +616,7 @@ export default class ManagementVehiclesIndexController extends BaseController {
     }
 
     onImportSuccess() {
-        this.hostRouter.transitionTo('console.fleet-ops.management.fleets.index', {
+        this.hostRouter.transitionTo('console.fleet-ops.management.vehicles.index', {
             queryParams: { refresh: true }
         });
     }
