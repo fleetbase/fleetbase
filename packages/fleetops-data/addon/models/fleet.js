@@ -32,6 +32,7 @@ export default class FleetModel extends Model {
     @attr('string') task;
     @attr('string') status;
     @attr('string') slug;
+    @attr('number') trip_length; // in minutes
 
     /** @dates */
     @attr('date') deleted_at;

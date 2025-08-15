@@ -211,6 +211,14 @@ export default class ManagementFleetsIndexController extends BaseController {
             filterComponent: 'filter/string',
         },
         {
+            label: this.intl.t('common.trip-length'),
+            valuePath: 'trip_length',
+            width: '100px',
+            resizable: true,
+            sortable: true,
+            filterable: false,
+        },
+        {
             label: this.intl.t('fleet-ops.common.manpower'),
             valuePath: 'drivers_count',
             width: '100px',
