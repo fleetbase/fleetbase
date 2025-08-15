@@ -18,6 +18,7 @@ export default class DriverFormPanelComponent extends Component {
     @service contextPanel;
     @service modalsManager;
     @service universe;
+    @service analytics;
 
     /**
      * Overlay context.
@@ -32,7 +33,7 @@ export default class DriverFormPanelComponent extends Component {
     @tracked driverStatusOptions = [
         { value: 'active', translationKey: 'statuses.active' },
         { value: 'pending', translationKey: 'statuses.pending' }
-      ];
+    ];
 
     /**
      * The coordinates input component instance.
@@ -88,7 +89,7 @@ export default class DriverFormPanelComponent extends Component {
                     },
                     confirm: async (modal) => {
                         modal.startLoading();
-                         // Required field validation
+                        // Required field validation
                         const requiredFields = ['name', 'email', 'phone', 'role'];
                         const hasEmptyRequired = requiredFields.some(field => !user[field] || user[field].toString().trim() === '');
                         if (hasEmptyRequired) {
@@ -147,6 +148,22 @@ export default class DriverFormPanelComponent extends Component {
 
         try {
             this.driver = yield this.driver.save();
+
+            // Track driver action in analytics
+            if (this.analytics && this.analytics.isInitialized) {
+                const action = this.driver.isNew ? 'created' : 'updated';
+                this.analytics.trackDriverAction(action, {
+                    id: this.driver.id,
+                    uuid: this.driver.uuid,
+                    name: this.driver.name,
+                    email: this.driver.user?.email,
+                    phone: this.driver.phone,
+                    license: this.driver.drivers_license_number,
+                    status: this.driver.status,
+                    company: this.currentUser.company?.name,
+                    fleet: this.driver.fleet?.name
+                });
+            }
         } catch (error) {
             this.notifications.serverError(error);
             this.hostRouter.refresh();
@@ -159,11 +176,11 @@ export default class DriverFormPanelComponent extends Component {
         contextComponentCallback(this, 'onAfterSave', this.driver);
     }
 
-     /**
-     * Validates required fields and sets errors.
-     * @returns {boolean} true if valid, false otherwise
-     */
-     validate() {
+    /**
+    * Validates required fields and sets errors.
+    * @returns {boolean} true if valid, false otherwise
+    */
+    validate() {
         const requiredFields = [
             'user',
             'drivers_license_number',

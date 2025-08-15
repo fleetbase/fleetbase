@@ -95,6 +95,12 @@ module.exports = function (environment) {
               webUser: getenv('CHARGEBEE_WEB_USERS_ADDON_ID', 'no_of_webusers-GBP-Monthly')
             }
         },
+
+        analytics: {
+            trackingId: getenv('GOOGLE_ANALYTICS_ID', 'G-49H8G09DDC'),
+            enabled: toBoolean(getenv('GOOGLE_ANALYTICS_ENABLED', true)),
+            debug: toBoolean(getenv('GOOGLE_ANALYTICS_DEBUG', false))
+        },
     };
 
     if (environment === 'development') {
