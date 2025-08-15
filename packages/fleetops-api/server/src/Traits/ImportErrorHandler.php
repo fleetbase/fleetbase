@@ -208,11 +208,9 @@ trait ImportErrorHandler
         if (!empty($missingHeaders)) {
             return [
                 'success' => false,
-                'errors' => [[
-                    'N/A',
+                'errors' => [
                     'Import failed: Missing required headers: ' . implode(', ', $missingHeaders),
-                    'N/A'
-                ]]
+                ]
             ];
         }
 

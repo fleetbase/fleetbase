@@ -1313,6 +1313,9 @@ fleet-ops:
         schedule: Date de début
         unschedule: Déplanifier
       order-form:
+        assign-fleet: Assigner la flotte
+        assign-fleet-text: Assignez la flotte avec laquelle cette commande sera exécutée.
+        assign-fleet-placeholder: Sélectionner la flotte
         id-text: Utilisez ce champ pour définir éventuellement un identifiant personnalisé ou interne pour la commande.
         end-date-text: La date et l'heure prévues pour l'achèvement de la commande. Cela marque la fin estimée du processus de livraison. Si la commande n'est pas terminée à ce moment-là, une action supplémentaire ou une réaffectation pourrait être nécessaire.
         schedule-text: La date et l'heure auxquelles la commande sera expédiée. Si aucun conducteur n'est assigné au moment de l'expédition, celle-ci échouera. Si la commande est Ad-Hoc, elle sera pingée aux conducteurs à proximité du point de collecte.
@@ -1546,6 +1549,7 @@ fleet-ops:
         show-less: Montrer moins de détails
         show-more: Montrer plus de détails
       schedule-card:
+        fleet-required: La flotte est requise
         destination: Destination
         unassign-driver: Retirer le chauffeur ?
         unassign-text: Vous êtes sur le point de retirer le chauffeur pour la commande {orderId}. Cliquez sur continuer pour confirmer la suppression du chauffeur.
@@ -2267,6 +2271,10 @@ fleet-ops:
           customer: Client
           customer-help-text: Assigner facultativement le client de cette commande. Si c'est un nouveau client, utilisez le bouton "Nouveau client" ci-dessus.
           customer-placeholder: Sélectionner un client
+          fleet: Flotte
+          fleet-help-text: Assigner la flotte pour cette commande.
+          fleet-placeholder: Sélectionner la flotte
+          select-fleet: Sélectionner la flotte
           facilitator: Facilitateur
           facilitator-help-text: Assigner facultativement un facilitateur pour cette commande, un facilitateur peut être un sous-traitant tiers ou un service qui facilitera le transport de cette commande.
           facilitator-placeholder: Sélectionner un facilitateur
@@ -2394,6 +2402,7 @@ fleet-ops:
           view-activity: Voir l'activité
           add-item-button: Ajouter un article
           edit-item-button: Modifier l'article
+          fleet: Flotte
           edit-order-title: Modifier les détails de la commande
           update-success: 'Les détails de la commande {orderId} ont été mis à jour.'
           order-metadata: Métadonnées de la commande
@@ -2880,6 +2889,12 @@ fleetbase:
     done: "Terminé"
     close: "Fermer"
     help: "Aide"
+    upload_spreadsheets:
+      title: "Télécharger des feuilles de calcul"
+      description: "Téléchargez des feuilles de calcul par glisser-déposer ou en les sélectionnant depuis votre appareil."
+    start_upload:
+      title: "Commencer le téléchargement"
+      description: "Lancez le téléchargement et le traitement des feuilles de calcul sélectionnées."
 
   orders:
     tour:
@@ -2889,12 +2904,6 @@ fleetbase:
       import_button:
         title: "Importer des commandes"
         description: "Importez des commandes depuis une feuille de calcul pour un traitement groupé efficace."
-      upload_spreadsheets:
-        title: "Télécharger des feuilles de calcul"
-        description: "Téléchargez des feuilles de calcul par glisser-déposer ou en les sélectionnant depuis votre appareil."
-      start_upload:
-        title: "Commencer le téléchargement"
-        description: "Lancez le téléchargement et le traitement des feuilles de calcul sélectionnées."
       dates:
         title: "Planification des commandes"
         description: "Définissez les dates de début et de fin estimées pour définir le calendrier de la commande."
@@ -2994,6 +3003,9 @@ fleetbase:
 
   drivers:
     tour:
+      import_button:
+        title: "Importez des pilotes"
+        description: "Importez des pilotes depuis une feuille de calcul pour un traitement efficace en masse."
       new_button:
         title: "Créer un nouveau chauffeur"
         description: "Ouvre le formulaire pour créer un nouveau profil de chauffeur et saisir les informations du chauffeur."
@@ -3009,6 +3021,9 @@ fleetbase:
 
   vehicles:
     tour:
+      import_button:
+        title: "Importez des véhicules"
+        description: "Importez des véhicules depuis un tableur pour un traitement efficace en masse."
       new_button:
         title: "Créer un nouveau véhicule"
         description: "Ouvre le formulaire pour créer un nouveau profil de véhicule et saisir les informations spécifiques au véhicule."
@@ -3024,6 +3039,9 @@ fleetbase:
 
   places:
     tour:
+      import_button:
+        title: "Importez des lieux"
+        description: "Importez des lieux depuis une feuille de calcul pour un traitement efficace en masse."
       new_button:
         title: "Bouton 'Nouveau lieu'"
         description: "Ouvre le formulaire de création de lieu où vous pouvez définir les détails de localisation d'un nouveau lieu."
@@ -3202,6 +3220,9 @@ fleetbase:
 
   fleets:
     tour:
+      import_button: 
+        title: "Importez des flottes"
+        description: "Importez des flottes depuis un tableur pour un traitement efficace en masse."
       new_button:
         title: "Bouton 'Nouvelle flotte'"
         description: "Ouvre le formulaire de création de flotte où vous pouvez définir les détails de la flotte."

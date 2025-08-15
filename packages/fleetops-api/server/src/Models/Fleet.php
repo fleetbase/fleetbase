@@ -86,6 +86,7 @@ class Fleet extends Model
         'task',
         'status',
         'slug',
+        'trip_length'
     ];
 
     /**

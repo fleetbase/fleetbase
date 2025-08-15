@@ -19,6 +19,8 @@ use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Log;
 use Fleetbase\FleetOps\Traits\ImportErrorHandler;
 use Fleetbase\Models\File;
+use Fleetbase\FleetOps\Models\ImportLog;
+use Illuminate\Support\Facades\Storage;
 
 class FleetController extends FleetOpsController
 {
@@ -212,8 +214,33 @@ class FleetController extends FleetOpsController
     public function import(ImportRequest $request)
     {
         $files = File::whereIn('uuid', $request->input('files'))->get();
+        $alreadyProcessed = ImportLog::where('imported_file_uuid', $files[0]->uuid)->first();
+        if($alreadyProcessed){
+            if($alreadyProcessed->status == 'ERROR' || $alreadyProcessed->status == 'PARTIALLY_COMPLETED'){
+                $url = Storage::url($alreadyProcessed['error_log_file_path']);
+                $message = $alreadyProcessed->status == 'ERROR'
+                    ? __('messages.full_import_error')
+                    : __('messages.partial_success');
+                return response()->json([
+                    'error_log_url' => $url,
+                    'message' => $message,
+                     'status' => $alreadyProcessed->status == 'ERROR' ? 'error' : 'partial_success',
+                    'success' => false,
+                ]);
+
+            }
+            if($alreadyProcessed->status == 'COMPLETED')
+            {
+                return response()->json([
+                'success' => true,
+                'message' => "Import completed successfully.",
+                ]);
+            }
+        }
         $requiredHeaders = ['name', 'task'];
-        $result = $this->processImportWithErrorHandling($files, 'fleet', function($file) use ($requiredHeaders) {
+        $validation = [];
+      
+        $result = $this->processImportWithErrorHandling($files, 'fleet', function($file) use ($requiredHeaders, &$validation) {
             $disk = config('filesystems.default');
             $data = Excel::toArray(new FleetImport(), $file->path, $disk);
             $totalRows = collect($data)->flatten(1)->count();
@@ -226,12 +253,11 @@ class FleetController extends FleetOpsController
                 ];
             }
             $validation = $this->validateImportHeaders($data, $requiredHeaders);
-            if (!$validation['success']) {
-                return response()->json($validation);
-            }
             return $this->fleetImportWithValidation($data);
         });
-        
+        if (!$validation['success']) {
+            return response()->error($validation['errors']);
+        }
         if (!empty($result['allErrors'])) {
             return response($this->generateErrorResponse($result['allErrors'], 'fleet', $files->first()->uuid, $result));
         }
@@ -311,17 +337,17 @@ class FleetController extends FleetOpsController
                     }
 
                     // Add field validation for name and task
-                    $fieldsToValidate = ['name', 'task'];
-                    foreach ($fieldsToValidate as $field) {
-                        if (isset($row[$field])) {
-                            $fieldErrors = \App\Helpers\FieldValidator::validateField($field, $row[$field], $displayRowIndex);
-                            $importErrors = array_merge($importErrors, $fieldErrors);
-                        }
-                    }
-                    // If there were field validation errors, skip to next row
-                    if (!empty($fieldErrors)) {
-                        continue;
-                    }
+                    // $fieldsToValidate = ['name', 'task'];
+                    // foreach ($fieldsToValidate as $field) {
+                    //     if (isset($row[$field])) {
+                    //         $fieldErrors = \App\Helpers\FieldValidator::validateField($field, $row[$field], $displayRowIndex);
+                    //         $importErrors = array_merge($importErrors, $fieldErrors);
+                    //     }
+                    // }
+                    // // If there were field validation errors, skip to next row
+                    // if (!empty($fieldErrors)) {
+                    //     continue;
+                    // }
 
                     // Clean the row data before passing to createFromImport
                     $cleanedRow = $this->cleanRowData($row);

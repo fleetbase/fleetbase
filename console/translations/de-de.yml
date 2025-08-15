@@ -1328,6 +1328,9 @@ fleet-ops:
         select-driver: Fahrer auswählen
         assign-vehicle: Fahrzeug zuweisen
         assign-vehicle-text: Weisen Sie das Fahrzeug zu, mit dem diese Bestellung ausgeführt wird.
+        assign-fleet: Flotte zuweisen
+        assign-fleet-text: Weisen Sie die Flotte zu, mit der diese Bestellung ausgeführt wird.
+        assign-fleet-placeholder: Flotte auswählen
         select-vehicle: Fahrzeug auswählen
       order-import:
         loading-message: Import wird verarbeitet...
@@ -1550,6 +1553,7 @@ fleet-ops:
         show-less: Weniger Details anzeigen
         show-more: Mehr Details anzeigen
       schedule-card:
+        fleet-required: Flotte ist erforderlich
         destination: Ziel
         unassign-driver: Fahrer entfernen?
         unassign-text: Sie sind dabei, den Fahrer für die Bestellung {orderId} zu entfernen. Klicken Sie auf "Weiter", um die Entfernung zu bestätigen.
@@ -2272,6 +2276,10 @@ fleet-ops:
           customer: Kunde
           customer-help-text: Weisen Sie dieser Bestellung optional einen Kunden zu. Wenn es sich um einen neuen Kunden handelt, verwenden Sie die Schaltfläche „Neuer Kunde“ oben.
           customer-placeholder: Kunden auswählen
+          fleet: Flotte
+          fleet-help-text: Weisen Sie die Flotte für diese Bestellung zu.
+          fleet-placeholder: Flotte auswählen
+          select-fleet: Flotte auswählen
           facilitator: Vermittler
           facilitator-help-text: Weisen Sie dieser Bestellung optional einen Vermittler zu, der ein Subunternehmer oder Dienstleister für den Transport dieser Bestellung sein kann.
           facilitator-placeholder: Vermittler auswählen
@@ -2405,6 +2413,7 @@ fleet-ops:
           unassign-title: Möchten Sie den Fahrer ({driverName}) von dieser Bestellung abbestellen?
           unassign-body: Sobald der Fahrer abbestellt wurde, hat er keinen Zugriff mehr auf die Bestelldetails.
           unassign-success: Fahrer wurde von dieser Bestellung abbestellt.
+          fleet: Flotte
           edit-route-title: Bestellroute bearbeiten
           route-error: Fehler bei der Routenoptimierung, überprüfen Sie die Routenangabe und versuchen Sie es erneut.
           route-update-success: '{orderId} Routenangaben wurden aktualisiert.'
@@ -2885,6 +2894,12 @@ fleetbase:
     done: "Fertig"
     close: "Schließen"
     help: "Hilfe"
+    upload_spreadsheets:
+      title: "Tabellen hochladen"
+      description: "Laden Sie Tabellenkalkulationsdateien per Drag & Drop hoch oder wählen Sie sie auf Ihrem Gerät aus."
+    start_upload:
+      title: "Upload starten"
+      description: "Starten Sie den Upload und die Verarbeitung der ausgewählten Tabellenkalkulationsdateien."
 
   orders:
     tour:
@@ -2894,12 +2909,6 @@ fleetbase:
       import_button:
         title: "Bestellungen importieren"
         description: "Importieren Sie Bestellungen aus einer Tabellenkalkulation für eine effiziente Massenverarbeitung."
-      upload_spreadsheets:
-        title: "Tabellen hochladen"
-        description: "Laden Sie Tabellenkalkulationsdateien per Drag & Drop hoch oder wählen Sie sie auf Ihrem Gerät aus."
-      start_upload:
-        title: "Upload starten"
-        description: "Starten Sie den Upload und die Verarbeitung der ausgewählten Tabellenkalkulationsdateien."
       dates:
         title: "Bestellplanung"
         description: "Legen Sie Start- und voraussichtliches Fertigstellungsdatum fest, um den Zeitplan der Bestellung zu skizzieren."
@@ -2999,6 +3008,9 @@ fleetbase:
 
   drivers:
     tour:
+      import_button:
+        title: "Treiber importieren"
+        description: "Importieren Sie Treiber aus einer Tabelle für eine effiziente Massenverarbeitung."
       new_button:
         title: "Neuen Fahrer erstellen"
         description: "Öffnet das Formular zum Erstellen eines neuen Fahrerprofils und zur Eingabe der Fahrerdaten."
@@ -3014,6 +3026,9 @@ fleetbase:
 
   vehicles:
     tour:
+      import_button:
+        title: "Fahrzeuge importieren"
+        description: "Importieren Sie Fahrzeuge aus einer Tabellenkalkulationsdatei für eine effiziente Massenverarbeitung."
       new_button:
         title: "Neues Fahrzeug anlegen"
         description: "Öffnet das Formular zur Erstellung eines neuen Fahrzeugprofils und zur Eingabe fahrzeugspezifischer Informationen."
@@ -3029,6 +3044,9 @@ fleetbase:
 
   places:
     tour:
+      import_button:
+        title: "Orte importieren"
+        description: "Importieren Sie Orte aus einer Tabellenkalkulationsdatei für eine effiziente Massenverarbeitung."
       new_button:
         title: "Schaltfläche 'Neuer Ort'"
         description: "Öffnet das Formular zur Ortserstellung, in dem Sie die Standortdetails für einen neuen Ort festlegen können."
@@ -3207,6 +3225,9 @@ fleetbase:
 
   fleets:
     tour:
+      import_button:
+        title: "Flotten importieren"
+        description: "Importieren Sie Flotten aus einer Tabellenkalkulationsdatei für eine effiziente Massenverarbeitung."
       new_button:
         title: "Schaltfläche 'Neue Flotte'"
         description: "Öffnet das Formular zur Flottenerstellung, in dem Sie Flottendetails festlegen können."

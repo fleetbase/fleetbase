@@ -413,7 +413,16 @@ trait HasApiControllerBehavior
                 
             }
         }
-         //Vehicle list Customization
+
+        // Driver filtering by fleet_uuid (add this)
+        if (get_class($this->model) === 'Fleetbase\FleetOps\Models\Driver' && $request->has('fleet_uuid')) {
+            $fleetUuid = $request->input('fleet_uuid');
+            $data = $this->model::whereHas('fleets', function ($query) use ($fleetUuid) {
+                $query->where('fleet_uuid', $fleetUuid);
+            })->get();
+        }
+
+        //Vehicle list Customization
         if (get_class($this->model) === 'Fleetbase\FleetOps\Models\Vehicle' && $request->has('order_uuid')) {
             $order = \Fleetbase\FleetOps\Models\Order::where('uuid', $request->order_uuid)
                     ->whereNull('deleted_at')
@@ -447,6 +456,14 @@ trait HasApiControllerBehavior
                 })->values();
             }    
         }
+
+        if (get_class($this->model) === 'Fleetbase\FleetOps\Models\Vehicle' && $request->has('fleet_uuid')) {
+            $fleetUuid = $request->input('fleet_uuid');
+            $data = $this->model::whereHas('fleets', function ($query) use ($fleetUuid) {
+                $query->where('fleet_uuid', $fleetUuid);
+            })->get();
+        }
+        
         if ($single) {
             $data = Arr::first($data);
 

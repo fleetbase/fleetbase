@@ -557,4 +557,9 @@ class Vehicle extends Model
     {
         return $this->attributes['is_vehicle_available'] ?? null;
     }
+
+    public function getAvailabilityMessageAttribute()
+    {
+        return $this->attributes['availability_message'] ?? null;
+    }
 }

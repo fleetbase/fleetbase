@@ -46,6 +46,7 @@
     {{/if}}
     <Button @customClass="new-driver-button" @icon="plus" @iconPrefix="fas" @type="primary" @text={{t "fleet-ops.common.new"}} class="mr-2" @onClick={{this.createDriver}} @permission="fleet-ops create driver" />
     <Button
+        @customClass="import-btn"
         @icon="upload"
         @type="magic"
         @text={{t "fleet-ops.common.import"}}

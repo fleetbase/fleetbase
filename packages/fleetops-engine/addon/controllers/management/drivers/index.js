@@ -657,7 +657,7 @@ export default class ManagementDriversIndexController extends BaseController {
     
     // Add this method to handle post-import success behavior for drivers:
     onImportSuccess() {
-        this.hostRouter.transitionTo('console.fleet-ops.management.fleets.index', {
+        this.hostRouter.transitionTo('console.fleet-ops.management.drivers.index', {
             queryParams: { refresh: true }
         });
     }
@@ -780,6 +780,47 @@ startDriversTour() {
             driverObj.destroy();
         },
         steps: [
+            {       
+                element: '.import-btn', // import button
+                popover: {
+                    title: this.intl.t('fleetbase.drivers.tour.import_button.title'),
+                    description: this.intl.t('fleetbase.drivers.tour.import_button.description'),
+                    onNextClick: () => {
+                        document.querySelector('.import-btn').click();
+                        const checkModal = setInterval(() => {
+                        const modal = document.querySelector('.flb--modal');
+                        if (modal && modal.classList.contains('show')) {
+                        clearInterval(checkModal);
+                        driverObj.moveNext(); // Move to the next step
+                        }
+                    }, 100);
+                    }
+                },
+            },
+            {
+                element: '.flb--modal .dropzone', // upload spreadsheets popup
+                popover: {
+                    title: this.intl.t('fleetbase.common.upload_spreadsheets.title'),
+                    description: this.intl.t('fleetbase.common.upload_spreadsheets.description'),
+                },
+            },
+            {
+                element: '.flb--modal .modal-footer-actions .btn-magic', // start upload button
+                popover: {
+                    title: this.intl.t('fleetbase.common.start_upload.title'),
+                    description: this.intl.t('fleetbase.common.start_upload.description'),
+                    onNextClick: () => {
+                        this.modalsManager.done();
+                        const checkModalClosed = setInterval(() => {
+                            const modal = document.querySelector('.flb--modal');
+                            if (!modal || !modal.classList.contains('show')) {
+                                clearInterval(checkModalClosed);
+                                driverObj.moveNext();
+                            }
+                        }, 100);
+                    },
+                },
+            },
             {
                 element: 'button.new-driver-button',
                 onHighlightStarted: (element) => {
@@ -806,6 +847,9 @@ startDriversTour() {
                                 }
                             }, 100);// Adjust delay based on createDriver completion
                     },
+                    onPrevClick: () => {
+                        driverObj.drive(0);
+                    }
                 },
             },
             {

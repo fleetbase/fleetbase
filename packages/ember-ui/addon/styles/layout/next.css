@@ -2409,3 +2409,13 @@ label:has(+ input[required])::after {
     width: 100%;
     margin: 4px 0;
 }
+.console-fleet-ops-management-drivers-index-index   :not(body):has(>.driver-active-element),
+.console-fleet-ops-operations-orders-index-index    :not(body):has(>.driver-active-element),
+.console-fleet-ops-management-vehicles-index-index  :not(body):has(>.driver-active-element),
+.console-fleet-ops-management-fleets-index-index    :not(body):has(>.driver-active-element),
+.console-fleet-ops-management-places-index-index    :not(body):has(>.driver-active-element) {
+    overflow: visible !important;
+}
+.date-picker-container {
+    width:fit-content
+}

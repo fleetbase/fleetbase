@@ -93,6 +93,31 @@
                     />
                 </InputGroup>
 
+                <InputGroup>
+                    <InputLabel @labelText={{html-safe (concat (t "fleet-ops.operations.orders.index.new.fleet") " <span style='color: red;'>*</span>")}} />
+                    <ModelSelect
+                        @modelName="fleet"
+                        @selectedModel={{this.order.fleet}}
+                        @placeholder={{t "fleet-ops.operations.orders.index.new.select-fleet"}}
+                        @triggerClass="form-select form-input"
+                        @infiniteScroll={{false}}
+                        @renderInPlace={{true}}
+                        @required={{true}}
+                        @onChange={{fn (mut this.order.fleet)}}
+                        @permission="fleet-ops create order"
+                        as |fleet|
+                    >
+                        <div class="flex items-center">
+                            <div class="w-7 flex-grow-0 flex-shrink-0">
+                                <FaIcon @icon="users" />
+                            </div>
+                            <span class="uppercase">
+                                {{fleet.name}}
+                            </span>
+                        </div>
+                    </ModelSelect>
+                </InputGroup>
+
                 {{!-- <InputGroup @name={{t "fleet-ops.operations.orders.index.new.customer"}} @helpText={{t "fleet-ops.operations.orders.index.new.customer-help-text"}}>
                     <ModelSelect
                         @modelName="customer"

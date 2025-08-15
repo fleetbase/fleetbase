@@ -479,7 +479,7 @@ fleet-ops:
     select-vehicle: Vehicle
     service: Service
     service-area: Service area
-    start-date: Start date
+    start-date: Start Date
     start_date_cannot_be_later: Start Date cannot be later than the end date.
     state: State
     status: Status
@@ -1086,6 +1086,9 @@ fleet-ops:
         assign-driver-text: Assign the driver this order will be dispatched to.
         assign-vehicle: Assign Vehicle
         assign-vehicle-text: Assign the vehicle this order will be performed with.
+        assign-fleet: Assign Fleet
+        assign-fleet-text: Assign the fleet this order will be performed with.
+        assign-fleet-placeholder: Select Fleet
         customer: Customer
         customer-text: Optionally assign the customer of this order. If it's a new
           customer, use the 'New Customer' button above.
@@ -1345,6 +1348,7 @@ fleet-ops:
         show-less: Show less details
         show-more: Show more details
       schedule-card:
+        fleet-required: Fleet is required
         assign-busy-button: Continue {button}
         assign-busy-text: The driver ({driverName}) <strong >{availability}</strong>.
           Do you still want to assign Order {orderId} to them? Click Continue {button}
@@ -2013,6 +2017,10 @@ fleet-ops:
           edit-metadata: Edit Metadata
           edit-order: Edit order metadata
           estimated-end-date: Estimated End Date
+          fleet: Fleet
+          fleet-help-text: Assign the fleet for this order.
+          fleet-placeholder: Select Fleet
+          select-fleet: Select Fleet
           facilitator: Facilitator
           facilitator-help-text: Optionally assign a facilitator for this order, a
             facilitator can be a 3rd party subcontractor or service that will facilitate
@@ -2121,6 +2129,7 @@ fleet-ops:
           edit-item-button: Edit Item
           edit-order-title: Edit Order Details
           edit-route-title: Edit Order Route
+          fleet: Fleet
           facilitator: Facilitator
           get-label: Get Label
           get-order-label: Get Order Label
@@ -2512,6 +2521,13 @@ fleetbase:
     done: "Done"
     close: "Close"
     help: "Help"
+    upload_spreadsheets:
+      title: "Upload Spreadsheets"
+      description: "Upload spreadsheet files by dragging and dropping or selecting from your device."
+
+    start_upload:
+      title: "Start Upload"
+      description: "Initiate the upload and processing of the selected spreadsheet files."
 
   orders:
     tour:
@@ -2522,14 +2538,6 @@ fleetbase:
       import_button:
         title: "Import Orders"
         description: "Import orders from a spreadsheet file for efficient bulk processing."
-
-      upload_spreadsheets:
-        title: "Upload Spreadsheets"
-        description: "Upload spreadsheet files by dragging and dropping or selecting from your device."
-
-      start_upload:
-        title: "Start Upload"
-        description: "Initiate the upload and processing of the selected spreadsheet files."
 
       dates:
         title: "Order Scheduling"
@@ -2659,6 +2667,10 @@ fleetbase:
 
   drivers:
     tour:
+      import_button:
+        title: "Import Drivers"
+        description: "Import drivers from a spreadsheet file for efficient bulk processing."
+
       new_button:
         title: "Create New Driver"
         description: "Opens the form to create a new driver profile and enter driver details."
@@ -2677,6 +2689,10 @@ fleetbase:
 
   vehicles:
     tour:
+      import_button:
+        title: "Import Vehicles"
+        description: "Import vehicles from a spreadsheet file for efficient bulk processing."
+
       new_button:
         title: "Create New Vehicle"
         description: "Opens the form to create a new vehicle profile and input vehicle-specific information."
@@ -2695,6 +2711,10 @@ fleetbase:
 
   places:
     tour:
+      import_button:
+        title: "Import places"
+        description: "Import places from a spreadsheet file for efficient bulk processing."
+
       new_button:
         title: "New Place Button"
         description: "Opens the place creation form where you can define location details for a new place."
@@ -2888,6 +2908,10 @@ fleetbase:
 
   fleets:
     tour:
+      import_button:
+        title: "Import Fleets"
+        description: "Import fleets from a spreadsheet file for efficient bulk processing."
+
       new_button:
         title: "New Fleet Button"
         description: "Opens the fleet creation form where you can define fleet details."

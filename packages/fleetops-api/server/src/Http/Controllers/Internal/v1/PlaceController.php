@@ -214,11 +214,35 @@ class PlaceController extends FleetOpsController
     public function import(ImportRequest $request)
     {
         $files = File::whereIn('uuid', $request->input('files'))->get();
+        $alreadyProcessed = ImportLog::where('imported_file_uuid', $files[0]->uuid)->first();
+        if($alreadyProcessed){
+            if($alreadyProcessed->status == 'ERROR' || $alreadyProcessed->status == 'PARTIALLY_COMPLETED'){
+                $url = Storage::url($alreadyProcessed['error_log_file_path']);
+                $message = $alreadyProcessed->status == 'ERROR'
+                    ? __('messages.full_import_error')
+                    : __('messages.partial_success');
+                return response()->json([
+                    'error_log_url' => $url,
+                    'message' => $message,
+                     'status' => $alreadyProcessed->status == 'ERROR' ? 'error' : 'partial_success',
+                    'success' => false,
+                ]);
+
+            }
+            if($alreadyProcessed->status == 'COMPLETED')
+            {
+                return response()->json([
+                'success' => true,
+                'message' => "Import completed successfully.",
+                ]);
+            }
+        }
         $requiredHeaders = [
             'name', 'phone', 'code', 'street1', 'street2', 'city', 'postal_code',
             'country', 'state', 'latitude', 'longitude'
         ];
-        $result = $this->processImportWithErrorHandling($files, 'place', function($file) use ($requiredHeaders) {
+        $validation = [];
+        $result = $this->processImportWithErrorHandling($files, 'place', function($file) use ($requiredHeaders, &$validation) {
             $disk = config('filesystems.default');
             $data = Excel::toArray(new PlaceImport(), $file->path, $disk);
             $totalRows = collect($data)->flatten(1)->count();
@@ -231,12 +255,11 @@ class PlaceController extends FleetOpsController
                 ];
             }
             $validation = $this->validateImportHeaders($data, $requiredHeaders);
-            if (!$validation['success']) {
-                return response()->json($validation);
-            }
             return $this->placeImport($data);
         });
-        
+        if (!$validation['success']) {
+            return response()->error($validation['errors']);
+        }
         if (!empty($result['allErrors'])) {
             return response($this->generateErrorResponse($result['allErrors'], 'place', $files->first()->uuid, $result));
         }
@@ -288,7 +311,7 @@ class PlaceController extends FleetOpsController
             $existingPlaceCodes = [];
             if (!empty($allPlaceCodes)) {
                 $existingPlaceCodes = Place::whereIn('code', array_unique($allPlaceCodes))
-                    // ->where('company_uuid', session('company'))
+                    ->where('company_uuid', session('company'))
                     ->whereNull('deleted_at')
                     ->pluck('code')
                     ->toArray();
@@ -344,12 +367,13 @@ class PlaceController extends FleetOpsController
                         'code' => $row['code'] ?? null,
                         'address' => $row['address'] ?? null,
                         'city' => $row['city'] ?? null,
-                        'state' => $row['state'] ?? null,
+                        'province' => $row['state'] ?? null,
                         'country' => $row['country'] ?? null,
                         'postal_code' => $row['postal_code'] ?? null,
                         'phone' => $row['phone'] ?? null,
                         'email' => $row['email'] ?? null,
                         'website' => $row['website'] ?? null,
+                        'street1' => $row['street1'] ?? null,
                         'meta' => [
                             'description' => $row['description'] ?? null,
                             'type' => $row['type'] ?? 'facility'
@@ -363,7 +387,7 @@ class PlaceController extends FleetOpsController
                             $longitude = floatval($row['longitude']);
                             
                             if ($latitude >= -90 && $latitude <= 90 && $longitude >= -180 && $longitude <= 180) {
-                                $placeData['location'] = new Point($longitude, $latitude);
+                                $placeData['location'] = new Point($latitude, $longitude);
                             } else {
                                 $importErrors[] = [
                                     (string)$displayRowIndex,

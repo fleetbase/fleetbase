@@ -9,6 +9,7 @@ import { driver } from 'driver.js';
 import 'driver.js/dist/driver.css';
 import { later } from '@ember/runloop';
 import ENV from '@fleetbase/console/config/environment';
+import { getOwner } from '@ember/application';
 import { 
     handleErrorLogDownload, 
     handleSuccessfulImport, 
@@ -535,7 +536,7 @@ export default class ManagementVehiclesIndexController extends BaseController {
                     handleErrorLogDownload(this, modal, results);
                     return;
                 }
-                handleSuccessfulImport(this, results, modal);
+                handleSuccessfulImport(this, results, modal, this.onImportSuccess.bind(this));
             } catch (error) {
                 console.error('Processing error:', error);
                 modal.stopLoading();
@@ -615,7 +616,7 @@ export default class ManagementVehiclesIndexController extends BaseController {
     }
 
     onImportSuccess() {
-        this.hostRouter.transitionTo('console.fleet-ops.management.fleets.index', {
+        this.hostRouter.transitionTo('console.fleet-ops.management.vehicles.index', {
             queryParams: { refresh: true }
         });
     }
@@ -665,6 +666,47 @@ export default class ManagementVehiclesIndexController extends BaseController {
                 }
             },
             steps: [
+                {       
+                    element: '.import-btn', // import button
+                    popover: {
+                        title: this.intl.t('fleetbase.vehicles.tour.import_button.title'),
+                        description: this.intl.t('fleetbase.vehicles.tour.import_button.description'),
+                        onNextClick: () => {
+                            document.querySelector('.import-btn').click();
+                            const checkModal = setInterval(() => {
+                            const modal = document.querySelector('.flb--modal');
+                            if (modal && modal.classList.contains('show')) {
+                            clearInterval(checkModal);
+                            driverObj.moveNext(); // Move to the next step
+                            }
+                        }, 100);
+                        }
+                    },
+                },
+                {
+                    element: '.flb--modal .dropzone', // upload spreadsheets popup
+                    popover: {
+                        title: this.intl.t('fleetbase.common.upload_spreadsheets.title'),
+                        description: this.intl.t('fleetbase.common.upload_spreadsheets.description'),
+                    },
+                },
+                {
+                    element: '.flb--modal .modal-footer-actions .btn-magic', // start upload button
+                    popover: {
+                        title: this.intl.t('fleetbase.common.start_upload.title'),
+                        description: this.intl.t('fleetbase.common.start_upload.description'),
+                        onNextClick: () => {
+                            this.modalsManager.done();
+                            const checkModalClosed = setInterval(() => {
+                                const modal = document.querySelector('.flb--modal');
+                                if (!modal || !modal.classList.contains('show')) {
+                                    clearInterval(checkModalClosed);
+                                    driverObj.moveNext();
+                                }
+                            }, 100);
+                        },
+                    },
+                },
                 {
                     element: 'button.new-vehicle-button',
                     onHighlightStarted: (element) => {
@@ -696,6 +738,9 @@ export default class ManagementVehiclesIndexController extends BaseController {
 
                             tryAttach();
                         },
+                        onPrevClick: () => { 
+                            driverObj.drive(0); // Go back to the first step
+                        }
 
                     },
                     onHighlightStarted: (element) => {

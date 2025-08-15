@@ -664,12 +664,12 @@ class Driver extends Model
         $password             = Utils::get($row, 'password');
 
         // Fix phone number format
-        $phone = Utils::fixPhone($phone);
+        // $phone = Utils::fixPhone($phone);
 
         // Try to find existing user
-        $user = User::where(function ($query) use ($email, $phone) {
+        $user = User::where(function ($query) use ($email) {
             $query->where('email', $email);
-            $query->orWhere('phone', $phone);
+            // $query->orWhere('phone', $phone);
         })->whereHas('companies', function ($query) {
             $query->where('company_uuid', session('company'));
         })->first();
