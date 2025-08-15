@@ -92,6 +92,7 @@ export default class FleetFormPanelComponent extends Component {
         const requiredFields = [
             'name',
             'status',
+            'trip_length'
         ];
         const hasEmptyRequired = requiredFields.some(field => !this.fleet[field] || this.fleet[field].toString().trim() === '');
         if (hasEmptyRequired) {
