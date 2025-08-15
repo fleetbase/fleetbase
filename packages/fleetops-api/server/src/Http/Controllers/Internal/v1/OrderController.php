@@ -991,6 +991,7 @@ class OrderController extends FleetOpsController
         $importErrors = [];
         $updatedOrders = [];
         $createdOrders = [];
+        $fleets = $this->getFleetDetails();
         foreach ($excelData as $sheetIndex => $sheetRows) {
             $sheetRowsWithIndex = collect($sheetRows)->map(function ($row, $originalIndex) {
                 $row['_original_row_index'] = $originalIndex;
@@ -1353,9 +1354,9 @@ class OrderController extends FleetOpsController
                                 }
                             }
                         },
-                        function (&$request, Order &$order, &$requestInput) {
+                        function (&$request, Order &$order, &$requestInput) use ($fleets) {
                             $input = $request->input('order');
-                            $fleets = $this->getFleetDetails();
+                            
                             if($order->scheduled_at && $order->estimated_end_date) {
                                 $start = Carbon::parse($order->scheduled_at);
                                 $end = Carbon::parse($order->estimated_end_date);
@@ -1922,10 +1923,12 @@ public function createRouteSegmentsFromRows(array $rows, Order $order, array $sa
         ]);
     }
 
-    public function getFleetDetails()
+    protected function getFleetDetails()
     {
         $fleets = Fleet::where('company_uuid', session('company'))
         ->whereNull('deleted_at')
+        ->where('status', 'active')
+        ->whereNotNull('trip_length')
         ->orderBy('trip_length', 'asc')
         ->get(['uuid', 'trip_length']);
         return $fleets;
