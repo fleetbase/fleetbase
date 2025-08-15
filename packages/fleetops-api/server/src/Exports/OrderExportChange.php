@@ -175,6 +175,10 @@ class OrderExportChange implements FromCollection, WithHeadings, ShouldAutoSize,
             $driverName = ucwords(strtolower($order->driver_name ?? ''));
             $vehiclePlateNumber = $order->vehicleAssigned?->plate_number ?? '';
             $vehicleType = $order->vehicleAssigned?->type ?? '';
+            if ($timezone === 'Asia/Calcutta') 
+            {
+                $timezone = 'Asia/Kolkata'; // Convert old timezone
+            }
             $startDate = $order->scheduled_at ? 
                          Carbon::parse($order->scheduled_at)
                         ->when($timezone, fn($c) => $c->setTimezone($timezone))
