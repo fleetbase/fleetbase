@@ -151,7 +151,6 @@ class DriverController extends FleetOpsController
                 ])
             );
         }
-        print_r("rajitha");die;
         try {
             $record = $this->model->createRecordFromRequest(
                 $request,
