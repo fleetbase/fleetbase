@@ -991,7 +991,6 @@ class OrderController extends FleetOpsController
         $importErrors = [];
         $updatedOrders = [];
         $createdOrders = [];
-
         foreach ($excelData as $sheetIndex => $sheetRows) {
             $sheetRowsWithIndex = collect($sheetRows)->map(function ($row, $originalIndex) {
                 $row['_original_row_index'] = $originalIndex;
@@ -1295,21 +1294,22 @@ class OrderController extends FleetOpsController
 
                     // Carrier details
                     $carrier = $firstRow['carrier'] ?? null;
-                    $carrier_uuid = null;
-                    if($carrier) {
-                        $carrier_uuid = Fleet::where('name', $carrier)
-                            ->where('company_uuid', session('company'))
-                            ->whereNull('deleted_at')
-                            ->value('uuid');
-                    }
                     $subcarrier = $firstRow['subcarrier'] ?? null;
-                    $subcarrier_uuid = null;
-                    if($subcarrier){
-                        $subcarrier_uuid = Fleet::where('name', $subcarrier)
-                            ->where('company_uuid', session('company'))
-                            ->whereNull('deleted_at')
-                            ->value('uuid');
-                    }
+                    // $carrier_uuid = null;
+                    // if($carrier) {
+                    //     $carrier_uuid = Fleet::where('name', $carrier)
+                    //         ->where('company_uuid', session('company'))
+                    //         ->whereNull('deleted_at')
+                    //         ->value('uuid');
+                    // }
+                   
+                    // $subcarrier_uuid = null;
+                    // if($subcarrier){
+                    //     $subcarrier_uuid = Fleet::where('name', $subcarrier)
+                    //         ->where('company_uuid', session('company'))
+                    //         ->whereNull('deleted_at')
+                    //         ->value('uuid');
+                    // }
 
                     $orderInput = [
                         'order' => [
@@ -1319,8 +1319,8 @@ class OrderController extends FleetOpsController
                             'type' => 'transport',
                             'scheduled_at' => $scheduledAt,
                             'estimated_end_date' => $estimatedEndDate,
-                            'fleet_uuid' => $carrier_uuid ?? null,
-                            'sub_fleet_uuid' => $subcarrier_uuid ?? null,
+                            'carrier' => $carrier,
+                            'sub_carrier' => $subcarrier,
                             'bid_id' => $firstRow['bid_id'] ?? null,
                             // Convert 'yes' to 1, anything else to 0/null
                             'spot_work' => (isset($firstRow['spot_work']) && strtolower(trim($firstRow['spot_work'])) === 'yes') ? 1 : 0,
@@ -1355,7 +1355,16 @@ class OrderController extends FleetOpsController
                         },
                         function (&$request, Order &$order, &$requestInput) {
                             $input = $request->input('order');
+                            $fleets = $this->getFleetDetails();
+                            $matchedFleet = $fleets->firstWhere('trip_length', '>=', $order->time);
+                            // If none found, pick the fleet with the largest trip_length
+                            if (!$matchedFleet) {
+                                $matchedFleet = $fleets->last();
+                            }
+                            // Assign fleet_uuid
+                            $order->fleet_uuid = $matchedFleet?->uuid ?? null;
                             $order->save();
+                            //Fleet calculation logic
 
                             $payload = new Payload([
                                 'company_uuid' => session('company'),
@@ -1901,5 +1910,14 @@ public function createRouteSegmentsFromRows(array $rows, Order $order, array $sa
             'company_uuid' => session('company'),
             'created_by_id' => UserHelper::getIdFromUuid(auth()->id()),
         ]);
+    }
+
+    public function getFleetDetails()
+    {
+        $fleets = Fleet::where('company_uuid', session('company'))
+        ->whereNull('deleted_at')
+        ->orderBy('trip_length', 'asc')
+        ->get(['uuid', 'trip_length']);
+        return $fleets;
     }
 }

@@ -120,7 +120,9 @@ class Order extends Model
         'fleet_uuid',
         'sub_fleet_uuid',
         'bid_id',
-        'spot_work'
+        'spot_work',
+        'carrier',
+        'sub_carrier'
     ];
 
     /**
