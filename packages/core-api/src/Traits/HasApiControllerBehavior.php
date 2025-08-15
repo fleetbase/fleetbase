@@ -564,10 +564,10 @@ trait HasApiControllerBehavior
                 }
 
 
-                // $plateNumber = $request['vehicle']['plate_number'] ?? null;
-                // if ($this->model->where('plate_number', $plateNumber)->whereNull('deleted_at')->exists()) {
-                //     return response()->error(__('messages.duplicate_check_vehicle'));
-                // }
+                $plateNumber = $request['vehicle']['plate_number'] ?? null;
+                if ($this->model->where('plate_number', $plateNumber)->whereNull('deleted_at')->exists()) {
+                    return response()->error(__('messages.duplicate_check_vehicle'));
+                }
                 try {
                     // Loop through each fleet UUID to validate individually
                     foreach ($fleetUuids as $fleetUuid) {
@@ -757,25 +757,25 @@ trait HasApiControllerBehavior
                     }
   
                     // Manual unique check for plate_number
-                    // $plateNumber =  $request['vehicle']['plate_number'] ?? null;
-                    // if (!empty($plateNumber)) {
-                    //     $duplicate = Vehicle::where('plate_number', $plateNumber)
-                    //         ->whereNull('deleted_at') // Exclude soft-deleted records
-                    //         ->where('uuid', '!=', $vehicle->uuid) // exclude current vehicle
-                    //         ->exists();
+                    $plateNumber =  $request['vehicle']['plate_number'] ?? null;
+                    if (!empty($plateNumber)) {
+                        $duplicate = Vehicle::where('plate_number', $plateNumber)
+                            ->whereNull('deleted_at') // Exclude soft-deleted records
+                            ->where('uuid', '!=', $vehicle->uuid) // exclude current vehicle
+                            ->exists();
 
-                    //     if ($duplicate) {
-                    //         return response()->error(__('messages.duplicate_check_vehicle'));
-                    //     }
+                        if ($duplicate) {
+                            return response()->error(__('messages.duplicate_check_vehicle'));
+                        }
 
-                    //     $vehicle->update(['plate_number' => $plateNumber]);
-                    // }
+                        $vehicle->update(['plate_number' => $plateNumber]);
+                    }
 
-                    // // Optional: update driver name too
-                    // $driverName = $request->input('driver_name');
-                    // if (!empty($driverName)) {
-                    //     $vehicle->update(['driver_name' => $driverName]);
-                    // }
+                    // Optional: update driver name too
+                    $driverName = $request->input('driver_name');
+                    if (!empty($driverName)) {
+                        $vehicle->update(['driver_name' => $driverName]);
+                    }
                 }
             }
             if ($model_name === 'Place') {

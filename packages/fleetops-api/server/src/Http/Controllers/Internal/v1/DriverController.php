@@ -86,7 +86,6 @@ class DriverController extends FleetOpsController
                 }
 
                 if ($existingUser) {
-                    print_r("sfsdf");die;
                     // if exists in organization create driver profile for user
                     $isOrganizationMember = $existingUser->companies()->where('companies.uuid', session('company'))->exists();
 
