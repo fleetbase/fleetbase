@@ -574,6 +574,11 @@ export default class OperationsOrdersIndexController extends BaseController {
         },
     ];
 
+    @tracked showAutoAllocationPanel = false;
+    @tracked autoAllocationDate = []; // array for range
+    @tracked selectedFleet = null;
+    @tracked fleetOptions = [];
+
     /**
      * Creates an instance of OperationsOrdersIndexController.
      * @memberof OperationsOrdersIndexController
@@ -584,6 +589,20 @@ export default class OperationsOrdersIndexController extends BaseController {
         if (this.session?.isAuthenticated) {
             this.getOrderStatusOptions.perform();
         }
+        // Fetch fleet list from API and set fleetOptions
+        this.fetch.get('fleets').then((response) => {
+            // response is { fleets: [...], meta: {...} }
+            const fleets = Array.isArray(response.fleets) ? response.fleets : [];
+            if (fleets.length > 0) {
+                this.fleetOptions = fleets.map(fleet => ({
+                    label: fleet.name,
+                    value: fleet.uuid // or fleet.id if you prefer
+                }));
+                console.log('Mapped fleetOptions:', this.fleetOptions);
+            } else {
+                this.fleetOptions = [];
+            }
+        });
     }
     @task *getOrderStatusOptions() {
         try {
@@ -1344,6 +1363,35 @@ export default class OperationsOrdersIndexController extends BaseController {
       return this.newController.importOrder();
     }
   
+
+
+    @action setAutoAllocationDate(dateObj) {
+        // For range, dateObj.formattedDate is an array
+        if (Array.isArray(dateObj?.formattedDate)) {
+            this.autoAllocationDate = dateObj.formattedDate;
+        } else if (dateObj?.formattedDate) {
+            this.autoAllocationDate = [dateObj.formattedDate];
+        } else {
+            this.autoAllocationDate = [];
+        }
+    }
+
+    @action toggleAutoAllocationPanel() {
+        this.showAutoAllocationPanel = !this.showAutoAllocationPanel;
+    }
+
+    @action setSelectedFleet(fleet) {
+        // PowerSelect passes the whole fleet object
+        this.selectedFleet = fleet;
+    }
+
+    @action allocateNow() {
+        // Implement your allocation logic here
+        // Example: send allocation request
+        // this.store.createRecord('allocation', { date: this.autoAllocationDate, fleet: this.selectedFleet }).save();
+        this.showAutoAllocationPanel = false;
+        // Optionally show notification
+    }
 
 }
 
