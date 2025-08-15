@@ -866,7 +866,7 @@ export default class ManagementPlacesIndexController extends BaseController {
 
 
     onImportSuccess() {
-        this.hostRouter.transitionTo('console.fleet-ops.management.fleets.index', {
+        this.hostRouter.transitionTo('console.fleet-ops.management.places.index', {
             queryParams: { refresh: true }
         });
     }
