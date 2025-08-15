@@ -991,6 +991,7 @@ class OrderController extends FleetOpsController
         $importErrors = [];
         $updatedOrders = [];
         $createdOrders = [];
+        $fleets = $this->getFleetDetails();
         foreach ($excelData as $sheetIndex => $sheetRows) {
             $sheetRowsWithIndex = collect($sheetRows)->map(function ($row, $originalIndex) {
                 $row['_original_row_index'] = $originalIndex;
@@ -1353,16 +1354,26 @@ class OrderController extends FleetOpsController
                                 }
                             }
                         },
-                        function (&$request, Order &$order, &$requestInput) {
+                        function (&$request, Order &$order, &$requestInput) use ($fleets) {
                             $input = $request->input('order');
-                            $fleets = $this->getFleetDetails();
-                            $matchedFleet = $fleets->firstWhere('trip_length', '>=', $order->time);
-                            // If none found, pick the fleet with the largest trip_length
-                            if (!$matchedFleet) {
-                                $matchedFleet = $fleets->last();
+                            
+                            if($order->scheduled_at && $order->estimated_end_date) {
+                                $start = Carbon::parse($order->scheduled_at);
+                                $end = Carbon::parse($order->estimated_end_date);
+                                // Calculate the hours (decimal value, e.g., 9.67)
+                                $hours = $start->floatDiffInHours($end);
+                                // Find the first fleet where trip_length >= hours
+                                $matchedFleet = $fleets->firstWhere('trip_length', '>=', $hours);
+                                // If none found, pick the fleet with the largest trip_length
+                                if (!$matchedFleet) {
+                                    $matchedFleet = $fleets->last();
+                                }
+                                // Assign fleet_uuid
+                                $order->fleet_uuid = $matchedFleet?->uuid ?? null;
                             }
-                            // Assign fleet_uuid
-                            $order->fleet_uuid = $matchedFleet?->uuid ?? null;
+                            else{
+                                $order->fleet_uuid = null;
+                            }
                             $order->save();
                             //Fleet calculation logic
 
@@ -1912,10 +1923,12 @@ public function createRouteSegmentsFromRows(array $rows, Order $order, array $sa
         ]);
     }
 
-    public function getFleetDetails()
+    protected function getFleetDetails()
     {
         $fleets = Fleet::where('company_uuid', session('company'))
         ->whereNull('deleted_at')
+        ->where('status', 'active')
+        ->whereNotNull('trip_length')
         ->orderBy('trip_length', 'asc')
         ->get(['uuid', 'trip_length']);
         return $fleets;
