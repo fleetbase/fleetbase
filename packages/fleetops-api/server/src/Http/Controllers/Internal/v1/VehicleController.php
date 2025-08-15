@@ -97,7 +97,7 @@ class VehicleController extends FleetOpsController
             }
         }
         $validation = [];
-        $requiredHeaders = ['name', 'make', 'model', 'year', 'plate_number', 'vin_number'];
+        $requiredHeaders = ['make', 'model', 'year', 'plate_number'];
         $result = $this->processImportWithErrorHandling($files, 'vehicle', function($file) use ($requiredHeaders, &$validation) {
             $disk = config('filesystems.default');
             $data = Excel::toArray(new VehicleImport(), $file->path, $disk);
