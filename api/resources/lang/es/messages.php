@@ -56,5 +56,10 @@ return [
     'past_date_message' => 'No se puede enviar una solicitud de permiso para fechas pasadas',
     'overlap_message_vehicle' => 'El vehículo ya está no disponible para el período seleccionado',
     'leave_request_update_success' => 'La solicitud de permiso se ha actualizado correctamente',
-    'request_update_success_vehicle' => 'La solicitud de vehículo se ha actualizado correctamente'
+    'request_update_success_vehicle' => 'La solicitud de vehículo se ha actualizado correctamente',
+    'fleet_uuid' => [
+        'required' => 'Se requiere una flota.',
+        'exists'   => 'La flota debe ser válida y estar activa.',
+        'driver_already_assigned' => 'El conductor :driver ya está asignado a la flota :fleet. Un conductor solo puede pertenecer a una flota.',
+    ],
 ];

@@ -33,11 +33,11 @@ class CreateDriverRequest extends CreateDriverApiRequest
             'city'     => 'nullable|string',
             'status'   => 'nullable|string|in:active,inactive,pending',
             'job'      => 'nullable|exists:orders,public_id',
-            'drivers_license_number' => [
-            'required',
-            'string',
-            Rule::unique('drivers', 'drivers_license_number')->ignore($driverId, 'uuid'),
-        ],
+        //     'drivers_license_number' => [
+        //     'required',
+        //     'string',
+        //     Rule::unique('drivers', 'drivers_license_number')->ignore($driverId, 'uuid'),
+        // ],
         ];
     }
 }

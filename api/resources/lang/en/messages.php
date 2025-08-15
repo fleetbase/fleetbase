@@ -62,5 +62,11 @@ return [
     'past_date_message' => 'Cannot submit request for past dates',
     'overlap_message_vehicle' => 'Vehicle is already unavailable for the selected period',
     'leave_request_update_success' => 'Leave request has been updated successfully',
-    'request_update_success_vehicle' => 'Vehicle request has been updated successfully'
+    'request_update_success_vehicle' => 'Vehicle request has been updated successfully',
+    'fleet_uuid' => [
+        'required' => 'Fleet is required.',
+        'exists' => 'Fleet must be valid and active.',
+        'driver_already_assigned' => 'Driver :driver is already assigned to Fleet :fleet. A driver can only belong to one fleet.',
+
+    ]
 ];
