@@ -117,15 +117,15 @@ class OrderExportChange implements FromCollection, WithHeadings, ShouldAutoSize,
             'start_date'  => 'scheduled_at',
             'created_at'  => 'created_at',
         ];
-        if(isset($this->timezone) && $this->filterBy)
+        $timezone = $this->timezone ?? 'UTC';
+        if(isset($timezone) && $this->filterBy)
         {
             $column = $filterMap[$this->filterBy] ?? null;
-            $timezone = $this->timezone;
+            if ($timezone === 'Asia/Calcutta') 
+            {
+                $timezone = 'Asia/Kolkata'; // Convert old timezone
+            }
             if ($column && $this->fromDate) {
-                if ($timezone === 'Asia/Calcutta') {
-                    $timezone = 'Asia/Kolkata'; // Convert old timezone
-                }
-                
                 // Parse fromDate and convert to local timezone
                 $fromDateLocal = Carbon::parse($this->fromDate)->setTimezone($timezone);
                 $startOfDayUtc = $fromDateLocal->copy()->startOfDay()->setTimezone('UTC');
@@ -175,7 +175,10 @@ class OrderExportChange implements FromCollection, WithHeadings, ShouldAutoSize,
             $driverName = ucwords(strtolower($order->driver_name ?? ''));
             $vehiclePlateNumber = $order->vehicleAssigned?->plate_number ?? '';
             $vehicleType = $order->vehicleAssigned?->type ?? '';
-            $startDate = $order->scheduled_at ? Carbon::parse($order->scheduled_at)->format('d/m/Y H:i') : '';
+            $startDate = $order->scheduled_at ? 
+                         Carbon::parse($order->scheduled_at)
+                        ->when($timezone, fn($c) => $c->setTimezone($timezone))
+                        ->format('d/m/Y H:i') : '';
             $waypoints = $order->payload?->waypoints;
             $driver_type = $order->driver_type ?? 'SINGLE_DRIVER';
 
