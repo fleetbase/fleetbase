@@ -2,7 +2,7 @@
     <div class="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
         <div class="bg-white dark:bg-gray-800 py-8 px-4 shadow sm:rounded-lg sm:px-10">
             <div class="mb-8">
-                <Image src={{@model.logo_url}} @fallbackSrc="/images/fleetbase-logo-svg.svg" alt={{t "app.name"}} width="160" height="56" class="w-40 h-14 mx-auto" />
+                <Image src={{@model.logo_url}} @fallbackSrc="/images/fleetbase-logo-svg.svg" alt={{app-name}} width="160" height="56" class="w-40 h-14 mx-auto" />
                 <h2 class="text-center text-lg font-extrabold text-gray-900 dark:text-white truncate">
                     {{t "invite.for-users.invitation-message" companyName=@model.name}}
                 </h2>
@@ -13,7 +13,7 @@
                     <FaIcon @icon="info-circle" class="text-blue-900 mr-4" />
                 </div>
                 <p class="flex-1 text-sm text-blue-900 dark:text-blue-900">
-                    {{t "invite.for-users.invitation-sent-message" htnmlSafe=true companyName=@model.name appName=(t "app.name")}}
+                    {{t "invite.for-users.invitation-sent-message" htnmlSafe=true companyName=@model.name appName=(app-name)}}
                 </p>
             </div>
 
@@ -23,12 +23,28 @@
                         {{t "invite.for-users.invitation-code-sent-text"}}
                     </label>
                     <div class="mt-2">
-                        <Input @value={{this.code}} id="code" name="code" @type="code" required class="form-input form-input-lg w-full" placeholder={{t "invite.for-users.invitation-code-sent-text"}} />
+                        <Input
+                            @value={{this.code}}
+                            id="code"
+                            name="code"
+                            @type="code"
+                            required
+                            class="form-input form-input-lg w-full"
+                            placeholder={{t "invite.for-users.invitation-code-sent-text"}}
+                        />
                     </div>
                 </div>
 
                 <div>
-                    <Button @icon="check" @size="lg" @type="primary" @buttonType="submit" @text={{t "invite.for-users.accept-invitation-text"}} @onClick={{this.acceptInvite}} @isLoading={{this.isLoading}} />
+                    <Button
+                        @icon="check"
+                        @size="lg"
+                        @type="primary"
+                        @buttonType="submit"
+                        @text={{t "invite.for-users.accept-invitation-text"}}
+                        @onClick={{this.acceptInvite}}
+                        @isLoading={{this.isLoading}}
+                    />
                 </div>
             </form>
         </div>

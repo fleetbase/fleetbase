@@ -141,7 +141,15 @@
             "@fleetbase/ember-core": "latest",
             "@fleetbase/ember-ui": "latest",
             "@fleetbase/fleetops-data": "latest"
-        }
+        },
+        "ignoredBuiltDependencies": [
+            "@fortawesome/fontawesome-common-types",
+            "@fortawesome/fontawesome-svg-core",
+            "@fortawesome/free-brands-svg-icons",
+            "@fortawesome/free-solid-svg-icons",
+            "core-js",
+            "fsevents"
+        ]
     },
     "prettier": {
         "trailingComma": "es5",

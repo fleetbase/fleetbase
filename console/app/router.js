@@ -30,10 +30,12 @@ Router.map(function () {
         this.route('account', function () {
             this.route('virtual', { path: '/:slug' });
             this.route('auth');
+            this.route('organizations');
         });
         this.route('settings', function () {
             this.route('virtual', { path: '/:slug' });
             this.route('two-fa');
+            this.route('notifications');
         });
         this.route('virtual', { path: '/:slug' });
         this.route('admin', function () {
@@ -48,7 +50,6 @@ Router.map(function () {
                 this.route('socket');
             });
             this.route('branding');
-            this.route('notifications');
             this.route('two-fa-settings');
             this.route('virtual', { path: '/:slug' });
             this.route('organizations', function () {
@@ -59,6 +60,31 @@ Router.map(function () {
             this.route('schedule-monitor', function () {
                 this.route('logs', { path: '/:id/logs' });
             });
+        });
+
+        this.mount('@fleetbase/dev-engine', {
+            as: 'developers',
+            path: 'developers'
+        });
+
+        this.mount('@fleetbase/iam-engine', {
+            as: 'iam',
+            path: 'iam'
+        });
+
+        this.mount('@fleetbase/fleetops-engine', {
+            as: 'fleet-ops',
+            path: 'fleet-ops'
+        });
+
+        this.mount('@fleetbase/registry-bridge-engine', {
+            as: 'extensions',
+            path: 'extensions'
+        });
+
+        this.mount('@fleetbase/storefront-engine', {
+            as: 'storefront',
+            path: 'storefront'
         });
     });
     this.route('catch', { path: '/*' });

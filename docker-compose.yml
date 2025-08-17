@@ -61,8 +61,8 @@ services:
       CACHE_URL: tcp://cache
       REDIS_URL: tcp://cache
     depends_on:
-        - database
-        - cache
+      - database
+      - cache
 
   console:
     image: fleetbase/fleetbase-console:latest
@@ -73,8 +73,6 @@ services:
 
   application:
     image: fleetbase/fleetbase-api:latest
-    volumes:
-      - ./api/.env:/fleetbase/api/.env
     environment:
       ENVIRONMENT: development
       DATABASE_URL: "mysql://root@database/fleetbase"
@@ -89,7 +87,7 @@ services:
       APP_NAME: Fleetbase
       LOG_CHANNEL: daily
       REGISTRY_HOST: https://registry.fleetbase.io
-      REGISTRY_PREINSTALLED_EXTENSIONS: 'true'
+      REGISTRY_PREINSTALLED_EXTENSIONS: "true"
       OSRM_HOST: https://router.project-osrm.org
     depends_on:
       - database

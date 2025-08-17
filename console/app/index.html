@@ -1,36 +1,36 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
-  <head>
-    <meta charset="utf-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-    <meta name="msapplication-TileColor" content="#da532c" />
-    <meta name="theme-color" content="#ffffff" />
-    <title>Fleetbase Console</title>
+    <head>
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+        <meta name="msapplication-TileColor" content="#da532c" />
+        <meta name="theme-color" content="#ffffff" />
+        <title>HashMicro TMS</title>
 
-    {{content-for "head"}}
+        {{content-for "head"}}
 
-    <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png" />
-    <link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png" />
-    <link rel="icon" type="image/png" sizes="16x16" href="/favicon/favicon-16x16.png" />
-    <link rel="manifest" href="/favicon/site.webmanifest" />
-    <link rel="mask-icon" href="/favicon/safari-pinned-tab.svg" color="#5bbad5" />
-    <link integrity="" rel="stylesheet" href="{{rootURL}}assets/vendor.css">
-    <link integrity="" rel="stylesheet" href="{{rootURL}}assets/@fleetbase/console.css">
+        <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png" />
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon/favicon-16x16.png" />
+        <link rel="manifest" href="/favicon/site.webmanifest" />
+        <link rel="mask-icon" href="/favicon/safari-pinned-tab.svg" color="#5bbad5" />
+        <link integrity="" rel="stylesheet" href="{{rootURL}}assets/vendor.css" />
+        <link integrity="" rel="stylesheet" href="{{rootURL}}assets/@fleetbase/console.css" />
 
-    {{content-for "head-footer"}}
-  </head>
-  <body>
-    {{content-for "body"}}
-    <div id="boot-loader" class="overloader">
-      <div class="loader-container">
-        <span class="fleetbase-loader" width="16" height="16"></span>
-        <div class="loading-message">Starting up...</div>
-      </div>
-    </div>
-    <script src="{{rootURL}}assets/vendor.js"></script>
-    <script src="{{rootURL}}assets/@fleetbase/console.js"></script>
+        {{content-for "head-footer"}}
+    </head>
+    <body>
+        {{content-for "body"}}
+        <div id="boot-loader" class="overloader">
+            <div class="loader-container">
+                <span class="fleetbase-loader" width="16" height="16"></span>
+                <div class="loading-message">Starting up...</div>
+            </div>
+        </div>
+        <script src="{{rootURL}}assets/vendor.js"></script>
+        <script src="{{rootURL}}assets/@fleetbase/console.js"></script>
 
-    {{content-for "body-footer"}}
-  </body>
+        {{content-for "body-footer"}}
+    </body>
 </html>

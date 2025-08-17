@@ -11,8 +11,14 @@
                     <div class="input-group">
                         <label>{{t "console.admin.branding.icon-text"}}</label>
                         <div class="flex flex-row items-center space-x-2">
-                            <Image src={{@model.icon_url}} @fallbackSrc="/images/icon.png" alt={{t "app.name"}} width="32" height="32" class="w-8 h-8 shadow-sm" />
-                            <FileUpload @name={{t "console.admin.branding.icon-text"}} @accept="image/*" @onFileAdded={{this.uploadIcon}} @labelClass="flex flex-row items-center justify-center mb-0i" as |queue|>
+                            <Image src={{@model.icon_url}} @fallbackSrc="/images/icon.png" alt={{app-name}} width="32" height="32" class="w-8 h-8 shadow-sm" />
+                            <FileUpload
+                                @name={{t "console.admin.branding.icon-text"}}
+                                @accept="image/*"
+                                @onFileAdded={{this.uploadIcon}}
+                                @labelClass="flex flex-row items-center justify-center mb-0i"
+                                as |queue|
+                            >
                                 <a tabindex={{0}} class="flex items-center px-0 text-xs no-underline truncate btn btn-sm btn-default" disabled={{queue.files.length}}>
                                     {{#if queue.files.length}}
                                         <div class="mr-1.5">
@@ -35,8 +41,14 @@
                     <div class="input-group">
                         <label>{{t "console.admin.branding.logo-text"}}</label>
                         <div class="flex flex-row items-center space-x-2">
-                            <Image src={{@model.logo_url}} @fallbackSrc="/images/fleetbase-logo-svg.svg" alt={{t "app.name"}} width="160" height="56" class="w-40 h-14" />
-                            <FileUpload @name={{t "console.admin.branding.logo-text"}} @accept="image/*" @onFileAdded={{this.uploadLogo}} @labelClass="flex flex-row items-center justify-center mb-0i" as |queue|>
+                            <Image src={{@model.logo_url}} @fallbackSrc="/images/fleetbase-logo-svg.svg" alt={{app-name}} width="160" height="56" class="w-40 h-14" />
+                            <FileUpload
+                                @name={{t "console.admin.branding.logo-text"}}
+                                @accept="image/*"
+                                @onFileAdded={{this.uploadLogo}}
+                                @labelClass="flex flex-row items-center justify-center mb-0i"
+                                as |queue|
+                            >
                                 <a tabindex={{0}} class="flex items-center px-0 text-xs no-underline truncate btn btn-sm btn-default" disabled={{queue.files.length}}>
                                     {{#if queue.files.length}}
                                         <div class="mr-1.5">

@@ -22,8 +22,9 @@ module.exports = function (environment) {
 
         APP: {
             autoboot: false,
+            name: getenv('APP_NAME', 'Hashmicro TMS'),
             extensions: asArray(getenv('EXTENSIONS')),
-            disableRuntimeConfig: toBoolean(getenv('DISABLE_RUNTIME_CONFIG'))
+            disableRuntimeConfig: toBoolean(getenv('DISABLE_RUNTIME_CONFIG')),
         },
 
         API: {

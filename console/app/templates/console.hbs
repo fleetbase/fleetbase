@@ -1,6 +1,15 @@
-{{page-title (t "app.name")}}
+{{page-title (app-name)}}
 <Layout::Container>
-    <Layout::Header @brand={{@model}} @menuItems={{this.menuItems}} @organizationMenuItems={{this.organizationMenuItems}} @userMenuItems={{this.userMenuItems}} @onAction={{this.onAction}} @showSidebarToggle={{true}} @sidebarToggleEnabled={{this.sidebarToggleEnabled}} @onSidebarToggle={{this.onSidebarToggle}} />
+    <Layout::Header
+        @brand={{@model}}
+        @menuItems={{this.menuItems}}
+        @organizationMenuItems={{this.organizationMenuItems}}
+        @userMenuItems={{this.userMenuItems}}
+        @onAction={{this.onAction}}
+        @showSidebarToggle={{true}}
+        @sidebarToggleEnabled={{this.sidebarToggleEnabled}}
+        @onSidebarToggle={{this.onSidebarToggle}}
+    />
     <Layout::Main>
         <Layout::Sidebar @onSetup={{this.setSidebarContext}}>
             <div class="next-sidebar-content-inner">
@@ -12,12 +21,19 @@
             {{outlet}}
         </Layout::Section>
     </Layout::Main>
-    <Layout::MobileNavbar @brand={{@model}} @user={{this.user}} @organizations={{this.organizations}} @menuItems={{this.menuItems}} @extensions={{this.extensions}} @onAction={{this.onAction}} />
+    <Layout::MobileNavbar
+        @brand={{@model}}
+        @user={{this.user}}
+        @organizations={{this.organizations}}
+        @menuItems={{this.menuItems}}
+        @extensions={{this.extensions}}
+        @onAction={{this.onAction}}
+    />
 </Layout::Container>
 <ChatContainer />
 <ConsoleWormhole />
 <ImpersonatorTray />
-{{!-- template-lint-disable no-potential-path-strings --}}
+{{! template-lint-disable no-potential-path-strings }}
 <RegistryYield @registry="@fleetbase/console" as |RegistryComponent|>
     <RegistryComponent @controller={{this}} />
 </RegistryYield>

@@ -1,369 +1,369 @@
 app:
-  name: Fleetbase
+    name: Hashmicro TMS
 terms:
-  new: New
-  sort: Sort
-  filter: Filer
-  columns: Columns
-  settings: Settings
-  home: Home
-  admin: Admin
-  logout: Logout
-  dashboard: Dashboard
-  search: Search
-  search-input: Search Input
-common: 
-  confirm: Confirm
-  edit: Edit
-  save: Save
-  save-changes: Save Changes
-  cancel: Cancel
-  2fa-config: 2FA Config
-  account: Account
-  admin: Admin
-  branding: Branding
-  columns: Columns
-  dashboard: Dashboard
-  date-of-birth: Date of Birth
-  delete: Delete
-  email: Email
-  filesystem: Filesystem
-  filter: Filer
-  home: Home
-  logout: Logout
-  mail: Mail
-  name: Name
-  new: New
-  notification-channels: Notification Channels
-  notifications: Notifications
-  organization: Organization
-  organizations: Organizations
-  overview: Overview
-  phone: Your phone number
-  profile: Profile
-  queue: Queue
-  save-button-text: Save Changes
-  search-input: Search Input
-  search: Search
-  services: Services
-  settings: Settings
-  socket: Socket
-  sort: Sort
-  two-factor: Two Factor
-  uploading: Uploading...
-  your-profile: Your Profile
-  created-at: Created At
-  country: Country
-  phone-number: Phone
-  status: Status
-  close-and-save: Close and Save
-  users: Users
-  changelog: Changelog
-  ok: OK
-  select-file: Select File
-  back: Back
-  next: Next
-  continue: Continue
-  done: Done
-  export: Export
-  reload: Reload
-  reload-data: Reload data
-  unauthorized: Unauthorized
-  unauthorized-to: Unauthorized to
-  unauthorized-access: Unauthorized Access
-  unauthorized-access-message: Unauthorized Access, you must request permissions to access.
-  permissions-required-for-changes: You do not have the required permissions to make changes.
-  push-notifications: Push Notifications
-  role: Role
-  timezone: Timezone
-component:
-  file:
-    dropdown-label: File actions
-  import-modal:
-    loading-message: Processing import...
-    drop-upload: Drop to upload
-    invalid: Invalid
-    ready-upload: ready for upload.
-    upload-spreadsheets: Upload Spreadsheets
-    drag-drop: Drag and drop spreadsheet files onto this dropzone
-    button-text: or select spreadsheets to upload
-    spreadsheets: spreadsheets
-    upload-queue: Upload Queue
-  dropzone:
-    file: file
-    drop-to-upload: Drop to upload
-    invalid: Invalid
-    files-ready-for-upload:  >-
-      {numOfFiles} ready for upload.
-    upload-images-videos: Upload Images & Videos
-    upload-documents: Upload Documents
-    upload-documents-files: Upload Documents & Files
-    upload-avatar-files: Upload Custom Avatars
-    dropzone-supported-images-videos: Drag and drop image and video files onto this dropzone
-    dropzone-supported-avatars: Drag and drop SVG or PNG files
-    dropzone-supported-files: Drag and drop files onto this dropzone
-    or-select-button-text: or select files to upload.
-    upload-queue: Upload Queue
+    new: New
+    sort: Sort
+    filter: Filer
+    columns: Columns
+    settings: Settings
+    home: Home
+    admin: Admin
+    logout: Logout
+    dashboard: Dashboard
+    search: Search
+    search-input: Search Input
+common:
+    confirm: Confirm
+    edit: Edit
+    save: Save
+    save-changes: Save Changes
+    cancel: Cancel
+    2fa-config: 2FA Config
+    account: Account
+    admin: Admin
+    branding: Branding
+    columns: Columns
+    dashboard: Dashboard
+    date-of-birth: Date of Birth
+    delete: Delete
+    email: Email
+    filesystem: Filesystem
+    filter: Filer
+    home: Home
+    logout: Logout
+    mail: Mail
+    name: Name
+    new: New
+    notification-channels: Notification Channels
+    notifications: Notifications
+    organization: Organization
+    organizations: Organizations
+    overview: Overview
+    phone: Your phone number
+    profile: Profile
+    queue: Queue
+    save-button-text: Save Changes
+    search-input: Search Input
+    search: Search
+    services: Services
+    settings: Settings
+    socket: Socket
+    sort: Sort
+    two-factor: Two Factor
     uploading: Uploading...
-  two-fa-enforcement-alert:
-    message: To enhance the security of your account, your organization requires Two-Factor Authentication (2FA). Enable 2FA in your account settings for an additional layer of protection.
-    button-text: Setup 2FA
-  comment-thread:
-    publish-comment-button-text: Publish comment
-    publish-reply-button-text: Publish reply
-    reply-comment-button-text: Reply
-    edit-comment-button-text: Edit
-    delete-comment-button-text: Delete
-    comment-published-ago: >-
-            {createdAgo} ago
-    comment-input-placeholder: Input a new comment...
-    comment-reply-placeholder: Input your reply...
-    comment-input-empty-notification: You cannot publish empty comments...
-    comment-min-length-notification: Comment must be atleast 2 characters
-  dashboard:
-    select-dashboard: Select Dashboard
-    create-new-dashboard: Create new Dashboard
-    create-a-new-dashboard: Create a new Dashboard
-    confirm-create-dashboard: Create Dashboard!
-    edit-layout: Edit layout
-    add-widgets: Add widgets
-    delete-dashboard: Delete dashboard
-    save-dashboard: Save Dashboard
-    you-cannot-delete-this-dashboard: You cannot delete this dashboard.
-    are-you-sure-you-want-delete-dashboard: Are you sure to delete this {dashboardName}?
-  dashboard-widget-panel:
-    widget-name: >-
-      {widgetName} Widget
-    select-widgets: Select Widgets
+    your-profile: Your Profile
+    created-at: Created At
+    country: Country
+    phone-number: Phone
+    status: Status
     close-and-save: Close and Save
+    users: Users
+    changelog: Changelog
+    ok: OK
+    select-file: Select File
+    back: Back
+    next: Next
+    continue: Continue
+    done: Done
+    export: Export
+    reload: Reload
+    reload-data: Reload data
+    unauthorized: Unauthorized
+    unauthorized-to: Unauthorized to
+    unauthorized-access: Unauthorized Access
+    unauthorized-access-message: Unauthorized Access, you must request permissions to access.
+    permissions-required-for-changes: You do not have the required permissions to make changes.
+    push-notifications: Push Notifications
+    role: Role
+    timezone: Timezone
+component:
+    file:
+        dropdown-label: File actions
+    import-modal:
+        loading-message: Processing import...
+        drop-upload: Drop to upload
+        invalid: Invalid
+        ready-upload: ready for upload.
+        upload-spreadsheets: Upload Spreadsheets
+        drag-drop: Drag and drop spreadsheet files onto this dropzone
+        button-text: or select spreadsheets to upload
+        spreadsheets: spreadsheets
+        upload-queue: Upload Queue
+    dropzone:
+        file: file
+        drop-to-upload: Drop to upload
+        invalid: Invalid
+        files-ready-for-upload: >-
+            {numOfFiles} ready for upload.
+        upload-images-videos: Upload Images & Videos
+        upload-documents: Upload Documents
+        upload-documents-files: Upload Documents & Files
+        upload-avatar-files: Upload Custom Avatars
+        dropzone-supported-images-videos: Drag and drop image and video files onto this dropzone
+        dropzone-supported-avatars: Drag and drop SVG or PNG files
+        dropzone-supported-files: Drag and drop files onto this dropzone
+        or-select-button-text: or select files to upload.
+        upload-queue: Upload Queue
+        uploading: Uploading...
+    two-fa-enforcement-alert:
+        message: To enhance the security of your account, your organization requires Two-Factor Authentication (2FA). Enable 2FA in your account settings for an additional layer of protection.
+        button-text: Setup 2FA
+    comment-thread:
+        publish-comment-button-text: Publish comment
+        publish-reply-button-text: Publish reply
+        reply-comment-button-text: Reply
+        edit-comment-button-text: Edit
+        delete-comment-button-text: Delete
+        comment-published-ago: >-
+            {createdAgo} ago
+        comment-input-placeholder: Input a new comment...
+        comment-reply-placeholder: Input your reply...
+        comment-input-empty-notification: You cannot publish empty comments...
+        comment-min-length-notification: Comment must be atleast 2 characters
+    dashboard:
+        select-dashboard: Select Dashboard
+        create-new-dashboard: Create new Dashboard
+        create-a-new-dashboard: Create a new Dashboard
+        confirm-create-dashboard: Create Dashboard!
+        edit-layout: Edit layout
+        add-widgets: Add widgets
+        delete-dashboard: Delete dashboard
+        save-dashboard: Save Dashboard
+        you-cannot-delete-this-dashboard: You cannot delete this dashboard.
+        are-you-sure-you-want-delete-dashboard: Are you sure to delete this {dashboardName}?
+    dashboard-widget-panel:
+        widget-name: >-
+            {widgetName} Widget
+        select-widgets: Select Widgets
+        close-and-save: Close and Save
 services:
-  dashboard-service:
-    create-dashboard-success-notification: New dashboard `{dashboardName}` created succesfully.
-    delete-dashboard-success-notification: Dashboard `{dashboardName}` was deleted.
+    dashboard-service:
+        create-dashboard-success-notification: New dashboard `{dashboardName}` created succesfully.
+        delete-dashboard-success-notification: Dashboard `{dashboardName}` was deleted.
 auth:
-  verification:
-    header-title: Account Verification
-    title: Verify your email address
-    message-text: <strong>Almost done!</strong><br> Check your email for a verification code.
-    verification-code-text: Enter the verification code you received via email.
-    verification-input-label: Verification Code
-    verify-button-text: Verify & Continue
-    didnt-receive-a-code: Didn't receive a code yet?
-    not-sent:
-      message: Didn't receive a code yet?
-      alternative-choice: Use alternaitve options below to verify your account.
-      resend-email: Resend Email
-      send-by-sms: Send by SMS
-  two-fa:
-    verify-code:
-      verification-code: Verification Code
-      check-title: Check your email or phone
-      check-subtitle: We've sent you a verification code. Enter the code below to complete the login process.
-      expired-help-text: Your 2FA authentication code has expired. You can request another code if you need more time.
-      resend-code: Resend Code
-      verify-code: Verify Code
-      cancel-two-factor: Cancel Two-Factor
-      invalid-session-error-notification: Invalid session. Please try again.
-      verification-successful-notification: Verification successful!
-      verification-code-expired-notification: Verification code has expired. Please request a new one.
-      verification-code-failed-notification: Verification failed. Please try again.
-    resend-code: 
-      verification-code-resent-notification: New verification code sent.
-      verification-code-resent-error-notification: Error resending verification code. Please try again.
-  forgot-password:
-    success-message: Check your email to continue!
-    is-sent:  
-      title: Almost Done!
-      message: <strong>Check your email!</strong><br> We've sent you a magic link to your email which will allow you to reset your password. The link expires in 15 minutes.
-    not-sent:
-      title: Forgot your password?
-      message: <strong>Don't worry, we've got your back.</strong><br> Enter the email you use to login to {appName} and we will send you a secure link to reset your password.
-    form:
-      email-label: Your email address
-      submit-button: OK, Send me a magic link!
-      nevermind-button: Nevermind
-  login:
-    title: Sign in to your account
-    no-identity-notification: Did you forget to enter your email?
-    no-password-notification: Did you forget to enter your password?
-    unverified-notification: Your account needs to be verified to proceed.
-    password-reset-required: A password reset is required to continue.
-    failed-attempt:
-      message: <strong>Forgot your password?</strong><br> Click the button below to reset your password.
-      button-text: Ok, help me reset!
-    form:
-      email-label: Email address
-      password-label: Password
-      remember-me-label: Remember me
-      forgot-password-label: Forgot your password?
-      sign-in-button: Sign in
-      create-account-button: Create a new Account
-    slow-connection-message: Experiencing connectivity issues.
-  reset-password:
-    success-message: Your password has been reset! Login to continue.
-    invalid-verification-code: This reset password link is invalid or expired.
-    title: Reset your password
-    form:
-      code:
-        label: Your reset code
-        help-text: The verification code you received in your email.
-      password:
-        label: New Password
-        help-text: Enter a password at-least 6 characters to continue.
-      confirm-password:
-        label: Confirm new Password
-        help-text: Enter a password at-least 6 characters to continue.
-      submit-button: Reset Password
-      back-button: Back
+    verification:
+        header-title: Account Verification
+        title: Verify your email address
+        message-text: <strong>Almost done!</strong><br> Check your email for a verification code.
+        verification-code-text: Enter the verification code you received via email.
+        verification-input-label: Verification Code
+        verify-button-text: Verify & Continue
+        didnt-receive-a-code: Didn't receive a code yet?
+        not-sent:
+            message: Didn't receive a code yet?
+            alternative-choice: Use alternaitve options below to verify your account.
+            resend-email: Resend Email
+            send-by-sms: Send by SMS
+    two-fa:
+        verify-code:
+            verification-code: Verification Code
+            check-title: Check your email or phone
+            check-subtitle: We've sent you a verification code. Enter the code below to complete the login process.
+            expired-help-text: Your 2FA authentication code has expired. You can request another code if you need more time.
+            resend-code: Resend Code
+            verify-code: Verify Code
+            cancel-two-factor: Cancel Two-Factor
+            invalid-session-error-notification: Invalid session. Please try again.
+            verification-successful-notification: Verification successful!
+            verification-code-expired-notification: Verification code has expired. Please request a new one.
+            verification-code-failed-notification: Verification failed. Please try again.
+        resend-code:
+            verification-code-resent-notification: New verification code sent.
+            verification-code-resent-error-notification: Error resending verification code. Please try again.
+    forgot-password:
+        success-message: Check your email to continue!
+        is-sent:
+            title: Almost Done!
+            message: <strong>Check your email!</strong><br> We've sent you a magic link to your email which will allow you to reset your password. The link expires in 15 minutes.
+        not-sent:
+            title: Forgot your password?
+            message: <strong>Don't worry, we've got your back.</strong><br> Enter the email you use to login to {appName} and we will send you a secure link to reset your password.
+        form:
+            email-label: Your email address
+            submit-button: OK, Send me a magic link!
+            nevermind-button: Nevermind
+    login:
+        title: Sign in to your account
+        no-identity-notification: Did you forget to enter your email?
+        no-password-notification: Did you forget to enter your password?
+        unverified-notification: Your account needs to be verified to proceed.
+        password-reset-required: A password reset is required to continue.
+        failed-attempt:
+            message: <strong>Forgot your password?</strong><br> Click the button below to reset your password.
+            button-text: Ok, help me reset!
+        form:
+            email-label: Email address
+            password-label: Password
+            remember-me-label: Remember me
+            forgot-password-label: Forgot your password?
+            sign-in-button: Sign in
+            create-account-button: Create a new Account
+        slow-connection-message: Experiencing connectivity issues.
+    reset-password:
+        success-message: Your password has been reset! Login to continue.
+        invalid-verification-code: This reset password link is invalid or expired.
+        title: Reset your password
+        form:
+            code:
+                label: Your reset code
+                help-text: The verification code you received in your email.
+            password:
+                label: New Password
+                help-text: Enter a password at-least 6 characters to continue.
+            confirm-password:
+                label: Confirm new Password
+                help-text: Enter a password at-least 6 characters to continue.
+            submit-button: Reset Password
+            back-button: Back
 console:
-  create-or-join-organization:
-    modal-title: Create or join a organization
-    join-success-notification: You have joined a new organization!
-    create-success-notification: You have created a new organization!
-  switch-organization:
-    modal-title: Are you sure you want to switch organization to {organizationName}?
-    modal-body: By confirming your account will remain logged in, but your primary organization will be switched.
-    modal-accept-button-text: Yes, I want to switch organization
-    success-notification: You have switched organizations
-  account:
-    index: 
-      upload-new: Upload new
-      phone: Your phone number.
-      photos: photos
-      timezone: Select your timezone.
-  admin:
-    schedule-monitor:
-      schedule-monitor: Schedule Monitor
-      task-logs-for: >-
-        Task Logs For: 
-      showing-last-count: Showing last {count} logs
-      name: Name
-      type: Type
-      timezone: Timezone
-      last-started: Last Started
-      last-finished: Last Finished
-      last-failure: Last Failure
-      date: Date
-      memory: Memory
-      runtime: Runtime
-      output: Output
-      no-output: No output
-    config:
-      database:
-        title: Database Configuration
-      filesystem:
-        title: Filesystem Configuration
-      mail:
-        title: Mail Configuration
-      notification-channels: 
-        title: Push Notifications Configuration
-      queue:
-        title: Queue Configuration
-      services:
-        title: Services Configuration
-      socket:
-        title: Socket Configuration
-    branding:
-      title: Branding
-      icon-text: Icon
-      upload-new: Upload new
-      reset-default: Reset to default
-      logo-text: Logo
-      theme: Default Theme
-    index:
-      total-users: Total Users
-      total-organizations: Total Organizations
-      total-transactions: Total Transactions
+    create-or-join-organization:
+        modal-title: Create or join a organization
+        join-success-notification: You have joined a new organization!
+        create-success-notification: You have created a new organization!
+    switch-organization:
+        modal-title: Are you sure you want to switch organization to {organizationName}?
+        modal-body: By confirming your account will remain logged in, but your primary organization will be switched.
+        modal-accept-button-text: Yes, I want to switch organization
+        success-notification: You have switched organizations
+    account:
+        index:
+            upload-new: Upload new
+            phone: Your phone number.
+            photos: photos
+            timezone: Select your timezone.
+    admin:
+        schedule-monitor:
+            schedule-monitor: Schedule Monitor
+            task-logs-for: >-
+                Task Logs For:
+            showing-last-count: Showing last {count} logs
+            name: Name
+            type: Type
+            timezone: Timezone
+            last-started: Last Started
+            last-finished: Last Finished
+            last-failure: Last Failure
+            date: Date
+            memory: Memory
+            runtime: Runtime
+            output: Output
+            no-output: No output
+        config:
+            database:
+                title: Database Configuration
+            filesystem:
+                title: Filesystem Configuration
+            mail:
+                title: Mail Configuration
+            notification-channels:
+                title: Push Notifications Configuration
+            queue:
+                title: Queue Configuration
+            services:
+                title: Services Configuration
+            socket:
+                title: Socket Configuration
+        branding:
+            title: Branding
+            icon-text: Icon
+            upload-new: Upload new
+            reset-default: Reset to default
+            logo-text: Logo
+            theme: Default Theme
+        index:
+            total-users: Total Users
+            total-organizations: Total Organizations
+            total-transactions: Total Transactions
+        notifications:
+            title: Notifications
+            notification-settings: Notification Settings
+        organizations:
+            index:
+                title: Organizations
+                owner-name-column: Owner
+                owner-phone-column: Owner Phone
+                owner-email-column: Owner Phone
+                users-count-column: Users
+                phone-column: Phone
+                email-column: Email
+            users:
+                title: Users
+    settings:
+        index:
+            title: Organization Settings
+            organization-name: Organization name
+            organization-description: Organization description
+            organization-phone: Organization phone number
+            organization-currency: Organization currency
+            organization-id: Organization ID
+            organization-branding: Organization Branding
+            logo: Logo
+            logo-help-text: Logo for your organization.
+            upload-new-logo: Upload new logo
+            backdrop: Backdrop
+            backdrop-help-text: Optional banner or background image for your organization.
+            upload-new-backdrop: Upload new backdrop
+            organization-timezone: Select the default timezone for your organization.
+            select-timezone: Select timezone.
+    extensions:
+        title: Extensions are coming soon!
+        message: Please check back in the upcoming versions as we prepare to launch the Extensions repository and marketplace.
     notifications:
-      title: Notifications
-      notification-settings: Notification Settings
-    organizations:
-      index:
-        title: Organizations
-        owner-name-column: Owner
-        owner-phone-column: Owner Phone
-        owner-email-column: Owner Phone
-        users-count-column: Users
-        phone-column: Phone
-        email-column: Email
-      users:
-        title: Users
-  settings:
-    index:
-      title: Organization Settings
-      organization-name: Organization name
-      organization-description: Organization description
-      organization-phone: Organization phone number
-      organization-currency: Organization currency
-      organization-id: Organization ID
-      organization-branding: Organization Branding
-      logo: Logo
-      logo-help-text: Logo for your organization.
-      upload-new-logo: Upload new logo
-      backdrop: Backdrop
-      backdrop-help-text: Optional banner or background image for your organization.
-      upload-new-backdrop: Upload new backdrop
-      organization-timezone: Select the default timezone for your organization.
-      select-timezone: Select timezone.
-  extensions:
-    title: Extensions are coming soon!
-    message: Please check back in the upcoming versions as we prepare to launch the Extensions repository and marketplace.
-  notifications:
-    select-all: Select All
-    mark-as-read: Mark as Read
-    received: >-
-        Received:
-    message: No notifications to display.
+        select-all: Select All
+        mark-as-read: Mark as Read
+        received: >-
+            Received:
+        message: No notifications to display.
 invite:
-  for-users:
-    invitation-message: You've been invited to join {companyName}
-    invitation-sent-message: You've been invited to join the {companyName} organization on {appName}. To accept this invitation, input your invitation code received by email and click continue.
-    invitation-code-sent-text: Your invitiation code
-    accept-invitation-text: Accept Invitation
+    for-users:
+        invitation-message: You've been invited to join {companyName}
+        invitation-sent-message: You've been invited to join the {companyName} organization on {appName}. To accept this invitation, input your invitation code received by email and click continue.
+        invitation-code-sent-text: Your invitiation code
+        accept-invitation-text: Accept Invitation
 onboard:
-  index:
-    title: Create your account
-    welcome-title: <strong>Welcome to {companyName}!</strong><br />
-    welcome-text: Complete the details required below to get started.
-    full-name: Full name
-    full-name-help-text: Your full name
-    your-email: Email address
-    your-email-help-text: Your email address
-    phone: Phone number
-    phone-help-text: Your phone number
-    organization-name: Organization name
-    organization-help-text: Your organization name, all your services and resources will be managed under this organization, later you can create as many organizations as you want or need.
-    password: Enter a password
-    password-help-text: Your password, make sure it's a good one.
-    confirm-password: Confirm your password
-    confirm-password-help-text: Just to confirm the password you entered above.
-    continue-button-text: Continue
-  verify-email:
-    header-title: Account Verification
-    title: Verify your email address
-    message-text: <strong>Almost done!</strong><br> Check your email for a verification code.
-    verification-code-text: Enter the verification code you received via email.
-    verification-input-label: Verification Code
-    verify-button-text: Verify & Continue
-    didnt-receive-a-code: Didn't receive a code yet?
-    not-sent:
-      message: Didn't receive a code yet?
-      alternative-choice: Use alternaitve options below to verify your account.
-      resend-email: Resend Email
-      send-by-sms: Send by SMS
+    index:
+        title: Create your account
+        welcome-title: <strong>Welcome to {companyName}!</strong><br />
+        welcome-text: Complete the details required below to get started.
+        full-name: Full name
+        full-name-help-text: Your full name
+        your-email: Email address
+        your-email-help-text: Your email address
+        phone: Phone number
+        phone-help-text: Your phone number
+        organization-name: Organization name
+        organization-help-text: Your organization name, all your services and resources will be managed under this organization, later you can create as many organizations as you want or need.
+        password: Enter a password
+        password-help-text: Your password, make sure it's a good one.
+        confirm-password: Confirm your password
+        confirm-password-help-text: Just to confirm the password you entered above.
+        continue-button-text: Continue
+    verify-email:
+        header-title: Account Verification
+        title: Verify your email address
+        message-text: <strong>Almost done!</strong><br> Check your email for a verification code.
+        verification-code-text: Enter the verification code you received via email.
+        verification-input-label: Verification Code
+        verify-button-text: Verify & Continue
+        didnt-receive-a-code: Didn't receive a code yet?
+        not-sent:
+            message: Didn't receive a code yet?
+            alternative-choice: Use alternaitve options below to verify your account.
+            resend-email: Resend Email
+            send-by-sms: Send by SMS
 install:
-  installer-header: Installer
-  failed-message-sent: The install failed! Click the button below to retry the install.
-  retry-install: Retry Install
-  start-install: Start Install
+    installer-header: Installer
+    failed-message-sent: The install failed! Click the button below to retry the install.
+    retry-install: Retry Install
+    start-install: Start Install
 layout:
-  header:
-    menus:
-      organization:
-        settings: Organization settings
-        create-or-join: Create or join organizations
-        explore-extensions: Explore extensions
-      user:
-        view-profile: View profile
-        keyboard-shortcuts: Show keyboard shortcuts
-        changelog: Changelog
+    header:
+        menus:
+            organization:
+                settings: Organization settings
+                create-or-join: Create or join organizations
+                explore-extensions: Explore extensions
+            user:
+                view-profile: View profile
+                keyboard-shortcuts: Show keyboard shortcuts
+                changelog: Changelog
