@@ -1583,6 +1583,12 @@ fleet-ops:
         start-date-required: La date de début est requise.
         end-date-required: La date de fin est requise.
         end-date-earlier: La date de fin ne peut pas être antérieure à la date de début.
+        assign-vehicle: Assigner un véhicule ?
+        assign-vehicle-busy-text: Le véhicule {vehicleName} est <strong>actuellement affecté à une autre commande active</strong>. Êtes-vous sûr de vouloir l’affecter à la commande {orderId} ?
+        assign-driver-busy-text: Le conducteur {driverName} est <strong>actuellement affecté à une autre commande active</strong>. Êtes-vous sûr de vouloir l’affecter à la commande {orderId} ?
+        assign-anyway: Continuer l’affectation
+        assign-driver-vehicle: Assigner un conducteur et un véhicule ?
+        assign-driver-vehicle-busy-text: Le conducteur {driverName} et le véhicule {vehicleName} <strong>sont actuellement affectés à une autre commande active</strong>. Voulez-vous quand même leur attribuer la commande {orderId} ?
     widget:
       fleet-ops-quickstart:
         message: Voyons ce que vous pouvez faire pour lancer les opérations...

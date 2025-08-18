@@ -953,6 +953,12 @@ fleet-ops:
           start-date-required: Cần nhập ngày bắt đầu.
           end-date-required: Cần nhập ngày kết thúc.
           end-date-earlier: Ngày kết thúc không được sớm hơn ngày bắt đầu.
+          assign-vehicle: Gán phương tiện?
+          assign-vehicle-busy-text: Phương tiện {vehicleName} <strong>hiện đang được gán cho một đơn hàng khác đang hoạt động</strong>. Bạn có chắc chắn muốn gán nó cho đơn hàng {orderId} không?
+          assign-driver-busy-text: Tài xế {driverName} <strong>hiện đang được gán cho một đơn hàng khác đang hoạt động</strong>. Bạn có chắc chắn muốn gán anh ấy cho đơn hàng {orderId} không?
+          assign-anyway: Tiếp tục gán
+          assign-driver-vehicle: Gán tài xế & phương tiện?
+          assign-driver-vehicle-busy-text: Tài xế {driverName} và phương tiện {vehicleName} <strong>hiện đang được gán cho một đơn hàng khác đang hoạt động</strong>. Bạn có muốn vẫn gán đơn hàng {orderId} cho họ không?
         place-form-panel:
           coordinates-required: "Yêu cầu nhập tọa độ vị trí."
           coordinates-invalid: "Tọa độ vị trí không hợp lệ. Vui lòng nhập vĩ độ và kinh độ hợp lệ."

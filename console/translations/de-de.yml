@@ -1586,6 +1586,12 @@ fleet-ops:
         start-date-required: Startdatum ist erforderlich.
         end-date-required: Enddatum ist erforderlich.
         end-date-earlier: Das Enddatum darf nicht vor dem Startdatum liegen.
+        assign-vehicle: Fahrzeug zuweisen?
+        assign-vehicle-busy-text: Das Fahrzeug {vehicleName} ist <strong>derzeit einem anderen aktiven Auftrag zugewiesen</strong>. Sind Sie sicher, dass Sie es dem Auftrag {orderId} zuweisen möchten?
+        assign-driver-busy-text: Der Fahrer {driverName} ist <strong>derzeit einem anderen aktiven Auftrag zugewiesen</strong>. Sind Sie sicher, dass Sie ihn dem Auftrag {orderId} zuweisen möchten?
+        assign-anyway: Mit der Zuweisung fortfahren
+        assign-driver-vehicle: Fahrer & Fahrzeug zuweisen?
+        assign-driver-vehicle-busy-text: Der Fahrer {driverName} und das Fahrzeug {vehicleName} <strong>sind derzeit einem anderen aktiven Auftrag zugewiesen</strong>. Möchten Sie den Auftrag {orderId} trotzdem ihnen zuweisen?
     widget:
       fleet-ops-quickstart:
         message: Sehen wir uns an, was Sie tun können, um den Betrieb zu starten...
