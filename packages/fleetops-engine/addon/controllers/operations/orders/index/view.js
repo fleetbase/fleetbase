@@ -760,7 +760,6 @@ export default class OperationsOrdersIndexViewController extends BaseController 
                     order.set('vehicle_assigned', null);
                     vehicleToAssign = null;
                     vehicleIsBusy = false;
-                    console.log('Vehicle removed, UUID set to:', order.vehicle_assigned_uuid, originalOrderData.vehicle_assigned); // Debug
                 } else {
                     order.set('vehicle_assigned', vehicle);
                     order.set('vehicle_assigned_uuid', vehicle.id);
