@@ -12,7 +12,6 @@ import { later } from '@ember/runloop';
 
 export default class OrderScheduleCardComponent extends Component {
     @service calendar;
-    @service analytics;
     @service store;
     @service contextPanel;
     @service intl;
@@ -667,11 +666,11 @@ export default class OrderScheduleCardComponent extends Component {
                 this.intl.t('fleet-ops.component.order.schedule-card.required-error')
             );
 
-                                // Schedule reopening of edit modal instead of DOM manipulation
-                    this.scheduleEditModalReopen(order);
-                    // Handle modal reopening after operation
-                    this.handleModalReopeningAfterOperation();
-                    return;
+            // Schedule reopening of edit modal instead of DOM manipulation
+            this.scheduleEditModalReopen(order);
+            // Handle modal reopening after operation
+            this.handleModalReopeningAfterOperation();
+            return;
         }
 
         const hasChanges = (() => {
@@ -682,7 +681,7 @@ export default class OrderScheduleCardComponent extends Component {
                 if (val1 == null || val2 == null) return true;  // One is null/undefined
                 return val1 !== val2;
             };
-        
+
             return (
                 safeCompare(this.originalOrder.driver_assigned_uuid, order.driver_assigned_uuid) ||
                 safeCompare(this.originalOrder.vehicle_assigned_uuid, order.vehicle_assigned_uuid) ||
@@ -863,6 +862,24 @@ export default class OrderScheduleCardComponent extends Component {
                     // Finally, transition to refresh the page
                     this.router.transitionTo('console.fleet-ops.operations.scheduler.index', {
                         queryParams: newQueryParams
+                    });
+                }
+
+                if (this.analytics && this.analytics.isInitialized) {
+                    this.analytics.trackDriverAssignment({
+                        order_id: order.id,
+                        order_uuid: order.uuid,
+                        order_public_id: order.public_id,
+                        driver_id: driver.id,
+                        driver_uuid: driver.uuid,
+                        driver_name: driver.name,
+                        driver_email: driver.email,
+                        driver_phone: driver.phone,
+                        vehicle_id: driver.vehicle?.id,
+                        vehicle_uuid: driver.vehicle?.uuid,
+                        vehicle_name: driver.vehicle?.name,
+                        vehicle_plate: driver.vehicle?.plate,
+                        type: 'success'
                     });
                 }
             })
