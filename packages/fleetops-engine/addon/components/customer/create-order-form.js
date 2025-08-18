@@ -32,6 +32,7 @@ export default class CustomerCreateOrderFormComponent extends Component {
     @service fetch;
     @service intl;
     @service universe;
+    @service analytics;
     @tracked order;
     @tracked customer;
     @tracked payload = this.store.createRecord('payload');
@@ -209,6 +210,24 @@ export default class CustomerCreateOrderFormComponent extends Component {
 
         try {
             yield order.save();
+
+            // Track order creation in analytics
+            if (this.analytics && this.analytics.isInitialized) {
+                this.analytics.trackOrderCreation({
+                    id: order.id,
+                    uuid: order.uuid,
+                    type: order.type,
+                    status: order.status,
+                    value: order.total,
+                    pickup: order.pickup?.address,
+                    dropoff: order.dropoff?.address,
+                    items: order.payload?.entities?.length || 0,
+                    waypoints_count: order.route?.waypoints?.length || 0,
+                    customer_id: this.customer?.id,
+                    customer_name: this.customer?.name
+                });
+            }
+
             // trigger event that fleet-ops created an order
             this.universe.trigger('fleet-ops.order.created', order);
 

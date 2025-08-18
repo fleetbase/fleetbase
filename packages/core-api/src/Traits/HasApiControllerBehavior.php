@@ -24,6 +24,7 @@ use App\Models\LeaveRequest;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Log;
+use Fleetbase\FleetOps\Models\FleetVehicle;
 trait HasApiControllerBehavior
 {
     /**
@@ -555,10 +556,27 @@ trait HasApiControllerBehavior
             $this->validateRequest($request);
             $model_name = str_replace('Controller', '', class_basename($this));
             if ($model_name == "Vehicle") {
+                $fleetUuids = $request['vehicle']['fleet_uuid'] ?? null;
+
+                // Check if the fleet UUIDs are empty
+                if (empty($fleetUuids) || !is_array($fleetUuids) || count($fleetUuids) === 0) {
+                    return response()->error(__('messages.fleet_uuid.required'));
+                }
+
+
                 $plateNumber = $request['vehicle']['plate_number'] ?? null;
                 if ($this->model->where('plate_number', $plateNumber)->whereNull('deleted_at')->exists()) {
                     return response()->error(__('messages.duplicate_check_vehicle'));
                 }
+                try {
+                    // Loop through each fleet UUID to validate individually
+                    foreach ($fleetUuids as $fleetUuid) {
+                        Vehicle::validateFleetUuid($fleetUuid);
+                    }
+                } catch (\Exception $e) {
+                    return response()->error(__('messages.fleet_uuid.exists'));
+                }
+
             } else if($model_name == "Place"){
                $place = $request['place'] ?? [];
                 $validator = Validator::make(
@@ -602,9 +620,39 @@ trait HasApiControllerBehavior
                     return response()->error(__('messages.duplicate_check_place'));
                 }
             }
-
+            else if ($model_name == "Fleet") {
+                $fleetName = $request['fleet']['name'] ?? null;
+                $tripLength = $request['fleet']['trip_length'] ?? null;
+                if ($this->model->where('name', $fleetName)->whereNull('deleted_at')->exists() || $this->model->where('trip_length', $tripLength)->whereNull('deleted_at')->exists()) {
+                    return response()->error(__('messages.duplicate_check_fleet'));
+                }
+            }
             $record = $this->model->createRecordFromRequest($request, $onBeforeCallback, $onAfterCallback);
+            if ($model_name === "Vehicle") {
+                $fleetUuids = $request['vehicle']['fleet_uuid'] ?? [];
 
+                // Ensure $fleetUuids is always an array
+                $fleetUuids = is_array($fleetUuids) ? $fleetUuids : [$fleetUuids];
+
+                foreach ($fleetUuids as $fleetUuid) {
+                    // Check uniqueness before creating
+                    $exists = FleetVehicle::where('fleet_uuid', $fleetUuid)
+                        ->where('vehicle_uuid', $record->uuid)
+                        ->exists();
+
+                    if (!$exists) {
+                        FleetVehicle::create([
+                            'fleet_uuid'   => $fleetUuid,
+                            'vehicle_uuid' => $record->uuid,
+                            'created_at'   => now(),
+                            'updated_at'   => now(),
+                        ]);
+                    }
+                }
+
+                // Load FleetVehicle relationships with Fleet details
+                $record->load('fleetVehicles.fleet');
+            }
             if (Http::isInternalRequest($request)) {
                 $this->resource::wrap($this->resourceSingularlName);
 
@@ -697,9 +745,23 @@ trait HasApiControllerBehavior
                     }
                 }
             }
+
             if ($model_name === 'Vehicle') {
                 $vehicle = Vehicle::find($id);
+                $fleetUuids = $request['vehicle']['fleet_uuid'] ?? null;
+                // Check if the fleet UUIDs are empty
+                if (empty($fleetUuids) || !is_array($fleetUuids) || count($fleetUuids) === 0) {
+                    return response()->error(__('messages.fleet_uuid.required'));
+                }
                 if ($vehicle) {
+                    // Loop through each fleet UUID to validate individually
+                    foreach ($fleetUuids as $fleetUuid) {
+                        $fleet_id = Vehicle::validateFleetUuid($fleetUuid);
+                        if(empty($fleet_id)) {
+                            return response()->error(__('messages.fleet_uuid.exists'));            
+                        }
+                    }
+  
                     // Manual unique check for plate_number
                     $plateNumber =  $request['vehicle']['plate_number'] ?? null;
                     if (!empty($plateNumber)) {
@@ -785,7 +847,31 @@ trait HasApiControllerBehavior
 
             $this->validateRequest($request);
             $record = $this->model->updateRecordFromRequest($request, $id, $onBeforeCallback, $onAfterCallback);
+            if ($model_name === "Vehicle") {
+                $fleetUuids = $request['vehicle']['fleet_uuid'] ?? [];
 
+                // Ensure $fleetUuids is always an array
+                $fleetUuids = is_array($fleetUuids) ? $fleetUuids : [$fleetUuids];
+
+                foreach ($fleetUuids as $fleetUuid) {
+                    // Check uniqueness before creating
+                    $exists = FleetVehicle::where('fleet_uuid', $fleetUuid)
+                        ->where('vehicle_uuid', $record->uuid)
+                        ->exists();
+
+                    if (!$exists) {
+                        FleetVehicle::create([
+                            'fleet_uuid'   => $fleetUuid,
+                            'vehicle_uuid' => $record->uuid,
+                            'created_at'   => now(),
+                            'updated_at'   => now(),
+                        ]);
+                    }
+                }
+
+                // Load FleetVehicle relationships with Fleet details
+                $record->load('fleetVehicles.fleet');
+            }
             if (Http::isInternalRequest($request)) {
                 $this->resource::wrap($this->resourceSingularlName);
 

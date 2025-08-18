@@ -14,6 +14,7 @@ export default class FleetFormPanelComponent extends Component {
     @service hostRouter;
     @service intl;
     @service contextPanel;
+    @service analytics;
 
     /**
      * Overlay context.
@@ -68,13 +69,27 @@ export default class FleetFormPanelComponent extends Component {
     @task *save() {
         // Validate before saving
         if (!this.validate()) {
-            showErrorOnce(this, this.notifications, this.intl.t('validation.form_invalid'));
-            return;
+            return; // Stop execution if validation fails
         }
         contextComponentCallback(this, 'onBeforeSave', this.fleet);
 
         try {
             this.fleet = yield this.fleet.save();
+
+            // Track fleet action in analytics
+            if (this.analytics && this.analytics.isInitialized) {
+                const action = this.fleet.isNew ? 'created' : 'updated';
+                this.analytics.trackFleetAction(action, {
+                    id: this.fleet.id,
+                    uuid: this.fleet.uuid,
+                    name: this.fleet.name,
+                    type: this.fleet.type,
+                    size: this.fleet.size,
+                    vehicles_count: this.fleet.vehicles_count,
+                    drivers_count: this.fleet.drivers_count,
+                    company: this.fleet.company?.name
+                });
+            }
         } catch (error) {
             this.notifications.serverError(error);
             return;
@@ -94,11 +109,17 @@ export default class FleetFormPanelComponent extends Component {
             'status',
             'trip_length'
         ];
+        const tripLength = parseInt(this.fleet.trip_length, 10);
         const hasEmptyRequired = requiredFields.some(field => !this.fleet[field] || this.fleet[field].toString().trim() === '');
         if (hasEmptyRequired) {
             showErrorOnce(this, this.notifications, this.intl.t('validation.form_invalid'));
             return false;
         }
+        if (isNaN(tripLength) || tripLength <= 0) {
+            showErrorOnce(this, this.notifications, this.intl.t('common.trip_length_invalid'));
+            return false;
+        }
+        
         return true;
     }
 
@@ -141,4 +162,6 @@ export default class FleetFormPanelComponent extends Component {
             this.fleet.set(underscore(relation) + '_uuid', null);
         }
     }
+
+ 
 }

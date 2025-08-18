@@ -20,6 +20,7 @@ export default class OrderScheduleCardComponent extends Component {
     @service modalsManager;
     @service notifications;
     @service abilities;
+    @service analytics;
     @tracked timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
     @tracked isAssigningDriver = false;
     @tracked drivers = [];
@@ -339,6 +340,28 @@ export default class OrderScheduleCardComponent extends Component {
 
     @action assignDriverNew(driver) {
         const eventBus = this.effectiveEventBus;
+
+        // Track driver assignment attempt
+        if (this.analytics && this.analytics.isInitialized) {
+            this.analytics.trackDriverAssignment({
+                order_id: this.args.order.id,
+                order_uuid: this.args.order.uuid,
+                order_public_id: this.args.order.public_id,
+                driver_id: driver?.id,
+                driver_uuid: driver?.uuid,
+                driver_name: driver?.name,
+                driver_email: driver?.email,
+                driver_phone: driver?.phone,
+                driver_available: driver?.is_available,
+                driver_has_vehicle: !driver?.have_no_vehicle,
+                vehicle_id: driver?.vehicle?.id,
+                vehicle_uuid: driver?.vehicle?.uuid,
+                vehicle_name: driver?.vehicle?.name,
+                vehicle_plate: driver?.vehicle?.plate,
+                type: 'attempt'
+            });
+        }
+
         try {
             // Close any open modals first
             document.querySelectorAll('.modal.show').forEach(modal => {
@@ -475,6 +498,25 @@ export default class OrderScheduleCardComponent extends Component {
                         return order.save()
                             .then(() => {
                                 this.isAssigningDriver = false;
+
+                                // Track successful driver assignment
+                                if (this.analytics && this.analytics.isInitialized) {
+                                    this.analytics.trackDriverAssignment({
+                                        order_id: order.id,
+                                        order_uuid: order.uuid,
+                                        order_public_id: order.public_id,
+                                        driver_id: driver.id,
+                                        driver_uuid: driver.uuid,
+                                        driver_name: driver.name,
+                                        driver_email: driver.email,
+                                        driver_phone: driver.phone,
+                                        vehicle_id: driver.vehicle?.id,
+                                        vehicle_uuid: driver.vehicle?.uuid,
+                                        vehicle_name: driver.vehicle?.name,
+                                        vehicle_plate: driver.vehicle?.plate,
+                                        type: 'success'
+                                    });
+                                }
 
                                 // Update with current page
                                 const newQueryParams = {
@@ -880,7 +922,6 @@ export default class OrderScheduleCardComponent extends Component {
                         refreshAll: true
                     });
                 }
-
                 // Add a small delay for notification visibility
                 setTimeout(() => {
                     // Close any active modals
@@ -959,6 +1000,21 @@ export default class OrderScheduleCardComponent extends Component {
     @action
     assignVehicleNew(vehicle) {
         const eventBus = this.effectiveEventBus;
+        // Track vehicle assignment attempt
+        if (this.analytics && this.analytics.isInitialized) {
+            this.analytics.trackEvent('vehicle_assignment_attempt', {
+                vehicle_id: vehicle?.id,
+                vehicle_uuid: vehicle?.uuid,
+                vehicle_name: vehicle?.display_name,
+                vehicle_plate: vehicle?.plate_number,
+                order_id: this.args.order.id,
+                order_uuid: this.args.order.uuid,
+                order_public_id: this.args.order.public_id,
+                vehicle_available: vehicle?.is_unassigned,
+                assignment_type: isBlank(vehicle) ? 'unassign' : 'assign'
+            });
+        }
+
         try {
             // Close any open modals
             document.querySelectorAll('.modal.show').forEach(modal => {
@@ -1106,4 +1162,157 @@ export default class OrderScheduleCardComponent extends Component {
         });
     }
 
+        if (this.isModalOpen) {
+            return;
+        }
+
+        const order = this.args.order;
+        this.modalsManager.done().then(() => {
+            this.isModalOpen = true;
+            this.isAssigningVehicle = true;
+
+            if (isBlank(vehicle)) {
+                // Unassign vehicle
+                return this.modalsManager.confirm({
+                    title: this.intl.t('fleet-ops.component.order.schedule-card.unassign-vehicle', { default: 'Unassign Vehicle' }),
+                    body: this.intl.t('fleet-ops.component.order.schedule-card.unassign-vehicle-text', { orderId: order.public_id }),
+                    acceptButtonText: this.intl.t('fleet-ops.component.order.schedule-card.unassign-button', { default: 'Unassign' }),
+                    confirm: async (modal) => {
+                        order.setProperties({
+                            vehicle_assigned: null,
+                            vehicle_assigned_uuid: null
+                        });
+
+                        modal.startLoading();
+                        try {
+                            await order.save();
+
+                            const currentRoute = this.router.currentRoute;
+                            const queryParams = currentRoute.queryParams || {};
+                            const currentPage = queryParams.page || 1;
+
+                            const newQueryParams = {
+                                ref: Date.now(),
+                                page: currentPage
+                            };
+
+                            return this.router.transitionTo('console.fleet-ops.operations.scheduler.index', {
+                                queryParams: newQueryParams
+                            }).then(() => {
+                                if (eventBus) {
+                                    eventBus.publish('calendar-refresh-needed', {
+                                        orderId: order.id,
+                                        currentPage: currentPage,
+                                        refreshAll: true
+                                    });
+                                }
+                                this.notifications.success(
+                                    this.intl.t('fleet-ops.operations.scheduler.index.success-message', {
+                                        orderId: order.public_id,
+                                        orderAt: order.scheduledAt
+                                    })
+                                );
+                                modal.done();
+                                this.isModalOpen = false;
+                            });
+                        } catch (error) {
+                            this.notifications.serverError(error);
+                            modal.stopLoading();
+                        } finally {
+                            this.isModalOpen = false;
+                        }
+                    },
+                    decline: (modal) => {
+                        this.isAssigningVehicle = false;
+                        modal.done();
+                        this.isModalOpen = false;
+                    },
+                });
+            } else {
+                // Assign vehicle with confirmation if already assigned
+                return this.modalsManager.confirm({
+                    title: this.intl.t('fleet-ops.component.order.schedule-card.assign-vehicle', { default: 'Assign Vehicle' }),
+                    body: vehicle.is_unassigned
+                        ? this.intl.t('fleet-ops.component.order.schedule-card.assign-vehicle-text', {
+                            vehicleName: vehicle.display_name,
+                            orderId: order.public_id,
+                        })
+                        : this.intl.t('fleet-ops.component.order.schedule-card.assign-vehicle-busy-text', {
+                            vehicleName: vehicle.display_name,
+                            orderId: order.public_id,
+                            availability: vehicle.availability_message || 'Assigned to another order',
+                        }),
+                    acceptButtonText: this.intl.t('fleet-ops.component.order.schedule-card.assign-button', { default: 'Assign' }),
+
+                    confirm: (modal) => {
+                        const currentRoute = this.router.currentRoute;
+                        const queryParams = currentRoute.queryParams || {};
+                        const currentPage = queryParams.page || 1;
+
+                        modal.startLoading();
+
+                        order.setProperties({
+                            vehicle_assigned: vehicle,
+                            vehicle_assigned_uuid: vehicle.id
+                        });
+
+                        return order.save()
+                            .then(() => {
+                                this.isAssigningVehicle = false;
+
+                                // Track successful vehicle assignment
+                                if (this.analytics && this.analytics.isInitialized) {
+                                    this.analytics.trackVehicleAssignment({
+                                        order_id: order.id,
+                                        order_uuid: order.uuid,
+                                        order_public_id: order.public_id,
+                                        vehicle_id: vehicle.id,
+                                        vehicle_uuid: vehicle.uuid,
+                                        vehicle_name: vehicle.display_name,
+                                        vehicle_plate: vehicle.plate_number,
+                                        vehicle_type: vehicle.type,
+                                        vehicle_model: vehicle.model,
+                                        vehicle_year: vehicle.year,
+                                        type: 'success'
+                                    });
+                                }
+
+                                const newQueryParams = {
+                                    ref: Date.now(),
+                                    page: currentPage
+                                };
+
+                                return this.router.transitionTo('console.fleet-ops.operations.scheduler.index', {
+                                    queryParams: newQueryParams
+                                });
+                            })
+                            .catch((error) => {
+                                this.notifications.serverError(error);
+                            })
+                            .finally(() => {
+                                if (eventBus) {
+                                    eventBus.publish('calendar-refresh-needed', {
+                                        orderId: order.id,
+                                        currentPage: currentPage,
+                                        refreshAll: true
+                                    });
+                                }
+                                this.notifications.success(
+                                    this.intl.t('fleet-ops.operations.scheduler.index.success-message', {
+                                        orderId: order.public_id,
+                                        orderAt: order.scheduledAt
+                                    })
+                                );
+                                modal.done();
+                                this.isModalOpen = false;
+                            });
+                    },
+                    decline: (modal) => {
+                        modal.done();
+                        this.isModalOpen = false;
+                    },
+                });
+            }
+        });
+    }
 }

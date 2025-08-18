@@ -56,5 +56,11 @@ return [
     'past_date_message' => 'La demande de congé ne peut pas être envoyée pour des dates passées',
     'overlap_message_vehicle' => 'Le véhicule est déjà indisponible pour la période sélectionnée',
     'leave_request_update_success' => 'La demande de congé a été mise à jour avec succès',
-    'request_update_success_vehicle' => 'La demande de véhicule a été mise à jour avec succès'
+    'request_update_success_vehicle' => 'La demande de véhicule a été mise à jour avec succès',
+    'fleet_uuid' => [
+        'required' => 'La flotte est obligatoire.',
+        'exists'   => 'La flotte doit être valide et active.',
+        'driver_already_assigned' => 'Le conducteur :driver est déjà affecté à la flotte :fleet. Un conducteur ne peut appartenir qu\'à une seule flotte.',
+    ],
+    'duplicate_check_fleet' => 'Une flotte avec ce nom ou cette durée de trajet existe déjà.',
 ];

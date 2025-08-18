@@ -61,6 +61,13 @@ export default class EditOrderRoutePanelComponent extends Component {
     @service notifications;
 
     /**
+     * Service for analytics
+     *
+     * @type {Service}
+     */
+    @service analytics;
+
+    /**
      * The orderwhich route is being edited.
      *
      * @type {OrderModel}
@@ -99,7 +106,7 @@ export default class EditOrderRoutePanelComponent extends Component {
             }, 4000);
         }
     }
-   
+
     /**
      * Task to save order route.
      *
@@ -110,12 +117,12 @@ export default class EditOrderRoutePanelComponent extends Component {
         const { payload } = this.order;
         const WAYPOINTS_ERROR = this.intl.t('common.valid-waypoints-error');
         if (payload.isMultiDrop && payload.waypoints && payload.waypoints.length > 0) {
-            if(payload.waypoints.length < 2){
+            if (payload.waypoints.length < 2) {
                 this.showErrorOnce(WAYPOINTS_ERROR);
                 return;
             }
             // Check for empty waypoints
-            const hasEmptyWaypoint = payload.waypoints.some(waypoint => 
+            const hasEmptyWaypoint = payload.waypoints.some(waypoint =>
                 !waypoint.public_id || // Check if waypoint has a public_id
                 !waypoint.latitude ||  // Or check directly for coordinates if that's how they're stored
                 !waypoint.longitude ||
@@ -141,10 +148,10 @@ export default class EditOrderRoutePanelComponent extends Component {
                 this.showErrorOnce(this.intl.t('common.duplicate-waypoint-error'));
                 return;
             }
-           
+
         }
-        else{
-            if(!payload.pickup || !payload.dropoff){
+        else {
+            if (!payload.pickup || !payload.dropoff) {
                 this.showErrorOnce(this.intl.t('common.pickup-dropoff-error'));
                 return;
             }
@@ -154,7 +161,7 @@ export default class EditOrderRoutePanelComponent extends Component {
             payload.waypoints.forEach((waypoint, idx) => {
                 waypoint.order = idx;
             });
-            console.log("editorderRoute",payload.waypoints);
+            console.log("editorderRoute", payload.waypoints);
             this.order = yield this.fetch.patch(
                 `orders/route/${this.order.id}`,
                 {
@@ -168,35 +175,35 @@ export default class EditOrderRoutePanelComponent extends Component {
                     normalizeModelType: 'order',
                 }
             );
-           // Clean up waypoints after save
-        if (this.order.payload && this.order.payload.waypoints) {
-            const waypoints = this.order.payload.waypoints;
-            const waypointsToRemove = [];
-            
-            // First identify which waypoints need to be removed
-            waypoints.forEach(waypoint => {
-                if (!waypoint.id && !waypoint.place_uuid) {
-                    waypointsToRemove.push(waypoint);
-                }
-            });
-            // Then remove them from the array
-            if (waypointsToRemove.length > 0) {
-                waypointsToRemove.forEach(waypoint => {
-                    waypoints.removeObject(waypoint);
+            // Clean up waypoints after save
+            if (this.order.payload && this.order.payload.waypoints) {
+                const waypoints = this.order.payload.waypoints;
+                const waypointsToRemove = [];
+
+                // First identify which waypoints need to be removed
+                waypoints.forEach(waypoint => {
+                    if (!waypoint.id && !waypoint.place_uuid) {
+                        waypointsToRemove.push(waypoint);
+                    }
                 });
+                // Then remove them from the array
+                if (waypointsToRemove.length > 0) {
+                    waypointsToRemove.forEach(waypoint => {
+                        waypoints.removeObject(waypoint);
+                    });
+                }
+                // Now remove all duplicates (not just consecutive ones)
+                this.removeDuplicateWaypoints(waypoints);
+
             }
-            // Now remove all duplicates (not just consecutive ones)
-            this.removeDuplicateWaypoints(waypoints);
-       
-        }
-        this.notifications.success(this.intl.t('fleet-ops.operations.orders.index.view.update-success', { orderId: this.order.public_id }));
-        contextComponentCallback(this, 'onAfterSave', this.order);
-        
+            this.notifications.success(this.intl.t('fleet-ops.operations.orders.index.view.update-success', { orderId: this.order.public_id }));
+            contextComponentCallback(this, 'onAfterSave', this.order);
+
         } catch (error) {
             this.notifications.serverError(error);
             return;
         }
-      
+
     }
 
     _serializeWaypoints(waypoints = []) {
@@ -226,35 +233,35 @@ export default class EditOrderRoutePanelComponent extends Component {
      * @action
      * @returns {Boolean} Indicates whether the cancel action was overridden.
      */
-   /**
- * Enhanced onPressCancel method that handles both server reload and empty waypoint removal
- */
+    /**
+  * Enhanced onPressCancel method that handles both server reload and empty waypoint removal
+  */
     @action onPressCancel() {
         // First clean up empty waypoints before server reload
         if (this.order?.payload?.waypoints && this.order.payload.waypoints.length > 0) {
             // Identify waypoints to remove
             const waypointsToRemove = [];
-            
+
             this.order.payload.waypoints.forEach(waypoint => {
                 // Check if waypoint is empty/invalid
-                const isEmpty = !waypoint.public_id || 
-                                !waypoint.place_uuid || 
-                                !waypoint.name ||
-                                !waypoint.latitude ||
-                                !waypoint.longitude ||
-                                waypoint.hasInvalidCoordinates;
-                                
+                const isEmpty = !waypoint.public_id ||
+                    !waypoint.place_uuid ||
+                    !waypoint.name ||
+                    !waypoint.latitude ||
+                    !waypoint.longitude ||
+                    waypoint.hasInvalidCoordinates;
+
                 if (isEmpty) {
                     waypointsToRemove.push(waypoint);
                 }
             });
-            
+
             // Remove the empty waypoints
             if (waypointsToRemove.length > 0) {
                 waypointsToRemove.forEach(waypoint => {
                     this.order.payload.waypoints.removeObject(waypoint);
                 });
-                
+
                 // If multi-drop mode is enabled but no waypoints remain, disable multi-drop
                 if (this.order.payload.isMultiDrop && this.order.payload.waypoints.length === 0) {
                     this.order.payload.isMultiDrop = false;
@@ -265,12 +272,12 @@ export default class EditOrderRoutePanelComponent extends Component {
         // Then reload the order from the server to discard any other changes
         if (this.order && this.order.id) {
             console.log(`Reloading order ${this.order.id} from server on cancel`);
-            
+
             this.store.findRecord('order', this.order.id, { reload: true })
                 .then((freshOrder) => {
                     console.log('Successfully reloaded order from server');
                     this.order = freshOrder;
-                    
+
                     // Notify about route change
                     contextComponentCallback(this, 'onRouteChanged');
                 })
@@ -282,7 +289,7 @@ export default class EditOrderRoutePanelComponent extends Component {
             // If no server reload, still notify about the route change
             contextComponentCallback(this, 'onRouteChanged');
         }
-        
+
         // Call the original cancel callback
         return contextComponentCallback(this, 'onPressCancel', this.order);
     }
@@ -379,21 +386,21 @@ export default class EditOrderRoutePanelComponent extends Component {
         this.order.payload.waypoints.pushObject(waypoint);
         // fire callback
         contextComponentCallback(this, 'onWaypointAdded', waypoint);
-        
+
     }
 
     @action setWaypointPlace(index, place) {
         if (isArray(this.order.payload.waypoints) && !this.order.payload.waypoints.objectAt(index)) {
             return;
         }
-    
+
         const json = place.serialize();
         const publicId = place.id;
-        
+
         // Check for consecutive duplicates
         const previousIndex = index - 1;
         const nextIndex = index + 1;
-        
+
         // Check if previous waypoint has the same public_id
         if (previousIndex >= 0) {
             const previousWaypoint = this.order.payload.waypoints.objectAt(previousIndex);
@@ -402,7 +409,7 @@ export default class EditOrderRoutePanelComponent extends Component {
                 return;
             }
         }
-        
+
         // Check if next waypoint has the same public_id
         if (nextIndex < this.order.payload.waypoints.length) {
             const nextWaypoint = this.order.payload.waypoints.objectAt(nextIndex);
@@ -411,7 +418,7 @@ export default class EditOrderRoutePanelComponent extends Component {
                 return;
             }
         }
-        
+
         this.order.payload.waypoints.objectAt(index).setProperties({
             uuid: place.id,
             place_uuid: place.id,
@@ -420,7 +427,7 @@ export default class EditOrderRoutePanelComponent extends Component {
             place,
             ...json,
         });
-    
+
         // fire callback waypoint place selected
         contextComponentCallback(this, 'onWaypointPlaceSelected', place);
         contextComponentCallback(this, 'onRouteChanged');
@@ -460,6 +467,19 @@ export default class EditOrderRoutePanelComponent extends Component {
                 }
 
                 this.order.payload.waypoints = sortedWaypoints;
+
+                // Track route optimization in analytics
+                if (this.analytics && this.analytics.isInitialized) {
+                    this.analytics.trackRouteOptimization({
+                        id: this.order.id,
+                        uuid: this.order.uuid,
+                        name: this.order.public_id,
+                        stops_count: responseWaypoints.length,
+                        total_distance: response.routes?.[0]?.distance || 0,
+                        total_time: response.routes?.[0]?.duration || 0,
+                        optimization_type: 'waypoint_reordering'
+                    });
+                }
             }
         } else {
             this.notifications.error(this.intl.t('fleet-ops.operations.orders.index.view.route-error'));
@@ -506,5 +526,5 @@ export default class EditOrderRoutePanelComponent extends Component {
         });
         return waypoints;
     }
-    
+
 }
