@@ -76,6 +76,19 @@ class ShiftAssignmentController extends Controller
      */
     public function getCurrentWeekData(Request $request): JsonResponse
     {
+        // Validate request
+        $validator = Validator::make($request->all(), [
+            'company_uuid' => 'nullable|string|uuid'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'errors' => $validator->errors(),
+                'message' => 'Validation failed'
+            ], 422);
+        }
+        
         try {
             // Get company UUID from request or use default
             $companyUuid = $request->input('company_uuid');
@@ -99,7 +112,8 @@ class ShiftAssignmentController extends Controller
 
         } catch (\Exception $e) {
             \Log::error('Error generating current week shift assignment data: ' . $e->getMessage(), [
-                'exception' => $e
+                'exception' => $e,
+                'request' => $request->all()
             ]);
 
             return response()->json([
@@ -118,6 +132,19 @@ class ShiftAssignmentController extends Controller
      */
     public function getNextWeekData(Request $request): JsonResponse
     {
+        // Validate request
+        $validator = Validator::make($request->all(), [
+            'company_uuid' => 'nullable|string|uuid'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'errors' => $validator->errors(),
+                'message' => 'Validation failed'
+            ], 422);
+        }
+        
         try {
             // Get company UUID from request or use default
             $companyUuid = $request->input('company_uuid');
@@ -141,7 +168,8 @@ class ShiftAssignmentController extends Controller
 
         } catch (\Exception $e) {
             \Log::error('Error generating next week shift assignment data: ' . $e->getMessage(), [
-                'exception' => $e
+                'exception' => $e,
+                'request' => $request->all()
             ]);
 
             return response()->json([
@@ -162,7 +190,7 @@ class ShiftAssignmentController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'date' => 'required|date',
-            'company_uuid' => 'nullable|string'
+            'company_uuid' => 'nullable|string|uuid'
         ]);
 
         if ($validator->fails()) {
@@ -177,44 +205,12 @@ class ShiftAssignmentController extends Controller
             $companyUuid = $request->input('company_uuid');
             $date = $request->input('date');
             
-            // Get available drivers for the specific date
-            $drivers = \Fleetbase\FleetOps\Models\Driver::with(['user'])
-                ->when($companyUuid, function ($query) use ($companyUuid) {
-                    return $query->where('company_uuid', $companyUuid);
-                })
-                ->whereNull('deleted_at')
-                ->where('status', 'active')
-                ->get()
-                ->filter(function ($driver) use ($date) {
-                    // Check if driver is available on this date
-                    $leaveRequests = \App\Models\LeaveRequest::where('driver_uuid', $driver->uuid)
-                        ->where('status', 'Approved')
-                        ->whereNull('deleted_at')
-                        ->where(function ($query) use ($date) {
-                            $query->whereDate('start_date', '<=', $date)
-                                  ->whereDate('end_date', '>=', $date);
-                        })
-                        ->exists();
-                    
-                    return !$leaveRequests;
-                })
-                ->map(function ($driver) {
-                    return [
-                        'id' => $driver->public_id,
-                        'name' => $driver->user->name ?? 'Unknown Driver',
-                        'status' => $driver->status,
-                        'online' => $driver->online
-                    ];
-                })
-                ->values();
+            // Use the service method to get available drivers
+            $data = $this->shiftAssignmentService->getAvailableDrivers($date, $companyUuid);
 
             return response()->json([
                 'success' => true,
-                'data' => [
-                    'date' => $date,
-                    'available_drivers' => $drivers,
-                    'total_available' => $drivers->count()
-                ],
+                'data' => $data,
                 'message' => 'Available drivers retrieved successfully'
             ]);
 
