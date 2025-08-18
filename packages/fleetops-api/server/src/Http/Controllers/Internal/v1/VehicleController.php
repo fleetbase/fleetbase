@@ -97,7 +97,7 @@ class VehicleController extends FleetOpsController
             }
         }
         $validation = [];
-        $requiredHeaders = ['name', 'make', 'model', 'year', 'plate_number', 'vin_number'];
+        $requiredHeaders = ['make', 'model', 'year', 'plate_number'];
         $result = $this->processImportWithErrorHandling($files, 'vehicle', function($file) use ($requiredHeaders, &$validation) {
             $disk = config('filesystems.default');
             $data = Excel::toArray(new VehicleImport(), $file->path, $disk);
@@ -333,10 +333,26 @@ class VehicleController extends FleetOpsController
         $plateNumber = $this->getVehicleValue($row, ['plate_number', 'license_plate', 'license_place_number', 'vehicle_plate', 'registration_plate', 'tag_number', 'tail_number', 'head_number']);
 
         // Basic validation - make is required (or vehicle name which can be parsed for make)
-        if (empty($make) && empty($vehicleName)) {
+        if (empty($make)) {
             $errors[] = [
                 (string)$displayRowIndex,
-                "Vehicle make or vehicle name is required.",
+                "Vehicle make is required.",
+                ""
+            ];
+            $hasValidationErrors = true;
+        }
+        if (empty($model)) {
+            $errors[] = [
+                (string)$displayRowIndex,
+                "Vehicle model is required.",
+                ""
+            ];
+            $hasValidationErrors = true;
+        }
+        if (empty($plateNumber)) {
+            $errors[] = [
+                (string)$displayRowIndex,
+                "Vehicle plate number is required.",
                 ""
             ];
             $hasValidationErrors = true;

@@ -81,6 +81,8 @@ class Order extends FleetbaseResource
             'created_by_name'        => $this->created_by_name,
             'updated_by_name'        => $this->updated_by_name,
             'created_by_uuid'        => $this->created_by_uuid,
+            'carrier'               => $this->carrier,
+            'sub_carrier'           => $this->sub_carrier,
         ];
     }
 
@@ -152,6 +154,8 @@ class Order extends FleetbaseResource
             'created_by_name' => $this->created_by_name,
             'updated_by_name' => $this->updated_by_name,
             'created_by_uuid' => $this->created_by_uuid,
+            'carrier'         => $this->carrier,
+            'sub_carrier'     => $this->sub_carrier,
         ];
     }
 }
