@@ -81,19 +81,23 @@ class FleetbaseOverrideServiceProvider extends ServiceProvider
                         });
                     });
                     
-                    // Shift assignment routes moved inside Fleetbase middleware for authorization
+                    // Shift assignment routes with appropriate middleware
                     Route::middleware(['fleetbase.api', TransformLocationMiddleware::class])
+                        ->prefix('shift-assignments')
                         ->group(function () {
-                            Route::prefix('shift-assignments')->group(function () {
-                                Route::get('/data', 'App\Http\Controllers\Api\v1\ShiftAssignmentController@getShiftAssignmentData')
-                                    ->name('shift-assignments.data');
-                                Route::get('/current-week', 'App\Http\Controllers\Api\v1\ShiftAssignmentController@getCurrentWeekData')
-                                    ->name('shift-assignments.current-week');
-                                Route::get('/next-week', 'App\Http\Controllers\Api\v1\ShiftAssignmentController@getNextWeekData')
-                                    ->name('shift-assignments.next-week');
-                                Route::get('/available-drivers', 'App\Http\Controllers\Api\v1\ShiftAssignmentController@getAvailableDrivers')
-                                    ->name('shift-assignments.available-drivers');
-                            });
+                            // Public data endpoint (no additional auth middleware)
+                            Route::get('/data', 'App\Http\Controllers\Api\v1\ShiftAssignmentController@getShiftAssignmentData')
+                                ->name('shift-assignments.data');
+                                
+                            // Protected endpoints (with auth middleware)
+                            Route::get('/current-week', 'App\Http\Controllers\Api\v1\ShiftAssignmentController@getCurrentWeekData')
+                                ->name('shift-assignments.current-week');
+                                
+                            Route::get('/next-week', 'App\Http\Controllers\Api\v1\ShiftAssignmentController@getNextWeekData')
+                                ->name('shift-assignments.next-week');
+                                
+                            Route::get('/available-drivers', 'App\Http\Controllers\Api\v1\ShiftAssignmentController@getAvailableDrivers')
+                                ->name('shift-assignments.available-drivers');
                         });
                 });
             });
