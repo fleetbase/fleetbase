@@ -28,7 +28,8 @@ use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Log;
 use Fleetbase\FleetOps\Traits\ImportErrorHandler;
 use Fleetbase\Models\File;
-use App\Helpers\FieldValidator;
+use Fleetbase\FleetOps\Models\ImportLog;
+use Illuminate\Support\Facades\Storage;
 
 class DriverController extends FleetOpsController
 {
@@ -537,8 +538,32 @@ class DriverController extends FleetOpsController
     public function import(ImportRequest $request)
     {
         $files = File::whereIn('uuid', $request->input('files'))->get();
+        $alreadyProcessed = ImportLog::where('imported_file_uuid', $files[0]->uuid)->first();
+        if($alreadyProcessed){
+            if($alreadyProcessed->status == 'ERROR' || $alreadyProcessed->status == 'PARTIALLY_COMPLETED'){
+                $url = Storage::url($alreadyProcessed['error_log_file_path']);
+                $message = $alreadyProcessed->status == 'ERROR'
+                    ? __('messages.full_import_error')
+                    : __('messages.partial_success');
+                return response()->json([
+                    'error_log_url' => $url,
+                    'message' => $message,
+                     'status' => $alreadyProcessed->status == 'ERROR' ? 'error' : 'partial_success',
+                    'success' => false,
+                ]);
+
+            }
+            if($alreadyProcessed->status == 'COMPLETED')
+            {
+                return response()->json([
+                'success' => true,
+                'message' => "Import completed successfully.",
+                ]);
+            }
+        }
         $requiredHeaders = ['name', 'phone', 'license', 'country', 'city', 'email'];
-        $result = $this->processImportWithErrorHandling($files, 'driver', function($file) use ($requiredHeaders) {
+        $validation = [];
+        $result = $this->processImportWithErrorHandling($files, 'driver', function($file) use ($requiredHeaders, &$validation) {
             $disk = config('filesystems.default');
             $data = Excel::toArray(new DriverImport(), $file->path, $disk);
             $totalRows = collect($data)->flatten(1)->count();
@@ -553,12 +578,12 @@ class DriverController extends FleetOpsController
 
             $validation = $this->validateImportHeaders($data, $requiredHeaders);
 
-            if (!$validation['success']) {
-                return response()->json($validation);
-            }
+
             return $this->driverImportWithValidation($data);
         });
-        
+        if (!$validation['success']) {
+            return response()->error($validation['errors']);
+        }
         if (!empty($result['allErrors'])) {
             return response($this->generateErrorResponse($result['allErrors'], 'driver', $files->first()->uuid, $result));
         }
@@ -642,14 +667,6 @@ class DriverController extends FleetOpsController
                 $displayRowIndex = $rowData['displayRowIndex'];
 
                 try {
-
-                    $fieldsToValidate = ['name', 'license', 'phone', 'country', 'city', 'email'];
-                    foreach ($fieldsToValidate as $field) {
-                        if (isset($row[$field])) {
-                            $fieldErrors = FieldValidator::validateField($field, $row[$field], $displayRowIndex);
-                            $importErrors = array_merge($importErrors, $fieldErrors);
-                        }
-                    }
                     // Pre-validation before calling createFromImport
                     $validationErrors = $this->validateDriverRow($row, $displayRowIndex, 
                         $existingEmails, $existingLicenseNumbers, $seenEmails, $seenLicenseNumbers);
@@ -786,6 +803,14 @@ class DriverController extends FleetOpsController
             ];
             $hasValidationErrors = true;
         }
+        if (empty($email)) {
+            $errors[] = [
+                (string)$displayRowIndex,
+                "Driver email is required.",
+                ""
+            ];
+            $hasValidationErrors = true;
+        }
 
         // Email validation
         if (!empty($email)) {
@@ -858,21 +883,6 @@ class DriverController extends FleetOpsController
                 $seenLicenseNumbers[] = $licenseNumber;
             }
         }
-
-        // Phone number validation (basic format check)
-        if (!empty($phone)) {
-            $phone = trim($phone);
-            // Allow various phone formats but ensure it has reasonable length and contains numbers
-            if (strlen($phone) < 7 || !preg_match('/[0-9]/', $phone)) {
-                $errors[] = [
-                    (string)$displayRowIndex,
-                    "Invalid phone number format: '{$phone}'",
-                    $email ?? $driversLicenseNumber ?? $name
-                ];
-                $hasValidationErrors = true;
-            }
-        }
-
         return $errors;
     }
 

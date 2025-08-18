@@ -450,6 +450,47 @@ export default class ManagementPlacesIndexController extends BaseController {
                 }
             },  
             steps: [
+                {       
+                    element: '.import-btn', // import button
+                    popover: {
+                        title: this.intl.t('fleetbase.places.tour.import_button.title'),
+                        description: this.intl.t('fleetbase.places.tour.import_button.description'),
+                        onNextClick: () => {
+                            document.querySelector('.import-btn').click();
+                            const checkModal = setInterval(() => {
+                            const modal = document.querySelector('.flb--modal');
+                            if (modal && modal.classList.contains('show')) {
+                            clearInterval(checkModal);
+                            driverObj.moveNext(); // Move to the next step
+                            }
+                        }, 100);
+                        }
+                    },
+                },
+                {
+                    element: '.flb--modal .dropzone', // upload spreadsheets popup
+                    popover: {
+                        title: this.intl.t('fleetbase.common.upload_spreadsheets.title'),
+                        description: this.intl.t('fleetbase.common.upload_spreadsheets.description'),
+                    },
+                },
+                {
+                    element: '.flb--modal .modal-footer-actions .btn-magic', // start upload button
+                    popover: {
+                        title: this.intl.t('fleetbase.common.start_upload.title'),
+                        description: this.intl.t('fleetbase.common.start_upload.description'),
+                        onNextClick: () => {
+                            this.modalsManager.done();
+                            const checkModalClosed = setInterval(() => {
+                                const modal = document.querySelector('.flb--modal');
+                                if (!modal || !modal.classList.contains('show')) {
+                                    clearInterval(checkModalClosed);
+                                    driverObj.moveNext();
+                                }
+                            }, 100);
+                        },
+                    },
+                },
                 {
                     element: '#next-view-section-subheader-actions .btn-wrapper .new-place-button',
                     onHighlightStarted: (element) => {
@@ -479,6 +520,9 @@ export default class ManagementPlacesIndexController extends BaseController {
                                 }
                             }, 100);
                         },
+                        onPrevClick: () => {
+                            driverObj.drive(0);
+                        }
                     },
                 },
                 {
@@ -736,6 +780,13 @@ export default class ManagementPlacesIndexController extends BaseController {
             } catch (error) {
                 console.error('Import failed:', error);
                 modal.stopLoading();
+                this.modalsManager.setOption('isErrorState', false);
+                this.modalsManager.setOption('errorLogUrl', null);
+                this.modalsManager.setOption('uploadQueue', []);
+                this.modalsManager.setOption('acceptButtonText', this.intl.t('fleet-ops.component.modals.order-import.start-upload-button'));
+                this.modalsManager.setOption('acceptButtonIcon', 'upload');
+                // this.modalsManager.setOption('acceptButtonScheme', 'magic');
+                this.modalsManager.setOption('acceptButtonDisabled', true);
                 this.modalsManager.setOption('isProcessing', false);
                 this.notifications.serverError(error);
             }
@@ -822,7 +873,7 @@ export default class ManagementPlacesIndexController extends BaseController {
 
 
     onImportSuccess() {
-        this.hostRouter.transitionTo('console.fleet-ops.management.fleets.index', {
+        this.hostRouter.transitionTo('console.fleet-ops.management.places.index', {
             queryParams: { refresh: true }
         });
     }

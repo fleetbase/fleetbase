@@ -211,6 +211,14 @@ export default class ManagementFleetsIndexController extends BaseController {
             filterComponent: 'filter/string',
         },
         {
+            label: this.intl.t('common.trip-length'),
+            valuePath: 'trip_length',
+            width: '100px',
+            resizable: true,
+            sortable: true,
+            filterable: false,
+        },
+        {
             label: this.intl.t('fleet-ops.common.manpower'),
             valuePath: 'drivers_count',
             width: '100px',
@@ -447,8 +455,15 @@ export default class ManagementFleetsIndexController extends BaseController {
                 handleSuccessfulImport(this, results, modal, this.onImportSuccess.bind(this));
 
             } catch (error) {
-                console.error('Fleet import error:', error);
+                console.error('Import failed:', error);
                 modal.stopLoading();
+                this.modalsManager.setOption('isErrorState', false);
+                this.modalsManager.setOption('errorLogUrl', null);
+                this.modalsManager.setOption('uploadQueue', []);
+                this.modalsManager.setOption('acceptButtonText', this.intl.t('fleet-ops.component.modals.order-import.start-upload-button'));
+                this.modalsManager.setOption('acceptButtonIcon', 'upload');
+                // this.modalsManager.setOption('acceptButtonScheme', 'magic');
+                this.modalsManager.setOption('acceptButtonDisabled', true);
                 this.modalsManager.setOption('isProcessing', false);
                 this.notifications.serverError(error);
             }
@@ -620,6 +635,47 @@ export default class ManagementFleetsIndexController extends BaseController {
                 }
             },
             steps: [
+                {       
+                    element: '.import-btn', // import button
+                    popover: {
+                        title: this.intl.t('fleetbase.fleets.tour.import_button.title'),
+                        description: this.intl.t('fleetbase.fleets.tour.import_button.description'),
+                        onNextClick: () => {
+                            document.querySelector('.import-btn').click();
+                            const checkModal = setInterval(() => {
+                            const modal = document.querySelector('.flb--modal');
+                            if (modal && modal.classList.contains('show')) {
+                            clearInterval(checkModal);
+                            driverObj.moveNext(); // Move to the next step
+                            }
+                        }, 100);
+                        }
+                    },
+                },
+                {
+                    element: '.flb--modal .dropzone', // upload spreadsheets popup
+                    popover: {
+                        title: this.intl.t('fleetbase.common.upload_spreadsheets.title'),
+                        description: this.intl.t('fleetbase.common.upload_spreadsheets.description'),
+                    },
+                },
+                {
+                    element: '.flb--modal .modal-footer-actions .btn-magic', // start upload button
+                    popover: {
+                        title: this.intl.t('fleetbase.common.start_upload.title'),
+                        description: this.intl.t('fleetbase.common.start_upload.description'),
+                        onNextClick: () => {
+                            this.modalsManager.done();
+                            const checkModalClosed = setInterval(() => {
+                                const modal = document.querySelector('.flb--modal');
+                                if (!modal || !modal.classList.contains('show')) {
+                                    clearInterval(checkModalClosed);
+                                    driverObj.moveNext();
+                                }
+                            }, 100);
+                        },
+                    },
+                },
                 {
                     element: 'button.create-fleet-btn',
                     onHighlightStarted: (element) => {
@@ -646,6 +702,9 @@ export default class ManagementFleetsIndexController extends BaseController {
                                 }
                             }, 100);
                         },
+                        onPrevClick: () => {
+                            driverObj.drive(0);
+                        }
                     },
                 },
                 {

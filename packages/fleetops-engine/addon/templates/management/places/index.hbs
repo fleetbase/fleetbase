@@ -46,6 +46,7 @@
     {{/if}}
     <Button @customClass="new-place-button" @icon="plus" @iconPrefix="fas" @type="primary" @text={{t "fleet-ops.common.new"}} class="mr-2" @onClick={{this.createPlace}} @permission="fleet-ops create place" />
     <Button
+        @customClass="import-btn"
         @icon="upload"
         @type="magic"
         @text={{t "fleet-ops.common.import"}}

@@ -144,6 +144,8 @@ common:
   from: Desde
   filter-by: Filtrar por
   to_date_before_from_date_error: La fecha “Hasta” no puede ser anterior a la fecha “Desde”.
+  trip-length: Duración del viaje
+  trip-length-placeholder: Introduzca la duración del viaje en horas
 leaves:
   driver_name: Nombre del conductor
   start_date: Fecha de inicio
@@ -1386,6 +1388,9 @@ fleet-ops:
         schedule: Fecha de inicio
         unschedule: Desprogramar
       order-form:
+        assign-fleet: Asignar Flota
+        assign-fleet-text: Asigne la flota con la que se realizará este pedido.
+        assign-fleet-placeholder: Seleccionar Flota
         id-text: Utilice este campo para definir opcionalmente un identificador interno
           o personalizado para el pedido.
         end-date-text: La fecha y la hora en que se espera que el pedido se complete. Esto marca el final previsto del proceso de entrega. Si el pedido no se completa para entonces, puede ser necesaria una acción adicional o una reasignación.
@@ -1648,6 +1653,7 @@ fleet-ops:
         show-less: Mostrar menos detalles
         show-more: Mostrar más detalles
       schedule-card:
+        fleet-required: Flota es requerida
         destination: Destino
         unassign-driver: ¿Quitar el controlador?
         unassign-text: Estás a punto de recoger al conductor del pedido.{orderId}Estás
@@ -2424,6 +2430,10 @@ fleet-ops:
             se trata de un cliente nuevo, utilice el botón "Nuevo cliente" que se
             encuentra arriba.
           customer-placeholder: Seleccione un cliente
+          fleet: Fleet
+          fleet-help-text: Asigne la flota para este pedido.
+          fleet-placeholder: Seleccionar Flota
+          select-fleet: Seleccionar Flota
           facilitator: Facilitador
           facilitator-help-text: Opcionalmente, asigne un facilitador para este pedido;
             un facilitador puede ser un contratista o servicio externo que facilitará
@@ -2573,6 +2583,7 @@ fleet-ops:
           add-item-button: Agregar un artículo
           edit-item-button: Editar artículo
           edit-order-title: Editar detalles del pedido
+          fleet: Flota
           update-success: Detalles del pedido{orderId}Los detalles del pedido se han
             actualizado.
           order-metadata: Ordenar metadatos
@@ -2581,6 +2592,7 @@ fleet-ops:
           unassign-body: Una vez que el conductor sea dado de baja, ya no tendrá acceso
             a los detalles de esta orden.
           unassign-success: El conductor fue dado de baja de este comando.
+
           edit-route-title: Cambiar la ruta del pedido
           route-error: La optimización de la ruta falló, verifique la entrada de la
             ruta e inténtelo nuevamente.
@@ -3169,6 +3181,12 @@ fleetbase:
     done: "Listo"
     close: "Cerrar"
     help: "Ayuda"
+    upload_spreadsheets:
+      title: "Cargar hojas de cálculo"
+      description: "Cargue archivos de hoja de cálculo arrastrándolos y soltándolos o seleccionándolos desde su dispositivo."
+    start_upload:
+      title: "Iniciar carga"
+      description: "Inicie la carga y el procesamiento de los archivos de hoja de cálculo seleccionados."
 
   orders:
     tour:
@@ -3178,12 +3196,6 @@ fleetbase:
       import_button:
         title: "Importar pedidos"
         description: "Importe pedidos desde una hoja de cálculo para un procesamiento masivo eficiente."
-      upload_spreadsheets:
-        title: "Cargar hojas de cálculo"
-        description: "Cargue archivos de hoja de cálculo arrastrándolos y soltándolos o seleccionándolos desde su dispositivo."
-      start_upload:
-        title: "Iniciar carga"
-        description: "Inicie la carga y el procesamiento de los archivos de hoja de cálculo seleccionados."
       dates:
         title: "Programación de pedidos"
         description: "Defina las fechas de inicio y finalización estimadas para definir el cronograma del pedido."
@@ -3283,6 +3295,9 @@ fleetbase:
 
   drivers:
     tour:
+      import_button:
+        title: "Importar controladores"
+        description: "Importe controladores desde una hoja de cálculo para un procesamiento masivo eficiente."
       new_button:
         title: "Crear Nuevo Conductor"
         description: "Abre el formulario para crear un nuevo perfil de conductor e ingresar sus datos."
@@ -3298,6 +3313,9 @@ fleetbase:
 
   vehicles:
     tour:
+      import_button:
+        title: "Importar vehículos"
+        description: "Importe vehículos desde una hoja de cálculo para un procesamiento masivo eficiente."
       new_button:
         title: "Crear Nuevo Vehículo"
         description: "Abre el formulario para crear un nuevo perfil de vehículo e ingresar la información específica del mismo."
@@ -3313,6 +3331,9 @@ fleetbase:
 
   places:
     tour:
+      import_button:
+        title: "Importar lugares"   
+        description: "Importa lugares desde una hoja de cálculo para un procesamiento masivo eficiente."
       new_button:
         title: "Botón 'Nuevo Lugar'"
         description: "Abre el formulario de creación de lugares donde puede definir los detalles de la ubicación de un nuevo lugar."
@@ -3491,6 +3512,9 @@ fleetbase:
 
   fleets:
     tour:
+      import_button:
+        title: "Importar flotas"
+        description: "Importe flotas desde una hoja de cálculo para un procesamiento masivo eficiente."
       new_button:
         title: "Botón Nueva flota"
         description: "Abre el formulario de creación de flota, donde puede definir los detalles de la misma."

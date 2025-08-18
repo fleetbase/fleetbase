@@ -78,11 +78,29 @@
                 </ModelSelect>
             </InputGroup> --}}
 
+            <InputGroup @name={{t "fleet-ops.component.modals.order-form.assign-fleet" }}
+                @helpText={{t "fleet-ops.component.modals.order-form.assign-fleet-text" }}>
+                <ModelSelect @modelName="fleet" @selectedModel={{@options.order.fleet}} @query={{hash order_uuid=@options.order.id
+                    timezone=(get-timezone)}} @placeholder={{t "fleet-ops.component.modals.order-form.assign-fleet-placeholder" }}
+                    @triggerClass="form-select form-input" @infiniteScroll={{false}} @renderInPlace={{true}}
+                    @onChange={{@options.setFleet}} @permission="fleet-ops update order" @allowClear={{true}} as |model|>
+                    <div class="flex items-center">
+                        {{!-- <div class="w-6">
+                            <Image @src={{model.avatar_url}} @fallbackSrc={{config "defaultValues.vehicleAvatar" }}
+                                class="w-4 h-4 shadow-sm rounded-md" />
+                        </div> --}}
+                        <div class="flex-1 flex flex-row truncate">
+                            <span class="uppercase">{{model.name}}</span>
+                        </div>
+                    </div>
+                </ModelSelect>
+            </InputGroup>
+            
             <InputGroup @name={{t "fleet-ops.component.modals.order-form.assign-driver"}} @helpText={{t "fleet-ops.component.modals.order-form.assign-driver-text"}}>
                 <ModelSelect
                     @modelName="driver"
                     @selectedModel={{@options.order.driver_assigned}}
-                    @query={{hash order_uuid=@options.order.id timezone=(get-timezone)}}
+                    @query={{hash order_uuid=@options.order.id timezone=(get-timezone) fleet_uuid=@options.order.fleet.id}}
                     @placeholder={{t "fleet-ops.component.modals.order-form.select-driver"}}
                     @triggerClass="form-select form-input"
                     @infiniteScroll={{false}}
@@ -121,7 +139,7 @@
                 <ModelSelect
                     @modelName="vehicle"
                     @selectedModel={{@options.order.vehicle_assigned}}
-                    @query={{hash order_uuid=@options.order.id timezone=(get-timezone)}}
+                    @query={{hash order_uuid=@options.order.id timezone=(get-timezone) fleet_uuid=@options.order.fleet.id}}
                     @placeholder={{t "fleet-ops.component.modals.order-form.select-vehicle"}}
                     @triggerClass="form-select form-input"
                     @infiniteScroll={{false}}

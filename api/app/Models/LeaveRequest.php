@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Fleetbase\Models\User;
 use Fleetbase\FleetOps\Models\Driver;
+use Fleetbase\FleetOps\Models\Vehicle;
 class LeaveRequest extends Model
 {
     use HasFactory, SoftDeletes;
@@ -36,6 +37,8 @@ class LeaveRequest extends Model
         'leave_type',
         'created_by_id',
         'updated_by_id',
+        'unavailability_type',
+        'vehicle_uuid'
     ];
 
     protected $casts = [
@@ -44,7 +47,7 @@ class LeaveRequest extends Model
         'meta' => 'array', // Cast JSON meta field to array
     ];
 
-    protected $appends = ['processed_by_name'];
+    protected $appends = ['processed_by_name', 'vehicle_name'];
 
     protected $dates = ['deleted_at']; // Enable soft deletes
 
@@ -65,5 +68,18 @@ class LeaveRequest extends Model
     public function driver()
     {
         return $this->belongsTo(Driver::class, 'driver_uuid', 'uuid'); 
+    }
+
+    public function vehicle()
+    {
+        return $this->belongsTo(Vehicle::class, 'vehicle_uuid', 'uuid');
+    }
+
+    public function getVehicleNameAttribute()
+    {
+        if ($this->vehicle) {
+            return $this->vehicle->plate_number . '-' . $this->vehicle->model;
+        }
+        return null;
     }
 }

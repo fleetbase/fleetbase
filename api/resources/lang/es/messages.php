@@ -53,4 +53,8 @@ return [
     'leave_already_rejected' => 'La solicitud de permiso ya ha sido rechazada.',
     'email_address_validation' => 'Por favor ingrese una dirección de correo electrónico válida.',
     'required_field' => 'Por favor complete los campos obligatorios.',
+    'past_date_message' => 'No se puede enviar una solicitud de permiso para fechas pasadas',
+    'overlap_message_vehicle' => 'El vehículo ya está no disponible para el período seleccionado',
+    'leave_request_update_success' => 'La solicitud de permiso se ha actualizado correctamente',
+    'request_update_success_vehicle' => 'La solicitud de vehículo se ha actualizado correctamente'
 ];

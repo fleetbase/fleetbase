@@ -12,7 +12,7 @@ return [
     'load_rejected' => 'Die Bestellung wurde abgelehnt.',
     'duplicate_leave_requests' => 'Es existiert bereits ein Urlaubsantrag für denselben Zeitraum.',
     'request_update_success' => 'Der Urlaubsantrag wurde erfolgreich aktualisiert.',
-    'request_deleted_success' => 'Der Urlaubsantrag wurde erfolgreich gelöscht.',
+    'request_deleted_success' => 'Die Anfrage wurde erfolgreich gelöscht.',
     'request_not_found' => 'Der Urlaubsantrag wurde nicht gefunden.',
     'invalid_activity_status' => 'Ungültiger Aktivitätsstatus.',
     'status_updated_successfully' => 'Status erfolgreich aktualisiert',
@@ -55,4 +55,8 @@ return [
     'leave_already_rejected' => 'Der Urlaubsantrag wurde bereits abgelehnt.',
     'email_address_validation' => 'Bitte geben Sie eine gültige E-Mail-Adresse ein.',
     'required_field' => 'Bitte füllen Sie die erforderlichen Felder aus.',
+    'past_date_message' => 'Der Urlaubsantrag kann nicht für vergangene Daten eingereicht werden',
+    'overlap_message_vehicle' => 'Das Fahrzeug ist bereits für den ausgewählten Zeitraum nicht verfügbar',
+    'leave_request_update_success' => 'Der Urlaubsantrag wurde erfolgreich aktualisiert',
+    'request_update_success_vehicle' => 'Der Fahrzeugantrag wurde erfolgreich aktualisiert'
 ];

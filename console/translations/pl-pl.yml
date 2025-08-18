@@ -149,6 +149,8 @@ common:
   from: Od
   filter-by: Filtruj według
   to_date_before_from_date_error: Data „Do” nie może być wcześniejsza niż data „Od”.
+  trip-length: Czas trwania podróży
+  trip-length-placeholder: Wprowadź czas trwania podróży w godzinach
 leaves:
   driver_name: Imię kierowcy
   start_date: Data rozpoczęcia
@@ -1310,6 +1312,9 @@ fleet-ops:
         schedule: Data rozpoczęcia
         unschedule: Anuluj harmonogram
       order-form:
+        assign-fleet: Przypisz flotę
+        assign-fleet-text: Przypisz flotę, z którą zostanie zrealizowane to zamówienie.
+        assign-fleet-placeholder: Wybierz flotę
         id-text: Użyj tego pola, aby opcjonalnie ustawić niestandardowy identyfikator lub wewnętrzny identyfikator zamówienia.
         schedule-text: Data i godzina wysyłki zamówienia. Jeśli w momencie wysyłki nie zostanie przypisany kierowca, wysyłka nie powiedzie się. Jeśli zamówienie jest ad hoc, zostanie wysłane do kierowców w pobliżu miejsca odbioru.
         end-date-text: Data i godzina zakończenia zamówienia. Określa przewidywane zakończenie procesu dostawy. Jeśli zamówienie nie zostanie zakończone do tego czasu, może wymagać dodatkowych działań lub ponownego przypisania.
@@ -1542,6 +1547,7 @@ fleet-ops:
         show-less: Pokaż mniej szczegółów
         show-more: Pokaż więcej szczegółów
       schedule-card:
+        fleet-required: Flota jest wymagana
         destination: Cel podróży
         unassign-driver: Usunąć przypisanie kierowcy?
         unassign-text: Zaraz usuniesz przypisanie kierowcy dla zamówienia {orderId}. Kliknij „Kontynuuj", aby potwierdzić usunięcie kierowcy.
@@ -2262,6 +2268,10 @@ fleet-ops:
           customer: Klient
           customer-help-text: Opcjonalnie przypisz klienta do zamówienia. Jeśli to nowy klient, użyj przycisku „Nowy klient" powyżej.
           customer-placeholder: Wybierz klienta
+          fleet: flotę
+          fleet-help-text: Przypisz flotę dla tego zamówienia.
+          fleet-placeholder: Wybierz flotę
+          select-fleet: Wybierz flotę
           facilitator: Pośrednik
           facilitator-help-text: Opcjonalnie przypisz pośrednika, który może być podwykonawcą lub usługą wspomagającą transport zamówienia.
           facilitator-placeholder: Wybierz pośrednika
@@ -2389,6 +2399,7 @@ fleet-ops:
           view-activity: Zobacz aktywność
           add-item-button: Dodaj przedmiot
           edit-item-button: Edytuj przedmiot
+          fleet: Flota
           edit-order-title: Edytuj szczegóły zamówienia
           update-success: 'Szczegóły zamówienia {orderId} zostały zaktualizowane.'
           order-metadata: Metadane zamówienia
@@ -2741,6 +2752,12 @@ fleetbase:
     done: "Gotowe"
     close: "Zamknij"
     help: "Pomoc"
+    upload_spreadsheets:
+      title: "Prześlij arkusze kalkulacyjne"
+      description: "Prześlij pliki arkuszy kalkulacyjnych, przeciągając je i upuszczając lub wybierając z urządzenia."
+    start_upload:
+      title: "Rozpocznij przesyłanie"
+      description: "Zainicjuj przesyłanie i przetwarzanie wybranych plików arkuszy kalkulacyjnych."
 
   orders:
     tour:
@@ -2750,12 +2767,6 @@ fleetbase:
       import_button:
         title: "Importuj zamówienia"
         description: "Importuj zamówienia z pliku arkusza kalkulacyjnego w celu wydajnego przetwarzania zbiorczego."
-      upload_spreadsheets:
-        title: "Prześlij arkusze kalkulacyjne"
-        description: "Prześlij pliki arkuszy kalkulacyjnych, przeciągając je i upuszczając lub wybierając z urządzenia."
-      start_upload:
-        title: "Rozpocznij przesyłanie"
-        description: "Zainicjuj przesyłanie i przetwarzanie wybranych plików arkuszy kalkulacyjnych."
       dates:
         title: "Harmonogram zamówień"
         description: "Zdefiniuj datę rozpoczęcia i przewidywaną datę zakończenia, aby określić harmonogram zamówienia."
@@ -2855,6 +2866,9 @@ fleetbase:
 
   drivers:
     tour:
+      import_button: 
+        title: "Importuj sterowniki"
+        description: "Importuj sterowniki z pliku arkusza kalkulacyjnego, aby wydajnie przetwarzać zbiorczo."
       new_button:
         title: "Utwórz nowego kierowcę"
         description: "Otwiera formularz umożliwiający utworzenie nowego profilu kierowcy i wprowadzenie danych kierowcy."
@@ -2870,6 +2884,9 @@ fleetbase:
 
   vehicles:
     tour:
+      import_button: 
+        title: "Importuj pojazdy"
+        description: "Importuj pojazdy z pliku arkusza kalkulacyjnego, aby zapewnić wydajne przetwarzanie zbiorcze."
       new_button:
         title: "Utwórz nowy pojazd"
         description: "Otwiera formularz, aby utworzyć nowy profil pojazdu i wprowadzić informacje dotyczące pojazdu."
@@ -2885,6 +2902,9 @@ fleetbase:
 
   places:
     tour:
+      import_button: 
+        title: "Importuj miejsca"
+        description: "Importuj miejsca z pliku arkusza kalkulacyjnego, aby wydajnie przetwarzać zbiorczo."
       new_button:
         title: "Przycisk 'Nowe miejsce'"
         description: "Otwiera formularz tworzenia miejsca, w którym można zdefiniować szczegóły lokalizacji nowego miejsca."
@@ -3063,6 +3083,9 @@ fleetbase:
 
   fleets:
     tour:
+      import_button:
+        title: "Importuj floty"
+        description: "Importuj floty z pliku arkusza kalkulacyjnego, aby wydajnie przetwarzać zbiorczo."
       new_button:
         title: "Przycisk Nowa flota"
         description: "Otwiera formularz tworzenia floty, w którym możesz zdefiniować szczegóły floty."
