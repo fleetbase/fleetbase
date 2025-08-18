@@ -136,7 +136,6 @@ export default class VehicleFormPanelComponent extends Component {
     validate() {
         const requiredFields = [
             'plate_number',
-            'vin',
             'make',
             'model',
             'year',
