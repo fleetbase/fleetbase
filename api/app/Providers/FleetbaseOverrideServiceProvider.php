@@ -41,45 +41,60 @@ class FleetbaseOverrideServiceProvider extends ServiceProvider
                    
                     
                     Route::middleware(['fleetbase.api', TransformLocationMiddleware::class])
-                    
                     ->group(function () {
                         Route::prefix('expense-reports')->group(function () {
-                        Route::post('/', 'App\Http\Controllers\Api\v1\ExpenseReportController@create')
-                            ->name('expense-reports.create');
-                        Route::get('/', 'App\Http\Controllers\Api\v1\ExpenseReportController@list')
-                            ->name('expense-reports.list');
-                        Route::delete('/{id}', 'App\Http\Controllers\Api\v1\ExpenseReportController@delete')
-                            ->name('expense-reports.delete');
-                        Route::put('/{id}', 'App\Http\Controllers\Api\v1\ExpenseReportController@update')
-                            ->name('expense-reports.update');
-                    });
-                    Route::prefix('parking-areas')->group(function () {
-                        Route::get('/create', 'App\Http\Controllers\Api\v1\ParkingAreaController@insert')
-                        ->name('parking-areas.create');
-                        Route::post('/', 'App\Http\Controllers\Api\v1\ParkingAreaController@nearest')
-                        ->name('parking-areas');
-                        Route::get('/list', 'App\Http\Controllers\Api\v1\ParkingAreaController@list')
-                        ->name('parking-areas.list');
-                    });
+                            Route::post('/', 'App\Http\Controllers\Api\v1\ExpenseReportController@create')
+                                ->name('expense-reports.create');
+                            Route::get('/', 'App\Http\Controllers\Api\v1\ExpenseReportController@list')
+                                ->name('expense-reports.list');
+                            Route::delete('/{id}', 'App\Http\Controllers\Api\v1\ExpenseReportController@delete')
+                                ->name('expense-reports.delete');
+                            Route::put('/{id}', 'App\Http\Controllers\Api\v1\ExpenseReportController@update')
+                                ->name('expense-reports.update');
+                        });
+                        
+                        Route::prefix('parking-areas')->group(function () {
+                            Route::get('/create', 'App\Http\Controllers\Api\v1\ParkingAreaController@insert')
+                                ->name('parking-areas.create');
+                            Route::post('/', 'App\Http\Controllers\Api\v1\ParkingAreaController@nearest')
+                                ->name('parking-areas');
+                            Route::get('/list', 'App\Http\Controllers\Api\v1\ParkingAreaController@list')
+                                ->name('parking-areas.list');
+                        });
 
-                    Route::post('/orders/{id}/start', 'App\Http\Controllers\Api\v1\CustomOrderController@driverAcceptance')
-                    ->name('orders.driverAcceptance'); // Give it the same name as Fleetbase's route
-                    Route::post('/orders/{id}/update-activity', 'App\Http\Controllers\Api\v1\CustomOrderController@driverActivity')
-                    ->name('orders.driverActivity');
-                    Route::middleware('auth:sanctum')->group(function () {
-                        Route::prefix('leave-requests')->group(function () {
-                        Route::post('/create', 'App\Http\Controllers\Api\v1\LeaveRequestController@store')
-                        ->name('leave-requests.create');
-                        Route::put('/{id}', 'App\Http\Controllers\Api\v1\LeaveRequestController@update')
-                        ->name('leave-requests.update');
-                        Route::get('/list', 'App\Http\Controllers\Api\v1\LeaveRequestController@list')
-                        ->name('leave-requests.list');
-                        Route::delete('/{id}', 'App\Http\Controllers\Api\v1\LeaveRequestController@destroy')
-                        ->name('leave-requests.destroy');
+                        Route::post('/orders/{id}/start', 'App\Http\Controllers\Api\v1\CustomOrderController@driverAcceptance')
+                            ->name('orders.driverAcceptance');
+                        Route::post('/orders/{id}/update-activity', 'App\Http\Controllers\Api\v1\CustomOrderController@driverActivity')
+                            ->name('orders.driverActivity');
+                            
+                        Route::middleware('auth:sanctum')->group(function () {
+                            Route::prefix('leave-requests')->group(function () {
+                                Route::post('/create', 'App\Http\Controllers\Api\v1\LeaveRequestController@store')
+                                    ->name('leave-requests.create');
+                                Route::put('/{id}', 'App\Http\Controllers\Api\v1\LeaveRequestController@update')
+                                    ->name('leave-requests.update');
+                                Route::get('/list', 'App\Http\Controllers\Api\v1\LeaveRequestController@list')
+                                    ->name('leave-requests.list');
+                                Route::delete('/{id}', 'App\Http\Controllers\Api\v1\LeaveRequestController@destroy')
+                                    ->name('leave-requests.destroy');
+                            });
+                        });
                     });
-                    });
-                });
                     
+                    // Shift assignment routes moved inside Fleetbase middleware for authorization
+                    Route::middleware(['fleetbase.api', TransformLocationMiddleware::class])
+                        ->group(function () {
+                            Route::prefix('shift-assignments')->group(function () {
+                                Route::get('/data', 'App\Http\Controllers\Api\v1\ShiftAssignmentController@getShiftAssignmentData')
+                                    ->name('shift-assignments.data');
+                                Route::get('/current-week', 'App\Http\Controllers\Api\v1\ShiftAssignmentController@getCurrentWeekData')
+                                    ->name('shift-assignments.current-week');
+                                Route::get('/next-week', 'App\Http\Controllers\Api\v1\ShiftAssignmentController@getNextWeekData')
+                                    ->name('shift-assignments.next-week');
+                                Route::get('/available-drivers', 'App\Http\Controllers\Api\v1\ShiftAssignmentController@getAvailableDrivers')
+                                    ->name('shift-assignments.available-drivers');
+                            });
+                        });
                 });
             });
     }
