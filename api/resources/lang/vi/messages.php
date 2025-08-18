@@ -43,5 +43,6 @@ return [
     'leave_already_rejected' => 'Yêu cầu nghỉ phép đã bị từ chối trước đó.',
     'email_address_validation' => 'Vui lòng nhập địa chỉ email hợp lệ.',
     'required_field' => 'Vui lòng điền các trường bắt buộc.',
+    'duplicate_check_fleet' => 'Một đội xe với tên hoặc chiều dài chuyến đi này đã tồn tại.'
 ];
 

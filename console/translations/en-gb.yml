@@ -231,6 +231,7 @@ common:
   to_date_before_from_date_error: The 'To' date cannot be earlier than the 'From' date.
   trip-length: Trip Length
   trip-length-placeholder: Enter trip length in hours
+  trip_length_invalid: Trip length must be a positive number greater than 0
 component:
   comment-thread:
     comment-input-empty-notification: You cannot publish empty comments...

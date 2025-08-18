@@ -56,5 +56,6 @@ return [
     'past_date_message' => 'La richiesta di permesso non può essere inviata per date passate',
     'overlap_message_vehicle' => 'Il veicolo è già non disponibile per il periodo selezionato',
     'leave_request_update_success' => 'La richiesta di permesso è stata aggiornata con successo',
-    'request_update_success_vehicle' => 'La richiesta di veicolo è stata aggiornata con successo'
+    'request_update_success_vehicle' => 'La richiesta di veicolo è stata aggiornata con successo',
+    'duplicate_check_fleet' => 'Esiste già una flotta con questo nome o questa durata del viaggio.',
 ];

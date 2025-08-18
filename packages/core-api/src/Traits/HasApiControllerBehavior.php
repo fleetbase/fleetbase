@@ -602,7 +602,13 @@ trait HasApiControllerBehavior
                     return response()->error(__('messages.duplicate_check_place'));
                 }
             }
-
+            else if ($model_name == "Fleet") {
+                $fleetName = $request['fleet']['name'] ?? null;
+                $tripLength = $request['fleet']['trip_length'] ?? null;
+                if ($this->model->where('name', $fleetName)->whereNull('deleted_at')->exists() || $this->model->where('trip_length', $tripLength)->whereNull('deleted_at')->exists()) {
+                    return response()->error(__('messages.duplicate_check_fleet'));
+                }
+            }
             $record = $this->model->createRecordFromRequest($request, $onBeforeCallback, $onAfterCallback);
 
             if (Http::isInternalRequest($request)) {

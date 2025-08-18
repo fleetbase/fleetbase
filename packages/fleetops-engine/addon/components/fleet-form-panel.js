@@ -69,8 +69,7 @@ export default class FleetFormPanelComponent extends Component {
     @task *save() {
         // Validate before saving
         if (!this.validate()) {
-            showErrorOnce(this, this.notifications, this.intl.t('validation.form_invalid'));
-            return;
+            return; // Stop execution if validation fails
         }
         contextComponentCallback(this, 'onBeforeSave', this.fleet);
 
@@ -110,11 +109,17 @@ export default class FleetFormPanelComponent extends Component {
             'status',
             'trip_length'
         ];
+        const tripLength = parseInt(this.fleet.trip_length, 10);
         const hasEmptyRequired = requiredFields.some(field => !this.fleet[field] || this.fleet[field].toString().trim() === '');
         if (hasEmptyRequired) {
             showErrorOnce(this, this.notifications, this.intl.t('validation.form_invalid'));
             return false;
         }
+        if (isNaN(tripLength) || tripLength <= 0) {
+            showErrorOnce(this, this.notifications, this.intl.t('common.trip_length_invalid'));
+            return false;
+        }
+        
         return true;
     }
 
@@ -157,4 +162,6 @@ export default class FleetFormPanelComponent extends Component {
             this.fleet.set(underscore(relation) + '_uuid', null);
         }
     }
+
+ 
 }
