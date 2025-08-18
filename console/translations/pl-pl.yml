@@ -1579,6 +1579,12 @@ fleet-ops:
         start-date-required: Wymagana jest data rozpoczęcia.
         end-date-required: Wymagana jest data zakończenia.
         end-date-earlier: Data zakończenia nie może być wcześniejsza niż data rozpoczęcia.
+        assign-vehicle: Przypisać pojazd?
+        assign-vehicle-busy-text: Pojazd {vehicleName} jest <strong>obecnie przypisany do innego aktywnego zlecenia</strong>. Czy na pewno chcesz przypisać go do zlecenia {orderId}?
+        assign-driver-busy-text: Kierowca {driverName} jest <strong>obecnie przypisany do innego aktywnego zlecenia</strong>. Czy na pewno chcesz przypisać go do zlecenia {orderId}?
+        assign-anyway: Kontynuuj przypisanie
+        assign-driver-vehicle: Przypisać kierowcę i pojazd?
+        assign-driver-vehicle-busy-text: Kierowca {driverName} i pojazd {vehicleName} <strong>są obecnie przypisani do innego aktywnego zlecenia</strong>. Czy mimo to chcesz przypisać im zlecenie {orderId}?
     widget:
       fleet-ops-quickstart:
         message: Zobacz, co możesz zrobić, aby szybko rozpocząć operacje...

@@ -1575,6 +1575,12 @@ fleet-ops:
         start-date-required: Start Date is required.
         end-date-required: End Date is required.
         end-date-earlier: End Date cannot be earlier than the Start Date.
+        assign-vehicle: Assign Vehicle?
+        assign-vehicle-busy-text: The vehicle {vehicleName} is <strong>currently assigned to another active order</strong>. Are you sure you want to assign it to order {orderId}?
+        assign-driver-busy-text: The driver {driverName} is <strong>currently assigned to another active order</strong>. Are you sure you want to assign it to order {orderId}?
+        assign-anyway: Continue with Assignment
+        assign-driver-vehicle: Assign Driver & Vehicle?
+        assign-driver-vehicle-busy-text: The driver {driverName} and the vehicle {vehicleName} <strong> are currently assigned to another active order</strong>. Do you still want to assign Order {orderId} to them?
     widget:
       fleet-ops-quickstart:
         message: Let's see what you can do to jumpstart operations...

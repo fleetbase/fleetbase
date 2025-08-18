@@ -1666,6 +1666,12 @@ fleet-ops:
           de asignar un nuevo controlador () al pedido. Haga clic en continuar para
           confirmar el controlador.
         assign-busy-text: El conductor ({driverName}) <strong >{availability}</strong>. ¿Aún desea asignarle la orden {orderId}? Haga clic en "Continuar" para confirmar.
+        assign-vehicle: ¿Asignar vehículo?
+        assign-vehicle-busy-text: El vehículo {vehicleName} está <strong>actualmente asignado a otro pedido activo</strong>. ¿Está seguro de que desea asignarlo al pedido {orderId}?
+        assign-driver-busy-text: El conductor {driverName} está <strong>actualmente asignado a otro pedido activo</strong>. ¿Está seguro de que desea asignarlo al pedido {orderId}?
+        assign-anyway: Continuar con la asignación
+        assign-driver-vehicle: ¿Asignar conductor y vehículo?
+        assign-driver-vehicle-busy-text: El conductor {driverName} y el vehículo {vehicleName} <strong>están actualmente asignados a otro pedido activo</strong>. ¿Desea asignarles igualmente el pedido {orderId}?
         assign-button: Continuar y asignar el conductor.
         driver-has-no-vehicle: El conductor seleccionado no tiene un vehículo asignado. Asigne un vehículo o elija otro conductor con vehículo antes de continuar.
         driver-no-vehicle-title: Tanto el conductor como el vehículo deben ser seleccionados para continuar.
