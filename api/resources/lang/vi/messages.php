@@ -43,6 +43,11 @@ return [
     'leave_already_rejected' => 'Yêu cầu nghỉ phép đã bị từ chối trước đó.',
     'email_address_validation' => 'Vui lòng nhập địa chỉ email hợp lệ.',
     'required_field' => 'Vui lòng điền các trường bắt buộc.',
+    'fleet_uuid' => [
+        'required' => 'Cần chọn đội xe.',
+        'exists'   => 'Đội xe phải hợp lệ và đang hoạt động.',
+        'driver_already_assigned' => 'Fahrer :driver ist bereits der Flotte :fleet zugewiesen. Ein Fahrer kann nur zu einer Flotte gehören.',
+    ],
     'duplicate_check_fleet' => 'Một đội xe với tên hoặc chiều dài chuyến đi này đã tồn tại.'
 ];
 

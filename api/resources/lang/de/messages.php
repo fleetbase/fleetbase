@@ -59,5 +59,9 @@ return [
     'overlap_message_vehicle' => 'Das Fahrzeug ist bereits für den ausgewählten Zeitraum nicht verfügbar',
     'leave_request_update_success' => 'Der Urlaubsantrag wurde erfolgreich aktualisiert',
     'request_update_success_vehicle' => 'Der Fahrzeugantrag wurde erfolgreich aktualisiert',
+    'fleet_uuid' => [
+        'required' => 'Flotte wird benötigt.',
+        'exists'   => 'Die Flotte muss gültig und aktiv sein.',
+    ],
     'duplicate_check_fleet' => 'A fleet with this name or trip length already exists.',
 ];

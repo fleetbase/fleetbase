@@ -57,5 +57,10 @@ return [
     'overlap_message_vehicle' => 'Il veicolo è già non disponibile per il periodo selezionato',
     'leave_request_update_success' => 'La richiesta di permesso è stata aggiornata con successo',
     'request_update_success_vehicle' => 'La richiesta di veicolo è stata aggiornata con successo',
+    'fleet_uuid' => [
+        'required' => 'La flotta è obbligatoria.',
+        'exists'   => 'La flotta deve essere valida e attiva.',
+        'driver_already_assigned' => 'L\'autista :driver è già assegnato alla flotta :fleet. Un autista può appartenere solo a una flotta.',
+    ],
     'duplicate_check_fleet' => 'Esiste già una flotta con questo nome o questa durata del viaggio.',
 ];
