@@ -99,12 +99,11 @@ export default class FleetFormPanelComponent extends Component {
             showErrorOnce(this, this.notifications, this.intl.t('validation.form_invalid'));
             return false;
         }
-        else{
-            if (isNaN(tripLength) || tripLength <= 0) {
-                showErrorOnce(this, this.notifications, this.intl.t('common.trip_length_invalid'));
-                return false;
-            }
+        if (isNaN(tripLength) || tripLength <= 0) {
+            showErrorOnce(this, this.notifications, this.intl.t('common.trip_length_invalid'));
+            return false;
         }
+        
         return true;
     }
 
