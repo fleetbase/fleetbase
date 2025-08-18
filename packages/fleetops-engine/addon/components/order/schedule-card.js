@@ -20,6 +20,7 @@ export default class OrderScheduleCardComponent extends Component {
     @service modalsManager;
     @service notifications;
     @service abilities;
+    @service analytics;
     @tracked timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
     @tracked isAssigningDriver = false;
     @tracked drivers = [];
@@ -926,6 +927,21 @@ export default class OrderScheduleCardComponent extends Component {
     @action
     assignVehicleNew(vehicle) {
         const eventBus = this.effectiveEventBus;
+        // Track vehicle assignment attempt
+        if (this.analytics && this.analytics.isInitialized) {
+            this.analytics.trackEvent('vehicle_assignment_attempt', {
+                vehicle_id: vehicle?.id,
+                vehicle_uuid: vehicle?.uuid,
+                vehicle_name: vehicle?.display_name,
+                vehicle_plate: vehicle?.plate_number,
+                order_id: this.args.order.id,
+                order_uuid: this.args.order.uuid,
+                order_public_id: this.args.order.public_id,
+                vehicle_available: vehicle?.is_unassigned,
+                assignment_type: isBlank(vehicle) ? 'unassign' : 'assign'
+            });
+        }
+
         try {
             // Close any open modals using Ember's modal service
             if (this.modalsManager && typeof this.modalsManager.done === 'function') {

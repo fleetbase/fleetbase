@@ -194,7 +194,42 @@ class Vehicle extends Model
     {
         return $this->hasManyThrough(Fleet::class, FleetVehicle::class, 'vehicle_uuid', 'uuid', 'uuid', 'fleet_uuid');
     }
+    /**
+     * The `fleetDrivers` function defines a relationship where a fleet has many drivers based on their
+     * UUIDs.
+     * 
+     * @return `fleetDrivers` function is returning a relationship 
+     */
+    public function fleetVehicles()
+    {
+        return $this->hasMany(FleetVehicle::class, 'vehicle_uuid', 'uuid');
+    }
 
+
+
+    /**
+     * The function `validateFleetUuid` checks if a fleet with a given UUID exists, is active, and not
+     * deleted in the database.
+     * 
+     * @param string fleetUuid The `validateFleetUuid` function takes a string parameter named
+     * ``, which represents the unique identifier of a fleet. This function validates the fleet
+     * UUID by checking if a fleet with the provided UUID exists, is active, and has not been deleted. If
+     * the fleet does not meet these criteria
+     *
+     */
+    public static function validateFleetUuid(string $fleetUuid)
+    {
+        $fleet = Fleet::where('uuid', $fleetUuid)
+            ->where('status', 'active')
+            ->whereNull('deleted_at')
+            ->first();
+
+        if (!$fleet) {
+        throw new \Exception(__('messages.fleet_uuid.exists'));
+        }
+
+        return $fleet;
+    }
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */

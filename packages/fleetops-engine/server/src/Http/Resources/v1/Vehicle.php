@@ -18,6 +18,8 @@ class Vehicle extends FleetbaseResource
     public function toArray($request)
     {
         return [
+            'fleet_vehicles' => FleetVehicle::collection($this->whenLoaded('fleetVehicles')),
+
             'id'                     => $this->when(Http::isInternalRequest(), $this->id, $this->public_id),
             'uuid'                   => $this->when(Http::isInternalRequest(), $this->uuid),
             'public_id'              => $this->when(Http::isInternalRequest(), $this->public_id),
@@ -28,6 +30,7 @@ class Vehicle extends FleetbaseResource
             'driver'                 => $this->whenLoaded('driver', fn () => new Driver($this->driver)),
             'devices'                => $this->whenLoaded('devices', fn () => $this->devices),
             'photo_url'              => $this->photo_url,
+
             'avatar_url'             => $this->avatar_url,
             'avatar_value'           => $this->when(Http::isInternalRequest(), $this->getOriginal('avatar_url')),
             'make'                   => $this->make,
