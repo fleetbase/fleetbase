@@ -247,26 +247,28 @@ class LeaveRequestController extends Controller
                     ], 400);
                 }
             }
-            // Check for overlapping leave requests
-            $existingLeaveRequest = LeaveRequest::where([
-                    ['user_uuid', '=', $input['user_uuid']],
-                    ['company_uuid', '=', Auth::getCompany()->uuid],
-                    ['record_status', '=', 1],
-                    ['deleted', '=', 0],
-            ])
-                ->where(function ($query) use ($input) {
-                    $query->where('start_date', '<=', $input['end_date'])
-                          ->where('end_date', '>=', $input['start_date']);
-                })
-                ->whereNull('deleted_at')
-                ->where('id', '!=', $leaveRequest->id)
-                ->first();
+            else{
+                // Check for overlapping leave requests
+                $existingLeaveRequest = LeaveRequest::where([
+                        ['user_uuid', '=', $input['user_uuid']],
+                        ['company_uuid', '=', Auth::getCompany()->uuid],
+                        ['record_status', '=', 1],
+                        ['deleted', '=', 0],
+                ])
+                    ->where(function ($query) use ($input) {
+                        $query->where('start_date', '<=', $input['end_date'])
+                            ->where('end_date', '>=', $input['start_date']);
+                    })
+                    ->whereNull('deleted_at')
+                    ->where('id', '!=', $leaveRequest->id)
+                    ->first();
 
-            if ($existingLeaveRequest) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'You already have a leave request for these dates',
-                ], 400);
+                if ($existingLeaveRequest) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'You already have a leave request for these dates',
+                    ], 400);
+                }
             }
         }
 
