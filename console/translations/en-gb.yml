@@ -86,6 +86,7 @@ auth:
     verification-input-label: Verification Code
     verify-button-text: Verify & Continue
 common:
+  import-success: Import successful!
   2fa-config: 2FA Config
   account: Account
   admin: Admin
@@ -228,7 +229,8 @@ common:
   from: From
   filter-by: Filter by
   to_date_before_from_date_error: The 'To' date cannot be earlier than the 'From' date.
-  
+  trip-length: Trip Length
+  trip-length-placeholder: Enter trip length in hours
 component:
   comment-thread:
     comment-input-empty-notification: You cannot publish empty comments...

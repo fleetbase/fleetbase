@@ -803,6 +803,14 @@ class DriverController extends FleetOpsController
             ];
             $hasValidationErrors = true;
         }
+        if (empty($email)) {
+            $errors[] = [
+                (string)$displayRowIndex,
+                "Driver email is required.",
+                ""
+            ];
+            $hasValidationErrors = true;
+        }
 
         // Email validation
         if (!empty($email)) {
