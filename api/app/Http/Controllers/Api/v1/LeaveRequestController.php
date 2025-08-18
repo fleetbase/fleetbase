@@ -44,13 +44,15 @@ class LeaveRequestController extends Controller
                 ['deleted', '=', 0],
             ]);
         
-        if(isset($unavailability_type))
+        if(!isset($unavailability_type)) //for mobile app leave list
+        {
+            $query->whereNull('unavailability_type');
+        }
+        if(isset($unavailability_page) && isset($unavailability_type)) //for mantence page
         {
             $query->where('unavailability_type', 'vehicle');
         }
-        else{
-            $query->whereNull('unavailability_type');
-        }
+        //unavailability_type = vehicle passed it shows all the list of leaves & vehicles
         $query->orderBy('id', 'desc');
         // 🔍 Apply filters with mapped columns
     foreach ($filterMap as $requestKey => $columnName) {
