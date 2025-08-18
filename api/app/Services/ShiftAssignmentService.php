@@ -144,15 +144,11 @@ class ShiftAssignmentService
         foreach ($drivers as $driver) {
             // Get unavailable dates for this driver
             $unavailableDates = $this->getUnavailableDates($driver, $start, $end);
-            
-            // Get driver preferences
-            $preferences = $this->getDriverPreferences($driver);
-            
             // Create resource entry for this driver
             $resources[] = [
                 'id' => $driver->uuid,
                 'name' => $driver->name,
-                'preferences' => $preferences,
+                'preferences' => [],
                 'unavailable_dates' => $unavailableDates,
                 'preferred_rest_days' => [] // Could be populated from driver preferences in the future
             ];
@@ -224,40 +220,7 @@ class ShiftAssignmentService
         }
     }
     
-    /**
-     * Get driver preferences
-     *
-     * @param Driver $driver
-     * @return array|null
-     */
-    private function getDriverPreferences(Driver $driver): ?array
-    {
-        // This would typically come from a driver preferences table
-        // For now, we'll generate some sample preferences based on driver ID
-        $driverId = $driver->public_id;
-        
-        // Generate different preferences for different drivers
-        $preferences = [
-            'D001' => null,
-            'D002' => ['preferred_start_time' => '00:00', 'preferred_end_time' => '12:00'],
-            'D003' => ['preferred_start_time' => '06:00', 'preferred_end_time' => '18:00'],
-            'D004' => ['preferred_start_time' => '04:00', 'preferred_end_time' => '12:00'],
-            'D005' => ['preferred_start_time' => '00:00', 'preferred_end_time' => '12:00'],
-            'D006' => ['preferred_start_time' => '06:00', 'preferred_end_time' => '18:00'],
-            'D007' => ['preferred_start_time' => '00:00', 'preferred_end_time' => '12:00'],
-            'D008' => ['preferred_start_time' => '12:00', 'preferred_end_time' => '18:00'],
-            'D009' => ['preferred_start_time' => '06:00', 'preferred_end_time' => '12:00'],
-            'D010' => ['preferred_start_time' => '06:00', 'preferred_end_time' => '18:00'],
-            'D012' => null,
-            'D013' => ['preferred_start_time' => '12:00', 'preferred_end_time' => '18:00'],
-            'D015' => ['preferred_start_time' => '18:00', 'preferred_end_time' => '23:00'],
-            'D016' => ['preferred_start_time' => '06:00', 'preferred_end_time' => '12:00'],
-            'D017' => ['preferred_start_time' => '10:00', 'preferred_end_time' => '16:00'],
-            'D018' => null
-        ];
-        
-        return $preferences[$driverId] ?? null;
-    }
+    
     
     /**
      * Get orders as shifts
