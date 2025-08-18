@@ -62,5 +62,6 @@ return [
     'past_date_message' => 'Cannot submit request for past dates',
     'overlap_message_vehicle' => 'Vehicle is already unavailable for the selected period',
     'leave_request_update_success' => 'Leave request has been updated successfully',
-    'request_update_success_vehicle' => 'Vehicle request has been updated successfully'
+    'request_update_success_vehicle' => 'Vehicle request has been updated successfully',
+    'duplicate_check_fleet' => 'A fleet with this name or trip length already exists.',
 ];
