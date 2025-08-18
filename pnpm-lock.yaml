@@ -1,0 +1,31 @@
+lockfileVersion: '9.0'
+
+settings:
+  autoInstallPeers: true
+  excludeLinksFromLockfile: false
+
+importers:
+
+  .:
+    dependencies:
+      chargebee:
+        specifier: ^3.10.0
+        version: 3.11.0
+      date-fns:
+        specifier: ^4.1.0
+        version: 4.1.0
+
+packages:
+
+  chargebee@3.11.0:
+    resolution: {integrity: sha512-in8xJ4KFtAnC8/xKjqaTkHPGEpVVUf8rRgNLmeg1QoCXaSGJNIS8YBXY4x5SVJ5TND+eRSK2JhxgvDfUgmGwUQ==}
+    engines: {node: '>=18.*'}
+
+  date-fns@4.1.0:
+    resolution: {integrity: sha512-Ukq0owbQXxa/U3EGtsdVBkR1w7KOQ5gIBqdH2hkvknzZPYvBxb/aa6E8L7tmjFtkwZBu3UXBbjIgPo/Ez4xaNg==}
+
+snapshots:
+
+  chargebee@3.11.0: {}
+
+  date-fns@4.1.0: {}

@@ -658,6 +658,14 @@ export default class OperationsOrdersIndexViewController extends BaseController 
     
         let vehicleToAssign = null;
         let vehicleIsBusy = false;
+        driverToAssign = order.driver_assigned;
+        if (driverToAssign) {
+            driverIsBusy = (driverToAssign.is_available === false && driverToAssign.have_no_vehicle === false);
+        }
+        vehicleToAssign = order.vehicle_assigned;
+        if (vehicleToAssign) {
+            vehicleIsBusy = (vehicleToAssign.is_vehicle_available == 0);
+        }
 
         let fleetToAssign = null;
         let fleetIsBusy = false;
@@ -875,6 +883,44 @@ export default class OperationsOrdersIndexViewController extends BaseController 
     
                     return true;
                 }
+                if (driverToAssign) {
+                    driverIsBusy = (driverToAssign.is_available === false && driverToAssign.have_no_vehicle === false);
+                }
+                vehicleToAssign = order.vehicle_assigned;
+                if (vehicleToAssign) {
+                    vehicleIsBusy = (vehicleToAssign.is_vehicle_available == 0);
+                }
+                if (vehicleToAssign && vehicleIsBusy && driverToAssign && driverIsBusy) {
+                    // Both busy
+                    setTimeout(() => {
+                        this.modalsManager.confirm({
+                            title: this.intl.t('fleet-ops.component.order.schedule-card.assign-driver-vehicle'),
+                            body: this.intl.t('fleet-ops.component.order.schedule-card.assign-driver-vehicle-busy-text', {
+                                driverName: driverToAssign.name,
+                                driverAvailability: driverToAssign.availability_message,
+                                driverButton: driverToAssign.button_message,
+                                vehicleName: vehicleToAssign.name,
+                                vehicleAvailability: vehicleToAssign.availability_message,
+                                vehicleButton: vehicleToAssign.button_message,
+                                orderId: order.public_id
+                            }),
+                            acceptButtonText: this.intl.t('fleet-ops.component.order.schedule-card.ok-button'),
+
+                            confirm: async (confirmModal) => {
+                                confirmModal.startLoading();
+                                await saveOrder();
+                            },
+                            decline: (confirmModal) => {
+                                confirmModal.done();
+                                setTimeout(() => {
+                                    resetOrderToOriginal();
+                                }, 100);
+                            }
+                        });
+                    }, 300);
+                    return true;
+                }
+
                 // If vehicle is busy, show the busy confirmation
                 if (vehicleToAssign && vehicleIsBusy) {
                     setTimeout(() => {

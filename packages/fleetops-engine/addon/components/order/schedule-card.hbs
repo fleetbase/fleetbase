@@ -129,7 +129,7 @@
                         @renderInPlace={{true}}
                         @disabled={{or (eq @order.status "completed") @order.isIntegratedVendorOrder}}
                         @allowClear={{true}}
-                        @onChange={{fn (mut @order.vehicle_assigned)}}
+                        @onChange={{fn this.handleVehicleChange @order}}
                         as |model|
                     >
                         <div class="flex items-center">

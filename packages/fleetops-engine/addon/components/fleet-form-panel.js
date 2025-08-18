@@ -14,6 +14,7 @@ export default class FleetFormPanelComponent extends Component {
     @service hostRouter;
     @service intl;
     @service contextPanel;
+    @service analytics;
 
     /**
      * Overlay context.
@@ -75,6 +76,21 @@ export default class FleetFormPanelComponent extends Component {
 
         try {
             this.fleet = yield this.fleet.save();
+
+            // Track fleet action in analytics
+            if (this.analytics && this.analytics.isInitialized) {
+                const action = this.fleet.isNew ? 'created' : 'updated';
+                this.analytics.trackFleetAction(action, {
+                    id: this.fleet.id,
+                    uuid: this.fleet.uuid,
+                    name: this.fleet.name,
+                    type: this.fleet.type,
+                    size: this.fleet.size,
+                    vehicles_count: this.fleet.vehicles_count,
+                    drivers_count: this.fleet.drivers_count,
+                    company: this.fleet.company?.name
+                });
+            }
         } catch (error) {
             this.notifications.serverError(error);
             return;
