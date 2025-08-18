@@ -62,4 +62,5 @@ return [
         'exists'   => 'La flotte doit être valide et active.',
         'driver_already_assigned' => 'Le conducteur :driver est déjà affecté à la flotte :fleet. Un conducteur ne peut appartenir qu\'à une seule flotte.',
     ],
+    'duplicate_check_fleet' => 'Une flotte avec ce nom ou cette durée de trajet existe déjà.',
 ];

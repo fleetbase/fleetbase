@@ -62,4 +62,5 @@ return [
         'exists'   => 'La flota debe ser válida y estar activa.',
         'driver_already_assigned' => 'El conductor :driver ya está asignado a la flota :fleet. Un conductor solo puede pertenecer a una flota.',
     ],
+    'duplicate_check_fleet' => 'Ya existe una flota con este nombre o esta duración de viaje.',
 ];

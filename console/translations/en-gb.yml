@@ -86,6 +86,7 @@ auth:
     verification-input-label: Verification Code
     verify-button-text: Verify & Continue
 common:
+  import-success: Import successful!
   2fa-config: 2FA Config
   account: Account
   admin: Admin
@@ -228,7 +229,9 @@ common:
   from: From
   filter-by: Filter by
   to_date_before_from_date_error: The 'To' date cannot be earlier than the 'From' date.
-  
+  trip-length: Trip Length
+  trip-length-placeholder: Enter trip length in hours
+  trip_length_invalid: Trip length must be a positive number greater than 0
 component:
   comment-thread:
     comment-input-empty-notification: You cannot publish empty comments...
@@ -1360,6 +1363,8 @@ fleet-ops:
         assign-vehicle: Assign Vehicle?
         assign-vehicle-busy-text: The vehicle {vehicleName} is <strong>currently assigned to another active order</strong>. Are you sure you want to assign it to order {orderId}?
         assign-anyway: Continue with Assignment
+        assign-driver-vehicle: Assign Driver & Vehicle?
+        assign-driver-vehicle-busy-text: The driver {driverName} and the vehicle {vehicleName} <strong> are currently assigned to another active order</strong>. Do you still want to assign Order {orderId} to them?
         cannot-edit-completed: Cannot edit completed orders
         cannot-modify-complete-order: Cannot modify a completed order.
         date: Date scheduled

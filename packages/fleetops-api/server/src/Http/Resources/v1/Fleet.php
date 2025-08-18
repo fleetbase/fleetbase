@@ -45,6 +45,7 @@ class Fleet extends FleetbaseResource
             'vehicles'              => $this->whenLoaded('vehicles', fn () => Vehicle::collection($this->vehicles)),
             'updated_at'            => $this->updated_at,
             'created_at'            => $this->created_at,
+            'trip_length'           => $this->trip_length,
         ];
     }
 
@@ -65,6 +66,7 @@ class Fleet extends FleetbaseResource
             'zone'         => $this->when($this->zone, data_get($this, 'zone.public_id')),
             'updated_at'   => $this->updated_at,
             'created_at'   => $this->created_at,
+            'trip_length'  => $this->trip_length,
         ];
     }
 }

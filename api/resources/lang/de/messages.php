@@ -62,5 +62,6 @@ return [
     'fleet_uuid' => [
         'required' => 'Flotte wird benötigt.',
         'exists'   => 'Die Flotte muss gültig und aktiv sein.',
-    ]
+    ],
+    'duplicate_check_fleet' => 'A fleet with this name or trip length already exists.',
 ];

@@ -16,6 +16,7 @@ export default class VehicleFormPanelComponent extends Component {
     @service notifications;
     @service hostRouter;
     @service contextPanel;
+    @service analytics;
 
     /**
      * Overlay context.
@@ -27,10 +28,10 @@ export default class VehicleFormPanelComponent extends Component {
      * Status options for vehicles.
      * @type {Array}
      */
-    @tracked vehicleStatusOptions =  [
+    @tracked vehicleStatusOptions = [
         { value: 'active', translationKey: 'statuses.active' },
         { value: 'pending', translationKey: 'statuses.pending' }
-      ];
+    ];
 
     /**
      * Permission needed to update or create record.
@@ -94,8 +95,8 @@ export default class VehicleFormPanelComponent extends Component {
      * @memberof VehicleFormPanelComponent
      */
     @task *save() {
-         // Validate before saving
-         if (!this.validate()) {
+        // Validate before saving
+        if (!this.validate()) {
             showErrorOnce(this, this.notifications, this.intl.t('validation.form_invalid'));
             return;
         }
@@ -103,6 +104,22 @@ export default class VehicleFormPanelComponent extends Component {
 
         try {
             this.vehicle = yield this.vehicle.save();
+
+            // Track vehicle action in analytics
+            if (this.analytics && this.analytics.isInitialized) {
+                const action = this.vehicle.isNew ? 'created' : 'updated';
+                this.analytics.trackVehicleAction(action, {
+                    id: this.vehicle.id,
+                    uuid: this.vehicle.uuid,
+                    name: this.vehicle.displayName,
+                    plate: this.vehicle.plate_number,
+                    type: this.vehicle.type,
+                    model: this.vehicle.model,
+                    year: this.vehicle.year,
+                    status: this.vehicle.status,
+                    company: this.currentUser.company?.name
+                });
+            }
         } catch (error) {
             this.notifications.serverError(error);
             return;

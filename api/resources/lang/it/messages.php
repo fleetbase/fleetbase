@@ -62,4 +62,5 @@ return [
         'exists'   => 'La flotta deve essere valida e attiva.',
         'driver_already_assigned' => 'L\'autista :driver è già assegnato alla flotta :fleet. Un autista può appartenere solo a una flotta.',
     ],
+    'duplicate_check_fleet' => 'Esiste già una flotta con questo nome o questa durata del viaggio.',
 ];

@@ -68,5 +68,6 @@ return [
         'exists' => 'Fleet must be valid and active.',
         'driver_already_assigned' => 'Driver :driver is already assigned to Fleet :fleet. A driver can only belong to one fleet.',
 
-    ]
+    ],
+    'duplicate_check_fleet' => 'A fleet with this name or trip length already exists.',
 ];
