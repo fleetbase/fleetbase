@@ -813,7 +813,7 @@ fleet-ops:
     height: Höhe
     host: Gastgeber
     id: ID
-    internal-id: Interne ID
+    internal-id: Amazon-Kennung
     item: Artikel
     key: Schlüssel
     label: Etikett
@@ -1127,6 +1127,15 @@ fleet-ops:
         order-config: Bestellkonfiguration
         parking: Parküberwachung
         toll-reports: Mautausgaben
+        maintenance-schedule: Wartungsplan
+    maintenance-schedule-form-panel:
+      create: Wartungsplan erstellen
+      save: Wartungsplan speichern
+      notes: Notizen
+      view: Details anzeigen
+      title: Wartungsplan
+      success-message: Wartungsplan erfolgreich gespeichert.
+      on-maintenance: Wartungsplan aktiv
     live-map-drawer:
       driver-listing:
         location: Standort
@@ -1586,6 +1595,12 @@ fleet-ops:
         start-date-required: Startdatum ist erforderlich.
         end-date-required: Enddatum ist erforderlich.
         end-date-earlier: Das Enddatum darf nicht vor dem Startdatum liegen.
+        assign-vehicle: Fahrzeug zuweisen?
+        assign-vehicle-busy-text: Das Fahrzeug {vehicleName} ist <strong>derzeit einem anderen aktiven Auftrag zugewiesen</strong>. Sind Sie sicher, dass Sie es dem Auftrag {orderId} zuweisen möchten?
+        assign-driver-busy-text: Der Fahrer {driverName} ist <strong>derzeit einem anderen aktiven Auftrag zugewiesen</strong>. Sind Sie sicher, dass Sie ihn dem Auftrag {orderId} zuweisen möchten?
+        assign-anyway: Mit der Zuweisung fortfahren
+        assign-driver-vehicle: Fahrer & Fahrzeug zuweisen?
+        assign-driver-vehicle-busy-text: Der Fahrer {driverName} und das Fahrzeug {vehicleName} <strong>sind derzeit einem anderen aktiven Auftrag zugewiesen</strong>. Möchten Sie den Auftrag {orderId} trotzdem ihnen zuweisen?
     widget:
       fleet-ops-quickstart:
         message: Sehen wir uns an, was Sie tun können, um den Betrieb zu starten...
@@ -2270,8 +2285,8 @@ fleet-ops:
           order-type: Bestelltyp
           order-type-help-text: Die Auswahl des Bestelltyps gibt an, welche Bestellkonfigurationen von FleetYes verwendet werden sollen.
           order-type-placeholder: Bestelltyp auswählen
-          internal-id: Interne ID
-          internal-id-help-text: Verwenden Sie dieses Feld, um optional eine benutzerdefinierte oder interne Identifikationsnummer für die Bestellung festzulegen.
+          internal-id: Amazon-Kennung
+          internal-id-help-text: Verwenden Sie dieses Feld, um optional eine benutzerdefinierte Kennung festzulegen
           schedule: Startdatum
           estimated-end-date: Voraussichtliches Enddatum
           schedule-help-text: Das Datum und die Uhrzeit, zu der die Bestellung versendet wird. Wenn zu diesem Zeitpunkt kein Fahrer zugewiesen ist, schlägt der Versand fehl. Wenn die Bestellung ad-hoc ist, wird sie an Fahrer in der Nähe des Abholorts gesendet.

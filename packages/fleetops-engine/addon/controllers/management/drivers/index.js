@@ -242,8 +242,8 @@ export default class ManagementDriversIndexController extends BaseController {
                         this.notifications.serverError(error);
                     });
             },
-            valuePath: 'vehicle.display_name',
-            modelNamePath: 'display_name',
+            valuePath: 'vehicleDisplayName',
+            modelNamePath: 'vehicleDisplayName',
             resizable: true,
             width: '180px',
             filterable: true,
@@ -560,10 +560,17 @@ export default class ManagementDriversIndexController extends BaseController {
                     return;
                 }
             } catch (error) {
-                console.log("Processing error:", error);
+                console.error('Import failed:', error);
                 modal.stopLoading();
+                this.modalsManager.setOption('isErrorState', false);
+                this.modalsManager.setOption('errorLogUrl', null);
+                this.modalsManager.setOption('uploadQueue', []);
+                this.modalsManager.setOption('acceptButtonText', this.intl.t('fleet-ops.component.modals.order-import.start-upload-button'));
+                this.modalsManager.setOption('acceptButtonIcon', 'upload');
+                // this.modalsManager.setOption('acceptButtonScheme', 'magic');
+                this.modalsManager.setOption('acceptButtonDisabled', true);
                 this.modalsManager.setOption('isProcessing', false);
-                return this.notifications.serverError(error);
+                this.notifications.serverError(error);
             }
     
             // Success case - process the results, passing onImportSuccess callback

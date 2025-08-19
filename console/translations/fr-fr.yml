@@ -151,6 +151,7 @@ common:
   to_date_before_from_date_error: La date « À » ne peut pas être antérieure à la date « De ».
   trip-length: Durée du trajet
   trip-length-placeholder: Saisissez la durée du trajet en heures
+  trip_length_invalid: La durée du trajet doit être un nombre positif supérieur à 0.
 leaves:
   driver_name: Nom du conducteur
   start_date: Date de début
@@ -816,7 +817,7 @@ fleet-ops:
     height: Hauteur
     host: Hôte
     id: ID
-    internal-id: ID Interne
+    internal-id: Identifiant Amazon
     item: Élément
     key: Clé
     label: Étiquette
@@ -1126,6 +1127,15 @@ fleet-ops:
         order-config: Configuration de commande
         parking: 	Surveillance Parking
         toll-reports: Dépenses de péage
+        maintenance-schedule: Plan de Maintenance
+    maintenance-schedule-form-panel:
+      create: Créer un Plan de Maintenance
+      save: Enregistrer le Plan de Maintenance
+      notes: Notes
+      view: Voir les Détails
+      title: Plan de Maintenance
+      success-message: Plan de maintenance enregistré avec succès.
+      on-maintenance: En maintenance
     live-map-drawer:
       driver-listing:
         location: Localisation
@@ -1582,6 +1592,12 @@ fleet-ops:
         start-date-required: La date de début est requise.
         end-date-required: La date de fin est requise.
         end-date-earlier: La date de fin ne peut pas être antérieure à la date de début.
+        assign-vehicle: Assigner un véhicule ?
+        assign-vehicle-busy-text: Le véhicule {vehicleName} est <strong>actuellement affecté à une autre commande active</strong>. Êtes-vous sûr de vouloir l’affecter à la commande {orderId} ?
+        assign-driver-busy-text: Le conducteur {driverName} est <strong>actuellement affecté à une autre commande active</strong>. Êtes-vous sûr de vouloir l’affecter à la commande {orderId} ?
+        assign-anyway: Continuer l’affectation
+        assign-driver-vehicle: Assigner un conducteur et un véhicule ?
+        assign-driver-vehicle-busy-text: Le conducteur {driverName} et le véhicule {vehicleName} <strong>sont actuellement affectés à une autre commande active</strong>. Voulez-vous quand même leur attribuer la commande {orderId} ?
     widget:
       fleet-ops-quickstart:
         message: Voyons ce que vous pouvez faire pour lancer les opérations...
@@ -2265,8 +2281,8 @@ fleet-ops:
           order-type: Type de commande
           order-type-help-text: La sélection du type de commande indiquera à FleetYes quelles configurations de commande utiliser.
           order-type-placeholder: Sélectionner le type de commande
-          internal-id: ID interne
-          internal-id-help-text: Utilisez ce champ pour définir un identifiant personnalisé ou un identifiant interne pour la commande.
+          internal-id: Identifiant Amazon
+          internal-id-help-text: Utilisez ce champ pour définir éventuellement un identifiant personnalisé
           schedule: Date de début
           estimated-end-date: Date de fin estimée
           schedule-help-text: La date et l'heure auxquelles la commande sera expédiée. Si aucun conducteur n'est assigné au moment de l'expédition, l'expédition échouera. Si la commande est Ad-Hoc, elle sera envoyée aux conducteurs à proximité du lieu de ramassage.

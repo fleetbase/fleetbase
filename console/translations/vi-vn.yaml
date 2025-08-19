@@ -149,6 +149,7 @@ common:
   to_date_before_from_date_error: Ngày "Đến" không thể sớm hơn ngày "Từ".
   trip-length: Thời gian chuyến đi
   trip-length-placeholder: Nhập thời gian chuyến đi tính bằng giờ
+  trip_length_invalid: Chiều dài chuyến đi phải là một số dương lớn hơn 0.
 leaves:
   driver_name: Tên tài xế
   start_date: Ngày bắt đầu
@@ -819,7 +820,7 @@ fleet-ops:
     height: Chiều cao
     host: Máy chủ
     id: ID
-    internal-id: Mã nội bộ
+    internal-id: Mã định danh Amazon
     item: Mục
     key: Khóa
     label: Nhãn
@@ -952,6 +953,12 @@ fleet-ops:
           start-date-required: Cần nhập ngày bắt đầu.
           end-date-required: Cần nhập ngày kết thúc.
           end-date-earlier: Ngày kết thúc không được sớm hơn ngày bắt đầu.
+          assign-vehicle: Gán phương tiện?
+          assign-vehicle-busy-text: Phương tiện {vehicleName} <strong>hiện đang được gán cho một đơn hàng khác đang hoạt động</strong>. Bạn có chắc chắn muốn gán nó cho đơn hàng {orderId} không?
+          assign-driver-busy-text: Tài xế {driverName} <strong>hiện đang được gán cho một đơn hàng khác đang hoạt động</strong>. Bạn có chắc chắn muốn gán anh ấy cho đơn hàng {orderId} không?
+          assign-anyway: Tiếp tục gán
+          assign-driver-vehicle: Gán tài xế & phương tiện?
+          assign-driver-vehicle-busy-text: Tài xế {driverName} và phương tiện {vehicleName} <strong>hiện đang được gán cho một đơn hàng khác đang hoạt động</strong>. Bạn có muốn vẫn gán đơn hàng {orderId} cho họ không?
         place-form-panel:
           coordinates-required: "Yêu cầu nhập tọa độ vị trí."
           coordinates-invalid: "Tọa độ vị trí không hợp lệ. Vui lòng nhập vĩ độ và kinh độ hợp lệ."
@@ -978,6 +985,18 @@ fleet-ops:
         title: Tạo đơn hàng
         settings: Cài đặt
         order-config: Cấu hình đơn hàng
+  component:
+    layout:       
+      fleet-ops-sidebar:  
+        maintenance-schedule: Lịch bảo trì
+    maintenance-schedule-form-panel:
+      create: Tạo Lịch Bảo Trì
+      save: Lưu Lịch Bảo Trì
+      notes: Ghi chú
+      view: Xem chi tiết
+      title: Lịch bảo trì
+      success-message: Lịch bảo trì đã được lưu thành công.
+      on-maintenance: Đang bảo trì
   management:
     metrics: 
       title: Các chỉ số IAM
@@ -1029,8 +1048,8 @@ fleet-ops:
           order-type: Loại đơn hàng
           order-type-help-text: Chọn loại đơn hàng sẽ cho FleetYes biết cấu hình đơn hàng cần sử dụng.
           order-type-placeholder: Chọn loại đơn hàng
-          internal-id: Mã nội bộ
-          internal-id-help-text: Sử dụng trường này để tùy chọn đặt mã định danh tùy chỉnh hoặc mã định danh nội bộ cho đơn hàng.
+          internal-id: Mã định danh Amazon
+          internal-id-help-text: Sử dụng trường này để tùy chọn đặt mã định danh tùy chỉnh
           schedule: Ngày bắt đầu
           estimated-end-date: Ngày kết thúc dự kiến
           schedule-help-text: Ngày và giờ mà đơn hàng sẽ được giao. Nếu không có tài xế được chỉ định vào thời gian giao hàng, việc giao hàng sẽ thất bại. Nếu đơn hàng là Ad-Hoc, đơn hàng sẽ được gửi đến các tài xế trong khu vực đón hàng.

@@ -86,6 +86,7 @@ auth:
     verification-input-label: Verification Code
     verify-button-text: Verify & Continue
 common:
+  import-success: Import successful!
   2fa-config: 2FA Config
   account: Account
   admin: Admin
@@ -230,6 +231,7 @@ common:
   to_date_before_from_date_error: The 'To' date cannot be earlier than the 'From' date.
   trip-length: Trip Length
   trip-length-placeholder: Enter trip length in hours
+  trip_length_invalid: Trip length must be a positive number greater than 0
 component:
   comment-thread:
     comment-input-empty-notification: You cannot publish empty comments...
@@ -434,7 +436,7 @@ fleet-ops:
     host: Host
     id: ID
     import: Import
-    internal-id: Internal ID
+    internal-id: Amazon Identifier
     item: Item
     key: Key
     label: Label
@@ -858,11 +860,20 @@ fleet-ops:
         toll-reports: Toll Expenses
         vehicles: Vehicles
         vendors: Vendors
+        maintenance-schedule: Maintenance Schedule
     leaves-report-panel:
       cancel-edit-leaves-report: Cancel edit Leaves Report
       cancel-new-leaves-report: Cancel new Leaves Report
       edit-button: Edit Leaves Report
       title: Leaves Report
+    maintenance-schedule-form-panel:
+      create: Create Maintenance Schedule
+      save: Save Maintenance Schedule
+      notes: Notes
+      view: View Details
+      title: Maintenance Schedule
+      success-message: Maintenance schedule saved successfully.
+      on-maintenance: on Maintenance
     live-map:
       assign-fleet: 'Assign Fleet to Service Area: {serviceName}'
       assign-zone: 'Assign Fleet to Zone: {zoneName}'
@@ -1360,7 +1371,10 @@ fleet-ops:
           {orderId}. Click continue to confirm driver.
         assign-vehicle: Assign Vehicle?
         assign-vehicle-busy-text: The vehicle {vehicleName} is <strong>currently assigned to another active order</strong>. Are you sure you want to assign it to order {orderId}?
+        assign-driver-busy-text: The driver {driverName} is <strong>currently assigned to another active order</strong>. Are you sure you want to assign it to order {orderId}?
         assign-anyway: Continue with Assignment
+        assign-driver-vehicle: Assign Driver & Vehicle?
+        assign-driver-vehicle-busy-text: The driver {driverName} and the vehicle {vehicleName} <strong>are currently assigned to another active order</strong>. Do you still want to assign Order {orderId} to them?
         cannot-edit-completed: Cannot edit completed orders
         cannot-modify-complete-order: Cannot modify a completed order.
         date: Date scheduled
@@ -2032,7 +2046,7 @@ fleet-ops:
           infoblock-text: is not able to support this location.
           input-field-required: The {inputFieldName} is required.
           input-order-info-text: Input order route to view service quotes.
-          internal-id: Internal ID
+          internal-id: Amazon Identifier
           internal-id-help-text: Use this field to optionally set a custom identifier
             or internal identifier for the order.
           invalid-coordinates: Invalid coordinates!

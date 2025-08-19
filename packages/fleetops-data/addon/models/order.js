@@ -111,6 +111,15 @@ export default class OrderModel extends Model {
     @bool('dispatched') isDispatched;
     @not('dispatched') isNotDispatched;
 
+    @computed('vehicle_assigned.plate_number', 'vehicle_assigned.model')
+    get vehicleDisplayName() {
+        const vehicle = this.vehicle_assigned;
+        if (!vehicle) return 'No Vehicle';
+        
+        const segments = [vehicle.plate_number, vehicle.model];
+        return segments.filter(Boolean).join(' ').trim() || 'No Vehicle';
+    }
+
     @computed('payload.{pickup.name,current_waypoint_uui,waypoints.@each.name}')
     get pickupName() {
         const { payload, meta } = this;

@@ -149,6 +149,7 @@ common:
   to_date_before_from_date_error: La data "A" non può essere precedente alla data "Da".
   trip-length: Durata del viaggio
   trip-length-placeholder: Inserisci la durata del viaggio in ore
+  trip_length_invalid: La durata del viaggio deve essere un numero positivo maggiore di 0.
 leaves:
   driver_name: Nome dell'autista
   start_date: Data di inizio
@@ -666,7 +667,7 @@ fleet-ops:
     height: Altezza
     host: Host
     id: ID
-    internal-id: ID Interno
+    internal-id: Identificatore Amazon
     item: Articolo
     key: Chiave
     label: Etichetta
@@ -975,6 +976,15 @@ fleet-ops:
         order-config: Configurazione Ordine
         parking: Monitoraggio parcheggi
         toll-reports: Spese di pedaggio
+        maintenance-schedule: Pianificazione della Manutenzione
+    maintenance-schedule-form-panel:
+      create: Crea Piano di Manutenzione
+      save: Salva Piano di Manutenzione
+      notes: Note
+      view: Visualizza Dettagli
+      title: Piano di Manutenzione
+      success-message: Piano di Manutenzione salvato con successo.
+      on-maintenance: In manutenzione
     live-map-drawer:
       driver-listing:
         location: Posizione
@@ -1429,6 +1439,12 @@ fleet-ops:
         start-date-required: La data di inizio è richiesta.
         end-date-required: La data di fine è richiesta.
         end-date-earlier: La data di fine non può essere precedente alla data di inizio.
+        assign-vehicle: Assegnare veicolo?
+        assign-vehicle-busy-text: Il veicolo {vehicleName} è <strong>attualmente assegnato a un altro ordine attivo</strong>. Sei sicuro di volerlo assegnare all’ordine {orderId}?
+        assign-driver-busy-text: L’autista {driverName} è <strong>attualmente assegnato a un altro ordine attivo</strong>. Sei sicuro di volerlo assegnare all’ordine {orderId}?
+        assign-anyway: Continua con l’assegnazione
+        assign-driver-vehicle: Assegnare autista e veicolo?
+        assign-driver-vehicle-busy-text: L’autista {driverName} e il veicolo {vehicleName} <strong>sono attualmente assegnati a un altro ordine attivo</strong>. Vuoi comunque assegnare loro l’ordine {orderId}?
     widget:
       fleet-ops-quickstart:
         message: Vediamo cosa puoi fare per avviare le operazioni...
@@ -2109,8 +2125,8 @@ fleet-ops:
           order-type: Tipo Ordine
           order-type-help-text: Selezionando il tipo di ordine, FleetYes saprà quale configurazione di ordine utilizzare.
           order-type-placeholder: Seleziona Tipo Ordine
-          internal-id: ID Interno
-          internal-id-help-text: Usa questo campo per impostare facoltativamente un identificatore personalizzato o interno per l'ordine.
+          internal-id: Identificatore Amazon
+          internal-id-help-text: Utilizzare questo campo per impostare facoltativamente un identificatore personalizzato
           schedule: Data di inizio
           estimated-end-date: Data di fine stimata
           schedule-help-text: La data e l'ora in cui l'ordine sarà spedito. Se nessun conducente è assegnato al momento della spedizione, la spedizione fallirà. Se l'ordine è Ad-Hoc, sarà inviato ai conducenti nelle vicinanze del ritiro.

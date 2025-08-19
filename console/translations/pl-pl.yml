@@ -151,6 +151,7 @@ common:
   to_date_before_from_date_error: Data „Do” nie może być wcześniejsza niż data „Od”.
   trip-length: Czas trwania podróży
   trip-length-placeholder: Wprowadź czas trwania podróży w godzinach
+  trip_length_invalid: Długość trasy musi być liczbą dodatnią większą niż 0.
 leaves:
   driver_name: Imię kierowcy
   start_date: Data rozpoczęcia
@@ -819,7 +820,7 @@ fleet-ops:
     height: Wysokość
     host: Host
     id: ID
-    internal-id: Wewnętrzny ID
+    internal-id: Identyfikator Amazon
     item: Przedmiot
     key: Klucz
     label: Etykieta
@@ -1123,6 +1124,15 @@ fleet-ops:
         title: Utwórz zamówienie
         settings: Ustawienia
         order-config: Konfiguracja zamówienia
+        maintenance-schedule: Planowanie konserwacji
+    maintenance-schedule-form-panel:
+      create: Utwórz Planowanie konserwacji
+      save: Zapisz Planowanie konserwacji
+      notes: Notatki
+      view: Zobacz szczegóły
+      title: Planowanie konserwacji
+      success-message: Planowanie konserwacji zapisane pomyślnie.
+      on-maintenance: W trakcie konserwacji
     live-map-drawer:
       driver-listing:
         location: Lokalizacja
@@ -1579,6 +1589,12 @@ fleet-ops:
         start-date-required: Wymagana jest data rozpoczęcia.
         end-date-required: Wymagana jest data zakończenia.
         end-date-earlier: Data zakończenia nie może być wcześniejsza niż data rozpoczęcia.
+        assign-vehicle: Przypisać pojazd?
+        assign-vehicle-busy-text: Pojazd {vehicleName} jest <strong>obecnie przypisany do innego aktywnego zlecenia</strong>. Czy na pewno chcesz przypisać go do zlecenia {orderId}?
+        assign-driver-busy-text: Kierowca {driverName} jest <strong>obecnie przypisany do innego aktywnego zlecenia</strong>. Czy na pewno chcesz przypisać go do zlecenia {orderId}?
+        assign-anyway: Kontynuuj przypisanie
+        assign-driver-vehicle: Przypisać kierowcę i pojazd?
+        assign-driver-vehicle-busy-text: Kierowca {driverName} i pojazd {vehicleName} <strong>są obecnie przypisani do innego aktywnego zlecenia</strong>. Czy mimo to chcesz przypisać im zlecenie {orderId}?
     widget:
       fleet-ops-quickstart:
         message: Zobacz, co możesz zrobić, aby szybko rozpocząć operacje...
@@ -2260,8 +2276,8 @@ fleet-ops:
           order-type: Typ zamówienia
           order-type-help-text: Wybór typu zamówienia określi, jaką konfigurację zamówień wykorzysta FleetYes.
           order-type-placeholder: Wybierz typ zamówienia
-          internal-id: ID wewnętrzne
-          internal-id-help-text: Użyj tego pola, aby opcjonalnie ustawić niestandardowy identyfikator lub wewnętrzny identyfikator zamówienia.
+          internal-id: Identyfikator Amazon
+          internal-id-help-text: Użyj tego pola, aby opcjonalnie ustawić własny identyfikator
           schedule: Data rozpoczęcia
           estimated-end-date: Szacowana data zakończenia
           schedule-help-text: Data i godzina wysyłki zamówienia. Jeśli nie przypisano kierowcy, wysyłka nie powiedzie się. W przypadku zamówień Ad-Hoc powiadomienie zostanie wysłane do kierowców w pobliżu miejsca odbioru.

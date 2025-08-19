@@ -16,6 +16,7 @@ export default class PlaceFormPanelComponent extends Component {
     @service notifications;
     @service hostRouter;
     @service contextPanel;
+    @service analytics;
 
     /**
      * Overlay context.
@@ -157,6 +158,22 @@ export default class PlaceFormPanelComponent extends Component {
 
         try {
             this.place = yield this.place.save();
+
+            // Track place action in analytics
+            if (this.analytics && this.analytics.isInitialized) {
+                const action = this.place.isNew ? 'created' : 'updated';
+                this.analytics.trackPlaceAction(action, {
+                    id: this.place.id,
+                    uuid: this.place.uuid,
+                    name: this.place.name,
+                    address: this.place.address,
+                    type: this.place.type,
+                    category: this.place.category,
+                    latitude: this.place.latitude,
+                    longitude: this.place.longitude,
+                    company: this.place.company?.name
+                });
+            }
         } catch (error) {
             this.notifications.serverError(error);
             return;

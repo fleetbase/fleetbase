@@ -32,6 +32,8 @@ use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\Sluggable\HasSlug;
 use Spatie\Sluggable\SlugOptions;
 use WebSocket\Message\Ping;
+use Fleetbase\FleetOps\Models\FleetDriver;
+use Fleetbase\Models\CompanyUser;
 
 class Driver extends Model
 {
@@ -220,6 +222,41 @@ class Driver extends Model
     public function company()
     {
         return $this->belongsTo(\Fleetbase\Models\Company::class);
+    }
+    /**
+     * The `fleetDrivers` function defines a relationship where a fleet has many drivers based on their
+     * UUIDs.
+     * 
+     * @return `fleetDrivers` function is returning a relationship 
+     */
+    public function fleetDrivers()
+    {
+        return $this->hasMany(FleetDriver::class, 'driver_uuid', 'uuid');
+    }
+
+
+    /**
+     * The function `validateFleetUuid` checks if a fleet with a given UUID exists, is active, and not
+     * deleted in the database.
+     * 
+     * @param string fleetUuid The `validateFleetUuid` function takes a string parameter named
+     * ``, which represents the unique identifier of a fleet. This function validates the fleet
+     * UUID by checking if a fleet with the provided UUID exists, is active, and has not been deleted. If
+     * the fleet does not meet these criteria
+     *
+     */
+    public static function validateFleetUuid(string $fleetUuid)
+    {
+        $fleet = Fleet::where('uuid', $fleetUuid)
+            ->where('status', 'active')
+            ->whereNull('deleted_at')
+            ->first();
+
+        if (!$fleet) {
+            throw new \Exception(__('messages.fleet_uuid.exists'));
+        }
+
+        return $fleet;
     }
 
     /**
@@ -691,7 +728,16 @@ class Driver extends Model
             }
 
             // save the user
-            $user->save();
+            if($user->save())
+            {
+                CompanyUser::create([
+                    'company_uuid' => session('company'),
+                    'user_uuid'    => $user->uuid,
+                    'role'         => 'driver',
+                    'status'       => 'active',
+                ]);
+            }
+            
         }
 
         // Fix country format

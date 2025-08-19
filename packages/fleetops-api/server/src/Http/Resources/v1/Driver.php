@@ -9,6 +9,7 @@ use Fleetbase\Http\Resources\User;
 use Fleetbase\LaravelMysqlSpatial\Types\Point;
 use Fleetbase\Support\Http;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Fleetbase\FleetOps\Http\Resources\v1\FleetDriver;
 
 class Driver extends FleetbaseResource
 {
@@ -56,6 +57,7 @@ class Driver extends FleetbaseResource
             'currency'                      => data_get($this, 'currency', Utils::getCurrenyFromCountryCode($this->country)),
             'city'                          => data_get($this, 'city', Utils::getCapitalCityFromCountryCode($this->country)),
             'online'                        => data_get($this, 'online', false),
+            'fleet_drivers'                 => FleetDriver::collection($this->fleetDrivers()->with('fleet')->get()),
             'status'                        => $this->status,
             'token'                         => $this->auth_token,
             'meta'                          => $this->meta,
@@ -66,6 +68,11 @@ class Driver extends FleetbaseResource
             'button_message'                => $this->button_message,
             'have_no_vehicle'               => $this->have_no_vehicle,
             'leave_balance'                 => (int) $this->leave_balance,
+            'fleet' => $this->whenLoaded('fleets', function () {
+                $fleet = $this->fleets()->without('drivers')->first();
+                return $fleet ? new Fleet($fleet) : null;
+            }),
+
         ];
     }
 

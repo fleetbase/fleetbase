@@ -15,6 +15,7 @@ export default class AuthLoginController extends Controller {
     @service intl;
     @service fetch;
     @service currentUser;
+    @service analytics;
 
     constructor() {
         super(...arguments);
@@ -29,7 +30,7 @@ export default class AuthLoginController extends Controller {
         const urlParams = new URLSearchParams(window.location.search);
         const paymentSuccess = urlParams.get('payment_success');
         const message = urlParams.get('message');
-        
+
         if (paymentSuccess === 'true') {
             this.notifications.success(message || 'Payment completed successfully! Please log in to continue.');
         }
@@ -117,6 +118,16 @@ export default class AuthLoginController extends Controller {
         event.preventDefault();
         // get user credentials
         const { identity, password, rememberMe } = this;
+        const rawEmail = identity;
+        const username = rawEmail.split('@')[0];
+        // Track login attempt
+        if (this.analytics && this.analytics.isInitialized) {
+            this.analytics.trackEvent('login_attempt', {
+                login_method: 'email',
+                remember_me: rememberMe,
+                email: username,
+            });
+        }
 
         // If no identity error
         if (!identity) {
@@ -207,27 +218,27 @@ export default class AuthLoginController extends Controller {
      * @memberof AuthLoginController
      */
     @action async sendUserForEmailVerification(email) {
-        
+
         try {
             // Get user details from database using email
             const userResponse = await this.fetch.get('users/find-by-email', { email: email });
-            
+
             if (!userResponse || !userResponse.success || !userResponse.data) {
                 this.notifications.error('Failed to get user details. Please try again.');
                 return this.router.transitionTo('console');
             }
-            
+
             const user = userResponse.data;
             const userId = user.uuid || user.id;
             const companyId = user.company_uuid;
             const chargebeeCustomerId = user.chargebee_customer_id;
-            const chargebeeSubscriptionId = user.chargebee_subscription_id; 
-            
+            const chargebeeSubscriptionId = user.chargebee_subscription_id;
+
             // First check subscription status
             // const subscriptionResponse = await this.fetch.get('onboard/subscription/status', { user_id: userId, company_id: companyId });
-            
+
             // if ( subscriptionResponse.data != null) { 
-            if(chargebeeSubscriptionId != null) {
+            if (chargebeeSubscriptionId != null) {
                 this.isLoading = false;
                 // Subscription exists, proceed with verification
                 return this.fetch.post('auth/create-verification-session', { email, send: true }).then(({ token, session }) => {
@@ -238,8 +249,8 @@ export default class AuthLoginController extends Controller {
                         });
                     });
                 });
-            } else { 
-                
+            } else {
+
                 // Get the latest pricing plan first
                 // const latestPlanResponse = await this.fetch.get('onboard/pricing-plans/latest');
                 // if (!latestPlanResponse || !latestPlanResponse.success) {
@@ -271,8 +282,8 @@ export default class AuthLoginController extends Controller {
                 //     subscription_start_date: dates.start,
                 //     subscription_end_date: dates.end,
                 // });
-                
-                
+
+
                 // if (createResponse && createResponse.success) {
                 //     // Check if payment URL is provided in response
                 //     const paymentUrl = createResponse.redirect_url;
@@ -284,7 +295,7 @@ export default class AuthLoginController extends Controller {
                 //         this.isLoading = false;
                 //         return;
                 //     }
-                    
+
                 //     // If no payment URL, construct one with user data
                 //     const baseUrl = "https://agilecyber-test.chargebee.com/hosted_pages/checkout";
                 //     const params = new URLSearchParams({
@@ -301,14 +312,14 @@ export default class AuthLoginController extends Controller {
                 //         'customer[last_name]': familyName,
                 //         'company': user.company_name || ''
                 //     });
-                    
+
                 //     this.paymentUrl = `${baseUrl}?${params.toString()}`;
                 //     this.showPaymentLoginFrame = true;
                 //     this.startIframePolling();
                 //     this.notifications.success('Please complete payment setup.');
                 //     this.isLoading = false;
                 //     return;
-                    
+
                 //     // If no payment URL, proceed with verification flow
                 //     return this.proceedWithVerification(email, createResponse || {});
                 // } else {
@@ -332,9 +343,9 @@ export default class AuthLoginController extends Controller {
                     'company': user.company_name || '',
                     'redirect_url': `${window.location.origin}/billing/success?user_uuid=${user.uuid}&company_uuid=${user.company_uuid}`,
                 });
-                
+
                 this.paymentUrl = `${baseUrl}?${params.toString()}`;
-                
+
                 console.log('🔗 Generated payment URL:', this.paymentUrl);
                 // console.log('🔗 Redirect URL:', `${window.location.origin}/billing/success`);
                 // console.log('🔗 Current origin:', window.location.origin);
@@ -342,11 +353,11 @@ export default class AuthLoginController extends Controller {
                 this.startIframePolling();
                 this.showPaymentLoginFrame = true;
                 this.notifications.success('Please complete payment setup.');
-                    this.isLoading = false;
+                this.isLoading = false;
                 return;
             }
         } catch (error) {
-            console.log("error",error)
+            console.log("error", error)
             // If API fails, fallback to default verification behavior
             return this.fetch.post('auth/create-verification-session', { email, send: true }).then(({ token, session }) => {
                 return this.session.store.persist({ email }).then(() => {
@@ -400,7 +411,16 @@ export default class AuthLoginController extends Controller {
      *
      * @void
      */
-   success() {
+    success() {
+        // Track successful login
+        if (this.analytics && this.analytics.isInitialized) {
+            this.analytics.trackEvent('login_success', {
+                login_method: 'email',
+                remember_me: this.rememberMe,
+                failed_attempts: this.failedAttempts
+            });
+        }
+
         this.reset('success');
     }
     // async success() {
@@ -414,11 +434,11 @@ export default class AuthLoginController extends Controller {
     //     // console.log("this.currentUser",this.currentUser.number_of_drivers)
     //     // const chargebeeCustomerId = this.currentUser.chargebee_customer_id;
     //     // const chargebeeSubscriptionId = this.currentUser.chargebee_subscription_id; 
-        
+
     //     // First check if subscription is created
     //     try {
     //         // const subscriptionResponse = await this.fetch.get('onboard/subscription/status', { user_id: userId, company_id: companyId });
-            
+
     //         // if (subscriptionResponse.success && subscriptionResponse.data != null) {
     //         if(this.currentUser.chargebee_subscription_id == null) {
     //             // Subscription exists, check if verification is pending
@@ -429,10 +449,10 @@ export default class AuthLoginController extends Controller {
     //                 // Verification is pending, redirect to verification page
     //                 return this.sendUserForEmailVerification(email);
     //             // }
-                
+
     //             // return this.router.transitionTo('console');
     //         } else {
-               
+
     //             // Get the latest pricing plan first
     //             // const latestPlanResponse = await this.fetch.get('onboard/pricing-plans/latest');
     //             // if (!latestPlanResponse || !latestPlanResponse.success) {
@@ -464,8 +484,8 @@ export default class AuthLoginController extends Controller {
     //             //     subscription_start_date: dates.start,
     //             //     subscription_end_date: dates.end,
     //             // });
-                
-                
+
+
     //             // if (createResponse && createResponse.success) {
     //             //     // Check if payment URL is provided in response
     //             //     const paymentUrl = createResponse.redirect_url || createResponse.data?.redirect_url;
@@ -479,12 +499,12 @@ export default class AuthLoginController extends Controller {
     //             if (this.currentUser.email_verified_at == null || empty(this.currentUser.email_verified_at)) {   
     //                 // If no payment URL, construct one with user data
     //                 const userResponse = await this.fetch.get('users/find-by-email', { email: email });
-            
+
     //                 if (!userResponse || !userResponse.success || !userResponse.data) {
     //                     this.notifications.error('Failed to get user details. Please try again.');
     //                     return this.router.transitionTo('console');
     //                 }
-            
+
     //                 const user = userResponse.data;
     //                 const baseUrl = ENV.chargebee.baseUrl;
     //                 const params = new URLSearchParams({
@@ -502,7 +522,7 @@ export default class AuthLoginController extends Controller {
     //                     'company': this.currentUser.company_name || '',
     //                     'redirect_url': `${window.location.origin}/billing/success?user_uuid=${this.currentUser.uuid}&company_uuid=${this.currentUser.company_uuid}`,
     //                 });
-                
+
     //                 this.paymentUrl = `${baseUrl}?${params.toString()}`;
     //                 this.showPaymentLoginFrame = true;
     //                 this.startIframePolling();  
@@ -535,6 +555,15 @@ export default class AuthLoginController extends Controller {
      * @void
      */
     failure(error) {
+        // Track login failure
+        if (this.analytics && this.analytics.isInitialized) {
+            this.analytics.trackEvent('login_failure', {
+                login_method: 'email',
+                error_message: error.toString(),
+                failed_attempts: this.failedAttempts
+            });
+        }
+
         this.notifications.serverError(error);
         this.reset('error');
     }
@@ -574,13 +603,13 @@ export default class AuthLoginController extends Controller {
         if (event.data && event.data.type === 'payment_completed') {
             this.handlePaymentSuccess();
         }
-        
+
         // Handle payment failure
         if (event.data && event.data.type === 'payment_failed') {
             this.closePaymentFrame();
             this.notifications.error('Payment failed. Please try again.');
         }
-        
+
         // Handle payment cancellation
         if (event.data && event.data.type === 'payment_cancelled') {
             this.closePaymentFrame();
@@ -666,7 +695,7 @@ export default class AuthLoginController extends Controller {
             return this.router.transitionTo('console');
         }
     }
-    
+
 
     /**
      * Check if verification is needed after payment completion
@@ -679,10 +708,10 @@ export default class AuthLoginController extends Controller {
 
             // Get user details to check verification status
             const userResponse = await this.fetch.get('users/find-by-email', { email: email });
-            
+
             if (userResponse && userResponse.success && userResponse.data) {
                 const user = userResponse.data;
-                
+
                 // Check if user needs verification
                 if (!user.email_verified_at) {
                     return this.proceedWithVerification(email, { verification_pending: true });
@@ -707,14 +736,14 @@ export default class AuthLoginController extends Controller {
     async proceedWithVerification(email, subscriptionData) {
         // Check if verification is pending from subscription data
         if (subscriptionData && subscriptionData.verification_pending) {
-            return this.router.transitionTo('auth.verification', { 
-                queryParams: { 
-                    token: subscriptionData.token, 
-                    hello: subscriptionData.session 
-                } 
+            return this.router.transitionTo('auth.verification', {
+                queryParams: {
+                    token: subscriptionData.token,
+                    hello: subscriptionData.session
+                }
             });
         }
-        
+
         // Create verification session
         return this.fetch.post('auth/create-verification-session', { email, send: true }).then(({ token, session }) => {
             return this.session.store.persist({ email }).then(() => {
@@ -742,7 +771,7 @@ export default class AuthLoginController extends Controller {
      */
     startIframePolling() {
         this.stopIframePolling(); // Clear any existing interval
-        
+
         this.iframePollingInterval = setInterval(() => {
             const iframe = document.querySelector('iframe[src*="gocardless"]');
             if (iframe && iframe.contentWindow) {
@@ -804,7 +833,7 @@ export default class AuthLoginController extends Controller {
         // reset login form state
         this.isLoading = false;
         this.isSlowConnection = false;
-        
+
         // reset login form state depending on type of reset
         switch (type) {
             case 'success':

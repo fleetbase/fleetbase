@@ -814,7 +814,7 @@ fleet-ops:
     height: Height
     host: Host
     id: ID
-    internal-id: Internal ID
+    internal-id: Amazon Identifier
     item: Item
     key: Key
     label: Label
@@ -1118,6 +1118,7 @@ fleet-ops:
         title: Create Order
         settings: Settings
         order-config: Order Config
+        maintenance-schedule: Maintenance Schedule
     live-map-drawer:
       driver-listing:
         location: Location
@@ -1575,6 +1576,12 @@ fleet-ops:
         start-date-required: Start Date is required.
         end-date-required: End Date is required.
         end-date-earlier: End Date cannot be earlier than the Start Date.
+        assign-vehicle: Assign Vehicle?
+        assign-vehicle-busy-text: The vehicle {vehicleName} is <strong>currently assigned to another active order</strong>. Are you sure you want to assign it to order {orderId}?
+        assign-driver-busy-text: The driver {driverName} is <strong>currently assigned to another active order</strong>. Are you sure you want to assign it to order {orderId}?
+        assign-anyway: Continue with Assignment
+        assign-driver-vehicle: Assign Driver & Vehicle?
+        assign-driver-vehicle-busy-text: The driver {driverName} and the vehicle {vehicleName} <strong>are currently assigned to another active order</strong>. Do you still want to assign Order {orderId} to them?
     widget:
       fleet-ops-quickstart:
         message: Let's see what you can do to jumpstart operations...
@@ -2057,6 +2064,14 @@ fleet-ops:
       edit-button: Edit Leaves Report
       cancel-edit-leaves-report: Cancel edit Leaves Report
       cancel-new-leaves-report: Cancel new Leaves Report
+    maintenance-schedule-form-panel:
+      create: Create Maintenance Schedule
+      save: Save Maintenance Schedule
+      notes: Notes
+      view: View Details
+      title: Maintenance Schedule
+      success-message: Maintenance schedule saved successfully.
+      on-maintenance: on Maintenance
   management:
     contacts:
       index:
@@ -2263,8 +2278,8 @@ fleet-ops:
           order-type: Order Type
           order-type-help-text: Selecting the order type will tell FleetYes what order configurations to use.
           order-type-placeholder: Select Order Type
-          internal-id: Internal ID
-          internal-id-help-text: Use this field to optionally set a custom identifier or internal identifier for the order.
+          internal-id: Amazon Identifier
+          internal-id-help-text: Use this field to optionally set a custom identifier
           schedule: Start Date
           estimated-end-date: Estimated End Date
           schedule-help-text: The date and time the order will be dispatched. If no driver is assigned at time of dispatch, the dispatch will fail. If the order is Ad-Hoc the order will be pinged to drivers in vicinity of pickup.

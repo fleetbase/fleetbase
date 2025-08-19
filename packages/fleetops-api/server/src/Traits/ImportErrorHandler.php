@@ -204,12 +204,14 @@ trait ImportErrorHandler
 
         // Check for missing headers
         $missingHeaders = array_diff($requiredHeaders, $normalizedHeaders);
-
+        $formattedHeaders = array_map(function($header) {
+            return ucwords(str_replace('_', ' ', $header));
+        }, $missingHeaders);
         if (!empty($missingHeaders)) {
             return [
                 'success' => false,
                 'errors' => [
-                    'Import failed: Missing required headers: ' . implode(', ', $missingHeaders),
+                    'Import failed: Missing required headers: ' . implode(', ', $formattedHeaders),
                 ]
             ];
         }

@@ -187,7 +187,7 @@ export default class ManagementVehiclesIndexController extends BaseController {
     @tracked columns = [
         {
             label: this.intl.t('fleet-ops.common.name'),
-            valuePath: 'display_name',
+            valuePath: 'plateNumberModel',
             photoPath: 'avatar_url',
             width: '200px',
             cellComponent: 'table/cell/vehicle-name',
@@ -197,7 +197,7 @@ export default class ManagementVehiclesIndexController extends BaseController {
             sortable: true,
             filterable: true,
             filterComponent: 'filter/string',
-            filterParam: 'display_name',
+            filterParam: 'plateNumberModel',
             showOnlineIndicator: true,
         },
         {
@@ -233,6 +233,15 @@ export default class ManagementVehiclesIndexController extends BaseController {
             label: this.intl.t('fleet-ops.common.id'),
             valuePath: 'public_id',
             cellComponent: 'click-to-copy',
+            width: '120px',
+            resizable: true,
+            sortable: true,
+            filterable: true,
+            filterComponent: 'filter/string',
+        },
+        {
+            label: this.intl.t('fleet-ops.common.internal-id'),
+            valuePath: 'internal_id',
             width: '120px',
             resizable: true,
             sortable: true,
@@ -538,9 +547,16 @@ export default class ManagementVehiclesIndexController extends BaseController {
                 }
                 handleSuccessfulImport(this, results, modal, this.onImportSuccess.bind(this));
             } catch (error) {
-                console.error('Processing error:', error);
+                console.error('Import failed:', error);
                 modal.stopLoading();
-                modal.setOption('isProcessing', false);
+                this.modalsManager.setOption('isErrorState', false);
+                this.modalsManager.setOption('errorLogUrl', null);
+                this.modalsManager.setOption('uploadQueue', []);
+                this.modalsManager.setOption('acceptButtonText', this.intl.t('fleet-ops.component.modals.order-import.start-upload-button'));
+                this.modalsManager.setOption('acceptButtonIcon', 'upload');
+                // this.modalsManager.setOption('acceptButtonScheme', 'magic');
+                this.modalsManager.setOption('acceptButtonDisabled', true);
+                this.modalsManager.setOption('isProcessing', false);
                 this.notifications.serverError(error);
             }
         };

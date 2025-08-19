@@ -4,7 +4,7 @@ namespace Fleetbase\FleetOps\Http\Resources\Internal\v1;
 
 use Fleetbase\FleetOps\Http\Resources\v1\VehicleWithoutDriver;
 use Illuminate\Support\Arr;
-
+use Fleetbase\FleetOps\Http\Resources\v1\FleetVehicle;
 class Vehicle extends VehicleWithoutDriver
 {
     /**
@@ -25,6 +25,7 @@ class Vehicle extends VehicleWithoutDriver
                 'display_name' => $this->display_name,
                 'driver_name'  => $this->driver_name,
                 'is_vehicle_available' => $this->is_vehicle_available,
+                'fleet_vehicles' => FleetVehicle::collection($this->whenLoaded('fleetVehicles')),
             ],
             'id'
         );

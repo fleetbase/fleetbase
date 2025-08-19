@@ -170,6 +170,15 @@ export default class DriverModel extends Model {
 
     @not('hasValidCoordinates') hasInvalidCoordinates;
 
+    @computed('vehicle.plate_number', 'vehicle.model')
+    get vehicleDisplayName() {
+        const vehicle = this.vehicle;
+        if (!vehicle) return 'No Vehicle';
+        
+        const segments = [vehicle.get('plate_number'), vehicle.get('model')];
+        return segments.filter(Boolean).join(' ').trim() || 'No Vehicle';
+    } 
+
     @computed('jobs.@each.status') get activeJobs() {
         return this.jobs.filter((order) => !['completed', 'canceled'].includes(order.status));
     }
