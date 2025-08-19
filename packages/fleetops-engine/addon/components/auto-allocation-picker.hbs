@@ -1,24 +1,33 @@
+{{#if this.isAutoAllocationEnabled}}
 <DropdownButton
     @text="Auto Allocate"
-    @icon="magic"
+    @img="/images/auto-allocation.svg"
+    @imgClass="h-4 w-4 mr-2"
     @type="magic"
-    @size="xs"
+    @size="sm"
     @buttonWrapperClass="mr-2"
     as |dd|
 >
     <div class="filters-dropdown-container w-auto">
         <div class="filters-dropdown-header">
-            <h4>Auto Allocate</h4>
+            <h2 class="auto-allocate-heading">Auto Allocate</h2>
         </div>
         <div class="filters-dropdown-body">
             <div class="flex flex-row gap-4 mb-6 fleetbase-power-select">
-                <DatePicker
-                    @value={{this.autoAllocationDate}}
-                    @onSelect={{@onSelectDate}}
-                    @placeholder="Select Date Range"
-                    @range={{true}}
-                    class="form-input-sm"
-                />
+                <div class="relative inline-block">
+                    <DatePicker
+                        @value={{this.autoAllocationDate}}
+                        @onSelect={{@onSelectDate}}
+                        @placeholder="Select Date Range"
+                        @range={{true}}
+                        @minDate={{this.minDate}}
+                        class="form-input-sm caret-gray-800"
+                        style="color: transparent;"
+                    />
+                    <span class="pointer-events-none absolute inset-0 flex items-center px-3 pr-10 whitespace-nowrap overflow-hidden text-ellipsis text-gray-800 text-sm">
+                        {{if this.prettyDateRange this.prettyDateRange @placeholder}}
+                    </span>
+                </div>
                 <PowerSelect
                     @options={{this.fleetOptions}}
                     @selected={{this.selectedFleet}}
@@ -36,9 +45,10 @@
                 @text="Allocate Now"
                 @type="primary"
                 class="w-full h-12 text-lg font-semibold bg-black text-white"
-                @onClick={{dropdown-fn dd @onAllocate}}
-                @disabled={{not @selectedFleet}}
+                @onClick={{dropdown-fn dd this.allocate}}
+                @disabled={{not this.hasDate}}
             />
         </div>
     </div>
 </DropdownButton>
+{{/if}}
