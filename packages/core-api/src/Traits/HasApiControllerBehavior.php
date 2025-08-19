@@ -387,8 +387,9 @@ trait HasApiControllerBehavior
         }
 
         // Create a new callback that combines date filtering with existing callback
-        
-
+        if (get_class($this->model) === 'Fleetbase\FleetOps\Models\Vehicle') {
+            $data->load('fleetVehicles');
+        }
         
         if (get_class($this->model) === 'Fleetbase\FleetOps\Models\Driver' && $request->has('order_uuid')) {
             $order = \Fleetbase\FleetOps\Models\Order::where('uuid', $request->order_uuid)
