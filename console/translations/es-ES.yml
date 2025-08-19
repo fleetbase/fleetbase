@@ -836,7 +836,7 @@ fleet-ops:
     height: Altura
     host: Anfitrión
     id: Identificación
-    internal-id: Identificación interna
+    internal-id: Identificador de Amazon
     item: Elemento
     key: Llave
     label: Etiqueta
@@ -2423,9 +2423,8 @@ fleet-ops:
           order-type-help-text: Seleccionar el tipo de orden le indicará a FleetYes
             qué configuraciones de orden usar.
           order-type-placeholder: Seleccionar tipo de pedido
-          internal-id: Identificación interna
-          internal-id-help-text: Utilice este campo para definir una ID personalizada
-            o una ID interna para el pedido.
+          internal-id: Identificador de Amazon
+          internal-id-help-text: Use este campo para establecer opcionalmente un identificador personalizado
           schedule: Fecha de inicio
           estimated-end-date: Fecha estimada de finalización
           schedule-help-text: La fecha y hora en que se enviará el pedido. Si no se

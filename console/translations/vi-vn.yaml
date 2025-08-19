@@ -820,7 +820,7 @@ fleet-ops:
     height: Chiều cao
     host: Máy chủ
     id: ID
-    internal-id: Mã nội bộ
+    internal-id: Mã định danh Amazon
     item: Mục
     key: Khóa
     label: Nhãn
@@ -1036,8 +1036,8 @@ fleet-ops:
           order-type: Loại đơn hàng
           order-type-help-text: Chọn loại đơn hàng sẽ cho FleetYes biết cấu hình đơn hàng cần sử dụng.
           order-type-placeholder: Chọn loại đơn hàng
-          internal-id: Mã nội bộ
-          internal-id-help-text: Sử dụng trường này để tùy chọn đặt mã định danh tùy chỉnh hoặc mã định danh nội bộ cho đơn hàng.
+          internal-id: Mã định danh Amazon
+          internal-id-help-text: Sử dụng trường này để tùy chọn đặt mã định danh tùy chỉnh
           schedule: Ngày bắt đầu
           estimated-end-date: Ngày kết thúc dự kiến
           schedule-help-text: Ngày và giờ mà đơn hàng sẽ được giao. Nếu không có tài xế được chỉ định vào thời gian giao hàng, việc giao hàng sẽ thất bại. Nếu đơn hàng là Ad-Hoc, đơn hàng sẽ được gửi đến các tài xế trong khu vực đón hàng.
