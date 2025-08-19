@@ -138,10 +138,10 @@ class DriverController extends FleetOpsController
         }
         
         $existingFleet = FleetDriver::where('fleet_uuid', $input['fleet_uuid'])->first();
-        $driver_name = Driver::where('uuid', $existingFleet->driver_uuid)
+        if ($existingFleet) {
+            $driver_name = Driver::where('uuid', $existingFleet->driver_uuid)
                 ->with('user') // eager load the user
                 ->first();
-        if ($existingFleet) {
             $fleetName = $existingFleet->fleet->name ?? '';
             $driverName = $driver_name->user->name ?? $driver_name->name ?? 'Driver';
 
