@@ -340,10 +340,19 @@ trait HasApiControllerBehavior
                             $startOfDayUtc =$localDate->copy()->startOfDay()->setTimezone('UTC');
                             $endOfDayUtc = $localDate->copy()->endOfDay()->setTimezone('UTC');
                             // Query between the UTC range
-                            $q->where(function ($subQuery) use ($dateColumnStart, $dateColumnEnd, $startOfDayUtc, $endOfDayUtc) {
-                                $subQuery->where($dateColumnStart, '<=', $endOfDayUtc)
-                                        ->where($dateColumnEnd, '>=', $startOfDayUtc);
+                             $q->where(function ($subQuery) use ($dateColumnStart, $dateColumnEnd, $startOfDayUtc, $endOfDayUtc) {
+                                $subQuery->where(function ($sq) use ($dateColumnStart, $dateColumnEnd, $startOfDayUtc, $endOfDayUtc) {
+                                    // Case 1: Orders with end date → check overlap
+                                    $sq->where($dateColumnStart, '<=', $endOfDayUtc)
+                                    ->where($dateColumnEnd, '>=', $startOfDayUtc);
+                                })
+                                ->orWhere(function ($sq) use ($dateColumnStart, $startOfDayUtc, $endOfDayUtc, $dateColumnEnd) {
+                                    // Case 2: Orders without end date → check scheduled_at directly
+                                    $sq->whereNull($dateColumnEnd)
+                                    ->whereBetween($dateColumnStart, [$startOfDayUtc, $endOfDayUtc]);
+                                });
                             });
+
                         } else {
                             // If no timezone specified or it's UTC, use direct date filter
                             $q->where(function ($subQuery) use ($dateColumnStart, $dateColumnEnd, $on) {
