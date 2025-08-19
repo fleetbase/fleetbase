@@ -11,7 +11,6 @@ export default class MaintenanceSchedulePanelComponent extends Component {
         // Normalize fields on the passed record so the template renders values
         try {
             const rec = this.order;
-            console.log(rec)
             if (rec) {
                 // Ensure vehicle displays even if relationship wasn't included
                 if (!rec.vehicle && rec.vehicle_name) {
