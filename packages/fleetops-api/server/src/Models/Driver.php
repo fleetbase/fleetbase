@@ -33,6 +33,7 @@ use Spatie\Sluggable\HasSlug;
 use Spatie\Sluggable\SlugOptions;
 use WebSocket\Message\Ping;
 use Fleetbase\FleetOps\Models\FleetDriver;
+use Fleetbase\Models\CompanyUser;
 
 class Driver extends Model
 {
@@ -727,7 +728,16 @@ class Driver extends Model
             }
 
             // save the user
-            $user->save();
+            if($user->save())
+            {
+                CompanyUser::create([
+                    'company_uuid' => session('company'),
+                    'user_uuid'    => $user->uuid,
+                    'role'         => 'driver',
+                    'status'       => 'active',
+                ]);
+            }
+            
         }
 
         // Fix country format
