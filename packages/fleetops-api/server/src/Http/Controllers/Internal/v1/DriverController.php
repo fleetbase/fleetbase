@@ -28,7 +28,9 @@ use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Log;
 use Fleetbase\FleetOps\Traits\ImportErrorHandler;
 use Fleetbase\Models\File;
-use App\Helpers\FieldValidator;
+use Fleetbase\FleetOps\Models\ImportLog;
+use Illuminate\Support\Facades\Storage;
+use Fleetbase\FleetOps\Models\FleetDriver;
 
 class DriverController extends FleetOpsController
 {
@@ -50,7 +52,6 @@ class DriverController extends FleetOpsController
     public function createRecord(Request $request)
     {
         $input = $request->input('driver');
-
         // create validation request
         $createDriverRequest = CreateDriverRequest::createFrom($request);
         $rules               = $createDriverRequest->rules();
@@ -65,7 +66,6 @@ class DriverController extends FleetOpsController
             if ($validator->errors()->hasAny(['phone', 'email'])) {
                 // get existing user
                 $existingUser = null;
-
                 // if values provided for user lookup
                 if (!empty($input['phone']) || !empty($input['email'])) {
                     $existingUserQuery = User::query();
@@ -127,7 +127,30 @@ class DriverController extends FleetOpsController
             // check from validator object if phone or email is not unique
             return $createDriverRequest->responseWithErrors($validator);
         }
+        if (empty($input['fleet_uuid'])) {
+            return response()->error(__('messages.fleet_uuid.required'));
+        }
+            // Will throw exception if invalid
+            $fleet = Driver::validateFleetUuid($input['fleet_uuid']);
+        if(empty($fleet)) {
+                      return response()->error(__('messages.fleet_uuid.exists'));
+  
+        }
+        
+        $existingFleet = FleetDriver::where('fleet_uuid', $input['fleet_uuid'])->first();
+        if ($existingFleet) {
+            $driver_name = Driver::where('uuid', $existingFleet->driver_uuid)
+                ->with('user') // eager load the user
+                ->first();
+            $fleetName = $existingFleet->fleet->name ?? '';
+            $driverName = $driver_name->user->name ?? $driver_name->name ?? 'Driver';
 
+            return response()->error(__('messages.fleet_uuid.driver_already_assigned', [
+                    'driver' => $driverName,
+                    'fleet'  => $fleetName,
+                ])
+            );
+        }
         try {
             $record = $this->model->createRecordFromRequest(
                 $request,
@@ -201,8 +224,17 @@ class DriverController extends FleetOpsController
                         $input['location'] = new Point(0, 0);
                     }
                 },
-                function ($request, &$driver) {
+               function ($request, &$driver) use (&$input) {
                     $driver->load(['user']);
+                    // Check if driver is already assigned to the fleet
+                    // Otherwise, create the FleetDriver record
+                    FleetDriver::create([
+                        'fleet_uuid' => $input['fleet_uuid'],
+                        'driver_uuid' => $driver->uuid,
+                        'created_at' => now(),
+                        'updated_at' => now(),
+                    ]);
+                    $driver->load('fleetDrivers.fleet');
                 }
             );
 
@@ -225,18 +257,43 @@ class DriverController extends FleetOpsController
     {
         // get input data
         $input = $request->input('driver');
-
         // create validation request
         $updateDriverRequest = UpdateDriverRequest::createFrom($request);
         $rules               = $updateDriverRequest->rules();
 
         // manually validate request
         $validator = Validator::make($input, $rules);
-
+        if (empty($input['fleet_uuid'])) {
+            return response()->error(__('messages.fleet_uuid.required'));
+        }
+        try {
+            // Will throw exception if invalid
+            $fleet = Driver::validateFleetUuid($input['fleet_uuid']);
+            if(empty($fleet)) {
+                return response()->error(__('messages.fleet_uuid.exists'));            
+            }
+        } catch (\Exception $e) {
+            return response()->error(__('messages.fleet_uuid.exists'));
+        }
         if ($validator->fails()) {
             return $updateDriverRequest->responseWithErrors($validator);
         }
+        $existingFleet = FleetDriver::where('fleet_uuid', $input['fleet_uuid'])
+            ->where('driver_uuid', '!=', $id) // $id without quotes
+            ->first();
+        $driver_name = Driver::where('uuid', $existingFleet->driver_uuid)
+                ->with('user') // eager load the user
+                ->first();
+        if ($existingFleet) {
+            $fleetName = $existingFleet->fleet->name ?? '';
+            $driverName = $driver_name->user->name ?? $driver_name->name ?? 'Driver';
 
+            return response()->error(__('messages.fleet_uuid.driver_already_assigned', [
+                    'driver' => $driverName,
+                    'fleet'  => $fleetName,
+                ])
+            );
+        }
         try {
             $driver = $this->model->find($id);
         $currentVehicleUuid = $driver->vehicle_uuid ?? null;
@@ -314,6 +371,17 @@ class DriverController extends FleetOpsController
                         $driverUser->update($userInput);
                         $input['slug'] = $driverUser->slug;
                     }
+                    // ✅ Handle fleet update and remove it from $input
+                    if (isset($input['fleet_uuid']) && Str::isUuid($input['fleet_uuid'])) {
+                        $driver->fleetDrivers()->updateOrCreate(
+                            ['driver_uuid' => $driver->uuid],
+                            ['fleet_uuid' => $input['fleet_uuid']]
+                        );
+
+                        unset($input['fleet_uuid']); // Remove it so updateRecordFromRequest won't see it
+                    }
+
+                    $driver->load('fleetDrivers.fleet');
 
                     // Flush cache
                     $driver->flushAttributesCache();
@@ -537,8 +605,32 @@ class DriverController extends FleetOpsController
     public function import(ImportRequest $request)
     {
         $files = File::whereIn('uuid', $request->input('files'))->get();
-        $requiredHeaders = ['name', 'license', 'country', 'city', 'email'];
-        $result = $this->processImportWithErrorHandling($files, 'driver', function($file) use ($requiredHeaders) {
+        $alreadyProcessed = ImportLog::where('imported_file_uuid', $files[0]->uuid)->first();
+        if($alreadyProcessed){
+            if($alreadyProcessed->status == 'ERROR' || $alreadyProcessed->status == 'PARTIALLY_COMPLETED'){
+                $url = Storage::url($alreadyProcessed['error_log_file_path']);
+                $message = $alreadyProcessed->status == 'ERROR'
+                    ? __('messages.full_import_error')
+                    : __('messages.partial_success');
+                return response()->json([
+                    'error_log_url' => $url,
+                    'message' => $message,
+                     'status' => $alreadyProcessed->status == 'ERROR' ? 'error' : 'partial_success',
+                    'success' => false,
+                ]);
+
+            }
+            if($alreadyProcessed->status == 'COMPLETED')
+            {
+                return response()->json([
+                'success' => true,
+                'message' => "Import completed successfully.",
+                ]);
+            }
+        }
+        $requiredHeaders = ['name', 'phone', 'license', 'country', 'city', 'email'];
+        $validation = [];
+        $result = $this->processImportWithErrorHandling($files, 'driver', function($file) use ($requiredHeaders, &$validation) {
             $disk = config('filesystems.default');
             $data = Excel::toArray(new DriverImport(), $file->path, $disk);
             $totalRows = collect($data)->flatten(1)->count();
@@ -553,12 +645,12 @@ class DriverController extends FleetOpsController
 
             $validation = $this->validateImportHeaders($data, $requiredHeaders);
 
-            if (!$validation['success']) {
-                return response()->json($validation);
-            }
+
             return $this->driverImportWithValidation($data);
         });
-        
+        if (!$validation['success']) {
+            return response()->error($validation['errors']);
+        }
         if (!empty($result['allErrors'])) {
             return response($this->generateErrorResponse($result['allErrors'], 'driver', $files->first()->uuid, $result));
         }
@@ -642,14 +734,6 @@ class DriverController extends FleetOpsController
                 $displayRowIndex = $rowData['displayRowIndex'];
 
                 try {
-
-                    // $fieldsToValidate = ['name', 'license', 'country', 'city', 'email'];
-                    // foreach ($fieldsToValidate as $field) {
-                    //     if (isset($row[$field])) {
-                    //         $fieldErrors = FieldValidator::validateField($field, $row[$field], $displayRowIndex);
-                    //         $importErrors = array_merge($importErrors, $fieldErrors);
-                    //     }
-                    // }
                     // Pre-validation before calling createFromImport
                     $validationErrors = $this->validateDriverRow($row, $displayRowIndex, 
                         $existingEmails, $existingLicenseNumbers, $seenEmails, $seenLicenseNumbers);
@@ -786,6 +870,14 @@ class DriverController extends FleetOpsController
             ];
             $hasValidationErrors = true;
         }
+        if (empty($email)) {
+            $errors[] = [
+                (string)$displayRowIndex,
+                "Driver email is required.",
+                ""
+            ];
+            $hasValidationErrors = true;
+        }
 
         // Email validation
         if (!empty($email)) {
@@ -858,9 +950,6 @@ class DriverController extends FleetOpsController
                 $seenLicenseNumbers[] = $licenseNumber;
             }
         }
-
-
-
         return $errors;
     }
 

@@ -147,6 +147,8 @@ common:
   from: Von
   filter-by: Filtern nach
   to_date_before_from_date_error: Das 'Bis'-Datum kann nicht früher sein als das 'Von'-Datum.
+  trip-length: Fahrtdauer
+  trip-length-placeholder: Geben Sie die Fahrtdauer in Stunden ein
 leaves:
   driver_name: Fahrername
   start_date: Startdatum
@@ -1337,6 +1339,9 @@ fleet-ops:
         select-driver: Fahrer auswählen
         assign-vehicle: Fahrzeug zuweisen
         assign-vehicle-text: Weisen Sie das Fahrzeug zu, mit dem diese Bestellung ausgeführt wird.
+        assign-fleet: Flotte zuweisen
+        assign-fleet-text: Weisen Sie die Flotte zu, mit der diese Bestellung ausgeführt wird.
+        assign-fleet-placeholder: Flotte auswählen
         select-vehicle: Fahrzeug auswählen
       order-import:
         loading-message: Import wird verarbeitet...
@@ -1559,6 +1564,7 @@ fleet-ops:
         show-less: Weniger Details anzeigen
         show-more: Mehr Details anzeigen
       schedule-card:
+        fleet-required: Flotte ist erforderlich
         destination: Ziel
         unassign-driver: Fahrer entfernen?
         unassign-text: Sie sind dabei, den Fahrer für die Bestellung {orderId} zu entfernen. Klicken Sie auf "Weiter", um die Entfernung zu bestätigen.
@@ -1589,6 +1595,12 @@ fleet-ops:
         start-date-required: Startdatum ist erforderlich.
         end-date-required: Enddatum ist erforderlich.
         end-date-earlier: Das Enddatum darf nicht vor dem Startdatum liegen.
+        assign-vehicle: Fahrzeug zuweisen?
+        assign-vehicle-busy-text: Das Fahrzeug {vehicleName} ist <strong>derzeit einem anderen aktiven Auftrag zugewiesen</strong>. Sind Sie sicher, dass Sie es dem Auftrag {orderId} zuweisen möchten?
+        assign-driver-busy-text: Der Fahrer {driverName} ist <strong>derzeit einem anderen aktiven Auftrag zugewiesen</strong>. Sind Sie sicher, dass Sie ihn dem Auftrag {orderId} zuweisen möchten?
+        assign-anyway: Mit der Zuweisung fortfahren
+        assign-driver-vehicle: Fahrer & Fahrzeug zuweisen?
+        assign-driver-vehicle-busy-text: Der Fahrer {driverName} und das Fahrzeug {vehicleName} <strong>sind derzeit einem anderen aktiven Auftrag zugewiesen</strong>. Möchten Sie den Auftrag {orderId} trotzdem ihnen zuweisen?
     widget:
       fleet-ops-quickstart:
         message: Sehen wir uns an, was Sie tun können, um den Betrieb zu starten...
@@ -2281,6 +2293,10 @@ fleet-ops:
           customer: Kunde
           customer-help-text: Weisen Sie dieser Bestellung optional einen Kunden zu. Wenn es sich um einen neuen Kunden handelt, verwenden Sie die Schaltfläche „Neuer Kunde“ oben.
           customer-placeholder: Kunden auswählen
+          fleet: Flotte
+          fleet-help-text: Weisen Sie die Flotte für diese Bestellung zu.
+          fleet-placeholder: Flotte auswählen
+          select-fleet: Flotte auswählen
           facilitator: Vermittler
           facilitator-help-text: Weisen Sie dieser Bestellung optional einen Vermittler zu, der ein Subunternehmer oder Dienstleister für den Transport dieser Bestellung sein kann.
           facilitator-placeholder: Vermittler auswählen
@@ -2414,6 +2430,7 @@ fleet-ops:
           unassign-title: Möchten Sie den Fahrer ({driverName}) von dieser Bestellung abbestellen?
           unassign-body: Sobald der Fahrer abbestellt wurde, hat er keinen Zugriff mehr auf die Bestelldetails.
           unassign-success: Fahrer wurde von dieser Bestellung abbestellt.
+          fleet: Flotte
           edit-route-title: Bestellroute bearbeiten
           route-error: Fehler bei der Routenoptimierung, überprüfen Sie die Routenangabe und versuchen Sie es erneut.
           route-update-success: '{orderId} Routenangaben wurden aktualisiert.'
@@ -3008,6 +3025,9 @@ fleetbase:
 
   drivers:
     tour:
+      import_button:
+        title: "Treiber importieren"
+        description: "Importieren Sie Treiber aus einer Tabelle für eine effiziente Massenverarbeitung."
       new_button:
         title: "Neuen Fahrer erstellen"
         description: "Öffnet das Formular zum Erstellen eines neuen Fahrerprofils und zur Eingabe der Fahrerdaten."
@@ -3023,6 +3043,9 @@ fleetbase:
 
   vehicles:
     tour:
+      import_button:
+        title: "Fahrzeuge importieren"
+        description: "Importieren Sie Fahrzeuge aus einer Tabellenkalkulationsdatei für eine effiziente Massenverarbeitung."
       new_button:
         title: "Neues Fahrzeug anlegen"
         description: "Öffnet das Formular zur Erstellung eines neuen Fahrzeugprofils und zur Eingabe fahrzeugspezifischer Informationen."
@@ -3038,6 +3061,9 @@ fleetbase:
 
   places:
     tour:
+      import_button:
+        title: "Orte importieren"
+        description: "Importieren Sie Orte aus einer Tabellenkalkulationsdatei für eine effiziente Massenverarbeitung."
       new_button:
         title: "Schaltfläche 'Neuer Ort'"
         description: "Öffnet das Formular zur Ortserstellung, in dem Sie die Standortdetails für einen neuen Ort festlegen können."
@@ -3216,6 +3242,9 @@ fleetbase:
 
   fleets:
     tour:
+      import_button:
+        title: "Flotten importieren"
+        description: "Importieren Sie Flotten aus einer Tabellenkalkulationsdatei für eine effiziente Massenverarbeitung."
       new_button:
         title: "Schaltfläche 'Neue Flotte'"
         description: "Öffnet das Formular zur Flottenerstellung, in dem Sie Flottendetails festlegen können."

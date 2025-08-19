@@ -74,6 +74,9 @@ body[data-theme='dark'] .dropdown-menu-item:focus {
     transition: all 0.3s ease-in-out;
     opacity: 1;
     visibility: visible;
+    left: unset;
+    transform: unset;
+    padding: 0px;
   }
   
   .dropdown-list li {

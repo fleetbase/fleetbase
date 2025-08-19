@@ -214,11 +214,35 @@ class PlaceController extends FleetOpsController
     public function import(ImportRequest $request)
     {
         $files = File::whereIn('uuid', $request->input('files'))->get();
+        $alreadyProcessed = ImportLog::where('imported_file_uuid', $files[0]->uuid)->first();
+        if($alreadyProcessed){
+            if($alreadyProcessed->status == 'ERROR' || $alreadyProcessed->status == 'PARTIALLY_COMPLETED'){
+                $url = Storage::url($alreadyProcessed['error_log_file_path']);
+                $message = $alreadyProcessed->status == 'ERROR'
+                    ? __('messages.full_import_error')
+                    : __('messages.partial_success');
+                return response()->json([
+                    'error_log_url' => $url,
+                    'message' => $message,
+                     'status' => $alreadyProcessed->status == 'ERROR' ? 'error' : 'partial_success',
+                    'success' => false,
+                ]);
+
+            }
+            if($alreadyProcessed->status == 'COMPLETED')
+            {
+                return response()->json([
+                'success' => true,
+                'message' => "Import completed successfully.",
+                ]);
+            }
+        }
         $requiredHeaders = [
             'name', 'phone', 'code', 'street1', 'street2', 'city', 'postal_code',
             'country', 'state', 'latitude', 'longitude'
         ];
-        $result = $this->processImportWithErrorHandling($files, 'place', function($file) use ($requiredHeaders) {
+        $validation = [];
+        $result = $this->processImportWithErrorHandling($files, 'place', function($file) use ($requiredHeaders, &$validation) {
             $disk = config('filesystems.default');
             $data = Excel::toArray(new PlaceImport(), $file->path, $disk);
             $totalRows = collect($data)->flatten(1)->count();
@@ -231,12 +255,11 @@ class PlaceController extends FleetOpsController
                 ];
             }
             $validation = $this->validateImportHeaders($data, $requiredHeaders);
-            if (!$validation['success']) {
-                return response()->json($validation);
-            }
             return $this->placeImport($data);
         });
-        
+        if (!$validation['success']) {
+            return response()->error($validation['errors']);
+        }
         if (!empty($result['allErrors'])) {
             return response($this->generateErrorResponse($result['allErrors'], 'place', $files->first()->uuid, $result));
         }

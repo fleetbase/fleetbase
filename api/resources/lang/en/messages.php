@@ -12,7 +12,7 @@ return [
     'load_rejected' => 'Order has been rejected.',
     'duplicate_leave_requests' => 'Leave request already exists for the same period.',
     'request_update_success' => 'Leave Request has been updated successfully',
-    'request_deleted_success' => 'Leave Request has been deleted successfully',
+    'request_deleted_success' => 'The Request has been deleted successfully',
     'request_not_found' => 'Leave Request has not been found',
     'order_import_success' => 'Orders imported successfully',
     'import_failed' => 'Import failed',
@@ -58,5 +58,16 @@ return [
     'leave_already_approved' => 'Leave request has already been approved.',
     'leave_already_rejected' => 'Leave request has already been rejected.',
     'email_address_validation' => 'Please enter a valid email address.',
-    'required_field' => 'Please fill the required fields.'
+    'required_field' => 'Please fill the required fields.',
+    'past_date_message' => 'Cannot submit request for past dates',
+    'overlap_message_vehicle' => 'Vehicle is already unavailable for the selected period',
+    'leave_request_update_success' => 'Leave request has been updated successfully',
+    'request_update_success_vehicle' => 'Vehicle request has been updated successfully',
+    'fleet_uuid' => [
+        'required' => 'Fleet is required.',
+        'exists' => 'Fleet must be valid and active.',
+        'driver_already_assigned' => 'Driver :driver is already assigned to Fleet :fleet. A driver can only belong to one fleet.',
+
+    ],
+    'duplicate_check_fleet' => 'A fleet with this name or trip length already exists.',
 ];

@@ -12,7 +12,7 @@ return [
     'load_rejected' => 'La commande a été rejetée.',
     'duplicate_leave_requests' => 'Une demande de congé existe déjà pour la même période.',
     'request_update_success' => 'La demande de congé a été mise à jour avec succès.',
-    'request_deleted_success' => 'La demande de congé a été supprimée avec succès.',
+    'request_deleted_success' => 'La demande a été supprimée avec succès.',
     'request_not_found' => 'La demande de congé est introuvable.',
     'invalid_activity_status' => 'Statut d\'activité invalide.',
     'status_updated_successfully' => 'Statut mis à jour avec succès',
@@ -53,4 +53,14 @@ return [
     'leave_already_rejected' => 'La demande de congé a déjà été rejetée.',
     'email_address_validation' => 'Veuillez entrer une adresse e-mail valide.',
     'required_field' => 'Veuillez remplir les champs obligatoires.',
+    'past_date_message' => 'La demande de congé ne peut pas être envoyée pour des dates passées',
+    'overlap_message_vehicle' => 'Le véhicule est déjà indisponible pour la période sélectionnée',
+    'leave_request_update_success' => 'La demande de congé a été mise à jour avec succès',
+    'request_update_success_vehicle' => 'La demande de véhicule a été mise à jour avec succès',
+    'fleet_uuid' => [
+        'required' => 'La flotte est obligatoire.',
+        'exists'   => 'La flotte doit être valide et active.',
+        'driver_already_assigned' => 'Le conducteur :driver est déjà affecté à la flotte :fleet. Un conducteur ne peut appartenir qu\'à une seule flotte.',
+    ],
+    'duplicate_check_fleet' => 'Une flotte avec ce nom ou cette durée de trajet existe déjà.',
 ];

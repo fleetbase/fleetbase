@@ -92,6 +92,13 @@ export default class DatePickerComponent extends Component {
         }
     }
 
+    @action handleInput(event) {
+        // Prevent infinite recursion: only clear if not already cleared
+        if (event.target.value === '' && this.currentValue !== null) {
+            this.clear(event);
+        }
+    }
+
     getOptions() {
         const options = this.defaultOptions;
         const { value } = this.args;

@@ -122,7 +122,16 @@
                             </ModelSelect>
                         </InputGroup>
                     {{/if}}
-
+                     <InputGroup 
+                    @name={{t "common.trip-length"}} 
+                    @placeholder={{t "common.trip-length-placeholder"}} 
+                    @value={{this.fleet.trip_length}} 
+                    @type="number" 
+                    min="1" 
+                    disabled={{unauthorized}} 
+                    class="w-full"
+                    @required={{true}}
+                    />
                     <InputGroup @wrapperClass="status-field fleetbase-power-select" @name={{t "fleet-ops.common.status"}} @helpText={{t "fleet-ops.component.fleet-form-panel.select-status-fleet"}} @required={{true}}>
                         <Select
                             @options={{this.statusOptions}}

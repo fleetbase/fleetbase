@@ -338,6 +338,12 @@ export default class OperationsOrdersIndexNewController extends BaseController {
             return;
         } 
 
+        if (!this.order.fleet) {
+            this.errorMessage = this.intl.t('fleet-ops.component.order.schedule-card.fleet-required');
+            this.showErrorOnce(this.errorMessage);
+            return;
+        }
+
         if (new Date(this.order.estimated_end_date) < new Date(this.order.scheduled_at)) {
             this.errorMessage = "End Date cannot be earlier than the start date.";
             this.showErrorOnce(this.errorMessage);

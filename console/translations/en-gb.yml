@@ -86,6 +86,7 @@ auth:
     verification-input-label: Verification Code
     verify-button-text: Verify & Continue
 common:
+  import-success: Import successful!
   2fa-config: 2FA Config
   account: Account
   admin: Admin
@@ -228,7 +229,9 @@ common:
   from: From
   filter-by: Filter by
   to_date_before_from_date_error: The 'To' date cannot be earlier than the 'From' date.
-  
+  trip-length: Trip Length
+  trip-length-placeholder: Enter trip length in hours
+  trip_length_invalid: Trip length must be a positive number greater than 0
 component:
   comment-thread:
     comment-input-empty-notification: You cannot publish empty comments...
@@ -479,7 +482,7 @@ fleet-ops:
     select-vehicle: Vehicle
     service: Service
     service-area: Service area
-    start-date: Start date
+    start-date: Start Date
     start_date_cannot_be_later: Start Date cannot be later than the end date.
     state: State
     status: Status
@@ -1095,6 +1098,9 @@ fleet-ops:
         assign-driver-text: Assign the driver this order will be dispatched to.
         assign-vehicle: Assign Vehicle
         assign-vehicle-text: Assign the vehicle this order will be performed with.
+        assign-fleet: Assign Fleet
+        assign-fleet-text: Assign the fleet this order will be performed with.
+        assign-fleet-placeholder: Select Fleet
         customer: Customer
         customer-text: Optionally assign the customer of this order. If it's a new
           customer, use the 'New Customer' button above.
@@ -1354,6 +1360,7 @@ fleet-ops:
         show-less: Show less details
         show-more: Show more details
       schedule-card:
+        fleet-required: Fleet is required
         assign-busy-button: Continue {button}
         assign-busy-text: The driver ({driverName}) <strong >{availability}</strong>.
           Do you still want to assign Order {orderId} to them? Click Continue {button}
@@ -1364,7 +1371,10 @@ fleet-ops:
           {orderId}. Click continue to confirm driver.
         assign-vehicle: Assign Vehicle?
         assign-vehicle-busy-text: The vehicle {vehicleName} is <strong>currently assigned to another active order</strong>. Are you sure you want to assign it to order {orderId}?
+        assign-driver-busy-text: The driver {driverName} is <strong>currently assigned to another active order</strong>. Are you sure you want to assign it to order {orderId}?
         assign-anyway: Continue with Assignment
+        assign-driver-vehicle: Assign Driver & Vehicle?
+        assign-driver-vehicle-busy-text: The driver {driverName} and the vehicle {vehicleName} <strong>are currently assigned to another active order</strong>. Do you still want to assign Order {orderId} to them?
         cannot-edit-completed: Cannot edit completed orders
         cannot-modify-complete-order: Cannot modify a completed order.
         date: Date scheduled
@@ -2020,6 +2030,10 @@ fleet-ops:
           edit-metadata: Edit Metadata
           edit-order: Edit order metadata
           estimated-end-date: Estimated End Date
+          fleet: Fleet
+          fleet-help-text: Assign the fleet for this order.
+          fleet-placeholder: Select Fleet
+          select-fleet: Select Fleet
           facilitator: Facilitator
           facilitator-help-text: Optionally assign a facilitator for this order, a
             facilitator can be a 3rd party subcontractor or service that will facilitate
@@ -2128,6 +2142,7 @@ fleet-ops:
           edit-item-button: Edit Item
           edit-order-title: Edit Order Details
           edit-route-title: Edit Order Route
+          fleet: Fleet
           facilitator: Facilitator
           get-label: Get Label
           get-order-label: Get Order Label

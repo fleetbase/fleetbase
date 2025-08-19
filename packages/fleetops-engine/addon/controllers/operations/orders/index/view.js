@@ -113,10 +113,10 @@ export default class OperationsOrdersIndexViewController extends BaseController 
         'Order Accepted by the driver.': 'accept-order',
         'Order has been dispatched.': 'dispacth-order',
         'Order status updated by the driver': 'update-order',
-        'Order has been started' : 'start-order',
-        'Driver completes the order' : 'complete-order',
+        'Order has been started': 'start-order',
+        'Driver completes the order': 'complete-order',
         'Order Rejected by the driver.Please assign a new driver.': 'reject-order',
-      };
+    };
 
     @not('isWaypointsCollapsed') waypointsIsNotCollapsed;
     @notEmpty('model.payload.waypoints') isMultiDropOrder;
@@ -142,7 +142,7 @@ export default class OperationsOrdersIndexViewController extends BaseController 
     @action formatTrackingDetails(details) {
         const key = this.trackingDetailKeyMap[details];
         return key ? `common.tracking-details.${key}` : 'common.tracking-details.unknown';
-      }
+    }
     /** @var entitiesByDestination */
     @computed('model.payload.{entities.[],waypoints.[]}')
     get entitiesByDestination() {
@@ -476,7 +476,7 @@ export default class OperationsOrdersIndexViewController extends BaseController 
 
         this.isWaypointsCollapsed = !_isWaypointsCollapsed;
     }
-    
+
     /**
      * Start the view order tour.
      *
@@ -503,10 +503,10 @@ export default class OperationsOrdersIndexViewController extends BaseController 
             allowClose: false,
             disableActiveInteraction: true,
             onPopoverRender: (popover) => {
-            const closeBtn = popover.wrapper.querySelector('.driver-popover-close-btn');
-            if (closeBtn) {
-                closeBtn.style.display = 'inline-block';
-            }
+                const closeBtn = popover.wrapper.querySelector('.driver-popover-close-btn');
+                if (closeBtn) {
+                    closeBtn.style.display = 'inline-block';
+                }
             },
             steps: [
                 {
@@ -532,20 +532,20 @@ export default class OperationsOrdersIndexViewController extends BaseController 
                             const order = this.model;
                             this.editOrder(order);
                             const checkModal = setInterval(() => {
-                            const modal = document.querySelector('.flb--modal');
-                            if (modal && modal.classList.contains('show')) {
-                            clearInterval(checkModal);
-                            driverObj.moveNext(); // Move to the next step
-                            }
-                        }, 100);  
+                                const modal = document.querySelector('.flb--modal');
+                                if (modal && modal.classList.contains('show')) {
+                                    clearInterval(checkModal);
+                                    driverObj.moveNext(); // Move to the next step
+                                }
+                            }, 100);
                         }
                     },
-                    
+
                     onHighlightStarted: (element) => {
                         element.scrollIntoView({ behavior: 'smooth' });
-                      },
+                    },
                 },
-                 {
+                {
                     element: '.flb--modal .flb--modal-content',
                     popover: {
                         title: this.intl.t('fleetbase.orders.tour.edit_modal.title'),
@@ -569,18 +569,18 @@ export default class OperationsOrdersIndexViewController extends BaseController 
                             const order = this.model;
                             this.editOrder(order);
                             const checkModal = setInterval(() => {
-                            const modal = document.querySelector('.flb--modal');
-                            if (modal && modal.classList.contains('show')) {
-                            clearInterval(checkModal);
-                            driverObj.movePrevious(); // Move to the next step
-                            }
-                        }, 100); 
+                                const modal = document.querySelector('.flb--modal');
+                                if (modal && modal.classList.contains('show')) {
+                                    clearInterval(checkModal);
+                                    driverObj.movePrevious(); // Move to the next step
+                                }
+                            }, 100);
                         }
                     },
-                     onHighlightStarted: (element) => {
+                    onHighlightStarted: (element) => {
                         // Ensure the element is scrolled into view before highlighting
                         element.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                      },
+                    },
                 },
                 {
                     element: '.new-order-notes .next-content-panel-container',
@@ -591,7 +591,7 @@ export default class OperationsOrdersIndexViewController extends BaseController 
                     onHighlightStarted: (element) => {
                         // Ensure the element is scrolled into view before highlighting
                         element.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                      },
+                    },
                 },
                 {
                     element: '.new-order-route .next-content-panel-container',
@@ -626,11 +626,11 @@ export default class OperationsOrdersIndexViewController extends BaseController 
                     onHighlightStarted: (element) => {
                         // Ensure the element is scrolled into view before highlighting
                         element.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                      },
+                    },
                 }
             ],
         });
-    
+
         driverObj.drive();
     }
 
@@ -643,7 +643,7 @@ export default class OperationsOrdersIndexViewController extends BaseController 
      */
     @action editOrder(order, options = {}) {
         options = options || {};
-    
+
         let originalOrderData = options.originalOrderData || {
             driver_assigned_uuid: order.driver_assigned_uuid,
             driver_assigned: order.driver_assigned,
@@ -655,9 +655,20 @@ export default class OperationsOrdersIndexViewController extends BaseController 
         let fieldsChanged = false;
         let driverToAssign = null;
         let driverIsBusy = false; // Track busy state separately
-    
+
         let vehicleToAssign = null;
         let vehicleIsBusy = false;
+        driverToAssign = order.driver_assigned;
+        if (driverToAssign) {
+            driverIsBusy = (driverToAssign.is_available === false && driverToAssign.have_no_vehicle === false);
+        }
+        vehicleToAssign = order.vehicle_assigned;
+        if (vehicleToAssign) {
+            vehicleIsBusy = (vehicleToAssign.is_vehicle_available == 0);
+        }
+
+        let fleetToAssign = null;
+        let fleetIsBusy = false;
         const resetOrderToOriginal = () => {
             order.set('driver_assigned_uuid', originalOrderData.driver_assigned_uuid);
             order.set('driver_assigned', originalOrderData.driver_assigned);
@@ -685,8 +696,8 @@ export default class OperationsOrdersIndexViewController extends BaseController 
                 resetOrderToOriginalDates();
                 return false;
             }
-    
-    
+
+
             if (endDate && endDate < startDate) {
                 if (canShowError) {
                     this.lastErrorTime = now;
@@ -695,10 +706,10 @@ export default class OperationsOrdersIndexViewController extends BaseController 
                 resetOrderToOriginalDates();
                 return false;
             }
-    
+
             return true;
-        };    
-    
+        };
+
         this.modalsManager.show('modals/order-form', {
             title: this.intl.t('fleet-ops.operations.orders.index.view.edit-order-title'),
             acceptButtonText: this.intl.t('common.save-changes'),
@@ -707,7 +718,7 @@ export default class OperationsOrdersIndexViewController extends BaseController 
                 order.set('facilitator', model);
                 order.set('facilitator_type', `fleet-ops:${model.facilitator_type}`);
                 order.set('driver', null);
-    
+
                 if (model) {
                     this.modalsManager.setOptions('driversQuery', {
                         facilitator: model.id,
@@ -726,21 +737,21 @@ export default class OperationsOrdersIndexViewController extends BaseController 
                     order.set('driver_assigned', null);
                     return;
                 }
-                
+
                 // Set driver regardless of availability
                 order.set('driver_assigned', driver);
                 order.set('driver_assigned_uuid', driver.id);
-    
+
                 // Only set vehicle if the driver has one
                 if (driver.vehicle) {
                     order.set('vehicle_assigned', driver.vehicle);
                     order.set('vehicle_assigned_uuid', driver.vehicle.id);
                 }
-    
+
                 // ALWAYS store the driver reference and track busy state
                 driverToAssign = driver;
                 driverIsBusy = (driver.is_available === false && driver.have_no_vehicle === false); // Explicitly check for false
-                
+
                 fieldsChanged = true;
             },
             setVehicle: (vehicle) => {
@@ -756,20 +767,35 @@ export default class OperationsOrdersIndexViewController extends BaseController 
                     vehicleIsBusy = (vehicleToAssign.is_vehicle_available == 0) ? true : false; // Adjust condition to your availability logic
                     }
                     fieldsChanged = true;
-                },
+            },
+
+            setFleet: (fleet) => {
+                if (!fleet) {
+                    order.set('fleet_uuid', null);
+                    order.set('fleet', null);
+                    fleetToAssign = null;
+                    fleetIsBusy = false;
+                } else {
+                    order.set('fleet', fleet);
+                    order.set('fleet_uuid', fleet.id);
+                    fleetToAssign = fleet;
+                    fleetIsBusy = (fleetToAssign.is_fleet_available == 0) ? true : false;
+                }
+                fieldsChanged = true;
+            },
 
             scheduleOrder: (dateInstance) => {
                 order.scheduled_at = dateInstance;
                 fieldsChanged = true;
                 validateOrderDates();
             },
-            
+
             EndDateOrder: (dateInstance) => {
                 order.estimated_end_date = dateInstance;
                 fieldsChanged = true;
                 validateOrderDates();
             },
-        
+
             driversQuery: {},
             order,
             confirm: async (modal) => {
@@ -778,7 +804,7 @@ export default class OperationsOrdersIndexViewController extends BaseController 
                     modal.stopLoading();
                     return;
                 }
-    
+
                 // Define the saveOrder function first so it can be used anywhere
                 const saveOrder = async () => {
                     try {
@@ -794,7 +820,7 @@ export default class OperationsOrdersIndexViewController extends BaseController 
                         modal.stopLoading();
                     }
                 };
-    
+
                 // Check if any changes were made at all
                 const hasChanges = 
                     originalOrderData.driver_assigned_uuid !== order.driver_assigned_uuid ||
@@ -812,24 +838,24 @@ export default class OperationsOrdersIndexViewController extends BaseController 
                     }));
                     return true;
                 }
-    
+
                 // Check if only dates changed (no changes to driver/vehicle assignments)
                 const onlyDatesChanged =
                     originalOrderData.driver_assigned_uuid === order.driver_assigned_uuid &&
                     originalOrderData.vehicle_assigned_uuid === order.vehicle_assigned_uuid &&
                     (originalOrderData.scheduled_at !== order.scheduled_at ||
                         originalOrderData.estimated_end_date !== order.estimated_end_date);
-    
+
                 // Check for partial assignment (one assigned, one not)
                 const hasDriver = order.driver_assigned !== null && order.driver_assigned_uuid !== null;
                 const hasVehicle = order.vehicle_assigned !== null && order.vehicle_assigned_uuid !== null;
                 const isPartiallyAssigned = hasDriver !== hasVehicle;
-    
+
                 // Allow saving if only dates changed or if we have both driver and vehicle
                 if (!onlyDatesChanged && isPartiallyAssigned) {
                     modal.stopLoading();
                     modal.done();
-    
+
                     setTimeout(() => {
                         this.modalsManager.confirm({
                             title: this.intl.t('fleet-ops.component.order.schedule-card.missing-info'),
@@ -840,9 +866,11 @@ export default class OperationsOrdersIndexViewController extends BaseController 
                             confirm: (errorModal) => {
                                 errorModal.done();
                                 setTimeout(() => {
+                                    resetOrderToOriginal();
                                     this.editOrder(order, {
                                         ...options,
-                                        originalOrderData,
+                                        originalOrderData
+                                        
                                     });
                                 }, 100);
                             },
@@ -850,20 +878,67 @@ export default class OperationsOrdersIndexViewController extends BaseController 
                                 errorModal.done();
                                 setTimeout(() => {
                                     resetOrderToOriginal();
+                                    this.editOrder(order, {
+                                        ...options,
+                                        originalOrderData
+                                        
+                                    });
                                 }, 100);
-                            }    
+                            }
                         });
                     }, 300);
-    
+
                     return true;
                 }
+                if (driverToAssign) {
+                    driverIsBusy = (driverToAssign.is_available === false && driverToAssign.have_no_vehicle === false);
+                }
+                vehicleToAssign = order.vehicle_assigned;
+                if (vehicleToAssign) {
+                    vehicleIsBusy = (vehicleToAssign.is_vehicle_available == 0);
+                }
+                if (vehicleToAssign && vehicleIsBusy && driverToAssign && driverIsBusy) {
+                    // Both busy
+                    setTimeout(() => {
+                        this.modalsManager.confirm({
+                            title: this.intl.t('fleet-ops.component.order.schedule-card.assign-driver-vehicle'),
+                            body: this.intl.t('fleet-ops.component.order.schedule-card.assign-driver-vehicle-busy-text', {
+                                driverName: driverToAssign.name,
+                                driverAvailability: driverToAssign.availability_message,
+                                driverButton: driverToAssign.button_message,
+                                vehicleName: vehicleToAssign.displayName,
+                                vehicleAvailability: vehicleToAssign.availability_message,
+                                vehicleButton: vehicleToAssign.button_message,
+                                orderId: order.public_id
+                            }),
+                            acceptButtonText: this.intl.t('fleet-ops.component.order.schedule-card.ok-button'),
+
+                            confirm: async (confirmModal) => {
+                                confirmModal.startLoading();
+                                await saveOrder();
+                            },
+                            decline: (confirmModal) => {
+                                confirmModal.done();
+                                setTimeout(() => {
+                                    resetOrderToOriginal();
+                                    this.editOrder(order, {
+                                        ...options,
+                                        originalOrderData
+                                    });
+                                }, 100);
+                            }
+                        });
+                    }, 300);
+                    return true;
+                }
+
                 // If vehicle is busy, show the busy confirmation
                 if (vehicleToAssign && vehicleIsBusy) {
                     setTimeout(() => {
                         this.modalsManager.confirm({
                             title: this.intl.t('fleet-ops.component.order.schedule-card.assign-vehicle'),
                             body: this.intl.t('fleet-ops.component.order.schedule-card.assign-vehicle-busy-text', {
-                                vehicleName: vehicleToAssign.name,
+                                vehicleName: vehicleToAssign.displayName,
                                 orderId: order.public_id,
                                 availability: vehicleToAssign.availability_message,
                                 button: vehicleToAssign.button_message,
@@ -878,6 +953,10 @@ export default class OperationsOrdersIndexViewController extends BaseController 
                                 confirmModal.done();
                                 setTimeout(() => {
                                     resetOrderToOriginal();
+                                    this.editOrder(order, {
+                                        ...options,
+                                        originalOrderData
+                                    });
                                 }, 100);
                             }
                         });
@@ -891,7 +970,7 @@ export default class OperationsOrdersIndexViewController extends BaseController 
                     setTimeout(() => {
                         this.modalsManager.confirm({
                             title: this.intl.t('fleet-ops.component.order.schedule-card.assign-driver'),
-                            body: this.intl.t('fleet-ops.component.order.schedule-card.assign-busy-text', {
+                            body: this.intl.t('fleet-ops.component.order.schedule-card.assign-driver-busy-text', {
                                 driverName: driverToAssign.name,
                                 orderId: order.public_id,
                                 availability: driverToAssign.availability_message,
@@ -907,16 +986,11 @@ export default class OperationsOrdersIndexViewController extends BaseController 
                             decline: (confirmModal) => {
                                 confirmModal.done();
                                 setTimeout(() => {
+                                    resetOrderToOriginal();
                                     this.editOrder(order, {
                                         ...options,
-                                        originalOrderData,
+                                        originalOrderData
                                     });
-                                }, 100);
-                            },
-                            decline: (confirmModal) => {
-                                confirmModal.done();
-                                setTimeout(() => {
-                                    resetOrderToOriginal();
                                 }, 100);
                             }
                         });
@@ -929,6 +1003,21 @@ export default class OperationsOrdersIndexViewController extends BaseController 
             decline: () => {
                 resetOrderToOriginal();
                 this.modalsManager.done();
+                // Reopen the previous modal (order edit form)
+                setTimeout(() => {
+                    // Find and click the edit button to reopen the modal
+                    const editButton = document.querySelector(`a[data-order-id="${order.public_id}"]`);
+                    if (editButton) {
+                        editButton.click();
+                    } else {
+                        // Fallback: try to find any edit button for this order
+                        const fallbackEditButton = document.querySelector(`[data-order-id="${order.public_id}"], [href*="/orders/${order.public_id}/edit"]`);
+                        if (fallbackEditButton) {
+                            fallbackEditButton.click();
+                        }
+                    }
+                }, 100);
+
             },
             ...options,
             originalOrderData,
@@ -1163,9 +1252,9 @@ export default class OperationsOrdersIndexViewController extends BaseController 
             await this.modalsManager.done();
         }
 
-   
+
         let driverToAssign = null; // Store the driver assignment until confirmation
-    
+
         this.modalsManager.show(`modals/order-assign-driver`, {
             title: order.driver_uuid ? this.intl.t('fleet-ops.operations.orders.index.view.change-order') : this.intl.t('fleet-ops.operations.orders.index.view.assign-order'),
             acceptButtonText: this.intl.t('common.save-changes'),
@@ -1174,11 +1263,11 @@ export default class OperationsOrdersIndexViewController extends BaseController 
                 if (!driver) {
                     order.set('driver_assigned_uuid', null);
                 }
-    
+
                 if (driver.is_available) {
                     order.set('driver_assigned', driver);
                     order.set('driver_assigned_uuid', driver.id);
-    
+
                     if (driver.vehicle) {
                         order.set('vehicle_assigned', driver.vehicle);
                     }
@@ -1189,7 +1278,7 @@ export default class OperationsOrdersIndexViewController extends BaseController 
             },
             confirm: async (modal) => {
                 modal.startLoading();
-    
+
                 const saveOrder = async () => {
                     try {
                         await order.save();
@@ -1200,7 +1289,7 @@ export default class OperationsOrdersIndexViewController extends BaseController 
                         modal.stopLoading();
                     }
                 };
-    
+
                 // Show confirmation modal if the driver is unavailable
                 if (driverToAssign) {
                     modal.done();
@@ -1219,11 +1308,11 @@ export default class OperationsOrdersIndexViewController extends BaseController 
                             confirm: async (confirmModal) => {
                                 order.set('driver_assigned', driverToAssign);
                                 order.set('driver_assigned_uuid', driverToAssign.id);
-    
+
                                 if (driverToAssign.vehicle) {
                                     order.set('vehicle_assigned', driverToAssign.vehicle);
                                 }
-    
+
                                 confirmModal.startLoading();
                                 await saveOrder();
                             },
@@ -1486,8 +1575,8 @@ export default class OperationsOrdersIndexViewController extends BaseController 
      */
     @action
     normalizeStatus(status) {
-      if (!status) return 'pending';
-      return status.toLowerCase().replace(/\s+/g, '_');
+        if (!status) return 'pending';
+        return status.toLowerCase().replace(/\s+/g, '_');
     }
 
     /**
@@ -1497,23 +1586,23 @@ export default class OperationsOrdersIndexViewController extends BaseController 
      */
     filterConsecutiveDuplicates(waypoints) {
         if (!waypoints || waypoints.length <= 1) {
-          return waypoints;
+            return waypoints;
         }
-        
+
         const result = [waypoints[0]];
-        
+
         for (let i = 1; i < waypoints.length; i++) {
-          const current = waypoints[i];
-          const previous = result[result.length - 1];
-          
-          // Compare lat/lng values (as arrays) to detect duplicates
-          // Format: [lat, lng]
-          if (current[0] !== previous[0] || current[1] !== previous[1]) {
-            result.push(current);
-          }
+            const current = waypoints[i];
+            const previous = result[result.length - 1];
+
+            // Compare lat/lng values (as arrays) to detect duplicates
+            // Format: [lat, lng]
+            if (current[0] !== previous[0] || current[1] !== previous[1]) {
+                result.push(current);
+            }
         }
-        
+
         return result;
-      }
-    
+    }
+
 }

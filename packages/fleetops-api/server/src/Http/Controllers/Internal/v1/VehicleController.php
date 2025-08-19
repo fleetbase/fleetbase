@@ -14,6 +14,8 @@ use Maatwebsite\Excel\Facades\Excel;
 use Fleetbase\FleetOps\Traits\ImportErrorHandler;
 use Fleetbase\Models\File;
 use Illuminate\Support\Facades\Log;
+use Fleetbase\FleetOps\Models\ImportLog;
+use Illuminate\Support\Facades\Storage;
 
 class VehicleController extends FleetOpsController
 {
@@ -25,7 +27,6 @@ class VehicleController extends FleetOpsController
      */
     public $resource = 'vehicle';
     public bool $disableResponseCache = true;
-
     /**
      * Get all status options for an vehicle.
      *
@@ -79,8 +80,32 @@ class VehicleController extends FleetOpsController
     public function import(ImportRequest $request)
     {
         $files = File::whereIn('uuid', $request->input('files'))->get();
-        $requiredHeaders = ['name', 'make', 'model', 'year', 'plate_number'];
-        $result = $this->processImportWithErrorHandling($files, 'vehicle', function($file) use ($requiredHeaders) {
+        $alreadyProcessed = ImportLog::where('imported_file_uuid', $files[0]->uuid)->first();
+        if($alreadyProcessed){
+            if($alreadyProcessed->status == 'ERROR' || $alreadyProcessed->status == 'PARTIALLY_COMPLETED'){
+                $url = Storage::url($alreadyProcessed['error_log_file_path']);
+                $message = $alreadyProcessed->status == 'ERROR'
+                    ? __('messages.full_import_error')
+                    : __('messages.partial_success');
+                return response()->json([
+                    'error_log_url' => $url,
+                    'message' => $message,
+                     'status' => $alreadyProcessed->status == 'ERROR' ? 'error' : 'partial_success',
+                    'success' => false,
+                ]);
+
+            }
+            if($alreadyProcessed->status == 'COMPLETED')
+            {
+                return response()->json([
+                'success' => true,
+                'message' => "Import completed successfully.",
+                ]);
+            }
+        }
+        $validation = [];
+        $requiredHeaders = ['make', 'model', 'year', 'plate_number'];
+        $result = $this->processImportWithErrorHandling($files, 'vehicle', function($file) use ($requiredHeaders, &$validation) {
             $disk = config('filesystems.default');
             $data = Excel::toArray(new VehicleImport(), $file->path, $disk);
             $totalRows = collect($data)->flatten(1)->count();
@@ -92,12 +117,11 @@ class VehicleController extends FleetOpsController
                 ];
             }
             $validation = $this->validateImportHeaders($data, $requiredHeaders);
-            if (!$validation['success']) {
-                return response()->json($validation);
-            }
             return $this->vehicleImportWithValidation($data);
         });
-        
+        if (!$validation['success']) {
+            return response()->error($validation['errors']);
+        }
         if (!empty($result['allErrors'])) {
             return response($this->generateErrorResponse($result['allErrors'], 'vehicle', $files->first()->uuid, $result));
         }
@@ -119,15 +143,28 @@ class VehicleController extends FleetOpsController
             $createdVehicles = [];
             $updatedVehicles = [];
 
-            // First, collect all plate numbers from the import file to check against existing database
+            // Pre-collect all unique VINs and plate numbers for batch validation
+            $allVins = [];
             $allPlateNumbers = [];
             $rowsWithIndex = [];
 
             foreach ($excelData as $sheetIndex => $sheetRows) {
-                foreach ($sheetRows as $rowIndex => $row) {
-                    $displayRowIndex = $rowIndex + 1;
+                $sheetRowsWithIndex = collect($sheetRows)->map(function ($row, $originalIndex) {
+                    $row['_original_row_index'] = $originalIndex;
+                    return $row;
+                });
+
+                foreach ($sheetRowsWithIndex as $rowIndex => $row) {
+                    $originalRowIndex = $row['_original_row_index'] ?? $rowIndex;
+                    $displayRowIndex = $originalRowIndex + 1;
+
+                    // Collect VINs and plate numbers for batch validation using same column mapping as createFromImport
+                    $vin = $this->getVehicleValue($row, ['vin', 'vin_number', 'vin_id', 'vehicle_identification_number', 'serial_number']);
                     $plateNumber = $this->getVehicleValue($row, ['plate_number', 'license_plate', 'license_place_number', 'vehicle_plate', 'registration_plate', 'tag_number', 'tail_number', 'head_number']);
                     
+                    if (!empty($vin)) {
+                        $allVins[] = strtoupper(trim($vin));
+                    }
                     if (!empty($plateNumber)) {
                         $allPlateNumbers[] = strtoupper(trim($plateNumber));
                     }
@@ -139,29 +176,41 @@ class VehicleController extends FleetOpsController
                 }
             }
 
-            // Get existing plate numbers from database (only check once at the beginning)
+            // Single query to get all existing VINs and plate numbers
+            $existingVins = [];
             $existingPlateNumbers = [];
+            
+            if (!empty($allVins)) {
+                $existingVins = Vehicle::whereIn('vin', array_unique($allVins))
+                    ->where('company_uuid', session('company'))
+                    ->whereNull('deleted_at')
+                    ->pluck('vin')
+                    ->map('strtoupper')
+                    ->toArray();
+            }
+
             if (!empty($allPlateNumbers)) {
                 $existingPlateNumbers = Vehicle::whereIn('plate_number', array_unique($allPlateNumbers))
                     ->where('company_uuid', session('company'))
+                    ->whereNull('deleted_at')
                     ->pluck('plate_number')
-                    ->map(function($plate) {
-                        return strtoupper($plate);
-                    })
+                    ->map('strtoupper')
                     ->toArray();
             }
 
             // Track duplicates within the import file itself
+            $seenVins = [];
             $seenPlateNumbers = [];
 
-            // Process each row
+            // Process each row with pre-validation before calling createFromImport
             foreach ($rowsWithIndex as $rowData) {
                 $row = $rowData['row'];
                 $displayRowIndex = $rowData['displayRowIndex'];
 
                 try {
-                    // Basic validation first (including database duplicate check)
-                    $validationErrors = $this->validateVehicleRowWithDatabaseCheck($row, $displayRowIndex, $seenPlateNumbers, $existingPlateNumbers);
+                    // Pre-validation before calling createFromImport
+                    $validationErrors = $this->validateVehicleRow($row, $displayRowIndex, 
+                        $existingVins, $existingPlateNumbers, $seenVins, $seenPlateNumbers);
                     
                     if (!empty($validationErrors)) {
                         $importErrors = array_merge($importErrors, $validationErrors);
@@ -185,30 +234,37 @@ class VehicleController extends FleetOpsController
                         }
 
                         // Add to seen arrays to prevent future duplicates in the same import
+                        if (!empty($vehicle->vin)) {
+                            $seenVins[] = strtoupper($vehicle->vin);
+                            $existingVins[] = strtoupper($vehicle->vin);
+                        }
                         if (!empty($vehicle->plate_number)) {
                             $seenPlateNumbers[] = strtoupper($vehicle->plate_number);
+                            $existingPlateNumbers[] = strtoupper($vehicle->plate_number);
                         }
                     } else {
                         $vehicleName = $this->getVehicleValue($row, ['vehicle', 'vehicle_name', 'name']);
                         $make = $this->getVehicleValue($row, ['make', 'vehicle_make', 'manufacturer', 'brand']);
+                        $vin = $this->getVehicleValue($row, ['vin', 'vin_number', 'vin_id', 'vehicle_identification_number', 'serial_number']);
                         $plateNumber = $this->getVehicleValue($row, ['plate_number', 'license_plate', 'license_place_number', 'vehicle_plate', 'registration_plate', 'tag_number', 'tail_number', 'head_number']);
                         
                         $importErrors[] = [
                             (string)$displayRowIndex,
                             "Failed to create vehicle - createFromImport returned null",
-                            $plateNumber ?? $make ?? $vehicleName ?? 'Unknown'
+                            $vin ?? $plateNumber ?? $make ?? $vehicleName ?? 'Unknown'
                         ];
                     }
 
                 } catch (\Exception $e) {
                     $vehicleName = $this->getVehicleValue($row, ['vehicle', 'vehicle_name', 'name']);
                     $make = $this->getVehicleValue($row, ['make', 'vehicle_make', 'manufacturer', 'brand']);
+                    $vin = $this->getVehicleValue($row, ['vin', 'vin_number', 'vin_id', 'vehicle_identification_number', 'serial_number']);
                     $plateNumber = $this->getVehicleValue($row, ['plate_number', 'license_plate', 'license_place_number', 'vehicle_plate', 'registration_plate', 'tag_number', 'tail_number', 'head_number']);
                     
                     $importErrors[] = [
                         (string)$displayRowIndex,
                         "Failed to create vehicle: " . $e->getMessage(),
-                        $plateNumber ?? $make ?? $vehicleName ?? 'Unknown'
+                        $vin ?? $plateNumber ?? $make ?? $vehicleName ?? 'Unknown'
                     ];
                 }
             }
@@ -258,34 +314,55 @@ class VehicleController extends FleetOpsController
         }
     }
 
-        /**
-     * Validation for a single vehicle row including database duplicate check
-     * Checks format, duplicates within import file, and existing data in database
+    /**
+     * Validate a single vehicle row before processing
+     * Collects ALL validation errors for the row instead of stopping at the first error
      *
      * @param array $row
      * @param int $displayRowIndex
-     * @param array $seenPlateNumbers
+     * @param array $existingVins
      * @param array $existingPlateNumbers
+     * @param array $seenVins
+     * @param array $seenPlateNumbers
      * @return array
      */
-    private function validateVehicleRowWithDatabaseCheck($row, $displayRowIndex, &$seenPlateNumbers, $existingPlateNumbers)
+    private function validateVehicleRow($row, $displayRowIndex, $existingVins, $existingPlateNumbers, &$seenVins, &$seenPlateNumbers)
     {
         $errors = [];
+        $hasValidationErrors = false;
 
         // Extract values using the same logic as createFromImport
         $vehicleName = $this->getVehicleValue($row, ['vehicle', 'vehicle_name', 'name']);
         $make = $this->getVehicleValue($row, ['make', 'vehicle_make', 'manufacturer', 'brand']);
         $model = $this->getVehicleValue($row, ['model', 'vehicle_model', 'brand_model']);
         $year = $this->getVehicleValue($row, ['year', 'vehicle_year', 'build_year', 'release_year']);
+        $vin = $this->getVehicleValue($row, ['vin', 'vin_number', 'vin_id', 'vehicle_identification_number', 'serial_number']);
         $plateNumber = $this->getVehicleValue($row, ['plate_number', 'license_plate', 'license_place_number', 'vehicle_plate', 'registration_plate', 'tag_number', 'tail_number', 'head_number']);
 
         // Basic validation - make is required (or vehicle name which can be parsed for make)
-        if (empty($make) && empty($vehicleName)) {
+        if (empty($make)) {
             $errors[] = [
                 (string)$displayRowIndex,
-                "Vehicle make or vehicle name is required.",
+                "Vehicle make is required.",
                 ""
             ];
+            $hasValidationErrors = true;
+        }
+        if (empty($model)) {
+            $errors[] = [
+                (string)$displayRowIndex,
+                "Vehicle model is required.",
+                ""
+            ];
+            $hasValidationErrors = true;
+        }
+        if (empty($plateNumber)) {
+            $errors[] = [
+                (string)$displayRowIndex,
+                "Vehicle plate number is required.",
+                ""
+            ];
+            $hasValidationErrors = true;
         }
 
         // Year validation
@@ -295,12 +372,53 @@ class VehicleController extends FleetOpsController
                 $errors[] = [
                     (string)$displayRowIndex,
                     "Invalid year: '{$year}'. Year must be between 1900 and " . (date('Y') + 2),
-                     $plateNumber ?? $make ?? $vehicleName
+                    $vin ?? $plateNumber ?? $make ?? $vehicleName
                 ];
+                $hasValidationErrors = true;
             }
         }
 
-        // Plate number validation - format, duplicates within import file, and database duplicates
+        // VIN validation
+        if (!empty($vin)) {
+            $vin = strtoupper(trim($vin));
+            
+            // VIN format validation (basic check for length and characters)
+            if (strlen($vin) !== 17 || !preg_match('/^[A-HJ-NPR-Z0-9]{17}$/', $vin)) {
+                $errors[] = [
+                    (string)$displayRowIndex,
+                    "Invalid VIN format: '{$vin}'. VIN must be 17 characters and contain only letters and numbers (excluding I, O, Q).",
+                    $vin
+                ];
+                $hasValidationErrors = true;
+            } else {
+                // Check for duplicate VIN in existing database
+                if (in_array($vin, $existingVins)) {
+                    $errors[] = [
+                        (string)$displayRowIndex,
+                        "VIN '{$vin}' already exists in the system.",
+                        $vin
+                    ];
+                    $hasValidationErrors = true;
+                }
+
+                // Check for duplicate VIN within the import file
+                if (in_array($vin, $seenVins)) {
+                    $errors[] = [
+                        (string)$displayRowIndex,
+                        "Duplicate VIN '{$vin}' found in import file.",
+                        $vin
+                    ];
+                    $hasValidationErrors = true;
+                }
+
+                // Only add to seen VINs if no validation errors for this VIN
+                if (!in_array($vin, $existingVins) && !in_array($vin, $seenVins)) {
+                    $seenVins[] = $vin;
+                }
+            }
+        }
+
+        // Plate number validation
         if (!empty($plateNumber)) {
             $plateNumber = strtoupper(trim($plateNumber));
             
@@ -311,7 +429,18 @@ class VehicleController extends FleetOpsController
                     "Invalid plate number format: '{$plateNumber}'. Plate number must be between 2 and 20 characters.",
                     $plateNumber
                 ];
+                $hasValidationErrors = true;
             } else {
+                // Check for duplicate plate number in existing database
+                if (in_array($plateNumber, $existingPlateNumbers)) {
+                    $errors[] = [
+                        (string)$displayRowIndex,
+                        "Plate number '{$plateNumber}' already exists in the system.",
+                        $plateNumber
+                    ];
+                    $hasValidationErrors = true;
+                }
+
                 // Check for duplicate plate number within the import file
                 if (in_array($plateNumber, $seenPlateNumbers)) {
                     $errors[] = [
@@ -319,18 +448,12 @@ class VehicleController extends FleetOpsController
                         "Duplicate plate number '{$plateNumber}' found in import file.",
                         $plateNumber
                     ];
-                } else {
-                    // Check for existing plate number in database
-                    if (in_array($plateNumber, $existingPlateNumbers)) {
-                        $errors[] = [
-                            (string)$displayRowIndex,
-                            "Plate number '{$plateNumber}' already exists in the system.",
-                            $plateNumber
-                        ];
-                    } else {
-                        // Add to seen plate numbers if no validation errors
-                        $seenPlateNumbers[] = $plateNumber;
-                    }
+                    $hasValidationErrors = true;
+                }
+
+                // Only add to seen plate numbers if no validation errors for this plate
+                if (!in_array($plateNumber, $existingPlateNumbers) && !in_array($plateNumber, $seenPlateNumbers)) {
+                    $seenPlateNumbers[] = $plateNumber;
                 }
             }
         }
@@ -378,7 +501,16 @@ class VehicleController extends FleetOpsController
             }
         }
 
-        // Normalize plate number to uppercase
+        // Normalize VIN and plate number to uppercase
+        $vin = $this->getVehicleValue($row, ['vin', 'vin_number', 'vin_id', 'vehicle_identification_number', 'serial_number']);
+        if (!empty($vin)) {
+            // Set VIN in all possible column names to ensure consistency
+            foreach (['vin', 'vin_number', 'vin_id', 'vehicle_identification_number', 'serial_number'] as $vinColumn) {
+                if (isset($row[$vinColumn])) {
+                    $row[$vinColumn] = strtoupper($vin);
+                }
+            }
+        }
 
         $plateNumber = $this->getVehicleValue($row, ['plate_number', 'license_plate', 'license_place_number', 'vehicle_plate', 'registration_plate', 'tag_number', 'tail_number', 'head_number']);
         if (!empty($plateNumber)) {

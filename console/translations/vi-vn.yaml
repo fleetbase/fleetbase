@@ -147,6 +147,9 @@ common:
   from: từ
   filter-by: Lọc theo
   to_date_before_from_date_error: Ngày "Đến" không thể sớm hơn ngày "Từ".
+  trip-length: Thời gian chuyến đi
+  trip-length-placeholder: Nhập thời gian chuyến đi tính bằng giờ
+  trip_length_invalid: Chiều dài chuyến đi phải là một số dương lớn hơn 0.
 leaves:
   driver_name: Tên tài xế
   start_date: Ngày bắt đầu
@@ -950,6 +953,12 @@ fleet-ops:
           start-date-required: Cần nhập ngày bắt đầu.
           end-date-required: Cần nhập ngày kết thúc.
           end-date-earlier: Ngày kết thúc không được sớm hơn ngày bắt đầu.
+          assign-vehicle: Gán phương tiện?
+          assign-vehicle-busy-text: Phương tiện {vehicleName} <strong>hiện đang được gán cho một đơn hàng khác đang hoạt động</strong>. Bạn có chắc chắn muốn gán nó cho đơn hàng {orderId} không?
+          assign-driver-busy-text: Tài xế {driverName} <strong>hiện đang được gán cho một đơn hàng khác đang hoạt động</strong>. Bạn có chắc chắn muốn gán anh ấy cho đơn hàng {orderId} không?
+          assign-anyway: Tiếp tục gán
+          assign-driver-vehicle: Gán tài xế & phương tiện?
+          assign-driver-vehicle-busy-text: Tài xế {driverName} và phương tiện {vehicleName} <strong>hiện đang được gán cho một đơn hàng khác đang hoạt động</strong>. Bạn có muốn vẫn gán đơn hàng {orderId} cho họ không?
         place-form-panel:
           coordinates-required: "Yêu cầu nhập tọa độ vị trí."
           coordinates-invalid: "Tọa độ vị trí không hợp lệ. Vui lòng nhập vĩ độ và kinh độ hợp lệ."
@@ -1123,6 +1132,7 @@ fleet-ops:
           view-activity: Xem hoạt động
           add-item-button: Thêm mặt hàng
           edit-item-button: Chỉnh sửa mặt hàng
+          fleet: Đội xe
           edit-order-title: Chỉnh sửa chi tiết đơn hàng
           update-success: Chi tiết '{orderId}' đã được cập nhật.
           order-metadata: Metadata đơn hàng
@@ -1524,6 +1534,9 @@ fleetbase:
 
   drivers:
     tour:
+      import_button:
+        title: "Nhập trình điều khiển"
+        description: "Nhập trình điều khiển từ tệp bảng tính để xử lý hàng loạt hiệu quả."
       new_button:
         title: "Tạo Tài xế Mới"
         description: "Mở biểu mẫu để tạo hồ sơ tài xế mới và nhập thông tin tài xế."
@@ -1539,6 +1552,9 @@ fleetbase:
 
   vehicles:
     tour:
+      import_button:
+        title: "Nhập xe"
+        description: "Nhập xe từ tệp bảng tính để xử lý hàng loạt hiệu quả."
       new_button:
         title: "Tạo Xe Mới"
         description: "Mở biểu mẫu để tạo hồ sơ xe mới và nhập thông tin cụ thể của xe."
@@ -1554,6 +1570,9 @@ fleetbase:
 
   places:
     tour:
+      import_button:
+        title: "Nhập địa điểm"
+        description: "Nhập địa điểm từ tệp bảng tính để xử lý hàng loạt hiệu quả."
       new_button:
         title: "Nút Địa điểm Mới"
         description: "Mở biểu mẫu tạo địa điểm, nơi bạn có thể xác định chi tiết vị trí cho một địa điểm mới."
@@ -1732,6 +1751,9 @@ fleetbase:
 
   fleets:
     tour:
+      import_button:
+        title: "Nhập đội xe"
+        description: "Nhập đội xe từ tệp bảng tính để xử lý hàng loạt hiệu quả."
       new_button:
         title: "Nút Đội xe Mới"
         description: "Mở biểu mẫu tạo đội xe, nơi bạn có thể xác định chi tiết đội xe."

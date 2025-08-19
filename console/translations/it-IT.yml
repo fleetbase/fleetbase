@@ -147,6 +147,9 @@ common:
   from: Da
   filter-by: Filtra per
   to_date_before_from_date_error: La data "A" non può essere precedente alla data "Da".
+  trip-length: Durata del viaggio
+  trip-length-placeholder: Inserisci la durata del viaggio in ore
+  trip_length_invalid: La durata del viaggio deve essere un numero positivo maggiore di 0.
 leaves:
   driver_name: Nome dell'autista
   start_date: Data di inizio
@@ -1171,6 +1174,9 @@ fleet-ops:
         schedule: Data di inizio
         unschedule: Annulla pianificazione
       order-form:
+        assign-fleet: Assegna Flotta
+        assign-fleet-text: Assegna la flotta con cui verrà eseguito questo ordine.
+        assign-fleet-placeholder: Seleziona Flotta
         id-text: Usa questo campo per impostare facoltativamente un identificatore personalizzato o un identificatore interno per l'ordine.
         end-date-text: La data e l'ora in cui l'ordine è previsto per essere completato. Questo segna la fine prevista del processo di consegna. Se l'ordine non viene completato entro tale momento, potrebbe essere necessaria un'ulteriore azione o una riassegnazione.
         schedule-text: La data e l'ora in cui l'ordine verrà inviato. Se non viene assegnato alcun conducente al momento della spedizione, la spedizione fallirà. Se l'ordine è Ad-Hoc, l'ordine verrà inviato ai conducenti nelle vicinanze del punto di ritiro.
@@ -1402,6 +1408,7 @@ fleet-ops:
         show-less: Mostra meno dettagli
         show-more: Mostra più dettagli
       schedule-card:
+        fleet-required: La flotta è richiesta
         destination: Destinazione
         unassign-driver: Rimuovere Conducente?
         unassign-text: Stai per rimuovere il conducente dall'Ordine {orderId}. Clicca continua per confermare la rimozione del conducente.
@@ -1432,6 +1439,12 @@ fleet-ops:
         start-date-required: La data di inizio è richiesta.
         end-date-required: La data di fine è richiesta.
         end-date-earlier: La data di fine non può essere precedente alla data di inizio.
+        assign-vehicle: Assegnare veicolo?
+        assign-vehicle-busy-text: Il veicolo {vehicleName} è <strong>attualmente assegnato a un altro ordine attivo</strong>. Sei sicuro di volerlo assegnare all’ordine {orderId}?
+        assign-driver-busy-text: L’autista {driverName} è <strong>attualmente assegnato a un altro ordine attivo</strong>. Sei sicuro di volerlo assegnare all’ordine {orderId}?
+        assign-anyway: Continua con l’assegnazione
+        assign-driver-vehicle: Assegnare autista e veicolo?
+        assign-driver-vehicle-busy-text: L’autista {driverName} e il veicolo {vehicleName} <strong>sono attualmente assegnati a un altro ordine attivo</strong>. Vuoi comunque assegnare loro l’ordine {orderId}?
     widget:
       fleet-ops-quickstart:
         message: Vediamo cosa puoi fare per avviare le operazioni...
@@ -2120,6 +2133,10 @@ fleet-ops:
           customer: Cliente
           customer-help-text: Assegna opzionalmente il cliente a questo ordine. Se è un nuovo cliente, usa il pulsante 'Nuovo Cliente' sopra.
           customer-placeholder: Seleziona Cliente
+          fleet: Flotta
+          fleet-help-text: Assegna la flotta per questo ordine.
+          fleet-placeholder: Seleziona Flotta
+          select-fleet: Seleziona Flotta
           facilitator: Facilitatore
           facilitator-help-text: Assegna opzionalmente un facilitatore per questo ordine, un facilitatore può essere un subappaltatore o un servizio che faciliterà il trasporto di questo ordine.
           facilitator-placeholder: Seleziona Facilitatore
@@ -2247,6 +2264,7 @@ fleet-ops:
           view-activity: Visualizza Attività
           add-item-button: Aggiungi Articolo
           edit-item-button: Modifica Articolo
+          fleet: Flotta
           edit-order-title: Modifica Dettagli Ordine
           update-success: 'I dettagli di {orderId} sono stati aggiornati.'
           order-metadata: Metadati Ordine
@@ -2854,6 +2872,9 @@ fleetbase:
 
   drivers:
     tour:
+      import_button:
+        title: "Importa i driver"
+        description: "Importa i driver da un foglio di calcolo per un'elaborazione efficiente in blocco."
       new_button:
         title: "Crea nuovo autista"
         description: "Apre il modulo per creare un nuovo profilo autista e inserire i dettagli dell'autista."
@@ -2869,6 +2890,9 @@ fleetbase:
 
   vehicles:
     tour:
+      import_button:
+        title: "Importa veicoli"
+        description: "Importa veicoli da un foglio di calcolo per un'elaborazione efficiente in blocco."
       new_button:
         title: "Crea nuovo veicolo"
         description: "Apre il modulo per creare un nuovo profilo veicolo e inserire informazioni specifiche."
@@ -2884,6 +2908,9 @@ fleetbase:
 
   places:
     tour:
+      import_button:
+        title: "Importa luoghi"
+        description: "Importa luoghi da un foglio di calcolo per un'elaborazione efficiente in blocco."
       new_button:
         title: "Pulsante Nuovo Luogo"
         description: "Apre il modulo di creazione del luogo, dove è possibile definire i dettagli della posizione per un nuovo luogo."
@@ -3062,6 +3089,9 @@ fleetbase:
 
   fleets:
     tour:
+      import_button:
+        title: "Importa flotte"
+        description: "Importa flotte da un foglio di calcolo per un'elaborazione efficiente in blocco."
       new_button:
         title: "Pulsante Nuova flotta"
         description: "Apre il modulo di creazione della flotta in cui puoi definire i dettagli della flotta."
