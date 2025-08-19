@@ -390,6 +390,9 @@ trait HasApiControllerBehavior
         if (get_class($this->model) === 'Fleetbase\FleetOps\Models\Vehicle') {
             $data->load('fleetVehicles');
         }
+        if (get_class($this->model) === 'Fleetbase\FleetOps\Models\Driver') {
+            $data->load('fleets');
+        }
         
         if (get_class($this->model) === 'Fleetbase\FleetOps\Models\Driver' && $request->has('order_uuid')) {
             $order = \Fleetbase\FleetOps\Models\Order::where('uuid', $request->order_uuid)
