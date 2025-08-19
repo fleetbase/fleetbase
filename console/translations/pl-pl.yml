@@ -820,7 +820,7 @@ fleet-ops:
     height: Wysokość
     host: Host
     id: ID
-    internal-id: Wewnętrzny ID
+    internal-id: Identyfikator Amazon
     item: Przedmiot
     key: Klucz
     label: Etykieta
@@ -2276,8 +2276,8 @@ fleet-ops:
           order-type: Typ zamówienia
           order-type-help-text: Wybór typu zamówienia określi, jaką konfigurację zamówień wykorzysta FleetYes.
           order-type-placeholder: Wybierz typ zamówienia
-          internal-id: ID wewnętrzne
-          internal-id-help-text: Użyj tego pola, aby opcjonalnie ustawić niestandardowy identyfikator lub wewnętrzny identyfikator zamówienia.
+          internal-id: Identyfikator Amazon
+          internal-id-help-text: Użyj tego pola, aby opcjonalnie ustawić własny identyfikator
           schedule: Data rozpoczęcia
           estimated-end-date: Szacowana data zakończenia
           schedule-help-text: Data i godzina wysyłki zamówienia. Jeśli nie przypisano kierowcy, wysyłka nie powiedzie się. W przypadku zamówień Ad-Hoc powiadomienie zostanie wysłane do kierowców w pobliżu miejsca odbioru.

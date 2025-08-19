@@ -341,7 +341,7 @@
                                     width="24"
                                     height="24"
                                     class="w-8 h-8 rounded-md shadow-sm mr-3 lg:mr-2"
-                                    alt={{@model.vehicle_assigned.display_name}}
+                                    alt={{@model.vehicle_assigned.plateNumberModel}}
                                 />
                                 <FaIcon
                                     @icon="circle"
@@ -350,7 +350,7 @@
                                 />
                             </div>
                             <div class="field-value">
-                                <div>{{n-a @model.vehicle_assigned.display_name "No Vehicle"}}</div>
+                                <div>{{n-a @model.vehicle_assigned.plateNumberModel "No Vehicle"}}</div>
                             </div>
                             <Attach::Tooltip @class="clean" @animation="scale" @placement="top">
                                 <InputInfo>
@@ -369,10 +369,10 @@
 
                     </div>
                 </div>
-                {{!-- <div class="field-info-container space-y-2">
+                <div class="field-info-container space-y-2">
                     <div class="field-name">{{t "fleet-ops.common.internal-id"}}</div>
                     <ClickToCopy @value={{@model.tracking_number.internal_id}} class="field-value">{{n-a @model.tracking_number.internal_id}}</ClickToCopy>
-                </div> --}}
+                </div>
                 <div class="field-info-container space-y-2">
                     <div class="field-name">{{t "fleet-ops.operations.orders.index.view.tracking-number"}}</div>
                     <ClickToCopy @value={{@model.tracking_number.tracking_number}} class="field-value">{{n-a @model.tracking_number.tracking_number}}</ClickToCopy>

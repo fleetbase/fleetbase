@@ -3,7 +3,11 @@
         <div class="grid grid-cols-2 gap-4 text-xs dark:text-gray-100">
             <div class="field-info-container space-y-2">
                 <div class="field-name">{{t "fleet-ops.common.name"}}</div>
-                <div class="field-value">{{n-a @vehicle.display_name}}</div>
+                <div class="field-value">{{n-a @vehicle.plateNumberModel}}</div>
+            </div>
+            <div class="field-info-container space-y-2">
+                <div class="field-name">{{t "fleet-ops.common.internal-id"}}</div>
+                <div class="field-value">{{n-a @vehicle.internal_id}}</div>
             </div>
             <div class="field-info-container space-y-2">
                 <div class="field-name">{{t "fleet-ops.common.plate-number"}}</div>

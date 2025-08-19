@@ -242,8 +242,8 @@ export default class ManagementDriversIndexController extends BaseController {
                         this.notifications.serverError(error);
                     });
             },
-            valuePath: 'vehicle.display_name',
-            modelNamePath: 'display_name',
+            valuePath: 'vehicleDisplayName',
+            modelNamePath: 'vehicleDisplayName',
             resizable: true,
             width: '180px',
             filterable: true,

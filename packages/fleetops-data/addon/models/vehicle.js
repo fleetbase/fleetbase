@@ -61,6 +61,11 @@ export default class VehicleModel extends Model {
         return nameSegments.filter(Boolean).join(' ').trim();
     }
 
+    @computed('plate_number', 'model') get plateNumberModel() {
+        const segments = [this.plate_number, this.model];
+        return segments.filter(segment => segment != null && segment !== '').join(' ').trim();
+    }
+
     @computed('updated_at') get updatedAgo() {
         if (!isValidDate(this.updated_at)) {
             return null;
