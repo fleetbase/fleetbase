@@ -68,6 +68,11 @@ class Driver extends FleetbaseResource
             'button_message'                => $this->button_message,
             'have_no_vehicle'               => $this->have_no_vehicle,
             'leave_balance'                 => (int) $this->leave_balance,
+            'fleet' => $this->whenLoaded('fleets', function () {
+                $fleet = $this->fleets()->without('drivers')->first();
+                return $fleet ? new Fleet($fleet) : null;
+            }),
+
         ];
     }
 
