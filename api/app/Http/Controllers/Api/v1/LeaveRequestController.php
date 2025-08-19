@@ -35,7 +35,7 @@ class LeaveRequestController extends Controller
 
         $dateFields = [ 'created_at'];
         $unavailability_type = request()->input('unavailability_type');
-
+        $unavailability_page = request()->input('unavailability_page');
         $query = LeaveRequest::with(['user', 'processedBy', 'vehicle'])
             ->whereNull('deleted_at')
             ->where([
