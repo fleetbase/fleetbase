@@ -26,18 +26,18 @@
                             <Image
                                 src={{this.vehicle.photo_url}}
                                 @fallbackSrc={{config "defaultValues.vehicleImage"}}
-                                alt={{this.vehicle.name}}
+                                alt={{this.vehicle.plateNumberModel}}
                                 height="48"
                                 width="48"
                                 class="h-12 w-12 rounded-lg shadow-sm"
                             />
                             <Attach::Tooltip @class="clean" @animation="scale" @placement="top">
-                                <InputInfo @text={{this.vehicle.displayName}} />
+                                <InputInfo @text={{this.vehicle.plateNumberModel}} />
                             </Attach::Tooltip>
                         </div>
                     </div>
                     <div class="flex flex-col">
-                        <h1 class="text-gray-900 dark:text-white text-2xl">{{this.vehicle.display_name}}</h1>
+                        <h1 class="text-gray-900 dark:text-white text-2xl">{{this.vehicle.plateNumberModel}}</h1>
                     </div>
                 </div>
             </div>

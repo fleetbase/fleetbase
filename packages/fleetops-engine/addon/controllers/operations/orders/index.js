@@ -387,7 +387,7 @@ export default class OperationsOrdersIndexController extends BaseController {
         {
             label: this.intl.t('fleet-ops.operations.orders.index.vehicle-assigned'),
             cellComponent: 'cell/vehicle-name',
-            valuePath: 'vehicle_assigned.display_name',
+            valuePath: 'vehicleDisplayName',
             modelPath: 'vehicle_assigned',
             showOnlineIndicator: true,
             width: '170px',

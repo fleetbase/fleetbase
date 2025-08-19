@@ -6,12 +6,12 @@
             {{#if @row.vehicle_assigned}}
                 <div class="ml-2 bg-gray-300 dark:bg-gray-800 opacity-50 px-1 text-xs">
                     <FaIcon @icon="car" @size="xs" class="mr-0.5" />
-                    <span>{{n-a @row.vehicle_assigned.display_name}}</span>
+                    <span>{{n-a @row.vehicle_assigned.plateNumberModel}}</span>
                 </div>
             {{else if this.driver.vehicle}}
                 <div class="ml-2 bg-gray-300 dark:bg-gray-800 opacity-50 px-1 text-xs">
                     <FaIcon @icon="car" @size="xs" class="mr-0.5" />
-                    <span>{{n-a this.driver.vehicle_name}}</span>
+                    <span>{{n-a this.driver.vehicle_assigned.plateNumberModel}}</span>
                 </div>
             {{/if}}
         </a>

@@ -870,15 +870,6 @@ export default class OrderScheduleCardComponent extends Component {
                         order_id: order.id,
                         order_uuid: order.uuid,
                         order_public_id: order.public_id,
-                        driver_id: driver.id,
-                        driver_uuid: driver.uuid,
-                        driver_name: driver.name,
-                        driver_email: driver.email,
-                        driver_phone: driver.phone,
-                        vehicle_id: driver.vehicle?.id,
-                        vehicle_uuid: driver.vehicle?.uuid,
-                        vehicle_name: driver.vehicle?.name,
-                        vehicle_plate: driver.vehicle?.plate,
                         type: 'success'
                     });
                 }
