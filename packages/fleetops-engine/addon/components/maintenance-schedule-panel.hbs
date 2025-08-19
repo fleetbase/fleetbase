@@ -10,7 +10,7 @@
     @width={{or this.width @width "570px"}}
 >
     <Overlay::Header
-        @title={{or this.title (concat (t "fleet-ops.common.order") " #" this.order.public_id)}}
+        @title={{(this.order.public_id)}}
         @status={{this.order.public_id}}
         @hideStatusDot={{true}}
         @createdAt={{this.order.createdAt}}
@@ -18,15 +18,13 @@
         <Button
             @type="default"
             @icon="pen"
-            @helpText={{t "fleet-ops.operations.orders.index.edit-order"}}
             @onClick={{this.onEdit}}
             @wrapperClass="mr-2"
-            @permission="fleet-ops update order"
+            @permission="fleet-ops update leave-request"
         />
         <Button
             @type="default"
             @icon="times"
-            @helpText={{t "fleet-ops.common.close"}}
             @onClick={{this.onPressCancel}}
         />
     </Overlay::Header>
@@ -52,7 +50,7 @@
             <div class="p-4 grid grid-cols-1 gap-3 text-xs dark:text-gray-100">
                 <div class="flex items-center justify-between">
                     <span class="text-gray-500 dark:text-gray-400">{{t "fleet-ops.operations.orders.index.vehicle-assigned"}}</span>
-                    <span class="font-medium">{{n-a this.order.vehicle_assigned.display_name}}</span>
+                    <span class="font-medium">{{n-a this.order.vehicle.display_name}}</span>
                 </div>
                 <div class="flex items-center justify-between">
                     <span class="text-gray-500 dark:text-gray-400">{{t "fleet-ops.common.schedule"}}</span>
@@ -65,10 +63,6 @@
                 <div class="flex items-center justify-between">
                     <span class="text-gray-500 dark:text-gray-400">{{t "fleet-ops.component.maintenance-schedule-form-panel.notes"}}</span>
                     <span class="font-medium">{{n-a this.order.notes}}</span>
-                </div>
-                <div class="flex items-center justify-between">
-                    <span class="text-gray-500 dark:text-gray-400">{{t "fleet-ops.operations.orders.index.created-by"}}</span>
-                    <span class="font-medium">{{this.order.created_by_name}}</span>
                 </div>
                 <div class="flex items-center justify-between">
                     <span class="text-gray-500 dark:text-gray-400">{{t "fleet-ops.common.created-at"}}</span>

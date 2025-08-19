@@ -215,7 +215,7 @@ export default class OperationsSchedulerIndexRoute extends Route {
                 return null;
             }
             
-            const response = await fetch(`${ENV.API.host}/api/v1/leave-requests/list?timestamp=${Date.now()}&status=Approved`, {
+            const response = await fetch(`${ENV.API.host}/api/v1/leave-requests/list?timestamp=${Date.now()}&status=Approved&unavailability_type=vehicle`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',

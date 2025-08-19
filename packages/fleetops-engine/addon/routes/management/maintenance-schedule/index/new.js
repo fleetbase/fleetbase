@@ -6,11 +6,17 @@ export default class ManagementMaintenanceScheduleIndexNewRoute extends Route {
     @service hostRouter;
     @service abilities;
     @service intl;
+    @service store;
 
     beforeModel() {
-        if (this.abilities.cannot('fleet-ops create order')) {
+        if (this.abilities.cannot('fleet-ops create leave-request')) {
             this.notifications.warning(this.intl.t('common.unauthorized-access'));
             return this.hostRouter.transitionTo('console.fleet-ops.management.maintenance-schedule.index');
         }
+    }
+
+    model() {
+        // Return a dummy object for testing
+        return {};
     }
 }

@@ -49,9 +49,13 @@ export default class ManagementMaintenanceScheduleIndexNewController extends Bas
     /**
      * The order being created for maintenance schedule.
      *
-     * @var {OrderModel}
+     * Note: We instantiate a maintenance-schedule record here; the form panel
+     * will convert new records into a leave-request before saving to ensure the
+     * POST goes to /leave-requests.
+     *
+     * @var {MaintenanceScheduleModel}
      */
-    @tracked order = this.store.createRecord('order', {});
+    @tracked order = this.store.createRecord('leave-request', {});
 
     /**
      * Set the overlay component context object.
@@ -97,6 +101,6 @@ export default class ManagementMaintenanceScheduleIndexNewController extends Bas
      * @memberof ManagementissuesIndexNewController
      */
     resetForm() {
-        this.order = this.store.createRecord('order', {});
+        this.order = this.store.createRecord('leave-request', {});
     }
 }

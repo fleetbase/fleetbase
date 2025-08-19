@@ -17,13 +17,20 @@ export default class ManagementMaintenanceScheduleIndexEditRoute extends Route {
     }
 
     beforeModel() {
-        if (this.abilities.cannot('fleet-ops update order')) {
+        if (this.abilities.cannot('fleet-ops update leave-request')) {
             this.notifications.warning(this.intl.t('common.unauthorized-access'));
             return this.hostRouter.transitionTo('console.fleet-ops.management.maintenance-schedule.index');
         }
     }
 
-    model({ public_id }) {
-        return this.store.queryRecord('order', { public_id, single: true, with: ['vehicle_assigned'] });
+    model(paramOrRecord) {
+        // If a full record instance was passed from the controller, use it directly to avoid refetching
+        if (paramOrRecord && typeof paramOrRecord === 'object' && paramOrRecord.constructor) {
+            return paramOrRecord;
+        }
+
+        // Otherwise, fall back to fetching by public_id
+        const { public_id } = paramOrRecord || {};
+        return this.store.queryRecord('leave-request', { public_id, single: true, with: ['vehicle_assigned'] });
     }
 }

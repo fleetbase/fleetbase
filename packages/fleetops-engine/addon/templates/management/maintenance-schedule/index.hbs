@@ -1,4 +1,4 @@
-<Layout::Section::Header @title={{t "fleet-ops.management.issues.index.title"}} @searchQuery={{this.query}} @onSearch={{perform this.search}}>
+<Layout::Section::Header @title={{t "fleet-ops.component.maintenance-schedule-form-panel.title"}} @searchQuery={{this.query}} @onSearch={{perform this.search}}>
     <Button @icon="refresh" @onClick={{this.reload}} @helpText={{t "fleet-ops.common.reload-data"}} class="mr-2" />
     <FiltersPicker
         @columns={{this.columns}}
@@ -10,26 +10,9 @@
     />
     <VisibleColumnPicker @columns={{this.columns}} @onChange={{fn (mut this.columns)}} class="mr-2" />
     {{#if (safe-has this.table "selectedRows")}}
-        <DropdownButton
-            @icon="layer-group"
-            @text={{t "fleet-ops.common.bulk-action"}}
-            @type="magic"
-            @size="sm"
-            @buttonWrapperClass="mr-2"
-            @contentClass="dropdown-menu"
-            @permission="fleet-ops delete issue"
-            as |dd|
-        >
-            <div class="next-dd-menu mt-2 mx-0">
-                <div class="px-1">
-                    <a href="#" class="text-red-500 next-dd-item" {{on "click" (dropdown-fn dd this.bulkDeleteIssues)}}>
-                        {{t "fleet-ops.management.issues.index.delete-issues"}}
-                    </a>
-                </div>
-            </div>
-        </DropdownButton>
+        {{!-- Removed invalid bulk actions --}}
     {{/if}}
-    <Button @customClass="new-issue-btn" @icon="plus" @iconPrefix="fas" @type="primary" @text={{t "fleet-ops.common.new"}} class="mr-2" @onClick={{this.createIssue}} @permission="fleet-ops create issue" />
+    <Button @customClass="new-schedule-btn" @icon="plus" @iconPrefix="fas" @type="primary" @text={{t "fleet-ops.common.new"}} class="mr-2" @onClick={{this.createSchedule}} @permission="fleet-ops create order" />
     {{!-- <Button
         @icon="upload"
         @type="magic"
@@ -39,12 +22,12 @@
         @permission="fleet-ops import issue"
         class="mr-2"
     /> --}}
-    <Button @icon="long-arrow-up" @iconClass="rotate-icon-45" @text={{t "fleet-ops.common.export"}} @onClick={{this.exportIssues}} @permission="fleet-ops export issue" />
+    {{!-- Optional export button can be added later when implemented in controller --}}
 </Layout::Section::Header>
 
 <Layout::Section::Body>
     <Table
-        @rows={{@model}}
+        @rows={{@model.data}}
         @columns={{this.columns}}
         @selectable={{true}}
         @canSelectAll={{true}}

@@ -2,15 +2,10 @@ import BaseController from '@fleetbase/fleetops-engine/controllers/base-controll
 import { inject as service } from '@ember/service';
 import { tracked } from '@glimmer/tracking';
 import { action, set } from '@ember/object';
-import { isBlank } from '@ember/utils';
-import { next } from '@ember/runloop';
 import { timeout } from 'ember-concurrency';
 import { task } from 'ember-concurrency-decorators';
-import { driver } from 'driver.js';
-import 'driver.js/dist/driver.css';
-import { later } from '@ember/runloop';
-import getIssueTypes from '../../../utils/get-issue-types';
-import getIssueCategories from '../../../utils/get-issue-categories';
+import { isBlank } from '@ember/utils';
+import ENV from '@fleetbase/console/config/environment';
 
 export default class ManagementMaintenanceScheduleIndexController extends BaseController {
     @service notifications;
@@ -20,201 +15,99 @@ export default class ManagementMaintenanceScheduleIndexController extends BaseCo
     @service store;
     @service hostRouter;
     @service filters;
-    @service currentUser;
 
-    /**
-     * Queryable parameters for this controller's model
-     *
-     * @var {Array}
-     */
+
     queryParams = [
+        'public_id',
         'page',
-        'limit',
+        'per_page',
         'sort',
         'query',
-        'public_id',
-        'issue_id',
-        'driver',
         'vehicle',
-        'assignee',
-        'reporter',
-        'created_by',
-        'updated_by',
-        'status',
-        'priority',
-        'category',
-        'type',
+        'reason',
+        'start_date',
+        'end_date',
+        'created_at',
     ];
 
-    /**
-     * The current page of data being viewed
-     *
-     * @var {Integer}
-     */
-    @tracked page = 1;
-
-    /**
-     * The maximum number of items to show per page
-     *
-     * @var {Integer}
-     */
-    @tracked limit;
-
-    /**
-     * The param to sort the data on, the param with prepended `-` is descending
-     *
-     * @var {String}
-     */
-    @tracked sort = '-created_at';
-
-    /**
-     * The filterable param `public_id`
-     *
-     * @var {String}
-     */
     @tracked public_id;
-
-    /**
-     * The filterable param `status`
-     *
-     * @var {String}
-     */
-    @tracked status;
-
-    /**
-     * The filterable param `priority`
-     *
-     * @var {Array|String}
-     */
-    @tracked priority;
-
-    /**
-     * The filterable param `type`
-     *
-     * @var {String}
-     */
-    @tracked type;
-
-    /**
-     * The filterable param `category`
-     *
-     * @var {String}
-     */
-    @tracked category;
-
-    /**
-     * The filterable param `vehicle`
-     *
-     * @var {String}
-     */
+    @tracked page = 1;
+    @tracked per_page;
+    @tracked sort = '-created_at';
+    @tracked query;
     @tracked vehicle;
+    @tracked reason;
+    @tracked created_at;
+    @tracked start_date;
+    @tracked end_date;
 
-    /**
-     * The filterable param `driver`
-     *
-     * @var {String}
-     */
-    @tracked driver;
-
-    /**
-     * The filterable param `assignee`
-     *
-     * @var {String}
-     */
-    @tracked assignee;
-
-    /**
-     * The filterable param `reporter`
-     *
-     * @var {String}
-     */
-    @tracked reporter;
-
-    /**
-     * All columns applicable for orders
-     *
-     * @var {Array}
-     */
     @tracked columns = [
         {
             label: this.intl.t('fleet-ops.common.id'),
             valuePath: 'public_id',
-            width: '140px',
-            cellComponent: 'table/cell/link-to',
-            route: 'management.maintenance-schedule.index.details',
-            onLinkClick: this.viewIssue,
+            cellComponent: 'table/cell/anchor',
+            action: (record) => this.viewSchedule(record),
             permission: 'fleet-ops view order',
+            width: '110px',
             resizable: true,
             sortable: true,
             filterable: true,
+            hidden: false,
             filterComponent: 'filter/string',
             filterParam: 'public_id',
         },
         {
-            label: this.intl.t('fleet-ops.operations.orders.index.vehicle-assigned'),
-            cellComponent: 'cell/vehicle-name',
-            valuePath: 'vehicle_assigned.display_name',
-            modelPath: 'vehicle_assigned',
-            showOnlineIndicator: true,
-            width: '170px',
-            resizable: true,
-            sortable: true,
-            filterable: false,
-        },
-        {
-            label: this.intl.t('fleet-ops.common.schedule'),
-            valuePath: 'scheduledAt',
-            sortParam: 'scheduled_at',
-            width: '150px',
-            cellComponent: 'table/cell/date',
+            label: this.intl.t('fleet-ops.common.vehicle-name'),
+            valuePath: 'vehicle.display_name',
+            width: '160px',
             resizable: true,
             sortable: true,
             filterable: true,
-            filterComponent: 'filter/date',
-            filterLabel: this.intl.t('fleet-ops.operations.orders.index.scheduled-at'),
-            filterParam: 'on',
-        },
-        {
-            label: this.intl.t('fleet-ops.operations.orders.index.estimated-end-date'),
-            valuePath: 'estimatedEndDate',
-            sortParam: 'estimated_end_date',
-            width: '150px',
-            cellComponent: 'table/cell/date',
-            resizable: true,
-            sortable: true,
-            filterable: true,
-            filterComponent: 'filter/date',
-            filterParam: 'estimated_end_date',
+            filterComponent: 'filter/string',
+            filterParam: 'vehicle',
         },
         {
             label: this.intl.t('fleet-ops.component.maintenance-schedule-form-panel.notes'),
-            valuePath: 'notes',
-            cellComponent: 'table/cell/base',
-            resizable: true,
-            sortable: false,
-            filterable: true,
-            filterComponent: 'filter/string',
-            filterParam: 'notes',
-        },
-        {
-            label: this.intl.t('fleet-ops.operations.orders.index.created-by'),
-            valuePath: 'created_by_name',
-            width: '140px',
-            cellComponent: 'table/cell/base',
+            valuePath: 'reason',
+            width: '220px',
             resizable: true,
             sortable: true,
             filterable: false,
+            filterComponent: 'filter/string',
+            filterParam: 'reason',
         },
         {
-            label: this.intl.t('fleet-ops.common.created-at'),
-            valuePath: 'createdAt',
-            sortParam: 'created_at',
-            width: '140px',
+            label: this.intl.t('fleet-ops.common.start-date'),
+            valuePath: 'start_date',
             cellComponent: 'table/cell/date',
+            width: '140px',
             resizable: true,
             sortable: true,
             filterable: true,
             filterComponent: 'filter/date',
+            filterParam: 'start_date',
+        },
+        {
+            label: this.intl.t('fleet-ops.operations.orders.index.estimated-end-date'),
+            valuePath: 'end_date',
+            cellComponent: 'table/cell/date',
+            width: '140px',
+            resizable: true,
+            sortable: true,
+            filterable: true,
+            filterComponent: 'filter/date',
+            filterParam: 'end_date',
+        },
+        {
+            label: this.intl.t('fleet-ops.common.created-at'),
+            valuePath: 'created_at',
+            cellComponent: 'table/cell/date',
+            width: '140px',
+            resizable: true,
+            sortable: true,
+            filterable: true,
+            filterComponent: 'filter/date',
+            filterParam: 'created_at',
         },
         {
             label: '',
@@ -225,25 +118,21 @@ export default class ManagementMaintenanceScheduleIndexController extends BaseCo
             ddMenuLabel: this.intl.t('fleet-ops.common.actions'),
             cellClassNames: 'overflow-visible',
             wrapperClass: 'flex items-center justify-end mx-2',
-            width: '12%',
+            width: '10%',
             actions: [
                 {
                     label: this.intl.t('fleet-ops.component.maintenance-schedule-form-panel.view'),
-                    icon: 'eye',
-                    fn: this.viewIssue,
+                    fn: (record) => this.viewSchedule(record),
                     permission: 'fleet-ops view order',
                 },
                 {
                     label: this.intl.t('fleet-ops.common.edit'),
-                    icon: 'pen',
-                    fn: this.editIssue,
+                    fn: (record) => this.editSchedule(record),
                     permission: 'fleet-ops update order',
                 },
-                { separator: true },
                 {
                     label: this.intl.t('fleet-ops.common.delete'),
-                    icon: 'trash',
-                    fn: this.deleteIssue,
+                    fn: (record) => this.deleteSchedule(record),
                     permission: 'fleet-ops delete order',
                 },
             ],
@@ -253,136 +142,212 @@ export default class ManagementMaintenanceScheduleIndexController extends BaseCo
             searchable: false,
         },
     ];
-
-    /**
-     * The search task.
-     *
-     * @void
-     */
     @task({ restartable: true }) *search({ target: { value } }) {
-            // if no query don't search
-            if (isBlank(value)) {
-                set(this, 'query', null);
-                this.hostRouter.refresh();
-                return;
-            }
-            // timeout for typing
-            yield timeout(200);
-    
-            // reset page for results
-            if (this.page > 1) {
-                set(this, 'page', 1);
-            }
-    
-            // update the query param
-            set(this, 'query', value);
+        // if no query don't search
+        if (isBlank(value)) {
+            set(this, 'query', null);
             this.hostRouter.refresh();
-    }
+            return;
+        }
+        // timeout for typing
+        yield timeout(200);
 
-    /**
-     * Toggles dialog to export a issue
-     *
-     * @void
-     */
-    @action exportIssues() {
-        const selections = this.table.selectedRows.map((_) => _.id);
-        this.crud.export('issue', { params: { selections } });
-    }
+        // reset page for results
+        if (this.page > 1) {
+            set(this, 'page', 1);
+        }
 
-    /**
-     * Handles and prompts for spreadsheet imports of issues.
-     *
-     * @void
-     */
-    @action importIssues() {
-        this.crud.import('issue', {
-            onImportCompleted: () => {
-                this.hostRouter.refresh();
-            },
-        });
+        // update the query param
+        set(this, 'query', value);
+        this.hostRouter.refresh();
     }
-
-    /**
-     * Reload layout view.
-     */
-    @action reload() {
-        return this.hostRouter.refresh();
-    }
-
-    /**
-     * Handle page change from the table pagination and refresh the route.
-     * Ensures the model reloads when navigating pages.
-     */
     @action onPageChange(page) {
         set(this, 'page', page);
-        // Schedule transition outside current render to avoid rerender-in-render errors
-        next(this, () => {
-            this.transitionToRoute('management.maintenance-schedule.index', { queryParams: { page } });
-        });
+        this.hostRouter.refresh();
     }
 
     /**
-     * View the selected maintenance order
-     *
-     * @param {OrderModel} order
-     * @param {Object} options
-     * @void
+     * Handle limit changes
      */
-    @action viewIssue(order) {
-        const public_id = typeof order?.public_id === 'string' ? order.public_id : order?.get?.('public_id');
-        next(this, () => {
-            this.transitionToRoute('management.maintenance-schedule.index.details', public_id);
-        });
+    @action onLimitChange(limit) {
+        set(this, 'per_page', limit);
+        set(this, 'page', 1); // Reset to first page
+        this.hostRouter.refresh();
     }
 
     /**
-     * Create a new maintenance schedule order
-     *
-     * @void
+     * Handle sort changes
      */
-    @action createIssue() {
+    @action onSortChange(sort) {
+        set(this, 'sort', sort);
+        set(this, 'page', 1); // Reset to first page
+        this.hostRouter.refresh();
+    }
+
+    /**
+     * Handle filter changes
+     */
+    @action onFilterChange(filterName, value) {
+        set(this, filterName, value);
+        set(this, 'page', 1); // Reset to first page
+        this.hostRouter.refresh();
+    }
+
+    /**
+     * Navigate to create new maintenance schedule
+     */
+    @action createSchedule() {
         return this.transitionToRoute('management.maintenance-schedule.index.new');
     }
 
     /**
-     * Edit a maintenance schedule order
-     *
-     * @param {OrderModel} order
-     * @void
+     * Clear all filters
      */
-    @action editIssue(order) {
-        return this.transitionToRoute('management.maintenance-schedule.index.edit', order);
+    @action clearFilters() {
+        set(this, 'public_id', null);
+        set(this, 'query', null);
+        set(this, 'vehicle', null);
+        set(this, 'reason', null);
+        set(this, 'start_date', null);
+        set(this, 'end_date', null);
+        set(this, 'created_at', null);
+        set(this, 'page', 1);
+        this.hostRouter.refresh();
     }
 
-    /**
-     * Delete a `issue` via confirm prompt
-     *
-     * @param {IssueModel} issue
-     * @param {Object} options
-     * @void
-     */
-    @action deleteIssue(issue, options = {}) {
-        this.crud.delete(issue, {
-            acceptButtonIcon: 'trash',
-            onConfirm: () => {
-                this.hostRouter.refresh();
-            },
-            ...options,
-        });
+    @action viewSchedule(record) {
+        // Pass the full record to avoid an extra API call
+        return this.transitionToRoute('management.maintenance-schedule.index.details', record);
     }
+    
+    @action editSchedule(record) {
+        // Pass the full record to avoid an extra API call
+        return this.transitionToRoute('management.maintenance-schedule.index.edit', record);
+    }
+    
+    @action async deleteSchedule(record, options = {}) {
+        // Align modal appearance/behavior with CRUD delete modal while keeping our DELETE flow
+        const modelName = this.intl.t('fleet-ops.component.maintenance-schedule-form-panel.title');
+        const translatedTitle = this.intl.t('common.model-delete-confirmation', { modelName });
+        const translatedSuccessMessage = this.intl.t('common.model-delete-success', { modelName });
+
+        const openConfirm = (confirmHandler) =>
+            this.modalsManager?.confirm({
+                title: translatedTitle,
+                args: ['model'],
+                model: record,
+                confirm: (modal) => {
+                    if (typeof options.onConfirm === 'function') {
+                        options.onConfirm(record);
+                    }
+                    return confirmHandler(modal);
+                },
+                confirmButtonTheme: 'danger',
+            });
+
+        const execDelete = async (modal) => {
+            try {
+                modal?.startLoading?.();
+
+                const authSession = JSON.parse(localStorage.getItem('ember_simple_auth-session'));
+                const token = authSession?.authenticated?.token;
+                if (!token) {
+                    this.notifications.error(this.intl.t('fleet-ops.common.not-authenticated'));
+                    modal?.done?.();
+                    return;
+                }
+
+                const id = record?.id ?? (typeof record.get === 'function' ? record.get('id') : null);
+                if (!id) {
+                    this.notifications.error(this.intl.t('fleet-ops.component.modals.order-import.invalid'));
+                    modal?.done?.();
+                    return;
+                }
+
+                const response = await fetch(`${ENV.API.host}/api/v1/leave-requests/${id}`, {
+                    method: 'DELETE',
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                });
+
+                if (!response.ok) {
+                    let message = this.intl.t('fleet-ops.common.failed-delete');
+                    let errorObj = new Error(message);
+                    try {
+                        const err = await response.json();
+                        message = err?.message || message;
+                        errorObj = new Error(message);
+                        // attach raw for serverError to display more details if implemented
+                        errorObj.raw = err;
+                    } catch (_) {}
+                    this.notifications.serverError(errorObj);
+                    if (typeof options.onError === 'function') {
+                        options.onError(errorObj, record);
+                    }
+                    modal?.done?.();
+                    return;
+                }
+
+                this.notifications.success(translatedSuccessMessage);
+                if (typeof options.onSuccess === 'function') {
+                    options.onSuccess(record);
+                }
+                modal?.done?.();
+                await this.hostRouter.refresh();
+            } catch (e) {
+                this.notifications.serverError(e);
+                if (typeof options.onError === 'function') {
+                    options.onError(e, record);
+                }
+                modal?.done?.();
+            } finally {
+                if (typeof options.callback === 'function') {
+                    options.callback(record);
+                }
+            }
+        };
+
+        // Open the modal. If modalsManager is unavailable, fall back to immediate delete
+        if (this.modalsManager?.confirm) {
+            return openConfirm(execDelete);
+        }
+
+        // Fallback behavior (no modal manager): proceed with delete directly
+        return execDelete();
+    }
+ 
 
     /**
-     * Bulk deletes selected `issues` via confirm prompt
-     *
-     * @param {Array} selected an array of selected models
-     * @void
+     * The function `rejectLeave` asynchronously updates the status of a leave request to 'reject'.
+     * @param leave - Leave object that contains information about the leave request, such as leave
+     * type, start date, end date, and employee details.
+     * @param [options] - The `options` parameter in the `rejectLeave` function is an optional object
+     * that can be passed to provide additional configuration or settings for the rejection of the
+     * leave request. It allows for customization of the rejection process by specifying various
+     * options as key-value pairs within the object. These options could include things like
      */
-    @action bulkDeleteIssues() {
+    @action async rejectLeave(leave, options = {}) {
+        await this._updateLeaveStatus(leave, 'reject');
+    }
+
+    @action async viewLeaves(leave, options = {}) {
+        return this.transitionToRoute('management.leaves.index.details', leave);
+    }
+
+    @action createLeave() {
+        return this.transitionToRoute('management.leaves.index.new');
+    }
+
+    @action editLeave(leave) {
+        return this.transitionToRoute('management.leaves.index.edit', leave);
+    }
+
+    @action bulkDeleteLeaves() {
         const selected = this.table.selectedRows;
-
         this.crud.bulkDelete(selected, {
             modelNamePath: 'id',
-            acceptButtonText: this.intl.t('fleet-ops.management.issues.index.delete-button'),
+            acceptButtonText: 'Delete selected leaves',
             onSuccess: async () => {
                 await this.hostRouter.refresh();
                 this.table.untoggleSelectAll();
@@ -391,11 +356,61 @@ export default class ManagementMaintenanceScheduleIndexController extends BaseCo
     }
 
     /**
-     * Starts the guided tour for the issues management page
+    * Reload layout view.
+    */
+    @action reload() {
+        return this.hostRouter.refresh();
+    }
+
+    
+
+    /**
+     * Toggles dialog to export a issue
      *
      * @void
      */
-    @action startIssuesTour() {
+    // @action exportLeaves() {
+    //     const selections = this.table.selectedRows.map((_) => _.id);
+    //     this.crud.export('leaves', { params: { selections } });
+    // }
+
+    /**
+     * Starts the guided tour for the leaves management page.
+     *
+     * This tour will highlight:
+     * 1. The three dots dropdown button in the first row.
+     * 2. The "View Leave" button in the actions menu.
+     * 3. The sidebar with leave details including the approve/reject buttons.
+     *
+     * @void
+     */
+    @action startLeavesTour() {
+        // UTILITY: Ensures dropdown menu is open before calling callback (for Next/Prev)
+        const ensureMenuOpen = (callback) => {
+            const menuSelector = '.next-dd-menu-table-dd';
+            const menuBtnSelector = 'table tbody tr:first-child td:last-child .ember-basic-dropdown button';
+
+            // If already open, proceed
+            if (document.querySelector(menuSelector)) {
+                callback();
+                return;
+            }
+            // Try to open the menu
+            const menuBtn = document.querySelector(menuBtnSelector);
+            if (menuBtn) {
+                menuBtn.click();
+            }
+            // Poll until menu is visible
+            const waitForMenu = () => {
+                if (document.querySelector(menuSelector)) {
+                    callback();
+                } else {
+                    setTimeout(waitForMenu, 100);
+                }
+            };
+            waitForMenu();
+        };
+
         const driverObj = driver({
             showProgress: true,
             nextBtnText: this.intl.t('fleetbase.common.next'),
@@ -412,179 +427,105 @@ export default class ManagementMaintenanceScheduleIndexController extends BaseCo
             },
             steps: [
                 {
-                    element: '.new-issue-btn',
+                    element: 'table tbody tr:first-child td:last-child .ember-basic-dropdown button',
                     popover: {
-                        title: this.intl.t('fleetbase.issues.tour.new_button.title'),
-                        description: this.intl.t('fleetbase.issues.tour.new_button.description'),
+                        title: this.intl.t('fleetbase.leaves.tour.dropdown.title'),
+                        description: this.intl.t('fleetbase.leaves.tour.dropdown.description'),
                         onNextClick: () => {
-                            this.createIssue();
-                            later(this, () => {
-                                const el = document.querySelector('.next-content-overlay > .next-content-overlay-panel-container > .next-content-overlay-panel');
-                                if (el) {
-                                    const onTransitionEnd = () => {
-                                        el.removeEventListener('transitionend', onTransitionEnd);
+                            const menuBtn = document.querySelector('table tbody tr:first-child td:last-child .ember-basic-dropdown button');
+                            if (menuBtn) {
+                                menuBtn.click();
+                                const waitForMenu = () => {
+                                    const menu = document.querySelector('.next-dd-menu-table-dd');
+                                    if (menu) {
                                         driverObj.moveNext();
-                                    };
-                                    el.addEventListener('transitionend', onTransitionEnd);
-                                }
-                            }, 100);
+                                    } else {
+                                        setTimeout(waitForMenu, 100);
+                                    }
+                                };
+                                waitForMenu();
+                            }
                         },
                     },
-                    onHighlightStarted: (element) => {
-                        element.style.setProperty('pointer-events', 'none', 'important');
-                        element.disabled = true;
-                    },
-                    onDeselected: (element) => {
-                        element.style.pointerEvents = 'auto';
-                        element.disabled = false;
+                },
+                {
+                    element: '.next-dd-menu-table-dd',
+                    popover: {
+                        title: this.intl.t('fleetbase.leaves.tour.actions_menu.title'),
+                        description: this.intl.t('fleetbase.leaves.tour.actions_menu.description'),
+                        // Keep menu open before going next/prev
+                        onNextClick: () => ensureMenuOpen(() => driverObj.moveNext()),
+                        onPrevClick: () => ensureMenuOpen(() => driverObj.movePrevious()),
                     },
                 },
                 {
-                    element: '.next-content-overlay-panel:has(.issue-form-panel)',
+                    element: '.next-dd-menu div[role="group"]:nth-child(3) > a',
                     popover: {
-                        title: this.intl.t('fleetbase.issues.tour.form_panel.title'),
-                        description: this.intl.t('fleetbase.issues.tour.form_panel.description'),
-                        onPrevClick: () => {
-                            // Attempt to close the sidebar by clicking the cancel button before moving to the previous step
-                            const cancelButton = document.querySelector('.issue-form-cancel-button');
-                            if (cancelButton) {
-                                cancelButton.click();
+                        title: this.intl.t('fleetbase.leaves.tour.view_button.title'),
+                        description: this.intl.t('fleetbase.leaves.tour.view_button.description'),
+                        onNextClick: () => ensureMenuOpen(() => driverObj.moveNext()),
+                        onPrevClick: () => ensureMenuOpen(() => driverObj.movePrevious()),
+                    },
+                },
+                {
+                    element: '.next-dd-menu div[role="group"]:nth-child(4) > a',
+                    popover: {
+                        title: this.intl.t('fleetbase.leaves.tour.approve_button.title'),
+                        description: this.intl.t('fleetbase.leaves.tour.approve_button.description'),
+                        onNextClick: () => ensureMenuOpen(() => driverObj.moveNext()),
+                        onPrevClick: () => ensureMenuOpen(() => driverObj.movePrevious()),
+                    },
+                },
+                {
+                    element: '.next-dd-menu div[role="group"]:nth-child(5) > a',
+                    popover: {
+                        title: this.intl.t('fleetbase.leaves.tour.reject_button.title'),
+                        description: this.intl.t('fleetbase.leaves.tour.reject_button.description'),
+                        onNextClick: () => {
+                            ensureMenuOpen(() => {
+                               const viewBtn = document.querySelector('.next-dd-menu div[role="group"]:nth-child(3) > a');
+                            if (viewBtn) {
+                                viewBtn.click();
                                 later(this, () => {
-                                    driverObj.movePrevious();
-                                }, 500); // Wait for sidebar to close
-                            } else {
-                                driverObj.movePrevious();
+                                    const el = document.querySelector('.next-content-overlay > .next-content-overlay-panel-container > .next-content-overlay-panel');
+                                    if (el) {
+                                        const onTransitionEnd = () => {
+                                            el.removeEventListener('transitionend', onTransitionEnd);
+                                            driverObj.moveNext();
+                                        };
+                                        el.addEventListener('transitionend', onTransitionEnd);
+                                    }
+                                }, 100);
                             }
-                        }
-                    },
-                    // onHighlightStarted: (element) => {
-                    //     element.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                    // },
+                            });
+                        },
+                        onPrevClick: () => ensureMenuOpen(() => driverObj.movePrevious()),
+                    }
                 },
                 {
-                    element: '.issue-form-panel .input-group:has(.reporter)',
+                    element: '.leaves-panel-details .grid',
                     popover: {
-                        title: this.intl.t('fleetbase.issues.tour.reporter_field.title'),
-                        description: this.intl.t('fleetbase.issues.tour.reporter_field.description'),
-                    },
-                    onHighlightStarted: (element) => {
-                        element.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                    },
-                },
-                {
-                    element: '.issue-form-panel .input-group:has(.assignee)',
-                    popover: {
-                        title: this.intl.t('fleetbase.issues.tour.assigned_to_field.title'),
-                        description: this.intl.t('fleetbase.issues.tour.assigned_to_field.description'),
-                    },
-                    onHighlightStarted: (element) => {
-                        element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        title: this.intl.t('fleetbase.leaves.tour.details.title'),
+                        description: this.intl.t('fleetbase.leaves.tour.details.description'),
+                        onPrevClick: () => {
+                            // Attempt to close the sidebar by clicking the cancel/close button before moving to previous step
+                            const closeBtn = document.querySelector('.next-content-overlay-panel:has(.leaves-panel-details) .next-view-header-right button');
+                            if (closeBtn) {
+                                closeBtn.click();
+                                ensureMenuOpen(() => driverObj.moveTo(4)); // Go back to Reject button
+                            }
+                        },
                     },
                 },
                 {
-                    element: '.issue-form-panel .input-group:has(.driver)',
+                    element: '.leaves-panel-details .flex:has(.btn-wrapper)',
                     popover: {
-                        title: this.intl.t('fleetbase.issues.tour.driver_field.title'),
-                        description: this.intl.t('fleetbase.issues.tour.driver_field.description'),
+                        title: this.intl.t('fleetbase.leaves.tour.sidebar_approve.title'),
+                        description: this.intl.t('fleetbase.leaves.tour.sidebar_approve.description'),
                     },
-                    onHighlightStarted: (element) => {
-                        element.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                    },
-                },
-                {
-                    element: '.issue-form-panel .input-group:has(.vehicle)',
-                    popover: {
-                        title: this.intl.t('fleetbase.issues.tour.vehicle_field.title'),
-                        description: this.intl.t('fleetbase.issues.tour.vehicle_field.description'),
-                    },
-                    onHighlightStarted: (element) => {
-                        element.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                    },
-                },
-                {
-                    element: '.issue-form-panel .input-group:has(.issue-type)',
-                    popover: {
-                        title: this.intl.t('fleetbase.issues.tour.type_field.title'),
-                        description: this.intl.t('fleetbase.issues.tour.type_field.description'),
-                    },
-                    onHighlightStarted: (element) => {
-                        element.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                    },
-                },
-                {
-                    element: '.issue-form-panel .input-group:has(.issue-category)',
-                    popover: {
-                        title: this.intl.t('fleetbase.issues.tour.category_field.title'),
-                        description: this.intl.t('fleetbase.issues.tour.category_field.description'),
-                    },
-                    onHighlightStarted: (element) => {
-                        element.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                    },
-                },
-                {
-                    element: '.issue-form-panel .input-group:has(.report)',
-                    popover: {
-                        title: this.intl.t('fleetbase.issues.tour.report_field.title'),
-                        description: this.intl.t('fleetbase.issues.tour.report_field.description'),
-                    },
-                    onHighlightStarted: (element) => {
-                        element.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                    },
-                },
-                {
-                    element: '.issue-form-panel .input-group:has(.emberTagInput)',
-                    popover: {
-                        title: this.intl.t('fleetbase.issues.tour.tags_field.title'),
-                        description: this.intl.t('fleetbase.issues.tour.tags_field.description'),
-                    },
-                    onHighlightStarted: (element) => {
-                        element.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                    },
-                },
-                {
-                    element: '.issue-form-panel .input-group:has(.priority)',
-                    popover: {
-                        title: this.intl.t('fleetbase.issues.tour.priority_field.title'),
-                        description: this.intl.t('fleetbase.issues.tour.priority_field.description'),
-                    },
-                    onHighlightStarted: (element) => {
-                        element.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                    },
-                },
-                {
-                    element: '.issue-form-panel .input-group:has(.status)',
-                    popover: {
-                        title: this.intl.t('fleetbase.issues.tour.status_field.title'),
-                        description: this.intl.t('fleetbase.issues.tour.status_field.description'),
-                    },
-                    onHighlightStarted: (element) => {
-                        element.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                    },
-                },
-                {
-                    element: '.issue-form-panel .input-group.coordinates',
-                    popover: {
-                        title: this.intl.t('fleetbase.issues.tour.coordinates_field.title'),
-                        description: this.intl.t('fleetbase.issues.tour.coordinates_field.description'),
-                    },
-                    onHighlightStarted: (element) => {
-                        element.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                    },
-                },
-                {
-                    element: '.create-issue-btn',
-                    popover: {
-                        title: this.intl.t('fleetbase.issues.tour.submit.title'),
-                        description: this.intl.t('fleetbase.issues.tour.submit.description'),
-                    },
-                    onHighlightStarted: (element) => {
-                        element.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                    },
-                },
+                }
             ],
         });
-
-        // Start the tour
         driverObj.drive();
     }
 }

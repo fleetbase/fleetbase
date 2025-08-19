@@ -6,6 +6,31 @@ export default class MaintenanceSchedulePanelComponent extends Component {
     @tracked overlayContext;
     @tracked tab = this.args.tab ?? { slug: 'overview' };
 
+    constructor() {
+        super(...arguments);
+        // Normalize fields on the passed record so the template renders values
+        try {
+            const rec = this.order;
+            console.log(rec)
+            if (rec) {
+                // Ensure vehicle displays even if relationship wasn't included
+                if (!rec.vehicle && rec.vehicle_name) {
+                    rec.vehicle = { display_name: rec.vehicle_name };
+                }
+                if (!rec.scheduledAt && rec.start_date) {
+                    rec.scheduledAt = rec.start_date;
+                }
+                if (!rec.estimatedEndDate && rec.end_date) {
+                    rec.estimatedEndDate = rec.end_date;
+                }
+                if (!rec.notes && rec.reason) {
+                    rec.notes = rec.reason;
+                }
+                rec.createdAt = rec.createdAt || rec.created_at;
+            }
+        } catch (_) {}
+    }
+
     get order() {
         return this.args.order || this.args.issue || this.args.model;
     }
