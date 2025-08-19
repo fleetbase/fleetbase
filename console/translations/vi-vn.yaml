@@ -985,6 +985,18 @@ fleet-ops:
         title: Tạo đơn hàng
         settings: Cài đặt
         order-config: Cấu hình đơn hàng
+  component:
+    layout:       
+      fleet-ops-sidebar:  
+        maintenance-schedule: Lịch bảo trì
+    maintenance-schedule-form-panel:
+      create: Tạo Lịch Bảo Trì
+      save: Lưu Lịch Bảo Trì
+      notes: Ghi chú
+      view: Xem chi tiết
+      title: Lịch bảo trì
+      success-message: Lịch bảo trì đã được lưu thành công.
+      on-maintenance: Đang bảo trì
   management:
     metrics: 
       title: Các chỉ số IAM

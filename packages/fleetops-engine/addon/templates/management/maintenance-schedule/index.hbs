@@ -1,0 +1,42 @@
+<Layout::Section::Header @title={{t "fleet-ops.component.maintenance-schedule-form-panel.title"}} @searchQuery={{this.query}} @onSearch={{perform this.search}}>
+    <Button @icon="refresh" @onClick={{this.reload}} @helpText={{t "fleet-ops.common.reload-data"}} class="mr-2" />
+    <FiltersPicker
+        @columns={{this.columns}}
+        @onApply={{fn this.filters.apply this}}
+        @onClear={{fn this.filters.reset this}}
+        @onFilterClear={{this.filters.clear}}
+        @onChange={{this.filters.set}}
+        @buttonWrapperClass="mr-2"
+    />
+    <VisibleColumnPicker @columns={{this.columns}} @onChange={{fn (mut this.columns)}} class="mr-2" />
+    {{#if (safe-has this.table "selectedRows")}}
+        {{!-- Removed invalid bulk actions --}}
+    {{/if}}
+    <Button @customClass="new-schedule-btn" @icon="plus" @iconPrefix="fas" @type="primary" @text={{t "fleet-ops.common.new"}} class="mr-2" @onClick={{this.createSchedule}} @permission="fleet-ops create order" />
+    {{!-- <Button
+        @icon="upload"
+        @type="magic"
+        @text={{t "fleet-ops.common.import"}}
+        @wrapperClass="hidden md:flex"
+        @onClick={{this.importIssues}}
+        @permission="fleet-ops import issue"
+        class="mr-2"
+    /> --}}
+    {{!-- Optional export button can be added later when implemented in controller --}}
+</Layout::Section::Header>
+
+<Layout::Section::Body>
+    <Table
+        @rows={{@model.data}}
+        @columns={{this.columns}}
+        @selectable={{true}}
+        @canSelectAll={{true}}
+        @onSetup={{fn (mut this.table)}}
+        @pagination={{true}}
+        @paginationMeta={{@model.meta}}
+        @page={{this.page}}
+        @onPageChange={{fn (mut this.page)}}
+    />
+</Layout::Section::Body>
+
+{{outlet}}
