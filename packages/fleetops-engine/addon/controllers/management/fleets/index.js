@@ -462,7 +462,7 @@ export default class ManagementFleetsIndexController extends BaseController {
                 this.modalsManager.setOption('uploadQueue', []);
                 this.modalsManager.setOption('acceptButtonText', this.intl.t('fleet-ops.component.modals.order-import.start-upload-button'));
                 this.modalsManager.setOption('acceptButtonIcon', 'upload');
-                // this.modalsManager.setOption('acceptButtonScheme', 'magic');
+                this.modalsManager.setOption('acceptButtonScheme', 'magic');
                 this.modalsManager.setOption('acceptButtonDisabled', true);
                 this.modalsManager.setOption('isProcessing', false);
                 this.notifications.serverError(error);

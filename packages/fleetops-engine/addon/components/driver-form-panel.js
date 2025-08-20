@@ -264,6 +264,12 @@ export default class DriverFormPanelComponent extends Component {
         }
     }
 
+    @action
+    onFleetChanged(fleet) {
+        this.driver.set('fleet', fleet);
+        this.driver.set('fleet_uuid', fleet?.id ?? null);
+    }
+
     /**
      * Sets the coordinates input component.
      *

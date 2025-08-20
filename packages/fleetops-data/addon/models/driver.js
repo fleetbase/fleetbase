@@ -20,10 +20,12 @@ export default class DriverModel extends Model {
     @attr('string') vendor_id;
     @attr('string') current_job_id;
     @attr('string') internal_id;
+    @attr('string') fleet_uuid;
 
     /** @relationships */
     @belongsTo('user', { async: true }) user;
-    @hasMany('fleet', { async: true }) fleets;
+    // @hasMany('fleets', { async: true }) fleets;
+    @belongsTo('fleet', { async: true, inverse: 'drivers' }) fleet;
     @hasMany('user-device', { async: true }) devices;
     @hasMany('order', { async: true }) jobs;
     @belongsTo('vehicle', { async: true }) vehicle;

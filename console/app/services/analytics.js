@@ -93,7 +93,7 @@ export default class AnalyticsService extends Service {
             };
 
             gtag('config', this.trackingId, config);
-            console.log('Tracked page view:', config);
+            // console.log('Tracked page view:', config);
         } catch (error) {
             console.error('Error tracking page view:', error);
         }

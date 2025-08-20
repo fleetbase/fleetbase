@@ -1441,6 +1441,7 @@ fleet-ops:
         message: Vous êtes sur le point de désinstaller l'extension "{options}". Êtes-vous sûr de vouloir continuer cette désinstallation ?
         sub-message: Toutes les configurations et paramètres personnalisés seront perdus.
       vehicle-details:
+        fleet: Flotte
         make: Marque
         model: Modèle
         year: Année
@@ -1989,6 +1990,9 @@ fleet-ops:
       name-text: Ce paramètre détermine la distance par défaut en mètres à laquelle les commandes adhoc doivent envoyer un ping aux conducteurs à proximité du point de collecte de la commande.
       message: La distance doit être en mètres
     vehicle-form-panel:
+      fleet: Flotte
+      fleet-text: Assigner une flotte à ce véhicule.
+      fleet-required: Au moins une flotte doit être sélectionnée.
       success-message: Véhicule ({vehicleName}) enregistré avec succès.
       view-details: Voir les détails du véhicule
       save-vehicle: Enregistrer le véhicule

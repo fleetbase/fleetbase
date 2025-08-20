@@ -1232,6 +1232,7 @@ fleet-ops:
           sure you wish to proceed with this uninstallation?
         sub-message: All configuration and customized settings will be lost.
       vehicle-details:
+        fleet: Fleets
         acceleration: 0 to 100 Kph
         avatar: Avatar
         body: Body
@@ -1681,6 +1682,9 @@ fleet-ops:
       view-details: View vehicle details
       vin-number: VIN Number
       year: Year
+      fleet: Fleet
+      fleet-text: Assign a fleet to this vehicle.
+      fleet-required: At least one fleet must be selected.
     vehicle-panel:
       assign-driver: Assign a driver to vehicle
       close: Close vehicle details
