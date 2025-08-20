@@ -1,0 +1,58 @@
+{{#if this.isAutoAllocationEnabled}}
+<DropdownButton
+    @text="Auto Allocate"
+    @img="/images/auto-allocation.svg"
+    @imgClass="h-4 w-4 mr-2"
+    @type="magic"
+    @size="sm"
+    @buttonWrapperClass="mr-2"
+    as |dd|
+>
+    <div class="filters-dropdown-container w-auto">
+        <div class="filters-dropdown-header">
+            <h2 class="auto-allocate-heading">Auto Allocate</h2>
+        </div>
+        <div class="filters-dropdown-body">
+            <div class="flex flex-row gap-4 mb-6 fleetbase-power-select">
+                <div class="relative inline-block">
+                    <DatePicker
+                        @value={{this.autoAllocationDate}}
+                        @onSelect={{@onSelectDate}}
+                        @placeholder="Select Date Range"
+                        @range={{true}}
+                        @minDate={{this.minDate}}
+                        class="form-input-sm caret-gray-800"
+                        style="color: transparent;"
+                    />
+                    <span class="pointer-events-none absolute inset-0 flex items-center px-3 pr-10 whitespace-nowrap overflow-hidden text-ellipsis text-gray-800 text-sm">
+                        {{if this.formattedDateRange this.formattedDateRange @placeholder}}
+                    </span>
+                    <!-- Calendar icon positioned on the right side -->
+                    <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                        <img src="/images/calendar.svg" alt="Calendar" class="h-4 w-4 opacity-60" />
+                    </div>
+                </div>
+                <PowerSelect
+                    @options={{this.fleetOptions}}
+                    @selected={{this.selectedFleet}}
+                    @onChange={{@onSelectFleet}}
+                    @placeholder="Select Fleet"
+                    @triggerClass="form-select form-input form-input-sm"
+                    as |fleet|
+                >
+                    {{fleet.label}}
+                </PowerSelect>
+            </div>
+        </div>
+        <div class="filters-dropdown-footer space-x-2 flex justify-center">
+            <Button
+                @text="Allocate Now"
+                @type="primary"
+                class="w-full h-12 text-lg font-semibold bg-black text-white"
+                @onClick={{dropdown-fn dd this.allocate}}
+                @disabled={{not this.hasDate}}
+            />
+        </div>
+    </div>
+</DropdownButton>
+{{/if}}
