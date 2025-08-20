@@ -464,6 +464,24 @@ export default class OperationsOrdersIndexController extends BaseController {
         //     filterOptionValue: 'id',
         //     filterComponentPlaceholder: 'Filter by order config',
         // },
+
+        {
+            label: this.intl.t('fleet-ops.common.fleet'),
+            cellComponent: 'table/cell/link-list',
+            cellComponentLabelPath: 'name',
+            action: (fleet) => {
+                this.contextPanel.focus(fleet);
+            },
+            valuePath: 'fleets',
+            width: '180px',
+            resizable: true,
+            hidden: true,
+            filterable: true,
+            filterComponent: 'filter/model',
+            filterComponentPlaceholder: this.intl.t('fleet-ops.common.select-fleet'),
+            filterParam: 'fleet',
+            model: 'fleet',
+        },
         {
             label: this.intl.t('fleet-ops.common.status'),
             valuePath: 'status',

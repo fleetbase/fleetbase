@@ -190,6 +190,24 @@
                                 </PowerSelect>
                             </div>
                         </InputGroup>
+
+                        <InputGroup>
+                        <InputLabel @labelText={{html-safe (concat (t "fleet-ops.component.modals.order-form.assign-fleet") " <span style='color: red;'>*</span>")}} />
+                            <div class="fleetbase-model-select fleetbase-power-select ember-model-select">
+                                <PowerSelectMultiple @options={{this.fleetOptions}} @selected={{this.selectedFleets}}
+                                    @onChange={{this.updateFleets}}
+                                    @required={{true}}
+                                    @placeholder={{t "fleet-ops.component.modals.order-form.assign-fleet-placeholder" }}
+                                    @triggerClass="form-select form-input" @disabled={{unauthorized}} as |fleet|>
+                                    <div class="flex items-center">
+                                        <div class="flex-1 flex flex-row truncate">
+                                            <span class="uppercase">{{fleet.name}}</span>
+                                        </div>
+                                    </div>
+                                </PowerSelectMultiple>
+                            </div>
+                        </InputGroup>
+
                         <InputGroup @name={{t "fleet-ops.common.coordinates"}} @wrapperClass="col-span-2" >
                             <CoordinatesInput
                                 @value={{this.vehicle.location}}

@@ -1424,6 +1424,7 @@ fleet-ops:
         message: You are attempting to uninstall the extension "{options}". Are you sure you wish to proceed with this uninstallation?
         sub-message: All configuration and customized settings will be lost.
       vehicle-details:
+        fleet: Fleet
         make: Make
         model: Model
         year: Year
@@ -1976,6 +1977,9 @@ fleet-ops:
       name-text: This setting determines the default distance in meters adhoc orders should ping drivers within vicinity of the order pickup point.
       message: Distance must be in meters
     vehicle-form-panel:
+      fleet: Fleet
+      fleet-text: Assign a fleet to this vehicle.
+      fleet-required: At least one fleet must be selected.
       success-message: Vehicle ({vehicleName}) saved successfully.
       view-details: View vehicle details
       save-vehicle: Save Vehicle

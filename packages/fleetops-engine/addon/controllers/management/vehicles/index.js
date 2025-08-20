@@ -283,6 +283,24 @@ export default class ManagementVehiclesIndexController extends BaseController {
             filterable: true,
             filterComponent: 'filter/string',
         },
+        {
+            label: this.intl.t('fleet-ops.common.fleet'),
+            // cellComponent: 'table/cell/link-list',
+            // cellComponentLabelPath: 'name',
+            // action: (fleet) => {
+            //     this.contextPanel.focus(fleet);
+            // },
+            valuePath: 'fleetNames',
+            width: '180px',
+            resizable: true,
+            hidden: false,
+            filterable: true,
+            filterComponent: 'filter/model',
+            // filterComponentPlaceholder: this.intl.t('fleet-ops.common.select-fleet'),
+            // filterParam: 'fleet',
+            // model: 'fleet',
+        },
+
         // {
         //     label: this.intl.t('fleet-ops.common.vendor'),
         //     cellComponent: 'table/cell/anchor',
@@ -554,7 +572,7 @@ export default class ManagementVehiclesIndexController extends BaseController {
                 this.modalsManager.setOption('uploadQueue', []);
                 this.modalsManager.setOption('acceptButtonText', this.intl.t('fleet-ops.component.modals.order-import.start-upload-button'));
                 this.modalsManager.setOption('acceptButtonIcon', 'upload');
-                // this.modalsManager.setOption('acceptButtonScheme', 'magic');
+                this.modalsManager.setOption('acceptButtonScheme', 'magic');
                 this.modalsManager.setOption('acceptButtonDisabled', true);
                 this.modalsManager.setOption('isProcessing', false);
                 this.notifications.serverError(error);

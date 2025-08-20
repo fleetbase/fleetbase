@@ -15,6 +15,7 @@ export default class VehicleModel extends Model {
     @attr('string') photo_uuid;
     @attr('string') vendor_uuid;
     @attr('boolean') online;
+    @attr('array') fleet_uuid;
 
     /** @relationships */
     @belongsTo('driver', { async: false }) driver;
@@ -42,6 +43,7 @@ export default class VehicleModel extends Model {
     @attr('string') trim;
     @attr('string') type;
     @attr('string') plate_number;
+    @attr('array') fleet_vehicles;
     @attr('string') vin;
     @attr('raw') vin_data;
     @attr('raw') model_data;
@@ -100,6 +102,15 @@ export default class VehicleModel extends Model {
         }
         return formatDate(this.created_at, 'PPP p');
     }
+
+    @computed('fleet_vehicles.@each.fleet')
+    get fleetNames() {
+        return (this.fleet_vehicles || [])
+            .map(fv => fv.fleet?.name)
+            .filter(Boolean)
+            .join(', ');
+    }
+
 
     @computed('created_at') get createdAtShort() {
         if (!isValidDate(this.created_at)) {

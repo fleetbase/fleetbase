@@ -1533,6 +1533,7 @@ fleet-ops:
           de desinstalar el "". ¿Está seguro de que desea continuar con esta desinstalación?
         sub-message: Se perderán todas las configuraciones y ajustes personalizados.
       vehicle-details:
+        fleet: Flota
         make: Marca
         model: Modelo
         year: Año
@@ -2122,6 +2123,9 @@ fleet-ops:
         punto de recopilación del comando.
       message: La distancia debe estar en metros.
     vehicle-form-panel:
+      fleet: Flota
+      fleet-text: Asigne una flota a este vehículo.
+      fleet-required: Se debe seleccionar al menos una flota.
       success-message: Vehículo ({vehicleName}Vehículo () registrado exitosamente.
       view-details: Ver detalles del vehículo
       save-vehicle: Registrar el vehículo

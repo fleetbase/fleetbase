@@ -194,6 +194,22 @@
                         </ModelSelect>
                     </InputGroup>
 
+                    <InputGroup @name={{t "fleet-ops.operations.orders.index.new.fleet" }} @required={{true}}>
+                        <ModelSelect @modelName="fleet" @selectedModel={{this.driver.fleet}}
+                            @placeholder={{t "fleet-ops.operations.orders.index.new.select-fleet" }} @triggerClass="form-select form-input"
+                            @infiniteScroll={{false}} @renderInPlace={{true}} @onChange={{this.onFleetChanged}}
+                            @permission="fleet-ops assign-fleet-for driver" as |fleet|>
+                            <div class="flex items-center">
+                                <div class="w-7 flex-grow-0 flex-shrink-0">
+                                    <FaIcon @icon="users" />
+                                </div>
+                                <span class="uppercase">
+                                    {{fleet.name}}
+                                </span>
+                            </div>
+                        </ModelSelect>
+                    </InputGroup>
+
                     <InputGroup @name={{t "fleet-ops.common.city"}} @required={{true}}>
                         <Input @value={{this.driver.city}} @type="text" class="w-full form-input" placeholder={{t "fleet-ops.common.city"}} disabled={{cannot this.savePermission}} />
                     </InputGroup>

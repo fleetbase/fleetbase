@@ -1444,6 +1444,7 @@ fleet-ops:
         message: Sie versuchen, die Erweiterung "{options}" zu deinstallieren. Möchten Sie mit dieser Deinstallation fortfahren?
         sub-message: Alle Konfigurationen und benutzerdefinierten Einstellungen gehen verloren.
       vehicle-details:
+        fleet: Fleets
         make: Marke
         model: Modell
         year: Jahr
@@ -1994,6 +1995,9 @@ fleet-ops:
       name-text: Diese Einstellung bestimmt die Standardentfernung in Metern, in der Adhoc-Bestellungen Fahrer im Umkreis des Abholpunkts der Bestellung anpingen sollten.
       message: Die Entfernung muss in Metern angegeben werden
     vehicle-form-panel:
+      fleet: Flotte
+      fleet-text: Weisen Sie diesem Fahrzeug eine Flotte zu.
+      fleet-required: Es muss mindestens eine Flotte ausgewählt werden.
       success-message: Fahrzeug ({vehicleName}) erfolgreich gespeichert.
       view-details: Fahrzeugdetails anzeigen
       save-vehicle: Fahrzeug speichern
