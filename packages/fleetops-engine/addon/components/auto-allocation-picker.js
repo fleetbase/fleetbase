@@ -34,10 +34,14 @@ export default class AutoAllocationPickerComponent extends Component {
         }
     }
 
-    // Minimum selectable date (tomorrow, local timezone)
+    // Minimum selectable date (disabled for testing - allows all dates)
     get minDate() {
-        const now = new Date();
-        return new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
+        // Disabled for testing - allows selection of any date including past dates
+        return null;
+        
+        // Original restriction (commented out):
+        // const now = new Date();
+        // return new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
     }
 
     // Instance-only pretty display: 'dd MMM- dd MMM, yyyy'
@@ -55,6 +59,36 @@ export default class AutoAllocationPickerComponent extends Component {
         const endStr = this.#formatDdMmm(end);
         const year = end.getFullYear();
         return `${startStr}- ${endStr}, ${year}`;
+    }
+
+    // Custom date range display formatting for the input field
+    get formattedDateRange() {
+        const value = this.args.autoAllocationDate;
+        if (!value) {
+            return '';
+        }
+        
+        // Handle array format (what the controller stores)
+        if (Array.isArray(value) && value.length === 2) {
+            const [start, end] = value.map(dateStr => new Date(dateStr));
+            if (isNaN(start.getTime()) || isNaN(end.getTime())) {
+                return '';
+            }
+            const options = { month: 'short', day: '2-digit' };
+            const year = start.getFullYear();
+            return `${start.toLocaleDateString(undefined, options)} - ${end.toLocaleDateString(undefined, options)}, ${year}`;
+        }
+        
+        // Handle single date string
+        if (typeof value === 'string' && value.trim()) {
+            const date = new Date(value);
+            if (!isNaN(date.getTime())) {
+                const options = { month: 'short', day: '2-digit', year: 'numeric' };
+                return date.toLocaleDateString(undefined, options);
+            }
+        }
+        
+        return '';
     }
 
     #formatDdMmm(date) {

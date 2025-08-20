@@ -1391,18 +1391,7 @@ export default class OperationsOrdersIndexController extends BaseController {
             return;
         }
 
-        if (!this.selectedFleet) {
-            this.notifications.error('Please select a fleet for allocation');
-            return;
-        }
-
         try {
-            // Show success notification that allocation process is starting
-            this.notifications.success('Auto allocation process initiated successfully!', {
-                title: 'Allocation Started',
-                timeout: 5000
-            });
-
             // Close the auto allocation panel
             this.showAutoAllocationPanel = false;
 

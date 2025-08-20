@@ -20,12 +20,12 @@
                         @onSelect={{@onSelectDate}}
                         @placeholder="Select Date Range"
                         @range={{true}}
-                        {{!-- @minDate={{this.minDate}} --}}
+                        @minDate={{this.minDate}}
                         class="form-input-sm caret-gray-800"
                         style="color: transparent;"
                     />
                     <span class="pointer-events-none absolute inset-0 flex items-center px-3 pr-10 whitespace-nowrap overflow-hidden text-ellipsis text-gray-800 text-sm">
-                        {{if this.prettyDateRange this.prettyDateRange @placeholder}}
+                        {{if this.formattedDateRange this.formattedDateRange @placeholder}}
                     </span>
                     <!-- Calendar icon positioned on the right side -->
                     <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">

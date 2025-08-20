@@ -45,16 +45,6 @@ export default class DatePickerComponent extends Component {
         this.airDatePickerRef = new AirDatepicker(node, this.getOptions());
     }
 
-    formatRangeDisplay(dates) {
-        if (isArray(dates) && dates.length === 2) {
-            const [start, end] = dates.map(date => new Date(date));
-            const options = { month: 'short', day: '2-digit' };
-            const year = start.getFullYear();
-            return `${start.toLocaleDateString(undefined, options)} - ${end.toLocaleDateString(undefined, options)}, ${year}`;
-        }
-        return '';
-    }
-
     @action onDateChange(...args) {
         if (typeof this.args.onChange === 'function') {
             this.args.onChange(...args);
@@ -69,23 +59,11 @@ export default class DatePickerComponent extends Component {
             // Check for clear (undefined date/formattedDate)
             if (newValue.date === undefined && newValue.formattedDate === undefined) {
                 this.currentValue = null;
-                if (this.nodeRef) {
-                    this.nodeRef.value = '';
-                }
             } else {
                 this.currentValue = newValue;
-                // If range, format display
-                if (isArray(newValue.formattedDate) && newValue.formattedDate.length === 2 && this.nodeRef) {
-                    this.nodeRef.value = this.formatRangeDisplay(newValue.formattedDate);
-                } else if (typeof newValue.formattedDate === 'string' && this.nodeRef) {
-                    this.nodeRef.value = newValue.formattedDate;
-                }
             }
         } else {
             this.currentValue = null;
-            if (this.nodeRef) {
-                this.nodeRef.value = '';
-            }
         }
     }
 
