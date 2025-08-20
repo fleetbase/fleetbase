@@ -19,7 +19,7 @@ class FleetVehicle extends FleetbaseResource
         return [
             'uuid'        => $this->when(Http::isInternalRequest(), $this->uuid),   
             'fleet_uuid'  => $this->fleet_uuid,
-            'vehhicle_uuid' => $this->vehicle_uuid,
+            'vehicle_uuid' => $this->vehicle_uuid,
             'created_at'  => $this->created_at,
             'updated_at'  => $this->updated_at,
             'deleted_at'  => $this->deleted_at,
