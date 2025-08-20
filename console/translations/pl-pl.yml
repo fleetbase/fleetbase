@@ -1437,6 +1437,7 @@ fleet-ops:
         message: Próbuje się odinstalować rozszerzenie "{options}". Czy na pewno chcesz kontynuować?
         sub-message: Wszystkie konfiguracje i dostosowane ustawienia zostaną utracone.
       vehicle-details:
+        fleet: Fleota
         make: Marka
         model: Model
         year: Rok
@@ -1987,6 +1988,9 @@ fleet-ops:
       name-text: To ustawienie określa domyślny dystans w metrach, w którym zamówienia ad-hoc powinny wysyłać powiadomienia do kierowców znajdujących się w pobliżu punktu odbioru zamówienia.
       message: Dystans musi być podany w metrach.
     vehicle-form-panel:
+      fleet: Flota
+      fleet-text: Przypisz flotę do tego pojazdu.
+      fleet-required: Musi być wybrana co najmniej jedna flota.
       success-message: Pojazd ({vehicleName}) zapisany pomyślnie.
       view-details: Zobacz szczegóły pojazdu
       save-vehicle: Zapisz pojazd
