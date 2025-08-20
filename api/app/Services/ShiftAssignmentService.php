@@ -94,6 +94,115 @@ class ShiftAssignmentService
         ];
     }
     
+    /**
+     * Apply allocated resources to update orders assignments and schedule times.
+     *
+     * @param array $allocatedResources
+     * @param string|null $timezone Input times' timezone (defaults to app timezone, stored as UTC)
+     * @return array Summary of updates
+     */
+    public function applyAllocatedResources(array $allocatedResources, ?string $timezone = null): array
+    {
+        $timezone = $timezone ?: config('app.timezone', 'UTC');
+        $updatedOrders = [];
+        $skippedAssignments = 0;
+        $errors = [];
+
+        foreach ($allocatedResources as $resourceIndex => $resource) {
+            $resourceId = $resource['resource_id'] ?? null;
+            $resourceName = $resource['resource_name'] ?? null;
+            $assignments = $resource['assignments'] ?? [];
+
+            // Resolve driver by uuid only
+            $driver = null;
+            if ($resourceId) {
+                $driver = Driver::with(['user'])
+                    ->where('uuid', $resourceId)
+                    ->first();
+                
+                \Log::info("Driver lookup for resource_id '{$resourceId}': " . ($driver ? "Found driver {$driver->uuid}" : "Not found"));
+            }
+            if (!$driver && $resourceName) {
+                $driver = Driver::with(['user'])
+                    ->whereHas('user', function ($q) use ($resourceName) {
+                        $q->where('name', $resourceName);
+                    })
+                    ->first();
+                
+                \Log::info("Driver lookup for resource_name '{$resourceName}': " . ($driver ? "Found driver {$driver->uuid}" : "Not found"));
+            }
+
+            foreach ($assignments as $date => $assignment) {
+                // Skip null or empty assignment objects
+                if ($assignment === null || (is_array($assignment) && empty($assignment))) {
+                    $skippedAssignments++;
+                    continue;
+                }
+
+                $orderPublicOrUuid = $assignment['id'] ?? null;
+                $startTime = $assignment['start_time'] ?? null;
+
+                if (!$orderPublicOrUuid || !$startTime) {
+                    $skippedAssignments++;
+                    continue;
+                }
+
+                try {
+                    // Combine date and time, interpret in provided timezone then convert to UTC for storage
+                    $localDateTime = Carbon::parse($date . ' ' . $startTime, $timezone);
+                    $scheduledAtUtc = $localDateTime->clone()->setTimezone('UTC');
+
+                    // Resolve order by public_id then uuid
+                    $order = Order::withoutGlobalScopes()
+                        ->where(function($query) use ($orderPublicOrUuid) {
+                            $query->where('public_id', $orderPublicOrUuid);
+                        })
+                        ->first();
+
+                    if (!$order) {
+                        $errors[] = [
+                            'resource' => $resourceId ?? $resourceName,
+                            'date' => $date,
+                            'order' => $orderPublicOrUuid,
+                            'message' => 'Order not found'
+                        ];
+                        continue;
+                    }
+
+                    // Update only driver assignment
+                    $updates = [];
+                    if ($driver) {
+                        $updates['driver_assigned_uuid'] = $driver->uuid;
+                        \Log::info("Updating order {$order->public_id} with driver {$driver->uuid}");
+                    } else {
+                        \Log::warning("No driver found for resource_id '{$resourceId}' or resource_name '{$resourceName}', skipping driver assignment for order {$order->public_id}");
+                    }
+
+                    Order::where('uuid', $order->uuid)->update($updates);
+
+                    $updatedOrders[] = $order->public_id ?? $order->uuid;
+                } catch (\Exception $e) {
+                    $errors[] = [
+                        'resource' => $resourceId ?? $resourceName,
+                        'date' => $date,
+                        'order' => $orderPublicOrUuid,
+                        'message' => $e->getMessage()
+                    ];
+                }
+            }
+        }
+
+        // Deduplicate updated order ids
+        $updatedOrders = array_values(array_unique($updatedOrders));
+
+        return [
+            'updated_orders' => count($updatedOrders),
+            'updated_order_ids' => $updatedOrders,
+            'skipped_assignments' => $skippedAssignments,
+            'errors' => $errors,
+        ];
+    }
+
     
     
     // Mock data generation methods have been removed to only process real data

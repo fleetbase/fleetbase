@@ -81,15 +81,18 @@ class FleetbaseOverrideServiceProvider extends ServiceProvider
                         });
                     });
                     
-                    // Shift assignment routes with appropriate middleware
+                    // Shift assignment routes - data endpoint without auth for testing
+                    Route::prefix('shift-assignments')->group(function () {
+                        Route::get('/data', 'App\Http\Controllers\Api\v1\ShiftAssignmentController@getShiftAssignmentData')
+                            ->name('shift-assignments.data');
+                        Route::post('/apply-allocations', 'App\Http\Controllers\Api\v1\ShiftAssignmentController@applyAllocations')
+                            ->name('shift-assignments.apply-allocations');
+                    });
+
+                    // Protected shift assignment endpoints
                     Route::middleware(['fleetbase.api', TransformLocationMiddleware::class])
                         ->prefix('shift-assignments')
                         ->group(function () {
-                            // Public data endpoint (no additional auth middleware)
-                            Route::get('/data', 'App\Http\Controllers\Api\v1\ShiftAssignmentController@getShiftAssignmentData')
-                                ->name('shift-assignments.data');
-                                
-                            // Protected endpoints (with auth middleware)
                             Route::get('/current-week', 'App\Http\Controllers\Api\v1\ShiftAssignmentController@getCurrentWeekData')
                                 ->name('shift-assignments.current-week');
                                 
@@ -99,6 +102,12 @@ class FleetbaseOverrideServiceProvider extends ServiceProvider
                             Route::get('/available-drivers', 'App\Http\Controllers\Api\v1\ShiftAssignmentController@getAvailableDrivers')
                                 ->name('shift-assignments.available-drivers');
                         });
+
+                    // Expose apply-allocations WITHOUT auth middleware for testing
+                    Route::prefix('shift-assignments')->group(function () {
+                        Route::post('/apply-allocations', 'App\Http\Controllers\Api\v1\ShiftAssignmentController@applyAllocations')
+                            ->name('shift-assignments.apply-allocations');
+                    });
                 });
             });
     }

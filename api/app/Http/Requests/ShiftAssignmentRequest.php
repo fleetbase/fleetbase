@@ -29,7 +29,17 @@ class ShiftAssignmentRequest extends FormRequest
             'start_date' => 'required|date|before_or_equal:end_date',
             'end_date' => 'required|date|after_or_equal:start_date|after:today',
             'company' => 'nullable|string',
-            'company_uuid' => 'nullable|string|uuid'
+            'company_uuid' => 'nullable|string|uuid',
+            // For allocation update
+            'allocated_resources' => 'sometimes|array',
+            'allocated_resources.*.resource_id' => 'required_with:allocated_resources|string',
+            'allocated_resources.*.resource_name' => 'nullable|string',
+            'allocated_resources.*.assignments' => 'required_with:allocated_resources|array',
+            'allocated_resources.*.assignments.*' => 'nullable|array',
+            'allocated_resources.*.assignments.*.id' => 'sometimes|string',
+            'allocated_resources.*.assignments.*.start_time' => 'sometimes|string',
+            'allocated_resources.*.assignments.*.preference_violated' => 'sometimes|boolean',
+            'timezone' => 'sometimes|string'
         ];
     }
 
