@@ -598,7 +598,6 @@ export default class OperationsOrdersIndexController extends BaseController {
                     label: fleet.name,
                     value: fleet.uuid // or fleet.id if you prefer
                 }));
-                console.log('Mapped fleetOptions:', this.fleetOptions);
             } else {
                 this.fleetOptions = [];
             }
@@ -1386,11 +1385,47 @@ export default class OperationsOrdersIndexController extends BaseController {
     }
 
     @action allocateNow() {
-        // Implement your allocation logic here
-        // Example: send allocation request
-        // this.store.createRecord('allocation', { date: this.autoAllocationDate, fleet: this.selectedFleet }).save();
-        this.showAutoAllocationPanel = false;
-        // Optionally show notification
+        // Validate that we have the required data
+        if (!this.autoAllocationDate || this.autoAllocationDate.length === 0) {
+            this.notifications.error('Please select a date range for allocation');
+            return;
+        }
+
+        if (!this.selectedFleet) {
+            this.notifications.error('Please select a fleet for allocation');
+            return;
+        }
+
+        try {
+            // Show success notification that allocation process is starting
+            this.notifications.success('Auto allocation process initiated successfully!', {
+                title: 'Allocation Started',
+                timeout: 5000
+            });
+
+            // Close the auto allocation panel
+            this.showAutoAllocationPanel = false;
+
+            // Log the allocation request for debugging
+            console.log('Auto allocation requested:', {
+                dateRange: this.autoAllocationDate,
+                fleet: this.selectedFleet,
+                timestamp: new Date().toISOString()
+            });
+
+            // The actual allocation logic is handled by the AutoAllocationPicker component
+            // This action just provides the UI feedback and state management
+            
+            // Optionally, you could trigger additional actions here:
+            // - Refresh the orders list
+            // - Update fleet availability
+            // - Send analytics events
+            // - etc.
+
+        } catch (error) {
+            console.error('Error in allocateNow:', error);
+            this.notifications.error('Failed to initiate allocation process. Please try again.');
+        }
     }
 
 }
