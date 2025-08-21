@@ -431,7 +431,7 @@ class SubscriptionUpdateService
     }
 
     /**
-     * Process subscription updates for subscriptions due in 3 days
+     * Process subscription updates for subscriptions due today
      * 
      * @return array
      */
@@ -439,12 +439,12 @@ class SubscriptionUpdateService
     {
         try {
 
-            $dateIn3Days = Carbon::now()->addDays(3)->format('Y-m-d');
+            $today = Carbon::now()->format('Y-m-d');
 
-            $subscriptionsDue = $this->getSubscriptionsDueIn3Days($dateIn3Days);
+            $subscriptionsDue = $this->getSubscriptionsDueToday($today);
 
             if ($subscriptionsDue->isEmpty()) {
-                return $this->createEmptyResponse($dateIn3Days);
+                return $this->createEmptyResponse($today);
             }
             
             $mappingResult = $this->mapSubscriptionsToUsers($subscriptionsDue);
@@ -455,7 +455,7 @@ class SubscriptionUpdateService
             // Process subscriptions
             $processedResults = $this->processSubscriptions($subscriptionUserMapping);
             
-            return $this->createSuccessResponse($dateIn3Days, $subscriptionsDue, $mappingResult, $processedResults);
+            return $this->createSuccessResponse($today, $subscriptionsDue, $mappingResult, $processedResults);
 
     } catch (\Exception $e) {
         Log::error('Failed to process subscription updates', [
@@ -472,14 +472,14 @@ class SubscriptionUpdateService
 }
 
 /**
- * Get subscriptions due in 3 days
+ * Get subscriptions due today
  *
- * @param string $dateIn3Days
+ * @param string $today
  * @return \Illuminate\Database\Eloquent\Collection
  */
-private function getSubscriptionsDueIn3Days(string $dateIn3Days)
+private function getSubscriptionsDueToday(string $today)
 {
-    // Get subscriptions due in 3 days directly from Chargebee
+    // Get subscriptions due today directly from Chargebee
     $chargebeeSite = config('services.chargebee.site_name');
     $apiKey = config('services.chargebee.api_key');
     
@@ -487,12 +487,12 @@ private function getSubscriptionsDueIn3Days(string $dateIn3Days)
         
         // Convert date to Unix timestamp format (seconds since epoch)
         // Start of the day
-        $startTimestamp = strtotime($dateIn3Days . ' 00:00:00');
+        $startTimestamp = strtotime($today . ' 00:00:00');
         // End of the day
-        $endTimestamp = strtotime($dateIn3Days . ' 23:59:59');
+        $endTimestamp = strtotime($today . ' 23:59:59');
         
-        Log::info('Fetching active subscriptions with next billing date in 3 days', [
-            'target_date' => $dateIn3Days,
+        Log::info('Fetching active subscriptions with next billing date today', [
+            'target_date' => $today,
             'start_timestamp' => $startTimestamp,
             'end_timestamp' => $endTimestamp,
             'timezone' => date_default_timezone_get()
@@ -567,8 +567,8 @@ private function getSubscriptionsDueIn3Days(string $dateIn3Days)
                 return $tempSubscription;
             })->filter(); // Remove any null values
             
-            Log::info('Found subscriptions due in 3 days from Chargebee', [
-                'target_date' => $dateIn3Days,
+            Log::info('Found subscriptions due today from Chargebee', [
+                'target_date' => $today,
                 'subscription_count' => $subscriptions->count()
             ]);
             
@@ -1108,7 +1108,7 @@ private function getSubscriptionsDueIn3Days(string $dateIn3Days)
     {
         return [
             'success' => true,
-            'message' => 'No subscriptions due in 3 days',
+            'message' => 'No subscriptions due today',
             'data' => [
                 'target_date' => $targetDate,
                 'processed_count' => 0,
@@ -1126,13 +1126,13 @@ private function getSubscriptionsDueIn3Days(string $dateIn3Days)
      * @param array $processedResults
      * @return array
      */
-    private function createSuccessResponse(string $dateIn3Days, $subscriptionsDue, array $mappingData, array $processedResults): array
+    private function createSuccessResponse(string $today, $subscriptionsDue, array $mappingData, array $processedResults): array
     {
         return [
             'success' => true,
-            'message' => 'Subscription updates processed for subscriptions due in 3 days',
+            'message' => 'Subscription updates processed for subscriptions due today',
             'data' => [
-                'target_date' => $dateIn3Days,
+                'target_date' => $today,
                 'total_subscriptions' => $subscriptionsDue->count(),
                 'mapped_subscriptions' => count($mappingData['subscription_mapping']),
                 'unique_companies' => count($mappingData['company_mapping']),
