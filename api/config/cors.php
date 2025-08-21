@@ -1,7 +1,7 @@
 <?php
 
 use Fleetbase\Support\Utils;
-
+$auto_allocation_host = explode(',', env('AUTO_ALLOCATION_HOST'));
 return [
 
     /*
@@ -21,7 +21,7 @@ return [
 
     'allowed_methods' => ['*'],
 
-    'allowed_origins' => array_filter(['http://localhost:4200', env('CONSOLE_HOST'), Utils::addWwwToUrl(env('CONSOLE_HOST')),  env('AUTO_ALLOCATION_HOST')]),
+    'allowed_origins' => array_filter(['http://localhost:4200', env('CONSOLE_HOST'), Utils::addWwwToUrl(env('CONSOLE_HOST')), ...$auto_allocation_host]),
 
     'allowed_origins_patterns' => [],
 
