@@ -81,18 +81,23 @@ class FleetbaseOverrideServiceProvider extends ServiceProvider
                         });
                     });
                     
-                    // Shift assignment routes - data endpoint without auth for testing
+                    // Public shift assignment data endpoint (no auth required)
                     Route::prefix('shift-assignments')->group(function () {
                         Route::get('/data', 'App\Http\Controllers\Api\v1\ShiftAssignmentController@getShiftAssignmentData')
                             ->name('shift-assignments.data');
                         Route::post('/apply-allocations', 'App\Http\Controllers\Api\v1\ShiftAssignmentController@applyAllocations')
                             ->name('shift-assignments.apply-allocations');
                     });
-
-                    // Protected shift assignment endpoints
+                    
+                    // Protected shift assignment routes (with auth middleware)
                     Route::middleware(['fleetbase.api', TransformLocationMiddleware::class])
                         ->prefix('shift-assignments')
                         ->group(function () {
+                            // Public data endpoint (no additional auth middleware)
+                            // Route::get('/data', 'App\Http\Controllers\Api\v1\ShiftAssignmentController@getShiftAssignmentData')
+                            //     ->name('shift-assignments.data');
+                                
+                            // Protected endpoints (with auth middleware)
                             Route::get('/current-week', 'App\Http\Controllers\Api\v1\ShiftAssignmentController@getCurrentWeekData')
                                 ->name('shift-assignments.current-week');
                                 
