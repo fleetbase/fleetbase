@@ -174,7 +174,7 @@ export default class ManagementPlacesIndexController extends BaseController {
         },
         {
             label: this.intl.t('fleet-ops.common.state'),
-            valuePath: 'state',
+            valuePath: 'province',
             cellComponent: 'table/cell/anchor',
             cellClassNames: 'uppercase',
             action: this.viewPlace,
