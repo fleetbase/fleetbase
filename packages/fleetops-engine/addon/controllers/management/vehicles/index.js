@@ -185,21 +185,21 @@ export default class ManagementVehiclesIndexController extends BaseController {
      * @var {Array}
      */
     @tracked columns = [
-        {
-            label: this.intl.t('fleet-ops.common.name'),
-            valuePath: 'plateNumberModel',
-            photoPath: 'avatar_url',
-            width: '200px',
-            cellComponent: 'table/cell/vehicle-name',
-            permission: 'fleet-ops view vehicle',
-            action: this.viewVehicle,
-            resizable: true,
-            sortable: true,
-            filterable: true,
-            filterComponent: 'filter/string',
-            filterParam: 'plateNumberModel',
-            showOnlineIndicator: true,
-        },
+        // {
+        //     label: this.intl.t('fleet-ops.common.name'),
+        //     valuePath: 'plateNumberModel',
+        //     photoPath: 'avatar_url',
+        //     width: '200px',
+        //     cellComponent: 'table/cell/vehicle-name',
+        //     permission: 'fleet-ops view vehicle',
+        //     action: this.viewVehicle,
+        //     resizable: true,
+        //     sortable: true,
+        //     filterable: true,
+        //     filterComponent: 'filter/string',
+        //     filterParam: 'plateNumberModel',
+        //     showOnlineIndicator: true,
+        // },
         {
             label: this.intl.t('fleet-ops.common.plate-number'),
             valuePath: 'plate_number',
