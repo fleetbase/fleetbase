@@ -112,7 +112,7 @@
             {{#if @isPopup}}
                 <span class="vehicle-text-display {{unless @order.vehicle_assigned 'dark:text-gray-600 text-gray-400'}}">
                     {{#if @order.vehicle_assigned}}
-                        {{@order.vehicle_assigned.display_name}}
+                        {{@order.vehicle_assigned.plate_number}}
                     {{else}}
                         {{t "fleet-ops.component.order.schedule-card.no-vehicle" default="Not Assigned"}}
                     {{/if}}
@@ -134,7 +134,7 @@
                     >
                         <div class="flex items-center">
                             <div class="flex-1 flex flex-row truncate">
-                                <span class="uppercase">{{model.display_name}}</span>
+                                <span class="uppercase">{{model.plate_number}}</span>
                             </div>
                         </div>
                     </ModelSelect>

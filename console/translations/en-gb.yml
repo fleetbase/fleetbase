@@ -436,7 +436,7 @@ fleet-ops:
     host: Host
     id: ID
     import: Import
-    internal-id: Internal ID
+    internal-id: Amazon Identifier
     item: Item
     key: Key
     label: Label
@@ -860,11 +860,20 @@ fleet-ops:
         toll-reports: Toll Expenses
         vehicles: Vehicles
         vendors: Vendors
+        maintenance-schedule: Maintenance Schedule
     leaves-report-panel:
       cancel-edit-leaves-report: Cancel edit Leaves Report
       cancel-new-leaves-report: Cancel new Leaves Report
       edit-button: Edit Leaves Report
       title: Leaves Report
+    maintenance-schedule-form-panel:
+      create: Create Maintenance Schedule
+      save: Save Maintenance Schedule
+      notes: Notes
+      view: View Details
+      title: Maintenance Schedule
+      success-message: Maintenance schedule saved successfully.
+      on-maintenance: on Maintenance
     live-map:
       assign-fleet: 'Assign Fleet to Service Area: {serviceName}'
       assign-zone: 'Assign Fleet to Zone: {zoneName}'
@@ -1223,6 +1232,7 @@ fleet-ops:
           sure you wish to proceed with this uninstallation?
         sub-message: All configuration and customized settings will be lost.
       vehicle-details:
+        fleet: Fleets
         acceleration: 0 to 100 Kph
         avatar: Avatar
         body: Body
@@ -1672,6 +1682,9 @@ fleet-ops:
       view-details: View vehicle details
       vin-number: VIN Number
       year: Year
+      fleet: Fleet
+      fleet-text: Assign a fleet to this vehicle.
+      fleet-required: At least one fleet must be selected.
     vehicle-panel:
       assign-driver: Assign a driver to vehicle
       close: Close vehicle details
@@ -2037,7 +2050,7 @@ fleet-ops:
           infoblock-text: is not able to support this location.
           input-field-required: The {inputFieldName} is required.
           input-order-info-text: Input order route to view service quotes.
-          internal-id: Internal ID
+          internal-id: Amazon Identifier
           internal-id-help-text: Use this field to optionally set a custom identifier
             or internal identifier for the order.
           invalid-coordinates: Invalid coordinates!

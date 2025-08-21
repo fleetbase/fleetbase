@@ -820,7 +820,7 @@ fleet-ops:
     height: Wysokość
     host: Host
     id: ID
-    internal-id: Wewnętrzny ID
+    internal-id: Identyfikator Amazon
     item: Przedmiot
     key: Klucz
     label: Etykieta
@@ -1124,6 +1124,15 @@ fleet-ops:
         title: Utwórz zamówienie
         settings: Ustawienia
         order-config: Konfiguracja zamówienia
+        maintenance-schedule: Planowanie konserwacji
+    maintenance-schedule-form-panel:
+      create: Utwórz Planowanie konserwacji
+      save: Zapisz Planowanie konserwacji
+      notes: Notatki
+      view: Zobacz szczegóły
+      title: Planowanie konserwacji
+      success-message: Planowanie konserwacji zapisane pomyślnie.
+      on-maintenance: W trakcie konserwacji
     live-map-drawer:
       driver-listing:
         location: Lokalizacja
@@ -1428,6 +1437,7 @@ fleet-ops:
         message: Próbuje się odinstalować rozszerzenie "{options}". Czy na pewno chcesz kontynuować?
         sub-message: Wszystkie konfiguracje i dostosowane ustawienia zostaną utracone.
       vehicle-details:
+        fleet: Fleota
         make: Marka
         model: Model
         year: Rok
@@ -1978,6 +1988,9 @@ fleet-ops:
       name-text: To ustawienie określa domyślny dystans w metrach, w którym zamówienia ad-hoc powinny wysyłać powiadomienia do kierowców znajdujących się w pobliżu punktu odbioru zamówienia.
       message: Dystans musi być podany w metrach.
     vehicle-form-panel:
+      fleet: Flota
+      fleet-text: Przypisz flotę do tego pojazdu.
+      fleet-required: Musi być wybrana co najmniej jedna flota.
       success-message: Pojazd ({vehicleName}) zapisany pomyślnie.
       view-details: Zobacz szczegóły pojazdu
       save-vehicle: Zapisz pojazd
@@ -2267,8 +2280,8 @@ fleet-ops:
           order-type: Typ zamówienia
           order-type-help-text: Wybór typu zamówienia określi, jaką konfigurację zamówień wykorzysta FleetYes.
           order-type-placeholder: Wybierz typ zamówienia
-          internal-id: ID wewnętrzne
-          internal-id-help-text: Użyj tego pola, aby opcjonalnie ustawić niestandardowy identyfikator lub wewnętrzny identyfikator zamówienia.
+          internal-id: Identyfikator Amazon
+          internal-id-help-text: Użyj tego pola, aby opcjonalnie ustawić własny identyfikator
           schedule: Data rozpoczęcia
           estimated-end-date: Szacowana data zakończenia
           schedule-help-text: Data i godzina wysyłki zamówienia. Jeśli nie przypisano kierowcy, wysyłka nie powiedzie się. W przypadku zamówień Ad-Hoc powiadomienie zostanie wysłane do kierowców w pobliżu miejsca odbioru.

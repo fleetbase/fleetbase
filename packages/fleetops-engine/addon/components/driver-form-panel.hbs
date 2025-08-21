@@ -82,7 +82,7 @@
                         <div class="-mt-1">
                             {{#if this.driver.vehicle}}
                                 <div class="flex flex-row items-center">
-                                    <span class="text-sm dark:text-gray-500 text-gray-700 mr-3">{{this.driver.vehicle.displayName}}</span>
+                                    <span class="text-sm dark:text-gray-500 text-gray-700 mr-3">{{this.driver.vehicle.plate_number}}</span>
                                 </div>
                             {{else}}
                                 <div class="flex flex-row items-center">
@@ -154,9 +154,9 @@
 
             <ContentPanel @wrapperClass="driver-details-panel" @title={{t "fleet-ops.component.driver-form-panel.driver-details"}} @open={{true}} @pad={{true}} @panelBodyClass="bg-white dark:bg-gray-800">
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 text-xs dark:text-gray-100">
-                    {{!-- <InputGroup @name={{t "fleet-ops.common.internal-id"}}>
+                    <InputGroup @name={{t "fleet-ops.common.internal-id"}}>
                         <Input @value={{this.driver.internal_id}} @type="text" class="w-full form-input" placeholder={{t "fleet-ops.common.internal-id"}} disabled={{cannot this.savePermission}} />
-                    </InputGroup> --}}
+                    </InputGroup>
 
                     <InputGroup @name={{t "fleet-ops.common.driver-license"}} @required={{true}}>
                         <Input @value={{this.driver.drivers_license_number}} @type="text" class="w-full form-input" placeholder={{t "fleet-ops.common.driver-license"}} disabled={{cannot this.savePermission}} />
@@ -190,7 +190,23 @@
                             @permission="fleet-ops assign-vehicle-for driver"
                             as |model|
                         >
-                            {{model.display_name}}
+                            {{model.plate_number}}
+                        </ModelSelect>
+                    </InputGroup>
+
+                    <InputGroup @name={{t "fleet-ops.operations.orders.index.new.fleet" }} @required={{true}}>
+                        <ModelSelect @modelName="fleet" @selectedModel={{this.driver.fleet}}
+                            @placeholder={{t "fleet-ops.operations.orders.index.new.select-fleet" }} @triggerClass="form-select form-input"
+                            @infiniteScroll={{false}} @renderInPlace={{true}} @onChange={{this.onFleetChanged}}
+                            @permission="fleet-ops assign-fleet-for driver" as |fleet|>
+                            <div class="flex items-center">
+                                <div class="w-7 flex-grow-0 flex-shrink-0">
+                                    <FaIcon @icon="users" />
+                                </div>
+                                <span class="uppercase">
+                                    {{fleet.name}}
+                                </span>
+                            </div>
                         </ModelSelect>
                     </InputGroup>
 

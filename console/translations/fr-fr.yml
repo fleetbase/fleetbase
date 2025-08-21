@@ -817,7 +817,7 @@ fleet-ops:
     height: Hauteur
     host: Hôte
     id: ID
-    internal-id: ID Interne
+    internal-id: Identifiant Amazon
     item: Élément
     key: Clé
     label: Étiquette
@@ -1127,6 +1127,15 @@ fleet-ops:
         order-config: Configuration de commande
         parking: 	Surveillance Parking
         toll-reports: Dépenses de péage
+        maintenance-schedule: Plan de Maintenance
+    maintenance-schedule-form-panel:
+      create: Créer un Plan de Maintenance
+      save: Enregistrer le Plan de Maintenance
+      notes: Notes
+      view: Voir les Détails
+      title: Plan de Maintenance
+      success-message: Plan de maintenance enregistré avec succès.
+      on-maintenance: En maintenance
     live-map-drawer:
       driver-listing:
         location: Localisation
@@ -1432,6 +1441,7 @@ fleet-ops:
         message: Vous êtes sur le point de désinstaller l'extension "{options}". Êtes-vous sûr de vouloir continuer cette désinstallation ?
         sub-message: Toutes les configurations et paramètres personnalisés seront perdus.
       vehicle-details:
+        fleet: Flotte
         make: Marque
         model: Modèle
         year: Année
@@ -1980,6 +1990,9 @@ fleet-ops:
       name-text: Ce paramètre détermine la distance par défaut en mètres à laquelle les commandes adhoc doivent envoyer un ping aux conducteurs à proximité du point de collecte de la commande.
       message: La distance doit être en mètres
     vehicle-form-panel:
+      fleet: Flotte
+      fleet-text: Assigner une flotte à ce véhicule.
+      fleet-required: Au moins une flotte doit être sélectionnée.
       success-message: Véhicule ({vehicleName}) enregistré avec succès.
       view-details: Voir les détails du véhicule
       save-vehicle: Enregistrer le véhicule
@@ -2272,8 +2285,8 @@ fleet-ops:
           order-type: Type de commande
           order-type-help-text: La sélection du type de commande indiquera à FleetYes quelles configurations de commande utiliser.
           order-type-placeholder: Sélectionner le type de commande
-          internal-id: ID interne
-          internal-id-help-text: Utilisez ce champ pour définir un identifiant personnalisé ou un identifiant interne pour la commande.
+          internal-id: Identifiant Amazon
+          internal-id-help-text: Utilisez ce champ pour définir éventuellement un identifiant personnalisé
           schedule: Date de début
           estimated-end-date: Date de fin estimée
           schedule-help-text: La date et l'heure auxquelles la commande sera expédiée. Si aucun conducteur n'est assigné au moment de l'expédition, l'expédition échouera. Si la commande est Ad-Hoc, elle sera envoyée aux conducteurs à proximité du lieu de ramassage.

@@ -667,7 +667,7 @@ fleet-ops:
     height: Altezza
     host: Host
     id: ID
-    internal-id: ID Interno
+    internal-id: Identificatore Amazon
     item: Articolo
     key: Chiave
     label: Etichetta
@@ -976,6 +976,15 @@ fleet-ops:
         order-config: Configurazione Ordine
         parking: Monitoraggio parcheggi
         toll-reports: Spese di pedaggio
+        maintenance-schedule: Pianificazione della Manutenzione
+    maintenance-schedule-form-panel:
+      create: Crea Piano di Manutenzione
+      save: Salva Piano di Manutenzione
+      notes: Note
+      view: Visualizza Dettagli
+      title: Piano di Manutenzione
+      success-message: Piano di Manutenzione salvato con successo.
+      on-maintenance: In manutenzione
     live-map-drawer:
       driver-listing:
         location: Posizione
@@ -1279,6 +1288,7 @@ fleet-ops:
         message: Stai tentando di disinstallare l'estensione "{options}". Sei sicuro di voler procedere con questa disinstallazione?
         sub-message: Tutte le configurazioni e le impostazioni personalizzate saranno perse.
       vehicle-details:
+        fleet: Flotta
         make: Marca
         model: Modello
         year: Anno
@@ -1827,6 +1837,9 @@ fleet-ops:
       name-text: Questa impostazione determina la distanza predefinita in metri entro la quale gli ordini adhoc devono fare ping ai conducenti nelle vicinanze del punto di raccolta dell'ordine.
       message: La distanza deve essere espressa in metri
     vehicle-form-panel:
+      fleet: Flotta
+      fleet-text: Assegna una flotta a questo veicolo.
+      fleet-required: Deve essere selezionata almeno una flotta.
       success-message: Veicolo ({vehicleName}) salvato con successo.
       view-details: Visualizza dettagli veicolo
       save-vehicle: Salva Veicolo
@@ -2116,8 +2129,8 @@ fleet-ops:
           order-type: Tipo Ordine
           order-type-help-text: Selezionando il tipo di ordine, FleetYes saprà quale configurazione di ordine utilizzare.
           order-type-placeholder: Seleziona Tipo Ordine
-          internal-id: ID Interno
-          internal-id-help-text: Usa questo campo per impostare facoltativamente un identificatore personalizzato o interno per l'ordine.
+          internal-id: Identificatore Amazon
+          internal-id-help-text: Utilizzare questo campo per impostare facoltativamente un identificatore personalizzato
           schedule: Data di inizio
           estimated-end-date: Data di fine stimata
           schedule-help-text: La data e l'ora in cui l'ordine sarà spedito. Se nessun conducente è assegnato al momento della spedizione, la spedizione fallirà. Se l'ordine è Ad-Hoc, sarà inviato ai conducenti nelle vicinanze del ritiro.

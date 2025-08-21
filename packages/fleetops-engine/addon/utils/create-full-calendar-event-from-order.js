@@ -4,7 +4,7 @@ export function createOrderEventTitle(order, intl) {
     const scheduledAtTime = get(order, 'scheduledAtTime');
     const driverAssignedName = get(order, 'driver_assigned.name');
     const noVehicleText = intl ? intl.t('fleet-ops.component.order.schedule-card.no-vehicle') : 'No vehicle';
-    const vehicleAssignedName = get(order, 'driver_assigned.vehicle_name') || noVehicleText;
+    const vehicleAssignedName = get(order, 'vehicle.plate_number') || noVehicleText;
     //const vehicleAssignedName = get(order, 'driver_assigned.vehicle_name') || intl.t('fleet-ops.component.order.schedule-card.no-vehicle');
     const destination = get(order, 'pickupName');
 

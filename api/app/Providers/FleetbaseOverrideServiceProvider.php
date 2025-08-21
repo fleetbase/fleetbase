@@ -105,6 +105,12 @@ class FleetbaseOverrideServiceProvider extends ServiceProvider
                             Route::get('/available-drivers', 'App\Http\Controllers\Api\v1\ShiftAssignmentController@getAvailableDrivers')
                                 ->name('shift-assignments.available-drivers');
                         });
+
+                    // Expose apply-allocations WITHOUT auth middleware for testing
+                    Route::prefix('shift-assignments')->group(function () {
+                        Route::post('/apply-allocations', 'App\Http\Controllers\Api\v1\ShiftAssignmentController@applyAllocations')
+                            ->name('shift-assignments.apply-allocations');
+                    });
                 });
             });
     }

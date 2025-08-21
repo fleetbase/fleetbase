@@ -1,0 +1,103 @@
+<Overlay
+    @onLoad={{this.setOverlayContext}}
+    @onOpen={{this.onOpen}}
+    @onClose={{this.onClose}}
+    @onToggle={{this.onToggle}}
+    @position="right"
+    @noBackdrop={{true}}
+    @fullHeight={{true}}
+    @isResizable={{or this.isResizable @isResizable}}
+    @width={{or this.width @width "570px"}}
+>
+    <Overlay::Header
+        @title={{if this.record.public_id (t "fleet-ops.component.maintenance-schedule-form-panel.title")}}
+        @status={{this.record.public_id}}
+        @hideStatusDot={{true}}
+        @titleWrapperClass="leading-5"
+    >
+        <div class="flex flex-1 justify-end">
+            <Button
+                @icon={{if this.record.id "save" "check"}}
+                @type="primary"
+                @text={{if this.record.id (t "fleet-ops.component.maintenance-schedule-form-panel.save") (t "fleet-ops.component.maintenance-schedule-form-panel.create")}}
+                @onClick={{perform this.save}}
+                @isLoading={{this.save.isRunning}}
+                @permission={{this.savePermission}}
+                @wrapperClass="mr-2"
+            />
+            {{#if this.record.id}}
+                <Button
+                    @type="default"
+                    @icon="circle-exclamation"
+                    @onClick={{this.onViewDetails}}
+                    @wrapperClass="mr-2"
+                    @permission="fleet-ops view order"
+                />
+            {{/if}}
+            <Button
+                @type="default"
+                @icon="times"
+                @onClick={{this.onPressCancel}}
+            />
+        </div>
+    </Overlay::Header>
+
+    <Overlay::Body @wrapperClass="px-4 pt-4">
+        {{#let (cannot this.savePermission) as |unauthorized|}}
+            <div class="grid grid-cols-1 text-xs dark:text-gray-100 gap-3">
+                <InputGroup @name={{t "fleet-ops.operations.orders.index.vehicle-assigned"}} @required={{true}}>
+                    <ModelSelect
+                        @modelName="vehicle"
+                        @selectedModel={{this.record.vehicle}}
+                        @placeholder={{t "fleet-ops.operations.orders.index.vehicle-assigned"}}
+                        @triggerClass="form-select form-input vehicle"
+                        @infiniteScroll={{false}}
+                        @renderInPlace={{true}}
+                        @onChange={{this.setVehicle}}
+                        @disabled={{unauthorized}}
+                        as |model|
+                    >
+                        {{model.display_name}}
+                    </ModelSelect>
+                </InputGroup>
+
+                <InputGroup>
+                    <InputLabel @labelText={{html-safe (concat (t "fleet-ops.common.schedule") " <span style='color: red;'>*</span>")}} />
+                    <Input
+                        @type="date"
+                        class="form-input"
+                        @value={{this.formatDateOnly this.record.scheduledAt}}
+                        @min={{format-date (now) "yyyy-MM-dd"}}
+                        {{on "input" this.updateScheduledAt}}
+                        {{on "change" this.updateScheduledAt}}
+                        @disabled={{unauthorized}}
+                    />
+                </InputGroup>
+
+                <InputGroup>
+                    <InputLabel @labelText={{t "fleet-ops.operations.orders.index.estimated-end-date"}} />
+                    <Input
+                        @type="date"
+                        class="form-input"
+                        @value={{this.formatDateOnly this.record.estimatedEndDate}}
+                        @min={{format-date (now) "yyyy-MM-dd"}}
+                        {{on "input" this.updateEstimatedEndDate}}
+                        {{on "change" this.updateEstimatedEndDate}}
+                        @disabled={{unauthorized}}
+                    />
+                </InputGroup>
+
+                <InputGroup @name={{t "fleet-ops.component.maintenance-schedule-form-panel.notes"}}>
+                    <Textarea
+                        @value={{this.record.notes}}
+                        class="w-full form-input"
+                        rows={{4}}
+                        disabled={{unauthorized}}
+                        placeholder={{t "fleet-ops.component.maintenance-schedule-form-panel.notes"}}
+                    />
+                </InputGroup>
+            </div>
+        {{/let}}
+        <Spacer @height="300px" />
+    </Overlay::Body>
+</Overlay>

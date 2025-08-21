@@ -119,6 +119,14 @@
             @permission="fleet-ops create order"
         />
         <Button @customClass="import-order" @icon="upload" @type="magic" @text={{if (media "isMobile") "" (t "fleet-ops.common.import")}} @onClick={{this.importOrder}} @disabled={{this.newController.isCreatingOrder}} @permission="fleet-ops import order" class="mr-2" />
+        <AutoAllocationPicker
+            @fleetOptions={{this.fleetOptions}}
+            @selectedFleet={{this.selectedFleet}}
+            @onSelectFleet={{this.setSelectedFleet}}
+            @autoAllocationDate={{this.autoAllocationDate}}
+            @onSelectDate={{this.setAutoAllocationDate}}
+            @onAllocate={{this.allocateNow}}
+        />
         <Button @icon="long-arrow-up" @iconClass="rotate-icon-45" @text={{t "fleet-ops.common.export"}} @onClick={{this.exportOrders}} @permission="fleet-ops export order" />
     </Layout::Section::Header>
     <Layout::Section::Body>

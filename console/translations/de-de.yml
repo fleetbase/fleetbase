@@ -813,7 +813,7 @@ fleet-ops:
     height: Höhe
     host: Gastgeber
     id: ID
-    internal-id: Interne ID
+    internal-id: Amazon-Kennung
     item: Artikel
     key: Schlüssel
     label: Etikett
@@ -1127,6 +1127,15 @@ fleet-ops:
         order-config: Bestellkonfiguration
         parking: Parküberwachung
         toll-reports: Mautausgaben
+        maintenance-schedule: Wartungsplan
+    maintenance-schedule-form-panel:
+      create: Wartungsplan erstellen
+      save: Wartungsplan speichern
+      notes: Notizen
+      view: Details anzeigen
+      title: Wartungsplan
+      success-message: Wartungsplan erfolgreich gespeichert.
+      on-maintenance: Wartungsplan aktiv
     live-map-drawer:
       driver-listing:
         location: Standort
@@ -1435,6 +1444,7 @@ fleet-ops:
         message: Sie versuchen, die Erweiterung "{options}" zu deinstallieren. Möchten Sie mit dieser Deinstallation fortfahren?
         sub-message: Alle Konfigurationen und benutzerdefinierten Einstellungen gehen verloren.
       vehicle-details:
+        fleet: Fleets
         make: Marke
         model: Modell
         year: Jahr
@@ -1985,6 +1995,9 @@ fleet-ops:
       name-text: Diese Einstellung bestimmt die Standardentfernung in Metern, in der Adhoc-Bestellungen Fahrer im Umkreis des Abholpunkts der Bestellung anpingen sollten.
       message: Die Entfernung muss in Metern angegeben werden
     vehicle-form-panel:
+      fleet: Flotte
+      fleet-text: Weisen Sie diesem Fahrzeug eine Flotte zu.
+      fleet-required: Es muss mindestens eine Flotte ausgewählt werden.
       success-message: Fahrzeug ({vehicleName}) erfolgreich gespeichert.
       view-details: Fahrzeugdetails anzeigen
       save-vehicle: Fahrzeug speichern
@@ -2276,8 +2289,8 @@ fleet-ops:
           order-type: Bestelltyp
           order-type-help-text: Die Auswahl des Bestelltyps gibt an, welche Bestellkonfigurationen von FleetYes verwendet werden sollen.
           order-type-placeholder: Bestelltyp auswählen
-          internal-id: Interne ID
-          internal-id-help-text: Verwenden Sie dieses Feld, um optional eine benutzerdefinierte oder interne Identifikationsnummer für die Bestellung festzulegen.
+          internal-id: Amazon-Kennung
+          internal-id-help-text: Verwenden Sie dieses Feld, um optional eine benutzerdefinierte Kennung festzulegen
           schedule: Startdatum
           estimated-end-date: Voraussichtliches Enddatum
           schedule-help-text: Das Datum und die Uhrzeit, zu der die Bestellung versendet wird. Wenn zu diesem Zeitpunkt kein Fahrer zugewiesen ist, schlägt der Versand fehl. Wenn die Bestellung ad-hoc ist, wird sie an Fahrer in der Nähe des Abholorts gesendet.

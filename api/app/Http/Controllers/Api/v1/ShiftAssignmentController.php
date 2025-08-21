@@ -239,4 +239,53 @@ class ShiftAssignmentController extends Controller
             ], 500);
         }
     }
+
+    /**
+     * Update orders from allocated resources payload.
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function applyAllocations(Request $request): JsonResponse
+    {
+        $validator = Validator::make($request->all(), [
+            'allocated_resources' => 'required|array|min:1',
+            'allocated_resources.*.resource_id' => 'nullable|string',
+            'allocated_resources.*.resource_name' => 'nullable|string',
+            'allocated_resources.*.assignments' => 'required|array',
+            'timezone' => 'sometimes|string',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'errors' => $validator->errors(),
+                'message' => 'Validation failed'
+            ], 422);
+        }
+
+        try {
+            $allocatedResources = $request->input('allocated_resources', []);
+            $timezone = $request->input('timezone');
+
+            $result = $this->shiftAssignmentService->applyAllocatedResources($allocatedResources, $timezone);
+
+            return response()->json([
+                'success' => true,
+                'data' => $result,
+                'message' => 'Allocations applied successfully'
+            ]);
+        } catch (\Exception $e) {
+            \Log::error('Error applying allocations: ' . $e->getMessage(), [
+                'exception' => $e,
+                'request' => $request->all()
+            ]);
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Error applying allocations',
+                'error' => config('app.debug') ? $e->getMessage() : 'Internal server error'
+            ], 500);
+        }
+    }
 }

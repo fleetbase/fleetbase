@@ -387,7 +387,7 @@ export default class OperationsOrdersIndexController extends BaseController {
         {
             label: this.intl.t('fleet-ops.operations.orders.index.vehicle-assigned'),
             cellComponent: 'cell/vehicle-name',
-            valuePath: 'vehicle_assigned.display_name',
+            valuePath: 'vehicle_assigned.plate_number',
             modelPath: 'vehicle_assigned',
             showOnlineIndicator: true,
             width: '170px',
@@ -464,6 +464,24 @@ export default class OperationsOrdersIndexController extends BaseController {
         //     filterOptionValue: 'id',
         //     filterComponentPlaceholder: 'Filter by order config',
         // },
+
+        {
+            label: this.intl.t('fleet-ops.common.fleet'),
+            cellComponent: 'table/cell/link-list',
+            cellComponentLabelPath: 'name',
+            action: (fleet) => {
+                this.contextPanel.focus(fleet);
+            },
+            valuePath: 'fleets',
+            width: '180px',
+            resizable: true,
+            hidden: true,
+            filterable: true,
+            filterComponent: 'filter/model',
+            filterComponentPlaceholder: this.intl.t('fleet-ops.common.select-fleet'),
+            filterParam: 'fleet',
+            model: 'fleet',
+        },
         {
             label: this.intl.t('fleet-ops.common.status'),
             valuePath: 'status',
@@ -574,6 +592,11 @@ export default class OperationsOrdersIndexController extends BaseController {
         },
     ];
 
+    @tracked showAutoAllocationPanel = false;
+    @tracked autoAllocationDate = []; // array for range
+    @tracked selectedFleet = null;
+    @tracked fleetOptions = [];
+
     /**
      * Creates an instance of OperationsOrdersIndexController.
      * @memberof OperationsOrdersIndexController
@@ -584,6 +607,19 @@ export default class OperationsOrdersIndexController extends BaseController {
         if (this.session?.isAuthenticated) {
             this.getOrderStatusOptions.perform();
         }
+        // Fetch fleet list from API and set fleetOptions
+        this.fetch.get('fleets').then((response) => {
+            // response is { fleets: [...], meta: {...} }
+            const fleets = Array.isArray(response.fleets) ? response.fleets : [];
+            if (fleets.length > 0) {
+                this.fleetOptions = fleets.map(fleet => ({
+                    label: fleet.name,
+                    value: fleet.uuid // or fleet.id if you prefer
+                }));
+            } else {
+                this.fleetOptions = [];
+            }
+        });
     }
     @task *getOrderStatusOptions() {
         try {
@@ -1344,6 +1380,60 @@ export default class OperationsOrdersIndexController extends BaseController {
       return this.newController.importOrder();
     }
   
+
+
+    @action setAutoAllocationDate(dateObj) {
+        // For range, dateObj.formattedDate is an array
+        if (Array.isArray(dateObj?.formattedDate)) {
+            this.autoAllocationDate = dateObj.formattedDate;
+        } else if (dateObj?.formattedDate) {
+            this.autoAllocationDate = [dateObj.formattedDate];
+        } else {
+            this.autoAllocationDate = [];
+        }
+    }
+
+    @action toggleAutoAllocationPanel() {
+        this.showAutoAllocationPanel = !this.showAutoAllocationPanel;
+    }
+
+    @action setSelectedFleet(fleet) {
+        // PowerSelect passes the whole fleet object
+        this.selectedFleet = fleet;
+    }
+
+    @action allocateNow() {
+        // Validate that we have the required data
+        if (!this.autoAllocationDate || this.autoAllocationDate.length === 0) {
+            this.notifications.error('Please select a date range for allocation');
+            return;
+        }
+
+        try {
+            // Close the auto allocation panel
+            this.showAutoAllocationPanel = false;
+
+            // Log the allocation request for debugging
+            console.log('Auto allocation requested:', {
+                dateRange: this.autoAllocationDate,
+                fleet: this.selectedFleet,
+                timestamp: new Date().toISOString()
+            });
+
+            // The actual allocation logic is handled by the AutoAllocationPicker component
+            // This action just provides the UI feedback and state management
+            
+            // Optionally, you could trigger additional actions here:
+            // - Refresh the orders list
+            // - Update fleet availability
+            // - Send analytics events
+            // - etc.
+
+        } catch (error) {
+            console.error('Error in allocateNow:', error);
+            this.notifications.error('Failed to initiate allocation process. Please try again.');
+        }
+    }
 
 }
 

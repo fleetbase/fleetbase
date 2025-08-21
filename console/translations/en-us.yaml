@@ -814,7 +814,7 @@ fleet-ops:
     height: Height
     host: Host
     id: ID
-    internal-id: Internal ID
+    internal-id: Amazon Identifier
     item: Item
     key: Key
     label: Label
@@ -1118,6 +1118,7 @@ fleet-ops:
         title: Create Order
         settings: Settings
         order-config: Order Config
+        maintenance-schedule: Maintenance Schedule
     live-map-drawer:
       driver-listing:
         location: Location
@@ -1423,6 +1424,7 @@ fleet-ops:
         message: You are attempting to uninstall the extension "{options}". Are you sure you wish to proceed with this uninstallation?
         sub-message: All configuration and customized settings will be lost.
       vehicle-details:
+        fleet: Fleet
         make: Make
         model: Model
         year: Year
@@ -1975,6 +1977,9 @@ fleet-ops:
       name-text: This setting determines the default distance in meters adhoc orders should ping drivers within vicinity of the order pickup point.
       message: Distance must be in meters
     vehicle-form-panel:
+      fleet: Fleet
+      fleet-text: Assign a fleet to this vehicle.
+      fleet-required: At least one fleet must be selected.
       success-message: Vehicle ({vehicleName}) saved successfully.
       view-details: View vehicle details
       save-vehicle: Save Vehicle
@@ -2063,6 +2068,14 @@ fleet-ops:
       edit-button: Edit Leaves Report
       cancel-edit-leaves-report: Cancel edit Leaves Report
       cancel-new-leaves-report: Cancel new Leaves Report
+    maintenance-schedule-form-panel:
+      create: Create Maintenance Schedule
+      save: Save Maintenance Schedule
+      notes: Notes
+      view: View Details
+      title: Maintenance Schedule
+      success-message: Maintenance schedule saved successfully.
+      on-maintenance: on Maintenance
   management:
     contacts:
       index:
@@ -2269,8 +2282,8 @@ fleet-ops:
           order-type: Order Type
           order-type-help-text: Selecting the order type will tell FleetYes what order configurations to use.
           order-type-placeholder: Select Order Type
-          internal-id: Internal ID
-          internal-id-help-text: Use this field to optionally set a custom identifier or internal identifier for the order.
+          internal-id: Amazon Identifier
+          internal-id-help-text: Use this field to optionally set a custom identifier
           schedule: Start Date
           estimated-end-date: Estimated End Date
           schedule-help-text: The date and time the order will be dispatched. If no driver is assigned at time of dispatch, the dispatch will fail. If the order is Ad-Hoc the order will be pinged to drivers in vicinity of pickup.

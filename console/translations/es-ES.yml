@@ -836,7 +836,7 @@ fleet-ops:
     height: Altura
     host: Anfitrión
     id: Identificación
-    internal-id: Identificación interna
+    internal-id: Identificador de Amazon
     item: Elemento
     key: Llave
     label: Etiqueta
@@ -1192,6 +1192,15 @@ fleet-ops:
         order-config: Configuración del pedido
         parking: Control Estacionamiento
         toll-reports: Gastos de peaje
+        maintenance-schedule: Plan de Mantenimiento
+    maintenance-schedule-form-panel:
+      create: Crear Plan de Mantenimiento
+      save: Guardar Plan de Mantenimiento
+      notes: Notas
+      view: Ver Detalles
+      title: Plan de Mantenimiento
+      success-message: Plan de mantenimiento guardado con éxito.
+      on-maintenance: en Mantenimiento
     live-map-drawer:
       driver-listing:
         location: Ubicación
@@ -1524,6 +1533,7 @@ fleet-ops:
           de desinstalar el "". ¿Está seguro de que desea continuar con esta desinstalación?
         sub-message: Se perderán todas las configuraciones y ajustes personalizados.
       vehicle-details:
+        fleet: Flota
         make: Marca
         model: Modelo
         year: Año
@@ -2113,6 +2123,9 @@ fleet-ops:
         punto de recopilación del comando.
       message: La distancia debe estar en metros.
     vehicle-form-panel:
+      fleet: Flota
+      fleet-text: Asigne una flota a este vehículo.
+      fleet-required: Se debe seleccionar al menos una flota.
       success-message: Vehículo ({vehicleName}Vehículo () registrado exitosamente.
       view-details: Ver detalles del vehículo
       save-vehicle: Registrar el vehículo
@@ -2423,9 +2436,8 @@ fleet-ops:
           order-type-help-text: Seleccionar el tipo de orden le indicará a FleetYes
             qué configuraciones de orden usar.
           order-type-placeholder: Seleccionar tipo de pedido
-          internal-id: Identificación interna
-          internal-id-help-text: Utilice este campo para definir una ID personalizada
-            o una ID interna para el pedido.
+          internal-id: Identificador de Amazon
+          internal-id-help-text: Use este campo para establecer opcionalmente un identificador personalizado
           schedule: Fecha de inicio
           estimated-end-date: Fecha estimada de finalización
           schedule-help-text: La fecha y hora en que se enviará el pedido. Si no se
