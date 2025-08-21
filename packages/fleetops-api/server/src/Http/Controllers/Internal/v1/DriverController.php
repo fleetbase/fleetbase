@@ -130,11 +130,14 @@ class DriverController extends FleetOpsController
         if (empty($input['fleet_uuid'])) {
             return response()->error(__('messages.fleet_uuid.required'));
         }
-            // Will throw exception if invalid
+        // Will throw exception if invalid
+        $fleet = null;
+        try {
             $fleet = Driver::validateFleetUuid($input['fleet_uuid']);
-        if(empty($fleet)) {
-                      return response()->error(__('messages.fleet_uuid.exists'));
-  
+        } catch (\Exception $e) {
+            return response()->error([
+                $e->getMessage()
+            ]);
         }
         
         $existingFleet = FleetDriver::where('fleet_uuid', $input['fleet_uuid'])->first();
