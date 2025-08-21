@@ -165,7 +165,7 @@ export default class ManagementTollReportsIndexController extends BaseController
         },
         {
             label: this.intl.t('fleet-ops.common.vehicle'),
-            valuePath: 'vehicle_name',
+            valuePath: 'vehicle.plate_number',
             width: '100px',
             cellComponent: 'table/cell/anchor',
             permission: 'fleet-ops view vehicle',
@@ -183,7 +183,7 @@ export default class ManagementTollReportsIndexController extends BaseController
             filterComponentPlaceholder: this.intl.t('fleet-ops.common.select-vehicle'),
             filterParam: 'vehicle',
             model: 'vehicle',
-            modelNamePath: 'displayName',
+            modelNamePath: 'vehicle.plate_number',
         },
         {
             label: this.intl.t('fleet-ops.common.status'),
