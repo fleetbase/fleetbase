@@ -145,15 +145,9 @@ class ActionMapper
      *
      * @return string|null The resolved permission action, or null if not found
      */
-    private static $resolved = false;
 
     public static function resolve(Request $request, ?string $resource = null): ?string
     {
-        if (self::$resolved) {
-            return null; // skip duplicate
-        }
-        self::$resolved = true;
-
         return static::getFromRequest($request, $resource);
     }
 
