@@ -568,7 +568,7 @@ trait HasApiControllerBehavior
 
             $this->validateRequest($request);
             $model_name = str_replace('Controller', '', class_basename($this));
-            if ($model_name == "Vehicle") {
+           /* if ($model_name == "Vehicle") {
                 $fleetUuids = $request['vehicle']['fleet_uuid'] ?? null;
 
                 // Check if the fleet UUIDs are empty
@@ -590,7 +590,8 @@ trait HasApiControllerBehavior
                     return response()->error(__('messages.fleet_uuid.exists'));
                 }
 
-            } else if($model_name == "Place"){
+            } */
+            if($model_name == "Place"){
                $place = $request['place'] ?? [];
                 $validator = Validator::make(
                     $place,
