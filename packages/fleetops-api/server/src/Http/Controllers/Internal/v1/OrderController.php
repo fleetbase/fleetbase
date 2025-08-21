@@ -1014,7 +1014,7 @@ class OrderController extends FleetOpsController
                     if (empty($trip_id)) {
                         $originalRowIndex = $rows[0]['_original_row_index'] ?? 0;
                         $importErrors[] = [
-                            (string)($originalRowIndex + 1),
+                            (string)($originalRowIndex + 2), // +2 to include header row
                             "Trip ID is required.",
                             ""
                         ];
@@ -1034,7 +1034,7 @@ class OrderController extends FleetOpsController
                             foreach ($rows as $row) {
                                 $originalRowIndex = $row['_original_row_index'] ?? 0;
                                 $importErrors[] = [
-                                    (string)($originalRowIndex + 1),
+                                    (string)($originalRowIndex + 2), // +2 to include header row
                                     "Trip ID '{$trip_id}' already exists.",
                                     (string)$tripId
                                 ];
@@ -1068,7 +1068,7 @@ class OrderController extends FleetOpsController
                             foreach ($existingVrIds as $existingVrId) {
                                 $originalRowIndex = $vrIdToRowIndex[$existingVrId] ?? 0;
                                 $importErrors[] = [
-                                    (string)($originalRowIndex + 1),
+                                    (string)($originalRowIndex + 2), // +2 to include header row
                                     "VR ID '{$existingVrId}' already exists.",
                                     (string)$tripId
                                 ];
@@ -1088,7 +1088,7 @@ class OrderController extends FleetOpsController
                             if (count($facilities) > 2) {
                                 $originalRowIndex = $row['_original_row_index'] ?? 0;
                                 $importErrors[] = [
-                                    (string)($originalRowIndex + 1),
+                                    (string)($originalRowIndex + 2), // +2 to include header row
                                     "Trip {$tripId}: Facility sequence has " . count($facilities) . " items. Only 2 are imported. Sequence: " . implode(' -> ', $facilities),
                                     (string)$tripId
                                 ];
@@ -1098,7 +1098,7 @@ class OrderController extends FleetOpsController
                             if (count($facilities) >= 2 && $facilities[0] === $facilities[1]) {
                                 $originalRowIndex = $row['_original_row_index'] ?? 0;
                                 $importErrors[] = [
-                                    (string)($originalRowIndex + 1),
+                                    (string)($originalRowIndex + 2), // +2 to include header row
                                     "Trip {$tripId}: First and second facility in sequence are the same ('{$facilities[0]}'). Sequence: " . implode(' -> ', $facilities),
                                     (string)$tripId
                                 ];
@@ -1138,7 +1138,7 @@ class OrderController extends FleetOpsController
                                     try {
                                         $yardArrivalDates[] = $this->parseExcelDate($value);
                                     } catch (\Exception $e) {
-                                        $displayRowIndex = $originalRowIndex + 1;
+                                        $displayRowIndex = $originalRowIndex + 2; // +2 to include header row
                                         $importErrors[] = [
                                             (string)$displayRowIndex,
                                             "Invalid date format for column '{$key}'",
@@ -1191,7 +1191,7 @@ class OrderController extends FleetOpsController
                         foreach ($allUniquePlaceCodes as $placeCode) {
                             if (!$placesByCode->has($placeCode)) {
                                 $rowIndex = isset($placeCodeToRowIndex[$placeCode]) 
-                                ? (string)($placeCodeToRowIndex[$placeCode] + 1) 
+                                ? (string)($placeCodeToRowIndex[$placeCode] + 2) // +2 to include header row
                                 : '-';
                                 $importErrors[] = [
                                     $rowIndex,
@@ -1211,7 +1211,7 @@ class OrderController extends FleetOpsController
                         $uniqueWaypointSequence = $this->buildWaypointSequence($routeMap);
                         
                         if (empty($uniqueWaypointSequence)) {
-                            $firstRowIndex = ($rows[0]['_original_row_index'] ?? 0) + 1;
+                            $firstRowIndex = ($rows[0]['_original_row_index'] ?? 0) + 2; // +2 to include header row
                             $importErrors[] = [
                                (string)$firstRowIndex,
                                 "Trip {$tripId}: Could not determine waypoint sequence from routes",
@@ -1620,26 +1620,23 @@ public function createRouteSegmentsFromRows(array $rows, Order $order, array $sa
         if ($existingSegments->count() > 0) {
             $existingIds = $existingSegments->pluck('public_id')->toArray();
             // Find the first row that has this VR ID for better error reporting
-            $firstRowWithVrId = null;
             foreach ($existingIds as $existingId) {
-            $firstRowWithVrId = null;
+                $firstRowWithVrId = null;
                 foreach ($rows as $row) {
                     if (isset($row['vr_id']) && $row['vr_id'] === $existingId) {
-                        $firstRowWithVrId = ($row['_original_row_index'] ?? 0) + 1;
+                        $firstRowWithVrId = ($row['_original_row_index'] ?? 0) + 2; // +2 to include header row
                         break;
                     }
                 }
-            $rowDisplay = $firstRowWithVrId ?? '-';
-            $errors[] = [$rowDisplay, "VR ID '{$existingId}' already exists", $order->public_id ?? ($order->id ?? '')];
-        }
-           
-            //throw new \Exception("Row {$rowDisplay}: VR ID already exists for the order: " . implode(', ', $existingIds));
+                $rowDisplay = $firstRowWithVrId ?? '-';
+                $errors[] = [$rowDisplay, "VR ID '{$existingId}' already exists", $order->public_id ?? ($order->id ?? '')];
+            }
         }
     }
     
     foreach ($rows as $groupIndex => $row) {
         $originalRowIndex = $row['_original_row_index'] ?? $groupIndex;
-        $displayRowIndex = $originalRowIndex + 1; // Convert to 1-based for display
+        $displayRowIndex = $originalRowIndex + 2; // +2 to include header row
         $fromCode = $row['stop_1'] ?? null;
         $toCode = $row['stop_2'] ?? null;
         // Fallback to facility_sequence if stop_1 or stop_2 are null
@@ -1794,7 +1791,7 @@ public function createRouteSegmentsFromRows(array $rows, Order $order, array $sa
             $createdSegments[] = $routeSegment->id;
             
         } catch (\Exception $e) {
-            $displayRowIndex = $originalRowIndex + 1;
+            $displayRowIndex = $originalRowIndex + 2; // +2 to include header row
             $errors[] = [$displayRowIndex, $e->getMessage(), $order->public_id];
 
         }
