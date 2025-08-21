@@ -99,7 +99,7 @@ export default class VehicleFormPanelComponent extends Component {
             return;
         }
 
-        this.notifications.success(this.intl.t('fleet-ops.component.vehicle-form-panel.success-message', { vehicleName: this.vehicle.plate_number }));
+        this.notifications.success(this.intl.t('fleet-ops.component.vehicle-form-panel.success-message', { vehicleName: this.vehicle.displayName }));
         contextComponentCallback(this, 'onAfterSave', this.vehicle);
     }
 
