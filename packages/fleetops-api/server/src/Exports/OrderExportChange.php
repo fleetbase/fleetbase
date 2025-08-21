@@ -31,79 +31,118 @@ class OrderExportChange implements FromCollection, WithHeadings, ShouldAutoSize,
     {
         return [
             // Main headers (row 1)
-            ['Block ID', 'Trip ID', 'Load ID', 'Lane', 'Arrival Start Time', 'Driver type', 'Driver(s) use first name and surname', '', 'Tractor', '', '', 'Trailer', '', ''],
+            ['UPCOMING TAB – BULK ASSIGNMENT'],  // Row 1
+            ['Instructions: Fill in the Driver, Tractor Vehicle Type, Registration Plate No., Country Code, Trailer Equipment Type, Trailer ID (separated by comma for two trailers) and Unscheduled Drop fields for the trips that you wish to assign. Trips with existing assignments will be overridden.'], // Row 2
+            [''], // Row 3 (blank row)
+            ['Block ID', '', '', '', '', '', 'Driver(s) use first name and surname', '', 'Tractor', '', '', 'Trailer', '', ''],
             // Sub headers (row 2)
-            ['', '', '', '', '', '', 'Driver 1', 'Driver 2 (if team)', 'Vehicle Type', 'License Plate #', 'Country Code', 'Equipment Type', 'Trailer ID', 'Unscheduled Drop (Yes/No)']
+            ['','Trip ID', 'Load ID', 'Lane', 'Arrival Start Time', 'Driver type', 'Driver 1', 'Driver 2 (if team)', 'Vehicle Type', 'License Plate #', 'Country Code', 'Equipment Type', 'Trailer ID', 'Unscheduled Drop (Yes/No)']
         ];
     }
 
-    public function registerEvents(): array
-    {
-        return [
-            AfterSheet::class => function(AfterSheet $event) {
-                $sheet = $event->sheet->getDelegate();
+  public function registerEvents(): array
+{
+    return [
+        AfterSheet::class => function(AfterSheet $event) {
+            $sheet = $event->sheet->getDelegate();
 
-                // Merge cells for main headers
-                $sheet->mergeCells('G1:H1'); // Driver(s) use first name and surname
-                $sheet->mergeCells('I1:K1'); // Tractor
-                $sheet->mergeCells('L1:N1'); // Trailer
+            // Merge cells for title and instructions
+            $sheet->mergeCells('A1:N1'); // Title
+            $sheet->mergeCells('A2:N2'); // Instructions
+            $sheet->mergeCells('G4:H4'); // Driver(s)
+            $sheet->mergeCells('I4:K4'); // Tractor
+            $sheet->mergeCells('L4:N4'); // Trailer
 
-                // Style main headers (row 1)
-                $sheet->getStyle('A1:N1')->applyFromArray([
-                    'font' => ['bold' => true],
-                    'fill' => [
-                        'fillType' => 'solid',
-                        'startColor' => ['rgb' => '70C0E7'] // Light blue/cyan
-                    ],
-                    'alignment' => ['horizontal' => 'center'],
-                    'borders' => [
-                        'allBorders' => [
-                            'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
-                            'color' => ['rgb' => '000000']
-                        ]
+            // Style Title (Row 1) - Left aligned
+            $sheet->getStyle('A1')->applyFromArray([
+                'font' => ['bold' => true, 'size' => 14],
+                'alignment' => [
+                    'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_LEFT,
+                    'vertical' => \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER
+                ],
+                'fill' => [
+                   'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID,
+                   'startColor' => ['rgb' => 'FFFFCC'] // Light yellow (same as Excel)
+                ]
+            ]);
+
+            // Style Instructions (Row 2) - Left aligned
+             $sheet->getStyle('A2')->applyFromArray([
+                'font' => ['italic' => true, 'size' => 10],
+                'alignment' => [
+                    'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_LEFT,
+                    'vertical' => \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER
+                ],
+                'fill' => [
+                    'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID,
+                    'startColor' => ['rgb' => 'FFFFCC'] // Light yellow (same as Excel)
+                ]
+            ]);
+            $sheet->getRowDimension(2)->setRowHeight(20);
+            $sheet->getStyle('A2')->getAlignment()->setWrapText(true);
+
+            // Style Main Header Row (Row 4)
+            $sheet->getStyle('A4:N4')->applyFromArray([
+                'font' => ['bold' => true],
+                'alignment' => ['horizontal' => 'center', 'vertical' => 'center'],
+                'fill' => [
+                    'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID,
+                    'startColor' => ['rgb' => 'CCFFFF'] // Light blue from Excel (RGB: 204,255,255)
+                ],
+                'borders' => [
+                    'allBorders' => [
+                        'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
+                        'color' => ['rgb' => '000000']
                     ]
-                ]);
+                ]
+            ]);
 
-                // Style sub headers (row 2)
-                $sheet->getStyle('A2:N2')->applyFromArray([
-                    'font' => ['bold' => true, 'size' => 9],
-                    'fill' => [
-                        'fillType' => 'solid',
-                        'startColor' => ['rgb' => 'E8F4F8'] // Very light blue
-                    ],
-                    'alignment' => ['horizontal' => 'center'],
-                    'borders' => [
-                        'allBorders' => [
-                            'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
-                            'color' => ['rgb' => '000000']
-                        ]
+            // Style Sub-Header Row (Row 5)
+            $sheet->getStyle('A5:N5')->applyFromArray([
+                'font' => ['bold' => true],
+                'alignment' => ['horizontal' => 'center', 'vertical' => 'center'],
+                'fill' => [
+                    'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID,
+                    'startColor' => ['rgb' => 'CCFFFF'] // Light blue from Excel (RGB: 204,255,255)
+                ],
+                'borders' => [
+                    'allBorders' => [
+                        'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
+                        'color' => ['rgb' => '000000']
                     ]
-                ]);
+                ]
+            ]);
 
-                // Set row heights
-                $sheet->getRowDimension(1)->setRowHeight(20);
-                $sheet->getRowDimension(2)->setRowHeight(20);
+            // Freeze first 5 rows so headers remain visible
+            $sheet->freezePane('A6');
 
-                // Auto-size columns A to N
-                foreach (range('A', 'N') as $column) {
-                    $sheet->getColumnDimension($column)->setAutoSize(true);
-                }
-
-                // Add border to data rows (starting from A3)
-                $lastRow = $sheet->getHighestRow(); // Get last used row
-                if ($lastRow >= 3) {
-                    $sheet->getStyle("A3:N{$lastRow}")->applyFromArray([
-                        'borders' => [
-                            'allBorders' => [
-                                'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
-                                'color' => ['rgb' => 'CCCCCC'] // Light gray border
-                            ]
-                        ]
-                    ]);
-                }
+            // Auto-size columns A to N
+            foreach (range('A', 'N') as $column) {
+                $sheet->getColumnDimension($column)->setAutoSize(true);
             }
-        ];
-    }
+
+            // Apply borders to all data rows starting from row 6
+            $lastRow = $sheet->getHighestRow(); // Get last used row
+            if ($lastRow >= 6) {
+            for ($row = 6; $row <= $lastRow; $row++) {
+                $fillColor = ($row % 2 == 0) ? 'FFFFFF' : 'C0C0C0'; // White & Gray
+                $sheet->getStyle("A{$row}:N{$row}")->applyFromArray([
+                    'fill' => [
+                        'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID,
+                        'startColor' => ['rgb' => $fillColor]
+                    ],
+                    'borders' => [
+                        'allBorders' => [
+                            'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
+                            'color' => ['rgb' => 'CCCCCC'] // Light gray border
+                        ]
+                    ]
+                ]);
+            }
+        }
+        }
+    ];
+}
 
 
     public function collection(): Collection
