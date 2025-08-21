@@ -1105,6 +1105,21 @@ class OrderController extends FleetOpsController
                                 $tripHasErrors = true;
                             }
                         }
+                        if (
+                            isset($row['stop_1'], $row['stop_2']) && // both keys exist
+                            !empty($row['stop_1']) &&
+                            !empty($row['stop_2']) &&
+                            $row['stop_1'] === $row['stop_2']
+                        ) {
+                            $originalRowIndex = $row['_original_row_index'] ?? 0;
+                            $importErrors[] = [
+                                (string)($originalRowIndex + 2), // +2 to account for header row
+                                "Trip {$tripId}: Stop 1 and Stop 2 are the same",
+                                (string)$tripId
+                            ];
+
+                            $tripHasErrors = true;
+                        }
                     }
                     if ($tripHasErrors) {
                         DB::rollback();
