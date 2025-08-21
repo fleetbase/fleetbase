@@ -112,7 +112,6 @@ class ActionMapper
      */
     public static function getAction(string $method, string $requestMethod, ?string $resource = null): ?string
     {
-        print_r($method);
         return app(static::class)->mapAction($method, $requestMethod, $resource);
     }
 
