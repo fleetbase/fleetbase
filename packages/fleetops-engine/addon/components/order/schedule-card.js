@@ -35,8 +35,6 @@ export default class OrderScheduleCardComponent extends Component {
     @tracked tempDriverSelection = null;
     @tracked tempVehicleSelection = null;
     @tracked originalOrder = null;
-    @tracked shouldReopenEditModal = false;
-    @tracked pendingEditModalData = null;
     router = null;
     calendarInstance = null;
     skipUnassignConfirm = false;
@@ -109,10 +107,13 @@ export default class OrderScheduleCardComponent extends Component {
     @action assignDriver(driver) {
         const eventBus = this.effectiveEventBus;
         try {
-            // Close any open modals first using Ember's modal service
-            if (this.modalsManager && typeof this.modalsManager.done === 'function') {
-                this.modalsManager.done();
-            }
+            // Close any open modals first
+            document.querySelectorAll('.modal.show').forEach(modal => {
+                const closeBtn = modal.querySelector('.close, .btn-close, [data-dismiss="modal"]');
+                if (closeBtn) {
+                    closeBtn.click();
+                }
+            });
         } catch (e) {
             console.error('Error closing modals:', e);
         }
@@ -200,10 +201,14 @@ export default class OrderScheduleCardComponent extends Component {
                         confirm: (modal) => {
                             modal.done();
                             this.isModalOpen = false;
-                            // Schedule reopening of edit modal instead of DOM manipulation
-                            this.scheduleEditModalReopen(order);
-                            // Handle modal reopening after operation
-                            this.handleModalReopeningAfterOperation();
+                            const orderId = order.public_id;
+                            // Try to find and click the edit button for this order
+                            setTimeout(() => {
+                                const editButton = document.querySelector('a[data-order-id="' + orderId + '"]');
+                                if (editButton) {
+                                    editButton.click();
+                                }
+                            }, 100);
                         }
                     });
                     return;
@@ -247,6 +252,7 @@ export default class OrderScheduleCardComponent extends Component {
                             .then(() => {
                                 this.isAssigningDriver = false;
 
+                                document.body.classList.add('is-loading');
                                 // Update with current page
                                 const newQueryParams = {
                                     ref: Date.now(),
@@ -269,6 +275,7 @@ export default class OrderScheduleCardComponent extends Component {
                                         refreshAll: true
                                     });
                                 } else {
+                                    document.body.classList.remove('is-loading');
                                     console.error("eventBus is not available.");
                                 }
                                 this.notifications.success(
@@ -490,10 +497,20 @@ export default class OrderScheduleCardComponent extends Component {
                         });
                     }
 
-                    // Schedule reopening of edit modal instead of DOM manipulation
-                    this.scheduleEditModalReopen(order);
-                    // Handle modal reopening after operation
-                    this.handleModalReopeningAfterOperation();
+                    // Reopen the previous modal (order edit form)
+                    setTimeout(() => {
+                        // Find and click the edit button to reopen the modal
+                        const editButton = document.querySelector(`a[data-order-id="${order.public_id}"]`);
+                        if (editButton) {
+                            editButton.click();
+                        } else {
+                            // Fallback: try to find any edit button for this order
+                            const fallbackEditButton = document.querySelector(`[data-order-id="${order.public_id}"], [href*="/orders/${order.public_id}/edit"]`);
+                            if (fallbackEditButton) {
+                                fallbackEditButton.click();
+                            }
+                        }
+                    }, 100); // Small delay to ensure modal closes first
                 },
             });
         }
@@ -505,13 +522,17 @@ export default class OrderScheduleCardComponent extends Component {
                 this.intl.t('fleet-ops.component.order.schedule-card.required-error')
             );
 
-            // Schedule reopening of edit modal instead of DOM manipulation
-            this.scheduleEditModalReopen(order);
-            // Handle modal reopening after operation
-            this.handleModalReopeningAfterOperation();
-            return;
-        }
+            // Option to automatically open the edit form again
+            setTimeout(() => {
+                const editButton = document.querySelector('a[data-order-id="' + orderId + '"]');
+                if (editButton) {
+                    editButton.click();
+                }
+            }, 100);
 
+            return;
+
+        }
         // Driver assigned but not available - show validation popup
         if (hasChanges && hasDriver && (!order.driver_assigned.is_available || order.vehicle_assigned.is_vehicle_available == 0)) {
             // Determine which one is busy
@@ -526,7 +547,7 @@ export default class OrderScheduleCardComponent extends Component {
                     driverName: order.driver_assigned.name,
                     driverAvailability: order.driver_assigned.availability_message || 'Unavailable',
                     driverButton: order.driver_assigned.button_message || 'Continue with assignment',
-                    vehicleName: order.vehicle_assigned.displayName,
+                    vehicleName: order.vehicle_assigned.plate_number,
                     vehicleAvailability: order.vehicle_assigned.availability_message || 'Unavailable',
                     vehicleButton: order.vehicle_assigned.button_message || 'Continue with assignment',
                     orderId: order.public_id,
@@ -538,7 +559,7 @@ export default class OrderScheduleCardComponent extends Component {
                     driverName: order.driver_assigned.name,
                     driverAvailability: order.driver_assigned.availability_message || 'Unavailable',
                     driverButton: order.driver_assigned.button_message || 'Continue with assignment',
-                    vehicleName: order.vehicle_assigned.displayName,
+                    vehicleName: order.vehicle_assigned.plate_number,
                     orderId: order.public_id,
                 });
                 acceptButtonText = this.intl.t('fleet-ops.component.order.schedule-card.assign-button', { default: 'Assign' });
@@ -546,7 +567,7 @@ export default class OrderScheduleCardComponent extends Component {
                 title = this.intl.t('fleet-ops.component.order.schedule-card.assign-driver-vehicle');
                 body = this.intl.t('fleet-ops.component.order.schedule-card.assign-vehicle-busy-text', {
                     driverName: order.driver_assigned.name,
-                    vehicleName: order.vehicle_assigned.displayName,
+                    vehicleName: order.vehicle_assigned.plate_number,
                     vehicleAvailability: order.vehicle_assigned.availability_message || 'Unavailable',
                     vehicleButton: order.vehicle_assigned.button_message || 'Continue with assignment',
                     orderId: order.public_id,
@@ -621,10 +642,20 @@ export default class OrderScheduleCardComponent extends Component {
                         });
                     }
 
-                    // Schedule reopening of edit modal instead of DOM manipulation
-                    this.scheduleEditModalReopen(order);
-                    // Handle modal reopening after operation
-                    this.handleModalReopeningAfterOperation();
+                    // Reopen the previous modal (order edit form)
+                    setTimeout(() => {
+                        // Find and click the edit button to reopen the modal
+                        const editButton = document.querySelector(`a[data-order-id="${order.public_id}"]`);
+                        if (editButton) {
+                            editButton.click();
+                        } else {
+                            // Fallback: try to find any edit button for this order
+                            const fallbackEditButton = document.querySelector(`[data-order-id="${order.public_id}"], [href*="/orders/${order.public_id}/edit"]`);
+                            if (fallbackEditButton) {
+                                fallbackEditButton.click();
+                            }
+                        }
+                    }, 100); // Small delay to ensure modal closes first
                 },
             });
         }
@@ -665,36 +696,22 @@ export default class OrderScheduleCardComponent extends Component {
                     });
                 }
 
-                // Close any active modals using Ember's modal service
-                try {
-                    if (this.modalsManager && typeof this.modalsManager.done === 'function') {
-                        this.modalsManager.done();
+                // Add a small delay for notification visibility
+                setTimeout(() => {
+                    // Close any active modals
+                    try {
+                        if (this.modalsManager && typeof this.modalsManager.done === 'function') {
+                            this.modalsManager.done();
+                        }
+                    } catch (e) {
+                        console.error('Error closing modals:', e);
                     }
-                } catch (e) {
-                    console.error('Error closing modals:', e);
-                }
 
-                // Check if we need to reopen the edit modal after successful save
-                if (this.shouldReopenEditModal) {
-                    // Use Ember's run loop to ensure the modal is properly closed before reopening
-                    this.later(() => {
-                        this.checkForModalReopening();
-                    }, 100);
-                } else {
                     // Finally, transition to refresh the page
                     this.router.transitionTo('console.fleet-ops.operations.scheduler.index', {
                         queryParams: newQueryParams
                     });
-                }
-
-                if (this.analytics && this.analytics.isInitialized) {
-                    this.analytics.trackDriverAssignment({
-                        order_id: order.id,
-                        order_uuid: order.uuid,
-                        order_public_id: order.public_id,
-                        type: 'success'
-                    });
-                }
+                }, 200);
             })
             .catch((error) => {
                 this.notifications.error(
@@ -755,87 +772,4 @@ export default class OrderScheduleCardComponent extends Component {
     }
 
 
-    /**
-     * Opens the edit modal for an order using proper Ember patterns
-     * @param {Object} order - The order to edit
-     * @param {Object} options - Additional options for the modal
-     */
-    @action
-    openEditModal(order, options = {}) {
-        // Use Ember's modal service instead of DOM manipulation
-        this.modalsManager.show('order-edit-modal', {
-            order,
-            onSave: this.saveOrder.bind(this),
-            onCancel: this.closeEditModal.bind(this),
-            ...options
-        });
-    }
-
-    /**
-     * Closes the edit modal and handles cleanup
-     */
-    @action
-    closeEditModal() {
-        this.modalsManager.done();
-        this.shouldReopenEditModal = false;
-        this.pendingEditModalData = null;
-        this.isModalOpen = false;
-    }
-
-    /**
-     * Schedules reopening of the edit modal after current operation completes
-     * @param {Object} order - The order to edit
-     * @param {Object} options - Additional options for the modal
-     */
-    @action
-    scheduleEditModalReopen(order, options = {}) {
-        this.shouldReopenEditModal = true;
-        this.pendingEditModalData = { order, options };
-    }
-
-    /**
-     * Reopens the edit modal if scheduled
-     */
-    @action
-    reopenEditModalIfScheduled() {
-        if (this.shouldReopenEditModal && this.pendingEditModalData) {
-            const { order, options } = this.pendingEditModalData;
-            this.openEditModal(order, options);
-            this.shouldReopenEditModal = false;
-            this.pendingEditModalData = null;
-        }
-    }
-
-    /**
-     * Lifecycle hook to handle cleanup when component is destroyed
-     */
-    willDestroy() {
-        super.willDestroy(...arguments);
-        // Clean up any pending modal operations
-        this.shouldReopenEditModal = false;
-        this.pendingEditModalData = null;
-        this.isModalOpen = false;
-    }
-
-    /**
-     * Method to be called after operations complete to check for modal reopening
-     * This should be called manually after async operations complete
-     */
-    @action
-    checkForModalReopening() {
-        // Check if we need to reopen a modal after the current operation completes
-        this.reopenEditModalIfScheduled();
-    }
-
-    /**
-     * Helper method to handle modal reopening after async operations
-     * This ensures proper timing for modal operations
-     */
-    @action
-    handleModalReopeningAfterOperation() {
-        // Use Ember's run loop to ensure proper timing
-        this.later(() => {
-            this.checkForModalReopening();
-        }, 100);
-    }
 }
