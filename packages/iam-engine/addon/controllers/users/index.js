@@ -685,13 +685,13 @@ export default class UsersIndexController extends Controller {
             description: this.intl.t('fleetbase.users.tour.role.description', { htmlSafe: true }),
           },
         },
-        {
-          element: '.create-user-modal .input-group:has(.policy-attacher)',
-          popover: {
-            title: this.intl.t('fleetbase.users.tour.policies.title'),
-            description: this.intl.t('fleetbase.users.tour.policies.description', { htmlSafe: true }),
-          },
-        },
+          // {
+          //   element: '.create-user-modal .input-group:has(.policy-attacher)',
+          //   popover: {
+          //     title: this.intl.t('fleetbase.users.tour.policies.title'),
+          //     description: this.intl.t('fleetbase.users.tour.policies.description', { htmlSafe: true }),
+          //   },
+          // },
         {
           element: '.create-user-modal .input-group:has(.user-permissions)',
           popover: {

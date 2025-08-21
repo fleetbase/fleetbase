@@ -155,6 +155,7 @@ leaves:
   start_date: Data di inizio
   end_date: Data di fine
   total_days: Durata (Giorni)
+  view: Visualizza per questo
   leave_type: Tipo di permesso
   reason: Motivo
   status: Stato
@@ -977,6 +978,11 @@ fleet-ops:
         parking: Monitoraggio parcheggi
         toll-reports: Spese di pedaggio
         maintenance-schedule: Pianificazione della Manutenzione
+    leaves-report-panel:
+      cancel-edit-leaves-report: Annulla modifica rapporto ferie
+      cancel-new-leaves-report: Annulla nuovo rapporto ferie
+      edit-button: Modifica rapporto ferie
+      title: Rapporto ferie
     maintenance-schedule-form-panel:
       create: Crea Piano di Manutenzione
       save: Salva Piano di Manutenzione
@@ -2263,6 +2269,9 @@ fleet-ops:
           payload: Payload
           items-drop: Articoli da consegnare a
           tracking: Tracciamento
+          current-destination: Destinazione attuale
+          current-eta: Orario di arrivo stimato
+          current-ect: Orario di completamento stimato
           waypoint-actions: Azioni Punto di Passaggio
           get-label: Ottieni Etichetta
           view-activity: Visualizza Attività
@@ -2285,6 +2294,7 @@ fleet-ops:
           assign-success: 'Il conducente di {orderId} è stato aggiornato.'
           order-title: Etichetta Ordine
           waypoint-title: Etichetta Punto di Passaggio
+          click-to-copy: Clicca per copiare
           proof-of-delivery: Prova di Consegna
           notes-placeholder: Inserisci le note sull'ordine qui...
           save-order-note: Salva Nota Ordine

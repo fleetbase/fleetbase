@@ -1125,6 +1125,11 @@ fleet-ops:
         settings: Ustawienia
         order-config: Konfiguracja zamówienia
         maintenance-schedule: Planowanie konserwacji
+    leaves-report-panel:
+      cancel-edit-leaves-report: Anuluj edycję raportu urlopów
+      cancel-new-leaves-report: Anuluj nowy raport urlopów
+      edit-button: Edytuj raport urlopów
+      title: Raport urlopów
     maintenance-schedule-form-panel:
       create: Utwórz Planowanie konserwacji
       save: Zapisz Planowanie konserwacji
@@ -2414,6 +2419,9 @@ fleet-ops:
           payload: Ładunek
           items-drop: Przedmioty dostarczane do
           tracking: Śledzenie
+          current-destination: Bieżący cel
+          current-eta: Szacowany czas przybycia
+          current-ect: Szacowany czas zakończenia
           waypoint-actions: Akcje punktów pośrednich
           get-label: Pobierz etykietę
           view-activity: Zobacz aktywność
@@ -2436,6 +2444,7 @@ fleet-ops:
           assign-success: 'Przypisany kierowca zamówienia {orderId} został zaktualizowany.'
           order-title: Etykieta zamówienia
           waypoint-title: Etykieta punktu pośredniego
+          click-to-copy: Kliknij, aby skopiować
           proof-of-delivery: Potwierdzenie dostawy
           notes-placeholder: Wpisz notatki do zamówienia tutaj...
           save-order-note: Zapisz notatkę zamówienia
