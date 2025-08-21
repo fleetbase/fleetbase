@@ -341,7 +341,7 @@
                                     width="24"
                                     height="24"
                                     class="w-8 h-8 rounded-md shadow-sm mr-3 lg:mr-2"
-                                    alt={{@model.vehicle_assigned.plateNumberModel}}
+                                    alt={{@model.vehicle_assigned.plate_number}}
                                 />
                                 <FaIcon
                                     @icon="circle"
@@ -350,7 +350,7 @@
                                 />
                             </div>
                             <div class="field-value">
-                                <div>{{n-a @model.vehicle_assigned.plateNumberModel "No Vehicle"}}</div>
+                                <div>{{n-a @model.vehicle_assigned.plate_number "No Vehicle"}}</div>
                             </div>
                             <Attach::Tooltip @class="clean" @animation="scale" @placement="top">
                                 <InputInfo>
