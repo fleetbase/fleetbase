@@ -55,7 +55,10 @@ class DriverController extends FleetOpsController
         // create validation request
         $createDriverRequest = CreateDriverRequest::createFrom($request);
         $rules               = $createDriverRequest->rules();
-
+        $existingDriver = Driver::where(['company_uuid' => session('company'), 'drivers_license_number' => $input['drivers_license_number']])->first();
+        if ($existingDriver) {
+            return ['driver' => new $this->resource($existingDriver)];
+        }
         // manually validate request
         $validator = Validator::make($input, $rules);
 
