@@ -526,7 +526,7 @@ export default class OrderScheduleCardComponent extends Component {
                     driverName: order.driver_assigned.name,
                     driverAvailability: order.driver_assigned.availability_message || 'Unavailable',
                     driverButton: order.driver_assigned.button_message || 'Continue with assignment',
-                    vehicleName: order.vehicle_assigned.displayName,
+                    vehicleName: order.vehicle_assigned.plate_number,
                     vehicleAvailability: order.vehicle_assigned.availability_message || 'Unavailable',
                     vehicleButton: order.vehicle_assigned.button_message || 'Continue with assignment',
                     orderId: order.public_id,
@@ -538,7 +538,7 @@ export default class OrderScheduleCardComponent extends Component {
                     driverName: order.driver_assigned.name,
                     driverAvailability: order.driver_assigned.availability_message || 'Unavailable',
                     driverButton: order.driver_assigned.button_message || 'Continue with assignment',
-                    vehicleName: order.vehicle_assigned.displayName,
+                    vehicleName: order.vehicle_assigned.plate_number,
                     orderId: order.public_id,
                 });
                 acceptButtonText = this.intl.t('fleet-ops.component.order.schedule-card.assign-button', { default: 'Assign' });
@@ -546,7 +546,7 @@ export default class OrderScheduleCardComponent extends Component {
                 title = this.intl.t('fleet-ops.component.order.schedule-card.assign-driver-vehicle');
                 body = this.intl.t('fleet-ops.component.order.schedule-card.assign-vehicle-busy-text', {
                     driverName: order.driver_assigned.name,
-                    vehicleName: order.vehicle_assigned.displayName,
+                    vehicleName: order.vehicle_assigned.plate_number,
                     vehicleAvailability: order.vehicle_assigned.availability_message || 'Unavailable',
                     vehicleButton: order.vehicle_assigned.button_message || 'Continue with assignment',
                     orderId: order.public_id,
