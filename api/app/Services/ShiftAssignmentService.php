@@ -309,10 +309,11 @@ class ShiftAssignmentService
             
             
             
-            // Get orders for the date range based on scheduled_at
+            // Get orders for the date range based on scheduled_at (date only)
             $query = DB::table('orders')
                 ->whereNotNull('scheduled_at')
-                ->whereBetween('scheduled_at', [$start, $end])
+                ->whereDate('scheduled_at', '>=', $start->format('Y-m-d'))
+                ->whereDate('scheduled_at', '<=', $end->format('Y-m-d'))
                 ->whereIn('status', ['created', 'planned']);
                 
             \Log::info('Filtering orders by status: created, planned');
@@ -323,7 +324,7 @@ class ShiftAssignmentService
                 $query->where('company_uuid', $companyUuid);
             }
             
-            \Log::info('Querying orders with scheduled_at between ' . $start->format('Y-m-d H:i:s') . ' and ' . $end->format('Y-m-d H:i:s'));
+            \Log::info('Querying orders with scheduled_at between dates ' . $start->format('Y-m-d') . ' and ' . $end->format('Y-m-d'));
             
             $orders = $query->get();
             \Log::info('Found ' . count($orders) . ' orders in date range');

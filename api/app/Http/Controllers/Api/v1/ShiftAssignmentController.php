@@ -42,8 +42,20 @@ class ShiftAssignmentController extends Controller
         }
 
         try {
-            $startDate = Carbon::parse($request->start_date);
-            $endDate = Carbon::parse($request->end_date);
+            // Handle multiple date formats (DD-MM-YYYY and YYYY-MM-DD)
+            $startDateStr = $request->start_date;
+            $endDateStr = $request->end_date;
+            
+            // If date is in DD-MM-YYYY format, convert to YYYY-MM-DD
+            if (preg_match('/^\d{2}-\d{2}-\d{4}$/', $startDateStr)) {
+                $startDateStr = \Carbon\Carbon::createFromFormat('d-m-Y', $startDateStr)->format('Y-m-d');
+            }
+            if (preg_match('/^\d{2}-\d{2}-\d{4}$/', $endDateStr)) {
+                $endDateStr = \Carbon\Carbon::createFromFormat('d-m-Y', $endDateStr)->format('Y-m-d');
+            }
+            
+            $startDate = Carbon::parse($startDateStr);
+            $endDate = Carbon::parse($endDateStr);
             $companyUuid = $request->input('company_uuid');
 
             $data = $this->shiftAssignmentService->generateShiftAssignmentData($startDate, $endDate, $companyUuid);
