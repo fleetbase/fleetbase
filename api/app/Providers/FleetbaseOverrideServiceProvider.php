@@ -85,6 +85,8 @@ class FleetbaseOverrideServiceProvider extends ServiceProvider
                     Route::prefix('shift-assignments')->group(function () {
                         Route::get('/data', 'App\Http\Controllers\Api\v1\ShiftAssignmentController@getShiftAssignmentData')
                             ->name('shift-assignments.data');
+                        Route::post('/apply-allocations', 'App\Http\Controllers\Api\v1\ShiftAssignmentController@applyAllocations')
+                            ->name('shift-assignments.apply-allocations');
                     });
                     
                     // Protected shift assignment routes (with auth middleware)
