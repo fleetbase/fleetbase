@@ -21,6 +21,7 @@ export default class FuelReportModel extends Model {
     @attr('string') reporter_name;
     @attr('string') driver_name;
     @attr('string') vehicle_name;
+    @attr('string') vehicle_plate_number; // Add this line
     @attr('string') report;
     @attr('string') odometer;
     @attr('string') amount;
@@ -95,6 +96,10 @@ export default class FuelReportModel extends Model {
                     .findRecord('vehicle', this.vehicle_uuid)
                     .then((vehicle) => {
                         this.vehicle = vehicle;
+                        // Also set the plate number if not already set
+                        if (!this.vehicle_plate_number && vehicle.plate_number) {
+                            this.vehicle_plate_number = vehicle.plate_number;
+                        }
                         resolve(vehicle);
                     })
                     .catch(reject);
