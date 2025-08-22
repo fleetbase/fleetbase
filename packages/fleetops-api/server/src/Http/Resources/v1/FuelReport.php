@@ -30,7 +30,7 @@ class FuelReport extends FleetbaseResource
             'vehicle_name'      => $this->when(Http::isInternalRequest(), $this->vehicle_name),
             'reporter'          => $this->whenLoaded('reporter', fn () => $this->reporter),
             'vehicle'           => $this->whenLoaded('vehicle', fn () => new Vehicle($this->vehicle)),
-            'driver'            => $this->whenLoaded('drivers', fn () => new Driver($this->driver)),
+            'driver'            => $this->whenLoaded('driver', fn () => new Driver($this->driver)),
             'odometer'          => $this->odometer,
             'amount'            => $this->amount,
             'currency'          => $this->currency,
