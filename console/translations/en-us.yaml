@@ -2413,6 +2413,9 @@ fleet-ops:
           payload: Payload
           items-drop: Items drop at
           tracking: Tracking
+          current-destination: Current Destination
+          current-eta: Current ETA
+          current-ect: Current ECT
           waypoint-actions: Waypoint Actions
           get-label: Get Label
           view-activity: View Activity
@@ -2434,6 +2437,7 @@ fleet-ops:
           assign-success: '{orderId} assigned driver updated.'
           order-title: Order Label
           waypoint-title: Waypoint Label
+          click-to-copy: Click to copy
           proof-of-delivery: Proof of Delivery
           notes-placeholder: Enter order notes here....
           save-order-note: Save Order Note

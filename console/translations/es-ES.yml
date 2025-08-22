@@ -152,6 +152,7 @@ leaves:
   start_date: Fecha de inicio
   end_date: Fecha de finalización
   total_days: Duración (Días)
+  view: Ver para esto
   leave_type: Tipo de ausencia
   reason: Motivo
   status: Estado
@@ -1193,6 +1194,11 @@ fleet-ops:
         parking: Control Estacionamiento
         toll-reports: Gastos de peaje
         maintenance-schedule: Plan de Mantenimiento
+    leaves-report-panel:
+      cancel-edit-leaves-report: Cancelar edición del informe de permisos
+      cancel-new-leaves-report: Cancelar nuevo informe de permisos
+      edit-button: Editar informe de permisos
+      title: Informe de permisos
     maintenance-schedule-form-panel:
       create: Crear Plan de Mantenimiento
       save: Guardar Plan de Mantenimiento
@@ -2596,6 +2602,9 @@ fleet-ops:
           payload: Cargando
           items-drop: Depósito de artículos en
           tracking: Hacer un seguimiento
+          current-destination: Destino actual
+          current-eta: Hora estimada de llegada
+          current-ect: Hora estimada de finalización
           waypoint-actions: Actuaciones en los puntos de cruce
           get-label: Obtener etiqueta
           view-activity: Ver actividad
@@ -2625,6 +2634,7 @@ fleet-ops:
             al pedido ha sido actualizado.
           order-title: Etiqueta de pedido
           waypoint-title: Etiqueta de punto de referencia
+          click-to-copy: Hacer clic para copiar
           proof-of-delivery: Comprobante de entrega
           notes-placeholder: Introduzca aquí las notas del pedido....
           save-order-note: Guardar nota de pedido

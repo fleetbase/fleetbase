@@ -551,7 +551,7 @@ export default class OperationsOrdersIndexController extends BaseController {
             ddButtonText: false,
             ddButtonIcon: 'ellipsis-h',
             ddButtonIconPrefix: 'fas',
-            ddMenuLabel: 'Order Actions',
+            ddMenuLabel: this.intl.t('fleet-ops.operations.orders.index.view.order-actions'),
             cellClassNames: 'overflow-visible',
             wrapperClass: 'flex items-center justify-end mx-2',
             width: '12%',

@@ -1128,6 +1128,11 @@ fleet-ops:
         parking: 	Surveillance Parking
         toll-reports: Dépenses de péage
         maintenance-schedule: Plan de Maintenance
+    leaves-report-panel:
+      cancel-edit-leaves-report: Annuler la modification du rapport de congés
+      cancel-new-leaves-report: Annuler le nouveau rapport de congés
+      edit-button: Modifier le rapport de congés
+      title: Rapport de congés
     maintenance-schedule-form-panel:
       create: Créer un Plan de Maintenance
       save: Enregistrer le Plan de Maintenance
@@ -2419,6 +2424,9 @@ fleet-ops:
           payload: Chargement
           items-drop: Dépôt des articles à
           tracking: Suivi
+          current-destination: Destination actuelle
+          current-eta: Heure d’arrivée estimée
+          current-ect: Heure de fin estimée
           waypoint-actions: Actions sur les points de passage
           get-label: Obtenir l'étiquette
           view-activity: Voir l'activité
@@ -2441,6 +2449,7 @@ fleet-ops:
           assign-success: 'Le conducteur assigné à la commande {orderId} a été mis à jour.'
           order-title: Étiquette de la commande
           waypoint-title: Étiquette du point de passage
+          click-to-copy: Cliquer pour copier
           proof-of-delivery: Preuve de livraison
           notes-placeholder: Entrez les notes de la commande ici....
           save-order-note: Enregistrer la note de la commande

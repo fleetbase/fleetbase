@@ -173,6 +173,7 @@ leaves:
   leave_actions: Urlaubsaktionen
   error_fetching_leaves: Fehler beim Abrufen der Fahrerabwesenheiten
   processed_by_name: Bearbeitet von
+  view: Ansicht Verlassen dafür
 validation:
   invalid_country_code: Geben Sie eine gültige Telefonnummer mit Ländervorwahl ein.
   required:
@@ -1128,6 +1129,11 @@ fleet-ops:
         parking: Parküberwachung
         toll-reports: Mautausgaben
         maintenance-schedule: Wartungsplan
+    leaves-report-panel:
+      cancel-edit-leaves-report: Bearbeitung des Urlaubsberichts abbrechen
+      cancel-new-leaves-report: Neuen Urlaubsbericht abbrechen
+      edit-button: Urlaubsbericht bearbeiten
+      title: Urlaubsbericht
     maintenance-schedule-form-panel:
       create: Wartungsplan erstellen
       save: Wartungsplan speichern
@@ -2423,6 +2429,9 @@ fleet-ops:
           payload: Nutzlast
           items-drop: Artikel fallen bei
           tracking: Tracking
+          current-destination: Aktuelles Ziel
+          current-eta: Aktuelle Ankunftszeit
+          current-ect: Voraussichtliche Fertigstellung
           waypoint-actions: Wegpunktaktionen
           get-label: Label abrufen
           view-activity: Aktivität anzeigen
@@ -2445,6 +2454,7 @@ fleet-ops:
           assign-success: '{orderId} Fahrer zugewiesen wurde aktualisiert.'
           order-title: Bestelllabel
           waypoint-title: Wegpunktlabel
+          click-to-copy: Zum Kopieren klicken
           proof-of-delivery: Liefernachweis
           notes-placeholder: Geben Sie hier Bestellnotizen ein...
           save-order-note: Bestellnotiz speichern
