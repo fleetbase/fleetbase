@@ -142,21 +142,6 @@ class DriverController extends FleetOpsController
                 $e->getMessage()
             ]);
         }
-        
-        $existingFleet = FleetDriver::where('fleet_uuid', $input['fleet_uuid'])->first();
-        if ($existingFleet) {
-            $driver_name = Driver::where('uuid', $existingFleet->driver_uuid)
-                ->with('user') // eager load the user
-                ->first();
-            $fleetName = $existingFleet->fleet->name ?? '';
-            $driverName = $driver_name->user->name ?? $driver_name->name ?? 'Driver';
-
-            return response()->error(__('messages.fleet_uuid.driver_already_assigned', [
-                    'driver' => $driverName,
-                    'fleet'  => $fleetName,
-                ])
-            );
-        }
         try {
             $record = $this->model->createRecordFromRequest(
                 $request,
@@ -465,7 +450,7 @@ class DriverController extends FleetOpsController
         if ($order->isDriver($driver)) {
             return response()->error('The driver is already assigned to this order.');
         }
-
+print_r("asda");die;
         $order->assignDriver($driver);
 
         return response()->json([
