@@ -1296,6 +1296,17 @@ refreshLeaveDisplay() {
         // get the event from the calendar
         let event = this.calendar.getEventById(order.id);
         const isCompleted = order.status === 'completed';
+        
+        // Store the ORIGINAL order state BEFORE any modifications
+        const originalOrderState = {
+            driver_assigned: order.driver_assigned,
+            driver_assigned_uuid: order.driver_assigned_uuid,
+            vehicle_assigned: order.vehicle_assigned,
+            vehicle_assigned_uuid: order.vehicle_assigned_uuid,
+            scheduled_at: order.scheduled_at,
+            estimated_end_date: order.estimated_end_date
+        };
+        
         this.modalsManager.show('modals/order-event', {
             // title: `Scheduling for ${order.public_id}`,
             title: `${order.public_id}`,
@@ -1414,6 +1425,43 @@ refreshLeaveDisplay() {
                     modal.stopLoading();
                 }
             },
+            decline: (modal) => {
+                console.log('Modal closed - restoring original order state');
+                
+                // RESTORE the original order state
+                order.setProperties({
+                    driver_assigned: originalOrderState.driver_assigned,
+                    driver_assigned_uuid: originalOrderState.driver_assigned_uuid,
+                    vehicle_assigned: originalOrderState.vehicle_assigned,
+                    vehicle_assigned_uuid: originalOrderState.vehicle_assigned_uuid,
+                    scheduled_at: originalOrderState.scheduled_at,
+                    estimated_end_date: originalOrderState.estimated_end_date
+                });
+                
+                // Rollback any unsaved changes
+                order.rollbackAttributes();
+                
+                // Close the modal
+                modal.done();
+                
+                // Publish calendar refresh event
+                if (this.eventBus) {
+                    this.eventBus.publish('calendar-refresh-needed', {
+                        orderId: order.id,
+                        refreshAll: true
+                    });
+                }
+                
+                // Force calendar update with restored data
+                if (this.calendar) {
+                    this.calendar.refetchEvents();
+                }
+                
+                // Refresh orders and update calendar
+                this.refreshOrders().then(() => {
+                    this.updateCalendar();
+                });
+            }
         });
     }
 

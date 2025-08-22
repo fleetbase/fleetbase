@@ -735,6 +735,8 @@ export default class OperationsOrdersIndexViewController extends BaseController 
                 if (!driver) {
                     order.set('driver_assigned_uuid', null);
                     order.set('driver_assigned', null);
+                    driverToAssign = null;
+                    driverIsBusy = false;
                     return;
                 }
 
@@ -746,6 +748,8 @@ export default class OperationsOrdersIndexViewController extends BaseController 
                 if (driver.vehicle) {
                     order.set('vehicle_assigned', driver.vehicle);
                     order.set('vehicle_assigned_uuid', driver.vehicle.id);
+                    vehicleToAssign = driver.vehicle;
+                    vehicleIsBusy = (vehicleToAssign.is_vehicle_available == 0) ? true : false;
                 }
 
                 // ALWAYS store the driver reference and track busy state
