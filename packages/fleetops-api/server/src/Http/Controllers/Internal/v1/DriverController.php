@@ -450,7 +450,6 @@ class DriverController extends FleetOpsController
         if ($order->isDriver($driver)) {
             return response()->error('The driver is already assigned to this order.');
         }
-print_r("asda");die;
         $order->assignDriver($driver);
 
         return response()->json([
