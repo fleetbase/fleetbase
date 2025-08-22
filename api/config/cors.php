@@ -1,9 +1,7 @@
 <?php
 
 use Fleetbase\Support\Utils;
-
 $auto_allocation_host = explode(',', env('AUTO_ALLOCATION_HOST'));
-
 return [
 
     /*
@@ -30,7 +28,6 @@ return [
     'allowed_headers' => ['*'],
 
     'exposed_headers' => ['x-compressed-json', 'access-console-sandbox', 'access-console-sandbox-key'],
-
 
     'max_age' => 0,
 
