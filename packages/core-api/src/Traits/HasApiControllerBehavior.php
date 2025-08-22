@@ -392,6 +392,7 @@ trait HasApiControllerBehavior
         }
         if (get_class($this->model) === 'Fleetbase\FleetOps\Models\Driver') {
             $data->load('fleets');
+            $data->load('fleetDrivers');
         }
         
         if (get_class($this->model) === 'Fleetbase\FleetOps\Models\Driver' && $request->has('order_uuid')) {
