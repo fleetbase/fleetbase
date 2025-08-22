@@ -284,22 +284,6 @@ class DriverController extends FleetOpsController
         if ($validator->fails()) {
             return $updateDriverRequest->responseWithErrors($validator);
         }
-        $existingFleet = FleetDriver::where('fleet_uuid', $input['fleet_uuid'])
-            ->where('driver_uuid', '!=', $id) // $id without quotes
-            ->first();
-        $driver_name = Driver::where('uuid', $existingFleet->driver_uuid)
-                ->with('user') // eager load the user
-                ->first();
-        if ($existingFleet) {
-            $fleetName = $existingFleet->fleet->name ?? '';
-            $driverName = $driver_name->user->name ?? $driver_name->name ?? 'Driver';
-
-            return response()->error(__('messages.fleet_uuid.driver_already_assigned', [
-                    'driver' => $driverName,
-                    'fleet'  => $fleetName,
-                ])
-            );
-        }
         try {
             $driver = $this->model->find($id);
         $currentVehicleUuid = $driver->vehicle_uuid ?? null;

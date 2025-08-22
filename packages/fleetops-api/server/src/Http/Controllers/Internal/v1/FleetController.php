@@ -140,6 +140,24 @@ class FleetController extends FleetOpsController
             'driver_uuid' => $driver->uuid,
         ])->exists();
 
+        $existingFleet = FleetDriver::where('driver_uuid', $driver->uuid)
+            ->whereNull('deleted_at')
+            ->first();
+        if($existingFleet) {
+            $driver_name = Driver::where('uuid', $driver->uuid)
+            ->with('user') // eager load the user
+            ->first();
+            if ($existingFleet) {
+                $fleetName = $existingFleet->fleet->name ?? '';
+                $driverName = $driver_name->user->name ?? $driver_name->name ?? 'Driver';
+                return response()->error(__('messages.fleet_uuid.driver_already_assigned', [
+                        'driver' => $driverName,
+                        'fleet'  => $fleetName,
+                    ])
+                );
+            } 
+        }
+        
         if (!$exists) {
             $added = FleetDriver::create([
                 'fleet_uuid'  => $fleet->uuid,
