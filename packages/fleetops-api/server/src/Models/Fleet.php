@@ -15,7 +15,7 @@ use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\Sluggable\HasSlug;
 use Spatie\Sluggable\SlugOptions;
-use Fleetbase\Models\User;
+
 class Fleet extends Model
 {
     use HasUuid;
@@ -165,22 +165,6 @@ class Fleet extends Model
     public function vehicles()
     {
         return $this->hasManyThrough(Vehicle::class, FleetVehicle::class, 'fleet_uuid', 'uuid', 'uuid', 'vehicle_uuid');
-    }
-    public function driver()
-    {
-        return $this->hasManyThrough(Driver::class, FleetDriver::class, 'fleet_uuid', 'uuid', 'uuid', 'driver_uuid');
-    }
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasManyThrough
-     */
-    public function vehicle()
-    {
-        return $this->hasManyThrough(Vehicle::class, FleetVehicle::class, 'fleet_uuid', 'uuid', 'uuid', 'vehicle_uuid');
-    }
-    public function reporter()
-    {
-        return $this->belongsTo(User::class, 'reported_by_uuid');
     }
 
     /**
