@@ -1094,7 +1094,7 @@ class OrderController extends FleetOpsController
                                 ];
                                 $tripHasErrors = true;
                             }
-                            // Check if first and second facility are the same
+                            /*Check if first and second facility are the same
                             if (count($facilities) >= 2 && $facilities[0] === $facilities[1]) {
                                 $originalRowIndex = $row['_original_row_index'] ?? 0;
                                 $importErrors[] = [
@@ -1103,9 +1103,9 @@ class OrderController extends FleetOpsController
                                     (string)$tripId
                                 ];
                                 $tripHasErrors = true;
-                            }
+                            }*/
                         }
-                        if (
+                        /*if (
                             isset($row['stop_1'], $row['stop_2']) && // both keys exist
                             !empty($row['stop_1']) &&
                             !empty($row['stop_2']) &&
@@ -1119,7 +1119,7 @@ class OrderController extends FleetOpsController
                             ];
 
                             $tripHasErrors = true;
-                        }
+                        }*/
                     }
                     if ($tripHasErrors) {
                         DB::rollback();
