@@ -2,8 +2,7 @@
 
 use Fleetbase\Support\Utils;
 
-// Ensure a string is passed to explode, default to empty string if null
-$auto_allocation_host = explode(',', env('AUTO_ALLOCATION_HOST') ?? '');
+$auto_allocation_host = explode(',', env('AUTO_ALLOCATION_HOST'));
 
 return [
 
@@ -24,22 +23,14 @@ return [
 
     'allowed_methods' => ['*'],
 
-    'allowed_origins' => array_filter([
-        'http://localhost:4200',
-        env('CONSOLE_HOST'),
-        Utils::addWwwToUrl(env('CONSOLE_HOST')),
-        ...$auto_allocation_host
-    ]),
+    'allowed_origins' => array_filter(['http://localhost:4200', env('CONSOLE_HOST'), Utils::addWwwToUrl(env('CONSOLE_HOST')), ...$auto_allocation_host]),
 
     'allowed_origins_patterns' => [],
 
     'allowed_headers' => ['*'],
 
-    'exposed_headers' => [
-        'x-compressed-json',
-        'access-console-sandbox',
-        'access-console-sandbox-key'
-    ],
+    'exposed_headers' => ['x-compressed-json', 'access-console-sandbox', 'access-console-sandbox-key'],
+
 
     'max_age' => 0,
 
