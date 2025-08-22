@@ -15,7 +15,6 @@ export default class OrderScheduleCardComponent extends Component {
     @service store;
     @service contextPanel;
     @service intl;
-    @service eventBus;
     @service modalsManager;
     @service notifications;
     @service abilities;
@@ -43,6 +42,10 @@ export default class OrderScheduleCardComponent extends Component {
 
     constructor(owner, { order }) {
         super(...arguments);
+
+        // Store EventBus reference early to ensure it's available throughout lifecycle
+        this._eventBus = this.args.eventBus;
+
         // Create a manual deep copy of the original order data
         this.originalOrder = {
             driver_assigned: order.driver_assigned ? order.driver_assigned : null,
@@ -58,6 +61,23 @@ export default class OrderScheduleCardComponent extends Component {
         // Try looking up router:main as an alternative
         this.router = ownerInstance.lookup('router:main');
 
+        // Manual service lookup as fallback
+        try {
+            // Try different service names
+            this.eventBus = ownerInstance.lookup('service:event-bus') ||
+                ownerInstance.lookup('service:eventBus') ||
+                ownerInstance.lookup('service:event_bus');
+
+            if (this.eventBus) {
+                console.log('=== DEBUG: EventBus manually looked up successfully ===');
+            } else {
+                console.log('=== DEBUG: EventBus not found via manual lookup ===');
+            }
+        } catch (error) {
+            console.error('=== DEBUG: Error in manual EventBus lookup ===', error);
+            this.eventBus = null;
+        }
+
         this.loadDriverFromOrder(order);
         this.loadPayloadFromOrder(order);
     }
@@ -65,7 +85,23 @@ export default class OrderScheduleCardComponent extends Component {
         return this.args.order.status === 'completed';
     }
     get effectiveEventBus() {
-        return this.eventBus || this.args.eventBus;
+        // Use stored EventBus reference first, then fallback to args
+        if (this._eventBus) {
+            return this._eventBus;
+        }
+
+        // Fallback to current args.eventBus
+        if (this.args.eventBus) {
+            return this.args.eventBus;
+        }
+
+        // Fallback to service if somehow it becomes available
+        if (this.eventBus) {
+            return this.eventBus;
+        }
+
+        console.error('=== DEBUG: No EventBus available ===');
+        return null;
     }
 
     @action loadDrivers(orderUuid) {
@@ -385,7 +421,8 @@ export default class OrderScheduleCardComponent extends Component {
 
         // Check if driver is being unassigned
         const wasDriverAssigned = this.originalOrder.driver_assigned_uuid !== null && this.originalOrder.driver_assigned_uuid !== undefined;
-        const isUnassigningDriver = wasDriverAssigned && !hasDriver;
+        const wasVehicleAssigned = this.originalOrder.vehicle_assigned_uuid !== null && this.originalOrder.vehicle_assigned_uuid !== undefined;
+        const isUnassigningDriver = wasDriverAssigned && !hasDriver && !hasVehicle && wasVehicleAssigned;
 
         // Check if there are any changes to the order, like driver, vehicle, date, etc.
         const hasChanges = (() => {
@@ -521,6 +558,15 @@ export default class OrderScheduleCardComponent extends Component {
             this.notifications.error(
                 this.intl.t('fleet-ops.component.order.schedule-card.required-error')
             );
+
+            // Publish calendar refresh event to update the page
+            if (this.effectiveEventBus) {
+                this.effectiveEventBus.publish('calendar-refresh-needed', {
+                    orderId: order.id,
+                    currentPage: currentPage,
+                    refreshAll: true
+                });
+            }
 
             // Option to automatically open the edit form again
             setTimeout(() => {
@@ -687,13 +733,19 @@ export default class OrderScheduleCardComponent extends Component {
                     })
                 );
 
-                // IMPORTANT: Publish calendar refresh event BEFORE closing modals or transitioning
+                // Before publishing the event
                 if (this.effectiveEventBus) {
-                    this.effectiveEventBus.publish('calendar-refresh-needed', {
-                        orderId: order.id,
-                        currentPage: currentPage,
-                        refreshAll: true
-                    });
+                    try {
+                        this.effectiveEventBus.publish('calendar-refresh-needed', {
+                            orderId: order.id,
+                            currentPage: currentPage,
+                            refreshAll: true
+                        });
+                    } catch (error) {
+                        console.error('=== DEBUG: Error publishing event ===', error);
+                    }
+                } else {
+                    console.error('=== DEBUG: effectiveEventBus is not available ===');
                 }
 
                 // Add a small delay for notification visibility
@@ -719,7 +771,25 @@ export default class OrderScheduleCardComponent extends Component {
                         defaultValue: 'Failed to update order.'
                     })
                 );
+                // Publish calendar refresh event to update the page
+                if (this.effectiveEventBus) {
+                    this.effectiveEventBus.publish('calendar-refresh-needed', {
+                        orderId: order.id,
+                        currentPage: currentPage,
+                        refreshAll: true
+                    });
+                }
                 console.error('Error saving order:', error);
+            })
+            .finally(() => {
+                // Publish calendar refresh event to update the page
+                if (this.effectiveEventBus) {
+                    this.effectiveEventBus.publish('calendar-refresh-needed', {
+                        orderId: order.id,
+                        currentPage: currentPage,
+                        refreshAll: true
+                    });
+                }
             });
     }
 
@@ -735,8 +805,6 @@ export default class OrderScheduleCardComponent extends Component {
             // Clear UI immediately
             order.set('driver_assigned', null);
             order.set('driver_assigned_uuid', null);
-            order.set('vehicle_assigned', null);
-            order.set('vehicle_assigned_uuid', null);
         } else {
             this.tempDriverSelection = driver;
 
@@ -750,8 +818,8 @@ export default class OrderScheduleCardComponent extends Component {
                 order.set('vehicle_assigned_uuid', driver.vehicle.id);
                 this.tempVehicleSelection = driver.vehicle;
             } else {
-                order.set('vehicle_assigned', null);
-                this.tempVehicleSelection = null;
+                this.originalOrder.vehicle_assigned ? order.set('vehicle_assigned', this.originalOrder.vehicle_assigned) : order.set('vehicle_assigned', null);
+                this.tempVehicleSelection = this.originalOrder.vehicle_assigned ? this.originalOrder.vehicle_assigned : null;
             }
         }
     }
