@@ -96,17 +96,20 @@ class ShiftAssignmentService
     
     /**
      * Apply allocated resources to update orders assignments and schedule times.
+     * Also supports unassigning drivers from orders via the uncovered_shifts payload.
      *
      * @param array $allocatedResources
      * @param string|null $timezone Input times' timezone (defaults to app timezone, stored as UTC)
-     * @return array Summary of updates
+     * @param array $uncoveredShifts Map of date => [order_ids] to unassign drivers from
+     * @return array Summary of updates and unassignments
      */
-    public function applyAllocatedResources(array $allocatedResources, ?string $timezone = null): array
+    public function applyAllocatedResources(array $allocatedResources, ?string $timezone = null, array $uncoveredShifts = []): array
     {
         $timezone = $timezone ?: config('app.timezone', 'UTC');
         $updatedOrders = [];
         $skippedAssignments = 0;
         $errors = [];
+        $unassignedOrders = [];
 
         foreach ($allocatedResources as $resourceIndex => $resource) {
             $resourceId = $resource['resource_id'] ?? null;
@@ -155,7 +158,8 @@ class ShiftAssignmentService
                     // Resolve order by public_id then uuid
                     $order = Order::withoutGlobalScopes()
                         ->where(function($query) use ($orderPublicOrUuid) {
-                            $query->where('public_id', $orderPublicOrUuid);
+                            $query->where('public_id', $orderPublicOrUuid)
+                                  ->orWhere('uuid', $orderPublicOrUuid);
                         })
                         ->first();
 
@@ -178,9 +182,13 @@ class ShiftAssignmentService
                         \Log::warning("No driver found for resource_id '{$resourceId}' or resource_name '{$resourceName}', skipping driver assignment for order {$order->public_id}");
                     }
 
-                    Order::where('uuid', $order->uuid)->update($updates);
-
-                    $updatedOrders[] = $order->public_id ?? $order->uuid;
+                    if (!empty($updates)) {
+                        Order::where('uuid', $order->uuid)->update($updates);
+                        $updatedOrders[] = $order->public_id ?? $order->uuid;
+                    } else {
+                        // no-op, nothing to update
+                        $skippedAssignments++;
+                    }
                 } catch (\Exception $e) {
                     $errors[] = [
                         'resource' => $resourceId ?? $resourceName,
@@ -192,12 +200,56 @@ class ShiftAssignmentService
             }
         }
 
+        // Process uncovered shifts: unassign drivers from specified orders
+        foreach ($uncoveredShifts as $date => $orderIds) {
+            if (!is_array($orderIds)) {
+                continue;
+            }
+            foreach ($orderIds as $orderId) {
+                try {
+                    $order = Order::withoutGlobalScopes()
+                        ->where(function ($q) use ($orderId) {
+                            $q->where('public_id', $orderId)
+                              ->orWhere('uuid', $orderId);
+                        })
+                        ->first();
+
+                    if (!$order) {
+                        $errors[] = [
+                            'resource' => null,
+                            'date' => $date,
+                            'order' => $orderId,
+                            'message' => 'Order not found for unassignment'
+                        ];
+                        continue;
+                    }
+
+                    // Only update if currently assigned
+                    if (!is_null($order->driver_assigned_uuid)) {
+                        Order::where('uuid', $order->uuid)->update(['driver_assigned_uuid' => null]);
+                        $unassignedOrders[] = $order->public_id ?? $order->uuid;
+                        \Log::info("Unassigned driver from order {$order->public_id} (date {$date})");
+                    }
+                } catch (\Exception $e) {
+                    $errors[] = [
+                        'resource' => null,
+                        'date' => $date,
+                        'order' => $orderId,
+                        'message' => $e->getMessage()
+                    ];
+                }
+            }
+        }
+
         // Deduplicate updated order ids
         $updatedOrders = array_values(array_unique($updatedOrders));
+        $unassignedOrders = array_values(array_unique($unassignedOrders));
 
         return [
             'updated_orders' => count($updatedOrders),
             'updated_order_ids' => $updatedOrders,
+            'unassigned_orders' => count($unassignedOrders),
+            'unassigned_order_ids' => $unassignedOrders,
             'skipped_assignments' => $skippedAssignments,
             'errors' => $errors,
         ];

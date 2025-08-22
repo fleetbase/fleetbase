@@ -253,6 +253,10 @@ class ShiftAssignmentController extends Controller
             'allocated_resources.*.resource_id' => 'nullable|string',
             'allocated_resources.*.resource_name' => 'nullable|string',
             'allocated_resources.*.assignments' => 'required|array',
+            // Optional: list of orders to unassign by date
+            'uncovered_shifts' => 'sometimes|array',
+            'uncovered_shifts.*' => 'array',
+            'uncovered_shifts.*.*' => 'string',
             'timezone' => 'sometimes|string',
         ]);
 
@@ -267,8 +271,9 @@ class ShiftAssignmentController extends Controller
         try {
             $allocatedResources = $request->input('allocated_resources', []);
             $timezone = $request->input('timezone');
+            $uncoveredShifts = $request->input('uncovered_shifts', []);
 
-            $result = $this->shiftAssignmentService->applyAllocatedResources($allocatedResources, $timezone);
+            $result = $this->shiftAssignmentService->applyAllocatedResources($allocatedResources, $timezone, $uncoveredShifts);
 
             return response()->json([
                 'success' => true,
