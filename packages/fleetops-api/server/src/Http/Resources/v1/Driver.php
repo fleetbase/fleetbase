@@ -57,11 +57,7 @@ class Driver extends FleetbaseResource
             'currency'                      => data_get($this, 'currency', Utils::getCurrenyFromCountryCode($this->country)),
             'city'                          => data_get($this, 'city', Utils::getCapitalCityFromCountryCode($this->country)),
             'online'                        => data_get($this, 'online', false),
-            'fleet_drivers' => $this->whenLoaded('fleetDrivers', function () {
-                return FleetDriver::collection(
-                    $this->fleetDrivers()->with('fleet')->get()
-                );
-            }),
+            'fleet_drivers'                 => FleetDriver::collection($this->whenLoaded('fleetDrivers')),
             'status'                        => $this->status,
             'token'                         => $this->auth_token,
             'meta'                          => $this->meta,
