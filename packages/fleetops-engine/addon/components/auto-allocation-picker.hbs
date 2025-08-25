@@ -10,7 +10,7 @@
 >
     <div class="filters-dropdown-container w-auto">
         <div class="filters-dropdown-header">
-            <h2 class="auto-allocate-heading">Auto Allocate</h2>
+            <h4>{{t "fleet-ops.common.auto-allocate"}}</h4>
         </div>
         <div class="filters-dropdown-body">
             <div class="flex flex-row gap-4 mb-6 fleetbase-power-select">
@@ -18,11 +18,12 @@
                     <DatePicker
                         @value={{this.autoAllocationDate}}
                         @onSelect={{@onSelectDate}}
-                        @placeholder="Select Date Range"
+                        @placeholder={{t "fleet-ops.common.select-date-range"}}
                         @range={{true}}
                         @minDate={{this.minDate}}
                         class="form-input-sm caret-gray-800"
-                        style="color: transparent;"
+                        style="color: transparent; caret-color: transparent;"
+                        readonly
                     />
                     <span class="pointer-events-none absolute inset-0 flex items-center px-3 pr-10 whitespace-nowrap overflow-hidden text-ellipsis text-gray-800 text-sm">
                         {{if this.formattedDateRange this.formattedDateRange @placeholder}}
@@ -36,7 +37,7 @@
                     @options={{this.fleetOptions}}
                     @selected={{this.selectedFleet}}
                     @onChange={{@onSelectFleet}}
-                    @placeholder="Select Fleet"
+                    @placeholder={{t "fleet-ops.operations.orders.index.new.select-fleet"}}
                     @triggerClass="form-select form-input form-input-sm"
                     as |fleet|
                 >
@@ -46,9 +47,9 @@
         </div>
         <div class="filters-dropdown-footer space-x-2 flex justify-center">
             <Button
-                @text="Allocate Now"
+                @text={{t "fleet-ops.common.allocate-now"}}
                 @type="primary"
-                class="w-full h-12 text-lg font-semibold bg-black text-white"
+                class="w-full text-lg font-semibold bg-black text-white"
                 @onClick={{dropdown-fn dd this.allocate}}
                 @disabled={{not this.hasDate}}
             />
