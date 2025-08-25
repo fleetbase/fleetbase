@@ -142,10 +142,10 @@ class ShiftAssignmentService
                     continue;
                 }
 
-                $orderPublicOrUuid = $assignment['id'] ?? null;
+                $orderInternalOrUuid = $assignment['id'] ?? null;
                 $startTime = $assignment['start_time'] ?? null;
 
-                if (!$orderPublicOrUuid || !$startTime) {
+                if (!$orderInternalOrUuid || !$startTime) {
                     $skippedAssignments++;
                     continue;
                 }
@@ -157,9 +157,9 @@ class ShiftAssignmentService
 
                     // Resolve order by internal_id then uuid
                     $order = Order::withoutGlobalScopes()
-                        ->where(function($query) use ($orderPublicOrUuid) {
-                            $query->where('internal_id', $orderPublicOrUuid)
-                                  ->orWhere('uuid', $orderPublicOrUuid);
+                        ->where(function($query) use ($orderInternalOrUuid) {
+                            $query->where('internal_id', $orderInternalOrUuid)
+                                  ->orWhere('uuid', $orderInternalOrUuid);
                         })
                         ->first();
 
@@ -167,7 +167,7 @@ class ShiftAssignmentService
                         $errors[] = [
                             'resource' => $resourceId ?? $resourceName,
                             'date' => $date,
-                            'order' => $orderPublicOrUuid,
+                            'order' => $orderInternalOrUuid,
                             'message' => 'Order not found'
                         ];
                         continue;
@@ -193,7 +193,7 @@ class ShiftAssignmentService
                     $errors[] = [
                         'resource' => $resourceId ?? $resourceName,
                         'date' => $date,
-                        'order' => $orderPublicOrUuid,
+                        'order' => $orderInternalOrUuid,
                         'message' => $e->getMessage()
                     ];
                 }
