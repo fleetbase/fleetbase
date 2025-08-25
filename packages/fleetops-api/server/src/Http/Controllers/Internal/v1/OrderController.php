@@ -1737,97 +1737,95 @@ private function buildWaypointSequence(array $routeMap): array
         try {
             // Generate unique public_id if vr_id is empty
             $publicId = $row['vr_id'] ?? null;
-            if (empty($publicId)) {
-                $publicId = 'RI_' . Str::upper(Str::random(8));
-            }
-            
-            // Check if this VR ID already exists and can be updated
-            $existingSegment = $existingSegments->firstWhere('public_id', $publicId);
-            
-            if ($existingSegment) {
-                // Update existing route segment
-                $existingSegment->order_id = $order->id;
-                $existingSegment->payload_id = $order->payload_uuid;
-                $existingSegment->from_waypoint_id = $fromWaypoint->uuid;
-                $existingSegment->to_waypoint_id = $toWaypoint->uuid;
-                $existingSegment->company_uuid = session('company');
-                $existingSegment->updated_by_id = UserHelper::getIdFromUuid(auth()->id());
-                $routeSegment = $existingSegment;
-            } else {
-                // Create new route segment
-                $routeSegment = new RouteSegment();
-                $routeSegment->order_id = $order->id;
-                $routeSegment->payload_id = $order->payload_uuid;
-                $routeSegment->from_waypoint_id = $fromWaypoint->uuid;
-                $routeSegment->to_waypoint_id = $toWaypoint->uuid;
-                $routeSegment->public_id = $publicId;
-                $routeSegment->company_uuid = session('company');
-                $routeSegment->created_by_id = UserHelper::getIdFromUuid(auth()->id());
-            }
-
-            // Handle potential array values from Excel
-            $routeSegment->cr_id = is_array($row['cr_id'] ?? null) ? null : ($row['cr_id'] ?? null);
-            $routeSegment->shipper_accounts = is_array($row['shipper_accounts'] ?? null) ? null : ($row['shipper_accounts'] ?? null);
-            $routeSegment->equipment_type = is_array($row['equipment_type'] ?? null) ? null : ($row['equipment_type'] ?? null);
-            $routeSegment->trailer_id = is_array($row['trailer_id'] ?? null) ? null : ($row['trailer_id'] ?? null);
-            $routeSegment->operator_id = is_array($row['operator_id'] ?? null) ? null : ($row['operator_id'] ?? null);
-            $routeSegment->tender_status = $row['tender_status'] ?? null;
-            // Set facility_sequence: use fromCode->toCode if row facility_sequence is null
-            if (!empty($row['facility_sequence'])) {
-                $routeSegment->facility_sequence = $row['facility_sequence'];
-            } elseif (!empty($fromCode) && !empty($toCode)) {
-                $routeSegment->facility_sequence = $fromCode . '->' . $toCode;
-            } else {
-                $routeSegment->facility_sequence = null;
-            }
-
-            $routeSegment->stop_1_yard_arrival = !empty($row['stop_1_yard_arrival']) 
-                ? $this->parseExcelDate($row['stop_1_yard_arrival']) : null;
-            $routeSegment->stop_1_yard_departure = !empty($row['stop_1_yard_departure']) 
-                ? $this->parseExcelDate($row['stop_1_yard_departure']) : null;
-
-            $routeSegment->stop_2_yard_arrival = !empty($row['stop_2_yard_arrival']) 
-                ? $this->parseExcelDate($row['stop_2_yard_arrival']) : null;
-            $routeSegment->stop_2_yard_departure = !empty($row['stop_2_yard_departure']) 
-                ? $this->parseExcelDate($row['stop_2_yard_departure']) : null;
-
-            $routeSegment->stop_3_yard_arrival = !empty($row['stop_3_yard_arrival']) 
-                ? $this->parseExcelDate($row['stop_3_yard_arrival']) : null;
-            $routeSegment->stop_3_yard_departure = !empty($row['stop_3_yard_departure']) 
-                ? $this->parseExcelDate($row['stop_3_yard_departure']) : null;
-            $routeSegment->driver_type = $row['transit_operator_type'] ?? null;
-            $routeSegment->truck_filter = $row['truck_filter'] ?? null;
-            // Handle date parsing safely
-            $routeSegment->vr_creation_date_time = null;
-            if (!empty($row['vr_creation_date_time']) && !is_array($row['vr_creation_date_time'])) {
-                try {
-                    $routeSegment->vr_creation_date_time = $this->parseExcelDate($row['vr_creation_date_time']);
-                } catch (\Exception $e) {
-                    Log::warning('Failed to parse vr_creation_date_time', [
-                        'value' => $row['vr_creation_date_time'],
-                        'error' => $e->getMessage()
-                    ]);
+            if(isset($publicId) && !empty($publicId)){
+                // Check if this VR ID already exists and can be updated
+                $existingSegment = $existingSegments->firstWhere('public_id', $publicId);
+                
+                if ($existingSegment) {
+                    // Update existing route segment
+                    $existingSegment->order_id = $order->id;
+                    $existingSegment->payload_id = $order->payload_uuid;
+                    $existingSegment->from_waypoint_id = $fromWaypoint->uuid;
+                    $existingSegment->to_waypoint_id = $toWaypoint->uuid;
+                    $existingSegment->company_uuid = session('company');
+                    $existingSegment->updated_by_id = UserHelper::getIdFromUuid(auth()->id());
+                    $routeSegment = $existingSegment;
+                } else {
+                    // Create new route segment
+                    $routeSegment = new RouteSegment();
+                    $routeSegment->order_id = $order->id;
+                    $routeSegment->payload_id = $order->payload_uuid;
+                    $routeSegment->from_waypoint_id = $fromWaypoint->uuid;
+                    $routeSegment->to_waypoint_id = $toWaypoint->uuid;
+                    $routeSegment->public_id = $publicId;
+                    $routeSegment->company_uuid = session('company');
+                    $routeSegment->created_by_id = UserHelper::getIdFromUuid(auth()->id());
                 }
-            }
-            
-            $routeSegment->vr_cancellation_date_time = null;
-            if (!empty($row['vr_cancellation_date_time']) && !is_array($row['vr_cancellation_date_time'])) {
-                try {
-                    $routeSegment->vr_cancellation_date_time = $this->parseExcelDate($row['vr_cancellation_date_time']);
-                } catch (\Exception $e) {
-                    Log::warning('Failed to parse vr_cancellation_date_time', [
-                        'value' => $row['vr_cancellation_date_time'],
-                        'error' => $e->getMessage()
-                    ]);
-                }
-            }
 
-            $routeSegment->save();
-            $createdSegments[] = $routeSegment->id;
+                // Handle potential array values from Excel
+                $routeSegment->cr_id = is_array($row['cr_id'] ?? null) ? null : ($row['cr_id'] ?? null);
+                $routeSegment->shipper_accounts = is_array($row['shipper_accounts'] ?? null) ? null : ($row['shipper_accounts'] ?? null);
+                $routeSegment->equipment_type = is_array($row['equipment_type'] ?? null) ? null : ($row['equipment_type'] ?? null);
+                $routeSegment->trailer_id = is_array($row['trailer_id'] ?? null) ? null : ($row['trailer_id'] ?? null);
+                $routeSegment->operator_id = is_array($row['operator_id'] ?? null) ? null : ($row['operator_id'] ?? null);
+                $routeSegment->tender_status = $row['tender_status'] ?? null;
+                // Set facility_sequence: use fromCode->toCode if row facility_sequence is null
+                if (!empty($row['facility_sequence'])) {
+                    $routeSegment->facility_sequence = $row['facility_sequence'];
+                } elseif (!empty($fromCode) && !empty($toCode)) {
+                    $routeSegment->facility_sequence = $fromCode . '->' . $toCode;
+                } else {
+                    $routeSegment->facility_sequence = null;
+                }
+
+                $routeSegment->stop_1_yard_arrival = !empty($row['stop_1_yard_arrival']) 
+                    ? $this->parseExcelDate($row['stop_1_yard_arrival']) : null;
+                $routeSegment->stop_1_yard_departure = !empty($row['stop_1_yard_departure']) 
+                    ? $this->parseExcelDate($row['stop_1_yard_departure']) : null;
+
+                $routeSegment->stop_2_yard_arrival = !empty($row['stop_2_yard_arrival']) 
+                    ? $this->parseExcelDate($row['stop_2_yard_arrival']) : null;
+                $routeSegment->stop_2_yard_departure = !empty($row['stop_2_yard_departure']) 
+                    ? $this->parseExcelDate($row['stop_2_yard_departure']) : null;
+
+                $routeSegment->stop_3_yard_arrival = !empty($row['stop_3_yard_arrival']) 
+                    ? $this->parseExcelDate($row['stop_3_yard_arrival']) : null;
+                $routeSegment->stop_3_yard_departure = !empty($row['stop_3_yard_departure']) 
+                    ? $this->parseExcelDate($row['stop_3_yard_departure']) : null;
+                $routeSegment->driver_type = $row['transit_operator_type'] ?? null;
+                $routeSegment->truck_filter = $row['truck_filter'] ?? null;
+                // Handle date parsing safely
+                $routeSegment->vr_creation_date_time = null;
+                if (!empty($row['vr_creation_date_time']) && !is_array($row['vr_creation_date_time'])) {
+                    try {
+                        $routeSegment->vr_creation_date_time = $this->parseExcelDate($row['vr_creation_date_time']);
+                    } catch (\Exception $e) {
+                        Log::warning('Failed to parse vr_creation_date_time', [
+                            'value' => $row['vr_creation_date_time'],
+                            'error' => $e->getMessage()
+                        ]);
+                    }
+                }
+                
+                $routeSegment->vr_cancellation_date_time = null;
+                if (!empty($row['vr_cancellation_date_time']) && !is_array($row['vr_cancellation_date_time'])) {
+                    try {
+                        $routeSegment->vr_cancellation_date_time = $this->parseExcelDate($row['vr_cancellation_date_time']);
+                    } catch (\Exception $e) {
+                        Log::warning('Failed to parse vr_cancellation_date_time', [
+                            'value' => $row['vr_cancellation_date_time'],
+                            'error' => $e->getMessage()
+                        ]);
+                    }
+                }
+
+                $routeSegment->save();
+                $createdSegments[] = $routeSegment->id;
+            }
             
         } catch (\Exception $e) {
             $displayRowIndex = $originalRowIndex + 2; // +2 to include header row
-            $errors[] = [$displayRowIndex, $e->getMessage(), $order->public_id];
+            $errors[] = [$displayRowIndex, $e->getMessage(), $order->internal_id];
 
         }
     }
