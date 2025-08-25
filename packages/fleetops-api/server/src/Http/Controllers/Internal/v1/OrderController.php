@@ -998,51 +998,51 @@ class OrderController extends FleetOpsController
                 return $row;
             });
 
-            $grouped = $sheetRowsWithIndex->groupBy(fn ($row) => $row['trip_id'] ?? Str::uuid());
+            $grouped = $sheetRowsWithIndex->groupBy(fn ($row) => $row['block_id'] ?? Str::uuid());
 
-            foreach ($grouped as $tripId => $rows) {
-                // Use database transaction for each trip
-                DB::beginTransaction();
-                try {
-                    $firstRow = $rows[0]; // or $firstRow = $rows->first();
-                    $yardArrivalDates = [];
-                    $routeRows = [];
-                    $tripHasErrors = false;
+                            foreach ($grouped as $blockId => $rows) {
+                    // Use database transaction for each block
+                    DB::beginTransaction();
+                    try {
+                        $firstRow = $rows[0]; // or $firstRow = $rows->first();
+                        $yardArrivalDates = [];
+                        $routeRows = [];
+                        $blockHasErrors = false;
 
-                    // PRE-VALIDATION: Check for duplicate Order id & VR IDs before processing
-                    $trip_id = $rows[0]['trip_id'] ?? null;
-                    if (empty($trip_id)) {
-                        $originalRowIndex = $rows[0]['_original_row_index'] ?? 0;
-                        $importErrors[] = [
-                            (string)($originalRowIndex + 2), // +2 to include header row
-                            "Trip ID is required.",
-                            ""
-                        ];
-                        DB::rollback();
-                        continue;
-                    }
-
-                    // Check duplicates for trip_id
-                    if (!empty($trip_id)) {
-                        $exists = Order::where('public_id', $trip_id)
-                            ->where('company_uuid', session('company'))
-                            ->whereNull('deleted_at')
-                            ->exists();
-
-                        if ($exists) {
-                            // Add error for each row with this trip_id
-                            foreach ($rows as $row) {
-                                $originalRowIndex = $row['_original_row_index'] ?? 0;
-                                $importErrors[] = [
-                                    (string)($originalRowIndex + 2), // +2 to include header row
-                                    "Trip ID '{$trip_id}' already exists.",
-                                    (string)$tripId
-                                ];
-                            }
+                        // PRE-VALIDATION: Check for duplicate Order id & VR IDs before processing
+                        $block_id = $rows[0]['block_id'] ?? null;
+                        if (empty($block_id)) {
+                            $originalRowIndex = $rows[0]['_original_row_index'] ?? 0;
+                            $importErrors[] = [
+                                (string)($originalRowIndex + 2), // +2 to include header row
+                                "Block ID is missing.",
+                                ""
+                            ];
                             DB::rollback();
                             continue;
                         }
-                    }
+
+                        // Check duplicates for block_id
+                        if (!empty($block_id)) {
+                            $exists = Order::where('internal_id', $block_id)
+                                ->where('company_uuid', session('company'))
+                                ->whereNull('deleted_at')
+                                ->exists();
+
+                            if ($exists) {
+                                // Add error for each row with this block_id
+                                foreach ($rows as $row) {
+                                    $originalRowIndex = $row['_original_row_index'] ?? 0;
+                                    $importErrors[] = [
+                                        (string)($originalRowIndex + 2), // +2 to include header row
+                                        "Block ID '{$block_id}' already exists.",
+                                        (string)$blockId
+                                ];
+                                }
+                                DB::rollback();
+                                continue;
+                            }
+                        }
 
                     // Collect all VR IDs from all rows first
                     $vrIds = [];
@@ -1070,10 +1070,10 @@ class OrderController extends FleetOpsController
                                 $importErrors[] = [
                                     (string)($originalRowIndex + 2), // +2 to include header row
                                     "VR ID '{$existingVrId}' already exists.",
-                                    (string)$tripId
+                                    (string)$blockId
                                 ];
                             }
-                            $tripHasErrors = true;
+                            $blockHasErrors = true;
                             DB::rollback();
                             continue;
                         }
@@ -1089,23 +1089,23 @@ class OrderController extends FleetOpsController
                                 $originalRowIndex = $row['_original_row_index'] ?? 0;
                                 $importErrors[] = [
                                     (string)($originalRowIndex + 2), // +2 to include header row
-                                    "Trip {$tripId}: Facility sequence has " . count($facilities) . " items. Only 2 are imported. Sequence: " . implode(' -> ', $facilities),
-                                    (string)$tripId
+                                    "Block {$blockId}: Facility sequence has " . count($facilities) . " items. Only 2 are imported. Sequence: " . implode(' -> ', $facilities),
+                                    (string)$blockId
                                 ];
-                                $tripHasErrors = true;
+                                $blockHasErrors = true;
                             }
                             /*Check if first and second facility are the same
                             if (count($facilities) >= 2 && $facilities[0] === $facilities[1]) {
                                 $originalRowIndex = $row['_original_row_index'] ?? 0;
                                 $importErrors[] = [
                                     (string)($originalRowIndex + 2), // +2 to include header row
-                                    "Trip {$tripId}: First and second facility in sequence are the same ('{$facilities[0]}'). Sequence: " . implode(' -> ', $facilities),
-                                    (string)$tripId
+                                    "Block {$blockId}: First and second facility in sequence are the same ('{$facilities[0]}'). Sequence: " . implode(' -> ', $facilities),
+                                    (string)$blockId
                                 ];
-                                $tripHasErrors = true;
+                                $blockHasErrors = true;
                             }*/
                         }
-                        /*if (
+                        /*                        if (
                             isset($row['stop_1'], $row['stop_2']) && // both keys exist
                             !empty($row['stop_1']) &&
                             !empty($row['stop_2']) &&
@@ -1114,14 +1114,14 @@ class OrderController extends FleetOpsController
                             $originalRowIndex = $row['_original_row_index'] ?? 0;
                             $importErrors[] = [
                                 (string)($originalRowIndex + 2), // +2 to account for header row
-                                "Trip {$tripId}: Stop 1 and Stop 2 are the same",
-                                (string)$tripId
+                                "Block {$blockId}: Stop 1 and Stop 2 are the same",
+                                (string)$blockId
                             ];
 
-                            $tripHasErrors = true;
+                            $blockHasErrors = true;
                         }*/
                     }
-                    if ($tripHasErrors) {
+                    if ($blockHasErrors) {
                         DB::rollback();
                         continue;
                     }
@@ -1129,7 +1129,7 @@ class OrderController extends FleetOpsController
                     $uniqueWaypointSequence = [];
 
                     if (count($rows) === 1) {
-                        // Single-row trip: simple case
+                        // Single-row block: simple case
                         $row = $rows[0];
                         $stop1 = $row['stop_1'] ?? null;
                         $stop2 = $row['stop_2'] ?? null;
@@ -1140,7 +1140,7 @@ class OrderController extends FleetOpsController
                         $row['_original_row_index'] = $row['_original_row_index'] ?? 0;
                         $routeRows[] = $row;
                     } else {
-                        // Multi-row trip: build chain by following route connections
+                        // Multi-row block: build chain by following route connections
                         $routeMap = [];
                         $allStops = [];
                         
@@ -1157,9 +1157,9 @@ class OrderController extends FleetOpsController
                                         $importErrors[] = [
                                             (string)$displayRowIndex,
                                             "Invalid date format for column '{$key}'",
-                                            (string)$tripId
+                                            (string)$blockId
                                         ];
-                                        $tripHasErrors = true;
+                                        $blockHasErrors = true;
                                         continue;
                                     }
                                 }
@@ -1178,7 +1178,7 @@ class OrderController extends FleetOpsController
                             $routeRows[] = $row;
                         }
                         
-                        if ($tripHasErrors) {
+                        if ($blockHasErrors) {
                             DB::rollback();
                             continue;
                         }
@@ -1210,14 +1210,14 @@ class OrderController extends FleetOpsController
                                 : '-';
                                 $importErrors[] = [
                                     $rowIndex,
-                                    "Invalid place code '{$placeCode}' in trip",
-                                    (string)$tripId
+                                    "Invalid place code '{$placeCode}' in block",
+                                    (string)$blockId
                                 ];
-                                $tripHasErrors = true;
+                                $blockHasErrors = true;
                             }
                         }
                         
-                        if ($tripHasErrors) {
+                        if ($blockHasErrors) {
                             DB::rollback();
                             continue;
                         }
@@ -1229,8 +1229,8 @@ class OrderController extends FleetOpsController
                             $firstRowIndex = ($rows[0]['_original_row_index'] ?? 0) + 2; // +2 to include header row
                             $importErrors[] = [
                                (string)$firstRowIndex,
-                                "Trip {$tripId}: Could not determine waypoint sequence from routes",
-                                (string)$tripId
+                                "Block {$blockId}: Could not determine waypoint sequence from routes",
+                                (string)$blockId
                             ];
                             DB::rollback();
                             continue;
@@ -1251,7 +1251,7 @@ class OrderController extends FleetOpsController
                             }
                         } catch (\Exception $e) {
                             Log::warning('Failed to parse cpt from first row', [
-                                'trip_id' => $tripId,
+                                'block_id' => $blockId,
                                 'cpt_value' => $firstRow['cpt'],
                                 'error' => $e->getMessage()
                             ]);
@@ -1259,7 +1259,7 @@ class OrderController extends FleetOpsController
                         }
                     }
 
-                    // If no cpt in first row, look for any cpt in the trip as fallback
+                    // If no cpt in first row, look for any cpt in the block as fallback
                     if (!$scheduledAt) {
                         foreach ($rows as $row) {
                             if (!empty($row['cpt'])) {
@@ -1291,7 +1291,7 @@ class OrderController extends FleetOpsController
                             }
                         } catch (\Exception $e) {
                             Log::warning('Failed to parse stop_2_yard_arrival from last row', [
-                                'trip_id' => $tripId,
+                                'block_id' => $blockId,
                                 'stop_2_yard_arrival_value' => $lastRow['stop_2_yard_arrival'],
                                 'error' => $e->getMessage()
                             ]);
@@ -1330,7 +1330,7 @@ class OrderController extends FleetOpsController
                     $orderInput = [
                         'order' => [
                             'internal_id' => $firstRow['block_id'] ?? null,
-                            'public_id' => $tripId,
+                            'public_id' => $firstRow['trip_id'] ?? null,
                             'status' => strtolower($firstRow['status'] ?? 'created'),
                             'type' => 'transport',
                             'scheduled_at' => $scheduledAt,
@@ -1451,24 +1451,24 @@ class OrderController extends FleetOpsController
                     if (!empty($routeSegmentErrors)) {
                     // Add route segment errors to main import errors
                         foreach ($routeSegmentErrors as $error) {
-                            $importErrors[] = $error; // Each error is already in format [rowIndex, message, tripId]
+                            $importErrors[] = $error; // Each error is already in format [rowIndex, message, blockId]
                         }
-                        DB::rollback(); // This will rollback the entire trip including order and waypoints
-                        continue; // Skip to next trip
+                        DB::rollback(); // This will rollback the entire block including order and waypoints
+                        continue; // Skip to next block
                     }
                     // If we reach here, everything succeeded
                     DB::commit();
 
-                    $ordersCache[$tripId] = $order;
+                    $ordersCache[$blockId] = $order;
                     $records[] = $order;
                     event(new OrderReady($order));
                 } catch (\Exception $e) {
-                    // Rollback the entire trip if anything fails
+                    // Rollback the entire block if anything fails
                     DB::rollback();
                     $importErrors[] = [
                         '-',
-                        "Trip {$tripId}: " . $e->getMessage(),
-                        $tripId
+                        "Block {$blockId}: " . $e->getMessage(),
+                        $blockId
                     ];
                 }
             }
@@ -1489,8 +1489,8 @@ class OrderController extends FleetOpsController
                 'total_errors' => $errorCount,
                 'errors' => $importErrors,
                 'message' => $successCount > 0
-                    ? "Partial import completed. {$createdCount} trips created, {$updatedCount} trips updated, {$errorCount} errors found."
-                    : "Import failed. No trips were imported due to validation errors."
+                    ? "Partial import completed. {$createdCount} blocks created, {$updatedCount} blocks updated, {$errorCount} errors found."
+                    : "Import failed. No blocks were imported due to validation errors."
             ]);
         }
 
@@ -1504,8 +1504,8 @@ class OrderController extends FleetOpsController
                 'total_processed' => $successCount,
                 'created' => $createdCount,
                 'updated' => $updatedCount,
-                'created_trips' => $createdOrders,
-                'updated_trips' => $updatedOrders
+                'created_blocks' => $createdOrders,
+                'updated_blocks' => $updatedOrders
             ]
         ];
 
