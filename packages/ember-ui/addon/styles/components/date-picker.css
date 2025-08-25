@@ -3,9 +3,9 @@
     --adp-z-index: 999999;
     --adp-day-name-color: rgb(17, 24, 39);
     --adp-cell-background-color-selected: rgba(59, 130, 246, 1);
-    --adp-cell-background-color-selected-hover: rgba(96, 165, 250, 1);
-    --adp-cell-background-color-in-range: rgba(147, 197, 253, 0.1);
-    --adp-background-color-in-range-focused: rgba(147, 197, 253, 0.2);
+    --adp-cell-background-color-selected-hover: rgba(37, 99, 235, 1);
+    --adp-cell-background-color-in-range: rgba(59, 130, 246, 1);
+    --adp-background-color-in-range-focused: rgba(59, 130, 246, 1);
 }
 
 body[data-theme='dark'].fleetbase-console .air-datepicker {
@@ -18,10 +18,13 @@ body[data-theme='dark'].fleetbase-console .air-datepicker {
     --adp-border-color: rgb(17, 24, 39);
     --adp-border-color-inner: rgb(17, 24, 39);
     --adp-border-color-inline: rgb(17, 24, 39);
+    --adp-cell-background-color-selected: rgba(59, 130, 246, 1);
+    --adp-cell-background-color-selected-hover: rgba(37, 99, 235, 1);
+    --adp-cell-background-color-in-range: rgba(59, 130, 246, 1);
+    --adp-background-color-in-range-focused: rgba(59, 130, 246, 1);
 
     /* --adp-background-color-selected-other-month: #a2ddf6;
     --adp-background-color-selected-other-month-focused: rgba(96, 165, 250, 1);
-    --adp-color-other-month: #dedede;
     --adp-color-disabled: rgba(107, 114, 128, 1);
     --adp-color-disabled-in-range: #939393;
     --adp-color-other-month-hover: #c5c5c5; */
@@ -29,4 +32,38 @@ body[data-theme='dark'].fleetbase-console .air-datepicker {
 
 body[data-theme='dark'].fleetbase-console .air-datepicker--pointer:after {
     @apply bg-gray-700;
+}
+
+/* Ensure text is white across the entire selected range */
+.fleetbase-console .air-datepicker .air-datepicker-body .air-datepicker-cell.-selected-,
+.fleetbase-console .air-datepicker .air-datepicker-body .air-datepicker-cell.-in-range-,
+.fleetbase-console .air-datepicker .air-datepicker-body .air-datepicker-cell.-range-from-,
+.fleetbase-console .air-datepicker .air-datepicker-body .air-datepicker-cell.-range-to- {
+    color: #ffffff !important;
+}
+
+/* Keep text white on hover states as well */
+.fleetbase-console .air-datepicker .air-datepicker-body .air-datepicker-cell.-selected-:hover,
+.fleetbase-console .air-datepicker .air-datepicker-body .air-datepicker-cell.-in-range-:hover,
+.fleetbase-console .air-datepicker .air-datepicker-body .air-datepicker-cell.-range-from-:hover,
+.fleetbase-console .air-datepicker .air-datepicker-body .air-datepicker-cell.-range-to-:hover {
+    color: #ffffff !important;
+}
+
+/* Hide pointer (triangle) only inside the Auto Allocate dropdown */
+.fleetbase-console .filters-dropdown-container .air-datepicker--pointer:before,
+.fleetbase-console .filters-dropdown-container .air-datepicker--pointer:after {
+    display: none !important;
+}
+
+/* Additionally hide the pointer element itself for robustness */
+.fleetbase-console .filters-dropdown-container .air-datepicker--pointer {
+    display: none !important;
+}
+
+/* Fallback: hide pointer globally within console to cover any container mismatches */
+.fleetbase-console .air-datepicker--pointer,
+.fleetbase-console .air-datepicker--pointer:before,
+.fleetbase-console .air-datepicker--pointer:after {
+    display: none !important;
 }

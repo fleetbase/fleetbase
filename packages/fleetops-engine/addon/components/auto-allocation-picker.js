@@ -67,27 +67,48 @@ export default class AutoAllocationPickerComponent extends Component {
         if (!value) {
             return '';
         }
-        
-        // Handle array format (what the controller stores)
-        if (Array.isArray(value) && value.length === 2) {
-            const [start, end] = value.map(dateStr => new Date(dateStr));
-            if (isNaN(start.getTime()) || isNaN(end.getTime())) {
-                return '';
+
+        const fmtShort = (d) => d.toLocaleDateString(undefined, { month: 'short', day: '2-digit' });
+        const fmtFull = (d) => d.toLocaleDateString(undefined, { month: 'short', day: '2-digit', year: 'numeric' });
+
+        // Array inputs: [start] or [start, end]
+        if (Array.isArray(value)) {
+            if (value.length === 1 && value[0]) {
+                const d = new Date(value[0]);
+                return isNaN(d) ? '' : fmtFull(d);
             }
-            const options = { month: 'short', day: '2-digit' };
-            const year = start.getFullYear();
-            return `${start.toLocaleDateString(undefined, options)} - ${end.toLocaleDateString(undefined, options)}, ${year}`;
+            if (value.length === 2 && value[0] && value[1]) {
+                const [start, end] = value.map((v) => new Date(v));
+                if (isNaN(start) || isNaN(end)) {
+                    return '';
+                }
+                const year = start.getFullYear();
+                return `${fmtShort(start)} - ${fmtShort(end)}, ${year}`;
+            }
         }
-        
-        // Handle single date string
+
+        // AirDatepicker object shape: { date: Date[]|Date, formattedDate: string|string[] }
+        if (typeof value === 'object') {
+            const fd = value.formattedDate;
+            const d = value.date;
+            if (Array.isArray(fd) && fd.length === 1) {
+                return String(fd[0] ?? '');
+            }
+            if (Array.isArray(d) && d.length === 1) {
+                const dd = d[0] instanceof Date ? d[0] : new Date(d[0]);
+                return isNaN(dd) ? '' : fmtFull(dd);
+            }
+            if (typeof fd === 'string' && fd.trim()) {
+                return fd;
+            }
+        }
+
+        // Single date string
         if (typeof value === 'string' && value.trim()) {
             const date = new Date(value);
-            if (!isNaN(date.getTime())) {
-                const options = { month: 'short', day: '2-digit', year: 'numeric' };
-                return date.toLocaleDateString(undefined, options);
-            }
+            return isNaN(date) ? '' : fmtFull(date);
         }
-        
+
         return '';
     }
 
