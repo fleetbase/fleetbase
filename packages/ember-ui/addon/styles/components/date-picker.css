@@ -53,7 +53,7 @@ body[data-theme='dark'].fleetbase-console .air-datepicker--pointer:after {
 /* Hide pointer (triangle) only inside the Auto Allocate dropdown */
 .fleetbase-console .filters-dropdown-container .air-datepicker--pointer:before,
 .fleetbase-console .filters-dropdown-container .air-datepicker--pointer:after {
-    display: none !important;
+    display: none;
 }
 
 /* Additionally hide the pointer element itself for robustness */
