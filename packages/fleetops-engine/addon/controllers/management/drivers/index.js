@@ -488,28 +488,6 @@ export default class ManagementDriversIndexController extends BaseController {
             }
         };
     
-        this.crud.import('driver', {
-            onImportCompleted: () => {
-                results = this.fetch.post('drivers/import', { files });
-                
-                // Handle error log case
-                if (results && results.error_log_url) {
-                    handleErrorLogDownload(this, modal, results);
-                    return;
-                }
-                this.hostRouter.refresh();
-            },
-            confirm: (modal) => {
-                // Check if we're in error state (download mode)
-                const isErrorState = this.modalsManager.getOption('isErrorState');
-                if (isErrorState) {
-                    downloadErrorLog(modal);
-                } else {
-                    originalConfirm(modal);
-                }
-            },
-        });
-    
         const originalConfirm = async (modal) => {
             const uploadQueue = this.modalsManager.getOption('uploadQueue');
             const uploadedFiles = [];
