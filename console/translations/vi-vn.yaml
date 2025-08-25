@@ -155,6 +155,7 @@ leaves:
   start_date: Ngày bắt đầu
   end_date: Ngày kết thúc
   total_days: Thời lượng (Ngày)
+  view: Xem cho điều này
   leave_type: Loại nghỉ phép
   reason: Lý do
   status: Trạng thái
@@ -992,6 +993,11 @@ fleet-ops:
     layout:       
       fleet-ops-sidebar:  
         maintenance-schedule: Lịch bảo trì
+    leaves-report-panel:
+      cancel-edit-leaves-report: Hủy chỉnh sửa báo cáo nghỉ phép
+      cancel-new-leaves-report: Hủy báo cáo nghỉ phép mới
+      edit-button: Chỉnh sửa báo cáo nghỉ phép
+      title: Báo cáo nghỉ phép
     maintenance-schedule-form-panel:
       create: Tạo Lịch Bảo Trì
       save: Lưu Lịch Bảo Trì
@@ -1130,6 +1136,9 @@ fleet-ops:
           payload: Tải trọng
           items-drop: Mặt hàng được thả tại
           tracking: Theo dõi
+          current-destination: Điểm đến hiện tại
+          current-eta: Thời gian đến dự kiến
+          current-ect: Thời gian hoàn thành dự kiến
           waypoint-actions: Hành động điểm dừng
           get-label: Lấy nhãn
           view-activity: Xem hoạt động
@@ -1152,6 +1161,7 @@ fleet-ops:
           assign-success: Tài xế đã được cập nhật cho đơn hàng '{orderId}'.
           order-title: Nhãn đơn hàng
           waypoint-title: Nhãn điểm dừng
+          click-to-copy: Nhấp để sao chép
           proof-of-delivery: Bằng chứng giao hàng
           notes-placeholder: Nhập ghi chú cho đơn hàng ở đây....
           save-order-note: Lưu ghi chú đơn hàng
