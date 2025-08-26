@@ -249,8 +249,8 @@ export default class CrudService extends Service {
             title: this.intl.t('common.export'),
             acceptButtonText: 'Download',
             modalClass: 'modal-md',
-            format: 'csv',
-            formatOptions: ['csv', 'xlsx', 'xls'],
+            format: 'xlsx',
+            formatOptions: ['xlsx', 'xls', 'csv'],
             // setFormat: ({ target }) => {
             //     this.modalsManager.setOption('format', target.value || null);
             setFormat: (selectedValue) => {
@@ -270,7 +270,7 @@ export default class CrudService extends Service {
                 this.modalsManager.setOption('createdAt', dateStr);
             },
             confirm: (modal, done) => {
-                const format = modal.getOption('format') ?? 'csv';
+                const format = modal.getOption('format') ?? 'xlsx';
                 let from_date = null;
                 let to_date = null;
                 let filter_by = null;

@@ -306,8 +306,19 @@ export default class OperationsOrdersIndexController extends BaseController {
      */
     @tracked columns = [
         {
-            label: this.intl.t('fleet-ops.common.id'),
+            label: this.intl.t('fleet-ops.operations.orders.index.block-id'),
             valuePath: 'public_id',
+            width: '140px',
+            cellComponent: 'table/cell/base',
+            resizable: true,
+            sortable: true,
+            filterable: true,
+            filterComponent: 'filter/string',
+            filterParam: 'internal_id',
+        },
+        {
+            label: this.intl.t('fleet-ops.operations.orders.index.trip-id'),
+            valuePath: 'internal_id',
             width: '140px',
             cellComponent: 'table/cell/link-to',
             route: 'operations.orders.index.view',
