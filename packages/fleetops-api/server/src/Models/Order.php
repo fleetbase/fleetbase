@@ -122,7 +122,8 @@ class Order extends Model
         'bid_id',
         'spot_work',
         'carrier',
-        'sub_carrier'
+        'sub_carrier',
+        'trip_id'
     ];
 
     /**
