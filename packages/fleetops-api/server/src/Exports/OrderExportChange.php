@@ -10,6 +10,7 @@ use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithEvents;
 use Maatwebsite\Excel\Events\AfterSheet;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
 
 class OrderExportChange implements FromCollection, WithHeadings, ShouldAutoSize, WithEvents
 {
@@ -40,7 +41,7 @@ class OrderExportChange implements FromCollection, WithHeadings, ShouldAutoSize,
         ];
     }
 
-  public function registerEvents(): array
+    public function registerEvents(): array
 {
     return [
         AfterSheet::class => function(AfterSheet $event) {
@@ -159,13 +160,13 @@ class OrderExportChange implements FromCollection, WithHeadings, ShouldAutoSize,
         $timezone = $this->timezone ?? 'UTC';
         if(isset($timezone) && $this->filterBy)
         {
-            $column = $filterMap[$this->filterBy] ?? null;
             if ($timezone === 'Asia/Calcutta') 
             {
                 $timezone = 'Asia/Kolkata'; // Convert old timezone
             }
+            $column = $filterMap[$this->filterBy] ?? null;
             if ($column && $this->fromDate) {
-                // Parse fromDate and convert to local timezone
+               // Parse fromDate and convert to local timezone
                 $fromDateLocal = Carbon::parse($this->fromDate)->setTimezone($timezone);
                 $startOfDayUtc = $fromDateLocal->copy()->startOfDay()->setTimezone('UTC');
                 
@@ -209,8 +210,8 @@ class OrderExportChange implements FromCollection, WithHeadings, ShouldAutoSize,
         $rows = collect();
         foreach ($orders as $order) {
             // Prepare the shared fields
-            $tripId = $order->public_id;
-            $blockId = $order->internal_id;
+            $tripId = $order->internal_id;
+            $blockId = $order->public_id;
             $driverName = ucwords(strtolower($order->driver_name ?? ''));
             $vehiclePlateNumber = $order->vehicleAssigned?->plate_number ?? '';
             $vehicleType = $order->vehicleAssigned?->type ?? '';
@@ -227,11 +228,20 @@ class OrderExportChange implements FromCollection, WithHeadings, ShouldAutoSize,
 
             // Create lane information from waypoints
             $segmentLane = '';
-            if ($waypoints instanceof Collection && $waypoints->isEmpty()) {
+            if ($waypoints instanceof Collection && $waypoints->count() == 2) {
+                  $placeNames = collect();
+                    foreach ($waypoints as $waypoint) {
+                        $placeName = $waypoint->name ?? $waypoint->city ?? $waypoint->code ?? '';
+                        if (!empty($placeName)) {
+                            $placeNames->push($placeName);
+                        }
+                    }
+                 
+            } else {
+                // No waypoints, fallback to pickup/dropoff codes
                 $pickupCode = $order->payload->pickup->code ?? '';
                 $dropoffCode = $order->payload->dropoff->code ?? '';
                 
-                // Only create lane if both codes exist
                 if (!empty($pickupCode) && !empty($dropoffCode)) {
                     $segmentLane = $pickupCode . '->' . $dropoffCode;
                 } elseif (!empty($pickupCode)) {
@@ -243,7 +253,7 @@ class OrderExportChange implements FromCollection, WithHeadings, ShouldAutoSize,
 
 
             // For each route segment, create a row
-            if ($order->routeSegments && $waypoints && count($waypoints) >= 2) {
+            if ($order->routeSegments && $order->routeSegments->count() > 0 && $waypoints && count($waypoints) >= 2) {
                 foreach ($order->routeSegments as $index => $segment) {
                     $loadId = $segment->public_id ?? '';
                     $equipment_type = $segment->equipment_type ?? '';
@@ -269,13 +279,44 @@ class OrderExportChange implements FromCollection, WithHeadings, ShouldAutoSize,
                         ''                           // Unscheduled Drop (Yes/No)
                     ]);
                 }
-            } else {
-                // Fallback if no segments — show 1 row
+            } 
+            elseif(isset($placeNames)){
+                  foreach ($waypoints as $waypoint) {
+                        $placeName = $waypoint->name ?? $waypoint->city ?? $waypoint->code ?? '';
+                        if (!empty($placeName)) {
+                            $placeNames->push($placeName);
+                        }
+                    }
+                    $uniquePlaceNames = $placeNames->unique()->values();
+
+                    if ($uniquePlaceNames->count() === 1) {
+                        // All waypoints have the same place name
+                        $segmentLane = $uniquePlaceNames->first();
+                    } 
+                 $rows->push([
+                    $blockId,                    // Block ID
+                    $tripId,                     // Trip ID
+                    '',                          // Load ID
+                    $segmentLane,                 // Lane
+                    $startDate,                  // Arrival Start Time
+                    $driver_type,                // Driver type
+                    $driverName,                 // Driver 1
+                    '',                          // Driver 2 (if team)
+                    $vehicleType,                // Vehicle Type
+                    $vehiclePlateNumber,         // License Plate #
+                    '',                        // Country Code (default)
+                    '',                          // Equipment Type
+                    '',                          // Trailer ID
+                    ''                           // Unscheduled Drop (Yes/No)
+                ]);
+            }
+            else {
+                // Fallback if no segments or waypoints — show 1 row for ALL orders
                 $rows->push([
                     $blockId,                    // Block ID
                     $tripId,                     // Trip ID
                     '',                          // Load ID
-                    $segmentLane,                       // Lane
+                    $segmentLane,                 // Lane
                     $startDate,                  // Arrival Start Time
                     $driver_type,                // Driver type
                     $driverName,                 // Driver 1
