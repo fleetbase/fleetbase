@@ -214,7 +214,7 @@ export default class OperationsOrdersIndexNewController extends BaseController {
     constructor() {
         super(...arguments); // Always call the parent class constructor first
         // Initialize waypoints with a default value
-       // this.waypoints = [{ place: 'Default Place' }];   
+        // this.waypoints = [{ place: 'Default Place' }];   
 
         // If needed, you can load waypoints from the store
         this.loadWaypoints();
@@ -226,7 +226,7 @@ export default class OperationsOrdersIndexNewController extends BaseController {
             place: null,  // Will show the empty dropdown
             customer: this.order ? this.order.customer : null
         });
-        
+
         this.set('waypoints', [defaultWaypoint]);
     }
 
@@ -336,7 +336,7 @@ export default class OperationsOrdersIndexNewController extends BaseController {
             this.errorMessage = this.intl.t('fleet-ops.component.order.schedule-card.start-date-required');
             this.showErrorOnce(this.errorMessage);
             return;
-        } 
+        }
 
         if (!this.order.fleet) {
             this.errorMessage = this.intl.t('fleet-ops.component.order.schedule-card.fleet-required');
@@ -355,32 +355,32 @@ export default class OperationsOrdersIndexNewController extends BaseController {
                 this.showErrorOnce(WAYPOINTS_ERROR);
                 return;
             }
-             // Validate that all non-empty waypoints are valid
-            const hasInvalidWaypoint = this.waypoints.some(waypoint => 
-                !waypoint.place || 
-                !waypoint.place.latitude || 
-                !waypoint.place.longitude || 
+            // Validate that all non-empty waypoints are valid
+            const hasInvalidWaypoint = this.waypoints.some(waypoint =>
+                !waypoint.place ||
+                !waypoint.place.latitude ||
+                !waypoint.place.longitude ||
                 waypoint.place.hasInvalidCoordinates
             );
-            
+
             if (hasInvalidWaypoint) {
                 this.showErrorOnce(WAYPOINTS_ERROR);
                 return;
             }
             // Check for consecutive duplicate waypoints
             let hasConsecutiveDuplicates = false;
-    
-             for (let i = 1; i < this.waypoints.length; i++) {
+
+            for (let i = 1; i < this.waypoints.length; i++) {
                 const currentWaypoint = this.waypoints[i];
-                const previousWaypoint = this.waypoints[i-1];
-                
+                const previousWaypoint = this.waypoints[i - 1];
+
                 // Check if current and previous have the same public_id
                 const currentPlaceId = currentWaypoint?.place?.public_id;
                 const previousPlaceId = previousWaypoint?.place?.public_id;
-                
+
                 // Check if both waypoints have valid place public_ids and they match
-                if (currentPlaceId && 
-                    previousPlaceId && 
+                if (currentPlaceId &&
+                    previousPlaceId &&
                     currentPlaceId === previousPlaceId) {
                     hasConsecutiveDuplicates = true;
                     break;
@@ -398,7 +398,7 @@ export default class OperationsOrdersIndexNewController extends BaseController {
         }
 
         this.previewRoute(false);
-        this.loader.showLoader('body', { loadingMessage: this.intl.t('common.creating-order')});
+        this.loader.showLoader('body', { loadingMessage: this.intl.t('common.creating-order') });
 
         const { order, groupedMetaFields, payload, entities, waypoints } = this;
         const route = this.leafletOptimizedRoute ? this.getOptimizedRoute() : this.getRoute();
@@ -479,7 +479,7 @@ export default class OperationsOrdersIndexNewController extends BaseController {
         let path = `${ENV.AWS.FILE_PATH}/order-imports/${this.currentUser.companyId}`;
         let disk = ENV.AWS.DISK;
         let bucket = ENV.AWS.BUCKET;
-        
+
         const checkQueue = () => {
             const uploadQueue = this.modalsManager.getOption('uploadQueue');
             if (uploadQueue.length) {
@@ -488,12 +488,12 @@ export default class OperationsOrdersIndexNewController extends BaseController {
                 this.modalsManager.setOption('acceptButtonDisabled', true);
             }
         };
-    
+
         // Store reference to original confirm function
         const originalConfirm = async (modal) => {
             const uploadQueue = this.modalsManager.getOption('uploadQueue');
             const uploadedFiles = [];
-            
+
             const uploadTask = (file) => {
                 return new Promise((resolve) => {
                     this.fetch.uploadFile.perform(
@@ -511,29 +511,29 @@ export default class OperationsOrdersIndexNewController extends BaseController {
                     );
                 });
             };
-    
+
             if (!uploadQueue.length) {
                 return this.notifications.warning(this.intl.t('fleet-ops.operations.orders.index.new.warning-message'));
             }
-    
+
             modal.startLoading();
             modal.setOption('acceptButtonText', this.intl.t('fleet-ops.component.modals.order-import.uploading'));
-    
+
             // Upload all files
             for (let i = 0; i < uploadQueue.length; i++) {
                 const file = uploadQueue.objectAt(i);
                 await uploadTask(file);
             }
-    
+
             this.modalsManager.setOption('acceptButtonText', this.intl.t('fleet-ops.component.modals.order-import.processing'));
             this.modalsManager.setOption('isProcessing', true);
-    
+
             const files = uploadedFiles.map((file) => file.id);
             let results;
-    
+
             try {
                 results = await this.fetch.post('orders/process-imports', { files });
-                
+
                 // Handle error log case
                 if (results && results.error_log_url) {
                     this.handleErrorLogDownload(modal, results);
@@ -545,11 +545,11 @@ export default class OperationsOrdersIndexNewController extends BaseController {
                 this.modalsManager.setOption('isProcessing', false);
                 return this.notifications.serverError(error);
             }
-    
+
             // Success case - process the results
             this.handleSuccessfulImport(results, modal);
         };
-    
+
         // Error log download handler
         const downloadErrorLog = (modal) => {
             const errorLogUrl = this.modalsManager.getOption('errorLogUrl');
@@ -561,7 +561,7 @@ export default class OperationsOrdersIndexNewController extends BaseController {
                 });
             }
         };
-    
+
         this.modalsManager.show('modals/order-import', {
             title: this.intl.t('fleet-ops.component.modals.order-import.title'),
             acceptButtonText: this.intl.t('fleet-ops.component.modals.order-import.start-upload-button'),
@@ -636,7 +636,7 @@ export default class OperationsOrdersIndexNewController extends BaseController {
             },
         });
     }
-    
+
     // Helper method to handle error log download setup
     handleErrorLogDownload(modal, results) {
         // if (results.message) {
@@ -644,9 +644,21 @@ export default class OperationsOrdersIndexNewController extends BaseController {
         // } else {
         //     this.notifications.warning(this.intl.t('fleet-ops.operations.orders.index.new.import-error-log-warning'));
         // }
-        
+
         // Set modal to error state
         let errorMessage = results?.message;
+        const successCount = results.created_orders;
+        const erroredCount = results.total_errors;
+        const uploadedCount = results.updated_orders;
+
+        const finalMessage = `${errorMessage}`;
+        const importResults = {
+            successCount: successCount,
+            erroredCount: erroredCount,
+            successLabel: this.intl.t('fleet-ops.component.modals.order-import.successful-imports'),
+            errorLabel: this.intl.t('fleet-ops.component.modals.order-import.errors')
+        };
+
         this.modalsManager.setOption('errorLogUrl', results.error_log_url);
         this.modalsManager.setOption('acceptButtonText', this.intl.t('common.download-error-log'));
         this.modalsManager.setOption('acceptButtonIcon', 'download');
@@ -654,11 +666,11 @@ export default class OperationsOrdersIndexNewController extends BaseController {
         this.modalsManager.setOption('keepOpen', true);
         this.modalsManager.setOption('isProcessing', false);
         this.modalsManager.setOption('isErrorState', true);
-        this.modalsManager.setOption('errorMessage', errorMessage)
-        
+        this.modalsManager.setOption('errorMessage', finalMessage);
+        this.modalsManager.setOption('importResults', importResults);
         modal.stopLoading();
     }
-    
+
     // Helper method to handle successful import
     handleSuccessfulImport(results, modal) {
         const places = get(results, 'places');
@@ -672,7 +684,7 @@ export default class OperationsOrdersIndexNewController extends BaseController {
                 return this.store.createRecord('waypoint', { place });
             });
         }
-    
+
         if (isArray(entities)) {
             this.entities = entities.map((entity) => {
                 return this.store.createRecord('entity', entity);
@@ -688,14 +700,14 @@ export default class OperationsOrdersIndexNewController extends BaseController {
         this.isCsvImportedOrder = true;
         //this.previewDraftOrderRoute(this.payload, this.waypoints, this.isMultipleDropoffOrder);
         this.hostRouter.transitionTo('console.fleet-ops.operations.orders.index', { queryParams: { layout: 'table', t: Date.now() } })
-        .then(() => {
-            // Force route refresh
-            this.hostRouter.refresh();
-        });
-    
+            .then(() => {
+                // Force route refresh
+                this.hostRouter.refresh();
+            });
+
         modal.done();
     }
-    
+
     // Improved download method
     downloadFile(url, onComplete = null) {
         try {
@@ -706,19 +718,19 @@ export default class OperationsOrdersIndexNewController extends BaseController {
                     const downloadUrl = window.URL.createObjectURL(blob);
                     const link = document.createElement('a');
                     link.href = downloadUrl;
-                    
+
                     // Extract filename from URL or use default
                     const filename = url.split('/').pop() || 'error_log.xlsx';
                     link.download = filename;
-                    
+
                     // Append to body, click, and cleanup
                     document.body.appendChild(link);
                     link.click();
                     document.body.removeChild(link);
-                    
+
                     // Release the blob URL
                     window.URL.revokeObjectURL(downloadUrl);
-                    
+
                     // Execute callback after download
                     if (onComplete && typeof onComplete === 'function') {
                         // Small delay to ensure download starts
@@ -734,7 +746,7 @@ export default class OperationsOrdersIndexNewController extends BaseController {
             this.directDownload(url, onComplete);
         }
     }
-    
+
     // Updated fallback direct download method with callback support
     directDownload(url, onComplete = null) {
         const link = document.createElement('a');
@@ -744,14 +756,14 @@ export default class OperationsOrdersIndexNewController extends BaseController {
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
-        
+
         // Execute callback after download attempt
         if (onComplete && typeof onComplete === 'function') {
             // Small delay to ensure download starts
             setTimeout(onComplete, 500);
         }
     }
-    
+
     // Helper method to reset modal to initial state
     resetModalToInitialState() {
         this.modalsManager.setOption('isErrorState', false);
@@ -958,10 +970,10 @@ export default class OperationsOrdersIndexNewController extends BaseController {
                 this.setupInterface();
             });
         }
-         // Make sure there's at least one waypoint
-    if (this.isMultipleDropoffOrder && (!this.waypoints || this.waypoints.length === 0)) {
-        this.addWaypoint();
-    }
+        // Make sure there's at least one waypoint
+        if (this.isMultipleDropoffOrder && (!this.waypoints || this.waypoints.length === 0)) {
+            this.addWaypoint();
+        }
         // switch to map mode
         this.ordersController.setLayoutMode('map');
     }
@@ -1003,9 +1015,9 @@ export default class OperationsOrdersIndexNewController extends BaseController {
         const leafletMap = this.leafletMap;
         const previewRouteControl = this.previewRouteControl;
         // Safety check
-    if (!leafletMap || !previewRouteControl) {
-        return;
-    }
+        if (!leafletMap || !previewRouteControl) {
+            return;
+        }
         let removed = false;
 
         if (leafletMap && previewRouteControl instanceof RoutingControl) {
