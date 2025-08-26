@@ -19,7 +19,7 @@ use Fleetbase\Models\CustomFieldValue;
 use Fleetbase\Models\Model;
 use Fleetbase\Models\Transaction;
 use Fleetbase\Traits\HasApiModelBehavior;
-use Fleetbase\FleetOps\Traits\HasConditionalInternalId;
+use Fleetbase\Traits\HasInternalId;
 use Fleetbase\Traits\HasMetaAttributes;
 use Fleetbase\Traits\HasOptionsAttributes;
 use Fleetbase\Traits\HasPublicId;
@@ -41,7 +41,7 @@ class Order extends Model
 {
     use HasUuid;
     use HasPublicId;
-    use HasConditionalInternalId;
+    use HasInternalId;
     use SendsWebhooks;
     use HasApiModelBehavior;
     use HasOptionsAttributes;
@@ -50,16 +50,6 @@ class Order extends Model
     use Searchable;
     use LogsActivity;
     use HasTrackingNumber;
-
-    /**
-     * Boot the model.
-     *
-     * @return void
-     */
-    protected static function boot()
-    {
-        parent::boot();
-    }
 
     /**
      * The database table used by the model.
@@ -132,9 +122,7 @@ class Order extends Model
         'bid_id',
         'spot_work',
         'carrier',
-        'sub_carrier',
-        '_from_import',
-        '_import_source'
+        'sub_carrier'
     ];
 
     /**

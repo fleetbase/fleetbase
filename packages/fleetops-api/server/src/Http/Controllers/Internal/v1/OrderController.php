@@ -1361,12 +1361,6 @@ class OrderController extends FleetOpsController
                         'spot_work' => (isset($firstRow['spot_work']) && strtolower(trim($firstRow['spot_work'])) === 'yes') ? 1 : 0,
                     ];
 
-                    // Mark as from import to avoid auto-generating internal_id
-                    if (empty($firstRow['trip_id'])) {
-                        $orderData['_from_import'] = true;
-                        $orderData['_import_source'] = 'excel';
-                    }
-
                     if ($existingOrder) {
                         // Update existing order
                         $existingOrder->update($orderData);
