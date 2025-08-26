@@ -1220,9 +1220,29 @@ class OrderController extends FleetOpsController
                         
                     }
 
-                    // FIXED DATE LOGIC: Get scheduled_at from FIRST row's cpt
+                    // FIXED DATE LOGIC: Get scheduled_at from FIRST row's stop_1_yard_arrival, fallback to cpt if empty
                     $scheduledAt = null;
-                    if (!empty($firstRow['cpt'])) {
+                    if (!empty($firstRow['stop_1_yard_arrival'])) {
+                        try {
+                            $parsedDate = $this->parseExcelDate($firstRow['stop_1_yard_arrival']);
+                            // Ensure it's a Carbon instance
+                            if (!empty($parsedDate)) {
+                                $scheduledAt = $parsedDate instanceof Carbon
+                                    ? $parsedDate
+                                    : Carbon::parse($parsedDate);
+                            }
+                        } catch (\Exception $e) {
+                            Log::warning('Failed to parse stop_1_yard_arrival from first row', [
+                                'block_id' => $blockId,
+                                'stop_1_yard_arrival_value' => $firstRow['stop_1_yard_arrival'],
+                                'error' => $e->getMessage()
+                            ]);
+                            $scheduledAt = null;
+                        }
+                    }
+
+                    // If no stop_1_yard_arrival in first row, check cpt as fallback
+                    if (!$scheduledAt && !empty($firstRow['cpt'])) {
                         try {
                             $parsedDate = $this->parseExcelDate($firstRow['cpt']);
                             // Ensure it's a Carbon instance
@@ -1241,7 +1261,25 @@ class OrderController extends FleetOpsController
                         }
                     }
 
-                    // If no cpt in first row, look for any cpt in the block as fallback
+                    // If still no scheduled_at, look for any stop_1_yard_arrival in the block as fallback
+                    if (!$scheduledAt) {
+                        foreach ($rows as $row) {
+                            if (!empty($row['stop_1_yard_arrival'])) {
+                                try {
+                                    $scheduledAt = $this->parseExcelDate($row['stop_1_yard_arrival']);
+                                    // Ensure it's a Carbon instance
+                                    if (is_string($scheduledAt)) {
+                                        $scheduledAt = Carbon::parse($scheduledAt);
+                                    }
+                                    break;
+                                } catch (\Exception $e) {
+                                    continue;
+                                }
+                            }
+                        }
+                    }
+
+                    // Final fallback: look for any cpt in the block
                     if (!$scheduledAt) {
                         foreach ($rows as $row) {
                             if (!empty($row['cpt'])) {
