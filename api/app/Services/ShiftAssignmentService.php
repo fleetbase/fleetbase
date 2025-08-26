@@ -142,10 +142,10 @@ class ShiftAssignmentService
                     continue;
                 }
 
-                $orderInternalOrUuid = $assignment['id'] ?? null;
+                $orderPublicOrUuid = $assignment['id'] ?? null;
                 $startTime = $assignment['start_time'] ?? null;
 
-                if (!$orderInternalOrUuid || !$startTime) {
+                if (!$orderPublicOrUuid || !$startTime) {
                     $skippedAssignments++;
                     continue;
                 }
@@ -155,11 +155,11 @@ class ShiftAssignmentService
                     $localDateTime = Carbon::parse($date . ' ' . $startTime, $timezone);
                     $scheduledAtUtc = $localDateTime->clone()->setTimezone('UTC');
 
-                    // Resolve order by internal_id then uuid
+                    // Resolve order by public_id then uuid
                     $order = Order::withoutGlobalScopes()
-                        ->where(function($query) use ($orderInternalOrUuid) {
-                            $query->where('internal_id', $orderInternalOrUuid)
-                                  ->orWhere('uuid', $orderInternalOrUuid);
+                        ->where(function($query) use ($orderPublicOrUuid) {
+                            $query->where('public_id', $orderPublicOrUuid)
+                                  ->orWhere('uuid', $orderPublicOrUuid);
                         })
                         ->first();
 
@@ -167,7 +167,7 @@ class ShiftAssignmentService
                         $errors[] = [
                             'resource' => $resourceId ?? $resourceName,
                             'date' => $date,
-                            'order' => $orderInternalOrUuid,
+                            'order' => $orderPublicOrUuid,
                             'message' => 'Order not found'
                         ];
                         continue;
@@ -177,14 +177,14 @@ class ShiftAssignmentService
                     $updates = [];
                     if ($driver) {
                         $updates['driver_assigned_uuid'] = $driver->uuid;
-                        \Log::info("Updating order {$order->internal_id} with driver {$driver->uuid}");
+                        \Log::info("Updating order {$order->public_id} with driver {$driver->uuid}");
                     } else {
-                        \Log::warning("No driver found for resource_id '{$resourceId}' or resource_name '{$resourceName}', skipping driver assignment for order {$order->internal_id}");
+                        \Log::warning("No driver found for resource_id '{$resourceId}' or resource_name '{$resourceName}', skipping driver assignment for order {$order->public_id}");
                     }
 
                     if (!empty($updates)) {
                         Order::where('uuid', $order->uuid)->update($updates);
-                        $updatedOrders[] = $order->internal_id ?? $order->uuid;
+                        $updatedOrders[] = $order->public_id ?? $order->uuid;
                     } else {
                         // no-op, nothing to update
                         $skippedAssignments++;
@@ -193,7 +193,7 @@ class ShiftAssignmentService
                     $errors[] = [
                         'resource' => $resourceId ?? $resourceName,
                         'date' => $date,
-                        'order' => $orderInternalOrUuid,
+                        'order' => $orderPublicOrUuid,
                         'message' => $e->getMessage()
                     ];
                 }
@@ -209,7 +209,7 @@ class ShiftAssignmentService
                 try {
                     $order = Order::withoutGlobalScopes()
                         ->where(function ($q) use ($orderId) {
-                            $q->where('internal_id', $orderId)
+                            $q->where('public_id', $orderId)
                               ->orWhere('uuid', $orderId);
                         })
                         ->first();
@@ -227,8 +227,8 @@ class ShiftAssignmentService
                     // Only update if currently assigned
                     if (!is_null($order->driver_assigned_uuid)) {
                         Order::where('uuid', $order->uuid)->update(['driver_assigned_uuid' => null]);
-                        $unassignedOrders[] = $order->internal_id ?? $order->uuid;
-                        \Log::info("Unassigned driver from order {$order->internal_id} (date {$date})");
+                        $unassignedOrders[] = $order->public_id ?? $order->uuid;
+                        \Log::info("Unassigned driver from order {$order->public_id} (date {$date})");
                     }
                 } catch (\Exception $e) {
                     $errors[] = [
@@ -500,7 +500,7 @@ class ShiftAssignmentService
                 $duration = $this->calculateOrderDuration($order);
                 
                 $datedShifts[] = [
-                    'id' => $order->internal_id,
+                    'id' => $order->public_id,
                     'start_time' => $shiftDate->format('Y-m-d H:i:s'),
                     'duration_minutes' => $duration,
                 ];
