@@ -23,7 +23,7 @@ class OrdersImportErrorsExport implements FromCollection, WithHeadings, ShouldAu
         return [
             'Row',
             'Error',
-            'Trip ID'
+            'Block ID'
         ];
     }
 
