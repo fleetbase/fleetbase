@@ -1,123 +1,128 @@
 <Modal::Default @modalIsOpened={{@modalIsOpened}} @options={{@options}} @confirm={{@onConfirm}} @decline={{@onDecline}}>
     <div class="modal-body-container my-5">
         {{#if @options.isErrorState}}
-            {{!-- Error State - Show error message and download option --}}
-            <div class="min-h-56 w-full rounded px-4 py-8 text-center flex flex-col items-center justify-center border-2 border-dashed border-red-200 dark:border-red-500">
-                <div class="text-center py-4">
-                    <FaIcon @icon="exclamation-triangle" @size="3x" class="text-red-500 mb-4" />
-                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">
-                        {{t "fleet-ops.component.modals.order-import.import-failed"}}
-                    </h3>
-                  
-                    <div class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-700 rounded-md p-4 max-w-md mx-auto">
-                        <div class="flex items-start">
-                            <FaIcon @icon="info-circle" class="text-red-400 mr-2 mt-0.5 flex-shrink-0" />
-                            <div class="text-sm text-red-700 dark:text-red-300 text-left">
-                                {{@options.errorMessage}}
+        {{!-- Error State - Show error message and download option --}}
+        <div
+            class="min-h-56 w-full rounded px-4 py-8 text-center flex flex-col items-center justify-center border-2 border-dashed border-red-200 dark:border-red-500">
+            <div class="text-center py-4">
+                <FaIcon @icon="exclamation-triangle" @size="3x" class="text-red-500 mb-4" />
+                <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+                    {{t "fleet-ops.component.modals.order-import.import-partially-success"}}
+                </h3>
+
+                <div
+                    class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-700 rounded-md p-4 max-w-md mx-auto">
+                    <div class="flex items-start">
+                        <FaIcon @icon="info-circle" class="text-red-400 mr-2 mt-0.5 flex-shrink-0" />
+                        <div class="text-sm text-black dark:text-white text-left">
+                            {{@options.errorMessage}}
+                            {{#if @options.importResults.successCount}}
+                            <div class="text-sm text-left mt-2 text-black dark:text-white">
+                                {{@options.importResults.successLabel}}: {{@options.importResults.successCount}}
                             </div>
+                            {{/if}}
+                            {{#if @options.importResults.erroredCount}}
+                            <div class="text-sm text-left mt-2 text-black dark:text-white">
+                                {{@options.importResults.errorLabel}}: {{@options.importResults.erroredCount}}
+                            </div>
+                            {{/if}}
                         </div>
                     </div>
                 </div>
             </div>
+        </div>
         {{else if @options.isProcessing}}
-            {{!-- Processing State --}}
-            <div
-                class="min-h-56 dropzone w-full rounded px-4 py-8 min-h text-gray-900 dark:text-white text-center flex flex-col items-center justify-center border-2 border-dashed border-gray-200 dark:border-indigo-500"
-            >
-                <div class="flex items-center justify-center py-5">
-                    <Spinner class="text-sm dark:text-gray-100" @loadingMessage={{t "fleet-ops.component.modals.order-import.loading-message"}} />
-                </div>
+        {{!-- Processing State --}}
+        <div
+            class="min-h-56 dropzone w-full rounded px-4 py-8 min-h text-gray-900 dark:text-white text-center flex flex-col items-center justify-center border-2 border-dashed border-gray-200 dark:border-indigo-500">
+            <div class="flex items-center justify-center py-5">
+                <Spinner class="text-sm dark:text-gray-100"
+                    @loadingMessage={{t "fleet-ops.component.modals.order-import.loading-message" }} />
             </div>
+        </div>
         {{else}}
-            {{!-- Normal Upload State --}}
-            {{#let (file-queue name="spreadsheets" onFileAdded=this.queueFile accept=(join "," @options.acceptedFileTypes)) as |queue|}}
-                <FileDropzone
-                    @queue={{queue}}
-                    class="min-h-56 dropzone w-full rounded px-4 py-8 min-h text-gray-900 dark:text-white text-center flex flex-col items-center justify-center border-2 border-dashed border-gray-200 dark:border-indigo-500"
-                    as |dropzone|
-                >
-                    {{#if dropzone.active}}
-                        {{#if dropzone.valid}}
-                            {{t "fleet-ops.component.modals.order-import.drop-upload"}}
-                        {{else}}
-                            {{t "fleet-ops.component.modals.order-import.invalid"}}
-                        {{/if}}
-                    {{else if queue.files.length}}
-                        <div class="my-2">
-                            <FaIcon @icon="file-import" class="text-indigo-500 mr-2" />
-                            
-                            {{t "fleet-ops.component.modals.order-import.ready-upload"}}
-                        </div>
-                        <div class="my-2">({{queue.progress}}%)</div>
-                    {{else}}
-                        {{!-- <h4 class="font-semibold mb-8">
-                            <FaIcon @icon="file-import" class="text-indigo-500 mr-2" />
-                            {{t "fleet-ops.component.modals.order-import.upload-spreadsheets"}}
-                        </h4> --}}
-                        <div>
-                            {{!-- {{#if dropzone.supported}}
-                                <p class="text-base font-semibold my-5">{{t "fleet-ops.component.modals.order-import.drag-drop"}}</p>
-                            {{/if}} --}}
-
-                            <UploadButton
-                                @buttonText={{t "fleet-ops.component.modals.order-import.button-text"}}
-                                @type="magic"
-                                @icon="file-import"
-                                @name={{t "fleet-ops.component.modals.order-import.spreadsheets"}}
-                                @for="spreadsheets"
-                                @accept={{join "," @options.acceptedFileTypes}}
-                                {{!-- @multiple={{true}} --}}
-                                @onFileAdded={{@options.queueFile}}
-                                class="w-72 justify-center"
-                            />
-                        </div>
-                    {{/if}}
-                </FileDropzone>
-            {{/let}}
-
-            {{!-- Upload Queue - Only show when not in error state --}}
-            {{#if @options.uploadQueue}}
-                <div class="mx-0 my-6">
-                    <div class="flex items-center justify-between mb-4">
-                        <span class="leading-6 dark:text-gray-100">{{t "fleet-ops.component.modals.order-import.upload-queue"}}</span>
-                    </div>
-
-                    <div class="table-wrapper table-fluid">
-                        <table class="table table-fixed">
-                            <thead>
-                                <tr>
-                                    {{#each @options.fileQueueColumns as |column|}}
-                                        <th>{{column.name}}</th>
-                                    {{/each}}
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {{#each @options.uploadQueue as |file|}}
-                                    <tr>
-                                        {{#each @options.fileQueueColumns as |column|}}
-                                            <td>
-                                                {{#if (eq column.key "delete")}}
-                                                    <a href="javascript:;" {{on "click" (fn @options.removeFile file)}}>
-                                                        <FaIcon @icon="trash" class="text-red-500" />
-                                                    </a>
-                                                {{else if (eq column.key "type")}}
-                                                    <FileIcon @file={{file}} />
-                                                {{else if (eq column.key "fileSize")}}
-                                                    {{format-bytes (get file column.valuePath)}}
-                                                {{else if (eq column.key "uploadDate")}}
-                                                    {{format-date (get file column.valuePath) "d MMM yyyy"}}
-                                                {{else}}
-                                                    <div class="min-w-225px max-w-225px truncate">{{get file column.valuePath}}</div>
-                                                {{/if}}
-                                            </td>
-                                        {{/each}}
-                                    </tr>
-                                {{/each}}
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
+        {{!-- Normal Upload State --}}
+        {{#let (file-queue name="spreadsheets" onFileAdded=this.queueFile accept=(join "," @options.acceptedFileTypes))
+        as |queue|}}
+        <FileDropzone @queue={{queue}}
+            class="min-h-56 dropzone w-full rounded px-4 py-8 min-h text-gray-900 dark:text-white text-center flex flex-col items-center justify-center border-2 border-dashed border-gray-200 dark:border-indigo-500"
+            as |dropzone|>
+            {{#if dropzone.active}}
+            {{#if dropzone.valid}}
+            {{t "fleet-ops.component.modals.order-import.drop-upload"}}
+            {{else}}
+            {{t "fleet-ops.component.modals.order-import.invalid"}}
             {{/if}}
+            {{else if queue.files.length}}
+            <div class="my-2">
+                <FaIcon @icon="file-import" class="text-indigo-500 mr-2" />
+
+                {{t "fleet-ops.component.modals.order-import.ready-upload"}}
+            </div>
+            <div class="my-2">({{queue.progress}}%)</div>
+            {{else}}
+            {{!-- <h4 class="font-semibold mb-8">
+                <FaIcon @icon="file-import" class="text-indigo-500 mr-2" />
+                {{t "fleet-ops.component.modals.order-import.upload-spreadsheets"}}
+            </h4> --}}
+            <div>
+                {{!-- {{#if dropzone.supported}}
+                <p class="text-base font-semibold my-5">{{t "fleet-ops.component.modals.order-import.drag-drop"}}</p>
+                {{/if}} --}}
+
+                <UploadButton @buttonText={{t "fleet-ops.component.modals.order-import.button-text" }} @type="magic"
+                    @icon="file-import" @name={{t "fleet-ops.component.modals.order-import.spreadsheets" }}
+                    @for="spreadsheets" @accept={{join "," @options.acceptedFileTypes}} {{!-- @multiple={{true}} --}}
+                    @onFileAdded={{@options.queueFile}} class="w-72 justify-center" />
+            </div>
+            {{/if}}
+        </FileDropzone>
+        {{/let}}
+
+        {{!-- Upload Queue - Only show when not in error state --}}
+        {{#if @options.uploadQueue}}
+        <div class="mx-0 my-6">
+            <div class="flex items-center justify-between mb-4">
+                <span class="leading-6 dark:text-gray-100">{{t
+                    "fleet-ops.component.modals.order-import.upload-queue"}}</span>
+            </div>
+
+            <div class="table-wrapper table-fluid">
+                <table class="table table-fixed">
+                    <thead>
+                        <tr>
+                            {{#each @options.fileQueueColumns as |column|}}
+                            <th>{{column.name}}</th>
+                            {{/each}}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{#each @options.uploadQueue as |file|}}
+                        <tr>
+                            {{#each @options.fileQueueColumns as |column|}}
+                            <td>
+                                {{#if (eq column.key "delete")}}
+                                <a href="javascript:;" {{on "click" (fn @options.removeFile file)}}>
+                                    <FaIcon @icon="trash" class="text-red-500" />
+                                </a>
+                                {{else if (eq column.key "type")}}
+                                <FileIcon @file={{file}} />
+                                {{else if (eq column.key "fileSize")}}
+                                {{format-bytes (get file column.valuePath)}}
+                                {{else if (eq column.key "uploadDate")}}
+                                {{format-date (get file column.valuePath) "d MMM yyyy"}}
+                                {{else}}
+                                <div class="min-w-225px max-w-225px truncate">{{get file column.valuePath}}</div>
+                                {{/if}}
+                            </td>
+                            {{/each}}
+                        </tr>
+                        {{/each}}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        {{/if}}
         {{/if}}
     </div>
 </Modal::Default>
