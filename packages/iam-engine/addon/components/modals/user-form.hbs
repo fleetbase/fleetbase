@@ -31,6 +31,7 @@
                             @renderInPlace={{true}}
                             @onChange={{fn (mut @options.user.role)}}
                             @disabled={{cannot @options.formPermission}}
+                            @query={{hash limit_basic="1"}}
                             as |model|
                         >
                             {{model.name}}
@@ -41,9 +42,9 @@
                     {{!-- <InputGroup @name={{t "iam.common.attach-policies"}}>
                         <PolicyAttacher @onChange={{fn (mut @options.user.policies)}} @value={{@options.user.policies}} @disabled={{cannot @options.formPermission}} />
                     </InputGroup> --}}
-                    <InputGroup @name={{t "iam.common.select-permissions"}}>
+                    {{!-- <InputGroup @name={{t "iam.common.select-permissions"}}>
                         <PermissionPicker class="user-permissions" @selected={{@options.user.permissions}} @onChange={{fn (mut @options.user.permissions)}} />
-                    </InputGroup>
+                    </InputGroup> --}}
                 {{/if}}
             </div>
         </div>
