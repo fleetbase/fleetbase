@@ -1025,7 +1025,7 @@ class OrderController extends FleetOpsController
                         // Check if block_id already exists - if yes, we'll update instead of create
                         $existingOrder = null;
                         if (!empty($block_id)) {
-                            $existingOrder = Order::where('internal_id', $block_id)
+                            $existingOrder = Order::where('public_id', $block_id)
                                 ->where('company_uuid', session('company'))
                                 ->whereNull('deleted_at')
                                 ->first();
@@ -1311,8 +1311,8 @@ class OrderController extends FleetOpsController
 
                     // Prepare order data
                     $orderData = [
-                        'internal_id' => $firstRow['block_id'] ?? null,
-                        'public_id' => $firstRow['trip_id'] ?? null,
+                        'internal_id' => $firstRow['trip_id'] ?? null,
+                        'public_id' => $firstRow['block_id'] ?? null,
                         'status' => strtolower($firstRow['status'] ?? 'created'),
                         'type' => 'transport',
                         'scheduled_at' => $scheduledAt,
