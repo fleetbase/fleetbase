@@ -129,7 +129,7 @@ common:
   new-order: New Order
   submit: Submit
   new-field: New Field
-  to: to
+  to: To
   confirm-action:
     single: Are you sure you want to {verb} this record?
     multiple: Are you sure you want to {verb} these records?
@@ -2453,6 +2453,8 @@ fleet-ops:
             no-order-installed: No order configurations installed!
             you-have-no-configs: You currently have no order configs installed, check at the extensions to install an order configuration to get started.
             view-extensions: View extensions
+        trip-id: Trip ID
+        block-id: Block ID
       route-segments:
         order-id: Order Id
         title: Route Segments
