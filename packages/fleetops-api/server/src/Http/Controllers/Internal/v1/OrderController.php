@@ -1825,7 +1825,7 @@ private function buildWaypointSequence(array $routeMap): array
             
         } catch (\Exception $e) {
             $displayRowIndex = $originalRowIndex + 2; // +2 to include header row
-            $errors[] = [$displayRowIndex, $e->getMessage(), $order->internal_id];
+            $errors[] = [$displayRowIndex, $e->getMessage(), $order->public_id];
 
         }
     }
