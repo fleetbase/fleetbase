@@ -425,7 +425,7 @@ class OrderController extends FleetOpsController
          $this->logImportResult($file->uuid, 'order', 'COMPLETED', null);
      return response([
          'succeed' => true,
-         'message' => "Import completed successfully. {$totalCreatedOrders} blocks created, {$totalUpdatedOrders} blocks updated.",
+         'message' => "Import completed successfully. {$totalCreatedOrders} trips created, {$totalUpdatedOrders} trips updated.",
          'created_orders' => $totalCreatedOrders,
          'updated_orders' => $totalUpdatedOrders,
          'total_processed' => $totalSuccessfulImports
@@ -1507,8 +1507,8 @@ class OrderController extends FleetOpsController
                 'total_errors' => $errorCount,
                 'errors' => $importErrors,
                 'message' => $successCount > 0
-                    ? "Partial import completed. {$createdCount} blocks created, {$updatedCount} blocks updated, {$errorCount} errors found."
-                    : "Import failed. No blocks were imported due to validation errors."
+                    ? "Partial import completed. {$createdCount} trips created, {$updatedCount} trips updated, {$errorCount} errors found."
+                    : "Import failed. No trips were imported due to validation errors."
             ]);
         }
 
@@ -1522,8 +1522,8 @@ class OrderController extends FleetOpsController
                 'total_processed' => $successCount,
                 'created' => $createdCount,
                 'updated' => $updatedCount,
-                'created_blocks' => $createdOrders,
-                'updated_blocks' => $updatedOrders
+                'created_trips' => $createdOrders,
+                'updated_trips' => $updatedOrders
             ]
         ];
 
