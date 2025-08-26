@@ -1349,7 +1349,7 @@ class OrderController extends FleetOpsController
 
                     // Prepare order data
                     $orderData = [
-                        'internal_id' => $firstRow['trip_id'] ?? null,
+                        'trip_id' => $firstRow['trip_id'] ?? null,
                         'public_id' => $firstRow['block_id'] ?? null,
                         'status' => strtolower($firstRow['status'] ?? 'created'),
                         'type' => 'transport',

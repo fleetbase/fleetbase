@@ -210,7 +210,7 @@ class OrderExportChange implements FromCollection, WithHeadings, ShouldAutoSize,
         $rows = collect();
         foreach ($orders as $order) {
             // Prepare the shared fields
-            $tripId = $order->internal_id;
+            $tripId = $order->trip_id;
             $blockId = $order->public_id;
             $driverName = ucwords(strtolower($order->driver_name ?? ''));
             $vehiclePlateNumber = $order->vehicleAssigned?->plate_number ?? '';
