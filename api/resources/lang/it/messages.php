@@ -63,4 +63,7 @@ return [
         'driver_already_assigned' => 'L\'autista :driver è già assegnato alla flotta :fleet. Un autista può appartenere solo a una flotta.',
     ],
     'duplicate_check_fleet' => 'Esiste già una flotta con questo nome o questa durata del viaggio.',
+    'vehicle_required' => 'Il veicolo è obbligatorio',
+    'end_date_before_start_date' => 'La data di fine non può essere precedente alla data di inizio',
+    'leave_request_overlap' => 'Hai già una richiesta di permesso per questi giorni',
 ];

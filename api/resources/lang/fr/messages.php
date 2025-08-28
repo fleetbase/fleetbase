@@ -63,4 +63,7 @@ return [
         'driver_already_assigned' => 'Le conducteur :driver est déjà affecté à la flotte :fleet. Un conducteur ne peut appartenir qu\'à une seule flotte.',
     ],
     'duplicate_check_fleet' => 'Une flotte avec ce nom ou cette durée de trajet existe déjà.',
+    'vehicle_required' => 'Le véhicule est requis',
+    'end_date_before_start_date' => 'La date de fin ne peut pas être antérieure à la date de début',
+    'leave_request_overlap' => 'Vous avez déjà une demande de congé pour ces jours',
 ];

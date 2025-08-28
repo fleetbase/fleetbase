@@ -109,6 +109,14 @@ class LeaveRequestController extends Controller
             $input['end_date'] = $input['start_date'];
         }
 
+        // Check if end_date is before start_date
+        if ($input['end_date'] < $input['start_date']) {
+            return response()->json([
+                'success' => false,
+                'message' => __('messages.end_date_before_start_date')
+            ], 400);
+        }
+
         // Check if dates are in the past
         $today = date('Y-m-d');
         if ($input['start_date'] < $today || $input['end_date'] < $today) {
@@ -119,6 +127,14 @@ class LeaveRequestController extends Controller
         }
         if(isset($input['unavailability_type']))
         {
+            // Check if vehicle_uuid is provided
+            if (empty($input['vehicle_uuid'])) {
+                return response()->json([
+                    'success' => false,
+                    'message' => __('messages.vehicle_required')
+                ], 400);
+            }
+            
             $input['unavailability_type'] = 'vehicle';
             $input['status'] = 'Approved';
             $vehcileRequestDuplicate = LeaveRequest::where([
@@ -160,7 +176,7 @@ class LeaveRequestController extends Controller
             if ($duplicateRequest) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'You already have a leave request for these dates',
+                    'message' => __('messages.leave_request_overlap'),
                 ], 400);
             }
         }
@@ -224,6 +240,14 @@ class LeaveRequestController extends Controller
             $input['end_date'] = $input['start_date'];
         }
 
+        // Check if end_date is before start_date
+        if ($input['end_date'] < $input['start_date']) {
+            return response()->json([
+                'success' => false,
+                'message' => __('messages.end_date_before_start_date')
+            ], 400);
+        }
+
         // Check if dates are in the past
         $today = date('Y-m-d');
         if ($input['start_date'] < $today || $input['end_date'] < $today) {
@@ -233,6 +257,17 @@ class LeaveRequestController extends Controller
             ], 400);
         }
 
+        // Check if vehicle_uuid is required for vehicle unavailability type
+        if(isset($input['unavailability_type']) && $input['unavailability_type'] == 'vehicle') {
+            // Check if vehicle_uuid is provided
+            if (empty($input['vehicle_uuid'])) {
+                return response()->json([
+                    'success' => false,
+                    'message' => __('messages.vehicle_required')
+                ], 400);
+            }
+        }
+        
         // Only check for overlaps if dates are being changed
         if (
             (isset($input['start_date']) && $input['start_date'] !== $leaveRequest->start_date) ||
@@ -268,7 +303,7 @@ class LeaveRequestController extends Controller
                 if ($existingLeaveRequest) {
                     return response()->json([
                         'success' => false,
-                        'message' => 'You already have a leave request for these dates',
+                        'message' => __('messages.leave_request_overlap'),
                     ], 400);
                 }
             }
