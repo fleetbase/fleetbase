@@ -382,10 +382,6 @@ trait HasApiControllerBehavior
                 if ($request->filled('trip_id')) {
                     $query->where('trip_id', 'LIKE', '%' . $request->input('trip_id') . '%');
                 }
-                Log::info('Raw SQL Query:', [
-                'sql' => $query->toSql(),
-                'bindings' => $query->getBindings()
-                ]);
             };
             
             $data = $this->model->queryFromRequest($request, $combinedCallback);
