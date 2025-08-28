@@ -94,6 +94,11 @@ export default class FiltersService extends Service {
         Object.keys(queryParams).forEach((queryParam) => {
             this.removeFromController(controller, queryParam, undefined);
         });
+
+        // Reset pagination to first page after clearing filters
+        if (controller && typeof controller.page === 'number') {
+            controller.set('page', 1);
+        }
     }
 
     @action clear(callback, queryParam = []) {

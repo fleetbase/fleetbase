@@ -1,7 +1,7 @@
 <Button @type={{@type}} @text={{if (eq (or @text "Filter") "Filter") (t "common.filter") @text}}  @icon={{or @icon "filter"}} @size={{or @size "xs"}} @wrapperClass={{@wrapperClass}} ...attributes>
     {{#if @buttonComponentArgs.activeFilters.length}}
-        <div class="box-divider">
+        {{!-- <div class="box-divider">
             <span class="font-semibold text-black">{{@buttonComponentArgs.activeFilters.length}}</span>
-        </div>
+        </div> --}}
     {{/if}}
 </Button>
