@@ -64,4 +64,7 @@ return [
         'exists'   => 'Die Flotte muss gültig und aktiv sein.',
     ],
     'duplicate_check_fleet' => 'A fleet with this name or trip length already exists.',
+    'vehicle_required' => 'Das Fahrzeug wird benötigt',
+    'end_date_before_start_date' => 'Das Enddatum kann nicht vor dem Startdatum liegen',
+    'leave_request_overlap' => 'Sie haben bereits einen Urlaubsantrag für diese Tage',
 ];

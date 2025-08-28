@@ -70,4 +70,7 @@ return [
 
     ],
     'duplicate_check_fleet' => 'A fleet with this name or trip length already exists.',
+    'vehicle_required' => 'Vehicle is required',
+    'end_date_before_start_date' => 'End date cannot be before start date',
+    'leave_request_overlap' => 'You already have a leave request for these dates',
 ];
