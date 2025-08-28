@@ -17,7 +17,7 @@ class RoleFilter extends Filter
         );
 
          if ($this->request->boolean('limit_basic')) {
-            $this->builder->whereIn('name', ['Driver', 'Driver Coordinator', 'Administrator']);
+            $this->builder->whereIn('name', ['Driver', 'Administrator']);
         }
     }
 
