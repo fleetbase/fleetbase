@@ -321,14 +321,14 @@ export default class OperationsOrdersIndexController extends BaseController {
         },
         {
             label: this.intl.t('fleet-ops.operations.orders.index.trip-id'),
-            valuePath: 'internal_id',
+            valuePath: 'trip_id',
             width: '140px',
             cellComponent: 'table/cell/base',
             resizable: true,
             sortable: true,
             filterable: true,
             filterComponent: 'filter/string',
-            filterParam: 'internal_id',
+            filterParam: 'trip_id',
         },
         {
             label: this.intl.t('fleet-ops.operations.orders.index.driver-assigned'),

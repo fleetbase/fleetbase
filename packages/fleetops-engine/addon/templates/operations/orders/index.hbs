@@ -64,7 +64,7 @@
 {{/if}}
 
 {{#if this.isTableLayout}}
-    <Layout::Section::Header @title={{t "fleet-ops.common.orders"}} @onSearch={{perform this.search}}>
+    <Layout::Section::Header @title={{t "fleet-ops.common.orders"}} @onSearch={{perform this.search}} @searchQuery={{this.query}}>
             <Button
                 @customClass="start-order-tour-btn"
                 @icon="question-circle"
@@ -147,7 +147,7 @@
 {{/if}}
 
 {{#if this.isKanbanView}}
-    <Layout::Section::Header @title={{t "fleet-ops.common.orders"}} @onSearch={{perform this.search}}>
+    <Layout::Section::Header @title={{t "fleet-ops.common.orders"}} @onSearch={{perform this.search}} @searchQuery={{this.query}}>
         <Button @icon="cogs" @text={{t "fleet-ops.common.config"}} class="mr-2" @onClick={{fn (transition-to "operations.orders.index.config")}} />
         <FiltersPicker
             @columns={{this.columns}}
