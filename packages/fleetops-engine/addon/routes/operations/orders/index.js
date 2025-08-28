@@ -15,6 +15,7 @@ export default class OperationsOrdersIndexRoute extends Route {
         status: { refreshModel: true },
         public_id: { refreshModel: true },
         internal_id: { refreshModel: true },
+        trip_id: { refreshModel: true },
         payload: { refreshModel: true },
         tracking: { refreshModel: true },
         facilitator: { refreshModel: true },
@@ -109,7 +110,7 @@ export default class OperationsOrdersIndexRoute extends Route {
         if (isExiting) {
             // Explicitly reset ALL query parameters to undefined to break sticky behavior
             const queryParamKeys = [
-                'page', 'limit', 'sort', 'query', 'public_id', 'internal_id', 
+                'page', 'limit', 'sort', 'query', 'public_id', 'internal_id', 'trip_id', 
                 'payload', 'tracking', 'facilitator', 'customer', 'driver', 
                 'vehicle', 'pickup', 'dropoff', 'created_by', 'updated_by', 
                 'status', 'type', 'on'
@@ -131,6 +132,7 @@ export default class OperationsOrdersIndexRoute extends Route {
                 query: null,
                 public_id: null,
                 internal_id: null,
+                trip_id: null,
                 payload: null,
                 tracking: null,
                 facilitator: null,
