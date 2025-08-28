@@ -866,6 +866,9 @@ trait HasApiModelBehavior
             $isFillable            = $this->isFillable($key) || in_array($key, ['uuid', 'public_id']);
 
             if (!$fieldEndsWithOperator && $isFillable) {
+                if ($key==='public_id' && get_class($this) === 'Fleetbase\\FleetOps\\Models\\Order') {
+                    continue;
+                }
                 $builder->where($key, '=', $value);
                 continue;
             }
