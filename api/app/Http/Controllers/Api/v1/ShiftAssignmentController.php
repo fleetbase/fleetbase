@@ -30,7 +30,8 @@ class ShiftAssignmentController extends Controller
         $validator = Validator::make($request->all(), [
             'start_date' => 'required|date|before_or_equal:end_date',
             'end_date' => 'required|date|after_or_equal:start_date',
-            'company_uuid' => 'nullable|string|uuid'
+            'company_uuid' => 'nullable|string|uuid',
+            'time_zone' => 'nullable|string'
         ]);
 
         if ($validator->fails()) {
@@ -57,8 +58,9 @@ class ShiftAssignmentController extends Controller
             $startDate = Carbon::parse($startDateStr);
             $endDate = Carbon::parse($endDateStr);
             $companyUuid = $request->input('company_uuid');
+            $timezone = $request->input('time_zone', 'UTC');
 
-            $data = $this->shiftAssignmentService->generateShiftAssignmentData($startDate, $endDate, $companyUuid);
+            $data = $this->shiftAssignmentService->generateShiftAssignmentData($startDate, $endDate, $companyUuid, $timezone);
 
             return response()->json([
                 'success' => true,
@@ -90,7 +92,8 @@ class ShiftAssignmentController extends Controller
     {
         // Validate request
         $validator = Validator::make($request->all(), [
-            'company_uuid' => 'nullable|string|uuid'
+            'company_uuid' => 'nullable|string|uuid',
+            'time_zone' => 'nullable|string'
         ]);
 
         if ($validator->fails()) {
@@ -104,6 +107,7 @@ class ShiftAssignmentController extends Controller
         try {
             // Get company UUID from request or use default
             $companyUuid = $request->input('company_uuid');
+            $timezone = $request->input('time_zone', 'UTC');
 
             // Calculate current week dates
             $startDate = now()->startOfWeek()->format('Y-m-d');
@@ -113,7 +117,8 @@ class ShiftAssignmentController extends Controller
             $data = $this->shiftAssignmentService->generateShiftAssignmentData(
                 $startDate,
                 $endDate,
-                $companyUuid
+                $companyUuid,
+                $timezone
             );
 
             return response()->json([
@@ -146,7 +151,8 @@ class ShiftAssignmentController extends Controller
     {
         // Validate request
         $validator = Validator::make($request->all(), [
-            'company_uuid' => 'nullable|string|uuid'
+            'company_uuid' => 'nullable|string|uuid',
+            'time_zone' => 'nullable|string'
         ]);
 
         if ($validator->fails()) {
@@ -160,6 +166,7 @@ class ShiftAssignmentController extends Controller
         try {
             // Get company UUID from request or use default
             $companyUuid = $request->input('company_uuid');
+            $timezone = $request->input('time_zone', 'UTC');
 
             // Calculate next week dates
             $startDate = now()->addWeek()->startOfWeek()->format('Y-m-d');
@@ -169,7 +176,8 @@ class ShiftAssignmentController extends Controller
             $data = $this->shiftAssignmentService->generateShiftAssignmentData(
                 $startDate,
                 $endDate,
-                $companyUuid
+                $companyUuid,
+                $timezone
             );
 
             return response()->json([
