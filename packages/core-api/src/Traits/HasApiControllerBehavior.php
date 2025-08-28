@@ -632,7 +632,7 @@ trait HasApiControllerBehavior
                         return response()->error(__('messages.invalid_coordinates'));
                     }
                 }
-                if ($code && $this->model->where('code', $code)->whereNull('deleted_at')->exists()) {
+                if ($code && $this->model->where('code', $code)->where('company_uuid', session('company'))->whereNull('deleted_at')->exists()) {
                     return response()->error(__('messages.duplicate_check_place'));
                 }
             }
@@ -846,6 +846,7 @@ trait HasApiControllerBehavior
                         $duplicate = Place::where('code', $code)
                             ->where('uuid', '!=', $place->uuid) // ignore the current record
                             ->whereNull('deleted_at') // Exclude soft-deleted records
+                            ->where('company_uuid', session('company'))
                             ->exists();
 
                         if ($duplicate) {
