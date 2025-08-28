@@ -158,38 +158,40 @@ class OrderExportChange implements FromCollection, WithHeadings, ShouldAutoSize,
             'created_at'  => 'created_at',
         ];
         $timezone = $this->timezone ?? 'UTC';
-        if(isset($timezone) && $this->filterBy)
+        if(isset($timezone))
         {
             if ($timezone === 'Asia/Calcutta') 
             {
                 $timezone = 'Asia/Kolkata'; // Convert old timezone
             }
-            $column = $filterMap[$this->filterBy] ?? null;
-            if ($column && $this->fromDate) {
-               // Parse fromDate and convert to local timezone
-                $fromDateLocal = Carbon::parse($this->fromDate)->setTimezone($timezone);
-                $startOfDayUtc = $fromDateLocal->copy()->startOfDay()->setTimezone('UTC');
-                
-                if ($this->toDate) {
-                    // Both fromDate and toDate provided
-                    $toDateLocal = Carbon::parse($this->toDate)->setTimezone($timezone);
-                    $endOfDayUtc = $toDateLocal->copy()->endOfDay()->setTimezone('UTC');
+            if(isset($this->filterBy)){
+                $column = $filterMap[$this->filterBy] ?? null;
+                if ($column && $this->fromDate) {
+                // Parse fromDate and convert to local timezone
+                    $fromDateLocal = Carbon::parse($this->fromDate)->setTimezone($timezone);
+                    $startOfDayUtc = $fromDateLocal->copy()->startOfDay()->setTimezone('UTC');
                     
-                    $query->whereBetween($column, [$startOfDayUtc, $endOfDayUtc]);
-                    
-                } else {
-                    // Only fromDate provided - filter for that specific day
-                    $endOfDayUtc = $fromDateLocal->copy()->endOfDay()->setTimezone('UTC');
-                    
-                    $query->whereBetween($column, [$startOfDayUtc, $endOfDayUtc]);
-                    
+                    if ($this->toDate) {
+                        // Both fromDate and toDate provided
+                        $toDateLocal = Carbon::parse($this->toDate)->setTimezone($timezone);
+                        $endOfDayUtc = $toDateLocal->copy()->endOfDay()->setTimezone('UTC');
+                        
+                        $query->whereBetween($column, [$startOfDayUtc, $endOfDayUtc]);
+                        
+                    } else {
+                        // Only fromDate provided - filter for that specific day
+                        $endOfDayUtc = $fromDateLocal->copy()->endOfDay()->setTimezone('UTC');
+                        
+                        $query->whereBetween($column, [$startOfDayUtc, $endOfDayUtc]);
+                        
+                    }
                 }
             }
         }
        
         // Apply limit only if no filters are provided
         $hasFilters = !empty($this->selections) || 
-                     (isset($this->timezone) && $this->filterBy && $this->fromDate);
+                     ($this->filterBy && $this->fromDate);
         
         if (!$hasFilters) {
             $limit = config('services.order_export_limit', 1000);
