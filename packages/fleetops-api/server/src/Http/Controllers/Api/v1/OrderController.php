@@ -573,44 +573,35 @@ class OrderController extends Controller
 
             if ($request->filled('on')) {
                 $on = Carbon::parse($request->input('on'));
-                $timezone = $request->input('timezone', 'UTC');
-               
-                $query->where(function ($q) use ($on, $timezone) {
-                    $hasScheduledAt = Schema::hasColumn($this->model->getTable(), 'scheduled_at');
-                    $dateColumnStart = $hasScheduledAt ? 'scheduled_at' : 'created_at';
-                    $dateColumnEnd = 'estimated_end_date';
-                    $on = Carbon::parse($on)->startOfDay();
-                    if ($timezone && ($timezone !== 'UTC')) {
-                        if ($timezone === 'Asia/Calcutta') {
-                            $timezone = 'Asia/Kolkata'; // Convert old timezone to the correct one
-                        }
-                        // Convert user's date to UTC start and end of the day
-                        $localDate = Carbon::parse($on)->setTimezone($timezone);
-                        $startOfDayUtc =$localDate->copy()->startOfDay()->setTimezone('UTC');
-                        $endOfDayUtc = $localDate->copy()->endOfDay()->setTimezone('UTC');
-                        // Query between the UTC range
-                         $q->where(function ($subQuery) use ($dateColumnStart, $dateColumnEnd, $startOfDayUtc, $endOfDayUtc) {
-                            $subQuery->where(function ($sq) use ($dateColumnStart, $dateColumnEnd, $startOfDayUtc, $endOfDayUtc) {
-                                // Case 1: Orders with end date → check overlap
-                                $sq->where($dateColumnStart, '<=', $endOfDayUtc)
-                                ->where($dateColumnEnd, '>=', $startOfDayUtc);
-                            })
-                            ->orWhere(function ($sq) use ($dateColumnStart, $startOfDayUtc, $endOfDayUtc, $dateColumnEnd) {
-                                // Case 2: Orders without end date → check scheduled_at directly
-                                $sq->whereNull($dateColumnEnd)
-                                ->whereBetween($dateColumnStart, [$startOfDayUtc, $endOfDayUtc]);
+                    $timezone = $request->input('timezone', 'UTC');
+                   
+                    $query->where(function ($q) use ($on, $timezone) {
+                        $dateColumnStart = 'scheduled_at';
+                        $dateColumnEnd = 'estimated_end_date';
+                        $on = Carbon::parse($on)->startOfDay();
+                        if ($timezone && ($timezone !== 'UTC')) {
+                            if ($timezone === 'Asia/Calcutta') {
+                                $timezone = 'Asia/Kolkata'; // Convert old timezone to the correct one
+                            }
+                            // Convert user's date to UTC start and end of the day
+                            $localDate = Carbon::parse($on)->setTimezone($timezone);
+                            $startOfDayUtc =$localDate->copy()->startOfDay()->setTimezone('UTC');
+                            $endOfDayUtc = $localDate->copy()->endOfDay()->setTimezone('UTC');
+                            // Check if the requested date falls between scheduled_at and estimated_end_date
+                            $q->where(function ($subQuery) use ($dateColumnStart, $dateColumnEnd, $startOfDayUtc, $endOfDayUtc) {
+                                $subQuery->where($dateColumnStart, '<=', $endOfDayUtc)
+                                        ->where($dateColumnEnd, '>=', $startOfDayUtc);
                             });
-                        });
-
-                    } else {
-                        // If no timezone specified or it's UTC, use direct date filter
-                        $q->where(function ($subQuery) use ($dateColumnStart, $dateColumnEnd, $on) {
-                            $subQuery->where($dateColumnStart, '<=', $on->endOfDay()) 
-                                     ->where($dateColumnEnd, '>=', $on->startOfDay());
-                        });
-                    }
-                });
+                        } else {
+                            // If no timezone specified or it's UTC, use direct date filter
+                            $q->where(function ($subQuery) use ($dateColumnStart, $dateColumnEnd, $on) {
+                                $subQuery->where($dateColumnStart, '<=', $on->endOfDay()) 
+                                         ->where($dateColumnEnd, '>=', $on->startOfDay());
+                            });
+                        }
+                    });
             }
+
             if ($request->boolean('pod_required')) {
                 $query->where('pod_required', 1);
             }
