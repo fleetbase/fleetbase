@@ -104,9 +104,48 @@ export default class OperationsOrdersIndexRoute extends Route {
             }
         }
     }
-    resetController(controller, isExiting) {
+
+    resetController(controller, isExiting, transition) {
         if (isExiting) {
-            controller.set('page', 1);
+            // Explicitly reset ALL query parameters to undefined to break sticky behavior
+            const queryParamKeys = [
+                'page', 'limit', 'sort', 'query', 'public_id', 'internal_id', 
+                'payload', 'tracking', 'facilitator', 'customer', 'driver', 
+                'vehicle', 'pickup', 'dropoff', 'created_by', 'updated_by', 
+                'status', 'type', 'on'
+            ];
+            
+            const resetParams = {};
+            queryParamKeys.forEach(key => {
+                resetParams[key] = undefined;
+            });
+            
+            // Set to undefined first to break sticky behavior
+            controller.setProperties(resetParams);
+            
+            // Then set to actual default values
+            controller.setProperties({
+                page: 1,
+                limit: null,
+                sort: '-created_at',
+                query: null,
+                public_id: null,
+                internal_id: null,
+                payload: null,
+                tracking: null,
+                facilitator: null,
+                customer: null,
+                driver: null,
+                vehicle: null,
+                pickup: null,
+                dropoff: null,
+                created_by: null,
+                updated_by: null,
+                status: null,
+                type: null,
+                on: null,
+                isSearchVisible: false
+            });
         }
     }
 }

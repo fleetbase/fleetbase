@@ -2,7 +2,6 @@ import Component from '@glimmer/component';
 import { tracked } from '@glimmer/tracking';
 import { inject as service } from '@ember/service';
 import { set, action } from '@ember/object';
-import { filter, gt } from '@ember/object/computed';
 import { isArray } from '@ember/array';
 import { later } from '@ember/runloop';
 import getUrlParam from '../utils/get-url-param';
@@ -21,163 +20,137 @@ export default class FiltersPickerComponent extends Component {
      * @memberof FiltersPickerComponent
      */
     @tracked filters = [];
+    @tracked activeFilters = [];
 
-    /**
-     * Filters which are active and should be applied.
-     *
-     * @memberof FiltersPickerComponent
-     */
-    @filter('filters.@each.isFilterActive', (filter) => filter.isFilterActive === true) activeFilters;
-
-    /**
-     * Computed property that determines if any filters are set.
-     *
-     * @memberof FiltersPickerComponent
-     */
-    @gt('activeFilters.length', 0) hasFilters;
-
-    /**
-     * Creates an instance of FiltersPickerComponent.
-     * @memberof FiltersPickerComponent
-     */
     constructor() {
         super(...arguments);
         this.updateFilters();
     }
 
-    /**
-     * Creates and updates filters via map
-     *
-     * @param {null|Function} onColumn
-     * @memberof FiltersPickerComponent
-     */
-    @action updateFilters(onColumn) {
-        this.filters = this.args.columns
-            .filter((column) => column.filterable)
-            .map((column, trueIndex) => {
-                // add true index to column
-                column = { ...column, trueIndex };
+    get hasFilters() {
+        return this.activeFilters.length > 0;
+    }
 
-                // set the column param
+
+
+    @action updateFilters(onColumn) {
+        const built = (this.args.columns || [])
+            .filter((column) => column.filterable)
+            .map((col, trueIndex) => {
+                let column = { ...col, trueIndex };
                 column.param = column.filterParam ?? column.valuePath;
 
-                // get the active param if any and update filter
                 const activeParam = getUrlParam(column.param);
 
-                // update if an activeParam exists
-                if (activeParam) {
-                    column.isFilterActive = true;
-
-                    if (isArray(activeParam) && activeParam.length === 0) {
-                        column.isFilterActive = false;
-                    }
-
+                if (activeParam !== null && activeParam !== undefined && activeParam !== '') {
+                    column.isFilterActive = isArray(activeParam) ? activeParam.length > 0 : true;
                     column.filterValue = activeParam;
-                }
-
-                // callback to modify column from hook
-                if (typeof onColumn === 'function') {
-                    onColumn(column, trueIndex, activeParam);
+                } else {
+                    column.isFilterActive = false;
+                    column.filterValue = undefined;
                 }
 
                 return column;
             });
 
-        return this;
-    }
+        this.filters = built;
+        this.activeFilters = built.filter((f) => f.isFilterActive);  // Ensure the array reference is updated
 
-    /**
+    
+}
+/**
      * Triggers the apply callback for the filters picker.
      *
      * @memberof FiltersPickerComponent
      */
-    @action applyFilters() {
-        const { onApply } = this.args;
+@action applyFilters() {
+    const { onApply } = this.args;
 
-        // run `onApply()` callback
-        if (typeof onApply === 'function') {
-            onApply();
-        }
-
-        // manually run update filters after apply with slight 300ms delay to update activeFilters
-        later(
-            this,
-            () => {
-                this.updateFilters();
-            },
-            150
-        );
+    // run `onApply()` callback
+    if (typeof onApply === 'function') {
+        onApply();
     }
 
-    /**
-     * Updates an individual filter/column value.
-     *
-     * @param {String} key
-     * @param {*} value
-     * @memberof FiltersPickerComponent
-     */
-    @action updateFilterValue({ param }, value) {
-        const { onChange } = this.args;
+    // manually run update filters after apply with slight 300ms delay to update activeFilters
+    later(
+        this,
+        () => {
+            this.updateFilters();
+        },
+        150
+    );
+}
 
-        // run `onChange()` callback
-        if (typeof onChange === 'function') {
-            onChange(param, value);
+
+@action updateFilterValue({ param }, value) {
+    const { onChange } = this.args;
+
+    // Rebuild filters immutably for immediate UI feedback
+    const updated = this.filters.map((c) => {
+        if (c.param !== param) return c;
+        const next = { ...c };
+        next.filterValue = value;
+
+        if (value !== undefined && value !== null && value !== '') {
+            next.isFilterActive = isArray(value) ? value.length > 0 : true;
+        } else {
+            next.isFilterActive = false;
         }
+
+        return next;
+    });
+
+    // Reassign the filters and activeFilters arrays with new references
+    this.filters = [...updated];
+    this.activeFilters = updated.filter((f) => f.isFilterActive);
+
+    // console.log('[picker] activeFilters updated after change', this.activeFilters);
+
+    if (typeof onChange === 'function') {
+        onChange(param, value);
     }
+}
 
-    /**
-     * Callback to clear a single filter/column value.
-     *
-     * @param {String} key
-     * @memberof FiltersPickerComponent
-     */
-    @action clearFilterValue({ param }) {
-        const { onFilterClear } = this.args;
+@action clearFilterValue({ param }) {
+    const { onFilterClear } = this.args;
 
-        // update filters
-        this.updateFilters((column) => {
-            if (column.param !== param) {
-                return;
-            }
+    const updated = this.filters.map((c) =>
+        c.param === param ? { ...c, filterValue: undefined, isFilterActive: false } : c
+    );
 
-            // clear column values
-            set(column, 'filterValue', undefined);
-            set(column, 'isFilterActive', false);
-        });
+    // Reassign the arrays to trigger reactivity
+    this.filters = [...updated];
+    this.activeFilters = updated.filter((f) => f.isFilterActive);
 
-        // run `onFilterClear()` callback
-        if (typeof onFilterClear === 'function') {
-            onFilterClear(param);
-        }
+    // console.log('[picker] activeFilters updated after clear', this.activeFilters);
+
+    if (typeof onFilterClear === 'function') {
+        onFilterClear(param);
     }
+}
 
-    /**
-     * Used to clear all filter/column values and URL params.
-     *
-     * @memberof FiltersPickerComponent
-     */
-    @action clearFilters() {
-        const { onClear } = this.args;
-        const currentRouteName = this.hostRouter.currentRouteName;
-        const currentQueryParams = { ...this.hostRouter.currentRoute.queryParams };
+@action clearFilters() {
+    const { onClear } = this.args;
+    const currentRouteName = this.hostRouter.currentRouteName;
+    const currentQueryParams = { ...this.hostRouter.currentRoute.queryParams };
 
-        // update filters
-        this.updateFilters((column) => {
-            const paramKey = column.filterParam ?? column.valuePath;
-            delete currentQueryParams[paramKey];
-            delete currentQueryParams[`${paramKey}[]`];
+    const updated = this.filters.map((c) => {
+        const key = c.filterParam ?? c.valuePath;
+        delete currentQueryParams[key];
+        delete currentQueryParams[`${key}[]`];
+        return { ...c, filterValue: undefined, isFilterActive: false };
+    });
 
-            // reset column values
-            set(column, 'filterValue', undefined);
-            set(column, 'isFilterActive', false);
-        });
+    // Reassign the arrays to trigger reactivity
+    this.filters = [...updated];
+    this.activeFilters = [];
 
-        // transition to cleared params with router service
-        this.hostRouter.transitionTo(currentRouteName, { queryParams: currentQueryParams });
+    this.hostRouter.transitionTo(currentRouteName, { queryParams: currentQueryParams });
 
-        // run `onClear()` callback
-        if (typeof onClear === 'function') {
-            onClear(...arguments);
-        }
+    // console.log('[picker] activeFilters cleared', this.activeFilters);
+
+    if (typeof onClear === 'function') {
+        onClear(...arguments);
     }
+}
 }
