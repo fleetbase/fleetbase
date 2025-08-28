@@ -83,6 +83,7 @@ class Order extends FleetbaseResource
             'created_by_uuid'        => $this->created_by_uuid,
             'carrier'               => $this->carrier,
             'sub_carrier'           => $this->sub_carrier,
+            'trip_id'               => $this->trip_id,
         ];
     }
 
@@ -156,6 +157,7 @@ class Order extends FleetbaseResource
             'created_by_uuid' => $this->created_by_uuid,
             'carrier'         => $this->carrier,
             'sub_carrier'     => $this->sub_carrier,
+            'trip_id'         => $this->trip_id,
         ];
     }
 }
