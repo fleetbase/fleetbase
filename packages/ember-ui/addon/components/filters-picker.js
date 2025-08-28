@@ -104,7 +104,7 @@ export default class FiltersPickerComponent extends Component {
     this.filters = [...updated];
     this.activeFilters = updated.filter((f) => f.isFilterActive);
 
-    console.log('[picker] activeFilters updated after change', this.activeFilters);
+    // console.log('[picker] activeFilters updated after change', this.activeFilters);
 
     if (typeof onChange === 'function') {
         onChange(param, value);
@@ -122,7 +122,7 @@ export default class FiltersPickerComponent extends Component {
     this.filters = [...updated];
     this.activeFilters = updated.filter((f) => f.isFilterActive);
 
-    console.log('[picker] activeFilters updated after clear', this.activeFilters);
+    // console.log('[picker] activeFilters updated after clear', this.activeFilters);
 
     if (typeof onFilterClear === 'function') {
         onFilterClear(param);
@@ -147,7 +147,7 @@ export default class FiltersPickerComponent extends Component {
 
     this.hostRouter.transitionTo(currentRouteName, { queryParams: currentQueryParams });
 
-    console.log('[picker] activeFilters cleared', this.activeFilters);
+    // console.log('[picker] activeFilters cleared', this.activeFilters);
 
     if (typeof onClear === 'function') {
         onClear(...arguments);
