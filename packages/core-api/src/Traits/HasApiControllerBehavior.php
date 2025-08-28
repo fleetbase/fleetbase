@@ -313,10 +313,10 @@ trait HasApiControllerBehavior
      */
     public function queryRecord(Request $request)
     {
+        
         $single        = $request->boolean('single');
         $queryCallback = $this->getControllerCallback('onQueryRecord');
         if (get_class($this->model) === 'Fleetbase\FleetOps\Models\Order') {
-            
             $combinedCallback = function ($query) use ($request, $queryCallback) {
                 // Apply the original callback if it exists
                 if ($queryCallback) {
@@ -379,7 +379,15 @@ trait HasApiControllerBehavior
                 if ($request->filled('public_id')) {
                     $query->where('public_id', 'LIKE', '%' . $request->input('public_id') . '%');
                 }
+                if ($request->filled('trip_id')) {
+                    $query->where('trip_id', 'LIKE', '%' . $request->input('trip_id') . '%');
+                }
+                Log::info('Raw SQL Query:', [
+                'sql' => $query->toSql(),
+                'bindings' => $query->getBindings()
+                ]);
             };
+            
             $data = $this->model->queryFromRequest($request, $combinedCallback);
         }
         else {
