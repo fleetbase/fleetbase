@@ -58,7 +58,8 @@ export default class OperationsOrdersIndexController extends BaseController {
         'drawerOpen',
         'drawerTab',
         'orderPanelOpen',
-        'on'
+        'on',
+        'trip_id'
     ];
 
     /**
@@ -264,6 +265,12 @@ export default class OperationsOrdersIndexController extends BaseController {
      */
     @tracked statusOptions = [];
     @tracked sta_op;
+    /**
+     * The filterable param `trip_id`
+     *
+     * @var {String}
+     */
+    @tracked trip_id;
     /**
      * Flag to determine if the layout is 'map'
      *
