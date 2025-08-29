@@ -594,7 +594,7 @@ class OrderController extends Controller
                             $subQuery->where(function ($innerQuery) use ($dateColumnStart, $dateColumnEnd, $startOfDayUtc, $endOfDayUtc) {
                                 $innerQuery->where($dateColumnStart, '<=', $endOfDayUtc)
                                           ->where($dateColumnEnd, '>=', $startOfDayUtc);
-                            })->orWhere(function ($innerQuery) use ($dateColumnStart, $startOfDayUtc, $endOfDayUtc) {
+                            })->orWhere(function ($innerQuery) use ($dateColumnStart, $dateColumnEnd, $startOfDayUtc, $endOfDayUtc) {
                                 $innerQuery->where($dateColumnStart, '<=', $endOfDayUtc)
                                           ->whereNull($dateColumnEnd);
                             });
