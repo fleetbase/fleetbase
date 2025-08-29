@@ -13,6 +13,28 @@ export default class FiltersService extends Service {
     @service urlSearchParams;
     @tracked pendingQueryParams = {};
     @tracked managedQueryParams = ['limit', 'offset', 'sort', 'query', 'page', 'layout', 'view'];
+    @tracked lastRouteName = null;
+
+    constructor() {
+        super(...arguments);
+        this.setupRouteListener();
+    }
+
+    /**
+     * Setup listener to clear pending params on route changes
+     */
+    setupRouteListener() {
+        this.router.on('routeDidChange', () => {
+            const currentRoute = this.router.currentRouteName;
+            
+            // If route changed, clear pending params to prevent stale filter application
+            if (this.lastRouteName && this.lastRouteName !== currentRoute) {
+                this.pendingQueryParams = {};
+            }
+            
+            this.lastRouteName = currentRoute;
+        });
+    }
 
     @computed('managedQueryParams', 'pendingQueryParams') get activeFilters() {
         const queryParams = this.getQueryParams();
@@ -75,6 +97,9 @@ export default class FiltersService extends Service {
     }
 
     @action apply(controller) {
+        // Clear stale pending params first, then get fresh current state
+        // this.clearStalePendingParams(controller);
+
         const currentQueryParams = this.getQueryParams(controller);
         const updatableQueryParams = { ...currentQueryParams, ...this.pendingQueryParams };
 
@@ -86,6 +111,29 @@ export default class FiltersService extends Service {
         set(controller, 'page', 1);
 
         this.notifyPropertyChange('activeFilters');
+    }
+
+     /**
+     * Clear pending params that don't match current URL state
+     */
+     @action clearStalePendingParams(controller) {
+        const currentQueryParams = this.getQueryParams(controller);
+        const freshPendingParams = {};
+        
+        // Only keep pending params that align with current URL state or are genuinely new
+        for (let param in this.pendingQueryParams) {
+            const pendingValue = this.pendingQueryParams[param];
+            const currentValue = currentQueryParams[param];
+            
+            // Keep pending param if:
+            // 1. It has a non-blank value AND
+            // 2. Either there's no current value OR the current value matches
+            if (!isBlank(pendingValue) && (isBlank(currentValue) || currentValue === pendingValue)) {
+                freshPendingParams[param] = pendingValue;
+            }
+        }
+        
+        this.pendingQueryParams = freshPendingParams;
     }
 
     @action reset(controller) {
@@ -202,7 +250,17 @@ export default class FiltersService extends Service {
     @action resetQueryParams() {
         if (!isBlank(this.activeFilters)) {
             this.clear();
+            // Clear pending params when resetting
+            this.pendingQueryParams = {};
             this.router.transitionTo({ queryParams: {} });
+        }
+    }
+
+    willDestroy() {
+        super.willDestroy();
+        // Clean up route listener
+        if (this.router.off) {
+            this.router.off('routeDidChange');
         }
     }
 }

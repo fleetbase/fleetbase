@@ -6,6 +6,7 @@ import isNestedRouteTransition from '@fleetbase/ember-core/utils/is-nested-route
 
 export default class OperationsOrdersIndexRoute extends Route {
     @service store;
+    @service filters;
     @tracked timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
     @tracked queryParams = {
         page: { refreshModel: true },
@@ -127,27 +128,28 @@ export default class OperationsOrdersIndexRoute extends Route {
             // Then set to actual default values
             controller.setProperties({
                 page: 1,
-                limit: null,
+                limit: undefined,
                 sort: '-created_at',
-                query: null,
-                public_id: null,
-                internal_id: null,
-                trip_id: null,
-                payload: null,
-                tracking: null,
-                facilitator: null,
-                customer: null,
-                driver: null,
-                vehicle: null,
-                pickup: null,
-                dropoff: null,
-                created_by: null,
-                updated_by: null,
-                status: null,
-                type: null,
-                on: null,
+                query: undefined,
+                public_id: undefined,
+                internal_id: undefined,
+                trip_id: undefined,
+                payload: undefined,
+                tracking: undefined,
+                facilitator: undefined,
+                customer: undefined,
+                driver: undefined,
+                vehicle: undefined,
+                pickup: undefined,
+                dropoff: undefined,
+                created_by: undefined,
+                updated_by: undefined,
+                status: undefined,
+                type: undefined,
+                on: undefined,
                 isSearchVisible: false
             });
+            this.filters.clearStalePendingParams(controller);
         }
     }
 }
