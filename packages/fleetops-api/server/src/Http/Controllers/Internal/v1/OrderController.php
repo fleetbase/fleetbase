@@ -1317,6 +1317,24 @@ class OrderController extends FleetOpsController
                             ]);
                         }
                     }
+                      
+                    if(empty($estimatedEndDate) && !empty($lastRow['stop_2_yard_departure'])) {
+                        try {
+                            $estimatedEndDate = $this->parseExcelDate($lastRow['stop_2_yard_departure']);
+                            // Ensure it's a Carbon instance
+                            if (is_string($estimatedEndDate)) {
+                                $estimatedEndDate = Carbon::parse($estimatedEndDate);
+                            }
+                        } catch (\Exception $e) {
+                            Log::warning('Failed to parse stop_2_yard_departure from last row', [
+                                'block_id' => $blockId,
+                                'stop_2_yard_departure_value' => $lastRow['stop_2_yard_departure'],
+                                'error' => $e->getMessage()
+                            ]);
+                        }
+                        
+                        
+                    }
                     
                     // Fallback: use the latest yard arrival date if stop_2_yard_arrival is empty or failed to parse
                     if (!$estimatedEndDate && !empty($yardArrivalDates)) {
@@ -1360,7 +1378,6 @@ class OrderController extends FleetOpsController
                         'bid_id' => $firstRow['bid_id'] ?? null,
                         'spot_work' => (isset($firstRow['spot_work']) && strtolower(trim($firstRow['spot_work'])) === 'yes') ? 1 : 0,
                     ];
-
                     if ($existingOrder) {
                         // Update existing order
                         $existingOrder->update($orderData);
