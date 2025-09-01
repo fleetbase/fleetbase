@@ -101,7 +101,12 @@ export default class ExportFormComponent extends Component {
             const originalConfirm = this.args.options.confirm;
             this.args.options.confirm = (...args) => {
                 if (this.dateError) {
-                    this.notifications.error(this.intl.t('common.to_date_before_from_date_error'));
+                    // Check which specific error occurred and show appropriate message
+                    if (this.toDate && !this.fromDate) {
+                        this.notifications.error(this.intl.t('common.please-select-from-date'));
+                    } else {
+                        this.notifications.error(this.intl.t('common.to_date_before_from_date_error'));
+                    }
                     return;
                 }
                 if (typeof originalConfirm === 'function') {
