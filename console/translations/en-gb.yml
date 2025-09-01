@@ -1378,8 +1378,8 @@ fleet-ops:
         assign-text: You are about to assign a new driver ({driverName}) to Order
           {orderId}. Click continue to confirm driver.
         assign-vehicle: Assign Vehicle?
-        assign-vehicle-busy-text: The vehicle {vehicleName} <strong>{availability}</strong>. Are you sure you want to assign it to order {orderId}?
-        assign-driver-busy-text: The driver {driverName} <strong>{availability}</strong>. Are you sure you want to assign it to order {orderId}?
+        assign-vehicle-busy-text: The vehicle {vehicleName} <strong>{vehicleAvailability}</strong>. Are you sure you want to assign it to order {orderId}?
+        assign-driver-busy-text: The driver {driverName} <strong>{driverAvailability}</strong>. Are you sure you want to assign it to order {orderId}?
         assign-anyway: Continue with Assignment
         assign-driver-vehicle: Assign Driver & Vehicle?
         assign-driver-vehicle-busy-text: The driver {driverName} <strong>{driverAvailability}</strong> and the vehicle {vehicleName} <strong>{vehicleAvailability}</strong>. Do you still want to assign Order {orderId} to them?
