@@ -441,6 +441,13 @@ trait HasApiControllerBehavior
             })->get();
         }
 
+        if (get_class($this->model) === 'Fleetbase\FleetOps\Models\Vehicle' && $request->has('fleet_uuid')) {
+            $fleetUuid = $request->input('fleet_uuid');
+            $data = $this->model::whereHas('fleets', function ($query) use ($fleetUuid) {
+                $query->where('fleet_uuid', $fleetUuid);
+            })->get();
+        }
+
         //Vehicle list Customization
         if (get_class($this->model) === 'Fleetbase\FleetOps\Models\Vehicle' && $request->has('order_uuid')) {
             $order = \Fleetbase\FleetOps\Models\Order::where('uuid', $request->order_uuid)
@@ -474,13 +481,6 @@ trait HasApiControllerBehavior
                     ];
                 })->values();
             }    
-        }
-
-        if (get_class($this->model) === 'Fleetbase\FleetOps\Models\Vehicle' && $request->has('fleet_uuid')) {
-            $fleetUuid = $request->input('fleet_uuid');
-            $data = $this->model::whereHas('fleets', function ($query) use ($fleetUuid) {
-                $query->where('fleet_uuid', $fleetUuid);
-            })->get();
         }
         
         if ($single) {
@@ -1272,14 +1272,28 @@ trait HasApiControllerBehavior
                     });
                 })
                 ->exists();
-
-            if ($activeOrder) {
-                return [
-                    'status' => false,
-                    'message' => 'Vehicle is already assigned to another order during this time period.',
-                    'is_vehicle_available' => 0,
-                ];
-            }
+                $vehicleUnavailable = LeaveRequest::where('vehicle_uuid', $vehicle_uuid)
+                ->whereNull('deleted_at')
+                ->where('unavailability_type', 'vehicle')
+                ->where(function ($query) use ($orderStartDate, $orderEndDate) {
+                    $query->where(function ($q) use ($orderStartDate, $orderEndDate) {
+                        $q->where('start_date', '<=', $orderEndDate)
+                          ->where('end_date', '>=', $orderStartDate);
+                    });
+                })
+                ->exists(); 
+            
+                if ($vehicleUnavailable || $activeOrder) {
+                    $message = $vehicleUnavailable
+                        ? 'Vehicle is under maintenance during this time period.'
+                        : 'Vehicle is already assigned to another order during this time period.';
+                
+                    return [
+                        'status' => false,
+                        'message' => $message,
+                        'is_vehicle_available' => 0,
+                    ];
+                }
 
             return [
                 'status' => true,
