@@ -25,6 +25,7 @@ class Vehicle extends VehicleWithoutDriver
                 'display_name' => $this->display_name,
                 'driver_name'  => $this->driver_name,
                 'is_vehicle_available' => $this->is_vehicle_available,
+                'availability_message' => $this->availability_message,
                 'fleet_vehicles' => FleetVehicle::collection($this->fleetVehicles()->with('fleet')->get()),
 
             ],
