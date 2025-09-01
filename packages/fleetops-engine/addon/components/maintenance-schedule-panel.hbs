@@ -9,10 +9,10 @@
     @isResizable={{or this.isResizable @isResizable}}
     @width={{or this.width @width "570px"}}
 >
-    <Overlay::Header
-        @title={{(this.order.public_id)}}
-        @status={{this.order.public_id}}
-        @hideStatusDot={{true}}
+    <Overlay::Header 
+        @title={{t "fleet-ops.component.maintenance-schedule-form-panel.title"}}
+        @status={{this.order.public_id}} 
+        @hideStatusDot={{true}} 
         @createdAt={{this.order.createdAt}}
     >
         <Button
@@ -30,46 +30,52 @@
     </Overlay::Header>
 
     <Overlay::Body class="no-padding">
+        <div class="section-header-actions w-full overflow-x-scroll lg:overflow-x-auto">
+            <div class="ui-tabs mt-4">
+                <nav>
+                    {{#each this.tabs as |tab|}}
+                        <a href="javascript:;" class="ui-tab {{if (eq this.tab.slug tab.slug) 'active'}}" {{on "click" (fn this.onTabChanged tab.slug)}}>
+                            <FaIcon @icon={{tab.icon}} class="mr-1" />
+                            <span>{{tab.title}}</span>
+                        </a>
+                    {{/each}}
+                </nav>
+            </div>
+        </div>
+        
         {{#if this.hasTabs}}
-            <div class="section-header-actions w-full overflow-x-scroll lg:overflow-x-auto">
-                <div class="ui-tabs mt-4">
-                    <nav>
-                        {{#each this.tabs as |tab|}}
-                            <a href="javascript:;" class="ui-tab {{if (eq this.tab.slug tab.slug) 'active'}}" {{on "click" (fn this.onTabChanged tab.slug)}}>
-                                <FaIcon @icon={{tab.icon}} class="mr-1" />
-                                <span>{{tab.title}}</span>
-                            </a>
-                        {{/each}}
-                    </nav>
-                </div>
-            </div>
-            <div class="tab-content tab-{{this.tab.slug}}">
-                {{component this.tab.component order=this.order tabOptions=this.tab options=this.tab.componentParams}}
-            </div>
-        {{else}}
-            <div class="p-4 grid grid-cols-1 gap-3 text-xs dark:text-gray-100">
-                <div class="flex items-center justify-between">
-                    <span class="text-gray-500 dark:text-gray-400">{{t "fleet-ops.operations.orders.index.vehicle-assigned"}}</span>
-                    <span class="font-medium">{{n-a this.order.vehicle.display_name}}</span>
-                </div>
-                <div class="flex items-center justify-between">
-                    <span class="text-gray-500 dark:text-gray-400">{{t "fleet-ops.common.schedule"}}</span>
-                    <span class="font-medium">{{n-a (format-date this.order.scheduledAt)}}</span>
-                </div>
-                <div class="flex items-center justify-between">
-                    <span class="text-gray-500 dark:text-gray-400">{{t "fleet-ops.operations.orders.index.estimated-end-date"}}</span>
-                    <span class="font-medium">{{n-a (format-date this.order.estimatedEndDate)}}</span>
-                </div>
-                <div class="flex items-center justify-between">
-                    <span class="text-gray-500 dark:text-gray-400">{{t "fleet-ops.component.maintenance-schedule-form-panel.notes"}}</span>
-                    <span class="font-medium">{{n-a this.order.notes}}</span>
-                </div>
-                <div class="flex items-center justify-between">
-                    <span class="text-gray-500 dark:text-gray-400">{{t "fleet-ops.common.created-at"}}</span>
-                    <span class="font-medium">{{n-a (format-date this.order.createdAt)}}</span>
-                </div>
-            </div>
-        {{/if}}
-        <Spacer @height="300px" />
+      <div class="tab-content tab-{{this.tab.slug}}">
+        {{component this.tab.component order=this.order tabOptions=this.tab options=this.tab.componentParams}}
+      </div>
+    {{else}}
+    <div class="p-4">
+    <ContentPanel @title={{t "fleet-ops.common.details"}} @open={{true}} @pad={{true}} @panelBodyClass="bg-white dark:bg-gray-900">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 text-xs md:mb-6 dark:text-gray-100">
+        <div class="field-info-container space-y-2">
+          <div class="field-name">{{t "fleet-ops.operations.orders.index.vehicle-assigned"}}</div>
+          <div class="field-value">{{n-a this.order.vehicle.display_name}}</div>
+        </div>
+        <div class="field-info-container space-y-2">
+          <div class="field-name">{{t "fleet-ops.common.schedule"}}</div>
+          <div class="field-value">{{n-a (format-date this.order.scheduledAt)}}</div>
+        </div>
+        <div class="field-info-container space-y-2">
+          <div class="field-name">{{t "leaves.end_date"}}</div>
+          <div class="field-value">{{n-a (format-date this.order.estimatedEndDate)}}</div>
+        </div>
+        <div class="field-info-container space-y-2">
+          <div class="field-name">{{t "fleet-ops.common.created-at"}}</div>
+          <div class="field-value">{{n-a (format-date this.order.createdAt)}}</div>
+        </div>
+        <div class="field-info-container space-y-2 col-span-2">
+          <div class="field-name">{{t "fleet-ops.component.maintenance-schedule-form-panel.notes"}}</div>
+          <div class="field-value">{{n-a this.order.notes}}</div>
+        </div>
+      </div>
+    </ContentPanel>
+    </div>
+    
+    {{/if}}
+    <Spacer @height="300px" />
     </Overlay::Body>
 </Overlay>

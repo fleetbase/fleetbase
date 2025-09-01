@@ -10,7 +10,7 @@
     @width={{or this.width @width "570px"}}
 >
     <Overlay::Header
-        @title={{if this.record.public_id (t "fleet-ops.component.maintenance-schedule-form-panel.title")}}
+        {{!-- @title={{if this.record.public_id (t "fleet-ops.component.maintenance-schedule-form-panel.title")}} --}}
         @status={{this.record.public_id}}
         @hideStatusDot={{true}}
         @titleWrapperClass="leading-5"
@@ -61,6 +61,7 @@
                     </ModelSelect>
                 </InputGroup>
 
+                <div class="flex items-end gap-5">
                 <InputGroup>
                     <InputLabel @labelText={{html-safe (concat (t "fleet-ops.common.schedule") " <span style='color: red;'>*</span>")}} />
                     <Input
@@ -75,7 +76,7 @@
                 </InputGroup>
 
                 <InputGroup>
-                    <InputLabel @labelText={{t "fleet-ops.operations.orders.index.estimated-end-date"}} />
+                    <InputLabel @labelText={{t "leaves.end_date" }} />
                     <Input
                         @type="date"
                         class="form-input"
@@ -86,6 +87,7 @@
                         @disabled={{unauthorized}}
                     />
                 </InputGroup>
+                </div>
 
                 <InputGroup @name={{t "fleet-ops.component.maintenance-schedule-form-panel.notes"}}>
                     <Textarea

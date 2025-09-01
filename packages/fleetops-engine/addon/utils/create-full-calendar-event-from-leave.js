@@ -19,7 +19,7 @@ export default function createFullCalendarEventFromLeave(unavailability, intl) {
     let title;
     if (isMaintenance) {
         const vehicleName =
-            unavailability?.vehicle_name ||
+            unavailability?.vehicle?.plate_number ||
             unavailability?.vehicle?.display_name ||
             '';
         const onMaintenance = (intl?.t && intl.t('fleet-ops.component.maintenance-schedule-form-panel.on-maintenance')) || 'on maintenance';

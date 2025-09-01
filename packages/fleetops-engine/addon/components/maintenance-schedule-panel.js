@@ -1,10 +1,15 @@
 import Component from '@glimmer/component';
 import { tracked } from '@glimmer/tracking';
+import { inject as service } from '@ember/service';
 import { action } from '@ember/object';
+import { isArray } from '@ember/array';
+import findActiveTab from '../utils/find-active-tab';
 
 export default class MaintenanceSchedulePanelComponent extends Component {
     @tracked overlayContext;
-    @tracked tab = this.args.tab ?? { slug: 'overview' };
+    @tracked tab;
+    @service universe;
+    @service intl;
 
     constructor() {
         super(...arguments);
@@ -28,6 +33,7 @@ export default class MaintenanceSchedulePanelComponent extends Component {
                 rec.createdAt = rec.createdAt || rec.created_at;
             }
         } catch (_) {}
+        this.tab = findActiveTab(this.tabs, this.args.tab);
     }
 
     get order() {
@@ -35,20 +41,14 @@ export default class MaintenanceSchedulePanelComponent extends Component {
     }
 
     get tabs() {
-        // Allow caller to pass through tabs; default to single overview without tabs
-        return this.args.tabs ?? [
-            {
-                slug: 'overview',
-                icon: 'clipboard-list',
-                title: 'Overview',
-                component: this.args.overviewComponent ?? null,
-                componentParams: this.args.overviewComponentParams ?? {},
-            },
-        ];
-    }
+        const registeredTabs = this.universe.getMenuItemsFromRegistry('fleet-ops:component:maintenance-schedule-panel');
+        const defaultTabs = [this.universe._createMenuItem(this.intl.t('fleet-ops.common.details'), null, {id: 'details', icon: 'circle-info', component: MaintenanceSchedulePanelComponent })];
 
-    get hasTabs() {
-        return Array.isArray(this.tabs) && this.tabs.length > 0 && !!this.tabs[0].component;
+        if (isArray(registeredTabs)) {
+            return [...defaultTabs, ...registeredTabs];
+        }
+
+        return defaultTabs;
     }
 
     get title() {
@@ -80,6 +80,11 @@ export default class MaintenanceSchedulePanelComponent extends Component {
         }
     }
 
+    @action onTabChanged(tab) {
+        this.tab = findActiveTab(this.tabs, tab);
+        contextComponentCallback(this, 'onTabChanged', tab);
+    }
+
     @action onEdit() {
         if (typeof this.args.onEdit === 'function') {
             this.args.onEdit(this.order);
@@ -89,14 +94,6 @@ export default class MaintenanceSchedulePanelComponent extends Component {
     @action onPressCancel() {
         if (typeof this.args.onPressCancel === 'function') {
             this.args.onPressCancel();
-        }
-    }
-
-    @action onTabChanged(slug) {
-        const next = (this.tabs || []).find((t) => t.slug === slug) || { slug };
-        this.tab = next;
-        if (typeof this.args.onTabChanged === 'function') {
-            this.args.onTabChanged(slug);
         }
     }
 }
