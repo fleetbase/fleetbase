@@ -673,11 +673,18 @@ export default class OrderScheduleCardComponent extends Component {
                 decline: (modal) => {
                     // User cancelled - reopen the previous modal
                     modal.done();
-                    // Clear temporary selections to restore original state
+                    
+                    // Clear temporary selections
                     this.tempDriverSelection = null;
                     this.tempVehicleSelection = null;
-                    order.set('driver_assigned', this.originalOrder.driver_assigned);
-                    order.set('vehicle_assigned', this.originalOrder.vehicle_assigned);
+                    
+                    // Immediately restore the original values to the order
+                    order.setProperties({
+                        driver_assigned: this.originalOrder.driver_assigned ? this.originalOrder.driver_assigned : null,
+                        driver_assigned_uuid: this.originalOrder.driver_assigned_uuid ? this.originalOrder.driver_assigned_uuid : null,
+                        vehicle_assigned: this.originalOrder.vehicle_assigned ? this.originalOrder.vehicle_assigned : null,
+                        vehicle_assigned_uuid: this.originalOrder.vehicle_assigned_uuid ? this.originalOrder.vehicle_assigned_uuid : null
+                    });
 
                     // Publish calendar refresh event to update the page
                     if (this.effectiveEventBus) {
@@ -688,7 +695,8 @@ export default class OrderScheduleCardComponent extends Component {
                         });
                     }
 
-                    // Reopen the previous modal (order edit form)
+                    // Reopen the previous modal (order edit form) with a longer delay
+                    // to ensure the order properties are properly restored
                     setTimeout(() => {
                         // Find and click the edit button to reopen the modal
                         const editButton = document.querySelector(`a[data-order-id="${order.public_id}"]`);
@@ -701,7 +709,7 @@ export default class OrderScheduleCardComponent extends Component {
                                 fallbackEditButton.click();
                             }
                         }
-                    }, 100); // Small delay to ensure modal closes first
+                    }, 300); // Longer delay to ensure order is properly restored
                 },
             });
         }
