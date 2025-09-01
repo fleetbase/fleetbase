@@ -82,10 +82,10 @@ class ShiftAssignmentService
             $resources = $this->generateResourcesArray($drivers, $start, $end);
             
             // Get real orders as dated shifts
-            $datedShifts = $this->getOrdersAsShifts($start, $end, $companyUuid, $timezone);
+            $datedShifts = $this->getOrdersAsShifts($start, $end, $timezone, $companyUuid);
             
             // Get pre-assigned shifts (orders that already have a driver assigned within dates)
-            $preAssignedShifts = $this->getPreAssignedShifts($start, $end, $companyUuid, $timezone);
+            $preAssignedShifts = $this->getPreAssignedShifts($start, $end, $timezone, $companyUuid);
 
             // Build previous allocation data matrix by resource and date
             $previousAllocationData = $this->getPreviousAllocationData($start, $end, $companyUuid, $resources, $dates, $timezone);
@@ -120,6 +120,13 @@ class ShiftAssignmentService
     public function applyAllocatedResources(array $allocatedResources, ?string $timezone = null, array $uncoveredShifts = []): array
     {
         $timezone = $timezone ?: config('app.timezone', 'UTC');
+        
+        // Validate timezone
+        if (!in_array($timezone, timezone_identifiers_list())) {
+            throw new \InvalidArgumentException('Invalid timezone: ' . $timezone);
+        }
+        
+        \Log::info('Applying allocations with timezone: ' . $timezone);
         $updatedOrders = [];
         $skippedAssignments = 0;
         $errors = [];
@@ -165,8 +172,25 @@ class ShiftAssignmentService
                 }
 
                 try {
-                    // Combine date and time, interpret in provided timezone then convert to UTC for storage
-                    $localDateTime = Carbon::parse($date . ' ' . $startTime, $timezone);
+                    // Parse start_time - it may already contain the full date and time
+                    $localDateTime = null;
+                    if (strpos($startTime, ' ') !== false) {
+                        // start_time already contains date and time, parse it directly
+                        try {
+                            $localDateTime = Carbon::parse($startTime, $timezone);
+                            \Log::info("Parsing start_time directly: {$startTime} in timezone {$timezone}");
+                        } catch (\Exception $parseError) {
+                            throw new \Exception("Invalid start_time format '{$startTime}': " . $parseError->getMessage());
+                        }
+                    } else {
+                        // start_time is just time, combine with date
+                        try {
+                            $localDateTime = Carbon::parse($date . ' ' . $startTime, $timezone);
+                            \Log::info("Combining date and time: {$date} {$startTime} in timezone {$timezone}");
+                        } catch (\Exception $parseError) {
+                            throw new \Exception("Invalid time format '{$startTime}' for date '{$date}': " . $parseError->getMessage());
+                        }
+                    }
                     $scheduledAtUtc = $localDateTime->clone()->setTimezone('UTC');
 
                     // Resolve order by public_id then uuid
@@ -187,13 +211,45 @@ class ShiftAssignmentService
                         continue;
                     }
 
-                    // Update only driver assignment
+                    // Update driver assignment and scheduling
                     $updates = [];
                     if ($driver) {
                         $updates['driver_assigned_uuid'] = $driver->uuid;
                         \Log::info("Updating order {$order->public_id} with driver {$driver->uuid}");
                     } else {
                         \Log::warning("No driver found for resource_id '{$resourceId}' or resource_name '{$resourceName}', skipping driver assignment for order {$order->public_id}");
+                    }
+
+                    // Update scheduled time if start_time is provided
+                    if ($startTime) {
+                        $updates['scheduled_at'] = $scheduledAtUtc;
+                        \Log::info("Updating order {$order->public_id} scheduled time to {$scheduledAtUtc->format('Y-m-d H:i:s')} UTC");
+                    }
+
+                    // Update estimated end time if end_time is provided
+                    $endTime = $assignment['end_time'] ?? null;
+                    if ($endTime) {
+                        $endDateTime = null;
+                        if (strpos($endTime, ' ') !== false) {
+                            // end_time already contains date and time, parse it directly
+                            try {
+                                $endDateTime = Carbon::parse($endTime, $timezone);
+                                \Log::info("Parsing end_time directly: {$endTime} in timezone {$timezone}");
+                            } catch (\Exception $parseError) {
+                                throw new \Exception("Invalid end_time format '{$endTime}': " . $parseError->getMessage());
+                            }
+                        } else {
+                            // end_time is just time, combine with date
+                            try {
+                                $endDateTime = Carbon::parse($date . ' ' . $endTime, $timezone);
+                                \Log::info("Combining date and end_time: {$date} {$endTime} in timezone {$timezone}");
+                            } catch (\Exception $parseError) {
+                                throw new \Exception("Invalid end_time format '{$endTime}' for date '{$date}': " . $parseError->getMessage());
+                            }
+                        }
+                        $estimatedEndUtc = $endDateTime->clone()->setTimezone('UTC');
+                        $updates['estimated_end_date'] = $estimatedEndUtc;
+                        \Log::info("Updating order {$order->public_id} estimated end time to {$estimatedEndUtc->format('Y-m-d H:i:s')} UTC");
                     }
 
                     if (!empty($updates)) {
@@ -628,7 +684,7 @@ class ShiftAssignmentService
      * @param string $timezone
      * @return array
      */
-    private function getOrdersAsShifts($start, $end, ?string $companyUuid = null, string $timezone): array
+    private function getOrdersAsShifts($start, $end, string $timezone, ?string $companyUuid = null): array
     {
         try {
             \Log::info('Getting orders as shifts with company_uuid: ' . ($companyUuid ?? 'null') . ' and timezone: ' . $timezone);
@@ -721,7 +777,7 @@ class ShiftAssignmentService
      * @param string $timezone
      * @return array
      */
-    private function getPreAssignedShifts($start, $end, ?string $companyUuid = null, string $timezone): array
+    private function getPreAssignedShifts($start, $end, string $timezone, ?string $companyUuid = null): array
     {
         try {
             \Log::info('Getting pre-assigned shifts with company_uuid: ' . ($companyUuid ?? 'null') . ' and timezone: ' . $timezone);
