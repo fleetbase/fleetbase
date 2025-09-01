@@ -63,7 +63,7 @@ export default class ExportFormComponent extends Component {
         // Check if toDate is selected without fromDate
         if (this.toDate && !this.fromDate) {
             this.dateError = true;
-            this.notifications.error(this.intl.t('common.please_select_from_date'));
+            this.notifications.error(this.intl.t('common.please-select-from-date'));
             return;
         }
         
