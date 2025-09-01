@@ -36,11 +36,11 @@ export default class AutoAllocationPickerComponent extends Component {
         }
     }
 
-    get minDate() {
+    // get minDate() {
         
-        const now = new Date();
-        return new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
-    }
+    //     const now = new Date();
+    //     return new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
+    // }
 
     // Instance-only pretty display: 'dd MMM- dd MMM, yyyy'
     get prettyDateRange() {
