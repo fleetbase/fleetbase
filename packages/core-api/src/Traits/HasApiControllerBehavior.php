@@ -1274,6 +1274,7 @@ trait HasApiControllerBehavior
                 ->exists();
                 $vehicleUnavailable = LeaveRequest::where('vehicle_uuid', $vehicle_uuid)
                 ->whereNull('deleted_at')
+                ->where('company_uuid', session('company'))
                 ->where('unavailability_type', 'vehicle')
                 ->where(function ($query) use ($orderStartDate, $orderEndDate) {
                     $query->where(function ($q) use ($orderStartDate, $orderEndDate) {
@@ -1285,7 +1286,7 @@ trait HasApiControllerBehavior
             
                 if ($vehicleUnavailable || $activeOrder) {
                     $message = $vehicleUnavailable
-                        ? 'Vehicle is under maintenance during this time period.'
+                        ? 'This vehicle is currently under maintenance and cannot be assigned to an order'
                         : 'Vehicle is already assigned to another order during this time period.';
                 
                     return [
