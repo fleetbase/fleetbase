@@ -15,6 +15,10 @@ class RoleFilter extends Filter
                 $query->where('company_uuid', $this->session->get('company'))->orWhereNull('company_uuid');
             }
         );
+
+         if ($this->request->boolean('limit_basic')) {
+            $this->builder->whereIn('name', ['Driver', 'Administrator']);
+        }
     }
 
     public function query(?string $query)

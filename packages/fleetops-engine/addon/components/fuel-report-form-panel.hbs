@@ -70,7 +70,7 @@
                     @triggerClass="form-select form-input vehicle" @infiniteScroll={{false}} @renderInPlace={{true}}
                     @onChange={{fn (mut this.fuelReport.vehicle)}} @onChangeId={{fn (mut this.fuelReport.vehicle_uuid)}}
                     @disabled={{unauthorized}} as |model|>
-                    {{model.display_name}}
+                    {{model.plate_number}}
                 </ModelSelect>
             </InputGroup>
             {{!-- <InputGroup @name={{t "fleet-ops.common.status" }}>

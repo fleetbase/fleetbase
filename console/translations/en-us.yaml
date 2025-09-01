@@ -129,7 +129,7 @@ common:
   new-order: New Order
   submit: Submit
   new-field: New Field
-  to: to
+  to: To
   confirm-action:
     single: Are you sure you want to {verb} this record?
     multiple: Are you sure you want to {verb} these records?
@@ -152,6 +152,8 @@ common:
   try-again: Try Again
   trip-length: Trip Length
   trip-length-placeholder: Enter trip length in hours
+  trip_length_invalid: Trip length must be a positive number greater than 0
+  please-select-from-date: Please select the From Date before selecting the To Date
 leaves:
   driver_name: Driver Name
   start_date: Start Date
@@ -1345,6 +1347,9 @@ fleet-ops:
         file-size: File Size
         upload-date: Upload Date
         import-failed: Import Failed
+        import-partially-success: Import Partially Successful
+        successful-imports: Successfully imported records
+        errors: Failed records
         import-failed-message: No trips were imported due to errors. Please review the attached error log for details.
         error-log-instruction: Some issues were found in your file. Click below to download details and fix them before trying again.
       place-import:
@@ -1427,6 +1432,7 @@ fleet-ops:
         message: You are attempting to uninstall the extension "{options}". Are you sure you wish to proceed with this uninstallation?
         sub-message: All configuration and customized settings will be lost.
       vehicle-details:
+        fleet: Fleet
         make: Make
         model: Model
         year: Year
@@ -1580,11 +1586,11 @@ fleet-ops:
         end-date-required: End Date is required.
         end-date-earlier: End Date cannot be earlier than the Start Date.
         assign-vehicle: Assign Vehicle?
-        assign-vehicle-busy-text: The vehicle {vehicleName} is <strong>currently assigned to another active order</strong>. Are you sure you want to assign it to order {orderId}?
-        assign-driver-busy-text: The driver {driverName} is <strong>currently assigned to another active order</strong>. Are you sure you want to assign it to order {orderId}?
+        assign-vehicle-busy-text: The vehicle {vehicleName} <strong>{availability}</strong>. Are you sure you want to assign it to order {orderId}?
+        assign-driver-busy-text: The driver {driverName} <strong>{availability}</strong>. Are you sure you want to assign it to order {orderId}?
         assign-anyway: Continue with Assignment
         assign-driver-vehicle: Assign Driver & Vehicle?
-        assign-driver-vehicle-busy-text: The driver {driverName} and the vehicle {vehicleName} <strong>are currently assigned to another active order</strong>. Do you still want to assign Order {orderId} to them?
+        assign-driver-vehicle-busy-text: The driver {driverName} <strong>{driverAvailability}</strong> and the vehicle {vehicleName} <strong>{vehicleAvailability}</strong>. Do you still want to assign Order {orderId} to them?
     widget:
       fleet-ops-quickstart:
         message: Let's see what you can do to jumpstart operations...
@@ -1979,6 +1985,9 @@ fleet-ops:
       name-text: This setting determines the default distance in meters adhoc orders should ping drivers within vicinity of the order pickup point.
       message: Distance must be in meters
     vehicle-form-panel:
+      fleet: Fleet
+      fleet-text: Assign a fleet to this vehicle.
+      fleet-required: At least one fleet must be selected.
       success-message: Vehicle ({vehicleName}) saved successfully.
       view-details: View vehicle details
       save-vehicle: Save Vehicle
@@ -2412,6 +2421,9 @@ fleet-ops:
           payload: Payload
           items-drop: Items drop at
           tracking: Tracking
+          current-destination: Current Destination
+          current-eta: Current ETA
+          current-ect: Current ECT
           waypoint-actions: Waypoint Actions
           get-label: Get Label
           view-activity: View Activity
@@ -2433,6 +2445,7 @@ fleet-ops:
           assign-success: '{orderId} assigned driver updated.'
           order-title: Order Label
           waypoint-title: Waypoint Label
+          click-to-copy: Click to copy
           proof-of-delivery: Proof of Delivery
           notes-placeholder: Enter order notes here....
           save-order-note: Save Order Note
@@ -2445,6 +2458,8 @@ fleet-ops:
             no-order-installed: No order configurations installed!
             you-have-no-configs: You currently have no order configs installed, check at the extensions to install an order configuration to get started.
             view-extensions: View extensions
+        trip-id: Trip ID
+        block-id: Block ID
       route-segments:
         order-id: Order Id
         title: Route Segments

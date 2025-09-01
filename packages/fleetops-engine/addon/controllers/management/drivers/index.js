@@ -242,8 +242,8 @@ export default class ManagementDriversIndexController extends BaseController {
                         this.notifications.serverError(error);
                     });
             },
-            valuePath: 'vehicleDisplayName',
-            modelNamePath: 'vehicleDisplayName',
+            valuePath: 'vehicle.plate_number',
+            modelNamePath: 'vehicle.plate_number',
             resizable: true,
             width: '180px',
             filterable: true,
@@ -254,20 +254,20 @@ export default class ManagementDriversIndexController extends BaseController {
         },
         {
             label: this.intl.t('fleet-ops.common.fleet'),
-            cellComponent: 'table/cell/link-list',
-            cellComponentLabelPath: 'name',
-            action: (fleet) => {
-                this.contextPanel.focus(fleet);
-            },
-            valuePath: 'fleets',
+            // cellComponent: 'table/cell/link-list',
+            // cellComponentLabelPath: 'name',
+            // action: (fleet) => {
+            //     this.contextPanel.focus(fleet);
+            // },
+            valuePath: 'fleet.name',
             width: '180px',
             resizable: true,
             hidden: true,
             filterable: true,
-            filterComponent: 'filter/model',
-            filterComponentPlaceholder: this.intl.t('fleet-ops.common.select-fleet'),
-            filterParam: 'fleet',
-            model: 'fleet',
+            // filterComponent: 'filter/model',
+            // filterComponentPlaceholder: this.intl.t('fleet-ops.common.select-fleet'),
+            // filterParam: 'fleet',
+            // model: 'fleet',
         },
         {
             label: this.intl.t('fleet-ops.common.license'),
@@ -488,28 +488,6 @@ export default class ManagementDriversIndexController extends BaseController {
             }
         };
     
-        this.crud.import('driver', {
-            onImportCompleted: () => {
-                results = this.fetch.post('drivers/import', { files });
-                
-                // Handle error log case
-                if (results && results.error_log_url) {
-                    handleErrorLogDownload(this, modal, results);
-                    return;
-                }
-                this.hostRouter.refresh();
-            },
-            confirm: (modal) => {
-                // Check if we're in error state (download mode)
-                const isErrorState = this.modalsManager.getOption('isErrorState');
-                if (isErrorState) {
-                    downloadErrorLog(modal);
-                } else {
-                    originalConfirm(modal);
-                }
-            },
-        });
-    
         const originalConfirm = async (modal) => {
             const uploadQueue = this.modalsManager.getOption('uploadQueue');
             const uploadedFiles = [];
@@ -559,6 +537,8 @@ export default class ManagementDriversIndexController extends BaseController {
                     handleErrorLogDownload(this, modal, results);
                     return;
                 }
+                 // Success case - process the results, passing onImportSuccess callback
+            handleSuccessfulImport(this, results, modal, this.onImportSuccess.bind(this));
             } catch (error) {
                 console.error('Import failed:', error);
                 modal.stopLoading();
@@ -567,14 +547,12 @@ export default class ManagementDriversIndexController extends BaseController {
                 this.modalsManager.setOption('uploadQueue', []);
                 this.modalsManager.setOption('acceptButtonText', this.intl.t('fleet-ops.component.modals.order-import.start-upload-button'));
                 this.modalsManager.setOption('acceptButtonIcon', 'upload');
-                // this.modalsManager.setOption('acceptButtonScheme', 'magic');
+                this.modalsManager.setOption('acceptButtonScheme', 'magic');
                 this.modalsManager.setOption('acceptButtonDisabled', true);
                 this.modalsManager.setOption('isProcessing', false);
                 this.notifications.serverError(error);
             }
     
-            // Success case - process the results, passing onImportSuccess callback
-            handleSuccessfulImport(this, results, modal, this.onImportSuccess.bind(this));
         };
     
         const downloadErrorLog = (modal) => {

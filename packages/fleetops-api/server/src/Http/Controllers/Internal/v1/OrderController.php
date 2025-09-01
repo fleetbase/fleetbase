@@ -422,14 +422,14 @@ class OrderController extends FleetOpsController
             ]);
         }
     }
-    $this->logImportResult($file->uuid, 'order', 'COMPLETED', null);
-    return response([
-        'succeed' => true,
-        'message' => "Import completed successfully. {$totalCreatedOrders} trips created, {$totalUpdatedOrders} trips updated.",
-        'created_orders' => $totalCreatedOrders,
-        'updated_orders' => $totalUpdatedOrders,
-        'total_processed' => $totalSuccessfulImports
-    ]);
+         $this->logImportResult($file->uuid, 'order', 'COMPLETED', null);
+     return response([
+         'succeed' => true,
+         'message' => "Import completed successfully. {$totalCreatedOrders} trips created, {$totalUpdatedOrders} trips updated.",
+         'created_orders' => $totalCreatedOrders,
+         'updated_orders' => $totalUpdatedOrders,
+         'total_processed' => $totalSuccessfulImports
+     ]);
 }
     /**
      * Updates a order to canceled and updates order activity.
@@ -998,51 +998,38 @@ class OrderController extends FleetOpsController
                 return $row;
             });
 
-            $grouped = $sheetRowsWithIndex->groupBy(fn ($row) => $row['trip_id'] ?? Str::uuid());
+            $grouped = $sheetRowsWithIndex->groupBy(fn ($row) => $row['block_id'] ?? Str::uuid());
 
-            foreach ($grouped as $tripId => $rows) {
-                // Use database transaction for each trip
-                DB::beginTransaction();
-                try {
-                    $firstRow = $rows[0]; // or $firstRow = $rows->first();
-                    $yardArrivalDates = [];
-                    $routeRows = [];
-                    $tripHasErrors = false;
+                            foreach ($grouped as $blockId => $rows) {
+                    // Use database transaction for each block
+                    DB::beginTransaction();
+                    try {
+                        $firstRow = $rows[0]; // or $firstRow = $rows->first();
+                        $yardArrivalDates = [];
+                        $routeRows = [];
+                        $blockHasErrors = false;
 
-                    // PRE-VALIDATION: Check for duplicate Order id & VR IDs before processing
-                    $trip_id = $rows[0]['trip_id'] ?? null;
-                    if (empty($trip_id)) {
-                        $originalRowIndex = $rows[0]['_original_row_index'] ?? 0;
-                        $importErrors[] = [
-                            (string)($originalRowIndex + 1),
-                            "Trip ID is required.",
-                            ""
-                        ];
-                        DB::rollback();
-                        continue;
-                    }
-
-                    // Check duplicates for trip_id
-                    if (!empty($trip_id)) {
-                        $exists = Order::where('public_id', $trip_id)
-                            ->where('company_uuid', session('company'))
-                            ->whereNull('deleted_at')
-                            ->exists();
-
-                        if ($exists) {
-                            // Add error for each row with this trip_id
-                            foreach ($rows as $row) {
-                                $originalRowIndex = $row['_original_row_index'] ?? 0;
-                                $importErrors[] = [
-                                    (string)($originalRowIndex + 1),
-                                    "Trip ID '{$trip_id}' already exists.",
-                                    (string)$tripId
-                                ];
-                            }
+                        // PRE-VALIDATION: Check for duplicate Order id & VR IDs before processing
+                        $block_id = $rows[0]['block_id'] ?? null;
+                        if (empty($block_id)) {
+                            $originalRowIndex = $rows[0]['_original_row_index'] ?? 0;
+                            $importErrors[] = [
+                                (string)($originalRowIndex + 2), // +2 to include header row
+                                "Block ID is missing.",
+                                ""
+                            ];
                             DB::rollback();
                             continue;
                         }
-                    }
+
+                        // Check if block_id already exists - if yes, we'll update instead of create
+                        $existingOrder = null;
+                        if (!empty($block_id)) {
+                            $existingOrder = Order::where('public_id', $block_id)
+                                ->where('company_uuid', session('company'))
+                                ->whereNull('deleted_at')
+                                ->first();
+                        }
 
                     // Collect all VR IDs from all rows first
                     $vrIds = [];
@@ -1055,28 +1042,14 @@ class OrderController extends FleetOpsController
                         }
                     }
 
-                    // Check for existing VR IDs
+                    // Check for existing VR IDs - we'll collect them for potential updates
+                    $existingVrIds = [];
                     if (!empty($vrIds)) {
                         $existingVrIds = RouteSegment::whereIn('public_id', $vrIds)
                             ->where('company_uuid', session('company'))
                             ->whereNull('deleted_at')
                             ->pluck('public_id')
                             ->toArray();
-                        
-                        if (!empty($existingVrIds)) {
-                            // Add error for each existing VR ID
-                            foreach ($existingVrIds as $existingVrId) {
-                                $originalRowIndex = $vrIdToRowIndex[$existingVrId] ?? 0;
-                                $importErrors[] = [
-                                    (string)($originalRowIndex + 1),
-                                    "VR ID '{$existingVrId}' already exists.",
-                                    (string)$tripId
-                                ];
-                            }
-                            $tripHasErrors = true;
-                            DB::rollback();
-                            continue;
-                        }
                     }
 
                     // Validate facility_sequence for each row
@@ -1088,44 +1061,61 @@ class OrderController extends FleetOpsController
                             if (count($facilities) > 2) {
                                 $originalRowIndex = $row['_original_row_index'] ?? 0;
                                 $importErrors[] = [
-                                    (string)($originalRowIndex + 1),
-                                    "Trip {$tripId}: Facility sequence has " . count($facilities) . " items. Only 2 are imported. Sequence: " . implode(' -> ', $facilities),
-                                    (string)$tripId
+                                    (string)($originalRowIndex + 2), // +2 to include header row
+                                    "Block {$blockId}: Facility sequence has " . count($facilities) . " items. Only 2 are imported. Sequence: " . implode(' -> ', $facilities),
+                                    (string)$blockId
                                 ];
-                                $tripHasErrors = true;
+                                $blockHasErrors = true;
                             }
-                            // Check if first and second facility are the same
+                            /*Check if first and second facility are the same
                             if (count($facilities) >= 2 && $facilities[0] === $facilities[1]) {
                                 $originalRowIndex = $row['_original_row_index'] ?? 0;
                                 $importErrors[] = [
-                                    (string)($originalRowIndex + 1),
-                                    "Trip {$tripId}: First and second facility in sequence are the same ('{$facilities[0]}'). Sequence: " . implode(' -> ', $facilities),
-                                    (string)$tripId
+                                    (string)($originalRowIndex + 2), // +2 to include header row
+                                    "Block {$blockId}: First and second facility in sequence are the same ('{$facilities[0]}'). Sequence: " . implode(' -> ', $facilities),
+                                    (string)$blockId
                                 ];
-                                $tripHasErrors = true;
-                            }
+                                $blockHasErrors = true;
+                            }*/
                         }
+                        /*                        if (
+                            isset($row['stop_1'], $row['stop_2']) && // both keys exist
+                            !empty($row['stop_1']) &&
+                            !empty($row['stop_2']) &&
+                            $row['stop_1'] === $row['stop_2']
+                        ) {
+                            $originalRowIndex = $row['_original_row_index'] ?? 0;
+                            $importErrors[] = [
+                                (string)($originalRowIndex + 2), // +2 to account for header row
+                                "Block {$blockId}: Stop 1 and Stop 2 are the same",
+                                (string)$blockId
+                            ];
+
+                            $blockHasErrors = true;
+                        }*/
                     }
-                    if ($tripHasErrors) {
+                    if ($blockHasErrors) {
                         DB::rollback();
                         continue;
                     }
                     // NEW LOGIC: Build proper waypoint sequence without duplicates
                     $uniqueWaypointSequence = [];
 
-                    if (count($rows) === 1) {
-                        // Single-row trip: simple case
-                        $row = $rows[0];
-                        $stop1 = $row['stop_1'] ?? null;
-                        $stop2 = $row['stop_2'] ?? null;
-                        
-                        if ($stop1) $uniqueWaypointSequence[] = $stop1;
-                        if ($stop2 && $stop2 !== $stop1) $uniqueWaypointSequence[] = $stop2;
-                        
-                        $row['_original_row_index'] = $row['_original_row_index'] ?? 0;
-                        $routeRows[] = $row;
-                    } else {
-                        // Multi-row trip: build chain by following route connections
+                                         if (count($rows) === 1) {
+                         // Single-row block: simple case
+                         $row = $rows[0];
+                         $stop1 = $row['stop_1'] ?? null;
+                         $stop2 = $row['stop_2'] ?? null;
+                         
+                         // Always add both stops, even if they're the same
+                         // This ensures we create separate waypoint records for pickup and dropoff
+                         if ($stop1) $uniqueWaypointSequence[] = $stop1;
+                         if ($stop2) $uniqueWaypointSequence[] = $stop2;
+                         
+                         $row['_original_row_index'] = $row['_original_row_index'] ?? 0;
+                         $routeRows[] = $row;
+                     } else {
+                        // Multi-row block: build chain by following route connections
                         $routeMap = [];
                         $allStops = [];
                         
@@ -1138,13 +1128,13 @@ class OrderController extends FleetOpsController
                                     try {
                                         $yardArrivalDates[] = $this->parseExcelDate($value);
                                     } catch (\Exception $e) {
-                                        $displayRowIndex = $originalRowIndex + 1;
+                                        $displayRowIndex = $originalRowIndex + 2; // +2 to include header row
                                         $importErrors[] = [
                                             (string)$displayRowIndex,
                                             "Invalid date format for column '{$key}'",
-                                            (string)$tripId
+                                            (string)$blockId
                                         ];
-                                        $tripHasErrors = true;
+                                        $blockHasErrors = true;
                                         continue;
                                     }
                                 }
@@ -1163,7 +1153,7 @@ class OrderController extends FleetOpsController
                             $routeRows[] = $row;
                         }
                         
-                        if ($tripHasErrors) {
+                        if ($blockHasErrors) {
                             DB::rollback();
                             continue;
                         }
@@ -1191,41 +1181,68 @@ class OrderController extends FleetOpsController
                         foreach ($allUniquePlaceCodes as $placeCode) {
                             if (!$placesByCode->has($placeCode)) {
                                 $rowIndex = isset($placeCodeToRowIndex[$placeCode]) 
-                                ? (string)($placeCodeToRowIndex[$placeCode] + 1) 
+                                ? (string)($placeCodeToRowIndex[$placeCode] + 2) // +2 to include header row
                                 : '-';
                                 $importErrors[] = [
                                     $rowIndex,
-                                    "Invalid place code '{$placeCode}' in trip",
-                                    (string)$tripId
+                                    "Invalid place code '{$placeCode}' in block",
+                                    (string)$blockId
                                 ];
-                                $tripHasErrors = true;
+                                $blockHasErrors = true;
                             }
                         }
                         
-                        if ($tripHasErrors) {
+                        if ($blockHasErrors) {
                             DB::rollback();
                             continue;
                         }
                         
-                        // Build the correct sequence by following the route chain
-                        $uniqueWaypointSequence = $this->buildWaypointSequence($routeMap);
-                        
-                        if (empty($uniqueWaypointSequence)) {
-                            $firstRowIndex = ($rows[0]['_original_row_index'] ?? 0) + 1;
-                            $importErrors[] = [
-                               (string)$firstRowIndex,
-                                "Trip {$tripId}: Could not determine waypoint sequence from routes",
-                                (string)$tripId
-                            ];
-                            DB::rollback();
-                            continue;
-                        }
+                                                 // Build the correct sequence by following the route chain
+                         $uniqueWaypointSequence = $this->buildWaypointSequence($routeMap);
+                         
+                         if (empty($uniqueWaypointSequence)) {
+                             $firstRowIndex = ($rows[0]['_original_row_index'] ?? 0) + 2; // +2 to include header row
+                             $importErrors[] = [
+                                (string)$firstRowIndex,
+                                 "Block {$blockId}: Could not determine waypoint sequence from routes",
+                                 (string)$blockId
+                             ];
+                             DB::rollback();
+                             continue;
+                         }
+                         
+                         // Ensure we have unique waypoints in sequence, even if same place appears multiple times
+                         $finalWaypointSequence = [];
+                         foreach ($uniqueWaypointSequence as $placeCode) {
+                             $finalWaypointSequence[] = $placeCode;
+                         }
+                         $uniqueWaypointSequence = $finalWaypointSequence;
                         
                     }
 
-                    // FIXED DATE LOGIC: Get scheduled_at from FIRST row's cpt
+                    // FIXED DATE LOGIC: Get scheduled_at from FIRST row's stop_1_yard_arrival, fallback to cpt if empty
                     $scheduledAt = null;
-                    if (!empty($firstRow['cpt'])) {
+                    if (!empty($firstRow['stop_1_yard_arrival'])) {
+                        try {
+                            $parsedDate = $this->parseExcelDate($firstRow['stop_1_yard_arrival']);
+                            // Ensure it's a Carbon instance
+                            if (!empty($parsedDate)) {
+                                $scheduledAt = $parsedDate instanceof Carbon
+                                    ? $parsedDate
+                                    : Carbon::parse($parsedDate);
+                            }
+                        } catch (\Exception $e) {
+                            Log::warning('Failed to parse stop_1_yard_arrival from first row', [
+                                'block_id' => $blockId,
+                                'stop_1_yard_arrival_value' => $firstRow['stop_1_yard_arrival'],
+                                'error' => $e->getMessage()
+                            ]);
+                            $scheduledAt = null;
+                        }
+                    }
+
+                    // If no stop_1_yard_arrival in first row, check cpt as fallback
+                    if (!$scheduledAt && !empty($firstRow['cpt'])) {
                         try {
                             $parsedDate = $this->parseExcelDate($firstRow['cpt']);
                             // Ensure it's a Carbon instance
@@ -1236,7 +1253,7 @@ class OrderController extends FleetOpsController
                             }
                         } catch (\Exception $e) {
                             Log::warning('Failed to parse cpt from first row', [
-                                'trip_id' => $tripId,
+                                'block_id' => $blockId,
                                 'cpt_value' => $firstRow['cpt'],
                                 'error' => $e->getMessage()
                             ]);
@@ -1244,7 +1261,25 @@ class OrderController extends FleetOpsController
                         }
                     }
 
-                    // If no cpt in first row, look for any cpt in the trip as fallback
+                    // If still no scheduled_at, look for any stop_1_yard_arrival in the block as fallback
+                    if (!$scheduledAt) {
+                        foreach ($rows as $row) {
+                            if (!empty($row['stop_1_yard_arrival'])) {
+                                try {
+                                    $scheduledAt = $this->parseExcelDate($row['stop_1_yard_arrival']);
+                                    // Ensure it's a Carbon instance
+                                    if (is_string($scheduledAt)) {
+                                        $scheduledAt = Carbon::parse($scheduledAt);
+                                    }
+                                    break;
+                                } catch (\Exception $e) {
+                                    continue;
+                                }
+                            }
+                        }
+                    }
+
+                    // Final fallback: look for any cpt in the block
                     if (!$scheduledAt) {
                         foreach ($rows as $row) {
                             if (!empty($row['cpt'])) {
@@ -1276,11 +1311,29 @@ class OrderController extends FleetOpsController
                             }
                         } catch (\Exception $e) {
                             Log::warning('Failed to parse stop_2_yard_arrival from last row', [
-                                'trip_id' => $tripId,
+                                'block_id' => $blockId,
                                 'stop_2_yard_arrival_value' => $lastRow['stop_2_yard_arrival'],
                                 'error' => $e->getMessage()
                             ]);
                         }
+                    }
+                      
+                    if(empty($estimatedEndDate) && !empty($lastRow['stop_2_yard_departure'])) {
+                        try {
+                            $estimatedEndDate = $this->parseExcelDate($lastRow['stop_2_yard_departure']);
+                            // Ensure it's a Carbon instance
+                            if (is_string($estimatedEndDate)) {
+                                $estimatedEndDate = Carbon::parse($estimatedEndDate);
+                            }
+                        } catch (\Exception $e) {
+                            Log::warning('Failed to parse stop_2_yard_departure from last row', [
+                                'block_id' => $blockId,
+                                'stop_2_yard_departure_value' => $lastRow['stop_2_yard_departure'],
+                                'error' => $e->getMessage()
+                            ]);
+                        }
+                        
+                        
                     }
                     
                     // Fallback: use the latest yard arrival date if stop_2_yard_arrival is empty or failed to parse
@@ -1312,82 +1365,101 @@ class OrderController extends FleetOpsController
                     //         ->value('uuid');
                     // }
 
-                    $orderInput = [
-                        'order' => [
-                            'internal_id' => $firstRow['block_id'] ?? null,
-                            'public_id' => $tripId,
-                            'status' => strtolower($firstRow['status'] ?? 'created'),
-                            'type' => 'transport',
-                            'scheduled_at' => $scheduledAt,
-                            'estimated_end_date' => $estimatedEndDate,
-                            'carrier' => $carrier,
-                            'sub_carrier' => $subcarrier,
-                            'bid_id' => $firstRow['bid_id'] ?? null,
-                            // Convert 'yes' to 1, anything else to 0/null
-                            'spot_work' => (isset($firstRow['spot_work']) && strtolower(trim($firstRow['spot_work'])) === 'yes') ? 1 : 0,
-                            // 'meta' => [
-                            //     'vehicle_id' => $firstRow['vehicle_id'] ?? null,
-                            //     'carrier' => $firstRow['carrier'] ?? null,
-                            //     'subcarrier' => $firstRow['subcarrier'] ?? null,
-                            //     'equipment_type' => $firstRow['equipment_type'] ?? null,
-                            //     'cpt' => $firstRow['cpt'] ?? null
-                            // ],
-                            'payload' => [
-                                'waypoints' => []
-                            ]
-                        ]
+                    // Prepare order data
+                    $orderData = [
+                        'trip_id' => $firstRow['trip_id'] ?? null,
+                        'public_id' => $firstRow['block_id'] ?? null,
+                        'status' => strtolower($firstRow['status'] ?? 'created'),
+                        'type' => 'transport',
+                        'scheduled_at' => $scheduledAt,
+                        'estimated_end_date' => $estimatedEndDate,
+                        'carrier' => $carrier,
+                        'sub_carrier' => $subcarrier,
+                        'bid_id' => $firstRow['bid_id'] ?? null,
+                        'spot_work' => (isset($firstRow['spot_work']) && strtolower(trim($firstRow['spot_work'])) === 'yes') ? 1 : 0,
                     ];
-
-                    $orderRequest = new Request();
-                    $orderRequest->merge($orderInput);
-
-                    $order = $this->model->createRecordFromRequest(
-                        $orderRequest,
-                        function ($request, &$input) {
-                            if (!isset($input['order_config_uuid'])) {
-                                $defaultOrderConfig = OrderConfig::where('key', 'transport')
-                                    ->where('company_uuid', session('company'))
-                                    ->whereNull('deleted_at')
-                                    ->first();
-                                if ($defaultOrderConfig) {
-                                    $input['order_config_uuid'] = $defaultOrderConfig->uuid;
-                                }
+                    if ($existingOrder) {
+                        // Update existing order
+                        $existingOrder->update($orderData);
+                        $order = $existingOrder;
+                        
+                        // Update fleet assignment
+                        if($order->scheduled_at && $order->estimated_end_date) {
+                            $start = Carbon::parse($order->scheduled_at);
+                            $end = Carbon::parse($order->estimated_end_date);
+                            $hours = $start->floatDiffInHours($end);
+                            $matchedFleet = $fleets->firstWhere('trip_length', '>=', $hours);
+                            if (!$matchedFleet) {
+                                $matchedFleet = $fleets->last();
                             }
-                        },
-                        function (&$request, Order &$order, &$requestInput) use ($fleets) {
-                            $input = $request->input('order');
-                            
-                            if($order->scheduled_at && $order->estimated_end_date) {
-                                $start = Carbon::parse($order->scheduled_at);
-                                $end = Carbon::parse($order->estimated_end_date);
-                                // Calculate the hours (decimal value, e.g., 9.67)
-                                $hours = $start->floatDiffInHours($end);
-                                // Find the first fleet where trip_length >= hours
-                                $matchedFleet = $fleets->firstWhere('trip_length', '>=', $hours);
-                                // If none found, pick the fleet with the largest trip_length
-                                if (!$matchedFleet) {
-                                    $matchedFleet = $fleets->last();
-                                }
-                                // Assign fleet_uuid
-                                $order->fleet_uuid = $matchedFleet?->uuid ?? null;
-                            }
-                            else{
-                                $order->fleet_uuid = null;
-                            }
-                            $order->save();
-                            //Fleet calculation logic
-
-                            $payload = new Payload([
-                                'company_uuid' => session('company'),
-                                'type' => 'transport'
-                            ]);
-                            $payload->save();
-
-                            $order->payload_uuid = $payload->uuid;
-                            $order->status = $input['status'] ?? 'created';
-                            $order->save();
+                            $order->fleet_uuid = $matchedFleet?->uuid ?? null;
+                        } else {
+                            $order->fleet_uuid = null;
                         }
-                    );
+                        $order->save();
+                        
+                        // Delete existing waypoints and route segments for this order
+                        if ($order->payload_uuid) {
+                            Waypoint::where('payload_uuid', $order->payload_uuid)->delete();
+                            RouteSegment::where('payload_id', $order->payload_uuid)->delete();
+                        }
+                        
+                        $updatedOrders[] = $order;
+                    } else {
+                        // Create new order
+                        $orderInput = [
+                            'order' => array_merge($orderData, [
+                                'payload' => ['waypoints' => []]
+                            ])
+                        ];
+
+                        $orderRequest = new Request();
+                        $orderRequest->merge($orderInput);
+
+                        $order = $this->model->createRecordFromRequest(
+                            $orderRequest,
+                            function ($request, &$input) {
+                                if (!isset($input['order_config_uuid'])) {
+                                    $defaultOrderConfig = OrderConfig::where('key', 'transport')
+                                        ->where('company_uuid', session('company'))
+                                        ->whereNull('deleted_at')
+                                        ->first();
+                                    if ($defaultOrderConfig) {
+                                        $input['order_config_uuid'] = $defaultOrderConfig->uuid;
+                                    }
+                                }
+                            },
+                            function (&$request, Order &$order, &$requestInput) use ($fleets) {
+                                $input = $request->input('order');
+                                
+                                if($order->scheduled_at && $order->estimated_end_date) {
+                                    $start = Carbon::parse($order->scheduled_at);
+                                    $end = Carbon::parse($order->estimated_end_date);
+                                    $hours = $start->floatDiffInHours($end);
+                                    $matchedFleet = $fleets->firstWhere('trip_length', '>=', $hours);
+                                    if (!$matchedFleet) {
+                                        $matchedFleet = $fleets->last();
+                                    }
+                                    $order->fleet_uuid = $matchedFleet?->uuid ?? null;
+                                } else {
+                                    $order->fleet_uuid = null;
+                                }
+                                $order->save();
+
+                                $payload = new Payload([
+                                    'company_uuid' => session('company'),
+                                    'type' => 'transport'
+                                ]);
+                                $payload->save();
+
+                                $order->payload_uuid = $payload->uuid;
+                                $order->status = $input['status'] ?? 'created';
+                                $order->save();
+                            }
+                        );
+                        
+                        $createdOrders[] = $order;
+                    }
 
                     // Create waypoints based on unique sequence
                     $savedWaypoints = [];
@@ -1401,59 +1473,75 @@ class OrderController extends FleetOpsController
                         ->get()
                         ->keyBy('code');
 
-                    foreach ($uniqueWaypointSequence as $placeCode) {
-                        $placeModel = $placesByCode->get($placeCode);
-                        if ($placeModel && isset($placeModel->uuid)) {
-                            $meta = [
-                                'place_code' => $placeCode
-                            ];
-                            try {
-                                $saved = Waypoint::create([
-                                    'company_uuid' => session('company'),
-                                    'payload_uuid' => $order->payload_uuid ?? ($order->payload->uuid ?? null),
-                                    'place_uuid' => $placeModel->uuid,
-                                    'order' => $orderIndex++,
-                                    'meta' => $meta,
-                                ]);
-                                $saved = $saved->fresh();
-                                $savedWaypoints[] = $saved;
-                                if (isset($saved->uuid)) {
-                                    $waypointMeta[$saved->uuid] = $meta;
-                                }
-                            } catch (\Exception $e) {
-                                Log::error('Failed to create waypoint', [
-                                    'place_code' => $placeCode,
-                                    'error' => $e->getMessage()
-                                ]);
-                                continue;
-                            }
-                        }
-                    }
+                                         // Track waypoints by place code to handle duplicates
+                     $waypointsByPlaceCode = [];
+                     
+                     foreach ($uniqueWaypointSequence as $index => $placeCode) {
+                         $placeModel = $placesByCode->get($placeCode);
+                         if ($placeModel && isset($placeModel->uuid)) {
+                             // Create unique metadata for each waypoint, even if same place
+                             $meta = [
+                                 'place_code' => $placeCode,
+                                 'waypoint_index' => $index,
+                                 'waypoint_type' => $index === 0 ? 'pickup' : 'dropoff'
+                             ];
+                             
+                             try {
+                                 $saved = Waypoint::create([
+                                     'company_uuid' => session('company'),
+                                     'payload_uuid' => $order->payload_uuid ?? ($order->payload->uuid ?? null),
+                                     'place_uuid' => $placeModel->uuid,
+                                     'order' => $orderIndex++,
+                                     'meta' => $meta,
+                                 ]);
+                                 $saved = $saved->fresh();
+                                 $savedWaypoints[] = $saved;
+                                 
+                                 // Store waypoint by place code for route segment creation
+                                 if (!isset($waypointsByPlaceCode[$placeCode])) {
+                                     $waypointsByPlaceCode[$placeCode] = [];
+                                 }
+                                 $waypointsByPlaceCode[$placeCode][] = $saved;
+                                 
+                                 if (isset($saved->uuid)) {
+                                     $waypointMeta[$saved->uuid] = $meta;
+                                 }
+                             } catch (\Exception $e) {
+                                 Log::error('Failed to create waypoint', [
+                                     'place_code' => $placeCode,
+                                     'error' => $e->getMessage()
+                                 ]);
+                                 continue;
+                             }
+                         }
+                     }
 
-                    // Create route segments - this can now fail safely within transaction
-                    $routeSegmentErrors = $this->createRouteSegmentsFromRows($routeRows, $order, $savedWaypoints, $waypointMeta);
-                    //$this->createRouteSegmentsFromRows($routeRows, $order, $savedWaypoints, $waypointMeta);
-                    if (!empty($routeSegmentErrors)) {
-                    // Add route segment errors to main import errors
-                        foreach ($routeSegmentErrors as $error) {
-                            $importErrors[] = $error; // Each error is already in format [rowIndex, message, tripId]
-                        }
-                        DB::rollback(); // This will rollback the entire trip including order and waypoints
-                        continue; // Skip to next trip
-                    }
-                    // If we reach here, everything succeeded
-                    DB::commit();
+                                         // Create route segments - this can now fail safely within transaction
+                     $routeSegmentErrors = $this->createRouteSegmentsFromRows($routeRows, $order, $savedWaypoints, $waypointMeta, $waypointsByPlaceCode);
+                     
+                     if (!empty($routeSegmentErrors)) {
+                         // Add route segment errors to main import errors
+                         foreach ($routeSegmentErrors as $error) {
+                             $importErrors[] = $error; // Each error is already in format [rowIndex, message, blockId]
+                         }
+                         $blockHasErrors = true;
+                         DB::rollback(); // This will rollback the entire block including order and waypoints
+                         continue; // Skip to next block
+                     }
+                     
+                     // If we reach here, everything succeeded
+                     DB::commit();
 
-                    $ordersCache[$tripId] = $order;
-                    $records[] = $order;
-                    event(new OrderReady($order));
+                     $ordersCache[$blockId] = $order;
+                     $records[] = $order;
+                     event(new OrderReady($order));
                 } catch (\Exception $e) {
-                    // Rollback the entire trip if anything fails
+                    // Rollback the entire block if anything fails
                     DB::rollback();
                     $importErrors[] = [
                         '-',
-                        "Trip {$tripId}: " . $e->getMessage(),
-                        $tripId
+                        "Block {$blockId}: " . $e->getMessage(),
+                        $blockId
                     ];
                 }
             }
@@ -1603,43 +1691,26 @@ private function buildWaypointSequence(array $routeMap): array
  * @return void
  * @throws \Exception
  */
-public function createRouteSegmentsFromRows(array $rows, Order $order, array $savedWaypoints = [], array $waypointMeta = []): array
+ public function createRouteSegmentsFromRows(array $rows, Order $order, array $savedWaypoints = [], array $waypointMeta = [], array $waypointsByPlaceCode = []): array
 {
     $errors = [];
     $createdSegments = [];
     
-    // PRE-CHECK: Validate VR IDs for uniqueness
+    // PRE-CHECK: Collect existing VR IDs for potential updates
     $vrIds = array_filter(array_map(function($row) {
         return $row['vr_id'] ?? null;
     }, $rows));
     
+    $existingSegments = collect();
     if (!empty($vrIds)) {
         $existingSegments = RouteSegment::whereIn('public_id', $vrIds)
           ->where('company_uuid', session('company'))
           ->whereNull('deleted_at')->get();
-        if ($existingSegments->count() > 0) {
-            $existingIds = $existingSegments->pluck('public_id')->toArray();
-            // Find the first row that has this VR ID for better error reporting
-            $firstRowWithVrId = null;
-            foreach ($existingIds as $existingId) {
-            $firstRowWithVrId = null;
-                foreach ($rows as $row) {
-                    if (isset($row['vr_id']) && $row['vr_id'] === $existingId) {
-                        $firstRowWithVrId = ($row['_original_row_index'] ?? 0) + 1;
-                        break;
-                    }
-                }
-            $rowDisplay = $firstRowWithVrId ?? '-';
-            $errors[] = [$rowDisplay, "VR ID '{$existingId}' already exists", $order->public_id ?? ($order->id ?? '')];
-        }
-           
-            //throw new \Exception("Row {$rowDisplay}: VR ID already exists for the order: " . implode(', ', $existingIds));
-        }
     }
     
     foreach ($rows as $groupIndex => $row) {
         $originalRowIndex = $row['_original_row_index'] ?? $groupIndex;
-        $displayRowIndex = $originalRowIndex + 1; // Convert to 1-based for display
+        $displayRowIndex = $originalRowIndex + 2; // +2 to include header row
         $fromCode = $row['stop_1'] ?? null;
         $toCode = $row['stop_2'] ?? null;
         // Fallback to facility_sequence if stop_1 or stop_2 are null
@@ -1661,18 +1732,28 @@ public function createRouteSegmentsFromRows(array $rows, Order $order, array $sa
         $fromWaypoint = null;
         $toWaypoint = null;
         
-        if (!empty($savedWaypoints) && !empty($waypointMeta)) {
-            // Match by place_code only (unique waypoints per place)
-            foreach ($savedWaypoints as $waypoint) {
-                $meta = isset($waypoint->uuid) ? ($waypointMeta[$waypoint->uuid] ?? []) : [];
-                if (isset($meta['place_code']) && $meta['place_code'] === $fromCode) {
-                    $fromWaypoint = $waypoint;
-                }
-                if (isset($meta['place_code']) && $meta['place_code'] === $toCode) {
-                    $toWaypoint = $waypoint;
-                }
-            }
-        } else {
+                 if (!empty($waypointsByPlaceCode)) {
+             // Use the new waypoint tracking system for better duplicate handling
+             if (isset($waypointsByPlaceCode[$fromCode])) {
+                 // Get the first waypoint for this place code (pickup)
+                 $fromWaypoint = $waypointsByPlaceCode[$fromCode][0];
+             }
+             if (isset($waypointsByPlaceCode[$toCode])) {
+                 // Get the last waypoint for this place code (dropoff)
+                 $toWaypoint = end($waypointsByPlaceCode[$toCode]);
+             }
+         } elseif (!empty($savedWaypoints) && !empty($waypointMeta)) {
+             // Fallback to old method
+             foreach ($savedWaypoints as $waypoint) {
+                 $meta = isset($waypoint->uuid) ? ($waypointMeta[$waypoint->uuid] ?? []) : [];
+                 if (isset($meta['place_code']) && $meta['place_code'] === $fromCode) {
+                     $fromWaypoint = $waypoint;
+                 }
+                 if (isset($meta['place_code']) && $meta['place_code'] === $toCode) {
+                     $toWaypoint = $waypoint;
+                 }
+             }
+         } else {
             // Database lookup fallback
             $fromPlace = Place::where('code', $fromCode)
                                     ->where('company_uuid', session('company'))
@@ -1709,92 +1790,96 @@ public function createRouteSegmentsFromRows(array $rows, Order $order, array $sa
         }
 
         try {
-            // Generate unique public_id if vr_id is empty or already exists
+            // Generate unique public_id if vr_id is empty
             $publicId = $row['vr_id'] ?? null;
-            if (empty($publicId)) {
-                $publicId = 'RI_' . Str::upper(Str::random(8));
-            }
-            
-            // Double-check for uniqueness
-            $exists = RouteSegment::where('public_id', $publicId)
-                ->where('company_uuid', session('company'))
-                ->exists();
-            if ($exists) {
-                $errors[] = [$displayRowIndex, "VR ID '{$publicId}' already exists", $order->public_id];
-                continue;
-            }
-
-            $routeSegment = new RouteSegment();
-            $routeSegment->order_id = $order->id;
-            $routeSegment->payload_id = $order->payload_uuid;
-            $routeSegment->from_waypoint_id = $fromWaypoint->uuid;
-            $routeSegment->to_waypoint_id = $toWaypoint->uuid;
-            $routeSegment->public_id = $publicId;
-            $routeSegment->company_uuid = session('company');
-            $routeSegment->created_by_id = UserHelper::getIdFromUuid(auth()->id());
-
-            // Handle potential array values from Excel
-            $routeSegment->cr_id = is_array($row['cr_id'] ?? null) ? null : ($row['cr_id'] ?? null);
-            $routeSegment->shipper_accounts = is_array($row['shipper_accounts'] ?? null) ? null : ($row['shipper_accounts'] ?? null);
-            $routeSegment->equipment_type = is_array($row['equipment_type'] ?? null) ? null : ($row['equipment_type'] ?? null);
-            $routeSegment->trailer_id = is_array($row['trailer_id'] ?? null) ? null : ($row['trailer_id'] ?? null);
-            $routeSegment->operator_id = is_array($row['operator_id'] ?? null) ? null : ($row['operator_id'] ?? null);
-            $routeSegment->tender_status = $row['tender_status'] ?? null;
-            // Set facility_sequence: use fromCode->toCode if row facility_sequence is null
-            if (!empty($row['facility_sequence'])) {
-                $routeSegment->facility_sequence = $row['facility_sequence'];
-            } elseif (!empty($fromCode) && !empty($toCode)) {
-                $routeSegment->facility_sequence = $fromCode . '->' . $toCode;
-            } else {
-                $routeSegment->facility_sequence = null;
-            }
-
-            $routeSegment->stop_1_yard_arrival = !empty($row['stop_1_yard_arrival']) 
-                ? $this->parseExcelDate($row['stop_1_yard_arrival']) : null;
-            $routeSegment->stop_1_yard_departure = !empty($row['stop_1_yard_departure']) 
-                ? $this->parseExcelDate($row['stop_1_yard_departure']) : null;
-
-            $routeSegment->stop_2_yard_arrival = !empty($row['stop_2_yard_arrival']) 
-                ? $this->parseExcelDate($row['stop_2_yard_arrival']) : null;
-            $routeSegment->stop_2_yard_departure = !empty($row['stop_2_yard_departure']) 
-                ? $this->parseExcelDate($row['stop_2_yard_departure']) : null;
-
-            $routeSegment->stop_3_yard_arrival = !empty($row['stop_3_yard_arrival']) 
-                ? $this->parseExcelDate($row['stop_3_yard_arrival']) : null;
-            $routeSegment->stop_3_yard_departure = !empty($row['stop_3_yard_departure']) 
-                ? $this->parseExcelDate($row['stop_3_yard_departure']) : null;
-            $routeSegment->driver_type = $row['transit_operator_type'] ?? null;
-            $routeSegment->truck_filter = $row['truck_filter'] ?? null;
-            // Handle date parsing safely
-            $routeSegment->vr_creation_date_time = null;
-            if (!empty($row['vr_creation_date_time']) && !is_array($row['vr_creation_date_time'])) {
-                try {
-                    $routeSegment->vr_creation_date_time = $this->parseExcelDate($row['vr_creation_date_time']);
-                } catch (\Exception $e) {
-                    Log::warning('Failed to parse vr_creation_date_time', [
-                        'value' => $row['vr_creation_date_time'],
-                        'error' => $e->getMessage()
-                    ]);
+            if(isset($publicId) && !empty($publicId)){
+                // Check if this VR ID already exists and can be updated
+                $existingSegment = $existingSegments->firstWhere('public_id', $publicId);
+                
+                if ($existingSegment) {
+                    // Update existing route segment
+                    $existingSegment->order_id = $order->id;
+                    $existingSegment->payload_id = $order->payload_uuid;
+                    $existingSegment->from_waypoint_id = $fromWaypoint->uuid;
+                    $existingSegment->to_waypoint_id = $toWaypoint->uuid;
+                    $existingSegment->company_uuid = session('company');
+                    $existingSegment->updated_by_id = UserHelper::getIdFromUuid(auth()->id());
+                    $routeSegment = $existingSegment;
+                } else {
+                    // Create new route segment
+                    $routeSegment = new RouteSegment();
+                    $routeSegment->order_id = $order->id;
+                    $routeSegment->payload_id = $order->payload_uuid;
+                    $routeSegment->from_waypoint_id = $fromWaypoint->uuid;
+                    $routeSegment->to_waypoint_id = $toWaypoint->uuid;
+                    $routeSegment->public_id = $publicId;
+                    $routeSegment->company_uuid = session('company');
+                    $routeSegment->created_by_id = UserHelper::getIdFromUuid(auth()->id());
                 }
-            }
-            
-            $routeSegment->vr_cancellation_date_time = null;
-            if (!empty($row['vr_cancellation_date_time']) && !is_array($row['vr_cancellation_date_time'])) {
-                try {
-                    $routeSegment->vr_cancellation_date_time = $this->parseExcelDate($row['vr_cancellation_date_time']);
-                } catch (\Exception $e) {
-                    Log::warning('Failed to parse vr_cancellation_date_time', [
-                        'value' => $row['vr_cancellation_date_time'],
-                        'error' => $e->getMessage()
-                    ]);
-                }
-            }
 
-            $routeSegment->save();
-            $createdSegments[] = $routeSegment->id;
+                // Handle potential array values from Excel
+                $routeSegment->cr_id = is_array($row['cr_id'] ?? null) ? null : ($row['cr_id'] ?? null);
+                $routeSegment->shipper_accounts = is_array($row['shipper_accounts'] ?? null) ? null : ($row['shipper_accounts'] ?? null);
+                $routeSegment->equipment_type = is_array($row['equipment_type'] ?? null) ? null : ($row['equipment_type'] ?? null);
+                $routeSegment->trailer_id = is_array($row['trailer_id'] ?? null) ? null : ($row['trailer_id'] ?? null);
+                $routeSegment->operator_id = is_array($row['operator_id'] ?? null) ? null : ($row['operator_id'] ?? null);
+                $routeSegment->tender_status = $row['tender_status'] ?? null;
+                // Set facility_sequence: use fromCode->toCode if row facility_sequence is null
+                if (!empty($row['facility_sequence'])) {
+                    $routeSegment->facility_sequence = $row['facility_sequence'];
+                } elseif (!empty($fromCode) && !empty($toCode)) {
+                    $routeSegment->facility_sequence = $fromCode . '->' . $toCode;
+                } else {
+                    $routeSegment->facility_sequence = null;
+                }
+
+                $routeSegment->stop_1_yard_arrival = !empty($row['stop_1_yard_arrival']) 
+                    ? $this->parseExcelDate($row['stop_1_yard_arrival']) : null;
+                $routeSegment->stop_1_yard_departure = !empty($row['stop_1_yard_departure']) 
+                    ? $this->parseExcelDate($row['stop_1_yard_departure']) : null;
+
+                $routeSegment->stop_2_yard_arrival = !empty($row['stop_2_yard_arrival']) 
+                    ? $this->parseExcelDate($row['stop_2_yard_arrival']) : null;
+                $routeSegment->stop_2_yard_departure = !empty($row['stop_2_yard_departure']) 
+                    ? $this->parseExcelDate($row['stop_2_yard_departure']) : null;
+
+                $routeSegment->stop_3_yard_arrival = !empty($row['stop_3_yard_arrival']) 
+                    ? $this->parseExcelDate($row['stop_3_yard_arrival']) : null;
+                $routeSegment->stop_3_yard_departure = !empty($row['stop_3_yard_departure']) 
+                    ? $this->parseExcelDate($row['stop_3_yard_departure']) : null;
+                $routeSegment->driver_type = $row['transit_operator_type'] ?? null;
+                $routeSegment->truck_filter = $row['truck_filter'] ?? null;
+                // Handle date parsing safely
+                $routeSegment->vr_creation_date_time = null;
+                if (!empty($row['vr_creation_date_time']) && !is_array($row['vr_creation_date_time'])) {
+                    try {
+                        $routeSegment->vr_creation_date_time = $this->parseExcelDate($row['vr_creation_date_time']);
+                    } catch (\Exception $e) {
+                        Log::warning('Failed to parse vr_creation_date_time', [
+                            'value' => $row['vr_creation_date_time'],
+                            'error' => $e->getMessage()
+                        ]);
+                    }
+                }
+                
+                $routeSegment->vr_cancellation_date_time = null;
+                if (!empty($row['vr_cancellation_date_time']) && !is_array($row['vr_cancellation_date_time'])) {
+                    try {
+                        $routeSegment->vr_cancellation_date_time = $this->parseExcelDate($row['vr_cancellation_date_time']);
+                    } catch (\Exception $e) {
+                        Log::warning('Failed to parse vr_cancellation_date_time', [
+                            'value' => $row['vr_cancellation_date_time'],
+                            'error' => $e->getMessage()
+                        ]);
+                    }
+                }
+
+                $routeSegment->save();
+                $createdSegments[] = $routeSegment->id;
+            }
             
         } catch (\Exception $e) {
-            $displayRowIndex = $originalRowIndex + 1;
+            $displayRowIndex = $originalRowIndex + 2; // +2 to include header row
             $errors[] = [$displayRowIndex, $e->getMessage(), $order->public_id];
 
         }

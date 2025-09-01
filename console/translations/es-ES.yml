@@ -147,11 +147,13 @@ common:
   trip-length: Duración del viaje
   trip-length-placeholder: Introduzca la duración del viaje en horas
   trip_length_invalid: La duración del viaje debe ser un número positivo mayor que 0.
+  please-select-from-date: Por favor, seleccione la fecha de inicio antes de seleccionar la fecha de fin
 leaves:
   driver_name: Nombre del conductor
   start_date: Fecha de inicio
   end_date: Fecha de finalización
   total_days: Duración (Días)
+  view: Ver para esto
   leave_type: Tipo de ausencia
   reason: Motivo
   status: Estado
@@ -1196,6 +1198,11 @@ fleet-ops:
         parking: Control Estacionamiento
         toll-reports: Gastos de peaje
         maintenance-schedule: Plan de Mantenimiento
+    leaves-report-panel:
+      cancel-edit-leaves-report: Cancelar edición del informe de permisos
+      cancel-new-leaves-report: Cancelar nuevo informe de permisos
+      edit-button: Editar informe de permisos
+      title: Informe de permisos
     maintenance-schedule-form-panel:
       create: Crear Plan de Mantenimiento
       save: Guardar Plan de Mantenimiento
@@ -1452,6 +1459,9 @@ fleet-ops:
         drop-instructions: "Seleccione archivo para subir"
         files-to-upload: "Archivos para subir"
         import-failed: "Importación fallida"
+        import-partially-success: Importación parcialmente exitosa
+        successful-imports: Registros importados correctamente
+        errors: Registros fallidos
         error-message: "Importación fallida. No se importaron lugares debido a errores.
           Por favor, revise el archivo de registro de errores adjunto para obtener
           detalles."
@@ -1536,6 +1546,7 @@ fleet-ops:
           de desinstalar el "". ¿Está seguro de que desea continuar con esta desinstalación?
         sub-message: Se perderán todas las configuraciones y ajustes personalizados.
       vehicle-details:
+        fleet: Flota
         make: Marca
         model: Modelo
         year: Año
@@ -1680,11 +1691,11 @@ fleet-ops:
           confirmar el controlador.
         assign-busy-text: El conductor ({driverName}) <strong >{availability}</strong>. ¿Aún desea asignarle la orden {orderId}? Haga clic en "Continuar" para confirmar.
         assign-vehicle: ¿Asignar vehículo?
-        assign-vehicle-busy-text: El vehículo {vehicleName} está <strong>actualmente asignado a otro pedido activo</strong>. ¿Está seguro de que desea asignarlo al pedido {orderId}?
-        assign-driver-busy-text: El conductor {driverName} está <strong>actualmente asignado a otro pedido activo</strong>. ¿Está seguro de que desea asignarlo al pedido {orderId}?
+        assign-vehicle-busy-text: El vehículo {vehicleName} <strong>{availability}</strong>. ¿Está seguro de que desea asignarlo al pedido {orderId}?
+        assign-driver-busy-text: El conductor {driverName} <strong>{availability}</strong>. ¿Está seguro de que desea asignarlo al pedido {orderId}?
         assign-anyway: Continuar con la asignación
         assign-driver-vehicle: ¿Asignar conductor y vehículo?
-        assign-driver-vehicle-busy-text: El conductor {driverName} y el vehículo {vehicleName} <strong>están actualmente asignados a otro pedido activo</strong>. ¿Desea asignarles igualmente el pedido {orderId}?
+        assign-driver-vehicle-busy-text: El conductor {driverName} <strong>{driverAvailability}</strong> y el vehículo {vehicleName} <strong>{vehicleAvailability}</strong>. ¿Desea asignarles igualmente el pedido {orderId}?
         assign-button: Continuar y asignar el conductor.
         driver-has-no-vehicle: El conductor seleccionado no tiene un vehículo asignado. Asigne un vehículo o elija otro conductor con vehículo antes de continuar.
         driver-no-vehicle-title: Tanto el conductor como el vehículo deben ser seleccionados para continuar.
@@ -2125,6 +2136,9 @@ fleet-ops:
         punto de recopilación del comando.
       message: La distancia debe estar en metros.
     vehicle-form-panel:
+      fleet: Flota
+      fleet-text: Asigne una flota a este vehículo.
+      fleet-required: Se debe seleccionar al menos una flota.
       success-message: Vehículo ({vehicleName}Vehículo () registrado exitosamente.
       view-details: Ver detalles del vehículo
       save-vehicle: Registrar el vehículo
@@ -2595,6 +2609,9 @@ fleet-ops:
           payload: Cargando
           items-drop: Depósito de artículos en
           tracking: Hacer un seguimiento
+          current-destination: Destino actual
+          current-eta: Hora estimada de llegada
+          current-ect: Hora estimada de finalización
           waypoint-actions: Actuaciones en los puntos de cruce
           get-label: Obtener etiqueta
           view-activity: Ver actividad
@@ -2624,6 +2641,7 @@ fleet-ops:
             al pedido ha sido actualizado.
           order-title: Etiqueta de pedido
           waypoint-title: Etiqueta de punto de referencia
+          click-to-copy: Hacer clic para copiar
           proof-of-delivery: Comprobante de entrega
           notes-placeholder: Introduzca aquí las notas del pedido....
           save-order-note: Guardar nota de pedido
@@ -2640,6 +2658,8 @@ fleet-ops:
               instalada, verifique las extensiones para instalar una configuración
               de comando para comenzar.
             view-extensions: Ver extensiones
+        trip-id: ID de viaje
+        block-id: ID de bloque
       route-segments:
         order-id: ID de pedido
         title: Segmentos de ruta

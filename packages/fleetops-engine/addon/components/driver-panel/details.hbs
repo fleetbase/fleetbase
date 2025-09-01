@@ -32,11 +32,15 @@
                     <div class="field-name">{{t "fleet-ops.common.driver-license"}}</div>
                     <div class="field-value">{{n-a @driver.drivers_license_number}}</div>
                 </div>
+                <div class="field-info-container space-y-2">
+                    <div class="field-name">{{t "fleet-ops.common.fleet"}}</div>
+                    <div class="field-value">{{n-a @driver.fleet.name}}</div>
+                </div>
                 {{!-- <div class="field-info-container space-y-2">
                     <div class="field-name">{{t "fleet-ops.common.vendor"}}</div>
                     <div class="field-value">{{n-a @driver.vendor_name}}</div>
                 </div> --}}
-                <div class="col-span-3"></div>
+                {{!-- <div class="col-span-3"></div> --}}
                 <div class="field-info-container space-y-2">
                     <div class="field-name">{{t "fleet-ops.common.city"}}</div>
                     <div class="field-value">{{n-a @driver.city}}</div>

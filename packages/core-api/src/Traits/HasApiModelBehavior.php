@@ -866,6 +866,10 @@ trait HasApiModelBehavior
             $isFillable            = $this->isFillable($key) || in_array($key, ['uuid', 'public_id']);
 
             if (!$fieldEndsWithOperator && $isFillable) {
+                // Skip default exact match for Order model's public_id and trip_id to use custom LIKE filters
+                if (get_class($this) === 'Fleetbase\\FleetOps\\Models\\Order' && in_array($key, ['public_id', 'trip_id'])) {
+                    continue;
+                }
                 $builder->where($key, '=', $value);
                 continue;
             }

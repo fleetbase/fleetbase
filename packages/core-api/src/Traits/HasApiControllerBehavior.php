@@ -313,10 +313,10 @@ trait HasApiControllerBehavior
      */
     public function queryRecord(Request $request)
     {
+        
         $single        = $request->boolean('single');
         $queryCallback = $this->getControllerCallback('onQueryRecord');
         if (get_class($this->model) === 'Fleetbase\FleetOps\Models\Order') {
-            
             $combinedCallback = function ($query) use ($request, $queryCallback) {
                 // Apply the original callback if it exists
                 if ($queryCallback) {
@@ -379,7 +379,11 @@ trait HasApiControllerBehavior
                 if ($request->filled('public_id')) {
                     $query->where('public_id', 'LIKE', '%' . $request->input('public_id') . '%');
                 }
+                if ($request->filled('trip_id')) {
+                    $query->where('trip_id', 'LIKE', '%' . $request->input('trip_id') . '%');
+                }
             };
+            
             $data = $this->model->queryFromRequest($request, $combinedCallback);
         }
         else {
@@ -392,6 +396,7 @@ trait HasApiControllerBehavior
         }
         if (get_class($this->model) === 'Fleetbase\FleetOps\Models\Driver') {
             $data->load('fleets');
+            $data->load('fleetDrivers');
         }
         
         if (get_class($this->model) === 'Fleetbase\FleetOps\Models\Driver' && $request->has('order_uuid')) {
@@ -568,7 +573,7 @@ trait HasApiControllerBehavior
 
             $this->validateRequest($request);
             $model_name = str_replace('Controller', '', class_basename($this));
-            if ($model_name == "Vehicle") {
+           if ($model_name == "Vehicle") {
                 $fleetUuids = $request['vehicle']['fleet_uuid'] ?? null;
 
                 // Check if the fleet UUIDs are empty
@@ -578,8 +583,9 @@ trait HasApiControllerBehavior
 
 
                 $plateNumber = $request['vehicle']['plate_number'] ?? null;
-                if ($this->model->where('plate_number', $plateNumber)->whereNull('deleted_at')->exists()) {
-                    return response()->error(__('messages.duplicate_check_vehicle'));
+                $recordExists = $this->model->where('plate_number', $plateNumber)->where('company_uuid', session('company'))->whereNull('deleted_at')->first();
+                if ($recordExists) {
+                    return new $this->resource($recordExists);
                 }
                 try {
                     // Loop through each fleet UUID to validate individually
@@ -590,7 +596,8 @@ trait HasApiControllerBehavior
                     return response()->error(__('messages.fleet_uuid.exists'));
                 }
 
-            } else if($model_name == "Place"){
+            }
+            if($model_name == "Place"){
                $place = $request['place'] ?? [];
                 $validator = Validator::make(
                     $place,
@@ -629,7 +636,7 @@ trait HasApiControllerBehavior
                         return response()->error(__('messages.invalid_coordinates'));
                     }
                 }
-                if ($code && $this->model->where('code', $code)->whereNull('deleted_at')->exists()) {
+                if ($code && $this->model->where('code', $code)->where('company_uuid', session('company'))->whereNull('deleted_at')->exists()) {
                     return response()->error(__('messages.duplicate_check_place'));
                 }
             }
@@ -843,6 +850,7 @@ trait HasApiControllerBehavior
                         $duplicate = Place::where('code', $code)
                             ->where('uuid', '!=', $place->uuid) // ignore the current record
                             ->whereNull('deleted_at') // Exclude soft-deleted records
+                            ->where('company_uuid', session('company'))
                             ->exists();
 
                         if ($duplicate) {

@@ -48,6 +48,8 @@ return [
         'exists'   => 'Đội xe phải hợp lệ và đang hoạt động.',
         'driver_already_assigned' => 'Fahrer :driver ist bereits der Flotte :fleet zugewiesen. Ein Fahrer kann nur zu einer Flotte gehören.',
     ],
-    'duplicate_check_fleet' => 'Một đội xe với tên hoặc chiều dài chuyến đi này đã tồn tại.'
+    'duplicate_check_fleet' => 'Một đội xe với tên hoặc chiều dài chuyến đi này đã tồn tại.',
+    'vehicle_required' => 'Phương tiện là bắt buộc',
+    'end_date_before_start_date' => 'Ngày kết thúc không thể trước ngày bắt đầu'
 ];
 

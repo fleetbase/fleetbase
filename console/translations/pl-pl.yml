@@ -152,6 +152,7 @@ common:
   trip-length: Czas trwania podróży
   trip-length-placeholder: Wprowadź czas trwania podróży w godzinach
   trip_length_invalid: Długość trasy musi być liczbą dodatnią większą niż 0.
+  please-select-from-date: Proszę wybrać datę od przed wybraniem daty do.
 leaves:
   driver_name: Imię kierowcy
   start_date: Data rozpoczęcia
@@ -1128,6 +1129,11 @@ fleet-ops:
         settings: Ustawienia
         order-config: Konfiguracja zamówienia
         maintenance-schedule: Planowanie konserwacji
+    leaves-report-panel:
+      cancel-edit-leaves-report: Anuluj edycję raportu urlopów
+      cancel-new-leaves-report: Anuluj nowy raport urlopów
+      edit-button: Edytuj raport urlopów
+      title: Raport urlopów
     maintenance-schedule-form-panel:
       create: Utwórz Planowanie konserwacji
       save: Zapisz Planowanie konserwacji
@@ -1440,6 +1446,7 @@ fleet-ops:
         message: Próbuje się odinstalować rozszerzenie "{options}". Czy na pewno chcesz kontynuować?
         sub-message: Wszystkie konfiguracje i dostosowane ustawienia zostaną utracone.
       vehicle-details:
+        fleet: Fleota
         make: Marka
         model: Model
         year: Rok
@@ -1593,11 +1600,11 @@ fleet-ops:
         end-date-required: Wymagana jest data zakończenia.
         end-date-earlier: Data zakończenia nie może być wcześniejsza niż data rozpoczęcia.
         assign-vehicle: Przypisać pojazd?
-        assign-vehicle-busy-text: Pojazd {vehicleName} jest <strong>obecnie przypisany do innego aktywnego zlecenia</strong>. Czy na pewno chcesz przypisać go do zlecenia {orderId}?
-        assign-driver-busy-text: Kierowca {driverName} jest <strong>obecnie przypisany do innego aktywnego zlecenia</strong>. Czy na pewno chcesz przypisać go do zlecenia {orderId}?
+        assign-vehicle-busy-text: Pojazd {vehicleName} <strong>{availability}</strong>. Czy na pewno chcesz przypisać go do zlecenia {orderId}?
+        assign-driver-busy-text: Kierowca {driverName} <strong>{availability}</strong>. Czy na pewno chcesz przypisać go do zlecenia {orderId}?
         assign-anyway: Kontynuuj przypisanie
         assign-driver-vehicle: Przypisać kierowcę i pojazd?
-        assign-driver-vehicle-busy-text: Kierowca {driverName} i pojazd {vehicleName} <strong>są obecnie przypisani do innego aktywnego zlecenia</strong>. Czy mimo to chcesz przypisać im zlecenie {orderId}?
+        assign-driver-vehicle-busy-text: Kierowca {driverName} <strong>{driverAvailability}</strong> i pojazd {vehicleName} <strong>{vehicleAvailability}</strong>. Czy mimo to chcesz przypisać im zlecenie {orderId}?
     widget:
       fleet-ops-quickstart:
         message: Zobacz, co możesz zrobić, aby szybko rozpocząć operacje...
@@ -1990,6 +1997,9 @@ fleet-ops:
       name-text: To ustawienie określa domyślny dystans w metrach, w którym zamówienia ad-hoc powinny wysyłać powiadomienia do kierowców znajdujących się w pobliżu punktu odbioru zamówienia.
       message: Dystans musi być podany w metrach.
     vehicle-form-panel:
+      fleet: Flota
+      fleet-text: Przypisz flotę do tego pojazdu.
+      fleet-required: Musi być wybrana co najmniej jedna flota.
       success-message: Pojazd ({vehicleName}) zapisany pomyślnie.
       view-details: Zobacz szczegóły pojazdu
       save-vehicle: Zapisz pojazd
@@ -2413,6 +2423,9 @@ fleet-ops:
           payload: Ładunek
           items-drop: Przedmioty dostarczane do
           tracking: Śledzenie
+          current-destination: Bieżący cel
+          current-eta: Szacowany czas przybycia
+          current-ect: Szacowany czas zakończenia
           waypoint-actions: Akcje punktów pośrednich
           get-label: Pobierz etykietę
           view-activity: Zobacz aktywność
@@ -2435,6 +2448,7 @@ fleet-ops:
           assign-success: 'Przypisany kierowca zamówienia {orderId} został zaktualizowany.'
           order-title: Etykieta zamówienia
           waypoint-title: Etykieta punktu pośredniego
+          click-to-copy: Kliknij, aby skopiować
           proof-of-delivery: Potwierdzenie dostawy
           notes-placeholder: Wpisz notatki do zamówienia tutaj...
           save-order-note: Zapisz notatkę zamówienia
@@ -2447,6 +2461,8 @@ fleet-ops:
             no-order-installed: Brak zainstalowanych konfiguracji zamówień!
             you-have-no-configs: Obecnie nie masz żadnych zainstalowanych konfiguracji zamówień. Sprawdź sekcję rozszerzeń, aby zainstalować konfigurację zamówienia i rozpocząć pracę.
             view-extensions: Zobacz rozszerzenia
+        trip-id: Identyfikator wycieczki
+        block-id: Identyfikator bloku
     route-segments:
       order-id: Identyfikator zamówienia
       title: Segmenty trasy

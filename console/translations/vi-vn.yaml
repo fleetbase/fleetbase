@@ -150,6 +150,7 @@ common:
   trip-length: Thời gian chuyến đi
   trip-length-placeholder: Nhập thời gian chuyến đi tính bằng giờ
   trip_length_invalid: Chiều dài chuyến đi phải là một số dương lớn hơn 0.
+  please-select-from-date: Vui lòng chọn ngày bắt đầu trước khi chọn ngày kết thúc
 leaves:
   driver_name: Tên tài xế
   start_date: Ngày bắt đầu
@@ -958,11 +959,11 @@ fleet-ops:
           end-date-required: Cần nhập ngày kết thúc.
           end-date-earlier: Ngày kết thúc không được sớm hơn ngày bắt đầu.
           assign-vehicle: Gán phương tiện?
-          assign-vehicle-busy-text: Phương tiện {vehicleName} <strong>hiện đang được gán cho một đơn hàng khác đang hoạt động</strong>. Bạn có chắc chắn muốn gán nó cho đơn hàng {orderId} không?
-          assign-driver-busy-text: Tài xế {driverName} <strong>hiện đang được gán cho một đơn hàng khác đang hoạt động</strong>. Bạn có chắc chắn muốn gán anh ấy cho đơn hàng {orderId} không?
+          assign-vehicle-busy-text: Phương tiện {vehicleName} <strong>{availability}</strong>. Bạn có chắc chắn muốn gán nó cho đơn hàng {orderId} không?
+          assign-driver-busy-text: Tài xế {driverName} <strong>{availability}</strong>. Bạn có chắc chắn muốn gán anh ấy cho đơn hàng {orderId} không?
           assign-anyway: Tiếp tục gán
           assign-driver-vehicle: Gán tài xế & phương tiện?
-          assign-driver-vehicle-busy-text: Tài xế {driverName} và phương tiện {vehicleName} <strong>hiện đang được gán cho một đơn hàng khác đang hoạt động</strong>. Bạn có muốn vẫn gán đơn hàng {orderId} cho họ không?
+          assign-driver-vehicle-busy-text: Tài xế {driverName} <strong>{driverAvailability}</strong> và phương tiện {vehicleName} <strong>{vehicleAvailability}</strong>. Bạn có muốn vẫn gán đơn hàng {orderId} cho họ không?
         place-form-panel:
           coordinates-required: "Yêu cầu nhập tọa độ vị trí."
           coordinates-invalid: "Tọa độ vị trí không hợp lệ. Vui lòng nhập vĩ độ và kinh độ hợp lệ."
@@ -1174,6 +1175,8 @@ fleet-ops:
             no-order-installed: Chưa có cấu hình đơn hàng nào được cài đặt!
             you-have-no-configs: Hiện tại bạn chưa có cấu hình đơn hàng nào được cài đặt, kiểm tra các tiện ích mở rộng để cài đặt cấu hình đơn hàng và bắt đầu.
             view-extensions: Xem tiện ích mở rộng
+        trip-id: ID chuyến đi
+        block-id: ID khối
       route-segments:
         order-id: Mã đơn hàng
         title: Phân đoạn tuyến đường

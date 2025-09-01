@@ -149,6 +149,8 @@ common:
   to_date_before_from_date_error: Das 'Bis'-Datum kann nicht früher sein als das 'Von'-Datum.
   trip-length: Fahrtdauer
   trip-length-placeholder: Geben Sie die Fahrtdauer in Stunden ein
+  trip_length_invalid: Die Fahrtdauer muss eine positive Zahl größer als 0 sein
+  please-select-from-date: Bitte wählen Sie das 'Von'-Datum, bevor Sie das 'Bis'-Datum wählen
 leaves:
   driver_name: Fahrername
   start_date: Startdatum
@@ -173,6 +175,7 @@ leaves:
   leave_actions: Urlaubsaktionen
   error_fetching_leaves: Fehler beim Abrufen der Fahrerabwesenheiten
   processed_by_name: Bearbeitet von
+  view: Ansicht Verlassen dafür
 validation:
   invalid_country_code: Geben Sie eine gültige Telefonnummer mit Ländervorwahl ein.
   required:
@@ -1131,6 +1134,11 @@ fleet-ops:
         parking: Parküberwachung
         toll-reports: Mautausgaben
         maintenance-schedule: Wartungsplan
+    leaves-report-panel:
+      cancel-edit-leaves-report: Bearbeitung des Urlaubsberichts abbrechen
+      cancel-new-leaves-report: Neuen Urlaubsbericht abbrechen
+      edit-button: Urlaubsbericht bearbeiten
+      title: Urlaubsbericht
     maintenance-schedule-form-panel:
       create: Wartungsplan erstellen
       save: Wartungsplan speichern
@@ -1447,6 +1455,7 @@ fleet-ops:
         message: Sie versuchen, die Erweiterung "{options}" zu deinstallieren. Möchten Sie mit dieser Deinstallation fortfahren?
         sub-message: Alle Konfigurationen und benutzerdefinierten Einstellungen gehen verloren.
       vehicle-details:
+        fleet: Fleets
         make: Marke
         model: Modell
         year: Jahr
@@ -1599,11 +1608,11 @@ fleet-ops:
         end-date-required: Enddatum ist erforderlich.
         end-date-earlier: Das Enddatum darf nicht vor dem Startdatum liegen.
         assign-vehicle: Fahrzeug zuweisen?
-        assign-vehicle-busy-text: Das Fahrzeug {vehicleName} ist <strong>derzeit einem anderen aktiven Auftrag zugewiesen</strong>. Sind Sie sicher, dass Sie es dem Auftrag {orderId} zuweisen möchten?
-        assign-driver-busy-text: Der Fahrer {driverName} ist <strong>derzeit einem anderen aktiven Auftrag zugewiesen</strong>. Sind Sie sicher, dass Sie ihn dem Auftrag {orderId} zuweisen möchten?
+        assign-vehicle-busy-text: Das Fahrzeug {vehicleName} <strong>{availability}</strong>. Sind Sie sicher, dass Sie es dem Auftrag {orderId} zuweisen möchten?
+        assign-driver-busy-text: Der Fahrer {driverName} <strong>{availability}</strong>. Sind Sie sicher, dass Sie ihn dem Auftrag {orderId} zuweisen möchten?
         assign-anyway: Mit der Zuweisung fortfahren
         assign-driver-vehicle: Fahrer & Fahrzeug zuweisen?
-        assign-driver-vehicle-busy-text: Der Fahrer {driverName} und das Fahrzeug {vehicleName} <strong>sind derzeit einem anderen aktiven Auftrag zugewiesen</strong>. Möchten Sie den Auftrag {orderId} trotzdem ihnen zuweisen?
+        assign-driver-vehicle-busy-text: Der Fahrer {driverName} <strong>{driverAvailability}</strong> und das Fahrzeug {vehicleName} <strong>{vehicleAvailability}</strong>. Möchten Sie den Auftrag {orderId} trotzdem ihnen zuweisen?
     widget:
       fleet-ops-quickstart:
         message: Sehen wir uns an, was Sie tun können, um den Betrieb zu starten...
@@ -1997,6 +2006,9 @@ fleet-ops:
       name-text: Diese Einstellung bestimmt die Standardentfernung in Metern, in der Adhoc-Bestellungen Fahrer im Umkreis des Abholpunkts der Bestellung anpingen sollten.
       message: Die Entfernung muss in Metern angegeben werden
     vehicle-form-panel:
+      fleet: Flotte
+      fleet-text: Weisen Sie diesem Fahrzeug eine Flotte zu.
+      fleet-required: Es muss mindestens eine Flotte ausgewählt werden.
       success-message: Fahrzeug ({vehicleName}) erfolgreich gespeichert.
       view-details: Fahrzeugdetails anzeigen
       save-vehicle: Fahrzeug speichern
@@ -2422,6 +2434,9 @@ fleet-ops:
           payload: Nutzlast
           items-drop: Artikel fallen bei
           tracking: Tracking
+          current-destination: Aktuelles Ziel
+          current-eta: Aktuelle Ankunftszeit
+          current-ect: Voraussichtliche Fertigstellung
           waypoint-actions: Wegpunktaktionen
           get-label: Label abrufen
           view-activity: Aktivität anzeigen
@@ -2444,6 +2459,7 @@ fleet-ops:
           assign-success: '{orderId} Fahrer zugewiesen wurde aktualisiert.'
           order-title: Bestelllabel
           waypoint-title: Wegpunktlabel
+          click-to-copy: Zum Kopieren klicken
           proof-of-delivery: Liefernachweis
           notes-placeholder: Geben Sie hier Bestellnotizen ein...
           save-order-note: Bestellnotiz speichern
@@ -2456,6 +2472,8 @@ fleet-ops:
             no-order-installed: Keine Bestellkonfigurationen installiert!
             you-have-no-configs: Derzeit sind keine Bestellkonfigurationen installiert. Überprüfen Sie die Erweiterungen, um eine Bestellkonfiguration zu installieren und zu starten.
             view-extensions: Erweiterungen anzeigen
+        trip-id: Reise ID
+        block-id: Block ID
       route-segments:
         order-id: Bestell-ID
         title: Routenabschnitte

@@ -736,6 +736,7 @@ class Driver extends Model
                     'role'         => 'driver',
                     'status'       => 'active',
                 ]);
+                $user->assignSingleRole('Driver');
             }
             
         }

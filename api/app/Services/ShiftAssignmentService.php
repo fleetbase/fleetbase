@@ -17,10 +17,11 @@ class ShiftAssignmentService
      * @param string|Carbon $startDate
      * @param string|Carbon $endDate
      * @param string|null $companyUuid
+     * @param string|null $timezone
      * @return array
      * @throws \InvalidArgumentException If company_uuid is invalid
      */
-    public function generateShiftAssignmentData($startDate, $endDate, ?string $companyUuid = null): array
+    public function generateShiftAssignmentData($startDate, $endDate, ?string $companyUuid = null, ?string $timezone = null): array
     {
         try {
             // Validate company UUID if provided
@@ -30,12 +31,37 @@ class ShiftAssignmentService
                 }
             }
             
-            // Convert to Carbon if string
+            // Set default timezone if not provided
+            $timezone = $timezone ?: 'UTC';
+            
+            // Handle timezone conversions
+            if ($timezone && ($timezone !== 'UTC')) {
+                if ($timezone === 'Asia/Calcutta') {
+                    $timezone = 'Asia/Kolkata'; // Convert old timezone to the correct one
+                }
+            }
+            
+            // Validate timezone
+            if (!in_array($timezone, timezone_identifiers_list())) {
+                throw new \InvalidArgumentException('Invalid timezone: ' . $timezone);
+            }
+            
+            // Convert to Carbon if string, handling DD-MM-YYYY format
             if (is_string($startDate)) {
+                // Check if date is in DD-MM-YYYY format and convert to YYYY-MM-DD
+                if (preg_match('/^\d{2}-\d{2}-\d{4}$/', $startDate)) {
+                    $parts = explode('-', $startDate);
+                    $startDate = $parts[2] . '-' . $parts[1] . '-' . $parts[0];
+                }
                 $startDate = Carbon::parse($startDate);
             }
             
             if (is_string($endDate)) {
+                // Check if date is in DD-MM-YYYY format and convert to YYYY-MM-DD
+                if (preg_match('/^\d{2}-\d{2}-\d{4}$/', $endDate)) {
+                    $parts = explode('-', $endDate);
+                    $endDate = $parts[2] . '-' . $parts[1] . '-' . $parts[0];
+                }
                 $endDate = Carbon::parse($endDate);
             }
             
@@ -44,6 +70,7 @@ class ShiftAssignmentService
             
             \Log::info('Generating shift assignment data for date range: ' . $start->format('Y-m-d') . ' to ' . $end->format('Y-m-d'));
             \Log::info('Company UUID: ' . ($companyUuid ?? 'null'));
+            \Log::info('Timezone: ' . $timezone);
             
             // Get all drivers for the company
             $drivers = $this->getDrivers($companyUuid);
@@ -55,45 +82,193 @@ class ShiftAssignmentService
             $resources = $this->generateResourcesArray($drivers, $start, $end);
             
             // Get real orders as dated shifts
-            $datedShifts = $this->getOrdersAsShifts($start, $end, $companyUuid);
+            $datedShifts = $this->getOrdersAsShifts($start, $end, $companyUuid, $timezone);
+            
+            // Get pre-assigned shifts (orders that already have a driver assigned within dates)
+            $preAssignedShifts = $this->getPreAssignedShifts($start, $end, $companyUuid, $timezone);
+
+            // Build previous allocation data matrix by resource and date
+            $previousAllocationData = $this->getPreviousAllocationData($start, $end, $companyUuid, $resources, $dates, $timezone);
             
             \Log::info('Generated shift assignment data with ' . count($dates) . ' dates, ' . 
-                     count($resources) . ' resources, and ' . count($datedShifts) . ' dated shifts');
+                     count($resources) . ' resources, and ' . count($datedShifts) . ' dated shifts. Pre-assigned: ' . count($preAssignedShifts));
             
             return [
                 'dates' => $dates,
                 'resources' => $resources,
                 'dated_shifts' => $datedShifts,
+                'pre_assigned_shifts' => $preAssignedShifts,
                 'problem_type' => 'shift_assignment',
                 'recurring_shifts' => null,
-                'previous_allocation_data' => [] // Empty array for previous allocation data
+                'previous_allocation_data' => $previousAllocationData
             ];
         } catch (\Exception $e) {
             \Log::error('Error generating shift assignment data: ' . $e->getMessage());
             throw $e;
         }
-        // Generate dates array
-        $dates = $this->generateDatesArray($start, $end);
-        
-        // Generate resources (drivers) array
-        $resources = $this->generateResourcesArray($drivers, $start, $end);
-        
-        // Get real orders as dated shifts
-        $datedShifts = $this->getOrdersAsShifts($start, $end, $companyUuid);
-        
-        \Log::info('Generated shift assignment data with ' . count($dates) . ' dates, ' . 
-                 count($resources) . ' resources, and ' . count($datedShifts) . ' dated shifts');
-        
-        return [
-            'dates' => $dates,
-            'resources' => $resources,
-            'dated_shifts' => $datedShifts,
-            'problem_type' => 'shift_assignment',
-            'recurring_shifts' => null,
-            'previous_allocation_data' => [] // Empty array for previous allocation data
-        ];
     }
     
+    /**
+     * Apply allocated resources to update orders assignments and schedule times.
+     * Also supports unassigning drivers from orders via the uncovered_shifts payload.
+     *
+     * @param array $allocatedResources
+     * @param string|null $timezone Input times' timezone (defaults to app timezone, stored as UTC)
+     * @param array $uncoveredShifts Map of date => [order_ids] to unassign drivers from
+     * @return array Summary of updates and unassignments
+     */
+    public function applyAllocatedResources(array $allocatedResources, ?string $timezone = null, array $uncoveredShifts = []): array
+    {
+        $timezone = $timezone ?: config('app.timezone', 'UTC');
+        $updatedOrders = [];
+        $skippedAssignments = 0;
+        $errors = [];
+        $unassignedOrders = [];
+
+        foreach ($allocatedResources as $resourceIndex => $resource) {
+            $resourceId = $resource['resource_id'] ?? null;
+            $resourceName = $resource['resource_name'] ?? null;
+            $assignments = $resource['assignments'] ?? [];
+
+            // Resolve driver by uuid only
+            $driver = null;
+            if ($resourceId) {
+                $driver = Driver::with(['user'])
+                    ->where('uuid', $resourceId)
+                    ->first();
+                
+                \Log::info("Driver lookup for resource_id '{$resourceId}': " . ($driver ? "Found driver {$driver->uuid}" : "Not found"));
+            }
+            if (!$driver && $resourceName) {
+                $driver = Driver::with(['user'])
+                    ->whereHas('user', function ($q) use ($resourceName) {
+                        $q->where('name', $resourceName);
+                    })
+                    ->first();
+                
+                \Log::info("Driver lookup for resource_name '{$resourceName}': " . ($driver ? "Found driver {$driver->uuid}" : "Not found"));
+            }
+
+            foreach ($assignments as $date => $assignment) {
+                // Skip null or empty assignment objects
+                if ($assignment === null || (is_array($assignment) && empty($assignment))) {
+                    $skippedAssignments++;
+                    continue;
+                }
+
+                $orderPublicOrUuid = $assignment['id'] ?? null;
+                $startTime = $assignment['start_time'] ?? null;
+
+                if (!$orderPublicOrUuid || !$startTime) {
+                    $skippedAssignments++;
+                    continue;
+                }
+
+                try {
+                    // Combine date and time, interpret in provided timezone then convert to UTC for storage
+                    $localDateTime = Carbon::parse($date . ' ' . $startTime, $timezone);
+                    $scheduledAtUtc = $localDateTime->clone()->setTimezone('UTC');
+
+                    // Resolve order by public_id then uuid
+                    $order = Order::withoutGlobalScopes()
+                        ->where(function($query) use ($orderPublicOrUuid) {
+                            $query->where('public_id', $orderPublicOrUuid)
+                                  ->orWhere('uuid', $orderPublicOrUuid);
+                        })
+                        ->first();
+
+                    if (!$order) {
+                        $errors[] = [
+                            'resource' => $resourceId ?? $resourceName,
+                            'date' => $date,
+                            'order' => $orderPublicOrUuid,
+                            'message' => 'Order not found'
+                        ];
+                        continue;
+                    }
+
+                    // Update only driver assignment
+                    $updates = [];
+                    if ($driver) {
+                        $updates['driver_assigned_uuid'] = $driver->uuid;
+                        \Log::info("Updating order {$order->public_id} with driver {$driver->uuid}");
+                    } else {
+                        \Log::warning("No driver found for resource_id '{$resourceId}' or resource_name '{$resourceName}', skipping driver assignment for order {$order->public_id}");
+                    }
+
+                    if (!empty($updates)) {
+                        Order::where('uuid', $order->uuid)->update($updates);
+                        $updatedOrders[] = $order->public_id ?? $order->uuid;
+                    } else {
+                        // no-op, nothing to update
+                        $skippedAssignments++;
+                    }
+                } catch (\Exception $e) {
+                    $errors[] = [
+                        'resource' => $resourceId ?? $resourceName,
+                        'date' => $date,
+                        'order' => $orderPublicOrUuid,
+                        'message' => $e->getMessage()
+                    ];
+                }
+            }
+        }
+
+        // Process uncovered shifts: unassign drivers from specified orders
+        foreach ($uncoveredShifts as $date => $orderIds) {
+            if (!is_array($orderIds)) {
+                continue;
+            }
+            foreach ($orderIds as $orderId) {
+                try {
+                    $order = Order::withoutGlobalScopes()
+                        ->where(function ($q) use ($orderId) {
+                            $q->where('public_id', $orderId)
+                              ->orWhere('uuid', $orderId);
+                        })
+                        ->first();
+
+                    if (!$order) {
+                        $errors[] = [
+                            'resource' => null,
+                            'date' => $date,
+                            'order' => $orderId,
+                            'message' => 'Order not found for unassignment'
+                        ];
+                        continue;
+                    }
+
+                    // Only update if currently assigned
+                    if (!is_null($order->driver_assigned_uuid)) {
+                        Order::where('uuid', $order->uuid)->update(['driver_assigned_uuid' => null]);
+                        $unassignedOrders[] = $order->public_id ?? $order->uuid;
+                        \Log::info("Unassigned driver from order {$order->public_id} (date {$date})");
+                    }
+                } catch (\Exception $e) {
+                    $errors[] = [
+                        'resource' => null,
+                        'date' => $date,
+                        'order' => $orderId,
+                        'message' => $e->getMessage()
+                    ];
+                }
+            }
+        }
+
+        // Deduplicate updated order ids
+        $updatedOrders = array_values(array_unique($updatedOrders));
+        $unassignedOrders = array_values(array_unique($unassignedOrders));
+
+        return [
+            'updated_orders' => count($updatedOrders),
+            'updated_order_ids' => $updatedOrders,
+            'unassigned_orders' => count($unassignedOrders),
+            'unassigned_order_ids' => $unassignedOrders,
+            'skipped_assignments' => $skippedAssignments,
+            'errors' => $errors,
+        ];
+    }
+
     
     
     // Mock data generation methods have been removed to only process real data
@@ -127,6 +302,155 @@ class ShiftAssignmentService
             \Log::error('Error getting drivers: ' . $e->getMessage());
             // Return empty collection if Driver model fails
             return collect();
+        }
+    }
+
+    /**
+     * Build previous allocation data per resource and date from orders already assigned to drivers
+     *
+     * @param mixed $start
+     * @param mixed $end
+     * @param string|null $companyUuid
+     * @param array $resources
+     * @param array $dates
+     * @param string $timezone
+     * @return array
+     */
+    private function getPreviousAllocationData($start, $end, ?string $companyUuid, array $resources, array $dates, string $timezone): array
+    {
+        try {
+            // Calculate previous week window based on LOCAL timezone, but query DB in UTC
+            $localStart = Carbon::parse($start)->copy()->setTimezone($timezone)->startOfDay();
+            $prevStartUtc = $localStart->copy()->subDays(7)->startOfDay()->setTimezone('UTC');
+            $prevEndUtc = $localStart->copy()->subDay()->endOfDay()->setTimezone('UTC');
+
+            \Log::info('Fetching previous allocation data (local tz window -> utc query)', [
+                'timezone' => $timezone,
+                'local_start' => $localStart->format('Y-m-d H:i:s'),
+                'prev_start_utc' => $prevStartUtc->format('Y-m-d H:i:s'),
+                'prev_end_utc' => $prevEndUtc->format('Y-m-d H:i:s'),
+            ]);
+
+            // Fetch assigned orders within previous range, limit to same statuses used for dated_shifts
+            $query = DB::table('orders')
+                ->select('public_id', 'driver_assigned_uuid', 'scheduled_at', 'estimated_end_date', 'vehicle_assigned_uuid')
+                ->whereNotNull('scheduled_at')
+                ->whereNotNull('driver_assigned_uuid')
+                ->whereIn('status', ['created', 'planned'])
+                ->where('scheduled_at', '>=', $prevStartUtc->toDateTimeString())
+                ->where('scheduled_at', '<=', $prevEndUtc->toDateTimeString());
+                
+            // Log the query for debugging
+            \Log::info('Previous week query:', [
+                'start_utc' => $prevStartUtc->toDateTimeString(),
+                'end_utc' => $prevEndUtc->toDateTimeString(),
+                'sql' => $query->toSql(),
+                'bindings' => $query->getBindings()
+            ]);
+                
+            if ($companyUuid) {
+                $query->where('company_uuid', $companyUuid);
+            }
+            
+            $orders = $query->get();
+            \Log::info('Found ' . $orders->count() . ' orders in previous allocation period');
+
+            // Group orders by driver and LOCAL date (keys in requested timezone)
+            $byDriverDate = [];
+            foreach ($orders as $order) {
+                $sourceDate = Carbon::parse($order->scheduled_at)->setTimezone($timezone);
+                $dateKey = $sourceDate->format('Y-m-d');
+                
+                // Compute duration and times
+                $duration = $this->calculateOrderDuration($order);
+                $startTime = $sourceDate->copy();
+                $endTime = $startTime->copy()->addMinutes($duration);
+                $driverId = $order->driver_assigned_uuid;
+                
+                if (!isset($byDriverDate[$driverId][$dateKey])) {
+                    $byDriverDate[$driverId][$dateKey] = [
+                        'public_id' => $order->public_id,
+                        'start_time' => $startTime->copy()->format('Y-m-d H:i:s'),
+                        'end_time' => $endTime->copy()->format('Y-m-d H:i:s'),
+                        'duration_minutes' => $duration,
+                        // Keep original UTC scheduled_at for comparisons
+                        'scheduled_at' => Carbon::parse($order->scheduled_at)->toDateTimeString(),
+                        'vehicle_id' => $order->vehicle_assigned_uuid ?? null,
+                    ];
+                } else {
+                    // Keep the earliest time (compare on UTC scheduled_at)
+                    $existing = $byDriverDate[$driverId][$dateKey];
+                    if (Carbon::parse($order->scheduled_at)->lt(Carbon::parse($existing['scheduled_at']))) {
+                        $byDriverDate[$driverId][$dateKey] = [
+                            'public_id' => $order->public_id,
+                            'start_time' => $startTime->copy()->format('Y-m-d H:i:s'),
+                            'end_time' => $endTime->copy()->format('Y-m-d H:i:s'),
+                            'duration_minutes' => $duration,
+                            'scheduled_at' => Carbon::parse($order->scheduled_at)->toDateTimeString(),
+                            'vehicle_id' => $order->vehicle_assigned_uuid ?? null,
+                        ];
+                    }
+                }
+            }
+
+            // Build payload with previous week's LOCAL dates
+            $payload = [];
+            $prevWeekDates = [];
+            
+            // Generate previous week local dates (keys in requested timezone)
+            $currentDate = $localStart->copy()->subDays(7);
+            $endDate = $localStart->copy()->subDay();
+            
+            while ($currentDate->lte($endDate)) {
+                $dateKey = $currentDate->format('Y-m-d');
+                $prevWeekDates[$dateKey] = $dateKey;
+                $currentDate->addDay();
+            }
+            
+            foreach ($resources as $resource) {
+                $driverId = $resource['id'] ?? null;
+                $driverName = $resource['name'] ?? null;
+                
+                // Initialize all previous week's dates with empty object {}
+                $assignments = new \stdClass();
+                
+                // Add actual assignments for the driver
+                if ($driverId && isset($byDriverDate[$driverId])) {
+                    foreach ($byDriverDate[$driverId] as $date => $info) {
+                        $assignment = new \stdClass();
+                        $assignment->id = $info['public_id'];
+                        $assignment->start_time = $info['start_time'];
+                        $assignment->end_time = $info['end_time'];
+                        $assignment->duration_minutes = $info['duration_minutes'];
+                        
+                        if (isset($info['vehicle_id']) && $info['vehicle_id'] !== null) {
+                            $assignment->vehicle_id = $info['vehicle_id'];
+                        } else {
+                            $assignment->vehicle_id = null;
+                        }
+                        
+                        $assignments->{$date} = $assignment;
+                    }
+                }
+                
+                // Ensure all previous week dates are included, even if empty
+                foreach ($prevWeekDates as $date) {
+                    if (!isset($assignments->{$date})) {
+                        $assignments->{$date} = new \stdClass();
+                    }
+                }
+
+                $payload[] = [
+                    'resource_id' => $driverId,
+                    'resource_name' => $driverName,
+                    'assignments' => $assignments,
+                ];
+            }
+
+            return $payload;
+        } catch (\Exception $e) {
+            \Log::error('Error building previous_allocation_data: ' . $e->getMessage());
+            return [];
         }
     }
     
@@ -163,7 +487,8 @@ class ShiftAssignmentService
      */
     private function generateResourcesArray(Collection $drivers, $start, $end): array
     {
-        $resources = [];
+        $resources = []; 
+
         
         // Get all driver UUIDs
         $driverUuids = $drivers->pluck('uuid')->toArray();
@@ -200,7 +525,7 @@ class ShiftAssignmentService
             $resources[] = [
                 'id' => $driver->uuid,
                 'name' => $driver->name,
-                'preferences' => [],
+                'preferences' => null,
                 'unavailable_dates' => $unavailableDates,
                 'preferred_rest_days' => [] // Could be populated from driver preferences in the future
             ];
@@ -300,22 +625,25 @@ class ShiftAssignmentService
      * @param mixed $start
      * @param mixed $end
      * @param string|null $companyUuid
+     * @param string $timezone
      * @return array
      */
-    private function getOrdersAsShifts($start, $end, ?string $companyUuid = null): array
+    private function getOrdersAsShifts($start, $end, ?string $companyUuid = null, string $timezone): array
     {
         try {
-            \Log::info('Getting orders as shifts with company_uuid: ' . ($companyUuid ?? 'null'));
+            \Log::info('Getting orders as shifts with company_uuid: ' . ($companyUuid ?? 'null') . ' and timezone: ' . $timezone);
             
-            
-            
-            // Get orders for the date range based on scheduled_at
+            // Get orders for the date range based on scheduled_at (date only)
+            // Exclude orders that already have a driver assigned since they're in pre_assigned_shifts
             $query = DB::table('orders')
                 ->whereNotNull('scheduled_at')
-                ->whereBetween('scheduled_at', [$start, $end])
+                ->whereNull('driver_assigned_uuid') // Exclude orders with assigned drivers
+                ->whereDate('scheduled_at', '>=', $start->format('Y-m-d'))
+                ->whereDate('scheduled_at', '<=', $end->format('Y-m-d'))
                 ->whereIn('status', ['created', 'planned']);
                 
             \Log::info('Filtering orders by status: created, planned');
+            \Log::info('Excluding orders with assigned drivers (driver_assigned_uuid is not null)');
                 
             // Filter by company if provided
             if ($companyUuid) {
@@ -323,10 +651,10 @@ class ShiftAssignmentService
                 $query->where('company_uuid', $companyUuid);
             }
             
-            \Log::info('Querying orders with scheduled_at between ' . $start->format('Y-m-d H:i:s') . ' and ' . $end->format('Y-m-d H:i:s'));
+            \Log::info('Querying orders with scheduled_at between dates ' . $start->format('Y-m-d') . ' and ' . $end->format('Y-m-d'));
             
             $orders = $query->get();
-            \Log::info('Found ' . count($orders) . ' orders in date range');
+            \Log::info('Found ' . count($orders) . ' orders in date range (excluding assigned orders)');
             
             $datedShifts = [];
             
@@ -336,15 +664,22 @@ class ShiftAssignmentService
                 
                 // Calculate duration based on order type or use default
                 $duration = $this->calculateOrderDuration($order);
+                // Compute end time based on duration
+                $endTime = $shiftDate->copy()->addMinutes($duration);
+                
+                // Convert times to the specified timezone
+                $startTimeInTimezone = $shiftDate->copy()->setTimezone($timezone)->format('Y-m-d H:i:s');
+                $endTimeInTimezone = $endTime->copy()->setTimezone($timezone)->format('Y-m-d H:i:s');
                 
                 $datedShifts[] = [
                     'id' => $order->public_id,
-                    'start_time' => $shiftDate->format('Y-m-d H:i:s'),
+                    'start_time' => $startTimeInTimezone,
+                    'end_time' => $endTimeInTimezone,
                     'duration_minutes' => $duration,
                 ];
             }
             
-            \Log::info('Processed ' . count($datedShifts) . ' dated shifts');
+            \Log::info('Processed ' . count($datedShifts) . ' dated shifts (unassigned orders only)');
             return $datedShifts;
         } catch (\Exception $e) {
             \Log::error("Error in getOrdersAsShifts: " . $e->getMessage());
@@ -365,11 +700,83 @@ class ShiftAssignmentService
             $order->scheduled_at && $order->estimated_end_date) {
             $start = Carbon::parse($order->scheduled_at);
             $end = Carbon::parse($order->estimated_end_date);
-            return $start->diffInMinutes($end);
+            $minutes = $start->diffInMinutes($end, false);
+            // If duration is 0 or negative, default to 720
+            if ($minutes <= 0) {
+                return 720;
+            }
+            return $minutes;
         }
         
         // If end time is not present, use default of 720 minutes (12 hours)
         return 720; // Default 12 hours for all orders without end time
+    }
+    
+    /**
+     * Get pre-assigned shifts (orders with driver already assigned) within date range
+     *
+     * @param mixed $start
+     * @param mixed $end
+     * @param string|null $companyUuid
+     * @param string $timezone
+     * @return array
+     */
+    private function getPreAssignedShifts($start, $end, ?string $companyUuid = null, string $timezone): array
+    {
+        try {
+            \Log::info('Getting pre-assigned shifts with company_uuid: ' . ($companyUuid ?? 'null') . ' and timezone: ' . $timezone);
+            \Log::info('Date range filter: ' . $start->format('Y-m-d') . ' to ' . $end->format('Y-m-d'));
+            
+            $query = DB::table('orders')
+                ->whereNotNull('scheduled_at')
+                ->whereNotNull('driver_assigned_uuid')
+                ->whereDate('scheduled_at', '>=', $start->format('Y-m-d'))
+                ->whereDate('scheduled_at', '<=', $end->format('Y-m-d'));
+            
+            if ($companyUuid) {
+                $query->where('company_uuid', $companyUuid);
+            }
+            
+            // Log the SQL query for debugging
+            \Log::info('Pre-assigned shifts query:', [
+                'start_date' => $start->format('Y-m-d'),
+                'end_date' => $end->format('Y-m-d'),
+                'sql' => $query->toSql(),
+                'bindings' => $query->getBindings()
+            ]);
+            
+            $orders = $query->get();
+            
+            \Log::info('Found ' . $orders->count() . ' orders with assigned drivers in date range');
+            
+            $preAssigned = [];
+            foreach ($orders as $order) {
+                $startTime = Carbon::parse($order->scheduled_at);
+                // Compute duration and end time
+                $duration = $this->calculateOrderDuration($order);
+                $endTime = $startTime->copy()->addMinutes($duration);
+                
+                // Convert times to the specified timezone
+                $startTimeInTimezone = $startTime->copy()->setTimezone($timezone)->format('Y-m-d H:i:s');
+                $endTimeInTimezone = $endTime->copy()->setTimezone($timezone)->format('Y-m-d H:i:s');
+                
+                $entry = [
+                    'id' => $order->public_id,
+                    'start_time' => $startTimeInTimezone,
+                    'end_time' => $endTimeInTimezone,
+                    'duration_minutes' => $duration,
+                    'resource_id' => $order->driver_assigned_uuid,
+                    'vehicle_id' => $order->vehicle_assigned_uuid ?? null,
+                ];
+                $preAssigned[] = $entry;
+            }
+            
+            \Log::info('Processed ' . count($preAssigned) . ' pre-assigned shifts');
+            return $preAssigned;
+        } catch (\Exception $e) {
+            \Log::error('Error in getPreAssignedShifts: ' . $e->getMessage());
+            return [];
+        }
     }
     
     // Previous allocation methods have been removed as they are no longer needed

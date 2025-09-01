@@ -40,6 +40,10 @@ export default class VehicleFormPanelComponent extends Component {
      */
     @tracked savePermission;
 
+
+    @tracked fleetOptions = [];
+    @tracked selectedFleets = [];
+
     /**
      * Constructs the component and applies initial state.
      */
@@ -48,6 +52,7 @@ export default class VehicleFormPanelComponent extends Component {
         this.vehicle = vehicle;
         this.savePermission = vehicle && vehicle.isNew ? 'fleet-ops create vehicle' : 'fleet-ops update vehicle';
         applyContextComponentArguments(this);
+        this.loadFleets();
     }
 
     /**
@@ -88,6 +93,31 @@ export default class VehicleFormPanelComponent extends Component {
         this.vehicle.avatar_url = url;
     }
 
+    async loadFleets() {
+    const fleets = await this.store.findAll('fleet');
+    this.fleetOptions = fleets.toArray();
+
+    if (this.vehicle && Array.isArray(this.vehicle.fleet_vehicles)) {
+        this.selectedFleets = this.vehicle.fleet_vehicles
+            .map(fv => {
+                // Use embedded fleet object
+                return this.fleetOptions.find(f => String(f.id) === String(fv.fleet.uuid));
+            })
+            .filter(Boolean);
+
+    }
+}
+
+    @action
+    updateFleets(fleets) {
+        this.selectedFleets = fleets;
+        if (this.vehicle) {
+            this.vehicle.fleets = fleets;
+            this.vehicle.fleet_uuid = Array.isArray(fleets) ? fleets.map(f => f.id) : [];
+        }
+    }
+
+
     /**
      * Task to save vehicle.
      *
@@ -125,7 +155,7 @@ export default class VehicleFormPanelComponent extends Component {
             return;
         }
 
-        this.notifications.success(this.intl.t('fleet-ops.component.vehicle-form-panel.success-message', { vehicleName: this.vehicle.displayName }));
+        this.notifications.success(this.intl.t('fleet-ops.component.vehicle-form-panel.success-message', { vehicleName: this.vehicle.plate_number }));
         contextComponentCallback(this, 'onAfterSave', this.vehicle);
     }
 

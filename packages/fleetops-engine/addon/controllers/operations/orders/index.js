@@ -58,7 +58,8 @@ export default class OperationsOrdersIndexController extends BaseController {
         'drawerOpen',
         'drawerTab',
         'orderPanelOpen',
-        'on'
+        'on',
+        'trip_id'
     ];
 
     /**
@@ -265,6 +266,12 @@ export default class OperationsOrdersIndexController extends BaseController {
     @tracked statusOptions = [];
     @tracked sta_op;
     /**
+     * The filterable param `trip_id`
+     *
+     * @var {String}
+     */
+    @tracked trip_id;
+    /**
      * Flag to determine if the layout is 'map'
      *
      * @type {Boolean}
@@ -306,7 +313,7 @@ export default class OperationsOrdersIndexController extends BaseController {
      */
     @tracked columns = [
         {
-            label: this.intl.t('fleet-ops.common.id'),
+            label: this.intl.t('fleet-ops.operations.orders.index.block-id'),
             valuePath: 'public_id',
             width: '140px',
             cellComponent: 'table/cell/link-to',
@@ -317,6 +324,18 @@ export default class OperationsOrdersIndexController extends BaseController {
             sortable: true,
             filterable: true,
             filterComponent: 'filter/string',
+            filterParam: 'public_id',
+        },
+        {
+            label: this.intl.t('fleet-ops.operations.orders.index.trip-id'),
+            valuePath: 'trip_id',
+            width: '140px',
+            cellComponent: 'table/cell/base',
+            resizable: true,
+            sortable: true,
+            filterable: true,
+            filterComponent: 'filter/string',
+            filterParam: 'trip_id',
         },
         {
             label: this.intl.t('fleet-ops.operations.orders.index.driver-assigned'),
@@ -387,7 +406,7 @@ export default class OperationsOrdersIndexController extends BaseController {
         {
             label: this.intl.t('fleet-ops.operations.orders.index.vehicle-assigned'),
             cellComponent: 'cell/vehicle-name',
-            valuePath: 'vehicleDisplayName',
+            valuePath: 'vehicle_assigned.plate_number',
             modelPath: 'vehicle_assigned',
             showOnlineIndicator: true,
             width: '170px',
@@ -464,6 +483,24 @@ export default class OperationsOrdersIndexController extends BaseController {
         //     filterOptionValue: 'id',
         //     filterComponentPlaceholder: 'Filter by order config',
         // },
+
+        {
+            label: this.intl.t('fleet-ops.common.fleet'),
+            cellComponent: 'table/cell/link-list',
+            cellComponentLabelPath: 'name',
+            action: (fleet) => {
+                this.contextPanel.focus(fleet);
+            },
+            valuePath: 'fleets',
+            width: '180px',
+            resizable: true,
+            hidden: true,
+            filterable: true,
+            filterComponent: 'filter/model',
+            filterComponentPlaceholder: this.intl.t('fleet-ops.common.select-fleet'),
+            filterParam: 'fleet',
+            model: 'fleet',
+        },
         {
             label: this.intl.t('fleet-ops.common.status'),
             valuePath: 'status',
@@ -533,7 +570,7 @@ export default class OperationsOrdersIndexController extends BaseController {
             ddButtonText: false,
             ddButtonIcon: 'ellipsis-h',
             ddButtonIconPrefix: 'fas',
-            ddMenuLabel: 'Order Actions',
+            ddMenuLabel: this.intl.t('fleet-ops.operations.orders.index.view.order-actions'),
             cellClassNames: 'overflow-visible',
             wrapperClass: 'flex items-center justify-end mx-2',
             width: '12%',

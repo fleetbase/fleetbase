@@ -150,11 +150,13 @@ common:
   trip-length: Durata del viaggio
   trip-length-placeholder: Inserisci la durata del viaggio in ore
   trip_length_invalid: La durata del viaggio deve essere un numero positivo maggiore di 0.
+  please-select-from-date: Si prega di selezionare la data di inizio prima di selezionare la data di fine
 leaves:
   driver_name: Nome dell'autista
   start_date: Data di inizio
   end_date: Data di fine
   total_days: Durata (Giorni)
+  view: Visualizza per questo
   leave_type: Tipo di permesso
   reason: Motivo
   status: Stato
@@ -980,6 +982,11 @@ fleet-ops:
         parking: Monitoraggio parcheggi
         toll-reports: Spese di pedaggio
         maintenance-schedule: Pianificazione della Manutenzione
+    leaves-report-panel:
+      cancel-edit-leaves-report: Annulla modifica rapporto ferie
+      cancel-new-leaves-report: Annulla nuovo rapporto ferie
+      edit-button: Modifica rapporto ferie
+      title: Rapporto ferie
     maintenance-schedule-form-panel:
       create: Crea Piano di Manutenzione
       save: Salva Piano di Manutenzione
@@ -1291,6 +1298,7 @@ fleet-ops:
         message: Stai tentando di disinstallare l'estensione "{options}". Sei sicuro di voler procedere con questa disinstallazione?
         sub-message: Tutte le configurazioni e le impostazioni personalizzate saranno perse.
       vehicle-details:
+        fleet: Flotta
         make: Marca
         model: Modello
         year: Anno
@@ -1443,11 +1451,11 @@ fleet-ops:
         end-date-required: La data di fine è richiesta.
         end-date-earlier: La data di fine non può essere precedente alla data di inizio.
         assign-vehicle: Assegnare veicolo?
-        assign-vehicle-busy-text: Il veicolo {vehicleName} è <strong>attualmente assegnato a un altro ordine attivo</strong>. Sei sicuro di volerlo assegnare all’ordine {orderId}?
-        assign-driver-busy-text: L’autista {driverName} è <strong>attualmente assegnato a un altro ordine attivo</strong>. Sei sicuro di volerlo assegnare all’ordine {orderId}?
+        assign-vehicle-busy-text: Il veicolo {vehicleName} <strong>{availability}</strong>. Sei sicuro di volerlo assegnare all’ordine {orderId}?
+        assign-driver-busy-text: L’autista {driverName} <strong>{availability}</strong>. Sei sicuro di volerlo assegnare all’ordine {orderId}?
         assign-anyway: Continua con l’assegnazione
         assign-driver-vehicle: Assegnare autista e veicolo?
-        assign-driver-vehicle-busy-text: L’autista {driverName} e il veicolo {vehicleName} <strong>sono attualmente assegnati a un altro ordine attivo</strong>. Vuoi comunque assegnare loro l’ordine {orderId}?
+        assign-driver-vehicle-busy-text: L’autista {driverName} <strong>{driverAvailability}</strong> e il veicolo {vehicleName} <strong>{vehicleAvailability}</strong>. Vuoi comunque assegnare loro l’ordine {orderId}?
     widget:
       fleet-ops-quickstart:
         message: Vediamo cosa puoi fare per avviare le operazioni...
@@ -1839,6 +1847,9 @@ fleet-ops:
       name-text: Questa impostazione determina la distanza predefinita in metri entro la quale gli ordini adhoc devono fare ping ai conducenti nelle vicinanze del punto di raccolta dell'ordine.
       message: La distanza deve essere espressa in metri
     vehicle-form-panel:
+      fleet: Flotta
+      fleet-text: Assegna una flotta a questo veicolo.
+      fleet-required: Deve essere selezionata almeno una flotta.
       success-message: Veicolo ({vehicleName}) salvato con successo.
       view-details: Visualizza dettagli veicolo
       save-vehicle: Salva Veicolo
@@ -2262,6 +2273,9 @@ fleet-ops:
           payload: Payload
           items-drop: Articoli da consegnare a
           tracking: Tracciamento
+          current-destination: Destinazione attuale
+          current-eta: Orario di arrivo stimato
+          current-ect: Orario di completamento stimato
           waypoint-actions: Azioni Punto di Passaggio
           get-label: Ottieni Etichetta
           view-activity: Visualizza Attività
@@ -2284,6 +2298,7 @@ fleet-ops:
           assign-success: 'Il conducente di {orderId} è stato aggiornato.'
           order-title: Etichetta Ordine
           waypoint-title: Etichetta Punto di Passaggio
+          click-to-copy: Clicca per copiare
           proof-of-delivery: Prova di Consegna
           notes-placeholder: Inserisci le note sull'ordine qui...
           save-order-note: Salva Nota Ordine
@@ -2296,6 +2311,8 @@ fleet-ops:
             no-order-installed: Nessuna configurazione ordine installata!
             you-have-no-configs: Al momento non hai configurazioni di ordine installate, controlla le estensioni per installare una configurazione di ordine e iniziare.
             view-extensions: Visualizza estensioni
+        trip-id: ID Viaggio
+        block-id: ID Blocco
       route-segments:
         order-id: ID Ordine
         title: Segmenti di percorso

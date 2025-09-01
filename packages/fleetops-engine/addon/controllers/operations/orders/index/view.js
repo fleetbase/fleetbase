@@ -735,6 +735,8 @@ export default class OperationsOrdersIndexViewController extends BaseController 
                 if (!driver) {
                     order.set('driver_assigned_uuid', null);
                     order.set('driver_assigned', null);
+                    driverToAssign = null;
+                    driverIsBusy = false;
                     return;
                 }
 
@@ -746,6 +748,8 @@ export default class OperationsOrdersIndexViewController extends BaseController 
                 if (driver.vehicle) {
                     order.set('vehicle_assigned', driver.vehicle);
                     order.set('vehicle_assigned_uuid', driver.vehicle.id);
+                    vehicleToAssign = driver.vehicle;
+                    vehicleIsBusy = (vehicleToAssign.is_vehicle_available == 0) ? true : false;
                 }
 
                 // ALWAYS store the driver reference and track busy state
@@ -906,7 +910,7 @@ export default class OperationsOrdersIndexViewController extends BaseController 
                                 driverName: driverToAssign.name,
                                 driverAvailability: driverToAssign.availability_message,
                                 driverButton: driverToAssign.button_message,
-                                vehicleName: vehicleToAssign.displayName,
+                                vehicleName: vehicleToAssign.plate_number,
                                 vehicleAvailability: vehicleToAssign.availability_message,
                                 vehicleButton: vehicleToAssign.button_message,
                                 orderId: order.public_id
@@ -938,7 +942,7 @@ export default class OperationsOrdersIndexViewController extends BaseController 
                         this.modalsManager.confirm({
                             title: this.intl.t('fleet-ops.component.order.schedule-card.assign-vehicle'),
                             body: this.intl.t('fleet-ops.component.order.schedule-card.assign-vehicle-busy-text', {
-                                vehicleName: vehicleToAssign.displayName,
+                                vehicleName: vehicleToAssign.plate_number,
                                 orderId: order.public_id,
                                 availability: vehicleToAssign.availability_message,
                                 button: vehicleToAssign.button_message,

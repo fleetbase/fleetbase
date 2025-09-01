@@ -59,6 +59,14 @@ export default class ExportFormComponent extends Component {
 
     validateDates() {
         this.dateError = false;
+        
+        // Check if toDate is selected without fromDate
+        if (this.toDate && !this.fromDate) {
+            this.dateError = true;
+            this.notifications.error(this.intl.t('common.please-select-from-date'));
+            return;
+        }
+        
         if (this.fromDate && this.toDate) {
             const from = new Date(this.fromDate);
             const to = new Date(this.toDate);

@@ -27,6 +27,7 @@ export default class OrderModel extends Model {
     @attr('string') payload_id;
     @attr('string') purchase_rate_id;
     @attr('string') driver_id;
+    @attr('string') trip_id;
 
     /** @relationships */
     @belongsTo('company') company;

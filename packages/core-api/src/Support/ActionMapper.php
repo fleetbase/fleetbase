@@ -131,7 +131,6 @@ class ActionMapper
         $route               = $request->route();
         $controllerNamespace = $route->getAction('controller');
         [, $method]          = explode('@', $controllerNamespace);
-
         return static::getAction($method, $request->method(), $resource);
     }
 
@@ -146,8 +145,10 @@ class ActionMapper
      *
      * @return string|null The resolved permission action, or null if not found
      */
+
     public static function resolve(Request $request, ?string $resource = null): ?string
     {
         return static::getFromRequest($request, $resource);
     }
+
 }

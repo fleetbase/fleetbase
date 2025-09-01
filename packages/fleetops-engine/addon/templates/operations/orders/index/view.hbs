@@ -341,7 +341,7 @@
                                     width="24"
                                     height="24"
                                     class="w-8 h-8 rounded-md shadow-sm mr-3 lg:mr-2"
-                                    alt={{@model.vehicle_assigned.plateNumberModel}}
+                                    alt={{@model.vehicle_assigned.plate_number}}
                                 />
                                 <FaIcon
                                     @icon="circle"
@@ -350,7 +350,7 @@
                                 />
                             </div>
                             <div class="field-value">
-                                <div>{{n-a @model.vehicle_assigned.plateNumberModel "No Vehicle"}}</div>
+                                <div>{{n-a @model.vehicle_assigned.plate_number "No Vehicle"}}</div>
                             </div>
                             <Attach::Tooltip @class="clean" @animation="scale" @placement="top">
                                 <InputInfo>
@@ -493,15 +493,15 @@
                         </div>
                         <div class="grid grid-cols-2 gap-2">
                             <div class="field-info-container space-y-1">
-                                <div class="field-name">Current ETA</div>
+                                <div class="field-name">{{t "fleet-ops.operations.orders.index.view.current-eta"}}</div>
                                 <div class="field-value">{{n-a (format-duration @model.tracker_data.current_destination_eta)}}</div>
                             </div>
                             <div class="field-info-container space-y-1">
-                                <div class="field-name">Current ECT</div>
+                                <div class="field-name">{{t "fleet-ops.operations.orders.index.view.current-ect"}}</div>
                                 <div class="field-value">{{n-a @model.tracker_data.estimated_completion_time_formatted}}</div>
                             </div>
                             <div class="field-info-container space-y-1">
-                                <div class="field-name">Current Destination</div>
+                                <div class="field-name">{{t "fleet-ops.operations.orders.index.view.current-destination"}}</div>
                                 <div class="field-value">{{n-a @model.tracker_data.current_destination.address}}</div>
                             </div>
                         </div>

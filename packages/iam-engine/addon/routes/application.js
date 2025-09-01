@@ -6,7 +6,18 @@ export default class ApplicationRoute extends Route {
     @service hostRouter;
     @service abilities;
     @service intl;
+    @service currentUser;
 
+
+    model() {
+        return {
+            currentUser: this.currentUser,
+            isAdmin: this.currentUser.isAdmin,
+            roleName: this.currentUser.roleName,
+            role: this.currentUser.role
+        };
+    }
+    
     beforeModel() {
         if (this.abilities.cannot('iam see extension')) {
             this.notifications.warning(this.intl.t('common.unauthorized-access'));

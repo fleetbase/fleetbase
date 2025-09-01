@@ -152,6 +152,7 @@ common:
   trip-length: Durée du trajet
   trip-length-placeholder: Saisissez la durée du trajet en heures
   trip_length_invalid: La durée du trajet doit être un nombre positif supérieur à 0.
+  please-select-from-date: Veuillez sélectionner la date de début avant de sélectionner la date de fin
 leaves:
   driver_name: Nom du conducteur
   start_date: Date de début
@@ -1131,6 +1132,11 @@ fleet-ops:
         parking: 	Surveillance Parking
         toll-reports: Dépenses de péage
         maintenance-schedule: Plan de Maintenance
+    leaves-report-panel:
+      cancel-edit-leaves-report: Annuler la modification du rapport de congés
+      cancel-new-leaves-report: Annuler le nouveau rapport de congés
+      edit-button: Modifier le rapport de congés
+      title: Rapport de congés
     maintenance-schedule-form-panel:
       create: Créer un Plan de Maintenance
       save: Enregistrer le Plan de Maintenance
@@ -1371,6 +1377,9 @@ fleet-ops:
         drop-instructions: "Sélectionnez un fichier à télécharger"
         files-to-upload: "Fichiers à télécharger"
         import-failed: "Importation échouée"
+        import-partially-success: Importation partiellement réussie
+        successful-imports: Enregistrements importés avec succès
+        errors: Enregistrements échoués
         error-message: "Importation échouée. Aucun lieu n'a été importé en raison d'erreurs. Veuillez examiner le fichier de journal d'erreur joint pour plus de détails."
         loading-message: "Traitement de l'importation des lieux..."
         start-upload-button: "Démarrer le téléchargement"
@@ -1444,6 +1453,7 @@ fleet-ops:
         message: Vous êtes sur le point de désinstaller l'extension "{options}". Êtes-vous sûr de vouloir continuer cette désinstallation ?
         sub-message: Toutes les configurations et paramètres personnalisés seront perdus.
       vehicle-details:
+        fleet: Flotte
         make: Marque
         model: Modèle
         year: Année
@@ -1596,11 +1606,11 @@ fleet-ops:
         end-date-required: La date de fin est requise.
         end-date-earlier: La date de fin ne peut pas être antérieure à la date de début.
         assign-vehicle: Assigner un véhicule ?
-        assign-vehicle-busy-text: Le véhicule {vehicleName} est <strong>actuellement affecté à une autre commande active</strong>. Êtes-vous sûr de vouloir l’affecter à la commande {orderId} ?
-        assign-driver-busy-text: Le conducteur {driverName} est <strong>actuellement affecté à une autre commande active</strong>. Êtes-vous sûr de vouloir l’affecter à la commande {orderId} ?
+        assign-vehicle-busy-text: Le véhicule {vehicleName} <strong>{availability}</strong>. Êtes-vous sûr de vouloir l’affecter à la commande {orderId} ?
+        assign-driver-busy-text: Le conducteur {driverName} <strong>{availability}</strong>. Êtes-vous sûr de vouloir l’affecter à la commande {orderId} ?
         assign-anyway: Continuer l’affectation
         assign-driver-vehicle: Assigner un conducteur et un véhicule ?
-        assign-driver-vehicle-busy-text: Le conducteur {driverName} et le véhicule {vehicleName} <strong>sont actuellement affectés à une autre commande active</strong>. Voulez-vous quand même leur attribuer la commande {orderId} ?
+        assign-driver-vehicle-busy-text: Le conducteur {driverName} <strong>{driverAvailability}</strong> et le véhicule {vehicleName} <strong>{vehicleAvailability}</strong>. Voulez-vous quand même leur attribuer la commande {orderId} ?
     widget:
       fleet-ops-quickstart:
         message: Voyons ce que vous pouvez faire pour lancer les opérations...
@@ -1992,6 +2002,9 @@ fleet-ops:
       name-text: Ce paramètre détermine la distance par défaut en mètres à laquelle les commandes adhoc doivent envoyer un ping aux conducteurs à proximité du point de collecte de la commande.
       message: La distance doit être en mètres
     vehicle-form-panel:
+      fleet: Flotte
+      fleet-text: Assigner une flotte à ce véhicule.
+      fleet-required: Au moins une flotte doit être sélectionnée.
       success-message: Véhicule ({vehicleName}) enregistré avec succès.
       view-details: Voir les détails du véhicule
       save-vehicle: Enregistrer le véhicule
@@ -2418,6 +2431,9 @@ fleet-ops:
           payload: Chargement
           items-drop: Dépôt des articles à
           tracking: Suivi
+          current-destination: Destination actuelle
+          current-eta: Heure d’arrivée estimée
+          current-ect: Heure de fin estimée
           waypoint-actions: Actions sur les points de passage
           get-label: Obtenir l'étiquette
           view-activity: Voir l'activité
@@ -2440,6 +2456,7 @@ fleet-ops:
           assign-success: 'Le conducteur assigné à la commande {orderId} a été mis à jour.'
           order-title: Étiquette de la commande
           waypoint-title: Étiquette du point de passage
+          click-to-copy: Cliquer pour copier
           proof-of-delivery: Preuve de livraison
           notes-placeholder: Entrez les notes de la commande ici....
           save-order-note: Enregistrer la note de la commande
@@ -2452,6 +2469,8 @@ fleet-ops:
             no-order-installed: Aucune configuration de commande installée !
             you-have-no-configs: Vous n'avez actuellement aucune configuration de commande installée, vérifiez les extensions pour installer une configuration de commande afin de commencer.
             view-extensions: Voir les extensions
+        trip-id: ID du voyage
+        block-id: ID du bloc
       route-segments:
         order-id: ID de commande
         title: Segments de route

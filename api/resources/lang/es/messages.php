@@ -63,4 +63,7 @@ return [
         'driver_already_assigned' => 'El conductor :driver ya está asignado a la flota :fleet. Un conductor solo puede pertenecer a una flota.',
     ],
     'duplicate_check_fleet' => 'Ya existe una flota con este nombre o esta duración de viaje.',
+    'vehicle_required' => 'El vehículo es requerido',
+    'end_date_before_start_date' => 'La fecha de fin no puede ser anterior a la fecha de inicio',
+    'leave_request_overlap' => 'Ya tienes una solicitud de permiso para estos días',
 ];

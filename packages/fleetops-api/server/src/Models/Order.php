@@ -70,7 +70,7 @@ class Order extends Model
      *
      * @var array
      */
-    protected $searchableColumns = ['public_id', 'internal_id', 'trackingNumber.tracking_number'];
+    protected $searchableColumns = ['public_id', 'internal_id', 'trackingNumber.tracking_number', 'trip_id'];
 
     /**
      * The attributes that are mass assignable.
@@ -122,7 +122,8 @@ class Order extends Model
         'bid_id',
         'spot_work',
         'carrier',
-        'sub_carrier'
+        'sub_carrier',
+        'trip_id'
     ];
 
     /**

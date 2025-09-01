@@ -30,7 +30,8 @@ class ShiftAssignmentController extends Controller
         $validator = Validator::make($request->all(), [
             'start_date' => 'required|date|before_or_equal:end_date',
             'end_date' => 'required|date|after_or_equal:start_date',
-            'company_uuid' => 'nullable|string|uuid'
+            'company_uuid' => 'nullable|string|uuid',
+            'time_zone' => 'nullable|string'
         ]);
 
         if ($validator->fails()) {
@@ -42,11 +43,24 @@ class ShiftAssignmentController extends Controller
         }
 
         try {
-            $startDate = Carbon::parse($request->start_date);
-            $endDate = Carbon::parse($request->end_date);
+            // Handle multiple date formats (DD-MM-YYYY and YYYY-MM-DD)
+            $startDateStr = $request->start_date;
+            $endDateStr = $request->end_date;
+            
+            // If date is in DD-MM-YYYY format, convert to YYYY-MM-DD
+            if (preg_match('/^\d{2}-\d{2}-\d{4}$/', $startDateStr)) {
+                $startDateStr = \Carbon\Carbon::createFromFormat('d-m-Y', $startDateStr)->format('Y-m-d');
+            }
+            if (preg_match('/^\d{2}-\d{2}-\d{4}$/', $endDateStr)) {
+                $endDateStr = \Carbon\Carbon::createFromFormat('d-m-Y', $endDateStr)->format('Y-m-d');
+            }
+            
+            $startDate = Carbon::parse($startDateStr);
+            $endDate = Carbon::parse($endDateStr);
             $companyUuid = $request->input('company_uuid');
+            $timezone = $request->input('time_zone', 'UTC');
 
-            $data = $this->shiftAssignmentService->generateShiftAssignmentData($startDate, $endDate, $companyUuid);
+            $data = $this->shiftAssignmentService->generateShiftAssignmentData($startDate, $endDate, $companyUuid, $timezone);
 
             return response()->json([
                 'success' => true,
@@ -78,7 +92,8 @@ class ShiftAssignmentController extends Controller
     {
         // Validate request
         $validator = Validator::make($request->all(), [
-            'company_uuid' => 'nullable|string|uuid'
+            'company_uuid' => 'nullable|string|uuid',
+            'time_zone' => 'nullable|string'
         ]);
 
         if ($validator->fails()) {
@@ -92,6 +107,7 @@ class ShiftAssignmentController extends Controller
         try {
             // Get company UUID from request or use default
             $companyUuid = $request->input('company_uuid');
+            $timezone = $request->input('time_zone', 'UTC');
 
             // Calculate current week dates
             $startDate = now()->startOfWeek()->format('Y-m-d');
@@ -101,7 +117,8 @@ class ShiftAssignmentController extends Controller
             $data = $this->shiftAssignmentService->generateShiftAssignmentData(
                 $startDate,
                 $endDate,
-                $companyUuid
+                $companyUuid,
+                $timezone
             );
 
             return response()->json([
@@ -134,7 +151,8 @@ class ShiftAssignmentController extends Controller
     {
         // Validate request
         $validator = Validator::make($request->all(), [
-            'company_uuid' => 'nullable|string|uuid'
+            'company_uuid' => 'nullable|string|uuid',
+            'time_zone' => 'nullable|string'
         ]);
 
         if ($validator->fails()) {
@@ -148,6 +166,7 @@ class ShiftAssignmentController extends Controller
         try {
             // Get company UUID from request or use default
             $companyUuid = $request->input('company_uuid');
+            $timezone = $request->input('time_zone', 'UTC');
 
             // Calculate next week dates
             $startDate = now()->addWeek()->startOfWeek()->format('Y-m-d');
@@ -157,7 +176,8 @@ class ShiftAssignmentController extends Controller
             $data = $this->shiftAssignmentService->generateShiftAssignmentData(
                 $startDate,
                 $endDate,
-                $companyUuid
+                $companyUuid,
+                $timezone
             );
 
             return response()->json([
@@ -223,6 +243,60 @@ class ShiftAssignmentController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Error getting available drivers',
+                'error' => config('app.debug') ? $e->getMessage() : 'Internal server error'
+            ], 500);
+        }
+    }
+
+    /**
+     * Update orders from allocated resources payload.
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function applyAllocations(Request $request): JsonResponse
+    {
+        $validator = Validator::make($request->all(), [
+            'allocated_resources' => 'required|array|min:1',
+            'allocated_resources.*.resource_id' => 'nullable|string',
+            'allocated_resources.*.resource_name' => 'nullable|string',
+            'allocated_resources.*.assignments' => 'required|array',
+            // Optional: list of orders to unassign by date
+            'uncovered_shifts' => 'sometimes|array',
+            'uncovered_shifts.*' => 'array',
+            'uncovered_shifts.*.*' => 'string',
+            'timezone' => 'sometimes|string',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'errors' => $validator->errors(),
+                'message' => 'Validation failed'
+            ], 422);
+        }
+
+        try {
+            $allocatedResources = $request->input('allocated_resources', []);
+            $timezone = $request->input('timezone');
+            $uncoveredShifts = $request->input('uncovered_shifts', []);
+
+            $result = $this->shiftAssignmentService->applyAllocatedResources($allocatedResources, $timezone, $uncoveredShifts);
+
+            return response()->json([
+                'success' => true,
+                'data' => $result,
+                'message' => 'Allocations applied successfully'
+            ]);
+        } catch (\Exception $e) {
+            \Log::error('Error applying allocations: ' . $e->getMessage(), [
+                'exception' => $e,
+                'request' => $request->all()
+            ]);
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Error applying allocations',
                 'error' => config('app.debug') ? $e->getMessage() : 'Internal server error'
             ], 500);
         }

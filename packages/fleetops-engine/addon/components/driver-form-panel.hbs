@@ -82,7 +82,7 @@
                         <div class="-mt-1">
                             {{#if this.driver.vehicle}}
                                 <div class="flex flex-row items-center">
-                                    <span class="text-sm dark:text-gray-500 text-gray-700 mr-3">{{this.driver.vehicle.plateNumberModel}}</span>
+                                    <span class="text-sm dark:text-gray-500 text-gray-700 mr-3">{{this.driver.vehicle.plate_number}}</span>
                                 </div>
                             {{else}}
                                 <div class="flex flex-row items-center">
@@ -190,7 +190,23 @@
                             @permission="fleet-ops assign-vehicle-for driver"
                             as |model|
                         >
-                            {{model.plateNumberModel}}
+                            {{model.plate_number}}
+                        </ModelSelect>
+                    </InputGroup>
+
+                    <InputGroup @name={{t "fleet-ops.operations.orders.index.new.fleet" }} @required={{true}}>
+                        <ModelSelect @modelName="fleet" @selectedModel={{this.driver.fleet}}
+                            @placeholder={{t "fleet-ops.operations.orders.index.new.select-fleet" }} @triggerClass="form-select form-input"
+                            @infiniteScroll={{false}} @renderInPlace={{true}} @onChange={{this.onFleetChanged}}
+                            @permission="fleet-ops assign-fleet-for driver" as |fleet|>
+                            <div class="flex items-center">
+                                <div class="w-7 flex-grow-0 flex-shrink-0">
+                                    <FaIcon @icon="users" />
+                                </div>
+                                <span class="uppercase">
+                                    {{fleet.name}}
+                                </span>
+                            </div>
                         </ModelSelect>
                     </InputGroup>
 
