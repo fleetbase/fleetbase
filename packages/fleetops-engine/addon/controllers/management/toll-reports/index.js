@@ -183,7 +183,7 @@ export default class ManagementTollReportsIndexController extends BaseController
             filterComponentPlaceholder: this.intl.t('fleet-ops.common.select-vehicle'),
             filterParam: 'vehicle',
             model: 'vehicle',
-            modelNamePath: 'vehicle.plate_number',
+            modelNamePath: 'plate_number',
         },
         {
             label: this.intl.t('fleet-ops.common.status'),
