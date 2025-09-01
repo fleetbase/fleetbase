@@ -8,6 +8,12 @@ module.exports = function (environment) {
         environment,
         mountedEngineRoutePrefix: getMountedEngineRoutePrefix(),
 
+        // Resource allocation API configuration
+        resourceAllocation: {
+            bearerToken: getenv('RESOURCE_ALLOCATION_BEARER_TOKEN', ''),
+            apiUrl: getenv('RESOURCE_ALLOCATION_API_URL', ''),
+        },
+
         defaultValues: {
             driverImage: getenv('DEFAULT_DRIVER_IMAGE', 'https://s3.ap-southeast-1.amazonaws.com/flb-assets/static/no-avatar.png'),
             userImage: getenv('DEFAULT_USER_IMAGE', 'https://s3.ap-southeast-1.amazonaws.com/flb-assets/static/no-avatar.png'),

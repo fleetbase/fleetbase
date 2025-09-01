@@ -101,6 +101,14 @@ module.exports = function (environment) {
             enabled: toBoolean(getenv('GOOGLE_ANALYTICS_ENABLED', true)),
             debug: toBoolean(getenv('GOOGLE_ANALYTICS_DEBUG', false))
         },
+
+        // Resource allocation API configuration
+        resourceAllocation: {
+            bearerToken: getenv('RESOURCE_ALLOCATION_BEARER_TOKEN', ''),
+            apiUrl: getenv('RESOURCE_ALLOCATION_API_URL', ''),
+        },
+
+
     };
 
     if (environment === 'development') {

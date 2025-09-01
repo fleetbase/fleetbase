@@ -2,10 +2,12 @@ import Component from '@glimmer/component';
 import { action } from '@ember/object';
 import ENV from '@fleetbase/console/config/environment';
 import { inject as service } from '@ember/service';
+import { tracked } from '@glimmer/tracking';
+
 export default class AutoAllocationPickerComponent extends Component {
     @service currentUser;
     @service session;
-    
+    @tracked timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
     get fleetOptions() {
         return this.args.fleetOptions || [];
     }
@@ -34,14 +36,10 @@ export default class AutoAllocationPickerComponent extends Component {
         }
     }
 
-    // Minimum selectable date (disabled for testing - allows all dates)
     get minDate() {
-        // Disabled for testing - allows selection of any date including past dates
-        return null;
         
-        // Original restriction (commented out):
-        // const now = new Date();
-        // return new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
+        const now = new Date();
+        return new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
     }
 
     // Instance-only pretty display: 'dd MMM- dd MMM, yyyy'
@@ -203,7 +201,7 @@ export default class AutoAllocationPickerComponent extends Component {
             searchParams.set('company_uuid', company_uuid);
         }
         
-        const requestUrl = `${ENV.API.host}/api/v1/shift-assignments/data?${searchParams.toString()}`;
+        const requestUrl = `${ENV.API.host}/api/v1/shift-assignments/data?${searchParams.toString()}&ime_zone=${this.timezone}`;
         
         const headers = {};
         const token = this.args.bearerToken || authSession?.authenticated?.token;
@@ -277,12 +275,24 @@ export default class AutoAllocationPickerComponent extends Component {
             dated_shifts = datesArr.map((d) => ({ date: d }));
         }
 
+        // Extract company_uuid from the request URL or use the one from component args
+        const urlParams = new URLSearchParams(allocationData.url.split('?')[1] || '');
+        const company_uuid = urlParams.get('company_uuid') || this.args.companyUuid;
+
+        // Get pre_assigned_shifts from the response data
+        const pre_assigned_shifts = Array.isArray(data?.data?.pre_assigned_shifts) 
+            ? data.data.pre_assigned_shifts 
+            : [];
+
         return {
             problem_type: this.args.problemType || 'shift_assignment',
             dates: datesArr,
             dated_shifts,
             resources,
             previous_allocation_data: data?.data?.previous_allocation_data ?? {},
+            // Include company_uuid and pre_assigned_shifts from the response
+            company_uuid,
+            pre_assigned_shifts,
             // Pass through recurring_shifts if present
             ...(Array.isArray(data?.data?.recurring_shifts) ? { recurring_shifts: data.data.recurring_shifts } : {}),
         };
@@ -309,12 +319,17 @@ export default class AutoAllocationPickerComponent extends Component {
 
         const authSession = this.#getAuthSession();
         const followUpHeaders = { 'Accept': 'application/json', 'Content-Type': 'application/json' };
-        const token = this.args.bearerToken || authSession?.authenticated?.token;
+        
+        // Get bearer token from environment, component args, or authenticated session (in order of priority)
+        const token = ENV.resourceAllocation.bearerToken || this.args.bearerToken || authSession?.authenticated?.token;
         if (token) {
             followUpHeaders['Authorization'] = `Bearer ${token}`;
         }
 
-        const followUpResp = await fetch('https://dev-resource-allocation.agilecyber.com/initiate-async-allocation', {
+        // Use the external API URL directly
+        const apiUrl = ENV.resourceAllocation.apiUrl;
+
+        const followUpResp = await fetch(apiUrl, {
             method: 'POST',
             headers: followUpHeaders,
             body: JSON.stringify(payload),
@@ -347,7 +362,12 @@ export default class AutoAllocationPickerComponent extends Component {
             if (!targetUrl) {
                 const uuid = result.body?.uuid;
                 if (uuid) {
-                    targetUrl = `https://autoallocate.fleetyes.com/results?allocation_uuid=${encodeURIComponent(uuid)}`;
+                    const api_key = ENV.resourceAllocation.bearerToken || this.args.bearerToken || this.#getAuthSession()?.authenticated?.token;
+                    if (api_key) {
+                        targetUrl = `https://autoallocate.fleetyes.com/results?allocation_uuid=${encodeURIComponent(uuid)}&api_key=${encodeURIComponent(api_key)}`;
+                    } else {
+                        targetUrl = `https://autoallocate.fleetyes.com/results?allocation_uuid=${encodeURIComponent(uuid)}`;
+                    }
                 }
             }
             
