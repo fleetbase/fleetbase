@@ -201,7 +201,7 @@ export default class AutoAllocationPickerComponent extends Component {
             searchParams.set('company_uuid', company_uuid);
         }
         
-        const requestUrl = `${ENV.API.host}/api/v1/shift-assignments/data?${searchParams.toString()}&ime_zone=${this.timezone}`;
+        const requestUrl = `${ENV.API.host}/api/v1/shift-assignments/data?${searchParams.toString()}&time_zone=${this.timezone}`;
         
         const headers = {};
         const token = this.args.bearerToken || authSession?.authenticated?.token;
@@ -362,9 +362,9 @@ export default class AutoAllocationPickerComponent extends Component {
             if (!targetUrl) {
                 const uuid = result.body?.uuid;
                 if (uuid) {
-                    const api_key = ENV.resourceAllocation.bearerToken || this.args.bearerToken || this.#getAuthSession()?.authenticated?.token;
-                    if (api_key) {
-                        targetUrl = `https://autoallocate.fleetyes.com/results?allocation_uuid=${encodeURIComponent(uuid)}&api_key=${encodeURIComponent(api_key)}`;
+                    const apiKey = ENV.resourceAllocation.bearerToken || this.args.bearerToken || this.#getAuthSession()?.authenticated?.token;
+                    if (apiKey) {
+                        targetUrl = `https://autoallocate.fleetyes.com/results?allocation_uuid=${encodeURIComponent(uuid)}&api_key=${encodeURIComponent(apiKey)}`;
                     } else {
                         targetUrl = `https://autoallocate.fleetyes.com/results?allocation_uuid=${encodeURIComponent(uuid)}`;
                     }
