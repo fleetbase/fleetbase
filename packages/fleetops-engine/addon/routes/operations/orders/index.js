@@ -80,6 +80,8 @@ export default class OperationsOrdersIndexRoute extends Route {
         if (params.status) {
             params.status = params.status.toLowerCase().replace(/\s+/g, '_');
         }
+        // Include fleet relationship in the query
+        params.include = 'fleet';
         console.log(params);
         return this.store.query('order', params);
     }
