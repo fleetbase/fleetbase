@@ -1,0 +1,12 @@
+{{#if this.fleet}}
+    <div class="relative flex items-center" ...attributes>
+        <img src={{this.fleet.photo_url}} alt={{this.fleet.name}} {{fallback-img-src (config "defaultValues.fleetImage")}} class="w-5 h-5 mr-2 rounded-md" />
+        <a href="javascript:;" class="relative flex flex-row items-center" disabled={{and @column.permission (cannot @column.permission)}} {{on "click" (fn this.onClick this.fleet)}}>
+            <span>{{get-default-value this.fleet.name}}</span>
+        </a>
+    </div>
+{{else}}
+    <div class="flex items-center">
+        <span>{{t "fleet-ops.component.cell.fleet-name.not-assigned"}}</span>
+    </div>
+{{/if}}
