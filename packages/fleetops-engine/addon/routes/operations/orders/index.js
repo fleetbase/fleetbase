@@ -3,10 +3,12 @@ import { tracked } from '@glimmer/tracking';
 import { inject as service } from '@ember/service';
 import { action, set } from '@ember/object';
 import isNestedRouteTransition from '@fleetbase/ember-core/utils/is-nested-route-transition';
+import { scheduleOnce } from '@ember/runloop';
 
 export default class OperationsOrdersIndexRoute extends Route {
     @service store;
     @service filters;
+    @service loader;
     @tracked timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
     @tracked queryParams = {
         page: { refreshModel: true },
@@ -46,6 +48,8 @@ export default class OperationsOrdersIndexRoute extends Route {
     @tracked isComingFromOutsideOrders = true;
     
     @action willTransition(transition) {
+        // Always show loader during transitions (including QP-only)
+        // this.loader.showOnTransition(transition, 'section.next-view-section');
         // Check if we're navigating within orders section
         if (transition.from && transition.from.name && transition.from.name.includes('operations.orders.index')) {
             this.isComingFromOutsideOrders = false;
@@ -81,6 +85,8 @@ export default class OperationsOrdersIndexRoute extends Route {
             params.status = params.status.toLowerCase().replace(/\s+/g, '_');
         }
         console.log(params);
+        // Show loader while fetching orders
+        this.loader.show('section.next-view-section');
         return this.store.query('order', params);
     }
     @action setupController(controller, model) {
@@ -93,6 +99,9 @@ export default class OperationsOrdersIndexRoute extends Route {
             // No need to use replaceWith here since we've already set the controller property
             // The layout will update in the UI
         }
+
+        // Remove loader after DOM has rendered
+        scheduleOnce('afterRender', this, () => this.loader.remove());
     }
     // This is called when entering the route
     beforeModel(transition) {

@@ -278,6 +278,15 @@ export default class ManagementTollReportsIndexController extends BaseController
         set(this, 'query', value);
         this.hostRouter.refresh();
     }
+
+    /**
+     * Handle page change from Table pagination.
+     * Only updates the `page` QP; route will refresh model and show loader.
+     */
+    @action onPageChange(page) {
+        set(this, 'page', page);
+    }
+
     /**
      * Toggles dialog to export a fuel report
      *

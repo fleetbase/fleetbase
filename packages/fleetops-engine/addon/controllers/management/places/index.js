@@ -330,6 +330,14 @@ export default class ManagementPlacesIndexController extends BaseController {
     }
 
     /**
+     * Handle page change from Table pagination.
+     * Only updates the `page` QP; route will refresh model and show loader.
+     */
+    @action onPageChange(page) {
+        set(this, 'page', page);
+    }
+
+    /**
      * Starts the Driver.js product tour
      */
     // @action

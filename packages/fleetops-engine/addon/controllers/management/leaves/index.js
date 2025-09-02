@@ -85,7 +85,7 @@ export default class ManagementLeavesIndexController extends BaseController {
         {
             label: this.intl.t('leaves.start_date'),
             valuePath: 'start_date',
-            cellComponent: 'table/cell/date',
+            cellComponent: 'table/cell/date-only',
             width: '120px',
             resizable: true,
             sortable: true,
@@ -95,7 +95,7 @@ export default class ManagementLeavesIndexController extends BaseController {
         {
             label: this.intl.t('leaves.end_date'),
             valuePath: 'end_date',
-            cellComponent: 'table/cell/date',
+            cellComponent: 'table/cell/date-only',
             width: '120px',
             resizable: true,
             sortable: true,
@@ -190,7 +190,6 @@ export default class ManagementLeavesIndexController extends BaseController {
         // if no query don't search
         if (isBlank(value)) {
             set(this, 'query', null);
-            this.hostRouter.refresh();
             return;
         }
         // timeout for typing
@@ -203,11 +202,9 @@ export default class ManagementLeavesIndexController extends BaseController {
 
         // update the query param
         set(this, 'query', value);
-        this.hostRouter.refresh();
     }
     @action onPageChange(page) {
         set(this, 'page', page);
-        this.hostRouter.refresh();
     }
 
     /**
@@ -216,7 +213,6 @@ export default class ManagementLeavesIndexController extends BaseController {
     @action onLimitChange(limit) {
         set(this, 'per_page', limit);
         set(this, 'page', 1); // Reset to first page
-        this.hostRouter.refresh();
     }
 
     /**
@@ -225,7 +221,6 @@ export default class ManagementLeavesIndexController extends BaseController {
     @action onSortChange(sort) {
         set(this, 'sort', sort);
         set(this, 'page', 1); // Reset to first page
-        this.hostRouter.refresh();
     }
 
     /**
@@ -234,7 +229,6 @@ export default class ManagementLeavesIndexController extends BaseController {
     @action onFilterChange(filterName, value) {
         set(this, filterName, value);
         set(this, 'page', 1); // Reset to first page
-        this.hostRouter.refresh();
     }
 
     /**
@@ -251,7 +245,6 @@ export default class ManagementLeavesIndexController extends BaseController {
         set(this, 'start_date', null);
         set(this, 'end_date', null);
         set(this, 'page', 1);
-        this.hostRouter.refresh();
     }
     // @task({ restartable: true }) *search({ target: { value } }) {
     //     if (!value) {

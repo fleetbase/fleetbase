@@ -31,7 +31,7 @@
         </DropdownButton>
     {{/if}}
 
-    <Button @icon="plus" @iconPrefix="fas" @type="primary" @text={{t "fleet-ops.common.new"}} class="mr-2 new-toll-report-btn" @onClick={{this.createFuelReport}} @permission="fleet-ops create fuel-report" />
+    <Button @customClass="new-toll-report-btn" @icon="plus" @iconPrefix="fas" @type="primary" @text={{t "fleet-ops.common.new"}} class="mr-2" @onClick={{this.createFuelReport}} @permission="fleet-ops create fuel-report" />
     {{!-- <Button
         @icon="upload"
         @type="magic"
@@ -54,7 +54,7 @@
         @pagination={{true}}
         @paginationMeta={{@model.meta}}
         @page={{this.page}}
-        @onPageChange={{fn (mut this.page)}}
+        @onPageChange={{this.onPageChange}} {{! Changed from fn (mut this.page) to this.onPageChange }}
     />
 </Layout::Section::Body>
 
