@@ -496,7 +496,7 @@ export default class OperationsOrdersIndexController extends BaseController {
             },
             width: '180px',
             resizable: true,
-            hidden: true,
+            hidden: false,
             filterable: true,
             filterComponent: 'filter/model',
             filterComponentPlaceholder: this.intl.t('fleet-ops.common.select-fleet'),

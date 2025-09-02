@@ -107,7 +107,6 @@ export default class FleetFormPanelComponent extends Component {
         const requiredFields = [
             'name',
             'status',
-            'trip_length'
         ];
         const tripLength = parseInt(this.fleet.trip_length, 10);
         const hasEmptyRequired = requiredFields.some(field => !this.fleet[field] || this.fleet[field].toString().trim() === '');
@@ -115,10 +114,10 @@ export default class FleetFormPanelComponent extends Component {
             showErrorOnce(this, this.notifications, this.intl.t('validation.form_invalid'));
             return false;
         }
-        if (isNaN(tripLength) || tripLength <= 0) {
-            showErrorOnce(this, this.notifications, this.intl.t('common.trip_length_invalid'));
-            return false;
-        }
+        // if (isNaN(tripLength) || tripLength <= 0) {
+        //     showErrorOnce(this, this.notifications, this.intl.t('common.trip_length_invalid'));
+        //     return false;
+        // }
         
         return true;
     }
