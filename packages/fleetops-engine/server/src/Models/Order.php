@@ -98,6 +98,8 @@ class Order extends Model
         'tracking_number_uuid',
         'driver_assigned_uuid',
         'vehicle_assigned_uuid',
+        'fleet_uuid',
+        'sub_fleet_uuid',
         'created_by_uuid',
         'updated_by_uuid',
         'scheduled_at',
@@ -141,6 +143,8 @@ class Order extends Model
         'return',
         'customer',
         'driver',
+        'vehicle',
+        'fleet',
         'entity_status',
         'created_by',
         'updated_by',
@@ -619,7 +623,7 @@ class Order extends Model
      */
     public function getIsReadyForDispatchAttribute()
     {
-        return $this->hasDrvierAssigned || $this->adhoc;
+        return $this->hasDriverAssigned || $this->adhoc;
     }
 
     /**
@@ -1395,7 +1399,7 @@ class Order extends Model
         }
 
         if (is_string($driver)) {
-            return $driver === $this->driver_assigned_uuid || ($this->driverAssigned && $driver === $this->driverAssigned->public_id);
+            return $driver === $this->driverAssigned->public_id || ($this->driverAssigned && $driver === $this->driverAssigned->public_id);
         }
 
         return $driver === $this->driverAssigned;
@@ -1777,5 +1781,12 @@ class Order extends Model
         }
 
         return false;
+    }
+
+    //get fleet [order.fleet_uuid = fleet.uuid]
+    public function fleet()
+    {
+        //one order has one fleet
+        return $this->belongsTo(\Fleetbase\FleetOps\Models\Fleet::class, 'fleet_uuid', 'uuid');
     }
 }

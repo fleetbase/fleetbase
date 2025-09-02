@@ -263,6 +263,21 @@ class OrderFilter extends Filter
         }
     }
 
+    public function fleet(string $fleet)
+    {
+        if (Str::isUuid($fleet)) {
+            $this->builder->whereHas('fleet', function ($query) use ($fleet) {
+                $query->where('uuid', $fleet);
+            });
+        } else {
+            $this->builder->whereHas('fleet', function ($query) use ($fleet) {
+                $query->where('public_id', $fleet);
+                $query->orWhere('internal_id', $fleet);
+                $query->orWhere('name', 'like', "%{$fleet}%");
+            });
+        }
+    }
+
     public function sort(string $sort)
     {
         list($param, $direction) = Http::useSort($sort);

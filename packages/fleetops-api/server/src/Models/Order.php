@@ -149,6 +149,8 @@ class Order extends Model
         'return',
         'customer',
         'driver',
+        'vehicle',
+        'fleet',
         'entity_status',
         'created_by',
         'updated_by',
@@ -630,7 +632,7 @@ class Order extends Model
      */
     public function getIsReadyForDispatchAttribute()
     {
-        return $this->hasDrvierAssigned || $this->adhoc;
+        return $this->hasDriverAssigned || $this->adhoc;
     }
 
     /**
@@ -1788,8 +1790,8 @@ class Order extends Model
     {
         return $this->hasMany(\Fleetbase\FleetOps\Models\RouteSegment::class, 'order_id', 'id')->where('deleted', 0);;
     }
-    //get fleets [order.fleet_uuid = fleet.uuid]
-    public function fleets()
+    //get fleet [order.fleet_uuid = fleet.uuid]
+    public function fleet()
     {
         //one order has one fleet
         return $this->belongsTo(\Fleetbase\FleetOps\Models\Fleet::class, 'fleet_uuid', 'uuid');
