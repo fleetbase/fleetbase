@@ -52,6 +52,13 @@ class LeaveRequestController extends Controller
         {
             $query->where('unavailability_type', 'vehicle');
         }
+        
+        // Filter out leave requests with deleted vehicles when unavailability_type is vehicle
+        if(isset($unavailability_type) && $unavailability_type === 'vehicle') {
+            $query->whereHas('vehicle', function($vehicleQuery) {
+                $vehicleQuery->whereNull('deleted_at');
+            });
+        }
         //unavailability_type = vehicle passed it shows all the list of leaves & vehicles
         $query->orderBy('id', 'desc');
         // 🔍 Apply filters with mapped columns
