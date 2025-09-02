@@ -414,7 +414,7 @@ trait HasApiControllerBehavior
                 $timezone = $request->timezone ?? 'UTC';
                 $fleet_uuid = $request->fleet_uuid ?? null;
                 if (isset($fleet_uuid) && !empty($fleet_uuid)) {
-                    $data = $data->filter(function ($driver) use ($order) {
+                    $data = $data->filter(function ($driver) use ($order,$fleet_uuid) {
                         // Get fleet_uuids that this driver belongs to using ORM relationship
                         $driverFleetUuids = $driver->fleets()->pluck('fleet_uuid')->toArray();
                         // Check if any of the driver's fleets match order's fleet_uuid or sub_fleet_uuid
@@ -459,7 +459,7 @@ trait HasApiControllerBehavior
                 $fleet_uuid = $request->fleet_uuid ?? null;
                 // Filter vehicles based on the order's fleet_uuid or sub_fleet_uuid
                 if (isset($fleet_uuid) && !empty($fleet_uuid)) {
-                    $data = $data->filter(function ($vehicle) use ($order) {
+                    $data = $data->filter(function ($vehicle) use ($order,$fleet_uuid) {
                         // Get fleet_uuids that this vehicle belongs to using ORM relationship
                         $vehicleFleetUuids = $vehicle->fleets()->pluck('fleet_uuid')->toArray();
                         
