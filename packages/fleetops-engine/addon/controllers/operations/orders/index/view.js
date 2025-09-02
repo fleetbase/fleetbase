@@ -225,7 +225,6 @@ export default class OperationsOrdersIndexViewController extends BaseController 
         yield order.loadOrderConfig();
         yield order.loadPayload();
         yield order.loadDriver();
-        yield order.loadFleet();
         yield order.loadTrackingNumber();
         yield order.loadCustomer();
         yield order.loadTrackingActivity();
@@ -650,8 +649,6 @@ export default class OperationsOrdersIndexViewController extends BaseController 
             driver_assigned: order.driver_assigned,
             vehicle_assigned_uuid: order.vehicle_assigned_uuid,
             vehicle_assigned: order.vehicle_assigned,
-            fleet_uuid: order.fleet_uuid,
-            fleet: order.fleet,
             scheduled_at: order.scheduled_at,
             estimated_end_date: order.estimated_end_date,
         };
@@ -677,8 +674,6 @@ export default class OperationsOrdersIndexViewController extends BaseController 
             order.set('driver_assigned', originalOrderData.driver_assigned);
             order.set('vehicle_assigned_uuid', originalOrderData.vehicle_assigned_uuid);
             order.set('vehicle_assigned', originalOrderData.vehicle_assigned);
-            order.set('fleet_uuid', originalOrderData.fleet_uuid);
-            order.set('fleet', originalOrderData.fleet);
             order.set('scheduled_at', originalOrderData.scheduled_at);
             order.set('estimated_end_date', originalOrderData.estimated_end_date);
         };
@@ -835,8 +830,7 @@ export default class OperationsOrdersIndexViewController extends BaseController 
                     originalOrderData.driver_assigned_uuid !== order.driver_assigned_uuid ||
                     originalOrderData.vehicle_assigned_uuid !== order.vehicle_assigned_uuid ||
                     originalOrderData.scheduled_at !== order.scheduled_at ||
-                    originalOrderData.estimated_end_date !== order.estimated_end_date || 
-                    originalOrderData.fleet_uuid !== order.fleet_uuid;
+                    originalOrderData.estimated_end_date !== order.estimated_end_date;
     
                 // If no changes, allow save
                 if (!hasChanges) {
@@ -849,11 +843,10 @@ export default class OperationsOrdersIndexViewController extends BaseController 
                     return true;
                 }
 
-                // Check if only dates changed (no changes to driver/vehicle/fleet assignments)
+                // Check if only dates changed (no changes to driver/vehicle assignments)
                 const onlyDatesChanged =
                     originalOrderData.driver_assigned_uuid === order.driver_assigned_uuid &&
                     originalOrderData.vehicle_assigned_uuid === order.vehicle_assigned_uuid &&
-                    originalOrderData.fleet_uuid === order.fleet_uuid &&
                     (originalOrderData.scheduled_at !== order.scheduled_at ||
                         originalOrderData.estimated_end_date !== order.estimated_end_date);
 
