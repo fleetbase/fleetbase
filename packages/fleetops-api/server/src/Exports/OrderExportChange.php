@@ -230,15 +230,15 @@ class OrderExportChange implements FromCollection, WithHeadings, ShouldAutoSize,
 
             // Create lane information from waypoints
             $segmentLane = '';
+            $placeNames = collect(); // Initialize placeNames outside the if condition
+            
             if ($waypoints instanceof Collection && $waypoints->count() == 2) {
-                  $placeNames = collect();
-                    foreach ($waypoints as $waypoint) {
-                        $placeName = $waypoint->name ?? $waypoint->city ?? $waypoint->code ?? '';
-                        if (!empty($placeName)) {
-                            $placeNames->push($placeName);
-                        }
+                foreach ($waypoints as $waypoint) {
+                    $placeName = $waypoint->name ?? $waypoint->city ?? $waypoint->code ?? '';
+                    if (!empty($placeName)) {
+                        $placeNames->push($placeName);
                     }
-                 
+                }
             } else {
                 // No waypoints, fallback to pickup/dropoff codes
                 $pickupCode = $order->payload->pickup->code ?? '';
@@ -255,20 +255,20 @@ class OrderExportChange implements FromCollection, WithHeadings, ShouldAutoSize,
 
 
             // For each route segment, create a row
-            if ($order->routeSegments && $order->routeSegments->count() > 0 && $waypoints && count($waypoints) >= 2) {
+            if ($order->routeSegments && $order->routeSegments->count() > 0) {
                 foreach ($order->routeSegments as $index => $segment) {
                     $loadId = $segment->public_id ?? '';
                     $equipment_type = $segment->equipment_type ?? '';
                     $trailer_id = $segment->trailer_id ?? '';
                     
                     // Create segment-specific lane if available
-                    $segmentLane = $segment->facility_sequence ?? '';
+                    $segmentLane = $segment->facility_sequence ?? $segmentLane;
                     
                     $rows->push([
                         $blockId,                    // Block ID
                         $tripId,                     // Trip ID
                         $loadId,                     // Load ID
-                        $segmentLane,                // Lane
+                        $segmentLane ?? '',          // Lane (ensure it's never null)
                         $startDate,                  // Arrival Start Time
                         $driver_type,                // Driver type
                         $driverName,                 // Driver 1
@@ -282,24 +282,29 @@ class OrderExportChange implements FromCollection, WithHeadings, ShouldAutoSize,
                     ]);
                 }
             } 
-            elseif(isset($placeNames)){
-                  foreach ($waypoints as $waypoint) {
-                        $placeName = $waypoint->name ?? $waypoint->city ?? $waypoint->code ?? '';
-                        if (!empty($placeName)) {
-                            $placeNames->push($placeName);
-                        }
+            elseif($waypoints && $waypoints->count() > 0){
+                // Process waypoints to create lane information
+                foreach ($waypoints as $waypoint) {
+                    $placeName = $waypoint->name ?? $waypoint->city ?? $waypoint->code ?? '';
+                    if (!empty($placeName)) {
+                        $placeNames->push($placeName);
                     }
-                    $uniquePlaceNames = $placeNames->unique()->values();
+                }
+                $uniquePlaceNames = $placeNames->unique()->values();
 
-                    if ($uniquePlaceNames->count() === 1) {
-                        // All waypoints have the same place name
-                        $segmentLane = $uniquePlaceNames->first();
-                    } 
-                 $rows->push([
+                if ($uniquePlaceNames->count() === 1) {
+                    // All waypoints have the same place name
+                    $segmentLane = $uniquePlaceNames->first();
+                } elseif ($uniquePlaceNames->count() > 1) {
+                    // Multiple unique place names, join them
+                    $segmentLane = $uniquePlaceNames->implode('->');
+                }
+                
+                $rows->push([
                     $blockId,                    // Block ID
                     $tripId,                     // Trip ID
                     '',                          // Load ID
-                    $segmentLane,                 // Lane
+                    $segmentLane ?? '',          // Lane (ensure it's never null)
                     $startDate,                  // Arrival Start Time
                     $driver_type,                // Driver type
                     $driverName,                 // Driver 1
@@ -318,7 +323,7 @@ class OrderExportChange implements FromCollection, WithHeadings, ShouldAutoSize,
                     $blockId,                    // Block ID
                     $tripId,                     // Trip ID
                     '',                          // Load ID
-                    $segmentLane,                 // Lane
+                    $segmentLane ?? '',          // Lane (ensure it's never null)
                     $startDate,                  // Arrival Start Time
                     $driver_type,                // Driver type
                     $driverName,                 // Driver 1
