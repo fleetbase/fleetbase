@@ -2,7 +2,7 @@ import Component            from '@glimmer/component';
 import { tracked }          from '@glimmer/tracking';
 import { action }           from '@ember/object';
 import { inject as service } from '@ember/service';
-import showErrorOnce from '@fleetbase/ember-ui/utils/show-error-once';
+import showErrorOnce from '@fleetbase/console/utils/show-error-once';
 
 export default class ExportFormComponent extends Component {
     @service notifications;
