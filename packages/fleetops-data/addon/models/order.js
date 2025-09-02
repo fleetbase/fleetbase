@@ -22,6 +22,8 @@ export default class OrderModel extends Model {
     @attr('string') purchase_rate_uuid;
     @attr('string') tracking_number_uuid;
     @attr('string') driver_assigned_uuid;
+    @attr('string') vehicle_assigned_uuid;
+    @attr('string') fleet_uuid;
     @attr('string') service_quote_uuid;
     @attr('string') order_config_uuid;
     @attr('string') payload_id;
@@ -38,6 +40,7 @@ export default class OrderModel extends Model {
     @belongsTo('payload', { async: false }) payload;
     @belongsTo('driver', { async: false, inverse: 'jobs' }) driver_assigned;
     @belongsTo('vehicle', { async: false }) vehicle_assigned;
+    @belongsTo('fleet', { async: false }) fleet;
     @belongsTo('route', { async: false }) route;
     @belongsTo('purchase-rate', { async: false }) purchase_rate;
     @belongsTo('tracking-number', { async: false }) tracking_number;
@@ -567,6 +570,24 @@ export default class OrderModel extends Model {
             return driverAssigned;
         }
        
+    }
+
+    async loadFleet(options = {}) {
+        const owner = getOwner(this);
+        const store = owner.lookup('service:store');
+        if (shouldNotLoadRelation(this, 'fleet')) {
+            return;
+        }
+
+        if (!this.fleet_uuid) {
+            return;
+        }
+
+        const fleet = await store.findRecord('fleet', this.fleet_uuid, options);
+        if (fleet) {
+            this.set('fleet', fleet);
+            return fleet;
+        }
     }
 
     async loadTrackingNumber(options = {}) {
