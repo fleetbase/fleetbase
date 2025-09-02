@@ -62,11 +62,11 @@
                 </InputGroup>
 
                 <div class="flex items-end gap-5">
-                <InputGroup>
+                <InputGroup @wrapperClass="flex-1">
                     <InputLabel @labelText={{html-safe (concat (t "fleet-ops.common.schedule") " <span style='color: red;'>*</span>")}} />
                     <Input
                         @type="date"
-                        class="form-input"
+                        class="form-input w-full"
                         @value={{this.formatDateOnly this.record.scheduledAt}}
                         @min={{format-date (now) "yyyy-MM-dd"}}
                         {{on "input" this.updateScheduledAt}}
@@ -75,11 +75,11 @@
                     />
                 </InputGroup>
 
-                <InputGroup>
+                <InputGroup @wrapperClass="flex-1">
                     <InputLabel @labelText={{t "leaves.end_date" }} />
                     <Input
                         @type="date"
-                        class="form-input"
+                        class="form-input w-full"
                         @value={{this.formatDateOnly this.record.estimatedEndDate}}
                         @min={{format-date (now) "yyyy-MM-dd"}}
                         {{on "input" this.updateEstimatedEndDate}}
