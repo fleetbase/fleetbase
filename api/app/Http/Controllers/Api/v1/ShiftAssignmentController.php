@@ -31,6 +31,7 @@ class ShiftAssignmentController extends Controller
             'start_date' => 'required|date|before_or_equal:end_date',
             'end_date' => 'required|date|after_or_equal:start_date',
             'company_uuid' => 'nullable|string|uuid',
+            'fleet_uuid' => 'nullable|string|uuid',
             'time_zone' => 'nullable|string'
         ]);
 
@@ -58,9 +59,10 @@ class ShiftAssignmentController extends Controller
             $startDate = Carbon::parse($startDateStr);
             $endDate = Carbon::parse($endDateStr);
             $companyUuid = $request->input('company_uuid');
+            $fleetUuid = $request->input('fleet_uuid');
             $timezone = $request->input('time_zone', 'UTC');
 
-            $data = $this->shiftAssignmentService->generateShiftAssignmentData($startDate, $endDate, $companyUuid, $timezone);
+            $data = $this->shiftAssignmentService->generateShiftAssignmentData($startDate, $endDate, $companyUuid, $timezone, $fleetUuid);
 
             return response()->json([
                 'success' => true,
@@ -93,6 +95,7 @@ class ShiftAssignmentController extends Controller
         // Validate request
         $validator = Validator::make($request->all(), [
             'company_uuid' => 'nullable|string|uuid',
+            'fleet_uuid' => 'nullable|string|uuid',
             'time_zone' => 'nullable|string'
         ]);
 
@@ -105,8 +108,9 @@ class ShiftAssignmentController extends Controller
         }
         
         try {
-            // Get company UUID from request or use default
+            // Get company UUID and fleet UUID from request or use default
             $companyUuid = $request->input('company_uuid');
+            $fleetUuid = $request->input('fleet_uuid');
             $timezone = $request->input('time_zone', 'UTC');
 
             // Calculate current week dates
@@ -118,7 +122,8 @@ class ShiftAssignmentController extends Controller
                 $startDate,
                 $endDate,
                 $companyUuid,
-                $timezone
+                $timezone,
+                $fleetUuid
             );
 
             return response()->json([
@@ -152,6 +157,7 @@ class ShiftAssignmentController extends Controller
         // Validate request
         $validator = Validator::make($request->all(), [
             'company_uuid' => 'nullable|string|uuid',
+            'fleet_uuid' => 'nullable|string|uuid',
             'time_zone' => 'nullable|string'
         ]);
 
@@ -164,8 +170,9 @@ class ShiftAssignmentController extends Controller
         }
         
         try {
-            // Get company UUID from request or use default
+            // Get company UUID and fleet UUID from request or use default
             $companyUuid = $request->input('company_uuid');
+            $fleetUuid = $request->input('fleet_uuid');
             $timezone = $request->input('time_zone', 'UTC');
 
             // Calculate next week dates
@@ -177,7 +184,8 @@ class ShiftAssignmentController extends Controller
                 $startDate,
                 $endDate,
                 $companyUuid,
-                $timezone
+                $timezone,
+                $fleetUuid
             );
 
             return response()->json([
@@ -201,7 +209,7 @@ class ShiftAssignmentController extends Controller
     }
 
     /**
-     * Get available drivers for a specific date
+     * Get available drivers for a specific date.
      *
      * @param Request $request
      * @return JsonResponse
@@ -210,7 +218,8 @@ class ShiftAssignmentController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'date' => 'required|date',
-            'company_uuid' => 'nullable|string|uuid'
+            'company_uuid' => 'nullable|string|uuid',
+            'fleet_uuid' => 'nullable|string|uuid'
         ]);
 
         if ($validator->fails()) {
@@ -223,10 +232,11 @@ class ShiftAssignmentController extends Controller
 
         try {
             $companyUuid = $request->input('company_uuid');
+            $fleetUuid = $request->input('fleet_uuid');
             $date = $request->input('date');
             
             // Use the service method to get available drivers
-            $data = $this->shiftAssignmentService->getAvailableDrivers($date, $companyUuid);
+            $data = $this->shiftAssignmentService->getAvailableDrivers($date, $companyUuid, $fleetUuid);
 
             return response()->json([
                 'success' => true,
