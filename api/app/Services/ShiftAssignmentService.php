@@ -799,10 +799,10 @@ class ShiftAssignmentService
      * @param string $timezone
      * @return array
      */
-    private function getPreAssignedShifts($start, $end, string $timezone, ?string $companyUuid = null, ?string $fleetUuid = null): array
+    public function getPreAssignedShifts($start, $end, string $timezone, ?string $companyUuid = null, ?string $fleetUuid = null): array
     {
         try {
-            \Log::info('Getting pre-assigned shifts with company_uuid: ' . ($companyUuid ?? 'null') . ' and timezone: ' . $timezone);
+            \Log::info('Getting pre-assigned shifts with company_uuid: ' . ($companyUuid ?? 'null') . ', fleet_uuid: ' . ($fleetUuid ?? 'null') . ' and timezone: ' . $timezone);
             \Log::info('Date range filter: ' . $start->format('Y-m-d') . ' to ' . $end->format('Y-m-d'));
             
             $query = DB::table('orders')
@@ -810,12 +810,14 @@ class ShiftAssignmentService
                 ->whereNotNull('driver_assigned_uuid')
                 ->whereDate('scheduled_at', '>=', $start->format('Y-m-d'))
                 ->whereDate('scheduled_at', '<=', $end->format('Y-m-d'));
-            
+        
             if ($companyUuid) {
                 $query->where('company_uuid', $companyUuid);
+                \Log::info('Filtering orders by company_uuid: ' . $companyUuid);
             }
             if ($fleetUuid) {
                 $query->where('fleet_uuid', $fleetUuid);
+                \Log::info('Filtering orders by fleet_uuid: ' . $fleetUuid);
             }
             
             // Log the SQL query for debugging
@@ -826,9 +828,49 @@ class ShiftAssignmentService
                 'bindings' => $query->getBindings()
             ]);
             
+            // Log the final SQL query and bindings
+            $sql = $query->toSql();
+            $bindings = $query->getBindings();
+            \Log::info('Pre-assigned shifts query:', [
+                'sql' => $sql,
+                'bindings' => $bindings,
+                'start_date' => $start->format('Y-m-d'),
+                'end_date' => $end->format('Y-m-d')
+            ]);
+            
             $orders = $query->get();
             
-            \Log::info('Found ' . $orders->count() . ' orders with assigned drivers in date range');
+            if ($orders->isEmpty()) {
+                // Log additional diagnostic information
+                $totalOrders = DB::table('orders')
+                    ->when($companyUuid, function($q) use ($companyUuid) {
+                        return $q->where('company_uuid', $companyUuid);
+                    })
+                    ->when($fleetUuid, function($q) use ($fleetUuid) {
+                        return $q->where('fleet_uuid', $fleetUuid);
+                    })
+                    ->count();
+                    
+                $totalWithDrivers = DB::table('orders')
+                    ->whereNotNull('driver_assigned_uuid')
+                    ->when($companyUuid, function($q) use ($companyUuid) {
+                        return $q->where('company_uuid', $companyUuid);
+                    })
+                    ->when($fleetUuid, function($q) use ($fleetUuid) {
+                        return $q->where('fleet_uuid', $fleetUuid);
+                    })
+                    ->count();
+                    
+                \Log::warning('No pre-assigned shifts found', [
+                    'total_orders' => $totalOrders,
+                    'total_with_drivers' => $totalWithDrivers,
+                    'date_range' => $start->format('Y-m-d') . ' to ' . $end->format('Y-m-d'),
+                    'company_uuid' => $companyUuid,
+                    'fleet_uuid' => $fleetUuid
+                ]);
+            } else {
+                \Log::info('Found ' . $orders->count() . ' orders with assigned drivers in date range');
+            }
             
             $preAssigned = [];
             foreach ($orders as $order) {
