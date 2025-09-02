@@ -15,6 +15,7 @@ import { getOwner } from '@ember/application';
 import { on } from '@ember/object/evented';
 import Controller from '@ember/controller';
 import { inject as controller } from '@ember/controller';
+import ENV from '@fleetbase/console/config/environment';
 
 export default class OperationsOrdersIndexController extends BaseController {
     @service currentUser;
@@ -29,6 +30,7 @@ export default class OperationsOrdersIndexController extends BaseController {
     @service socket;
     @service abilities;
     @service session;
+    @tracked timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
     @controller('operations/orders/index/new') newController;
     /**
      * Queryable parameters for this controller's model
@@ -1050,6 +1052,100 @@ export default class OperationsOrdersIndexController extends BaseController {
         });
     }
 
+    /**
+     * Auto-allocates multiple selected orders.
+     *
+     * @param {Array} [selected=[]] - Orders selected for auto-allocation.
+     * @action
+     * @memberof OperationsOrdersIndexController
+     */
+    @action
+    async bulkAutoAllocate(selected = []) {
+        selected = selected.length > 0 ? selected : this.table.selectedRows;
+    
+        if (!Array.isArray(selected) || selected.length === 0) {
+            return;
+        }
+    
+        const selectedOrders = selected.map(order => order.public_id).join(',');
+        const companyUuid = this.currentUser?.company_uuid || 
+                            this.session?.data?.authenticated?.company_uuid ||
+                            this.currentUser?.user?.company_uuid;
+        const url = `${ENV.API.host}/api/v1/shift-assignments/data?selected_orders=[${selectedOrders}]&company_uuid=${companyUuid}&time_zone=${this.timezone}`;
+    
+        this.isLoading = true;
+    
+        this.modalsManager.confirm({
+            title: this.intl.t('fleet-ops.operations.orders.index.dispatch-title'),
+            body: this.intl.t('fleet-ops.operations.orders.index.dispatch-body'),
+            acceptButtonScheme: 'primary',
+            acceptButtonText: this.intl.t('fleet-ops.operations.orders.index.view.dispatch'),
+            acceptButtonIcon: 'paper-plane',
+            confirm: async (modal) => {
+                modal.startLoading();
+    
+                try {
+                    // ---- First API call ----
+                    const getResp = await fetch(url, {
+                        method: 'GET',
+                        headers: this.fetch.getHeaders()
+                    });
+    
+                    const getData = await getResp.json(); // This will be your payload for the next call
+    
+                    this.notifications.success(
+                        this.intl.t('fleet-ops.operations.orders.index.auto-allocate-success', {
+                            count: selected.length
+                        })
+                    );
+    
+                    // ---- Second API call ----
+                    const authSession = this.#getAuthSession();
+                    const followUpHeaders = {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    };
+    
+                    const token = ENV.resourceAllocation.bearerToken || this.args.bearerToken || authSession?.authenticated?.token;
+                    if (token) {
+                        followUpHeaders['Authorization'] = `Bearer ${token}`;
+                    }
+    
+                    const apiUrl = ENV.resourceAllocation.apiUrl;
+    
+                    // Use data from first call as payload
+                    const followUpResp = await fetch(apiUrl, {
+                        method: 'POST',
+                        headers: followUpHeaders,
+                        body: JSON.stringify(getData) // <-- pass first call response here
+                    });
+    
+                    if (!followUpResp.ok) {
+                        throw new Error(`Follow-up API failed with status ${followUpResp.status}`);
+                    }
+    
+                    this.notifications.success('Follow-up API call succeeded.');
+    
+                    await this.hostRouter.refresh();
+                    this.table.untoggleSelectAll();
+                } catch (error) {
+                    console.error('Auto-allocation or follow-up failed:', error);
+                    this.notifications.serverError(error);
+                } finally {
+                    this.isLoading = false;
+                    modal.stopLoading();
+                }
+            }
+        });
+    }
+    
+    #getAuthSession() {
+        try {
+            return JSON.parse(localStorage.getItem('ember_simple_auth-session'));
+        } catch (_) {
+            return null;
+        }
+    }
     /**
      * Cancels multiple selected orders.
      *
