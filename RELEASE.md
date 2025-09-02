@@ -1,21 +1,24 @@
-# 🚀 Fleetbase v0.7.9 — 2025-08-13
+# 🚀 Fleetbase v0.7.10 — 2025-09-02
 
-> “Template variable resolver + patch vehicle update on order via API”
+> “Preparing for a major update”
 
 ---
 
 ## ✨ Highlights
-- Patched vehicle assignment update on orders via API
-- Added ability to use variables in order config activity objects for the `status` and `details` properties
-- Tigher data retention time by maintenance scripts
-
-### Variable Usage
-Now in your activity status and details fields you can do things like "Driver completed {waypoint.type}" or "{capitalize waypoint.type} has been completed". These use of variables will then be resolved, say "waypoint.type" = "pickup", then in the inserted activity status those examples would resolve to "Driver completed pickup", and "Pickup has been completed".
+- Added new core Report and Alert models to enable report generation and alerts
+- Added new FleetOps models to enhance maintenance and telematics: Maintenance, WorkOrder, Asset, Equipment, Part, Sensor, Telematic 
+- Added new `HasCustomFields` trait to enable custom fields on resources
+- Added ability to filter storefront metrics with date range input
+- Patched customers widget in storefront
+- Patched payment gateway management in storefront
+- Added ability to set default order config to stores and networks
+- Critical patches for stripe integration in Storefront
+- Other quality patches in storefront
 
 ---
 
 ## ⚠️ Breaking Changes
-- None 🙂
+- ⚠️ `VehicleDevice` and `VehicleDeviceEvent` has been deprecated and changed to `Device` and `DeviceEvent`
 
 ---
 
