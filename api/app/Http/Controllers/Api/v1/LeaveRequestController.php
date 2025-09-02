@@ -136,6 +136,7 @@ class LeaveRequestController extends Controller
             }
             
             $input['unavailability_type'] = 'vehicle';
+            $input['leave_type'] = 'Other';
             $input['status'] = 'Approved';
             $vehcileRequestDuplicate = LeaveRequest::where([
                 ['vehicle_uuid', '=', $input['vehicle_uuid']],
