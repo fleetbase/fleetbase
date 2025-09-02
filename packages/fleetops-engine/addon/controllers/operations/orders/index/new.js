@@ -557,7 +557,7 @@ export default class OperationsOrdersIndexNewController extends BaseController {
                 // Pass callback to refresh page after download
                 this.downloadFile(errorLogUrl, () => {
                     modal.done();
-                    this.hostRouter.refresh(); // ✅ Refresh after download completes
+                    // Don't refresh to avoid breaking pagination
                 });
             }
         };
@@ -631,7 +631,7 @@ export default class OperationsOrdersIndexNewController extends BaseController {
                 } finally {
                     this.modalsManager.setOption('uploadQueue', []);
                     modal.done();
-                    this.hostRouter.refresh(); // ✅ Refresh list after closing
+                    // Don't refresh to avoid breaking pagination
                 }
             },
         });
