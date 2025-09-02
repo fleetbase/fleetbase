@@ -40,6 +40,7 @@ export default class OperationsOrdersIndexController extends BaseController {
         'customer',
         'driver',
         'vehicle',
+        'fleet',
         'pickup',
         'dropoff',
         'created_by',
@@ -135,6 +136,13 @@ export default class OperationsOrdersIndexController extends BaseController {
      * @var {String}
      */
     @tracked vehicle;
+
+    /**
+     * The filterable param `fleet`
+     *
+     * @var {String}
+     */
+    @tracked fleet;
 
     /**
      * The filterable param `payload`
@@ -404,6 +412,23 @@ export default class OperationsOrdersIndexController extends BaseController {
             filterComponentPlaceholder: 'Select vehicle for order',
             filterParam: 'vehicle',
             model: 'vehicle',
+        },
+        {
+            label: this.intl.t('fleet-ops.common.fleet'),
+            cellComponent: 'table/cell/link-list',
+            cellComponentLabelPath: 'name',
+            action: (fleet) => {
+                this.contextPanel.focus(fleet);
+            },
+            valuePath: 'fleet',
+            width: '180px',
+            resizable: true,
+            hidden: true,
+            filterable: true,
+            filterComponent: 'filter/model',
+            filterComponentPlaceholder: this.intl.t('fleet-ops.common.select-fleet'),
+            filterParam: 'fleet',
+            model: 'fleet',
         },
         {
             label: this.intl.t('fleet-ops.operations.orders.index.facilitator'),
