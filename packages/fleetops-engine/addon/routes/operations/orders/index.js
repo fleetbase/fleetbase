@@ -21,6 +21,8 @@ export default class OperationsOrdersIndexRoute extends Route {
         tracking: { refreshModel: true },
         facilitator: { refreshModel: true },
         driver: { refreshModel: true },
+        vehicle: { refreshModel: true },
+        fleet: { refreshModel: true },
         customer: { refreshModel: true },
         pickup: { refreshModel: true },
         dropoff: { refreshModel: true },
