@@ -204,7 +204,7 @@ class OrderExportChange implements FromCollection, WithHeadings, ShouldAutoSize,
             'vehicleAssigned', // Make sure to include vehicle relationship
             'payload.waypoints',
             'routeSegments',
-            'fleets',
+            // 'fleets',
             'createdBy',
             'updatedBy',
         ])->OrderBy('created_at', 'desc')->get();
