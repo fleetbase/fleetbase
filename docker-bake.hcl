@@ -24,13 +24,21 @@ target "app" {
   // set the target from matrix
   target     = tgt
   dockerfile = "docker/Dockerfile"
-  platforms = [
-    "linux/amd64",
-  ]
+  platforms  = ["linux/amd64", "linux/arm64"]
 
-  tags = notequal("", REGISTRY) ? formatlist(
-    GCP ? "${REGISTRY}/${tgt}:%s" : "${REGISTRY}:${tgt}-%s",
-    compact(["latest", VERSION])
+  # Generate tags for both the canonical name (${tgt})
+  # and an alias (api) *only when tgt == "app"*
+  tags = notequal("", REGISTRY) ? concat(
+    # normal tags for tgt (app/scheduler/events)
+    formatlist(
+      GCP ? "${REGISTRY}/${tgt}:%s" : "${REGISTRY}:${tgt}-%s",
+      compact(["latest", VERSION])
+    ),
+    # alias tags for api (only if this is the "app" variant)
+    tgt == "app" ? formatlist(
+      GCP ? "${REGISTRY}/api:%s" : "${REGISTRY}:api-%s",
+      compact(["latest", VERSION])
+    ) : []
   ) : []
 
   args = {
@@ -44,9 +52,7 @@ target "app" {
 target "app-httpd" {
   context    = "./"
   dockerfile = "docker/httpd/Dockerfile"
-  platforms = [
-    "linux/amd64",
-  ]
+  platforms  = ["linux/amd64", "linux/arm64"]
 
   tags = notequal("", REGISTRY) ? formatlist(
     GCP ? "${REGISTRY}/app-httpd:%s" : "${REGISTRY}:app-httpd-%s",
