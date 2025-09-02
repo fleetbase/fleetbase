@@ -208,7 +208,7 @@ class OrderExportChange implements FromCollection, WithHeadings, ShouldAutoSize,
             'createdBy',
             'updatedBy',
         ])->OrderBy('created_at', 'desc')->get();
-
+        
         $rows = collect();
         foreach ($orders as $order) {
             // Prepare the shared fields
@@ -230,15 +230,15 @@ class OrderExportChange implements FromCollection, WithHeadings, ShouldAutoSize,
 
             // Create lane information from waypoints
             $segmentLane = '';
-            $placeNames = collect(); // Initialize placeNames outside the if condition
-            
-            if ($waypoints instanceof Collection && $waypoints->count() == 2) {
-                foreach ($waypoints as $waypoint) {
-                    $placeName = $waypoint->name ?? $waypoint->city ?? $waypoint->code ?? '';
-                    if (!empty($placeName)) {
-                        $placeNames->push($placeName);
+            /*if ($waypoints instanceof Collection && $waypoints->count() == 2) {
+                  $placeNames = collect();
+                    foreach ($waypoints as $waypoint) {
+                        $placeName = $waypoint->name ?? $waypoint->city ?? $waypoint->code ?? '';
+                        if (!empty($placeName)) {
+                            $placeNames->push($placeName);
+                        }
                     }
-                }
+                 
             } else {
                 // No waypoints, fallback to pickup/dropoff codes
                 $pickupCode = $order->payload->pickup->code ?? '';
@@ -251,24 +251,24 @@ class OrderExportChange implements FromCollection, WithHeadings, ShouldAutoSize,
                 } elseif (!empty($dropoffCode)) {
                     $segmentLane = $dropoffCode;
                 }
-            }
+            }*/
 
 
             // For each route segment, create a row
-            if ($order->routeSegments && $order->routeSegments->count() > 0) {
+            if ($order->routeSegments && $order->routeSegments->count() > 0 && $waypoints && count($waypoints) >= 2) {
                 foreach ($order->routeSegments as $index => $segment) {
                     $loadId = $segment->public_id ?? '';
                     $equipment_type = $segment->equipment_type ?? '';
                     $trailer_id = $segment->trailer_id ?? '';
                     
                     // Create segment-specific lane if available
-                    $segmentLane = $segment->facility_sequence ?? $segmentLane;
+                    $segmentLane = $segment->facility_sequence ?? '';
                     
                     $rows->push([
                         $blockId,                    // Block ID
                         $tripId,                     // Trip ID
                         $loadId,                     // Load ID
-                        $segmentLane ?? '',          // Lane (ensure it's never null)
+                        $segmentLane,                // Lane
                         $startDate,                  // Arrival Start Time
                         $driver_type,                // Driver type
                         $driverName,                 // Driver 1
@@ -282,29 +282,58 @@ class OrderExportChange implements FromCollection, WithHeadings, ShouldAutoSize,
                     ]);
                 }
             } 
-            elseif($waypoints && $waypoints->count() > 0){
-                // Process waypoints to create lane information
-                foreach ($waypoints as $waypoint) {
-                    $placeName = $waypoint->name ?? $waypoint->city ?? $waypoint->code ?? '';
-                    if (!empty($placeName)) {
-                        $placeNames->push($placeName);
+            else{
+                if($waypoints instanceof Collection && $waypoints->count() == 2){
+                    $placeNames = collect();
+                    foreach ($waypoints as $waypoint) {
+                        $placeName = $waypoint->name ?? $waypoint->city ?? $waypoint->code ?? '';
+                        if (!empty($placeName)) {
+                            $placeNames->push($placeName);
+                        }
+                    }
+                    $uniquePlaceNames = $placeNames->unique()->values();
+
+                    if ($uniquePlaceNames->count() === 1) {
+                        // All waypoints have the same place name
+                        $segmentLane = $uniquePlaceNames->first();
+                    } 
+                }
+                else{
+                    $pickupCode = $order->payload->pickup->code ?? '';
+                    $dropoffCode = $order->payload->dropoff->code ?? '';
+                    
+                    if (!empty($pickupCode) && !empty($dropoffCode)) {
+                        if($pickupCode === $dropoffCode)
+                        {
+                            $segmentLane = $pickupCode;
+                        }
+                        else{
+                            $segmentLane = $pickupCode . '->' . $dropoffCode;
+                        }
+                    } elseif (!empty($pickupCode)) {
+                        $segmentLane = $pickupCode;
+                    } elseif (!empty($dropoffCode)) {
+                        $segmentLane = $dropoffCode;
                     }
                 }
-                $uniquePlaceNames = $placeNames->unique()->values();
-
-                if ($uniquePlaceNames->count() === 1) {
-                    // All waypoints have the same place name
-                    $segmentLane = $uniquePlaceNames->first();
-                } elseif ($uniquePlaceNames->count() > 1) {
-                    // Multiple unique place names, join them
-                    $segmentLane = $uniquePlaceNames->implode('->');
-                }
                 
-                $rows->push([
+                //   foreach ($waypoints as $waypoint) {
+                //         $placeName = $waypoint->name ?? $waypoint->city ?? $waypoint->code ?? '';
+                //         if (!empty($placeName)) {
+                //             $placeNames->push($placeName);
+                //         }
+                //     }
+                //     $uniquePlaceNames = $placeNames->unique()->values();
+
+                //     if ($uniquePlaceNames->count() === 1) {
+                //         // All waypoints have the same place name
+                //         $segmentLane = $uniquePlaceNames->first();
+                //     } 
+                 $rows->push([
                     $blockId,                    // Block ID
                     $tripId,                     // Trip ID
                     '',                          // Load ID
-                    $segmentLane ?? '',          // Lane (ensure it's never null)
+                    $segmentLane,                 // Lane
                     $startDate,                  // Arrival Start Time
                     $driver_type,                // Driver type
                     $driverName,                 // Driver 1
@@ -317,25 +346,25 @@ class OrderExportChange implements FromCollection, WithHeadings, ShouldAutoSize,
                     ''                           // Unscheduled Drop (Yes/No)
                 ]);
             }
-            else {
-                // Fallback if no segments or waypoints — show 1 row for ALL orders
-                $rows->push([
-                    $blockId,                    // Block ID
-                    $tripId,                     // Trip ID
-                    '',                          // Load ID
-                    $segmentLane ?? '',          // Lane (ensure it's never null)
-                    $startDate,                  // Arrival Start Time
-                    $driver_type,                // Driver type
-                    $driverName,                 // Driver 1
-                    '',                          // Driver 2 (if team)
-                    $vehicleType,                // Vehicle Type
-                    $vehiclePlateNumber,         // License Plate #
-                    '',                        // Country Code (default)
-                    '',                          // Equipment Type
-                    '',                          // Trailer ID
-                    ''                           // Unscheduled Drop (Yes/No)
-                ]);
-            }
+            // else {
+            //     // Fallback if no segments or waypoints — show 1 row for ALL orders
+            //     $rows->push([
+            //         $blockId,                    // Block ID
+            //         $tripId,                     // Trip ID
+            //         '',                          // Load ID
+            //         $segmentLane,                 // Lane
+            //         $startDate,                  // Arrival Start Time
+            //         $driver_type,                // Driver type
+            //         $driverName,                 // Driver 1
+            //         '',                          // Driver 2 (if team)
+            //         $vehicleType,                // Vehicle Type
+            //         $vehiclePlateNumber,         // License Plate #
+            //         '',                        // Country Code (default)
+            //         '',                          // Equipment Type
+            //         '',                          // Trailer ID
+            //         ''                           // Unscheduled Drop (Yes/No)
+            //     ]);
+            // }
         }
 
         return $rows;
