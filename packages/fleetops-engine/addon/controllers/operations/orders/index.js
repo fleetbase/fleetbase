@@ -486,12 +486,12 @@ export default class OperationsOrdersIndexController extends BaseController {
 
         {
             label: this.intl.t('fleet-ops.common.fleet'),
-            cellComponent: 'table/cell/link-list',
-            cellComponentLabelPath: 'name',
+            cellComponent: 'cell/fleet-name',
+            valuePath: 'fleet.name',
+            modelPath: 'fleet',
             action: (fleet) => {
                 this.contextPanel.focus(fleet);
             },
-            valuePath: 'fleets',
             width: '180px',
             resizable: true,
             hidden: true,
