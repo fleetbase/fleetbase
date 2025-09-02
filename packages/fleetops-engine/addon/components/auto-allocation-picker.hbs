@@ -51,7 +51,8 @@
                 @type="primary"
                 class="w-full text-lg font-semibold bg-black text-white"
                 @onClick={{dropdown-fn dd this.allocate}}
-                @disabled={{not this.hasDate}}
+                {{!-- @disabled={{not this.hasDate}} --}}
+                @disabled={{not this.canAllocate}}
             />
         </div>
     </div>
