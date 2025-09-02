@@ -18,16 +18,24 @@ class ShiftAssignmentService
      * @param string|Carbon $endDate
      * @param string|null $companyUuid
      * @param string|null $timezone
+     * @param string|null $fleetUuid
      * @return array
      * @throws \InvalidArgumentException If company_uuid is invalid
      */
-    public function generateShiftAssignmentData($startDate, $endDate, ?string $companyUuid = null, ?string $timezone = null): array
+    public function generateShiftAssignmentData($startDate, $endDate, ?string $companyUuid = null, ?string $timezone = null, ?string $fleetUuid = null): array
     {
         try {
             // Validate company UUID if provided
             if ($companyUuid !== null) {
                 if (!preg_match('/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i', $companyUuid)) {
                     throw new \InvalidArgumentException('Invalid company UUID format');
+                }
+            }
+            
+            // Validate fleet UUID if provided
+            if ($fleetUuid !== null) {
+                if (!preg_match('/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i', $fleetUuid)) {
+                    throw new \InvalidArgumentException('Invalid fleet UUID format');
                 }
             }
             
@@ -70,10 +78,11 @@ class ShiftAssignmentService
             
             \Log::info('Generating shift assignment data for date range: ' . $start->format('Y-m-d') . ' to ' . $end->format('Y-m-d'));
             \Log::info('Company UUID: ' . ($companyUuid ?? 'null'));
+            \Log::info('Fleet UUID: ' . ($fleetUuid ?? 'null'));
             \Log::info('Timezone: ' . $timezone);
             
-            // Get all drivers for the company
-            $drivers = $this->getDrivers($companyUuid);
+            // Get all drivers for the company and fleet
+            $drivers = $this->getDrivers($companyUuid, $fleetUuid);
             
             // Generate dates array
             $dates = $this->generateDatesArray($start, $end);
@@ -82,10 +91,10 @@ class ShiftAssignmentService
             $resources = $this->generateResourcesArray($drivers, $start, $end);
             
             // Get real orders as dated shifts
-            $datedShifts = $this->getOrdersAsShifts($start, $end, $timezone, $companyUuid);
+            $datedShifts = $this->getOrdersAsShifts($start, $end, $timezone, $companyUuid, $fleetUuid);
             
             // Get pre-assigned shifts (orders that already have a driver assigned within dates)
-            $preAssignedShifts = $this->getPreAssignedShifts($start, $end, $timezone, $companyUuid);
+            $preAssignedShifts = $this->getPreAssignedShifts($start, $end, $timezone, $companyUuid, $fleetUuid);
 
             // Build previous allocation data matrix by resource and date
             $previousAllocationData = $this->getPreviousAllocationData($start, $end, $companyUuid, $resources, $dates, $timezone);
@@ -333,12 +342,13 @@ class ShiftAssignmentService
      * Get drivers for the company
      *
      * @param string|null $companyUuid
+     * @param string|null $fleetUuid
      * @return Collection
      */
-    private function getDrivers(?string $companyUuid = null): Collection
+    private function getDrivers(?string $companyUuid = null, ?string $fleetUuid = null): Collection
     {
         try {
-            \Log::info('Getting drivers with company_uuid: ' . ($companyUuid ?? 'null'));
+            \Log::info('Getting drivers with company_uuid: ' . ($companyUuid ?? 'null') . ' and fleet_uuid: ' . ($fleetUuid ?? 'null'));
             
             $query = Driver::with(['user'])
                 ->whereNull('deleted_at')
@@ -348,10 +358,18 @@ class ShiftAssignmentService
                 \Log::info('Filtering drivers by company_uuid: ' . $companyUuid);
                 $query->where('company_uuid', $companyUuid);
             }
-            
+
+            if ($fleetUuid) {
+                \Log::info('Filtering drivers by fleet_uuid: ' . $fleetUuid);
+                // Filter drivers by fleet using the fleet_drivers relationship table
+                $query->whereHas('fleetDrivers', function ($q) use ($fleetUuid) {
+                    $q->where('fleet_uuid', $fleetUuid);
+                });
+            }
+            \Log::info('SQL', [$query->toSql(), $query->getBindings()]);
             // Get unique drivers to avoid duplicates
             $drivers = $query->get()->unique('uuid');
-            
+            \Log::info('SQL', [$query->toSql(), $query->getBindings()]);
             \Log::info('Found ' . $drivers->count() . ' unique drivers');
             return $drivers;
         } catch (\Exception $e) {
@@ -684,7 +702,7 @@ class ShiftAssignmentService
      * @param string $timezone
      * @return array
      */
-    private function getOrdersAsShifts($start, $end, string $timezone, ?string $companyUuid = null): array
+    private function getOrdersAsShifts($start, $end, string $timezone, ?string $companyUuid = null, ?string $fleetUuid = null): array
     {
         try {
             \Log::info('Getting orders as shifts with company_uuid: ' . ($companyUuid ?? 'null') . ' and timezone: ' . $timezone);
@@ -705,6 +723,10 @@ class ShiftAssignmentService
             if ($companyUuid) {
                 \Log::info('Filtering orders by company_uuid: ' . $companyUuid);
                 $query->where('company_uuid', $companyUuid);
+            }
+            if ($fleetUuid) {
+                $query->where('fleet_uuid', $fleetUuid);
+                
             }
             
             \Log::info('Querying orders with scheduled_at between dates ' . $start->format('Y-m-d') . ' and ' . $end->format('Y-m-d'));
@@ -777,7 +799,7 @@ class ShiftAssignmentService
      * @param string $timezone
      * @return array
      */
-    private function getPreAssignedShifts($start, $end, string $timezone, ?string $companyUuid = null): array
+    private function getPreAssignedShifts($start, $end, string $timezone, ?string $companyUuid = null, ?string $fleetUuid = null): array
     {
         try {
             \Log::info('Getting pre-assigned shifts with company_uuid: ' . ($companyUuid ?? 'null') . ' and timezone: ' . $timezone);
@@ -791,6 +813,9 @@ class ShiftAssignmentService
             
             if ($companyUuid) {
                 $query->where('company_uuid', $companyUuid);
+            }
+            if ($fleetUuid) {
+                $query->where('fleet_uuid', $fleetUuid);
             }
             
             // Log the SQL query for debugging
@@ -842,10 +867,11 @@ class ShiftAssignmentService
      *
      * @param string $date
      * @param string|null $companyUuid
+     * @param string|null $fleetUuid
      * @return array
      * @throws \InvalidArgumentException If company_uuid is invalid
      */
-    public function getAvailableDrivers(string $date, ?string $companyUuid = null): array
+    public function getAvailableDrivers(string $date, ?string $companyUuid = null, ?string $fleetUuid = null): array
     {
         try {
             // Validate company UUID if provided
@@ -855,7 +881,14 @@ class ShiftAssignmentService
                 }
             }
             
-            \Log::info('Getting available drivers for date: ' . $date . ' and company_uuid: ' . ($companyUuid ?? 'null'));
+            // Validate fleet UUID if provided
+            if ($fleetUuid !== null) {
+                if (!preg_match('/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i', $fleetUuid)) {
+                    throw new \InvalidArgumentException('Invalid fleet UUID format');
+                }
+            }
+            
+            \Log::info('Getting available drivers for date: ' . $date . ', company_uuid: ' . ($companyUuid ?? 'null') . ', fleet_uuid: ' . ($fleetUuid ?? 'null'));
             
             // First, get all driver UUIDs who are on approved leave for the given date
             $driversOnLeave = DB::table('leave_requests')
@@ -877,6 +910,14 @@ class ShiftAssignmentService
             // Add company filter if provided
             if ($companyUuid) {
                 $query->where('company_uuid', $companyUuid);
+            }
+            
+            // Add fleet filter if provided
+            if ($fleetUuid) {
+                \Log::info('Filtering available drivers by fleet_uuid: ' . $fleetUuid);
+                $query->whereHas('fleetDrivers', function ($q) use ($fleetUuid) {
+                    $q->where('fleet_uuid', $fleetUuid);
+                });
             }
             
             // Exclude drivers who are on leave
