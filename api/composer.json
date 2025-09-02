@@ -7,17 +7,28 @@
         "laravel"
     ],
     "license": "AGPL-3.0-or-later",
+    "authors": [
+        {
+            "name": "Fleetbase Pte Ltd.",
+            "email": "hello@fleetbase.io"
+        },
+        {
+            "name": "Ronald A. Richardson",
+            "email": "ron@fleetbase.io"
+        }
+    ],
     "require": {
         "php": "^8.0",
         "appstract/laravel-opcache": "^4.0",
-        "fleetbase/core-api": "^1.6.15",
-        "fleetbase/fleetops-api": "^0.6.17",
+        "fleetbase/core-api": "^1.6.16",
+        "fleetbase/fleetops-api": "^0.6.18",
         "fleetbase/registry-bridge": "^0.0.19",
-        "fleetbase/storefront-api": "^0.4.0",
+        "fleetbase/storefront-api": "^0.4.1",
         "fleetbase/billing-api": "^0.1.9",
         "fleetbase/internals-api": "^0.0.20",
         "fleetbase/aws-marketplace": "^0.0.4",
         "fleetbase/flespi-integration": "^0.1.14",
+        "fleetbase/samsara-api": "^0.0.1",
         "fleetbase/customer-portal-api": "^0.0.7",
         "fleetbase/valhalla-api": "^0.0.1",
         "fleetbase/vroom-api": "^0.0.1",
@@ -39,7 +50,6 @@
     "require-dev": {
         "spatie/laravel-ignition": "^2.0",
         "fakerphp/faker": "^1.9.1",
-        "kitloong/laravel-migrations-generator": "^6.10",
         "laravel/sail": "^1.0.1",
         "mockery/mockery": "^1.4.4",
         "nunomaduro/collision": "^7.0",
