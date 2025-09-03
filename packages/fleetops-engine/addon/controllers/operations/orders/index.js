@@ -1079,19 +1079,19 @@ export default class OperationsOrdersIndexController extends BaseController {
             return;
         }
 
-        // // Check if all selected orders have the same fleet_uuid
-        // const fleetUuids = selected.map(order => order.fleet_uuid).filter(uuid => uuid);
-        // const uniqueFleetUuids = [...new Set(fleetUuids)];
+        // Check if all selected orders have the same fleet_uuid
+        const fleetUuids = selected.map(order => order.fleet_uuid).filter(uuid => uuid);
+        const uniqueFleetUuids = [...new Set(fleetUuids)];
         
-        // if (uniqueFleetUuids.length > 1) {
-        //     this.notifications.warning(this.intl.t('fleet-ops.operations.orders.index.auto-allocate-fleet-mismatch'));
-        //     return;
-        // }
+        if (uniqueFleetUuids.length > 1) {
+            this.notifications.warning(this.intl.t('fleet-ops.operations.orders.index.auto-allocate-fleet-mismatch'));
+            return;
+        }
         
-        // if (fleetUuids.length !== selected.length) {
-        //     this.notifications.warning(this.intl.t('fleet-ops.operations.orders.index.auto-allocate-missing-fleet'));
-        //     return;
-        // }
+        if (fleetUuids.length !== selected.length) {
+            this.notifications.warning(this.intl.t('fleet-ops.operations.orders.index.auto-allocate-missing-fleet'));
+            return;
+        }
     
         const selectedOrders = selected.map(order => order.public_id).join(',');
         const companyUuid = this.currentUser?.company_uuid || 
