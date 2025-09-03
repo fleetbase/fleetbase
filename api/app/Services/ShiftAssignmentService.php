@@ -238,12 +238,12 @@ class ShiftAssignmentService
 
                     // Vehicle assignment
                     $vehicleId = $assignment['vehicle_id'] ?? null;
-                    $vehicle = Vehicle::where('uuid', $vehicleId)->whereNull('deleted_at')->first();
-                    if(!$vehicle) {
-                        // throw new error if vehicle_id is provided but not found
-                        throw new \Exception("Vehicle with UUID '{$vehicleId}' not found");
-                    }
-                    if( $vehicle && $vehicleId ) {
+                    if ($vehicleId) {
+                        $vehicle = Vehicle::where('uuid', $vehicleId)->whereNull('deleted_at')->first();
+                        if (!$vehicle) {
+                            // throw new error if vehicle_id is provided but not found
+                            throw new \Exception("Vehicle with UUID '{$vehicleId}' not found");
+                        }
                         $updates['vehicle_assigned_uuid'] = $vehicleId;
                         \Log::info("Updating order {$order->public_id} with vehicle {$vehicleId}");
                     }
@@ -317,17 +317,20 @@ class ShiftAssignmentService
                     }
 
                     // Only update if currently assigned
+                    $updatesToUnassign = [];
                     if (!is_null($order->driver_assigned_uuid)) {
-                        Order::where('uuid', $order->uuid)->update(['driver_assigned_uuid' => null]);
-                        $unassignedOrders[] = $order->public_id ?? $order->uuid;
+                        $updatesToUnassign['driver_assigned_uuid'] = null;
                         \Log::info("Unassigned driver from order {$order->public_id} (date {$date})");
                     }
                     if (!is_null($order->vehicle_assigned_uuid)) {
-                        Order::where('uuid', $order->uuid)->update(['vehicle_assigned_uuid' => null]);
-                        $unassignedOrders[] = $order->public_id ?? $order->uuid;
+                        $updatesToUnassign['vehicle_assigned_uuid'] = null;
                         \Log::info("Unassigned vehicle from order {$order->public_id} (date {$date})");
                     }
-                    
+
+                    if (!empty($updatesToUnassign)) {
+                        Order::where('uuid', $order->uuid)->update($updatesToUnassign);
+                        $unassignedOrders[] = $order->public_id ?? $order->uuid;
+                    }
                 } catch (\Exception $e) {
                     $errors[] = [
                         'resource' => null,
