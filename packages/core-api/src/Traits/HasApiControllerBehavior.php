@@ -643,7 +643,7 @@ trait HasApiControllerBehavior
             else if ($model_name == "Fleet") {
                 $fleetName = $request['fleet']['name'] ?? null;
                 $tripLength = $request['fleet']['trip_length'] ?? null;
-                if ($this->model->where('name', $fleetName)->where('company_uuid', session('company'))->whereNull('deleted_at')->exists() || $this->model->where('company_uuid', session('company'))->where('trip_length', $tripLength)->whereNull('deleted_at')->exists()) {
+                if ($this->model->where('name', $fleetName)->where('trip_length', $tripLength)->where('company_uuid', session('company'))->whereNull('deleted_at')->exists()) {
                     return response()->error(__('messages.duplicate_check_fleet'));
                 }
             }
