@@ -2037,9 +2037,8 @@ private function buildWaypointSequence(array $routeMap): array
         $fleets = Fleet::where('company_uuid', session('company'))
         ->whereNull('deleted_at')
         ->where('status', 'active')
-        ->whereNotNull('trip_length')
-        ->orderBy('trip_length', 'asc')
-        ->get(['uuid', 'trip_length']);
+        ->orderByRaw('CASE WHEN trip_length IS NULL THEN 1 ELSE 0 END, trip_length ASC')
+        ->get(['uuid', 'trip_length', 'name']);
         return $fleets;
     }
 }
