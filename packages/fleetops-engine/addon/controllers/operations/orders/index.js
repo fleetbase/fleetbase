@@ -1098,7 +1098,7 @@ export default class OperationsOrdersIndexController extends BaseController {
                             this.session?.data?.authenticated?.company_uuid ||
                             this.currentUser?.user?.company_uuid;
                             
-        const url = `${ENV.API.host}/api/v1/shift-assignments/data?selected_orders=[${selectedOrders}]&company_uuid=${companyUuid}&time_zone=${this.timezone}`;
+        const url = `${ENV.API.host}/api/v1/shift-assignments/data?selected_orders=[${selectedOrders}]&company_uuid=${companyUuid}&fleet_uuid=${uniqueFleetUuids}&time_zone=${this.timezone}`;
     
         this.isLoading = true;
     
