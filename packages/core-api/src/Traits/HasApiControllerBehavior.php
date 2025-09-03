@@ -1286,7 +1286,7 @@ trait HasApiControllerBehavior
             
                 if ($vehicleUnavailable || $activeOrder) {
                     $message = $vehicleUnavailable
-                        ? 'This vehicle is currently under maintenance and cannot be assigned to an order'
+                        ? 'is scheduled for maintenance'
                         : 'is already assigned to another order during this time period.';
                 
                     return [
@@ -1298,7 +1298,7 @@ trait HasApiControllerBehavior
 
             return [
                 'status' => true,
-                'error' => 'Vehicle is available',
+                'message' => 'Vehicle is available',
                 'is_vehicle_available' => 1,
             ];
 
