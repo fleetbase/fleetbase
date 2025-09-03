@@ -173,6 +173,16 @@ export default class CrudService extends Service {
         const fetchParams = getWithDefault(options, 'fetchParams', {});
         const fetchOptions = getWithDefault(options, 'fetchOptions', {});
         const deleteSuccessMessage = options.bulk_deleted_success ? options.bulk_deleted_success : null;
+        let payloadValue;
+        if (options.skipIds === true) {
+            // Don’t include ids for this action
+            payloadValue = { ...fetchParams };
+        } else {
+            payloadValue = {
+                ids: selected.map((model) => model.id),
+                ...fetchParams,
+            };
+        }
         this.modalsManager.show('modals/bulk-action-model', {
             // title: `Bulk ${verb} ${pluralize(modelName)}`,
             acceptButtonText: humanize(verb),
@@ -197,10 +207,7 @@ export default class CrudService extends Service {
 
                 return this.fetch[actionMethod](
                     options.actionPath,
-                    {
-                        ids: selected.map((model) => model.id),
-                        ...fetchParams,
-                    },
+                    payloadValue,
                     fetchOptions
                 )
                     .then((response) => {
