@@ -643,7 +643,7 @@ trait HasApiControllerBehavior
             else if ($model_name == "Fleet") {
                 $fleetName = $request['fleet']['name'] ?? null;
                 $tripLength = $request['fleet']['trip_length'] ?? null;
-                if ($this->model->where('name', $fleetName)->where('company_uuid', session('company'))->whereNull('deleted_at')->exists() || $this->model->where('company_uuid', session('company'))->where('trip_length', $tripLength)->whereNull('deleted_at')->exists()) {
+                if ($this->model->where('name', $fleetName)->where('trip_length', $tripLength)->where('company_uuid', session('company'))->whereNull('deleted_at')->exists()) {
                     return response()->error(__('messages.duplicate_check_fleet'));
                 }
             }
@@ -1286,8 +1286,8 @@ trait HasApiControllerBehavior
             
                 if ($vehicleUnavailable || $activeOrder) {
                     $message = $vehicleUnavailable
-                        ? 'This vehicle is currently under maintenance and cannot be assigned to an order'
-                        : 'Vehicle is already assigned to another order during this time period.';
+                        ? 'is scheduled for maintenance'
+                        : 'is already assigned to another order during this time period.';
                 
                     return [
                         'status' => false,
@@ -1298,7 +1298,7 @@ trait HasApiControllerBehavior
 
             return [
                 'status' => true,
-                'error' => 'Vehicle is available',
+                'message' => 'Vehicle is available',
                 'is_vehicle_available' => 1,
             ];
 

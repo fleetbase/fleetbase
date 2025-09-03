@@ -1448,10 +1448,22 @@ class OrderController extends FleetOpsController
                                     $start = Carbon::parse($order->scheduled_at);
                                     $end = Carbon::parse($order->estimated_end_date);
                                     $hours = $start->floatDiffInHours($end);
+                                    
+                                    // First try to find a fleet with trip_length >= hours
                                     $matchedFleet = $fleets->firstWhere('trip_length', '>=', $hours);
+                                    
                                     if (!$matchedFleet) {
-                                        $matchedFleet = $fleets->last();
+                                        // If no fleet found, look for tramper fleet (no trip_length or null)
+                                        $matchedFleet = $fleets->firstWhere(function($fleet) {
+                                            return is_null($fleet->trip_length) || $fleet->trip_length == 0;
+                                        });
+                                        
+                                        // If still no fleet found, use the last one as fallback
+                                        if (!$matchedFleet) {
+                                            $matchedFleet = $fleets->last();
+                                        }
                                     }
+                                    
                                     $order->fleet_uuid = $matchedFleet?->uuid ?? null;
                                 } else {
                                     $order->fleet_uuid = null;
@@ -2025,9 +2037,8 @@ private function buildWaypointSequence(array $routeMap): array
         $fleets = Fleet::where('company_uuid', session('company'))
         ->whereNull('deleted_at')
         ->where('status', 'active')
-        ->whereNotNull('trip_length')
-        ->orderBy('trip_length', 'asc')
-        ->get(['uuid', 'trip_length']);
+        ->orderByRaw('CASE WHEN trip_length IS NULL THEN 1 ELSE 0 END, trip_length ASC')
+        ->get(['uuid', 'trip_length', 'name']);
         return $fleets;
     }
 }
