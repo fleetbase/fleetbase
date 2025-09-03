@@ -915,11 +915,11 @@ export default class OperationsOrdersIndexViewController extends BaseController 
                             title: this.intl.t('fleet-ops.component.order.schedule-card.assign-driver-vehicle'),
                             body: this.intl.t('fleet-ops.component.order.schedule-card.assign-driver-vehicle-busy-text', {
                                 driverName: driverToAssign.name,
-                                driverAvailability: driverToAssign.availability_message,
-                                driverButton: driverToAssign.button_message,
+                                driverAvailability: driverToAssign.availability_message || 'Unavailable',
+                                driverButton: driverToAssign.button_message || 'Continue with assignment',
                                 vehicleName: vehicleToAssign.plate_number,
-                                vehicleAvailability: vehicleToAssign.availability_message,
-                                vehicleButton: vehicleToAssign.button_message,
+                                vehicleAvailability: vehicleToAssign.availability_message || 'Unavailable',
+                                vehicleButton: vehicleToAssign.button_message || 'Continue with assignment',
                                 orderId: order.public_id
                             }),
                             acceptButtonText: this.intl.t('fleet-ops.component.order.schedule-card.ok-button'),
@@ -951,8 +951,8 @@ export default class OperationsOrdersIndexViewController extends BaseController 
                             body: this.intl.t('fleet-ops.component.order.schedule-card.assign-vehicle-busy-text', {
                                 vehicleName: vehicleToAssign.plate_number,
                                 orderId: order.public_id,
-                                vehicleAvailability: vehicleToAssign.availability_message,
-                                button: vehicleToAssign.button_message,
+                                vehicleAvailability: vehicleToAssign.availability_message || 'Unavailable',
+                                button: vehicleToAssign.button_message || 'Continue with assignment',
                             }),
                             acceptButtonText: this.intl.t('fleet-ops.component.order.schedule-card.ok-button'),
 
@@ -984,11 +984,10 @@ export default class OperationsOrdersIndexViewController extends BaseController 
                             body: this.intl.t('fleet-ops.component.order.schedule-card.assign-driver-busy-text', {
                                 driverName: driverToAssign.name,
                                 orderId: order.public_id,
-                                availability: driverToAssign.availability_message,
-                                button: driverToAssign.button_message,
+                                driverAvailability: driverToAssign.availability_message || 'Unavailable',
                             }),
                             acceptButtonText: this.intl.t('fleet-ops.component.order.schedule-card.assign-busy-button', {
-                                button: driverToAssign.button_message,
+                                button: driverToAssign.button_message || 'Continue with assignment',
                             }),
                             confirm: async (confirmModal) => {
                                 confirmModal.startLoading();
@@ -1237,7 +1236,13 @@ export default class OperationsOrdersIndexViewController extends BaseController 
                     return later(
                         this,
                         () => {
-                            return this.hostRouter.refresh();
+                            // Refresh model data while preserving pagination
+                            const ordersController = this.hostRouter.currentRoute.controller;
+                            if (ordersController && ordersController.model) {
+                                return ordersController.model.reload();
+                            } else {
+                                return this.hostRouter.refresh();
+                            }
                         },
                         100
                     );
