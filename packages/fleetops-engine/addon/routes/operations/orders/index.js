@@ -68,12 +68,22 @@ export default class OperationsOrdersIndexRoute extends Route {
         const isPaginationTransition = transition.to.name === transition.from.name &&
                                        transition.to.queryParams.page !== transition.from.queryParams.page;
         
-        // Only disable refreshModel for nested routes that aren't pagination transitions
-        if (isNestedRouteTransition(transition) && !isPaginationTransition) {
-            set(this.queryParams, 'page.refreshModel', false);
+        // Check if we're coming back from import (has timestamp parameter and coming from new order route)
+        const isComingFromImport = transition.to.queryParams.t && 
+                                   transition.from && 
+                                   transition.from.name && 
+                                   (transition.from.name.includes('operations.orders.index.new') || 
+                                    transition.from.name.includes('console.fleet-ops.operations.orders.index.new'));
+        
+        // Only disable refreshModel for nested routes that aren't pagination transitions or import returns
+        // BUT NEVER disable refreshModel for page parameter - pagination must always work
+        if (isNestedRouteTransition(transition) && !isPaginationTransition && !isComingFromImport) {
+            // Only disable refreshModel for non-pagination parameters
             set(this.queryParams, 'sort.refreshModel', false);
+            // Keep page.refreshModel always true for pagination to work
+            set(this.queryParams, 'page.refreshModel', true);
         } else {
-            // Ensure refreshModel is enabled for pagination
+            // Ensure refreshModel is enabled for pagination and import returns
             set(this.queryParams, 'page.refreshModel', true);
             set(this.queryParams, 'sort.refreshModel', true);
         }
