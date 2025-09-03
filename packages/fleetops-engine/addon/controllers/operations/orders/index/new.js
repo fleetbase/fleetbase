@@ -719,6 +719,11 @@ export default class OperationsOrdersIndexNewController extends BaseController {
             });
 
         modal.done();
+        
+        // Simple transition back to orders index - the route will handle the refresh automatically
+        this.hostRouter.transitionTo('console.fleet-ops.operations.orders.index', { 
+            queryParams: { layout: 'table' } 
+        });
     }
 
     // Improved download method

@@ -130,7 +130,8 @@ class ShiftAssignmentController extends Controller
                         'pre_assigned_shifts' => array_values($preAssignedShifts),
                         'problem_type' => 'shift_assignment',
                         'recurring_shifts' => null,
-                        'previous_allocation_data' => $fullData['previous_allocation_data']
+                        'previous_allocation_data' => $fullData['previous_allocation_data'],
+                        'vehicles_data' => $fullData['vehicles_data']
                     ],
                     'message' => 'Shift assignment data retrieved successfully for selected orders'
                 ]);
