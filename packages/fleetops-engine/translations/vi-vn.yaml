@@ -1368,6 +1368,10 @@ fleet-ops:
         table: Bảng
         cancel-orders: Hủy Đơn Hàng
         delete-orders: Xóa Đơn Hàng
+        auto-allocate-title: Tự Động Phân Bổ Đơn Hàng
+        auto-allocate-body: Bạn có chắc chắn muốn tự động phân bổ {count} đơn hàng{plural} không? Hệ thống sẽ tự động gán tài xế cho các đơn hàng này.
+        auto-allocate-fleet-mismatch: Không thể tự động phân bổ đơn hàng từ các đội xe khác nhau. Vui lòng chọn đơn hàng từ cùng một đội xe.
+        auto-allocate-missing-fleet: Một số đơn hàng đã chọn không có đội xe được gán. Vui lòng đảm bảo tất cả đơn hàng thuộc về một đội xe trước khi tự động phân bổ.
         estimated-end-date: Ngày kết thúc dự kiến
         select-driver: Tài xế
         select-vehicle: Phương tiện

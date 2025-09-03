@@ -87,14 +87,14 @@
         {{#if (safe-has this.table "selectedRows")}}
             <DropdownButton @icon="layer-group" @type="magic" @text={{t "fleet-ops.common.bulk-action"}} @size="sm" @buttonWrapperClass="mr-2" as |dd|>
                 <div class="next-dd-menu mt-2 mx-0">
+                    {{#if this.isAutoAllocationEnabled}}
                     <div class="px-1">
                         <a href="javascript:;" class="next-dd-item" {{on "click" (dropdown-fn dd this.bulkAutoAllocate)}} disabled={{cannot "fleet-ops auto-allocate order"}}>
-                            <div class="w-6">
-                                <img src="/images/auto-allocation.svg" alt="Auto Allocation" class="h-4 w-4">
-                            </div>
-                            <div>Auto Allocation</div>
+                            <div class="w-6"><FaIcon @icon="users-cog" @size="sm" /></div>
+                            <div>{{t "fleet-ops.common.auto-allocate"}}</div>
                         </a>
                     </div>
+                    {{/if}}
                     <div class="next-dd-menu-seperator"></div>
                     <div class="px-1">
                         <a href="javascript:;" class="text-red-500 next-dd-item" {{on "click" (dropdown-fn dd this.bulkDeleteOrders)}} disabled={{cannot "fleet-ops delete order"}}>
