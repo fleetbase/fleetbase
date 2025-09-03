@@ -5,6 +5,7 @@ namespace App\Services;
 use Fleetbase\FleetOps\Models\Driver;
 use Fleetbase\FleetOps\Models\Order;
 use Fleetbase\Models\User;
+use Fleetbase\FleetOps\Models\Vehicle;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
@@ -156,12 +157,14 @@ class ShiftAssignmentService
             if ($resourceId) {
                 $driver = Driver::with(['user'])
                     ->where('uuid', $resourceId)
+                    ->whereNull('deleted_at')
                     ->first();
                 
                 \Log::info("Driver lookup for resource_id '{$resourceId}': " . ($driver ? "Found driver {$driver->uuid}" : "Not found"));
             }
             if (!$driver && $resourceName) {
                 $driver = Driver::with(['user'])
+                    ->whereNull('deleted_at')
                     ->whereHas('user', function ($q) use ($resourceName) {
                         $q->where('name', $resourceName);
                     })
@@ -240,6 +243,18 @@ class ShiftAssignmentService
                         \Log::info("Updating order {$order->public_id} scheduled time to {$scheduledAtUtc->format('Y-m-d H:i:s')} UTC");
                     }
 
+                    // Vehicle assignment
+                    $vehicleId = $assignment['vehicle_id'] ?? null;
+                    if ($vehicleId) {
+                        $vehicle = Vehicle::where('uuid', $vehicleId)->whereNull('deleted_at')->first();
+                        if (!$vehicle) {
+                            // throw new error if vehicle_id is provided but not found
+                            throw new \Exception("Vehicle with UUID '{$vehicleId}' not found");
+                        }
+                        $updates['vehicle_assigned_uuid'] = $vehicleId;
+                        \Log::info("Updating order {$order->public_id} with vehicle {$vehicleId}");
+                    }
+
                     // Update estimated end time if end_time is provided
                     $endTime = $assignment['end_time'] ?? null;
                     if ($endTime) {
@@ -309,10 +324,19 @@ class ShiftAssignmentService
                     }
 
                     // Only update if currently assigned
+                    $updatesToUnassign = [];
                     if (!is_null($order->driver_assigned_uuid)) {
-                        Order::where('uuid', $order->uuid)->update(['driver_assigned_uuid' => null]);
-                        $unassignedOrders[] = $order->public_id ?? $order->uuid;
+                        $updatesToUnassign['driver_assigned_uuid'] = null;
                         \Log::info("Unassigned driver from order {$order->public_id} (date {$date})");
+                    }
+                    if (!is_null($order->vehicle_assigned_uuid)) {
+                        $updatesToUnassign['vehicle_assigned_uuid'] = null;
+                        \Log::info("Unassigned vehicle from order {$order->public_id} (date {$date})");
+                    }
+
+                    if (!empty($updatesToUnassign)) {
+                        Order::where('uuid', $order->uuid)->update($updatesToUnassign);
+                        $unassignedOrders[] = $order->public_id ?? $order->uuid;
                     }
                 } catch (\Exception $e) {
                     $errors[] = [
@@ -417,7 +441,8 @@ class ShiftAssignmentService
                 ->whereNotNull('driver_assigned_uuid')
                 ->whereIn('status', ['created', 'planned'])
                 ->where('scheduled_at', '>=', $prevStartUtc->toDateTimeString())
-                ->where('scheduled_at', '<=', $prevEndUtc->toDateTimeString());
+                ->where('scheduled_at', '<=', $prevEndUtc->toDateTimeString())
+                ->whereNull('deleted_at');
                 
             // Log the query for debugging
             \Log::info('Previous week query:', [
@@ -794,7 +819,8 @@ class ShiftAssignmentService
             $query = DB::table('orders')
                 ->whereNotNull('scheduled_at')
                 ->whereNull('driver_assigned_uuid') // Exclude orders with assigned drivers
-                ->whereIn('status', ['created', 'planned']);
+                ->whereIn('status', ['created', 'planned'])
+                ->whereNull('deleted_at');
                 
             // Apply timezone-aware date filtering with fallback
             $this->applyTimezoneAwareDateFilter($query, 'scheduled_at', $start, $end, $timezone);
@@ -881,7 +907,8 @@ class ShiftAssignmentService
             
             $query = DB::table('orders')
                 ->whereNotNull('scheduled_at')
-                ->whereNotNull('driver_assigned_uuid');
+                ->whereNotNull('driver_assigned_uuid')
+                ->whereNull('deleted_at');
         
             // Apply timezone-aware date filtering
             $this->applyTimezoneAwareDateFilter($query, 'scheduled_at', $start, $end, $timezone);
@@ -1093,7 +1120,8 @@ class ShiftAssignmentService
             $ordersQuery = DB::table('orders')
                 ->whereIn('vehicle_assigned_uuid', $vehicleUuids)
                 ->whereNotNull('scheduled_at')
-                ->whereIn('status', ['created', 'planned']);
+                ->whereIn('status', ['created', 'planned'])
+                ->whereNull('deleted_at');
                 
             // Apply timezone-aware date filtering for orders
             $this->applyTimezoneAwareDateFilter($ordersQuery, 'scheduled_at', $start, $end, $timezone);

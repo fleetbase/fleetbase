@@ -1655,13 +1655,14 @@ export default class OperationsOrdersIndexController extends BaseController {
 
         const company_uuid = this.currentUser?.user?.company_uuid || this.session?.data?.authenticated?.company_uuid;
         const pre_assigned_shifts = Array.isArray(data?.data?.pre_assigned_shifts) ? data.data.pre_assigned_shifts : [];
-
+        console.log('data', data);
         return {
             problem_type: 'shift_assignment',
             dates: datesArr,
             dated_shifts,
             resources,
             previous_allocation_data: data?.data?.previous_allocation_data ?? {},
+            vehicles_data: data?.data?.vehicles_data ?? [],
             company_uuid,
             pre_assigned_shifts,
             ...(Array.isArray(data?.data?.recurring_shifts) ? { recurring_shifts: data.data.recurring_shifts } : {}),
@@ -1694,15 +1695,14 @@ export default class OperationsOrdersIndexController extends BaseController {
             // If API indicates success and provides URL or UUID for results
             if (result.ok && result.body?.success === true) {
                 let targetUrl = typeof result.body.url === 'string' ? result.body.url.trim() : '';
-                if (!targetUrl) {
-                    const uuid = result.body?.uuid;
-                    if (uuid) {
-                        const apiKey = ENV.resourceAllocation?.bearerToken || this.#getAuthSession()?.authenticated?.token;
-                        if (apiKey) {
-                            targetUrl = `https://autoallocate.fleetyes.com/results?allocation_uuid=${encodeURIComponent(uuid)}&api_key=${encodeURIComponent(apiKey)}`;
-                        } else {
-                            targetUrl = `https://autoallocate.fleetyes.com/results?allocation_uuid=${encodeURIComponent(uuid)}`;
-                        }
+                // if (!targetUrl) {
+                const uuid = result.body?.uuid;
+                if (uuid) {
+                    const apiKey = ENV.resourceAllocation?.bearerToken || this.#getAuthSession()?.authenticated?.token;
+                    if (apiKey) {
+                        targetUrl = `${targetUrl}?allocation_uuid=${encodeURIComponent(uuid)}&api_key=${encodeURIComponent(apiKey)}`;
+                    } else {
+                        targetUrl = `${targetUrl}?allocation_uuid=${encodeURIComponent(uuid)}`;
                     }
                 }
                 
