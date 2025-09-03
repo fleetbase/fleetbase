@@ -951,7 +951,7 @@ export default class OperationsOrdersIndexViewController extends BaseController 
                             body: this.intl.t('fleet-ops.component.order.schedule-card.assign-vehicle-busy-text', {
                                 vehicleName: vehicleToAssign.plate_number,
                                 orderId: order.public_id,
-                                availability: vehicleToAssign.availability_message,
+                                vehicleAvailability: vehicleToAssign.availability_message,
                                 button: vehicleToAssign.button_message,
                             }),
                             acceptButtonText: this.intl.t('fleet-ops.component.order.schedule-card.ok-button'),
