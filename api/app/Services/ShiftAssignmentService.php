@@ -5,6 +5,7 @@ namespace App\Services;
 use Fleetbase\FleetOps\Models\Driver;
 use Fleetbase\FleetOps\Models\Order;
 use Fleetbase\Models\User;
+use Fleetbase\FleetOps\Models\Vehicle;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
@@ -235,6 +236,18 @@ class ShiftAssignmentService
                         \Log::info("Updating order {$order->public_id} scheduled time to {$scheduledAtUtc->format('Y-m-d H:i:s')} UTC");
                     }
 
+                    // Vehicle assignment
+                    $vehicleId = $assignment['vehicle_id'] ?? null;
+                    $vehicle = Vehicle::where('uuid', $vehicleId)->whereNull('deleted_at')->first();
+                    if(!$vehicle) {
+                        // throw new error if vehicle_id is provided but not found
+                        throw new \Exception("Vehicle with UUID '{$vehicleId}' not found");
+                    }
+                    if( $vehicle && $vehicleId ) {
+                        $updates['vehicle_assigned_uuid'] = $vehicleId;
+                        \Log::info("Updating order {$order->public_id} with vehicle {$vehicleId}");
+                    }
+
                     // Update estimated end time if end_time is provided
                     $endTime = $assignment['end_time'] ?? null;
                     if ($endTime) {
@@ -309,6 +322,12 @@ class ShiftAssignmentService
                         $unassignedOrders[] = $order->public_id ?? $order->uuid;
                         \Log::info("Unassigned driver from order {$order->public_id} (date {$date})");
                     }
+                    if (!is_null($order->vehicle_assigned_uuid)) {
+                        Order::where('uuid', $order->uuid)->update(['vehicle_assigned_uuid' => null]);
+                        $unassignedOrders[] = $order->public_id ?? $order->uuid;
+                        \Log::info("Unassigned vehicle from order {$order->public_id} (date {$date})");
+                    }
+                    
                 } catch (\Exception $e) {
                     $errors[] = [
                         'resource' => null,
