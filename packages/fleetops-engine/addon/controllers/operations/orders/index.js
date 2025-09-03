@@ -486,15 +486,15 @@ export default class OperationsOrdersIndexController extends BaseController {
 
         {
             label: this.intl.t('fleet-ops.common.fleet'),
-            cellComponent: 'cell/fleet-name',
+            // cellComponent: 'cell/fleet-name',
             valuePath: 'fleet.name',
             modelPath: 'fleet',
-            action: (fleet) => {
-                this.contextPanel.focus(fleet);
-            },
+            // action: (fleet) => {
+            //     this.contextPanel.focus(fleet);
+            // },
             width: '180px',
             resizable: true,
-            hidden: true,
+            hidden: false,
             filterable: true,
             filterComponent: 'filter/model',
             filterComponentPlaceholder: this.intl.t('fleet-ops.common.select-fleet'),

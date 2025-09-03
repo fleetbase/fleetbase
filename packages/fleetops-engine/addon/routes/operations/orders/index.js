@@ -74,14 +74,30 @@ export default class OperationsOrdersIndexRoute extends Route {
         }
     }
 
-    @action model(params) {
+    @action async model(params) {
         //add timezone also here
         params.timezone = this.timezone;
         if (params.status) {
             params.status = params.status.toLowerCase().replace(/\s+/g, '_');
         }
         console.log(params);
-        return this.store.query('order', params);
+        
+        const orders = await this.store.query('order', params);
+        
+        // Load fleet data for each order that has a fleet_uuid
+        const fleetLoadPromises = orders.map(async (order) => {
+            if (order.fleet_uuid && !order.fleet) {
+                try {
+                    await order.loadFleet();
+                } catch (error) {
+                    console.warn('Failed to load fleet for order:', order.id, error);
+                }
+            }
+        });
+        
+        await Promise.all(fleetLoadPromises);
+        
+        return orders;
     }
     @action setupController(controller, model) {
         super.setupController(controller, model);

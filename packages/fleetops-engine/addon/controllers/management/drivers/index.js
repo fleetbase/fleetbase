@@ -256,18 +256,18 @@ export default class ManagementDriversIndexController extends BaseController {
             label: this.intl.t('fleet-ops.common.fleet'),
             // cellComponent: 'table/cell/link-list',
             // cellComponentLabelPath: 'name',
-            // action: (fleet) => {
-            //     this.contextPanel.focus(fleet);
-            // },
+            action: (fleet) => {
+                this.contextPanel.focus(fleet);
+            },
             valuePath: 'fleet.name',
             width: '180px',
             resizable: true,
-            hidden: true,
+            hidden: false,
             filterable: true,
-            // filterComponent: 'filter/model',
-            // filterComponentPlaceholder: this.intl.t('fleet-ops.common.select-fleet'),
-            // filterParam: 'fleet',
-            // model: 'fleet',
+            filterComponent: 'filter/model',
+            filterComponentPlaceholder: this.intl.t('fleet-ops.common.select-fleet'),
+            filterParam: 'fleet',
+            model: 'fleet',
         },
         {
             label: this.intl.t('fleet-ops.common.license'),
