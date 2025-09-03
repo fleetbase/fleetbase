@@ -64,6 +64,7 @@ class ShiftAssignmentController extends Controller
 
                 $companyUuid = $request->input('company_uuid');
                 $timezone = $request->input('time_zone', 'UTC');
+                $fleetUuid = $request->input('fleet_uuid');
 
                 // Get date range from selected orders
                 $dateRange = $this->getDateRangeFromOrders($orderIds, $companyUuid);
@@ -95,7 +96,8 @@ class ShiftAssignmentController extends Controller
                     $dateRange['start_date'],
                     $dateRange['end_date'],
                     $timezone,
-                    $companyUuid
+                    $companyUuid,
+                    $fleetUuid
                 );
 
                 // Filter pre-assigned shifts to only include selected orders
@@ -108,7 +110,8 @@ class ShiftAssignmentController extends Controller
                     $dateRange['start_date'],
                     $dateRange['end_date'],
                     $companyUuid,
-                    $timezone
+                    $timezone,
+                    $fleetUuid
                 );
 
                 \Log::info('Response data:', [
@@ -176,8 +179,8 @@ class ShiftAssignmentController extends Controller
                 $endDate = Carbon::parse($endDateStr);
                 $companyUuid = $request->input('company_uuid');
                 $timezone = $request->input('time_zone', 'UTC');
-
-                $data = $this->shiftAssignmentService->generateShiftAssignmentData($startDate, $endDate, $companyUuid, $timezone);
+                $fleetUuid = $request->input('fleet_uuid');
+                $data = $this->shiftAssignmentService->generateShiftAssignmentData($startDate, $endDate, $companyUuid, $timezone, $fleetUuid);
 
                 return response()->json([
                     'success' => true,
