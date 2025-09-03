@@ -38,7 +38,8 @@ export default class OperationsOrdersIndexRoute extends Route {
         created_by: { refreshModel: true },
         updated_by: { refreshModel: true },
         created_at: { refreshModel: true },
-        updated_at: { refreshModel: true },
+        updated_at: { refreshModel: true }
+        
     };
 
     
@@ -132,7 +133,7 @@ export default class OperationsOrdersIndexRoute extends Route {
                 'page', 'limit', 'sort', 'query', 'public_id', 'internal_id', 'trip_id', 
                 'payload', 'tracking', 'facilitator', 'customer', 'driver', 
                 'vehicle', 'pickup', 'dropoff', 'created_by', 'updated_by', 
-                'status', 'type', 'on'
+                'status', 'type', 'on','fleet'
             ];
             
             const resetParams = {};
@@ -165,7 +166,8 @@ export default class OperationsOrdersIndexRoute extends Route {
                 status: undefined,
                 type: undefined,
                 on: undefined,
-                isSearchVisible: false
+                isSearchVisible: false,
+                fleet: undefined
             });
             this.filters.clearStalePendingParams(controller);
         }

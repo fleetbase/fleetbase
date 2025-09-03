@@ -59,7 +59,8 @@ export default class OperationsOrdersIndexController extends BaseController {
         'drawerTab',
         'orderPanelOpen',
         'on',
-        'trip_id'
+        'trip_id',
+        'fleet'
     ];
 
     /**
@@ -271,6 +272,7 @@ export default class OperationsOrdersIndexController extends BaseController {
      * @var {String}
      */
     @tracked trip_id;
+    @tracked fleet
     /**
      * Flag to determine if the layout is 'map'
      *
