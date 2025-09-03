@@ -11,7 +11,9 @@ export default class AutoAllocationPickerComponent extends Component {
     get fleetOptions() {
         return this.args.fleetOptions || [];
     }
-
+    get canAllocate() {
+        return this.hasDate && this.selectedFleet;
+    }
     get selectedFleet() {
         return this.args.selectedFleet;
     }
@@ -197,10 +199,13 @@ export default class AutoAllocationPickerComponent extends Component {
         const searchParams = new URLSearchParams();
         searchParams.set('start_date', start_date);
         searchParams.set('end_date', end_date);
+        console.log('selectedFleet', this.selectedFleet);
         if (company_uuid) {
             searchParams.set('company_uuid', company_uuid);
         }
-        
+        if (this.selectedFleet?.value) {
+            searchParams.set('fleet_uuid', this.selectedFleet.value);
+        }
         const requestUrl = `${ENV.API.host}/api/v1/shift-assignments/data?${searchParams.toString()}&time_zone=${this.timezone}`;
         
         const headers = {};
@@ -271,13 +276,14 @@ export default class AutoAllocationPickerComponent extends Component {
             // dates array contains shift-like objects
             dated_shifts = datesArr.map((s) => normalizeShift(s, s?.date));
         } else {
-            // Fallback: create minimal objects from dates only
+            // Fallback: create mmal objects from dates only
             dated_shifts = datesArr.map((d) => ({ date: d }));
         }
 
         // Extract company_uuid from the request URL or use the one from component args
         const urlParams = new URLSearchParams(allocationData.url.split('?')[1] || '');
         const company_uuid = urlParams.get('company_uuid') || this.args.companyUuid;
+        const fleet_uuid = urlParams.get('fleet_uuid') || this.selectedFleet?.value;
 
         // Get pre_assigned_shifts from the response data
         const pre_assigned_shifts = Array.isArray(data?.data?.pre_assigned_shifts) 
@@ -292,6 +298,7 @@ export default class AutoAllocationPickerComponent extends Component {
             previous_allocation_data: data?.data?.previous_allocation_data ?? {},
             // Include company_uuid and pre_assigned_shifts from the response
             company_uuid,
+            fleet_uuid,
             pre_assigned_shifts,
             // Pass through recurring_shifts if present
             ...(Array.isArray(data?.data?.recurring_shifts) ? { recurring_shifts: data.data.recurring_shifts } : {}),

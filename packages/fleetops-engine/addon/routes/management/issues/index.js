@@ -2,9 +2,11 @@ import Route from '@ember/routing/route';
 import { inject as service } from '@ember/service';
 import { action, set } from '@ember/object';
 import isNestedRouteTransition from '@fleetbase/ember-core/utils/is-nested-route-transition';
+import { scheduleOnce } from '@ember/runloop';
 
 export default class ManagementIssuesIndexRoute extends Route {
     @service store;
+    @service loader;
 
     queryParams = {
         page: { refreshModel: true },
@@ -45,7 +47,15 @@ export default class ManagementIssuesIndexRoute extends Route {
      
 
     model(params) {
+        // Show loader while fetching issues
+        this.loader.show();
         return this.store.query('issue', { ...params, with: ['driver', 'vehicle', 'assignee', 'reporter'] });
+    }
+    
+    // Remove loader after the table and DOM have rendered
+    setupController(controller, model) {
+        super.setupController(...arguments);
+        scheduleOnce('afterRender', this, () => this.loader.remove());
     }
     resetController(controller, isExiting) {
         if (isExiting) {

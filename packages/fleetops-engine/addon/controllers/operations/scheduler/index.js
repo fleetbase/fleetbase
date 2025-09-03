@@ -1217,7 +1217,9 @@ async _updateCalendarAsync() {
             const chunk = leaveEvents.slice(i, i + CHUNK_SIZE);
             
             chunk.forEach(event => {
-                event.setProp('classNames', ['leave-event', 'leave-visible']);
+                // Preserve existing classNames and add 'leave-visible'
+                const currentClassNames = event.classNames || [];
+                event.setProp('classNames', Array.from(new Set([...currentClassNames, 'leave-visible'])));
                 event.setProp('display', 'auto');
                 if (!event.backgroundColor || event.backgroundColor === 'transparent') {
                     event.setProp('backgroundColor', '#FFD700');
@@ -1258,7 +1260,9 @@ refreshLeaveDisplay() {
     
     leaveEvents.forEach(event => {
         // Ensure leave events are visible and styled properly
-        event.setProp('classNames', ['leave-event', 'leave-visible']);
+        // Preserve existing classNames and add 'leave-visible'
+        const currentClassNames = event.classNames || [];
+        event.setProp('classNames', Array.from(new Set([...currentClassNames, 'leave-visible'])));
         event.setProp('display', 'auto');
         
         // If backgroundColor is transparent, set a default color
@@ -1291,7 +1295,6 @@ refreshLeaveDisplay() {
     }
 }
 
-    
     @action viewEvent(order) {
         // get the event from the calendar
         let event = this.calendar.getEventById(order.id);
@@ -1976,7 +1979,7 @@ refreshLeaveDisplay() {
                     if (element) {
                         scrollElementIntoView(element);
                     }
-                    // Add resize event listener when highlighting starts
+                    // Add resize event listener when tour is started
                     window.addEventListener('resize', handleResize);
                 },
                 onHighlightEnded: () => {

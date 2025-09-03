@@ -157,20 +157,20 @@ export default class ManagementFleetsIndexController extends BaseController {
         //     filterParam: 'service_area',
         //     model: 'service-area',
         // },
-        {
-            label: this.intl.t('fleet-ops.common.parent-fleet'),
-            cellComponent: 'table/cell/anchor',
-            permission: 'fleet-ops view fleet',
-            // action: this.viewParentFleet.bind(this),
-            valuePath: 'parent_fleet.name',
-            resizable: true,
-            width: '130px',
-            filterable: false,
-            filterComponent: 'filter/model',
-            filterComponentPlaceholder: this.intl.t('fleet-ops.common.select-fleet'),
-            filterParam: 'parent_fleet_uuid',
-            model: 'fleet',
-        },
+        // {
+        //     label: this.intl.t('fleet-ops.common.parent-fleet'),
+        //     cellComponent: 'table/cell/anchor',
+        //     permission: 'fleet-ops view fleet',
+        //     // action: this.viewParentFleet.bind(this),
+        //     valuePath: 'parent_fleet.name',
+        //     resizable: true,
+        //     width: '130px',
+        //     filterable: false,
+        //     filterComponent: 'filter/model',
+        //     filterComponentPlaceholder: this.intl.t('fleet-ops.common.select-fleet'),
+        //     filterParam: 'parent_fleet_uuid',
+        //     model: 'fleet',
+        // },
         // {
         //     label: this.intl.t('fleet-ops.common.vendor'),
         //     cellComponent: 'table/cell/anchor',
@@ -341,6 +341,14 @@ export default class ManagementFleetsIndexController extends BaseController {
         // update the query param
         set(this, 'query', value);
         this.hostRouter.refresh();
+    }
+
+    /**
+     * Handle page change from Table pagination.
+     * Only updates the `page` QP; route will refresh model and show loader.
+     */
+    @action onPageChange(page) {
+        set(this, 'page', page);
     }
 
     /**

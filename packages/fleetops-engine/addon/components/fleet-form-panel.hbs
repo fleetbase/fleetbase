@@ -51,7 +51,7 @@
             {{#let (cannot this.savePermission) as |unauthorized|}}
                 <div class="flex flex-col text-xs dark:text-gray-100">
                     <InputGroup @wrapperClass="fleet-name-field" @name={{t "fleet-ops.component.fleet-form-panel.fleet-name"}} @value={{this.fleet.name}} @disabled={{unauthorized}} @required={{true}} />
-                    <InputGroup @wrapperClass="parent-fleet-field" @name={{t "fleet-ops.component.fleet-form-panel.parent-fleet"}} @value={{this.fleet.parent_fleet}}>
+                    {{!-- <InputGroup @wrapperClass="parent-fleet-field" @name={{t "fleet-ops.component.fleet-form-panel.parent-fleet"}} @value={{this.fleet.parent_fleet}}>
                         <ModelSelect
                             @modelName="fleet"
                             @selectedModel={{this.fleet.parent_fleet}}
@@ -66,7 +66,7 @@
                         >
                             {{model.name}}
                         </ModelSelect>
-                    </InputGroup>
+                    </InputGroup> --}}
                     {{!-- <InputGroup @name={{t "fleet-ops.common.vendor"}} @value={{this.fleet.vendor}}>
                         <ModelSelect
                             @modelName="vendor"
@@ -130,7 +130,6 @@
                     min="1" 
                     disabled={{unauthorized}} 
                     class="w-full"
-                    @required={{true}}
                     />
                     <InputGroup @wrapperClass="status-field fleetbase-power-select" @name={{t "fleet-ops.common.status"}} @helpText={{t "fleet-ops.component.fleet-form-panel.select-status-fleet"}} @required={{true}}>
                         <Select

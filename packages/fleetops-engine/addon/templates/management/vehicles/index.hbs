@@ -13,8 +13,8 @@
         @columns={{this.columns}}
         @onApply={{fn this.filters.apply this}}
         @onClear={{fn this.filters.reset this}}
-        @onFilterClear={{this.filters.clear}}
-        @onChange={{this.filters.set}}
+        @onFilterClear={{fn this.filters.clear null}}
+        @onChange={{fn this.filters.set}}
         @buttonWrapperClass="mr-2"
     />
     <VisibleColumnPicker @columns={{this.columns}} @onChange={{fn (mut this.columns)}} class="mr-2" />
@@ -69,7 +69,7 @@
         @pagination={{true}}
         @paginationMeta={{@model.meta}}
         @page={{this.page}}
-        @onPageChange={{fn (mut this.page)}}
+        @onPageChange={{this.onPageChange}}
     />
 </Layout::Section::Body>
 {{outlet}}

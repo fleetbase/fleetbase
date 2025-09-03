@@ -3,9 +3,11 @@ import { inject as service } from '@ember/service';
 import { action, set } from '@ember/object';
 import isNestedRouteTransition from '@fleetbase/ember-core/utils/is-nested-route-transition';
 import ENV from '@fleetbase/console/config/environment';
+import { scheduleOnce } from '@ember/runloop';
 
 export default class ManagementLeavesIndexRoute extends Route {
     @service store;
+    @service loader;
 
     queryParams = {
         page: { refreshModel: true },
@@ -42,6 +44,8 @@ export default class ManagementLeavesIndexRoute extends Route {
     }
 
     async model(params) {
+        // Show loader while fetching leaves
+        this.loader.show();
         try {
             // Get authentication token
             const authSession = JSON.parse(localStorage.getItem('ember_simple_auth-session'));
@@ -172,6 +176,12 @@ export default class ManagementLeavesIndexRoute extends Route {
                 }
             };
         }
+    }
+    
+    // Remove loader after the table and DOM have rendered
+    setupController(controller, model) {
+        super.setupController(...arguments);
+        scheduleOnce('afterRender', this, () => this.loader.remove());
     }
 
     resetController(controller, isExiting) {

@@ -61,7 +61,8 @@ export default class OperationsOrdersIndexController extends BaseController {
         'drawerTab',
         'orderPanelOpen',
         'on',
-        'trip_id'
+        'trip_id',
+        'fleet'
     ];
 
     /**
@@ -283,6 +284,7 @@ export default class OperationsOrdersIndexController extends BaseController {
      * @var {String}
      */
     @tracked trip_id;
+    @tracked fleet
     /**
      * Flag to determine if the layout is 'map'
      *
@@ -498,15 +500,15 @@ export default class OperationsOrdersIndexController extends BaseController {
 
         {
             label: this.intl.t('fleet-ops.common.fleet'),
-            cellComponent: 'table/cell/link-list',
-            cellComponentLabelPath: 'name',
-            action: (fleet) => {
-                this.contextPanel.focus(fleet);
-            },
-            valuePath: 'fleets',
+            // cellComponent: 'cell/fleet-name',
+            valuePath: 'fleet.name',
+            modelPath: 'fleet',
+            // action: (fleet) => {
+            //     this.contextPanel.focus(fleet);
+            // },
             width: '180px',
             resizable: true,
-            hidden: true,
+            hidden: false,
             filterable: true,
             filterComponent: 'filter/model',
             filterComponentPlaceholder: this.intl.t('fleet-ops.common.select-fleet'),

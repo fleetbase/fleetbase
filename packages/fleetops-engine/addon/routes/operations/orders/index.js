@@ -3,10 +3,12 @@ import { tracked } from '@glimmer/tracking';
 import { inject as service } from '@ember/service';
 import { action, set } from '@ember/object';
 import isNestedRouteTransition from '@fleetbase/ember-core/utils/is-nested-route-transition';
+import { scheduleOnce } from '@ember/runloop';
 
 export default class OperationsOrdersIndexRoute extends Route {
     @service store;
     @service filters;
+    @service loader;
     @tracked timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
     @tracked queryParams = {
         page: { refreshModel: true },
@@ -21,6 +23,8 @@ export default class OperationsOrdersIndexRoute extends Route {
         tracking: { refreshModel: true },
         facilitator: { refreshModel: true },
         driver: { refreshModel: true },
+        vehicle: { refreshModel: true },
+        fleet: { refreshModel: true },
         customer: { refreshModel: true },
         pickup: { refreshModel: true },
         dropoff: { refreshModel: true },
@@ -36,7 +40,8 @@ export default class OperationsOrdersIndexRoute extends Route {
         created_by: { refreshModel: true },
         updated_by: { refreshModel: true },
         created_at: { refreshModel: true },
-        updated_at: { refreshModel: true },
+        updated_at: { refreshModel: true }
+        
     };
 
     
@@ -44,6 +49,8 @@ export default class OperationsOrdersIndexRoute extends Route {
     @tracked isComingFromOutsideOrders = true;
     
     @action willTransition(transition) {
+        // Always show loader during transitions (including QP-only)
+        // this.loader.showOnTransition(transition, 'section.next-view-section');
         // Check if we're navigating within orders section
         if (transition.from && transition.from.name && transition.from.name.includes('operations.orders.index')) {
             this.isComingFromOutsideOrders = false;
@@ -72,14 +79,32 @@ export default class OperationsOrdersIndexRoute extends Route {
         }
     }
 
-    @action model(params) {
+    @action async model(params) {
         //add timezone also here
         params.timezone = this.timezone;
         if (params.status) {
             params.status = params.status.toLowerCase().replace(/\s+/g, '_');
         }
         console.log(params);
-        return this.store.query('order', params);
+        // Show loader while fetching orders
+        this.loader.show('section.next-view-section');
+        
+        const orders = await this.store.query('order', params);
+        
+        // Load fleet data for each order that has a fleet_uuid
+        const fleetLoadPromises = orders.map(async (order) => {
+            if (order.fleet_uuid && !order.fleet) {
+                try {
+                    await order.loadFleet();
+                } catch (error) {
+                    console.warn('Failed to load fleet for order:', order.id, error);
+                }
+            }
+        });
+        
+        await Promise.all(fleetLoadPromises);
+        
+        return orders;
     }
     @action setupController(controller, model) {
         super.setupController(controller, model);
@@ -91,6 +116,9 @@ export default class OperationsOrdersIndexRoute extends Route {
             // No need to use replaceWith here since we've already set the controller property
             // The layout will update in the UI
         }
+
+        // Remove loader after DOM has rendered
+        scheduleOnce('afterRender', this, () => this.loader.remove());
     }
     // This is called when entering the route
     beforeModel(transition) {
@@ -114,7 +142,7 @@ export default class OperationsOrdersIndexRoute extends Route {
                 'page', 'limit', 'sort', 'query', 'public_id', 'internal_id', 'trip_id', 
                 'payload', 'tracking', 'facilitator', 'customer', 'driver', 
                 'vehicle', 'pickup', 'dropoff', 'created_by', 'updated_by', 
-                'status', 'type', 'on'
+                'status', 'type', 'on','fleet'
             ];
             
             const resetParams = {};
@@ -147,7 +175,8 @@ export default class OperationsOrdersIndexRoute extends Route {
                 status: undefined,
                 type: undefined,
                 on: undefined,
-                isSearchVisible: false
+                isSearchVisible: false,
+                fleet: undefined
             });
             this.filters.clearStalePendingParams(controller);
         }

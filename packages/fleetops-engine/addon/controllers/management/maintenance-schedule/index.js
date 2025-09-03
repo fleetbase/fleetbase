@@ -84,7 +84,7 @@ export default class ManagementMaintenanceScheduleIndexController extends BaseCo
         {
             label: this.intl.t('fleet-ops.common.start-date'),
             valuePath: 'start_date',
-            cellComponent: 'table/cell/date',
+            cellComponent: 'table/cell/date-only',
             width: '140px',
             resizable: true,
             sortable: true,
@@ -95,7 +95,7 @@ export default class ManagementMaintenanceScheduleIndexController extends BaseCo
         {
             label: this.intl.t('leaves.end_date'),
             valuePath: 'end_date',
-            cellComponent: 'table/cell/date',
+            cellComponent: 'table/cell/date-only',
             width: '140px',
             resizable: true,
             sortable: true,

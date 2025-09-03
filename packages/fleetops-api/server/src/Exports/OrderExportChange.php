@@ -204,11 +204,11 @@ class OrderExportChange implements FromCollection, WithHeadings, ShouldAutoSize,
             'vehicleAssigned', // Make sure to include vehicle relationship
             'payload.waypoints',
             'routeSegments',
-            'fleets',
+            // 'fleets',
             'createdBy',
             'updatedBy',
         ])->OrderBy('created_at', 'desc')->get();
-
+        
         $rows = collect();
         foreach ($orders as $order) {
             // Prepare the shared fields
@@ -230,7 +230,7 @@ class OrderExportChange implements FromCollection, WithHeadings, ShouldAutoSize,
 
             // Create lane information from waypoints
             $segmentLane = '';
-            if ($waypoints instanceof Collection && $waypoints->count() == 2) {
+            /*if ($waypoints instanceof Collection && $waypoints->count() == 2) {
                   $placeNames = collect();
                     foreach ($waypoints as $waypoint) {
                         $placeName = $waypoint->name ?? $waypoint->city ?? $waypoint->code ?? '';
@@ -251,7 +251,7 @@ class OrderExportChange implements FromCollection, WithHeadings, ShouldAutoSize,
                 } elseif (!empty($dropoffCode)) {
                     $segmentLane = $dropoffCode;
                 }
-            }
+            }*/
 
 
             // For each route segment, create a row
@@ -282,8 +282,10 @@ class OrderExportChange implements FromCollection, WithHeadings, ShouldAutoSize,
                     ]);
                 }
             } 
-            elseif(isset($placeNames)){
-                  foreach ($waypoints as $waypoint) {
+            else{
+                if($waypoints instanceof Collection && $waypoints->count() == 2){
+                    $placeNames = collect();
+                    foreach ($waypoints as $waypoint) {
                         $placeName = $waypoint->name ?? $waypoint->city ?? $waypoint->code ?? '';
                         if (!empty($placeName)) {
                             $placeNames->push($placeName);
@@ -295,6 +297,38 @@ class OrderExportChange implements FromCollection, WithHeadings, ShouldAutoSize,
                         // All waypoints have the same place name
                         $segmentLane = $uniquePlaceNames->first();
                     } 
+                }
+                else{
+                    $pickupCode = $order->payload->pickup->code ?? '';
+                    $dropoffCode = $order->payload->dropoff->code ?? '';
+                    
+                    if (!empty($pickupCode) && !empty($dropoffCode)) {
+                        if($pickupCode === $dropoffCode)
+                        {
+                            $segmentLane = $pickupCode;
+                        }
+                        else{
+                            $segmentLane = $pickupCode . '->' . $dropoffCode;
+                        }
+                    } elseif (!empty($pickupCode)) {
+                        $segmentLane = $pickupCode;
+                    } elseif (!empty($dropoffCode)) {
+                        $segmentLane = $dropoffCode;
+                    }
+                }
+                
+                //   foreach ($waypoints as $waypoint) {
+                //         $placeName = $waypoint->name ?? $waypoint->city ?? $waypoint->code ?? '';
+                //         if (!empty($placeName)) {
+                //             $placeNames->push($placeName);
+                //         }
+                //     }
+                //     $uniquePlaceNames = $placeNames->unique()->values();
+
+                //     if ($uniquePlaceNames->count() === 1) {
+                //         // All waypoints have the same place name
+                //         $segmentLane = $uniquePlaceNames->first();
+                //     } 
                  $rows->push([
                     $blockId,                    // Block ID
                     $tripId,                     // Trip ID
@@ -312,25 +346,25 @@ class OrderExportChange implements FromCollection, WithHeadings, ShouldAutoSize,
                     ''                           // Unscheduled Drop (Yes/No)
                 ]);
             }
-            else {
-                // Fallback if no segments or waypoints — show 1 row for ALL orders
-                $rows->push([
-                    $blockId,                    // Block ID
-                    $tripId,                     // Trip ID
-                    '',                          // Load ID
-                    $segmentLane,                 // Lane
-                    $startDate,                  // Arrival Start Time
-                    $driver_type,                // Driver type
-                    $driverName,                 // Driver 1
-                    '',                          // Driver 2 (if team)
-                    $vehicleType,                // Vehicle Type
-                    $vehiclePlateNumber,         // License Plate #
-                    '',                        // Country Code (default)
-                    '',                          // Equipment Type
-                    '',                          // Trailer ID
-                    ''                           // Unscheduled Drop (Yes/No)
-                ]);
-            }
+            // else {
+            //     // Fallback if no segments or waypoints — show 1 row for ALL orders
+            //     $rows->push([
+            //         $blockId,                    // Block ID
+            //         $tripId,                     // Trip ID
+            //         '',                          // Load ID
+            //         $segmentLane,                 // Lane
+            //         $startDate,                  // Arrival Start Time
+            //         $driver_type,                // Driver type
+            //         $driverName,                 // Driver 1
+            //         '',                          // Driver 2 (if team)
+            //         $vehicleType,                // Vehicle Type
+            //         $vehiclePlateNumber,         // License Plate #
+            //         '',                        // Country Code (default)
+            //         '',                          // Equipment Type
+            //         '',                          // Trailer ID
+            //         ''                           // Unscheduled Drop (Yes/No)
+            //     ]);
+            // }
         }
 
         return $rows;

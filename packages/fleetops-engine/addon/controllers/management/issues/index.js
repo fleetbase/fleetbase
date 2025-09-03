@@ -344,7 +344,6 @@ export default class ManagementIssuesIndexController extends BaseController {
             // if no query don't search
             if (isBlank(value)) {
                 set(this, 'query', null);
-                this.hostRouter.refresh();
                 return;
             }
             // timeout for typing
@@ -357,7 +356,6 @@ export default class ManagementIssuesIndexController extends BaseController {
     
             // update the query param
             set(this, 'query', value);
-            this.hostRouter.refresh();
     }
 
     /**
