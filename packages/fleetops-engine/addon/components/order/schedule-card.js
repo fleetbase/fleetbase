@@ -604,8 +604,6 @@ export default class OrderScheduleCardComponent extends Component {
                 body = this.intl.t('fleet-ops.component.order.schedule-card.assign-driver-busy-text', {
                     driverName: order.driver_assigned.name,
                     driverAvailability: order.driver_assigned.availability_message || 'Unavailable',
-                    driverButton: order.driver_assigned.button_message || 'Continue with assignment',
-                    vehicleName: order.vehicle_assigned.plate_number,
                     orderId: order.public_id,
                 });
                 acceptButtonText = this.intl.t('fleet-ops.component.order.schedule-card.assign-button', { default: 'Assign' });

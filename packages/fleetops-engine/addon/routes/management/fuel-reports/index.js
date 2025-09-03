@@ -35,10 +35,17 @@ export default class ManagementFuelReportsIndexRoute extends Route {
              const isPaginationTransition = transition.to.name === transition.from.name && 
                                          transition.to.queryParams.page !== transition.from.queryParams.page;
      
-             if (isNestedRouteTransition(transition) && !isPaginationTransition) {
+             // Check if coming back from fuel-report creation/view to fuel-reports index
+             const isComingBackFromFuelReport = transition.from && 
+                                             (transition.from.name.includes('management.fuel-reports.index.new') || 
+                                              transition.from.name.includes('management.fuel-reports.index.view'));
+     
+             // Only disable refreshModel for nested routes that aren't pagination transitions and aren't coming back from fuel-report pages
+             if (isNestedRouteTransition(transition) && !isPaginationTransition && !isComingBackFromFuelReport) {
                  set(this.queryParams, 'page.refreshModel', false);
                  set(this.queryParams, 'sort.refreshModel', false);
              } else {
+                 // Ensure refreshModel is enabled for pagination and when coming back from fuel-report pages
                  set(this.queryParams, 'page.refreshModel', true);
                  set(this.queryParams, 'sort.refreshModel', true);
              }
