@@ -951,7 +951,7 @@ export default class OperationsOrdersIndexViewController extends BaseController 
                             body: this.intl.t('fleet-ops.component.order.schedule-card.assign-vehicle-busy-text', {
                                 vehicleName: vehicleToAssign.plate_number,
                                 orderId: order.public_id,
-                                availability: vehicleToAssign.availability_message,
+                                vehicleAvailability: vehicleToAssign.availability_message,
                                 button: vehicleToAssign.button_message,
                             }),
                             acceptButtonText: this.intl.t('fleet-ops.component.order.schedule-card.ok-button'),
@@ -984,8 +984,7 @@ export default class OperationsOrdersIndexViewController extends BaseController 
                             body: this.intl.t('fleet-ops.component.order.schedule-card.assign-driver-busy-text', {
                                 driverName: driverToAssign.name,
                                 orderId: order.public_id,
-                                availability: driverToAssign.availability_message,
-                                button: driverToAssign.button_message,
+                                driverAvailability: driverToAssign.availability_message,
                             }),
                             acceptButtonText: this.intl.t('fleet-ops.component.order.schedule-card.assign-busy-button', {
                                 button: driverToAssign.button_message,
@@ -1237,7 +1236,13 @@ export default class OperationsOrdersIndexViewController extends BaseController 
                     return later(
                         this,
                         () => {
-                            return this.hostRouter.refresh();
+                            // Refresh model data while preserving pagination
+                            const ordersController = this.hostRouter.currentRoute.controller;
+                            if (ordersController && ordersController.model) {
+                                return ordersController.model.reload();
+                            } else {
+                                return this.hostRouter.refresh();
+                            }
                         },
                         100
                     );
