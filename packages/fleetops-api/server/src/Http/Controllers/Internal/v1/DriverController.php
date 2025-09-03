@@ -625,19 +625,28 @@ class DriverController extends FleetOpsController
             
             Log::info('Total rows with data: ' . $totalRows .", Company: ". session('company'));
             
-            if ($totalRows > config('params.maximum_import_row_size')) {
+            /*if ($totalRows > config('params.maximum_import_row_size')) {
                 return [
                     'success' => false,
                     'errors' => [['N/A', "Import failed: Maximum of ". config('params.maximum_import_row_size') ." rows allowed. Your file contains {$totalRows} rows.", 'N/A']]
                 ];
-            }
+            }*/
 
             $validation = $this->validateImportHeaders($data, $requiredHeaders);
-
+            
+            // Check validation before proceeding
+            if (!$validation['success']) {
+                return [
+                    'success' => false,
+                    'errors' => $validation['errors']
+                ];
+            }
 
             return $this->driverImportWithValidation($data);
         });
-        if (!$validation['success']) {
+        
+        // Check if validation failed
+        if (isset($validation['success']) && !$validation['success']) {
             return response()->error($validation['errors']);
         }
         if (!empty($result['allErrors'])) {
