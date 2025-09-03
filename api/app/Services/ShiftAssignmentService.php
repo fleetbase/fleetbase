@@ -710,6 +710,13 @@ class ShiftAssignmentService
     private function getOrdersAsShifts($start, $end, string $timezone, ?string $companyUuid = null, ?string $fleetUuid = null): array
     {
         try {
+            // Handle timezone conversions (same as in generateShiftAssignmentData)
+            if ($timezone && ($timezone !== 'UTC')) {
+                if ($timezone === 'Asia/Calcutta') {
+                    $timezone = 'Asia/Kolkata'; // Convert old timezone to the correct one
+                }
+            }
+            
             \Log::info('Getting orders as shifts with company_uuid: ' . ($companyUuid ?? 'null') . ' and timezone: ' . $timezone);
             
             // Get orders for the date range based on scheduled_at (date only)
@@ -719,11 +726,34 @@ class ShiftAssignmentService
                 ->whereNull('driver_assigned_uuid') // Exclude orders with assigned drivers
                 ->whereIn('status', ['created', 'planned']);
                 
-            // Apply timezone-aware date filtering
+            // Apply timezone-aware date filtering with fallback
             if ($timezone !== 'UTC') {
-                // Convert UTC datetime to requested timezone before filtering by date
-                $query->whereRaw('DATE(CONVERT_TZ(scheduled_at, "UTC", ?)) >= ?', [$timezone, $start->format('Y-m-d')])
-                      ->whereRaw('DATE(CONVERT_TZ(scheduled_at, "UTC", ?)) <= ?', [$timezone, $end->format('Y-m-d')]);
+                // Test if CONVERT_TZ works on this MySQL server
+                $testConvert = DB::selectOne('SELECT CONVERT_TZ(NOW(), "UTC", ?) as test_time', [$timezone]);
+                
+                if ($testConvert && $testConvert->test_time !== null) {
+                    // CONVERT_TZ works, use timezone-aware filtering
+                    \Log::info('Using CONVERT_TZ for timezone-aware date filtering');
+                    $query->whereRaw('DATE(CONVERT_TZ(scheduled_at, "UTC", ?)) >= ?', [$timezone, $start->format('Y-m-d')])
+                          ->whereRaw('DATE(CONVERT_TZ(scheduled_at, "UTC", ?)) <= ?', [$timezone, $end->format('Y-m-d')]);
+                } else {
+                    // CONVERT_TZ failed, use UTC offset calculation as fallback
+                    \Log::warning('CONVERT_TZ failed, using UTC offset fallback for timezone: ' . $timezone);
+                    
+                    // Calculate timezone offset (Asia/Kolkata is UTC+5:30)
+                    $offsetHours = ($timezone === 'Asia/Kolkata') ? 5.5 : 0;
+                    $offsetMinutes = $offsetHours * 60;
+                    
+                    // Convert start/end dates to UTC range accounting for timezone offset
+                    $utcStart = $start->copy()->subMinutes($offsetMinutes);
+                    $utcEnd = $end->copy()->addDay()->subMinutes($offsetMinutes)->subSecond();
+                    
+                    \Log::info('Using UTC offset fallback: local range ' . $start->format('Y-m-d') . ' to ' . $end->format('Y-m-d') . 
+                              ' becomes UTC range ' . $utcStart->format('Y-m-d H:i:s') . ' to ' . $utcEnd->format('Y-m-d H:i:s'));
+                    
+                    $query->where('scheduled_at', '>=', $utcStart->format('Y-m-d H:i:s'))
+                          ->where('scheduled_at', '<=', $utcEnd->format('Y-m-d H:i:s'));
+                }
             } else {
                 // If timezone is UTC, use direct date filtering
                 $query->whereDate('scheduled_at', '>=', $start->format('Y-m-d'))
@@ -741,13 +771,85 @@ class ShiftAssignmentService
             }
             if ($fleetUuid) {
                 $query->where('fleet_uuid', $fleetUuid);
-                
+                \Log::info('Filtering orders by fleet_uuid: ' . $fleetUuid);
             }
             
             \Log::info('Querying orders with scheduled_at between dates ' . $start->format('Y-m-d') . ' and ' . $end->format('Y-m-d') . ' in timezone ' . $timezone);
             
+            // First, let's check what orders exist in the date range WITHOUT filtering by driver assignment
+            $debugQuery = DB::table('orders')
+                ->whereNotNull('scheduled_at')
+                ->whereIn('status', ['created', 'planned']);
+                
+            if ($timezone !== 'UTC') {
+                // Use same logic as main query for consistency
+                $testConvert = DB::selectOne('SELECT CONVERT_TZ(NOW(), "UTC", ?) as test_time', [$timezone]);
+                
+                if ($testConvert && $testConvert->test_time !== null) {
+                    $debugQuery->whereRaw('DATE(CONVERT_TZ(scheduled_at, "UTC", ?)) >= ?', [$timezone, $start->format('Y-m-d')])
+                              ->whereRaw('DATE(CONVERT_TZ(scheduled_at, "UTC", ?)) <= ?', [$timezone, $end->format('Y-m-d')]);
+                } else {
+                    // Use UTC offset fallback
+                    $offsetHours = ($timezone === 'Asia/Kolkata') ? 5.5 : 0;
+                    $offsetMinutes = $offsetHours * 60;
+                    $utcStart = $start->copy()->subMinutes($offsetMinutes);
+                    $utcEnd = $end->copy()->addDay()->subMinutes($offsetMinutes)->subSecond();
+                    
+                    $debugQuery->where('scheduled_at', '>=', $utcStart->format('Y-m-d H:i:s'))
+                              ->where('scheduled_at', '<=', $utcEnd->format('Y-m-d H:i:s'));
+                }
+            } else {
+                $debugQuery->whereDate('scheduled_at', '>=', $start->format('Y-m-d'))
+                          ->whereDate('scheduled_at', '<=', $end->format('Y-m-d'));
+            }
+            
+            if ($companyUuid) {
+                $debugQuery->where('company_uuid', $companyUuid);
+            }
+            if ($fleetUuid) {
+                $debugQuery->where('fleet_uuid', $fleetUuid);
+            }
+            
+            $allOrdersInRange = $debugQuery->get();
+            $assignedCount = $debugQuery->whereNotNull('driver_assigned_uuid')->count();
+            $unassignedCount = $debugQuery->whereNull('driver_assigned_uuid')->count();
+            
+            \Log::info('DEBUG: Total orders in date range: ' . $allOrdersInRange->count() . 
+                      ', Assigned: ' . $assignedCount . 
+                      ', Unassigned: ' . $unassignedCount);
+            
+            // If no orders found, let's check what date ranges actually have orders
+            if ($allOrdersInRange->count() === 0) {
+                $sampleOrders = DB::table('orders')
+                    ->whereNotNull('scheduled_at')
+                    ->where('company_uuid', $companyUuid)
+                    ->orderBy('scheduled_at', 'desc')
+                    ->limit(5)
+                    ->get(['public_id', 'scheduled_at', 'driver_assigned_uuid', 'status']);
+                    
+                \Log::info('DEBUG: No orders in requested range. Recent orders in database:');
+                foreach ($sampleOrders as $order) {
+                    $localTime = DB::selectOne('SELECT CONVERT_TZ(?, "UTC", ?) as local_time', 
+                        [$order->scheduled_at, $timezone]);
+                    \Log::info('DEBUG Recent Order: ' . $order->public_id . 
+                              ', Scheduled UTC: ' . $order->scheduled_at . 
+                              ', Local (' . $timezone . '): ' . ($localTime->local_time ?? 'NULL') .
+                              ', Driver: ' . ($order->driver_assigned_uuid ?? 'NULL') . 
+                              ', Status: ' . $order->status);
+                }
+            }
+            
+            // Log a few sample orders for debugging
+            foreach ($allOrdersInRange->take(3) as $sampleOrder) {
+                \Log::info('DEBUG Sample Order: ' . $sampleOrder->public_id . 
+                          ', Scheduled: ' . $sampleOrder->scheduled_at . 
+                          ', Driver: ' . ($sampleOrder->driver_assigned_uuid ?? 'NULL') . 
+                          ', Status: ' . $sampleOrder->status);
+            }
+            
             $orders = $query->get();
-            \Log::info('Found ' . count($orders) . ' orders in date range (excluding assigned orders)');
+            
+            \Log::info('Found ' . $orders->count() . ' orders in date range (excluding assigned orders)');
             
             $datedShifts = [];
             
@@ -810,25 +912,56 @@ class ShiftAssignmentService
      *
      * @param mixed $start
      * @param mixed $end
-     * @param string|null $companyUuid
      * @param string $timezone
+     * @param string|null $companyUuid
+     * @param string|null $fleetUuid
      * @return array
      */
     public function getPreAssignedShifts($start, $end, string $timezone, ?string $companyUuid = null, ?string $fleetUuid = null): array
     {
         try {
+            // Handle timezone conversions (same as in generateShiftAssignmentData)
+            if ($timezone && ($timezone !== 'UTC')) {
+                if ($timezone === 'Asia/Calcutta') {
+                    $timezone = 'Asia/Kolkata'; // Convert old timezone to the correct one
+                }
+            }
+            
             \Log::info('Getting pre-assigned shifts with company_uuid: ' . ($companyUuid ?? 'null') . ', fleet_uuid: ' . ($fleetUuid ?? 'null') . ' and timezone: ' . $timezone);
             \Log::info('Date range filter: ' . $start->format('Y-m-d') . ' to ' . $end->format('Y-m-d'));
             
             $query = DB::table('orders')
                 ->whereNotNull('scheduled_at')
                 ->whereNotNull('driver_assigned_uuid');
-        
-            // Apply timezone-aware date filtering
+                
+            // Apply timezone-aware date filtering with fallback (consistent with getOrdersAsShifts)
             if ($timezone !== 'UTC') {
-                // Convert UTC datetime to requested timezone before filtering by date
-                $query->whereRaw('DATE(CONVERT_TZ(scheduled_at, "UTC", ?)) >= ?', [$timezone, $start->format('Y-m-d')])
-                      ->whereRaw('DATE(CONVERT_TZ(scheduled_at, "UTC", ?)) <= ?', [$timezone, $end->format('Y-m-d')]);
+                // Test if CONVERT_TZ works on this MySQL server
+                $testConvert = DB::selectOne('SELECT CONVERT_TZ(NOW(), "UTC", ?) as test_time', [$timezone]);
+                
+                if ($testConvert && $testConvert->test_time !== null) {
+                    // CONVERT_TZ works, use timezone-aware filtering
+                    \Log::info('Using CONVERT_TZ for pre-assigned shifts timezone-aware date filtering');
+                    $query->whereRaw('DATE(CONVERT_TZ(scheduled_at, "UTC", ?)) >= ?', [$timezone, $start->format('Y-m-d')])
+                          ->whereRaw('DATE(CONVERT_TZ(scheduled_at, "UTC", ?)) <= ?', [$timezone, $end->format('Y-m-d')]);
+                } else {
+                    // CONVERT_TZ failed, use UTC offset calculation as fallback
+                    \Log::warning('CONVERT_TZ failed for pre-assigned shifts, using UTC offset fallback for timezone: ' . $timezone);
+                    
+                    // Calculate timezone offset (Asia/Kolkata is UTC+5:30)
+                    $offsetHours = ($timezone === 'Asia/Kolkata') ? 5.5 : 0;
+                    $offsetMinutes = $offsetHours * 60;
+                    
+                    // Convert start/end dates to UTC range accounting for timezone offset
+                    $utcStart = $start->copy()->subMinutes($offsetMinutes);
+                    $utcEnd = $end->copy()->addDay()->subMinutes($offsetMinutes)->subSecond();
+                    
+                    \Log::info('Pre-assigned shifts UTC offset fallback: local range ' . $start->format('Y-m-d') . ' to ' . $end->format('Y-m-d') . 
+                              ' becomes UTC range ' . $utcStart->format('Y-m-d H:i:s') . ' to ' . $utcEnd->format('Y-m-d H:i:s'));
+                    
+                    $query->where('scheduled_at', '>=', $utcStart->format('Y-m-d H:i:s'))
+                          ->where('scheduled_at', '<=', $utcEnd->format('Y-m-d H:i:s'));
+                }
             } else {
                 // If timezone is UTC, use direct date filtering
                 $query->whereDate('scheduled_at', '>=', $start->format('Y-m-d'))
@@ -1037,19 +1170,30 @@ class ShiftAssignmentService
         try {
             \Log::info('Getting vehicles data with company_uuid: ' . ($companyUuid ?? 'null') . ', fleet_uuid: ' . ($fleetUuid ?? 'null') . ' and timezone: ' . $timezone);
             
-            if (!$companyUuid || !$fleetUuid) {
-                \Log::info('Company UUID or Fleet UUID not provided, returning empty vehicles data');
+            if (!$companyUuid) {
+                \Log::info('Company UUID not provided, returning empty vehicles data');
                 return [];
             }
             
-            // Get vehicles for the fleet and company
-            $vehiclesQuery = DB::table('vehicles')
-                ->join('fleet_vehicles', 'vehicles.uuid', '=', 'fleet_vehicles.vehicle_uuid')
-                ->select('vehicles.uuid', 'vehicles.plate_number', 'vehicles.company_uuid')
-                ->where('vehicles.company_uuid', $companyUuid)
-                ->where('fleet_vehicles.fleet_uuid', $fleetUuid)
-                ->whereNull('vehicles.deleted_at')
-                ->whereNull('fleet_vehicles.deleted_at');
+            // Get vehicles for the company (optionally filtered by fleet)
+            if ($fleetUuid) {
+                // Get vehicles for specific fleet
+                \Log::info('Getting vehicles for specific fleet: ' . $fleetUuid);
+                $vehiclesQuery = DB::table('vehicles')
+                    ->join('fleet_vehicles', 'vehicles.uuid', '=', 'fleet_vehicles.vehicle_uuid')
+                    ->select('vehicles.uuid', 'vehicles.plate_number', 'vehicles.company_uuid')
+                    ->where('vehicles.company_uuid', $companyUuid)
+                    ->where('fleet_vehicles.fleet_uuid', $fleetUuid)
+                    ->whereNull('vehicles.deleted_at')
+                    ->whereNull('fleet_vehicles.deleted_at');
+            } else {
+                // Get all vehicles for the company
+                \Log::info('Getting all vehicles for company (no fleet filter)');
+                $vehiclesQuery = DB::table('vehicles')
+                    ->select('vehicles.uuid', 'vehicles.plate_number', 'vehicles.company_uuid')
+                    ->where('vehicles.company_uuid', $companyUuid)
+                    ->whereNull('vehicles.deleted_at');
+            }
                 
             $vehicles = $vehiclesQuery->get();
             \Log::info('Found ' . $vehicles->count() . ' vehicles for fleet and company');
@@ -1091,11 +1235,25 @@ class ShiftAssignmentService
                 ->whereNotNull('scheduled_at')
                 ->whereIn('status', ['created', 'planned']);
                 
-            // Apply timezone-aware date filtering for orders
+            // Apply timezone-aware date filtering with fallback for orders
             if ($timezone !== 'UTC') {
-                // Convert UTC datetime to requested timezone before filtering by date
-                $ordersQuery->whereRaw('DATE(CONVERT_TZ(scheduled_at, "UTC", ?)) >= ?', [$timezone, $start->format('Y-m-d')])
-                           ->whereRaw('DATE(CONVERT_TZ(scheduled_at, "UTC", ?)) <= ?', [$timezone, $end->format('Y-m-d')]);
+                // Test if CONVERT_TZ works on this MySQL server
+                $testConvert = DB::selectOne('SELECT CONVERT_TZ(NOW(), "UTC", ?) as test_time', [$timezone]);
+                
+                if ($testConvert && $testConvert->test_time !== null) {
+                    // CONVERT_TZ works, use timezone-aware filtering
+                    $ordersQuery->whereRaw('DATE(CONVERT_TZ(scheduled_at, "UTC", ?)) >= ?', [$timezone, $start->format('Y-m-d')])
+                               ->whereRaw('DATE(CONVERT_TZ(scheduled_at, "UTC", ?)) <= ?', [$timezone, $end->format('Y-m-d')]);
+                } else {
+                    // CONVERT_TZ failed, use UTC offset calculation as fallback
+                    $offsetHours = ($timezone === 'Asia/Kolkata') ? 5.5 : 0;
+                    $offsetMinutes = $offsetHours * 60;
+                    $utcStart = $start->copy()->subMinutes($offsetMinutes);
+                    $utcEnd = $end->copy()->addDay()->subMinutes($offsetMinutes)->subSecond();
+                    
+                    $ordersQuery->where('scheduled_at', '>=', $utcStart->format('Y-m-d H:i:s'))
+                               ->where('scheduled_at', '<=', $utcEnd->format('Y-m-d H:i:s'));
+                }
             } else {
                 // If timezone is UTC, use direct date filtering
                 $ordersQuery->whereDate('scheduled_at', '>=', $start->format('Y-m-d'))

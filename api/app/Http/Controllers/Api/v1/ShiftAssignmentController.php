@@ -178,8 +178,8 @@ class ShiftAssignmentController extends Controller
                 $startDate = Carbon::parse($startDateStr);
                 $endDate = Carbon::parse($endDateStr);
                 $companyUuid = $request->input('company_uuid');
-                $timezone = $request->input('time_zone', 'UTC');
                 $fleetUuid = $request->input('fleet_uuid');
+                $timezone = $request->input('time_zone', 'UTC');
                 $data = $this->shiftAssignmentService->generateShiftAssignmentData($startDate, $endDate, $companyUuid, $timezone, $fleetUuid);
 
                 return response()->json([
