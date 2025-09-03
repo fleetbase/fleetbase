@@ -440,6 +440,14 @@ export default class ManagementDriversIndexController extends BaseController {
     }
 
     /**
+     * Handle page change from Table pagination.
+     * Only updates the `page` QP; route will refresh model and show loader.
+     */
+    @action onPageChange(page) {
+        set(this, 'page', page);
+    }
+
+    /**
      * Bulk deletes selected `driver` via confirm prompt
      *
      * @param {Array} selected an array of selected models

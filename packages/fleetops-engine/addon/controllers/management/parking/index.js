@@ -280,6 +280,14 @@ export default class ManagementParkingIndexController extends BaseController {
     }
 
     /**
+     * Handle page change from Table pagination.
+     * Only updates the `page` QP; route will refresh model and show loader.
+     */
+    @action onPageChange(page) {
+        set(this, 'page', page);
+    }
+
+    /**
      * Toggles dialog to export a fuel report
      *
      * @void

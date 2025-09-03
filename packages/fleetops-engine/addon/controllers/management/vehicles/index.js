@@ -434,7 +434,6 @@ export default class ManagementVehiclesIndexController extends BaseController {
         // if no query don't search
         if (isBlank(value)) {
             set(this, 'query', null);
-            this.hostRouter.refresh();
             return;
         }
         // timeout for typing
@@ -447,7 +446,6 @@ export default class ManagementVehiclesIndexController extends BaseController {
 
         // update the query param
         set(this, 'query', value);
-        this.hostRouter.refresh();
     }
 
     /**
@@ -458,6 +456,14 @@ export default class ManagementVehiclesIndexController extends BaseController {
     @action exportVehicles() {
         const selections = this.table.selectedRows.map((_) => _.id);
         this.crud.export('vehicle', { params: { selections } });
+    }
+
+    /**
+     * Handle page change from Table pagination.
+     * Only updates the `page` QP; route will refresh model and show loader.
+     */
+    @action onPageChange(page) {
+        set(this, 'page', page);
     }
 
     /**
