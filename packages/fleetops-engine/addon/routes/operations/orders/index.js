@@ -40,7 +40,8 @@ export default class OperationsOrdersIndexRoute extends Route {
         created_by: { refreshModel: true },
         updated_by: { refreshModel: true },
         created_at: { refreshModel: true },
-        updated_at: { refreshModel: true },
+        updated_at: { refreshModel: true }
+        
     };
 
     
@@ -78,7 +79,7 @@ export default class OperationsOrdersIndexRoute extends Route {
         }
     }
 
-    @action model(params) {
+    @action async model(params) {
         //add timezone also here
         params.timezone = this.timezone;
         if (params.status) {
@@ -87,7 +88,23 @@ export default class OperationsOrdersIndexRoute extends Route {
         console.log(params);
         // Show loader while fetching orders
         this.loader.show('section.next-view-section');
-        return this.store.query('order', params);
+        
+        const orders = await this.store.query('order', params);
+        
+        // Load fleet data for each order that has a fleet_uuid
+        const fleetLoadPromises = orders.map(async (order) => {
+            if (order.fleet_uuid && !order.fleet) {
+                try {
+                    await order.loadFleet();
+                } catch (error) {
+                    console.warn('Failed to load fleet for order:', order.id, error);
+                }
+            }
+        });
+        
+        await Promise.all(fleetLoadPromises);
+        
+        return orders;
     }
     @action setupController(controller, model) {
         super.setupController(controller, model);
@@ -125,7 +142,7 @@ export default class OperationsOrdersIndexRoute extends Route {
                 'page', 'limit', 'sort', 'query', 'public_id', 'internal_id', 'trip_id', 
                 'payload', 'tracking', 'facilitator', 'customer', 'driver', 
                 'vehicle', 'pickup', 'dropoff', 'created_by', 'updated_by', 
-                'status', 'type', 'on'
+                'status', 'type', 'on','fleet'
             ];
             
             const resetParams = {};
@@ -158,7 +175,8 @@ export default class OperationsOrdersIndexRoute extends Route {
                 status: undefined,
                 type: undefined,
                 on: undefined,
-                isSearchVisible: false
+                isSearchVisible: false,
+                fleet: undefined
             });
             this.filters.clearStalePendingParams(controller);
         }

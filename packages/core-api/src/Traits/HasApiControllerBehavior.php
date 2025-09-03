@@ -414,7 +414,7 @@ trait HasApiControllerBehavior
                 $timezone = $request->timezone ?? 'UTC';
                 $fleet_uuid = $request->fleet_uuid ?? null;
                 if (isset($fleet_uuid) && !empty($fleet_uuid)) {
-                    $data = $data->filter(function ($driver) use ($order) {
+                    $data = $data->filter(function ($driver) use ($order,$fleet_uuid) {
                         // Get fleet_uuids that this driver belongs to using ORM relationship
                         $driverFleetUuids = $driver->fleets()->pluck('fleet_uuid')->toArray();
                         // Check if any of the driver's fleets match order's fleet_uuid or sub_fleet_uuid
@@ -459,7 +459,7 @@ trait HasApiControllerBehavior
                 $fleet_uuid = $request->fleet_uuid ?? null;
                 // Filter vehicles based on the order's fleet_uuid or sub_fleet_uuid
                 if (isset($fleet_uuid) && !empty($fleet_uuid)) {
-                    $data = $data->filter(function ($vehicle) use ($order) {
+                    $data = $data->filter(function ($vehicle) use ($order,$fleet_uuid) {
                         // Get fleet_uuids that this vehicle belongs to using ORM relationship
                         $vehicleFleetUuids = $vehicle->fleets()->pluck('fleet_uuid')->toArray();
                         
@@ -643,7 +643,7 @@ trait HasApiControllerBehavior
             else if ($model_name == "Fleet") {
                 $fleetName = $request['fleet']['name'] ?? null;
                 $tripLength = $request['fleet']['trip_length'] ?? null;
-                if ($this->model->where('name', $fleetName)->whereNull('deleted_at')->exists() || $this->model->where('trip_length', $tripLength)->whereNull('deleted_at')->exists()) {
+                if ($this->model->where('name', $fleetName)->where('company_uuid', session('company'))->whereNull('deleted_at')->exists() || $this->model->where('company_uuid', session('company'))->where('trip_length', $tripLength)->whereNull('deleted_at')->exists()) {
                     return response()->error(__('messages.duplicate_check_fleet'));
                 }
             }

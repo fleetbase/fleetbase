@@ -269,7 +269,15 @@ export default class FetchService extends Service {
         const headers = Object.assign(this.getHeaders(), options.headers ?? {});
         const host = options.host ?? this.host;
         const namespace = options.namespace ?? this.namespace;
-        const url = options.externalRequest === true ? path : [host, namespace, path].filter(Boolean).join('/');
+        
+        // Check if the path is already a full URL
+        let url;
+        if (path.startsWith('http://') || path.startsWith('https://') || options.externalRequest === true) {
+            url = path;
+        } else {
+            // Only prepend host and namespace for relative paths
+            url = [host, namespace, path].filter(Boolean).join('/');
+        }
 
         return new Promise((resolve, reject) => {
             return fetch(url, {

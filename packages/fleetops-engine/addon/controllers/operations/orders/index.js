@@ -15,6 +15,7 @@ import { getOwner } from '@ember/application';
 import { on } from '@ember/object/evented';
 import Controller from '@ember/controller';
 import { inject as controller } from '@ember/controller';
+import ENV from '@fleetbase/console/config/environment';
 
 export default class OperationsOrdersIndexController extends BaseController {
     @service currentUser;
@@ -29,6 +30,7 @@ export default class OperationsOrdersIndexController extends BaseController {
     @service socket;
     @service abilities;
     @service session;
+    @tracked timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
     @controller('operations/orders/index/new') newController;
     /**
      * Queryable parameters for this controller's model
@@ -59,7 +61,8 @@ export default class OperationsOrdersIndexController extends BaseController {
         'drawerTab',
         'orderPanelOpen',
         'on',
-        'trip_id'
+        'trip_id',
+        'fleet'
     ];
 
     /**
@@ -264,6 +267,16 @@ export default class OperationsOrdersIndexController extends BaseController {
      * @type {Array}
      */
     @tracked statusOptions = [];
+
+    /**
+     * Check if auto allocation should be enabled based on URL parameter
+     *
+     * @type {Boolean}
+     */
+    get isAutoAllocationEnabled() {
+        const urlParams = new URLSearchParams(window.location.search);
+        return urlParams.get('auto_allocation') === 'true';
+    }
     @tracked sta_op;
     /**
      * The filterable param `trip_id`
@@ -271,6 +284,7 @@ export default class OperationsOrdersIndexController extends BaseController {
      * @var {String}
      */
     @tracked trip_id;
+    @tracked fleet
     /**
      * Flag to determine if the layout is 'map'
      *
@@ -486,17 +500,15 @@ export default class OperationsOrdersIndexController extends BaseController {
 
         {
             label: this.intl.t('fleet-ops.common.fleet'),
-            cellComponent: 'table/cell/link-list',
-            cellComponentLabelPath: 'name',
-            valuePath: 'fleets',
-            // valuePath: 'fleet.name',
-            // modelPath: 'fleet',
-            action: (fleet) => {
-                this.contextPanel.focus(fleet);
-            },
+            // cellComponent: 'cell/fleet-name',
+            valuePath: 'fleet.name',
+            modelPath: 'fleet',
+            // action: (fleet) => {
+            //     this.contextPanel.focus(fleet);
+            // },
             width: '180px',
             resizable: true,
-            hidden: true,
+            hidden: false,
             filterable: true,
             filterComponent: 'filter/model',
             filterComponentPlaceholder: this.intl.t('fleet-ops.common.select-fleet'),
@@ -1053,6 +1065,98 @@ export default class OperationsOrdersIndexController extends BaseController {
     }
 
     /**
+     * Auto-allocates multiple selected orders.
+     *
+     * @param {Array} [selected=[]] - Orders selected for auto-allocation.
+     * @action
+     * @memberof OperationsOrdersIndexController
+     */
+    @action
+    async bulkAutoAllocate(selected = []) {
+        selected = selected.length > 0 ? selected : this.table.selectedRows;
+    
+        if (!Array.isArray(selected) || selected.length === 0) {
+            return;
+        }
+
+        // // Check if all selected orders have the same fleet_uuid
+        // const fleetUuids = selected.map(order => order.fleet_uuid).filter(uuid => uuid);
+        // const uniqueFleetUuids = [...new Set(fleetUuids)];
+        
+        // if (uniqueFleetUuids.length > 1) {
+        //     this.notifications.warning(this.intl.t('fleet-ops.operations.orders.index.auto-allocate-fleet-mismatch'));
+        //     return;
+        // }
+        
+        // if (fleetUuids.length !== selected.length) {
+        //     this.notifications.warning(this.intl.t('fleet-ops.operations.orders.index.auto-allocate-missing-fleet'));
+        //     return;
+        // }
+    
+        const selectedOrders = selected.map(order => order.public_id).join(',');
+        const companyUuid = this.currentUser?.company_uuid || 
+                            this.session?.data?.authenticated?.company_uuid ||
+                            this.currentUser?.user?.company_uuid;
+                            
+        const url = `${ENV.API.host}/api/v1/shift-assignments/data?selected_orders=[${selectedOrders}]&company_uuid=${companyUuid}&time_zone=${this.timezone}`;
+    
+        this.isLoading = true;
+    
+        this.modalsManager.confirm({
+            title: this.intl.t('fleet-ops.operations.orders.index.auto-allocate-title'),
+            body: this.intl.t('fleet-ops.operations.orders.index.auto-allocate-body', {
+                count: selected.length,
+                plural: selected.length > 1 ? 's' : ''
+            }),
+            acceptButtonScheme: 'primary',
+            acceptButtonText: this.intl.t('fleet-ops.common.auto-allocate'),
+            acceptButtonIcon: 'users-cog',
+            confirm: async (modal) => {
+                modal.startLoading();
+    
+                try {
+                    // ---- First API call ----
+                    const getResp = await fetch(url, {
+                        method: 'GET',
+                        headers: this.fetch.getHeaders()
+                    });
+    
+                    const getData = await getResp.json(); // This will be your payload for the next call
+    
+                    // this.notifications.success(
+                    //     this.intl.t('fleet-ops.operations.orders.index.auto-allocate-success', {
+                    //         count: selected.length
+                    //     })
+                    // );
+    
+                    // ---- Second API call ----
+                    const result = await this.#submitAllocation(getData);
+
+                    if (!result.ok && !result.skipped) {
+                        throw new Error(`Follow-up API failed with status ${result.status}`);
+                    }
+
+                    if (result.skipped) {
+                        this.notifications.warning(result.message);
+                    } else {
+                        this.notifications.success('Auto-allocation completed successfully.');
+                        this.#handleAllocationResult(result);
+                    }
+
+                    await this.hostRouter.refresh();
+                    this.table.untoggleSelectAll();
+                } catch (error) {
+                    console.error('Auto-allocation or follow-up failed:', error);
+                    this.notifications.serverError(error);
+                } finally {
+                    this.isLoading = false;
+                    modal.stopLoading();
+                }
+            }
+        });
+    }
+    
+    /**
      * Cancels multiple selected orders.
      *
      * @param {Array} [selected=[]] - Orders selected for cancellation.
@@ -1425,34 +1529,237 @@ export default class OperationsOrdersIndexController extends BaseController {
 
     @action allocateNow() {
         // Validate that we have the required data
-        if (!this.autoAllocationDate || this.autoAllocationDate.length === 0) {
-            this.notifications.error('Please select a date range for allocation');
-            return;
-        }
-
         try {
             // Close the auto allocation panel
             this.showAutoAllocationPanel = false;
-
-            // Log the allocation request for debugging
-            console.log('Auto allocation requested:', {
-                dateRange: this.autoAllocationDate,
-                fleet: this.selectedFleet,
-                timestamp: new Date().toISOString()
-            });
-
-            // The actual allocation logic is handled by the AutoAllocationPicker component
-            // This action just provides the UI feedback and state management
-            
-            // Optionally, you could trigger additional actions here:
-            // - Refresh the orders list
-            // - Update fleet availability
-            // - Send analytics events
-            // - etc.
-
         } catch (error) {
             console.error('Error in allocateNow:', error);
-            this.notifications.error('Failed to initiate allocation process. Please try again.');
+            this.notifications.error(this.intl.t('fleet-ops.operations.orders.index.failed_allocation_process'));
+        }
+    }
+
+    /**
+     * Private method to submit allocation data to a second API endpoint
+     * @param {Object} data - The allocation data to submit
+     * @returns {Promise<Object>} - The API response
+     */
+    async #submitAllocation(data) {
+        // Build proper payload from the component's logic
+        const payload = this.#buildAllocationPayload(data);
+        
+        // Check if we have trips to allocate (from component logic)
+        const hasDatedTrips = Array.isArray(payload.dated_shifts) && payload.dated_shifts.some((s) => {
+            if (!s || typeof s !== 'object') return false;
+            const id = s.id || s.shift_id;
+            const st = s.start_time;
+            return Boolean(id && st);
+        });
+        const hasRecurringTrips = Array.isArray(payload.recurring_shifts) && payload.recurring_shifts.length > 0;
+        
+        if (!hasDatedTrips && !hasRecurringTrips) {
+            return {
+                skipped: true,
+                reason: 'no_trips',
+                message: this.intl.t('fleet-ops.operations.orders.index.trips_already_assigned')
+            };
+        }
+
+        const authSession = this.#getAuthSession();
+        const headers = { 'Accept': 'application/json', 'Content-Type': 'application/json' };
+        
+        // Get bearer token from environment, component args, or authenticated session
+        const token = ENV.resourceAllocation?.bearerToken || authSession?.authenticated?.token;
+        if (token) {
+            headers['Authorization'] = `Bearer ${token}`;
+        }
+
+        // Use the external API URL from environment
+        const apiUrl = ENV.resourceAllocation?.apiUrl;
+        if (!apiUrl) {
+            throw new Error(this.intl.t('fleet-ops.operations.orders.index.api_url_not_configured'));
+        }
+
+        try {
+            const response = await fetch(apiUrl, {
+                method: 'POST',
+                headers,
+                body: JSON.stringify(payload),
+            });
+            
+            const body = await response.json().catch(() => null);
+            
+            return {
+                status: response.status,
+                ok: response.ok,
+                body,
+                payload
+            };
+        } catch (error) {
+            console.error('Error in submitAllocation:', error);
+            return { ok: false, error: error.message };
+        }
+    }
+
+    /**
+     * Private method to build allocation payload (based on component logic)
+     * @param {Object} data - The raw allocation data
+     * @returns {Object} - The formatted payload
+     */
+    #buildAllocationPayload(data) {
+        const datesArr = Array.isArray(data?.data?.dates) ? data.data.dates : [];
+        const rawResources = Array.isArray(data?.data?.resources) ? data.data.resources : [];
+
+        const resources = rawResources.map((r) => {
+            const prefs = r?.preferences || {};
+            const resolvedStart = prefs.preferred_start_time ?? null;
+            const resolvedEnd = prefs.preferred_end_time ?? null;
+
+            const preferences = (resolvedStart == null && resolvedEnd == null)
+                ? null
+                : {
+                    ...prefs,
+                    preferred_start_time: resolvedStart,
+                    preferred_end_time: resolvedEnd,
+                };
+
+            return {
+                ...r,
+                preferences,
+            };
+        });
+
+        // Build dated_shifts
+        const normalizeShift = (s, date) => {
+            const id = s?.id ?? s?.uuid ?? s?.shift_id ?? null;
+            const start_time = s?.start_time ?? s?.startTime ?? s?.starttime ?? s?.start ?? null;
+            const d = s?.date ?? date ?? null;
+            return { ...s, id, start_time, date: d };
+        };
+
+        let dated_shifts = [];
+        if (Array.isArray(data?.data?.dated_shifts) && data.data.dated_shifts.length > 0) {
+            dated_shifts = data.data.dated_shifts.map((s) => normalizeShift(s, s?.date));
+        } else if (Array.isArray(data?.data?.shifts) && data.data.shifts.length > 0) {
+            dated_shifts = data.data.shifts.map((s) => normalizeShift(s, s?.date));
+        } else if (data?.data?.shifts_by_date && typeof data.data.shifts_by_date === 'object') {
+            for (const [date, arr] of Object.entries(data.data.shifts_by_date)) {
+                if (Array.isArray(arr)) {
+                    dated_shifts.push(...arr.map((s) => normalizeShift(s, date)));
+                }
+            }
+        } else if (Array.isArray(datesArr) && datesArr.length > 0 && typeof datesArr[0] === 'object') {
+            dated_shifts = datesArr.map((s) => normalizeShift(s, s?.date));
+        } else {
+            dated_shifts = datesArr.map((d) => ({ date: d }));
+        }
+
+        const company_uuid = this.currentUser?.user?.company_uuid || this.session?.data?.authenticated?.company_uuid;
+        const pre_assigned_shifts = Array.isArray(data?.data?.pre_assigned_shifts) ? data.data.pre_assigned_shifts : [];
+
+        return {
+            problem_type: 'shift_assignment',
+            dates: datesArr,
+            dated_shifts,
+            resources,
+            previous_allocation_data: data?.data?.previous_allocation_data ?? {},
+            company_uuid,
+            pre_assigned_shifts,
+            ...(Array.isArray(data?.data?.recurring_shifts) ? { recurring_shifts: data.data.recurring_shifts } : {}),
+        };
+    }
+
+    /**
+     * Private method to get authentication session from localStorage
+     * @returns {Object|null} - The auth session object
+     */
+    #getAuthSession() {
+        try {
+            return JSON.parse(localStorage.getItem('ember_simple_auth-session'));
+        } catch (_) {
+            return null;
+        }
+    }
+
+    /**
+     * Private method to handle allocation result processing
+     * @param {Object} result - The allocation result to process
+     */
+    #handleAllocationResult(result) {
+        try {
+            // Handle results based on component logic
+            if (result.skipped) {
+                return; // Already handled in the calling code
+            }
+
+            // If API indicates success and provides URL or UUID for results
+            if (result.ok && result.body?.success === true) {
+                let targetUrl = typeof result.body.url === 'string' ? result.body.url.trim() : '';
+                if (!targetUrl) {
+                    const uuid = result.body?.uuid;
+                    if (uuid) {
+                        const apiKey = ENV.resourceAllocation?.bearerToken || this.#getAuthSession()?.authenticated?.token;
+                        if (apiKey) {
+                            targetUrl = `https://autoallocate.fleetyes.com/results?allocation_uuid=${encodeURIComponent(uuid)}&api_key=${encodeURIComponent(apiKey)}`;
+                        } else {
+                            targetUrl = `https://autoallocate.fleetyes.com/results?allocation_uuid=${encodeURIComponent(uuid)}`;
+                        }
+                    }
+                }
+                
+                if (targetUrl) {
+                    this.#openResultsInNewTab(targetUrl);
+                }
+            }
+        } catch (error) {
+            console.error('Error handling allocation result:', error);
+            this.notifications.error('Failed to process allocation result');
+        }
+    }
+
+    /**
+     * Private method to open results in new tab
+     * @param {string} targetUrl - The URL to open
+     */
+    #openResultsInNewTab(targetUrl) {
+        let newTabRef = null;
+        
+        try {
+            newTabRef = window.open('', '_blank');
+        } catch (_) {}
+
+        if (newTabRef) {
+            let navigated = false;
+            try { 
+                newTabRef.location.replace(targetUrl); 
+                navigated = true; 
+            } catch (_) {}
+            
+            if (!navigated) {
+                try {
+                    const doc = newTabRef.document;
+                    if (doc) {
+                        const p = doc.createElement('p');
+                        p.style.fontFamily = 'Arial, sans-serif';
+                        p.style.margin = '16px';
+                        p.appendChild(doc.createTextNode('Click to view results: '));
+                        const a = doc.createElement('a');
+                        a.href = targetUrl;
+                        a.target = '_self';
+                        a.textContent = 'Open Results';
+                        p.appendChild(a);
+                        if (doc.body) {
+                            doc.body.innerHTML = '';
+                            doc.body.appendChild(p);
+                        } else if (doc.documentElement) {
+                            const body = doc.createElement('body');
+                            body.appendChild(p);
+                            doc.documentElement.appendChild(body);
+                        }
+                    }
+                } catch (_) {}
+            }
+        } else {
+            try { window.open(targetUrl, '_blank'); } catch (_) {}
         }
     }
 

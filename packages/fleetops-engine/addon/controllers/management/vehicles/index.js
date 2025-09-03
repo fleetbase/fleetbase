@@ -287,18 +287,18 @@ export default class ManagementVehiclesIndexController extends BaseController {
             label: this.intl.t('fleet-ops.common.fleet'),
             // cellComponent: 'table/cell/link-list',
             // cellComponentLabelPath: 'name',
-            // action: (fleet) => {
-            //     this.contextPanel.focus(fleet);
-            // },
+            action: (fleet) => {
+                this.contextPanel.focus(fleet);
+            },
             valuePath: 'fleetNames',
             width: '180px',
             resizable: true,
             hidden: false,
             filterable: true,
             filterComponent: 'filter/model',
-            // filterComponentPlaceholder: this.intl.t('fleet-ops.common.select-fleet'),
-            // filterParam: 'fleet',
-            // model: 'fleet',
+            filterComponentPlaceholder: this.intl.t('fleet-ops.common.select-fleet'),
+            filterParam: 'fleet',
+            model: 'fleet',
         },
 
         // {
