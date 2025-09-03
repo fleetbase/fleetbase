@@ -1695,15 +1695,14 @@ export default class OperationsOrdersIndexController extends BaseController {
             // If API indicates success and provides URL or UUID for results
             if (result.ok && result.body?.success === true) {
                 let targetUrl = typeof result.body.url === 'string' ? result.body.url.trim() : '';
-                if (!targetUrl) {
-                    const uuid = result.body?.uuid;
-                    if (uuid) {
-                        const apiKey = ENV.resourceAllocation?.bearerToken || this.#getAuthSession()?.authenticated?.token;
-                        if (apiKey) {
-                            targetUrl = `https://autoallocate.fleetyes.com/results?allocation_uuid=${encodeURIComponent(uuid)}&api_key=${encodeURIComponent(apiKey)}`;
-                        } else {
-                            targetUrl = `https://autoallocate.fleetyes.com/results?allocation_uuid=${encodeURIComponent(uuid)}`;
-                        }
+                // if (!targetUrl) {
+                const uuid = result.body?.uuid;
+                if (uuid) {
+                    const apiKey = ENV.resourceAllocation?.bearerToken || this.#getAuthSession()?.authenticated?.token;
+                    if (apiKey) {
+                        targetUrl = `${targetUrl}?allocation_uuid=${encodeURIComponent(uuid)}&api_key=${encodeURIComponent(apiKey)}`;
+                    } else {
+                        targetUrl = `${targetUrl}?allocation_uuid=${encodeURIComponent(uuid)}`;
                     }
                 }
                 
