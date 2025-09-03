@@ -289,13 +289,14 @@ export default class AutoAllocationPickerComponent extends Component {
         const pre_assigned_shifts = Array.isArray(data?.data?.pre_assigned_shifts) 
             ? data.data.pre_assigned_shifts 
             : [];
-
+        console.log('data', data);
         return {
             problem_type: this.args.problemType || 'shift_assignment',
             dates: datesArr,
             dated_shifts,
             resources,
             previous_allocation_data: data?.data?.previous_allocation_data ?? {},
+            vehicles_data: data?.data?.vehicles_data ?? [],
             // Include company_uuid and pre_assigned_shifts from the response
             company_uuid,
             fleet_uuid,
