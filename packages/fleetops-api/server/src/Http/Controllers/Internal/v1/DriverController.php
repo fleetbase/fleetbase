@@ -607,8 +607,23 @@ class DriverController extends FleetOpsController
         $result = $this->processImportWithErrorHandling($files, 'driver', function($file) use ($requiredHeaders, &$validation) {
             $disk = config('filesystems.default');
             $data = Excel::toArray(new DriverImport(), $file->path, $disk);
-            $totalRows = collect($data)->flatten(1)->count();
-            Log::info('Total rows: ' . $totalRows .", Company: ". session('company'));
+            
+            // Count only rows with actual data (skip empty rows)
+            $totalRows = 0;
+            foreach ($data as $sheetRows) {
+                foreach ($sheetRows as $row) {
+                    $name = $this->getDriverValue($row, ['name', 'full_name', 'first_name', 'driver', 'person']);
+                    $email = $this->getDriverValue($row, ['email', 'email_address']);
+                    $driversLicenseNumber = $this->getDriverValue($row, ['drivers_license', 'driver_license', 'drivers_license_number', 'driver_license_number', 'license', 'driver_id', 'driver_identification', 'driver_identification_number', 'license_number']);
+                    
+                    // Count row only if it has meaningful data
+                    if (!empty($name) || !empty($email) || !empty($driversLicenseNumber)) {
+                        $totalRows++;
+                    }
+                }
+            }
+            
+            Log::info('Total rows with data: ' . $totalRows .", Company: ". session('company'));
             
             if ($totalRows > config('params.maximum_import_row_size')) {
                 return [
@@ -655,10 +670,17 @@ class DriverController extends FleetOpsController
                     $originalRowIndex = $row['_original_row_index'] ?? $rowIndex;
                     $displayRowIndex = $originalRowIndex + 1;
 
-                    // Collect emails and license numbers for batch validation using same column mapping as createFromImport
+                    // Skip empty rows - check if row has any meaningful data
+                    $name = $this->getDriverValue($row, ['name', 'full_name', 'first_name', 'driver', 'person']);
                     $email = $this->getDriverValue($row, ['email', 'email_address']);
                     $driversLicenseNumber = $this->getDriverValue($row, ['drivers_license', 'driver_license', 'drivers_license_number', 'driver_license_number', 'license', 'driver_id', 'driver_identification', 'driver_identification_number', 'license_number']);
                     
+                    // Skip row if all key fields are empty
+                    if (empty($name) && empty($email) && empty($driversLicenseNumber)) {
+                        continue;
+                    }
+                    
+                    // Collect emails and license numbers for batch validation using same column mapping as createFromImport
                     if (!empty($email)) {
                         $allEmails[] = strtolower(trim($email));
                     }
