@@ -138,7 +138,7 @@ class FleetController extends FleetOpsController
         $exists = FleetDriver::where([
             'fleet_uuid'  => $fleet->uuid,
             'driver_uuid' => $driver->uuid,
-        ])->whereNull('deleted_at')->where('company_uuid', session('company'))->exists();
+        ])->whereNull('deleted_at')->exists();
 
         // $existingFleet = FleetDriver::where('driver_uuid', $driver->uuid)
         //     ->whereNull('deleted_at')
