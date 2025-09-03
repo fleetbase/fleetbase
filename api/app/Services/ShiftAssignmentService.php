@@ -696,8 +696,6 @@ class ShiftAssignmentService
         }
     }
     
-    
-    
     /**
      * Apply timezone-aware date filtering to a query with CONVERT_TZ fallback
      *
@@ -800,7 +798,6 @@ class ShiftAssignmentService
                 
             // Apply timezone-aware date filtering with fallback
             $this->applyTimezoneAwareDateFilter($query, 'scheduled_at', $start, $end, $timezone);
-                
             // Filter by company if provided
             if ($companyUuid) {
                 $query->where('company_uuid', $companyUuid);
@@ -834,7 +831,6 @@ class ShiftAssignmentService
                 ];
             }
             
-            \Log::info('Processed ' . count($datedShifts) . ' dated shifts (unassigned orders only)');
             return $datedShifts;
         } catch (\Exception $e) {
             \Log::error("Error in getOrdersAsShifts: " . $e->getMessage());
@@ -880,138 +876,24 @@ class ShiftAssignmentService
     public function getPreAssignedShifts($start, $end, string $timezone, ?string $companyUuid = null, ?string $fleetUuid = null): array
     {
         try {
-            // Handle timezone conversions (same as in generateShiftAssignmentData)
-            if ($timezone && ($timezone !== 'UTC')) {
-                if ($timezone === 'Asia/Calcutta') {
-                    $timezone = 'Asia/Kolkata'; // Convert old timezone to the correct one
-                }
+            \Log::info('Getting pre-assigned shifts with company_uuid: ' . ($companyUuid ?? 'null') . ', fleet_uuid: ' . ($fleetUuid ?? 'null') . ' and timezone: ' . $timezone);
+            \Log::info('Date range filter: ' . $start->format('Y-m-d') . ' to ' . $end->format('Y-m-d'));
+            
+            $query = DB::table('orders')
+                ->whereNotNull('scheduled_at')
+                ->whereNotNull('driver_assigned_uuid');
+        
+            // Apply timezone-aware date filtering
+            $this->applyTimezoneAwareDateFilter($query, 'scheduled_at', $start, $end, $timezone);
+        
+            if ($companyUuid) {
+                $query->where('company_uuid', $companyUuid);
             }
-        
-        $query = DB::table('orders')
-            ->whereNotNull('scheduled_at')
-            ->whereNotNull('driver_assigned_uuid') // Only orders with assigned drivers
-            ->whereIn('status', ['created', 'planned']);
-        
-        // Apply timezone-aware date filtering with fallback
-        $this->applyTimezoneAwareDateFilter($query, 'scheduled_at', $start, $end, $timezone);
-        
-        if ($companyUuid) {
-            $query->where('company_uuid', $companyUuid);
-            \Log::info('Filtering orders by company_uuid: ' . $companyUuid);
-        }
-        if ($fleetUuid) {
-            $query->where('fleet_uuid', $fleetUuid);
-            \Log::info('Filtering orders by fleet_uuid: ' . $fleetUuid);
-        }
-        
-        // Log the SQL query for debugging
-        \Log::info('Pre-assigned shifts query:', [
-            'start_date' => $start->format('Y-m-d'),
-            'end_date' => $end->format('Y-m-d'),
-            'timezone' => $timezone,
-            'sql' => $query->toSql(),
-            'bindings' => $query->getBindings()
-        ]);
-        
-        // Log the final SQL query and bindings
-        $sql = $query->toSql();
-        $bindings = $query->getBindings();
-        \Log::info('Pre-assigned shifts query:', [
-            'sql' => $sql,
-            'bindings' => $bindings,
-            'start_date' => $start->format('Y-m-d'),
-            'end_date' => $end->format('Y-m-d'),
-            'timezone' => $timezone
-        ]);
-        
-        $orders = $query->get();
-        
-        if ($orders->isEmpty()) {
-            // Log additional diagnostic information
-            $totalOrders = DB::table('orders')
-                ->when($companyUuid, function($q) use ($companyUuid) {
-                    return $q->where('company_uuid', $companyUuid);
-                })
-                ->when($fleetUuid, function($q) use ($fleetUuid) {
-                    return $q->where('fleet_uuid', $fleetUuid);
-                })
-                ->count();
-                
-            $totalWithDrivers = DB::table('orders')
-                ->whereNotNull('driver_assigned_uuid')
-                ->when($companyUuid, function($q) use ($companyUuid) {
-                    return $q->where('company_uuid', $companyUuid);
-                })
-                ->when($fleetUuid, function($q) use ($fleetUuid) {
-                    return $q->where('fleet_uuid', $fleetUuid);
-                })
-                ->count();
-                
-            \Log::warning('No pre-assigned shifts found', [
-                'total_orders' => $totalOrders,
-                'total_with_drivers' => $totalWithDrivers,
-                'date_range' => $start->format('Y-m-d') . ' to ' . $end->format('Y-m-d'),
             if ($fleetUuid) {
                 $query->where('fleet_uuid', $fleetUuid);
-                \Log::info('Filtering orders by fleet_uuid: ' . $fleetUuid);
             }
-            
-            \Log::info('Using timezone-aware date filtering for timezone: ' . $timezone);
-            
-            // Log the SQL query for debugging
-            \Log::info('Pre-assigned shifts query:', [
-                'start_date' => $start->format('Y-m-d'),
-                'end_date' => $end->format('Y-m-d'),
-                'timezone' => $timezone,
-                'sql' => $query->toSql(),
-                'bindings' => $query->getBindings()
-            ]);
-            
-            // Log the final SQL query and bindings
-            $sql = $query->toSql();
-            $bindings = $query->getBindings();
-            \Log::info('Pre-assigned shifts query:', [
-                'sql' => $sql,
-                'bindings' => $bindings,
-                'start_date' => $start->format('Y-m-d'),
-                'end_date' => $end->format('Y-m-d'),
-                'timezone' => $timezone
-            ]);
             
             $orders = $query->get();
-            
-            if ($orders->isEmpty()) {
-                // Log additional diagnostic information
-                $totalOrders = DB::table('orders')
-                    ->when($companyUuid, function($q) use ($companyUuid) {
-                        return $q->where('company_uuid', $companyUuid);
-                    })
-                    ->when($fleetUuid, function($q) use ($fleetUuid) {
-                        return $q->where('fleet_uuid', $fleetUuid);
-                    })
-                    ->count();
-                    
-                $totalWithDrivers = DB::table('orders')
-                    ->whereNotNull('driver_assigned_uuid')
-                    ->when($companyUuid, function($q) use ($companyUuid) {
-                        return $q->where('company_uuid', $companyUuid);
-                    })
-                    ->when($fleetUuid, function($q) use ($fleetUuid) {
-                        return $q->where('fleet_uuid', $fleetUuid);
-                    })
-                    ->count();
-                    
-                \Log::warning('No pre-assigned shifts found', [
-                    'total_orders' => $totalOrders,
-                    'total_with_drivers' => $totalWithDrivers,
-                    'date_range' => $start->format('Y-m-d') . ' to ' . $end->format('Y-m-d'),
-                    'timezone' => $timezone,
-                    'company_uuid' => $companyUuid,
-                    'fleet_uuid' => $fleetUuid
-                ]);
-            } else {
-                \Log::info('Found ' . $orders->count() . ' orders with assigned drivers in date range');
-            }
             
             $preAssigned = [];
             foreach ($orders as $order) {
@@ -1035,7 +917,6 @@ class ShiftAssignmentService
                 $preAssigned[] = $entry;
             }
             
-            \Log::info('Processed ' . count($preAssigned) . ' pre-assigned shifts');
             return $preAssigned;
         } catch (\Exception $e) {
             \Log::error('Error in getPreAssignedShifts: ' . $e->getMessage());
@@ -1214,30 +1095,8 @@ class ShiftAssignmentService
                 ->whereNotNull('scheduled_at')
                 ->whereIn('status', ['created', 'planned']);
                 
-            // Apply timezone-aware date filtering with fallback for orders
-            if ($timezone !== 'UTC') {
-                // Test if CONVERT_TZ works on this MySQL server
-                $testConvert = DB::selectOne('SELECT CONVERT_TZ(NOW(), "UTC", ?) as test_time', [$timezone]);
-                
-                if ($testConvert && $testConvert->test_time !== null) {
-                    // CONVERT_TZ works, use timezone-aware filtering
-                    $ordersQuery->whereRaw('DATE(CONVERT_TZ(scheduled_at, "UTC", ?)) >= ?', [$timezone, $start->format('Y-m-d')])
-                               ->whereRaw('DATE(CONVERT_TZ(scheduled_at, "UTC", ?)) <= ?', [$timezone, $end->format('Y-m-d')]);
-                } else {
-                    // CONVERT_TZ failed, use UTC offset calculation as fallback
-                    $offsetHours = ($timezone === 'Asia/Kolkata') ? 5.5 : 0;
-                    $offsetMinutes = $offsetHours * 60;
-                    $utcStart = $start->copy()->subMinutes($offsetMinutes);
-                    $utcEnd = $end->copy()->addDay()->subMinutes($offsetMinutes)->subSecond();
-                    
-                    $ordersQuery->where('scheduled_at', '>=', $utcStart->format('Y-m-d H:i:s'))
-                               ->where('scheduled_at', '<=', $utcEnd->format('Y-m-d H:i:s'));
-                }
-            } else {
-                // If timezone is UTC, use direct date filtering
-                $ordersQuery->whereDate('scheduled_at', '>=', $start->format('Y-m-d'))
-                           ->whereDate('scheduled_at', '<=', $end->format('Y-m-d'));
-            }
+            // Apply timezone-aware date filtering for orders
+            $this->applyTimezoneAwareDateFilter($ordersQuery, 'scheduled_at', $start, $end, $timezone);
             
             if ($companyUuid) {
                 $ordersQuery->where('company_uuid', $companyUuid);
