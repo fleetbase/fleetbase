@@ -243,7 +243,7 @@ export default class ManagementDriversIndexController extends BaseController {
                     });
             },
             valuePath: 'vehicle.plate_number',
-            modelNamePath: 'vehicle.plate_number',
+            modelNamePath: 'plate_number',
             resizable: true,
             width: '180px',
             filterable: true,

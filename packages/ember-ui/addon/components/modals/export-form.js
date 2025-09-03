@@ -2,6 +2,7 @@ import Component            from '@glimmer/component';
 import { tracked }          from '@glimmer/tracking';
 import { action }           from '@ember/object';
 import { inject as service } from '@ember/service';
+import showErrorOnce from '@fleetbase/ember-ui/utils/show-error-once';
 
 export default class ExportFormComponent extends Component {
     @service notifications;
@@ -63,7 +64,7 @@ export default class ExportFormComponent extends Component {
         // Check if toDate is selected without fromDate
         if (this.toDate && !this.fromDate) {
             this.dateError = true;
-            this.notifications.error(this.intl.t('common.please-select-from-date'));
+            showErrorOnce(this, this.notifications, this.intl.t('common.please-select-from-date'));
             return;
         }
         
@@ -72,7 +73,7 @@ export default class ExportFormComponent extends Component {
             const to = new Date(this.toDate);
             if (to < from) {
                 this.dateError = true;
-                this.notifications.error(this.intl.t('common.to_date_before_from_date_error'));
+                showErrorOnce(this, this.notifications, this.intl.t('common.to_date_before_from_date_error'));
             }
         }
     }
@@ -101,7 +102,12 @@ export default class ExportFormComponent extends Component {
             const originalConfirm = this.args.options.confirm;
             this.args.options.confirm = (...args) => {
                 if (this.dateError) {
-                    this.notifications.error(this.intl.t('common.to_date_before_from_date_error'));
+                    // Check which specific error occurred and show appropriate message
+                    if (this.toDate && !this.fromDate) {
+                        showErrorOnce(this, this.notifications, this.intl.t('common.please-select-from-date'));
+                    } else {
+                        showErrorOnce(this, this.notifications, this.intl.t('common.to_date_before_from_date_error'));
+                    }
                     return;
                 }
                 if (typeof originalConfirm === 'function') {
