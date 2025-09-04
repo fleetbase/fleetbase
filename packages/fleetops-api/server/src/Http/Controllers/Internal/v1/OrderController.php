@@ -1059,7 +1059,7 @@ class OrderController extends FleetOpsController
             Log::info("Missing place codes found", ['missing_place_codes' => $missingPlaceCodes]);
             if(isset($missingPlaceCodes) && !empty($missingPlaceCodes)) {
                 
-                $defaultPlaceCode = config('services.google_maps_api_key');
+                $defaultPlaceCode = config('services.default_place_code');
                 $defaultPlace = Place::where('code', $defaultPlaceCode)->whereNull('deleted_at')->first();
                 // Create missing places using createFromMixed for better geocoding support
                 foreach ($missingPlaceCodes as $placeCode) {
