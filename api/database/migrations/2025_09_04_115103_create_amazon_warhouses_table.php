@@ -32,7 +32,7 @@ return new class extends Migration
             $table->string('building', 191)->nullable()->index();
             $table->string('security_access_code')->nullable();
             $table->string('country', 191)->nullable()->index();
-            $table->point('location')->nullable()->spatialIndex();
+            $table->point('location');
             $table->string('latitude')->nullable();
             $table->string('longitude')->nullable();
             $table->json('meta')->nullable();
