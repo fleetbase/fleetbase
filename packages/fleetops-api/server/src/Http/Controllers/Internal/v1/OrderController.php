@@ -1353,15 +1353,15 @@ class OrderController extends FleetOpsController
                             $facility_sequence = $row['facility_sequence'];
                             $facilities = array_filter(array_map('trim', explode('->', $facility_sequence)));
 
-                            if (count($facilities) > 2) {
-                                $originalRowIndex = $row['_original_row_index'] ?? 0;
-                                $importErrors[] = [
-                                    (string)($originalRowIndex + 2), // +2 to include header row
-                                    "Block {$blockId}: Facility sequence has " . count($facilities) . " items. Only 2 are imported. Sequence: " . implode(' -> ', $facilities),
-                                    (string)$blockId
-                                ];
-                                $blockHasErrors = true;
-                            }
+                            // if (count($facilities) > 2) {
+                            //     $originalRowIndex = $row['_original_row_index'] ?? 0;
+                            //     $importErrors[] = [
+                            //         (string)($originalRowIndex + 2), // +2 to include header row
+                            //         "Block {$blockId}: Facility sequence has " . count($facilities) . " items. Only 2 are imported. Sequence: " . implode(' -> ', $facilities),
+                            //         (string)$blockId
+                            //     ];
+                            //     $blockHasErrors = true;
+                            // }
                             /*Check if first and second facility are the same
                             if (count($facilities) >= 2 && $facilities[0] === $facilities[1]) {
                                 $originalRowIndex = $row['_original_row_index'] ?? 0;
