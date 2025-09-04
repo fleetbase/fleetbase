@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('amazon_warhouses', function (Blueprint $table) {
+        Schema::create('amazon_warehouses', function (Blueprint $table) {
             $table->id();
             $table->string('_key')->nullable();
             $table->string('uuid', 191)->unique()->nullable();
@@ -57,6 +57,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('amazon_warhouses');
+        Schema::dropIfExists('amazon_warehouses');
     }
 };
