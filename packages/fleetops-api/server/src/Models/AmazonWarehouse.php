@@ -27,7 +27,6 @@ class AmazonWarehouse extends Model
     use TracksApiCredential;
     use SpatialTrait;
     use SoftDeletes;
-    use LogsActivity;
 
     /**
      * The database table used by the model.
