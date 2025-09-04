@@ -14,6 +14,7 @@ use Fleetbase\FleetOps\Http\Requests\CancelOrderRequest;
 use Fleetbase\FleetOps\Http\Requests\Internal\CreateOrderRequest;
 use Fleetbase\FleetOps\Http\Resources\v1\Order as OrderResource;
 use Fleetbase\FleetOps\Imports\OrdersImport;
+use Fleetbase\FleetOps\Models\AmazonWarehouse;
 use Fleetbase\FleetOps\Models\Driver;
 use Fleetbase\FleetOps\Models\Entity;
 use Fleetbase\FleetOps\Models\Order;
@@ -46,7 +47,7 @@ use Fleetbase\FleetOps\Models\ImportLog;
 use Fleetbase\FleetOps\Models\OrderStatus;
 use Fleetbase\FleetOps\Exports\OrderExportChange;
 use Fleetbase\FleetOps\Traits\ImportErrorHandler;
-use Fleetbase\FleetOps\Models\AmazonWarehouse;
+
 
 class OrderController extends FleetOpsController
 {
@@ -1061,7 +1062,7 @@ class OrderController extends FleetOpsController
                 $defaultPlaceCode = config('services.google_maps_api_key');
                 $defaultPlace = Place::where('code', $defaultPlaceCode)->whereNull('deleted_at')->first();
                 // Create missing places using createFromMixed for better geocoding support
-            foreach ($missingPlaceCodes as $placeCode) {
+                foreach ($missingPlaceCodes as $placeCode) {
                 try {
                     $place = null;
                     $street1 = null;
@@ -1222,7 +1223,7 @@ class OrderController extends FleetOpsController
                         'error' => $e->getMessage()
                     ]);
                 }
-            }
+                }
             }
             // Log summary
             if (!empty($createdPlaces)) {
