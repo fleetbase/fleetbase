@@ -1275,13 +1275,13 @@ class OrderController extends FleetOpsController
         
         // PRE-VALIDATION: Validate and create missing places before processing orders
         $placeValidationResult = $this->validateAndCreatePlaces($excelData);
-        if (!$placeValidationResult['success']) {
-            return response()->json([
-                'success' => false,
-                'errors' => $placeValidationResult['errors'],
-                'message' => 'Place validation failed'
-            ]);
-        }
+        // if (!$placeValidationResult['success']) {
+        //     return response()->json([
+        //         'success' => false,
+        //         'errors' => $placeValidationResult['errors'],
+        //         'message' => 'Place validation failed'
+        //     ]);
+        // }
         
         // Log place validation summary
         if ($placeValidationResult['created_count'] > 0) {
@@ -1316,7 +1316,14 @@ class OrderController extends FleetOpsController
                             DB::rollback();
                             continue;
                         }
-
+                        if (isset($placeValidationResult) && !$placeValidationResult['success']) {
+                            // Skip this row, log the error
+                            $importErrors[] = [
+                                'N/A',
+                                'error' => $placeValidationResults['errors']
+                            ];
+                            continue; // Skip to next row
+                        }
                         // Check if block_id already exists - if yes, we'll update instead of create
                         $existingOrder = null;
                         if (!empty($block_id)) {
