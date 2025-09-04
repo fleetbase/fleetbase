@@ -37,7 +37,8 @@ class Geocoding
     public static function geocode(string $searchQuery, $latitude = null, $longitude = null): Collection
     {
         $httpClient = new Client();
-        $provider   = new GoogleMaps($httpClient, null, config('services.google_maps.api_key', env('GOOGLE_MAPS_API_KEY')));
+        $geoCodeApiKey = config('services.google_maps_api_key');
+        $provider   = new GoogleMaps($httpClient, null, $geoCodeApiKey);
         $geocoder   = new StatefulGeocoder($provider, 'en');
 
         try {

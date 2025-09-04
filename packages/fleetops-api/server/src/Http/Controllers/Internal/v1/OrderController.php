@@ -46,6 +46,7 @@ use Fleetbase\FleetOps\Models\ImportLog;
 use Fleetbase\FleetOps\Models\OrderStatus;
 use Fleetbase\FleetOps\Exports\OrderExportChange;
 use Fleetbase\FleetOps\Traits\ImportErrorHandler;
+use Fleetbase\FleetOps\Models\AmazonWarehouse;
 
 class OrderController extends FleetOpsController
 {
@@ -977,7 +978,284 @@ class OrderController extends FleetOpsController
         return new OrderResource($order);
     }
 
-    
+    /**
+     * Validate and create missing places before order import
+     *
+     * @param array $excelData
+     * @return array
+     */
+    public function validateAndCreatePlaces($excelData)
+    {
+        try {
+            $allPlaceCodes = [];
+            $errors = [];
+            
+            // Collect all unique place codes from all sheets
+            foreach ($excelData as $sheetIndex => $sheetRows) {
+                foreach ($sheetRows as $rowIndex => $row) {
+                    $displayRowIndex = $rowIndex + 2; // +2 to include header row
+                    
+                    // Collect stop_1 and stop_2 codes
+                    $stop1 = $row['stop_1'] ?? null;
+                    $stop2 = $row['stop_2'] ?? null;
+                    
+                    // Also check facility_sequence for additional place codes
+                    $facilitySequence = $row['facility_sequence'] ?? null;
+                    
+                    if (!empty($stop1)) {
+                        $allPlaceCodes[] = trim($stop1);
+                    }
+                    if (!empty($stop2)) {
+                        $allPlaceCodes[] = trim($stop2);
+                    }
+                    
+                    // Parse facility_sequence if present
+                    if (!empty($facilitySequence)) {
+                        $facilities = array_filter(array_map('trim', explode('->', $facilitySequence)));
+                        foreach ($facilities as $facility) {
+                            if (!empty($facility)) {
+                                $allPlaceCodes[] = $facility;
+                            }
+                        }
+                    }
+                }
+            }
+            
+            // Remove duplicates and empty values
+            $allPlaceCodes = array_unique(array_filter($allPlaceCodes));
+            
+            if (empty($allPlaceCodes)) {
+                return ['success' => true, 'created_places' => []];
+            }
+            
+            // Check which places already exist
+            $existingPlaces = Place::whereIn('code', $allPlaceCodes)
+                ->where('company_uuid', session('company'))
+                ->whereNull('deleted_at')
+                ->get()
+                ->keyBy('code');
+            
+            $existingPlaceCodes = $existingPlaces->keys()->toArray();
+            $missingPlaceCodes = array_diff($allPlaceCodes, $existingPlaceCodes);
+            
+            // Get AmazonWarehouses for missing place codes
+            $amazonWarehouses = [];
+            if (!empty($missingPlaceCodes)) {
+                $amazonWarehouses = AmazonWarehouse::whereIn('code', $missingPlaceCodes)
+                    ->whereNull('deleted_at')
+                    ->get()
+                    ->keyBy('code');
+                
+                Log::info("Found AmazonWarehouses for missing codes", [
+                    'missing_place_codes' => $missingPlaceCodes,
+                    'found_amazon_warehouses' => $amazonWarehouses->keys()->toArray(),
+                    'total_found' => $amazonWarehouses->count()
+                ]);
+            }
+            
+            $createdPlaces = [];
+            $postalCode = null;
+            Log::info("Missing place codes found", ['missing_place_codes' => $missingPlaceCodes]);
+            if(isset($missingPlaceCodes) && !empty($missingPlaceCodes)) {
+                
+                $defaultPlaceCode = config('services.google_maps_api_key');
+                $defaultPlace = Place::where('code', $defaultPlaceCode)->whereNull('deleted_at')->first();
+                // Create missing places using createFromMixed for better geocoding support
+            foreach ($missingPlaceCodes as $placeCode) {
+                try {
+                    $place = null;
+                    $street1 = null;
+                    $city = null;
+                    $postal_code = null;
+                    $country = null;
+                    $location = null;
+                    
+                    // Step 1: Check if place code exists in AmazonWarehouses
+                    if (isset($amazonWarehouses[$placeCode])) {
+                        $amazonWarehouse = $amazonWarehouses[$placeCode];
+                        Log::info("Creating place from AmazonWarehouse data for code: {$placeCode}", [
+                            'warehouse_id' => $amazonWarehouse->uuid,
+                            'warehouse_name' => $amazonWarehouse->name ?? 'Unknown'
+                        ]);
+                        
+                        // Extract data from AmazonWarehouse
+                        $street1 = $amazonWarehouse->street1 ?? null;
+                        $city = $amazonWarehouse->city ?? null;
+                        $postal_code = $amazonWarehouse->postal_code ?? null;
+                        $country = $amazonWarehouse->country ?? null;
+                        
+                        // Extract location coordinates from AmazonWarehouse
+                        $locationData = $amazonWarehouse->location ?? null;
+                        if ($locationData) {
+                            if (is_array($locationData) && isset($locationData['coordinates'])) {
+                                $lng = $locationData['coordinates'][0] ?? null;
+                                $lat = $locationData['coordinates'][1] ?? null;
+                                $location = $lat . ',' . $lng;
+                            } elseif (is_object($locationData) && method_exists($locationData, 'getLat') && method_exists($locationData, 'getLng')) {
+                                $lat = $locationData->getLat();
+                                $lng = $locationData->getLng();
+                                $location = $lat . ',' . $lng;
+                            }
+                        }
+                    }
+                    // Step 2: If not found in AmazonWarehouses, try postal code geocoding
+                    else {
+                        Log::info("AmazonWarehouse not found for code: {$placeCode}, trying postal code geocoding");
+                        
+                        // Check for postal code pattern and geocode
+                        if (preg_match('/([A-Z]{1,2}\d{1,2}[A-Z]?)[_\-\s]?(\d[A-Z]{2})/i', $placeCode, $m)) {
+                            $postalCode = strtoupper($m[1] . ' ' . $m[2]); // normalize to "ME17 2LH"
+                            if(isset($postalCode)){
+                                $results = Place::getAddressFromPostalCode($postalCode);
+                                if($results) {
+                                    Log::info('Place geocoding results:', [
+                                        'results_type' => get_class($results),
+                                        'results_data' => $results->toArray()
+                                    ]);
+                                    
+                                    // Extract data from Place model result
+                                    $street1 = $results->street1 ?? null;
+                                    $city = $results->city ?? null;
+                                    $postal_code = $results->postal_code ?? null;
+                                    $country = $results->country ?? null;
+                                    
+                                    // Extract location coordinates
+                                    $locationData = $results->location ?? null;
+                                    if ($locationData) {
+                                        // Handle different location formats
+                                        if (is_array($locationData) && isset($locationData['coordinates'])) {
+                                            $lng = $locationData['coordinates'][0] ?? null; // longitude
+                                            $lat = $locationData['coordinates'][1] ?? null; // latitude
+                                            $location = $lat . ',' . $lng;
+                                        } elseif (is_object($locationData) && method_exists($locationData, 'getLat') && method_exists($locationData, 'getLng')) {
+                                            // Handle SpatialPoint object
+                                            $lat = $locationData->getLat();
+                                            $lng = $locationData->getLng();
+                                            $location = $lat . ',' . $lng;
+                                        } else {
+                                            $location = null;
+                                        }
+                                    } else {
+                                        $location = null;
+                                    }
+                                }
+                            }
+                        }
+                        
+                        // Step 3: If geocoding failed or no postal code pattern, use default place data
+                        if (!$street1 && !$city && !$location) {
+                            Log::info("Geocoding failed for code: {$placeCode}, using default place data");
+                            if($defaultPlace) {
+                                $location = $defaultPlace?->location;
+                                $street1  = $defaultPlace?->street1;
+                                $city     = $defaultPlace?->city;
+                                $country  = $defaultPlace?->country;
+                                $postal_code = $defaultPlace?->postal_code;
+                            }
+                            else {
+                                $location = null;
+                                $street1 = null;
+                                $city = null;
+                                $country = null;
+                                $postal_code = null;
+                            }
+                        }
+                    }
+                    $place = Place::createFromMixed($placeCode, [], true);
+                    
+                    if ($place) {
+                        // Update the place with our specific attributes
+                        $place->company_uuid = session('company');
+                        $place->code = $placeCode;
+                        $place->name = $placeCode;
+                        $place->type = 'auto_created';
+                        
+                        // Set extracted fields from geocoding result
+                        if ($street1) {
+                            $place->street1 = $street1;
+                        }
+                        if ($city) {
+                            $place->city = $city;
+                        }
+                        if ($postal_code) {
+                            $place->postal_code = $postal_code;
+                        }
+                        if ($country) {
+                            $place->country = $country;
+                        }
+                        if ($location) {
+                            $place->location = $location;
+                        }
+                        $place->save();
+                        
+                        $createdPlaces[] = $place;
+                        Log::info("Created missing place: {$placeCode}", [
+                            'place_id' => $place->uuid,
+                            'geocoded' => !empty($place->street1),
+                            'has_location' => !empty($place->location)
+                        ]);
+                    } else {
+                        // Fallback to direct creation if geocoding fails
+                        $place = Place::create([
+                            'company_uuid' => session('company'),
+                            'code' => $placeCode,
+                            'name' => $placeCode,
+                            'type' => 'auto_created',
+                            'street1' => $street1,
+                            'country' => $country,
+                            'location' => $location,
+                        ]);
+                        
+                        $createdPlaces[] = $place;
+                        Log::info("Created missing place (fallback): {$placeCode}", [
+                            'place_id' => $place->uuid
+                        ]);
+                    }
+                    
+                } catch (\Exception $e) {
+                    $errors[] = [
+                        'N/A',
+                        "Failed to create place '{$placeCode}': " . $e->getMessage(),
+                        'N/A'
+                    ];
+                    Log::error("Failed to create place: {$placeCode}", [
+                        'error' => $e->getMessage()
+                    ]);
+                }
+            }
+            }
+            // Log summary
+            if (!empty($createdPlaces)) {
+                Log::info("Place validation completed", [
+                    'total_places_found' => count($allPlaceCodes),
+                    'existing_places' => count($existingPlaceCodes),
+                    'created_places' => count($createdPlaces),
+                    'created_place_codes' => array_map(fn($p) => $p->code, $createdPlaces)
+                ]);
+            }
+            
+            return [
+                'success' => empty($errors),
+                'errors' => $errors,
+                'created_places' => $createdPlaces,
+                'existing_places' => $existingPlaces,
+                'total_places' => count($allPlaceCodes),
+                'created_count' => count($createdPlaces),
+                'existing_count' => count($existingPlaceCodes)
+            ];
+            
+        } catch (\Exception $e) {
+            Log::error('Place validation failed', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+            
+            return [
+                'success' => false,
+                'errors' => [['N/A', 'Place validation failed: ' . $e->getMessage(), 'N/A']]
+            ];
+        }
+    }
 
    public function orderImport($excelData)
 {
@@ -991,7 +1269,23 @@ class OrderController extends FleetOpsController
         $importErrors = [];
         $updatedOrders = [];
         $createdOrders = [];
+        $allCreatedPlaces = [];
         $fleets = $this->getFleetDetails();
+        
+        // PRE-VALIDATION: Validate and create missing places before processing orders
+        $placeValidationResult = $this->validateAndCreatePlaces($excelData);
+        if (!$placeValidationResult['success']) {
+            return response()->json([
+                'success' => false,
+                'errors' => $placeValidationResult['errors'],
+                'message' => 'Place validation failed'
+            ]);
+        }
+        
+        // Log place validation summary
+        if ($placeValidationResult['created_count'] > 0) {
+            Log::info("Order import: Created {$placeValidationResult['created_count']} missing places before processing orders");
+        }
         foreach ($excelData as $sheetIndex => $sheetRows) {
             $sheetRowsWithIndex = collect($sheetRows)->map(function ($row, $originalIndex) {
                 $row['_original_row_index'] = $originalIndex;
@@ -1158,13 +1452,15 @@ class OrderController extends FleetOpsController
                             continue;
                         }
                         
-                        // Validate all places exist
+                        // Get all places and create missing ones automatically
                         $allUniquePlaceCodes = array_unique($allStops);
                         $placesByCode = Place::whereIn('code', $allUniquePlaceCodes)
                                             ->where('company_uuid', session('company'))
                                             ->whereNull('deleted_at')
                                             ->get()
                                             ->keyBy('code');
+                        
+                        // Track place codes to row indices for error reporting
                         $placeCodeToRowIndex = []; 
                         foreach ($routeRows as $row) {
                             $originalRowIndex = $row['_original_row_index'];
@@ -1177,18 +1473,45 @@ class OrderController extends FleetOpsController
                             if ($stop2 && !isset($placeCodeToRowIndex[$stop2])) {
                                 $placeCodeToRowIndex[$stop2] = $originalRowIndex;
                             }
-                        }                   
+                        }
+                        
+                        // Create missing places automatically
+                        $createdPlaces = [];
                         foreach ($allUniquePlaceCodes as $placeCode) {
                             if (!$placesByCode->has($placeCode)) {
-                                $rowIndex = isset($placeCodeToRowIndex[$placeCode]) 
-                                ? (string)($placeCodeToRowIndex[$placeCode] + 2) // +2 to include header row
-                                : '-';
-                                $importErrors[] = [
-                                    $rowIndex,
-                                    "Invalid place code '{$placeCode}' in block",
-                                    (string)$blockId
-                                ];
-                                $blockHasErrors = true;
+                                try {
+                                    $newPlace = Place::create([
+                                        'uuid' => Str::uuid(),
+                                        'public_id' => Str::random(7),
+                                        'company_uuid' => session('company'),
+                                        'code' => $placeCode,
+                                        'name' => $placeCode, // Use code as name if no other name provided
+                                        'type' => 'place',
+                                        'status' => 'active',
+                                        'created_at' => now(),
+                                        'updated_at' => now(),
+                                    ]);
+                                    
+                                    $placesByCode->put($placeCode, $newPlace);
+                                    $createdPlaces[] = $placeCode;
+                                    $allCreatedPlaces[] = $placeCode;
+                                    
+                                    Log::info("Auto-created missing place during import", [
+                                        'place_code' => $placeCode,
+                                        'place_uuid' => $newPlace->uuid,
+                                        'block_id' => $blockId
+                                    ]);
+                                } catch (\Exception $e) {
+                                    $rowIndex = isset($placeCodeToRowIndex[$placeCode]) 
+                                        ? (string)($placeCodeToRowIndex[$placeCode] + 2) // +2 to include header row
+                                        : '-';
+                                    $importErrors[] = [
+                                        $rowIndex,
+                                        "Failed to create place '{$placeCode}': " . $e->getMessage(),
+                                        (string)$blockId
+                                    ];
+                                    $blockHasErrors = true;
+                                }
                             }
                         }
                         
@@ -1576,6 +1899,7 @@ class OrderController extends FleetOpsController
             $errorCount = count($importErrors);
             $createdCount = count($createdOrders);
             $updatedCount = count($updatedOrders);
+            $createdPlacesCount = count(array_unique($allCreatedPlaces));
 
             return response()->json([
                 'success' => false,
@@ -1583,10 +1907,12 @@ class OrderController extends FleetOpsController
                 'successful_imports' => $successCount,
                 'created_orders' => $createdCount,
                 'updated_orders' => $updatedCount,
+                'created_places' => array_unique($allCreatedPlaces),
+                'created_places_count' => $createdPlacesCount,
                 'total_errors' => $errorCount,
                 'errors' => $importErrors,
                 'message' => $successCount > 0
-                    ? "Partial import completed. {$createdCount} trips created, {$updatedCount} trips updated, {$errorCount} errors found."
+                    ? "Partial import completed. {$createdCount} trips created, {$updatedCount} trips updated, {$createdPlacesCount} places auto-created, {$errorCount} errors found."
                     : "Import failed. No trips were imported due to validation errors."
             ]);
         }
@@ -1594,6 +1920,7 @@ class OrderController extends FleetOpsController
         $successCount = count($records);
         $createdCount = count($createdOrders);
         $updatedCount = count($updatedOrders);
+        $createdPlacesCount = count(array_unique($allCreatedPlaces));
 
         return [
             'records' => $records,
@@ -1601,6 +1928,8 @@ class OrderController extends FleetOpsController
                 'total_processed' => $successCount,
                 'created' => $createdCount,
                 'updated' => $updatedCount,
+                'created_places' => array_unique($allCreatedPlaces),
+                'created_places_count' => $createdPlacesCount,
                 'created_trips' => $createdOrders,
                 'updated_trips' => $updatedOrders
             ]
@@ -1756,52 +2085,33 @@ private function buildWaypointSequence(array $routeMap): array
         $fromWaypoint = null;
         $toWaypoint = null;
         
-                 if (!empty($waypointsByPlaceCode)) {
-             // Use the new waypoint tracking system for better duplicate handling
-             if (isset($waypointsByPlaceCode[$fromCode])) {
-                 // Get the first waypoint for this place code (pickup)
-                 $fromWaypoint = $waypointsByPlaceCode[$fromCode][0];
-             }
-             if (isset($waypointsByPlaceCode[$toCode])) {
-                 // Get the last waypoint for this place code (dropoff)
-                 $toWaypoint = end($waypointsByPlaceCode[$toCode]);
-             }
-         } elseif (!empty($savedWaypoints) && !empty($waypointMeta)) {
-             // Fallback to old method
-             foreach ($savedWaypoints as $waypoint) {
-                 $meta = isset($waypoint->uuid) ? ($waypointMeta[$waypoint->uuid] ?? []) : [];
-                 if (isset($meta['place_code']) && $meta['place_code'] === $fromCode) {
-                     $fromWaypoint = $waypoint;
-                 }
-                 if (isset($meta['place_code']) && $meta['place_code'] === $toCode) {
-                     $toWaypoint = $waypoint;
-                 }
-             }
-         } else {
-            // Database lookup fallback
-            $fromPlace = Place::where('code', $fromCode)
-                                    ->where('company_uuid', session('company'))
-                                    ->whereNull('deleted_at')->first();
-            $toPlace = Place::where('code', $toCode)
-                                    ->where('company_uuid', session('company'))
-                                    ->whereNull('deleted_at')->first();
-
-            if (!$fromPlace || !$toPlace) {
-                $orderPublicId = $order->public_id ?? ($order->id ?? '');
-                $missingPlaces = [];
-                if (!$fromPlace) $missingPlaces[] = $fromCode;
-                if (!$toPlace) $missingPlaces[] = $toCode;
-                $errors[] = [$displayRowIndex, "Invalid place code(s): " . implode(', ', $missingPlaces), $orderPublicId];
-                continue;
+        if (!empty($waypointsByPlaceCode)) {
+            // Use the new waypoint tracking system for better duplicate handling
+            if (isset($waypointsByPlaceCode[$fromCode])) {
+                // Get the first waypoint for this place code (pickup)
+                $fromWaypoint = $waypointsByPlaceCode[$fromCode][0];
             }
-
-            $waypoints = Waypoint::where('payload_uuid', $order->payload_uuid ?? ($order->payload->uuid ?? null))
-                ->where('company_uuid', session('company'))
-                ->orderBy('order')
-                ->get();
-            
-            $fromWaypoint = $waypoints->firstWhere('place_uuid', $fromPlace->uuid);
-            $toWaypoint = $waypoints->firstWhere('place_uuid', $toPlace->uuid);
+            if (isset($waypointsByPlaceCode[$toCode])) {
+                // Get the last waypoint for this place code (dropoff)
+                $toWaypoint = end($waypointsByPlaceCode[$toCode]);
+            }
+        } elseif (!empty($savedWaypoints) && !empty($waypointMeta)) {
+            // Fallback to old method
+            foreach ($savedWaypoints as $waypoint) {
+                $meta = isset($waypoint->uuid) ? ($waypointMeta[$waypoint->uuid] ?? []) : [];
+                if (isset($meta['place_code']) && $meta['place_code'] === $fromCode) {
+                    $fromWaypoint = $waypoint;
+                }
+                if (isset($meta['place_code']) && $meta['place_code'] === $toCode) {
+                    $toWaypoint = $waypoint;
+                }
+            }
+        } else {
+            // This should not happen since we validate places before import
+            // But keep as safety fallback with better error message
+            $orderPublicId = $order->public_id ?? ($order->id ?? '');
+            $errors[] = [$displayRowIndex, "Waypoint data not available for place codes: {$fromCode}, {$toCode}. This should not happen after place validation.", $orderPublicId];
+            continue;
         }
 
         if (!$fromWaypoint || !$toWaypoint) {
