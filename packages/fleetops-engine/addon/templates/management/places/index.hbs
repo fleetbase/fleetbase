@@ -68,7 +68,7 @@
         @pagination={{true}}
         @paginationMeta={{@model.meta}}
         @page={{this.page}}
-        @onPageChange={{fn (mut this.page)}}
+        @onPageChange={{this.onPageChange}} {{! Changed from fn (mut this.page) to this.onPageChange }}
     />
 </Layout::Section::Body>
 {{outlet}}

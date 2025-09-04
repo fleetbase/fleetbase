@@ -1353,6 +1353,14 @@ fleet-ops:
         cancel-orders: Cancel Orders
         delete-orders: Delete Orders
         dispatch-orders: Dispatch Orders
+        auto-allocate-title: Auto Allocate Orders
+        auto-allocate-body: Are you sure you want to auto allocate {count} order{plural}? The system will automatically assign drivers to these orders.
+        auto-allocate-fleet-mismatch: Cannot auto allocate orders from different fleets. Please select orders from the same fleet.
+        auto-allocate-missing-fleet: Some selected orders do not have a fleet assigned. Please ensure all orders belong to a fleet before auto allocation.
+        please_select_date_range: Please select a date range for allocation,
+        failed_allocation_process: Failed to initiate allocation process. Please try again.,
+        trips_already_assigned: The selected trips are already assigned to drivers.,
+        api_url_not_configured: Resource allocation API URL not configured,
         new:
           create-new-customer: Create new customer
           create-new-facilitator: Create new facilitator

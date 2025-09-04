@@ -11,7 +11,9 @@ export default class AutoAllocationPickerComponent extends Component {
     get fleetOptions() {
         return this.args.fleetOptions || [];
     }
-
+    get canAllocate() {
+        return this.hasDate && this.selectedFleet;
+    }
     get selectedFleet() {
         return this.args.selectedFleet;
     }
@@ -197,10 +199,13 @@ export default class AutoAllocationPickerComponent extends Component {
         const searchParams = new URLSearchParams();
         searchParams.set('start_date', start_date);
         searchParams.set('end_date', end_date);
+        console.log('selectedFleet', this.selectedFleet);
         if (company_uuid) {
             searchParams.set('company_uuid', company_uuid);
         }
-        
+        if (this.selectedFleet?.value) {
+            searchParams.set('fleet_uuid', this.selectedFleet.value);
+        }
         const requestUrl = `${ENV.API.host}/api/v1/shift-assignments/data?${searchParams.toString()}&time_zone=${this.timezone}`;
         
         const headers = {};
@@ -271,27 +276,30 @@ export default class AutoAllocationPickerComponent extends Component {
             // dates array contains shift-like objects
             dated_shifts = datesArr.map((s) => normalizeShift(s, s?.date));
         } else {
-            // Fallback: create minimal objects from dates only
+            // Fallback: create mmal objects from dates only
             dated_shifts = datesArr.map((d) => ({ date: d }));
         }
 
         // Extract company_uuid from the request URL or use the one from component args
         const urlParams = new URLSearchParams(allocationData.url.split('?')[1] || '');
         const company_uuid = urlParams.get('company_uuid') || this.args.companyUuid;
+        const fleet_uuid = urlParams.get('fleet_uuid') || this.selectedFleet?.value;
 
         // Get pre_assigned_shifts from the response data
         const pre_assigned_shifts = Array.isArray(data?.data?.pre_assigned_shifts) 
             ? data.data.pre_assigned_shifts 
             : [];
-
+        console.log('data', data);
         return {
             problem_type: this.args.problemType || 'shift_assignment',
             dates: datesArr,
             dated_shifts,
             resources,
             previous_allocation_data: data?.data?.previous_allocation_data ?? {},
+            vehicles_data: data?.data?.vehicles_data ?? [],
             // Include company_uuid and pre_assigned_shifts from the response
             company_uuid,
+            fleet_uuid,
             pre_assigned_shifts,
             // Pass through recurring_shifts if present
             ...(Array.isArray(data?.data?.recurring_shifts) ? { recurring_shifts: data.data.recurring_shifts } : {}),
@@ -359,17 +367,17 @@ export default class AutoAllocationPickerComponent extends Component {
         // If API indicates success and provides empty URL, redirect new tab to results with allocation UUID
         if (result.ok && result.body?.success === true) {
             let targetUrl = typeof result.body.url === 'string' ? result.body.url.trim() : '';
-            if (!targetUrl) {
-                const uuid = result.body?.uuid;
-                if (uuid) {
-                    const apiKey = ENV.resourceAllocation.bearerToken || this.args.bearerToken || this.#getAuthSession()?.authenticated?.token;
-                    if (apiKey) {
-                        targetUrl = `https://autoallocate.fleetyes.com/results?allocation_uuid=${encodeURIComponent(uuid)}&api_key=${encodeURIComponent(apiKey)}`;
-                    } else {
-                        targetUrl = `https://autoallocate.fleetyes.com/results?allocation_uuid=${encodeURIComponent(uuid)}`;
-                    }
+            // if (!targetUrl) {
+            const uuid = result.body?.uuid;
+            if (uuid) {
+                const apiKey = ENV.resourceAllocation.bearerToken || this.args.bearerToken || this.#getAuthSession()?.authenticated?.token;
+                if (apiKey) {
+                    targetUrl = `${targetUrl}?allocation_uuid=${encodeURIComponent(uuid)}&api_key=${encodeURIComponent(apiKey)}`;
+                } else {
+                    targetUrl = `${targetUrl}?allocation_uuid=${encodeURIComponent(uuid)}`;
                 }
             }
+            // }
             
             if (targetUrl) {
                 this.openResultsInNewTab(targetUrl);

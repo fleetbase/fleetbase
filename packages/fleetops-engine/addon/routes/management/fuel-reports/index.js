@@ -2,9 +2,11 @@ import Route from '@ember/routing/route';
 import { inject as service } from '@ember/service';
 import { action, set } from '@ember/object';
 import isNestedRouteTransition from '@fleetbase/ember-core/utils/is-nested-route-transition';
+import { scheduleOnce } from '@ember/runloop'; // Import scheduleOnce
 
 export default class ManagementFuelReportsIndexRoute extends Route {
     @service store;
+    @service loader; // Inject the loader service
 
     queryParams = {
         page: { refreshModel: true },
@@ -33,10 +35,17 @@ export default class ManagementFuelReportsIndexRoute extends Route {
              const isPaginationTransition = transition.to.name === transition.from.name && 
                                          transition.to.queryParams.page !== transition.from.queryParams.page;
      
-             if (isNestedRouteTransition(transition) && !isPaginationTransition) {
+             // Check if coming back from fuel-report creation/view to fuel-reports index
+             const isComingBackFromFuelReport = transition.from && 
+                                             (transition.from.name.includes('management.fuel-reports.index.new') || 
+                                              transition.from.name.includes('management.fuel-reports.index.view'));
+     
+             // Only disable refreshModel for nested routes that aren't pagination transitions and aren't coming back from fuel-report pages
+             if (isNestedRouteTransition(transition) && !isPaginationTransition && !isComingBackFromFuelReport) {
                  set(this.queryParams, 'page.refreshModel', false);
                  set(this.queryParams, 'sort.refreshModel', false);
              } else {
+                 // Ensure refreshModel is enabled for pagination and when coming back from fuel-report pages
                  set(this.queryParams, 'page.refreshModel', true);
                  set(this.queryParams, 'sort.refreshModel', true);
              }
@@ -44,12 +53,20 @@ export default class ManagementFuelReportsIndexRoute extends Route {
      
 
     model(params) {
+        this.loader.show(); // Show loader when model is loading
         return this.store.query('fuel-report', { 
             ...params, 
             report_type: 'fuel', 
             with: ['driver', 'vehicle', 'reporter'] 
         });
     }
+
+    setupController(controller, model) {
+        super.setupController(...arguments);
+        // Remove loader after the table and DOM have rendered
+        scheduleOnce('afterRender', this, () => this.loader.remove());
+    }
+
     resetController(controller, isExiting) {
         if (isExiting) {
             controller.set('page', 1);

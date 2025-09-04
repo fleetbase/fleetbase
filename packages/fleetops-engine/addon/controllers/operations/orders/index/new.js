@@ -458,7 +458,11 @@ export default class OperationsOrdersIndexNewController extends BaseController {
                         later(
                             this,
                             () => {
-                                this.hostRouter.refresh();
+                                // Refresh the orders index model data while preserving pagination
+                                const ordersIndexRoute = this.hostRouter.currentRoute.parent;
+                                if (ordersIndexRoute && ordersIndexRoute.controller && ordersIndexRoute.controller.model) {
+                                    ordersIndexRoute.controller.model.reload();
+                                }
                             },
                             100
                         );
@@ -557,7 +561,12 @@ export default class OperationsOrdersIndexNewController extends BaseController {
                 // Pass callback to refresh page after download
                 this.downloadFile(errorLogUrl, () => {
                     modal.done();
-                    this.hostRouter.refresh(); // ✅ Refresh after download completes
+                    // Refresh the model data without breaking pagination
+                    const ordersController = this.hostRouter.currentRoute.controller;
+                    if (ordersController && ordersController.model) {
+                        // Reload the current page of orders to show newly imported orders
+                        ordersController.model.reload();
+                    }
                 });
             }
         };
@@ -631,7 +640,7 @@ export default class OperationsOrdersIndexNewController extends BaseController {
                 } finally {
                     this.modalsManager.setOption('uploadQueue', []);
                     modal.done();
-                    this.hostRouter.refresh(); // ✅ Refresh list after closing
+                    // Don't refresh to avoid breaking pagination
                 }
             },
         });
@@ -701,11 +710,20 @@ export default class OperationsOrdersIndexNewController extends BaseController {
         //this.previewDraftOrderRoute(this.payload, this.waypoints, this.isMultipleDropoffOrder);
         this.hostRouter.transitionTo('console.fleet-ops.operations.orders.index', { queryParams: { layout: 'table', t: Date.now() } })
             .then(() => {
-                // Force route refresh
-                this.hostRouter.refresh();
+                // Refresh the model data without breaking pagination
+                const ordersController = this.hostRouter.currentRoute.controller;
+                if (ordersController && ordersController.model) {
+                    // Reload the current page of orders to show newly imported orders
+                    ordersController.model.reload();
+                }
             });
 
         modal.done();
+        
+        // Simple transition back to orders index - the route will handle the refresh automatically
+        this.hostRouter.transitionTo('console.fleet-ops.operations.orders.index', { 
+            queryParams: { layout: 'table' } 
+        });
     }
 
     // Improved download method

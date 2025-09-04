@@ -5,6 +5,7 @@ namespace App\Services;
 use Fleetbase\FleetOps\Models\Driver;
 use Fleetbase\FleetOps\Models\Order;
 use Fleetbase\Models\User;
+use Fleetbase\FleetOps\Models\Vehicle;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
@@ -99,8 +100,12 @@ class ShiftAssignmentService
             // Build previous allocation data matrix by resource and date
             $previousAllocationData = $this->getPreviousAllocationData($start, $end, $companyUuid, $resources, $dates, $timezone);
             
+            // Get vehicles data with unavailable dates
+            $vehiclesData = $this->getVehiclesData($start, $end, $companyUuid, $fleetUuid, $timezone);
+            
             \Log::info('Generated shift assignment data with ' . count($dates) . ' dates, ' . 
-                     count($resources) . ' resources, and ' . count($datedShifts) . ' dated shifts. Pre-assigned: ' . count($preAssignedShifts));
+                     count($resources) . ' resources, ' . count($datedShifts) . ' dated shifts, ' . 
+                     count($preAssignedShifts) . ' pre-assigned shifts, and ' . count($vehiclesData) . ' vehicles');
             
             return [
                 'dates' => $dates,
@@ -109,7 +114,8 @@ class ShiftAssignmentService
                 'pre_assigned_shifts' => $preAssignedShifts,
                 'problem_type' => 'shift_assignment',
                 'recurring_shifts' => null,
-                'previous_allocation_data' => $previousAllocationData
+                'previous_allocation_data' => $previousAllocationData,
+                'vehicles_data' => $vehiclesData
             ];
         } catch (\Exception $e) {
             \Log::error('Error generating shift assignment data: ' . $e->getMessage());
@@ -151,12 +157,14 @@ class ShiftAssignmentService
             if ($resourceId) {
                 $driver = Driver::with(['user'])
                     ->where('uuid', $resourceId)
+                    ->whereNull('deleted_at')
                     ->first();
                 
                 \Log::info("Driver lookup for resource_id '{$resourceId}': " . ($driver ? "Found driver {$driver->uuid}" : "Not found"));
             }
             if (!$driver && $resourceName) {
                 $driver = Driver::with(['user'])
+                    ->whereNull('deleted_at')
                     ->whereHas('user', function ($q) use ($resourceName) {
                         $q->where('name', $resourceName);
                     })
@@ -235,6 +243,18 @@ class ShiftAssignmentService
                         \Log::info("Updating order {$order->public_id} scheduled time to {$scheduledAtUtc->format('Y-m-d H:i:s')} UTC");
                     }
 
+                    // Vehicle assignment
+                    $vehicleId = $assignment['vehicle_id'] ?? null;
+                    if ($vehicleId) {
+                        $vehicle = Vehicle::where('uuid', $vehicleId)->whereNull('deleted_at')->first();
+                        if (!$vehicle) {
+                            // throw new error if vehicle_id is provided but not found
+                            throw new \Exception("Vehicle with UUID '{$vehicleId}' not found");
+                        }
+                        $updates['vehicle_assigned_uuid'] = $vehicleId;
+                        \Log::info("Updating order {$order->public_id} with vehicle {$vehicleId}");
+                    }
+
                     // Update estimated end time if end_time is provided
                     $endTime = $assignment['end_time'] ?? null;
                     if ($endTime) {
@@ -304,10 +324,19 @@ class ShiftAssignmentService
                     }
 
                     // Only update if currently assigned
+                    $updatesToUnassign = [];
                     if (!is_null($order->driver_assigned_uuid)) {
-                        Order::where('uuid', $order->uuid)->update(['driver_assigned_uuid' => null]);
-                        $unassignedOrders[] = $order->public_id ?? $order->uuid;
+                        $updatesToUnassign['driver_assigned_uuid'] = null;
                         \Log::info("Unassigned driver from order {$order->public_id} (date {$date})");
+                    }
+                    if (!is_null($order->vehicle_assigned_uuid)) {
+                        $updatesToUnassign['vehicle_assigned_uuid'] = null;
+                        \Log::info("Unassigned vehicle from order {$order->public_id} (date {$date})");
+                    }
+
+                    if (!empty($updatesToUnassign)) {
+                        Order::where('uuid', $order->uuid)->update($updatesToUnassign);
+                        $unassignedOrders[] = $order->public_id ?? $order->uuid;
                     }
                 } catch (\Exception $e) {
                     $errors[] = [
@@ -412,7 +441,8 @@ class ShiftAssignmentService
                 ->whereNotNull('driver_assigned_uuid')
                 ->whereIn('status', ['created', 'planned'])
                 ->where('scheduled_at', '>=', $prevStartUtc->toDateTimeString())
-                ->where('scheduled_at', '<=', $prevEndUtc->toDateTimeString());
+                ->where('scheduled_at', '<=', $prevEndUtc->toDateTimeString())
+                ->whereNull('deleted_at');
                 
             // Log the query for debugging
             \Log::info('Previous week query:', [
@@ -691,8 +721,80 @@ class ShiftAssignmentService
         }
     }
     
-    
-    
+    /**
+     * Apply timezone-aware date filtering to a query with CONVERT_TZ fallback
+     *
+     * @param \Illuminate\Database\Query\Builder $query
+     * @param string $dateColumn
+     * @param \Carbon\Carbon $start
+     * @param \Carbon\Carbon $end
+     * @param string $timezone
+     * @return void
+     */
+    private function applyTimezoneAwareDateFilter($query, string $dateColumn, $start, $end, string $timezone): void
+    {
+        if ($timezone === 'UTC') {
+            // If timezone is UTC, use direct date filtering
+            $query->whereDate($dateColumn, '>=', $start->format('Y-m-d'))
+                  ->whereDate($dateColumn, '<=', $end->format('Y-m-d'));
+            return;
+        }
+
+        // Test if CONVERT_TZ works on this MySQL server
+        $testConvert = DB::selectOne('SELECT CONVERT_TZ(NOW(), "UTC", ?) as test_time', [$timezone]);
+        
+        if ($testConvert && $testConvert->test_time !== null) {
+            // CONVERT_TZ works, use timezone-aware filtering
+            $query->whereRaw("DATE(CONVERT_TZ({$dateColumn}, \"UTC\", ?)) >= ?", [$timezone, $start->format('Y-m-d')])
+                  ->whereRaw("DATE(CONVERT_TZ({$dateColumn}, \"UTC\", ?)) <= ?", [$timezone, $end->format('Y-m-d')]);
+        } else {
+            // CONVERT_TZ failed, use UTC offset calculation as fallback
+            \Log::warning('CONVERT_TZ failed, using UTC offset fallback for timezone: ' . $timezone);
+            
+            // Calculate timezone offset dynamically
+            $offsetMinutes = $this->getTimezoneOffsetMinutes($timezone);
+            
+            // Convert start/end dates to UTC range accounting for timezone offset
+            $utcStart = $start->copy()->subMinutes($offsetMinutes);
+            $utcEnd = $end->copy()->addDay()->subMinutes($offsetMinutes)->subSecond();
+            
+            $query->where($dateColumn, '>=', $utcStart->format('Y-m-d H:i:s'))
+                  ->where($dateColumn, '<=', $utcEnd->format('Y-m-d H:i:s'));
+        }
+    }
+
+    /**
+     * Get timezone offset in minutes from UTC
+     *
+     * @param string $timezone
+     * @return int
+     */
+    private function getTimezoneOffsetMinutes(string $timezone): int
+    {
+        try {
+            $utc = new \DateTimeZone('UTC');
+            $tz = new \DateTimeZone($timezone);
+            $now = new \DateTime('now', $utc);
+            
+            // Get offset in seconds and convert to minutes
+            $offsetSeconds = $tz->getOffset($now);
+            return intval($offsetSeconds / 60);
+        } catch (\Exception $e) {
+            \Log::error('Failed to calculate timezone offset for: ' . $timezone . ', error: ' . $e->getMessage());
+            
+            // Fallback for common timezones
+            $commonOffsets = [
+                'Asia/Kolkata' => 330,  // UTC+5:30
+                'Asia/Calcutta' => 330, // UTC+5:30 (old name)
+                'America/New_York' => -300, // UTC-5 (EST, varies with DST)
+                'Europe/London' => 0,   // UTC+0 (GMT, varies with DST)
+                'Asia/Tokyo' => 540,    // UTC+9
+            ];
+            
+            return $commonOffsets[$timezone] ?? 0;
+        }
+    }
+
     /**
      * Get orders as shifts
      *
@@ -705,34 +807,32 @@ class ShiftAssignmentService
     private function getOrdersAsShifts($start, $end, string $timezone, ?string $companyUuid = null, ?string $fleetUuid = null): array
     {
         try {
-            \Log::info('Getting orders as shifts with company_uuid: ' . ($companyUuid ?? 'null') . ' and timezone: ' . $timezone);
+            // Handle timezone conversions (same as in generateShiftAssignmentData)
+            if ($timezone && ($timezone !== 'UTC')) {
+                if ($timezone === 'Asia/Calcutta') {
+                    $timezone = 'Asia/Kolkata'; // Convert old timezone to the correct one
+                }
+            }
             
             // Get orders for the date range based on scheduled_at (date only)
             // Exclude orders that already have a driver assigned since they're in pre_assigned_shifts
             $query = DB::table('orders')
                 ->whereNotNull('scheduled_at')
                 ->whereNull('driver_assigned_uuid') // Exclude orders with assigned drivers
-                ->whereDate('scheduled_at', '>=', $start->format('Y-m-d'))
-                ->whereDate('scheduled_at', '<=', $end->format('Y-m-d'))
-                ->whereIn('status', ['created', 'planned']);
+                ->whereIn('status', ['created', 'planned'])
+                ->whereNull('deleted_at');
                 
-            \Log::info('Filtering orders by status: created, planned');
-            \Log::info('Excluding orders with assigned drivers (driver_assigned_uuid is not null)');
-                
+            // Apply timezone-aware date filtering with fallback
+            $this->applyTimezoneAwareDateFilter($query, 'scheduled_at', $start, $end, $timezone);
             // Filter by company if provided
             if ($companyUuid) {
-                \Log::info('Filtering orders by company_uuid: ' . $companyUuid);
                 $query->where('company_uuid', $companyUuid);
             }
             if ($fleetUuid) {
                 $query->where('fleet_uuid', $fleetUuid);
-                
             }
             
-            \Log::info('Querying orders with scheduled_at between dates ' . $start->format('Y-m-d') . ' and ' . $end->format('Y-m-d'));
-            
             $orders = $query->get();
-            \Log::info('Found ' . count($orders) . ' orders in date range (excluding assigned orders)');
             
             $datedShifts = [];
             
@@ -757,7 +857,6 @@ class ShiftAssignmentService
                 ];
             }
             
-            \Log::info('Processed ' . count($datedShifts) . ' dated shifts (unassigned orders only)');
             return $datedShifts;
         } catch (\Exception $e) {
             \Log::error("Error in getOrdersAsShifts: " . $e->getMessage());
@@ -795,8 +894,9 @@ class ShiftAssignmentService
      *
      * @param mixed $start
      * @param mixed $end
-     * @param string|null $companyUuid
      * @param string $timezone
+     * @param string|null $companyUuid
+     * @param string|null $fleetUuid
      * @return array
      */
     public function getPreAssignedShifts($start, $end, string $timezone, ?string $companyUuid = null, ?string $fleetUuid = null): array
@@ -808,69 +908,19 @@ class ShiftAssignmentService
             $query = DB::table('orders')
                 ->whereNotNull('scheduled_at')
                 ->whereNotNull('driver_assigned_uuid')
-                ->whereDate('scheduled_at', '>=', $start->format('Y-m-d'))
-                ->whereDate('scheduled_at', '<=', $end->format('Y-m-d'));
+                ->whereNull('deleted_at');
+        
+            // Apply timezone-aware date filtering
+            $this->applyTimezoneAwareDateFilter($query, 'scheduled_at', $start, $end, $timezone);
         
             if ($companyUuid) {
                 $query->where('company_uuid', $companyUuid);
-                \Log::info('Filtering orders by company_uuid: ' . $companyUuid);
             }
             if ($fleetUuid) {
                 $query->where('fleet_uuid', $fleetUuid);
-                \Log::info('Filtering orders by fleet_uuid: ' . $fleetUuid);
             }
-            
-            // Log the SQL query for debugging
-            \Log::info('Pre-assigned shifts query:', [
-                'start_date' => $start->format('Y-m-d'),
-                'end_date' => $end->format('Y-m-d'),
-                'sql' => $query->toSql(),
-                'bindings' => $query->getBindings()
-            ]);
-            
-            // Log the final SQL query and bindings
-            $sql = $query->toSql();
-            $bindings = $query->getBindings();
-            \Log::info('Pre-assigned shifts query:', [
-                'sql' => $sql,
-                'bindings' => $bindings,
-                'start_date' => $start->format('Y-m-d'),
-                'end_date' => $end->format('Y-m-d')
-            ]);
             
             $orders = $query->get();
-            
-            if ($orders->isEmpty()) {
-                // Log additional diagnostic information
-                $totalOrders = DB::table('orders')
-                    ->when($companyUuid, function($q) use ($companyUuid) {
-                        return $q->where('company_uuid', $companyUuid);
-                    })
-                    ->when($fleetUuid, function($q) use ($fleetUuid) {
-                        return $q->where('fleet_uuid', $fleetUuid);
-                    })
-                    ->count();
-                    
-                $totalWithDrivers = DB::table('orders')
-                    ->whereNotNull('driver_assigned_uuid')
-                    ->when($companyUuid, function($q) use ($companyUuid) {
-                        return $q->where('company_uuid', $companyUuid);
-                    })
-                    ->when($fleetUuid, function($q) use ($fleetUuid) {
-                        return $q->where('fleet_uuid', $fleetUuid);
-                    })
-                    ->count();
-                    
-                \Log::warning('No pre-assigned shifts found', [
-                    'total_orders' => $totalOrders,
-                    'total_with_drivers' => $totalWithDrivers,
-                    'date_range' => $start->format('Y-m-d') . ' to ' . $end->format('Y-m-d'),
-                    'company_uuid' => $companyUuid,
-                    'fleet_uuid' => $fleetUuid
-                ]);
-            } else {
-                \Log::info('Found ' . $orders->count() . ' orders with assigned drivers in date range');
-            }
             
             $preAssigned = [];
             foreach ($orders as $order) {
@@ -894,7 +944,6 @@ class ShiftAssignmentService
                 $preAssigned[] = $entry;
             }
             
-            \Log::info('Processed ' . count($preAssigned) . ' pre-assigned shifts');
             return $preAssigned;
         } catch (\Exception $e) {
             \Log::error('Error in getPreAssignedShifts: ' . $e->getMessage());
@@ -990,6 +1039,159 @@ class ShiftAssignmentService
         } catch (\Exception $e) {
             \Log::error('Error in getAvailableDrivers: ' . $e->getMessage());
             throw $e;
+        }
+    }
+    
+    /**
+     * Get vehicles data with unavailable dates
+     *
+     * @param mixed $start
+     * @param mixed $end
+     * @param string|null $companyUuid
+     * @param string|null $fleetUuid
+     * @param string $timezone
+     * @return array
+     */
+    private function getVehiclesData($start, $end, ?string $companyUuid = null, ?string $fleetUuid = null, string $timezone = 'UTC'): array
+    {
+        try {
+            \Log::info('Getting vehicles data with company_uuid: ' . ($companyUuid ?? 'null') . ', fleet_uuid: ' . ($fleetUuid ?? 'null') . ' and timezone: ' . $timezone);
+            
+            if (!$companyUuid) {
+                \Log::info('Company UUID not provided, returning empty vehicles data');
+                return [];
+            }
+            
+            // Get vehicles for the company (optionally filtered by fleet)
+            if ($fleetUuid) {
+                // Get vehicles for specific fleet
+                \Log::info('Getting vehicles for specific fleet: ' . $fleetUuid);
+                $vehiclesQuery = DB::table('vehicles')
+                    ->join('fleet_vehicles', 'vehicles.uuid', '=', 'fleet_vehicles.vehicle_uuid')
+                    ->select('vehicles.uuid', 'vehicles.plate_number', 'vehicles.company_uuid')
+                    ->where('vehicles.company_uuid', $companyUuid)
+                    ->where('fleet_vehicles.fleet_uuid', $fleetUuid)
+                    ->whereNull('vehicles.deleted_at')
+                    ->whereNull('fleet_vehicles.deleted_at');
+            } else {
+                // Get all vehicles for the company
+                \Log::info('Getting all vehicles for company (no fleet filter)');
+                $vehiclesQuery = DB::table('vehicles')
+                    ->select('vehicles.uuid', 'vehicles.plate_number', 'vehicles.company_uuid')
+                    ->where('vehicles.company_uuid', $companyUuid)
+                    ->whereNull('vehicles.deleted_at');
+            }
+                
+            $vehicles = $vehiclesQuery->get();
+            \Log::info('Found ' . $vehicles->count() . ' vehicles for fleet and company');
+            
+            if ($vehicles->isEmpty()) {
+                return [];
+            }
+            
+            $vehicleUuids = $vehicles->pluck('uuid')->toArray();
+            $vehiclesData = [];
+            
+            // Get leave requests for vehicles (unavailability_type = "vehicle")
+            $leaveRequests = DB::table('leave_requests')
+                ->whereIn('vehicle_uuid', $vehicleUuids)
+                ->where('unavailability_type', 'vehicle')
+                ->where('status', 'Approved')
+                ->whereNull('deleted_at')
+                ->where('deleted', 0)
+                ->where(function ($query) use ($start, $end) {
+                    $query->whereBetween('start_date', [$start, $end])
+                          ->orWhereBetween('end_date', [$start, $end])
+                          ->orWhere(function ($q) use ($start, $end) {
+                              $q->where('start_date', '<=', $start)
+                                ->where('end_date', '>=', $end);
+                          });
+                })
+                ->get();
+                
+            \Log::info('Found ' . $leaveRequests->count() . ' approved leave requests for vehicles');
+            \Log::info('Leave request query details:', [
+                'vehicle_uuids' => $vehicleUuids,
+                'start_date' => $start->format('Y-m-d'),
+                'end_date' => $end->format('Y-m-d')
+            ]);
+            
+            // Get orders where vehicles are already assigned (within date range)
+            $ordersQuery = DB::table('orders')
+                ->whereIn('vehicle_assigned_uuid', $vehicleUuids)
+                ->whereNotNull('scheduled_at')
+                ->whereIn('status', ['created', 'planned'])
+                ->whereNull('deleted_at');
+                
+            // Apply timezone-aware date filtering for orders
+            $this->applyTimezoneAwareDateFilter($ordersQuery, 'scheduled_at', $start, $end, $timezone);
+            
+            if ($companyUuid) {
+                $ordersQuery->where('company_uuid', $companyUuid);
+            }
+            
+            $assignedOrders = $ordersQuery->get();
+            \Log::info('Found ' . $assignedOrders->count() . ' orders with assigned vehicles in date range');
+            \Log::info('Orders query details:', [
+                'vehicle_uuids' => $vehicleUuids,
+                'start_date' => $start->format('Y-m-d'),
+                'end_date' => $end->format('Y-m-d'),
+                'timezone' => $timezone,
+                'company_uuid' => $companyUuid
+            ]);
+            
+            // Process each vehicle
+            foreach ($vehicles as $vehicle) {
+                $unavailableDates = [];
+                
+                // Process leave requests for this vehicle
+                foreach ($leaveRequests as $leave) {
+                    if ($leave->vehicle_uuid === $vehicle->uuid) {
+                        $current = Carbon::parse($leave->start_date);
+                        $endDate = Carbon::parse($leave->end_date);
+                        
+                        while ($current->lte($endDate)) {
+                            if ($current->between($start, $end)) {
+                                $unavailableDates[] = $current->format('Y-m-d');
+                            }
+                            $current->addDay();
+                        }
+                    }
+                }
+                
+                // Process orders where this vehicle is assigned
+                foreach ($assignedOrders as $order) {
+                    if ($order->vehicle_assigned_uuid === $vehicle->uuid) {
+                        // Convert scheduled_at to requested timezone and extract date
+                        $orderDate = Carbon::parse($order->scheduled_at);
+                        if ($timezone !== 'UTC') {
+                            $orderDate->setTimezone($timezone);
+                        }
+                        $dateKey = $orderDate->format('Y-m-d');
+                        
+                        if (!in_array($dateKey, $unavailableDates)) {
+                            $unavailableDates[] = $dateKey;
+                        }
+                    }
+                }
+                
+                // Remove duplicates and sort
+                $unavailableDates = array_unique($unavailableDates);
+                sort($unavailableDates);
+                
+                $vehiclesData[] = [
+                    'id' => $vehicle->uuid,
+                    'plate_no' => $vehicle->plate_number,
+                    'unavailable_dates' => $unavailableDates
+                ];
+            }
+            
+            \Log::info('Processed vehicles data for ' . count($vehiclesData) . ' vehicles');
+            return $vehiclesData;
+            
+        } catch (\Exception $e) {
+            \Log::error('Error getting vehicles data: ' . $e->getMessage());
+            return [];
         }
     }
 }

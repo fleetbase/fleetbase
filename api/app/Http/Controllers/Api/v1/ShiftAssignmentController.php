@@ -64,6 +64,7 @@ class ShiftAssignmentController extends Controller
 
                 $companyUuid = $request->input('company_uuid');
                 $timezone = $request->input('time_zone', 'UTC');
+                $fleetUuid = $request->input('fleet_uuid');
 
                 // Get date range from selected orders
                 $dateRange = $this->getDateRangeFromOrders($orderIds, $companyUuid);
@@ -95,7 +96,8 @@ class ShiftAssignmentController extends Controller
                     $dateRange['start_date'],
                     $dateRange['end_date'],
                     $timezone,
-                    $companyUuid
+                    $companyUuid,
+                    $fleetUuid
                 );
 
                 // Filter pre-assigned shifts to only include selected orders
@@ -103,8 +105,18 @@ class ShiftAssignmentController extends Controller
                     return in_array($shift['id'], $orderIds);
                 });
 
+                // Generate resources (drivers) for the selected orders date range
+                $fullData = $this->shiftAssignmentService->generateShiftAssignmentData(
+                    $dateRange['start_date'],
+                    $dateRange['end_date'],
+                    $companyUuid,
+                    $timezone,
+                    $fleetUuid
+                );
+
                 \Log::info('Response data:', [
                     'dates_count' => count($dates),
+                    'resources_count' => count($fullData['resources']),
                     'dated_shifts_count' => count($datedShifts),
                     'pre_assigned_shifts_count' => count($preAssignedShifts)
                 ]);
@@ -113,12 +125,13 @@ class ShiftAssignmentController extends Controller
                     'success' => true,
                     'data' => [
                         'dates' => $dates,
-                        'resources' => [],
+                        'resources' => $fullData['resources'],
                         'dated_shifts' => array_values($datedShifts),
                         'pre_assigned_shifts' => array_values($preAssignedShifts),
                         'problem_type' => 'shift_assignment',
                         'recurring_shifts' => null,
-                        'previous_allocation_data' => []
+                        'previous_allocation_data' => $fullData['previous_allocation_data'],
+                        'vehicles_data' => $fullData['vehicles_data']
                     ],
                     'message' => 'Shift assignment data retrieved successfully for selected orders'
                 ]);
@@ -166,9 +179,9 @@ class ShiftAssignmentController extends Controller
                 $startDate = Carbon::parse($startDateStr);
                 $endDate = Carbon::parse($endDateStr);
                 $companyUuid = $request->input('company_uuid');
+                $fleetUuid = $request->input('fleet_uuid');
                 $timezone = $request->input('time_zone', 'UTC');
-
-                $data = $this->shiftAssignmentService->generateShiftAssignmentData($startDate, $endDate, $companyUuid, $timezone);
+                $data = $this->shiftAssignmentService->generateShiftAssignmentData($startDate, $endDate, $companyUuid, $timezone, $fleetUuid);
 
                 return response()->json([
                     'success' => true,
@@ -202,8 +215,13 @@ class ShiftAssignmentController extends Controller
     private function getDateRangeFromOrders(array $orderIds, ?string $companyUuid = null): ?array
     {
         try {
+            \Log::info('Getting date range from orders', [
+                'order_ids' => $orderIds,
+                'company_uuid' => $companyUuid
+            ]);
+
             $query = DB::table('orders')
-                ->select('scheduled_at')
+                ->select('scheduled_at', 'public_id', 'company_uuid')
                 ->whereIn('public_id', $orderIds)
                 ->whereNotNull('scheduled_at');
 
@@ -211,10 +229,20 @@ class ShiftAssignmentController extends Controller
                 $query->where('company_uuid', $companyUuid);
             }
 
+            \Log::info('SQL Query:', [
+                'sql' => $query->toSql(),
+                'bindings' => $query->getBindings()
+            ]);
+
             $orders = $query->get();
 
+            \Log::info('Query results:', [
+                'found_orders' => $orders->count(),
+                'orders' => $orders->toArray()
+            ]);
+
             if ($orders->isEmpty()) {
-                return null;
+                    return null;
             }
 
             $minDate = null;

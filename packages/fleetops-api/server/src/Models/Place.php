@@ -21,6 +21,7 @@ use Fleetbase\Traits\TracksApiCredential;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Log;
 
 class Place extends Model
 {
@@ -894,5 +895,20 @@ class Place extends Model
     public function getAddressAttribute()
     {
         return $this->getAddressString();
+    }
+
+    public static function getAddressFromPostalCode($postalCode)
+    {
+        $results = Geocoding::geocode($postalCode);
+         if ($results->isNotEmpty()) {
+            $place = $results->first();
+            Log::info('Geocoding place results.', [
+                'address' => $place,
+            ]);
+               return $place;
+         }
+        else{
+            return null;
+        }
     }
 }

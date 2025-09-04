@@ -4,9 +4,11 @@ import { action, set } from '@ember/object';
 import isNestedRouteTransition from '@fleetbase/ember-core/utils/is-nested-route-transition';
 import { tracked } from '@glimmer/tracking';
 import { A } from '@ember/array';
+import { scheduleOnce } from '@ember/runloop';
 
 export default class ManagementVehiclesIndexRoute extends Route {
     @service store;
+    @service loader;
     @tracked _filterParams ;
     queryParams = {
         page: { refreshModel: true },
@@ -40,67 +42,61 @@ export default class ManagementVehiclesIndexRoute extends Route {
             if (this.controller && shouldReset && typeof this.controller.resetView === 'function') {
                 this.controller.resetView(transition);
             }
-    
-            const isPaginationTransition = transition.to.name === transition.from.name && 
-                                        transition.to.queryParams.page !== transition.from.queryParams.page;
-    
-            if (isNestedRouteTransition(transition) && !isPaginationTransition) {
-                set(this.queryParams, 'page.refreshModel', false);
-                set(this.queryParams, 'sort.refreshModel', false);
-            } else {
-                set(this.queryParams, 'page.refreshModel', true);
-                set(this.queryParams, 'sort.refreshModel', true);
-            }
+
+            // Always ensure pagination and sort trigger model refresh, even during nested transitions
+            set(this.queryParams, 'page.refreshModel', true);
+            set(this.queryParams, 'sort.refreshModel', true);
         }
         
         model(params) {
             // Store this for later use
             this._filterParams = params;
-            
+            this.loader.show();
+
             // Special handling for pending status that also includes null status vehicles
             if (params.status === 'pending') {
               // Make a copy of params without status for the second query
               const paramsWithoutStatus = { ...params };
               delete paramsWithoutStatus.status;
-              
-              // First get pending vehicles
-              return this.store.query('vehicle', params)
-                .then(pendingResults => {
+
+              // First get pending vehicles, then combine with null-status vehicles
+              return this.store
+                .query('vehicle', params)
+                .then((pendingResults) => {
                   // Save pagination metadata from the first query
                   const meta = pendingResults.meta || {};
-                  
+
                   // Now get all vehicles with the same filters (minus status) and filter for null status
-                  return this.store.query('vehicle', { ...paramsWithoutStatus, limit: 100 })
-                    .then(allVehicles => {
-                      // Filter to find null status vehicles
-                      const nullVehicles = allVehicles.filter(v => v.status === null);
-                      
-                      // Create a new array with both sets of results
-                      const combinedResults = A();
-                      
-                      // Add pending results first
-                      pendingResults.forEach(vehicle => {
-                        combinedResults.pushObject(vehicle);
-                      });
-                      
-                      // Then add null status vehicles if not already included
-                      nullVehicles.forEach(vehicle => {
-                        if (!combinedResults.find(v => v.id === vehicle.id)) {
-                          combinedResults.pushObject(vehicle);
-                        }
-                      });
-                      
-                      // Add metadata to the array for pagination
-                      combinedResults.meta = meta;
-                      
-                      // Add the pagination properties directly to the array
-                      combinedResults.current_page = meta.current_page || 1;
-                      combinedResults.total_pages = meta.total_pages || 1;
-                      combinedResults.total = meta.total || combinedResults.length;
-                      combinedResults.per_page = meta.per_page || 25;
-                      
-                      return combinedResults;
+                  return this.store.query('vehicle', { ...paramsWithoutStatus, limit: 100 }).then((allVehicles) => {
+                    // Filter to find null status vehicles
+                    const nullVehicles = allVehicles.filter((v) => v.status === null);
+
+                    // Create a new array with both sets of results
+                    const combinedResults = A();
+
+                    // Add pending results first
+                    pendingResults.forEach((vehicle) => {
+                      combinedResults.pushObject(vehicle);
                     });
+
+                    // Then add null status vehicles if not already included
+                    nullVehicles.forEach((vehicle) => {
+                      if (!combinedResults.find((v) => v.id === vehicle.id)) {
+                        combinedResults.pushObject(vehicle);
+                      }
+                    });
+
+                    // Add metadata to the array for pagination
+                    combinedResults.meta = meta;
+
+                    // Add the pagination properties directly to the array
+                    combinedResults.current_page = meta.current_page || 1;
+                    combinedResults.total_pages = meta.total_pages || 1;
+                    combinedResults.total = meta.total || combinedResults.length;
+                    combinedResults.per_page = meta.per_page || 25;
+
+                    return combinedResults;
+                  });
                 });
             }
             
@@ -124,6 +120,9 @@ export default class ManagementVehiclesIndexRoute extends Route {
                 });
               }
             }
+
+            // Remove loader after the table and DOM have rendered
+            scheduleOnce('afterRender', this, () => this.loader.remove());
           }
           resetController(controller, isExiting) {
             if (isExiting) {
