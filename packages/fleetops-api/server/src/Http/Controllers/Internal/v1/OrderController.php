@@ -1478,7 +1478,7 @@ class OrderController extends FleetOpsController
                         
                         // Create missing places automatically
                         $createdPlaces = [];
-                        foreach ($allUniquePlaceCodes as $placeCode) {
+                        /*foreach ($allUniquePlaceCodes as $placeCode) {
                             if (!$placesByCode->has($placeCode)) {
                                 try {
                                     $newPlace = Place::create([
@@ -1514,7 +1514,7 @@ class OrderController extends FleetOpsController
                                     $blockHasErrors = true;
                                 }
                             }
-                        }
+                        }*/
                         
                         if ($blockHasErrors) {
                             DB::rollback();
