@@ -214,7 +214,19 @@ export default class OrderModel extends Model {
             return null;
         }
 
-        return formatDate(this.updated_at, 'PP HH:mm');
+        // Format the date to show exactly as stored in DB (without timezone conversion)
+        // Use toISOString() to get the UTC representation and format it
+        const isoString = this.updated_at.toISOString();
+        const datePart = isoString.split('T')[0]; // Get YYYY-MM-DD part
+        const timePart = isoString.split('T')[1].split('.')[0]; // Get HH:MM:SS part
+        
+        // Parse the date parts and format them
+        const [year, month, day] = datePart.split('-');
+        const [hours, minutes] = timePart.split(':');
+        
+        // Create a readable format
+        const date = new Date(year, month - 1, day, hours, minutes);
+        return formatDate(date, 'PP HH:mm');
     }
 
     @computed('updated_at') get updatedAtShort() {
@@ -238,7 +250,19 @@ export default class OrderModel extends Model {
             return null;
         }
 
-        return formatDate(this.created_at, 'PP HH:mm');
+        // Format the date to show exactly as stored in DB (without timezone conversion)
+        // Use toISOString() to get the UTC representation and format it
+        const isoString = this.created_at.toISOString();
+        const datePart = isoString.split('T')[0]; // Get YYYY-MM-DD part
+        const timePart = isoString.split('T')[1].split('.')[0]; // Get HH:MM:SS part
+        
+        // Parse the date parts and format them
+        const [year, month, day] = datePart.split('-');
+        const [hours, minutes] = timePart.split(':');
+        
+        // Create a readable format
+        const date = new Date(year, month - 1, day, hours, minutes);
+        return formatDate(date, 'PP HH:mm');
     }
 
     @computed('created_at') get createdAtShort() {
@@ -254,7 +278,19 @@ export default class OrderModel extends Model {
             return null;
         }
 
-        return formatDate(this.created_at, 'PP HH:mm');
+        // Format the date to show exactly as stored in DB (without timezone conversion)
+        // Use toISOString() to get the UTC representation and format it
+        const isoString = this.created_at.toISOString();
+        const datePart = isoString.split('T')[0]; // Get YYYY-MM-DD part
+        const timePart = isoString.split('T')[1].split('.')[0]; // Get HH:MM:SS part
+        
+        // Parse the date parts and format them
+        const [year, month, day] = datePart.split('-');
+        const [hours, minutes] = timePart.split(':');
+        
+        // Create a readable format
+        const date = new Date(year, month - 1, day, hours, minutes);
+        return formatDate(date, 'PP HH:mm');
     }
 
     @computed('created_at') get createdAtDetailed() {
@@ -262,7 +298,19 @@ export default class OrderModel extends Model {
             return null;
         }
 
-        return formatDate(this.created_at, 'PP HH:mm');
+        // Format the date to show exactly as stored in DB (without timezone conversion)
+        // Use toISOString() to get the UTC representation and format it
+        const isoString = this.created_at.toISOString();
+        const datePart = isoString.split('T')[0]; // Get YYYY-MM-DD part
+        const timePart = isoString.split('T')[1].split('.')[0]; // Get HH:MM:SS part
+        
+        // Parse the date parts and format them
+        const [year, month, day] = datePart.split('-');
+        const [hours, minutes] = timePart.split(':');
+        
+        // Create a readable format
+        const date = new Date(year, month - 1, day, hours, minutes);
+        return formatDate(date, 'PP HH:mm');
     }
 
     @computed('dispatched_at') get dispatchedAgo() {
@@ -278,7 +326,19 @@ export default class OrderModel extends Model {
             return null;
         }
 
-        return formatDate(this.dispatched_at, 'PP HH:mm');
+        // Format the date to show exactly as stored in DB (without timezone conversion)
+        // Use toISOString() to get the UTC representation and format it
+        const isoString = this.dispatched_at.toISOString();
+        const datePart = isoString.split('T')[0]; // Get YYYY-MM-DD part
+        const timePart = isoString.split('T')[1].split('.')[0]; // Get HH:MM:SS part
+        
+        // Parse the date parts and format them
+        const [year, month, day] = datePart.split('-');
+        const [hours, minutes] = timePart.split(':');
+        
+        // Create a readable format
+        const date = new Date(year, month - 1, day, hours, minutes);
+        return formatDate(date, 'PP HH:mm');
     }
 
     @computed('dispatched_at') get dispatchedAtShort() {
@@ -302,7 +362,19 @@ export default class OrderModel extends Model {
             return null;
         }
 
-        return formatDate(this.started_at, 'PP HH:mm');
+        // Format the date to show exactly as stored in DB (without timezone conversion)
+        // Use toISOString() to get the UTC representation and format it
+        const isoString = this.started_at.toISOString();
+        const datePart = isoString.split('T')[0]; // Get YYYY-MM-DD part
+        const timePart = isoString.split('T')[1].split('.')[0]; // Get HH:MM:SS part
+        
+        // Parse the date parts and format them
+        const [year, month, day] = datePart.split('-');
+        const [hours, minutes] = timePart.split(':');
+        
+        // Create a readable format
+        const date = new Date(year, month - 1, day, hours, minutes);
+        return formatDate(date, 'PP HH:mm');
     }
 
     @computed('started_at') get startedAtShort() {
@@ -318,14 +390,38 @@ export default class OrderModel extends Model {
             return null;
         }
 
-        return formatDate(this.scheduled_at, 'PP HH:mm');
+        // Format the date to show exactly as stored in DB (without timezone conversion)
+        // Use toISOString() to get the UTC representation and format it
+        const isoString = this.scheduled_at.toISOString();
+        const datePart = isoString.split('T')[0]; // Get YYYY-MM-DD part
+        const timePart = isoString.split('T')[1].split('.')[0]; // Get HH:MM:SS part
+        
+        // Parse the date parts and format them
+        const [year, month, day] = datePart.split('-');
+        const [hours, minutes] = timePart.split(':');
+        
+        // Create a readable format
+        const date = new Date(year, month - 1, day, hours, minutes);
+        return formatDate(date, 'PP HH:mm');
     }
     @computed('estimated_end_date') get estimatedEndDate() {
         if (!isValidDate(this.estimated_end_date)) {
             return null;
         }
 
-        return formatDate(this.estimated_end_date, 'PP HH:mm');
+        // Format the date to show exactly as stored in DB (without timezone conversion)
+        // Use toISOString() to get the UTC representation and format it
+        const isoString = this.estimated_end_date.toISOString();
+        const datePart = isoString.split('T')[0]; // Get YYYY-MM-DD part
+        const timePart = isoString.split('T')[1].split('.')[0]; // Get HH:MM:SS part
+        
+        // Parse the date parts and format them
+        const [year, month, day] = datePart.split('-');
+        const [hours, minutes] = timePart.split(':');
+        
+        // Create a readable format
+        const date = new Date(year, month - 1, day, hours, minutes);
+        return formatDate(date, 'PP HH:mm');
     }
     @computed('estimated_end_date') get estimatedEndDateTime() {
         if (!isValidDate(this.estimated_end_date)) {

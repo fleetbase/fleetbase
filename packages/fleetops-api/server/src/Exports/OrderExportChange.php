@@ -157,7 +157,7 @@ class OrderExportChange implements FromCollection, WithHeadings, ShouldAutoSize,
             'start_date'  => 'scheduled_at',
             'created_at'  => 'created_at',
         ];
-        $timezone = $this->timezone ?? 'UTC';
+        $timezone = NULL;
         if(isset($timezone))
         {
             if ($timezone === 'Asia/Calcutta') 
