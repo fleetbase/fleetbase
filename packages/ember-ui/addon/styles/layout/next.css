@@ -1703,8 +1703,9 @@ body[data-theme='dark'] .next-table-wrapper .tfoot-row > td {
 }
 
 .next-table-wrapper table thead tr th {
-    @apply px-4 py-2 text-xs text-left font-medium leading-4 tracking-wider text-gray-900 whitespace-nowrap uppercase border-b border-gray-200 bg-white;
+    @apply px-4 py-2 text-left font-medium leading-4 tracking-wider text-gray-900 whitespace-nowrap uppercase border-b border-gray-200 bg-white;
     text-overflow: ellipsis;
+    font-weight: 700;
 }
 
 .next-table-wrapper table thead tr th.lt-column.is-draggable,

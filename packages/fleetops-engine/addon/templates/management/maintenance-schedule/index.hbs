@@ -9,8 +9,25 @@
         @buttonWrapperClass="mr-2"
     />
     <VisibleColumnPicker @columns={{this.columns}} @onChange={{fn (mut this.columns)}} class="mr-2" />
-    {{#if (safe-has this.table "selectedRows")}}
-        {{!-- Removed invalid bulk actions --}}
+        {{#if (safe-has this.table "selectedRows")}}
+        <DropdownButton
+            @icon="layer-group"
+            @text={{t "fleet-ops.common.bulk-action"}}
+            @type="magic"
+            @size="sm"
+            @buttonWrapperClass="mr-2"
+            @contentClass="dropdown-menu"
+            @permission="fleet-ops delete fleet"
+            as |dd|
+        >
+            <div class="next-dd-menu mt-2 mx-0">
+                <div class="px-1">
+                    <a href="#" class="text-red-500 next-dd-item" {{on "click" (dropdown-fn dd this.bulkDeleteLeaves)}}>
+                        {{t "fleet-ops.component.maintenance-schedule-form-panel.delete-maintenance-schedules"}}
+                    </a>
+                </div>
+            </div>
+        </DropdownButton>
     {{/if}}
     <Button @customClass="new-schedule-btn" @icon="plus" @iconPrefix="fas" @type="primary" @text={{t "fleet-ops.common.new"}} class="mr-2" @onClick={{this.createSchedule}} @permission="fleet-ops create order" />
     {{!-- <Button

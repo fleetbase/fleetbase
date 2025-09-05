@@ -607,7 +607,8 @@ body[data-theme='dark'] .iti__divider {
 
 body[data-theme='light'] .form-checkbox,
 body[data-theme='light'] .form-radio {
-    @apply border-gray-200;
+    /* @apply border-gray-200; */
+    border: #111827 solid 1px;
 }
 
 .coordinates-input-map-container {
