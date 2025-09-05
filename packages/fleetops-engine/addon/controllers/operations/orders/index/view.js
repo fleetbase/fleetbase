@@ -915,11 +915,11 @@ export default class OperationsOrdersIndexViewController extends BaseController 
                             title: this.intl.t('fleet-ops.component.order.schedule-card.assign-driver-vehicle'),
                             body: this.intl.t('fleet-ops.component.order.schedule-card.assign-driver-vehicle-busy-text', {
                                 driverName: driverToAssign.name,
-                                driverAvailability: driverToAssign.availability_message || 'Unavailable',
-                                driverButton: driverToAssign.button_message || 'Continue with assignment',
+                                driverAvailability: driverToAssign.availability_message || this.intl.t('fleet-ops.component.order.schedule-card.unavailable'),
+                                driverButton: driverToAssign.button_message || this.intl.t('fleet-ops.component.order.schedule-card.continue-with-assignment'),
                                 vehicleName: vehicleToAssign.plate_number,
-                                vehicleAvailability: vehicleToAssign.availability_message || 'Unavailable',
-                                vehicleButton: vehicleToAssign.button_message || 'Continue with assignment',
+                                vehicleAvailability: vehicleToAssign.availability_message || this.intl.t('fleet-ops.component.order.schedule-card.unavailable'),
+                                vehicleButton: vehicleToAssign.button_message || this.intl.t('fleet-ops.component.order.schedule-card.continue-with-assignment'),
                                 orderId: order.public_id
                             }),
                             acceptButtonText: this.intl.t('fleet-ops.component.order.schedule-card.ok-button'),
@@ -951,8 +951,8 @@ export default class OperationsOrdersIndexViewController extends BaseController 
                             body: this.intl.t('fleet-ops.component.order.schedule-card.assign-vehicle-busy-text', {
                                 vehicleName: vehicleToAssign.plate_number,
                                 orderId: order.public_id,
-                                vehicleAvailability: vehicleToAssign.availability_message || 'Unavailable',
-                                button: vehicleToAssign.button_message || 'Continue with assignment',
+                                vehicleAvailability: vehicleToAssign.availability_message || this.intl.t('fleet-ops.component.order.schedule-card.unavailable'),
+                                button: vehicleToAssign.button_message || this.intl.t('fleet-ops.component.order.schedule-card.continue-with-assignment'),
                             }),
                             acceptButtonText: this.intl.t('fleet-ops.component.order.schedule-card.ok-button'),
 
@@ -984,10 +984,10 @@ export default class OperationsOrdersIndexViewController extends BaseController 
                             body: this.intl.t('fleet-ops.component.order.schedule-card.assign-driver-busy-text', {
                                 driverName: driverToAssign.name,
                                 orderId: order.public_id,
-                                driverAvailability: driverToAssign.availability_message || 'Unavailable',
+                                driverAvailability: driverToAssign.availability_message || this.intl.t('fleet-ops.component.order.schedule-card.unavailable'),
                             }),
                             acceptButtonText: this.intl.t('fleet-ops.component.order.schedule-card.assign-busy-button', {
-                                button: driverToAssign.button_message || 'Continue with assignment',
+                                button: driverToAssign.button_message || this.intl.t('fleet-ops.component.order.schedule-card.continue-with-assignment'),
                             }),
                             confirm: async (confirmModal) => {
                                 confirmModal.startLoading();
@@ -1315,11 +1315,11 @@ export default class OperationsOrdersIndexViewController extends BaseController 
                             body: this.intl.t('fleet-ops.component.order.schedule-card.assign-driver-busy-text', {
                                 driverName: driverToAssign.name,
                                 orderId: order.public_id,
-                                driverAvailability: driverToAssign.availability_message || 'Unavailable',
-                                button: driverToAssign.button_message || 'Continue with assignment',
+                                driverAvailability: driverToAssign.availability_message || this.intl.t('fleet-ops.component.order.schedule-card.unavailable'),
+                                button: driverToAssign.button_message || this.intl.t('fleet-ops.component.order.schedule-card.continue-with-assignment'),
                             }),
                             acceptButtonText: this.intl.t('fleet-ops.component.order.schedule-card.assign-busy-button', {
-                                button: driverToAssign.button_message || 'Continue with assignment',
+                                button: driverToAssign.button_message || this.intl.t('fleet-ops.component.order.schedule-card.continue-with-assignment'),
                             }),
                             confirm: async (confirmModal) => {
                                 order.set('driver_assigned', driverToAssign);
