@@ -2118,7 +2118,7 @@ private function buildWaypointSequence(array $routeMap): array
             // This should not happen since we validate places before import
             // But keep as safety fallback with better error message
             $orderPublicId = $order->public_id ?? ($order->id ?? '');
-            $errors[] = [$displayRowIndex, "Waypoint data not available for place codes: {$fromCode}, {$toCode}. This should not happen after place validation.", $orderPublicId];
+            $errors[] = [$displayRowIndex, "Waypoint data not available for place codes: {$fromCode}, {$toCode}.", $orderPublicId];
             continue;
         }
 
