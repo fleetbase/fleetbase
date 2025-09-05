@@ -260,7 +260,7 @@ class OrderExportChange implements FromCollection, WithHeadings, ShouldAutoSize,
                     $loadId = $segment->public_id ?? '';
                     $equipment_type = $segment->equipment_type ?? '';
                     $trailer_id = $segment->trailer_id ?? '';
-                    
+                    $startDate = $segment->stop_1_yard_arrival ?? $startDate ?? '';
                     // Create segment-specific lane if available
                     $segmentLane = $segment->facility_sequence ?? '';
                     
