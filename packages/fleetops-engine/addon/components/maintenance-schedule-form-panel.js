@@ -265,7 +265,7 @@ export default class MaintenanceScheduleFormPanelComponent extends Component {
 
             // Optionally hydrate current record with returned fields
             if (data && typeof data === 'object') {
-                try { this.record.setProperties(data); } catch (_) {}
+             try { this.record.setProperties(data.data); } catch (_) {}
             }
 
             this.notifications.success(this.intl.t('fleet-ops.component.maintenance-schedule-form-panel.success-message'));

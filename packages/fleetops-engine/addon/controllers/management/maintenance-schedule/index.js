@@ -352,7 +352,7 @@ export default class ManagementMaintenanceScheduleIndexController extends BaseCo
         const selected = this.table.selectedRows;
         this.crud.bulkDelete(selected, {
             modelNamePath: 'id',
-            acceptButtonText: 'Delete selected leaves',
+            acceptButtonText: this.intl.t('fleet-ops.component.maintenance-schedule-form-panel.delete-selected-records'),
             onSuccess: async () => {
                 await this.hostRouter.refresh();
                 this.table.untoggleSelectAll();
