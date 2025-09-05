@@ -17,11 +17,19 @@ export default class DateTimeInputComponent extends Component {
 
     initializeFromValue() {
         if (this.args.value instanceof Date && !isNaN(this.args.value.getTime())) {
-        this.date = format(this.args.value, this.dateFormat);
-        this.time = format(this.args.value, this.timeFormat);
+            // this.date = format(this.args.value, this.dateFormat);
+            // this.time = format(this.args.value, this.timeFormat);
+            
+            // Format date normally
+            this.date = format(this.args.value, this.dateFormat);
+            
+            // Extract time from UTC string to avoid timezone conversion
+            const utcString = this.args.value.toISOString();
+            const timeMatch = utcString.match(/T(\d{2}:\d{2})/);
+            this.time = timeMatch ? timeMatch[1] : format(this.args.value, this.timeFormat);
         } else {
-        this.date = null;
-        this.time = null;
+            this.date = null;
+            this.time = null;
         }
     }
 
@@ -33,8 +41,8 @@ export default class DateTimeInputComponent extends Component {
 
         // If date is missing, it's invalid input
         if (!this.date) {
-        this.args.onUpdate?.(null, null);
-        return;
+            this.args.onUpdate?.(null, null);
+            return;
         }
 
         // Use "00:00" (12 AM) as default if time is not set
@@ -43,17 +51,17 @@ export default class DateTimeInputComponent extends Component {
         let dateTimeInstance = parse(dateTimeString, this.dateTimeFormat, new Date());
 
         if (isNaN(dateTimeInstance.getTime())) {
-        this.args.onUpdate?.(null, null);
+            this.args.onUpdate?.(null, null);
         } else {
-        this.args.onUpdate?.(dateTimeInstance, format(dateTimeInstance, this.dateTimeFormat));
+            this.args.onUpdate?.(dateTimeInstance, format(dateTimeInstance, this.dateTimeFormat));
         }
     }
 
     @action
     didReceiveArguments() {
         if (!(this.args.value instanceof Date) || isNaN(this.args.value.getTime())) {
-        this.date = null;
-        this.time = null;
+            this.date = null;
+            this.time = null;
         }
     }
 }
