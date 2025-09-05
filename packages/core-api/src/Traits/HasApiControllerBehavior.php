@@ -411,7 +411,8 @@ trait HasApiControllerBehavior
                         ->whereNull('deleted_at')
                         ->first();
             if ($order) {
-                $timezone = $request->timezone ?? 'UTC';
+                // $timezone = $request->timezone ?? 'UTC';
+                $timezone = NULL;
                 $fleet_uuid = $request->fleet_uuid ?? null;
                 if (isset($fleet_uuid) && !empty($fleet_uuid)) {
                     $data = $data->filter(function ($driver) use ($order,$fleet_uuid) {
@@ -455,7 +456,8 @@ trait HasApiControllerBehavior
                     ->first();
         
             if ($order) {
-                $timezone = $request->timezone ?? 'UTC';
+                // $timezone = $request->timezone ?? 'UTC';
+                $timezone = NULL;
                 $fleet_uuid = $request->fleet_uuid ?? null;
                 // Filter vehicles based on the order's fleet_uuid or sub_fleet_uuid
                 if (isset($fleet_uuid) && !empty($fleet_uuid)) {
