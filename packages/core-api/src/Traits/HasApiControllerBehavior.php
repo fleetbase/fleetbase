@@ -1162,8 +1162,12 @@ trait HasApiControllerBehavior
                 $orderEndDate = $localOrderEndDate->setTimezone('UTC');
             }
             else{
+                // When timezone is NULL, use dates as they are from database
                 $orderStartDate = Carbon::parse($order->scheduled_at);
                 $orderEndDate = Carbon::parse($order->estimated_end_date);
+                // Set local dates for leave request checking
+                $localOrderStartDate = $orderStartDate;
+                $localOrderEndDate = $orderEndDate;
             }
 
             // Check for overlapping leave requests
@@ -1259,8 +1263,12 @@ trait HasApiControllerBehavior
                 $orderEndDate = $localOrderEndDate->setTimezone('UTC');
             }
             else{
+                // When timezone is NULL, use dates as they are from database
                 $orderStartDate = Carbon::parse($order->scheduled_at);
                 $orderEndDate = Carbon::parse($order->estimated_end_date);
+                // Set local dates for consistency
+                $localOrderStartDate = $orderStartDate;
+                $localOrderEndDate = $orderEndDate;
             }
 
             // Check for overlapping active orders with the same vehicle
