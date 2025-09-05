@@ -206,7 +206,7 @@ export default class AutoAllocationPickerComponent extends Component {
         if (this.selectedFleet?.value) {
             searchParams.set('fleet_uuid', this.selectedFleet.value);
         }
-        const requestUrl = `${ENV.API.host}/api/v1/shift-assignments/data?${searchParams.toString()}&time_zone=${this.timezone}`;
+        const requestUrl = `${ENV.API.host}/api/v1/shift-assignments/data?${searchParams.toString()}`;
         
         const headers = {};
         const token = this.args.bearerToken || authSession?.authenticated?.token;
