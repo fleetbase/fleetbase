@@ -1312,14 +1312,14 @@ export default class OperationsOrdersIndexViewController extends BaseController 
                     setTimeout(() => {
                         this.modalsManager.confirm({
                             title: this.intl.t('fleet-ops.component.order.schedule-card.assign-driver'),
-                            body: this.intl.t('fleet-ops.component.order.schedule-card.assign-busy-text', {
+                            body: this.intl.t('fleet-ops.component.order.schedule-card.assign-driver-busy-text', {
                                 driverName: driverToAssign.name,
                                 orderId: order.public_id,
-                                availability: driverToAssign.availability_message,
-                                button: driverToAssign.button_message,
+                                driverAvailability: driverToAssign.availability_message || 'Unavailable',
+                                button: driverToAssign.button_message || 'Continue with assignment',
                             }),
                             acceptButtonText: this.intl.t('fleet-ops.component.order.schedule-card.assign-busy-button', {
-                                button: driverToAssign.button_message,
+                                button: driverToAssign.button_message || 'Continue with assignment',
                             }),
                             confirm: async (confirmModal) => {
                                 order.set('driver_assigned', driverToAssign);
