@@ -23,5 +23,9 @@ export default {
             style: 'currency',
             currency: 'USD',
         },
+        NGN: {
+            style: 'currency',
+            currency: 'NGN',
+        },
     },
 };

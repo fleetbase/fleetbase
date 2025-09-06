@@ -1,0 +1,50 @@
+{
+  email ayotunde@verspel.com
+}
+
+# API
+parceli-api.verspel.com {
+  encode zstd gzip
+  header Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
+
+  # Preflight for any path/method
+  @preflight method OPTIONS
+  handle @preflight {
+    header Access-Control-Allow-Origin "https://parceli.verspel.com"
+    header Access-Control-Allow-Credentials "true"
+    header Access-Control-Allow-Methods "GET, POST, PUT, PATCH, DELETE, OPTIONS"
+    header Access-Control-Allow-Headers "Content-Type, X-Requested-With, Authorization, X-CSRF-TOKEN, X-XSRF-TOKEN, X-Console-Sandbox, X-Console-Sandbox-Key, Accept, Origin, Referer"
+    header Access-Control-Max-Age "86400"
+    respond "" 204
+  }
+
+  # App traffic; force ONE CORS set on every response
+  reverse_proxy http://application:8000 {
+    # always attach these back to the client
+    header_down Access-Control-Allow-Origin "https://parceli.verspel.com"
+    header_down Access-Control-Allow-Credentials "true"
+    header_down Access-Control-Expose-Headers "x-compressed-json, access-console-sandbox, access-console-sandbox-key"
+    header_down Vary "Origin"
+  }
+}
+
+# Console
+parceli.verspel.com {
+  encode zstd gzip
+  reverse_proxy http://console:4200
+}
+
+# Sockets (WS/WSS)
+sockets.parceli.verspel.com {
+  encode zstd gzip
+  reverse_proxy http://socket:8000
+}
+
+# phpMyAdmin (Basic auth – change user/pass)
+pma.parceli.verspel.com {
+  encode zstd gzip
+  basicauth {
+    admin $2a$14$C3IvwqRXcvkrD0qi.dIDXeCqavP6i8wECHNhiPkETf9SkEXfgWAC6  # "admin:change_me" (bcrypt)
+  }
+  reverse_proxy http://phpmyadmin:80
+}

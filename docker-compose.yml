@@ -1,106 +1,199 @@
 services:
-  cache:
-    image: redis:4-alpine
-    healthcheck:
-      test: ["CMD", "redis-cli", "ping"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-
   database:
-    image: mysql:8.0-oracle
-    ports:
-      - "3306:3306"
-    volumes:
-      - "./docker/database/:/docker-entrypoint-initdb.d/"
-      - "./docker/database/mysql:/var/lib/mysql"
+    image: mysql:8.0
+    restart: unless-stopped
     environment:
-      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
-      MYSQL_DATABASE: "fleetbase"
+      MYSQL_ROOT_PASSWORD: P3tr0c10
+      MYSQL_DATABASE: fleetbase
+      MYSQL_USER: fleetuser
+      MYSQL_PASSWORD: P3tr0c10
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
+      test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -uroot -p$$MYSQL_ROOT_PASSWORD --silent || exit 1"]
+      interval: 5s
+      timeout: 3s
+      retries: 30
+      start_period: 20s
+    expose:
+      - "3306"
+
+  cache:
+    image: redis:6-alpine
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "redis-cli ping | grep -q PONG || exit 1"]
+      interval: 5s
+      timeout: 3s
+      retries: 30
+      start_period: 10s
+    expose:
+      - "6379"
 
   socket:
     image: socketcluster/socketcluster:v17.4.0
-    ports:
-      - "38000:8000"
+    restart: unless-stopped
     environment:
-      SOCKETCLUSTER_WORKERS: 10
-      SOCKETCLUSTER_BROKERS: 10
-
-  scheduler:
-    image: fleetbase/fleetbase-api:latest
-    command: ["go-crond", "--verbose", "root:./crontab"]
-    environment:
-      DATABASE_URL: "mysql://root@database/fleetbase"
-      QUEUE_CONNECTION: redis
-      CACHE_DRIVER: redis
-      CACHE_PATH: /fleetbase/api/storage/framework/cache
-      CACHE_URL: tcp://cache
-      REDIS_URL: tcp://cache
-    depends_on:
-      - database
-      - cache
-
-  queue:
-    image: fleetbase/fleetbase-api:latest
-    command: ["php", "artisan", "queue:work"]
-    healthcheck:
-      test: ["CMD", "php", "artisan", "queue:status"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-    environment:
-      DATABASE_URL: "mysql://root@database/fleetbase"
-      QUEUE_CONNECTION: redis
-      CACHE_DRIVER: redis
-      CACHE_PATH: /fleetbase/api/storage/framework/cache
-      CACHE_URL: tcp://cache
-      REDIS_URL: tcp://cache
-    depends_on:
-        - database
-        - cache
-
-  console:
-    image: fleetbase/fleetbase-console:latest
-    ports:
-      - "4200:4200"
-    volumes:
-      - ./console/fleetbase.config.json:/usr/share/nginx/html/fleetbase.config.json
+      SOCKETCLUSTER_WORKERS: 4
+      SOCKETCLUSTER_BROKERS: 4
+    expose:
+      - "8000"
 
   application:
     image: fleetbase/fleetbase-api:latest
-    volumes:
-      - ./api/.env:/fleetbase/api/.env
+    restart: unless-stopped
+    depends_on:
+      database:
+        condition: service_healthy
+      cache:
+        condition: service_healthy
     environment:
-      ENVIRONMENT: development
-      DATABASE_URL: "mysql://root@database/fleetbase"
+      APP_NAME: Parceli
+      APP_ENV: production
+      APP_DEBUG: "false"
+      APP_KEY: base64:V0y90h7y6a3l6cNw6Zg0xK1uV1u7cWw2b1g8q1t9y5A=
+      APP_URL: https://parceli-api.verspel.com
+      LOG_CHANNEL: daily
+      CONSOLE_HOST: https://parceli.verspel.com
+      FRONTEND_HOSTS: https://parceli.verspel.com
+
+      # maps
+      MAPS_VENDOR: mapbox
+      MAPBOX_ACCESS_TOKEN: pk.eyJ1IjoicGFyY2VsaSIsImEiOiJjbWY4cW1lZDYwYXVrMmlxd21rM3lleDBuIn0.gXekxyzGYo1wf0yIA4CVIg
+      # Optional tuning
+      MAPBOX_DIRECTIONS_PROFILE: driving
+      MAPBOX_MATRIX_PROFILE: driving
+      MAPBOX_COUNTRY_BIAS: NG
+
+      # ---- DB (internal) ----
+      DB_CONNECTION: mysql
+      DB_HOST: database
+      DB_PORT: 3306
+      DB_DATABASE: fleetbase
+      DB_USERNAME: fleetuser
+      DB_PASSWORD: P3tr0c10
+
+      # Use same DB for storefront
+      STOREFRONT_DB_CONNECTION: mysql
+      DB_STOREFRONT_HOST: database
+      DB_STOREFRONT_PORT: 3306
+      DB_STOREFRONT_DATABASE: fleetbase
+      DB_STOREFRONT_USERNAME: fleetuser
+      DB_STOREFRONT_PASSWORD: P3tr0c10
+
+      # ---- Redis/queue ----
       QUEUE_CONNECTION: redis
       CACHE_DRIVER: redis
-      CACHE_PATH: /fleetbase/api/storage/framework/cache
-      CACHE_URL: tcp://cache
-      REDIS_URL: tcp://cache
-      SESSION_DOMAIN: localhost
-      BROADCAST_DRIVER: socketcluster
-      MAIL_FROM_NAME: Fleetbase
-      APP_NAME: Fleetbase
-      LOG_CHANNEL: daily
-      REGISTRY_HOST: https://registry.fleetbase.io
-      REGISTRY_PREINSTALLED_EXTENSIONS: 'true'
-      OSRM_HOST: https://router.project-osrm.org
-    depends_on:
-      - database
-      - cache
-      - queue
+      REDIS_CLIENT: phpredis
+      REDIS_HOST: cache
+      REDIS_PORT: 6379
+      CACHE_URL: redis://cache:6379
+      REDIS_URL: redis://cache:6379
 
-  httpd:
-    build:
-      context: .
-      dockerfile: docker/httpd/Dockerfile
-    ports:
-      - "8000:80"
+      # Auth/cookies across subdomains
+      SESSION_DOMAIN: .verspel.com
+      SESSION_SECURE_COOKIE: "true"
+      SESSION_SAME_SITE: lax
+      SANCTUM_STATEFUL_DOMAINS: parceli.verspel.com
+      TRUSTED_PROXIES: "*"
+
+      # Safe mail default so flows never 500 on SMTP
+      MAIL_MAILER: smtp
+      MAIL_HOST: email-smtp.eu-west-2.amazonaws.com   # <— use your SES region
+      MAIL_PORT: 587                                   # 587 (STARTTLS) is best on AWS; 465 also works
+      MAIL_ENCRYPTION: tls                             # tls for 587, ssl for 465
+      MAIL_USERNAME: "AKIAZ7SALMKAM6WMVLZJ"
+      MAIL_PASSWORD: "BEUAklQfCNdtU6kBz/BFAW1f9AjBMTdR1TxuwnCbGHJs"
+      MAIL_FROM_ADDRESS: "parceli@verspel.com"        # must be a verified SES identity
+      MAIL_FROM_NAME: "Parceli"
+
+      # Optional defaults
+      BROADCAST_DRIVER: socketcluster
+      REGISTRY_HOST: https://registry.fleetbase.io
+      REGISTRY_PREINSTALLED_EXTENSIONS: "true"
+      OSRM_HOST: https://router.project-osrm.org
+    expose:
+      - "8000"
+
+  queue:
+    image: fleetbase/fleetbase-api:latest
+    restart: unless-stopped
     depends_on:
-      - application
+      database:
+        condition: service_healthy
+      cache:
+        condition: service_healthy
+    command: ["php","artisan","queue:work","--tries=3","--timeout=90"]
+    environment:
+      DB_CONNECTION: mysql
+      DB_HOST: database
+      DB_PORT: 3306
+      DB_DATABASE: fleetbase
+      DB_USERNAME: fleetuser
+      DB_PASSWORD: P3tr0c10
+      QUEUE_CONNECTION: redis
+      REDIS_HOST: cache
+      REDIS_PORT: 6379
+
+  scheduler:
+    image: fleetbase/fleetbase-api:latest
+    restart: unless-stopped
+    depends_on:
+      database:
+        condition: service_healthy
+      cache:
+        condition: service_healthy
+    command: ["go-crond","--verbose","root:./crontab"]
+    environment:
+      DB_CONNECTION: mysql
+      DB_HOST: database
+      DB_PORT: 3306
+      DB_DATABASE: fleetbase
+      DB_USERNAME: fleetuser
+      DB_PASSWORD: P3tr0c10
+      QUEUE_CONNECTION: redis
+      REDIS_HOST: cache
+      REDIS_PORT: 6379
+
+  console:
+    image: fleetbase/fleetbase-console:latest
+    restart: unless-stopped
+    environment:
+      MAPS_PROVIDER: mapbox
+      MAPBOX_TOKEN: pk.eyJ1IjoicGFyY2VsaSIsImEiOiJjbWY4cW1lZDYwYXVrMmlxd21rM3lleDBuIn0.gXekxyzGYo1wf0yIA4CVIg
+    volumes:
+      - ./console/fleetbase.config.json:/usr/share/nginx/html/fleetbase.config.json:ro
+    expose:
+      - "4200"
+
+  phpmyadmin:
+    image: phpmyadmin:5-apache
+    restart: unless-stopped
+    environment:
+      PMA_HOST: database
+      PMA_PORT: 3306
+      UPLOAD_LIMIT: 128M
+    expose:
+      - "80"
+
+  caddy:
+    image: caddy:2
+    restart: unless-stopped
+    depends_on:
+      application:
+        condition: service_started
+      console:
+        condition: service_started
+      socket:
+        condition: service_started
+      phpmyadmin:
+        condition: service_started
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile.edge:/etc/caddy/Caddyfile:ro
+      - caddy-data:/data
+      - caddy-config:/config
+
+volumes:
+  caddy-data:
+  caddy-config:

@@ -1,3 +1,11 @@
 {
-    "API_HOST": "http://localhost:8000"
+  "apiHost": "https://parceli-api.verspel.com",
+  "API_HOST": "https://parceli-api.verspel.com",
+  "socketHost": "sockets.parceli.verspel.com",
+  "socketPort": 443,
+  "socketSecure": true,
+  "SOCKETCLUSTER_HOST": "sockets.parceli.verspel.com",
+  "SOCKETCLUSTER_PORT": 443,
+  "currency": "NGN",
+  "locale": "en-NG"
 }
