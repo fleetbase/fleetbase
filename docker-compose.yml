@@ -3,12 +3,12 @@ services:
     image: mysql:8.0
     restart: unless-stopped
     environment:
-      MYSQL_ROOT_PASSWORD: P3tr0c10
-      MYSQL_DATABASE: fleetbase
-      MYSQL_USER: fleetuser
-      MYSQL_PASSWORD: P3tr0c10
+      MYSQL_ROOT_PASSWORD: xxxxxxxx
+      MYSQL_DATABASE: xxxxxxxx
+      MYSQL_USER: xxxxxxxx
+      MYSQL_PASSWORD: xxxxxxxx
     healthcheck:
-      test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -uroot -p$$MYSQL_ROOT_PASSWORD --silent || exit 1"]
+      test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -uxxxxxxxx -p$$MYSQL_ROOT_PASSWORD --silent || exit 1"]
       interval: 5s
       timeout: 3s
       retries: 30
@@ -46,18 +46,18 @@ services:
       cache:
         condition: service_healthy
     environment:
-      APP_NAME: Parceli
+      APP_NAME: xxxxxxxx
       APP_ENV: production
       APP_DEBUG: "false"
-      APP_KEY: base64:V0y90h7y6a3l6cNw6Zg0xK1uV1u7cWw2b1g8q1t9y5A=
-      APP_URL: https://parceli-api.verspel.com
+      APP_KEY: base64:xxxxxxxx
+      APP_URL: https://xxxxxxxx
       LOG_CHANNEL: daily
-      CONSOLE_HOST: https://parceli.verspel.com
-      FRONTEND_HOSTS: https://parceli.verspel.com
+      CONSOLE_HOST: https://xxxxxxxx
+      FRONTEND_HOSTS: https://xxxxxxxx
 
       # maps
       MAPS_VENDOR: mapbox
-      MAPBOX_ACCESS_TOKEN: pk.eyJ1IjoicGFyY2VsaSIsImEiOiJjbWY4cW1lZDYwYXVrMmlxd21rM3lleDBuIn0.gXekxyzGYo1wf0yIA4CVIg
+      MAPBOX_ACCESS_TOKEN: xxxxxxxx
       # Optional tuning
       MAPBOX_DIRECTIONS_PROFILE: driving
       MAPBOX_MATRIX_PROFILE: driving
@@ -67,17 +67,17 @@ services:
       DB_CONNECTION: mysql
       DB_HOST: database
       DB_PORT: 3306
-      DB_DATABASE: fleetbase
-      DB_USERNAME: fleetuser
-      DB_PASSWORD: P3tr0c10
+      DB_DATABASE: xxxxxxxx
+      DB_USERNAME: xxxxxxxx
+      DB_PASSWORD: xxxxxxxx
 
       # Use same DB for storefront
       STOREFRONT_DB_CONNECTION: mysql
       DB_STOREFRONT_HOST: database
       DB_STOREFRONT_PORT: 3306
-      DB_STOREFRONT_DATABASE: fleetbase
-      DB_STOREFRONT_USERNAME: fleetuser
-      DB_STOREFRONT_PASSWORD: P3tr0c10
+      DB_STOREFRONT_DATABASE: xxxxxxxx
+      DB_STOREFRONT_USERNAME: xxxxxxxx
+      DB_STOREFRONT_PASSWORD: xxxxxxxx
 
       # ---- Redis/queue ----
       QUEUE_CONNECTION: redis
@@ -89,21 +89,21 @@ services:
       REDIS_URL: redis://cache:6379
 
       # Auth/cookies across subdomains
-      SESSION_DOMAIN: .verspel.com
+      SESSION_DOMAIN: xxxxxxxx
       SESSION_SECURE_COOKIE: "true"
       SESSION_SAME_SITE: lax
-      SANCTUM_STATEFUL_DOMAINS: parceli.verspel.com
+      SANCTUM_STATEFUL_DOMAINS: xxxxxxxx
       TRUSTED_PROXIES: "*"
 
       # Safe mail default so flows never 500 on SMTP
       MAIL_MAILER: smtp
-      MAIL_HOST: email-smtp.eu-west-2.amazonaws.com   # <— use your SES region
+      MAIL_HOST: xxxxxxxx  # <— use your SES region
       MAIL_PORT: 587                                   # 587 (STARTTLS) is best on AWS; 465 also works
       MAIL_ENCRYPTION: tls                             # tls for 587, ssl for 465
-      MAIL_USERNAME: "AKIAZ7SALMKAM6WMVLZJ"
-      MAIL_PASSWORD: "BEUAklQfCNdtU6kBz/BFAW1f9AjBMTdR1TxuwnCbGHJs"
-      MAIL_FROM_ADDRESS: "parceli@verspel.com"        # must be a verified SES identity
-      MAIL_FROM_NAME: "Parceli"
+      MAIL_USERNAME: "xxxxxxxx"
+      MAIL_PASSWORD: "xxxxxxxx"
+      MAIL_FROM_ADDRESS: "xxxxxxxx"        # must be a verified SES identity
+      MAIL_FROM_NAME: "xxxxxxxx"
 
       # Optional defaults
       BROADCAST_DRIVER: socketcluster
@@ -126,9 +126,9 @@ services:
       DB_CONNECTION: mysql
       DB_HOST: database
       DB_PORT: 3306
-      DB_DATABASE: fleetbase
-      DB_USERNAME: fleetuser
-      DB_PASSWORD: P3tr0c10
+      DB_DATABASE: xxxxxxxx
+      DB_USERNAME: xxxxxxxx
+      DB_PASSWORD: xxxxxxxx
       QUEUE_CONNECTION: redis
       REDIS_HOST: cache
       REDIS_PORT: 6379
@@ -146,9 +146,9 @@ services:
       DB_CONNECTION: mysql
       DB_HOST: database
       DB_PORT: 3306
-      DB_DATABASE: fleetbase
-      DB_USERNAME: fleetuser
-      DB_PASSWORD: P3tr0c10
+      DB_DATABASE: xxxxxxxx
+      DB_USERNAME: xxxxxxxx
+      DB_PASSWORD: xxxxxxxx
       QUEUE_CONNECTION: redis
       REDIS_HOST: cache
       REDIS_PORT: 6379
@@ -158,7 +158,7 @@ services:
     restart: unless-stopped
     environment:
       MAPS_PROVIDER: mapbox
-      MAPBOX_TOKEN: pk.eyJ1IjoicGFyY2VsaSIsImEiOiJjbWY4cW1lZDYwYXVrMmlxd21rM3lleDBuIn0.gXekxyzGYo1wf0yIA4CVIg
+      MAPBOX_TOKEN: xxxxxxxx
     volumes:
       - ./console/fleetbase.config.json:/usr/share/nginx/html/fleetbase.config.json:ro
     expose:
