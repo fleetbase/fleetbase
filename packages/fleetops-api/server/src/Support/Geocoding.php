@@ -10,6 +10,7 @@ use Geocoder\Query\ReverseQuery;
 use Geocoder\StatefulGeocoder;
 use GuzzleHttp\Client;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class Geocoding.
@@ -38,6 +39,10 @@ class Geocoding
     {
         $httpClient = new Client();
         $geoCodeApiKey = config('services.google_maps_api_key');
+        Log::info("geoCodeApiKey", [
+            'geoCodeApiKey' => $geoCodeApiKey,
+            'company_uuid' => session('company')
+        ]);
         $provider   = new GoogleMaps($httpClient, null, $geoCodeApiKey);
         $geocoder   = new StatefulGeocoder($provider, 'en');
 
