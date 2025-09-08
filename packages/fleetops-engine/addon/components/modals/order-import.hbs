@@ -16,7 +16,7 @@
                         <FaIcon @icon="info-circle" class="text-red-400 mr-2 mt-0.5 flex-shrink-0" />
                         <div class="text-sm text-black dark:text-white text-left">
                             {{@options.errorMessage}}
-                            {{#if @options.importResults.successCount}}
+                            {{!-- {{#if @options.importResults.successCount}}
                             <div class="text-sm text-left mt-2 text-black dark:text-white">
                                 {{@options.importResults.successLabel}}: {{@options.importResults.successCount}}
                             </div>
@@ -25,7 +25,7 @@
                             <div class="text-sm text-left mt-2 text-black dark:text-white">
                                 {{@options.importResults.errorLabel}}: {{@options.importResults.erroredCount}}
                             </div>
-                            {{/if}}
+                            {{/if}} --}}
                         </div>
                     </div>
                 </div>

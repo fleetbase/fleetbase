@@ -1297,7 +1297,7 @@ trait HasApiControllerBehavior
                 if ($vehicleUnavailable || $activeOrder) {
                     $message = $vehicleUnavailable
                         ? 'is scheduled for maintenance'
-                        : 'is already assigned to another order during this time period.';
+                        : 'is already assigned to another order during this time period';
                 
                     return [
                         'status' => false,
