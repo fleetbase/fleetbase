@@ -1667,7 +1667,6 @@ export default class OperationsOrdersIndexController extends BaseController {
         }
         
         const pre_assigned_shifts = Array.isArray(data?.data?.pre_assigned_shifts) ? data.data.pre_assigned_shifts : [];
-        console.log('data', data);
         return {
             problem_type: 'shift_assignment',
             dates: datesArr,
