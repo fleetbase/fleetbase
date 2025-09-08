@@ -340,7 +340,13 @@ class OrderController extends FleetOpsController
             ];
             $validation = $this->validateImportHeaders($data, $requiredHeaders);
             if (!$validation['success']) {
-                return response()->json($validation);
+                // Return header validation error immediately
+                return response()->json([
+                    'success' => false,
+                    'message' => $validation['errors'][0],
+                    'status' => 'validation_error',
+                    'errors' => $validation['errors']
+                ], 400);
             }
             $data_import = $this->orderImport($data);
 
