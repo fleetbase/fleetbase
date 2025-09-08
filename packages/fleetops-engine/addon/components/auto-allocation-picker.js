@@ -284,12 +284,18 @@ export default class AutoAllocationPickerComponent extends Component {
         const urlParams = new URLSearchParams(allocationData.url.split('?')[1] || '');
         const company_uuid = urlParams.get('company_uuid') || this.args.companyUuid;
         const fleet_uuid = urlParams.get('fleet_uuid') || this.selectedFleet?.value;
+        
+        // Extract fleet_name with multiple fallbacks
+        let fleet_name = this.selectedFleet?.label;
+        if (!fleet_name && fleet_uuid && this.fleetOptions?.length > 0) {
+            const fleetOption = this.fleetOptions.find(option => option.value === fleet_uuid);
+            fleet_name = fleetOption?.label;
+        }
 
         // Get pre_assigned_shifts from the response data
         const pre_assigned_shifts = Array.isArray(data?.data?.pre_assigned_shifts) 
             ? data.data.pre_assigned_shifts 
             : [];
-        console.log('data', data);
         return {
             problem_type: this.args.problemType || 'shift_assignment',
             dates: datesArr,
@@ -297,9 +303,10 @@ export default class AutoAllocationPickerComponent extends Component {
             resources,
             previous_allocation_data: data?.data?.previous_allocation_data ?? {},
             vehicles_data: data?.data?.vehicles_data ?? [],
-            // Include company_uuid and pre_assigned_shifts from the response
+            // Include company_uuid, fleet_uuid, fleet_name and pre_assigned_shifts from the response
             company_uuid,
             fleet_uuid,
+            fleet_name,
             pre_assigned_shifts,
             // Pass through recurring_shifts if present
             ...(Array.isArray(data?.data?.recurring_shifts) ? { recurring_shifts: data.data.recurring_shifts } : {}),
