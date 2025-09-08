@@ -1130,7 +1130,7 @@ export default class OperationsOrdersIndexController extends BaseController {
                     // );
     
                     // ---- Second API call ----
-                    const result = await this.#submitAllocation(getData);
+                    const result = await this.#submitAllocation(getData, url);
 
                     if (!result.ok && !result.skipped) {
                         throw new Error(`Follow-up API failed with status ${result.status}`);
@@ -1543,9 +1543,9 @@ export default class OperationsOrdersIndexController extends BaseController {
      * @param {Object} data - The allocation data to submit
      * @returns {Promise<Object>} - The API response
      */
-    async #submitAllocation(data) {
+    async #submitAllocation(data, requestUrl = null) {
         // Build proper payload from the component's logic
-        const payload = this.#buildAllocationPayload(data);
+        const payload = this.#buildAllocationPayload(data, requestUrl);
         
         // Check if we have trips to allocate (from component logic)
         const hasDatedTrips = Array.isArray(payload.dated_shifts) && payload.dated_shifts.some((s) => {
@@ -1605,7 +1605,7 @@ export default class OperationsOrdersIndexController extends BaseController {
      * @param {Object} data - The raw allocation data
      * @returns {Object} - The formatted payload
      */
-    #buildAllocationPayload(data) {
+    #buildAllocationPayload(data, requestUrl = null) {
         const datesArr = Array.isArray(data?.data?.dates) ? data.data.dates : [];
         const rawResources = Array.isArray(data?.data?.resources) ? data.data.resources : [];
 
@@ -1654,6 +1654,18 @@ export default class OperationsOrdersIndexController extends BaseController {
         }
 
         const company_uuid = this.currentUser?.user?.company_uuid || this.session?.data?.authenticated?.company_uuid;
+        
+        // Extract fleet information from the request URL (same approach as auto-allocation-picker component)
+        const urlParams = new URLSearchParams(requestUrl ? requestUrl.split('?')[1] || '' : '');
+        const fleet_uuid = urlParams.get('fleet_uuid') || this.selectedFleet?.value;
+        
+        // Extract fleet_name with multiple fallbacks
+        let fleet_name = this.selectedFleet?.label;
+        if (!fleet_name && fleet_uuid && this.fleetOptions?.length > 0) {
+            const fleetOption = this.fleetOptions.find(option => option.value === fleet_uuid);
+            fleet_name = fleetOption?.label;
+        }
+        
         const pre_assigned_shifts = Array.isArray(data?.data?.pre_assigned_shifts) ? data.data.pre_assigned_shifts : [];
         console.log('data', data);
         return {
@@ -1664,6 +1676,8 @@ export default class OperationsOrdersIndexController extends BaseController {
             previous_allocation_data: data?.data?.previous_allocation_data ?? {},
             vehicles_data: data?.data?.vehicles_data ?? [],
             company_uuid,
+            fleet_uuid,
+            fleet_name,
             pre_assigned_shifts,
             ...(Array.isArray(data?.data?.recurring_shifts) ? { recurring_shifts: data.data.recurring_shifts } : {}),
         };
@@ -1726,7 +1740,7 @@ export default class OperationsOrdersIndexController extends BaseController {
         try {
             newTabRef = window.open('', '_blank');
         } catch (_) {}
-
+        
         if (newTabRef) {
             let navigated = false;
             try { 
@@ -1764,4 +1778,3 @@ export default class OperationsOrdersIndexController extends BaseController {
     }
 
 }
-

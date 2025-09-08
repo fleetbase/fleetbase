@@ -284,6 +284,7 @@ export default class AutoAllocationPickerComponent extends Component {
         const urlParams = new URLSearchParams(allocationData.url.split('?')[1] || '');
         const company_uuid = urlParams.get('company_uuid') || this.args.companyUuid;
         const fleet_uuid = urlParams.get('fleet_uuid') || this.selectedFleet?.value;
+        const fleet_name = this.selectedFleet?.label;
 
         // Get pre_assigned_shifts from the response data
         const pre_assigned_shifts = Array.isArray(data?.data?.pre_assigned_shifts) 
@@ -297,9 +298,10 @@ export default class AutoAllocationPickerComponent extends Component {
             resources,
             previous_allocation_data: data?.data?.previous_allocation_data ?? {},
             vehicles_data: data?.data?.vehicles_data ?? [],
-            // Include company_uuid and pre_assigned_shifts from the response
+            // Include company_uuid, fleet_uuid, fleet_name and pre_assigned_shifts from the response
             company_uuid,
             fleet_uuid,
+            fleet_name,
             pre_assigned_shifts,
             // Pass through recurring_shifts if present
             ...(Array.isArray(data?.data?.recurring_shifts) ? { recurring_shifts: data.data.recurring_shifts } : {}),
