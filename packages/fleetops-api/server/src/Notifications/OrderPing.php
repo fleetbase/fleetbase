@@ -66,7 +66,8 @@ class OrderPing extends Notification implements ShouldQueue
      */
     public function via($notifiable)
     {
-        return ['broadcast', FcmChannel::class, ApnChannel::class];
+        // return ['broadcast', FcmChannel::class, ApnChannel::class];
+        return [];
     }
 
     /**
