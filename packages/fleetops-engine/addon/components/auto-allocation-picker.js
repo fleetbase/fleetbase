@@ -34,8 +34,16 @@ export default class AutoAllocationPickerComponent extends Component {
             const s = String(v).toLowerCase();
             return s === 'true' || s === '1' || s === 'yes';
         } catch (_) {
-            return false;
+            return false; 
         }
+    }
+
+    // Track the selected rows
+    @tracked _selectedRows = [];
+
+    // Update _selectedRows when args change
+    get selectedRows() {
+        return this.args.selectedRows || [];
     }
 
     // get minDate() {
