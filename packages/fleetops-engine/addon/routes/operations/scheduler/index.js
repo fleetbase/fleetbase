@@ -166,7 +166,7 @@ export default class OperationsSchedulerIndexRoute extends Route {
                 const page = i + j + 1;
                 batchPromises.push(
                     this.store.query('order', {
-                        with: ['driverAssigned'],
+                        with: ['driverAssigned', 'fleet'],
                         fields: this.REQUEST_CONFIG.minimalFields,
                         filter: {
                             deleted_at: null
@@ -319,7 +319,7 @@ export default class OperationsSchedulerIndexRoute extends Route {
             const [paginatedOrders, driverUnavailability] = await Promise.all([
                 this.store.query('order', {
                     // status: 'created',
-                    with: ['payload', 'driverAssigned.vehicle'],
+                    with: ['payload', 'driverAssigned.vehicle', 'fleet'],
                     limit: listLimit,
                     sort: '-created_at',
                     page: page

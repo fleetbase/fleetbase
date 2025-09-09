@@ -33,7 +33,9 @@ export default class OrderScheduleCardComponent extends Component {
     @tracked isSaving = false;
     @tracked tempDriverSelection = null;
     @tracked tempVehicleSelection = null;
+    @tracked tempFleetSelection = null;
     @tracked originalOrder = null;
+    orderRef = null;
     router = null;
     calendarInstance = null;
     skipUnassignConfirm = false;
@@ -46,11 +48,17 @@ export default class OrderScheduleCardComponent extends Component {
         // Store EventBus reference early to ensure it's available throughout lifecycle
         this._eventBus = this.args.eventBus;
 
+        // Store order reference to prevent undefined access during destruction
+        this.orderRef = order;
+
         // Create a manual deep copy of the original order data
         this.originalOrder = {
             driver_assigned: order.driver_assigned ? order.driver_assigned : null,
             driver_assigned_uuid: order.driver_assigned_uuid,
             vehicle_assigned: order.vehicle_assigned ? order.vehicle_assigned : null,
+            vehicle_assigned_uuid: order.vehicle_assigned_uuid,
+            fleet: order.fleet ? order.fleet : null,
+            fleet_uuid: order.fleet_uuid,
             scheduled_at: order.scheduled_at ? order.scheduled_at : null,
             estimated_end_date: order.estimated_end_date ? order.estimated_end_date : null,
         };
@@ -80,6 +88,7 @@ export default class OrderScheduleCardComponent extends Component {
 
         this.loadDriverFromOrder(order);
         this.loadPayloadFromOrder(order);
+        this.loadFleetFromOrder(order);
     }
     get isCompleted() {
         return this.args.order.status === 'completed';
@@ -348,6 +357,7 @@ export default class OrderScheduleCardComponent extends Component {
                 this.originalOrderSnapshot = {
                     driver_id: order.driver_assigned?.id,
                     vehicle_id: order.vehicle_assigned?.id,
+                    fleet_id: order.fleet_uuid,
                     scheduledAt: order.scheduledAt,
                     estimatedEndDate: order.estimatedEndDate,
                 };
@@ -368,6 +378,59 @@ export default class OrderScheduleCardComponent extends Component {
         }
     }
 
+    loadFleetFromOrder(order) {
+        if (order && order.fleet_uuid && !order.fleet) {
+            // Try to find the fleet directly by UUID
+            this.store.findRecord('fleet', order.fleet_uuid).then((fleet) => {
+                // Set the fleet relationship on the order
+                order.set('fleet', fleet);
+            }).catch((error) => {
+                console.warn('Failed to load fleet for order:', order.id, error);
+                // Fallback: try to reload the order with fleet relationship
+                this.store.findRecord('order', order.id, { 
+                    with: ['fleet'],
+                    reload: true 
+                }).then((reloadedOrder) => {
+                    order.set('fleet', reloadedOrder.fleet);
+                }).catch((reloadError) => {
+                    console.warn('Failed to reload order with fleet:', order.id, reloadError);
+                });
+            });
+        } else {
+            console.log('Fleet already loaded or no fleet_uuid for order:', order.id);
+        }
+    }
+
+    willDestroy() {
+        super.willDestroy();
+        
+        // Revert all unsaved changes when component is destroyed (modal closed)
+        // Use stored order reference since this.args.order might be undefined
+        if (this.orderRef && this.originalOrder) {
+            this.revertUnsavedChanges();
+        }
+    }
+
+    revertUnsavedChanges() {
+        const order = this.orderRef;
+        if (!order || !this.originalOrder) return;
+
+        // Always revert all fields to original values, regardless of current state
+        order.set('driver_assigned', this.originalOrder.driver_assigned);
+        order.set('driver_assigned_uuid', this.originalOrder.driver_assigned_uuid);
+        order.set('vehicle_assigned', this.originalOrder.vehicle_assigned);
+        order.set('vehicle_assigned_uuid', this.originalOrder.vehicle_assigned_uuid);
+        order.set('fleet', this.originalOrder.fleet);
+        order.set('fleet_uuid', this.originalOrder.fleet_uuid);
+        order.set('scheduled_at', this.originalOrder.scheduled_at);
+        order.set('estimated_end_date', this.originalOrder.estimated_end_date);
+
+        // Clear temporary selections
+        this.tempDriverSelection = null;
+        this.tempVehicleSelection = null;
+        this.tempFleetSelection = null;
+    }
+
 
     hasOrderChanged(order) {
         const snapshot = this.originalOrderSnapshot;
@@ -375,7 +438,8 @@ export default class OrderScheduleCardComponent extends Component {
 
         return (
             snapshot.driver_id !== order.driver_assigned?.internal_id ||
-            snapshot.vehicle_id !== order.vehicle_assigned?.internal_id
+            snapshot.vehicle_id !== order.vehicle_assigned?.internal_id ||
+            snapshot.fleet_id !== order.fleet?.internal_id
             //   snapshot.scheduledAt !== order.scheduledAt ||
             //   snapshot.estimatedEndDate !== order.estimatedEndDate
             // Add more fields if needed
@@ -437,6 +501,7 @@ export default class OrderScheduleCardComponent extends Component {
             return (
                 safeCompare(this.originalOrder.driver_assigned_uuid, order.driver_assigned_uuid) ||
                 safeCompare(this.originalOrder.vehicle_assigned_uuid, order.vehicle_assigned_uuid) ||
+                safeCompare(this.originalOrder.fleet_uuid, order.fleet_uuid) ||
                 safeCompare(this.originalOrder.scheduled_at, order.scheduled_at) ||
                 safeCompare(this.originalOrder.estimated_end_date, order.estimated_end_date)
             );
@@ -524,6 +589,7 @@ export default class OrderScheduleCardComponent extends Component {
                     // Clear temporary selections to restore original state
                     this.tempDriverSelection = null;
                     this.tempVehicleSelection = null;
+                    this.tempFleetSelection = null;
 
                     // Publish calendar refresh event to update the page
                     if (this.effectiveEventBus) {
@@ -676,13 +742,16 @@ export default class OrderScheduleCardComponent extends Component {
                     // Clear temporary selections
                     this.tempDriverSelection = null;
                     this.tempVehicleSelection = null;
+                    this.tempFleetSelection = null;
                     
                     // Immediately restore the original values to the order
                     order.setProperties({
                         driver_assigned: this.originalOrder.driver_assigned ? this.originalOrder.driver_assigned : null,
                         driver_assigned_uuid: this.originalOrder.driver_assigned_uuid ? this.originalOrder.driver_assigned_uuid : null,
                         vehicle_assigned: this.originalOrder.vehicle_assigned ? this.originalOrder.vehicle_assigned : null,
-                        vehicle_assigned_uuid: this.originalOrder.vehicle_assigned_uuid ? this.originalOrder.vehicle_assigned_uuid : null
+                        vehicle_assigned_uuid: this.originalOrder.vehicle_assigned_uuid ? this.originalOrder.vehicle_assigned_uuid : null,
+                        fleet: this.originalOrder.fleet ? this.originalOrder.fleet : null,
+                        fleet_uuid: this.originalOrder.fleet_uuid ? this.originalOrder.fleet_uuid : null
                     });
 
                     // Publish calendar refresh event to update the page
@@ -719,14 +788,28 @@ export default class OrderScheduleCardComponent extends Component {
                 driver_assigned: this.tempDriverSelection !== null ? this.tempDriverSelection : order.driver_assigned,
                 driver_assigned_uuid: this.tempDriverSelection !== null ? this.tempDriverSelection.id : order.driver_assigned_uuid,
                 vehicle_assigned: this.tempVehicleSelection !== null ? this.tempVehicleSelection : order.vehicle_assigned,
-                vehicle_assigned_uuid: this.tempVehicleSelection !== null ? this.tempVehicleSelection.id : order.vehicle_assigned_uuid
+                vehicle_assigned_uuid: this.tempVehicleSelection !== null ? this.tempVehicleSelection.id : order.vehicle_assigned_uuid,
+                fleet: this.tempFleetSelection !== null ? this.tempFleetSelection : order.fleet,
+                fleet_uuid: this.tempFleetSelection !== null ? this.tempFleetSelection.id : order.fleet_uuid
             });
         } else if (!hasDriver && !hasVehicle) {
             order.setProperties({
                 driver_assigned: null,
                 driver_assigned_uuid: null,
                 vehicle_assigned: null,
-                vehicle_assigned_uuid: null
+                vehicle_assigned_uuid: null,
+                fleet: this.tempFleetSelection !== null ? this.tempFleetSelection : order.fleet,
+                fleet_uuid: this.tempFleetSelection !== null ? this.tempFleetSelection.id : order.fleet_uuid
+            });
+        } else {
+            // Handle fleet-only changes or other combinations
+            order.setProperties({
+                driver_assigned: this.tempDriverSelection !== null ? this.tempDriverSelection : order.driver_assigned,
+                driver_assigned_uuid: this.tempDriverSelection !== null ? this.tempDriverSelection.id : order.driver_assigned_uuid,
+                vehicle_assigned: this.tempVehicleSelection !== null ? this.tempVehicleSelection : order.vehicle_assigned,
+                vehicle_assigned_uuid: this.tempVehicleSelection !== null ? this.tempVehicleSelection.id : order.vehicle_assigned_uuid,
+                fleet: this.tempFleetSelection !== null ? this.tempFleetSelection : order.fleet,
+                fleet_uuid: this.tempFleetSelection !== null ? this.tempFleetSelection.id : order.fleet_uuid
             });
         }
 
@@ -843,6 +926,35 @@ export default class OrderScheduleCardComponent extends Component {
             // Update UI immediately
             order.set('vehicle_assigned', vehicle);
             order.set('vehicle_assigned_uuid', vehicle.id);
+        }
+    }
+
+    @action
+    handleFleetChange(order, fleet) {
+        if (!fleet) {
+            this.tempFleetSelection = null;
+            // Update UI immediately
+            order.set('fleet', null);
+            order.set('fleet_uuid', null);
+        } else {
+            this.tempFleetSelection = fleet;
+            // Update UI immediately
+            order.set('fleet', fleet);
+            order.set('fleet_uuid', fleet.id);
+        }
+        
+        // Clear driver and vehicle selections when fleet changes
+        // as they may no longer be valid for the new fleet
+        if (order.driver_assigned) {
+            order.set('driver_assigned', null);
+            order.set('driver_assigned_uuid', null);
+            this.tempDriverSelection = null;
+        }
+        
+        if (order.vehicle_assigned) {
+            order.set('vehicle_assigned', null);
+            order.set('vehicle_assigned_uuid', null);
+            this.tempVehicleSelection = null;
         }
     }
 
