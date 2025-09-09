@@ -1132,13 +1132,11 @@ class ShiftAssignmentService
 
             // Overlap condition: trip intersects with requested window
             $ordersQuery->where(function ($query) use ($start, $end) {
-            $query->whereBetween('scheduled_at', [$start, $end])          // trip starts inside window
-                  ->orWhereBetween('estimated_end_date', [$start, $end])  // trip ends inside window
-                  ->orWhere(function ($q) use ($start, $end) {            // trip fully covers window
-                        $q->where('scheduled_at', '<=', $start)
-                            ->where('estimated_end_date', '>=', $end);
-                    });
+                // Overlap check: order_start <= query_end AND query_start <= order_end
+                $query->where('scheduled_at', '<=', $end)
+                      ->where('estimated_end_date', '>=', $start);
             });
+            
             
             $assignedOrders = $ordersQuery->get();
             \Log::info('Found ' . $assignedOrders->count() . ' orders with assigned vehicles in date range');
@@ -1173,7 +1171,7 @@ class ShiftAssignmentService
                 foreach ($assignedOrders as $order) {
                     if ($order->vehicle_assigned_uuid === $vehicle->uuid) {
                         $orderStartDate = Carbon::parse($order->scheduled_at)->startOfDay();
-                        $orderEndDate = Carbon::parse($order->estimated_end_date)->endOfDay();
+                        $orderEndDate = $order->estimated_end_date ? Carbon::parse($order->estimated_end_date)->endOfDay() : Carbon::parse($order->scheduled_at)->endOfDay();
 
                         if ($timezone !== 'UTC') {
                             $orderStartDate->setTimezone($timezone);
