@@ -448,7 +448,7 @@ _applyInitialFilters() {
         Promise.resolve(this.initializationCompleted).then(() => {
         this.store.query('order', { 
             // status: 'created',
-            with: ['payload', 'driverAssigned.vehicle'],
+            with: ['payload', 'driverAssigned.vehicle', 'fleet'],
             page: this.page,
             sort: '-created_at'
         }).then(orders => {
@@ -459,7 +459,7 @@ _applyInitialFilters() {
         if (!this.calscheduledOrders || this.calscheduledOrders.length === 0) {
             this.store.query('order', { 
                 // status: 'created',
-                with: ['payload', 'driverAssigned.vehicle'],
+                with: ['payload', 'driverAssigned.vehicle', 'fleet'],
                 limit: 500, // Larger limit for calendar
                 sort: '-created_at'
             }).then(calscheduledOrders => {

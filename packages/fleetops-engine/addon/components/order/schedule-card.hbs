@@ -49,6 +49,48 @@
             <span>{{n-a @order.createdAtWithTime}}</span>
         </div>
         
+        <!-- Fleet assigned section -->
+        <div class="flex items-center justify-between {{if @order.fleet 'fleet-assigned'}}">
+            <div class="flex flex-row items-center leading-5">
+                <div class="w-4">
+                    <FaIcon @icon="users" @size="xs" />
+                </div>
+                <span class="font-semibold">{{t "fleet-ops.component.order.schedule-card.fleet-assigned"}}</span>
+            </div>
+            
+            {{#if @isPopup}}
+                <span class="fleet-text-display {{unless @order.fleet 'dark:text-gray-600 text-gray-400'}}">
+                    {{#if @order.fleet}}
+                        {{@order.fleet.name}}
+                    {{else}}
+                        {{t "fleet-ops.component.order.schedule-card.no-fleet" default="Not Assigned"}}
+                    {{/if}}
+                </span>
+            {{else}}
+                <div class="calendar-fleet-select">
+                    <ModelSelect 
+                        @modelName="fleet"
+                        @selectedModel={{@order.fleet}}
+                        @query={{hash order_uuid=@order.id timezone=this.timezone}}
+                        @placeholder={{t "fleet-ops.component.order.schedule-card.select-fleet"}}
+                        @triggerClass="form-select form-input w-full"
+                        @infiniteScroll={{false}}
+                        @renderInPlace={{true}}
+                        @disabled={{or (eq @order.status "completed") @order.isIntegratedVendorOrder}}
+                        @allowClear={{true}}
+                        @onChange={{fn this.handleFleetChange @order}}
+                        as |model|
+                    >
+                        <div class="flex items-center">
+                            <div class="flex-1 flex flex-row truncate">
+                                <span class="uppercase">{{model.name}}</span>
+                            </div>
+                        </div>
+                    </ModelSelect>
+                </div>
+            {{/if}}
+        </div>
+        
         <!-- Driver assigned section -->
         <div class="flex items-center justify-between {{if @order.driver_assigned 'driver-assigned'}}">
             <div class="flex flex-row items-center">
@@ -71,7 +113,7 @@
                     <ModelSelect 
                         @modelName="driver"
                         @selectedModel={{@order.driver_assigned}}
-                        @query={{hash order_uuid=@order.id timezone=this.timezone}}
+                        @query={{if @order.fleet_uuid (hash order_uuid=@order.id timezone=this.timezone fleet_uuid=@order.fleet_uuid) (hash order_uuid=@order.id timezone=this.timezone)}}
                         @placeholder={{t "fleet-ops.component.modals.order-form.select-driver"}}
                         @triggerClass="form-select form-input"
                         @infiniteScroll={{false}}
@@ -122,7 +164,7 @@
                     <ModelSelect
                         @modelName="vehicle"
                         @selectedModel={{@order.vehicle_assigned}}
-                        @query={{hash order_uuid=@order.id timezone=this.timezone}}
+                        @query={{if @order.fleet_uuid (hash order_uuid=@order.id timezone=this.timezone fleet_uuid=@order.fleet_uuid) (hash order_uuid=@order.id timezone=this.timezone)}}
                         @placeholder={{t "fleet-ops.component.modals.order-form.select-vehicle"}}
                         @triggerClass="form-select form-input"
                         @infiniteScroll={{false}}
