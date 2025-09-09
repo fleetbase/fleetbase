@@ -22,6 +22,7 @@ class InvoiceGeneratedMail extends Mailable implements ShouldQueue
     public array $invoice;
     public array $customer;
     private array $tempFiles = [];
+    private ?array $pdfInfo = null;
 
     public function __construct(array $invoice, array $customer = [])
     {
@@ -38,7 +39,13 @@ class InvoiceGeneratedMail extends Mailable implements ShouldQueue
             }
         }
     }
-
+    private function getPdfInfo(): array
+    {
+        if ($this->pdfInfo === null) {
+            $this->pdfInfo = $this->handlePdfGeneration();
+        }
+        return $this->pdfInfo;
+    }
     public function envelope(): Envelope
     {
         $invoiceNumber = $this->invoice['invoice_number'] ?? 'Invoice #' . ($this->invoice['id'] ?? 'Unknown');
@@ -57,7 +64,8 @@ class InvoiceGeneratedMail extends Mailable implements ShouldQueue
 
     public function content(): Content
     {
-        $pdfInfo = $this->handlePdfGeneration();
+        // Use memoized PDF info instead of calling handlePdfGeneration() directly
+        $pdfInfo = $this->getPdfInfo();
 
         return new Content(
             markdown: 'fleetbase::mail.invoice-generated-multi-method',
@@ -82,8 +90,8 @@ class InvoiceGeneratedMail extends Mailable implements ShouldQueue
     {
         $attachments = [];
         
-        // Check if PDF is available and should be attached
-        $pdfInfo = $this->handlePdfGeneration();
+        // Use memoized PDF info instead of calling handlePdfGeneration() directly
+        $pdfInfo = $this->getPdfInfo();
         
         // Only attach PDF if we have a local file path (not using Chargebee direct URL)
         if (($pdfInfo['available'] ?? false) && ($pdfInfo['file_path'] ?? null) && ($pdfInfo['method'] ?? '') !== 'chargebee_direct_url') {
@@ -105,13 +113,15 @@ class InvoiceGeneratedMail extends Mailable implements ShouldQueue
                     
                     Log::info('PDF attached to email', [
                         'filename' => $fileName,
-                        'size' => strlen($pdfContent)
+                        'size' => strlen($pdfContent),
+                        'generation_method' => $pdfInfo['method'] ?? 'unknown'
                     ]);
                 }
             } catch (\Throwable $e) {
                 Log::warning('Failed to attach PDF to email', [
                     'error' => $e->getMessage(),
-                    'file_path' => $pdfInfo['file_path'] ?? 'unknown'
+                    'file_path' => $pdfInfo['file_path'] ?? 'unknown',
+                    'generation_method' => $pdfInfo['method'] ?? 'unknown'
                 ]);
             }
         } else {
