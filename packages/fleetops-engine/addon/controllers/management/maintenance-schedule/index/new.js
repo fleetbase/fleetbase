@@ -84,11 +84,11 @@ export default class ManagementMaintenanceScheduleIndexNewController extends Bas
      * @return {Promise}
      * @memberof ManagementissuesIndexNewController
      */
-    @action onAfterSave(order) {
+    @action async onAfterSave(order) {
         if (this.overlay) {
             this.overlay.close();
         }
-
+        this.resetForm();
         this.hostRouter.refresh();
         return this.transitionToRoute('management.maintenance-schedule.index.details', order).then(() => {
             this.resetForm();
