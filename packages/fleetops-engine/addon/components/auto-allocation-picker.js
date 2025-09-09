@@ -38,14 +38,6 @@ export default class AutoAllocationPickerComponent extends Component {
         }
     }
 
-    // Track the selected rows
-    @tracked _selectedRows = [];
-
-    // Update _selectedRows when args change
-    get selectedRows() {
-        return this.args.selectedRows || [];
-    }
-
     // get minDate() {
         
     //     const now = new Date();
