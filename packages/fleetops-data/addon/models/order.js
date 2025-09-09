@@ -213,10 +213,10 @@ export default class OrderModel extends Model {
         if (!isValidDate(this.updated_at)) {
             return null;
         }
-
+        return formatDate(this.updated_at, 'PP HH:mm');
         // Format the date to show exactly as stored in DB (without timezone conversion)
         // Use toISOString() to get the UTC representation and format it
-        const isoString = this.updated_at.toISOString();
+        /*const isoString = this.updated_at.toISOString();
         const datePart = isoString.split('T')[0]; // Get YYYY-MM-DD part
         const timePart = isoString.split('T')[1].split('.')[0]; // Get HH:MM:SS part
         
@@ -226,7 +226,8 @@ export default class OrderModel extends Model {
         
         // Create a readable format
         const date = new Date(year, month - 1, day, hours, minutes);
-        return formatDate(date, 'PP HH:mm');
+        return formatDate(date, 'PP HH:mm');*/
+
     }
 
     @computed('updated_at') get updatedAtShort() {
@@ -249,10 +250,10 @@ export default class OrderModel extends Model {
         if (!isValidDate(this.created_at)) {
             return null;
         }
-
-        // Format the date to show exactly as stored in DB (without timezone conversion)
-        // Use toISOString() to get the UTC representation and format it
-        const isoString = this.created_at.toISOString();
+        return formatDate(this.created_at, 'PP HH:mm')
+        // // Format the date to show exactly as stored in DB (without timezone conversion)
+        // // Use toISOString() to get the UTC representation and format it
+        /*const isoString = this.created_at.toISOString();
         const datePart = isoString.split('T')[0]; // Get YYYY-MM-DD part
         const timePart = isoString.split('T')[1].split('.')[0]; // Get HH:MM:SS part
         
@@ -262,7 +263,7 @@ export default class OrderModel extends Model {
         
         // Create a readable format
         const date = new Date(year, month - 1, day, hours, minutes);
-        return formatDate(date, 'PP HH:mm');
+        return formatDate(date, 'PP HH:mm');*/
     }
 
     @computed('created_at') get createdAtShort() {
@@ -277,10 +278,10 @@ export default class OrderModel extends Model {
         if (!isValidDate(this.created_at)) {
             return null;
         }
-
+        return formatDate(this.created_at, 'PP HH:mm');
         // Format the date to show exactly as stored in DB (without timezone conversion)
         // Use toISOString() to get the UTC representation and format it
-        const isoString = this.created_at.toISOString();
+        /*const isoString = this.created_at.toISOString();
         const datePart = isoString.split('T')[0]; // Get YYYY-MM-DD part
         const timePart = isoString.split('T')[1].split('.')[0]; // Get HH:MM:SS part
         
@@ -290,17 +291,17 @@ export default class OrderModel extends Model {
         
         // Create a readable format
         const date = new Date(year, month - 1, day, hours, minutes);
-        return formatDate(date, 'PP HH:mm');
+        return formatDate(date, 'PP HH:mm');*/
     }
 
     @computed('created_at') get createdAtDetailed() {
         if (!isValidDate(this.created_at)) {
             return null;
         }
-
+        return formatDate(this.created_at, 'PP HH:mm');
         // Format the date to show exactly as stored in DB (without timezone conversion)
         // Use toISOString() to get the UTC representation and format it
-        const isoString = this.created_at.toISOString();
+        /*const isoString = this.created_at.toISOString();
         const datePart = isoString.split('T')[0]; // Get YYYY-MM-DD part
         const timePart = isoString.split('T')[1].split('.')[0]; // Get HH:MM:SS part
         
@@ -310,7 +311,7 @@ export default class OrderModel extends Model {
         
         // Create a readable format
         const date = new Date(year, month - 1, day, hours, minutes);
-        return formatDate(date, 'PP HH:mm');
+        return formatDate(date, 'PP HH:mm');*/
     }
 
     @computed('dispatched_at') get dispatchedAgo() {
