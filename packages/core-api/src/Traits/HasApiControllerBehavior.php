@@ -25,6 +25,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Log;
 use Fleetbase\FleetOps\Models\FleetVehicle;
+use Illuminate\Support\Facades\DB;
 trait HasApiControllerBehavior
 {
     /**
@@ -876,16 +877,28 @@ trait HasApiControllerBehavior
                 // Ensure $fleetUuids is always an array
                 $fleetUuids = is_array($fleetUuids) ? $fleetUuids : [$fleetUuids];
 
-                foreach ($fleetUuids as $fleetUuid) {
-                    // Check uniqueness before creating
-                    $exists = FleetVehicle::where('fleet_uuid', $fleetUuid)
-                        ->where('vehicle_uuid', $record->uuid)
-                        ->exists();
+                DB::transaction(function () use ($fleetUuids, $record) {
+                    // ✅ Remove fleets not in the new payload
+                    FleetVehicle::where('vehicle_uuid', $record->uuid)
+                        ->whereNotIn('fleet_uuid', $fleetUuids)
+                        ->delete();
 
-                    if (!$exists) {
-                        FleetVehicle::create([
-                            'fleet_uuid'   => $fleetUuid,
-                            'vehicle_uuid' => $record->uuid,
+                    // ✅ Add missing fleets
+                    foreach ($fleetUuids as $fleetUuid) {
+                        $exists = FleetVehicle::where('fleet_uuid', $fleetUuid)
+                            ->where('vehicle_uuid', $record->uuid)
+                            ->exists();
+                foreach ($fleetUuids as $fleetUuid) {
+                        if (!$exists) {
+                            FleetVehicle::create([
+                                'fleet_uuid'   => $fleetUuid,
+                                'vehicle_uuid' => $record->uuid,
+                                'created_at'   => now(),
+                                'updated_at'   => now(),
+                            ]);
+                        }
+                    }
+                });
                             'created_at'   => now(),
                             'updated_at'   => now(),
                         ]);

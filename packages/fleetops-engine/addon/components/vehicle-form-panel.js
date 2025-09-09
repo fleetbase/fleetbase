@@ -113,7 +113,17 @@ export default class VehicleFormPanelComponent extends Component {
         this.selectedFleets = fleets;
         if (this.vehicle) {
             this.vehicle.fleets = fleets;
-            this.vehicle.fleet_uuid = Array.isArray(fleets) ? fleets.map(f => f.id) : [];
+
+            // Replace vehicle.fleet_vehicles to stay consistent
+            this.vehicle.fleet_vehicles = fleets.map(f => {
+                return {
+                    fleet_uuid: f.id,
+                    fleet: f, // keep reference if needed
+                };
+            });
+
+            // Keep UUID list in sync
+            this.vehicle.fleet_uuid = fleets.map(f => f.id);
         }
     }
 
