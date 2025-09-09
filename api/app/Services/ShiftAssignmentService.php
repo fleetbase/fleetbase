@@ -1137,7 +1137,6 @@ class ShiftAssignmentService
                       ->where('estimated_end_date', '>=', $start);
             });
             
-            
             $assignedOrders = $ordersQuery->get();
             \Log::info('Found ' . $assignedOrders->count() . ' orders with assigned vehicles in date range');
             \Log::info('Orders query details:', [
