@@ -1124,11 +1124,18 @@ class ShiftAssignmentService
                 ->whereNull('deleted_at');
                 
             // Apply timezone-aware date filtering for orders
-            $this->applyTimezoneAwareDateFilter($ordersQuery, 'scheduled_at', $start, $end, $timezone);
+            // $this->applyTimezoneAwareDateFilter($ordersQuery, 'scheduled_at', $start, $end, $timezone);
             
             if ($companyUuid) {
                 $ordersQuery->where('company_uuid', $companyUuid);
             }
+
+            // Overlap condition: trip intersects with requested window
+            $ordersQuery->where(function ($query) use ($start, $end) {
+                // Overlap check: order_start <= query_end AND query_start <= order_end
+                $query->where('scheduled_at', '<=', $end)
+                      ->where('estimated_end_date', '>=', $start);
+            });
             
             $assignedOrders = $ordersQuery->get();
             \Log::info('Found ' . $assignedOrders->count() . ' orders with assigned vehicles in date range');
@@ -1162,15 +1169,26 @@ class ShiftAssignmentService
                 // Process orders where this vehicle is assigned
                 foreach ($assignedOrders as $order) {
                     if ($order->vehicle_assigned_uuid === $vehicle->uuid) {
-                        // Convert scheduled_at to requested timezone and extract date
-                        $orderDate = Carbon::parse($order->scheduled_at);
+                        $orderStartDate = Carbon::parse($order->scheduled_at)->startOfDay();
+                        $orderEndDate = $order->estimated_end_date ? Carbon::parse($order->estimated_end_date)->endOfDay() : Carbon::parse($order->scheduled_at)->endOfDay();
+
                         if ($timezone !== 'UTC') {
-                            $orderDate->setTimezone($timezone);
+                            $orderStartDate->setTimezone($timezone);
+                            $orderEndDate->setTimezone($timezone);
                         }
-                        $dateKey = $orderDate->format('Y-m-d');
-                        
-                        if (!in_array($dateKey, $unavailableDates)) {
-                            $unavailableDates[] = $dateKey;
+
+                        // Requested window
+                        $windowStart = $start->copy()->startOfDay();
+                        $windowEnd = $end->copy()->endOfDay();
+
+                        // Find overlap between [orderStart, orderEnd] and [windowStart, windowEnd]
+                        $current = $orderStartDate->greaterThan($windowStart) ? $orderStartDate : $windowStart;
+                        $last = $orderEndDate->lessThan($windowEnd) ? $orderEndDate : $windowEnd;
+
+                        // Loop through overlapping days
+                        while ($current->lte($last)) {
+                            $unavailableDates[] = $current->format('Y-m-d');
+                            $current->addDay();
                         }
                     }
                 }
