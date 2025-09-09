@@ -61,7 +61,8 @@ class OrderDispatched extends Notification implements ShouldQueue
      */
     public function via($notifiable)
     {
-        return ['broadcast', 'mail', FcmChannel::class, ApnChannel::class];
+        // return ['broadcast', 'mail', FcmChannel::class, ApnChannel::class];
+        return [];
     }
 
     /**
