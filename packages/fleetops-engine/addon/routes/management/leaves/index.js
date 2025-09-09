@@ -57,7 +57,7 @@ export default class ManagementLeavesIndexRoute extends Route {
                         current_page: 1,
                         last_page: 1,
                         total: 0,
-                        per_page: params.per_page || 25,
+                        per_page: params.per_page || 50,
                         from: 0,
                         to: 0
                     }
@@ -69,7 +69,7 @@ export default class ManagementLeavesIndexRoute extends Route {
             
             // Add pagination
             searchParams.append('page', params.page || 1);
-            searchParams.append('per_page', params.per_page || 25);
+            searchParams.append('per_page', params.per_page || 50);
             
             // Add sorting
             if (params.sort) {
@@ -139,7 +139,7 @@ export default class ManagementLeavesIndexRoute extends Route {
             } else if (result.success) {
                 // Non-paginated response - create pagination meta
                 const total = result.total || result.data?.length || 0;
-                const perPage = params.per_page || 25;
+                const perPage = params.per_page || 50;
                 const currentPage = params.page || 1;
                 const lastPage = Math.ceil(total / perPage);
                 const from = ((currentPage - 1) * perPage) + 1;

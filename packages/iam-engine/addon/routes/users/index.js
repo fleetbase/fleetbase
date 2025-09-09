@@ -22,7 +22,7 @@ export default class UsersIndexRoute extends Route {
         
         // Ensure page and limit params exist
         const page = parseInt(queryParams.page || 1, 10);
-        const limit = parseInt(queryParams.limit || 30, 10);
+        const limit = parseInt(queryParams.limit || 50, 10);
         
         // Set page and limit in queryParams
         queryParams.page = page;

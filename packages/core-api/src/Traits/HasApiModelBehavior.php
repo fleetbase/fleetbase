@@ -104,7 +104,7 @@ trait HasApiModelBehavior
      */
     public function queryFromRequest(Request $request, ?\Closure $queryCallback = null)
     {
-        $limit   = $request->integer('limit', 30);
+        $limit   = $request->integer('limit', 50);
         $columns = $request->input('columns', ['*']);
 
         /**
