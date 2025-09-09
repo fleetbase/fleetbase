@@ -152,11 +152,19 @@ Route::prefix(config('fleetbase.api.routing.prefix', '/'))->namespace('Fleetbase
                             }
                         );
                         $router->group(
+                            ['prefix' => 'invoices/pdf'],
+                            function ($router) {
+                                $router->get('download/{filename}', 'InvoicePdfDownloadController@download')->name('invoice.download');
+                                $router->get('view/{filename}', 'InvoicePdfDownloadController@view')->name('invoice.view');
+                            }
+                        );
+                        $router->group(
                             ['prefix' => 'test-webhooks'],
                             function ($router) {
                                 $router->get('subscription-created', 'WebhookTestController@testSubscriptionCreated');
                                 $router->get('payment_succeeded', 'WebhookTestController@testPaymentSucceeded');
                                 $router->get('payment_failed', 'WebhookTestController@testPaymentFailed');
+                                $router->get('invoice_generated', 'WebhookTestController@testInvoiceGenerated');
                             }
                         );
                         $router->group(

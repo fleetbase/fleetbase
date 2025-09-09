@@ -15,6 +15,7 @@ use Fleetbase\Models\PlanPricingRelation;
 use Fleetbase\Models\CompanyPlanRelation;
 use Fleetbase\Models\FailedWebhook;
 use Fleetbase\Models\ProcessedWebhook;
+use Fleetbase\Mail\InvoiceGeneratedMail;
 // use App\Models\Transaction;
 // use App\Mail\WelcomeMail;
 // use App\Mail\PaymentFailedMail;
@@ -332,7 +333,7 @@ class ChargebeeWebhookController extends Controller
 
             case 'payment_succeeded':
                 try {
-                    $this->handlePaymentSucceeded($content['transaction'], $content['subscription'] ?? null);
+                    $this->handlePaymentSucceeded($content['transaction'], $content['subscription'] ?? null, $content['invoice'] ?? null);
                     return response()->json(['status' => 'success'], 200);
                 } catch (\InvalidArgumentException $e) {
                     Log::error('Invalid payment data: ' . $e->getMessage());
@@ -351,9 +352,21 @@ class ChargebeeWebhookController extends Controller
                         return response()->json(['error' => 'Failed to process payment failure'], 500);
                     }
 
-            // case 'invoice_generated':
-            //     $this->handleInvoiceGenerated($content['invoice']);
-            //     break;
+            case 'invoice_generated':
+                try {
+                    // $this->handleInvoiceGenerated($content['invoice']);
+                    // Just log the invoice generation, don't send email yet
+                    Log::info('Invoice generated', [
+                        'invoice_id' => $content['invoice']['id'] ?? 'unknown',
+                        'invoice_number' => $content['invoice']['invoice_number'] ?? 'unknown',
+                        'amount' => $content['invoice']['amount'] ?? 0,
+                        'status' => $content['invoice']['status'] ?? 'unknown'
+                    ]);
+                    return response()->json(['status' => 'success'], 200);
+                } catch (\Exception $e) {
+                    Log::error('Invoice generation processing failed: ' . $e->getMessage());
+                    return response()->json(['error' => 'Failed to process invoice generation'], 500);
+                }
 
             // case 'customer_created':
             //     $this->handleCustomerCreated($content['customer']);
@@ -591,7 +604,7 @@ class ChargebeeWebhookController extends Controller
     /**
      * Handle payment succeeded
      */
-    private function handlePaymentSucceeded(array $transaction, ?array $subscription = null): void
+    private function handlePaymentSucceeded(array $transaction, ?array $subscription = null, ?array $invoice = null): void
     {
         Log::info('Processing payment succeeded', ['transaction_id' => $transaction['id'] ?? 'unknown'], $subscription);
         try {
@@ -775,6 +788,9 @@ class ChargebeeWebhookController extends Controller
                 throw new \InvalidArgumentException($errorMessage, 400);
             }
 
+            // Send paid invoice email after successful payment
+            $this->sendPaidInvoiceEmail($invoice, $user);
+
             Log::info('Payment processed successfully', [
                 'transaction_id' => $transaction['id']
             ]);
@@ -928,19 +944,122 @@ class ChargebeeWebhookController extends Controller
      */
     private function handleInvoiceGenerated(array $invoice): void
     {
-        Log::info('Processing invoice generated', ['invoice_id' => $invoice['id']]);
+        Log::info('Processing invoice generated', ['invoice_id' => $invoice['id'] ?? 'unknown']);
 
         try {
-            // Store invoice record or send to customer
-            // Add your invoice handling logic here
+            // Validate required invoice data
+            if (!isset($invoice['id'])) {
+                throw new \InvalidArgumentException('Missing required invoice data: id', 400);
+            }
+
+            // Get customer information if available
+            $customer = [];
+            if (isset($invoice['customer'])) {
+                $customer = $invoice['customer'];
+            }
+
+            // Get support email from environment variable
+            $supportEmail = config('services.support_emails');
+            
+            if (!$supportEmail) {
+                Log::warning('SUPPORT_EMAIL not configured in environment variables', [
+                    'invoice_id' => $invoice['id']
+                ]);
+                return;
+            }
+
+            // Send invoice notification to support
+            try {
+                Mail::to($supportEmail)->send(new InvoiceGeneratedMail($invoice, $customer));
+                
+                Log::info('Invoice notification sent to support successfully', [
+                    'invoice_id' => $invoice['id'],
+                    'support_email' => $supportEmail
+                ]);
+            } catch (\Exception $e) {
+                Log::error('Failed to send invoice notification to support: ' . $e->getMessage(), [
+                    'invoice_id' => $invoice['id'],
+                    'support_email' => $supportEmail
+                ]);
+                // Don't throw the exception to avoid webhook failure
+            }
 
             Log::info('Invoice processed successfully', [
                 'invoice_id' => $invoice['id']
             ]);
 
+        } catch (\InvalidArgumentException $e) {
+            // Re-throw the custom exception to be handled by the calling webhook handler
+            throw $e;
         } catch (\Exception $e) {
             Log::error('Failed to handle invoice generated: ' . $e->getMessage());
             throw $e;
+        }
+    }
+
+    /**
+     * Send paid invoice email after successful payment
+     */
+    private function sendPaidInvoiceEmail(?array $invoice, $user): void
+    {
+        try {
+            // Check if invoice data is available
+            if (!$invoice) {
+                Log::info('No invoice data provided, skipping invoice email');
+                return;
+            }
+
+            $invoiceId = $invoice['id'] ?? null;
+            if (!$invoiceId) {
+                Log::info('No invoice ID found in invoice data, skipping invoice email');
+                return;
+            }
+
+            // Get support email from environment variable
+            $supportEmail = config('services.support_emails');
+            if (!$supportEmail) {
+                Log::warning('SUPPORT_EMAIL not configured, skipping invoice email', [
+                    'invoice_id' => $invoiceId
+                ]);
+                return;
+            }
+
+            // Prepare invoice data for email (mark as paid since payment succeeded)
+            $invoiceData = array_merge($invoice, [
+                'status' => 'paid',
+                'paid_at' => time(),
+            ]);
+
+            // Prepare customer data
+            $customer = [
+                'id' => $user->chargebee_customer_id ?? 'unknown',
+                'first_name' => $user->first_name ?? '',
+                'last_name' => $user->last_name ?? '',
+                'email' => $user->email ?? '',
+                'company' => $user->company_name ?? '',
+                'company_uuid' => $user->company_uuid ?? 'unknown',
+            ];
+
+            // Log::info('Sending paid invoice email', [
+            //     'invoice_id' => $invoiceId,
+            //     'customer_email' => $customer['email'],
+            //     'amount' => $invoiceData['amount'] ?? 0
+            // ]);
+
+            // Send the paid invoice email
+            Mail::to($supportEmail)->send(new InvoiceGeneratedMail($invoiceData, $customer));
+            
+            // Log::info('Paid invoice email sent successfully', [
+            //     'invoice_id' => $invoiceId,
+            //     'support_email' => $supportEmail
+            // ]);
+
+        } catch (\Exception $e) {
+            Log::error('Failed to send paid invoice email', [
+                'invoice_id' => $invoice['id'] ?? 'unknown',
+                'error' => $e->getMessage()
+            ]);
+            // Don't throw the exception to avoid webhook failure
         }
     }
 

@@ -71,4 +71,5 @@ return [
     'order_export_limit' => env('ORDER_EXPORT_LIMIT', 1000),
     'default_place_code' => env('DEFAULT_PLACE_CODE'),
     'google_maps_api_key' => env('GOOGLE_MAPS_API_KEY'),
+    'support_emails' => array_filter(explode(',', env('SUPPORT_EMAILS', ''))),
 ];
