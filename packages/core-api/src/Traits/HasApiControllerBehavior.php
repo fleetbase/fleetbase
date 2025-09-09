@@ -876,6 +876,11 @@ trait HasApiControllerBehavior
                 // Ensure $fleetUuids is always an array
                 $fleetUuids = is_array($fleetUuids) ? $fleetUuids : [$fleetUuids];
 
+                // ✅ Remove fleets not in the new payload
+                FleetVehicle::where('vehicle_uuid', $record->uuid)
+                    ->whereNotIn('fleet_uuid', $fleetUuids)
+                    ->delete();
+
                 foreach ($fleetUuids as $fleetUuid) {
                     // Check uniqueness before creating
                     $exists = FleetVehicle::where('fleet_uuid', $fleetUuid)
