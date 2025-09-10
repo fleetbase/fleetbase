@@ -255,7 +255,7 @@ export default class CrudService extends Service {
         const modalOptions = {
             title: this.intl.t('common.export'),
             acceptButtonText: 'Download',
-            modalClass: 'modal-md',
+            modalClass: 'modal-sm',
             format: 'xls',
             formatOptions: ['xls', 'xlsx', 'csv'],
             // setFormat: ({ target }) => {
