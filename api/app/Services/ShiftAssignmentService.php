@@ -344,7 +344,7 @@ class ShiftAssignmentService
                     }
 
                     if (!empty($updatesToUnassign)) {
-                        Order::where('uuid', $order->uuid)->update($updatesToUnassign);
+                        $result = Order::where('uuid', $order->uuid)->update($updatesToUnassign);
                         if ($result) {
                             $unassignedOrders[] = $order->public_id ?? $order->uuid;
 
