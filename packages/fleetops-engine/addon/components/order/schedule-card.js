@@ -816,6 +816,23 @@ export default class OrderScheduleCardComponent extends Component {
         // If it passes validation, save the order
         return order.save()
             .then(() => {
+                // Update the original order snapshot with the new values after successful save
+                this.originalOrder = {
+                    driver_assigned: order.driver_assigned ? order.driver_assigned : null,
+                    driver_assigned_uuid: order.driver_assigned_uuid,
+                    vehicle_assigned: order.vehicle_assigned ? order.vehicle_assigned : null,
+                    vehicle_assigned_uuid: order.vehicle_assigned_uuid,
+                    fleet: order.fleet ? order.fleet : null,
+                    fleet_uuid: order.fleet_uuid,
+                    scheduled_at: order.scheduled_at ? order.scheduled_at : null,
+                    estimated_end_date: order.estimated_end_date ? order.estimated_end_date : null,
+                };
+
+                // Clear temporary selections since they're now saved
+                this.tempDriverSelection = null;
+                this.tempVehicleSelection = null;
+                this.tempFleetSelection = null;
+
                 // Show success notification
                 this.notifications.success(
                     this.intl.t('fleet-ops.operations.orders.index.view.update-success', {
