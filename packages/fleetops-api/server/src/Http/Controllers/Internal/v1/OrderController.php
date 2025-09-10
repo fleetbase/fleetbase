@@ -1563,9 +1563,9 @@ class OrderController extends FleetOpsController
                         $order = $existingOrder;
                         
                         // Update fleet assignment
-                        if($order->scheduled_at && $order->estimated_end_date) {
-                            $start = Carbon::parse($order->scheduled_at);
-                            $end = Carbon::parse($order->estimated_end_date);
+                        if($scheduledAt && $estimatedEndDate) {
+                            $start = Carbon::parse($scheduledAt);
+                            $end = Carbon::parse($estimatedEndDate);
                             $hours = $start->floatDiffInHours($end);
                             
                             // First try to find a fleet with trip_length >= hours
