@@ -874,7 +874,7 @@ trait HasApiControllerBehavior
             if ($model_name === "Vehicle") {
                 $fleetUuids = $request['vehicle']['fleet_uuid'] ?? [];
 
-                // Ensure $fleetUuids is always an array
+                // Ensure it's always an array
                 $fleetUuids = is_array($fleetUuids) ? $fleetUuids : [$fleetUuids];
 
                 DB::transaction(function () use ($fleetUuids, $record) {
@@ -888,7 +888,7 @@ trait HasApiControllerBehavior
                         $exists = FleetVehicle::where('fleet_uuid', $fleetUuid)
                             ->where('vehicle_uuid', $record->uuid)
                             ->exists();
-                foreach ($fleetUuids as $fleetUuid) {
+
                         if (!$exists) {
                             FleetVehicle::create([
                                 'fleet_uuid'   => $fleetUuid,
@@ -899,13 +899,8 @@ trait HasApiControllerBehavior
                         }
                     }
                 });
-                            'created_at'   => now(),
-                            'updated_at'   => now(),
-                        ]);
-                    }
-                }
 
-                // Load FleetVehicle relationships with Fleet details
+                // Reload updated relationships
                 $record->load('fleetVehicles.fleet');
             }
             if (Http::isInternalRequest($request)) {
