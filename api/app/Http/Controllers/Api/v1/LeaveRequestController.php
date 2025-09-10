@@ -27,6 +27,8 @@ class LeaveRequestController extends Controller
             'status'      => 'status',
             'leave_type'  => 'leave_type',
             'driver_uuid' => 'driver_uuid', 
+            'vehicle_uuid' => 'vehicle_uuid',
+            'reason'      => 'reason',
             'start_date'  => 'start_date',
             'end_date'    => 'end_date',
             'created_at'  => 'created_at',
@@ -67,7 +69,10 @@ class LeaveRequestController extends Controller
         if (!is_null($value)) {
             if (in_array($requestKey, $dateFields)) {
                 $query->whereDate($columnName, $value);  // compare only the date part
-            } else {
+            }   else if ($requestKey === 'public_id') {
+                // Use LIKE matching for public_id filter to allow partial matching
+                $query->where($columnName, 'LIKE', '%' . $value . '%');
+            }  else {
                 $query->where($columnName, $value);
             }
         }
