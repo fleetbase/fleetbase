@@ -113,14 +113,21 @@ export default class VehicleFormPanelComponent extends Component {
         this.selectedFleets = fleets;
         if (this.vehicle) {
             this.vehicle.fleets = fleets;
+            const currentFleets = this.vehicle.fleet_vehicles || [];
 
-            // Replace vehicle.fleet_vehicles to stay consistent
-            this.vehicle.fleet_vehicles = fleets.map(f => {
-                return {
-                    fleet_uuid: f.id,
-                    fleet: f, // keep reference if needed
-                };
+            // Remove fleets that are no longer selected
+            currentFleets.forEach(fleet => {
+                if (!fleets.find(f => String(f.id) === String(fleet.fleet_uuid))) {
+                    this.vehicle.fleet_vehicles.removeObject(fleet);
+                }
             });
+
+            // Add new fleets
+            // fleets.forEach(fleet => {
+            //     if (!currentFleets.find(f => String(f.id) === String(fleet.fleet_uuid))) {
+            //         this.vehicle.fleets_vehicles.pushObject(fleet);
+            //     }
+            // });
 
             // Keep UUID list in sync
             this.vehicle.fleet_uuid = fleets.map(f => f.id);
