@@ -1,4 +1,4 @@
-{{#if this.isAutoAllocationEnabled}}
+{{#if (and this.isAutoAllocationEnabled (eq this.args.selectedRows.length 0))}}
 <DropdownButton
     @text="Auto Allocate"
     @img="/images/auto-allocation.svg"

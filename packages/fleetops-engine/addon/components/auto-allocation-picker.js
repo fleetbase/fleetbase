@@ -34,7 +34,7 @@ export default class AutoAllocationPickerComponent extends Component {
             const s = String(v).toLowerCase();
             return s === 'true' || s === '1' || s === 'yes';
         } catch (_) {
-            return false;
+            return false; 
         }
     }
 

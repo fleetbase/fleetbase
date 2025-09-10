@@ -84,7 +84,7 @@
             @buttonWrapperClass="mr-2"
         />
         <VisibleColumnPicker @columns={{this.columns}} @onChange={{fn (mut this.columns)}} class="mr-2" />
-        {{#if (safe-has this.table "selectedRows")}}
+        {{#if (and (safe-has this.table "selectedRows") (gt this.table.selectedRows.length 0))}}
             <DropdownButton @icon="layer-group" @type="magic" @text={{t "fleet-ops.common.bulk-action"}} @size="sm" @buttonWrapperClass="mr-2" as |dd|>
                 <div class="next-dd-menu mt-2 mx-0">
                     {{#if this.isAutoAllocationEnabled}}
@@ -125,6 +125,7 @@
         <AutoAllocationPicker
             @fleetOptions={{this.fleetOptions}}
             @selectedFleet={{this.selectedFleet}}
+            @selectedRows={{if this.table.selectedRows this.table.selectedRows (array)}}
             @onSelectFleet={{this.setSelectedFleet}}
             @autoAllocationDate={{this.autoAllocationDate}}
             @onSelectDate={{this.setAutoAllocationDate}}
