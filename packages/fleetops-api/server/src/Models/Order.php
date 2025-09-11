@@ -123,7 +123,8 @@ class Order extends Model
         'spot_work',
         'carrier',
         'sub_carrier',
-        'trip_id'
+        'trip_id',
+        'allocation_uuid'
     ];
 
     /**

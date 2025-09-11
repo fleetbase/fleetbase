@@ -130,9 +130,10 @@ class ShiftAssignmentService
      * @param array $allocatedResources
      * @param string|null $timezone Input times' timezone (defaults to app timezone, stored as UTC)
      * @param array $uncoveredShifts Map of date => [order_ids] to unassign drivers from
+     * @param string|null $allocationUuid
      * @return array Summary of updates and unassignments
      */
-    public function applyAllocatedResources(array $allocatedResources, ?string $timezone = null, array $uncoveredShifts = []): array
+    public function applyAllocatedResources(array $allocatedResources, ?string $timezone = null, array $uncoveredShifts = [], ?string $allocationUuid = null): array
     {
         $timezone = $timezone ?: config('app.timezone', 'UTC');
         
@@ -141,11 +142,11 @@ class ShiftAssignmentService
             throw new \InvalidArgumentException('Invalid timezone: ' . $timezone);
         }
         
-        \Log::info('Applying allocations with timezone: ' . $timezone);
-        $updatedOrders = [];
+        // Initialize arrays for tracking updates and errors
         $skippedAssignments = 0;
         $errors = [];
         $unassignedOrders = [];
+        $updatedOrders = [];
 
         foreach ($allocatedResources as $resourceIndex => $resource) {
             $resourceId = $resource['resource_id'] ?? null;
@@ -159,8 +160,6 @@ class ShiftAssignmentService
                     ->where('uuid', $resourceId)
                     ->whereNull('deleted_at')
                     ->first();
-                
-                \Log::info("Driver lookup for resource_id '{$resourceId}': " . ($driver ? "Found driver {$driver->uuid}" : "Not found"));
             }
             if (!$driver && $resourceName) {
                 $driver = Driver::with(['user'])
@@ -169,8 +168,6 @@ class ShiftAssignmentService
                         $q->where('name', $resourceName);
                     })
                     ->first();
-                
-                \Log::info("Driver lookup for resource_name '{$resourceName}': " . ($driver ? "Found driver {$driver->uuid}" : "Not found"));
             }
 
             foreach ($assignments as $date => $assignment) {
@@ -180,10 +177,10 @@ class ShiftAssignmentService
                     continue;
                 }
 
-                $orderPublicOrUuid = $assignment['id'] ?? null;
+                $orderPublicId = $assignment['id'] ?? null;
                 $startTime = $assignment['start_time'] ?? null;
 
-                if (!$orderPublicOrUuid || !$startTime) {
+                if (!$orderPublicId || !$startTime) {
                     $skippedAssignments++;
                     continue;
                 }
@@ -195,7 +192,6 @@ class ShiftAssignmentService
                         // start_time already contains date and time, parse it directly
                         try {
                             $localDateTime = Carbon::parse($startTime, $timezone);
-                            \Log::info("Parsing start_time directly: {$startTime} in timezone {$timezone}");
                         } catch (\Exception $parseError) {
                             throw new \Exception("Invalid start_time format '{$startTime}': " . $parseError->getMessage());
                         }
@@ -203,26 +199,22 @@ class ShiftAssignmentService
                         // start_time is just time, combine with date
                         try {
                             $localDateTime = Carbon::parse($date . ' ' . $startTime, $timezone);
-                            \Log::info("Combining date and time: {$date} {$startTime} in timezone {$timezone}");
                         } catch (\Exception $parseError) {
                             throw new \Exception("Invalid time format '{$startTime}' for date '{$date}': " . $parseError->getMessage());
                         }
                     }
                     $scheduledAtUtc = $localDateTime->clone()->setTimezone('UTC');
 
-                    // Resolve order by public_id then uuid
+                    // Find order by public_id only
                     $order = Order::withoutGlobalScopes()
-                        ->where(function($query) use ($orderPublicOrUuid) {
-                            $query->where('public_id', $orderPublicOrUuid)
-                                  ->orWhere('uuid', $orderPublicOrUuid);
-                        })
+                        ->where('public_id', $orderPublicId)
                         ->first();
 
                     if (!$order) {
                         $errors[] = [
                             'resource' => $resourceId ?? $resourceName,
                             'date' => $date,
-                            'order' => $orderPublicOrUuid,
+                            'order' => $orderPublicId,
                             'message' => 'Order not found'
                         ];
                         continue;
@@ -232,7 +224,10 @@ class ShiftAssignmentService
                     $updates = [];
                     if ($driver) {
                         $updates['driver_assigned_uuid'] = $driver->uuid;
-                        \Log::info("Updating order {$order->public_id} with driver {$driver->uuid}");
+                        // Only set allocation_uuid if explicitly provided
+                        if ($allocationUuid) {
+                            $updates['allocation_uuid'] = $allocationUuid;
+                        }
                     } else {
                         \Log::warning("No driver found for resource_id '{$resourceId}' or resource_name '{$resourceName}', skipping driver assignment for order {$order->public_id}");
                     }
@@ -240,7 +235,6 @@ class ShiftAssignmentService
                     // Update scheduled time if start_time is provided
                     if ($startTime) {
                         $updates['scheduled_at'] = $scheduledAtUtc;
-                        \Log::info("Updating order {$order->public_id} scheduled time to {$scheduledAtUtc->format('Y-m-d H:i:s')} UTC");
                     }
 
                     // Vehicle assignment
@@ -252,7 +246,6 @@ class ShiftAssignmentService
                             throw new \Exception("Vehicle with UUID '{$vehicleId}' not found");
                         }
                         $updates['vehicle_assigned_uuid'] = $vehicleId;
-                        \Log::info("Updating order {$order->public_id} with vehicle {$vehicleId}");
                     }
 
                     // Update estimated end time if end_time is provided
@@ -263,7 +256,6 @@ class ShiftAssignmentService
                             // end_time already contains date and time, parse it directly
                             try {
                                 $endDateTime = Carbon::parse($endTime, $timezone);
-                                \Log::info("Parsing end_time directly: {$endTime} in timezone {$timezone}");
                             } catch (\Exception $parseError) {
                                 throw new \Exception("Invalid end_time format '{$endTime}': " . $parseError->getMessage());
                             }
@@ -271,19 +263,75 @@ class ShiftAssignmentService
                             // end_time is just time, combine with date
                             try {
                                 $endDateTime = Carbon::parse($date . ' ' . $endTime, $timezone);
-                                \Log::info("Combining date and end_time: {$date} {$endTime} in timezone {$timezone}");
                             } catch (\Exception $parseError) {
                                 throw new \Exception("Invalid end_time format '{$endTime}' for date '{$date}': " . $parseError->getMessage());
                             }
                         }
                         $estimatedEndUtc = $endDateTime->clone()->setTimezone('UTC');
                         $updates['estimated_end_date'] = $estimatedEndUtc;
-                        \Log::info("Updating order {$order->public_id} estimated end time to {$estimatedEndUtc->format('Y-m-d H:i:s')} UTC");
                     }
 
                     if (!empty($updates)) {
-                        Order::where('uuid', $order->uuid)->update($updates);
-                        $updatedOrders[] = $order->public_id ?? $order->uuid;
+                        try {
+                            // Log the update attempt with more context
+                            \Log::info('Attempting to update order', [
+                                'order_uuid' => $order->uuid,
+                                'public_id' => $order->public_id,
+                                'updates' => $updates,
+                                'driver_uuid' => $driver->uuid ?? null,
+                                'resource_id' => $resourceId,
+                                'date' => $date,
+                                'resource_name' => $resourceName,
+                                'allocation_uuid' => $allocationUuid,
+                                'current_time' => now()->toDateTimeString(),
+                                'order_exists' => Order::where('public_id', $order->public_id)->exists() ? 'yes' : 'no'
+                            ]);
+                            
+                            // Clear previous query log for this update
+                            DB::flushQueryLog();
+                            
+                            // Perform the update
+                            $result = Order::withoutGlobalScopes()
+                                ->where('public_id', $order->public_id)
+                                ->update($updates);
+                                
+                            // Log the result with query log
+                            $queryLog = DB::getQueryLog();
+                            $lastQuery = !empty($queryLog) ? end($queryLog) : 'No query logged';
+                            
+                            // Verify the update
+                            $updatedOrder = Order::withoutGlobalScopes()
+                                ->where('public_id', $order->public_id)
+                                ->first();
+                                
+                            \Log::info('Order update result', [
+                                'order_uuid' => $order->uuid,
+                                'public_id' => $order->public_id,
+                                'rows_affected' => $result,
+                                'query' => $lastQuery,
+                                'actual_driver' => $updatedOrder ? $updatedOrder->driver_assigned_uuid : 'order_not_found',
+                                'expected_driver' => $driver->uuid ?? null,
+                                'update_successful' => ($updatedOrder && $updatedOrder->driver_assigned_uuid === ($driver->uuid ?? null)) ? 'yes' : 'no'
+                            ]);
+                            
+                            if ($result > 0) {
+                                $updatedOrders[] = $order->public_id;
+                                \Log::debug("Successfully updated order {$order->public_id} for driver {$resourceId}");
+                            } else {
+                                // Log a warning if no rows were affected
+                                \Log::warning("No rows affected when updating order {$order->public_id}", [
+                                    'public_id' => $order->public_id,
+                                    'updates' => $updates
+                                ]);
+                            }
+                        } catch (\Exception $e) {
+                            $errors[] = [
+                                'resource' => $resourceId ?? $resourceName,
+                                'date' => $date,
+                                'order' => $orderPublicId,
+                                'message' => 'Failed to update order in database: ' . $e->getMessage()
+                            ];
+                        }
                     } else {
                         // no-op, nothing to update
                         $skippedAssignments++;
@@ -292,68 +340,73 @@ class ShiftAssignmentService
                     $errors[] = [
                         'resource' => $resourceId ?? $resourceName,
                         'date' => $date,
-                        'order' => $orderPublicOrUuid,
+                        'order' => $orderPublicId,
                         'message' => $e->getMessage()
                     ];
+                    continue;
                 }
             }
         }
 
-        // Process uncovered shifts: unassign drivers from specified orders
-        foreach ($uncoveredShifts as $date => $orderIds) {
-            if (!is_array($orderIds)) {
-                continue;
-            }
-            foreach ($orderIds as $orderId) {
+        // Process uncovered shifts
+        if (!empty($uncoveredShifts)) {
+            foreach ($uncoveredShifts as $date => $orderIds) {
+                if (empty($orderIds)) {
+                    continue;
+                }
+
+                $orderIds = (array) $orderIds;
+                
                 try {
-                    $order = Order::withoutGlobalScopes()
-                        ->where(function ($q) use ($orderId) {
-                            $q->where('public_id', $orderId)
-                              ->orWhere('uuid', $orderId);
-                        })
-                        ->first();
+                    $orders = Order::whereIn('public_id', $orderIds)->get();
+                    
+                    foreach ($orders as $order) {
+                        // Always update allocation_uuid if provided, even if driver is already unassigned
+                        $updatesToUnassign = [];
+                        
+                        // Set allocation_uuid if explicitly provided
+                        if ($allocationUuid) {
+                            $updatesToUnassign['allocation_uuid'] = $allocationUuid;
+                        }
+                        
+                        // Only unassign driver and vehicle if they're currently assigned
+                        if (!is_null($order->driver_assigned_uuid)) {
+                            $updatesToUnassign['driver_assigned_uuid'] = null;
+                        }
+                        if (!is_null($order->vehicle_assigned_uuid)) {
+                            $updatesToUnassign['vehicle_assigned_uuid'] = null;
+                        }
 
-                    if (!$order) {
-                        $errors[] = [
-                            'resource' => null,
-                            'date' => $date,
-                            'order' => $orderId,
-                            'message' => 'Order not found for unassignment'
-                        ];
-                        continue;
-                    }
-
-                    // Only update if currently assigned
-                    $updatesToUnassign = [];
-                    if (!is_null($order->driver_assigned_uuid)) {
-                        $updatesToUnassign['driver_assigned_uuid'] = null;
-                        \Log::info("Unassigned driver from order {$order->public_id} (date {$date})");
-                    }
-                    if (!is_null($order->vehicle_assigned_uuid)) {
-                        $updatesToUnassign['vehicle_assigned_uuid'] = null;
-                        \Log::info("Unassigned vehicle from order {$order->public_id} (date {$date})");
-                    }
-
-                    if (!empty($updatesToUnassign)) {
-                        Order::where('uuid', $order->uuid)->update($updatesToUnassign);
-                        $unassignedOrders[] = $order->public_id ?? $order->uuid;
+                        if (!empty($updatesToUnassign)) {
+                            try {
+                                Order::where('uuid', $order->uuid)->update($updatesToUnassign);
+                                $unassignedOrders[] = $order->public_id ?? $order->uuid;
+                            } catch (\Exception $e) {
+                                \Log::error("Failed to unassign order {$order->public_id} (date: {$date}): " . $e->getMessage());
+                            }
+                        } else {
+                            // Include already unassigned orders in the response
+                            $unassignedOrders[] = $order->public_id ?? $order->uuid;
+                        }
                     }
                 } catch (\Exception $e) {
                     $errors[] = [
                         'resource' => null,
                         'date' => $date,
-                        'order' => $orderId,
-                        'message' => $e->getMessage()
+                        'order' => implode(',', $orderIds),
+                        'message' => 'Failed to process uncovered shifts: ' . $e->getMessage()
                     ];
                 }
             }
         }
+        
 
         // Deduplicate updated order ids
         $updatedOrders = array_values(array_unique($updatedOrders));
         $unassignedOrders = array_values(array_unique($unassignedOrders));
 
         return [
+            'allocation_uuid' => $allocationUuid,
             'updated_orders' => count($updatedOrders),
             'updated_order_ids' => $updatedOrders,
             'unassigned_orders' => count($unassignedOrders),
@@ -363,10 +416,6 @@ class ShiftAssignmentService
         ];
     }
 
-    
-    
-    // Mock data generation methods have been removed to only process real data
-    
     /**
      * Get drivers for the company
      *

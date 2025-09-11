@@ -637,6 +637,7 @@ class ShiftAssignmentController extends Controller
             'uncovered_shifts.*' => 'array',
             'uncovered_shifts.*.*' => 'string',
             'timezone' => 'sometimes|string',
+            'uuid' => 'sometimes|string|max:50',
         ]);
 
         if ($validator->fails()) {
@@ -651,8 +652,9 @@ class ShiftAssignmentController extends Controller
             $allocatedResources = $request->input('allocated_resources', []);
             $timezone = $request->input('timezone');
             $uncoveredShifts = $request->input('uncovered_shifts', []);
+            $batchUuid = $request->input('uuid');
 
-            $result = $this->shiftAssignmentService->applyAllocatedResources($allocatedResources, $timezone, $uncoveredShifts);
+            $result = $this->shiftAssignmentService->applyAllocatedResources($allocatedResources, $timezone, $uncoveredShifts, $batchUuid);
 
             return response()->json([
                 'success' => true,
