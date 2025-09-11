@@ -25,7 +25,11 @@ export default class DateTimeInputComponent extends Component {
             
             // Extract time from UTC string to avoid timezone conversion
             const utcString = this.args.value.toISOString();
+            const dateMatch = utcString.match(/^(\d{4}-\d{2}-\d{2})/);
             const timeMatch = utcString.match(/T(\d{2}:\d{2})/);
+            
+            // Use UTC date and time directly to avoid timezone conversion
+            this.date = dateMatch ? dateMatch[1] : format(this.args.value, this.dateFormat);
             this.time = timeMatch ? timeMatch[1] : format(this.args.value, this.timeFormat);
         } else {
             this.date = null;
