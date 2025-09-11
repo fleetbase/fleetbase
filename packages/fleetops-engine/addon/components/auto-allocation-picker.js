@@ -22,20 +22,21 @@ export default class AutoAllocationPickerComponent extends Component {
         return this.args.autoAllocationDate;
     }
 
-    // Toggle visibility of Auto Allocate UI based on request URL (?auto_allocation=true) or explicit arg
+    // Toggle visibility of Auto Allocate UI based on company UUID or explicit arg
     get isAutoAllocationEnabled() {
+        // Check if explicitly set via component argument
         if (typeof this.args.autoAllocationEnabled === 'boolean') {
             return this.args.autoAllocationEnabled;
         }
-        try {
-            const params = new URLSearchParams(window.location.search);
-            const v = params.get('auto_allocation') ?? params.get('autoAllocation');
-            if (v == null) return false;
-            const s = String(v).toLowerCase();
-            return s === 'true' || s === '1' || s === 'yes';
-        } catch (_) {
-            return false; 
-        }
+
+        // Get company UUID from args or current user
+        const companyUuid = this.args.companyUuid || 
+                          this.currentUser?.user?.company_uuid || 
+                          this.session?.data?.authenticated?.company_uuid;
+        
+        // Enable only for specific company UUIDs
+        const enabledCompanyUuids = ENV.TEST_COMPANY_UUIDS || [];
+        return companyUuid && enabledCompanyUuids.includes(companyUuid);
     }
 
     // get minDate() {

@@ -269,13 +269,19 @@ export default class OperationsOrdersIndexController extends BaseController {
     @tracked statusOptions = [];
 
     /**
-     * Check if auto allocation should be enabled based on URL parameter
+     * Check if auto allocation should be enabled based on company UUID
      *
      * @type {Boolean}
      */
     get isAutoAllocationEnabled() {
-        const urlParams = new URLSearchParams(window.location.search);
-        return urlParams.get('auto_allocation') === 'true';
+        // Get company UUID from args or current user
+        const companyUuid = this.companyUuid || 
+                          this.currentUser?.user?.company_uuid || 
+                          this.session?.data?.authenticated?.company_uuid;
+        
+        // Enable only for specific company UUIDs
+        const enabledCompanyUuids = ENV.TEST_COMPANY_UUIDS || [];
+        return companyUuid && enabledCompanyUuids.includes(companyUuid);
     }
     @tracked sta_op;
     /**
