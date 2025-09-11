@@ -335,9 +335,7 @@ class ShiftAssignmentService
                         // Only set allocation_uuid if explicitly provided
                         if ($allocationUuid) {
                             $updatesToUnassign['allocation_uuid'] = $allocationUuid;
-                        } else {
-                            \Log::info("Unassigned driver from order {$order->public_id} (date {$date})");
-                        }
+                        } 
                     }
                     if (!is_null($order->vehicle_assigned_uuid)) {
                         $updatesToUnassign['vehicle_assigned_uuid'] = null;
