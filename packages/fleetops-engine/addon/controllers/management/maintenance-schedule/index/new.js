@@ -89,9 +89,9 @@ export default class ManagementMaintenanceScheduleIndexNewController extends Bas
             this.overlay.close();
         }
         this.hostRouter.refresh();
-        // return this.transitionToRoute('management.maintenance-schedule.index.details', order).then(() => {
-        //     this.resetForm();
-        // });
+        return this.transitionToRoute('management.maintenance-schedule.index').then(() => {
+            this.resetForm();
+        });
     }
 
     /**
