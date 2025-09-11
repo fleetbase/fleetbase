@@ -372,18 +372,22 @@ trait HasApiControllerBehavior
                         $endOfDay = $on->endOfDay()->format('Y-m-d H:i:s');
                         
                         
-                        $q->where(function ($subQuery) use ($dateColumnStart, $dateColumnEnd, $startOfDay, $endOfDay) {
-                            $subQuery->where(function ($sq) use ($dateColumnStart, $dateColumnEnd, $startOfDay, $endOfDay) {
-                                // Case 1: Orders with end date → check overlap
-                                $sq->where($dateColumnStart, '<=', $endOfDay)
-                                ->where($dateColumnEnd, '>=', $startOfDay);
-                            })
-                            ->orWhere(function ($sq) use ($dateColumnStart, $dateColumnEnd, $startOfDay, $endOfDay) {
-                                // Case 2: Orders without end date → check scheduled_at directly
-                                $sq->whereNull($dateColumnEnd)
-                                ->whereBetween($dateColumnStart, [$startOfDay, $endOfDay]);
-                            });
-                        });
+                        // Filter only by start date (scheduled_at or created_at)
+                        $q->whereBetween($dateColumnStart, [$startOfDay, $endOfDay]);
+                        
+                        // Commented out end date filtering
+                        // $q->where(function ($subQuery) use ($dateColumnStart, $dateColumnEnd, $startOfDay, $endOfDay) {
+                        //     $subQuery->where(function ($sq) use ($dateColumnStart, $dateColumnEnd, $startOfDay, $endOfDay) {
+                        //         // Case 1: Orders with end date → check overlap
+                        //         $sq->where($dateColumnStart, '<=', $endOfDay)
+                        //         ->where($dateColumnEnd, '>=', $startOfDay);
+                        //     })
+                        //     ->orWhere(function ($sq) use ($dateColumnStart, $dateColumnEnd, $startOfDay, $endOfDay) {
+                        //         // Case 2: Orders without end date → check scheduled_at directly
+                        //         $sq->whereNull($dateColumnEnd)
+                        //         ->whereBetween($dateColumnStart, [$startOfDay, $endOfDay]);
+                        //     });
+                        // });
                     });
                 }
                 if($request->filled('created_by')){
