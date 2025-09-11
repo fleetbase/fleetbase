@@ -52,7 +52,7 @@ module.exports = function (environment) {
         stripe: {
             publishableKey: getenv('STRIPE_KEY'),
         },
-        
+
         defaultValues: {
             categoryImage: getenv('DEFAULT_CATEGORY_IMAGE', 'https://flb-assets.s3.ap-southeast-1.amazonaws.com/images/fallback-placeholder-1.png'),
             placeholderImage: getenv('DEFAULT_PLACEHOLDER_IMAGE', 'https://flb-assets.s3.ap-southeast-1.amazonaws.com/images/fallback-placeholder-2.png'),
@@ -107,6 +107,7 @@ module.exports = function (environment) {
             bearerToken: getenv('RESOURCE_ALLOCATION_BEARER_TOKEN', ''),
             apiUrl: getenv('RESOURCE_ALLOCATION_API_URL', ''),
         },
+        TEST_COMPANY_UUIDS: getenv('TEST_COMPANY_UUIDS', ["e2bd8dca-ea04-4096-84c4-63fdfa1d0355", "e9cc5d2c-79b9-420b-bfe2-e188983f8a78"]),
 
 
     };
