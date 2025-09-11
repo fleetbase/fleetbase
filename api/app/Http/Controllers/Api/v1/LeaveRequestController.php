@@ -78,6 +78,22 @@ class LeaveRequestController extends Controller
         }
     }
 
+        // 🔎 Free-text search for maintenance page (supports query|q|search)
+        $search = request()->input('query', request()->input('q', request()->input('search')));
+        if (!empty($search)) {
+            $query->where(function ($q) use ($search) {
+                $q->where('public_id', 'LIKE', '%' . $search . '%')
+                    ->orWhere('reason', 'LIKE', '%' . $search . '%')
+                    ->orWhere('start_date', 'LIKE', '%' . $search . '%')
+                    ->orWhere('end_date', 'LIKE', '%' . $search . '%');
+            });
+            // also search related vehicle by plate number / public_id
+            $query->orWhereHas('vehicle', function ($v) use ($search) {
+                $v->where('plate_number', 'LIKE', '%' . $search . '%')
+                  ->orWhere('public_id', 'LIKE', '%' . $search . '%');
+            });
+        }
+
 
         // 📄 Paginate or return all
         if ($perPage > 0) {
