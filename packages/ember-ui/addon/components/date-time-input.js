@@ -49,10 +49,33 @@ export default class DateTimeInputComponent extends Component {
             return;
         }
 
-        // Use "00:00" (12 AM) as default if time is not set
-        let timeToUse = this.time || '00:00';
-        let dateTimeString = `${this.date} ${timeToUse}`;
-        let dateTimeInstance = parse(dateTimeString, this.dateTimeFormat, new Date());
+        // Handle time preservation better
+        let timeToUse;
+        if (this.time) {
+            // Time is explicitly set in the component
+            timeToUse = this.time;
+        } else if (this.args.value instanceof Date && !isNaN(this.args.value.getTime())) {
+            // Preserve existing time from the original value when time is not set
+            const utcString = this.args.value.toISOString();
+            const timeMatch = utcString.match(/T(\d{2}:\d{2})/);
+            timeToUse = timeMatch ? timeMatch[1] : '00:00';
+        } else {
+            // Default to midnight
+            timeToUse = '00:00';
+        }
+        
+        // Create date components from the input
+        const [year, month, day] = this.date.split('-').map(Number);
+        const [hours, minutes] = timeToUse.split(':').map(Number);
+        
+        // Create a date object in UTC to avoid timezone conversion issues
+        let dateTimeInstance = new Date(Date.UTC(year, month - 1, day, hours, minutes));
+        
+        // If the date is invalid, try parsing with date-fns as fallback
+        if (isNaN(dateTimeInstance.getTime())) {
+            let dateTimeString = `${this.date} ${timeToUse}`;
+            dateTimeInstance = parse(dateTimeString, this.dateTimeFormat, new Date());
+        }
 
         if (isNaN(dateTimeInstance.getTime())) {
             this.args.onUpdate?.(null, null);
