@@ -159,14 +159,14 @@ export default class LayoutFleetOpsSidebarComponent extends Component {
                 permission: 'fleet-ops list leaves',
                 visible: this.abilities.can('fleet-ops see leaves'),
             },
-            {
-                intl: 'fleet-ops.component.layout.fleet-ops-sidebar.maintenance-schedule',
-                title: this.intl.t('fleet-ops.component.layout.fleet-ops-sidebar.maintenance-schedule'),
-                icon: 'tools',
-                route: 'management.maintenance-schedule',
-                permission: 'fleet-ops list maintenance-schedule',
-                visible: this.abilities.can('fleet-ops see maintenance-schedule'),
-            },
+            // {
+            //     intl: 'fleet-ops.component.layout.fleet-ops-sidebar.maintenance-schedule',
+            //     title: this.intl.t('fleet-ops.component.layout.fleet-ops-sidebar.maintenance-schedule'),
+            //     icon: 'tools',
+            //     route: 'management.maintenance-schedule',
+            //     permission: 'fleet-ops list maintenance-schedule',
+            //     visible: this.abilities.can('fleet-ops see maintenance-schedule'),
+            // },
         ];
 
         const settingsItems = [];
