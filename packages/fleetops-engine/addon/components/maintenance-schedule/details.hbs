@@ -1,46 +1,68 @@
-﻿<div class="p-4">
-    <ContentPanel @title={{t "fleet-ops.common.details"}} @open={{true}} @pad={{true}} @panelBodyClass="bg-white dark:bg-gray-900">
-        <div class="grid grid-cols-2 gap-4 text-xs md:mb-6 dark:text-gray-100">
-            <div class="field-info-container space-y-2">
-                <div class="field-name">{{t "fleet-ops.common.id"}}</div>
-                <div class="field-value">{{n-a (or @record.public_id @leaveRequest.public_id @model.public_id)}}</div>
-            </div>
-            <div class="field-info-container space-y-2">
-                <div class="field-name">{{t "fleet-ops.common.vehicle"}}</div>
-                <div class="field-value">
-                    {{#if (or @record.vehicle @leaveRequest.vehicle @model.vehicle)}}
-                        {{n-a (or @record.vehicle.display_name @leaveRequest.vehicle.display_name @model.vehicle.display_name)}}
-                    {{else}}
-                        {{n-a (or @record.vehicle_name @leaveRequest.vehicle_name @model.vehicle_name)}}
-                    {{/if}}
-                </div>
-            </div>
-            <div class="field-info-container space-y-2">
-                <div class="field-name">{{t "fleet-ops.common.reason"}}</div>
-                <div class="field-value">{{n-a (or @record.reason @leaveRequest.reason @model.reason)}}</div>
-            </div>
-            <div class="field-info-container space-y-2">
-                <div class="field-name">{{t "fleet-ops.common.start-date"}}</div>
-                <div class="field-value">{{n-a (or @record.start_date @leaveRequest.start_date @model.start_date)}}</div>
-            </div>
-            <div class="field-info-container space-y-2">
-                <div class="field-name">{{t "fleet-ops.operations.orders.index.estimated-end-date"}}</div>
-                <div class="field-value">{{n-a (or @record.end_date @leaveRequest.end_date @model.end_date)}}</div>
-            </div>
-            <div class="field-info-container space-y-2">
-                <div class="field-name">{{t "fleet-ops.common.type"}}</div>
-                <div class="field-value">{{n-a (or @record.unavailability_type @leaveRequest.unavailability_type @model.unavailability_type)}}</div>
-            </div>
-            <div class="field-info-container space-y-2">
-                <div class="field-name">{{t "fleet-ops.common.created-at"}}</div>
-                <div class="field-value">{{n-a (or @record.created_at @leaveRequest.created_at @model.created_at)}}</div>
-            </div>
-            {{#if (or @record.notes @leaveRequest.notes @model.notes)}}
-                <div class="field-info-container space-y-2 col-span-2">
-                    <div class="field-name">{{t "fleet-ops.common.notes"}}</div>
-                    <div class="field-value">{{n-a (or @record.notes @leaveRequest.notes @model.notes)}}</div>
-                </div>
-            {{/if}}
+﻿{{#let (or @record @leaveRequest @model) as |rec|}}
+  <div class="p-4">
+    <ContentPanel
+      @title={{t "fleet-ops.common.details"}}
+      @open={{true}}
+      @pad={{true}}
+      @panelBodyClass="bg-white dark:bg-gray-900"
+    >
+      <div class="grid grid-cols-2 gap-4 text-xs md:mb-6 dark:text-gray-100">
+
+        <div class="field-info-container space-y-2">
+          <div class="field-name">{{t "fleet-ops.common.id"}}</div>
+          <div class="field-value">{{n-a rec.public_id}}</div>
         </div>
+
+        <div class="field-info-container space-y-2">
+          <div class="field-name">{{t "fleet-ops.common.vehicle"}}</div>
+          <div class="field-value">
+            {{#if rec.vehicle}}
+              {{n-a rec.vehicle.display_name}}
+            {{else}}
+              {{n-a rec.vehicle_name}}
+            {{/if}}
+          </div>
+        </div>
+
+        <div class="field-info-container space-y-2">
+          <div class="field-name">{{t "fleet-ops.common.reason"}}</div>
+          <div class="field-value">{{n-a rec.reason}}</div>
+        </div>
+
+        <div class="field-info-container space-y-2">
+          <div class="field-name">{{t "fleet-ops.common.start-date"}}</div>
+          <div class="field-value">
+            {{n-a (format-date (or rec.scheduledAt rec.start_date))}}
+          </div>
+        </div>
+
+        <div class="field-info-container space-y-2">
+          <div class="field-name">{{t "fleet-ops.operations.orders.index.estimated-end-date"}}</div>
+          <div class="field-value">
+            {{n-a (format-date (or rec.estimatedEndDate rec.end_date))}}
+          </div>
+        </div>
+
+        <div class="field-info-container space-y-2">
+          <div class="field-name">{{t "fleet-ops.common.type"}}</div>
+          <div class="field-value">{{n-a rec.unavailability_type}}</div>
+        </div>
+
+        <div class="field-info-container space-y-2">
+          <div class="field-name">{{t "fleet-ops.common.created-at"}}</div>
+          <div class="field-value">
+            {{n-a (format-date (or rec.createdAt rec.created_at))}}
+          </div>
+        </div>
+
+        {{#if rec.notes}}
+          <div class="field-info-container space-y-2 col-span-2">
+            <div class="field-name">{{t "fleet-ops.common.notes"}}</div>
+            <div class="field-value">{{n-a rec.notes}}</div>
+          </div>
+        {{/if}}
+
+      </div>
     </ContentPanel>
-</div>
+  </div>
+{{/let}}

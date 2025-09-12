@@ -4,6 +4,7 @@ import { inject as service } from '@ember/service';
 import { action } from '@ember/object';
 import { isArray } from '@ember/array';
 import findActiveTab from '../utils/find-active-tab';
+import MaintenanceSchedulePanelDetailComponent from './maintenance-schedule/details';
 
 export default class MaintenanceSchedulePanelComponent extends Component {
     @tracked overlayContext;
@@ -42,7 +43,7 @@ export default class MaintenanceSchedulePanelComponent extends Component {
 
     get tabs() {
         const registeredTabs = this.universe.getMenuItemsFromRegistry('fleet-ops:component:maintenance-schedule-panel');
-        const defaultTabs = [this.universe._createMenuItem(this.intl.t('fleet-ops.common.details'), null, {id: 'details', icon: 'circle-info', component: MaintenanceSchedulePanelComponent })];
+        const defaultTabs = [this.universe._createMenuItem(this.intl.t('fleet-ops.common.details'), null, {id: 'details', icon: 'circle-info', component: MaintenanceSchedulePanelDetailComponent })];
 
         if (isArray(registeredTabs)) {
             return [...defaultTabs, ...registeredTabs];
