@@ -37,3 +37,6 @@ php artisan registry:init
 
 # Restart octane
 # php artisan octane:reload
+
+# Link public disk
+php artisan storage:link
