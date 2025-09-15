@@ -297,6 +297,7 @@ export default class AutoAllocationPickerComponent extends Component {
         const pre_assigned_shifts = Array.isArray(data?.data?.pre_assigned_shifts) 
             ? data.data.pre_assigned_shifts 
             : [];
+        const pre_assigned_vehicles = Array.isArray(data?.data?.pre_assigned_vehicles) ? data.data.pre_assigned_vehicles : [];
         return {
             problem_type: this.args.problemType || 'shift_assignment',
             dates: datesArr,
@@ -309,6 +310,7 @@ export default class AutoAllocationPickerComponent extends Component {
             fleet_uuid,
             fleet_name,
             pre_assigned_shifts,
+            pre_assigned_vehicles,
             // Pass through recurring_shifts if present
             ...(Array.isArray(data?.data?.recurring_shifts) ? { recurring_shifts: data.data.recurring_shifts } : {}),
         };

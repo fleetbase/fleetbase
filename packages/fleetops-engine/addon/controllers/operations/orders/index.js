@@ -1085,84 +1085,12 @@ export default class OperationsOrdersIndexController extends BaseController {
             return;
         }
 
-        // Check if all selected orders have the same fleet_uuid
-        const fleetUuids = selected.map(order => order.fleet_uuid).filter(uuid => uuid);
-        const uniqueFleetUuids = [...new Set(fleetUuids)];
-        
-        if (uniqueFleetUuids.length > 1) {
-            this.notifications.warning(this.intl.t('fleet-ops.operations.orders.index.auto-allocate-fleet-mismatch'));
-            return;
-        }
-        
-        if (fleetUuids.length !== selected.length) {
-            this.notifications.warning(this.intl.t('fleet-ops.operations.orders.index.auto-allocate-missing-fleet'));
-            return;
-        }
-    
-        const selectedOrders = selected.map(order => order.public_id).join(',');
-        const companyUuid = this.currentUser?.company_uuid || 
-                            this.session?.data?.authenticated?.company_uuid ||
-                            this.currentUser?.user?.company_uuid;
-                            
-        const url = `${ENV.API.host}/api/v1/shift-assignments/data?selected_orders=[${selectedOrders}]&company_uuid=${companyUuid}&fleet_uuid=${uniqueFleetUuids}`;
-    
-        this.isLoading = true;
-    
-        this.modalsManager.confirm({
-            title: this.intl.t('fleet-ops.operations.orders.index.auto-allocate-title'),
-            body: this.intl.t('fleet-ops.operations.orders.index.auto-allocate-body', {
-                count: selected.length,
-                plural: selected.length > 1 ? 's' : ''
-            }),
             acceptButtonScheme: 'primary',
             acceptButtonText: this.intl.t('fleet-ops.common.auto-allocate'),
             acceptButtonIcon: 'users-cog',
-            confirm: async (modal) => {
-                modal.startLoading();
-    
-                try {
-                    // ---- First API call ----
-                    const getResp = await fetch(url, {
-                        method: 'GET',
-                        headers: this.fetch.getHeaders()
-                    });
-    
-                    const getData = await getResp.json(); // This will be your payload for the next call
-    
-                    // this.notifications.success(
-                    //     this.intl.t('fleet-ops.operations.orders.index.auto-allocate-success', {
-                    //         count: selected.length
-                    //     })
-                    // );
-    
-                    // ---- Second API call ----
-                    const result = await this.#submitAllocation(getData, url);
-
-                    if (!result.ok && !result.skipped) {
-                        throw new Error(`Follow-up API failed with status ${result.status}`);
-                    }
-
-                    if (result.skipped) {
-                        this.notifications.warning(result.message);
-                    } else {
-                        this.notifications.success('Auto-allocation completed successfully.');
-                        this.#handleAllocationResult(result);
-                    }
-
-                    await this.hostRouter.refresh();
-                    this.table.untoggleSelectAll();
-                } catch (error) {
-                    console.error('Auto-allocation or follow-up failed:', error);
-                    this.notifications.serverError(error);
-                } finally {
-                    this.isLoading = false;
-                    modal.stopLoading();
-                }
-            }
-        });
-    }
-    
-    /**
+            confirm: (modal) => {
+                modal.done();
+                resolve(true);
      * Cancels multiple selected orders.
      *
      * @param {Array} [selected=[]] - Orders selected for cancellation.
@@ -1673,6 +1601,7 @@ export default class OperationsOrdersIndexController extends BaseController {
         }
         
         const pre_assigned_shifts = Array.isArray(data?.data?.pre_assigned_shifts) ? data.data.pre_assigned_shifts : [];
+        const pre_assigned_vehicles = Array.isArray(data?.data?.pre_assigned_vehicles) ? data.data.pre_assigned_vehicles : [];
         return {
             problem_type: 'shift_assignment',
             dates: datesArr,
@@ -1684,6 +1613,7 @@ export default class OperationsOrdersIndexController extends BaseController {
             fleet_uuid,
             fleet_name,
             pre_assigned_shifts,
+            pre_assigned_vehicles,
             ...(Array.isArray(data?.data?.recurring_shifts) ? { recurring_shifts: data.data.recurring_shifts } : {}),
         };
     }
