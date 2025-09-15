@@ -114,6 +114,20 @@ class ShiftAssignmentController extends Controller
                     $fleetUuid
                 );
 
+
+                $vehicleUuids = $fullData['vehicles_data']->pluck('id')->toArray();
+                \Log::info('Vehicle IDs:', ['vehicle_ids' => $vehicleUuids]);
+
+                // Get vehicles with pre-assigned shifts other than requested fleet
+                $preAssignedVehicles = $this->shiftAssignmentService->getPreAssignedVehicles(
+                    $dateRange['start_date'],
+                    $dateRange['end_date'],
+                    $timezone,
+                    $companyUuid,
+                    $fleetUuid,
+                    $vehicleUuids
+                );
+
                 \Log::info('Response data:', [
                     'dates_count' => count($dates),
                     'resources_count' => count($fullData['resources']),
@@ -131,7 +145,8 @@ class ShiftAssignmentController extends Controller
                         'problem_type' => 'shift_assignment',
                         'recurring_shifts' => null,
                         'previous_allocation_data' => $fullData['previous_allocation_data'],
-                        'vehicles_data' => $fullData['vehicles_data']
+                        'vehicles_data' => $fullData['vehicles_data'],
+                        'pre_assigned_vehicles' => $preAssignedVehicles
                     ],
                     'message' => 'Shift assignment data retrieved successfully for selected orders'
                 ]);
@@ -142,7 +157,7 @@ class ShiftAssignmentController extends Controller
                     'trace' => $e->getTraceAsString()
                 ]);
                 return response()->json([
-                    'success' => false, 
+                    'success' => false,
                     'message' => 'Error processing request',
                     'debug' => config('app.debug') ? $e->getMessage() : null
                 ], 500);
@@ -152,7 +167,7 @@ class ShiftAssignmentController extends Controller
             $validator = Validator::make($request->all(), [
                 'start_date' => 'required|date|before_or_equal:end_date',
                 'end_date' => 'required|date|after_or_equal:start_date',
-                'company_uuid' => 'nullable|string|uuid',   
+                'company_uuid' => 'nullable|string|uuid',
                 'fleet_uuid' => 'nullable|string|uuid',
                 'time_zone' => 'nullable|string'
             ]);
@@ -167,7 +182,7 @@ class ShiftAssignmentController extends Controller
                 // Handle multiple date formats (DD-MM-YYYY and YYYY-MM-DD)
                 $startDateStr = $request->start_date;
                 $endDateStr = $request->end_date;
-                
+
                 // If date is in DD-MM-YYYY format, convert to YYYY-MM-DD
                 if (preg_match('/^\d{2}-\d{2}-\d{4}$/', $startDateStr)) {
                     $startDateStr = \Carbon\Carbon::createFromFormat('d-m-Y', $startDateStr)->format('Y-m-d');
@@ -175,7 +190,7 @@ class ShiftAssignmentController extends Controller
                 if (preg_match('/^\d{2}-\d{2}-\d{4}$/', $endDateStr)) {
                     $endDateStr = \Carbon\Carbon::createFromFormat('d-m-Y', $endDateStr)->format('Y-m-d');
                 }
-                
+
                 $startDate = Carbon::parse($startDateStr);
                 $endDate = Carbon::parse($endDateStr);
                 $companyUuid = $request->input('company_uuid');
@@ -250,7 +265,7 @@ class ShiftAssignmentController extends Controller
 
             foreach ($orders as $order) {
                 $scheduledAt = Carbon::parse($order->scheduled_at);
-                
+
                 if (!$minDate || $scheduledAt < $minDate) {
                     $minDate = $scheduledAt;
                 }
@@ -282,41 +297,41 @@ class ShiftAssignmentController extends Controller
     {
         try {
             \Log::info('Getting selected orders as shifts with company_uuid: ' . ($companyUuid ?? 'null') . ' and timezone: ' . $timezone);
-            
+
             // Get orders for the specific IDs
             $query = \DB::table('orders')
                 ->whereIn('public_id', $orderIds)
                 ->whereNotNull('scheduled_at')
                 ->whereNull('driver_assigned_uuid') // Exclude orders with assigned drivers
                 ->whereIn('status', ['created', 'planned']);
-                
+
             \Log::info('Filtering orders by status: created, planned');
             \Log::info('Excluding orders with assigned drivers (driver_assigned_uuid is not null)');
-                
+
             // Filter by company if provided
             if ($companyUuid) {
                 \Log::info('Filtering orders by company_uuid: ' . $companyUuid);
                 $query->where('company_uuid', $companyUuid);
             }
-            
+
             $orders = $query->get();
             \Log::info('Found ' . count($orders) . ' selected orders (excluding assigned orders)');
-            
+
             $datedShifts = [];
-            
+
             foreach ($orders as $order) {
                 // We already filtered by scheduled_at in the query, so we can use it directly
                 $shiftDate = \Carbon\Carbon::parse($order->scheduled_at);
-                
+
                 // Calculate duration based on order type or use default
                 $duration = $this->calculateOrderDuration($order);
                 // Compute end time based on duration
                 $endTime = $shiftDate->copy()->addMinutes($duration);
-                
+
                 // Convert times to the specified timezone
                 $startTimeInTimezone = $shiftDate->copy()->setTimezone($timezone)->format('Y-m-d H:i:s');
                 $endTimeInTimezone = $endTime->copy()->setTimezone($timezone)->format('Y-m-d H:i:s');
-                
+
                 $datedShifts[] = [
                     'id' => $order->public_id,
                     'start_time' => $startTimeInTimezone,
@@ -324,7 +339,7 @@ class ShiftAssignmentController extends Controller
                     'duration_minutes' => $duration,
                 ];
             }
-            
+
             \Log::info('Processed ' . count($datedShifts) . ' selected orders as dated shifts (unassigned orders only)');
             return $datedShifts;
         } catch (\Exception $e) {
@@ -342,7 +357,7 @@ class ShiftAssignmentController extends Controller
     private function calculateOrderDuration($order): int
     {
         // If we have estimated start and end times, calculate duration
-        if (isset($order->scheduled_at) && isset($order->estimated_end_date) && 
+        if (isset($order->scheduled_at) && isset($order->estimated_end_date) &&
             $order->scheduled_at && $order->estimated_end_date) {
             $start = \Carbon\Carbon::parse($order->scheduled_at);
             $end = \Carbon\Carbon::parse($order->estimated_end_date);
@@ -353,7 +368,7 @@ class ShiftAssignmentController extends Controller
             }
             return $minutes;
         }
-        
+
         // If end time is not present, use default of 720 minutes (12 hours)
         return 720; // Default 12 hours for all orders without end time
     }
@@ -371,22 +386,22 @@ class ShiftAssignmentController extends Controller
     {
         $start = Carbon::parse($startDate)->setTimezone($timezone)->startOfDay();
         $end = Carbon::parse($endDate)->setTimezone($timezone)->startOfDay();
-        
+
         $dates = [];
         $current = $start->copy();
-        
+
         while ($current->lte($end)) {
             $dates[] = $current->format('Y-m-d');
             $current->addDay();
         }
-        
+
         \Log::info('Generated dates array:', [
             'timezone' => $timezone,
             'start' => $start->format('Y-m-d'),
             'end' => $end->format('Y-m-d'),
             'dates' => $dates
         ]);
-        
+
         return $dates;
     }
 
@@ -402,39 +417,39 @@ class ShiftAssignmentController extends Controller
     {
         try {
             \Log::info('Generating dates array from selected orders with company_uuid: ' . ($companyUuid ?? 'null') . ' and timezone: ' . $timezone);
-            
+
             $query = \DB::table('orders')
                 ->whereIn('public_id', $orderIds)
                 ->whereNotNull('scheduled_at')
                 ->whereIn('status', ['created', 'planned']);
-                
+
             if ($companyUuid) {
                 $query->where('company_uuid', $companyUuid);
             }
-            
+
             $orders = $query->get(['scheduled_at']);
-            
+
             if ($orders->isEmpty()) {
                 \Log::warning('No orders found with valid scheduled_at dates for IDs: ' . implode(', ', $orderIds));
                 return [];
             }
-            
+
             $scheduledDates = $orders->pluck('scheduled_at')
                 ->filter()
                 ->map(function($date) use ($timezone) {
                     return \Carbon\Carbon::parse($date)->setTimezone($timezone);
                 });
-            
+
             if ($scheduledDates->isEmpty()) {
                 \Log::warning('No valid scheduled_at dates found in orders for IDs: ' . implode(', ', $orderIds));
                 return [];
             }
-            
+
             $startDate = $scheduledDates->min();
             $endDate = $scheduledDates->max();
-            
+
             return $this->generateDatesArrayInTimezone($startDate, $endDate, $timezone);
-            
+
         } catch (\Exception $e) {
             \Log::error('Error generating dates array from selected orders: ' . $e->getMessage(), [
                 'order_ids' => $orderIds,
@@ -467,7 +482,7 @@ class ShiftAssignmentController extends Controller
                 'message' => 'Validation failed'
             ], 422);
         }
-        
+
         try {
             // Get company UUID and fleet UUID from request or use default
             $companyUuid = $request->input('company_uuid');
@@ -529,7 +544,7 @@ class ShiftAssignmentController extends Controller
                 'message' => 'Validation failed'
             ], 422);
         }
-        
+
         try {
             // Get company UUID and fleet UUID from request or use default
             $companyUuid = $request->input('company_uuid');
@@ -595,7 +610,7 @@ class ShiftAssignmentController extends Controller
             $companyUuid = $request->input('company_uuid');
             $fleetUuid = $request->input('fleet_uuid');
             $date = $request->input('date');
-            
+
             // Use the service method to get available drivers
             $data = $this->shiftAssignmentService->getAvailableDrivers($date, $companyUuid, $fleetUuid);
 
