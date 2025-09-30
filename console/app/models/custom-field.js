@@ -30,6 +30,14 @@ export default class CustomFieldModel extends Model {
     @attr('date') deleted_at;
 
     /** @computed */
+    @computed('type') get valueType() {
+        if (this.type === 'file-upload') return 'file';
+        if (this.type === 'date-time-input') return 'date';
+        if (this.type === 'model-select') return 'model';
+
+        return 'text';
+    }
+
     @computed('created_at') get createdAgo() {
         return formatDistanceToNow(this.created_at);
     }
