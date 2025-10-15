@@ -25,7 +25,34 @@
 Fleetbase is a modular logistics and supply chain operating system designed to streamline management, planning, optimization, and operational control across various sectors of the supply chain industry.
 
 <p align="center" dir="auto">
-  <img src="https://github.com/fleetbase/fleetbase/assets/816371/125348c9-c88a-49fe-b098-9abec9d7dff8" alt="Fleetbase Console" width="1200" style="max-width: 100%;" />
+  <img src="https://flb-assets.s3.ap-southeast-1.amazonaws.com/static/fleetbase_overview.png" alt="Fleetbase Console" width="1200" style="max-width: 100%;" />
+</p>
+
+## Visual Feature Showcase
+
+<p align="center" dir="auto">
+  <img src="https://flb-assets.s3.ap-southeast-1.amazonaws.com/static/order-board-kanban.png" alt="Fleetbase Order Board" width="1200" style="max-width: 100%;" />
+  <em>Visualize and manage your orders with a dynamic Kanban board.</em>
+</p>
+
+<p align="center" dir="auto">
+  <img src="https://flb-assets.s3.ap-southeast-1.amazonaws.com/static/order-workflow-config.png" alt="Fleetbase Order Workflow Configuration" width="1200" style="max-width: 100%;" />
+  <em>Create custom order flows and automation with the intuitive workflow builder.</em>
+</p>
+
+<p align="center" dir="auto">
+  <img src="https://flb-assets.s3.ap-southeast-1.amazonaws.com/static/order-map-view.png" alt="Fleetbase Order Map View" width="1200" style="max-width: 100%;" />
+  <em>Track individual orders in real-time on an interactive map.</em>
+</p>
+
+<p align="center" dir="auto">
+  <img src="https://flb-assets.s3.ap-southeast-1.amazonaws.com/static/live-map-tracking.png" alt="Fleetbase Live Map Tracking" width="1200" style="max-width: 100%;" />
+  <em>Get a complete overview of your fleet and active orders on a live map.</em>
+</p>
+
+<p align="center" dir="auto">
+  <img src="https://flb-assets.s3.ap-southeast-1.amazonaws.com/static/fleet-map-zones.png" alt="Fleetbase Fleet Map with Zones" width="1200" style="max-width: 100%;" />
+  <em>Define and manage service areas and zones for your fleet.</em>
 </p>
 
 **Quickstart**
@@ -180,8 +207,8 @@ Fleetbase offers a few open sourced apps which are built on Fleetbase which can 
 ## 🛣️ Roadmap
 1.  **Inventory and Warehouse Management** ~ Pallet will be Fleetbase’s first official extension for WMS & Inventory.
 2.  **Accounting and Invoicing** ~ Ledger will be Fleetbase’s first official extension accounting and invoicing.
-3.  **Fleetbase for Desktop** ~ Desktop builds for OSX and Windows.
-4. **Custom Maps and Routing Engines** ~ Feature to enable easy integrations with custom maps and routing engines like Google Maps or Mapbox etc…
+3.  **AI** ~ AI Agent intrgation for system and workflows.
+4. **Dynamic Rules System** ~ Trigger events, tasks jobs from a rule builder on resources.
 
 ## 🪲 Bugs and 💡 Feature Requests
 

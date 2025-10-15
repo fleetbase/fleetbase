@@ -26,7 +26,7 @@ export default class GroupModel extends Model {
     }
 
     @computed('updated_at') get updatedAt() {
-        return format(this.updated_at, 'PPP p');
+        return format(this.updated_at, 'yyyy-MM-dd HH:mm');
     }
 
     @computed('created_at') get createdAgo() {
@@ -34,6 +34,6 @@ export default class GroupModel extends Model {
     }
 
     @computed('created_at') get createdAt() {
-        return format(this.created_at, 'PPP p');
+        return format(this.created_at, 'yyyy-MM-dd HH:mm');
     }
 }

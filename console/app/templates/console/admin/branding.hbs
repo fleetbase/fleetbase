@@ -1,12 +1,12 @@
 {{page-title (t "console.admin.branding.title")}}
 <Layout::Section::Header @title={{t "console.admin.branding.title"}}>
-    <Button @type="primary" @size="sm" @icon="save" @text={{t "common.save-button-text"}} @onClick={{this.save}} @disabled={{this.isLoading}} @isLoading={{this.isLoading}} />
+    <Button @type="primary" @size="sm" @icon="save" @text={{t "common.save-changes"}} @onClick={{this.save}} @disabled={{this.isLoading}} @isLoading={{this.isLoading}} />
 </Layout::Section::Header>
 
 <Layout::Section::Body class="overflow-y-scroll h-full">
     <div class="container mx-auto h-screen">
         <div class="max-w-3xl my-10 mx-auto space-y-6">
-            <ContentPanel @title={{t "console.admin.branding.title"}} @open={{true}} @pad={{true}} @panelBodyClass="bg-white dark:bg-gray-800">
+            <ContentPanel @title={{t "console.admin.branding.title"}} @open={{true}} @wrapperClass="bordered-classic">
                 <form class="flex flex-col" {{on "submit" this.save}}>
                     <div class="input-group">
                         <label>{{t "console.admin.branding.icon-text"}}</label>

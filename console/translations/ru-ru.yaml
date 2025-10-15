@@ -1,0 +1,766 @@
+app:
+  name: Fleetbase
+common:
+  new: Новый
+  create: Создать
+  add: Добавить
+  edit: Редактировать
+  update: Обновить
+  save: Сохранить
+  save-changes: Сохранить изменения
+  delete: Удалить
+  delete-selected: Удалить выбранное
+  delete-selected-count: Удалить {count} выбранных
+  remove: Удалить
+  cancel: Отмена
+  confirm: Подтвердить
+  close: Закрыть
+  open: Открыть
+  view: Просмотр
+  preview: Предварительный просмотр
+  upload: Загрузить
+  download: Скачать
+  import: Импорт
+  export: Экспорт
+  print: Печать
+  duplicate: Дублировать
+  copy: Копировать
+  paste: Вставить
+  share: Поделиться
+  refresh: Обновить
+  reset: Сбросить
+  retry: Повторить
+  back: Назад
+  next: Далее
+  previous: Предыдущий
+  submit: Отправить
+  apply: Применить
+  continue: Продолжить
+  proceed: Продолжить
+  select: Выбрать
+  deselect: Снять выбор
+  search: Поиск
+  filter: Фильтр
+  sort: Сортировать
+  view-all: Просмотреть все
+  clear: Очистить
+  done: Готово
+  finish: Завершить
+  skip: Пропустить
+  method: Метод
+  bulk-delete: Массовое удаление
+  bulk-delete-resource: Массовое удаление {resource}
+  bulk-cancel: Массовая отмена
+  bulk-cancel-resource: Массовая отмена {resource}
+  bulk-actions: Массовые действия
+  column: Колонка
+  row: Строка
+  table: Таблица
+  list: Список
+  grid: Сетка
+  form: Форма
+  field: Поле
+  section: Раздел
+  panel: Панель
+  card: Карточка
+  tab: Вкладка
+  modal: Модальное окно
+  dialog: Диалог
+  menu: Меню
+  dropdown: Выпадающий список
+  tooltip: Подсказка
+  sidebar: Боковая панель
+  toolbar: Панель инструментов
+  footer: Нижний колонтитул
+  header: Заголовок
+  title: Заголовок
+  subtitle: Подзаголовок
+  description: Описание
+  placeholder: Заполнитель
+  label: Метка
+  button: Кнопка
+  icon: Иконка
+  avatar: Аватар
+  link: Ссылка
+  badge: Значок
+  tag: Тег
+  banner: Баннер
+  step: Шаг
+  progress: Прогресс
+  map: Карта
+  board: Доска
+  loading: Загрузка
+  loading-resource: Загрузка {resource}
+  saving: Сохранение
+  processing: Обработка
+  fetching: Получение
+  updating: Обновление
+  uploading: Загрузка
+  completed: Завершено
+  success: Успешно
+  failed: Не удалось
+  error: Ошибка
+  warning: Предупреждение
+  info: Информация
+  ready: Готово
+  active: Активный
+  inactive: Неактивный
+  enabled: Включено
+  disabled: Отключено
+  online: В сети
+  offline: Не в сети
+  pending: В ожидании
+  archived: Архивировано
+  hidden: Скрыто
+  visible: Видимо
+  empty: Пусто
+  not-found: Не найдено
+  no-results: Нет результатов
+  try-again: Попробуйте снова
+  are-you-sure: Вы уверены?
+  changes-saved: Изменения успешно сохранены.
+  saved-successfully: Изменения успешно сохранены.
+  field-saved: '{field} успешно сохранено.'
+  changes-discarded: Изменения отменены.
+  delete-confirm: Вы уверены, что хотите удалить этот элемент?
+  action-successful: Действие выполнено успешно.
+  action-failed: Действие не удалось. Пожалуйста, попробуйте снова.
+  something-went-wrong: Что-то пошло не так.
+  please-wait: Пожалуйста, подождите...
+  sign-in: Войти
+  sign-out: Выйти
+  sign-up: Зарегистрироваться
+  log-in: Войти
+  log-out: Выйти
+  register: Регистрация
+  forgot-password: Забыли пароль
+  reset-password: Сбросить пароль
+  change-password: Изменить пароль
+  password: Пароль
+  confirm-password: Подтвердите пароль
+  email: Электронная почта
+  username: Имя пользователя
+  remember-me: Запомнить меня
+  welcome: Добро пожаловать
+  welcome-back: С возвращением
+  profile: Профиль
+  account: Аккаунт
+  settings: Настройки
+  preferences: Предпочтения
+  record: Запись
+  records: Записи
+  item: Элемент
+  items: Предметы
+  entry: Запись
+  entries: Записи
+  id: ID
+  name: Имя
+  type: Тип
+  category: Категория
+  overview: Обзор
+  value: Значение
+  amount: Количество
+  price: Цена
+  quantity: Количество
+  status: Статус
+  date: Дата
+  date-created: Дата создания
+  date-updated: Дата обновления
+  time: Время
+  created-at: Создано в
+  updated-at: Обновлено в
+  expired-at: Истекло в
+  last-seen-at: Последнее посещение
+  last-modified: Последнее изменение
+  last-modified-data: 'Последнее изменение: {date}'
+  actions: Действия
+  details: Детали
+  notes: Заметки
+  reference: Ссылка
+  filter-by: Фильтр по
+  sort-by: Сортировать по
+  ascending: По возрастанию
+  descending: По убыванию
+  all: Все
+  none: Нет
+  select-all: Выбрать все
+  deselect-all: Снять выделение
+  show-more: Показать больше
+  show-less: Показать меньше
+  page: Страница
+  of: из
+  total: Всего
+  items-per-page: Элементов на странице
+  showing: Показано
+  to: до
+  results: Результаты
+  load-more: Загрузить больше
+  no-more-results: Больше результатов нет
+  today: Сегодня
+  yesterday: Вчера
+  tomorrow: Завтра
+  day: День
+  week: Неделя
+  month: Месяц
+  year: Год
+  date-range: Диапазон дат
+  start-date: Дата начала
+  end-date: Дата окончания
+  time-zone: Часовой пояс
+  system: Система
+  dashboard: Панель управления
+  home: Главная
+  analytics: Аналитика
+  reports: Отчёты
+  logs: Журналы
+  help: Помощь
+  support: Поддержка
+  contact: Контакт
+  documentation: Документация
+  language: Язык
+  version: Версия
+  theme: Тема
+  light-mode: Светлый режим
+  dark-mode: Тёмный режим
+  update-available: Доступно обновление
+  install-update: Установить обновление
+  maintenance-mode: Режим обслуживания
+  notification: Уведомление
+  notifications: Уведомления
+  mark-as-read: Отметить как прочитанное
+  mark-all-as-read: Отметить все как прочитанные
+  clear-notifications: Очистить уведомления
+  company: Компания
+  companies: Компании
+  user: Пользователь
+  users: Пользователи
+  role: Роль
+  roles: Роли
+  permission: Разрешение
+  permissions: Разрешения
+  group: Группа
+  groups: Группы
+  unauthorized: Неавторизован
+  forbidden: Запрещено
+  resource-not-found: Ресурс не найден
+  server-error: Ошибка сервера
+  validation-error: Ошибка проверки
+  timeout-error: Время запроса истекло
+  network-error: Сетевая ошибка
+  unknown-error: Неизвестная ошибка
+  file: Файл
+  files: Файлы
+  folder: Папка
+  folders: Папки
+  upload-file: Загрузить файл
+  upload-files: Загрузить файлы
+  upload-image: Загрузить изображение
+  upload-image-supported: Поддерживаются PNG, JPEG и GIF
+  choose-file: Выбрать файл
+  choose-files: Выбрать файлы
+  drag-and-drop: Перетащите и отпустите
+  download-file: Скачать файл
+  file-size: Размер файла
+  file-type: Тип файла
+  confirm-delete: Подтвердить удаление
+  confirm-action: Подтвердить действие
+  confirm-exit: Подтвердить выход
+  confirm-and-save-changes: Подтвердить и сохранить изменения
+  are-you-sure-exit: Вы уверены, что хотите выйти?
+  unsaved-changes-warning: У вас есть несохранённые изменения.
+  connected: Подключено
+  disconnected: Отключено
+  reconnecting: Повторное подключение
+  connection-lost: Соединение потеряно
+  connection-restored: Соединение восстановлено
+  show: Показать
+  hide: Скрыть
+  expand: Развернуть
+  collapse: Свернуть
+  enable: Включить
+  disable: Отключить
+  minimize: Свернуть
+  maximize: Развернуть
+  restore: Восстановить
+  zoom-in: Увеличить
+  zoom-out: Уменьшить
+  fullscreen: Полноэкранный режим
+  exit-fullscreen: Выйти из полноэкранного режима
+  true: 'true'
+  false: 'false'
+  ok: ОК
+  none-available: Нет доступных
+  default: По умолчанию
+  custom: Пользовательский
+  general: Общие
+  advanced: Расширенные
+  placeholder-text: Введите текст здесь...
+  learn-more: Узнать больше
+  view-resource: Просмотреть {resource}
+  view-resource-details: Просмотреть детали {resource}
+  create-a-new-resource: Создать новый {resource}
+  create-new-resource: Создать новый {resource}
+  search-resource: Поиск {resource}
+  new-resource: Новый {resource}
+  update-resource: Обновить {resource}
+  save-resource-changes: Сохранить изменения {resource}
+  creating-resource: Создание {resource}
+  cancel-resource: Отменить {resource}
+  delete-resource: Удалить {resource}
+  delete-resource-name: 'Удалить: {resourceName}'
+  delete-resource-named: Удалить {resource} ({resourceName})
+  delete-resource-prompt: Это действие нельзя отменить. После удаления запись будет
+    удалена навсегда.
+  delete-cannot-be-undone: Это действие нельзя отменить. После удаления запись будет
+    удалена навсегда.
+  create-resource: Создать {resource}
+  edit-resource: Редактировать {resource}
+  edit-resource-details: Редактировать детали {resource}
+  edit-resource-type-name: 'Редактировать {resource}: {resourceName}'
+  edit-resource-name: 'Редактировать: {resourceName}'
+  config: Настройки
+  select-field: Выбрать {field}
+  columns: Колонки
+  metadata: Метаданные
+  meta: Мета
+  resource-created-success: Новый {resource} успешно создан.
+  resource-created-success-name: Новый {resource} ({resourceName}) успешно создан.
+  resource-updated-success: '{resource} ({resourceName}) успешно обновлён.'
+  resource-action-success: '{resource} ({resourceName}) успешно {action}.'
+  resource-deleted-success: '{resource} ({resourceName}) успешно удалён.'
+  resource-deleted: '{resource} ({resourceName}) удалён.'
+  continue-without-saving: Продолжить без сохранения?
+  continue-without-saving-prompt: У вас есть несохранённые изменения в этом {resource}.
+    Продолжение приведёт к их потере. Нажмите Продолжить, чтобы продолжить.
+resource:
+  alert: Оповещение
+  alerts: Оповещения
+  brand: Бренд
+  brands: Бренды
+  category: Категория
+  categories: Категории
+  chat-attachment: Вложение чата
+  chat-attachments: Вложения чата
+  chat-channel: Канал чата
+  chat-channels: Каналы чата
+  chat-log: Журнал чата
+  chat-logs: Журналы чата
+  chat-message: Сообщение чата
+  chat-messages: Сообщения чата
+  chat-participant: Участник чата
+  chat-participants: Участники чата
+  chat-receipt: Квитанция чата
+  chat-receipts: Квитанции чата
+  comment: Комментарий
+  comments: Комментарии
+  company: Компания
+  companies: Компании
+  custom-field-value: Значение пользовательского поля
+  custom-field-values: Значения пользовательских полей
+  custom-field: Пользовательское поле
+  custom-fields: Пользовательские поля
+  dashboard-widget: Виджет панели
+  dashboard-widgets: Виджеты панели
+  dashboard: Панель
+  dashboards: Панели
+  extension: Расширение
+  extensions: Расширения
+  file: Файл
+  files: Файлы
+  group: Группа
+  groups: Группы
+  notification: Уведомление
+  notifications: Уведомления
+  permission: Разрешение
+  permissions: Разрешения
+  policy: Политика
+  policies: Политики
+  report: Отчет
+  reports: Отчеты
+  role: Роль
+  roles: Роли
+  setting: Настройка
+  settings: Настройки
+  transaction: Транзакция
+  transactions: Транзакции
+  user-device: Устройство пользователя
+  user-devices: Устройства пользователя
+  user: Пользователь
+  users: Пользователи
+dropzone:
+  file: файл
+  drop-to-upload: Перетащите для загрузки
+  invalid: Недействительно
+  files-ready-for-upload: '{numOfFiles} готов(ы) к загрузке.'
+  upload-images-videos: Загрузить изображения и видео
+  upload-documents: Загрузить документы
+  upload-documents-files: Загрузить документы и файлы
+  upload-avatar-files: Загрузить пользовательские аватары
+  dropzone-supported-images-videos: Перетащите сюда файлы изображений и видео
+  dropzone-supported-avatars: Перетащите файлы SVG или PNG
+  dropzone-supported-files: Перетащите файлы сюда
+  or-select-button-text: или выберите файлы для загрузки.
+  upload-queue: Очередь загрузки
+  uploading: Загрузка...
+two-fa-enforcement-alert:
+  message: Для повышения безопасности вашей учетной записи ваша организация требует
+    двухфакторную аутентификацию (2FA). Включите 2FA в настройках учетной записи для
+    дополнительного уровня защиты.
+  button-text: Настроить 2FA
+comment-thread:
+  publish-comment-button-text: Опубликовать комментарий
+  publish-reply-button-text: Опубликовать ответ
+  reply-comment-button-text: Ответить
+  edit-comment-button-text: Редактировать
+  delete-comment-button-text: Удалить
+  comment-published-ago: '{createdAgo} назад'
+  comment-input-placeholder: Введите новый комментарий...
+  comment-reply-placeholder: Введите ваш ответ...
+  comment-input-empty-notification: Вы не можете публиковать пустые комментарии...
+  comment-min-length-notification: Комментарий должен содержать не менее 2 символов
+dashboard:
+  select-dashboard: Выбрать панель управления
+  create-new-dashboard: Создать новую панель управления
+  create-a-new-dashboard: Создать новую панель управления
+  confirm-create-dashboard: Создать панель управления!
+  edit-layout: Редактировать макет
+  add-widgets: Добавить виджеты
+  delete-dashboard: Удалить панель управления
+  save-dashboard: Сохранить панель управления
+  you-cannot-delete-this-dashboard: Вы не можете удалить эту панель управления.
+  are-you-sure-you-want-delete-dashboard: Вы уверены, что хотите удалить {dashboardName}?
+dashboard-widget-panel:
+  widget-name: Виджет {widgetName}
+  select-widgets: Выбрать виджеты
+  close-and-save: Закрыть и сохранить
+filters-picker:
+  filters: Фильтры
+  filter-data: Фильтровать данные
+visible-column-picker:
+  select-viewable-columns: Выбрать отображаемые столбцы
+  customize-columns: Настроить столбцы
+component:
+  file:
+    dropdown-label: Действия с файлом
+  import-modal:
+    loading-message: Обработка импорта...
+    drop-upload: Перетащите для загрузки
+    invalid: Недействительно
+    ready-upload: готов к загрузке.
+    upload-spreadsheets: Загрузить таблицы
+    drag-drop: Перетащите файлы таблиц на эту область
+    button-text: или выберите таблицы для загрузки
+    spreadsheets: таблицы
+    upload-queue: Очередь загрузки
+  dropzone:
+    file: файл
+    drop-to-upload: Перетащите для загрузки
+    invalid: Недействительно
+    files-ready-for-upload: '{numOfFiles} готов(ы) к загрузке.'
+    upload-images-videos: Загрузить изображения и видео
+    upload-documents: Загрузить документы
+    upload-documents-files: Загрузить документы и файлы
+    upload-avatar-files: Загрузить пользовательские аватары
+    dropzone-supported-images-videos: Перетащите изображения и видео на эту область
+    dropzone-supported-avatars: Перетащите файлы SVG или PNG
+    dropzone-supported-files: Перетащите файлы на эту область
+    or-select-button-text: или выберите файлы для загрузки.
+    upload-queue: Очередь загрузки
+    uploading: Загрузка...
+  two-fa-enforcement-alert:
+    message: Для повышения безопасности вашей учетной записи ваша организация требует
+      двухфакторную аутентификацию (2FA). Включите 2FA в настройках учетной записи
+      для дополнительного уровня защиты.
+    button-text: Настроить 2FA
+  comment-thread:
+    publish-comment-button-text: Опубликовать комментарий
+    publish-reply-button-text: Опубликовать ответ
+    reply-comment-button-text: Ответить
+    edit-comment-button-text: Редактировать
+    delete-comment-button-text: Удалить
+    comment-published-ago: '{createdAgo} назад'
+    comment-input-placeholder: Введите новый комментарий...
+    comment-reply-placeholder: Введите ваш ответ...
+    comment-input-empty-notification: Вы не можете опубликовать пустой комментарий...
+    comment-min-length-notification: Комментарий должен содержать не менее 2 символов
+  dashboard:
+    select-dashboard: Выбрать панель
+    create-new-dashboard: Создать новую панель
+    create-a-new-dashboard: Создать новую панель
+    confirm-create-dashboard: Создать панель!
+    edit-layout: Редактировать макет
+    add-widgets: Добавить виджеты
+    delete-dashboard: Удалить панель
+    save-dashboard: Сохранить панель
+    you-cannot-delete-this-dashboard: Вы не можете удалить эту панель.
+    are-you-sure-you-want-delete-dashboard: Вы уверены, что хотите удалить {dashboardName}?
+  dashboard-widget-panel:
+    widget-name: Виджет {widgetName}
+    select-widgets: Выбрать виджеты
+    close-and-save: Закрыть и сохранить
+services:
+  dashboard-service:
+    create-dashboard-success-notification: Новая панель `{dashboardName}` успешно
+      создана.
+    delete-dashboard-success-notification: Панель `{dashboardName}` была удалена.
+auth:
+  verification:
+    header-title: Подтверждение аккаунта
+    title: Подтвердите ваш адрес электронной почты
+    message-text: <strong>Почти готово!</strong><br> Проверьте вашу электронную почту
+      для кода подтверждения.
+    verification-code-text: Введите код подтверждения, который вы получили по электронной
+      почте.
+    verification-input-label: Код подтверждения
+    verify-button-text: Подтвердить и продолжить
+    didnt-receive-a-code: Не получили код?
+    not-sent:
+      message: Не получили код?
+      alternative-choice: Используйте альтернативные варианты ниже для подтверждения
+        аккаунта.
+      resend-email: Отправить письмо повторно
+      send-by-sms: Отправить по SMS
+  two-fa:
+    verify-code:
+      verification-code: Код подтверждения
+      check-title: Проверьте вашу почту или телефон
+      check-subtitle: Мы отправили вам код подтверждения. Введите код ниже, чтобы
+        завершить процесс входа.
+      expired-help-text: Ваш код двухфакторной аутентификации истек. Вы можете запросить
+        новый код, если вам нужно больше времени.
+      resend-code: Отправить код повторно
+      verify-code: Подтвердить код
+      cancel-two-factor: Отменить двухфакторную аутентификацию
+      invalid-session-error-notification: Недействительная сессия. Пожалуйста, попробуйте
+        снова.
+      verification-successful-notification: Подтверждение прошло успешно!
+      verification-code-expired-notification: Код подтверждения истек. Пожалуйста,
+        запросите новый.
+      verification-code-failed-notification: Подтверждение не удалось. Пожалуйста,
+        попробуйте снова.
+    resend-code:
+      verification-code-resent-notification: Новый код подтверждения отправлен.
+      verification-code-resent-error-notification: Ошибка при повторной отправке кода
+        подтверждения. Пожалуйста, попробуйте снова.
+  forgot-password:
+    success-message: Проверьте вашу электронную почту, чтобы продолжить!
+    is-sent:
+      title: Почти готово!
+      message: <strong>Проверьте вашу почту!</strong><br> Мы отправили вам волшебную
+        ссылку на электронную почту, которая позволит сбросить пароль. Ссылка действует
+        15 минут.
+    not-sent:
+      title: Забыли пароль?
+      message: <strong>Не волнуйтесь, мы поможем.</strong><br> Введите электронную
+        почту, которую вы используете для входа в {appName}, и мы отправим вам безопасную
+        ссылку для сброса пароля.
+    form:
+      email-label: Ваш адрес электронной почты
+      submit-button: ОК, отправьте мне волшебную ссылку!
+      nevermind-button: Не важно
+  login:
+    title: Войдите в свой аккаунт
+    no-identity-notification: Вы забыли ввести электронную почту?
+    no-password-notification: Вы забыли ввести пароль?
+    unverified-notification: Ваш аккаунт должен быть подтвержден для продолжения.
+    password-reset-required: Для продолжения требуется сброс пароля.
+    failed-attempt:
+      message: <strong>Забыли пароль?</strong><br> Нажмите кнопку ниже, чтобы сбросить
+        пароль.
+      button-text: Ок, помогите сбросить!
+    form:
+      email-label: Адрес электронной почты
+      password-label: Пароль
+      remember-me-label: Запомнить меня
+      forgot-password-label: Забыли пароль?
+      sign-in-button: Войти
+      create-account-button: Создать новый аккаунт
+    slow-connection-message: Проблемы с подключением.
+  reset-password:
+    success-message: Ваш пароль был сброшен! Войдите, чтобы продолжить.
+    invalid-verification-code: Эта ссылка для сброса пароля недействительна или истекла.
+    title: Сбросьте пароль
+    form:
+      code:
+        label: Ваш код сброса
+        help-text: Код подтверждения, который вы получили на электронную почту.
+      password:
+        label: Новый пароль
+        help-text: Введите пароль длиной не менее 6 символов для продолжения.
+      confirm-password:
+        label: Подтвердите новый пароль
+        help-text: Введите пароль длиной не менее 6 символов для продолжения.
+      submit-button: Сбросить пароль
+      back-button: Назад
+console:
+  create-or-join-organization:
+    modal-title: Создать или присоединиться к организации
+    join-success-notification: Вы присоединились к новой организации!
+    create-success-notification: Вы создали новую организацию!
+  switch-organization:
+    modal-title: Вы уверены, что хотите переключиться на организацию {organizationName}?
+    modal-body: Подтвердив, ваш аккаунт останется в системе, но основная организация
+      будет изменена.
+    modal-accept-button-text: Да, хочу переключиться на другую организацию
+    success-notification: Вы переключились на другую организацию
+  account:
+    index:
+      upload-new: Загрузить новое
+      phone: Ваш номер телефона.
+      photos: фотографии
+      timezone: Выберите ваш часовой пояс.
+  admin:
+    menu:
+      overview: Обзор
+      organizations: Организации
+      branding: Брендинг
+      2fa-config: Настройка 2FA
+      schedule-monitor: Мониторинг расписания
+      services: Сервисы
+      mail: Почта
+      filesystem: Файловая система
+      queue: Очередь
+      socket: Сокет
+      push-notifications: Push-уведомления
+    schedule-monitor:
+      schedule-monitor: Монитор расписания
+      task-logs-for: 'Логи задач для: '
+      showing-last-count: Показаны последние {count} логов
+      name: Имя
+      type: Тип
+      timezone: Часовой пояс
+      last-started: Последний запуск
+      last-finished: Последнее завершение
+      last-failure: Последняя ошибка
+      date: Дата
+      memory: Память
+      runtime: Время выполнения
+      output: Вывод
+      no-output: Нет вывода
+    config:
+      database:
+        title: Настройка базы данных
+      filesystem:
+        title: Настройка файловой системы
+      mail:
+        title: Настройка почты
+      notification-channels:
+        title: Настройка push-уведомлений
+      queue:
+        title: Настройка очереди
+      services:
+        title: Настройка сервисов
+      socket:
+        title: Настройка сокета
+    branding:
+      title: Брендинг
+      icon-text: Иконка
+      upload-new: Загрузить новую
+      reset-default: Сбросить по умолчанию
+      logo-text: Логотип
+      theme: Тема по умолчанию
+    index:
+      total-users: Всего пользователей
+      total-organizations: Всего организаций
+      total-transactions: Всего транзакций
+    notifications:
+      title: Уведомления
+      notification-settings: Настройки уведомлений
+    organizations:
+      index:
+        title: Организации
+        owner-name-column: Владелец
+        owner-phone-column: Телефон владельца
+        owner-email-column: Телефон владельца
+        users-count-column: Пользователи
+        phone-column: Телефон
+        email-column: Электронная почта
+      users:
+        title: Пользователи
+  settings:
+    index:
+      title: Настройки организации
+      organization-name: Название организации
+      organization-description: Описание организации
+      organization-phone: Телефон организации
+      organization-currency: Валюта организации
+      organization-id: ID организации
+      organization-branding: Брендинг организации
+      logo: Логотип
+      logo-help-text: Логотип вашей организации.
+      upload-new-logo: Загрузить новый логотип
+      backdrop: Фон
+      backdrop-help-text: Необязательный баннер или фоновое изображение для вашей
+        организации.
+      upload-new-backdrop: Загрузить новый фон
+      organization-timezone: Выберите часовой пояс по умолчанию для вашей организации.
+      select-timezone: Выбрать часовой пояс.
+  extensions:
+    title: Расширения скоро появятся!
+    message: Пожалуйста, возвращайтесь в следующих версиях, пока мы готовимся к запуску
+      репозитория и маркетплейса расширений.
+  notifications:
+    select-all: Выбрать все
+    mark-as-read: Отметить как прочитанное
+    received: 'Получено:'
+    message: Нет уведомлений для отображения.
+invite:
+  for-users:
+    invitation-message: Вас пригласили присоединиться к {companyName}
+    invitation-sent-message: Вас пригласили присоединиться к организации {companyName}
+      в {appName}. Чтобы принять приглашение, введите код приглашения, полученный
+      по электронной почте, и нажмите продолжить.
+    invitation-code-sent-text: Ваш код приглашения
+    accept-invitation-text: Принять приглашение
+onboard:
+  index:
+    title: Создайте свой аккаунт
+    welcome-title: <strong>Добро пожаловать в {companyName}!</strong><br />
+    welcome-text: Заполните необходимые данные ниже, чтобы начать.
+    full-name: Полное имя
+    full-name-help-text: Ваше полное имя
+    your-email: Адрес электронной почты
+    your-email-help-text: Ваш адрес электронной почты
+    phone: Номер телефона
+    phone-help-text: Ваш номер телефона
+    organization-name: Название организации
+    organization-help-text: Название вашей организации, все ваши сервисы и ресурсы
+      будут управляться в рамках этой организации, позже вы сможете создать столько
+      организаций, сколько захотите или потребуется.
+    password: Введите пароль
+    password-help-text: Ваш пароль, убедитесь, что он надежный.
+    confirm-password: Подтвердите пароль
+    confirm-password-help-text: Просто подтвердите пароль, который вы ввели выше.
+    continue-button-text: Продолжить
+  verify-email:
+    header-title: Подтверждение аккаунта
+    title: Подтвердите ваш адрес электронной почты
+    message-text: <strong>Почти готово!</strong><br> Проверьте вашу почту для получения
+      кода подтверждения.
+    verification-code-text: Введите код подтверждения, полученный по электронной почте.
+    verification-input-label: Код подтверждения
+    verify-button-text: Подтвердить и продолжить
+    didnt-receive-a-code: Код еще не получен?
+    not-sent:
+      message: Код еще не получен?
+      alternative-choice: Используйте альтернативные варианты ниже для подтверждения
+        аккаунта.
+      resend-email: Отправить письмо повторно
+      send-by-sms: Отправить по SMS
+install:
+  installer-header: Установщик
+  failed-message-sent: Установка не удалась! Нажмите кнопку ниже, чтобы повторить
+    установку.
+  retry-install: Повторить установку
+  start-install: Начать установку
+layout:
+  header:
+    menus:
+      organization:
+        settings: Настройки организации
+        create-or-join: Создать или присоединиться к организациям
+        explore-extensions: Изучить расширения
+      user:
+        view-profile: Просмотреть профиль
+        keyboard-shortcuts: Показать горячие клавиши
+        changelog: Журнал изменений

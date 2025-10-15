@@ -21,11 +21,11 @@ export default class NotificationModel extends Model {
     }
 
     @computed('created_at') get createdAt() {
-        return format(this.created_at, 'PPP p');
+        return format(this.created_at, 'yyyy-MM-dd HH:mm');
     }
 
     @computed('read_at') get readAt() {
-        return format(this.read_at, 'PPP p');
+        return format(this.read_at, 'yyyy-MM-dd HH:mm');
     }
 
     @computed('read_at') get isRead() {

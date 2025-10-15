@@ -67,17 +67,3 @@ body.console-admin-organizations-index-index .next-table-wrapper > table {
 body[data-theme='dark'] #boot-loader > .loader-container > .loading-message {
     color: #fff;
 }
-
-/** hotfix: ember-power-select-trigger broken padding after upgrade - @todo move to ember-ui */
-body.fleetbase-console .ember-power-select-trigger {
-    padding-top: 0.5rem;
-    padding-right: 2.5rem;
-    padding-bottom: 0.5rem;
-    padding-left: 0.75rem;
-}
-
-/** hotfix sidebar-panel-toggle light mode - @todo move to ember-ui */
-body[data-theme="light"] .next-sidebar .next-content-panel-wrapper .next-content-panel-container .next-content-panel > .next-content-panel-header.next-sidebar-panel-toggle:hover {
-    background-color: rgba(59, 130, 246, 1);
-    background-color: rgba(59, 130, 246, var(--tw-bg-opacity));
-}

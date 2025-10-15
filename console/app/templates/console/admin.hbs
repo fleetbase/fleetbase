@@ -1,10 +1,10 @@
 {{page-title "Admin"}}
 
 <EmberWormhole @to="sidebar-menu-items">
-    <Layout::Sidebar::Item @route="console.admin.index" @icon="rectangle-list">{{t "common.overview"}}</Layout::Sidebar::Item>
-    <Layout::Sidebar::Item @route="console.admin.organizations" @icon="building">{{t "common.organizations"}}</Layout::Sidebar::Item>
-    <Layout::Sidebar::Item @route="console.admin.branding" @icon="palette">{{t "common.branding"}}</Layout::Sidebar::Item>
-    <Layout::Sidebar::Item @route="console.admin.two-fa-settings" @icon="shield-halved">{{t "common.2fa-config"}}</Layout::Sidebar::Item>
+    <Layout::Sidebar::Item @route="console.admin.index" @icon="rectangle-list">{{t "console.admin.menu.overview"}}</Layout::Sidebar::Item>
+    <Layout::Sidebar::Item @route="console.admin.organizations" @icon="building">{{t "console.admin.menu.organizations"}}</Layout::Sidebar::Item>
+    <Layout::Sidebar::Item @route="console.admin.branding" @icon="palette">{{t "console.admin.menu.branding"}}</Layout::Sidebar::Item>
+    <Layout::Sidebar::Item @route="console.admin.two-fa-settings" @icon="shield-halved">{{t "console.admin.menu.2fa-config"}}</Layout::Sidebar::Item>
     <Layout::Sidebar::Item @route="console.admin.schedule-monitor" @icon="calendar-check">{{t "console.admin.schedule-monitor.schedule-monitor"}}</Layout::Sidebar::Item>
     {{#each this.universe.adminMenuItems as |menuItem|}}
         <Layout::Sidebar::Item
@@ -25,12 +25,12 @@
         </Layout::Sidebar::Panel>
     {{/each}}
     <Layout::Sidebar::Panel @open={{true}} @title="System Config">
-        <Layout::Sidebar::Item @route="console.admin.config.services" @icon="bell-concierge">{{t "common.services"}}</Layout::Sidebar::Item>
-        <Layout::Sidebar::Item @route="console.admin.config.mail" @icon="envelope">{{t "common.mail"}}</Layout::Sidebar::Item>
-        <Layout::Sidebar::Item @route="console.admin.config.filesystem" @icon="hard-drive">{{t "common.filesystem"}}</Layout::Sidebar::Item>
-        <Layout::Sidebar::Item @route="console.admin.config.queue" @icon="layer-group">{{t "common.queue"}}</Layout::Sidebar::Item>
-        <Layout::Sidebar::Item @route="console.admin.config.socket" @icon="plug">{{t "common.socket"}}</Layout::Sidebar::Item>
-        <Layout::Sidebar::Item @route="console.admin.config.notification-channels" @icon="tower-broadcast">{{t "common.push-notifications"}}</Layout::Sidebar::Item>
+        <Layout::Sidebar::Item @route="console.admin.config.services" @icon="bell-concierge">{{t "console.admin.menu.services"}}</Layout::Sidebar::Item>
+        <Layout::Sidebar::Item @route="console.admin.config.mail" @icon="envelope">{{t "console.admin.menu.mail"}}</Layout::Sidebar::Item>
+        <Layout::Sidebar::Item @route="console.admin.config.filesystem" @icon="hard-drive">{{t "console.admin.menu.filesystem"}}</Layout::Sidebar::Item>
+        <Layout::Sidebar::Item @route="console.admin.config.queue" @icon="layer-group">{{t "console.admin.menu.queue"}}</Layout::Sidebar::Item>
+        <Layout::Sidebar::Item @route="console.admin.config.socket" @icon="plug">{{t "console.admin.menu.socket"}}</Layout::Sidebar::Item>
+        <Layout::Sidebar::Item @route="console.admin.config.notification-channels" @icon="tower-broadcast">{{t "console.admin.menu.push-notifications"}}</Layout::Sidebar::Item>
     </Layout::Sidebar::Panel>
 </EmberWormhole>
 
