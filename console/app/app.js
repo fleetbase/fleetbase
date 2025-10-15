@@ -5,6 +5,7 @@ import config from '@fleetbase/console/config/environment';
 import loadExtensions from '@fleetbase/ember-core/utils/load-extensions';
 import mapEngines from '@fleetbase/ember-core/utils/map-engines';
 import loadRuntimeConfig from '@fleetbase/console/utils/runtime-config';
+import applyRouterFix from './utils/router-refresh-patch';
 
 export default class App extends Application {
     modulePrefix = config.modulePrefix;
@@ -14,6 +15,7 @@ export default class App extends Application {
     engines = {};
 
     async ready() {
+        applyRouterFix(this);
         const extensions = await loadExtensions();
 
         this.extensions = extensions;

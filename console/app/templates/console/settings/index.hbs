@@ -3,7 +3,7 @@
 <Layout::Section::Body class="overflow-y-scroll h-full">
     <div class="container mx-auto h-screen">
         <div class="max-w-3xl my-10 mx-auto space-y-6">
-            <ContentPanel @title={{t "console.settings.index.title"}} @open={{true}} @pad={{true}} @panelBodyClass="bg-white dark:bg-gray-800">
+            <ContentPanel @title={{t "console.settings.index.title"}} @open={{true}} @wrapperClass="bordered-classic">
                 <form {{on "submit" (perform this.saveSettings)}}>
                     <InputGroup @name={{t "console.settings.index.organization-name"}} @value={{@model.name}} />
                     <InputGroup @name={{t "console.settings.index.organization-description"}} @value={{@model.description}} />
@@ -18,12 +18,12 @@
                     </InputGroup>
                     <InputGroup @name={{t "console.settings.index.organization-id"}} @value={{@model.public_id}} @disabled={{true}} />
                     <div class="mt-3 flex items-center justify-end">
-                        <Button @buttonType="submit" @type="primary" @size="lg" @icon="save" @text="{{t "common.save-button-text"}}" @isLoading={{this.saveSettings.isRunning}} />
+                        <Button @buttonType="submit" @type="primary" @size="lg" @icon="save" @text="{{t "common.save-changes"}}" @isLoading={{this.saveSettings.isRunning}} />
                     </div>
                 </form>
             </ContentPanel>
 
-            <ContentPanel @title={{t "console.settings.index.organization-branding"}} @open={{true}} @pad={{true}} @panelBodyClass="bg-white dark:bg-gray-800">
+            <ContentPanel @title={{t "console.settings.index.organization-branding"}} @open={{true}} @wrapperClass="bordered-classic">
                 <InputGroup @name={{t "console.settings.index.logo"}} @helpText={{t "console.settings.index.logo-help-text"}}>
                     <div class="flex flex-row items-center">
                         <Image src={{@model.logo_url}} @fallbackSrc={{config "defaultValues.placeholderImage"}} alt={{concat @model.name " logo"}} class="h-20 w-64 border dark:border-gray-900 rounded-md mr-4" />

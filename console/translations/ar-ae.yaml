@@ -1,0 +1,754 @@
+app:
+  name: Fleetbase
+common:
+  new: جديد
+  create: إنشاء
+  add: إضافة
+  edit: تعديل
+  update: تحديث
+  save: حفظ
+  save-changes: حفظ التغييرات
+  delete: حذف
+  delete-selected: حذف المحدد
+  delete-selected-count: حذف {count} المحدد
+  remove: إزالة
+  cancel: إلغاء
+  confirm: تأكيد
+  close: إغلاق
+  open: فتح
+  view: عرض
+  preview: معاينة
+  upload: رفع
+  download: تنزيل
+  import: استيراد
+  export: تصدير
+  print: طباعة
+  duplicate: تكرار
+  copy: نسخ
+  paste: لصق
+  share: مشاركة
+  refresh: تحديث
+  reset: إعادة تعيين
+  retry: إعادة المحاولة
+  back: عودة
+  next: التالي
+  previous: السابق
+  submit: إرسال
+  apply: تطبيق
+  continue: متابعة
+  proceed: المتابعة
+  select: تحديد
+  deselect: إلغاء التحديد
+  search: بحث
+  filter: تصفية
+  sort: فرز
+  view-all: عرض الكل
+  clear: مسح
+  done: تم
+  finish: إنهاء
+  skip: تخطي
+  method: طريقة
+  bulk-delete: حذف جماعي
+  bulk-delete-resource: حذف جماعي {resource}
+  bulk-cancel: إلغاء جماعي
+  bulk-cancel-resource: إلغاء جماعي {resource}
+  bulk-actions: إجراءات جماعية
+  column: عمود
+  row: صف
+  table: جدول
+  list: قائمة
+  grid: شبكة
+  form: نموذج
+  field: حقل
+  section: قسم
+  panel: لوحة
+  card: بطاقة
+  tab: تبويب
+  modal: نافذة منبثقة
+  dialog: حوار
+  menu: قائمة
+  dropdown: قائمة منسدلة
+  tooltip: تلميح
+  sidebar: الشريط الجانبي
+  toolbar: شريط الأدوات
+  footer: تذييل
+  header: رأس الصفحة
+  title: عنوان
+  subtitle: عنوان فرعي
+  description: وصف
+  placeholder: عنصر نائب
+  label: تسمية
+  button: زر
+  icon: أيقونة
+  avatar: صورة رمزية
+  link: رابط
+  badge: شارة
+  tag: وسم
+  banner: لافتة
+  step: خطوة
+  progress: تقدم
+  map: خريطة
+  board: لوحة
+  loading: جارٍ التحميل
+  loading-resource: جارٍ تحميل {resource}
+  saving: جارٍ الحفظ
+  processing: جارٍ المعالجة
+  fetching: جارٍ الجلب
+  updating: جارٍ التحديث
+  uploading: جارٍ الرفع
+  completed: مكتمل
+  success: نجاح
+  failed: فشل
+  error: خطأ
+  warning: تحذير
+  info: معلومات
+  ready: جاهز
+  active: نشط
+  inactive: غير نشط
+  enabled: مفعل
+  disabled: معطل
+  online: متصل
+  offline: غير متصل
+  pending: قيد الانتظار
+  archived: مؤرشف
+  hidden: مخفي
+  visible: مرئي
+  empty: فارغ
+  not-found: غير موجود
+  no-results: لا توجد نتائج
+  try-again: حاول مرة أخرى
+  are-you-sure: هل أنت متأكد؟
+  changes-saved: تم حفظ التغييرات بنجاح.
+  saved-successfully: تم حفظ التغييرات بنجاح.
+  field-saved: '{field} تم حفظه بنجاح.'
+  changes-discarded: تم تجاهل التغييرات.
+  delete-confirm: هل أنت متأكد أنك تريد حذف هذا العنصر؟
+  action-successful: تم تنفيذ الإجراء بنجاح.
+  action-failed: فشل الإجراء. يرجى المحاولة مرة أخرى.
+  something-went-wrong: حدث خطأ ما.
+  please-wait: يرجى الانتظار...
+  sign-in: تسجيل الدخول
+  sign-out: تسجيل الخروج
+  sign-up: إنشاء حساب
+  log-in: تسجيل الدخول
+  log-out: تسجيل الخروج
+  register: تسجيل
+  forgot-password: نسيت كلمة المرور
+  reset-password: إعادة تعيين كلمة المرور
+  change-password: تغيير كلمة المرور
+  password: كلمة المرور
+  confirm-password: تأكيد كلمة المرور
+  email: البريد الإلكتروني
+  username: اسم المستخدم
+  remember-me: تذكرني
+  welcome: مرحباً
+  welcome-back: مرحباً بعودتك
+  profile: الملف الشخصي
+  account: الحساب
+  settings: الإعدادات
+  preferences: التفضيلات
+  record: سجل
+  records: سجلات
+  item: عنصر
+  items: عناصر
+  entry: إدخال
+  entries: إدخالات
+  id: المعرف
+  name: الاسم
+  type: النوع
+  category: الفئة
+  overview: نظرة عامة
+  value: القيمة
+  amount: المبلغ
+  price: السعر
+  quantity: الكمية
+  status: الحالة
+  date: التاريخ
+  date-created: تاريخ الإنشاء
+  date-updated: تاريخ التحديث
+  time: الوقت
+  created-at: تم الإنشاء في
+  updated-at: تم التحديث في
+  expired-at: انتهت صلاحيتها في
+  last-seen-at: آخر ظهور في
+  last-modified: آخر تعديل
+  last-modified-data: 'آخر تعديل: {date}'
+  actions: الإجراءات
+  details: تفاصيل
+  notes: ملاحظات
+  reference: مرجع
+  filter-by: تصفية حسب
+  sort-by: ترتيب حسب
+  ascending: تصاعدي
+  descending: تنازلي
+  all: الكل
+  none: لا شيء
+  select-all: تحديد الكل
+  deselect-all: إلغاء تحديد الكل
+  show-more: عرض المزيد
+  show-less: عرض أقل
+  page: صفحة
+  of: من
+  total: الإجمالي
+  items-per-page: العناصر في كل صفحة
+  showing: عرض
+  to: إلى
+  results: النتائج
+  load-more: تحميل المزيد
+  no-more-results: لا مزيد من النتائج
+  today: اليوم
+  yesterday: أمس
+  tomorrow: غدًا
+  day: يوم
+  week: أسبوع
+  month: شهر
+  year: سنة
+  date-range: نطاق التاريخ
+  start-date: تاريخ البدء
+  end-date: تاريخ الانتهاء
+  time-zone: المنطقة الزمنية
+  system: النظام
+  dashboard: لوحة التحكم
+  home: الرئيسية
+  analytics: التحليلات
+  reports: التقارير
+  logs: السجلات
+  help: مساعدة
+  support: الدعم
+  contact: اتصال
+  documentation: التوثيق
+  language: اللغة
+  version: الإصدار
+  theme: الثيم
+  light-mode: الوضع الفاتح
+  dark-mode: الوضع الداكن
+  update-available: تحديث متوفر
+  install-update: تثبيت التحديث
+  maintenance-mode: وضع الصيانة
+  notification: إشعار
+  notifications: الإشعارات
+  mark-as-read: وضع كمقروء
+  mark-all-as-read: وضع الكل كمقروء
+  clear-notifications: مسح الإشعارات
+  company: شركة
+  companies: شركات
+  user: مستخدم
+  users: مستخدمون
+  role: دور
+  roles: أدوار
+  permission: إذن
+  permissions: أذونات
+  group: مجموعة
+  groups: مجموعات
+  unauthorized: غير مصرح
+  forbidden: ممنوع
+  resource-not-found: المورد غير موجود
+  server-error: خطأ في الخادم
+  validation-error: خطأ في التحقق
+  timeout-error: انتهت مهلة الطلب
+  network-error: خطأ في الشبكة
+  unknown-error: خطأ غير معروف
+  file: ملف
+  files: ملفات
+  folder: مجلد
+  folders: مجلدات
+  upload-file: رفع ملف
+  upload-files: رفع ملفات
+  upload-image: رفع صورة
+  upload-image-supported: يدعم PNG و JPEG و GIF
+  choose-file: اختر ملف
+  choose-files: اختر ملفات
+  drag-and-drop: اسحب وأفلت
+  download-file: تحميل ملف
+  file-size: حجم الملف
+  file-type: نوع الملف
+  confirm-delete: تأكيد الحذف
+  confirm-action: تأكيد الإجراء
+  confirm-exit: تأكيد الخروج
+  confirm-and-save-changes: تأكيد وحفظ التغييرات
+  are-you-sure-exit: هل أنت متأكد أنك تريد الخروج؟
+  unsaved-changes-warning: لديك تغييرات غير محفوظة.
+  connected: متصل
+  disconnected: غير متصل
+  reconnecting: إعادة الاتصال
+  connection-lost: انقطع الاتصال
+  connection-restored: تم استعادة الاتصال
+  show: عرض
+  hide: إخفاء
+  expand: توسيع
+  collapse: طي
+  enable: تمكين
+  disable: تعطيل
+  minimize: تصغير
+  maximize: تكبير
+  restore: استعادة
+  zoom-in: تكبير
+  zoom-out: تصغير
+  fullscreen: شاشة كاملة
+  exit-fullscreen: خروج من الشاشة الكاملة
+  true: 'true'
+  false: 'false'
+  ok: موافق
+  none-available: لا يوجد
+  default: افتراضي
+  custom: مخصص
+  general: عام
+  advanced: متقدم
+  placeholder-text: أدخل النص هنا...
+  learn-more: تعرف على المزيد
+  view-resource: عرض {resource}
+  view-resource-details: عرض تفاصيل {resource}
+  create-a-new-resource: إنشاء {resource} جديد
+  create-new-resource: إنشاء {resource} جديد
+  search-resource: بحث في {resource}
+  new-resource: '{resource} جديد'
+  update-resource: تحديث {resource}
+  save-resource-changes: حفظ تغييرات {resource}
+  creating-resource: إنشاء {resource}
+  cancel-resource: إلغاء {resource}
+  delete-resource: حذف {resource}
+  delete-resource-name: 'حذف: {resourceName}'
+  delete-resource-named: حذف {resource} ({resourceName})
+  delete-resource-prompt: لا يمكن التراجع عن هذا الإجراء. بمجرد الحذف، سيتم إزالة
+    السجل نهائيًا.
+  delete-cannot-be-undone: لا يمكن التراجع عن هذا الإجراء. بمجرد الحذف، سيتم إزالة
+    السجل نهائيًا.
+  create-resource: إنشاء {resource}
+  edit-resource: تعديل {resource}
+  edit-resource-details: تعديل تفاصيل {resource}
+  edit-resource-type-name: 'تعديل {resource}: {resourceName}'
+  edit-resource-name: 'تعديل: {resourceName}'
+  config: الإعدادات
+  select-field: اختر {field}
+  columns: الأعمدة
+  metadata: البيانات الوصفية
+  meta: ميتا
+  resource-created-success: تم إنشاء {resource} جديد بنجاح.
+  resource-created-success-name: تم إنشاء {resource} جديد ({resourceName}) بنجاح.
+  resource-updated-success: تم تحديث {resource} ({resourceName}) بنجاح.
+  resource-action-success: تم {action} {resource} ({resourceName}) بنجاح.
+  resource-deleted-success: تم حذف {resource} ({resourceName}) بنجاح.
+  resource-deleted: تم حذف {resource} ({resourceName}).
+  continue-without-saving: المتابعة بدون حفظ؟
+  continue-without-saving-prompt: لديك تغييرات غير محفوظة على هذا {resource}. المتابعة
+    ستتجاهلها. انقر متابعة للمتابعة.
+resource:
+  alert: تنبيه
+  alerts: تنبيهات
+  brand: علامة تجارية
+  brands: علامات تجارية
+  category: فئة
+  categories: فئات
+  chat-attachment: مرفق المحادثة
+  chat-attachments: مرفقات المحادثة
+  chat-channel: قناة المحادثة
+  chat-channels: قنوات المحادثة
+  chat-log: سجل المحادثة
+  chat-logs: سجلات المحادثة
+  chat-message: رسالة المحادثة
+  chat-messages: رسائل المحادثة
+  chat-participant: مشارك المحادثة
+  chat-participants: مشاركو المحادثة
+  chat-receipt: إيصال المحادثة
+  chat-receipts: إيصالات المحادثة
+  comment: تعليق
+  comments: تعليقات
+  company: شركة
+  companies: شركات
+  custom-field-value: قيمة الحقل المخصص
+  custom-field-values: قيم الحقول المخصصة
+  custom-field: حقل مخصص
+  custom-fields: حقول مخصصة
+  dashboard-widget: أداة لوحة التحكم
+  dashboard-widgets: أدوات لوحة التحكم
+  dashboard: لوحة التحكم
+  dashboards: لوحات التحكم
+  extension: امتداد
+  extensions: امتدادات
+  file: ملف
+  files: ملفات
+  group: مجموعة
+  groups: مجموعات
+  notification: إشعار
+  notifications: إشعارات
+  permission: إذن
+  permissions: أذونات
+  policy: سياسة
+  policies: سياسات
+  report: تقرير
+  reports: تقارير
+  role: دور
+  roles: أدوار
+  setting: إعداد
+  settings: إعدادات
+  transaction: معاملة
+  transactions: معاملات
+  user-device: جهاز المستخدم
+  user-devices: أجهزة المستخدم
+  user: مستخدم
+  users: مستخدمون
+dropzone:
+  file: ملف
+  drop-to-upload: اسحب للإفلات للتحميل
+  invalid: غير صالح
+  files-ready-for-upload: '{numOfFiles} جاهزة للتحميل.'
+  upload-images-videos: تحميل الصور والفيديوهات
+  upload-documents: تحميل المستندات
+  upload-documents-files: تحميل المستندات والملفات
+  upload-avatar-files: تحميل الصور الرمزية المخصصة
+  dropzone-supported-images-videos: اسحب وأفلت ملفات الصور والفيديوهات على هذه المنطقة
+  dropzone-supported-avatars: اسحب وأفلت ملفات SVG أو PNG
+  dropzone-supported-files: اسحب وأفلت الملفات على هذه المنطقة
+  or-select-button-text: أو اختر ملفات للتحميل.
+  upload-queue: قائمة انتظار التحميل
+  uploading: جارٍ التحميل...
+two-fa-enforcement-alert:
+  message: لتعزيز أمان حسابك، تطلب مؤسستك تفعيل المصادقة الثنائية (2FA). قم بتمكين
+    2FA في إعدادات حسابك للحصول على طبقة إضافية من الحماية.
+  button-text: إعداد 2FA
+comment-thread:
+  publish-comment-button-text: نشر التعليق
+  publish-reply-button-text: نشر الرد
+  reply-comment-button-text: رد
+  edit-comment-button-text: تعديل
+  delete-comment-button-text: حذف
+  comment-published-ago: منذ {createdAgo}
+  comment-input-placeholder: أدخل تعليقًا جديدًا...
+  comment-reply-placeholder: أدخل ردك...
+  comment-input-empty-notification: لا يمكنك نشر تعليقات فارغة...
+  comment-min-length-notification: يجب أن يكون التعليق مكونًا من حرفين على الأقل
+dashboard:
+  select-dashboard: اختر لوحة التحكم
+  create-new-dashboard: إنشاء لوحة تحكم جديدة
+  create-a-new-dashboard: إنشاء لوحة تحكم جديدة
+  confirm-create-dashboard: إنشاء لوحة التحكم!
+  edit-layout: تعديل التخطيط
+  add-widgets: إضافة الأدوات
+  delete-dashboard: حذف لوحة التحكم
+  save-dashboard: حفظ لوحة التحكم
+  you-cannot-delete-this-dashboard: لا يمكنك حذف هذه اللوحة.
+  are-you-sure-you-want-delete-dashboard: هل أنت متأكد من حذف {dashboardName}؟
+dashboard-widget-panel:
+  widget-name: أداة {widgetName}
+  select-widgets: اختر الأدوات
+  close-and-save: إغلاق وحفظ
+filters-picker:
+  filters: الفلاتر
+  filter-data: تصفية البيانات
+visible-column-picker:
+  select-viewable-columns: اختر الأعمدة المرئية
+  customize-columns: تخصيص الأعمدة
+component:
+  file:
+    dropdown-label: إجراءات الملف
+  import-modal:
+    loading-message: جارٍ معالجة الاستيراد...
+    drop-upload: أسقط للتحميل
+    invalid: غير صالح
+    ready-upload: جاهز للتحميل.
+    upload-spreadsheets: تحميل جداول البيانات
+    drag-drop: اسحب وأفلت ملفات جداول البيانات على هذه المنطقة
+    button-text: أو اختر جداول البيانات للتحميل
+    spreadsheets: جداول البيانات
+    upload-queue: قائمة انتظار التحميل
+  dropzone:
+    file: ملف
+    drop-to-upload: أسقط للتحميل
+    invalid: غير صالح
+    files-ready-for-upload: '{numOfFiles} جاهز للتحميل.'
+    upload-images-videos: تحميل الصور والفيديوهات
+    upload-documents: تحميل المستندات
+    upload-documents-files: تحميل المستندات والملفات
+    upload-avatar-files: تحميل الصور الرمزية المخصصة
+    dropzone-supported-images-videos: اسحب وأفلت ملفات الصور والفيديو على هذه المنطقة
+    dropzone-supported-avatars: اسحب وأفلت ملفات SVG أو PNG
+    dropzone-supported-files: اسحب وأفلت الملفات على هذه المنطقة
+    or-select-button-text: أو اختر الملفات للتحميل.
+    upload-queue: قائمة انتظار التحميل
+    uploading: جارٍ التحميل...
+  two-fa-enforcement-alert:
+    message: لتعزيز أمان حسابك، تتطلب مؤسستك المصادقة الثنائية (2FA). قم بتمكين 2FA
+      في إعدادات حسابك لطبقة إضافية من الحماية.
+    button-text: إعداد 2FA
+  comment-thread:
+    publish-comment-button-text: نشر التعليق
+    publish-reply-button-text: نشر الرد
+    reply-comment-button-text: رد
+    edit-comment-button-text: تعديل
+    delete-comment-button-text: حذف
+    comment-published-ago: منذ {createdAgo}
+    comment-input-placeholder: أدخل تعليقًا جديدًا...
+    comment-reply-placeholder: أدخل ردك...
+    comment-input-empty-notification: لا يمكنك نشر تعليقات فارغة...
+    comment-min-length-notification: يجب أن يكون التعليق على الأقل 2 حرف
+  dashboard:
+    select-dashboard: اختر لوحة التحكم
+    create-new-dashboard: إنشاء لوحة تحكم جديدة
+    create-a-new-dashboard: إنشاء لوحة تحكم جديدة
+    confirm-create-dashboard: إنشاء لوحة التحكم!
+    edit-layout: تعديل التخطيط
+    add-widgets: إضافة الأدوات
+    delete-dashboard: حذف لوحة التحكم
+    save-dashboard: حفظ لوحة التحكم
+    you-cannot-delete-this-dashboard: لا يمكنك حذف هذه اللوحة.
+    are-you-sure-you-want-delete-dashboard: هل أنت متأكد من حذف {dashboardName}؟
+  dashboard-widget-panel:
+    widget-name: أداة {widgetName}
+    select-widgets: اختر الأدوات
+    close-and-save: إغلاق وحفظ
+services:
+  dashboard-service:
+    create-dashboard-success-notification: تم إنشاء لوحة التحكم الجديدة `{dashboardName}`
+      بنجاح.
+    delete-dashboard-success-notification: تم حذف لوحة التحكم `{dashboardName}`.
+auth:
+  verification:
+    header-title: التحقق من الحساب
+    title: تحقق من عنوان بريدك الإلكتروني
+    message-text: <strong>اقتربنا من الانتهاء!</strong><br> تحقق من بريدك الإلكتروني
+      للحصول على رمز التحقق.
+    verification-code-text: أدخل رمز التحقق الذي استلمته عبر البريد الإلكتروني.
+    verification-input-label: رمز التحقق
+    verify-button-text: تحقق واستمر
+    didnt-receive-a-code: لم تستلم رمزًا بعد؟
+    not-sent:
+      message: لم تستلم رمزًا بعد؟
+      alternative-choice: استخدم الخيارات البديلة أدناه للتحقق من حسابك.
+      resend-email: إعادة إرسال البريد الإلكتروني
+      send-by-sms: إرسال عبر الرسائل النصية
+  two-fa:
+    verify-code:
+      verification-code: رمز التحقق
+      check-title: تحقق من بريدك الإلكتروني أو هاتفك
+      check-subtitle: لقد أرسلنا لك رمز تحقق. أدخل الرمز أدناه لإكمال عملية تسجيل
+        الدخول.
+      expired-help-text: رمز التحقق الخاص بالمصادقة الثنائية قد انتهت صلاحيته. يمكنك
+        طلب رمز جديد إذا كنت بحاجة إلى مزيد من الوقت.
+      resend-code: إعادة إرسال الرمز
+      verify-code: تحقق من الرمز
+      cancel-two-factor: إلغاء المصادقة الثنائية
+      invalid-session-error-notification: جلسة غير صالحة. يرجى المحاولة مرة أخرى.
+      verification-successful-notification: تم التحقق بنجاح!
+      verification-code-expired-notification: انتهت صلاحية رمز التحقق. يرجى طلب رمز
+        جديد.
+      verification-code-failed-notification: فشل التحقق. يرجى المحاولة مرة أخرى.
+    resend-code:
+      verification-code-resent-notification: تم إرسال رمز تحقق جديد.
+      verification-code-resent-error-notification: حدث خطأ أثناء إعادة إرسال رمز التحقق.
+        يرجى المحاولة مرة أخرى.
+  forgot-password:
+    success-message: تحقق من بريدك الإلكتروني للمتابعة!
+    is-sent:
+      title: اقتربنا من الانتهاء!
+      message: <strong>تحقق من بريدك الإلكتروني!</strong><br> لقد أرسلنا لك رابطًا
+        سحريًا إلى بريدك الإلكتروني يسمح لك بإعادة تعيين كلمة المرور. الرابط ينتهي
+        خلال 15 دقيقة.
+    not-sent:
+      title: هل نسيت كلمة المرور؟
+      message: <strong>لا تقلق، نحن هنا لمساعدتك.</strong><br> أدخل البريد الإلكتروني
+        الذي تستخدمه لتسجيل الدخول إلى {appName} وسنرسل لك رابطًا آمنًا لإعادة تعيين
+        كلمة المرور.
+    form:
+      email-label: عنوان بريدك الإلكتروني
+      submit-button: حسنًا، أرسل لي رابطًا سحريًا!
+      nevermind-button: لا بأس
+  login:
+    title: تسجيل الدخول إلى حسابك
+    no-identity-notification: هل نسيت إدخال بريدك الإلكتروني؟
+    no-password-notification: هل نسيت إدخال كلمة المرور؟
+    unverified-notification: يجب التحقق من حسابك للمتابعة.
+    password-reset-required: مطلوب إعادة تعيين كلمة المرور للمتابعة.
+    failed-attempt:
+      message: <strong>هل نسيت كلمة المرور؟</strong><br> اضغط الزر أدناه لإعادة تعيين
+        كلمة المرور.
+      button-text: حسنًا، ساعدني في إعادة التعيين!
+    form:
+      email-label: عنوان البريد الإلكتروني
+      password-label: كلمة المرور
+      remember-me-label: تذكرني
+      forgot-password-label: هل نسيت كلمة المرور؟
+      sign-in-button: تسجيل الدخول
+      create-account-button: إنشاء حساب جديد
+    slow-connection-message: تواجه مشاكل في الاتصال.
+  reset-password:
+    success-message: تم إعادة تعيين كلمة المرور! قم بتسجيل الدخول للمتابعة.
+    invalid-verification-code: رابط إعادة تعيين كلمة المرور هذا غير صالح أو منتهي
+      الصلاحية.
+    title: إعادة تعيين كلمة المرور
+    form:
+      code:
+        label: رمز إعادة التعيين الخاص بك
+        help-text: رمز التحقق الذي استلمته في بريدك الإلكتروني.
+      password:
+        label: كلمة المرور الجديدة
+        help-text: أدخل كلمة مرور لا تقل عن 6 أحرف للمتابعة.
+      confirm-password:
+        label: تأكيد كلمة المرور الجديدة
+        help-text: أدخل كلمة مرور لا تقل عن 6 أحرف للمتابعة.
+      submit-button: إعادة تعيين كلمة المرور
+      back-button: عودة
+console:
+  create-or-join-organization:
+    modal-title: إنشاء أو الانضمام إلى منظمة
+    join-success-notification: لقد انضممت إلى منظمة جديدة!
+    create-success-notification: لقد أنشأت منظمة جديدة!
+  switch-organization:
+    modal-title: هل أنت متأكد أنك تريد التبديل إلى المنظمة {organizationName}؟
+    modal-body: بتأكيدك سيظل حسابك مسجلاً للدخول، لكن المنظمة الأساسية الخاصة بك ستتغير.
+    modal-accept-button-text: نعم، أريد التبديل إلى المنظمة
+    success-notification: لقد قمت بتبديل المنظمات
+  account:
+    index:
+      upload-new: تحميل جديد
+      phone: رقم هاتفك.
+      photos: الصور
+      timezone: اختر منطقتك الزمنية.
+  admin:
+    menu:
+      overview: نظرة عامة
+      organizations: المنظمات
+      branding: العلامة التجارية
+      2fa-config: إعداد التحقق بخطوتين
+      schedule-monitor: مراقبة الجدول
+      services: الخدمات
+      mail: البريد
+      filesystem: نظام الملفات
+      queue: الطابور
+      socket: المقبس
+      push-notifications: الإشعارات الفورية
+    schedule-monitor:
+      schedule-monitor: مراقب الجدول
+      task-logs-for: 'سجلات المهام لـ: '
+      showing-last-count: عرض آخر {count} سجلات
+      name: الاسم
+      type: النوع
+      timezone: المنطقة الزمنية
+      last-started: آخر بدء
+      last-finished: آخر انتهاء
+      last-failure: آخر فشل
+      date: التاريخ
+      memory: الذاكرة
+      runtime: مدة التشغيل
+      output: المخرجات
+      no-output: لا توجد مخرجات
+    config:
+      database:
+        title: تكوين قاعدة البيانات
+      filesystem:
+        title: تكوين نظام الملفات
+      mail:
+        title: تكوين البريد
+      notification-channels:
+        title: تكوين الإشعارات الفورية
+      queue:
+        title: تكوين الطابور
+      services:
+        title: تكوين الخدمات
+      socket:
+        title: تكوين المقبس
+    branding:
+      title: العلامة التجارية
+      icon-text: الأيقونة
+      upload-new: تحميل جديد
+      reset-default: إعادة التعيين إلى الافتراضي
+      logo-text: الشعار
+      theme: الثيم الافتراضي
+    index:
+      total-users: إجمالي المستخدمين
+      total-organizations: إجمالي المؤسسات
+      total-transactions: إجمالي المعاملات
+    notifications:
+      title: الإشعارات
+      notification-settings: إعدادات الإشعارات
+    organizations:
+      index:
+        title: المؤسسات
+        owner-name-column: المالك
+        owner-phone-column: هاتف المالك
+        owner-email-column: هاتف المالك
+        users-count-column: المستخدمون
+        phone-column: الهاتف
+        email-column: البريد الإلكتروني
+      users:
+        title: المستخدمون
+  settings:
+    index:
+      title: إعدادات المؤسسة
+      organization-name: اسم المؤسسة
+      organization-description: وصف المؤسسة
+      organization-phone: رقم هاتف المؤسسة
+      organization-currency: عملة المؤسسة
+      organization-id: معرف المؤسسة
+      organization-branding: العلامة التجارية للمنظمة
+      logo: الشعار
+      logo-help-text: شعار لمنظمتك.
+      upload-new-logo: تحميل شعار جديد
+      backdrop: الخلفية
+      backdrop-help-text: لافتة اختيارية أو صورة خلفية لمنظمتك.
+      upload-new-backdrop: تحميل خلفية جديدة
+      organization-timezone: اختر المنطقة الزمنية الافتراضية لمنظمتك.
+      select-timezone: اختر المنطقة الزمنية.
+  extensions:
+    title: الإضافات قادمة قريبًا!
+    message: يرجى العودة في الإصدارات القادمة بينما نستعد لإطلاق مستودع الإضافات والسوق.
+  notifications:
+    select-all: تحديد الكل
+    mark-as-read: وضع علامة كمقروء
+    received: 'تم الاستلام:'
+    message: لا توجد إشعارات للعرض.
+invite:
+  for-users:
+    invitation-message: لقد تمت دعوتك للانضمام إلى {companyName}
+    invitation-sent-message: لقد تمت دعوتك للانضمام إلى منظمة {companyName} على {appName}.
+      لقبول هذه الدعوة، أدخل رمز الدعوة الذي تلقيته عبر البريد الإلكتروني واضغط متابعة.
+    invitation-code-sent-text: رمز الدعوة الخاص بك
+    accept-invitation-text: قبول الدعوة
+onboard:
+  index:
+    title: إنشاء حسابك
+    welcome-title: <strong>مرحبًا بك في {companyName}!</strong><br />
+    welcome-text: أكمل التفاصيل المطلوبة أدناه للبدء.
+    full-name: الاسم الكامل
+    full-name-help-text: اسمك الكامل
+    your-email: عنوان البريد الإلكتروني
+    your-email-help-text: عنوان بريدك الإلكتروني
+    phone: رقم الهاتف
+    phone-help-text: رقم هاتفك
+    organization-name: اسم المنظمة
+    organization-help-text: اسم منظمتك، سيتم إدارة جميع خدماتك ومواردك تحت هذه المنظمة،
+      لاحقًا يمكنك إنشاء العديد من المنظمات كما تريد أو تحتاج.
+    password: أدخل كلمة المرور
+    password-help-text: كلمة مرورك، تأكد من أنها قوية.
+    confirm-password: تأكيد كلمة المرور
+    confirm-password-help-text: فقط لتأكيد كلمة المرور التي أدخلتها أعلاه.
+    continue-button-text: متابعة
+  verify-email:
+    header-title: التحقق من الحساب
+    title: تحقق من عنوان بريدك الإلكتروني
+    message-text: <strong>اقتربنا من الانتهاء!</strong><br> تحقق من بريدك الإلكتروني
+      للحصول على رمز التحقق.
+    verification-code-text: أدخل رمز التحقق الذي تلقيته عبر البريد الإلكتروني.
+    verification-input-label: رمز التحقق
+    verify-button-text: تحقق وواصل
+    didnt-receive-a-code: لم تستلم رمزًا بعد؟
+    not-sent:
+      message: لم تستلم رمزًا بعد؟
+      alternative-choice: استخدم الخيارات البديلة أدناه للتحقق من حسابك.
+      resend-email: إعادة إرسال البريد الإلكتروني
+      send-by-sms: الإرسال عبر الرسائل النصية
+install:
+  installer-header: المثبت
+  failed-message-sent: فشل التثبيت! اضغط الزر أدناه لإعادة محاولة التثبيت.
+  retry-install: إعادة محاولة التثبيت
+  start-install: بدء التثبيت
+layout:
+  header:
+    menus:
+      organization:
+        settings: إعدادات المنظمة
+        create-or-join: إنشاء أو الانضمام إلى المنظمات
+        explore-extensions: استكشاف الإضافات
+      user:
+        view-profile: عرض الملف الشخصي
+        keyboard-shortcuts: عرض اختصارات لوحة المفاتيح
+        changelog: سجل التغييرات

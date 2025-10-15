@@ -3,7 +3,7 @@
 <Layout::Section::Body class="overflow-y-scroll h-full">
     <div class="container mx-auto h-screen">
         <div class="max-w-3xl my-10 mx-auto">
-            <ContentPanel @title={{t "common.your-profile"}} @open={{true}} @pad={{true}} @panelBodyClass="bg-white dark:bg-gray-800">
+            <ContentPanel @title={{t "common.your-profile"}} @open={{true}} @wrapperClass="bordered-classic">
                 <form class="flex flex-col md:flex-row" {{on "submit" (perform this.saveProfile)}}>
                     <div class="w-32 flex flex-col justify-center mb-6 mr-6">
                         <Image src={{this.user.avatar_url}} @fallbackSrc={{config "defaultValues.userImage"}} alt={{this.user.name}} class="w-32 h-32 rounded-md" />
@@ -38,7 +38,7 @@
                             </InputGroup>
                         </div>
                         <div class="mt-3 flex items-center justify-end">
-                            <Button @buttonType="submit" @type="primary" @size="lg" @icon="save" @text={{t "common.save-button-text"}} @onClick={{perform this.saveProfile}} @isLoading={{not this.saveProfile.isIdle}} />
+                            <Button @buttonType="submit" @type="primary" @size="lg" @icon="save" @text={{t "common.save-changes"}} @onClick={{perform this.saveProfile}} @isLoading={{not this.saveProfile.isIdle}} />
                         </div>
                     </div>
                 </form>

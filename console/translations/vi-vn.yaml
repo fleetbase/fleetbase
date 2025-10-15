@@ -1,209 +1,593 @@
 app:
   name: Fleetbase
-terms:
+common:
   new: Mới
-  sort: Sắp xếp
-  filter: Lọc
-  columns: Cột
-  settings: Cài đặt
-  home: Trang chủ
-  admin: Admin
-  logout: Đăng xuất
-  dashboard: Bảng điều khiển
-  search: Tìm kiếm
-  search-input: Đầu vào tìm kiếm
-common: 
-  confirm: Xác nhận
+  create: Tạo
+  add: Thêm
   edit: Chỉnh sửa
+  update: Cập nhật
   save: Lưu
   save-changes: Lưu thay đổi
-  cancel: Hủy
-  2fa-config: Cấu hình 2FA
-  account: Tài khoản
-  admin: Admin
-  branding: Thương hiệu
-  columns: Cột
-  dashboard: Bảng điều khiển
-  date-of-birth: Ngày sinh
   delete: Xóa
-  email: Email
-  filesystem: Hệ thống tệp
-  filter: Lọc
-  home: Trang chủ
-  logout: Đăng xuất
-  mail: Mail
-  name: Tên
-  new: Mới
-  notification-channels: Kênh thông báo
-  notifications: Thông báo
-  organization: Tổ chức
-  organizations: Các tổ chức
-  overview: Tổng quan
-  phone: Số điện thoại của bạn
-  profile: Hồ sơ
-  queue: Hàng đợi
-  save-button-text: Lưu thay đổi
-  search-input: Đầu vào tìm kiếm
-  search: Tìm kiếm
-  services: Dịch vụ
-  settings: Cài đặt
-  socket: Socket
-  sort: Sắp xếp
-  two-factor: Hai yếu tố
-  uploading: Đang tải lên...
-  your-profile: Hồ sơ của bạn
-  created-at: Được tạo vào
-  country: Quốc qua
-  phone-number: Số điện thoại
-  status: Trạng thái
-  close-and-save: Đóng và Lưu
-  users: Người dùng
-  changelog: Nhật ký thay đổi
-  ok: OK
-  select-file: Chọn tệp
+  delete-selected: Xóa mục đã chọn
+  delete-selected-count: Xóa {count} mục đã chọn
+  remove: Gỡ bỏ
+  cancel: Hủy
+  confirm: Xác nhận
+  close: Đóng
+  open: Mở
+  view: Xem
+  preview: Xem trước
+  upload: Tải lên
+  download: Tải xuống
+  import: Nhập khẩu
+  export: Xuất khẩu
+  print: In
+  duplicate: Nhân bản
+  copy: Sao chép
+  paste: Dán
+  share: Chia sẻ
+  refresh: Làm mới
+  reset: Đặt lại
+  retry: Thử lại
   back: Quay lại
   next: Tiếp theo
+  previous: Trước
+  submit: Gửi
+  apply: Áp dụng
   continue: Tiếp tục
-  done: Đã xong
-  export: Xuất
-  reload: Tải lại
-  reload-data: Tải lại dữ liệu
-  unauthorized: Không có quyền
-  unauthorized-to: Không có quyền để
-  unauthorized-access: Không có quyền truy cập
-  unauthorized-access-message: Không có quyền truy cập, bạn phải yêu cầu quyền để truy cập.
-  permissions-required-for-changes: Bạn không có quyền cần thiết để thực hiện thay đổi.
-  push-notifications: Đẩy thông báo
+  proceed: Tiến hành
+  select: Chọn
+  deselect: Bỏ chọn
+  search: Tìm kiếm
+  filter: Lọc
+  sort: Sắp xếp
+  view-all: Xem tất cả
+  clear: Xóa
+  done: Hoàn thành
+  finish: Kết thúc
+  skip: Bỏ qua
+  method: Phương pháp
+  bulk-delete: Xóa hàng loạt
+  bulk-delete-resource: Xóa hàng loạt {resource}
+  bulk-cancel: Hủy hàng loạt
+  bulk-cancel-resource: Hủy hàng loạt {resource}
+  bulk-actions: Hành động hàng loạt
+  column: Cột
+  row: Hàng
+  table: Bảng
+  list: Danh sách
+  grid: Lưới
+  form: Biểu mẫu
+  field: Trường
+  section: Phần
+  panel: Bảng điều khiển
+  card: Thẻ
+  tab: Tab
+  modal: Cửa sổ bật lên
+  dialog: Hộp thoại
+  menu: Menu
+  dropdown: Danh sách thả xuống
+  tooltip: Chú giải công cụ
+  sidebar: Thanh bên
+  toolbar: Thanh công cụ
+  footer: Chân trang
+  header: Đầu trang
+  title: Tiêu đề
+  subtitle: Phụ đề
+  description: Mô tả
+  placeholder: Chỗ giữ chỗ
+  label: Nhãn
+  button: Nút
+  icon: Biểu tượng
+  avatar: Ảnh đại diện
+  link: Liên kết
+  badge: Huy hiệu
+  tag: Thẻ
+  banner: Biểu ngữ
+  step: Bước
+  progress: Tiến trình
+  map: Bản đồ
+  board: Bảng
+  loading: Đang tải
+  loading-resource: Đang tải {resource}
+  saving: Đang lưu
+  processing: Đang xử lý
+  fetching: Đang lấy dữ liệu
+  updating: Đang cập nhật
+  uploading: Đang tải lên
+  completed: Hoàn thành
+  success: Thành công
+  failed: Thất bại
+  error: Lỗi
+  warning: Cảnh báo
+  info: Thông tin
+  ready: Sẵn sàng
+  active: Hoạt động
+  inactive: Không hoạt động
+  enabled: Đã bật
+  disabled: Đã tắt
+  online: Trực tuyến
+  offline: Ngoại tuyến
+  pending: Đang chờ
+  archived: Đã lưu trữ
+  hidden: Ẩn
+  visible: Hiển thị
+  empty: Trống
+  not-found: Không tìm thấy
+  no-results: Không có kết quả
+  try-again: Thử lại
+  are-you-sure: Bạn có chắc không?
+  changes-saved: Thay đổi đã được lưu thành công.
+  saved-successfully: Thay đổi đã được lưu thành công.
+  field-saved: '{field} đã được lưu thành công.'
+  changes-discarded: Thay đổi đã bị bỏ qua.
+  delete-confirm: Bạn có chắc muốn xóa mục này không?
+  action-successful: Hành động hoàn tất thành công.
+  action-failed: Hành động thất bại. Vui lòng thử lại.
+  something-went-wrong: Đã xảy ra lỗi.
+  please-wait: Vui lòng đợi...
+  sign-in: Đăng nhập
+  sign-out: Đăng xuất
+  sign-up: Đăng ký
+  log-in: Đăng nhập
+  log-out: Đăng xuất
+  register: Đăng ký
+  forgot-password: Quên mật khẩu
+  reset-password: Đặt lại mật khẩu
+  change-password: Đổi mật khẩu
+  password: Mật khẩu
+  confirm-password: Xác nhận mật khẩu
+  email: Email
+  username: Tên đăng nhập
+  remember-me: Ghi nhớ tôi
+  welcome: Chào mừng
+  welcome-back: Chào mừng trở lại
+  profile: Hồ sơ
+  account: Tài khoản
+  settings: Cài đặt
+  preferences: Tùy chọn
+  record: Bản ghi
+  records: Các bản ghi
+  item: Mục
+  items: Mục
+  entry: Mục nhập
+  entries: Các mục nhập
+  id: ID
+  name: Tên
+  type: Loại
+  category: Danh mục
+  overview: Tổng quan
+  value: Giá trị
+  amount: Số lượng
+  price: Giá
+  quantity: Số lượng
+  status: Trạng thái
+  date: Ngày
+  date-created: Ngày tạo
+  date-updated: Ngày cập nhật
+  time: Thời gian
+  created-at: Tạo lúc
+  updated-at: Cập nhật lúc
+  expired-at: Hết hạn lúc
+  last-seen-at: Lần cuối thấy lúc
+  last-modified: Lần sửa cuối
+  last-modified-data: 'Lần sửa cuối: {date}'
+  actions: Hành động
+  details: Chi tiết
+  notes: Ghi chú
+  reference: Tham chiếu
+  filter-by: Lọc theo
+  sort-by: Sắp xếp theo
+  ascending: Tăng dần
+  descending: Giảm dần
+  all: Tất cả
+  none: Không có
+  select-all: Chọn tất cả
+  deselect-all: Bỏ chọn tất cả
+  show-more: Hiển thị thêm
+  show-less: Hiển thị ít hơn
+  page: Trang
+  of: của
+  total: Tổng
+  items-per-page: Mục mỗi trang
+  showing: Hiển thị
+  to: đến
+  results: Kết quả
+  load-more: Tải thêm
+  no-more-results: Không còn kết quả
+  today: Hôm nay
+  yesterday: Hôm qua
+  tomorrow: Ngày mai
+  day: Ngày
+  week: Tuần
+  month: Tháng
+  year: Năm
+  date-range: Khoảng ngày
+  start-date: Ngày bắt đầu
+  end-date: Ngày kết thúc
+  time-zone: Múi giờ
+  system: Hệ thống
+  dashboard: Bảng điều khiển
+  home: Trang chủ
+  analytics: Phân tích
+  reports: Báo cáo
+  logs: Nhật ký
+  help: Trợ giúp
+  support: Hỗ trợ
+  contact: Liên hệ
+  documentation: Tài liệu
+  language: Ngôn ngữ
+  version: Phiên bản
+  theme: Giao diện
+  light-mode: Chế độ sáng
+  dark-mode: Chế độ tối
+  update-available: Có bản cập nhật
+  install-update: Cài đặt cập nhật
+  maintenance-mode: Chế độ bảo trì
+  notification: Thông báo
+  notifications: Thông báo
+  mark-as-read: Đánh dấu đã đọc
+  mark-all-as-read: Đánh dấu tất cả đã đọc
+  clear-notifications: Xóa thông báo
+  company: Công ty
+  companies: Các công ty
+  user: Người dùng
+  users: Người dùng
+  role: Vai trò
+  roles: Các vai trò
+  permission: Quyền
+  permissions: Các quyền
+  group: Nhóm
+  groups: Các nhóm
+  unauthorized: Không được phép
+  forbidden: Bị cấm
+  resource-not-found: Không tìm thấy tài nguyên
+  server-error: Lỗi máy chủ
+  validation-error: Lỗi xác thực
+  timeout-error: Yêu cầu hết thời gian
+  network-error: Lỗi mạng
+  unknown-error: Lỗi không xác định
+  file: Tệp
+  files: Các tệp
+  folder: Thư mục
+  folders: Các thư mục
+  upload-file: Tải lên tệp
+  upload-files: Tải lên các tệp
+  upload-image: Tải lên hình ảnh
+  upload-image-supported: Hỗ trợ PNG, JPEG và GIF
+  choose-file: Chọn tệp
+  choose-files: Chọn các tệp
+  drag-and-drop: Kéo và thả
+  download-file: Tải xuống tệp
+  file-size: Kích thước tệp
+  file-type: Loại tệp
+  confirm-delete: Xác nhận xóa
+  confirm-action: Xác nhận hành động
+  confirm-exit: Xác nhận thoát
+  confirm-and-save-changes: Xác nhận & Lưu thay đổi
+  are-you-sure-exit: Bạn có chắc chắn muốn thoát không?
+  unsaved-changes-warning: Bạn có các thay đổi chưa được lưu.
+  connected: Đã kết nối
+  disconnected: Đã ngắt kết nối
+  reconnecting: Đang kết nối lại
+  connection-lost: Mất kết nối
+  connection-restored: Kết nối được phục hồi
+  show: Hiển thị
+  hide: Ẩn
+  expand: Mở rộng
+  collapse: Thu gọn
+  enable: Bật
+  disable: Tắt
+  minimize: Thu nhỏ
+  maximize: Phóng to
+  restore: Khôi phục
+  zoom-in: Phóng to
+  zoom-out: Thu nhỏ
+  fullscreen: Toàn màn hình
+  exit-fullscreen: Thoát toàn màn hình
+  true: 'true'
+  false: 'false'
+  ok: OK
+  none-available: Không có sẵn
+  default: Mặc định
+  custom: Tùy chỉnh
+  general: Chung
+  advanced: Nâng cao
+  placeholder-text: Nhập văn bản tại đây...
+  learn-more: Tìm hiểu thêm
+  view-resource: Xem {resource}
+  view-resource-details: Xem chi tiết {resource}
+  create-a-new-resource: Tạo mới {resource}
+  create-new-resource: Tạo mới {resource}
+  search-resource: Tìm kiếm {resource}
+  new-resource: '{resource} mới'
+  update-resource: Cập nhật {resource}
+  save-resource-changes: Lưu thay đổi {resource}
+  creating-resource: Đang tạo {resource}
+  cancel-resource: Hủy {resource}
+  delete-resource: Xóa {resource}
+  delete-resource-name: 'Xóa: {resourceName}'
+  delete-resource-named: Xóa {resource} ({resourceName})
+  delete-resource-prompt: Hành động này không thể hoàn tác. Khi đã xóa, bản ghi sẽ
+    bị xóa vĩnh viễn.
+  delete-cannot-be-undone: Hành động này không thể hoàn tác. Khi đã xóa, bản ghi sẽ
+    bị xóa vĩnh viễn.
+  create-resource: Tạo {resource}
+  edit-resource: Chỉnh sửa {resource}
+  edit-resource-details: Chỉnh sửa chi tiết {resource}
+  edit-resource-type-name: 'Chỉnh sửa {resource}: {resourceName}'
+  edit-resource-name: 'Chỉnh sửa: {resourceName}'
+  config: Cấu hình
+  select-field: Chọn {field}
+  columns: Cột
+  metadata: Siêu dữ liệu
+  meta: Meta
+  resource-created-success: Đã tạo mới {resource} thành công.
+  resource-created-success-name: Đã tạo mới {resource} ({resourceName}) thành công.
+  resource-updated-success: Đã cập nhật {resource} ({resourceName}) thành công.
+  resource-action-success: '{resource} ({resourceName}) {action} thành công.'
+  resource-deleted-success: Đã xóa {resource} ({resourceName}) thành công.
+  resource-deleted: '{resource} ({resourceName}) đã bị xóa.'
+  continue-without-saving: Tiếp tục mà không lưu?
+  continue-without-saving-prompt: Bạn có những thay đổi chưa được lưu cho {resource}
+    này. Tiếp tục sẽ bỏ qua chúng. Nhấn Tiếp tục để tiếp tục.
+resource:
+  alert: Cảnh báo
+  alerts: Các cảnh báo
+  brand: Thương hiệu
+  brands: Các thương hiệu
+  category: Danh mục
+  categories: Các danh mục
+  chat-attachment: Tệp đính kèm trò chuyện
+  chat-attachments: Các tệp đính kèm trò chuyện
+  chat-channel: Kênh trò chuyện
+  chat-channels: Các kênh trò chuyện
+  chat-log: Nhật ký trò chuyện
+  chat-logs: Các nhật ký trò chuyện
+  chat-message: Tin nhắn trò chuyện
+  chat-messages: Các tin nhắn trò chuyện
+  chat-participant: Người tham gia trò chuyện
+  chat-participants: Các người tham gia trò chuyện
+  chat-receipt: Biên nhận trò chuyện
+  chat-receipts: Các biên nhận trò chuyện
+  comment: Bình luận
+  comments: Các bình luận
+  company: Công ty
+  companies: Các công ty
+  custom-field-value: Giá trị trường tùy chỉnh
+  custom-field-values: Giá trị Trường Tùy chỉnh
+  custom-field: Trường Tùy chỉnh
+  custom-fields: Các Trường Tùy chỉnh
+  dashboard-widget: Tiện ích Bảng điều khiển
+  dashboard-widgets: Các Tiện ích Bảng điều khiển
+  dashboard: Bảng điều khiển
+  dashboards: Các Bảng điều khiển
+  extension: Tiện ích mở rộng
+  extensions: Các Tiện ích mở rộng
+  file: Tệp
+  files: Các Tệp
+  group: Nhóm
+  groups: Các Nhóm
+  notification: Thông báo
+  notifications: Các Thông báo
+  permission: Quyền
+  permissions: Các Quyền
+  policy: Chính sách
+  policies: Các Chính sách
+  report: Báo cáo
+  reports: Các Báo cáo
+  role: Vai trò
+  roles: Các Vai trò
+  setting: Cài đặt
+  settings: Các Cài đặt
+  transaction: Giao dịch
+  transactions: Các Giao dịch
+  user-device: Thiết bị Người dùng
+  user-devices: Các Thiết bị Người dùng
+  user: Người dùng
+  users: Các Người dùng
+dropzone:
+  file: tệp
+  drop-to-upload: Kéo thả để tải lên
+  invalid: Không hợp lệ
+  files-ready-for-upload: '{numOfFiles} sẵn sàng để tải lên.'
+  upload-images-videos: Tải lên Hình ảnh & Video
+  upload-documents: Tải lên Tài liệu
+  upload-documents-files: Tải lên Tài liệu & Tệp
+  upload-avatar-files: Tải lên Ảnh đại diện Tùy chỉnh
+  dropzone-supported-images-videos: Kéo và thả các tệp hình ảnh và video vào khu vực
+    này
+  dropzone-supported-avatars: Kéo và thả các tệp SVG hoặc PNG
+  dropzone-supported-files: Kéo và thả các tệp vào khu vực này
+  or-select-button-text: hoặc chọn tệp để tải lên.
+  upload-queue: Hàng đợi Tải lên
+  uploading: Đang tải lên...
+two-fa-enforcement-alert:
+  message: Để tăng cường bảo mật cho tài khoản của bạn, tổ chức của bạn yêu cầu Xác
+    thực Hai Yếu tố (2FA). Hãy bật 2FA trong cài đặt tài khoản để có thêm một lớp
+    bảo vệ.
+  button-text: Thiết lập 2FA
+comment-thread:
+  publish-comment-button-text: Đăng bình luận
+  publish-reply-button-text: Đăng trả lời
+  reply-comment-button-text: Trả lời
+  edit-comment-button-text: Chỉnh sửa
+  delete-comment-button-text: Xóa
+  comment-published-ago: Cách đây {createdAgo}
+  comment-input-placeholder: Nhập bình luận mới...
+  comment-reply-placeholder: Nhập phản hồi của bạn...
+  comment-input-empty-notification: Bạn không thể đăng bình luận trống...
+  comment-min-length-notification: Bình luận phải có ít nhất 2 ký tự
+dashboard:
+  select-dashboard: Chọn Bảng điều khiển
+  create-new-dashboard: Tạo Bảng điều khiển mới
+  create-a-new-dashboard: Tạo một Bảng điều khiển mới
+  confirm-create-dashboard: Tạo Bảng điều khiển!
+  edit-layout: Chỉnh sửa bố cục
+  add-widgets: Thêm tiện ích
+  delete-dashboard: Xóa bảng điều khiển
+  save-dashboard: Lưu Bảng điều khiển
+  you-cannot-delete-this-dashboard: Bạn không thể xóa bảng điều khiển này.
+  are-you-sure-you-want-delete-dashboard: Bạn có chắc chắn muốn xóa {dashboardName}
+    không?
+dashboard-widget-panel:
+  widget-name: Tiện ích {widgetName}
+  select-widgets: Chọn Tiện ích
+  close-and-save: Đóng và Lưu
+filters-picker:
+  filters: Bộ lọc
+  filter-data: Lọc Dữ liệu
+visible-column-picker:
+  select-viewable-columns: Chọn các cột có thể xem
+  customize-columns: Tùy chỉnh Cột
 component:
   file:
-    dropdown-label: Hành động với tệp
+    dropdown-label: Hành động tệp
   import-modal:
-    loading-message: Đang tiến hành nhập...
+    loading-message: Đang xử lý nhập khẩu...
     drop-upload: Thả để tải lên
     invalid: Không hợp lệ
-    ready-upload: sẵn sàng tải lên.
-    upload-spreadsheets: Tải lên Bảng tính
-    drag-drop: Kéo và thả các tệp bảng tính vào vùng thả này
+    ready-upload: sẵn sàng để tải lên.
+    upload-spreadsheets: Tải lên bảng tính
+    drag-drop: Kéo và thả các tệp bảng tính vào khu vực này
     button-text: hoặc chọn bảng tính để tải lên
     spreadsheets: bảng tính
-    upload-queue: Tải lên hàng đợi
+    upload-queue: Hàng đợi tải lên
   dropzone:
-    file: file
+    file: tệp
     drop-to-upload: Thả để tải lên
     invalid: Không hợp lệ
-    files-ready-for-upload:  >-
-      {numOfFiles} sẵn sàng tải lên.
-    upload-images-videos: Tải lên hình ảnh và video
-    upload-documents: Tải lên tài liệu
-    upload-documents-files: Tải lên tài liệu và tập tin
-    upload-avatar-files: Tải lên ảnh đại diện tùy chỉnh
-    dropzone-supported-images-videos: Kéo và thả ảnh hoặc video vào vùng thả này
-    dropzone-supported-avatars: Kéo và thả tệp SVG hoặc PNG
-    dropzone-supported-files: Kéo và thả tệp vào vùng thả này
-    or-select-button-text: hoặc chọn file để tải lên.
-    upload-queue: Tải lên hàng đợi
+    files-ready-for-upload: '{numOfFiles} sẵn sàng để tải lên.'
+    upload-images-videos: Tải lên Hình ảnh & Video
+    upload-documents: Tải lên Tài liệu
+    upload-documents-files: Tải lên Tài liệu & Tệp
+    upload-avatar-files: Tải lên Ảnh đại diện tùy chỉnh
+    dropzone-supported-images-videos: Kéo và thả các tệp hình ảnh và video vào khu
+      vực này
+    dropzone-supported-avatars: Kéo và thả các tệp SVG hoặc PNG
+    dropzone-supported-files: Kéo và thả các tệp vào khu vực này
+    or-select-button-text: hoặc chọn tệp để tải lên.
+    upload-queue: Hàng đợi tải lên
     uploading: Đang tải lên...
   two-fa-enforcement-alert:
-    message: Để tăng cường bảo mật cho tài khoản của bạn, tổ chức của bạn yêu cầu Xác thực hai yếu tố (2FA). Bật 2FA trong cài đặt tài khoản của bạn để có thêm một lớp bảo vệ.
-    button-text: Cấu hình 2FA
+    message: Để tăng cường bảo mật cho tài khoản của bạn, tổ chức của bạn yêu cầu
+      Xác thực Hai Yếu tố (2FA). Hãy bật 2FA trong cài đặt tài khoản để có thêm một
+      lớp bảo vệ.
+    button-text: Thiết lập 2FA
   comment-thread:
     publish-comment-button-text: Đăng bình luận
-    publish-reply-button-text: Đăng phản hồi
-    reply-comment-button-text: Phản hồi
+    publish-reply-button-text: Đăng trả lời
+    reply-comment-button-text: Trả lời
     edit-comment-button-text: Chỉnh sửa
     delete-comment-button-text: Xóa
-    comment-published-ago: >-
-            {createdAgo} trước
-    comment-input-placeholder: Nhập một bình luận mới...
-    comment-reply-placeholder: Nhập phản hồi của bạn...
+    comment-published-ago: '{createdAgo} trước'
+    comment-input-placeholder: Nhập bình luận mới...
+    comment-reply-placeholder: Nhập câu trả lời của bạn...
     comment-input-empty-notification: Bạn không thể đăng bình luận trống...
-    comment-min-length-notification: Bình luận phải chứa ít nhất 2 ký tự
+    comment-min-length-notification: Bình luận phải có ít nhất 2 ký tự
   dashboard:
     select-dashboard: Chọn Bảng điều khiển
-    create-new-dashboard: Tạo mới Bảng điều khiển
-    create-a-new-dashboard: Tạo mới một Bảng điều khiển
+    create-new-dashboard: Tạo Bảng điều khiển mới
+    create-a-new-dashboard: Tạo một Bảng điều khiển mới
     confirm-create-dashboard: Tạo Bảng điều khiển!
     edit-layout: Chỉnh sửa bố cục
     add-widgets: Thêm tiện ích
     delete-dashboard: Xóa bảng điều khiển
-    save-dashboard: Lưu bảng điều khiển
+    save-dashboard: Lưu Bảng điều khiển
     you-cannot-delete-this-dashboard: Bạn không thể xóa bảng điều khiển này.
-    are-you-sure-you-want-delete-dashboard: Bạn có chắc chắn xóa {dashboardName}?
+    are-you-sure-you-want-delete-dashboard: Bạn có chắc chắn muốn xóa {dashboardName}
+      không?
   dashboard-widget-panel:
-    widget-name: >-
-      {widgetName} Tiện ích
-    select-widgets: Chọn tiện ích
+    widget-name: Tiện ích {widgetName}
+    select-widgets: Chọn Tiện ích
     close-and-save: Đóng và Lưu
 services:
   dashboard-service:
-    create-dashboard-success-notification: Bảng điều khiển `{dashboardName}` đã được tạo thành công.
-    delete-dashboard-success-notification: Bảng điều khiển `{dashboardName}` đã được xóa.
+    create-dashboard-success-notification: Bảng điều khiển mới `{dashboardName}` đã
+      được tạo thành công.
+    delete-dashboard-success-notification: Bảng điều khiển `{dashboardName}` đã bị
+      xóa.
 auth:
   verification:
-    header-title: Xác thực tài khoản
-    title: Xác thực email của bạn
-    message-text: <strong>Gần xong rồi!</strong><br> Kiểm tả email của bạn để lấy mã xác thực.
-    verification-code-text: Nhập mã xác thực bạn vừa nhận qua email.
-    verification-input-label: Mã xác thực
-    verify-button-text: Xác thực & Tiếp tục
+    header-title: Xác minh tài khoản
+    title: Xác minh địa chỉ email của bạn
+    message-text: <strong>Sắp hoàn thành!</strong><br> Kiểm tra email của bạn để lấy
+      mã xác minh.
+    verification-code-text: Nhập mã xác minh bạn nhận được qua email.
+    verification-input-label: Mã xác minh
+    verify-button-text: Xác minh & Tiếp tục
     didnt-receive-a-code: Chưa nhận được mã?
     not-sent:
       message: Chưa nhận được mã?
-      alternative-choice: Sử dụng các tùy chọn thay thế bên dưới để xác thực tài khoản của bạn.
-      resend-email: Gửi lại email
+      alternative-choice: Sử dụng các tùy chọn thay thế bên dưới để xác minh tài khoản
+        của bạn.
+      resend-email: Gửi lại Email
       send-by-sms: Gửi qua SMS
   two-fa:
     verify-code:
-      verification-code: Mã xác thực
-      check-title: Kiểm tra email hoặc điện thoại của bạn.
-      check-subtitle: Chúng tôi đã gửi cho bạn mã xác thực. Nhập mã bên dưới để hoàn tất quá trình đăng nhập.
-      expired-help-text: Mã xác thực 2FA của bạn đã hết hạn. Bạn có thể yêu cầu mã khác nếu cần thêm thời gian.
-      resend-code: Gửi lại mã
-      verify-code: Xác thực mã
-      cancel-two-factor: Hủy 2 yếu tố
-      invalid-session-error-notification: Phiên không hợp lệ. Vui lòng thử lại.
-      verification-successful-notification: Xác thực thành công!
-      verification-code-expired-notification: Mã xác thực đã hết hạn. Vui lòng yêu cầu một mã mới.
-      verification-code-failed-notification: Xác thực thất bại. Vui lòng thử lại.
-    resend-code: 
-      verification-code-resent-notification: Mã xác thực mới đã được gửi.
-      verification-code-resent-error-notification: Xảy ra lỗi khi gửi lại mã xác thực. Vui lòng thử lại.
+      verification-code: Mã xác minh
+      check-title: Kiểm tra email hoặc điện thoại của bạn
+      check-subtitle: Chúng tôi đã gửi cho bạn một mã xác minh. Nhập mã bên dưới để
+        hoàn tất quá trình đăng nhập.
+      expired-help-text: Mã xác thực 2FA của bạn đã hết hạn. Bạn có thể yêu cầu mã
+        khác nếu cần thêm thời gian.
+      resend-code: Gửi lại Mã
+      verify-code: Xác minh Mã
+      cancel-two-factor: Hủy Xác thực Hai Yếu tố
+      invalid-session-error-notification: Phiên làm việc không hợp lệ. Vui lòng thử
+        lại.
+      verification-successful-notification: Xác minh thành công!
+      verification-code-expired-notification: Mã xác minh đã hết hạn. Vui lòng yêu
+        cầu mã mới.
+      verification-code-failed-notification: Xác minh thất bại. Vui lòng thử lại.
+    resend-code:
+      verification-code-resent-notification: Mã xác minh mới đã được gửi.
+      verification-code-resent-error-notification: Lỗi khi gửi lại mã xác minh. Vui
+        lòng thử lại.
   forgot-password:
     success-message: Kiểm tra email của bạn để tiếp tục!
-    is-sent:  
+    is-sent:
       title: Gần xong rồi!
-      message: <strong>Kiểm tra email của bạn!</strong><br> Chúng tôi đã gửi cho bạn một liên kết đến email của bạn, cho phép bạn đặt lại mật khẩu. Liên kết sẽ hết hạn sau 15 phút.
+      message: <strong>Kiểm tra email của bạn!</strong><br> Chúng tôi đã gửi cho bạn
+        một liên kết thần kỳ đến email để bạn có thể đặt lại mật khẩu. Liên kết sẽ
+        hết hạn trong 15 phút.
     not-sent:
       title: Quên mật khẩu?
-      message: <strong>Đừng lo lắng, chúng tôi luôn hỗ trợ bạn.</strong><br> Nhập email bạn sử dụng để đăng nhập {appName} và chúng tôi sẽ gửi cho bạn một liên kết an toàn để đặt lại mật khẩu.
+      message: <strong>Đừng lo, chúng tôi luôn hỗ trợ bạn.</strong><br> Nhập email
+        bạn dùng để đăng nhập {appName} và chúng tôi sẽ gửi cho bạn một liên kết an
+        toàn để đặt lại mật khẩu.
     form:
       email-label: Địa chỉ email của bạn
-      submit-button: OK, Gửi cho tôi một liên kết!
-      nevermind-button: Ok
+      submit-button: OK, Gửi cho tôi liên kết thần kỳ!
+      nevermind-button: Không sao
   login:
     title: Đăng nhập vào tài khoản của bạn
-    no-identity-notification: Bạn quên nhập email của bạn?
-    no-password-notification: Bạn quên nhập mật khẩu của bạn?
+    no-identity-notification: Bạn có quên nhập email không?
+    no-password-notification: Bạn có quên nhập mật khẩu không?
     unverified-notification: Tài khoản của bạn cần được xác minh để tiếp tục.
+    password-reset-required: Cần đặt lại mật khẩu để tiếp tục.
     failed-attempt:
-      message: <strong>Quên mật khẩu?</strong><br> Nhấp vào nút bên dưới để đặt lại mật khẩu của bạn.
-      button-text: Được, giúp tôi thiết lập lại nhé!
+      message: <strong>Quên mật khẩu?</strong><br> Nhấn nút bên dưới để đặt lại mật
+        khẩu.
+      button-text: Được rồi, giúp tôi đặt lại!
     form:
       email-label: Địa chỉ email
       password-label: Mật khẩu
-      remember-me-label: Ghi nhớ đăng nhập
+      remember-me-label: Ghi nhớ tôi
       forgot-password-label: Quên mật khẩu?
       sign-in-button: Đăng nhập
-      create-account-button: Tạo mới tài khoản
-    slow-connection-message: Đang gặp sự cố kết nối.
+      create-account-button: Tạo tài khoản mới
+    slow-connection-message: Gặp sự cố kết nối.
   reset-password:
     success-message: Mật khẩu của bạn đã được đặt lại! Đăng nhập để tiếp tục.
-    invalid-verification-code: Liên kết đặt lại mật khẩu này không hợp lệ hoặc đã hết hạn.
+    invalid-verification-code: Liên kết đặt lại mật khẩu này không hợp lệ hoặc đã
+      hết hạn.
     title: Đặt lại mật khẩu của bạn
     form:
       code:
         label: Mã đặt lại của bạn
-        help-text: Mã xác thực bạn đã nhận qua email.
+        help-text: Mã xác minh bạn nhận được trong email.
       password:
         label: Mật khẩu mới
         help-text: Nhập mật khẩu ít nhất 6 ký tự để tiếp tục.
@@ -214,45 +598,58 @@ auth:
       back-button: Quay lại
 console:
   create-or-join-organization:
-    modal-title: Tạo mới hoặc tham gia một tổ chức
-    join-success-notification: Bạn đã tham gia một tổ chức mới!
-    create-success-notification: Bạn vừa tạo ra một tổ chức mới!
+    modal-title: Tạo hoặc tham gia tổ chức
+    join-success-notification: Bạn đã tham gia tổ chức mới!
+    create-success-notification: Bạn đã tạo tổ chức mới!
   switch-organization:
-    modal-title: Bạn có chắc chắn muốn chuyển đổi sang tổ chức {organizationName}?
-    modal-body: Bằng cách xác nhận, tài khoản của bạn sẽ vẫn được đăng nhập, nhưng tổ chức chính của bạn sẽ được chuyển đổi.
-    modal-accept-button-text: Vâng, tôi muốn chuyển đổi tổ chức
-    success-notification: Bạn đã chuyển đổi tổ chức
+    modal-title: Bạn có chắc muốn chuyển tổ chức sang {organizationName}?
+    modal-body: Khi xác nhận, tài khoản của bạn vẫn đăng nhập, nhưng tổ chức chính
+      sẽ được chuyển đổi.
+    modal-accept-button-text: Vâng, tôi muốn chuyển tổ chức
+    success-notification: Bạn đã chuyển tổ chức
   account:
-    index: 
+    index:
       upload-new: Tải lên mới
       phone: Số điện thoại của bạn.
       photos: ảnh
+      timezone: Chọn múi giờ của bạn.
   admin:
+    menu:
+      overview: Tổng quan
+      organizations: Tổ chức
+      branding: Thương hiệu
+      2fa-config: Cấu hình 2FA
+      schedule-monitor: Lịch giám sát
+      services: Dịch vụ
+      mail: Thư
+      filesystem: Hệ thống tập tin
+      queue: Hàng đợi
+      socket: Socket
+      push-notifications: Thông báo đẩy
     schedule-monitor:
-      schedule-monitor: Lịch trình giám sát
-      task-logs-for: >-
-        Nhật ký tác vụ cho:
-      showing-last-count: Đang hiển thị {count} nhật ký cuối
+      schedule-monitor: Giám sát lịch trình
+      task-logs-for: 'Nhật ký tác vụ cho: '
+      showing-last-count: Hiển thị {count} nhật ký cuối cùng
       name: Tên
       type: Loại
       timezone: Múi giờ
-      last-started: Lần bắt đầu cuối
-      last-finished: Lần kết thúc cuối
-      last-failure: Lần thất bại cuối
+      last-started: Bắt đầu lần cuối
+      last-finished: Kết thúc lần cuối
+      last-failure: Lỗi lần cuối
       date: Ngày
-      memory: Memory
-      runtime: Runtime
+      memory: Bộ nhớ
+      runtime: Thời gian chạy
       output: Đầu ra
       no-output: Không có đầu ra
     config:
       database:
-        title: Cấu hình cơ sở dữ liệu 
+        title: Cấu hình cơ sở dữ liệu
       filesystem:
         title: Cấu hình hệ thống tập tin
       mail:
-        title: Cấu hình Mail
-      notification-channels: 
-        title: Cấu hình kênh thông báo
+        title: Cấu hình thư điện tử
+      notification-channels:
+        title: Cấu hình thông báo đẩy
       queue:
         title: Cấu hình hàng đợi
       services:
@@ -261,11 +658,11 @@ console:
         title: Cấu hình Socket
     branding:
       title: Thương hiệu
-      icon-text: Icon
-      upload-new: Tải lên
-      reset-default: Đặt về mặc định
+      icon-text: Biểu tượng
+      upload-new: Tải lên mới
+      reset-default: Đặt lại về mặc định
       logo-text: Logo
-      theme: Chủ đề mặc định
+      theme: Giao diện mặc định
     index:
       total-users: Tổng số người dùng
       total-organizations: Tổng số tổ chức
@@ -276,11 +673,11 @@ console:
     organizations:
       index:
         title: Tổ chức
-        owner-name-column: Người sở hữu
-        owner-phone-column: Điện thoại chủ sở hữu
+        owner-name-column: Chủ sở hữu
+        owner-phone-column: Số điện thoại chủ sở hữu
         owner-email-column: Email chủ sở hữu
         users-count-column: Người dùng
-        phone-column: Số điện thoại
+        phone-column: Điện thoại
         email-column: Email
       users:
         title: Người dùng
@@ -288,75 +685,83 @@ console:
     index:
       title: Cài đặt tổ chức
       organization-name: Tên tổ chức
-      organization-description: Mô tả
-      organization-phone: Số điện thoại
-      organization-currency: Tiền tệ
-      organization-id: ID
-      organization-branding: Thương hiệu
+      organization-description: Mô tả tổ chức
+      organization-phone: Số điện thoại tổ chức
+      organization-currency: Tiền tệ tổ chức
+      organization-id: ID tổ chức
+      organization-branding: Thương hiệu tổ chức
       logo: Logo
-      logo-help-text: Logo cho tổ chức của bạn..
+      logo-help-text: Logo cho tổ chức của bạn.
       upload-new-logo: Tải lên logo mới
       backdrop: Phông nền
-      backdrop-help-text: Biểu ngữ hoặc hình ảnh nền tùy chọn cho tổ chức của bạn.
+      backdrop-help-text: Hình nền hoặc banner tùy chọn cho tổ chức của bạn.
       upload-new-backdrop: Tải lên phông nền mới
+      organization-timezone: Chọn múi giờ mặc định cho tổ chức của bạn.
+      select-timezone: Chọn múi giờ.
   extensions:
-    title: Các tiện ích mở rộng sẽ sớm ra mắt!
-    message: Vui lòng kiểm tra lại trong các phiên bản sắp tới khi chúng tôi chuẩn bị ra mắt kho lưu trữ và thị trường Tiện ích mở rộng.
+    title: Các tiện ích mở rộng sắp ra mắt!
+    message: Vui lòng quay lại trong các phiên bản sắp tới khi chúng tôi chuẩn bị
+      ra mắt kho tiện ích mở rộng và chợ ứng dụng.
   notifications:
     select-all: Chọn tất cả
-    mark-as-read: Đánh dấu là đã đọc
-    received: >-
-        Đã nhận:
-    message: Không có thông báo nào để hiển thị.
+    mark-as-read: Đánh dấu đã đọc
+    received: 'Đã nhận:'
+    message: Không có thông báo để hiển thị.
 invite:
   for-users:
     invitation-message: Bạn đã được mời tham gia {companyName}
-    invitation-sent-message: Bạn đã được mời tham gia tổ chức {companyName} trên {appName}. Để chấp nhận lời mời này, hãy nhập mã mời nhận được qua email và nhấp vào tiếp tục.
-    invitation-code-sent-text: Mã mời của bạn
+    invitation-sent-message: Bạn đã được mời tham gia tổ chức {companyName} trên {appName}.
+      Để chấp nhận lời mời này, hãy nhập mã lời mời bạn nhận được qua email và nhấn
+      tiếp tục.
+    invitation-code-sent-text: Mã lời mời của bạn
     accept-invitation-text: Chấp nhận lời mời
 onboard:
   index:
-    title: Tạo tài khoản mới
-    welcome-title: <strong>Chào mừng tới {companyName}!</strong><br />
-    welcome-text: Hoàn tất các thông tin yêu cầu bên dưới để bắt đầu.
-    full-name: Tên đầy đủ
-    full-name-help-text: Tên đầy đủ của bạn
+    title: Tạo tài khoản của bạn
+    welcome-title: <strong>Chào mừng đến với {companyName}!</strong><br />
+    welcome-text: Hoàn thành các thông tin cần thiết bên dưới để bắt đầu.
+    full-name: Họ và tên
+    full-name-help-text: Họ và tên đầy đủ của bạn
     your-email: Địa chỉ email
     your-email-help-text: Địa chỉ email của bạn
     phone: Số điện thoại
     phone-help-text: Số điện thoại của bạn
     organization-name: Tên tổ chức
-    organization-help-text: Tên tổ chức của bạn, tất cả các dịch vụ và tài nguyên của bạn sẽ được quản lý theo tổ chức này, sau đó bạn có thể tạo nhiều tổ chức tùy ý hoặc theo nhu cầu.
+    organization-help-text: Tên tổ chức của bạn, tất cả dịch vụ và tài nguyên sẽ được
+      quản lý dưới tổ chức này, sau này bạn có thể tạo nhiều tổ chức tùy ý hoặc theo
+      nhu cầu.
     password: Nhập mật khẩu
-    password-help-text: Mật khẩu của bạn phải an toàn.
-    confirm-password: Xác nhận mật khẩu của bạn
+    password-help-text: Mật khẩu của bạn, hãy đảm bảo nó đủ mạnh.
+    confirm-password: Xác nhận mật khẩu
     confirm-password-help-text: Chỉ để xác nhận mật khẩu bạn đã nhập ở trên.
     continue-button-text: Tiếp tục
   verify-email:
-    header-title: Xác thực tài khoản
-    title: Xác thực địa chỉ email của bạn
-    message-text: <strong>Gần xong rồi!</strong><br> Kiêm tra mã xác thực trong email của bạn.
-    verification-code-text: Nhập mã xác thực bạn vừa nhận qua email.
-    verification-input-label: Mã xác thực
-    verify-button-text: Xác thực & Tiếp tục
-    didnt-receive-a-code: Bạn vẫn chưa nhận được mã?
+    header-title: Xác minh tài khoản
+    title: Xác minh địa chỉ email của bạn
+    message-text: <strong Gần hoàn tất!</strong><br> Kiểm tra email của bạn để lấy
+      mã xác minh.
+    verification-code-text: Nhập mã xác minh bạn nhận được qua email.
+    verification-input-label: Mã xác minh
+    verify-button-text: Xác minh & Tiếp tục
+    didnt-receive-a-code: Chưa nhận được mã?
     not-sent:
-      message: Bạn vẫn chưa nhận được mã?
-      alternative-choice: Sử dụng các tùy chọn thay thế bên dưới để xác thực tài khoản của bạn.
-      resend-email: Gửi lại
+      message: Chưa nhận được mã?
+      alternative-choice: Sử dụng các tùy chọn thay thế bên dưới để xác minh tài khoản
+        của bạn.
+      resend-email: Gửi lại Email
       send-by-sms: Gửi qua SMS
 install:
   installer-header: Trình cài đặt
-  failed-message-sent: Cài đặt thất bại! Nhấp vào nút bên dưới để thử cài đặt lại.
-  retry-install: Thử lại cài đặt
+  failed-message-sent: Cài đặt thất bại! Nhấn nút bên dưới để thử lại.
+  retry-install: Thử cài đặt lại
   start-install: Bắt đầu cài đặt
 layout:
   header:
     menus:
       organization:
         settings: Cài đặt tổ chức
-        create-or-join: Tạo mới hoặc tham gia một tổ chức
-        explore-extensions: Khám phá phần mở rộng
+        create-or-join: Tạo hoặc tham gia tổ chức
+        explore-extensions: Khám phá tiện ích mở rộng
       user:
         view-profile: Xem hồ sơ
         keyboard-shortcuts: Hiển thị phím tắt

@@ -1,4 +1,4 @@
-<ContentPanel @title="Mail" @open={{true}} @pad={{true}} @panelBodyClass="bg-white dark:bg-gray-800">
+<ContentPanel @title="Mail" @open={{true}} @wrapperClass="bordered-classic">
     <InputGroup @name="Mailer" @helpText="Select the default mailer for Fleetbase to use.">
         <Select @options={{this.mailers}} @value={{this.mailer}} @onSelect={{this.setMailer}} @placeholder="Select mailer" class="w-full" />
     </InputGroup>

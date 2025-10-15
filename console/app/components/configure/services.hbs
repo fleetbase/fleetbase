@@ -1,15 +1,15 @@
-<ContentPanel @title="AWS" @open={{true}} @pad={{true}} @panelBodyClass="bg-white dark:bg-gray-800">
+<ContentPanel @title="AWS" @open={{true}} @wrapperClass="bordered-classic">
     <InputGroup @name="AWS Access Key" @value={{this.awsKey}} disabled={{this.isLoading}} />
     <InputGroup @name="AWS Access Secret" @value={{this.awsSecret}} disabled={{this.isLoading}} />
     <InputGroup @name="AWS Region" @value={{this.awsRegion}} disabled={{this.isLoading}} />
 </ContentPanel>
 
-<ContentPanel @title="Google Maps" @open={{true}} @pad={{true}} @panelBodyClass="bg-white dark:bg-gray-800">
+<ContentPanel @title="Google Maps" @open={{true}} @wrapperClass="bordered-classic">
     <InputGroup @name="Google Maps API Key" @value={{this.googleMapsApiKey}} disabled={{this.isLoading}} />
     <InputGroup @name="Google Maps Locale" @value={{this.googleMapsLocale}} disabled={{this.isLoading}} />
 </ContentPanel>
 
-<ContentPanel @title="Twilio" @open={{true}} @pad={{true}} @panelBodyClass="bg-white dark:bg-gray-800">
+<ContentPanel @title="Twilio" @open={{true}} @wrapperClass="bordered-classic">
     <InputGroup @name="Twilio SID" @value={{this.twilioSid}} disabled={{this.isLoading}} />
     <InputGroup @name="Twilio Token" @value={{this.twilioToken}} disabled={{this.isLoading}} />
     <InputGroup @name="Twilio From" @value={{this.twilioFrom}} disabled={{this.isLoading}} />
@@ -25,7 +25,7 @@
     </div>
 </ContentPanel>
 
-<ContentPanel @title="Sentry" @open={{true}} @pad={{true}} @panelBodyClass="bg-white dark:bg-gray-800">
+<ContentPanel @title="Sentry" @open={{true}} @wrapperClass="bordered-classic">
     <InputGroup @name="Sentry DSN" @value={{this.sentryDsn}} disabled={{this.isLoading}} />
     {{#if this.sentryTestResponse}}
         <div class="flex flex-row items-center rounded-lg border {{if (eq this.sentryTestResponse.status 'error') 'border-red-900 bg-red-800 text-red-100' 'border-green-900 bg-green-800 text-green-100'}} shadow-sm my-2 px-4 py-2">
@@ -36,7 +36,7 @@
     <Button @wrapperClass="mt-3" @icon="plug" @text="Test Sentry Config" @onClick={{perform this.testSentry}} @isLoading={{this.testSentry.isRunning}} @disabled={{not this.sentryDsn}} />
 </ContentPanel>
 
-<ContentPanel @title="IP Info" @open={{true}} @pad={{true}} @panelBodyClass="bg-white dark:bg-gray-800">
+<ContentPanel @title="IP Info" @open={{true}} @wrapperClass="bordered-classic">
     <InputGroup @name="IP Info API Key" @value={{this.ipinfoApiKey}} disabled={{this.isLoading}} />
 </ContentPanel>
 

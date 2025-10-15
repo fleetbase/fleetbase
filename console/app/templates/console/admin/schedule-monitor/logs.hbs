@@ -1,13 +1,15 @@
 {{page-title (concat (t "console.admin.schedule-monitor.schedule-monitor") " - " @model.name)}}
 <Overlay @isOpen={{true}} @onLoad={{this.setOverlayContext}} @position="right" @noBackdrop={{true}} @fullHeight={{true}} @width="600px" @isResizable={{true}}>
     <Overlay::Header @title={{concat (t "console.admin.schedule-monitor.task-logs-for") @model.name}} @titleClass="max-w-400px truncate" @hideStatusDot={{true}} @titleWrapperClass="leading-5">
-        <div class="flex flex-1 justify-end">
-            <Button @type="default" @icon="times" @helpText={{t "common.close-and-save"}} @onClick={{this.onPressClose}} />
-        </div>
+        <:actions>
+            <div class="flex flex-1 justify-end">
+                <Button @type="default" @icon="times" @helpText={{t "common.close"}} @onClick={{this.onPressClose}} />
+            </div>
+        </:actions>
     </Overlay::Header>
 
     <Overlay::Body>
-        <div class="p-4">
+        <div class="px-3 py-2">
             <div class="flex items-center justify-between mb-4">
                 <div class="text-sm">{{t "console.admin.schedule-monitor.showing-last-count" count=20}}</div>
                 <Button @size="xs" @icon="arrows-rotate" @onClick={{perform this.reload @model}} @isLoading={{not this.reload.isIdle}} />

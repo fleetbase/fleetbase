@@ -1,24 +1,27 @@
-# 🚀 Fleetbase v0.7.10 — 2025-09-02
+# 🚀 Fleetbase v0.7.11 — 2025-10-15
 
-> “Preparing for a major update”
+> “Major update is here”
 
 ---
 
 ## ✨ Highlights
-- Added new core Report and Alert models to enable report generation and alerts
-- Added new FleetOps models to enhance maintenance and telematics: Maintenance, WorkOrder, Asset, Equipment, Part, Sensor, Telematic 
-- Added new `HasCustomFields` trait to enable custom fields on resources
-- Added ability to filter storefront metrics with date range input
-- Patched customers widget in storefront
-- Patched payment gateway management in storefront
-- Added ability to set default order config to stores and networks
-- Critical patches for stripe integration in Storefront
-- Other quality patches in storefront
+- UI/UX Refactor and improvements.
+- Core API added `without` feature for `FleetbaseResource` classes, which filters properties from the JSON response of a resource.
+- Added complete Reporting registry to Core API, and supported Schema
+- Improved Custom Fields core feature
+- FleetOps refactor completed
+- Added Analytics -> Reports to FleetOps
+- Added Order Kanban Board to Fleet-Ops
+- UI/UX Refactor and Improvements
+- Storefront patch for sending notifications without FCM/APN configured
+- Storefront food truck orders automatically assign driver patch
+- Added new complete translations: Arabic, Bulgarian, Spanish, French, Mongolian, Portuguese (Brazil), Russian, Vietnamese, and Chinese
+- Custom Fields for all resources now here.
 
 ---
 
 ## ⚠️ Breaking Changes
-- ⚠️ `VehicleDevice` and `VehicleDeviceEvent` has been deprecated and changed to `Device` and `DeviceEvent`
+- None
 
 ---
 

@@ -9,7 +9,7 @@ module.exports = {
             './node_modules/@fleetbase+*/addon/**/*.{hbs,js}',
             './node_modules/@fleetbase/ember-ui/addon/templates/**/*.{hbs,js}',
             './node_modules/@fleetbase/ember-ui/addon/components/**/*.{hbs,js}',
-            './node_modules/**/*-engine/addon/**/*.{hbs,js}'
+            './node_modules/**/*-engine/addon/**/*.{hbs,js}',
         ],
     },
     safelist: [

@@ -186,7 +186,7 @@ export default class UserModel extends Model {
         if (!isValid(this.updated_at)) {
             return '-';
         }
-        return format(this.updated_at, 'PPP p');
+        return format(this.updated_at, 'yyyy-MM-dd HH:mm');
     }
 
     @computed('updated_at') get updatedAtShort() {
@@ -207,7 +207,7 @@ export default class UserModel extends Model {
         if (!isValid(this.created_at)) {
             return '-';
         }
-        return format(this.created_at, 'PPP p');
+        return format(this.created_at, 'yyyy-MM-dd HH:mm');
     }
 
     @computed('created_at') get createdAtShort() {
