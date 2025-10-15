@@ -24,7 +24,7 @@ target "app" {
   // set the target from matrix
   target     = tgt
   dockerfile = "docker/Dockerfile"
-  platforms  = ["linux/amd64", "linux/arm64"]
+  platforms  = ["linux/amd64"]
 
   # Generate tags for both the canonical name (${tgt})
   # and an alias (api) *only when tgt == "app"*
@@ -52,7 +52,7 @@ target "app" {
 target "app-httpd" {
   context    = "./"
   dockerfile = "docker/httpd/Dockerfile"
-  platforms  = ["linux/amd64", "linux/arm64"]
+  platforms  = ["linux/amd64"]
 
   tags = notequal("", REGISTRY) ? formatlist(
     GCP ? "${REGISTRY}/app-httpd:%s" : "${REGISTRY}:app-httpd-%s",

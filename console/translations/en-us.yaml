@@ -1,86 +1,472 @@
 app:
   name: Fleetbase
-terms:
+
+common:
   new: New
-  sort: Sort
-  filter: Filer
-  columns: Columns
-  settings: Settings
-  home: Home
-  admin: Admin
-  logout: Logout
-  dashboard: Dashboard
-  search: Search
-  search-input: Search Input
-common: 
-  confirm: Confirm
+  create: Create
+  add: Add
   edit: Edit
+  update: Update
   save: Save
   save-changes: Save Changes
-  cancel: Cancel
-  2fa-config: 2FA Config
-  account: Account
-  admin: Admin
-  branding: Branding
-  columns: Columns
-  dashboard: Dashboard
-  date-of-birth: Date of Birth
   delete: Delete
-  email: Email
-  filesystem: Filesystem
-  filter: Filer
-  home: Home
-  logout: Logout
-  mail: Mail
-  name: Name
-  new: New
-  notification-channels: Notification Channels
-  notifications: Notifications
-  organization: Organization
-  organizations: Organizations
-  overview: Overview
-  phone: Your phone number
-  profile: Profile
-  queue: Queue
-  save-button-text: Save Changes
-  search-input: Search Input
-  search: Search
-  services: Services
-  settings: Settings
-  socket: Socket
-  sort: Sort
-  two-factor: Two Factor
-  uploading: Uploading...
+  delete-selected: Delete Selected
+  delete-selected-count: Delete {count} Selected
   your-profile: Your Profile
-  created-at: Created At
-  country: Country
-  phone-number: Phone
-  status: Status
-  close-and-save: Close and Save
-  users: Users
-  changelog: Changelog
-  ok: OK
-  select-file: Select File
+  date-of-birth: Date of Birth
+  organization: Organization
+  two-factor: Two Factor
+  remove: Remove
+  cancel: Cancel
+  confirm: Confirm
+  close: Close
+  open: Open
+  view: View
+  preview: Preview
+  upload: Upload
+  download: Download
+  import: Import
+  export: Export
+  print: Print
+  duplicate: Duplicate
+  copy: Copy
+  paste: Paste
+  share: Share
+  refresh: Refresh
+  reset: Reset
+  retry: Retry
   back: Back
   next: Next
+  previous: Previous
+  submit: Submit
+  apply: Apply
   continue: Continue
+  proceed: Proceed
+  select: Select
+  deselect: Deselect
+  search: Search
+  filter: Filter
+  sort: Sort
+  view-all: View All
+  clear: Clear
   done: Done
-  export: Export
-  reload: Reload
-  reload-data: Reload data
-  unauthorized: Unauthorized
-  unauthorized-to: Unauthorized to
-  unauthorized-access: Unauthorized Access
-  unauthorized-access-message: Unauthorized Access, you must request permissions to access.
-  permissions-required-for-changes: You do not have the required permissions to make changes.
-  push-notifications: Push Notifications
-  role: Role
-  timezone: Timezone
+  finish: Finish
+  skip: Skip
+  method: Method
   bulk-delete: Bulk Delete
-  bulk-delete-resource: Delete {resource}
+  bulk-delete-resource: Bulk Delete {resource}
+  bulk-cancel: Bulk Cancel
+  bulk-cancel-resource: Bulk Cancel {resource}
+  bulk-actions: Bulk Actions
+  column: Column
+  row: Row
+  table: Table
+  list: List
+  grid: Grid
+  form: Form
+  field: Field
+  section: Section
+  panel: Panel
+  card: Card
+  tab: Tab
+  modal: Modal
+  dialog: Dialog
+  menu: Menu
+  dropdown: Dropdown
+  tooltip: Tooltip
+  sidebar: Sidebar
+  toolbar: Toolbar
+  footer: Footer
+  header: Header
+  title: Title
+  subtitle: Subtitle
+  description: Description
+  placeholder: Placeholder
+  label: Label
+  button: Button
+  icon: Icon
+  avatar: Avatar
+  link: Link
+  badge: Badge
+  tag: Tag
+  banner: Banner
+  step: Step
+  progress: Progress
+  map: Map
+  board: Board
+  loading: Loading
+  loading-resource: Loading {resource}
+  saving: Saving
+  processing: Processing
+  fetching: Fetching
+  updating: Updating
+  uploading: Uploading
+  completed: Completed
+  success: Success
+  failed: Failed
+  error: Error
+  warning: Warning
+  info: Info
+  ready: Ready
+  activity: Activity
+  active: Active
+  inactive: Inactive
+  enabled: Enabled
+  disabled: Disabled
+  online: Online
+  offline: Offline
+  pending: Pending
+  archived: Archived
+  hidden: Hidden
+  visible: Visible
+  empty: Empty
+  not-found: Not Found
+  no-results: No Results
+  try-again: Try Again
+  are-you-sure: Are you sure?
+  changes-saved: Changes saved successfully.
+  saved-successfully: Changes saved successfully.
+  field-saved: >-
+    {field} saved successfully.
+  changes-discarded: Changes discarded.
+  delete-confirm: Are you sure you want to delete this item?
+  action-successful: Action completed successfully.
+  action-failed: Action failed. Please try again.
+  something-went-wrong: Something went wrong.
+  please-wait: Please wait...
+  sign-in: Sign In
+  sign-out: Sign Out
+  sign-up: Sign Up
+  log-in: Log In
+  log-out: Log Out
+  register: Register
+  forgot-password: Forgot Password
+  reset-password: Reset Password
+  change-password: Change Password
+  password: Password
+  confirm-password: Confirm Password
+  email: Email
+  username: Username
+  remember-me: Remember Me
+  welcome: Welcome
+  welcome-back: Welcome Back
+  profile: Profile
+  account: Account
+  settings: Settings
+  preferences: Preferences
+  record: Record
+  records: Records
+  item: Item
+  items: Items
+  entry: Entry
+  entries: Entries
+  id: ID
+  name: Name
+  type: Type
+  category: Category
+  overview: Overview
+  value: Value
+  amount: Amount
+  price: Price
+  quantity: Quantity
+  status: Status
+  date: Date
+  date-created: Date Created
+  date-updated: Date Updated
+  time: Time
+  created-at: Created At
+  updated-at: Updated At
+  expired-at: Expired at
+  last-seen-at: Last Seen At
+  last-modified: Last Modified
+  last-modified-data: >-
+    Last Modified: {date}
+  actions: Actions
+  details: Details
+  notes: Notes
+  reference: Reference
+  filter-by: Filter By
+  filter-by-field: Filter By {field}
+  sort-by: Sort By
+  ascending: Ascending
+  descending: Descending
+  all: All
+  none: None
+  select-all: Select All
+  deselect-all: Deselect All
+  show-more: Show More
+  show-less: Show Less
+  page: Page
+  of: of
+  total: Total
+  items-per-page: Items per page
+  showing: Showing
+  to: to
+  results: Results
+  load-more: Load More
+  no-more-results: No More Results
+  today: Today
+  yesterday: Yesterday
+  tomorrow: Tomorrow
+  day: Day
+  week: Week
+  month: Month
+  year: Year
+  date-range: Date Range
+  start-date: Start Date
+  end-date: End Date
+  time-zone: Time Zone
+  system: System
+  dashboard: Dashboard
+  home: Home
+  analytics: Analytics
+  reports: Reports
+  logs: Logs
+  help: Help
+  support: Support
+  contact: Contact
+  documentation: Documentation
+  language: Language
+  timezone: Timezone
+  version: Version
+  theme: Theme
+  light-mode: Light Mode
+  dark-mode: Dark Mode
+  update-available: Update Available
+  install-update: Install Update
+  maintenance-mode: Maintenance Mode
+  notification: Notification
+  notifications: Notifications
+  mark-as-read: Mark as Read
+  mark-all-as-read: Mark All as Read
+  clear-notifications: Clear Notifications
+  company: Company
+  companies: Companies
+  user: User
+  users: Users
+  role: Role
+  roles: Roles
+  permission: Permission
+  permissions: Permissions
+  group: Group
+  groups: Groups
+  unauthorized: Unauthorized
+  forbidden: Forbidden
+  resource-not-found: Resource Not Found
+  server-error: Server Error
+  validation-error: Validation Error
+  timeout-error: Request Timed Out
+  network-error: Network Error
+  unknown-error: Unknown Error
+  file: File
+  files: Files
+  folder: Folder
+  folders: Folder's
+  upload-file: Upload File
+  upload-files: Upload Files
+  upload-image: Upload Image
+  upload-image-supported: Supports PNGs, JPEGs and GIFs
+  choose-file: Choose File
+  choose-files: Choose Files
+  drag-and-drop: Drag and Drop
+  download-file: Download File
+  file-size: File Size
+  file-type: File Type
+  confirm-delete: Confirm Delete
+  confirm-action: Confirm Action
+  confirm-exit: Confirm Exit
+  confirm-and-save-changes: Confirm & Save Changes
+  are-you-sure-exit: Are you sure you want to exit?
+  unsaved-changes-warning: You have unsaved changes.
+  connected: Connected
+  disconnected: Disconnected
+  reconnecting: Reconnecting
+  connection-lost: Connection Lost
+  connection-restored: Connection Restored
+  show: Show
+  hide: Hide
+  expand: Expand
+  collapse: Collapse
+  enable: Enable
+  disable: Disable
+  minimize: Minimize
+  maximize: Maximize
+  restore: Restore
+  zoom-in: Zoom In
+  zoom-out: Zoom Out
+  fullscreen: Fullscreen
+  exit-fullscreen: Exit Fullscreen
+  yes: Yes
+  no: No
+  ok: OK
+  none-available: None Available
+  default: Default
+  custom: Custom
+  general: General
+  advanced: Advanced
+  placeholder-text: Enter text here...
+  learn-more: Learn More
+  view-resource: View {resource}
+  view-resource-details: View {resource} Details
+  create-a-new-resource: Create a new {resource}
+  create-new-resource: Create new {resource}
+  search-resource: Search {resource}
+  new-resource: New {resource}
+  update-resource: Update {resource}
+  save-resource-changes: Save {resource} Changes
+  creating-resource: Creating {resource}
+  cancel-resource: Cancel {resource}
+  delete-resource: Delete {resource}
+  delete-resource-name: >-
+    Delete: {resourceName}
+  delete-resource-named: Delete {resource} ({resourceName})
+  delete-resource-prompt: This action cannot be undone. Once deleted, the record will be permanently removed.
+  delete-cannot-be-undone: This action cannot be undone. Once deleted, the record will be permanently removed.
+  create-resource: Create {resource}
+  edit-resource: Edit {resource}
+  edit-resource-details: Edit {resource} Details
+  edit-resource-type-name: >-
+    Edit {resource}: {resourceName}
+  edit-resource-name: >-
+    Edit: {resourceName}
+  config: Config
+  select-field: Select {field}
+  columns: Columns
+  metadata: Metadata
+  meta: Meta
+  resource-created-success: New {resource} created successfully.
+  resource-created-success-name: New {resource} ({resourceName}) created successfully.
+  resource-updated-success: >-
+    {resource} ({resourceName}) updated successfully.
+  resource-action-success: >-
+    {resource} ({resourceName}) {action} successfully.
+  resource-deleted-success: >-
+    {resource} ({resourceName}) deleted successfully.
+  resource-deleted: >-
+    {resource} ({resourceName}) deleted.
+  continue-without-saving: Continue Without Saving?
+  continue-without-saving-prompt: You have unsaved changes to this {resource}. Continuing will discard them. Click Continue to proceed.
+
+resource:
+  alert: Alert
+  alerts: Alerts
+  brand: Brand
+  brands: Brands
+  category: Category
+  categories: Categories
+  chat-attachment: Chat Attachment
+  chat-attachments: Chat Attachments
+  chat-channel: Chat Channel
+  chat-channels: Chat Channels
+  chat-log: Chat Log
+  chat-logs: Chat Logs
+  chat-message: Chat Message
+  chat-messages: Chat Messages
+  chat-participant: Chat Participant
+  chat-participants: Chat Participants
+  chat-receipt: Chat Receipt
+  chat-receipts: Chat Receipts
+  comment: Comment
+  comments: Comments
+  company: Company
+  companies: Companies
+  custom-field-value: Custom Field Value
+  custom-field-values: Custom Field Values
+  custom-field: Custom Field
+  custom-fields: Custom Fields
+  dashboard-widget: Dashboard Widget
+  dashboard-widgets: Dashboard Widgets
+  dashboard: Dashboard
+  dashboards: Dashboards
+  extension: Extension
+  extensions: Extensions
+  file: File
+  files: Files
+  group: Group
+  groups: Groups
+  notification: Notification
+  notifications: Notifications
+  permission: Permission
+  permissions: Permissions
+  policy: Policy
+  policies: Policies
+  report: Report
+  reports: Reports
+  role: Role
+  roles: Roles
+  setting: Setting
+  settings: Settings
+  transaction: Transaction
+  transactions: Transactions
+  user-device: User Device
+  user-devices: User Devices
+  user: User
+  users: Users
+
+dropzone:
+  file: file
+  drop-to-upload: Drop to upload
+  invalid: Invalid
+  files-ready-for-upload:  >-
+    {numOfFiles} ready for upload.
+  upload-images-videos: Upload Images & Videos
+  upload-documents: Upload Documents
+  upload-documents-files: Upload Documents & Files
+  upload-avatar-files: Upload Custom Avatars
+  dropzone-supported-images-videos: Drag and drop image and video files onto this dropzone
+  dropzone-supported-avatars: Drag and drop SVG or PNG files
+  dropzone-supported-files: Drag and drop files onto this dropzone
+  or-select-button-text: or select files to upload.
+  upload-queue: Upload Queue
+  uploading: Uploading...
+
+two-fa-enforcement-alert:
+  message: To enhance the security of your account, your organization requires Two-Factor Authentication (2FA). Enable 2FA in your account settings for an additional layer of protection.
+  button-text: Setup 2FA
+
+comment-thread:
+  publish-comment-button-text: Publish comment
+  publish-reply-button-text: Publish reply
+  reply-comment-button-text: Reply
+  edit-comment-button-text: Edit
+  delete-comment-button-text: Delete
+  comment-published-ago: >-
+          {createdAgo} ago
+  comment-input-placeholder: Input a new comment...
+  comment-reply-placeholder: Input your reply...
+  comment-input-empty-notification: You cannot publish empty comments...
+  comment-min-length-notification: Comment must be atleast 2 characters
+
+dashboard:
+  select-dashboard: Select Dashboard
+  create-new-dashboard: Create new Dashboard
+  create-a-new-dashboard: Create a new Dashboard
+  confirm-create-dashboard: Create Dashboard!
+  edit-layout: Edit layout
+  add-widgets: Add widgets
+  delete-dashboard: Delete dashboard
+  save-dashboard: Save Dashboard
+  you-cannot-delete-this-dashboard: You cannot delete this dashboard.
+  are-you-sure-you-want-delete-dashboard: Are you sure to delete this {dashboardName}?
+
+dashboard-widget-panel:
+  widget-name: >-
+    {widgetName} Widget
+  select-widgets: Select Widgets
+  close-and-save: Close and Save
+
+filters-picker:
+  filters: Filters
+  filter-data: Filter Data
+
+visible-column-picker:
+  select-viewable-columns: Select viewable columns
+  customize-columns: Customize Columns
+
 component:
   file:
     dropdown-label: File actions
+
   import-modal:
     loading-message: Processing import...
     drop-upload: Drop to upload
@@ -91,6 +477,7 @@ component:
     button-text: or select spreadsheets to upload
     spreadsheets: spreadsheets
     upload-queue: Upload Queue
+
   dropzone:
     file: file
     drop-to-upload: Drop to upload
@@ -107,9 +494,11 @@ component:
     or-select-button-text: or select files to upload.
     upload-queue: Upload Queue
     uploading: Uploading...
+
   two-fa-enforcement-alert:
     message: To enhance the security of your account, your organization requires Two-Factor Authentication (2FA). Enable 2FA in your account settings for an additional layer of protection.
     button-text: Setup 2FA
+
   comment-thread:
     publish-comment-button-text: Publish comment
     publish-reply-button-text: Publish reply
@@ -122,6 +511,7 @@ component:
     comment-reply-placeholder: Input your reply...
     comment-input-empty-notification: You cannot publish empty comments...
     comment-min-length-notification: Comment must be atleast 2 characters
+
   dashboard:
     select-dashboard: Select Dashboard
     create-new-dashboard: Create new Dashboard
@@ -133,15 +523,18 @@ component:
     save-dashboard: Save Dashboard
     you-cannot-delete-this-dashboard: You cannot delete this dashboard.
     are-you-sure-you-want-delete-dashboard: Are you sure to delete this {dashboardName}?
+
   dashboard-widget-panel:
     widget-name: >-
       {widgetName} Widget
     select-widgets: Select Widgets
     close-and-save: Close and Save
+
 services:
   dashboard-service:
     create-dashboard-success-notification: New dashboard `{dashboardName}` created succesfully.
     delete-dashboard-success-notification: Dashboard `{dashboardName}` was deleted.
+
 auth:
   verification:
     header-title: Account Verification
@@ -156,6 +549,7 @@ auth:
       alternative-choice: Use alternaitve options below to verify your account.
       resend-email: Resend Email
       send-by-sms: Send by SMS
+
   two-fa:
     verify-code:
       verification-code: Verification Code
@@ -169,9 +563,11 @@ auth:
       verification-successful-notification: Verification successful!
       verification-code-expired-notification: Verification code has expired. Please request a new one.
       verification-code-failed-notification: Verification failed. Please try again.
+
     resend-code: 
       verification-code-resent-notification: New verification code sent.
       verification-code-resent-error-notification: Error resending verification code. Please try again.
+
   forgot-password:
     success-message: Check your email to continue!
     is-sent:  
@@ -184,6 +580,7 @@ auth:
       email-label: Your email address
       submit-button: OK, Send me a magic link!
       nevermind-button: Nevermind
+
   login:
     title: Sign in to your account
     no-identity-notification: Did you forget to enter your email?
@@ -193,6 +590,7 @@ auth:
     failed-attempt:
       message: <strong>Forgot your password?</strong><br> Click the button below to reset your password.
       button-text: Ok, help me reset!
+
     form:
       email-label: Email address
       password-label: Password
@@ -201,6 +599,7 @@ auth:
       sign-in-button: Sign in
       create-account-button: Create a new Account
     slow-connection-message: Experiencing connectivity issues.
+
   reset-password:
     success-message: Your password has been reset! Login to continue.
     invalid-verification-code: This reset password link is invalid or expired.
@@ -217,23 +616,39 @@ auth:
         help-text: Enter a password at-least 6 characters to continue.
       submit-button: Reset Password
       back-button: Back
+
 console:
   create-or-join-organization:
     modal-title: Create or join a organization
     join-success-notification: You have joined a new organization!
     create-success-notification: You have created a new organization!
+
   switch-organization:
     modal-title: Are you sure you want to switch organization to {organizationName}?
     modal-body: By confirming your account will remain logged in, but your primary organization will be switched.
     modal-accept-button-text: Yes, I want to switch organization
     success-notification: You have switched organizations
+
   account:
     index: 
       upload-new: Upload new
       phone: Your phone number.
       photos: photos
       timezone: Select your timezone.
+
   admin:
+    menu:
+      overview: Overview
+      organizations: Organizations
+      branding: Branding
+      2fa-config: 2FA Config
+      schedule-monitor: Schedule Monitor
+      services: Services
+      mail: Mail
+      filesystem: Filesystem
+      queue: Queue
+      socket: Socket
+      push-notifications: Push Notifications
     schedule-monitor:
       schedule-monitor: Schedule Monitor
       task-logs-for: >-
@@ -290,6 +705,7 @@ console:
         email-column: Email
       users:
         title: Users
+
   settings:
     index:
       title: Organization Settings
@@ -307,21 +723,25 @@ console:
       upload-new-backdrop: Upload new backdrop
       organization-timezone: Select the default timezone for your organization.
       select-timezone: Select timezone.
+
   extensions:
     title: Extensions are coming soon!
     message: Please check back in the upcoming versions as we prepare to launch the Extensions repository and marketplace.
+
   notifications:
     select-all: Select All
     mark-as-read: Mark as Read
     received: >-
         Received:
     message: No notifications to display.
+
 invite:
   for-users:
     invitation-message: You've been invited to join {companyName}
     invitation-sent-message: You've been invited to join the {companyName} organization on {appName}. To accept this invitation, input your invitation code received by email and click continue.
     invitation-code-sent-text: Your invitiation code
     accept-invitation-text: Accept Invitation
+
 onboard:
   index:
     title: Create your account
@@ -353,11 +773,13 @@ onboard:
       alternative-choice: Use alternaitve options below to verify your account.
       resend-email: Resend Email
       send-by-sms: Send by SMS
+
 install:
   installer-header: Installer
   failed-message-sent: The install failed! Click the button below to retry the install.
   retry-install: Retry Install
   start-install: Start Install
+
 layout:
   header:
     menus:

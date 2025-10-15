@@ -54,7 +54,7 @@ export default class ReportModel extends Model {
     }
 
     /** @computed */
-    @computed('query_config')
+    @computed('query_config.columns.length', 'query_config.table.name')
     get hasValidConfig() {
         return (
             isPresent(this.query_config) &&
@@ -70,7 +70,7 @@ export default class ReportModel extends Model {
         return this.query_config?.table?.name || '';
     }
 
-    @computed('query_config.table.label')
+    @computed('query_config.table.label', 'tableName')
     get tableLabel() {
         return this.query_config?.table?.label || this.tableName;
     }
@@ -101,7 +101,7 @@ export default class ReportModel extends Model {
         return isArray(this.query_config?.joins) && this.query_config.joins.length > 0;
     }
 
-    @computed('query_config.joins.[]')
+    @computed('hasJoins', 'query_config.joins.[]')
     get joinedTables() {
         if (!this.hasJoins) {
             return [];
@@ -120,7 +120,7 @@ export default class ReportModel extends Model {
         return isArray(this.query_config?.conditions) && this.query_config.conditions.length > 0;
     }
 
-    @computed('query_config.conditions.[]')
+    @computed('hasConditions', 'query_config.conditions.[]')
     get conditionsCount() {
         if (!this.hasConditions) {
             return 0;
@@ -144,7 +144,7 @@ export default class ReportModel extends Model {
         return isPresent(this.query_config?.limit) && this.query_config.limit > 0;
     }
 
-    @computed('totalSelectedColumns', 'hasJoins', 'conditionsCount', 'hasGrouping')
+    @computed('conditionsCount', 'hasGrouping', 'hasJoins', 'joinedTables.length', 'totalSelectedColumns')
     get complexity() {
         let score = 0;
 
@@ -224,7 +224,7 @@ export default class ReportModel extends Model {
         return this.shared_with || [];
     }
 
-    @computed('is_scheduled', 'schedule_frequency', 'next_scheduled_run')
+    @computed('is_scheduled', 'next_scheduled_run', 'schedule_frequency', 'schedule_timezone')
     get scheduleInfo() {
         if (!this.is_scheduled) {
             return null;
@@ -237,7 +237,7 @@ export default class ReportModel extends Model {
         };
     }
 
-    @computed('query_config.conditions.[]')
+    @computed('hasConditions', 'query_config.conditions.[]')
     get conditionsSummary() {
         if (!this.hasConditions) {
             return [];
@@ -317,6 +317,19 @@ export default class ReportModel extends Model {
 
         try {
             const response = await fetch.post(this.id ? `reports/${this.id}/execute` : 'reports/execute-query', { query_config: this.query_config });
+            return response;
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    // API methods for interacting with the new backend
+    async executeQuery() {
+        const owner = getOwner(this);
+        const fetch = owner.lookup('service:fetch');
+
+        try {
+            const response = await fetch.post('reports/execute-query', { query_config: this.query_config });
             return response;
         } catch (error) {
             throw error;

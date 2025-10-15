@@ -10,7 +10,7 @@ export default class AlertModel extends Model {
     @attr('string') subject_type;
     @attr('string') subject_uuid;
     @attr('string') message;
-    
+
     /** @json attributes */
     @attr() rule;
     @attr() context;
@@ -37,7 +37,7 @@ export default class AlertModel extends Model {
 
     @computed('triggered_at') get triggeredAt() {
         if (!this.triggered_at) return 'Unknown';
-        return format(this.triggered_at, 'PPP p');
+        return format(this.triggered_at, 'yyyy-MM-dd HH:mm');
     }
 
     @computed('acknowledged_at') get acknowledgedAgo() {
@@ -47,7 +47,7 @@ export default class AlertModel extends Model {
 
     @computed('acknowledged_at') get acknowledgedAt() {
         if (!this.acknowledged_at) return 'Not acknowledged';
-        return format(this.acknowledged_at, 'PPP p');
+        return format(this.acknowledged_at, 'yyyy-MM-dd HH:mm');
     }
 
     @computed('resolved_at') get resolvedAgo() {
@@ -57,7 +57,7 @@ export default class AlertModel extends Model {
 
     @computed('resolved_at') get resolvedAt() {
         if (!this.resolved_at) return 'Not resolved';
-        return format(this.resolved_at, 'PPP p');
+        return format(this.resolved_at, 'yyyy-MM-dd HH:mm');
     }
 
     @computed('updated_at') get updatedAgo() {
@@ -65,7 +65,7 @@ export default class AlertModel extends Model {
     }
 
     @computed('updated_at') get updatedAt() {
-        return format(this.updated_at, 'PPP p');
+        return format(this.updated_at, 'yyyy-MM-dd HH:mm');
     }
 
     @computed('created_at') get createdAgo() {
@@ -73,7 +73,7 @@ export default class AlertModel extends Model {
     }
 
     @computed('created_at') get createdAt() {
-        return format(this.created_at, 'PPP p');
+        return format(this.created_at, 'yyyy-MM-dd HH:mm');
     }
 
     /** @computed - Status checks */
@@ -111,7 +111,7 @@ export default class AlertModel extends Model {
 
     @computed('acknowledgmentDurationMinutes') get acknowledgmentDurationFormatted() {
         if (!this.acknowledgmentDurationMinutes) return null;
-        
+
         const minutes = this.acknowledgmentDurationMinutes;
         if (minutes < 60) return `${minutes}m`;
         if (minutes < 1440) return `${Math.floor(minutes / 60)}h ${minutes % 60}m`;
@@ -120,7 +120,7 @@ export default class AlertModel extends Model {
 
     @computed('resolutionDurationMinutes') get resolutionDurationFormatted() {
         if (!this.resolutionDurationMinutes) return null;
-        
+
         const minutes = this.resolutionDurationMinutes;
         if (minutes < 60) return `${minutes}m`;
         if (minutes < 1440) return `${Math.floor(minutes / 60)}h ${minutes % 60}m`;
@@ -137,33 +137,33 @@ export default class AlertModel extends Model {
     /** @computed - Severity styling */
     @computed('severity') get severityBadgeClass() {
         const severityClasses = {
-            'critical': 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300',
-            'high': 'bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-300',
-            'medium': 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300',
-            'low': 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300',
-            'info': 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300'
+            critical: 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300',
+            high: 'bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-300',
+            medium: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300',
+            low: 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300',
+            info: 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300',
         };
         return severityClasses[this.severity] || severityClasses['info'];
     }
 
     @computed('severity') get severityIcon() {
         const severityIcons = {
-            'critical': 'fas fa-exclamation-circle',
-            'high': 'fas fa-exclamation-triangle',
-            'medium': 'fas fa-exclamation',
-            'low': 'fas fa-info-circle',
-            'info': 'fas fa-info'
+            critical: 'fas fa-exclamation-circle',
+            high: 'fas fa-exclamation-triangle',
+            medium: 'fas fa-exclamation',
+            low: 'fas fa-info-circle',
+            info: 'fas fa-info',
         };
         return severityIcons[this.severity] || severityIcons['info'];
     }
 
     @computed('severity') get severityColor() {
         const severityColors = {
-            'critical': 'text-red-600 dark:text-red-400',
-            'high': 'text-orange-600 dark:text-orange-400',
-            'medium': 'text-yellow-600 dark:text-yellow-400',
-            'low': 'text-blue-600 dark:text-blue-400',
-            'info': 'text-gray-600 dark:text-gray-400'
+            critical: 'text-red-600 dark:text-red-400',
+            high: 'text-orange-600 dark:text-orange-400',
+            medium: 'text-yellow-600 dark:text-yellow-400',
+            low: 'text-blue-600 dark:text-blue-400',
+            info: 'text-gray-600 dark:text-gray-400',
         };
         return severityColors[this.severity] || severityColors['info'];
     }
@@ -194,30 +194,30 @@ export default class AlertModel extends Model {
     /** @computed - Type styling */
     @computed('type') get typeIcon() {
         const typeIcons = {
-            'maintenance': 'fas fa-wrench',
-            'temperature': 'fas fa-thermometer-half',
-            'fuel': 'fas fa-gas-pump',
-            'speed': 'fas fa-tachometer-alt',
-            'location': 'fas fa-map-marker-alt',
-            'system': 'fas fa-cog',
-            'security': 'fas fa-shield-alt',
-            'performance': 'fas fa-chart-line',
-            'compliance': 'fas fa-clipboard-check'
+            maintenance: 'fas fa-wrench',
+            temperature: 'fas fa-thermometer-half',
+            fuel: 'fas fa-gas-pump',
+            speed: 'fas fa-tachometer-alt',
+            location: 'fas fa-map-marker-alt',
+            system: 'fas fa-cog',
+            security: 'fas fa-shield-alt',
+            performance: 'fas fa-chart-line',
+            compliance: 'fas fa-clipboard-check',
         };
         return typeIcons[this.type] || 'fas fa-bell';
     }
 
     @computed('type') get typeBadgeClass() {
         const typeClasses = {
-            'maintenance': 'bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-300',
-            'temperature': 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300',
-            'fuel': 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300',
-            'speed': 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300',
-            'location': 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300',
-            'system': 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300',
-            'security': 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-300',
-            'performance': 'bg-indigo-100 text-indigo-800 dark:bg-indigo-900 dark:text-indigo-300',
-            'compliance': 'bg-pink-100 text-pink-800 dark:bg-pink-900 dark:text-pink-300'
+            maintenance: 'bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-300',
+            temperature: 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300',
+            fuel: 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300',
+            speed: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300',
+            location: 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300',
+            system: 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300',
+            security: 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-300',
+            performance: 'bg-indigo-100 text-indigo-800 dark:bg-indigo-900 dark:text-indigo-300',
+            compliance: 'bg-pink-100 text-pink-800 dark:bg-pink-900 dark:text-pink-300',
         };
         return typeClasses[this.type] || 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300';
     }
@@ -225,34 +225,34 @@ export default class AlertModel extends Model {
     /** @computed - Subject information */
     @computed('subject_type') get subjectTypeFormatted() {
         if (!this.subject_type) return 'Unknown';
-        
+
         // Convert from model class name to human readable
         const typeMap = {
-            'vehicle': 'Vehicle',
-            'driver': 'Driver',
-            'order': 'Order',
-            'device': 'Device',
-            'asset': 'Asset',
-            'maintenance': 'Maintenance',
-            'fuel_report': 'Fuel Report'
+            vehicle: 'Vehicle',
+            driver: 'Driver',
+            order: 'Order',
+            device: 'Device',
+            asset: 'Asset',
+            maintenance: 'Maintenance',
+            fuel_report: 'Fuel Report',
         };
-        
-        return typeMap[this.subject_type] || this.subject_type.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+
+        return typeMap[this.subject_type] || this.subject_type.replace(/_/g, ' ').replace(/\b\w/g, (l) => l.toUpperCase());
     }
 
     /** @computed - Priority and urgency */
     @computed('severity', 'ageMinutes') get urgencyLevel() {
         const severityWeight = {
-            'critical': 4,
-            'high': 3,
-            'medium': 2,
-            'low': 1,
-            'info': 0
+            critical: 4,
+            high: 3,
+            medium: 2,
+            low: 1,
+            info: 0,
         };
-        
+
         const weight = severityWeight[this.severity] || 0;
         const ageHours = this.ageMinutes / 60;
-        
+
         // Calculate urgency based on severity and age
         if (weight >= 3 && ageHours > 1) return 'urgent';
         if (weight >= 2 && ageHours > 4) return 'urgent';
@@ -263,10 +263,10 @@ export default class AlertModel extends Model {
 
     @computed('urgencyLevel') get urgencyBadgeClass() {
         const urgencyClasses = {
-            'urgent': 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300 animate-pulse',
-            'high': 'bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-300',
-            'medium': 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300',
-            'low': 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300'
+            urgent: 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300 animate-pulse',
+            high: 'bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-300',
+            medium: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300',
+            low: 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300',
         };
         return urgencyClasses[this.urgencyLevel] || urgencyClasses['low'];
     }
@@ -281,24 +281,31 @@ export default class AlertModel extends Model {
     }
 
     @computed('context.location') get hasLocation() {
-        return !!(this.context?.location);
+        return !!this.context?.location;
     }
 
-    @computed('context.value', 'rule.threshold') get thresholdExceeded() {
+    @computed('context.value', 'rule.{operator,threshold}') get thresholdExceeded() {
         if (!this.context?.value || !this.rule?.threshold) return null;
-        
+
         const value = parseFloat(this.context.value);
         const threshold = parseFloat(this.rule.threshold);
         const operator = this.rule.operator || '>';
-        
+
         switch (operator) {
-            case '>': return value > threshold;
-            case '<': return value < threshold;
-            case '>=': return value >= threshold;
-            case '<=': return value <= threshold;
-            case '==': return value === threshold;
-            case '!=': return value !== threshold;
-            default: return null;
+            case '>':
+                return value > threshold;
+            case '<':
+                return value < threshold;
+            case '>=':
+                return value >= threshold;
+            case '<=':
+                return value <= threshold;
+            case '==':
+                return value === threshold;
+            case '!=':
+                return value !== threshold;
+            default:
+                return null;
         }
     }
 }

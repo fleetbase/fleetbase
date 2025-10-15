@@ -1,0 +1,734 @@
+app:
+  name: Fleetbase
+common:
+  new: 新建
+  create: 创建
+  add: 添加
+  edit: 编辑
+  update: 更新
+  save: 保存
+  save-changes: 保存更改
+  delete: 删除
+  delete-selected: 删除选中项
+  delete-selected-count: 删除 {count} 个选中项
+  remove: 移除
+  cancel: 取消
+  confirm: 确认
+  close: 关闭
+  open: 打开
+  view: 查看
+  preview: 预览
+  upload: 上传
+  download: 下载
+  import: 导入
+  export: 导出
+  print: 打印
+  duplicate: 复制
+  copy: 复制
+  paste: 粘贴
+  share: 分享
+  refresh: 刷新
+  reset: 重置
+  retry: 重试
+  back: 返回
+  next: 下一步
+  previous: 上一步
+  submit: 提交
+  apply: 应用
+  continue: 继续
+  proceed: 继续
+  select: 选择
+  deselect: 取消选择
+  search: 搜索
+  filter: 筛选
+  sort: 排序
+  view-all: 查看全部
+  clear: 清除
+  done: 完成
+  finish: 完成
+  skip: 跳过
+  method: 方法
+  bulk-delete: 批量删除
+  bulk-delete-resource: 批量删除 {resource}
+  bulk-cancel: 批量取消
+  bulk-cancel-resource: 批量取消 {resource}
+  bulk-actions: 批量操作
+  column: 列
+  row: 行
+  table: 表格
+  list: 列表
+  grid: 网格
+  form: 表单
+  field: 字段
+  section: 部分
+  panel: 面板
+  card: 卡片
+  tab: 标签页
+  modal: 模态框
+  dialog: 对话框
+  menu: 菜单
+  dropdown: 下拉菜单
+  tooltip: 工具提示
+  sidebar: 侧边栏
+  toolbar: 工具栏
+  footer: 页脚
+  header: 页眉
+  title: 标题
+  subtitle: 副标题
+  description: 描述
+  placeholder: 占位符
+  label: 标签
+  button: 按钮
+  icon: 图标
+  avatar: 头像
+  link: 链接
+  badge: 徽章
+  tag: 标签
+  banner: 横幅
+  step: 步骤
+  progress: 进度
+  map: 地图
+  board: 看板
+  loading: 加载中
+  loading-resource: 加载 {resource}
+  saving: 保存中
+  processing: 处理中
+  fetching: 获取中
+  updating: 更新中
+  uploading: 上传中
+  completed: 已完成
+  success: 成功
+  failed: 失败
+  error: 错误
+  warning: 警告
+  info: 信息
+  ready: 准备就绪
+  active: 激活
+  inactive: 未激活
+  enabled: 已启用
+  disabled: 已禁用
+  online: 在线
+  offline: 离线
+  pending: 待处理
+  archived: 已归档
+  hidden: 隐藏
+  visible: 可见
+  empty: 空
+  not-found: 未找到
+  no-results: 无结果
+  try-again: 请再试一次
+  are-you-sure: 你确定吗？
+  changes-saved: 更改已成功保存。
+  saved-successfully: 更改已成功保存。
+  field-saved: '{field} 已成功保存。'
+  changes-discarded: 更改已放弃。
+  delete-confirm: 你确定要删除此项目吗？
+  action-successful: 操作成功完成。
+  action-failed: 操作失败。请再试一次。
+  something-went-wrong: 出了点问题。
+  please-wait: 请稍候...
+  sign-in: 登录
+  sign-out: 登出
+  sign-up: 注册
+  log-in: 登录
+  log-out: 登出
+  register: 注册
+  forgot-password: 忘记密码
+  reset-password: 重置密码
+  change-password: 更改密码
+  password: 密码
+  confirm-password: 确认密码
+  email: 电子邮件
+  username: 用户名
+  remember-me: 记住我
+  welcome: 欢迎
+  welcome-back: 欢迎回来
+  profile: 个人资料
+  account: 账户
+  settings: 设置
+  preferences: 偏好
+  record: 记录
+  records: 记录
+  item: 项目
+  items: 项目
+  entry: 条目
+  entries: 条目
+  id: 编号
+  name: 名称
+  type: 类型
+  category: 类别
+  overview: 概览
+  value: 数值
+  amount: 数量
+  price: 价格
+  quantity: 数量
+  status: 状态
+  date: 日期
+  date-created: 创建日期
+  date-updated: 更新日期
+  time: 时间
+  created-at: 创建于
+  updated-at: 更新于
+  expired-at: 过期于
+  last-seen-at: 最后查看于
+  last-modified: 最后修改
+  last-modified-data: 最后修改：{date}
+  actions: 操作
+  details: 详情
+  notes: 备注
+  reference: 参考
+  filter-by: 筛选条件
+  sort-by: 排序方式
+  ascending: 升序
+  descending: 降序
+  all: 全部
+  none: 无
+  select-all: 全选
+  deselect-all: 取消全选
+  show-more: 显示更多
+  show-less: 显示更少
+  page: 页
+  of: 共
+  total: 总计
+  items-per-page: 每页项目数
+  showing: 显示
+  to: 至
+  results: 结果
+  load-more: 加载更多
+  no-more-results: 无更多结果
+  today: 今天
+  yesterday: 昨天
+  tomorrow: 明天
+  day: 天
+  week: 周
+  month: 月
+  year: 年
+  date-range: 日期范围
+  start-date: 开始日期
+  end-date: 结束日期
+  time-zone: 时区
+  system: 系统
+  dashboard: 仪表盘
+  home: 主页
+  analytics: 分析
+  reports: 报告
+  logs: 日志
+  help: 帮助
+  support: 支持
+  contact: 联系
+  documentation: 文档
+  language: 语言
+  version: 版本
+  theme: 主题
+  light-mode: 浅色模式
+  dark-mode: 深色模式
+  update-available: 有可用更新
+  install-update: 安装更新
+  maintenance-mode: 维护模式
+  notification: 通知
+  notifications: 通知
+  mark-as-read: 标记为已读
+  mark-all-as-read: 全部标记为已读
+  clear-notifications: 清除通知
+  company: 公司
+  companies: 公司
+  user: 用户
+  users: 用户
+  role: 角色
+  roles: 角色
+  permission: 权限
+  permissions: 权限
+  group: 组
+  groups: 组
+  unauthorized: 未授权
+  forbidden: 禁止访问
+  resource-not-found: 资源未找到
+  server-error: 服务器错误
+  validation-error: 验证错误
+  timeout-error: 请求超时
+  network-error: 网络错误
+  unknown-error: 未知错误
+  file: 文件
+  files: 文件
+  folder: 文件夹
+  folders: 文件夹的
+  upload-file: 上传文件
+  upload-files: 上传文件
+  upload-image: 上传图片
+  upload-image-supported: 支持 PNG、JPEG 和 GIF
+  choose-file: 选择文件
+  choose-files: 选择文件
+  drag-and-drop: 拖放
+  download-file: 下载文件
+  file-size: 文件大小
+  file-type: 文件类型
+  confirm-delete: 确认删除
+  confirm-action: 确认操作
+  confirm-exit: 确认退出
+  confirm-and-save-changes: 确认并保存更改
+  are-you-sure-exit: 您确定要退出吗？
+  unsaved-changes-warning: 您有未保存的更改。
+  connected: 已连接
+  disconnected: 已断开连接
+  reconnecting: 重新连接中
+  connection-lost: 连接丢失
+  connection-restored: 连接已恢复
+  show: 显示
+  hide: 隐藏
+  expand: 展开
+  collapse: 折叠
+  enable: 启用
+  disable: 禁用
+  minimize: 最小化
+  maximize: 最大化
+  restore: 还原
+  zoom-in: 放大
+  zoom-out: 缩小
+  fullscreen: 全屏
+  exit-fullscreen: 退出全屏
+  true: 'true'
+  false: 'false'
+  ok: 确定
+  none-available: 无可用
+  default: 默认
+  custom: 自定义
+  general: 常规
+  advanced: 高级
+  placeholder-text: 请输入文本...
+  learn-more: 了解更多
+  view-resource: 查看{resource}
+  view-resource-details: 查看{resource}详情
+  create-a-new-resource: 创建新的{resource}
+  create-new-resource: 创建新的{resource}
+  search-resource: 搜索{resource}
+  new-resource: 新的{resource}
+  update-resource: 更新 {resource}
+  save-resource-changes: 保存 {resource} 更改
+  creating-resource: 正在创建 {resource}
+  cancel-resource: 取消 {resource}
+  delete-resource: 删除 {resource}
+  delete-resource-name: 删除：{resourceName}
+  delete-resource-named: 删除 {resource}（{resourceName}）
+  delete-resource-prompt: 此操作无法撤销。删除后，记录将被永久移除。
+  delete-cannot-be-undone: 此操作无法撤销。删除后，记录将被永久移除。
+  create-resource: 创建 {resource}
+  edit-resource: 编辑 {resource}
+  edit-resource-details: 编辑 {resource} 详情
+  edit-resource-type-name: 编辑 {resource}：{resourceName}
+  edit-resource-name: 编辑：{resourceName}
+  config: 配置
+  select-field: 选择 {field}
+  columns: 列
+  metadata: 元数据
+  meta: 元信息
+  resource-created-success: 新 {resource} 创建成功。
+  resource-created-success-name: 新 {resource}（{resourceName}）创建成功。
+  resource-updated-success: '{resource}（{resourceName}）更新成功。'
+  resource-action-success: '{resource}（{resourceName}）{action}成功。'
+  resource-deleted-success: '{resource}（{resourceName}）删除成功。'
+  resource-deleted: '{resource}（{resourceName}）已删除。'
+  continue-without-saving: 不保存继续？
+  continue-without-saving-prompt: 您对该 {resource} 有未保存的更改。继续将丢弃这些更改。点击继续以继续操作。
+resource:
+  alert: 警报
+  alerts: 警报
+  brand: 品牌
+  brands: 品牌
+  category: 类别
+  categories: 类别
+  chat-attachment: 聊天附件
+  chat-attachments: 聊天附件
+  chat-channel: 聊天频道
+  chat-channels: 聊天频道
+  chat-log: 聊天记录
+  chat-logs: 聊天记录
+  chat-message: 聊天消息
+  chat-messages: 聊天消息
+  chat-participant: 聊天参与者
+  chat-participants: 聊天参与者
+  chat-receipt: 聊天回执
+  chat-receipts: 聊天回执
+  comment: 评论
+  comments: 评论
+  company: 公司
+  companies: 公司
+  custom-field-value: 自定义字段值
+  custom-field-values: 自定义字段值
+  custom-field: 自定义字段
+  custom-fields: 自定义字段
+  dashboard-widget: 仪表板小部件
+  dashboard-widgets: 仪表板小部件
+  dashboard: 仪表板
+  dashboards: 仪表板
+  extension: 扩展
+  extensions: 扩展
+  file: 文件
+  files: 文件
+  group: 组
+  groups: 组
+  notification: 通知
+  notifications: 通知
+  permission: 权限
+  permissions: 权限
+  policy: 策略
+  policies: 策略
+  report: 报告
+  reports: 报告
+  role: 角色
+  roles: 角色
+  setting: 设置
+  settings: 设置
+  transaction: 交易
+  transactions: 交易
+  user-device: 用户设备
+  user-devices: 用户设备
+  user: 用户
+  users: 用户
+dropzone:
+  file: 文件
+  drop-to-upload: 拖拽上传
+  invalid: 无效
+  files-ready-for-upload: '{numOfFiles} 个文件准备上传。'
+  upload-images-videos: 上传图片和视频
+  upload-documents: 上传文档
+  upload-documents-files: 上传文档和文件
+  upload-avatar-files: 上传自定义头像
+  dropzone-supported-images-videos: 将图片和视频文件拖放到此上传区域
+  dropzone-supported-avatars: 拖放 SVG 或 PNG 文件
+  dropzone-supported-files: 将文件拖放到此上传区域
+  or-select-button-text: 或选择文件上传。
+  upload-queue: 上传队列
+  uploading: 上传中...
+two-fa-enforcement-alert:
+  message: 为增强您的账户安全，您的组织要求启用双因素认证（2FA）。请在账户设置中启用2FA以获得额外的保护层。
+  button-text: 设置2FA
+comment-thread:
+  publish-comment-button-text: 发布评论
+  publish-reply-button-text: 发布回复
+  reply-comment-button-text: 回复
+  edit-comment-button-text: 编辑
+  delete-comment-button-text: 删除
+  comment-published-ago: '{createdAgo} 前'
+  comment-input-placeholder: 输入新评论...
+  comment-reply-placeholder: 输入您的回复...
+  comment-input-empty-notification: 您不能发布空评论...
+  comment-min-length-notification: 评论必须至少包含2个字符
+dashboard:
+  select-dashboard: 选择仪表板
+  create-new-dashboard: 创建新仪表板
+  create-a-new-dashboard: 创建一个新仪表板
+  confirm-create-dashboard: 创建仪表板！
+  edit-layout: 编辑布局
+  add-widgets: 添加小部件
+  delete-dashboard: 删除仪表板
+  save-dashboard: 保存仪表板
+  you-cannot-delete-this-dashboard: 您无法删除此仪表板。
+  are-you-sure-you-want-delete-dashboard: 您确定要删除此 {dashboardName} 吗？
+dashboard-widget-panel:
+  widget-name: '{widgetName} 小部件'
+  select-widgets: 选择小部件
+  close-and-save: 关闭并保存
+filters-picker:
+  filters: 筛选器
+  filter-data: 筛选数据
+visible-column-picker:
+  select-viewable-columns: 选择可见列
+  customize-columns: 自定义列
+component:
+  file:
+    dropdown-label: 文件操作
+  import-modal:
+    loading-message: 正在处理导入...
+    drop-upload: 拖拽上传
+    invalid: 无效
+    ready-upload: 准备上传。
+    upload-spreadsheets: 上传电子表格
+    drag-drop: 将电子表格文件拖放到此区域
+    button-text: 或选择电子表格上传
+    spreadsheets: 电子表格
+    upload-queue: 上传队列
+  dropzone:
+    file: 文件
+    drop-to-upload: 拖拽上传
+    invalid: 无效
+    files-ready-for-upload: '{numOfFiles} 个文件准备上传。'
+    upload-images-videos: 上传图片和视频
+    upload-documents: 上传文档
+    upload-documents-files: 上传文档和文件
+    upload-avatar-files: 上传自定义头像
+    dropzone-supported-images-videos: 将图片和视频文件拖放到此区域
+    dropzone-supported-avatars: 拖放 SVG 或 PNG 文件
+    dropzone-supported-files: 将文件拖放到此区域
+    or-select-button-text: 或选择文件上传。
+    upload-queue: 上传队列
+    uploading: 上传中...
+  two-fa-enforcement-alert:
+    message: 为了增强您的账户安全，您的组织要求启用双因素认证（2FA）。请在账户设置中启用2FA以获得额外的保护层。
+    button-text: 设置2FA
+  comment-thread:
+    publish-comment-button-text: 发布评论
+    publish-reply-button-text: 发布回复
+    reply-comment-button-text: 回复
+    edit-comment-button-text: 编辑
+    delete-comment-button-text: 删除
+    comment-published-ago: '{createdAgo} 前'
+    comment-input-placeholder: 输入新评论...
+    comment-reply-placeholder: 输入您的回复...
+    comment-input-empty-notification: 您不能发布空评论...
+    comment-min-length-notification: 评论必须至少包含2个字符
+  dashboard:
+    select-dashboard: 选择仪表板
+    create-new-dashboard: 创建新仪表板
+    create-a-new-dashboard: 创建一个新仪表板
+    confirm-create-dashboard: 创建仪表板！
+    edit-layout: 编辑布局
+    add-widgets: 添加小部件
+    delete-dashboard: 删除仪表板
+    save-dashboard: 保存仪表板
+    you-cannot-delete-this-dashboard: 您无法删除此仪表板。
+    are-you-sure-you-want-delete-dashboard: 您确定要删除此 {dashboardName} 吗？
+  dashboard-widget-panel:
+    widget-name: '{widgetName} 小部件'
+    select-widgets: 选择小部件
+    close-and-save: 关闭并保存
+services:
+  dashboard-service:
+    create-dashboard-success-notification: 新仪表板 `{dashboardName}` 创建成功。
+    delete-dashboard-success-notification: 仪表板 `{dashboardName}` 已被删除。
+auth:
+  verification:
+    header-title: 账户验证
+    title: 验证您的电子邮件地址
+    message-text: <strong>快完成了！</strong><br> 请检查您的邮箱获取验证码。
+    verification-code-text: 输入您通过电子邮件收到的验证码。
+    verification-input-label: 验证码
+    verify-button-text: 验证并继续
+    didnt-receive-a-code: 还没收到验证码？
+    not-sent:
+      message: 还没收到验证码？
+      alternative-choice: 使用以下替代选项验证您的账户。
+      resend-email: 重新发送邮件
+      send-by-sms: 通过短信发送
+  two-fa:
+    verify-code:
+      verification-code: 验证码
+      check-title: 检查您的电子邮件或电话
+      check-subtitle: 我们已向您发送验证码。请输入以下代码完成登录过程。
+      expired-help-text: 您的两步验证代码已过期。如需更多时间，您可以请求新的代码。
+      resend-code: 重新发送代码
+      verify-code: 验证代码
+      cancel-two-factor: 取消两步验证
+      invalid-session-error-notification: 会话无效。请重试。
+      verification-successful-notification: 验证成功！
+      verification-code-expired-notification: 验证码已过期。请请求新的验证码。
+      verification-code-failed-notification: 验证失败。请重试。
+    resend-code:
+      verification-code-resent-notification: 新的验证码已发送。
+      verification-code-resent-error-notification: 重新发送验证码时出错。请重试。
+  forgot-password:
+    success-message: 请检查您的电子邮件以继续！
+    is-sent:
+      title: 快完成了！
+      message: <strong>请检查您的邮箱！</strong><br> 我们已向您的邮箱发送了一条魔法链接，您可以通过该链接重置密码。链接15分钟后过期。
+    not-sent:
+      title: 忘记密码了吗？
+      message: <strong>别担心，我们帮您搞定。</strong><br> 输入您用于登录{appName}的邮箱，我们将发送一条安全链接帮助您重置密码。
+    form:
+      email-label: 您的邮箱地址
+      submit-button: 好的，发送魔法链接给我！
+      nevermind-button: 算了
+  login:
+    title: 登录您的账户
+    no-identity-notification: 您忘记输入邮箱了吗？
+    no-password-notification: 您忘记输入密码了吗？
+    unverified-notification: 您的账户需要验证才能继续。
+    password-reset-required: 需要重置密码才能继续。
+    failed-attempt:
+      message: <strong>忘记密码了吗？</strong><br> 点击下面按钮重置密码。
+      button-text: 好的，帮我重置！
+    form:
+      email-label: 邮箱地址
+      password-label: 密码
+      remember-me-label: 记住我
+      forgot-password-label: 忘记密码？
+      sign-in-button: 登录
+      create-account-button: 创建新账户
+    slow-connection-message: 网络连接不稳定。
+  reset-password:
+    success-message: 密码已重置！请登录继续。
+    invalid-verification-code: 此重置密码链接无效或已过期。
+    title: 重置您的密码
+    form:
+      code:
+        label: 您的重置码
+        help-text: 您邮箱中收到的验证码。
+      password:
+        label: 新密码
+        help-text: 请输入至少6个字符的密码以继续。
+      confirm-password:
+        label: 确认新密码
+        help-text: 请输入至少6个字符的密码以继续。
+      submit-button: 重置密码
+      back-button: 返回
+console:
+  create-or-join-organization:
+    modal-title: 创建或加入组织
+    join-success-notification: 您已加入新组织！
+    create-success-notification: 您已创建新组织！
+  switch-organization:
+    modal-title: 您确定要切换到组织 {organizationName} 吗？
+    modal-body: 确认后您的账户将保持登录状态，但主要组织将被切换。
+    modal-accept-button-text: 是的，我要切换组织
+    success-notification: 您已切换组织
+  account:
+    index:
+      upload-new: 上传新文件
+      phone: 您的电话号码。
+      photos: 照片
+      timezone: 选择您的时区。
+  admin:
+    menu:
+      overview: 概览
+      organizations: 组织
+      branding: 品牌设置
+      2fa-config: 双因素认证配置
+      schedule-monitor: 计划监控
+      services: 服务
+      mail: 邮件
+      filesystem: 文件系统
+      queue: 队列
+      socket: 套接字
+      push-notifications: 推送通知
+    schedule-monitor:
+      schedule-monitor: 计划监控
+      task-logs-for: 任务日志：
+      showing-last-count: 显示最近 {count} 条日志
+      name: 名称
+      type: 类型
+      timezone: 时区
+      last-started: 上次启动
+      last-finished: 上次完成
+      last-failure: 上次失败
+      date: 日期
+      memory: 内存
+      runtime: 运行时间
+      output: 输出
+      no-output: 无输出
+    config:
+      database:
+        title: 数据库配置
+      filesystem:
+        title: 文件系统配置
+      mail:
+        title: 邮件配置
+      notification-channels:
+        title: 推送通知配置
+      queue:
+        title: 队列配置
+      services:
+        title: 服务配置
+      socket:
+        title: 套接字配置
+    branding:
+      title: 品牌设置
+      icon-text: 图标
+      upload-new: 上传新图标
+      reset-default: 重置为默认
+      logo-text: 标志
+      theme: 默认主题
+    index:
+      total-users: 用户总数
+      total-organizations: 组织总数
+      total-transactions: 交易总数
+    notifications:
+      title: 通知
+      notification-settings: 通知设置
+    organizations:
+      index:
+        title: 组织
+        owner-name-column: 所有者
+        owner-phone-column: 所有者电话
+        owner-email-column: 所有者邮箱
+        users-count-column: 用户数
+        phone-column: 电话
+        email-column: 邮箱
+      users:
+        title: 用户
+  settings:
+    index:
+      title: 组织设置
+      organization-name: 组织名称
+      organization-description: 组织描述
+      organization-phone: 组织电话号码
+      organization-currency: 组织货币
+      organization-id: 组织ID
+      organization-branding: 组织品牌
+      logo: 标志
+      logo-help-text: 您组织的标志。
+      upload-new-logo: 上传新标志
+      backdrop: 背景
+      backdrop-help-text: 您组织的可选横幅或背景图片。
+      upload-new-backdrop: 上传新背景
+      organization-timezone: 选择您组织的默认时区。
+      select-timezone: 选择时区。
+  extensions:
+    title: 扩展即将推出！
+    message: 请在即将发布的版本中回来查看，我们正在准备推出扩展仓库和市场。
+  notifications:
+    select-all: 全选
+    mark-as-read: 标记为已读
+    received: 收到：
+    message: 没有可显示的通知。
+invite:
+  for-users:
+    invitation-message: 您已被邀请加入 {companyName}
+    invitation-sent-message: 您已被邀请加入 {appName} 上的 {companyName} 组织。要接受此邀请，请输入您通过电子邮件收到的邀请代码并点击继续。
+    invitation-code-sent-text: 您的邀请码
+    accept-invitation-text: 接受邀请
+onboard:
+  index:
+    title: 创建您的账户
+    welcome-title: <strong>欢迎来到 {companyName}！</strong><br />
+    welcome-text: 填写以下所需信息以开始使用。
+    full-name: 全名
+    full-name-help-text: 您的全名
+    your-email: 电子邮件地址
+    your-email-help-text: 您的电子邮件地址
+    phone: 电话号码
+    phone-help-text: 您的电话号码
+    organization-name: 组织名称
+    organization-help-text: 您的组织名称，您所有的服务和资源都将在此组织下管理，之后您可以根据需要创建任意数量的组织。
+    password: 输入密码
+    password-help-text: 您的密码，请确保密码安全。
+    confirm-password: 确认密码
+    confirm-password-help-text: 确认您上面输入的密码。
+    continue-button-text: 继续
+  verify-email:
+    header-title: 账户验证
+    title: 验证您的电子邮件地址
+    message-text: <strong>快完成了！</strong><br> 请检查您的电子邮件获取验证码。
+    verification-code-text: 输入您通过电子邮件收到的验证码。
+    verification-input-label: 验证码
+    verify-button-text: 验证并继续
+    didnt-receive-a-code: 还没收到验证码？
+    not-sent:
+      message: 还没收到验证码？
+      alternative-choice: 使用以下替代选项验证您的账户。
+      resend-email: 重新发送邮件
+      send-by-sms: 通过短信发送
+install:
+  installer-header: 安装程序
+  failed-message-sent: 安装失败！点击下面的按钮重试安装。
+  retry-install: 重试安装
+  start-install: 开始安装
+layout:
+  header:
+    menus:
+      organization:
+        settings: 组织设置
+        create-or-join: 创建或加入组织
+        explore-extensions: 探索扩展
+      user:
+        view-profile: 查看个人资料
+        keyboard-shortcuts: 显示键盘快捷键
+        changelog: 更新日志

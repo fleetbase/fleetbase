@@ -1,13 +1,13 @@
 {{page-title "Notifications"}}
 <Layout::Section::Header @title={{t "common.notifications"}}>
-     <Button @type="primary" @size="sm" @icon="save" @text={{t "common.save-button-text"}} @onClick={{perform this.saveSettings}} @disabled={{this.saveSettings.isRunning}} @isLoading={{or this.saveSettings.isRunning this.getSettings.isRunning}} />
+     <Button @type="primary" @size="sm" @icon="save" @text={{t "common.save-changes"}} @onClick={{perform this.saveSettings}} @disabled={{this.saveSettings.isRunning}} @isLoading={{or this.saveSettings.isRunning this.getSettings.isRunning}} />
 </Layout::Section::Header>
 
 <Layout::Section::Body class="overflow-y-scroll h-full">
     <div class="container mx-auto h-screen">
         <div class="max-w-3xl my-10 mx-auto space-y-4">
             {{#each-in this.groupedNotifications as |groupName notifications|}}
-                <ContentPanel @title={{concat (smart-humanize groupName) " " (t "console.admin.notifications.notification-settings") }} @open={{true}} @pad={{true}} @panelBodyClass="bg-white dark:bg-gray-800">
+                <ContentPanel @title={{concat (smart-humanize groupName) " " (t "console.admin.notifications.notification-settings") }} @open={{true}} @wrapperClass="bordered-classic">
                     {{#each notifications as |notification|}}
                         <InputGroup @name={{titleize notification.name}} @helpText={{notification.description}}>
                             <div class="fleetbase-model-select fleetbase-power-select ember-model-select">

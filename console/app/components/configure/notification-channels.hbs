@@ -1,4 +1,4 @@
-<ContentPanel @title="APN Configutation" @open={{true}} @pad={{true}} @panelBodyClass="bg-white dark:bg-gray-800">
+<ContentPanel @title="APN Configutation" @open={{true}} @wrapperClass="bordered-classic">
     <InputGroup @name="APN Key ID" @value={{this.apn.key_id}} disabled={{this.isLoading}} />
     <InputGroup @name="APN Team ID" @value={{this.apn.team_id}} disabled={{this.isLoading}} />
     <InputGroup @name="APN App Bundle ID" @value={{this.apn.app_bundle_id}} disabled={{this.isLoading}} />
@@ -20,7 +20,7 @@
     </InputGroup>
 </ContentPanel>
 
-<ContentPanel @title="Firebase Configutation" @open={{true}} @pad={{true}} @panelBodyClass="bg-white dark:bg-gray-800">
+<ContentPanel @title="Firebase Configutation" @open={{true}} @wrapperClass="bordered-classic">
     <InputGroup @wrapperClass="flex flex-row items-center mb-0i">
         <UploadButton @name="firebase-service-account" @accept="text/plain,text/javascript,application/json" @onFileAdded={{this.uploadFirebaseCredentials}} @buttonText="Upload Service Account JSON" @icon="upload" class="w-auto m-0i mt-0i" />
         {{#if this.firebase.credentials_file}}
@@ -33,7 +33,7 @@
     </InputGroup>
 </ContentPanel>
 
-<ContentPanel @title="Test Push Notification" @open={{true}} @pad={{true}} @panelBodyClass="bg-white dark:bg-gray-900">
+<ContentPanel @title="Test Push Notification" @open={{true}} @wrapperClass="bordered-classic">
     {{#if this.testResponse}}
         <div class="flex flex-row items-center rounded-lg border {{if (eq this.testResponse.status 'error') 'border-red-900 bg-red-800 text-red-100' 'border-green-900 bg-green-800 text-green-100'}} shadow-sm my-2 px-4 py-2">
             <FaIcon @icon={{if (eq this.testResponse.status 'error') 'triangle-exclamation' 'circle-check'}} class="mr-1.5 {{if (eq this.testResponse.status 'error') 'text-red-200' 'text-green-200'}}" />
