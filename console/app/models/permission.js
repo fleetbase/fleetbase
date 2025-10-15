@@ -132,6 +132,6 @@ export default class PermissionModel extends Model {
     }
 
     @computed('created_at') get createdAt() {
-        return format(this.created_at, 'PPP p');
+        return format(this.created_at, 'yyyy-MM-dd HH:mm');
     }
 }

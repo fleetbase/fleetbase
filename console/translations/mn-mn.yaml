@@ -1,0 +1,770 @@
+app:
+  name: Fleetbase
+common:
+  new: Шинэ
+  create: Үүсгэх
+  add: Нэмэх
+  edit: Засах
+  update: Шинэчлэх
+  save: Хадгалах
+  save-changes: Өөрчлөлтийг хадгалах
+  delete: Устгах
+  delete-selected: Сонгосон устгах
+  delete-selected-count: '{count} ширхэгийг устгах'
+  remove: Хасах
+  cancel: Цуцлах
+  confirm: Батлах
+  close: Хаах
+  open: Нээх
+  view: Харах
+  preview: Урьдчилсан харалт
+  upload: Ачаалах
+  download: Татаж авах
+  import: Импортлох
+  export: Экспортлох
+  print: Хэвлэх
+  duplicate: Хуулбарлах
+  copy: Хуулах
+  paste: Наах
+  share: Хуваалцах
+  refresh: Шинэчлэх
+  reset: Дахин тохируулах
+  retry: Дахин оролдох
+  back: Буцах
+  next: Дараах
+  previous: Өмнөх
+  submit: Илгээх
+  apply: Хэрэглэх
+  continue: Үргэлжлүүлэх
+  proceed: Үргэлжлүүлэх
+  select: Сонгох
+  deselect: Сонголтыг цуцлах
+  search: Хайх
+  filter: Шүүлтүүр
+  sort: Эрэмбэлэх
+  view-all: Бүгдийг харах
+  clear: Цэвэрлэх
+  done: Болсон
+  finish: Дуусгах
+  skip: Алгасах
+  method: Арга
+  bulk-delete: Бөөнөөр устгах
+  bulk-delete-resource: Бөөнөөр устгах {resource}
+  bulk-cancel: Бөөн цуцлах
+  bulk-cancel-resource: Бөөн цуцлах {resource}
+  bulk-actions: Бөөн үйлдлүүд
+  column: Багана
+  row: Мөр
+  table: Хүснэгт
+  list: Жагсаалт
+  grid: Сүлжээ
+  form: Форм
+  field: Талбар
+  section: Хэсэг
+  panel: Самбар
+  card: Карт
+  tab: Хуудас
+  modal: Модал
+  dialog: Диалог
+  menu: Цэс
+  dropdown: Унждаг цэс
+  tooltip: Тайлбар
+  sidebar: Хажуугийн самбар
+  toolbar: Хэрэгслийн самбар
+  footer: Доод хэсэг
+  header: Дээд хэсэг
+  title: Гарчиг
+  subtitle: Дэд гарчиг
+  description: Тодорхойлолт
+  placeholder: Түгээмэл орлуулах текст
+  label: Шошго
+  button: Товч
+  icon: Тэмдэг
+  avatar: Профайл зураг
+  link: Холбоос
+  badge: Шагнал
+  tag: Таг
+  banner: Туг
+  step: Алхам
+  progress: Ахиц
+  map: Газрын зураг
+  board: Самбар
+  loading: Ачааллаж байна
+  loading-resource: '{resource} ачааллаж байна'
+  saving: Хадгалж байна
+  processing: Боловсруулж байна
+  fetching: Угсарч байна
+  updating: Шинэчилж байна
+  uploading: Ачааллаж байна
+  completed: Дууссан
+  success: Амжилттай
+  failed: Амжилтгүй
+  error: Алдаа
+  warning: Анхааруулга
+  info: Мэдээлэл
+  ready: Бэлэн
+  active: Идэвхтэй
+  inactive: Идэвхгүй
+  enabled: Идэвхжсэн
+  disabled: Идэвхгүй болгосон
+  online: Онлайн
+  offline: Оффлайн
+  pending: Хүлээгдэж буй
+  archived: Архивлагдсан
+  hidden: Нуугдсан
+  visible: Ил харагдах
+  empty: Хоосон
+  not-found: Олдсонгүй
+  no-results: Үр дүн олдсонгүй
+  try-again: Дахин оролдоно уу
+  are-you-sure: Та итгэлтэй байна уу?
+  changes-saved: Өөрчлөлтүүд амжилттай хадгалагдлаа.
+  saved-successfully: Өөрчлөлтүүд амжилттай хадгалагдлаа.
+  field-saved: '{field} амжилттай хадгалагдлаа.'
+  changes-discarded: Өөрчлөлтүүд устгагдлаа.
+  delete-confirm: Та энэ зүйл устгахдаа итгэлтэй байна уу?
+  action-successful: Үйлдэл амжилттай боллоо.
+  action-failed: Үйлдэл амжилтгүй боллоо. Дахин оролдоно уу.
+  something-went-wrong: Ямар нэг зүйл буруу боллоо.
+  please-wait: Түр хүлээнэ үү...
+  sign-in: Нэвтрэх
+  sign-out: Гарах
+  sign-up: Бүртгүүлэх
+  log-in: Нэвтрэх
+  log-out: Гарах
+  register: Бүртгүүлэх
+  forgot-password: Нууц үгээ мартсан
+  reset-password: Нууц үг сэргээх
+  change-password: Нууц үг солих
+  password: Нууц үг
+  confirm-password: Нууц үгээ баталгаажуулах
+  email: И-мэйл
+  username: Хэрэглэгчийн нэр
+  remember-me: Намайг сана
+  welcome: Тавтай морил
+  welcome-back: Дахин тавтай морил
+  profile: Профайл
+  account: Данс
+  settings: Тохиргоо
+  preferences: Тохиргоо
+  record: Бичлэг
+  records: Бичлэгүүд
+  item: Зүйл
+  items: Бараа
+  entry: Оролт
+  entries: Оролтууд
+  id: ID
+  name: Нэр
+  type: Төрөл
+  category: Ангилал
+  overview: Тойм
+  value: Үнэлгээ
+  amount: Тоо хэмжээ
+  price: Үнэ
+  quantity: Тоо ширхэг
+  status: Төлөв
+  date: Огноо
+  date-created: Үүсгэсэн огноо
+  date-updated: Шинэчилсэн огноо
+  time: Цаг
+  created-at: Үүсгэсэн газар
+  updated-at: Шинэчилсэн газар
+  expired-at: Хугацаа дууссан
+  last-seen-at: Сүүлд харагдсан
+  last-modified: Сүүлд өөрчлөгдсөн
+  last-modified-data: 'Сүүлд өөрчлөгдсөн: {date}'
+  actions: Үйлдлүүд
+  details: Дэлгэрэнгүй
+  notes: Тэмдэглэл
+  reference: Лавлагаа
+  filter-by: Шүүлтүүрээр
+  sort-by: Эрэмбэлэх
+  ascending: Өсөх дарааллаар
+  descending: Буурах дарааллаар
+  all: Бүгд
+  none: Ямар ч
+  select-all: Бүгдийг сонгох
+  deselect-all: Бүгдийг цуцлах
+  show-more: Илүүг үзүүлэх
+  show-less: Багаг үзүүлэх
+  page: Хуудас
+  of: нийт
+  total: Нийт
+  items-per-page: Хуудас бүрийн бараа
+  showing: Үзүүлж байна
+  to: хүртэл
+  results: Үр дүн
+  load-more: Илүү ачааллах
+  no-more-results: Илүү үр дүн алга
+  today: Өнөөдөр
+  yesterday: Өчигдөр
+  tomorrow: Маргааш
+  day: Өдөр
+  week: Долоо хоног
+  month: Сар
+  year: Жил
+  date-range: Огнооны хүрээ
+  start-date: Эхлэх огноо
+  end-date: Дуусах огноо
+  time-zone: Цагийн бүс
+  system: Систем
+  dashboard: Хяналтын самбар
+  home: Нүүр
+  analytics: Аналитик
+  reports: Тайлангууд
+  logs: Тэмдэглэлүүд
+  help: Тусламж
+  support: Дэмжлэг
+  contact: Холбоо барих
+  documentation: Баримт бичиг
+  language: Хэл
+  version: Хувилбар
+  theme: Сэдэв
+  light-mode: Гэрэлтэй горим
+  dark-mode: Харанхуй горим
+  update-available: Шинэчлэлт бэлэн байна
+  install-update: Шинэчлэл суулгах
+  maintenance-mode: Үйлчилгээний горим
+  notification: Мэдэгдэл
+  notifications: Мэдэгдлүүд
+  mark-as-read: Уншсан гэж тэмдэглэх
+  mark-all-as-read: Бүгдийг уншсан гэж тэмдэглэх
+  clear-notifications: Мэдэгдлийг цэвэрлэх
+  company: Компани
+  companies: Компаниуд
+  user: Хэрэглэгч
+  users: Хэрэглэгчид
+  role: Үүрэг
+  roles: Үүргүүд
+  permission: Зөвшөөрөл
+  permissions: Зөвшөөрлүүд
+  group: Бүлэг
+  groups: Бүлгүүд
+  unauthorized: Зөвшөөрөлгүй
+  forbidden: Хориглосон
+  resource-not-found: Ресурс олдсонгүй
+  server-error: Серверийн алдаа
+  validation-error: Баталгаажуулалтын алдаа
+  timeout-error: Хүсэлт хугацаа дууссан
+  network-error: Сүлжээний алдаа
+  unknown-error: Тодорхойгүй алдаа
+  file: Файл
+  files: Файлууд
+  folder: Фолдер
+  folders: Фолдерууд
+  upload-file: Файл оруулах
+  upload-files: Файлууд оруулах
+  upload-image: Зураг оруулах
+  upload-image-supported: PNG, JPEG болон GIF дэмжигддэг
+  choose-file: Файл сонгох
+  choose-files: Файлууд сонгох
+  drag-and-drop: Чирж тавих
+  download-file: Файл татаж авах
+  file-size: Файлын хэмжээ
+  file-type: Файлын төрөл
+  confirm-delete: Устгахыг баталгаажуулах
+  confirm-action: Үйлдлийг баталгаажуулах
+  confirm-exit: Гарахыг баталгаажуулах
+  confirm-and-save-changes: Баталгаажуулж, өөрчлөлтийг хадгалах
+  are-you-sure-exit: Гарахдаа итгэлтэй байна уу?
+  unsaved-changes-warning: Танд хадгалаагүй өөрчлөлтүүд байна.
+  connected: Холбогдсон
+  disconnected: Тасарсан
+  reconnecting: Дахин холбогдож байна
+  connection-lost: Холболт тасарсан
+  connection-restored: Холболт сэргээгдсэн
+  show: Үзүүлэх
+  hide: Нуух
+  expand: Тэлэх
+  collapse: Агших
+  enable: Идэвхжүүлэх
+  disable: Идэвхгүй болгох
+  minimize: Богиносгох
+  maximize: Дээд зэргээр томруулах
+  restore: Сэргээх
+  zoom-in: Ойртуулах
+  zoom-out: Холдуулах
+  fullscreen: Дэлгэц дүүрэн
+  exit-fullscreen: Дэлгэц дүүрэн горимоос гарах
+  true: "true"
+  false: "false"
+  ok: Зөвшөөрөх
+  none-available: Боломжгүй
+  default: Анхдагч
+  custom: Захиалгат
+  general: Ерөнхий
+  advanced: Ахисан түвшин
+  placeholder-text: Энд текст оруулна уу...
+  learn-more: Илүү ихийг мэдэх
+  view-resource: '{resource} харах'
+  view-resource-details: '{resource} дэлгэрэнгүй харах'
+  create-a-new-resource: Шинэ {resource} үүсгэх
+  create-new-resource: Шинэ {resource} үүсгэх
+  search-resource: '{resource} хайх'
+  new-resource: Шинэ {resource}
+  update-resource: '{resource}-ийг шинэчлэх'
+  save-resource-changes: '{resource}-ийн өөрчлөлтүүдийг хадгалах'
+  creating-resource: '{resource} үүсгэж байна'
+  cancel-resource: '{resource}-ийг цуцлах'
+  delete-resource: '{resource}-ийг устгах'
+  delete-resource-name: 'Устгах: {resourceName}'
+  delete-resource-named: '{resource} ({resourceName}) устгах'
+  delete-resource-prompt: Энэ үйлдлийг буцаах боломжгүй. Устгасны дараа бүртгэл бүрмөсөн
+    устгагдана.
+  delete-cannot-be-undone: Энэ үйлдлийг буцаах боломжгүй. Устгасны дараа бүртгэл бүрмөсөн
+    устгагдана.
+  create-resource: '{resource} үүсгэх'
+  edit-resource: '{resource}-ийг засах'
+  edit-resource-details: '{resource}-ийн дэлгэрэнгүй мэдээллийг засах'
+  edit-resource-type-name: '{resource}: {resourceName} засах'
+  edit-resource-name: 'Засах: {resourceName}'
+  config: Тохиргоо
+  select-field: '{field}-ийг сонгох'
+  columns: Баганууд
+  metadata: Метадата
+  meta: Мета
+  resource-created-success: Шинэ {resource} амжилттай үүслээ.
+  resource-created-success-name: Шинэ {resource} ({resourceName}) амжилттай үүслээ.
+  resource-updated-success: '{resource} ({resourceName}) амжилттай шинэчлэгдлээ.'
+  resource-action-success: '{resource} ({resourceName}) {action} амжилттай боллоо.'
+  resource-deleted-success: '{resource} ({resourceName}) амжилттай устгагдлаа.'
+  resource-deleted: '{resource} ({resourceName}) устгагдсан.'
+  continue-without-saving: Хадгалалгүй үргэлжлүүлэх үү?
+  continue-without-saving-prompt: Танд энэ {resource}-ийн хадгалагдаагүй өөрчлөлтүүд
+    байна. Үргэлжлүүлэхэд эдгээр өөрчлөлтүүд устах болно. Үргэлжлүүлэхийг дарна уу.
+resource:
+  alert: Анхааруулга
+  alerts: Анхааруулгууд
+  brand: Брэнд
+  brands: Брэндүүд
+  category: Ангилал
+  categories: Ангилалууд
+  chat-attachment: Чатын хавсралт
+  chat-attachments: Чатын хавсралтууд
+  chat-channel: Чатын суваг
+  chat-channels: Чатын сувгууд
+  chat-log: Чатын бүртгэл
+  chat-logs: Чатын бүртгэлүүд
+  chat-message: Чатын мессеж
+  chat-messages: Чатын мессежүүд
+  chat-participant: Чатын оролцогч
+  chat-participants: Чатын оролцогчид
+  chat-receipt: Чатын баримт
+  chat-receipts: Чатын баримтууд
+  comment: Сэтгэгдэл
+  comments: Сэтгэгдлүүд
+  company: Компанийн
+  companies: Компаниуд
+  custom-field-value: Захиалгат талбарын утга
+  custom-field-values: Захиалгат талбарын утгууд
+  custom-field: Захиалгат талбар
+  custom-fields: Захиалгат талбарууд
+  dashboard-widget: Хянах самбарын виджет
+  dashboard-widgets: Хянах самбарын виджетүүд
+  dashboard: Хянах самбар
+  dashboards: Хянах самбарууд
+  extension: Өргөтгөл
+  extensions: Өргөтгөлүүд
+  file: Файл
+  files: Файлууд
+  group: Бүлэг
+  groups: Бүлгүүд
+  notification: Мэдэгдэл
+  notifications: Мэдэгдлүүд
+  permission: Зөвшөөрөл
+  permissions: Зөвшөөрлүүд
+  policy: Бодлого
+  policies: Бодлогууд
+  report: Тайлан
+  reports: Тайлангууд
+  role: Үүрэг
+  roles: Үүргүүд
+  setting: Тохиргоо
+  settings: Тохиргоонууд
+  transaction: Гүйлгээ
+  transactions: Гүйлгээүүд
+  user-device: Хэрэглэгчийн төхөөрөмж
+  user-devices: Хэрэглэгчийн төхөөрөмжүүд
+  user: Хэрэглэгч
+  users: Хэрэглэгчид
+dropzone:
+  file: файл
+  drop-to-upload: Өргөж оруулах
+  invalid: Буруу
+  files-ready-for-upload: '{numOfFiles} файл өргөжүүлэхэд бэлэн.'
+  upload-images-videos: Зураг болон видео өргөжүүлэх
+  upload-documents: Баримт бичиг өргөжүүлэх
+  upload-documents-files: Баримт бичиг болон файлуудыг өргөжүүлэх
+  upload-avatar-files: Захиалгат дүрс өргөжүүлэх
+  dropzone-supported-images-videos: Энэ талбарт зураг болон видео файлуудыг чирж оруулна
+    уу
+  dropzone-supported-avatars: SVG эсвэл PNG файлуудыг чирж оруулна уу
+  dropzone-supported-files: Энэ талбарт файлуудыг чирж оруулна уу
+  or-select-button-text: эсвэл өргөжүүлэх файлуудыг сонгоно уу.
+  upload-queue: Өргөжүүлэх дараалал
+  uploading: Өргөжүүлж байна...
+two-fa-enforcement-alert:
+  message: Таны дансны аюулгүй байдлыг нэмэгдүүлэхийн тулд танай байгууллага Хоёр
+    шатлалтай баталгаажуулалт (2FA) шаарддаг. Нэмэлт хамгаалалтын давхаргыг идэвхжүүлэхийн
+    тулд дансны тохиргоонд 2FA-г асаана уу.
+  button-text: 2FA тохируулах
+comment-thread:
+  publish-comment-button-text: Сэтгэгдэл нийтлэх
+  publish-reply-button-text: Хариу нийтлэх
+  reply-comment-button-text: Хариу бичих
+  edit-comment-button-text: Засах
+  delete-comment-button-text: Устгах
+  comment-published-ago: '{createdAgo} өмнө'
+  comment-input-placeholder: Шинэ сэтгэгдэл оруулна уу...
+  comment-reply-placeholder: Хариултаа оруулна уу...
+  comment-input-empty-notification: Хоосон сэтгэгдэл нийтэлж болохгүй...
+  comment-min-length-notification: Сэтгэгдэл дор хаяж 2 тэмдэгттэй байх ёстой
+dashboard:
+  select-dashboard: Хяналтын самбарыг сонгох
+  create-new-dashboard: Шинэ хяналтын самбар үүсгэх
+  create-a-new-dashboard: Шинэ хяналтын самбар үүсгэх
+  confirm-create-dashboard: Хяналтын самбар үүсгэх!
+  edit-layout: Загварыг засах
+  add-widgets: Виджет нэмэх
+  delete-dashboard: Хяналтын самбарыг устгах
+  save-dashboard: Хяналтын самбарыг хадгалах
+  you-cannot-delete-this-dashboard: Та энэ хяналтын самбарыг устгаж чадахгүй.
+  are-you-sure-you-want-delete-dashboard: Та {dashboardName} хяналтын самбарыг устгахдаа
+    итгэлтэй байна уу?
+dashboard-widget-panel:
+  widget-name: '{widgetName} Виджет'
+  select-widgets: Виджет сонгох
+  close-and-save: Хаах ба хадгалах
+filters-picker:
+  filters: Шүүлтүүрүүд
+  filter-data: Өгөгдлийг шүүх
+visible-column-picker:
+  select-viewable-columns: Үзэгдэх багануудыг сонгох
+  customize-columns: Багануудыг тохируулах
+component:
+  file:
+    dropdown-label: Файлын үйлдлүүд
+  import-modal:
+    loading-message: Импорт боловсруулж байна...
+    drop-upload: Өргөж оруулах
+    invalid: Буруу
+    ready-upload: татаж авахад бэлэн.
+    upload-spreadsheets: Хүснэгтүүдийг татаж авах
+    drag-drop: Хүснэгтийн файлуудыг энэ талбар руу чирж унагаана уу
+    button-text: эсвэл татаж авах хүснэгтүүдийг сонгоно уу
+    spreadsheets: хүснэгтүүд
+    upload-queue: Татаж авах дараалал
+  dropzone:
+    file: файл
+    drop-to-upload: Өргөж оруулах
+    invalid: Буруу
+    files-ready-for-upload: '{numOfFiles} татаж авахад бэлэн.'
+    upload-images-videos: Зураг ба видео татаж авах
+    upload-documents: Баримт бичиг татаж авах
+    upload-documents-files: Баримт бичиг ба файлуудыг татаж авах
+    upload-avatar-files: Захиалгат дүрсүүдийг татаж авах
+    dropzone-supported-images-videos: Зураг ба видео файлуудыг энэ талбар руу чирж
+      унагаана уу
+    dropzone-supported-avatars: SVG эсвэл PNG файлуудыг чирж унагаана уу
+    dropzone-supported-files: Файлуудыг энэ талбар руу чирж унагаана уу
+    or-select-button-text: эсвэл татаж авах файлуудыг сонгоно уу.
+    upload-queue: Татаж авах дараалал
+    uploading: Татаж байна...
+  two-fa-enforcement-alert:
+    message: Таны дансны аюулгүй байдлыг сайжруулахын тулд таны байгууллага Хоёр шатлалтай
+      баталгаажуулалт (2FA) шаарддаг. Нэмэлт хамгаалалтын давхаргыг идэвхжүүлэхийн
+      тулд дансны тохиргоонд 2FA-г асаана уу.
+    button-text: 2FA-г тохируулах
+  comment-thread:
+    publish-comment-button-text: Сэтгэгдэл нийтлэх
+    publish-reply-button-text: Хариулт нийтлэх
+    reply-comment-button-text: Хариулах
+    edit-comment-button-text: Засах
+    delete-comment-button-text: Устгах
+    comment-published-ago: '{createdAgo} өмнө'
+    comment-input-placeholder: Шинэ сэтгэгдэл оруулна уу...
+    comment-reply-placeholder: Хариултаа оруулна уу...
+    comment-input-empty-notification: Хоосон сэтгэгдэл нийтлэх боломжгүй...
+    comment-min-length-notification: Сэтгэгдэл дор хаяж 2 тэмдэгттэй байх ёстой
+  dashboard:
+    select-dashboard: Хяналтын самбар сонгох
+    create-new-dashboard: Шинэ хяналтын самбар үүсгэх
+    create-a-new-dashboard: Шинэ хяналтын самбар үүсгэх
+    confirm-create-dashboard: Хяналтын самбар үүсгэх!
+    edit-layout: Төлөвлөлт засах
+    add-widgets: Виджет нэмэх
+    delete-dashboard: Хяналтын самбар устгах
+    save-dashboard: Хяналтын самбарыг хадгалах
+    you-cannot-delete-this-dashboard: Та энэ хяналтын самбарыг устгах боломжгүй.
+    are-you-sure-you-want-delete-dashboard: Та {dashboardName} хяналтын самбарыг устгахдаа
+      итгэлтэй байна уу?
+  dashboard-widget-panel:
+    widget-name: '{widgetName} Виджет'
+    select-widgets: Виджетүүдийг сонгох
+    close-and-save: Хаах ба хадгалах
+services:
+  dashboard-service:
+    create-dashboard-success-notification: Шинэ хяналтын самбар `{dashboardName}`
+      амжилттай үүслээ.
+    delete-dashboard-success-notification: Хяналтын самбар `{dashboardName}` устгагдлаа.
+auth:
+  verification:
+    header-title: Данс баталгаажуулалт
+    title: Имэйл хаягаа баталгаажуулна уу
+    message-text: <strong>Бараг дууслаа!</strong><br> Баталгаажуулах кодыг имэйлээр
+      шалгана уу.
+    verification-code-text: Имэйлээр авсан баталгаажуулах кодоо оруулна уу.
+    verification-input-label: Баталгаажуулах код
+    verify-button-text: Баталгаажуулж үргэлжлүүлэх
+    didnt-receive-a-code: Код ирээгүй байна уу?
+    not-sent:
+      message: Код ирээгүй байна уу?
+      alternative-choice: Данс баталгаажуулахын тулд доорх өөр сонголтуудыг ашиглана
+        уу.
+      resend-email: Имэйл дахин илгээх
+      send-by-sms: SMS-ээр илгээх
+  two-fa:
+    verify-code:
+      verification-code: Баталгаажуулах код
+      check-title: Имэйл эсвэл утсаа шалгана уу
+      check-subtitle: Бид танд баталгаажуулах код илгээсэн. Нэвтрэх үйл явцыг дуусгахын
+        тулд доорх кодыг оруулна уу.
+      expired-help-text: Таны 2FA баталгаажуулах код хугацаа нь дууссан байна. Илүү
+        цаг хэрэгтэй бол шинэ код хүсэж болно.
+      resend-code: Код дахин илгээх
+      verify-code: Код баталгаажуулах
+      cancel-two-factor: Хоёр шатлалт баталгаажуулалтыг цуцлах
+      invalid-session-error-notification: Хүчингүй сесс. Дахин оролдоно уу.
+      verification-successful-notification: Баталгаажуулалт амжилттай боллоо!
+      verification-code-expired-notification: Баталгаажуулах код хугацаа нь дууссан
+        байна. Шинэ код хүснэ үү.
+      verification-code-failed-notification: Баталгаажуулалт амжилтгүй боллоо. Дахин
+        оролдоно уу.
+    resend-code:
+      verification-code-resent-notification: Шинэ баталгаажуулах код илгээгдлээ.
+      verification-code-resent-error-notification: Баталгаажуулах кодыг дахин илгээхэд
+        алдаа гарлаа. Дахин оролдоно уу.
+  forgot-password:
+    success-message: Үргэлжлүүлэхийн тулд имэйлээ шалгана уу!
+    is-sent:
+      title: Бараг л боллоо!
+      message: <strong>И-мэйлээ шалгаарай!</strong><br> Бид таны и-мэйл хаяг руу нууц
+        үгээ сэргээх холбоос илгээсэн. Энэхүү холбоос 15 минутын дараа хугацаа нь
+        дуусна.
+    not-sent:
+      title: Нууц үгээ мартсан уу?
+      message: <strong>Санаа зоволтгүй, бид таныг дэмжиж байна.</strong><br> Та {appName}
+        руу нэвтрэхдээ ашигладаг и-мэйл хаягаа оруулна уу, бид танд нууц үгээ сэргээх
+        аюулгүй холбоос илгээх болно.
+    form:
+      email-label: Таны и-мэйл хаяг
+      submit-button: За, надад ид шидийн холбоос илгээгээрэй!
+      nevermind-button: Яахав
+  login:
+    title: Таны данс руу нэвтрэх
+    no-identity-notification: И-мэйлээ оруулахаа мартсан уу?
+    no-password-notification: Нууц үгээ оруулахаа мартсан уу?
+    unverified-notification: Таны дансыг баталгаажуулах шаардлагатай.
+    password-reset-required: Үргэлжлүүлэхийн тулд нууц үгээ сэргээх шаардлагатай.
+    failed-attempt:
+      message: <strong>Нууц үгээ мартсан уу?</strong><br> Нууц үгээ сэргээхийн тулд
+        доорх товчийг дарна уу.
+      button-text: За, надад сэргээхэд туслаач!
+    form:
+      email-label: И-мэйл хаяг
+      password-label: Нууц үг
+      remember-me-label: Намайг сана
+      forgot-password-label: Нууц үгээ мартсан уу?
+      sign-in-button: Нэвтрэх
+      create-account-button: Шинэ данс үүсгэх
+    slow-connection-message: Сүлжээний холболт удааширч байна.
+  reset-password:
+    success-message: Таны нууц үг амжилттай сэргээгдлээ! Үргэлжлүүлэхийн тулд нэвтэрнэ
+      үү.
+    invalid-verification-code: Энэ нууц үг сэргээх холбоос хүчин төгөлдөр бус эсвэл
+      хугацаа нь дууссан байна.
+    title: Нууц үгээ сэргээх
+    form:
+      code:
+        label: Таны сэргээх код
+        help-text: Та и-мэйлээр авсан баталгаажуулах код.
+      password:
+        label: Шинэ нууц үг
+        help-text: Үргэлжлүүлэхийн тулд дор хаяж 6 тэмдэгт бүхий нууц үг оруулна уу.
+      confirm-password:
+        label: Шинэ нууц үгийг баталгаажуулах
+        help-text: Үргэлжлүүлэхийн тулд дор хаяж 6 тэмдэгт бүхий нууц үг оруулна уу.
+      submit-button: Нууц үг сэргээх
+      back-button: Буцах
+console:
+  create-or-join-organization:
+    modal-title: Байгууллага үүсгэх эсвэл нэгдэх
+    join-success-notification: Та шинэ байгууллагад нэгдлээ!
+    create-success-notification: Та шинэ байгууллага үүсгэлээ!
+  switch-organization:
+    modal-title: Та {organizationName} байгууллагад шилжихдээ итгэлтэй байна уу?
+    modal-body: Баталгаажуулснаар таны данс нэвтэрсэн хэвээр үлдэх боловч таны үндсэн
+      байгууллага солигдоно.
+    modal-accept-button-text: Тийм, би байгууллага солихыг хүсэж байна
+    success-notification: Та байгууллагаа амжилттай солилоо
+  account:
+    index:
+      upload-new: Шинэ файл оруулах
+      phone: Таны утасны дугаар.
+      photos: зурагнууд
+      timezone: Цагийн бүсээ сонгоно уу.
+  admin:
+    menu:
+      overview: Тойм
+      organizations: Байгууллагууд
+      branding: Брэндинг
+      2fa-config: 2FA тохиргоо
+      schedule-monitor: Хуваарь хянах
+      services: Үйлчилгээ
+      mail: И-мэйл
+      filesystem: Файлын систем
+      queue: Эрэмбэлсэн жагсаалт
+      socket: Сокет
+      push-notifications: Түлхэх мэдэгдэл
+    schedule-monitor:
+      schedule-monitor: Хуваарь хянагч
+      task-logs-for: 'Даалгаврын бүртгэл: '
+      showing-last-count: Сүүлийн {count} бүртгэлийг харуулж байна
+      name: Нэр
+      type: Төрөл
+      timezone: Цагийн бүс
+      last-started: Сүүлд эхэлсэн
+      last-finished: Сүүлд дууссан
+      last-failure: Сүүлд амжилтгүй болсон
+      date: Огноо
+      memory: Санах ой
+      runtime: Ажиллах хугацаа
+      output: Гаралт
+      no-output: Гаралт байхгүй
+    config:
+      database:
+        title: Мэдээллийн сангийн тохиргоо
+      filesystem:
+        title: Файлын системийн тохиргоо
+      mail:
+        title: И-мэйл тохиргоо
+      notification-channels:
+        title: Түлхэх мэдэгдлийн тохиргоо
+      queue:
+        title: Эрэмбэлсэн жагсаалтын тохиргоо
+      services:
+        title: Үйлчилгээний тохиргоо
+      socket:
+        title: Сокетийн тохиргоо
+    branding:
+      title: Брэндинг
+      icon-text: Тэмдэг
+      upload-new: Шинэ файл оруулах
+      reset-default: Үндсэн тохиргоонд буцаах
+      logo-text: Лого
+      theme: Үндсэн сэдэв
+    index:
+      total-users: Нийт хэрэглэгчид
+      total-organizations: Нийт байгууллагууд
+      total-transactions: Нийт гүйлгээ
+    notifications:
+      title: Мэдэгдэл
+      notification-settings: Мэдэгдлийн тохиргоо
+    organizations:
+      index:
+        title: Байгууллагууд
+        owner-name-column: Эзэмшигч
+        owner-phone-column: Эзэмшигчийн утас
+        owner-email-column: Эзэмшигчийн и-мэйл
+        users-count-column: Хэрэглэгчид
+        phone-column: Утас
+        email-column: И-мэйл
+      users:
+        title: Хэрэглэгчид
+  settings:
+    index:
+      title: Байгууллагын тохиргоо
+      organization-name: Байгууллагын нэр
+      organization-description: Байгууллагын танилцуулга
+      organization-phone: Байгууллагын утасны дугаар
+      organization-currency: Байгууллагын валют
+      organization-id: Байгууллагын ID
+      organization-branding: Байгууллагын брэнд
+      logo: Лого
+      logo-help-text: Таны байгууллагын лого.
+      upload-new-logo: Шинэ лого оруулах
+      backdrop: Дэвсгэр зураг
+      backdrop-help-text: Таны байгууллагад зориулсан нэмэлт баннер эсвэл дэвсгэр
+        зураг.
+      upload-new-backdrop: Шинэ дэвсгэр зураг оруулах
+      organization-timezone: Таны байгууллагын үндсэн цагийн бүсийг сонгоно уу.
+      select-timezone: Цагийн бүс сонгох.
+  extensions:
+    title: Өргөтгөлүүд удахгүй ирнэ!
+    message: Өргөтгөлүүдийн сан болон зах зээлийг нээхэд бэлдэж байгаа тул дараагийн
+      хувилбаруудаа шалгаарай.
+  notifications:
+    select-all: Бүгдийг Сонгох
+    mark-as-read: Уншсан гэж тэмдэглэх
+    received: 'Хүлээн авсан:'
+    message: Үзүүлэх мэдэгдэл алга.
+invite:
+  for-users:
+    invitation-message: Танд {companyName} нэгдэх урилга ирлээ
+    invitation-sent-message: '{appName} дээрх {companyName} байгууллагад нэгдэх урилгыг
+      танд илгээсэн. Урилгыг хүлээн авахын тулд имэйлээр авсан урилгын кодоо оруулж
+      үргэлжлүүлнэ үү.'
+    invitation-code-sent-text: Таны урилгын код
+    accept-invitation-text: Урилгыг хүлээн авах
+onboard:
+  index:
+    title: Хэрэглэгчийн бүртгэл үүсгэх
+    welcome-title: <strong>Тавтай морилно уу {companyName}!</strong><br />
+    welcome-text: Эхлэхийн тулд доорх шаардлагатай мэдээллийг бөглөнө үү.
+    full-name: Бүтэн нэр
+    full-name-help-text: Таны бүтэн нэр
+    your-email: Имэйл хаяг
+    your-email-help-text: Таны имэйл хаяг
+    phone: Утасны дугаар
+    phone-help-text: Таны утасны дугаар
+    organization-name: Байгууллагын нэр
+    organization-help-text: Таны байгууллагын нэр, таны бүх үйлчилгээ, нөөцүүд энэ
+      байгууллагын дор удирдагдана, дараа нь хүссэн эсвэл хэрэгтэй бол олон байгууллага
+      үүсгэж болно.
+    password: Нууц үг оруулах
+    password-help-text: Таны нууц үг, сайн нууц үг сонгоно уу.
+    confirm-password: Нууц үгээ баталгаажуулах
+    confirm-password-help-text: Дээр оруулсан нууц үгийг баталгаажуулах зорилгоор.
+    continue-button-text: Үргэлжлүүлэх
+  verify-email:
+    header-title: Бүртгэлийн баталгаажуулалт
+    title: Имэйл хаягаа баталгаажуулна уу
+    message-text: <strong>Бараг дууслаа!</strong><br> Баталгаажуулах кодыг имэйлээсээ
+      шалгана уу.
+    verification-code-text: Имэйлээр авсан баталгаажуулах кодоо оруулна уу.
+    verification-input-label: Баталгаажуулах код
+    verify-button-text: Баталгаажуулж үргэлжлүүлэх
+    didnt-receive-a-code: Код ирээгүй байна уу?
+    not-sent:
+      message: Код ирээгүй байна уу?
+      alternative-choice: Бүртгэлээ баталгаажуулахын тулд доорх өөр сонголтуудыг ашиглана
+        уу.
+      resend-email: Имэйл дахин илгээх
+      send-by-sms: SMS-аар илгээх
+install:
+  installer-header: Суулгагч
+  failed-message-sent: Суулгалт амжилтгүй боллоо! Дахин суулгахын тулд доорх товчийг
+    дарна уу.
+  retry-install: Суулгалтыг дахин оролдох
+  start-install: Суулгалтыг эхлүүлэх
+layout:
+  header:
+    menus:
+      organization:
+        settings: Байгууллагын тохиргоо
+        create-or-join: Байгууллага үүсгэх эсвэл нэгдэх
+        explore-extensions: Нэмэлтүүдийг судлах
+      user:
+        view-profile: Профайлыг үзэх
+        keyboard-shortcuts: Товчлолуудыг харуулах
+        changelog: Өөрчлөлтийн түүх

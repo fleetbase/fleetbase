@@ -7,7 +7,7 @@
             <div class="flex flex-row justify-end">
                 <Button @type="primary" @icon="plus" @text="Create Organization" @onClick={{this.createOrganization}} />
             </div>
-            <ContentPanel @title="Your Organizations" @open={{true}} @pad={{true}} @panelBodyClass="bg-white dark:bg-gray-800">
+            <ContentPanel @title="Your Organizations" @open={{true}} @wrapperClass="bordered-classic">
                 <div class="space-y-2">
                     {{#each @model as |organization|}}
                         <div class="grid grid-cols-3 border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 rounded-lg px-3 py-2 items-center">

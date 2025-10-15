@@ -20,26 +20,26 @@
     "require": {
         "php": "^8.0",
         "appstract/laravel-opcache": "^4.0",
-        "fleetbase/core-api": "^1.6.16",
-        "fleetbase/fleetops-api": "^0.6.18",
+        "fleetbase/core-api": "^1.6.18",
+        "fleetbase/fleetops-api": "^0.6.19",
         "fleetbase/flespi-integration": "^0.1.14",
         "fleetbase/samsara-api": "^0.0.1",
         "fleetbase/vroom-api": "^0.0.1",
         "fleetbase/valhalla-api": "^0.0.1",
-        "fleetbase/billing-api": "^0.1.9",
-        "fleetbase/internals-api": "^0.0.20",
-        "fleetbase/aws-marketplace": "^0.0.4",
-        "fleetbase/registry-bridge": "^0.0.19",
-        "fleetbase/storefront-api": "^0.4.1",
-        "fleetbase/customer-portal-api": "^0.0.7",
+        "fleetbase/billing-api": "^0.1.10",
+        "fleetbase/internals-api": "^0.0.21",
+        "fleetbase/aws-marketplace": "^0.0.6",
+        "fleetbase/registry-bridge": "^0.1.0",
+        "fleetbase/storefront-api": "^0.4.2",
+        "fleetbase/customer-portal-api": "^0.0.8",
         "guzzlehttp/guzzle": "^7.0.1",
         "laravel/framework": "^10.0",
         "laravel/octane": "^2.3",
         "laravel/tinker": "^2.9",
         "league/flysystem-aws-s3-v3": "^3.0",
         "maatwebsite/excel": "^3.1",
-        "phpoffice/phpspreadsheet": "^1.28",
         "maennchen/zipstream-php": "3.1.2",
+        "phpoffice/phpspreadsheet": "^1.28",
         "predis/predis": "^2.1",
         "psr/http-factory-implementation": "*",
         "resend/resend-php": "^0.14.0",
@@ -112,15 +112,6 @@
         ],
         "clean-logs": [
             "composer run-script clear-logs"
-        ],
-        "dock": [
-            "docker exec -it fleetbase_os_application_1 /usr/bin/tmux -u new"
-        ],
-        "dock-server": [
-            "docker exec -it fleetbase_os_httpd_1 /bin/sh"
-        ],
-        "tunnel": [
-            "ngrok http --region=ap --hostname=fleetbase.ap.ngrok.io 8000"
         ]
     },
     "extra": {

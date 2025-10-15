@@ -18,6 +18,10 @@ export default class CategoryModel extends Model {
     @hasMany('category', { inverse: 'parent' }) subcategories;
     @tracked parent_category;
 
+    /** Array<CustomFieldModel> attached at runtime for rendering */
+    @tracked customFields = [];
+    @tracked isEditing = false;
+
     /** @attributes */
     @attr('string') owner_type;
     @attr('string') name;
@@ -46,7 +50,7 @@ export default class CategoryModel extends Model {
     }
 
     @computed('updated_at') get updatedAt() {
-        return format(this.updated_at, 'PPP p');
+        return format(this.updated_at, 'yyyy-MM-dd HH:mm');
     }
 
     @computed('updated_at') get updatedAtShort() {
@@ -58,7 +62,7 @@ export default class CategoryModel extends Model {
     }
 
     @computed('created_at') get createdAt() {
-        return format(this.created_at, 'PPP p');
+        return format(this.created_at, 'yyyy-MM-dd HH:mm');
     }
 
     @computed('created_at') get createdAtShort() {
