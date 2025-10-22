@@ -1,22 +1,13 @@
-# 🚀 Fleetbase v0.7.11 — 2025-10-15
+# 🚀 Fleetbase v0.7.12 — 2025-10-22
 
-> “Major update is here”
+> “Patches”
 
 ---
 
 ## ✨ Highlights
-- UI/UX Refactor and improvements.
-- Core API added `without` feature for `FleetbaseResource` classes, which filters properties from the JSON response of a resource.
-- Added complete Reporting registry to Core API, and supported Schema
-- Improved Custom Fields core feature
-- FleetOps refactor completed
-- Added Analytics -> Reports to FleetOps
-- Added Order Kanban Board to Fleet-Ops
-- UI/UX Refactor and Improvements
-- Storefront patch for sending notifications without FCM/APN configured
-- Storefront food truck orders automatically assign driver patch
-- Added new complete translations: Arabic, Bulgarian, Spanish, French, Mongolian, Portuguese (Brazil), Russian, Vietnamese, and Chinese
-- Custom Fields for all resources now here.
+- Improvements to Fleet-Ops orders Kanban view, filter by order type and search/filters working.
+- Patches to food truck API.
+- Patches to multiple waypoints API handling.
 
 ---
 
