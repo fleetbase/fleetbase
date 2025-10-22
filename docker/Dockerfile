@@ -75,7 +75,7 @@ ENV QUEUE_CONNECTION=redis
 ENV CADDYFILE_PATH=/fleetbase/Caddyfile
 ENV CONSOLE_PATH=/fleetbase/console
 ENV OCTANE_SERVER=frankenphp
-ENV FLEETBASE_VERSION=0.7.11
+ENV FLEETBASE_VERSION=0.7.12
 
 # Set environment
 ARG ENVIRONMENT=production

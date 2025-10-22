@@ -1,4 +1,5 @@
-FROM --platform=linux/amd64 dunglas/frankenphp:static-builder
+# FROM --platform=linux/amd64 dunglas/frankenphp:static-builder
+FROM --platform=linux/amd64 docker.io/dunglas/frankenphp:static-builder@sha256:821526b776a26502735d83890cc0a0d579348c510ba6c777df0762cb1c50d967
 
 WORKDIR /go/src/app
 

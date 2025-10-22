@@ -4,6 +4,7 @@ import { inject as service } from '@ember/service';
 import { later } from '@ember/runloop';
 import { action } from '@ember/object';
 import { isArray } from '@ember/array';
+import { dasherize } from '@ember/string';
 import first from '@fleetbase/ember-core/utils/first';
 
 export default class ConsoleController extends Controller {
@@ -16,67 +17,19 @@ export default class ConsoleController extends Controller {
     @service intl;
     @service universe;
     @service abilities;
-
-    /**
-     * Authenticated user organizations.
-     *
-     * @var {Array}
-     */
     @tracked organizations = [];
-
-    /**
-     * Sidebar Context Controls
-     *
-     * @var {SidebarContext}
-     */
     @tracked sidebarContext;
-
-    /**
-     * State of sidebar toggle icon
-     *
-     * @var {SidebarContext}
-     */
     @tracked sidebarToggleEnabled = true;
-
-    /**
-     * The sidebar toggle state.
-     *
-     * @var {SidebarContext}
-     */
     @tracked sidebarToggleState = {};
-
-    /**
-     * Routes which should hide the sidebar menu.
-     *
-     * @var {Array}
-     */
     @tracked hiddenSidebarRoutes = ['console.home', 'console.notifications', 'console.virtual'];
-
-    /**
-     * Menu items to be added to the main header navigation bar.
-     *
-     * @memberof ConsoleController
-     */
     @tracked menuItems = [];
-
-    /**
-     * Menu items to be added to the user dropdown menu located in the header.
-     *
-     * @memberof ConsoleController
-     */
     @tracked userMenuItems = [];
-
-    /**
-     * Menu items to be added to the organization dropdown menu located in the header.
-     *
-     * @memberof ConsoleController
-     */
     @tracked organizationMenuItems = [];
 
-    /**
-     * Creates an instance of ConsoleController.
-     * @memberof ConsoleController
-     */
+    get currentRouteClass() {
+        return dasherize(this.router.currentRouteName.replace(/\./g, ' '));
+    }
+
     constructor() {
         super(...arguments);
         this.router.on('routeDidChange', (transition) => {
