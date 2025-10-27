@@ -3,6 +3,7 @@ import { computed } from '@ember/object';
 import { isArray } from '@ember/array';
 import { getOwner } from '@ember/application';
 import { isPresent, isEmpty } from '@ember/utils';
+import { format, formatDistanceToNow } from 'date-fns';
 
 export default class ReportModel extends Model {
     /** @ids */
@@ -35,6 +36,10 @@ export default class ReportModel extends Model {
     @attr('raw') meta;
     @attr('string') status;
 
+    /** @dates */
+    @attr('date') created_at;
+    @attr('date') updated_at;
+
     /** @relationships */
     // @belongsTo('company') company;
     // @belongsTo('user') createdBy;
@@ -54,8 +59,23 @@ export default class ReportModel extends Model {
     }
 
     /** @computed */
-    @computed('query_config.columns.length', 'query_config.table.name')
-    get hasValidConfig() {
+    @computed('updated_at') get updatedAgo() {
+        return formatDistanceToNow(this.updated_at);
+    }
+
+    @computed('updated_at') get updatedAt() {
+        return format(this.updated_at, 'yyyy-MM-dd HH:mm');
+    }
+
+    @computed('created_at') get createdAgo() {
+        return formatDistanceToNow(this.created_at);
+    }
+
+    @computed('created_at') get createdAt() {
+        return format(this.created_at, 'yyyy-MM-dd HH:mm');
+    }
+
+    @computed('query_config.columns.length', 'query_config.table.name') get hasValidConfig() {
         return (
             isPresent(this.query_config) &&
             isPresent(this.query_config.table) &&
@@ -65,23 +85,19 @@ export default class ReportModel extends Model {
         );
     }
 
-    @computed('query_config.table.name')
-    get tableName() {
+    @computed('query_config.table.name') get tableName() {
         return this.query_config?.table?.name || '';
     }
 
-    @computed('query_config.table.label', 'tableName')
-    get tableLabel() {
+    @computed('query_config.table.label', 'tableName') get tableLabel() {
         return this.query_config?.table?.label || this.tableName;
     }
 
-    @computed('query_config.columns.[]')
-    get selectedColumns() {
+    @computed('query_config.columns.[]') get selectedColumns() {
         return this.query_config?.columns || [];
     }
 
-    @computed('selectedColumns.[]', 'query_config.joins.[]')
-    get totalSelectedColumns() {
+    @computed('selectedColumns.[]', 'query_config.joins.[]') get totalSelectedColumns() {
         let count = this.selectedColumns.length;
 
         // Add columns from joins
@@ -96,13 +112,11 @@ export default class ReportModel extends Model {
         return count;
     }
 
-    @computed('query_config.joins.[]')
-    get hasJoins() {
+    @computed('query_config.joins.[]') get hasJoins() {
         return isArray(this.query_config?.joins) && this.query_config.joins.length > 0;
     }
 
-    @computed('hasJoins', 'query_config.joins.[]')
-    get joinedTables() {
+    @computed('hasJoins', 'query_config.joins.[]') get joinedTables() {
         if (!this.hasJoins) {
             return [];
         }
@@ -115,13 +129,11 @@ export default class ReportModel extends Model {
         }));
     }
 
-    @computed('query_config.conditions.[]')
-    get hasConditions() {
+    @computed('query_config.conditions.[]') get hasConditions() {
         return isArray(this.query_config?.conditions) && this.query_config.conditions.length > 0;
     }
 
-    @computed('hasConditions', 'query_config.conditions.[]')
-    get conditionsCount() {
+    @computed('hasConditions', 'query_config.conditions.[]') get conditionsCount() {
         if (!this.hasConditions) {
             return 0;
         }
@@ -129,23 +141,19 @@ export default class ReportModel extends Model {
         return this.countConditionsRecursively(this.query_config.conditions);
     }
 
-    @computed('query_config.groupBy.[]')
-    get hasGrouping() {
+    @computed('query_config.groupBy.[]') get hasGrouping() {
         return isArray(this.query_config?.groupBy) && this.query_config.groupBy.length > 0;
     }
 
-    @computed('query_config.sortBy.[]')
-    get hasSorting() {
+    @computed('query_config.sortBy.[]') get hasSorting() {
         return isArray(this.query_config?.sortBy) && this.query_config.sortBy.length > 0;
     }
 
-    @computed('query_config.limit')
-    get hasLimit() {
+    @computed('query_config.limit') get hasLimit() {
         return isPresent(this.query_config?.limit) && this.query_config.limit > 0;
     }
 
-    @computed('conditionsCount', 'hasGrouping', 'hasJoins', 'joinedTables.length', 'totalSelectedColumns')
-    get complexity() {
+    @computed('conditionsCount', 'hasGrouping', 'hasJoins', 'joinedTables.length', 'totalSelectedColumns') get complexity() {
         let score = 0;
 
         score += this.totalSelectedColumns;
@@ -162,8 +170,7 @@ export default class ReportModel extends Model {
         }
     }
 
-    @computed('complexity', 'totalSelectedColumns', 'joinedTables.length')
-    get estimatedPerformance() {
+    @computed('complexity', 'totalSelectedColumns', 'joinedTables.length') get estimatedPerformance() {
         if (this.complexity === 'simple' && this.totalSelectedColumns <= 10) {
             return 'fast';
         } else if (this.complexity === 'moderate' && this.joinedTables.length <= 2) {
@@ -173,8 +180,7 @@ export default class ReportModel extends Model {
         }
     }
 
-    @computed('last_executed_at')
-    get lastExecutedDisplay() {
+    @computed('last_executed_at') get lastExecutedDisplay() {
         if (!this.last_executed_at) {
             return 'Never executed';
         }
@@ -182,8 +188,7 @@ export default class ReportModel extends Model {
         return this.last_executed_at.toLocaleDateString() + ' ' + this.last_executed_at.toLocaleTimeString();
     }
 
-    @computed('average_execution_time')
-    get averageExecutionTimeDisplay() {
+    @computed('average_execution_time') get averageExecutionTimeDisplay() {
         if (!this.average_execution_time) {
             return 'N/A';
         }
@@ -195,13 +200,11 @@ export default class ReportModel extends Model {
         }
     }
 
-    @computed('execution_count')
-    get executionCountDisplay() {
+    @computed('execution_count') get executionCountDisplay() {
         return this.execution_count || 0;
     }
 
-    @computed('last_result_count')
-    get lastResultCountDisplay() {
+    @computed('last_result_count') get lastResultCountDisplay() {
         if (this.last_result_count === null || this.last_result_count === undefined) {
             return 'N/A';
         }
@@ -209,23 +212,19 @@ export default class ReportModel extends Model {
         return this.last_result_count.toLocaleString();
     }
 
-    @computed('export_formats.[]')
-    get availableExportFormats() {
+    @computed('export_formats.[]') get availableExportFormats() {
         return this.export_formats || ['csv', 'excel', 'json'];
     }
 
-    @computed('tags.[]')
-    get tagsList() {
+    @computed('tags.[]') get tagsList() {
         return this.tags || [];
     }
 
-    @computed('shared_with.[]')
-    get sharedWithList() {
+    @computed('shared_with.[]') get sharedWithList() {
         return this.shared_with || [];
     }
 
-    @computed('is_scheduled', 'next_scheduled_run', 'schedule_frequency', 'schedule_timezone')
-    get scheduleInfo() {
+    @computed('is_scheduled', 'next_scheduled_run', 'schedule_frequency', 'schedule_timezone') get scheduleInfo() {
         if (!this.is_scheduled) {
             return null;
         }
@@ -237,8 +236,7 @@ export default class ReportModel extends Model {
         };
     }
 
-    @computed('hasConditions', 'query_config.conditions.[]')
-    get conditionsSummary() {
+    @computed('hasConditions', 'query_config.conditions.[]') get conditionsSummary() {
         if (!this.hasConditions) {
             return [];
         }
@@ -246,8 +244,7 @@ export default class ReportModel extends Model {
         return this.extractConditionsSummary(this.query_config.conditions);
     }
 
-    @computed('status')
-    get statusDisplay() {
+    @computed('status') get statusDisplay() {
         const statusMap = {
             draft: 'Draft',
             active: 'Active',
@@ -258,8 +255,7 @@ export default class ReportModel extends Model {
         return statusMap[this.status] || this.status;
     }
 
-    @computed('status')
-    get statusClass() {
+    @computed('status') get statusClass() {
         const statusClasses = {
             draft: 'status-draft',
             active: 'status-active',

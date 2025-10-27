@@ -1,13 +1,17 @@
-# 🚀 Fleetbase v0.7.12 — 2025-10-22
+# 🚀 Fleetbase v0.7.13 — 2025-10-28
 
-> “Patches”
+> “Connectivity Module + Positions Playback + Positions & Device Events Drawer”
 
 ---
 
 ## ✨ Highlights
-- Improvements to Fleet-Ops orders Kanban view, filter by order type and search/filters working.
-- Patches to food truck API.
-- Patches to multiple waypoints API handling.
+- Introduces the new Connectivity module in Fleet-Ops for managing telematics, devices, sensors with native support for Flespi, Geotab, and Samsara built in.
+- Introduces Position replay for Vehicles
+- Added new live map drawer tabs "Positions", and "Events" to view all trackable resources position data, as well as replay positions
+- Improved the report query builder + fix drag sort on group by/aggregate fn and order by columns
+- Patched entities by destination order view
+- Improved movement tracker service to account for spead, improved bearing/heading for accurate playback and live tracking of assets
+- Improved tracking endpoint for both vehicles and drivers
 
 ---
 
