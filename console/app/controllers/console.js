@@ -17,9 +17,9 @@ export default class ConsoleController extends Controller {
     @service intl;
     @service universe;
     @service abilities;
+    @service sidebar;
     @tracked organizations = [];
     @tracked sidebarContext;
-    @tracked sidebarToggleEnabled = true;
     @tracked sidebarToggleState = {};
     @tracked hiddenSidebarRoutes = ['console.home', 'console.notifications', 'console.virtual'];
     @tracked menuItems = [];
@@ -42,17 +42,17 @@ export default class ConsoleController extends Controller {
 
                 // Hide the sidebar if the current route is in hiddenSidebarRoutes
                 if (shouldHideSidebar) {
-                    this.sidebarContext.hideNow();
+                    this.sidebar.hideNow();
                     this.sidebarToggleEnabled = false;
                     return; // Exit early as no further action is required
                 }
 
                 // If the sidebar was manually closed and not on a hidden route, keep it closed
                 if (isSidebarManuallyClosed) {
-                    this.sidebarContext.hideNow();
+                    this.sidebar.hideNow();
                 } else {
                     // Otherwise, show the sidebar
-                    this.sidebarContext.show();
+                    this.sidebar.show();
                 }
 
                 // Ensure toggle is enabled unless on a hidden route
@@ -87,7 +87,7 @@ export default class ConsoleController extends Controller {
         this.universe.trigger('sidebarContext.available', sidebarContext);
 
         if (this.hiddenSidebarRoutes.includes(this.router.currentRouteName)) {
-            this.sidebarContext.hideNow();
+            this.sidebar.hideNow();
             this.sidebarToggleEnabled = false;
         }
     }

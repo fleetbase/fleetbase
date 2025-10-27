@@ -13,7 +13,11 @@ export default class DashboardModel extends Model {
 
     /** @attributes */
     @attr('string') name;
+    @attr('string') extension;
     @attr('boolean') is_default;
+    @attr('array') tags;
+    @attr('object') options;
+    @attr('object') meta;
 
     /** @dates */
     @attr('date') created_at;
