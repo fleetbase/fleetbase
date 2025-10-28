@@ -34,7 +34,9 @@ services:
     environment:
       SOCKETCLUSTER_WORKERS: 10
       SOCKETCLUSTER_BROKERS: 10
-      SOCKETCLUSTER_OPTIONS: '{"origins":"*:*"}'
+      # SOCKETCLUSTER_OPTIONS can be set via docker-compose.override.yml for specific environments
+      # For production, use: SOCKETCLUSTER_OPTIONS: '{"origins":"https://yourdomain.com:*"}'
+      # For development, use: SOCKETCLUSTER_OPTIONS: '{"origins":"http://localhost:*"}'
 
   scheduler:
     image: fleetbase/fleetbase-api:latest
