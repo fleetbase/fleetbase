@@ -10,6 +10,7 @@
 - Added pill components for driver, vehicle, device, and order.
 - Fix custom fields manager component persistence https://github.com/fleetbase/ember-ui/pull/89
 - Improved dashboard isolation mechanism so that dashboard component can be rendered in multiple engines.
+- Added meta viewer and editor for drivers, and vehicles. Fixes https://github.com/fleetbase/fleetbase/issues/440
 
 ---
 
