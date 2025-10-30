@@ -1,17 +1,15 @@
-# 🚀 Fleetbase v0.7.13 — 2025-10-28
+# 🚀 Fleetbase v0.7.14 — 2025-10-30
 
-> “Connectivity Module + Positions Playback + Positions & Device Events Drawer”
+> Improved positions replay + meta field editors for drivers and vehicles”
 
 ---
 
 ## ✨ Highlights
-- Introduces the new Connectivity module in Fleet-Ops for managing telematics, devices, sensors with native support for Flespi, Geotab, and Samsara built in.
-- Introduces Position replay for Vehicles
-- Added new live map drawer tabs "Positions", and "Events" to view all trackable resources position data, as well as replay positions
-- Improved the report query builder + fix drag sort on group by/aggregate fn and order by columns
-- Patched entities by destination order view
-- Improved movement tracker service to account for spead, improved bearing/heading for accurate playback and live tracking of assets
-- Improved tracking endpoint for both vehicles and drivers
+- Added ability to attach telematic devices to vehicles .
+- Improved positions replay component to use client side + added step controls - Dropped `MovementTrackerService` from position playback components, use new `PositionPlaybackService` which implements full position playback completely on client side.
+- Added pill components for driver, vehicle, device, and order.
+- Fix custom fields manager component persistence https://github.com/fleetbase/ember-ui/pull/89
+- Improved dashboard isolation mechanism so that dashboard component can be rendered in multiple engines.
 
 ---
 
