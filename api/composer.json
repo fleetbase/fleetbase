@@ -20,10 +20,10 @@
     "require": {
         "php": "^8.0",
         "appstract/laravel-opcache": "^4.0",
-        "fleetbase/core-api": "^1.6.20",
-        "fleetbase/fleetops-api": "^0.6.21",
+        "fleetbase/core-api": "^1.6.21",
+        "fleetbase/fleetops-api": "^0.6.22",
         "fleetbase/registry-bridge": "^0.1.0",
-        "fleetbase/storefront-api": "^0.4.3",
+        "fleetbase/storefront-api": "^0.4.4",
         "fleetbase/billing-api": "^0.1.10",
         "fleetbase/internals-api": "^0.0.21",
         "fleetbase/aws-marketplace": "^0.0.6",
@@ -44,6 +44,7 @@
         "psr/http-factory-implementation": "*",
         "resend/resend-php": "^0.14.0",
         "s-ichikawa/laravel-sendgrid-driver": "^4.0",
+        "stripe/stripe-php": "13.13.0",
         "symfony/mailgun-mailer": "^7.1",
         "symfony/postmark-mailer": "^7.1"
     },
