@@ -1,16 +1,12 @@
-# 🚀 Fleetbase v0.7.14 — 2025-10-30
+# 🚀 Fleetbase v0.7.15 — 2025-11-01
 
-> Improved positions replay + meta field editors for drivers and vehicles”
+> "Optimization tune-up, prevent queue blockage"
 
 ---
 
 ## ✨ Highlights
-- Added ability to attach telematic devices to vehicles .
-- Improved positions replay component to use client side + added step controls - Dropped `MovementTrackerService` from position playback components, use new `PositionPlaybackService` which implements full position playback completely on client side.
-- Added pill components for driver, vehicle, device, and order.
-- Fix custom fields manager component persistence https://github.com/fleetbase/ember-ui/pull/89
-- Improved dashboard isolation mechanism so that dashboard component can be rendered in multiple engines.
-- Added meta viewer and editor for drivers, and vehicles. Fixes https://github.com/fleetbase/fleetbase/issues/440
+- Create surgical optimziations around metadata option data, as well as order methods to prevent trigger lifecycle jobs.
+- Updated order `setDistanceAndTime` to prevent lifecycle job triggers, order estimation tracking limited to orders within past 2 days instead of month, now runs every 10 minutes instead of 5 minutes.
 
 ---
 
