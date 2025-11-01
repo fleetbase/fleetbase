@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "c050bc97b2aef702345052f6d811768a",
+    "content-hash": "b5c0c47fa78f6a66e13634c96dcec735",
     "packages": [
         {
             "name": "appstract/laravel-opcache",
@@ -124,16 +124,16 @@
         },
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.359.1",
+            "version": "3.359.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "40543e3993fc5094094ac9f9bdc4434bf81cca2d"
+                "reference": "a32e4c9522f0b61c947fafa1713d3a24b397a757"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/40543e3993fc5094094ac9f9bdc4434bf81cca2d",
-                "reference": "40543e3993fc5094094ac9f9bdc4434bf81cca2d",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/a32e4c9522f0b61c947fafa1713d3a24b397a757",
+                "reference": "a32e4c9522f0b61c947fafa1713d3a24b397a757",
                 "shasum": ""
             },
             "require": {
@@ -215,9 +215,9 @@
             "support": {
                 "forum": "https://github.com/aws/aws-sdk-php/discussions",
                 "issues": "https://github.com/aws/aws-sdk-php/issues",
-                "source": "https://github.com/aws/aws-sdk-php/tree/3.359.1"
+                "source": "https://github.com/aws/aws-sdk-php/tree/3.359.3"
             },
-            "time": "2025-10-29T20:13:06+00:00"
+            "time": "2025-10-31T18:15:22+00:00"
         },
         {
             "name": "aws/aws-sdk-php-laravel",
@@ -1781,29 +1781,28 @@
         },
         {
             "name": "dragonmantank/cron-expression",
-            "version": "v3.4.0",
+            "version": "v3.6.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/dragonmantank/cron-expression.git",
-                "reference": "8c784d071debd117328803d86b2097615b457500"
+                "reference": "d61a8a9604ec1f8c3d150d09db6ce98b32675013"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dragonmantank/cron-expression/zipball/8c784d071debd117328803d86b2097615b457500",
-                "reference": "8c784d071debd117328803d86b2097615b457500",
+                "url": "https://api.github.com/repos/dragonmantank/cron-expression/zipball/d61a8a9604ec1f8c3d150d09db6ce98b32675013",
+                "reference": "d61a8a9604ec1f8c3d150d09db6ce98b32675013",
                 "shasum": ""
             },
             "require": {
-                "php": "^7.2|^8.0",
-                "webmozart/assert": "^1.0"
+                "php": "^8.2|^8.3|^8.4|^8.5"
             },
             "replace": {
                 "mtdowling/cron-expression": "^1.0"
             },
             "require-dev": {
-                "phpstan/extension-installer": "^1.0",
-                "phpstan/phpstan": "^1.0",
-                "phpunit/phpunit": "^7.0|^8.0|^9.0"
+                "phpstan/extension-installer": "^1.4.3",
+                "phpstan/phpstan": "^1.12.32|^2.1.31",
+                "phpunit/phpunit": "^8.5.48|^9.0"
             },
             "type": "library",
             "extra": {
@@ -1834,7 +1833,7 @@
             ],
             "support": {
                 "issues": "https://github.com/dragonmantank/cron-expression/issues",
-                "source": "https://github.com/dragonmantank/cron-expression/tree/v3.4.0"
+                "source": "https://github.com/dragonmantank/cron-expression/tree/v3.6.0"
             },
             "funding": [
                 {
@@ -1842,7 +1841,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2024-10-09T13:47:03+00:00"
+            "time": "2025-10-31T18:51:33+00:00"
         },
         {
             "name": "edamov/pushok",
@@ -2360,16 +2359,16 @@
         },
         {
             "name": "fleetbase/core-api",
-            "version": "1.6.21",
+            "version": "1.6.22",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fleetbase/core-api.git",
-                "reference": "0dd2ef7648ed834d5f9fa14f6f57906821ee0395"
+                "reference": "7ba3d4563e0a167bf0901652db3c643fb33e0c6d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fleetbase/core-api/zipball/0dd2ef7648ed834d5f9fa14f6f57906821ee0395",
-                "reference": "0dd2ef7648ed834d5f9fa14f6f57906821ee0395",
+                "url": "https://api.github.com/repos/fleetbase/core-api/zipball/7ba3d4563e0a167bf0901652db3c643fb33e0c6d",
+                "reference": "7ba3d4563e0a167bf0901652db3c643fb33e0c6d",
                 "shasum": ""
             },
             "require": {
@@ -2454,9 +2453,9 @@
             ],
             "support": {
                 "issues": "https://github.com/fleetbase/core-api/issues",
-                "source": "https://github.com/fleetbase/core-api/tree/v1.6.21"
+                "source": "https://github.com/fleetbase/core-api/tree/v1.6.22"
             },
-            "time": "2025-10-30T08:34:14+00:00"
+            "time": "2025-11-01T05:53:44+00:00"
         },
         {
             "name": "fleetbase/countries",
@@ -2615,16 +2614,16 @@
         },
         {
             "name": "fleetbase/fleetops-api",
-            "version": "0.6.22",
+            "version": "0.6.23",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fleetbase/fleetops.git",
-                "reference": "0c987e2acdfe7aef6bac8dc2034827688cc070d2"
+                "reference": "49360c081ba4872fea3de5aabfc69a188bc1145f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fleetbase/fleetops/zipball/0c987e2acdfe7aef6bac8dc2034827688cc070d2",
-                "reference": "0c987e2acdfe7aef6bac8dc2034827688cc070d2",
+                "url": "https://api.github.com/repos/fleetbase/fleetops/zipball/49360c081ba4872fea3de5aabfc69a188bc1145f",
+                "reference": "49360c081ba4872fea3de5aabfc69a188bc1145f",
                 "shasum": ""
             },
             "require": {
@@ -2699,16 +2698,16 @@
             ],
             "support": {
                 "issues": "https://github.com/fleetbase/fleetops/issues",
-                "source": "https://github.com/fleetbase/fleetops/tree/v0.6.22"
+                "source": "https://github.com/fleetbase/fleetops/tree/v0.6.23"
             },
-            "time": "2025-10-30T08:59:38+00:00"
+            "time": "2025-11-01T05:57:03+00:00"
         },
         {
             "name": "fleetbase/flespi-integration",
             "version": "0.1.14",
             "dist": {
                 "type": "tar",
-                "url": "https://s3.ap-southeast-1.amazonaws.com/fleetbase-registry-qa/flb/%40fleetbase/flespi-engine/flespi-engine-0.1.14.tgz?AWSAccessKeyId=ASIA26E6KG6WMPMOXV7Q&Expires=1761824134&Signature=KQIA%2BuDfFkdTqqdH6aB54v%2BoYdY%3D&x-amz-security-token=IQoJb3JpZ2luX2VjEDMaDmFwLXNvdXRoZWFzdC0xIkYwRAIgchrzUfHRnfIoudg3sJeQ6ubF345AbXDIeQcE9NSGaFwCIBIjX1MJH4oW2Zt3j5%2FKRRyy%2BBZqhZrhJj%2FVGUM%2Bu1oRKo8ECOz%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEQABoMNzUxOTUxMjk2NDI4IgyR12jygKivJ3%2Fjb8Mq4wNY2lGRF7iDfxl0WoeRmuKhDUmQM7F9lnH%2FWQWBsKGh1CjMd3MVmEhogTz%2BQ5BLWNEyHbCkK7rtzCvB4lX%2Bs45omx8VJbDTZdU25WNfp0JLOneuzhzV1pEh3Pp%2BCmOEwfyxRfhJ9fKeWbyoBPtA%2BW%2FnuRcfPSxAHTQpWRFiU1nxVYdI9C6ad3fvj%2F0JTj8t2x2eRFaIi9J1sIz0rBZuulAEJAZZW%2F13AUd9biPUM5CapuP6d2d4mVjKoIyOi8PrUNIP%2BDJg68LaBbms60WoYa2BhqZkD42L67eqNYgEwJI6gfjF9HOzy80moBaZ4Dnc6Ovyn0h2AYdz4EKJDaziVLCu1Bk2skStov0wxg72BkzTcT4kyE32%2FelcHXJ7mKPF%2FB7SGAQyqJgd1Wgqma2oWUXomFSYOFTxZaeHXB6GowAoZ%2B2DuTdPnCs4EMawT0Md86%2FiQEAT3f7c%2FdVz2D%2BTkg6tgIcqvNsi0I2tpZJ2KAIBOparaU9DXkBMx7L%2Fj7S7kKit9RFXA%2FrcjKAte7okSwXmM7oIreumqgdRqN%2B8Uked441rCP5zX8C7qVctDVykCQHewHEDKuMEaH9KZEmH4eEXqoVSCO8UiRSn7vdWRGFpjtYHUEOz96KK9cBqFq2LnoFLV%2BAwh4qNyAY6pgE2MrcNV%2Bi8Nlii0%2FNhAmfD0Y3DHl0vTwAOZT%2Bk%2F1u02yd2gLPlGyEFc1oAnYFOnJMT%2FV4dk26qkjdkFrQgPaYyLiWsMQ5a9nSd%2BWZp4OsdlmhmthEv4ySXacIdXzy0BOzm8W4yjAAOiR12x3%2Fgl3i8OPSrttOjDav42gJFANYUTxKQlg4U0obW56ZNlJFOd8Hs4buB3ouDwvVPNVyMrOB3hvTCJXEE"
+                "url": "https://s3.ap-southeast-1.amazonaws.com/fleetbase-registry-qa/flb/%40fleetbase/flespi-engine/flespi-engine-0.1.14.tgz?AWSAccessKeyId=ASIA26E6KG6WJKXIEZCX&Expires=1761979506&Signature=SQURtNKoxcFmMT%2FO1hx998TMZfg%3D&x-amz-security-token=IQoJb3JpZ2luX2VjEF8aDmFwLXNvdXRoZWFzdC0xIkcwRQIhAIPyFgvHslr709X3m%2FZ%2FrOmZAieRyB6jxM5EtkcGqNQcAiBQb%2Bz880LfGVLHb%2FFoPYjOulAHawZ4HAQWRZUrx7bnBCqGBAgoEAAaDDc1MTk1MTI5NjQyOCIMXMLAg6VXZZ6EilZFKuMDYzjf9%2Fnplt5X79tJDxrGJ8OKCwGLLLoF4pBVgRbxZqzdo9t2YucgEPXXgAaYhznaEURi5wzF%2BGYtrasVAoScsUaHcTgK9UPck5XKJw9RtK2bf5U4%2FTfblgLtQsydSvNL8CsgcoULtUFIE9LiU3boa82xuDQLNG0GHoP7shx1yjYv18AUds4e8JeezDhrwx8frIPInw6KbvdL2L%2F5e42uTm2l%2FXLSVODffB48qfaKvJJN285hKD3Ln6EdGbZk5vSluppgr%2BkhOFlqzsrXpEu9K9nxhxbHunO6o219rBvBzsmBy3VWAJJa0GnIy5R8WcIAn%2F6zYZ92WflCwelrxHkhl8O80GnYbhbWwGu%2BFq%2Bd%2BaYKUZAgzLMoPfUanH4OWxNu2LzBwmNciTuyq0zog%2FFk8s5d2VxrbfyCz0iSCVuG%2FHpj0GJPPqtcbCCf15r0%2FVBx%2B26GaWtNDrzK2UUXNNTfDt75Z81KAebgq5u4DVa236clXTp%2FzB2OO%2BraOQXY84muqU86ndrjW%2Fe%2BB9kn5iq%2Brbwi16m1PB2NQmrY8hWiO%2BadFv6sNPCzlo1CHqBrd57ZsaRFerdyNMb6ZrjaGI5SL%2BT6F3sZjTAP7gNhPP2mG4aoQjShA23pLi4xZq1YBfom90VHMMLQlsgGOqUB1Y3anAhsY4z%2BErgR45HkklagUSxvekxeVwRJqVuqnhJYFRxjxMr7g0jKVVcNDJsBesAGTm4RhrIe54pV4MJUO7CdxW%2F6%2BOyIxnumvydGukS1%2BPBepFuIIg%2B0O4OaFcQzgBbiUgerWw%2FPNSfZbZIk9bKNCK1aa1J%2Bna7O8zP%2B4HXjcnL87NyK2fK7rLF3E0q1gOwHqQ2585lrgKcjnHtBE6NLWB2%2F"
             },
             "require": {
                 "fleetbase/core-api": "*",
@@ -8214,25 +8213,25 @@
         },
         {
             "name": "nette/schema",
-            "version": "v1.3.2",
+            "version": "v1.3.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nette/schema.git",
-                "reference": "da801d52f0354f70a638673c4a0f04e16529431d"
+                "reference": "2befc2f42d7c715fd9d95efc31b1081e5d765004"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nette/schema/zipball/da801d52f0354f70a638673c4a0f04e16529431d",
-                "reference": "da801d52f0354f70a638673c4a0f04e16529431d",
+                "url": "https://api.github.com/repos/nette/schema/zipball/2befc2f42d7c715fd9d95efc31b1081e5d765004",
+                "reference": "2befc2f42d7c715fd9d95efc31b1081e5d765004",
                 "shasum": ""
             },
             "require": {
                 "nette/utils": "^4.0",
-                "php": "8.1 - 8.4"
+                "php": "8.1 - 8.5"
             },
             "require-dev": {
                 "nette/tester": "^2.5.2",
-                "phpstan/phpstan-nette": "^1.0",
+                "phpstan/phpstan-nette": "^2.0@stable",
                 "tracy/tracy": "^2.8"
             },
             "type": "library",
@@ -8242,6 +8241,9 @@
                 }
             },
             "autoload": {
+                "psr-4": {
+                    "Nette\\": "src"
+                },
                 "classmap": [
                     "src/"
                 ]
@@ -8270,9 +8272,9 @@
             ],
             "support": {
                 "issues": "https://github.com/nette/schema/issues",
-                "source": "https://github.com/nette/schema/tree/v1.3.2"
+                "source": "https://github.com/nette/schema/tree/v1.3.3"
             },
-            "time": "2024-10-06T23:10:23+00:00"
+            "time": "2025-10-30T22:57:59+00:00"
         },
         {
             "name": "nette/utils",
@@ -16245,64 +16247,6 @@
                 "source": "https://github.com/dbojdo/eval-math/tree/1.0.2"
             },
             "time": "2025-03-13T13:56:02+00:00"
-        },
-        {
-            "name": "webmozart/assert",
-            "version": "1.12.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/webmozarts/assert.git",
-                "reference": "9be6926d8b485f55b9229203f962b51ed377ba68"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/webmozarts/assert/zipball/9be6926d8b485f55b9229203f962b51ed377ba68",
-                "reference": "9be6926d8b485f55b9229203f962b51ed377ba68",
-                "shasum": ""
-            },
-            "require": {
-                "ext-ctype": "*",
-                "ext-date": "*",
-                "ext-filter": "*",
-                "php": "^7.2 || ^8.0"
-            },
-            "suggest": {
-                "ext-intl": "",
-                "ext-simplexml": "",
-                "ext-spl": ""
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "1.10-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Webmozart\\Assert\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Bernhard Schussek",
-                    "email": "bschussek@gmail.com"
-                }
-            ],
-            "description": "Assertions to validate method input/output with nice error messages.",
-            "keywords": [
-                "assert",
-                "check",
-                "validate"
-            ],
-            "support": {
-                "issues": "https://github.com/webmozarts/assert/issues",
-                "source": "https://github.com/webmozarts/assert/tree/1.12.1"
-            },
-            "time": "2025-10-29T15:56:20+00:00"
         },
         {
             "name": "willdurand/geocoder",
