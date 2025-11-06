@@ -13,6 +13,14 @@
         <InputGroup @name="SMTP Timeout" @value={{this.smtpTimeout}} disabled={{this.loadConfigValues.isRunning}} />
         <InputGroup @name="SMTP Auth Mode" @value={{this.smtpAuth_mode}} disabled={{this.loadConfigValues.isRunning}} />
     {{/if}}
+    {{#if (eq this.mailer "microsoft-graph")}}
+        <InputGroup @name="Client ID" @value={{this.microsoftGraphClient_id}} disabled={{this.loadConfigValues.isRunning}} />
+        <InputGroup @name="Client Secret" @value={{this.microsoftGraphClient_secret}} disabled={{this.loadConfigValues.isRunning}} />
+        <InputGroup @name="Tenant ID" @value={{this.microsoftGraphTenant_id}} disabled={{this.loadConfigValues.isRunning}} />
+        <InputGroup>
+            <Toggle @isToggled={{this.microsoftGraphSave_to_sent_items}} @onToggle={{fn (mut this.microsoftGraphSave_to_sent_items)}} @label="Save to sent items"  />
+        </InputGroup>
+    {{/if}}
     {{#if (eq this.mailer "mailgun")}}
         <InputGroup @name="Mailgun Domain" @value={{this.mailgunDomain}} disabled={{this.loadConfigValues.isRunning}} />
         <InputGroup @name="Mailgun Endpoint" @value={{this.mailgunEndpoint}} disabled={{this.loadConfigValues.isRunning}} />

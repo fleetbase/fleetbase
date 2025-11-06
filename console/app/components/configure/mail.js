@@ -26,6 +26,10 @@ export default class ConfigureMailComponent extends Component {
     @tracked postmarkToken = null;
     @tracked sendgridApi_key = null;
     @tracked resendKey = null;
+    @tracked microsoftGraphClient_id = null;
+    @tracked microsoftGraphClient_secret = null;
+    @tracked microsoftGraphTenant_id = null;
+    @tracked microsoftGraphSave_to_sent_items = false;
 
     /**
      * Creates an instance of ConfigureFilesystemComponent.
@@ -61,6 +65,19 @@ export default class ConfigureMailComponent extends Component {
             password: this.smtpPassword,
             timeout: this.smtpTimeout,
             auth_mode: this.smtpAuth_mode,
+        };
+    }
+
+    @action serializeMicrosoftGraphConfig() {
+        return {
+            client_id: this.microsoftGraphClient_id,
+            client_secret: this.microsoftGraphClient_secret,
+            tenant_id: this.microsoftGraphTenant_id,
+            save_to_sent_items: this.microsoftGraphSave_to_sent_items,
+            from: {
+                address: this.fromAddress,
+                name: this.fromName,
+            },
         };
     }
 
@@ -112,6 +129,7 @@ export default class ConfigureMailComponent extends Component {
                 postmark: this.serializePostmarkConfig(),
                 sendgrid: this.serializeSendgridConfig(),
                 resend: this.serializeResendConfig(),
+                microsoftGraph: this.serializeMicrosoftGraphConfig(),
             });
         } catch (error) {
             this.notifications.serverError(error);
@@ -131,6 +149,7 @@ export default class ConfigureMailComponent extends Component {
                 postmark: this.serializePostmarkConfig(),
                 sendgrid: this.serializeSendgridConfig(),
                 resend: this.serializeResendConfig(),
+                microsoftGraph: this.serializeMicrosoftGraphConfig(),
             });
             this.notifications.success('Mail configuration saved.');
         } catch (error) {

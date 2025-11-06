@@ -9,9 +9,7 @@ export default class Router extends EmberRouter {
 Router.map(function () {
     this.route('virtual', { path: '/:slug' });
     this.route('install');
-    this.route('onboard', function () {
-        this.route('verify-email');
-    });
+    this.route('onboard');
     this.route('auth', function () {
         this.route('login', { path: '/' });
         this.route('forgot-password');
