@@ -1,16 +1,20 @@
-# 🚀 Fleetbase v0.7.14 — 2025-10-30
+# 🚀 Fleetbase v0.7.16 — 2025-11-06
 
-> Improved positions replay + meta field editors for drivers and vehicles”
+> "New onboarding orchestrator, improved password security, UI improvements, bug fixes"
 
 ---
 
 ## ✨ Highlights
-- Added ability to attach telematic devices to vehicles .
-- Improved positions replay component to use client side + added step controls - Dropped `MovementTrackerService` from position playback components, use new `PositionPlaybackService` which implements full position playback completely on client side.
-- Added pill components for driver, vehicle, device, and order.
-- Fix custom fields manager component persistence https://github.com/fleetbase/ember-ui/pull/89
-- Improved dashboard isolation mechanism so that dashboard component can be rendered in multiple engines.
-- Added meta viewer and editor for drivers, and vehicles. Fixes https://github.com/fleetbase/fleetbase/issues/440
+- Made the `LogApiRequests` middleware more robust
+- Fixed controller validation handling
+- Added microsoft365/graph mail driver
+- Improved password requirements (including breached password check)
+- Patched creating duplicate users by email in IAM
+- Patch env mapper
+- Vehicle/driver tracking API doesnt fire resource lifecycle events or log requests - only tracking events
+- Patched `<ModelCoordinatesInput />` component
+- Security patch on Storefront customers API
+- Styling updates on Storefront
 
 ---
 

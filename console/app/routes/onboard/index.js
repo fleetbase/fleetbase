@@ -3,6 +3,17 @@ import { inject as service } from '@ember/service';
 
 export default class OnboardIndexRoute extends Route {
     @service store;
+    @service('onboarding-orchestrator') orchestrator;
+
+    queryParams = {
+        step: { refreshModel: false },
+        session: { refreshModel: false },
+        code: { refreshModel: false },
+    };
+
+    beforeModel() {
+        this.orchestrator.start();
+    }
 
     model() {
         return this.store.findRecord('brand', 1);

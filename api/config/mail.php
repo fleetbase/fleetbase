@@ -66,6 +66,18 @@ return [
 
         'resend' => [],
 
+        'microsoft-graph' => [
+            'transport' => 'microsoft-graph',
+            'client_id' => env('MICROSOFT_GRAPH_CLIENT_ID'),
+            'client_secret' => env('MICROSOFT_GRAPH_CLIENT_SECRET'),
+            'tenant_id' => env('MICROSOFT_GRAPH_TENANT_ID'),
+            'from' => [
+                'address' => env('MAIL_FROM_ADDRESS', 'hello@fleetbase.io'),
+                'name' => env('MAIL_FROM_NAME', env('APP_NAME', 'Fleetbase')),
+            ],
+            'save_to_sent_items' =>  env('MAIL_SAVE_TO_SENT_ITEMS', false),
+        ],
+
         'sendmail' => [
             'transport' => 'sendmail',
             'path' => env('MAIL_SENDMAIL_PATH', '/usr/sbin/sendmail -t -i'),
