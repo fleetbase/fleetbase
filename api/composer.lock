@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "9d9d415dbb732b1a33e3d1c920b6583f",
+    "content-hash": "78ce36d0e29ca76bbb2815a77f99fd4b",
     "packages": [
         {
             "name": "appstract/laravel-opcache",
@@ -2158,16 +2158,16 @@
         },
         {
             "name": "fleetbase/core-api",
-            "version": "1.6.21",
+            "version": "1.6.23",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fleetbase/core-api.git",
-                "reference": "0dd2ef7648ed834d5f9fa14f6f57906821ee0395"
+                "reference": "7093703521e6915aab6ad93afb4997eb6e9559c3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fleetbase/core-api/zipball/0dd2ef7648ed834d5f9fa14f6f57906821ee0395",
-                "reference": "0dd2ef7648ed834d5f9fa14f6f57906821ee0395",
+                "url": "https://api.github.com/repos/fleetbase/core-api/zipball/7093703521e6915aab6ad93afb4997eb6e9559c3",
+                "reference": "7093703521e6915aab6ad93afb4997eb6e9559c3",
                 "shasum": ""
             },
             "require": {
@@ -2187,6 +2187,7 @@
                 "illuminate/routing": "^9.0|^10.0",
                 "illuminate/support": "^9.0|^10.0",
                 "inkrot/php-compress-json": "^0.1.1",
+                "innoge/laravel-msgraph-mail": "^1.4",
                 "jdorn/sql-formatter": "^1.2",
                 "laravel-notification-channels/apn": "^5.0",
                 "laravel-notification-channels/fcm": "^4.1",
@@ -2252,9 +2253,9 @@
             ],
             "support": {
                 "issues": "https://github.com/fleetbase/core-api/issues",
-                "source": "https://github.com/fleetbase/core-api/tree/v1.6.21"
+                "source": "https://github.com/fleetbase/core-api/tree/v1.6.23"
             },
-            "time": "2025-10-30T08:34:14+00:00"
+            "time": "2025-11-06T11:50:01+00:00"
         },
         {
             "name": "fleetbase/countries",
@@ -2323,16 +2324,16 @@
         },
         {
             "name": "fleetbase/fleetops-api",
-            "version": "0.6.22",
+            "version": "0.6.24",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fleetbase/fleetops.git",
-                "reference": "0c987e2acdfe7aef6bac8dc2034827688cc070d2"
+                "reference": "8d5f1f3707236b13d6a43b7a1131e644a446bc71"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fleetbase/fleetops/zipball/0c987e2acdfe7aef6bac8dc2034827688cc070d2",
-                "reference": "0c987e2acdfe7aef6bac8dc2034827688cc070d2",
+                "url": "https://api.github.com/repos/fleetbase/fleetops/zipball/8d5f1f3707236b13d6a43b7a1131e644a446bc71",
+                "reference": "8d5f1f3707236b13d6a43b7a1131e644a446bc71",
                 "shasum": ""
             },
             "require": {
@@ -2407,9 +2408,9 @@
             ],
             "support": {
                 "issues": "https://github.com/fleetbase/fleetops/issues",
-                "source": "https://github.com/fleetbase/fleetops/tree/v0.6.22"
+                "source": "https://github.com/fleetbase/fleetops/tree/v0.6.24"
             },
-            "time": "2025-10-30T08:59:38+00:00"
+            "time": "2025-11-06T12:20:51+00:00"
         },
         {
             "name": "fleetbase/laravel-mysql-spatial",
@@ -2561,16 +2562,16 @@
         },
         {
             "name": "fleetbase/storefront-api",
-            "version": "0.4.4",
+            "version": "0.4.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fleetbase/storefront.git",
-                "reference": "3c86e4f8ad8f15ade883967a498990428ee0a0fa"
+                "reference": "ede69c8c3875c451a68b26207214108e9bea8d6e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fleetbase/storefront/zipball/3c86e4f8ad8f15ade883967a498990428ee0a0fa",
-                "reference": "3c86e4f8ad8f15ade883967a498990428ee0a0fa",
+                "url": "https://api.github.com/repos/fleetbase/storefront/zipball/ede69c8c3875c451a68b26207214108e9bea8d6e",
+                "reference": "ede69c8c3875c451a68b26207214108e9bea8d6e",
                 "shasum": ""
             },
             "require": {
@@ -2638,9 +2639,9 @@
             ],
             "support": {
                 "issues": "https://github.com/fleetbase/storefront/issues",
-                "source": "https://github.com/fleetbase/storefront/tree/v0.4.4"
+                "source": "https://github.com/fleetbase/storefront/tree/v0.4.5"
             },
-            "time": "2025-10-30T09:01:04+00:00"
+            "time": "2025-11-06T12:24:08+00:00"
         },
         {
             "name": "fleetbase/twilio",
@@ -4589,6 +4590,74 @@
                 "source": "https://github.com/inkrot/php-compress-json/tree/v0.1.3"
             },
             "time": "2025-07-04T10:13:38+00:00"
+        },
+        {
+            "name": "innoge/laravel-msgraph-mail",
+            "version": "1.4.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/InnoGE/laravel-msgraph-mail.git",
+                "reference": "288a9a6c7b28537111822549712f5ec04eba011e"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/InnoGE/laravel-msgraph-mail/zipball/288a9a6c7b28537111822549712f5ec04eba011e",
+                "reference": "288a9a6c7b28537111822549712f5ec04eba011e",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/contracts": "^9.38|^10.0|^11.0|^12.0",
+                "php": "^8.1",
+                "spatie/laravel-package-tools": "^1.14.0",
+                "symfony/mailer": "^6.0|^7.0"
+            },
+            "require-dev": {
+                "composer/semver": "^3.4",
+                "guzzlehttp/guzzle": "^7.5",
+                "laravel/pint": "^1.0",
+                "nunomaduro/larastan": "^2.0.1|^3.0",
+                "orchestra/testbench": "^7.0|^8.0|^9.0|^10.0",
+                "pestphp/pest": "^1.21|^2.0|^3.0",
+                "pestphp/pest-plugin-laravel": "^1.21|^2.0|^3.0",
+                "phpstan/extension-installer": "^1.1",
+                "spatie/laravel-ray": "^1.26"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "InnoGE\\LaravelMsGraphMail\\LaravelMsGraphMailServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "InnoGE\\LaravelMsGraphMail\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Tim Geisendoerfer",
+                    "email": "geisi@users.noreply.github.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Laravel Mail driver for Microsoft Office 365 using the MSGraph API",
+            "homepage": "https://github.com/innoge/laravel-msgraph-mail",
+            "keywords": [
+                "innoge",
+                "laravel",
+                "laravel-msgraph-mail"
+            ],
+            "support": {
+                "issues": "https://github.com/InnoGE/laravel-msgraph-mail/issues",
+                "source": "https://github.com/InnoGE/laravel-msgraph-mail/tree/1.4.2"
+            },
+            "time": "2025-10-08T11:55:06+00:00"
         },
         {
             "name": "jdorn/sql-formatter",
