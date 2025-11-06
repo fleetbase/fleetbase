@@ -1,0 +1,11 @@
+<section class="onboarding step-host">
+    {{#if this.initialized}}
+        {{#if this.currentComponent}}
+            {{component this.currentComponent context=this.context orchestrator=this.orchestrator brand=@brand}}
+        {{/if}}
+    {{else}}
+        <div class="flex items-center justify-center min-h-24">
+            <Spinner />
+        </div>
+    {{/if}}
+</section>

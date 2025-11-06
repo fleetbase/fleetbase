@@ -1,12 +1,21 @@
-# 🚀 Fleetbase v0.7.15 — 2025-11-01
+# 🚀 Fleetbase v0.7.16 — 2025-11-06
 
-> "Optimization tune-up, prevent queue blockage"
+> "New onboarding orchestrator, improved password security, UI improvements, bug fixes"
 
 ---
 
 ## ✨ Highlights
-- Create surgical optimziations around metadata option data, as well as order methods to prevent trigger lifecycle jobs.
-- Updated order `setDistanceAndTime` to prevent lifecycle job triggers, order estimation tracking limited to orders within past 2 days instead of month, now runs every 10 minutes instead of 5 minutes.
+- New onboarding orchestrator to build more robust onboarding flows
+- Made the `LogApiRequests` middleware more robust
+- Fixed controller validation handling
+- Added microsoft365/graph mail driver
+- Improved password requirements (including breached password check)
+- Patched creating duplicate users by email in IAM
+- Patch env mapper
+- Vehicle/driver tracking API doesnt fire resource lifecycle events or log requests - only tracking events
+- Patched `<ModelCoordinatesInput />` component
+- Security patch on Storefront customers API
+- Styling updates on Storefront
 
 ---
 
