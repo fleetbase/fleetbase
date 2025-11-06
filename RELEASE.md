@@ -5,6 +5,7 @@
 ---
 
 ## ✨ Highlights
+- New onboarding orchestrator to build more robust onboarding flows
 - Made the `LogApiRequests` middleware more robust
 - Fixed controller validation handling
 - Added microsoft365/graph mail driver
