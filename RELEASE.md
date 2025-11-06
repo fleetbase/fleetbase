@@ -1,21 +1,11 @@
 # 🚀 Fleetbase v0.7.16 — 2025-11-06
 
-> "New onboarding orchestrator, improved password security, UI improvements, bug fixes"
+> "Hotfix: router map"
 
 ---
 
 ## ✨ Highlights
-- New onboarding orchestrator to build more robust onboarding flows
-- Made the `LogApiRequests` middleware more robust
-- Fixed controller validation handling
-- Added microsoft365/graph mail driver
-- Improved password requirements (including breached password check)
-- Patched creating duplicate users by email in IAM
-- Patch env mapper
-- Vehicle/driver tracking API doesnt fire resource lifecycle events or log requests - only tracking events
-- Patched `<ModelCoordinatesInput />` component
-- Security patch on Storefront customers API
-- Styling updates on Storefront
+- Hotfix router map
 
 ---
 
