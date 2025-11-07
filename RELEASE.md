@@ -1,12 +1,11 @@
-# 🚀 Fleetbase v0.7.15 — 2025-11-01
+# 🚀 Fleetbase v0.7.16 — 2025-11-06
 
-> "Optimization tune-up, prevent queue blockage"
+> "Hotfix: router map"
 
 ---
 
 ## ✨ Highlights
-- Create surgical optimziations around metadata option data, as well as order methods to prevent trigger lifecycle jobs.
-- Updated order `setDistanceAndTime` to prevent lifecycle job triggers, order estimation tracking limited to orders within past 2 days instead of month, now runs every 10 minutes instead of 5 minutes.
+- Hotfix router map
 
 ---
 
