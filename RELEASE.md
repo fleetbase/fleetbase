@@ -1,4 +1,4 @@
-# 🚀 Fleetbase v0.7.17 — 2025-11-10
+# 🚀 Fleetbase v0.7.18 — 2025-11-10
 
 > "Hotfix IAM user validation, make online/offline toggle silent"
 
