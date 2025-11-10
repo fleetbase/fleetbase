@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "9d9d415dbb732b1a33e3d1c920b6583f",
+    "content-hash": "72a36e593cf931305f9b208b43f7859b",
     "packages": [
         {
             "name": "appstract/laravel-opcache",
@@ -2157,18 +2157,110 @@
             "time": "2025-04-09T20:32:01+00:00"
         },
         {
-            "name": "fleetbase/core-api",
-            "version": "1.6.21",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/fleetbase/core-api.git",
-                "reference": "0dd2ef7648ed834d5f9fa14f6f57906821ee0395"
-            },
+            "name": "fleetbase/billing-api",
+            "version": "0.1.10",
             "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/fleetbase/core-api/zipball/0dd2ef7648ed834d5f9fa14f6f57906821ee0395",
-                "reference": "0dd2ef7648ed834d5f9fa14f6f57906821ee0395",
-                "shasum": ""
+                "type": "tar",
+                "url": "https://s3.ap-southeast-1.amazonaws.com/fleetbase-registry-production/flb/%40fleetbase/billing-engine/billing-engine-0.1.10.tgz?AWSAccessKeyId=ASIA26E6KG6WE7N7AKA5&Expires=1762334166&Signature=JmrUQAZ2l6Izw4NMbAnOx8ml3zI%3D&x-amz-security-token=IQoJb3JpZ2luX2VjEMH%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaDmFwLXNvdXRoZWFzdC0xIkgwRgIhALFrH5PJus%2BeG1%2Bwim90NAVNu7J6B9TLR1BhesQ5HKENAiEA5F%2BSi5inrqDURPLxeu1GfYxb820qPnWe%2BYyKDXGXN%2BwqnwQIiv%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARAAGgw3NTE5NTEyOTY0MjgiDN3XlEgCmNtw6PI2qirzA8Rdt8RYnnT551raW1RcC6v8RMe115OkvdSjE1AAgmk7k%2FhMBderPk%2BkXMPUOmkGlR0HBPqFdSbjOWehuu07uyfU6u3D%2BbaqpvbmxESovBKStjcgquEDmWqrPWiVpVWkYJ7iKK0Eii1%2BHFylmEFl6SPxnuB3lBZaHq6p2uElteyeWgC9ksnFzCkPAdlIo5Bys1NoPnWiaJ9ibiSgyvA9L4Uo8bdYFXIhqeeMuGGW7KOtCAXjdF3NsvbSV7tfl4yTL0f1HcjooiB6UcO4MVg6bysIjpBAIT7Kln2aZHBT86tXUQdbAZJcaP0RQL5Nmwl8fP%2Fkdtc%2B934wOyBB8Es%2B7noGYvW2axkmcuHGnzcVklpvbmQ7v7npOx2JF1kp89nJNtNaHVK06iifYFdMw%2BtIbLItx5EwJXmRkLpd54lTids6wF9xNzbA%2B%2BGvd4lc3%2FINT%2BWjR0CS0j%2B%2FLl1DNVvYIxv4F77UuUwY6TDjb2lbHPTMvuCRxNcBoN9s%2F%2FqKOXv7ole8VrwtfEJdLWKxsGZSSzx9%2BwDePrJ5Pu8h48NJiqoKEzi7%2BwOuSewh9Hmxwp6Rq3Brx23y1g%2BaHWK7SrP3IpWjV45VnoU3poq50fcOiN9ES1jpDKqfVr6iUSLYRyrnLhjkfb89NGzvkVnipPi6uEKvxLUwo6SsyAY6pQEx1ksREijM7WLOeUHw8ik7gkT0LvTZI%2F%2FjA3%2B68UIlBDU2%2Ba4TPM54dJC75LSqjh0IhUdyGrkuHmHtRZkdmZ8XvHjSK65zcQ0yooH3pXDFypkWCnNQqBRImavZQeN%2FKaR1C%2FI6KIil5spTewxXnAD1vdPPnk5buqcwjClVzBNYZic2PealTZo06oawdQ3uoNT4r%2BgK0sbJ0Ku7OJwmSE4G8MOcpig%3D"
+            },
+            "require": {
+                "fleetbase/core-api": "*",
+                "laravel/cashier": "^15.2.1",
+                "php": "^8.0",
+                "php-http/guzzle7-adapter": "^1.0",
+                "psr/http-factory-implementation": "*",
+                "stripe/stripe-php": "^13.0"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "^3.34.1",
+                "nunomaduro/collision": "^7.0",
+                "pestphp/pest": "^2.33.2",
+                "phpstan/phpstan": "^1.10.38",
+                "symfony/var-dumper": "^5.4.29"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Fleetbase\\Billing\\Providers\\BillingServiceProvider"
+                    ]
+                },
+                "fleetbase": {
+                    "sandbox-migrations": false
+                },
+                "fleetbase/billing-api": {
+                    "excludes": [
+                        "addon",
+                        "app",
+                        "assets",
+                        "config",
+                        "tests",
+                        "vendor"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Fleetbase\\Billing\\": "server/src/",
+                    "Fleetbase\\Billing\\Seeders\\": "server/seeders/"
+                }
+            },
+            "autoload-dev": {
+                "psr-4": {
+                    "Fleetbase\\Billing\\Tests\\": "server/tests/"
+                }
+            },
+            "scripts": {
+                "lint": [
+                    "php-cs-fixer fix -v"
+                ],
+                "test:lint": [
+                    "php-cs-fixer fix -v --dry-run"
+                ],
+                "test:types": [
+                    "phpstan analyse --ansi --memory-limit=0"
+                ],
+                "test:unit": [
+                    "pest --colors=always"
+                ],
+                "test": [
+                    "@test:lint",
+                    "@test:types",
+                    "@test:unit"
+                ]
+            },
+            "license": [
+                "AGPL-3.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "Fleetbase Pte Ltd.",
+                    "email": "hello@fleetbase.io"
+                },
+                {
+                    "name": "Ronald A. Richardson",
+                    "email": "ron@fleetbase.io"
+                }
+            ],
+            "description": "Multi-Tenant Billing and Subscriptions Extension for Fleetbase",
+            "keywords": [
+                "billing",
+                "billing system",
+                "fleetbase",
+                "fleetbase-extension",
+                "revenue engine",
+                "revenue generator",
+                "stripe",
+                "stripe api"
+            ]
+        },
+        {
+            "name": "fleetbase/core-api",
+            "version": "1.6.23",
+            "dist": {
+                "type": "path",
+                "url": "../packages/core-api",
+                "reference": "d84cbadb9219f84f645541163dff68406181d47c"
             },
             "require": {
                 "aws/aws-sdk-php-laravel": "^3.7",
@@ -2187,6 +2279,7 @@
                 "illuminate/routing": "^9.0|^10.0",
                 "illuminate/support": "^9.0|^10.0",
                 "inkrot/php-compress-json": "^0.1.1",
+                "innoge/laravel-msgraph-mail": "^1.4",
                 "jdorn/sql-formatter": "^1.2",
                 "laravel-notification-channels/apn": "^5.0",
                 "laravel-notification-channels/fcm": "^4.1",
@@ -2231,7 +2324,30 @@
                     "Fleetbase\\Seeders\\": "seeders/"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
+            "autoload-dev": {
+                "psr-4": {
+                    "Fleetbase\\Tests\\": "tests/"
+                }
+            },
+            "scripts": {
+                "lint": [
+                    "php-cs-fixer fix -v"
+                ],
+                "test:lint": [
+                    "php-cs-fixer fix -v --dry-run"
+                ],
+                "test:types": [
+                    "phpstan analyse --ansi --memory-limit=0"
+                ],
+                "test:unit": [
+                    "pest --colors=always"
+                ],
+                "test": [
+                    "@test:lint",
+                    "@test:types",
+                    "@test:unit"
+                ]
+            },
             "license": [
                 "AGPL-3.0-or-later"
             ],
@@ -2250,11 +2366,9 @@
                 "fleetbase",
                 "logistics platform"
             ],
-            "support": {
-                "issues": "https://github.com/fleetbase/core-api/issues",
-                "source": "https://github.com/fleetbase/core-api/tree/v1.6.21"
-            },
-            "time": "2025-10-30T08:34:14+00:00"
+            "transport-options": {
+                "relative": true
+            }
         },
         {
             "name": "fleetbase/countries",
@@ -2323,17 +2437,11 @@
         },
         {
             "name": "fleetbase/fleetops-api",
-            "version": "0.6.22",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/fleetbase/fleetops.git",
-                "reference": "0c987e2acdfe7aef6bac8dc2034827688cc070d2"
-            },
+            "version": "0.6.24",
             "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/fleetbase/fleetops/zipball/0c987e2acdfe7aef6bac8dc2034827688cc070d2",
-                "reference": "0c987e2acdfe7aef6bac8dc2034827688cc070d2",
-                "shasum": ""
+                "type": "path",
+                "url": "../packages/fleetops",
+                "reference": "8d5f1f3707236b13d6a43b7a1131e644a446bc71"
             },
             "require": {
                 "barryvdh/laravel-dompdf": "^2.0",
@@ -2383,7 +2491,30 @@
                     "Fleetbase\\FleetOps\\Seeders\\": "server/seeders/"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
+            "autoload-dev": {
+                "psr-4": {
+                    "Fleetbase\\Tests\\": "server/tests/"
+                }
+            },
+            "scripts": {
+                "lint": [
+                    "php-cs-fixer fix -v"
+                ],
+                "test:lint": [
+                    "php-cs-fixer fix -v --dry-run"
+                ],
+                "test:types": [
+                    "phpstan analyse --ansi --memory-limit=4G"
+                ],
+                "test:unit": [
+                    "pest --colors=always"
+                ],
+                "test": [
+                    "@test:lint",
+                    "@test:types",
+                    "@test:unit"
+                ]
+            },
             "license": [
                 "AGPL-3.0-or-later"
             ],
@@ -2405,11 +2536,189 @@
                 "last-mile",
                 "tms"
             ],
-            "support": {
-                "issues": "https://github.com/fleetbase/fleetops/issues",
-                "source": "https://github.com/fleetbase/fleetops/tree/v0.6.22"
+            "transport-options": {
+                "relative": true
+            }
+        },
+        {
+            "name": "fleetbase/fliit-api",
+            "version": "0.0.1",
+            "dist": {
+                "type": "path",
+                "url": "../packages/fliit",
+                "reference": "3462c21db7365f312105446b5db7c488289a9b61"
             },
-            "time": "2025-10-30T08:59:38+00:00"
+            "require": {
+                "fleetbase/core-api": "*",
+                "fleetbase/fleetops-api": "*",
+                "php": "^8.0",
+                "php-http/guzzle7-adapter": "^1.0",
+                "psr/http-factory-implementation": "*",
+                "staudenmeir/eloquent-has-many-deep": "^1.7"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "^3.34.1",
+                "nunomaduro/collision": "^5.11.0|^6.4.0",
+                "pestphp/pest": "^1.22.6",
+                "phpstan/phpstan": "^1.10.38",
+                "symfony/var-dumper": "^5.4.29"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Fleetbase\\Fliit\\Providers\\FliitServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Fleetbase\\Fliit\\": "server/src/",
+                    "Fleetbase\\Fliit\\Database\\Seeders\\": "server/database/seeders/"
+                }
+            },
+            "autoload-dev": {
+                "psr-4": {
+                    "Fleetbase\\Fliit\\Tests\\": "server/tests/"
+                }
+            },
+            "scripts": {
+                "lint": [
+                    "php-cs-fixer fix -v"
+                ],
+                "test:lint": [
+                    "php-cs-fixer fix -v --dry-run"
+                ],
+                "test:types": [
+                    "phpstan analyse --ansi --memory-limit=0"
+                ],
+                "test:unit": [
+                    "pest --colors=always"
+                ],
+                "test": [
+                    "@test:lint",
+                    "@test:types",
+                    "@test:unit"
+                ]
+            },
+            "license": [
+                "AGPL-3.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "Fleetbase Pte Ltd",
+                    "email": "hello@fleetbase.io"
+                }
+            ],
+            "description": "Fliit vehicle procurement and fleet management",
+            "keywords": [
+                "asset management",
+                "fleet management",
+                "fleetbase",
+                "fleetbase-extension",
+                "fliit",
+                "vehicle procurement"
+            ],
+            "transport-options": {
+                "relative": true
+            }
+        },
+        {
+            "name": "fleetbase/internals-api",
+            "version": "0.0.21",
+            "dist": {
+                "type": "path",
+                "url": "../packages/internals",
+                "reference": "05e27cb95b53008d78d841ef415f1317c912fc3c"
+            },
+            "require": {
+                "fleetbase/billing-api": "*",
+                "fleetbase/core-api": "*",
+                "fleetbase/registry-bridge": "*",
+                "php": "^8.0",
+                "php-http/guzzle7-adapter": "^1.0",
+                "psr/http-factory-implementation": "*"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "^3.34.1",
+                "nunomaduro/collision": "^7.0",
+                "pestphp/pest": "^2.33.2",
+                "phpstan/phpstan": "^1.10.38",
+                "symfony/var-dumper": "^5.4.29"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Fleetbase\\Internals\\Providers\\InternalServiceProvider"
+                    ]
+                },
+                "fleetbase": {
+                    "sandbox-migrations": false
+                },
+                "fleetbase/internals-api": {
+                    "excludes": [
+                        "addon",
+                        "app",
+                        "assets",
+                        "config",
+                        "tests",
+                        "vendor"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Fleetbase\\Internals\\": "server/src/",
+                    "Fleetbase\\Internals\\Seeds\\": "server/seeds/"
+                }
+            },
+            "autoload-dev": {
+                "psr-4": {
+                    "Fleetbase\\Internals\\Tests\\": "server/tests/"
+                }
+            },
+            "scripts": {
+                "lint": [
+                    "php-cs-fixer fix -v"
+                ],
+                "test:lint": [
+                    "php-cs-fixer fix -v --dry-run"
+                ],
+                "test:types": [
+                    "phpstan analyse --ansi --memory-limit=0"
+                ],
+                "test:unit": [
+                    "pest --colors=always"
+                ],
+                "test": [
+                    "@test:lint",
+                    "@test:types",
+                    "@test:unit"
+                ]
+            },
+            "license": [
+                "AGPL-3.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "Fleetbase Pte Ltd.",
+                    "email": "hello@fleetbase.io"
+                },
+                {
+                    "name": "Ronald A. Richardson",
+                    "email": "ron@fleetbase.io"
+                }
+            ],
+            "description": "Private internal functionality for Fleetbase SaaS",
+            "keywords": [
+                "fleetbase",
+                "fleetbase-extension",
+                "fleetbase-internals"
+            ],
+            "transport-options": {
+                "relative": true
+            }
         },
         {
             "name": "fleetbase/laravel-mysql-spatial",
@@ -2561,17 +2870,11 @@
         },
         {
             "name": "fleetbase/storefront-api",
-            "version": "0.4.4",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/fleetbase/storefront.git",
-                "reference": "3c86e4f8ad8f15ade883967a498990428ee0a0fa"
-            },
+            "version": "0.4.5",
             "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/fleetbase/storefront/zipball/3c86e4f8ad8f15ade883967a498990428ee0a0fa",
-                "reference": "3c86e4f8ad8f15ade883967a498990428ee0a0fa",
-                "shasum": ""
+                "type": "path",
+                "url": "../packages/storefront",
+                "reference": "ede69c8c3875c451a68b26207214108e9bea8d6e"
             },
             "require": {
                 "fleetbase/core-api": "*",
@@ -2603,8 +2906,8 @@
                     ]
                 },
                 "fleetbase": {
-                    "order-config": "Fleetbase\\Storefront\\Support\\OrderConfig",
                     "create-database": "storefront",
+                    "order-config": "Fleetbase\\Storefront\\Support\\OrderConfig",
                     "sandbox-migrations": false
                 }
             },
@@ -2614,7 +2917,30 @@
                     "Fleetbase\\Storefront\\Seeders\\": "server/seeders/"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
+            "autoload-dev": {
+                "psr-4": {
+                    "Fleetbase\\Storefront\\Tests\\": "server/tests/"
+                }
+            },
+            "scripts": {
+                "lint": [
+                    "php-cs-fixer fix -v"
+                ],
+                "test:lint": [
+                    "php-cs-fixer fix -v --dry-run"
+                ],
+                "test:types": [
+                    "phpstan analyse --ansi --memory-limit=0"
+                ],
+                "test:unit": [
+                    "pest --colors=always"
+                ],
+                "test": [
+                    "@test:lint",
+                    "@test:types",
+                    "@test:unit"
+                ]
+            },
             "license": [
                 "AGPL-3.0-or-later"
             ],
@@ -2636,11 +2962,9 @@
                 "marketplace",
                 "storefront"
             ],
-            "support": {
-                "issues": "https://github.com/fleetbase/storefront/issues",
-                "source": "https://github.com/fleetbase/storefront/tree/v0.4.4"
-            },
-            "time": "2025-10-30T09:01:04+00:00"
+            "transport-options": {
+                "relative": true
+            }
         },
         {
             "name": "fleetbase/twilio",
@@ -4589,6 +4913,74 @@
                 "source": "https://github.com/inkrot/php-compress-json/tree/v0.1.3"
             },
             "time": "2025-07-04T10:13:38+00:00"
+        },
+        {
+            "name": "innoge/laravel-msgraph-mail",
+            "version": "1.4.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/InnoGE/laravel-msgraph-mail.git",
+                "reference": "288a9a6c7b28537111822549712f5ec04eba011e"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/InnoGE/laravel-msgraph-mail/zipball/288a9a6c7b28537111822549712f5ec04eba011e",
+                "reference": "288a9a6c7b28537111822549712f5ec04eba011e",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/contracts": "^9.38|^10.0|^11.0|^12.0",
+                "php": "^8.1",
+                "spatie/laravel-package-tools": "^1.14.0",
+                "symfony/mailer": "^6.0|^7.0"
+            },
+            "require-dev": {
+                "composer/semver": "^3.4",
+                "guzzlehttp/guzzle": "^7.5",
+                "laravel/pint": "^1.0",
+                "nunomaduro/larastan": "^2.0.1|^3.0",
+                "orchestra/testbench": "^7.0|^8.0|^9.0|^10.0",
+                "pestphp/pest": "^1.21|^2.0|^3.0",
+                "pestphp/pest-plugin-laravel": "^1.21|^2.0|^3.0",
+                "phpstan/extension-installer": "^1.1",
+                "spatie/laravel-ray": "^1.26"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "InnoGE\\LaravelMsGraphMail\\LaravelMsGraphMailServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "InnoGE\\LaravelMsGraphMail\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Tim Geisendoerfer",
+                    "email": "geisi@users.noreply.github.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Laravel Mail driver for Microsoft Office 365 using the MSGraph API",
+            "homepage": "https://github.com/innoge/laravel-msgraph-mail",
+            "keywords": [
+                "innoge",
+                "laravel",
+                "laravel-msgraph-mail"
+            ],
+            "support": {
+                "issues": "https://github.com/InnoGE/laravel-msgraph-mail/issues",
+                "source": "https://github.com/InnoGE/laravel-msgraph-mail/tree/1.4.2"
+            },
+            "time": "2025-10-08T11:55:06+00:00"
         },
         {
             "name": "jdorn/sql-formatter",
@@ -11515,6 +11907,115 @@
                 "source": "https://github.com/sqids/sqids-php/tree/0.4.1"
             },
             "time": "2023-09-12T22:30:42+00:00"
+        },
+        {
+            "name": "staudenmeir/eloquent-has-many-deep",
+            "version": "1.19.5",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/staudenmeir/eloquent-has-many-deep.git",
+                "reference": "572acb1a15fd32919aead1965c33664a0fa074e1"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/staudenmeir/eloquent-has-many-deep/zipball/572acb1a15fd32919aead1965c33664a0fa074e1",
+                "reference": "572acb1a15fd32919aead1965c33664a0fa074e1",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/database": "^10.0",
+                "php": "^8.1",
+                "staudenmeir/eloquent-has-many-deep-contracts": "^1.1"
+            },
+            "require-dev": {
+                "awobaz/compoships": "^2.2",
+                "barryvdh/laravel-ide-helper": "^2.13",
+                "illuminate/pagination": "^10.0",
+                "korridor/laravel-has-many-merged": "^1.0",
+                "mockery/mockery": "^1.6",
+                "orchestra/testbench": "^8.13",
+                "phpstan/phpstan": "^1.10",
+                "phpunit/phpunit": "^10.1",
+                "staudenmeir/eloquent-eager-limit": "^1.8",
+                "staudenmeir/eloquent-json-relations": "^1.8.2",
+                "staudenmeir/laravel-adjacency-list": "^1.13.7"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Staudenmeir\\EloquentHasManyDeep\\IdeHelperServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Staudenmeir\\EloquentHasManyDeep\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Jonas Staudenmeir",
+                    "email": "mail@jonas-staudenmeir.de"
+                }
+            ],
+            "description": "Laravel Eloquent HasManyThrough relationships with unlimited levels",
+            "support": {
+                "issues": "https://github.com/staudenmeir/eloquent-has-many-deep/issues",
+                "source": "https://github.com/staudenmeir/eloquent-has-many-deep/tree/1.19.5"
+            },
+            "funding": [
+                {
+                    "url": "https://paypal.me/JonasStaudenmeir",
+                    "type": "custom"
+                }
+            ],
+            "time": "2025-09-28T17:21:27+00:00"
+        },
+        {
+            "name": "staudenmeir/eloquent-has-many-deep-contracts",
+            "version": "v1.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/staudenmeir/eloquent-has-many-deep-contracts.git",
+                "reference": "c39317b839d6123be126b9980e4a3d38310f5939"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/staudenmeir/eloquent-has-many-deep-contracts/zipball/c39317b839d6123be126b9980e4a3d38310f5939",
+                "reference": "c39317b839d6123be126b9980e4a3d38310f5939",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/database": "^10.0",
+                "php": "^8.1"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Staudenmeir\\EloquentHasManyDeepContracts\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Jonas Staudenmeir",
+                    "email": "mail@jonas-staudenmeir.de"
+                }
+            ],
+            "description": "Contracts for staudenmeir/eloquent-has-many-deep",
+            "support": {
+                "issues": "https://github.com/staudenmeir/eloquent-has-many-deep-contracts/issues",
+                "source": "https://github.com/staudenmeir/eloquent-has-many-deep-contracts/tree/v1.1"
+            },
+            "time": "2023-01-18T12:43:26+00:00"
         },
         {
             "name": "stripe/stripe-php",
