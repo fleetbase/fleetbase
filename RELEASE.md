@@ -1,11 +1,14 @@
-# 🚀 Fleetbase v0.7.16 — 2025-11-06
+# 🚀 Fleetbase v0.7.18 — 2025-11-10
 
-> "Hotfix: router map"
+> "Hotfix IAM user validation, make online/offline toggle silent"
 
 ---
 
 ## ✨ Highlights
-- Hotfix router map
+- Hotfix validateRequest implementation to not rewrite request params
+- Hotfix user validation password optional for creation
+- Made online/offline endpoint for drivers silent
+- Hotfix QPay payment gateway on Storefront + ebarimt reciept fix
 
 ---
 
