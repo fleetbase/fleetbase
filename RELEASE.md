@@ -1,21 +1,14 @@
-# 🚀 Fleetbase v0.7.16 — 2025-11-06
+# 🚀 Fleetbase v0.7.17 — 2025-11-10
 
-> "New onboarding orchestrator, improved password security, UI improvements, bug fixes"
+> "Hotfix IAM user validation, make online/offline toggle silent"
 
 ---
 
 ## ✨ Highlights
-- New onboarding orchestrator to build more robust onboarding flows
-- Made the `LogApiRequests` middleware more robust
-- Fixed controller validation handling
-- Added microsoft365/graph mail driver
-- Improved password requirements (including breached password check)
-- Patched creating duplicate users by email in IAM
-- Patch env mapper
-- Vehicle/driver tracking API doesnt fire resource lifecycle events or log requests - only tracking events
-- Patched `<ModelCoordinatesInput />` component
-- Security patch on Storefront customers API
-- Styling updates on Storefront
+- Hotfix validateRequest implementation to not rewrite request params
+- Hotfix user validation password optional for creation
+- Made online/offline endpoint for drivers silent
+- Hotfix QPay payment gateway on Storefront + ebarimt reciept fix
 
 ---
 
