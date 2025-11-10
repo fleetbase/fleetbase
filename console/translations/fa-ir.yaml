@@ -1,0 +1,741 @@
+app:
+  name: فلیت‌بیس
+common:
+  new: جدید
+  create: ایجاد
+  add: افزودن
+  edit: ویرایش
+  update: به‌روزرسانی
+  save: ذخیره
+  save-changes: ذخیره تغییرات
+  delete: حذف
+  delete-selected: حذف انتخاب‌شده‌ها
+  delete-selected-count: حذف {count} مورد انتخاب‌شده
+  your-profile: پروفایل شما
+  date-of-birth: تاریخ تولد
+  organization: سازمان
+  two-factor: احراز هویت دو مرحله‌ای
+  remove: حذف
+  cancel: لغو
+  confirm: تأیید
+  close: بستن
+  open: باز کردن
+  view: مشاهده
+  preview: پیش‌نمایش
+  upload: بارگذاری
+  download: دانلود
+  import: وارد کردن
+  export: صادر کردن
+  print: چاپ
+  duplicate: تکثیر
+  copy: کپی
+  paste: جای‌گذاری
+  share: اشتراک‌گذاری
+  refresh: تازه‌سازی
+  reset: بازنشانی
+  retry: تلاش مجدد
+  back: بازگشت
+  next: بعدی
+  previous: قبلی
+  submit: ارسال
+  apply: اعمال
+  continue: ادامه
+  proceed: ادامه دادن
+  select: انتخاب
+  deselect: لغو انتخاب
+  search: جستجو
+  filter: فیلتر
+  sort: مرتب‌سازی
+  view-all: مشاهده همه
+  clear: پاک کردن
+  done: انجام شد
+  finish: پایان
+  skip: رد کردن
+  method: روش
+  bulk-delete: حذف گروهی
+  bulk-delete-resource: حذف گروهی {resource}
+  bulk-cancel: لغو گروهی
+  bulk-cancel-resource: لغو گروهی {resource}
+  bulk-actions: اقدامات گروهی
+  column: ستون
+  row: ردیف
+  table: جدول
+  list: لیست
+  grid: شبکه
+  form: فرم
+  field: فیلد
+  section: بخش
+  panel: پنل
+  card: کارت
+  tab: زبانه
+  modal: مودال
+  dialog: دیالوگ
+  menu: منو
+  dropdown: کشویی
+  tooltip: راهنمای ابزار
+  sidebar: نوار کناری
+  toolbar: نوار ابزار
+  footer: پاورقی
+  header: سربرگ
+  title: عنوان
+  subtitle: زیرعنوان
+  description: توضیحات
+  placeholder: مکان‌نما
+  label: برچسب
+  button: دکمه
+  icon: آیکون
+  avatar: آواتار
+  link: لینک
+  badge: نشان
+  tag: برچسب
+  banner: بنر
+  step: مرحله
+  progress: پیشرفت
+  map: نقشه
+  board: تابلو
+  loading: در حال بارگذاری
+  loading-resource: در حال بارگذاری {resource}
+  saving: در حال ذخیره
+  processing: در حال پردازش
+  fetching: در حال دریافت
+  updating: در حال به‌روزرسانی
+  uploading: در حال بارگذاری
+  completed: تکمیل شد
+  success: موفقیت
+  failed: ناموفق
+  error: خطا
+  warning: هشدار
+  info: اطلاعات
+  ready: آماده
+  activity: فعالیت
+  active: فعال
+  inactive: غیرفعال
+  enabled: فعال‌شده
+  disabled: غیرفعال‌شده
+  online: آنلاین
+  offline: آفلاین
+  pending: در انتظار
+  archived: بایگانی‌شده
+  hidden: مخفی
+  visible: قابل مشاهده
+  empty: خالی
+  not-found: پیدا نشد
+  no-results: بدون نتیجه
+  try-again: دوباره امتحان کنید
+  are-you-sure: آیا مطمئن هستید؟
+  changes-saved: تغییرات با موفقیت ذخیره شد
+  saved-successfully: تغییرات با موفقیت ذخیره شد
+  field-saved: "{field} با موفقیت ذخیره شد"
+  changes-discarded: تغییرات لغو شد
+  delete-confirm: آیا مطمئن هستید که می‌خواهید این مورد را حذف کنید؟
+  action-successful: اقدام با موفقیت انجام شد
+  action-failed: اقدام ناموفق بود. لطفاً دوباره امتحان کنید
+  something-went-wrong: مشکلی پیش آمد
+  please-wait: لطفاً منتظر بمانید...
+  sign-in: ورود
+  sign-out: خروج
+  sign-up: ثبت‌نام
+  log-in: ورود
+  log-out: خروج
+  register: ثبت
+  forgot-password: رمز عبور را فراموش کرده‌اید؟
+  reset-password: بازنشانی رمز عبور
+  change-password: تغییر رمز عبور
+  password: رمز عبور
+  confirm-password: تأیید رمز عبور
+  email: ایمیل
+  username: نام کاربری
+  remember-me: مرا به خاطر بسپار
+  welcome: خوش آمدید
+  welcome-back: خوش آمدید دوباره
+  profile: پروفایل
+  account: حساب کاربری
+  settings: تنظیمات
+  preferences: ترجیحات
+  record: رکورد
+  records: رکوردها
+  item: مورد
+  items: موارد
+  entry: ورودی
+  entries: ورودی‌ها
+  id: شناسه
+  name: نام
+  type: نوع
+  category: دسته‌بندی
+  overview: مرور
+  value: مقدار
+  amount: مبلغ
+  price: قیمت
+  quantity: تعداد
+  status: وضعیت
+  date: تاریخ
+  date-created: تاریخ ایجاد
+  date-updated: تاریخ به‌روزرسانی
+  time: زمان
+  created-at: ایجاد شده در
+  updated-at: به‌روزرسانی شده در
+  expired-at: منقضی شده در
+  last-seen-at: آخرین بازدید در
+  last-modified: آخرین ویرایش
+  last-modified-data: "آخرین ویرایش: {date}"
+  actions: اقدامات
+  details: جزئیات
+  notes: یادداشت‌ها
+  reference: مرجع
+  filter-by: فیلتر بر اساس
+  filter-by-field: فیلتر بر اساس {field}
+  sort-by: مرتب‌سازی بر اساس
+  ascending: صعودی
+  descending: نزولی
+  all: همه
+  none: هیچ‌کدام
+  select-all: انتخاب همه
+  deselect-all: لغو انتخاب همه
+  show-more: نمایش بیشتر
+  show-less: نمایش کمتر
+  page: صفحه
+  of: از
+  total: مجموع
+  items-per-page: موارد در هر صفحه
+  showing: در حال نمایش
+  to: تا
+  results: نتایج
+  load-more: بارگذاری بیشتر
+  no-more-results: نتیجه دیگری وجود ندارد
+  today: امروز
+  yesterday: دیروز
+  tomorrow: فردا
+  day: روز
+  week: هفته
+  month: ماه
+  year: سال
+  date-range: بازه زمانی
+  start-date: تاریخ شروع
+  end-date: تاریخ پایان
+  time-zone: منطقه زمانی
+  system: سیستم
+  dashboard: داشبورد
+  home: خانه
+  analytics: تحلیل‌ها
+  reports: گزارش‌ها
+  logs: لاگ‌ها
+  help: کمک
+  support: پشتیبانی
+  contact: تماس
+  documentation: مستندات
+  language: زبان
+  timezone: منطقه زمانی
+  version: نسخه
+  theme: تم
+  light-mode: حالت روشن
+  dark-mode: حالت تیره
+  update-available: به‌روزرسانی در دسترس است
+  install-update: نصب به‌روزرسانی
+  maintenance-mode: حالت نگهداری
+  notification: اعلان
+  notifications: اعلان‌ها
+  mark-as-read: علامت‌گذاری به عنوان خوانده‌شده
+  mark-all-as-read: علامت‌گذاری همه به عنوان خوانده‌شده
+  clear-notifications: پاک کردن اعلان‌ها
+  company: شرکت
+  companies: شرکت‌ها
+  user: کاربر
+  users: کاربران
+  role: نقش
+  roles: نقش‌ها
+  permission: مجوز
+  permissions: مجوزها
+  group: گروه
+  groups: گروه‌ها
+  unauthorized: غیرمجاز
+  forbidden: ممنوع
+  resource-not-found: منبع پیدا نشد
+  server-error: خطای سرور
+  validation-error: خطای اعتبارسنجی
+  timeout-error: درخواست منقضی شد
+  network-error: خطای شبکه
+  unknown-error: خطای ناشناخته
+  file: فایل
+  files: فایل‌ها
+  folder: پوشه
+  folders: پوشه‌ها
+  upload-file: بارگذاری فایل
+  upload-files: بارگذاری فایل‌ها
+  upload-image: بارگذاری تصویر
+  upload-image-supported: پشتیبانی از PNG، JPEG و GIF
+  choose-file: انتخاب فایل
+  choose-files: انتخاب فایل‌ها
+  drag-and-drop: کشیدن و رها کردن
+  download-file: دانلود فایل
+  file-size: اندازه فایل
+  file-type: نوع فایل
+  confirm-delete: تأیید حذف
+  confirm-action: تأیید اقدام
+  confirm-exit: تأیید خروج
+  confirm-and-save-changes: تأیید و ذخیره تغییرات
+  are-you-sure-exit: آیا مطمئن هستید که می‌خواهید خارج شوید؟
+  unsaved-changes-warning: شما تغییرات ذخیره‌نشده دارید
+  connected: متصل
+  disconnected: قطع‌شده
+  reconnecting: در حال اتصال مجدد
+  connection-lost: اتصال قطع شد
+  connection-restored: اتصال برقرار شد
+  show: نمایش
+  hide: مخفی کردن
+  expand: گسترش
+  collapse: جمع کردن
+  enable: فعال کردن
+  disable: غیرفعال کردن
+  minimize: کوچک کردن
+  maximize: بزرگ کردن
+  restore: بازیابی
+  zoom-in: بزرگ‌نمایی
+  zoom-out: کوچک‌نمایی
+  fullscreen: تمام صفحه
+  exit-fullscreen: خروج از حالت تمام صفحه
+  yes: بله
+  no: خیر
+  ok: تأیید
+  none-available: هیچ‌کدام در دسترس نیست
+  default: پیش‌فرض
+  custom: سفارشی
+  general: عمومی
+  advanced: پیشرفته
+  placeholder-text: اینجا متن وارد کنید...
+  learn-more: اطلاعات بیشتر
+  view-resource: مشاهده {resource}
+  view-resource-details: مشاهده جزئیات {resource}
+  create-a-new-resource: ایجاد یک {resource} جدید
+  create-new-resource: ایجاد {resource} جدید
+  search-resource: جستجوی {resource}
+  new-resource: "{resource} جدید"
+  update-resource: به‌روزرسانی {resource}
+  save-resource-changes: ذخیره تغییرات {resource}
+  creating-resource: در حال ایجاد {resource}
+  cancel-resource: لغو {resource}
+  delete-resource: حذف {resource}
+  delete-resource-name: "حذف: {resourceName}"
+  delete-resource-named: حذف {resource} ({resourceName})
+  delete-resource-prompt: این اقدام قابل بازگشت نیست. پس از حذف، رکورد برای همیشه حذف خواهد شد
+  delete-cannot-be-undone: این اقدام قابل بازگشت نیست. پس از حذف، رکورد برای همیشه حذف خواهد شد
+  create-resource: ایجاد {resource}
+  edit-resource: ویرایش {resource}
+  edit-resource-details: ویرایش جزئیات {resource}
+  edit-resource-type-name: "ویرایش {resource}: {resourceName}"
+  edit-resource-name: "ویرایش: {resourceName}"
+  config: پیکربندی
+  select-field: انتخاب {field}
+  columns: ستون‌ها
+  metadata: متادیتا
+  meta: متا
+  resource-created-success: "{resource} جدید با موفقیت ایجاد شد"
+  resource-created-success-name: "{resource} جدید important! ({resourceName}) با موفقیت ایجاد شد"
+  resource-updated-success: "{resource} ({resourceName}) با موفقیت به‌روزرسانی شد"
+  resource-action-success: "{resource} ({resourceName}) با موفقیت {action} شد"
+  resource-deleted-success: "{resource} ({resourceName}) با موفقیت حذف شد"
+  resource-deleted: "{resource} ({resourceName}) حذف شد"
+  continue-without-saving: ادامه بدون ذخیره؟
+  continue-without-saving-prompt: شما تغییرات ذخیره‌نشده‌ای در این {resource} دارید. ادامه دادن باعث لغو آنها خواهد شد. برای ادامه کلیک کنید
+resource:
+  alert: هشدار
+  alerts: هشدارها
+  brand: برند
+  brands: برندها
+  category: دسته‌بندی
+  categories: دسته‌بندی‌ها
+  chat-attachment: پیوست چت
+  chat-attachments: پیوست‌های چت
+  chat-channel: کانال چت
+  chat-channels: کانال‌های چت
+  chat-log: لاگ چت
+  chat-logs: لاگ‌های چت
+  chat-message: پیام چت
+  chat-messages: پیام‌های چت
+  chat-participant: شرکت‌کننده چت
+  chat-participants: شرکت‌کنندگان چت
+  chat-receipt: رسید چت
+  chat-receipts: رسیدهای چت
+  comment: نظر
+  comments: نظرات
+  company: شرکت
+  companies: شرکت‌ها
+  custom-field-value: مقدار فیلد سفارشی
+  custom-field-values: مقادیر فیلد سفارشی
+  custom-field: فیلد سفارشی
+  custom-fields: فیلدهای سفارشی
+  dashboard-widget: ویجت داشبورد
+  dashboard-widgets: ویجت‌های داشبورد
+  dashboard: داشبورد
+  dashboards: داشبوردها
+  extension: افزونه
+  extensions: افزونه‌ها
+  file: فایل
+  files: فایل‌ها
+  group: گروه
+  groups: گروه‌ها
+  notification: اعلان
+  notifications: اعلان‌ها
+  permission: مجوز
+  permissions: مجوزها
+  policy: سیاست
+  policies: سیاست‌ها
+  report: گزارش
+  reports: گزارش‌ها
+  role: نقش
+  roles: نقش‌ها
+  setting: تنظیم
+  settings: تنظیمات
+  transaction: تراکنش
+  transactions: تراکنش‌ها
+  user-device: دستگاه کاربر
+  user-devices: دستگاه‌های کاربر
+  user: کاربر
+  users: کاربران
+dropzone:
+  file: فایل
+  drop-to-upload: برای بارگذاری رها کنید
+  invalid: نامعتبر
+  files-ready-for-upload: "{numOfFiles} آماده برای بارگذاری"
+  upload-images-videos: بارگذاری تصاویر و ویدئوها
+  upload-documents: بارگذاری اسناد
+  upload-documents-files: بارگذاری اسناد و فایل‌ها
+  upload-avatar-files: بارگذاری آواتارهای سفارشی
+  dropzone-supported-images-videos: فایل‌های تصویر و ویدئو را به این منطقه رها کنید
+  dropzone-supported-avatars: فایل‌های SVG یا PNG را رها کنید
+  dropzone-supported-files: فایل‌ها را به این منطقه رها کنید
+  or-select-button-text: یا فایل‌ها را برای بارگذاری انتخاب کنید
+  upload-queue: صف بارگذاری
+  uploading: در حال بارگذاری...
+two-fa-enforcement-alert:
+  message: برای افزایش امنیت حساب کاربری خود، سازمان شما احراز هویت دو مرحله‌ای (2FA) را الزامی کرده است. 2FA را در تنظیمات حساب خود فعال کنید تا لایه امنیتی بیشتری داشته باشید
+  button-text: تنظیم 2FA
+comment-thread:
+  publish-comment-button-text: انتشار نظر
+  publish-reply-button-text: انتشار پاسخ
+  reply-comment-button-text: پاسخ
+  edit-comment-button-text: ویرایش
+  delete-comment-button-text: حذف
+  comment-published-ago: "{createdAgo} پیش"
+  comment-input-placeholder: یک نظر جدید وارد کنید...
+  comment-reply-placeholder: پاسخ خود را وارد کنید...
+  comment-input-empty-notification: نمی‌توانید نظرات خالی منتشر کنید...
+  comment-min-length-notification: نظر باید حداقل 2 کاراکتر باشد
+dashboard:
+  select-dashboard: انتخاب داشبورد
+  create-new-dashboard: ایجاد داشبورد جدید
+  create-a-new-dashboard: ایجاد یک داشبورد جدید
+  confirm-create-dashboard: ایجاد داشبورد!
+  edit-layout: ویرایش چیدمان
+  add-widgets: افزودن ویجت‌ها
+  delete-dashboard: حذف داشبورد
+  save-dashboard: ذخیره داشبورد
+  you-cannot-delete-this-dashboard: نمی‌توانید این داشبورد را حذف کنید
+  are-you-sure-you-want-delete-dashboard: آیا مطمئن هستید که می‌خواهید {dashboardName} را حذف کنید؟
+dashboard-widget-panel:
+  widget-name: "ویجت {widgetName}"
+  select-widgets: انتخاب ویجت‌ها
+  close-and-save: بستن و ذخیره
+filters-picker:
+  filters: فیلترها
+  filter-data: فیلتر داده‌ها
+visible-column-picker:
+  select-viewable-columns: انتخاب ستون‌های قابل مشاهده
+  customize-columns: سفارشی‌سازی ستون‌ها
+component:
+  file:
+    dropdown-label: اقدامات فایل
+  import-modal:
+    loading-message: در حال پردازش وارد کردن...
+    drop-upload: برای بارگذاری رها کنید
+    invalid: نامعتبر
+    ready-upload: آماده برای بارگذاری
+    upload-spreadsheets: بارگذاری صفحات گسترده
+    drag-drop: فایل‌های صفحه گسترده را به این منطقه رها کنید
+    button-text: یا صفحات گسترده را برای بارگذاری انتخاب کنید
+    spreadsheets: صفحات گسترده
+    upload-queue: صف بارگذاری
+  dropzone:
+    file: فایل
+    drop-to-upload: برای بارگذاری رها کنید
+    invalid: نامعتبر
+    files-ready-for-upload: "{numOfFiles} آماده برای بارگذاری"
+    upload-images-videos: بارگذاری تصاویر و ویدئوها
+    upload-documents: بارگذاری اسناد
+    upload-documents-files: بارگذاری اسناد و فایل‌ها
+    upload-avatar-files: بارگذاری آواتارهای سفارشی
+    dropzone-supported-images-videos: فایل‌های تصویر و ویدئو را به این منطقه رها کنید
+    dropzone-supported-avatars: فایل‌های SVG یا PNG را رها کنید
+    dropzone-supported-files: فایل‌ها را به این منطقه رها کنید
+    or-select-button-text: یا فایل‌ها را برای بارگذاری انتخاب کنید
+    upload-queue: صف بارگذاری
+    uploading: در حال بارگذاری...
+  two-fa-enforcement-alert:
+    message: برای افزایش امنیت حساب کاربری خود، سازمان شما احراز هویت دو مرحله‌ای (2FA) را الزامی کرده است. 2FA را در تنظیمات حساب خود فعال کنید تا لایه امنیتی بیشتری داشته باشید
+    button-text: تنظیم 2FA
+  comment-thread:
+    publish-comment-button-text: انتشار نظر
+    publish-reply-button-text: انتشار پاسخ
+    reply-comment-button-text: پاسخ
+    edit-comment-button-text: ویرایش
+    delete-comment-button-text: حذف
+    comment-published-ago: "{createdAgo} پیش"
+    comment-input-placeholder: یک نظر جدید وارد کنید...
+    comment-reply-placeholder: پاسخ خود را وارد کنید...
+    comment-input-empty-notification: نمی‌توانید نظرات خالی منتشر کنید...
+    comment-min-length-notification: نظر باید حداقل 2 کاراکتر باشد
+  dashboard:
+    select-dashboard: انتخاب داشبورد
+    create-new-dashboard: ایجاد داشبورد جدید
+    create-a-new-dashboard: ایجاد یک داشبورد جدید
+    confirm-create-dashboard: ایجاد داشبورد!
+    edit-layout: ویرایش چیدمان
+    add-widgets: افزودن ویجت‌ها
+    delete-dashboard: حذف داشبورد
+    save-dashboard: ذخیره داشبورد
+    you-cannot-delete-this-dashboard: نمی‌توانید این داشبورد را حذف کنید
+    are-you-sure-you-want-delete-dashboard: آیا مطمئن هستید که می‌خواهید {dashboardName} را حذف کنید؟
+  dashboard-widget-panel:
+    widget-name: "ویجت {widgetName}"
+    select-widgets: انتخاب ویجت‌ها
+    close-and-save: بستن و ذخیره
+services:
+  dashboard-service:
+    create-dashboard-success-notification: داشبورد جدید `{dashboardName}` با موفقیت ایجاد شد
+    delete-dashboard-success-notification: داشبورد `{dashboardName}` حذف شد
+auth:
+  verification:
+    header-title: تأیید حساب
+    title: ایمیل خود را تأیید کنید
+    message-text: "<strong>تقریباً تمام شد!</strong><br> ایمیل خود را برای دریافت کد تأیید بررسی کنید"
+    verification-code-text: کد تأییدی که از طریق ایمیل دریافت کرده‌اید را وارد کنید
+    verification-input-label: کد تأیید
+    verify-button-text: تأیید و ادامه
+    didnt-receive-a-code: هنوز کدی دریافت نکرده‌اید؟
+    not-sent:
+      message: هنوز کدی دریافت نکرده‌اید؟
+      alternative-choice: از گزینه‌های جایگزین زیر برای تأیید حساب خود استفاده کنید
+      resend-email: ارسال مجدد ایمیل
+      send-by-sms: ارسال از طریق پیامک
+  two-fa:
+    verify-code:
+      verification-code: کد تأیید
+      check-title: ایمیل یا تلفن خود را بررسی کنید
+      check-subtitle: ما یک کد تأیید برای شما ارسال کرده‌ایم. کد را در زیر وارد کنید تا فرآیند ورود کامل شود
+      expired-help-text: کد احراز هویت دو مرحله‌ای شما منقضی شده است. در صورت نیاز می‌توانید کد دیگری درخواست کنید
+      resend-code: ارسال مجدد کد
+      verify-code: تأیید کد
+      cancel-two-factor: لغو احراز هویت دو مرحله‌ای
+      invalid-session-error-notification: جلسه نامعتبر است. لطفاً دوباره امتحان کنید
+      verification-successful-notification: تأیید با موفقیت انجام شد!
+      verification-code-expired-notification: کد تأیید منقضی شده است. لطفاً کد جدیدی درخواست کنید
+      verification-code-failed-notification: تأیید ناموفق بود. لطفاً دوباره امتحان کنید
+    resend-code:
+      verification-code-resent-notification: کد تأیید جدید ارسال شد
+      verification-code-resent-error-notification: خطا در ارسال مجدد کد تأیید. لطفاً دوباره امتحان کنید
+  forgot-password:
+    success-message: ایمیل خود را برای ادامه بررسی کنید!
+    is-sent:
+      title: تقریباً تمام شد!
+      message: "<strong>ایمیل خود را بررسی کنید!</strong><br> ما یک لینک جادویی به ایمیل شما ارسال کرده‌ایم که به شما امکان بازنشانی رمز عبور را می‌دهد. این لینک در 15 دقیقه منقضی می‌شود"
+    not-sent:
+      title: رمز عبور خود را فراموش کرده‌اید؟
+      message: "<strong>نگران نباشید، ما از شما پشتیبانی می‌کنیم.</strong><br> ایمیلی که برای ورود به {appName} استفاده می‌کنید را وارد کنید و ما یک لینک امن برای بازنشانی رمز عبور برای شما ارسال خواهیم کرد"
+    form:
+      email-label: آدرس ایمیل شما
+      submit-button: خوب، لینک جادویی را برایم بفرست!
+      nevermind-button: بی‌خیال
+  login:
+    title: به حساب کاربری خود وارد شوید
+    no-identity-notification: آیا فراموش کردید ایمیل خود را وارد کنید؟
+    no-password-notification: آیا فراموش کردید رمز عبور خود را وارد کنید؟
+    unverified-notification: حساب شما برای ادامه باید تأیید شود
+    password-reset-required: برای ادامه، بازنشانی رمز عبور لازم است
+    failed-attempt:
+      message: "<strong>رمز عبور خود را فراموش کرده‌اید؟</strong><br> برای بازنشانی رمز عبور خود روی دکمه زیر کلیک کنید"
+      button-text: خوب، به من کمک کن تا بازنشانی کنم!
+    form:
+      email-label: آدرس ایمیل
+      password-label: رمز عبور
+      remember-me-label: مرا به خاطر بسپار
+      forgot-password-label: رمز عبور خود را فراموش کرده‌اید؟
+      sign-in-button: ورود
+      create-account-button: ایجاد حساب جدید
+    slow-connection-message: در حال تجربه مشکلات اتصال
+  reset-password:
+    success-message: رمز عبور شما بازنشانی شد! برای ادامه وارد شوید
+    invalid-verification-code: این لینک بازنشانی رمز عبور نامعتبر یا منقضی شده است
+    title: بازنشانی رمز عبور
+    form:
+      code:
+        label: کد بازنشانی شما
+        help-text: کد تأییدی که در ایمیل خود دریافت کرده‌اید
+      password:
+        label: رمز عبور جدید
+        help-text: برای ادامه، رمزی با حداقل 6 کاراکتر وارد کنید
+      confirm-password:
+        label: تأیید رمز عبور جدید
+        help-text: برای ادامه، رمزی با حداقل 6 کاراکتر وارد کنید
+      submit-button: بازنشانی رمز عبور
+      back-button: بازگشت
+console:
+  create-or-join-organization:
+    modal-title: ایجاد یا پیوستن به یک سازمان
+    join-success-notification: شما به یک سازمان جدید پیوستید!
+    create-success-notification: شما یک سازمان جدید ایجاد کردید!
+  switch-organization:
+    modal-title: آیا مطمئن هستید که می‌خواهید سازمان را به {organizationName} تغییر دهید؟
+    modal-body: با تأیید، حساب شما همچنان وارد خواهد ماند، اما سازمان اصلی شما تغییر خواهد کرد
+    modal-accept-button-text: بله، می‌خواهم سازمان را تغییر دهم
+    success-notification: شما سازمان‌ها را تغییر دادید
+  account:
+    index:
+      upload-new: بارگذاری جدید
+      phone: شماره تلفن شما
+      photos: عکس‌ها
+      timezone: منطقه زمانی خود را انتخاب کنید
+  admin:
+    menu:
+      overview: مرور
+      organizations: سازمان‌ها
+      branding: برندینگ
+      2fa-config: پیکربندی 2FA
+      schedule-monitor: مانیتور برنامه
+      services: خدمات
+      mail: ایمیل
+      filesystem: سیستم فایل
+      queue: صف
+      socket: سوکت
+      push-notifications: اعلان‌های فشاری
+    schedule-monitor:
+      schedule-monitor: مانیتور برنامه
+      task-logs-for: "لاگ‌های وظایف برای:"
+      showing-last-count: نمایش آخرین {count} لاگ
+      name: نام
+      type: نوع
+      timezone: منطقه زمانی
+      last-started: آخرین شروع
+      last-finished: آخرین پایان
+      last-failure: آخرین شکست
+      date: تاریخ
+      memory: حافظه
+      runtime: زمان اجرا
+      output: خروجی
+      no-output: بدون خروجی
+    config:
+      database:
+        title: پیکربندی پایگاه داده
+      filesystem:
+        title: پیکربندی سیستم فایل
+      mail:
+        title: پیکربندی ایمیل
+      notification-channels:
+        title: پیکربندی اعلان‌های فشاری
+      queue:
+        title: پیکربندی صف
+      services:
+        title: پیکربندی خدمات
+      socket:
+        title: پیکربندی سوکت
+    branding:
+      title: برندینگ
+      icon-text: آیکون
+      upload-new: بارگذاری جدید
+      reset-default: بازنشانی به پیش‌فرض
+      logo-text: لوگو
+      theme: تم پیش‌فرض
+    index:
+      total-users: مجموع کاربران
+      total-organizations: مجموع سازمان‌ها
+      total-transactions: مجموع تراکنش‌ها
+    notifications:
+      title: اعلان‌ها
+      notification-settings: تنظیمات اعلان
+    organizations:
+      index:
+        title: سازمان‌ها
+        owner-name-column: مالک
+        owner-phone-column: تلفن مالک
+        owner-email-column: ایمیل مالک
+        users-count-column: کاربران
+        phone-column: تلفن
+        email-column: ایمیل
+      users:
+        title: کاربران
+  settings:
+    index:
+      title: تنظیمات سازمان
+      organization-name: نام سازمان
+      organization-description: توضیحات سازمان
+      organization-phone: شماره تلفن سازمان
+      organization-currency: ارز سازمان
+      organization-id: شناسه سازمان
+      organization-branding: برندینگ سازمان
+      logo: لوگو
+      logo-help-text: لوگو برای سازمان شما
+      upload-new-logo: بارگذاری لوگوی جدید
+      backdrop: پس‌زمینه
+      backdrop-help-text: بنر یا تصویر پس‌زمینه اختیاری برای سازمان شما
+      upload-new-backdrop: بارگذاری پس‌زمینه جدید
+      organization-timezone: منطقه زمانی پیش‌فرض برای سازمان خود را انتخاب کنید
+      select-timezone: انتخاب منطقه زمانی
+  extensions:
+    title: افزونه‌ها به زودی می‌آیند!
+    message: لطفاً در نسخه‌های آینده بررسی کنید، زیرا ما در حال آماده‌سازی برای راه‌اندازی مخزن و بازار افزونه‌ها هستیم
+  notifications:
+    select-all: انتخاب همه
+    mark-as-read: علامت‌گذاری به عنوان خوانده‌شده
+    received: "دریافت‌شده:"
+    message: هیچ اعلانی برای نمایش وجود ندارد
+invite:
+  for-users:
+    invitation-message: شما به پیوستن به {companyName} دعوت شده‌اید
+    invitation-sent-message: شما به پیوستن به سازمان {companyName} در {appName} دعوت شده‌اید. برای پذیرش این دعوت، کد دعوت دریافت‌شده از طریق ایمیل را وارد کنید و روی ادامه کلیک کنید
+    invitation-code-sent-text: کد دعوت شما
+    accept-invitation-text: پذیرش دعوت
+onboard:
+  index:
+    title: ایجاد حساب کاربری شما
+    welcome-title: "<strong>به {companyName} خوش آمدید!</strong><br />"
+    welcome-text: جزئیات مورد نیاز زیر را تکمیل کنید تا شروع کنید
+    full-name: نام کامل
+    full-name-help-text: نام کامل شما
+    your-email: آدرس ایمیل
+    your-email-help-text: آدرس ایمیل شما
+    phone: شماره تلفن
+    phone-help-text: شماره تلفن شما
+    organization-name: نام سازمان
+    organization-help-text: نام سازمان شما، تمام خدمات و منابع شما تحت این سازمان مدیریت خواهند شد، بعداً می‌توانید به تعداد دلخواه سازمان ایجاد کنید
+    password: یک رمز عبور وارد کنید
+    password-help-text: رمز عبور شما، مطمئن شوید که قوی است
+    confirm-password: رمز عبور خود را تأیید کنید
+    confirm-password-help-text: فقط برای تأیید رمز عبوری که در بالا وارد کرده‌اید
+    continue-button-text: ادامه
+  verify-email:
+    header-title: تأیید حساب
+    title: آدرس ایمیل خود را تأیید کنید
+    message-text: "<strong>تقریباً تمام شد!</strong><br> ایمیل خود را برای دریافت کد تأیید بررسی کنید"
+    verification-code-text: کد تأییدی که از طریق ایمیل دریافت کرده‌اید را وارد کنید
+    verification-input-label: کد تأیید
+    verify-button-text: تأیید و ادامه
+    didnt-receive-a-code: هنوز کدی دریافت نکرده‌اید؟
+    not-sent:
+      message: هنوز کدی دریافت نکرده‌اید؟
+      alternative-choice: از گزینه‌های جایگزین زیر برای تأیید حساب خود استفاده کنید
+      resend-email: ارسال مجدد ایمیل
+      send-by-sms: ارسال از طریق پیامک
+install:
+  installer-header: نصب‌کننده
+  failed-message-sent: نصب ناموفق بود! برای تلاش مجدد روی دکمه زیر کلیک کنید
+  retry-install: تلاش مجدد برای نصب
+  start-install: شروع نصب
+layout:
+  header:
+    menus:
+      organization:
+        settings: تنظیمات سازمان
+        create-or-join: ایجاد یا پیوستن به سازمان‌ها
+        explore-extensions: کاوش در افزونه‌ها
+      user:
+        view-profile: مشاهده پروفایل
+        keyboard-shortcuts: نمایش میانبرهای صفحه‌کلید
+        changelog: تغییرات
