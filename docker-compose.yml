@@ -9,18 +9,19 @@ services:
       retries: 5
 
   database:
-    image: mysql:8.0-oracle
+    image: postgres:16-alpine
     restart: unless-stopped
     ports:
-      - "3306:3306"
+      - "5432:5432"
     volumes:
       - "./docker/database/:/docker-entrypoint-initdb.d/"
-      - "./docker/database/mysql:/var/lib/mysql"
+      - "./docker/database/postgres:/var/lib/postgresql/data"
     environment:
-      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
-      MYSQL_DATABASE: "fleetbase"
+      POSTGRES_USER: "fleetbase"
+      POSTGRES_PASSWORD: "fleetbase"
+      POSTGRES_DB: "fleetbase"
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      test: ["CMD-SHELL", "pg_isready -U fleetbase"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -35,11 +36,13 @@ services:
       SOCKETCLUSTER_BROKERS: 10
 
   scheduler:
-    image: fleetbase/fleetbase-api:latest
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.pgsql
     command: ["go-crond", "--verbose", "root:./crontab"]
     restart: unless-stopped
     environment:
-      DATABASE_URL: "mysql://root@database/fleetbase"
+      DATABASE_URL: "pgsql://fleetbase:fleetbase@database/fleetbase"
       QUEUE_CONNECTION: redis
       CACHE_DRIVER: redis
       CACHE_PATH: /fleetbase/api/storage/framework/cache
@@ -50,7 +53,9 @@ services:
       - cache
 
   queue:
-    image: fleetbase/fleetbase-api:latest
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.pgsql
     command: ["php", "artisan", "queue:work"]
     restart: unless-stopped
     healthcheck:
@@ -59,7 +64,7 @@ services:
       timeout: 10s
       retries: 3
     environment:
-      DATABASE_URL: "mysql://root@database/fleetbase"
+      DATABASE_URL: "pgsql://fleetbase:fleetbase@database/fleetbase"
       QUEUE_CONNECTION: redis
       CACHE_DRIVER: redis
       CACHE_PATH: /fleetbase/api/storage/framework/cache
@@ -77,12 +82,14 @@ services:
       - ./console/fleetbase.config.json:/usr/share/nginx/html/fleetbase.config.json
 
   application:
-    image: fleetbase/fleetbase-api:latest
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.pgsql
     volumes:
       - ./api/.env:/fleetbase/api/.env
     environment:
       ENVIRONMENT: development
-      DATABASE_URL: "mysql://root@database/fleetbase"
+      DATABASE_URL: "pgsql://fleetbase:fleetbase@database/fleetbase"
       QUEUE_CONNECTION: redis
       CACHE_DRIVER: redis
       CACHE_PATH: /fleetbase/api/storage/framework/cache

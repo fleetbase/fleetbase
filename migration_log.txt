@@ -1,0 +1,103 @@
+
+   INFO  Preparing database.  
+
+  Creating migration table ......................................... 16ms DONE
+
+   INFO  Running migrations.  
+
+  2019_12_14_000001_create_personal_access_tokens_table ............ 28ms DONE
+  2023_04_25_094301_create_users_table ............................. 66ms DONE
+  2023_04_25_094302_create_user_devices_table ...................... 45ms DONE
+  2023_04_25_094304_create_permissions_table ....................... 54ms FAIL
+
+In Connection.php line 829:
+                                                                               
+  [Illuminate\Database\QueryException (42830)]                                 
+  SQLSTATE[42830]: Invalid foreign key: 7 ERROR:  there is no unique constrai  
+  nt matching given keys for referenced table "permissions" (Connection: pgsq  
+  l, SQL: alter table "model_has_permissions" add constraint "model_has_permi  
+  ssions_permission_id_foreign" foreign key ("permission_id") references "per  
+  missions" ("id") on delete cascade)                                          
+                                                                               
+
+Exception trace:
+  at /fleetbase/api/vendor/laravel/framework/src/Illuminate/Database/Connection.php:829
+ Illuminate\Database\Connection->runQueryCallback() at /fleetbase/api/vendor/laravel/framework/src/Illuminate/Database/Connection.php:783
+ Illuminate\Database\Connection->run() at /fleetbase/api/vendor/laravel/framework/src/Illuminate/Database/Connection.php:576
+ Illuminate\Database\Connection->statement() at /fleetbase/api/vendor/laravel/framework/src/Illuminate/Database/Schema/Blueprint.php:110
+ Illuminate\Database\Schema\Blueprint->build() at /fleetbase/api/vendor/laravel/framework/src/Illuminate/Database/Schema/Builder.php:602
+ Illuminate\Database\Schema\Builder->build() at /fleetbase/api/vendor/laravel/framework/src/Illuminate/Database/Schema/Builder.php:456
+ Illuminate\Database\Schema\Builder->create() at /fleetbase/api/vendor/laravel/framework/src/Illuminate/Support/Facades/Facade.php:355
+ Illuminate\Support\Facades\Facade::__callStatic() at /fleetbase/api/vendor/fleetbase/core-api/migrations/2023_04_25_094304_create_permissions_table.php:40
+ Illuminate\Database\Migrations\Migration@anonymous\/fleetbase/api/vendor/fleetbase/core-api/migrations/2023_04_25_094304_create_permissions_table.php:7$2ad->up() at /fleetbase/api/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php:501
+ Illuminate\Database\Migrations\Migrator->runMethod() at /fleetbase/api/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php:418
+ Illuminate\Database\Migrations\Migrator->Illuminate\Database\Migrations\{closure}() at /fleetbase/api/vendor/laravel/framework/src/Illuminate/Database/Concerns/ManagesTransactions.php:30
+ Illuminate\Database\Connection->transaction() at /fleetbase/api/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php:426
+ Illuminate\Database\Migrations\Migrator->runMigration() at /fleetbase/api/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php:224
+ Illuminate\Database\Migrations\Migrator->Illuminate\Database\Migrations\{closure}() at /fleetbase/api/vendor/laravel/framework/src/Illuminate/Console/View/Components/Task.php:37
+ Illuminate\Console\View\Components\Task->render() at /fleetbase/api/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php:783
+ Illuminate\Database\Migrations\Migrator->write() at /fleetbase/api/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php:224
+ Illuminate\Database\Migrations\Migrator->runUp() at /fleetbase/api/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php:189
+ Illuminate\Database\Migrations\Migrator->runPending() at /fleetbase/api/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php:132
+ Illuminate\Database\Migrations\Migrator->run() at /fleetbase/api/vendor/laravel/framework/src/Illuminate/Database/Console/Migrations/MigrateCommand.php:90
+ Illuminate\Database\Console\Migrations\MigrateCommand->Illuminate\Database\Console\Migrations\{closure}() at /fleetbase/api/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php:641
+ Illuminate\Database\Migrations\Migrator->usingConnection() at /fleetbase/api/vendor/laravel/framework/src/Illuminate/Database/Console/Migrations/MigrateCommand.php:83
+ Illuminate\Database\Console\Migrations\MigrateCommand->handle() at /fleetbase/api/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php:36
+ Illuminate\Container\BoundMethod::Illuminate\Container\{closure}() at /fleetbase/api/vendor/laravel/framework/src/Illuminate/Container/Util.php:41
+ Illuminate\Container\Util::unwrapIfClosure() at /fleetbase/api/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php:93
+ Illuminate\Container\BoundMethod::callBoundMethod() at /fleetbase/api/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php:35
+ Illuminate\Container\BoundMethod::call() at /fleetbase/api/vendor/laravel/framework/src/Illuminate/Container/Container.php:662
+ Illuminate\Container\Container->call() at /fleetbase/api/vendor/laravel/framework/src/Illuminate/Console/Command.php:211
+ Illuminate\Console\Command->execute() at /fleetbase/api/vendor/symfony/console/Command/Command.php:326
+ Symfony\Component\Console\Command\Command->run() at /fleetbase/api/vendor/laravel/framework/src/Illuminate/Console/Command.php:180
+ Illuminate\Console\Command->run() at /fleetbase/api/vendor/symfony/console/Application.php:1088
+ Symfony\Component\Console\Application->doRunCommand() at /fleetbase/api/vendor/symfony/console/Application.php:324
+ Symfony\Component\Console\Application->doRun() at /fleetbase/api/vendor/symfony/console/Application.php:175
+ Symfony\Component\Console\Application->run() at /fleetbase/api/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php:201
+ Illuminate\Foundation\Console\Kernel->handle() at /fleetbase/api/artisan:35
+
+In Connection.php line 587:
+                                                                               
+  [PDOException (42830)]                                                       
+  SQLSTATE[42830]: Invalid foreign key: 7 ERROR:  there is no unique constrai  
+  nt matching given keys for referenced table "permissions"                    
+                                                                               
+
+Exception trace:
+  at /fleetbase/api/vendor/laravel/framework/src/Illuminate/Database/Connection.php:587
+ PDOStatement->execute() at /fleetbase/api/vendor/laravel/framework/src/Illuminate/Database/Connection.php:587
+ Illuminate\Database\Connection->Illuminate\Database\{closure}() at /fleetbase/api/vendor/laravel/framework/src/Illuminate/Database/Connection.php:816
+ Illuminate\Database\Connection->runQueryCallback() at /fleetbase/api/vendor/laravel/framework/src/Illuminate/Database/Connection.php:783
+ Illuminate\Database\Connection->run() at /fleetbase/api/vendor/laravel/framework/src/Illuminate/Database/Connection.php:576
+ Illuminate\Database\Connection->statement() at /fleetbase/api/vendor/laravel/framework/src/Illuminate/Database/Schema/Blueprint.php:110
+ Illuminate\Database\Schema\Blueprint->build() at /fleetbase/api/vendor/laravel/framework/src/Illuminate/Database/Schema/Builder.php:602
+ Illuminate\Database\Schema\Builder->build() at /fleetbase/api/vendor/laravel/framework/src/Illuminate/Database/Schema/Builder.php:456
+ Illuminate\Database\Schema\Builder->create() at /fleetbase/api/vendor/laravel/framework/src/Illuminate/Support/Facades/Facade.php:355
+ Illuminate\Support\Facades\Facade::__callStatic() at /fleetbase/api/vendor/fleetbase/core-api/migrations/2023_04_25_094304_create_permissions_table.php:40
+ Illuminate\Database\Migrations\Migration@anonymous\/fleetbase/api/vendor/fleetbase/core-api/migrations/2023_04_25_094304_create_permissions_table.php:7$2ad->up() at /fleetbase/api/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php:501
+ Illuminate\Database\Migrations\Migrator->runMethod() at /fleetbase/api/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php:418
+ Illuminate\Database\Migrations\Migrator->Illuminate\Database\Migrations\{closure}() at /fleetbase/api/vendor/laravel/framework/src/Illuminate/Database/Concerns/ManagesTransactions.php:30
+ Illuminate\Database\Connection->transaction() at /fleetbase/api/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php:426
+ Illuminate\Database\Migrations\Migrator->runMigration() at /fleetbase/api/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php:224
+ Illuminate\Database\Migrations\Migrator->Illuminate\Database\Migrations\{closure}() at /fleetbase/api/vendor/laravel/framework/src/Illuminate/Console/View/Components/Task.php:37
+ Illuminate\Console\View\Components\Task->render() at /fleetbase/api/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php:783
+ Illuminate\Database\Migrations\Migrator->write() at /fleetbase/api/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php:224
+ Illuminate\Database\Migrations\Migrator->runUp() at /fleetbase/api/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php:189
+ Illuminate\Database\Migrations\Migrator->runPending() at /fleetbase/api/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php:132
+ Illuminate\Database\Migrations\Migrator->run() at /fleetbase/api/vendor/laravel/framework/src/Illuminate/Database/Console/Migrations/MigrateCommand.php:90
+ Illuminate\Database\Console\Migrations\MigrateCommand->Illuminate\Database\Console\Migrations\{closure}() at /fleetbase/api/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php:641
+ Illuminate\Database\Migrations\Migrator->usingConnection() at /fleetbase/api/vendor/laravel/framework/src/Illuminate/Database/Console/Migrations/MigrateCommand.php:83
+ Illuminate\Database\Console\Migrations\MigrateCommand->handle() at /fleetbase/api/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php:36
+ Illuminate\Container\BoundMethod::Illuminate\Container\{closure}() at /fleetbase/api/vendor/laravel/framework/src/Illuminate/Container/Util.php:41
+ Illuminate\Container\Util::unwrapIfClosure() at /fleetbase/api/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php:93
+ Illuminate\Container\BoundMethod::callBoundMethod() at /fleetbase/api/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php:35
+ Illuminate\Container\BoundMethod::call() at /fleetbase/api/vendor/laravel/framework/src/Illuminate/Container/Container.php:662
+ Illuminate\Container\Container->call() at /fleetbase/api/vendor/laravel/framework/src/Illuminate/Console/Command.php:211
+ Illuminate\Console\Command->execute() at /fleetbase/api/vendor/symfony/console/Command/Command.php:326
+ Symfony\Component\Console\Command\Command->run() at /fleetbase/api/vendor/laravel/framework/src/Illuminate/Console/Command.php:180
+ Illuminate\Console\Command->run() at /fleetbase/api/vendor/symfony/console/Application.php:1088
+ Symfony\Component\Console\Application->doRunCommand() at /fleetbase/api/vendor/symfony/console/Application.php:324
+ Symfony\Component\Console\Application->doRun() at /fleetbase/api/vendor/symfony/console/Application.php:175
+ Symfony\Component\Console\Application->run() at /fleetbase/api/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php:201
+ Illuminate\Foundation\Console\Kernel->handle() at /fleetbase/api/artisan:35
+

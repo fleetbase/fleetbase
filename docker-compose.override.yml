@@ -1,0 +1,54 @@
+services:
+  database:
+    image: postgis/postgis:16-3.4-alpine
+    restart: unless-stopped
+    ports:
+      - "5432:5432"
+    volumes:
+      - "./docker/database/:/docker-entrypoint-initdb.d/"
+      - fleetbase_postgres_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: "fleetbase"
+      POSTGRES_PASSWORD: "fleetbase"
+      POSTGRES_DB: "fleetbase"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U fleetbase"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+  application:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.pgsql
+    volumes:
+      - ./api/config/database.php:/fleetbase/api/config/database.php
+    environment:
+      APP_KEY: "base64:v1yyxlpOikBdBDJC2sMjEpjkhPLtSLT5q6ZA4p5QLPo="
+      CONSOLE_HOST: "http://localhost:4200"
+      ENVIRONMENT: "development"
+      APP_DEBUG: "true"
+      PHP_MEMORY_LIMIT: "-1"
+      DATABASE_URL: "pgsql://fleetbase:fleetbase@database/fleetbase"
+      DB_CONNECTION: "pgsql"
+      DB_HOST: "database"
+      DB_PORT: "5432"
+      DB_DATABASE: "fleetbase"
+      DB_USERNAME: "fleetbase"
+      DB_PASSWORD: "fleetbase"
+  queue:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.pgsql
+    environment:
+      PHP_MEMORY_LIMIT: "-1"
+      DATABASE_URL: "pgsql://fleetbase:fleetbase@database/fleetbase"
+  scheduler:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.pgsql
+    environment:
+      PHP_MEMORY_LIMIT: "-1"
+      DATABASE_URL: "pgsql://fleetbase:fleetbase@database/fleetbase"
+
+volumes:
+  fleetbase_postgres_data:

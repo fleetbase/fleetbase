@@ -28,6 +28,17 @@ class RouteServiceProvider extends ServiceProvider
                         );
                     }
                 );
+
+                // Ruta para manejar verificación de 2FA
+                Route::get(
+                    '/int/v1/two-fa/check',
+                    function (Request $request) {
+                        return response()->json([
+                            'isTwoFaEnabled' => false,
+                            'twoFaSession' => null
+                        ]);
+                    }
+                );
             }
         );
     }

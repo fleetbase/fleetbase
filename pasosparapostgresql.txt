@@ -1,0 +1,87 @@
+
+🚀 PARA INSTANCIA VIRGEN (RECOMENDADO)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+echo "FRONTEND_HOSTS=http://localhost:4200,http://localhost:8000" >> api/.env
+
+
+docker compose up -d
+
+
+1. Limpiar base de datos completamente:
+
+docker compose exec -T database psql -U fleetbase -d fleetbase << 'SQL'
+DROP SCHEMA public CASCADE;
+CREATE SCHEMA public;
+GRANT ALL ON SCHEMA public TO fleetbase;
+GRANT ALL ON SCHEMA public TO public;
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+CREATE EXTENSION IF NOT EXISTS "postgis";
+CREATE EXTENSION IF NOT EXISTS "pg_trgm";
+SQL
+
+2. Crear tabla migrations:
+
+docker compose exec application php artisan migrate:install
+
+3. Ejecutar script completo:
+
+bash scripts/migrate-all-robust.sh
+
+'/mnt/g/Users/GAMEMAX/Documents/CREAI/fleetbase-repo/scripts/create-permissions.sh'
+
+bash scripts/create-roles.sh
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+'/mnt/g/Users/GAMEMAX/Documents/CREAI/fleetbase-repo/scripts/migrate-all-robust.sh'
+
+
+test:
+
+'/mnt/g/Users/GAMEMAX/Documents/CREAI/fleetbase-repo/scripts/apply-all-pgsql-fixes.sh'
+
+
+agregar todos los pasos o fixes que fueron correctos a scripts/migrate-all-robust.sh, esto con el fin de que en una instancia virgen funcione a la perfeccion
+no crear md files
+no crear resumenes finales
+
+---
+
+
+ANTIGUAS
+
+'/mnt/g/Users/GAMEMAX/Documents/CREAI/fleetbase-repo/scripts/master-fix-pgsql.sh'
+
+
+
+'/mnt/g/Users/GAMEMAX/Documents/CREAI/fleetbase-repo/scripts/fix-stuck-migrations.sh'
+
+bash scripts/run-migrations-with-timeout.sh
+
+'/mnt/g/Users/GAMEMAX/Documents/CREAI/fleetbase-repo/scripts/fix-missing-columns.sh'
+
+docker compose restart application
+
+'/mnt/g/Users/GAMEMAX/Documents/CREAI/fleetbase-repo/scripts/rollback-onboarding.sh'
+
+docker compose restart application
+
+'/mnt/g/Users/GAMEMAX/Documents/CREAI/fleetbase-repo/scripts/diagnose-and-fix-onboarding.sh'
+
+'/mnt/g/Users/GAMEMAX/Documents/CREAI/fleetbase-repo/scripts/deep-fix-onboarding.sh'
+
+
+'/mnt/g/Users/GAMEMAX/Documents/CREAI/fleetbase-repo/scripts/migrate-all-robust.sh'
+
+docker compose restart application
+
+
+
+
+
+'/mnt/g/Users/GAMEMAX/Documents/CREAI/fleetbase-repo/scripts/apply-all-pgsql-fixes.sh'
+
+
+
+
