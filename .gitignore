@@ -1,57 +1,145 @@
-/node_modules
+# IDEs and Editors
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+*.sublime-project
+*.sublime-workspace
+.project
+.settings/
+
+# Python
+venv/
+env/
+*.pyc
+__pycache__/
+.Python
+*.py[cod]
+*$py.class
+pip-log.txt
+.pytest_cache/
+
+# Node
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.npm
+.yarn-integrity
+
+# PHP
+vendor/
+composer.phar
+
+# Logs
+*.log
+logs/
+*.log.*
+storage/logs/
+
+# Backups and temporary files
+*.bak
+*.backup
+*.old
+*.orig
+*.tmp
+*.temp
+*.cache
+*.saved
+
+# Environment files
 .env
-.env.backup
-.phpunit.result.cache
-.pnpm-store
-.tool-versions
-docker-compose.override.yml
-npm-debug.log
-yarn-error.log
-api/public/hot
-api/public/storage
-api/storage/*.key
-api/storage/uploads
-api/storage/public
-api/vendor
-api/composer.dev.json
-api/composer-install-dev.sh
-api/auth.json
-api/crontab
-api/go-crond
-api/.fleetbase-id
-act.sh
-composer-auth.json
-docker/database/*
-docker/database/mysql/*
-.talismanrc
-verdaccio/minio
-verdaccio/config/htpasswd
-verdaccio/storage
-# private packages
-packages/billing
-packages/flespi
-packages/loconav
-packages/internals
-packages/projectargus-engine
-packages/customer-portal
-packages/solid
-packages/aws-marketplace
-packages/countries
-packages/fliit
-packages/samsara
-packages/solid*
-packages/valhalla
-packages/vroom
-solid
-verdaccio
-# asdf
-.tools-versions
-# binary build resources
-builds/osx/frankenphp
-# build artifacts
-/builds/dist/
-/builds/linux/spc/downloads/*
-*.exe
-*.dll
-*.so
-*.dylib
+.env.*
+!.env.example
+!.env.sample
+
+# Secrets and credentials
+secrets/
+*.key
+*.pem
+*.p12
+*.crt
+*.cer
+infra/helm/secrets.env
+infra/helm/mysql.txt
+
+# Database files
+*.sql
+*.sql.gz
+*.dump
+!docker/database/*.sql
+!scripts/create-essential-tables.sql
+
+# Build artifacts
+dist/
+build/
+*.egg-info/
+.eggs/
+
+# Docker
+docker-compose.override.yml.bak.*
+.dockerignore
+
+# OS files
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Desktop.ini
+
+# Testing
+coverage/
+.coverage
+.tox/
+.nox/
+.hypothesis/
+
+# Documentation build
+docs/_build/
+docs/.doctrees/
+
+# Terraform
+*.tfstate
+*.tfstate.*
+.terraform/
+.terraform.lock.hcl
+
+# Package files
+*.jar
+*.war
+*.nar
+*.ear
+*.zip
+*.tar.gz
+*.rar
+
+# Laravel specific
+bootstrap/cache/*
+!bootstrap/cache/.gitignore
+storage/app/public/*
+!storage/app/public/.gitignore
+storage/framework/cache/*
+!storage/framework/cache/.gitignore
+storage/framework/sessions/*
+!storage/framework/sessions/.gitignore
+storage/framework/views/*
+!storage/framework/views/.gitignore
+
+# Ember specific
+/dist/
+/tmp/
+/.sass-cache
+/connect.lock
+/coverage/
+/libpeerconnection.log
+/testem.log
+
+# Project specific
+fleet_ops_*.sql
+database.mmd
+mmdc.json
+create-erd.sh
+get-docker.sh
+migration_log.txt

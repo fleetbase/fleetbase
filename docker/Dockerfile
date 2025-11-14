@@ -3,13 +3,14 @@
 FROM dunglas/frankenphp:1.5.0-php8.2-bookworm AS base
 
 # Install packages
-RUN apt-get update && apt-get install -y git bind9-utils mycli nodejs npm nano uuid-runtime \
+RUN apt-get update && apt-get install -y git bind9-utils postgresql-client nodejs npm nano uuid-runtime \
   && mkdir -p /root/.ssh \
   && ssh-keyscan github.com >> /root/.ssh/known_hosts
 
 # Install PHP Extensions
 RUN install-php-extensions \
-  pdo_mysql \
+  pdo_pgsql \
+  pgsql \
   gd \
   bcmath \
   redis \
