@@ -1,134 +1,91 @@
-<div id="hero">
-  <p align="center" dir="auto">
-      <a href="https://fleetbase.io" rel="nofollow">
-        <img src="https://user-images.githubusercontent.com/58805033/191936702-fed04b0f-7966-4041-96d0-95e27bf98248.png" alt="Fleetbase logo" width="500" height="120" style="max-width: 100%;">
-      </a>
-    </p>
-    <p align="center" dir="auto">
-      Modular logistics and supply chain operating system
-      <br>
-      <a href="https://docs.fleetbase.io/" rel="nofollow" target="_fleetbase_docs">Documentation</a>
-      ·
-      <a href="https://console.fleetbase.io" rel="nofollow" target="_fleetbase_console">Cloud Version</a>
-      ·
-      <a href="https://console.fleetbase.io/aws-marketplace" rel="nofollow" target="_aws_marketplace">Deploy on AWS</a>
-      ·
-      <a href="https://tally.so/r/3NBpAW" rel="nofollow">Book a Demo</a>
-      ·
-      <a href="https://discord.gg/V7RVWRQ2Wm" target="discord" rel="nofollow">Discord</a>
-    </p>
-    <hr />
-</div>
+# Sistema de Gestión Logística
 
-## What is Fleetbase?
+Sistema modular para la gestión de operaciones logísticas y cadena de suministro.
 
-Fleetbase is a modular logistics and supply chain operating system designed to streamline management, planning, optimization, and operational control across various sectors of the supply chain industry.
+## ¿Qué es este sistema?
 
-<p align="center" dir="auto">
-  <img src="https://flb-assets.s3.ap-southeast-1.amazonaws.com/static/fleetbase_overview.png" alt="Fleetbase Console" width="1200" style="max-width: 100%;" />
-</p>
+Este es un sistema operativo modular de logística y cadena de suministro diseñado para optimizar la gestión, planificación y control operacional en diversos sectores de la industria.
 
-## Visual Feature Showcase
+## Características Visuales
 
-<p align="center" dir="auto">
-  <img src="https://flb-assets.s3.ap-southeast-1.amazonaws.com/static/order-board-kanban.png" alt="Fleetbase Order Board" width="1200" style="max-width: 100%;" />
-  <em>Visualize and manage your orders with a dynamic Kanban board.</em>
-</p>
+- Tablero Kanban dinámico para visualización de órdenes
+- Constructor de flujos de trabajo intuitivo
+- Seguimiento en tiempo real en mapa interactivo
+- Vista completa de flota y órdenes activas
+- Gestión de zonas y áreas de servicio
 
-<p align="center" dir="auto">
-  <img src="https://flb-assets.s3.ap-southeast-1.amazonaws.com/static/order-workflow-config.png" alt="Fleetbase Order Workflow Configuration" width="1200" style="max-width: 100%;" />
-  <em>Create custom order flows and automation with the intuitive workflow builder.</em>
-</p>
-
-<p align="center" dir="auto">
-  <img src="https://flb-assets.s3.ap-southeast-1.amazonaws.com/static/order-map-view.png" alt="Fleetbase Order Map View" width="1200" style="max-width: 100%;" />
-  <em>Track individual orders in real-time on an interactive map.</em>
-</p>
-
-<p align="center" dir="auto">
-  <img src="https://flb-assets.s3.ap-southeast-1.amazonaws.com/static/live-map-tracking.png" alt="Fleetbase Live Map Tracking" width="1200" style="max-width: 100%;" />
-  <em>Get a complete overview of your fleet and active orders on a live map.</em>
-</p>
-
-<p align="center" dir="auto">
-  <img src="https://flb-assets.s3.ap-southeast-1.amazonaws.com/static/fleet-map-zones.png" alt="Fleetbase Fleet Map with Zones" width="1200" style="max-width: 100%;" />
-  <em>Define and manage service areas and zones for your fleet.</em>
-</p>
-
-**Quickstart**
+## Inicio Rápido
 
 ```bash
-git clone git@github.com:fleetbase/fleetbase.git  
-cd fleetbase && ./scripts/docker-install.sh
+git clone [tu-repositorio]
+cd [directorio-proyecto]
+docker-compose up -d
 ```
 
-## 📖 Table of contents
+## 📖 Tabla de contenidos
 
-  - [Features](#-features)
-  - [Install](#-install)
-  - [Deploy on AWS](#-deploy-on-aws-in-one-click)
-  - [Extensions](#-extensions)
-  - [Apps](#-apps)
+  - [Características](#-características)
+  - [Instalación](#-instalación)
+  - [Extensiones](#-extensiones)
+  - [Aplicaciones](#-aplicaciones)
   - [Roadmap](#-roadmap)
-  - [Bugs and Feature Requests](#-bugs-and--feature-requests)
-  - [Documentation](#-documentation)
-  - [Contributing](#-contributing)
-  - [Community](#-community)
-  - [Creators](#-creators)
-  - [License & Copyright](#-license-and-copyright)
+  - [Bugs y Solicitudes de Características](#-bugs-y--solicitudes-de-características)
+  - [Documentación](#-documentación)
+  - [Contribuir](#-contribuir)
+  - [Licencia y Copyright](#-licencia-y-copyright)
 
-## 📦 Features
-- **Extensible:** Build installable extensions and additional functionality directly into the OS via modular architecture.
-- **Developer Friendly:** RESTful API, socket, and webhooks to seamlessly integrate with external systems or develop custom applications.
-- **Native Apps:** Collection of open-source and native apps designed for operations and customer facing.
-- **Collaboration:** Dedicated chat and comments system for collaboration across your organization.
-- **Security:** Secure data encryption, adherence to industry-standard security practices, and a comprehensive dynamic Identity and Access Management (IAM) system.  
-- **Telematics:** Integrate and connect to hardware devices and sensors to provide more feedback and visibility into operations.
-- **Internationalized:** Translate into multiple languages to accommodate diverse user bases and global operations.
-- **Framework:** PHP core built around logistics and supply chain abstractions to streamline extension development.
-- **Dynamic:** Configurable rules, flows and logic to enable automation and customization.
-- **UI/UX:** Clean, responsive user-friendly interface for efficient management and operations from desktop or mobile.
-- **Dashboards:** Create custom dashboards and widgets to get full visibility into operations.  
-- **Scalability:** Uninterrupted growth with scalable infrastructure and design, capable of handling increasing data volume and user demand as your business expands.
-- **Continuous Improvements:** Commitment to continuous improvement, providing regular updates that seamlessly introduce optimizations, new features, and overall enhancements to the OS.
-- **Open Source:** Deploy it either on-premise or in the cloud according to your organization's needs and preferences.
+## 📦 Características
+- **Extensible:** Construye extensiones instalables y funcionalidad adicional directamente en el sistema operativo a través de arquitectura modular.
+- **Amigable para Desarrolladores:** API RESTful, socket y webhooks para integrar sin problemas con sistemas externos o desarrollar aplicaciones personalizadas.
+- **Aplicaciones Nativas:** Colección de aplicaciones de código abierto y nativas diseñadas para operaciones y atención al cliente.
+- **Colaboración:** Sistema dedicado de chat y comentarios para la colaboración en toda tu organización.
+- **Seguridad:** Cifrado de datos seguro, adherencia a las prácticas de seguridad estándar de la industria y un sistema integral de gestión de identidad y acceso (IAM) dinámico.
+- **Telemática:** Integración y conexión con dispositivos de hardware y sensores para proporcionar más retroalimentación y visibilidad en las operaciones.
+- **Internacionalizado:** Traducción a múltiples idiomas para acomodar bases de usuarios diversas y operaciones globales.
+- **Framework:** Núcleo PHP construido alrededor de abstracciones de logística y cadena de suministro para agilizar el desarrollo de extensiones.
+- **Dinámico:** Reglas, flujos y lógica configurables para habilitar la automatización y personalización.
+- **UI/UX:** Interfaz limpia, receptiva y fácil de usar para una gestión y operaciones eficientes desde escritorio o móvil.
+- **Paneles:** Crea paneles y widgets personalizados para obtener visibilidad completa de las operaciones.
+- **Escalabilidad:** Crecimiento ininterrumpido con infraestructura y diseño escalables, capaz de manejar el aumento del volumen de datos y la demanda de usuarios a medida que tu negocio se expande.
+- **Mejoras Continuas:** Compromiso con la mejora continua, proporcionando actualizaciones regulares que introducen sin problemas optimizaciones, nuevas características y mejoras generales al sistema.
+- **Código Abierto:** Despliégalo ya sea en las instalaciones o en la nube según las necesidades y preferencias de tu organización.
 
-## 💾 Install
-Getting up and running with Fleetbase via Docker is the quickest and most straightforward way. If you’d like to use Fleetbase without docker read the [full install guide in the Fleetbase documentation](https://docs.fleetbase.io/getting-started/install).  
-  
-Make sure you have both the latest versions of docker and docker-compose installed on your system.
+## 💾 Instalación
+
+La forma más rápida de comenzar es mediante Docker. Asegúrate de tener las últimas versiones de Docker y Docker Compose instaladas en tu sistema.
 
 ```bash
-git clone git@github.com:fleetbase/fleetbase.git  
-cd fleetbase && ./scripts/docker-install.sh
+git clone [tu-repositorio]
+cd [directorio-proyecto]
+docker-compose up -d
 ```
 
-### Accessing Fleetbase
-Once successfully installed and running you can then access the Fleetbase console on port 4200 and the API will be accessible from port 8000.  
-  
-Fleetbase Console: http://localhost:4200
-Fleetbase API: http://localhost:8000
+### Acceso al Sistema
+Una vez instalado correctamente, puedes acceder a la consola en el puerto 4200 y la API estará accesible desde el puerto 8000.
 
-### Additional Configurations
+Consola: http://localhost:4200
+API: http://localhost:8000
 
-**CORS:** If you’re installing directly on a server you will need to configure the environment variables to the application container:
+### Configuraciones Adicionales
+
+**CORS:** Si estás instalando directamente en un servidor, necesitarás configurar las variables de entorno en el contenedor de la aplicación:
 ```
-CONSOLE_HOST=http://{yourhost}:4200
+CONSOLE_HOST=http://{tuhost}:4200
 ```
-If you have additional applications or frontends you can use the environment variable `FRONTEND_HOSTS` to add a comma delimited list of additioal frontend hosts.
+Si tienes aplicaciones o frontends adicionales, puedes usar la variable de entorno `FRONTEND_HOSTS` para agregar una lista delimitada por comas de hosts frontend adicionales.
 
-**Application Key** If you get an issue about a missing application key just run:
+**Clave de Aplicación** Si obtienes un problema sobre una clave de aplicación faltante, simplemente ejecuta:
 ```bash
 docker compose exec application bash -c "php artisan key:generate --show"
 ```
-Next copy this value to the `APP_KEY` environment variable in the application container and restart.
-  
-**Routing:** Fleetbase ships with a default OSRM server hosted by `[router.project-osrm.org](https://router.project-osrm.org)` but you’re able to use your own or any other OSRM compatible server. You can modify this in the `console/environments` directory by modifying the .env file of the environment you’re deploying and setting the `OSRM_HOST` to the OSRM server for Fleetbase to use.  
-  
-**Services:** There are a few environment variables which need to be set for Fleetbase to function with full features. If you’re deploying with docker then it’s easiest to just create a `docker-compose.override.yml` and supply the environment variables in this file.
+Luego copia este valor a la variable de entorno `APP_KEY` en el contenedor de la aplicación y reinicia.
+
+**Enrutamiento:** El sistema incluye un servidor OSRM predeterminado alojado por `router.project-osrm.org` pero puedes usar tu propio servidor o cualquier otro servidor compatible con OSRM. Puedes modificar esto en el directorio `console/environments` modificando el archivo .env del entorno que estás desplegando y configurando `OSRM_HOST` al servidor OSRM para usar.
+
+**Servicios:** Hay algunas variables de entorno que deben configurarse para que el sistema funcione con todas las características. Si estás desplegando con Docker, es más fácil crear un `docker-compose.override.yml` y proporcionar las variables de entorno en este archivo.
 
 ```yaml
-version: “3.8”
+version: "3.8"
 services:  
   application:  
     environment:  
@@ -143,105 +100,51 @@ services:
       TWILIO_FROM:
 ```
 
-You can learn more about full installation, and configuration in the [official documentation](https://docs.fleetbase.io/getting-started/install).
+# 🧩 Extensiones
 
-## 🚀 Deploy on AWS in One Click
+Las extensiones son componentes modulares que mejoran la funcionalidad de tu instancia. Te permiten agregar nuevas características, personalizar el comportamiento existente o integrar con sistemas externos.
 
-Deploy your complete Fleetbase logistics platform on AWS with enterprise-grade security, scalability, and reliability. No DevOps expertise required!
+Puedes desarrollar y publicar tus propias extensiones siguiendo la guía de desarrollo de extensiones.
 
-[![Deploy to AWS](https://img.shields.io/badge/Deploy%20to%20AWS-FF9900?style=for-the-badge&logo=amazon-aws&logoColor=white)](https://console.fleetbase.io/aws-marketplace)
+## ⌨️ CLI
 
-### ✨ What You Get
+La CLI es una herramienta poderosa diseñada para simplificar la gestión de extensiones. Con la CLI, puedes manejar autenticación, instalar y desinstalar extensiones, y crear estructuras para nuevas extensiones si estás desarrollando las tuyas propias.
 
-- **Complete AWS Infrastructure**: ECS Fargate, RDS MySQL, ElastiCache Redis, S3, CloudFront, and more  
-- **25-Minute Setup**: From zero to production-ready logistics platform  
-- **Enterprise Security**: VPC isolation, encrypted storage, secrets management  
-- **Auto-Scaling**: Handle traffic spikes with ECS Fargate auto-scaling  
-- **High Availability**: Multi-AZ deployment with 99.9% uptime SLA  
-- **Cost Optimized**: Pay-as-you-use with optimized resource allocation  
-
-### 🏗️ Infrastructure Included
-
-Your AWS deployment includes a complete, production-ready infrastructure stack:
-
-- **Compute**: ECS Fargate cluster with auto-scaling services  
-- **Database**: RDS MySQL 8.0 with automated backups and Multi-AZ support  
-- **Cache**: ElastiCache Redis for high-performance caching  
-- **Storage**: S3 object storage with CloudFront CDN for global distribution  
-- **Networking**: VPC with private subnets, NAT gateways, and security groups  
-- **Load Balancing**: Application Load Balancer with SSL certificates  
-- **Monitoring**: CloudWatch logs, container insights, and health monitoring  
-- **Messaging**: SQS message queues for background job processing  
-
-[**🚀 Deploy Now**](https://console.fleetbase.io/aws-marketplace) | [**📖 Learn More**](https://docs.fleetbase.io/category/deploying/aws)
-
-# 🧩 Extensions 
-
-Extensions are modular components that enhance the functionality of your Fleetbase instance. They allow you to add new features, customize existing behavior, or integrate with external systems.
-
-You can find extensions available from the official [Fleetbase Console](https://console.fleetbase.io), here you will also be able get your registry token to install extensions to a self-hosted Fleetbase instance. 
-
-Additionally you're able to develop and publish your own extensions as well which you can read more about developing extensions via the [extension building guide](https://docs.fleetbase.io/developers/building-an-extension).
-
-## ⌨️ Fleetbase CLI 
-
-The Fleetbase CLI is a powerful tool designed to simplify the management of extensions for your Fleetbase instance. With the CLI, you can effortlessly handle authentication, install and uninstall extensions, and scaffold new extensions if you are developing your own.
-
-Get started with the CLI with npm:
+Comienza con la CLI usando npm:
 
 ```bash
 npm i -g @fleetbase/cli
 ```
 
-Once installed, you can access a variety of commands to manage your Fleetbase extensions.
+Una vez instalado, puedes acceder a una variedad de comandos para gestionar tus extensiones.
 
-# 📱 Apps
+# 📱 Aplicaciones
 
-Fleetbase offers a few open sourced apps which are built on Fleetbase which can be cloned and customized. Every app is built so that the Fleetbase instance can be switched out whether on-premise install or cloud hosted.
+El sistema ofrece algunas aplicaciones de código abierto que pueden ser clonadas y personalizadas. Cada aplicación está construida de manera que la instancia pueda ser cambiada ya sea en instalación local o alojada en la nube.
 
 <ul>
-  <li><a href="https://github.com/fleetbase/storefront-app">Storefront App</a>: Fleetbase based ecommerce/on-demand app for launching your very own shop or marketplace to Apple or Android playstore.</li>
-  <li><a href="https://github.com/fleetbase/navigator-app">Navigator App</a>: Fleetbase based driver app which can be used for drivers to manage and update order, additionally provides real time driver location which can be viewed in the Fleetbase Console.</li>
+  <li>Aplicación de Tienda: Aplicación de comercio electrónico/bajo demanda para lanzar tu propia tienda o mercado.</li>
+  <li>Aplicación de Navegador: Aplicación para conductores que puede ser utilizada para gestionar y actualizar órdenes, además proporciona ubicación del conductor en tiempo real.</li>
 </ul>
 
 ## 🛣️ Roadmap
-1.  **Inventory and Warehouse Management** ~ Pallet will be Fleetbase’s first official extension for WMS & Inventory.
-2.  **Accounting and Invoicing** ~ Ledger will be Fleetbase’s first official extension accounting and invoicing.
-3.  **AI** ~ AI Agent intrgation for system and workflows.
-4. **Dynamic Rules System** ~ Trigger events, tasks jobs from a rule builder on resources.
+1. **Gestión de Inventario y Almacén** ~ Extensión para WMS e Inventario.
+2. **Contabilidad y Facturación** ~ Extensión para contabilidad y facturación.
+3. **IA** ~ Integración de Agente IA para sistema y flujos de trabajo.
+4. **Sistema de Reglas Dinámicas** ~ Desencadenar eventos, tareas y trabajos desde un constructor de reglas en recursos.
 
-## 🪲 Bugs and 💡 Feature Requests
+## 🪲 Bugs y 💡 Solicitudes de Características
 
-Have a bug or a feature request? Please check the <a href="https://github.com/fleetbase/fleetbase/issues">issue tracker</a> and search for existing and closed issues. If your problem or idea is not addressed yet, please <a href="https://github.com/fleetbase/fleetbase/issues/new">open a new issue</a>.
+Si encuentras un bug o tienes una solicitud de función, por favor revisa el rastreador de problemas y busca problemas existentes y cerrados. Si tu problema o idea no ha sido abordado aún, por favor abre un nuevo problema.
 
-## 👨‍💻 Contributing
+## 👨‍💻 Contribuir
 
-Please read through our <a href="https://github.com/fleetbase/fleetbase/blob/main/CONTRIBUTING.md">contributing guidelines</a>. Included are directions for opening issues, coding standards, and notes on development.
+Por favor lee nuestras guías de contribución. Se incluyen direcciones para abrir problemas, estándares de codificación y notas sobre desarrollo.
 
-## 👥 Community
+## 👥 Comunidad
 
-Get updates on Fleetbase's development and chat with the project maintainers and community members by joining our <a href="https://discord.gg/V7RVWRQ2Wm">Discord</a>.
+Obtén actualizaciones sobre el desarrollo y chatea con los mantenedores del proyecto y miembros de la comunidad.
 
-<ul>
-  <li>Follow <a href="https://x.com/fleetbase_io">@fleetbase_io on X</a>.</li>
-  <li>Read and subscribe to <a href="https://www.fleetbase.io/blog-2">The Official Fleetbase Blog</a>.</li>
-  <li>Ask and explore <a href="https://github.com/orgs/fleetbase/discussions">our GitHub Discussions</a>.</li>
-</ul>
-<p dir="auto">See the <a href="https://github.com/fleetbase/fleetbase/releases">Releases</a> section of our GitHub project for changelogs for each release version of Fleetbase.</p>
-<p>Release announcement posts on <a href="https://www.fleetbase.io/blog-2" rel="nofollow">the official Fleetbase blog</a> contain summaries of the most noteworthy changes made in each release.</p>
+# Licencia y Copyright
 
-## Creators
-
-<p dir="auto"><strong>Ronald A. Richardson</strong>- Co-founder &amp; CTO</p>
-<img src="https://user-images.githubusercontent.com/58805033/230263021-212f2553-1269-473d-be94-313cb3eecfa5.png" alt="Ron Image" width="75" height="75" style="max-width: 100%;">          
-<p><a href="https://github.com/orgs/fleetbase/people/roncodes">Github</a> | <a href="https://www.linkedin.com/in/ronald-a-richardson/">LinkedIn</a></p>
-                   
-<p dir="auto"><strong>Shiv Thakker</strong> - Co-founder &amp; CEO</p>
-<img src="https://user-images.githubusercontent.com/58805033/230262598-1ce6d0cc-fb65-41f9-8384-5cf5cbf369c7.png" alt="Shiv Image" width="75" height="75" style="max-width: 100%;">  
-<p><a href="https://github.com/orgs/fleetbase/people/shivthakker">Github</a> | <a href="https://www.linkedin.com/in/shivthakker/">LinkedIn</a></p>
-
-
-# License & Copyright
-
-Fleetbase is made available under the terms of the <a href="https://www.gnu.org/licenses/agpl-3.0.html" target="_blank">GNU Affero General Public License 3.0 (AGPL 3.0)</a>. For other licenses <a href="mailto:hello@fleetbase.io" target="_blank">contact us</a>.
-
+Este sistema está disponible bajo los términos de la Licencia Pública General GNU Affero 3.0 (AGPL 3.0).
