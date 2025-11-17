@@ -1,14 +1,17 @@
-# 🚀 Fleetbase v0.7.18 — 2025-11-10
+# 🚀 Fleetbase v0.7.19 — 2025-11-17
 
-> "Hotfix IAM user validation, make online/offline toggle silent"
+> "A major leap forward in scheduling, reporting, and user interface capabilities."
 
 ---
 
 ## ✨ Highlights
-- Hotfix validateRequest implementation to not rewrite request params
-- Hotfix user validation password optional for creation
-- Made online/offline endpoint for drivers silent
-- Hotfix QPay payment gateway on Storefront + ebarimt reciept fix
+- **Core Scheduling Module**: A comprehensive, polymorphic, and reusable scheduling system has been integrated into the core API, providing the foundation for a wide range of scheduling applications.
+- **Driver Scheduling with HOS Compliance**: FleetOps now includes built-in compliance for FMCSA Hours of Service regulations.
+- **Computed Columns in Query Builder**: The query builder now supports computed columns, allowing for more complex and powerful data queries with secure expression validation.
+- **Advanced Table Functionality**: The Ember UI table component now supports multi-column sorting, horizontal scrolling, and sticky columns.
+- **New Filter Components**: New filter components for multi-input and range selection have been added to the Ember UI.
+- **Dispatched Flag Control**: The order creation process in FleetOps now allows for explicit control over the dispatch behavior.
+- **Vehicle Attributes Enhancement**: The vehicle model and API resources in FleetOps have been enhanced with additional attributes.
 
 ---
 
