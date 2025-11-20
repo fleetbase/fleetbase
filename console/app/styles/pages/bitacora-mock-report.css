@@ -2,6 +2,8 @@
     padding: 2rem;
     background: rgb(248, 250, 252);
     min-height: 100vh;
+    height: 100%;
+    overflow-y: auto;
 }
 
 body[data-theme='dark'] .bitacora-mock-report {
