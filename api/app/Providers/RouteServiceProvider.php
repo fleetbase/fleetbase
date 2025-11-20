@@ -5,6 +5,7 @@ namespace App\Providers;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ActivityReportController;
 
 class RouteServiceProvider extends ServiceProvider
 {
@@ -38,6 +39,12 @@ class RouteServiceProvider extends ServiceProvider
                             'twoFaSession' => null
                         ]);
                     }
+                );
+
+                // Ruta para reportes de actividades por sección (LIPU-101)
+                Route::get(
+                    '/api/v1/activity/reports-by-section',
+                    [ActivityReportController::class, 'reportsBySection']
                 );
             }
         );

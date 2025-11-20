@@ -36,10 +36,15 @@ services:
       SOCKETCLUSTER_BROKERS: 10
 
   scheduler:
+    user: "root"
     build:
       context: .
       dockerfile: docker/Dockerfile.pgsql
-    command: ["go-crond", "--verbose", "root:./crontab"]
+    command:
+      - go-crond
+      - --verbose
+      - --working-directory=/fleetbase/api
+      - root:/fleetbase/api/crontab
     restart: unless-stopped
     environment:
       DATABASE_URL: "pgsql://fleetbase:fleetbase@database/fleetbase"

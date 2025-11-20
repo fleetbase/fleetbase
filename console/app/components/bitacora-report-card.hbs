@@ -39,7 +39,7 @@
                 </div>
             {{else if this.hasSections}}
                 <ul class="bitacora-report-card__sections">
-                    {{#each this.sections as |section|}}
+                    {{#each this.resolvedSections as |section|}}
                         <li class="bitacora-report-card__section">
                             <div class="bitacora-report-card__section-header">
                                 <div>

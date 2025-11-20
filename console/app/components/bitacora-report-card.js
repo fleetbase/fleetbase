@@ -34,8 +34,16 @@ export default class BitacoraReportCardComponent extends Component {
 
     constructor() {
         super(...arguments);
-        this.loadReportData();
-        this.#scheduleAutoRefresh();
+        if (this.hasExternalSections) {
+            this.isLoading = false;
+            this.sections = this.normalizeSections(this.args.sections);
+            this.lastUpdated = new Date();
+        } else {
+            this.loadReportData();
+            if (!this.disableAutoRefresh) {
+                this.#scheduleAutoRefresh();
+            }
+        }
     }
 
     willDestroy() {
@@ -43,12 +51,28 @@ export default class BitacoraReportCardComponent extends Component {
         this.#clearAutoRefresh();
     }
 
+    get disableAutoRefresh() {
+        return Boolean(this.args.disableAutoRefresh);
+    }
+
+    get hasExternalSections() {
+        return isArray(this.args.sections) && this.args.sections.length > 0;
+    }
+
+    get resolvedSections() {
+        if (this.hasExternalSections) {
+            return this.normalizeSections(this.args.sections);
+        }
+
+        return this.sections;
+    }
+
     get periodOptions() {
         return PERIOD_PRESETS;
     }
 
     get hasSections() {
-        return isArray(this.sections) && this.sections.length > 0;
+        return isArray(this.resolvedSections) && this.resolvedSections.length > 0;
     }
 
     get lastUpdatedLabel() {
@@ -145,6 +169,10 @@ export default class BitacoraReportCardComponent extends Component {
 
     @action
     async loadReportData(options = {}) {
+        if (this.hasExternalSections) {
+            return;
+        }
+
         if (!options.silent) {
             this.isLoading = true;
         }
