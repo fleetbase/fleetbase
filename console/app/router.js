@@ -37,6 +37,9 @@ Router.map(function () {
             this.route('notifications');
         });
         this.route('virtual', { path: '/:slug' });
+        this.route('bitacora', function () {
+            this.route('mock-report');
+        });
         this.route('admin', function () {
             this.route('config', function () {
                 this.route('database');

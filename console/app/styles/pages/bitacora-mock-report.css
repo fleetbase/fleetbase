@@ -1,0 +1,147 @@
+.bitacora-mock-report {
+    padding: 2rem;
+    background: rgb(248, 250, 252);
+    min-height: 100vh;
+}
+
+body[data-theme='dark'] .bitacora-mock-report {
+    background: rgb(15, 23, 42);
+}
+
+.bitacora-mock-report__eyebrow {
+    font-size: 0.85rem;
+    color: rgb(100, 116, 139);
+    margin-bottom: 0.35rem;
+}
+
+.bitacora-mock-report__title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin: 0;
+}
+
+.bitacora-mock-report__subtitle {
+    color: rgb(100, 116, 139);
+    margin-top: 0.35rem;
+}
+
+.bitacora-mock-report__grid {
+    margin-top: 2rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 1.5rem;
+}
+
+.bitacora-mock-report__panel {
+    background: white;
+    border-radius: 1rem;
+    border: 1px solid rgb(226, 232, 240);
+    padding: 1.25rem;
+    box-shadow: 0 10px 30px rgba(15, 23, 42, 0.05);
+}
+
+body[data-theme='dark'] .bitacora-mock-report__panel {
+    background: rgb(30, 41, 59);
+    border-color: rgb(51, 65, 85);
+}
+
+.bitacora-mock-report__panel-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+}
+
+.bitacora-mock-report__tag {
+    font-size: 0.75rem;
+    background: rgb(240, 249, 255);
+    color: rgb(29, 78, 216);
+    border-radius: 999px;
+    padding: 0.15rem 0.65rem;
+}
+
+.bitacora-mock-report__stat-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.75rem;
+}
+
+.bitacora-mock-report__stat {
+    border: 1px solid transparent;
+    border-radius: 0.85rem;
+    padding: 0.75rem;
+    text-align: left;
+    background: rgb(248, 250, 252);
+    transition: transform 0.15s ease, border-color 0.15s ease;
+}
+
+.bitacora-mock-report__stat:hover {
+    transform: translateY(-1px);
+}
+
+.bitacora-mock-report__stat.is-active {
+    border-color: rgb(74, 222, 128);
+    background: rgba(16, 185, 129, 0.08);
+}
+
+.bitacora-mock-report__stat-label {
+    display: block;
+    font-size: 0.85rem;
+    color: rgb(100, 116, 139);
+}
+
+.bitacora-mock-report__stat-value {
+    display: block;
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-top: 0.35rem;
+}
+
+.bitacora-mock-report__roles {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.bitacora-mock-report__role-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.bitacora-mock-report__activity-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+}
+
+.bitacora-mock-report__activity-title {
+    margin: 0;
+    font-size: 0.95rem;
+}
+
+.bitacora-mock-report__activity-context {
+    margin: 0.15rem 0;
+    color: rgb(100, 116, 139);
+    font-size: 0.85rem;
+}
+
+.bitacora-mock-report__activity-time {
+    margin: 0;
+    font-size: 0.75rem;
+    color: rgb(148, 163, 184);
+}
+
+@media (max-width: 768px) {
+    .bitacora-mock-report {
+        padding: 1.25rem;
+    }
+
+    .bitacora-mock-report__stat-grid {
+        grid-template-columns: repeat(1, minmax(0, 1fr));
+    }
+}
+
