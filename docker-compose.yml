@@ -39,7 +39,10 @@ services:
     build:
       context: .
       dockerfile: docker/Dockerfile.pgsql
-    command: ["go-crond", "--verbose", "root:./crontab"]
+      target: production
+    volumes:
+      - ./docker/crontab:/fleetbase/api/crontab:ro
+    command: ["go-crond", "--verbose", "--allow-unprivileged", "root:./crontab"]
     restart: unless-stopped
     environment:
       DATABASE_URL: "pgsql://fleetbase:fleetbase@database/fleetbase"
@@ -56,6 +59,7 @@ services:
     build:
       context: .
       dockerfile: docker/Dockerfile.pgsql
+      target: production
     command: ["php", "artisan", "queue:work"]
     restart: unless-stopped
     healthcheck:
@@ -85,6 +89,7 @@ services:
     build:
       context: .
       dockerfile: docker/Dockerfile.pgsql
+      target: development
     volumes:
       - ./api/.env:/fleetbase/api/.env
     environment:
