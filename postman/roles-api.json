@@ -1,0 +1,624 @@
+{
+	"info": {
+		"_postman_id": "lipu-roles-api-2025",
+		"name": "LIPU Roles API",
+		"description": "Complete API collection for managing roles in LIPU Material Management System.\n\n**Version**: 1.0.0\n**Base URL**: http://localhost:8000/api\n**Authentication**: Bearer Token (Sanctum)\n\n## Quick Start\n\n1. Run the **Auth > Login** request to get your token\n2. Token will be automatically saved to collection variable\n3. All other requests will use this token\n\n## LIPU Roles\n\n- LIPU Administrator\n- Plant Operator\n- Fleet Supervisor\n- Data Analyst",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200) {",
+									"    const response = pm.response.json();",
+									"    pm.collectionVariables.set('auth_token', response.token);",
+									"    pm.environment.set('auth_token', response.token);",
+									"    console.log('Token saved:', response.token);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"admin@lipu.com\",\n  \"password\": \"password\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/login",
+							"host": ["{{base_url}}"],
+							"path": ["login"]
+						},
+						"description": "Login to get authentication token. Token is automatically saved to collection variables."
+					},
+					"response": []
+				}
+			],
+			"description": "Authentication endpoints"
+		},
+		{
+			"name": "Roles",
+			"item": [
+				{
+					"name": "List Roles",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/roles?service=lipu-mms&limit=10",
+							"host": ["{{base_url}}"],
+							"path": ["roles"],
+							"query": [
+								{
+									"key": "service",
+									"value": "lipu-mms",
+									"description": "Filter by service"
+								},
+								{
+									"key": "limit",
+									"value": "10",
+									"description": "Items per page"
+								},
+								{
+									"key": "page",
+									"value": "1",
+									"description": "Page number",
+									"disabled": true
+								},
+								{
+									"key": "query",
+									"value": "",
+									"description": "Search query",
+									"disabled": true
+								},
+								{
+									"key": "sort",
+									"value": "name",
+									"description": "Sort field",
+									"disabled": true
+								},
+								{
+									"key": "order",
+									"value": "asc",
+									"description": "Sort order (asc/desc)",
+									"disabled": true
+								}
+							]
+						},
+						"description": "Get paginated list of roles. Filter by service=lipu-mms for LIPU-specific roles."
+					},
+					"response": []
+				},
+				{
+					"name": "Get Role by ID",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/roles/:roleId?with[]=permissions&with[]=users",
+							"host": ["{{base_url}}"],
+							"path": ["roles", ":roleId"],
+							"query": [
+								{
+									"key": "with[]",
+									"value": "permissions",
+									"description": "Include permissions"
+								},
+								{
+									"key": "with[]",
+									"value": "users",
+									"description": "Include users"
+								}
+							],
+							"variable": [
+								{
+									"key": "roleId",
+									"value": "{{role_id}}",
+									"description": "Role UUID"
+								}
+							]
+						},
+						"description": "Get a specific role by ID. Include related data using with[] parameter."
+					},
+					"response": []
+				},
+				{
+					"name": "Create Role",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 201) {",
+									"    const response = pm.response.json();",
+									"    pm.collectionVariables.set('role_id', response.data.id);",
+									"    console.log('Role created with ID:', response.data.id);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Warehouse Manager\",\n  \"guard_name\": \"sanctum\",\n  \"description\": \"Manages warehouse operations and inventory\",\n  \"service\": \"lipu-mms\",\n  \"permissions\": [1, 5, 10, 15]\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/roles",
+							"host": ["{{base_url}}"],
+							"path": ["roles"]
+						},
+						"description": "Create a new role. Automatically saves created role ID to collection variables."
+					},
+					"response": []
+				},
+				{
+					"name": "Update Role",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"description\": \"Updated description for warehouse manager role\",\n  \"permissions\": [1, 5, 10, 15, 20]\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/roles/:roleId",
+							"host": ["{{base_url}}"],
+							"path": ["roles", ":roleId"],
+							"variable": [
+								{
+									"key": "roleId",
+									"value": "{{role_id}}",
+									"description": "Role UUID"
+								}
+							]
+						},
+						"description": "Update an existing role. Cannot update protected roles (is_mutable=false)."
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Role",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/roles/:roleId",
+							"host": ["{{base_url}}"],
+							"path": ["roles", ":roleId"],
+							"variable": [
+								{
+									"key": "roleId",
+									"value": "{{role_id}}",
+									"description": "Role UUID"
+								}
+							]
+						},
+						"description": "Delete a role (soft delete). Cannot delete protected roles (is_deletable=false) or roles with assigned users."
+					},
+					"response": []
+				},
+				{
+					"name": "Assign Permissions (Sync)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"permissions\": [1, 2, 3, 5, 10],\n  \"operation\": \"sync\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/roles/:roleId/assign-permissions",
+							"host": ["{{base_url}}"],
+							"path": ["roles", ":roleId", "assign-permissions"],
+							"variable": [
+								{
+									"key": "roleId",
+									"value": "{{role_id}}",
+									"description": "Role UUID"
+								}
+							]
+						},
+						"description": "Sync permissions to role (replaces all existing permissions with new list)."
+					},
+					"response": []
+				},
+				{
+					"name": "Assign Permissions (Attach)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"permissions\": [15, 20],\n  \"operation\": \"attach\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/roles/:roleId/assign-permissions",
+							"host": ["{{base_url}}"],
+							"path": ["roles", ":roleId", "assign-permissions"],
+							"variable": [
+								{
+									"key": "roleId",
+									"value": "{{role_id}}",
+									"description": "Role UUID"
+								}
+							]
+						},
+						"description": "Attach additional permissions to role (keeps existing permissions)."
+					},
+					"response": []
+				},
+				{
+					"name": "Assign Permissions (Detach)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"permissions\": [15, 20],\n  \"operation\": \"detach\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/roles/:roleId/assign-permissions",
+							"host": ["{{base_url}}"],
+							"path": ["roles", ":roleId", "assign-permissions"],
+							"variable": [
+								{
+									"key": "roleId",
+									"value": "{{role_id}}",
+									"description": "Role UUID"
+								}
+							]
+						},
+						"description": "Remove specific permissions from role."
+					},
+					"response": []
+				},
+				{
+					"name": "Assign Role to Users",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"users\": [\n    \"user-uuid-1\",\n    \"user-uuid-2\",\n    \"user-uuid-3\"\n  ]\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/roles/:roleId/assign-users",
+							"host": ["{{base_url}}"],
+							"path": ["roles", ":roleId", "assign-users"],
+							"variable": [
+								{
+									"key": "roleId",
+									"value": "{{role_id}}",
+									"description": "Role UUID"
+								}
+							]
+						},
+						"description": "Assign a role to multiple users at once."
+					},
+					"response": []
+				}
+			],
+			"description": "CRUD operations for roles management",
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "{{auth_token}}",
+						"type": "string"
+					}
+				]
+			}
+		},
+		{
+			"name": "LIPU Specific",
+			"item": [
+				{
+					"name": "Get LIPU Administrator Role",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/roles?service=lipu-mms&query=LIPU Administrator",
+							"host": ["{{base_url}}"],
+							"path": ["roles"],
+							"query": [
+								{
+									"key": "service",
+									"value": "lipu-mms"
+								},
+								{
+									"key": "query",
+									"value": "LIPU Administrator"
+								}
+							]
+						},
+						"description": "Find the LIPU Administrator role"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Plant Operator Role",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/roles?service=lipu-mms&query=Plant Operator",
+							"host": ["{{base_url}}"],
+							"path": ["roles"],
+							"query": [
+								{
+									"key": "service",
+									"value": "lipu-mms"
+								},
+								{
+									"key": "query",
+									"value": "Plant Operator"
+								}
+							]
+						},
+						"description": "Find the Plant Operator role"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Fleet Supervisor Role",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/roles?service=lipu-mms&query=Fleet Supervisor",
+							"host": ["{{base_url}}"],
+							"path": ["roles"],
+							"query": [
+								{
+									"key": "service",
+									"value": "lipu-mms"
+								},
+								{
+									"key": "query",
+									"value": "Fleet Supervisor"
+								}
+							]
+						},
+						"description": "Find the Fleet Supervisor role"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Data Analyst Role",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/roles?service=lipu-mms&query=Data Analyst",
+							"host": ["{{base_url}}"],
+							"path": ["roles"],
+							"query": [
+								{
+									"key": "service",
+									"value": "lipu-mms"
+								},
+								{
+									"key": "query",
+									"value": "Data Analyst"
+								}
+							]
+						},
+						"description": "Find the Data Analyst role"
+					},
+					"response": []
+				},
+				{
+					"name": "Create Custom LIPU Role",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Quality Control Inspector\",\n  \"guard_name\": \"sanctum\",\n  \"description\": \"Inspects product quality and compliance\",\n  \"service\": \"lipu-mms\",\n  \"permissions\": [10, 11, 12]\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/roles",
+							"host": ["{{base_url}}"],
+							"path": ["roles"]
+						},
+						"description": "Create a custom LIPU role"
+					},
+					"response": []
+				}
+			],
+			"description": "Quick access to LIPU-specific roles",
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "{{auth_token}}",
+						"type": "string"
+					}
+				]
+			}
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{auth_token}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"// Auto-set timestamp for requests",
+					"pm.variables.set('timestamp', new Date().toISOString());"
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"// Log response time",
+					"console.log('Response time:', pm.response.responseTime + 'ms');",
+					"",
+					"// Check for common errors",
+					"if (pm.response.code === 401) {",
+					"    console.error('Authentication failed. Please run Login request.');",
+					"}",
+					"",
+					"if (pm.response.code === 403) {",
+					"    console.error('Permission denied. Check user permissions.');",
+					"}"
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:8000/api",
+			"type": "string"
+		},
+		{
+			"key": "auth_token",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "role_id",
+			"value": "",
+			"type": "string"
+		}
+	]
+}
+
