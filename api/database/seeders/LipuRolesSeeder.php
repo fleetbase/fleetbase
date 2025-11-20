@@ -92,7 +92,7 @@ class LipuRolesSeeder extends Seeder
         $this->command->info("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
         $this->command->info("   ✅ Roles created: {$created}");
         $this->command->info("   ⏭️  Roles skipped: {$skipped}");
-        
+
         $total = DB::table('roles')->where('service', 'lipu-mms')->count();
         $this->command->info("   📊 Total LIPU roles: {$total}");
         $this->command->newLine();
