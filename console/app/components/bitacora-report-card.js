@@ -75,6 +75,73 @@ export default class BitacoraReportCardComponent extends Component {
         return isArray(this.resolvedSections) && this.resolvedSections.length > 0;
     }
 
+    get chartSections() {
+        const limit = this.args.chartLimit ?? 5;
+        return this.resolvedSections.slice(0, limit);
+    }
+
+    get chartData() {
+        const labels = this.chartSections.map((section) => section.name);
+        const data = this.chartSections.map((section) => section.total);
+
+        if (!labels.length) {
+            return { labels: [], datasets: [] };
+        }
+
+        return {
+            labels,
+            datasets: [
+                {
+                    label: this.intl?.t?.('bitacora.report-card.chartLabel') ?? 'Actividades',
+                    data,
+                    backgroundColor: this.buildDatasetColors(data.length),
+                    borderRadius: 6,
+                    barThickness: 20,
+                },
+            ],
+        };
+    }
+
+    get chartOptions() {
+        const textColor = this.args.chartTickColor ?? '#1f2937';
+        return {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: false,
+                },
+                tooltip: {
+                    callbacks: {
+                        label: (context) => `${context.dataset.label}: ${context.parsed.y ?? context.parsed}`,
+                    },
+                },
+            },
+            scales: {
+                x: {
+                    grid: {
+                        display: false,
+                    },
+                    ticks: {
+                        color: textColor,
+                    },
+                },
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        precision: 0,
+                        color: textColor,
+                    },
+                },
+            },
+            ...(this.args.chartOptions ?? {}),
+        };
+    }
+
+    get showChart() {
+        return this.chartData?.datasets?.length > 0;
+    }
+
     get lastUpdatedLabel() {
         if (!this.lastUpdated) {
             return null;
@@ -161,6 +228,23 @@ export default class BitacoraReportCardComponent extends Component {
             .toString()
             .replace(/[_-]/g, ' ')
             .replace(/\b\w/g, (char) => char.toUpperCase());
+    }
+
+    buildDatasetColors(length = 0) {
+        const palette = this.args.chartPalette ?? ['#1D9A6C', '#2FBF71', '#4BD38C', '#7EE5B0', '#A6F1C7', '#CDF9DF'];
+        if (!length) {
+            return [];
+        }
+
+        if (palette.length >= length) {
+            return palette.slice(0, length);
+        }
+
+        const colors = [];
+        for (let i = 0; i < length; i++) {
+            colors.push(palette[i % palette.length]);
+        }
+        return colors;
     }
 
     async fetchReportData(params = {}) {

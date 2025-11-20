@@ -70,6 +70,12 @@ body[data-theme='dark'] .bitacora-report-card__select {
     margin-top: 1.25rem;
 }
 
+.bitacora-report-card__chart {
+    width: 100%;
+    min-height: 220px;
+    margin-bottom: 1.5rem;
+}
+
 .bitacora-report-card__sections {
     display: flex;
     flex-direction: column;
@@ -192,6 +198,23 @@ body[data-theme='dark'] .bitacora-report-card__state {
 
 body[data-theme='dark'] .bitacora-report-card__timestamp {
     color: rgb(148, 163, 184);
+}
+
+.bitacora-report-chart {
+    height: 100%;
+}
+
+.bitacora-report-chart canvas {
+    width: 100% !important;
+    height: 100% !important;
+}
+
+.bitacora-report-chart--empty {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.85rem;
+    color: rgb(100, 116, 139);
 }
 
 @media (max-width: 640px) {

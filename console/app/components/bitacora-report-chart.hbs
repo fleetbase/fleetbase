@@ -1,0 +1,15 @@
+{{#if this.hasData}}
+    <div class="bitacora-report-chart" ...attributes>
+        <canvas
+            role="img"
+            aria-label={{or @ariaLabel "Gráfica de reportes por sección"}}
+            {{did-insert this.registerChart}}
+            {{did-update this.rebuildChart this.chartVersion}}
+        ></canvas>
+    </div>
+{{else}}
+    <div class="bitacora-report-chart bitacora-report-chart--empty" ...attributes>
+        <p>Sin datos suficientes para graficar.</p>
+    </div>
+{{/if}}
+

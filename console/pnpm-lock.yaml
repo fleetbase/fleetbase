@@ -58,6 +58,9 @@ importers:
       '@fortawesome/ember-fontawesome':
         specifier: ^2.0.0
         version: 2.0.0(ember-source@5.4.1(@babel/core@7.28.4)(@glimmer/component@1.1.2(@babel/core@7.28.4))(rsvp@4.8.5)(webpack@5.102.1))(rollup@2.79.2)(webpack@5.102.1)
+      chart.js:
+        specifier: ^4.5.1
+        version: 4.5.1
       ember-changeset:
         specifier: 4.1.2
         version: 4.1.2(ember-data@4.12.8(@babel/core@7.28.4)(@ember/string@3.1.1)(@glimmer/tracking@1.1.2)(ember-source@5.4.1(@babel/core@7.28.4)(@glimmer/component@1.1.2(@babel/core@7.28.4))(rsvp@4.8.5)(webpack@5.102.1))(webpack@5.102.1))(webpack@5.102.1)
@@ -10131,7 +10134,7 @@ snapshots:
 
   '@dagrejs/graphlib@2.1.13': {}
 
-  '@ember-data/adapter@4.12.8(@ember-data/store@4.12.8(@babel/core@7.28.4)(@ember-data/graph@4.12.8)(@ember-data/json-api@4.12.8)(@ember-data/legacy-compat@4.12.8)(@ember-data/model@4.12.8)(@ember-data/tracking@4.12.8)(@ember/string@3.1.1)(@glimmer/tracking@1.1.2)(ember-source@5.4.1(@babel/core@7.28.4)(@glimmer/component@1.1.2(@babel/core@7.28.4))(rsvp@4.8.5)(webpack@5.102.1)))(@ember/string@3.1.1)(ember-inflector@4.0.3(ember-source@5.4.1(@babel/core@7.28.4)(@glimmer/component@1.1.2(@babel/core@7.28.4))(rsvp@4.8.5)(webpack@5.102.1)))':
+  '@ember-data/adapter@4.12.8(@ember-data/store@4.12.8)(@ember/string@3.1.1)(ember-inflector@4.0.3(ember-source@5.4.1(@babel/core@7.28.4)(@glimmer/component@1.1.2(@babel/core@7.28.4))(rsvp@4.8.5)(webpack@5.102.1)))':
     dependencies:
       '@ember-data/private-build-infra': 4.12.8
       '@ember-data/store': 4.12.8(@babel/core@7.28.4)(@ember-data/graph@4.12.8)(@ember-data/json-api@4.12.8)(@ember-data/legacy-compat@4.12.8)(@ember-data/model@4.12.8)(@ember-data/tracking@4.12.8)(@ember/string@3.1.1)(@glimmer/tracking@1.1.2)(ember-source@5.4.1(@babel/core@7.28.4)(@glimmer/component@1.1.2(@babel/core@7.28.4))(rsvp@4.8.5)(webpack@5.102.1))
@@ -10262,7 +10265,7 @@ snapshots:
 
   '@ember-data/rfc395-data@0.0.4': {}
 
-  '@ember-data/serializer@4.12.8(@ember-data/store@4.12.8(@babel/core@7.28.4)(@ember-data/graph@4.12.8)(@ember-data/json-api@4.12.8)(@ember-data/legacy-compat@4.12.8)(@ember-data/model@4.12.8)(@ember-data/tracking@4.12.8)(@ember/string@3.1.1)(@glimmer/tracking@1.1.2)(ember-source@5.4.1(@babel/core@7.28.4)(@glimmer/component@1.1.2(@babel/core@7.28.4))(rsvp@4.8.5)(webpack@5.102.1)))(@ember/string@3.1.1)(ember-inflector@4.0.3(ember-source@5.4.1(@babel/core@7.28.4)(@glimmer/component@1.1.2(@babel/core@7.28.4))(rsvp@4.8.5)(webpack@5.102.1)))':
+  '@ember-data/serializer@4.12.8(@ember-data/store@4.12.8)(@ember/string@3.1.1)(ember-inflector@4.0.3(ember-source@5.4.1(@babel/core@7.28.4)(@glimmer/component@1.1.2(@babel/core@7.28.4))(rsvp@4.8.5)(webpack@5.102.1)))':
     dependencies:
       '@ember-data/private-build-infra': 4.12.8
       '@ember-data/store': 4.12.8(@babel/core@7.28.4)(@ember-data/graph@4.12.8)(@ember-data/json-api@4.12.8)(@ember-data/legacy-compat@4.12.8)(@ember-data/model@4.12.8)(@ember-data/tracking@4.12.8)(@ember/string@3.1.1)(@glimmer/tracking@1.1.2)(ember-source@5.4.1(@babel/core@7.28.4)(@glimmer/component@1.1.2(@babel/core@7.28.4))(rsvp@4.8.5)(webpack@5.102.1))
@@ -14889,7 +14892,7 @@ snapshots:
 
   ember-data@4.12.8(@babel/core@7.28.4)(@ember/string@3.1.1)(@glimmer/tracking@1.1.2)(ember-source@5.4.1(@babel/core@7.28.4)(@glimmer/component@1.1.2(@babel/core@7.28.4))(rsvp@4.8.5)(webpack@5.102.1))(webpack@5.102.1):
     dependencies:
-      '@ember-data/adapter': 4.12.8(@ember-data/store@4.12.8(@babel/core@7.28.4)(@ember-data/graph@4.12.8)(@ember-data/json-api@4.12.8)(@ember-data/legacy-compat@4.12.8)(@ember-data/model@4.12.8)(@ember-data/tracking@4.12.8)(@ember/string@3.1.1)(@glimmer/tracking@1.1.2)(ember-source@5.4.1(@babel/core@7.28.4)(@glimmer/component@1.1.2(@babel/core@7.28.4))(rsvp@4.8.5)(webpack@5.102.1)))(@ember/string@3.1.1)(ember-inflector@4.0.3(ember-source@5.4.1(@babel/core@7.28.4)(@glimmer/component@1.1.2(@babel/core@7.28.4))(rsvp@4.8.5)(webpack@5.102.1)))
+      '@ember-data/adapter': 4.12.8(@ember-data/store@4.12.8)(@ember/string@3.1.1)(ember-inflector@4.0.3(ember-source@5.4.1(@babel/core@7.28.4)(@glimmer/component@1.1.2(@babel/core@7.28.4))(rsvp@4.8.5)(webpack@5.102.1)))
       '@ember-data/debug': 4.12.8(@ember-data/store@4.12.8)(@ember/string@3.1.1)(webpack@5.102.1)
       '@ember-data/graph': 4.12.8(@ember-data/store@4.12.8)
       '@ember-data/json-api': 4.12.8(@ember-data/graph@4.12.8)(@ember-data/store@4.12.8)
@@ -14897,7 +14900,7 @@ snapshots:
       '@ember-data/model': 4.12.8(@babel/core@7.28.4)(@ember-data/debug@4.12.8)(@ember-data/graph@4.12.8)(@ember-data/json-api@4.12.8)(@ember-data/legacy-compat@4.12.8)(@ember-data/store@4.12.8)(@ember-data/tracking@4.12.8)(@ember/string@3.1.1)(ember-inflector@4.0.3(ember-source@5.4.1(@babel/core@7.28.4)(@glimmer/component@1.1.2(@babel/core@7.28.4))(rsvp@4.8.5)(webpack@5.102.1)))(ember-source@5.4.1(@babel/core@7.28.4)(@glimmer/component@1.1.2(@babel/core@7.28.4))(rsvp@4.8.5)(webpack@5.102.1))
       '@ember-data/private-build-infra': 4.12.8
       '@ember-data/request': 4.12.8
-      '@ember-data/serializer': 4.12.8(@ember-data/store@4.12.8(@babel/core@7.28.4)(@ember-data/graph@4.12.8)(@ember-data/json-api@4.12.8)(@ember-data/legacy-compat@4.12.8)(@ember-data/model@4.12.8)(@ember-data/tracking@4.12.8)(@ember/string@3.1.1)(@glimmer/tracking@1.1.2)(ember-source@5.4.1(@babel/core@7.28.4)(@glimmer/component@1.1.2(@babel/core@7.28.4))(rsvp@4.8.5)(webpack@5.102.1)))(@ember/string@3.1.1)(ember-inflector@4.0.3(ember-source@5.4.1(@babel/core@7.28.4)(@glimmer/component@1.1.2(@babel/core@7.28.4))(rsvp@4.8.5)(webpack@5.102.1)))
+      '@ember-data/serializer': 4.12.8(@ember-data/store@4.12.8)(@ember/string@3.1.1)(ember-inflector@4.0.3(ember-source@5.4.1(@babel/core@7.28.4)(@glimmer/component@1.1.2(@babel/core@7.28.4))(rsvp@4.8.5)(webpack@5.102.1)))
       '@ember-data/store': 4.12.8(@babel/core@7.28.4)(@ember-data/graph@4.12.8)(@ember-data/json-api@4.12.8)(@ember-data/legacy-compat@4.12.8)(@ember-data/model@4.12.8)(@ember-data/tracking@4.12.8)(@ember/string@3.1.1)(@glimmer/tracking@1.1.2)(ember-source@5.4.1(@babel/core@7.28.4)(@glimmer/component@1.1.2(@babel/core@7.28.4))(rsvp@4.8.5)(webpack@5.102.1))
       '@ember-data/tracking': 4.12.8
       '@ember/edition-utils': 1.2.0
