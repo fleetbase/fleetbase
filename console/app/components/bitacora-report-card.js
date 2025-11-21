@@ -11,11 +11,11 @@ const DEFAULT_PERIOD = 'last_7_days';
 const REFRESH_INTERVAL = 5 * 60 * 1000;
 
 const PERIOD_PRESETS = [
-    { value: 'today', label: 'Today' },
-    { value: 'last_7_days', label: 'Last 7 days' },
-    { value: 'last_30_days', label: 'Last 30 days' },
-    { value: 'this_month', label: 'This month' },
-    { value: 'previous_month', label: 'Previous month' },
+    { value: 'today', label: 'Hoy' },
+    { value: 'last_7_days', label: 'Últimos 7 días' },
+    { value: 'last_30_days', label: 'Últimos 30 días' },
+    { value: 'this_month', label: 'Este mes' },
+    { value: 'previous_month', label: 'Mes anterior' },
 ];
 
 export default class BitacoraReportCardComponent extends Component {
@@ -71,6 +71,7 @@ export default class BitacoraReportCardComponent extends Component {
         return PERIOD_PRESETS;
     }
 
+
     get hasSections() {
         return isArray(this.resolvedSections) && this.resolvedSections.length > 0;
     }
@@ -83,6 +84,7 @@ export default class BitacoraReportCardComponent extends Component {
     get chartData() {
         const labels = this.chartSections.map((section) => section.name);
         const data = this.chartSections.map((section) => section.total);
+        const trends = this.chartSections.map((section) => section.trend);
 
         if (!labels.length) {
             return { labels: [], datasets: [] };
@@ -94,17 +96,21 @@ export default class BitacoraReportCardComponent extends Component {
                 {
                     label: this.intl?.t?.('bitacora.report-card.chartLabel') ?? 'Actividades',
                     data,
-                    backgroundColor: this.buildDatasetColors(data.length),
-                    borderRadius: 6,
-                    barThickness: 20,
+                    backgroundColor: '#1D9A6C',
+                    borderRadius: 4,
+                    barThickness: 16,
                 },
             ],
+            trends, // Para mostrar en tooltips
         };
     }
 
     get chartOptions() {
-        const textColor = this.args.chartTickColor ?? '#1f2937';
+        const textColor = this.args.chartTickColor ?? '#94a3b8';
+        const trends = this.chartData.trends || [];
+        
         return {
+            indexAxis: 'y', // Barras horizontales
             responsive: true,
             maintainAspectRatio: false,
             plugins: {
@@ -112,25 +118,46 @@ export default class BitacoraReportCardComponent extends Component {
                     display: false,
                 },
                 tooltip: {
+                    backgroundColor: 'rgba(15, 23, 42, 0.95)',
+                    padding: 12,
+                    titleColor: '#f1f5f9',
+                    bodyColor: '#cbd5e1',
+                    borderColor: '#334155',
+                    borderWidth: 1,
                     callbacks: {
-                        label: (context) => `${context.dataset.label}: ${context.parsed.y ?? context.parsed}`,
+                        label: (context) => {
+                            const value = context.parsed.x;
+                            const trend = trends[context.dataIndex] || '';
+                            return `${value} actividades ${trend ? '(' + trend + ')' : ''}`;
+                        },
                     },
                 },
             },
             scales: {
                 x: {
+                    beginAtZero: true,
+                    grid: {
+                        display: true,
+                        color: 'rgba(148, 163, 184, 0.1)',
+                    },
+                    ticks: {
+                        precision: 0,
+                        color: textColor,
+                        font: {
+                            size: 11,
+                        },
+                    },
+                },
+                y: {
                     grid: {
                         display: false,
                     },
                     ticks: {
                         color: textColor,
-                    },
-                },
-                y: {
-                    beginAtZero: true,
-                    ticks: {
-                        precision: 0,
-                        color: textColor,
+                        font: {
+                            size: 12,
+                            weight: '500',
+                        },
                     },
                 },
             },
@@ -174,6 +201,14 @@ export default class BitacoraReportCardComponent extends Component {
         return this.intl?.t?.('bitacora.report-card.error') ?? 'No pudimos cargar los reportes. Inténtalo de nuevo.';
     }
 
+    isPeriodSelected(value) {
+        return value === this.selectedPeriod;
+    }
+
+    isTrendDown(direction) {
+        return direction === 'down';
+    }
+
     #scheduleAutoRefresh() {
         this.#clearAutoRefresh();
         this.#refreshTimer = later(this, async () => {
@@ -190,10 +225,54 @@ export default class BitacoraReportCardComponent extends Component {
     }
 
     buildQueryParams(extra = {}) {
+        const dates = this.getPeriodDates(this.selectedPeriod);
         return {
-            period: this.selectedPeriod,
+            start_date: dates.start,
+            end_date: dates.end,
             ...(this.args.query ?? {}),
             ...extra,
+        };
+    }
+
+    getPeriodDates(period) {
+        console.log('[BitacoraReportCard] getPeriodDates called with period:', period);
+        const now = new Date();
+        const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+        let start, end;
+
+        switch (period) {
+            case 'today':
+                console.log('[BitacoraReportCard] Using TODAY range');
+                start = today;
+                end = now;
+                break;
+            case 'last_7_days':
+                start = new Date(today);
+                start.setDate(start.getDate() - 7);
+                end = now;
+                break;
+            case 'last_30_days':
+                start = new Date(today);
+                start.setDate(start.getDate() - 30);
+                end = now;
+                break;
+            case 'this_month':
+                start = new Date(now.getFullYear(), now.getMonth(), 1);
+                end = now;
+                break;
+            case 'previous_month':
+                start = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+                end = new Date(now.getFullYear(), now.getMonth(), 0, 23, 59, 59);
+                break;
+            default:
+                start = new Date(today);
+                start.setDate(start.getDate() - 7);
+                end = now;
+        }
+
+        return {
+            start: start.toISOString(),
+            end: end.toISOString(),
         };
     }
 
@@ -209,13 +288,19 @@ export default class BitacoraReportCardComponent extends Component {
                 count,
             }));
 
+            const trendValue = typeof section.trend === 'number' ? section.trend : parseFloat(section.trend) || 0;
+            const trendDirection = section.trend_direction ?? (trendValue > 0 ? 'up' : (trendValue < 0 ? 'down' : 'neutral'));
+            const trendSign = trendValue > 0 ? '+' : '';
+            const trendFormatted = `${trendSign}${trendValue.toFixed(1)}%`;
+
             return {
                 id: section.slug ?? section.name ?? section.log_name ?? guidFor(section),
                 name: section.name ?? section.log_name ?? '—',
                 slug: section.slug,
                 total: section.total ?? section.total_activities ?? 0,
-                trend: section.trend ?? 0,
-                trendDirection: section.trend_direction ?? (section.trend >= 0 ? 'up' : 'down'),
+                trend: trendFormatted,
+                trendValue: trendValue,
+                trendDirection: trendDirection,
                 lastActivity: section.last_activity,
                 lastActivityLabel: section.last_activity ? formatDistanceToNow(new Date(section.last_activity), { addSuffix: true }) : null,
                 actions,
@@ -252,43 +337,34 @@ export default class BitacoraReportCardComponent extends Component {
     }
 
     @action
-    async loadReportData(options = {}) {
-        if (this.hasExternalSections) {
+    handlePeriodChange(value) {
+        console.log('[BitacoraReportCard] Period changed to:', value);
+        
+        if (!value || value === this.selectedPeriod) {
             return;
         }
 
-        if (!options.silent) {
-            this.isLoading = true;
-        }
-
-        this.errorMessage = null;
-
-        try {
-            const response = await this.fetchReportData(this.buildQueryParams(options.params));
-            this.sections = this.normalizeSections(response?.sections ?? response?.current_period?.sections ?? []);
-            this.lastUpdated = new Date();
-        } catch (error) {
-            this.errorMessage = this.errorLabel;
-            if (this.notifications?.danger) {
-                this.notifications.danger(this.errorLabel);
-            }
-            // eslint-disable-next-line no-console
-            console.error('[BitacoraReportCard] Failed to load report data', error);
-        } finally {
-            this.isLoading = false;
-        }
+        this.selectedPeriod = value;
+        console.log('[BitacoraReportCard] Loading data for new period...');
+        this.loadReportData();
     }
 
     @action
-    handlePeriodChange(event) {
-        const nextValue = event?.target?.value;
-
-        if (!nextValue || nextValue === this.selectedPeriod) {
+    handlePeriodChangeNative(event) {
+        const value = event.target.value;
+        console.log('[BitacoraReportCard] Period changed (native) to:', value);
+        
+        if (!value || value === this.selectedPeriod) {
             return;
         }
 
-        this.selectedPeriod = nextValue;
+        this.selectedPeriod = value;
+        console.log('[BitacoraReportCard] Loading data for new period...');
         this.loadReportData();
+    }
+
+    isPeriodSelected(value) {
+        return value === this.selectedPeriod;
     }
 
     @action
@@ -306,5 +382,43 @@ export default class BitacoraReportCardComponent extends Component {
             return this.router.transitionTo('console.bitacora.reports');
         }
     }
+
+    @action
+    async loadReportData(options = {}) {
+        if (this.hasExternalSections) {
+            console.log('[BitacoraReportCard] Skipping load - using external sections');
+            return;
+        }
+
+        if (!options.silent) {
+            this.isLoading = true;
+        }
+
+        this.errorMessage = null;
+
+        try {
+            const params = this.buildQueryParams(options.params);
+            console.log('[BitacoraReportCard] Fetching with params:', params);
+            const response = await this.fetchReportData(params);
+            console.log('[BitacoraReportCard] Response received:', response);
+            this.sections = this.normalizeSections(response?.sections ?? response?.current_period?.sections ?? []);
+            this.lastUpdated = new Date();
+            console.log('[BitacoraReportCard] Sections updated:', this.sections.length);
+        } catch (error) {
+            this.errorMessage = this.errorLabel;
+            if (this.notifications?.danger) {
+                this.notifications.danger(this.errorLabel);
+            }
+            // eslint-disable-next-line no-console
+            console.error('[BitacoraReportCard] Failed to load report data', error);
+        } finally {
+            this.isLoading = false;
+            console.log('[BitacoraReportCard] isLoading set to false');
+        }
+    }
+
 }
+
+
+
 

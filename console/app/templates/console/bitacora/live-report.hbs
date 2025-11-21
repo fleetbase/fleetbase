@@ -2,9 +2,9 @@
     <header class="bitacora-mock-report__header">
         <div>
             <p class="bitacora-mock-report__eyebrow">Administración / Bitácora</p>
-            <h1 class="bitacora-mock-report__title">Sección Bitácora – Vista General (demo)</h1>
+            <h1 class="bitacora-mock-report__title">Reportes en Vivo – Conectado al Backend</h1>
             <p class="bitacora-mock-report__subtitle">
-                Página temporal para validar los componentes de la tarjeta de reportes por sección.
+                Esta página carga datos reales desde el backend API (sin mock). Usa el selector de período para cambiar el rango.
             </p>
         </div>
     </header>
@@ -69,16 +69,17 @@
 
         <div class="bitacora-mock-report__panel bitacora-mock-report__panel--reports">
             <div class="bitacora-mock-report__panel-heading">
-                <p>Reportes por sección</p>
-                <span class="bitacora-mock-report__tag">{{this.selectedPanelLabel}}</span>
+                <p>Reportes por sección (Backend API)</p>
+                <span class="bitacora-mock-report__tag bitacora-mock-report__tag--live">🔴 LIVE</span>
             </div>
             
+            {{! No se pasa @sections, el componente cargará del backend }}
             <BitacoraReportCard
-                @sections={{this.model.sections}}
-                @disableAutoRefresh={{true}}
                 @period="last_7_days"
                 @chartLimit={{4}}
             />
         </div>
     </section>
 </div>
+
+

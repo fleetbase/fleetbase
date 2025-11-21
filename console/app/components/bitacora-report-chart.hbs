@@ -2,9 +2,8 @@
     <div class="bitacora-report-chart" ...attributes>
         <canvas
             role="img"
-            aria-label={{or @ariaLabel "Gráfica de reportes por sección"}}
-            {{did-insert this.registerChart}}
-            {{did-update this.rebuildChart this.chartVersion}}
+            aria-label={{this.ariaLabel}}
+            id={{this.canvasId}}
         ></canvas>
     </div>
 {{else}}
@@ -12,4 +11,3 @@
         <p>Sin datos suficientes para graficar.</p>
     </div>
 {{/if}}
-

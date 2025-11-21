@@ -46,8 +46,12 @@ class ActivityReportController extends Controller
                 ->pluck('count', 'description');
 
             // Calculate trend
-            $periodLength = $startDate->diffInDays($endDate);
-            $prevStartDate = $startDate->copy()->subDays($periodLength);
+            // Use total seconds to get accurate period length, then convert to days
+            // This ensures we get at least 1 day even for periods < 24 hours
+            $periodLengthInSeconds = $startDate->diffInSeconds($endDate);
+            $periodLengthInDays = max(1, round($periodLengthInSeconds / 86400)); // At least 1 day
+            
+            $prevStartDate = $startDate->copy()->subDays($periodLengthInDays);
             $prevEndDate = $startDate->copy();
             
             $prevTotal = DB::table('activity')
@@ -62,13 +66,14 @@ class ActivityReportController extends Controller
                 $trend = 100;
             }
             
-            $trendSign = $trend >= 0 ? '+' : '';
+            $trendDirection = $trend > 0 ? 'up' : ($trend < 0 ? 'down' : 'neutral');
 
             return [
                 'name' => $item->section,
                 'total_activities' => $item->total,
                 'actions' => $actions,
-                'trend' => $trendSign . round($trend, 1) . '%',
+                'trend' => round($trend, 1),
+                'trend_direction' => $trendDirection,
                 'last_activity' => $item->last_activity
             ];
         });

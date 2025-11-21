@@ -72,8 +72,16 @@ body[data-theme='dark'] .bitacora-report-card__select {
 
 .bitacora-report-card__chart {
     width: 100%;
-    min-height: 220px;
+    min-height: 180px;
+    max-height: 240px;
     margin-bottom: 1.5rem;
+    padding: 0.75rem;
+    background: rgba(248, 250, 252, 0.5);
+    border-radius: 0.5rem;
+}
+
+body[data-theme='dark'] .bitacora-report-card__chart {
+    background: rgba(15, 23, 42, 0.3);
 }
 
 .bitacora-report-card__sections {

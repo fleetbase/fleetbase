@@ -16,6 +16,10 @@ export default class ConsoleBitacoraMockReportController extends Controller {
         return stat?.label ?? '';
     }
 
+    isStatSelected(statKey) {
+        return statKey === this.selectedPanel;
+    }
+
     @action
     selectPanel(key) {
         this.selectedPanel = key;

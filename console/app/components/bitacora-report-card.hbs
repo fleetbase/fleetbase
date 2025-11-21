@@ -6,48 +6,47 @@
                 <p class="bitacora-report-card__subtitle">{{this.subtitle}}</p>
             </div>
             <div class="bitacora-report-card__controls">
-                <label class="sr-only" for={{this.periodSelectId}}>
-                    {{this.subtitle}}
-                </label>
-                <select id={{this.periodSelectId}} class="bitacora-report-card__select" value={{this.selectedPeriod}} {{on "change" this.handlePeriodChange}}>
-                    {{#each this.periodOptions as |option|}}
-                        <option value={{option.value}} selected={{eq option.value this.selectedPeriod}}>
-                            {{option.label}}
-                        </option>
-                    {{/each}}
-                </select>
-                <button type="button" class="btn btn-xs btn-default bitacora-report-card__refresh" disabled={{this.isLoading}} {{on "click" this.handleRefresh}}>
-                    <FaIcon @icon="rotate" class="{{if this.isLoading 'animate-spin'}}" />
-                    <span>{{if this.isLoading this.loadingLabel "Actualizar"}}</span>
-                </button>
+                <label for={{this.periodSelectId}} class="bitacora-report-card__label">Periodo</label>
+                <Select
+                    @value={{this.selectedPeriod}}
+                    @options={{this.periodOptions}}
+                    @optionLabel="label"
+                    @optionValue="value"
+                    @onSelect={{this.handlePeriodChange}}
+                    @placeholder="Seleccionar periodo"
+                />
+                <Button
+                    @type="default"
+                    @icon="sync"
+                    @onClick={{this.handleRefresh}}
+                    @disabled={{this.isLoading}}
+                    @wrapperClass="bitacora-report-card__refresh-btn"
+                    @helpText="Actualizar reportes"
+                />
             </div>
         </header>
 
         <section class="bitacora-report-card__body">
             {{#if this.isLoading}}
-                <div class="bitacora-report-card__state bitacora-report-card__state--loading">
-                    <Spinner />
+                <div class="bitacora-report-card__loading">
+                    <span class="bitacora-report-card__spinner">⏳</span>
                     <p>{{this.loadingLabel}}</p>
                 </div>
             {{else if this.errorMessage}}
-                <div class="bitacora-report-card__state bitacora-report-card__state--error">
-                    <FaIcon @icon="triangle-exclamation" />
+                <div class="bitacora-report-card__error">
                     <p>{{this.errorMessage}}</p>
-                    <button type="button" class="btn btn-xs btn-default" {{on "click" this.handleRefresh}}>
-                        Reintentar
-                    </button>
                 </div>
             {{else if this.hasSections}}
                 {{#if this.showChart}}
                     <div class="bitacora-report-card__chart">
                         <BitacoraReportChart
-                            @type={{or @chartType "bar"}}
                             @data={{this.chartData}}
                             @options={{this.chartOptions}}
                             @ariaLabel={{this.subtitle}}
                         />
                     </div>
                 {{/if}}
+                
                 <ul class="bitacora-report-card__sections">
                     {{#each this.resolvedSections as |section|}}
                         <li class="bitacora-report-card__section">
@@ -56,16 +55,22 @@
                                     <p class="bitacora-report-card__section-name">{{section.name}}</p>
                                     {{#if section.lastActivityLabel}}
                                         <p class="bitacora-report-card__section-meta">
-                                            <FaIcon @icon="clock" @size="xs" class="mr-2" />
                                             {{section.lastActivityLabel}}
                                         </p>
                                     {{/if}}
                                 </div>
                                 <div class="bitacora-report-card__section-metrics">
                                     <span class="bitacora-report-card__section-total">{{section.total}}</span>
-                                    <span class="bitacora-report-card__trend {{if (eq section.trendDirection 'down') 'bitacora-report-card__trend--down' 'bitacora-report-card__trend--up'}}">
-                                        {{if (eq section.trendDirection 'down') '↓' '↑'}} {{section.trend}}%
-                                    </span>
+                                    {{#if section.trendDirection}}
+                                        <span class="bitacora-report-card__trend bitacora-report-card__trend--{{section.trendDirection}}">
+                                            {{#if (this.isTrendDown section.trendDirection)}}
+                                                ↓
+                                            {{else}}
+                                                ↑
+                                            {{/if}}
+                                            {{section.trend}}
+                                        </span>
+                                    {{/if}}
                                 </div>
                             </div>
                             <div class="bitacora-report-card__section-actions">
@@ -86,27 +91,24 @@
                     {{/each}}
                 </ul>
             {{else}}
-                <div class="bitacora-report-card__state bitacora-report-card__state--empty">
-                    <FaIcon @icon="inbox" />
+                <div class="bitacora-report-card__empty">
                     <p>{{this.emptyLabel}}</p>
                 </div>
             {{/if}}
         </section>
 
-        <footer class="bitacora-report-card__footer">
-            <div class="bitacora-report-card__timestamp">
-                {{#if this.lastUpdatedLabel}}
-                    <FaIcon @icon="rotate" @size="xs" class="mr-1" />
-                    <span>Actualizado {{this.lastUpdatedLabel}}</span>
-                {{else}}
-                    <span>Sin actualización reciente</span>
-                {{/if}}
-            </div>
-            <button type="button" class="btn btn-sm btn-primary" {{on "click" this.handleViewDetails}}>
-                Ver detalles
-                <FaIcon @icon="arrow-right" class="ml-2" />
-            </button>
-        </footer>
+        {{#if this.lastUpdatedLabel}}
+            <footer class="bitacora-report-card__footer">
+                <p class="bitacora-report-card__footer-text">
+                    Actualizado {{this.lastUpdatedLabel}}
+                </p>
+                <Button
+                    @type="link"
+                    @text="Ver detalles →"
+                    @onClick={{this.handleViewDetails}}
+                    @wrapperClass="bitacora-report-card__details-btn"
+                />
+            </footer>
+        {{/if}}
     </div>
 </div>
-
