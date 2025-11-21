@@ -13,10 +13,29 @@
 .bitacora-report-card__header,
 .bitacora-report-card__footer {
     display: flex;
-    flex-wrap: wrap;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-top: 1.5rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid rgb(226, 232, 240);
+}
+
+body[data-theme='dark'] .bitacora-report-card__footer {
+    border-top-color: rgb(55, 65, 81);
+}
+
+.bitacora-report-card__footer-actions {
+    display: flex;
     align-items: center;
-    justify-content: space-between;
-    gap: 1rem;
+    justify-content: flex-end;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+}
+
+.bitacora-report-card__footer-timestamp {
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .bitacora-report-card__title {
@@ -206,6 +225,49 @@ body[data-theme='dark'] .bitacora-report-card__state {
 
 body[data-theme='dark'] .bitacora-report-card__timestamp {
     color: rgb(148, 163, 184);
+}
+
+/* Pagination */
+.bitacora-report-card__pagination {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 1.5rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgb(226, 232, 240);
+}
+
+body[data-theme='dark'] .bitacora-report-card__pagination {
+    border-top-color: rgb(51, 65, 85);
+}
+
+.bitacora-report-card__pagination-info {
+    font-size: 0.875rem;
+    color: rgb(100, 116, 139);
+}
+
+body[data-theme='dark'] .bitacora-report-card__pagination-info {
+    color: rgb(148, 163, 184);
+}
+
+.bitacora-report-card__pagination-controls {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.bitacora-report-card__pagination-current {
+    font-size: 0.875rem;
+    color: rgb(51, 65, 85);
+    font-weight: 500;
+}
+
+body[data-theme='dark'] .bitacora-report-card__pagination-current {
+    color: rgb(203, 213, 225);
+}
+
+.bitacora-report-card__pagination-btn {
+    min-width: auto;
 }
 
 .bitacora-report-chart {

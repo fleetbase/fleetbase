@@ -48,7 +48,7 @@
                 {{/if}}
                 
                 <ul class="bitacora-report-card__sections">
-                    {{#each this.resolvedSections as |section|}}
+                    {{#each this.paginatedSections as |section|}}
                         <li class="bitacora-report-card__section">
                             <div class="bitacora-report-card__section-header">
                                 <div>
@@ -90,6 +90,37 @@
                         </li>
                     {{/each}}
                 </ul>
+
+                {{#if this.hasPagination}}
+                    <div class="bitacora-report-card__pagination">
+                        <div class="bitacora-report-card__pagination-info">
+                            <span>{{this.paginationInfo}}</span>
+                        </div>
+                        <div class="bitacora-report-card__pagination-controls">
+                            <Button
+                                @type="default"
+                                @icon="chevron-left"
+                                @size="xs"
+                                @onClick={{this.goToPreviousPage}}
+                                @disabled={{not this.canGoPrevious}}
+                                @wrapperClass="bitacora-report-card__pagination-btn"
+                                @helpText="Página anterior"
+                            />
+                            <span class="bitacora-report-card__pagination-current">
+                                Página {{this.currentPage}} de {{this.totalPages}}
+                            </span>
+                            <Button
+                                @type="default"
+                                @icon="chevron-right"
+                                @size="xs"
+                                @onClick={{this.goToNextPage}}
+                                @disabled={{not this.canGoNext}}
+                                @wrapperClass="bitacora-report-card__pagination-btn"
+                                @helpText="Página siguiente"
+                            />
+                        </div>
+                    </div>
+                {{/if}}
             {{else}}
                 <div class="bitacora-report-card__empty">
                     <p>{{this.emptyLabel}}</p>
@@ -97,18 +128,51 @@
             {{/if}}
         </section>
 
-        {{#if this.lastUpdatedLabel}}
-            <footer class="bitacora-report-card__footer">
-                <p class="bitacora-report-card__footer-text">
-                    Actualizado {{this.lastUpdatedLabel}}
-                </p>
+        <footer class="bitacora-report-card__footer">
+            <div class="bitacora-report-card__footer-actions">
+                {{#if this.hasSections}}
+                    <Button
+                        @type="default"
+                        @text="CSV"
+                        @icon="file-csv"
+                        @size="xs"
+                        @onClick={{fn this.handleExport "csv"}}
+                        @wrapperClass="bitacora-report-card__export-btn"
+                        @helpText="Exportar como CSV"
+                    />
+                    <Button
+                        @type="default"
+                        @text="Excel"
+                        @icon="file-excel"
+                        @size="xs"
+                        @onClick={{fn this.handleExport "xlsx"}}
+                        @wrapperClass="bitacora-report-card__export-btn"
+                        @helpText="Exportar como Excel"
+                    />
+                    <Button
+                        @type="default"
+                        @text="PDF"
+                        @icon="file-pdf"
+                        @size="xs"
+                        @onClick={{fn this.handleExport "pdf"}}
+                        @wrapperClass="bitacora-report-card__export-btn"
+                        @helpText="Imprimir / Guardar como PDF"
+                    />
+                {{/if}}
                 <Button
                     @type="link"
                     @text="Ver detalles →"
                     @onClick={{this.handleViewDetails}}
                     @wrapperClass="bitacora-report-card__details-btn"
                 />
-            </footer>
-        {{/if}}
+            </div>
+            {{#if this.lastUpdatedLabel}}
+                <div class="bitacora-report-card__footer-timestamp">
+                    <p class="bitacora-report-card__footer-text">
+                        Actualizado {{this.lastUpdatedLabel}}
+                    </p>
+                </div>
+            {{/if}}
+        </footer>
     </div>
 </div>

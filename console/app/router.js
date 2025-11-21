@@ -62,7 +62,6 @@ Router.map(function () {
         });
 
         this.route('bitacora', function () {
-            this.route('mock-report');
             this.route('live-report');
         });
 
