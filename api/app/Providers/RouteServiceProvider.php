@@ -43,7 +43,7 @@ class RouteServiceProvider extends ServiceProvider
 
                 // Ruta para reportes de actividades por sección (LIPU-101)
                 Route::get(
-                    '/api/v1/activity/reports-by-section',
+                    '/int/v1/activity/reports-by-section',
                     [ActivityReportController::class, 'reportsBySection']
                 );
             }

@@ -1,0 +1,46 @@
+<div class="period-selector">
+    <div class="period-selector__label-row">
+        <label class="period-selector__label">{{this.label}}</label>
+        {{#if this.displayLabel}}
+            <span class="period-selector__current">{{this.displayLabel}}</span>
+        {{/if}}
+    </div>
+
+    <Select
+        @value={{this.selected}}
+        @options={{this.options}}
+        @optionLabel="label"
+        @optionValue="value"
+        @onSelect={{this.selectPeriod}}
+        @wrapperClass="period-selector__select"
+        @placeholder="Seleccionar período"
+    />
+
+    {{#if this.showCustomRange}}
+        <div class="period-selector__custom">
+            <div class="period-selector__custom-inputs">
+                <div class="period-selector__field">
+                    <label>Inicio</label>
+                    <input type="date" value={{this.customStart}} {{on "input" (fn this.updateCustomRange "customStart")}} />
+                </div>
+                <div class="period-selector__field">
+                    <label>Fin</label>
+                    <input type="date" value={{this.customEnd}} {{on "input" (fn this.updateCustomRange "customEnd")}} />
+                </div>
+            </div>
+            <div class="period-selector__actions">
+                <Button
+                    @type="primary"
+                    @text="Aplicar rango"
+                    @size="xs"
+                    @onClick={{this.applyCustomRange}}
+                    @icon="calendar-check"
+                />
+                {{#if this.customError}}
+                    <p class="period-selector__error">{{this.customError}}</p>
+                {{/if}}
+            </div>
+        </div>
+    {{/if}}
+</div>
+

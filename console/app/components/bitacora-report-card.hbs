@@ -6,14 +6,11 @@
                 <p class="bitacora-report-card__subtitle">{{this.subtitle}}</p>
             </div>
             <div class="bitacora-report-card__controls">
-                <label for={{this.periodSelectId}} class="bitacora-report-card__label">Periodo</label>
-                <Select
+                <PeriodSelector
                     @value={{this.selectedPeriod}}
                     @options={{this.periodOptions}}
-                    @optionLabel="label"
-                    @optionValue="value"
-                    @onSelect={{this.handlePeriodChange}}
-                    @placeholder="Seleccionar periodo"
+                    @onChange={{this.handlePeriodChange}}
+                    @label="Periodo"
                 />
                 <Button
                     @type="default"

@@ -18,6 +18,7 @@ const PERIOD_PRESETS = [
     { value: 'this_month', label: 'Este mes' },
     { value: 'previous_month', label: 'Mes anterior' },
 ];
+const CUSTOM_PERIOD_OPTION = { value: 'custom', label: 'Rango personalizado' };
 
 export default class BitacoraReportCardComponent extends Component {
     @service fetch;
@@ -31,6 +32,7 @@ export default class BitacoraReportCardComponent extends Component {
     @tracked errorMessage = null;
     @tracked lastUpdated = null;
     @tracked currentPage = 1;
+    @tracked customRange = null;
 
     #refreshTimer = null;
 
@@ -70,7 +72,7 @@ export default class BitacoraReportCardComponent extends Component {
     }
 
     get periodOptions() {
-        return PERIOD_PRESETS;
+        return [...PERIOD_PRESETS, CUSTOM_PERIOD_OPTION];
     }
 
 
@@ -262,7 +264,10 @@ export default class BitacoraReportCardComponent extends Component {
     }
 
     buildQueryParams(extra = {}) {
-        const dates = this.getPeriodDates(this.selectedPeriod);
+        const dates =
+            this.selectedPeriod === 'custom' && this.customRange?.start && this.customRange?.end
+                ? this.customRange
+                : this.getPeriodDates(this.selectedPeriod);
         return {
             start_date: dates.start,
             end_date: dates.end,
@@ -370,19 +375,31 @@ export default class BitacoraReportCardComponent extends Component {
     }
 
     async fetchReportData(params = {}) {
-        return this.fetch.get('activity/reports-by-section', params, { namespace: 'api/v1' });
+        return this.fetch.get('activity/reports-by-section', params, { namespace: 'int/v1' });
     }
 
     @action
-    handlePeriodChange(value) {
+    handlePeriodChange(payload) {
+        const { value, start, end } = typeof payload === 'string' ? { value: payload } : payload || {};
         console.log('[BitacoraReportCard] Period changed to:', value);
         
-        if (!value || value === this.selectedPeriod) {
+        if (!value) {
+            return;
+        }
+
+        if (value !== 'custom' && value === this.selectedPeriod) {
             return;
         }
 
         this.selectedPeriod = value;
         this.currentPage = 1; // Reset to first page
+
+        if (value === 'custom' && start && end) {
+            this.customRange = { start, end };
+        } else if (value !== 'custom') {
+            this.customRange = null;
+        }
+
         console.log('[BitacoraReportCard] Loading data for new period...');
         this.loadReportData();
     }

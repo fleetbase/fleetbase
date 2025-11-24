@@ -36,6 +36,9 @@ Router.map(function () {
             this.route('two-fa');
             this.route('notifications');
         });
+        this.route('bitacora', function () {
+            this.route('live-report');
+        });
         this.route('virtual', { path: '/:slug' });
         this.route('admin', function () {
             this.route('config', function () {
@@ -59,10 +62,6 @@ Router.map(function () {
             this.route('schedule-monitor', function () {
                 this.route('logs', { path: '/:id/logs' });
             });
-        });
-
-        this.route('bitacora', function () {
-            this.route('live-report');
         });
 
         this.mount('@fleetbase/dev-engine', {

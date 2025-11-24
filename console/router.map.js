@@ -36,6 +36,9 @@ Router.map(function () {
             this.route('two-fa');
             this.route('notifications');
         });
+        this.route('bitacora', function () {
+            this.route('live-report');
+        });
         this.route('virtual', { path: '/:slug' });
         this.route('admin', function () {
             this.route('config', function () {

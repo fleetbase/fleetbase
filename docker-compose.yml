@@ -92,6 +92,7 @@ services:
       dockerfile: docker/Dockerfile.pgsql
     volumes:
       - ./api/.env:/fleetbase/api/.env
+      - ./api/app:/fleetbase/api/app
     environment:
       ENVIRONMENT: development
       DATABASE_URL: "pgsql://fleetbase:fleetbase@database/fleetbase"

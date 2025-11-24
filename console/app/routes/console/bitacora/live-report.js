@@ -1,7 +1,12 @@
 import Route from '@ember/routing/route';
 
 export default class ConsoleBitacoraLiveReportRoute extends Route {
+    beforeModel() {
+        console.log('🚀 Bitacora Live Report Route: beforeModel ACTIVATED');
+    }
+
     model() {
+        console.log('🚀 Bitacora Live Report Route: model ACTIVATED');
         // No se pasan sections, el componente las cargará del backend
         return {
             stats: [
@@ -51,5 +56,3 @@ export default class ConsoleBitacoraLiveReportRoute extends Route {
         };
     }
 }
-
-
