@@ -342,8 +342,7 @@ constructor() {
       .bitacora-report-card__title
       .bitacora-report-card__subtitle
       .bitacora-report-card__controls
-        .bitacora-report-card__label
-        .bitacora-report-card__select
+        .bitacora-report-card__period-label
         .bitacora-report-card__refresh-btn
     .bitacora-report-card__body
       .bitacora-report-card__loading

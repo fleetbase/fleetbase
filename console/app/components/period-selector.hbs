@@ -1,10 +1,12 @@
 <div class="period-selector">
-    <div class="period-selector__label-row">
-        <label class="period-selector__label">{{this.label}}</label>
-        {{#if this.displayLabel}}
-            <span class="period-selector__current">{{this.displayLabel}}</span>
-        {{/if}}
-    </div>
+    {{#if this.showLabelRow}}
+        <div class="period-selector__label-row">
+            <label class="period-selector__label">{{this.label}}</label>
+            {{#if this.displayLabel}}
+                <span class="period-selector__current">{{this.displayLabel}}</span>
+            {{/if}}
+        </div>
+    {{/if}}
 
     <Select
         @value={{this.selected}}

@@ -23,6 +23,10 @@ export default class PeriodSelectorComponent extends Component {
         return this.args.label ?? 'Período';
     }
 
+    get showLabelRow() {
+        return this.args.showLabelRow ?? true;
+    }
+
     get options() {
         return this.args.options ?? DEFAULT_OPTIONS;
     }

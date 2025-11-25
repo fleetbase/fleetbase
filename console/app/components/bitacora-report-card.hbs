@@ -1,16 +1,14 @@
 <div class="bitacora-report-card" ...attributes>
     <div class="bitacora-report-card__container border dark:border-gray-700 border-gray-200 rounded-xl shadow-sm bg-white dark:bg-gray-900">
         <header class="bitacora-report-card__header">
-            <div>
-                <p class="bitacora-report-card__title">{{this.title}}</p>
-                <p class="bitacora-report-card__subtitle">{{this.subtitle}}</p>
-            </div>
             <div class="bitacora-report-card__controls">
+                <span class="bitacora-report-card__period-label">Periodo</span>
                 <PeriodSelector
                     @value={{this.selectedPeriod}}
                     @options={{this.periodOptions}}
                     @onChange={{this.handlePeriodChange}}
                     @label="Periodo"
+                    @showLabelRow={{false}}
                 />
                 <Button
                     @type="default"
@@ -156,12 +154,6 @@
                         @helpText="Imprimir / Guardar como PDF"
                     />
                 {{/if}}
-                <Button
-                    @type="link"
-                    @text="Ver detalles →"
-                    @onClick={{this.handleViewDetails}}
-                    @wrapperClass="bitacora-report-card__details-btn"
-                />
             </div>
             {{#if this.lastUpdatedLabel}}
                 <div class="bitacora-report-card__footer-timestamp">
