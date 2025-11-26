@@ -15,8 +15,7 @@ export default class ApplicationRoute extends Route {
     @service intl;
     @service currentUser;
     @service router;
-    @service('universe/hook-service') hookService;
-    @service('universe/extension-manager') extensionManager;
+    @service universe;
     @tracked defaultTheme;
 
     /**
@@ -25,7 +24,7 @@ export default class ApplicationRoute extends Route {
      * @memberof ApplicationRoute
      */
     @action willTransition(transition) {
-        this.hookService.execute('application:will-transition', this.session, this.router, transition);
+        this.universe.callHooks('application:will-transition', this.session, this.router, transition);
     }
 
     /**
@@ -46,7 +45,7 @@ export default class ApplicationRoute extends Route {
      * @memberof ApplicationRoute
      */
     @action loading(transition) {
-        this.hookService.execute('application:loading', this.session, this.router, transition);
+        this.universe.callHooks('application:loading', this.session, this.router, transition);
     }
 
     /**
@@ -80,9 +79,9 @@ export default class ApplicationRoute extends Route {
      */
     async beforeModel(transition) {
         await this.session.setup();
-        await this.extensionManager.waitForBoot();
+        await this.universe.booting();
 
-        this.hookService.execute('application:before-model', this.session, this.router, transition);
+        this.universe.callHooks('application:before-model', this.session, this.router, transition);
 
         const shift = this.urlSearchParams.get('shift');
         if (this.session.isAuthenticated && shift) {

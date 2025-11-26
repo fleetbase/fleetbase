@@ -90,9 +90,9 @@ export default class DashboardModel extends Model {
 
     getRegistry() {
         const owner = getOwner(this);
-        const widgetService = owner.lookup('service:universe/widget-service');
-        if (widgetService) {
-            return widgetService.getRegistry(this.id);
+        const universe = owner.lookup('service:universe');
+        if (universe) {
+            return universe.getDashboardRegistry(this.id);
         }
 
         return undefined;
