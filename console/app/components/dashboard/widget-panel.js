@@ -4,11 +4,11 @@ import { inject as service } from '@ember/service';
 import { action } from '@ember/object';
 
 export default class DashboardWidgetPanelComponent extends Component {
-    @service universe;
+    @service('universe/widget-service') widgetService;
+    @service notifications;
     @tracked availableWidgets = [];
     @tracked dashboard;
     @tracked isOpen = true;
-    @service notifications;
 
     /**
      * Constructs the component and applies initial state.
@@ -16,7 +16,7 @@ export default class DashboardWidgetPanelComponent extends Component {
     constructor(owner, { dashboard }) {
         super(...arguments);
 
-        this.availableWidgets = this.universe.getDashboardWidgets();
+        this.availableWidgets = this.widgetService.getWidgets('dashboard');
         this.dashboard = dashboard;
     }
 
