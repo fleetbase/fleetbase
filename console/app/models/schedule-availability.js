@@ -11,7 +11,7 @@ export default class ScheduleAvailabilityModel extends Model {
     @attr('string') reason;
     @attr('string') notes;
     @attr('object') meta;
-    
+
     @attr('date') created_at;
     @attr('date') updated_at;
     @attr('date') deleted_at;

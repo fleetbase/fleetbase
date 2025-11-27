@@ -2,8 +2,12 @@
 
 /** eslint-disable node/no-unpublished-require */
 const EmberApp = require('ember-cli/lib/broccoli/ember-app');
-const FleetbaseExtensionsIndexer = require('fleetbase-extensions-indexer');
+const ExtensionDiscoveryPlugin = require('./lib/build-plugins/extension-discovery');
+const ExtensionShimGeneratorPlugin = require('./lib/build-plugins/extension-shim-generator');
+const ExtensionLoadersGeneratorPlugin = require('./lib/build-plugins/extension-loaders-generator');
+const RouterGeneratorPlugin = require('./lib/build-plugins/router-generator');
 const Funnel = require('broccoli-funnel');
+const mergeTrees = require('broccoli-merge-trees');
 const writeFile = require('broccoli-file-creator');
 const postcssImport = require('postcss-import');
 const postcssPresetEnv = require('postcss-preset-env');
@@ -60,9 +64,85 @@ module.exports = function (defaults) {
         babel: {
             plugins: [require.resolve('ember-auto-import/babel-plugin')],
         },
+
+        autoImport: {
+            // Allow dynamic imports of app/extensions/* files
+            // This is required for the extension setup code to be bundled
+            // by ember-auto-import and loaded via dynamic import()
+            allowAppImports: ['extensions/*'],
+
+            // Optional: Configure webpack for better code splitting
+            webpack: {
+                optimization: {
+                    splitChunks: {
+                        chunks: 'all',
+                        cacheGroups: {
+                            // Group all extension files into a single chunk
+                            extensions: {
+                                test: /[\\/]app[\\/]extensions[\\/]/,
+                                name: 'extensions',
+                                priority: 10,
+                            },
+                        },
+                    },
+                },
+            },
+        },
     });
 
-    let extensions = new FleetbaseExtensionsIndexer();
+    // ============================================================================
+    // FLEETBASE EXTENSION BUILD PLUGINS
+    // ============================================================================
+    // Discover all Fleetbase extensions
+    const extensionDiscovery = new ExtensionDiscoveryPlugin([], {
+        projectRoot: __dirname,
+        annotation: 'Discover Fleetbase Extensions',
+    });
+
+    // Generate extension shim files
+    const extensionShims = new ExtensionShimGeneratorPlugin([extensionDiscovery], {
+        projectRoot: __dirname,
+        annotation: 'Generate Extension Shims',
+    });
+
+    // Generate extension loaders map
+    const extensionLoaders = new ExtensionLoadersGeneratorPlugin([extensionDiscovery], {
+        projectRoot: __dirname,
+        annotation: 'Generate Extension Loaders',
+    });
+
+    // Generate router with engine mounts
+    const router = new RouterGeneratorPlugin([extensionDiscovery], {
+        projectRoot: __dirname,
+        routerMapFile: __dirname + '/router.map.js',
+        annotation: 'Generate Router with Engine Mounts',
+    });
+
+    // ============================================================================
+    // FUNNEL GENERATED FILES INTO APP TREE
+    // ============================================================================
+    // Funnel extension shims to app/extensions/
+    const extensionShimsTree = new Funnel(extensionShims, {
+        destDir: 'app',
+    });
+
+    // Funnel extension loaders to app/utils/
+    const extensionLoadersTree = new Funnel(extensionLoaders, {
+        destDir: 'app',
+    });
+
+    // Funnel router to app
+    const routerTree = new Funnel(router, {
+        destDir: 'app',
+    });
+
+    // Generated extension files
+    const extensions = mergeTrees([extensionShimsTree, extensionLoadersTree, routerTree], {
+        overwrite: true,
+        annotation: 'Merge Extension Generated Files',
+    });
+
+    // let extensions = new FleetbaseExtensionsIndexer();
     let runtimeConfigTree;
     if (toBoolean(process.env.DISABLE_RUNTIME_CONFIG)) {
         runtimeConfigTree = writeFile('fleetbase.config.json', '{}');

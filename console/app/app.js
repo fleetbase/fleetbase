@@ -15,11 +15,12 @@ export default class App extends Application {
     engines = {};
 
     async ready() {
+        console.log('[app.ready] Has been called!');
         applyRouterFix(this);
-        const extensions = await loadExtensions();
 
-        this.extensions = extensions;
-        this.engines = mapEngines(extensions);
+        // Extensions are now loaded in the initialize-universe initializer
+        // This hook can be used for other ready-time setup if needed
+        console.log('[app.ready] Application ready with extensions:', this.extensions);
     }
 }
 
@@ -27,7 +28,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     await loadRuntimeConfig();
     loadInitializers(App, config.modulePrefix);
 
-    let fleetbase = App.create();
-    fleetbase.deferReadiness();
-    fleetbase.boot();
+    const Fleetbase = App.create();
+    Fleetbase.deferReadiness();
+    Fleetbase.boot();
 });
