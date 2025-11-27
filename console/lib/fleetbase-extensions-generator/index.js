@@ -136,12 +136,13 @@ module.exports = {
     },
 
     generateExtensionLoaders(extensions) {
-        const utilsDir = path.join(this.project.root, 'app', 'utils');
+        const extensionsDir = path.join(this.project.root, 'app', 'extensions');
 
-        if (!fs.existsSync(utilsDir)) {
-            fs.mkdirSync(utilsDir, { recursive: true });
+        if (!fs.existsSync(extensionsDir)) {
+            fs.mkdirSync(extensionsDir, { recursive: true });
         }
 
+        const imports = [];
         const loaders = {};
 
         extensions.forEach((extension) => {
@@ -152,22 +153,30 @@ module.exports = {
             }
 
             const mountPath = extension.fleetbase?.route || this.getExtensionMountPath(extension.name);
-            loaders[extension.name] = `() => import('@fleetbase/console/extensions/${mountPath}')`;
+            const camelCaseName = mountPath.replace(/-([a-z])/g, (g) => g[1].toUpperCase());
+            
+            imports.push(`import ${camelCaseName} from './${mountPath}';`);
+            loaders[extension.name] = `() => ${camelCaseName}`;
         });
 
-        const loadersContent = `// Auto-generated extension loaders
+        const loadersContent = `${imports.join('\n')}
+
 export const EXTENSION_LOADERS = {
 ${Object.entries(loaders)
     .map(([name, loader]) => `    '${name}': ${loader}`)
     .join(',\n')}
 };
 
-export default EXTENSION_LOADERS;
+export const getExtensionLoader = (packageName) => {
+    return EXTENSION_LOADERS[packageName];
+};
+
+export default getExtensionLoader;
 `;
 
-        const loadersFile = path.join(utilsDir, 'extension-loaders.generated.js');
+        const loadersFile = path.join(extensionsDir, 'index.js');
         fs.writeFileSync(loadersFile, loadersContent, 'utf8');
-        console.log('[fleetbase-extensions-generator]   ✓ Generated app/utils/extension-loaders.generated.js');
+        console.log('[fleetbase-extensions-generator]   ✓ Generated app/extensions/index.js');
     },
 
     generateRouter(extensions) {
