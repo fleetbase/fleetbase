@@ -26,6 +26,11 @@
         "test": "concurrently \"npm:lint\" \"npm:test:*\" --names \"lint,test:\"",
         "test:ember": "ember test"
     },
+    "ember-addon": {
+        "paths": [
+            "lib/fleetbase-extensions-generator"
+        ]
+    },
     "dependencies": {
         "@ember/legacy-built-in-components": "^0.4.2",
         "@fleetbase/ember-core": "link:../packages/ember-core",
