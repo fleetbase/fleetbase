@@ -276,15 +276,16 @@ ${extensionCode}
     generateRouter(extensions) {
         console.log('[fleetbase-extensions-generator] Generating router.js...');
         
+        const routerMapFile = path.join(this.project.root, 'router.map.js');
         const routerFile = path.join(this.project.root, 'app', 'router.js');
         
-        if (!fs.existsSync(routerFile)) {
-            console.error('[fleetbase-extensions-generator]   ! router.js not found at:', routerFile);
+        if (!fs.existsSync(routerMapFile)) {
+            console.error('[fleetbase-extensions-generator]   ! router.map.js not found at:', routerMapFile);
             return;
         }
         
-        // Read router.js
-        const routerContent = fs.readFileSync(routerFile, 'utf8');
+        // Read router.map.js (source template)
+        const routerContent = fs.readFileSync(routerMapFile, 'utf8');
         
         // Separate extensions by mount location
         const consoleExtensions = [];
