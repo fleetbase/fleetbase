@@ -24,17 +24,70 @@ module.exports = {
         console.log('[fleetbase-extensions-generator] included() hook called');
         console.log('[fleetbase-extensions-generator] Project root:', this.project.root);
         
-        // Discover extensions
-        const extensions = this.discoverExtensions();
-        console.log('[fleetbase-extensions-generator] Found', extensions.length, 'extension(s)');
+        // Discover extensions and cache them
+        this._extensions = this.discoverExtensions();
+        console.log('[fleetbase-extensions-generator] Found', this._extensions.length, 'extension(s)');
         
         // Generate files directly to app directory
-        this.generateExtensionShims(extensions);
-        this.generateExtensionLoaders(extensions);
-        this.generateRouter(extensions);
-        this.generateExtensionsManifest(extensions);
+        this.generateExtensionShims(this._extensions);
+        this.generateExtensionLoaders(this._extensions);
+        this.generateRouter(this._extensions);
+        this.generateExtensionsManifest(this._extensions);
+        
+        // Set up file watching for extension.js files
+        this.setupFileWatching();
         
         console.log('[fleetbase-extensions-generator] ========================================');
+    },
+
+    /**
+     * Set up file watching for extension.js files to regenerate on changes
+     */
+    setupFileWatching() {
+        if (this.app.env !== 'development') {
+            return; // Only watch in development
+        }
+
+        const chokidar = require('chokidar');
+        const extensionPaths = [];
+        
+        // Collect all extension.js file paths
+        for (const extension of this._extensions) {
+            const extensionPath = path.join(
+                this.project.root,
+                'node_modules',
+                extension.name,
+                'addon',
+                'extension.js'
+            );
+            
+            if (fs.existsSync(extensionPath)) {
+                extensionPaths.push(extensionPath);
+            }
+        }
+        
+        if (extensionPaths.length === 0) {
+            return;
+        }
+        
+        console.log('[fleetbase-extensions-generator] Watching', extensionPaths.length, 'extension file(s) for changes');
+        
+        // Watch extension files
+        const watcher = chokidar.watch(extensionPaths, {
+            persistent: true,
+            ignoreInitial: true
+        });
+        
+        watcher.on('change', (changedPath) => {
+            console.log('[fleetbase-extensions-generator] Extension file changed:', changedPath);
+            console.log('[fleetbase-extensions-generator] Regenerating extension files...');
+            
+            // Regenerate all extension files
+            this.generateExtensionShims(this._extensions);
+            this.generateExtensionLoaders(this._extensions);
+            
+            console.log('[fleetbase-extensions-generator] ✓ Regeneration complete');
+        });
     },
 
     /**
@@ -223,16 +276,15 @@ ${extensionCode}
     generateRouter(extensions) {
         console.log('[fleetbase-extensions-generator] Generating router.js...');
         
-        const routerMapFile = path.join(this.project.root, 'app', 'router.map.js');
         const routerFile = path.join(this.project.root, 'app', 'router.js');
         
-        if (!fs.existsSync(routerMapFile)) {
-            console.error('[fleetbase-extensions-generator]   ! router.map.js not found at:', routerMapFile);
+        if (!fs.existsSync(routerFile)) {
+            console.error('[fleetbase-extensions-generator]   ! router.js not found at:', routerFile);
             return;
         }
         
-        // Read router.map.js
-        const routerMapContent = fs.readFileSync(routerMapFile, 'utf8');
+        // Read router.js
+        const routerContent = fs.readFileSync(routerFile, 'utf8');
         
         // Separate extensions by mount location
         const consoleExtensions = [];
@@ -257,7 +309,7 @@ ${extensionCode}
         const recast = require('recast');
         const babelParser = require('recast/parsers/babel');
         
-        const ast = recast.parse(routerMapContent, { parser: babelParser });
+        const ast = recast.parse(routerContent, { parser: babelParser });
         
         let consoleAdded = 0;
         let rootAdded = 0;
@@ -300,17 +352,25 @@ ${extensionCode}
             visitCallExpression(path) {
                 const node = path.node;
                 
-                // Look for this.route('console', ...)
+                // Look for this.route('console', ...) with path: '/'
                 if (n.MemberExpression.check(node.callee) &&
                     n.ThisExpression.check(node.callee.object) &&
                     node.callee.property.name === 'route' &&
                     node.arguments.length > 0 &&
                     n.Literal.check(node.arguments[0]) &&
-                    node.arguments[0].value === 'console') {
+                    node.arguments[0].value === 'console' &&
+                    node.arguments.length > 1 &&
+                    n.ObjectExpression.check(node.arguments[1]) &&
+                    node.arguments[1].properties.some(p => 
+                        n.Property.check(p) && 
+                        p.key.name === 'path' && 
+                        n.Literal.check(p.value) && 
+                        p.value.value === '/'
+                    )) {
                     
-                    // Find the function expression in the second argument
-                    if (node.arguments.length > 1 && n.FunctionExpression.check(node.arguments[1])) {
-                        const functionExpression = node.arguments[1];
+                    // Find the function expression in the third argument (after path config)
+                    if (node.arguments.length > 2 && n.FunctionExpression.check(node.arguments[2])) {
+                        const functionExpression = node.arguments[2];
                         
                         // Add mount statements for each extension
                         extensions.forEach(extension => {
@@ -359,12 +419,18 @@ ${extensionCode}
         let addedCount = 0;
         
         types.visit(ast, {
-            visitExportDefaultDeclaration(path) {
+            visitCallExpression(path) {
                 const node = path.node;
                 
-                // Look for export default function(router) { ... }
-                if (n.FunctionExpression.check(node.declaration)) {
-                    const functionExpression = node.declaration;
+                // Look for Router.map(function() { ... })
+                if (n.MemberExpression.check(node.callee) &&
+                    n.Identifier.check(node.callee.object) &&
+                    node.callee.object.name === 'Router' &&
+                    node.callee.property.name === 'map' &&
+                    node.arguments.length > 0 &&
+                    n.FunctionExpression.check(node.arguments[0])) {
+                    
+                    const functionExpression = node.arguments[0];
                     
                     // Add mount statements for each root extension
                     extensions.forEach(extension => {
@@ -373,7 +439,7 @@ ${extensionCode}
                             const mountStatement = b.expressionStatement(
                                 b.callExpression(
                                     b.memberExpression(
-                                        b.identifier('router'),
+                                        b.thisExpression(),
                                         b.identifier('mount')
                                     ),
                                     [
@@ -389,6 +455,9 @@ ${extensionCode}
                             addedCount++;
                         }
                     });
+                    
+                    return false; // Don't traverse children
+                }
                     
                     return false; // Don't traverse children
                 }
