@@ -89,7 +89,10 @@ class ExtensionLoadersGeneratorPlugin extends Plugin {
     }
 
     async build() {
-        console.log('[ExtensionLoadersGenerator] Generating extension-loaders.generated.js...');
+        console.log('[ExtensionLoadersGenerator] ========================================');
+        console.log('[ExtensionLoadersGenerator] Starting loaders generation...');
+        console.log('[ExtensionLoadersGenerator] Project root:', this.projectRoot);
+        console.log('[ExtensionLoadersGenerator] Output path:', this.outputPath);
         
         // Read discovered extensions from cache
         const extensionsCacheFile = path.join(this.inputPaths[0], 'extensions.json');
@@ -112,7 +115,11 @@ class ExtensionLoadersGeneratorPlugin extends Plugin {
         
         fs.writeFileSync(outputPath, content, 'utf8');
 
-        console.log(`[ExtensionLoadersGenerator] Generated extension-loaders.generated.js with ${count} loaders`);
+        console.log('[ExtensionLoadersGenerator] ========================================');
+        console.log('[ExtensionLoadersGenerator] ✓ Loaders generation complete');
+        console.log('[ExtensionLoadersGenerator] Generated extension-loaders.generated.js with', count, 'loader(s)');
+        console.log('[ExtensionLoadersGenerator] Output file:', outputPath);
+        console.log('[ExtensionLoadersGenerator] ========================================');
     }
 }
 

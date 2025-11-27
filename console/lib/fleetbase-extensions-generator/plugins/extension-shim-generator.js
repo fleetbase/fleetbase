@@ -23,9 +23,14 @@ class ExtensionShimGeneratorPlugin extends Plugin {
         this.projectRoot = options.projectRoot || process.cwd();
     }
 
-    build() {
-        const extensionsJsonPath = path.join(this.inputPaths[0], 'extensions.json');
+    async build() {
+        console.log('[ExtensionShimGenerator] ========================================');
+        console.log('[ExtensionShimGenerator] Starting shim generation...');
+        console.log('[ExtensionShimGenerator] Project root:', this.projectRoot);
+        console.log('[ExtensionShimGenerator] Output path:', this.outputPath);
         
+        const extensionsJsonPath = path.join(this.inputPaths[0], 'extensions.json');
+        console.log('[ExtensionShimGenerator] Reading extensions from:', extensionsJsonPath);        
         // Check if extensions.json exists
         if (!fs.existsSync(extensionsJsonPath)) {
             console.warn('[ExtensionShimGenerator] extensions.json not found, skipping');
@@ -96,7 +101,11 @@ ${extensionCode}
             }
         }
         
-        console.log(`[ExtensionShimGenerator] Generated ${shimCount} extension shim files`);
+        console.log('[ExtensionShimGenerator] ========================================');
+        console.log('[ExtensionShimGenerator] ✓ Shim generation complete');
+        console.log('[ExtensionShimGenerator] Generated', shimCount, 'extension shim file(s)');
+        console.log('[ExtensionShimGenerator] Output directory:', path.join(this.outputPath, 'extensions'));
+        console.log('[ExtensionShimGenerator] ========================================');
     }
 
     /**

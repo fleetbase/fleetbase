@@ -98,7 +98,10 @@ class ExtensionDiscoveryPlugin extends Plugin {
     }
 
     async build() {
-        console.log('[ExtensionDiscovery] Discovering Fleetbase extensions...');
+        console.log('[ExtensionDiscovery] ========================================');
+        console.log('[ExtensionDiscovery] Starting extension discovery...');
+        console.log('[ExtensionDiscovery] Project root:', this.projectRoot);
+        console.log('[ExtensionDiscovery] Output path:', this.outputPath);
         
         const extensions = await this.discoverExtensions();
         
@@ -110,12 +113,14 @@ class ExtensionDiscoveryPlugin extends Plugin {
             'utf8'
         );
 
-        console.log(`[ExtensionDiscovery] Found ${extensions.length} extensions`);
-        
-        // Log discovered extensions
+        console.log('[ExtensionDiscovery] ========================================');
+        console.log('[ExtensionDiscovery] ✓ Discovery complete');
+        console.log('[ExtensionDiscovery] Found', extensions.length, 'extension(s):');
         extensions.forEach(ext => {
-            console.log(`  - ${ext.name}@${ext.version}`);
+            console.log('[ExtensionDiscovery]   -', ext.name + '@' + ext.version);
         });
+        console.log('[ExtensionDiscovery] Wrote extensions.json to:', cacheFile);
+        console.log('[ExtensionDiscovery] ========================================');
     }
 }
 

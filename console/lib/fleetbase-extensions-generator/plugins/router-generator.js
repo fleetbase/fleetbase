@@ -167,7 +167,10 @@ class RouterGeneratorPlugin extends Plugin {
     }
 
     async build() {
-        console.log('[RouterGenerator] Generating app/router.js...');
+        console.log('[RouterGenerator] ========================================');
+        console.log('[RouterGenerator] Starting router generation...');
+        console.log('[RouterGenerator] Project root:', this.projectRoot);
+        console.log('[RouterGenerator] Output path:', this.outputPath);
         
         // Read discovered extensions from cache
         const extensionsCacheFile = path.join(this.inputPaths[0], 'extensions.json');
@@ -208,7 +211,13 @@ class RouterGeneratorPlugin extends Plugin {
         const outputPath = path.join(this.outputPath, 'router.js');
         fs.writeFileSync(outputPath, output, 'utf8');
 
-        console.log(`[RouterGenerator] Generated app/router.js (${consoleAdded} console mounts, ${rootAdded} root mounts)`);
+        console.log('[RouterGenerator] ========================================');
+        console.log('[RouterGenerator] ✓ Router generation complete');
+        console.log('[RouterGenerator] Generated app/router.js');
+        console.log('[RouterGenerator]   - Console mounts:', consoleAdded);
+        console.log('[RouterGenerator]   - Root mounts:', rootAdded);
+        console.log('[RouterGenerator] Output file:', outputPath);
+        console.log('[RouterGenerator] ========================================');
     }
 }
 
