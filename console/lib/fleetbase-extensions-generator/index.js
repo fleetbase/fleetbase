@@ -1,479 +1,327 @@
+/* eslint-env node */
 'use strict';
 
-const path = require('path');
-const fs = require('fs');
 const fg = require('fast-glob');
-
-console.log('[fleetbase-extensions-generator] Addon loaded at startup');
+const fs = require('fs');
+const path = require('path');
+const recast = require('recast');
+const babelParser = require('recast/parsers/babel');
+const builders = recast.types.builders;
+const chokidar = require('chokidar');
 
 module.exports = {
-    name: 'fleetbase-extensions-generator',
+    name: require('./package').name,
 
-    isDevelopingAddon() {
-        return true;
-    },
-
-    /**
-     * The included hook runs once when the addon is loaded.
-     * We use it to generate extension files directly to the app directory.
-     */
     included(app) {
         this._super.included.apply(this, arguments);
-
-        console.log('[fleetbase-extensions-generator] ========================================');
-        console.log('[fleetbase-extensions-generator] included() hook called');
-        console.log('[fleetbase-extensions-generator] Project root:', this.project.root);
-
-        // Discover extensions and cache them
-        this._extensions = this.discoverExtensions();
-        console.log('[fleetbase-extensions-generator] Found', this._extensions.length, 'extension(s)');
-
-        // Generate files directly to app directory
-        this.generateExtensionShims(this._extensions);
-        this.generateExtensionLoaders(this._extensions);
-        this.generateRouter(this._extensions);
-        this.generateExtensionsManifest(this._extensions);
-
-        // Set up file watching for extension.js files
-        this.setupFileWatching();
-
-        console.log('[fleetbase-extensions-generator] ========================================');
+        
+        console.log('[fleetbase-extensions-generator] Generating Fleetbase extension files...');
+        
+        // Generate files on startup
+        this.generateExtensionFiles();
+        
+        // Watch for changes in development
+        this.watchExtensionFiles();
     },
 
-    /**
-     * Set up file watching for extension.js files to regenerate on changes
-     */
-    setupFileWatching() {
-        if (this.app.env !== 'development') {
-            return; // Only watch in development
-        }
-
-        const chokidar = require('chokidar');
-        const extensionPaths = [];
-
-        // Collect all extension.js file paths
-        for (const extension of this._extensions) {
-            const extensionPath = path.join(this.project.root, 'node_modules', extension.name, 'addon', 'extension.js');
-
-            if (fs.existsSync(extensionPath)) {
-                extensionPaths.push(extensionPath);
-            }
-        }
-
-        if (extensionPaths.length === 0) {
+    async generateExtensionFiles() {
+        const extensions = await this.getExtensions();
+        
+        if (extensions.length === 0) {
+            console.log('[fleetbase-extensions-generator] No extensions found');
             return;
         }
+        
+        console.log('[fleetbase-extensions-generator] Found', extensions.length, 'extension(s)');
+        
+        // Generate extension shims
+        this.generateExtensionShims(extensions);
+        
+        // Generate extension loaders
+        this.generateExtensionLoaders(extensions);
+        
+        // Generate router
+        this.generateRouter(extensions);
+        
+        // Generate manifest
+        this.generateExtensionsManifest(extensions);
+    },
 
-        console.log('[fleetbase-extensions-generator] Watching', extensionPaths.length, 'extension file(s) for changes');
+    getExtensions() {
+        return new Promise((resolve, reject) => {
+            const extensions = [];
+            const seenPackages = new Set();
+            const cwd = this.project.root;
 
-        // Watch extension files
-        const watcher = chokidar.watch(extensionPaths, {
-            persistent: true,
-            ignoreInitial: true,
-        });
+            return fg(['node_modules/*/package.json', 'node_modules/*/*/package.json'], { cwd })
+                .then((results) => {
+                    for (let i = 0; i < results.length; i++) {
+                        const packagePath = path.join(cwd, results[i]);
+                        const packageJson = fs.readFileSync(packagePath);
+                        let packageData = null;
 
-        watcher.on('change', (changedPath) => {
-            console.log('[fleetbase-extensions-generator] Extension file changed:', changedPath);
-            console.log('[fleetbase-extensions-generator] Regenerating extension files...');
+                        try {
+                            packageData = JSON.parse(packageJson);
+                        } catch (e) {
+                            console.warn(`Could not parse package.json at ${packagePath}:`, e);
+                            continue;
+                        }
 
-            // Regenerate all extension files
-            this.generateExtensionShims(this._extensions);
-            this.generateExtensionLoaders(this._extensions);
+                        if (!packageData || !packageData.keywords || !packageData.keywords.includes('fleetbase-extension') || !packageData.keywords.includes('ember-engine')) {
+                            continue;
+                        }
 
-            console.log('[fleetbase-extensions-generator] ✓ Regeneration complete');
+                        // If we've seen this package before, skip it
+                        if (seenPackages.has(packageData.name)) {
+                            continue;
+                        }
+
+                        seenPackages.add(packageData.name);
+                        extensions.push(this.only(packageData, ['name', 'description', 'version', 'fleetbase', 'keywords', 'license', 'repository']));
+                    }
+
+                    resolve(extensions);
+                })
+                .catch(reject);
         });
     },
 
-    /**
-     * Discover Fleetbase extensions from node_modules
-     */
-    discoverExtensions() {
-        console.log('[fleetbase-extensions-generator] Discovering extensions...');
+    only(subject, props = []) {
+        const keys = Object.keys(subject);
+        const result = {};
 
-        const extensions = [];
-        const seenPackages = new Set();
+        for (let i = 0; i < keys.length; i++) {
+            const key = keys[i];
 
-        const results = fg.sync(['node_modules/*/package.json', 'node_modules/*/*/package.json'], {
-            cwd: this.project.root,
-            absolute: true,
-        });
-
-        for (const packagePath of results) {
-            let packageData = null;
-
-            try {
-                const packageJson = fs.readFileSync(packagePath, 'utf8');
-                packageData = JSON.parse(packageJson);
-            } catch (e) {
-                continue;
+            if (props.includes(key)) {
+                result[key] = subject[key];
             }
-
-            // Check if this is a Fleetbase extension
-            if (!packageData || !packageData.keywords || !packageData.keywords.includes('fleetbase-extension') || !packageData.keywords.includes('ember-engine')) {
-                continue;
-            }
-
-            // Skip duplicates
-            if (seenPackages.has(packageData.name)) {
-                continue;
-            }
-
-            seenPackages.add(packageData.name);
-
-            const extension = {
-                name: packageData.name,
-                version: packageData.version,
-                fleetbase: packageData.fleetbase || {},
-            };
-
-            extensions.push(extension);
-            console.log('[fleetbase-extensions-generator]   -', extension.name + '@' + extension.version);
         }
 
-        return extensions;
+        return result;
     },
 
-    /**
-     * Generate extension shim files in app/extensions/
-     */
-    generateExtensionShims(extensions) {
-        console.log('[fleetbase-extensions-generator] Generating extension shims...');
+    getExtensionMountPath(extensionName) {
+        let extensionNameSegments = extensionName.split('/');
+        let mountName = extensionNameSegments[1];
 
+        if (typeof mountName !== 'string') {
+            mountName = extensionNameSegments[0];
+        }
+
+        return mountName.replace('-engine', '');
+    },
+
+    generateExtensionShims(extensions) {
         const extensionsDir = path.join(this.project.root, 'app', 'extensions');
 
-        // Create directory
         if (!fs.existsSync(extensionsDir)) {
             fs.mkdirSync(extensionsDir, { recursive: true });
         }
 
-        let shimCount = 0;
+        extensions.forEach((extension) => {
+            const extensionPath = path.join(this.project.root, 'node_modules', extension.name, 'addon', 'extension.js');
 
-        for (const extension of extensions) {
-            const pkgName = extension.name;
-            const mountName = this.getExtensionMountPath(pkgName);
-
-            // Path to extension.js in the engine's addon directory
-            const extensionPath = path.join(this.project.root, 'node_modules', pkgName, 'addon', 'extension.js');
-
-            // Check if extension.js exists
             if (!fs.existsSync(extensionPath)) {
-                console.log('[fleetbase-extensions-generator]   ! No extension.js found for', pkgName);
-                continue;
+                return;
             }
 
-            // Read the extension code
-            let extensionCode;
-            try {
-                extensionCode = fs.readFileSync(extensionPath, 'utf8');
-            } catch (error) {
-                console.error('[fleetbase-extensions-generator]   ! Failed to read extension.js for', pkgName, ':', error.message);
-                continue;
-            }
+            const extensionContent = fs.readFileSync(extensionPath, 'utf8');
+            const mountPath = extension.fleetbase?.route || this.getExtensionMountPath(extension.name);
+            const shimFile = path.join(extensionsDir, `${mountPath}.js`);
 
-            // Generate shim content
-            const shimContent = `// GENERATED BY fleetbase-extensions-generator - DO NOT EDIT
-// Extension setup for ${pkgName}
-//
-// This file contains the inlined extension setup code from the engine.
-// It is generated at build time to enable dynamic import without loading
-// the entire engine bundle.
-
-${extensionCode}
-`;
-
-            // Write shim file
-            const shimPath = path.join(extensionsDir, `${mountName}.js`);
-            try {
-                fs.writeFileSync(shimPath, shimContent, 'utf8');
-                shimCount++;
-                console.log('[fleetbase-extensions-generator]   \u2713 Generated', `app/extensions/${mountName}.js`);
-            } catch (error) {
-                console.error('[fleetbase-extensions-generator]   ! Failed to write shim for', pkgName, ':', error.message);
-            }
-        }
-
-        console.log('[fleetbase-extensions-generator] Generated', shimCount, 'extension shim(s)');
+            fs.writeFileSync(shimFile, extensionContent, 'utf8');
+            console.log('[fleetbase-extensions-generator]   ✓ Generated app/extensions/' + mountPath + '.js');
+        });
     },
 
-    /**
-     * Generate extension loaders in app/utils/
-     */
     generateExtensionLoaders(extensions) {
-        console.log('[fleetbase-extensions-generator] Generating extension loaders...');
-
         const utilsDir = path.join(this.project.root, 'app', 'utils');
 
-        // Create directory
         if (!fs.existsSync(utilsDir)) {
             fs.mkdirSync(utilsDir, { recursive: true });
         }
 
-        const lines = ['// GENERATED BY fleetbase-extensions-generator - DO NOT EDIT', '// Extension loader map for dynamic imports', '', 'export const EXTENSION_LOADERS = {'];
+        const loaders = {};
 
-        let loaderCount = 0;
-
-        for (const extension of extensions) {
-            const pkgName = extension.name;
-
-            // Check if extension.js exists
-            const extensionPath = path.join(this.project.root, 'node_modules', pkgName, 'addon', 'extension.js');
+        extensions.forEach((extension) => {
+            const extensionPath = path.join(this.project.root, 'node_modules', extension.name, 'addon', 'extension.js');
 
             if (!fs.existsSync(extensionPath)) {
-                continue;
+                return;
             }
 
-            const mountName = this.getExtensionMountPath(pkgName);
-            lines.push(`    '${pkgName}': () => import('@fleetbase/console/extensions/${mountName}'),`);
-            loaderCount++;
-        }
+            const mountPath = extension.fleetbase?.route || this.getExtensionMountPath(extension.name);
+            loaders[extension.name] = `() => import('@fleetbase/console/extensions/${mountPath}')`;
+        });
 
-        lines.push('};');
-        lines.push('');
+        const loadersContent = `// Auto-generated extension loaders
+export const EXTENSION_LOADERS = {
+${Object.entries(loaders)
+    .map(([name, loader]) => `    '${name}': ${loader}`)
+    .join(',\n')}
+};
 
-        const loadersContent = lines.join('\n');
-        const loadersPath = path.join(utilsDir, 'extension-loaders.generated.js');
+export default EXTENSION_LOADERS;
+`;
 
-        try {
-            fs.writeFileSync(loadersPath, loadersContent, 'utf8');
-            console.log('[fleetbase-extensions-generator]   \u2713 Generated app/utils/extension-loaders.generated.js with', loaderCount, 'loader(s)');
-        } catch (error) {
-            console.error('[fleetbase-extensions-generator]   ! Failed to write extension loaders:', error.message);
-        }
+        const loadersFile = path.join(utilsDir, 'extension-loaders.generated.js');
+        fs.writeFileSync(loadersFile, loadersContent, 'utf8');
+        console.log('[fleetbase-extensions-generator]   ✓ Generated app/utils/extension-loaders.generated.js');
     },
 
-    /**
-     * Generate router.js with extension mounts
-     */
     generateRouter(extensions) {
-        console.log('[fleetbase-extensions-generator] Generating router.js...');
+        const consoleExtensions = extensions.filter((extension) => !extension.fleetbase || extension.fleetbase.mount !== 'root');
+        const rootExtensions = extensions.filter((extension) => extension.fleetbase && extension.fleetbase.mount === 'root');
+        const routerMapPath = path.join(this.project.root, 'router.map.js');
+        const routerFileContents = fs.readFileSync(routerMapPath, 'utf-8');
+        const ast = recast.parse(routerFileContents, { parser: babelParser });
 
-        const routerMapFile = path.join(this.project.root, 'router.map.js');
-        const routerFile = path.join(this.project.root, 'app', 'router.js');
-
-        if (!fs.existsSync(routerMapFile)) {
-            console.error('[fleetbase-extensions-generator]   ! router.map.js not found at:', routerMapFile);
-            return;
-        }
-
-        // Read router.map.js (source template)
-        const routerContent = fs.readFileSync(routerMapFile, 'utf8');
-
-        // Separate extensions by mount location
-        const consoleExtensions = [];
-        const rootExtensions = [];
-
-        for (const extension of extensions) {
-            const mountLocation = extension.fleetbase?.route?.mountLocation || 'console';
-            const route = extension.fleetbase?.route?.slug || this.getExtensionMountPath(extension.name);
-
-            if (mountLocation === 'console') {
-                consoleExtensions.push({ name: extension.name, route });
-            } else if (mountLocation === 'root') {
-                rootExtensions.push({ name: extension.name, route });
-            }
-        }
-
-        console.log('[fleetbase-extensions-generator]   Console extensions:', consoleExtensions.length);
-        console.log('[fleetbase-extensions-generator]   Root extensions:', rootExtensions.length);
-
-        // Parse and modify the router using simple string manipulation
-        // (We'll use recast for proper AST manipulation)
-        const recast = require('recast');
-        const babelParser = require('recast/parsers/babel');
-
-        const ast = recast.parse(routerContent, { parser: babelParser });
-
-        let consoleAdded = 0;
-        let rootAdded = 0;
-
-        // Add console extensions
-        if (consoleExtensions.length > 0) {
-            consoleAdded = this.addConsoleExtensions(ast, consoleExtensions);
-        }
-
-        // Add root extensions
-        if (rootExtensions.length > 0) {
-            rootAdded = this.addRootExtensions(ast, rootExtensions);
-        }
-
-        // Generate output
-        const output = recast.print(ast, { quote: 'single' }).code;
-
-        try {
-            fs.writeFileSync(routerFile, output, 'utf8');
-            console.log('[fleetbase-extensions-generator]   \u2713 Generated app/router.js');
-            console.log('[fleetbase-extensions-generator]     - Console mounts:', consoleAdded);
-            console.log('[fleetbase-extensions-generator]     - Root mounts:', rootAdded);
-        } catch (error) {
-            console.error('[fleetbase-extensions-generator]   ! Failed to write router.js:', error.message);
-        }
-    },
-
-    /**
-     * Add console extensions to the router AST
-     */
-    addConsoleExtensions(ast, extensions) {
-        const recast = require('recast');
-        const types = recast.types;
-        const n = types.namedTypes;
-        const b = types.builders;
-
-        let addedCount = 0;
-
-        types.visit(ast, {
+        recast.visit(ast, {
             visitCallExpression(path) {
-                const node = path.node;
+                if (path.value.type === 'CallExpression' && path.value.callee.property.name === 'route' && path.value.arguments[0].value === 'console') {
+                    let functionExpression;
 
-                // Look for this.route('console', ...) with path: '/'
-                if (
-                    n.MemberExpression.check(node.callee) &&
-                    n.ThisExpression.check(node.callee.object) &&
-                    node.callee.property.name === 'route' &&
-                    node.arguments.length > 0 &&
-                    n.Literal.check(node.arguments[0]) &&
-                    node.arguments[0].value === 'console' &&
-                    node.arguments.length > 1 &&
-                    n.ObjectExpression.check(node.arguments[1]) &&
-                    node.arguments[1].properties.some((p) => n.Property.check(p) && p.key.name === 'path' && n.Literal.check(p.value) && p.value.value === '/')
-                ) {
-                    // Find the function expression in the third argument (after path config)
-                    if (node.arguments.length > 2 && n.FunctionExpression.check(node.arguments[2])) {
-                        const functionExpression = node.arguments[2];
+                    // Find the function expression
+                    path.value.arguments.forEach((arg) => {
+                        if (arg.type === 'FunctionExpression') {
+                            functionExpression = arg;
+                        }
+                    });
+                    
+                    if (functionExpression) {
+                        // Check and add the new engine mounts
+                        consoleExtensions.forEach((extension) => {
+                            const mountPath = module.exports.getExtensionMountPath(extension.name);
+                            let route = mountPath;
 
-                        // Add mount statements for each extension
-                        extensions.forEach((extension) => {
-                            // Check if already mounted
-                            if (!this.isEngineMounted(functionExpression.body.body, extension.name)) {
-                                const mountStatement = b.expressionStatement(
-                                    b.callExpression(b.memberExpression(b.thisExpression(), b.identifier('mount')), [
-                                        b.literal(extension.name),
-                                        b.objectExpression([b.property('init', b.identifier('as'), b.literal(extension.route))]),
-                                    ])
+                            if (extension.fleetbase && extension.fleetbase.route) {
+                                route = extension.fleetbase.route;
+                            }
+
+                            // Check if engine is already mounted
+                            const isMounted = functionExpression.body.body.some((expressionStatement) => {
+                                return expressionStatement.expression.arguments[0].value === extension.name;
+                            });
+
+                            // If not mounted, append to the function body
+                            if (!isMounted) {
+                                functionExpression.body.body.push(
+                                    builders.expressionStatement(
+                                        builders.callExpression(builders.memberExpression(builders.thisExpression(), builders.identifier('mount')), [
+                                            builders.literal(extension.name),
+                                            builders.objectExpression([
+                                                builders.property('init', builders.identifier('as'), builders.literal(route)),
+                                                builders.property('init', builders.identifier('path'), builders.literal(route)),
+                                            ]),
+                                        ])
+                                    )
                                 );
-
-                                functionExpression.body.body.push(mountStatement);
-                                addedCount++;
                             }
                         });
                     }
-
-                    return false; // Don't traverse children
                 }
 
-                this.traverse(path);
-            },
-        });
+                if (path.value.type === 'CallExpression' && path.value.callee.property.name === 'map') {
+                    let functionExpression;
 
-        return addedCount;
-    },
-
-    /**
-     * Add root extensions to the router AST
-     */
-    addRootExtensions(ast, extensions) {
-        const recast = require('recast');
-        const types = recast.types;
-        const n = types.namedTypes;
-        const b = types.builders;
-
-        let addedCount = 0;
-
-        types.visit(ast, {
-            visitCallExpression: (path) => {
-                const node = path.node;
-
-                // Look for Router.map(function() { ... })
-                if (
-                    n.MemberExpression.check(node.callee) &&
-                    n.Identifier.check(node.callee.object) &&
-                    node.callee.object.name === 'Router' &&
-                    node.callee.property.name === 'map' &&
-                    node.arguments.length > 0 &&
-                    n.FunctionExpression.check(node.arguments[0])
-                ) {
-                    const functionExpression = node.arguments[0];
-
-                    // Add mount statements for each root extension
-                    extensions.forEach((extension) => {
-                        // Check if already mounted
-                        if (!this.isEngineMounted(functionExpression.body.body, extension.name)) {
-                            const mountStatement = b.expressionStatement(
-                                b.callExpression(b.memberExpression(b.thisExpression(), b.identifier('mount')), [
-                                    b.literal(extension.name),
-                                    b.objectExpression([b.property('init', b.identifier('as'), b.literal(extension.route))]),
-                                ])
-                            );
-
-                            functionExpression.body.body.push(mountStatement);
-                            addedCount++;
+                    path.value.arguments.forEach((arg) => {
+                        if (arg.type === 'FunctionExpression') {
+                            functionExpression = arg;
                         }
                     });
 
-                    return false; // Don't traverse children
+                    if (functionExpression) {
+                        rootExtensions.forEach((extension) => {
+                            const mountPath = module.exports.getExtensionMountPath(extension.name);
+                            let route = mountPath;
+
+                            if (extension.fleetbase && extension.fleetbase.route) {
+                                route = extension.fleetbase.route;
+                            }
+
+                            const isMounted = functionExpression.body.body.some((expressionStatement) => {
+                                return expressionStatement.expression.arguments[0].value === extension.name;
+                            });
+
+                            if (!isMounted) {
+                                functionExpression.body.body.push(
+                                    builders.expressionStatement(
+                                        builders.callExpression(builders.memberExpression(builders.thisExpression(), builders.identifier('mount')), [
+                                            builders.literal(extension.name),
+                                            builders.objectExpression([
+                                                builders.property('init', builders.identifier('as'), builders.literal(route)),
+                                                builders.property('init', builders.identifier('path'), builders.literal(route)),
+                                            ]),
+                                        ])
+                                    )
+                                );
+                            }
+                        });
+                    }
                 }
 
                 this.traverse(path);
             },
         });
 
-        return addedCount;
+        const output = recast.print(ast, { quote: 'single' }).code;
+        const routerFile = path.join(this.project.root, 'app/router.js');
+        fs.writeFileSync(routerFile, output);
+        console.log('[fleetbase-extensions-generator]   ✓ Generated app/router.js');
     },
 
-    /**
-     * Check if an engine is already mounted in the AST
-     */
-    isEngineMounted(statements, engineName) {
-        const recast = require('recast');
-        const types = recast.types;
-        const n = types.namedTypes;
-
-        for (const statement of statements) {
-            if (
-                n.ExpressionStatement.check(statement) &&
-                n.CallExpression.check(statement.expression) &&
-                n.MemberExpression.check(statement.expression.callee) &&
-                statement.expression.callee.property.name === 'mount' &&
-                statement.expression.arguments.length > 0 &&
-                n.Literal.check(statement.expression.arguments[0]) &&
-                statement.expression.arguments[0].value === engineName
-            ) {
-                return true;
-            }
-        }
-
-        return false;
-    },
-
-    /**
-     * Generate extensions.json manifest in public/
-     */
     generateExtensionsManifest(extensions) {
-        console.log('[fleetbase-extensions-generator] Generating extensions manifest...');
-
         const publicDir = path.join(this.project.root, 'public');
 
-        // Create directory
         if (!fs.existsSync(publicDir)) {
             fs.mkdirSync(publicDir, { recursive: true });
         }
 
-        const manifestPath = path.join(publicDir, 'extensions.json');
-        const manifestContent = JSON.stringify(extensions, null, 2);
+        const manifest = extensions.map((ext) => ({
+            name: ext.name,
+            version: ext.version,
+            route: ext.fleetbase?.route,
+        }));
 
-        try {
-            fs.writeFileSync(manifestPath, manifestContent, 'utf8');
-            console.log('[fleetbase-extensions-generator]   \u2713 Generated public/extensions.json');
-        } catch (error) {
-            console.error('[fleetbase-extensions-generator]   ! Failed to write extensions.json:', error.message);
-        }
+        const manifestFile = path.join(publicDir, 'extensions.json');
+        fs.writeFileSync(manifestFile, JSON.stringify(manifest, null, 2), 'utf8');
+        console.log('[fleetbase-extensions-generator]   ✓ Generated public/extensions.json');
     },
 
-    /**
-     * Extract the mount path from an extension package name
-     */
-    getExtensionMountPath(extensionName) {
-        const segments = extensionName.split('/');
-        let mountName = segments[1] || segments[0];
-        return mountName.replace('-engine', '');
+    watchExtensionFiles() {
+        const isDevelopment = process.env.EMBER_ENV !== 'production';
+
+        if (!isDevelopment) {
+            return;
+        }
+
+        const self = this;
+        
+        this.getExtensions().then((extensions) => {
+            const extensionFiles = [];
+
+            extensions.forEach((extension) => {
+                const extensionPath = path.join(self.project.root, 'node_modules', extension.name, 'addon', 'extension.js');
+                if (fs.existsSync(extensionPath)) {
+                    extensionFiles.push(extensionPath);
+                }
+            });
+
+            if (extensionFiles.length === 0) {
+                return;
+            }
+
+            const watcher = chokidar.watch(extensionFiles, {
+                persistent: true,
+                ignoreInitial: true,
+            });
+
+            watcher.on('change', (filePath) => {
+                console.log('[fleetbase-extensions-generator] Extension file changed:', filePath);
+                console.log('[fleetbase-extensions-generator] Regenerating extension files...');
+                self.generateExtensionFiles();
+            });
+        });
     },
 };
