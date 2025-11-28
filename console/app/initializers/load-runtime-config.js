@@ -35,6 +35,7 @@ export function initialize(application) {
 export default {
     name: 'load-runtime-config',
     initialize,
-    // Run before everything else
+    // Run after intl polyfills are loaded, before socketcluster
+    after: 'load-intl-polyfills',
     before: 'load-socketcluster-client'
 };
