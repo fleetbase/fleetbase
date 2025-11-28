@@ -124,11 +124,11 @@ export default class ApplicationRoute extends Route {
      * Initializes the application's locale settings based on the current user's preferences.
      *
      * This method retrieves the user's preferred locale using the `getOption` method from the `currentUser` service.
-     * If no locale is set by the user, it defaults to `'en-us'`. It then sets the application's locale by calling
+     * If no locale is set by the user, it defaults to `'en-US'`. It then sets the application's locale by calling
      * the `setLocale` method of the `intl` service with the retrieved locale.
      */
     initializeLocale() {
-        const locale = this.currentUser.getOption('locale', 'en-us');
+        const locale = this.currentUser.getOption('locale', 'en-US');
         this.intl.setLocale([locale]);
     }
 
