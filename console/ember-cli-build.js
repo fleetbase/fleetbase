@@ -2,10 +2,6 @@
 
 /** eslint-disable node/no-unpublished-require */
 const EmberApp = require('ember-cli/lib/broccoli/ember-app');
-// const ExtensionDiscoveryPlugin = require('./lib/build-plugins/extension-discovery');
-// const ExtensionShimGeneratorPlugin = require('./lib/build-plugins/extension-shim-generator');
-// const ExtensionLoadersGeneratorPlugin = require('./lib/build-plugins/extension-loaders-generator');
-// const RouterGeneratorPlugin = require('./lib/build-plugins/router-generator');
 const Funnel = require('broccoli-funnel');
 const writeFile = require('broccoli-file-creator');
 const mergeTrees = require('broccoli-merge-trees');
@@ -32,6 +28,10 @@ module.exports = function (defaults) {
             options: {
                 ignore: ['app/router.js'],
             },
+        },
+
+        intl: {
+            silent: true,
         },
 
         'ember-simple-auth': {
@@ -63,58 +63,9 @@ module.exports = function (defaults) {
 
         babel: {
             plugins: [require.resolve('ember-auto-import/babel-plugin')],
-        }
+        },
     });
-
-    // const extensionDiscovery = new ExtensionDiscoveryPlugin([], {
-    //     projectRoot: __dirname,
-    //     annotation: 'Discover Fleetbase Extensions',
-    // });
-
-    // const extensionShims = new ExtensionShimGeneratorPlugin([extensionDiscovery], {
-    //     projectRoot: __dirname,
-    //     annotation: 'Generate Extension Shims',
-    // });
-
-    // const extensionLoaders = new ExtensionLoadersGeneratorPlugin([extensionDiscovery], {
-    //     projectRoot: __dirname,
-    //     annotation: 'Generate Extension Loaders',
-    // });
-
-    // const router = new RouterGeneratorPlugin([extensionDiscovery], {
-    //     projectRoot: __dirname,
-    //     annotation: 'Generate Router with Extension Mounts',
-    // });
-
-    // const generatedAppTree = mergeTrees(
-    //     [
-    //         new Funnel(extensionShims, {
-    //             srcDir: 'extensions',
-    //             destDir: 'extensions',
-    //         }),
-    //         new Funnel(extensionLoaders, {
-    //             srcDir: 'utils',
-    //             destDir: 'utils',
-    //         }),
-    //         new Funnel(router, {
-    //             srcDir: '/',
-    //             destDir: '/',
-    //         }),
-    //     ],
-    //     {
-    //         overwrite: true,
-    //         annotation: 'Merge Extension Generated Files into app tree',
-    //     }
-    // );
-
-    // app.trees.app = mergeTrees([app.trees.app, generatedAppTree], { overwrite: true });
-
-    // const extensionManifestTree = new Funnel(extensionDiscovery, {
-    //     srcDir: '/',
-    //     files: ['extensions.json'],
-    //     destDir: '/',
-    // });
-
+    
     let runtimeConfigTree;
     if (toBoolean(process.env.DISABLE_RUNTIME_CONFIG)) {
         runtimeConfigTree = writeFile('fleetbase.config.json', '{}');
