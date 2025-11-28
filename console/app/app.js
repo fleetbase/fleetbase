@@ -11,5 +11,4 @@ export default class App extends Application {
     engines = {};
 }
 
-// Load all initializers (including our new load-runtime-config initializer)
 loadInitializers(App, config.modulePrefix);
