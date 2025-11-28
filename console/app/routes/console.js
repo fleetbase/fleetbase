@@ -39,6 +39,7 @@ export default class ConsoleRoute extends Route {
     async afterModel(model, transition) {
         this.hookService.execute('console:after-model', this.session, this.router, model, transition);
         removeBootLoader();
+        console.log('boot loader removed');
     }
 
     /**

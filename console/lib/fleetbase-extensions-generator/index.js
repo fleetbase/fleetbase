@@ -13,6 +13,7 @@ module.exports = {
     name: require('./package').name,
 
     getGeneratedFileHeader() {
+        const year = (new Date()).getFullYear();
         return `/**
  * ███████╗██╗     ███████╗███████╗████████╗██████╗  █████╗ ███████╗███████╗
  * ██╔════╝██║     ██╔════╝██╔════╝╚══██╔══╝██╔══██╗██╔══██╗██╔════╝██╔════╝
@@ -27,7 +28,7 @@ module.exports = {
  * Any manual changes will be overwritten on the next build.
  * 
  * @generated
- * @copyright © 2024 Fleetbase Pte Ltd. All rights reserved.
+ * @copyright © ${year} Fleetbase Pte Ltd. All rights reserved.
  * @license AGPL-3.0-or-later
  */
 
@@ -37,17 +38,15 @@ module.exports = {
     included(app) {
         this._super.included.apply(this, arguments);
         
-        console.log('\n' + '='.repeat(80));
+        console.log('\n' + '/'.repeat(70));
         console.log('[Fleetbase] Extension Build System');
-        console.log('='.repeat(80));
+        console.log('/'.repeat(70));
         
         // Generate files on startup
         this.generateExtensionFiles();
         
         // Watch for changes in development
         this.watchExtensionFiles();
-        
-        console.log('='.repeat(80) + '\n');
     },
 
     async generateExtensionFiles() {

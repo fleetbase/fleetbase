@@ -96,7 +96,10 @@ export default class ApplicationRoute extends Route {
      * @memberof ApplicationRoute
      */
     afterModel() {
-        if (!this.session.isAuthenticated) removeBootLoader();
+        if (!this.session.isAuthenticated) {
+            console.log('boot loader removed');
+            removeBootLoader();
+        }
     }
 
     /**
