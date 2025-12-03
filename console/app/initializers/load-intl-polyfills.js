@@ -40,5 +40,5 @@ export function initialize(application) {
 
 export default {
     name: 'load-intl-polyfills',
-    initialize
+    initialize,
 };

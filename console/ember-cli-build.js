@@ -21,13 +21,7 @@ module.exports = function (defaults) {
         storeConfigInMeta: false,
 
         fingerprint: {
-            exclude: [
-                'leaflet/', 
-                'leaflet-images/', 
-                'socketcluster-client.min.js',
-                'fleetbase.config.json',
-                'extensions.json'
-            ],
+            exclude: ['leaflet/', 'leaflet-images/', 'socketcluster-client.min.js', 'fleetbase.config.json', 'extensions.json'],
         },
 
         liveReload: {
@@ -71,7 +65,7 @@ module.exports = function (defaults) {
             plugins: [require.resolve('ember-auto-import/babel-plugin')],
         },
     });
-    
+
     let runtimeConfigTree;
     if (toBoolean(process.env.DISABLE_RUNTIME_CONFIG)) {
         runtimeConfigTree = writeFile('fleetbase.config.json', '{}');

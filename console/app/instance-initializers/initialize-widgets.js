@@ -1,5 +1,6 @@
 import { Widget } from '@fleetbase/ember-core/contracts';
 import { faGithub } from '@fortawesome/free-brands-svg-icons';
+import { debug } from '@ember/debug';
 
 /**
  * Register dashboard and widgets for FleetbaseConsole
@@ -8,7 +9,7 @@ import { faGithub } from '@fortawesome/free-brands-svg-icons';
 export function initialize(appInstance) {
     const widgetService = appInstance.lookup('service:universe/widget-service');
 
-    console.log('[initialize-widgets] Registering console dashboard and widgets...');
+    debug('[Initializing Widgets] Registering console dashboard and widgets...');
 
     // Register the console dashboard
     widgetService.registerDashboard('dashboard');

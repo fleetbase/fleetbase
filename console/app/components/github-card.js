@@ -52,7 +52,7 @@ export default class GithubCardComponent extends Component {
             this.data = cachedData;
         } else {
             // Fetch new data
-            const response = yield fetch('https://api.github.com/repos/fleetbase/fleetbase');
+            const response = yield fetch('https://api.github.com/repos/fleetbase/fleetbase', { cache: 'default' });
             if (response.ok) {
                 this.data = yield response.json();
                 this.localCache.set('fleetbase-github-data', this.data);
@@ -72,7 +72,7 @@ export default class GithubCardComponent extends Component {
             this.tags = cachedTags;
         } else {
             // Fetch new tags
-            const response = yield fetch('https://api.github.com/repos/fleetbase/fleetbase/tags');
+            const response = yield fetch('https://api.github.com/repos/fleetbase/fleetbase/tags', { cache: 'default' });
             if (response.ok) {
                 this.tags = yield response.json();
                 this.localCache.set('fleetbase-github-tags', this.tags);

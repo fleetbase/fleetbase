@@ -14,17 +14,18 @@ import { debug } from '@ember/debug';
  */
 export function initialize(application) {
     const startTime = performance.now();
-    debug('[Initializer:load-runtime-config] Loading runtime configuration...');
+    debug('[Runtime Config] Loading runtime configuration...');
 
     // Defer readiness until config is loaded
     application.deferReadiness();
     (async () => {
         try {
             await loadRuntimeConfig();
-            debug(`[Initializer:load-runtime-config] Runtime config loaded in ${(endTime - startTime).toFixed(2)}ms`);
+            const endTime = performance.now();
+            debug(`[Runtime Config] Runtime config loaded in ${(endTime - startTime).toFixed(2)}ms`);
             application.advanceReadiness();
         } catch (error) {
-            console.error('[Initializer:load-runtime-config] Failed to load runtime config:', error);
+            console.error('[Runtime Config] Failed to load runtime config:', error);
             // Still advance readiness to prevent hanging
             application.advanceReadiness();
         }

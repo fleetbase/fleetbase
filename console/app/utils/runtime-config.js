@@ -60,21 +60,21 @@ export function applyRuntimeConfig(rawConfig = {}) {
             const coercedValue = coerceValue(key, value);
             set(config, configPath, coercedValue);
         } else {
-            debug(`[runtime-config] Ignored unknown key: ${key}`);
+            debug(`[Runtime Config] Ignored unknown key: ${key}`);
         }
     });
 }
 
 /**
  * Get cached config from localStorage
- * 
+ *
  * @returns {Object|null} Cached config or null
  */
 function getCachedConfig() {
     try {
         const cached = localStorage.getItem(CACHE_KEY);
         const cachedVersion = localStorage.getItem(CACHE_VERSION_KEY);
-        
+
         if (!cached || !cachedVersion) {
             return null;
         }
@@ -84,55 +84,55 @@ function getCachedConfig() {
 
         // Check if cache is still valid (within TTL)
         if (cacheAge > CACHE_TTL) {
-            debug('[runtime-config] Cache expired');
+            debug('[Runtime Config] Cache expired');
             return null;
         }
 
-        debug(`[runtime-config] Using cached config (age: ${Math.round(cacheAge / 1000)}s)`);
+        debug(`[Runtime Config] Using cached config (age: ${Math.round(cacheAge / 1000)}s)`);
         return cacheData.config;
     } catch (e) {
-        debug(`[runtime-config] Failed to read cache: ${e.message}`);
+        debug(`[Runtime Config] Failed to read cache: ${e.message}`);
         return null;
     }
 }
 
 /**
  * Save config to localStorage cache
- * 
+ *
  * @param {Object} config Config object
  */
 function setCachedConfig(config) {
     try {
         const cacheData = {
             config,
-            timestamp: Date.now()
+            timestamp: Date.now(),
         };
         localStorage.setItem(CACHE_KEY, JSON.stringify(cacheData));
         localStorage.setItem(CACHE_VERSION_KEY, '1');
-        debug('[runtime-config] Config cached to localStorage');
+        debug('[Runtime Config] Config cached to localStorage');
     } catch (e) {
-        debug(`[runtime-config] Failed to cache config: ${e.message}`);
+        debug(`[Runtime Config] Failed to cache config: ${e.message}`);
     }
 }
 
 /**
  * Clear cached config
- * 
+ *
  * @export
  */
 export function clearRuntimeConfigCache() {
     try {
         localStorage.removeItem(CACHE_KEY);
         localStorage.removeItem(CACHE_VERSION_KEY);
-        debug('[runtime-config] Cache cleared');
+        debug('[Runtime Config] Cache cleared');
     } catch (e) {
-        debug(`[runtime-config] Failed to clear cache: ${e.message}`);
+        debug(`[Runtime Config] Failed to clear cache: ${e.message}`);
     }
 }
 
 /**
  * Load and apply runtime config with localStorage caching.
- * 
+ *
  * Strategy:
  * 1. Check localStorage cache first (instant, no HTTP request)
  * 2. If cache hit and valid, use it immediately
@@ -147,34 +147,34 @@ export default async function loadRuntimeConfig() {
         return;
     }
 
-    // Try cache first
-    const cachedConfig = getCachedConfig();
-    if (cachedConfig) {
-        applyRuntimeConfig(cachedConfig);
-        return;
-    }
+    // // Try cache first
+    // const cachedConfig = getCachedConfig();
+    // if (cachedConfig) {
+    //     applyRuntimeConfig(cachedConfig);
+    //     return;
+    // }
 
     // Cache miss - fetch from server
     try {
         const startTime = performance.now();
-        const response = await fetch(`/fleetbase.config.json`, { 
-            cache: 'default' // Use browser cache if available
+        const response = await fetch('/fleetbase.config.json', {
+            cache: 'default', // Use browser cache if available
         });
-        
+
         if (!response.ok) {
-            debug('[runtime-config] No fleetbase.config.json found, using built-in config defaults');
+            debug('[Runtime Config] No fleetbase.config.json found, using built-in config defaults');
             return;
         }
 
         const runtimeConfig = await response.json();
         const endTime = performance.now();
-        
-        debug(`[runtime-config] Fetched from server in ${(endTime - startTime).toFixed(2)}ms`);
-        
+
+        debug(`[Runtime Config] Fetched from server in ${(endTime - startTime).toFixed(2)}ms`);
+
         // Apply and cache
         applyRuntimeConfig(runtimeConfig);
         setCachedConfig(runtimeConfig);
     } catch (e) {
-        debug(`[runtime-config] Failed to load runtime config: ${e.message}`);
+        debug(`[Runtime Config] Failed to load runtime config: ${e.message}`);
     }
 }

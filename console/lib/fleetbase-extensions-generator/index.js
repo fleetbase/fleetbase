@@ -13,7 +13,7 @@ module.exports = {
     name: require('./package').name,
 
     getGeneratedFileHeader() {
-        const year = (new Date()).getFullYear();
+        const year = new Date().getFullYear();
         return `/**
  * ███████╗██╗     ███████╗███████╗████████╗██████╗  █████╗ ███████╗███████╗
  * ██╔════╝██║     ██╔════╝██╔════╝╚══██╔══╝██╔══██╗██╔══██╗██╔════╝██╔════╝
@@ -37,41 +37,41 @@ module.exports = {
 
     included(app) {
         this._super.included.apply(this, arguments);
-        
+
         console.log('\n' + '/'.repeat(70));
         console.log('[Fleetbase] Extension Build System');
         console.log('/'.repeat(70));
-        
+
         // Generate files on startup
         this.generateExtensionFiles();
-        
+
         // Watch for changes in development
         this.watchExtensionFiles();
     },
 
     async generateExtensionFiles() {
         const extensions = await this.getExtensions();
-        
+
         if (extensions.length === 0) {
             console.log('[Fleetbase] No extensions found');
             return;
         }
-        
+
         console.log(`[Fleetbase] Discovered ${extensions.length} extension(s)`);
-        extensions.forEach(ext => {
+        extensions.forEach((ext) => {
             console.log(`[Fleetbase]   - ${ext.name} (v${ext.version})`);
         });
         console.log('');
-        
+
         // Generate extension shims
         this.generateExtensionShims(extensions);
-        
+
         // Generate extension loaders
         this.generateExtensionLoaders(extensions);
-        
+
         // Generate router
         this.generateRouter(extensions);
-        
+
         // Generate manifest
         this.generateExtensionsManifest(extensions);
     },
@@ -184,12 +184,14 @@ module.exports = {
 
             const mountPath = extension.fleetbase?.route || this.getExtensionMountPath(extension.name);
             const camelCaseName = mountPath.replace(/-([a-z])/g, (g) => g[1].toUpperCase());
-            
+
             imports.push(`import ${camelCaseName} from './${mountPath}';`);
             loaders[extension.name] = `() => ${camelCaseName}`;
         });
 
-        const loadersContent = this.getGeneratedFileHeader() + `${imports.join('\n')}
+        const loadersContent =
+            this.getGeneratedFileHeader() +
+            `${imports.join('\n')}
 
 export const EXTENSION_LOADERS = {
 ${Object.entries(loaders)
@@ -227,7 +229,7 @@ export default getExtensionLoader;
                             functionExpression = arg;
                         }
                     });
-                    
+
                     if (functionExpression) {
                         // Check and add the new engine mounts
                         consoleExtensions.forEach((extension) => {
@@ -337,7 +339,7 @@ export default getExtensionLoader;
         }
 
         const self = this;
-        
+
         this.getExtensions().then((extensions) => {
             const extensionFiles = [];
 

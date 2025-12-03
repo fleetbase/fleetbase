@@ -17,6 +17,5 @@ export async function initialize(appInstance) {
 
 export default {
     name: 'load-extensions',
-    initialize
+    initialize,
 };
-

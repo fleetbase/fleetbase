@@ -12,6 +12,5 @@ export async function initialize(appInstance) {
 export default {
     name: 'setup-extensions',
     after: ['load-extensions', 'initialize-registries', 'initialize-widgets'],
-    initialize
+    initialize,
 };
-
