@@ -125,10 +125,10 @@ Next copy this value to the `APP_KEY` environment variable in the application co
   
 **Routing:** Fleetbase ships with a default OSRM server hosted by `[router.project-osrm.org](https://router.project-osrm.org)` but you’re able to use your own or any other OSRM compatible server. You can modify this in the `console/environments` directory by modifying the .env file of the environment you’re deploying and setting the `OSRM_HOST` to the OSRM server for Fleetbase to use.  
   
-**Services:** There are a few environment variables which need to be set for Fleetbase to function with full features. If you’re deploying with docker then it’s easiest to just create a `docker-compose.override.yml` and supply the environment variables in this file.
+**Services:** There are a few environment variables which need to be set for Fleetbase to function with full features. If you're deploying with docker then it's easiest to just create a `docker-compose.override.yml` and supply the environment variables in this file.
 
 ```yaml
-version: “3.8”
+version: "3.8"
 services:  
   application:  
     environment:  
@@ -141,7 +141,17 @@ services:
       TWILIO_SID:  
       TWILIO_TOKEN:
       TWILIO_FROM:
+
+  socket:
+    environment:
+      # IMPORTANT: Configure WebSocket origins for security
+      # Development (localhost only - include WebSocket protocols):
+      SOCKETCLUSTER_OPTIONS: '{"origins":"http://localhost:*,https://localhost:*,ws://localhost:*,wss://localhost:*"}'
+      # Production (replace with your actual domain):
+      # SOCKETCLUSTER_OPTIONS: '{"origins":"https://yourdomain.com:*,wss://yourdomain.com:*"}'
 ```
+
+**WebSocket Security:** The `SOCKETCLUSTER_OPTIONS` environment variable controls which domains can connect to the WebSocket server. Always restrict origins to your specific domains in production to prevent security vulnerabilities.
 
 You can learn more about full installation, and configuration in the [official documentation](https://docs.fleetbase.io/getting-started/install).
 
