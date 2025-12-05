@@ -1,0 +1,15 @@
+{
+    "name": "fleetbase-extensions-generator",
+    "version": "0.0.0",
+    "private": true,
+    "keywords": [
+        "ember-addon"
+    ],
+    "ember-addon": {
+        "configPath": "tests/dummy/config"
+    },
+    "dependencies": {
+        "broccoli-funnel": "^5.0.2",
+        "broccoli-merge-trees": "^5.2.1"
+    }
+}

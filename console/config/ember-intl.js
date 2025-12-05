@@ -14,7 +14,7 @@ module.exports = function (/* environment */) {
          * @type {String?}
          * @default "null"
          */
-        fallbackLocale: 'en-us',
+        fallbackLocale: 'en-US',
 
         /**
          * Path where translations are stored.  This is relative to the project root.

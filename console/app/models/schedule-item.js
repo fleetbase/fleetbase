@@ -14,9 +14,9 @@ export default class ScheduleItemModel extends Model {
     @attr('date') break_end_at;
     @attr('string', { defaultValue: 'pending' }) status;
     @attr('object') meta;
-    
+
     @belongsTo('schedule') schedule;
-    
+
     @attr('date') created_at;
     @attr('date') updated_at;
     @attr('date') deleted_at;

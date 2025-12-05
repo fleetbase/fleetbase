@@ -107,8 +107,12 @@ export default class UserVerificationService extends Service {
     }
 
     #wait(timeout = 75000) {
-        return later(this, () => {
-            this.waiting = true;
-        }, timeout);
+        return later(
+            this,
+            () => {
+                this.waiting = true;
+            },
+            timeout
+        );
     }
 }

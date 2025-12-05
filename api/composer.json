@@ -18,12 +18,12 @@
         }
     ],
     "require": {
-        "php": "^8.0",
+        "php": ">=8.0 <=8.2.28",
         "appstract/laravel-opcache": "^4.0",
-        "fleetbase/core-api": "^1.6.25",
-        "fleetbase/fleetops-api": "^0.6.26",
-        "fleetbase/registry-bridge": "^0.1.0",
-        "fleetbase/storefront-api": "^0.4.7",
+        "fleetbase/core-api": "^1.6.27",
+        "fleetbase/fleetops-api": "^0.6.28",
+        "fleetbase/registry-bridge": "^0.1.1",
+        "fleetbase/storefront-api": "^0.4.8",
         "guzzlehttp/guzzle": "^7.0.1",
         "laravel/framework": "^10.0",
         "laravel/octane": "^2.3",

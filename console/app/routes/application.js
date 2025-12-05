@@ -7,6 +7,8 @@ import pathToRoute from '@fleetbase/ember-core/utils/path-to-route';
 import removeBootLoader from '../utils/remove-boot-loader';
 
 export default class ApplicationRoute extends Route {
+    @service('universe/hook-service') hookService;
+    @service('universe/extension-manager') extensionManager;
     @service session;
     @service theme;
     @service fetch;
@@ -15,7 +17,6 @@ export default class ApplicationRoute extends Route {
     @service intl;
     @service currentUser;
     @service router;
-    @service universe;
     @tracked defaultTheme;
 
     /**
@@ -24,7 +25,7 @@ export default class ApplicationRoute extends Route {
      * @memberof ApplicationRoute
      */
     @action willTransition(transition) {
-        this.universe.callHooks('application:will-transition', this.session, this.router, transition);
+        this.hookService.execute('application:will-transition', this.session, this.router, transition);
     }
 
     /**
@@ -45,7 +46,7 @@ export default class ApplicationRoute extends Route {
      * @memberof ApplicationRoute
      */
     @action loading(transition) {
-        this.universe.callHooks('application:loading', this.session, this.router, transition);
+        this.hookService.execute('application:loading', this.session, this.router, transition);
     }
 
     /**
@@ -79,9 +80,9 @@ export default class ApplicationRoute extends Route {
      */
     async beforeModel(transition) {
         await this.session.setup();
-        await this.universe.booting();
+        await this.extensionManager.waitForBoot();
 
-        this.universe.callHooks('application:before-model', this.session, this.router, transition);
+        this.hookService.execute('application:before-model', this.session, this.router, transition);
 
         const shift = this.urlSearchParams.get('shift');
         if (this.session.isAuthenticated && shift) {
@@ -95,9 +96,7 @@ export default class ApplicationRoute extends Route {
      * @memberof ApplicationRoute
      */
     afterModel() {
-        if (!this.session.isAuthenticated) {
-            removeBootLoader();
-        }
+        if (!this.session.isAuthenticated) removeBootLoader();
     }
 
     /**
@@ -122,11 +121,11 @@ export default class ApplicationRoute extends Route {
      * Initializes the application's locale settings based on the current user's preferences.
      *
      * This method retrieves the user's preferred locale using the `getOption` method from the `currentUser` service.
-     * If no locale is set by the user, it defaults to `'en-us'`. It then sets the application's locale by calling
+     * If no locale is set by the user, it defaults to `'en-US'`. It then sets the application's locale by calling
      * the `setLocale` method of the `intl` service with the retrieved locale.
      */
     initializeLocale() {
-        const locale = this.currentUser.getOption('locale', 'en-us');
+        const locale = this.currentUser.getOption('locale', 'en-US');
         this.intl.setLocale([locale]);
     }
 
