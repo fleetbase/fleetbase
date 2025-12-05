@@ -27,12 +27,16 @@ services:
 
   socket:
     image: socketcluster/socketcluster:v17.4.0
+    platform: linux/amd64
     restart: unless-stopped
     ports:
       - "38000:8000"
     environment:
       SOCKETCLUSTER_WORKERS: 10
       SOCKETCLUSTER_BROKERS: 10
+      # SOCKETCLUSTER_OPTIONS can be set via docker-compose.override.yml for specific environments
+      # For production, use: SOCKETCLUSTER_OPTIONS: '{"origins":"https://yourdomain.com:*"}'
+      # For development, use: SOCKETCLUSTER_OPTIONS: '{"origins":"http://localhost:*"}'
 
   scheduler:
     image: fleetbase/fleetbase-api:latest
