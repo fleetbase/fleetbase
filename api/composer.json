@@ -18,15 +18,12 @@
         }
     ],
     "require": {
-        "php": "^8.0",
+        "php": ">=8.0 <=8.2.28",
         "appstract/laravel-opcache": "^4.0",
-        "fleetbase/billing-api": "^0.1.10",
-        "fleetbase/core-api": "^1.6.24",
-        "fleetbase/fleetops-api": "^0.6.25",
-        "fleetbase/fliit-api": "^0.0.1",
-        "fleetbase/internals-api": "^0.0.21",
-        "fleetbase/registry-bridge": "^0.1.0",
-        "fleetbase/storefront-api": "^0.4.6",
+        "fleetbase/core-api": "^1.6.27",
+        "fleetbase/fleetops-api": "^0.6.28",
+        "fleetbase/registry-bridge": "^0.1.1",
+        "fleetbase/storefront-api": "^0.4.8",
         "guzzlehttp/guzzle": "^7.0.1",
         "laravel/framework": "^10.0",
         "laravel/octane": "^2.3",
@@ -55,30 +52,6 @@
         {
             "type": "composer",
             "url": "https://registry.fleetbase.io"
-        },
-        {
-            "type": "path",
-            "url": "../packages/core-api"
-        },
-        {
-            "type": "path",
-            "url": "../packages/fleetops"
-        },
-        {
-            "type": "path",
-            "url": "../packages/storefront"
-        },
-        {
-            "type": "path",
-            "url": "../packages/fliit"
-        },
-        {
-            "type": "path",
-            "url": "../packages/internals"
-        },
-        {
-            "type": "path",
-            "url": "../packages/billing"
         }
     ],
     "autoload": {
@@ -124,7 +97,7 @@
         }
     },
     "config": {
-        "secure-http": false, 
+        "secure-http": false,
         "optimize-autoloader": true,
         "preferred-install": "dist",
         "sort-packages": true,

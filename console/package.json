@@ -33,11 +33,15 @@
     },
     "dependencies": {
         "@ember/legacy-built-in-components": "^0.4.2",
-        "@fleetbase/ember-core": "link:../packages/ember-core",
-        "@fleetbase/ember-ui": "link:../packages/ember-ui",
-        "@fleetbase/fleetops-data": "^0.1.23",
-        "@fleetbase/fleetops-engine": "link:../packages/fleetops",
         "@fleetbase/leaflet-routing-machine": "^3.2.17",
+        "@fleetbase/ember-core": "^0.3.7",
+        "@fleetbase/ember-ui": "^0.3.12",
+        "@fleetbase/fleetops-data": "^0.1.23",
+        "@fleetbase/storefront-engine": "^0.4.8",
+        "@fleetbase/fleetops-engine": "^0.6.28",
+        "@fleetbase/iam-engine": "^0.1.5",
+        "@fleetbase/dev-engine": "^0.2.11",
+        "@fleetbase/registry-bridge-engine": "^0.1.1",
         "@formatjs/intl-datetimeformat": "^6.18.2",
         "@formatjs/intl-numberformat": "^8.15.6",
         "@formatjs/intl-pluralrules": "^5.4.6",
@@ -145,9 +149,9 @@
     },
     "pnpm": {
         "overrides": {
-            "@fleetbase/ember-core": "link:../packages/ember-core",
-            "@fleetbase/ember-ui": "link:../packages/ember-ui",
-            "@fleetbase/fleetops-data": "latest"
+            "@fleetbase/ember-core": "^0.3.7",
+            "@fleetbase/ember-ui": "^0.3.12",
+            "@fleetbase/fleetops-data": "^0.1.23"
         }
     },
     "prettier": {
