@@ -1,0 +1,25 @@
+# Docker Compose Override Example
+# Copy this file to docker-compose.override.yml and customize for your environment
+
+version: "3.8"
+services:
+  application:
+    environment:
+      CONSOLE_HOST: http://localhost:4200
+      # Add your environment-specific variables here
+      MAIL_MAILER: smtp  # or ses, mailgun, postmark, sendgrid
+      OSRM_HOST: https://router.project-osrm.org
+      # IPINFO_API_KEY: your_api_key
+      # GOOGLE_MAPS_API_KEY: your_api_key
+      # GOOGLE_MAPS_LOCALE: us
+      # TWILIO_SID: your_twilio_sid
+      # TWILIO_TOKEN: your_twilio_token
+      # TWILIO_FROM: your_twilio_phone
+
+  socket:
+    environment:
+      # DEVELOPMENT: Allow localhost connections (HTTP, HTTPS, and WebSocket protocols)
+      SOCKETCLUSTER_OPTIONS: '{"origins":"http://localhost:*,https://localhost:*,ws://localhost:*,wss://localhost:*"}'
+      
+      # PRODUCTION: Replace with your actual domain(s) - include all protocols
+      # SOCKETCLUSTER_OPTIONS: '{"origins":"https://yourdomain.com:*,wss://yourdomain.com:*,https://app.yourdomain.com:*,wss://app.yourdomain.com:*"}'

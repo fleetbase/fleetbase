@@ -13,9 +13,9 @@ export default class ScheduleTemplateModel extends Model {
     @attr('number') break_duration;
     @attr('string') rrule;
     @attr('object') meta;
-    
+
     @belongsTo('company') company;
-    
+
     @attr('date') created_at;
     @attr('date') updated_at;
     @attr('date') deleted_at;

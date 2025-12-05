@@ -107,8 +107,8 @@ export function suppressRouterRefreshErrors(application) {
         // Global error handler for unhandled promise rejections
         window.addEventListener('unhandledrejection', (event) => {
             const error = event.reason;
-            if (error?.message?.includes("You didn't provide enough string/numeric parameters to satisfy all of the dynamic segments")) {
-                debug('[Fleetbase Router Patch] Suppressed known Ember route refresh bug:', error.message);
+            if (typeof error?.message === 'string' && error?.message.includes("You didn't provide enough string/numeric parameters to satisfy all of the dynamic segments")) {
+                debug('[Fleetbase Router Patch] Suppressed known Ember route refresh bug: ' + error.message);
                 event.preventDefault(); // Prevent the error from being logged
             }
         });
@@ -118,8 +118,8 @@ export function suppressRouterRefreshErrors(application) {
             const originalEmberError = window.Ember.onerror;
 
             window.Ember.onerror = function (error) {
-                if (error?.message?.includes("You didn't provide enough string/numeric parameters to satisfy all of the dynamic segments")) {
-                    debug('[Fleetbase Router Patch] Suppressed known Ember route refresh bug:', error.message);
+                if (typeof error?.message === 'string' && error?.message.includes("You didn't provide enough string/numeric parameters to satisfy all of the dynamic segments")) {
+                    debug('[Fleetbase Router Patch] Suppressed known Ember route refresh bug: ' + error.message);
                     return; // Suppress the error
                 }
 

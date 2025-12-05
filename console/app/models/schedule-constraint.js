@@ -14,9 +14,9 @@ export default class ScheduleConstraintModel extends Model {
     @attr('number', { defaultValue: 0 }) priority;
     @attr('boolean', { defaultValue: true }) is_active;
     @attr('object') meta;
-    
+
     @belongsTo('company') company;
-    
+
     @attr('date') created_at;
     @attr('date') updated_at;
     @attr('date') deleted_at;
