@@ -55,12 +55,9 @@ Router.map(function () {
                 this.route('index', { path: '/' }, function () {
                     this.route('users', { path: '/:public_id/users' });
                 });
-<<<<<<< HEAD
-=======
             });
             this.route('schedule-monitor', function () {
                 this.route('logs', { path: '/:id/logs' });
->>>>>>> 23d5ecfdb856aac664f6124188de619f036d825b
             });
         });
     });
