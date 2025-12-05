@@ -50,6 +50,13 @@ module.exports = {
     },
 
     async generateExtensionFiles() {
+        // Clean up old/stale extensions directory before generating new files
+        const extensionsDir = path.join(this.project.root, 'app', 'extensions');
+        if (fs.existsSync(extensionsDir)) {
+            console.log('[Fleetbase] Cleaning up old extensions directory...');
+            fs.rmSync(extensionsDir, { recursive: true, force: true });
+        }
+
         const extensions = await this.getExtensions();
 
         if (extensions.length === 0) {
