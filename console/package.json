@@ -11,8 +11,7 @@
         "test": "tests"
     },
     "scripts": {
-        "prebuild": "node prebuild.js",
-        "build": "pnpm run prebuild && ember build",
+        "build": "ember build",
         "lint": "concurrently \"npm:lint:*(!fix)\" --names \"lint:\"",
         "lint:css": "stylelint \"**/*.css\"",
         "lint:css:fix": "concurrently \"npm:lint:css -- --fix\"",
@@ -22,8 +21,8 @@
         "lint:js": "eslint . --cache",
         "lint:js:fix": "eslint . --fix",
         "lint:intl": "fleetbase-intl-lint",
-        "start": "pnpm run prebuild && ember serve",
-        "start:dev": "pnpm run prebuild && ember serve --environment development",
+        "start": "ember serve",
+        "start:dev": "ember serve --environment development",
         "test": "concurrently \"npm:lint\" \"npm:test:*\" --names \"lint,test:\"",
         "test:ember": "ember test"
     },
