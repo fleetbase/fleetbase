@@ -2,6 +2,7 @@ import Route from '@ember/routing/route';
 import { inject as service } from '@ember/service';
 
 export default class VirtualRoute extends Route {
+    @service('universe/menu-service') menuService;
     @service universe;
 
     queryParams = {
@@ -12,6 +13,6 @@ export default class VirtualRoute extends Route {
 
     model({ slug }, transition) {
         const view = this.universe.getViewFromTransition(transition);
-        return this.universe.lookupMenuItemFromRegistry('auth:login', slug, view);
+        return this.menuService.lookupMenuItem('auth:login', slug, view);
     }
 }
