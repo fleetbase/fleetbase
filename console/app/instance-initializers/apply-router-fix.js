@@ -21,8 +21,7 @@ export function initialize(appInstance) {
     debug('[Initializing Router Patch] Applying router refresh bug fix...');
 
     try {
-        const application = appInstance.application;
-        applyRouterFix(application);
+        applyRouterFix(appInstance);
 
         const endTime = performance.now();
         debug(`[Initializing Router Patch] Router fix applied in ${(endTime - startTime).toFixed(2)}ms`);
