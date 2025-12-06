@@ -5,16 +5,7 @@ const EmberApp = require('ember-cli/lib/broccoli/ember-app');
 const Funnel = require('broccoli-funnel');
 const writeFile = require('broccoli-file-creator');
 const mergeTrees = require('broccoli-merge-trees');
-const postcssImport = require('postcss-import');
-const postcssPresetEnv = require('postcss-preset-env');
-const postcssEach = require('postcss-each');
-const postcssMixins = require('postcss-mixins');
-const postcssConditionals = require('postcss-conditionals-renewed');
-const postcssAtRulesVariables = require('postcss-at-rules-variables');
-const autoprefixer = require('autoprefixer');
-const tailwind = require('tailwindcss');
 const toBoolean = require('./config/utils/to-boolean');
-const environment = process.env.EMBER_ENV;
 
 module.exports = function (defaults) {
     const app = new EmberApp(defaults, {
@@ -36,29 +27,6 @@ module.exports = function (defaults) {
 
         'ember-simple-auth': {
             useSessionSetupMethod: true,
-        },
-
-        postcssOptions: {
-            compile: {
-                enabled: true,
-                cacheInclude: [/.*\.(css|scss|hbs)$/, /.*\/tailwind\/config\.js$/, /.*tailwind\.js$/],
-                plugins: [
-                    postcssAtRulesVariables,
-                    postcssImport({
-                        path: ['node_modules'],
-                        plugins: [postcssAtRulesVariables, postcssImport],
-                    }),
-                    postcssMixins,
-                    postcssPresetEnv({ stage: 1 }),
-                    postcssEach,
-                    tailwind('./tailwind.config.js'),
-                    autoprefixer,
-                ],
-            },
-            filter: {
-                enabled: true,
-                plugins: [postcssAtRulesVariables, postcssMixins, postcssEach, postcssConditionals, tailwind('./tailwind.config.js')],
-            },
         },
 
         babel: {

@@ -79,6 +79,12 @@ function getCachedConfig() {
             return null;
         }
 
+        // Application version has changed
+        if (cachedVersion !== config.APP.version) {
+            debug(`[Runtime Config] Version mismatch (cached: ${cachedVersion}, current: ${config.APP.version})`);
+            return null;
+        }
+
         const cacheData = JSON.parse(cached);
         const cacheAge = Date.now() - cacheData.timestamp;
 
@@ -101,14 +107,14 @@ function getCachedConfig() {
  *
  * @param {Object} config Config object
  */
-function setCachedConfig(config) {
+function setCachedConfig(runtimeConfig) {
     try {
         const cacheData = {
-            config,
+            config: runtimeConfig,
             timestamp: Date.now(),
         };
         localStorage.setItem(CACHE_KEY, JSON.stringify(cacheData));
-        localStorage.setItem(CACHE_VERSION_KEY, '1');
+        localStorage.setItem(CACHE_VERSION_KEY, config.APP.version);
         debug('[Runtime Config] Config cached to localStorage');
     } catch (e) {
         debug(`[Runtime Config] Failed to cache config: ${e.message}`);
@@ -147,12 +153,15 @@ export default async function loadRuntimeConfig() {
         return;
     }
 
-    // // Try cache first
-    // const cachedConfig = getCachedConfig();
-    // if (cachedConfig) {
-    //     applyRuntimeConfig(cachedConfig);
-    //     return;
-    // }
+    const isProduction = config?.environment === 'production';
+    if (isProduction) {
+        // Try cache first
+        const cachedConfig = getCachedConfig();
+        if (cachedConfig) {
+            applyRuntimeConfig(cachedConfig);
+            return;
+        }
+    }
 
     // Cache miss - fetch from server
     try {
