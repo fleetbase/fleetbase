@@ -121,7 +121,7 @@ jobs:
 
   build_frontend:
     name: Build and Deploy the Console
-    needs: [build_service]
+    # needs: [build_service]
     runs-on: ubuntu-latest
     permissions:
       id-token: write # This is required for requesting the JWT
