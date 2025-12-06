@@ -1,6 +1,6 @@
 {
     "name": "@fleetbase/console",
-    "version": "0.7.20",
+    "version": "0.7.21",
     "private": true,
     "description": "Modular logistics and supply chain operating system (LSOS)",
     "repository": "https://github.com/fleetbase/fleetbase",
@@ -33,15 +33,15 @@
     },
     "dependencies": {
         "@ember/legacy-built-in-components": "^0.4.2",
-        "@fleetbase/dev-engine": "^0.2.11",
-        "@fleetbase/ember-core": "^0.3.7",
-        "@fleetbase/ember-ui": "^0.3.12",
+        "@fleetbase/dev-engine": "^0.2.12",
+        "@fleetbase/ember-core": "^0.3.8",
+        "@fleetbase/ember-ui": "^0.3.13",
         "@fleetbase/fleetops-data": "^0.1.23",
-        "@fleetbase/fleetops-engine": "^0.6.28",
-        "@fleetbase/iam-engine": "^0.1.5",
+         "@fleetbase/fleetops-engine": "^0.6.29",
+        "@fleetbase/iam-engine": "^0.1.6",
         "@fleetbase/leaflet-routing-machine": "^3.2.17",
-        "@fleetbase/registry-bridge-engine": "^0.1.1",
-        "@fleetbase/storefront-engine": "^0.4.8",
+        "@fleetbase/registry-bridge-engine": "^0.1.2",
+        "@fleetbase/storefront-engine": "^0.4.9",
         "@formatjs/intl-datetimeformat": "^6.18.2",
         "@formatjs/intl-numberformat": "^8.15.6",
         "@formatjs/intl-pluralrules": "^5.4.6",
@@ -82,6 +82,8 @@
         "broccoli-asset-rev": "^3.0.0",
         "broccoli-file-creator": "^2.1.1",
         "broccoli-funnel": "^3.0.8",
+        "broccoli-merge-trees": "^4.2.0",
+        "chokidar": "4.0.3",
         "concurrently": "^8.2.2",
         "date-fns": "^2.30.0",
         "dragula": "^3.7.3",
@@ -166,5 +168,6 @@
                 }
             }
         ]
-    }
+    },
+    "packageManager": "pnpm@9.5.0+sha512.140036830124618d624a2187b50d04289d5a087f326c9edfc0ccd733d76c4f52c3a313d4fc148794a2a9d81553016004e6742e8cf850670268a7387fc220c903"
 }
