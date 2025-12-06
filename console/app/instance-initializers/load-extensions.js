@@ -6,12 +6,10 @@ export async function initialize(appInstance) {
     const application = appInstance.application;
     const extensionManager = appInstance.lookup('service:universe/extension-manager');
 
-    if (!application.extensions || application.extensions.length === 0) {
-        try {
-            await extensionManager.loadExtensions(application);
-        } catch (error) {
-            console.error('[load-extensions] Error:', error);
-        }
+    try {
+        await extensionManager.loadExtensions(application);
+    } catch (error) {
+        console.error('[load-extensions] Error:', error);
     }
 }
 
