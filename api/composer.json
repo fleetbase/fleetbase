@@ -23,7 +23,7 @@
         "fleetbase/core-api": "^1.6.28",
         "fleetbase/fleetops-api": "^0.6.29",
         "fleetbase/registry-bridge": "^0.1.2",
-        "fleetbase/storefront-api": "^0.4.9",
+        "fleetbase/storefront-api": "dev-dev-v0.4.10",
         "fleetbase/billing-api": "^0.1.12",
         "fleetbase/internals-api": "^0.0.23",
         "fleetbase/aws-marketplace": "^0.0.8",
@@ -64,6 +64,10 @@
         {
             "type": "vcs",
             "url": "https://github.com/fleetbase/internals"
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/fleetbase/storefront"
         },
         {
             "type": "composer",
