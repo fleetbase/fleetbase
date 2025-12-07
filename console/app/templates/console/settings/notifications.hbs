@@ -17,7 +17,7 @@
                                     @selected={{get this.notificationSettings (concat (get-notification-key notification.definition notification.name) ".notifiables")}}
                                     @onChange={{fn this.onSelectNotifiable notification}}
                                     @placeholder="Select notifiables..."
-                                    @triggerClass="form-select form-input form-input-sm flex-1"
+                                    @triggerClass="form-select form-input flex-1"
                                     as |notifiable|
                                 >
                                     {{notifiable.label}}
@@ -27,6 +27,21 @@
                     {{/each}}
                 </ContentPanel>
             {{/each-in}}
+
+            <ContentPanel @title="SMS Notification Settings" @open={{true}} @wrapperClass="bordered-classic">
+                <Toggle @isToggled={{this.company.options.alpha_numeric_sender_id_enabled}} @onToggle={{this.toggleAlphaNumericSenderId}} @label="Enable Alpha-Numeric Sender ID" @wrapperClass="mb-4" />
+                <InputGroup @name="Alpha-Numeric Sender ID" @value={{this.company.options.alpha_numeric_sender_id}} @helpText="Set the custom alphanumeric name that will appear as the sender for all SMS sent by your organization. Up to 11 letters or numbers. Not supported in all countries." @disabled={{not this.company.options.alpha_numeric_sender_id_enabled}} />
+                <div class="space-y-2 mb-3">
+                    <InfoBlock>
+                        <p>Alphanumeric Sender IDs allow your organization to replace a traditional phone number with a custom text-based sender name when sending SMS notifications (e.g., Fleetbase, MyStore, DispatchHQ). This can improve brand recognition, increase message trust, and enhance deliverability in regions where numeric senders are restricted by local carriers.</p>
+                        <p>When enabled, Fleetbase will use this sender ID for all outbound SMS messages sent on behalf of your organization, including order updates, verification codes, driver notifications, and other automated alerts. Sender IDs can contain up to 11 characters using letters and numbers.</p>
+                        <p>Some countries require or enforce specific messaging rules, and certain carriers may only support alphanumeric senders. Using a Sender ID can significantly improve message delivery in these regions.</p>
+                    </InfoBlock>
+                    <InfoBlock @type="warning">
+                        <p>Delivery of SMS using Alphanumeric Sender IDs depends on local carrier policies. Some regions may restrict or block numeric senders or require the use of alphanumeric senders for successful delivery. While Fleetbase will attempt to deliver all messages using your configured Sender ID, message delivery cannot be guaranteed in countries with carrier-level filtering or regulatory restrictions. Your organization is responsible for ensuring compliance with local messaging regulations in the countries you send SMS to.</p>
+                    </InfoBlock>
+                </div>
+            </ContentPanel>
         </div>
     </div>
     <Spacer @height="300px" />

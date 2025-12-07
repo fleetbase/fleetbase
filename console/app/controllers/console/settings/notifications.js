@@ -6,35 +6,13 @@ import createNotificationKey from '@fleetbase/ember-core/utils/create-notificati
 import { task } from 'ember-concurrency';
 
 export default class ConsoleSettingsNotificationsController extends Controller {
-    /**
-     * Inject the notifications service.
-     *
-     * @memberof ConsoleSettingsNotificationsController
-     */
     @service notifications;
-
-    /**
-     * Inject the fetch service.
-     *
-     * @memberof ConsoleSettingsNotificationsController
-     */
     @service fetch;
-
-    /**
-     * The notification settings value JSON.
-     *
-     * @memberof ConsoleSettingsNotificationsController
-     * @var {Object}
-     */
+    @service store;
+    @service currentUser;
     @tracked notificationSettings = {};
-
-    /**
-     * Notification transport methods enabled.
-     *
-     * @memberof ConsoleSettingsNotificationsController
-     * @var {Array}
-     */
     @tracked notificationTransportMethods = ['email', 'sms'];
+    @tracked company;
 
     /**
      * Creates an instance of ConsoleSettingsNotificationsController.
@@ -43,6 +21,40 @@ export default class ConsoleSettingsNotificationsController extends Controller {
     constructor() {
         super(...arguments);
         this.getSettings.perform();
+    }
+
+    /**
+     * Toggles the "Alphanumeric Sender ID" feature for the current company.
+     *
+     * Updates the company's `options` object by setting the
+     * `alpha_numeric_sender_id_enabled` flag. This controls whether the
+     * organization uses a custom alphanumeric sender ID when sending SMS.
+     *
+     * @action
+     * @param {boolean} enabled - Whether the feature should be enabled or disabled.
+     * @returns {void}
+     */
+    @action toggleAlphaNumericSenderId(enabled) {
+        const currentOptions = this.company.options ?? {};
+        this.company.set('options', { ...currentOptions, alpha_numeric_sender_id_enabled: enabled });
+    }
+
+    /**
+     * Sets the Alphanumeric Sender ID string for the current company.
+     *
+     * Reads the input's value from the event and updates the company's `options`
+     * object by setting the `alpha_numeric_sender_id` field. This value represents
+     * the sender name that will appear in outbound SMS messages (subject to carrier
+     * support and restrictions).
+     *
+     * @action
+     * @param {Event} event - Input event containing the alphanumeric sender ID value.
+     * @returns {void}
+     */
+    @action setAlphaNumericSenderId(event) {
+        const value = event.target.value;
+        const currentOptions = this.company.options ?? {};
+        this.company.set('options', { ...currentOptions, alpha_numeric_sender_id: value });
     }
 
     /**
@@ -94,7 +106,8 @@ export default class ConsoleSettingsNotificationsController extends Controller {
         const { notificationSettings } = this;
 
         try {
-            yield this.fetch.post('notifications/save-settings', { notificationSettings });
+            yield this.fetch.post('notifications/save-settings', { notificationSettings: notificationSettings ?? {} });
+            yield this.saveCompanyOptions.perform();
             this.notifications.success('Notification settings successfully saved.');
         } catch (error) {
             this.notifications.serverError(error);
@@ -110,6 +123,28 @@ export default class ConsoleSettingsNotificationsController extends Controller {
         try {
             const { notificationSettings } = yield this.fetch.get('notifications/get-settings');
             this.notificationSettings = notificationSettings;
+        } catch (error) {
+            this.notifications.serverError(error);
+        }
+    }
+
+    /**
+     * Saves the updated company options to the backend.
+     *
+     * This ember-concurrency task attempts to persist the company's modified
+     * `options` object by calling `company.save()`. If the request fails, a server
+     * error notification is displayed. No action is taken if no company is loaded.
+     *
+     * @task
+     * @generator
+     * @yields {Promise} Resolves when the save request completes.
+     * @returns {Promise<void>} Task completion state.
+     */
+    @task *saveCompanyOptions() {
+        if (!this.company) return;
+
+        try {
+            yield this.company.save();
         } catch (error) {
             this.notifications.serverError(error);
         }
