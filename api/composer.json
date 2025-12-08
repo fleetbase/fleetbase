@@ -21,7 +21,7 @@
         "php": ">=8.0 <=8.2.28",
         "appstract/laravel-opcache": "^4.0",
         "fleetbase/core-api": "^1.6.28",
-        "fleetbase/fleetops-api": "^0.6.29",
+        "fleetbase/fleetops-api": "dev-dev-v0.6.30",
         "fleetbase/registry-bridge": "^0.1.2",
         "fleetbase/storefront-api": "dev-dev-v0.4.10",
         "fleetbase/billing-api": "^0.1.12",
@@ -68,6 +68,10 @@
         {
             "type": "vcs",
             "url": "https://github.com/fleetbase/storefront"
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/fleetbase/fleetops"
         },
         {
             "type": "composer",
