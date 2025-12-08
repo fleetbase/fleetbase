@@ -1,11 +1,19 @@
-export function initialize(application) {
-    const universe = application.lookup('service:universe');
-    if (universe) {
-        universe.createRegistries(['@fleetbase/console', 'auth:login']);
-        universe.bootEngines(application);
+/**
+ * Load extensions from the API using ExtensionManager
+ * This must run before other initializers that depend on extensions
+ */
+export async function initialize(appInstance) {
+    const application = appInstance.application;
+    const extensionManager = appInstance.lookup('service:universe/extension-manager');
+
+    try {
+        await extensionManager.loadExtensions(application);
+    } catch (error) {
+        console.error('[load-extensions] Error:', error);
     }
 }
 
 export default {
+    name: 'load-extensions',
     initialize,
 };

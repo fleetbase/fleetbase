@@ -6,14 +6,16 @@
     <Layout::Sidebar::Item @route="console.admin.branding" @icon="palette">{{t "console.admin.menu.branding"}}</Layout::Sidebar::Item>
     <Layout::Sidebar::Item @route="console.admin.two-fa-settings" @icon="shield-halved">{{t "console.admin.menu.2fa-config"}}</Layout::Sidebar::Item>
     <Layout::Sidebar::Item @route="console.admin.schedule-monitor" @icon="calendar-check">{{t "console.admin.schedule-monitor.schedule-monitor"}}</Layout::Sidebar::Item>
-    {{#each this.universe.adminMenuItems as |menuItem|}}
+    
+    {{#each this.menuService.adminMenuItems as |menuItem|}}
         <Layout::Sidebar::Item
             @onClick={{fn this.universe.transitionMenuItem "console.admin.virtual" menuItem}}
             @item={{menuItem}}
             @icon={{menuItem.icon}}
         >{{menuItem.title}}</Layout::Sidebar::Item>
     {{/each}}
-    {{#each this.universe.adminMenuPanels as |menuPanel|}}
+
+    {{#each this.menuService.adminMenuPanels as |menuPanel|}}
         <Layout::Sidebar::Panel @open={{menuPanel.open}} @title={{menuPanel.title}}>
             {{#each menuPanel.items as |menuItem|}}
                 <Layout::Sidebar::Item

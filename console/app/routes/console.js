@@ -5,9 +5,9 @@ import removeBootLoader from '../utils/remove-boot-loader';
 import '@fleetbase/leaflet-routing-machine';
 
 export default class ConsoleRoute extends Route {
+    @service('universe/hook-service') hookService;
     @service store;
     @service session;
-    @service universe;
     @service router;
     @service currentUser;
     @service intl;
@@ -22,7 +22,7 @@ export default class ConsoleRoute extends Route {
     async beforeModel(transition) {
         await this.session.requireAuthentication(transition, 'auth.login');
 
-        this.universe.callHooks('console:before-model', this.session, this.router, transition);
+        this.hookService.execute('console:before-model', this.session, this.router, transition);
 
         if (this.session.isAuthenticated) {
             return this.session.promiseCurrentUser(transition);
@@ -37,7 +37,7 @@ export default class ConsoleRoute extends Route {
      * @memberof ConsoleRoute
      */
     async afterModel(model, transition) {
-        this.universe.callHooks('console:after-model', this.session, this.router, model, transition);
+        this.hookService.execute('console:after-model', this.session, this.router, model, transition);
         removeBootLoader();
     }
 
@@ -47,7 +47,7 @@ export default class ConsoleRoute extends Route {
      * @memberof ConsoleRoute
      */
     @action didTransition() {
-        this.universe.callHooks('console:did-transition', this.session, this.router);
+        this.hookService.execute('console:did-transition', this.session, this.router);
     }
 
     /**
