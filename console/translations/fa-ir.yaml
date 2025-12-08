@@ -60,6 +60,103 @@ buttons:
   reject-order:      رد سفارش
   start-delivery:    شروع تحویل
   end-delivery:      پایان تحویل
+vehicle:
+  columns:
+    id:               شناسه
+    name:             نام
+    license-plate:    پلاک
+    vin:              شماره VIN
+    type:             نوع
+    status:           وضعیت
+    fuel-level:       سطح سوخت
+    location:         مکان
+    created-at:       ایجاد شده در
+    updated-at:       به‌روزرسانی شده در
+  fields:
+    name:             نام خودرو
+    license-plate:    شماره پلاک
+    vin:              شماره شناسایی خودرو (VIN)
+    type:             نوع خودرو
+    make:             سازنده
+    model:            مدل
+    year:             سال ساخت
+    capacity:         ظرفیت
+    fuel-type:        نوع سوخت
+    status:           وضعیت (فعال/غیرفعال)
+
+order:
+  columns:
+    id:               شناسه
+    number:           شماره سفارش
+    status:           وضعیت
+    customer:         مشتری
+    origin:           مبدأ
+    destination:      مقصد
+    total:            مجموع
+    created-at:       ایجاد شده در
+  fields:
+    number:           شماره سفارش
+    status:           وضعیت (در حال پردازش/تحویل شده)
+    customer-name:    نام مشتری
+    phone:            تلفن مشتری
+    origin:           آدرس مبدأ
+    destination:      آدرس مقصد
+    items:            اقلام
+    total:            مبلغ کل
+    notes:            یادداشت‌ها
+
+driver:
+  columns:
+    id:               شناسه
+    name:             نام
+    phone:            تلفن
+    license:          گواهینامه
+    status:           وضعیت
+    vehicle:          خودرو
+    rating:           امتیاز
+  fields:
+    name:             نام راننده
+    phone:            شماره تلفن
+    email:            ایمیل
+    license-number:   شماره گواهینامه
+    license-type:     نوع گواهینامه
+    status:           وضعیت (فعال/مشغول)
+    rating:           امتیاز (از 1 تا 5)
+
+fleet:
+  columns:
+    id:               شناسه
+    name:             نام
+    vehicles-count:   تعداد خودروها
+    drivers-count:    تعداد رانندگان
+    status:           وضعیت
+  fields:
+    name:             نام ناوگان
+    code:             کد ناوگان
+    manager:          مدیر
+    location:         مکان پایگاه
+
+contact:
+  fields:
+    name:             نام
+    email:            ایمیل
+    phone:            تلفن
+    company:          شرکت
+    type:             نوع (مشتری/تأمین‌کننده)
+
+place:
+  fields:
+    name:             نام مکان
+    address:          آدرس
+    lat:              عرض جغرافیایی
+    lng:              طول جغرافیایی
+    type:             نوع (انبار/دفتر)
+
+custom-fields:
+  label:             برچسب
+  type:              نوع (متن/عدد/انتخابی)
+  required:          الزامی
+  options:           گزینه‌ها (برای dropdown)
 common:
   new: جدید
   create: ایجاد
