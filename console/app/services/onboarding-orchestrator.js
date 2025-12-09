@@ -7,6 +7,7 @@ export default class OnboardingOrchestratorService extends Service {
     @service onboardingContext;
 
     @tracked flow = null;
+    @tracked wrapper = null;
     @tracked current = null;
     @tracked history = [];
     @tracked sessionId = null;
@@ -15,6 +16,7 @@ export default class OnboardingOrchestratorService extends Service {
         const flow = this.onboardingRegistry.getFlow(flowId ?? this.onboardingRegistry.defaultFlow);
         if (!flow) throw new Error(`Onboarding flow '${flowId}' not found`);
         this.flow = flow;
+        this.wrapper = flow.wrapper || null;
         this.sessionId = opts.sessionId || null;
         this.history = [];
         this.goto(flow.entry);
