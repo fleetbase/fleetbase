@@ -1,9 +1,6 @@
 {
 	frankenphp {
-		# Reduced from 24 to 20 for better resource management
-		# With 4 containers: 20 × 4 = 80 total workers
-		# Requires db.t3.large (591 max connections) or better
-		num_threads 20
+		num_threads 24
 	}
 	order php_server before file_server
 }
@@ -11,14 +8,6 @@
 http://:8000 {
 	root * /fleetbase/api/public
 	encode zstd br gzip
-	
-	# Request timeouts to prevent hanging
-	timeouts {
-		read_body 10s
-		read_header 5s
-		write 60s
-		idle 120s
-	}
 	
 	php_server {
 		resolve_root_symlink
