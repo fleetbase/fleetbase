@@ -75,7 +75,7 @@ ENV QUEUE_CONNECTION=redis
 ENV CADDYFILE_PATH=/fleetbase/Caddyfile
 ENV CONSOLE_PATH=/fleetbase/console
 ENV OCTANE_SERVER=frankenphp
-ENV FLEETBASE_VERSION=0.7.22
+ENV FLEETBASE_VERSION=0.7.23
 
 # Set environment
 ARG ENVIRONMENT=production
@@ -158,14 +158,14 @@ CMD ["php", "artisan", "queue:work"]
 # Application dev stage
 FROM base AS app-dev
 ENTRYPOINT ["docker-php-entrypoint"]
-CMD ["sh", "-c", "php artisan octane:frankenphp --max-requests=250 --port=8000 --host=0.0.0.0 --watch"]
+CMD ["sh", "-c", "php artisan octane:frankenphp --max-requests=1000 --port=8000 --host=0.0.0.0 --watch"]
 
 # Application release stage
 FROM base AS app-release
 ENTRYPOINT ["docker-php-entrypoint"]
-CMD ["sh", "-c", "php artisan octane:frankenphp --max-requests=250 --port=8000 --host=0.0.0.0"] 
+CMD ["sh", "-c", "php artisan octane:frankenphp --max-requests=1000 --port=8000 --host=0.0.0.0"] 
 
 # Application stage
 FROM base AS app
 ENTRYPOINT ["/sbin/ssm-parent", "-c", ".ssm-parent.yaml", "run", "--", "docker-php-entrypoint"]
-CMD ["sh", "-c", "php artisan octane:frankenphp --max-requests=250 --port=8000 --host=0.0.0.0"]
+CMD ["sh", "-c", "php artisan octane:frankenphp --max-requests=1000 --port=8000 --host=0.0.0.0"]

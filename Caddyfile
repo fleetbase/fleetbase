@@ -8,6 +8,7 @@
 http://:8000 {
 	root * /fleetbase/api/public
 	encode zstd br gzip
+	
 	php_server {
 		resolve_root_symlink
 	}

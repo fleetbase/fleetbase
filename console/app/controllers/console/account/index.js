@@ -68,6 +68,7 @@ export default class ConsoleAccountIndexController extends Controller {
                 subject_uuid: this.user.id,
                 subject_type: 'user',
                 type: 'user_avatar',
+                resize: 'md'
             },
             (uploadedFile) => {
                 this.user.setProperties({
