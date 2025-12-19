@@ -29,7 +29,7 @@ export default class UserSerializer extends ApplicationSerializer.extend(Embedde
             let attrs = normalized.data.attributes || {};
 
             for (let key in attrs) {
-                if (attrs[key] === null || attrs[key] === undefined) {
+                if (attrs[key] === null || attrs[key] === undefined || key === 'avatar_url') {
                     delete attrs[key];
                 }
             }

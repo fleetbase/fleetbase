@@ -4,9 +4,9 @@
     <div class="container mx-auto h-screen">
         <div class="max-w-3xl my-10 mx-auto">
             <ContentPanel @title={{t "common.your-profile"}} @open={{true}} @wrapperClass="bordered-classic">
-                <form class="flex flex-col md:flex-row" {{on "submit" (perform this.saveProfile)}}>
+                <form class="flex flex-col items-start md:flex-row" {{on "submit" (perform this.saveProfile)}}>
                     <div class="w-32 flex flex-col justify-center mb-6 mr-6">
-                        <Image src={{this.user.avatar_url}} @fallbackSrc={{config "defaultValues.userImage"}} alt={{this.user.name}} class="w-32 h-32 rounded-md" />
+                        <Image src={{this.user.avatar_url}} @fallbackSrc={{config "defaultValues.userImage"}} alt={{this.user.name}} class="w-32 h-32 rounded-md mt-1" />
                         <FileUpload
                             @name={{t "console.account.index.photos"}}
                             @accept="image/*"
