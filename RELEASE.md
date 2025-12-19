@@ -1,14 +1,35 @@
-# 🚀 Fleetbase v0.7.22 — 2025-12-07
+# 🚀 Fleetbase v0.7.23 — 2025-12-19
 
-> "Organizations can now set their own alpha-numeric sender ID for SMS"
+> "🤯 Insane optimization and performance upgrades + horizontal scaling support 🚀"
 
 ---
 
 ## ✨ Highlights
-- **Custom Alphanumeric Sender ID for SMS:**  
-  Organizations can now configure their own **Alphanumeric Sender ID** used when sending verification codes and other SMS notifications.  
-  This feature improves brand recognition, enhances trust, and aligns outbound communication with each organization’s identity.  
-  Supported in regions/carriers where alphanumeric senders are allowed (e.g., Mongolia and others).
+
+- Major performance and optimization improvements which support horizontal scaling
+- Ability to resize images on upload using resize parameters
+- Several patches in FleetOps - fixed service rates and missing translations, improvements and patch to scheduler
+- Added a new `LanguageService` available in ember-core
+- Minor `@fleetbase/ember-ui` improvements
+
+### New Features
+- **Improved API performance** with two-layer caching system (Redis + ETag validation) for user and organization data
+- **Reduced bandwidth usage** with automatic HTTP 304 Not Modified responses via new ValidateETag middleware
+- **Faster page loads** with intelligent cache invalidation that updates immediately when data changes
+- **New UserCacheService class** for centralized cache management across the application
+- **Image resizing support** for dynamic image dimensions via URL parameters
+- Added `ApiModelCache` class - Provides intelligent Redis-based caching for API query results with automatic invalidation
+- Added `HasApiModelCache` trait - Enables models to cache query results with a single method call
+
+### Performance Improvements
+- Optimized form data syncing to eliminate N+1 query problems, reducing database queries from N to 2 for relationship syncing
+- Implemented cache stampede prevention to handle high concurrent load efficiently
+- Added cache versioning system for automatic invalidation when data changes
+
+### Developer Experience
+- Added `X-Cache-Status` header to API responses for easy cache debugging (HIT/MISS visibility)
+- Automatic multi-tenant cache key generation for company-scoped data isolation
+- Graceful fallback to direct queries when cache is unavailable
 
 ---
 
