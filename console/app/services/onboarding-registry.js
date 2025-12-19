@@ -9,7 +9,7 @@ export default class OnboardingRegistryService extends Service {
         this.defaultFlow = flowId;
     }
 
-    registerFlow(flow) {
+    registerFlow(flow, options = {}) {
         if (!flow || !flow.id || !flow.entry || !Array.isArray(flow.steps)) {
             throw new Error('Invalid FlowDef: id, entry, steps are required');
         }
@@ -23,6 +23,11 @@ export default class OnboardingRegistryService extends Service {
             }
         }
         this.flows.set(flow.id, flow);
+
+        // If specified, set as default flow
+        if (options.default) {
+            this.defaultFlow = flow.id;
+        }
     }
 
     getFlow(id) {
