@@ -1,35 +1,17 @@
-# 🚀 Fleetbase v0.7.23 — 2025-12-19
+# 🚀 Fleetbase v0.7.24 — 2025-12-21
 
-> "🤯 Insane optimization and performance upgrades + horizontal scaling support 🚀"
+> "Critical core-api patches for cache key generation"
 
 ---
 
 ## ✨ Highlights
 
-- Major performance and optimization improvements which support horizontal scaling
-- Ability to resize images on upload using resize parameters
-- Several patches in FleetOps - fixed service rates and missing translations, improvements and patch to scheduler
-- Added a new `LanguageService` available in ember-core
-- Minor `@fleetbase/ember-ui` improvements
+### Bug Fixes
+- **Fixed cache key collision bug** - Different filter parameters (e.g., `type=customer` vs `type=contact`) now generate unique cache keys instead of returning wrong cached results
+- **Fixed BadMethodCallException** - Models without soft deletes (like Permission) no longer crash when calling `getDeletedAtColumn()`
 
-### New Features
-- **Improved API performance** with two-layer caching system (Redis + ETag validation) for user and organization data
-- **Reduced bandwidth usage** with automatic HTTP 304 Not Modified responses via new ValidateETag middleware
-- **Faster page loads** with intelligent cache invalidation that updates immediately when data changes
-- **New UserCacheService class** for centralized cache management across the application
-- **Image resizing support** for dynamic image dimensions via URL parameters
-- Added `ApiModelCache` class - Provides intelligent Redis-based caching for API query results with automatic invalidation
-- Added `HasApiModelCache` trait - Enables models to cache query results with a single method call
-
-### Performance Improvements
-- Optimized form data syncing to eliminate N+1 query problems, reducing database queries from N to 2 for relationship syncing
-- Implemented cache stampede prevention to handle high concurrent load efficiently
-- Added cache versioning system for automatic invalidation when data changes
-
-### Developer Experience
-- Added `X-Cache-Status` header to API responses for easy cache debugging (HIT/MISS visibility)
-- Automatic multi-tenant cache key generation for company-scoped data isolation
-- Graceful fallback to direct queries when cache is unavailable
+### Improvements
+- **Added caching to Permission model** - Permission queries now benefit from Redis caching for improved performance
 
 ---
 
