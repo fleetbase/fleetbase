@@ -1,17 +1,13 @@
-# 🚀 Fleetbase v0.7.24 — 2025-12-21
+# 🚀 Fleetbase v0.7.25 — 2025-12-29
 
-> "Critical core-api patches for cache key generation"
+> "New SMS service to support multiple SMS providers + framework improvements"
 
 ---
 
 ## ✨ Highlights
-
-### Bug Fixes
-- **Fixed cache key collision bug** - Different filter parameters (e.g., `type=customer` vs `type=contact`) now generate unique cache keys instead of returning wrong cached results
-- **Fixed BadMethodCallException** - Models without soft deletes (like Permission) no longer crash when calling `getDeletedAtColumn()`
-
-### Improvements
-- **Added caching to Permission model** - Permission queries now benefit from Redis caching for improved performance
+- Removed `window.Fleetbase` for improved frontend security
+- Improved query optimizations
+- Added new SMS service to support multiple SMS providers
 
 ---
 
