@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "0a4d5402ef0197586152d90d3bd5a5df",
+    "content-hash": "96a0ad8b0fce1b2eeb89c0f07ed3a9c9",
     "packages": [
         {
             "name": "appstract/laravel-opcache",
@@ -124,16 +124,16 @@
         },
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.368.2",
+            "version": "3.369.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "96397db9a3fd0b5e6b3c52e363b6a55831a93b1d"
+                "reference": "11d11bd6b5b0fc2b8e1ee1b5b758360dc2671a33"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/96397db9a3fd0b5e6b3c52e363b6a55831a93b1d",
-                "reference": "96397db9a3fd0b5e6b3c52e363b6a55831a93b1d",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/11d11bd6b5b0fc2b8e1ee1b5b758360dc2671a33",
+                "reference": "11d11bd6b5b0fc2b8e1ee1b5b758360dc2671a33",
                 "shasum": ""
             },
             "require": {
@@ -147,7 +147,7 @@
                 "mtdowling/jmespath.php": "^2.8.0",
                 "php": ">=8.1",
                 "psr/http-message": "^1.0 || ^2.0",
-                "symfony/filesystem": "^v6.4.3 || ^v7.1.0 || ^v8.0.0"
+                "symfony/filesystem": "^v5.4.45 || ^v6.4.3 || ^v7.1.0 || ^v8.0.0"
             },
             "require-dev": {
                 "andrewsville/php-token-reflection": "^1.4",
@@ -215,9 +215,9 @@
             "support": {
                 "forum": "https://github.com/aws/aws-sdk-php/discussions",
                 "issues": "https://github.com/aws/aws-sdk-php/issues",
-                "source": "https://github.com/aws/aws-sdk-php/tree/3.368.2"
+                "source": "https://github.com/aws/aws-sdk-php/tree/3.369.3"
             },
-            "time": "2025-12-18T19:07:30+00:00"
+            "time": "2025-12-26T19:10:15+00:00"
         },
         {
             "name": "aws/aws-sdk-php-laravel",
@@ -2157,16 +2157,16 @@
         },
         {
             "name": "fleetbase/core-api",
-            "version": "1.6.30",
+            "version": "1.6.32",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fleetbase/core-api.git",
-                "reference": "9020d1219f15eacab54ef2439681dae23cba1941"
+                "reference": "65ac2eea8d2508a12229aa040445908a2db5227c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fleetbase/core-api/zipball/9020d1219f15eacab54ef2439681dae23cba1941",
-                "reference": "9020d1219f15eacab54ef2439681dae23cba1941",
+                "url": "https://api.github.com/repos/fleetbase/core-api/zipball/65ac2eea8d2508a12229aa040445908a2db5227c",
+                "reference": "65ac2eea8d2508a12229aa040445908a2db5227c",
                 "shasum": ""
             },
             "require": {
@@ -2253,9 +2253,9 @@
             ],
             "support": {
                 "issues": "https://github.com/fleetbase/core-api/issues",
-                "source": "https://github.com/fleetbase/core-api/tree/v1.6.30"
+                "source": "https://github.com/fleetbase/core-api/tree/v1.6.32"
             },
-            "time": "2025-12-21T03:58:35+00:00"
+            "time": "2025-12-29T12:24:09+00:00"
         },
         {
             "name": "fleetbase/countries",
@@ -2324,16 +2324,16 @@
         },
         {
             "name": "fleetbase/fleetops-api",
-            "version": "0.6.31",
+            "version": "0.6.32",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fleetbase/fleetops.git",
-                "reference": "66edd91babdaf9e8a7a8c6b03842fe0857f5077f"
+                "reference": "666369af0b5a0b15742f8850c67858ab9e9aba0e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fleetbase/fleetops/zipball/66edd91babdaf9e8a7a8c6b03842fe0857f5077f",
-                "reference": "66edd91babdaf9e8a7a8c6b03842fe0857f5077f",
+                "url": "https://api.github.com/repos/fleetbase/fleetops/zipball/666369af0b5a0b15742f8850c67858ab9e9aba0e",
+                "reference": "666369af0b5a0b15742f8850c67858ab9e9aba0e",
                 "shasum": ""
             },
             "require": {
@@ -2408,9 +2408,9 @@
             ],
             "support": {
                 "issues": "https://github.com/fleetbase/fleetops/issues",
-                "source": "https://github.com/fleetbase/fleetops/tree/v0.6.31"
+                "source": "https://github.com/fleetbase/fleetops/tree/v0.6.32"
             },
-            "time": "2025-12-19T15:09:42+00:00"
+            "time": "2025-12-29T10:26:01+00:00"
         },
         {
             "name": "fleetbase/laravel-mysql-spatial",
@@ -3387,16 +3387,16 @@
         },
         {
             "name": "google/apiclient-services",
-            "version": "v0.424.0",
+            "version": "v0.426.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/googleapis/google-api-php-client-services.git",
-                "reference": "b368dcc5dce8043fed1b248a66020747d5cec353"
+                "reference": "cc74cd104a1ed1cf545480c52f13831e6eb0efe2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/googleapis/google-api-php-client-services/zipball/b368dcc5dce8043fed1b248a66020747d5cec353",
-                "reference": "b368dcc5dce8043fed1b248a66020747d5cec353",
+                "url": "https://api.github.com/repos/googleapis/google-api-php-client-services/zipball/cc74cd104a1ed1cf545480c52f13831e6eb0efe2",
+                "reference": "cc74cd104a1ed1cf545480c52f13831e6eb0efe2",
                 "shasum": ""
             },
             "require": {
@@ -3425,9 +3425,9 @@
             ],
             "support": {
                 "issues": "https://github.com/googleapis/google-api-php-client-services/issues",
-                "source": "https://github.com/googleapis/google-api-php-client-services/tree/v0.424.0"
+                "source": "https://github.com/googleapis/google-api-php-client-services/tree/v0.426.0"
             },
-            "time": "2025-12-15T00:58:22+00:00"
+            "time": "2025-12-24T01:04:22+00:00"
         },
         {
             "name": "google/auth",
@@ -3866,24 +3866,24 @@
         },
         {
             "name": "graham-campbell/result-type",
-            "version": "v1.1.3",
+            "version": "v1.1.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/GrahamCampbell/Result-Type.git",
-                "reference": "3ba905c11371512af9d9bdd27d99b782216b6945"
+                "reference": "e01f4a821471308ba86aa202fed6698b6b695e3b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/GrahamCampbell/Result-Type/zipball/3ba905c11371512af9d9bdd27d99b782216b6945",
-                "reference": "3ba905c11371512af9d9bdd27d99b782216b6945",
+                "url": "https://api.github.com/repos/GrahamCampbell/Result-Type/zipball/e01f4a821471308ba86aa202fed6698b6b695e3b",
+                "reference": "e01f4a821471308ba86aa202fed6698b6b695e3b",
                 "shasum": ""
             },
             "require": {
                 "php": "^7.2.5 || ^8.0",
-                "phpoption/phpoption": "^1.9.3"
+                "phpoption/phpoption": "^1.9.5"
             },
             "require-dev": {
-                "phpunit/phpunit": "^8.5.39 || ^9.6.20 || ^10.5.28"
+                "phpunit/phpunit": "^8.5.41 || ^9.6.22 || ^10.5.45 || ^11.5.7"
             },
             "type": "library",
             "autoload": {
@@ -3912,7 +3912,7 @@
             ],
             "support": {
                 "issues": "https://github.com/GrahamCampbell/Result-Type/issues",
-                "source": "https://github.com/GrahamCampbell/Result-Type/tree/v1.1.3"
+                "source": "https://github.com/GrahamCampbell/Result-Type/tree/v1.1.4"
             },
             "funding": [
                 {
@@ -3924,7 +3924,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-07-20T21:45:45+00:00"
+            "time": "2025-12-27T19:43:20+00:00"
         },
         {
             "name": "grpc/grpc",
@@ -4731,16 +4731,16 @@
         },
         {
             "name": "intervention/image",
-            "version": "3.11.5",
+            "version": "3.11.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Intervention/image.git",
-                "reference": "76e96d3809d53dd8d597005634a733d4b2f6c2c3"
+                "reference": "5f6d27d9fd56312c47f347929e7ac15345c605a1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Intervention/image/zipball/76e96d3809d53dd8d597005634a733d4b2f6c2c3",
-                "reference": "76e96d3809d53dd8d597005634a733d4b2f6c2c3",
+                "url": "https://api.github.com/repos/Intervention/image/zipball/5f6d27d9fd56312c47f347929e7ac15345c605a1",
+                "reference": "5f6d27d9fd56312c47f347929e7ac15345c605a1",
                 "shasum": ""
             },
             "require": {
@@ -4787,7 +4787,7 @@
             ],
             "support": {
                 "issues": "https://github.com/Intervention/image/issues",
-                "source": "https://github.com/Intervention/image/tree/3.11.5"
+                "source": "https://github.com/Intervention/image/tree/3.11.6"
             },
             "funding": [
                 {
@@ -4803,7 +4803,7 @@
                     "type": "ko_fi"
                 }
             ],
-            "time": "2025-11-29T11:18:34+00:00"
+            "time": "2025-12-17T13:38:29+00:00"
         },
         {
             "name": "jdorn/sql-formatter",
@@ -7812,16 +7812,16 @@
         },
         {
             "name": "nette/utils",
-            "version": "v4.1.0",
+            "version": "v4.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nette/utils.git",
-                "reference": "fa1f0b8261ed150447979eb22e373b7b7ad5a8e0"
+                "reference": "c99059c0315591f1a0db7ad6002000288ab8dc72"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nette/utils/zipball/fa1f0b8261ed150447979eb22e373b7b7ad5a8e0",
-                "reference": "fa1f0b8261ed150447979eb22e373b7b7ad5a8e0",
+                "url": "https://api.github.com/repos/nette/utils/zipball/c99059c0315591f1a0db7ad6002000288ab8dc72",
+                "reference": "c99059c0315591f1a0db7ad6002000288ab8dc72",
                 "shasum": ""
             },
             "require": {
@@ -7895,9 +7895,9 @@
             ],
             "support": {
                 "issues": "https://github.com/nette/utils/issues",
-                "source": "https://github.com/nette/utils/tree/v4.1.0"
+                "source": "https://github.com/nette/utils/tree/v4.1.1"
             },
-            "time": "2025-12-01T17:49:23+00:00"
+            "time": "2025-12-22T12:14:32+00:00"
         },
         {
             "name": "nikic/php-parser",
@@ -8967,16 +8967,16 @@
         },
         {
             "name": "phpoption/phpoption",
-            "version": "1.9.4",
+            "version": "1.9.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/schmittjoh/php-option.git",
-                "reference": "638a154f8d4ee6a5cfa96d6a34dfbe0cffa9566d"
+                "reference": "75365b91986c2405cf5e1e012c5595cd487a98be"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/schmittjoh/php-option/zipball/638a154f8d4ee6a5cfa96d6a34dfbe0cffa9566d",
-                "reference": "638a154f8d4ee6a5cfa96d6a34dfbe0cffa9566d",
+                "url": "https://api.github.com/repos/schmittjoh/php-option/zipball/75365b91986c2405cf5e1e012c5595cd487a98be",
+                "reference": "75365b91986c2405cf5e1e012c5595cd487a98be",
                 "shasum": ""
             },
             "require": {
@@ -9026,7 +9026,7 @@
             ],
             "support": {
                 "issues": "https://github.com/schmittjoh/php-option/issues",
-                "source": "https://github.com/schmittjoh/php-option/tree/1.9.4"
+                "source": "https://github.com/schmittjoh/php-option/tree/1.9.5"
             },
             "funding": [
                 {
@@ -9038,7 +9038,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2025-08-21T11:53:16+00:00"
+            "time": "2025-12-27T19:41:33+00:00"
         },
         {
             "name": "phpseclib/phpseclib",
@@ -11573,16 +11573,16 @@
         },
         {
             "name": "spomky-labs/pki-framework",
-            "version": "1.4.0",
+            "version": "1.4.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Spomky-Labs/pki-framework.git",
-                "reference": "bf6f55a9d9eb25b7781640221cb54f5c727850d7"
+                "reference": "f0e9a548df4e3942886adc9b7830581a46334631"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Spomky-Labs/pki-framework/zipball/bf6f55a9d9eb25b7781640221cb54f5c727850d7",
-                "reference": "bf6f55a9d9eb25b7781640221cb54f5c727850d7",
+                "url": "https://api.github.com/repos/Spomky-Labs/pki-framework/zipball/f0e9a548df4e3942886adc9b7830581a46334631",
+                "reference": "f0e9a548df4e3942886adc9b7830581a46334631",
                 "shasum": ""
             },
             "require": {
@@ -11666,7 +11666,7 @@
             ],
             "support": {
                 "issues": "https://github.com/Spomky-Labs/pki-framework/issues",
-                "source": "https://github.com/Spomky-Labs/pki-framework/tree/1.4.0"
+                "source": "https://github.com/Spomky-Labs/pki-framework/tree/1.4.1"
             },
             "funding": [
                 {
@@ -11678,7 +11678,7 @@
                     "type": "patreon"
                 }
             ],
-            "time": "2025-10-22T08:24:34+00:00"
+            "time": "2025-12-20T12:57:40+00:00"
         },
         {
             "name": "sqids/sqids",
@@ -15580,26 +15580,26 @@
         },
         {
             "name": "vlucas/phpdotenv",
-            "version": "v5.6.2",
+            "version": "v5.6.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/vlucas/phpdotenv.git",
-                "reference": "24ac4c74f91ee2c193fa1aaa5c249cb0822809af"
+                "reference": "955e7815d677a3eaa7075231212f2110983adecc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/vlucas/phpdotenv/zipball/24ac4c74f91ee2c193fa1aaa5c249cb0822809af",
-                "reference": "24ac4c74f91ee2c193fa1aaa5c249cb0822809af",
+                "url": "https://api.github.com/repos/vlucas/phpdotenv/zipball/955e7815d677a3eaa7075231212f2110983adecc",
+                "reference": "955e7815d677a3eaa7075231212f2110983adecc",
                 "shasum": ""
             },
             "require": {
                 "ext-pcre": "*",
-                "graham-campbell/result-type": "^1.1.3",
+                "graham-campbell/result-type": "^1.1.4",
                 "php": "^7.2.5 || ^8.0",
-                "phpoption/phpoption": "^1.9.3",
-                "symfony/polyfill-ctype": "^1.24",
-                "symfony/polyfill-mbstring": "^1.24",
-                "symfony/polyfill-php80": "^1.24"
+                "phpoption/phpoption": "^1.9.5",
+                "symfony/polyfill-ctype": "^1.26",
+                "symfony/polyfill-mbstring": "^1.26",
+                "symfony/polyfill-php80": "^1.26"
             },
             "require-dev": {
                 "bamarni/composer-bin-plugin": "^1.8.2",
@@ -15648,7 +15648,7 @@
             ],
             "support": {
                 "issues": "https://github.com/vlucas/phpdotenv/issues",
-                "source": "https://github.com/vlucas/phpdotenv/tree/v5.6.2"
+                "source": "https://github.com/vlucas/phpdotenv/tree/v5.6.3"
             },
             "funding": [
                 {
@@ -15660,7 +15660,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2025-04-30T23:37:27+00:00"
+            "time": "2025-12-27T19:49:13+00:00"
         },
         {
             "name": "voku/portable-ascii",

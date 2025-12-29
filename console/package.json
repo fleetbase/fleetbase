@@ -1,6 +1,6 @@
 {
     "name": "@fleetbase/console",
-    "version": "0.7.24",
+    "version": "0.7.25",
     "private": true,
     "description": "Modular logistics and supply chain operating system (LSOS)",
     "repository": "https://github.com/fleetbase/fleetbase",
@@ -34,10 +34,10 @@
     "dependencies": {
         "@ember/legacy-built-in-components": "^0.4.2",
         "@fleetbase/dev-engine": "^0.2.12",
-        "@fleetbase/ember-core": "^0.3.9",
-        "@fleetbase/ember-ui": "^0.3.15",
-        "@fleetbase/fleetops-data": "^0.1.24",
-        "@fleetbase/fleetops-engine": "^0.6.31",
+        "@fleetbase/ember-core": "^0.3.10",
+        "@fleetbase/ember-ui": "^0.3.17",
+        "@fleetbase/fleetops-data": "^0.1.25",
+        "@fleetbase/fleetops-engine": "^0.6.32",
         "@fleetbase/iam-engine": "^0.1.6",
         "@fleetbase/leaflet-routing-machine": "^3.2.17",
         "@fleetbase/registry-bridge-engine": "^0.1.2",
@@ -150,8 +150,8 @@
     },
     "pnpm": {
         "overrides": {
-            "@fleetbase/ember-core": "^0.3.9",
-            "@fleetbase/ember-ui": "^0.3.15",
+            "@fleetbase/ember-core": "^0.3.10",
+            "@fleetbase/ember-ui": "^0.3.17",
             "@fleetbase/fleetops-data": "^0.1.24"
         }
     },
