@@ -5,8 +5,8 @@ settings:
   excludeLinksFromLockfile: false
 
 overrides:
-  '@fleetbase/ember-core': latest
-  '@fleetbase/ember-ui': latest
+  '@fleetbase/ember-core': ^0.3.10
+  '@fleetbase/ember-ui': ^0.3.17
   '@fleetbase/fleetops-data': ^0.1.24
 
 importers:
@@ -20,10 +20,10 @@ importers:
         specifier: ^0.2.12
         version: 0.2.12(@ember/string@3.1.1)(@ember/test-helpers@3.3.1(@babel/core@7.28.5)(ember-source@5.4.1(@babel/core@7.28.5)(@glimmer/component@1.1.2(@babel/core@7.28.5))(rsvp@4.8.5)(webpack@5.104.1))(webpack@5.104.1))(@glimmer/component@1.1.2(@babel/core@7.28.5))(@glimmer/tracking@1.1.2)(ember-engines@0.9.0(@ember/legacy-built-in-components@0.4.2(ember-source@5.4.1(@babel/core@7.28.5)(@glimmer/component@1.1.2(@babel/core@7.28.5))(rsvp@4.8.5)(webpack@5.104.1)))(ember-source@5.4.1(@babel/core@7.28.5)(@glimmer/component@1.1.2(@babel/core@7.28.5))(rsvp@4.8.5)(webpack@5.104.1)))(ember-resolver@11.0.1(ember-source@5.4.1(@babel/core@7.28.5)(@glimmer/component@1.1.2(@babel/core@7.28.5))(rsvp@4.8.5)(webpack@5.104.1)))(ember-source@5.4.1(@babel/core@7.28.5)(@glimmer/component@1.1.2(@babel/core@7.28.5))(rsvp@4.8.5)(webpack@5.104.1))(eslint@8.57.1)(postcss@8.5.6)(rollup@2.79.2)(tracked-built-ins@3.4.0(@babel/core@7.28.5))(webpack@5.104.1)
       '@fleetbase/ember-core':
-        specifier: latest
+        specifier: ^0.3.10
         version: 0.3.10(@ember/string@3.1.1)(@ember/test-helpers@3.3.1(@babel/core@7.28.5)(ember-source@5.4.1(@babel/core@7.28.5)(@glimmer/component@1.1.2(@babel/core@7.28.5))(rsvp@4.8.5)(webpack@5.104.1))(webpack@5.104.1))(ember-resolver@11.0.1(ember-source@5.4.1(@babel/core@7.28.5)(@glimmer/component@1.1.2(@babel/core@7.28.5))(rsvp@4.8.5)(webpack@5.104.1)))(ember-source@5.4.1(@babel/core@7.28.5)(@glimmer/component@1.1.2(@babel/core@7.28.5))(rsvp@4.8.5)(webpack@5.104.1))(eslint@8.57.1)(webpack@5.104.1)
       '@fleetbase/ember-ui':
-        specifier: latest
+        specifier: ^0.3.17
         version: 0.3.17(@ember/test-helpers@3.3.1(@babel/core@7.28.5)(ember-source@5.4.1(@babel/core@7.28.5)(@glimmer/component@1.1.2(@babel/core@7.28.5))(rsvp@4.8.5)(webpack@5.104.1))(webpack@5.104.1))(@glimmer/component@1.1.2(@babel/core@7.28.5))(@glimmer/tracking@1.1.2)(ember-resolver@11.0.1(ember-source@5.4.1(@babel/core@7.28.5)(@glimmer/component@1.1.2(@babel/core@7.28.5))(rsvp@4.8.5)(webpack@5.104.1)))(ember-source@5.4.1(@babel/core@7.28.5)(@glimmer/component@1.1.2(@babel/core@7.28.5))(rsvp@4.8.5)(webpack@5.104.1))(postcss@8.5.6)(rollup@2.79.2)(tracked-built-ins@3.4.0(@babel/core@7.28.5))(webpack@5.104.1)
       '@fleetbase/fleetops-data':
         specifier: ^0.1.24
