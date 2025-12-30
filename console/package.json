@@ -1,6 +1,6 @@
 {
     "name": "@fleetbase/console",
-    "version": "0.7.21",
+    "version": "0.7.25",
     "private": true,
     "description": "Modular logistics and supply chain operating system (LSOS)",
     "repository": "https://github.com/fleetbase/fleetbase",
@@ -34,10 +34,10 @@
     "dependencies": {
         "@ember/legacy-built-in-components": "^0.4.2",
         "@fleetbase/dev-engine": "^0.2.12",
-        "@fleetbase/ember-core": "^0.3.8",
-        "@fleetbase/ember-ui": "^0.3.13",
-        "@fleetbase/fleetops-data": "^0.1.23",
-        "@fleetbase/fleetops-engine": "^0.6.29",
+        "@fleetbase/ember-core": "^0.3.10",
+        "@fleetbase/ember-ui": "^0.3.17",
+        "@fleetbase/fleetops-data": "^0.1.25",
+        "@fleetbase/fleetops-engine": "^0.6.32",
         "@fleetbase/iam-engine": "^0.1.6",
         "@fleetbase/billing-engine": "^0.1.12",
         "@fleetbase/internals-engine": "^0.0.23",
@@ -48,7 +48,7 @@
         "@fleetbase/valhalla-engine": "^0.0.3",
         "@fleetbase/customer-portal-engine": "^0.0.10",
         "@fleetbase/registry-bridge-engine": "^0.1.2",
-        "@fleetbase/storefront-engine": "^0.4.9",
+        "@fleetbase/storefront-engine": "^0.4.10",
         "@fleetbase/leaflet-routing-machine": "^3.2.17",
         "@formatjs/intl-datetimeformat": "^6.18.2",
         "@formatjs/intl-numberformat": "^8.15.6",
@@ -101,6 +101,7 @@
         "ember-cli-babel": "^8.2.0",
         "ember-cli-clean-css": "^3.0.0",
         "ember-cli-dependency-checker": "^3.3.2",
+        "ember-cli-deprecation-workflow": "^4.0.0",
         "ember-cli-dotenv": "^3.1.0",
         "ember-cli-htmlbars": "^6.3.0",
         "ember-cli-inject-live-reload": "^2.1.0",
@@ -157,9 +158,9 @@
     },
     "pnpm": {
         "overrides": {
-            "@fleetbase/ember-core": "latest",
-            "@fleetbase/ember-ui": "latest",
-            "@fleetbase/fleetops-data": "latest"
+            "@fleetbase/ember-core": "^0.3.10",
+            "@fleetbase/ember-ui": "^0.3.17",
+            "@fleetbase/fleetops-data": "^0.1.24"
         }
     },
     "prettier": {

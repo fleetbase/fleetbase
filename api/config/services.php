@@ -43,4 +43,10 @@ return [
         'secret' => env('STRIPE_SECRET', env('STRIPE_API_SECRET')),
         'webhook_secret' => env('STRIPE_WEBHOOK_SECRET'),
     ],
+
+    'callpromn' => [
+        'api_key' => env('CALLPROMN_API_KEY', ''),
+        'from' => env('CALLPROMN_FROM', ''),
+        'base_url' => env('CALLPROMN_BASE_URL', 'https://api.messagepro.mn' ),
+    ],
 ];

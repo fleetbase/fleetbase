@@ -23,7 +23,7 @@ module.exports = function (environment) {
         APP: {
             autoboot: true,
             extensions: asArray(getenv('EXTENSIONS')),
-            disableRuntimeConfig: toBoolean(getenv('DISABLE_RUNTIME_CONFIG')),
+            disableRuntimeConfig: toBoolean(getenv('DISABLE_RUNTIME_CONFIG', environment === 'production')),
         },
 
         API: {

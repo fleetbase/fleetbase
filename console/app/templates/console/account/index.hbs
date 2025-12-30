@@ -4,21 +4,27 @@
     <div class="container mx-auto h-screen">
         <div class="max-w-3xl my-10 mx-auto">
             <ContentPanel @title={{t "common.your-profile"}} @open={{true}} @wrapperClass="bordered-classic">
-                <form class="flex flex-col md:flex-row" {{on "submit" (perform this.saveProfile)}}>
+                <form class="flex flex-col items-start md:flex-row" {{on "submit" (perform this.saveProfile)}}>
                     <div class="w-32 flex flex-col justify-center mb-6 mr-6">
-                        <Image src={{this.user.avatar_url}} @fallbackSrc={{config "defaultValues.userImage"}} alt={{this.user.name}} class="w-32 h-32 rounded-md" />
-                        <FileUpload @name={{t "console.account.index.photos"}} @accept="image/*" @onFileAdded={{this.uploadNewPhoto}} @labelClass="flex flex-row items-center justify-center" as |queue|>
+                        <Image src={{this.user.avatar_url}} @fallbackSrc={{config "defaultValues.userImage"}} alt={{this.user.name}} class="w-32 h-32 rounded-md mt-1" />
+                        <FileUpload
+                            @name={{t "console.account.index.photos"}}
+                            @accept="image/*"
+                            @onFileAdded={{this.uploadNewPhoto}}
+                            @labelClass="flex flex-row items-center justify-center"
+                            as |queue|
+                        >
                             <a tabindex={{0}} class="flex items-center px-0 mt-2 text-xs no-underline truncate btn btn-sm btn-default" disabled={{queue.files.length}}>
                                 {{#if queue.files.length}}
                                     <div class="mr-1.5">
                                         <Spinner />
                                     </div>
                                     <span>
-                                        {{t "common.uploading"}}                       
+                                        {{t "common.uploading"}}
                                     </span>
                                 {{else}}
                                     <FaIcon @icon="image" class="mr-1.5" />
-                                    <span>                                        
+                                    <span>
                                         {{t "console.account.index.upload-new"}}
                                     </span>
                                 {{/if}}
@@ -34,11 +40,31 @@
                             </InputGroup>
                             <InputGroup @name={{t "common.date-of-birth"}} @type="date" @value={{this.user.date_of_birth}} />
                             <InputGroup @name={{t "common.timezone"}} @helpText={{t "console.account.index.timezone"}}>
-                                <Select @value={{this.user.timezone}} @options={{this.timezones}} @onSelect={{fn (mut this.user.timezone)}} @placeholder={{t "console.account.index.timezone"}} />
+                                <div class="fleetbase-model-select fleetbase-power-select ember-model-select">
+                                    <PowerSelect
+                                        @options={{this.timezones}}
+                                        @selected={{this.user.timezone}}
+                                        @onChange={{fn (mut this.user.timezone)}}
+                                        @placeholder={{t "console.account.index.timezone"}}
+                                        @triggerClass="form-select form-input"
+                                        @searchEnabled={{true}}
+                                        as |option|
+                                    >
+                                        <div>{{option}}</div>
+                                    </PowerSelect>
+                                </div>
                             </InputGroup>
                         </div>
                         <div class="mt-3 flex items-center justify-end">
-                            <Button @buttonType="submit" @type="primary" @size="lg" @icon="save" @text={{t "common.save-changes"}} @onClick={{perform this.saveProfile}} @isLoading={{not this.saveProfile.isIdle}} />
+                            <Button
+                                @buttonType="submit"
+                                @type="primary"
+                                @size="lg"
+                                @icon="save"
+                                @text={{t "common.save-changes"}}
+                                @onClick={{perform this.saveProfile}}
+                                @isLoading={{not this.saveProfile.isIdle}}
+                            />
                         </div>
                     </div>
                 </form>

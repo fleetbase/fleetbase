@@ -5,6 +5,7 @@ import groupBy from '@fleetbase/ember-core/utils/group-by';
 
 export default class ConsoleSettingsNotificationsRoute extends Route {
     @service fetch;
+    @service currentUser;
 
     model() {
         return hash({
@@ -13,10 +14,11 @@ export default class ConsoleSettingsNotificationsRoute extends Route {
         });
     }
 
-    setupController(controller, { registry, notifiables }) {
+    async setupController(controller, { registry, notifiables }) {
         super.setupController(...arguments);
 
         controller.groupedNotifications = groupBy(registry, 'package');
         controller.notifiables = notifiables;
+        controller.company = await this.currentUser.loadCompany();
     }
 }

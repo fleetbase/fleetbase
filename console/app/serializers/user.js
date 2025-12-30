@@ -4,8 +4,6 @@ import { EmbeddedRecordsMixin } from '@ember-data/serializer/rest';
 export default class UserSerializer extends ApplicationSerializer.extend(EmbeddedRecordsMixin) {
     /**
      * Embedded relationship attributes
-     *
-     * @var {Object}
      */
     get attrs() {
         return {
@@ -16,22 +14,45 @@ export default class UserSerializer extends ApplicationSerializer.extend(Embedde
     }
 
     /**
-     * Customize serializer so that the password is never sent to the server via Ember Data
+     * Prevent partial payloads from overwriting fully-loaded
+     * user records in the store.
      *
-     * @param {Snapshot} snapshot
-     * @param {Object} options
-     * @return {Object} json
+     * This runs ONLY on incoming data.
+     */
+    normalize(modelClass, resourceHash, prop) {
+        let normalized = super.normalize(modelClass, resourceHash, prop);
+
+        // Existing user already loaded in the store?
+        let existing = this.store.peekRecord(normalized.data.type, normalized.data.id);
+
+        if (existing) {
+            let attrs = normalized.data.attributes || {};
+
+            for (let key in attrs) {
+                if (attrs[key] === null || attrs[key] === undefined || key === 'avatar_url') {
+                    delete attrs[key];
+                }
+            }
+        }
+
+        return normalized;
+    }
+
+    /**
+     * Customize serializer so that sensitive or server-managed
+     * fields are never sent to the backend.
      */
     serialize() {
         const json = super.serialize(...arguments);
 
-        // delete the password always
+        // Never send password
         delete json.password;
-        // delete verification attributes
+
+        // Verification flags
         delete json.email_verified_at;
         delete json.phone_verified_at;
 
-        // delete server managed dates
+        // Server-managed timestamps
         delete json.deleted_at;
         delete json.created_at;
         delete json.updated_at;

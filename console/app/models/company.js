@@ -24,7 +24,7 @@ export default class Company extends Model {
     @attr('string') logo_url;
     @attr('string') backdrop_url;
     @attr('string') description;
-    @attr('raw') options;
+    @attr('object') options;
     @attr('number') users_count;
     @attr('string') type;
     @attr('string') currency;
