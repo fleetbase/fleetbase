@@ -50,12 +50,22 @@ export default class OnboardingContextService extends Service {
             return;
         }
 
-        this.data = { ...this.data, ...data };
+        // Filter out sensitive fields
+        const sensitiveFields = ['password', 'password_confirmation'];
+        const filteredData = {};
+        
+        for (const [key, value] of Object.entries(data)) {
+            if (!sensitiveFields.includes(key)) {
+                filteredData[key] = value;
+            }
+        }
+
+        this.data = { ...this.data, ...filteredData };
 
         if (options.persist === true) {
             const keys = new Set(this.appCache.get(KEYS_INDEX) ?? []);
 
-            for (const key of Object.keys(data)) {
+            for (const key of Object.keys(filteredData)) {
                 keys.add(key);
                 this.appCache.set(`${CONTEXT_PREFIX}${key}`, this.data[key]);
             }
@@ -69,6 +79,12 @@ export default class OnboardingContextService extends Service {
      * Optionally persist it
      */
     set(key, value, options = {}) {
+        // Don't store sensitive fields
+        const sensitiveFields = ['password', 'password_confirmation'];
+        if (sensitiveFields.includes(key)) {
+            return;
+        }
+
         this.data = { ...this.data, [key]: value };
 
         if (options.persist === true) {
