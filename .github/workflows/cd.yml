@@ -13,9 +13,24 @@ env:
   GITHUB_AUTH_KEY: ${{ secrets._GITHUB_AUTH_TOKEN }}
 
 jobs:
+  setup:
+    name: Setup Environment
+    runs-on: ubuntu-latest
+    outputs:
+      environment: ${{ steps.extract-env.outputs.environment }}
+    steps:
+      - name: Extract environment from branch name
+        id: extract-env
+        run: |
+          ENVIRONMENT=$(echo "${{ github.ref_name }}" | sed 's|deploy/||')
+          echo "environment=${ENVIRONMENT}" >> $GITHUB_OUTPUT
+          echo "Deploying to environment: ${ENVIRONMENT}"
+
   build_service:
     name: Build and Deploy the Service
+    needs: [setup]
     runs-on: ubuntu-latest
+    environment: ${{ needs.setup.outputs.environment }} 
     permissions:
       id-token: write # This is required for requesting the JWT
       contents: read # This is required for actions/checkout
@@ -120,8 +135,9 @@ jobs:
 
   build_frontend:
     name: Build and Deploy the Console
-    needs: [build_service]
+    needs: [setup, build_service]
     runs-on: ubuntu-latest
+    environment: ${{ needs.setup.outputs.environment }}
     permissions:
       id-token: write # This is required for requesting the JWT
       contents: read # This is required for actions/checkout
@@ -192,20 +208,17 @@ jobs:
           fi
         working-directory: ./console
 
-      - name: Set Env Variables for QA
-        if: startsWith(github.ref, 'refs/heads/deploy/qa')
+      - name: Set Env Variables
         run: |
-          echo "STRIPE_KEY=${{ secrets.STRIPE_TEST_KEY }}" >> ./environments/.env.production
+          echo "EXTENSIONS=${{ secrets.EXTENSIONS }}" >> ./environments/.env.production
           echo "LOGROCKET_APP_ID=${{ secrets.LOGROCKET_APP_ID }}" >> ./environments/.env.production
-          echo "EXTENSIONS=@fleetbase/billing-engine,@fleetbase/internals-engine" >> ./environments/.env.production
-        working-directory: ./console
-
-      - name: Set Env Variables for Production
-        if: startsWith(github.ref, 'refs/heads/deploy/production')
-        run: |
           echo "STRIPE_KEY=${{ secrets.STRIPE_KEY }}" >> ./environments/.env.production
-          echo "LOGROCKET_APP_ID=${{ secrets.LOGROCKET_APP_ID }}" >> ./environments/.env.production
-          echo "EXTENSIONS=@fleetbase/billing-engine,@fleetbase/internals-engine" >> ./environments/.env.production
+          echo "STRIPE_PRICE_LICENSE_ANNUAL_ID=${{ secrets.STRIPE_PRICE_LICENSE_ANNUAL_ID }}" >> ./environments/.env.production
+          echo "STRIPE_PRICE_LICENSE_MONTHLY_ID=${{ secrets.STRIPE_PRICE_LICENSE_MONTHLY_ID }}" >> ./environments/.env.production
+          echo "STRIPE_PRICE_LICENSE_MAJOR_ID=${{ secrets.STRIPE_PRICE_LICENSE_MAJOR_ID }}" >> ./environments/.env.production
+          echo "STRIPE_PRICE_LICENSE_MINOR_ID=${{ secrets.STRIPE_PRICE_LICENSE_MINOR_ID }}" >> ./environments/.env.production
+          echo "STRIPE_PRICE_INSTALLATION_FULL_ID=${{ secrets.STRIPE_PRICE_INSTALLATION_FULL_ID }}" >> ./environments/.env.production
+          echo "STRIPE_PRICE_INSTALLATION_ASSISTED_ID=${{ secrets.STRIPE_PRICE_INSTALLATION_ASSISTED_ID }}" >> ./environments/.env.production
         working-directory: ./console
 
       - name: Install dependencies

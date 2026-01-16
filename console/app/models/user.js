@@ -34,6 +34,7 @@ export default class UserModel extends Model {
     @attr('boolean') is_admin;
     @attr('boolean') is_subscribed;
     @attr('boolean') is_trialing;
+    @attr('boolean') company_onboarding_completed;
     @attr('raw') meta;
     @attr('raw') subscription;
 

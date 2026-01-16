@@ -12,7 +12,8 @@ export default class OnboardIndexRoute extends Route {
     };
 
     beforeModel() {
-        this.orchestrator.start();
+        // Resume from previous session if data exists in localStorage
+        this.orchestrator.start(null, { resume: true });
     }
 
     model() {

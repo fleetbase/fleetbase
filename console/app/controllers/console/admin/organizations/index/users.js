@@ -77,7 +77,7 @@ export default class ConsoleAdminOrganizationsIndexUsersController extends Contr
             valuePath: 'roleName',
         },
         {
-            label: this.intl.t('common.phone-number'),
+            label: this.intl.t('common.phone'),
             valuePath: 'phone',
         },
         {

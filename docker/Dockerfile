@@ -1,6 +1,6 @@
 # syntax = docker/dockerfile:1.2
 # Base stage
-FROM dunglas/frankenphp:1.5.0-php8.2-bookworm AS base
+FROM dunglas/frankenphp:1.11-php8.2-bookworm AS base
 
 # Install packages
 RUN apt-get update && apt-get install -y git bind9-utils mycli nodejs npm nano uuid-runtime \
@@ -75,7 +75,7 @@ ENV QUEUE_CONNECTION=redis
 ENV CADDYFILE_PATH=/fleetbase/Caddyfile
 ENV CONSOLE_PATH=/fleetbase/console
 ENV OCTANE_SERVER=frankenphp
-ENV FLEETBASE_VERSION=0.7.25
+ENV FLEETBASE_VERSION=0.7.26
 
 # Set environment
 ARG ENVIRONMENT=production
