@@ -33,6 +33,7 @@ export default class Company extends Model {
     @attr('string') phone;
     @attr('string') status;
     @attr('string') slug;
+    @attr('boolean', { defaultValue: false }) onboarding_completed;
 
     /** @dates */
     @attr('date') joined_at;
