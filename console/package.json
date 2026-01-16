@@ -45,13 +45,14 @@
         "@fleetbase/iam-engine": "^0.1.6",
         "@fleetbase/internals-engine": "^0.0.24",
         "@fleetbase/leaflet-routing-machine": "^3.2.17",
-        "@fleetbase/registry-bridge-engine": "^0.1.4",
+        "@fleetbase/registry-bridge-engine": "^0.1.3",
         "@fleetbase/samsara-engine": "^0.0.3",
         "@fleetbase/valhalla-engine": "^0.0.3",
         "@fleetbase/vroom-engine": "^0.0.3",
         "@fleetbase/storefront-engine": "^0.4.12",
         "@formatjs/intl-datetimeformat": "^6.18.2",
         "@formatjs/intl-numberformat": "^8.15.6",
+        "@formatjs/intl-pluralrules": "^5.4.6",
         "@formatjs/intl-relativetimeformat": "^11.4.13",
         "@fortawesome/ember-fontawesome": "^2.0.0",
         "ember-changeset": "4.1.2",
@@ -159,7 +160,7 @@
         "overrides": {
             "@fleetbase/ember-core": "^0.3.10",
             "@fleetbase/ember-ui": "^0.3.18",
-            "@fleetbase/fleetops-data": "^0.1.24"
+            "@fleetbase/fleetops-data": "^0.1.25"
         }
     },
     "prettier": {
