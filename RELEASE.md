@@ -1,13 +1,14 @@
-# 🚀 Fleetbase v0.7.25 — 2025-12-29
+# 🚀 Fleetbase v0.7.26 — 2025-01-16
 
-> "New SMS service to support multiple SMS providers + framework improvements"
+> "Improved Driver Validation + API improvements"
 
 ---
 
 ## ✨ Highlights
-- Removed `window.Fleetbase` for improved frontend security
-- Improved query optimizations
-- Added new SMS service to support multiple SMS providers
+- Improved driver creation validation for internal API
+- Vehicle and Driver API use explicit `::create` method now
+- Improved onboarding orchestrator framework and services for history and resume capability
+- Upgraded Stripe SDK to v17
 
 ---
 
