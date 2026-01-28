@@ -12,7 +12,7 @@ export default class GithubCardComponent extends Component {
     @storageFor('local-cache') localCache;
     @tracked data = {
         owner: {
-            avatar_url: 'https://avatars.githubusercontent.com/u/38091894?v=4',
+            avatar_url: '/images/icon.png',
         },
     };
     @tracked tags = [];
@@ -50,11 +50,19 @@ export default class GithubCardComponent extends Component {
         if (cachedData && expiration && !isPast(new Date(expiration))) {
             // Use cached data
             this.data = cachedData;
+            // Override avatar URL to use local image
+            if (this.data.owner) {
+                this.data.owner.avatar_url = '/images/icon.png';
+            }
         } else {
             // Fetch new data
             const response = yield fetch('https://api.github.com/repos/fleetbase/fleetbase', { cache: 'default' });
             if (response.ok) {
                 this.data = yield response.json();
+                // Override avatar URL to use local image
+                if (this.data.owner) {
+                    this.data.owner.avatar_url = '/images/icon.png';
+                }
                 this.localCache.set('fleetbase-github-data', this.data);
                 this.localCache.set('fleetbase-github-data-expiration', add(new Date(), { hours: 6 }));
             }

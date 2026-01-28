@@ -37,6 +37,11 @@ export default class ConsoleRoute extends Route {
      * @memberof ConsoleRoute
      */
     async afterModel(model, transition) {
+        // Normalize icon URL to use local icon if it's from S3
+        if (model?.icon_url && model.icon_url.includes('flb-assets.s3.ap-southeast-1.amazonaws.com')) {
+            model.set('icon_url', '/images/icon.png');
+        }
+        
         this.hookService.execute('console:after-model', this.session, this.router, model, transition);
         removeBootLoader();
     }

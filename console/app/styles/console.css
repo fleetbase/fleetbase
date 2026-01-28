@@ -67,3 +67,11 @@ body.console-admin-organizations-index-index .next-table-wrapper > table {
 body[data-theme='dark'] #boot-loader > .loader-container > .loading-message {
     color: #fff;
 }
+
+body[data-theme='light'] .next-view-container {
+    background-color: #001528;
+}
+
+body[data-theme='dark'] .next-view-container {
+    background-color: #3a0000;
+}

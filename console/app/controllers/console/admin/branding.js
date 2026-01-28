@@ -3,6 +3,7 @@ import { tracked } from '@glimmer/tracking';
 import { inject as service } from '@ember/service';
 import { action } from '@ember/object';
 import { isArray } from '@ember/array';
+import { computed } from '@ember/object';
 
 export default class ConsoleAdminBrandingController extends Controller {
     /**
@@ -39,6 +40,25 @@ export default class ConsoleAdminBrandingController extends Controller {
      * @memberof ConsoleAdminBrandingController
      */
     @tracked themeOptions = ['light', 'dark'];
+
+    /**
+     * Get normalized icon URL - use local icon if source is from S3
+     *
+     * @memberof ConsoleAdminBrandingController
+     */
+    @computed('model.icon_url')
+    get normalizedIconUrl() {
+        if (!this.model?.icon_url) {
+            return '/images/icon.png';
+        }
+        
+        // If icon_url is from S3, use local icon instead
+        if (this.model.icon_url.includes('flb-assets.s3.ap-southeast-1.amazonaws.com')) {
+            return '/images/icon.png';
+        }
+        
+        return this.model.icon_url;
+    }
 
     /**
      * Set the default theme
@@ -80,6 +100,18 @@ export default class ConsoleAdminBrandingController extends Controller {
     }
 
     /**
+     * Normalize icon URL to use local icon if it's the remote fleetbase icon
+     *
+     * @returns {void}
+     * @memberof ConsoleAdminBrandingController
+     */
+    normalizeIconUrl() {
+        if (this.model.icon_url && this.model.icon_url.includes('flb-assets.s3.ap-southeast-1.amazonaws.com/')) {
+            this.model.set('icon_url', '/images/icon.png');
+        }
+    }
+
+    /**
      * Unsets the logo properties on the model.
      *
      * @action
@@ -99,6 +131,9 @@ export default class ConsoleAdminBrandingController extends Controller {
      */
     @action save() {
         this.isLoading = true;
+
+        // Normalize icon URL before saving
+        this.normalizeIconUrl();
 
         return this.model
             .save()
