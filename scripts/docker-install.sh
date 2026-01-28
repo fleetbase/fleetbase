@@ -125,7 +125,7 @@ docker compose up -d
 DB_SERVICE="database"     # ← change if your docker‑compose uses a different name
 DB_WAIT_TIMEOUT=60        # seconds
 
-echo "⏳  Waiting for “$DB_SERVICE” to become ready (timeout: ${DB_WAIT_TIMEOUT}s)…"
+echo "⏳  Waiting for "$DB_SERVICE" to become ready (timeout: ${DB_WAIT_TIMEOUT}s)…"
 DB_CONTAINER=$(docker compose ps -q "$DB_SERVICE")
 
 if [ -z "$DB_CONTAINER" ]; then
@@ -162,7 +162,7 @@ echo "✔  Database is ready."
 ###############################################################################
 echo "⏳  Running deploy script inside the application container..."
 docker compose exec application bash -c "./deploy.sh"
-docker compose up -d
+docker compose up --build -d
 
 echo
 echo "🏁  Fleetbase is up!"
