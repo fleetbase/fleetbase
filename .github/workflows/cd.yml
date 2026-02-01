@@ -210,6 +210,7 @@ jobs:
 
       - name: Set Env Variables
         run: |
+          echo "DISABLE_RUNTIME_CONFIG=true" >> ./environments/.env.production
           echo "EXTENSIONS=${{ secrets.EXTENSIONS }}" >> ./environments/.env.production
           echo "LOGROCKET_APP_ID=${{ secrets.LOGROCKET_APP_ID }}" >> ./environments/.env.production
           echo "STRIPE_KEY=${{ secrets.STRIPE_KEY }}" >> ./environments/.env.production
@@ -237,10 +238,6 @@ jobs:
           set -u
 
           DEPLOY_BUCKET=${STATIC_DEPLOY_BUCKET:-${{ env.PROJECT }}-${{ env.STACK }}}
-          NEW_BUCKET="${PROJECT}-${STACK}-console"
-          if aws s3api head-bucket --bucket "$NEW_BUCKET" 2>/dev/null; then
-            DEPLOY_BUCKET="$NEW_BUCKET"
-          fi
 
           # this value will come from the dotenv above
           echo "Deploying to $DEPLOY_BUCKET"
