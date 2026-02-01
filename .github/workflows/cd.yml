@@ -210,6 +210,9 @@ jobs:
 
       - name: Set Env Variables
         run: |
+          # ensure file ends with a newline
+          printf '\n' >> ./environments/.env.production
+          
           echo "EXTENSIONS=${{ secrets.EXTENSIONS }}" >> ./environments/.env.production
           echo "LOGROCKET_APP_ID=${{ secrets.LOGROCKET_APP_ID }}" >> ./environments/.env.production
           echo "STRIPE_KEY=${{ secrets.STRIPE_KEY }}" >> ./environments/.env.production
