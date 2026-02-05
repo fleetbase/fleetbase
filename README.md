@@ -5,6 +5,13 @@
       </a>
     </p>
     <p align="center" dir="auto">
+      <a href="https://github.com/fleetbase/fleetbase/blob/main/LICENSE"><img src="https://img.shields.io/github/license/fleetbase/fleetbase" alt="License"></a>
+      <a href="https://github.com/fleetbase/fleetbase/releases"><img src="https://img.shields.io/github/v/release/fleetbase/fleetbase" alt="Latest Release"></a>
+      <a href="https://github.com/fleetbase/fleetbase/stargazers"><img src="https://img.shields.io/github/stars/fleetbase/fleetbase?style=social" alt="GitHub Stars"></a>
+      <a href="https://discord.gg/V7RVWRQ2Wm"><img src="https://img.shields.io/discord/927592923834372136?logo=discord&label=Discord" alt="Discord"></a>
+      <a href="https://github.com/fleetbase/fleetbase/issues"><img src="https://img.shields.io/github/issues/fleetbase/fleetbase" alt="GitHub Issues"></a>
+    </p>
+    <p align="center" dir="auto">
       Modular logistics and supply chain operating system
       <br>
       <a href="https://docs.fleetbase.io/" rel="nofollow" target="_fleetbase_docs">Documentation</a>
@@ -105,7 +112,7 @@ docker compose exec application bash -c "php artisan key:generate --show"
 ```
 Next copy this value to the `APP_KEY` environment variable in the application container and restart.
   
-**Routing:** Fleetbase ships with a default OSRM server hosted by `[router.project-osrm.org](https://router.project-osrm.org)` but you're able to use your own or any other OSRM compatible server. You can modify this in the `console/environments` directory by modifying the .env file of the environment you're deploying and setting the `OSRM_HOST` to the OSRM server for Fleetbase to use.  
+**Routing:** Fleetbase ships with a default OSRM server hosted by [router.project-osrm.org](https://router.project-osrm.org) but you're able to use your own or any other OSRM compatible server. You can modify this in the `console/environments` directory by modifying the .env file of the environment you're deploying and setting the `OSRM_HOST` to the OSRM server for Fleetbase to use.  
   
 **Services:** There are a few environment variables which need to be set for Fleetbase to function with full features. If you're deploying with docker then it's easiest to just create a `docker-compose.override.yml` and supply the environment variables in this file.
 
@@ -268,5 +275,5 @@ For more information about commercial licensing options, please contact us:
 
 ---
 
-**Copyright © 2025 Fleetbase Pte. Ltd.** All rights reserved.
+**Copyright © 2026 Fleetbase Pte. Ltd.** All rights reserved.
 
