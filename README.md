@@ -11,8 +11,6 @@
       ·
       <a href="https://console.fleetbase.io" rel="nofollow" target="_fleetbase_console">Cloud Version</a>
       ·
-      <a href="https://console.fleetbase.io/aws-marketplace" rel="nofollow" target="_aws_marketplace">Deploy on AWS</a>
-      ·
       <a href="https://tally.so/r/3NBpAW" rel="nofollow">Book a Demo</a>
       ·
       <a href="https://discord.gg/V7RVWRQ2Wm" target="discord" rel="nofollow">Discord</a>
@@ -30,30 +28,13 @@ Fleetbase is a modular logistics and supply chain operating system designed to s
 
 ## Visual Feature Showcase
 
-<p align="center" dir="auto">
-  <img src="https://flb-assets.s3.ap-southeast-1.amazonaws.com/static/order-board-kanban.png" alt="Fleetbase Order Board" width="1200" style="max-width: 100%;" />
-  <em>Visualize and manage your orders with a dynamic Kanban board.</em>
-</p>
-
-<p align="center" dir="auto">
-  <img src="https://flb-assets.s3.ap-southeast-1.amazonaws.com/static/order-workflow-config.png" alt="Fleetbase Order Workflow Configuration" width="1200" style="max-width: 100%;" />
-  <em>Create custom order flows and automation with the intuitive workflow builder.</em>
-</p>
-
-<p align="center" dir="auto">
-  <img src="https://flb-assets.s3.ap-southeast-1.amazonaws.com/static/order-map-view.png" alt="Fleetbase Order Map View" width="1200" style="max-width: 100%;" />
-  <em>Track individual orders in real-time on an interactive map.</em>
-</p>
-
-<p align="center" dir="auto">
-  <img src="https://flb-assets.s3.ap-southeast-1.amazonaws.com/static/live-map-tracking.png" alt="Fleetbase Live Map Tracking" width="1200" style="max-width: 100%;" />
-  <em>Get a complete overview of your fleet and active orders on a live map.</em>
-</p>
-
-<p align="center" dir="auto">
-  <img src="https://flb-assets.s3.ap-southeast-1.amazonaws.com/static/fleet-map-zones.png" alt="Fleetbase Fleet Map with Zones" width="1200" style="max-width: 100%;" />
-  <em>Define and manage service areas and zones for your fleet.</em>
-</p>
+| Feature | Screenshot | Description |
+|---------|------------|-------------|
+| **Order Board** | <img src="https://flb-assets.s3.ap-southeast-1.amazonaws.com/static/order-board-kanban.png" alt="Fleetbase Order Board" width="600" /> | Visualize and manage your orders with a dynamic Kanban board. |
+| **Workflow Builder** | <img src="https://flb-assets.s3.ap-southeast-1.amazonaws.com/static/order-workflow-config.png" alt="Fleetbase Order Workflow Configuration" width="600" /> | Create custom order flows and automation with the intuitive workflow builder. |
+| **Order Tracking** | <img src="https://flb-assets.s3.ap-southeast-1.amazonaws.com/static/order-map-view.png" alt="Fleetbase Order Map View" width="600" /> | Track individual orders in real-time on an interactive map. |
+| **Live Fleet Map** | <img src="https://flb-assets.s3.ap-southeast-1.amazonaws.com/static/live-map-tracking.png" alt="Fleetbase Live Map Tracking" width="600" /> | Get a complete overview of your fleet and active orders on a live map. |
+| **Service Zones** | <img src="https://flb-assets.s3.ap-southeast-1.amazonaws.com/static/fleet-map-zones.png" alt="Fleetbase Fleet Map with Zones" width="600" /> | Define and manage service areas and zones for your fleet. |
 
 **Quickstart**
 
@@ -66,7 +47,6 @@ cd fleetbase && ./scripts/docker-install.sh
 
   - [Features](#-features)
   - [Install](#-install)
-  - [Deploy on AWS](#-deploy-on-aws-in-one-click)
   - [Extensions](#-extensions)
   - [Apps](#-apps)
   - [Roadmap](#-roadmap)
@@ -78,23 +58,26 @@ cd fleetbase && ./scripts/docker-install.sh
   - [License & Copyright](#-license-and-copyright)
 
 ## 📦 Features
-- **Extensible:** Build installable extensions and additional functionality directly into the OS via modular architecture.
-- **Developer Friendly:** RESTful API, socket, and webhooks to seamlessly integrate with external systems or develop custom applications.
-- **Native Apps:** Collection of open-source and native apps designed for operations and customer facing.
-- **Collaboration:** Dedicated chat and comments system for collaboration across your organization.
-- **Security:** Secure data encryption, adherence to industry-standard security practices, and a comprehensive dynamic Identity and Access Management (IAM) system.  
-- **Telematics:** Integrate and connect to hardware devices and sensors to provide more feedback and visibility into operations.
-- **Internationalized:** Translate into multiple languages to accommodate diverse user bases and global operations.
-- **Framework:** PHP core built around logistics and supply chain abstractions to streamline extension development.
-- **Dynamic:** Configurable rules, flows and logic to enable automation and customization.
-- **UI/UX:** Clean, responsive user-friendly interface for efficient management and operations from desktop or mobile.
-- **Dashboards:** Create custom dashboards and widgets to get full visibility into operations.  
-- **Scalability:** Uninterrupted growth with scalable infrastructure and design, capable of handling increasing data volume and user demand as your business expands.
-- **Continuous Improvements:** Commitment to continuous improvement, providing regular updates that seamlessly introduce optimizations, new features, and overall enhancements to the OS.
-- **Open Source:** Deploy it either on-premise or in the cloud according to your organization's needs and preferences.
+
+| Feature | Description |
+|---------|-------------|
+| 🔌 **Extensible** | Build installable extensions and additional functionality directly into the OS via modular architecture. |
+| 👨‍💻 **Developer Friendly** | RESTful API, socket, and webhooks to seamlessly integrate with external systems or develop custom applications. |
+| 📱 **Native Apps** | Collection of open-source and native apps designed for operations and customer facing. |
+| 🤝 **Collaboration** | Dedicated chat and comments system for collaboration across your organization. |
+| 🔒 **Security** | Secure data encryption, adherence to industry-standard security practices, and a comprehensive dynamic Identity and Access Management (IAM) system. |
+| 📡 **Telematics** | Integrate and connect to hardware devices and sensors to provide more feedback and visibility into operations. |
+| 🌐 **Internationalized** | Translate into multiple languages to accommodate diverse user bases and global operations. |
+| ⚙️ **Framework** | PHP core built around logistics and supply chain abstractions to streamline extension development. |
+| 🔄 **Dynamic** | Configurable rules, flows and logic to enable automation and customization. |
+| 🎨 **UI/UX** | Clean, responsive user-friendly interface for efficient management and operations from desktop or mobile. |
+| 📊 **Dashboards** | Create custom dashboards and widgets to get full visibility into operations. |
+| 📈 **Scalability** | Uninterrupted growth with scalable infrastructure and design, capable of handling increasing data volume and user demand as your business expands. |
+| 🔄 **Continuous Improvements** | Commitment to continuous improvement, providing regular updates that seamlessly introduce optimizations, new features, and overall enhancements to the OS. |
+| 🌍 **Open Source** | Deploy it either on-premise or in the cloud according to your organization's needs and preferences. |
 
 ## 💾 Install
-Getting up and running with Fleetbase via Docker is the quickest and most straightforward way. If you’d like to use Fleetbase without docker read the [full install guide in the Fleetbase documentation](https://docs.fleetbase.io/getting-started/install).  
+Getting up and running with Fleetbase via Docker is the quickest and most straightforward way. If you'd like to use Fleetbase without docker read the [full install guide in the Fleetbase documentation](https://docs.fleetbase.io/getting-started/install).  
   
 Make sure you have both the latest versions of docker and docker-compose installed on your system.
 
@@ -111,7 +94,7 @@ Fleetbase API: http://localhost:8000
 
 ### Additional Configurations
 
-**CORS:** If you’re installing directly on a server you will need to configure the environment variables to the application container:
+**CORS:** If you're installing directly on a server you will need to configure the environment variables to the application container:
 ```
 CONSOLE_HOST=http://{yourhost}:4200
 ```
@@ -123,7 +106,7 @@ docker compose exec application bash -c "php artisan key:generate --show"
 ```
 Next copy this value to the `APP_KEY` environment variable in the application container and restart.
   
-**Routing:** Fleetbase ships with a default OSRM server hosted by `[router.project-osrm.org](https://router.project-osrm.org)` but you’re able to use your own or any other OSRM compatible server. You can modify this in the `console/environments` directory by modifying the .env file of the environment you’re deploying and setting the `OSRM_HOST` to the OSRM server for Fleetbase to use.  
+**Routing:** Fleetbase ships with a default OSRM server hosted by `[router.project-osrm.org](https://router.project-osrm.org)` but you're able to use your own or any other OSRM compatible server. You can modify this in the `console/environments` directory by modifying the .env file of the environment you're deploying and setting the `OSRM_HOST` to the OSRM server for Fleetbase to use.  
   
 **Services:** There are a few environment variables which need to be set for Fleetbase to function with full features. If you're deploying with docker then it's easiest to just create a `docker-compose.override.yml` and supply the environment variables in this file.
 
@@ -155,36 +138,6 @@ services:
 
 You can learn more about full installation, and configuration in the [official documentation](https://docs.fleetbase.io/getting-started/install).
 
-## 🚀 Deploy on AWS in One Click
-
-Deploy your complete Fleetbase logistics platform on AWS with enterprise-grade security, scalability, and reliability. No DevOps expertise required!
-
-[![Deploy to AWS](https://img.shields.io/badge/Deploy%20to%20AWS-FF9900?style=for-the-badge&logo=amazon-aws&logoColor=white)](https://console.fleetbase.io/aws-marketplace)
-
-### ✨ What You Get
-
-- **Complete AWS Infrastructure**: ECS Fargate, RDS MySQL, ElastiCache Redis, S3, CloudFront, and more  
-- **25-Minute Setup**: From zero to production-ready logistics platform  
-- **Enterprise Security**: VPC isolation, encrypted storage, secrets management  
-- **Auto-Scaling**: Handle traffic spikes with ECS Fargate auto-scaling  
-- **High Availability**: Multi-AZ deployment with 99.9% uptime SLA  
-- **Cost Optimized**: Pay-as-you-use with optimized resource allocation  
-
-### 🏗️ Infrastructure Included
-
-Your AWS deployment includes a complete, production-ready infrastructure stack:
-
-- **Compute**: ECS Fargate cluster with auto-scaling services  
-- **Database**: RDS MySQL 8.0 with automated backups and Multi-AZ support  
-- **Cache**: ElastiCache Redis for high-performance caching  
-- **Storage**: S3 object storage with CloudFront CDN for global distribution  
-- **Networking**: VPC with private subnets, NAT gateways, and security groups  
-- **Load Balancing**: Application Load Balancer with SSL certificates  
-- **Monitoring**: CloudWatch logs, container insights, and health monitoring  
-- **Messaging**: SQS message queues for background job processing  
-
-[**🚀 Deploy Now**](https://console.fleetbase.io/aws-marketplace) | [**📖 Learn More**](https://docs.fleetbase.io/category/deploying/aws)
-
 # 🧩 Extensions 
 
 Extensions are modular components that enhance the functionality of your Fleetbase instance. They allow you to add new features, customize existing behavior, or integrate with external systems.
@@ -215,8 +168,8 @@ Fleetbase offers a few open sourced apps which are built on Fleetbase which can 
 </ul>
 
 ## 🛣️ Roadmap
-1.  **Inventory and Warehouse Management** ~ Pallet will be Fleetbase’s first official extension for WMS & Inventory.
-2.  **Accounting and Invoicing** ~ Ledger will be Fleetbase’s first official extension accounting and invoicing.
+1.  **Inventory and Warehouse Management** ~ Pallet will be Fleetbase's first official extension for WMS & Inventory.
+2.  **Accounting and Invoicing** ~ Ledger will be Fleetbase's first official extension accounting and invoicing.
 3.  **AI** ~ AI Agent intrgation for system and workflows.
 4. **Dynamic Rules System** ~ Trigger events, tasks jobs from a rule builder on resources.
 
@@ -224,7 +177,7 @@ Fleetbase offers a few open sourced apps which are built on Fleetbase which can 
 
 Have a bug or a feature request? Please check the <a href="https://github.com/fleetbase/fleetbase/issues">issue tracker</a> and search for existing and closed issues. If your problem or idea is not addressed yet, please <a href="https://github.com/fleetbase/fleetbase/issues/new">open a new issue</a>.
 
-## 👨‍💻 Contributing
+## 📄 Documentation
 
 Please read through our <a href="https://github.com/fleetbase/fleetbase/blob/main/CONTRIBUTING.md">contributing guidelines</a>. Included are directions for opening issues, coding standards, and notes on development.
 
