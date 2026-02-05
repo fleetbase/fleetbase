@@ -528,6 +528,8 @@ component:
 services:
   dashboard-service:
     create-dashboard-success-notification: Yangi `{dashboardName}` boshqaruv paneli muvaffaqiyatli yaratildi.
+    delete-dashboard-success-notification: >-
+      `{dashboardName}` boshqaruv paneli o'chirildi.
 
 auth:
   verification:
