@@ -8,7 +8,7 @@
       <a href="https://github.com/fleetbase/fleetbase/blob/main/LICENSE"><img src="https://img.shields.io/github/license/fleetbase/fleetbase" alt="License"></a>
       <a href="https://github.com/fleetbase/fleetbase/releases"><img src="https://img.shields.io/github/v/release/fleetbase/fleetbase" alt="Latest Release"></a>
       <a href="https://github.com/fleetbase/fleetbase/stargazers"><img src="https://img.shields.io/github/stars/fleetbase/fleetbase?style=social" alt="GitHub Stars"></a>
-      <a href="https://discord.gg/V7RVWRQ2Wm"><img src="https://img.shields.io/discord/927592923834372136?logo=discord&label=Discord" alt="Discord"></a>
+      <a href="https://discord.gg/V7RVWRQ2Wm"><img src="https://img.shields.io/discord/699834923032248430?logo=discord&label=Discord" alt="Discord"></a>
       <a href="https://github.com/fleetbase/fleetbase/issues"><img src="https://img.shields.io/github/issues/fleetbase/fleetbase" alt="GitHub Issues"></a>
     </p>
     <p align="center" dir="auto">
