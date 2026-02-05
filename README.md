@@ -52,10 +52,9 @@ cd fleetbase && ./scripts/docker-install.sh
   - [Roadmap](#-roadmap)
   - [Bugs and Feature Requests](#-bugs-and--feature-requests)
   - [Documentation](#-documentation)
-  - [Contributing](#-contributing)
   - [Community](#-community)
-  - [Creators](#-creators)
-  - [License & Copyright](#-license-and-copyright)
+  - [Creators](#creators)
+  - [License & Copyright](#license--copyright)
 
 ## 📦 Features
 
@@ -195,16 +194,79 @@ Get updates on Fleetbase's development and chat with the project maintainers and
 
 ## Creators
 
-<p dir="auto"><strong>Ronald A. Richardson</strong>- Co-founder &amp; CTO</p>
-<img src="https://user-images.githubusercontent.com/58805033/230263021-212f2553-1269-473d-be94-313cb3eecfa5.png" alt="Ron Image" width="75" height="75" style="max-width: 100%;">          
-<p><a href="https://github.com/orgs/fleetbase/people/roncodes">Github</a> | <a href="https://www.linkedin.com/in/ronald-a-richardson/">LinkedIn</a></p>
-                   
-<p dir="auto"><strong>Shiv Thakker</strong> - Co-founder &amp; CEO</p>
-<img src="https://user-images.githubusercontent.com/58805033/230262598-1ce6d0cc-fb65-41f9-8384-5cf5cbf369c7.png" alt="Shiv Image" width="75" height="75" style="max-width: 100%;">  
-<p><a href="https://github.com/orgs/fleetbase/people/shivthakker">Github</a> | <a href="https://www.linkedin.com/in/shivthakker/">LinkedIn</a></p>
+<table style="border: none;">
+  <tr>
+    <td align="center" style="border: none;">
+      <img src="https://user-images.githubusercontent.com/58805033/230263021-212f2553-1269-473d-be94-313cb3eecfa5.png" alt="Ronald A. Richardson" width="120" height="120" style="border-radius: 50%;">
+      <br>
+      <strong>Ronald A. Richardson</strong>
+      <br>
+      Co-founder & CTO
+      <br>
+      <a href="https://github.com/orgs/fleetbase/people/roncodes">GitHub</a> | <a href="https://www.linkedin.com/in/ronald-a-richardson/">LinkedIn</a>
+    </td>
+    <td align="center" style="border: none;">
+      <img src="https://user-images.githubusercontent.com/58805033/230262598-1ce6d0cc-fb65-41f9-8384-5cf5cbf369c7.png" alt="Shiv Thakker" width="120" height="120" style="border-radius: 50%;">
+      <br>
+      <strong>Shiv Thakker</strong>
+      <br>
+      Co-founder & CEO
+      <br>
+      <a href="https://github.com/orgs/fleetbase/people/shivthakker">GitHub</a> | <a href="https://www.linkedin.com/in/shivthakker/">LinkedIn</a>
+    </td>
+  </tr>
+</table>
 
 
 # License & Copyright
 
-Fleetbase is made available under the terms of the <a href="https://www.gnu.org/licenses/agpl-3.0.html" target="_blank">GNU Affero General Public License 3.0 (AGPL 3.0)</a>. For other licenses <a href="mailto:hello@fleetbase.io" target="_blank">contact us</a>.
+Fleetbase is available under a **dual-licensing model** to accommodate both open-source community users and commercial enterprises:
+
+## Open Source License (AGPL-3.0)
+
+By default, Fleetbase is licensed under the [GNU Affero General Public License v3.0 (AGPL-3.0)](https://www.gnu.org/licenses/agpl-3.0.html). This license allows you to use, modify, and distribute Fleetbase freely, provided that:
+
+- Any modifications or derivative works are also made available under AGPL-3.0
+- If you run a modified version as a network service, you must make the source code available to users
+
+The AGPL-3.0 is ideal for open-source projects, academic research, and organizations committed to sharing their improvements with the community.
+
+## Commercial License (FCL)
+
+For organizations that require more flexibility, Fleetbase offers a **Fleetbase Commercial License (FCL)** that provides:
+
+- **Freedom from AGPL obligations** – Deploy and modify Fleetbase without source code disclosure requirements
+- **Proprietary integrations** – Build closed-source extensions and integrations
+- **Commercial protections** – Warranties, indemnities, and legal assurances not provided under AGPL
+- **Derivative work ownership** – Retain full ownership of your modifications and customizations
+- **Flexible licensing options** – Choose from annual, monthly, or perpetual license models
+
+### Commercial License Options
+
+| License Type | Price | Support & Updates | Best For |
+|--------------|-------|-------------------|----------|
+| **Annual License** | $25,000/year | ✅ All upgrades & Business Support included | Organizations requiring continuous updates and support |
+| **Monthly License** | $2,500/month | ✅ All upgrades & Business Support included | Pilot projects and short-term deployments |
+| **Major Version License** | $25,000 (one-time) | ❌ No ongoing support | Stable deployments on a single major version |
+| **Minor Version License** | $15,000 (one-time) | ❌ No ongoing support | Locked version deployments |
+
+### When You Need a Commercial License
+
+You should consider a commercial license if you:
+
+- Want to build proprietary extensions or integrations without open-sourcing them
+- Need to embed Fleetbase in a commercial product without AGPL obligations
+- Require enterprise-grade support, SLAs, and legal protections
+- Plan to modify Fleetbase without sharing your changes publicly
+
+### Get a Commercial License
+
+For more information about commercial licensing options, please contact us:
+
+- **Email:** [hello@fleetbase.io](mailto:hello@fleetbase.io)
+- **Website:** [fleetbase.io](https://fleetbase.io)
+
+---
+
+**Copyright © 2025 Fleetbase Pte. Ltd.** All rights reserved.
 
