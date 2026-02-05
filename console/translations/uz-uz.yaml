@@ -1,0 +1,777 @@
+app:
+  name: Fleetbase
+
+common:
+  new: Yangi
+  create: Yaratish
+  add: Qo'shish
+  edit: Tahrirlash
+  update: Yangilash
+  save: Saqlash
+  save-changes: O'zgarishlarni saqlash
+  delete: O'chirish
+  delete-selected: Tanlanganlarni o'chirish
+  delete-selected-count: "{count} ta tanlanganni o'chirish"
+  your-profile: Sizning profilingiz
+  date-of-birth: Tug'ilgan sana
+  organization: Tashkilot
+  two-factor: Ikki faktorli
+  remove: O'chirish
+  cancel: Bekor qilish
+  confirm: Tasdiqlash
+  close: Yopish
+  open: Ochish
+  view: Ko'rish
+  preview: Ko'rib chiqish
+  upload: Yuklash
+  download: Yuklab olish
+  import: Import qilish
+  export: Eksport qilish
+  print: Chop etish
+  duplicate: Nusxalash
+  copy: Nusxa olish
+  paste: Joylashtirish
+  share: Ulashish
+  refresh: Yangilash
+  reset: Qayta o'rnatish
+  retry: Qayta urinish
+  back: Orqaga
+  next: Keyingisi
+  previous: Oldingisi
+  submit: Yuborish
+  apply: Qo'llash
+  continue: Davom etish
+  proceed: Davom etish
+  select: Tanlash
+  deselect: Tanlovni bekor qilish
+  search: Qidirish
+  filter: Filtr
+  sort: Saralash
+  view-all: Hammasini ko'rish
+  clear: Tozalash
+  done: Bajarildi
+  finish: Tugatish
+  skip: O'tkazib yuborish
+  method: Usul
+  bulk-delete: Ommaviy o'chirish
+  bulk-delete-resource: "{resource} ni ommaviy o'chirish"
+  bulk-cancel: Ommaviy bekor qilish
+  bulk-cancel-resource: "{resource} ni ommaviy bekor qilish"
+  bulk-actions: Ommaviy amallar
+  column: Ustun
+  row: Qator
+  table: Jadval
+  list: Ro'yxat
+  grid: Setka
+  form: Shakl
+  field: Maydon
+  section: Bo'lim
+  panel: Panel
+  card: Karta
+  tab: Varaqa
+  modal: Modal
+  dialog: Dialog
+  menu: Menyu
+  dropdown: Ochiladigan menyu
+  tooltip: Maslahat
+  sidebar: Yon panel
+  toolbar: Asboblar paneli
+  footer: Pastki qism
+  header: Yuqori qism
+  title: Sarlavha
+  subtitle: Kichik sarlavha
+  description: Tavsif
+  placeholder: Joy egallovchi
+  label: Yorliq
+  button: Tugma
+  icon: Belgi
+  avatar: Avatar
+  link: Havola
+  badge: Nishon
+  tag: Teg
+  banner: Banner
+  step: Qadam
+  progress: Jarayon
+  map: Xarita
+  board: Doska
+  loading: Yuklanmoqda
+  loading-resource: "{resource} yuklanmoqda"
+  saving: Saqlanmoqda
+  processing: Ishlanmoqda
+  fetching: Olinmoqda
+  updating: Yangilanmoqda
+  uploading: Yuklanmoqda
+  completed: Bajarildi
+  success: Muvaffaqiyatli
+  failed: Muvaffaqiyatsiz
+  error: Xato
+  warning: Ogohlantirish
+  info: Ma'lumot
+  ready: Tayyor
+  activity: Faoliyat
+  active: Faol
+  inactive: Nofaol
+  enabled: Yoqilgan
+  disabled: O'chirilgan
+  online: Onlayn
+  offline: Oflayn
+  pending: Kutishda
+  archived: Arxivlangan
+  hidden: Yashirin
+  visible: Ko'rinadigan
+  empty: Bo'sh
+  not-found: Topilmadi
+  no-results: Natijalar yo'q
+  try-again: Qayta urinib ko'ring
+  are-you-sure: Ishonchingiz komilmi?
+  changes-saved: O'zgarishlar muvaffaqiyatli saqlandi.
+  saved-successfully: O'zgarishlar muvaffaqiyatli saqlandi.
+  field-saved: >-
+    {field} muvaffaqiyatli saqlandi.
+  changes-discarded: O'zgarishlar bekor qilindi.
+  delete-confirm: Haqiqatan ham bu elementni oʻchirib tashlamoqchimisiz?
+  action-successful: Amal muvaffaqiyatli bajarildi.
+  action-failed: Amal bajarilmadi. Iltimos, qaytadan urining.
+  something-went-wrong: Nimadir noto'g'ri ketdi.
+  please-wait: Iltimos kuting...
+  sign-in: Kirish
+  sign-out: Chiqish
+  sign-up: Ro'yxatdan o'tish
+  log-in: Kirish
+  log-out: Chiqish
+  register: Ro'yxatdan o'tish
+  forgot-password: Parolni unutdingizmi
+  reset-password: Parolni tiklash
+  change-password: Parolni o'zgartirish
+  password: Parol
+  confirm-password: Parolni tasdiqlang
+  email: Elektron pochta
+  username: Foydalanuvchi nomi
+  remember-me: Meni eslab qol
+  welcome: Xush kelibsiz
+  welcome-back: Xush kelibsiz
+  profile: Profil
+  account: Hisob
+  settings: Sozlamalar
+  preferences: Afzalliklar
+  record: Yozuv
+  records: Yozuvlar
+  item: Element
+  items: Elementlar
+  entry: Yozuv
+  entries: Yozuvlar
+  id: ID
+  name: Ism
+  type: Tur
+  category: Kategoriya
+  overview: Umumiy koʻrinish
+  value: Qiymat
+  amount: Miqdor
+  price: Narx
+  quantity: Miqdori
+  status: Holat
+  date: Sana
+  date-created: Yaratilgan sana
+  date-updated: Yangilangan sana
+  time: Vaqt
+  created-at: Yaratilgan vaqti
+  updated-at: Yangilangan vaqti
+  expired-at: Yaroqlilik muddati
+  last-seen-at: Oxirgi marta ko'rilgan
+  last-modified: Oxirgi o'zgartirish
+  last-modified-data: >-
+    Oxirgi o'zgartirish: {date}
+  actions: Amallar
+  details: Tafsilotlar
+  notes: Eslatmalar
+  reference: Malumot
+  filter-by: Filtr bo'yicha
+  filter-by-field: "{field} bo'yicha filtr"
+  sort-by: Saralash
+  ascending: O'sish tartibida
+  descending: Kamayish tartibida
+  all: Hammasi
+  none: Hech qanday
+  select-all: Hammasini tanlash
+  deselect-all: Barchasini bekor qilish
+  show-more: Ko'proq ko'rsatish
+  show-less: Kamroq ko'rsatish
+  page: Sahifa
+  of: ning
+  total: Jami
+  items-per-page: Har bir sahifadagi elementlar
+  showing: Ko'rsatilmoqda
+  to: gacha
+  results: Natijalar
+  load-more: Ko'proq yuklash
+  no-more-results: Boshqa natijalar yo'q
+  today: Bugun
+  yesterday: Kecha
+  tomorrow: Ertaga
+  day: Kun
+  week: Hafta
+  month: Oy
+  year: Yil
+  date-range: Sana oralig'i
+  start-date: Boshlanish sanasi
+  end-date: Tugash sanasi
+  time-zone: Vaqt mintaqasi
+  system: Tizim
+  dashboard: Boshqaruv paneli
+  home: Bosh sahifa
+  analytics: Analitika
+  reports: Hisobotlar
+  logs: Jurnallar
+  help: Yordam
+  support: Qo'llab-quvvatlash
+  contact: Aloqa
+  documentation: Hujjatlar
+  language: Til
+  timezone: Vaqt mintaqasi
+  version: Versiya
+  theme: Mavzu
+  light-mode: Yorug'lik rejimi
+  dark-mode: Qorong'u rejim
+  update-available: Yangilanish mavjud
+  install-update: Yangilanishni o'rnatish
+  maintenance-mode: Texnik xizmat ko'rsatish rejimi
+  notification: Bildirishnoma
+  notifications: Bildirishnomalar
+  mark-as-read: O'qilgan deb belgilash
+  mark-all-as-read: Hammasini o'qilgan deb belgilash
+  clear-notifications: Bildirishnomalarni tozalash
+  company: Kompaniya
+  companies: Kompaniyalar
+  user: Foydalanuvchi
+  users: Foydalanuvchilar
+  role: Rol
+  roles: Rollar
+  permission: Ruxsat
+  permissions: Ruxsatlar
+  group: Guruh
+  groups: Guruhlar
+  unauthorized: Ruxsatsiz
+  forbidden: Taqiqlandi
+  resource-not-found: Resurs topilmadi
+  server-error: Server xatosi
+  validation-error: Tasdiqlash xatosi
+  timeout-error: So'rov vaqti tugadi
+  network-error: Tarmoq xatosi
+  unknown-error: Noma'lum xato
+  file: Fayl
+  files: Fayllar
+  folder: Papka
+  folders: Papkalar
+  upload-file: Fayl yuklash
+  upload-files: Fayllarni yuklash
+  upload-image: Rasm yuklash
+  upload-image-supported: PNG, JPEG va GIF-larni qo'llab-quvvatlaydi
+  choose-file: Faylni tanlang
+  choose-files: Fayllarni tanlang
+  drag-and-drop: Tortib tashlang
+  download-file: Faylni yuklab olish
+  file-size: Fayl hajmi
+  file-type: Fayl turi
+  confirm-delete: O'chirishni tasdiqlang
+  confirm-action: Amalni tasdiqlang
+  confirm-exit: Chiqishni tasdiqlang
+  confirm-and-save-changes: Tasdiqlang va o'zgarishlarni saqlang
+  are-you-sure-exit: Haqiqatan ham chiqmoqchimisiz?
+  unsaved-changes-warning: Sizda saqlanmagan o'zgarishlar mavjud.
+  connected: Ulangan
+  disconnected: Ulanmagan
+  reconnecting: Qayta ulanmoqda
+  connection-lost: Ulanish uzildi
+  connection-restored: Ulanish tiklandi
+  show: Ko'rsatish
+  hide: Yashirish
+  expand: Kengaytirish
+  collapse: Yig'ish
+  enable: Yoqish
+  disable: O'chirish
+  minimize: Kichraytirish
+  maximize: Kattalashtirish
+  restore: Qayta tiklash
+  zoom-in: Kattalashtirish
+  zoom-out: Kichraytirish
+  fullscreen: To'liq ekran
+  exit-fullscreen: To'liq ekrandan chiqish
+  yes: Ha
+  no: Yo'q
+  ok: OK
+  none-available: Mavjud emas
+  default: Standart
+  custom: Maxsus
+  general: Umumiy
+  advanced: Kengaytirilgan
+  placeholder-text: Bu yerga matn kiriting...
+  learn-more: Ko'proq bilish
+  view-resource: "{resource} ni ko'rish"
+  view-resource-details: "{resource} tafsilotlarini ko'rish"
+  create-a-new-resource: "Yangi {resource} yaratish"
+  create-new-resource: "Yangi {resource} yaratish"
+  search-resource: "{resource} ni qidirish"
+  new-resource: "Yangi {resource}"
+  update-resource: "{resource} ni yangilash"
+  save-resource-changes: "{resource} o'zgarishlarini saqlash"
+  creating-resource: "{resource} yaratilmoqda"
+  cancel-resource: "{resource} ni bekor qilish"
+  delete-resource: "{resource} ni o'chirish"
+  delete-resource-name: >-
+    O'chirish: {resourceName}
+  delete-resource-named: "{resource} ({resourceName}) ni o'chirish"
+  delete-resource-prompt: Bu amalni bekor qilib bo'lmaydi. O'chirilgandan so'ng, yozuv butunlay o'chiriladi.
+  delete-cannot-be-undone: Bu amalni bekor qilib bo'lmaydi. O'chirilgandan so'ng, yozuv butunlay o'chiriladi.
+  create-resource: "{resource} yaratish"
+  edit-resource: "{resource} ni tahrirlash"
+  edit-resource-details: "{resource} tafsilotlarini tahrirlash"
+  edit-resource-type-name: >-
+    Tahrirlash {resource}: {resourceName}
+  edit-resource-name: >-
+    Tahrirlash: {resourceName}
+  config: Konfiguratsiya
+  select-field: "{field} ni tanlang"
+  columns: Ustunlar
+  metadata: Metama'lumotlar
+  meta: Meta
+  resource-created-success: "Yangi {resource} muvaffaqiyatli yaratildi."
+  resource-created-success-name: "Yangi {resource} ({resourceName}) muvaffaqiyatli yaratildi."
+  resource-updated-success: >-
+    {resource} ({resourceName}) muvaffaqiyatli yangilandi.
+  resource-action-success: >-
+    {resource} ({resourceName}) {action} muvaffaqiyatli bajarildi.
+  resource-deleted-success: >-
+    {resource} ({resourceName}) muvaffaqiyatli o'chirildi.
+  resource-deleted: >-
+    {resource} ({resourceName}) o'chirildi.
+  continue-without-saving: Saqlamasdan davom etish kerakmi?
+  continue-without-saving-prompt: Sizda bu {resource} ga saqlanmagan o'zgarishlar mavjud. Davom etish ularni bekor qiladi. Davom etish uchun Davom etish tugmasini bosing.
+  changelog: O'zgarishlar jurnali
+
+resource:
+  alert: Ogohlantirish
+  alerts: Ogohlantirishlar
+  brand: Brend
+  brands: Brendlar
+  category: Kategoriya
+  categories: Kategoriyalar
+  chat-attachment: Chat ilovasi
+  chat-attachments: Chat ilovalari
+  chat-channel: Chat kanali
+  chat-channels: Chat kanallari
+  chat-log: Chat jurnali
+  chat-logs: Chat jurnallari
+  chat-message: Chat xabari
+  chat-messages: Chat xabarlari
+  chat-participant: Chat ishtirokchisi
+  chat-participants: Chat ishtirokchilari
+  chat-receipt: Chat kvitansiyasi
+  chat-receipts: Chat kvitansiyalari
+  comment: Izoh
+  comments: Izohlar
+  company: Kompaniya
+  companies: Kompaniyalar
+  custom-field-value: Maxsus maydon qiymati
+  custom-field-values: Maxsus maydon qiymatlari
+  custom-field: Maxsus maydon
+  custom-fields: Maxsus maydonlar
+  dashboard-widget: Boshqaruv paneli vidjeti
+  dashboard-widgets: Boshqaruv paneli vidjetlari
+  dashboard: Boshqaruv paneli
+  dashboards: Boshqaruv panellari
+  extension: Kengaytma
+  extensions: Kengaytmalar
+  file: Fayl
+  files: Fayllar
+  group: Guruh
+  groups: Guruhlar
+  notification: Bildirishnoma
+  notifications: Bildirishnomalar
+  permission: Ruxsat
+  permissions: Ruxsatlar
+  policy: Siyosat
+  policies: Siyosatlar
+  report: Hisobot
+  reports: Hisobotlar
+  role: Rol
+  roles: Rollar
+  setting: Sozlama
+  settings: Sozlamalar
+  transaction: Tranzaksiya
+  transactions: Tranzaksiyalar
+  user-device: Foydalanuvchi qurilmasi
+  user-devices: Foydalanuvchi qurilmalari
+  user: Foydalanuvchi
+  users: Foydalanuvchilar
+
+dropzone:
+  file: fayl
+  drop-to-upload: Yuklash uchun tashlang
+  invalid: Noto'g'ri
+  files-ready-for-upload: >-
+    {numOfFiles} ta fayl yuklashga tayyor.
+  upload-images-videos: Rasmlar va videolarni yuklash
+  upload-documents: Hujjatlarni yuklash
+  upload-documents-files: Hujjatlar va fayllarni yuklash
+  upload-avatar-files: Maxsus avatarlarni yuklash
+  dropzone-supported-images-videos: Rasm va video fayllarni bu yerga tortib tashlang
+  dropzone-supported-avatars: SVG yoki PNG fayllarini tortib tashlang
+  dropzone-supported-files: Fayllarni bu yerga tortib tashlang
+  or-select-button-text: yoki yuklash uchun fayllarni tanlang.
+  upload-queue: Yuklash navbati
+  uploading: Yuklanmoqda...
+
+two-fa-enforcement-alert:
+  message: Hisobingiz xavfsizligini oshirish uchun tashkilotingiz Ikki Faktorli Autentifikatsiyani (2FA) talab qiladi. Qo'shimcha himoya qatlami uchun hisob sozlamalaringizda 2FA-ni yoqing.
+  button-text: 2FA-ni sozlash
+
+comment-thread:
+  publish-comment-button-text: Izohni chop etish
+  publish-reply-button-text: Javobni chop etish
+  reply-comment-button-text: Javob berish
+  edit-comment-button-text: Tahrirlash
+  delete-comment-button-text: O'chirish
+  comment-published-ago: >-
+    {createdAgo} oldin
+  comment-input-placeholder: Yangi izoh kiriting...
+  comment-reply-placeholder: Javobingizni kiriting...
+  comment-input-empty-notification: Bo'sh izohlarni chop eta olmaysiz...
+  comment-min-length-notification: Izoh kamida 2 ta belgidan iborat bo'lishi kerak
+
+dashboard:
+  select-dashboard: Boshqaruv panelini tanlang
+  create-new-dashboard: Yangi boshqaruv paneli yaratish
+  create-a-new-dashboard: Yangi boshqaruv paneli yaratish
+  confirm-create-dashboard: Boshqaruv panelini yaratish!
+  edit-layout: Tartibni tahrirlash
+  add-widgets: Vidjetlarni qo'shish
+  delete-dashboard: Boshqaruv panelini o'chirish
+  save-dashboard: Boshqaruv panelini saqlash
+  you-cannot-delete-this-dashboard: Siz bu boshqaruv panelini o'chira olmaysiz.
+  are-you-sure-you-want-delete-dashboard: Haqiqatan ham bu {dashboardName} ni o'chirmoqchimisiz?
+dashboard-widget-panel:
+  widget-name: >-
+    {widgetName} vidjeti
+  select-widgets: Vidjetlarni tanlang
+  close-and-save: Yopish va saqlash
+  filter-widgets: Vidjetlarni kalit so'z bo'yicha filtrlash
+
+filters-picker:
+  filters: Filtrlar
+  filter-data: Ma'lumotlarni filtrlash
+
+visible-column-picker:
+  select-viewable-columns: Ko'rinadigan ustunlarni tanlang
+  customize-columns: Ustunlarni moslashtirish
+
+component:
+  file:
+    dropdown-label: Fayl amallari
+  import-modal:
+    loading-message: Import qayta ishlanmoqda...
+    drop-upload: Yuklash uchun tashlang
+    invalid: Noto'g'ri
+    ready-upload: yuklashga tayyor.
+    upload-spreadsheets: Jadvallarni yuklash
+    drag-drop: Jadval fayllarini bu yerga tortib tashlang
+    button-text: yoki yuklash uchun jadvallarni tanlang
+    spreadsheets: jadvallar
+    upload-queue: Yuklash navbati
+  dropzone:
+    file: fayl
+    drop-to-upload: Yuklash uchun tashlang
+    invalid: Noto'g'ri
+    files-ready-for-upload: >-
+      {numOfFiles} ta fayl yuklashga tayyor.
+    upload-images-videos: Rasmlar va videolarni yuklash
+    upload-documents: Hujjatlarni yuklash
+    upload-documents-files: Hujjatlar va fayllarni yuklash
+    upload-avatar-files: Maxsus avatarlarni yuklash
+    dropzone-supported-images-videos: Rasm va video fayllarni bu yerga tortib tashlang
+    dropzone-supported-avatars: SVG yoki PNG fayllarini tortib tashlang
+    dropzone-supported-files: Fayllarni bu yerga tortib tashlang
+    or-select-button-text: yoki yuklash uchun fayllarni tanlang.
+    upload-queue: Yuklash navbati
+    uploading: Yuklanmoqda...
+  two-fa-enforcement-alert:
+    message: Hisobingiz xavfsizligini oshirish uchun tashkilotingiz Ikki Faktorli Autentifikatsiyani (2FA) talab qiladi. Qo'shimcha himoya qatlami uchun hisob sozlamalaringizda 2FA-ni yoqing.
+    button-text: 2FA-ni sozlash
+  comment-thread:
+    publish-comment-button-text: Izohni chop etish
+    publish-reply-button-text: Javobni chop etish
+    reply-comment-button-text: Javob berish
+    edit-comment-button-text: Tahrirlash
+    delete-comment-button-text: O'chirish
+    comment-published-ago: >-
+      {createdAgo} oldin
+    comment-input-placeholder: Yangi izoh kiriting...
+    comment-reply-placeholder: Javobingizni kiriting...
+    comment-input-empty-notification: Bo'sh izohlarni chop eta olmaysiz...
+    comment-min-length-notification: Izoh kamida 2 ta belgidan iborat bo'lishi kerak
+  dashboard:
+    select-dashboard: Boshqaruv panelini tanlang
+    create-new-dashboard: Yangi boshqaruv paneli yaratish
+    create-a-new-dashboard: Yangi boshqaruv paneli yaratish
+    confirm-create-dashboard: Boshqaruv panelini yaratish!
+    edit-layout: Tartibni tahrirlash
+    add-widgets: Vidjetlarni qo'shish
+    delete-dashboard: Boshqaruv panelini o'chirish
+    save-dashboard: Boshqaruv panelini saqlash
+    you-cannot-delete-this-dashboard: Siz bu boshqaruv panelini o'chira olmaysiz.
+    are-you-sure-you-want-delete-dashboard: Haqiqatan ham bu {dashboardName} ni o'chirmoqchimisiz?
+  dashboard-widget-panel:
+    widget-name: >-
+      {widgetName} vidjeti
+    select-widgets: Vidjetlarni tanlang
+    close-and-save: Yopish va saqlash
+
+services:
+  dashboard-service:
+    create-dashboard-success-notification: Yangi `{dashboardName}` boshqaruv paneli muvaffaqiyatli yaratildi.
+    delete-dashboard-success-notification: >-
+      `{dashboardName}` boshqaruv paneli o'chirildi.
+
+auth:
+  verification:
+    header-title: Hisobni tekshirish
+    title: Elektron pochta manzilingizni tasdiqlang
+    message-text: <strong>Deyarli tayyor!</strong><br> Tasdiqlash kodi uchun elektron pochtangizni tekshiring.
+    verification-code-text: Elektron pochta orqali olgan tasdiqlash kodini kiriting.
+    verification-input-label: Tasdiqlash kodi
+    verify-button-text: Tasdiqlash va davom etish
+    didnt-receive-a-code: Hali kod olmadizmi?
+    not-sent:
+      message: Hali kod olmadizmi?
+      alternative-choice: Hisobingizni tasdiqlash uchun quyidagi muqobil variantlardan foydalaning.
+      resend-email: E-pochtani qayta yuborish
+      send-by-sms: SMS orqali yuborish
+  two-fa:
+    verify-code:
+      verification-code: Tasdiqlash kodi
+      check-title: E-pochtangizni yoki telefoningizni tekshiring
+      check-subtitle: Biz sizga tasdiqlash kodini yubordik. Kirish jarayonini yakunlash uchun quyidagi kodni kiriting.
+      expired-help-text: Sizning 2FA autentifikatsiya kodingiz muddati tugagan. Agar ko'proq vaqt kerak bo'lsa, boshqa kod so'rashingiz mumkin.
+      resend-code: Kodni qayta yuborish
+      verify-code: Kodni tasdiqlash
+      cancel-two-factor: Ikki faktorli autentifikatsiyani bekor qilish
+      invalid-session-error-notification: Noto'g'ri sessiya. Iltimos, qaytadan urining.
+      verification-successful-notification: Tasdiqlash muvaffaqiyatli!
+      verification-code-expired-notification: Tasdiqlash kodi muddati tugagan. Iltimos, yangisini so'rang.
+      verification-code-failed-notification: Tasdiqlash muvaffaqiyatsiz tugadi. Iltimos, qaytadan urining.
+    resend-code:
+      verification-code-resent-notification: Yangi tasdiqlash kodi yuborildi.
+      verification-code-resent-error-notification: Tasdiqlash kodini qayta yuborishda xato. Iltimos, qaytadan urining.
+  forgot-password:
+    success-message: Davom etish uchun elektron pochtangizni tekshiring!
+    is-sent:
+      title: Deyarli tayyor!
+      message: <strong>E-pochtangizni tekshiring!</strong><br> Biz sizga parolingizni tiklash imkonini beruvchi sehrli havolani elektron pochtangizga yubordik. Havola 15 daqiqadan so'ng tugaydi.
+    not-sent:
+      title: Parolingizni unutdingizmi?
+      message: <strong>Xavotir olmang, biz sizga yordam beramiz.</strong><br> {appName} ga kirish uchun foydalanadigan elektron pochta manzilingizni kiriting va biz sizga parolingizni tiklash uchun xavfsiz havola yuboramiz.
+    form:
+      email-label: Sizning elektron pochta manzilingiz
+      submit-button: OK, menga sehrli havola yuboring!
+      nevermind-button: Hechqisi yo'q
+  login:
+    title: Hisobingizga kiring
+    no-identity-notification: E-pochtangizni kiritishni unutdingizmi?
+    no-password-notification: Parolingizni kiritishni unutdingizmi?
+    unverified-notification: Davom etish uchun hisobingiz tasdiqlanishi kerak.
+    password-reset-required: Davom etish uchun parolni tiklash talab qilinadi.
+    failed-attempt:
+      message: <strong>Parolingizni unutdingizmi?</strong><br> Parolingizni tiklash uchun quyidagi tugmani bosing.
+      button-text: Ok, tiklashga yordam bering!
+    form:
+      email-label: Elektron pochta manzili
+      password-label: Parol
+      remember-me-label: Meni eslab qol
+      forgot-password-label: Parolingizni unutdingizmi?
+      sign-in-button: Kirish
+      create-account-button: Yangi hisob yaratish
+    slow-connection-message: Ulanish muammolari yuzaga kelmoqda.
+  reset-password:
+    success-message: Parolingiz tiklandi! Davom etish uchun tizimga kiring.
+    invalid-verification-code: Bu parolni tiklash havolasi yaroqsiz yoki muddati o'tgan.
+    title: Parolingizni tiklang
+    form:
+      code:
+        label: Sizning tiklash kodingiz
+        help-text: E-pochtangizda olgan tasdiqlash kodi.
+      password:
+        label: Yangi parol
+        help-text: Davom etish uchun kamida 6 ta belgidan iborat parol kiriting.
+      confirm-password:
+        label: Yangi parolni tasdiqlang
+        help-text: Davom etish uchun kamida 6 ta belgidan iborat parol kiriting.
+      submit-button: Parolni tiklash
+      back-button: Orqaga
+
+console:
+  create-or-join-organization:
+    modal-title: Tashkilot yaratish yoki unga qo'shilish
+    join-success-notification: Siz yangi tashkilotga qo'shildingiz!
+    create-success-notification: Siz yangi tashkilot yaratdingiz!
+  switch-organization:
+    modal-title: Haqiqatan ham tashkilotni {organizationName} ga o'zgartirmoqchimisiz?
+    modal-body: Tasdiqlaganingizdan so'ng hisobingiz tizimda qoladi, lekin asosiy tashkilotingiz o'zgaradi.
+    modal-accept-button-text: Ha, men tashkilotni o'zgartirmoqchiman
+    success-notification: Siz tashkilotlarni o'zgartirdingiz
+  account:
+    index:
+      upload-new: Yangisini yuklash
+      phone: Sizning telefon raqamingiz.
+      photos: rasmlar
+      timezone: Vaqt mintaqangizni tanlang.
+  admin:
+    menu:
+      overview: Umumiy ko'rinish
+      organizations: Tashkilotlar
+      branding: Brending
+      "2fa-config": 2FA konfiguratsiyasi
+      schedule-monitor: Jadval monitori
+      services: Xizmatlar
+      mail: Pochta
+      filesystem: Fayl tizimi
+      queue: Navbat
+      socket: Soket
+      push-notifications: Push-bildirishnomalar
+    schedule-monitor:
+      schedule-monitor: Jadval monitori
+      task-logs-for: >-
+        Vazifalar jurnali uchun:
+      showing-last-count: Oxirgi {count} ta jurnal ko'rsatilmoqda
+      name: Nomi
+      type: Turi
+      timezone: Vaqt mintaqasi
+      last-started: Oxirgi boshlangan
+      last-finished: Oxirgi tugallangan
+      last-failure: Oxirgi muvaffaqiyatsizlik
+      date: Sana
+      memory: Xotira
+      runtime: Ish vaqti
+      output: Chiqish
+      no-output: Chiqish yo'q
+    config:
+      database:
+        title: Ma'lumotlar bazasi konfiguratsiyasi
+      filesystem:
+        title: Fayl tizimi konfiguratsiyasi
+      mail:
+        title: Pochta konfiguratsiyasi
+      notification-channels:
+        title: Push-bildirishnomalar konfiguratsiyasi
+      queue:
+        title: Navbat konfiguratsiyasi
+      services:
+        title: Xizmatlar konfiguratsiyasi
+      socket:
+        title: Soket konfiguratsiyasi
+    branding:
+      title: Brending
+      icon-text: Belgi
+      upload-new: Yangisini yuklash
+      reset-default: Standart holatga qaytarish
+      logo-text: Logotip
+      theme: Standart mavzu
+    index:
+      total-users: Jami foydalanuvchilar
+      total-organizations: Jami tashkilotlar
+      total-transactions: Jami tranzaksiyalar
+    notifications:
+      title: Bildirishnomalar
+      notification-settings: Bildirishnomalar sozlamalari
+    organizations:
+      index:
+        title: Tashkilotlar
+        owner-name-column: Egasi
+        owner-phone-column: Egasining telefoni
+        owner-email-column: Egasining telefoni
+        users-count-column: Foydalanuvchilar
+        phone-column: Telefon
+        email-column: Elektron pochta
+      users:
+        title: Foydalanuvchilar
+  settings:
+    index:
+      title: Tashkilot sozlamalari
+      organization-name: Tashkilot nomi
+      organization-description: Tashkilot tavsifi
+      organization-phone: Tashkilot telefon raqami
+      organization-currency: Tashkilot valyutasi
+      organization-id: Tashkilot IDsi
+      organization-branding: Tashkilot brendingi
+      logo: Logotip
+      logo-help-text: Tashkilotingiz uchun logotip.
+      upload-new-logo: Yangi logotip yuklash
+      backdrop: Orqa fon
+      backdrop-help-text: Tashkilotingiz uchun ixtiyoriy banner yoki fon rasmi.
+      upload-new-backdrop: Yangi orqa fon yuklash
+      organization-timezone: Tashkilotingiz uchun standart vaqt mintaqasini tanlang.
+      select-timezone: Vaqt mintaqasini tanlang.
+  extensions:
+    title: Kengaytmalar tez kunda!
+    message: Kengaytmalar ombori va bozorini ishga tushirishga tayyorgarlik ko'rayotganimiz sababli, kelgusi versiyalarda qayta tekshiring.
+  notifications:
+    select-all: Hammasini tanlash
+    mark-as-read: O'qilgan deb belgilash
+    received: >-
+      Qabul qilindi:
+    message: Ko'rsatish uchun bildirishnomalar yo'q.
+
+invite:
+  for-users:
+    invitation-message: Sizni {companyName} ga qo'shilishga taklif qilishdi
+    invitation-sent-message: Sizni {appName} dagi {companyName} tashkilotiga qo'shilishga taklif qilishdi. Ushbu taklifni qabul qilish uchun elektron pochta orqali olgan taklifnomangiz kodini kiriting va davom etish tugmasini bosing.
+    invitation-code-sent-text: Sizning taklifnoma kodingiz
+    accept-invitation-text: Taklifni qabul qilish
+
+onboard:
+  index:
+    title: Hisobingizni yarating
+    welcome-title: <strong>{companyName} ga xush kelibsiz!</strong><br />
+    welcome-text: Boshlash uchun quyida talab qilinadigan ma'lumotlarni to'ldiring.
+    full-name: To'liq ism
+    full-name-help-text: Sizning to'liq ismingiz
+    your-email: Elektron pochta manzili
+    your-email-help-text: Sizning elektron pochta manzilingiz
+    phone: Telefon raqami
+    phone-help-text: Sizning telefon raqamingiz
+    organization-name: Tashkilot nomi
+    organization-help-text: Sizning tashkilotingiz nomi, barcha xizmatlaringiz va resurslaringiz ushbu tashkilot ostida boshqariladi, keyinchalik xohlagancha yoki kerak bo'lganda ko'plab tashkilotlar yaratishingiz mumkin.
+    password: Parol kiriting
+    password-help-text: Sizning parolingiz, yaxshi ekanligiga ishonch hosil qiling.
+    confirm-password: Parolingizni tasdiqlang
+    confirm-password-help-text: Yuqorida kiritgan parolingizni tasdiqlash uchun.
+    continue-button-text: Davom etish
+  verify-email:
+    header-title: Hisobni tekshirish
+    title: Elektron pochta manzilingizni tasdiqlang
+    message-text: <strong>Deyarli tayyor!</strong><br> Tasdiqlash kodi uchun elektron pochtangizni tekshiring.
+    verification-code-text: Elektron pochta orqali olgan tasdiqlash kodini kiriting.
+    verification-input-label: Tasdiqlash kodi
+    verify-button-text: Tasdiqlash va davom etish
+    didnt-receive-a-code: Hali kod olmadizmi?
+    not-sent:
+      message: Hali kod olmadizmi?
+      alternative-choice: Hisobingizni tasdiqlash uchun quyidagi muqobil variantlardan foydalaning.
+      resend-email: E-pochtani qayta yuborish
+      send-by-sms: SMS orqali yuborish
+
+install:
+  installer-header: O'rnatuvchi
+  failed-message-sent: O'rnatish muvaffaqiyatsiz tugadi! O'rnatishni qayta urinish uchun quyidagi tugmani bosing.
+  retry-install: Qayta o'rnatish
+  start-install: O'rnatishni boshlash
+
+layout:
+  header:
+    menus:
+      organization:
+        settings: Tashkilot sozlamalari
+        create-or-join: Tashkilot yaratish yoki unga qo'shilish
+        explore-extensions: Kengaytmalarni o'rganish
+      user:
+        view-profile: Profilni ko'rish
+        keyboard-shortcuts: Klaviatura yorliqlarini ko'rsatish
+        changelog: O'zgarishlar jurnali
