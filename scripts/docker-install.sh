@@ -114,12 +114,11 @@ mv -f "${CONFIG_PATH}.tmp" "$CONFIG_PATH"
 echo "✔  $CONFIG_PATH updated"
 
 ###############################################################################
-# 6b. Write console environment files (.env.development and .env.production)
+# 6b. Update console environment files (.env.development and .env.production)
 ###############################################################################
 ENV_DIR="$CONFIG_DIR/environments"
-mkdir -p "$ENV_DIR"
 
-# Write .env.development
+# Update .env.development
 cat > "$ENV_DIR/.env.development" <<ENV_DEV
 API_HOST=http://$HOST:8000
 API_NAMESPACE=int/v1
@@ -130,7 +129,7 @@ SOCKETCLUSTER_PORT=38000
 OSRM_HOST=https://router.project-osrm.org
 ENV_DEV
 
-# Write .env.production
+# Update .env.production
 cat > "$ENV_DIR/.env.production" <<ENV_PROD
 API_HOST=https://$HOST:8000
 API_NAMESPACE=int/v1
