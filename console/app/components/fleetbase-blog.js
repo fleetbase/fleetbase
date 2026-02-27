@@ -2,6 +2,7 @@ import Component from '@glimmer/component';
 import { tracked } from '@glimmer/tracking';
 import { inject as service } from '@ember/service';
 import { isArray } from '@ember/array';
+import { debug } from '@ember/debug';
 import { storageFor } from 'ember-local-storage';
 import { add, isPast } from 'date-fns';
 import { task } from 'ember-concurrency';
