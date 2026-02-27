@@ -190,12 +190,14 @@ npm install -g @fleetbase/cli
 | Command | Description |
 |---------|-------------|
 | `flb install-fleetbase` | Install Fleetbase using Docker with interactive setup |
-| `flb register` | Register a Registry Developer Account |
-| `flb verify` | Verify your developer account email |
-| `flb login` | Authenticate with the Fleetbase registry |
+| `flb set-auth <token>` | Set your registry authentication token for installing extensions |
 | `flb install <extension>` | Install an extension to your Fleetbase instance |
 | `flb uninstall <extension>` | Uninstall an extension from your instance |
+| `flb register` | Register a Registry Developer Account (for publishers) |
+| `flb verify` | Verify your developer account email (for publishers) |
+| `flb login` | Authenticate with the registry (for publishing extensions) |
 | `flb create-extension` | Scaffold a new extension for development |
+| `flb publish` | Publish an extension to the registry |
 
 # 🧩 Extensions 
 
@@ -211,8 +213,8 @@ To install extensions on a self-hosted instance:
 
 ```bash
 # 1. Get your registry token from https://console.fleetbase.io
-# 2. Authenticate with the registry
-flb login -u your-username -p your-password -e your-email@example.com
+# 2. Set your authentication token
+flb set-auth your-registry-token-here
 
 # 3. Install an extension
 flb install @fleetbase/extension-name
@@ -223,10 +225,19 @@ flb install @fleetbase/extension-name
 You can develop and publish your own extensions to extend Fleetbase's functionality or monetize through the marketplace. Learn more in the [extension building guide](https://docs.fleetbase.io/developers/building-an-extension).
 
 ```bash
-# Create a new extension
+# 1. Register a developer account (one-time)
+flb register
+
+# 2. Verify your email
+flb verify -e your-email@example.com -c verification-code
+
+# 3. Create a new extension
 flb create-extension my-custom-extension
 
-# Publish to the registry
+# 4. Authenticate for publishing
+flb login -u your-username -p your-password -e your-email@example.com
+
+# 5. Publish to the registry
 flb publish
 ```
 
