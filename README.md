@@ -5,7 +5,7 @@
       </a>
     </p>
     <p align="center" dir="auto">
-      <a href="https://github.com/fleetbase/fleetbase/blob/main/LICENSE"><img src="https://img.shields.io/github/license/fleetbase/fleetbase" alt="License"></a>
+      <a href="https://github.com/fleetbase/fleetbase/blob/main/LICENSE.md"><img src="https://img.shields.io/github/license/fleetbase/fleetbase" alt="License"></a>
       <a href="https://github.com/fleetbase/fleetbase/releases"><img src="https://img.shields.io/github/v/release/fleetbase/fleetbase" alt="Latest Release"></a>
       <a href="https://github.com/fleetbase/fleetbase/stargazers"><img src="https://img.shields.io/github/stars/fleetbase/fleetbase?style=social" alt="GitHub Stars"></a>
       <a href="https://discord.gg/V7RVWRQ2Wm"><img src="https://img.shields.io/discord/699834923032248430?logo=discord&label=Discord" alt="Discord"></a>
@@ -49,7 +49,7 @@ Fleetbase is designed for organizations that need powerful logistics and supply 
 | Feature | Screenshot | Description |
 |---------|------------|-------------|
 | **Order Board** | <img src="https://flb-assets.s3.ap-southeast-1.amazonaws.com/static/order-board-kanban.png" alt="Fleetbase Order Board" width="600" /> | Visualize and manage your orders with a dynamic Kanban board. |
-| **Workflow Builder** | <img src="https://flb-assets.s3.ap-southeast-1.amazonaws.com/static/order-workflow-config.png" alt="Fleetbase Order Workflow Configuration" width="600" /> | Create custom order flows and automation with the intuitive workflow builder. |
+| **Order Config** | <img src="https://flb-assets.s3.ap-southeast-1.amazonaws.com/static/order-workflow-config.png" alt="Fleetbase Order Configuration" width="600" /> | Create custom order configurations with logic, rules, automation, activity flows, and custom fields. |
 | **Order Tracking** | <img src="https://flb-assets.s3.ap-southeast-1.amazonaws.com/static/order-map-view.png" alt="Fleetbase Order Map View" width="600" /> | Track individual orders in real-time on an interactive map. |
 | **Live Fleet Map** | <img src="https://flb-assets.s3.ap-southeast-1.amazonaws.com/static/live-map-tracking.png" alt="Fleetbase Live Map Tracking" width="600" /> | Get a complete overview of your fleet and active orders on a live map. |
 | **Service Zones** | <img src="https://flb-assets.s3.ap-southeast-1.amazonaws.com/static/fleet-map-zones.png" alt="Fleetbase Fleet Map with Zones" width="600" /> | Define and manage service areas and zones for your fleet. |
@@ -57,8 +57,8 @@ Fleetbase is designed for organizations that need powerful logistics and supply 
 **Quickstart**
 
 ```bash
-git clone git@github.com:fleetbase/fleetbase.git  
-cd fleetbase && ./scripts/docker-install.sh
+npm install -g @fleetbase/cli
+flb install-fleetbase
 ```
 
 ## 📖 Table of contents
@@ -96,9 +96,27 @@ cd fleetbase && ./scripts/docker-install.sh
 | 🌍 **Open Source** | Deploy it either on-premise or in the cloud according to your organization's needs and preferences. |
 
 ## 💾 Install
-Getting up and running with Fleetbase via Docker is the quickest and most straightforward way. If you'd like to use Fleetbase without docker read the [full install guide in the Fleetbase documentation](https://docs.fleetbase.io/getting-started/install).  
-  
-Make sure you have both the latest versions of docker and docker-compose installed on your system.
+
+The easiest way to get started with Fleetbase is using the Fleetbase CLI, which automates the entire Docker-based installation process. If you'd like to use Fleetbase without Docker, read the [full install guide in the Fleetbase documentation](https://docs.fleetbase.io/getting-started/install).
+
+### Prerequisites
+- Node.js (v14 or higher)
+- Docker and Docker Compose
+- Git
+
+### Quick Install with CLI
+
+```bash
+# Install the Fleetbase CLI globally
+npm install -g @fleetbase/cli
+
+# Run the interactive installer
+flb install-fleetbase
+```
+
+### Alternative Install Script
+
+You can also use the install script directly:
 
 ```bash
 git clone git@github.com:fleetbase/fleetbase.git  
@@ -157,25 +175,82 @@ services:
 
 You can learn more about full installation, and configuration in the [official documentation](https://docs.fleetbase.io/getting-started/install).
 
+## ⌨️ Fleetbase CLI 
+
+The Fleetbase CLI is a powerful tool for managing your Fleetbase instance. It simplifies installation, extension management, authentication, and development workflows.
+
+Install the CLI globally with npm:
+
+```bash
+npm install -g @fleetbase/cli
+```
+
+### Available Commands
+
+| Command | Description |
+|---------|-------------|
+| `flb install-fleetbase` | Install Fleetbase using Docker with interactive setup |
+| `flb set-auth <token>` | Set your registry authentication token for installing extensions |
+| `flb install <extension>` | Install an extension to your Fleetbase instance |
+| `flb uninstall <extension>` | Uninstall an extension from your instance |
+| `flb register` | Register a Registry Developer Account |
+| `flb verify` | Verify your developer account email |
+| `flb login` | Authenticate with the registry (for publishing extensions) |
+| `flb scaffold` | Scaffold a new extension for development |
+| `flb publish` | Publish an extension to the registry |
+| `flb generate-token` | Generate or regenerate your registry authentication token |
+
 # 🧩 Extensions 
 
 Extensions are modular components that enhance the functionality of your Fleetbase instance. They allow you to add new features, customize existing behavior, or integrate with external systems.
 
-You can find extensions available from the official [Fleetbase Console](https://console.fleetbase.io), here you will also be able get your registry token to install extensions to a self-hosted Fleetbase instance. 
+### Installing Extensions
 
-Additionally you're able to develop and publish your own extensions as well which you can read more about developing extensions via the [extension building guide](https://docs.fleetbase.io/developers/building-an-extension).
-
-## ⌨️ Fleetbase CLI 
-
-The Fleetbase CLI is a powerful tool designed to simplify the management of extensions for your Fleetbase instance. With the CLI, you can effortlessly handle authentication, install and uninstall extensions, and scaffold new extensions if you are developing your own.
-
-Get started with the CLI with npm:
+To install extensions on a self-hosted instance:
 
 ```bash
-npm i -g @fleetbase/cli
+# 1. Register an account (one-time)
+flb register
+
+# 2. Verify your email (one-time)
+flb verify -e your-email@example.com -c verification-code
+
+# 3. Generate your registry token
+flb generate-token -e your-email@example.com
+
+# 4. Set your authentication token
+flb set-auth your-registry-token-here
+
+# 5. Install an extension
+flb install <extension>
 ```
 
-Once installed, you can access a variety of commands to manage your Fleetbase extensions.
+**Example:**
+```bash
+flb install fleetbase/pallet
+flb install fleetbase/fleetops
+```
+
+### Developing Extensions
+
+You can develop and publish your own extensions to extend Fleetbase's functionality or monetize through the marketplace. Learn more in the [extension building guide](https://docs.fleetbase.io/developers/building-an-extension).
+
+```bash
+# 1. Register a developer account (one-time)
+flb register
+
+# 2. Verify your email
+flb verify -e your-email@example.com -c verification-code
+
+# 3. Scaffold a new extension
+flb scaffold
+
+# 4. Authenticate for publishing
+flb login -u your-username -p your-password -e your-email@example.com
+
+# 5. Publish to the registry
+flb publish
+```
 
 # 📱 Apps
 

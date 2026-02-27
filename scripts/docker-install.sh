@@ -96,7 +96,7 @@ else
 fi
 
 ###############################################################################
-# 6. Write console/fleetbase.config.json atomically
+# 6. Write console/fleetbase.config.json atomically (for development runtime)
 ###############################################################################
 CONFIG_DIR="console"
 CONFIG_PATH="$CONFIG_DIR/fleetbase.config.json"
@@ -112,6 +112,36 @@ cat > "${CONFIG_PATH}.tmp" <<JSON
 JSON
 mv -f "${CONFIG_PATH}.tmp" "$CONFIG_PATH"
 echo "✔  $CONFIG_PATH updated"
+
+###############################################################################
+# 6b. Update console environment files (.env.development and .env.production)
+###############################################################################
+ENV_DIR="$CONFIG_DIR/environments"
+
+# Update .env.development
+cat > "$ENV_DIR/.env.development" <<ENV_DEV
+API_HOST=http://$HOST:8000
+API_NAMESPACE=int/v1
+SOCKETCLUSTER_PATH=/socketcluster/
+SOCKETCLUSTER_HOST=$HOST
+SOCKETCLUSTER_SECURE=false
+SOCKETCLUSTER_PORT=38000
+OSRM_HOST=https://router.project-osrm.org
+ENV_DEV
+
+# Update .env.production
+cat > "$ENV_DIR/.env.production" <<ENV_PROD
+API_HOST=https://$HOST:8000
+API_NAMESPACE=int/v1
+API_SECURE=true
+SOCKETCLUSTER_PATH=/socketcluster/
+SOCKETCLUSTER_HOST=$HOST
+SOCKETCLUSTER_SECURE=true
+SOCKETCLUSTER_PORT=38000
+OSRM_HOST=https://router.project-osrm.org
+ENV_PROD
+
+echo "✔  Console environment files updated"
 
 ###############################################################################
 # 7. Start stack, wait for DB, then run deploy

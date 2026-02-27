@@ -74,7 +74,11 @@ services:
         - cache
 
   console:
-    image: fleetbase/fleetbase-console:latest
+    build:
+      context: ./console
+      dockerfile: Dockerfile
+      args:
+        ENVIRONMENT: development
     ports:
       - "4200:4200"
     volumes:
