@@ -5,7 +5,7 @@
       </a>
     </p>
     <p align="center" dir="auto">
-      <a href="https://github.com/fleetbase/fleetbase/blob/main/LICENSE"><img src="https://img.shields.io/github/license/fleetbase/fleetbase" alt="License"></a>
+      <a href="https://github.com/fleetbase/fleetbase/blob/main/LICENSE.md"><img src="https://img.shields.io/github/license/fleetbase/fleetbase" alt="License"></a>
       <a href="https://github.com/fleetbase/fleetbase/releases"><img src="https://img.shields.io/github/v/release/fleetbase/fleetbase" alt="Latest Release"></a>
       <a href="https://github.com/fleetbase/fleetbase/stargazers"><img src="https://img.shields.io/github/stars/fleetbase/fleetbase?style=social" alt="GitHub Stars"></a>
       <a href="https://discord.gg/V7RVWRQ2Wm"><img src="https://img.shields.io/discord/699834923032248430?logo=discord&label=Discord" alt="Discord"></a>
@@ -193,8 +193,8 @@ npm install -g @fleetbase/cli
 | `flb set-auth <token>` | Set your registry authentication token for installing extensions |
 | `flb install <extension>` | Install an extension to your Fleetbase instance |
 | `flb uninstall <extension>` | Uninstall an extension from your instance |
-| `flb register` | Register a Registry Developer Account (for publishers) |
-| `flb verify` | Verify your developer account email (for publishers) |
+| `flb register` | Register a Registry Developer Account |
+| `flb verify` | Verify your developer account email |
 | `flb login` | Authenticate with the registry (for publishing extensions) |
 | `flb scaffold` | Scaffold a new extension for development |
 | `flb publish` | Publish an extension to the registry |
@@ -209,12 +209,26 @@ Extensions are modular components that enhance the functionality of your Fleetba
 To install extensions on a self-hosted instance:
 
 ```bash
-# 1. Get your registry token from https://console.fleetbase.io
-# 2. Set your authentication token
+# 1. Register an account (one-time)
+flb register
+
+# 2. Verify your email (one-time)
+flb verify -e your-email@example.com -c verification-code
+
+# 3. Generate your registry token
+flb generate-token -e your-email@example.com
+
+# 4. Set your authentication token
 flb set-auth your-registry-token-here
 
-# 3. Install an extension
-flb install @fleetbase/extension-name
+# 5. Install an extension
+flb install <extension>
+```
+
+**Example:**
+```bash
+flb install fleetbase/pallet
+flb install fleetbase/fleetops
 ```
 
 ### Developing Extensions
