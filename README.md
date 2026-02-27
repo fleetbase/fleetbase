@@ -57,8 +57,8 @@ Fleetbase is designed for organizations that need powerful logistics and supply 
 **Quickstart**
 
 ```bash
-git clone git@github.com:fleetbase/fleetbase.git  
-cd fleetbase && ./scripts/docker-install.sh
+npm install -g @fleetbase/cli
+flb install-fleetbase
 ```
 
 ## 📖 Table of contents
@@ -96,9 +96,40 @@ cd fleetbase && ./scripts/docker-install.sh
 | 🌍 **Open Source** | Deploy it either on-premise or in the cloud according to your organization's needs and preferences. |
 
 ## 💾 Install
-Getting up and running with Fleetbase via Docker is the quickest and most straightforward way. If you'd like to use Fleetbase without docker read the [full install guide in the Fleetbase documentation](https://docs.fleetbase.io/getting-started/install).  
-  
-Make sure you have both the latest versions of docker and docker-compose installed on your system.
+
+The easiest way to get started with Fleetbase is using the Fleetbase CLI, which automates the entire Docker-based installation process. If you'd like to use Fleetbase without Docker, read the [full install guide in the Fleetbase documentation](https://docs.fleetbase.io/getting-started/install).
+
+### Prerequisites
+- Node.js (v14 or higher)
+- Docker and Docker Compose
+- Git
+
+### Quick Install with CLI
+
+```bash
+# Install the Fleetbase CLI globally
+npm install -g @fleetbase/cli
+
+# Run the interactive installer
+flb install-fleetbase
+```
+
+The CLI will guide you through the installation process with interactive prompts for:
+- **Host/IP address** - Where Fleetbase will be accessible (default: localhost)
+- **Environment** - Development or production mode
+- **Installation directory** - Where to install Fleetbase (default: current directory)
+
+The installer will automatically:
+- Clone the Fleetbase repository (if needed)
+- Generate secure application keys
+- Configure Docker Compose
+- Set up environment files
+- Start all services
+- Run database migrations
+
+### Manual Install (Alternative)
+
+If you prefer to install manually:
 
 ```bash
 git clone git@github.com:fleetbase/fleetbase.git  
