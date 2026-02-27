@@ -49,7 +49,7 @@ Fleetbase is designed for organizations that need powerful logistics and supply 
 | Feature | Screenshot | Description |
 |---------|------------|-------------|
 | **Order Board** | <img src="https://flb-assets.s3.ap-southeast-1.amazonaws.com/static/order-board-kanban.png" alt="Fleetbase Order Board" width="600" /> | Visualize and manage your orders with a dynamic Kanban board. |
-| **Workflow Builder** | <img src="https://flb-assets.s3.ap-southeast-1.amazonaws.com/static/order-workflow-config.png" alt="Fleetbase Order Workflow Configuration" width="600" /> | Create custom order flows and automation with the intuitive workflow builder. |
+| **Order Config** | <img src="https://flb-assets.s3.ap-southeast-1.amazonaws.com/static/order-workflow-config.png" alt="Fleetbase Order Configuration" width="600" /> | Create custom order configurations with logic, rules, automation, activity flows, and custom fields. |
 | **Order Tracking** | <img src="https://flb-assets.s3.ap-southeast-1.amazonaws.com/static/order-map-view.png" alt="Fleetbase Order Map View" width="600" /> | Track individual orders in real-time on an interactive map. |
 | **Live Fleet Map** | <img src="https://flb-assets.s3.ap-southeast-1.amazonaws.com/static/live-map-tracking.png" alt="Fleetbase Live Map Tracking" width="600" /> | Get a complete overview of your fleet and active orders on a live map. |
 | **Service Zones** | <img src="https://flb-assets.s3.ap-southeast-1.amazonaws.com/static/fleet-map-zones.png" alt="Fleetbase Fleet Map with Zones" width="600" /> | Define and manage service areas and zones for your fleet. |
