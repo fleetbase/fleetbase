@@ -51,7 +51,7 @@ Support for **KZT (Kazakhstani Tenge)** currency has been added across both **co
 - **[ember-core]** Added centralized events service for analytics tracking across all core services
 - **[ember-core]** Event tracking in CRUD service (create, update, delete, bulk actions, import, export)
 - **[ember-core]** Dual event system (fires on both events service and universe service)
-- **[fleetops]** Added event tracking to 30 FleetOps controllers for PostHog analytics
+- **[fleetops]** Added event tracking to 30 FleetOps controllers for event tracking
 - **[fleetops]** Import operations now return count of imported records in response
 
 ### Developer Tools
