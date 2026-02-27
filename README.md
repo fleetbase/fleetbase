@@ -114,22 +114,9 @@ npm install -g @fleetbase/cli
 flb install-fleetbase
 ```
 
-The CLI will guide you through the installation process with interactive prompts for:
-- **Host/IP address** - Where Fleetbase will be accessible (default: localhost)
-- **Environment** - Development or production mode
-- **Installation directory** - Where to install Fleetbase (default: current directory)
+### Alternative Install Script
 
-The installer will automatically:
-- Clone the Fleetbase repository (if needed)
-- Generate secure application keys
-- Configure Docker Compose
-- Set up environment files
-- Start all services
-- Run database migrations
-
-### Manual Install (Alternative)
-
-If you prefer to install manually:
+You can also use the install script directly:
 
 ```bash
 git clone git@github.com:fleetbase/fleetbase.git  
@@ -188,25 +175,60 @@ services:
 
 You can learn more about full installation, and configuration in the [official documentation](https://docs.fleetbase.io/getting-started/install).
 
+## ⌨️ Fleetbase CLI 
+
+The Fleetbase CLI is a powerful tool for managing your Fleetbase instance. It simplifies installation, extension management, authentication, and development workflows.
+
+Install the CLI globally with npm:
+
+```bash
+npm install -g @fleetbase/cli
+```
+
+### Available Commands
+
+| Command | Description |
+|---------|-------------|
+| `flb install-fleetbase` | Install Fleetbase using Docker with interactive setup |
+| `flb register` | Register a Registry Developer Account |
+| `flb verify` | Verify your developer account email |
+| `flb login` | Authenticate with the Fleetbase registry |
+| `flb install <extension>` | Install an extension to your Fleetbase instance |
+| `flb uninstall <extension>` | Uninstall an extension from your instance |
+| `flb create-extension` | Scaffold a new extension for development |
+
 # 🧩 Extensions 
 
 Extensions are modular components that enhance the functionality of your Fleetbase instance. They allow you to add new features, customize existing behavior, or integrate with external systems.
 
-You can find extensions available from the official [Fleetbase Console](https://console.fleetbase.io), here you will also be able get your registry token to install extensions to a self-hosted Fleetbase instance. 
+### Finding Extensions
 
-Additionally you're able to develop and publish your own extensions as well which you can read more about developing extensions via the [extension building guide](https://docs.fleetbase.io/developers/building-an-extension).
+Browse available extensions in the [Fleetbase Extension Marketplace](https://console.fleetbase.io). You'll also find your registry authentication token here, which is required to install extensions on self-hosted instances.
 
-## ⌨️ Fleetbase CLI 
+### Installing Extensions
 
-The Fleetbase CLI is a powerful tool designed to simplify the management of extensions for your Fleetbase instance. With the CLI, you can effortlessly handle authentication, install and uninstall extensions, and scaffold new extensions if you are developing your own.
-
-Get started with the CLI with npm:
+To install extensions on a self-hosted instance:
 
 ```bash
-npm i -g @fleetbase/cli
+# 1. Get your registry token from https://console.fleetbase.io
+# 2. Authenticate with the registry
+flb login -u your-username -p your-password -e your-email@example.com
+
+# 3. Install an extension
+flb install @fleetbase/extension-name
 ```
 
-Once installed, you can access a variety of commands to manage your Fleetbase extensions.
+### Developing Extensions
+
+You can develop and publish your own extensions to extend Fleetbase's functionality or monetize through the marketplace. Learn more in the [extension building guide](https://docs.fleetbase.io/developers/building-an-extension).
+
+```bash
+# Create a new extension
+flb create-extension my-custom-extension
+
+# Publish to the registry
+flb publish
+```
 
 # 📱 Apps
 
