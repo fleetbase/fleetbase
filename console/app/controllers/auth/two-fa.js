@@ -149,7 +149,7 @@ export default class AuthTwoFaController extends Controller {
             this.notifications.success(this.intl.t('auth.two-fa.verify-code.verification-successful-notification'));
 
             // authenticate user
-            return this.session.authenticate('authenticator:fleetbase', { authToken }).then(() => {
+            return this.session.authenticate('authenticator:fleetbase', { authToken, identity }).then(() => {
                 return this.router.transitionTo('console');
             });
         } catch (error) {
