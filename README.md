@@ -196,16 +196,13 @@ npm install -g @fleetbase/cli
 | `flb register` | Register a Registry Developer Account (for publishers) |
 | `flb verify` | Verify your developer account email (for publishers) |
 | `flb login` | Authenticate with the registry (for publishing extensions) |
-| `flb create-extension` | Scaffold a new extension for development |
+| `flb scaffold` | Scaffold a new extension for development |
 | `flb publish` | Publish an extension to the registry |
+| `flb generate-token` | Generate or regenerate your registry authentication token |
 
 # 🧩 Extensions 
 
 Extensions are modular components that enhance the functionality of your Fleetbase instance. They allow you to add new features, customize existing behavior, or integrate with external systems.
-
-### Finding Extensions
-
-Browse available extensions in the [Fleetbase Extension Marketplace](https://console.fleetbase.io). You'll also find your registry authentication token here, which is required to install extensions on self-hosted instances.
 
 ### Installing Extensions
 
@@ -231,8 +228,8 @@ flb register
 # 2. Verify your email
 flb verify -e your-email@example.com -c verification-code
 
-# 3. Create a new extension
-flb create-extension my-custom-extension
+# 3. Scaffold a new extension
+flb scaffold
 
 # 4. Authenticate for publishing
 flb login -u your-username -p your-password -e your-email@example.com
