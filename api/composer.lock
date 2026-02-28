@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "6327bc3172d3e92c060c576df8b57919",
+    "content-hash": "784bd052687a49a240afcf2a8b3a651e",
     "packages": [
         {
             "name": "appstract/laravel-opcache",
@@ -124,16 +124,16 @@
         },
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.371.2",
+            "version": "3.371.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "32090a8ac3ec8859cb83bdde800b8f0ecf92d8ec"
+                "reference": "d300ec1c861e52dc8f17ca3d75dc754da949f065"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/32090a8ac3ec8859cb83bdde800b8f0ecf92d8ec",
-                "reference": "32090a8ac3ec8859cb83bdde800b8f0ecf92d8ec",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/d300ec1c861e52dc8f17ca3d75dc754da949f065",
+                "reference": "d300ec1c861e52dc8f17ca3d75dc754da949f065",
                 "shasum": ""
             },
             "require": {
@@ -197,11 +197,11 @@
             "authors": [
                 {
                     "name": "Amazon Web Services",
-                    "homepage": "http://aws.amazon.com"
+                    "homepage": "https://aws.amazon.com"
                 }
             ],
             "description": "AWS SDK for PHP - Use Amazon Web Services in your PHP project",
-            "homepage": "http://aws.amazon.com/sdkforphp",
+            "homepage": "https://aws.amazon.com/sdk-for-php",
             "keywords": [
                 "amazon",
                 "aws",
@@ -215,9 +215,9 @@
             "support": {
                 "forum": "https://github.com/aws/aws-sdk-php/discussions",
                 "issues": "https://github.com/aws/aws-sdk-php/issues",
-                "source": "https://github.com/aws/aws-sdk-php/tree/3.371.2"
+                "source": "https://github.com/aws/aws-sdk-php/tree/3.371.3"
             },
-            "time": "2026-02-26T19:06:10+00:00"
+            "time": "2026-02-27T19:05:40+00:00"
         },
         {
             "name": "aws/aws-sdk-php-laravel",
@@ -2323,16 +2323,16 @@
         },
         {
             "name": "fleetbase/fleetops-api",
-            "version": "0.6.36",
+            "version": "0.6.37",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fleetbase/fleetops.git",
-                "reference": "2a6178e011ed2aad1fe3e5cb67308455c48e1cca"
+                "reference": "071a0f06fbe60b7a98fb84686112cc0cd2c3018c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fleetbase/fleetops/zipball/2a6178e011ed2aad1fe3e5cb67308455c48e1cca",
-                "reference": "2a6178e011ed2aad1fe3e5cb67308455c48e1cca",
+                "url": "https://api.github.com/repos/fleetbase/fleetops/zipball/071a0f06fbe60b7a98fb84686112cc0cd2c3018c",
+                "reference": "071a0f06fbe60b7a98fb84686112cc0cd2c3018c",
                 "shasum": ""
             },
             "require": {
@@ -2407,9 +2407,9 @@
             ],
             "support": {
                 "issues": "https://github.com/fleetbase/fleetops/issues",
-                "source": "https://github.com/fleetbase/fleetops/tree/v0.6.36"
+                "source": "https://github.com/fleetbase/fleetops/tree/v0.6.37"
             },
-            "time": "2026-02-27T07:56:16+00:00"
+            "time": "2026-02-28T01:43:39+00:00"
         },
         {
             "name": "fleetbase/laravel-mysql-spatial",
@@ -2479,16 +2479,16 @@
         },
         {
             "name": "fleetbase/registry-bridge",
-            "version": "0.1.6",
+            "version": "0.1.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fleetbase/registry-bridge.git",
-                "reference": "3e6ba698f5015616ec88c336fe66e98701442ad2"
+                "reference": "52441e2b2c56d74afb02a216f962cd712c356efd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fleetbase/registry-bridge/zipball/3e6ba698f5015616ec88c336fe66e98701442ad2",
-                "reference": "3e6ba698f5015616ec88c336fe66e98701442ad2",
+                "url": "https://api.github.com/repos/fleetbase/registry-bridge/zipball/52441e2b2c56d74afb02a216f962cd712c356efd",
+                "reference": "52441e2b2c56d74afb02a216f962cd712c356efd",
                 "shasum": ""
             },
             "require": {
@@ -2555,9 +2555,9 @@
             ],
             "support": {
                 "issues": "https://github.com/fleetbase/registry-bridge/issues",
-                "source": "https://github.com/fleetbase/registry-bridge/tree/v0.1.6"
+                "source": "https://github.com/fleetbase/registry-bridge/tree/v0.1.7"
             },
-            "time": "2026-02-27T07:58:45+00:00"
+            "time": "2026-02-28T01:41:56+00:00"
         },
         {
             "name": "fleetbase/storefront-api",
