@@ -191,6 +191,7 @@ npm install -g @fleetbase/cli
 |---------|-------------|
 | `flb install-fleetbase` | Install Fleetbase using Docker with interactive setup |
 | `flb set-auth <token>` | Set your registry authentication token for installing extensions |
+| `flb search [query]` | Browse and search available extensions without authentication |
 | `flb install <extension>` | Install an extension to your Fleetbase instance |
 | `flb uninstall <extension>` | Uninstall an extension from your instance |
 | `flb register` | Register a Registry Developer Account |
@@ -203,6 +204,34 @@ npm install -g @fleetbase/cli
 # 🧩 Extensions 
 
 Extensions are modular components that enhance the functionality of your Fleetbase instance. They allow you to add new features, customize existing behavior, or integrate with external systems.
+
+### Browsing Extensions
+
+You can browse all publicly available extensions without any account or authentication token:
+
+```bash
+# List all available extensions
+flb search
+
+# Search by keyword
+flb search fleet
+
+# Filter by category
+flb search --category logistics
+
+# Show only free extensions
+flb search --free
+
+# Output as JSON (for scripting)
+flb search --json
+```
+
+Each result shows the extension name, category, publisher, version, price, and both supported install formats:
+
+```
+flb install fleetbase/fleetops
+flb install ext_abc123
+```
 
 ### Installing Extensions
 
