@@ -59,27 +59,24 @@ module.exports = {
 
         const extensions = await this.getExtensions();
 
-        if (extensions.length === 0) {
-            console.log('[Fleetbase] No extensions found');
-            return;
+        if (extensions.length > 0) {
+            console.log(`[Fleetbase] Discovered ${extensions.length} extension(s)`);
+            extensions.forEach((ext) => {
+                console.log(`[Fleetbase]   - ${ext.name} (v${ext.version})`);
+            });
+            console.log('');
+
+            // Generate extension shims (only needed when extensions are present)
+            this.generateExtensionShims(extensions);
+        } else {
+            console.log('[Fleetbase] No extensions found — generating empty extension loader to satisfy module dependencies.');
         }
 
-        console.log(`[Fleetbase] Discovered ${extensions.length} extension(s)`);
-        extensions.forEach((ext) => {
-            console.log(`[Fleetbase]   - ${ext.name} (v${ext.version})`);
-        });
-        console.log('');
-
-        // Generate extension shims
-        this.generateExtensionShims(extensions);
-
-        // Generate extension loaders
+        // Always generate loaders, router, and manifest so that
+        // @fleetbase/console/extensions (app/extensions/index.js) always exists
+        // and the build does not fail when zero extensions are installed.
         this.generateExtensionLoaders(extensions);
-
-        // Generate router
         this.generateRouter(extensions);
-
-        // Generate manifest
         this.generateExtensionsManifest(extensions);
     },
 
@@ -227,7 +224,7 @@ export default getExtensionLoader;
 
         recast.visit(ast, {
             visitCallExpression(path) {
-                if (path.value.type === 'CallExpression' && path.value.callee.property.name === 'route' && path.value.arguments[0].value === 'console') {
+                if (path.value.type === 'CallExpression' && path.value.callee.property && path.value.callee.property.name === 'route' && path.value.arguments[0] && path.value.arguments[0].value === 'console') {
                     let functionExpression;
 
                     // Find the function expression
@@ -270,7 +267,7 @@ export default getExtensionLoader;
                     }
                 }
 
-                if (path.value.type === 'CallExpression' && path.value.callee.property.name === 'map') {
+                if (path.value.type === 'CallExpression' && path.value.callee.property && path.value.callee.property.name === 'map') {
                     let functionExpression;
 
                     path.value.arguments.forEach((arg) => {
