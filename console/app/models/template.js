@@ -22,7 +22,7 @@ export default class TemplateModel extends Model {
     @attr('number') height;
     @attr('string', { defaultValue: 'mm' }) unit;
     @attr('string', { defaultValue: '#ffffff' }) background_color;
-    @attr('array', { defaultValue: () => [] }) content;
+    @attr('array') content;
     @attr('boolean', { defaultValue: false }) is_default;
     @attr('string', { defaultValue: 'draft' }) status;
     @attr('object') meta;
