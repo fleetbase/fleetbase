@@ -41,21 +41,6 @@ export default class TemplateModel extends Model {
         return this.status === 'published';
     }
 
-    @computed('context_type') get contextTypeLabel() {
-        const labels = {
-            invoice: 'Invoice',
-            order: 'Order',
-            transaction: 'Transaction',
-            wallet: 'Wallet',
-            contact: 'Contact',
-            company: 'Company',
-            shipment: 'Shipment',
-            waybill: 'Waybill',
-            receipt: 'Receipt',
-        };
-        return labels[this.context_type] ?? this.context_type;
-    }
-
     @computed('paper_size', 'orientation') get dimensionLabel() {
         if (this.paper_size === 'custom') {
             return `${this.width} × ${this.height} ${this.unit}`;
