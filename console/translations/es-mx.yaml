@@ -2140,6 +2140,7 @@ comment-thread:
   comment-min-length-notification: El comentario debe tener al menos 2 caracteres
 
 dashboard:
+  default_dashboard: Panel predeterminado
   select-dashboard: Seleccionar Panel
   create-new-dashboard: Crear nuevo Panel
   create-a-new-dashboard: Crear un nuevo Panel
@@ -2232,6 +2233,147 @@ component:
     widget-name: Widget {widgetName}
     select-widgets: Seleccionar widgets
     close-and-save: Cerrar y guardar
+
+  github-card:
+    star-on-github: Dar estrella en Github
+    latest-release: "Última versión: {releaseName}"
+    stars: Estrellas
+    watchers: Seguidores
+    forks: Bifurcaciones
+    open: Abiertos
+    issues: Issues
+
+  configure:
+    test-config: Probar configuración
+    save-changes: Guardar cambios
+    filesystem:
+      title: Sistema de archivos
+      driver: Controlador
+      driver-help-text: Selecciona el controlador de sistema de archivos predeterminado para Fleetbase.
+      select-driver: Seleccionar controlador de sistema de archivos
+      s3-bucket: Bucket S3
+      s3-url: URL S3
+      s3-endpoint: Endpoint S3
+      gcs-warning: "¡Advertencia! GCS ya está configurado en el entorno del servidor. Cambiar los valores a continuación puede causar problemas."
+      gcs-bucket: Bucket GCS
+      gcs-key-file: Archivo de clave de cuenta de servicio GCS
+      upload-service-account: Subir JSON de cuenta de servicio
+    mail:
+      title: Correo
+      mailer: Servicio de correo
+      mailer-help-text: Selecciona el servicio de correo predeterminado para Fleetbase.
+      select-mailer: Seleccionar servicio de correo
+      smtp-host: Host SMTP
+      smtp-port: Puerto SMTP
+      smtp-encryption: Cifrado SMTP
+      smtp-tls-help-text: Cifrado TLS habilitado
+      smtp-username: Usuario SMTP
+      smtp-password: Contraseña SMTP
+      smtp-timeout: Tiempo de espera SMTP
+      smtp-auth-mode: Modo de autenticación SMTP
+      client-id: ID de cliente
+      client-secret: Secreto de cliente
+      tenant-id: ID de inquilino
+      save-to-sent-items: Guardar en elementos enviados
+      mailgun-domain: Dominio Mailgun
+      mailgun-endpoint: Endpoint Mailgun
+      mailgun-secret: Secreto Mailgun
+      postmark-token: Token de Postmark
+      sendgrid-api-key: Clave API de Sendgrid
+      resend-api-key: Clave API de Resend
+      from-address: Dirección de remitente
+      from-address-help-text: Ingresa la dirección de correo electrónico desde la cual Fleetbase enviará correos.
+      from-name: Nombre del remitente
+      from-name-help-text: Ingresa el nombre desde el cual Fleetbase enviará correos.
+    notification-channels:
+      apn-title: Configuración APN
+      apn-key-id: ID de clave APN
+      apn-team-id: ID de equipo APN
+      apn-bundle-id: ID de paquete de app APN
+      upload-p8-key: Subir archivo de clave P8
+      apn-production: APN Producción
+      firebase-title: Configuración Firebase
+      upload-service-account: Subir JSON de cuenta de servicio
+      test-push-title: Probar notificación push
+      test-title-label: "Título:"
+      test-title-placeholder: Título de la notificación push
+      test-message-label: "Mensaje:"
+      test-message-placeholder: Mensaje de la notificación push
+      apn-device-token: "Token de dispositivo APN:"
+      fcm-device-token: "Token de dispositivo FCM:"
+    queue:
+      title: Cola
+      driver: Controlador
+      driver-help-text: Selecciona el controlador de cola predeterminado para Fleetbase.
+      select-driver: Seleccionar controlador de cola
+      beanstalk-host: Host Beanstalk
+      beanstalk-queue: Cola Beanstalk
+      sqs-prefix: Prefijo SQS
+      sqs-queue: Cola SQS
+      sqs-suffix: Sufijo SQS
+    services:
+      aws-title: AWS
+      aws-access-key: Clave de acceso AWS
+      aws-access-secret: Secreto de acceso AWS
+      aws-region: Región AWS
+      google-maps-title: Google Maps
+      google-maps-api-key: Clave API de Google Maps
+      google-maps-locale: Locale de Google Maps
+      twilio-title: Twilio
+      twilio-sid: SID de Twilio
+      twilio-token: Token de Twilio
+      twilio-from: Remitente Twilio
+      send-test-sms: Enviar SMS de prueba aquí
+      test-twilio: Probar configuración de Twilio
+      sentry-title: Sentry
+      sentry-dsn: DSN de Sentry
+      test-sentry: Probar configuración de Sentry
+      ipinfo-title: IP Info
+      ipinfo-api-key: Clave API de IP Info
+    socket:
+      title: Conexión SocketCluster
+      cannot-change: La configuración de SocketCluster no se puede cambiar en este momento.
+      output: Salida
+      awaiting-events: Esperando eventos...
+      test-connection: Probar conexión de socket
+
+  fleetbase-blog:
+    title: Blog de Fleetbase
+    visit-blog: Visitar blog
+
+  impersonator-tray:
+    end-impersonation: Finalizar suplantación
+
+  modals:
+    create-dashboard:
+      name: Nombre del panel
+      name-help-text: Ingresa el nombre de tu panel
+    edit-organization:
+      name: Nombre de la organización
+      description: Descripción de la organización
+      phone: Teléfono de la organización
+      currency: Moneda de la organización
+    leave-organization:
+      owner-leaving: "Como propietario de <strong>{orgName}</strong>, dejar la organización requiere que nombres un nuevo propietario."
+      select-member-prompt: Selecciona un miembro del menú desplegable para transferir la propiedad antes de continuar.
+      select-new-owner: Seleccionar nuevo propietario
+      select-member: Seleccionar un miembro
+      sole-owner: "Eres el único propietario de <strong>{orgName}</strong>."
+      will-be-deleted: Al salir, la organización será eliminada permanentemente junto con todos sus datos.
+      are-you-sure: ¿Estás seguro de que quieres continuar?
+      cannot-be-undone: Esta acción no se puede deshacer.
+      confirm-leave: "¿Estás seguro de que quieres abandonar la organización <strong>{orgName}</strong>?"
+      no-access-warning: Ya no tendrás acceso a sus recursos y configuraciones.
+    validate-password:
+      password: Contraseña
+      confirm-password: Confirmar contraseña
+
+  two-fa-settings:
+    enable-2fa: Habilitar autenticación de dos factores
+    require-2fa: Requerir que los usuarios configuren 2FA
+    choose-method: Elige un método de autenticación
+    choose-method-description: Además de tu nombre de usuario y contraseña, deberás ingresar un código (enviado por app o SMS) para iniciar sesión en tu cuenta
+    recommended: Recomendado
 
 services:
   dashboard-service:
