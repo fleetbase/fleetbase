@@ -1,12 +1,12 @@
-<ContentPanel @title="APN Configutation" @open={{true}} @wrapperClass="bordered-classic">
-    <InputGroup @name="APN Key ID" @value={{this.apn.key_id}} disabled={{this.isLoading}} />
-    <InputGroup @name="APN Team ID" @value={{this.apn.team_id}} disabled={{this.isLoading}} />
-    <InputGroup @name="APN App Bundle ID" @value={{this.apn.app_bundle_id}} disabled={{this.isLoading}} />
+<ContentPanel @title={{t "component.configure.notification-channels.apn-title"}} @open={{true}} @wrapperClass="bordered-classic">
+    <InputGroup @name={{t "component.configure.notification-channels.apn-key-id"}} @value={{this.apn.key_id}} disabled={{this.isLoading}} />
+    <InputGroup @name={{t "component.configure.notification-channels.apn-team-id"}} @value={{this.apn.team_id}} disabled={{this.isLoading}} />
+    <InputGroup @name={{t "component.configure.notification-channels.apn-bundle-id"}} @value={{this.apn.app_bundle_id}} disabled={{this.isLoading}} />
     {{!-- <InputGroup @name="APN Private Key" disabled={{this.isLoading}}>
         <Textarea class="form-input w-full" @value={{this.apn.private_key_content}} placeholder="APN Private Key" rows="10" disabled={{this.isLoading}} />
     </InputGroup> --}}
     <InputGroup @wrapperClass="flex flex-row items-center">
-        <UploadButton @name="apn-key" @accept="text/plain,application/x-pem-file,application/x-pkcs12,application/x-x509-ca-cert,.p12,.pem,.p8" @onFileAdded={{this.uploadApnKey}} @buttonText="Upload P8 Key File" @icon="upload" class="w-auto m-0i mt-0i" />
+        <UploadButton @name="apn-key" @accept="text/plain,application/x-pem-file,application/x-pkcs12,application/x-x509-ca-cert,.p12,.pem,.p8" @onFileAdded={{this.uploadApnKey}} @buttonText={{t "component.configure.notification-channels.upload-p8-key"}} @icon="upload" class="w-auto m-0i mt-0i" />
         {{#if this.apn.private_key_file}}
             <div class="ml-2.5 text-sm dark:text-white text-black flex flex-row items-center border border-blue-500 rounded-lg px-2 py-0.5 -mt-1">
                 <FaIcon @icon="file-text" @size="sm" class="mr-2 dark:text-white text-black" />
@@ -16,13 +16,13 @@
         {{/if}}
     </InputGroup>
     <InputGroup @wrapperClass="mb-0i">
-        <Checkbox @label="APN Production" @value={{this.apn.production}} @onToggle={{this.toggleApnProduction}} />
+        <Checkbox @label={{t "component.configure.notification-channels.apn-production"}} @value={{this.apn.production}} @onToggle={{this.toggleApnProduction}} />
     </InputGroup>
 </ContentPanel>
 
-<ContentPanel @title="Firebase Configutation" @open={{true}} @wrapperClass="bordered-classic">
+<ContentPanel @title={{t "component.configure.notification-channels.firebase-title"}} @open={{true}} @wrapperClass="bordered-classic">
     <InputGroup @wrapperClass="flex flex-row items-center mb-0i">
-        <UploadButton @name="firebase-service-account" @accept="text/plain,text/javascript,application/json" @onFileAdded={{this.uploadFirebaseCredentials}} @buttonText="Upload Service Account JSON" @icon="upload" class="w-auto m-0i mt-0i" />
+        <UploadButton @name="firebase-service-account" @accept="text/plain,text/javascript,application/json" @onFileAdded={{this.uploadFirebaseCredentials}} @buttonText={{t "component.configure.notification-channels.upload-service-account"}} @icon="upload" class="w-auto m-0i mt-0i" />
         {{#if this.firebase.credentials_file}}
             <div class="ml-2.5 text-sm dark:text-white text-black flex flex-row items-center border border-blue-500 rounded-lg px-2 py-0.5 -mt-1">
                 <FaIcon @icon="file-text" @size="sm" class="mr-2 dark:text-white text-black" />
@@ -33,7 +33,7 @@
     </InputGroup>
 </ContentPanel>
 
-<ContentPanel @title="Test Push Notification" @open={{true}} @wrapperClass="bordered-classic">
+<ContentPanel @title={{t "component.configure.notification-channels.test-push-title"}} @open={{true}} @wrapperClass="bordered-classic">
     {{#if this.testResponse}}
         <div class="flex flex-row items-center rounded-lg border {{if (eq this.testResponse.status 'error') 'border-red-900 bg-red-800 text-red-100' 'border-green-900 bg-green-800 text-green-100'}} shadow-sm my-2 px-4 py-2">
             <FaIcon @icon={{if (eq this.testResponse.status 'error') 'triangle-exclamation' 'circle-check'}} class="mr-1.5 {{if (eq this.testResponse.status 'error') 'text-red-200' 'text-green-200'}}" />
@@ -43,28 +43,28 @@
     <div class="">
         <div class="flex flex-col space-y-2">
             <div class="flex flex-row items-center">
-                <div class="text-sm w-40">Title:</div>
-                <Input @value={{this.testTitle}} placeholder="Push Notification Title" class="form-input flex-1" />
+                <div class="text-sm w-40">{{t "component.configure.notification-channels.test-title-label"}}</div>
+                <Input @value={{this.testTitle}} placeholder={{t "component.configure.notification-channels.test-title-placeholder"}} class="form-input flex-1" />
             </div>
             <div class="flex flex-row items-center">
-                <div class="text-sm w-40">Message:</div>
-                <Input @value={{this.testMessage}} placeholder="Push Notification Message" class="form-input flex-1" />
+                <div class="text-sm w-40">{{t "component.configure.notification-channels.test-message-label"}}</div>
+                <Input @value={{this.testMessage}} placeholder={{t "component.configure.notification-channels.test-message-placeholder"}} class="form-input flex-1" />
             </div>
             <div class="flex flex-row items-center">
-                <div class="text-sm w-40">APN Device Token:</div>
-                <Input @value={{this.apnToken}} placeholder="APN Device Token" class="form-input flex-1" />
+                <div class="text-sm w-40">{{t "component.configure.notification-channels.apn-device-token"}}</div>
+                <Input @value={{this.apnToken}} placeholder={{t "component.configure.notification-channels.apn-device-token"}} class="form-input flex-1" />
             </div>
             <div class="flex flex-row items-center">
-                <div class="text-sm w-40">FCM Device Token:</div>
-                <Input @value={{this.fcmToken}} placeholder="FCM Device Token" class="form-input flex-1" />
+                <div class="text-sm w-40">{{t "component.configure.notification-channels.fcm-device-token"}}</div>
+                <Input @value={{this.fcmToken}} placeholder={{t "component.configure.notification-channels.fcm-device-token"}} class="form-input flex-1" />
             </div>
         </div>
-        <Button @wrapperClass="mt-3" @icon="plug" @text="Test Config" @onClick={{this.test}} @isLoading={{this.isLoading}} />
+        <Button @wrapperClass="mt-3" @icon="plug" @text={{t "component.configure.test-config"}} @onClick={{this.test}} @isLoading={{this.isLoading}} />
     </div>
 </ContentPanel>
 
 <Spacer @height="300px" />
 
 <EmberWormhole @to="next-view-section-subheader-actions">
-    <Button @type="primary" @size="sm" @icon="save" @text="Save Changes" @onClick={{this.save}} @disabled={{this.isLoading}} @isLoading={{this.isLoading}} />
+    <Button @type="primary" @size="sm" @icon="save" @text={{t "component.configure.save-changes"}} @onClick={{this.save}} @disabled={{this.isLoading}} @isLoading={{this.isLoading}} />
 </EmberWormhole>
