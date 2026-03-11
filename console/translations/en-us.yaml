@@ -347,7 +347,7 @@ common:
   continue-without-saving: Continue Without Saving?
   continue-without-saving-prompt: You have unsaved changes to this {resource}. Continuing will discard them. Click Continue to proceed.
   changelog: Changelog
-
+  
 resource:
   alert: Alert
   alerts: Alerts
@@ -936,3 +936,51 @@ layout:
         view-profile: View profile
         keyboard-shortcuts: Show keyboard shortcuts
         changelog: Changelog
+widget:
+  fleet-ops-quickstart:
+    message: Let's see what you can do to jumpstart operations...
+    start-task: Start Task
+  key-metrics:
+    title: Fleet-Ops Metrics
+    earnings: Earnings
+    fuel-expenses: Fuel Expenses
+    traveled: Distance Traveled
+    total-time: Total Time
+    order-scheduled: Orders Scheduled
+    order-completed: Orders Completed
+    order-progress: Orders In Progress
+    order-canceled: Orders Canceled
+    driver-online: Drivers Online
+    customers: Customers
+    open-issue: Open Issue
+    closed-issues: Closed Issues
+  live-order-map:
+    loading: Loading orders in progress...
+    assigned: Driver Assigned
+    no-order: No orders in progress
+    message: When orders are in progress they will display in this widget and show real time activity.
+  recent-orders:
+    title: Recent Orders
+    loading: Loading recent orders...
+    no-orders: No orders for this week
+    message-part-1: There hasn't been any orders this week, get movement going by
+    message-part-2: creating a new order
+    message-part-3: or allow your customers to submit orders via API.
+  transactions:
+    title: Recent Transactions
+    loading: Loading recent transactions...
+    no-transactions: No transactions this week
+    message: When orders are going through with service rates, Fleetbase tracks transactions automatically.
+metadata-editor:
+  filter_keys: Filtrar claves…
+  add: Agregar
+  clear_all: Limpiar todo
+  key: Clave
+  value: Valor
+  type: Tipo
+  text: Texto
+  number: Número
+  boolean: Booleano
+  empty_message_part1: No hay metadatos. Haz clic en
+  empty_message_part2: para crear uno.
+  fix_invalid_keys: Corrige las claves inválidas o duplicadas.
