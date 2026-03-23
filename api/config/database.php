@@ -3,7 +3,7 @@
 use Illuminate\Support\Str;
 
 $redis_host = env('REDIS_HOST', '127.0.0.1');
-$redis_database = env('REDIS_DATABASE', '0');
+$redis_database = (int) env('REDIS_DATABASE', 0);
 $redis_password = env('REDIS_PASSWORD', null);
 
 if ($cacheUrl = getenv('CACHE_URL')) {
@@ -13,8 +13,12 @@ if ($cacheUrl = getenv('CACHE_URL')) {
     if (isset($url['pass'])) {
         $redis_password = $url['pass'];
     }
-    $redis_database = isset($url['path']) ? substr($url['path'], 1) : 'cache';
+    $redis_database = isset($url['path']) ? (int) substr($url['path'], 1) : 0;
 }
+
+$redis_sql_database = (int) env('REDIS_SQL_DATABASE', $redis_database + 1);
+$redis_cache_database = (int) env('REDIS_CACHE_DATABASE', $redis_database + 2);
+$redis_geocode_cache_database = (int) env('REDIS_GEOCODE_CACHE_DATABASE', $redis_database + 3);
 
 
 return [
@@ -93,21 +97,21 @@ return [
             'host' => $redis_host,
             'password' => $redis_password,
             'port' => env('REDIS_PORT', 6379),
-            'database' => $redis_database . '_sql_cache',
+            'database' => $redis_sql_database,
         ],
 
         'cache' => [
             'host' => $redis_host,
             'password' => $redis_password,
             'port' => env('REDIS_PORT', 6379),
-            'database' => $redis_database . '_cache',
+            'database' => $redis_cache_database,
         ],
 
         'geocode-cache' => [
             'host' => $redis_host,
             'password' => $redis_password,
             'port' => env('REDIS_PORT', 6379),
-            'database' => $redis_database . '_geocode_cache',
+            'database' => $redis_geocode_cache_database,
         ],
     ],
 
