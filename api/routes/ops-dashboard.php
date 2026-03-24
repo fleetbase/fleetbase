@@ -19,6 +19,7 @@ Route::prefix('ops')->group(function () {
     Route::patch('drivers/{id}', [OpsDashboardController::class, 'updateDriver']);
     Route::post('drivers/{id}/availability', [OpsDashboardController::class, 'setDriverAvailability']);
     Route::post('drivers/{id}/assign-vehicle', [OpsDashboardController::class, 'assignVehicle']);
+    Route::post('drivers/{id}/payout-batches', [OpsDashboardController::class, 'createDriverPayoutBatch']);
     Route::post('drivers/{id}/approve', [OpsDashboardController::class, 'approveDriver']);
     Route::post('drivers/{id}/reject', [OpsDashboardController::class, 'rejectDriver']);
 

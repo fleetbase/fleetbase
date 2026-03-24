@@ -160,6 +160,7 @@
                         <th>Capacity</th>
                         <th>License</th>
                         <th>Vehicle</th>
+                        <th>Payouts</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -198,6 +199,18 @@
                                 {{#if driver.pending_vehicle}}
                                     <div class="ops-table-hint">Pending replacement: {{driver.pending_vehicle.label}}</div>
                                 {{/if}}
+                            </td>
+                            <td>
+                                <div>{{if driver.payout.method driver.payout.method "No payout method"}}</div>
+                                <div class="ops-table-hint">Unpaid: UGX {{driver.payout.unpaid_total}}</div>
+                                {{#if driver.payout.queued_total}}
+                                    <div class="ops-table-hint">Queued: UGX {{driver.payout.queued_total}}</div>
+                                {{/if}}
+                                <div class="ops-inline-actions">
+                                    <button type="button" class="ops-inline-button" {{on "click" (fn this.createPayoutBatch driver)}}>
+                                        Queue payout
+                                    </button>
+                                </div>
                             </td>
                         </tr>
                     {{/each}}

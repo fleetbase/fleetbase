@@ -634,6 +634,52 @@ class OpsDashboardController extends Controller
         ]);
     }
 
+    public function createDriverPayoutBatch(Request $request, string $id): JsonResponse
+    {
+        $company = $this->resolveCompany($request);
+        $driver = $this->findDriver($company->uuid, $id);
+
+        if (!$driver) {
+            return response()->json(['error' => 'Driver not found.'], 404);
+        }
+
+        $payoutProfile = data_get($driver->meta, 'payout_profile', []);
+        if (blank(data_get($payoutProfile, 'method'))) {
+            return response()->json(['error' => 'Driver has not added payout details yet.'], 422);
+        }
+
+        $snapshot = $this->driverPayoutSnapshot($driver);
+        if (count($snapshot['unpaid_orders']) === 0) {
+            return response()->json(['error' => 'No unpaid completed deliveries are ready for payout.'], 422);
+        }
+
+        $batchUuid = (string) Str::uuid();
+        DB::table('driver_payout_batches')->insert([
+            'uuid' => $batchUuid,
+            'company_uuid' => $company->uuid,
+            'driver_uuid' => $driver->uuid,
+            'currency_code' => 'UGX',
+            'status' => 'queued',
+            'gross_earnings' => $snapshot['unpaid_total'],
+            'order_count' => count($snapshot['unpaid_orders']),
+            'cycle_started_at' => $snapshot['cycle_started_at'],
+            'cycle_ended_at' => now(),
+            'scheduled_for' => $snapshot['next_payout_at'],
+            'meta' => json_encode([
+                'order_uuids' => collect($snapshot['unpaid_orders'])->pluck('uuid')->values()->all(),
+                'payout_profile' => $payoutProfile,
+                'medusa_sync_status' => 'pending_medusa_sync',
+            ]),
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+
+        return response()->json([
+            'ok' => true,
+            'driver' => $this->serializeDriverRow($this->findDriverRow($company->uuid, $driver->uuid)),
+        ]);
+    }
+
     public function approveDriver(Request $request, string $id): JsonResponse
     {
         $company = $this->resolveCompany($request);
@@ -1130,6 +1176,8 @@ class OpsDashboardController extends Controller
         $application = data_get($meta, 'portal_application', []);
         $isApproved = in_array((string) $row->status, ['active', 'approved'], true);
         $pendingVehicle = $this->pendingVehicleSummary(data_get($meta, 'pending_vehicle_uuid'));
+        $payoutSnapshot = $this->driverPayoutSnapshotByUuid($row->uuid);
+        $payoutProfile = data_get($meta, 'payout_profile', []);
 
         return [
             'uuid' => $row->uuid,
@@ -1154,6 +1202,12 @@ class OpsDashboardController extends Controller
                 'label' => trim(implode(' ', array_filter([$row->vehicle_make, $row->vehicle_model, $row->vehicle_plate_number]))),
             ],
             'pending_vehicle' => $pendingVehicle,
+            'payout' => [
+                'method' => data_get($payoutProfile, 'method'),
+                'sync_status' => data_get($payoutProfile, 'sync_status'),
+                'unpaid_total' => $payoutSnapshot['unpaid_total'],
+                'queued_total' => $payoutSnapshot['queued_total'],
+            ],
             'created_at' => $this->toIso8601String($row->created_at),
         ];
     }
@@ -1487,6 +1541,90 @@ class OpsDashboardController extends Controller
 
             $driver->save();
         }
+    }
+
+    protected function driverPayoutSnapshotByUuid(string $driverUuid): array
+    {
+        $driver = Driver::where('uuid', $driverUuid)->first();
+
+        return $driver ? $this->driverPayoutSnapshot($driver) : [
+            'unpaid_total' => 0,
+            'queued_total' => 0,
+        ];
+    }
+
+    protected function driverPayoutSnapshot(Driver $driver): array
+    {
+        $allDeliveredOrders = $driver->orders()->where('status', 'completed')->get();
+        $payoutBatches = DB::table('driver_payout_batches')
+            ->where('driver_uuid', $driver->uuid)
+            ->orderByDesc('created_at')
+            ->get();
+        $batchedOrderUuids = collect($payoutBatches)
+            ->flatMap(function ($batch) {
+                $meta = $this->parseMeta($batch->meta ?? null);
+                return data_get($meta, 'order_uuids', []);
+            })
+            ->filter()
+            ->unique()
+            ->values()
+            ->all();
+        $unpaidOrders = $allDeliveredOrders->reject(fn (Order $order) => in_array($order->uuid, $batchedOrderUuids, true))->values();
+        $unpaidTotal = $unpaidOrders->sum(function (Order $order) {
+            return $this->driverEarningsForAmount((int) data_get($order->meta, 'delivery_amount', data_get($order->meta, 'quote_amount', 0)));
+        });
+        $queuedTotal = collect($payoutBatches)
+            ->filter(fn ($batch) => in_array((string) $batch->status, ['queued', 'processing'], true))
+            ->sum('gross_earnings');
+
+        return [
+            'unpaid_orders' => $unpaidOrders,
+            'unpaid_total' => (int) $unpaidTotal,
+            'queued_total' => (int) $queuedTotal,
+            'cycle_started_at' => $this->currentPayoutCycleStart((string) config('commission.payout_day', 'thursday')),
+            'next_payout_at' => $this->nextPayoutCycleStart(
+                (string) config('commission.payout_day', 'thursday'),
+                $this->currentPayoutCycleStart((string) config('commission.payout_day', 'thursday'))
+            ),
+        ];
+    }
+
+    protected function driverEarningsForAmount(int $deliveryAmount): int
+    {
+        $percentage = (float) config('commission.driver_earnings_percentage', 80);
+
+        return (int) round($deliveryAmount * ($percentage / 100));
+    }
+
+    protected function currentPayoutCycleStart(string $payoutDay): Carbon
+    {
+        $normalizedDay = strtolower($payoutDay);
+        $today = now()->startOfDay();
+        $cycleStart = $today->copy()->startOfWeek();
+
+        for ($offset = 0; $offset < 7; $offset++) {
+            $candidate = $today->copy()->subDays($offset)->startOfDay();
+            if (strtolower($candidate->englishDayOfWeek) === $normalizedDay) {
+                return $candidate;
+            }
+        }
+
+        return $cycleStart;
+    }
+
+    protected function nextPayoutCycleStart(string $payoutDay, Carbon $currentCycleStart): Carbon
+    {
+        $normalizedDay = strtolower($payoutDay);
+        $next = $currentCycleStart->copy()->addDay()->startOfDay();
+
+        for ($offset = 0; $offset < 7; $offset++) {
+            $candidate = $next->copy()->addDays($offset)->startOfDay();
+            if (strtolower($candidate->englishDayOfWeek) === $normalizedDay) {
+                return $candidate;
+            }
+        }
+
+        return $currentCycleStart->copy()->addWeek();
     }
 
     protected function listAssignableDrivers(string $companyUuid): array

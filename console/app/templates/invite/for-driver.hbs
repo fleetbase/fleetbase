@@ -222,6 +222,110 @@
                         {{/if}}
                     </article>
 
+                    <article class="driver-portal-panel">
+                        <div class="driver-portal-panel-header">
+                            <div>
+                                <p class="driver-portal-kicker">Payout method</p>
+                                <h3>How you want to get paid</h3>
+                            </div>
+                        </div>
+
+                        {{#if this.payoutProfile}}
+                            <div class="driver-preview-code">
+                                <p class="driver-portal-kicker">Current sync status</p>
+                                <strong>{{this.payoutProfile.sync_status}}</strong>
+                                <p>This profile should be pushed to Medusa so it can create or update the driver payout recipient there.</p>
+                            </div>
+                        {{/if}}
+
+                        <form class="driver-portal-form" aria-label="Update payout profile" {{on "submit" this.savePayoutProfile}}>
+                            <label>
+                                <span>Country</span>
+                                <select {{on "change" this.updatePayoutCountry}}>
+                                    {{#each this.payoutCountryOptions as |country|}}
+                                        <option value={{country.code}} selected={{eq this.payoutForm.country_code country.code}}>{{country.label}} ({{country.code}})</option>
+                                    {{/each}}
+                                </select>
+                            </label>
+                            <label>
+                                <span>Account name</span>
+                                <input type="text" value={{this.payoutForm.account_name}} {{on "input" (fn this.updatePayoutField "account_name")}} />
+                            </label>
+                            <label>
+                                <span>Payout email</span>
+                                <input type="email" value={{this.payoutForm.payout_email}} {{on "input" (fn this.updatePayoutField "payout_email")}} placeholder="driver@example.com" />
+                            </label>
+                            <label>
+                                <span>Account or wallet number</span>
+                                <input type="text" value={{this.payoutForm.account_number}} {{on "input" (fn this.updatePayoutField "account_number")}} placeholder="Number used for payout receipt" />
+                            </label>
+                            <div class="driver-portal-form-field">
+                                <div class="driver-portal-label-row">
+                                    <span>Bank name</span>
+                                    <button type="button" class="driver-portal-inline-link" {{on "click" this.reloadPayoutOptions}} disabled={{this.isLoadingPayoutOptions}}>
+                                        {{if this.isLoadingPayoutOptions "Loading..." "Reload"}}
+                                    </button>
+                                </div>
+                                <label>
+                                <select {{on "focus" this.ensurePayoutOptionsLoaded}} {{on "click" this.ensurePayoutOptionsLoaded}} {{on "change" this.updatePayoutInstitution}} disabled={{this.isLoadingPayoutOptions}}>
+                                    <option value="">{{if this.isLoadingPayoutOptions "Loading banks..." "Select a bank name"}}</option>
+                                    {{#each this.payoutInstitutionOptions as |institution|}}
+                                        <option value={{institution.id}} selected={{eq this.payoutForm.bank_id institution.id}}>
+                                            {{institution.displayLabel}}
+                                        </option>
+                                    {{/each}}
+                                </select>
+                                </label>
+                            </div>
+                            {{#if this.payoutRequiresBranch}}
+                                <label>
+                                    <span>Branch</span>
+                                    <select {{on "change" this.updatePayoutBranch}} disabled={{this.isLoadingPayoutBranches}}>
+                                        <option value="">{{if this.isLoadingPayoutBranches "Loading branches..." "Select a branch"}}</option>
+                                        {{#each this.payoutBranches as |branch|}}
+                                            <option value={{branch.code}} selected={{eq this.payoutForm.branch_code branch.code}}>{{branch.name}}</option>
+                                        {{/each}}
+                                    </select>
+                                </label>
+                            {{/if}}
+                            {{#if this.payoutRequiresSwiftCode}}
+                                <label>
+                                    <span>SWIFT code</span>
+                                    <input type="text" value={{this.payoutForm.swift_code}} {{on "input" (fn this.updatePayoutField "swift_code")}} placeholder="Required for this country" />
+                                </label>
+                            {{/if}}
+                            {{#if this.payoutRequiresRoutingNumber}}
+                                <label>
+                                    <span>Routing number</span>
+                                    <input type="text" value={{this.payoutForm.routing_number}} {{on "input" (fn this.updatePayoutField "routing_number")}} placeholder="Required for this country" />
+                                </label>
+                            {{/if}}
+                            {{#if this.showPayoutOptionsEmptyState}}
+                                <div class="driver-portal-help driver-portal-form-span-2">
+                                    <p>No bank names have loaded yet for {{this.payoutForm.country_code}}.</p>
+                                    <p>Use the button below after confirming the Fleetbase API was restarted with your Flutterwave secret key.</p>
+                                    <button type="button" class="driver-portal-button driver-portal-button-secondary" {{on "click" this.reloadPayoutOptions}}>
+                                        Reload bank names
+                                    </button>
+                                </div>
+                            {{/if}}
+                            <div class="driver-portal-help driver-portal-form-span-2">
+                                <p>This flow is fixed to the Flutterwave <code>bank account</code> path, so the rider only chooses the bank name and account details here.</p>
+                                <p>The matching Flutterwave <code>account_bank</code> code is stored automatically in the background.</p>
+                                {{#if this.selectedPayoutInstitution}}
+                                    <p><strong>{{this.selectedPayoutInstitution.name}}</strong> will be sent to Medusa later as <code>account_bank={{this.payoutForm.bank_code}}</code>{{#if this.payoutForm.provider_type}} and Flutterwave reports it as <strong>{{this.payoutForm.provider_type}}</strong>{{/if}}.</p>
+                                {{else}}
+                                    <p>Pick a country first, then choose a bank name from the live Flutterwave list.</p>
+                                {{/if}}
+                            </div>
+                            <div class="driver-portal-form-actions">
+                                <button type="submit" class="driver-portal-button" disabled={{this.isSavingPayoutProfile}}>
+                                    Save payout details
+                                </button>
+                            </div>
+                        </form>
+                    </article>
+
                     <article class="driver-portal-panel driver-portal-panel-full">
                         <div class="driver-portal-panel-header">
                             <div>
@@ -250,6 +354,36 @@
                             </div>
                         {{else}}
                             <p class="driver-empty-state">Completed delivery history will appear here.</p>
+                        {{/if}}
+                    </article>
+
+                    <article class="driver-portal-panel driver-portal-panel-full">
+                        <div class="driver-portal-panel-header">
+                            <div>
+                                <p class="driver-portal-kicker">Payout history</p>
+                                <h3>Recent payout batches</h3>
+                            </div>
+                        </div>
+
+                        {{#if this.payoutBatches.length}}
+                            <div class="driver-order-list">
+                                {{#each this.payoutBatches as |batch|}}
+                                    <div class="driver-order-list-item">
+                                        <div>
+                                            <strong>{{batch.currency_code}} {{batch.gross_earnings}}</strong>
+                                            <p>{{batch.order_count}} deliveries</p>
+                                        </div>
+                                        <div>
+                                            <strong>{{batch.status}}</strong>
+                                            {{#if batch.scheduled_for}}
+                                                <p>scheduled {{batch.scheduled_for}}</p>
+                                            {{/if}}
+                                        </div>
+                                    </div>
+                                {{/each}}
+                            </div>
+                        {{else}}
+                            <p class="driver-empty-state">Payout batches will appear here once dispatch or Medusa queues them.</p>
                         {{/if}}
                     </article>
                 {{else}}

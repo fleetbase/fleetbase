@@ -15,6 +15,9 @@ use Fleetbase\Models\VerificationCode;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
 
 class DriverPortalController extends Controller
@@ -263,6 +266,200 @@ class DriverPortalController extends Controller
         ]);
     }
 
+    public function updatePayoutProfile(Request $request): JsonResponse
+    {
+        $driver = $this->resolveAuthenticatedDriver($request);
+
+        if (!$driver) {
+            return response()->json(['error' => 'Driver profile not found for the authenticated user.'], 404);
+        }
+
+        $payload = $request->validate([
+            'public_id' => 'nullable|string|max:120',
+            'method' => 'nullable|string|max:60',
+            'account_name' => 'required|string|max:120',
+            'payout_email' => 'nullable|email|max:190',
+            'account_number' => 'required|string|max:60',
+            'country_code' => 'required|string|size:2',
+            'bank_id' => 'nullable|string|max:40',
+            'bank_code' => 'required|string|max:40',
+            'bank_name' => 'required|string|max:120',
+            'provider_type' => 'nullable|string|max:60',
+            'branch_code' => 'nullable|string|max:80',
+            'branch_name' => 'nullable|string|max:120',
+            'swift_code' => 'nullable|string|max:40',
+            'routing_number' => 'nullable|string|max:40',
+        ]);
+
+        $country = strtoupper((string) $payload['country_code']);
+        $method = $this->resolvePayoutMethod($payload['method'] ?? null, $payload['provider_type'] ?? null);
+
+        if ($method !== 'mobile_money' && $this->countryRequiresBranch($country) && blank($payload['branch_code'] ?? null)) {
+            return response()->json(['error' => 'A bank branch is required for payout profiles in this country.'], 422);
+        }
+
+        if ($method !== 'mobile_money' && $this->countryRequiresRoutingNumber($country) && blank($payload['routing_number'] ?? null)) {
+            return response()->json(['error' => 'A routing number is required for payout profiles in this country.'], 422);
+        }
+
+        if ($method !== 'mobile_money' && $this->countryRequiresSwift($country) && blank($payload['swift_code'] ?? null)) {
+            return response()->json(['error' => 'A SWIFT code is required for payout profiles in this country.'], 422);
+        }
+
+        $driverMeta = is_array($driver->meta) ? $driver->meta : [];
+        $driverMeta['payout_profile'] = [
+            'method' => $method,
+            'account_name' => trim((string) $payload['account_name']),
+            'payout_email' => $payload['payout_email'] ?? $driver->email,
+            'account_number' => trim((string) $payload['account_number']),
+            'country_code' => $country,
+            'country' => $country,
+            'bank_id' => $payload['bank_id'] ?? null,
+            'bank_code' => trim((string) $payload['bank_code']),
+            'account_bank' => trim((string) $payload['bank_code']),
+            'bank_name' => trim((string) $payload['bank_name']),
+            'provider_type' => $payload['provider_type'] ?? null,
+            'branch_code' => $payload['branch_code'] ?? null,
+            'branch_name' => $payload['branch_name'] ?? null,
+            'swift_code' => $payload['swift_code'] ?? null,
+            'routing_number' => $payload['routing_number'] ?? null,
+            'business_name' => trim((string) $payload['account_name']),
+            'business_email' => $payload['payout_email'] ?? $driver->email,
+            'business_mobile' => $driver->phone,
+            'business_contact' => $driver->name,
+            'business_contact_mobile' => $driver->phone,
+            'sync_status' => 'pending_medusa_sync',
+            'updated_at' => now()->toIso8601String(),
+            'medusa_recipient_id' => data_get($driverMeta, 'payout_profile.medusa_recipient_id'),
+        ];
+        $driver->meta = $driverMeta;
+        $driver->save();
+
+        return response()->json([
+            'ok' => true,
+            'driver' => $this->serializeDriverSnapshot($driver->fresh(['user', 'vehicle', 'currentOrder.payload'])),
+        ]);
+    }
+
+    public function payoutOptions(Request $request): JsonResponse
+    {
+        $driver = $this->resolveAuthenticatedDriver($request);
+
+        if (!$driver) {
+            return response()->json(['error' => 'Driver profile not found for the authenticated user.'], 404);
+        }
+
+        $payload = $request->validate([
+            'country' => 'required|string|size:2',
+        ]);
+
+        $country = strtoupper((string) $payload['country']);
+        $secret = (string) env('FLUTTERWAVE_SECRET_KEY');
+        $baseUrl = rtrim((string) env('FLUTTERWAVE_BASE_URL', 'https://api.flutterwave.com/v3'), '/');
+
+        if (blank($secret)) {
+            return response()->json(['error' => 'Flutterwave secret key is not configured yet.'], 422);
+        }
+
+        $cacheKey = sprintf('flutterwave:banks:%s', $country);
+        $banks = Cache::get($cacheKey);
+
+        if (!$banks) {
+            $response = Http::withToken($secret)
+                ->acceptJson()
+                ->get(sprintf('%s/banks/%s', $baseUrl, $country), [
+                    'include_provider_type' => 1,
+                ]);
+
+            if ($response->failed()) {
+                return response()->json([
+                    'error' => 'Unable to fetch Flutterwave payout institutions for that country.',
+                    'details' => $response->json('message'),
+                ], 422);
+            }
+
+            $banks = collect($response->json('data', []))
+                ->map(fn (array $bank) => [
+                    'id' => data_get($bank, 'id'),
+                    'code' => (string) data_get($bank, 'code'),
+                    'name' => (string) data_get($bank, 'name'),
+                    'provider_type' => data_get($bank, 'provider_type', 'bank'),
+                ])
+                ->sortBy('name')
+                ->values()
+                ->all();
+
+            Cache::put($cacheKey, $banks, now()->addHours(12));
+        }
+
+        return response()->json([
+            'country' => $country,
+            'institutions' => $banks,
+            'requirements' => $this->payoutRequirementsForCountry($country),
+        ]);
+    }
+
+    public function payoutBranches(Request $request): JsonResponse
+    {
+        $driver = $this->resolveAuthenticatedDriver($request);
+
+        if (!$driver) {
+            return response()->json(['error' => 'Driver profile not found for the authenticated user.'], 404);
+        }
+
+        $payload = $request->validate([
+            'country' => 'required|string|size:2',
+            'bank_id' => 'required|string|max:40',
+        ]);
+
+        $country = strtoupper((string) $payload['country']);
+        $secret = (string) env('FLUTTERWAVE_SECRET_KEY');
+        $baseUrl = rtrim((string) env('FLUTTERWAVE_BASE_URL', 'https://api.flutterwave.com/v3'), '/');
+
+        if (blank($secret)) {
+            return response()->json(['error' => 'Flutterwave secret key is not configured yet.'], 422);
+        }
+
+        if (!$this->countryRequiresBranch($country)) {
+            return response()->json([
+                'country' => $country,
+                'branches' => [],
+            ]);
+        }
+
+        $cacheKey = sprintf('flutterwave:branches:%s:%s', $country, $payload['bank_id']);
+        $branches = Cache::get($cacheKey);
+
+        if (!$branches) {
+            $response = Http::withToken($secret)
+                ->acceptJson()
+                ->get(sprintf('%s/banks/%s/branches', $baseUrl, $payload['bank_id']));
+
+            if ($response->failed()) {
+                return response()->json([
+                    'error' => 'Unable to fetch Flutterwave bank branches for that institution.',
+                    'details' => $response->json('message'),
+                ], 422);
+            }
+
+            $branches = collect($response->json('data', []))
+                ->map(fn (array $branch) => [
+                    'id' => data_get($branch, 'id'),
+                    'code' => (string) data_get($branch, 'branch_code', data_get($branch, 'code')),
+                    'name' => (string) data_get($branch, 'branch_name', data_get($branch, 'name')),
+                ])
+                ->values()
+                ->all();
+
+            Cache::put($cacheKey, $branches, now()->addHours(12));
+        }
+
+        return response()->json([
+            'country' => $country,
+            'branches' => $branches,
+        ]);
+    }
+
     public function toggleOnline(Request $request): JsonResponse
     {
         $driver = $this->resolveAuthenticatedDriver($request);
@@ -447,6 +644,10 @@ class DriverPortalController extends Controller
         $allDeliveredOrders = $driver->orders()
             ->where('status', 'completed')
             ->get();
+        $payoutBatches = $this->payoutBatchesForDriver($driver->uuid);
+        $batchedOrderUuids = $this->batchedOrderUuids($payoutBatches);
+        $unpaidDeliveredOrders = $allDeliveredOrders->reject(fn (Order $order) => in_array($order->uuid, $batchedOrderUuids, true))->values();
+        $payoutProfile = $this->serializePayoutProfile(data_get($driver->meta, 'payout_profile', []));
 
         $freeSlots = RiderCapacity::freeSlots($driver->uuid);
         $maxPackages = (int) config('commission.max_packages_per_rider', 3);
@@ -541,8 +742,10 @@ class DriverPortalController extends Controller
             ],
             'current_order' => $isApproved && $currentOrder ? $this->serializeOrder($currentOrder) : null,
             'active_orders' => $isApproved ? $activeOrders->map(fn (Order $order) => $this->serializeOrder($order))->all() : [],
-            'delivered_orders' => $isApproved ? $deliveredOrders->map(fn (Order $order) => $this->serializeDeliveredOrder($order))->all() : [],
-            'earnings' => $isApproved ? $this->serializeDriverEarnings($allDeliveredOrders) : null,
+            'delivered_orders' => $isApproved ? $deliveredOrders->map(fn (Order $order) => $this->serializeDeliveredOrder($order, $payoutBatches))->all() : [],
+            'earnings' => $isApproved ? $this->serializeDriverEarnings($allDeliveredOrders, $unpaidDeliveredOrders, $payoutBatches) : null,
+            'payout_profile' => $payoutProfile,
+            'payout_batches' => $isApproved ? $this->serializePayoutBatches($payoutBatches) : [],
         ];
     }
 
@@ -610,21 +813,23 @@ class DriverPortalController extends Controller
         ];
     }
 
-    protected function serializeDeliveredOrder(Order $order): array
+    protected function serializeDeliveredOrder(Order $order, $payoutBatches): array
     {
         $serialized = $this->serializeOrder($order);
         $orderMeta = is_array($order->meta) ? $order->meta : [];
         $deliveryAmount = $this->deliveryAmountForOrder($orderMeta);
         $driverEarnings = $this->driverEarningsForAmount($deliveryAmount);
+        $payoutBatch = $this->payoutBatchForOrder($order->uuid, $payoutBatches);
 
         return array_merge($serialized, [
             'delivered_at' => $this->toIso8601String($order->updated_at),
             'delivery_amount' => $deliveryAmount,
             'driver_earnings' => $driverEarnings,
+            'payout_status' => $payoutBatch ? (string) $payoutBatch->status : 'unpaid',
         ]);
     }
 
-    protected function serializeDriverEarnings($deliveredOrders): array
+    protected function serializeDriverEarnings($deliveredOrders, $unpaidDeliveredOrders, $payoutBatches): array
     {
         $payoutDay = strtolower((string) config('commission.payout_day', 'thursday'));
         $cycleStart = $this->currentPayoutCycleStart($payoutDay);
@@ -633,16 +838,27 @@ class DriverPortalController extends Controller
         $lifetimeTotal = 0;
         $currentCycleTotal = 0;
         $currentCycleCount = 0;
+        $queuedPayoutTotal = 0;
 
         foreach ($deliveredOrders as $order) {
             $orderMeta = is_array($order->meta) ? $order->meta : [];
             $driverEarnings = $this->driverEarningsForAmount($this->deliveryAmountForOrder($orderMeta));
             $lifetimeTotal += $driverEarnings;
+        }
 
+        foreach ($unpaidDeliveredOrders as $order) {
+            $orderMeta = is_array($order->meta) ? $order->meta : [];
+            $driverEarnings = $this->driverEarningsForAmount($this->deliveryAmountForOrder($orderMeta));
             $deliveredAt = Carbon::parse($order->updated_at);
             if ($deliveredAt->greaterThanOrEqualTo($cycleStart)) {
                 $currentCycleTotal += $driverEarnings;
                 $currentCycleCount++;
+            }
+        }
+
+        foreach ($payoutBatches as $batch) {
+            if (in_array((string) $batch->status, ['queued', 'processing'], true)) {
+                $queuedPayoutTotal += (int) $batch->gross_earnings;
             }
         }
 
@@ -651,6 +867,7 @@ class DriverPortalController extends Controller
             'lifetime_total' => $lifetimeTotal,
             'current_cycle_unpaid' => $currentCycleTotal,
             'current_cycle_count' => $currentCycleCount,
+            'queued_payout_total' => $queuedPayoutTotal,
             'payout_schedule' => (string) config('commission.payout_schedule', 'weekly'),
             'payout_day' => ucfirst($payoutDay),
             'cycle_started_at' => $cycleStart->toIso8601String(),
@@ -720,6 +937,149 @@ class DriverPortalController extends Controller
         }
 
         return $currentCycleStart->copy()->addWeek();
+    }
+
+    protected function payoutBatchesForDriver(string $driverUuid)
+    {
+        return DB::table('driver_payout_batches')
+            ->where('driver_uuid', $driverUuid)
+            ->orderByDesc('created_at')
+            ->get();
+    }
+
+    protected function batchedOrderUuids($payoutBatches): array
+    {
+        return collect($payoutBatches)
+            ->flatMap(function ($batch) {
+                $meta = $this->decodeJsonArray($batch->meta ?? null);
+                return data_get($meta, 'order_uuids', []);
+            })
+            ->filter()
+            ->unique()
+            ->values()
+            ->all();
+    }
+
+    protected function payoutBatchForOrder(string $orderUuid, $payoutBatches)
+    {
+        return collect($payoutBatches)->first(function ($batch) use ($orderUuid) {
+            $meta = $this->decodeJsonArray($batch->meta ?? null);
+            return in_array($orderUuid, data_get($meta, 'order_uuids', []), true);
+        });
+    }
+
+    protected function serializePayoutProfile(array $profile): ?array
+    {
+        if (blank(data_get($profile, 'account_name')) && blank(data_get($profile, 'bank_code'))) {
+            return null;
+        }
+
+        return [
+            'method' => data_get($profile, 'method'),
+            'account_name' => data_get($profile, 'account_name'),
+            'payout_email' => data_get($profile, 'payout_email'),
+            'account_number' => data_get($profile, 'account_number'),
+            'country' => data_get($profile, 'country', data_get($profile, 'country_code')),
+            'account_bank' => data_get($profile, 'account_bank', data_get($profile, 'bank_code')),
+            'bank_id' => data_get($profile, 'bank_id'),
+            'bank_name' => data_get($profile, 'bank_name'),
+            'bank_code' => data_get($profile, 'bank_code'),
+            'provider_type' => data_get($profile, 'provider_type'),
+            'branch_code' => data_get($profile, 'branch_code'),
+            'branch_name' => data_get($profile, 'branch_name'),
+            'swift_code' => data_get($profile, 'swift_code'),
+            'routing_number' => data_get($profile, 'routing_number'),
+            'country_code' => data_get($profile, 'country_code'),
+            'business_name' => data_get($profile, 'business_name'),
+            'business_email' => data_get($profile, 'business_email'),
+            'business_mobile' => data_get($profile, 'business_mobile'),
+            'business_contact' => data_get($profile, 'business_contact'),
+            'business_contact_mobile' => data_get($profile, 'business_contact_mobile'),
+            'sync_status' => data_get($profile, 'sync_status', 'pending_medusa_sync'),
+            'updated_at' => data_get($profile, 'updated_at'),
+            'medusa_recipient_id' => data_get($profile, 'medusa_recipient_id'),
+        ];
+    }
+
+    protected function resolvePayoutMethod(?string $method, ?string $providerType): string
+    {
+        if (filled($method)) {
+            return (string) $method;
+        }
+
+        return $this->providerTypeIndicatesMobileMoney($providerType) ? 'mobile_money' : 'bank_transfer';
+    }
+
+    protected function payoutRequirementsForCountry(string $country): array
+    {
+        return [
+            'requires_branch' => $this->countryRequiresBranch($country),
+            'requires_swift_code' => $this->countryRequiresSwift($country),
+            'requires_routing_number' => $this->countryRequiresRoutingNumber($country),
+        ];
+    }
+
+    protected function countryRequiresBranch(string $country): bool
+    {
+        return in_array(strtoupper($country), ['GH', 'TZ', 'RW', 'UG'], true);
+    }
+
+    protected function countryRequiresRoutingNumber(string $country): bool
+    {
+        return strtoupper($country) === 'US';
+    }
+
+    protected function countryRequiresSwift(string $country): bool
+    {
+        $country = strtoupper($country);
+
+        return $country === 'US' || in_array($country, [
+            'AT', 'BE', 'BG', 'CH', 'CY', 'CZ', 'DE', 'DK', 'EE', 'ES', 'FI', 'FR',
+            'GB', 'GI', 'GR', 'HR', 'HU', 'IE', 'IS', 'IT', 'LI', 'LT', 'LU', 'LV',
+            'MC', 'MT', 'NL', 'NO', 'PL', 'PT', 'RO', 'SE', 'SI', 'SK',
+        ], true);
+    }
+
+    protected function providerTypeIndicatesMobileMoney(?string $providerType): bool
+    {
+        if (blank($providerType)) {
+            return false;
+        }
+
+        $normalized = strtolower((string) $providerType);
+
+        return str_contains($normalized, 'mobile') || str_contains($normalized, 'wallet');
+    }
+
+    protected function serializePayoutBatches($payoutBatches): array
+    {
+        return collect($payoutBatches)->take(8)->map(function ($batch) {
+            $meta = $this->decodeJsonArray($batch->meta ?? null);
+
+            return [
+                'uuid' => $batch->uuid,
+                'status' => $batch->status,
+                'gross_earnings' => (int) $batch->gross_earnings,
+                'order_count' => (int) $batch->order_count,
+                'currency_code' => $batch->currency_code,
+                'scheduled_for' => $this->toIso8601String($batch->scheduled_for),
+                'transferred_at' => $this->toIso8601String($batch->transferred_at),
+                'medusa_sync_status' => data_get($meta, 'medusa_sync_status'),
+            ];
+        })->all();
+    }
+
+    protected function decodeJsonArray(mixed $value): array
+    {
+        if (is_array($value)) {
+            return $value;
+        }
+
+        if (is_string($value) && $value !== '') {
+            return json_decode($value, true) ?: [];
+        }
+
+        return [];
     }
 
     protected function driverOnboardSettings(Company $company): array

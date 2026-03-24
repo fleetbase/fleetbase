@@ -29,6 +29,68 @@ const defaultVehicleForm = () => ({
     notes: '',
 });
 
+const defaultPayoutForm = () => ({
+    method: 'bank_transfer',
+    account_name: '',
+    payout_email: '',
+    account_number: '',
+    country_code: 'UG',
+    bank_id: '',
+    bank_name: '',
+    bank_code: '',
+    provider_type: '',
+    branch_code: '',
+    branch_name: '',
+    swift_code: '',
+    routing_number: '',
+});
+
+const payoutCountryOptions = [
+    { code: 'UG', label: 'Uganda' },
+    { code: 'NG', label: 'Nigeria' },
+    { code: 'GH', label: 'Ghana' },
+    { code: 'KE', label: 'Kenya' },
+    { code: 'TZ', label: 'Tanzania' },
+    { code: 'RW', label: 'Rwanda' },
+    { code: 'ZA', label: 'South Africa' },
+    { code: 'US', label: 'United States' },
+    { code: 'GB', label: 'United Kingdom' },
+    { code: 'DE', label: 'Germany' },
+    { code: 'FR', label: 'France' },
+    { code: 'ES', label: 'Spain' },
+];
+
+const payoutMethodForProviderType = (providerType) => {
+    const normalized = (providerType ?? '').toLowerCase();
+
+    return normalized.includes('mobile') || normalized.includes('wallet') ? 'mobile_money' : 'bank_transfer';
+};
+
+const payoutProviderTypeLabel = (providerType) => {
+    const normalized = (providerType ?? '').toLowerCase();
+
+    if (!normalized) {
+        return '';
+    }
+
+    if (normalized.includes('mobile')) {
+        return 'Mobile money';
+    }
+
+    if (normalized.includes('wallet')) {
+        return 'Wallet';
+    }
+
+    if (normalized === 'bank') {
+        return 'Bank';
+    }
+
+    return normalized
+        .split(/[_-]+/)
+        .map((part) => `${part.charAt(0).toUpperCase()}${part.slice(1)}`)
+        .join(' ');
+};
+
 export default class InviteForDriverController extends Controller {
     @service fetch;
     @service notifications;
@@ -42,6 +104,10 @@ export default class InviteForDriverController extends Controller {
     @tracked profileForm = defaultProfileForm();
     @tracked applicationForm = defaultApplicationForm();
     @tracked vehicleForm = defaultVehicleForm();
+    @tracked payoutForm = defaultPayoutForm();
+    @tracked payoutInstitutions = [];
+    @tracked payoutBranches = [];
+    @tracked payoutRequirements = {};
     @tracked isEditingVehicleRequest = false;
     @tracked isRequestingCode = false;
     @tracked isVerifyingCode = false;
@@ -51,6 +117,9 @@ export default class InviteForDriverController extends Controller {
     @tracked isRestoringSession = false;
     @tracked isSubmittingApplication = false;
     @tracked isSavingVehicle = false;
+    @tracked isSavingPayoutProfile = false;
+    @tracked isLoadingPayoutOptions = false;
+    @tracked isLoadingPayoutBranches = false;
 
     hydrate(model) {
         this.portal = model?.portal ?? null;
@@ -62,6 +131,10 @@ export default class InviteForDriverController extends Controller {
         this.profileForm = defaultProfileForm();
         this.applicationForm = defaultApplicationForm();
         this.vehicleForm = defaultVehicleForm();
+        this.payoutForm = defaultPayoutForm();
+        this.payoutInstitutions = [];
+        this.payoutBranches = [];
+        this.payoutRequirements = {};
         this.isEditingVehicleRequest = false;
     }
 
@@ -103,6 +176,60 @@ export default class InviteForDriverController extends Controller {
 
     get earnings() {
         return this.driverState?.earnings ?? null;
+    }
+
+    get payoutProfile() {
+        return this.driverState?.payout_profile ?? null;
+    }
+
+    get payoutCountryOptions() {
+        return payoutCountryOptions;
+    }
+
+    get selectedPayoutInstitution() {
+        return this.payoutInstitutions.find((institution) => String(institution.id) === String(this.payoutForm.bank_id)) ?? null;
+    }
+
+    get payoutInstitutionOptions() {
+        return [...this.payoutInstitutions]
+            .sort((left, right) => {
+                const leftMethod = payoutMethodForProviderType(left.provider_type);
+                const rightMethod = payoutMethodForProviderType(right.provider_type);
+
+                if (leftMethod !== rightMethod) {
+                    return leftMethod === 'mobile_money' ? -1 : 1;
+                }
+
+                return left.name.localeCompare(right.name);
+            })
+            .map((institution) => ({
+                ...institution,
+                displayLabel: payoutProviderTypeLabel(institution.provider_type) ? `${institution.name} • ${payoutProviderTypeLabel(institution.provider_type)}` : institution.name,
+            }));
+    }
+
+    get selectedPayoutMethodLabel() {
+        return this.payoutForm.method === 'mobile_money' ? 'Mobile money wallet' : 'Permanent bank account';
+    }
+
+    get payoutRequiresBranch() {
+        return Boolean(this.payoutRequirements?.requires_branch) && this.payoutForm.method !== 'mobile_money';
+    }
+
+    get payoutRequiresSwiftCode() {
+        return Boolean(this.payoutRequirements?.requires_swift_code) && this.payoutForm.method !== 'mobile_money';
+    }
+
+    get payoutRequiresRoutingNumber() {
+        return Boolean(this.payoutRequirements?.requires_routing_number) && this.payoutForm.method !== 'mobile_money';
+    }
+
+    get showPayoutOptionsEmptyState() {
+        return Boolean(this.payoutForm.country_code) && !this.isLoadingPayoutOptions && this.payoutInstitutions.length === 0;
+    }
+
+    get payoutBatches() {
+        return this.driverState?.payout_batches ?? [];
     }
 
     get checklist() {
@@ -193,6 +320,7 @@ export default class InviteForDriverController extends Controller {
             this.driverState = payload.driver;
             this.syncProfileForm(payload.driver);
             this.storeDriverState(payload.driver);
+            await this.syncPayoutReferenceData(payload.driver, { silent: true });
 
             return payload.driver;
         } finally {
@@ -226,6 +354,158 @@ export default class InviteForDriverController extends Controller {
             this.isEditingVehicleRequest = true;
         } else {
             this.isEditingVehicleRequest = false;
+        }
+
+        this.payoutForm = {
+            method: driver?.payout_profile?.method ?? payoutMethodForProviderType(driver?.payout_profile?.provider_type),
+            account_name: driver?.payout_profile?.account_name ?? '',
+            payout_email: driver?.payout_profile?.payout_email ?? driver?.email ?? '',
+            account_number: driver?.payout_profile?.account_number ?? driver?.payout_profile?.bank_account_number ?? driver?.payout_profile?.mobile_money_number ?? '',
+            country_code: driver?.payout_profile?.country_code ?? 'UG',
+            bank_id: driver?.payout_profile?.bank_id ? String(driver?.payout_profile?.bank_id) : '',
+            bank_name: driver?.payout_profile?.bank_name ?? '',
+            bank_code: driver?.payout_profile?.bank_code ?? '',
+            provider_type: driver?.payout_profile?.provider_type ?? (driver?.payout_profile?.mobile_money_provider ? 'mobile_money' : ''),
+            branch_code: driver?.payout_profile?.branch_code ?? '',
+            branch_name: driver?.payout_profile?.branch_name ?? '',
+            swift_code: driver?.payout_profile?.swift_code ?? '',
+            routing_number: driver?.payout_profile?.routing_number ?? '',
+        };
+    }
+
+    async syncPayoutReferenceData(driver, { silent = true } = {}) {
+        const countryCode = driver?.payout_profile?.country_code ?? this.payoutForm.country_code;
+
+        if (!this.token || !countryCode) {
+            return;
+        }
+
+        await this.loadPayoutOptions(countryCode, { silent });
+
+        const bankId = driver?.payout_profile?.bank_id ?? this.payoutForm.bank_id;
+        if (bankId && this.payoutRequiresBranch) {
+            await this.loadPayoutBranches(countryCode, bankId, { silent });
+        } else {
+            this.payoutBranches = [];
+        }
+    }
+
+    async loadPayoutOptions(countryCode, { silent = false } = {}) {
+        if (!this.token || !countryCode) {
+            this.payoutInstitutions = [];
+            this.payoutRequirements = {};
+            return;
+        }
+
+        this.isLoadingPayoutOptions = true;
+
+        try {
+            const payload = await this.fetch.post(
+                'driver-portal/payout-options',
+                {
+                    public_id: this.portal.public_id,
+                    country: countryCode,
+                },
+                {
+                    namespace: 'api/v1',
+                    headers: this.authHeaders,
+                }
+            );
+
+            this.payoutInstitutions = (payload.institutions ?? []).map((institution) => ({
+                ...institution,
+                id: String(institution.id),
+            }));
+            this.payoutRequirements = payload.requirements ?? {};
+
+            if (this.payoutForm.bank_id) {
+                const institution = this.payoutInstitutions.find((item) => String(item.id) === String(this.payoutForm.bank_id));
+
+                if (!institution) {
+                    this.payoutForm = {
+                        ...this.payoutForm,
+                        method: 'bank_transfer',
+                        bank_id: '',
+                        bank_name: '',
+                        bank_code: '',
+                        provider_type: '',
+                        branch_code: '',
+                        branch_name: '',
+                    };
+                    this.payoutBranches = [];
+                } else {
+                    this.payoutForm = {
+                        ...this.payoutForm,
+                        method: payoutMethodForProviderType(institution.provider_type),
+                        bank_id: String(institution.id),
+                        bank_name: institution.name,
+                        bank_code: institution.code,
+                        provider_type: institution.provider_type ?? '',
+                    };
+                }
+            }
+        } catch (error) {
+            this.payoutInstitutions = [];
+            this.payoutRequirements = {};
+            this.payoutBranches = [];
+
+            if (!silent) {
+                this.notifications.error(error.message ?? 'Unable to load payout institutions for that country.');
+            }
+        } finally {
+            this.isLoadingPayoutOptions = false;
+        }
+    }
+
+    async loadPayoutBranches(countryCode, bankId, { silent = false } = {}) {
+        if (!this.token || !countryCode || !bankId) {
+            this.payoutBranches = [];
+            return;
+        }
+
+        this.isLoadingPayoutBranches = true;
+
+        try {
+            const payload = await this.fetch.post(
+                'driver-portal/payout-branches',
+                {
+                    public_id: this.portal.public_id,
+                    country: countryCode,
+                    bank_id: bankId,
+                },
+                {
+                    namespace: 'api/v1',
+                    headers: this.authHeaders,
+                }
+            );
+
+            this.payoutBranches = payload.branches ?? [];
+
+            if (this.payoutForm.branch_code) {
+                const branch = this.payoutBranches.find((item) => String(item.code) === String(this.payoutForm.branch_code));
+
+                if (!branch) {
+                    this.payoutForm = {
+                        ...this.payoutForm,
+                        branch_code: '',
+                        branch_name: '',
+                    };
+                } else {
+                    this.payoutForm = {
+                        ...this.payoutForm,
+                        branch_code: branch.code,
+                        branch_name: branch.name,
+                    };
+                }
+            }
+        } catch (error) {
+            this.payoutBranches = [];
+
+            if (!silent) {
+                this.notifications.error(error.message ?? 'Unable to load bank branches for that institution.');
+            }
+        } finally {
+            this.isLoadingPayoutBranches = false;
         }
     }
 
@@ -317,6 +597,76 @@ export default class InviteForDriverController extends Controller {
         this.vehicleForm = { ...this.vehicleForm, [field]: event.target.value };
     }
 
+    @action updatePayoutField(field, event) {
+        this.payoutForm = { ...this.payoutForm, [field]: event.target.value };
+    }
+
+    @action async updatePayoutCountry(event) {
+        const countryCode = String(event.target.value ?? '').toUpperCase();
+
+        this.payoutForm = {
+            ...this.payoutForm,
+            country_code: countryCode,
+            method: 'bank_transfer',
+            bank_id: '',
+            bank_name: '',
+            bank_code: '',
+            provider_type: '',
+            branch_code: '',
+            branch_name: '',
+            swift_code: '',
+            routing_number: '',
+        };
+        this.payoutBranches = [];
+
+        await this.loadPayoutOptions(countryCode);
+    }
+
+    @action async updatePayoutInstitution(event) {
+        const bankId = String(event.target.value ?? '');
+        const institution = this.payoutInstitutions.find((item) => String(item.id) === bankId);
+
+        this.payoutForm = {
+            ...this.payoutForm,
+            method: payoutMethodForProviderType(institution?.provider_type),
+            bank_id: bankId,
+            bank_name: institution?.name ?? '',
+            bank_code: institution?.code ?? '',
+            provider_type: institution?.provider_type ?? '',
+            branch_code: '',
+            branch_name: '',
+        };
+
+        if (this.payoutRequiresBranch && bankId) {
+            await this.loadPayoutBranches(this.payoutForm.country_code, bankId);
+        } else {
+            this.payoutBranches = [];
+        }
+    }
+
+    @action updatePayoutBranch(event) {
+        const branchCode = String(event.target.value ?? '');
+        const branch = this.payoutBranches.find((item) => String(item.code) === String(branchCode));
+
+        this.payoutForm = {
+            ...this.payoutForm,
+            branch_code: branchCode,
+            branch_name: branch?.name ?? '',
+        };
+    }
+
+    @action async reloadPayoutOptions() {
+        await this.loadPayoutOptions(this.payoutForm.country_code);
+    }
+
+    @action async ensurePayoutOptionsLoaded() {
+        if (this.payoutInstitutions.length > 0 || this.isLoadingPayoutOptions || !this.payoutForm.country_code) {
+            return;
+        }
+
+        await this.loadPayoutOptions(this.payoutForm.country_code);
+    }
+
     @action usePreviewCode() {
         if (this.previewCode) {
             this.code = this.previewCode;
@@ -404,6 +754,7 @@ export default class InviteForDriverController extends Controller {
             this.driverState = payload.driver;
             this.syncProfileForm(payload.driver);
             this.storeDriverState(payload.driver);
+            await this.syncPayoutReferenceData(payload.driver, { silent: true });
             this.notifications.success(`Welcome back, ${payload.driver?.name ?? 'driver'}.`);
         } catch (error) {
             this.notifications.error(error.message ?? 'Unable to verify that code.');
@@ -468,6 +819,7 @@ export default class InviteForDriverController extends Controller {
             this.driverState = payload.driver;
             this.syncProfileForm(payload.driver);
             this.storeDriverState(payload.driver);
+            await this.syncPayoutReferenceData(payload.driver, { silent: true });
             this.notifications.success('Profile updated.');
         } catch (error) {
             this.notifications.error(error.message ?? 'Unable to update your driver profile.');
@@ -510,11 +862,46 @@ export default class InviteForDriverController extends Controller {
             this.isEditingVehicleRequest = false;
             this.syncProfileForm(payload.driver);
             this.storeDriverState(payload.driver);
+            await this.syncPayoutReferenceData(payload.driver, { silent: true });
             this.notifications.success(payload.driver?.pending_vehicle ? 'Vehicle request submitted for admin review.' : 'Vehicle details saved.');
         } catch (error) {
             this.notifications.error(error.message ?? 'Unable to save vehicle details.');
         } finally {
             this.isSavingVehicle = false;
+        }
+    }
+
+    @action async savePayoutProfile(event) {
+        event.preventDefault();
+
+        if (!this.token) {
+            return;
+        }
+
+        this.isSavingPayoutProfile = true;
+
+        try {
+            const payload = await this.fetch.patch(
+                'driver-portal/me/payout-profile',
+                {
+                    public_id: this.portal.public_id,
+                    ...this.payoutForm,
+                },
+                {
+                    namespace: 'api/v1',
+                    headers: this.authHeaders,
+                }
+            );
+
+            this.driverState = payload.driver;
+            this.syncProfileForm(payload.driver);
+            this.storeDriverState(payload.driver);
+            await this.syncPayoutReferenceData(payload.driver, { silent: true });
+            this.notifications.success('Payout details saved. Medusa can now sync this payout profile.');
+        } catch (error) {
+            this.notifications.error(error.message ?? 'Unable to save payout details.');
+        } finally {
+            this.isSavingPayoutProfile = false;
         }
     }
 
@@ -536,6 +923,10 @@ export default class InviteForDriverController extends Controller {
         this.previewCode = null;
         this.profileForm = defaultProfileForm();
         this.vehicleForm = defaultVehicleForm();
+        this.payoutForm = defaultPayoutForm();
+        this.payoutInstitutions = [];
+        this.payoutBranches = [];
+        this.payoutRequirements = {};
         this.isEditingVehicleRequest = false;
         this.notifications.success('Driver session closed.');
     }

@@ -990,8 +990,36 @@ body[data-theme='dark'] .ops-button {
     font-weight: 600;
 }
 
+.driver-portal-form-field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.45rem;
+}
+
 .driver-portal-form label span {
     font-size: 0.86rem;
+}
+
+.driver-portal-label-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+}
+
+.driver-portal-inline-link {
+    border: 0;
+    background: transparent;
+    color: #0f766e;
+    font-weight: 700;
+    font-size: 0.8rem;
+    cursor: pointer;
+    padding: 0;
+}
+
+.driver-portal-inline-link:disabled {
+    opacity: 0.6;
+    cursor: default;
 }
 
 .driver-portal-form-span-2,
@@ -999,7 +1027,8 @@ body[data-theme='dark'] .ops-button {
     grid-column: 1 / -1;
 }
 
-.driver-portal-form input {
+.driver-portal-form input,
+.driver-portal-form select {
     width: 100%;
     min-height: 3rem;
     padding: 0.8rem 0.95rem;
@@ -1013,7 +1042,8 @@ body[data-theme='dark'] .ops-button {
         box-shadow 140ms ease;
 }
 
-.driver-portal-form input:focus {
+.driver-portal-form input:focus,
+.driver-portal-form select:focus {
     border-color: #14b8a6;
     box-shadow: 0 0 0 4px rgb(20 184 166 / 12%);
 }
@@ -1108,10 +1138,15 @@ body[data-theme='dark'] .driver-order-status-pending {
     color: #fef3c7;
 }
 
-body[data-theme='dark'] .driver-portal-form input {
+body[data-theme='dark'] .driver-portal-form input,
+body[data-theme='dark'] .driver-portal-form select {
     background: #0f172a;
     color: #e2e8f0;
     border-color: rgb(71 85 105);
+}
+
+body[data-theme='dark'] .driver-portal-inline-link {
+    color: #5eead4;
 }
 
 @media (width <= 980px) {

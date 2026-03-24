@@ -126,4 +126,14 @@ export default class ConsoleOpsDriversController extends Controller {
             this.notifications.error(error.message ?? 'Unable to reject driver.');
         }
     }
+
+    @action async createPayoutBatch(driver) {
+        try {
+            await this.fetch.post(`ops/drivers/${driver.uuid}/payout-batches`);
+            this.notifications.success('Driver payout batch queued.');
+            await this.reload();
+        } catch (error) {
+            this.notifications.error(error.message ?? 'Unable to queue a payout batch.');
+        }
+    }
 }
