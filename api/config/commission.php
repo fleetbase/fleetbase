@@ -7,6 +7,20 @@ return [
 
     'nearby_pickup_radius_km' => (float) env('NEARBY_PICKUP_RADIUS_KM', 2),
 
+    'logistics_default_company_uuid' => env('LOGISTICS_DEFAULT_COMPANY_UUID'),
+
+    'logistics_quote_ttl_minutes' => (int) env('LOGISTICS_QUOTE_TTL_MINUTES', 15),
+
+    'logistics_quote_base_fee' => (int) env('LOGISTICS_QUOTE_BASE_FEE', 3000),
+
+    'logistics_quote_per_km_fee' => (int) env('LOGISTICS_QUOTE_PER_KM_FEE', 500),
+
+    'logistics_quote_service_fee' => (int) env('LOGISTICS_QUOTE_SERVICE_FEE', 1000),
+
+    'logistics_quote_weight_included_grams' => (int) env('LOGISTICS_QUOTE_WEIGHT_INCLUDED_GRAMS', 3000),
+
+    'logistics_quote_extra_kg_fee' => (int) env('LOGISTICS_QUOTE_EXTRA_KG_FEE', 250),
+
     'nearby_pickup_pending_statuses' => array_values(array_filter(array_map(
         'trim',
         explode(',', (string) env('NEARBY_PICKUP_PENDING_STATUSES', 'created,pending'))

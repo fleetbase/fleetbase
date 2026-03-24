@@ -16,3 +16,8 @@ Route::prefix('multi-pickup')->group(function () {
 
     Route::post('fleetbase-webhook', [MultiPickupController::class, 'fleetbaseWebhook']);
 });
+
+Route::prefix('logistics')->group(function () {
+    Route::post('quotes', [MultiPickupController::class, 'quote']);
+    Route::post('deliveries', [MultiPickupController::class, 'createDelivery']);
+});
