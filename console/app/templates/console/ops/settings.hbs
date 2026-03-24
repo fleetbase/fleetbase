@@ -1,0 +1,56 @@
+{{page-title "Ops Settings"}}
+<div class="ops-page">
+    <div class="ops-page-header">
+        <div>
+            <p class="ops-eyebrow">Settings</p>
+            <h1>Operational defaults</h1>
+            <p>Keep dispatch defaults and support contacts close to the logistics team that actually uses them.</p>
+        </div>
+    </div>
+
+    <section class="ops-card">
+        <div class="ops-card-header">
+            <div>
+                <p class="ops-eyebrow">Configuration</p>
+                <h3>Workspace settings</h3>
+            </div>
+        </div>
+
+        <form class="ops-form-grid" {{on "submit" this.save}}>
+            <label>
+                <span>Company name</span>
+                <input type="text" value={{this.settings.company_name}} disabled />
+            </label>
+            <label>
+                <span>Support phone</span>
+                <input type="text" value={{this.settings.support_phone}} {{on "input" (fn this.updateField "support_phone")}} />
+            </label>
+            <label>
+                <span>Support email</span>
+                <input type="email" value={{this.settings.support_email}} {{on "input" (fn this.updateField "support_email")}} />
+            </label>
+            <label>
+                <span>Default dispatch mode</span>
+                <select {{on "change" (fn this.updateField "default_dispatch_mode")}}>
+                    <option value="manual" selected={{eq this.settings.default_dispatch_mode "manual"}}>manual</option>
+                    <option value="auto_assign" selected={{eq this.settings.default_dispatch_mode "auto_assign"}}>auto_assign</option>
+                </select>
+            </label>
+            <label class="ops-checkbox-row">
+                <input type="checkbox" checked={{this.settings.auto_assign_new_orders}} {{on "change" (fn this.toggleField "auto_assign_new_orders")}} />
+                <span>Auto-assign new orders when possible</span>
+            </label>
+            <label class="ops-checkbox-row">
+                <input type="checkbox" checked={{this.settings.show_advanced_permissions}} {{on "change" (fn this.toggleField "show_advanced_permissions")}} />
+                <span>Show advanced permissions controls in this workspace</span>
+            </label>
+            <label class="ops-form-span-2">
+                <span>Service notes</span>
+                <textarea rows="4" {{on "input" (fn this.updateField "service_notes")}}>{{this.settings.service_notes}}</textarea>
+            </label>
+            <div class="ops-form-actions ops-form-span-2">
+                <button type="submit" class="ops-button" disabled={{this.isSaving}}>Save settings</button>
+            </div>
+        </form>
+    </section>
+</div>

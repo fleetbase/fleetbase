@@ -1,0 +1,25 @@
+{{page-title "Ops Dashboard"}}
+<Layout::Section::Body class="overflow-y-scroll h-full without-padding">
+    <div class="ops-shell">
+        <aside class="ops-sidebar">
+            <div class="ops-sidebar-header">
+                <p class="ops-eyebrow">Logistics</p>
+                <h2>Ops Dashboard</h2>
+                <p>Keep dispatch, drivers, vehicles, and access in one simpler workspace.</p>
+            </div>
+
+            <nav class="ops-nav">
+                <LinkTo @route="console.ops.index" class="ops-nav-link">Overview</LinkTo>
+                <LinkTo @route="console.ops.orders" class="ops-nav-link">Orders</LinkTo>
+                <LinkTo @route="console.ops.drivers" class="ops-nav-link">Drivers</LinkTo>
+                <LinkTo @route="console.ops.vehicles" class="ops-nav-link">Vehicles</LinkTo>
+                <LinkTo @route="console.ops.team" class="ops-nav-link">Team & Access</LinkTo>
+                <LinkTo @route="console.ops.settings" class="ops-nav-link">Settings</LinkTo>
+            </nav>
+        </aside>
+
+        <section class="ops-content">
+            {{outlet}}
+        </section>
+    </div>
+</Layout::Section::Body>

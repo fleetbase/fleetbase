@@ -1,0 +1,784 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\MultiPickup\Models\RiderCapacity;
+use Fleetbase\FleetOps\Models\Driver;
+use Fleetbase\FleetOps\Models\Order;
+use Fleetbase\FleetOps\Models\Vehicle;
+use Fleetbase\Models\Company;
+use Fleetbase\Models\CompanyUser;
+use Fleetbase\Models\Role;
+use Fleetbase\Models\Setting;
+use Fleetbase\Models\User;
+use Fleetbase\Models\VerificationCode;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Str;
+
+class DriverPortalController extends Controller
+{
+    public function context(string $publicId): JsonResponse
+    {
+        $portal = $this->resolvePortalContext($publicId);
+
+        return response()->json([
+            'portal' => [
+                'public_id' => $publicId,
+                'company' => [
+                    'uuid' => $portal['company']->uuid,
+                    'public_id' => $portal['company']->public_id,
+                    'name' => $portal['company']->name,
+                    'phone' => $portal['company']->phone,
+                ],
+                'driver' => $portal['driver'] ? [
+                    'uuid' => $portal['driver']->uuid,
+                    'public_id' => $portal['driver']->public_id,
+                    'name' => $portal['driver']->name,
+                    'phone' => $portal['driver']->phone,
+                ] : null,
+                'onboard_settings' => $this->driverOnboardSettings($portal['company']),
+            ],
+        ]);
+    }
+
+    public function requestCode(Request $request): JsonResponse
+    {
+        $payload = $request->validate([
+            'public_id' => 'required|string|max:120',
+            'identity' => 'required|string|max:190',
+        ]);
+
+        $portal = $this->resolvePortalContext($payload['public_id']);
+        $driver = $this->resolvePortalDriver($portal, $payload['identity']);
+
+        if (!$driver) {
+            return response()->json(['error' => 'No driver found with that identity for this portal.'], 404);
+        }
+
+        $user = $driver->user;
+        VerificationCode::where('subject_uuid', $user->uuid)->where('for', 'driver_portal_login')->delete();
+
+        $verification = VerificationCode::generateFor($user, 'driver_portal_login', false);
+        $verification->expires_at = now()->addMinutes(10);
+        $verification->meta = [
+            'company_uuid' => $driver->company_uuid,
+            'driver_uuid' => $driver->uuid,
+            'portal_public_id' => $payload['public_id'],
+        ];
+        $verification->save();
+
+        return response()->json([
+            'ok' => true,
+            'delivery_method' => app()->environment('production') ? 'sms' : 'preview',
+            'expires_at' => $verification->expires_at?->toIso8601String(),
+            'preview_code' => app()->environment('production') ? null : (string) $verification->code,
+            'driver' => [
+                'public_id' => $driver->public_id,
+                'name' => $driver->name,
+            ],
+        ]);
+    }
+
+    public function apply(Request $request): JsonResponse
+    {
+        $payload = $request->validate([
+            'public_id' => 'required|string|max:120',
+            'name' => 'required|string|max:120',
+            'email' => 'required|email|max:190',
+            'phone' => 'required|string|max:40',
+            'drivers_license_number' => 'nullable|string|max:120',
+            'notes' => 'nullable|string|max:500',
+        ]);
+
+        $portal = $this->resolvePortalContext($payload['public_id']);
+
+        if ($portal['driver']) {
+            return response()->json(['error' => 'This link is scoped to an existing rider. Use the fleet join link to apply as a new driver.'], 422);
+        }
+
+        $company = $portal['company'];
+        $user = User::where('email', $payload['email'])->orWhere('phone', $this->normalizePhone($payload['phone']))->first();
+
+        if (!$user) {
+            $user = new User();
+            $user->uuid = (string) Str::uuid();
+            $user->password = Str::password(16);
+        }
+
+        $user->name = $payload['name'];
+        $user->email = $payload['email'];
+        $user->phone = $payload['phone'];
+        $user->company_uuid = $company->uuid;
+        $user->status = 'active';
+        $user->save();
+        $user->setType('driver');
+
+        $companyUser = CompanyUser::firstOrCreate(
+            [
+                'company_uuid' => $company->uuid,
+                'user_uuid' => $user->uuid,
+            ],
+            [
+                'uuid' => (string) Str::uuid(),
+                'status' => 'pending',
+            ]
+        );
+
+        $companyUser->status = 'pending';
+        $companyUser->save();
+
+        $role = $this->resolveDriverRole($company);
+        if ($role) {
+            $companyUser->assignSingleRole($role->name);
+        }
+
+        $driver = Driver::firstOrCreate(
+            [
+                'company_uuid' => $company->uuid,
+                'user_uuid' => $user->uuid,
+            ],
+            [
+                'uuid' => (string) Str::uuid(),
+                'slug' => $user->slug ?: Str::slug($user->name . '-' . Str::random(4)),
+            ]
+        );
+
+        $driver->slug = $driver->slug ?: ($user->slug ?: Str::slug($user->name . '-' . Str::random(4)));
+        $driver->status = 'pending_approval';
+        $driver->online = false;
+        $driver->drivers_license_number = $payload['drivers_license_number'] ?? $driver->drivers_license_number;
+        $driverMeta = is_array($driver->meta) ? $driver->meta : [];
+        $driverMeta['portal_application'] = array_merge(
+            data_get($driverMeta, 'portal_application', []),
+            [
+                'applied_at' => now()->toIso8601String(),
+                'notes' => $payload['notes'] ?? null,
+                'source' => 'driver-portal',
+            ]
+        );
+        $driver->meta = $driverMeta;
+        $driver->save();
+
+        return response()->json([
+            'ok' => true,
+            'message' => 'Application received. Dispatch can review and approve this rider before full access is unlocked.',
+            'driver' => [
+                'public_id' => $driver->public_id,
+                'name' => $driver->name,
+                'status' => $driver->status,
+            ],
+        ]);
+    }
+
+    public function verifyCode(Request $request): JsonResponse
+    {
+        $payload = $request->validate([
+            'public_id' => 'required|string|max:120',
+            'identity' => 'required|string|max:190',
+            'code' => 'required|string|max:12',
+        ]);
+
+        $portal = $this->resolvePortalContext($payload['public_id']);
+        $driver = $this->resolvePortalDriver($portal, $payload['identity']);
+
+        if (!$driver) {
+            return response()->json(['error' => 'No driver found with that identity for this portal.'], 404);
+        }
+
+        $user = $driver->user;
+        $verification = VerificationCode::where('subject_uuid', $user->uuid)
+            ->where('for', 'driver_portal_login')
+            ->where('code', $payload['code'])
+            ->first();
+
+        $isExpired = !$verification || ($verification->expires_at && Carbon::parse($verification->expires_at)->isPast());
+
+        if ($isExpired) {
+            return response()->json(['error' => 'Invalid or expired verification code.'], 422);
+        }
+
+        $user->company_uuid = $driver->company_uuid;
+        $user->save();
+
+        $token = $user->createToken($driver->uuid);
+        $verification->delete();
+
+        return response()->json([
+            'ok' => true,
+            'token' => $token->plainTextToken,
+            'driver' => $this->serializeDriverSnapshot($driver->fresh(['user', 'vehicle', 'currentOrder.payload'])),
+        ]);
+    }
+
+    public function me(Request $request): JsonResponse
+    {
+        $driver = $this->resolveAuthenticatedDriver($request);
+
+        if (!$driver) {
+            return response()->json(['error' => 'Driver profile not found for the authenticated user.'], 404);
+        }
+
+        return response()->json([
+            'driver' => $this->serializeDriverSnapshot($driver),
+        ]);
+    }
+
+    public function updateProfile(Request $request): JsonResponse
+    {
+        $driver = $this->resolveAuthenticatedDriver($request);
+
+        if (!$driver) {
+            return response()->json(['error' => 'Driver profile not found for the authenticated user.'], 404);
+        }
+
+        $payload = $request->validate([
+            'public_id' => 'nullable|string|max:120',
+            'name' => 'nullable|string|max:120',
+            'phone' => 'nullable|string|max:40',
+            'email' => 'nullable|email|max:190',
+            'drivers_license_number' => 'nullable|string|max:120',
+        ]);
+
+        $user = $driver->user;
+        if ($user) {
+            foreach (['name', 'phone', 'email'] as $field) {
+                if (array_key_exists($field, $payload)) {
+                    $user->{$field} = $payload[$field];
+                }
+            }
+            $user->save();
+        }
+
+        if (array_key_exists('drivers_license_number', $payload)) {
+            $driver->drivers_license_number = $payload['drivers_license_number'];
+        }
+
+        $driver->save();
+
+        return response()->json([
+            'ok' => true,
+            'driver' => $this->serializeDriverSnapshot($driver->fresh(['user', 'vehicle', 'currentOrder.payload'])),
+        ]);
+    }
+
+    public function toggleOnline(Request $request): JsonResponse
+    {
+        $driver = $this->resolveAuthenticatedDriver($request);
+
+        if (!$driver) {
+            return response()->json(['error' => 'Driver profile not found for the authenticated user.'], 404);
+        }
+
+        if (!$this->driverIsApproved($driver)) {
+            return response()->json(['error' => 'This rider is still pending approval and cannot go online yet.'], 422);
+        }
+
+        $payload = $request->validate([
+            'public_id' => 'nullable|string|max:120',
+            'online' => 'nullable|boolean',
+        ]);
+
+        $driver->online = array_key_exists('online', $payload) ? (bool) $payload['online'] : !$driver->online;
+        $driver->saveQuietly();
+
+        if ($driver->vehicle) {
+            $driver->vehicle->online = $driver->online;
+            $driver->vehicle->saveQuietly();
+        }
+
+        return response()->json([
+            'ok' => true,
+            'driver' => $this->serializeDriverSnapshot($driver->fresh(['user', 'vehicle', 'currentOrder.payload'])),
+        ]);
+    }
+
+    public function updateVehicle(Request $request): JsonResponse
+    {
+        $driver = $this->resolveAuthenticatedDriver($request);
+
+        if (!$driver) {
+            return response()->json(['error' => 'Driver profile not found for the authenticated user.'], 404);
+        }
+
+        $payload = $request->validate([
+            'public_id' => 'nullable|string|max:120',
+            'name' => 'nullable|string|max:120',
+            'make' => 'nullable|string|max:80',
+            'model' => 'nullable|string|max:80',
+            'year' => 'nullable|integer|min:1900|max:2100',
+            'plate_number' => 'nullable|string|max:40',
+            'color' => 'nullable|string|max:40',
+            'type' => 'nullable|string|max:80',
+            'notes' => 'nullable|string|max:500',
+            'replace_pending' => 'nullable|boolean',
+        ]);
+
+        [$activeVehicle, $pendingVehicle] = $this->splitDriverVehicles($driver);
+        $replacePending = (bool) ($payload['replace_pending'] ?? false);
+
+        if ($replacePending && $pendingVehicle) {
+            $pendingVehicle->delete();
+            $pendingVehicle = null;
+        }
+
+        $vehicle = $pendingVehicle;
+
+        if (!$vehicle) {
+            $vehicle = new Vehicle();
+            $vehicle->company_uuid = $driver->company_uuid;
+            $vehicle->status = 'pending_review';
+            $vehicle->online = false;
+        }
+
+        foreach (['make', 'model', 'year', 'plate_number', 'color', 'type', 'notes'] as $field) {
+            if (array_key_exists($field, $payload)) {
+                $vehicle->{$field} = $payload[$field];
+            }
+        }
+
+        $vehicle->name = $payload['name'] ?? $vehicle->name ?? trim(implode(' ', array_filter([
+            $payload['year'] ?? $vehicle->year,
+            $payload['make'] ?? $vehicle->make,
+            $payload['model'] ?? $vehicle->model,
+            $payload['plate_number'] ?? $vehicle->plate_number,
+        ]))) ?: ($driver->name . ' vehicle');
+
+        $vehicleMeta = is_array($vehicle->meta) ? $vehicle->meta : [];
+        $vehicleMeta['portal_application'] = array_merge(
+            data_get($vehicleMeta, 'portal_application', []),
+            [
+                'submitted_by_driver_uuid' => $driver->uuid,
+                'submitted_at' => now()->toIso8601String(),
+                'requested_change' => filled($activeVehicle?->uuid),
+            ]
+        );
+        $vehicle->meta = $vehicleMeta;
+        $vehicle->save();
+
+        $driverMeta = is_array($driver->meta) ? $driver->meta : [];
+        $driverMeta['pending_vehicle_uuid'] = $vehicle->uuid;
+        $driver->meta = $driverMeta;
+        $driver->save();
+
+        return response()->json([
+            'ok' => true,
+            'driver' => $this->serializeDriverSnapshot($driver->fresh(['user', 'vehicle', 'currentOrder.payload'])),
+        ]);
+    }
+
+    protected function resolvePortalContext(string $publicId): array
+    {
+        $company = Company::where('public_id', $publicId)->first();
+        if ($company) {
+            return ['company' => $company, 'driver' => null];
+        }
+
+        $driver = Driver::with('user')->where('public_id', $publicId)->firstOrFail();
+        $company = Company::where('uuid', $driver->company_uuid)->firstOrFail();
+
+        return ['company' => $company, 'driver' => $driver];
+    }
+
+    protected function resolvePortalDriver(array $portal, string $identity): ?Driver
+    {
+        $query = Driver::with(['user', 'vehicle', 'currentOrder.payload'])
+            ->where('company_uuid', $portal['company']->uuid)
+            ->whereNull('deleted_at');
+
+        if ($portal['driver']) {
+            $query->where('uuid', $portal['driver']->uuid);
+        }
+
+        $normalizedPhone = $this->normalizePhone($identity);
+
+        return $query->whereHas('user', function ($userQuery) use ($identity, $normalizedPhone) {
+            $userQuery->where('email', $identity)->orWhere('phone', $normalizedPhone);
+        })->first();
+    }
+
+    protected function resolveAuthenticatedDriver(Request $request): ?Driver
+    {
+        $user = $request->user();
+        if (!$user instanceof User) {
+            return null;
+        }
+
+        $publicId = $request->input('public_id', $request->query('public_id'));
+        $portal = $publicId ? $this->resolvePortalContext($publicId) : null;
+
+        $driverQuery = Driver::with(['user', 'vehicle', 'currentOrder.payload'])
+            ->where('user_uuid', $user->uuid)
+            ->whereNull('deleted_at');
+
+        if ($portal) {
+            $driverQuery->where('company_uuid', $portal['company']->uuid);
+        } elseif ($user->company_uuid) {
+            $driverQuery->where('company_uuid', $user->company_uuid);
+        }
+
+        $driver = $driverQuery->first();
+
+        if (!$driver) {
+            $driver = Driver::with(['user', 'vehicle', 'currentOrder.payload'])
+                ->where('user_uuid', $user->uuid)
+                ->whereNull('deleted_at')
+                ->first();
+        }
+
+        return $driver;
+    }
+
+    protected function serializeDriverSnapshot(Driver $driver): array
+    {
+        $driver->loadMissing(['user', 'vehicle', 'currentOrder.payload']);
+        $currentOrder = $driver->getCurrentOrder();
+        $activeOrders = $driver->orders()
+            ->whereNotIn('status', ['completed', 'cancelled', 'canceled', 'failed'])
+            ->orderByDesc('created_at')
+            ->limit(6)
+            ->get();
+        $deliveredOrders = $driver->orders()
+            ->where('status', 'completed')
+            ->orderByDesc('updated_at')
+            ->limit(20)
+            ->get();
+        $allDeliveredOrders = $driver->orders()
+            ->where('status', 'completed')
+            ->get();
+
+        $freeSlots = RiderCapacity::freeSlots($driver->uuid);
+        $maxPackages = (int) config('commission.max_packages_per_rider', 3);
+        $activePackages = max(0, $maxPackages - $freeSlots);
+        $isApproved = $this->driverIsApproved($driver);
+        $applicationMeta = data_get($driver->meta, 'portal_application', []);
+        [$activeVehicle, $pendingVehicle] = $this->splitDriverVehicles($driver);
+
+        return [
+            'uuid' => $driver->uuid,
+            'public_id' => $driver->public_id,
+            'name' => $driver->name,
+            'email' => $driver->email,
+            'phone' => $driver->phone,
+            'status' => $driver->status,
+            'approval_status' => $isApproved ? 'approved' : 'pending_approval',
+            'is_approved' => $isApproved,
+            'online' => (bool) $driver->online,
+            'avatar_url' => $driver->avatar_url,
+            'photo_url' => $driver->photo_url,
+            'drivers_license_number' => $driver->drivers_license_number,
+            'application' => [
+                'applied_at' => data_get($applicationMeta, 'applied_at'),
+                'approved_at' => data_get($applicationMeta, 'approved_at'),
+                'notes' => data_get($applicationMeta, 'notes'),
+            ],
+            'vehicle' => $activeVehicle ? [
+                'uuid' => $activeVehicle->uuid,
+                'public_id' => $activeVehicle->public_id,
+                'name' => $activeVehicle->name,
+                'label' => trim(implode(' ', array_filter([
+                    $activeVehicle->year,
+                    $activeVehicle->make,
+                    $activeVehicle->model,
+                    $activeVehicle->plate_number,
+                ]))),
+                'plate_number' => $activeVehicle->plate_number,
+                'make' => $activeVehicle->make,
+                'model' => $activeVehicle->model,
+                'year' => $activeVehicle->year,
+                'color' => $activeVehicle->color,
+                'type' => $activeVehicle->type,
+                'notes' => $activeVehicle->notes,
+                'status' => $activeVehicle->status,
+            ] : null,
+            'pending_vehicle' => $pendingVehicle ? [
+                'uuid' => $pendingVehicle->uuid,
+                'public_id' => $pendingVehicle->public_id,
+                'name' => $pendingVehicle->name,
+                'label' => trim(implode(' ', array_filter([
+                    $pendingVehicle->year,
+                    $pendingVehicle->make,
+                    $pendingVehicle->model,
+                    $pendingVehicle->plate_number,
+                ]))),
+                'plate_number' => $pendingVehicle->plate_number,
+                'make' => $pendingVehicle->make,
+                'model' => $pendingVehicle->model,
+                'year' => $pendingVehicle->year,
+                'color' => $pendingVehicle->color,
+                'type' => $pendingVehicle->type,
+                'notes' => $pendingVehicle->notes,
+                'status' => $pendingVehicle->status,
+                'submitted_at' => data_get($pendingVehicle->meta, 'portal_application.submitted_at'),
+            ] : null,
+            'capacity' => [
+                'max' => $maxPackages,
+                'active' => $activePackages,
+                'free_slots' => $freeSlots,
+            ],
+            'checklist' => [
+                [
+                    'key' => 'phone',
+                    'label' => 'Phone number on file',
+                    'complete' => filled($driver->phone),
+                ],
+                [
+                    'key' => 'license',
+                    'label' => 'Driver license added',
+                    'complete' => filled($driver->drivers_license_number),
+                ],
+                [
+                    'key' => 'vehicle',
+                    'label' => 'Approved vehicle assigned',
+                    'complete' => filled($activeVehicle?->uuid),
+                ],
+                [
+                    'key' => 'approval',
+                    'label' => 'Dispatch approval completed',
+                    'complete' => $isApproved,
+                ],
+            ],
+            'current_order' => $isApproved && $currentOrder ? $this->serializeOrder($currentOrder) : null,
+            'active_orders' => $isApproved ? $activeOrders->map(fn (Order $order) => $this->serializeOrder($order))->all() : [],
+            'delivered_orders' => $isApproved ? $deliveredOrders->map(fn (Order $order) => $this->serializeDeliveredOrder($order))->all() : [],
+            'earnings' => $isApproved ? $this->serializeDriverEarnings($allDeliveredOrders) : null,
+        ];
+    }
+
+    protected function splitDriverVehicles(Driver $driver): array
+    {
+        $driver->loadMissing('vehicle');
+
+        $activeVehicle = $driver->vehicle;
+        $pendingVehicle = null;
+        $pendingVehicleUuid = data_get($driver->meta, 'pending_vehicle_uuid');
+
+        if (filled($pendingVehicleUuid)) {
+            $pendingVehicle = Vehicle::where('company_uuid', $driver->company_uuid)
+                ->where('uuid', $pendingVehicleUuid)
+                ->whereNull('deleted_at')
+                ->first();
+        }
+
+        if ($pendingVehicle && $pendingVehicle->status !== 'pending_review') {
+            $pendingVehicle = null;
+        }
+
+        if ($activeVehicle && $activeVehicle->status === 'pending_review') {
+            $pendingVehicle = $pendingVehicle ?: $activeVehicle;
+            $activeVehicle = null;
+        }
+
+        if ($activeVehicle && $pendingVehicle && $activeVehicle->uuid === $pendingVehicle->uuid) {
+            $activeVehicle = null;
+        }
+
+        return [$activeVehicle, $pendingVehicle];
+    }
+
+    protected function serializeOrder(Order $order): array
+    {
+        $order->loadMissing(['payload', 'customer']);
+        $payload = $order->payload;
+        $orderMeta = is_array($order->meta) ? $order->meta : [];
+        $customer = data_get($orderMeta, 'customer', []);
+        $pickup = data_get($orderMeta, 'pickup', []);
+        $dropoff = data_get($orderMeta, 'dropoff', []);
+
+        return [
+            'uuid' => $order->uuid,
+            'public_id' => $order->public_id,
+            'status' => $order->status,
+            'stage' => $this->serializeOrderStage($order),
+            'customer_name' => data_get($order, 'customer.name') ?? data_get($customer, 'name'),
+            'customer_phone' => data_get($order, 'customer.phone') ?? data_get($customer, 'phone'),
+            'pickup_name' => data_get($payload, 'pickup_name') ?? data_get($pickup, 'name') ?? data_get($pickup, 'address_line_1'),
+            'pickup_address' => data_get($pickup, 'address_line_1'),
+            'pickup_city' => data_get($pickup, 'city'),
+            'dropoff_name' => data_get($payload, 'dropoff_name') ?? data_get($dropoff, 'name') ?? data_get($dropoff, 'address_line_1'),
+            'dropoff_address' => data_get($dropoff, 'address_line_1'),
+            'dropoff_city' => data_get($dropoff, 'city'),
+            'notes' => $order->notes,
+            'tracking_url' => $this->trackingBaseUrl() . '/track?' . http_build_query([
+                'order_id' => $order->public_id,
+                'display_id' => $order->public_id,
+                'merchant' => 'Merchant',
+            ]),
+            'created_at' => $this->toIso8601String($order->created_at),
+            'updated_at' => $this->toIso8601String($order->updated_at),
+        ];
+    }
+
+    protected function serializeDeliveredOrder(Order $order): array
+    {
+        $serialized = $this->serializeOrder($order);
+        $orderMeta = is_array($order->meta) ? $order->meta : [];
+        $deliveryAmount = $this->deliveryAmountForOrder($orderMeta);
+        $driverEarnings = $this->driverEarningsForAmount($deliveryAmount);
+
+        return array_merge($serialized, [
+            'delivered_at' => $this->toIso8601String($order->updated_at),
+            'delivery_amount' => $deliveryAmount,
+            'driver_earnings' => $driverEarnings,
+        ]);
+    }
+
+    protected function serializeDriverEarnings($deliveredOrders): array
+    {
+        $payoutDay = strtolower((string) config('commission.payout_day', 'thursday'));
+        $cycleStart = $this->currentPayoutCycleStart($payoutDay);
+        $nextPayoutAt = $this->nextPayoutCycleStart($payoutDay, $cycleStart);
+
+        $lifetimeTotal = 0;
+        $currentCycleTotal = 0;
+        $currentCycleCount = 0;
+
+        foreach ($deliveredOrders as $order) {
+            $orderMeta = is_array($order->meta) ? $order->meta : [];
+            $driverEarnings = $this->driverEarningsForAmount($this->deliveryAmountForOrder($orderMeta));
+            $lifetimeTotal += $driverEarnings;
+
+            $deliveredAt = Carbon::parse($order->updated_at);
+            if ($deliveredAt->greaterThanOrEqualTo($cycleStart)) {
+                $currentCycleTotal += $driverEarnings;
+                $currentCycleCount++;
+            }
+        }
+
+        return [
+            'currency_code' => 'UGX',
+            'lifetime_total' => $lifetimeTotal,
+            'current_cycle_unpaid' => $currentCycleTotal,
+            'current_cycle_count' => $currentCycleCount,
+            'payout_schedule' => (string) config('commission.payout_schedule', 'weekly'),
+            'payout_day' => ucfirst($payoutDay),
+            'cycle_started_at' => $cycleStart->toIso8601String(),
+            'next_payout_at' => $nextPayoutAt->toIso8601String(),
+        ];
+    }
+
+    protected function serializeOrderStage(Order $order): array
+    {
+        $stageKey = match (strtolower((string) $order->status)) {
+            'completed' => 'delivered',
+            'started' => 'on_the_way',
+            'dispatched' => 'pickup_in_progress',
+            default => 'driver_assigned',
+        };
+
+        $stageLabel = match ($stageKey) {
+            'delivered' => 'Delivered',
+            'on_the_way' => 'On the way',
+            'pickup_in_progress' => 'Picking up order',
+            default => 'Driver assigned',
+        };
+
+        return [
+            'key' => $stageKey,
+            'label' => $stageLabel,
+        ];
+    }
+
+    protected function deliveryAmountForOrder(array $orderMeta): int
+    {
+        return (int) data_get($orderMeta, 'delivery_amount', data_get($orderMeta, 'quote_amount', 0));
+    }
+
+    protected function driverEarningsForAmount(int $deliveryAmount): int
+    {
+        $percentage = (float) config('commission.driver_earnings_percentage', 80);
+
+        return (int) round($deliveryAmount * ($percentage / 100));
+    }
+
+    protected function currentPayoutCycleStart(string $payoutDay): Carbon
+    {
+        $today = now()->startOfDay();
+        $cycleStart = $today->copy()->startOfWeek();
+
+        for ($offset = 0; $offset < 7; $offset++) {
+            $candidate = $today->copy()->subDays($offset)->startOfDay();
+            if (strtolower($candidate->englishDayOfWeek) === $payoutDay) {
+                $cycleStart = $candidate;
+                break;
+            }
+        }
+
+        return $cycleStart;
+    }
+
+    protected function nextPayoutCycleStart(string $payoutDay, Carbon $currentCycleStart): Carbon
+    {
+        $next = $currentCycleStart->copy()->addDay()->startOfDay();
+
+        for ($offset = 0; $offset < 7; $offset++) {
+            $candidate = $next->copy()->addDays($offset)->startOfDay();
+            if (strtolower($candidate->englishDayOfWeek) === $payoutDay) {
+                return $candidate;
+            }
+        }
+
+        return $currentCycleStart->copy()->addWeek();
+    }
+
+    protected function driverOnboardSettings(Company $company): array
+    {
+        $settings = Setting::where('key', 'fleet-ops.driver-onboard-settings.' . $company->uuid)->value('value');
+
+        return is_array($settings) ? $settings : [];
+    }
+
+    protected function normalizePhone(string $value): string
+    {
+        $phone = preg_replace('/\s+/', '', $value);
+
+        if (!Str::startsWith($phone, '+')) {
+            $phone = '+' . $phone;
+        }
+
+        return $phone;
+    }
+
+    protected function resolveDriverRole(Company $company): ?Role
+    {
+        return Role::query()
+            ->where('company_uuid', $company->uuid)
+            ->where(function ($query) {
+                $query->where('name', 'driver')->orWhere('name', 'Driver');
+            })
+            ->orderBy('id')
+            ->first();
+    }
+
+    protected function driverIsApproved(Driver $driver): bool
+    {
+        return in_array((string) $driver->status, ['active', 'approved'], true);
+    }
+
+    protected function toIso8601String(mixed $value): ?string
+    {
+        if ($value === null || $value === '') {
+            return null;
+        }
+
+        if ($value instanceof Carbon) {
+            return $value->toIso8601String();
+        }
+
+        return Carbon::parse($value)->toIso8601String();
+    }
+
+    protected function trackingBaseUrl(): string
+    {
+        $request = request();
+        if ($request) {
+            $schemeAndHost = $request->getSchemeAndHttpHost();
+            if (filled($schemeAndHost)) {
+                return rtrim($schemeAndHost, '/');
+            }
+        }
+
+        return rtrim((string) config('app.url'), '/');
+    }
+}

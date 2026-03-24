@@ -1,0 +1,163 @@
+{{page-title "Ops Orders"}}
+<div class="ops-page">
+    <div class="ops-page-header">
+        <div>
+            <p class="ops-eyebrow">Orders</p>
+            <h1>Dispatch board</h1>
+            <p>Create simple delivery orders, assign drivers, and keep statuses moving.</p>
+        </div>
+    </div>
+
+    <section class="ops-card">
+        <div class="ops-card-header">
+            <div>
+                <p class="ops-eyebrow">Quick action</p>
+                <h3>Create order</h3>
+            </div>
+        </div>
+
+        <form class="ops-form-grid" {{on "submit" this.createOrder}}>
+            <label>
+                <span>Customer name</span>
+                <input type="text" value={{this.orderForm.customer_name}} {{on "input" (fn this.updateField "customer_name")}} />
+            </label>
+            <label>
+                <span>Customer phone</span>
+                <input type="text" value={{this.orderForm.customer_phone}} {{on "input" (fn this.updateField "customer_phone")}} />
+            </label>
+            <label>
+                <span>Customer email</span>
+                <input type="email" value={{this.orderForm.customer_email}} {{on "input" (fn this.updateField "customer_email")}} />
+            </label>
+            <label>
+                <span>Assign driver</span>
+                <select {{on "change" (fn this.updateField "driver_uuid")}}>
+                    <option value="">Unassigned</option>
+                    {{#each this.drivers as |driver|}}
+                        <option value={{driver.uuid}} selected={{eq driver.uuid this.orderForm.driver_uuid}}>
+                            {{driver.name}} ({{driver.free_slots}} free)
+                        </option>
+                    {{/each}}
+                </select>
+            </label>
+            <label>
+                <span>Pickup address</span>
+                <input type="text" value={{this.orderForm.pickup_address_line_1}} {{on "input" (fn this.updateField "pickup_address_line_1")}} />
+            </label>
+            <label>
+                <span>Pickup city</span>
+                <input type="text" value={{this.orderForm.pickup_city}} {{on "input" (fn this.updateField "pickup_city")}} />
+            </label>
+            <label>
+                <span>Pickup country</span>
+                <input type="text" value={{this.orderForm.pickup_country_code}} {{on "input" (fn this.updateField "pickup_country_code")}} />
+            </label>
+            <label>
+                <span>Pickup latitude</span>
+                <input type="text" value={{this.orderForm.pickup_latitude}} {{on "input" (fn this.updateField "pickup_latitude")}} />
+            </label>
+            <label>
+                <span>Pickup longitude</span>
+                <input type="text" value={{this.orderForm.pickup_longitude}} {{on "input" (fn this.updateField "pickup_longitude")}} />
+            </label>
+            <label>
+                <span>Dropoff address</span>
+                <input type="text" value={{this.orderForm.dropoff_address_line_1}} {{on "input" (fn this.updateField "dropoff_address_line_1")}} />
+            </label>
+            <label>
+                <span>Dropoff city</span>
+                <input type="text" value={{this.orderForm.dropoff_city}} {{on "input" (fn this.updateField "dropoff_city")}} />
+            </label>
+            <label>
+                <span>Dropoff country</span>
+                <input type="text" value={{this.orderForm.dropoff_country_code}} {{on "input" (fn this.updateField "dropoff_country_code")}} />
+            </label>
+            <label>
+                <span>Dropoff latitude</span>
+                <input type="text" value={{this.orderForm.dropoff_latitude}} {{on "input" (fn this.updateField "dropoff_latitude")}} />
+            </label>
+            <label>
+                <span>Dropoff longitude</span>
+                <input type="text" value={{this.orderForm.dropoff_longitude}} {{on "input" (fn this.updateField "dropoff_longitude")}} />
+            </label>
+            <label class="ops-form-span-2">
+                <span>Notes</span>
+                <textarea rows="3" {{on "input" (fn this.updateField "notes")}}>{{this.orderForm.notes}}</textarea>
+            </label>
+            <div class="ops-form-actions ops-form-span-2">
+                <button type="submit" class="ops-button" disabled={{this.isSubmitting}}>Create order</button>
+            </div>
+        </form>
+    </section>
+
+    <section class="ops-card">
+        <div class="ops-card-header">
+            <div>
+                <p class="ops-eyebrow">Live list</p>
+                <h3>Orders</h3>
+            </div>
+        </div>
+        <div class="ops-table-wrapper">
+            <table class="ops-table">
+                <thead>
+                    <tr>
+                        <th>Order</th>
+                        <th>Customer</th>
+                        <th>City</th>
+                        <th>Driver</th>
+                        <th>Stage</th>
+                        <th>Status</th>
+                        <th>Simulate</th>
+                        <th>Tracking</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#each this.orders as |order|}}
+                        <tr>
+                            <td>{{order.public_id}}</td>
+                            <td>
+                                <strong>{{order.customer_name}}</strong>
+                                <div>{{order.customer_phone}}</div>
+                            </td>
+                            <td>{{order.dropoff_city}}</td>
+                            <td>
+                                <select {{on "change" (fn this.assignDriver order)}}>
+                                    <option value="">Unassigned</option>
+                                    {{#each this.drivers as |driver|}}
+                                        <option value={{driver.uuid}} selected={{eq driver.uuid order.driver.uuid}}>
+                                            {{driver.name}} ({{driver.free_slots}} free)
+                                        </option>
+                                    {{/each}}
+                                </select>
+                            </td>
+                            <td>
+                                <strong>{{order.stage.label}}</strong>
+                            </td>
+                            <td>
+                                <select {{on "change" (fn this.updateStatus order)}}>
+                                    <option value="created" selected={{eq order.status "created"}}>created</option>
+                                    <option value="dispatched" selected={{eq order.status "dispatched"}}>dispatched</option>
+                                    <option value="started" selected={{eq order.status "started"}}>started</option>
+                                    <option value="completed" selected={{eq order.status "completed"}}>completed</option>
+                                    <option value="cancelled" selected={{eq order.status "cancelled"}}>cancelled</option>
+                                </select>
+                            </td>
+                            <td>
+                                <button type="button" class="ops-inline-button" {{on "click" (fn this.advanceStage order)}}>
+                                    Advance
+                                </button>
+                            </td>
+                            <td>
+                                {{#if order.tracking_url}}
+                                    <a href={{order.tracking_url}} target="_blank" rel="noopener noreferrer" class="ops-inline-link">Open</a>
+                                {{else}}
+                                    <span class="ops-muted">Unavailable</span>
+                                {{/if}}
+                            </td>
+                        </tr>
+                    {{/each}}
+                </tbody>
+            </table>
+        </div>
+    </section>
+</div>

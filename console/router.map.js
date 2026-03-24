@@ -27,6 +27,13 @@ Router.map(function () {
     this.route('console', { path: '/' }, function () {
         this.route('home', { path: '/' });
         this.route('notifications');
+        this.route('ops', function () {
+            this.route('orders');
+            this.route('drivers');
+            this.route('vehicles');
+            this.route('team');
+            this.route('settings');
+        });
         this.route('account', function () {
             this.route('virtual', { path: '/:slug' });
             this.route('auth');

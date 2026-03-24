@@ -1,0 +1,126 @@
+{{page-title "Ops Overview"}}
+<div class="ops-page">
+    <div class="ops-page-header">
+        <div>
+            <p class="ops-eyebrow">Overview</p>
+            <h1>Operations snapshot</h1>
+            <p>See what needs attention first without digging through the full Fleetbase UI.</p>
+        </div>
+    </div>
+
+    <div class="ops-metrics-grid">
+        <article class="ops-metric-card">
+            <span>Active orders</span>
+            <strong>{{this.model.summary.orders.active}}</strong>
+            <small>{{this.model.summary.orders.unassigned}} still need assignment</small>
+        </article>
+        <article class="ops-metric-card">
+            <span>Online drivers</span>
+            <strong>{{this.model.summary.drivers.online}}</strong>
+            <small>{{this.model.summary.drivers.at_capacity}} at capacity</small>
+        </article>
+        <article class="ops-metric-card">
+            <span>Vehicles in service</span>
+            <strong>{{this.model.summary.vehicles.in_service}}</strong>
+            <small>{{this.model.summary.vehicles.unassigned}} not assigned</small>
+        </article>
+        <article class="ops-metric-card">
+            <span>Team members</span>
+            <strong>{{this.model.summary.team.total}}</strong>
+            <small>{{this.model.summary.team.dispatchers}} dispatchers</small>
+        </article>
+    </div>
+
+    <div class="ops-two-column">
+        <section class="ops-card">
+            <div class="ops-card-header">
+                <div>
+                    <p class="ops-eyebrow">Priority queue</p>
+                    <h3>Alerts</h3>
+                </div>
+            </div>
+            <div class="ops-alert-list">
+                {{#each this.model.alerts as |alert|}}
+                    <div class="ops-alert-row">
+                        <div>
+                            <strong>{{alert.label}}</strong>
+                            <p>{{alert.count}} currently open</p>
+                        </div>
+                        <LinkTo @route={{alert.route}} class="ops-inline-link">Open</LinkTo>
+                    </div>
+                {{/each}}
+            </div>
+        </section>
+
+        <section class="ops-card">
+            <div class="ops-card-header">
+                <div>
+                    <p class="ops-eyebrow">Recent work</p>
+                    <h3>Latest orders</h3>
+                </div>
+            </div>
+            <div class="ops-table-wrapper">
+                <table class="ops-table">
+                    <thead>
+                        <tr>
+                            <th>Order</th>
+                            <th>Status</th>
+                            <th>Customer</th>
+                            <th>Driver</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{#each this.model.recent_orders as |order|}}
+                            <tr>
+                                <td>{{order.public_id}}</td>
+                                <td>{{order.status}}</td>
+                                <td>{{order.customer_name}}</td>
+                                <td>{{if order.driver.name order.driver.name "Unassigned"}}</td>
+                            </tr>
+                        {{/each}}
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </div>
+
+    <section class="ops-card">
+        <div class="ops-card-header">
+            <div>
+                <p class="ops-eyebrow">Live board</p>
+                <h3>Current deliveries and stages</h3>
+            </div>
+        </div>
+        {{#if this.model.live_deliveries.length}}
+            <div class="ops-table-wrapper">
+                <table class="ops-table">
+                    <thead>
+                        <tr>
+                            <th>Order</th>
+                            <th>Stage</th>
+                            <th>Customer</th>
+                            <th>Driver</th>
+                            <th>Dropoff</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{#each this.model.live_deliveries as |order|}}
+                            <tr>
+                                <td>{{order.public_id}}</td>
+                                <td><strong>{{order.stage.label}}</strong></td>
+                                <td>
+                                    <strong>{{order.customer_name}}</strong>
+                                    <div>{{order.customer_phone}}</div>
+                                </td>
+                                <td>{{if order.driver.name order.driver.name "Unassigned"}}</td>
+                                <td>{{or order.dropoff_address order.dropoff_city "Pending"}}</td>
+                            </tr>
+                        {{/each}}
+                    </tbody>
+                </table>
+            </div>
+        {{else}}
+            <p class="ops-empty-state">No deliveries are currently in progress.</p>
+        {{/if}}
+    </section>
+</div>

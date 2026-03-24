@@ -16,6 +16,14 @@ class MultiPickupServiceProvider extends ServiceProvider
             ->middleware('api')
             ->group(base_path('routes/multi-pickup.php'));
 
+        Route::prefix('api/v1')
+            ->middleware('api')
+            ->group(base_path('routes/driver-portal.php'));
+
+        Route::prefix('int/v1')
+            ->middleware(['api', 'auth:sanctum'])
+            ->group(base_path('routes/ops-dashboard.php'));
+
         Route::get('/track', [TrackingController::class, 'show'])->name('multi-pickup.track');
 
         $this->callAfterResolving(Schedule::class, function (Schedule $schedule) {

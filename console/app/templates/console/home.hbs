@@ -1,6 +1,16 @@
 {{page-title "Dashboard"}}
 <Layout::Section::Body class="overflow-y-scroll h-full">
     <TwoFaEnforcementAlert />
+    <div class="px-14 pt-6">
+        <div class="ops-home-banner">
+            <div>
+                <p class="ops-eyebrow">Operations Workspace</p>
+                <h2>Open the simplified logistics dashboard</h2>
+                <p>Use a cleaner workspace for dispatch, drivers, vehicles, team setup, and day-to-day operations.</p>
+            </div>
+            <LinkTo @route="console.ops.index" class="ops-home-cta">Open Ops Dashboard</LinkTo>
+        </div>
+    </div>
     <Dashboard @extension="core" @createWrapperClass="px-10" class="flex items-center justify-between mb-4 mt-6 px-14" />
     <Spacer @height="300px" />
 </Layout::Section::Body>

@@ -1,0 +1,208 @@
+{{page-title "Ops Drivers"}}
+<div class="ops-page">
+    <div class="ops-page-header">
+        <div>
+            <p class="ops-eyebrow">Drivers</p>
+            <h1>Driver setup and availability</h1>
+            <p>Create drivers in one step, assign vehicles, and manage availability without the default Fleetbase complexity.</p>
+        </div>
+    </div>
+
+    {{#if this.portal}}
+        <section class="ops-card">
+            <div class="ops-card-header">
+                <div>
+                    <p class="ops-eyebrow">Rider onboarding link</p>
+                    <h3>Use the fleet public id for self-onboarding</h3>
+                    <p class="ops-muted">This is the general driver application link. A driver-specific public id is optional later for one-rider private access, but the company link is the right default for onboarding.</p>
+                </div>
+            </div>
+            <div class="ops-alert-row">
+                <div>
+                    <strong>{{this.portal.onboarding_url}}</strong>
+                    <p>Share this with riders so they can apply, verify with a code, and wait for admin approval before full dashboard access is unlocked.</p>
+                </div>
+            </div>
+        </section>
+    {{/if}}
+
+    <section class="ops-card">
+        <div class="ops-card-header">
+            <div>
+                <p class="ops-eyebrow">Applications</p>
+                <h3>Pending rider approvals</h3>
+            </div>
+        </div>
+
+        {{#if this.pendingDrivers.length}}
+            <div class="ops-table-wrapper">
+                <table class="ops-table">
+                    <thead>
+                        <tr>
+                            <th>Applicant</th>
+                            <th>Contact</th>
+                            <th>License</th>
+                            <th>Vehicle</th>
+                            <th>Applied</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{#each this.pendingDrivers as |driver|}}
+                            <tr>
+                                <td>
+                                    <strong>{{driver.name}}</strong>
+                                    <div>{{driver.public_id}}</div>
+                                </td>
+                                <td>
+                                    <div>{{driver.email}}</div>
+                                    <div>{{driver.phone}}</div>
+                                </td>
+                                <td>{{if driver.drivers_license_number driver.drivers_license_number "Not added yet"}}</td>
+                                <td>
+                                    {{#if driver.pending_vehicle}}
+                                        <strong>{{driver.pending_vehicle.label}}</strong>
+                                        <div>Pending review on Vehicles page</div>
+                                    {{else if driver.vehicle.uuid}}
+                                        <strong>{{driver.vehicle.label}}</strong>
+                                        <div>Already assigned</div>
+                                    {{else}}
+                                        <span>No vehicle submitted yet</span>
+                                    {{/if}}
+                                </td>
+                                <td>{{if driver.application.applied_at driver.application.applied_at "Just now"}}</td>
+                                <td>
+                                    <div class="ops-inline-actions">
+                                        <button type="button" class="ops-inline-button" {{on "click" (fn this.approveDriver driver)}}>
+                                            Approve
+                                        </button>
+                                        <button type="button" class="ops-inline-button ops-inline-button-danger" {{on "click" (fn this.rejectDriver driver)}}>
+                                            Reject
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        {{/each}}
+                    </tbody>
+                </table>
+            </div>
+        {{else}}
+            <p class="ops-empty-state">No rider applications are waiting for approval right now.</p>
+        {{/if}}
+    </section>
+
+    <section class="ops-card">
+        <div class="ops-card-header">
+            <div>
+                <p class="ops-eyebrow">Quick action</p>
+                <h3>Create driver</h3>
+            </div>
+        </div>
+
+        <form class="ops-form-grid" {{on "submit" this.createDriver}}>
+            <label>
+                <span>Full name</span>
+                <input type="text" value={{this.driverForm.name}} {{on "input" (fn this.updateField "name")}} />
+            </label>
+            <label>
+                <span>Email</span>
+                <input type="email" value={{this.driverForm.email}} {{on "input" (fn this.updateField "email")}} />
+            </label>
+            <label>
+                <span>Phone</span>
+                <input type="text" value={{this.driverForm.phone}} {{on "input" (fn this.updateField "phone")}} />
+            </label>
+            <label>
+                <span>Status</span>
+                <select {{on "change" (fn this.updateField "status")}}>
+                    <option value="active" selected={{eq this.driverForm.status "active"}}>active</option>
+                    <option value="inactive" selected={{eq this.driverForm.status "inactive"}}>inactive</option>
+                </select>
+            </label>
+            <label>
+                <span>Role preset</span>
+                <select {{on "change" (fn this.updateField "role_key")}}>
+                    {{#each this.rolePresets as |preset|}}
+                        <option value={{preset.key}} selected={{eq preset.key this.driverForm.role_key}}>{{preset.label}}</option>
+                    {{/each}}
+                </select>
+            </label>
+            <label>
+                <span>Assign vehicle</span>
+                <select {{on "change" (fn this.updateField "vehicle_uuid")}}>
+                    <option value="">No vehicle</option>
+                    {{#each this.vehicles as |vehicle|}}
+                        <option value={{vehicle.uuid}} selected={{eq vehicle.uuid this.driverForm.vehicle_uuid}}>{{vehicle.label}}</option>
+                    {{/each}}
+                </select>
+            </label>
+            <div class="ops-form-actions ops-form-span-2">
+                <button type="submit" class="ops-button" disabled={{this.isSubmitting}}>Create driver</button>
+            </div>
+        </form>
+    </section>
+
+    <section class="ops-card">
+        <div class="ops-card-header">
+            <div>
+                <p class="ops-eyebrow">Live list</p>
+                <h3>Drivers</h3>
+            </div>
+        </div>
+        <div class="ops-table-wrapper">
+            <table class="ops-table">
+                <thead>
+                    <tr>
+                        <th>Driver</th>
+                        <th>Contact</th>
+                        <th>Status</th>
+                        <th>Online</th>
+                        <th>Capacity</th>
+                        <th>License</th>
+                        <th>Vehicle</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#each this.drivers as |driver|}}
+                        <tr>
+                            <td>
+                                <strong>{{driver.name}}</strong>
+                                <div>{{driver.public_id}}</div>
+                            </td>
+                            <td>
+                                <div>{{driver.email}}</div>
+                                <div>{{driver.phone}}</div>
+                            </td>
+                            <td>
+                                <select {{on "change" (fn this.updateDriverStatus driver)}}>
+                                    <option value="active" selected={{eq driver.status "active"}}>active</option>
+                                    <option value="pending_approval" selected={{eq driver.status "pending_approval"}}>pending approval</option>
+                                    <option value="inactive" selected={{eq driver.status "inactive"}}>inactive</option>
+                                    <option value="rejected" selected={{eq driver.status "rejected"}}>rejected</option>
+                                </select>
+                            </td>
+                            <td>
+                                <button type="button" class="ops-inline-button" {{on "click" (fn this.toggleAvailability driver)}}>
+                                    {{if driver.online "Online" "Offline"}}
+                                </button>
+                            </td>
+                            <td>{{driver.free_slots}} free</td>
+                            <td>{{if driver.drivers_license_number driver.drivers_license_number "Not added"}}</td>
+                            <td>
+                                <select {{on "change" (fn this.assignVehicle driver)}}>
+                                    <option value="">No vehicle</option>
+                                    {{#each this.vehicles as |vehicle|}}
+                                        <option value={{vehicle.uuid}} selected={{eq vehicle.uuid driver.vehicle.uuid}}>{{vehicle.label}}</option>
+                                    {{/each}}
+                                </select>
+                                {{#if driver.pending_vehicle}}
+                                    <div class="ops-table-hint">Pending replacement: {{driver.pending_vehicle.label}}</div>
+                                {{/if}}
+                            </td>
+                        </tr>
+                    {{/each}}
+                </tbody>
+            </table>
+        </div>
+    </section>
+</div>

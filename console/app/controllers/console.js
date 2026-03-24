@@ -21,7 +21,7 @@ export default class ConsoleController extends Controller {
     @tracked organizations = [];
     @tracked sidebarContext;
     @tracked sidebarToggleState = {};
-    @tracked hiddenSidebarRoutes = ['console.home', 'console.notifications', 'console.virtual'];
+    @tracked hiddenSidebarRoutes = ['console.home', 'console.notifications', 'console.virtual', 'console.ops'];
     @tracked menuItems = [];
     @tracked userMenuItems = [];
     @tracked organizationMenuItems = [];
@@ -35,7 +35,7 @@ export default class ConsoleController extends Controller {
         this.router.on('routeDidChange', (transition) => {
             if (this.sidebarContext) {
                 // Determine if the new route should hide the sidebar
-                const shouldHideSidebar = this.hiddenSidebarRoutes.includes(transition.to.name);
+                const shouldHideSidebar = this.shouldHideSidebarForRoute(transition.to.name);
 
                 // Check if the sidebar was manually toggled and is currently closed
                 const isSidebarManuallyClosed = this.sidebarToggleState.clicked && !this.sidebarToggleState.isOpen;
@@ -86,10 +86,14 @@ export default class ConsoleController extends Controller {
         this.universe.sidebarContext = sidebarContext;
         this.universe.trigger('sidebarContext.available', sidebarContext);
 
-        if (this.hiddenSidebarRoutes.includes(this.router.currentRouteName)) {
+        if (this.shouldHideSidebarForRoute(this.router.currentRouteName)) {
             this.sidebar.hideNow();
             this.sidebarToggleEnabled = false;
         }
+    }
+
+    shouldHideSidebarForRoute(routeName) {
+        return this.hiddenSidebarRoutes.some((hiddenRoute) => routeName === hiddenRoute || routeName.startsWith(`${hiddenRoute}.`));
     }
 
     /**

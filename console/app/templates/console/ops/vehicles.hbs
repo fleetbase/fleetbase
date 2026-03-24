@@ -1,0 +1,159 @@
+{{page-title "Ops Vehicles"}}
+<div class="ops-page">
+    <div class="ops-page-header">
+        <div>
+            <p class="ops-eyebrow">Vehicles</p>
+            <h1>Fleet vehicles at a glance</h1>
+            <p>Add vehicles, mark them in or out of service, and keep assignment visibility simple.</p>
+        </div>
+    </div>
+
+    <section class="ops-card">
+        <div class="ops-card-header">
+            <div>
+                <p class="ops-eyebrow">Quick action</p>
+                <h3>Create vehicle</h3>
+            </div>
+        </div>
+
+        <form class="ops-form-grid" {{on "submit" this.createVehicle}}>
+            <label>
+                <span>Vehicle name</span>
+                <input type="text" value={{this.vehicleForm.name}} {{on "input" (fn this.updateField "name")}} />
+            </label>
+            <label>
+                <span>Make</span>
+                <input type="text" value={{this.vehicleForm.make}} {{on "input" (fn this.updateField "make")}} />
+            </label>
+            <label>
+                <span>Model</span>
+                <input type="text" value={{this.vehicleForm.model}} {{on "input" (fn this.updateField "model")}} />
+            </label>
+            <label>
+                <span>Year</span>
+                <input type="number" value={{this.vehicleForm.year}} {{on "input" (fn this.updateField "year")}} />
+            </label>
+            <label>
+                <span>Plate number</span>
+                <input type="text" value={{this.vehicleForm.plate_number}} {{on "input" (fn this.updateField "plate_number")}} />
+            </label>
+            <label>
+                <span>Status</span>
+                <select {{on "change" (fn this.updateField "status")}}>
+                    <option value="active" selected={{eq this.vehicleForm.status "active"}}>active</option>
+                    <option value="pending_review" selected={{eq this.vehicleForm.status "pending_review"}}>pending review</option>
+                    <option value="inactive" selected={{eq this.vehicleForm.status "inactive"}}>inactive</option>
+                    <option value="out_of_service" selected={{eq this.vehicleForm.status "out_of_service"}}>out_of_service</option>
+                </select>
+            </label>
+            <div class="ops-form-actions ops-form-span-2">
+                <button type="submit" class="ops-button" disabled={{this.isSubmitting}}>Create vehicle</button>
+            </div>
+        </form>
+    </section>
+
+    <section class="ops-card">
+        <div class="ops-card-header">
+            <div>
+                <p class="ops-eyebrow">Vehicle review queue</p>
+                <h3>Driver-submitted vehicles awaiting approval</h3>
+                <p>Approve these here instead of hunting through the full fleet list.</p>
+            </div>
+        </div>
+
+        {{#if this.pendingReviewVehicles.length}}
+            <div class="ops-table-wrapper">
+                <table class="ops-table">
+                    <thead>
+                        <tr>
+                            <th>Vehicle</th>
+                            <th>Plate</th>
+                            <th>Submitted by</th>
+                            <th>Request type</th>
+                            <th>Decision</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{#each this.pendingReviewVehicles as |vehicle|}}
+                            <tr>
+                                <td>
+                                    <strong>{{vehicle.name}}</strong>
+                                    <div>{{vehicle.make}} {{vehicle.model}}</div>
+                                </td>
+                                <td>{{or vehicle.plate_number "Not set"}}</td>
+                                <td>{{or vehicle.portal_submission.submitted_by_driver_name "Driver submission"}}</td>
+                                <td>{{if vehicle.portal_submission.requested_change "Replacement request" "First vehicle request"}}</td>
+                                <td>
+                                    <select {{on "change" (fn this.updateVehicleStatus vehicle)}}>
+                                        <option value="pending_review" selected={{eq vehicle.status "pending_review"}}>pending review</option>
+                                        <option value="active">approve as active</option>
+                                        <option value="inactive">decline to inactive</option>
+                                        <option value="out_of_service">out of service</option>
+                                    </select>
+                                </td>
+                            </tr>
+                        {{/each}}
+                    </tbody>
+                </table>
+            </div>
+        {{else}}
+            <p class="ops-empty-state">No driver-submitted vehicles are waiting for review right now.</p>
+        {{/if}}
+    </section>
+
+    <section class="ops-card">
+        <div class="ops-card-header">
+            <div>
+                <p class="ops-eyebrow">Live list</p>
+                <h3>Vehicles</h3>
+            </div>
+        </div>
+        <div class="ops-table-wrapper">
+            <table class="ops-table">
+                <thead>
+                    <tr>
+                        <th>Vehicle</th>
+                        <th>Plate</th>
+                        <th>Status</th>
+                        <th>Submission</th>
+                        <th>Assigned driver</th>
+                        <th>Online</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#each this.vehicles as |vehicle|}}
+                        <tr>
+                            <td>
+                                <strong>{{vehicle.name}}</strong>
+                                <div>{{vehicle.make}} {{vehicle.model}}</div>
+                            </td>
+                            <td>{{or vehicle.plate_number "Not set"}}</td>
+                            <td>
+                                <select {{on "change" (fn this.updateVehicleStatus vehicle)}}>
+                                    <option value="active" selected={{eq vehicle.status "active"}}>active</option>
+                                    <option value="pending_review" selected={{eq vehicle.status "pending_review"}}>pending review</option>
+                                    <option value="inactive" selected={{eq vehicle.status "inactive"}}>inactive</option>
+                                    <option value="out_of_service" selected={{eq vehicle.status "out_of_service"}}>out_of_service</option>
+                                </select>
+                            </td>
+                            <td>
+                                {{#if vehicle.portal_submission.submitted_by_driver_uuid}}
+                                    <strong>{{or vehicle.portal_submission.submitted_by_driver_name "Driver submission"}}</strong>
+                                    <div>{{if vehicle.portal_submission.requested_change "Replacement request" "First vehicle request"}}</div>
+                                {{else}}
+                                    <span>Admin created</span>
+                                {{/if}}
+                            </td>
+                            <td>{{or vehicle.driver.name "Unassigned"}}</td>
+                            <td>{{if vehicle.online "Online" "Offline"}}</td>
+                        </tr>
+                    {{else}}
+                        <tr>
+                            <td colspan="6" class="ops-empty-state">No vehicles yet.</td>
+                        </tr>
+                    {{/each}}
+                </tbody>
+            </table>
+        </div>
+    </section>
+</div>

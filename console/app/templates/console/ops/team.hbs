@@ -1,0 +1,96 @@
+{{page-title "Ops Team"}}
+<div class="ops-page">
+    <div class="ops-page-header">
+        <div>
+            <p class="ops-eyebrow">Team & Access</p>
+            <h1>Simpler staff and role setup</h1>
+            <p>Create staff users and assign practical role presets without diving into the full permission matrix first.</p>
+        </div>
+    </div>
+
+    <section class="ops-card">
+        <div class="ops-card-header">
+            <div>
+                <p class="ops-eyebrow">Quick action</p>
+                <h3>Create staff member</h3>
+            </div>
+        </div>
+
+        <form class="ops-form-grid" {{on "submit" this.createMember}}>
+            <label>
+                <span>Full name</span>
+                <input type="text" value={{this.memberForm.name}} {{on "input" (fn this.updateField "name")}} />
+            </label>
+            <label>
+                <span>Email</span>
+                <input type="email" value={{this.memberForm.email}} {{on "input" (fn this.updateField "email")}} />
+            </label>
+            <label>
+                <span>Phone</span>
+                <input type="text" value={{this.memberForm.phone}} {{on "input" (fn this.updateField "phone")}} />
+            </label>
+            <label>
+                <span>Status</span>
+                <select {{on "change" (fn this.updateField "status")}}>
+                    <option value="active" selected={{eq this.memberForm.status "active"}}>active</option>
+                    <option value="inactive" selected={{eq this.memberForm.status "inactive"}}>inactive</option>
+                </select>
+            </label>
+            <label class="ops-form-span-2">
+                <span>Role preset</span>
+                <select {{on "change" (fn this.updateField "role_key")}}>
+                    {{#each this.rolePresets as |preset|}}
+                        <option value={{preset.key}} selected={{eq preset.key this.memberForm.role_key}}>{{preset.label}}</option>
+                    {{/each}}
+                </select>
+            </label>
+            <div class="ops-form-actions ops-form-span-2">
+                <button type="submit" class="ops-button" disabled={{this.isSubmitting}}>Create team member</button>
+            </div>
+        </form>
+    </section>
+
+    <section class="ops-card">
+        <div class="ops-card-header">
+            <div>
+                <p class="ops-eyebrow">Live list</p>
+                <h3>Team</h3>
+            </div>
+        </div>
+        <div class="ops-table-wrapper">
+            <table class="ops-table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Contact</th>
+                        <th>Status</th>
+                        <th>Role</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#each this.team as |member|}}
+                        <tr>
+                            <td>{{member.name}}</td>
+                            <td>
+                                <div>{{member.email}}</div>
+                                <div>{{member.phone}}</div>
+                            </td>
+                            <td>{{member.status}}</td>
+                            <td>
+                                <select {{on "change" (fn this.changeRole member)}}>
+                                    {{#each this.rolePresets as |preset|}}
+                                        <option value={{preset.key}} selected={{eq preset.key member.role_key}}>{{preset.label}}</option>
+                                    {{/each}}
+                                </select>
+                            </td>
+                        </tr>
+                    {{else}}
+                        <tr>
+                            <td colspan="4" class="ops-empty-state">No team members yet.</td>
+                        </tr>
+                    {{/each}}
+                </tbody>
+            </table>
+        </div>
+    </section>
+</div>

@@ -45,6 +45,13 @@ Router.map(function () {
     this.route('console', { path: '/' }, function () {
         this.route('home', { path: '/' });
         this.route('notifications');
+        this.route('ops', function () {
+            this.route('orders');
+            this.route('drivers');
+            this.route('vehicles');
+            this.route('team');
+            this.route('settings');
+        });
         this.route('account', function () {
             this.route('virtual', { path: '/:slug' });
             this.route('auth');
@@ -85,6 +92,11 @@ Router.map(function () {
             path: 'developers'
         });
 
+        this.mount('@fleetbase/registry-bridge-engine', {
+            as: 'extensions',
+            path: 'extensions'
+        });
+
         this.mount('@fleetbase/fleetops-engine', {
             as: 'fleet-ops',
             path: 'fleet-ops'
@@ -98,11 +110,6 @@ Router.map(function () {
         this.mount('@fleetbase/storefront-engine', {
             as: 'storefront',
             path: 'storefront'
-        });
-
-        this.mount('@fleetbase/registry-bridge-engine', {
-            as: 'extensions',
-            path: 'extensions'
         });
     });
     this.route('catch', { path: '/*' });

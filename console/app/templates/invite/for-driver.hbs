@@ -1,2 +1,525 @@
-{{page-title "ForDriver"}}
-{{outlet}}
+{{page-title "Driver Portal"}}
+
+<div class="driver-portal-shell">
+    <div class="driver-portal-backdrop"></div>
+
+    <div class="driver-portal-content">
+        <section class="driver-portal-hero">
+            <div>
+                <p class="driver-portal-kicker">Driver portal</p>
+                <h1>{{this.portal.company.name}} delivery workspace</h1>
+                <p>
+                    Riders can apply for onboarding themselves, sign back in with a code, and use a simpler delivery workspace without the full Fleetbase admin dashboard.
+                </p>
+            </div>
+
+            <div class="driver-portal-hero-card">
+                <p class="driver-portal-kicker">Portal scope</p>
+                {{#if this.hasPortalDriver}}
+                    <h3>{{this.portal.driver.name}}</h3>
+                    <p>This link is scoped to one specific rider profile.</p>
+                {{else}}
+                    <h3>{{this.portal.company.name}}</h3>
+                    <p>This company-level link is the main rider onboarding entry point for new driver applications.</p>
+                {{/if}}
+            </div>
+        </section>
+
+        {{#if this.isRestoringSession}}
+            <section class="driver-portal-panel driver-portal-panel-muted">
+                <p>Restoring your rider session...</p>
+            </section>
+        {{else if this.isAuthenticated}}
+            <section class="driver-portal-toolbar">
+                <div>
+                    <p class="driver-portal-kicker">Signed in</p>
+                    <h2>{{this.driverState.name}}</h2>
+                    <p>{{this.driverState.phone}} {{#if this.driverState.email}}<span class="driver-portal-separator">•</span> {{this.driverState.email}}{{/if}}</p>
+                </div>
+
+                <div class="driver-portal-toolbar-actions">
+                    <span class="driver-status-pill {{if this.isApproved this.driverStatusTone 'is-pending'}}">
+                        {{if this.isApproved (if this.driverState.online "Online and available" "Offline") "Pending approval"}}
+                    </span>
+                    <button type="button" class="driver-portal-button driver-portal-button-secondary" {{on "click" this.refreshDriverState}} disabled={{this.isRefreshingDriver}}>
+                        Refresh
+                    </button>
+                    {{#if this.isApproved}}
+                        <button type="button" class="driver-portal-button" {{on "click" this.toggleOnline}} disabled={{this.isTogglingOnline}}>
+                            {{if this.driverState.online "Go offline" "Go online"}}
+                        </button>
+                    {{/if}}
+                    <button type="button" class="driver-portal-button driver-portal-button-ghost" {{on "click" this.logoutDriverPortal}}>
+                        Sign out
+                    </button>
+                </div>
+            </section>
+
+            <section class="driver-portal-stats">
+                <article class="driver-portal-stat-card">
+                    <p class="driver-portal-kicker">Capacity</p>
+                    <h3>{{this.driverState.capacity.active}} / {{this.driverState.capacity.max}}</h3>
+                    <p>{{this.driverState.capacity.free_slots}} free package slots left.</p>
+                </article>
+                <article class="driver-portal-stat-card">
+                    <p class="driver-portal-kicker">Current vehicle</p>
+                    <h3>{{this.currentVehicleLabel}}</h3>
+                    <p>
+                        {{#if this.activeVehicle}}
+                            {{this.activeVehicle.status}}
+                        {{else if this.pendingVehicle}}
+                            Awaiting admin review
+                        {{else}}
+                            Submit a vehicle to complete onboarding.
+                        {{/if}}
+                    </p>
+                </article>
+                <article class="driver-portal-stat-card">
+                    <p class="driver-portal-kicker">{{if this.isApproved "Active deliveries" "Approval status"}}</p>
+                    <h3>{{if this.isApproved this.activeOrders.length "Reviewing"}}</h3>
+                    <p>{{if this.isApproved (if this.currentOrder "You already have a live delivery in motion." "No live delivery is active right now.") "Dispatch will unlock the full rider dashboard after approval."}}</p>
+                </article>
+            </section>
+
+            <section class="driver-portal-grid">
+                <article class="driver-portal-panel">
+                    <div class="driver-portal-panel-header">
+                        <div>
+                            <p class="driver-portal-kicker">Onboarding</p>
+                            <h3>Ready-to-drive checklist</h3>
+                        </div>
+                        <span>{{this.checklistCompletedCount}} / {{this.checklist.length}}</span>
+                    </div>
+
+                    <ul class="driver-checklist">
+                        {{#each this.checklist as |item|}}
+                            <li class="{{if item.complete 'is-complete' 'is-pending'}}">
+                                <span class="driver-checklist-marker">{{if item.complete "Done" "Pending"}}</span>
+                                <div>
+                                    <strong>{{item.label}}</strong>
+                                    <p>{{if item.complete "This part is already in place." "Finish this to complete driver setup."}}</p>
+                                </div>
+                            </li>
+                        {{/each}}
+                    </ul>
+                </article>
+
+                {{#if this.isApproved}}
+                    <article class="driver-portal-panel">
+                        <div class="driver-portal-panel-header">
+                            <div>
+                                <p class="driver-portal-kicker">Current delivery</p>
+                                <h3>{{if this.currentOrder this.currentOrder.public_id "Nothing assigned yet"}}</h3>
+                            </div>
+                            {{#if this.currentOrder}}
+                                <span class="driver-order-status">{{this.currentOrder.stage.label}}</span>
+                            {{/if}}
+                        </div>
+
+                        {{#if this.currentOrder}}
+                            <div class="driver-order-stack">
+                                <div class="driver-order-line">
+                                    <span>Pickup</span>
+                                    <strong>{{if this.currentOrder.pickup_name this.currentOrder.pickup_name "Pickup pending"}}</strong>
+                                </div>
+                                <div class="driver-order-line">
+                                    <span>Dropoff</span>
+                                    <strong>{{if this.currentOrder.dropoff_name this.currentOrder.dropoff_name "Dropoff pending"}}</strong>
+                                </div>
+                                <div class="driver-order-line">
+                                    <span>Customer</span>
+                                    <strong>{{if this.currentOrder.customer_name this.currentOrder.customer_name "Customer not attached"}}</strong>
+                                </div>
+                                <div class="driver-order-line">
+                                    <span>Customer phone</span>
+                                    <strong>{{if this.currentOrder.customer_phone this.currentOrder.customer_phone "Phone not attached"}}</strong>
+                                </div>
+                                <div class="driver-order-line">
+                                    <span>Pickup address</span>
+                                    <strong>
+                                        {{if this.currentOrder.pickup_address this.currentOrder.pickup_address "Pickup address pending"}}
+                                        {{#if this.currentOrder.pickup_city}}<br />{{this.currentOrder.pickup_city}}{{/if}}
+                                    </strong>
+                                </div>
+                                <div class="driver-order-line">
+                                    <span>Dropoff address</span>
+                                    <strong>
+                                        {{if this.currentOrder.dropoff_address this.currentOrder.dropoff_address "Dropoff address pending"}}
+                                        {{#if this.currentOrder.dropoff_city}}<br />{{this.currentOrder.dropoff_city}}{{/if}}
+                                    </strong>
+                                </div>
+                                {{#if this.currentOrder.notes}}
+                                    <div class="driver-order-note">
+                                        {{this.currentOrder.notes}}
+                                    </div>
+                                {{/if}}
+                                <a href={{this.currentOrder.tracking_url}} class="driver-portal-button driver-portal-button-secondary" target="_blank" rel="noopener noreferrer">
+                                    Open tracking page
+                                </a>
+                            </div>
+                        {{else}}
+                            <p class="driver-empty-state">When a delivery is assigned, the key pickup and dropoff details will appear here.</p>
+                        {{/if}}
+                    </article>
+
+                    <article class="driver-portal-panel">
+                        <div class="driver-portal-panel-header">
+                            <div>
+                                <p class="driver-portal-kicker">Upcoming work</p>
+                                <h3>Active orders</h3>
+                            </div>
+                        </div>
+
+                        {{#if this.activeOrders.length}}
+                            <div class="driver-order-list">
+                                {{#each this.activeOrders as |order|}}
+                                    <div class="driver-order-list-item">
+                                        <div>
+                                            <strong>{{order.public_id}}</strong>
+                                            <p>{{if order.pickup_name order.pickup_name "Pickup pending"}} → {{if order.dropoff_name order.dropoff_name "Dropoff pending"}}</p>
+                                            {{#if order.customer_phone}}
+                                                <p>{{order.customer_phone}}</p>
+                                            {{/if}}
+                                        </div>
+                                        <span class="driver-order-status">{{order.stage.label}}</span>
+                                    </div>
+                                {{/each}}
+                            </div>
+                        {{else}}
+                            <p class="driver-empty-state">No active deliveries are queued for this rider right now.</p>
+                        {{/if}}
+                    </article>
+
+                    <article class="driver-portal-panel">
+                        <div class="driver-portal-panel-header">
+                            <div>
+                                <p class="driver-portal-kicker">Earnings</p>
+                                <h3>Weekly payout snapshot</h3>
+                            </div>
+                        </div>
+
+                        {{#if this.earnings}}
+                            <div class="driver-order-stack">
+                                <div class="driver-order-line">
+                                    <span>Unpaid this cycle</span>
+                                    <strong>{{this.earnings.currency_code}} {{this.earnings.current_cycle_unpaid}}</strong>
+                                </div>
+                                <div class="driver-order-line">
+                                    <span>Total lifetime earnings</span>
+                                    <strong>{{this.earnings.currency_code}} {{this.earnings.lifetime_total}}</strong>
+                                </div>
+                                <div class="driver-order-line">
+                                    <span>Completed deliveries this cycle</span>
+                                    <strong>{{this.earnings.current_cycle_count}}</strong>
+                                </div>
+                                <div class="driver-order-line">
+                                    <span>Next payout</span>
+                                    <strong>{{this.earnings.payout_day}} • {{this.earnings.next_payout_at}}</strong>
+                                </div>
+                            </div>
+                        {{else}}
+                            <p class="driver-empty-state">Earnings will appear here once deliveries are completed.</p>
+                        {{/if}}
+                    </article>
+
+                    <article class="driver-portal-panel driver-portal-panel-full">
+                        <div class="driver-portal-panel-header">
+                            <div>
+                                <p class="driver-portal-kicker">History</p>
+                                <h3>Delivered orders</h3>
+                            </div>
+                        </div>
+
+                        {{#if this.deliveredOrders.length}}
+                            <div class="driver-order-list">
+                                {{#each this.deliveredOrders as |order|}}
+                                    <div class="driver-order-list-item">
+                                        <div>
+                                            <strong>{{order.public_id}}</strong>
+                                            <p>{{if order.dropoff_address order.dropoff_address "Dropoff address pending"}}</p>
+                                            {{#if order.customer_phone}}
+                                                <p>{{order.customer_phone}}</p>
+                                            {{/if}}
+                                        </div>
+                                        <div>
+                                            <strong>{{order.delivery_amount}} / {{order.driver_earnings}}</strong>
+                                            <p>delivery / rider earnings</p>
+                                        </div>
+                                    </div>
+                                {{/each}}
+                            </div>
+                        {{else}}
+                            <p class="driver-empty-state">Completed delivery history will appear here.</p>
+                        {{/if}}
+                    </article>
+                {{else}}
+                    <article class="driver-portal-panel">
+                        <div class="driver-portal-panel-header">
+                            <div>
+                                <p class="driver-portal-kicker">Application status</p>
+                                <h3>Waiting for dispatch approval</h3>
+                            </div>
+                            <span class="driver-order-status driver-order-status-pending">Pending</span>
+                        </div>
+
+                        <div class="driver-order-stack">
+                            <div class="driver-order-line">
+                                <span>Applied</span>
+                                <strong>{{if this.driverState.application.applied_at this.driverState.application.applied_at "Just now"}}</strong>
+                            </div>
+                            <div class="driver-order-line">
+                                <span>What happens next</span>
+                                <strong>Dispatch reviews your details, assigns a vehicle if needed, and then unlocks the full rider dashboard.</strong>
+                            </div>
+                            {{#if this.driverState.application.notes}}
+                                <div class="driver-order-note">
+                                    {{this.driverState.application.notes}}
+                                </div>
+                            {{/if}}
+                        </div>
+                    </article>
+                {{/if}}
+
+                <article class="driver-portal-panel">
+                    <div class="driver-portal-panel-header">
+                        <div>
+                            <p class="driver-portal-kicker">Vehicle</p>
+                            <h3>Rider vehicle details</h3>
+                        </div>
+                    </div>
+
+                    {{#if this.activeVehicle}}
+                        <div class="driver-portal-vehicle-summary">
+                            <div class="driver-order-line">
+                                <span>Approved vehicle</span>
+                                <strong>{{or this.activeVehicle.label this.activeVehicle.name}}</strong>
+                            </div>
+                            <div class="driver-order-line">
+                                <span>Policy</span>
+                                <strong>Only one active vehicle can be used for live deliveries at a time.</strong>
+                            </div>
+                        </div>
+                    {{/if}}
+
+                    {{#if this.pendingVehicle}}
+                        <div class="driver-preview-code">
+                            <p class="driver-portal-kicker">Pending review</p>
+                            <strong>{{or this.pendingVehicle.label this.pendingVehicle.name}}</strong>
+                            <p>This vehicle request is waiting for admin approval before it replaces your active vehicle.</p>
+                            {{#if this.pendingVehicle.submitted_at}}
+                                <p>Requested at {{this.pendingVehicle.submitted_at}}</p>
+                            {{/if}}
+                        </div>
+                    {{/if}}
+
+                    {{#if this.showVehicleRequestForm}}
+                        {{#if this.pendingVehicle}}
+                            <div class="driver-portal-help">
+                                <p>Submitting another vehicle now will cancel the previous pending request and replace it with this new one.</p>
+                            </div>
+                        {{/if}}
+                        <form class="driver-portal-form" aria-label="Update driver vehicle details" {{on "submit" this.saveVehicle}}>
+                            <label>
+                                <span>Vehicle name</span>
+                                <input type="text" value={{this.vehicleForm.name}} {{on "input" (fn this.updateVehicleField "name")}} placeholder="My motorbike" />
+                            </label>
+                            <label>
+                                <span>Make</span>
+                                <input type="text" value={{this.vehicleForm.make}} {{on "input" (fn this.updateVehicleField "make")}} />
+                            </label>
+                            <label>
+                                <span>Model</span>
+                                <input type="text" value={{this.vehicleForm.model}} {{on "input" (fn this.updateVehicleField "model")}} />
+                            </label>
+                            <label>
+                                <span>Year</span>
+                                <input type="number" value={{this.vehicleForm.year}} {{on "input" (fn this.updateVehicleField "year")}} />
+                            </label>
+                            <label>
+                                <span>Plate number</span>
+                                <input type="text" value={{this.vehicleForm.plate_number}} {{on "input" (fn this.updateVehicleField "plate_number")}} />
+                            </label>
+                            <label>
+                                <span>Color</span>
+                                <input type="text" value={{this.vehicleForm.color}} {{on "input" (fn this.updateVehicleField "color")}} />
+                            </label>
+                            <label>
+                                <span>Vehicle type</span>
+                                <input type="text" value={{this.vehicleForm.type}} {{on "input" (fn this.updateVehicleField "type")}} placeholder="motorbike, van, bicycle..." />
+                            </label>
+                            <label class="driver-portal-form-span-2">
+                                <span>Vehicle notes</span>
+                                <input type="text" value={{this.vehicleForm.notes}} {{on "input" (fn this.updateVehicleField "notes")}} placeholder="Anything dispatch should know about this vehicle" />
+                            </label>
+                            <div class="driver-portal-form-actions">
+                                <button type="submit" class="driver-portal-button" disabled={{this.isSavingVehicle}}>
+                                    {{if this.pendingVehicle "Replace pending vehicle request" "Submit vehicle for review"}}
+                                </button>
+                            </div>
+                        </form>
+                    {{else}}
+                        <div class="driver-portal-form-actions">
+                            <button type="button" class="driver-portal-button driver-portal-button-secondary" {{on "click" this.startVehicleRequest}}>
+                                {{if this.pendingVehicle "Submit a different vehicle instead" "Request vehicle change"}}
+                            </button>
+                        </div>
+                    {{/if}}
+                </article>
+
+                <article class="driver-portal-panel">
+                    <div class="driver-portal-panel-header">
+                        <div>
+                            <p class="driver-portal-kicker">Profile</p>
+                            <h3>Driver details</h3>
+                        </div>
+                    </div>
+
+                    <form class="driver-portal-form" aria-label="Update driver profile details" {{on "submit" this.saveProfile}}>
+                        <label>
+                            <span>Full name</span>
+                            <input type="text" value={{this.profileForm.name}} {{on "input" (fn this.updateProfileField "name")}} />
+                        </label>
+                        <label>
+                            <span>Email</span>
+                            <input type="email" value={{this.profileForm.email}} {{on "input" (fn this.updateProfileField "email")}} />
+                        </label>
+                        <label>
+                            <span>Phone</span>
+                            <input type="text" value={{this.profileForm.phone}} {{on "input" (fn this.updateProfileField "phone")}} />
+                        </label>
+                        <label>
+                            <span>Driver license number</span>
+                            <input type="text" value={{this.profileForm.drivers_license_number}} {{on "input" (fn this.updateProfileField "drivers_license_number")}} />
+                        </label>
+                        <div class="driver-portal-form-actions">
+                            <button type="submit" class="driver-portal-button" disabled={{this.isSavingProfile}}>
+                                Save profile
+                            </button>
+                        </div>
+                    </form>
+                </article>
+            </section>
+        {{else}}
+            <section class="driver-portal-grid driver-portal-grid-auth">
+                <article class="driver-portal-panel">
+                    <div class="driver-portal-panel-header">
+                        <div>
+                            <p class="driver-portal-kicker">Step 1</p>
+                            <h3>Apply to ride</h3>
+                        </div>
+                    </div>
+
+                    <form class="driver-portal-form" aria-label="Apply as a new driver" {{on "submit" this.submitApplication}}>
+                        <label>
+                            <span>Full name</span>
+                            <input type="text" value={{this.applicationForm.name}} {{on "input" (fn this.updateApplicationField "name")}} />
+                        </label>
+                        <label>
+                            <span>Email</span>
+                            <input type="email" value={{this.applicationForm.email}} {{on "input" (fn this.updateApplicationField "email")}} />
+                        </label>
+                        <label>
+                            <span>Phone</span>
+                            <input type="text" value={{this.applicationForm.phone}} {{on "input" (fn this.updateApplicationField "phone")}} />
+                        </label>
+                        <label>
+                            <span>Driver license number</span>
+                            <input type="text" value={{this.applicationForm.drivers_license_number}} {{on "input" (fn this.updateApplicationField "drivers_license_number")}} />
+                        </label>
+                        <label class="driver-portal-form-span-2">
+                            <span>Notes for dispatch</span>
+                            <input type="text" value={{this.applicationForm.notes}} {{on "input" (fn this.updateApplicationField "notes")}} placeholder="Anything useful about availability or onboarding" />
+                        </label>
+                        <div class="driver-portal-form-actions">
+                            <button type="submit" class="driver-portal-button" disabled={{this.isSubmittingApplication}}>
+                                Submit rider application
+                            </button>
+                        </div>
+                    </form>
+                </article>
+
+                <article class="driver-portal-panel">
+                    <div class="driver-portal-panel-header">
+                        <div>
+                            <p class="driver-portal-kicker">Step 2</p>
+                            <h3>Already applied? Sign back in</h3>
+                        </div>
+                    </div>
+
+                    <form class="driver-portal-form" aria-label="Sign in to the driver portal" {{on "submit" this.verifyCode}}>
+                        <label class="driver-portal-form-span-2">
+                            <span>Email or phone</span>
+                            <input
+                                type="text"
+                                value={{this.identity}}
+                                {{on "input" this.updateIdentity}}
+                                placeholder={{if this.hasPortalDriver "Use the rider email or phone already on file" "Use the email or phone attached to the rider profile"}}
+                            />
+                        </label>
+                        <label>
+                            <span>Verification code</span>
+                            <input type="text" value={{this.code}} {{on "input" this.updateCode}} placeholder="Enter the code" />
+                        </label>
+                        <div class="driver-portal-form-actions">
+                            <button type="button" class="driver-portal-button driver-portal-button-secondary" {{on "click" this.requestCode}} disabled={{this.isRequestingCode}}>
+                                Send sign-in code
+                            </button>
+                            <button type="submit" class="driver-portal-button" disabled={{this.isVerifyingCode}}>
+                                Enter rider workspace
+                            </button>
+                        </div>
+                    </form>
+
+                    {{#if this.previewCode}}
+                        <div class="driver-preview-code">
+                            <p class="driver-portal-kicker">Local development preview</p>
+                            <h4>{{this.previewCode}}</h4>
+                            <p>Use this code locally while SMS delivery is not connected yet.</p>
+                            <button type="button" class="driver-portal-button driver-portal-button-secondary" {{on "click" this.usePreviewCode}}>
+                                Use this code
+                            </button>
+                        </div>
+                    {{/if}}
+
+                    <div class="driver-portal-help">
+                        <p><strong>Why this link uses the fleet public id:</strong> this company-level URL is the general rider entry point where new applicants can onboard themselves.</p>
+                        <p><strong>Driver-specific links still matter:</strong> they are useful later for private one-rider access, targeted invites, or a dedicated rider-app handoff.</p>
+                        {{#if this.portal.company.phone}}
+                            <p><strong>Need help?</strong> Contact dispatch at {{this.portal.company.phone}}.</p>
+                        {{/if}}
+                    </div>
+                </article>
+
+                <article class="driver-portal-panel driver-portal-panel-full">
+                    <div class="driver-portal-panel-header">
+                        <div>
+                            <p class="driver-portal-kicker">What unlocks after approval</p>
+                            <h3>Full rider workspace</h3>
+                        </div>
+                    </div>
+
+                    <div class="driver-order-list">
+                        <div class="driver-order-list-item">
+                            <div>
+                                <strong>Go online and receive work</strong>
+                                <p>Approved riders can toggle availability and begin taking assignments.</p>
+                            </div>
+                        </div>
+                        <div class="driver-order-list-item">
+                            <div>
+                                <strong>Current delivery and active jobs</strong>
+                                <p>Pickup, dropoff, customer details, and tracking links appear after approval.</p>
+                            </div>
+                        </div>
+                        <div class="driver-order-list-item">
+                            <div>
+                                <strong>Vehicle and onboarding completion</strong>
+                                <p>Dispatch can approve the rider, assign a vehicle, and complete final setup from the ops dashboard.</p>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+            </section>
+        {{/if}}
+    </div>
+</div>

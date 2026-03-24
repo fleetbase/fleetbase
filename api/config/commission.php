@@ -21,6 +21,8 @@ return [
 
     'logistics_quote_extra_kg_fee' => (int) env('LOGISTICS_QUOTE_EXTRA_KG_FEE', 250),
 
+    'driver_earnings_percentage' => (float) env('DRIVER_EARNINGS_PERCENTAGE', 80),
+
     'nearby_pickup_pending_statuses' => array_values(array_filter(array_map(
         'trim',
         explode(',', (string) env('NEARBY_PICKUP_PENDING_STATUSES', 'created,pending'))
