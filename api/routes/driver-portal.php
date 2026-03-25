@@ -20,5 +20,10 @@ Route::prefix('driver-portal')->group(function () {
         Route::patch('me/payout-profile', [DriverPortalController::class, 'updatePayoutProfile']);
         Route::patch('me/vehicle', [DriverPortalController::class, 'updateVehicle']);
         Route::post('me/toggle-online', [DriverPortalController::class, 'toggleOnline']);
+        Route::post('me/orders/{id}/accept', [DriverPortalController::class, 'acceptOrder']);
+        Route::post('me/orders/{id}/reject', [DriverPortalController::class, 'rejectOrder']);
+        Route::post('me/orders/{id}/arrived-pickup', [DriverPortalController::class, 'arrivedAtPickup']);
+        Route::post('me/orders/{id}/select-current', [DriverPortalController::class, 'selectCurrentOrder']);
+        Route::post('me/orders/{id}/status', [DriverPortalController::class, 'updateOrderStatus']);
     });
 });

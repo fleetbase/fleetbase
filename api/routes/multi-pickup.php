@@ -20,4 +20,6 @@ Route::prefix('multi-pickup')->group(function () {
 Route::prefix('logistics')->group(function () {
     Route::post('quotes', [MultiPickupController::class, 'quote']);
     Route::post('deliveries', [MultiPickupController::class, 'createDelivery']);
+    Route::post('deliveries/{orderId}/status', [MultiPickupController::class, 'updateDeliveryStatus']);
+    Route::post('deliveries/{orderId}/reassign', [MultiPickupController::class, 'reassignDelivery']);
 });

@@ -108,6 +108,7 @@ export default class InviteForDriverController extends Controller {
     @tracked payoutInstitutions = [];
     @tracked payoutBranches = [];
     @tracked payoutRequirements = {};
+    @tracked selectedOrderUuid = null;
     @tracked isEditingVehicleRequest = false;
     @tracked isRequestingCode = false;
     @tracked isVerifyingCode = false;
@@ -135,6 +136,7 @@ export default class InviteForDriverController extends Controller {
         this.payoutInstitutions = [];
         this.payoutBranches = [];
         this.payoutRequirements = {};
+        this.selectedOrderUuid = null;
         this.isEditingVehicleRequest = false;
     }
 
@@ -168,6 +170,11 @@ export default class InviteForDriverController extends Controller {
 
     get activeOrders() {
         return this.driverState?.active_orders ?? [];
+    }
+
+    get selectedUpcomingOrder() {
+        const candidate = this.activeOrders.find((order) => order.uuid === this.selectedOrderUuid);
+        return candidate ?? this.currentOrder ?? this.activeOrders[0] ?? null;
     }
 
     get deliveredOrders() {
@@ -371,6 +378,12 @@ export default class InviteForDriverController extends Controller {
             swift_code: driver?.payout_profile?.swift_code ?? '',
             routing_number: driver?.payout_profile?.routing_number ?? '',
         };
+
+        if (this.selectedOrderUuid && !(driver?.active_orders ?? []).some((order) => order.uuid === this.selectedOrderUuid)) {
+            this.selectedOrderUuid = driver?.current_order?.uuid ?? driver?.active_orders?.[0]?.uuid ?? null;
+        } else if (!this.selectedOrderUuid) {
+            this.selectedOrderUuid = driver?.current_order?.uuid ?? driver?.active_orders?.[0]?.uuid ?? null;
+        }
     }
 
     async syncPayoutReferenceData(driver, { silent = true } = {}) {
@@ -911,6 +924,135 @@ export default class InviteForDriverController extends Controller {
             this.notifications.success('Driver view refreshed.');
         } catch (error) {
             this.notifications.error(error.message ?? 'Unable to refresh driver state.');
+        }
+    }
+
+    @action viewOrderDetails(order) {
+        this.selectedOrderUuid = order?.uuid ?? null;
+    }
+
+    @action async setCurrentOrder(order) {
+        if (!this.token || !order?.uuid) {
+            return;
+        }
+
+        try {
+            const payload = await this.fetch.post(
+                `driver-portal/me/orders/${order.uuid}/select-current`,
+                { public_id: this.portal.public_id },
+                {
+                    namespace: 'api/v1',
+                    headers: this.authHeaders,
+                }
+            );
+
+            this.driverState = payload.driver;
+            this.selectedOrderUuid = order.uuid;
+            this.syncProfileForm(payload.driver);
+            this.storeDriverState(payload.driver);
+            this.notifications.success('Current delivery updated.');
+        } catch (error) {
+            this.notifications.error(error.message ?? 'Unable to set the current delivery.');
+        }
+    }
+
+    @action async acceptOrder(order) {
+        if (!this.token || !order?.uuid) {
+            return;
+        }
+
+        try {
+            const payload = await this.fetch.post(
+                `driver-portal/me/orders/${order.uuid}/accept`,
+                { public_id: this.portal.public_id },
+                {
+                    namespace: 'api/v1',
+                    headers: this.authHeaders,
+                }
+            );
+
+            this.driverState = payload.driver;
+            this.selectedOrderUuid = order.uuid;
+            this.syncProfileForm(payload.driver);
+            this.storeDriverState(payload.driver);
+            this.notifications.success('Dispatch can now see that you accepted this pickup.');
+        } catch (error) {
+            this.notifications.error(error.message ?? 'Unable to accept this order.');
+        }
+    }
+
+    @action async rejectOrder(order) {
+        if (!this.token || !order?.uuid) {
+            return;
+        }
+
+        try {
+            const payload = await this.fetch.post(
+                `driver-portal/me/orders/${order.uuid}/reject`,
+                { public_id: this.portal.public_id },
+                {
+                    namespace: 'api/v1',
+                    headers: this.authHeaders,
+                }
+            );
+
+            this.driverState = payload.driver;
+            this.syncProfileForm(payload.driver);
+            this.storeDriverState(payload.driver);
+            this.notifications.success('Order released back to dispatch for reassignment.');
+        } catch (error) {
+            this.notifications.error(error.message ?? 'Unable to reject this order.');
+        }
+    }
+
+    @action async arrivedAtPickup(order) {
+        if (!this.token || !order?.uuid) {
+            return;
+        }
+
+        try {
+            const payload = await this.fetch.post(
+                `driver-portal/me/orders/${order.uuid}/arrived-pickup`,
+                { public_id: this.portal.public_id },
+                {
+                    namespace: 'api/v1',
+                    headers: this.authHeaders,
+                }
+            );
+
+            this.driverState = payload.driver;
+            this.syncProfileForm(payload.driver);
+            this.storeDriverState(payload.driver);
+            this.notifications.success('Pickup arrival recorded. Merchant can now see you are at the pickup point.');
+        } catch (error) {
+            this.notifications.error(error.message ?? 'Unable to confirm pickup arrival.');
+        }
+    }
+
+    @action async updateOrderStage(order, status) {
+        if (!this.token || !order?.uuid || !status) {
+            return;
+        }
+
+        try {
+            const payload = await this.fetch.post(
+                `driver-portal/me/orders/${order.uuid}/status`,
+                {
+                    public_id: this.portal.public_id,
+                    status,
+                },
+                {
+                    namespace: 'api/v1',
+                    headers: this.authHeaders,
+                }
+            );
+
+            this.driverState = payload.driver;
+            this.syncProfileForm(payload.driver);
+            this.storeDriverState(payload.driver);
+            this.notifications.success(`Order moved to ${status}.`);
+        } catch (error) {
+            this.notifications.error(error.message ?? 'Unable to update this order stage.');
         }
     }
 

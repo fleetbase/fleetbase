@@ -18,6 +18,7 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
 
 class DriverPortalController extends Controller
@@ -491,6 +492,207 @@ class DriverPortalController extends Controller
         ]);
     }
 
+    public function acceptOrder(Request $request, string $id): JsonResponse
+    {
+        $driver = $this->resolveAuthenticatedDriver($request);
+
+        if (!$driver) {
+            return response()->json(['error' => 'Driver profile not found for the authenticated user.'], 404);
+        }
+
+        $order = $this->findDriverOrder($driver, $id);
+
+        if (!$order) {
+            return response()->json(['error' => 'Order not found for this driver.'], 404);
+        }
+
+        if (in_array((string) $order->status, ['completed', 'cancelled', 'canceled', 'failed'], true)) {
+            return response()->json(['error' => 'This order is no longer active.'], 422);
+        }
+
+        $meta = is_array($order->meta) ? $order->meta : [];
+        $meta['assignment_response'] = [
+            'status' => 'accepted',
+            'assigned_at' => data_get($meta, 'assignment_response.assigned_at', now()->toIso8601String()),
+            'accepted_at' => now()->toIso8601String(),
+            'rejected_at' => null,
+        ];
+        $order->status = 'dispatched';
+        $order->dispatched = true;
+        $order->dispatched_at = $order->dispatched_at ?: now();
+        $order->meta = $meta;
+        $order->saveQuietly();
+
+        if (blank($driver->current_job_uuid)) {
+            $driver->current_job_uuid = $order->uuid;
+            $driver->save();
+        }
+
+        return response()->json([
+            'ok' => true,
+            'driver' => $this->serializeDriverSnapshot($driver->fresh(['user', 'vehicle', 'currentOrder.payload'])),
+        ]);
+    }
+
+    public function arrivedAtPickup(Request $request, string $id): JsonResponse
+    {
+        $driver = $this->resolveAuthenticatedDriver($request);
+
+        if (!$driver) {
+            return response()->json(['error' => 'Driver profile not found for the authenticated user.'], 404);
+        }
+
+        $order = $this->findDriverOrder($driver, $id);
+
+        if (!$order) {
+            return response()->json(['error' => 'Order not found for this driver.'], 404);
+        }
+
+        if ((string) $order->status !== 'dispatched') {
+            return response()->json(['error' => 'Pickup arrival can only be confirmed after you accept the job.'], 422);
+        }
+
+        $meta = is_array($order->meta) ? $order->meta : [];
+        $meta['pickup_arrival'] = [
+            'arrived_at' => now()->toIso8601String(),
+            'merchant_notified' => true,
+        ];
+        $order->meta = $meta;
+        $order->saveQuietly();
+
+        return response()->json([
+            'ok' => true,
+            'driver' => $this->serializeDriverSnapshot($driver->fresh(['user', 'vehicle', 'currentOrder.payload'])),
+        ]);
+    }
+
+    public function rejectOrder(Request $request, string $id): JsonResponse
+    {
+        $driver = $this->resolveAuthenticatedDriver($request);
+
+        if (!$driver) {
+            return response()->json(['error' => 'Driver profile not found for the authenticated user.'], 404);
+        }
+
+        $order = $this->findDriverOrder($driver, $id);
+
+        if (!$order) {
+            return response()->json(['error' => 'Order not found for this driver.'], 404);
+        }
+
+        $meta = is_array($order->meta) ? $order->meta : [];
+        $rejectedDrivers = collect(data_get($meta, 'rejected_driver_uuids', []))
+            ->push($driver->uuid)
+            ->filter()
+            ->unique()
+            ->values()
+            ->all();
+
+        $meta['assignment_response'] = [
+            'status' => 'rejected',
+            'assigned_at' => data_get($meta, 'assignment_response.assigned_at'),
+            'accepted_at' => null,
+            'rejected_at' => now()->toIso8601String(),
+        ];
+        $meta['rejected_driver_uuids'] = $rejectedDrivers;
+
+        $order->driver_assigned_uuid = null;
+        $order->vehicle_assigned_uuid = null;
+        $order->status = 'created';
+        $order->dispatched = false;
+        $order->dispatched_at = null;
+        $order->started = false;
+        $order->started_at = null;
+        $order->meta = $meta;
+        $order->saveQuietly();
+
+        RiderCapacity::removePackage($driver->uuid, $order->uuid);
+
+        if ($driver->current_job_uuid === $order->uuid) {
+            $driver->current_job_uuid = $this->nextCurrentOrderUuid($driver, $order->uuid);
+            $driver->save();
+        }
+
+        return response()->json([
+            'ok' => true,
+            'driver' => $this->serializeDriverSnapshot($driver->fresh(['user', 'vehicle', 'currentOrder.payload'])),
+        ]);
+    }
+
+    public function selectCurrentOrder(Request $request, string $id): JsonResponse
+    {
+        $driver = $this->resolveAuthenticatedDriver($request);
+
+        if (!$driver) {
+            return response()->json(['error' => 'Driver profile not found for the authenticated user.'], 404);
+        }
+
+        $order = $this->findDriverOrder($driver, $id);
+
+        if (!$order) {
+            return response()->json(['error' => 'Order not found for this driver.'], 404);
+        }
+
+        if (in_array((string) $order->status, ['completed', 'cancelled', 'canceled', 'failed'], true)) {
+            return response()->json(['error' => 'Only active jobs can be set as current.'], 422);
+        }
+
+        $driver->current_job_uuid = $order->uuid;
+        $driver->save();
+
+        return response()->json([
+            'ok' => true,
+            'driver' => $this->serializeDriverSnapshot($driver->fresh(['user', 'vehicle', 'currentOrder.payload'])),
+        ]);
+    }
+
+    public function updateOrderStatus(Request $request, string $id): JsonResponse
+    {
+        $driver = $this->resolveAuthenticatedDriver($request);
+
+        if (!$driver) {
+            return response()->json(['error' => 'Driver profile not found for the authenticated user.'], 404);
+        }
+
+        $order = $this->findDriverOrder($driver, $id);
+
+        if (!$order) {
+            return response()->json(['error' => 'Order not found for this driver.'], 404);
+        }
+
+        $payload = $request->validate([
+            'status' => 'required|string|in:completed',
+        ]);
+
+        $status = strtolower((string) $payload['status']);
+
+        $order->status = $status;
+
+        if ($status === 'completed') {
+            if ((string) $order->status !== 'completed' && (string) $order->getOriginal('status') !== 'started') {
+                return response()->json(['error' => 'This order can only be completed after dispatch marks it on the way.'], 422);
+            }
+            $order->started = true;
+            $order->started_at = $order->started_at ?: now();
+        }
+
+        $order->saveQuietly();
+
+        if ($status === 'completed') {
+            RiderCapacity::removePackage($driver->uuid, $order->uuid);
+
+            if ($driver->current_job_uuid === $order->uuid) {
+                $driver->current_job_uuid = $this->nextCurrentOrderUuid($driver, $order->uuid);
+                $driver->save();
+            }
+        }
+
+        return response()->json([
+            'ok' => true,
+            'driver' => $this->serializeDriverSnapshot($driver->fresh(['user', 'vehicle', 'currentOrder.payload'])),
+        ]);
+    }
+
     public function updateVehicle(Request $request): JsonResponse
     {
         $driver = $this->resolveAuthenticatedDriver($request);
@@ -630,12 +832,8 @@ class DriverPortalController extends Controller
     protected function serializeDriverSnapshot(Driver $driver): array
     {
         $driver->loadMissing(['user', 'vehicle', 'currentOrder.payload']);
-        $currentOrder = $driver->getCurrentOrder();
-        $activeOrders = $driver->orders()
-            ->whereNotIn('status', ['completed', 'cancelled', 'canceled', 'failed'])
-            ->orderByDesc('created_at')
-            ->limit(6)
-            ->get();
+        $activeOrders = $this->activeOrdersForDriver($driver);
+        $currentOrder = $this->resolveCurrentDriverOrder($driver, $activeOrders);
         $deliveredOrders = $driver->orders()
             ->where('status', 'completed')
             ->orderByDesc('updated_at')
@@ -780,6 +978,77 @@ class DriverPortalController extends Controller
         return [$activeVehicle, $pendingVehicle];
     }
 
+    protected function resolveCurrentDriverOrder(Driver $driver, $activeOrders): ?Order
+    {
+        if (filled($driver->current_job_uuid)) {
+            $selected = $activeOrders->firstWhere('uuid', $driver->current_job_uuid);
+            if ($selected) {
+                return $selected;
+            }
+        }
+
+        $accepted = $activeOrders->first(function (Order $order) {
+            return strtolower((string) data_get($order->meta, 'assignment_response.status')) === 'accepted';
+        });
+
+        return $accepted ?: $activeOrders->first();
+    }
+
+    protected function findDriverOrder(Driver $driver, string $id): ?Order
+    {
+        $orderUuid = DB::table('orders')
+            ->where('company_uuid', $driver->company_uuid)
+            ->where('driver_assigned_uuid', $driver->uuid)
+            ->whereNull('deleted_at')
+            ->where(function ($query) use ($id) {
+                $query->where('uuid', $id)->orWhere('public_id', $id);
+            })
+            ->value('uuid');
+
+        if (!$orderUuid) {
+            return null;
+        }
+
+        return Order::query()->where('uuid', $orderUuid)->first();
+    }
+
+    protected function nextCurrentOrderUuid(Driver $driver, ?string $excludingUuid = null): ?string
+    {
+        return DB::table('orders')
+            ->where('company_uuid', $driver->company_uuid)
+            ->where('driver_assigned_uuid', $driver->uuid)
+            ->whereNull('deleted_at')
+            ->whereNotIn('status', ['completed', 'cancelled', 'canceled', 'failed'])
+            ->when($excludingUuid, fn ($query) => $query->where('uuid', '!=', $excludingUuid))
+            ->orderByDesc('created_at')
+            ->value('uuid');
+    }
+
+    protected function activeOrdersForDriver(Driver $driver)
+    {
+        $orderUuids = DB::table('orders')
+            ->where('company_uuid', $driver->company_uuid)
+            ->where('driver_assigned_uuid', $driver->uuid)
+            ->whereNull('deleted_at')
+            ->whereNotIn('status', ['completed', 'cancelled', 'canceled', 'failed'])
+            ->orderByDesc('created_at')
+            ->limit(6)
+            ->pluck('uuid')
+            ->all();
+
+        if (empty($orderUuids)) {
+            return collect();
+        }
+
+        $orders = Order::query()
+            ->whereIn('uuid', $orderUuids)
+            ->get()
+            ->sortByDesc('created_at')
+            ->values();
+
+        return $orders;
+    }
+
     protected function serializeOrder(Order $order): array
     {
         $order->loadMissing(['payload', 'customer']);
@@ -788,20 +1057,50 @@ class DriverPortalController extends Controller
         $customer = data_get($orderMeta, 'customer', []);
         $pickup = data_get($orderMeta, 'pickup', []);
         $dropoff = data_get($orderMeta, 'dropoff', []);
+        $assignmentResponse = data_get($orderMeta, 'assignment_response', []);
 
         return [
             'uuid' => $order->uuid,
             'public_id' => $order->public_id,
             'status' => $order->status,
-            'stage' => $this->serializeOrderStage($order),
-            'customer_name' => data_get($order, 'customer.name') ?? data_get($customer, 'name'),
-            'customer_phone' => data_get($order, 'customer.phone') ?? data_get($customer, 'phone'),
+            'stage' => $this->serializeOrderStage($order, $assignmentResponse),
+            'customer_name' => data_get($order, 'customer.name')
+                ?? data_get($customer, 'name')
+                ?? data_get($dropoff, 'name')
+                ?? data_get($payload, 'dropoff_name'),
+            'customer_phone' => data_get($order, 'customer.phone')
+                ?? data_get($customer, 'phone')
+                ?? data_get($dropoff, 'phone'),
             'pickup_name' => data_get($payload, 'pickup_name') ?? data_get($pickup, 'name') ?? data_get($pickup, 'address_line_1'),
             'pickup_address' => data_get($pickup, 'address_line_1'),
             'pickup_city' => data_get($pickup, 'city'),
+            'pickup_latitude' => data_get($pickup, 'latitude'),
+            'pickup_longitude' => data_get($pickup, 'longitude'),
             'dropoff_name' => data_get($payload, 'dropoff_name') ?? data_get($dropoff, 'name') ?? data_get($dropoff, 'address_line_1'),
             'dropoff_address' => data_get($dropoff, 'address_line_1'),
             'dropoff_city' => data_get($dropoff, 'city'),
+            'dropoff_latitude' => data_get($dropoff, 'latitude'),
+            'dropoff_longitude' => data_get($dropoff, 'longitude'),
+            'assignment_response' => [
+                'status' => data_get($assignmentResponse, 'status'),
+                'assigned_at' => data_get($assignmentResponse, 'assigned_at'),
+                'accepted_at' => data_get($assignmentResponse, 'accepted_at'),
+                'rejected_at' => data_get($assignmentResponse, 'rejected_at'),
+            ],
+            'pickup_arrival' => [
+                'arrived_at' => data_get($orderMeta, 'pickup_arrival.arrived_at'),
+                'merchant_notified' => (bool) data_get($orderMeta, 'pickup_arrival.merchant_notified', false),
+            ],
+            'can_accept' => in_array((string) $order->status, ['created', 'assigned'], true)
+                && data_get($assignmentResponse, 'status') !== 'accepted'
+                && filled($order->driver_assigned_uuid),
+            'can_reject' => in_array((string) $order->status, ['created', 'assigned', 'dispatched'], true)
+                && filled($order->driver_assigned_uuid)
+                && data_get($assignmentResponse, 'status') !== 'accepted',
+            'can_arrive_pickup' => (string) $order->status === 'dispatched'
+                && blank(data_get($orderMeta, 'pickup_arrival.arrived_at')),
+            'can_start' => false,
+            'can_complete' => (string) $order->status === 'started',
             'notes' => $order->notes,
             'tracking_url' => $this->trackingBaseUrl() . '/track?' . http_build_query([
                 'order_id' => $order->public_id,
@@ -875,20 +1174,27 @@ class DriverPortalController extends Controller
         ];
     }
 
-    protected function serializeOrderStage(Order $order): array
+    protected function serializeOrderStage(Order $order, array $assignmentResponse = []): array
     {
-        $stageKey = match (strtolower((string) $order->status)) {
-            'completed' => 'delivered',
-            'started' => 'on_the_way',
-            'dispatched' => 'pickup_in_progress',
-            default => 'driver_assigned',
+        $rawStatus = strtolower((string) $order->status);
+        $assignmentStatus = strtolower((string) data_get($assignmentResponse, 'status'));
+
+        $stageKey = match (true) {
+            in_array($rawStatus, ['completed', 'cancelled', 'canceled', 'failed'], true) => 'delivered',
+            $rawStatus === 'started' => 'on_the_way',
+            $rawStatus === 'dispatched' => 'package_handed_over',
+            filled($order->driver_assigned_uuid) && $assignmentStatus === 'accepted' => 'driver_confirmed',
+            filled($order->driver_assigned_uuid) => 'driver_assigned',
+            default => 'awaiting_assignment',
         };
 
         $stageLabel = match ($stageKey) {
             'delivered' => 'Delivered',
             'on_the_way' => 'On the way',
-            'pickup_in_progress' => 'Picking up order',
-            default => 'Driver assigned',
+            'package_handed_over' => 'Heading to pickup',
+            'driver_confirmed' => 'Driver confirmed',
+            'driver_assigned' => 'Driver assigned',
+            default => 'Awaiting driver',
         };
 
         return [
@@ -941,6 +1247,10 @@ class DriverPortalController extends Controller
 
     protected function payoutBatchesForDriver(string $driverUuid)
     {
+        if (!Schema::hasTable('driver_payout_batches')) {
+            return collect();
+        }
+
         return DB::table('driver_payout_batches')
             ->where('driver_uuid', $driverUuid)
             ->orderByDesc('created_at')

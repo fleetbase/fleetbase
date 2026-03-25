@@ -16,6 +16,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
 
 class OpsDashboardController extends Controller
@@ -102,7 +103,8 @@ class OpsDashboardController extends Controller
             ->all();
 
         $liveDeliveries = $this->ordersQuery($company->uuid)
-            ->whereIn('o.status', ['dispatched', 'started'])
+            ->whereNotIn('o.status', ['completed', 'cancelled', 'canceled', 'failed'])
+            ->whereNotNull('o.driver_assigned_uuid')
             ->limit(8)
             ->get()
             ->map(fn (object $row) => $this->serializeOrderRow($row))
@@ -203,7 +205,7 @@ class OpsDashboardController extends Controller
             ], 422);
         }
 
-        $status = $driver ? 'dispatched' : 'created';
+        $status = 'created';
 
         $order = new Order();
         $order->company_uuid = $company->uuid;
@@ -211,8 +213,8 @@ class OpsDashboardController extends Controller
         $order->updated_by_uuid = $actor->uuid;
         $order->driver_assigned_uuid = $driver?->uuid;
         $order->vehicle_assigned_uuid = $driver?->vehicle_uuid;
-        $order->dispatched = !is_null($driver);
-        $order->dispatched_at = $driver ? now() : null;
+        $order->dispatched = false;
+        $order->dispatched_at = null;
         $order->type = 'delivery';
         $order->status = $status;
         $order->notes = $payload['notes'] ?? null;
@@ -225,12 +227,20 @@ class OpsDashboardController extends Controller
             ],
             'pickup' => $payload['pickup'],
             'dropoff' => $payload['dropoff'],
+            'assignment_response' => $driver ? [
+                'status' => 'pending',
+                'assigned_at' => now()->toIso8601String(),
+                'accepted_at' => null,
+                'rejected_at' => null,
+            ] : null,
         ];
         $order->save();
 
         if ($driver) {
-            $driver->current_job_uuid = $order->uuid;
-            $driver->save();
+            if (blank($driver->current_job_uuid)) {
+                $driver->current_job_uuid = $order->uuid;
+                $driver->save();
+            }
             RiderCapacity::addPackage($driver->uuid, $order->uuid);
         }
 
@@ -275,17 +285,29 @@ class OpsDashboardController extends Controller
                 }
             }
 
+            $meta = is_array($order->meta) ? $order->meta : [];
             $order->driver_assigned_uuid = $nextDriver?->uuid;
             $order->vehicle_assigned_uuid = $nextDriver?->vehicle_uuid;
             $order->updated_by_uuid = $actor->uuid;
-            $order->dispatched = !is_null($nextDriver);
-            $order->dispatched_at = $nextDriver ? ($order->dispatched_at ?: now()) : null;
-            $order->status = $nextDriver ? 'dispatched' : 'created';
+            $order->dispatched = false;
+            $order->dispatched_at = null;
+            $order->started = false;
+            $order->started_at = null;
+            $order->status = 'created';
+            $meta['assignment_response'] = $nextDriver ? [
+                'status' => 'pending',
+                'assigned_at' => now()->toIso8601String(),
+                'accepted_at' => null,
+                'rejected_at' => null,
+            ] : null;
+            $order->meta = $meta;
             $this->saveOrderWithoutAssignmentNotification($order);
 
             if ($nextDriver) {
-                $nextDriver->current_job_uuid = $order->uuid;
-                $nextDriver->save();
+                if (blank($nextDriver->current_job_uuid)) {
+                    $nextDriver->current_job_uuid = $order->uuid;
+                    $nextDriver->save();
+                }
                 RiderCapacity::addPackage($nextDriver->uuid, $order->uuid);
             }
         });
@@ -311,8 +333,24 @@ class OpsDashboardController extends Controller
         ]);
 
         $status = strtolower($payload['status']);
+
+        if ($status === 'dispatched' && blank($order->driver_assigned_uuid)) {
+            return response()->json(['error' => 'Assign a driver before moving this order into pickup progress.'], 422);
+        }
+
+        if ($status === 'started' && strtolower((string) $order->status) !== 'dispatched') {
+            return response()->json(['error' => 'The driver must accept the job before dispatch can mark it on the way.'], 422);
+        }
+
         $order->status = $status;
         $order->updated_by_uuid = $actor->uuid;
+
+        if ($status === 'created') {
+            $order->dispatched = false;
+            $order->dispatched_at = null;
+            $order->started = false;
+            $order->started_at = null;
+        }
 
         if (in_array($status, ['dispatched', 'started'], true)) {
             $order->dispatched = true;
@@ -636,6 +674,10 @@ class OpsDashboardController extends Controller
 
     public function createDriverPayoutBatch(Request $request, string $id): JsonResponse
     {
+        if (!Schema::hasTable('driver_payout_batches')) {
+            return response()->json(['error' => 'Driver payout batches are not available until the latest migration is run.'], 422);
+        }
+
         $company = $this->resolveCompany($request);
         $driver = $this->findDriver($company->uuid, $id);
 
@@ -1147,21 +1189,36 @@ class OpsDashboardController extends Controller
     {
         $meta = $this->parseMeta($row->meta ?? null);
         $customer = data_get($meta, 'customer', []);
+        $pickup = data_get($meta, 'pickup', []);
         $dropoff = data_get($meta, 'dropoff', []);
+        $assignmentResponse = data_get($meta, 'assignment_response', []);
 
         return [
             'uuid' => $row->uuid,
             'public_id' => $row->public_id,
             'status' => $row->status,
-            'stage' => $this->serializeOrderStage($row->status),
-            'customer_name' => data_get($customer, 'name'),
-            'customer_phone' => data_get($customer, 'phone'),
+            'stage' => $this->serializeOrderStage($row->status, $row->driver_uuid, $assignmentResponse),
+            'customer_name' => data_get($customer, 'name') ?? data_get($dropoff, 'name'),
+            'customer_phone' => data_get($customer, 'phone') ?? data_get($dropoff, 'phone'),
+            'pickup_name' => data_get($pickup, 'name') ?: data_get($pickup, 'address_line_1'),
+            'pickup_address' => data_get($pickup, 'address_line_1'),
+            'pickup_city' => data_get($pickup, 'city'),
             'dropoff_address' => data_get($dropoff, 'address_line_1'),
             'dropoff_city' => data_get($dropoff, 'city'),
             'driver' => [
                 'uuid' => $row->driver_uuid,
                 'name' => $row->driver_name,
                 'phone' => $row->driver_phone,
+            ],
+            'assignment_response' => [
+                'status' => data_get($assignmentResponse, 'status'),
+                'assigned_at' => data_get($assignmentResponse, 'assigned_at'),
+                'accepted_at' => data_get($assignmentResponse, 'accepted_at'),
+                'rejected_at' => data_get($assignmentResponse, 'rejected_at'),
+            ],
+            'pickup_arrival' => [
+                'arrived_at' => data_get($meta, 'pickup_arrival.arrived_at'),
+                'merchant_notified' => (bool) data_get($meta, 'pickup_arrival.merchant_notified', false),
             ],
             'tracking_url' => $this->buildTrackingUrl($row->public_id, data_get($meta, 'merchant_name', 'Merchant')),
             'notes' => $row->notes,
@@ -1556,10 +1613,12 @@ class OpsDashboardController extends Controller
     protected function driverPayoutSnapshot(Driver $driver): array
     {
         $allDeliveredOrders = $driver->orders()->where('status', 'completed')->get();
-        $payoutBatches = DB::table('driver_payout_batches')
-            ->where('driver_uuid', $driver->uuid)
-            ->orderByDesc('created_at')
-            ->get();
+        $payoutBatches = Schema::hasTable('driver_payout_batches')
+            ? DB::table('driver_payout_batches')
+                ->where('driver_uuid', $driver->uuid)
+                ->orderByDesc('created_at')
+                ->get()
+            : collect();
         $batchedOrderUuids = collect($payoutBatches)
             ->flatMap(function ($batch) {
                 $meta = $this->parseMeta($batch->meta ?? null);
@@ -1667,20 +1726,27 @@ class OpsDashboardController extends Controller
         ]);
     }
 
-    protected function serializeOrderStage(?string $status): array
+    protected function serializeOrderStage(?string $status, ?string $driverUuid = null, array $assignmentResponse = []): array
     {
-        $stageKey = match (strtolower((string) $status)) {
-            'completed' => 'delivered',
-            'started' => 'on_the_way',
-            'dispatched' => 'pickup_in_progress',
-            default => 'driver_assigned',
+        $rawStatus = strtolower((string) $status);
+        $assignmentStatus = strtolower((string) data_get($assignmentResponse, 'status'));
+
+        $stageKey = match (true) {
+            in_array($rawStatus, ['completed', 'cancelled', 'canceled', 'failed'], true) => 'delivered',
+            $rawStatus === 'started' => 'on_the_way',
+            $rawStatus === 'dispatched' => 'package_handed_over',
+            filled($driverUuid) && $assignmentStatus === 'accepted' => 'driver_confirmed',
+            filled($driverUuid) => 'driver_assigned',
+            default => 'awaiting_assignment',
         };
 
         $stageLabel = match ($stageKey) {
             'delivered' => 'Delivered',
             'on_the_way' => 'On the way',
-            'pickup_in_progress' => 'Picking up order',
-            default => 'Driver assigned',
+            'package_handed_over' => 'Heading to pickup',
+            'driver_confirmed' => 'Driver confirmed',
+            'driver_assigned' => 'Driver assigned',
+            default => 'Awaiting driver',
         };
 
         return [

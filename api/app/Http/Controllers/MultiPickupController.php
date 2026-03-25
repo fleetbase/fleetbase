@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\MultiPickup\Models\RiderCapacity;
 use App\MultiPickup\Services\RiderNotificationService;
 use App\MultiPickup\Support\NearbyPickupFinder;
+use Fleetbase\FleetOps\Models\Driver;
 use Fleetbase\FleetOps\Models\Order;
 use Fleetbase\Models\Company;
 use Illuminate\Http\JsonResponse;
@@ -317,12 +318,11 @@ class MultiPickupController extends Controller
         }
 
         $quote = cache()->get($this->quoteCacheKey((string) $payload['quote_id']));
+        $quoteRecovered = false;
 
         if (!$quote) {
-            return response()->json([
-                'ok' => false,
-                'error' => 'Quote not found or expired.',
-            ], 422);
+            $quote = $this->recoverQuoteFromDeliveryPayload($payload);
+            $quoteRecovered = true;
         }
 
         $driver = $this->findAvailableDriver(
@@ -332,15 +332,15 @@ class MultiPickupController extends Controller
         );
 
         $externalDisplayId = (string) data_get($payload, 'order.display_id', data_get($payload, 'order.id'));
-        $status = $driver ? 'dispatched' : 'created';
+        $status = 'created';
 
         $order = new Order();
         $order->company_uuid = $company->uuid;
         $order->created_by_uuid = $company->owner_uuid;
         $order->updated_by_uuid = $company->owner_uuid;
         $order->driver_assigned_uuid = data_get($driver, 'uuid');
-        $order->dispatched = !is_null($driver);
-        $order->dispatched_at = $driver ? now() : null;
+        $order->dispatched = false;
+        $order->dispatched_at = null;
         $order->type = 'delivery';
         $order->status = $status;
         $order->notes = sprintf('Medusa logistics delivery for %s', $externalDisplayId);
@@ -349,6 +349,7 @@ class MultiPickupController extends Controller
             'quote_id' => $payload['quote_id'],
             'quote_amount' => data_get($quote, 'amount'),
             'quote_currency_code' => data_get($quote, 'currency_code'),
+            'quote_recovered' => $quoteRecovered,
             'merchant_id' => data_get($payload, 'merchant.id'),
             'merchant_name' => data_get($payload, 'merchant.name'),
             'sales_channel_id' => data_get($payload, 'merchant.sales_channel_id'),
@@ -356,14 +357,30 @@ class MultiPickupController extends Controller
             'medusa_display_id' => data_get($payload, 'order.display_id'),
             'fulfillment_id' => data_get($payload, 'order.fulfillment_id'),
             'customer_email' => data_get($payload, 'order.email'),
+            'customer' => [
+                'name' => data_get($payload, 'dropoff.name'),
+                'phone' => data_get($payload, 'dropoff.phone'),
+                'email' => data_get($payload, 'order.email'),
+            ],
             'delivery_amount' => data_get($payload, 'order.delivery_amount', data_get($quote, 'amount')),
             'pickup' => data_get($payload, 'pickup'),
             'dropoff' => data_get($payload, 'dropoff'),
             'items' => data_get($payload, 'items', []),
+            'assignment_response' => $driver ? [
+                'status' => 'pending',
+                'assigned_at' => now()->toIso8601String(),
+                'accepted_at' => null,
+                'rejected_at' => null,
+            ] : null,
         ];
         $order->save();
 
         if ($driver) {
+            $driverModel = Driver::where('uuid', data_get($driver, 'uuid'))->first();
+            if ($driverModel && blank($driverModel->current_job_uuid)) {
+                $driverModel->current_job_uuid = $order->uuid;
+                $driverModel->save();
+            }
             RiderCapacity::addPackage($driver->uuid, $order->uuid);
         }
 
@@ -371,6 +388,159 @@ class MultiPickupController extends Controller
             'ok' => true,
             'delivery' => $this->formatDeliveryResponse($request, $order),
         ]);
+    }
+
+    public function updateDeliveryStatus(Request $request, string $orderId): JsonResponse
+    {
+        $payload = $request->validate([
+            'status' => 'required|string|in:created,dispatched,started,completed,cancelled,canceled,failed',
+        ]);
+
+        $order = $this->findLogisticsOrder($orderId);
+
+        if (!$order) {
+            return response()->json([
+                'ok' => false,
+                'error' => 'Delivery not found.',
+            ], 404);
+        }
+
+        $status = strtolower((string) $payload['status']);
+        $order->status = $status;
+
+        if ($status === 'created') {
+            $order->dispatched = false;
+            $order->dispatched_at = null;
+            $order->started = false;
+            $order->started_at = null;
+        }
+
+        if (in_array($status, ['dispatched', 'started'], true)) {
+            $order->dispatched = true;
+            $order->dispatched_at = $order->dispatched_at ?: now();
+        }
+
+        if ($status === 'started') {
+            $order->started = true;
+            $order->started_at = $order->started_at ?: now();
+        }
+
+        if (in_array($status, ['completed', 'cancelled', 'canceled', 'failed'], true) && $order->driver_assigned_uuid) {
+            RiderCapacity::removePackage($order->driver_assigned_uuid, $order->uuid);
+            $driver = Driver::where('uuid', $order->driver_assigned_uuid)->first();
+            if ($driver && $driver->current_job_uuid === $order->uuid) {
+                $driver->current_job_uuid = null;
+                $driver->save();
+            }
+        }
+
+        $order->save();
+
+        return response()->json([
+            'ok' => true,
+            'delivery' => $this->formatDeliveryResponse($request, $order),
+        ]);
+    }
+
+    public function reassignDelivery(Request $request, string $orderId): JsonResponse
+    {
+        $payload = $request->validate([
+            'driver_uuid' => 'nullable|string',
+        ]);
+
+        $order = $this->findLogisticsOrder($orderId);
+
+        if (!$order) {
+            return response()->json([
+                'ok' => false,
+                'error' => 'Delivery not found.',
+            ], 404);
+        }
+
+        $meta = is_array($order->meta) ? $order->meta : [];
+        $pickupLatitude = (float) data_get($meta, 'pickup.latitude');
+        $pickupLongitude = (float) data_get($meta, 'pickup.longitude');
+
+        $nextDriver = filled($payload['driver_uuid'] ?? null)
+            ? Driver::where('company_uuid', $order->company_uuid)->where('uuid', (string) $payload['driver_uuid'])->first()
+            : $this->findAvailableDriver($order->company_uuid, $pickupLatitude, $pickupLongitude);
+
+        if ($nextDriver && !RiderCapacity::hasCapacity($nextDriver->uuid) && $nextDriver->uuid !== $order->driver_assigned_uuid) {
+            return response()->json([
+                'ok' => false,
+                'error' => 'Selected driver is already at maximum capacity.',
+            ], 422);
+        }
+
+        if ($order->driver_assigned_uuid && $order->driver_assigned_uuid !== $nextDriver?->uuid) {
+            RiderCapacity::removePackage($order->driver_assigned_uuid, $order->uuid);
+            $previousDriver = Driver::where('uuid', $order->driver_assigned_uuid)->first();
+            if ($previousDriver && $previousDriver->current_job_uuid === $order->uuid) {
+                $previousDriver->current_job_uuid = null;
+                $previousDriver->save();
+            }
+        }
+
+        $meta['assignment_response'] = $nextDriver ? [
+            'status' => 'pending',
+            'assigned_at' => now()->toIso8601String(),
+            'accepted_at' => null,
+            'rejected_at' => null,
+        ] : null;
+
+        $order->driver_assigned_uuid = $nextDriver?->uuid;
+        $order->vehicle_assigned_uuid = $nextDriver?->vehicle_uuid;
+        $order->status = 'created';
+        $order->dispatched = false;
+        $order->dispatched_at = null;
+        $order->started = false;
+        $order->started_at = null;
+        $order->meta = $meta;
+        $order->save();
+
+        if ($nextDriver) {
+            if (blank($nextDriver->current_job_uuid)) {
+                $nextDriver->current_job_uuid = $order->uuid;
+                $nextDriver->save();
+            }
+            RiderCapacity::addPackage($nextDriver->uuid, $order->uuid);
+        }
+
+        return response()->json([
+            'ok' => true,
+            'delivery' => $this->formatDeliveryResponse($request, $order),
+        ]);
+    }
+
+    protected function recoverQuoteFromDeliveryPayload(array $payload): array
+    {
+        $distanceKm = round($this->calculateDistanceKm(
+            (float) data_get($payload, 'pickup.latitude'),
+            (float) data_get($payload, 'pickup.longitude'),
+            (float) data_get($payload, 'dropoff.latitude'),
+            (float) data_get($payload, 'dropoff.longitude')
+        ), 2);
+
+        $fallbackAmount = (int) round((float) data_get($payload, 'order.delivery_amount', 0));
+        $breakdown = $this->buildQuoteBreakdown($distanceKm, 0);
+        $calculatedAmount = array_sum($breakdown);
+
+        return [
+            'quote_id' => (string) data_get($payload, 'quote_id'),
+            'provider' => 'fleetbase',
+            'currency_code' => strtolower((string) data_get($payload, 'order.currency_code', '')),
+            'amount' => $fallbackAmount > 0 ? $fallbackAmount : $calculatedAmount,
+            'breakdown' => $breakdown,
+            'distance_km' => $distanceKm,
+            'estimated_pickup_minutes' => max(10, (int) ceil($distanceKm * 2)),
+            'estimated_dropoff_minutes' => max(20, (int) ceil($distanceKm * 5)),
+            'expires_at' => null,
+            'meta' => [
+                'recovered_from_expired_quote' => true,
+                'sales_channel_id' => data_get($payload, 'merchant.sales_channel_id'),
+                'merchant_id' => data_get($payload, 'merchant.id'),
+            ],
+        ];
     }
 
     public function tracking(string $orderId): JsonResponse
@@ -651,6 +821,26 @@ class MultiPickupController extends Controller
         return null;
     }
 
+    protected function findLogisticsOrder(string $identifier): ?Order
+    {
+        $existing = DB::table('orders')
+            ->whereNull('deleted_at')
+            ->where(function ($query) use ($identifier) {
+                $query->where('uuid', $identifier)
+                    ->orWhere('public_id', $identifier)
+                    ->orWhereRaw("JSON_UNQUOTE(JSON_EXTRACT(meta, '$.medusa_order_id')) = ?", [$identifier])
+                    ->orWhereRaw("JSON_UNQUOTE(JSON_EXTRACT(meta, '$.medusa_display_id')) = ?", [$identifier]);
+            })
+            ->select('uuid')
+            ->first();
+
+        if (!$existing) {
+            return null;
+        }
+
+        return Order::query()->where('uuid', $existing->uuid)->first();
+    }
+
     protected function determineTrackingStatus(object $order): string
     {
         $rawStatus = strtolower((string) ($order->status ?? ''));
@@ -663,8 +853,12 @@ class MultiPickupController extends Controller
             return 'started';
         }
 
-        if (!empty($order->dispatched_at) || (int) ($order->dispatched ?? 0) === 1 || !empty($order->driver_uuid)) {
+        if (!empty($order->dispatched_at) || (int) ($order->dispatched ?? 0) === 1) {
             return 'dispatched';
+        }
+
+        if (!empty($order->driver_uuid)) {
+            return 'assigned';
         }
 
         if ($rawStatus !== '') {

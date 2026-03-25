@@ -153,6 +153,46 @@
                                         {{this.currentOrder.notes}}
                                     </div>
                                 {{/if}}
+                                <div class="driver-portal-form-actions">
+                                    <button type="button" class="driver-portal-button driver-portal-button-secondary" {{on "click" (fn this.setCurrentOrder this.currentOrder)}}>
+                                        Make current focus
+                                    </button>
+                                    {{#if this.currentOrder.can_accept}}
+                                        <button type="button" class="driver-portal-button" {{on "click" (fn this.acceptOrder this.currentOrder)}}>
+                                            Accept pickup
+                                        </button>
+                                    {{/if}}
+                                    {{#if this.currentOrder.can_reject}}
+                                        <button type="button" class="driver-portal-button driver-portal-button-ghost" {{on "click" (fn this.rejectOrder this.currentOrder)}}>
+                                            Reject pickup
+                                        </button>
+                                    {{/if}}
+                                    {{#if this.currentOrder.can_arrive_pickup}}
+                                        <button type="button" class="driver-portal-button" {{on "click" (fn this.arrivedAtPickup this.currentOrder)}}>
+                                            Reached pickup
+                                        </button>
+                                    {{/if}}
+                                    {{#if this.currentOrder.can_complete}}
+                                        <button type="button" class="driver-portal-button" {{on "click" (fn this.updateOrderStage this.currentOrder "completed")}}>
+                                            Mark delivered
+                                        </button>
+                                    {{/if}}
+                                </div>
+                                {{#if this.currentOrder.assignment_response.status}}
+                                    <div class="driver-order-note">
+                                        Assignment response: <strong>{{this.currentOrder.assignment_response.status}}</strong>
+                                    </div>
+                                {{/if}}
+                                {{#if this.currentOrder.pickup_arrival.arrived_at}}
+                                    <div class="driver-order-note">
+                                        Pickup arrival recorded: <strong>{{this.currentOrder.pickup_arrival.arrived_at}}</strong>
+                                    </div>
+                                {{/if}}
+                                {{#if this.currentOrder.tracking_url}}
+                                    <div class="driver-portal-map-frame">
+                                        <iframe title="Current delivery map" src={{this.currentOrder.tracking_url}} loading="lazy"></iframe>
+                                    </div>
+                                {{/if}}
                                 <a href={{this.currentOrder.tracking_url}} class="driver-portal-button driver-portal-button-secondary" target="_blank" rel="noopener noreferrer">
                                     Open tracking page
                                 </a>
@@ -173,7 +213,7 @@
                         {{#if this.activeOrders.length}}
                             <div class="driver-order-list">
                                 {{#each this.activeOrders as |order|}}
-                                    <div class="driver-order-list-item">
+                                    <div class="driver-order-list-item {{if (eq this.selectedUpcomingOrder.uuid order.uuid) "is-selected"}}">
                                         <div>
                                             <strong>{{order.public_id}}</strong>
                                             <p>{{if order.pickup_name order.pickup_name "Pickup pending"}} → {{if order.dropoff_name order.dropoff_name "Dropoff pending"}}</p>
@@ -181,10 +221,67 @@
                                                 <p>{{order.customer_phone}}</p>
                                             {{/if}}
                                         </div>
-                                        <span class="driver-order-status">{{order.stage.label}}</span>
+                                        <div class="driver-order-list-actions">
+                                            <span class="driver-order-status">{{order.stage.label}}</span>
+                                            <button type="button" class="driver-portal-button driver-portal-button-secondary" {{on "click" (fn this.viewOrderDetails order)}}>
+                                                View
+                                            </button>
+                                            <button type="button" class="driver-portal-button driver-portal-button-secondary" {{on "click" (fn this.setCurrentOrder order)}}>
+                                                Focus
+                                            </button>
+                                        </div>
                                     </div>
                                 {{/each}}
                             </div>
+                            {{#if this.selectedUpcomingOrder}}
+                                <div class="driver-order-detail-card">
+                                    <div class="driver-portal-panel-header">
+                                        <div>
+                                            <p class="driver-portal-kicker">Selected job</p>
+                                            <h3>{{this.selectedUpcomingOrder.public_id}}</h3>
+                                        </div>
+                                        <span>{{this.selectedUpcomingOrder.stage.label}}</span>
+                                    </div>
+                                    <div class="driver-order-stack">
+                                        <div class="driver-order-line">
+                                            <span>Pickup</span>
+                                            <strong>{{or this.selectedUpcomingOrder.pickup_name this.selectedUpcomingOrder.pickup_address "Pickup pending"}}</strong>
+                                        </div>
+                                        <div class="driver-order-line">
+                                            <span>Dropoff</span>
+                                            <strong>{{or this.selectedUpcomingOrder.dropoff_name this.selectedUpcomingOrder.dropoff_address "Dropoff pending"}}</strong>
+                                        </div>
+                                        <div class="driver-order-line">
+                                            <span>Customer</span>
+                                            <strong>{{or this.selectedUpcomingOrder.customer_name "Customer not attached"}}</strong>
+                                        </div>
+                                        <div class="driver-order-line">
+                                            <span>Phone</span>
+                                            <strong>{{or this.selectedUpcomingOrder.customer_phone "Phone not attached"}}</strong>
+                                        </div>
+                                        <div class="driver-portal-form-actions">
+                                            {{#if this.selectedUpcomingOrder.can_accept}}
+                                                <button type="button" class="driver-portal-button" {{on "click" (fn this.acceptOrder this.selectedUpcomingOrder)}}>
+                                                    Accept pickup
+                                                </button>
+                                            {{/if}}
+                                            {{#if this.selectedUpcomingOrder.can_reject}}
+                                                <button type="button" class="driver-portal-button driver-portal-button-ghost" {{on "click" (fn this.rejectOrder this.selectedUpcomingOrder)}}>
+                                                    Reject pickup
+                                                </button>
+                                            {{/if}}
+                                            {{#if this.selectedUpcomingOrder.can_arrive_pickup}}
+                                                <button type="button" class="driver-portal-button" {{on "click" (fn this.arrivedAtPickup this.selectedUpcomingOrder)}}>
+                                                    Reached pickup
+                                                </button>
+                                            {{/if}}
+                                            <button type="button" class="driver-portal-button driver-portal-button-secondary" {{on "click" (fn this.setCurrentOrder this.selectedUpcomingOrder)}}>
+                                                Show as current delivery
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            {{/if}}
                         {{else}}
                             <p class="driver-empty-state">No active deliveries are queued for this rider right now.</p>
                         {{/if}}

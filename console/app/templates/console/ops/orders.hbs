@@ -106,8 +106,10 @@
                         <th>City</th>
                         <th>Driver</th>
                         <th>Stage</th>
+                        <th>Driver reply</th>
                         <th>Status</th>
                         <th>Simulate</th>
+                        <th>Actions</th>
                         <th>Tracking</th>
                     </tr>
                 </thead>
@@ -133,6 +135,7 @@
                             <td>
                                 <strong>{{order.stage.label}}</strong>
                             </td>
+                            <td>{{or order.assignment_response.status "pending"}}</td>
                             <td>
                                 <select {{on "change" (fn this.updateStatus order)}}>
                                     <option value="created" selected={{eq order.status "created"}}>created</option>
@@ -148,6 +151,17 @@
                                 </button>
                             </td>
                             <td>
+                                <button type="button" class="ops-inline-button" {{on "click" (fn this.inspectOrder order)}}>
+                                    Details
+                                </button>
+                                <button type="button" class="ops-inline-button" {{on "click" (fn this.markHandedOver order)}}>
+                                    Handed over
+                                </button>
+                                <button type="button" class="ops-inline-button ops-inline-button-danger" {{on "click" (fn this.unassignDriver order)}}>
+                                    Remove driver
+                                </button>
+                            </td>
+                            <td>
                                 {{#if order.tracking_url}}
                                     <a href={{order.tracking_url}} target="_blank" rel="noopener noreferrer" class="ops-inline-link">Open</a>
                                 {{else}}
@@ -159,5 +173,50 @@
                 </tbody>
             </table>
         </div>
+
+        {{#if this.selectedOrder}}
+            <div class="ops-table-detail-card">
+                <div class="ops-card-header">
+                    <div>
+                        <p class="ops-eyebrow">Selected order</p>
+                        <h3>{{this.selectedOrder.public_id}}</h3>
+                    </div>
+                </div>
+                <div class="ops-form-grid">
+                    <label>
+                        <span>Pickup</span>
+                        <strong>{{or this.selectedOrder.pickup_name this.selectedOrder.pickup_address "Pickup pending"}}</strong>
+                    </label>
+                    <label>
+                        <span>Dropoff</span>
+                        <strong>{{or this.selectedOrder.dropoff_address "Dropoff pending"}}</strong>
+                    </label>
+                    <label>
+                        <span>Customer</span>
+                        <strong>{{or this.selectedOrder.customer_name "Customer not attached"}}</strong>
+                    </label>
+                    <label>
+                        <span>Customer phone</span>
+                        <strong>{{or this.selectedOrder.customer_phone "Phone not attached"}}</strong>
+                    </label>
+                    <label>
+                        <span>Driver</span>
+                        <strong>{{or this.selectedOrder.driver.name "Unassigned"}}</strong>
+                    </label>
+                    <label>
+                        <span>Driver response</span>
+                        <strong>{{or this.selectedOrder.assignment_response.status "pending"}}</strong>
+                    </label>
+                </div>
+                {{#if this.selectedOrder.pickup_arrival.arrived_at}}
+                    <div class="ops-table-hint">
+                        Driver reported arrival at pickup: {{this.selectedOrder.pickup_arrival.arrived_at}}
+                    </div>
+                {{/if}}
+                {{#if this.selectedOrder.notes}}
+                    <div class="ops-table-hint">{{this.selectedOrder.notes}}</div>
+                {{/if}}
+            </div>
+        {{/if}}
     </section>
 </div>

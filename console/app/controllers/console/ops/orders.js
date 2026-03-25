@@ -33,6 +33,7 @@ export default class ConsoleOpsOrdersController extends Controller {
     @tracked orders = [];
     @tracked drivers = [];
     @tracked meta = {};
+    @tracked selectedOrderUuid = null;
     @tracked orderForm = defaultOrderForm();
     @tracked isSubmitting = false;
 
@@ -40,6 +41,15 @@ export default class ConsoleOpsOrdersController extends Controller {
         this.orders = payload.orders ?? [];
         this.drivers = payload.drivers ?? [];
         this.meta = payload.meta ?? {};
+        if (this.selectedOrderUuid && !this.orders.some((order) => order.uuid === this.selectedOrderUuid)) {
+            this.selectedOrderUuid = this.orders[0]?.uuid ?? null;
+        } else if (!this.selectedOrderUuid) {
+            this.selectedOrderUuid = this.orders[0]?.uuid ?? null;
+        }
+    }
+
+    get selectedOrder() {
+        return this.orders.find((order) => order.uuid === this.selectedOrderUuid) ?? null;
     }
 
     async reload() {
@@ -122,6 +132,36 @@ export default class ConsoleOpsOrdersController extends Controller {
             await this.reload();
         } catch (error) {
             this.notifications.error(error.message ?? 'Unable to advance the order stage.');
+        }
+    }
+
+    @action inspectOrder(order) {
+        this.selectedOrderUuid = order?.uuid ?? null;
+    }
+
+    @action async markHandedOver(order) {
+        try {
+            await this.fetch.post(`ops/orders/${order.uuid}/status`, {
+                status: 'started',
+            });
+
+            this.notifications.success('Order marked as on the way.');
+            await this.reload();
+        } catch (error) {
+            this.notifications.error(error.message ?? 'Unable to mark this order as on the way.');
+        }
+    }
+
+    @action async unassignDriver(order) {
+        try {
+            await this.fetch.post(`ops/orders/${order.uuid}/assign-driver`, {
+                driver_uuid: null,
+            });
+
+            this.notifications.success('Driver removed from this order.');
+            await this.reload();
+        } catch (error) {
+            this.notifications.error(error.message ?? 'Unable to remove the current driver.');
         }
     }
 }

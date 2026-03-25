@@ -410,6 +410,12 @@ body[data-theme='dark'] #boot-loader > .loader-container > .loading-message {
     color: #64748b;
 }
 
+.ops-table-detail-card {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgb(226 232 240);
+}
+
 .ops-form-grid input[disabled] {
     background: #f8fafc;
     color: #64748b;
@@ -976,6 +982,44 @@ body[data-theme='dark'] .ops-button {
     border: 1px solid rgb(226 232 240);
 }
 
+.driver-order-list-item.is-selected {
+    border-color: rgb(20 184 166 / 55%);
+    box-shadow: 0 0 0 3px rgb(20 184 166 / 10%);
+}
+
+.driver-order-list-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+}
+
+.driver-order-detail-card {
+    margin-top: 1rem;
+    padding: 1rem;
+    border-radius: 1rem;
+    background: #f8fafc;
+    border: 1px solid rgb(226 232 240);
+}
+
+.driver-portal-map-frame {
+    width: 100%;
+    min-height: 24rem;
+    border-radius: 1rem;
+    overflow: hidden;
+    border: 1px solid rgb(226 232 240);
+    background: #e2e8f0;
+}
+
+.driver-portal-map-frame iframe {
+    width: 100%;
+    min-height: 24rem;
+    border: 0;
+    display: block;
+    background: #fff;
+}
+
 .driver-portal-form {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -1106,13 +1150,28 @@ body[data-theme='dark'] .driver-order-line,
 body[data-theme='dark'] .driver-order-note,
 body[data-theme='dark'] .driver-preview-code,
 body[data-theme='dark'] .driver-portal-help,
-body[data-theme='dark'] .driver-order-list-item {
+body[data-theme='dark'] .driver-order-list-item,
+body[data-theme='dark'] .driver-order-detail-card {
     background: rgb(30 41 59 / 88%);
+    border-color: rgb(51 65 85);
+}
+
+body[data-theme='dark'] .driver-order-list-item.is-selected {
+    border-color: rgb(45 212 191 / 50%);
+    box-shadow: 0 0 0 3px rgb(45 212 191 / 10%);
+}
+
+body[data-theme='dark'] .driver-portal-map-frame {
+    background: rgb(15 23 42 / 88%);
     border-color: rgb(51 65 85);
 }
 
 body[data-theme='dark'] .ops-table-hint {
     color: #94a3b8;
+}
+
+body[data-theme='dark'] .ops-table-detail-card {
+    border-top-color: rgb(51 65 85);
 }
 
 body[data-theme='dark'] .driver-checklist-marker {
