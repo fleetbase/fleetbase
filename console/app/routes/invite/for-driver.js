@@ -13,6 +13,7 @@ export default class InviteForDriverRoute extends Route {
         super.setupController(controller, model);
         controller.hydrate(model);
         controller.restoreDriverSession();
+        controller.startAutoRefresh();
     }
 
     afterModel() {
@@ -25,5 +26,6 @@ export default class InviteForDriverRoute extends Route {
 
     deactivate() {
         document.body.classList.remove('scrollable');
+        this.controllerFor('invite.for-driver').stopAutoRefresh();
     }
 }

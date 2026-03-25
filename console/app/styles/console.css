@@ -733,6 +733,157 @@ body[data-theme='dark'] .ops-button {
     justify-content: flex-end;
 }
 
+.driver-portal-identity {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+}
+
+.driver-portal-status-meta {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    flex-wrap: wrap;
+    margin-top: 0.35rem;
+}
+
+.driver-portal-sync-copy {
+    font-size: 0.86rem;
+    font-weight: 600;
+    color: #475569;
+}
+
+.driver-portal-nav {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    margin: -0.2rem 0 1.5rem;
+}
+
+.driver-portal-nav-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 2.6rem;
+    padding: 0.65rem 1rem;
+    border-radius: 999px;
+    background: rgb(255 255 255 / 85%);
+    border: 1px solid rgb(203 213 225 / 95%);
+    color: #0f172a;
+    font-weight: 700;
+    text-decoration: none;
+    box-shadow: 0 14px 30px rgb(15 23 42 / 8%);
+}
+
+.driver-portal-nav-link:hover {
+    color: #0f172a;
+    background: #fff;
+}
+
+.driver-portal-workspace {
+    display: grid;
+    grid-template-columns: minmax(14rem, 18rem) minmax(0, 1fr);
+    gap: 1rem;
+    align-items: start;
+}
+
+.driver-portal-sidebar {
+    position: sticky;
+    top: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.driver-portal-sidebar-card {
+    padding: 1.15rem 1.1rem;
+}
+
+.driver-portal-sidebar-summary {
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+}
+
+.driver-portal-sidebar-summary div {
+    display: flex;
+    flex-direction: column;
+    gap: 0.18rem;
+    padding: 0.85rem 0.95rem;
+    border-radius: 1rem;
+    background: #f8fafc;
+    border: 1px solid rgb(226 232 240);
+}
+
+.driver-portal-sidebar-summary span {
+    font-size: 0.74rem;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #0f766e;
+}
+
+.driver-portal-sidebar-summary strong {
+    color: #0f172a;
+    font-size: 0.98rem;
+}
+
+.driver-portal-sidebar-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 0.7rem;
+}
+
+.driver-portal-sidebar-link {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.18rem;
+    width: 100%;
+    padding: 0.95rem 1rem;
+    border-radius: 1rem;
+    border: 1px solid rgb(203 213 225 / 95%);
+    background: rgb(255 255 255 / 88%);
+    color: #0f172a;
+    cursor: pointer;
+    box-shadow: 0 14px 30px rgb(15 23 42 / 8%);
+    transition:
+        transform 140ms ease,
+        border-color 140ms ease,
+        box-shadow 140ms ease,
+        background 140ms ease;
+}
+
+.driver-portal-sidebar-link:hover {
+    transform: translateY(-1px);
+}
+
+.driver-portal-sidebar-link span {
+    font-size: 1rem;
+    font-weight: 800;
+}
+
+.driver-portal-sidebar-link small {
+    font-size: 0.84rem;
+    color: #64748b;
+}
+
+.driver-portal-sidebar-link.is-active {
+    background: linear-gradient(135deg, #0f766e 0%, #0f172a 100%);
+    border-color: transparent;
+    box-shadow: 0 18px 32px rgb(15 118 110 / 18%);
+}
+
+.driver-portal-sidebar-link.is-active span,
+.driver-portal-sidebar-link.is-active small {
+    color: #fff;
+}
+
+.driver-portal-mainview {
+    min-width: 0;
+}
+
 .driver-status-pill,
 .driver-order-status {
     display: inline-flex;
@@ -838,6 +989,41 @@ body[data-theme='dark'] .ops-button {
     gap: 1rem;
 }
 
+.driver-portal-flow-section {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.driver-portal-card-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+}
+
+.driver-portal-card-grid-work,
+.driver-portal-card-grid-money,
+.driver-portal-card-grid-account {
+    align-items: start;
+}
+
+.driver-portal-section-heading {
+    padding: 0.15rem 0 0.1rem;
+}
+
+.driver-portal-section-heading h3 {
+    margin: 0;
+    color: #0f172a;
+    font-size: clamp(1.35rem, 2.4vw, 1.8rem);
+}
+
+.driver-portal-section-heading p:last-child {
+    margin: 0.45rem 0 0;
+    color: #475569;
+    max-width: 48rem;
+}
+
 .driver-portal-grid-auth {
     align-items: start;
 }
@@ -918,6 +1104,42 @@ body[data-theme='dark'] .ops-button {
     display: flex;
     flex-direction: column;
     gap: 0.85rem;
+}
+
+.driver-portal-spotlight {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.9rem;
+    margin-bottom: 1rem;
+}
+
+.driver-portal-step-card {
+    display: flex;
+    flex-direction: column;
+    gap: 0.45rem;
+    padding: 1rem 1.05rem;
+    border-radius: 1rem;
+    background: linear-gradient(180deg, #f8fafc 0%, #eef2ff 100%);
+    border: 1px solid rgb(226 232 240);
+}
+
+.driver-portal-step-card strong {
+    color: #0f172a;
+    font-size: 1rem;
+}
+
+.driver-portal-step-card p {
+    margin: 0;
+    color: #475569;
+    line-height: 1.5;
+}
+
+.driver-portal-step-label {
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #0f766e;
 }
 
 .driver-portal-vehicle-summary {
@@ -1124,18 +1346,24 @@ body[data-theme='dark'] .driver-portal-hero-card,
 body[data-theme='dark'] .driver-portal-panel,
 body[data-theme='dark'] .driver-portal-stat-card,
 body[data-theme='dark'] .driver-portal-toolbar,
+body[data-theme='dark'] .driver-portal-nav-link,
+body[data-theme='dark'] .driver-portal-sidebar-link,
 body[data-theme='dark'] .driver-portal-panel-header > span:last-child,
 body[data-theme='dark'] .driver-portal-form label,
 body[data-theme='dark'] .driver-portal-stat-card h3,
+body[data-theme='dark'] .driver-portal-section-heading h3,
 body[data-theme='dark'] .driver-order-list-item strong,
 body[data-theme='dark'] .driver-order-line strong,
-body[data-theme='dark'] .driver-checklist strong {
+body[data-theme='dark'] .driver-checklist strong,
+body[data-theme='dark'] .driver-portal-sidebar-summary strong,
+body[data-theme='dark'] .driver-portal-step-card strong {
     color: #e2e8f0;
 }
 
 body[data-theme='dark'] .driver-portal-hero-card p:last-child,
 body[data-theme='dark'] .driver-portal-toolbar p:last-child,
 body[data-theme='dark'] .driver-portal-stat-card p:last-child,
+body[data-theme='dark'] .driver-portal-section-heading p:last-child,
 body[data-theme='dark'] .driver-checklist p,
 body[data-theme='dark'] .driver-empty-state,
 body[data-theme='dark'] .driver-portal-help p,
@@ -1151,7 +1379,9 @@ body[data-theme='dark'] .driver-order-note,
 body[data-theme='dark'] .driver-preview-code,
 body[data-theme='dark'] .driver-portal-help,
 body[data-theme='dark'] .driver-order-list-item,
-body[data-theme='dark'] .driver-order-detail-card {
+body[data-theme='dark'] .driver-order-detail-card,
+body[data-theme='dark'] .driver-portal-sidebar-summary div,
+body[data-theme='dark'] .driver-portal-step-card {
     background: rgb(30 41 59 / 88%);
     border-color: rgb(51 65 85);
 }
@@ -1164,6 +1394,33 @@ body[data-theme='dark'] .driver-order-list-item.is-selected {
 body[data-theme='dark'] .driver-portal-map-frame {
     background: rgb(15 23 42 / 88%);
     border-color: rgb(51 65 85);
+}
+
+body[data-theme='dark'] .driver-portal-sync-copy {
+    color: #94a3b8;
+}
+
+body[data-theme='dark'] .driver-portal-nav-link {
+    background: rgb(15 23 42 / 88%);
+    border-color: rgb(51 65 85);
+}
+
+body[data-theme='dark'] .driver-portal-sidebar-link {
+    background: rgb(15 23 42 / 88%);
+    border-color: rgb(51 65 85);
+}
+
+body[data-theme='dark'] .driver-portal-sidebar-link small,
+body[data-theme='dark'] .driver-portal-sidebar-summary span {
+    color: #94a3b8;
+}
+
+body[data-theme='dark'] .driver-portal-sidebar-link.is-active {
+    background: linear-gradient(135deg, #0f766e 0%, #134e4a 100%);
+}
+
+body[data-theme='dark'] .driver-portal-step-label {
+    color: #5eead4;
 }
 
 body[data-theme='dark'] .ops-table-hint {
@@ -1212,7 +1469,10 @@ body[data-theme='dark'] .driver-portal-inline-link {
     .driver-portal-hero,
     .driver-portal-stats,
     .driver-portal-grid,
-    .driver-portal-form {
+    .driver-portal-form,
+    .driver-portal-card-grid,
+    .driver-portal-spotlight,
+    .driver-portal-workspace {
         grid-template-columns: 1fr;
     }
 
@@ -1223,6 +1483,15 @@ body[data-theme='dark'] .driver-portal-inline-link {
 
     .driver-portal-toolbar-actions {
         justify-content: flex-start;
+    }
+
+    .driver-portal-sidebar {
+        position: static;
+    }
+
+    .driver-portal-sidebar-nav {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
     }
 }
 
@@ -1235,6 +1504,19 @@ body[data-theme='dark'] .driver-portal-inline-link {
     .driver-order-list-item {
         flex-direction: column;
         align-items: flex-start;
+    }
+
+    .driver-portal-nav {
+        gap: 0.55rem;
+    }
+
+    .driver-portal-nav-link {
+        width: 100%;
+        justify-content: flex-start;
+    }
+
+    .driver-portal-sidebar-nav {
+        grid-template-columns: 1fr;
     }
 }
 /* stylelint-enable no-descending-specificity */

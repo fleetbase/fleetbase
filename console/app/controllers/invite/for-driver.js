@@ -121,6 +121,12 @@ export default class InviteForDriverController extends Controller {
     @tracked isSavingPayoutProfile = false;
     @tracked isLoadingPayoutOptions = false;
     @tracked isLoadingPayoutBranches = false;
+    @tracked lastSyncedAt = null;
+    @tracked activeWorkspaceSection = 'work';
+
+    autoRefreshTimer = null;
+    handleVisibilityWake = null;
+    handleWindowFocus = null;
 
     hydrate(model) {
         this.portal = model?.portal ?? null;
@@ -138,6 +144,8 @@ export default class InviteForDriverController extends Controller {
         this.payoutRequirements = {};
         this.selectedOrderUuid = null;
         this.isEditingVehicleRequest = false;
+        this.lastSyncedAt = null;
+        this.activeWorkspaceSection = 'work';
     }
 
     get portalStorageKey() {
@@ -279,6 +287,121 @@ export default class InviteForDriverController extends Controller {
         return Boolean(this.portal?.driver);
     }
 
+    get driverAvailabilityLabel() {
+        if (!this.isApproved) {
+            return 'Waiting approval';
+        }
+
+        return this.driverState?.online ? 'Ready for work' : 'Offline';
+    }
+
+    get workQueueLabel() {
+        return this.activeOrders.length === 1 ? '1 job waiting' : `${this.activeOrders.length} jobs waiting`;
+    }
+
+    get currentFocusLabel() {
+        return this.currentOrder?.stage?.label ?? this.selectedUpcomingOrder?.stage?.label ?? 'No live job';
+    }
+
+    get syncStatusLabel() {
+        if (this.isRefreshingDriver) {
+            return 'Syncing now...';
+        }
+
+        if (!this.lastSyncedAt) {
+            return 'Waiting for first sync';
+        }
+
+        const formatted = this.lastSyncedAt.toLocaleTimeString([], {
+            hour: 'numeric',
+            minute: '2-digit',
+        });
+
+        return `Updated ${formatted}`;
+    }
+
+    get isWorkSectionActive() {
+        return this.activeWorkspaceSection === 'work';
+    }
+
+    get isMoneySectionActive() {
+        return this.activeWorkspaceSection === 'money';
+    }
+
+    get isAccountSectionActive() {
+        return this.activeWorkspaceSection === 'account';
+    }
+
+    startAutoRefresh() {
+        this.stopAutoRefresh();
+
+        if (typeof window === 'undefined') {
+            return;
+        }
+
+        if (!this.handleVisibilityWake) {
+            this.handleVisibilityWake = async () => {
+                if (!this.isAuthenticated || typeof document === 'undefined' || document.hidden || this.isRefreshingDriver) {
+                    return;
+                }
+
+                try {
+                    await this.loadDriverState();
+                } catch {
+                    // silent background refresh
+                }
+            };
+        }
+
+        if (!this.handleWindowFocus) {
+            this.handleWindowFocus = async () => {
+                if (!this.isAuthenticated || this.isRefreshingDriver) {
+                    return;
+                }
+
+                try {
+                    await this.loadDriverState();
+                } catch {
+                    // silent background refresh
+                }
+            };
+        }
+
+        if (typeof document !== 'undefined') {
+            document.addEventListener('visibilitychange', this.handleVisibilityWake);
+        }
+
+        window.addEventListener('focus', this.handleWindowFocus);
+
+        this.autoRefreshTimer = window.setInterval(async () => {
+            if (!this.isAuthenticated || this.isRefreshingDriver || typeof document === 'undefined' || document.hidden) {
+                return;
+            }
+
+            try {
+                await this.loadDriverState();
+            } catch {
+                // silent background refresh
+            }
+        }, 6000);
+    }
+
+    stopAutoRefresh() {
+        if (typeof window !== 'undefined' && this.autoRefreshTimer) {
+            window.clearInterval(this.autoRefreshTimer);
+        }
+
+        if (typeof document !== 'undefined' && this.handleVisibilityWake) {
+            document.removeEventListener('visibilitychange', this.handleVisibilityWake);
+        }
+
+        if (typeof window !== 'undefined' && this.handleWindowFocus) {
+            window.removeEventListener('focus', this.handleWindowFocus);
+        }
+
+        this.autoRefreshTimer = null;
+    }
+
     async restoreDriverSession() {
         const token = this.readStoredToken();
         if (!token) {
@@ -327,7 +450,9 @@ export default class InviteForDriverController extends Controller {
             this.driverState = payload.driver;
             this.syncProfileForm(payload.driver);
             this.storeDriverState(payload.driver);
+            this.lastSyncedAt = new Date();
             await this.syncPayoutReferenceData(payload.driver, { silent: true });
+            this.startAutoRefresh();
 
             return payload.driver;
         } finally {
@@ -767,7 +892,9 @@ export default class InviteForDriverController extends Controller {
             this.driverState = payload.driver;
             this.syncProfileForm(payload.driver);
             this.storeDriverState(payload.driver);
+            this.lastSyncedAt = new Date();
             await this.syncPayoutReferenceData(payload.driver, { silent: true });
+            this.startAutoRefresh();
             this.notifications.success(`Welcome back, ${payload.driver?.name ?? 'driver'}.`);
         } catch (error) {
             this.notifications.error(error.message ?? 'Unable to verify that code.');
@@ -799,6 +926,7 @@ export default class InviteForDriverController extends Controller {
             this.driverState = payload.driver;
             this.syncProfileForm(payload.driver);
             this.storeDriverState(payload.driver);
+            this.lastSyncedAt = new Date();
             this.notifications.success(`You are now ${payload.driver?.online ? 'online' : 'offline'}.`);
         } catch (error) {
             this.notifications.error(error.message ?? 'Unable to update driver availability.');
@@ -832,6 +960,7 @@ export default class InviteForDriverController extends Controller {
             this.driverState = payload.driver;
             this.syncProfileForm(payload.driver);
             this.storeDriverState(payload.driver);
+            this.lastSyncedAt = new Date();
             await this.syncPayoutReferenceData(payload.driver, { silent: true });
             this.notifications.success('Profile updated.');
         } catch (error) {
@@ -875,6 +1004,7 @@ export default class InviteForDriverController extends Controller {
             this.isEditingVehicleRequest = false;
             this.syncProfileForm(payload.driver);
             this.storeDriverState(payload.driver);
+            this.lastSyncedAt = new Date();
             await this.syncPayoutReferenceData(payload.driver, { silent: true });
             this.notifications.success(payload.driver?.pending_vehicle ? 'Vehicle request submitted for admin review.' : 'Vehicle details saved.');
         } catch (error) {
@@ -909,6 +1039,7 @@ export default class InviteForDriverController extends Controller {
             this.driverState = payload.driver;
             this.syncProfileForm(payload.driver);
             this.storeDriverState(payload.driver);
+            this.lastSyncedAt = new Date();
             await this.syncPayoutReferenceData(payload.driver, { silent: true });
             this.notifications.success('Payout details saved. Medusa can now sync this payout profile.');
         } catch (error) {
@@ -950,6 +1081,7 @@ export default class InviteForDriverController extends Controller {
             this.selectedOrderUuid = order.uuid;
             this.syncProfileForm(payload.driver);
             this.storeDriverState(payload.driver);
+            this.lastSyncedAt = new Date();
             this.notifications.success('Current delivery updated.');
         } catch (error) {
             this.notifications.error(error.message ?? 'Unable to set the current delivery.');
@@ -975,6 +1107,7 @@ export default class InviteForDriverController extends Controller {
             this.selectedOrderUuid = order.uuid;
             this.syncProfileForm(payload.driver);
             this.storeDriverState(payload.driver);
+            this.lastSyncedAt = new Date();
             this.notifications.success('Dispatch can now see that you accepted this pickup.');
         } catch (error) {
             this.notifications.error(error.message ?? 'Unable to accept this order.');
@@ -999,6 +1132,7 @@ export default class InviteForDriverController extends Controller {
             this.driverState = payload.driver;
             this.syncProfileForm(payload.driver);
             this.storeDriverState(payload.driver);
+            this.lastSyncedAt = new Date();
             this.notifications.success('Order released back to dispatch for reassignment.');
         } catch (error) {
             this.notifications.error(error.message ?? 'Unable to reject this order.');
@@ -1023,6 +1157,7 @@ export default class InviteForDriverController extends Controller {
             this.driverState = payload.driver;
             this.syncProfileForm(payload.driver);
             this.storeDriverState(payload.driver);
+            this.lastSyncedAt = new Date();
             this.notifications.success('Pickup arrival recorded. Merchant can now see you are at the pickup point.');
         } catch (error) {
             this.notifications.error(error.message ?? 'Unable to confirm pickup arrival.');
@@ -1050,6 +1185,7 @@ export default class InviteForDriverController extends Controller {
             this.driverState = payload.driver;
             this.syncProfileForm(payload.driver);
             this.storeDriverState(payload.driver);
+            this.lastSyncedAt = new Date();
             this.notifications.success(`Order moved to ${status}.`);
         } catch (error) {
             this.notifications.error(error.message ?? 'Unable to update this order stage.');
@@ -1061,6 +1197,7 @@ export default class InviteForDriverController extends Controller {
         this.clearStoredDriverState();
         this.token = null;
         this.driverState = null;
+        this.stopAutoRefresh();
         this.code = '';
         this.previewCode = null;
         this.profileForm = defaultProfileForm();
@@ -1070,11 +1207,17 @@ export default class InviteForDriverController extends Controller {
         this.payoutBranches = [];
         this.payoutRequirements = {};
         this.isEditingVehicleRequest = false;
+        this.lastSyncedAt = null;
+        this.activeWorkspaceSection = 'work';
         this.notifications.success('Driver session closed.');
     }
 
     @action startVehicleRequest() {
         this.isEditingVehicleRequest = true;
         this.vehicleForm = defaultVehicleForm();
+    }
+
+    @action setActiveWorkspaceSection(section) {
+        this.activeWorkspaceSection = section;
     }
 }
