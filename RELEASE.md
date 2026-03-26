@@ -1,90 +1,92 @@
-# 🚀 Fleetbase v0.7.30 — 2026-02-28
-
-> "Extension discovery, driver vehicle validation, and CLI search"
-
+# 🚀 Fleetbase v0.7.31 — 2026-03-26
+> "The Ledger & The Navigator"
 ---
-
 ## ✨ Highlights
+This landmark release introduces two major, transformative features to the Fleetbase ecosystem: the first official version of the **Ledger** accounting extension and the brand new **Smart Navigator** header menu. Additionally, this release includes a powerful new **Template Builder** system and a completely redesigned **Installation Wizard**.
 
-This release includes two bug fixes and one new feature: a corrected public extension discovery endpoint in the Registry Bridge, a driver vehicle validation patch in FleetOps, and a new `flb search` command in the Fleetbase CLI.
+### 💰 Ledger: Accounting, Invoicing & Payments
+After months of development, the **Ledger** extension (`v0.0.1`) makes its official debut. This is a full-featured accounting and payments module deeply integrated into Fleetbase, providing a comprehensive suite of tools to manage your organization's finances.
 
-### 🔌 Registry Bridge — Public Extension Discovery
+Key features include:
+- **Invoicing:** Create, send, and manage professional invoices with customizable templates.
+- **Payment Gateways:** Seamlessly integrate with Stripe to accept online payments. The system includes robust webhook handling to automatically update invoice statuses.
+- **Revenue & Expense Tracking:** Automatically track revenue from FleetOps orders and Storefront purchases. Manually record expenses to get a complete financial picture.
+- **Accounts Receivable:** Keep track of outstanding invoices with an AR aging report.
+- **Digital Wallets:** Provide drivers and customers with digital wallets to manage balances and transactions.
+- **Financial Reporting:** Generate essential financial reports to monitor your business's health.
+- **RBAC Permissions:** A complete set of permissions for controlling access to all Ledger resources.
 
-The public extensions listing endpoint (`~registry/v1/extensions`) has been corrected and hardened. A dedicated `PublicRegistryExtension` API resource now sanitizes the response, stripping all sensitive fields before they leave the server. The `install_count` aggregation has been fixed to use `withCount('installs')` and the incorrect `author` relationship has been replaced with the proper `company` relationship. The endpoint returns a clean, flat array.
+### 🧭 Smart Navigator: A New Way to Navigate
+The main console header has been completely redesigned with the new **Smart Navigator** menu. This intelligent and responsive navigation system streamlines access to all your extensions and most-used features.
 
-### 🚛 FleetOps — Driver Vehicle Validation
-
-A `TypeError` that occurred when creating a driver with a vehicle object sent from the frontend has been resolved. A new `ResolvableVehicle` validation rule accepts a `public_id` string (e.g., `vehicle_abc123`), a UUID string, or an object/array containing an `id`, `public_id`, or `uuid` key. Vehicle normalization has been added to both `createRecord()` and `updateRecord()` in `DriverController` so the correct vehicle UUID is always resolved before persistence.
-
-### 🔍 Fleetbase CLI — Extension Search Command
-
-A new `flb search [query]` command (alias: `flb list-extensions`) lets developers and administrators browse all available extensions directly from the terminal. Results are displayed in a formatted, colour-coded table showing the extension name, category, publisher, version, price, and supported install formats. Filtering options include `--category`, `--free`, `--json`, `--simple`, and `--host`.
+Key features include:
+- **Intelligent & Responsive:** The menu automatically collapses items into a "More" dropdown as your screen width changes, ensuring a clean and uncluttered interface.
+- **Searchable Dropdown:** A powerful, multi-column dropdown allows you to instantly search and access any menu item.
+- **Shortcuts:** Extensions can now register "Shortcuts" — prominent, card-style links in the main dropdown that provide one-click access to critical actions like creating a new order or invoice.
+- **Pinning & Customization:** Pin your most frequently used extensions and shortcuts to the main header for immediate access.
 
 ---
-
 ## ✨ New Features
 
-- **[fleetbase-cli]** Added `flb search [query]` command (alias: `flb list-extensions`) for browsing available extensions
-- **[fleetbase-cli]** `--category` filter to narrow results by extension category
-- **[fleetbase-cli]** `--free` flag to list only free extensions
-- **[fleetbase-cli]** `--json` flag for machine-readable JSON output
-- **[fleetbase-cli]** `--simple` flag for plain-text terminal output
-- **[fleetbase-cli]** `--host` option to target self-hosted registry instances
+### 🎨 Template Builder System
+- **[core-api, ember-ui]** A new visual template builder has been introduced for creating and managing document templates (e.g., for invoices, reports, packing slips).
+- **[ember-ui]** The builder features a drag-and-drop canvas, a properties panel for customizing elements, and support for dynamic data via queries.
+- **[core-api]** Backend support includes new `Template` and `TemplateQuery` models and a preview endpoint for unsaved templates.
+
+### 🪄 Interactive Installation Wizard
+- **[fleetbase]** The `docker-install.sh` script is now a full-fledged interactive wizard.
+- **[fleetbase]** The wizard guides users through configuring core settings, database connections (bundled MySQL or external), mail services (SMTP, Mailgun, SES, etc.), and file storage (local, S3, GCS).
+
+### 🔧 Ember Core & UI Enhancements
+- **[ember-core]** The `universe` service now correctly forwards sub-services to the host application, resolving cross-engine service isolation issues.
+- **[ember-core]** Implemented more robust session lifecycle events for login/logout handling.
+- **[ember-ui]** Added a comprehensive set of status badges for invoices and transactions.
 
 ---
-
 ## 🐛 Bug Fixes
 
+### Billing
+- **[billing]** Fixed a critical bug in `BillableQueryBuilder` where `where('stripe_id', ...)` queries were not being correctly translated to `where('payment_gateway_id', ...)`. [1]
+
 ### FleetOps
-- **[fleetops]** Fixed `TypeError` when creating a driver with a vehicle object sent from the frontend
-- **[fleetops]** Added `ResolvableVehicle` validation rule accepting `public_id`, UUID, or object with `id`/`public_id`/`uuid`
-- **[fleetops]** Added vehicle normalization in `DriverController::createRecord()` and `updateRecord()`
+- **[fleetops]** Suppressed a false-positive `ember/no-shadow-route-definition` lint error for the top-level `virtual` route using an `eslint-disable` comment. [2]
 
-### Registry Bridge
-- **[registry-bridge]** Fixed `install_count` column error by switching to `withCount('installs')` eager load
-- **[registry-bridge]** Removed incorrect `author` relationship; replaced with correct `company` relationship
-- **[registry-bridge]** Removed sensitive data (internal UUIDs, Stripe IDs, private relationships) from public endpoint response
-- **[registry-bridge]** Public extensions endpoint now returns a plain array without a wrapping key
+### Ledger
+- **[ledger]** Resolved dozens of bugs during the stabilization process, including fixes for invoice number generation, line item calculations, webhook processing, currency handling, and cross-engine service dependencies.
+
+### Ember UI
+- **[ember-ui]** Fixed numerous styling, rendering, and interactivity bugs in the new Smart Navigator and Template Builder components.
 
 ---
-
-## 🔧 Improvements
-
-- **[fleetbase-cli]** Price display correctly converts cents to dollars in search results
-- **[fleetbase-cli]** Search results show both install formats: `flb install fleetbase/<slug>` and `flb install <extension_id>`
-- **[registry-bridge]** Extension listing response is a clean, flat array for easier consumption by CLI and third-party tools
-
----
-
 ## ⚠️ Breaking Changes
-
-- None 🙂
+- **[fleetbase]** The primary console virtual route has been moved from `/:slug` to `/~/:slug` to avoid conflicts with extension routes.
 
 ---
-
 ## 🔧 Upgrade Steps
-
 ```bash
 # Pull latest version
-git pull origin main --no-rebase
-
+git pull origin dev-v0.7.31 --no-rebase
 # Update docker
 docker compose pull
 docker compose down && docker compose up -d
-
 # Run deploy script
 docker compose exec application bash -c "./deploy.sh"
 ```
 
 ---
-
 ## 📦 Component Versions
-
-- **fleetops**: v0.6.37
-- **registry-bridge**: v0.1.7
-- **fleetbase-cli**: v0.0.5
+- **fleetbase**: v0.7.31
+- **core-api**: v1.6.38
+- **fleetops**: v0.6.38
+- **storefront**: v0.4.14
+- **ledger**: v0.0.1
+- **ember-core**: v0.3.17
+- **ember-ui**: v0.3.25
 
 ---
+## References
+[1] `fleetbase/billing` - PR #28: `fix/billable-query-builder-stripe-id-mapping`
+[2] `fleetbase/fleetops` - PR #210: `feature/header-menu-shortcuts`
 
 ## Need help? 
-Join the discussion on [GitHub Discussions](https://github.com/fleetbase/ember-ui/discussions) or drop by [#fleetbase on Discord](https://discord.com/invite/HnTqQ6zAVn)
+Join the discussion on [GitHub Discussions](https://github.com/fleetbase/fleetbase/discussions) or drop by [#fleetbase on Discord](https://discord.com/invite/HnTqQ6zAVn)
