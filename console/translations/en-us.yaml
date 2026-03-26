@@ -319,6 +319,10 @@ common:
   delete-resource: Delete {resource}
   delete-resource-name: >-
     Delete: {resourceName}
+  resource-actions: >-
+    {resource} Actions
+  resource-location: >-
+    {resource} Location
   delete-resource-named: Delete {resource} ({resourceName})
   delete-resource-prompt: This action cannot be undone. Once deleted, the record will be permanently removed.
   delete-cannot-be-undone: This action cannot be undone. Once deleted, the record will be permanently removed.
