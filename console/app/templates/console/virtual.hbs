@@ -1,7 +1,6 @@
 {{page-title @model.title}}
 
 <Layout::Section::Body class="overflow-y-scroll h-full">
-    {{log "@model" @model}}
     <LazyEngineComponent @component={{@model.component}} @params={{@model.componentParams}} />
     <Spacer @height="300px" />
 </Layout::Section::Body>
