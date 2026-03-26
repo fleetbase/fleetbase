@@ -1,26 +1,8 @@
 import Controller from '@ember/controller';
+import { tracked } from '@glimmer/tracking';
+import { inject as service } from '@ember/service';
 
 export default class ConsoleHomeController extends Controller {
-    rows = [
-        {
-            name: 'Jason',
-            age: 24,
-            vehicle: 'Honda',
-        },
-    ];
-
-    columns = [
-        {
-            label: 'Name',
-            valuePath: 'name',
-        },
-        {
-            label: 'Age',
-            valuePath: 'age',
-        },
-        {
-            label: 'Vehicle',
-            valuePath: 'vehicle',
-        },
-    ];
+    @service store;
+    @tracked template = this.store.createRecord('template');
 }

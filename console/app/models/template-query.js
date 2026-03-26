@@ -27,7 +27,7 @@ export default class TemplateQueryModel extends Model {
      * JSON object of filter conditions applied to the query.
      * e.g. { "status": "completed", "created_at_gte": "2024-12-01" }
      */
-    @attr('object', { defaultValue: () => ({}) }) filters;
+    @attr('object') filters;
 
     @attr('string') sort_by;
     @attr('string', { defaultValue: 'desc' }) sort_direction;
