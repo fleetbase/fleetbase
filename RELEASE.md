@@ -76,7 +76,7 @@ docker compose exec application bash -c "./deploy.sh"
 - **fleetops**: v0.6.38
 - **storefront**: v0.4.14
 - **ledger**: v0.0.1
-- **ember-core**: v0.3.17
+- **ember-core**: v0.3.18
 - **ember-ui**: v0.3.25
 - **fleetbase-cli**: v0.0.6
 
