@@ -1,4 +1,3 @@
-# 🚀 Fleetbase v0.7.31 — 2026-03-26
 > "The Ledger & The Navigator"
 ---
 ## ✨ Highlights
@@ -34,8 +33,8 @@ Key features include:
 - **[core-api]** Backend support includes new `Template` and `TemplateQuery` models and a preview endpoint for unsaved templates.
 
 ### 🪄 Interactive Installation Wizard
-- **[fleetbase]** The `docker-install.sh` script is now a full-fledged interactive wizard.
-- **[fleetbase]** The wizard guides users through configuring core settings, database connections (bundled MySQL or external), mail services (SMTP, Mailgun, SES, etc.), and file storage (local, S3, GCS).
+- **[fleetbase, fleetbase-cli]** The `docker-install.sh` script and the `flb install-fleetbase` command are now full-fledged interactive wizards.
+- **[fleetbase, fleetbase-cli]** The wizard guides users through configuring core settings, database connections (bundled MySQL or external), mail services (SMTP, Mailgun, SES, etc.), file storage (local, S3, GCS), and other third-party services.
 
 ### 🔧 Ember Core & UI Enhancements
 - **[ember-core]** The `universe` service now correctly forwards sub-services to the host application, resolving cross-engine service isolation issues.
@@ -45,14 +44,11 @@ Key features include:
 ---
 ## 🐛 Bug Fixes
 
-### Billing
-- **[billing]** Fixed a critical bug in `BillableQueryBuilder` where `where('stripe_id', ...)` queries were not being correctly translated to `where('payment_gateway_id', ...)`. [1]
-
 ### FleetOps
-- **[fleetops]** Suppressed a false-positive `ember/no-shadow-route-definition` lint error for the top-level `virtual` route using an `eslint-disable` comment. [2]
+- **[fleetops]** Suppressed a false-positive `ember/no-shadow-route-definition` lint error for the top-level `virtual` route using an `eslint-disable` comment. [1]
 
 ### Ledger
-- **[ledger]** Resolved dozens of bugs during the stabilization process, including fixes for invoice number generation, line item calculations, webhook processing, currency handling, and cross-engine service dependencies.
+- **[ledger]** Resolved numerous bugs during the stabilization process, including fixes for invoice number generation, line item calculations, webhook processing, currency handling, and cross-engine service dependencies.
 
 ### Ember UI
 - **[ember-ui]** Fixed numerous styling, rendering, and interactivity bugs in the new Smart Navigator and Template Builder components.
@@ -65,7 +61,7 @@ Key features include:
 ## 🔧 Upgrade Steps
 ```bash
 # Pull latest version
-git pull origin dev-v0.7.31 --no-rebase
+git pull origin main --no-rebase
 # Update docker
 docker compose pull
 docker compose down && docker compose up -d
@@ -82,11 +78,11 @@ docker compose exec application bash -c "./deploy.sh"
 - **ledger**: v0.0.1
 - **ember-core**: v0.3.17
 - **ember-ui**: v0.3.25
+- **fleetbase-cli**: v0.0.6
 
 ---
 ## References
-[1] `fleetbase/billing` - PR #28: `fix/billable-query-builder-stripe-id-mapping`
-[2] `fleetbase/fleetops` - PR #210: `feature/header-menu-shortcuts`
+[1] `fleetbase/fleetops` - PR #210: `feature/header-menu-shortcuts`
 
 ## Need help? 
 Join the discussion on [GitHub Discussions](https://github.com/fleetbase/fleetbase/discussions) or drop by [#fleetbase on Discord](https://discord.com/invite/HnTqQ6zAVn)
