@@ -37,7 +37,7 @@ export function initialize(appInstance) {
     ];
 
     // Register widgets
-    widgetService.registerWidgets('dashboard', widgets);
+    // widgetService.registerWidgets('dashboard', widgets);
 }
 
 export default {
