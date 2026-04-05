@@ -15,7 +15,7 @@ export default class ScheduleItemModel extends Model {
     @attr('date') break_start_at;
     @attr('date') break_end_at;
     @attr('string') title;
-    @attr('string', { defaultValue: 'pending' }) status;
+    @attr('string', { defaultValue: 'scheduled' }) status;
     @attr('string') notes;
 
     /** @exception fields */
