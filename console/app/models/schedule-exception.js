@@ -23,8 +23,8 @@ export default class ScheduleExceptionModel extends Model {
     /** @attributes */
     @attr('string', { defaultValue: 'time_off' }) type;
     @attr('string', { defaultValue: 'pending' }) status;
-    @attr('date') start_date;
-    @attr('date') end_date;
+    @attr('date') start_at;
+    @attr('date') end_at;
     @attr('string') reason;
     @attr('string') notes;
     @attr('string') rejection_reason;
