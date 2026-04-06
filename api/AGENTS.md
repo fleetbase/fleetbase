@@ -40,5 +40,5 @@ The Laravel application root for the Fleetbase API. Bootstraps the framework, re
 - `~/fleetbase-project/docs/ai-rules-workspace.md`
 - `~/fleetbase-project/docs/env-vars.md`
 
-## Boost gate
-Before first edit: `composer require laravel/boost --dev && php artisan boost:install`, then commit.
+## Boost gate (deferred)
+Boost is deferred for this repo — not because it's broken, but because its generated outputs would remain container-local until the API source is host-mounted (only `api/.env` is currently mounted from host). `composer require laravel/boost --dev` was already run inside the container during Phase 1.6; `php artisan boost:install` was not (it requires an interactive TTY and its outputs wouldn't be host-visible anyway). Revisit when (a) the first real Laravel edit here demands it, OR (b) the API source is moved onto the host. See `~/fleetbase-project/docs/ai-rules-laravel.md` for the full Boost gate reasoning.
