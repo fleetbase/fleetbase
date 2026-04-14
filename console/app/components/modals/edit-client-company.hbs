@@ -1,0 +1,17 @@
+{{! template-lint-disable no-unbound }}
+<Modal::Default @modalIsOpened={{@modalIsOpened}} @options={{@options}} @confirm={{@onConfirm}} @decline={{@onDecline}}>
+    <div class="modal-body-container pt-0i text-gray-900 dark:text-white">
+        <InputGroup
+            @name="Client name"
+            @value={{@options.client.name}}
+            @helpText="Display name for this client company."
+            data-test-client-name-input
+        />
+        <InputGroup
+            @name="Client code"
+            @value={{@options.client.client_code}}
+            @helpText="Optional short code used to identify this client in reports and exports."
+            data-test-client-code-input
+        />
+    </div>
+</Modal::Default>

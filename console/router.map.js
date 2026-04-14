@@ -36,6 +36,7 @@ Router.map(function () {
             this.route('virtual', { path: '/:slug' });
             this.route('two-fa');
             this.route('notifications');
+            this.route('clients');
         });
         this.route('virtual', { path: '/:slug' });
         this.route('admin', function () {

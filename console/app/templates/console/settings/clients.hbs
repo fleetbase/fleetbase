@@ -1,0 +1,80 @@
+{{page-title "Clients"}}
+<Layout::Section::Header @title="Clients">
+    {{#unless this.accessDenied}}
+        <Button
+            @type="primary"
+            @icon="plus"
+            @text="Add Client"
+            @onClick={{this.openAddClientModal}}
+            @disabled={{this.isBusy}}
+            data-test-add-client
+        />
+    {{/unless}}
+</Layout::Section::Header>
+
+<Layout::Section::Body class="overflow-y-scroll h-full">
+    <div class="container mx-auto h-screen">
+        <div class="max-w-4xl my-10 mx-auto space-y-4">
+            {{#if this.accessDenied}}
+                <ContentPanel @title="Access Denied" @open={{true}} @wrapperClass="bordered-classic">
+                    <div class="p-4 text-sm" data-test-clients-access-denied>
+                        <p>You do not have permission to manage client companies.</p>
+                        <p class="mt-2 text-gray-500 dark:text-gray-400">Switch to an organization context or contact your administrator.</p>
+                    </div>
+                </ContentPanel>
+            {{else}}
+                <ContentPanel @title="Your Clients" @open={{true}} @wrapperClass="bordered-classic">
+                    {{#if (eq this.clients.length 0)}}
+                        <div class="p-6 text-center text-sm text-gray-500 dark:text-gray-400" data-test-clients-empty-state>
+                            <p>No client companies yet.</p>
+                            <p class="mt-1">Click "Add Client" above to create your first client.</p>
+                        </div>
+                    {{else}}
+                        <div class="space-y-2" data-test-clients-list>
+                            {{#each this.clients as |client|}}
+                                <div
+                                    class="grid grid-cols-3 border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 rounded-lg px-3 py-2 items-center"
+                                    data-test-client-row={{client.client_code}}
+                                >
+                                    <div>
+                                        <div class="font-semibold" data-test-client-name>{{client.name}}</div>
+                                        {{#if client.client_code}}
+                                            <div class="text-xs text-gray-500 dark:text-gray-400" data-test-client-code>
+                                                Code: {{client.client_code}}
+                                            </div>
+                                        {{/if}}
+                                    </div>
+                                    <div class="text-sm text-gray-500 dark:text-gray-400">
+                                        {{#if client.created_at}}
+                                            Created: {{format-date client.created_at}}
+                                        {{/if}}
+                                    </div>
+                                    <div class="flex flex-row items-center justify-end space-x-2">
+                                        <Button
+                                            @size="xs"
+                                            @icon="pencil"
+                                            @text="Edit"
+                                            @disabled={{this.isBusy}}
+                                            @onClick={{fn this.openEditClientModal client}}
+                                            data-test-client-edit={{client.client_code}}
+                                        />
+                                        <Button
+                                            @type="danger"
+                                            @size="xs"
+                                            @icon="trash"
+                                            @text="Delete"
+                                            @disabled={{this.isBusy}}
+                                            @onClick={{fn this.deleteClient client}}
+                                            data-test-client-delete={{client.client_code}}
+                                        />
+                                    </div>
+                                </div>
+                            {{/each}}
+                        </div>
+                    {{/if}}
+                </ContentPanel>
+            {{/if}}
+        </div>
+    </div>
+    <Spacer @height="300px" />
+</Layout::Section::Body>
