@@ -1,8 +1,10 @@
 import Model, { attr, belongsTo } from '@ember-data/model';
 
 export default class ScheduleItemModel extends Model {
+    /** @ids */
     @attr('string') public_id;
     @attr('string') schedule_uuid;
+    @attr('string') schedule_template_uuid;
     @attr('string') assignee_uuid;
     @attr('string') assignee_type;
     @attr('string') resource_uuid;
@@ -12,10 +14,20 @@ export default class ScheduleItemModel extends Model {
     @attr('number') duration;
     @attr('date') break_start_at;
     @attr('date') break_end_at;
-    @attr('string', { defaultValue: 'pending' }) status;
+    @attr('string') title;
+    @attr('string', { defaultValue: 'scheduled' }) status;
+    @attr('string') notes;
+
+    /** @exception fields */
+    @attr('boolean', { defaultValue: false }) is_exception;
+    @attr('date') exception_for_date;
+
+    /** @meta */
     @attr('object') meta;
 
-    @belongsTo('schedule') schedule;
+    /** @relationships */
+    @belongsTo('schedule', { async: true }) schedule;
+    @belongsTo('schedule-template', { async: true }) scheduleTemplate;
 
     @attr('date') created_at;
     @attr('date') updated_at;

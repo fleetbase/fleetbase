@@ -16,9 +16,14 @@ export default class ScheduleModel extends Model {
     @attr('string', { defaultValue: 'draft' }) status;
     @attr('object') meta;
 
+    /** @materialization tracking */
+    @attr('date') last_materialized_at;
+    @attr('number', { defaultValue: 60 }) materialization_horizon_days;
+
     /** @relationships */
-    @hasMany('schedule-item') items;
-    @belongsTo('company') company;
+    @hasMany('schedule-item', { async: true }) items;
+    @hasMany('schedule-exception', { async: true }) exceptions;
+    @belongsTo('company', { async: true }) company;
 
     /** @dates */
     @attr('date') created_at;
