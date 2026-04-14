@@ -276,8 +276,7 @@ Fleetbase offers open-source mobile apps that can be customized and deployed:
 
 | Feature | Status | Expected Release | Description |
 |---------|--------|------------------|-------------|
-| **Pallet (WMS)** | 🚧 In Development | Late Q1 / Early Q2 2026 | Inventory and Warehouse Management extension |
-| **Ledger** | 🚧 In Development | Late Q1 / Early Q2 2026 | Accounting and Invoicing extension |
+| **Pallet (WMS)** | 🚧 In Development | Q2 2026 | Inventory and Warehouse Management extension |
 | **AI Agent** | 🔬 Research | Q4 2026 | AI integration for system and workflow automation |
 | **Dynamic Rules** | 📋 Planned | 2027 | Rule builder to trigger events, tasks, and jobs |
 
