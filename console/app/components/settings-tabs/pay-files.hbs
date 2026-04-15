@@ -1,0 +1,81 @@
+<form class="grid gap-4 max-w-xl" {{on "submit" this.submit}} data-test-settings-form="pay-files">
+    <label class="grid gap-1">
+        <span class="text-sm font-medium">Default pay-file format</span>
+        <select
+            {{on "change" this.updateDefaultFormat}}
+            data-test-field="default_format"
+            class="form-select"
+        >
+            <option value="csv" selected={{eq this.defaultFormat "csv"}}>CSV</option>
+            <option value="ach_nacha" selected={{eq this.defaultFormat "ach_nacha"}}>ACH (NACHA)</option>
+            <option value="iif" selected={{eq this.defaultFormat "iif"}}>IIF (QuickBooks)</option>
+        </select>
+    </label>
+
+    <label class="grid gap-1">
+        <span class="text-sm font-medium">Default frequency</span>
+        <select
+            {{on "change" this.updateDefaultFrequency}}
+            data-test-field="default_frequency"
+            class="form-select"
+        >
+            <option value="daily" selected={{eq this.defaultFrequency "daily"}}>Daily</option>
+            <option value="weekly" selected={{eq this.defaultFrequency "weekly"}}>Weekly</option>
+            <option value="biweekly" selected={{eq this.defaultFrequency "biweekly"}}>Biweekly</option>
+            <option value="monthly" selected={{eq this.defaultFrequency "monthly"}}>Monthly</option>
+        </select>
+    </label>
+
+    <label class="grid gap-1">
+        <span class="text-sm font-medium">Default day of week</span>
+        <select
+            {{on "change" this.updateDefaultDayOfWeek}}
+            data-test-field="default_day_of_week"
+            class="form-select"
+        >
+            <option value="0" selected={{eq this.defaultDayOfWeek "0"}}>Sunday</option>
+            <option value="1" selected={{eq this.defaultDayOfWeek "1"}}>Monday</option>
+            <option value="2" selected={{eq this.defaultDayOfWeek "2"}}>Tuesday</option>
+            <option value="3" selected={{eq this.defaultDayOfWeek "3"}}>Wednesday</option>
+            <option value="4" selected={{eq this.defaultDayOfWeek "4"}}>Thursday</option>
+            <option value="5" selected={{eq this.defaultDayOfWeek "5"}}>Friday</option>
+            <option value="6" selected={{eq this.defaultDayOfWeek "6"}}>Saturday</option>
+        </select>
+    </label>
+
+    <label class="grid gap-1">
+        <span class="text-sm font-medium">Default recipients (one email per line)</span>
+        <textarea
+            rows="4"
+            value={{this.recipientsText}}
+            {{on "input" this.updateRecipients}}
+            data-test-field="default_recipients"
+            class="form-input font-mono text-sm"
+        >{{this.recipientsText}}</textarea>
+    </label>
+
+    <label class="grid gap-1">
+        <span class="text-sm font-medium">Default payment method</span>
+        <select
+            {{on "change" this.updateDefaultPaymentMethod}}
+            data-test-field="default_payment_method"
+            class="form-select"
+        >
+            <option value="ach" selected={{eq this.defaultPaymentMethod "ach"}}>ACH</option>
+            <option value="check" selected={{eq this.defaultPaymentMethod "check"}}>Check</option>
+            <option value="wire" selected={{eq this.defaultPaymentMethod "wire"}}>Wire</option>
+            <option value="card" selected={{eq this.defaultPaymentMethod "card"}}>Card</option>
+        </select>
+    </label>
+
+    <div class="mt-2">
+        <button
+            type="submit"
+            disabled={{@isSaving}}
+            class="btn btn-primary"
+            data-test-save
+        >
+            {{if @isSaving "Saving..." "Save Pay Files"}}
+        </button>
+    </div>
+</form>

@@ -1,0 +1,76 @@
+<form class="grid gap-4 max-w-xl" {{on "submit" this.submit}} data-test-settings-form="billing">
+    <label class="grid gap-1">
+        <span class="text-sm font-medium">Default payment terms (days)</span>
+        <input
+            type="number"
+            min="0"
+            step="1"
+            value={{this.paymentTermsDays}}
+            {{on "input" this.updatePaymentTermsDays}}
+            data-test-field="default_payment_terms_days"
+            class="form-input"
+        />
+    </label>
+
+    <label class="grid gap-1">
+        <span class="text-sm font-medium">Default billing frequency</span>
+        <select
+            {{on "change" this.updateBillingFrequency}}
+            data-test-field="default_billing_frequency"
+            class="form-select"
+        >
+            <option value="per_shipment" selected={{eq this.billingFrequency "per_shipment"}}>Per shipment</option>
+            <option value="weekly" selected={{eq this.billingFrequency "weekly"}}>Weekly</option>
+            <option value="biweekly" selected={{eq this.billingFrequency "biweekly"}}>Biweekly</option>
+            <option value="monthly" selected={{eq this.billingFrequency "monthly"}}>Monthly</option>
+        </select>
+    </label>
+
+    <label class="grid gap-1">
+        <span class="text-sm font-medium">Invoice number prefix</span>
+        <input
+            type="text"
+            maxlength="10"
+            value={{this.invoicePrefix}}
+            {{on "input" this.updateInvoicePrefix}}
+            data-test-field="invoice_number_prefix"
+            class="form-input"
+        />
+    </label>
+
+    <label class="grid gap-1">
+        <span class="text-sm font-medium">Next invoice number</span>
+        <input
+            type="number"
+            min="1"
+            step="1"
+            value={{this.invoiceNext}}
+            {{on "input" this.updateInvoiceNext}}
+            data-test-field="invoice_number_next"
+            class="form-input"
+        />
+    </label>
+
+    <label class="grid gap-1">
+        <span class="text-sm font-medium">Default currency (ISO-4217)</span>
+        <input
+            type="text"
+            maxlength="3"
+            value={{this.currency}}
+            {{on "input" this.updateCurrency}}
+            data-test-field="default_currency"
+            class="form-input uppercase"
+        />
+    </label>
+
+    <div class="mt-2">
+        <button
+            type="submit"
+            disabled={{@isSaving}}
+            class="btn btn-primary"
+            data-test-save
+        >
+            {{if @isSaving "Saving..." "Save Billing"}}
+        </button>
+    </div>
+</form>

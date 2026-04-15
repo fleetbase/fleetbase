@@ -1,0 +1,48 @@
+<form class="grid gap-4 max-w-xl" {{on "submit" this.submit}} data-test-settings-form="audit">
+    <label class="grid gap-1">
+        <span class="text-sm font-medium">Default tolerance (percent)</span>
+        <input
+            type="number"
+            min="0"
+            step="0.1"
+            value={{this.defaultTolerancePercent}}
+            {{on "input" this.updateDefaultTolerancePercent}}
+            data-test-field="default_tolerance_percent"
+            class="form-input"
+        />
+    </label>
+
+    <label class="grid gap-1">
+        <span class="text-sm font-medium">Default tolerance (amount, USD)</span>
+        <input
+            type="number"
+            min="0"
+            step="0.01"
+            value={{this.defaultToleranceAmount}}
+            {{on "input" this.updateDefaultToleranceAmount}}
+            data-test-field="default_tolerance_amount"
+            class="form-input"
+        />
+    </label>
+
+    <label class="flex items-center gap-2">
+        <input
+            type="checkbox"
+            checked={{this.autoAuditOnReceive}}
+            {{on "change" this.toggleAutoAuditOnReceive}}
+            data-test-field="auto_audit_on_receive"
+        />
+        <span class="text-sm">Auto-audit invoices on receipt</span>
+    </label>
+
+    <div class="mt-2">
+        <button
+            type="submit"
+            disabled={{@isSaving}}
+            class="btn btn-primary"
+            data-test-save
+        >
+            {{if @isSaving "Saving..." "Save Audit"}}
+        </button>
+    </div>
+</form>

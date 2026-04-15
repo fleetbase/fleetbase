@@ -1,0 +1,60 @@
+<form class="grid gap-4 max-w-xl" {{on "submit" this.submit}} data-test-settings-form="tendering">
+    <label class="grid gap-1">
+        <span class="text-sm font-medium">Default tender method</span>
+        <select
+            {{on "change" this.updateDefaultMethod}}
+            data-test-field="default_method"
+            class="form-select"
+        >
+            <option value="email" selected={{eq this.defaultMethod "email"}}>Email</option>
+            <option value="api" selected={{eq this.defaultMethod "api"}}>API</option>
+        </select>
+    </label>
+
+    <label class="grid gap-1">
+        <span class="text-sm font-medium">Default expiration (hours)</span>
+        <input
+            type="number"
+            min="1"
+            step="1"
+            value={{this.expirationHours}}
+            {{on "input" this.updateExpirationHours}}
+            data-test-field="default_expiration_hours"
+            class="form-input"
+        />
+    </label>
+
+    <label class="flex items-center gap-2">
+        <input
+            type="checkbox"
+            checked={{this.autoWaterfall}}
+            {{on "change" this.toggleAutoWaterfall}}
+            data-test-field="auto_waterfall"
+        />
+        <span class="text-sm">Auto-waterfall to next carrier on decline/timeout</span>
+    </label>
+
+    <label class="grid gap-1">
+        <span class="text-sm font-medium">Check-call stale threshold (hours)</span>
+        <input
+            type="number"
+            min="1"
+            step="1"
+            value={{this.checkCallStaleHours}}
+            {{on "input" this.updateCheckCallStaleHours}}
+            data-test-field="check_call_stale_hours"
+            class="form-input"
+        />
+    </label>
+
+    <div class="mt-2">
+        <button
+            type="submit"
+            disabled={{@isSaving}}
+            class="btn btn-primary"
+            data-test-save
+        >
+            {{if @isSaving "Saving..." "Save Tendering"}}
+        </button>
+    </div>
+</form>

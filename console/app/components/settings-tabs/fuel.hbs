@@ -1,0 +1,53 @@
+<form class="grid gap-4 max-w-xl" {{on "submit" this.submit}} data-test-settings-form="fuel">
+    <label class="flex items-center gap-2">
+        <input
+            type="checkbox"
+            checked={{this.autoUpdateEia}}
+            {{on "change" this.toggleAutoUpdateEia}}
+            data-test-field="auto_update_eia"
+        />
+        <span class="text-sm">Auto-update fuel price from EIA</span>
+    </label>
+
+    <label class="grid gap-1">
+        <span class="text-sm font-medium">Manual override price (USD / gallon)</span>
+        <input
+            type="number"
+            min="0"
+            step="0.01"
+            value={{this.manualOverridePrice}}
+            {{on "input" this.updateManualOverridePrice}}
+            data-test-field="manual_override_price"
+            class="form-input"
+            placeholder="Leave blank to use EIA price"
+        />
+    </label>
+
+    <label class="grid gap-1">
+        <span class="text-sm font-medium">Update day</span>
+        <select
+            {{on "change" this.updateUpdateDay}}
+            data-test-field="update_day"
+            class="form-select"
+        >
+            <option value="monday" selected={{eq this.updateDay "monday"}}>Monday</option>
+            <option value="tuesday" selected={{eq this.updateDay "tuesday"}}>Tuesday</option>
+            <option value="wednesday" selected={{eq this.updateDay "wednesday"}}>Wednesday</option>
+            <option value="thursday" selected={{eq this.updateDay "thursday"}}>Thursday</option>
+            <option value="friday" selected={{eq this.updateDay "friday"}}>Friday</option>
+            <option value="saturday" selected={{eq this.updateDay "saturday"}}>Saturday</option>
+            <option value="sunday" selected={{eq this.updateDay "sunday"}}>Sunday</option>
+        </select>
+    </label>
+
+    <div class="mt-2">
+        <button
+            type="submit"
+            disabled={{@isSaving}}
+            class="btn btn-primary"
+            data-test-save
+        >
+            {{if @isSaving "Saving..." "Save Fuel"}}
+        </button>
+    </div>
+</form>

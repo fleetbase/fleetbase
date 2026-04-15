@@ -1,0 +1,77 @@
+{{page-title "Operations Settings"}}
+<Layout::Section::Header @title="Operations Settings" />
+
+<Layout::Section::Body class="overflow-y-scroll h-full">
+    <div class="container mx-auto h-screen">
+        <div class="max-w-4xl my-10 mx-auto space-y-4">
+            {{#if this.accessDenied}}
+                <ContentPanel @title="Access Denied" @open={{true}} @wrapperClass="bordered-classic">
+                    <div class="p-4 text-sm" data-test-operations-access-denied>
+                        <p>You do not have permission to view or change operations settings.</p>
+                        <p class="mt-2 text-gray-500 dark:text-gray-400">Switch to an organization context or contact your administrator.</p>
+                    </div>
+                </ContentPanel>
+            {{else}}
+                <ContentPanel @title="Operations Settings" @open={{true}} @wrapperClass="bordered-classic">
+                    <p class="text-sm text-gray-500 dark:text-gray-400 mb-4">
+                        Per-company defaults for billing, tendering, documents, pay files, fuel, and audit.
+                    </p>
+
+                    <nav class="flex gap-2 mb-4 border-b border-gray-200 dark:border-gray-700" role="tablist">
+                        {{#each this.tabs as |tab|}}
+                            <button
+                                type="button"
+                                role="tab"
+                                aria-selected={{eq this.activeTab tab}}
+                                class="px-3 py-2 text-sm font-medium capitalize {{if (eq this.activeTab tab) 'border-b-2 border-blue-500 text-blue-600 dark:text-blue-400' 'text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100'}}"
+                                {{on "click" (fn this.setActiveTab tab)}}
+                                data-test-tab={{tab}}
+                            >{{tab}}</button>
+                        {{/each}}
+                    </nav>
+
+                    <div class="pt-2" data-test-operations-panel>
+                        {{#if (eq this.activeTab "billing")}}
+                            <SettingsTabs::Billing
+                                @values={{this.billing}}
+                                @isSaving={{this.isSaving}}
+                                @onSave={{this.saveCategory}}
+                            />
+                        {{else if (eq this.activeTab "tendering")}}
+                            <SettingsTabs::Tendering
+                                @values={{this.tendering}}
+                                @isSaving={{this.isSaving}}
+                                @onSave={{this.saveCategory}}
+                            />
+                        {{else if (eq this.activeTab "documents")}}
+                            <SettingsTabs::Documents
+                                @values={{this.documents}}
+                                @isSaving={{this.isSaving}}
+                                @onSave={{this.saveCategory}}
+                            />
+                        {{else if (eq this.activeTab "pay-files")}}
+                            <SettingsTabs::PayFiles
+                                @values={{this.payFiles}}
+                                @isSaving={{this.isSaving}}
+                                @onSave={{this.saveCategory}}
+                            />
+                        {{else if (eq this.activeTab "fuel")}}
+                            <SettingsTabs::Fuel
+                                @values={{this.fuel}}
+                                @isSaving={{this.isSaving}}
+                                @onSave={{this.saveCategory}}
+                            />
+                        {{else if (eq this.activeTab "audit")}}
+                            <SettingsTabs::Audit
+                                @values={{this.audit}}
+                                @isSaving={{this.isSaving}}
+                                @onSave={{this.saveCategory}}
+                            />
+                        {{/if}}
+                    </div>
+                </ContentPanel>
+            {{/if}}
+        </div>
+    </div>
+    <Spacer @height="300px" />
+</Layout::Section::Body>

@@ -1,0 +1,50 @@
+<form class="grid gap-4 max-w-xl" {{on "submit" this.submit}} data-test-settings-form="documents">
+    <label class="flex items-center gap-2">
+        <input
+            type="checkbox"
+            checked={{this.autoRequestPod}}
+            {{on "change" this.toggleAutoRequest}}
+            data-test-field="auto_request_pod_on_delivery"
+        />
+        <span class="text-sm">Auto-request Proof of Delivery on delivery</span>
+    </label>
+
+    <label class="grid gap-1">
+        <span class="text-sm font-medium">POD due (days after delivery)</span>
+        <input
+            type="number"
+            min="0"
+            step="1"
+            value={{this.podDueDays}}
+            {{on "input" this.updatePodDueDays}}
+            data-test-field="pod_due_days"
+            class="form-input"
+        />
+    </label>
+
+    <fieldset class="grid gap-2">
+        <legend class="text-sm font-medium">Required documents</legend>
+        {{#each this.docOptions as |code|}}
+            <label class="flex items-center gap-2">
+                <input
+                    type="checkbox"
+                    checked={{this.isDocRequired code}}
+                    {{on "change" (fn this.toggleDoc code)}}
+                    data-test-doc={{code}}
+                />
+                <span class="text-sm capitalize">{{code}}</span>
+            </label>
+        {{/each}}
+    </fieldset>
+
+    <div class="mt-2">
+        <button
+            type="submit"
+            disabled={{@isSaving}}
+            class="btn btn-primary"
+            data-test-save
+        >
+            {{if @isSaving "Saving..." "Save Documents"}}
+        </button>
+    </div>
+</form>

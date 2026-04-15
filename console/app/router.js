@@ -55,6 +55,7 @@ Router.map(function () {
             this.route('two-fa');
             this.route('notifications');
             this.route('clients');
+            this.route('operations');
         });
         this.route('virtual', { path: '/:slug' });
         this.route('admin', function () {
@@ -86,14 +87,14 @@ Router.map(function () {
             path: 'developers'
         });
 
-        this.mount('@fleetbase/iam-engine', {
-            as: 'iam',
-            path: 'iam'
-        });
-
         this.mount('@fleetbase/fleetops-engine', {
             as: 'fleet-ops',
             path: 'fleet-ops'
+        });
+
+        this.mount('@fleetbase/iam-engine', {
+            as: 'iam',
+            path: 'iam'
         });
 
         this.mount('@fleetbase/ledger-engine', {
