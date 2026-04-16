@@ -1,61 +1,33 @@
-> "The Ledger & The Navigator"
+> v0.7.33 ~ "Orchestrator Capacity Corrections & Currency Fix"
 ---
 ## ✨ Highlights
-This landmark release introduces two major, transformative features to the Fleetbase ecosystem: the first official version of the **Ledger** accounting extension and the brand new **Smart Navigator** header menu. Additionally, this release includes a powerful new **Template Builder** system and a completely redesigned **Installation Wizard**.
-
-### 💰 Ledger: Accounting, Invoicing & Payments
-After months of development, the **Ledger** extension (`v0.0.1`) makes its official debut. This is a full-featured accounting and payments module deeply integrated into Fleetbase, providing a comprehensive suite of tools to manage your organization's finances.
-
-Key features include:
-- **Invoicing:** Create, send, and manage professional invoices with customizable templates.
-- **Payment Gateways:** Seamlessly integrate with Stripe to accept online payments. The system includes robust webhook handling to automatically update invoice statuses.
-- **Revenue & Expense Tracking:** Automatically track revenue from FleetOps orders and Storefront purchases. Manually record expenses to get a complete financial picture.
-- **Accounts Receivable:** Keep track of outstanding invoices with an AR aging report.
-- **Digital Wallets:** Provide drivers and customers with digital wallets to manage balances and transactions.
-- **Financial Reporting:** Generate essential financial reports to monitor your business's health.
-- **RBAC Permissions:** A complete set of permissions for controlling access to all Ledger resources.
-
-### 🧭 Smart Navigator: A New Way to Navigate
-The main console header has been completely redesigned with the new **Smart Navigator** menu. This intelligent and responsive navigation system streamlines access to all your extensions and most-used features.
-
-Key features include:
-- **Intelligent & Responsive:** The menu automatically collapses items into a "More" dropdown as your screen width changes, ensuring a clean and uncluttered interface.
-- **Searchable Dropdown:** A powerful, multi-column dropdown allows you to instantly search and access any menu item.
-- **Shortcuts:** Extensions can now register "Shortcuts" — prominent, card-style links in the main dropdown that provide one-click access to critical actions like creating a new order or invoice.
-- **Pinning & Customization:** Pin your most frequently used extensions and shortcuts to the main header for immediate access.
-
----
-## ✨ New Features
-
-### 🎨 Template Builder System
-- **[core-api, ember-ui]** A new visual template builder has been introduced for creating and managing document templates (e.g., for invoices, reports, packing slips).
-- **[ember-ui]** The builder features a drag-and-drop canvas, a properties panel for customizing elements, and support for dynamic data via queries.
-- **[core-api]** Backend support includes new `Template` and `TemplateQuery` models and a preview endpoint for unsaved templates.
-
-### 🪄 Interactive Installation Wizard
-- **[fleetbase, fleetbase-cli]** The `docker-install.sh` script and the `flb install-fleetbase` command are now full-fledged interactive wizards.
-- **[fleetbase, fleetbase-cli]** The wizard guides users through configuring core settings, database connections (bundled MySQL or external), mail services (SMTP, Mailgun, SES, etc.), file storage (local, S3, GCS), and other third-party services.
-
-### 🔧 Ember Core & UI Enhancements
-- **[ember-core]** The `universe` service now correctly forwards sub-services to the host application, resolving cross-engine service isolation issues.
-- **[ember-core]** Implemented more robust session lifecycle events for login/logout handling.
-- **[ember-ui]** Added a comprehensive set of status badges for invoices and transactions.
+This is a focused correctness release addressing critical naming inconsistencies and redundant columns introduced with the Orchestrator in v0.7.32, alongside a bug fix in the core API for currency code resolution that affected 10 territories.
 
 ---
 ## 🐛 Bug Fixes
 
-### FleetOps
-- **[fleetops]** Suppressed a false-positive `ember/no-shadow-route-definition` lint error for the top-level `virtual` route using an `eslint-disable` comment. [1]
+### Core API
+- **[core-api]** Fixed `getCurrencyFromCountryCode()` returning an array instead of a `?string` for 10 territories (BQ, CC, CX, GP, GF, MQ, YT, RE, SJ, TK) where the PragmaRX Countries package returns currencies as an associative map (`{"USD": {...}}`) rather than a sequential list (`["USD"]`). Introduced `Utils::resolveCurrencyCode()` which normalises both shapes — sequential list via `Arr::first()`, associative map via `array_key_first()`. Also guards `strtolower()` comparisons in `getCountryCodeByCurrency()` with `is_string()` to prevent `mb_strtolower(null)` deprecation warnings. ([core-api#201](https://github.com/fleetbase/core-api/pull/201))
 
-### Ledger
-- **[ledger]** Resolved numerous bugs during the stabilization process, including fixes for invoice number generation, line item calculations, webhook processing, currency handling, and cross-engine service dependencies.
+### FleetOps — Orchestrator Capacity Columns
+- **[fleetops]** Removed redundant `capacity_weight_kg` column from the `vehicles` table — this was a duplicate of the pre-existing `payload_capacity` column. `OrchestrationPayloadBuilder` now reads `payload_capacity` directly. ([fleetops#225](https://github.com/fleetbase/fleetops/pull/225))
+- **[fleetops]** Renamed non-standard vehicle capacity columns to follow the Fleetbase `payload_capacity_*` naming convention: `capacity_volume_m3` → `payload_capacity_volume`, `capacity_pallets` → `payload_capacity_pallets`, `capacity_parcels` → `payload_capacity_parcels`. ([fleetops#225](https://github.com/fleetbase/fleetops/pull/225))
+- **[fleetops]** Removed all four redundant capacity cache columns from the `payloads` table (`capacity_weight_kg`, `capacity_volume_m3`, `capacity_pallets`, `capacity_parcels`). These values are now computed dynamically from payload entities by `OrchestrationPayloadBuilder` with full unit normalisation (kg, g, lb, oz, t; m, cm, mm, in, ft), eliminating the risk of stale denormalised data. ([fleetops#225](https://github.com/fleetbase/fleetops/pull/225))
+- **[fleetops]** `VehicleController` (`Api/v1`) `create` and `update` whitelists now accept all orchestrator capacity and constraint fields: `payload_capacity`, `payload_capacity_volume`, `payload_capacity_pallets`, `payload_capacity_parcels`, `skills`, `max_tasks`, `time_window_start`, `time_window_end`, `return_to_depot`. ([fleetops#225](https://github.com/fleetbase/fleetops/pull/225))
+- **[fleetops]** `OrderController` (`Api/v1`) `create` and `update` whitelists now accept orchestrator constraint fields: `time_window_start`, `time_window_end`, `required_skills`, `orchestrator_priority`. ([fleetops#225](https://github.com/fleetbase/fleetops/pull/225))
+- **[fleetops]** Vehicle form and details UI updated: `payload_capacity_volume`, `payload_capacity_pallets`, and `payload_capacity_parcels` are now editable in the **Capacity & Dimensions** sub-section of Technical Specifications and displayed in the same section in the details view (not in the Orchestrator Constraints panel, as these are general vehicle specification fields). ([fleetops#225](https://github.com/fleetbase/fleetops/pull/225))
 
-### Ember UI
-- **[ember-ui]** Fixed numerous styling, rendering, and interactivity bugs in the new Smart Navigator and Template Builder components.
+### FleetOps Data — Ember Data Models
+- **[fleetops-data]** `Vehicle` model: added `payload_capacity_volume`, `payload_capacity_pallets`, `payload_capacity_parcels` attributes (following `payload_capacity_*` convention) and orchestrator constraint attributes `skills`, `max_tasks`, `time_window_start`, `time_window_end`, `return_to_depot`. ([fleetops-data#47](https://github.com/fleetbase/fleetops-data/pull/47))
+- **[fleetops-data]** `Order` model: added orchestrator constraint attributes `time_window_start`, `time_window_end`, `required_skills`, `orchestrator_priority`. ([fleetops-data#47](https://github.com/fleetbase/fleetops-data/pull/47))
 
 ---
-## ⚠️ Breaking Changes
-- **[fleetbase]** The primary console virtual route has been moved from `/:slug` to `/~/:slug` to avoid conflicts with extension routes.
+## ⚠️ Breaking Changes / Migration Notes
+- **[fleetops]** Two new corrective migrations must be run on instances that have already applied the v0.7.32 migrations:
+  - `2026_04_14_000001` — drops the four redundant capacity columns from the `payloads` table.
+  - `2026_04_14_000002` — renames the three vehicle capacity columns to the `payload_capacity_*` convention and drops the redundant `capacity_weight_kg` column.
+  - Run `php artisan migrate` after upgrading.
+- **[core-api]** No schema changes. The currency fix is a pure PHP logic change with no migration required.
 
 ---
 ## 🔧 Upgrade Steps
@@ -71,18 +43,12 @@ docker compose exec application bash -c "./deploy.sh"
 
 ---
 ## 📦 Component Versions
-- **fleetbase**: v0.7.31
-- **core-api**: v1.6.38
-- **fleetops**: v0.6.38
-- **storefront**: v0.4.14
-- **ledger**: v0.0.1
-- **ember-core**: v0.3.18
-- **ember-ui**: v0.3.25
-- **fleetbase-cli**: v0.0.6
+- **fleetbase**: v0.7.33
+- **core-api**: v1.6.40
+- **fleetops**: v0.6.40
+- **fleetops-data**: v0.1.28
+- **ember-ui**: v0.3.26
 
 ---
-## References
-[1] `fleetbase/fleetops` - PR #210: `feature/header-menu-shortcuts`
-
-## Need help? 
+## Need help?
 Join the discussion on [GitHub Discussions](https://github.com/fleetbase/fleetbase/discussions) or drop by [#fleetbase on Discord](https://discord.com/invite/HnTqQ6zAVn)

@@ -1,6 +1,6 @@
 {
     "name": "@fleetbase/console",
-    "version": "0.7.31",
+    "version": "0.7.33",
     "private": true,
     "description": "Modular logistics and supply chain operating system (LSOS)",
     "repository": "https://github.com/fleetbase/fleetbase",
@@ -34,18 +34,18 @@
     "dependencies": {
         "@ember/legacy-built-in-components": "^0.4.2",
         "@fleetbase/aws-marketplace": "^0.0.8",
-        "@fleetbase/billing-engine": "^0.1.21",
+        "@fleetbase/billing-engine": "^0.1.22",
         "@fleetbase/customer-portal-engine": "^0.0.10",
         "@fleetbase/dev-engine": "^0.2.13",
         "@fleetbase/ember-core": "^0.3.18",
-        "@fleetbase/ember-ui": "^0.3.25",
-        "@fleetbase/fleetops-data": "^0.1.25",
-        "@fleetbase/fleetops-engine": "^0.6.38",
+        "@fleetbase/ember-ui": "^0.3.26",
+        "@fleetbase/fleetops-data": "^0.1.28",
+        "@fleetbase/fleetops-engine": "^0.6.40",
         "@fleetbase/iam-engine": "^0.1.8",
         "@fleetbase/flespi-engine": "^0.1.16",
         "@fleetbase/internals-engine": "^0.0.29",
         "@fleetbase/leaflet-routing-machine": "^3.2.17",
-        "@fleetbase/registry-bridge-engine": "^0.1.8",
+        "@fleetbase/registry-bridge-engine": "^0.1.9",
         "@fleetbase/samsara-engine": "^0.0.3",
         "@fleetbase/valhalla-engine": "^0.0.3",
         "@fleetbase/vroom-engine": "^0.0.3",
@@ -160,8 +160,8 @@
     "pnpm": {
         "overrides": {
             "@fleetbase/ember-core": "^0.3.18",
-            "@fleetbase/ember-ui": "^0.3.25",
-            "@fleetbase/fleetops-data": "^0.1.25"
+            "@fleetbase/ember-ui": "^0.3.26",
+            "@fleetbase/fleetops-data": "^0.1.28"
         }
     },
     "prettier": {
