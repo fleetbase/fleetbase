@@ -70,10 +70,11 @@ services:
       CACHE_URL: tcp://cache
       REDIS_URL: tcp://cache
     depends_on:
-        - database
-        - cache
+      - database
+      - cache
 
   console:
+    restart: unless-stopped
     build:
       context: ./console
       dockerfile: Dockerfile
@@ -85,9 +86,11 @@ services:
       - ./console/fleetbase.config.json:/usr/share/nginx/html/fleetbase.config.json
 
   application:
+    restart: unless-stopped
     image: fleetbase/fleetbase-api:latest
     volumes:
       - ./api/.env:/fleetbase/api/.env
+      - ./api/storage/app:/fleetbase/api/storage/app
     environment:
       ENVIRONMENT: development
       DATABASE_URL: "mysql://root@database/fleetbase"
@@ -102,7 +105,7 @@ services:
       APP_NAME: Fleetbase
       LOG_CHANNEL: daily
       REGISTRY_HOST: https://registry.fleetbase.io
-      REGISTRY_PREINSTALLED_EXTENSIONS: 'true'
+      REGISTRY_PREINSTALLED_EXTENSIONS: "true"
       OSRM_HOST: https://router.project-osrm.org
     depends_on:
       - database
@@ -110,6 +113,7 @@ services:
       - queue
 
   httpd:
+    restart: unless-stopped
     build:
       context: .
       dockerfile: docker/httpd/Dockerfile
