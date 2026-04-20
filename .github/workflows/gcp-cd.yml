@@ -170,6 +170,7 @@ jobs:
         SOCKETCLUSTER_SECURE: "true"
         SOCKETCLUSTER_PORT: "443"
         API_HOST: ${{ env.API_HOST }}
+        DISABLE_RUNTIME_CONFIG: "true"
       run: |
         set -eu
 
