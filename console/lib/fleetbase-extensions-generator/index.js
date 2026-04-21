@@ -224,7 +224,13 @@ export default getExtensionLoader;
 
         recast.visit(ast, {
             visitCallExpression(path) {
-                if (path.value.type === 'CallExpression' && path.value.callee.property && path.value.callee.property.name === 'route' && path.value.arguments[0] && path.value.arguments[0].value === 'console') {
+                if (
+                    path.value.type === 'CallExpression' &&
+                    path.value.callee.property &&
+                    path.value.callee.property.name === 'route' &&
+                    path.value.arguments[0] &&
+                    path.value.arguments[0].value === 'console'
+                ) {
                     let functionExpression;
 
                     // Find the function expression

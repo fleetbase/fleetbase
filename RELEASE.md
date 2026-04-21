@@ -1,14 +1,12 @@
-> v0.7.34 ~ "Simply set orchestration constraint default valalues"
+> v0.7.35 ~ "Send user invites directly"
 ---
 ## ✨ Highlights
-This is a very simple release which sets default values for orchestrator contraints on order creation.
+Patched user invitation flow and adds an explicit "Invite User" button to IAM.
 
 ---
 ## 🐛 Bug Fixes
-
-### FleetOps — Orchestrator Capacity Columns
-- **[fleetops]** fix: prevent orchestrator_priority null constraint violation on order creation [PR](https://github.com/fleetbase/fleetops/pull/228)
-
+- Patched user invitation flow via creation and explicit invites.
+- Patch sandbox api key creation.
 
 ---
 ## 🔧 Upgrade Steps
@@ -24,9 +22,10 @@ docker compose exec application bash -c "./deploy.sh"
 
 ---
 ## 📦 Component Versions
-- **fleetbase**: v0.7.34
-- **fleetops**: v0.6.41
-- **ledger**: v0.0.2
+- **fleetbase**: v0.7.35
+- **fleetops**: v0.6.42
+- **core-api**: v1.6.41
+- **iam-engine**: v0.1.9
 
 ---
 ## Need help?

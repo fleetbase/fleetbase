@@ -22,7 +22,7 @@ export default class OnboardingOrchestratorService extends Service {
     async start(flowId = null, opts = {}) {
         const flow = this.onboardingRegistry.getFlow(flowId ?? this.onboardingRegistry.defaultFlow);
         if (!flow) throw new Error(`Onboarding flow '${flowId}' not found`);
-        
+
         this.flow = flow;
         this.wrapper = flow.wrapper || null;
         this.sessionId = opts.sessionId || null;
@@ -79,7 +79,7 @@ export default class OnboardingOrchestratorService extends Service {
         if (!this.flow || !this.current) return;
 
         const leaving = this.current;
-        
+
         // afterLeave lifecycle hook
         if (typeof leaving.afterLeave === 'function') {
             await leaving.afterLeave(this.onboardingContext);
@@ -136,14 +136,14 @@ export default class OnboardingOrchestratorService extends Service {
      */
     getCurrentPath() {
         if (!this.flow || !this.flow.paths) return null;
-        
+
         // Determine path based on context or current step
         for (const [pathId, pathDef] of Object.entries(this.flow.paths)) {
-            if (pathDef.steps && pathDef.steps.some(s => s.id === this.current?.id)) {
+            if (pathDef.steps && pathDef.steps.some((s) => s.id === this.current?.id)) {
                 return pathDef;
             }
         }
-        
+
         return null;
     }
 
@@ -153,8 +153,8 @@ export default class OnboardingOrchestratorService extends Service {
     isStepInPath(stepId) {
         const currentPath = this.getCurrentPath();
         if (!currentPath) return true; // If no paths defined, all steps are valid
-        
-        return currentPath.steps?.some(s => s.id === stepId) ?? false;
+
+        return currentPath.steps?.some((s) => s.id === stepId) ?? false;
     }
 
     /**
@@ -164,9 +164,9 @@ export default class OnboardingOrchestratorService extends Service {
      */
     _persistHistory() {
         if (!this.flow) return;
-        
+
         try {
-            const historyIds = this.history.map(step => step.id);
+            const historyIds = this.history.map((step) => step.id);
             localStorage.setItem(this.historyStorageKey, JSON.stringify(historyIds));
         } catch (error) {
             console.warn('[OnboardingOrchestrator] Failed to persist history:', error);
@@ -180,17 +180,18 @@ export default class OnboardingOrchestratorService extends Service {
      */
     _restoreHistory() {
         if (!this.flow) return;
-        
+
         try {
             const stored = localStorage.getItem(this.historyStorageKey);
             if (!stored) return;
-            
+
             const historyIds = JSON.parse(stored);
-            this.history = historyIds
-                .map(id => this.flow.steps.find(s => s.id === id))
-                .filter(Boolean); // Remove any invalid steps
-            
-            console.log('[OnboardingOrchestrator] Restored history:', this.history.map(s => s.id));
+            this.history = historyIds.map((id) => this.flow.steps.find((s) => s.id === id)).filter(Boolean); // Remove any invalid steps
+
+            console.log(
+                '[OnboardingOrchestrator] Restored history:',
+                this.history.map((s) => s.id)
+            );
         } catch (error) {
             console.warn('[OnboardingOrchestrator] Failed to restore history:', error);
             this.history = [];
@@ -204,7 +205,7 @@ export default class OnboardingOrchestratorService extends Service {
      */
     _clearHistory() {
         if (!this.flow) return;
-        
+
         try {
             localStorage.removeItem(this.historyStorageKey);
         } catch (error) {
