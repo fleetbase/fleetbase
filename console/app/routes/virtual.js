@@ -12,7 +12,7 @@ export default class VirtualRoute extends Route {
     queryParams = {
         view: {
             refreshModel: true,
-        }
+        },
     };
 
     async beforeModel(transition) {
