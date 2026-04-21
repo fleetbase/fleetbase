@@ -16,14 +16,14 @@ export default class ScheduleTemplateModel extends Model {
     /** @attributes */
     @attr('string') name;
     @attr('string') description;
-    @attr('string') start_time;       // HH:mm — e.g. "08:00"
-    @attr('string') end_time;         // HH:mm — e.g. "16:00"
+    @attr('string') start_time; // HH:mm — e.g. "08:00"
+    @attr('string') end_time; // HH:mm — e.g. "16:00"
     @attr('string') break_start_time; // HH:mm — e.g. "12:00" (optional)
-    @attr('string') break_end_time;   // HH:mm — e.g. "13:00" (optional)
-    @attr('number') duration;         // computed minutes (end - start)
-    @attr('number') break_duration;   // minutes
-    @attr('string') rrule;            // RFC 5545 RRULE string
-    @attr('string') color;            // hex color for calendar display
+    @attr('string') break_end_time; // HH:mm — e.g. "13:00" (optional)
+    @attr('number') duration; // computed minutes (end - start)
+    @attr('number') break_duration; // minutes
+    @attr('string') rrule; // RFC 5545 RRULE string
+    @attr('string') color; // hex color for calendar display
     @attr('object') meta;
 
     /** @relationships */
@@ -42,7 +42,12 @@ export default class ScheduleTemplateModel extends Model {
         if (!this.rrule) return null;
         const dayMap = { MO: 'Mon', TU: 'Tue', WE: 'Wed', TH: 'Thu', FR: 'Fri', SA: 'Sat', SU: 'Sun' };
         const byday = this.rrule.match(/BYDAY=([^;]+)/);
-        const days = byday ? byday[1].split(',').map((d) => dayMap[d] || d).join(', ') : '';
+        const days = byday
+            ? byday[1]
+                  .split(',')
+                  .map((d) => dayMap[d] || d)
+                  .join(', ')
+            : '';
         const freq = this.rrule.match(/FREQ=(\w+)/);
         const freqLabel = freq ? freq[1].charAt(0) + freq[1].slice(1).toLowerCase() : '';
         const times = this.start_time && this.end_time ? ` · ${this.start_time}–${this.end_time}` : '';

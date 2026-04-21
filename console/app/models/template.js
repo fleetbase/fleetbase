@@ -41,7 +41,7 @@ export default class TemplateModel extends Model {
         return this.status === 'published';
     }
 
-    @computed('paper_size', 'orientation') get dimensionLabel() {
+    @computed('height', 'orientation', 'paper_size', 'unit', 'width') get dimensionLabel() {
         if (this.paper_size === 'custom') {
             return `${this.width} × ${this.height} ${this.unit}`;
         }

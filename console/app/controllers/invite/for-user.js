@@ -42,16 +42,22 @@ export default class InviteForUserController extends Controller {
             title: 'Set a new password',
             closeButton: false,
             backdropClose: false,
+            keepOpen: true,
             hideDeclineButton: true,
             declineButtonDisabled: true,
             password: null,
             password_confirmation: null,
-            confirm: (modal) => {
+            confirm: async (modal) => {
                 modal.startLoading();
 
-                const input = modal.getOptions(['password', 'password_confirmation']);
-
-                return this.fetch.post('users/set-password', input);
+                try {
+                    const input = modal.getOptions(['password', 'password_confirmation']);
+                    await this.fetch.post('users/set-password', input);
+                    return modal.done();
+                } catch (err) {
+                    this.notifications.serverError(err);
+                    modal.stopLoading();
+                }
             },
         });
     }

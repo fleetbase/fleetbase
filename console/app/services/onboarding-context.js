@@ -16,7 +16,7 @@ export default class OnboardingContextService extends Service {
 
     /**
      * Safe wrapper for appCache.set with quota error handling
-     * 
+     *
      * @param {string} key - The key to set
      * @param {*} value - The value to store
      * @returns {Object} Result object with success status and storage type
@@ -28,20 +28,20 @@ export default class OnboardingContextService extends Service {
         } catch (error) {
             if (this._isQuotaError(error)) {
                 console.warn(`[OnboardingContext] localStorage quota exceeded, using memory fallback for key: ${key}`);
-                
+
                 // Store in memory as fallback
                 this._memoryCache.set(key, value);
-                
+
                 // Mark that we're using fallback and notify user (only once)
                 if (!this.quotaExceeded) {
                     this.quotaExceeded = true;
                     this.usingMemoryFallback = true;
                     this._notifyUser();
                 }
-                
+
                 return { success: true, storage: 'memory', warning: 'Using memory fallback' };
             }
-            
+
             // Re-throw non-quota errors
             throw error;
         }
@@ -49,7 +49,7 @@ export default class OnboardingContextService extends Service {
 
     /**
      * Safe wrapper for appCache.get with memory fallback
-     * 
+     *
      * @param {string} key - The key to retrieve
      * @returns {*} The stored value or undefined
      */
@@ -62,25 +62,19 @@ export default class OnboardingContextService extends Service {
         } catch (error) {
             console.warn(`[OnboardingContext] Error reading from appCache: ${error.message}`);
         }
-        
+
         // Fallback to memory cache
         return this._memoryCache.get(key);
     }
 
     /**
      * Check if error is a quota exceeded error
-     * 
+     *
      * @param {Error} error - The error to check
      * @returns {boolean} True if it's a quota error
      */
     _isQuotaError(error) {
-        return (
-            error instanceof DOMException &&
-            (error.code === 22 ||
-                error.code === 1014 ||
-                error.name === 'QuotaExceededError' ||
-                error.name === 'NS_ERROR_DOM_QUOTA_REACHED')
-        );
+        return error instanceof DOMException && (error.code === 22 || error.code === 1014 || error.name === 'QuotaExceededError' || error.name === 'NS_ERROR_DOM_QUOTA_REACHED');
     }
 
     /**
@@ -92,7 +86,7 @@ export default class OnboardingContextService extends Service {
                 'Your browser storage is full. Your onboarding progress will be saved temporarily but may be lost if you close this tab. Please complete the onboarding process in this session.',
                 {
                     timeout: 10000,
-                    clearDuration: 300
+                    clearDuration: 300,
                 }
             );
         }
@@ -143,7 +137,7 @@ export default class OnboardingContextService extends Service {
         // Filter out sensitive fields
         const sensitiveFields = ['password', 'password_confirmation'];
         const filteredData = {};
-        
+
         for (const [key, value] of Object.entries(data)) {
             if (!sensitiveFields.includes(key)) {
                 filteredData[key] = value;
@@ -205,7 +199,7 @@ export default class OnboardingContextService extends Service {
 
         this._safeSet(`${CONTEXT_PREFIX}${key}`, undefined);
         this._safeSet(KEYS_INDEX, [...keys]);
-        
+
         // Also remove from memory cache
         this._memoryCache.delete(`${CONTEXT_PREFIX}${key}`);
     }
@@ -230,14 +224,14 @@ export default class OnboardingContextService extends Service {
 
     /**
      * Get storage status for debugging
-     * 
+     *
      * @returns {Object} Storage status information
      */
     getStorageStatus() {
         return {
             quotaExceeded: this.quotaExceeded,
             usingMemoryFallback: this.usingMemoryFallback,
-            memoryItemCount: this._memoryCache.size
+            memoryItemCount: this._memoryCache.size,
         };
     }
 }
