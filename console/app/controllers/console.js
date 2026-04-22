@@ -119,8 +119,9 @@ export default class ConsoleController extends Controller {
      * @void
      */
     @action createOrJoinOrg() {
-        const currency = this.currentUser.currency;
-        const country = this.currentUser.country;
+        const currency = this.currentUser.company?.currency ?? this.currentUser.currency ?? 'USD';
+        const country = this.currentUser.company?.country ?? this.currentUser.country;
+        const timezone = this.currentUser.company?.timezone ?? this.currentUser.whois('timezone');
 
         this.modalsManager.show('modals/create-or-join-org', {
             title: this.intl.t('console.create-or-join-organization.modal-title'),
@@ -134,7 +135,7 @@ export default class ConsoleController extends Controller {
             phone: null,
             currency,
             country,
-            timezone: null,
+            timezone,
             changeAction: (action) => {
                 this.modalsManager.setOption('action', action);
             },

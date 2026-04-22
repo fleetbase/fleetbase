@@ -1,12 +1,13 @@
-> v0.7.35 ~ "Send user invites directly"
+> v0.7.36 ~ "Geofence events and logs added"
 ---
 ## ✨ Highlights
-Patched user invitation flow and adds an explicit "Invite User" button to IAM.
+Added Geofencing.
 
 ---
 ## 🐛 Bug Fixes
-- Patched user invitation flow via creation and explicit invites.
-- Patch sandbox api key creation.
+- Fixed the order import template download location
+- Added the new Geofence feature and events
+- Added ability to apply service quotes to created orders via update API
 
 ---
 ## 🔧 Upgrade Steps
@@ -22,10 +23,10 @@ docker compose exec application bash -c "./deploy.sh"
 
 ---
 ## 📦 Component Versions
-- **fleetbase**: v0.7.35
-- **fleetops**: v0.6.42
-- **core-api**: v1.6.41
-- **iam-engine**: v0.1.9
+- **fleetbase**: v0.7.36
+- **fleetops**: v0.6.44
+- **fleetops-data**: v0.1.29
+- **core-api**: v1.6.43
 
 ---
 ## Need help?

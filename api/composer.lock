@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "44c91262bb3d7d7bd684ec26c99ed6dc",
+    "content-hash": "12414df3b29714054708203fcffc3e0d",
     "packages": [
         {
             "name": "appstract/laravel-opcache",
@@ -124,16 +124,16 @@
         },
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.379.3",
+            "version": "3.379.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "54a7dbb04489a8b330db64ec07c1f658c9262433"
+                "reference": "606d812d3e9289147e2c801d51b916c45c92de39"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/54a7dbb04489a8b330db64ec07c1f658c9262433",
-                "reference": "54a7dbb04489a8b330db64ec07c1f658c9262433",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/606d812d3e9289147e2c801d51b916c45c92de39",
+                "reference": "606d812d3e9289147e2c801d51b916c45c92de39",
                 "shasum": ""
             },
             "require": {
@@ -215,9 +215,9 @@
             "support": {
                 "forum": "https://github.com/aws/aws-sdk-php/discussions",
                 "issues": "https://github.com/aws/aws-sdk-php/issues",
-                "source": "https://github.com/aws/aws-sdk-php/tree/3.379.3"
+                "source": "https://github.com/aws/aws-sdk-php/tree/3.379.4"
             },
-            "time": "2026-04-20T18:13:51+00:00"
+            "time": "2026-04-21T20:01:34+00:00"
         },
         {
             "name": "aws/aws-sdk-php-laravel",
@@ -2156,16 +2156,16 @@
         },
         {
             "name": "fleetbase/core-api",
-            "version": "1.6.41",
+            "version": "1.6.43",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fleetbase/core-api.git",
-                "reference": "81c086c2f58d0b0c0b454e0053d4b8788bf3073a"
+                "reference": "b8fbdec4b3ff0deac8022f27b2c1502437973885"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fleetbase/core-api/zipball/81c086c2f58d0b0c0b454e0053d4b8788bf3073a",
-                "reference": "81c086c2f58d0b0c0b454e0053d4b8788bf3073a",
+                "url": "https://api.github.com/repos/fleetbase/core-api/zipball/b8fbdec4b3ff0deac8022f27b2c1502437973885",
+                "reference": "b8fbdec4b3ff0deac8022f27b2c1502437973885",
                 "shasum": ""
             },
             "require": {
@@ -2255,9 +2255,9 @@
             ],
             "support": {
                 "issues": "https://github.com/fleetbase/core-api/issues",
-                "source": "https://github.com/fleetbase/core-api/tree/v1.6.41"
+                "source": "https://github.com/fleetbase/core-api/tree/v1.6.43"
             },
-            "time": "2026-04-21T08:56:18+00:00"
+            "time": "2026-04-22T07:57:30+00:00"
         },
         {
             "name": "fleetbase/countries",
@@ -2326,16 +2326,16 @@
         },
         {
             "name": "fleetbase/fleetops-api",
-            "version": "0.6.43",
+            "version": "0.6.44",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fleetbase/fleetops.git",
-                "reference": "23d4dd5b5af3ca609c8f51f3c045be24e49e95d1"
+                "reference": "1b9a79202fd0c602bf320fea19d6a212e7577c6a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fleetbase/fleetops/zipball/23d4dd5b5af3ca609c8f51f3c045be24e49e95d1",
-                "reference": "23d4dd5b5af3ca609c8f51f3c045be24e49e95d1",
+                "url": "https://api.github.com/repos/fleetbase/fleetops/zipball/1b9a79202fd0c602bf320fea19d6a212e7577c6a",
+                "reference": "1b9a79202fd0c602bf320fea19d6a212e7577c6a",
                 "shasum": ""
             },
             "require": {
@@ -2412,9 +2412,9 @@
             ],
             "support": {
                 "issues": "https://github.com/fleetbase/fleetops/issues",
-                "source": "https://github.com/fleetbase/fleetops/tree/v0.6.43"
+                "source": "https://github.com/fleetbase/fleetops/tree/v0.6.44"
             },
-            "time": "2026-04-21T08:53:03+00:00"
+            "time": "2026-04-22T08:06:44+00:00"
         },
         {
             "name": "fleetbase/laravel-mysql-spatial",
@@ -5893,16 +5893,16 @@
         },
         {
             "name": "laravel/octane",
-            "version": "v2.17.1",
+            "version": "v2.17.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/octane.git",
-                "reference": "eb6150b9aa30956e3a2c04dfebf3a03c5d963a3a"
+                "reference": "d73525fe809da767c0463d9f30fdd24fecf982b3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/octane/zipball/eb6150b9aa30956e3a2c04dfebf3a03c5d963a3a",
-                "reference": "eb6150b9aa30956e3a2c04dfebf3a03c5d963a3a",
+                "url": "https://api.github.com/repos/laravel/octane/zipball/d73525fe809da767c0463d9f30fdd24fecf982b3",
+                "reference": "d73525fe809da767c0463d9f30fdd24fecf982b3",
                 "shasum": ""
             },
             "require": {
@@ -5978,7 +5978,7 @@
                 "issues": "https://github.com/laravel/octane/issues",
                 "source": "https://github.com/laravel/octane"
             },
-            "time": "2026-03-18T14:14:24+00:00"
+            "time": "2026-04-16T14:48:13+00:00"
         },
         {
             "name": "laravel/prompts",
