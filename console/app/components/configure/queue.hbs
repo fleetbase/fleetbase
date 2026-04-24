@@ -1,15 +1,15 @@
-<ContentPanel @title="Queue" @open={{true}} @wrapperClass="bordered-classic">
-    <InputGroup @name="Driver" @helpText="Select the default queue driver for Fleetbase to use.">
-        <Select @options={{this.connections}} @value={{this.driver}} @onSelect={{this.setDriver}} @placeholder="Select queue driver" disabled={{this.isLoading}} class="w-full" />
+<ContentPanel @title={{t "component.configure.queue.title"}} @open={{true}} @wrapperClass="bordered-classic">
+    <InputGroup @name={{t "component.configure.queue.driver"}} @helpText={{t "component.configure.queue.driver-help-text"}}>
+        <Select @options={{this.connections}} @value={{this.driver}} @onSelect={{this.setDriver}} @placeholder={{t "component.configure.queue.select-driver"}} disabled={{this.isLoading}} class="w-full" />
     </InputGroup>
     {{#if (eq this.driver "beanstalkd")}}
-        <InputGroup @name="Beanstalk Host" @value={{this.beanstalkdHost}} disabled={{this.isLoading}} />
-        <InputGroup @name="Beanstalk Queue" @value={{this.beanstalkdQueue}} />
+        <InputGroup @name={{t "component.configure.queue.beanstalk-host"}} @value={{this.beanstalkdHost}} disabled={{this.isLoading}} />
+        <InputGroup @name={{t "component.configure.queue.beanstalk-queue"}} @value={{this.beanstalkdQueue}} />
     {{/if}}
     {{#if (eq this.driver "sqs")}}
-        <InputGroup @name="SQS Prefix" @value={{this.sqsPrefix}} disabled={{this.isLoading}} />
-        <InputGroup @name="SQS Queue" @value={{this.sqsQueue}} disabled={{this.isLoading}} />
-        <InputGroup @name="SQS Suffix" @value={{this.sqsSuffix}} disabled={{this.isLoading}} />
+        <InputGroup @name={{t "component.configure.queue.sqs-prefix"}} @value={{this.sqsPrefix}} disabled={{this.isLoading}} />
+        <InputGroup @name={{t "component.configure.queue.sqs-queue"}} @value={{this.sqsQueue}} disabled={{this.isLoading}} />
+        <InputGroup @name={{t "component.configure.queue.sqs-suffix"}} @value={{this.sqsSuffix}} disabled={{this.isLoading}} />
     {{/if}}
     {{#if this.testResponse}}
         <div class="flex flex-row items-center rounded-lg border {{if (eq this.testResponse.status 'error') 'border-red-900 bg-red-800 text-red-100' 'border-green-900 bg-green-800 text-green-100'}} shadow-sm my-2 px-4 py-2">
@@ -17,9 +17,9 @@
             <span class="text-xs">{{this.this.testResponse.message}}</span>
         </div>
     {{/if}}
-    <Button @wrapperClass="mt-3" @icon="plug" @text="Test Config" @onClick={{this.test}} @isLoading={{this.isLoading}} />
+    <Button @wrapperClass="mt-3" @icon="plug" @text={{t "component.configure.test-config"}} @onClick={{this.test}} @isLoading={{this.isLoading}} />
 </ContentPanel>
 
 <EmberWormhole @to="next-view-section-subheader-actions">
-    <Button @type="primary" @size="sm" @icon="save" @text="Save Changes" @onClick={{this.save}} @disabled={{this.isLoading}} @isLoading={{this.isLoading}} />
+    <Button @type="primary" @size="sm" @icon="save" @text={{t "component.configure.save-changes"}} @onClick={{this.save}} @disabled={{this.isLoading}} @isLoading={{this.isLoading}} />
 </EmberWormhole>

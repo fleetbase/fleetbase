@@ -35,7 +35,7 @@
                             @buttonType="submit"
                             @type="primary"
                             @size="lg"
-                            @text="Verify & Continue"
+                        @text={{t "onboard.verify-email.verify-button-text"}}
                             @isLoading={{this.verify.isRunning}}
                             @disabled={{not this.verification.ready}}
                         />

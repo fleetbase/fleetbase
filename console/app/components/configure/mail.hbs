@@ -1,48 +1,48 @@
-<ContentPanel @title="Mail" @open={{true}} @wrapperClass="bordered-classic">
-    <InputGroup @name="Mailer" @helpText="Select the default mailer for Fleetbase to use.">
-        <Select @options={{this.mailers}} @value={{this.mailer}} @onSelect={{this.setMailer}} @placeholder="Select mailer" class="w-full" />
+<ContentPanel @title={{t "component.configure.mail.title"}} @open={{true}} @wrapperClass="bordered-classic">
+    <InputGroup @name={{t "component.configure.mail.mailer"}} @helpText={{t "component.configure.mail.mailer-help-text"}}>
+        <Select @options={{this.mailers}} @value={{this.mailer}} @onSelect={{this.setMailer}} @placeholder={{t "component.configure.mail.select-mailer"}} class="w-full" />
     </InputGroup>
     {{#if (eq this.mailer "smtp")}}
-        <InputGroup @name="SMTP Host" @value={{this.smtpHost}} disabled={{this.loadConfigValues.isRunning}} />
-        <InputGroup @name="SMTP Port" @type="number" @value={{this.smtpPort}} disabled={{this.loadConfigValues.isRunning}} />
+        <InputGroup @name={{t "component.configure.mail.smtp-host"}} @value={{this.smtpHost}} disabled={{this.loadConfigValues.isRunning}} />
+        <InputGroup @name={{t "component.configure.mail.smtp-port"}} @type="number" @value={{this.smtpPort}} disabled={{this.loadConfigValues.isRunning}} />
         <InputGroup>
-            <Toggle @isToggled={{eq this.smtpEncryption "tls"}} @onToggle={{this.enableSmtpEncryption}} @label="SMTP Encryption" @helpText="Enabled TLS Encryption" />
+            <Toggle @isToggled={{eq this.smtpEncryption "tls"}} @onToggle={{this.enableSmtpEncryption}} @label={{t "component.configure.mail.smtp-encryption"}} @helpText={{t "component.configure.mail.smtp-tls-help-text"}} />
         </InputGroup>
-        <InputGroup @name="SMTP Username" @value={{this.smtpUsername}} disabled={{this.loadConfigValues.isRunning}} />
-        <InputGroup @name="SMTP Password" @value={{this.smtpPassword}} disabled={{this.loadConfigValues.isRunning}} />
-        <InputGroup @name="SMTP Timeout" @value={{this.smtpTimeout}} disabled={{this.loadConfigValues.isRunning}} />
-        <InputGroup @name="SMTP Auth Mode" @value={{this.smtpAuth_mode}} disabled={{this.loadConfigValues.isRunning}} />
+        <InputGroup @name={{t "component.configure.mail.smtp-username"}} @value={{this.smtpUsername}} disabled={{this.loadConfigValues.isRunning}} />
+        <InputGroup @name={{t "component.configure.mail.smtp-password"}} @value={{this.smtpPassword}} disabled={{this.loadConfigValues.isRunning}} />
+        <InputGroup @name={{t "component.configure.mail.smtp-timeout"}} @value={{this.smtpTimeout}} disabled={{this.loadConfigValues.isRunning}} />
+        <InputGroup @name={{t "component.configure.mail.smtp-auth-mode"}} @value={{this.smtpAuth_mode}} disabled={{this.loadConfigValues.isRunning}} />
     {{/if}}
     {{#if (eq this.mailer "microsoft-graph")}}
-        <InputGroup @name="Client ID" @value={{this.microsoftGraphClient_id}} disabled={{this.loadConfigValues.isRunning}} />
-        <InputGroup @name="Client Secret" @value={{this.microsoftGraphClient_secret}} disabled={{this.loadConfigValues.isRunning}} />
-        <InputGroup @name="Tenant ID" @value={{this.microsoftGraphTenant_id}} disabled={{this.loadConfigValues.isRunning}} />
+        <InputGroup @name={{t "component.configure.mail.client-id"}} @value={{this.microsoftGraphClient_id}} disabled={{this.loadConfigValues.isRunning}} />
+        <InputGroup @name={{t "component.configure.mail.client-secret"}} @value={{this.microsoftGraphClient_secret}} disabled={{this.loadConfigValues.isRunning}} />
+        <InputGroup @name={{t "component.configure.mail.tenant-id"}} @value={{this.microsoftGraphTenant_id}} disabled={{this.loadConfigValues.isRunning}} />
         <InputGroup>
-            <Toggle @isToggled={{this.microsoftGraphSave_to_sent_items}} @onToggle={{fn (mut this.microsoftGraphSave_to_sent_items)}} @label="Save to sent items"  />
+            <Toggle @isToggled={{this.microsoftGraphSave_to_sent_items}} @onToggle={{fn (mut this.microsoftGraphSave_to_sent_items)}} @label={{t "component.configure.mail.save-to-sent-items"}}  />
         </InputGroup>
     {{/if}}
     {{#if (eq this.mailer "mailgun")}}
-        <InputGroup @name="Mailgun Domain" @value={{this.mailgunDomain}} disabled={{this.loadConfigValues.isRunning}} />
-        <InputGroup @name="Mailgun Endpoint" @value={{this.mailgunEndpoint}} disabled={{this.loadConfigValues.isRunning}} />
-        <InputGroup @name="Mailgun Secret" @value={{this.mailgunSecret}} disabled={{this.loadConfigValues.isRunning}} />
+        <InputGroup @name={{t "component.configure.mail.mailgun-domain"}} @value={{this.mailgunDomain}} disabled={{this.loadConfigValues.isRunning}} />
+        <InputGroup @name={{t "component.configure.mail.mailgun-endpoint"}} @value={{this.mailgunEndpoint}} disabled={{this.loadConfigValues.isRunning}} />
+        <InputGroup @name={{t "component.configure.mail.mailgun-secret"}} @value={{this.mailgunSecret}} disabled={{this.loadConfigValues.isRunning}} />
     {{/if}}
     {{#if (eq this.mailer "postmark")}}
-        <InputGroup @name="Postmark Token" @value={{this.postmarkToken}} disabled={{this.loadConfigValues.isRunning}} />
+        <InputGroup @name={{t "component.configure.mail.postmark-token"}} @value={{this.postmarkToken}} disabled={{this.loadConfigValues.isRunning}} />
     {{/if}}
     {{#if (eq this.mailer "sendgrid")}}
-        <InputGroup @name="Sendgrid API Key" @value={{this.sendgridApi_key}} disabled={{this.loadConfigValues.isRunning}} />
+        <InputGroup @name={{t "component.configure.mail.sendgrid-api-key"}} @value={{this.sendgridApi_key}} disabled={{this.loadConfigValues.isRunning}} />
     {{/if}}
     {{#if (eq this.mailer "resend")}}
-        <InputGroup @name="Resend API Key" @value={{this.resendKey}} disabled={{this.loadConfigValues.isRunning}} />
+        <InputGroup @name={{t "component.configure.mail.resend-api-key"}} @value={{this.resendKey}} disabled={{this.loadConfigValues.isRunning}} />
     {{/if}}
     <InputGroup
-        @name="From Address"
-        @helpText="Input the email address for Fleetbase to send emails from."
+        @name={{t "component.configure.mail.from-address"}}
+        @helpText={{t "component.configure.mail.from-address-help-text"}}
         @value={{this.fromAddress}}
-        @placeholder="From Address"
+        @placeholder={{t "component.configure.mail.from-address"}}
         disabled={{this.isLoading}}
     />
-    <InputGroup @name="From Name" @helpText="Input the name for Fleetbase to send emails from." @value={{this.fromName}} @placeholder="From Name" disabled={{this.isLoading}} />
+    <InputGroup @name={{t "component.configure.mail.from-name"}} @helpText={{t "component.configure.mail.from-name-help-text"}} @value={{this.fromName}} @placeholder={{t "component.configure.mail.from-name"}} disabled={{this.isLoading}} />
     {{#if this.testResponse}}
         <div
             class="flex flex-row items-center rounded-lg border
@@ -56,9 +56,9 @@
             <span class="text-xs">{{this.testResponse.message}}</span>
         </div>
     {{/if}}
-    <Button @wrapperClass="mt-3" @icon="plug" @text="Test Config" @onClick={{perform this.test}} @isLoading={{this.test.isRunning}} />
+    <Button @wrapperClass="mt-3" @icon="plug" @text={{t "component.configure.test-config"}} @onClick={{perform this.test}} @isLoading={{this.test.isRunning}} />
 </ContentPanel>
 
 <EmberWormhole @to="next-view-section-subheader-actions">
-    <Button @type="primary" @size="sm" @icon="save" @text="Save Changes" @onClick={{perform this.save}} @disabled={{this.save.isRunning}} @isLoading={{this.save.isRunning}} />
+    <Button @type="primary" @size="sm" @icon="save" @text={{t "component.configure.save-changes"}} @onClick={{perform this.save}} @disabled={{this.save.isRunning}} @isLoading={{this.save.isRunning}} />
 </EmberWormhole>
