@@ -1,13 +1,23 @@
-> v0.7.36 ~ "Geofence events and logs added"
+> v0.7.37 ~ "Service rate repricing and billing fixes"
 ---
 ## ✨ Highlights
-Added Geofencing.
+Improved the end-to-end service rate flow across FleetOps and Ledger, including repricing existing orders, more flexible service-rate formulas, and better invoice revision handling.
 
 ---
 ## 🐛 Bug Fixes
-- Fixed the order import template download location
-- Added the new Geofence feature and events
-- Added ability to apply service quotes to created orders via update API
+- Fixed repricing existing orders so applying a new service quote creates a new purchase rate and updates the order correctly
+- Fixed transaction rotation so superseded order transactions are voided when a new purchase rate is applied
+- Fixed Ledger invoice revision behavior so repriced orders generate a new invoice instead of reusing stale invoice state
+- Fixed the order Invoice tab refresh crash caused by the lazy-loaded Ledger extension mounting too early
+- Fixed stale order purchase-rate and invoice data after applying updated service quotes
+- Fixed per-mile service-rate math and distance unit handling for `m`, `km`, `ft`, `yd`, and `mi`
+- Fixed Parcel Rate persistence, editing, and duplicate row issues in the service-rate editor
+- Fixed Per Drop-Off persistence, duplicate row issues, and incorrect default range calculations in the service-rate editor
+- Fixed public service quote responses so `service_name` and `service_rate_name` are populated correctly
+- Fixed parcel quote line-item descriptions to include the matched parcel size
+- Added new algorithm variables for counts and normalized distance/time values used in custom service-rate formulas
+- Fixed no-quote order transaction currency fallback precedence to use organization currency, then Ledger accounting base currency, then USD
+- Fix false email uniqueness errors when updating users
 
 ---
 ## 🔧 Upgrade Steps
@@ -20,13 +30,6 @@ docker compose down && docker compose up -d
 # Run deploy script
 docker compose exec application bash -c "./deploy.sh"
 ```
-
----
-## 📦 Component Versions
-- **fleetbase**: v0.7.36
-- **fleetops**: v0.6.44
-- **fleetops-data**: v0.1.29
-- **core-api**: v1.6.43
 
 ---
 ## Need help?
