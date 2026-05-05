@@ -5,11 +5,10 @@ This release focuses on the new provider-agnostic mapping work in FleetOps, foun
 
 ---
 ## 📦 Component Versions
-- `fleetbase` / console: `0.7.37`
-- `fleetops`: `0.6.45`
+- `fleetops`: `0.6.46`
 - `fleetops-data`: `0.1.31`
-- `ember-ui`: `0.3.27`
-- `core-api`: `1.6.44`
+- `ember-ui`: `0.3.29`
+- `core-api`: `1.6.45`
 - `vroom`: `0.0.4`
 - `valhalla`: `0.0.4`
 
