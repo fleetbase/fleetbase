@@ -7,16 +7,9 @@
         @userMenuItems={{this.userMenuItems}}
         @onAction={{this.onAction}}
         @showSidebarToggle={{true}}
-        @sidebarToggleEnabled={{true}}
-        @onSidebarToggle={{this.onSidebarToggle}}
     />
     <Layout::Main class={{this.currentRouteClass}}>
-        <Layout::Sidebar @onSetup={{this.setSidebarContext}}>
-            <div class="next-sidebar-content-inner">
-                <div role="menu" id="sidebar-menu-items">
-                </div>
-            </div>
-        </Layout::Sidebar>
+        <Layout::Sidebar @onSetup={{this.setSidebarContext}} />
         <Layout::Section>
             {{outlet}}
         </Layout::Section>

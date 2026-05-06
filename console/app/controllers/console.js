@@ -17,62 +17,14 @@ export default class ConsoleController extends Controller {
     @service intl;
     @service universe;
     @service abilities;
-    @service sidebar;
     @tracked organizations = [];
     @tracked sidebarContext;
-    @tracked sidebarToggleState = {};
-    @tracked hiddenSidebarRoutes = ['console.home', 'console.notifications', 'console.virtual'];
     @tracked menuItems = [];
     @tracked userMenuItems = [];
     @tracked organizationMenuItems = [];
 
     get currentRouteClass() {
         return dasherize(this.router.currentRouteName.replace(/\./g, ' '));
-    }
-
-    constructor() {
-        super(...arguments);
-        this.router.on('routeDidChange', (transition) => {
-            if (this.sidebarContext) {
-                // Determine if the new route should hide the sidebar
-                const shouldHideSidebar = this.hiddenSidebarRoutes.includes(transition.to.name);
-
-                // Check if the sidebar was manually toggled and is currently closed
-                const isSidebarManuallyClosed = this.sidebarToggleState.clicked && !this.sidebarToggleState.isOpen;
-
-                // Hide the sidebar if the current route is in hiddenSidebarRoutes
-                if (shouldHideSidebar) {
-                    this.sidebar.hideNow();
-                    this.sidebarToggleEnabled = false;
-                    return; // Exit early as no further action is required
-                }
-
-                // If the sidebar was manually closed and not on a hidden route, keep it closed
-                if (isSidebarManuallyClosed) {
-                    this.sidebar.hideNow();
-                } else {
-                    // Otherwise, show the sidebar
-                    this.sidebar.show();
-                }
-
-                // Ensure toggle is enabled unless on a hidden route
-                this.sidebarToggleEnabled = !shouldHideSidebar;
-            }
-        });
-    }
-
-    /**
-     * When sidebar is manually toggled
-     *
-     * @param {SidebarContext} sidebar
-     * @param {boolean} isOpen
-     * @memberof ConsoleController
-     */
-    @action onSidebarToggle(sidebar, isOpen) {
-        this.sidebarToggleState = {
-            clicked: true,
-            isOpen,
-        };
     }
 
     /**
@@ -85,11 +37,6 @@ export default class ConsoleController extends Controller {
         this.sidebarContext = sidebarContext;
         this.universe.sidebarContext = sidebarContext;
         this.universe.trigger('sidebarContext.available', sidebarContext);
-
-        if (this.hiddenSidebarRoutes.includes(this.router.currentRouteName)) {
-            this.sidebar.hideNow();
-            this.sidebarToggleEnabled = false;
-        }
     }
 
     /**
