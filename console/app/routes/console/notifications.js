@@ -5,6 +5,7 @@ import { inject as service } from '@ember/service';
  * Route for managing console notifications.
  */
 export default class ConsoleNotificationsRoute extends Route {
+    @service sidebar;
     @service store;
 
     queryParams = {
@@ -23,5 +24,13 @@ export default class ConsoleNotificationsRoute extends Route {
      */
     model(params = {}) {
         return this.store.query('notification', params);
+    }
+
+    activate() {
+        this.sidebar.disable();
+    }
+
+    deactivate() {
+        this.sidebar.enable();
     }
 }
