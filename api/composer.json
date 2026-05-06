@@ -54,7 +54,16 @@
     "repositories": [
         {
             "type": "composer",
-            "url": "https://registry.fleetbase.io"
+            "url": "https://registry.fleetbase.io",
+            "canonical": false,
+            "exclude": [
+                "fleetbase/core-api",
+                "fleetbase/fleetops-api",
+                "fleetbase/storefront-api",
+                "fleetbase/ledger-api",
+                "fleetbase/valhalla-api",
+                "fleetbase/vroom-api"
+            ]
         }
     ],
     "autoload": {
@@ -100,7 +109,7 @@
         }
     },
     "config": {
-        "secure-http": false, 
+        "secure-http": false,
         "optimize-autoloader": true,
         "preferred-install": "dist",
         "sort-packages": true,

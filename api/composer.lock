@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "cc016cfe138f18a226422abf99d5abb9",
+    "content-hash": "bfee94dfa9e711d73ec15d185687e094",
     "packages": [
         {
             "name": "appstract/laravel-opcache",
@@ -124,16 +124,16 @@
         },
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.380.0",
+            "version": "3.380.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "72a79cf7698392fedbbc188b33c5b40fbe959307"
+                "reference": "01e0e05a5744715904cfb53ac7564d2e39996d4d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/72a79cf7698392fedbbc188b33c5b40fbe959307",
-                "reference": "72a79cf7698392fedbbc188b33c5b40fbe959307",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/01e0e05a5744715904cfb53ac7564d2e39996d4d",
+                "reference": "01e0e05a5744715904cfb53ac7564d2e39996d4d",
                 "shasum": ""
             },
             "require": {
@@ -215,9 +215,9 @@
             "support": {
                 "forum": "https://github.com/aws/aws-sdk-php/discussions",
                 "issues": "https://github.com/aws/aws-sdk-php/issues",
-                "source": "https://github.com/aws/aws-sdk-php/tree/3.380.0"
+                "source": "https://github.com/aws/aws-sdk-php/tree/3.380.1"
             },
-            "time": "2026-05-04T18:14:56+00:00"
+            "time": "2026-05-05T18:06:08+00:00"
         },
         {
             "name": "aws/aws-sdk-php-laravel",
@@ -2805,9 +2805,16 @@
         {
             "name": "fleetbase/valhalla-api",
             "version": "0.0.4",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/fleetbase/valhalla.git",
+                "reference": "f25160fd0ec6d885ff5667922d9834951ca6e255"
+            },
             "dist": {
-                "type": "tar",
-                "url": "https://s3.ap-southeast-1.amazonaws.com/fleetbase-registry-production/flb/%40fleetbase/valhalla-engine/valhalla-engine-0.0.4.tgz?AWSAccessKeyId=ASIA26E6KG6WAABR2DFT&Expires=1777980729&Signature=ImOOv4MVVNK9%2BMZueIHbmm9D0h0%3D&x-amz-security-token=IQoJb3JpZ2luX2VjELv%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaDmFwLXNvdXRoZWFzdC0xIkYwRAIgGCpGp3WhVaqamAsiHnIS4gzoYIedM09eDE4M1s0WujICIHRMINVgxyLO%2FuHMSYDGN7MvsiZwNlsbqMSafNnzXBGgKp8ECIT%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEQABoMNzUxOTUxMjk2NDI4IgyINtIyZH94ngclcOwq8wPIdk8UI%2FnlH0a3S2t66h5t0B%2FEJuy3iPPH5S6TejF5JFe2LD%2FcQtpOjqHH%2BQg6mtgSys1VThfL22MUBMBtIvkgjMrMO5oxsqSqNzDiGOE1Y71MP2EkY21yd1VeuIHxJmnjqIN7x6P0r3zqk%2BPFyXfFXys0P08HTl%2BWR8LXWaIOjZ7SZUUfdKTUHgl87y9CESCyxZjHlOGiwmOv5i442SY%2FQz2dwhJ3EcJ14wnfi2fmEYRYAYr2EunzkQ8OJynwVsramPd0u7Qpbrtl0MkFIwbFriCiYWkq7SO3y6LnUnaSAcACnnD19DNd1LU6%2F1G9ZKyCVvAhi%2BN4I9LjrdkqQdYO3XCo9IOFVq08FSN%2BvkMqDtnetzOE0qeFO8qwzgrhAfZZ%2BQIQURjcJAcr7Bb4XGXoijjTZponWhwwnmWjUgi2ghrSCRJ1Z9gHnNNnySkExwjEMAPnQH9CaI2hwdfLNLAXm4xNYFqFDGVZmjvRowGFwk4T7L1Bp9nlHk3GkesRJPSwn4RAW8O%2FVRmUoWhWfVgn46nJPSbnNY7JFaUNvCz9PbhFLyyd%2FxoQRSJHa6hTHdioVSJyVJjO9KzluZtBr0CTXxRwPFtjWVKv976Cstpnlf6Bu84q%2Byx%2B1ao9zKrLiYHSjny9482pjSkw%2FPKYEh5iEktJMMWc588GOqcBjBxfV0ItuEP%2FKrxof%2BxugNjatS69eKDF4kzPJmza%2FW5jko3v%2Fe4fRex13ro%2F2lLGuCFlgL69uRZVPdbpsPIN%2B%2BlB8Gh83SjT%2Bt8VBV%2B0VZYYmDe8va7ZY9ZOjYTxRejQ8cHJLIpRCYHopuyFGmA6SCTBQyfOTu8%2FtMsqTARQCrcPsI%2BwIPTUD%2FmDALgnNqf5Tul%2F0gxtywnogk6vRuBm40z6uXrYf9w%3D"
+                "type": "zip",
+                "url": "https://api.github.com/repos/fleetbase/valhalla/zipball/f25160fd0ec6d885ff5667922d9834951ca6e255",
+                "reference": "f25160fd0ec6d885ff5667922d9834951ca6e255",
+                "shasum": ""
             },
             "require": {
                 "fleetbase/core-api": "*",
@@ -2836,30 +2843,7 @@
                     "Fleetbase\\Valhalla\\Seeds\\": "server/seeds/"
                 }
             },
-            "autoload-dev": {
-                "psr-4": {
-                    "Fleetbase\\Valhalla\\Tests\\": "server/tests/"
-                }
-            },
-            "scripts": {
-                "lint": [
-                    "php-cs-fixer fix -v"
-                ],
-                "test:lint": [
-                    "php-cs-fixer fix -v --dry-run"
-                ],
-                "test:types": [
-                    "phpstan analyse --ansi --memory-limit=0"
-                ],
-                "test:unit": [
-                    "pest --colors=always"
-                ],
-                "test": [
-                    "@test:lint",
-                    "@test:types",
-                    "@test:unit"
-                ]
-            },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "AGPL-3.0-or-later"
             ],
@@ -2872,19 +2856,30 @@
             "description": "Valhalla routing engine extension for Fleetbase",
             "keywords": [
                 "fleetbase",
-                "fleetbase",
                 "fleetbase-extension",
                 "routing",
                 "routing engine",
                 "valhalla"
-            ]
+            ],
+            "support": {
+                "issues": "https://github.com/fleetbase/valhalla/issues",
+                "source": "https://github.com/fleetbase/valhalla/tree/v0.0.4"
+            },
+            "time": "2026-05-05T10:52:46+00:00"
         },
         {
             "name": "fleetbase/vroom-api",
             "version": "0.0.4",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/fleetbase/vroom.git",
+                "reference": "da154b395354155e5daa0a9f95adbbc042c72b85"
+            },
             "dist": {
-                "type": "tar",
-                "url": "https://s3.ap-southeast-1.amazonaws.com/fleetbase-registry-production/flb/%40fleetbase/vroom-engine/vroom-engine-0.0.4.tgz?AWSAccessKeyId=ASIA26E6KG6WAABR2DFT&Expires=1777980729&Signature=B7%2BKoPD0zgCywFBt4Xm6GAOSYfM%3D&x-amz-security-token=IQoJb3JpZ2luX2VjELv%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaDmFwLXNvdXRoZWFzdC0xIkYwRAIgGCpGp3WhVaqamAsiHnIS4gzoYIedM09eDE4M1s0WujICIHRMINVgxyLO%2FuHMSYDGN7MvsiZwNlsbqMSafNnzXBGgKp8ECIT%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEQABoMNzUxOTUxMjk2NDI4IgyINtIyZH94ngclcOwq8wPIdk8UI%2FnlH0a3S2t66h5t0B%2FEJuy3iPPH5S6TejF5JFe2LD%2FcQtpOjqHH%2BQg6mtgSys1VThfL22MUBMBtIvkgjMrMO5oxsqSqNzDiGOE1Y71MP2EkY21yd1VeuIHxJmnjqIN7x6P0r3zqk%2BPFyXfFXys0P08HTl%2BWR8LXWaIOjZ7SZUUfdKTUHgl87y9CESCyxZjHlOGiwmOv5i442SY%2FQz2dwhJ3EcJ14wnfi2fmEYRYAYr2EunzkQ8OJynwVsramPd0u7Qpbrtl0MkFIwbFriCiYWkq7SO3y6LnUnaSAcACnnD19DNd1LU6%2F1G9ZKyCVvAhi%2BN4I9LjrdkqQdYO3XCo9IOFVq08FSN%2BvkMqDtnetzOE0qeFO8qwzgrhAfZZ%2BQIQURjcJAcr7Bb4XGXoijjTZponWhwwnmWjUgi2ghrSCRJ1Z9gHnNNnySkExwjEMAPnQH9CaI2hwdfLNLAXm4xNYFqFDGVZmjvRowGFwk4T7L1Bp9nlHk3GkesRJPSwn4RAW8O%2FVRmUoWhWfVgn46nJPSbnNY7JFaUNvCz9PbhFLyyd%2FxoQRSJHa6hTHdioVSJyVJjO9KzluZtBr0CTXxRwPFtjWVKv976Cstpnlf6Bu84q%2Byx%2B1ao9zKrLiYHSjny9482pjSkw%2FPKYEh5iEktJMMWc588GOqcBjBxfV0ItuEP%2FKrxof%2BxugNjatS69eKDF4kzPJmza%2FW5jko3v%2Fe4fRex13ro%2F2lLGuCFlgL69uRZVPdbpsPIN%2B%2BlB8Gh83SjT%2Bt8VBV%2B0VZYYmDe8va7ZY9ZOjYTxRejQ8cHJLIpRCYHopuyFGmA6SCTBQyfOTu8%2FtMsqTARQCrcPsI%2BwIPTUD%2FmDALgnNqf5Tul%2F0gxtywnogk6vRuBm40z6uXrYf9w%3D"
+                "type": "zip",
+                "url": "https://api.github.com/repos/fleetbase/vroom/zipball/da154b395354155e5daa0a9f95adbbc042c72b85",
+                "reference": "da154b395354155e5daa0a9f95adbbc042c72b85",
+                "shasum": ""
             },
             "require": {
                 "fleetbase/core-api": "*",
@@ -2913,30 +2908,7 @@
                     "Fleetbase\\Vroom\\Seeds\\": "server/seeds/"
                 }
             },
-            "autoload-dev": {
-                "psr-4": {
-                    "Fleetbase\\Vroom\\Tests\\": "server/tests/"
-                }
-            },
-            "scripts": {
-                "lint": [
-                    "php-cs-fixer fix -v"
-                ],
-                "test:lint": [
-                    "php-cs-fixer fix -v --dry-run"
-                ],
-                "test:types": [
-                    "phpstan analyse --ansi --memory-limit=0"
-                ],
-                "test:unit": [
-                    "pest --colors=always"
-                ],
-                "test": [
-                    "@test:lint",
-                    "@test:types",
-                    "@test:unit"
-                ]
-            },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "AGPL-3.0-or-later"
             ],
@@ -2948,13 +2920,17 @@
             ],
             "description": "VROOM route optimization machine extension for Fleetbase",
             "keywords": [
-                "fleetbase",
+                "VROOM",
                 "fleetbase",
                 "fleetbase-extension",
                 "route optimization",
-                "routing",
-                "vroom"
-            ]
+                "routing"
+            ],
+            "support": {
+                "issues": "https://github.com/fleetbase/vroom/issues",
+                "source": "https://github.com/fleetbase/vroom/tree/v0.0.4"
+            },
+            "time": "2026-05-05T10:45:24+00:00"
         },
         {
             "name": "fruitcake/php-cors",
@@ -5749,16 +5725,16 @@
         },
         {
             "name": "laravel/cashier",
-            "version": "v16.5.1",
+            "version": "v16.5.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/cashier-stripe.git",
-                "reference": "49a581bccb5e56a45e1c8ee94587ce3420203a7a"
+                "reference": "b6bcd6b4d79acead34d00a5a528c904d67c5e08a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/cashier-stripe/zipball/49a581bccb5e56a45e1c8ee94587ce3420203a7a",
-                "reference": "49a581bccb5e56a45e1c8ee94587ce3420203a7a",
+                "url": "https://api.github.com/repos/laravel/cashier-stripe/zipball/b6bcd6b4d79acead34d00a5a528c904d67c5e08a",
+                "reference": "b6bcd6b4d79acead34d00a5a528c904d67c5e08a",
                 "shasum": ""
             },
             "require": {
@@ -5834,7 +5810,7 @@
                 "issues": "https://github.com/laravel/cashier/issues",
                 "source": "https://github.com/laravel/cashier"
             },
-            "time": "2026-04-01T15:57:36+00:00"
+            "time": "2026-05-05T21:18:35+00:00"
         },
         {
             "name": "laravel/framework",
