@@ -20,10 +20,10 @@ ENV PATH=/root/.pnpm/bin:$PATH
 
 RUN npm install -g ember-cli pnpm
 
-COPY package.json pnpm-workspace.yaml ./
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 COPY .npmr[c] ./
 
-RUN pnpm install
+RUN pnpm install --frozen-lockfile
 
 COPY . .
 
