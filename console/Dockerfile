@@ -1,5 +1,5 @@
 # ---- Build Stage ----
-FROM node:22.13.0-alpine3.19 AS builder
+FROM node:22.22.0-alpine3.22 AS builder
 
 # Set the working directory in the container to /console
 WORKDIR /console
@@ -15,7 +15,7 @@ ARG ENVIRONMENT=production
 ENV PATH=/root/.pnpm/bin:$PATH
 
 # Copy pnpm-lock.yaml (or package.json) into the directory /console in the container
-COPY package.json pnpm-lock.yaml ./
+COPY package.json pnpm-workspace.yaml ./
 
 # Copy over .npmrc if applicable
 COPY .npmr[c] ./
