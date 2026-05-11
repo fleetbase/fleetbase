@@ -20,15 +20,15 @@
     "require": {
         "php": ">=8.0 <=8.2.30",
         "appstract/laravel-opcache": "^4.0",
-        "fleetbase/core-api": "^1.6.45",
-        "fleetbase/fleetops-api": "^0.6.46",
+        "fleetbase/core-api": "^1.6.46",
+        "fleetbase/fleetops-api": "^0.6.47",
         "fleetbase/registry-bridge": "^0.1.9",
         "fleetbase/storefront-api": "^0.4.14",
         "fleetbase/aws-marketplace": "^0.0.8",
         "fleetbase/billing-api": "^0.1.22",
         "fleetbase/customer-portal-api": "^0.0.10",
         "fleetbase/flespi-integration": "^0.1.16",
-        "fleetbase/internals-api": "^0.0.31",
+        "fleetbase/internals-api": "^0.0.32",
         "fleetbase/samsara-api": "^0.0.3",
         "fleetbase/solid-api": "^0.0.7",       
         "fleetbase/ledger-api": "^0.0.3",
@@ -73,7 +73,16 @@
         },
         {
             "type": "composer",
-            "url": "https://registry.fleetbase.io"
+            "url": "https://registry.fleetbase.io",
+            "canonical": false,
+            "exclude": [
+                "fleetbase/core-api",
+                "fleetbase/fleetops-api",
+                "fleetbase/storefront-api",
+                "fleetbase/ledger-api",
+                "fleetbase/valhalla-api",
+                "fleetbase/vroom-api"
+            ]
         }
     ],
     "autoload": {
@@ -119,7 +128,7 @@
         }
     },
     "config": {
-        "secure-http": false, 
+        "secure-http": false,
         "optimize-autoloader": true,
         "preferred-install": "dist",
         "sort-packages": true,

@@ -1,6 +1,6 @@
 {
     "name": "@fleetbase/console",
-    "version": "0.7.38",
+    "version": "0.7.39",
     "private": true,
     "description": "Modular logistics and supply chain operating system (LSOS)",
     "repository": "https://github.com/fleetbase/fleetbase",
@@ -37,21 +37,21 @@
         "@fleetbase/billing-engine": "^0.1.22",
         "@fleetbase/customer-portal-engine": "^0.0.10",
         "@fleetbase/dev-engine": "^0.2.13",
-        "@fleetbase/ember-core": "^0.3.18",
+        "@fleetbase/ember-core": "^0.3.19",
         "@fleetbase/ember-ui": "^0.3.29",
-        "@fleetbase/fleetops-data": "^0.1.31",
-        "@fleetbase/fleetops-engine": "^0.6.46",
-        "@fleetbase/vroom-engine": "^0.0.4",
-        "@fleetbase/valhalla-engine": "^0.0.4",
-        "@fleetbase/leaflet-routing-machine": "^3.2.17",
+        "@fleetbase/fleetops-data": "^0.1.32",
+        "@fleetbase/fleetops-engine": "^0.6.47",
         "@fleetbase/iam-engine": "^0.1.9",
         "@fleetbase/flespi-engine": "^0.1.16",
-        "@fleetbase/internals-engine": "^0.0.31",
+        "@fleetbase/internals-engine": "^0.0.32",
         "@fleetbase/samsara-engine": "^0.0.3",
         "@fleetbase/solid-engine": "^0.0.7",
+        "@fleetbase/leaflet-routing-machine": "^3.2.17",
         "@fleetbase/ledger-engine": "^0.0.3",
         "@fleetbase/registry-bridge-engine": "^0.1.9",
         "@fleetbase/storefront-engine": "^0.4.14",
+        "@fleetbase/valhalla-engine": "^0.0.4",
+        "@fleetbase/vroom-engine": "^0.0.4",
         "@formatjs/intl-datetimeformat": "^6.18.2",
         "@formatjs/intl-numberformat": "^8.15.6",
         "@formatjs/intl-pluralrules": "^5.4.6",
@@ -153,16 +153,16 @@
         "webpack": "^5.98.0"
     },
     "engines": {
-        "node": ">= 18"
+        "node": ">= 22"
     },
     "ember": {
         "edition": "octane"
     },
     "pnpm": {
         "overrides": {
-            "@fleetbase/ember-core": "^0.3.18",
+            "@fleetbase/ember-core": "^0.3.19",
             "@fleetbase/ember-ui": "^0.3.29",
-            "@fleetbase/fleetops-data": "^0.1.31"
+            "@fleetbase/fleetops-data": "^0.1.32"
         }
     },
     "prettier": {
@@ -180,5 +180,5 @@
             }
         ]
     },
-    "packageManager": "pnpm@9.5.0+sha512.140036830124618d624a2187b50d04289d5a087f326c9edfc0ccd733d76c4f52c3a313d4fc148794a2a9d81553016004e6742e8cf850670268a7387fc220c903"
+    "packageManager": "pnpm@11.0.9"
 }

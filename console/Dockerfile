@@ -1,5 +1,5 @@
 # ---- Build Stage ----
-FROM node:18.15.0-alpine as builder
+FROM node:22.22.0-alpine3.22 AS builder
 
 # Set the working directory in the container to /console
 WORKDIR /console
@@ -14,8 +14,8 @@ ARG ENVIRONMENT=production
 # Add the pnpm global bin to the PATH
 ENV PATH=/root/.pnpm/bin:$PATH
 
-# Copy pnpm-lock.yaml (or package.json) into the directory /console in the container
-COPY package.json pnpm-lock.yaml ./
+# Copy package metadata first for better dependency caching
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 
 # Copy over .npmrc if applicable
 COPY .npmr[c] ./
@@ -30,7 +30,7 @@ RUN apk update && apk add git openssh-client
 RUN mkdir -p -m 0600 ~/.ssh && ssh-keyscan github.com >> ~/.ssh/known_hosts
 
 # Install app dependencies
-RUN pnpm install
+RUN pnpm install --frozen-lockfile
 
 # Copy the console directory contents into the container at /console
 COPY . .
