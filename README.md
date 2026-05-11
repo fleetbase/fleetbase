@@ -14,7 +14,9 @@
     <p align="center" dir="auto">
       Modular logistics and supply chain operating system
       <br>
-      <a href="https://docs.fleetbase.io/" rel="nofollow" target="_fleetbase_docs">Documentation</a>
+      <a href="https://www.fleetbase.io/docs" rel="nofollow" target="_fleetbase_docs">Documentation</a>
+      ·
+      <a href="https://www.fleetbase.io/docs/api" rel="nofollow" target="_fleetbase_api_docs">API Reference</a>
       ·
       <a href="https://console.fleetbase.io" rel="nofollow" target="_fleetbase_console">Cloud Version</a>
       ·
@@ -97,10 +99,10 @@ flb install-fleetbase
 
 ## 💾 Install
 
-The easiest way to get started with Fleetbase is using the Fleetbase CLI, which automates the entire Docker-based installation process. If you'd like to use Fleetbase without Docker, read the [full install guide in the Fleetbase documentation](https://docs.fleetbase.io/getting-started/install).
+The easiest way to get started with Fleetbase is using the Fleetbase CLI, which automates the entire Docker-based installation process. For local setup options, read the [running locally quickstart in the Fleetbase documentation](https://www.fleetbase.io/docs/platform/quickstart/running-locally).
 
 ### Prerequisites
-- Node.js (v14 or higher)
+- Node.js v22
 - Docker and Docker Compose
 - Git
 
@@ -173,7 +175,7 @@ services:
 
 **WebSocket Security:** The `SOCKETCLUSTER_OPTIONS` environment variable controls which domains can connect to the WebSocket server. Always restrict origins to your specific domains in production to prevent security vulnerabilities.
 
-You can learn more about full installation, and configuration in the [official documentation](https://docs.fleetbase.io/getting-started/install).
+You can learn more about local installation and configuration in the [official documentation](https://www.fleetbase.io/docs/platform/quickstart/running-locally).
 
 ## ⌨️ Fleetbase CLI 
 
@@ -244,7 +246,7 @@ flb install fleetbase/fleetops
 
 ### Developing Extensions
 
-You can develop and publish your own extensions to extend Fleetbase's functionality or monetize through the marketplace. Learn more in the [extension building guide](https://docs.fleetbase.io/developers/building-an-extension).
+You can develop and publish your own extensions to extend Fleetbase's functionality or monetize through the marketplace. Learn more in the [extension development quickstart](https://www.fleetbase.io/docs/extension-development/getting-started/quickstart).
 
 ```bash
 # 1. Register a developer account (one-time)
@@ -291,7 +293,7 @@ Want to influence our roadmap? [Join the discussion](https://github.com/orgs/fle
 | **Cloud Self-Hosted** | Production (AWS, GCP, Azure) | 30-60 minutes | Self-managed |
 | **Fleetbase Cloud** | Quick start, no DevOps | Instant | Fully managed |
 
-[View detailed deployment guides →](https://docs.fleetbase.io/category/deploying)
+[View the cloud deployment guide →](https://www.fleetbase.io/docs/platform/quickstart/deploy-in-cloud)
 
 ## 🐛 Bugs and 💡 Feature Requests
 
@@ -301,10 +303,11 @@ Have a bug or a feature request? Please check the <a href="https://github.com/fl
 
 Fleetbase has comprehensive documentation to help you get started and make the most of the platform:
 
-- **Getting Started**: [Installation Guide](https://docs.fleetbase.io/getting-started/install)
-- **API Reference**: [API Documentation](https://docs.fleetbase.io/api-reference)
-- **Extension Development**: [Building Extensions](https://docs.fleetbase.io/developers/building-an-extension)
-- **Deployment**: [Deployment Guides](https://docs.fleetbase.io/deployment)
+- **Getting Started**: [Run Fleetbase locally](https://www.fleetbase.io/docs/platform/quickstart/running-locally)
+- **API Reference**: [API Documentation](https://www.fleetbase.io/docs/api)
+- **Developer Console**: [API keys and integration setup](https://www.fleetbase.io/docs/platform/developer-console/api-keys)
+- **Extension Development**: [Extension quickstart](https://www.fleetbase.io/docs/extension-development/getting-started/quickstart)
+- **Deployment**: [Deploy Fleetbase in the cloud](https://www.fleetbase.io/docs/platform/quickstart/deploy-in-cloud)
 
 ## 🤝 Contributing
 
@@ -313,10 +316,10 @@ We welcome contributions from the community! Here's how you can help:
 - **Report Bugs**: [Open an issue](https://github.com/fleetbase/fleetbase/issues/new)
 - **Suggest Features**: [Start a discussion](https://github.com/orgs/fleetbase/discussions)
 - **Submit PRs**: Read our [Contributing Guide](https://github.com/fleetbase/fleetbase/blob/main/CONTRIBUTING.md)
-- **Write Documentation**: Help improve our [docs](https://docs.fleetbase.io)
-- **Build Extensions**: Create and share [extensions](https://docs.fleetbase.io/developers/building-an-extension)
+- **Write Documentation**: Help improve our [docs](https://www.fleetbase.io/docs)
+- **Build Extensions**: Create and share [extensions](https://www.fleetbase.io/docs/extension-development/getting-started/quickstart)
 
-**Development Setup**: See our [Development Installation Guide](https://docs.fleetbase.io/getting-started/install/for-development) for detailed instructions on setting up your local development environment.
+**Development Setup**: See our [Development Setup Guide](https://www.fleetbase.io/docs/platform/quickstart/development-setup) for detailed instructions on setting up your local development environment.
 
 ## 👥 Community
 
@@ -407,4 +410,3 @@ For more information about commercial licensing options, please contact us:
 ---
 
 **Copyright © 2026 Fleetbase Pte. Ltd.** All rights reserved.
-
