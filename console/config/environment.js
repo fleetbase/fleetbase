@@ -43,6 +43,39 @@ module.exports = function (environment) {
             port: getenv('SOCKETCLUSTER_PORT', 38000),
         },
 
+        // OAuth provider config (issue #453). Each block is independent —
+        // the corresponding "Sign in with X" button on the login form only
+        // renders when its block has a clientId / appId set. Set these env
+        // vars in `console/environments/.env.{development,production}`:
+        //
+        //   GOOGLE_OAUTH_CLIENT_ID      — public OAuth client_id from Google Cloud Console
+        //   FACEBOOK_OAUTH_APP_ID       — public App ID from Meta for Developers
+        //   MICROSOFT_OAUTH_CLIENT_ID   — Azure AD application client_id
+        //   MICROSOFT_OAUTH_TENANT      — tenant (uuid/domain) or 'common'
+        //   APPLE_OAUTH_CLIENT_ID       — Apple Services ID (e.g. com.example.web)
+        //   APPLE_OAUTH_REDIRECT_URI    — must match the redirect URI registered with Apple
+        //
+        // Server-side verification (core-api AuthController) re-validates
+        // every token, so these values are public and safe to bake into
+        // the Console JS bundle.
+        oauth: {
+            google: {
+                clientId: getenv('GOOGLE_OAUTH_CLIENT_ID', ''),
+            },
+            facebook: {
+                appId:      getenv('FACEBOOK_OAUTH_APP_ID', ''),
+                sdkVersion: getenv('FACEBOOK_OAUTH_SDK_VERSION', 'v18.0'),
+            },
+            microsoft: {
+                clientId: getenv('MICROSOFT_OAUTH_CLIENT_ID', ''),
+                tenant:   getenv('MICROSOFT_OAUTH_TENANT', 'common'),
+            },
+            apple: {
+                clientId:    getenv('APPLE_OAUTH_CLIENT_ID', ''),
+                redirectUri: getenv('APPLE_OAUTH_REDIRECT_URI', ''),
+            },
+        },
+
         stripe: {
             publishableKey: getenv('STRIPE_KEY'),
         },
