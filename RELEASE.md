@@ -6,9 +6,7 @@ This release focuses on FleetOps `0.6.48`. It introduces provider-neutral order 
 ---
 ## 📦 Component Versions
 - `fleetops`: `0.6.48`
-- `fleetops-data`: `0.1.33`
-- `ember-ui`: `0.3.29`
-- `core-api`: `1.6.46`
+- `core-api`: `1.6.47`
 
 ---
 ## 🚚 FleetOps
