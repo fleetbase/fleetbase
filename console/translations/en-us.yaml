@@ -606,6 +606,20 @@ auth:
       sign-in-button: Sign in
       create-account-button: Create a new Account
     slow-connection-message: Experiencing connectivity issues.
+    oauth:
+      divider: Or continue with
+      google:
+        button: Sign in with Google
+        handshake-failed: 'Google Sign-In failed: {error}'
+      facebook:
+        button: Sign in with Facebook
+        handshake-failed: 'Facebook Sign-In failed: {error}'
+      office365:
+        button: Sign in with Office365
+        handshake-failed: 'Office365 Sign-In failed: {error}'
+      apple:
+        button: Sign in with Apple
+        handshake-failed: 'Apple Sign-In failed: {error}'
 
   reset-password:
     success-message: Your password has been reset! Login to continue.
