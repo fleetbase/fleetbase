@@ -1,18 +1,18 @@
-<ContentPanel @title="AWS" @open={{true}} @wrapperClass="bordered-classic">
-    <InputGroup @name="AWS Access Key" @value={{this.awsKey}} disabled={{this.isLoading}} />
-    <InputGroup @name="AWS Access Secret" @value={{this.awsSecret}} disabled={{this.isLoading}} />
-    <InputGroup @name="AWS Region" @value={{this.awsRegion}} disabled={{this.isLoading}} />
+<ContentPanel @title={{t "component.configure.services.aws-title"}} @open={{true}} @wrapperClass="bordered-classic">
+    <InputGroup @name={{t "component.configure.services.aws-access-key"}} @value={{this.awsKey}} disabled={{this.isLoading}} />
+    <InputGroup @name={{t "component.configure.services.aws-access-secret"}} @value={{this.awsSecret}} disabled={{this.isLoading}} />
+    <InputGroup @name={{t "component.configure.services.aws-region"}} @value={{this.awsRegion}} disabled={{this.isLoading}} />
 </ContentPanel>
 
-<ContentPanel @title="Google Maps" @open={{true}} @wrapperClass="bordered-classic">
-    <InputGroup @name="Google Maps API Key" @value={{this.googleMapsApiKey}} disabled={{this.isLoading}} />
-    <InputGroup @name="Google Maps Locale" @value={{this.googleMapsLocale}} disabled={{this.isLoading}} />
+<ContentPanel @title={{t "component.configure.services.google-maps-title"}} @open={{true}} @wrapperClass="bordered-classic">
+    <InputGroup @name={{t "component.configure.services.google-maps-api-key"}} @value={{this.googleMapsApiKey}} disabled={{this.isLoading}} />
+    <InputGroup @name={{t "component.configure.services.google-maps-locale"}} @value={{this.googleMapsLocale}} disabled={{this.isLoading}} />
 </ContentPanel>
 
-<ContentPanel @title="Twilio" @open={{true}} @wrapperClass="bordered-classic">
-    <InputGroup @name="Twilio SID" @value={{this.twilioSid}} disabled={{this.isLoading}} />
-    <InputGroup @name="Twilio Token" @value={{this.twilioToken}} disabled={{this.isLoading}} />
-    <InputGroup @name="Twilio From" @value={{this.twilioFrom}} disabled={{this.isLoading}} />
+<ContentPanel @title={{t "component.configure.services.twilio-title"}} @open={{true}} @wrapperClass="bordered-classic">
+    <InputGroup @name={{t "component.configure.services.twilio-sid"}} @value={{this.twilioSid}} disabled={{this.isLoading}} />
+    <InputGroup @name={{t "component.configure.services.twilio-token"}} @value={{this.twilioToken}} disabled={{this.isLoading}} />
+    <InputGroup @name={{t "component.configure.services.twilio-from"}} @value={{this.twilioFrom}} disabled={{this.isLoading}} />
     {{#if this.twilioTestResponse}}
         <div class="flex flex-row items-center rounded-lg border {{if (eq this.twilioTestResponse.status 'error') 'border-red-900 bg-red-800 text-red-100' 'border-green-900 bg-green-800 text-green-100'}} shadow-sm my-2 px-4 py-2">
             <FaIcon @icon={{if (eq this.twilioTestResponse.status 'error') 'triangle-exclamation' 'circle-check'}} class="mr-1.5 {{if (eq this.twilioTestResponse.status 'error') 'text-red-200' 'text-green-200'}}" />
@@ -20,28 +20,28 @@
         </div>
     {{/if}}
     <div class="flex flex-row items-center mt-3">
-        <Input @value={{this.twilioTestPhone}} @type="tel" placeholder="Send Test SMS Here" class="form-input form-input-sm" />
-        <Button @wrapperClass="ml-2" @icon="plug" @text="Test Twilio Config" @onClick={{perform this.testTwilio}} @isLoading={{this.testTwilio.isRunning}} @disabled={{not this.twilioTestPhone}} />
+        <Input @value={{this.twilioTestPhone}} @type="tel" placeholder={{t "component.configure.services.send-test-sms"}} class="form-input form-input-sm" />
+        <Button @wrapperClass="ml-2" @icon="plug" @text={{t "component.configure.services.test-twilio"}} @onClick={{perform this.testTwilio}} @isLoading={{this.testTwilio.isRunning}} @disabled={{not this.twilioTestPhone}} />
     </div>
 </ContentPanel>
 
-<ContentPanel @title="Sentry" @open={{true}} @wrapperClass="bordered-classic">
-    <InputGroup @name="Sentry DSN" @value={{this.sentryDsn}} disabled={{this.isLoading}} />
+<ContentPanel @title={{t "component.configure.services.sentry-title"}} @open={{true}} @wrapperClass="bordered-classic">
+    <InputGroup @name={{t "component.configure.services.sentry-dsn"}} @value={{this.sentryDsn}} disabled={{this.isLoading}} />
     {{#if this.sentryTestResponse}}
         <div class="flex flex-row items-center rounded-lg border {{if (eq this.sentryTestResponse.status 'error') 'border-red-900 bg-red-800 text-red-100' 'border-green-900 bg-green-800 text-green-100'}} shadow-sm my-2 px-4 py-2">
             <FaIcon @icon={{if (eq this.sentryTestResponse.status 'error') 'triangle-exclamation' 'circle-check'}} class="mr-1.5 {{if (eq this.sentryTestResponse.status 'error') 'text-red-200' 'text-green-200'}}" />
             <span class="text-xs">{{this.this.sentryTestResponse.message}}</span>
         </div>
     {{/if}}
-    <Button @wrapperClass="mt-3" @icon="plug" @text="Test Sentry Config" @onClick={{perform this.testSentry}} @isLoading={{this.testSentry.isRunning}} @disabled={{not this.sentryDsn}} />
+    <Button @wrapperClass="mt-3" @icon="plug" @text={{t "component.configure.services.test-sentry"}} @onClick={{perform this.testSentry}} @isLoading={{this.testSentry.isRunning}} @disabled={{not this.sentryDsn}} />
 </ContentPanel>
 
-<ContentPanel @title="IP Info" @open={{true}} @wrapperClass="bordered-classic">
-    <InputGroup @name="IP Info API Key" @value={{this.ipinfoApiKey}} disabled={{this.isLoading}} />
+<ContentPanel @title={{t "component.configure.services.ipinfo-title"}} @open={{true}} @wrapperClass="bordered-classic">
+    <InputGroup @name={{t "component.configure.services.ipinfo-api-key"}} @value={{this.ipinfoApiKey}} disabled={{this.isLoading}} />
 </ContentPanel>
 
 <Spacer @height="200px" />
 
 <EmberWormhole @to="next-view-section-subheader-actions">
-    <Button @type="primary" @size="sm" @icon="save" @text="Save Changes" @onClick={{perform this.save}} @disabled={{or this.save.isRunning this.loadConfigValues.isRunning}} @isLoading={{or this.save.isRunning this.loadConfigValues.isRunning}} />
+    <Button @type="primary" @size="sm" @icon="save" @text={{t "component.configure.save-changes"}} @onClick={{perform this.save}} @disabled={{or this.save.isRunning this.loadConfigValues.isRunning}} @isLoading={{or this.save.isRunning this.loadConfigValues.isRunning}} />
 </EmberWormhole>
