@@ -1,67 +1,62 @@
-> v0.7.39 ~ "Order creation hardening, polymorphic customer fixes, and dependency cleanup"
+> v0.7.40 ~ "Tracking intelligence, orchestrator capacity allocation, and customer repairs"
 ---
 ## ✨ Highlights
-This release is a focused hardening release for order creation, FleetOps Data polymorphic serialization, request timezone handling, dependency resolution, and CI runtime consistency. It fixes a new order-create failure where generic customer polymorphic types could be persisted as a non-existent FleetOps Customer model, restores concrete customer subtype serialization in FleetOps Data, improves request timezone precedence in Core API user enrichment, forces public Fleetbase package resolution through Packagist, and standardizes FleetOps/FleetOps Data CI jobs on Node 22.
+This release focuses on FleetOps `0.6.48`. It introduces provider-neutral order tracking intelligence, expands the FleetOps orchestrator with consumable API endpoints and capacity-only allocation, and repairs the customer contact/user type invariant so FleetOps customers stay consistent across existing and newly saved records.
 
 ---
 ## 📦 Component Versions
-- `fleetops`: `0.6.47`
-- `fleetops-data`: `0.1.32`
-- `ember-ui`: `0.3.29`
-- `core-api`: `1.6.46`
+- `fleetops`: `0.6.48`
+- `core-api`: `1.6.47`
 
 ---
 ## 🚚 FleetOps
-### Order customer type normalization
-- Added a dedicated order-form customer selection action so the selected customer, `customer_uuid`, and `customer_type` are updated together.
-- Ensured order creation submits concrete customer types such as `fleet-ops:contact` or `fleet-ops:vendor` instead of the abstract `fleet-ops:customer` type.
-- Added server-side normalization in the internal v1 order create flow so submitted customer UUIDs are resolved against contacts and vendors before persistence.
-- Prevented invalid order customer morph classes from being saved when stale or generic internal order payloads are submitted.
+### Order tracking intelligence
+- Replaced the old monolithic `OrderTracker` internals with a provider-neutral tracking intelligence layer.
+- Added the new tracking provider domain with context builders, provider registry/manager, provider capabilities, tracking options, normalized result DTOs, and tracking stop DTOs.
+- Added built-in `google_routes`, `osrm`, and `calculated` tracking providers so FleetOps can support route-aware providers without hard-coding OSRM as the only path.
+- Added company-level tracking settings and internal endpoints for reading and saving tracking provider configuration.
+- Updated order details, route lists, overlays, lookup views, progress cards, and tracking UI components to consume the canonical nested `tracker_data` shape.
+- Added a reusable tracking stop progress component and duration formatting helper for clearer order progress display.
+- Added live order query and active live order metric improvements, including a dedicated driver ping internal API path.
 
-### Order creation and routing polish
-- Fixed route customer assignment behavior so waypoint/customer changes keep the correct polymorphic type alongside the selected customer UUID.
-- Continued cleanup around the order route and payload form after the provider-agnostic map and waypoint payload updates.
-- Removed the old CI Node strategy matrix and aligned FleetOps CI with the current Node 22 runtime.
+### Orchestrator consumable API and capacity allocation
+- Added consumable API endpoints for orchestrator run and commit flows:
+  - `POST /v1/orchestrator/run`
+  - `POST /v1/orchestrator/commit`
+- Kept VROOM configuration settings-driven while exposing public API responses that use public IDs instead of internal UUIDs or database IDs.
+- Refactored VROOM payload generation around Fleetbase route semantics so pickup/dropoff, waypoint-only, and mixed route orders stay atomic during optimization.
+- Added VROOM capacity-only allocation for users who want vehicle allocation by capacity, skills, task limits, and workload constraints without requiring vehicle locations.
+- Added a native FleetOps `capacity` allocation engine for deterministic capacity-only assignment without routing.
+- Added a VROOM orchestration seeder with located and locationless vehicles, capacity data, order dimensions, weights, pallets, parcels, and seeded metadata for repeatable testing.
+- Added orchestrator UI controls for allocation strategy and lightweight vehicle/driver position indicators that use the existing model coordinate validity helpers.
 
----
-## 🧱 FleetOps Data
-### Polymorphic customer serialization
-- Restored concrete subtype fallback in the order serializer so abstract customer models serialize using their related record type when available.
-- Restored the same concrete subtype fallback in the waypoint serializer.
-- Prevented selected customer records from serializing as `fleet-ops:customer` when the concrete record is actually a contact or vendor.
-- Preserved the existing abstract subtype cleanup for values like `customer-contact`, `customer-vendor`, and `facilitator-vendor`.
-- Hardened waypoint polymorphic serialization so null customer relationships serialize safely without dereferencing the missing relationship first.
-
-### Runtime and model follow-up
-- Bumped FleetOps Data to `0.1.32`.
-- Centralized FleetOps Data CI around Node 22.
-- Included the recurring order schedule attribute follow-up from the previous model/serializer hardening work.
-
----
-## 🧩 Core API
-### Request timezone precedence
-- Updated user enrichment timezone handling so the request timezone is preferred when available.
-- Bumped Core API to `1.6.46`.
+### Customer contact/user invariant
+- Enforced the FleetOps customer invariant so contacts saved as `customer` keep the linked user type aligned as `customer`.
+- Prevented existing FleetOps customer contacts from being changed away from `customer` through the internal contact save flow.
+- Added an idempotent repair migration for historical customer contacts using strong Fleet-Ops Customer role hints as repair evidence.
 
 ---
-## 📦 Platform Packaging
-- Forced public Fleetbase packages to resolve from Packagist so installs and updates use the expected public package source.
-- Keeps the default `vroom` and `valhalla` extension versions at `0.0.4`.
-
----
-## 🎨 Ember UI
-- Carries forward the `0.3.29` UI improvements from the previous release.
-- Includes the latest mobile navbar/sidebar service synchronization and layout refinements already shipped in the current Ember UI package line.
+## 🧪 Tests and Coverage
+- Added backend coverage for orchestrator consumable run/commit responses and public-ID serialization.
+- Added VROOM payload tests for route-task semantics, capacity-only request generation, assignment mapping, and unassigned order handling.
+- Added native capacity allocation tests for weight, volume, pallets, parcels, skills, task limits, and workload balancing behavior.
+- Added tracking intelligence tests, live order query tests, driver ping endpoint tests, and frontend tracking component coverage.
 
 ---
 ## 🐛 Bug Fixes
-- Fixed order creation failures caused by `customer_type: fleet-ops:customer` resolving to the non-existent `Fleetbase\FleetOps\Models\Customer` class.
-- Fixed order webhook payload generation crashes caused by invalid customer morph classes after order insert.
-- Fixed FleetOps Data order and waypoint serializers so selected customer records preserve concrete contact/vendor polymorphic types.
-- Fixed waypoint serializer null-relationship handling for customer polymorphic types.
-- Fixed request timezone precedence during Core API user enrichment.
-- Fixed public Fleetbase package resolution so Composer installs prefer Packagist for public package dependencies.
-- Fixed FleetOps and FleetOps Data CI runtime drift by aligning jobs with Node 22.
+- Fixed order tracking architecture limitations that made OSRM the only first-class tracking provider.
+- Fixed active live order metric behavior and moved driver ping behavior to the internal API surface.
+- Fixed route summary stop count and tracking progress rail display issues.
+- Fixed purchase-rate component lint issues from the tracking release train.
+- Fixed customer contacts that could be saved as FleetOps customers while their linked users remained generic users or contacts.
+- Fixed orchestrator VROOM behavior for Fleetbase payloads with pickup/dropoff only, waypoint-only routes, mixed route payloads, missing coordinates, and capacity-only allocation without vehicle positions.
+
+---
+## 🔌 API Changes
+- Added `POST /v1/orchestrator/run` for consumable orchestration execution.
+- Added `POST /v1/orchestrator/commit` for committing public-ID orchestrator assignments.
+- Added internal tracking settings endpoints for tracking provider configuration.
+- Added internal driver ping API handling for live order tracking workflows.
 
 ---
 ## 🔧 Upgrade Steps
