@@ -147,7 +147,7 @@ Next copy this value to the `APP_KEY` environment variable in the application co
   
 **Routing:** Fleetbase ships with a default OSRM server hosted by [router.project-osrm.org](https://router.project-osrm.org) but you're able to use your own or any other OSRM compatible server. You can modify this in the `console/environments` directory by modifying the .env file of the environment you're deploying and setting the `OSRM_HOST` to the OSRM server for Fleetbase to use.  
   
-**Services:** There are a few environment variables which need to be set for Fleetbase to function with full features. If you're deploying with docker then it's easiest to just create a `docker-compose.override.yml` and supply the environment variables in this file.
+**Services:** There are a few environment variables which need to be set for Fleetbase to function with full features. The console image now reads its runtime config from environment variables, so a `docker-compose.override.yml` is optional rather than required. You can set the values directly in your shell, a `.env` file, or an override file if you prefer.
 
 ```yaml
 version: "3.8"

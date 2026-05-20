@@ -10,6 +10,9 @@ ENV PNPM_HOME=/root/.pnpm
 
 # Set environment
 ARG ENVIRONMENT=production
+ARG API_HOST=http://localhost:8000
+
+ENV API_HOST=${API_HOST}
 
 # Add the pnpm global bin to the PATH
 ENV PATH=/root/.pnpm/bin:$PATH
@@ -44,6 +47,10 @@ FROM nginx:alpine
 # Copy the built app to our served directory
 COPY --from=builder /console/dist /usr/share/nginx/html
 
+# Generate runtime config from container environment before nginx starts.
+COPY docker-entrypoint.sh /docker-entrypoint.sh
+RUN chmod +x /docker-entrypoint.sh
+
 # Expose the port nginx is bound to
 EXPOSE 4200
 
@@ -51,4 +58,5 @@ EXPOSE 4200
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 
 # Start Nginx server
+ENTRYPOINT ["/docker-entrypoint.sh"]
 CMD ["nginx", "-g", "daemon off;"]

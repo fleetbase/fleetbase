@@ -82,8 +82,14 @@ services:
         ENVIRONMENT: development
     ports:
       - "4200:4200"
-    volumes:
-      - ./console/fleetbase.config.json:/usr/share/nginx/html/fleetbase.config.json
+    environment:
+      API_HOST: ${API_HOST:-http://localhost:8000}
+      API_NAMESPACE: ${API_NAMESPACE:-int/v1}
+      SOCKETCLUSTER_PATH: ${SOCKETCLUSTER_PATH:-/socketcluster/}
+      SOCKETCLUSTER_HOST: ${SOCKETCLUSTER_HOST:-localhost}
+      SOCKETCLUSTER_SECURE: ${SOCKETCLUSTER_SECURE:-false}
+      SOCKETCLUSTER_PORT: ${SOCKETCLUSTER_PORT:-38000}
+      OSRM_HOST: ${OSRM_HOST:-https://router.project-osrm.org}
 
   application:
     restart: unless-stopped
