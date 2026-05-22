@@ -1,8 +1,18 @@
+linkWorkspacePackages: deep
+preferWorkspacePackages: true
+publicHoistPattern:
+  - "*ember-core*"
+  - "*ember-ui*"
+  - "*fleetops-data*"
+overrides:
+  "@fleetbase/fleetops-data": "^0.1.33"
+  "@fleetbase/ember-core": "^0.3.19"
+  "@fleetbase/ember-ui": "^0.3.31"
 allowBuilds:
-  '@fortawesome/fontawesome-common-types': false
-  '@fortawesome/fontawesome-svg-core': false
-  '@fortawesome/free-brands-svg-icons': false
-  '@fortawesome/free-solid-svg-icons': false
+  "@fortawesome/fontawesome-common-types": false
+  "@fortawesome/fontawesome-svg-core": false
+  "@fortawesome/free-brands-svg-icons": false
+  "@fortawesome/free-solid-svg-icons": false
   core-js: false
   fsevents: false
   protobufjs: false

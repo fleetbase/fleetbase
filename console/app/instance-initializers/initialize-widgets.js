@@ -31,7 +31,7 @@ export function initialize(appInstance) {
             description: 'Displays current Github stats from the official Fleetbase repo.',
             icon: faGithub,
             component: 'github-card',
-            grid_options: { w: 4, h: 8, minW: 4, minH: 8 },
+            grid_options: { w: 4, h: 9, minW: 4, minH: 9 },
             default: true,
         }),
     ];
