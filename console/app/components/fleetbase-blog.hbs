@@ -11,16 +11,22 @@
             {{#if this.loadBlogPosts.isRunning}}
                 <Spinner />
             {{else}}
-                <ul class="space-y-2">
-                    {{#each this.posts as |post|}}
-                        <li class="text-sm flex flex-col lg:flex-row">
-                            <a href={{post.link}} target="_blog" class="text-black truncate max-w-lg dark:text-gray-200">
-                                <span class="truncate">{{post.title}}</span>
-                            </a>
-                            <span class="ml-1 text-gray-900 dark:text-gray-400">- {{post.pubDate}}</span>
-                        </li>
-                    {{/each}}
-                </ul>
+                {{#if this.posts.length}}
+                    <ul class="space-y-2">
+                        {{#each this.posts as |post|}}
+                            <li class="text-sm flex flex-col lg:flex-row">
+                                <a href={{post.link}} target="_blog" rel="noopener noreferrer" class="text-black truncate max-w-lg dark:text-gray-200">
+                                    <span class="truncate">{{post.title}}</span>
+                                </a>
+                                <span class="ml-1 text-gray-900 dark:text-gray-400">- {{post.pubDate}}</span>
+                            </li>
+                        {{/each}}
+                    </ul>
+                {{else}}
+                    <div class="text-sm text-gray-700 dark:text-gray-300">
+                        No blog posts are available right now.
+                    </div>
+                {{/if}}
             {{/if}}
         </div>
     </div>

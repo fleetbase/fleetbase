@@ -1,78 +1,91 @@
-> v0.7.38 ~ "Provider-agnostic maps, UI polish, and data-model hardening"
+> v0.7.42 ~ "Customer APIs, multi-zone pricing, CLI installation, and operations hardening"
 ---
 ## ✨ Highlights
-This release focuses on the new provider-agnostic mapping work in FleetOps, foundational UI improvements in Ember UI, data-layer hardening in FleetOps Data, and expanded default platform capabilities through bundled routing extensions. Together these changes make the map stack more flexible, improve large resource workflows across desktop browsers, tighten the model/serializer behavior used by maintenance, orders, and upcoming recurring scheduling flows, and ship VROOM and Valhalla pre-installed with Fleetbase by default.
+This release updates Fleetbase Console `0.7.42`, FleetOps `0.6.50`, FleetOps Data `0.1.34`, Core API `1.6.49`, and Ember UI `0.3.32`. It adds a public FleetOps customer API for customer portals, first-class public order config discovery, multi-zone distance service-rate pricing, safer driver and vehicle availability defaults, hardened live-map viewport loading, and a new CLI-driven installation flow that replaces the old web-based installer with a not-configured landing page.
 
 ---
 ## 📦 Component Versions
-- `fleetops`: `0.6.46`
-- `fleetops-data`: `0.1.31`
-- `ember-ui`: `0.3.29`
-- `core-api`: `1.6.45`
-- `vroom`: `0.0.4`
-- `valhalla`: `0.0.4`
-
----
-## 🧩 Default Extensions
-- Fleetbase now ships the `vroom` and `valhalla` extensions as default pre-installed extensions.
-- `vroom` provides built-in optimization engine support out of the box, including new admin-level defaults and organization-level override settings.
-- `valhalla` provides built-in routing and map-services support out of the box, with matching admin and organization settings surfaces for default configuration and per-organization overrides.
+- `console`: `0.7.42`
+- `fleetops`: `0.6.50`
+- `fleetops-data`: `0.1.34`
+- `ember-ui`: `0.3.32`
+- `core-api`: `1.6.49`
 
 ---
 ## 🚚 FleetOps
-### Provider-agnostic map architecture
-- Added a system-level default map provider flow so platform admins can define the default provider once and organizations can still override it in their own settings.
-- Expanded the FleetOps admin map settings UI to manage provider selection alongside provider-specific settings.
-- Continued the provider-agnostic live map work so FleetOps can switch more cleanly between Google Maps and Leaflet without route/view logic being tightly coupled to one provider.
+### Public customer API and order config discovery
+- Added a B2C FleetOps customer API under `/v1/customers/*` so customer portals can use a Fleetbase API credential directly, without Storefront publishable-key or Store/Network coupling.
+- Added public customer signup, verification-code, login, SMS login, password reset, logout, device registration, profile, saved-place, customer-order listing, customer-order create, and customer-order detail flows.
+- Added `Customer-Token` authentication backed by Sanctum personal access tokens, with company checks against the API credential session so tokens cannot cross company boundaries.
+- Added a FleetOps `Customer` contact specialization and customer auth helper for company-preferred token resolution.
+- Kept the API boundary canonical: customer place payloads use the standard Place shape, customer order creation mirrors the normal FleetOps order shape, and customer-created orders force `customer_uuid` from the token.
+- Added optional `service_quote` consumption on customer order creation so customer portals can submit selected quotes and lock purchase rates onto the resulting order.
+- Added public read-only `/v1/order-configs` and `/v1/order-configs/{id}` endpoints with a public-safe `OrderConfig` resource exposing activity flow metadata for portals, drivers, and integrations.
+- Added a `company` object to customer responses with public-safe company details and canonical transaction currency resolution.
 
-### Live map and geofence UX improvements
-- Improved Google Maps polygon labeling and hover behavior for service areas and zones so focus-mode labels and tooltips render more reliably.
-- Hardened the live-map provider handoff when moving between Orchestrator and the dashboard/live map to avoid stale provider state and map-instance reuse issues.
-- Improved route visualization and related map flows around route editing, route optimization, and mixed-stop rendering.
+### Multi-zone distance service rates
+- Added a generic `multi_zone_distance` service-rate calculation method for routes that cross multiple priced zones or service areas.
+- Added geographic pricing rule metadata on service-rate fees, including service area or zone references, labels, priority, and fallback behavior.
+- Priced route distance by sampling route legs against configured zone/service-area polygons and returning per-zone quote line items.
+- Added FleetOps service-rate form and detail UI support for configuring and reviewing multi-zone distance fees.
+- Fixed preliminary quote currency filtering so service quotes respect the submitted currency.
 
-### Orders and payload summary improvements
-- Fixed lightweight order index payloads so pickup and dropoff can be derived from first/last waypoint markers without loading the full waypoint collection.
-- Corrected route-type summary behavior so waypoint-only orders do not misreport themselves as pickup-and-dropoff routes after lightweight payload hydration.
-- Added reusable place-address HTML utilities and helpers, plus a dedicated place-address cell component for more consistent address rendering in the UI.
-
-### Import and place-resolution hardening
-- Hardened structured place resolution during order import so explicit city, country, and coordinates remain authoritative instead of being overwritten by loose geocoder matches.
-- Improved shared-place deduplication during repeat imports so Fleetbase reuses previously created shared places instead of duplicating them unnecessarily.
-- Fixed place-resolution edge cases that could resolve underspecified addresses to the wrong country even when the import row already provided the correct structured location context.
-
----
-## 🧱 FleetOps Data
-### Model coverage and serializer correctness
-- Added the `recurring-order-schedule` model to FleetOps Data so the frontend data layer has the proper model surface ready for recurring scheduling workflows.
-- Extended the maintenance schedule model with explicit `subject_uuid`, `subject_type`, `default_assignee_uuid`, and `default_assignee_type` attributes for cleaner polymorphic state handling.
-- Fixed polymorphic embedded serialization across maintenance schedules, maintenances, work orders, orders, waypoints, and entities so serializers stop reaching for parent `*_type` attributes on child models that do not define them.
-- Resolved the maintenance schedule creation/update assertion path where related records like vehicles could trigger missing-attribute errors during embedded polymorphic serialization.
+### Operations workflow hardening
+- Hardened live-map viewport loading with SRID-safe coordinate predicates, validated viewport bounds, normalized bounds cache keys, result caps, debounced frontend reloads, and an explicit live-map resource limit.
+- Defaulted driver and vehicle availability to `available` across backend creation, frontend forms, dispatch/orchestrator lookups, seeders, and existing null or legacy `active` records.
+- Added order form required-field indicators backed by create-order validation, and updated multi-waypoint route rows to use RouteList-style markers.
+- Added driver assign/unassign quick actions from order rows and order details.
+- Improved multi-stop order activity flow behavior, activity-flow horizontal scrolling, order config flow normalization/rendering, route/tracking display, and order ETA gating by tracking lifecycle.
+- Fixed FleetOps order file/document handling, label rendering, vehicle assignment behavior, service area map context menus, and a broken `vehicle/pill` translation key.
+- Added customer contact user identity conflict handling and an audit command to surface customer/user type mismatches.
 
 ---
-## 🎨 Ember UI
-### Resource actions and dropdown support
-- Added first-class dropdown action-button support across tabular layouts, panel header actions, overlays, content panels, and modal footers.
-- Improved dropdown rendering so action items can safely omit icons and use either `text` or `label`, making split-button and menu-driven workflows more reusable across apps.
-- Preserved button type styling on dropdown triggers so primary and magic action menus render consistently with the rest of the Fleetbase action system.
+## 🧩 FleetOps Data
+- Added model and serializer support for multi-zone distance service-rate rules.
+- Added service-rate-fee fields for zone/service-area references, labels, priority, fallback configuration, and embedded rule preservation.
+- Added service-rate helpers for detecting multi-zone distance rates, sorting rules, and creating default rules.
+- Defaulted FleetOps Data driver and vehicle model statuses to `available` so frontend data defaults match FleetOps backend behavior.
 
-### Table and layout polish
-- Improved the native table scroll-container behavior to better support horizontal resource-table scrolling across browsers and layouts.
-- Refined floating pagination behavior for card-grid layouts so large resource sets behave more consistently with tabular layouts.
-- Polished shared layout/action surfaces used by FleetOps and other modules, reducing friction for richer resource actions without custom one-off UI code.
+---
+## 🧱 Core API and Console
+### CLI-driven installation flow
+- Removed the old web-based installer execution flow from Console and replaced it with a passive not-configured landing page that points operators to the local and cloud install docs.
+- Added a shared Console installation service that detects `fleetbase_not_configured` API responses, redirects to `/install`, checks onboarding state through `onboard/should-onboard`, and returns configured installs to onboarding or login.
+- Added install-completion socket listening on the `fleetbase.install` channel so open install pages refresh after CLI/container setup finishes.
+- Added the Core API `fleetbase:notify-installed` command and wired `api/deploy.sh` to broadcast install completion after migrations, caches, and registry initialization.
+- Removed internal web installer controller routes and shifted configuration guarding into Core API middleware for the new installer method.
 
-### Sidebar and shell UX
-- Included the recent sidebar state and transition refinements that made hide/show behavior smoother and more intentional in the app shell.
-- Continued the underlying shell/layout cleanup that supports route-specific sidebar control and more predictable overlay/header action rendering.
+### Platform and integrations
+- Updated the CallPro.mn SMS integration to the new API base URL and refreshed SMS handling coverage.
+- Updated deployment workflows to install the latest pnpm action version during release builds.
+
+---
+## 🧪 Tests and Coverage
+- Added FleetOps static-shape coverage for customer endpoints, customer order canonical fields, customer portal alias prevention, and public order config resources.
+- Added FleetOps coverage for live-map viewport bounds, driver/vehicle status defaults, order form required indicators, and multi-zone service-rate behavior.
+- Added FleetOps Data unit coverage for multi-zone rule sorting and default rule creation.
+- Added Core API unit coverage for the updated CallPro SMS service.
+- Added Console unit coverage for the installation service, application route error handling, login/onboarding redirects, and install route behavior.
 
 ---
 ## 🐛 Bug Fixes
-- Fixed Google Maps service-area and zone label rendering regressions introduced during the provider abstraction work.
-- Fixed live-map transition issues that could leave a stale map provider active after leaving Orchestrator.
-- Fixed incorrect order pickup/dropoff blanks on first table load for waypoint-driven payloads.
-- Fixed wrong-country place resolution during order import when the spreadsheet already provided structured address context.
-- Fixed duplicate shared-place creation on repeated imports of the same structured locations.
-- Fixed maintenance schedule polymorphic serialization errors caused by serializers reading `subject_type`-style attributes from related child models.
-- Fixed resource action surfaces in Ember UI that previously could not natively support dropdown-based primary actions cleanly.
+- Fixed customer signup verification failures caused by unsaved verification subjects and guarded User fields.
+- Fixed customer signup/login idempotency, password mutator usage, and reset-password double hashing.
+- Fixed customer order creation so client-supplied dispatch, driver, vehicle, facilitator, and customer fields cannot override the authenticated customer context.
+- Fixed multi-zone fee persistence, embedded fee refresh after edit, duplicate fee serialization, geography inference, and quote breakdown labels.
+- Fixed live-map database errors and inefficient loading caused by envelope-based viewport filtering.
+- Fixed driver and vehicle records defaulting to legacy `active` or null statuses instead of the dispatch-ready `available` status.
+- Fixed order config flow serialization and frontend rendering drift.
+- Fixed install boot behavior so an unconfigured instance no longer attempts web-based install actions from the browser.
+
+---
+## 🔌 API Changes
+- Added `POST /v1/customers/request-creation-code`.
+- Added `POST /v1/customers`, `POST /v1/customers/login`, `POST /v1/customers/login-with-sms`, `POST /v1/customers/verify-code`, `POST /v1/customers/forgot-password`, and `POST /v1/customers/reset-password`.
+- Added customer-token protected `GET/PUT /v1/customers/me`, `POST /v1/customers/logout`, `POST /v1/customers/logout-all`, `GET /v1/customers/places`, `GET/POST /v1/customers/orders`, `GET /v1/customers/orders/{id}`, and `POST /v1/customers/register-device`.
+- Added public read-only `GET /v1/order-configs` and `GET /v1/order-configs/{id}`.
+- Added Core API middleware behavior for unconfigured instances using the `fleetbase_not_configured` error code.
+- Removed the internal browser-driven installer API surface in favor of CLI/container installation and the install-completion notification command.
 
 ---
 ## 🔧 Upgrade Steps

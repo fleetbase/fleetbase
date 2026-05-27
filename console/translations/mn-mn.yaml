@@ -752,11 +752,11 @@ onboard:
       resend-email: Имэйл дахин илгээх
       send-by-sms: SMS-аар илгээх
 install:
-  installer-header: Суулгагч
-  failed-message-sent: Суулгалт амжилтгүй боллоо! Дахин суулгахын тулд доорх товчийг
-    дарна уу.
-  retry-install: Суулгалтыг дахин оролдох
-  start-install: Суулгалтыг эхлүүлэх
+  not-configured-title: Fleetbase is not installed or configured
+  not-configured-message: Complete setup from the Fleetbase CLI or application container, then reload this page once the database, migrations, and seed data are ready.
+  running-locally-docs: See running locally docs
+  cloud-docs: See cloud deployment docs
+  refreshing: Installation complete, refreshing...
 layout:
   header:
     menus:

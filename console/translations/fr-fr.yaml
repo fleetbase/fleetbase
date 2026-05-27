@@ -756,11 +756,11 @@ onboard:
       resend-email: Renvoyer l'e-mail
       send-by-sms: Envoyer par SMS
 install:
-  installer-header: Installateur
-  failed-message-sent: L'installation a échoué ! Cliquez sur le bouton ci-dessous
-    pour réessayer l'installation.
-  retry-install: Réessayer l'installation
-  start-install: Démarrer l'installation
+  not-configured-title: Fleetbase is not installed or configured
+  not-configured-message: Complete setup from the Fleetbase CLI or application container, then reload this page once the database, migrations, and seed data are ready.
+  running-locally-docs: See running locally docs
+  cloud-docs: See cloud deployment docs
+  refreshing: Installation complete, refreshing...
 layout:
   header:
     menus:

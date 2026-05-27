@@ -1,34 +1,22 @@
-<div class="max-w-2xl m-auto h-screen overflow-y-scroll">
-    <div class="h-full">
-        <div class="border border-black bg-gray-900 shadow-md rounded-md p-5 mt-12">
-            <div class="w-full flex-col items-center justify-center text-center mb-6">
-                <img src="/images/icon.png" alt={{concat (t "app.name") " Install"}} class="w-12 h-12 mx-auto" width="48" height="48" />
-                <h3 class="mt-2 text-gray-50 font-bold">{{t "app.name"}} {{t "install.installer-header"}}</h3>
-            </div>
-            <div class="space-y-4 mb-5">
-                {{#each this.steps as |step|}}
-                    <div class="border {{if (eq step.status 'pending') 'border-black bg-gray-800'}} {{if (eq step.status 'in_progress') "border-blue-500 bg-blue-900"}} {{if (eq step.status 'completed') 'border-green-900 bg-green-800'}} {{if (eq step.status 'failed') 'border-red-900 bg-red-800'}} shadow-md px-4 py-2 flex flex-row items-center rounded-xl">
-                        <div class="w-12 flex flex-row items-center">
-                            <FaIcon @icon="circle-check" class="{{if (eq step.status 'pending') "text-gray-500"}} {{if (eq step.status 'in_progress') "text-blue-200"}} {{if (eq step.status 'completed') "text-green-400"}} {{if (eq step.status 'failed') "text-red-400"}}" />
-                            {{#if (eq step.status 'in_progress')}}
-                                <div class="ml-2 -mb-0.5">
-                                    <Spinner />
-                                </div>
-                            {{/if}}
-                        </div>
-                        <span class="{{if (eq step.status 'pending') "text-gray-500"}} {{if (eq step.status 'in_progress') "text-blue-200"}} {{if (eq step.status 'completed') "text-green-400"}} {{if (eq step.status 'failed') "text-red-400"}} font-semibold">{{step.name}}</span>
-                    </div>
-                {{/each}}
-            </div>
-            <div class="flex flex-col flex-1 my-1">
-                {{#if this.error}}
-                    <div class="flex items-center border border-red-900 bg-red-800 text-red-100 px-4 py-1.5 rounded-lg mb-3 shadow-md">
-                        <FaIcon @icon="triangle-exclamation" class="text-red-100 mr-2" />
-                        <span>{{t "install.failed-message-sent"}}</span>
-                    </div>
-                {{/if}}
-                <Button @type="primary" @icon="play" @size="lg" @text={{if this.error (t "install.retry-install") (t "install.start-install") }} @wrapperClass="flex-1" class="w-full" @onClick={{this.startInstall}} @isLoading={{this.install.isRunning}} @disabled={{this.install.isRunning}} />
-            </div>
+<div class="min-h-screen flex items-center justify-center px-6 py-12">
+    <div class="w-full max-w-xl border border-gray-800 bg-gray-900 shadow-md rounded-md p-8 text-center">
+        <img src="/images/icon.png" alt={{t "app.name"}} class="w-12 h-12 mx-auto" width="48" height="48" />
+        <h1 class="mt-4 text-2xl font-bold text-gray-50">{{t "install.not-configured-title"}}</h1>
+        <p class="mt-3 text-sm leading-6 text-gray-300">{{t "install.not-configured-message"}}</p>
+
+        {{#if this.isRefreshing}}
+            <p class="mt-4 text-sm font-medium text-sky-300">{{t "install.refreshing"}}</p>
+        {{/if}}
+
+        <div class="mt-8 flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-3">
+            <a href={{this.runningLocallyDocsUrl}} target="_blank" rel="noopener noreferrer" class="inline-flex items-center justify-center rounded-md bg-sky-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-sky-500">
+                <FaIcon @icon="book" class="mr-2" />
+                {{t "install.running-locally-docs"}}
+            </a>
+            <a href={{this.cloudDocsUrl}} target="_blank" rel="noopener noreferrer" class="inline-flex items-center justify-center rounded-md border border-gray-700 bg-gray-800 px-4 py-2 text-sm font-semibold text-gray-100 hover:bg-gray-700">
+                <FaIcon @icon="cloud" class="mr-2" />
+                {{t "install.cloud-docs"}}
+            </a>
         </div>
     </div>
 </div>

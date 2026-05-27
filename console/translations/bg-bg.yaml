@@ -749,11 +749,11 @@ onboard:
       resend-email: Изпрати имейл отново
       send-by-sms: Изпрати чрез SMS
 install:
-  installer-header: Инсталатор
-  failed-message-sent: Инсталацията неуспешна! Натиснете бутона по-долу, за да опитате
-    отново.
-  retry-install: Опитай отново инсталацията
-  start-install: Започни инсталацията
+  not-configured-title: Fleetbase is not installed or configured
+  not-configured-message: Complete setup from the Fleetbase CLI or application container, then reload this page once the database, migrations, and seed data are ready.
+  running-locally-docs: See running locally docs
+  cloud-docs: See cloud deployment docs
+  refreshing: Installation complete, refreshing...
 layout:
   header:
     menus:

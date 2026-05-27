@@ -751,10 +751,11 @@ onboard:
       resend-email: Gửi lại Email
       send-by-sms: Gửi qua SMS
 install:
-  installer-header: Trình cài đặt
-  failed-message-sent: Cài đặt thất bại! Nhấn nút bên dưới để thử lại.
-  retry-install: Thử cài đặt lại
-  start-install: Bắt đầu cài đặt
+  not-configured-title: Fleetbase is not installed or configured
+  not-configured-message: Complete setup from the Fleetbase CLI or application container, then reload this page once the database, migrations, and seed data are ready.
+  running-locally-docs: See running locally docs
+  cloud-docs: See cloud deployment docs
+  refreshing: Installation complete, refreshing...
 layout:
   header:
     menus:

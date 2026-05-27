@@ -52,7 +52,19 @@ export default class DashboardModel extends Model {
     addWidget(widget) {
         const owner = getOwner(this);
         const store = owner.lookup('service:store');
-        const widgetRecord = store.createRecord('dashboard-widget', { ...widget, dashboard: this });
+
+        // The registry slug (e.g. 'fleet-ops-kpi-earnings-widget') is shared across every
+        // dashboard that consumes the widget; if it lands in the Ember Data record id we
+        // collide on the second add. Strip it, let Ember Data assign a UUID, and stash
+        // the slug under options.widget_key so persisted records can be resolved back to
+        // their registry definition on reload.
+        // eslint-disable-next-line no-unused-vars
+        const { id: widgetKey, default: _isDefault, ...rest } = widget;
+        const widgetRecord = store.createRecord('dashboard-widget', {
+            ...rest,
+            options: { ...(rest.options ?? {}), widget_key: widgetKey },
+            dashboard: this,
+        });
 
         return new Promise((resolve, reject) => {
             widgetRecord

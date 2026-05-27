@@ -460,7 +460,14 @@ dashboard-widget-panel:
     {widgetName} Widget
   select-widgets: Select Widgets
   close-and-save: Close and Save
-  filter-widgets: Filter widgets by keyword
+  filter-widgets: Search widgets…
+  no-widgets-match: No widgets match your filters.
+  tab-all: All
+  tab-default: Recommended
+  tab-added: On Dashboard
+  badge-default: Default
+  add: Add
+  add-another: Add another
 
 filters-picker:
   filters: Filters
@@ -530,6 +537,7 @@ component:
     save-dashboard: Save Dashboard
     you-cannot-delete-this-dashboard: You cannot delete this dashboard.
     are-you-sure-you-want-delete-dashboard: Are you sure to delete this {dashboardName}?
+    create-to-customize-hint: Create a dashboard to customize widgets.
 
   dashboard-widget-panel:
     widget-name: >-
@@ -782,10 +790,11 @@ onboard:
       send-by-sms: Send by SMS
 
 install:
-  installer-header: Installer
-  failed-message-sent: The install failed! Click the button below to retry the install.
-  retry-install: Retry Install
-  start-install: Start Install
+  not-configured-title: Fleetbase is not installed or configured
+  not-configured-message: Complete setup from the Fleetbase CLI or application container, then reload this page once the database, migrations, and seed data are ready.
+  running-locally-docs: See running locally docs
+  cloud-docs: See cloud deployment docs
+  refreshing: Installation complete, refreshing...
 
 layout:
   header:
