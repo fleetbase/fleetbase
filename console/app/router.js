@@ -7,10 +7,10 @@ export default class Router extends EmberRouter {
 }
 
 Router.map(function () {
-    this.route('virtual', { path: '/:slug' });
+    this.route('virtual', { path: '/~/:slug' });
     this.route('install');
     this.route('onboard', function () {
-        this.route('verify-email');
+        this.route('index', { path: '/' });
     });
     this.route('auth', function () {
         this.route('login', { path: '/' });
@@ -30,10 +30,12 @@ Router.map(function () {
         this.route('account', function () {
             this.route('virtual', { path: '/:slug' });
             this.route('auth');
+            this.route('organizations');
         });
         this.route('settings', function () {
             this.route('virtual', { path: '/:slug' });
             this.route('two-fa');
+            this.route('notifications');
         });
         this.route('virtual', { path: '/:slug' });
         this.route('admin', function () {
@@ -48,7 +50,6 @@ Router.map(function () {
                 this.route('socket');
             });
             this.route('branding');
-            this.route('notifications');
             this.route('two-fa-settings');
             this.route('virtual', { path: '/:slug' });
             this.route('organizations', function () {

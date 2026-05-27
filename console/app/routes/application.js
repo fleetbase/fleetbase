@@ -1,5 +1,4 @@
 import Route from '@ember/routing/route';
-import { tracked } from '@glimmer/tracking';
 import { inject as service } from '@ember/service';
 import { action } from '@ember/object';
 import isElectron from '@fleetbase/ember-core/utils/is-electron';
@@ -11,13 +10,12 @@ export default class ApplicationRoute extends Route {
     @service('universe/extension-manager') extensionManager;
     @service session;
     @service theme;
-    @service fetch;
     @service urlSearchParams;
     @service modalsManager;
     @service intl;
     @service currentUser;
     @service router;
-    @tracked defaultTheme;
+    @service installation;
 
     /**
      * Handle the transition into the application.
@@ -50,25 +48,18 @@ export default class ApplicationRoute extends Route {
     }
 
     /**
-     * Check the installation status of Fleetbase and transition user accordingly.
+     * Handle application-level route errors.
      *
-     * @return {void|Transition}
+     * @param {Error|Object} error
+     * @return {boolean}
      * @memberof ApplicationRoute
      */
-    // eslint-disable-next-line ember/classic-decorator-hooks
-    async init() {
-        super.init(...arguments);
-        const { shouldInstall, shouldOnboard, defaultTheme } = await this.checkInstallationStatus();
-
-        this.defaultTheme = defaultTheme;
-
-        if (shouldInstall) {
-            return this.router.transitionTo('install');
+    @action error(error) {
+        if (this.installation.handleError(error)) {
+            return false;
         }
 
-        if (shouldOnboard) {
-            return this.router.transitionTo('onboard');
-        }
+        return true;
     }
 
     /**
@@ -104,8 +95,7 @@ export default class ApplicationRoute extends Route {
      *
      * This method prepares the theme by setting up an array of class names that should be applied to the
      * application's body element. If the application is running inside an Electron environment, it adds the
-     * `'is-electron'` class to the array. It then calls the `initialize` method of the `theme` service,
-     * passing in the `bodyClassNames` array and the `defaultTheme` configuration.
+     * `'is-electron'` class to the array. It then calls the `initialize` method of the `theme` service.
      */
     initializeTheme() {
         const bodyClassNames = [];
@@ -114,7 +104,7 @@ export default class ApplicationRoute extends Route {
             bodyClassNames.pushObject(['is-electron']);
         }
 
-        this.theme.initialize({ bodyClassNames, theme: this.defaultTheme });
+        this.theme.initialize({ bodyClassNames });
     }
 
     /**
@@ -127,15 +117,5 @@ export default class ApplicationRoute extends Route {
     initializeLocale() {
         const locale = this.currentUser.getOption('locale', 'en-US');
         this.intl.setLocale([locale]);
-    }
-
-    /**
-     * Checks to determine if Fleetbase should be installed or user needs to onboard.
-     *
-     * @return {Promise}
-     * @memberof ApplicationRoute
-     */
-    checkInstallationStatus() {
-        return this.fetch.get('installer/initialize');
     }
 }

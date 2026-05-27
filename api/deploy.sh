@@ -35,5 +35,8 @@ php artisan route:cache
 # Initialize registry
 php artisan registry:init
 
+# Notify open install pages that setup has completed
+php artisan fleetbase:notify-installed || true
+
 # Restart octane
 # php artisan octane:reload

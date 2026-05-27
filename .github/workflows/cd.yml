@@ -180,7 +180,7 @@ jobs:
         name: Install pnpm
         id: pnpm-install
         with:
-          version: 11
+          version: latest
           run_install: false
 
       - name: Get pnpm Store Directory

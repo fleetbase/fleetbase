@@ -724,10 +724,11 @@ onboard:
       resend-email: ارسال مجدد ایمیل
       send-by-sms: ارسال از طریق پیامک
 install:
-  installer-header: نصب‌کننده
-  failed-message-sent: نصب ناموفق بود! برای تلاش مجدد روی دکمه زیر کلیک کنید
-  retry-install: تلاش مجدد برای نصب
-  start-install: شروع نصب
+  not-configured-title: Fleetbase is not installed or configured
+  not-configured-message: Complete setup from the Fleetbase CLI or application container, then reload this page once the database, migrations, and seed data are ready.
+  running-locally-docs: See running locally docs
+  cloud-docs: See cloud deployment docs
+  refreshing: Installation complete, refreshing...
 layout:
   header:
     menus:
