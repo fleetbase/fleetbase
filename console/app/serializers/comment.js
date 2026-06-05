@@ -20,6 +20,10 @@ export default class CommentSerializer extends ApplicationSerializer.extend(Embe
             return;
         }
 
+        if (key === 'subject_id') {
+            return;
+        }
+
         super.serializeAttribute(...arguments);
     }
 

@@ -83,3 +83,67 @@ body.fleetbase-console .snm-dropdown-card {
     height: 100%;
     min-height: 84px;
 }
+
+.console-dashboard-page {
+    display: flex;
+    flex: 0 0 auto;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    width: 100%;
+    padding: 0.625rem 2.5rem;
+    border-bottom: 1px solid #e5e7eb;
+    background-color: #fff;
+    box-shadow: 0 1px 2px rgb(15 23 42 / 5%);
+    z-index: 700;
+}
+
+.console-dashboard-create-wrapper .leaflet-control,
+.console-dashboard-create-wrapper .leaflet-top.leaflet-left,
+.console-dashboard-create-wrapper .leaflet-top.leaflet-left > .leaflet-control-zoom {
+    z-index: 600;
+}
+
+body[data-theme='dark'] .console-dashboard-page {
+    border-bottom-color: #1f2937;
+    background-color: #111827;
+    box-shadow: 0 1px 2px rgb(2 6 23 / 30%);
+}
+
+.console-dashboard-title h1 {
+    color: #111827;
+    font-size: 1rem;
+    font-weight: 700;
+    line-height: 1.2;
+}
+
+body[data-theme='dark'] .console-dashboard-title h1 {
+    color: #f9fafb;
+}
+
+.console-dashboard-actions {
+    justify-content: flex-end;
+}
+
+.console-dashboard-create-wrapper {
+    padding: 1rem 2.5rem;
+}
+
+@media (width <= 767px) {
+    .console-dashboard-page {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 0.75rem;
+        padding: 0.625rem 1rem;
+    }
+
+    .console-dashboard-actions {
+        width: 100%;
+        justify-content: flex-start;
+        flex-wrap: wrap;
+    }
+
+    .console-dashboard-create-wrapper {
+        padding: 1rem;
+    }
+}

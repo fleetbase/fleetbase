@@ -1,7 +1,20 @@
 {{page-title "Dashboard"}}
 <Layout::Section::Body class="overflow-y-scroll h-full">
     <TwoFaEnforcementAlert />
-    <Dashboard @extension="core" @createWrapperClass="px-10" class="flex items-center justify-between mb-4 mt-6 px-14" />
+    <RegistryYield @registry="console:home:before-dashboard" as |RegistryComponent|>
+        <RegistryComponent @controller={{this}} @position="before-dashboard" />
+    </RegistryYield>
+    <Dashboard
+        @extension="core"
+        @leftHeaderWrapperClass="console-dashboard-title"
+        @rightHeaderWrapperClass="console-dashboard-actions"
+        @createWrapperClass="console-dashboard-create-wrapper"
+        @stickyHeader={{true}}
+        class="console-dashboard-page"
+    />
+    <RegistryYield @registry="console:home:after-dashboard" as |RegistryComponent|>
+        <RegistryComponent @controller={{this}} @position="after-dashboard" />
+    </RegistryYield>
     <Spacer @height="300px" />
 </Layout::Section::Body>
 <div id="console-home-wormhole" />

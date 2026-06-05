@@ -4,8 +4,11 @@ import { format, formatDistanceToNow } from 'date-fns';
 
 export default class CommentModel extends Model {
     /** @ids */
+    @attr('string') uuid;
+    @attr('string') public_id;
     @attr('string') company_uuid;
     @attr('string') parent_comment_uuid;
+    @attr('string') subject_id;
     @attr('string') subject_uuid;
     @attr('string') subject_type;
 
