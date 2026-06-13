@@ -20,19 +20,18 @@
     "require": {
         "php": ">=8.0 <=8.2.30",
         "appstract/laravel-opcache": "^4.0",
-        "fleetbase/core-api": "^1.6.49",
-        "fleetbase/fleetops-api": "^0.6.50",
+        "fleetbase/core-api": "^1.6.51",
+        "fleetbase/fleetops-api": "^0.6.52",
         "fleetbase/registry-bridge": "^0.1.9",
-        "fleetbase/storefront-api": "^0.4.14",
-        "fleetbase/ledger-api": "^0.0.3",
+        "fleetbase/storefront-api": "^0.4.16",
+        "fleetbase/ledger-api": "^0.0.5",
         "fleetbase/flespi-integration": "^0.1.16",
         "fleetbase/samsara-api": "^0.0.3",
+        "fleetbase/customer-portal-api": "^0.0.11",
         "fleetbase/valhalla-api": "^0.0.4",
         "fleetbase/vroom-api": "^0.0.4",
         "fleetbase/billing-api": "^0.1.22",
         "fleetbase/internals-api": "^0.0.32",
-        "fleetbase/aws-marketplace": "^0.0.8",
-        "fleetbase/customer-portal-api": "^0.0.10",
         "guzzlehttp/guzzle": "^7.0.1",
         "laravel/framework": "^10.0",
         "laravel/octane": "^2.3",
@@ -60,19 +59,11 @@
     "repositories": [
         {
             "type": "vcs",
-            "url": "https://github.com/fleetbase/aws-marketplace"
-        },
-        {
-            "type": "vcs",
             "url": "https://github.com/fleetbase/billing"
         },
         {
             "type": "vcs",
             "url": "https://github.com/fleetbase/internals"
-        },
-        {
-            "type": "vcs",
-            "url": "https://github.com/fleetbase/customer-portal"
         },
         {
             "type": "composer",
@@ -83,6 +74,7 @@
                 "fleetbase/fleetops-api",
                 "fleetbase/storefront-api",
                 "fleetbase/ledger-api",
+                "fleetbase/customer-portal-api",
                 "fleetbase/valhalla-api",
                 "fleetbase/vroom-api"
             ]

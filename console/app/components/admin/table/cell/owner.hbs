@@ -1,0 +1,15 @@
+{{#if this.owner}}
+    <div class="flex min-w-0 items-center gap-3">
+        <Image src={{this.owner.avatar_url}} class="h-8 w-8 flex-shrink-0 rounded-full border border-gray-200 object-cover dark:border-gray-700" />
+        <div class="min-w-0">
+            <div class="truncate text-sm font-medium text-gray-900 dark:text-gray-100">{{n-a this.owner.name}}</div>
+            <div class="truncate text-xs text-gray-500 dark:text-gray-400">{{n-a this.owner.email}}</div>
+            <div class="truncate text-xs text-gray-400 dark:text-gray-500">{{n-a this.owner.phone}}</div>
+        </div>
+    </div>
+{{else}}
+    <div class="flex items-center gap-2 text-xs text-amber-600 dark:text-amber-300">
+        <FaIcon @icon="triangle-exclamation" />
+        <span>No owner assigned</span>
+    </div>
+{{/if}}

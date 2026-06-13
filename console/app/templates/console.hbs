@@ -9,11 +9,12 @@
         @showSidebarToggle={{true}}
     />
     <Layout::Main class={{this.currentRouteClass}}>
-        <Layout::Sidebar @onSetup={{this.setSidebarContext}} />
+        <Layout::Sidebar />
         <Layout::Section>
             {{outlet}}
         </Layout::Section>
         <ResourceContextPanel />
+        <DocsPanel />
     </Layout::Main>
     <Layout::MobileNavbar
         @brand={{@model}}

@@ -1,22 +1,37 @@
 {{page-title (t "console.admin.organizations.index.title")}}
 {{! template-lint-disable no-unbound }}
-<Layout::Section::Header @title={{t "console.admin.organizations.index.title"}} @searchQuery={{unbound this.query}} @onSearch={{this.search}}>
-    <Button @icon="long-arrow-up" @iconClass="rotate-icon-45" @text={{t "common.export"}} @wrapperClass="hidden md:flex" @onClick={{this.exportOrganization}} />
-</Layout::Section::Header>
 
-<Layout::Section::Body>
-    <Table
-        @rows={{@model}}
-        @columns={{this.columns}}
-        @selectable={{true}}
-        @canSelectAll={{true}}
-        @onSetup={{fn (mut this.table)}}
-        @pagination={{true}}
-        @paginationMeta={{@model.meta}}
-        @page={{this.page}}
-        @onPageChange={{fn (mut this.page)}}
-        @onRowClick={{this.goToCompany}}
-    />
-</Layout::Section::Body>
+<Layout::Resource::Tabular
+    @resource="company"
+    @title={{t "console.admin.organizations.index.title"}}
+    @searchQuery={{unbound this.query}}
+    @onSearch={{this.search}}
+    @data={{@model}}
+    @columns={{this.columns}}
+    @page={{this.page}}
+    @onPageChange={{fn (mut this.page)}}
+    @setupTable={{fn (mut this.table)}}
+    @actionButtons={{this.actionButtons}}
+    @bulkActions={{this.bulkActions}}
+    @controller={{this}}
+    @selectable={{true}}
+    @canSelectAll={{true}}
+    @onRowClick={{this.goToCompany}}
+    @searchInputClass="admin-organization-resource-search"
+    @filterPickerButtonClass="admin-organization-resource-action-button"
+    @columnPickerButtonClass="admin-organization-resource-action-button"
+    @emptyStateComponent={{component
+        "table/empty-state"
+        variant="compact"
+        icon="building"
+        title="No organizations found"
+        description="No organizations match the current admin view."
+        filteredTitle="No organizations match your filters"
+        filteredDescription="Adjust the search, filters, or saved view to find another organization."
+        primaryText="Clear View"
+        primaryIcon="filter-circle-xmark"
+        primaryAction=this.clearSavedView
+    }}
+/>
 
 {{outlet}}

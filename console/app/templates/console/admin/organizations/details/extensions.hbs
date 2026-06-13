@@ -1,0 +1,53 @@
+{{page-title "Extensions"}}
+
+<div class="mx-auto w-full max-w-7xl p-4 md:p-6">
+    <section class="rounded-md border bg-white p-4 shadow-sm dark:border-gray-700 dark:bg-gray-800">
+        <div class="flex items-start justify-between gap-4">
+            <div class="flex items-start gap-3">
+                <div class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-md bg-purple-50 text-purple-600 dark:bg-purple-900/30 dark:text-purple-300">
+                    <FaIcon @icon="puzzle-piece" />
+                </div>
+                <div class="min-w-0">
+                    <h2 class="text-sm font-semibold text-gray-900 dark:text-white">Installed Extensions</h2>
+                    <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
+                        Extension footprint for this organization. Package-specific controls can mount additional panels through the admin registry.
+                    </p>
+                </div>
+            </div>
+            <Badge @status="info" @hideStatusDot={{true}}>{{@model.extensions.length}} installed</Badge>
+        </div>
+
+        {{#if @model.extensions.length}}
+            <div class="mt-4 grid gap-3 md:grid-cols-2">
+                {{#each @model.extensions as |extension|}}
+                    <div class="flex items-start justify-between gap-3 rounded-md border border-gray-100 p-3 dark:border-gray-700">
+                        <div class="flex min-w-0 items-start gap-3">
+                            <div class="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-md bg-gray-100 text-gray-500 dark:bg-gray-700 dark:text-gray-300">
+                                <FaIcon @icon={{or extension.icon "puzzle-piece"}} />
+                            </div>
+                            <div class="min-w-0">
+                                <div class="truncate text-sm font-semibold text-gray-900 dark:text-white">{{extension.name}}</div>
+                                <div class="truncate text-xs text-gray-500 dark:text-gray-400">{{n-a extension.description}}</div>
+                                <div class="mt-1 truncate font-mono text-[11px] text-gray-400 dark:text-gray-500">{{or extension.key extension.slug extension.extension_id}}</div>
+                            </div>
+                        </div>
+                        <div class="flex flex-shrink-0 flex-col items-end gap-1">
+                            <Badge @status="success" @hideStatusDot={{true}}>{{extension.status}}</Badge>
+                            {{#if extension.version}}
+                                <span class="text-[11px] text-gray-400 dark:text-gray-500">v{{extension.version}}</span>
+                            {{/if}}
+                        </div>
+                    </div>
+                {{/each}}
+            </div>
+        {{else}}
+            <div class="mt-4 rounded-md border border-dashed border-gray-200 p-5 text-center text-sm text-gray-500 dark:border-gray-700 dark:text-gray-400">
+                No organization-specific extensions are installed.
+            </div>
+        {{/if}}
+    </section>
+
+    <RegistryYield @registry="console:admin:organization:extensions" @context={{hash organization=@model.organization extensions=@model.extensions}} as |RegistryComponent context|>
+        <RegistryComponent @organization={{context.organization}} @extensions={{context.extensions}} />
+    </RegistryYield>
+</div>

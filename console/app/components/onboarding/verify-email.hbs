@@ -1,7 +1,7 @@
 {{page-title (t "onboard.verify-email.header-title")}}
 
 <div class="flex items-center justify-center h-screen min-h-screen px-4 py-12 bg-gray-50 dark:bg-gray-900 sm:px-6 lg:px-8 overflow-y-scroll">
-    <div class="w-full max-w-md h-screen flex items-center justify-center py-4">
+    <div class="w-full max-w-md h-screen flex flex-col items-center justify-center py-4">
         {{#if this.initialized}}
             <div class="bg-white dark:bg-gray-800 py-8 px-4 shadow rounded-lg w-full">
                 <div class="mb-6">
@@ -78,5 +78,6 @@
                 </form>
             </div>
         {{/if}}
+        <FleetbaseAttribution />
     </div>
 </div>

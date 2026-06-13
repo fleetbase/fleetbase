@@ -1,0 +1,61 @@
+{{page-title "Users"}}
+{{! template-lint-disable no-unbound }}
+
+<div class="mx-auto flex w-full max-w-7xl flex-col gap-4 p-4 md:p-6">
+    <div class="flex flex-col gap-1">
+        <h2 class="text-base font-bold text-gray-900 dark:text-gray-100">Organization Users</h2>
+        <p class="text-sm text-gray-500 dark:text-gray-300">Search members, review access state, and manage user support actions for this organization.</p>
+    </div>
+
+    <section class="overflow-hidden rounded-md border border-gray-200 bg-white shadow-sm dark:border-gray-700 dark:bg-gray-800">
+        <div class="admin-organization-resource-header border-b border-gray-200 px-4 py-3 dark:border-gray-700">
+            <div>
+                <h3 class="text-sm font-bold text-gray-900 dark:text-gray-100">Users</h3>
+                <p class="mt-1 text-xs leading-5 text-gray-500 dark:text-gray-300">Filter organization users and open row actions for impersonation or password support.</p>
+            </div>
+            <div class="admin-organization-resource-actions flex min-w-0 flex-wrap items-center gap-2 lg:ml-auto lg:flex-nowrap lg:justify-end">
+                <Layout::Resource::TabularActions
+                    @title="Users"
+                    @searchQuery={{unbound this.nestedQuery}}
+                    @onSearch={{this.search}}
+                    @columns={{this.columns}}
+                    @page={{this.nestedPage}}
+                    @onPageChange={{fn (mut this.nestedPage)}}
+                    @actionButtons={{this.actionButtons}}
+                    @bulkActions={{this.bulkActions}}
+                    @controller={{this}}
+                    @table={{this.table}}
+                    @searchInputClass="admin-organization-resource-search"
+                    @filterPickerButtonClass="admin-organization-resource-action-button"
+                    @columnPickerButtonClass="admin-organization-resource-action-button"
+                />
+            </div>
+        </div>
+
+        <Layout::Resource::Tabular
+            @resource="user"
+            @title="Users"
+            @data={{@model}}
+            @columns={{this.columns}}
+            @page={{this.nestedPage}}
+            @onPageChange={{fn (mut this.nestedPage)}}
+            @controller={{this}}
+            @setupTable={{fn (mut this.table)}}
+            @selectable={{false}}
+            @canSelectAll={{false}}
+            @withoutHeader={{true}}
+            @emptyStateComponent={{component
+                "table/empty-state"
+                variant="compact"
+                icon="users"
+                title="No users found"
+                description="This organization does not have users matching the current view."
+                filteredTitle="No users match your filters"
+                filteredDescription="Adjust the search or filters to find another organization user."
+                primaryText="Refresh"
+                primaryIcon="refresh"
+                primaryAction=this.refresh
+            }}
+        />
+    </section>
+</div>

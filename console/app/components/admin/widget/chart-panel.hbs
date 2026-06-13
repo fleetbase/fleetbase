@@ -1,0 +1,64 @@
+<div class="admin-dashboard-widget flex h-full min-h-0 flex-col overflow-hidden rounded-md border bg-white shadow-sm dark:border-gray-700 dark:bg-gray-800" ...attributes>
+    <div class="flex items-center justify-between border-b border-gray-100 px-3 py-2.5 dark:border-gray-700">
+        <div class="flex min-w-0 items-center gap-2">
+            <div class="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-md bg-blue-50 text-blue-600 dark:bg-blue-900/30 dark:text-blue-300">
+                <FaIcon @icon={{this.icon}} />
+            </div>
+            <div class="min-w-0">
+                <div class="truncate text-xs font-bold uppercase text-gray-900 dark:text-gray-100">{{this.title}}</div>
+                {{#if this.subtitle}}
+                    <div class="truncate text-[11px] text-gray-500 dark:text-gray-400">{{this.subtitle}}</div>
+                {{/if}}
+            </div>
+        </div>
+        <button type="button" class="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-md text-gray-400 hover:bg-gray-100 hover:text-gray-700 dark:hover:bg-gray-700 dark:hover:text-gray-200" {{on "click" (perform this.load)}}>
+            <FaIcon @icon="rotate" />
+        </button>
+    </div>
+
+    <div class="min-h-0 flex-1 overflow-y-auto p-3">
+        {{#if this.error}}
+            <div class="flex h-full items-center justify-center text-center text-xs font-medium text-rose-600 dark:text-rose-300">{{this.error}}</div>
+        {{else if this.load.isRunning}}
+            <div class="flex h-full items-center justify-center"><Spinner /></div>
+        {{else if this.chartDatasets}}
+            <div class="h-full min-h-[12rem]">
+                <Chart @type={{or this.data.type "line"}} @labels={{this.chartLabels}} @datasets={{this.chartDatasets}} @options={{this.chartOptions}} />
+            </div>
+        {{else if this.items.length}}
+            <div class="grid h-full grid-cols-1 content-start gap-2">
+                {{#each this.items as |item|}}
+                    <button type="button" class="flex items-center justify-between rounded-md border border-gray-100 px-3 py-2 text-left {{if item.route 'hover:border-blue-200 hover:bg-blue-50/40 dark:hover:border-blue-800 dark:hover:bg-blue-900/10'}} dark:border-gray-700" disabled={{not item.route}} {{on "click" (fn this.openItem item)}}>
+                        <div class="min-w-0">
+                            <div class="truncate text-sm font-medium text-gray-900 dark:text-gray-100">{{item.title}}</div>
+                            {{#if item.description}}
+                                <div class="truncate text-xs text-gray-500 dark:text-gray-400">{{item.description}}</div>
+                            {{/if}}
+                        </div>
+                        <div class="flex flex-shrink-0 items-center gap-2">
+                            {{#if item.status}}
+                                <Badge @status={{item.status}} @hideStatusDot={{true}}>{{or item.value item.status}}</Badge>
+                            {{else if item.value}}
+                                <span class="text-sm font-semibold text-gray-900 dark:text-gray-100">{{item.value}}</span>
+                            {{/if}}
+                            {{#if item.route}}
+                                <FaIcon @icon="chevron-right" class="text-[10px] text-gray-300 dark:text-gray-500" />
+                            {{/if}}
+                        </div>
+                    </button>
+                {{/each}}
+            </div>
+        {{else}}
+            <div class="flex h-full items-center justify-center text-center text-xs text-gray-500 dark:text-gray-400">{{this.emptyText}}</div>
+        {{/if}}
+    </div>
+
+    {{#if this.hasDrilldown}}
+        <div class="border-t border-gray-100 px-3 py-2 dark:border-gray-700">
+            <button type="button" class="inline-flex items-center gap-1 text-xs font-semibold text-blue-600 hover:text-blue-700 dark:text-blue-300 dark:hover:text-blue-200" {{on "click" this.openDrilldown}}>
+                View all
+                <FaIcon @icon="arrow-right" class="text-[10px]" />
+            </button>
+        </div>
+    {{/if}}
+</div>
