@@ -8,6 +8,7 @@ import config from 'ember-get-config';
 
 export default class UserModel extends Model {
     /** @ids */
+    @attr('string') uuid;
     @attr('string') public_id;
     @attr('string') company_uuid;
     @attr('string') avatar_uuid;

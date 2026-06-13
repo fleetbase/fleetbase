@@ -1,5 +1,5 @@
 <div class="flex items-center justify-center h-screen min-h-screen px-4 py-12 bg-gray-50 dark:bg-gray-900 sm:px-6 lg:px-8 overflow-y-scroll">
-    <div class="w-full max-w-md h-screen flex items-center justify-center py-4">
+    <div class="w-full max-w-md h-screen flex flex-col items-center justify-center py-4">
         <div class="bg-white dark:bg-gray-800 py-5 px-4 shadow rounded-lg w-full">
             <div class="mb-4">
                 <Image src={{@brand.logo_url}} @fallbackSrc="/images/fleetbase-logo-svg.svg" alt={{t "app.name"}} height="56" class="h-10 object-contain mx-auto" />
@@ -57,5 +57,6 @@
                 <YieldedComponent @context={{ctx}} />
             </RegistryYield>
         </div>
+        <FleetbaseAttribution />
     </div>
 </div>

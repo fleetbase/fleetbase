@@ -9,7 +9,7 @@
         @showSidebarToggle={{true}}
     />
     <Layout::Main class={{this.currentRouteClass}}>
-        <Layout::Sidebar @onSetup={{this.setSidebarContext}} />
+        <Layout::Sidebar />
         <Layout::Section>
             {{outlet}}
         </Layout::Section>

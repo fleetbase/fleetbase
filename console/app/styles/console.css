@@ -39,6 +39,98 @@ body.console-admin-organizations-index-index .next-table-wrapper > table {
     table-layout: auto;
 }
 
+.admin-organization-kpi-tile {
+    transition:
+        transform 160ms ease-out,
+        box-shadow 160ms ease-out,
+        border-color 160ms ease-out;
+}
+
+.admin-organization-kpi-tile:hover {
+    box-shadow: 0 8px 24px -12px rgb(15 23 42 / 35%);
+}
+
+.admin-organization-kpi-tile .admin-organization-kpi-icon {
+    color: #64748b;
+    background-color: rgb(100 116 139 / 12%);
+}
+
+.admin-organization-kpi-accent-blue {
+    border-color: rgb(59 130 246 / 28%);
+    background-image: linear-gradient(135deg, rgb(59 130 246 / 10%) 0%, rgb(59 130 246 / 0%) 62%);
+}
+
+.admin-organization-kpi-accent-green {
+    border-color: rgb(16 185 129 / 28%);
+    background-image: linear-gradient(135deg, rgb(16 185 129 / 10%) 0%, rgb(16 185 129 / 0%) 62%);
+}
+
+.admin-organization-kpi-accent-amber {
+    border-color: rgb(245 158 11 / 32%);
+    background-image: linear-gradient(135deg, rgb(245 158 11 / 12%) 0%, rgb(245 158 11 / 0%) 62%);
+}
+
+.admin-organization-kpi-accent-rose {
+    border-color: rgb(244 63 94 / 28%);
+    background-image: linear-gradient(135deg, rgb(244 63 94 / 10%) 0%, rgb(244 63 94 / 0%) 62%);
+}
+
+.admin-organization-kpi-accent-blue .admin-organization-kpi-icon {
+    color: rgb(37 99 235);
+    background-color: rgb(59 130 246 / 12%);
+}
+
+.admin-organization-kpi-accent-green .admin-organization-kpi-icon {
+    color: rgb(5 150 105);
+    background-color: rgb(16 185 129 / 12%);
+}
+
+.admin-organization-kpi-accent-amber .admin-organization-kpi-icon {
+    color: rgb(217 119 6);
+    background-color: rgb(245 158 11 / 14%);
+}
+
+.admin-organization-kpi-accent-rose .admin-organization-kpi-icon {
+    color: rgb(225 29 72);
+    background-color: rgb(244 63 94 / 12%);
+}
+
+body[data-theme='dark'] .admin-organization-kpi-accent-blue .admin-organization-kpi-icon {
+    color: rgb(147 197 253);
+}
+
+body[data-theme='dark'] .admin-organization-kpi-accent-green .admin-organization-kpi-icon {
+    color: rgb(110 231 183);
+}
+
+body[data-theme='dark'] .admin-organization-kpi-accent-amber .admin-organization-kpi-icon {
+    color: rgb(252 211 77);
+}
+
+body[data-theme='dark'] .admin-organization-kpi-accent-rose .admin-organization-kpi-icon {
+    color: rgb(251 113 133);
+}
+
+.admin-organization-resource-header {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.admin-organization-resource-actions .admin-organization-resource-search {
+    min-width: 16rem;
+    height: 2.25rem;
+    min-height: 2.25rem;
+}
+
+@media (width >= 1024px) {
+    .admin-organization-resource-header {
+        align-items: center;
+        flex-direction: row;
+        justify-content: space-between;
+    }
+}
+
 #boot-loader {
     position: absolute;
     z-index: 9999999999;
@@ -119,6 +211,10 @@ body[data-theme='dark'] .console-dashboard-page {
 
 body[data-theme='dark'] .console-dashboard-title h1 {
     color: #f9fafb;
+}
+
+.fleetbase-invite-shell {
+    min-height: 100vh;
 }
 
 .console-dashboard-actions {

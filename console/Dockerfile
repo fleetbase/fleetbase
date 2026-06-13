@@ -11,6 +11,10 @@ ENV PNPM_HOME=/root/.pnpm
 # Set environment
 ARG ENVIRONMENT=production
 
+# Attribution
+ARG DISABLE_FLEETBASE_ATTRIBUTION=false
+ENV DISABLE_FLEETBASE_ATTRIBUTION=$DISABLE_FLEETBASE_ATTRIBUTION
+
 # Add the pnpm global bin to the PATH
 ENV PATH=/root/.pnpm/bin:$PATH
 

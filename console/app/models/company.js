@@ -32,11 +32,14 @@ export default class Company extends Model {
     @attr('string') timezone;
     @attr('string') phone;
     @attr('string') status;
+    @attr('string') plan;
+    @attr('string') billing_status;
     @attr('string') slug;
     @attr('boolean', { defaultValue: false }) onboarding_completed;
 
     /** @dates */
     @attr('date') joined_at;
+    @attr('date') trial_ends_at;
     @attr('date') deleted_at;
     @attr('date') created_at;
     @attr('date') updated_at;
@@ -68,6 +71,14 @@ export default class Company extends Model {
 
     @computed('created_at') get createdAtShort() {
         return format(this.created_at, 'PP');
+    }
+
+    @computed('onboarding_completed') get onboardingStatus() {
+        return this.onboarding_completed ? 'complete' : 'incomplete';
+    }
+
+    @computed('status') get statusLabel() {
+        return this.status || 'active';
     }
 
     /** @methods */

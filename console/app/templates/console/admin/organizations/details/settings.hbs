@@ -1,0 +1,77 @@
+{{page-title "Settings"}}
+
+<div class="mx-auto grid w-full max-w-7xl gap-3 p-4 md:grid-cols-2 md:p-6">
+    <section class="rounded-md border bg-white p-3 shadow-sm dark:border-gray-700 dark:bg-gray-800">
+        <div class="flex items-start justify-between gap-4">
+            <div>
+                <h2 class="text-xs font-bold uppercase text-gray-900 dark:text-white">Organization Settings</h2>
+                <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Core organization profile, phone, and currency fields.</p>
+            </div>
+            <Button @icon="edit" @text="Edit" @size="xs" @type="primary" @onClick={{this.editOrganization}} />
+        </div>
+
+        <div class="mt-3 space-y-2 text-sm">
+            <div class="flex justify-between gap-4">
+                <span class="text-gray-500 dark:text-gray-400">Name</span>
+                <span class="text-right font-medium text-gray-900 dark:text-white">{{@model.name}}</span>
+            </div>
+            <div class="flex justify-between gap-4">
+                <span class="text-gray-500 dark:text-gray-400">Description</span>
+                <span class="text-right font-medium text-gray-900 dark:text-white">{{n-a @model.description}}</span>
+            </div>
+            <div class="flex justify-between gap-4">
+                <span class="text-gray-500 dark:text-gray-400">Phone</span>
+                <span class="text-right font-medium text-gray-900 dark:text-white">{{n-a @model.phone}}</span>
+            </div>
+            <div class="flex justify-between gap-4">
+                <span class="text-gray-500 dark:text-gray-400">Currency</span>
+                <span class="text-right font-medium text-gray-900 dark:text-white">{{n-a @model.currency}}</span>
+            </div>
+            <div class="flex justify-between gap-4">
+                <span class="text-gray-500 dark:text-gray-400">Timezone</span>
+                <span class="text-right font-medium text-gray-900 dark:text-white">{{n-a @model.timezone}}</span>
+            </div>
+        </div>
+    </section>
+
+    <RegistryYield @registry="console:admin:organization:settings-panels" @context={{hash organization=@model}} as |RegistryComponent context|>
+        <RegistryComponent @organization={{context.organization}} />
+    </RegistryYield>
+
+    <section class="rounded-md border bg-white p-3 shadow-sm dark:border-gray-700 dark:bg-gray-800">
+        <h2 class="text-xs font-bold uppercase text-gray-900 dark:text-white">Lifecycle Controls</h2>
+        <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Status and onboarding changes are recorded in organization activity.</p>
+
+        <div class="mt-4 space-y-3">
+            <div class="flex items-center justify-between gap-4 rounded-md border border-gray-100 p-3 dark:border-gray-700">
+                <div>
+                    <div class="text-sm font-semibold text-gray-900 dark:text-white">Organization Status</div>
+                    <div class="text-xs text-gray-500 dark:text-gray-400">Suspend, reactivate, or flag inactive access.</div>
+                </div>
+                <div class="flex flex-wrap justify-end gap-2">
+                    <Button @size="xs" @text="Activate" @icon="circle-check" @onClick={{fn this.setStatus "active"}} />
+                    <Button @size="xs" @text="Inactive" @icon="circle-pause" @onClick={{fn this.setStatus "inactive"}} />
+                    <Button @size="xs" @type="danger" @text="Suspend" @icon="ban" @onClick={{fn this.setStatus "suspended"}} />
+                </div>
+            </div>
+
+            <div class="flex items-center justify-between gap-4 rounded-md border border-gray-100 p-3 dark:border-gray-700">
+                <div>
+                    <div class="text-sm font-semibold text-gray-900 dark:text-white">Onboarding State</div>
+                    <div class="text-xs text-gray-500 dark:text-gray-400">Manually correct onboarding state for support workflows.</div>
+                </div>
+                <div class="flex flex-wrap justify-end gap-2">
+                    <Button @size="xs" @text="Mark Complete" @icon="circle-check" @onClick={{fn this.setOnboarding true}} />
+                    <Button @size="xs" @text="Mark Incomplete" @icon="triangle-exclamation" @onClick={{fn this.setOnboarding false}} />
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="rounded-md border bg-white p-3 shadow-sm dark:border-gray-700 dark:bg-gray-800">
+        <h2 class="text-xs font-bold uppercase text-gray-900 dark:text-white">Danger Zone</h2>
+        <div class="mt-4 rounded-md border border-dashed border-gray-200 p-4 text-sm text-gray-500 dark:border-gray-700 dark:text-gray-400">
+            Destructive organization deletion and data purge actions remain intentionally unavailable until separate purge contracts and confirmation workflows are added.
+        </div>
+    </section>
+</div>

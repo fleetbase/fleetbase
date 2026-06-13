@@ -1,4 +1,4 @@
-<div class="min-h-screen flex items-center justify-center px-6 py-12">
+<div class="min-h-screen flex flex-col items-center justify-center px-6 py-12">
     <div class="w-full max-w-xl border border-gray-800 bg-gray-900 shadow-md rounded-md p-8 text-center">
         <img src="/images/icon.png" alt={{t "app.name"}} class="w-12 h-12 mx-auto" width="48" height="48" />
         <h1 class="mt-4 text-2xl font-bold text-gray-50">{{t "install.not-configured-title"}}</h1>
@@ -9,14 +9,25 @@
         {{/if}}
 
         <div class="mt-8 flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-3">
-            <a href={{this.runningLocallyDocsUrl}} target="_blank" rel="noopener noreferrer" class="inline-flex items-center justify-center rounded-md bg-sky-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-sky-500">
+            <a
+                href={{this.runningLocallyDocsUrl}}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="inline-flex items-center justify-center rounded-md bg-sky-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-sky-500"
+            >
                 <FaIcon @icon="book" class="mr-2" />
                 {{t "install.running-locally-docs"}}
             </a>
-            <a href={{this.cloudDocsUrl}} target="_blank" rel="noopener noreferrer" class="inline-flex items-center justify-center rounded-md border border-gray-700 bg-gray-800 px-4 py-2 text-sm font-semibold text-gray-100 hover:bg-gray-700">
+            <a
+                href={{this.cloudDocsUrl}}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="inline-flex items-center justify-center rounded-md border border-gray-700 bg-gray-800 px-4 py-2 text-sm font-semibold text-gray-100 hover:bg-gray-700"
+            >
                 <FaIcon @icon="cloud" class="mr-2" />
                 {{t "install.cloud-docs"}}
             </a>
         </div>
     </div>
+    <FleetbaseAttribution />
 </div>

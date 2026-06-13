@@ -18,6 +18,10 @@ RUN mkdir -p ~/.pnpm
 ENV PNPM_HOME=/root/.pnpm
 ENV PATH=/root/.pnpm/bin:$PATH
 
+# Attribution
+ARG DISABLE_FLEETBASE_ATTRIBUTION=false
+ENV DISABLE_FLEETBASE_ATTRIBUTION=$DISABLE_FLEETBASE_ATTRIBUTION
+
 RUN npm install -g ember-cli pnpm
 
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./

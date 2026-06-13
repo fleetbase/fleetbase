@@ -1,0 +1,91 @@
+{{page-title @model.name}}
+
+<div class="h-full overflow-y-auto bg-gray-50 dark:bg-gray-900">
+    <div class="flex w-full flex-col">
+        <section class="sticky top-0 z-50 bg-white pt-3 shadow-sm dark:bg-gray-900">
+            <div class="mx-auto flex w-full max-w-7xl flex-col gap-3 px-4 md:px-6 lg:flex-row lg:items-start lg:justify-between">
+                <div class="flex min-w-0 items-start gap-3">
+                    {{#if @model.logo_url}}
+                        <Image src={{@model.logo_url}} class="mt-0.5 h-9 w-9 rounded-md border border-gray-200 object-cover dark:border-gray-700" />
+                    {{else}}
+                        <div class="mt-0.5 flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-md border border-gray-200 bg-gray-50 text-gray-500 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300">
+                            <FaIcon @icon="building" />
+                        </div>
+                    {{/if}}
+
+                    <div class="min-w-0">
+                        <div class="flex flex-wrap items-center gap-2">
+                            <h1 class="truncate text-lg font-bold text-gray-900 dark:text-gray-100">{{@model.name}}</h1>
+                            <Badge @status={{if (eq this.organizationStatus "active") "success" "warning"}} @hideStatusDot={{true}}>{{this.organizationStatus}}</Badge>
+                            <Badge @status={{if @model.onboarding_completed "success" "warning"}} @hideStatusDot={{true}}>Onboarding {{this.onboardingStatus}}</Badge>
+                        </div>
+
+                        <div class="mt-1 flex flex-wrap gap-x-2 gap-y-1 text-xs text-gray-500 dark:text-gray-300">
+                            {{#if this.hasOwner}}
+                                <span>Owner: {{n-a this.ownerName}}</span>
+                                <span class="text-gray-300 dark:text-gray-600">/</span>
+                                <span>{{n-a this.ownerEmail}}</span>
+                            {{else}}
+                                <span>No owner assigned</span>
+                            {{/if}}
+                            <span class="text-gray-300 dark:text-gray-600">/</span>
+                            <span>Users: {{n-a @model.users_count}}</span>
+                            <span class="text-gray-300 dark:text-gray-600">/</span>
+                            <span>Created: {{n-a @model.createdAtShort}}</span>
+                        </div>
+
+                        <div class="mt-1.5 flex flex-wrap items-center gap-x-2 gap-y-1 text-[11px] text-gray-500 dark:text-gray-400">
+                            <span class="font-semibold uppercase text-gray-400 dark:text-gray-500">IDs</span>
+                            {{#if @model.public_id}}
+                                <button type="button" class="inline-flex items-center gap-1 rounded border border-gray-200 bg-gray-50 px-1.5 py-0.5 font-mono hover:border-blue-300 hover:text-blue-600 dark:border-gray-700 dark:bg-gray-800 dark:hover:border-blue-500 dark:hover:text-blue-300" {{on "click" (fn this.copyId @model.public_id "Public ID")}}>
+                                    <FaIcon @icon="copy" class="text-[10px]" />
+                                    {{@model.public_id}}
+                                </button>
+                            {{/if}}
+                            {{#if @model.uuid}}
+                                <button type="button" class="inline-flex max-w-full items-center gap-1 rounded border border-gray-200 bg-gray-50 px-1.5 py-0.5 font-mono hover:border-blue-300 hover:text-blue-600 dark:border-gray-700 dark:bg-gray-800 dark:hover:border-blue-500 dark:hover:text-blue-300" {{on "click" (fn this.copyId @model.uuid "UUID")}}>
+                                    <FaIcon @icon="fingerprint" class="text-[10px]" />
+                                    <span class="truncate">{{@model.uuid}}</span>
+                                </button>
+                            {{/if}}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex flex-shrink-0 flex-wrap items-center gap-2 whitespace-nowrap lg:justify-end">
+                    <Button @icon="arrow-left" @text="Back" @size="xs" @onClick={{transition-to "console.admin.organizations.index"}} />
+                    <DropdownButton
+                        @icon="ellipsis-h"
+                        @iconPrefix="fas"
+                        @text="Actions"
+                        @type="primary"
+                        @size="xs"
+                        @items={{this.actionMenuItems}}
+                        @isLoading={{this.impersonateOwner.isRunning}}
+                        @contentClass="dropdown-menu"
+                        @renderInPlace={{true}}
+                    />
+                </div>
+            </div>
+
+            <nav class="mt-3 flex w-full gap-1 overflow-x-auto border-b border-gray-200 text-sm dark:border-gray-700" aria-label="Organization admin sections">
+                {{#each this.tabs as |tab|}}
+                    <LinkTo
+                        @route={{tab.route}}
+                        @models={{if tab.model (array @model.public_id tab.model) (array @model.public_id)}}
+                        class="inline-flex flex-shrink-0 items-center border-b-2 px-3 py-3 font-medium {{if tab.active 'border-blue-500 text-gray-900 dark:text-white' 'border-transparent text-gray-500 hover:border-blue-400 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white'}}"
+                    >
+                        {{#if tab.icon}}
+                            <FaIcon @icon={{tab.icon}} class="mr-1.5 text-xs" />
+                        {{/if}}
+                        {{tab.label}}
+                    </LinkTo>
+                {{/each}}
+            </nav>
+        </section>
+
+        <section class="min-w-0">
+            {{outlet}}
+        </section>
+    </div>
+</div>

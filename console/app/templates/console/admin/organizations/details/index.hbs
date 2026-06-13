@@ -1,0 +1,97 @@
+{{page-title "Overview"}}
+
+<div class="mx-auto flex w-full max-w-7xl flex-col gap-4 p-4 md:p-6">
+    <section class="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
+        {{#each this.metrics as |metric|}}
+            <div class="admin-organization-kpi-tile {{metric.accentClass}} relative min-h-[102px] overflow-hidden rounded-md border bg-white shadow-sm dark:bg-gray-800">
+                <div class="flex h-full items-start justify-between gap-3 p-3">
+                    <div class="min-w-0">
+                        <div class="truncate text-[10px] font-bold uppercase text-gray-500 dark:text-gray-400">{{metric.label}}</div>
+                        <div class="mt-2 truncate text-2xl font-extrabold leading-none text-gray-900 dark:text-gray-50">{{metric.value}}</div>
+                        {{#if metric.caption}}
+                            <div class="mt-2 truncate text-xs text-gray-500 dark:text-gray-400">{{metric.caption}}</div>
+                        {{/if}}
+                    </div>
+                    <div class="admin-organization-kpi-icon flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-md text-[13px]">
+                        <FaIcon @icon={{metric.icon}} />
+                    </div>
+                </div>
+            </div>
+        {{/each}}
+    </section>
+
+    <div class="grid w-full gap-3 lg:grid-cols-3">
+        <section class="rounded-md border bg-white p-3 shadow-sm dark:border-gray-700 dark:bg-gray-800 lg:col-span-2">
+            <h2 class="text-xs font-bold uppercase text-gray-900 dark:text-white">Profile</h2>
+            <div class="mt-3 space-y-2 text-sm">
+                <div class="flex justify-between gap-4">
+                    <span class="text-gray-500 dark:text-gray-400">Name</span>
+                    <span class="text-right font-medium text-gray-900 dark:text-white">{{@model.name}}</span>
+                </div>
+                <div class="flex justify-between gap-4">
+                    <span class="text-gray-500 dark:text-gray-400">Phone</span>
+                    <span class="text-right font-medium text-gray-900 dark:text-white">{{n-a @model.phone}}</span>
+                </div>
+                <div class="flex justify-between gap-4">
+                    <span class="text-gray-500 dark:text-gray-400">Country</span>
+                    <span class="text-right font-medium text-gray-900 dark:text-white">{{n-a @model.country}}</span>
+                </div>
+                <div class="flex justify-between gap-4">
+                    <span class="text-gray-500 dark:text-gray-400">Timezone</span>
+                    <span class="text-right font-medium text-gray-900 dark:text-white">{{n-a @model.timezone}}</span>
+                </div>
+                <div class="flex justify-between gap-4">
+                    <span class="text-gray-500 dark:text-gray-400">Currency</span>
+                    <span class="text-right font-medium text-gray-900 dark:text-white">{{n-a @model.currency}}</span>
+                </div>
+            </div>
+
+            <div class="mt-4 border-t border-gray-100 pt-3 dark:border-gray-700">
+                <h3 class="text-xs font-bold uppercase text-gray-900 dark:text-white">Owner</h3>
+            {{#if this.owner}}
+                <div class="mt-3 flex items-start gap-3">
+                    <div class="flex h-9 w-9 items-center justify-center rounded-md bg-blue-50 text-blue-600 dark:bg-blue-900/30 dark:text-blue-300">
+                        <FaIcon @icon="user" />
+                    </div>
+                    <div class="min-w-0">
+                        <div class="truncate text-sm font-medium text-gray-900 dark:text-white">{{n-a this.ownerName}}</div>
+                        <div class="truncate text-sm text-gray-500 dark:text-gray-400">{{n-a this.ownerEmail}}</div>
+                        <div class="mt-1 text-xs text-gray-500 dark:text-gray-400">{{n-a this.ownerPhone}}</div>
+                    </div>
+                </div>
+            {{else}}
+                <div class="mt-3 rounded-md border border-yellow-200 bg-yellow-50 p-3 text-sm text-yellow-800 dark:border-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-100">
+                    No owner is assigned to this organization.
+                </div>
+            {{/if}}
+            </div>
+        </section>
+
+        <section class="rounded-md border bg-white p-3 shadow-sm dark:border-gray-700 dark:bg-gray-800">
+            <h2 class="text-xs font-bold uppercase text-gray-900 dark:text-white">Operational State</h2>
+            <div class="mt-3 space-y-2">
+                <div class="flex items-center justify-between">
+                    <span class="text-sm text-gray-500 dark:text-gray-400">Status</span>
+                    <Badge @status={{if (eq @model.statusLabel "active") "success" "warning"}} @hideStatusDot={{true}}>{{@model.statusLabel}}</Badge>
+                </div>
+                <div class="flex items-center justify-between">
+                    <span class="text-sm text-gray-500 dark:text-gray-400">Onboarding</span>
+                    <Badge @status={{if @model.onboarding_completed "success" "warning"}} @hideStatusDot={{true}}>{{@model.onboardingStatus}}</Badge>
+                </div>
+                <div class="flex items-center justify-between">
+                    <span class="text-sm text-gray-500 dark:text-gray-400">Users</span>
+                    <span class="text-sm font-medium text-gray-900 dark:text-white">{{n-a @model.users_count}}</span>
+                </div>
+            </div>
+        </section>
+
+        <RegistryYield @registry="console:admin:organization:overview-panels" @context={{hash organization=@model}} as |RegistryComponent context|>
+            <RegistryComponent @organization={{context.organization}} />
+        </RegistryYield>
+
+        <section class="rounded-md border bg-white p-3 shadow-sm dark:border-gray-700 dark:bg-gray-800 lg:col-span-3">
+            <h2 class="text-xs font-bold uppercase text-gray-900 dark:text-white">Recent Activity</h2>
+            <ActivityLog @companyUuid={{@model.uuid}} @maxVisibleActivities={{5}} @showHeader={{false}} @showControls={{false}} class="mt-3" />
+        </section>
+    </div>
+</div>

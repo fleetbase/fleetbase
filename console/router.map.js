@@ -53,8 +53,14 @@ Router.map(function () {
             this.route('two-fa-settings');
             this.route('virtual', { path: '/:slug' });
             this.route('organizations', function () {
-                this.route('index', { path: '/' }, function () {
-                    this.route('users', { path: '/:public_id/users' });
+                this.route('index', { path: '/' });
+                this.route('details', { path: '/:public_id' }, function () {
+                    this.route('index', { path: '/' });
+                    this.route('users');
+                    this.route('extensions');
+                    this.route('activity');
+                    this.route('settings');
+                    this.route('extensions-tab', { path: '/extensions/:slug' });
                 });
             });
             this.route('schedule-monitor', function () {

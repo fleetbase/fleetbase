@@ -1,0 +1,13 @@
+<div class="flex min-w-0 items-center gap-3">
+    {{#if @row.logo_url}}
+        <Image src={{@row.logo_url}} class="h-9 w-9 flex-shrink-0 rounded-md border border-gray-200 object-cover dark:border-gray-700" />
+    {{else}}
+        <div class="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-md border border-gray-200 bg-gray-50 text-gray-500 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300">
+            <FaIcon @icon="building" />
+        </div>
+    {{/if}}
+    <div class="min-w-0">
+        <div class="truncate text-sm font-semibold text-gray-900 dark:text-gray-100">{{@row.name}}</div>
+        <div class="truncate text-xs text-gray-500 dark:text-gray-400">{{n-a @row.description}}</div>
+    </div>
+</div>

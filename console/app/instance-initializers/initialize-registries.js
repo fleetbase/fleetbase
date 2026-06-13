@@ -10,7 +10,19 @@ export function initialize(appInstance) {
     debug('[Initializing Registries] Creating console registries...');
 
     // Create console-specific registries
-    registryService.createRegistries(['@fleetbase/console', 'auth:login', 'console:home:before-dashboard', 'console:home:after-dashboard']);
+    registryService.createRegistries([
+        '@fleetbase/console',
+        'auth:login',
+        'console:home:before-dashboard',
+        'console:home:after-dashboard',
+        'console:admin:dashboard:widgets',
+        'console:admin:organization:tabs',
+        'console:admin:organization:actions',
+        'console:admin:organization:overview-panels',
+        'console:admin:organization:settings-panels',
+        'console:admin:organization:extensions',
+        'console:admin:organization:activity',
+    ]);
 }
 
 export default {
