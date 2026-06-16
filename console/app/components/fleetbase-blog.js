@@ -4,7 +4,7 @@ import { inject as service } from '@ember/service';
 import { isArray } from '@ember/array';
 import { debug } from '@ember/debug';
 import { storageFor } from 'ember-local-storage';
-import { add, isPast } from 'date-fns';
+import { add, format, isPast, isValid } from 'date-fns';
 import { task } from 'ember-concurrency';
 
 export default class FleetbaseBlogComponent extends Component {
@@ -15,6 +15,29 @@ export default class FleetbaseBlogComponent extends Component {
     constructor() {
         super(...arguments);
         this.loadBlogPosts.perform();
+    }
+
+    get formattedPosts() {
+        return this.posts.map((post) => {
+            return {
+                ...post,
+                formattedDate: this.formatPublishedDate(post.pubDate),
+            };
+        });
+    }
+
+    formatPublishedDate(value) {
+        if (!value) {
+            return '';
+        }
+
+        const date = new Date(value);
+
+        if (!isValid(date)) {
+            return value;
+        }
+
+        return format(date, 'MMM d, yyyy');
     }
 
     @task *loadBlogPosts() {

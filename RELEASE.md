@@ -1,67 +1,59 @@
-> v0.7.44 ~ "Admin dashboards, internal metrics, Fleet-Ops connectivity, and shared UI polish"
+> v0.7.45 ~ "Multi-provider SMS, Fleet-Ops operations navigation, reports, and telematics hardening"
 ---
 ## Highlights
-Fleetbase `0.7.44` brings a more complete admin experience, new internal metrics for Console dashboards, a major Fleet-Ops connectivity update, native fuel provider integration support, and shared UI improvements across engines. This release updates Fleetbase Console `0.7.44`, Core API `1.6.51`, Fleet-Ops `0.6.52`, Fleet-Ops Data `0.1.37`, Ledger `0.0.5`, IAM Engine `0.1.10`, Developers Engine `0.2.14`, Ember Core `0.3.22`, and Ember UI `0.3.34`.
+Fleetbase `0.7.45` adds configurable multi-provider SMS support, a refreshed Fleet-Ops navigation experience, new shared reporting widgets, facilitator-driver data support, and several telematics and device-management hardening fixes. This release updates Fleetbase Console `0.7.45`, Core API `1.6.52`, Fleet-Ops `0.6.53`, Fleet-Ops Data `0.1.38`, and Ember UI `0.3.35`.
 
 ---
 ## Component Versions
-- `console`: `0.7.44`
-- `core-api`: `1.6.51`
-- `fleetops`: `0.6.52`
-- `fleetops-data`: `0.1.37`
-- `ledger`: `0.0.5`
-- `iam-engine`: `0.1.10`
-- `dev-engine`: `0.2.14`
-- `ember-core`: `0.3.22`
-- `ember-ui`: `0.3.34`
+- `console`: `0.7.45`
+- `core-api`: `1.6.52`
+- `fleetops`: `0.6.53`
+- `fleetops-data`: `0.1.38`
+- `ember-ui`: `0.3.35`
 
 ---
-## Console and Admin
-- Replaced the static Console admin overview with the shared Dashboard experience, including sticky dashboard headers and reusable admin widgets.
-- Added richer organization management views with organization details, settings, users, extensions, activity, owner/company table cells, and overview widgets.
-- Improved the install, invite, onboarding, auth, catch, and virtual screens so the surrounding Console shell feels more consistent.
+## Core API and SMS
+- Added multi-provider SMS support for Vonage, AWS SNS, MessageBird, SMPP, custom HTTP providers, and the existing CallPro path.
+- Added protocol and provider configuration support so SMS delivery can be driven from settings and environment mapping.
+- Improved SMS service fallback behavior and added coverage for the new provider selection paths.
+- Updated the Fleetbase blog RSS source used by Console content surfaces.
 
 ---
-## Fleet-Ops Connectivity and Fuel
-- Reworked Fleet-Ops connectivity around a clearer Telematics hub with provider setup, settings, device/event/sensor/log views, attachments, and connection diagnostics.
-- Added native fuel provider integrations, including provider connection setup, matching priorities, sync/import flows, provider transactions, and Fleet-Ops widgets.
-- Added PetroApp as the built-in fuel provider path while keeping the integration framework extension-ready.
-- Added Fleet-Ops Data models and serializers for fuel provider connections and fuel provider transactions, and exposed provider metadata on fuel reports.
-- Improved driver, fleet, vehicle, device, and map drawer workflows around connectivity and assignment actions.
+## Fleet-Ops Operations and Telematics
+- Refactored the Fleet-Ops sidebar navigation and added an operations monitor for a clearer operations-focused workspace.
+- Added hub and search support for richer Fleet-Ops management, maintenance, analytics, and settings landing surfaces.
+- Hardened device attachment morph types and added repair support for invalid polymorphic relation namespaces.
+- Improved telematics device sync, attach error handling, Afaqy provider behavior, and device/vehicle filtering.
+- Fixed draft order entity editing and restored facilitator-driver schedule assignee support.
 
 ---
-## Dashboards and Metrics
-- Added internal Core API metrics support for admin, IAM, and developer dashboards.
-- Rebuilt the IAM dashboard with KPI, identity health, access coverage, access risk, policy, group, activity, and quick-action widgets.
-- Rebuilt the Developers dashboard with API traffic, latency, error rate, webhook delivery, endpoint health, event stream, credentials, activity, and quick resource widgets.
-- Improved dashboard registration, widget sizing, and layout structure across engines.
-- Updated IAM and Developers packages for Node 22 and pnpm 11 compatibility in CI and workspace builds.
+## Reports and Shared UI
+- Added shared report find/select components, a report widget, and report widget registration.
+- Added dashboard outlets so engines can contribute content around shared dashboard layouts.
+- Refined the shared sidebar navigator and simplified Fleetbase attribution styling and behavior.
+- Added tests for report selection, report widgets, sidebar navigation, dashboard registration, and attribution behavior.
 
 ---
-## Core API and Shared UI
-- Added internal admin, IAM, and developer search support for Console dashboard and management surfaces.
-- Improved organization resources, company filtering, activity filtering, and API model behavior used by internal Console tools.
-- Updated Ledger with a lighter app shell and internal search controller support.
-- Added shared Ember UI sidebar navigation, table empty states, Fleetbase attribution, and legal notice UI.
-- Improved shared docs panel, activity log, floating UI, sidebar resize behavior, date-time input handling, filters picker behavior, and resource table empty-state forwarding.
-- Improved Ember Core service exports, serializer normalization, chat service behavior, request option forwarding, and custom field loading defaults.
+## Data Models
+- Added the Fleet-Ops Data `facilitator-driver` model and application re-export.
+- Added driver subtype support on facilitators so maintenance and assignment workflows can identify facilitator drivers correctly.
+- Added regression coverage for facilitator-driver data and maintenance schedule normalization.
 
 ---
 ## Bug Fixes
-- Fixed telematics detail routing, connection logs, diagnostics, and setup flows that could make provider/device management harder to follow.
-- Improved fuel provider matching, import, sync, and transaction workflows.
-- Fixed shared sidebar, table, docs panel, activity log, floating, and date-time UI behavior covered by new Ember UI tests.
-- Fixed IAM and Developers dashboard structure issues and linter/style ordering cleanup.
-- Fixed Ember Core payload normalization for plural underscore keys and made custom field loading request all records by default.
-- Fixed Ledger internal search controller behavior.
+- Fixed reports empty-state documentation links.
+- Fixed Fleet-Ops draft order entity edit modal behavior.
+- Fixed device attach errors and telematics sync feedback paths.
+- Fixed facilitator-driver assignee restoration in maintenance schedules.
+- Fixed shared sidebar navigator edge behavior covered by new Ember UI tests.
 
 ---
 ## API Changes
-- Added internal metrics endpoints under `int/v1/metrics/admin`, `int/v1/metrics/iam`, and `int/v1/metrics/dev`.
-- Added internal search endpoints for admin, IAM, and developer Console surfaces.
-- Added Fleet-Ops fuel provider API support for provider connections, transactions, sync/import workflows, events, and matching.
-- Added Fleet-Ops Data `fuel-provider-connection` and `fuel-provider-transaction` models and serializers.
-- Extended internal organization, company, activity, and resource behavior used by Console admin views.
+- Added configurable SMS provider support in Core API settings and environment mapping.
+- Added internal Fleet-Ops hub and search routes for management, maintenance, analytics, and settings surfaces.
+- Added Fleet-Ops device and vehicle hardening around attachable types, filters, and telematics sync.
+- Added Fleet-Ops Data `facilitator-driver` model support for facilitator driver assignment workflows.
+- Added shared Ember UI report selection and report widget components.
 
 ---
 ## Upgrade Steps
