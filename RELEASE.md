@@ -1,59 +1,58 @@
-> v0.7.45 ~ "Multi-provider SMS, Fleet-Ops operations navigation, reports, and telematics hardening"
+> v0.7.46 ~ "Fleet-Ops telematics workspaces, work order categories, service quotes, and shared table polish"
 ---
 ## Highlights
-Fleetbase `0.7.45` adds configurable multi-provider SMS support, a refreshed Fleet-Ops navigation experience, new shared reporting widgets, facilitator-driver data support, and several telematics and device-management hardening fixes. This release updates Fleetbase Console `0.7.45`, Core API `1.6.52`, Fleet-Ops `0.6.53`, Fleet-Ops Data `0.1.38`, and Ember UI `0.3.35`.
+Fleetbase `0.7.46` improves Fleet-Ops maintenance, telematics, device management, service quotes, and order creation workflows. This release updates Fleetbase Console `0.7.46`, Fleet-Ops `0.6.54`, Fleet-Ops Data `0.1.39`, and Ember UI `0.3.36`.
 
 ---
 ## Component Versions
-- `console`: `0.7.45`
-- `core-api`: `1.6.52`
-- `fleetops`: `0.6.53`
-- `fleetops-data`: `0.1.38`
-- `ember-ui`: `0.3.35`
+- `console`: `0.7.46`
+- `fleetops`: `0.6.54`
+- `fleetops-data`: `0.1.39`
+- `ember-ui`: `0.3.36`
 
 ---
-## Core API and SMS
-- Added multi-provider SMS support for Vonage, AWS SNS, MessageBird, SMPP, custom HTTP providers, and the existing CallPro path.
-- Added protocol and provider configuration support so SMS delivery can be driven from settings and environment mapping.
-- Improved SMS service fallback behavior and added coverage for the new provider selection paths.
-- Updated the Fleetbase blog RSS source used by Console content surfaces.
+## Fleet-Ops Maintenance and Work Orders
+- Added first-class work order categories with backend migration support and Fleet-Ops Data model support.
+- Updated work order forms, details, resources, seed data, and maintenance trigger processing to understand categories.
+- Improved maintenance and work order list behavior with better filtering and resource loading paths.
 
 ---
-## Fleet-Ops Operations and Telematics
-- Refactored the Fleet-Ops sidebar navigation and added an operations monitor for a clearer operations-focused workspace.
-- Added hub and search support for richer Fleet-Ops management, maintenance, analytics, and settings landing surfaces.
-- Hardened device attachment morph types and added repair support for invalid polymorphic relation namespaces.
-- Improved telematics device sync, attach error handling, Afaqy provider behavior, and device/vehicle filtering.
-- Fixed draft order entity editing and restored facilitator-driver schedule assignee support.
+## Telematics and Device Management
+- Reworked telematics attachment and device detail workspaces with clearer tabs, better spacing, and richer device event, sensor, and vehicle views.
+- Hardened telematics provider sync, attachment filters, sync commands, provider exception handling, and device/sensor/vehicle model behavior.
+- Improved telematic device details panels and vehicle attachment workflows for operators working through connectivity screens.
+- Optimized operations monitor resource loading so the Fleet-Ops sidebar remains responsive with richer live data.
 
 ---
-## Reports and Shared UI
-- Added shared report find/select components, a report widget, and report widget registration.
-- Added dashboard outlets so engines can contribute content around shared dashboard layouts.
-- Refined the shared sidebar navigator and simplified Fleetbase attribution styling and behavior.
-- Added tests for report selection, report widgets, sidebar navigation, dashboard registration, and attribution behavior.
+## Orders and Service Quotes
+- Added a service quote refresh coordinator and loading state so quote refresh actions are easier to follow.
+- Added service quote override extension hooks for package-specific quote behavior.
+- Extracted order orchestrator constraints into a dedicated form section.
+- Replaced queued order-creation closures with jobs for API and internal order finalization.
+- Preserved driver license expiry during driver updates and improved order payload handling.
 
 ---
-## Data Models
-- Added the Fleet-Ops Data `facilitator-driver` model and application re-export.
-- Added driver subtype support on facilitators so maintenance and assignment workflows can identify facilitator drivers correctly.
-- Added regression coverage for facilitator-driver data and maintenance schedule normalization.
+## Shared UI
+- Added a sidebar navigator active hook so engines can control active sidebar state more cleanly.
+- Added compact table spacing utilities and refined shared resource table actions.
+- Improved dropdown and basic table styling used by dense operational screens.
+- Added focused coverage for sidebar navigator behavior and tabular resource layout updates.
 
 ---
 ## Bug Fixes
-- Fixed reports empty-state documentation links.
-- Fixed Fleet-Ops draft order entity edit modal behavior.
-- Fixed device attach errors and telematics sync feedback paths.
-- Fixed facilitator-driver assignee restoration in maintenance schedules.
-- Fixed shared sidebar navigator edge behavior covered by new Ember UI tests.
+- Fixed Fleet-Ops registry sidebar ordering.
+- Fixed telematics device attachment filtering and provider sync edge cases.
+- Fixed driver license expiry being dropped during updates.
+- Fixed service quote refresh feedback and order form structure issues.
+- Fixed spacing and detail-panel issues in telematics device and attachment screens.
 
 ---
 ## API Changes
-- Added configurable SMS provider support in Core API settings and environment mapping.
-- Added internal Fleet-Ops hub and search routes for management, maintenance, analytics, and settings surfaces.
-- Added Fleet-Ops device and vehicle hardening around attachable types, filters, and telematics sync.
-- Added Fleet-Ops Data `facilitator-driver` model support for facilitator driver assignment workflows.
-- Added shared Ember UI report selection and report widget components.
+- Added `category` support to Fleet-Ops work orders and Fleet-Ops Data work order models.
+- Added internal device event, sensor, vehicle, fleet, and live controller/filter updates for richer telematics workspaces.
+- Added order finalization jobs for API and internal order creation flows.
+- Added service quote override extension hooks and refresh coordination support.
+- Added shared Ember UI sidebar active-state and compact table utilities.
 
 ---
 ## Upgrade Steps
