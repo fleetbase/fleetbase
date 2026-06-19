@@ -1,58 +1,50 @@
-> v0.7.46 ~ "Fleet-Ops telematics workspaces, work order categories, service quotes, and shared table polish"
+> v0.7.47 ~ "Fleet-Ops device inventory, telematics parity, attachable data models, and dashboard slots"
 ---
 ## Highlights
-Fleetbase `0.7.46` improves Fleet-Ops maintenance, telematics, device management, service quotes, and order creation workflows. This release updates Fleetbase Console `0.7.46`, Fleet-Ops `0.6.54`, Fleet-Ops Data `0.1.39`, and Ember UI `0.3.36`.
+Fleetbase `0.7.47` improves Fleet-Ops connectivity workflows, device inventory screens, compact identity displays, shared navigation, and dashboard extension points. This release updates Fleet-Ops `0.6.55`, Fleet-Ops Data `0.1.40`, Ember UI `0.3.37`, and Ember Core `0.3.23`.
 
 ---
 ## Component Versions
-- `console`: `0.7.46`
-- `fleetops`: `0.6.54`
-- `fleetops-data`: `0.1.39`
-- `ember-ui`: `0.3.36`
+- `fleetops`: `0.6.55`
+- `fleetops-data`: `0.1.40`
+- `ember-ui`: `0.3.37`
+- `ember-core`: `0.3.23`
 
 ---
-## Fleet-Ops Maintenance and Work Orders
-- Added first-class work order categories with backend migration support and Fleet-Ops Data model support.
-- Updated work order forms, details, resources, seed data, and maintenance trigger processing to understand categories.
-- Improved maintenance and work order list behavior with better filtering and resource loading paths.
+## Fleet-Ops Connectivity and Device Inventory
+- Added native telematics provider parity improvements across Fleet-Ops provider, device, sensor, event, and vehicle workflows.
+- Improved connectivity device inventory screens with richer identity cells, attached-vehicle display, device action handling, and detail-panel tabs.
+- Improved Fleet-Ops drawer search workflows for drivers, vehicles, device events, positions, and related operational resources.
+- Refined compact identity indicators for vehicles, drivers, devices, equipment, parts, telematics devices, and providers.
+- Fixed Fleet-Ops sidebar initial route sync and registry sidebar ordering behavior.
 
 ---
-## Telematics and Device Management
-- Reworked telematics attachment and device detail workspaces with clearer tabs, better spacing, and richer device event, sensor, and vehicle views.
-- Hardened telematics provider sync, attachment filters, sync commands, provider exception handling, and device/sensor/vehicle model behavior.
-- Improved telematic device details panels and vehicle attachment workflows for operators working through connectivity screens.
-- Optimized operations monitor resource loading so the Fleet-Ops sidebar remains responsive with richer live data.
+## Attachable Device Data
+- Added Fleet-Ops Data models for attachable devices, attachable assets, and attachable vehicles.
+- Expanded device and device-event models so device inventory screens can represent richer attachable context.
+- Added device serializer support and regression coverage for attachable device payloads.
 
 ---
-## Orders and Service Quotes
-- Added a service quote refresh coordinator and loading state so quote refresh actions are easier to follow.
-- Added service quote override extension hooks for package-specific quote behavior.
-- Extracted order orchestrator constraints into a dedicated form section.
-- Replaced queued order-creation closures with jobs for API and internal order finalization.
-- Preserved driver license expiry during driver updates and improved order payload handling.
-
----
-## Shared UI
-- Added a sidebar navigator active hook so engines can control active sidebar state more cleanly.
-- Added compact table spacing utilities and refined shared resource table actions.
-- Improved dropdown and basic table styling used by dense operational screens.
-- Added focused coverage for sidebar navigator behavior and tabular resource layout updates.
+## Shared UI and Dashboard Slots
+- Added Ember Core dashboard slot registration APIs for engines that need to contribute dashboard content.
+- Enhanced Ember UI sidebar navigation, badges, tab navigation, dashboard panels, and dashboard service behavior.
+- Added shared resource identity table cells with documented image sizing and focused test coverage.
+- Improved dropdown table-cell behavior used by dense operational lists.
 
 ---
 ## Bug Fixes
-- Fixed Fleet-Ops registry sidebar ordering.
-- Fixed telematics device attachment filtering and provider sync edge cases.
-- Fixed driver license expiry being dropped during updates.
-- Fixed service quote refresh feedback and order form structure issues.
-- Fixed spacing and detail-panel issues in telematics device and attachment screens.
+- Fixed service-rate route handling in Fleet-Ops.
+- Fixed Fleet-Ops sidebar initial route synchronization.
+- Fixed drawer dropdown positioning and search behavior in map and operations surfaces.
+- Fixed shared UI badge, tab navigation, sidebar navigator, dashboard widget panel, and resource identity regressions.
+- Fixed linter issues in the updated shared UI components.
 
 ---
 ## API Changes
-- Added `category` support to Fleet-Ops work orders and Fleet-Ops Data work order models.
-- Added internal device event, sensor, vehicle, fleet, and live controller/filter updates for richer telematics workspaces.
-- Added order finalization jobs for API and internal order creation flows.
-- Added service quote override extension hooks and refresh coordination support.
-- Added shared Ember UI sidebar active-state and compact table utilities.
+- Added Ember Core dashboard slot registration services.
+- Added Fleet-Ops Data attachable device model and serializer support.
+- Added Fleet-Ops action/service updates for device, vehicle, equipment, sensor, vendor, and service-rate workflows.
+- Added shared Ember UI resource identity cell APIs and navigation/badge improvements.
 
 ---
 ## Upgrade Steps

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "9666cb89a1cc7becde9eaa8397f48536",
+    "content-hash": "ea5e5beab6044130a675ca84f0465a38",
     "packages": [
         {
             "name": "appstract/laravel-opcache",
@@ -124,16 +124,16 @@
         },
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.385.1",
+            "version": "3.385.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "f2d28e1bb5f16589fcc1fc0fb8272441b6166903"
+                "reference": "cc71d2d80d6effff8bf806a96c7f0f97ce4d7693"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/f2d28e1bb5f16589fcc1fc0fb8272441b6166903",
-                "reference": "f2d28e1bb5f16589fcc1fc0fb8272441b6166903",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/cc71d2d80d6effff8bf806a96c7f0f97ce4d7693",
+                "reference": "cc71d2d80d6effff8bf806a96c7f0f97ce4d7693",
                 "shasum": ""
             },
             "require": {
@@ -215,9 +215,9 @@
             "support": {
                 "forum": "https://github.com/aws/aws-sdk-php/discussions",
                 "issues": "https://github.com/aws/aws-sdk-php/issues",
-                "source": "https://github.com/aws/aws-sdk-php/tree/3.385.1"
+                "source": "https://github.com/aws/aws-sdk-php/tree/3.385.2"
             },
-            "time": "2026-06-17T18:08:17+00:00"
+            "time": "2026-06-18T18:08:43+00:00"
         },
         {
             "name": "aws/aws-sdk-php-laravel",
@@ -2579,16 +2579,16 @@
         },
         {
             "name": "fleetbase/fleetops-api",
-            "version": "0.6.54",
+            "version": "0.6.55",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fleetbase/fleetops.git",
-                "reference": "056be8548be887b819b0a3f8229db2a0c87b741d"
+                "reference": "a5bc419c2ed9fa1092b1dd1561c013e49453f277"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fleetbase/fleetops/zipball/056be8548be887b819b0a3f8229db2a0c87b741d",
-                "reference": "056be8548be887b819b0a3f8229db2a0c87b741d",
+                "url": "https://api.github.com/repos/fleetbase/fleetops/zipball/a5bc419c2ed9fa1092b1dd1561c013e49453f277",
+                "reference": "a5bc419c2ed9fa1092b1dd1561c013e49453f277",
                 "shasum": ""
             },
             "require": {
@@ -2665,16 +2665,16 @@
             ],
             "support": {
                 "issues": "https://github.com/fleetbase/fleetops/issues",
-                "source": "https://github.com/fleetbase/fleetops/tree/v0.6.54"
+                "source": "https://github.com/fleetbase/fleetops/tree/v0.6.55"
             },
-            "time": "2026-06-18T10:00:53+00:00"
+            "time": "2026-06-19T11:17:00+00:00"
         },
         {
             "name": "fleetbase/flespi-integration",
             "version": "0.1.16",
             "dist": {
                 "type": "tar",
-                "url": "https://s3.ap-southeast-1.amazonaws.com/fleetbase-registry-production/flb/%40fleetbase/flespi-engine/flespi-engine-0.1.16.tgz?AWSAccessKeyId=ASIA26E6KG6WJDTIRPI4&Expires=1781779432&Signature=gEI055K2CofVb%2Bkcwq0ns4gPCrQ%3D&x-amz-security-token=IQoJb3JpZ2luX2VjENr%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaDmFwLXNvdXRoZWFzdC0xIkgwRgIhANNXcCl7s2yX77Pf%2FioTt%2F6xzYxBkL0ftTvTCbW5IYsfAiEAx0YPdPOWfzOgyhBnxHQQeU8UfzU1zPqQWo0Hqwtm028qnwQIo%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARAAGgw3NTE5NTEyOTY0MjgiDKAECKiASGBUrGr6CirzAxPFEy2Z%2BbiFEJVMzNm7%2BQJjpR%2Bmd780%2F0bbBAWYkBTxXsfgdsrcqnKnWbAjiWfpNQ%2FkWrLVc5b3%2BL7L1HgiyrW6Ksb09djYvRGVme98VNSCUo7y0BEf7AvSh%2F%2FTzm2jYE7jyEovQpxg8tBz5gwdnt2ZAhvXSDOSm9qVdVmI2gmqapL%2Bm9LJyB2VgZPgHThUPREkDl3oQjbbBo2ZjSZFeZ9HHlDCMaEtNFZ%2B%2Fh9adrepshTH5Fq7maJbMmGHB3bUBmVEho7BmCOBn3Rpkf4JegIAJDCAdZwbjY0TA0Fxap5tgsumU8cZt5Gd1elYy%2F31FHyfDvRnwvdYBFAbh%2BrlsezCKMYdbNzKW23wCd5CFRUN6%2B0adJpmcOGw1yEYrytGj4U8Z8aNQ4yZgCsNe%2BqUEHntcq4%2FNyIXyOzsY2ZhGEpYJsvSzWtPQyT%2BS%2Bj0z%2BoKraA%2FNj0JI%2FKEyeeLvKkjqK6T%2BVhXZFYnv6lgqHi337zIdLf8kwO5LGMcpLuWJA41FU%2B6i79aYe58eD9EC%2FsMSQAaxAfrF%2BA2I7vfD8JKCbqGpPIS84y0trgqfsJ%2BbG11xI4xOxgEgc2SOCRSz0iFXNmDJe6jQUQiDIJ0xrFyqXfslZB4DjmmhnVgkX8gquwiSCD8cS1YMn%2F49b%2Fkqz3ux1MvmvYwtIjP0QY6pQGPIskrp7b7mqzP8U9zvI8UzdtKthNo5loPw18VNQJuvs34bL%2Bs5FuAuZhupDZbJS6Fwetv9M%2FXyaPWX23swdkNEk1exEcQi%2BqtgbyMp9O7my4RncEpM%2B707f1Ka%2FD8a8j6%2BCUMnw1sC2zv9sFf25NDk3PkxFwV%2Fwu%2BM%2FRL42nZEhT31Ntihf2aY9EmysGoXbFCEILZEXKNFcS%2FwUjF7jhxtJIq89w%3D"
+                "url": "https://s3.ap-southeast-1.amazonaws.com/fleetbase-registry-production/flb/%40fleetbase/flespi-engine/flespi-engine-0.1.16.tgz?AWSAccessKeyId=ASIA26E6KG6WOCAGOUGY&Expires=1781870073&Signature=FbrMhWJ6EjWEhvv9Bp53IWgqKW0%3D&x-amz-security-token=IQoJb3JpZ2luX2VjEPT%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaDmFwLXNvdXRoZWFzdC0xIkcwRQIgasJhvNO3gVO2DbIS%2Bi4tTIhm26VeFnLGdenzX6Zk6GoCIQD5%2F33BopX68NYuQQXGDvO2FZVCTXP9LXxU2QtoODonJCqfBAi9%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F8BEAAaDDc1MTk1MTI5NjQyOCIMKMRYRjXlhkNARrguKvMDE2LJizPIEO8T7ic98AzzvrxvdJwb5Lm3p5IBHD4liMbw0ciEHck9wzs0sBJFw%2BkdolkHw4f2TTH1r1ebb05mk00143IIDuNrSVPPGGeTbNis7JkSdNW1qcVb8%2FwmluEH1oQGi6ANSgH3Kdo0PCws4t0%2FX0q2%2FQhDgF1hEAlTNJOOerIfSSsp85NhOYVsLQmCIAPnX7SB1pNDhQsmqkp1lQgarg1Dl4VXdURjfBlK16%2B8rsagebwFJgRpYGd4Y2Q33%2FAUAyM2%2Bgf2dhErtX4lAFv3EcCfkXkCP2vtoMuIjr60oM%2FBlpsKGcYM6Hc7bj3o1HV5NjnScO4SdfAEzIkbck8%2FHJ0q96FZ%2BenT7bkYrcBGoIzLyldh2XCchE5%2FXTplhjCpEwy70t0t2Y0Q4jvhs7eZ4Ow4DI4qBwiGAxgUNYlINBRpvLKFZfXAxs8PO9NKbqSZKNETBSJsexfnI8bOrSIwieFiPkHRTxGKVs1pH3ZWlEbpdp%2Bbvl4a0xJthbjbZONSi7A%2B1%2BCcPt1DLklxq0U1mqc%2F9c5VF73NifkOiSDBw%2BEdeobi4Od9%2B2RUgX22oH2ARyCGzF42rHeSCDXB3oX3rCxhuqzAbO2iKc9bfG9JKE2rF2d4T%2BhAhvHujcmZ3RLs7Ik830PDkUWtTSIVmmIg4jCQzdTRBjqmAYP178FH8rXsj6lWwn6oa8vJRD5Ey1Ejfra3bomE%2F%2BVzIWLfkvHG2%2FoBKEVLu2YVA6lAvOkAfjDpzuVUmr8KC%2F5c3Zv9KhVZ1CpMjplWk%2B5I6pzrHBE4Yx0fWn2BI9kD%2B0sUMe84Nct5l2pydfRLXFaeSBW8R0Rf1%2FR7uH9%2BzkoAJy1iieHsLryy5ZthAAczYtZwndd1QXjeb3ipNsieixRf%2FjO3NQo%3D"
             },
             "require": {
                 "fleetbase/core-api": "*",
@@ -3093,7 +3093,7 @@
             "version": "0.0.3",
             "dist": {
                 "type": "tar",
-                "url": "https://s3.ap-southeast-1.amazonaws.com/fleetbase-registry-production/flb/%40fleetbase/samsara-engine/samsara-engine-0.0.3.tgz?AWSAccessKeyId=ASIA26E6KG6WJDTIRPI4&Expires=1781779432&Signature=bE7kY4oM7jVb8p4caWmi9fTcmG0%3D&x-amz-security-token=IQoJb3JpZ2luX2VjENr%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaDmFwLXNvdXRoZWFzdC0xIkgwRgIhANNXcCl7s2yX77Pf%2FioTt%2F6xzYxBkL0ftTvTCbW5IYsfAiEAx0YPdPOWfzOgyhBnxHQQeU8UfzU1zPqQWo0Hqwtm028qnwQIo%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARAAGgw3NTE5NTEyOTY0MjgiDKAECKiASGBUrGr6CirzAxPFEy2Z%2BbiFEJVMzNm7%2BQJjpR%2Bmd780%2F0bbBAWYkBTxXsfgdsrcqnKnWbAjiWfpNQ%2FkWrLVc5b3%2BL7L1HgiyrW6Ksb09djYvRGVme98VNSCUo7y0BEf7AvSh%2F%2FTzm2jYE7jyEovQpxg8tBz5gwdnt2ZAhvXSDOSm9qVdVmI2gmqapL%2Bm9LJyB2VgZPgHThUPREkDl3oQjbbBo2ZjSZFeZ9HHlDCMaEtNFZ%2B%2Fh9adrepshTH5Fq7maJbMmGHB3bUBmVEho7BmCOBn3Rpkf4JegIAJDCAdZwbjY0TA0Fxap5tgsumU8cZt5Gd1elYy%2F31FHyfDvRnwvdYBFAbh%2BrlsezCKMYdbNzKW23wCd5CFRUN6%2B0adJpmcOGw1yEYrytGj4U8Z8aNQ4yZgCsNe%2BqUEHntcq4%2FNyIXyOzsY2ZhGEpYJsvSzWtPQyT%2BS%2Bj0z%2BoKraA%2FNj0JI%2FKEyeeLvKkjqK6T%2BVhXZFYnv6lgqHi337zIdLf8kwO5LGMcpLuWJA41FU%2B6i79aYe58eD9EC%2FsMSQAaxAfrF%2BA2I7vfD8JKCbqGpPIS84y0trgqfsJ%2BbG11xI4xOxgEgc2SOCRSz0iFXNmDJe6jQUQiDIJ0xrFyqXfslZB4DjmmhnVgkX8gquwiSCD8cS1YMn%2F49b%2Fkqz3ux1MvmvYwtIjP0QY6pQGPIskrp7b7mqzP8U9zvI8UzdtKthNo5loPw18VNQJuvs34bL%2Bs5FuAuZhupDZbJS6Fwetv9M%2FXyaPWX23swdkNEk1exEcQi%2BqtgbyMp9O7my4RncEpM%2B707f1Ka%2FD8a8j6%2BCUMnw1sC2zv9sFf25NDk3PkxFwV%2Fwu%2BM%2FRL42nZEhT31Ntihf2aY9EmysGoXbFCEILZEXKNFcS%2FwUjF7jhxtJIq89w%3D"
+                "url": "https://s3.ap-southeast-1.amazonaws.com/fleetbase-registry-production/flb/%40fleetbase/samsara-engine/samsara-engine-0.0.3.tgz?AWSAccessKeyId=ASIA26E6KG6WOCAGOUGY&Expires=1781870073&Signature=TjCtaHQr7mgzgL2txQbBqyJGD9g%3D&x-amz-security-token=IQoJb3JpZ2luX2VjEPT%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaDmFwLXNvdXRoZWFzdC0xIkcwRQIgasJhvNO3gVO2DbIS%2Bi4tTIhm26VeFnLGdenzX6Zk6GoCIQD5%2F33BopX68NYuQQXGDvO2FZVCTXP9LXxU2QtoODonJCqfBAi9%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F8BEAAaDDc1MTk1MTI5NjQyOCIMKMRYRjXlhkNARrguKvMDE2LJizPIEO8T7ic98AzzvrxvdJwb5Lm3p5IBHD4liMbw0ciEHck9wzs0sBJFw%2BkdolkHw4f2TTH1r1ebb05mk00143IIDuNrSVPPGGeTbNis7JkSdNW1qcVb8%2FwmluEH1oQGi6ANSgH3Kdo0PCws4t0%2FX0q2%2FQhDgF1hEAlTNJOOerIfSSsp85NhOYVsLQmCIAPnX7SB1pNDhQsmqkp1lQgarg1Dl4VXdURjfBlK16%2B8rsagebwFJgRpYGd4Y2Q33%2FAUAyM2%2Bgf2dhErtX4lAFv3EcCfkXkCP2vtoMuIjr60oM%2FBlpsKGcYM6Hc7bj3o1HV5NjnScO4SdfAEzIkbck8%2FHJ0q96FZ%2BenT7bkYrcBGoIzLyldh2XCchE5%2FXTplhjCpEwy70t0t2Y0Q4jvhs7eZ4Ow4DI4qBwiGAxgUNYlINBRpvLKFZfXAxs8PO9NKbqSZKNETBSJsexfnI8bOrSIwieFiPkHRTxGKVs1pH3ZWlEbpdp%2Bbvl4a0xJthbjbZONSi7A%2B1%2BCcPt1DLklxq0U1mqc%2F9c5VF73NifkOiSDBw%2BEdeobi4Od9%2B2RUgX22oH2ARyCGzF42rHeSCDXB3oX3rCxhuqzAbO2iKc9bfG9JKE2rF2d4T%2BhAhvHujcmZ3RLs7Ik830PDkUWtTSIVmmIg4jCQzdTRBjqmAYP178FH8rXsj6lWwn6oa8vJRD5Ey1Ejfra3bomE%2F%2BVzIWLfkvHG2%2FoBKEVLu2YVA6lAvOkAfjDpzuVUmr8KC%2F5c3Zv9KhVZ1CpMjplWk%2B5I6pzrHBE4Yx0fWn2BI9kD%2B0sUMe84Nct5l2pydfRLXFaeSBW8R0Rf1%2FR7uH9%2BzkoAJy1iieHsLryy5ZthAAczYtZwndd1QXjeb3ipNsieixRf%2FjO3NQo%3D"
             },
             "require": {
                 "fleetbase/core-api": "*",
@@ -3171,7 +3171,7 @@
             "version": "0.0.7",
             "dist": {
                 "type": "tar",
-                "url": "https://s3.ap-southeast-1.amazonaws.com/fleetbase-registry-production/flb/%40fleetbase/solid-engine/solid-engine-0.0.7.tgz?AWSAccessKeyId=ASIA26E6KG6WJDTIRPI4&Expires=1781779432&Signature=fOFCEGQEwCAyv7tT3qmp3fpNshM%3D&x-amz-security-token=IQoJb3JpZ2luX2VjENr%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaDmFwLXNvdXRoZWFzdC0xIkgwRgIhANNXcCl7s2yX77Pf%2FioTt%2F6xzYxBkL0ftTvTCbW5IYsfAiEAx0YPdPOWfzOgyhBnxHQQeU8UfzU1zPqQWo0Hqwtm028qnwQIo%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARAAGgw3NTE5NTEyOTY0MjgiDKAECKiASGBUrGr6CirzAxPFEy2Z%2BbiFEJVMzNm7%2BQJjpR%2Bmd780%2F0bbBAWYkBTxXsfgdsrcqnKnWbAjiWfpNQ%2FkWrLVc5b3%2BL7L1HgiyrW6Ksb09djYvRGVme98VNSCUo7y0BEf7AvSh%2F%2FTzm2jYE7jyEovQpxg8tBz5gwdnt2ZAhvXSDOSm9qVdVmI2gmqapL%2Bm9LJyB2VgZPgHThUPREkDl3oQjbbBo2ZjSZFeZ9HHlDCMaEtNFZ%2B%2Fh9adrepshTH5Fq7maJbMmGHB3bUBmVEho7BmCOBn3Rpkf4JegIAJDCAdZwbjY0TA0Fxap5tgsumU8cZt5Gd1elYy%2F31FHyfDvRnwvdYBFAbh%2BrlsezCKMYdbNzKW23wCd5CFRUN6%2B0adJpmcOGw1yEYrytGj4U8Z8aNQ4yZgCsNe%2BqUEHntcq4%2FNyIXyOzsY2ZhGEpYJsvSzWtPQyT%2BS%2Bj0z%2BoKraA%2FNj0JI%2FKEyeeLvKkjqK6T%2BVhXZFYnv6lgqHi337zIdLf8kwO5LGMcpLuWJA41FU%2B6i79aYe58eD9EC%2FsMSQAaxAfrF%2BA2I7vfD8JKCbqGpPIS84y0trgqfsJ%2BbG11xI4xOxgEgc2SOCRSz0iFXNmDJe6jQUQiDIJ0xrFyqXfslZB4DjmmhnVgkX8gquwiSCD8cS1YMn%2F49b%2Fkqz3ux1MvmvYwtIjP0QY6pQGPIskrp7b7mqzP8U9zvI8UzdtKthNo5loPw18VNQJuvs34bL%2Bs5FuAuZhupDZbJS6Fwetv9M%2FXyaPWX23swdkNEk1exEcQi%2BqtgbyMp9O7my4RncEpM%2B707f1Ka%2FD8a8j6%2BCUMnw1sC2zv9sFf25NDk3PkxFwV%2Fwu%2BM%2FRL42nZEhT31Ntihf2aY9EmysGoXbFCEILZEXKNFcS%2FwUjF7jhxtJIq89w%3D"
+                "url": "https://s3.ap-southeast-1.amazonaws.com/fleetbase-registry-production/flb/%40fleetbase/solid-engine/solid-engine-0.0.7.tgz?AWSAccessKeyId=ASIA26E6KG6WOCAGOUGY&Expires=1781870073&Signature=jqon4XdHi%2FyXUO2j5FNIASBxhBk%3D&x-amz-security-token=IQoJb3JpZ2luX2VjEPT%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaDmFwLXNvdXRoZWFzdC0xIkcwRQIgasJhvNO3gVO2DbIS%2Bi4tTIhm26VeFnLGdenzX6Zk6GoCIQD5%2F33BopX68NYuQQXGDvO2FZVCTXP9LXxU2QtoODonJCqfBAi9%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F8BEAAaDDc1MTk1MTI5NjQyOCIMKMRYRjXlhkNARrguKvMDE2LJizPIEO8T7ic98AzzvrxvdJwb5Lm3p5IBHD4liMbw0ciEHck9wzs0sBJFw%2BkdolkHw4f2TTH1r1ebb05mk00143IIDuNrSVPPGGeTbNis7JkSdNW1qcVb8%2FwmluEH1oQGi6ANSgH3Kdo0PCws4t0%2FX0q2%2FQhDgF1hEAlTNJOOerIfSSsp85NhOYVsLQmCIAPnX7SB1pNDhQsmqkp1lQgarg1Dl4VXdURjfBlK16%2B8rsagebwFJgRpYGd4Y2Q33%2FAUAyM2%2Bgf2dhErtX4lAFv3EcCfkXkCP2vtoMuIjr60oM%2FBlpsKGcYM6Hc7bj3o1HV5NjnScO4SdfAEzIkbck8%2FHJ0q96FZ%2BenT7bkYrcBGoIzLyldh2XCchE5%2FXTplhjCpEwy70t0t2Y0Q4jvhs7eZ4Ow4DI4qBwiGAxgUNYlINBRpvLKFZfXAxs8PO9NKbqSZKNETBSJsexfnI8bOrSIwieFiPkHRTxGKVs1pH3ZWlEbpdp%2Bbvl4a0xJthbjbZONSi7A%2B1%2BCcPt1DLklxq0U1mqc%2F9c5VF73NifkOiSDBw%2BEdeobi4Od9%2B2RUgX22oH2ARyCGzF42rHeSCDXB3oX3rCxhuqzAbO2iKc9bfG9JKE2rF2d4T%2BhAhvHujcmZ3RLs7Ik830PDkUWtTSIVmmIg4jCQzdTRBjqmAYP178FH8rXsj6lWwn6oa8vJRD5Ey1Ejfra3bomE%2F%2BVzIWLfkvHG2%2FoBKEVLu2YVA6lAvOkAfjDpzuVUmr8KC%2F5c3Zv9KhVZ1CpMjplWk%2B5I6pzrHBE4Yx0fWn2BI9kD%2B0sUMe84Nct5l2pydfRLXFaeSBW8R0Rf1%2FR7uH9%2BzkoAJy1iieHsLryy5ZthAAczYtZwndd1QXjeb3ipNsieixRf%2FjO3NQo%3D"
             },
             "require": {
                 "easyrdf/easyrdf": "^1.1",
@@ -4813,22 +4813,22 @@
         },
         {
             "name": "guzzlehttp/guzzle",
-            "version": "7.12.0",
+            "version": "7.12.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/guzzle/guzzle.git",
-                "reference": "eaa81598031cf57a9e36258c8546defffc994cba"
+                "reference": "d34627490fbc03bf5c5d7cfed81f2faa19519425"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/guzzle/guzzle/zipball/eaa81598031cf57a9e36258c8546defffc994cba",
-                "reference": "eaa81598031cf57a9e36258c8546defffc994cba",
+                "url": "https://api.github.com/repos/guzzle/guzzle/zipball/d34627490fbc03bf5c5d7cfed81f2faa19519425",
+                "reference": "d34627490fbc03bf5c5d7cfed81f2faa19519425",
                 "shasum": ""
             },
             "require": {
                 "ext-json": "*",
                 "guzzlehttp/promises": "^2.5",
-                "guzzlehttp/psr7": "^2.12",
+                "guzzlehttp/psr7": "^2.12.1",
                 "php": "^7.2.5 || ^8.0",
                 "psr/http-client": "^1.0",
                 "symfony/deprecation-contracts": "^2.5 || ^3.0",
@@ -4841,7 +4841,7 @@
                 "bamarni/composer-bin-plugin": "^1.8.2",
                 "ext-curl": "*",
                 "guzzle/client-integration-tests": "3.0.2",
-                "guzzlehttp/test-server": "^0.5",
+                "guzzlehttp/test-server": "^0.5.1",
                 "php-http/message-factory": "^1.1",
                 "phpunit/phpunit": "^8.5.52 || ^9.6.34",
                 "psr/log": "^1.1 || ^2.0 || ^3.0"
@@ -4921,7 +4921,7 @@
             ],
             "support": {
                 "issues": "https://github.com/guzzle/guzzle/issues",
-                "source": "https://github.com/guzzle/guzzle/tree/7.12.0"
+                "source": "https://github.com/guzzle/guzzle/tree/7.12.1"
             },
             "funding": [
                 {
@@ -4937,7 +4937,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-06-16T22:11:48+00:00"
+            "time": "2026-06-18T14:12:49+00:00"
         },
         {
             "name": "guzzlehttp/promises",

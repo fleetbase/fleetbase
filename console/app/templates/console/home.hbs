@@ -5,6 +5,7 @@
         <RegistryComponent @controller={{this}} @position="before-dashboard" />
     </RegistryYield>
     <Dashboard
+        @slot="console.home"
         @extension="core"
         @leftHeaderWrapperClass="console-dashboard-title"
         @rightHeaderWrapperClass="console-dashboard-actions"
