@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "4cad124154ea8048700192fa90972f32",
+    "content-hash": "29985641a1e3f33c8bb1d23d11487565",
     "packages": [
         {
             "name": "appstract/laravel-opcache",
@@ -124,16 +124,16 @@
         },
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.384.9",
+            "version": "3.385.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "71513f9c05ed1fde0fb95e8c7e7d3c88409d7de9"
+                "reference": "cc71d2d80d6effff8bf806a96c7f0f97ce4d7693"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/71513f9c05ed1fde0fb95e8c7e7d3c88409d7de9",
-                "reference": "71513f9c05ed1fde0fb95e8c7e7d3c88409d7de9",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/cc71d2d80d6effff8bf806a96c7f0f97ce4d7693",
+                "reference": "cc71d2d80d6effff8bf806a96c7f0f97ce4d7693",
                 "shasum": ""
             },
             "require": {
@@ -215,9 +215,9 @@
             "support": {
                 "forum": "https://github.com/aws/aws-sdk-php/discussions",
                 "issues": "https://github.com/aws/aws-sdk-php/issues",
-                "source": "https://github.com/aws/aws-sdk-php/tree/3.384.9"
+                "source": "https://github.com/aws/aws-sdk-php/tree/3.385.2"
             },
-            "time": "2026-06-12T18:10:49+00:00"
+            "time": "2026-06-18T18:08:43+00:00"
         },
         {
             "name": "aws/aws-sdk-php-laravel",
@@ -2265,16 +2265,16 @@
         },
         {
             "name": "fleetbase/core-api",
-            "version": "1.6.51",
+            "version": "1.6.52",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fleetbase/core-api.git",
-                "reference": "4147cb35ca4fa18ae896400c779500bc5b019b1e"
+                "reference": "e7ac7053f4ddcd7845b329ee019541aeda74b9ff"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fleetbase/core-api/zipball/4147cb35ca4fa18ae896400c779500bc5b019b1e",
-                "reference": "4147cb35ca4fa18ae896400c779500bc5b019b1e",
+                "url": "https://api.github.com/repos/fleetbase/core-api/zipball/e7ac7053f4ddcd7845b329ee019541aeda74b9ff",
+                "reference": "e7ac7053f4ddcd7845b329ee019541aeda74b9ff",
                 "shasum": ""
             },
             "require": {
@@ -2364,9 +2364,9 @@
             ],
             "support": {
                 "issues": "https://github.com/fleetbase/core-api/issues",
-                "source": "https://github.com/fleetbase/core-api/tree/v1.6.51"
+                "source": "https://github.com/fleetbase/core-api/tree/v1.6.52"
             },
-            "time": "2026-06-12T10:39:40+00:00"
+            "time": "2026-06-16T05:45:19+00:00"
         },
         {
             "name": "fleetbase/countries",
@@ -2504,16 +2504,16 @@
         },
         {
             "name": "fleetbase/fleetops-api",
-            "version": "0.6.52",
+            "version": "0.6.55",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fleetbase/fleetops.git",
-                "reference": "4e2fe8174e7325144700d866c09225f4da2ce4df"
+                "reference": "a5bc419c2ed9fa1092b1dd1561c013e49453f277"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fleetbase/fleetops/zipball/4e2fe8174e7325144700d866c09225f4da2ce4df",
-                "reference": "4e2fe8174e7325144700d866c09225f4da2ce4df",
+                "url": "https://api.github.com/repos/fleetbase/fleetops/zipball/a5bc419c2ed9fa1092b1dd1561c013e49453f277",
+                "reference": "a5bc419c2ed9fa1092b1dd1561c013e49453f277",
                 "shasum": ""
             },
             "require": {
@@ -2590,16 +2590,16 @@
             ],
             "support": {
                 "issues": "https://github.com/fleetbase/fleetops/issues",
-                "source": "https://github.com/fleetbase/fleetops/tree/v0.6.52"
+                "source": "https://github.com/fleetbase/fleetops/tree/v0.6.55"
             },
-            "time": "2026-06-12T11:22:20+00:00"
+            "time": "2026-06-19T11:17:00+00:00"
         },
         {
             "name": "fleetbase/flespi-integration",
             "version": "0.1.16",
             "dist": {
                 "type": "tar",
-                "url": "https://s3.ap-southeast-1.amazonaws.com/fleetbase-registry-qa/flb/%40fleetbase/flespi-engine/flespi-engine-0.1.16.tgz?AWSAccessKeyId=ASIA26E6KG6WMVHYPQPJ&Expires=1781320679&Signature=3Bw1DnRAM8GXWIDqHvrvD8J7HBQ%3D&x-amz-security-token=IQoJb3JpZ2luX2VjEFsaDmFwLXNvdXRoZWFzdC0xIkgwRgIhAKs0HUyKxiqevWAgNoJkIQJPinzQPOFX34sncjkb5DdRAiEAwxi0q6ampp0JWb8DNsaCXNPtGmyFBVf45dcP955jTsAqhgQIJBAAGgw3NTE5NTEyOTY0MjgiDDWG%2F%2F8hAAW8rHLXGirjA6c0Z%2BsVa8F7i46uB%2Bwr4RXQhNLvnRxKwJkTN0r0FeD98tURxWQxsr4qIS86hgdncYWEJW2sNURCnfwlyDUxPJ6jLNoPL0c9cCG3S8StrN4q233sznhcuE2DSPycBJxkYwXb4kgkX6BbQjkealNtA2uYihob6VcAMBAsIuNusQffaooWnsD2x3eAOMQ%2B8pUHUgcduHrqGKiK0%2FDN1CmBU0xTwi%2FXzpc4sIQsmZPFSmLHa7R0siLX6iQJZ1O6d8a3OpSmfxBMR9r3boUeISL983tRmxyCvtFwNatxv3gmEq28Y3av1hUH1ZI%2FlXdX7mVwkgpp%2FZMD%2Fnv7X%2Fle9plq%2Fg7LAPQytUOEJaw%2Fq8o0RVRJqJuD7Z3rSKfDSoWdNuN%2F8PJ%2Bm4mVTS%2BlKTwQKTM%2FeGGp13Lg6TbzAEN7FbpQ1CY02PfaXERdD5e%2FN%2Bw5WXx4bz86ru1YyY2xXy1hXScAtkCCrxKxaLTOGyXJZRnkx0VT2FxF9sKiBBoaTqGfUkLNm3KqveNqgC%2B9IJIH8qHPzon3RXTV8TpjfZI3nsWXtoNug0kWqKOiv%2But%2F7g5nU%2B04cplbrMCZeAXu4RBWyEd07ulj%2FycSFB%2BtUQJNieeQOgs7UoAv8ukO19H0ZDFoVFAB1tzOzDTiLPRBjqkAQJbF9N9vWUQ70yI6fQenQQ1eT60CogB52zc4P3wxBdinLhyGC1tN2hxFBaQ4ByDgx80F4HD21pbZ9clRGW%2BOnRqG4RfFYUCEnbE6gANzgjXuFb16xCcz5jcBTHxautGkCTy1NQ2eoiIo37SYjCBMfhKhQCwum%2Bcva0giow8ZGSGpS8NO2s3zCbZPlKfNSoNAO6qM%2BelEncTNp%2Fdzv2dMM6xeeLv"
+                "url": "https://s3.ap-southeast-1.amazonaws.com/fleetbase-registry-qa/flb/%40fleetbase/flespi-engine/flespi-engine-0.1.16.tgz?AWSAccessKeyId=ASIA26E6KG6WOLFW3LR6&Expires=1781870298&Signature=qTNdcsmoJUn9gTj8R%2B6%2BWISkuaI%3D&x-amz-security-token=IQoJb3JpZ2luX2VjEPT%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaDmFwLXNvdXRoZWFzdC0xIkYwRAIgJTuYPhCol7KgFYRVZm9dfOExZtKKg6d4%2B%2BZGDxhiay8CIAtCn%2FG17faKg0SQ%2FCxiAMtqXrM2712jcL4T28tEu0zuKo8ECL3%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEQABoMNzUxOTUxMjk2NDI4Igwpo%2FZkdAXtNXwmXPoq4wNXd1j2cmnbQkrDMcUX%2BboLN3PqvuHcH3E0cXz2lGPp0wz4Z1PQ0lmOFsfys051qVxrueZsT1cojYPFZMtwjMTQSC87VqcbzdlZm43x87AlCsK5oHQLjFrfCP%2BDGkXKxG%2BGqTxTWMAjIzQKk5usubTlM3xLi2260iSJSox4XKy90Dn5kSEgoMo3tPy%2BXlLjXVeQTtdFmc4ZOcOHViautXC2dbVHG71e3V1m1yZCe2SRqUZN%2BA4g2MgKgWVA70VaaGx7G7Qvl7f3hiW5DC%2B%2BNQ9cqWxVYx21E%2FykkrmHGlPs6p6SD9GP6xOo0kl%2Fzh081oR0QzNzEX5dSzY7UoljAwbSYpoUbMdp5urs2JjnXsonG2Ca12hLr1TI1g9YI3GnZyf3%2FHc6CXmK85DaDEBgbsDbQw06CM%2BZNkQmjpyP6PiWmbY9eHsyGlqCpjHCZ5R17p%2Bb6RRqyCKj4975cBYuQZzT5xhmCAznx5XeLclm9p0D8pYbQ4CmFr96Qc6AfopqxVYHVW5tc9nXpYh01ZrUXtWhkhOKMOqvcJI8TwsujyR5QG1rV%2Fskhanvz0JfNzkxE4gdjOy9KPEWFGSO1bZ377YcVwDgYXR9PvK8ppNwpGsnpReHIaBQ%2FHAXxlJn3KoeFFOOvVgw%2F9HU0QY6pgGMji8ahZrv7ZB3vA7PrWNO8UZRCNyGUEnPe7XhY%2BaQJFhmrZ%2Be1G72rGb7L3LlGB1vdMLu%2Fi7tC4pUrF0K58zUyA9XAiurQq850kCAw0hIxTYYJ11DTEYPgoALq91WX3vj6w2kkhp9jkR8%2BwdgxKkVXckZ9rn4aFyDF8lvaFcEKxmxJrTgnNilNZKweUozu0gkSkLZ%2FGHtWD7Xr5cnICmMeKYfHR7X"
             },
             "require": {
                 "fleetbase/core-api": "*",
@@ -2684,16 +2684,16 @@
         },
         {
             "name": "fleetbase/internals-api",
-            "version": "0.0.32",
+            "version": "0.0.33",
             "source": {
                 "type": "git",
                 "url": "git@github.com:fleetbase/internals.git",
-                "reference": "02c902a5fd60f0753c71677f61ecc81e013fe15a"
+                "reference": "a2926c44d6ae0c3f04e62381bd578484bf329f0c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fleetbase/internals/zipball/02c902a5fd60f0753c71677f61ecc81e013fe15a",
-                "reference": "02c902a5fd60f0753c71677f61ecc81e013fe15a",
+                "url": "https://api.github.com/repos/fleetbase/internals/zipball/a2926c44d6ae0c3f04e62381bd578484bf329f0c",
+                "reference": "a2926c44d6ae0c3f04e62381bd578484bf329f0c",
                 "shasum": ""
             },
             "require": {
@@ -2782,10 +2782,10 @@
                 "fleetbase-internals"
             ],
             "support": {
-                "source": "https://github.com/fleetbase/internals/tree/v0.0.32",
+                "source": "https://github.com/fleetbase/internals/tree/v0.0.33",
                 "issues": "https://github.com/fleetbase/internals/issues"
             },
-            "time": "2026-05-11T08:12:20+00:00"
+            "time": "2026-06-16T07:54:21+00:00"
         },
         {
             "name": "fleetbase/laravel-mysql-spatial",
@@ -3018,7 +3018,7 @@
             "version": "0.0.3",
             "dist": {
                 "type": "tar",
-                "url": "https://s3.ap-southeast-1.amazonaws.com/fleetbase-registry-qa/flb/%40fleetbase/samsara-engine/samsara-engine-0.0.3.tgz?AWSAccessKeyId=ASIA26E6KG6WMVHYPQPJ&Expires=1781320679&Signature=h87f%2FbuaIzevqYySdBIDXw5VehU%3D&x-amz-security-token=IQoJb3JpZ2luX2VjEFsaDmFwLXNvdXRoZWFzdC0xIkgwRgIhAKs0HUyKxiqevWAgNoJkIQJPinzQPOFX34sncjkb5DdRAiEAwxi0q6ampp0JWb8DNsaCXNPtGmyFBVf45dcP955jTsAqhgQIJBAAGgw3NTE5NTEyOTY0MjgiDDWG%2F%2F8hAAW8rHLXGirjA6c0Z%2BsVa8F7i46uB%2Bwr4RXQhNLvnRxKwJkTN0r0FeD98tURxWQxsr4qIS86hgdncYWEJW2sNURCnfwlyDUxPJ6jLNoPL0c9cCG3S8StrN4q233sznhcuE2DSPycBJxkYwXb4kgkX6BbQjkealNtA2uYihob6VcAMBAsIuNusQffaooWnsD2x3eAOMQ%2B8pUHUgcduHrqGKiK0%2FDN1CmBU0xTwi%2FXzpc4sIQsmZPFSmLHa7R0siLX6iQJZ1O6d8a3OpSmfxBMR9r3boUeISL983tRmxyCvtFwNatxv3gmEq28Y3av1hUH1ZI%2FlXdX7mVwkgpp%2FZMD%2Fnv7X%2Fle9plq%2Fg7LAPQytUOEJaw%2Fq8o0RVRJqJuD7Z3rSKfDSoWdNuN%2F8PJ%2Bm4mVTS%2BlKTwQKTM%2FeGGp13Lg6TbzAEN7FbpQ1CY02PfaXERdD5e%2FN%2Bw5WXx4bz86ru1YyY2xXy1hXScAtkCCrxKxaLTOGyXJZRnkx0VT2FxF9sKiBBoaTqGfUkLNm3KqveNqgC%2B9IJIH8qHPzon3RXTV8TpjfZI3nsWXtoNug0kWqKOiv%2But%2F7g5nU%2B04cplbrMCZeAXu4RBWyEd07ulj%2FycSFB%2BtUQJNieeQOgs7UoAv8ukO19H0ZDFoVFAB1tzOzDTiLPRBjqkAQJbF9N9vWUQ70yI6fQenQQ1eT60CogB52zc4P3wxBdinLhyGC1tN2hxFBaQ4ByDgx80F4HD21pbZ9clRGW%2BOnRqG4RfFYUCEnbE6gANzgjXuFb16xCcz5jcBTHxautGkCTy1NQ2eoiIo37SYjCBMfhKhQCwum%2Bcva0giow8ZGSGpS8NO2s3zCbZPlKfNSoNAO6qM%2BelEncTNp%2Fdzv2dMM6xeeLv"
+                "url": "https://s3.ap-southeast-1.amazonaws.com/fleetbase-registry-qa/flb/%40fleetbase/samsara-engine/samsara-engine-0.0.3.tgz?AWSAccessKeyId=ASIA26E6KG6WOLFW3LR6&Expires=1781870298&Signature=vwu0yOk%2BKGjdUWmpwkvuK7ab6pI%3D&x-amz-security-token=IQoJb3JpZ2luX2VjEPT%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaDmFwLXNvdXRoZWFzdC0xIkYwRAIgJTuYPhCol7KgFYRVZm9dfOExZtKKg6d4%2B%2BZGDxhiay8CIAtCn%2FG17faKg0SQ%2FCxiAMtqXrM2712jcL4T28tEu0zuKo8ECL3%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEQABoMNzUxOTUxMjk2NDI4Igwpo%2FZkdAXtNXwmXPoq4wNXd1j2cmnbQkrDMcUX%2BboLN3PqvuHcH3E0cXz2lGPp0wz4Z1PQ0lmOFsfys051qVxrueZsT1cojYPFZMtwjMTQSC87VqcbzdlZm43x87AlCsK5oHQLjFrfCP%2BDGkXKxG%2BGqTxTWMAjIzQKk5usubTlM3xLi2260iSJSox4XKy90Dn5kSEgoMo3tPy%2BXlLjXVeQTtdFmc4ZOcOHViautXC2dbVHG71e3V1m1yZCe2SRqUZN%2BA4g2MgKgWVA70VaaGx7G7Qvl7f3hiW5DC%2B%2BNQ9cqWxVYx21E%2FykkrmHGlPs6p6SD9GP6xOo0kl%2Fzh081oR0QzNzEX5dSzY7UoljAwbSYpoUbMdp5urs2JjnXsonG2Ca12hLr1TI1g9YI3GnZyf3%2FHc6CXmK85DaDEBgbsDbQw06CM%2BZNkQmjpyP6PiWmbY9eHsyGlqCpjHCZ5R17p%2Bb6RRqyCKj4975cBYuQZzT5xhmCAznx5XeLclm9p0D8pYbQ4CmFr96Qc6AfopqxVYHVW5tc9nXpYh01ZrUXtWhkhOKMOqvcJI8TwsujyR5QG1rV%2Fskhanvz0JfNzkxE4gdjOy9KPEWFGSO1bZ377YcVwDgYXR9PvK8ppNwpGsnpReHIaBQ%2FHAXxlJn3KoeFFOOvVgw%2F9HU0QY6pgGMji8ahZrv7ZB3vA7PrWNO8UZRCNyGUEnPe7XhY%2BaQJFhmrZ%2Be1G72rGb7L3LlGB1vdMLu%2Fi7tC4pUrF0K58zUyA9XAiurQq850kCAw0hIxTYYJ11DTEYPgoALq91WX3vj6w2kkhp9jkR8%2BwdgxKkVXckZ9rn4aFyDF8lvaFcEKxmxJrTgnNilNZKweUozu0gkSkLZ%2FGHtWD7Xr5cnICmMeKYfHR7X"
             },
             "require": {
                 "fleetbase/core-api": "*",
@@ -4052,16 +4052,16 @@
         },
         {
             "name": "google/apiclient-services",
-            "version": "v0.444.0",
+            "version": "v0.445.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/googleapis/google-api-php-client-services.git",
-                "reference": "b38b3329e67bf68ef184997c047e6ff5952feca5"
+                "reference": "d76b09227d898db351457010c88f39eedfb815aa"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/googleapis/google-api-php-client-services/zipball/b38b3329e67bf68ef184997c047e6ff5952feca5",
-                "reference": "b38b3329e67bf68ef184997c047e6ff5952feca5",
+                "url": "https://api.github.com/repos/googleapis/google-api-php-client-services/zipball/d76b09227d898db351457010c88f39eedfb815aa",
+                "reference": "d76b09227d898db351457010c88f39eedfb815aa",
                 "shasum": ""
             },
             "require": {
@@ -4090,9 +4090,9 @@
             ],
             "support": {
                 "issues": "https://github.com/googleapis/google-api-php-client-services/issues",
-                "source": "https://github.com/googleapis/google-api-php-client-services/tree/v0.444.0"
+                "source": "https://github.com/googleapis/google-api-php-client-services/tree/v0.445.0"
             },
-            "time": "2026-06-08T01:52:31+00:00"
+            "time": "2026-06-15T01:58:30+00:00"
         },
         {
             "name": "google/auth",
@@ -4158,16 +4158,16 @@
         },
         {
             "name": "google/cloud-core",
-            "version": "v1.72.2",
+            "version": "v1.72.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/googleapis/google-cloud-php-core.git",
-                "reference": "f1f2f8465106f4b52568b05a6548d3d055f76767"
+                "reference": "2be1708d7a1f425551ec420e96f17cdbd0962497"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/googleapis/google-cloud-php-core/zipball/f1f2f8465106f4b52568b05a6548d3d055f76767",
-                "reference": "f1f2f8465106f4b52568b05a6548d3d055f76767",
+                "url": "https://api.github.com/repos/googleapis/google-cloud-php-core/zipball/2be1708d7a1f425551ec420e96f17cdbd0962497",
+                "reference": "2be1708d7a1f425551ec420e96f17cdbd0962497",
                 "shasum": ""
             },
             "require": {
@@ -4219,9 +4219,9 @@
             ],
             "description": "Google Cloud PHP shared dependency, providing functionality useful to all components.",
             "support": {
-                "source": "https://github.com/googleapis/google-cloud-php-core/tree/v1.72.2"
+                "source": "https://github.com/googleapis/google-cloud-php-core/tree/v1.72.3"
             },
-            "time": "2026-06-02T19:05:53+00:00"
+            "time": "2026-06-17T23:07:32+00:00"
         },
         {
             "name": "google/cloud-storage",
@@ -4283,16 +4283,16 @@
         },
         {
             "name": "google/common-protos",
-            "version": "4.14.0",
+            "version": "4.14.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/googleapis/common-protos-php.git",
-                "reference": "f8e72f7b581702e7c3ee0776144f4974da172428"
+                "reference": "4eb6813b8068653e055fc8a63dbda3446f3e8869"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/googleapis/common-protos-php/zipball/f8e72f7b581702e7c3ee0776144f4974da172428",
-                "reference": "f8e72f7b581702e7c3ee0776144f4974da172428",
+                "url": "https://api.github.com/repos/googleapis/common-protos-php/zipball/4eb6813b8068653e055fc8a63dbda3446f3e8869",
+                "reference": "4eb6813b8068653e055fc8a63dbda3446f3e8869",
                 "shasum": ""
             },
             "require": {
@@ -4336,9 +4336,9 @@
                 "google"
             ],
             "support": {
-                "source": "https://github.com/googleapis/common-protos-php/tree/v4.14.0"
+                "source": "https://github.com/googleapis/common-protos-php/tree/v4.14.1"
             },
-            "time": "2026-04-09T21:01:46+00:00"
+            "time": "2026-06-17T23:07:32+00:00"
         },
         {
             "name": "google/gax",
@@ -4638,22 +4638,22 @@
         },
         {
             "name": "guzzlehttp/guzzle",
-            "version": "7.11.1",
+            "version": "7.12.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/guzzle/guzzle.git",
-                "reference": "5af96f374e0ab4ebd747b8310888c99d3adb0a8c"
+                "reference": "d34627490fbc03bf5c5d7cfed81f2faa19519425"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/guzzle/guzzle/zipball/5af96f374e0ab4ebd747b8310888c99d3adb0a8c",
-                "reference": "5af96f374e0ab4ebd747b8310888c99d3adb0a8c",
+                "url": "https://api.github.com/repos/guzzle/guzzle/zipball/d34627490fbc03bf5c5d7cfed81f2faa19519425",
+                "reference": "d34627490fbc03bf5c5d7cfed81f2faa19519425",
                 "shasum": ""
             },
             "require": {
                 "ext-json": "*",
                 "guzzlehttp/promises": "^2.5",
-                "guzzlehttp/psr7": "^2.11",
+                "guzzlehttp/psr7": "^2.12.1",
                 "php": "^7.2.5 || ^8.0",
                 "psr/http-client": "^1.0",
                 "symfony/deprecation-contracts": "^2.5 || ^3.0",
@@ -4666,7 +4666,7 @@
                 "bamarni/composer-bin-plugin": "^1.8.2",
                 "ext-curl": "*",
                 "guzzle/client-integration-tests": "3.0.2",
-                "guzzlehttp/test-server": "^0.5",
+                "guzzlehttp/test-server": "^0.5.1",
                 "php-http/message-factory": "^1.1",
                 "phpunit/phpunit": "^8.5.52 || ^9.6.34",
                 "psr/log": "^1.1 || ^2.0 || ^3.0"
@@ -4746,7 +4746,7 @@
             ],
             "support": {
                 "issues": "https://github.com/guzzle/guzzle/issues",
-                "source": "https://github.com/guzzle/guzzle/tree/7.11.1"
+                "source": "https://github.com/guzzle/guzzle/tree/7.12.1"
             },
             "funding": [
                 {
@@ -4762,7 +4762,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-06-07T22:54:06+00:00"
+            "time": "2026-06-18T14:12:49+00:00"
         },
         {
             "name": "guzzlehttp/promises",
@@ -4850,16 +4850,16 @@
         },
         {
             "name": "guzzlehttp/psr7",
-            "version": "2.11.0",
+            "version": "2.12.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/guzzle/psr7.git",
-                "reference": "bbb5e61349fa5cb822b3e87842b951088b76b81f"
+                "reference": "172ef2f4e9824c1e058b7f30be8ae25a02c0f2b7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/guzzle/psr7/zipball/bbb5e61349fa5cb822b3e87842b951088b76b81f",
-                "reference": "bbb5e61349fa5cb822b3e87842b951088b76b81f",
+                "url": "https://api.github.com/repos/guzzle/psr7/zipball/172ef2f4e9824c1e058b7f30be8ae25a02c0f2b7",
+                "reference": "172ef2f4e9824c1e058b7f30be8ae25a02c0f2b7",
                 "shasum": ""
             },
             "require": {
@@ -4949,7 +4949,7 @@
             ],
             "support": {
                 "issues": "https://github.com/guzzle/psr7/issues",
-                "source": "https://github.com/guzzle/psr7/tree/2.11.0"
+                "source": "https://github.com/guzzle/psr7/tree/2.12.1"
             },
             "funding": [
                 {
@@ -4965,7 +4965,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-06-02T12:30:48+00:00"
+            "time": "2026-06-18T09:49:37+00:00"
         },
         {
             "name": "guzzlehttp/uri-template",
@@ -10955,20 +10955,20 @@
         },
         {
             "name": "ramsey/uuid",
-            "version": "4.9.2",
+            "version": "4.9.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ramsey/uuid.git",
-                "reference": "8429c78ca35a09f27565311b98101e2826affde0"
+                "reference": "1df15849d00943a67d677dc9cfd80795f038c9f8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ramsey/uuid/zipball/8429c78ca35a09f27565311b98101e2826affde0",
-                "reference": "8429c78ca35a09f27565311b98101e2826affde0",
+                "url": "https://api.github.com/repos/ramsey/uuid/zipball/1df15849d00943a67d677dc9cfd80795f038c9f8",
+                "reference": "1df15849d00943a67d677dc9cfd80795f038c9f8",
                 "shasum": ""
             },
             "require": {
-                "brick/math": "^0.8.16 || ^0.9 || ^0.10 || ^0.11 || ^0.12 || ^0.13 || ^0.14",
+                "brick/math": ">=0.8.16 <=0.18",
                 "php": "^8.0",
                 "ramsey/collection": "^1.2 || ^2.0"
             },
@@ -11027,9 +11027,9 @@
             ],
             "support": {
                 "issues": "https://github.com/ramsey/uuid/issues",
-                "source": "https://github.com/ramsey/uuid/tree/4.9.2"
+                "source": "https://github.com/ramsey/uuid/tree/4.9.3"
             },
-            "time": "2025-12-14T04:43:48+00:00"
+            "time": "2026-06-18T03:57:49+00:00"
         },
         {
             "name": "react/event-loop",
@@ -19486,7 +19486,7 @@
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
-        "php": ">=8.0 <=8.2.30"
+        "php": ">=8.0 <=8.2.31"
     },
     "platform-dev": {},
     "plugin-api-version": "2.9.0"

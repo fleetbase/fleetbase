@@ -44,7 +44,7 @@ class AppServiceProvider extends ServiceProvider
                 Log::info('[http:out:start]', [
                     'id'              => $id,
                     'method'          => $request->getMethod(),
-                    'url'             => (string) $request->getUri(),
+                    'url'             => $this->redactOutboundHttpUrl((string) $request->getUri()),
                     'timeout'         => $options['timeout'] ?? null,
                     'connect_timeout' => $options['connect_timeout'] ?? null,
                     'trace'           => $this->outboundHttpTrace(),
@@ -76,6 +76,11 @@ class AppServiceProvider extends ServiceProvider
                 );
             };
         });
+    }
+
+    protected function redactOutboundHttpUrl(string $url): string
+    {
+        return preg_replace('/([?&](?:token|access_token|api_key|apikey|key|secret|signature)=)[^&#]*/i', '$1[redacted]', $url) ?? $url;
     }
 
     protected function outboundHttpTrace(): array

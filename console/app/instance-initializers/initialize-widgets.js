@@ -16,6 +16,11 @@ export function initialize(appInstance) {
     // Register the console dashboard
     widgetService.registerDashboard('dashboard');
     widgetService.registerDashboard('admin');
+    widgetService.registerDashboardForSlot('console.home', 'dashboard', {
+        name: 'Default Dashboard',
+        extension: 'core',
+        priority: 0,
+    });
 
     // Wait for all extension to boot
     universe.onBoot(() => {

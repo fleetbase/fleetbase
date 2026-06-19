@@ -1,29 +1,38 @@
-<div class="fleetbase-blog" ...attributes>
-    <div class="border dark:border-gray-700 border-gray-200 dark:bg-gray-800 bg-gray-50 rounded-lg shadow-sm flex flex-col">
-        <div class="flex flex-row items-center justify-between rounded-t-lg px-4 py-2 border-b border-gray-200 dark:border-gray-700">
+<div class="fleetbase-blog flex h-full min-h-0 w-full" ...attributes>
+    <div class="flex h-full min-h-0 w-full flex-col overflow-hidden rounded-lg border border-gray-200 bg-gray-50 shadow-sm dark:border-gray-700 dark:bg-gray-800">
+        <div class="sticky top-0 flex flex-shrink-0 flex-row items-center justify-between rounded-t-lg border-b border-gray-200 bg-gray-50 px-4 py-2 dark:border-gray-700 dark:bg-gray-800">
             <span class="text-base font-bold text-black dark:text-gray-100">Fleetbase Blog</span>
             <a href="https://www.fleetbase.io/blog" target="_blog" class="flex flex-row items-center text-sm">
                 <FaIcon @icon="arrow-up-right-from-square" @size="xs" class="mr-2" />
                 <span>Visit Blog</span>
             </a>
         </div>
-        <div class="px-4 py-2.5">
+        <div class="min-h-0 flex-1 overflow-y-auto">
             {{#if this.loadBlogPosts.isRunning}}
-                <Spinner />
+                <div class="p-4">
+                    <Spinner />
+                </div>
             {{else}}
-                {{#if this.posts.length}}
-                    <ul class="space-y-2">
-                        {{#each this.posts as |post|}}
-                            <li class="text-sm flex flex-col lg:flex-row">
-                                <a href={{post.link}} target="_blog" rel="noopener noreferrer" class="text-black truncate max-w-lg dark:text-gray-200">
-                                    <span class="truncate">{{post.title}}</span>
+                {{#if this.formattedPosts.length}}
+                    <ul class="divide-y divide-gray-200 dark:divide-gray-700">
+                        {{#each this.formattedPosts as |post|}}
+                            <li class="text-sm">
+                                <a
+                                    href={{post.link}}
+                                    target="_blog"
+                                    rel="noopener noreferrer"
+                                    class="group flex items-start justify-between gap-4 px-4 py-3 text-gray-900 transition-colors hover:bg-blue-50 hover:text-blue-700 dark:text-gray-100 dark:hover:bg-gray-700 dark:hover:text-blue-300"
+                                >
+                                    <span class="min-w-0 flex-1 whitespace-normal break-words font-medium leading-5">{{post.title}}</span>
+                                    {{#if post.formattedDate}}
+                                        <span class="flex-shrink-0 whitespace-nowrap text-right text-xs text-gray-500 transition-colors group-hover:text-blue-600 dark:text-gray-400 dark:group-hover:text-blue-300">{{post.formattedDate}}</span>
+                                    {{/if}}
                                 </a>
-                                <span class="ml-1 text-gray-900 dark:text-gray-400">- {{post.pubDate}}</span>
                             </li>
                         {{/each}}
                     </ul>
                 {{else}}
-                    <div class="text-sm text-gray-700 dark:text-gray-300">
+                    <div class="p-4 text-sm text-gray-700 dark:text-gray-300">
                         No blog posts are available right now.
                     </div>
                 {{/if}}
