@@ -35,6 +35,7 @@ export default class ConfigureServicesComponent extends Component {
     @tracked smsTestMessage = 'This is a Fleetbase SMS test.';
     @tracked smsTestResponse;
     @tracked customHttpHeadersText = '{}';
+    @tracked customHttpQueryParamsText = '{}';
     @tracked customHttpBodyText = '{}';
 
     /** sentry service */
@@ -109,6 +110,10 @@ export default class ConfigureServicesComponent extends Component {
             this.customHttpHeadersText = event.target.value;
         }
 
+        if (field === 'query_params') {
+            this.customHttpQueryParamsText = event.target.value;
+        }
+
         if (field === 'body') {
             this.customHttpBodyText = event.target.value;
         }
@@ -140,6 +145,10 @@ export default class ConfigureServicesComponent extends Component {
 
     get selectedSmsProviderConfig() {
         return this.normalizedSms.providers[this.smsSelectedProvider] || {};
+    }
+
+    get isCustomHttpPostMethod() {
+        return (this.selectedSmsProviderConfig.method || 'POST').toUpperCase() === 'POST';
     }
 
     get smsConfigForSave() {
@@ -256,7 +265,9 @@ export default class ConfigureServicesComponent extends Component {
             aws_sns: {},
             smpp: {},
             custom_http: {
+                method: 'POST',
                 headers: {},
+                query_params: {},
                 body: {
                     to: '{{to}}',
                     text: '{{text}}',
@@ -307,6 +318,7 @@ export default class ConfigureServicesComponent extends Component {
     syncSmsJsonText() {
         const customHttpConfig = this.normalizedSms.providers.custom_http || {};
         this.customHttpHeadersText = JSON.stringify(customHttpConfig.headers || {}, null, 2);
+        this.customHttpQueryParamsText = JSON.stringify(customHttpConfig.query_params || {}, null, 2);
         this.customHttpBodyText = JSON.stringify(
             customHttpConfig.body || {
                 to: '{{to}}',

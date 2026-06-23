@@ -1,50 +1,67 @@
-> v0.7.47 ~ "Fleet-Ops device inventory, telematics parity, attachable data models, and dashboard slots"
+> v0.7.48 ~ "Fleet-Ops REST coverage, revenue lifecycle safeguards, settlement status, and navigation polish"
 ---
 ## Highlights
-Fleetbase `0.7.47` improves Fleet-Ops connectivity workflows, device inventory screens, compact identity displays, shared navigation, and dashboard extension points. This release updates Fleet-Ops `0.6.55`, Fleet-Ops Data `0.1.40`, Ember UI `0.3.37`, and Ember Core `0.3.23`.
+Fleetbase `0.7.48` expands Fleet-Ops public REST and export coverage, improves active revenue metrics, adds transaction settlement status support, introduces Ledger revenue lifecycle safeguards, and polishes sidebar navigation and currency utilities. This release updates Fleetbase Console `0.7.48`, Fleet-Ops `0.6.56`, Core API `1.6.53`, Ledger `0.0.6`, and Ember UI `0.3.38`.
 
 ---
 ## Component Versions
-- `fleetops`: `0.6.55`
-- `fleetops-data`: `0.1.40`
-- `ember-ui`: `0.3.37`
-- `ember-core`: `0.3.23`
+- `console`: `0.7.48`
+- `fleetops`: `0.6.56`
+- `core-api`: `1.6.53`
+- `ledger`: `0.0.6`
+- `ember-ui`: `0.3.38`
 
 ---
-## Fleet-Ops Connectivity and Device Inventory
-- Added native telematics provider parity improvements across Fleet-Ops provider, device, sensor, event, and vehicle workflows.
-- Improved connectivity device inventory screens with richer identity cells, attached-vehicle display, device action handling, and detail-panel tabs.
-- Improved Fleet-Ops drawer search workflows for drivers, vehicles, device events, positions, and related operational resources.
-- Refined compact identity indicators for vehicles, drivers, devices, equipment, parts, telematics devices, and providers.
-- Fixed Fleet-Ops sidebar initial route sync and registry sidebar ordering behavior.
+## Fleet-Ops REST, Exports, and Metrics
+- Added public Fleet-Ops REST endpoints for devices, equipment, fuel transactions, parts, sensors, and work orders, with UUID-safe resource resolution.
+- Expanded Fleet-Ops export coverage across contacts, devices, drivers, equipment, fleets, fuel reports, issues, maintenance, orders, parts, places, sensors, service areas, service rates, telematics, vehicles, vendors, and work orders.
+- Added a shared active revenue query so earnings, revenue trend, and average order value calculations ignore deleted or inactive orders and invoices.
+- Standardized active revenue transaction status handling for reporting and accounting consistency.
+- Fixed sensor status and type filters so option labels render correctly.
 
 ---
-## Attachable Device Data
-- Added Fleet-Ops Data models for attachable devices, attachable assets, and attachable vehicles.
-- Expanded device and device-event models so device inventory screens can represent richer attachable context.
-- Added device serializer support and regression coverage for attachable device payloads.
+## Telematics and Device Workflows
+- Hardened Safee and AFAQY telematics sync, including sensor identity sync, device status bootstrap, and safer provider error handling.
+- Added connectivity device event details and improved device event navigation.
+- Fixed vehicle attachment navigation and improved device, sensor, and vehicle filters used by connectivity screens.
+- Added Google Maps view layer settings for Fleet-Ops map configuration.
+- Added settings to enable Google Traffic Layer + Transit Layer.
 
 ---
-## Shared UI and Dashboard Slots
-- Added Ember Core dashboard slot registration APIs for engines that need to contribute dashboard content.
-- Enhanced Ember UI sidebar navigation, badges, tab navigation, dashboard panels, and dashboard service behavior.
-- Added shared resource identity table cells with documented image sizing and focused test coverage.
-- Improved dropdown table-cell behavior used by dense operational lists.
+## Ledger and Settlement
+- Added transaction settlement status support in Core API and Ledger, including migrations and model/resource helpers.
+- Added Ledger revenue lifecycle safeguards for cancelled/deleted orders, deleted or inactive invoices, transaction voiding, restore handling, and reversal journal creation.
+- Added a dry-run-first Ledger repair command for revenue lifecycle inconsistencies.
+- Added GNU Taler gateway support, invoice QR checkout, public invoice payment flow improvements, and local Taler testing utilities.
+- Added invoice and transaction filters for settlement and review workflows.
+
+---
+## Shared UI and Console Polish
+- Fixed sidebar navigator initial active-parent sync so module root pages do not open deeply nested menus too early.
+- Added permission-safe sidebar navigator filtering for visible permissions and visible child requirements.
+- Added recently-offline badge styling.
+- Improved currency lookup and formatting utilities.
+- Added internal bulk delete REST registration support in Core API.
+- Improved handling for reused organization invite codes.
+- Added GET support for custom HTTP SMS gateways.
 
 ---
 ## Bug Fixes
-- Fixed service-rate route handling in Fleet-Ops.
-- Fixed Fleet-Ops sidebar initial route synchronization.
-- Fixed drawer dropdown positioning and search behavior in map and operations surfaces.
-- Fixed shared UI badge, tab navigation, sidebar navigator, dashboard widget panel, and resource identity regressions.
-- Fixed linter issues in the updated shared UI components.
+- Fixed active revenue metrics counting inactive or deleted revenue sources.
+- Fixed Fleet-Ops sensor filter option rendering.
+- Fixed Safee and AFAQY telematics sync edge cases.
+- Fixed Fleet-Ops vehicle attachment navigation.
+- Fixed sidebar navigator initial sync and related lint issues.
+- Fixed reused organization invite code handling.
 
 ---
 ## API Changes
-- Added Ember Core dashboard slot registration services.
-- Added Fleet-Ops Data attachable device model and serializer support.
-- Added Fleet-Ops action/service updates for device, vehicle, equipment, sensor, vendor, and service-rate workflows.
-- Added shared Ember UI resource identity cell APIs and navigation/badge improvements.
+- Added Core API `settlement_status` support for transactions.
+- Added internal bulk delete REST routing support.
+- Added Fleet-Ops public REST endpoints and request/resource contracts for device, equipment, fuel transaction, part, sensor, and work order resources.
+- Added Fleet-Ops export classes for additional operational resources.
+- Added Ledger revenue lifecycle service, repair command, settlement filters, and Taler gateway integration.
+- Added Ember UI sidebar navigator visibility controls and currency utility improvements.
 
 ---
 ## Upgrade Steps
