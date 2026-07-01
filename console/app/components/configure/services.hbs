@@ -46,13 +46,11 @@
             <InputGroup @name="Vonage API Key" @value={{this.selectedSmsProviderConfig.api_key}} {{on "input" (fn this.updateSmsProviderField "vonage" "api_key")}} disabled={{this.isLoading}} />
             <InputGroup @name="Vonage API Secret" @value={{this.selectedSmsProviderConfig.api_secret}} {{on "input" (fn this.updateSmsProviderField "vonage" "api_secret")}} disabled={{this.isLoading}} />
             <InputGroup @name="Vonage From" @value={{this.selectedSmsProviderConfig.from}} {{on "input" (fn this.updateSmsProviderField "vonage" "from")}} disabled={{this.isLoading}} />
-            <InputGroup @name="Vonage Base URL" @value={{this.selectedSmsProviderConfig.base_url}} {{on "input" (fn this.updateSmsProviderField "vonage" "base_url")}} disabled={{this.isLoading}} />
         {{/if}}
 
         {{#if (eq this.smsSelectedProvider "messagebird")}}
             <InputGroup @name="MessageBird Access Key" @value={{this.selectedSmsProviderConfig.access_key}} {{on "input" (fn this.updateSmsProviderField "messagebird" "access_key")}} disabled={{this.isLoading}} />
             <InputGroup @name="MessageBird Originator" @value={{this.selectedSmsProviderConfig.originator}} {{on "input" (fn this.updateSmsProviderField "messagebird" "originator")}} disabled={{this.isLoading}} />
-            <InputGroup @name="MessageBird Base URL" @value={{this.selectedSmsProviderConfig.base_url}} {{on "input" (fn this.updateSmsProviderField "messagebird" "base_url")}} disabled={{this.isLoading}} />
         {{/if}}
 
         {{#if (eq this.smsSelectedProvider "aws_sns")}}
@@ -77,14 +75,25 @@
         {{/if}}
 
         {{#if (eq this.smsSelectedProvider "custom_http")}}
+            <div>
+                <label class="form-label">Method</label>
+                <select class="form-select form-select-sm w-full" data-test-custom-http-method {{on "change" (fn this.updateSmsProviderField "custom_http" "method")}}>
+                    <option value="POST" selected={{eq (or this.selectedSmsProviderConfig.method "POST") "POST"}}>POST</option>
+                    <option value="GET" selected={{eq this.selectedSmsProviderConfig.method "GET"}}>GET</option>
+                </select>
+            </div>
             <InputGroup @name="Gateway URL" @value={{this.selectedSmsProviderConfig.url}} {{on "input" (fn this.updateSmsProviderField "custom_http" "url")}} disabled={{this.isLoading}} />
             <InputGroup @name="From" @value={{this.selectedSmsProviderConfig.from}} {{on "input" (fn this.updateSmsProviderField "custom_http" "from")}} disabled={{this.isLoading}} />
             <InputGroup @name="Auth Header" @value={{this.selectedSmsProviderConfig.auth_header}} {{on "input" (fn this.updateSmsProviderField "custom_http" "auth_header")}} disabled={{this.isLoading}} />
             <InputGroup @name="Auth Token" @value={{this.selectedSmsProviderConfig.auth_token}} {{on "input" (fn this.updateSmsProviderField "custom_http" "auth_token")}} disabled={{this.isLoading}} />
             <label class="form-label">Headers JSON</label>
             <textarea class="form-input w-full font-mono text-xs" rows="4" value={{this.customHttpHeadersText}} {{on "input" (fn this.updateSmsProviderJsonField "custom_http" "headers")}}></textarea>
-            <label class="form-label mt-3">Body Template JSON</label>
-            <textarea class="form-input w-full font-mono text-xs" rows="5" value={{this.customHttpBodyText}} {{on "input" (fn this.updateSmsProviderJsonField "custom_http" "body")}}></textarea>
+            <label class="form-label mt-3">Query Params JSON</label>
+            <textarea class="form-input w-full font-mono text-xs" rows="4" value={{this.customHttpQueryParamsText}} {{on "input" (fn this.updateSmsProviderJsonField "custom_http" "query_params")}} data-test-custom-http-query-params></textarea>
+            {{#if this.isCustomHttpPostMethod}}
+                <label class="form-label mt-3">Body Template JSON</label>
+                <textarea class="form-input w-full font-mono text-xs" rows="5" value={{this.customHttpBodyText}} {{on "input" (fn this.updateSmsProviderJsonField "custom_http" "body")}} data-test-custom-http-body></textarea>
+            {{/if}}
         {{/if}}
     </div>
 

@@ -1,5 +1,6 @@
 import { module, test } from 'qunit';
 import { setupTest } from '@fleetbase/console/tests/helpers';
+import window from 'ember-window-mock';
 
 class MenuServiceStub {
     adminMenuItems = [
@@ -107,7 +108,11 @@ module('Unit | Controller | console/admin', function (hooks) {
 
         assert.strictEqual(registryItem.label, 'Registry Config');
         assert.strictEqual(registryItem.icon, 'gear');
+        assert.true(registryItem._virtual, 'loose registry items keep virtual metadata');
+        assert.strictEqual(registryItem.slug, 'registry-config');
+        assert.strictEqual(registryItem.view, null);
         assert.deepEqual(registryItem.keywords, ['registry-config', 'Registry Config', 'Registry Config', 'Configure the registry bridge.', 'extensions']);
+        assert.strictEqual(typeof registryItem.activeWhen, 'function', 'registry items can report active state');
         assert.strictEqual(typeof registryItem.onClick, 'function', 'registry items keep click handlers');
     });
 
@@ -128,6 +133,28 @@ module('Unit | Controller | console/admin', function (hooks) {
             'panel children preserve icons'
         );
         assert.deepEqual(panel.children[0].keywords, ['fleet-ops', 'navigator-app', 'Navigator App', 'Navigator App', 'Configure the navigator app.']);
+        assert.true(panel.children[0]._virtual, 'panel children keep virtual metadata');
+        assert.strictEqual(panel.children[0].slug, 'fleet-ops', 'panel child slug remains the panel slug for /admin/<panel>');
+        assert.strictEqual(panel.children[0].view, 'navigator-app', 'panel child view remains the child slug for ?view=<item>');
+        assert.strictEqual(typeof panel.children[0].activeWhen, 'function', 'panel children can report active state');
+    });
+
+    test('it marks virtual registry items active from the current admin virtual URL', function (assert) {
+        const controller = this.owner.lookup('controller:console/admin');
+        const rootRegistryItem = controller.navigationItems[5];
+        const navigatorAppItem = controller.navigationItems[6].children[0];
+        const mapItem = controller.navigationItems[6].children[1];
+
+        window.location.href = '/admin/fleet-ops?view=navigator-app';
+
+        assert.true(navigatorAppItem.activeWhen(), 'matching panel child is active for /admin/<panel>?view=<item>');
+        assert.false(mapItem.activeWhen(), 'sibling panel child is not active for a different view');
+        assert.false(rootRegistryItem.activeWhen(), 'loose registry item is not active for a panel child URL');
+
+        window.location.href = '/admin/registry-config';
+
+        assert.true(rootRegistryItem.activeWhen(), 'loose registry item is active for /admin/<slug>');
+        assert.false(navigatorAppItem.activeWhen(), 'panel child is not active for loose registry URL');
     });
 
     test('it transitions registry items through the admin virtual route', function (assert) {
@@ -145,8 +172,10 @@ module('Unit | Controller | console/admin', function (hooks) {
             'registry items use the admin virtual route'
         );
         assert.strictEqual(universe.transitions[0].menuItem.slug, 'registry-config');
+        assert.true(universe.transitions[0].menuItem._virtual, 'root registry click passes virtual-enriched item');
         assert.strictEqual(universe.transitions[1].menuItem.slug, 'fleet-ops');
         assert.strictEqual(universe.transitions[1].menuItem.view, 'navigator-app', 'panel item view is preserved for query param routing');
+        assert.true(universe.transitions[1].menuItem._virtual, 'panel registry click passes virtual-enriched item');
     });
 
     test('it adds system config as a nested navigator branch', function (assert) {

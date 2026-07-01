@@ -1,5 +1,6 @@
 import Controller from '@ember/controller';
 import { inject as service } from '@ember/service';
+import isMenuItemActive from '@fleetbase/ember-ui/utils/is-menu-item-active';
 
 export default class ConsoleAdminController extends Controller {
     @service('universe/menu-service') menuService;
@@ -121,14 +122,30 @@ export default class ConsoleAdminController extends Controller {
     }
 
     buildRegistryItem(menuItem, panel = null) {
-        return {
+        const registryItem = {
+            ...menuItem,
             id: `${panel?.slug ?? 'admin'}:${menuItem.slug ?? menuItem.title}:${menuItem.view ?? 'index'}`,
+            _virtual: true,
             label: menuItem.label ?? menuItem.title,
             description: menuItem.description,
             icon: menuItem.icon,
             iconPrefix: menuItem.iconPrefix,
+            priority: menuItem.priority,
+            slug: menuItem.slug,
+            view: menuItem.view,
+            section: menuItem.section,
+            _isPanelItem: menuItem._isPanelItem,
+            _panelSlug: menuItem._panelSlug,
+            component: menuItem.component,
+            componentParams: menuItem.componentParams,
+            permission: menuItem.permission,
+            visible: menuItem.visible,
             keywords: [menuItem.slug, menuItem.view, menuItem.section, menuItem.title, menuItem.label, menuItem.description, ...(menuItem.tags ?? [])].filter(Boolean),
-            onClick: () => this.universe.transitionMenuItem('console.admin.virtual', menuItem),
+            activeWhen: () => isMenuItemActive(menuItem.section, menuItem.slug, menuItem.view),
         };
+
+        registryItem.onClick = () => this.universe.transitionMenuItem('console.admin.virtual', registryItem);
+
+        return registryItem;
     }
 }

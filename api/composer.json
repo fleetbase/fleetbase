@@ -20,14 +20,15 @@
     "require": {
         "php": ">=8.0 <=8.2.31",
         "appstract/laravel-opcache": "^4.0",
-        "fleetbase/core-api": "^1.6.52",
-        "fleetbase/fleetops-api": "^0.6.55",
+        "fleetbase/core-api": "^1.6.53",
+        "fleetbase/ai": "^0.0.1",
+        "fleetbase/fleetops-api": "^0.6.57",
         "fleetbase/registry-bridge": "^0.1.9",
-        "fleetbase/storefront-api": "^0.4.16",
-        "fleetbase/ledger-api": "^0.0.5",
         "fleetbase/flespi-integration": "^0.1.16",
         "fleetbase/samsara-api": "^0.0.3",
-        "fleetbase/customer-portal-api": "^0.0.11",
+        "fleetbase/customer-portal-api": "^0.0.12",
+        "fleetbase/storefront-api": "^0.4.16",
+        "fleetbase/ledger-api": "^0.0.7",
         "fleetbase/valhalla-api": "^0.0.4",
         "fleetbase/vroom-api": "^0.0.4",
         "fleetbase/billing-api": "^0.1.22",
@@ -75,6 +76,7 @@
                 "fleetbase/storefront-api",
                 "fleetbase/ledger-api",
                 "fleetbase/customer-portal-api",
+                "fleetbase/ai",
                 "fleetbase/valhalla-api",
                 "fleetbase/vroom-api"
             ]
