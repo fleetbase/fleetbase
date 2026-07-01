@@ -296,17 +296,34 @@ export default getExtensionLoader;
                             });
 
                             if (!isMounted) {
-                                functionExpression.body.body.push(
-                                    builders.expressionStatement(
-                                        builders.callExpression(builders.memberExpression(builders.thisExpression(), builders.identifier('mount')), [
-                                            builders.literal(extension.name),
-                                            builders.objectExpression([
-                                                builders.property('init', builders.identifier('as'), builders.literal(route)),
-                                                builders.property('init', builders.identifier('path'), builders.literal(route)),
-                                            ]),
-                                        ])
-                                    )
+                                const mountExpression = builders.expressionStatement(
+                                    builders.callExpression(builders.memberExpression(builders.thisExpression(), builders.identifier('mount')), [
+                                        builders.literal(extension.name),
+                                        builders.objectExpression([
+                                            builders.property('init', builders.identifier('as'), builders.literal(route)),
+                                            builders.property('init', builders.identifier('path'), builders.literal(route)),
+                                        ]),
+                                    ])
                                 );
+
+                                const catchRouteIndex = functionExpression.body.body.findIndex((expressionStatement) => {
+                                    const expression = expressionStatement.expression;
+
+                                    return (
+                                        expression &&
+                                        expression.type === 'CallExpression' &&
+                                        expression.callee.property &&
+                                        expression.callee.property.name === 'route' &&
+                                        expression.arguments[0] &&
+                                        expression.arguments[0].value === 'catch'
+                                    );
+                                });
+
+                                if (catchRouteIndex === -1) {
+                                    functionExpression.body.body.push(mountExpression);
+                                } else {
+                                    functionExpression.body.body.splice(catchRouteIndex, 0, mountExpression);
+                                }
                             }
                         });
                     }

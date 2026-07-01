@@ -1,67 +1,69 @@
-> v0.7.48 ~ "Fleet-Ops REST coverage, revenue lifecycle safeguards, settlement status, and navigation polish"
+> v0.7.49 ~ "Introducing Fleetbase AI, the operations copilot for Fleetbase"
+
 ---
 ## Highlights
-Fleetbase `0.7.48` expands Fleet-Ops public REST and export coverage, improves active revenue metrics, adds transaction settlement status support, introduces Ledger revenue lifecycle safeguards, and polishes sidebar navigation and currency utilities. This release updates Fleetbase Console `0.7.48`, Fleet-Ops `0.6.56`, Core API `1.6.53`, Ledger `0.0.6`, and Ember UI `0.3.38`.
+Fleetbase `0.7.49` introduces `fleetbase/ai`, the official AI module for Fleetbase. Fleetbase AI adds a global operations copilot to the Console, persistent AI sessions, auditable task history, provider configuration, and a capability framework that lets Fleetbase modules safely expose context and previewable actions. This release updates Fleetbase Console `0.7.49`, AI `0.0.1`, Fleet-Ops `0.6.57`, Customer Portal `0.0.12`, Ledger `0.0.7`, Ember UI `0.3.39`, and Ember Core `0.3.24`.
 
 ---
 ## Component Versions
-- `console`: `0.7.48`
-- `fleetops`: `0.6.56`
-- `core-api`: `1.6.53`
-- `ledger`: `0.0.6`
-- `ember-ui`: `0.3.38`
+- `console`: `0.7.49`
+- `ai`: `0.0.1`
+- `fleetops`: `0.6.57`
+- `customer-portal`: `0.0.12`
+- `ledger`: `0.0.7`
+- `ember-ui`: `0.3.39`
+- `ember-core`: `0.3.24`
 
 ---
-## Fleet-Ops REST, Exports, and Metrics
-- Added public Fleet-Ops REST endpoints for devices, equipment, fuel transactions, parts, sensors, and work orders, with UUID-safe resource resolution.
-- Expanded Fleet-Ops export coverage across contacts, devices, drivers, equipment, fleets, fuel reports, issues, maintenance, orders, parts, places, sensors, service areas, service rates, telematics, vehicles, vendors, and work orders.
-- Added a shared active revenue query so earnings, revenue trend, and average order value calculations ignore deleted or inactive orders and invoices.
-- Standardized active revenue transaction status handling for reporting and accounting consistency.
-- Fixed sensor status and type filters so option labels render correctly.
+## Fleetbase AI
+- Added the new official Fleetbase AI module with a global prompt available from the Console header tray.
+- Added persistent AI chat sessions with history, continuation, ending, soft delete, markdown responses, and attachment references.
+- Added admin configuration for enabling Fleetbase AI, choosing providers and models, testing providers, and reviewing usage and audit logs.
+- Added provider support for OpenAI, Claude, and a local preview provider for development and testing.
+- Added durable AI task, task-step, session, and admin access records so AI activity can be audited.
+- Added a capability framework for modules to register AI-readable context, preview-only actions, and confirmed apply actions.
 
 ---
-## Telematics and Device Workflows
-- Hardened Safee and AFAQY telematics sync, including sensor identity sync, device status bootstrap, and safer provider error handling.
-- Added connectivity device event details and improved device event navigation.
-- Fixed vehicle attachment navigation and improved device, sensor, and vehicle filters used by connectivity screens.
-- Added Google Maps view layer settings for Fleet-Ops map configuration.
-- Added settings to enable Google Traffic Layer + Transit Layer.
+## Fleet-Ops & AI Pilot
+- Added Fleet-Ops AI operational capabilities for order context, operational queries, resource search, docs/help context, route optimization, and order insights.
+- Added a preview-confirm-create order flow for natural-language order creation.
+- Added compact AI order preview UI with pickup/dropoff details, route preview, schedule display, assignment fields, POD and dispatch toggles, notes, and explicit create/cancel controls.
+- Improved AI route previews, Google map lifecycle handling, place point resolution, payload normalization, relative date resolution, and schedule formatting.
+- Added Fleet hierarchy tree/details improvements and additional order details registry support.
 
 ---
-## Ledger and Settlement
-- Added transaction settlement status support in Core API and Ledger, including migrations and model/resource helpers.
-- Added Ledger revenue lifecycle safeguards for cancelled/deleted orders, deleted or inactive invoices, transaction voiding, restore handling, and reversal journal creation.
-- Added a dry-run-first Ledger repair command for revenue lifecycle inconsistencies.
-- Added GNU Taler gateway support, invoice QR checkout, public invoice payment flow improvements, and local Taler testing utilities.
-- Added invoice and transaction filters for settlement and review workflows.
+## Shared Console and UI
+- Added Ember Core support for loading the AI module and registering renderable components by registry type.
+- Added Ember UI header tray registry support for extensions like Fleetbase AI.
+- Added ISO string parsing for date-time inputs and object/array rendering for metadata viewer output.
+- Added a `format-json` helper and improved dropdown/table behavior.
+- Fixed resource card styling, Tailwind CSS `theme()` usage, and RGBA alpha normalization.
 
 ---
-## Shared UI and Console Polish
-- Fixed sidebar navigator initial active-parent sync so module root pages do not open deeply nested menus too early.
-- Added permission-safe sidebar navigator filtering for visible permissions and visible child requirements.
-- Added recently-offline badge styling.
-- Improved currency lookup and formatting utilities.
-- Added internal bulk delete REST registration support in Core API.
-- Improved handling for reused organization invite codes.
-- Added GET support for custom HTTP SMS gateways.
+## Ledger and Customer Portal
+- Completed Ledger invoice settings functionality with canonical `payment_terms_days` support and legacy `due_date_offset_days` compatibility.
+- Applied payment terms defaults to manual and backend invoice creation.
+- Wired `auto_send_on_creation` through the shared invoice send flow for manual and order-generated invoices.
+- Improved Taler demo seeding.
+- Updated Customer Portal to `0.0.12` with dependency updates and internal order-controller compatibility.
 
 ---
 ## Bug Fixes
-- Fixed active revenue metrics counting inactive or deleted revenue sources.
-- Fixed Fleet-Ops sensor filter option rendering.
-- Fixed Safee and AFAQY telematics sync edge cases.
-- Fixed Fleet-Ops vehicle attachment navigation.
-- Fixed sidebar navigator initial sync and related lint issues.
-- Fixed reused organization invite code handling.
+- Fixed AI route preview map errors and route engine lookup issues.
+- Fixed AI order preview editing, map lifecycle, schedule display, place resolution, and create-order payload normalization.
+- Fixed Fleet hierarchy dropdown formatting.
+- Fixed date-time input parsing for ISO strings.
+- Fixed metadata viewer formatting for object and array values.
+- Fixed Ledger invoice settings spacing and invoice default behavior.
 
 ---
 ## API Changes
-- Added Core API `settlement_status` support for transactions.
-- Added internal bulk delete REST routing support.
-- Added Fleet-Ops public REST endpoints and request/resource contracts for device, equipment, fuel transaction, part, sensor, and work order resources.
-- Added Fleet-Ops export classes for additional operational resources.
-- Added Ledger revenue lifecycle service, repair command, settlement filters, and Taler gateway integration.
-- Added Ember UI sidebar navigator visibility controls and currency utility improvements.
+- Added Fleetbase AI internal routes for config, provider testing, sessions, tasks, task preview/apply/cancel, tools, admin session/task views, reveal access, and usage analytics.
+- Added AI data records for `ai_sessions`, `ai_tasks`, `ai_task_steps`, and AI admin access logs.
+- Added AI capability registration APIs for context capabilities and preview/apply actions.
+- Added `@fleetbase/ai-engine` to Console and `fleetbase/ai` to API dependencies.
+- Added Fleet-Ops AI capability endpoints and backend support for AI-assisted operational workflows.
+- Updated Ledger invoice settings aliases and auto-send behavior.
 
 ---
 ## Upgrade Steps
