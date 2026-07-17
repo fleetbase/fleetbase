@@ -1,0 +1,810 @@
+app:
+  name: Fleetbase
+
+common:
+  new: Nuovo
+  create: Crea
+  add: Aggiungi
+  edit: Modifica
+  update: Aggiorna
+  save: Salva
+  save-changes: Salva modifiche
+  delete: Elimina
+  delete-selected: Elimina selezionati
+  delete-selected-count: Elimina {count} selezionati
+  your-profile: Il tuo profilo
+  date-of-birth: Data di nascita
+  organization: Organizzazione
+  two-factor: Due fattori
+  remove: Rimuovi
+  cancel: Annulla
+  confirm: Conferma
+  close: Chiudi
+  open: Apri
+  view: Visualizza
+  preview: Anteprima
+  upload: Carica
+  download: Scarica
+  import: Importa
+  export: Esporta
+  print: Stampa
+  duplicate: Duplica
+  copy: Copia
+  paste: Incolla
+  share: Condividi
+  refresh: Aggiorna
+  reset: Reimposta
+  retry: Riprova
+  back: Indietro
+  next: Avanti
+  previous: Precedente
+  submit: Invia
+  apply: Applica
+  continue: Continua
+  proceed: Procedi
+  select: Seleziona
+  deselect: Deseleziona
+  search: Cerca
+  filter: Filtra
+  sort: Ordina
+  view-all: Visualizza tutti
+  clear: Cancella
+  done: Fatto
+  finish: Fine
+  skip: Salta
+  method: Metodo
+  bulk-delete: Elimina in blocco
+  bulk-delete-resource: Elimina {resource} in blocco
+  bulk-cancel: Annulla in blocco
+  bulk-cancel-resource: Annulla {resource} in blocco
+  bulk-actions: Azioni in blocco
+  column: Colonna
+  row: Riga
+  table: Tabella
+  list: Elenco
+  grid: Griglia
+  form: Modulo
+  field: Campo
+  section: Sezione
+  panel: Pannello
+  card: Card
+  tab: Scheda
+  modal: Finestra modale
+  dialog: Finestra di dialogo
+  menu: Menu
+  dropdown: Menu a tendina
+  tooltip: Tooltip
+  sidebar: Barra laterale
+  toolbar: Barra degli strumenti
+  footer: Piè di pagina
+  header: Intestazione
+  title: Titolo
+  subtitle: Sottotitolo
+  description: Descrizione
+  placeholder: Segnaposto
+  label: Etichetta
+  button: Pulsante
+  icon: Icona
+  avatar: Avatar
+  link: Link
+  badge: Badge
+  tag: Tag
+  banner: Banner
+  step: Passaggio
+  progress: Avanzamento
+  map: Mappa
+  board: Bacheca
+  loading: Caricamento
+  loading-resource: Caricamento {resource}
+  saving: Salvataggio
+  processing: Elaborazione
+  fetching: Recupero
+  updating: Aggiornamento
+  uploading: Caricamento in corso
+  completed: Completato
+  success: Successo
+  failed: Non riuscito
+  error: Errore
+  warning: Avviso
+  info: Info
+  ready: Pronto
+  activity: Attività
+  active: Attivo
+  inactive: Inattivo
+  enabled: Abilitato
+  disabled: Disabilitato
+  online: Online
+  offline: Offline
+  pending: In sospeso
+  archived: Archiviato
+  hidden: Nascosto
+  visible: Visibile
+  empty: Vuoto
+  not-found: Non trovato
+  no-results: Nessun risultato
+  try-again: Riprova
+  are-you-sure: Sei sicuro?
+  changes-saved: Modifiche salvate con successo.
+  saved-successfully: Modifiche salvate con successo.
+  field-saved: >-
+    {field} salvato con successo.
+  changes-discarded: Modifiche scartate.
+  delete-confirm: Sei sicuro di voler eliminare questo elemento?
+  action-successful: Azione completata con successo.
+  action-failed: Azione non riuscita. Riprova.
+  something-went-wrong: Qualcosa è andato storto.
+  please-wait: Attendere prego...
+  sign-in: Accedi
+  sign-out: Esci
+  sign-up: Registrati
+  log-in: Accedi
+  log-out: Esci
+  register: Registrati
+  forgot-password: Password dimenticata
+  reset-password: Reimposta password
+  change-password: Cambia password
+  password: Password
+  confirm-password: Conferma password
+  email: Email
+  username: Nome utente
+  remember-me: Ricordami
+  welcome: Benvenuto
+  welcome-back: Bentornato
+  profile: Profilo
+  account: Account
+  settings: Impostazioni
+  preferences: Preferenze
+  record: Record
+  records: Record
+  item: Elemento
+  items: Elementi
+  entry: Voce
+  entries: Voci
+  id: ID
+  name: Nome
+  type: Tipo
+  category: Categoria
+  overview: Panoramica
+  value: Valore
+  amount: Importo
+  price: Prezzo
+  quantity: Quantità
+  status: Stato
+  date: Data
+  date-created: Data di creazione
+  date-updated: Data di aggiornamento
+  time: Ora
+  created-at: Creato il
+  updated-at: Aggiornato il
+  expired-at: Scaduto il
+  last-seen-at: Ultimo accesso il
+  last-modified: Ultima modifica
+  last-modified-data: >-
+    Ultima modifica: {date}
+  actions: Azioni
+  details: Dettagli
+  notes: Note
+  reference: Riferimento
+  filter-by: Filtra per
+  filter-by-field: Filtra per {field}
+  sort-by: Ordina per
+  ascending: Crescente
+  descending: Decrescente
+  all: Tutti
+  none: Nessuno
+  select-all: Seleziona tutto
+  deselect-all: Deseleziona tutto
+  show-more: Mostra di più
+  show-less: Mostra di meno
+  page: Pagina
+  of: di
+  total: Totale
+  items-per-page: Elementi per pagina
+  showing: Visualizzazione
+  to: a
+  results: Risultati
+  load-more: Carica altri
+  no-more-results: Nessun altro risultato
+  today: Oggi
+  yesterday: Ieri
+  tomorrow: Domani
+  day: Giorno
+  week: Settimana
+  month: Mese
+  year: Anno
+  date-range: Intervallo di date
+  start-date: Data di inizio
+  end-date: Data di fine
+  time-zone: Fuso orario
+  system: Sistema
+  dashboard: Dashboard
+  home: Home
+  analytics: Analisi
+  reports: Report
+  logs: Log
+  help: Aiuto
+  support: Supporto
+  contact: Contatto
+  documentation: Documentazione
+  language: Lingua
+  timezone: Fuso orario
+  version: Versione
+  theme: Tema
+  light-mode: Modalità chiara
+  dark-mode: Modalità scura
+  update-available: Aggiornamento disponibile
+  install-update: Installa aggiornamento
+  maintenance-mode: Modalità manutenzione
+  notification: Notifica
+  notifications: Notifiche
+  mark-as-read: Segna come letto
+  mark-all-as-read: Segna tutto come letto
+  clear-notifications: Cancella notifiche
+  company: Azienda
+  companies: Aziende
+  user: Utente
+  users: Utenti
+  role: Ruolo
+  roles: Ruoli
+  permission: Permesso
+  permissions: Permessi
+  group: Gruppo
+  groups: Gruppi
+  unauthorized: Non autorizzato
+  forbidden: Accesso negato
+  resource-not-found: Risorsa non trovata
+  server-error: Errore del server
+  validation-error: Errore di validazione
+  timeout-error: Richiesta scaduta
+  network-error: Errore di rete
+  unknown-error: Errore sconosciuto
+  file: File
+  files: File
+  folder: Cartella
+  folders: Cartelle
+  upload-file: Carica file
+  upload-files: Carica file
+  upload-image: Carica immagine
+  upload-image-supported: Supporta PNG, JPEG e GIF
+  choose-file: Scegli file
+  choose-files: Scegli file
+  drag-and-drop: Trascina e rilascia
+  download-file: Scarica file
+  file-size: Dimensione file
+  file-type: Tipo di file
+  confirm-delete: Conferma eliminazione
+  confirm-action: Conferma azione
+  confirm-exit: Conferma uscita
+  confirm-and-save-changes: Conferma e salva modifiche
+  are-you-sure-exit: Sei sicuro di voler uscire?
+  unsaved-changes-warning: Hai modifiche non salvate.
+  connected: Connesso
+  disconnected: Disconnesso
+  reconnecting: Riconnessione in corso
+  connection-lost: Connessione persa
+  connection-restored: Connessione ripristinata
+  show: Mostra
+  hide: Nascondi
+  expand: Espandi
+  collapse: Comprimi
+  enable: Abilita
+  disable: Disabilita
+  minimize: Riduci
+  maximize: Ingrandisci
+  restore: Ripristina
+  zoom-in: Aumenta zoom
+  zoom-out: Riduci zoom
+  fullscreen: Schermo intero
+  exit-fullscreen: Esci da schermo intero
+  yes: 'Sì'
+  no: 'No'
+  ok: OK
+  none-available: Nessuno disponibile
+  default: Predefinito
+  custom: Personalizzato
+  general: Generale
+  advanced: Avanzate
+  placeholder-text: Inserisci il testo qui...
+  learn-more: Scopri di più
+  view-resource: Visualizza {resource}
+  view-resource-details: Visualizza dettagli {resource}
+  create-a-new-resource: Crea un nuovo {resource}
+  create-new-resource: Crea nuovo {resource}
+  search-resource: Cerca {resource}
+  new-resource: Nuovo {resource}
+  update-resource: Aggiorna {resource}
+  save-resource-changes: Salva modifiche {resource}
+  creating-resource: Creazione {resource}
+  cancel-resource: Annulla {resource}
+  delete-resource: Elimina {resource}
+  delete-resource-name: >-
+    Elimina: {resourceName}
+  resource-actions: >-
+    Azioni {resource}
+  resource-location: >-
+    Posizione {resource}
+  delete-resource-named: Elimina {resource} ({resourceName})
+  delete-resource-prompt: Questa azione non può essere annullata. Una volta eliminato, il record verrà rimosso definitivamente.
+  delete-cannot-be-undone: Questa azione non può essere annullata. Una volta eliminato, il record verrà rimosso definitivamente.
+  create-resource: Crea {resource}
+  edit-resource: Modifica {resource}
+  edit-resource-details: Modifica dettagli {resource}
+  edit-resource-type-name: >-
+    Modifica {resource}: {resourceName}
+  edit-resource-name: >-
+    Modifica: {resourceName}
+  config: Configurazione
+  select-field: Seleziona {field}
+  columns: Colonne
+  metadata: Metadati
+  meta: Meta
+  resource-created-success: Nuovo {resource} creato con successo.
+  resource-created-success-name: Nuovo {resource} ({resourceName}) creato con successo.
+  resource-updated-success: >-
+    {resource} ({resourceName}) aggiornato con successo.
+  resource-action-success: >-
+    {resource} ({resourceName}) {action} con successo.
+  resource-deleted-success: >-
+    {resource} ({resourceName}) eliminato con successo.
+  resource-deleted: >-
+    {resource} ({resourceName}) eliminato.
+  continue-without-saving: Continuare senza salvare?
+  continue-without-saving-prompt: Hai modifiche non salvate per questo {resource}. Continuando verranno scartate. Clicca su Continua per procedere.
+  changelog: Changelog
+  reload: Ricarica
+
+resource:
+  alert: Avviso
+  alerts: Avvisi
+  brand: Marchio
+  brands: Marchi
+  category: Categoria
+  categories: Categorie
+  chat-attachment: Allegato chat
+  chat-attachments: Allegati chat
+  chat-channel: Canale chat
+  chat-channels: Canali chat
+  chat-log: Log chat
+  chat-logs: Log chat
+  chat-message: Messaggio chat
+  chat-messages: Messaggi chat
+  chat-participant: Partecipante chat
+  chat-participants: Partecipanti chat
+  chat-receipt: Conferma di lettura chat
+  chat-receipts: Conferme di lettura chat
+  comment: Commento
+  comments: Commenti
+  company: Azienda
+  companies: Aziende
+  custom-field-value: Valore campo personalizzato
+  custom-field-values: Valori campi personalizzati
+  custom-field: Campo personalizzato
+  custom-fields: Campi personalizzati
+  dashboard-widget: Widget dashboard
+  dashboard-widgets: Widget dashboard
+  dashboard: Dashboard
+  dashboards: Dashboard
+  extension: Estensione
+  extensions: Estensioni
+  file: File
+  files: File
+  group: Gruppo
+  groups: Gruppi
+  notification: Notifica
+  notifications: Notifiche
+  permission: Permesso
+  permissions: Permessi
+  policy: Policy
+  policies: Policy
+  report: Report
+  reports: Report
+  role: Ruolo
+  roles: Ruoli
+  setting: Impostazione
+  settings: Impostazioni
+  transaction: Transazione
+  transactions: Transazioni
+  user-device: Dispositivo utente
+  user-devices: Dispositivi utente
+  user: Utente
+  users: Utenti
+  country: Paese
+
+dropzone:
+  file: file
+  drop-to-upload: Rilascia per caricare
+  invalid: Non valido
+  files-ready-for-upload: >-
+    {numOfFiles} pronti per il caricamento.
+  upload-images-videos: Carica immagini e video
+  upload-documents: Carica documenti
+  upload-documents-files: Carica documenti e file
+  upload-avatar-files: Carica avatar personalizzati
+  dropzone-supported-images-videos: Trascina e rilascia file immagine e video in quest'area
+  dropzone-supported-avatars: Trascina e rilascia file SVG o PNG
+  dropzone-supported-files: Trascina e rilascia i file in quest'area
+  or-select-button-text: oppure seleziona i file da caricare.
+  upload-queue: Coda di caricamento
+  uploading: Caricamento in corso...
+
+two-fa-enforcement-alert:
+  message: Per aumentare la sicurezza del tuo account, la tua organizzazione richiede l'autenticazione a due fattori (2FA). Abilita la 2FA nelle impostazioni del tuo account per un ulteriore livello di protezione.
+  button-text: Configura 2FA
+
+comment-thread:
+  publish-comment-button-text: Pubblica commento
+  publish-reply-button-text: Pubblica risposta
+  reply-comment-button-text: Rispondi
+  edit-comment-button-text: Modifica
+  delete-comment-button-text: Elimina
+  comment-published-ago: >-
+          {createdAgo} fa
+  comment-input-placeholder: Scrivi un nuovo commento...
+  comment-reply-placeholder: Scrivi la tua risposta...
+  comment-input-empty-notification: Non puoi pubblicare commenti vuoti...
+  comment-min-length-notification: Il commento deve contenere almeno 2 caratteri
+
+dashboard:
+  select-dashboard: Seleziona dashboard
+  create-new-dashboard: Crea nuova dashboard
+  create-a-new-dashboard: Crea una nuova dashboard
+  confirm-create-dashboard: Crea dashboard!
+  edit-layout: Modifica layout
+  add-widgets: Aggiungi widget
+  delete-dashboard: Elimina dashboard
+  save-dashboard: Salva dashboard
+  you-cannot-delete-this-dashboard: Non puoi eliminare questa dashboard.
+  are-you-sure-you-want-delete-dashboard: Sei sicuro di voler eliminare {dashboardName}?
+
+dashboard-widget-panel:
+  widget-name: >-
+    Widget {widgetName}
+  select-widgets: Seleziona widget
+  close-and-save: Chiudi e salva
+  filter-widgets: Cerca widget…
+  no-widgets-match: Nessun widget corrisponde ai filtri.
+  tab-all: Tutti
+  tab-default: Consigliati
+  tab-added: Nella dashboard
+  badge-default: Predefinito
+  add: Aggiungi
+  add-another: Aggiungine un altro
+
+filters-picker:
+  filters: Filtri
+  filter-data: Filtra dati
+
+visible-column-picker:
+  select-viewable-columns: Seleziona le colonne visibili
+  customize-columns: Personalizza colonne
+
+component:
+  file:
+    dropdown-label: Azioni file
+
+  import-modal:
+    loading-message: Elaborazione importazione...
+    drop-upload: Rilascia per caricare
+    invalid: Non valido
+    ready-upload: pronti per il caricamento.
+    upload-spreadsheets: Carica fogli di calcolo
+    drag-drop: Trascina e rilascia file di fogli di calcolo in quest'area
+    button-text: oppure seleziona i fogli di calcolo da caricare
+    spreadsheets: fogli di calcolo
+    upload-queue: Coda di caricamento
+
+  dropzone:
+    file: file
+    drop-to-upload: Rilascia per caricare
+    invalid: Non valido
+    files-ready-for-upload: >-
+      {numOfFiles} pronti per il caricamento.
+    upload-images-videos: Carica immagini e video
+    upload-documents: Carica documenti
+    upload-documents-files: Carica documenti e file
+    upload-avatar-files: Carica avatar personalizzati
+    dropzone-supported-images-videos: Trascina e rilascia file immagine e video in quest'area
+    dropzone-supported-avatars: Trascina e rilascia file SVG o PNG
+    dropzone-supported-files: Trascina e rilascia i file in quest'area
+    or-select-button-text: oppure seleziona i file da caricare.
+    upload-queue: Coda di caricamento
+    uploading: Caricamento in corso...
+
+  two-fa-enforcement-alert:
+    message: Per aumentare la sicurezza del tuo account, la tua organizzazione richiede l'autenticazione a due fattori (2FA). Abilita la 2FA nelle impostazioni del tuo account per un ulteriore livello di protezione.
+    button-text: Configura 2FA
+
+  comment-thread:
+    publish-comment-button-text: Pubblica commento
+    publish-reply-button-text: Pubblica risposta
+    reply-comment-button-text: Rispondi
+    edit-comment-button-text: Modifica
+    delete-comment-button-text: Elimina
+    comment-published-ago: >-
+            {createdAgo} fa
+    comment-input-placeholder: Scrivi un nuovo commento...
+    comment-reply-placeholder: Scrivi la tua risposta...
+    comment-input-empty-notification: Non puoi pubblicare commenti vuoti...
+    comment-min-length-notification: Il commento deve contenere almeno 2 caratteri
+
+  dashboard:
+    select-dashboard: Seleziona dashboard
+    create-new-dashboard: Crea nuova dashboard
+    create-a-new-dashboard: Crea una nuova dashboard
+    confirm-create-dashboard: Crea dashboard!
+    edit-layout: Modifica layout
+    add-widgets: Aggiungi widget
+    delete-dashboard: Elimina dashboard
+    save-dashboard: Salva dashboard
+    you-cannot-delete-this-dashboard: Non puoi eliminare questa dashboard.
+    are-you-sure-you-want-delete-dashboard: Sei sicuro di voler eliminare {dashboardName}?
+    create-to-customize-hint: Crea una dashboard per personalizzare i widget.
+
+  dashboard-widget-panel:
+    widget-name: >-
+      Widget {widgetName}
+    select-widgets: Seleziona widget
+    close-and-save: Chiudi e salva
+
+services:
+  dashboard-service:
+    create-dashboard-success-notification: Nuova dashboard `{dashboardName}` creata con successo.
+    delete-dashboard-success-notification: La dashboard `{dashboardName}` è stata eliminata.
+
+auth:
+  verification:
+    header-title: Verifica dell'account
+    title: Verifica il tuo indirizzo email
+    message-text: <strong>Ci siamo quasi!</strong><br> Controlla la tua email per il codice di verifica.
+    verification-code-text: Inserisci il codice di verifica che hai ricevuto via email.
+    verification-input-label: Codice di verifica
+    verify-button-text: Verifica e continua
+    didnt-receive-a-code: Non hai ancora ricevuto il codice?
+    not-sent:
+      message: Non hai ancora ricevuto il codice?
+      alternative-choice: Usa le opzioni alternative qui sotto per verificare il tuo account.
+      resend-email: Invia di nuovo l'email
+      send-by-sms: Invia via SMS
+
+  two-fa:
+    verify-code:
+      verification-code: Codice di verifica
+      check-title: Controlla la tua email o il telefono
+      check-subtitle: Ti abbiamo inviato un codice di verifica. Inserisci il codice qui sotto per completare l'accesso.
+      expired-help-text: Il tuo codice di autenticazione 2FA è scaduto. Puoi richiedere un altro codice se hai bisogno di più tempo.
+      resend-code: Invia di nuovo il codice
+      verify-code: Verifica codice
+      cancel-two-factor: Annulla autenticazione a due fattori
+      invalid-session-error-notification: Sessione non valida. Riprova.
+      verification-successful-notification: Verifica riuscita!
+      verification-code-expired-notification: Il codice di verifica è scaduto. Richiedine uno nuovo.
+      verification-code-failed-notification: Verifica non riuscita. Riprova.
+
+    resend-code:
+      verification-code-resent-notification: Nuovo codice di verifica inviato.
+      verification-code-resent-error-notification: Errore durante il reinvio del codice di verifica. Riprova.
+
+  forgot-password:
+    success-message: Controlla la tua email per continuare!
+    is-sent:
+      title: Ci siamo quasi!
+      message: <strong>Controlla la tua email!</strong><br> Ti abbiamo inviato via email un link magico che ti permetterà di reimpostare la password. Il link scade tra 15 minuti.
+    not-sent:
+      title: Hai dimenticato la password?
+      message: <strong>Non preoccuparti, ci pensiamo noi.</strong><br> Inserisci l'email che usi per accedere a {appName} e ti invieremo un link sicuro per reimpostare la password.
+    form:
+      email-label: Il tuo indirizzo email
+      submit-button: OK, inviami un link magico!
+      nevermind-button: Lascia perdere
+
+  login:
+    title: Accedi al tuo account
+    no-identity-notification: Hai dimenticato di inserire la tua email?
+    no-password-notification: Hai dimenticato di inserire la password?
+    unverified-notification: Il tuo account deve essere verificato per procedere.
+    password-reset-required: È necessario reimpostare la password per continuare.
+    failed-attempt:
+      message: <strong>Hai dimenticato la password?</strong><br> Clicca il pulsante qui sotto per reimpostare la password.
+      button-text: Ok, aiutami a reimpostarla!
+
+    form:
+      email-label: Indirizzo email
+      password-label: Password
+      remember-me-label: Ricordami
+      forgot-password-label: Hai dimenticato la password?
+      sign-in-button: Accedi
+      create-account-button: Crea un nuovo account
+    slow-connection-message: Si stanno verificando problemi di connettività.
+
+  reset-password:
+    success-message: La tua password è stata reimpostata! Accedi per continuare.
+    invalid-verification-code: Questo link per reimpostare la password non è valido o è scaduto.
+    title: Reimposta la tua password
+    form:
+      code:
+        label: Il tuo codice di reimpostazione
+        help-text: Il codice di verifica che hai ricevuto via email.
+      password:
+        label: Nuova password
+        help-text: Inserisci una password di almeno 6 caratteri per continuare.
+      confirm-password:
+        label: Conferma la nuova password
+        help-text: Inserisci una password di almeno 6 caratteri per continuare.
+      submit-button: Reimposta password
+      back-button: Indietro
+
+console:
+  create-or-join-organization:
+    modal-title: Crea o unisciti a un'organizzazione
+    join-success-notification: Ti sei unito a una nuova organizzazione!
+    create-success-notification: Hai creato una nuova organizzazione!
+
+  switch-organization:
+    modal-title: Sei sicuro di voler passare all'organizzazione {organizationName}?
+    modal-body: Confermando, il tuo account rimarrà connesso, ma la tua organizzazione principale verrà cambiata.
+    modal-accept-button-text: Sì, voglio cambiare organizzazione
+    success-notification: Hai cambiato organizzazione
+
+  account:
+    index:
+      upload-new: Carica nuova
+      phone: Il tuo numero di telefono.
+      photos: foto
+      timezone: Seleziona il tuo fuso orario.
+
+  admin:
+    menu:
+      overview: Panoramica
+      organizations: Organizzazioni
+      branding: Branding
+      2fa-config: Configurazione 2FA
+      schedule-monitor: Monitoraggio pianificazioni
+      services: Servizi
+      mail: Posta
+      filesystem: Filesystem
+      queue: Coda
+      socket: Socket
+      push-notifications: Notifiche push
+    schedule-monitor:
+      schedule-monitor: Monitoraggio pianificazioni
+      task-logs-for: >-
+        Log attività per:
+      showing-last-count: Visualizzazione degli ultimi {count} log
+      name: Nome
+      type: Tipo
+      timezone: Fuso orario
+      last-started: Ultimo avvio
+      last-finished: Ultimo completamento
+      last-failure: Ultimo errore
+      date: Data
+      memory: Memoria
+      runtime: Tempo di esecuzione
+      output: Output
+      no-output: Nessun output
+    config:
+      database:
+        title: Configurazione database
+      filesystem:
+        title: Configurazione filesystem
+      mail:
+        title: Configurazione posta
+      notification-channels:
+        title: Configurazione notifiche push
+      queue:
+        title: Configurazione coda
+      services:
+        title: Configurazione servizi
+      socket:
+        title: Configurazione socket
+    branding:
+      title: Branding
+      icon-text: Icona
+      upload-new: Carica nuovo
+      reset-default: Ripristina predefinito
+      logo-text: Logo
+      theme: Tema predefinito
+    index:
+      total-users: Utenti totali
+      total-organizations: Organizzazioni totali
+      total-transactions: Transazioni totali
+    notifications:
+      title: Notifiche
+      notification-settings: Impostazioni notifiche
+    organizations:
+      index:
+        title: Organizzazioni
+        owner-name-column: Proprietario
+        owner-phone-column: Telefono proprietario
+        owner-email-column: Email proprietario
+        users-count-column: Utenti
+        phone-column: Telefono
+        email-column: Email
+      users:
+        title: Utenti
+
+  settings:
+    index:
+      title: Impostazioni organizzazione
+      organization-name: Nome organizzazione
+      organization-description: Descrizione organizzazione
+      organization-phone: Numero di telefono dell'organizzazione
+      organization-currency: Valuta dell'organizzazione
+      organization-id: ID organizzazione
+      organization-branding: Branding organizzazione
+      logo: Logo
+      logo-help-text: Il logo della tua organizzazione.
+      upload-new-logo: Carica nuovo logo
+      backdrop: Sfondo
+      backdrop-help-text: Banner o immagine di sfondo facoltativa per la tua organizzazione.
+      upload-new-backdrop: Carica nuovo sfondo
+      organization-timezone: Seleziona il fuso orario predefinito per la tua organizzazione.
+      select-timezone: Seleziona fuso orario.
+
+  extensions:
+    title: Le estensioni sono in arrivo!
+    message: Ricontrolla nelle prossime versioni, mentre ci prepariamo a lanciare il repository e il marketplace delle estensioni.
+
+  notifications:
+    select-all: Seleziona tutto
+    mark-as-read: Segna come letto
+    received: >-
+        Ricevuto:
+    message: Nessuna notifica da visualizzare.
+
+invite:
+  for-users:
+    invitation-message: Sei stato invitato a unirti a {companyName}
+    invitation-sent-message: Sei stato invitato a unirti all'organizzazione {companyName} su {appName}. Per accettare questo invito, inserisci il codice di invito ricevuto via email e clicca su continua.
+    invitation-code-sent-text: Il tuo codice di invito
+    accept-invitation-text: Accetta invito
+
+onboard:
+  index:
+    title: Crea il tuo account
+    welcome-title: <strong>Benvenuto in {companyName}!</strong><br />
+    welcome-text: Completa i dettagli richiesti qui sotto per iniziare.
+    full-name: Nome completo
+    full-name-help-text: Il tuo nome completo
+    your-email: Indirizzo email
+    your-email-help-text: Il tuo indirizzo email
+    phone: Numero di telefono
+    phone-help-text: Il tuo numero di telefono
+    organization-name: Nome organizzazione
+    organization-help-text: Il nome della tua organizzazione; tutti i tuoi servizi e le tue risorse saranno gestiti sotto questa organizzazione. In seguito potrai creare tutte le organizzazioni che vuoi o di cui hai bisogno.
+    password: Inserisci una password
+    password-help-text: La tua password, assicurati che sia sicura.
+    confirm-password: Conferma la tua password
+    confirm-password-help-text: Solo per confermare la password inserita sopra.
+    continue-button-text: Continua
+  verify-email:
+    header-title: Verifica dell'account
+    title: Verifica il tuo indirizzo email
+    message-text: <strong>Ci siamo quasi!</strong><br> Controlla la tua email per il codice di verifica.
+    verification-code-text: Inserisci il codice di verifica che hai ricevuto via email.
+    verification-input-label: Codice di verifica
+    verify-button-text: Verifica e continua
+    didnt-receive-a-code: Non hai ancora ricevuto il codice?
+    not-sent:
+      message: Non hai ancora ricevuto il codice?
+      alternative-choice: Usa le opzioni alternative qui sotto per verificare il tuo account.
+      resend-email: Invia di nuovo l'email
+      send-by-sms: Invia via SMS
+
+install:
+  not-configured-title: Fleetbase non è installato o configurato
+  not-configured-message: Completa la configurazione dalla CLI di Fleetbase o dal container dell'applicazione, poi ricarica questa pagina quando database, migrazioni e dati iniziali saranno pronti.
+  running-locally-docs: Vedi la documentazione per l'esecuzione in locale
+  cloud-docs: Vedi la documentazione per il deployment in cloud
+  refreshing: Installazione completata, ricaricamento in corso...
+
+layout:
+  header:
+    menus:
+      organization:
+        settings: Impostazioni organizzazione
+        create-or-join: Crea o unisciti a organizzazioni
+        explore-extensions: Esplora estensioni
+      user:
+        view-profile: Visualizza profilo
+        keyboard-shortcuts: Mostra scorciatoie da tastiera
+        changelog: Changelog
