@@ -34,7 +34,7 @@
                     <div class="flex-1">
                         <div class="grid grid-cols-1 lg:grid-cols-2 gap-2 text-xs dark:text-gray-100">
                             <InputGroup @name={{t "common.name"}} @value={{this.user.name}} />
-                            <InputGroup @name={{t "common.email"}} @type="email" @value={{this.user.email}} />
+                            <InputGroup @name={{t "common.email"}} @type="email" @value={{this.user.email}} @disabled={{true}} />
                             <InputGroup @name={{t "common.phone"}} @helpText={{t "console.account.index.phone"}}>
                                 <PhoneInput @value={{this.user.phone}} @onInput={{fn (mut this.user.phone)}} class="form-input input-lg w-full" />
                             </InputGroup>
