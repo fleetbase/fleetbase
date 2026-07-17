@@ -597,6 +597,18 @@ auth:
         help-text: Entrez un mot de passe d'au moins 6 caractères pour continuer.
       submit-button: Réinitialiser le mot de passe
       back-button: Retour
+  confirm-email-change:
+    success-message: Your email address has been updated.
+    invalid-verification-code: This email change link is invalid or expired.
+    title: Confirm email change
+    message-text: Confirm this change to update the login email for your Fleetbase account.
+    form:
+      code:
+        label: Confirmation code
+        help-text: The confirmation code from your email.
+      submit-button: Confirm Email Change
+      back-button: Back
+
 console:
   create-or-join-organization:
     modal-title: Créer ou rejoindre une organisation

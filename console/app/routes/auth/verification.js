@@ -1,10 +1,16 @@
 import Route from '@ember/routing/route';
 import { inject as service } from '@ember/service';
+import { action } from '@ember/object';
+import removeBootLoader from '../../utils/remove-boot-loader';
 
 export default class AuthVerificationRoute extends Route {
     @service session;
     @service fetch;
     @service router;
+
+    @action activate() {
+        removeBootLoader();
+    }
 
     queryParams = {
         token: {

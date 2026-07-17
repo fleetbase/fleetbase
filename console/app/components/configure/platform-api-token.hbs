@@ -1,0 +1,79 @@
+<ContentPanel @title={{t "console.admin.platform-api-token.title"}} @open={{true}} @wrapperClass="bordered-classic">
+    {{#if this.loadStatus.isRunning}}
+        <div class="flex items-center justify-center p-4">
+            <Spinner @loadingMessage={{t "console.admin.platform-api-token.loading"}} @wrapperClass="flex flex-row" @iconClass="mr-2" />
+        </div>
+    {{else}}
+        <div class="space-y-6">
+            <div class="rounded-md border border-blue-200 bg-blue-50 px-4 py-3 text-blue-900 dark:border-blue-900 dark:bg-blue-900 dark:text-blue-100">
+                <div class="flex items-start">
+                    <FaIcon @icon="circle-info" class="mt-0.5 mr-2 text-blue-600 dark:text-blue-200" />
+                    <p class="text-sm leading-5">{{t "console.admin.platform-api-token.description"}}</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 gap-3 md:grid-cols-3">
+                <div class="rounded-md border border-gray-200 bg-white px-3 py-2 dark:border-gray-700 dark:bg-gray-800">
+                    <div class="text-xs font-semibold uppercase text-gray-500 dark:text-gray-400">{{t "console.admin.platform-api-token.status"}}</div>
+                    <div class="mt-2 flex items-center text-sm font-semibold {{if this.isConfigured 'text-green-600 dark:text-green-300' 'text-yellow-600 dark:text-yellow-300'}}">
+                        <FaIcon @icon={{if this.isConfigured "circle-check" "triangle-exclamation"}} class="mr-2" />
+                        {{if this.isConfigured (t "console.admin.platform-api-token.configured") (t "console.admin.platform-api-token.not-configured")}}
+                    </div>
+                </div>
+                <div class="rounded-md border border-gray-200 bg-white px-3 py-2 dark:border-gray-700 dark:bg-gray-800">
+                    <div class="text-xs font-semibold uppercase text-gray-500 dark:text-gray-400">{{t "console.admin.platform-api-token.last-rotated"}}</div>
+                    <div class="mt-2 text-sm font-medium text-gray-900 dark:text-gray-100">{{this.rotatedAt}}</div>
+                </div>
+                <div class="rounded-md border border-gray-200 bg-white px-3 py-2 dark:border-gray-700 dark:bg-gray-800">
+                    <div class="text-xs font-semibold uppercase text-gray-500 dark:text-gray-400">{{t "console.admin.platform-api-token.last-used"}}</div>
+                    <div class="mt-2 text-sm font-medium text-gray-900 dark:text-gray-100">{{this.lastUsedAt}}</div>
+                </div>
+            </div>
+
+            {{#if this.token}}
+                <div class="rounded-md border border-yellow-300 bg-yellow-50 p-4 text-yellow-900 dark:border-yellow-700 dark:bg-yellow-900 dark:text-yellow-100">
+                    <div class="flex items-start">
+                        <FaIcon @icon="triangle-exclamation" class="mt-0.5 mr-2 text-yellow-600 dark:text-yellow-200" />
+                        <div class="w-full space-y-3">
+                            <p class="text-sm font-semibold">{{t "console.admin.platform-api-token.one-time-warning"}}</p>
+                            <div class="flex flex-col gap-2 md:flex-row md:items-center">
+                                <Input @value={{this.token}} readonly={{true}} class="form-input w-full font-mono text-xs" />
+                                <Button @icon="copy" @text={{t "common.copy"}} @onClick={{this.copyToken}} />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {{/if}}
+
+            <div class="flex flex-wrap gap-2">
+                {{#if this.isConfigured}}
+                    <Button
+                        @type="warning"
+                        @icon="rotate"
+                        @text={{t "console.admin.platform-api-token.rotate-token"}}
+                        @onClick={{this.confirmRotateToken}}
+                        @disabled={{or this.rotateToken.isRunning this.revokeToken.isRunning}}
+                        @isLoading={{this.rotateToken.isRunning}}
+                    />
+                    <Button
+                        @type="danger"
+                        @icon="trash"
+                        @text={{t "console.admin.platform-api-token.revoke-token"}}
+                        @onClick={{this.confirmRevokeToken}}
+                        @disabled={{or this.rotateToken.isRunning this.revokeToken.isRunning}}
+                        @isLoading={{this.revokeToken.isRunning}}
+                    />
+                {{else}}
+                    <Button
+                        @type="primary"
+                        @icon="key"
+                        @text={{t "console.admin.platform-api-token.generate-token"}}
+                        @onClick={{this.generateToken}}
+                        @disabled={{this.rotateToken.isRunning}}
+                        @isLoading={{this.rotateToken.isRunning}}
+                    />
+                {{/if}}
+            </div>
+        </div>
+    {{/if}}
+</ContentPanel>

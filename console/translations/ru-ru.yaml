@@ -592,6 +592,18 @@ auth:
         help-text: Введите пароль длиной не менее 6 символов для продолжения.
       submit-button: Сбросить пароль
       back-button: Назад
+  confirm-email-change:
+    success-message: Your email address has been updated.
+    invalid-verification-code: This email change link is invalid or expired.
+    title: Confirm email change
+    message-text: Confirm this change to update the login email for your Fleetbase account.
+    form:
+      code:
+        label: Confirmation code
+        help-text: The confirmation code from your email.
+      submit-button: Confirm Email Change
+      back-button: Back
+
 console:
   create-or-join-organization:
     modal-title: Создать или присоединиться к организации

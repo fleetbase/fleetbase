@@ -1,11 +1,17 @@
 import Route from '@ember/routing/route';
 import { inject as service } from '@ember/service';
+import { action } from '@ember/object';
+import removeBootLoader from '../../utils/remove-boot-loader';
 
 export default class AuthLoginRoute extends Route {
     @service session;
     @service universe;
     @service installation;
     @service router;
+
+    @action activate() {
+        removeBootLoader();
+    }
 
     /**
      * If user is authentication redirect to console.

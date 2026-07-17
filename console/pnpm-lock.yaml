@@ -17,8 +17,8 @@ importers:
         specifier: ^0.4.2
         version: 0.4.2(ember-source@5.4.1(@babel/core@7.29.7)(@glimmer/component@1.1.2(@babel/core@7.29.7))(rsvp@4.8.5)(webpack@5.107.2(postcss@8.5.15)))
       '@fleetbase/ai-engine':
-        specifier: ^0.0.2
-        version: 0.0.2(47001768392269870195224ea32348e1)
+        specifier: ^0.0.3
+        version: 0.0.3(47001768392269870195224ea32348e1)
       '@fleetbase/customer-portal-engine':
         specifier: ^0.0.12
         version: 0.0.12(abaf0c2a8c51c5147c2d07c08c7af87d)
@@ -35,23 +35,23 @@ importers:
         specifier: ^0.1.40
         version: 0.1.40(@ember/string@3.1.1)(@ember/test-helpers@3.3.1(@babel/core@7.29.7)(ember-source@5.4.1(@babel/core@7.29.7)(@glimmer/component@1.1.2(@babel/core@7.29.7))(rsvp@4.8.5)(webpack@5.107.2(postcss@8.5.15)))(webpack@5.107.2(postcss@8.5.15)))(ember-resolver@11.0.1(ember-source@5.4.1(@babel/core@7.29.7)(@glimmer/component@1.1.2(@babel/core@7.29.7))(rsvp@4.8.5)(webpack@5.107.2(postcss@8.5.15))))(ember-source@5.4.1(@babel/core@7.29.7)(@glimmer/component@1.1.2(@babel/core@7.29.7))(rsvp@4.8.5)(webpack@5.107.2(postcss@8.5.15)))(eslint@8.57.1)(webpack@5.107.2(postcss@8.5.15))
       '@fleetbase/fleetops-engine':
-        specifier: ^0.6.57
-        version: 0.6.57(abaf0c2a8c51c5147c2d07c08c7af87d)
+        specifier: ^0.6.58
+        version: 0.6.58(abaf0c2a8c51c5147c2d07c08c7af87d)
       '@fleetbase/iam-engine':
-        specifier: ^0.1.10
-        version: 0.1.10(abaf0c2a8c51c5147c2d07c08c7af87d)
+        specifier: ^0.1.11
+        version: 0.1.11(abaf0c2a8c51c5147c2d07c08c7af87d)
       '@fleetbase/leaflet-routing-machine':
         specifier: ^3.2.17
         version: 3.2.17
       '@fleetbase/ledger-engine':
-        specifier: ^0.0.7
-        version: 0.0.7(abaf0c2a8c51c5147c2d07c08c7af87d)
+        specifier: ^0.0.8
+        version: 0.0.8(abaf0c2a8c51c5147c2d07c08c7af87d)
       '@fleetbase/registry-bridge-engine':
         specifier: ^0.1.9
         version: 0.1.9(abaf0c2a8c51c5147c2d07c08c7af87d)
       '@fleetbase/storefront-engine':
-        specifier: ^0.4.16
-        version: 0.4.16(abaf0c2a8c51c5147c2d07c08c7af87d)
+        specifier: ^0.4.17
+        version: 0.4.17(abaf0c2a8c51c5147c2d07c08c7af87d)
       '@fleetbase/valhalla-engine':
         specifier: ^0.0.4
         version: 0.0.4(abaf0c2a8c51c5147c2d07c08c7af87d)
@@ -1544,8 +1544,8 @@ packages:
   '@event-calendar/core@5.7.1':
     resolution: {integrity: sha512-ms9MQagthrmRO+ytZD5dDQHjBb+r/6mwld4/psZRaBI6bciIEsmphCrxFaF9HnGvLW0htSa973TVbYMbDsDtVA==}
 
-  '@fleetbase/ai-engine@0.0.2':
-    resolution: {integrity: sha512-8TzOUJZmyx0N53jOuiu9FoJNVHnIvRi89INnVBKJeamlhC01pU6b2tEPssnecDt3dMbcyQsm0n17vXuvuZbEng==}
+  '@fleetbase/ai-engine@0.0.3':
+    resolution: {integrity: sha512-WtXe/tghtyLfGDOe+dSO6MJzcvoA+J0x9C+r0Ju9WBWW6EllgliJaAAc6C2F1j5D9qPaFjB4V8SWKB/unaNalA==}
     engines: {node: '>= 18'}
     peerDependencies:
       ember-engines: ^0.9.0
@@ -1580,14 +1580,14 @@ packages:
     resolution: {integrity: sha512-bp4tWaS2cpnitjtmH9hm3T7milwSqgt4j3T/KA8cvsFpbg7p303ADb5CNml5RsribgdBcRYtMsLEFYeYnU9dpg==}
     engines: {node: '>= 18'}
 
-  '@fleetbase/fleetops-engine@0.6.57':
-    resolution: {integrity: sha512-34g1fvg25htzZdedwgJOllUhMIExFSoBwIDzbx6TOCAwObI4MnrZ64quQ+ExYUi8OAJHpM+fce3gqc2zCboH4A==}
+  '@fleetbase/fleetops-engine@0.6.58':
+    resolution: {integrity: sha512-xl31MdOI77Ul3Yk+n8F1BFS4HbNvg3NB01a4A3dPRGDLlcurVsUkePsPZIx2ttN4dygiVzYcsz03cuEIXGcb4g==}
     engines: {node: '>= 18'}
     peerDependencies:
       ember-engines: ^0.9.0
 
-  '@fleetbase/iam-engine@0.1.10':
-    resolution: {integrity: sha512-x4LEUt80OooOQHSCeEvK7nPJi4kmpb/HO/7DCnNxIsaYoHZ5q2PpI5wD2YnSGRUZwC9eMK5YyqV0vQU1nP/YvA==}
+  '@fleetbase/iam-engine@0.1.11':
+    resolution: {integrity: sha512-kBPpfgB1qktpAe/t1V76qcz8g8wIPprNW+V9qdlXdob/DoN8dVChX78NOtRJ2946vLtPoKUEu+NDtop7ChBb7A==}
     engines: {node: '>= 18'}
     peerDependencies:
       ember-engines: ^0.9.0
@@ -1599,8 +1599,8 @@ packages:
   '@fleetbase/leaflet-routing-machine@3.2.17':
     resolution: {integrity: sha512-2S/XLPzf25ZKV7cFJwfeu4voYQboF9JiDfpRUTrif4XCfgdrQ2Zim7O5iTpoNv2l8Ne8D+Ed7BGJsKWjJFLcsw==}
 
-  '@fleetbase/ledger-engine@0.0.7':
-    resolution: {integrity: sha512-Mpp3GmD6b3WfdzaaI9F8OVuQClUybxYUo3sEVi87+gNitmLKu8wMbK2YXaf8NAu0nRYHAKaeAGIyxafQ2bErKA==}
+  '@fleetbase/ledger-engine@0.0.8':
+    resolution: {integrity: sha512-WO5aRiL1rYmj0mDGQcZN9xwWGrDCoiFWl+18nFlyesZVETGD2igKQptwbL3V1X7LllLodxUZf9krW9PFKn5JTg==}
     engines: {node: '>= 18'}
     peerDependencies:
       ember-engines: ^0.9.0
@@ -1611,8 +1611,8 @@ packages:
     peerDependencies:
       ember-engines: ^0.9.0
 
-  '@fleetbase/storefront-engine@0.4.16':
-    resolution: {integrity: sha512-5Ik5H+H8ixZgyKW+NJLzSrSAyAxH/Wss2bM6BMnp0ePJnVeoUoyh8lCQXsR2KUeXB6xzEq9893PCuVhGWoxMfA==}
+  '@fleetbase/storefront-engine@0.4.17':
+    resolution: {integrity: sha512-RTF1rngNkeTvHB0Yg4ErDu5MU5szTT3oe7xNWgGFUJkt2yeyUAdcx5Ay+EbxZCQ0zao92/u+SuVmE+AzqXWjRg==}
     engines: {node: '>= 18'}
     peerDependencies:
       ember-engines: ^0.9.0
@@ -10876,7 +10876,7 @@ snapshots:
     transitivePeerDependencies:
       - '@typescript-eslint/types'
 
-  '@fleetbase/ai-engine@0.0.2(47001768392269870195224ea32348e1)':
+  '@fleetbase/ai-engine@0.0.3(47001768392269870195224ea32348e1)':
     dependencies:
       '@babel/core': 7.29.7
       '@fleetbase/ember-core': 0.3.24(@ember/string@3.1.1)(@ember/test-helpers@3.3.1(@babel/core@7.29.7)(ember-source@5.4.1(@babel/core@7.29.7)(@glimmer/component@1.1.2(@babel/core@7.29.7))(rsvp@4.8.5)(webpack@5.107.2(postcss@8.5.15)))(webpack@5.107.2(postcss@8.5.15)))(ember-resolver@11.0.1(ember-source@5.4.1(@babel/core@7.29.7)(@glimmer/component@1.1.2(@babel/core@7.29.7))(rsvp@4.8.5)(webpack@5.107.2(postcss@8.5.15))))(ember-source@5.4.1(@babel/core@7.29.7)(@glimmer/component@1.1.2(@babel/core@7.29.7))(rsvp@4.8.5)(webpack@5.107.2(postcss@8.5.15)))(eslint@8.57.1)(webpack@5.107.2(postcss@8.5.15))
@@ -11202,7 +11202,7 @@ snapshots:
       - utf-8-validate
       - webpack
 
-  '@fleetbase/fleetops-engine@0.6.57(abaf0c2a8c51c5147c2d07c08c7af87d)':
+  '@fleetbase/fleetops-engine@0.6.58(abaf0c2a8c51c5147c2d07c08c7af87d)':
     dependencies:
       '@babel/core': 7.29.7
       '@fleetbase/ember-core': 0.3.24(@ember/string@3.1.1)(@ember/test-helpers@3.3.1(@babel/core@7.29.7)(ember-source@5.4.1(@babel/core@7.29.7)(@glimmer/component@1.1.2(@babel/core@7.29.7))(rsvp@4.8.5)(webpack@5.107.2(postcss@8.5.15)))(webpack@5.107.2(postcss@8.5.15)))(ember-resolver@11.0.1(ember-source@5.4.1(@babel/core@7.29.7)(@glimmer/component@1.1.2(@babel/core@7.29.7))(rsvp@4.8.5)(webpack@5.107.2(postcss@8.5.15))))(ember-source@5.4.1(@babel/core@7.29.7)(@glimmer/component@1.1.2(@babel/core@7.29.7))(rsvp@4.8.5)(webpack@5.107.2(postcss@8.5.15)))(eslint@8.57.1)(webpack@5.107.2(postcss@8.5.15))
@@ -11272,7 +11272,7 @@ snapshots:
       - webpack-command
       - yaml
 
-  '@fleetbase/iam-engine@0.1.10(abaf0c2a8c51c5147c2d07c08c7af87d)':
+  '@fleetbase/iam-engine@0.1.11(abaf0c2a8c51c5147c2d07c08c7af87d)':
     dependencies:
       '@babel/core': 7.29.7
       '@fleetbase/ember-core': 0.3.24(@ember/string@3.1.1)(@ember/test-helpers@3.3.1(@babel/core@7.29.7)(ember-source@5.4.1(@babel/core@7.29.7)(@glimmer/component@1.1.2(@babel/core@7.29.7))(rsvp@4.8.5)(webpack@5.107.2(postcss@8.5.15)))(webpack@5.107.2(postcss@8.5.15)))(ember-resolver@11.0.1(ember-source@5.4.1(@babel/core@7.29.7)(@glimmer/component@1.1.2(@babel/core@7.29.7))(rsvp@4.8.5)(webpack@5.107.2(postcss@8.5.15))))(ember-source@5.4.1(@babel/core@7.29.7)(@glimmer/component@1.1.2(@babel/core@7.29.7))(rsvp@4.8.5)(webpack@5.107.2(postcss@8.5.15)))(eslint@8.57.1)(webpack@5.107.2(postcss@8.5.15))
@@ -11336,7 +11336,7 @@ snapshots:
       '@mapbox/polyline': 0.2.0
       osrm-text-instructions: 0.13.4
 
-  '@fleetbase/ledger-engine@0.0.7(abaf0c2a8c51c5147c2d07c08c7af87d)':
+  '@fleetbase/ledger-engine@0.0.8(abaf0c2a8c51c5147c2d07c08c7af87d)':
     dependencies:
       '@babel/core': 7.29.7
       '@fleetbase/ember-core': 0.3.24(@ember/string@3.1.1)(@ember/test-helpers@3.3.1(@babel/core@7.29.7)(ember-source@5.4.1(@babel/core@7.29.7)(@glimmer/component@1.1.2(@babel/core@7.29.7))(rsvp@4.8.5)(webpack@5.107.2(postcss@8.5.15)))(webpack@5.107.2(postcss@8.5.15)))(ember-resolver@11.0.1(ember-source@5.4.1(@babel/core@7.29.7)(@glimmer/component@1.1.2(@babel/core@7.29.7))(rsvp@4.8.5)(webpack@5.107.2(postcss@8.5.15))))(ember-source@5.4.1(@babel/core@7.29.7)(@glimmer/component@1.1.2(@babel/core@7.29.7))(rsvp@4.8.5)(webpack@5.107.2(postcss@8.5.15)))(eslint@8.57.1)(webpack@5.107.2(postcss@8.5.15))
@@ -11448,7 +11448,7 @@ snapshots:
       - webpack-command
       - yaml
 
-  '@fleetbase/storefront-engine@0.4.16(abaf0c2a8c51c5147c2d07c08c7af87d)':
+  '@fleetbase/storefront-engine@0.4.17(abaf0c2a8c51c5147c2d07c08c7af87d)':
     dependencies:
       '@babel/core': 7.29.7
       '@fleetbase/ember-core': 0.3.24(@ember/string@3.1.1)(@ember/test-helpers@3.3.1(@babel/core@7.29.7)(ember-source@5.4.1(@babel/core@7.29.7)(@glimmer/component@1.1.2(@babel/core@7.29.7))(rsvp@4.8.5)(webpack@5.107.2(postcss@8.5.15)))(webpack@5.107.2(postcss@8.5.15)))(ember-resolver@11.0.1(ember-source@5.4.1(@babel/core@7.29.7)(@glimmer/component@1.1.2(@babel/core@7.29.7))(rsvp@4.8.5)(webpack@5.107.2(postcss@8.5.15))))(ember-source@5.4.1(@babel/core@7.29.7)(@glimmer/component@1.1.2(@babel/core@7.29.7))(rsvp@4.8.5)(webpack@5.107.2(postcss@8.5.15)))(eslint@8.57.1)(webpack@5.107.2(postcss@8.5.15))

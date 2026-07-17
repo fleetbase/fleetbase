@@ -633,6 +633,18 @@ auth:
       submit-button: Reset Password
       back-button: Back
 
+  confirm-email-change:
+    success-message: Your email address has been updated.
+    invalid-verification-code: This email change link is invalid or expired.
+    title: Confirm email change
+    message-text: Confirm this change to update the login email for your Fleetbase account.
+    form:
+      code:
+        label: Confirmation code
+        help-text: The confirmation code from your email.
+      submit-button: Confirm Email Change
+      back-button: Back
+
 console:
   create-or-join-organization:
     modal-title: Create or join a organization
@@ -658,6 +670,7 @@ console:
       organizations: Organizations
       branding: Branding
       2fa-config: 2FA Config
+      platform-api-token: Platform API Token
       schedule-monitor: Schedule Monitor
       services: Services
       mail: Mail
@@ -696,6 +709,28 @@ console:
         title: Services Configuration
       socket:
         title: Socket Configuration
+    platform-api-token:
+      title: Platform API Token
+      description: Manage the platform API token used by trusted integrations to access protected platform endpoints such as the organization directory.
+      loading: Loading platform API token status...
+      status: Status
+      configured: Configured
+      not-configured: Not configured
+      last-rotated: Last rotated
+      last-used: Last used
+      never: Never
+      generate-token: Generate Token
+      rotate-token: Rotate Token
+      revoke-token: Revoke Token
+      one-time-warning: Copy this token now. It will not be shown again.
+      rotate-confirm-title: Rotate platform API token?
+      rotate-warning: Rotating this token immediately invalidates integrations using the previous token.
+      revoke-confirm-title: Revoke platform API token?
+      revoke-warning: Revoking disables platform-token access to protected platform endpoints.
+      generated: Platform API token generated.
+      rotated: Platform API token rotated.
+      revoked: Platform API token revoked.
+      copied: Platform API token copied to clipboard.
     branding:
       title: Branding
       icon-text: Icon
