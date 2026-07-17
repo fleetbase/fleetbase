@@ -51,6 +51,7 @@ Router.map(function () {
             });
             this.route('branding');
             this.route('two-fa-settings');
+            this.route('platform-api-token');
             this.route('virtual', { path: '/:slug' });
             this.route('organizations', function () {
                 this.route('index', { path: '/' });

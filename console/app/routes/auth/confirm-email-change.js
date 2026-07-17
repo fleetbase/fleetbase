@@ -3,7 +3,7 @@ import { inject as service } from '@ember/service';
 import { action } from '@ember/object';
 import removeBootLoader from '../../utils/remove-boot-loader';
 
-export default class AuthResetPasswordRoute extends Route {
+export default class AuthConfirmEmailChangeRoute extends Route {
     @service store;
     @service fetch;
     @service router;
@@ -15,17 +15,16 @@ export default class AuthResetPasswordRoute extends Route {
     }
 
     async model({ id }) {
-        return this.fetch.get('auth/validate-verification', { id });
+        return this.fetch.get('auth/validate-verification', { id, for: 'email_change' });
     }
 
     async setupController(controller, model) {
         super.setupController(...arguments);
         if (model.is_valid === false) {
-            this.notifications.warning(this.intl.t('auth.reset-password.invalid-verification-code'));
-            return this.router.transitionTo('auth');
+            this.notifications.warning(this.intl.t('auth.confirm-email-change.invalid-verification-code'));
+            return this.router.transitionTo('auth.login');
         }
 
-        // set brand to controller
         controller.brand = await this.store.findRecord('brand', 1);
     }
 }

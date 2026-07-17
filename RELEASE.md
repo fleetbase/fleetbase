@@ -1,39 +1,70 @@
-> v0.7.51 ~ "AI prompt availability and DateTimeInput stability"
+> v0.7.52 ~ "Platform hardening, backend coverage, Taler lifecycle, and secure account updates"
 
 ---
 ## Highlights
-Fleetbase `0.7.51` is a focused stability release for Fleetbase AI runtime access and shared date-time input editing. This release updates Fleetbase Console `0.7.51`, AI `0.0.2`, and Ember UI `0.3.41`.
+Fleetbase `0.7.52` focuses on platform quality, security hardening, backend coverage, and payment/account workflow reliability. This release updates Fleetbase Console `0.7.52`, AI `0.0.3`, Storefront `0.4.17`, Fleet-Ops `0.6.58`, Ledger `0.0.8`, Core API `1.6.54`, and IAM Engine `0.1.11`.
 
 ---
 ## Component Versions
-- `console`: `0.7.51`
-- `ai`: `0.0.2`
-- `ember-ui`: `0.3.41`
+- `console`: `0.7.52`
+- `ai`: `0.0.3`
+- `storefront`: `0.4.17`
+- `fleetops`: `0.6.58`
+- `ledger`: `0.0.8`
+- `core-api`: `1.6.54`
+- `iam-engine`: `0.1.11`
 
 ---
-## Fleetbase AI
-- Added a non-admin runtime status endpoint so authenticated users can see and use the AI prompt when Fleetbase AI is enabled.
-- Kept provider configuration and admin metadata behind the existing admin-only config endpoint.
-- Added server-side guards so disabled AI blocks task creation, preview, and apply requests.
-- Updated the AI header tray button and AI service to use the runtime availability flow.
+## Platform Quality and Coverage
+- Added backend coverage baseline tooling, Pest runners, coverage summaries, and CI coverage reporting across AI, Storefront, Fleet-Ops, Core API, and Ledger.
+- Restored and stabilized backend package test harnesses, including custom vendor-path support, package bootstrapping, and CI runner fixes.
+- Added focused coverage for reporting contracts, resource shapes, validation behavior, support helpers, route helpers, currency behavior, tracking, telematics, and exports.
+- Updated Console localization content for this release.
 
 ---
-## Shared UI
-- Fixed `DateTimeInput` controlled editing so schedule fields do not reset while users type or select values.
-- Preserved ISO datetime string hydration for initial values.
-- Stopped emitting null callbacks for incomplete native date/time input states.
-- Added focused regression coverage for the DateTimeInput editing flow.
+## Core API Hardening
+- Added security advisory fixes for tenant-scoped internal endpoints, generic user access, template query execution, and platform-token-protected organization access.
+- Added organization name search and improved organization API protection.
+- Fixed public ID generation collisions and dynamic request resolution.
+- Improved SMPP configuration diagnostics and environment mapping.
+- Widened transaction settled currency support for settlement-related workflows.
+
+---
+## Ledger and Taler
+- Completed the GNU Taler payment gateway lifecycle with tenant-safe webhook routing, hosted sandbox defaults, diagnostics, webhook provisioning, settlement verification, and richer refund metadata.
+- Added gateway lifecycle fields for reconciliation, refund status, wallet refund state, settlement metadata, and raw Taler details.
+- Added invoice refund workflows, refund confirmation, reversal handling, and refund result UI.
+- Revamped Ledger payment gateway management with gateway catalog cards, diagnostics, setup, webhooks, details, and provider status surfaces.
+- Added Taler sandbox and settlement console commands plus focused driver, webhook, lifecycle, diagnostics, and refund coverage.
+
+---
+## Fleet-Ops and Storefront
+- Restored Fleet-Ops backend coverage and package test tooling for the `0.6.58` release.
+- Removed the organizations listing API endpoint from the Fleet-Ops release branch.
+- Stabilized Fleet-Ops backend tests around analytics, tracking, live queries, telematics, service rates, service areas, and assignment contracts.
+- Added Storefront backend coverage tooling, corrected backend PHPUnit paths, and refreshed checkout/order resource tests.
+
+---
+## IAM
+- Added a secure user email-change flow with a dedicated modal, controller wiring, confirmation copy, and translated UI strings.
+- Updated IAM dependency overrides and workspace metadata for the release.
 
 ---
 ## Bug Fixes
-- Fixed Fleetbase AI prompt availability for non-admin authenticated users when AI is enabled.
-- Fixed disabled AI allowing task creation, preview, or apply requests.
-- Fixed DateTimeInput resync behavior that could clear order schedule inputs during editing.
+- Fixed tenant-scoped access gaps in internal Core API endpoints.
+- Fixed Core API public ID collision handling.
+- Fixed Core API template query and report export formatting paths.
+- Fixed Ledger refund reversal handling and gateway route assertions.
+- Fixed Storefront checkout/order resource test contracts.
+- Fixed IAM change-email flow copy and form behavior.
 
 ---
 ## API Changes
-- Added a Fleetbase AI runtime status endpoint for authenticated users.
-- Added disabled-AI guards to AI task creation, preview, and apply endpoints.
+- Added Core API platform-token protection for trusted organization access.
+- Hardened Core API internal endpoint scoping and template query execution.
+- Removed the Fleet-Ops organizations listing API endpoint from the release branch.
+- Added Ledger Taler gateway diagnostics, webhook provisioning, settlement verification, refund workflow, and gateway transaction lifecycle fields.
+- Added IAM secure email-change flow support.
 
 ---
 ## Upgrade Steps

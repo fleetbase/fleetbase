@@ -12,10 +12,25 @@ import getTwoFaMethods from '@fleetbase/console/utils/get-two-fa-methods';
  * @extends Controller
  */
 export default class ConsoleAccountAuthController extends Controller {
+    @service currentUser;
     @service fetch;
     @service notifications;
     @service router;
     @service modalsManager;
+
+    /**
+     * The new email address the user wants to verify.
+     *
+     * @type {string}
+     */
+    @tracked newEmail;
+
+    /**
+     * The current password used to authorize an email change.
+     *
+     * @type {string}
+     */
+    @tracked currentPassword;
 
     /**
      * The new password the user intends to set.
@@ -103,6 +118,30 @@ export default class ConsoleAccountAuthController extends Controller {
      */
     @action saveTwoFactorAuthSettings() {
         this.saveUserTwoFaSettings.perform(this.twoFaSettings);
+    }
+
+    /**
+     * Initiates the task to request an email change for the current user.
+     *
+     * @method changeEmail
+     */
+    @task *changeEmail(event) {
+        if (event instanceof Event) {
+            event.preventDefault();
+        }
+
+        try {
+            yield this.fetch.post('users/change-email', {
+                email: this.newEmail,
+                password: this.currentPassword,
+            });
+
+            this.notifications.success('Email change verification sent. Confirm the new address before your login email changes.');
+            this.newEmail = undefined;
+            this.currentPassword = undefined;
+        } catch (error) {
+            this.notifications.serverError(error, 'Failed to request email change.');
+        }
     }
 
     /**

@@ -1,40 +1,14 @@
 import Route from '@ember/routing/route';
 import { inject as service } from '@ember/service';
+import { action } from '@ember/object';
+import removeBootLoader from '../../utils/remove-boot-loader';
 
 export default class AuthTwoFaRoute extends Route {
-    /**
-     * Fetch service for making HTTP requests.
-     *
-     * @var {Service}
-     */
     @service fetch;
-
-    /**
-     * Notifications service for handling notifications.
-     *
-     * @var {Service}
-     */
     @service notifications;
-
-    /**
-     * Router service.
-     *
-     * @var {Service}
-     */
     @service router;
-
-    /**
-     * Session service for managing user sessions.
-     *
-     * @var {Service}
-     */
     @service session;
 
-    /**
-     * Query parameters for the route.
-     *
-     * @var {Object}
-     */
     queryParams = {
         token: {
             refreshModel: false,
@@ -46,12 +20,10 @@ export default class AuthTwoFaRoute extends Route {
         },
     };
 
-    /**
-     * Executes before the model is loaded, used for validating 2FA session with the server.
-     *
-     * @param {Object} transition - The transition object representing the route transition.
-     * @return {Promise} A promise that resolves if the 2FA session is valid, and rejects with an error otherwise.
-     */
+    @action activate() {
+        removeBootLoader();
+    }
+
     beforeModel(transition) {
         // validate 2fa session with server
         let { token, clientToken } = transition.to.queryParams;
@@ -84,11 +56,6 @@ export default class AuthTwoFaRoute extends Route {
         });
     }
 
-    /**
-     * Sets up the controller, including client token and session expiration details.
-     *
-     * @param {Object} controller - The controller for the route.
-     */
     setupController(controller) {
         super.setupController(...arguments);
 
@@ -100,15 +67,13 @@ export default class AuthTwoFaRoute extends Route {
         });
     }
 
-    invalidateTwoFaSession(token, identity) {
+    async invalidateTwoFaSession(token, identity) {
         this.notifications.error('2FA authentication session has expired.');
-        return this.fetch
-            .post('two-fa/invalidate', {
-                token,
-                identity,
-            })
-            .then(() => {
-                return this.router.transitionTo('auth.login');
-            });
+        await this.fetch.post('two-fa/invalidate', {
+            token,
+            identity,
+        });
+
+        return this.router.transitionTo('auth.login');
     }
 }

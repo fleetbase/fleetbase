@@ -587,6 +587,18 @@ auth:
         help-text: أدخل كلمة مرور لا تقل عن 6 أحرف للمتابعة.
       submit-button: إعادة تعيين كلمة المرور
       back-button: عودة
+  confirm-email-change:
+    success-message: Your email address has been updated.
+    invalid-verification-code: This email change link is invalid or expired.
+    title: Confirm email change
+    message-text: Confirm this change to update the login email for your Fleetbase account.
+    form:
+      code:
+        label: Confirmation code
+        help-text: The confirmation code from your email.
+      submit-button: Confirm Email Change
+      back-button: Back
+
 console:
   create-or-join-organization:
     modal-title: إنشاء أو الانضمام إلى منظمة

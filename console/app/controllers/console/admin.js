@@ -42,6 +42,13 @@ export default class ConsoleAdminController extends Controller {
                 keywords: ['two factor', '2fa', 'security', 'mfa'],
             },
             {
+                label: this.intl.t('console.admin.menu.platform-api-token'),
+                description: 'Manage the platform API token used by trusted platform integrations.',
+                icon: 'key',
+                route: 'console.admin.platform-api-token',
+                keywords: ['platform', 'api', 'token', 'security', 'organizations'],
+            },
+            {
                 label: this.intl.t('console.admin.schedule-monitor.schedule-monitor'),
                 description: 'Review scheduled tasks and their recent execution logs.',
                 icon: 'calendar-check',

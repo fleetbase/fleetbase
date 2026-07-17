@@ -1,9 +1,9 @@
 import Controller from '@ember/controller';
 import { tracked } from '@glimmer/tracking';
-import { inject as service } from '@ember/service';
 import { action } from '@ember/object';
 import { alias } from '@ember/object/computed';
 import { debug } from '@ember/debug';
+import { inject as service } from '@ember/service';
 import { task } from 'ember-concurrency';
 
 export default class ConsoleAccountIndexController extends Controller {
@@ -27,13 +27,6 @@ export default class ConsoleAccountIndexController extends Controller {
      * @memberof ConsoleAccountIndexController
      */
     @service notifications;
-
-    /**
-     * Inject the `modalsManager` service.
-     *
-     * @memberof ConsoleAccountIndexController
-     */
-    @service modalsManager;
 
     /**
      * Alias to the currentUser service user record.
@@ -93,42 +86,13 @@ export default class ConsoleAccountIndexController extends Controller {
             event.preventDefault();
         }
 
-        let canUpdateProfile = true;
-        // If email has been changed prompt for password validation
-        if (this.changedUserAttribute('email')) {
-            canUpdateProfile = yield this.validatePassword.perform();
+        try {
+            const user = yield this.user.save();
+            this.notifications.success('Profile changes saved.');
+            this.currentUser.set('user', user);
+        } catch (error) {
+            this.notifications.serverError(error);
         }
-
-        if (canUpdateProfile === true) {
-            try {
-                const user = yield this.user.save();
-                this.notifications.success('Profile changes saved.');
-                this.currentUser.set('user', user);
-            } catch (error) {
-                this.notifications.serverError(error);
-            }
-        } else {
-            this.user.rollbackAttributes();
-        }
-    }
-
-    /**
-     * Task to validate current password
-     *
-     * @return {boolean}
-     * @memberof ConsoleAccountIndexController
-     */
-    @task *validatePassword() {
-        let isPasswordValid = false;
-
-        yield this.modalsManager.show('modals/validate-password', {
-            body: 'You must validate your password to update the account email address.',
-            onValidated: (isValid) => {
-                isPasswordValid = isValid;
-            },
-        });
-
-        return isPasswordValid;
     }
 
     /**
@@ -142,17 +106,5 @@ export default class ConsoleAccountIndexController extends Controller {
         } catch (error) {
             debug(`Unable to load timezones : ${error.message}`);
         }
-    }
-
-    /**
-     * Checks if any user attribute has been changed
-     *
-     * @param {string} attributeKey
-     * @return {boolean}
-     * @memberof ConsoleAccountIndexController
-     */
-    changedUserAttribute(attributeKey) {
-        const changedAttributes = this.user.changedAttributes();
-        return changedAttributes[attributeKey] !== undefined;
     }
 }

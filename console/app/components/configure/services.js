@@ -37,6 +37,7 @@ export default class ConfigureServicesComponent extends Component {
     @tracked customHttpHeadersText = '{}';
     @tracked customHttpQueryParamsText = '{}';
     @tracked customHttpBodyText = '{}';
+    @tracked isSmppAdvancedSettingsVisible = false;
 
     /** sentry service */
     @tracked sentryDsn = null;
@@ -103,6 +104,16 @@ export default class ConfigureServicesComponent extends Component {
         this.sms = this.updateSmsProvider(provider, {
             [field]: event.target.checked,
         });
+    }
+
+    @action updateSmsProviderNumberField(provider, field, event) {
+        this.sms = this.updateSmsProvider(provider, {
+            [field]: Number.parseInt(event.target.value, 10) || 0,
+        });
+    }
+
+    @action toggleSmppAdvancedSettings() {
+        this.isSmppAdvancedSettingsVisible = !this.isSmppAdvancedSettingsVisible;
     }
 
     @action updateSmsProviderJsonField(provider, field, event) {
@@ -263,7 +274,19 @@ export default class ConfigureServicesComponent extends Component {
             vonage: {},
             messagebird: {},
             aws_sns: {},
-            smpp: {},
+            smpp: {
+                bind_type: 'transceiver',
+                addr_ton: 0,
+                addr_npi: 0,
+                source_addr_ton: 5,
+                source_addr_npi: 0,
+                dest_addr_ton: 1,
+                dest_addr_npi: 1,
+                registered_delivery: 1,
+                data_coding: 0,
+                service_type: '',
+                address_range: '',
+            },
             custom_http: {
                 method: 'POST',
                 headers: {},
@@ -282,6 +305,21 @@ export default class ConfigureServicesComponent extends Component {
             sid: providers.twilio.sid ?? this.twilioSid,
             token: providers.twilio.token ?? this.twilioToken,
             from: providers.twilio.from ?? this.twilioFrom,
+        };
+
+        providers.smpp = {
+            bind_type: 'transceiver',
+            addr_ton: 0,
+            addr_npi: 0,
+            source_addr_ton: 5,
+            source_addr_npi: 0,
+            dest_addr_ton: 1,
+            dest_addr_npi: 1,
+            registered_delivery: 1,
+            data_coding: 0,
+            service_type: '',
+            address_range: '',
+            ...providers.smpp,
         };
 
         return {
