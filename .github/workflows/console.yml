@@ -1,0 +1,91 @@
+name: Console CI
+
+# Runs the Ember console's lint + QUnit suite + coverage from the monorepo root.
+# NOTE: console/ is tracked directly in this repo (not a submodule), and GitHub
+# only executes workflows under the repo-root .github/workflows/. So THIS file —
+# not console/.github/workflows/ci.yml — is what gates the console in fleetbase-dev.
+
+on:
+  push:
+    branches: [main]
+    tags:
+      - 'v*'
+  pull_request:
+    branches: [main]
+
+env:
+  NODE_VERSION: 22.x
+
+defaults:
+  run:
+    working-directory: console
+
+jobs:
+  build-and-test:
+    name: Lint, Test, Build
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js ${{ env.NODE_VERSION }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: latest
+
+      - name: Get pnpm Store Directory
+        id: pnpm-cache
+        shell: bash
+        run: echo "STORE_PATH=$(pnpm store path)" >> "$GITHUB_OUTPUT"
+
+      - uses: actions/cache@v4
+        name: Setup pnpm Cache
+        with:
+          path: ${{ steps.pnpm-cache.outputs.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('console/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+
+      - name: Create .npmrc
+        run: |
+          if [[ -n "${{ secrets._GITHUB_AUTH_TOKEN }}" ]]; then
+            echo "@fleetbase:registry=https://npm.pkg.github.com/" > .npmrc
+            echo "//npm.pkg.github.com/:_authToken=${{ secrets._GITHUB_AUTH_TOKEN }}" >> .npmrc
+          fi
+
+      - name: Install Dependencies
+        run: pnpm install
+
+      - name: Lint
+        run: pnpm run lint
+
+      # The step that was previously missing everywhere for the console: actually
+      # running the existing QUnit suite (tests/unit + tests/integration), here
+      # with coverage instrumentation.
+      - name: Test (with coverage)
+        run: pnpm run test:ember:coverage
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v4
+        with:
+          files: console/coverage/lcov.info
+          flags: console
+          name: console-coverage
+          fail_ci_if_error: false
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+
+      # Coverage gate. Target is 100% (scripts/coverage-check.mjs).
+      # continue-on-error is TEMPORARY — remove it to make this a required,
+      # blocking check once the console suite reaches 100% coverage.
+      - name: Enforce coverage threshold (100%)
+        continue-on-error: true
+        run: pnpm run coverage:check -- --fail-under=100
+
+      - name: Build (production)
+        run: npx ember build --environment production

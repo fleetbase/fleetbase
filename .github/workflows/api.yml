@@ -1,0 +1,115 @@
+name: API CI
+
+# Runs the host Laravel app's PHPUnit suite (api/tests) against real MySQL + Redis
+# service containers, then reports coverage over api/app. The extension packages
+# (core-api, fleetops-api, …) have their own CI in their own repos; this workflow
+# covers the host application that wires them together.
+
+on:
+  push:
+    branches: [main]
+    tags:
+      - 'v*'
+  pull_request:
+    branches: [main]
+
+defaults:
+  run:
+    working-directory: api
+
+jobs:
+  test:
+    name: PHPUnit + Coverage
+    runs-on: ubuntu-latest
+
+    services:
+      mysql:
+        image: mysql:8.0-oracle
+        env:
+          MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+          MYSQL_DATABASE: fleetbase_test
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping -h 127.0.0.1"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=10
+
+      redis:
+        image: redis:7-alpine
+        ports:
+          - 6379:6379
+        options: >-
+          --health-cmd="redis-cli ping"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=10
+
+    env:
+      # Test DB/cache/queue point at the service containers. Feature tests that
+      # use RefreshDatabase will migrate into fleetbase_test.
+      DB_CONNECTION: mysql
+      DB_HOST: 127.0.0.1
+      DB_PORT: 3306
+      DB_DATABASE: fleetbase_test
+      DB_USERNAME: root
+      DB_PASSWORD: ""
+      REDIS_HOST: 127.0.0.1
+      REDIS_PORT: 6379
+      CACHE_DRIVER: array
+      QUEUE_CONNECTION: sync
+      SESSION_DRIVER: array
+      MAIL_MAILER: array
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: mbstring, xml, gd, zip, pdo_mysql, redis, sockets, intl, bcmath, gmp, geos
+          coverage: xdebug
+
+      - name: Install additional system packages
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libzip-dev libgd-dev libgeos-dev libgmp-dev default-mysql-client libicu-dev
+
+      - name: Configure Composer auth for GitHub
+        run: composer config --global github-oauth.github.com "${{ secrets._GITHUB_AUTH_TOKEN }}"
+
+      - name: Prepare environment file
+        run: |
+          [ -f .env ] || cp .env.example .env
+          php artisan key:generate --force || true
+
+      - name: Install dependencies
+        run: composer install --prefer-dist --no-progress --no-interaction
+
+      - name: Run tests
+        run: composer test:unit
+
+      - name: Generate coverage report
+        run: composer coverage:baseline
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v4
+        with:
+          files: api/coverage/clover.xml
+          flags: api
+          name: api-coverage
+          fail_ci_if_error: false
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+
+      # Coverage gate. Target is 100% (composer coverage:check --fail-under=100).
+      # continue-on-error is TEMPORARY: the host-app suite is a starter suite and
+      # not yet at 100%. Remove `continue-on-error` (making this a required,
+      # blocking check) once api/app is fully covered — the "flip to required"
+      # step described in the plan.
+      - name: Enforce coverage threshold (100%)
+        continue-on-error: true
+        run: composer coverage:check

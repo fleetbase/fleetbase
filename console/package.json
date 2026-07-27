@@ -24,7 +24,9 @@
         "start": "ember serve",
         "start:dev": "ember serve --environment development",
         "test": "concurrently \"npm:lint\" \"npm:test:*\" --names \"lint,test:\"",
-        "test:ember": "ember test"
+        "test:ember": "ember test",
+        "test:ember:coverage": "COVERAGE=true ember test",
+        "coverage:check": "node scripts/coverage-check.mjs"
     },
     "ember-addon": {
         "paths": [

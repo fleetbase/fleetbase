@@ -105,6 +105,17 @@
         ],
         "clean-logs": [
             "composer run-script clear-logs"
+        ],
+        "test:unit": "phpunit --colors=always",
+        "test:coverage:clover": "mkdir -p coverage && XDEBUG_MODE=coverage phpunit --coverage-clover=coverage/clover.xml --colors=always",
+        "coverage:summary": "php scripts/coverage-summary.php coverage/clover.xml",
+        "coverage:check": "php scripts/coverage-summary.php coverage/clover.xml --fail-under=100",
+        "coverage:baseline": [
+            "@test:coverage:clover",
+            "@coverage:summary"
+        ],
+        "test": [
+            "@test:unit"
         ]
     },
     "extra": {
