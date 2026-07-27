@@ -1,6 +1,7 @@
 #!/bin/bash
 
 set -e
+set -o pipefail
 
 log() {
     echo -e "\033[1;34m[🔧 $1]\033[0m"
@@ -26,6 +27,9 @@ OSX_DIR="$ROOT_DIR/builds/osx"
 DIST_DIR="$ROOT_DIR/builds/dist"
 APP_DIR="$ROOT_DIR/api"
 BREW_PREFIX="/opt/homebrew"
+STATIC_PHP_CLI_VERSION="2.5.2"
+TARGET_PHP_VERSION="8.2"
+TOOLING_PHP_VERSION="8.4.0"
 
 OS="$(uname -s | tr '[:upper:]' '[:lower:]')"
 ARCH="$(uname -m)"
@@ -33,26 +37,47 @@ BINARY_NAME="fleetbase-$OS-$ARCH"
 
 log "Binary will be: $BINARY_NAME"
 
+require_command() {
+    if ! command -v "$1" >/dev/null 2>&1; then
+        log_error "Required command not found: $1"
+        exit 1
+    fi
+}
+
+require_file() {
+    if [ ! -f "$1" ]; then
+        log_error "Required file missing: $1"
+        exit 1
+    fi
+}
+
+require_dir() {
+    if [ ! -d "$1" ]; then
+        log_error "Required directory missing: $1"
+        exit 1
+    fi
+}
+
+require_command php
+require_command git
+require_command jq
+require_command curl
+require_command brew
+
+if [[ "$ARCH" != "arm64" ]]; then
+    log_warn "This script is tuned for Apple Silicon builds; detected architecture: $ARCH"
+fi
+
+mkdir -p "$DIST_DIR"
+if [[ ! -w "$DIST_DIR" ]]; then
+    log_error "Dist directory is not writable: $DIST_DIR"
+    exit 1
+fi
+
 # Setup PHP 8.4
 log "Detecting current PHP version..."
 ORIGINAL_PHP_PATH="$(which php)"
 ORIGINAL_PHP_VERSION="$(php -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION.".".PHP_RELEASE_VERSION;' 2>/dev/null)"
-IS_ASDF_MANAGED=false
-
-if [[ "$ORIGINAL_PHP_PATH" == *".asdf"* ]]; then
-    IS_ASDF_MANAGED=true
-fi
-
-# 🔁 Trap to restore PHP when script exits
-trap 'if [ "$IS_ASDF_MANAGED" = true ]; then
-          log "Restoring asdf-managed PHP version: $ORIGINAL_PHP_VERSION"
-          asdf set php "$ORIGINAL_PHP_VERSION" || true
-          log "Reverted to PHP $(php -v | head -n 1)"
-      else
-          log "Unsetting asdf set to restore system PHP"
-          asdf set php system || true
-          log "Reverted to PHP $(php -v | head -n 1)"
-      fi' EXIT
 
 log "Detected PHP version: $ORIGINAL_PHP_VERSION"
 log "Detected PHP binary: $ORIGINAL_PHP_PATH"
@@ -64,8 +89,9 @@ if [[ "$ORIGINAL_PHP_PATH" == "$BREW_PREFIX/bin/php" && "$ORIGINAL_PHP_VERSION" 
     log "Homebrew PHP $ORIGINAL_PHP_VERSION detected at $ORIGINAL_PHP_PATH — skipping asdf build/install."
 else
     # Only install under asdf if we don’t already have 8.4.0 installed
-    log "No Homebrew PHP 8.4 detected (found $ORIGINAL_PHP_PATH $ORIGINAL_PHP_VERSION), using asdf to build/install."
-    if ! asdf list php | grep -q "8.4.0"; then
+    require_command asdf
+    log "No Homebrew PHP 8.4 detected (found $ORIGINAL_PHP_PATH $ORIGINAL_PHP_VERSION), using asdf shell-local PHP $TOOLING_PHP_VERSION."
+    if ! asdf list php | grep -q "$TOOLING_PHP_VERSION"; then
         # Use brew to install required dependencies for asdf php management
         log "Checking and installing Homebrew packages required for PHP 8.4 build..."
 
@@ -84,14 +110,15 @@ else
         export PKG_CONFIG_PATH="$BREW_PREFIX/opt/openssl/lib/pkgconfig:$BREW_PREFIX/opt/oniguruma/lib/pkgconfig:$BREW_PREFIX/opt/libsodium/lib/pkgconfig:$BREW_PREFIX/opt/libzip/lib/pkgconfig:$BREW_PREFIX/opt/gd/lib/pkgconfig:$BREW_PREFIX/opt/zlib/lib/pkgconfig:$BREW_PREFIX/opt/openssl@3/lib/pkgconfig:$BREW_PREFIX/opt/libxml2/lib/pkgconfig:$BREW_PREFIX/opt/curl/lib/pkgconfig:$BREW_PREFIX/opt/sqlite3/lib/pkgconfig:$BREW_PREFIX/opt/freetype/lib/pkgconfig:$BREW_PREFIX/opt/jpeg/lib/pkgconfig:$BREW_PREFIX/opt/libpng/lib/pkgconfig"
         export PHP_CONFIGURE_OPTIONS="--with-openssl=$(brew --prefix openssl) --with-iconv=$(brew --prefix libiconv)"
 
-        log "Installing PHP 8.4.0 with asdf..."
-        asdf install php 8.4.0 --verbose
+        log "Installing PHP $TOOLING_PHP_VERSION with asdf..."
+        asdf install php "$TOOLING_PHP_VERSION" --verbose
     else
-        log "asdf already has PHP 8.4.0 installed, skipping"
+        log "asdf already has PHP $TOOLING_PHP_VERSION installed, skipping"
     fi
 
-    log "Switching to PHP 8.4.0 with asdf set..."
-    asdf set php 8.4.0 --home 
+    log "Activating PHP $TOOLING_PHP_VERSION for this shell only..."
+    export ASDF_PHP_VERSION="$TOOLING_PHP_VERSION"
+    log "Build tooling PHP is now: $(php -r 'echo PHP_VERSION;' 2>/dev/null)"
 fi
 
 # Clone FrankenPHP
@@ -103,6 +130,7 @@ else
 fi
 
 cd "$OSX_DIR/frankenphp"
+require_file "$OSX_DIR/frankenphp/build-static.sh"
 
 # Patch build script
 log "Patching build-static.sh to skip git pull..."
@@ -110,7 +138,7 @@ sed -i '' 's/^[ \t]*git pull/# git pull/' ./build-static.sh
 
 # Set environment variables
 log "Exporting build environment variables..."
-export PHP_VERSION=8.2
+export PHP_VERSION="$TARGET_PHP_VERSION"
 export PHP_EXTENSIONS="pdo_mysql,gd,bcmath,redis,intl,zip,gmp,apcu,opcache,imagick,sockets,pcntl,geos,iconv,mbstring,fileinfo,ctype,tokenizer,simplexml,dom,filter,session"
 export PHP_EXTENSION_LIBS="libgeos,libzip,bzip2,libxml2,openssl,zlib"
 export SPC_REL_TYPE=source
@@ -121,14 +149,24 @@ export CMAKE_OSX_ARCHITECTURES=arm64
 # Clone and prepare static-php-cli in dist/
 STATIC_PHP_CLI_DIR="$OSX_DIR/frankenphp/dist/static-php-cli"
 if [ ! -d "$STATIC_PHP_CLI_DIR" ]; then
-    log "Cloning static-php-cli into dist/..."
-    git clone --depth 1 --branch 2.5.2 https://github.com/crazywhalecc/static-php-cli.git "$STATIC_PHP_CLI_DIR"
+    log "Cloning static-php-cli $STATIC_PHP_CLI_VERSION into dist/..."
+    git clone --depth 1 --branch "$STATIC_PHP_CLI_VERSION" https://github.com/crazywhalecc/static-php-cli.git "$STATIC_PHP_CLI_DIR"
 else
     log_warn "static-php-cli already exists in dist/. Skipping clone."
 fi
 
+require_dir "$STATIC_PHP_CLI_DIR/src/SPC/builder/unix/library"
+require_dir "$STATIC_PHP_CLI_DIR/src/SPC/builder/macos/library"
+require_file "$STATIC_PHP_CLI_DIR/src/SPC/builder/unix/UnixBuilderBase.php"
+require_file "$STATIC_PHP_CLI_DIR/config/source.json"
+require_file "$STATIC_PHP_CLI_DIR/config/ext.json"
+require_file "$STATIC_PHP_CLI_DIR/config/lib.json"
+require_file "$ROOT_DIR/builds/osx/spc/libgeos-unix.php"
+require_file "$ROOT_DIR/builds/osx/spc/libgeos-macos.php"
+require_file "$ROOT_DIR/builds/osx/spc/UnixBuilderBase-macos.php"
+
 # Inject libgeos support
-log "Injecting libgeos patch files..."
+log "Injecting libgeos patch files for pinned static-php-cli $STATIC_PHP_CLI_VERSION..."
 cp "$ROOT_DIR/builds/osx/spc/libgeos-unix.php" "$STATIC_PHP_CLI_DIR/src/SPC/builder/unix/library/libgeos.php"
 cp "$ROOT_DIR/builds/osx/spc/libgeos-macos.php" "$STATIC_PHP_CLI_DIR/src/SPC/builder/macos/library/libgeos.php"
 cp "$ROOT_DIR/builds/osx/spc/UnixBuilderBase-macos.php" "$STATIC_PHP_CLI_DIR/src/SPC/builder/unix/UnixBuilderBase.php"
@@ -163,7 +201,12 @@ log "Patching build-static.sh to skip git pull and composer install..."
 sed -i '' 's/^[[:space:]]*git pull/# git pull/' "$OSX_DIR/frankenphp/build-static.sh"
 
 # Patch add CoreServices framework for Caddy build on OSX
-sed -i '' 's/-framework CoreFoundation -framework SystemConfiguration/& -framework CoreServices/' "$OSX_DIR/frankenphp/build-static.sh"
+if grep -q -- '-framework CoreFoundation -framework SystemConfiguration' "$OSX_DIR/frankenphp/build-static.sh"; then
+    sed -i '' 's/-framework CoreFoundation -framework SystemConfiguration/& -framework CoreServices/' "$OSX_DIR/frankenphp/build-static.sh"
+else
+    log_error "Unable to patch CoreServices framework: expected Caddy linker flags were not found."
+    exit 1
+fi
 
 # ── work around 403 on GH macOS runners ────────────────────────────────────────
 log "Patching curl to use a browser-like User-Agent (to avoid 403s)…"
