@@ -54,14 +54,19 @@ jobs:
       # docker-compose.yml pins application/queue/scheduler to
       # fleetbase/fleetbase-api:latest. Build that tag locally from THIS checkout so
       # the smoke test exercises source, not the last published image.
+      #
+      # Use the `app-release` target — the same stage the published fleetbase-api
+      # image is built from (see docker-bake.hcl). Its entrypoint is plain
+      # docker-php-entrypoint. The `app` target instead entrypoints through
+      # ssm-parent, which fetches config from AWS SSM at startup and therefore
+      # crash-loops outside AWS (e.g. in CI).
       - name: Build API image from source
         if: steps.auth.outputs.available == 'true'
         run: |
           docker build \
             --file docker/Dockerfile \
-            --target app \
+            --target app-release \
             --build-arg GITHUB_AUTH_KEY="${{ secrets._GITHUB_AUTH_TOKEN }}" \
-            --build-arg ENVIRONMENT=development \
             --tag fleetbase/fleetbase-api:latest \
             .
 
