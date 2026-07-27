@@ -76,12 +76,12 @@ jobs:
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v4
         with:
+          token: ${{ secrets.CODECOV_TOKEN }}
           files: console/coverage/lcov.info
+          disable_search: true
           flags: console
           name: console-coverage
           fail_ci_if_error: false
-        env:
-          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
       # Coverage gate. Target is 100% (scripts/coverage-check.mjs).
       # continue-on-error is TEMPORARY — remove it to make this a required,

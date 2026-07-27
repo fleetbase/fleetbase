@@ -101,12 +101,12 @@ jobs:
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v4
         with:
+          token: ${{ secrets.CODECOV_TOKEN }}
           files: api/coverage/clover.xml
+          disable_search: true
           flags: api
           name: api-coverage
           fail_ci_if_error: false
-        env:
-          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
       # Coverage gate. Target is 100% (composer coverage:check --fail-under=100).
       # continue-on-error is TEMPORARY: the host-app suite is a starter suite and
