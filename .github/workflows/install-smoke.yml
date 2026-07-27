@@ -19,6 +19,9 @@ concurrency:
   group: install-smoke-${{ github.ref }}
   cancel-in-progress: true
 
+permissions:
+  contents: read
+
 jobs:
   install-smoke:
     name: Fresh Install Boots and Serves
