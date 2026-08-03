@@ -4,9 +4,11 @@ import { setupTest } from '@fleetbase/console/tests/helpers';
 module('Unit | Adapter | application', function (hooks) {
     setupTest(hooks);
 
-    // Replace this with your real tests.
-    test('it exists', function (assert) {
-        let adapter = this.owner.lookup('adapter:application');
+    // The application adapter is re-exported from @fleetbase/ember-core; this
+    // asserts it resolves and is wired into the container.
+    test('it resolves from the container', function (assert) {
+        const adapter = this.owner.lookup('adapter:application');
         assert.ok(adapter);
+        assert.strictEqual(typeof adapter.urlForFindRecord, 'function');
     });
 });

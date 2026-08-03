@@ -41,7 +41,8 @@ export default class DashboardCountComponent extends Component {
      * @memberof WidgetKeyMetricsCountComponent
      */
     createRenderValueFromOptions(options = {}) {
-        if (value !== null) {
+        // Skip deriving a value from options when one was already provided.
+        if (this.value !== null) {
             return;
         }
 

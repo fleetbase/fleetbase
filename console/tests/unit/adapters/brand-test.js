@@ -4,9 +4,12 @@ import { setupTest } from '@fleetbase/console/tests/helpers';
 module('Unit | Adapter | brand', function (hooks) {
     setupTest(hooks);
 
-    // Replace this with your real tests.
-    test('it exists', function (assert) {
-        let adapter = this.owner.lookup('adapter:brand');
-        assert.ok(adapter);
+    test('all branding record URLs resolve to settings/branding', function (assert) {
+        const adapter = this.owner.lookup('adapter:brand');
+        const expected = `${adapter.host}/${adapter.namespace}/settings/branding`;
+
+        assert.strictEqual(adapter.urlForFindRecord(), expected);
+        assert.strictEqual(adapter.urlForUpdateRecord(), expected);
+        assert.strictEqual(adapter.urlForCreateRecord(), expected);
     });
 });
