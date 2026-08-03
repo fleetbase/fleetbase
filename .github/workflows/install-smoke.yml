@@ -125,6 +125,18 @@ jobs:
           wait_for "Console" "http://localhost:4200" "<!DOCTYPE html>" || \
             wait_for "Console" "http://localhost:4200" "<html"
 
+      # Run the official Postman collections against the live stack we just booted.
+      # Reuses this job's running containers (no second boot). Non-blocking for now:
+      # the full collections include data-dependent requests that stay red until the
+      # collections are curated in fleetbase/postman. Drop continue-on-error once green.
+      - name: Postman API contract
+        if: steps.auth.outputs.available == 'true'
+        continue-on-error: true
+        uses: ./.github/actions/postman-contract
+        with:
+          postman-api-key: ${{ secrets.POSTMAN_API_KEY }}
+          github-token: ${{ secrets._GITHUB_AUTH_TOKEN }}
+
       - name: Dump logs on failure
         if: failure() && steps.auth.outputs.available == 'true'
         run: |
