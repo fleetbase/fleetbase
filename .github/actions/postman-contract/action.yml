@@ -52,19 +52,29 @@ runs:
       if: steps.pmauth.outputs.available == 'true'
       shell: bash
       run: |
-        set -euo pipefail
-        KEY="$(docker compose exec -T application php artisan tinker < scripts/ci/mint-api-key.php 2>/dev/null \
-          | grep -oE 'flb_(live|test)_[A-Za-z0-9_-]+' | tail -1)"
+        set -uo pipefail
+        # Run the mint snippet via `tinker --execute="eval(base64_decode(...))"`.
+        # Piping a file with a <?php tag to tinker triggers a PsySH parse error, and
+        # inlining the code would let the shell expand its $variables — base64+eval
+        # sidesteps both. Capture stdout+stderr so failures are diagnosable.
+        CODE="$(base64 scripts/ci/mint-api-key.php | tr -d '\n')"
+        OUT="$(docker compose exec -T application php artisan tinker --execute="eval(base64_decode('${CODE}'));" 2>&1 || true)"
+        KEY="$(printf '%s\n' "$OUT" | grep -oE 'flb_(live|test)_[A-Za-z0-9_-]+' | tail -1 || true)"
         if [[ -z "$KEY" ]]; then
-          echo "::error::Could not mint an API key from the running stack."
+          echo "::error::Could not mint an API key from the running stack. Tinker output:"
+          printf '%s\n' "$OUT"
           exit 1
         fi
         echo "::add-mask::$KEY"
         echo "api_key=$KEY" >> "$GITHUB_OUTPUT"
         echo "Verifying key against ${{ inputs.base-url }}/${{ inputs.namespace }}/organizations/current ..."
-        curl -fsS -H "Authorization: Bearer $KEY" \
-          "${{ inputs.base-url }}/${{ inputs.namespace }}/organizations/current" >/dev/null
-        echo "✔ API key authenticates."
+        HTTP_CODE="$(curl -s -o /dev/null -w '%{http_code}' -H "Authorization: Bearer ${KEY}" \
+          "${{ inputs.base-url }}/${{ inputs.namespace }}/organizations/current" || true)"
+        if [[ "$HTTP_CODE" != "200" ]]; then
+          echo "::error::API key verification returned HTTP ${HTTP_CODE} (expected 200)"
+          exit 1
+        fi
+        echo "✔ API key authenticates (HTTP 200)."
 
     - name: Install Postman CLI
       if: steps.pmauth.outputs.available == 'true'
