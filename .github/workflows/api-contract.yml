@@ -31,10 +31,12 @@ on:
         required: false
         default: false
       fleetbase-ref:
-        description: Ref of fleetbase/fleetbase to boot.
+        description: Ref of fleetbase/fleetbase to boot (must match the ref that ships
+          this workflow + composite action + scripts).
         type: string
         required: false
-        default: main
+        # TODO: change to `main` once dev-v0.7.53 is merged.
+        default: dev-v0.7.53
       postman-ref:
         description: Ref of fleetbase/postman to run.
         type: string
