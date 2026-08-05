@@ -4,20 +4,18 @@ import { setupTest } from '@fleetbase/console/tests/helpers';
 module('Unit | Serializer | group', function (hooks) {
     setupTest(hooks);
 
-    // Replace this with your real tests.
-    test('it exists', function (assert) {
-        let store = this.owner.lookup('service:store');
-        let serializer = store.serializerFor('group');
+    test('serialize emits users/permissions/policies as id arrays', function (assert) {
+        const store = this.owner.lookup('service:store');
+        const user = store.push({ data: { id: 'u1', type: 'user' } });
+        const permission = store.push({ data: { id: 'perm1', type: 'permission' } });
+        const policy = store.push({ data: { id: 'pol1', type: 'policy' } });
+        const record = store.createRecord('group', { name: 'Admins', users: [user], permissions: [permission], policies: [policy] });
 
-        assert.ok(serializer);
-    });
+        const json = record.serialize();
 
-    test('it serializes records', function (assert) {
-        let store = this.owner.lookup('service:store');
-        let record = store.createRecord('group', {});
-
-        let serializedRecord = record.serialize();
-
-        assert.ok(serializedRecord);
+        assert.strictEqual(json.name, 'Admins');
+        assert.deepEqual(json.users, ['u1'], 'users serialized as ids');
+        assert.deepEqual(json.permissions, ['perm1'], 'permissions serialized as ids');
+        assert.deepEqual(json.policies, ['pol1'], 'policies serialized as ids');
     });
 });
