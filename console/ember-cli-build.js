@@ -30,7 +30,10 @@ module.exports = function (defaults) {
         },
 
         babel: {
-            plugins: [require.resolve('ember-auto-import/babel-plugin')],
+            // ember-cli-code-coverage does not instrument automatically — the app has to
+            // add its babel plugin explicitly. buildBabelPlugin() returns [] unless
+            // COVERAGE=true, so normal builds are unaffected.
+            plugins: [require.resolve('ember-auto-import/babel-plugin'), ...require('ember-cli-code-coverage').buildBabelPlugin()],
         },
     });
 

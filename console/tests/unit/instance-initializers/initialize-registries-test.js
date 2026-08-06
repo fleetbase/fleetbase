@@ -1,39 +1,28 @@
-import Application from '@ember/application';
-
-import config from '@fleetbase/console/config/environment';
-import { initialize } from '@fleetbase/console/instance-initializers/initialize-registries';
 import { module, test } from 'qunit';
-import Resolver from 'ember-resolver';
-import { run } from '@ember/runloop';
+import { initialize } from '@fleetbase/console/instance-initializers/initialize-registries';
 
-module('Unit | Instance Initializer | initialize-registries', function (hooks) {
-    hooks.beforeEach(function () {
-        this.TestApplication = class TestApplication extends Application {
-            modulePrefix = config.modulePrefix;
-            podModulePrefix = config.podModulePrefix;
-            Resolver = Resolver;
+module('Unit | Instance Initializer | initialize-registries', function () {
+    test('it creates the console registries', function (assert) {
+        let created;
+        const appInstance = {
+            lookup(name) {
+                assert.strictEqual(name, 'service:universe/registry-service');
+                return {
+                    createRegistries(registries) {
+                        created = registries;
+                    },
+                };
+            },
         };
 
-        this.TestApplication.instanceInitializer({
-            name: 'initializer under test',
-            initialize,
-        });
+        initialize(appInstance);
 
-        this.application = this.TestApplication.create({
-            autoboot: false,
-        });
-
-        this.instance = this.application.buildInstance();
-    });
-    hooks.afterEach(function () {
-        run(this.instance, 'destroy');
-        run(this.application, 'destroy');
-    });
-
-    // TODO: Replace this with your real tests.
-    test('it works', async function (assert) {
-        await this.instance.boot();
-
-        assert.ok(true);
+        assert.ok(created.includes('@fleetbase/console'), 'the console registry is created');
+        assert.ok(created.includes('auth:login'), 'the login registry is created');
+        assert.ok(
+            created.every((name) => typeof name === 'string'),
+            'every registry is named with a string'
+        );
+        assert.strictEqual(new Set(created).size, created.length, 'no registry is registered twice');
     });
 });

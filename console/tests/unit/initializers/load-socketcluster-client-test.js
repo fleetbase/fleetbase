@@ -1,37 +1,23 @@
-import Application from '@ember/application';
-
-import config from '@fleetbase/console/config/environment';
-import { initialize } from '@fleetbase/console/initializers/load-socketcluster-client';
 import { module, test } from 'qunit';
-import Resolver from 'ember-resolver';
-import { run } from '@ember/runloop';
+import { initialize } from '@fleetbase/console/initializers/load-socketcluster-client';
 
 module('Unit | Initializer | load-socketcluster-client', function (hooks) {
-    hooks.beforeEach(function () {
-        this.TestApplication = class TestApplication extends Application {
-            modulePrefix = config.modulePrefix;
-            podModulePrefix = config.podModulePrefix;
-            Resolver = Resolver;
-        };
-
-        this.TestApplication.initializer({
-            name: 'initializer under test',
-            initialize,
-        });
-
-        this.application = this.TestApplication.create({
-            autoboot: false,
-        });
-    });
-
     hooks.afterEach(function () {
-        run(this.application, 'destroy');
+        document.querySelectorAll('script[data-socketcluster-client]').forEach((node) => node.remove());
     });
 
-    // TODO: Replace this with your real tests.
-    test('it works', async function (assert) {
-        await this.application.boot();
+    test('it injects the socketcluster client script', function (assert) {
+        initialize();
 
-        assert.ok(true);
+        const script = document.querySelector('script[data-socketcluster-client]');
+        assert.ok(script, 'the script tag is added');
+        assert.ok(script.src.endsWith('/assets/socketcluster-client.min.js'), 'it points at the bundled client');
+    });
+
+    test('it does not inject the script twice', function (assert) {
+        initialize();
+        initialize();
+
+        assert.strictEqual(document.querySelectorAll('script[data-socketcluster-client]').length, 1, 'only one script tag is added');
     });
 });
