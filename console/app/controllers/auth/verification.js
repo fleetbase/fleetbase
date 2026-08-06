@@ -2,7 +2,7 @@ import Controller from '@ember/controller';
 import { inject as service } from '@ember/service';
 import { tracked } from '@glimmer/tracking';
 import { action } from '@ember/object';
-import { later } from '@ember/runloop';
+import { later, cancel } from '@ember/runloop';
 import { task } from 'ember-concurrency';
 
 export default class AuthVerificationController extends Controller {
@@ -27,13 +27,23 @@ export default class AuthVerificationController extends Controller {
     constructor() {
         super(...arguments);
 
-        later(
+        this.stillWaitingTimer = later(
             this,
             () => {
                 this.stillWaiting = true;
             },
             this.waitTimeout
         );
+    }
+
+    willDestroy() {
+        super.willDestroy(...arguments);
+
+        // Cancel the pending "still waiting" timer so it never fires on a torn-down
+        // controller (e.g. navigating away before the timeout elapses).
+        if (this.stillWaitingTimer) {
+            cancel(this.stillWaitingTimer);
+        }
     }
 
     @action onDidntReceiveCode() {

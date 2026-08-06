@@ -46,19 +46,21 @@ module('Unit | Service | installation', function (hooks) {
             }
         }
 
-        class RouterStub extends Service {
-            currentRouteName = 'auth.login';
-
-            transitionTo(routeName) {
-                transitionedTo = routeName;
-                return 'install-transition';
-            }
-        }
-
         this.owner.register('service:fetch', FetchStub);
-        this.owner.register('service:router', RouterStub);
 
         const service = this.owner.lookup('service:installation');
+
+        // Ember's built-in RouterService can't be replaced via owner.register in setupTest —
+        // patch the injected instance the service actually calls.
+        Object.defineProperty(service.router, 'currentRouteName', { configurable: true, value: 'auth.login' });
+        Object.defineProperty(service.router, 'transitionTo', {
+            configurable: true,
+            value: (routeName) => {
+                transitionedTo = routeName;
+                return 'install-transition';
+            },
+        });
+
         const result = await service.checkOnboarding();
 
         assert.true(result.notConfigured);
@@ -98,17 +100,18 @@ module('Unit | Service | installation', function (hooks) {
             }
         }
 
-        class RouterStub extends Service {
-            transitionTo(routeName) {
-                transitionedTo = routeName;
-                return 'onboard-transition';
-            }
-        }
-
         this.owner.register('service:fetch', FetchStub);
-        this.owner.register('service:router', RouterStub);
 
         const service = this.owner.lookup('service:installation');
+
+        Object.defineProperty(service.router, 'transitionTo', {
+            configurable: true,
+            value: (routeName) => {
+                transitionedTo = routeName;
+                return 'onboard-transition';
+            },
+        });
+
         const result = await service.redirectIfConfiguredFromInstall();
 
         assert.strictEqual(result, 'onboard-transition');
@@ -126,17 +129,18 @@ module('Unit | Service | installation', function (hooks) {
             }
         }
 
-        class RouterStub extends Service {
-            transitionTo(routeName) {
-                transitionedTo = routeName;
-                return 'login-transition';
-            }
-        }
-
         this.owner.register('service:fetch', FetchStub);
-        this.owner.register('service:router', RouterStub);
 
         const service = this.owner.lookup('service:installation');
+
+        Object.defineProperty(service.router, 'transitionTo', {
+            configurable: true,
+            value: (routeName) => {
+                transitionedTo = routeName;
+                return 'login-transition';
+            },
+        });
+
         const result = await service.redirectIfConfiguredFromInstall();
 
         assert.strictEqual(result, 'login-transition');

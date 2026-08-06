@@ -1,58 +1,49 @@
 import { module, test } from 'qunit';
 import { setupTest } from '@fleetbase/console/tests/helpers';
-import window from 'ember-window-mock';
+import Service from '@ember/service';
 
-class MenuServiceStub {
-    adminMenuItems = [
-        {
-            title: 'Registry Config',
-            label: 'Registry Config',
-            description: 'Configure the registry bridge.',
-            icon: 'gear',
-            slug: 'registry-config',
-            view: null,
-            tags: ['extensions'],
-        },
-    ];
+const ADMIN_MENU_ITEMS = [
+    {
+        title: 'Registry Config',
+        label: 'Registry Config',
+        description: 'Configure the registry bridge.',
+        icon: 'gear',
+        slug: 'registry-config',
+        view: null,
+        tags: ['extensions'],
+    },
+];
 
-    adminMenuPanels = [
-        {
-            title: 'Fleet-Ops Config',
-            slug: 'fleet-ops',
-            icon: 'truck',
-            items: [
-                {
-                    title: 'Navigator App',
-                    icon: 'location-arrow',
-                    slug: 'fleet-ops',
-                    view: 'navigator-app',
-                    description: 'Configure the navigator app.',
-                },
-                {
-                    title: 'Map',
-                    icon: 'map',
-                    slug: 'fleet-ops',
-                    view: 'map',
-                },
-            ],
-        },
-    ];
-}
+const ADMIN_MENU_PANELS = [
+    {
+        title: 'Fleet-Ops Config',
+        slug: 'fleet-ops',
+        icon: 'truck',
+        items: [
+            {
+                title: 'Navigator App',
+                icon: 'location-arrow',
+                slug: 'fleet-ops',
+                view: 'navigator-app',
+                description: 'Configure the navigator app.',
+            },
+            {
+                title: 'Map',
+                icon: 'map',
+                slug: 'fleet-ops',
+                view: 'map',
+            },
+        ],
+    },
+];
 
-class UniverseStub {
-    transitions = [];
-
-    transitionMenuItem(route, menuItem) {
-        this.transitions.push({ route, menuItem });
-    }
-}
-
-class IntlStub {
+class IntlStub extends Service {
     translations = {
         'console.admin.menu.overview': 'Overview',
         'console.admin.menu.organizations': 'Organizations',
         'console.admin.menu.branding': 'Branding',
         'console.admin.menu.2fa-config': '2FA Config',
+        'console.admin.menu.platform-api-token': 'Platform API Token',
         'console.admin.schedule-monitor.schedule-monitor': 'Schedule Monitor',
         'console.admin.menu.services': 'Services',
         'console.admin.menu.mail': 'Mail',
@@ -71,9 +62,28 @@ module('Unit | Controller | console/admin', function (hooks) {
     setupTest(hooks);
 
     hooks.beforeEach(function () {
-        this.owner.register('service:universe/menu-service', MenuServiceStub);
-        this.owner.register('service:universe', UniverseStub);
+        // ember-intl's service overrides cleanly via owner.register.
         this.owner.register('service:intl', IntlStub);
+
+        // The universe service (and its universe/menu-service alias) is a pre-resolved
+        // singleton that owner.register can't swap, and it boots real extension menus.
+        // adminMenuItems/adminMenuPanels are @computed getters and transitionMenuItem is an
+        // @action getter, so shadow each with an own value property on the injected instance.
+        const seedMenus = (service) => {
+            Object.defineProperty(service, 'adminMenuItems', { configurable: true, value: ADMIN_MENU_ITEMS });
+            Object.defineProperty(service, 'adminMenuPanels', { configurable: true, value: ADMIN_MENU_PANELS });
+        };
+        seedMenus(this.owner.lookup('service:universe/menu-service'));
+
+        const universe = this.owner.lookup('service:universe');
+        seedMenus(universe);
+        universe.transitions = [];
+        Object.defineProperty(universe, 'transitionMenuItem', {
+            configurable: true,
+            value: (route, menuItem) => {
+                universe.transitions.push({ route, menuItem });
+            },
+        });
     });
 
     test('it exists', function (assert) {
@@ -86,25 +96,32 @@ module('Unit | Controller | console/admin', function (hooks) {
         const items = controller.navigationItems;
 
         assert.deepEqual(
-            items.slice(0, 5).map((item) => item.label),
-            ['Overview', 'Organizations', 'Branding', '2FA Config', 'Schedule Monitor'],
+            items.slice(0, 6).map((item) => item.label),
+            ['Overview', 'Organizations', 'Branding', '2FA Config', 'Platform API Token', 'Schedule Monitor'],
             'core admin items retain their current order'
         );
         assert.deepEqual(
-            items.slice(0, 5).map((item) => item.route),
-            ['console.admin.index', 'console.admin.organizations', 'console.admin.branding', 'console.admin.two-fa-settings', 'console.admin.schedule-monitor'],
+            items.slice(0, 6).map((item) => item.route),
+            [
+                'console.admin.index',
+                'console.admin.organizations',
+                'console.admin.branding',
+                'console.admin.two-fa-settings',
+                'console.admin.platform-api-token',
+                'console.admin.schedule-monitor',
+            ],
             'core admin items retain their routes'
         );
         assert.deepEqual(
-            items.slice(0, 5).map((item) => item.icon),
-            ['rectangle-list', 'building', 'palette', 'shield-halved', 'calendar-check'],
+            items.slice(0, 6).map((item) => item.icon),
+            ['rectangle-list', 'building', 'palette', 'shield-halved', 'key', 'calendar-check'],
             'core admin items retain their icons'
         );
     });
 
     test('it converts loose registry admin menu items into root navigator items', function (assert) {
         const controller = this.owner.lookup('controller:console/admin');
-        const registryItem = controller.navigationItems[5];
+        const registryItem = controller.navigationItems[6];
 
         assert.strictEqual(registryItem.label, 'Registry Config');
         assert.strictEqual(registryItem.icon, 'gear');
@@ -118,7 +135,7 @@ module('Unit | Controller | console/admin', function (hooks) {
 
     test('it converts registry admin panels into nested navigator branches', function (assert) {
         const controller = this.owner.lookup('controller:console/admin');
-        const panel = controller.navigationItems[6];
+        const panel = controller.navigationItems[7];
 
         assert.strictEqual(panel.label, 'Fleet-Ops Config');
         assert.strictEqual(panel.icon, 'truck');
@@ -132,7 +149,9 @@ module('Unit | Controller | console/admin', function (hooks) {
             ['location-arrow', 'map'],
             'panel children preserve icons'
         );
-        assert.deepEqual(panel.children[0].keywords, ['fleet-ops', 'navigator-app', 'Navigator App', 'Navigator App', 'Configure the navigator app.']);
+        // keywords = [slug, view, section, title, label, description, ...tags].filter(Boolean);
+        // this fixture item has no section/label, so those drop out.
+        assert.deepEqual(panel.children[0].keywords, ['fleet-ops', 'navigator-app', 'Navigator App', 'Configure the navigator app.']);
         assert.true(panel.children[0]._virtual, 'panel children keep virtual metadata');
         assert.strictEqual(panel.children[0].slug, 'fleet-ops', 'panel child slug remains the panel slug for /admin/<panel>');
         assert.strictEqual(panel.children[0].view, 'navigator-app', 'panel child view remains the child slug for ?view=<item>');
@@ -141,27 +160,37 @@ module('Unit | Controller | console/admin', function (hooks) {
 
     test('it marks virtual registry items active from the current admin virtual URL', function (assert) {
         const controller = this.owner.lookup('controller:console/admin');
-        const rootRegistryItem = controller.navigationItems[5];
-        const navigatorAppItem = controller.navigationItems[6].children[0];
-        const mapItem = controller.navigationItems[6].children[1];
+        const rootRegistryItem = controller.navigationItems[6];
+        const navigatorAppItem = controller.navigationItems[7].children[0];
+        const mapItem = controller.navigationItems[7].children[1];
 
-        window.location.href = '/admin/fleet-ops?view=navigator-app';
+        // activeWhen delegates to isMenuItemActive, which reads window.location.pathname and
+        // (via getUrlParam) window.location.search off the real global window. replaceState
+        // rewrites both synchronously without navigating the test iframe.
+        const originalUrl = window.location.href;
+        const visit = (url) => window.history.replaceState(null, '', url);
 
-        assert.true(navigatorAppItem.activeWhen(), 'matching panel child is active for /admin/<panel>?view=<item>');
-        assert.false(mapItem.activeWhen(), 'sibling panel child is not active for a different view');
-        assert.false(rootRegistryItem.activeWhen(), 'loose registry item is not active for a panel child URL');
+        try {
+            visit('/admin/fleet-ops?view=navigator-app');
 
-        window.location.href = '/admin/registry-config';
+            assert.true(navigatorAppItem.activeWhen(), 'matching panel child is active for /admin/<panel>?view=<item>');
+            assert.false(mapItem.activeWhen(), 'sibling panel child is not active for a different view');
+            assert.false(rootRegistryItem.activeWhen(), 'loose registry item is not active for a panel child URL');
 
-        assert.true(rootRegistryItem.activeWhen(), 'loose registry item is active for /admin/<slug>');
-        assert.false(navigatorAppItem.activeWhen(), 'panel child is not active for loose registry URL');
+            visit('/admin/registry-config');
+
+            assert.true(rootRegistryItem.activeWhen(), 'loose registry item is active for /admin/<slug>');
+            assert.false(navigatorAppItem.activeWhen(), 'panel child is not active for loose registry URL');
+        } finally {
+            window.history.replaceState(null, '', originalUrl);
+        }
     });
 
     test('it transitions registry items through the admin virtual route', function (assert) {
         const controller = this.owner.lookup('controller:console/admin');
         const universe = this.owner.lookup('service:universe');
-        const rootRegistryItem = controller.navigationItems[5];
-        const panelRegistryItem = controller.navigationItems[6].children[0];
+        const rootRegistryItem = controller.navigationItems[6];
+        const panelRegistryItem = controller.navigationItems[7].children[0];
 
         rootRegistryItem.onClick();
         panelRegistryItem.onClick();
@@ -180,7 +209,7 @@ module('Unit | Controller | console/admin', function (hooks) {
 
     test('it adds system config as a nested navigator branch', function (assert) {
         const controller = this.owner.lookup('controller:console/admin');
-        const systemConfig = controller.navigationItems[7];
+        const systemConfig = controller.navigationItems[8];
 
         assert.strictEqual(systemConfig.label, 'System Config');
         assert.deepEqual(
