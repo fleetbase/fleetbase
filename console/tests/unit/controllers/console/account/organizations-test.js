@@ -110,6 +110,22 @@ module('Unit | Controller | console/account/organizations', function (hooks) {
         this.owner.register('service:notifications', NotificationsStub);
         this.owner.register('service:intl', IntlStub);
 
+        // Registered before the controller is looked up — the controller resolves its
+        // injections on creation, so a stub registered later would never reach it and the
+        // real fetch service would issue a request.
+        this.posted = [];
+        const posted = this.posted;
+        class FetchStub extends Service {
+            post(path, payload) {
+                posted.push({ path, payload });
+                return this.postResponse ? this.postResponse(path, payload) : Promise.resolve({});
+            }
+            flushRequestCache(path) {
+                posted.push({ flushed: path });
+            }
+        }
+        this.owner.register('service:fetch', FetchStub);
+
         this.controller = this.owner.lookup('controller:console/account/organizations');
         this.modals = this.owner.lookup('service:modals-manager');
         this.notifications = this.owner.lookup('service:notifications');
@@ -237,22 +253,7 @@ module('Unit | Controller | console/account/organizations', function (hooks) {
     });
 
     test('createOrganization posts the new organization and refreshes', async function (assert) {
-        const posted = [];
-        class FetchStub extends Service {
-            post(path, payload) {
-                posted.push({ path, payload });
-                return Promise.resolve({});
-            }
-            flushRequestCache(path) {
-                posted.push({ flushed: path });
-            }
-        }
-        this.owner.register('service:fetch', FetchStub);
-
-        const controller = this.owner.lookup('controller:console/account/organizations');
-        controller.router.refresh = () => this.refreshed++;
-
-        controller.createOrganization();
+        this.controller.createOrganization();
 
         const options = this.modals.lastOptions;
         options.organization.name = 'New Co';
@@ -260,23 +261,16 @@ module('Unit | Controller | console/account/organizations', function (hooks) {
         // this confirm handler reads the edited organization back via modal.getOption()
         await options.confirm(fakeModal(options));
 
-        assert.strictEqual(posted[0].path, 'auth/create-organization');
-        assert.strictEqual(posted[0].payload.name, 'New Co');
-        assert.deepEqual(posted[1], { flushed: 'auth/organizations' });
+        assert.strictEqual(this.posted[0].path, 'auth/create-organization');
+        assert.strictEqual(this.posted[0].payload.name, 'New Co');
+        assert.deepEqual(this.posted[1], { flushed: 'auth/organizations' });
         assert.strictEqual(this.refreshed, 1);
     });
 
     test('switchOrganization reports a server error without reloading', async function (assert) {
-        class FetchStub extends Service {
-            post() {
-                return Promise.reject(new Error('nope'));
-            }
-            flushRequestCache() {}
-        }
-        this.owner.register('service:fetch', FetchStub);
+        this.controller.fetch.postResponse = () => Promise.reject(new Error('nope'));
 
-        const controller = this.owner.lookup('controller:console/account/organizations');
-        controller.switchOrganization(organization());
+        this.controller.switchOrganization(organization());
 
         const modal = fakeModal();
         await this.modals.lastOptions.confirm(modal);
@@ -286,20 +280,8 @@ module('Unit | Controller | console/account/organizations', function (hooks) {
     });
 
     test('switchOrganization posts the switch and schedules a reload on success', async function (assert) {
-        const posted = [];
-        class FetchStub extends Service {
-            post(path, payload) {
-                posted.push({ path, payload });
-                return Promise.resolve({});
-            }
-            flushRequestCache(path) {
-                posted.push({ flushed: path });
-            }
-        }
-        this.owner.register('service:fetch', FetchStub);
-
-        const controller = this.owner.lookup('controller:console/account/organizations');
-        controller.switchOrganization(organization());
+        const posted = this.posted;
+        this.controller.switchOrganization(organization());
 
         // The success path returns the `later` timer that reloads the page — cancel it
         // so the pending reload never fires against the test runner.
