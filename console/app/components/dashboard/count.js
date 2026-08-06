@@ -30,19 +30,26 @@ export default class DashboardCountComponent extends Component {
     constructor(owner, { options, title, value = null }) {
         super(...arguments);
         this.title = title;
-        this.value = value;
-        this.createRenderValueFromOptions(options);
+        this.createRenderValueFromOptions(options, value);
     }
 
     /**
      * Creates the value to render using the options provided.
      *
+     * The provided value is taken as a parameter rather than read back off the tracked
+     * `value` property: reading and then writing the same tracked property while the
+     * component is being constructed during a render trips Ember's "already been used
+     * previously in the same computation" assertion. Mirrors
+     * @fleetbase/ember-ui's widget/count component.
+     *
      * @param {Object} [options={}]
+     * @param {String|Number} [defaultValue=null]
      * @memberof WidgetKeyMetricsCountComponent
      */
-    createRenderValueFromOptions(options = {}) {
+    createRenderValueFromOptions(options = {}, defaultValue = null) {
         // Skip deriving a value from options when one was already provided.
-        if (this.value !== null) {
+        if (defaultValue !== null) {
+            this.value = defaultValue;
             return;
         }
 

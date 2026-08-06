@@ -6,21 +6,24 @@ import { hbs } from 'ember-cli-htmlbars';
 module('Integration | Component | dashboard/query-params', function (hooks) {
     setupRenderingTest(hooks);
 
-    test('it renders', async function (assert) {
-        // Set any properties with this.set('myProperty', 'value');
-        // Handle any actions with this.set('myAction', function(val) { ... });
+    test('it renders a labelled control for each param', async function (assert) {
+        this.set('params', {
+            status: { component: 'input' },
+            driver_name: { component: 'input' },
+        });
 
-        await render(hbs`<Dashboard::QueryParams />`);
+        await render(hbs`<Dashboard::QueryParams @params={{this.params}} />`);
+
+        // humanize() only upper-cases the first character: driver_name -> "Driver name".
+        assert.dom(this.element).containsText('Status');
+        assert.dom(this.element).containsText('Driver name', 'param keys are humanized into labels');
+    });
+
+    test('it renders nothing for an empty param set', async function (assert) {
+        this.set('params', {});
+
+        await render(hbs`<Dashboard::QueryParams @params={{this.params}} />`);
 
         assert.dom(this.element).hasText('');
-
-        // Template block usage:
-        await render(hbs`
-      <Dashboard::QueryParams>
-        template block text
-      </Dashboard::QueryParams>
-    `);
-
-        assert.dom(this.element).hasText('template block text');
     });
 });

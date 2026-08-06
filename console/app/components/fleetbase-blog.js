@@ -53,6 +53,14 @@ export default class FleetbaseBlogComponent extends Component {
             // Fetch new data
             try {
                 const data = yield this.fetch.get('lookup/fleetbase-blog');
+
+                // The component can be torn down while this request is in flight; writing
+                // tracked state afterwards throws "Cannot create a new tag ... after it has
+                // been destroyed".
+                if (this.isDestroying || this.isDestroyed) {
+                    return;
+                }
+
                 this.posts = isArray(data) ? data : [];
                 if (data) {
                     this.localCache.set('fleetbase-blog-data', data);
