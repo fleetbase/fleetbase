@@ -83,12 +83,22 @@ jobs:
           name: console-coverage
           fail_ci_if_error: false
 
-      # Coverage gate. Target is 100% (scripts/coverage-check.mjs).
-      # continue-on-error is TEMPORARY — remove it to make this a required,
-      # blocking check once the console suite reaches 100% coverage.
-      - name: Enforce coverage threshold (100%)
+      # Coverage gate. Long-term target is 100% (scripts/coverage-check.mjs); the
+      # threshold ratchets up as the suite grows.
+      #
+      # 35 is the floor the suite currently holds. Measured locally at 392/392:
+      #   lines 44.06% · statements 43.57% · functions 40.22% · branches 36.18%
+      # The check applies the threshold to ALL FOUR metrics, so branches is the
+      # binding constraint — 40 would fail today despite lines being at 44%.
+      #
+      # Until this commit the console produced no coverage report at all (no babel
+      # instrumentation, no sendCoverage hook, and a scoped-modulePrefix path
+      # mismatch), so this gate has never actually evaluated anything. It stays
+      # continue-on-error for one release so the first real CI report can be
+      # observed; drop that line to make it a required, blocking check.
+      - name: Enforce coverage threshold
         continue-on-error: true
-        run: pnpm run coverage:check -- --fail-under=100
+        run: pnpm run coverage:check -- --fail-under=35
 
       - name: Build (production)
         run: npx ember build --environment production
