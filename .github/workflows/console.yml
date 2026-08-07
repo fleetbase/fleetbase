@@ -83,22 +83,28 @@ jobs:
           name: console-coverage
           fail_ci_if_error: false
 
-      # Coverage gate. Long-term target is 100% (scripts/coverage-check.mjs); the
-      # threshold ratchets up as the suite grows.
+      # Coverage gate — reports the numbers, does not block this release.
       #
-      # 35 is the floor the suite currently holds. Measured locally at 392/392:
-      #   lines 44.06% · statements 43.57% · functions 40.22% · branches 36.18%
-      # The check applies the threshold to ALL FOUR metrics, so branches is the
-      # binding constraint — 40 would fail today despite lines being at 44%.
+      # Measured locally at 577/577 passing:
+      #   lines 70.02% · statements 69.84% · functions 68.69% · branches 71.54%
+      # scripts/coverage-check.mjs applies the threshold to ALL FOUR metrics, so
+      # functions is the binding constraint — 70 would fail today despite lines
+      # being at 70.02%. 65 is the floor the suite comfortably holds.
       #
-      # Until this commit the console produced no coverage report at all (no babel
-      # instrumentation, no sendCoverage hook, and a scoped-modulePrefix path
-      # mismatch), so this gate has never actually evaluated anything. It stays
-      # continue-on-error for one release so the first real CI report can be
-      # observed; drop that line to make it a required, blocking check.
-      - name: Enforce coverage threshold
+      # Deliberately still continue-on-error. Coverage produced no report at all
+      # until recently (no babel instrumentation, no sendCoverage hook, and a
+      # scoped-modulePrefix path mismatch dropping every file), and the Lint step
+      # ahead of it was failing, so this gate has never once evaluated real data in
+      # CI. Watch one green run before making it blocking.
+      #
+      # 100% remains the long-term target but is deferred: several files cannot be
+      # covered as written — four use later(() => window.location.reload()), and
+      # report.js has static methods calling getOwner() on the class, which returns
+      # undefined. Reaching 100% needs those addressed (an injectable reload,
+      # repairing or removing the dead statics) rather than more tests.
+      - name: Report coverage threshold
         continue-on-error: true
-        run: pnpm run coverage:check -- --fail-under=35
+        run: pnpm run coverage:check -- --fail-under=65
 
       - name: Build (production)
         run: npx ember build --environment production

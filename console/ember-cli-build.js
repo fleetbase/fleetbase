@@ -4,7 +4,6 @@
 const EmberApp = require('ember-cli/lib/broccoli/ember-app');
 const Funnel = require('broccoli-funnel');
 const writeFile = require('broccoli-file-creator');
-const mergeTrees = require('broccoli-merge-trees');
 const toBoolean = require('./config/utils/to-boolean');
 
 module.exports = function (defaults) {

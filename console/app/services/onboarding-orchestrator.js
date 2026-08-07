@@ -138,7 +138,7 @@ export default class OnboardingOrchestratorService extends Service {
         if (!this.flow || !this.flow.paths) return null;
 
         // Determine path based on context or current step
-        for (const [pathId, pathDef] of Object.entries(this.flow.paths)) {
+        for (const pathDef of Object.values(this.flow.paths)) {
             if (pathDef.steps && pathDef.steps.some((s) => s.id === this.current?.id)) {
                 return pathDef;
             }

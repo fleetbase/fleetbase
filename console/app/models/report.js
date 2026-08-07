@@ -1,8 +1,8 @@
-import Model, { attr, belongsTo, hasMany } from '@ember-data/model';
+import Model, { attr } from '@ember-data/model';
 import { computed } from '@ember/object';
 import { isArray } from '@ember/array';
 import { getOwner } from '@ember/application';
-import { isPresent, isEmpty } from '@ember/utils';
+import { isPresent } from '@ember/utils';
 import { format, formatDistanceToNow } from 'date-fns';
 
 export default class ReportModel extends Model {
@@ -34,7 +34,6 @@ export default class ReportModel extends Model {
     @attr('raw') tags;
     @attr('raw') options;
     @attr('raw') meta;
-    @attr('string') status;
 
     /** @dates */
     @attr('date') created_at;
@@ -75,7 +74,7 @@ export default class ReportModel extends Model {
         return format(this.created_at, 'yyyy-MM-dd HH:mm');
     }
 
-    @computed('query_config.columns.length', 'query_config.table.name') get hasValidConfig() {
+    @computed('query_config.{columns.length,table.name}') get hasValidConfig() {
         return (
             isPresent(this.query_config) &&
             isPresent(this.query_config.table) &&
@@ -311,12 +310,8 @@ export default class ReportModel extends Model {
         const owner = getOwner(this);
         const fetch = owner.lookup('service:fetch');
 
-        try {
-            const response = await fetch.post(this.id ? `reports/${this.id}/execute` : 'reports/execute-query', { query_config: this.query_config });
-            return response;
-        } catch (error) {
-            throw error;
-        }
+        const response = await fetch.post(this.id ? `reports/${this.id}/execute` : 'reports/execute-query', { query_config: this.query_config });
+        return response;
     }
 
     // API methods for interacting with the new backend
@@ -324,58 +319,42 @@ export default class ReportModel extends Model {
         const owner = getOwner(this);
         const fetch = owner.lookup('service:fetch');
 
-        try {
-            const response = await fetch.post('reports/execute-query', { query_config: this.query_config });
-            return response;
-        } catch (error) {
-            throw error;
-        }
+        const response = await fetch.post('reports/execute-query', { query_config: this.query_config });
+        return response;
     }
 
     async export(format = 'csv', options = {}) {
         const owner = getOwner(this);
         const fetch = owner.lookup('service:fetch');
 
-        try {
-            const response = await fetch.post(`reports/${this.id}/export`, {
-                format,
-                options,
-            });
+        const response = await fetch.post(`reports/${this.id}/export`, {
+            format,
+            options,
+        });
 
-            return response;
-        } catch (error) {
-            throw error;
-        }
+        return response;
     }
 
     async validate() {
         const owner = getOwner(this);
         const fetch = owner.lookup('service:fetch');
 
-        try {
-            const response = await fetch.post('reports/validate-query', {
-                query_config: this.query_config,
-            });
+        const response = await fetch.post('reports/validate-query', {
+            query_config: this.query_config,
+        });
 
-            return response;
-        } catch (error) {
-            throw error;
-        }
+        return response;
     }
 
     async analyze() {
         const owner = getOwner(this);
         const fetch = owner.lookup('service:fetch');
 
-        try {
-            const response = await fetch.post('reports/analyze-query', {
-                query_config: this.query_config,
-            });
+        const response = await fetch.post('reports/analyze-query', {
+            query_config: this.query_config,
+        });
 
-            return response;
-        } catch (error) {
-            throw error;
-        }
+        return response;
     }
 
     // Static methods for direct query operations
@@ -383,89 +362,61 @@ export default class ReportModel extends Model {
         const owner = getOwner(this);
         const fetch = owner.lookup('service:fetch');
 
-        try {
-            const response = await fetch.post('reports/execute-query', {
-                query_config: queryConfig,
-            });
+        const response = await fetch.post('reports/execute-query', {
+            query_config: queryConfig,
+        });
 
-            return response;
-        } catch (error) {
-            throw error;
-        }
+        return response;
     }
 
     static async exportQuery(queryConfig, format = 'csv', options = {}) {
         const owner = getOwner(this);
         const fetch = owner.lookup('service:fetch');
 
-        try {
-            const response = await fetch('reports/export-query', {
-                query_config: queryConfig,
-                format,
-                options,
-            });
+        const response = await fetch('reports/export-query', {
+            query_config: queryConfig,
+            format,
+            options,
+        });
 
-            return response;
-        } catch (error) {
-            throw error;
-        }
+        return response;
     }
 
     static async validateQuery(queryConfig) {
         const owner = getOwner(this);
         const fetch = owner.lookup('service:fetch');
 
-        try {
-            const response = await fetch.post('reports/validate-query', { query_config: queryConfig });
-            return response;
-        } catch (error) {
-            throw error;
-        }
+        const response = await fetch.post('reports/validate-query', { query_config: queryConfig });
+        return response;
     }
 
     static async analyzeQuery(queryConfig) {
         const owner = getOwner(this);
         const fetch = owner.lookup('service:fetch');
 
-        try {
-            const response = await fetch.post('reports/analyze-query', { query_config: queryConfig });
-            return response;
-        } catch (error) {
-            throw error;
-        }
+        const response = await fetch.post('reports/analyze-query', { query_config: queryConfig });
+        return response;
     }
 
     static async getTables() {
-        try {
-            const { tables } = await fetch.get('reports/tables');
-            return tables;
-        } catch (error) {
-            throw error;
-        }
+        const { tables } = await fetch.get('reports/tables');
+        return tables;
     }
 
     static async getTableSchema(tableName) {
         const owner = getOwner(this);
         const fetch = owner.lookup('service:fetch');
 
-        try {
-            const { schema } = await fetch.get(`reports/tables/${tableName}/schema`);
-            return schema;
-        } catch (error) {
-            throw error;
-        }
+        const { schema } = await fetch.get(`reports/tables/${tableName}/schema`);
+        return schema;
     }
 
     static async getExportFormats() {
         const owner = getOwner(this);
         const fetch = owner.lookup('service:fetch');
 
-        try {
-            const { formats } = await fetch.get('reports/export-formats');
-            return formats;
-        } catch (error) {
-            throw error;
-        }
+        const { formats } = await fetch.get('reports/export-formats');
+        return formats;
     }
 
     // Utility methods for frontend display
