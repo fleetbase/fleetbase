@@ -1,70 +1,76 @@
-> v0.7.52 ~ "Platform hardening, backend coverage, Taler lifecycle, and secure account updates"
+> v0.7.53 ~ "CI hardening, full coverage foundations, Fleet-Ops reliability, and Taler refunds"
 
 ---
 ## Highlights
-Fleetbase `0.7.52` focuses on platform quality, security hardening, backend coverage, and payment/account workflow reliability. This release updates Fleetbase Console `0.7.52`, AI `0.0.3`, Storefront `0.4.17`, Fleet-Ops `0.6.58`, Ledger `0.0.8`, Core API `1.6.54`, and IAM Engine `0.1.11`.
+Fleetbase `0.7.53` is a quality and reliability release. It adds root install-smoke, API, Console, and Postman contract CI, expands backend coverage across the core modules, and ships targeted fixes for Fleet-Ops operations, Storefront checkout behavior, Ledger Taler refunds, and shared platform runtime paths.
 
 ---
 ## Component Versions
-- `console`: `0.7.52`
-- `ai`: `0.0.3`
-- `storefront`: `0.4.17`
-- `fleetops`: `0.6.58`
-- `ledger`: `0.0.8`
-- `core-api`: `1.6.54`
-- `iam-engine`: `0.1.11`
+- `console`: `0.7.53`
+- `core-api`: `1.6.55`
+- `ai`: `0.0.4`
+- `fleetops`: `0.6.59`
+- `ledger`: `0.0.9`
+- `storefront`: `0.4.18`
 
 ---
-## Platform Quality and Coverage
-- Added backend coverage baseline tooling, Pest runners, coverage summaries, and CI coverage reporting across AI, Storefront, Fleet-Ops, Core API, and Ledger.
-- Restored and stabilized backend package test harnesses, including custom vendor-path support, package bootstrapping, and CI runner fixes.
-- Added focused coverage for reporting contracts, resource shapes, validation behavior, support helpers, route helpers, currency behavior, tracking, telematics, and exports.
-- Updated Console localization content for this release.
+## Platform CI and Coverage
+- Added root-level CI for install-smoke, API tests, Console tests, and coverage reporting.
+- Added a live-stack Postman contract workflow that can mint an API key and run the official Fleetbase collections.
+- Replaced API stub tests with real host-app coverage for health checks, outbound HTTP logging, users, and event-provider behavior.
+- Expanded Console QUnit coverage, fixed lint blockers, and added coverage reporting for the root Console workflow.
+- Fixed Docker install smoke issues around release image targets, bundled database privileges, API key minting, Codecov uploads, and package registry resolution.
 
 ---
-## Core API Hardening
-- Added security advisory fixes for tenant-scoped internal endpoints, generic user access, template query execution, and platform-token-protected organization access.
-- Added organization name search and improved organization API protection.
-- Fixed public ID generation collisions and dynamic request resolution.
-- Improved SMPP configuration diagnostics and environment mapping.
-- Widened transaction settled currency support for settlement-related workflows.
+## Core API
+- Expanded Core API backend coverage to a full baseline across controllers, requests, resources, reports, templates, files, notifications, auth, metrics/search, settings, middleware, webhooks, services, models, traits, and console commands.
+- Improved coverage reporting when Clover omits aggregate class metrics.
+- Added broader contract coverage for SMS providers, two-factor auth, scheduling, API credential tracking, resource expansion, report execution, policy behavior, and tenant-scoped helper paths.
+- Updated the host API dependency to `fleetbase/core-api` `1.6.55`.
+
+---
+## Fleet-Ops
+- Expanded Fleet-Ops backend coverage from the high-70% range to a near-complete baseline while cleaning up dead or unreachable branches.
+- Fixed production defects found during coverage work, including plain-address place insertion, reverse-geocode validation, empty reverse-geocode results, Lalamove market quotations, missing order config defaults, and service-rate sorting.
+- Added a View Label action for individual entities and scoped order, waypoint, and entity label lookup by company.
+- Fixed GeoJSON fallback coordinate handling so bare coordinate pairs are read in GeoJSON longitude/latitude order.
+- Fixed vehicle vendor filtering, driver device registration without an explicit driver id, and default device `last_position` creation.
+- Added coverage for AFAQY transport, Lalamove quotes, service quotes, geofencing, maintenance/work-order imports, order imports, waypoint activity, vendor bridges, tracking, fuel reports, and driver assignment flows.
 
 ---
 ## Ledger and Taler
-- Completed the GNU Taler payment gateway lifecycle with tenant-safe webhook routing, hosted sandbox defaults, diagnostics, webhook provisioning, settlement verification, and richer refund metadata.
-- Added gateway lifecycle fields for reconciliation, refund status, wallet refund state, settlement metadata, and raw Taler details.
-- Added invoice refund workflows, refund confirmation, reversal handling, and refund result UI.
-- Revamped Ledger payment gateway management with gateway catalog cards, diagnostics, setup, webhooks, details, and provider status surfaces.
-- Added Taler sandbox and settlement console commands plus focused driver, webhook, lifecycle, diagnostics, and refund coverage.
+- Completed the customer-facing GNU Taler refund lifecycle with persistent refund URIs, refund history, public wallet handoff, QR/copy fallback, and refund email delivery.
+- Added scheduled and manual Taler refund verification so invoices remain pending until wallet acceptance is confirmed.
+- Improved Taler driver support for refund status polling, order-status checks, gateway diagnostics, and credential validation.
+- Expanded Ledger backend coverage to a full baseline across gateways, invoices, wallet, payments, refunds, revenue lifecycle, webhooks, listeners, resources, filters, notifications, commands, and routes.
+- Added Ledger API contract workflow support and coverage reporting.
 
 ---
-## Fleet-Ops and Storefront
-- Restored Fleet-Ops backend coverage and package test tooling for the `0.6.58` release.
-- Removed the organizations listing API endpoint from the Fleet-Ops release branch.
-- Stabilized Fleet-Ops backend tests around analytics, tracking, live queries, telematics, service rates, service areas, and assignment contracts.
-- Added Storefront backend coverage tooling, corrected backend PHPUnit paths, and refreshed checkout/order resource tests.
-
----
-## IAM
-- Added a secure user email-change flow with a dedicated modal, controller wiring, confirmation copy, and translated UI strings.
-- Updated IAM dependency overrides and workspace metadata for the release.
+## AI and Storefront
+- Expanded Fleetbase AI backend coverage to a full baseline, including sessions, tasks, attachments, providers, admin endpoints, query execution, capability helpers, and coverage-summary reporting.
+- Organized AI backend tests into explicit unit and feature suites and added CI coverage reporting.
+- Expanded Storefront backend coverage to a full baseline across checkout, payment initialization, Stripe/QPay flows, customer auth, integrated vendors, food trucks, commerce resources, commands, middleware, requests, and provider integrations.
+- Fixed Storefront issues found by coverage around pickup-store resolution, order configuration projection, Twilio-specific errors, dashboard behavior, and Stripe checkout errors.
 
 ---
 ## Bug Fixes
-- Fixed tenant-scoped access gaps in internal Core API endpoints.
-- Fixed Core API public ID collision handling.
-- Fixed Core API template query and report export formatting paths.
-- Fixed Ledger refund reversal handling and gateway route assertions.
-- Fixed Storefront checkout/order resource test contracts.
-- Fixed IAM change-email flow copy and form behavior.
+- Fixed Console lint failures that blocked the release workflow before tests and coverage could run.
+- Fixed missing Console translation keys used by set-password and common action flows.
+- Fixed Fleet-Ops label lookup cross-company leakage.
+- Fixed Fleet-Ops vehicle vendor filtering returning no public API results.
+- Fixed Fleet-Ops driver device registration and device default position creation returning `500`s.
+- Fixed Storefront checkout and Stripe error paths surfaced by backend coverage.
+- Fixed Ledger refund reversal and wallet refund state handling for Taler refunds.
 
 ---
 ## API Changes
-- Added Core API platform-token protection for trusted organization access.
-- Hardened Core API internal endpoint scoping and template query execution.
-- Removed the Fleet-Ops organizations listing API endpoint from the release branch.
-- Added Ledger Taler gateway diagnostics, webhook provisioning, settlement verification, refund workflow, and gateway transaction lifecycle fields.
-- Added IAM secure email-change flow support.
+- Added root API contract workflow support for live-stack Postman collection runs.
+- Updated Core API to `1.6.55` and widened backend contract coverage across public, internal, admin, reporting, auth, webhook, search, settings, and file routes.
+- Fleet-Ops entity labels now use the existing order label endpoint and enforce company-scoped subject resolution.
+- Fleet-Ops GeoJSON fallback coordinate parsing now preserves GeoJSON longitude/latitude order for affected bare-pair inputs.
+- Fleet-Ops public vehicle vendor filtering now accepts public/internal vendor identifiers, while internal routes can still resolve vendor UUIDs.
+- Fleet-Ops driver device registration can resolve the current driver when no id is supplied, and devices default missing `last_position` to `POINT(0,0)`.
+- Ledger adds public Taler refund handoff, refund-history access, refund verification command support, and pending refund state transitions.
 
 ---
 ## Upgrade Steps
