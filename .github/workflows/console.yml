@@ -54,13 +54,16 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-pnpm-store-
 
-      - name: Create .npmrc
-        run: |
-          if [[ -n "${{ secrets._GITHUB_AUTH_TOKEN }}" ]]; then
-            echo "@fleetbase:registry=https://npm.pkg.github.com/" > .npmrc
-            echo "//npm.pkg.github.com/:_authToken=${{ secrets._GITHUB_AUTH_TOKEN }}" >> .npmrc
-          fi
-
+      # No .npmrc is written on purpose. Every @fleetbase/* package this app depends on
+      # is published to the public npm registry, so the default registry resolves them
+      # with no credentials — which is what an OSS repo needs: forks and outside
+      # contributors must be able to install without any token.
+      #
+      # An earlier version of this step wrote "@fleetbase:registry=https://npm.pkg.github.com/"
+      # whenever the _GITHUB_AUTH_TOKEN secret was present. That redirected the whole
+      # @fleetbase scope to GitHub Packages, where these packages are not published, and
+      # install died with ERR_PNPM_FETCH_404 on @fleetbase/ember-core. Note it failed only
+      # on the main repo (which has the secret) and passed on forks (which do not).
       - name: Install Dependencies
         run: pnpm install
 
