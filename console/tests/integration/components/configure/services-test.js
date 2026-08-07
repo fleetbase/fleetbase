@@ -86,7 +86,10 @@ module('Integration | Component | configure/services', function (hooks) {
     });
 
     test('it renders sms provider configuration and sends test payload', async function (assert) {
-        await render(hbs`<Configure::Services />`);
+        await render(hbs`
+            <div id="next-view-section-subheader-actions"></div>
+            <Configure::Services />
+        `);
         await waitFor('[data-test-sms-default-provider]');
 
         assert.dom('[data-test-sms-default-provider]').hasValue('twilio');
@@ -117,7 +120,10 @@ module('Integration | Component | configure/services', function (hooks) {
     });
 
     test('it configures custom http get query params', async function (assert) {
-        await render(hbs`<Configure::Services />`);
+        await render(hbs`
+            <div id="next-view-section-subheader-actions"></div>
+            <Configure::Services />
+        `);
         await waitFor('[data-test-sms-default-provider]');
 
         assert.dom(this.element).doesNotIncludeText('Vonage Base URL');
@@ -160,7 +166,10 @@ module('Integration | Component | configure/services', function (hooks) {
     });
 
     test('it configures smpp advanced submit parameters', async function (assert) {
-        await render(hbs`<Configure::Services />`);
+        await render(hbs`
+            <div id="next-view-section-subheader-actions"></div>
+            <Configure::Services />
+        `);
         await waitFor('[data-test-sms-default-provider]');
 
         await select('[data-test-sms-default-provider]', 'smpp');

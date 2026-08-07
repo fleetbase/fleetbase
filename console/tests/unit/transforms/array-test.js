@@ -1,13 +1,42 @@
 import { module, test } from 'qunit';
-
 import { setupTest } from '@fleetbase/console/tests/helpers';
 
 module('Unit | Transform | array', function (hooks) {
     setupTest(hooks);
 
-    // Replace this with your real tests.
-    test('it exists', function (assert) {
-        let transform = this.owner.lookup('transform:array');
-        assert.ok(transform);
+    test('deserialize returns [] for null/undefined', function (assert) {
+        const transform = this.owner.lookup('transform:array');
+        assert.deepEqual(transform.deserialize(null), []);
+        assert.deepEqual(transform.deserialize(undefined), []);
+    });
+
+    test('deserialize passes through arrays unchanged', function (assert) {
+        const transform = this.owner.lookup('transform:array');
+        const arr = [1, 2, 3];
+        assert.strictEqual(transform.deserialize(arr), arr);
+    });
+
+    test('deserialize parses JSON array strings', function (assert) {
+        const transform = this.owner.lookup('transform:array');
+        assert.deepEqual(transform.deserialize('[1,2,3]'), [1, 2, 3]);
+    });
+
+    test('deserialize returns [] for malformed JSON strings', function (assert) {
+        const transform = this.owner.lookup('transform:array');
+        assert.deepEqual(transform.deserialize('[1,2'), []);
+    });
+
+    test('deserialize converts non-string iterables via Array.from', function (assert) {
+        const transform = this.owner.lookup('transform:array');
+        assert.deepEqual(transform.deserialize(new Set([1, 2])), [1, 2]);
+    });
+
+    test('serialize mirrors deserialize behavior', function (assert) {
+        const transform = this.owner.lookup('transform:array');
+        assert.deepEqual(transform.serialize(undefined), []);
+        const arr = ['a', 'b'];
+        assert.strictEqual(transform.serialize(arr), arr);
+        assert.deepEqual(transform.serialize('["x"]'), ['x']);
+        assert.deepEqual(transform.serialize('bad'), []);
     });
 });

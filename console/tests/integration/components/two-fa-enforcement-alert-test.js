@@ -1,26 +1,68 @@
 import { module, test } from 'qunit';
 import { setupRenderingTest } from '@fleetbase/console/tests/helpers';
-import { render } from '@ember/test-helpers';
+import { render, click } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
+import Service from '@ember/service';
+
+function registerFetch(owner, response) {
+    class FetchStub extends Service {
+        get() {
+            return Promise.resolve(response);
+        }
+    }
+    owner.register('service:fetch', FetchStub);
+}
 
 module('Integration | Component | two-fa-enforcement-alert', function (hooks) {
     setupRenderingTest(hooks);
 
-    test('it renders', async function (assert) {
-        // Set any properties with this.set('myProperty', 'value');
-        // Handle any actions with this.set('myAction', function(val) { ... });
+    hooks.beforeEach(function () {
+        // Components using {{t}} need the locale resolved before render, otherwise
+        // ember-intl sets _locale mid-render and trips the tracked-property assertion.
+        this.owner.lookup('service:intl').setLocale('en-us');
+    });
+
+    test('it renders the alert when 2FA is enforced', async function (assert) {
+        registerFetch(this.owner, { shouldEnforce: true });
 
         await render(hbs`<TwoFaEnforcementAlert />`);
 
-        assert.dom().hasText('');
+        assert.dom('.two-fa-enforcement-alert').exists('the alert is shown');
+        assert.dom('#two-fa-setup-button').exists('the setup button is offered');
+    });
 
-        // Template block usage:
-        await render(hbs`
-      <TwoFaEnforcementAlert>
-        template block text
-      </TwoFaEnforcementAlert>
-    `);
+    test('it renders nothing when 2FA is not enforced', async function (assert) {
+        registerFetch(this.owner, { shouldEnforce: false });
 
-        assert.dom().hasText('template block text');
+        await render(hbs`<TwoFaEnforcementAlert />`);
+
+        assert.dom('.two-fa-enforcement-alert').doesNotExist();
+    });
+
+    test('it renders nothing when the enforcement check returns nothing', async function (assert) {
+        registerFetch(this.owner, null);
+
+        await render(hbs`<TwoFaEnforcementAlert />`);
+
+        assert.dom('.two-fa-enforcement-alert').doesNotExist();
+    });
+
+    test('the setup button transitions to the account auth settings', async function (assert) {
+        registerFetch(this.owner, { shouldEnforce: true });
+
+        await render(hbs`<TwoFaEnforcementAlert />`);
+
+        // RouterService can't be swapped via owner.register; patch the instance the
+        // component resolves.
+        let transitionedTo;
+        const router = this.owner.lookup('service:router');
+        Object.defineProperty(router, 'transitionTo', {
+            configurable: true,
+            value: (routeName) => (transitionedTo = routeName),
+        });
+
+        await click('#two-fa-setup-button');
+
+        assert.strictEqual(transitionedTo, 'console.account.auth');
     });
 });

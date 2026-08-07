@@ -82,7 +82,22 @@ export default class ConsoleAdminOrganizationsController extends Controller {
      *
      * @var {Array}
      */
-    queryParams = ['query', 'name', 'page', 'limit', 'sort', 'country', 'status', 'owner_email', 'onboarding_completed', 'billing_status', 'created_at', 'needs_attention', 'missing_owner', 'inactive_status'];
+    queryParams = [
+        'query',
+        'name',
+        'page',
+        'limit',
+        'sort',
+        'country',
+        'status',
+        'owner_email',
+        'onboarding_completed',
+        'billing_status',
+        'created_at',
+        'needs_attention',
+        'missing_owner',
+        'inactive_status',
+    ];
 
     get actionButtons() {
         return [

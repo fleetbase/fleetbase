@@ -41,17 +41,20 @@ module('Unit | Route | auth/login', function (hooks) {
             }
         }
 
-        class RouterStub extends Service {
-            transitionTo(routeName) {
-                transitionedTo = routeName;
-                return 'onboard-transition';
-            }
-        }
-
         this.owner.register('service:installation', InstallationStub);
-        this.owner.register('service:router', RouterStub);
 
         const route = this.owner.lookup('route:auth/login');
+
+        // Ember's built-in RouterService can't be replaced via owner.register in setupTest,
+        // so spy on transitionTo on the injected instance the route actually calls.
+        Object.defineProperty(route.router, 'transitionTo', {
+            configurable: true,
+            value: (routeName) => {
+                transitionedTo = routeName;
+                return 'onboard-transition';
+            },
+        });
+
         const result = await route.beforeModel({});
 
         assert.strictEqual(result, 'onboard-transition');
@@ -77,19 +80,22 @@ module('Unit | Route | auth/login', function (hooks) {
             }
         }
 
-        class UniverseStub extends Service {
-            virtualRouteRedirect(transition, routeName, virtualRouteName, options) {
-                virtualRedirect = { transition, routeName, virtualRouteName, options };
-                return 'login-transition';
-            }
-        }
-
         this.owner.register('service:installation', InstallationStub);
         this.owner.register('service:session', SessionStub);
-        this.owner.register('service:universe', UniverseStub);
 
         const transition = {};
         const route = this.owner.lookup('route:auth/login');
+
+        // universe is a pre-resolved singleton that owner.register can't swap, and
+        // virtualRouteRedirect is an @action (a getter) — shadow it with a value property.
+        Object.defineProperty(route.universe, 'virtualRouteRedirect', {
+            configurable: true,
+            value: (transition, routeName, virtualRouteName, options) => {
+                virtualRedirect = { transition, routeName, virtualRouteName, options };
+                return 'login-transition';
+            },
+        });
+
         const result = await route.beforeModel(transition);
 
         assert.strictEqual(result, 'login-transition');

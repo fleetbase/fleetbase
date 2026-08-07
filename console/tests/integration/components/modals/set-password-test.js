@@ -6,21 +6,18 @@ import { hbs } from 'ember-cli-htmlbars';
 module('Integration | Component | modals/set-password', function (hooks) {
     setupRenderingTest(hooks);
 
-    test('it renders', async function (assert) {
-        // Set any properties with this.set('myProperty', 'value');
-        // Handle any actions with this.set('myAction', function(val) { ... });
+    hooks.beforeEach(function () {
+        // Components using {{t}} need the locale resolved before render, otherwise
+        // ember-intl sets _locale mid-render and trips the tracked-property assertion.
+        this.owner.lookup('service:intl').setLocale('en-us');
+    });
 
-        await render(hbs`<Modals::SetPassword />`);
+    test('it renders the set-password modal body', async function (assert) {
+        this.set('options', { title: 'Set Password' });
 
-        assert.dom().hasText('');
+        await render(hbs`<Modals::SetPassword @modalIsOpened={{true}} @options={{this.options}} />`);
 
-        // Template block usage:
-        await render(hbs`
-      <Modals::SetPassword>
-        template block text
-      </Modals::SetPassword>
-    `);
-
-        assert.dom().hasText('template block text');
+        assert.dom('.modal-body-container').exists('the modal body renders');
+        assert.dom('input[type="password"]').exists({ count: 2 }, 'a password and confirmation field are offered');
     });
 });

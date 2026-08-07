@@ -9,6 +9,7 @@ common:
   update: Update
   save: Save
   save-changes: Save Changes
+  close-and-save: Close and Save
   delete: Delete
   delete-selected: Delete Selected
   delete-selected-count: Delete {count} Selected
@@ -146,6 +147,7 @@ common:
   password: Password
   confirm-password: Confirm Password
   email: Email
+  phone: Phone
   username: Username
   remember-me: Remember Me
   welcome: Welcome
@@ -785,6 +787,13 @@ console:
     received: >-
         Received:
     message: No notifications to display.
+
+modals:
+  set-password:
+    message: Your account was created from an invitation and does not have a password yet. Set one now to finish securing your account.
+    new-password: New Password
+    confirm-password: Confirm Password
+    help-text: Enter a password at-least 6 characters to continue.
 
 invite:
   for-users:

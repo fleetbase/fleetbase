@@ -1,0 +1,138 @@
+name: Postman API Contract
+description: >-
+  Mint a Fleetbase API key against an already-running stack and run the official
+  Postman collections (from fleetbase/postman) against http://localhost:8000.
+
+inputs:
+  collections:
+    description: Comma- or newline-separated collection names under postman/collections.
+    required: false
+    default: |
+      Fleetbase API
+      Fleetbase Core API
+      Fleetbase Storefront API
+      Fleetbase Ledger API
+  base-url:
+    description: Base URL of the running API.
+    required: false
+    default: http://localhost:8000
+  namespace:
+    description: API version namespace.
+    required: false
+    default: v1
+  postman-ref:
+    description: Ref of the fleetbase/postman repo to check out.
+    required: false
+    default: main
+  postman-api-key:
+    description: Postman CLI API key. When empty, the whole action no-ops.
+    required: false
+    default: ''
+  github-token:
+    description: Token used to check out fleetbase/postman.
+    required: false
+    default: ''
+
+runs:
+  using: composite
+  steps:
+    - name: Check Postman API key availability
+      id: pmauth
+      shell: bash
+      run: |
+        if [[ -n "${{ inputs.postman-api-key }}" ]]; then
+          echo "available=true" >> "$GITHUB_OUTPUT"
+        else
+          echo "available=false" >> "$GITHUB_OUTPUT"
+          echo "::warning::POSTMAN_API_KEY is not set; skipping the Postman contract run."
+        fi
+
+    - name: Mint API key from the running stack
+      id: key
+      if: steps.pmauth.outputs.available == 'true'
+      shell: bash
+      run: |
+        set -uo pipefail
+        # Run the mint snippet via `tinker --execute="eval(base64_decode(...))"`.
+        # Piping a file with a <?php tag to tinker triggers a PsySH parse error, and
+        # inlining the code would let the shell expand its $variables — base64+eval
+        # sidesteps both. Capture stdout+stderr so failures are diagnosable.
+        CODE="$(base64 scripts/ci/mint-api-key.php | tr -d '\n')"
+        OUT="$(docker compose exec -T application php artisan tinker --execute="eval(base64_decode('${CODE}'));" 2>&1 || true)"
+        KEY="$(printf '%s\n' "$OUT" | grep -oE 'flb_(live|test)_[A-Za-z0-9_-]+' | tail -1 || true)"
+        if [[ -z "$KEY" ]]; then
+          echo "::error::Could not mint an API key from the running stack. Tinker output:"
+          printf '%s\n' "$OUT"
+          exit 1
+        fi
+        echo "::add-mask::$KEY"
+        echo "api_key=$KEY" >> "$GITHUB_OUTPUT"
+        echo "Verifying key against ${{ inputs.base-url }}/${{ inputs.namespace }}/organizations/current ..."
+        HTTP_CODE="$(curl -s -o /dev/null -w '%{http_code}' -H "Authorization: Bearer ${KEY}" \
+          "${{ inputs.base-url }}/${{ inputs.namespace }}/organizations/current" || true)"
+        if [[ "$HTTP_CODE" != "200" ]]; then
+          echo "::error::API key verification returned HTTP ${HTTP_CODE} (expected 200)"
+          exit 1
+        fi
+        echo "✔ API key authenticates (HTTP 200)."
+
+    - name: Install Postman CLI
+      if: steps.pmauth.outputs.available == 'true'
+      shell: bash
+      run: |
+        curl -fsSL -o- "https://dl-cli.pstmn.io/install/linux64.sh" | sh
+        postman --version
+
+    - name: Postman CLI login
+      if: steps.pmauth.outputs.available == 'true'
+      shell: bash
+      run: postman login --with-api-key "${{ inputs.postman-api-key }}"
+
+    - name: Checkout Postman collections
+      if: steps.pmauth.outputs.available == 'true'
+      uses: actions/checkout@v4
+      with:
+        repository: fleetbase/postman
+        ref: ${{ inputs.postman-ref }}
+        token: ${{ inputs.github-token }}
+        path: .postman
+
+    - name: Run Postman collections
+      if: steps.pmauth.outputs.available == 'true'
+      shell: bash
+      env:
+        API_KEY: ${{ steps.key.outputs.api_key }}
+        COLLECTIONS: ${{ inputs.collections }}
+        BASE_URL: ${{ inputs.base-url }}
+        NAMESPACE: ${{ inputs.namespace }}
+      run: |
+        set -uo pipefail
+        overall=0
+        # Accept commas or newlines as separators; the loop runs in the current
+        # shell (process substitution) so $overall survives.
+        while IFS= read -r raw; do
+          name="$(echo "$raw" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')"
+          [[ -z "$name" ]] && continue
+          dir=".postman/postman/collections/$name"
+          if [[ ! -d "$dir" ]]; then
+            echo "::warning::Collection directory not found: $dir"
+            continue
+          fi
+          echo "::group::Collection: $name"
+          extra=()
+          if [[ "$name" == "Fleetbase Integrated Vendor Flow" ]]; then
+            extra+=(--iteration-data ".postman/collections/workflows/integrated-vendor/data/happy-path.example.json")
+          fi
+          if postman collection run "$dir" \
+              --env-var "base_url=${BASE_URL}" \
+              --env-var "namespace=${NAMESPACE}" \
+              --env-var "api_key=${API_KEY}" \
+              "${extra[@]}"; then
+            echo "✔ $name passed"
+          else
+            echo "::warning::Collection failed: $name"
+            overall=1
+          fi
+          echo "::endgroup::"
+        done < <(printf '%s' "$COLLECTIONS" | tr ',' '\n')
+        exit $overall

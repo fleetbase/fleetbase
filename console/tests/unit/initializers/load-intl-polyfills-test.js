@@ -1,37 +1,28 @@
-import Application from '@ember/application';
-
-import config from '@fleetbase/console/config/environment';
-import { initialize } from '@fleetbase/console/initializers/load-intl-polyfills';
 import { module, test } from 'qunit';
-import Resolver from 'ember-resolver';
-import { run } from '@ember/runloop';
+import { initialize } from '@fleetbase/console/initializers/load-intl-polyfills';
 
-module('Unit | Initializer | load-intl-polyfills', function (hooks) {
-    hooks.beforeEach(function () {
-        this.TestApplication = class TestApplication extends Application {
-            modulePrefix = config.modulePrefix;
-            podModulePrefix = config.podModulePrefix;
-            Resolver = Resolver;
+module('Unit | Initializer | load-intl-polyfills', function () {
+    test('it defers readiness while the polyfills load and advances afterwards', async function (assert) {
+        const calls = [];
+        let advanced;
+        const didAdvance = new Promise((resolve) => (advanced = resolve));
+
+        const application = {
+            deferReadiness: () => calls.push('defer'),
+            advanceReadiness: () => {
+                calls.push('advance');
+                advanced();
+            },
         };
 
-        this.TestApplication.initializer({
-            name: 'initializer under test',
-            initialize,
-        });
+        initialize(application);
 
-        this.application = this.TestApplication.create({
-            autoboot: false,
-        });
-    });
+        assert.deepEqual(calls, ['defer'], 'readiness is deferred synchronously');
 
-    hooks.afterEach(function () {
-        run(this.application, 'destroy');
-    });
+        // The polyfills load through dynamic imports in a bare async IIFE, which settled()
+        // does not track — wait on advanceReadiness itself.
+        await didAdvance;
 
-    // TODO: Replace this with your real tests.
-    test('it works', async function (assert) {
-        await this.application.boot();
-
-        assert.ok(true);
+        assert.deepEqual(calls, ['defer', 'advance'], 'readiness advances once the polyfills resolve');
     });
 });

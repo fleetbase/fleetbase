@@ -1,39 +1,36 @@
-import Application from '@ember/application';
-
-import config from '@fleetbase/console/config/environment';
-import { initialize } from '@fleetbase/console/instance-initializers/load-leaflet';
 import { module, test } from 'qunit';
-import Resolver from 'ember-resolver';
-import { run } from '@ember/runloop';
+import { initialize } from '@fleetbase/console/instance-initializers/load-leaflet';
 
-module('Unit | Instance Initializer | load-leaflet', function (hooks) {
-    hooks.beforeEach(function () {
-        this.TestApplication = class TestApplication extends Application {
-            modulePrefix = config.modulePrefix;
-            podModulePrefix = config.podModulePrefix;
-            Resolver = Resolver;
-        };
-
-        this.TestApplication.instanceInitializer({
-            name: 'initializer under test',
-            initialize,
+module('Unit | Instance Initializer | load-leaflet', function () {
+    test('it loads leaflet and patches Control to stop refocusing the map', function (assert) {
+        let loadOptions;
+        initialize({
+            lookup: () => ({
+                load(options) {
+                    loadOptions = options;
+                },
+            }),
         });
 
-        this.application = this.TestApplication.create({
-            autoboot: false,
+        assert.strictEqual(typeof loadOptions.onReady, 'function', 'an onReady callback is supplied');
+
+        // Drive onReady with a stand-in for the Leaflet global.
+        let included;
+        loadOptions.onReady({
+            Control: {
+                include(mixin) {
+                    included = mixin;
+                },
+            },
+            Util: { falseFn: 'false-fn' },
         });
 
-        this.instance = this.application.buildInstance();
-    });
-    hooks.afterEach(function () {
-        run(this.instance, 'destroy');
-        run(this.application, 'destroy');
+        assert.deepEqual(included, { _refocusOnMap: 'false-fn' }, 'map refocusing is disabled');
     });
 
-    // TODO: Replace this with your real tests.
-    test('it works', async function (assert) {
-        await this.instance.boot();
+    test('it is a no-op when the leaflet service is unavailable', function (assert) {
+        initialize({ lookup: () => undefined });
 
-        assert.ok(true);
+        assert.ok(true, 'no error is thrown without a leaflet service');
     });
 });

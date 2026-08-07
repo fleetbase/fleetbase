@@ -1,0 +1,113 @@
+name: Console CI
+
+# Runs the Ember console's lint + QUnit suite + coverage from the monorepo root.
+# NOTE: console/ is tracked directly in this repo (not a submodule), and GitHub
+# only executes workflows under the repo-root .github/workflows/. So THIS file —
+# not console/.github/workflows/ci.yml — is what gates the console in fleetbase-dev.
+
+on:
+  push:
+    branches: [main]
+    tags:
+      - 'v*'
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+env:
+  NODE_VERSION: 22.x
+
+defaults:
+  run:
+    working-directory: console
+
+jobs:
+  build-and-test:
+    name: Lint, Test, Build
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js ${{ env.NODE_VERSION }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: latest
+
+      - name: Get pnpm Store Directory
+        id: pnpm-cache
+        shell: bash
+        run: echo "STORE_PATH=$(pnpm store path)" >> "$GITHUB_OUTPUT"
+
+      - uses: actions/cache@v4
+        name: Setup pnpm Cache
+        with:
+          path: ${{ steps.pnpm-cache.outputs.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('console/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+
+      # No .npmrc is written on purpose. Every @fleetbase/* package this app depends on
+      # is published to the public npm registry, so the default registry resolves them
+      # with no credentials — which is what an OSS repo needs: forks and outside
+      # contributors must be able to install without any token.
+      #
+      # An earlier version of this step wrote "@fleetbase:registry=https://npm.pkg.github.com/"
+      # whenever the _GITHUB_AUTH_TOKEN secret was present. That redirected the whole
+      # @fleetbase scope to GitHub Packages, where these packages are not published, and
+      # install died with ERR_PNPM_FETCH_404 on @fleetbase/ember-core. Note it failed only
+      # on the main repo (which has the secret) and passed on forks (which do not).
+      - name: Install Dependencies
+        run: pnpm install
+
+      - name: Lint
+        run: pnpm run lint
+
+      # The step that was previously missing everywhere for the console: actually
+      # running the existing QUnit suite (tests/unit + tests/integration), here
+      # with coverage instrumentation.
+      - name: Test (with coverage)
+        run: pnpm run test:ember:coverage
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v4
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: console/coverage/lcov.info
+          disable_search: true
+          flags: console
+          name: console-coverage
+          fail_ci_if_error: false
+
+      # Coverage gate — reports the numbers, does not block this release.
+      #
+      # Measured locally at 577/577 passing:
+      #   lines 70.02% · statements 69.84% · functions 68.69% · branches 71.54%
+      # scripts/coverage-check.mjs applies the threshold to ALL FOUR metrics, so
+      # functions is the binding constraint — 70 would fail today despite lines
+      # being at 70.02%. 65 is the floor the suite comfortably holds.
+      #
+      # Deliberately still continue-on-error. Coverage produced no report at all
+      # until recently (no babel instrumentation, no sendCoverage hook, and a
+      # scoped-modulePrefix path mismatch dropping every file), and the Lint step
+      # ahead of it was failing, so this gate has never once evaluated real data in
+      # CI. Watch one green run before making it blocking.
+      #
+      # 100% remains the long-term target but is deferred: several files cannot be
+      # covered as written — four use later(() => window.location.reload()), and
+      # report.js has static methods calling getOwner() on the class, which returns
+      # undefined. Reaching 100% needs those addressed (an injectable reload,
+      # repairing or removing the dead statics) rather than more tests.
+      - name: Report coverage threshold
+        continue-on-error: true
+        run: pnpm run coverage:check -- --fail-under=65
+
+      - name: Build (production)
+        run: npx ember build --environment production
