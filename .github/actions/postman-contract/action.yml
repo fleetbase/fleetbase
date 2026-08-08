@@ -111,6 +111,27 @@ runs:
         ran=0
         mkdir -p postman-results
 
+        # The Postman CLI has no --color flag and, like any chalk-based CLI, drops colour
+        # when stdout is not a terminal — which it never is here, both because Actions has
+        # no TTY and because we pipe into tee. Running it under a PTY (`script`) restores
+        # it. TERM matters as much as the PTY: measured locally, a PTY with TERM unset
+        # still produced plain text, while a PTY with TERM=xterm-256color produced fully
+        # coloured output. Actions renders ANSI in the job log.
+        #
+        # The command lives in a file rather than inline in `script -c` so the API key is
+        # inherited from the environment instead of being embedded in a shell string.
+        # Written with printf, not a heredoc: an unindented heredoc terminator would end
+        # this YAML block scalar.
+        RUNNER="${RUNNER_TEMP:-/tmp}/postman-run.sh"
+        printf '%s\n' \
+          '#!/usr/bin/env bash' \
+          'postman collection run "$1" \' \
+          '  --env-var "base_url=${BASE_URL}" \' \
+          '  --env-var "namespace=${NAMESPACE}" \' \
+          '  --env-var "api_key=${API_KEY}" \' \
+          '  "${@:2}"' > "$RUNNER"
+        chmod +x "$RUNNER"
+
         {
           echo "## Postman API contract"
           echo
@@ -139,24 +160,32 @@ runs:
           fi
 
           ran=$((ran + 1))
-          log="postman-results/$(echo "$name" | tr ' /' '__').log"
-          echo "───────────────────────────────────────────────────────────────"
-          echo "▶ Running collection: $name"
-          echo "───────────────────────────────────────────────────────────────"
+          slug="$(echo "$name" | tr ' /' '__')"
+          ansi="postman-results/${slug}.ansi"  # colour preserved, for eyeballing
+          log="postman-results/${slug}.log"    # plain text, for parsing and reading
+          printf '\n\033[1;36m┏━━ ▶ %s\033[0m\n' "$name"
 
-          # tee so the full run is visible in the job log AND kept for the summary and
-          # the uploaded artifact. Not wrapped in ::group:: — these results are the
-          # point of the job, so they should be readable without expanding anything.
-          if postman collection run "$dir" \
-              --env-var "base_url=${BASE_URL}" \
-              --env-var "namespace=${NAMESPACE}" \
-              --env-var "api_key=${API_KEY}" \
-              "${extra[@]}" 2>&1 | tee "$log"; then
+          # tee so the run is visible in the job log AND kept for the summary and the
+          # artifact. Not wrapped in ::group:: — these results are the point of the job,
+          # so they should be readable without expanding anything.
+          #
+          # </dev/null is load-bearing: this loop is fed by `read` from a pipe, and a PTY
+          # child inherits and drains that stdin. Without it only the first collection
+          # ever runs — verified: 3 items in, 1 iteration out.
+          if TERM=xterm-256color script -qec \
+                "$(printf '%q ' "$RUNNER" "$dir" ${extra[@]+"${extra[@]}"})" \
+                /dev/null </dev/null 2>&1 | tee "$ansi"; then
             status="✅ passed"
           else
             status="❌ failed"
             overall=1
           fi
+
+          # Strip the colour codes and the PTY's carriage returns for the parsed copy.
+          # Mandatory, not cosmetic: ANSI sequences contain digits, so grepping the raw
+          # coloured log for the summary numbers returns nothing and every row would
+          # silently render as a dash.
+          sed -E $'s/\x1b\\[[0-9;]*[a-zA-Z]//g; s/\r$//' "$ansi" > "$log"
 
           # Pull executed/failed out of the CLI reporter's summary table. The table is
           # drawn with box characters, not ASCII pipes, so match on the label plus two
