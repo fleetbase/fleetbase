@@ -137,8 +137,8 @@ runs:
           echo
           echo "\`${BASE_URL}/${NAMESPACE}\` · collections from fleetbase/postman@${{ inputs.postman-ref }}"
           echo
-          echo "| Collection | Result | Requests | Assertions | Failed |"
-          echo "| --- | --- | ---: | ---: | ---: |"
+          echo "| Collection | Result | Requests | Req failed | Assertions | Assert failed |"
+          echo "| --- | --- | ---: | ---: | ---: | ---: |"
         } >> "$GITHUB_STEP_SUMMARY"
 
         while IFS= read -r raw; do
@@ -149,20 +149,41 @@ runs:
             # A caller asking for a collection that does not exist is a misconfiguration,
             # not something to pass silently.
             echo "::error::Collection directory not found: $dir"
-            echo "| $name | ⚠️ not found | – | – | – |" >> "$GITHUB_STEP_SUMMARY"
+            echo "| $name | ⚠️ not found | – | – | – | – |" >> "$GITHUB_STEP_SUMMARY"
             overall=1
             continue
-          fi
-
-          extra=()
-          if [[ "$name" == "Fleetbase Integrated Vendor Flow" ]]; then
-            extra+=(--iteration-data ".postman/collections/workflows/integrated-vendor/data/happy-path.example.json")
           fi
 
           ran=$((ran + 1))
           slug="$(echo "$name" | tr ' /' '__')"
           ansi="postman-results/${slug}.ansi"  # colour preserved, for eyeballing
-          log="postman-results/${slug}.log"    # plain text, for parsing and reading
+          log="postman-results/${slug}.log"    # plain text, for reading
+
+          # Only the cli reporter is usable here. These collections are
+          # postman-v3-yaml-native-git ("multi-protocol"), and the CLI rejects -r json
+          # for them outright:
+          #   Error: Reporter "json" is not supported for multi-protocol collections.
+          # So the summary below is parsed from the cli reporter's ASCII table.
+          args=("$dir" -r cli)
+
+          # The CLI does NOT resolve the collection variables declared in
+          # .resources/definition.yaml — verified: with no --env-var at all, even
+          # {{base_url}} stays literal. Only --env-var values are substituted. Ledger and
+          # Storefront declare api_prefix there, so without this every one of their
+          # requests would go to /%7B%7Bapi_prefix%7D%7D/... and 404. Read it from the
+          # collection rather than hardcoding, so a new prefixed collection just works.
+          # \042 and \047 are " and ' — octal escapes dodge a nest of shell quoting.
+          prefix="$(sed -n 's/^[[:space:]]*api_prefix:[[:space:]]*//p' \
+                      "$dir/.resources/definition.yaml" 2>/dev/null | head -1 | tr -d '\042\047')"
+          if [[ -n "$prefix" ]]; then
+            args+=(--env-var "api_prefix=$prefix")
+            echo "  api_prefix=$prefix"
+          fi
+
+          if [[ "$name" == "Fleetbase Integrated Vendor Flow" ]]; then
+            args+=(--iteration-data ".postman/collections/workflows/integrated-vendor/data/happy-path.example.json")
+          fi
+
           printf '\n\033[1;36m┏━━ ▶ %s\033[0m\n' "$name"
 
           # tee so the run is visible in the job log AND kept for the summary and the
@@ -173,7 +194,7 @@ runs:
           # child inherits and drains that stdin. Without it only the first collection
           # ever runs — verified: 3 items in, 1 iteration out.
           if TERM=xterm-256color script -qec \
-                "$(printf '%q ' "$RUNNER" "$dir" ${extra[@]+"${extra[@]}"})" \
+                "$(printf '%q ' "$RUNNER" "${args[@]}")" \
                 /dev/null </dev/null 2>&1 | tee "$ansi"; then
             status="✅ passed"
           else
@@ -181,31 +202,39 @@ runs:
             overall=1
           fi
 
-          # Strip the colour codes and the PTY's carriage returns for the parsed copy.
-          # Mandatory, not cosmetic: ANSI sequences contain digits, so grepping the raw
-          # coloured log for the summary numbers returns nothing and every row would
-          # silently render as a dash.
+          # Strip the colour codes and the PTY's carriage returns for the plain copy, so
+          # the artifact is readable in an editor rather than full of escape sequences.
           sed -E $'s/\x1b\\[[0-9;]*[a-zA-Z]//g; s/\r$//' "$ansi" > "$log"
 
-          # Pull executed/failed out of the CLI reporter's summary table. The table is
-          # drawn with box characters, not ASCII pipes, so match on the label plus two
-          # numbers rather than on the border. Tolerant on purpose: if the format shifts
-          # the row renders with dashes and the artifact stays authoritative.
+          # Read executed/failed out of the reporter's summary table. Each row is
+          # "| <label> | <executed> | <failed> |", so match the label plus two numbers
+          # rather than the border, which differs between reporter versions. Verified
+          # against a real collection run: requests 8/8, assertions 0/0.
           row() { grep -aiE "(^|[^a-z])$1([^a-z]|$)" "$log" | grep -aE '[0-9]+[^0-9]+[0-9]+' \
-                    | head -1 | grep -oE '[0-9]+' | head -2 | paste -sd/ - ; }
-          requests="$(row requests || true)"
-          assertions="$(row assertions || true)"
-          failed="$(grep -acE '^[[:space:]]*[0-9]+\.[[:space:]]+.*(AssertionError|expected)' "$log" || true)"
-          echo "| $name | $status | ${requests:-–} | ${assertions:-–} | ${failed:-0} |" >> "$GITHUB_STEP_SUMMARY"
+                    | head -1 | grep -oE '[0-9]+' | head -2 | paste -sd' ' - ; }
+          read -r r_exec r_fail <<<"$(row requests)"
+          read -r a_exec a_fail <<<"$(row assertions)"
+          echo "| $name | $status | ${r_exec:-–} | ${r_fail:-–} | ${a_exec:-–} | ${a_fail:-–} |" \
+            >> "$GITHUB_STEP_SUMMARY"
 
-          # Collect failing assertions so the summary says what broke, not just that
-          # something did. Written to a file rather than accumulated in a shell string,
-          # so nothing here can sit at column 0 and terminate this YAML block scalar.
+          # A collection with no assertions cannot fail on a bad response — it only
+          # catches transport errors, so a 500 from every endpoint still reads as green.
+          # Say so rather than letting the row imply the API was verified.
+          if [[ "${a_exec:-0}" == "0" ]]; then
+            echo "::warning::'$name' ran ${r_exec:-0} requests but executed no assertions; it cannot detect a bad response."
+            printf '\n> ⚠️ **%s** executed no assertions — it only catches transport errors.\n' \
+              "$name" >> postman-results/details.md
+          fi
+
+          # The reporter prints a "#  failure  detail" block listing each failure with
+          # its message and the request it came from. Take the block wholesale instead of
+          # grepping for assertion lines: failures can be transport errors ("1.  Error")
+          # with no assertion text, which a line-match misses entirely.
           if [[ "$status" == *failed* ]]; then
             {
               printf '\n<details><summary>Failures — %s</summary>\n\n' "$name"
               printf '```\n'
-              grep -aE '^[[:space:]]*[0-9]+\.[[:space:]]+.*(AssertionError|expected)' "$log" | head -60 || true
+              awk '/^[[:space:]]*#[[:space:]]+failure/{f=1} f' "$log" | head -80
               printf '```\n</details>\n'
             } >> postman-results/details.md
           fi
