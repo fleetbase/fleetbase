@@ -108,31 +108,98 @@ runs:
       run: |
         set -uo pipefail
         overall=0
-        # Accept commas or newlines as separators; the loop runs in the current
-        # shell (process substitution) so $overall survives.
+        mkdir -p postman-results
+
+        {
+          echo "## Postman API contract"
+          echo
+          echo "\`${BASE_URL}/${NAMESPACE}\` · collections from fleetbase/postman@${{ inputs.postman-ref }}"
+          echo
+          echo "| Collection | Result | Requests | Assertions | Failed |"
+          echo "| --- | --- | ---: | ---: | ---: |"
+        } >> "$GITHUB_STEP_SUMMARY"
+
         while IFS= read -r raw; do
           name="$(echo "$raw" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')"
           [[ -z "$name" ]] && continue
           dir=".postman/postman/collections/$name"
           if [[ ! -d "$dir" ]]; then
-            echo "::warning::Collection directory not found: $dir"
+            # A caller asking for a collection that does not exist is a misconfiguration,
+            # not something to pass silently.
+            echo "::error::Collection directory not found: $dir"
+            echo "| $name | ⚠️ not found | – | – | – |" >> "$GITHUB_STEP_SUMMARY"
+            overall=1
             continue
           fi
-          echo "::group::Collection: $name"
+
           extra=()
           if [[ "$name" == "Fleetbase Integrated Vendor Flow" ]]; then
             extra+=(--iteration-data ".postman/collections/workflows/integrated-vendor/data/happy-path.example.json")
           fi
+
+          log="postman-results/$(echo "$name" | tr ' /' '__').log"
+          echo "───────────────────────────────────────────────────────────────"
+          echo "▶ Running collection: $name"
+          echo "───────────────────────────────────────────────────────────────"
+
+          # tee so the full run is visible in the job log AND kept for the summary and
+          # the uploaded artifact. Not wrapped in ::group:: — these results are the
+          # point of the job, so they should be readable without expanding anything.
           if postman collection run "$dir" \
               --env-var "base_url=${BASE_URL}" \
               --env-var "namespace=${NAMESPACE}" \
               --env-var "api_key=${API_KEY}" \
-              "${extra[@]}"; then
-            echo "✔ $name passed"
+              "${extra[@]}" 2>&1 | tee "$log"; then
+            status="✅ passed"
           else
-            echo "::warning::Collection failed: $name"
+            status="❌ failed"
             overall=1
           fi
-          echo "::endgroup::"
+
+          # Pull executed/failed out of the CLI reporter's summary table. The table is
+          # drawn with box characters, not ASCII pipes, so match on the label plus two
+          # numbers rather than on the border. Tolerant on purpose: if the format shifts
+          # the row renders with dashes and the artifact stays authoritative.
+          row() { grep -aiE "(^|[^a-z])$1([^a-z]|$)" "$log" | grep -aE '[0-9]+[^0-9]+[0-9]+' \
+                    | head -1 | grep -oE '[0-9]+' | head -2 | paste -sd/ - ; }
+          requests="$(row requests || true)"
+          assertions="$(row assertions || true)"
+          failed="$(grep -acE '^[[:space:]]*[0-9]+\.[[:space:]]+.*(AssertionError|expected)' "$log" || true)"
+          echo "| $name | $status | ${requests:-–} | ${assertions:-–} | ${failed:-0} |" >> "$GITHUB_STEP_SUMMARY"
+
+          # Collect failing assertions so the summary says what broke, not just that
+          # something did. Written to a file rather than accumulated in a shell string,
+          # so nothing here can sit at column 0 and terminate this YAML block scalar.
+          if [[ "$status" == *failed* ]]; then
+            {
+              printf '\n<details><summary>Failures — %s</summary>\n\n' "$name"
+              printf '```\n'
+              grep -aE '^[[:space:]]*[0-9]+\.[[:space:]]+.*(AssertionError|expected)' "$log" | head -60 || true
+              printf '```\n</details>\n'
+            } >> postman-results/details.md
+          fi
         done < <(printf '%s' "$COLLECTIONS" | tr ',' '\n')
+
+        if [[ -s postman-results/details.md ]]; then
+          cat postman-results/details.md >> "$GITHUB_STEP_SUMMARY"
+        fi
+
+        {
+          echo
+          if [[ "$overall" == "0" ]]; then
+            echo "All collections passed."
+          else
+            echo "One or more collections failed — full output is in the **postman-results** artifact."
+          fi
+        } >> "$GITHUB_STEP_SUMMARY"
+
         exit $overall
+
+    - name: Upload Postman results
+      if: always() && steps.pmauth.outputs.available == 'true'
+      uses: actions/upload-artifact@v4
+      with:
+        name: postman-results
+        path: postman-results/
+        if-no-files-found: ignore
+        retention-days: 14
