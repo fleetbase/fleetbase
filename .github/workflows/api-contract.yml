@@ -31,12 +31,22 @@ on:
         required: false
         default: false
       fleetbase-ref:
-        description: Ref of fleetbase/fleetbase to boot (must match the ref that ships
-          this workflow + composite action + scripts).
+        description: >-
+          Ref of fleetbase/fleetbase to boot (ships the compose files, installer and
+          composite action). Tracks main by default so contract runs always exercise
+          the current platform — there is no per-release version to remember to bump.
+          Pin to a tag only when reproducing a specific failure.
         type: string
         required: false
-        # TODO: change to `main` once dev-v0.7.53 is merged.
-        default: dev-v0.7.53
+        default: main
+      api-image:
+        description: >-
+          API image to test against. Defaults to :latest, which is what each release
+          publishes, so this tracks the newest platform automatically. Pin to e.g.
+          fleetbase/fleetbase-api:v0.7.53 to reproduce an older result.
+        type: string
+        required: false
+        default: fleetbase/fleetbase-api:latest
       postman-ref:
         description: Ref of fleetbase/postman to run.
         type: string
@@ -94,7 +104,24 @@ jobs:
 
       - name: Pull published API image
         if: ${{ !inputs.build-from-source }}
-        run: docker pull fleetbase/fleetbase-api:latest
+        run: |
+          docker pull "${{ inputs.api-image }}"
+          # :latest is a moving target, so record the digest and build date the run
+          # actually used — otherwise a red run months from now is unreproducible.
+          # Raw newlines collapse in markdown, so fence it. `join` tolerates an image
+          # with no digest instead of erroring the way `index` would. The format string
+          # stays on one line — a wrapped one would end this YAML block scalar.
+          {
+            echo "### API image under test"
+            echo '```'
+            docker image inspect "${{ inputs.api-image }}" --format 'requested: ${{ inputs.api-image }}{{"\n"}}tags:      {{join .RepoTags ", "}}{{"\n"}}digest:    {{join .RepoDigests ", "}}{{"\n"}}created:   {{.Created}}'
+            echo '```'
+          } | tee -a "$GITHUB_STEP_SUMMARY"
+          # Retag so the compose file's fleetbase/fleetbase-api:latest reference resolves
+          # to the requested image even when a specific tag was asked for.
+          if [[ "${{ inputs.api-image }}" != "fleetbase/fleetbase-api:latest" ]]; then
+            docker tag "${{ inputs.api-image }}" fleetbase/fleetbase-api:latest
+          fi
 
       - name: Ensure clean database volume
         run: |
