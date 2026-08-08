@@ -40,6 +40,15 @@ try {
     );
 
     echo PHP_EOL . 'MINTED_API_KEY=' . $credential->fresh()->key . PHP_EOL;
+
+    // A handful of endpoints (organizations listing, driver onboarding) sit behind
+    // AuthenticatePlatformApiToken rather than an org API credential, and answer 401
+    // to an flb_live_ key. Only the hash is persisted, so the plaintext cannot be read
+    // back — rotating is the only way to learn a usable token. Safe here because this
+    // script only ever runs against a throwaway CI stack; do not run it against an
+    // install whose platform token is already in use.
+    $platformToken = \Fleetbase\Support\PlatformApi::rotateToken();
+    echo 'MINTED_PLATFORM_TOKEN=' . $platformToken . PHP_EOL;
 } catch (\Throwable $e) {
     echo PHP_EOL . 'MINT_ERROR: ' . get_class($e) . ': ' . $e->getMessage() . PHP_EOL;
     echo $e->getFile() . ':' . $e->getLine() . PHP_EOL;
