@@ -53,6 +53,13 @@ export default class GithubCardComponent extends Component {
         } else {
             // Fetch new data
             const response = yield fetch('https://api.github.com/repos/fleetbase/fleetbase', { cache: 'default' });
+
+            // The component can be torn down mid-request; writing tracked state afterwards
+            // throws "Cannot create a new tag ... after it has been destroyed".
+            if (this.isDestroying || this.isDestroyed) {
+                return;
+            }
+
             if (response.ok) {
                 this.data = yield response.json();
                 this.localCache.set('fleetbase-github-data', this.data);
@@ -73,6 +80,11 @@ export default class GithubCardComponent extends Component {
         } else {
             // Fetch new tags
             const response = yield fetch('https://api.github.com/repos/fleetbase/fleetbase/tags', { cache: 'default' });
+
+            if (this.isDestroying || this.isDestroyed) {
+                return;
+            }
+
             if (response.ok) {
                 this.tags = yield response.json();
                 this.localCache.set('fleetbase-github-tags', this.tags);

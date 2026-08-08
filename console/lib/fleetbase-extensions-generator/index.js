@@ -35,7 +35,7 @@ module.exports = {
 `;
     },
 
-    included(app) {
+    included() {
         this._super.included.apply(this, arguments);
 
         console.log('\n' + '/'.repeat(70));

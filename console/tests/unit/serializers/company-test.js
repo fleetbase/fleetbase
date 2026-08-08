@@ -1,24 +1,14 @@
 import { module, test } from 'qunit';
-
 import { setupTest } from '@fleetbase/console/tests/helpers';
 
 module('Unit | Serializer | company', function (hooks) {
     setupTest(hooks);
 
-    // Replace this with your real tests.
-    test('it exists', function (assert) {
-        let store = this.owner.lookup('service:store');
-        let serializer = store.serializerFor('company');
+    test('serialize keeps scalar attributes', function (assert) {
+        const store = this.owner.lookup('service:store');
+        const json = store.createRecord('company', { name: 'Acme', type: 'corporation' }).serialize();
 
-        assert.ok(serializer);
-    });
-
-    test('it serializes records', function (assert) {
-        let store = this.owner.lookup('service:store');
-        let record = store.createRecord('company', {});
-
-        let serializedRecord = record.serialize();
-
-        assert.ok(serializedRecord);
+        assert.strictEqual(json.name, 'Acme');
+        assert.strictEqual(json.type, 'corporation');
     });
 });

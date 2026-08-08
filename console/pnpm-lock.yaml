@@ -17,11 +17,11 @@ importers:
         specifier: ^0.4.2
         version: 0.4.2(ember-source@5.4.1(@babel/core@7.29.7)(@glimmer/component@1.1.2(@babel/core@7.29.7))(rsvp@4.8.5)(webpack@5.107.2(postcss@8.5.15)))
       '@fleetbase/ai-engine':
-        specifier: ^0.0.3
-        version: 0.0.3(47001768392269870195224ea32348e1)
+        specifier: ^0.0.4
+        version: 0.0.4(47001768392269870195224ea32348e1)
       '@fleetbase/billing-engine':
-        specifier: ^0.1.22
-        version: 0.1.22(abaf0c2a8c51c5147c2d07c08c7af87d)
+        specifier: ^0.1.24
+        version: 0.1.24(abaf0c2a8c51c5147c2d07c08c7af87d)
       '@fleetbase/customer-portal-engine':
         specifier: ^0.0.12
         version: 0.0.12(abaf0c2a8c51c5147c2d07c08c7af87d)
@@ -38,8 +38,8 @@ importers:
         specifier: ^0.1.40
         version: 0.1.40(@ember/string@3.1.1)(@ember/test-helpers@3.3.1(@babel/core@7.29.7)(ember-source@5.4.1(@babel/core@7.29.7)(@glimmer/component@1.1.2(@babel/core@7.29.7))(rsvp@4.8.5)(webpack@5.107.2(postcss@8.5.15)))(webpack@5.107.2(postcss@8.5.15)))(ember-resolver@11.0.1(ember-source@5.4.1(@babel/core@7.29.7)(@glimmer/component@1.1.2(@babel/core@7.29.7))(rsvp@4.8.5)(webpack@5.107.2(postcss@8.5.15))))(ember-source@5.4.1(@babel/core@7.29.7)(@glimmer/component@1.1.2(@babel/core@7.29.7))(rsvp@4.8.5)(webpack@5.107.2(postcss@8.5.15)))(eslint@8.57.1)(webpack@5.107.2(postcss@8.5.15))
       '@fleetbase/fleetops-engine':
-        specifier: ^0.6.58
-        version: 0.6.58(abaf0c2a8c51c5147c2d07c08c7af87d)
+        specifier: ^0.6.59
+        version: 0.6.59(abaf0c2a8c51c5147c2d07c08c7af87d)
       '@fleetbase/flespi-engine':
         specifier: ^0.1.16
         version: 0.1.16(f1326ecab97aab699534966af0560208)
@@ -47,14 +47,14 @@ importers:
         specifier: ^0.1.11
         version: 0.1.11(abaf0c2a8c51c5147c2d07c08c7af87d)
       '@fleetbase/internals-engine':
-        specifier: ^0.0.34
-        version: 0.0.34(d83a70aac8639c50f5e8e2c220948c08)
+        specifier: ^0.0.36
+        version: 0.0.36(d83a70aac8639c50f5e8e2c220948c08)
       '@fleetbase/leaflet-routing-machine':
         specifier: ^3.2.17
         version: 3.2.17
       '@fleetbase/ledger-engine':
-        specifier: ^0.0.8
-        version: 0.0.8(abaf0c2a8c51c5147c2d07c08c7af87d)
+        specifier: ^0.0.9
+        version: 0.0.9(abaf0c2a8c51c5147c2d07c08c7af87d)
       '@fleetbase/registry-bridge-engine':
         specifier: ^0.1.9
         version: 0.1.9(abaf0c2a8c51c5147c2d07c08c7af87d)
@@ -65,8 +65,8 @@ importers:
         specifier: ^0.0.7
         version: 0.0.7(abaf0c2a8c51c5147c2d07c08c7af87d)
       '@fleetbase/storefront-engine':
-        specifier: ^0.4.17
-        version: 0.4.17(abaf0c2a8c51c5147c2d07c08c7af87d)
+        specifier: ^0.4.18
+        version: 0.4.18(abaf0c2a8c51c5147c2d07c08c7af87d)
       '@fleetbase/valhalla-engine':
         specifier: ^0.0.4
         version: 0.0.4(abaf0c2a8c51c5147c2d07c08c7af87d)
@@ -218,6 +218,9 @@ importers:
       ember-cli-clean-css:
         specifier: ^3.0.0
         version: 3.0.0
+      ember-cli-code-coverage:
+        specifier: ^2.0.3
+        version: 2.1.2
       ember-cli-dependency-checker:
         specifier: ^3.3.2
         version: 3.3.3(ember-cli@5.4.2(@babel/core@7.29.7)(@types/node@25.9.1)(handlebars@4.7.9)(underscore@1.13.8))
@@ -1563,14 +1566,14 @@ packages:
   '@event-calendar/core@5.7.1':
     resolution: {integrity: sha512-ms9MQagthrmRO+ytZD5dDQHjBb+r/6mwld4/psZRaBI6bciIEsmphCrxFaF9HnGvLW0htSa973TVbYMbDsDtVA==}
 
-  '@fleetbase/ai-engine@0.0.3':
-    resolution: {integrity: sha512-WtXe/tghtyLfGDOe+dSO6MJzcvoA+J0x9C+r0Ju9WBWW6EllgliJaAAc6C2F1j5D9qPaFjB4V8SWKB/unaNalA==, tarball: https://npm.pkg.github.com/download/@fleetbase/ai-engine/0.0.3/8d0ad23caa07b26d63b98e6fbe072e8022d00f87}
+  '@fleetbase/ai-engine@0.0.4':
+    resolution: {integrity: sha512-/kvqspgpNJf+VqaL+FqszQj4prseQmd66Qw0XSUcnx0mCY7wcCcNgwvw9eiXSIVd4RodzzSogb1gwEQY6D2Aig==, tarball: https://npm.pkg.github.com/download/@fleetbase/ai-engine/0.0.4/78e1b7da88887a3749a17ea205297a90e7fb4411}
     engines: {node: '>= 18'}
     peerDependencies:
       ember-engines: ^0.9.0
 
-  '@fleetbase/billing-engine@0.1.22':
-    resolution: {integrity: sha512-q9gA9ySz9wUwYKYUOhRukRurQj8154RfIX/gKH2W6gl8TJvJZHn4NVN5ppX94FB60cQEbwO0BzeDY24datUn1A==, tarball: https://npm.pkg.github.com/download/@fleetbase/billing-engine/0.1.22/4801ae504beae6c227dcf0be1694caa097fa52fa}
+  '@fleetbase/billing-engine@0.1.24':
+    resolution: {integrity: sha512-PE7MU+RxCcBb0yhSdWU7VZFdqbK27kCEk78N4WF8gmdZZ19x9L9D54razD0zQpQxilQoddWEy8sF1ZpBR6T4RQ==, tarball: https://npm.pkg.github.com/download/@fleetbase/billing-engine/0.1.24/789b05aaab50634b6ed580e5a8510e9ccd4200af}
     engines: {node: '>= 18'}
     peerDependencies:
       ember-engines: ^0.9.0
@@ -1605,8 +1608,8 @@ packages:
     resolution: {integrity: sha512-bp4tWaS2cpnitjtmH9hm3T7milwSqgt4j3T/KA8cvsFpbg7p303ADb5CNml5RsribgdBcRYtMsLEFYeYnU9dpg==, tarball: https://npm.pkg.github.com/download/@fleetbase/fleetops-data/0.1.40/89327d93f7efe68893dba8f368cfb91dd0de158b}
     engines: {node: '>= 18'}
 
-  '@fleetbase/fleetops-engine@0.6.58':
-    resolution: {integrity: sha512-xl31MdOI77Ul3Yk+n8F1BFS4HbNvg3NB01a4A3dPRGDLlcurVsUkePsPZIx2ttN4dygiVzYcsz03cuEIXGcb4g==, tarball: https://npm.pkg.github.com/download/@fleetbase/fleetops-engine/0.6.58/e24d612666654c586cc850c9ae2162b308149b02}
+  '@fleetbase/fleetops-engine@0.6.59':
+    resolution: {integrity: sha512-j8PBVhu28A+rGLqqWhH7vO8Uq/czjVjpNthKzNPxWyiTKxVcxQc2G2eadXi8Ry/DR0ZQl9E1Gi5cVxZWn3WBvg==, tarball: https://npm.pkg.github.com/download/@fleetbase/fleetops-engine/0.6.59/632c817705cee2446817297652a78a8e126e23b3}
     engines: {node: '>= 18'}
     peerDependencies:
       ember-engines: ^0.9.0
@@ -1623,8 +1626,8 @@ packages:
     peerDependencies:
       ember-engines: ^0.9.0
 
-  '@fleetbase/internals-engine@0.0.34':
-    resolution: {integrity: sha512-3kM+TnYRIui1/Rejrn9+v8Hq6yG8uvmWbPuwIcgikZ5amaR6ltR469LtSThJTO9tkKL8fSbzGW3txPpXdM/xsw==, tarball: https://npm.pkg.github.com/download/@fleetbase/internals-engine/0.0.34/b84619e9480bfa6f0d8d02bee17aed0f889844ba}
+  '@fleetbase/internals-engine@0.0.36':
+    resolution: {integrity: sha512-g9Nq5oJamJiUQpxtwqFy6/bo1//lUNYw43qDmDudRw1PwL7xFtJRv4g/5h3K4CGeNyQdXBJD/bk/7lnV78HL0w==, tarball: https://npm.pkg.github.com/download/@fleetbase/internals-engine/0.0.36/5362bb997cd71ea8bd19cb080b6b8d625271ad6a}
     engines: {node: '>= 18'}
     peerDependencies:
       ember-engines: ^0.9.0
@@ -1636,8 +1639,8 @@ packages:
   '@fleetbase/leaflet-routing-machine@3.2.17':
     resolution: {integrity: sha512-DAg9BP5UebOSfxbL3A5zeJwPQWRUc1uPcCBvpEV0Dk4zY588o9Ai9xQOTWaaUFy5b+NT2KI6E1ujuZ1rHUKlIQ==, tarball: https://npm.pkg.github.com/download/@fleetbase/leaflet-routing-machine/3.2.17/2116bab4292dd7ad284c53cf2f3f0ac4d7bcda92}
 
-  '@fleetbase/ledger-engine@0.0.8':
-    resolution: {integrity: sha512-WO5aRiL1rYmj0mDGQcZN9xwWGrDCoiFWl+18nFlyesZVETGD2igKQptwbL3V1X7LllLodxUZf9krW9PFKn5JTg==, tarball: https://npm.pkg.github.com/download/@fleetbase/ledger-engine/0.0.8/d9fea5f4dccc57d7109a418dee0652c7b83549be}
+  '@fleetbase/ledger-engine@0.0.9':
+    resolution: {integrity: sha512-F7PXlIdhHEQ/tCb63ZkAtNv5NhACh0nnrgi24cabyMKuZl+dDX25bactgiXh2IPFKJs0RPLu0PjZkN4h0EWUSw==, tarball: https://npm.pkg.github.com/download/@fleetbase/ledger-engine/0.0.9/3ac66dd99536f069f5ef6c7fc4910906f6272419}
     engines: {node: '>= 18'}
     peerDependencies:
       ember-engines: ^0.9.0
@@ -1660,8 +1663,8 @@ packages:
     peerDependencies:
       ember-engines: ^0.9.0
 
-  '@fleetbase/storefront-engine@0.4.17':
-    resolution: {integrity: sha512-RTF1rngNkeTvHB0Yg4ErDu5MU5szTT3oe7xNWgGFUJkt2yeyUAdcx5Ay+EbxZCQ0zao92/u+SuVmE+AzqXWjRg==, tarball: https://npm.pkg.github.com/download/@fleetbase/storefront-engine/0.4.17/71c5da15c68cab6de3e8eddcdf9c33026a195e25}
+  '@fleetbase/storefront-engine@0.4.18':
+    resolution: {integrity: sha512-vhm2xgxxsmGcs3ZRCyswXzjdjljU+kAqMKMKteobENyRXbyASYpukkE1vMZ/LJM6cUMUT1hq+y0g5qNMsnk75w==, tarball: https://npm.pkg.github.com/download/@fleetbase/storefront-engine/0.4.18/272728dc17869a8ffce249b9c894b3b66a181dc5}
     engines: {node: '>= 18'}
     peerDependencies:
       ember-engines: ^0.9.0
@@ -1905,6 +1908,14 @@ packages:
   '@isaacs/cliui@8.0.2':
     resolution: {integrity: sha512-O8jcjabXaleOG9DQ0+ARXWZBTfnP4WNAqzuiJK7ll44AmxGKv/J2M4TPjxjY3znBCfvBXFzucm1twdyFybFqEA==}
     engines: {node: '>=12'}
+
+  '@istanbuljs/load-nyc-config@1.1.0':
+    resolution: {integrity: sha512-VjeHSlIzpv/NyD3N0YuHfXOPDIixcA1q2ZV98wsMqcYlPmv2n3Yb2lYP9XMElnaFVXg5A7YLTeLu6V84uQDjmQ==}
+    engines: {node: '>=8'}
+
+  '@istanbuljs/schema@0.1.6':
+    resolution: {integrity: sha512-+Sg6GCR/wy1oSmQDFq4LQDAhm3ETKnorxN+y5nbLULOR3P0c14f2Wurzj3/xqPXtasLFfHd5iRFQ7AJt4KH2cw==}
+    engines: {node: '>=8'}
 
   '@joint/core@4.2.4':
     resolution: {integrity: sha512-GMXYz40VQ5AtDDp0/Z08pAN3w8H7DaUdKitVAqkDegXN29uzq5TvB/O7i0Mwc87WB3sc032Asj+hLKicCLjSxA==}
@@ -2765,6 +2776,9 @@ packages:
   arg@5.0.2:
     resolution: {integrity: sha512-PYjyFOLKQ9y57JvQ6QLo8dAgNqswh8M1RMJYdQduT6xbWSgK36P/Z/v+p888pM69jMMfS8Xd8F6I1kQ/I9HUGg==}
 
+  argparse@1.0.10:
+    resolution: {integrity: sha512-o5Roy6tNG4SL/FOkCAN6RzjiakZS25RLYFrcMttJqbdd8BWrnA+fGz57iN5Pb06pvBGvl5gQ0B48dJlslXvoTg==}
+
   argparse@2.0.1:
     resolution: {integrity: sha512-8+9WqebbFzpX9OR+Wa6O29asIogeRMzcGtAINdpMHHyAg10f05aSFVBbcEqGf/PXw1EjAZ+q2/bEBg3DvurK3Q==}
 
@@ -2977,6 +2991,10 @@ packages:
   babel-plugin-htmlbars-inline-precompile@5.3.1:
     resolution: {integrity: sha512-QWjjFgSKtSRIcsBhJmEwS2laIdrA6na8HAlc/pEAhjHgQsah/gMiBFRZvbQTy//hWxR4BMwV7/Mya7q5H8uHeA==}
     engines: {node: 10.* || >= 12.*}
+
+  babel-plugin-istanbul@6.1.1:
+    resolution: {integrity: sha512-Y1IQok9821cC9onCx5otgFfRm7Lm+I+wwxOx738M/WLPZ9Q42m4IG5W0FNX8WLL2gYMZo3JkuXIH2DOpWM+qwA==}
+    engines: {node: '>=8'}
 
   babel-plugin-module-resolver@3.2.0:
     resolution: {integrity: sha512-tjR0GvSndzPew/Iayf4uICWZqjBwnlMWjSx6brryfQ81F9rxBVqwDJtFCV8oOs0+vJeefK9TmdZtkIFdFe1UnA==}
@@ -3440,6 +3458,10 @@ packages:
   camelcase-keys@7.0.2:
     resolution: {integrity: sha512-Rjs1H+A9R+Ig+4E/9oyB66UC5Mj9Xq3N//vcLf2WzgdTi/3gUu3Z9KoqmlrEG4VuuLK8wJHofxzdQXz/knhiYg==}
     engines: {node: '>=12'}
+
+  camelcase@5.3.1:
+    resolution: {integrity: sha512-L28STB170nwWS63UjtlEOE3dldQApaJXZkOI1uMFfzf3rRuPegHaHesyee+YxQ+W6SvRDQV6UrdOdRiR153wJg==}
+    engines: {node: '>=6'}
 
   camelcase@6.3.0:
     resolution: {integrity: sha512-Gmy6FhYlCY7uOElZUSbxo2UCDH8owEk996gkbrpsgGtrJLM3J7jGxl9Ic7Qwwj4ivOE5AWZWRMecDdF7hqGjFA==}
@@ -4383,6 +4405,18 @@ packages:
   ember-cli-clean-css@3.0.0:
     resolution: {integrity: sha512-BbveJCyRvzzkaTH1llLW+MpHe/yzA5zpHOpMIg2vp/3JD9mban9zUm7lphaB0TSpPuMuby9rAhTI8pgXq0ifIA==}
     engines: {node: 16.* || >= 18}
+
+  ember-cli-code-coverage@2.1.2:
+    resolution: {integrity: sha512-4DpMv6SiGbAHNcfvSk0k/ybogd0iiUEgMdVxnb7t0+ITpLA7G6+bjGpd8W8ImoINcKdhSbP6Zl78WlWo/8XcDg==}
+    engines: {node: 14.* || 16.* || >= 18}
+    peerDependencies:
+      '@embroider/compat': ^0.47.0 || ^1.0.0 || ^2.0.0 || >=3.0.0
+      '@embroider/core': ^0.47.0 || ^1.0.0 || ^2.0.0 || >=3.0.0
+    peerDependenciesMeta:
+      '@embroider/compat':
+        optional: true
+      '@embroider/core':
+        optional: true
 
   ember-cli-dependency-checker@3.3.3:
     resolution: {integrity: sha512-mvp+HrE0M5Zhc2oW8cqs8wdhtqq0CfQXAYzaIstOzHJJn/U01NZEGu3hz7J7zl/+jxZkyygylzcS57QqmPXMuQ==}
@@ -5547,6 +5581,10 @@ packages:
     resolution: {integrity: sha512-9fSjSaos/fRIVIp+xSJlE6lfwhES7LNtKaCBIamHsjr2na1BiABJPo0mOjjz8GJDURarmCPGqaiVg5mfjb98CQ==}
     engines: {node: '>= 0.4'}
 
+  get-package-type@0.1.0:
+    resolution: {integrity: sha512-pjzuKtY64GYfWizNAJ0fr9VqttZkNiK2iS430LtIHzjBEr6bX8Am2zm4sW4Ro5wjWW5cAlRL1qAMTcXbjNAO2Q==}
+    engines: {node: '>=8.0.0'}
+
   get-proto@1.0.1:
     resolution: {integrity: sha512-sTSfBjoXBp89JvIKIefqw7U2CCebsc74kiY6awiGogKtoSGbgjYE/G/+l9sF3MWFPNc9IcoOC4ODfKHfxFmp0g==}
     engines: {node: '>= 0.4'}
@@ -5818,6 +5856,9 @@ packages:
   hosted-git-info@6.1.3:
     resolution: {integrity: sha512-HVJyzUrLIL1c0QmviVh5E8VGyUS7xCFPS6yydaVd1UegW+ibV/CohqTH9MkOLDp5o+rb82DMo77PTuc9F/8GKw==}
     engines: {node: ^14.17.0 || ^16.13.0 || >=18.0.0}
+
+  html-escaper@2.0.2:
+    resolution: {integrity: sha512-H2iMtd0I4Mt5eYiapRdIDjp+XzelXQ0tFE4JS7YFwFevXXMmOp9myNrUvCg0D6ws8iqkRPBfKHgbwig1SmlLfg==}
 
   html-tags@3.3.1:
     resolution: {integrity: sha512-ztqyC3kLto0e9WbNp0aeP+M3kTt+nbaIveGmUxAtZa+8iFgKLUOD4YKM5j+f3QD89bra7UeumolZHKuOXnTmeQ==}
@@ -6250,6 +6291,26 @@ packages:
     resolution: {integrity: sha512-WhB9zCku7EGTj/HQQRz5aUQEUeoQZH2bWcltRErOpymJ4boYE6wL9Tbr23krRPSZ+C5zqNSrSw+Cc7sZZ4b7vg==}
     engines: {node: '>=0.10.0'}
 
+  istanbul-lib-coverage@3.2.2:
+    resolution: {integrity: sha512-O8dpsF+r0WV/8MNRKfnmrtCWhuKjxrq2w+jpzBL5UZKTi2LeVWnWOmWRxFlesJONmc+wLAGvKQZEOanko0LFTg==}
+    engines: {node: '>=8'}
+
+  istanbul-lib-instrument@5.2.1:
+    resolution: {integrity: sha512-pzqtp31nLv/XFOzXGuvhCb8qhjmTVo5vjVk19XE4CRlSWz0KoeJ3bw9XsA7nOp9YBf4qHjwBxkDzKcME/J29Yg==}
+    engines: {node: '>=8'}
+
+  istanbul-lib-report@3.0.1:
+    resolution: {integrity: sha512-GCfE1mtsHGOELCU8e/Z7YWzpmybrx/+dSTfLrvY8qRmaY6zXTKWn6WQIjaAFw069icm6GVMNkgu0NzI4iPZUNw==}
+    engines: {node: '>=10'}
+
+  istanbul-lib-source-maps@4.0.1:
+    resolution: {integrity: sha512-n3s8EwkdFIJCG3BPKBYvskgXGoy88ARzvegkitk60NxRdwltLOTaH7CUiMRXvwYorl0Q712iEjcWB+fK/MrWVw==}
+    engines: {node: '>=10'}
+
+  istanbul-reports@3.2.0:
+    resolution: {integrity: sha512-HGYWWS/ehqTV3xN10i23tkPkpH46MLCIMFNCaaKNavAXTF1RkqxawEPtnjnGZ6XKSInBKkiOA5BKS+aZiY3AvA==}
+    engines: {node: '>=8'}
+
   istextorbinary@2.1.0:
     resolution: {integrity: sha512-kT1g2zxZ5Tdabtpp9VSdOzW9lb6LXImyWbzbQeTxoRtHhurC9Ej9Wckngr2+uepPL09ky/mJHmN9jeJPML5t6A==}
     engines: {node: '>=0.12'}
@@ -6281,6 +6342,10 @@ packages:
 
   js-tokens@4.0.0:
     resolution: {integrity: sha512-RdJUflcE3cUzKiMqQgsCu06FPu9UdIJO0beYbPhHN4k6apgJtifcoCtT9bcxOpYBtpD2kCM6Sbzg4CausW/PKQ==}
+
+  js-yaml@3.15.1:
+    resolution: {integrity: sha512-S99WuO3HlhO3XN41EtYUNl9zzXjoJx7QvmipxsJVxtCBT0YHEFy+iOJhjSvrmV12nYhWpZaM8lPHkJm0yUMbag==}
+    hasBin: true
 
   js-yaml@4.1.1:
     resolution: {integrity: sha512-qQKT4zQxXl8lLwBtHMWwaTcGfFOZviOJet3Oy/xmGk2gZH677CJM9EvtfdSkgWcATZhj/55JZ0rmy3myCT5lsA==}
@@ -6549,6 +6614,10 @@ packages:
   make-dir@3.1.0:
     resolution: {integrity: sha512-g3FeP20LNwhALb/6Cz6Dd4F2ngze0jz7tbzrD2wAV+o9FeNHe4rL+yK2md0J/fiSf1sa1ADhXqi5+oVwOM/eGw==}
     engines: {node: '>=8'}
+
+  make-dir@4.0.0:
+    resolution: {integrity: sha512-hXdUTZYIVOt1Ex//jAQi+wTZZpUpwBj/0QsOzqegb3rGMMeJiSEu5xLHnYfBrRV4RH2+OCSOO95Is/7x1WJ4bw==}
+    engines: {node: '>=10'}
 
   makeerror@1.0.12:
     resolution: {integrity: sha512-JmqCvUhmt43madlpFzG4BQzG2Z3m6tvQDNKdClZnO3VbIudJYmxsT0FNJMeiB2+JTSlTQTSbU8QdesVmwJcmLg==}
@@ -6863,6 +6932,10 @@ packages:
 
   no-case@3.0.4:
     resolution: {integrity: sha512-fgAN3jGAh+RoxUGZHTSOLJIqUc2wmoBwGR4tbpNAKmmovFoWq0OdRkb0VkldReO2a2iBT/OEulG9XSUc10r3zg==}
+
+  node-dir@0.1.17:
+    resolution: {integrity: sha512-tmPX422rYgofd4epzrNoOXiE8XFZYOcCq1vD7MAXCDO+O+zndlA2ztdKKMa+EeuBG5tHETpr4ml4RGgpqDCCAg==}
+    engines: {node: '>= 0.10.5'}
 
   node-fetch@2.7.0:
     resolution: {integrity: sha512-c4FRfUm/dbcWZ7U+1Wq0AwCyFL+3nt2bEw05wfxSz+DWpWsitgmSgYmy2dQdWyKC1694ELPqMs/YzUSNozLt8A==}
@@ -8552,6 +8625,9 @@ packages:
     resolution: {integrity: sha512-NzNVhJDYpwceVVii8/Hu6DKfD2G+NrQHlS/V/qgv763EYudVwEcMQNxd2lh+0VrUByXN/oJkl5grOhYWvQUYiw==}
     engines: {node: '>=0.10.0'}
 
+  sprintf-js@1.0.3:
+    resolution: {integrity: sha512-D9cPgkvLlV3t3IzL0D0YLvGA9Ahk4PcvVwUbN0dSGr1aP0Nrt4AEnTUbuGvquEC0mA64Gqt1fzirlRs5ibXx8g==}
+
   sprintf-js@1.1.3:
     resolution: {integrity: sha512-Oo+0REFV59/rz3gfJNKQiBlwfHaSESl1pcGyABQsnnIfWOFt6JNj5gCog2U6MLZ//IGYD+nA8nI+mTShREReaA==}
 
@@ -8875,6 +8951,10 @@ packages:
     resolution: {integrity: sha512-J/9An6vs9Us6wKRriSFXBWdRZapREHqFzdNUKk0pmu804EMR6dr6winwo7e5JDxN4xahxQsuysyYFwlwj4XN/Q==}
     engines: {node: '>=10'}
     hasBin: true
+
+  test-exclude@6.0.0:
+    resolution: {integrity: sha512-cAGWPIyOHU6zlmg88jwm7VRyXnMN7iV68OGAbYDk/Mh/xC/pzVPlQtY6ngoIH/5/tciuhGfvESU8GrHrcxD56w==}
+    engines: {node: '>=8'}
 
   testem@3.20.1:
     resolution: {integrity: sha512-HMbcVlrRDt+GjEGJZrPSCp0XFzM7SSdmLvNSJm++hIITEIMoccCQGikvelOO/NjfZJ0HTZCEyvg3+CIStjaZqQ==}
@@ -11034,7 +11114,7 @@ snapshots:
     transitivePeerDependencies:
       - '@typescript-eslint/types'
 
-  '@fleetbase/ai-engine@0.0.3(47001768392269870195224ea32348e1)':
+  '@fleetbase/ai-engine@0.0.4(47001768392269870195224ea32348e1)':
     dependencies:
       '@babel/core': 7.29.7
       '@fleetbase/ember-core': 0.3.24(@ember/string@3.1.1)(@ember/test-helpers@3.3.1(@babel/core@7.29.7)(ember-source@5.4.1(@babel/core@7.29.7)(@glimmer/component@1.1.2(@babel/core@7.29.7))(rsvp@4.8.5)(webpack@5.107.2(postcss@8.5.15)))(webpack@5.107.2(postcss@8.5.15)))(ember-resolver@11.0.1(ember-source@5.4.1(@babel/core@7.29.7)(@glimmer/component@1.1.2(@babel/core@7.29.7))(rsvp@4.8.5)(webpack@5.107.2(postcss@8.5.15))))(ember-source@5.4.1(@babel/core@7.29.7)(@glimmer/component@1.1.2(@babel/core@7.29.7))(rsvp@4.8.5)(webpack@5.107.2(postcss@8.5.15)))(eslint@8.57.1)(webpack@5.107.2(postcss@8.5.15))
@@ -11090,7 +11170,7 @@ snapshots:
       - webpack-command
       - yaml
 
-  '@fleetbase/billing-engine@0.1.22(abaf0c2a8c51c5147c2d07c08c7af87d)':
+  '@fleetbase/billing-engine@0.1.24(abaf0c2a8c51c5147c2d07c08c7af87d)':
     dependencies:
       '@adopted-ember-addons/ember-stripe-elements': 2.0.5
       '@babel/core': 7.29.7
@@ -11414,7 +11494,7 @@ snapshots:
       - utf-8-validate
       - webpack
 
-  '@fleetbase/fleetops-engine@0.6.58(abaf0c2a8c51c5147c2d07c08c7af87d)':
+  '@fleetbase/fleetops-engine@0.6.59(abaf0c2a8c51c5147c2d07c08c7af87d)':
     dependencies:
       '@babel/core': 7.29.7
       '@fleetbase/ember-core': 0.3.24(@ember/string@3.1.1)(@ember/test-helpers@3.3.1(@babel/core@7.29.7)(ember-source@5.4.1(@babel/core@7.29.7)(@glimmer/component@1.1.2(@babel/core@7.29.7))(rsvp@4.8.5)(webpack@5.107.2(postcss@8.5.15)))(webpack@5.107.2(postcss@8.5.15)))(ember-resolver@11.0.1(ember-source@5.4.1(@babel/core@7.29.7)(@glimmer/component@1.1.2(@babel/core@7.29.7))(rsvp@4.8.5)(webpack@5.107.2(postcss@8.5.15))))(ember-source@5.4.1(@babel/core@7.29.7)(@glimmer/component@1.1.2(@babel/core@7.29.7))(rsvp@4.8.5)(webpack@5.107.2(postcss@8.5.15)))(eslint@8.57.1)(webpack@5.107.2(postcss@8.5.15))
@@ -11591,7 +11671,7 @@ snapshots:
       - webpack-command
       - yaml
 
-  '@fleetbase/internals-engine@0.0.34(d83a70aac8639c50f5e8e2c220948c08)':
+  '@fleetbase/internals-engine@0.0.36(d83a70aac8639c50f5e8e2c220948c08)':
     dependencies:
       '@babel/core': 7.29.7
       '@fleetbase/ember-core': 0.3.24(@ember/string@3.1.1)(@ember/test-helpers@3.3.1(@babel/core@7.29.7)(ember-source@5.4.1(@babel/core@7.29.7)(@glimmer/component@1.1.2(@babel/core@7.29.7))(rsvp@4.8.5)(webpack@5.107.2(postcss@8.5.15)))(webpack@5.107.2(postcss@8.5.15)))(ember-resolver@11.0.1(ember-source@5.4.1(@babel/core@7.29.7)(@glimmer/component@1.1.2(@babel/core@7.29.7))(rsvp@4.8.5)(webpack@5.107.2(postcss@8.5.15))))(ember-source@5.4.1(@babel/core@7.29.7)(@glimmer/component@1.1.2(@babel/core@7.29.7))(rsvp@4.8.5)(webpack@5.107.2(postcss@8.5.15)))(eslint@8.57.1)(webpack@5.107.2(postcss@8.5.15))
@@ -11661,7 +11741,7 @@ snapshots:
       '@mapbox/polyline': 0.2.0
       osrm-text-instructions: 0.13.4
 
-  '@fleetbase/ledger-engine@0.0.8(abaf0c2a8c51c5147c2d07c08c7af87d)':
+  '@fleetbase/ledger-engine@0.0.9(abaf0c2a8c51c5147c2d07c08c7af87d)':
     dependencies:
       '@babel/core': 7.29.7
       '@fleetbase/ember-core': 0.3.24(@ember/string@3.1.1)(@ember/test-helpers@3.3.1(@babel/core@7.29.7)(ember-source@5.4.1(@babel/core@7.29.7)(@glimmer/component@1.1.2(@babel/core@7.29.7))(rsvp@4.8.5)(webpack@5.107.2(postcss@8.5.15)))(webpack@5.107.2(postcss@8.5.15)))(ember-resolver@11.0.1(ember-source@5.4.1(@babel/core@7.29.7)(@glimmer/component@1.1.2(@babel/core@7.29.7))(rsvp@4.8.5)(webpack@5.107.2(postcss@8.5.15))))(ember-source@5.4.1(@babel/core@7.29.7)(@glimmer/component@1.1.2(@babel/core@7.29.7))(rsvp@4.8.5)(webpack@5.107.2(postcss@8.5.15)))(eslint@8.57.1)(webpack@5.107.2(postcss@8.5.15))
@@ -11882,7 +11962,7 @@ snapshots:
       - webpack-command
       - yaml
 
-  '@fleetbase/storefront-engine@0.4.17(abaf0c2a8c51c5147c2d07c08c7af87d)':
+  '@fleetbase/storefront-engine@0.4.18(abaf0c2a8c51c5147c2d07c08c7af87d)':
     dependencies:
       '@babel/core': 7.29.7
       '@fleetbase/ember-core': 0.3.24(@ember/string@3.1.1)(@ember/test-helpers@3.3.1(@babel/core@7.29.7)(ember-source@5.4.1(@babel/core@7.29.7)(@glimmer/component@1.1.2(@babel/core@7.29.7))(rsvp@4.8.5)(webpack@5.107.2(postcss@8.5.15)))(webpack@5.107.2(postcss@8.5.15)))(ember-resolver@11.0.1(ember-source@5.4.1(@babel/core@7.29.7)(@glimmer/component@1.1.2(@babel/core@7.29.7))(rsvp@4.8.5)(webpack@5.107.2(postcss@8.5.15))))(ember-source@5.4.1(@babel/core@7.29.7)(@glimmer/component@1.1.2(@babel/core@7.29.7))(rsvp@4.8.5)(webpack@5.107.2(postcss@8.5.15)))(eslint@8.57.1)(webpack@5.107.2(postcss@8.5.15))
@@ -12416,6 +12496,16 @@ snapshots:
       wrap-ansi: 8.1.0
       wrap-ansi-cjs: wrap-ansi@7.0.0
 
+  '@istanbuljs/load-nyc-config@1.1.0':
+    dependencies:
+      camelcase: 5.3.1
+      find-up: 4.1.0
+      get-package-type: 0.1.0
+      js-yaml: 3.15.1
+      resolve-from: 5.0.0
+
+  '@istanbuljs/schema@0.1.6': {}
+
   '@joint/core@4.2.4': {}
 
   '@joint/layout-directed-graph@4.2.3':
@@ -12945,7 +13035,7 @@ snapshots:
 
   '@types/glob@9.0.0':
     dependencies:
-      glob: 8.1.0
+      glob: 13.0.6
 
   '@types/http-errors@2.0.5': {}
 
@@ -13347,6 +13437,10 @@ snapshots:
 
   arg@5.0.2: {}
 
+  argparse@1.0.10:
+    dependencies:
+      sprintf-js: 1.0.3
+
   argparse@2.0.1: {}
 
   aria-query@5.3.1: {}
@@ -13599,6 +13693,16 @@ snapshots:
       magic-string: 0.25.9
       parse-static-imports: 1.1.0
       string.prototype.matchall: 4.0.12
+
+  babel-plugin-istanbul@6.1.1:
+    dependencies:
+      '@babel/helper-plugin-utils': 7.29.7
+      '@istanbuljs/load-nyc-config': 1.1.0
+      '@istanbuljs/schema': 0.1.6
+      istanbul-lib-instrument: 5.2.1
+      test-exclude: 6.0.0
+    transitivePeerDependencies:
+      - supports-color
 
   babel-plugin-module-resolver@3.2.0:
     dependencies:
@@ -14576,6 +14680,8 @@ snapshots:
       map-obj: 4.3.0
       quick-lru: 5.1.1
       type-fest: 1.4.0
+
+  camelcase@5.3.1: {}
 
   camelcase@6.3.0: {}
 
@@ -15589,6 +15695,22 @@ snapshots:
       broccoli-persistent-filter: 3.1.3
       clean-css: 5.3.3
       json-stable-stringify: 1.3.0
+    transitivePeerDependencies:
+      - supports-color
+
+  ember-cli-code-coverage@2.1.2:
+    dependencies:
+      babel-plugin-istanbul: 6.1.1
+      body-parser: 1.20.5
+      ember-cli-babel: 7.26.11
+      express: 4.22.2
+      fs-extra: 9.1.0
+      istanbul-lib-coverage: 3.2.2
+      istanbul-lib-report: 3.0.1
+      istanbul-lib-source-maps: 4.0.1
+      istanbul-reports: 3.2.0
+      node-dir: 0.1.17
+      walk-sync: 2.2.0
     transitivePeerDependencies:
       - supports-color
 
@@ -17818,6 +17940,8 @@ snapshots:
       hasown: 2.0.3
       math-intrinsics: 1.1.0
 
+  get-package-type@0.1.0: {}
+
   get-proto@1.0.1:
     dependencies:
       dunder-proto: 1.0.1
@@ -18138,6 +18262,8 @@ snapshots:
   hosted-git-info@6.1.3:
     dependencies:
       lru-cache: 7.18.3
+
+  html-escaper@2.0.2: {}
 
   html-tags@3.3.1: {}
 
@@ -18558,6 +18684,37 @@ snapshots:
 
   isobject@3.0.1: {}
 
+  istanbul-lib-coverage@3.2.2: {}
+
+  istanbul-lib-instrument@5.2.1:
+    dependencies:
+      '@babel/core': 7.29.7
+      '@babel/parser': 7.29.7
+      '@istanbuljs/schema': 0.1.6
+      istanbul-lib-coverage: 3.2.2
+      semver: 6.3.1
+    transitivePeerDependencies:
+      - supports-color
+
+  istanbul-lib-report@3.0.1:
+    dependencies:
+      istanbul-lib-coverage: 3.2.2
+      make-dir: 4.0.0
+      supports-color: 7.2.0
+
+  istanbul-lib-source-maps@4.0.1:
+    dependencies:
+      debug: 4.4.3
+      istanbul-lib-coverage: 3.2.2
+      source-map: 0.6.1
+    transitivePeerDependencies:
+      - supports-color
+
+  istanbul-reports@3.2.0:
+    dependencies:
+      html-escaper: 2.0.2
+      istanbul-lib-report: 3.0.1
+
   istextorbinary@2.1.0:
     dependencies:
       binaryextensions: 2.3.0
@@ -18591,6 +18748,11 @@ snapshots:
   js-tokens@3.0.2: {}
 
   js-tokens@4.0.0: {}
+
+  js-yaml@3.15.1:
+    dependencies:
+      argparse: 1.0.10
+      esprima: 4.0.1
 
   js-yaml@4.1.1:
     dependencies:
@@ -18836,6 +18998,10 @@ snapshots:
   make-dir@3.1.0:
     dependencies:
       semver: 6.3.1
+
+  make-dir@4.0.0:
+    dependencies:
+      semver: 7.8.1
 
   makeerror@1.0.12:
     dependencies:
@@ -19183,6 +19349,10 @@ snapshots:
     dependencies:
       lower-case: 2.0.2
       tslib: 2.8.1
+
+  node-dir@0.1.17:
+    dependencies:
+      minimatch: 3.1.5
 
   node-fetch@2.7.0:
     dependencies:
@@ -21116,6 +21286,8 @@ snapshots:
     dependencies:
       extend-shallow: 3.0.2
 
+  sprintf-js@1.0.3: {}
+
   sprintf-js@1.1.3: {}
 
   sri-toolbox@0.2.0: {}
@@ -21529,6 +21701,12 @@ snapshots:
       acorn: 8.16.0
       commander: 2.20.3
       source-map-support: 0.5.21
+
+  test-exclude@6.0.0:
+    dependencies:
+      '@istanbuljs/schema': 0.1.6
+      glob: 7.2.3
+      minimatch: 3.1.5
 
   testem@3.20.1(@babel/core@7.29.7)(handlebars@4.7.9)(underscore@1.13.8):
     dependencies:

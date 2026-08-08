@@ -1,0 +1,163 @@
+name: API Contract (Postman)
+
+# Reusable workflow: boot a full Fleetbase stack and run the official Postman
+# collections against the live API. Called centrally (build from source) and by
+# module repos (fleetops/storefront/ledger/core-api) which pull the published
+# image and run only their own collection:
+#
+#   jobs:
+#     contract:
+#       uses: fleetbase/fleetbase/.github/workflows/api-contract.yml@main
+#       with: { collections: "Fleetbase Storefront API", build-from-source: false }
+#       secrets: inherit
+#
+# Requires org-level secrets POSTMAN_API_KEY and _GITHUB_AUTH_TOKEN (inherited).
+
+on:
+  workflow_call:
+    inputs:
+      collections:
+        description: Comma/newline-separated collection names under postman/collections.
+        type: string
+        required: false
+        default: |
+          Fleetbase API
+          Fleetbase Core API
+          Fleetbase Storefront API
+          Fleetbase Ledger API
+      build-from-source:
+        description: Build the API image from this repo (central) instead of pulling :latest.
+        type: boolean
+        required: false
+        default: false
+      fleetbase-ref:
+        description: >-
+          Ref of fleetbase/fleetbase to boot (ships the compose files, installer and
+          composite action). Tracks main by default so contract runs always exercise
+          the current platform — there is no per-release version to remember to bump.
+          Pin to a tag only when reproducing a specific failure.
+        type: string
+        required: false
+        default: main
+      api-image:
+        description: >-
+          API image to test against. Defaults to :latest, which is what each release
+          publishes, so this tracks the newest platform automatically. Pin to e.g.
+          fleetbase/fleetbase-api:v0.7.53 to reproduce an older result.
+        type: string
+        required: false
+        default: fleetbase/fleetbase-api:latest
+      postman-ref:
+        description: Ref of fleetbase/postman to run.
+        type: string
+        required: false
+        default: main
+
+permissions:
+  contents: read
+
+jobs:
+  # Cheap gate so callers don't spend ~10 minutes booting the stack when the
+  # Postman secret isn't configured yet. Skips the whole contract job if absent.
+  gate:
+    name: Check Postman secret
+    runs-on: ubuntu-latest
+    outputs:
+      enabled: ${{ steps.check.outputs.enabled }}
+    steps:
+      - id: check
+        run: |
+          if [[ -n "${{ secrets.POSTMAN_API_KEY }}" ]]; then
+            echo "enabled=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "enabled=false" >> "$GITHUB_OUTPUT"
+            echo "::warning::POSTMAN_API_KEY is not set; skipping the API contract run."
+          fi
+
+  contract:
+    name: Postman contract against live API
+    needs: gate
+    if: needs.gate.outputs.enabled == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - name: Checkout fleetbase/fleetbase
+        uses: actions/checkout@v4
+        with:
+          repository: fleetbase/fleetbase
+          ref: ${{ inputs.fleetbase-ref }}
+          submodules: recursive
+          token: ${{ secrets._GITHUB_AUTH_TOKEN }}
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build API image from source
+        if: ${{ inputs.build-from-source }}
+        run: |
+          docker build \
+            --file docker/Dockerfile \
+            --target app-release \
+            --build-arg GITHUB_AUTH_KEY="${{ secrets._GITHUB_AUTH_TOKEN }}" \
+            --tag fleetbase/fleetbase-api:latest \
+            .
+
+      - name: Pull published API image
+        if: ${{ !inputs.build-from-source }}
+        run: |
+          docker pull "${{ inputs.api-image }}"
+          # :latest is a moving target, so record the digest and build date the run
+          # actually used — otherwise a red run months from now is unreproducible.
+          # Raw newlines collapse in markdown, so fence it. `join` tolerates an image
+          # with no digest instead of erroring the way `index` would. The format string
+          # stays on one line — a wrapped one would end this YAML block scalar.
+          {
+            echo "### API image under test"
+            echo '```'
+            docker image inspect "${{ inputs.api-image }}" --format 'requested: ${{ inputs.api-image }}{{"\n"}}tags:      {{join .RepoTags ", "}}{{"\n"}}digest:    {{join .RepoDigests ", "}}{{"\n"}}created:   {{.Created}}'
+            echo '```'
+          } | tee -a "$GITHUB_STEP_SUMMARY"
+          # Retag so the compose file's fleetbase/fleetbase-api:latest reference resolves
+          # to the requested image even when a specific tag was asked for.
+          if [[ "${{ inputs.api-image }}" != "fleetbase/fleetbase-api:latest" ]]; then
+            docker tag "${{ inputs.api-image }}" fleetbase/fleetbase-api:latest
+          fi
+
+      - name: Ensure clean database volume
+        run: |
+          sudo rm -rf docker/database/mysql
+          mkdir -p docker/database/mysql
+
+      - name: Run non-interactive installer
+        run: |
+          [ -f api/.env ] || cp api/.env.example api/.env 2>/dev/null || touch api/.env
+          bash scripts/docker-install.sh --non-interactive
+
+      - name: Wait for API health
+        run: |
+          set -uo pipefail
+          for i in $(seq 1 30); do
+            if curl -fsS --max-time 5 http://localhost:8000/health | grep -q '"status"'; then
+              echo "API is healthy"; exit 0
+            fi
+            sleep 5
+          done
+          echo "::error::API did not become healthy"; exit 1
+
+      - name: Run Postman contract
+        uses: ./.github/actions/postman-contract
+        with:
+          collections: ${{ inputs.collections }}
+          postman-ref: ${{ inputs.postman-ref }}
+          postman-api-key: ${{ secrets.POSTMAN_API_KEY }}
+          github-token: ${{ secrets._GITHUB_AUTH_TOKEN }}
+
+      - name: Dump logs on failure
+        if: failure()
+        run: |
+          docker compose ps || true
+          docker compose logs --no-color --tail=300 || true
+
+      - name: Tear down
+        if: always()
+        run: docker compose down -v || true

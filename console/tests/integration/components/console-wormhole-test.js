@@ -6,21 +6,9 @@ import { hbs } from 'ember-cli-htmlbars';
 module('Integration | Component | console-wormhole', function (hooks) {
     setupRenderingTest(hooks);
 
-    test('it renders', async function (assert) {
-        // Set any properties with this.set('myProperty', 'value');
-        // Handle any actions with this.set('myAction', function(val) { ... });
-
+    test('it renders the console wormhole destination element', async function (assert) {
         await render(hbs`<ConsoleWormhole />`);
 
-        assert.dom().hasText('');
-
-        // Template block usage:
-        await render(hbs`
-      <ConsoleWormhole>
-        template block text
-      </ConsoleWormhole>
-    `);
-
-        assert.dom().hasText('template block text');
+        assert.dom('#console-wormhole').exists('other components can wormhole into this element');
     });
 });

@@ -1,3 +1,7 @@
+// This utility exists specifically to patch Ember's private router microlib, so reaching
+// for _routerMicrolib is the entire point — the public router service does not expose the
+// refresh implementation that needs fixing.
+/* eslint-disable ember/no-private-routing-service */
 import { debug } from '@ember/debug';
 /**
  * Fleetbase Router Refresh Bug Fix Utility
@@ -36,8 +40,6 @@ export function patchRouterRefresh(application) {
             debug('[Fleetbase Router Patch] Already applied, skipping');
             return;
         }
-
-        const originalRefresh = router._routerMicrolib.refresh.bind(router._routerMicrolib);
 
         router._routerMicrolib.refresh = function (pivotRoute) {
             const previousTransition = this.activeTransition;

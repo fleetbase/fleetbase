@@ -6,12 +6,19 @@ import { hbs } from 'ember-cli-htmlbars';
 module('Integration | Helper | json-pretty-print', function (hooks) {
     setupRenderingTest(hooks);
 
-    // TODO: Replace this with your real tests.
-    test('it renders', async function (assert) {
-        this.set('inputValue', '1234');
+    test('pretty-prints an object with two-space indentation', async function (assert) {
+        this.set('value', { a: 1, b: [2, 3] });
 
-        await render(hbs`{{json-pretty-print this.inputValue}}`);
+        await render(hbs`{{json-pretty-print this.value}}`);
 
-        assert.dom(this.element).hasText('1234');
+        assert.strictEqual(this.element.textContent.trim(), JSON.stringify({ a: 1, b: [2, 3] }, null, '  '));
+    });
+
+    test('stringifies primitive values', async function (assert) {
+        this.set('value', '1234');
+
+        await render(hbs`{{json-pretty-print this.value}}`);
+
+        assert.strictEqual(this.element.textContent.trim(), '"1234"');
     });
 });

@@ -1,5 +1,13 @@
 name: Fleetbase CI
 
+# Image-build gate: proves the Docker images still bake from source.
+# This is one of four sibling checks that together gate `main`:
+#   - ci.yml           → this file: docker bake (images build)
+#   - install-smoke.yml → fresh install boots and serves (docker compose + deploy.sh + health)
+#   - api.yml          → host Laravel PHPUnit suite + coverage
+#   - console.yml      → Ember QUnit suite + coverage
+# Mark all four as required status checks in branch protection so a red PR is blocked.
+
 on:
   push:
     branches: [ main ]
@@ -7,6 +15,7 @@ on:
       - 'v*'
   pull_request:
     branches: [ main ]
+  workflow_dispatch:
 
 jobs:
   build:

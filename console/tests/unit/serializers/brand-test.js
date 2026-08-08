@@ -4,20 +4,10 @@ import { setupTest } from '@fleetbase/console/tests/helpers';
 module('Unit | Serializer | brand', function (hooks) {
     setupTest(hooks);
 
-    // Replace this with your real tests.
-    test('it exists', function (assert) {
-        let store = this.owner.lookup('service:store');
-        let serializer = store.serializerFor('brand');
+    test('serialize keeps scalar attributes', function (assert) {
+        const store = this.owner.lookup('service:store');
+        const json = store.createRecord('brand', { default_theme: 'dark' }).serialize();
 
-        assert.ok(serializer);
-    });
-
-    test('it serializes records', function (assert) {
-        let store = this.owner.lookup('service:store');
-        let record = store.createRecord('brand', {});
-
-        let serializedRecord = record.serialize();
-
-        assert.ok(serializedRecord);
+        assert.strictEqual(json.default_theme, 'dark');
     });
 });
