@@ -108,6 +108,7 @@ runs:
       run: |
         set -uo pipefail
         overall=0
+        ran=0
         mkdir -p postman-results
 
         {
@@ -137,6 +138,7 @@ runs:
             extra+=(--iteration-data ".postman/collections/workflows/integrated-vendor/data/happy-path.example.json")
           fi
 
+          ran=$((ran + 1))
           log="postman-results/$(echo "$name" | tr ' /' '__').log"
           echo "───────────────────────────────────────────────────────────────"
           echo "▶ Running collection: $name"
@@ -178,14 +180,26 @@ runs:
               printf '```\n</details>\n'
             } >> postman-results/details.md
           fi
-        done < <(printf '%s' "$COLLECTIONS" | tr ',' '\n')
+        # printf '%s\n', NOT '%s': without a trailing newline `read` hits EOF and
+        # returns non-zero before the body runs, so a single-line COLLECTIONS (what
+        # every module caller passes) silently iterated zero times and exited green.
+        done < <(printf '%s\n' "$COLLECTIONS" | tr ',' '\n')
 
         if [[ -s postman-results/details.md ]]; then
           cat postman-results/details.md >> "$GITHUB_STEP_SUMMARY"
         fi
 
+        # A run that executed nothing is a failure, not a pass. This is exactly how the
+        # trailing-newline bug above stayed invisible: green check, zero collections run.
+        if [[ "$ran" == "0" ]]; then
+          echo "::error::No collections were run. COLLECTIONS was: '${COLLECTIONS}'"
+          echo "**No collections were run.** Check the \`collections\` input." >> "$GITHUB_STEP_SUMMARY"
+          exit 1
+        fi
+
         {
           echo
+          echo "Ran ${ran} collection(s)."
           if [[ "$overall" == "0" ]]; then
             echo "All collections passed."
           else
