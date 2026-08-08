@@ -497,6 +497,22 @@ fi
 success "Database is ready"
 
 ###############################################################################
+# STEP 12b — Grant privileges for the bundled database
+###############################################################################
+# The bundled MySQL grants the app user (DB_USERNAME) privileges on the primary
+# database only. deploy.sh also provisions a separate sandbox database
+# (fleetbase_sandbox) via `php artisan sandbox:migrate`, which requires the
+# CREATE privilege at the server level. Grant it here using the root credentials
+# generated above so the limited app user can create/manage the sandbox DB.
+if [[ "$DB_MODE" == "internal" ]]; then
+  section "Granting Database Privileges"
+  docker compose exec -T "$DB_SERVICE" \
+    mysql -uroot -p"${DB_ROOT_PASSWORD}" \
+    -e "GRANT ALL PRIVILEGES ON *.* TO '${DB_USERNAME}'@'%'; FLUSH PRIVILEGES;"
+  success "Privileges granted to '${DB_USERNAME}'"
+fi
+
+###############################################################################
 # STEP 13 — Run deploy script
 ###############################################################################
 section "Running Deployment Script"

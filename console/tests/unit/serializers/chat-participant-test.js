@@ -1,24 +1,14 @@
 import { module, test } from 'qunit';
-
 import { setupTest } from '@fleetbase/console/tests/helpers';
 
-module('Unit | Serializer | chat participant', function (hooks) {
+module('Unit | Serializer | chat-participant', function (hooks) {
     setupTest(hooks);
 
-    // Replace this with your real tests.
-    test('it exists', function (assert) {
-        let store = this.owner.lookup('service:store');
-        let serializer = store.serializerFor('chat-participant');
+    test('serialize keeps scalar attributes', function (assert) {
+        const store = this.owner.lookup('service:store');
+        const json = store.createRecord('chat-participant', { name: 'Ron', email: 'ron@fleetbase.io' }).serialize();
 
-        assert.ok(serializer);
-    });
-
-    test('it serializes records', function (assert) {
-        let store = this.owner.lookup('service:store');
-        let record = store.createRecord('chat-participant', {});
-
-        let serializedRecord = record.serialize();
-
-        assert.ok(serializedRecord);
+        assert.strictEqual(json.name, 'Ron');
+        assert.strictEqual(json.email, 'ron@fleetbase.io');
     });
 });

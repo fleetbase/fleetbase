@@ -32,6 +32,14 @@ class FetchStub extends Service {
                             originator: 'Fleetbase',
                             base_url: 'https://rest.messagebird.com/messages',
                         },
+                        smpp: {
+                            host: 'smpp.example.test',
+                            port: 2775,
+                            system_id: 'fleetbase',
+                            password: 'secret',
+                            source_addr: 'FLEETBASE',
+                            bind_type: 'transceiver',
+                        },
                         custom_http: {
                             method: 'POST',
                             url: 'https://sms-gateway.test/send',
@@ -78,7 +86,10 @@ module('Integration | Component | configure/services', function (hooks) {
     });
 
     test('it renders sms provider configuration and sends test payload', async function (assert) {
-        await render(hbs`<Configure::Services />`);
+        await render(hbs`
+            <div id="next-view-section-subheader-actions"></div>
+            <Configure::Services />
+        `);
         await waitFor('[data-test-sms-default-provider]');
 
         assert.dom('[data-test-sms-default-provider]').hasValue('twilio');
@@ -109,7 +120,10 @@ module('Integration | Component | configure/services', function (hooks) {
     });
 
     test('it configures custom http get query params', async function (assert) {
-        await render(hbs`<Configure::Services />`);
+        await render(hbs`
+            <div id="next-view-section-subheader-actions"></div>
+            <Configure::Services />
+        `);
         await waitFor('[data-test-sms-default-provider]');
 
         assert.dom(this.element).doesNotIncludeText('Vonage Base URL');
@@ -148,6 +162,59 @@ module('Integration | Component | configure/services', function (hooks) {
                 recipient: '{{to}}',
                 message: '{{text}}',
             },
+        });
+    });
+
+    test('it configures smpp advanced submit parameters', async function (assert) {
+        await render(hbs`
+            <div id="next-view-section-subheader-actions"></div>
+            <Configure::Services />
+        `);
+        await waitFor('[data-test-sms-default-provider]');
+
+        await select('[data-test-sms-default-provider]', 'smpp');
+        assert.dom('[data-test-sms-configure-provider]').hasValue('smpp');
+        assert.dom('[data-test-smpp-advanced-settings]').doesNotExist();
+        assert.dom('[data-test-smpp-advanced-toggle]').hasText('Advanced Settings');
+
+        await click('[data-test-smpp-advanced-toggle]');
+        assert.dom('[data-test-smpp-advanced-settings]').exists();
+        assert.dom('[data-test-smpp-advanced-toggle]').hasText('Hide Advanced Settings');
+
+        await fillIn('[data-test-smpp-addr-ton]', '1');
+        await fillIn('[data-test-smpp-addr-npi]', '0');
+        await fillIn('[data-test-smpp-source-ton]', '1');
+        await fillIn('[data-test-smpp-source-npi]', '0');
+        await fillIn('[data-test-smpp-dest-ton]', '1');
+        await fillIn('[data-test-smpp-dest-npi]', '0');
+
+        await click('[data-test-smpp-advanced-toggle]');
+        assert.dom('[data-test-smpp-advanced-settings]').doesNotExist();
+        assert.dom('[data-test-smpp-advanced-toggle]').hasText('Advanced Settings');
+
+        await fillIn('[data-test-sms-test-phone]', '+15551234567');
+        await click('[data-test-sms-test-button]');
+
+        const fetch = this.owner.lookup('service:fetch');
+
+        assert.strictEqual(fetch.lastPost.url, 'settings/test-sms-provider-config');
+        assert.deepEqual(fetch.lastPost.payload.config, {
+            host: 'smpp.example.test',
+            port: 2775,
+            system_id: 'fleetbase',
+            password: 'secret',
+            source_addr: 'FLEETBASE',
+            bind_type: 'transceiver',
+            addr_ton: 1,
+            addr_npi: 0,
+            source_addr_ton: 1,
+            source_addr_npi: 0,
+            dest_addr_ton: 1,
+            dest_addr_npi: 0,
+            registered_delivery: 1,
+            data_coding: 0,
+            service_type: '',
+            address_range: '',
         });
     });
 });

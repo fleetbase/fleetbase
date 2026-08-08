@@ -4,7 +4,6 @@
 const EmberApp = require('ember-cli/lib/broccoli/ember-app');
 const Funnel = require('broccoli-funnel');
 const writeFile = require('broccoli-file-creator');
-const mergeTrees = require('broccoli-merge-trees');
 const toBoolean = require('./config/utils/to-boolean');
 
 module.exports = function (defaults) {
@@ -30,7 +29,10 @@ module.exports = function (defaults) {
         },
 
         babel: {
-            plugins: [require.resolve('ember-auto-import/babel-plugin')],
+            // ember-cli-code-coverage does not instrument automatically — the app has to
+            // add its babel plugin explicitly. buildBabelPlugin() returns [] unless
+            // COVERAGE=true, so normal builds are unaffected.
+            plugins: [require.resolve('ember-auto-import/babel-plugin'), ...require('ember-cli-code-coverage').buildBabelPlugin()],
         },
     });
 

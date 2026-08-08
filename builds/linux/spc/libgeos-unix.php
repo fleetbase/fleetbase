@@ -24,7 +24,7 @@ trait libgeos
                 'LDFLAGS'  => $this->getLibExtraLdFlags(),
                 'LIBS'     => $this->getLibExtraLibs(),
             ])
-            ->execWithEnv("cmake {$this->builder->makeCmakeArgs()} -DBUILD_SHARED_LIBS=OFF ..")
+            ->execWithEnv("cmake {$this->builder->makeCmakeArgs()} -DBUILD_SHARED_LIBS=OFF -DBUILD_GEOSOP=OFF -DBUILD_TESTING=OFF -DGEOS_ENABLE_TESTS=OFF ..")
             ->execWithEnv("make -j{$this->builder->concurrency}")
             ->execWithEnv('make install');
 

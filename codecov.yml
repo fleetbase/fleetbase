@@ -1,0 +1,34 @@
+# Codecov configuration for the Fleetbase monorepo (host apps only).
+# The api/ (Laravel) and console/ (Ember) coverage reports are uploaded from
+# .github/workflows/api.yml and console.yml under distinct flags so each app's
+# coverage is tracked independently. Extension packages report from their own repos.
+
+coverage:
+  status:
+    project:
+      default:
+        # Do not fail the Codecov check on a small dip while suites are being
+        # built up to 100%. The hard 100% gate lives in each workflow
+        # (coverage:check / coverage-check.mjs) and is flipped to required there.
+        target: auto
+        threshold: 1%
+        informational: true
+    patch:
+      default:
+        informational: true
+
+flags:
+  api:
+    paths:
+      - api/app
+  console:
+    paths:
+      - console/app
+
+comment:
+  layout: "reach, diff, flags, files"
+  require_changes: false
+
+# Suppress the "waiting for other uploads" behavior across unrelated jobs.
+codecov:
+  require_ci_to_pass: false

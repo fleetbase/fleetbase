@@ -68,10 +68,30 @@
             <InputGroup @name="SMPP Password" @value={{this.selectedSmsProviderConfig.password}} {{on "input" (fn this.updateSmsProviderField "smpp" "password")}} disabled={{this.isLoading}} />
             <InputGroup @name="SMPP Source Address" @value={{this.selectedSmsProviderConfig.source_addr}} {{on "input" (fn this.updateSmsProviderField "smpp" "source_addr")}} disabled={{this.isLoading}} />
             <InputGroup @name="SMPP Bind Type" @value={{this.selectedSmsProviderConfig.bind_type}} {{on "input" (fn this.updateSmsProviderField "smpp" "bind_type")}} disabled={{this.isLoading}} />
-            <label class="flex flex-row items-center text-sm mt-2">
-                <Input @type="checkbox" @checked={{this.selectedSmsProviderConfig.tls}} {{on "change" (fn this.updateSmsProviderChecked "smpp" "tls")}} />
+            <label class="flex flex-row items-center text-sm my-2">
+                <Input @type="checkbox" @checked={{this.selectedSmsProviderConfig.tls}} {{on "change" (fn this.updateSmsProviderChecked "smpp" "tls")}} class="fleetbase-checkbox form-checkbox" />
                 <span class="ml-2">Use TLS</span>
             </label>
+            {{!-- <Checkbox @label="Use TLS" @value={{this.selectedSmsProviderConfig.tls}} @onToggle={{fn this.updateSmsProviderChecked "smpp" "tls"}} @wrapperClass="my-2" /> --}}
+            <button type="button" class="text-xs px-2 py-1 rounded-md border border-gray-200 dark:border-gray-700 flex items-center w-full" data-test-smpp-advanced-toggle {{on "click" this.toggleSmppAdvancedSettings}}>
+                <FaIcon @icon="sliders" class="mr-1" /> <span>{{if this.isSmppAdvancedSettingsVisible "Hide Advanced Settings" "Advanced Settings"}}</span>
+            </button>
+            {{#if this.isSmppAdvancedSettingsVisible}}
+                <div class="mt-1 mb-2 rounded-md border border-gray-200 dark:border-gray-700 px-2 py-2">
+                    <div class="grid grid-cols-2 gap-2" data-test-smpp-advanced-settings>
+                        <InputGroup @name="Bind TON" @value={{this.selectedSmsProviderConfig.addr_ton}} data-test-smpp-addr-ton {{on "input" (fn this.updateSmsProviderNumberField "smpp" "addr_ton")}} disabled={{this.isLoading}} />
+                        <InputGroup @name="Bind NPI" @value={{this.selectedSmsProviderConfig.addr_npi}} data-test-smpp-addr-npi {{on "input" (fn this.updateSmsProviderNumberField "smpp" "addr_npi")}} disabled={{this.isLoading}} />
+                        <InputGroup @name="Source TON" @value={{this.selectedSmsProviderConfig.source_addr_ton}} data-test-smpp-source-ton {{on "input" (fn this.updateSmsProviderNumberField "smpp" "source_addr_ton")}} disabled={{this.isLoading}} />
+                        <InputGroup @name="Source NPI" @value={{this.selectedSmsProviderConfig.source_addr_npi}} data-test-smpp-source-npi {{on "input" (fn this.updateSmsProviderNumberField "smpp" "source_addr_npi")}} disabled={{this.isLoading}} />
+                        <InputGroup @name="Destination TON" @value={{this.selectedSmsProviderConfig.dest_addr_ton}} data-test-smpp-dest-ton {{on "input" (fn this.updateSmsProviderNumberField "smpp" "dest_addr_ton")}} disabled={{this.isLoading}} />
+                        <InputGroup @name="Destination NPI" @value={{this.selectedSmsProviderConfig.dest_addr_npi}} data-test-smpp-dest-npi {{on "input" (fn this.updateSmsProviderNumberField "smpp" "dest_addr_npi")}} disabled={{this.isLoading}} />
+                        <InputGroup @name="Registered Delivery" @value={{this.selectedSmsProviderConfig.registered_delivery}} data-test-smpp-registered-delivery {{on "input" (fn this.updateSmsProviderNumberField "smpp" "registered_delivery")}} disabled={{this.isLoading}} />
+                        <InputGroup @name="Data Coding" @value={{this.selectedSmsProviderConfig.data_coding}} data-test-smpp-data-coding {{on "input" (fn this.updateSmsProviderNumberField "smpp" "data_coding")}} disabled={{this.isLoading}} />
+                    </div>
+                    <InputGroup @name="SMPP Service Type" @value={{this.selectedSmsProviderConfig.service_type}} data-test-smpp-service-type {{on "input" (fn this.updateSmsProviderField "smpp" "service_type")}} disabled={{this.isLoading}} />
+                    <InputGroup @name="SMPP Address Range" @value={{this.selectedSmsProviderConfig.address_range}} data-test-smpp-address-range {{on "input" (fn this.updateSmsProviderField "smpp" "address_range")}} disabled={{this.isLoading}} />
+                </div>
+            {{/if}}
         {{/if}}
 
         {{#if (eq this.smsSelectedProvider "custom_http")}}

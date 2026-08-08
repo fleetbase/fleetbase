@@ -1,5 +1,7 @@
 import Route from '@ember/routing/route';
 import { inject as service } from '@ember/service';
+import { action } from '@ember/object';
+import removeBootLoader from '../../utils/remove-boot-loader';
 
 export default class AuthResetPasswordRoute extends Route {
     @service store;
@@ -7,6 +9,10 @@ export default class AuthResetPasswordRoute extends Route {
     @service router;
     @service notifications;
     @service intl;
+
+    @action activate() {
+        removeBootLoader();
+    }
 
     async model({ id }) {
         return this.fetch.get('auth/validate-verification', { id });

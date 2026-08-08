@@ -1,0 +1,150 @@
+name: Install Smoke Test
+
+# Proves that a fresh clone actually installs and serves — the thing an end user does.
+# Builds the API image from source, runs the real non-interactive installer
+# (scripts/docker-install.sh, which brings the stack up and runs api/deploy.sh:
+# migrate / sandbox:migrate / seed / create-permissions / registry:init), then
+# asserts migrations ran and both the API (:8000/health) and Console (:4200) respond.
+
+on:
+  push:
+    branches: [main]
+    tags:
+      - 'v*'
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: install-smoke-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  install-smoke:
+    name: Fresh Install Boots and Serves
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      # The extension packages (fleetbase/core-api, fleetops-api, …) resolve from
+      # GitHub via composer github-oauth during the image build. Without this token
+      # the API image build cannot install dependencies. Same secret the deploy
+      # workflows already use.
+      - name: Check composer auth availability
+        id: auth
+        run: |
+          if [[ -n "${{ secrets._GITHUB_AUTH_TOKEN }}" ]]; then
+            echo "available=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "available=false" >> "$GITHUB_OUTPUT"
+            echo "::warning::_GITHUB_AUTH_TOKEN is not set; the API image build will likely fail to resolve private Fleetbase packages. Configure this secret to enable the install smoke test."
+          fi
+
+      # docker-compose.yml pins application/queue/scheduler to
+      # fleetbase/fleetbase-api:latest. Build that tag locally from THIS checkout so
+      # the smoke test exercises source, not the last published image.
+      #
+      # Use the `app-release` target — the same stage the published fleetbase-api
+      # image is built from (see docker-bake.hcl). Its entrypoint is plain
+      # docker-php-entrypoint. The `app` target instead entrypoints through
+      # ssm-parent, which fetches config from AWS SSM at startup and therefore
+      # crash-loops outside AWS (e.g. in CI).
+      - name: Build API image from source
+        if: steps.auth.outputs.available == 'true'
+        run: |
+          docker build \
+            --file docker/Dockerfile \
+            --target app-release \
+            --build-arg GITHUB_AUTH_KEY="${{ secrets._GITHUB_AUTH_TOKEN }}" \
+            --tag fleetbase/fleetbase-api:latest \
+            .
+
+      # The repo currently commits a live MySQL datadir at docker/database/mysql
+      # (mounted into the db container). Start from a clean volume so the installer's
+      # freshly generated credentials initialize a fresh database instead of colliding
+      # with stale committed data.
+      - name: Ensure clean database volume
+        if: steps.auth.outputs.available == 'true'
+        run: |
+          sudo rm -rf docker/database/mysql
+          mkdir -p docker/database/mysql
+
+      - name: Run non-interactive installer
+        if: steps.auth.outputs.available == 'true'
+        run: |
+          # Ensure the API .env the compose file mounts exists.
+          [ -f api/.env ] || cp api/.env.example api/.env 2>/dev/null || touch api/.env
+          bash scripts/docker-install.sh --non-interactive
+
+      - name: Assert migrations ran
+        if: steps.auth.outputs.available == 'true'
+        run: |
+          set -euo pipefail
+          echo "Migration status:"
+          docker compose exec -T application php artisan migrate:status | tee /tmp/migrate-status.txt
+          # A successful install must show at least one "Ran" migration and no "Pending".
+          grep -Eiq "ran|yes" /tmp/migrate-status.txt
+          if grep -Eiq "pending" /tmp/migrate-status.txt; then
+            echo "::error::Pending migrations remain after install"; exit 1
+          fi
+
+      - name: Smoke test HTTP endpoints
+        if: steps.auth.outputs.available == 'true'
+        run: |
+          set -uo pipefail
+
+          wait_for() {
+            local name="$1" url="$2" expect="$3" tries=30
+            echo "Waiting for $name at $url ..."
+            for i in $(seq 1 $tries); do
+              body="$(curl -fsS --max-time 5 "$url" 2>/dev/null || true)"
+              if echo "$body" | grep -q "$expect"; then
+                echo "✔ $name responded: $body"
+                return 0
+              fi
+              sleep 5
+            done
+            echo "::error::$name did not respond with '$expect' at $url after $((tries*5))s"
+            return 1
+          }
+
+          # API health route (registered in api/app/Providers/RouteServiceProvider.php).
+          wait_for "API /health" "http://localhost:8000/health" '"status"'
+          # Console SPA shell.
+          wait_for "Console" "http://localhost:4200" "<!DOCTYPE html>" || \
+            wait_for "Console" "http://localhost:4200" "<html"
+
+      # Run the official Postman collections against the live stack we just booted.
+      # Reuses this job's running containers (no second boot). Non-blocking for now:
+      # the full collections include data-dependent requests that stay red until the
+      # collections are curated in fleetbase/postman. Drop continue-on-error once green.
+      - name: Postman API contract
+        if: steps.auth.outputs.available == 'true'
+        continue-on-error: true
+        uses: ./.github/actions/postman-contract
+        with:
+          postman-api-key: ${{ secrets.POSTMAN_API_KEY }}
+          github-token: ${{ secrets._GITHUB_AUTH_TOKEN }}
+
+      - name: Dump logs on failure
+        if: failure() && steps.auth.outputs.available == 'true'
+        run: |
+          echo "===== docker compose ps ====="
+          docker compose ps || true
+          echo "===== docker compose logs ====="
+          docker compose logs --no-color --tail=300 || true
+
+      - name: Tear down
+        if: always() && steps.auth.outputs.available == 'true'
+        run: docker compose down -v || true

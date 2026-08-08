@@ -1,39 +1,64 @@
-import Application from '@ember/application';
-
-import config from '@fleetbase/console/config/environment';
-import { initialize } from '@fleetbase/console/instance-initializers/initialize-widgets';
 import { module, test } from 'qunit';
-import Resolver from 'ember-resolver';
-import { run } from '@ember/runloop';
+import { initialize } from '@fleetbase/console/instance-initializers/initialize-widgets';
 
-module('Unit | Instance Initializer | initialize-widgets', function (hooks) {
-    hooks.beforeEach(function () {
-        this.TestApplication = class TestApplication extends Application {
-            modulePrefix = config.modulePrefix;
-            podModulePrefix = config.podModulePrefix;
-            Resolver = Resolver;
-        };
+function widgetServiceStub() {
+    return {
+        dashboards: [],
+        slots: [],
+        // registerWidgets(dashboardId, widgets)
+        registeredByDashboard: {},
+        registerDashboard(id) {
+            this.dashboards.push(id);
+        },
+        registerDashboardForSlot(slot, dashboard, options) {
+            this.slots.push({ slot, dashboard, options });
+        },
+        registerWidgets(dashboardId, widgets) {
+            this.registeredByDashboard[dashboardId] = widgets;
+        },
+    };
+}
 
-        this.TestApplication.instanceInitializer({
-            name: 'initializer under test',
-            initialize,
-        });
+function appInstanceStub(widgetService, onBoot) {
+    const universe = {
+        getService: () => widgetService,
+        onBoot,
+    };
 
-        this.application = this.TestApplication.create({
-            autoboot: false,
-        });
+    return {
+        lookup(name) {
+            return name === 'service:universe' ? universe : { getMenuItems: () => [] };
+        },
+    };
+}
 
-        this.instance = this.application.buildInstance();
+module('Unit | Instance Initializer | initialize-widgets', function () {
+    test('it registers the console dashboards and the default home slot', function (assert) {
+        const widgetService = widgetServiceStub();
+
+        initialize(appInstanceStub(widgetService, () => {}));
+
+        assert.deepEqual(widgetService.dashboards, ['dashboard', 'admin'], 'both dashboards are registered');
+        assert.strictEqual(widgetService.slots.length, 1);
+        assert.deepEqual(widgetService.slots[0].slot, 'console.home');
+        assert.deepEqual(widgetService.slots[0].dashboard, 'dashboard');
+        assert.strictEqual(widgetService.slots[0].options.extension, 'core');
     });
-    hooks.afterEach(function () {
-        run(this.instance, 'destroy');
-        run(this.application, 'destroy');
-    });
 
-    // TODO: Replace this with your real tests.
-    test('it works', async function (assert) {
-        await this.instance.boot();
+    test('the widgets are registered once the universe boots', function (assert) {
+        const widgetService = widgetServiceStub();
+        let bootCallback;
 
-        assert.ok(true);
+        initialize(appInstanceStub(widgetService, (callback) => (bootCallback = callback)));
+
+        assert.strictEqual(typeof bootCallback, 'function', 'registration waits for the boot hook');
+        assert.deepEqual(widgetService.registeredByDashboard, {}, 'nothing is registered before boot');
+
+        bootCallback();
+
+        const ids = (widgetService.registeredByDashboard.dashboard ?? []).map((widget) => widget.id);
+        assert.ok(ids.includes('fleetbase-blog'), 'the blog widget is registered on the dashboard');
+        assert.ok(ids.includes('fleetbase-github-card'), 'the github card widget is registered on the dashboard');
+        assert.ok(Array.isArray(widgetService.registeredByDashboard.admin), 'admin widgets are registered too');
     });
 });

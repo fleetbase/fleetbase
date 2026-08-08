@@ -1,0 +1,31 @@
+<div class="bg-white dark:bg-gray-800 py-8 px-4 shadow rounded-lg">
+    <div class="mb-4">
+        <LinkTo @route="console" class="flex items-center justify-center">
+            <LogoIcon @brand={{this.brand}} @size="12" class="rounded-md" />
+        </LinkTo>
+        <h2 class="text-center text-lg font-extrabold text-gray-900 dark:text-white truncate">
+            {{t "auth.confirm-email-change.title"}}
+        </h2>
+    </div>
+
+    <InfoBlock @type="info" @icon="envelope-circle-check" @iconSize="lg">
+        {{t "auth.confirm-email-change.message-text"}}
+    </InfoBlock>
+
+    <form class="mt-8 space-y-6" {{on "submit" (perform this.confirmEmailChange)}}>
+        <InputGroup @name={{t "auth.confirm-email-change.form.code.label"}} @value={{this.code}} @inputClass="form-input-lg" @helpText={{t "auth.confirm-email-change.form.code.help-text"}} />
+
+        <div class="flex space-x-2">
+            <Button
+                @icon="check"
+                @size="lg"
+                @type="primary"
+                @buttonType="submit"
+                @text={{t "auth.confirm-email-change.form.submit-button"}}
+                @onClick={{perform this.confirmEmailChange}}
+                @isLoading={{not this.confirmEmailChange.isIdle}}
+            />
+            <Button @size="lg" @buttonType="button" @text={{t "auth.confirm-email-change.form.back-button"}} @onClick={{fn (transition-to "auth.login")}} @disabled={{not this.confirmEmailChange.isIdle}} />
+        </div>
+    </form>
+</div>

@@ -23,6 +23,7 @@ RUN install-php-extensions \
   # geos \
   sockets \
   pcntl \
+  xdebug \
   @composer
 
 # Install build dependencies for GEOS
@@ -75,7 +76,7 @@ ENV QUEUE_CONNECTION=redis
 ENV CADDYFILE_PATH=/fleetbase/Caddyfile
 ENV CONSOLE_PATH=/fleetbase/console
 ENV OCTANE_SERVER=frankenphp
-ENV FLEETBASE_VERSION=0.7.50
+ENV FLEETBASE_VERSION=0.7.53
 
 # Set environment
 ARG ENVIRONMENT=production

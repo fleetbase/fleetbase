@@ -1,39 +1,34 @@
-import Application from '@ember/application';
-
-import config from '@fleetbase/console/config/environment';
-import { initialize } from '@fleetbase/console/instance-initializers/load-extensions';
 import { module, test } from 'qunit';
-import Resolver from 'ember-resolver';
-import { run } from '@ember/runloop';
+import { initialize } from '@fleetbase/console/instance-initializers/load-extensions';
 
-module('Unit | Instance Initializer | load-extensions', function (hooks) {
-    hooks.beforeEach(function () {
-        this.TestApplication = class TestApplication extends Application {
-            modulePrefix = config.modulePrefix;
-            podModulePrefix = config.podModulePrefix;
-            Resolver = Resolver;
-        };
+module('Unit | Instance Initializer | load-extensions', function () {
+    test('it loads the extensions for the application', async function (assert) {
+        const application = { name: 'console' };
+        let loadedFor;
 
-        this.TestApplication.instanceInitializer({
-            name: 'initializer under test',
-            initialize,
+        await initialize({
+            application,
+            lookup: () => ({
+                loadExtensions(app) {
+                    loadedFor = app;
+                    return Promise.resolve();
+                },
+            }),
         });
 
-        this.application = this.TestApplication.create({
-            autoboot: false,
+        assert.strictEqual(loadedFor, application);
+    });
+
+    test('a failing extension load is swallowed so boot continues', async function (assert) {
+        await initialize({
+            application: {},
+            lookup: () => ({
+                loadExtensions() {
+                    return Promise.reject(new Error('bad extension'));
+                },
+            }),
         });
 
-        this.instance = this.application.buildInstance();
-    });
-    hooks.afterEach(function () {
-        run(this.instance, 'destroy');
-        run(this.application, 'destroy');
-    });
-
-    // TODO: Replace this with your real tests.
-    test('it works', async function (assert) {
-        await this.instance.boot();
-
-        assert.ok(true);
+        assert.ok(true, 'the rejection does not propagate');
     });
 });

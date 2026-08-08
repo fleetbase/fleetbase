@@ -18,21 +18,21 @@
         }
     ],
     "require": {
-        "php": ">=8.0 <=8.2.31",
+        "php": ">=8.0 <8.3",
         "appstract/laravel-opcache": "^4.0",
-        "fleetbase/core-api": "^1.6.53",
-        "fleetbase/ai": "^0.0.1",
-        "fleetbase/fleetops-api": "^0.6.57",
+        "fleetbase/core-api": "^1.6.55",
+        "fleetbase/ai": "^0.0.4",
+        "fleetbase/fleetops-api": "^0.6.59",
         "fleetbase/registry-bridge": "^0.1.9",
         "fleetbase/flespi-integration": "^0.1.16",
         "fleetbase/samsara-api": "^0.0.3",
         "fleetbase/customer-portal-api": "^0.0.12",
-        "fleetbase/storefront-api": "^0.4.16",
-        "fleetbase/ledger-api": "^0.0.7",
+        "fleetbase/storefront-api": "^0.4.18",
+        "fleetbase/ledger-api": "^0.0.9",
         "fleetbase/valhalla-api": "^0.0.4",
         "fleetbase/vroom-api": "^0.0.4",
-        "fleetbase/billing-api": "^0.1.22",
-        "fleetbase/internals-api": "^0.0.34",
+        "fleetbase/billing-api": "^0.1.24",
+        "fleetbase/internals-api": "^0.0.36",
         "guzzlehttp/guzzle": "^7.0.1",
         "laravel/framework": "^10.0",
         "laravel/octane": "^2.3",
@@ -117,6 +117,17 @@
         ],
         "clean-logs": [
             "composer run-script clear-logs"
+        ],
+        "test:unit": "phpunit --colors=always",
+        "test:coverage:clover": "mkdir -p coverage && XDEBUG_MODE=coverage phpunit --coverage-clover=coverage/clover.xml --colors=always",
+        "coverage:summary": "php scripts/coverage-summary.php coverage/clover.xml",
+        "coverage:check": "php scripts/coverage-summary.php coverage/clover.xml --fail-under=100",
+        "coverage:baseline": [
+            "@test:coverage:clover",
+            "@coverage:summary"
+        ],
+        "test": [
+            "@test:unit"
         ]
     },
     "extra": {

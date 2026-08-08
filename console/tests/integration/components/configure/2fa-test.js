@@ -6,21 +6,20 @@ import { hbs } from 'ember-cli-htmlbars';
 module('Integration | Component | configure/2fa', function (hooks) {
     setupRenderingTest(hooks);
 
-    test('it renders', async function (assert) {
-        // Set any properties with this.set('myProperty', 'value');
-        // Handle any actions with this.set('myAction', function(val) { ... });
+    test('it yields its block content', async function (assert) {
+        await render(hbs`
+            <Configure::2fa>
+                <span class="yielded">two factor settings</span>
+            </Configure::2fa>
+        `);
 
+        assert.dom('.yielded').exists('the block is yielded');
+        assert.dom(this.element).hasText('two factor settings');
+    });
+
+    test('it renders nothing without a block', async function (assert) {
         await render(hbs`<Configure::2fa />`);
 
         assert.dom(this.element).hasText('');
-
-        // Template block usage:
-        await render(hbs`
-      <Configure::2fa>
-        template block text
-      </Configure::2fa>
-    `);
-
-        assert.dom(this.element).hasText('template block text');
     });
 });
