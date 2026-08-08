@@ -60,6 +60,7 @@ runs:
         CODE="$(base64 scripts/ci/mint-api-key.php | tr -d '\n')"
         OUT="$(docker compose exec -T application php artisan tinker --execute="eval(base64_decode('${CODE}'));" 2>&1 || true)"
         KEY="$(printf '%s\n' "$OUT" | grep -oE 'flb_(live|test)_[A-Za-z0-9_-]+' | tail -1 || true)"
+        PLATFORM_TOKEN="$(printf '%s\n' "$OUT" | grep -oE 'flb_platform_[A-Za-z0-9]+' | tail -1 || true)"
         if [[ -z "$KEY" ]]; then
           echo "::error::Could not mint an API key from the running stack. Tinker output:"
           printf '%s\n' "$OUT"
@@ -67,6 +68,15 @@ runs:
         fi
         echo "::add-mask::$KEY"
         echo "api_key=$KEY" >> "$GITHUB_OUTPUT"
+        # A few endpoints (organizations listing, driver onboarding) sit behind the
+        # platform API token rather than an org credential and answer 401 to an
+        # flb_live_ key. Absent is not fatal — only those requests will 401.
+        if [[ -n "$PLATFORM_TOKEN" ]]; then
+          echo "::add-mask::$PLATFORM_TOKEN"
+          echo "platform_token=$PLATFORM_TOKEN" >> "$GITHUB_OUTPUT"
+        else
+          echo "::warning::No platform token minted; platform-scoped requests will 401."
+        fi
         echo "Verifying key against ${{ inputs.base-url }}/${{ inputs.namespace }}/organizations/current ..."
         HTTP_CODE="$(curl -s -o /dev/null -w '%{http_code}' -H "Authorization: Bearer ${KEY}" \
           "${{ inputs.base-url }}/${{ inputs.namespace }}/organizations/current" || true)"
@@ -102,6 +112,7 @@ runs:
       shell: bash
       env:
         API_KEY: ${{ steps.key.outputs.api_key }}
+        PLATFORM_TOKEN: ${{ steps.key.outputs.platform_token }}
         COLLECTIONS: ${{ inputs.collections }}
         BASE_URL: ${{ inputs.base-url }}
         NAMESPACE: ${{ inputs.namespace }}
@@ -130,6 +141,7 @@ runs:
           '  --env-var "base_url=${BASE_URL}" \' \
           '  --env-var "namespace=${NAMESPACE}" \' \
           '  --env-var "api_key=${API_KEY}" \' \
+          '  --env-var "platform_token=${PLATFORM_TOKEN}" \' \
           '  "${@:2}"' > "$RUNNER"
         chmod +x "$RUNNER"
 
@@ -165,7 +177,22 @@ runs:
           # for them outright:
           #   Error: Reporter "json" is not supported for multi-protocol collections.
           # So the summary below is parsed from the cli reporter's ASCII table.
+          # Run every request explicitly, in the collection's own order but with each
+          # DELETE moved to the end. The collection is published as API reference
+          # documentation, so its structure and ordering cannot be changed to suit the
+          # test run — but a delete that fires mid-run destroys a record the remaining
+          # requests still need, which is what produced most of the 404s. The CLI
+          # honours the order of repeated -i flags, so deferring them costs nothing and
+          # keeps DELETE coverage intact.
           args=("$dir" -r cli)
+          if [[ -f scripts/ci/order-collection-requests.py ]]; then
+            while IFS= read -r req; do
+              [[ -n "$req" ]] && args+=(-i "$req")
+            done < <(python3 scripts/ci/order-collection-requests.py "$dir")
+            echo "  running $(( (${#args[@]} - 2) / 2 )) requests, deletes deferred to the end"
+          else
+            echo "::warning::order-collection-requests.py not found; running in natural order (deletes may strand later requests)."
+          fi
 
           # The CLI does NOT resolve the collection variables declared in
           # .resources/definition.yaml — verified: with no --env-var at all, even
