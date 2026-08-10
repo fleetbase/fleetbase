@@ -151,6 +151,8 @@ jobs:
           mkdir -p docker/database/mysql
 
       - name: Run non-interactive installer
+        env:
+          GOOGLE_MAPS_API_KEY: ${{ secrets.GOOGLE_MAPS_API_KEY }}
         run: |
           [ -f api/.env ] || cp api/.env.example api/.env 2>/dev/null || touch api/.env
 
@@ -171,6 +173,25 @@ jobs:
             echo 'THROTTLE_ENABLED=false' >> api/.env
           fi
           echo "Throttling disabled for the contract run: $(grep '^THROTTLE_ENABLED=' api/.env)"
+
+          # Place::createFromMixed resolves a place string by matching an existing
+          # street1/name first, then falls through to createFromGeocodingLookup. The
+          # order shapes that send a real street address ("Singapore 018971") have no
+          # seeded match, so without a key they cannot resolve and those requests fail
+          # for a reason that has nothing to do with the API under test.
+          #
+          # Optional on purpose: absent, the run still covers createFromMixed through
+          # the coordinate and GeoJSON shapes, which need no external service.
+          if [[ -n "${GOOGLE_MAPS_API_KEY:-}" ]]; then
+            if grep -q '^GOOGLE_MAPS_API_KEY=' api/.env; then
+              sed -i "s|^GOOGLE_MAPS_API_KEY=.*|GOOGLE_MAPS_API_KEY=${GOOGLE_MAPS_API_KEY}|" api/.env
+            else
+              echo "GOOGLE_MAPS_API_KEY=${GOOGLE_MAPS_API_KEY}" >> api/.env
+            fi
+            echo "Geocoding enabled: address-string place resolution will use Google Maps."
+          else
+            echo "::notice::GOOGLE_MAPS_API_KEY not set; order shapes that send a street address cannot geocode. Coordinate and GeoJSON shapes are unaffected."
+          fi
 
           bash scripts/docker-install.sh --non-interactive
 
