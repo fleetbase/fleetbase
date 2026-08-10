@@ -153,6 +153,25 @@ jobs:
       - name: Run non-interactive installer
         run: |
           [ -f api/.env ] || cp api/.env.example api/.env 2>/dev/null || touch api/.env
+
+          # The public API throttles 120 requests/minute, and ThrottleRequests sits
+          # FIRST in the fleetbase.api middleware group — before authentication — so
+          # $request->user() is null and the bucket is keyed per IP rather than per API
+          # key. A contract run is ~180 requests in about a minute from one runner, so
+          # it throttles itself: measured, 61 requests came back
+          # {"errors":["Too many requests."]}, every one of them a false failure.
+          #
+          # Must be the literal string false. ThrottleRequests checks
+          # `config('api.throttle.enabled', true) === false`, and env() casts "false" to
+          # a boolean but leaves "0" as the string "0", which is !== false and would
+          # silently leave throttling on.
+          if grep -q '^THROTTLE_ENABLED=' api/.env; then
+            sed -i 's/^THROTTLE_ENABLED=.*/THROTTLE_ENABLED=false/' api/.env
+          else
+            echo 'THROTTLE_ENABLED=false' >> api/.env
+          fi
+          echo "Throttling disabled for the contract run: $(grep '^THROTTLE_ENABLED=' api/.env)"
+
           bash scripts/docker-install.sh --non-interactive
 
       - name: Wait for API health
