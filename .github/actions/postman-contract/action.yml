@@ -354,9 +354,15 @@ runs:
           # --verbose echoes request headers, so the minted bearer token would otherwise
           # be written verbatim into an uploaded artifact. ::add-mask:: covers the job
           # log but does NOT apply to artifacts, so scrub both copies explicitly.
+          # Two -e expressions rather than one wrapped with a backslash: inside single
+          # quotes a trailing \ is NOT a line continuation, so sed received a literal
+          # backslash-newline and died with "unterminated address regex" — meaning the
+          # scrub silently did not run and the artifact kept the bearer token.
           for f in "$ansi" "$log"; do
-            sed -i -E 's/(Authorization:[[:space:]]*Bearer[[:space:]]*)[A-Za-z0-9._-]+/\1<redacted>/gi; \
-                       s/(flb_(live|test|platform)_)[A-Za-z0-9_-]+/\1<redacted>/g' "$f"
+            sed -i -E \
+              -e 's/(Authorization:[[:space:]]*Bearer[[:space:]]*)[A-Za-z0-9._-]+/\1<redacted>/gi' \
+              -e 's/(flb_(live|test|platform)_)[A-Za-z0-9_-]+/\1<redacted>/g' \
+              "$f"
           done
 
           # Read executed/failed out of the reporter's summary table. Each row is
