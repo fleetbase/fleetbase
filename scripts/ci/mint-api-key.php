@@ -142,6 +142,36 @@ try {
     $seedVerificationCode('fleetops_customer_login');
     $seedVerificationCode('fleetops_customer_password_reset', ['identity' => $customerIdentity]);
 
+    // The Storefront API authenticates with a store/network key, not an organization
+    // API credential: SetStorefrontSession rejects any bearer token that does not start
+    // with "store" or "network", so the flb_live_ key above can never authenticate a
+    // Storefront request. Seed a store so the Storefront collection has a usable key.
+    // Guarded because the extension is not installed in every stack.
+    if (class_exists(\Fleetbase\Storefront\Models\Store::class)) {
+        $store = \Fleetbase\Storefront\Models\Store::where([
+            'company_uuid' => $company->uuid,
+            'name'         => 'CI Contract Store',
+        ])->first();
+
+        if (!$store) {
+            // Store::boot() sets `key` to 'store_' . md5(...) on creating, so the key
+            // exists only after the insert — it cannot be supplied.
+            $store = \Fleetbase\Storefront\Models\Store::create([
+                'company_uuid'    => $company->uuid,
+                'created_by_uuid' => $user->uuid,
+                'name'            => 'CI Contract Store',
+                'description'     => 'Seeded by the API contract run.',
+                'currency'        => 'USD',
+                'online'          => 1,
+            ]);
+        }
+
+        echo 'MINTED_STOREFRONT_KEY=' . $store->fresh()->key . PHP_EOL;
+        echo 'MINTED_STOREFRONT_ID=' . $store->public_id . PHP_EOL;
+    } else {
+        echo 'MINTED_STOREFRONT_KEY=' . PHP_EOL;
+    }
+
     echo 'SEEDED_CUSTOMER_IDENTITY=' . $customerIdentity . PHP_EOL;
     echo 'SEEDED_CUSTOMER_PHONE=' . $customerPhone . PHP_EOL;
     echo 'SEEDED_VERIFICATION_CODE=' . $customerCode . PHP_EOL;
