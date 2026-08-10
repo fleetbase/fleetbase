@@ -1,12 +1,60 @@
 #!/usr/bin/env python3
 """Emit `-i <Folder/Request>` args for a Postman git-native collection directory,
-in the collection's own order, with every DELETE deferred to the end.
+in the collection's own order, with every DELETE — and any explicitly pinned
+request — deferred to the end.
 
 The collection doubles as published API reference, so its on-disk structure and
-ordering must not change. Deferring deletes at run time keeps DELETE coverage
-without letting a delete destroy a record the rest of the run still needs.
+ordering must not change. Deferring at run time keeps full coverage without
+letting one request destroy state the rest of the run still needs.
+
+Two deferral rules, in ascending order of precedence:
+
+  1. DELETE (heuristic). Any DELETE may strand a later request that reads the
+     record, so all of them move to the tail.
+  2. RUN_LAST (explicit). Session teardown cannot be expressed as a heuristic,
+     because ordering matters *between* the deferred requests — see below.
 """
 import os, re, sys
+
+# Requests relocated to the very end of the run, in exactly the order listed.
+# Keyed by collection directory name.
+#
+# Fleetbase API / Customers issues a Sanctum token (`Customer-Token`) and has
+# three requests that destroy it:
+#
+#   * Logout Customer              revokes the token used on that request
+#   * Logout All Customer Sessions revokes every token for the user
+#   * Reset Customer Password      revokes every token as a side effect
+#                                  (CustomerController::resetPassword calls
+#                                  deleteUserTokens after setting the password)
+#
+# Deferring all three is not sufficient: whichever logout runs first leaves the
+# other holding a dead token, so a fresh token has to be minted in between.
+# Login Customer is relocated here to do exactly that — safe to move out of its
+# natural position because Create a Customer already bootstraps customer_token
+# earlier in the run via its afterResponse script.
+#
+# Reset Customer Password is a *public* route (no AuthenticateCustomerToken
+# middleware) — it needs no token, it only destroys them — so it is free to run
+# dead last.
+# Request Customer Login SMS is pinned for a different reason: Create a Customer
+# sends {{$randomPhoneNumber}}, and creating the customer Contact syncs that phone
+# onto the linked User row — so after it runs, User.phone is a random number and
+# looking the customer up by the fixed {{customer_phone}} 400s with "No customer
+# with this phone number found". Update Authenticated Customer sends
+# {{customer_phone}} and mirrors it back onto the User, so this request only
+# succeeds once that has run. Pinning it to the head of the tail puts it after
+# Update Authenticated Customer (order 9000) while keeping it before the logouts.
+# It is a public route, so it needs no token.
+RUN_LAST = {
+    'Fleetbase API': [
+        'Customers/Request Customer Login SMS',     # needs User.phone restored by Update Me
+        'Customers/Logout Customer',                # revokes the current token
+        'Customers/Login Customer',                 # re-mints customer_token
+        'Customers/Logout All Customer Sessions',   # revokes every token
+        'Customers/Reset Customer Password',        # public route, no token needed
+    ],
+}
 
 root = sys.argv[1]
 def field(path, key, default=None):
@@ -16,7 +64,11 @@ def field(path, key, default=None):
     except OSError:
         return default
 
+# Pinned order for this collection, as {path: index}. Unknown collection => {}.
+run_last = {p: i for i, p in enumerate(RUN_LAST.get(os.path.basename(root.rstrip('/')), []))}
+
 items = []
+seen = set()
 for folder in os.listdir(root):
     d = os.path.join(root, folder)
     if not os.path.isdir(d) or folder.startswith('.'):
@@ -29,7 +81,29 @@ for folder in os.listdir(root):
         name = fn[:-len('.request.yaml')]
         method = (field(p, 'method', '?') or '?').upper()
         rorder = int(field(p, 'order', 10**9))
-        items.append((method == 'DELETE', forder, folder, rorder, name))
+        path = f'{folder}/{name}'
+        seen.add(path)
+        if path in run_last:
+            # Phase 2 sorts after the DELETEs: "pinned last" means last, and
+            # explicit intent beats the heuristic. Nothing in Fleetbase API
+            # currently deletes the customer's Contact or User, so the relative
+            # order of phases 1 and 2 is inert today — but a future RUN_LAST
+            # entry that depends on a record a DELETE removes would need this.
+            phase, primary, secondary = 2, run_last[path], 0
+            sort_folder = ''
+        else:
+            phase, primary, secondary = (1 if method == 'DELETE' else 0), forder, rorder
+            sort_folder = folder
+        items.append((phase, primary, sort_folder, secondary, name, path))
 
-for _is_delete, _fo, folder, _ro, name in sorted(items):
-    print(f'{folder}/{name}')
+for *_key, path in sorted(items):
+    print(path)
+
+# A rename in the postman repo would silently un-pin a request and quietly
+# reintroduce the token-revocation failures. Warn, but do NOT exit non-zero: the
+# caller consumes stdout with `while read req; do args+=(-i "$req"); done`, and
+# never checks the exit status — so failing here would yield a partial or empty
+# -i list, a worse and much less obvious failure than a red annotation.
+for path in run_last:
+    if path not in seen:
+        print(f'::warning::RUN_LAST entry not found in collection: {path}', file=sys.stderr)
