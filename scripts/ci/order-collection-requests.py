@@ -67,6 +67,21 @@ def field(path, key, default=None):
 # Pinned order for this collection, as {path: index}. Unknown collection => {}.
 run_last = {p: i for i, p in enumerate(RUN_LAST.get(os.path.basename(root.rstrip('/')), []))}
 
+def line_value(path, key):
+    """Read a scalar whose value may contain spaces, e.g. `name: A long title`.
+
+    field() stops at the first token, which silently truncated request names to
+    their first word and made every -i miss.
+    """
+    try:
+        m = re.search(rf'^{key}:[ \t]*(.+?)[ \t]*$', open(path, encoding='utf-8').read(), re.M)
+    except OSError:
+        return None
+    if not m:
+        return None
+    return m.group(1).strip().strip('"').strip("'")
+
+
 items = []
 seen = set()
 for folder in os.listdir(root):
@@ -78,7 +93,12 @@ for folder in os.listdir(root):
         if not fn.endswith('.request.yaml'):
             continue
         p = os.path.join(d, fn)
-        name = fn[:-len('.request.yaml')]
+        # Prefer the request's declared name over the filename. They usually match,
+        # but the on-disk name is truncated at 60 characters, so a longer request
+        # (e.g. Storefront's "Setups a verification request to create a new storefront
+        # customer. ?") ends up with a filename the collection does not know. `-i` then
+        # fails to match it and the CLI aborts the ENTIRE run with 0 requests executed.
+        name = (line_value(p, 'name') or fn[:-len('.request.yaml')])
         method = (field(p, 'method', '?') or '?').upper()
         rorder = int(field(p, 'order', 10**9))
         path = f'{folder}/{name}'

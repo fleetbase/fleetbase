@@ -369,6 +369,14 @@ runs:
           # A collection with no assertions cannot fail on a bad response — it only
           # catches transport errors, so a 500 from every endpoint still reads as green.
           # Say so rather than letting the row imply the API was verified.
+          # A collection that executed nothing is a failure, not a pass. The CLI
+          # aborts the whole run when one -i name does not match a collection item
+          # and reports 0 requests executed, which otherwise reads as a clean run.
+          if [[ "${r_exec:-0}" == "0" ]]; then
+            echo "::error::'$name' executed 0 requests. Usually a -i name that matches no collection item; look for 'items were not found' in the log."
+            overall=1
+          fi
+
           if [[ "${a_exec:-0}" == "0" ]]; then
             echo "::warning::'$name' ran ${r_exec:-0} requests but executed no assertions; it cannot detect a bad response."
             printf '\n> ⚠️ **%s** executed no assertions — it only catches transport errors.\n' \
