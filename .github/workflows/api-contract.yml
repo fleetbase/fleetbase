@@ -8,7 +8,12 @@ name: API Contract (Postman)
 #   jobs:
 #     contract:
 #       uses: fleetbase/fleetbase/.github/workflows/api-contract.yml@main
-#       with: { collections: "Fleetbase Storefront API", build-from-source: false }
+#       with:
+#         collections: "Fleetbase Storefront API"
+#         build-from-source: false
+#         # Without overlay-package the run tests the version of this module baked into
+#         # the published image, NOT the branch under review.
+#         overlay-package: fleetbase/storefront-api
 #       secrets: inherit
 #
 # Requires org-level secrets POSTMAN_API_KEY and _GITHUB_AUTH_TOKEN (inherited).
@@ -47,6 +52,23 @@ on:
         type: string
         required: false
         default: fleetbase/fleetbase-api:latest
+      overlay-package:
+        description: >-
+          Composer package inside the API image to replace with the CALLING repository's
+          checked-out source, e.g. fleetbase/fleetops-api. Without this a module's
+          contract run exercises whatever version of that module is baked into the
+          published image, not the branch under review — so a PR's own API changes are
+          never actually tested. Leave empty to test the image as published.
+        type: string
+        required: false
+        default: ''
+      overlay-path:
+        description: >-
+          Directory within the calling repository that is the package root (the folder
+          containing its composer.json). Defaults to the repository root.
+        type: string
+        required: false
+        default: .
       postman-ref:
         description: Ref of fleetbase/postman to run.
         type: string
@@ -143,6 +165,78 @@ jobs:
             sleep 5
           done
           echo "::error::API did not become healthy"; exit 1
+
+      # In a reusable workflow github.repository/github.sha refer to the CALLER, so this
+      # checks out the module branch under review rather than fleetbase/fleetbase.
+      - name: Checkout calling repository for overlay
+        if: ${{ inputs.overlay-package != '' }}
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ github.repository }}
+          ref: ${{ github.sha }}
+          token: ${{ secrets._GITHUB_AUTH_TOKEN }}
+          path: .overlay
+
+      - name: Overlay branch source over the published package
+        if: ${{ inputs.overlay-package != '' }}
+        run: |
+          set -uo pipefail
+          PKG="${{ inputs.overlay-package }}"
+          SRC=".overlay/${{ inputs.overlay-path }}"
+          DEST="/fleetbase/api/vendor/${PKG}"
+
+          if [[ ! -f "$SRC/composer.json" ]]; then
+            echo "::error::No composer.json at ${SRC}; set overlay-path to the package root."
+            exit 1
+          fi
+
+          WAS="$(docker compose exec -T application sh -c "cat ${DEST}/composer.json 2>/dev/null" \
+                  | python3 -c 'import json,sys; print(json.load(sys.stdin).get("version","unknown"))' 2>/dev/null || echo unknown)"
+
+          # Replace rather than merge, so files deleted on the branch actually disappear.
+          # The branch has no vendor/ of its own (never installed), so nothing to exclude.
+          docker compose exec -T application sh -c "rm -rf ${DEST} && mkdir -p ${DEST}"
+          tar -C "$SRC" -cf - . | docker compose exec -T application sh -c "tar -C ${DEST} -xf -"
+          docker compose exec -T application sh -c "chown -R www-data:www-data ${DEST}"
+
+          # The image is built with --optimize-autoloader, which freezes a classmap.
+          # Without dumping it, classes added on the branch are simply not found.
+          docker compose exec -T application su www-data -s /bin/sh -c \
+            "cd /fleetbase/api && composer dump-autoload --optimize --no-scripts" 2>&1 | tail -3
+
+          # A branch may ship new migrations, and stale caches would mask new routes/config.
+          docker compose exec -T application su www-data -s /bin/sh -c \
+            "cd /fleetbase/api && php artisan optimize:clear" 2>&1 | tail -5
+          docker compose exec -T application su www-data -s /bin/sh -c \
+            "cd /fleetbase/api && php artisan migrate --force" 2>&1 | tail -10
+
+          # New composer requirements on the branch are NOT installed by this overlay.
+          # Surface that rather than letting it fail later as a confusing class-not-found.
+          if ! diff -q <(python3 -c "import json;print(json.dumps(json.load(open('$SRC/composer.json')).get('require',{}),sort_keys=True))") \
+                       <(docker compose exec -T application sh -c "cat ${DEST}/composer.json" \
+                         | python3 -c "import json,sys;print(json.dumps(json.load(sys.stdin).get('require',{}),sort_keys=True))") >/dev/null 2>&1; then
+            echo "::warning::${PKG} changed its composer requires on this branch; the overlay does not install new dependencies."
+          fi
+
+          {
+            echo "### Package under test"
+            echo
+            echo "\`${PKG}\` replaced with **${{ github.repository }}@${{ github.sha }}**"
+            echo "(image shipped version \`${WAS}\`)."
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Re-check API health after overlay
+        if: ${{ inputs.overlay-package != '' }}
+        run: |
+          for i in $(seq 1 20); do
+            if curl -fsS --max-time 5 http://localhost:8000/health | grep -q '"status"'; then
+              echo "API healthy after overlay"; exit 0
+            fi
+            sleep 3
+          done
+          echo "::error::API did not recover after overlaying ${{ inputs.overlay-package }}"
+          docker compose logs --no-color --tail=100 application || true
+          exit 1
 
       - name: Run Postman contract
         uses: ./.github/actions/postman-contract
