@@ -45,6 +45,15 @@ inputs:
       drift apart. Quoted because unquoted 000000 is YAML for the integer 0.
     required: false
     default: '000000'
+  verbose:
+    description: >-
+      Run the CLI with --verbose so request and response bodies are captured. Without
+      it a failing request records only a status code and a byte count, which is not
+      enough to tell a bad request body from a broken endpoint. Bodies are kept in the
+      uploaded artifact with Authorization headers scrubbed; the job log relies on
+      ::add-mask:: for the same secrets.
+    required: false
+    default: 'true'
   postman-ref:
     description: Ref of the fleetbase/postman repo to check out.
     required: false
@@ -270,6 +279,9 @@ runs:
           # RUN_LAST in order-collection-requests.py. The CLI honours the order of
           # repeated -i flags, so deferring costs nothing and keeps coverage intact.
           args=("$dir" -r cli)
+          if [[ "${{ inputs.verbose }}" == "true" ]]; then
+            args+=(--verbose)
+          fi
           if [[ -f scripts/ci/order-collection-requests.py ]]; then
             while IFS= read -r req; do
               [[ -n "$req" ]] && args+=(-i "$req")
@@ -327,6 +339,14 @@ runs:
           # Strip the colour codes and the PTY's carriage returns for the plain copy, so
           # the artifact is readable in an editor rather than full of escape sequences.
           sed -E $'s/\x1b\\[[0-9;]*[a-zA-Z]//g; s/\r$//' "$ansi" > "$log"
+
+          # --verbose echoes request headers, so the minted bearer token would otherwise
+          # be written verbatim into an uploaded artifact. ::add-mask:: covers the job
+          # log but does NOT apply to artifacts, so scrub both copies explicitly.
+          for f in "$ansi" "$log"; do
+            sed -i -E 's/(Authorization:[[:space:]]*Bearer[[:space:]]*)[A-Za-z0-9._-]+/\1<redacted>/gi; \
+                       s/(flb_(live|test|platform)_)[A-Za-z0-9_-]+/\1<redacted>/g' "$f"
+          done
 
           # Read executed/failed out of the reporter's summary table. Each row is
           # "| <label> | <executed> | <failed> |", so match the label plus two numbers
