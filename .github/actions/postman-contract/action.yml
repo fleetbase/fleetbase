@@ -158,6 +158,7 @@ runs:
         ORGANIZATION_ID="$(printf '%s\n' "$OUT" | grep -oE 'MINTED_COMPANY_ID=company_[A-Za-z0-9]+' | tail -1 | cut -d= -f2 || true)"
         STOREFRONT_KEY="$(printf '%s\n' "$OUT" | grep -oE 'MINTED_STOREFRONT_KEY=store_[A-Za-z0-9]+' | tail -1 | cut -d= -f2 || true)"
         INVOICE_ID="$(printf '%s\n' "$OUT" | grep -oE 'SEEDED_INVOICE_ID=[A-Za-z0-9_]+' | tail -1 | cut -d= -f2 || true)"
+        GATEWAY_ID="$(printf '%s\n' "$OUT" | grep -oE 'SEEDED_LEDGER_GATEWAY=[A-Za-z0-9_]+' | tail -1 | cut -d= -f2 || true)"
         if [[ -z "$KEY" ]]; then
           echo "::error::Could not mint an API key from the running stack. Tinker output:"
           printf '%s\n' "$OUT"
@@ -211,6 +212,15 @@ runs:
         else
           echo "::warning::No invoice seeded; the Ledger public-invoice requests will 404."
         fi
+        # Pay Public Invoice and Top Up Wallet both address a gateway by public_id, and
+        # {{gateway_id}} was set by nothing — both answered "Payment gateway not found or
+        # unavailable." Empty only means no Stripe test secret was provided, in which case
+        # the seed creates no gateway.
+        if [[ -n "$GATEWAY_ID" ]]; then
+          echo "gateway_id=$GATEWAY_ID" >> "$GITHUB_OUTPUT"
+        else
+          echo "::warning::No payment gateway seeded; the gateway-backed requests will report it as unavailable."
+        fi
         if [[ -n "$PLATFORM_TOKEN" ]]; then
           echo "::add-mask::$PLATFORM_TOKEN"
           echo "platform_token=$PLATFORM_TOKEN" >> "$GITHUB_OUTPUT"
@@ -256,6 +266,7 @@ runs:
         STOREFRONT_KEY: ${{ steps.key.outputs.storefront_key }}
         ORGANIZATION_ID: ${{ steps.key.outputs.organization_id }}
         INVOICE_PUBLIC_ID: ${{ steps.key.outputs.invoice_public_id }}
+        GATEWAY_ID: ${{ steps.key.outputs.gateway_id }}
         COLLECTIONS: ${{ inputs.collections }}
         BASE_URL: ${{ inputs.base-url }}
         NAMESPACE: ${{ inputs.namespace }}
@@ -333,6 +344,8 @@ runs:
           '  --env-var "proof_photo_base64=iVBORw0KGgoAAAANSUhEUgAAAAgAAAAICAIAAABLbSncAAAAbElEQVR42hXNQRUAUQhCUaMYhShGeVGIQhSizB+XXA7ODDtouIHBQ4YOM8suWm5h8ZKl+0CskDiBsIioHhx76LiDw0eO3oN/4FVf+J8h0PduzBqZ8x/bxNQPwgaFy192SGgelC0q13/CJaXlA8Z7WAFXOTbyAAAAAElFTkSuQmCC" \' \
           '  --env-var "proof_signature_base64=iVBORw0KGgoAAAANSUhEUgAAAAgAAAAICAIAAABLbSncAAAAbElEQVR42hXNQRUAUQhCUaMYhShGeVGIQhSizB+XXA7ODDtouIHBQ4YOM8suWm5h8ZKl+0CskDiBsIioHhx76LiDw0eO3oN/4FVf+J8h0PduzBqZ8x/bxNQPwgaFy192SGgelC0q13/CJaXlA8Z7WAFXOTbyAAAAAElFTkSuQmCC" \' \
           '  --env-var "invoice_public_id=${INVOICE_PUBLIC_ID}" \' \
+          '  --env-var "gateway_id=${GATEWAY_ID}" \' \
+          '  --env-var "payment_reference=ci-contract-payment-reference" \' \
           '  --env-var "push_token=ci-contract-push-token" \' \
           '  "${@:2}"' > "$RUNNER"
         chmod +x "$RUNNER"
