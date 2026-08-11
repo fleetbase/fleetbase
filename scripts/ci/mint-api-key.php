@@ -142,6 +142,17 @@ try {
     $seedVerificationCode('fleetops_customer_login');
     $seedVerificationCode('fleetops_customer_password_reset', ['identity' => $customerIdentity]);
 
+    // The Storefront customer endpoints run the same flows against the same User but
+    // scope their codes under their own `for` values, so the fleetops rows above do not
+    // satisfy them. Matched exactly as each controller looks them up:
+    //
+    //   storefront_login             ::verifyCode        subject_uuid + code + for
+    //   storefront_create_customer   ::create            code + for + meta->identity
+    //   storefront_account_closure   ::confirmClosure    code + for + meta->identity
+    $seedVerificationCode('storefront_login');
+    $seedVerificationCode('storefront_create_customer', ['identity' => $customerIdentity]);
+    $seedVerificationCode('storefront_account_closure', ['identity' => $customerIdentity]);
+
     // The Storefront API authenticates with a store/network key, not an organization
     // API credential: SetStorefrontSession rejects any bearer token that does not start
     // with "store" or "network", so the flb_live_ key above can never authenticate a
