@@ -150,8 +150,30 @@ try {
     //   storefront_create_customer   ::create            code + for + meta->identity
     //   storefront_account_closure   ::confirmClosure    code + for + meta->identity
     $seedVerificationCode('storefront_login');
-    $seedVerificationCode('storefront_create_customer', ['identity' => $customerIdentity]);
-    $seedVerificationCode('storefront_account_closure', ['identity' => $customerIdentity]);
+    // Filed under the PHONE, not the email: confirmAccountClosure computes the identity it
+    // looks up as `$user->phone ?? $user->email`, and the seeded customer has a phone. A
+    // code filed under the email was never found — "Invalid verification code provided!".
+    $seedVerificationCode('storefront_account_closure', ['identity' => $customerPhone]);
+
+    // Create a Customer needs an identity with NO existing contact: the request validates
+    // `email` with Rule::unique('contacts'), and by the time it runs the seeded customer's
+    // contact exists — "The email has already been taken." So the creation code is filed
+    // under a second identity reserved for exactly that, and deliberately left without a
+    // contact of its own.
+    $newCustomerIdentity = getenv('CI_NEW_CUSTOMER_IDENTITY') ?: 'ci-new-customer@fleetbase.local';
+
+    \Fleetbase\Models\VerificationCode::withoutGlobalScopes()
+        ->where(['subject_uuid' => $customer->uuid, 'for' => 'storefront_create_customer'])
+        ->delete();
+    $createCode             = \Fleetbase\Models\VerificationCode::generateFor($customer, 'storefront_create_customer', false);
+    $createCode->expires_at = \Illuminate\Support\Carbon::now()->addDay();
+    $createCode->meta       = ['identity' => $newCustomerIdentity];
+    $createCode->status     = 'active';
+    $createCode->save();
+    $createCode->code       = $customerCode;
+    $createCode->save();
+
+    echo 'SEEDED_NEW_CUSTOMER_IDENTITY=' . $newCustomerIdentity . PHP_EOL;
 
     // The Storefront API authenticates with a store/network key, not an organization
     // API credential: SetStorefrontSession rejects any bearer token that does not start
