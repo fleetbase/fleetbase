@@ -54,6 +54,19 @@ import os, re, sys
 #
 # Listed paths sort to the FRONT of the delete batch, in the order given. Add a child
 # here whenever its parent's delete would remove it.
+# Requests whose dependency lives in a LATER folder. The published collection's folder
+# order is documentation, not a dependency graph — Cart sorts before Products, so
+# Add Item to Cart fired before Create Product ever ran and {{product_id}} was unset,
+# giving "Invalid product provided". These run after every ordinary request but BEFORE
+# the deletes, in the order listed here.
+RUN_LATE = {
+    'Fleetbase Storefront API': [
+        'Cart/Add Item to Cart',        # needs {{product_id}} from Products/Create Product
+        'Cart/Update item in Cart',     # needs the line item Add Item to Cart creates
+        'Cart/Remove item from cart',   # ditto
+    ],
+}
+
 DELETE_FIRST = {
     'Fleetbase API': [
         'Zones/Delete a Zone',            # cascades with Service Areas/Delete a Service Area
@@ -81,6 +94,7 @@ def field(path, key, default=None):
 # Pinned order for this collection, as {path: index}. Unknown collection => {}.
 run_last = {p: i for i, p in enumerate(RUN_LAST.get(os.path.basename(root.rstrip('/')), []))}
 delete_first = {p: i for i, p in enumerate(DELETE_FIRST.get(os.path.basename(root.rstrip('/')), []))}
+run_late = {p: i for i, p in enumerate(RUN_LATE.get(os.path.basename(root.rstrip('/')), []))}
 
 def line_value(path, key):
     """Read a scalar whose value may contain spaces, e.g. `name: A long title`.
@@ -119,20 +133,23 @@ for folder in os.listdir(root):
         path = f'{folder}/{name}'
         seen.add(path)
         if path in run_last:
-            # Phase 2 sorts after the DELETEs: "pinned last" means last, and
+            # Phase 3 sorts after the DELETEs: "pinned last" means last, and
             # explicit intent beats the heuristic. Nothing in Fleetbase API
             # currently deletes the customer's Contact or User, so the relative
             # order of phases 1 and 2 is inert today — but a future RUN_LAST
             # entry that depends on a record a DELETE removes would need this.
-            phase, primary, secondary = 2, run_last[path], 0
+            phase, primary, secondary = 3, run_last[path], 0
             sort_folder = ''
         elif method == 'DELETE' and path in delete_first:
             # Negative primary sorts ahead of every folder-ordered delete, since
             # forder is always non-negative.
-            phase, primary, secondary = 1, delete_first[path] - len(delete_first), 0
+            phase, primary, secondary = 2, delete_first[path] - len(delete_first), 0
+            sort_folder = ''
+        elif path in run_late:
+            phase, primary, secondary = 1, run_late[path], 0
             sort_folder = ''
         else:
-            phase, primary, secondary = (1 if method == 'DELETE' else 0), forder, rorder
+            phase, primary, secondary = (2 if method == 'DELETE' else 0), forder, rorder
             sort_folder = folder
         items.append((phase, primary, sort_folder, secondary, name, path))
 
