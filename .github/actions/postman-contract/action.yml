@@ -45,6 +45,24 @@ inputs:
       drift apart. Quoted because unquoted 000000 is YAML for the integer 0.
     required: false
     default: '000000'
+  driver-identity:
+    description: >-
+      Email of the seeded CI driver. Login Driver resolves a User by phone OR email that
+      has a related Driver record, so this must match a seeded driver, not the credential
+      owner.
+    required: false
+    default: ci-driver@fleetbase.local
+  driver-password:
+    description: Password for the seeded CI driver. Minimum 8 characters.
+    required: false
+    default: CiDriverPassw0rd!
+  driver-phone:
+    description: >-
+      Phone for the seeded CI driver, E.164. Request Driver Login SMS resolves a user by
+      this number and 400s with "No driver with this phone # found." if it matches none.
+      Must differ from customer-phone — the lookup is by number alone.
+    required: false
+    default: '+15555550124'
   verbose:
     description: >-
       Run the CLI with --verbose so request and response bodies are captured. Without
@@ -90,6 +108,9 @@ runs:
         CUSTOMER_PASSWORD: ${{ inputs.customer-password }}
         CUSTOMER_PHONE: ${{ inputs.customer-phone }}
         VERIFICATION_CODE: ${{ inputs.customer-verification-code }}
+        DRIVER_IDENTITY: ${{ inputs.driver-identity }}
+        DRIVER_PASSWORD: ${{ inputs.driver-password }}
+        DRIVER_PHONE: ${{ inputs.driver-phone }}
       run: |
         set -uo pipefail
         # Run the mint snippet via `tinker --execute="eval(base64_decode(...))"`.
@@ -106,6 +127,9 @@ runs:
           -e "CI_CUSTOMER_PHONE=${CUSTOMER_PHONE}" \
           -e "CI_CUSTOMER_PASSWORD=${CUSTOMER_PASSWORD}" \
           -e "CI_CUSTOMER_VERIFICATION_CODE=${VERIFICATION_CODE}" \
+          -e "CI_DRIVER_IDENTITY=${DRIVER_IDENTITY}" \
+          -e "CI_DRIVER_PHONE=${DRIVER_PHONE}" \
+          -e "CI_DRIVER_PASSWORD=${DRIVER_PASSWORD}" \
           application php artisan tinker --execute="eval(base64_decode('${CODE}'));" 2>&1 || true)"
         KEY="$(printf '%s\n' "$OUT" | grep -oE 'flb_(live|test)_[A-Za-z0-9_-]+' | tail -1 || true)"
         PLATFORM_TOKEN="$(printf '%s\n' "$OUT" | grep -oE 'flb_platform_[A-Za-z0-9]+' | tail -1 || true)"
@@ -125,6 +149,15 @@ runs:
         SEEDED_CODE="$(printf '%s\n' "$OUT" | grep -oE 'SEEDED_VERIFICATION_CODE=[A-Za-z0-9]+' | tail -1 | cut -d= -f2 || true)"
         if [[ "$SEEDED_CODE" != "$VERIFICATION_CODE" ]]; then
           echo "::error::Customer fixtures were not seeded (expected code '${VERIFICATION_CODE}', got '${SEEDED_CODE}'). Tinker output:"
+          printf '%s\n' "$OUT"
+          exit 1
+        fi
+        # The Drivers folder's auth flows depend on the seeded driver in the same way.
+        # The snippet only reaches this echo if the Driver record was created, so a missing
+        # line means driver auth would fail with an opaque 401/400 across four requests.
+        SEEDED_DRIVER="$(printf '%s\n' "$OUT" | grep -oE 'SEEDED_DRIVER_IDENTITY=\S+' | tail -1 | cut -d= -f2 || true)"
+        if [[ "$SEEDED_DRIVER" != "$DRIVER_IDENTITY" ]]; then
+          echo "::error::Driver fixtures were not seeded (expected '${DRIVER_IDENTITY}', got '${SEEDED_DRIVER}'). Tinker output:"
           printf '%s\n' "$OUT"
           exit 1
         fi
@@ -198,6 +231,9 @@ runs:
         CUSTOMER_PASSWORD: ${{ inputs.customer-password }}
         CUSTOMER_PHONE: ${{ inputs.customer-phone }}
         VERIFICATION_CODE: ${{ inputs.customer-verification-code }}
+        DRIVER_IDENTITY: ${{ inputs.driver-identity }}
+        DRIVER_PASSWORD: ${{ inputs.driver-password }}
+        DRIVER_PHONE: ${{ inputs.driver-phone }}
       run: |
         set -uo pipefail
         overall=0
@@ -244,6 +280,10 @@ runs:
           '  --env-var "customer_password=${CUSTOMER_PASSWORD}" \' \
           '  --env-var "customer_phone=${CUSTOMER_PHONE}" \' \
           '  --env-var "verification_code=${VERIFICATION_CODE}" \' \
+          '  --env-var "driver_identity=${DRIVER_IDENTITY}" \' \
+          '  --env-var "driver_password=${DRIVER_PASSWORD}" \' \
+          '  --env-var "driver_phone=${DRIVER_PHONE}" \' \
+          '  --env-var "device_token=ci-contract-device-token" \' \
           '  --env-var "push_token=ci-contract-push-token" \' \
           '  "${@:2}"' > "$RUNNER"
         chmod +x "$RUNNER"
