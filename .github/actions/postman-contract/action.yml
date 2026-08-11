@@ -135,6 +135,7 @@ runs:
         PLATFORM_TOKEN="$(printf '%s\n' "$OUT" | grep -oE 'flb_platform_[A-Za-z0-9]+' | tail -1 || true)"
         ORGANIZATION_ID="$(printf '%s\n' "$OUT" | grep -oE 'MINTED_COMPANY_ID=company_[A-Za-z0-9]+' | tail -1 | cut -d= -f2 || true)"
         STOREFRONT_KEY="$(printf '%s\n' "$OUT" | grep -oE 'MINTED_STOREFRONT_KEY=store_[A-Za-z0-9]+' | tail -1 | cut -d= -f2 || true)"
+        INVOICE_ID="$(printf '%s\n' "$OUT" | grep -oE 'SEEDED_INVOICE_ID=[A-Za-z0-9_]+' | tail -1 | cut -d= -f2 || true)"
         if [[ -z "$KEY" ]]; then
           echo "::error::Could not mint an API key from the running stack. Tinker output:"
           printf '%s\n' "$OUT"
@@ -180,6 +181,14 @@ runs:
         else
           echo "::warning::No storefront key minted; the Storefront collection will 401."
         fi
+        # The three public-invoice requests are addressed by an invoice public_id and
+        # nothing in the collection can create one — the public API has no invoice
+        # creation endpoint. Absent only means the ledger extension is not installed.
+        if [[ -n "$INVOICE_ID" ]]; then
+          echo "invoice_public_id=$INVOICE_ID" >> "$GITHUB_OUTPUT"
+        else
+          echo "::warning::No invoice seeded; the Ledger public-invoice requests will 404."
+        fi
         if [[ -n "$PLATFORM_TOKEN" ]]; then
           echo "::add-mask::$PLATFORM_TOKEN"
           echo "platform_token=$PLATFORM_TOKEN" >> "$GITHUB_OUTPUT"
@@ -224,6 +233,7 @@ runs:
         PLATFORM_TOKEN: ${{ steps.key.outputs.platform_token }}
         STOREFRONT_KEY: ${{ steps.key.outputs.storefront_key }}
         ORGANIZATION_ID: ${{ steps.key.outputs.organization_id }}
+        INVOICE_PUBLIC_ID: ${{ steps.key.outputs.invoice_public_id }}
         COLLECTIONS: ${{ inputs.collections }}
         BASE_URL: ${{ inputs.base-url }}
         NAMESPACE: ${{ inputs.namespace }}
@@ -294,6 +304,7 @@ runs:
           '  --env-var "driver_password=${DRIVER_PASSWORD}" \' \
           '  --env-var "driver_phone=${DRIVER_PHONE}" \' \
           '  --env-var "device_token=ci-contract-device-token" \' \
+          '  --env-var "invoice_public_id=${INVOICE_PUBLIC_ID}" \' \
           '  --env-var "push_token=ci-contract-push-token" \' \
           '  "${@:2}"' > "$RUNNER"
         chmod +x "$RUNNER"

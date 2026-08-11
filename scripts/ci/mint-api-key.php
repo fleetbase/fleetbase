@@ -244,6 +244,53 @@ try {
     echo 'SEEDED_DRIVER_IDENTITY=' . $driverIdentity . PHP_EOL;
     echo 'SEEDED_DRIVER_PHONE=' . $driverPhone . PHP_EOL;
 
+    /* ============================================================
+     | LEDGER INVOICE FIXTURE (Fleetbase Ledger API / Public Invoices)
+     * ============================================================ */
+
+    // The three public-invoice endpoints are addressed by an invoice public_id, and
+    // {{invoice_public_id}} is set by nothing — no request in the collection creates an
+    // invoice, because the public API exposes no invoice-creation endpoint. Seeding one
+    // is the only way to reach them.
+    //
+    // Status is deliberately NOT 'draft': PublicInvoiceController::show answers 403 for
+    // draft invoices ("not yet available"), so a draft would exercise the guard rather
+    // than the endpoint. 'sent' also lets show() transition it to 'viewed' on first
+    // access, which is the behaviour worth covering.
+    if (class_exists(\Fleetbase\Ledger\Models\Invoice::class)) {
+        $invoice = \Fleetbase\Ledger\Models\Invoice::withoutGlobalScopes()
+            ->where(['company_uuid' => $company->uuid, 'number' => 'CI-CONTRACT-0001'])
+            ->first();
+
+        if (!$invoice) {
+            $invoice = \Fleetbase\Ledger\Models\Invoice::create([
+                'company_uuid'    => $company->uuid,
+                'created_by_uuid' => $user->uuid,
+                'number'          => 'CI-CONTRACT-0001',
+                'date'            => \Illuminate\Support\Carbon::now()->toDateString(),
+                'due_date'        => \Illuminate\Support\Carbon::now()->addDays(30)->toDateString(),
+                'subtotal'        => 10000,
+                'tax'             => 0,
+                'total_amount'    => 10000,
+                'amount_paid'     => 0,
+                'balance'         => 10000,
+                'currency'        => 'USD',
+                'status'          => 'sent',
+                'notes'           => 'Seeded by the API contract run.',
+            ]);
+        }
+
+        // Reasserted on reruns: show() flips `sent` to `viewed` on first access, and a
+        // later run would otherwise start from whatever the previous one left behind.
+        $invoice->status    = 'sent';
+        $invoice->viewed_at = null;
+        $invoice->save();
+
+        echo 'SEEDED_INVOICE_ID=' . $invoice->fresh()->public_id . PHP_EOL;
+    } else {
+        echo '::warning::Ledger not installed; the invoice fixture was skipped.' . PHP_EOL;
+    }
+
     echo 'SEEDED_CUSTOMER_IDENTITY=' . $customerIdentity . PHP_EOL;
     echo 'SEEDED_CUSTOMER_PHONE=' . $customerPhone . PHP_EOL;
     echo 'SEEDED_VERIFICATION_CODE=' . $customerCode . PHP_EOL;
