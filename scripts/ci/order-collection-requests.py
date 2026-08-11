@@ -46,6 +46,20 @@ import os, re, sys
 # succeeds once that has run. Pinning it to the head of the tail puts it after
 # Update Authenticated Customer (order 9000) while keeping it before the logouts.
 # It is a public route, so it needs no token.
+# Deletes are deferred as a batch, and within that batch they keep folder order —
+# which can delete a parent before its children. Zones carry a service_area, so
+# Delete a Service Area (Service Areas sorts before Zones) cascaded the zone away and
+# Delete a Zone then answered "Zone resource not found." — a 404 manufactured entirely
+# by this script's own ordering, not by the API.
+#
+# Listed paths sort to the FRONT of the delete batch, in the order given. Add a child
+# here whenever its parent's delete would remove it.
+DELETE_FIRST = {
+    'Fleetbase API': [
+        'Zones/Delete a Zone',            # cascades with Service Areas/Delete a Service Area
+    ],
+}
+
 RUN_LAST = {
     'Fleetbase API': [
         'Customers/Request Customer Login SMS',     # needs User.phone restored by Update Me
@@ -66,6 +80,7 @@ def field(path, key, default=None):
 
 # Pinned order for this collection, as {path: index}. Unknown collection => {}.
 run_last = {p: i for i, p in enumerate(RUN_LAST.get(os.path.basename(root.rstrip('/')), []))}
+delete_first = {p: i for i, p in enumerate(DELETE_FIRST.get(os.path.basename(root.rstrip('/')), []))}
 
 def line_value(path, key):
     """Read a scalar whose value may contain spaces, e.g. `name: A long title`.
@@ -110,6 +125,11 @@ for folder in os.listdir(root):
             # order of phases 1 and 2 is inert today — but a future RUN_LAST
             # entry that depends on a record a DELETE removes would need this.
             phase, primary, secondary = 2, run_last[path], 0
+            sort_folder = ''
+        elif method == 'DELETE' and path in delete_first:
+            # Negative primary sorts ahead of every folder-ordered delete, since
+            # forder is always non-negative.
+            phase, primary, secondary = 1, delete_first[path] - len(delete_first), 0
             sort_folder = ''
         else:
             phase, primary, secondary = (1 if method == 'DELETE' else 0), forder, rorder
