@@ -245,6 +245,82 @@ try {
     echo 'SEEDED_DRIVER_PHONE=' . $driverPhone . PHP_EOL;
 
     /* ============================================================
+     | STRIPE TEST GATEWAY (Storefront checkout + Ledger top-up)
+     * ============================================================ */
+
+    // Stripe is configured by a Gateway ROW, not by env vars: Storefront resolves it with
+    // Storefront::findGateway('stripe') scoped to the store, then reads
+    // $gateway->config->secret_key. With no row the checkout chain answers
+    // "Stripe not setup." and the ledger top-up answers "No query results for Gateway".
+    //
+    // Both values come from the CI environment and are TEST-mode by contract — the action
+    // passes STRIPE_TEST_KEY / STRIPE_TEST_SECRET. Nothing is seeded when the secret is
+    // absent, so a fork without the org secrets still runs everything else.
+    $stripePublishable = getenv('CI_STRIPE_PUBLISHABLE_KEY') ?: '';
+    $stripeSecret      = getenv('CI_STRIPE_SECRET_KEY') ?: '';
+
+    if ($stripeSecret && isset($store) && class_exists(\Fleetbase\Storefront\Models\Gateway::class)) {
+        $storefrontGateway = \Fleetbase\Storefront\Models\Gateway::withoutGlobalScopes()
+            ->where(['owner_uuid' => $store->uuid, 'code' => 'stripe'])
+            ->first();
+
+        if (!$storefrontGateway) {
+            $storefrontGateway               = new \Fleetbase\Storefront\Models\Gateway();
+            $storefrontGateway->company_uuid = $company->uuid;
+            $storefrontGateway->owner_uuid   = $store->uuid;
+            // Assigned through the mutator, which runs Utils::getMutationType() — every
+            // other writer in the package sets it this way, and storing the FQCN directly
+            // produces a value findGateway's owner scoping will not match.
+            $storefrontGateway->owner_type   = 'storefront:store';
+            $storefrontGateway->code         = 'stripe';
+            $storefrontGateway->type         = 'stripe';
+        }
+
+        $storefrontGateway->created_by_uuid = $user->uuid;
+        $storefrontGateway->name            = 'CI Contract Stripe (test mode)';
+        $storefrontGateway->sandbox         = true;
+        $storefrontGateway->config          = [
+            'public_key' => $stripePublishable,
+            'secret_key' => $stripeSecret,
+        ];
+        $storefrontGateway->save();
+
+        echo 'SEEDED_STOREFRONT_GATEWAY=' . $storefrontGateway->fresh()->public_id . PHP_EOL;
+    }
+
+    if ($stripeSecret && class_exists(\Fleetbase\Ledger\Models\Gateway::class)) {
+        // A different model with a different shape: keyed by `driver` rather than `code`,
+        // and its Stripe driver reads `publishable_key` where Storefront reads
+        // `public_key`. Seeding one does not seed the other.
+        $ledgerGateway = \Fleetbase\Ledger\Models\Gateway::withoutGlobalScopes()
+            ->where(['company_uuid' => $company->uuid, 'driver' => 'stripe'])
+            ->first();
+
+        if (!$ledgerGateway) {
+            $ledgerGateway               = new \Fleetbase\Ledger\Models\Gateway();
+            $ledgerGateway->company_uuid = $company->uuid;
+            $ledgerGateway->driver       = 'stripe';
+        }
+
+        $ledgerGateway->created_by_uuid = $user->uuid;
+        $ledgerGateway->name            = 'CI Contract Stripe (test mode)';
+        $ledgerGateway->is_sandbox      = true;
+        $ledgerGateway->environment     = 'sandbox';
+        $ledgerGateway->status          = 'active';
+        $ledgerGateway->config          = [
+            'publishable_key' => $stripePublishable,
+            'secret_key'      => $stripeSecret,
+        ];
+        $ledgerGateway->save();
+
+        echo 'SEEDED_LEDGER_GATEWAY=' . $ledgerGateway->fresh()->public_id . PHP_EOL;
+    }
+
+    if (!$stripeSecret) {
+        echo '::notice::No Stripe test secret provided; gateway-backed requests will report the gateway as unconfigured.' . PHP_EOL;
+    }
+
+    /* ============================================================
      | LEDGER INVOICE FIXTURE (Fleetbase Ledger API / Public Invoices)
      * ============================================================ */
 
