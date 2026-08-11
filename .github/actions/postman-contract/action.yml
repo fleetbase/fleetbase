@@ -336,6 +336,7 @@ runs:
           '  --env-var "customer_name=Jane Customer" \' \
           '  --env-var "customer_password=${CUSTOMER_PASSWORD}" \' \
           '  --env-var "customer_phone=${CUSTOMER_PHONE}" \' \
+          '  --env-var "new_customer_identity=ci-new-customer@fleetbase.local" \' \
           '  --env-var "verification_code=${VERIFICATION_CODE}" \' \
           '  --env-var "driver_identity=${DRIVER_IDENTITY}" \' \
           '  --env-var "driver_password=${DRIVER_PASSWORD}" \' \

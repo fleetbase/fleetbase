@@ -64,9 +64,17 @@ RUN_LATE = {
         'Orders/Update an Order',       # needs {{service_quote_id}} from Service Quotes/Query Service Quotes
     ],
     'Fleetbase Storefront API': [
+        # The cart has to be populated before anything prices or checks out against it,
+        # and emptied only once those are done. Deferring just the three Cart requests
+        # left Checkout running against an empty cart — "The selected cart is invalid."
         'Cart/Add Item to Cart',        # needs {{product_id}} from Products/Create Product
         'Cart/Update item in Cart',     # needs the line item Add Item to Cart creates
-        'Cart/Remove item from cart',   # ditto
+        'Delivery Service Quote/Retrieve a Delivery Service Quote ❗',  # prices the cart
+        'Checkout/Before ❗',                    # needs the cart AND {{service_quote_id}}
+        'Checkout/Capture checkout as order',    # needs {{checkout_token}} from Before
+        'Checkout/Get Checkout Status',          # ditto
+        'Checkout/Update Stripe Payment Intent', # needs the cart and the service quote
+        'Cart/Remove item from cart',   # LAST: it empties what the above depend on
     ],
 }
 
