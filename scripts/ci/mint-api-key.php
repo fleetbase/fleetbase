@@ -278,6 +278,74 @@ try {
     echo 'SEEDED_DRIVER_PHONE=' . $driverPhone . PHP_EOL;
 
     /* ============================================================
+     | STORE LOCATION (Storefront)
+     * ============================================================ */
+
+    // Retrieve Location answered 404 because the store has no locations at all — List
+    // Locations returned [] and nothing could set {{location_id}}. A store location is
+    // also what a real storefront sends as the delivery quote's `origin`.
+    if (isset($store) && class_exists(\Fleetbase\Storefront\Models\StoreLocation::class)) {
+        $storeLocation = \Fleetbase\Storefront\Models\StoreLocation::withoutGlobalScopes()
+            ->where(['store_uuid' => $store->uuid, 'name' => 'CI Contract Location'])
+            ->first();
+
+        if (!$storeLocation) {
+            // The location needs a Place to point at. createFromCoordinates persists one
+            // scoped to the company, which is what StoreLocation::place expects.
+            $place = \Fleetbase\FleetOps\Models\Place::createFromCoordinates(
+                new \Fleetbase\LaravelMysqlSpatial\Types\Point(1.3521, 103.8198),
+                ['company_uuid' => $company->uuid, 'name' => 'CI Contract Location'],
+                true
+            );
+
+            $storeLocation = \Fleetbase\Storefront\Models\StoreLocation::create([
+                'store_uuid'      => $store->uuid,
+                'created_by_uuid' => $user->uuid,
+                'place_uuid'      => $place->uuid,
+                'name'            => 'CI Contract Location',
+            ]);
+        }
+
+        echo 'SEEDED_STORE_LOCATION=' . $storeLocation->fresh()->public_id . PHP_EOL;
+    }
+
+    /* ============================================================
+     | SERVICE RATE (Storefront delivery quotes)
+     * ============================================================ */
+
+    // Retrieve a Delivery Service Quote answered "No service rates available!". The
+    // storefront quote asks ServiceRate::getServicableForPlaces() for rates matching the
+    // order config key and the cart's currency, then filters by geography: a rate with a
+    // service area or a zone is only servicable when the destination falls inside it.
+    //
+    // A rate with NEITHER skips both containment checks and is servicable everywhere,
+    // which is what a contract run wants — the quote is then exercised without depending
+    // on a seeded polygon that the collection's coordinates happen to fall inside.
+    if (class_exists(\Fleetbase\FleetOps\Models\ServiceRate::class)) {
+        $serviceRate = \Fleetbase\FleetOps\Models\ServiceRate::withoutGlobalScopes()
+            ->where(['company_uuid' => $company->uuid, 'service_name' => 'CI Contract Flat Rate'])
+            ->first();
+
+        if (!$serviceRate) {
+            $serviceRate = \Fleetbase\FleetOps\Models\ServiceRate::create([
+                'company_uuid'            => $company->uuid,
+                'service_name'            => 'CI Contract Flat Rate',
+                // Matches Storefront::getSessionOrderConfig()'s default key, which is what
+                // the quote filters `service_type` on.
+                'service_type'            => 'storefront',
+                'rate_calculation_method' => 'fixed_rate',
+                'base_fee'                => 500,
+                // Must match the cart's currency — the query lowercases and compares it.
+                'currency'                => 'USD',
+                'duration_terms'          => 'Same day',
+                'estimated_days'          => 1,
+            ]);
+        }
+
+        echo 'SEEDED_SERVICE_RATE=' . $serviceRate->fresh()->public_id . PHP_EOL;
+    }
+
+    /* ============================================================
      | STRIPE TEST GATEWAY (Storefront checkout + Ledger top-up)
      * ============================================================ */
 
