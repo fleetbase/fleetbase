@@ -300,6 +300,10 @@ runs:
         #     Update Authenticated Customer is a no-op rename rather than a surprise.
         # verification_code must equal what mint-api-key.php seeded — both read the same
         # action input, so they cannot drift.
+        # proof_photo_base64 / proof_signature_base64 are an 8x8 PNG. Capture Photo
+        # validates with base64_decode($value, true), so a data: URI prefix would fail
+        # the strict decode — this is bare base64 — and the bytes are a real image
+        # because the same rule also accepts an uploaded file and checks its dimensions.
         printf '%s\n' \
           '#!/usr/bin/env bash' \
           '# The CLI resolves a formdata `src` against its own process working directory,' \
@@ -326,6 +330,8 @@ runs:
           '  --env-var "driver_password=${DRIVER_PASSWORD}" \' \
           '  --env-var "driver_phone=${DRIVER_PHONE}" \' \
           '  --env-var "device_token=ci-contract-device-token" \' \
+          '  --env-var "proof_photo_base64=iVBORw0KGgoAAAANSUhEUgAAAAgAAAAICAIAAABLbSncAAAAbElEQVR42hXNQRUAUQhCUaMYhShGeVGIQhSizB+XXA7ODDtouIHBQ4YOM8suWm5h8ZKl+0CskDiBsIioHhx76LiDw0eO3oN/4FVf+J8h0PduzBqZ8x/bxNQPwgaFy192SGgelC0q13/CJaXlA8Z7WAFXOTbyAAAAAElFTkSuQmCC" \' \
+          '  --env-var "proof_signature_base64=iVBORw0KGgoAAAANSUhEUgAAAAgAAAAICAIAAABLbSncAAAAbElEQVR42hXNQRUAUQhCUaMYhShGeVGIQhSizB+XXA7ODDtouIHBQ4YOM8suWm5h8ZKl+0CskDiBsIioHhx76LiDw0eO3oN/4FVf+J8h0PduzBqZ8x/bxNQPwgaFy192SGgelC0q13/CJaXlA8Z7WAFXOTbyAAAAAElFTkSuQmCC" \' \
           '  --env-var "invoice_public_id=${INVOICE_PUBLIC_ID}" \' \
           '  --env-var "push_token=ci-contract-push-token" \' \
           '  "${@:2}"' > "$RUNNER"
