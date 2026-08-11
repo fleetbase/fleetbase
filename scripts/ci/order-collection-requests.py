@@ -60,6 +60,9 @@ import os, re, sys
 # giving "Invalid product provided". These run after every ordinary request but BEFORE
 # the deletes, in the order listed here.
 RUN_LATE = {
+    'Fleetbase API': [
+        'Orders/Update an Order',       # needs {{service_quote_id}} from Service Quotes/Query Service Quotes
+    ],
     'Fleetbase Storefront API': [
         'Cart/Add Item to Cart',        # needs {{product_id}} from Products/Create Product
         'Cart/Update item in Cart',     # needs the line item Add Item to Cart creates
