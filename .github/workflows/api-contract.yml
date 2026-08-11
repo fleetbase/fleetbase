@@ -193,15 +193,22 @@ jobs:
             echo "::notice::GOOGLE_MAPS_API_KEY not set; order shapes that send a street address cannot geocode. Coordinate and GeoJSON shapes are unaffected."
           fi
 
-          bash scripts/docker-install.sh --non-interactive
-
           # The verification-code endpoints deliver by SMS and fall back to email. With
-          # no mail transport configured the fallback dies on a null from-address —
-          # "Email \"null\" does not comply with addr-spec of RFC 2822" — so
-          # Request Customer Creation Code, Request Customer Login SMS and Request Driver
-          # Login SMS all answered 400 for a reason that has nothing to do with the API.
-          # The log mailer writes the message to the Laravel log and delivers nothing, so
-          # nothing leaves the runner; the endpoints simply become exercisable.
+          # no usable from-address the fallback dies inside Symfony —
+          #   Email "null" does not comply with addr-spec of RFC 2822
+          # — which surfaced as 400s on three requests and a 500 on Send Work Order.
+          #
+          # api/.env.example ships the literal string MAIL_FROM_ADDRESS=null, which
+          # OVERRIDES config/mail.php's default rather than falling back to it.
+          #
+          # This must run BEFORE the installer brings the stack up. Laravel parses .env
+          # once at boot, and an earlier attempt to set it afterwards did not take:
+          # config:clear and octane:reload both ran and the endpoints still answered
+          # Email "null", because the workers were already holding the parsed values.
+          #
+          # The log mailer delivers nothing, so no mail leaves the runner; the endpoints
+          # simply become exercisable. MAIL_MAILER is already log via the installer's
+          # generated compose override.
           set_env() {
             if grep -q "^$1=" api/.env; then
               sed -i "s|^$1=.*|$1=$2|" api/.env
@@ -211,16 +218,10 @@ jobs:
           }
           set_env MAIL_MAILER log
           set_env MAIL_FROM_ADDRESS ci-contract@fleetbase.local
-          # Quoted in .env: an unquoted value with spaces is truncated at the first one.
-          set_env MAIL_FROM_NAME '"Fleetbase API Contract"'
           echo "Mail transport: log (from ci-contract@fleetbase.local)"
-          # After the installer, not before: docker-install.sh writes MAIL_* itself
-          # (MAIL_FROM_ADDRESS="") and would overwrite anything set earlier. The stack
-          # is already up by this point, so the config cache has to be dropped.
-          docker compose exec -T application php artisan config:clear >/dev/null 2>&1 || true
-          # Octane holds a booted application in each worker, so clearing the cached
-          # config file is not enough — the workers have to be recycled to re-read .env.
-          docker compose exec -T application php artisan octane:reload >/dev/null 2>&1 || true
+
+          bash scripts/docker-install.sh --non-interactive
+
 
 
       - name: Wait for API health
