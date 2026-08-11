@@ -253,6 +253,9 @@ runs:
         # Written with printf, not a heredoc: an unindented heredoc terminator would end
         # this YAML block scalar.
         RUNNER="${RUNNER_TEMP:-/tmp}/postman-run.sh"
+        # Absolute, because the runner cds into it and the loop below stays in the
+        # workspace to read the collection's own files.
+        export POSTMAN_DIR="${GITHUB_WORKSPACE:-$PWD}/.postman"
         # The customer_* / verification_code / push_token vars below are referenced by the
         # Customers folder but declared with no value, and the CLI substitutes only
         # --env-var (see the note further down). Two couplings are deliberate and must not
@@ -267,6 +270,13 @@ runs:
         # action input, so they cannot drift.
         printf '%s\n' \
           '#!/usr/bin/env bash' \
+          '# The CLI resolves a formdata `src` against its own process working directory,' \
+          '# and --working-dir does NOT change that. Files/Upload File carries a path' \
+          '# relative to the postman repo root, which is correct for anyone running the' \
+          '# published collection — so the CLI has to run from there, not from the' \
+          '# fleetbase workspace. Collection and --iteration-data paths are passed' \
+          '# relative to $POSTMAN_DIR to match.' \
+          'cd "$POSTMAN_DIR" || exit 1' \
           'postman collection run "$1" \' \
           '  --env-var "base_url=${BASE_URL}" \' \
           '  --env-var "namespace=${NAMESPACE}" \' \
@@ -301,6 +311,9 @@ runs:
           name="$(echo "$raw" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')"
           [[ -z "$name" ]] && continue
           dir=".postman/postman/collections/$name"
+          # Same directory, expressed relative to $POSTMAN_DIR — that is what the CLI is
+          # given, since the runner cds there first.
+          rel="postman/collections/$name"
           if [[ ! -d "$dir" ]]; then
             # A caller asking for a collection that does not exist is a misconfiguration,
             # not something to pass silently.
@@ -329,7 +342,7 @@ runs:
           # requests, which revoke the Customer-Token the rest of the folder needs; see
           # RUN_LAST in order-collection-requests.py. The CLI honours the order of
           # repeated -i flags, so deferring costs nothing and keeps coverage intact.
-          args=("$dir" -r cli)
+          args=("$rel" -r cli)
           if [[ "${{ inputs.verbose }}" == "true" ]]; then
             args+=(--verbose)
           fi
@@ -361,7 +374,7 @@ runs:
           fi
 
           if [[ "$name" == "Fleetbase Integrated Vendor Flow" ]]; then
-            args+=(--iteration-data ".postman/collections/workflows/integrated-vendor/data/happy-path.example.json")
+            args+=(--iteration-data "collections/workflows/integrated-vendor/data/happy-path.example.json")
           fi
 
           printf '\n\033[1;36m┏━━ ▶ %s\033[0m\n' "$name"
