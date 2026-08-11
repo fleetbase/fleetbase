@@ -313,6 +313,10 @@ jobs:
           postman-ref: ${{ inputs.postman-ref }}
           postman-api-key: ${{ secrets.POSTMAN_API_KEY }}
           github-token: ${{ secrets._GITHUB_AUTH_TOKEN }}
+          # TEST-mode keys only. The live pair also exists in the org secrets and must
+          # never be referenced here — a contract run creates payment intents.
+          stripe-publishable-key: ${{ secrets.STRIPE_TEST_KEY }}
+          stripe-secret-key: ${{ secrets.STRIPE_TEST_SECRET }}
 
       - name: Dump logs on failure
         if: failure()

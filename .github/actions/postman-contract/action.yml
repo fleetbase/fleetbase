@@ -72,6 +72,19 @@ inputs:
       ::add-mask:: for the same secrets.
     required: false
     default: 'true'
+  stripe-publishable-key:
+    description: >-
+      Stripe TEST publishable key (pk_test_). Seeded into the storefront and ledger
+      gateway rows so the checkout and top-up paths are reachable.
+    required: false
+    default: ''
+  stripe-secret-key:
+    description: >-
+      Stripe TEST secret key (sk_test_). When empty no gateway is seeded and the
+      gateway-backed requests report the gateway as unconfigured, which is the
+      correct result for a fork without the org secrets.
+    required: false
+    default: ''
   postman-ref:
     description: Ref of the fleetbase/postman repo to check out.
     required: false
@@ -111,8 +124,15 @@ runs:
         DRIVER_IDENTITY: ${{ inputs.driver-identity }}
         DRIVER_PASSWORD: ${{ inputs.driver-password }}
         DRIVER_PHONE: ${{ inputs.driver-phone }}
+        STRIPE_PUBLISHABLE_KEY: ${{ inputs.stripe-publishable-key }}
+        STRIPE_SECRET_KEY: ${{ inputs.stripe-secret-key }}
       run: |
         set -uo pipefail
+        # Masked before it is ever passed on: the seed echoes gateway ids, and --verbose
+        # captures request and response bodies into the uploaded artifact.
+        if [[ -n "${STRIPE_SECRET_KEY:-}" ]]; then
+          echo "::add-mask::${STRIPE_SECRET_KEY}"
+        fi
         # Run the mint snippet via `tinker --execute="eval(base64_decode(...))"`.
         # Piping a file with a <?php tag to tinker triggers a PsySH parse error, and
         # inlining the code would let the shell expand its $variables — base64+eval
@@ -130,6 +150,8 @@ runs:
           -e "CI_DRIVER_IDENTITY=${DRIVER_IDENTITY}" \
           -e "CI_DRIVER_PHONE=${DRIVER_PHONE}" \
           -e "CI_DRIVER_PASSWORD=${DRIVER_PASSWORD}" \
+          -e "CI_STRIPE_PUBLISHABLE_KEY=${STRIPE_PUBLISHABLE_KEY}" \
+          -e "CI_STRIPE_SECRET_KEY=${STRIPE_SECRET_KEY}" \
           application php artisan tinker --execute="eval(base64_decode('${CODE}'));" 2>&1 || true)"
         KEY="$(printf '%s\n' "$OUT" | grep -oE 'flb_(live|test)_[A-Za-z0-9_-]+' | tail -1 || true)"
         PLATFORM_TOKEN="$(printf '%s\n' "$OUT" | grep -oE 'flb_platform_[A-Za-z0-9]+' | tail -1 || true)"
@@ -426,6 +448,7 @@ runs:
             sed -i -E \
               -e 's/(Authorization:[[:space:]]*Bearer[[:space:]]*)[A-Za-z0-9._-]+/\1<redacted>/gi' \
               -e 's/(flb_(live|test|platform)_)[A-Za-z0-9_-]+/\1<redacted>/g' \
+            -e 's/((sk|rk|pk)_(live|test)_)[A-Za-z0-9]+/\1<redacted>/g' \
               "$f"
           done
 
