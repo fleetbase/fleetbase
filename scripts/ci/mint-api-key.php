@@ -172,6 +172,78 @@ try {
         echo 'MINTED_STOREFRONT_KEY=' . PHP_EOL;
     }
 
+    /* ============================================================
+     | DRIVER FIXTURES (Fleetbase API / Drivers)
+     * ============================================================ */
+
+    // Login Driver resolves a User by phone OR email that HAS a related driver:
+    //   User::where(phone = static::phone($identity))->orWhere('email', $identity)
+    //       ->whereHas('driver')
+    // so the User alone is not enough — a Driver row scoped to the same company is
+    // required or every driver auth request fails before it reaches a password check.
+    $driverIdentity = getenv('CI_DRIVER_IDENTITY') ?: 'ci-driver@fleetbase.local';
+    $driverPhone    = getenv('CI_DRIVER_PHONE') ?: '+15555550124';
+    $driverPassword = getenv('CI_DRIVER_PASSWORD') ?: 'CiDriverPassw0rd!';
+
+    $driverUser = \Fleetbase\Models\User::where('email', $driverIdentity)->withoutGlobalScopes()->first();
+    if (!$driverUser) {
+        $driverUser               = new \Fleetbase\Models\User();
+        $driverUser->email        = $driverIdentity;
+        $driverUser->company_uuid = $company->uuid;
+    }
+    // Reasserted on every run: Switch Driver Organization and the profile updates mutate
+    // these, and the collection expects a known starting state.
+    $driverUser->name   = 'Casey Driver';
+    $driverUser->phone  = $driverPhone;
+    $driverUser->type   = 'user';
+    $driverUser->status = 'active';
+    $driverUser->password = $driverPassword;
+    $driverUser->save();
+
+    if (class_exists(\Fleetbase\FleetOps\Models\Driver::class)) {
+        $driverRecord = \Fleetbase\FleetOps\Models\Driver::withoutGlobalScopes()
+            ->where(['user_uuid' => $driverUser->uuid, 'company_uuid' => $company->uuid])
+            ->first();
+
+        if (!$driverRecord) {
+            $driverRecord = \Fleetbase\FleetOps\Models\Driver::create([
+                'user_uuid'    => $driverUser->uuid,
+                'company_uuid' => $company->uuid,
+                'status'       => 'active',
+                'online'       => 0,
+            ]);
+        }
+
+        echo 'SEEDED_DRIVER_ID=' . $driverRecord->fresh()->public_id . PHP_EOL;
+
+        // POST /v1/drivers/register-device (the route with no {id}) resolves the driver
+        // from $request->user(). Under `fleetbase.api` that is the API credential's owner,
+        // not the driver seeded above — so the route is unreachable unless the credential
+        // owner is itself a driver. That is a real configuration (an owner-operator), and
+        // it is the only way an org-key contract run can exercise the tokenless route.
+        \Fleetbase\FleetOps\Models\Driver::firstOrCreate(
+            ['user_uuid' => $user->uuid, 'company_uuid' => $company->uuid],
+            ['status' => 'active', 'online' => 0]
+        );
+    } else {
+        echo '::warning::FleetOps not installed; driver fixtures skipped.' . PHP_EOL;
+    }
+
+    // verifyCode defaults `for` to driver_login and matches on subject + code + for,
+    // mirroring the customer login code above.
+    \Fleetbase\Models\VerificationCode::withoutGlobalScopes()
+        ->where(['subject_uuid' => $driverUser->uuid, 'for' => 'driver_login'])
+        ->delete();
+    $driverCode             = \Fleetbase\Models\VerificationCode::generateFor($driverUser, 'driver_login', false);
+    $driverCode->expires_at = \Illuminate\Support\Carbon::now()->addDay();
+    $driverCode->status     = 'active';
+    $driverCode->save();
+    $driverCode->code = $customerCode;
+    $driverCode->save();
+
+    echo 'SEEDED_DRIVER_IDENTITY=' . $driverIdentity . PHP_EOL;
+    echo 'SEEDED_DRIVER_PHONE=' . $driverPhone . PHP_EOL;
+
     echo 'SEEDED_CUSTOMER_IDENTITY=' . $customerIdentity . PHP_EOL;
     echo 'SEEDED_CUSTOMER_PHONE=' . $customerPhone . PHP_EOL;
     echo 'SEEDED_VERIFICATION_CODE=' . $customerCode . PHP_EOL;
