@@ -310,6 +310,49 @@ try {
     echo 'SEEDED_DRIVER_PHONE=' . $driverPhone . PHP_EOL;
 
     /* ============================================================
+     | FOOD TRUCK (Storefront)
+     * ============================================================ */
+
+    // Retrieve Food Truck answered "Food Truck resource not found." because the store has
+    // none — Query Food Trucks returned [] and nothing could set {{food_truck_id}}. A food
+    // truck is a vehicle bound to a store, so both are seeded. The vehicle carries an
+    // explicit location: `location` is a spatial column, and the same NOT NULL default
+    // that broke sensor and fuel report creation applies here.
+    if (isset($store) && class_exists(\Fleetbase\Storefront\Models\FoodTruck::class)) {
+        $truckVehicle = \Fleetbase\FleetOps\Models\Vehicle::withoutGlobalScopes()
+            ->where(['company_uuid' => $company->uuid, 'plate_number' => 'CI-TRUCK-1'])
+            ->first();
+
+        if (!$truckVehicle) {
+            $truckVehicle = \Fleetbase\FleetOps\Models\Vehicle::create([
+                'company_uuid' => $company->uuid,
+                'plate_number' => 'CI-TRUCK-1',
+                'make'         => 'Contract',
+                'model'        => 'Food Truck',
+                'year'         => 2026,
+                'status'       => 'active',
+                'location'     => new \Fleetbase\LaravelMysqlSpatial\Types\Point(1.3521, 103.8198),
+            ]);
+        }
+
+        $foodTruck = \Fleetbase\Storefront\Models\FoodTruck::withoutGlobalScopes()
+            ->where(['store_uuid' => $store->uuid, 'vehicle_uuid' => $truckVehicle->uuid])
+            ->first();
+
+        if (!$foodTruck) {
+            $foodTruck = \Fleetbase\Storefront\Models\FoodTruck::create([
+                'company_uuid'    => $company->uuid,
+                'created_by_uuid' => $user->uuid,
+                'store_uuid'      => $store->uuid,
+                'vehicle_uuid'    => $truckVehicle->uuid,
+                'status'          => 'active',
+            ]);
+        }
+
+        echo 'SEEDED_FOOD_TRUCK=' . $foodTruck->fresh()->public_id . PHP_EOL;
+    }
+
+    /* ============================================================
      | NETWORK (Storefront network-scoped endpoints)
      * ============================================================ */
 
