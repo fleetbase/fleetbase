@@ -216,6 +216,12 @@ jobs:
               echo "$1=$2" >> api/.env
             fi
           }
+          # The storefront review-account bypass, pointed at the seeded customer's phone.
+          # This is the same mechanism App Store review uses, and it is inert without BOTH
+          # values — the code alone is not accepted for an identity that is not listed.
+          # It lets phone verification be exercised without a live SMS provider.
+          set_env STOREFRONT_BYPASS_VERIFICATION_CODE 000000
+          set_env STOREFRONT_REVIEW_ACCOUNTS '+15555550123'
           set_env MAIL_MAILER log
           set_env MAIL_FROM_ADDRESS ci-contract@fleetbase.local
           echo "Mail transport: log (from ci-contract@fleetbase.local)"
