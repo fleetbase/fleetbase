@@ -75,6 +75,28 @@ EXCLUDED = {
     },
 }
 
+# A documented request that a workflow runs more than once. The CLI honours repeated -i
+# flags, so the cycle is expressed here rather than by inventing extra requests.
+#
+# Completing an order means advancing every service stop: Get Order Next Activity to see
+# what is available, then Update Order Activity to apply it — once per stop, exactly as
+# navigator-app does. The collection's order carries four waypoints plus a pickup and a
+# dropoff, so `times` covers them with room to spare; a surplus cycle is harmless because
+# updateActivity answers "Order is already completed." once the flow is exhausted.
+#
+# `then` runs after the cycle, which is the only way Complete an Order can see every
+# waypoint COMPLETED.
+CYCLES = {
+    'Fleetbase API': {
+        'sequence': [
+            'Orders/Get Order Next Activity',
+            'Orders/Update Order Activity',
+        ],
+        'times': 6,
+        'then': ['Orders/Complete an Order'],
+    },
+}
+
 RUN_LATE = {
     'Fleetbase API': [
         'Orders/Update an Order',       # needs {{service_quote_id}} from Service Quotes/Query Service Quotes
@@ -134,6 +156,8 @@ def field(path, key, default=None):
 run_last = {p: i for i, p in enumerate(RUN_LAST.get(os.path.basename(root.rstrip('/')), []))}
 delete_first = {p: i for i, p in enumerate(DELETE_FIRST.get(os.path.basename(root.rstrip('/')), []))}
 run_late = {p: i for i, p in enumerate(RUN_LATE.get(os.path.basename(root.rstrip('/')), []))}
+cycles = CYCLES.get(os.path.basename(root.rstrip('/')), {})
+cycled = set(cycles.get('sequence', [])) | set(cycles.get('then', []))
 excluded = EXCLUDED.get(os.path.basename(root.rstrip('/')), {})
 
 def line_value(path, key):
@@ -172,6 +196,9 @@ for folder in os.listdir(root):
         rorder = int(field(p, 'order', 10**9))
         path = f'{folder}/{name}'
         seen.add(path)
+        if path in cycled:
+            # Emitted by the cycle block after the ordinary phase, in dependency order.
+            continue
         if path in excluded:
             # Reported every run so an exclusion cannot quietly become permanent.
             print(f'::notice::excluded from the contract run — {path}: {excluded[path]}', file=sys.stderr)
@@ -197,8 +224,28 @@ for folder in os.listdir(root):
             sort_folder = folder
         items.append((phase, primary, sort_folder, secondary, name, path))
 
-for *_key, path in sorted(items):
+ordered = sorted(items)
+
+# Phases 0 and 1 are the ordinary and run-late requests; 2 and 3 are the deletes and the
+# session teardown. The cycle goes between them: everything that sets the order up has
+# run, and nothing has torn it down yet — Delete an Order is in phase 2.
+for key in ordered:
+    if key[0] <= 1:
+        print(key[-1])
+
+for _ in range(cycles.get('times', 0)):
+    for path in cycles['sequence']:
+        print(path)
+for path in cycles.get('then', []):
     print(path)
+
+for key in ordered:
+    if key[0] > 1:
+        print(key[-1])
+
+for path in cycled:
+    if path not in seen:
+        print(f'::warning::CYCLES entry not found in collection: {path}', file=sys.stderr)
 
 # A rename in the postman repo would silently un-pin a request and quietly
 # reintroduce the token-revocation failures. Warn, but do NOT exit non-zero: the
