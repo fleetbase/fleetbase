@@ -104,6 +104,15 @@ DELETE_FIRST = {
 }
 
 RUN_LAST = {
+    # Account closure DELETES the customer's user account. It is a POST, so the DELETE
+    # heuristic does not catch it, and once it succeeded every later authenticated request
+    # failed with "Not authorized" — the customer was gone. It only started succeeding once
+    # its verification code was seeded correctly, which is how a fixture fix turned into a
+    # 7-request regression.
+    'Fleetbase Storefront API': [
+        'Customer/Start Account Closure',
+        'Customer/Confirm Account Closure',
+    ],
     'Fleetbase API': [
         'Customers/Request Customer Login SMS',     # needs User.phone restored by Update Me
         'Customers/Logout Customer',                # revokes the current token
