@@ -331,6 +331,10 @@ try {
                 'model'        => 'Food Truck',
                 'year'         => 2026,
                 'status'       => 'active',
+                // Both are NOT NULL without a default. `location` is the spatial column
+                // that already broke sensor and fuel report creation; `online` is the same
+                // trap one column over, and it aborted the whole seed.
+                'online'       => 0,
                 'location'     => new \Fleetbase\LaravelMysqlSpatial\Types\Point(1.3521, 103.8198),
             ]);
         }
