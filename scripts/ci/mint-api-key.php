@@ -274,8 +274,72 @@ try {
     $driverCode->code = $customerCode;
     $driverCode->save();
 
+    /* ============================================================
+     | SECOND ORGANIZATION (Switch Driver Organization)
+     * ============================================================ */
+
+    // switchOrganization rejects a switch to the org the driver is already in, and then
+    // requires a CompanyUser row proving membership of the target. Neither can be created
+    // through the public API, so the seeded driver is given a second organization here:
+    // a company, a CompanyUser row, and a driver profile in it.
+    //
+    // The collection's other driver requests use {{driver_id}} from Create a Driver, whose
+    // user belongs to one company only — hence a separate {{multi_org_driver_id}} for the
+    // one request that needs two.
+    $secondCompany = \Fleetbase\Models\Company::firstOrCreate(['name' => 'CI Contract Org (Secondary)']);
+    if (empty($secondCompany->owner_uuid)) {
+        $secondCompany->setOwner($user, true);
+        $secondCompany->save();
+    }
+
+    \Fleetbase\Models\CompanyUser::firstOrCreate([
+        'company_uuid' => $secondCompany->uuid,
+        'user_uuid'    => $driverUser->uuid,
+    ], ['status' => 'active']);
+
+    if (class_exists(\Fleetbase\FleetOps\Models\Driver::class)) {
+        \Fleetbase\FleetOps\Models\Driver::firstOrCreate(
+            ['user_uuid' => $driverUser->uuid, 'company_uuid' => $secondCompany->uuid],
+            ['status' => 'active', 'online' => 0]
+        );
+    }
+
+    echo 'SEEDED_SECONDARY_ORGANIZATION_ID=' . $secondCompany->public_id . PHP_EOL;
+
     echo 'SEEDED_DRIVER_IDENTITY=' . $driverIdentity . PHP_EOL;
     echo 'SEEDED_DRIVER_PHONE=' . $driverPhone . PHP_EOL;
+
+    /* ============================================================
+     | NETWORK (Storefront network-scoped endpoints)
+     * ============================================================ */
+
+    // List Network Stores answered "Stores cannot have stores!" because the contract
+    // authenticates with a STORE key, and the network endpoints require a network session.
+    // Network::boot() generates `key = 'network_' . md5(...)` on insert exactly like Store,
+    // so a seeded network yields a usable key; the collection's network requests send it
+    // instead of the store key.
+    if (isset($store) && class_exists(\Fleetbase\Storefront\Models\Network::class)) {
+        $network = \Fleetbase\Storefront\Models\Network::withoutGlobalScopes()
+            ->where(['company_uuid' => $company->uuid, 'name' => 'CI Contract Network'])
+            ->first();
+
+        if (!$network) {
+            $network = \Fleetbase\Storefront\Models\Network::create([
+                'company_uuid'    => $company->uuid,
+                'created_by_uuid' => $user->uuid,
+                'name'            => 'CI Contract Network',
+                'description'     => 'Seeded by the API contract run.',
+                'currency'        => 'USD',
+                'online'          => 1,
+            ]);
+        }
+
+        // Without a member store the listing is empty and proves nothing.
+        $network->addStore($store);
+
+        echo 'MINTED_NETWORK_KEY=' . $network->fresh()->key . PHP_EOL;
+        echo 'MINTED_NETWORK_ID=' . $network->public_id . PHP_EOL;
+    }
 
     /* ============================================================
      | STORE LOCATION (Storefront)
