@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "7f82b5425eb962d402c1fe21ae1359f6",
+    "content-hash": "0fe8fb12dcab56a336b6236e972f75de",
     "packages": [
         {
             "name": "appstract/laravel-opcache",
@@ -124,16 +124,16 @@
         },
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.391.1",
+            "version": "3.392.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "90920ce5518aa864e04da0224bb0ba0ee9e31d7f"
+                "reference": "c6bb281dfbfd4c8c2d0bd2c3b95242af41bb1b4c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/90920ce5518aa864e04da0224bb0ba0ee9e31d7f",
-                "reference": "90920ce5518aa864e04da0224bb0ba0ee9e31d7f",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/c6bb281dfbfd4c8c2d0bd2c3b95242af41bb1b4c",
+                "reference": "c6bb281dfbfd4c8c2d0bd2c3b95242af41bb1b4c",
                 "shasum": ""
             },
             "require": {
@@ -215,9 +215,9 @@
             "support": {
                 "forum": "https://github.com/aws/aws-sdk-php/discussions",
                 "issues": "https://github.com/aws/aws-sdk-php/issues",
-                "source": "https://github.com/aws/aws-sdk-php/tree/3.391.1"
+                "source": "https://github.com/aws/aws-sdk-php/tree/3.392.0"
             },
-            "time": "2026-08-07T20:18:18+00:00"
+            "time": "2026-08-11T18:12:10+00:00"
         },
         {
             "name": "aws/aws-sdk-php-laravel",
@@ -1142,16 +1142,16 @@
         },
         {
             "name": "cuyz/valinor",
-            "version": "2.5.1",
+            "version": "2.6.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/CuyZ/Valinor.git",
-                "reference": "d1f6d5296c3cb67d64996f2570831137502c260a"
+                "reference": "15e5afc4a5463d15d26b010fd0a703e16f14c90f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/CuyZ/Valinor/zipball/d1f6d5296c3cb67d64996f2570831137502c260a",
-                "reference": "d1f6d5296c3cb67d64996f2570831137502c260a",
+                "url": "https://api.github.com/repos/CuyZ/Valinor/zipball/15e5afc4a5463d15d26b010fd0a703e16f14c90f",
+                "reference": "15e5afc4a5463d15d26b010fd0a703e16f14c90f",
                 "shasum": ""
             },
             "require": {
@@ -1166,6 +1166,7 @@
                 "infection/infection": "^0.32",
                 "marcocesarato/php-conventional-changelog": "^1.12",
                 "mikey179/vfsstream": "^1.6.10",
+                "php-ds/php-ds": "^1.8",
                 "phpbench/phpbench": "^1.3",
                 "phpstan/phpstan": "^2.0",
                 "phpstan/phpstan-phpunit": "^2.0",
@@ -1210,7 +1211,7 @@
             ],
             "support": {
                 "issues": "https://github.com/CuyZ/Valinor/issues",
-                "source": "https://github.com/CuyZ/Valinor/tree/2.5.1"
+                "source": "https://github.com/CuyZ/Valinor/tree/2.6.0"
             },
             "funding": [
                 {
@@ -1218,7 +1219,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-07-28T21:32:29+00:00"
+            "time": "2026-08-11T07:30:08+00:00"
         },
         {
             "name": "dflydev/dot-access-data",
@@ -2392,16 +2393,16 @@
         },
         {
             "name": "fleetbase/billing-api",
-            "version": "0.1.24",
+            "version": "0.1.25",
             "source": {
                 "type": "git",
                 "url": "git@github.com:fleetbase/billing.git",
-                "reference": "b16cfc4411dc01e3f3b15f4fc58deb441e54ed2e"
+                "reference": "91e0bdcde510280e6b6f27e0ab4cb721249d934a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fleetbase/billing/zipball/b16cfc4411dc01e3f3b15f4fc58deb441e54ed2e",
-                "reference": "b16cfc4411dc01e3f3b15f4fc58deb441e54ed2e",
+                "url": "https://api.github.com/repos/fleetbase/billing/zipball/91e0bdcde510280e6b6f27e0ab4cb721249d934a",
+                "reference": "91e0bdcde510280e6b6f27e0ab4cb721249d934a",
                 "shasum": ""
             },
             "require": {
@@ -2515,10 +2516,10 @@
                 "stripe api"
             ],
             "support": {
-                "source": "https://github.com/fleetbase/billing/tree/v0.1.24",
+                "source": "https://github.com/fleetbase/billing/tree/v0.1.25",
                 "issues": "https://github.com/fleetbase/billing/issues"
             },
-            "time": "2026-08-08T08:04:06+00:00"
+            "time": "2026-08-12T08:09:28+00:00"
         },
         {
             "name": "fleetbase/core-api",
@@ -2944,16 +2945,16 @@
         },
         {
             "name": "fleetbase/internals-api",
-            "version": "0.0.36",
+            "version": "0.0.37",
             "source": {
                 "type": "git",
                 "url": "git@github.com:fleetbase/internals.git",
-                "reference": "888d3dc8bf6bc4436d7fc6eb315e88654a14e242"
+                "reference": "0a6fbe0c3c7951bc268728e4d339f77f8841ad54"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fleetbase/internals/zipball/888d3dc8bf6bc4436d7fc6eb315e88654a14e242",
-                "reference": "888d3dc8bf6bc4436d7fc6eb315e88654a14e242",
+                "url": "https://api.github.com/repos/fleetbase/internals/zipball/0a6fbe0c3c7951bc268728e4d339f77f8841ad54",
+                "reference": "0a6fbe0c3c7951bc268728e4d339f77f8841ad54",
                 "shasum": ""
             },
             "require": {
@@ -3052,10 +3053,10 @@
                 "fleetbase-internals"
             ],
             "support": {
-                "source": "https://github.com/fleetbase/internals/tree/v0.0.36",
+                "source": "https://github.com/fleetbase/internals/tree/v0.0.37",
                 "issues": "https://github.com/fleetbase/internals/issues"
             },
-            "time": "2026-08-08T10:19:44+00:00"
+            "time": "2026-08-12T08:08:06+00:00"
         },
         {
             "name": "fleetbase/laravel-mysql-spatial",
@@ -4422,16 +4423,16 @@
         },
         {
             "name": "google/apiclient-services",
-            "version": "v0.453.0",
+            "version": "v0.454.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/googleapis/google-api-php-client-services.git",
-                "reference": "9eeab572613c0b533f8268e5df0954a63100061d"
+                "reference": "4c0b343eb836b63616592ce98eca9f804b2b6493"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/googleapis/google-api-php-client-services/zipball/9eeab572613c0b533f8268e5df0954a63100061d",
-                "reference": "9eeab572613c0b533f8268e5df0954a63100061d",
+                "url": "https://api.github.com/repos/googleapis/google-api-php-client-services/zipball/4c0b343eb836b63616592ce98eca9f804b2b6493",
+                "reference": "4c0b343eb836b63616592ce98eca9f804b2b6493",
                 "shasum": ""
             },
             "require": {
@@ -4460,9 +4461,9 @@
             ],
             "support": {
                 "issues": "https://github.com/googleapis/google-api-php-client-services/issues",
-                "source": "https://github.com/googleapis/google-api-php-client-services/tree/v0.453.0"
+                "source": "https://github.com/googleapis/google-api-php-client-services/tree/v0.454.0"
             },
-            "time": "2026-08-03T01:20:25+00:00"
+            "time": "2026-08-10T01:06:25+00:00"
         },
         {
             "name": "google/auth",
@@ -4713,16 +4714,16 @@
         },
         {
             "name": "google/gax",
-            "version": "v1.47.0",
+            "version": "v1.47.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/googleapis/gax-php.git",
-                "reference": "ec67d460a42acaea3b787c73ff29801978d12ae5"
+                "reference": "0c25a2499a7204bee09e3cb28437a391d85976e5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/googleapis/gax-php/zipball/ec67d460a42acaea3b787c73ff29801978d12ae5",
-                "reference": "ec67d460a42acaea3b787c73ff29801978d12ae5",
+                "url": "https://api.github.com/repos/googleapis/gax-php/zipball/0c25a2499a7204bee09e3cb28437a391d85976e5",
+                "reference": "0c25a2499a7204bee09e3cb28437a391d85976e5",
                 "shasum": ""
             },
             "require": {
@@ -4771,9 +4772,9 @@
             ],
             "support": {
                 "issues": "https://github.com/googleapis/gax-php/issues",
-                "source": "https://github.com/googleapis/gax-php/tree/v1.47.0"
+                "source": "https://github.com/googleapis/gax-php/tree/v1.47.1"
             },
-            "time": "2026-07-28T00:15:15+00:00"
+            "time": "2026-08-10T16:39:50+00:00"
         },
         {
             "name": "google/grpc-gcp",
@@ -4822,16 +4823,16 @@
         },
         {
             "name": "google/longrunning",
-            "version": "0.7.1",
+            "version": "0.8.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/googleapis/php-longrunning.git",
-                "reference": "cac9bedf199239ae2b1acd4a8e4ea2276bd9f55a"
+                "reference": "2c22ca5184cba320f5e7e012261b82bdc969a4f6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/googleapis/php-longrunning/zipball/cac9bedf199239ae2b1acd4a8e4ea2276bd9f55a",
-                "reference": "cac9bedf199239ae2b1acd4a8e4ea2276bd9f55a",
+                "url": "https://api.github.com/repos/googleapis/php-longrunning/zipball/2c22ca5184cba320f5e7e012261b82bdc969a4f6",
+                "reference": "2c22ca5184cba320f5e7e012261b82bdc969a4f6",
                 "shasum": ""
             },
             "require-dev": {
@@ -4860,9 +4861,9 @@
             ],
             "description": "Google LongRunning Client for PHP",
             "support": {
-                "source": "https://github.com/googleapis/php-longrunning/tree/v0.7.1"
+                "source": "https://github.com/googleapis/php-longrunning/tree/v0.8.0"
             },
-            "time": "2026-03-31T19:52:22+00:00"
+            "time": "2026-08-10T16:39:50+00:00"
         },
         {
             "name": "google/protobuf",
@@ -6692,12 +6693,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/framework.git",
-                "reference": "61cad00bdaf0f710da070e1596c9ca6d567f4d12"
+                "reference": "74e222cee687f957d95aaadddae69270e3205cf7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/framework/zipball/61cad00bdaf0f710da070e1596c9ca6d567f4d12",
-                "reference": "61cad00bdaf0f710da070e1596c9ca6d567f4d12",
+                "url": "https://api.github.com/repos/laravel/framework/zipball/74e222cee687f957d95aaadddae69270e3205cf7",
+                "reference": "74e222cee687f957d95aaadddae69270e3205cf7",
                 "shasum": ""
             },
             "require": {
@@ -6892,20 +6893,20 @@
                 "issues": "https://github.com/laravel/framework/issues",
                 "source": "https://github.com/laravel/framework"
             },
-            "time": "2026-08-07T13:41:57+00:00"
+            "time": "2026-08-12T03:46:26+00:00"
         },
         {
             "name": "laravel/octane",
-            "version": "v2.18.0",
+            "version": "v2.19.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/octane.git",
-                "reference": "404a2f98370c5dea7fb65ecce03c807e8d324074"
+                "reference": "49b111b2390a645f7afc2cdea650229ba2209dec"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/octane/zipball/404a2f98370c5dea7fb65ecce03c807e8d324074",
-                "reference": "404a2f98370c5dea7fb65ecce03c807e8d324074",
+                "url": "https://api.github.com/repos/laravel/octane/zipball/49b111b2390a645f7afc2cdea650229ba2209dec",
+                "reference": "49b111b2390a645f7afc2cdea650229ba2209dec",
                 "shasum": ""
             },
             "require": {
@@ -6981,7 +6982,7 @@
                 "issues": "https://github.com/laravel/octane/issues",
                 "source": "https://github.com/laravel/octane"
             },
-            "time": "2026-07-21T13:23:39+00:00"
+            "time": "2026-08-05T02:06:18+00:00"
         },
         {
             "name": "laravel/prompts",
@@ -7373,16 +7374,16 @@
         },
         {
             "name": "league/commonmark",
-            "version": "2.9.0",
+            "version": "2.10.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/thephpleague/commonmark.git",
-                "reference": "5703d83ba3da3b2e356a5fedc848ed6d8ffb6529"
+                "reference": "d2d1aa8b35e072966c89bc0c66cf926e56767dc4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/thephpleague/commonmark/zipball/5703d83ba3da3b2e356a5fedc848ed6d8ffb6529",
-                "reference": "5703d83ba3da3b2e356a5fedc848ed6d8ffb6529",
+                "url": "https://api.github.com/repos/thephpleague/commonmark/zipball/d2d1aa8b35e072966c89bc0c66cf926e56767dc4",
+                "reference": "d2d1aa8b35e072966c89bc0c66cf926e56767dc4",
                 "shasum": ""
             },
             "require": {
@@ -7419,7 +7420,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-main": "2.10-dev"
+                    "dev-main": "2.11-dev"
                 }
             },
             "autoload": {
@@ -7476,7 +7477,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-08-03T13:42:31+00:00"
+            "time": "2026-08-11T16:06:25+00:00"
         },
         {
             "name": "league/config",
@@ -18387,16 +18388,16 @@
         },
         {
             "name": "laravel/sail",
-            "version": "v1.65.0",
+            "version": "v1.66.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/sail.git",
-                "reference": "d4b92139858d2a189a6302ca133e494f58afe20b"
+                "reference": "ebf286104306c50c8fd060cbc57de35b9dffa779"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/sail/zipball/d4b92139858d2a189a6302ca133e494f58afe20b",
-                "reference": "d4b92139858d2a189a6302ca133e494f58afe20b",
+                "url": "https://api.github.com/repos/laravel/sail/zipball/ebf286104306c50c8fd060cbc57de35b9dffa779",
+                "reference": "ebf286104306c50c8fd060cbc57de35b9dffa779",
                 "shasum": ""
             },
             "require": {
@@ -18446,7 +18447,7 @@
                 "issues": "https://github.com/laravel/sail/issues",
                 "source": "https://github.com/laravel/sail"
             },
-            "time": "2026-08-03T18:00:17+00:00"
+            "time": "2026-08-10T13:09:27+00:00"
         },
         {
             "name": "mockery/mockery",
@@ -18533,20 +18534,20 @@
         },
         {
             "name": "myclabs/deep-copy",
-            "version": "1.13.4",
+            "version": "1.14.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/myclabs/DeepCopy.git",
-                "reference": "07d290f0c47959fd5eed98c95ee5602db07e0b6a"
+                "reference": "8680aa248f8e07bc8fb43f56f0f5fc77a0c96aae"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/myclabs/DeepCopy/zipball/07d290f0c47959fd5eed98c95ee5602db07e0b6a",
-                "reference": "07d290f0c47959fd5eed98c95ee5602db07e0b6a",
+                "url": "https://api.github.com/repos/myclabs/DeepCopy/zipball/8680aa248f8e07bc8fb43f56f0f5fc77a0c96aae",
+                "reference": "8680aa248f8e07bc8fb43f56f0f5fc77a0c96aae",
                 "shasum": ""
             },
             "require": {
-                "php": "^7.1 || ^8.0"
+                "php": "^8.0"
             },
             "conflict": {
                 "doctrine/collections": "<1.6.8",
@@ -18581,15 +18582,15 @@
             ],
             "support": {
                 "issues": "https://github.com/myclabs/DeepCopy/issues",
-                "source": "https://github.com/myclabs/DeepCopy/tree/1.13.4"
+                "source": "https://github.com/myclabs/DeepCopy/tree/1.14.0"
             },
             "funding": [
                 {
-                    "url": "https://tidelift.com/funding/github/packagist/myclabs/deep-copy",
-                    "type": "tidelift"
+                    "url": "https://github.com/mnapoli",
+                    "type": "github"
                 }
             ],
-            "time": "2025-08-01T08:46:24+00:00"
+            "time": "2026-08-11T10:17:44+00:00"
         },
         {
             "name": "nunomaduro/collision",
@@ -19989,16 +19990,16 @@
         },
         {
             "name": "sebastian/recursion-context",
-            "version": "5.0.1",
+            "version": "5.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/recursion-context.git",
-                "reference": "47e34210757a2f37a97dcd207d032e1b01e64c7a"
+                "reference": "5d32fe257a9b39cb63146924d6b4e32a22d4502a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/recursion-context/zipball/47e34210757a2f37a97dcd207d032e1b01e64c7a",
-                "reference": "47e34210757a2f37a97dcd207d032e1b01e64c7a",
+                "url": "https://api.github.com/repos/sebastianbergmann/recursion-context/zipball/5d32fe257a9b39cb63146924d6b4e32a22d4502a",
+                "reference": "5d32fe257a9b39cb63146924d6b4e32a22d4502a",
                 "shasum": ""
             },
             "require": {
@@ -20041,7 +20042,7 @@
             "support": {
                 "issues": "https://github.com/sebastianbergmann/recursion-context/issues",
                 "security": "https://github.com/sebastianbergmann/recursion-context/security/policy",
-                "source": "https://github.com/sebastianbergmann/recursion-context/tree/5.0.1"
+                "source": "https://github.com/sebastianbergmann/recursion-context/tree/5.0.2"
             },
             "funding": [
                 {
@@ -20061,7 +20062,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2025-08-10T07:50:56+00:00"
+            "time": "2026-08-11T05:27:39+00:00"
         },
         {
             "name": "sebastian/type",
