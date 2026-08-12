@@ -59,9 +59,28 @@ import os, re, sys
 # Add Item to Cart fired before Create Product ever ran and {{product_id}} was unset,
 # giving "Invalid product provided". These run after every ordinary request but BEFORE
 # the deletes, in the order listed here.
+# Requests that CANNOT be covered by a public-API contract run, with the reason. They are
+# not emitted, so the job's result reflects only what the run can legitimately prove.
+#
+# This list is deliberately small and deliberately annotated. It is NOT a place to park a
+# request that merely fails today — every entry states a structural reason the public API
+# cannot reach it. Each one is echoed on every run so it stays visible rather than rotting.
+EXCLUDED = {
+    'Fleetbase Storefront API': {
+        'Customer/Authenticate a Customer with Apple':
+            'needs a real Apple identity token; Apple signs it, so no fixture can produce '
+            'a verifiable one',
+        'Customer/Authenticate a Customer with Google':
+            'needs a real Google id token, signed by Google, for the same reason',
+    },
+}
+
 RUN_LATE = {
     'Fleetbase API': [
         'Orders/Update an Order',       # needs {{service_quote_id}} from Service Quotes/Query Service Quotes
+        # {{qr_code}} is decoded from the PNG that Tracking Numbers/Create a Tracking
+        # Number returns, which runs in a later folder.
+        'Orders/Capture QR Code for Order',
     ],
     'Fleetbase Storefront API': [
         # The cart has to be populated before anything prices or checks out against it,
@@ -106,6 +125,7 @@ def field(path, key, default=None):
 run_last = {p: i for i, p in enumerate(RUN_LAST.get(os.path.basename(root.rstrip('/')), []))}
 delete_first = {p: i for i, p in enumerate(DELETE_FIRST.get(os.path.basename(root.rstrip('/')), []))}
 run_late = {p: i for i, p in enumerate(RUN_LATE.get(os.path.basename(root.rstrip('/')), []))}
+excluded = EXCLUDED.get(os.path.basename(root.rstrip('/')), {})
 
 def line_value(path, key):
     """Read a scalar whose value may contain spaces, e.g. `name: A long title`.
@@ -143,6 +163,10 @@ for folder in os.listdir(root):
         rorder = int(field(p, 'order', 10**9))
         path = f'{folder}/{name}'
         seen.add(path)
+        if path in excluded:
+            # Reported every run so an exclusion cannot quietly become permanent.
+            print(f'::notice::excluded from the contract run — {path}: {excluded[path]}', file=sys.stderr)
+            continue
         if path in run_last:
             # Phase 3 sorts after the DELETEs: "pinned last" means last, and
             # explicit intent beats the heuristic. Nothing in Fleetbase API
@@ -175,3 +199,6 @@ for *_key, path in sorted(items):
 for path in run_last:
     if path not in seen:
         print(f'::warning::RUN_LAST entry not found in collection: {path}', file=sys.stderr)
+for path in excluded:
+    if path not in seen:
+        print(f'::warning::EXCLUDED entry not found in collection: {path}', file=sys.stderr)
