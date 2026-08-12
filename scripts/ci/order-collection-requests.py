@@ -66,35 +66,21 @@ import os, re, sys
 # request that merely fails today — every entry states a structural reason the public API
 # cannot reach it. Each one is echoed on every run so it stays visible rather than rotting.
 EXCLUDED = {
-    'Fleetbase API': {
-        'Drivers/Switch Driver Organization':
-            'switches to {{organization_id}}, the org the driver is already in; needs a '
-            'driver with membership in a SECOND organization, which no public endpoint creates',
-        'Orders/Capture QR Code for Order':
-            'captureQrScan requires $code === $subject->uuid, and the public API never '
-            'exposes uuids (qr_code is $this->when($isInternal, ...))',
-        'Tracking Numbers/Decode Tracking Number QR':
-            'same uuid gate as Capture QR Code — from-qr matches on uuid, which the public '
-            'API does not expose',
-    },
     'Fleetbase Storefront API': {
         'Customer/Authenticate a Customer with Apple':
-            'needs a real Apple identity token; no fixture can produce a verifiable one',
+            'needs a real Apple identity token; Apple signs it, so no fixture can produce '
+            'a verifiable one',
         'Customer/Authenticate a Customer with Google':
-            'needs a real Google id token',
-        'Customer/Request Phone Verification':
-            'SMS only by design — verifying a phone by email verifies nothing — so it needs '
-            'live Twilio credentials',
-        'Customer/Verify Phone Number':
-            'consumes the code Request Phone Verification would have sent',
-        'Store/List Network Stores':
-            'the contract key is a store, not a network — "Stores cannot have stores!"',
+            'needs a real Google id token, signed by Google, for the same reason',
     },
 }
 
 RUN_LATE = {
     'Fleetbase API': [
         'Orders/Update an Order',       # needs {{service_quote_id}} from Service Quotes/Query Service Quotes
+        # {{qr_code}} is decoded from the PNG that Tracking Numbers/Create a Tracking
+        # Number returns, which runs in a later folder.
+        'Orders/Capture QR Code for Order',
     ],
     'Fleetbase Storefront API': [
         # The cart has to be populated before anything prices or checks out against it,
