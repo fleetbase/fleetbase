@@ -85,8 +85,14 @@ EXCLUDED = {
 # complete), so `times` is well above the stop count rather than equal to it. Six cycles
 # applied cleanly and still left "Not all waypoints completed for order."
 #
-# A surplus cycle is harmless: once the flow is exhausted updateActivity answers
-# "Order is already completed." and the assertions have already had what they need.
+# A surplus cycle is NOT harmless, which an earlier version of this comment got wrong:
+# once the flow is exhausted updateActivity answers "Order is already completed." with a
+# 400, and each extra pass is a counted failure. 16 passes completed the order and then
+# failed four times; 12 is what the flow actually consumes.
+#
+# So this number is tied to the order config's activity count and the collection's
+# waypoint count. If either changes, the tail of the cycle starts failing — the fix is to
+# retune this, not to treat it as an API problem.
 #
 # `then` runs after the cycle, which is the only way Complete an Order can see every
 # waypoint COMPLETED.
@@ -96,7 +102,7 @@ CYCLES = {
             'Orders/Get Order Next Activity',
             'Orders/Update Order Activity',
         ],
-        'times': 16,
+        'times': 12,
         'then': ['Orders/Complete an Order'],
     },
 }
