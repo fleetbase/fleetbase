@@ -81,8 +81,12 @@ EXCLUDED = {
 # Completing an order means advancing every service stop: Get Order Next Activity to see
 # what is available, then Update Order Activity to apply it — once per stop, exactly as
 # navigator-app does. The collection's order carries four waypoints plus a pickup and a
-# dropoff, so `times` covers them with room to spare; a surplus cycle is harmless because
-# updateActivity answers "Order is already completed." once the flow is exhausted.
+# dropoff — but a stop usually takes MORE than one activity to clear (arrive, then
+# complete), so `times` is well above the stop count rather than equal to it. Six cycles
+# applied cleanly and still left "Not all waypoints completed for order."
+#
+# A surplus cycle is harmless: once the flow is exhausted updateActivity answers
+# "Order is already completed." and the assertions have already had what they need.
 #
 # `then` runs after the cycle, which is the only way Complete an Order can see every
 # waypoint COMPLETED.
@@ -92,7 +96,7 @@ CYCLES = {
             'Orders/Get Order Next Activity',
             'Orders/Update Order Activity',
         ],
-        'times': 6,
+        'times': 16,
         'then': ['Orders/Complete an Order'],
     },
 }
