@@ -119,6 +119,10 @@ RUN_LATE = {
         'Checkout/Capture checkout as order',    # needs {{checkout_token}} from Before
         'Checkout/Get Checkout Status',          # ditto
         'Checkout/Update Stripe Payment Intent', # needs the cart and the service quote
+        # {{order_id}} is captured by Capture checkout as order — the only request that
+        # creates a storefront order.
+        'Orders/Complete Order Pickup',
+        'Orders/Get Order Receipt',
         'Cart/Remove item from cart',   # LAST: it empties what the above depend on
     ],
 }

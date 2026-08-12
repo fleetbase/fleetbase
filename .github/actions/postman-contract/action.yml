@@ -329,6 +329,10 @@ runs:
         #     Update Authenticated Customer is a no-op rename rather than a surprise.
         # verification_code must equal what mint-api-key.php seeded — both read the same
         # action input, so they cannot drift.
+        # base64_file_data / from_datetime / to_datetime were referenced by requests but
+        # set by nothing — see scripts/ci/find-unsourced-variables.py. An unresolved
+        # variable is sent literally, so those requests were exercising the API with the
+        # string "{{base64_file_data}}" rather than a payload.
         # proof_photo_base64 / proof_signature_base64 are an 8x8 PNG. Capture Photo
         # validates with base64_decode($value, true), so a data: URI prefix would fail
         # the strict decode — this is bare base64 — and the bytes are a real image
@@ -360,6 +364,9 @@ runs:
           '  --env-var "driver_password=${DRIVER_PASSWORD}" \' \
           '  --env-var "driver_phone=${DRIVER_PHONE}" \' \
           '  --env-var "device_token=ci-contract-device-token" \' \
+          '  --env-var "base64_file_data=iVBORw0KGgoAAAANSUhEUgAAAAgAAAAICAIAAABLbSncAAAAbElEQVR42hXNQRUAUQhCUaMYhShGeVGIQhSizB+XXA7ODDtouIHBQ4YOM8suWm5h8ZKl+0CskDiBsIioHhx76LiDw0eO3oN/4FVf+J8h0PduzBqZ8x/bxNQPwgaFy192SGgelC0q13/CJaXlA8Z7WAFXOTbyAAAAAElFTkSuQmCC" \' \
+          '  --env-var "from_datetime=2026-01-01T00:00:00Z" \' \
+          '  --env-var "to_datetime=2027-01-01T00:00:00Z" \' \
           '  --env-var "proof_photo_base64=iVBORw0KGgoAAAANSUhEUgAAAAgAAAAICAIAAABLbSncAAAAbElEQVR42hXNQRUAUQhCUaMYhShGeVGIQhSizB+XXA7ODDtouIHBQ4YOM8suWm5h8ZKl+0CskDiBsIioHhx76LiDw0eO3oN/4FVf+J8h0PduzBqZ8x/bxNQPwgaFy192SGgelC0q13/CJaXlA8Z7WAFXOTbyAAAAAElFTkSuQmCC" \' \
           '  --env-var "proof_signature_base64=iVBORw0KGgoAAAANSUhEUgAAAAgAAAAICAIAAABLbSncAAAAbElEQVR42hXNQRUAUQhCUaMYhShGeVGIQhSizB+XXA7ODDtouIHBQ4YOM8suWm5h8ZKl+0CskDiBsIioHhx76LiDw0eO3oN/4FVf+J8h0PduzBqZ8x/bxNQPwgaFy192SGgelC0q13/CJaXlA8Z7WAFXOTbyAAAAAElFTkSuQmCC" \' \
           '  --env-var "invoice_public_id=${INVOICE_PUBLIC_ID}" \' \
