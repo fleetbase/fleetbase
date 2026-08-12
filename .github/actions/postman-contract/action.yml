@@ -153,6 +153,20 @@ runs:
           -e "CI_STRIPE_PUBLISHABLE_KEY=${STRIPE_PUBLISHABLE_KEY}" \
           -e "CI_STRIPE_SECRET_KEY=${STRIPE_SECRET_KEY}" \
           application php artisan tinker --execute="eval(base64_decode('${CODE}'));" 2>&1 || true)"
+        # Always surface what the seed produced, not only when a step later fails.
+        #
+        # The mint runs one PHP snippet inside a single try, so the FIRST fixture that
+        # throws aborts every fixture after it — and the step still exits 0 as long as the
+        # API key came out. A vehicle column with no default did exactly that: the network,
+        # store location, service rate, gateway and invoice fixtures were all silently
+        # absent, and the requests needing them failed much later for reasons that looked
+        # unrelated. MINT_ERROR is echoed by the snippet's catch; make it loud.
+        printf '%s\n' "$OUT" | grep -E '^(MINTED_|SEEDED_|MINT_ERROR)' || true
+        if printf '%s\n' "$OUT" | grep -q 'MINT_ERROR'; then
+          echo "::error::The seed aborted partway. Fixtures after the failure were NOT created:"
+          printf '%s\n' "$OUT" | grep -A 2 'MINT_ERROR'
+          exit 1
+        fi
         KEY="$(printf '%s\n' "$OUT" | grep -oE 'flb_(live|test)_[A-Za-z0-9_-]+' | tail -1 || true)"
         PLATFORM_TOKEN="$(printf '%s\n' "$OUT" | grep -oE 'flb_platform_[A-Za-z0-9]+' | tail -1 || true)"
         ORGANIZATION_ID="$(printf '%s\n' "$OUT" | grep -oE 'MINTED_COMPANY_ID=company_[A-Za-z0-9]+' | tail -1 | cut -d= -f2 || true)"
