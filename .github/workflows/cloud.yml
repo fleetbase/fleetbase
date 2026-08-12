@@ -9,10 +9,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Close invalid PRs
-        run: |
-          if [[ "${{ github.event.pull_request.head.ref }}" != "main" ]] && [[ "${{ github.event.pull_request.head.ref }}" != "dev-cloud" ]]; then
-            echo "This PR is from '${{ github.event.pull_request.head.ref }}', but only PRs from 'main' or 'dev-cloud' are allowed. Closing PR."
-            gh pr close ${{ github.event.pull_request.number }} --repo ${{ github.repository }}
-          fi
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_HEAD_REF: ${{ github.event.pull_request.head.ref }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          REPO: ${{ github.repository }}
+        run: |
+          if [[ "$PR_HEAD_REF" != "main" ]] && [[ "$PR_HEAD_REF" != "dev-cloud" ]]; then
+            echo "This PR is from '$PR_HEAD_REF', but only PRs from 'main' or 'dev-cloud' are allowed. Closing PR."
+            gh pr close "$PR_NUMBER" --repo "$REPO"
+          fi
