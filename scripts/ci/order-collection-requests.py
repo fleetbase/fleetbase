@@ -66,6 +66,22 @@ import os, re, sys
 # request that merely fails today — every entry states a structural reason the public API
 # cannot reach it. Each one is echoed on every run so it stays visible rather than rotting.
 EXCLUDED = {
+    'Fleetbase API': {
+        # NOT a structural limit, and not a collection defect: the decode script on
+        # Create a Tracking Number is correct and works in the Postman app. The CLI
+        # cannot resolve npm packages for a LOCAL collection directory — Postman's
+        # package library is a cloud feature — so the run logs
+        #   Cannot find package 'npm:jsqr@1.4.0'
+        # and {{qr_code}} is never set. Verified against CLI 2.336.0; there is no flag
+        # for it in `postman --help` or `postman collection run --help`.
+        #
+        # Remove both the day the CLI resolves packages, or the run moves to a cloud
+        # collection. The script stays either way — it is correct documentation.
+        'Tracking Numbers/Decode Tracking Number QR':
+            'needs {{qr_code}}, decoded from the QR PNG by an npm package the CLI cannot load',
+        'Orders/Capture QR Code for Order':
+            'same decoded value',
+    },
     'Fleetbase Storefront API': {
         'Customer/Authenticate a Customer with Apple':
             'needs a real Apple identity token; Apple signs it, so no fixture can produce '
