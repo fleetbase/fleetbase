@@ -159,6 +159,9 @@ runs:
         STOREFRONT_KEY="$(printf '%s\n' "$OUT" | grep -oE 'MINTED_STOREFRONT_KEY=store_[A-Za-z0-9]+' | tail -1 | cut -d= -f2 || true)"
         INVOICE_ID="$(printf '%s\n' "$OUT" | grep -oE 'SEEDED_INVOICE_ID=[A-Za-z0-9_]+' | tail -1 | cut -d= -f2 || true)"
         GATEWAY_ID="$(printf '%s\n' "$OUT" | grep -oE 'SEEDED_LEDGER_GATEWAY=[A-Za-z0-9_]+' | tail -1 | cut -d= -f2 || true)"
+        NETWORK_KEY="$(printf '%s\n' "$OUT" | grep -oE 'MINTED_NETWORK_KEY=network_[A-Za-z0-9]+' | tail -1 | cut -d= -f2 || true)"
+        SECONDARY_ORG_ID="$(printf '%s\n' "$OUT" | grep -oE 'SEEDED_SECONDARY_ORGANIZATION_ID=company_[A-Za-z0-9]+' | tail -1 | cut -d= -f2 || true)"
+        MULTI_ORG_DRIVER_ID="$(printf '%s\n' "$OUT" | grep -oE 'SEEDED_DRIVER_ID=driver_[A-Za-z0-9]+' | tail -1 | cut -d= -f2 || true)"
         if [[ -z "$KEY" ]]; then
           echo "::error::Could not mint an API key from the running stack. Tinker output:"
           printf '%s\n' "$OUT"
@@ -221,6 +224,18 @@ runs:
         else
           echo "::warning::No payment gateway seeded; the gateway-backed requests will report it as unavailable."
         fi
+        # Network-scoped endpoints need a network session, which a store key cannot give.
+        if [[ -n "$NETWORK_KEY" ]]; then
+          echo "::add-mask::$NETWORK_KEY"
+          echo "network_key=$NETWORK_KEY" >> "$GITHUB_OUTPUT"
+        fi
+        # Switch Driver Organization needs a driver that belongs to TWO organizations.
+        if [[ -n "$SECONDARY_ORG_ID" ]]; then
+          echo "secondary_organization_id=$SECONDARY_ORG_ID" >> "$GITHUB_OUTPUT"
+        fi
+        if [[ -n "$MULTI_ORG_DRIVER_ID" ]]; then
+          echo "multi_org_driver_id=$MULTI_ORG_DRIVER_ID" >> "$GITHUB_OUTPUT"
+        fi
         if [[ -n "$PLATFORM_TOKEN" ]]; then
           echo "::add-mask::$PLATFORM_TOKEN"
           echo "platform_token=$PLATFORM_TOKEN" >> "$GITHUB_OUTPUT"
@@ -267,6 +282,9 @@ runs:
         ORGANIZATION_ID: ${{ steps.key.outputs.organization_id }}
         INVOICE_PUBLIC_ID: ${{ steps.key.outputs.invoice_public_id }}
         GATEWAY_ID: ${{ steps.key.outputs.gateway_id }}
+        NETWORK_KEY: ${{ steps.key.outputs.network_key }}
+        SECONDARY_ORG_ID: ${{ steps.key.outputs.secondary_organization_id }}
+        MULTI_ORG_DRIVER_ID: ${{ steps.key.outputs.multi_org_driver_id }}
         COLLECTIONS: ${{ inputs.collections }}
         BASE_URL: ${{ inputs.base-url }}
         NAMESPACE: ${{ inputs.namespace }}
@@ -346,6 +364,9 @@ runs:
           '  --env-var "proof_signature_base64=iVBORw0KGgoAAAANSUhEUgAAAAgAAAAICAIAAABLbSncAAAAbElEQVR42hXNQRUAUQhCUaMYhShGeVGIQhSizB+XXA7ODDtouIHBQ4YOM8suWm5h8ZKl+0CskDiBsIioHhx76LiDw0eO3oN/4FVf+J8h0PduzBqZ8x/bxNQPwgaFy192SGgelC0q13/CJaXlA8Z7WAFXOTbyAAAAAElFTkSuQmCC" \' \
           '  --env-var "invoice_public_id=${INVOICE_PUBLIC_ID}" \' \
           '  --env-var "gateway_id=${GATEWAY_ID}" \' \
+          '  --env-var "network_key=${NETWORK_KEY}" \' \
+          '  --env-var "secondary_organization_id=${SECONDARY_ORG_ID}" \' \
+          '  --env-var "multi_org_driver_id=${MULTI_ORG_DRIVER_ID}" \' \
           '  --env-var "payment_reference=ci-contract-payment-reference" \' \
           '  --env-var "push_token=ci-contract-push-token" \' \
           '  "${@:2}"' > "$RUNNER"
