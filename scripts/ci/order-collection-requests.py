@@ -147,6 +147,18 @@ RUN_LATE = {
         # creates a storefront order.
         'Orders/Complete Order Pickup',
         'Orders/Get Order Receipt',
+
+        # Both QPay callbacks address {{checkout_id}}, which only Before sets — in the
+        # Checkout folder they sort ahead of it and were sent the literal string
+        # "{{checkout_id}}", answering CHECKOUT_SESSION_NOT_FOUND every run.
+        #
+        # What they cover, precisely: capture-qpay short-circuits to a synthesised result
+        # when the checkout's gateway is in sandbox and `test` is success|error — it checks
+        # the sandbox flag, not the gateway type, and the seeded storefront gateway is
+        # sandbox. So this exercises the documented test-scenario branch, NOT the real
+        # invoice-check path, which needs live QPay credentials and cannot run here.
+        'Checkout/Capture QPay Callback',
+        'Checkout/Capture QPay Callback via GET',
     ],
 }
 
