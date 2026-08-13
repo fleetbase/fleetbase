@@ -285,6 +285,39 @@ jobs:
           docker compose exec -T application su www-data -s /bin/sh -c \
             "cd /fleetbase/api && php artisan migrate --force" 2>&1 | tail -10
 
+          # Octane (frankenphp) boots the framework ONCE, when the container starts — which
+          # is before this overlay. Classes are autoloaded lazily, so the branch's
+          # controllers do take effect on the first request that needs them; anything
+          # resolved during BOOT does not. Service providers have already run, and
+          # mergeConfigFrom() merged the PUBLISHED package's config, so a config key the
+          # branch adds simply does not exist at runtime.
+          #
+          # That is exactly what hid storefront's review-account bypass. The published
+          # config/storefront.php has only bypass_verification_code; the branch adds
+          # review_accounts, and isReviewAccountBypass() requires the identity to appear in
+          # that allowlist — which resolved to [] via config()'s default. Request Phone
+          # Verification and Verify Phone Number failed for two releases against values this
+          # workflow had correctly written to .env before boot.
+          #
+          # Reloading the workers re-runs the providers against the overlaid files. This is
+          # NOT the same as the .env case documented above: those values are parsed by the
+          # master process, which a worker reload does not restart — which is why they are
+          # still written before the stack comes up.
+          docker compose exec -T application su www-data -s /bin/sh -c \
+            "cd /fleetbase/api && php artisan octane:reload" 2>&1 | tail -3
+
+          # The reload is asynchronous, so give the workers a moment to come back rather
+          # than racing the first collection request against a restarting pool.
+          for i in $(seq 1 20); do
+            if curl -fsS --max-time 5 http://localhost:8000/health | grep -q '"status"'; then
+              echo "API healthy after octane:reload"; break
+            fi
+            if [[ $i -eq 20 ]]; then
+              echo "::error::API did not come back after octane:reload"; exit 1
+            fi
+            sleep 3
+          done
+
           # New composer requirements on the branch are NOT installed by this overlay.
           # Surface that rather than letting it fail later as a confusing class-not-found.
           if ! diff -q <(python3 -c "import json;print(json.dumps(json.load(open('$SRC/composer.json')).get('require',{}),sort_keys=True))") \
