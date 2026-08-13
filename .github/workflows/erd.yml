@@ -1,0 +1,143 @@
+name: Refresh ERD
+
+on:
+  push:
+    branches:
+      - 'dev-v*'
+  workflow_dispatch:
+
+concurrency:
+  group: erd-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  refresh:
+    name: Generate ERD and open PR
+    if: startsWith(github.ref, 'refs/heads/dev-v')
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+
+    steps:
+      - name: Checkout release branch
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Validate generator scripts
+        run: |
+          bash -n create-erd.sh
+          docker run --rm \
+            --volume "$GITHUB_WORKSPACE/create-erd.sh:/work/create-erd.sh:ro" \
+            koalaman/shellcheck-alpine:v0.10.0 \
+            /work/create-erd.sh
+          python3 -m unittest discover -s tests/erd -p 'test_*.py' -v
+          docker run --rm \
+            --volume "$GITHUB_WORKSPACE/.github/workflows/erd.yml:/work/erd.yml:ro" \
+            rhysd/actionlint:1.7.7 \
+            -color /work/erd.yml
+
+      - name: Require Composer authentication
+        env:
+          COMPOSER_AUTH_TOKEN: ${{ secrets._GITHUB_AUTH_TOKEN }}
+        run: |
+          if [[ -z "$COMPOSER_AUTH_TOKEN" ]]; then
+            echo "_GITHUB_AUTH_TOKEN is required to resolve Fleetbase Composer dependencies" >&2
+            exit 1
+          fi
+
+      - name: Prepare clean database and environment
+        run: |
+          sudo rm -rf docker/database/mysql
+          mkdir -p docker/database/mysql
+          if [[ ! -f api/.env ]]; then
+            cp api/.env.example api/.env 2>/dev/null || touch api/.env
+          fi
+
+      - name: Build release API image
+        env:
+          COMPOSER_AUTH_TOKEN: ${{ secrets._GITHUB_AUTH_TOKEN }}
+        run: |
+          docker build \
+            --file docker/Dockerfile \
+            --target app-release \
+            --build-arg GITHUB_AUTH_KEY="$COMPOSER_AUTH_TOKEN" \
+            --tag fleetbase/fleetbase-api:erd \
+            .
+          docker tag fleetbase/fleetbase-api:erd fleetbase/fleetbase-api:latest
+
+      - name: Start MySQL and Redis
+        run: docker compose up -d --wait database cache
+
+      - name: Create databases and run migrations
+        run: |
+          docker compose run --rm --no-deps application sh -c \
+            'php artisan mysql:createdb && php artisan migrate --force'
+          docker compose run --rm --no-deps application \
+            php artisan migrate:status --no-ansi
+
+      - name: Resolve Docker network
+        run: |
+          database_container="$(docker compose ps -q database)"
+          network="$(docker inspect "$database_container" --format '{{range $name, $_ := .NetworkSettings.Networks}}{{$name}}{{end}}')"
+          if [[ -z "$network" ]]; then
+            echo "Unable to resolve the database container network" >&2
+            exit 1
+          fi
+          echo "ERD_DOCKER_NETWORK=$network" >> "$GITHUB_ENV"
+
+      - name: Generate and validate ERD outputs
+        env:
+          ERD_USE_DOCKER: 'true'
+          ERD_DB_HOST: database
+          ERD_DB_PORT: '3306'
+          ERD_DB_NAME: fleetbase
+          ERD_DB_USER: root
+          ERD_DB_PASSWORD: ''
+        run: ./create-erd.sh
+
+      - name: Show service logs on failure
+        if: failure()
+        run: docker compose logs --no-color --tail=300 || true
+
+      - name: Tear down services
+        if: always()
+        run: docker compose down -v || true
+
+      - name: Create or update ERD pull request
+        if: success()
+        id: erd-pr
+        uses: peter-evans/create-pull-request@v8
+        with:
+          token: ${{ github.token }}
+          base: ${{ github.ref_name }}
+          branch: automation/erd/${{ github.ref_name }}
+          delete-branch: true
+          add-paths: |
+            database.mmd
+            erd.svg
+            erd-dark.svg
+          commit-message: Refresh ERD for ${{ github.ref_name }}
+          committer: github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>
+          author: github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>
+          title: Refresh ERD for ${{ github.ref_name }}
+          body: |
+            Regenerates the database ERD from the release schema at `${{ github.sha }}`.
+
+            Generated artifacts:
+            - `database.mmd`
+            - `erd.svg`
+            - `erd-dark.svg`
+
+            This pull request is maintained automatically as `${{ github.ref_name }}` changes.
+          draft: false
+
+      - name: Report pull request
+        if: steps.erd-pr.outputs.pull-request-url
+        env:
+          PR_URL: ${{ steps.erd-pr.outputs.pull-request-url }}
+          PR_OPERATION: ${{ steps.erd-pr.outputs.pull-request-operation }}
+        run: echo "::notice::$PR_URL was $PR_OPERATION"
