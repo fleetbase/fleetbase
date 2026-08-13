@@ -115,11 +115,29 @@ RUN_LATE = {
         'Orders/Capture QR Code for Order',
     ],
     'Fleetbase Storefront API': [
-        # The cart has to be populated before anything prices or checks out against it,
-        # and emptied only once those are done. Deferring just the three Cart requests
-        # left Checkout running against an empty cart — "The selected cart is invalid."
+        # TWO carts, deliberately.
+        #
+        # The cart lifecycle (add, update, remove) and the checkout chain want opposite
+        # things from the same {{cart_id}}: the lifecycle ends with the cart emptied, and
+        # checkout needs it populated. Sharing one cart used to work only because the
+        # mutating cart actions ignored Cart::retrieve()'s $excludeCheckedout and would
+        # happily edit a cart that had already produced an order. Once that was fixed,
+        # running Remove last answered "Invalid cart item provided to cart!" — the cart
+        # was checked out, so the API handed back a fresh empty one.
+        #
+        # GET /carts takes no identifier, so Retrieve or Create Cart ALWAYS creates a new
+        # cart and re-points {{cart_id}} at it. Running it twice is what gives each half
+        # its own cart, using only requests the collection already documents.
+
+        # Cart A — the lifecycle, start to finish.
+        'Cart/Retrieve or Create Cart',
         'Cart/Add Item to Cart',        # needs {{product_id}} from Products/Create Product
         'Cart/Update item in Cart',     # needs the line item Add Item to Cart creates
+        'Cart/Remove item from cart',   # leaves cart A empty, which is the point
+
+        # Cart B — priced, checked out, and turned into an order.
+        'Cart/Retrieve or Create Cart',
+        'Cart/Add Item to Cart',
         'Delivery Service Quote/Retrieve a Delivery Service Quote ❗',  # prices the cart
         'Checkout/Before ❗',                    # needs the cart AND {{service_quote_id}}
         'Checkout/Capture checkout as order',    # needs {{checkout_token}} from Before
@@ -129,7 +147,6 @@ RUN_LATE = {
         # creates a storefront order.
         'Orders/Complete Order Pickup',
         'Orders/Get Order Receipt',
-        'Cart/Remove item from cart',   # LAST: it empties what the above depend on
     ],
 }
 
@@ -169,7 +186,13 @@ def field(path, key, default=None):
 # Pinned order for this collection, as {path: index}. Unknown collection => {}.
 run_last = {p: i for i, p in enumerate(RUN_LAST.get(os.path.basename(root.rstrip('/')), []))}
 delete_first = {p: i for i, p in enumerate(DELETE_FIRST.get(os.path.basename(root.rstrip('/')), []))}
-run_late = {p: i for i, p in enumerate(RUN_LATE.get(os.path.basename(root.rstrip('/')), []))}
+# RUN_LATE is emitted verbatim rather than folded into the sort, so a request may appear
+# in it more than once. The CLI honours repeated -i flags, which is how the Storefront
+# collection gets a second cart out of Retrieve or Create Cart without inventing a
+# request. A path listed here is removed from the ordinary phase entirely — if it also
+# needs to run early, list it early here.
+run_late_seq = list(RUN_LATE.get(os.path.basename(root.rstrip('/')), []))
+run_late     = set(run_late_seq)
 cycles = CYCLES.get(os.path.basename(root.rstrip('/')), {})
 cycled = set(cycles.get('sequence', [])) | set(cycles.get('then', []))
 excluded = EXCLUDED.get(os.path.basename(root.rstrip('/')), {})
@@ -213,6 +236,10 @@ for folder in os.listdir(root):
         if path in cycled:
             # Emitted by the cycle block after the ordinary phase, in dependency order.
             continue
+        if path in run_late:
+            # Emitted verbatim from run_late_seq after the ordinary phase, so that a
+            # request listed twice actually runs twice.
+            continue
         if path in excluded:
             # Reported every run so an exclusion cannot quietly become permanent.
             print(f'::notice::excluded from the contract run — {path}: {excluded[path]}', file=sys.stderr)
@@ -230,9 +257,6 @@ for folder in os.listdir(root):
             # forder is always non-negative.
             phase, primary, secondary = 2, delete_first[path] - len(delete_first), 0
             sort_folder = ''
-        elif path in run_late:
-            phase, primary, secondary = 1, run_late[path], 0
-            sort_folder = ''
         else:
             phase, primary, secondary = (2 if method == 'DELETE' else 0), forder, rorder
             sort_folder = folder
@@ -246,6 +270,9 @@ ordered = sorted(items)
 for key in ordered:
     if key[0] <= 1:
         print(key[-1])
+
+for path in run_late_seq:
+    print(path)
 
 for _ in range(cycles.get('times', 0)):
     for path in cycles['sequence']:
@@ -269,6 +296,12 @@ for path in cycled:
 for path in run_last:
     if path not in seen:
         print(f'::warning::RUN_LAST entry not found in collection: {path}', file=sys.stderr)
+for path in run_late:
+    if path not in seen:
+        # RUN_LATE is the only list whose entries are printed without being matched against
+        # a file first, so a typo here would send the CLI an -i it cannot resolve — which
+        # aborts the whole run with 0 requests executed.
+        print(f'::warning::RUN_LATE entry not found in collection: {path}', file=sys.stderr)
 for path in excluded:
     if path not in seen:
         print(f'::warning::EXCLUDED entry not found in collection: {path}', file=sys.stderr)
