@@ -1,0 +1,326 @@
+name: Release Tag
+
+# Reusable workflow: turn a merged `dev-v*` release branch into a pushed git tag.
+# Called by fleetbase/fleetbase and every module repo:
+#
+#   jobs:
+#     tag:
+#       if: github.event_name == 'workflow_dispatch' ||
+#           (github.event.pull_request.merged == true &&
+#            startsWith(github.event.pull_request.head.ref, 'dev-v'))
+#       uses: fleetbase/fleetbase/.github/workflows/release-tag.yml@main
+#       with:
+#         version-files: composer.json,package.json,extension.json
+#       secrets: inherit
+#
+# It creates and pushes the tag and NOTHING ELSE. Everything a release does already
+# exists and chains off `on: push: tags: ['v*']` — create-release.yml publishes the
+# GitHub Release, publish-docker-images.yml pushes the images, the npm_publish /
+# github_publish jobs inside each module's ember.yml/ci.yml publish the packages, and
+# Packagist syncs from the tag over its own webhook. A second release path here would
+# duplicate all of it.
+#
+# Requires org-level secret _GITHUB_AUTH_TOKEN (inherited).
+#
+# WHY NOT GITHUB_TOKEN: a tag pushed with the default GITHUB_TOKEN does not trigger
+# other workflows. The tag would appear, nothing would publish, and the release would
+# look finished. That failure is silent, which is why this workflow no-ops with a
+# warning rather than falling back to GITHUB_TOKEN when _GITHUB_AUTH_TOKEN is absent.
+
+on:
+  workflow_call:
+    inputs:
+      version-files:
+        description: >-
+          Comma or newline separated manifests whose `version` must equal the version
+          being released. Every listed file must exist and must carry a version — a
+          missing one fails the run rather than being skipped, because a silently
+          skipped check is worse than no check. Differs per repo: the full modules
+          carry all three, core-api only composer.json, the Ember addons only
+          package.json, and the root repo keeps its version in console/package.json.
+        type: string
+        required: false
+        default: composer.json,package.json,extension.json
+      release-notes:
+        description: >-
+          Release notes file. Its FIRST LINE must name the version being released, which
+          is what makes a current-release-only notes file checkable at all — without it
+          there is no way to tell notes written for this release from last release's
+          notes left in place. Root's file already has this shape:
+          `> v0.7.53 ~ "CI hardening, full coverage foundations, ..."`.
+        type: string
+        required: false
+        default: RELEASE.md
+      version:
+        description: >-
+          Version to release, for the workflow_dispatch recovery path only. Ignored on the
+          merged-PR path, where the version comes from the branch name and cannot be
+          overridden — the whole point of that path is that nobody retypes it.
+        type: string
+        required: false
+        default: ''
+      dry-run:
+        description: >-
+          Run every validation and write the summary, then stop without pushing. Use it
+          to prove the checks on a real merge before trusting the automation.
+        type: boolean
+        required: false
+        default: false
+
+permissions:
+  contents: read
+
+# Two release PRs merging close together must not race on the same tag namespace.
+# cancel-in-progress is deliberately false: a half-finished release is worse than a
+# queued one.
+concurrency:
+  group: release-tag-${{ github.repository }}
+  cancel-in-progress: false
+
+jobs:
+  # Cheap gate, mirroring api-contract.yml: a fork or an unconfigured repo should emit a
+  # warning and no-op, not fail red on every merge to main.
+  gate:
+    name: Check release token
+    runs-on: ubuntu-latest
+    outputs:
+      enabled: ${{ steps.check.outputs.enabled }}
+    steps:
+      - id: check
+        run: |
+          if [[ -n "${{ secrets._GITHUB_AUTH_TOKEN }}" ]]; then
+            echo "enabled=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "enabled=false" >> "$GITHUB_OUTPUT"
+            echo "::warning::_GITHUB_AUTH_TOKEN is not set; skipping the release tag."
+          fi
+
+  tag:
+    name: Validate and push the release tag
+    needs: gate
+    if: needs.gate.outputs.enabled == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      # Resolve what we are releasing and from which commit, before checking anything
+      # out — the two entry modes differ in both.
+      #
+      #   merged PR   the version comes from the branch name and the tag goes on the
+      #               PR's merge commit. Tagging `main` at run time would usually be the
+      #               same commit and occasionally, silently, not be.
+      #   dispatch    recovery path. The usual failure is a stale release-notes file,
+      #               which gets fixed by a commit to main AFTER the merge — a commit a
+      #               re-run of the original event would never see. Here a human names
+      #               the version explicitly, so tagging main at HEAD is what they mean.
+      - name: Resolve version and target commit
+        id: resolve
+        run: |
+          set -uo pipefail
+
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+            VERSION="${{ inputs.version }}"
+            VERSION="${VERSION#v}"
+            if [[ -z "$VERSION" ]]; then
+              echo "::error::workflow_dispatch needs a version input, e.g. 0.4.19."
+              exit 1
+            fi
+            SHA=""
+            SOURCE="workflow_dispatch (tags main at HEAD)"
+          else
+            if [[ "${{ github.event.pull_request.merged }}" != "true" ]]; then
+              echo "::error::Pull request was closed without being merged; nothing to release."
+              exit 1
+            fi
+
+            HEAD_REF="${{ github.event.pull_request.head.ref }}"
+            if [[ "$HEAD_REF" != dev-v* ]]; then
+              echo "::error::Head branch '${HEAD_REF}' is not a dev-v* release branch."
+              exit 1
+            fi
+
+            VERSION="${HEAD_REF#dev-v}"
+            SHA="${{ github.event.pull_request.merge_commit_sha }}"
+            SOURCE="merged PR #${{ github.event.pull_request.number }} (${HEAD_REF})"
+          fi
+
+          # Reject anything that is not a plain semver, with an optional pre-release
+          # suffix. A malformed branch name must not become a malformed tag that the
+          # publish workflows then act on.
+          if [[ ! "$VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z.-]+)?$ ]]; then
+            echo "::error::'${VERSION}' is not a valid version (expected N.N.N or N.N.N-suffix)."
+            exit 1
+          fi
+
+          {
+            echo "version=${VERSION}"
+            echo "tag=v${VERSION}"
+            echo "sha=${SHA}"
+            echo "source=${SOURCE}"
+          } >> "$GITHUB_OUTPUT"
+
+          echo "Releasing v${VERSION} from ${SOURCE}"
+
+      # fetch-depth 0 so the tag-collision check below can see existing tags, and so the
+      # annotated tag is created against real history rather than a shallow graft.
+      - name: Checkout the commit being released
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ steps.resolve.outputs.sha || 'main' }}
+          fetch-depth: 0
+          token: ${{ secrets._GITHUB_AUTH_TOKEN }}
+
+      - name: Check the manifests agree with the version
+        id: manifests
+        env:
+          VERSION: ${{ steps.resolve.outputs.version }}
+          VERSION_FILES: ${{ inputs.version-files }}
+        run: |
+          set -uo pipefail
+          FAILED=0
+          REPORT=""
+
+          # Accept either separator so a caller can use a comma list or a YAML block.
+          while IFS= read -r FILE; do
+            FILE="$(echo "$FILE" | tr -d '[:space:]')"
+            [[ -z "$FILE" ]] && continue
+
+            if [[ ! -f "$FILE" ]]; then
+              echo "::error::${FILE} is listed in version-files but does not exist."
+              REPORT="${REPORT}| \`${FILE}\` | — | missing |"$'\n'
+              FAILED=1
+              continue
+            fi
+
+            # -e so a null/absent `version` key exits non-zero instead of printing the
+            # string "null" and comparing unequal for a confusing reason.
+            if ! FOUND="$(jq -er '.version' "$FILE" 2>/dev/null)"; then
+              echo "::error::${FILE} has no \`version\` key."
+              REPORT="${REPORT}| \`${FILE}\` | — | no version key |"$'\n'
+              FAILED=1
+              continue
+            fi
+
+            if [[ "$FOUND" != "$VERSION" ]]; then
+              echo "::error::${FILE} says ${FOUND}, but the release is ${VERSION}."
+              REPORT="${REPORT}| \`${FILE}\` | ${FOUND} | mismatch |"$'\n'
+              FAILED=1
+              continue
+            fi
+
+            REPORT="${REPORT}| \`${FILE}\` | ${FOUND} | ok |"$'\n'
+          done < <(echo "$VERSION_FILES" | tr ',' '\n')
+
+          {
+            echo "report<<REPORT_EOF"
+            printf '%s' "$REPORT"
+            echo "REPORT_EOF"
+          } >> "$GITHUB_OUTPUT"
+
+          if [[ "$FAILED" -ne 0 ]]; then
+            echo "::error::Version files disagree with the release version; not tagging."
+            exit 1
+          fi
+
+      # The staleness guard. A current-release-only notes file cannot otherwise be
+      # distinguished from one nobody updated — and on the root repo this same file is
+      # both the GitHub Release body (create-release.yml) and the Discord announcement
+      # (discord-announcement.yml), so stale notes ship to both.
+      - name: Check the release notes are for this version
+        id: notes
+        env:
+          VERSION: ${{ steps.resolve.outputs.version }}
+          NOTES: ${{ inputs.release-notes }}
+        run: |
+          set -uo pipefail
+
+          if [[ ! -f "$NOTES" ]]; then
+            echo "::error::${NOTES} does not exist; write the release notes before merging."
+            exit 1
+          fi
+
+          if [[ ! -s "$NOTES" ]]; then
+            echo "::error::${NOTES} is empty; write the release notes before merging."
+            exit 1
+          fi
+
+          FIRST_LINE="$(head -n1 "$NOTES")"
+          if [[ "$FIRST_LINE" != *"v${VERSION}"* ]]; then
+            echo "::error::${NOTES} does not name v${VERSION} on its first line — it reads: ${FIRST_LINE}"
+            echo "::error::That usually means the notes are left over from the previous release."
+            exit 1
+          fi
+
+          echo "title=${FIRST_LINE}" >> "$GITHUB_OUTPUT"
+          echo "Release notes headline: ${FIRST_LINE}"
+
+      # Re-running a workflow must be safe, but an existing tag on a DIFFERENT commit is
+      # a real problem — someone released this version already, from something else.
+      - name: Check for an existing tag
+        id: collision
+        env:
+          TAG: ${{ steps.resolve.outputs.tag }}
+        run: |
+          set -uo pipefail
+          EXISTING="$(git rev-list -n1 "$TAG" 2>/dev/null || true)"
+          TARGET="$(git rev-parse HEAD)"
+
+          if [[ -z "$EXISTING" ]]; then
+            echo "exists=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          if [[ "$EXISTING" == "$TARGET" ]]; then
+            echo "exists=same" >> "$GITHUB_OUTPUT"
+            echo "::notice::${TAG} already points at ${TARGET}; nothing to do."
+            exit 0
+          fi
+
+          echo "::error::${TAG} already exists at ${EXISTING}, but this release is ${TARGET}."
+          echo "::error::Delete the tag deliberately or bump the version; this workflow will not move it."
+          exit 1
+
+      - name: Create and push the tag
+        if: ${{ !inputs.dry-run && steps.collision.outputs.exists == 'false' }}
+        env:
+          TAG: ${{ steps.resolve.outputs.tag }}
+          TITLE: ${{ steps.notes.outputs.title }}
+          SOURCE: ${{ steps.resolve.outputs.source }}
+        run: |
+          set -uo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git tag -a "$TAG" -m "$TITLE" -m "Released by ${SOURCE}."
+          git push origin "$TAG"
+          echo "::notice::Pushed ${TAG} at $(git rev-parse HEAD)."
+
+      - name: Summary
+        if: always()
+        env:
+          TAG: ${{ steps.resolve.outputs.tag }}
+          SOURCE: ${{ steps.resolve.outputs.source }}
+          REPORT: ${{ steps.manifests.outputs.report }}
+          TITLE: ${{ steps.notes.outputs.title }}
+          EXISTS: ${{ steps.collision.outputs.exists }}
+        run: |
+          set -uo pipefail
+          {
+            echo "### Release ${TAG:-unknown}"
+            echo
+            echo "- source: ${SOURCE:-unresolved}"
+            echo "- commit: $(git rev-parse HEAD 2>/dev/null || echo unknown)"
+            if [[ "${{ inputs.dry-run }}" == "true" ]]; then
+              echo "- **dry run — no tag was pushed**"
+            elif [[ "$EXISTS" == "same" ]]; then
+              echo "- tag already existed at this commit; nothing pushed"
+            fi
+            echo
+            if [[ -n "${REPORT:-}" ]]; then
+              echo "| file | version | |"
+              echo "|---|---|---|"
+              printf '%s\n' "$REPORT"
+            fi
+            if [[ -n "${TITLE:-}" ]]; then
+              echo "> ${TITLE}"
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"
