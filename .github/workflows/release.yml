@@ -33,7 +33,9 @@ jobs:
          startsWith(github.event.pull_request.head.ref, 'dev-v'))
     uses: ./.github/workflows/release-tag.yml
     with:
-      # The root repo has no manifest of its own; the version of record is the console's.
-      version-files: console/package.json
+      # The root repo has no manifest of its own. The version lives in two places that
+      # drift independently — as of this writing docker/Dockerfile still says 0.7.53
+      # while console/package.json says 0.7.54, and nothing catches that today.
+      version-files: console/package.json,docker/Dockerfile=FLEETBASE_VERSION
       version: ${{ github.event.inputs.version || '' }}
     secrets: inherit

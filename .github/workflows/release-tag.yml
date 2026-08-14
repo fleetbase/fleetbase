@@ -32,12 +32,23 @@ on:
     inputs:
       version-files:
         description: >-
-          Comma or newline separated manifests whose `version` must equal the version
-          being released. Every listed file must exist and must carry a version — a
-          missing one fails the run rather than being skipped, because a silently
-          skipped check is worse than no check. Differs per repo: the full modules
-          carry all three, core-api only composer.json, the Ember addons only
-          package.json, and the root repo keeps its version in console/package.json.
+          Comma or newline separated places whose version must equal the one being
+          released. Two forms:
+
+            path              JSON — the `.version` key. e.g. composer.json
+            path=KEY          key=value line. e.g. docker/Dockerfile=FLEETBASE_VERSION
+
+          Every listed file must exist and must yield a version — a missing one fails
+          the run rather than being skipped, because a silently skipped check is worse
+          than no check.
+
+          Which places exist differs by repo, so this has to be set per caller. Only
+          modules with BOTH an ember addon and a server directory carry all three
+          manifests: fleetops, storefront, ledger, pallet, customer-portal,
+          registry-bridge, valhalla, vroom. core-api is server-only (composer.json);
+          engine-only modules such as ember-ui, ember-core, fleetops-data, dev-engine
+          and iam-engine are package.json only. The root repo has no manifest of its
+          own and keeps the version in console/package.json AND docker/Dockerfile.
         type: string
         required: false
         default: composer.json,package.json,extension.json
@@ -180,34 +191,57 @@ jobs:
           REPORT=""
 
           # Accept either separator so a caller can use a comma list or a YAML block.
-          while IFS= read -r FILE; do
-            FILE="$(echo "$FILE" | tr -d '[:space:]')"
-            [[ -z "$FILE" ]] && continue
+          while IFS= read -r ENTRY; do
+            ENTRY="$(echo "$ENTRY" | tr -d '[:space:]')"
+            [[ -z "$ENTRY" ]] && continue
+
+            # `path=KEY` reads a key=value line; a bare path is JSON and reads .version.
+            # The root repo needs the first form: its version lives in an ENV line in
+            # docker/Dockerfile as well as in console/package.json, and those two drift
+            # independently — today the Dockerfile says 0.7.53 while the console says
+            # 0.7.54, which nothing catches.
+            KEY=""
+            FILE="$ENTRY"
+            if [[ "$ENTRY" == *"="* ]]; then
+              KEY="${ENTRY#*=}"
+              FILE="${ENTRY%%=*}"
+            fi
+            LABEL="$FILE${KEY:+ (${KEY})}"
 
             if [[ ! -f "$FILE" ]]; then
               echo "::error::${FILE} is listed in version-files but does not exist."
-              REPORT="${REPORT}| \`${FILE}\` | — | missing |"$'\n'
+              REPORT="${REPORT}| \`${LABEL}\` | — | missing |"$'\n'
               FAILED=1
               continue
             fi
 
-            # -e so a null/absent `version` key exits non-zero instead of printing the
-            # string "null" and comparing unequal for a confusing reason.
-            if ! FOUND="$(jq -er '.version' "$FILE" 2>/dev/null)"; then
-              echo "::error::${FILE} has no \`version\` key."
-              REPORT="${REPORT}| \`${FILE}\` | — | no version key |"$'\n'
+            if [[ -n "$KEY" ]]; then
+              # Value must start with a digit, so `KEY=$SOME_ARG` is reported as
+              # unverifiable rather than silently compared against a variable name.
+              # \b keeps MY_FLEETBASE_VERSION from shadowing FLEETBASE_VERSION.
+              FOUND="$(grep -oE "\b${KEY}=[\"']?[0-9][0-9A-Za-z.+-]*" "$FILE" 2>/dev/null \
+                        | head -n1 | sed -E "s/.*=[\"']?//")"
+            else
+              # -e so a null/absent `version` key exits non-zero instead of printing the
+              # string "null" and comparing unequal for a confusing reason.
+              FOUND="$(jq -er '.version' "$FILE" 2>/dev/null)" || FOUND=""
+            fi
+
+            if [[ -z "$FOUND" ]]; then
+              echo "::error::${LABEL} yields no readable version."
+              REPORT="${REPORT}| \`${LABEL}\` | — | no version found |"$'\n'
               FAILED=1
               continue
             fi
 
             if [[ "$FOUND" != "$VERSION" ]]; then
-              echo "::error::${FILE} says ${FOUND}, but the release is ${VERSION}."
-              REPORT="${REPORT}| \`${FILE}\` | ${FOUND} | mismatch |"$'\n'
+              echo "::error::${LABEL} says ${FOUND}, but the release is ${VERSION}."
+              REPORT="${REPORT}| \`${LABEL}\` | ${FOUND} | mismatch |"$'\n'
               FAILED=1
               continue
             fi
 
-            REPORT="${REPORT}| \`${FILE}\` | ${FOUND} | ok |"$'\n'
+            REPORT="${REPORT}| \`${LABEL}\` | ${FOUND} | ok |"$'\n'
           done < <(echo "$VERSION_FILES" | tr ',' '\n')
 
           {
