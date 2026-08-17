@@ -166,3 +166,54 @@ module('Integration | Component | github-card | fetching', function (hooks) {
         assert.strictEqual(component.releaseUrl, 'https://github.com/fleetbase/fleetbase/releases', 'a blank tag name leaves the plain releases URL');
     });
 });
+
+/**
+ * Both tasks guard against writing tracked state after teardown. Driving that means
+ * holding the request open, tearing the component down, and only then resolving it.
+ */
+module('Integration | Component | github-card | teardown', function (hooks) {
+    setupRenderingTest(hooks);
+
+    hooks.beforeEach(function () {
+        _resetStorages();
+        window.localStorage.clear();
+
+        this.fetchModule = window.require('fetch');
+        this.originalFetch = this.fetchModule.default;
+    });
+
+    hooks.afterEach(function () {
+        this.fetchModule.default = this.originalFetch;
+        _resetStorages();
+        window.localStorage.clear();
+    });
+
+    test('a response arriving after teardown is ignored', async function (assert) {
+        const captured = captureComponent(this.owner, 'github-card', GithubCardComponent);
+        const pending = [];
+
+        this.fetchModule.default = () =>
+            new Promise((resolve) => {
+                pending.push(resolve);
+            });
+
+        // Park both requests so the component builds but neither task can finish. render()
+        // waits on them, so do not await it until the responses are released.
+        const rendering = render(hbs`<GithubCard />`);
+        while (!captured.instance) {
+            await new Promise((resolve) => setTimeout(resolve, 0));
+        }
+
+        const component = captured.instance;
+        // Flag the component as tearing down. Actually calling clearRender() cannot work
+        // here: it waits for settled, which the parked tasks would block forever.
+        Object.defineProperty(component, 'isDestroying', { configurable: true, value: true });
+
+        pending.forEach((resolve) => resolve({ ok: true, json: () => Promise.resolve({ full_name: 'late/response' }) }));
+        await rendering;
+
+        assert.strictEqual(pending.length, 2, 'both requests were in flight');
+        assert.notStrictEqual(component.data?.full_name, 'late/response', 'the late repository response is dropped');
+        assert.deepEqual(component.tags, [], 'and the late tags response is dropped too');
+    });
+});

@@ -4,6 +4,8 @@ import Service from '@ember/service';
 import { render } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
 import { _resetStorages } from 'ember-local-storage/helpers/storage';
+import FleetbaseBlogComponent from '@fleetbase/console/components/fleetbase-blog';
+import { captureComponent } from '@fleetbase/console/tests/helpers/capture-component';
 
 module('Integration | Component | fleetbase-blog', function (hooks) {
     setupRenderingTest(hooks);
@@ -63,5 +65,78 @@ module('Integration | Component | fleetbase-blog', function (hooks) {
         await render(hbs`<FleetbaseBlog />`);
 
         assert.dom('.fleetbase-blog').containsText('No blog posts are available right now.');
+    });
+});
+
+/**
+ * The blog falls back to the API when its local cache is empty or stale, and formats each
+ * post's publish date defensively.
+ */
+module('Integration | Component | fleetbase-blog | loading', function (hooks) {
+    setupRenderingTest(hooks);
+
+    hooks.beforeEach(function () {
+        _resetStorages();
+        window.localStorage.clear();
+
+        this.getResponse = [{ title: 'Fleetbase 0.8', pubDate: '2026-01-15T00:00:00Z' }];
+        this.getRejectsWith = null;
+        const context = this;
+
+        class FetchStub extends Service {
+            async get() {
+                if (context.getRejectsWith) {
+                    throw context.getRejectsWith;
+                }
+
+                return context.getResponse;
+            }
+        }
+        this.owner.register('service:fetch', FetchStub);
+
+        const captured = captureComponent(this.owner, 'fleetbase-blog', FleetbaseBlogComponent);
+        this.build = async () => {
+            await render(hbs`<FleetbaseBlog />`);
+            return captured.instance;
+        };
+    });
+
+    hooks.afterEach(function () {
+        _resetStorages();
+        window.localStorage.clear();
+    });
+
+    test('an empty cache loads the posts and caches them', async function (assert) {
+        const component = await this.build();
+
+        assert.deepEqual(component.posts, this.getResponse);
+        assert.deepEqual(component.localCache.get('fleetbase-blog-data'), this.getResponse, 'the posts are cached');
+        assert.ok(component.localCache.get('fleetbase-blog-data-expiration'), 'with an expiry stamp');
+    });
+
+    test('a response that is not a list is treated as no posts', async function (assert) {
+        this.getResponse = { error: 'unexpected' };
+        const component = await this.build();
+
+        assert.deepEqual(component.posts, [], 'nothing is rendered rather than a broken list');
+    });
+
+    test('a failed request leaves the blog empty without throwing', async function (assert) {
+        this.getRejectsWith = new Error('blog feed unavailable');
+        const component = await this.build();
+
+        assert.deepEqual(component.posts, []);
+    });
+
+    test('formattedPosts renders each publish date defensively', async function (assert) {
+        this.getResponse = [{ title: 'Dated', pubDate: '2026-01-15T00:00:00Z' }, { title: 'Undated' }, { title: 'Nonsense date', pubDate: 'not a date at all' }];
+        const component = await this.build();
+
+        const formatted = component.formattedPosts;
+        assert.strictEqual(formatted.length, 3);
+        assert.strictEqual(formatted[0].formattedDate, 'Jan 15, 2026', 'a real date is formatted');
+        assert.strictEqual(formatted[1].formattedDate, '', 'a missing date renders as empty');
+        assert.strictEqual(formatted[2].formattedDate, 'not a date at all', 'an unparseable date is passed through unchanged');
+        assert.strictEqual(formatted[0].title, 'Dated', 'the rest of the post is preserved');
     });
 });

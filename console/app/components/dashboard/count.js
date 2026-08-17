@@ -55,25 +55,30 @@ export default class DashboardCountComponent extends Component {
 
         let { format, currency, dateFormat, value } = options;
 
+        // These are plain utils taking positional arguments, not helpers taking a params
+        // array. Passing `[value, currency]` meant the currency and date format were never
+        // read, and date-fns rejects an array outright, so a count configured with
+        // format: 'date' threw "RangeError: Invalid time value" and broke the render.
         switch (format) {
             case 'money':
-                value = formatCurrency([value, currency]);
+                value = formatCurrency(value, currency);
                 break;
 
             case 'meters':
-                value = formatMeters([value]);
+                value = formatMeters(value);
                 break;
 
             case 'bytes':
-                value = formatBytes([value]);
+                value = formatBytes(value);
                 break;
 
             case 'duration':
-                value = formatDuration([value]);
+                value = formatDuration(value);
                 break;
 
             case 'date':
-                value = formatDate([value, dateFormat]);
+                // date-fns only accepts a Date or a timestamp, and API values arrive serialized.
+                value = formatDate(new Date(value), dateFormat);
                 break;
 
             default:

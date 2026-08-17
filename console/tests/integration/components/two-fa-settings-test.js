@@ -191,3 +191,22 @@ module('Integration | Component | two-fa-settings | actions', function (hooks) {
         ]);
     });
 });
+
+module('Integration | Component | two-fa-settings | no methods', function (hooks) {
+    setupRenderingTest(hooks);
+
+    test('enabling 2FA with no method list leaves the selection untouched', async function (assert) {
+        this.set('settings', { enabled: false });
+        const captured = captureComponent(this.owner, 'two-fa-settings', TwoFaSettingsComponent);
+
+        await render(hbs`<TwoFaSettings @twoFaSettings={{this.settings}} />`);
+        const component = captured.instance;
+
+        assert.strictEqual(component.selectedTwoFaMethod, 'email', 'the constructor defaulted it');
+
+        component.onTwoFaToggled(true);
+
+        assert.true(component.isTwoFaEnabled);
+        assert.strictEqual(component.selectedTwoFaMethod, 'email', 'with nothing to recommend, the default stands');
+    });
+});

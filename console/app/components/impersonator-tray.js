@@ -24,7 +24,10 @@ export default class ImpersonatorTrayComponent extends Component {
             await this.router.transitionTo('console');
             this.session.manuallyAuthenticate(token);
             this.notifications.info(`Ending impersonation session.`);
-            later(
+
+            // Handed back so the caller can cancel the pending reload. Without this the
+            // timer is unreachable once scheduled and always reloads the window.
+            return later(
                 this,
                 () => {
                     window.location.reload();
