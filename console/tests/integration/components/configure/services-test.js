@@ -600,3 +600,50 @@ module('Integration | Component | configure/services | actions', function (hooks
         assert.deepEqual(JSON.parse(component.customHttpBodyText), { to: '{{to}}', text: '{{text}}', from: '{{from}}' }, 'the templated default body is offered');
     });
 });
+
+module('Integration | Component | configure/services | sparse sms config', function (hooks) {
+    setupRenderingTest(hooks);
+
+    hooks.beforeEach(function () {
+        this.getResponse = {};
+        const context = this;
+
+        class SparseFetchStub extends Service {
+            async get() {
+                return context.getResponse;
+            }
+            async post() {
+                return { status: 'success' };
+            }
+        }
+        class QuietNotificationsStub extends Service {
+            serverError() {}
+        }
+
+        this.owner.register('service:fetch', SparseFetchStub);
+        this.owner.register('service:notifications', QuietNotificationsStub);
+
+        const captured = captureComponent(this.owner, 'configure/services', ConfigureServicesComponent);
+        this.build = async () => {
+            await render(hbs`
+                <div id="next-view-section-subheader-actions"></div>
+                <Configure::Services />
+            `);
+
+            return captured.instance;
+        };
+    });
+
+    test('a custom HTTP provider saved without headers reads back as an empty object', async function (assert) {
+        // An incoming providers block replaces the shipped defaults wholesale, so a
+        // custom_http entry written by an older version has neither headers nor query params.
+        this.getResponse = { sms: { defaultProvider: 'custom_http', providers: { custom_http: { method: 'POST', url: 'https://gw.test/send' } } } };
+
+        const component = await this.build();
+
+        assert.strictEqual(component.customHttpHeadersText, '{}', 'the headers editor opens on an empty object rather than "undefined"');
+        assert.strictEqual(component.customHttpQueryParamsText, '{}', 'and so does the query params editor');
+        assert.strictEqual(component.customHttpBodyText, JSON.stringify({ to: '{{to}}', text: '{{text}}', from: '{{from}}' }, null, 2), 'a missing body falls back to the templated default');
+        assert.strictEqual(component.smsSelectedProvider, 'custom_http', 'the saved provider is the one shown');
+    });
+});

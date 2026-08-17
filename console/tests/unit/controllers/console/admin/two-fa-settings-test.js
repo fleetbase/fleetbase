@@ -109,3 +109,42 @@ module('Unit | Controller | console/admin/two-fa-settings', function (hooks) {
         assert.false(controller.isLoading);
     });
 });
+
+module('Unit | Controller | console/admin/two-fa-settings | defaults', function (hooks) {
+    setupTest(hooks);
+
+    hooks.beforeEach(function () {
+        this.requests = [];
+        const context = this;
+
+        class FetchStub extends Service {
+            get(path) {
+                context.requests.push({ method: 'get', path });
+                return Promise.resolve({ enabled: false });
+            }
+            post(path, payload) {
+                context.requests.push({ method: 'post', path, payload });
+                return Promise.resolve({ ok: true });
+            }
+        }
+        class NotificationsStub extends Service {
+            successes = [];
+            success(message) {
+                this.successes.push(message);
+            }
+            serverError() {}
+        }
+
+        this.owner.register('service:fetch', FetchStub);
+        this.owner.register('service:notifications', NotificationsStub);
+    });
+
+    test('saving with nothing supplied posts an empty settings object', async function (assert) {
+        const controller = this.owner.lookup('controller:console/admin/two-fa-settings');
+
+        await controller.saveTwoFactorSettingsForAdmin.perform();
+
+        const post = this.requests.find((request) => request.method === 'post');
+        assert.deepEqual(post, { method: 'post', path: 'two-fa/config', payload: { twoFaSettings: {} } });
+    });
+});

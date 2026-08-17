@@ -324,3 +324,62 @@ module('Unit | Controller | console/account/auth | credentials and 2FA', functio
         assert.deepEqual(this.notifications().successes, []);
     });
 });
+
+module('Unit | Controller | console/account/auth | form submission', function (hooks) {
+    setupTest(hooks);
+
+    // changePassword waits on the validate-password modal, which never resolves on its own.
+    function stubModals(owner, isValid) {
+        class ModalsManagerStub extends Service {
+            show(name, options) {
+                options.onValidated(isValid);
+                return Promise.resolve();
+            }
+        }
+
+        owner.register('service:modals-manager', ModalsManagerStub);
+    }
+
+    test('changePassword stops the form submitting the page away', async function (assert) {
+        const { posts, notified } = stubServices(this.owner, { post: () => Promise.resolve({ status: 'ok' }) });
+        stubModals(this.owner, true);
+        const controller = this.owner.lookup('controller:console/account/auth');
+        controller.newPassword = 'new-password';
+        controller.newConfirmPassword = 'new-password';
+
+        const event = new Event('submit', { cancelable: true });
+        await controller.changePassword.perform(event);
+
+        assert.true(event.defaultPrevented, 'the native submit is cancelled');
+        assert.deepEqual(posts.at(-1), {
+            path: 'users/change-password',
+            payload: { password: 'new-password', password_confirmation: 'new-password' },
+        });
+        assert.deepEqual(notified.success, ['Password change successfully.']);
+        assert.strictEqual(controller.newPassword, undefined, 'the form is cleared afterwards');
+    });
+
+    test('a password that fails validation clears the form without changing anything', async function (assert) {
+        const { posts } = stubServices(this.owner);
+        stubModals(this.owner, false);
+        const controller = this.owner.lookup('controller:console/account/auth');
+        controller.newPassword = 'new-password';
+        controller.newConfirmPassword = 'new-password';
+
+        await controller.changePassword.perform();
+
+        assert.deepEqual(posts, [], 'nothing is sent');
+        assert.strictEqual(controller.newPassword, undefined);
+        assert.strictEqual(controller.newConfirmPassword, undefined);
+    });
+
+    test('saving 2FA settings with nothing selected posts an empty settings object', async function (assert) {
+        const { posts, notified } = stubServices(this.owner);
+        const controller = this.owner.lookup('controller:console/account/auth');
+
+        await controller.saveUserTwoFaSettings.perform();
+
+        assert.deepEqual(posts.at(-1), { path: 'users/two-fa', payload: { twoFaSettings: {} } });
+        assert.deepEqual(notified.success, ['2FA Settings saved successfully.']);
+    });
+});

@@ -61,7 +61,7 @@ export default class ConfigureServicesComponent extends Component {
 
         if (config.sms) {
             this.sms = this.normalizeSmsConfig(config.sms);
-            this.smsSelectedProvider = this.sms.defaultProvider || 'twilio';
+            this.smsSelectedProvider = this.sms.defaultProvider;
             this.syncSmsJsonText();
         }
     }
@@ -170,7 +170,7 @@ export default class ConfigureServicesComponent extends Component {
             providers: {
                 ...sms.providers,
                 twilio: {
-                    ...(sms.providers.twilio || {}),
+                    ...sms.providers.twilio,
                     sid: this.twilioSid,
                     token: this.twilioToken,
                     from: this.twilioFrom,

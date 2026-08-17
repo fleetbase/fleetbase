@@ -1,6 +1,7 @@
 import { module, test } from 'qunit';
 import { setupTest } from '@fleetbase/console/tests/helpers';
 import Service from '@ember/service';
+import getTwoFaMethods from '@fleetbase/console/utils/get-two-fa-methods';
 
 /**
  * A @tracked field's initializer only runs the first time the property is read, so a
@@ -16,6 +17,21 @@ const CONTROLLERS = [
     {
         name: 'controller:auth/two-fa',
         defaults: { otpValue: '', countdownReady: false, isCodeExpired: false, verificationCode: '' },
+    },
+    // These three load their real state from the API in their constructors. The defaults
+    // below are what the screen shows in the moment before that request comes back, so they
+    // are read synchronously — a settled() here would overwrite them with the response.
+    {
+        name: 'controller:console/account/auth',
+        defaults: { twoFaConfig: {}, isSystemTwoFaEnabled: false, methods: getTwoFaMethods() },
+    },
+    {
+        name: 'controller:console/admin/two-fa-settings',
+        defaults: { twoFaConfig: {}, isSystemTwoFaEnabled: false, isTwoFaEnforced: false, isLoading: false },
+    },
+    {
+        name: 'controller:console/settings/notifications',
+        defaults: { notificationSettings: {}, notificationTransportMethods: ['email', 'sms'] },
     },
 ];
 
@@ -40,7 +56,7 @@ module('Unit | Controller | tracked defaults', function (hooks) {
             const controller = this.owner.lookup(name);
 
             for (const [property, value] of Object.entries(defaults)) {
-                assert.strictEqual(controller[property], value, property);
+                assert.deepEqual(controller[property], value, property);
             }
         });
     });

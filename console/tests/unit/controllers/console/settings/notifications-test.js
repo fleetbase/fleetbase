@@ -200,3 +200,80 @@ module('Unit | Controller | console/settings/notifications | persistence', funct
         assert.deepEqual(this.notifications().serverErrors, [failure]);
     });
 });
+
+module('Unit | Controller | console/settings/notifications | company options', function (hooks) {
+    setupTest(hooks);
+
+    hooks.beforeEach(function () {
+        class FetchStub extends Service {
+            get() {
+                return Promise.resolve({ notificationSettings: {} });
+            }
+        }
+        this.owner.register('service:fetch', FetchStub);
+
+        this.build = async () => {
+            const controller = this.owner.lookup('controller:console/settings/notifications');
+            await settled();
+
+            // Stands in for the company record: only options and set() are read.
+            controller.company = {
+                options: undefined,
+                set(key, value) {
+                    this[key] = value;
+                },
+            };
+
+            return controller;
+        };
+    });
+
+    test('a company that has never had options gets a fresh options object', async function (assert) {
+        const controller = await this.build();
+
+        controller.setAlphaNumericSenderId({ target: { value: 'FLEETBASE' } });
+
+        assert.deepEqual(controller.company.options, { alpha_numeric_sender_id: 'FLEETBASE' });
+    });
+
+    test('existing company options are preserved when the sender id changes', async function (assert) {
+        const controller = await this.build();
+        controller.company.options = { alpha_numeric_sender_id_enabled: true, unrelated: 'kept' };
+
+        controller.setAlphaNumericSenderId({ target: { value: 'ACME' } });
+
+        assert.deepEqual(controller.company.options, {
+            alpha_numeric_sender_id_enabled: true,
+            unrelated: 'kept',
+            alpha_numeric_sender_id: 'ACME',
+        });
+    });
+
+    test('selecting notifiables twice for the same notification updates the existing entry', async function (assert) {
+        const controller = await this.build();
+        const notification = { definition: 'order.created', name: 'Order Created' };
+
+        controller.onSelectNotifiable(notification, [{ value: 'user_1' }]);
+        const key = Object.keys(controller.notificationSettings)[0];
+
+        controller.onSelectNotifiable(notification, [{ value: 'user_2' }, { value: 'user_3' }]);
+
+        assert.deepEqual(Object.keys(controller.notificationSettings), [key], 'the same key is reused rather than duplicated');
+        assert.deepEqual(controller.notificationSettings[key].notifiables, [{ value: 'user_2' }, { value: 'user_3' }], 'the selection is replaced');
+    });
+
+    test('mutating with nothing leaves the settings as they were', async function (assert) {
+        const controller = await this.build();
+        controller.notificationSettings = { 'order.created': { definition: 'order.created' } };
+
+        controller.mutateNotificationSettings();
+
+        assert.deepEqual(controller.notificationSettings, { 'order.created': { definition: 'order.created' } });
+    });
+
+    test('the transport methods a notifiable is reachable on default to email and sms', async function (assert) {
+        const controller = await this.build();
+
+        assert.deepEqual(controller.notificationTransportMethods, ['email', 'sms']);
+    });
+});

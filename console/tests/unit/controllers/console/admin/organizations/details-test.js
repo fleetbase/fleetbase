@@ -1,6 +1,7 @@
 import { module, test } from 'qunit';
 import { setupTest } from '@fleetbase/console/tests/helpers';
 import Service from '@ember/service';
+import { settled } from '@ember/test-helpers';
 
 class NotificationsStub extends Service {
     successes = [];
@@ -492,5 +493,99 @@ module('Unit | Controller | console/admin/organizations/details | registry fallb
         Object.defineProperty(this.controller.session, 'data', { configurable: true, value: { authenticated: { user: 'user_1' } } });
         assert.strictEqual(this.controller.extensionContext.currentUser, 'user_1');
         assert.strictEqual(this.controller.extensionContext.organization, this.controller.model);
+    });
+});
+
+/**
+ * The impersonation success path ends in a window reload, which is isolated behind
+ * reloadWindow() precisely so it can be replaced here — Location members are
+ * non-configurable, so the real call can never be stubbed.
+ */
+module('Unit | Controller | console/admin/organizations/details | impersonation', function (hooks) {
+    setupTest(hooks);
+
+    hooks.beforeEach(function () {
+        const self = this;
+        this.posted = [];
+
+        class FetchStub extends Service {
+            post(path, payload) {
+                self.posted.push({ path, payload });
+                return Promise.resolve({ token: 'imp-token' });
+            }
+        }
+        class SessionStub extends Service {
+            authenticated = [];
+            data = { authenticated: { user: { id: 'me' } } };
+            manuallyAuthenticate(token) {
+                this.authenticated.push(token);
+            }
+        }
+
+        this.owner.register('service:notifications', NotificationsStub);
+        this.owner.register('service:modals-manager', ModalsManagerStub);
+        this.owner.register('service:fetch', FetchStub);
+        this.owner.register('service:session', SessionStub);
+
+        this.controller = this.owner.lookup('controller:console/admin/organizations/details');
+        this.notifications = this.owner.lookup('service:notifications');
+        this.session = this.owner.lookup('service:session');
+
+        this.transitions = [];
+        Object.defineProperty(this.controller.router, 'transitionTo', {
+            configurable: true,
+            value: (...args) => {
+                this.transitions.push(args);
+                return Promise.resolve();
+            },
+        });
+
+        this.reloads = 0;
+        Object.defineProperty(this.controller, 'reloadWindow', { configurable: true, value: () => this.reloads++ });
+    });
+
+    test('impersonating an owner authenticates as them and reloads the console', async function (assert) {
+        this.controller.model = organization({ owner_uuid: 'u1' });
+        Object.defineProperty(this.controller, 'owner', { configurable: true, value: { id: 'u1', email: 'owner@acme.test' } });
+
+        await this.controller.impersonateOwner.perform();
+
+        assert.deepEqual(this.posted.at(-1), { path: 'auth/impersonate', payload: { user: 'u1' } });
+        assert.deepEqual(this.transitions, [['console']], 'the console is entered before the session is swapped');
+        assert.deepEqual(this.session.authenticated, ['imp-token'], 'the impersonation token replaces the current session');
+        assert.deepEqual(this.notifications.infos, ['Now impersonating owner@acme.test...'], 'the owner is named');
+        assert.strictEqual(this.reloads, 0, 'the reload is deferred rather than immediate');
+
+        await settled();
+        assert.strictEqual(this.reloads, 1, 'and lands once the timer fires');
+    });
+
+    test('an owner with no email address is described generically', async function (assert) {
+        this.controller.model = organization({ owner_uuid: 'u1' });
+
+        await this.controller.impersonateOwner.perform();
+        await settled();
+
+        assert.deepEqual(this.notifications.infos, ['Now impersonating organization owner...']);
+        assert.strictEqual(this.reloads, 1);
+    });
+
+    test('a registered action in the action menu runs when clicked', async function (assert) {
+        const clicked = [];
+        Object.defineProperty(this.controller.menuService, 'getMenuItems', {
+            configurable: true,
+            value: (registry) =>
+                registry === 'console:admin:organization:actions' ? [{ label: 'Sync Billing', icon: 'sync', class: 'danger', onClick: (context) => clicked.push(context) }] : [],
+        });
+        this.controller.model = organization({ uuid: 'uuid_1' });
+
+        const item = this.controller.actionMenuItems.find((entry) => entry.label === 'Sync Billing');
+        assert.strictEqual(item.icon, 'sync');
+        assert.strictEqual(item.class, 'danger');
+
+        item.onClick();
+
+        assert.strictEqual(clicked.length, 1, 'the registered handler runs');
+        assert.strictEqual(clicked[0].organization, this.controller.model, 'and receives the extension context');
     });
 });

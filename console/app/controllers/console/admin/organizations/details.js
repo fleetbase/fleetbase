@@ -27,7 +27,7 @@ export default class ConsoleAdminOrganizationsDetailsController extends Controll
             model: tab.slug,
             priority: tab.priority ?? 50,
         }));
-        const tabs = [...coreTabs, ...registeredTabs].sort((a, b) => (a.priority ?? 99) - (b.priority ?? 99));
+        const tabs = [...coreTabs, ...registeredTabs].sort((a, b) => a.priority - b.priority);
 
         return tabs.map((tab) => ({
             ...tab,
@@ -234,15 +234,20 @@ export default class ConsoleAdminOrganizationsDetailsController extends Controll
             yield this.router.transitionTo('console');
             this.session.manuallyAuthenticate(token);
             this.notifications.info(`Now impersonating ${this.ownerEmail || 'organization owner'}...`);
-            later(
-                this,
-                () => {
-                    window.location.reload();
-                },
-                600
-            );
+            later(this, this.reloadWindow, 600);
         } catch (error) {
             this.notifications.serverError(error);
         }
+    }
+
+    /**
+     * Reloading the window is the last step of impersonation. Location members are
+     * non-configurable per spec, so this cannot be stubbed — it is isolated here so callers
+     * can be tested by replacing the method, matching InstallationService,
+     * ConsoleAdminOrganizationsController and ConsoleController.
+     */
+    /* istanbul ignore next -- window.location.reload() cannot be stubbed */
+    reloadWindow() {
+        window.location.reload();
     }
 }
