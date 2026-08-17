@@ -148,3 +148,179 @@ module('Unit | Controller | console/account/auth', function (hooks) {
         assert.deepEqual(posts.at(-1), { path: 'users/two-fa', payload: { twoFaSettings: { enabled: true } } });
     });
 });
+
+module('Unit | Controller | console/account/auth | credentials and 2FA', function (hooks) {
+    setupTest(hooks);
+
+    hooks.beforeEach(function () {
+        this.requests = [];
+        this.responses = { 'two-fa/config': { enabled: true }, 'users/two-fa': { enabled: true, method: 'sms' } };
+        this.getRejectsWith = null;
+        this.postRejectsWith = null;
+        this.passwordIsValid = true;
+        const context = this;
+
+        class FetchStub extends Service {
+            get(path) {
+                context.requests.push({ method: 'get', path });
+                return context.getRejectsWith ? Promise.reject(context.getRejectsWith) : Promise.resolve(context.responses[path]);
+            }
+            post(path, payload) {
+                context.requests.push({ method: 'post', path, payload });
+                return context.postRejectsWith ? Promise.reject(context.postRejectsWith) : Promise.resolve({ ok: true });
+            }
+        }
+        class NotificationsStub extends Service {
+            successes = [];
+            serverErrors = [];
+            success(message) {
+                this.successes.push(message);
+            }
+            serverError(error, fallback) {
+                this.serverErrors.push([error, fallback]);
+            }
+        }
+        class ModalsManagerStub extends Service {
+            shown = [];
+            show(name, options) {
+                this.shown.push({ name, options });
+                options.onValidated?.(context.passwordIsValid);
+                return Promise.resolve();
+            }
+        }
+        this.owner.register('service:fetch', FetchStub);
+        this.owner.register('service:notifications', NotificationsStub);
+        this.owner.register('service:modals-manager', ModalsManagerStub);
+
+        this.build = async () => {
+            const controller = this.owner.lookup('controller:console/account/auth');
+            await controller.loadSystemTwoFaConfig.last;
+            await controller.loadUserTwoFaSettings.last;
+            return controller;
+        };
+        this.notifications = () => this.owner.lookup('service:notifications');
+    });
+
+    test('it loads the system config and the user 2FA settings on construction', async function (assert) {
+        const controller = await this.build();
+
+        assert.deepEqual(this.requests.map((request) => request.path).sort(), ['two-fa/config', 'users/two-fa']);
+        assert.true(controller.isSystemTwoFaEnabled);
+        assert.deepEqual(controller.twoFaSettings, this.responses['users/two-fa']);
+    });
+
+    test('failed 2FA loads are reported', async function (assert) {
+        const failure = new Error('two-fa unavailable');
+        this.getRejectsWith = failure;
+        await this.build();
+
+        assert.deepEqual(this.notifications().serverErrors, [
+            [failure, undefined],
+            [failure, undefined],
+        ]);
+    });
+
+    test('changeEmail posts the new address and clears the form', async function (assert) {
+        const controller = await this.build();
+        controller.newEmail = 'new@fleetbase.io';
+        controller.currentPassword = 'secret';
+
+        await controller.changeEmail.perform();
+
+        assert.deepEqual(this.requests.at(-1), { method: 'post', path: 'users/change-email', payload: { email: 'new@fleetbase.io', password: 'secret' } });
+        assert.strictEqual(controller.newEmail, undefined, 'the form is cleared');
+        assert.strictEqual(controller.currentPassword, undefined);
+        assert.strictEqual(this.notifications().successes.length, 1);
+    });
+
+    test('changeEmail prevents a form submission from navigating', async function (assert) {
+        const controller = await this.build();
+        const event = new Event('submit', { cancelable: true });
+
+        await controller.changeEmail.perform(event);
+
+        assert.true(event.defaultPrevented);
+    });
+
+    test('a failed email change is reported with its own fallback message', async function (assert) {
+        const failure = new Error('address already in use');
+        this.postRejectsWith = failure;
+        const controller = await this.build();
+
+        await controller.changeEmail.perform();
+
+        assert.deepEqual(this.notifications().serverErrors.at(-1), [failure, 'Failed to request email change.']);
+    });
+
+    test('changePassword validates the current password before changing it', async function (assert) {
+        const controller = await this.build();
+        controller.newPassword = 'new-secret';
+        controller.newConfirmPassword = 'new-secret';
+
+        await controller.changePassword.perform();
+
+        assert.strictEqual(this.owner.lookup('service:modals-manager').shown[0].name, 'modals/validate-password');
+        assert.deepEqual(this.requests.at(-1), {
+            method: 'post',
+            path: 'users/change-password',
+            payload: { password: 'new-secret', password_confirmation: 'new-secret' },
+        });
+        assert.deepEqual(this.notifications().successes, ['Password change successfully.']);
+        assert.strictEqual(controller.newPassword, undefined, 'the form is cleared');
+    });
+
+    test('a failed password validation abandons the change', async function (assert) {
+        this.passwordIsValid = false;
+        const controller = await this.build();
+        controller.newPassword = 'new-secret';
+        controller.newConfirmPassword = 'new-secret';
+
+        await controller.changePassword.perform();
+
+        assert.notOk(
+            this.requests.some((request) => request.path === 'users/change-password'),
+            'nothing is submitted'
+        );
+        assert.strictEqual(controller.newPassword, undefined, 'the form is cleared anyway');
+        assert.deepEqual(this.notifications().successes, []);
+    });
+
+    test('a failed password change is reported with its own fallback message', async function (assert) {
+        const failure = new Error('password too weak');
+        const controller = await this.build();
+        this.postRejectsWith = failure;
+
+        await controller.changePassword.perform();
+
+        assert.deepEqual(this.notifications().serverErrors.at(-1), [failure, 'Failed to change password.']);
+        assert.strictEqual(controller.newPassword, undefined);
+    });
+
+    test('the 2FA toggles patch one field each and saving posts them', async function (assert) {
+        const controller = await this.build();
+
+        controller.onTwoFaToggled(false);
+        assert.false(controller.twoFaSettings.enabled);
+
+        controller.onTwoFaMethodSelected('email');
+        assert.strictEqual(controller.twoFaSettings.method, 'email');
+        assert.false(controller.twoFaSettings.enabled, 'the earlier change survives');
+
+        controller.saveTwoFactorAuthSettings();
+        await controller.saveUserTwoFaSettings.last;
+
+        assert.deepEqual(this.requests.at(-1), { method: 'post', path: 'users/two-fa', payload: { twoFaSettings: controller.twoFaSettings } });
+        assert.deepEqual(this.notifications().successes, ['2FA Settings saved successfully.']);
+    });
+
+    test('a failed 2FA save is reported', async function (assert) {
+        const controller = await this.build();
+        this.postRejectsWith = new Error('save rejected');
+
+        controller.saveTwoFactorAuthSettings();
+        await controller.saveUserTwoFaSettings.last;
+
+        assert.strictEqual(this.notifications().serverErrors.length, 1);
+        assert.deepEqual(this.notifications().successes, []);
+    });
+});

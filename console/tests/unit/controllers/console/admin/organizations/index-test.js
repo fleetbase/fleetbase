@@ -277,3 +277,249 @@ module('Unit | Controller | console/admin/organizations/index', function (hooks)
         }
     });
 });
+
+module('Unit | Controller | console/admin/organizations/index | actions', function (hooks) {
+    setupTest(hooks);
+
+    hooks.beforeEach(function () {
+        this.posted = [];
+        this.postRejectsWith = null;
+        const context = this;
+
+        class FetchStub extends Service {
+            post(path, payload) {
+                context.posted.push({ path, payload });
+                return context.postRejectsWith ? Promise.reject(context.postRejectsWith) : Promise.resolve({ token: 'impersonation-token' });
+            }
+        }
+        class SessionStub extends Service {
+            authenticated = [];
+            manuallyAuthenticate(token) {
+                this.authenticated.push(token);
+            }
+        }
+        class NotificationsStub extends Service {
+            errors = [];
+            infos = [];
+            successes = [];
+            serverErrors = [];
+            error(message) {
+                this.errors.push(message);
+            }
+            info(message) {
+                this.infos.push(message);
+            }
+            success(message) {
+                this.successes.push(message);
+            }
+            serverError(error) {
+                this.serverErrors.push(error);
+            }
+        }
+        class CrudStub extends Service {
+            exported = [];
+            export(type, options) {
+                this.exported.push({ type, options });
+            }
+        }
+        this.owner.register('service:fetch', FetchStub);
+        this.owner.register('service:session', SessionStub);
+        this.owner.register('service:notifications', NotificationsStub);
+        this.owner.register('service:crud', CrudStub);
+
+        this.build = () => {
+            const controller = this.owner.lookup('controller:console/admin/organizations/index');
+            this.transitions = [];
+            Object.defineProperty(controller.router, 'transitionTo', {
+                configurable: true,
+                value: (...args) => {
+                    this.transitions.push(args);
+                    return Promise.resolve();
+                },
+            });
+            this.reloads = 0;
+            Object.defineProperty(controller, 'reloadWindow', { configurable: true, value: () => this.reloads++ });
+            return controller;
+        };
+        this.notifications = () => this.owner.lookup('service:notifications');
+    });
+
+    test('search stores the term and returns to the first page', function (assert) {
+        const controller = this.build();
+        controller.page = 5;
+
+        controller.search({ target: { value: 'fleetbase' } });
+        assert.strictEqual(controller.query, 'fleetbase');
+        assert.strictEqual(controller.page, 1);
+
+        controller.search({ target: {} });
+        assert.strictEqual(controller.query, '', 'a cleared box searches for nothing');
+    });
+
+    test('the row actions navigate to the organization and its activity', function (assert) {
+        const controller = this.build();
+
+        controller.goToCompany({ public_id: 'company_1' });
+        controller.openActivity({ public_id: 'company_1' });
+
+        assert.deepEqual(this.transitions, [
+            ['console.admin.organizations.details', 'company_1'],
+            ['console.admin.organizations.details.activity', 'company_1'],
+        ]);
+    });
+
+    test('resolveBelongsTo unwraps a loaded owner and withholds an unloaded one', function (assert) {
+        const controller = this.build();
+        const record = { id: 'user_1' };
+
+        assert.strictEqual(controller.resolveBelongsTo(null), null);
+        assert.strictEqual(controller.resolveBelongsTo({ content: record }), record, 'a resolved proxy yields its content');
+        assert.strictEqual(controller.resolveBelongsTo(record), record, 'a plain record is used as-is');
+        assert.strictEqual(controller.resolveBelongsTo({ isPending: true }), null);
+        assert.strictEqual(controller.resolveBelongsTo({ isFulfilled: false }), null);
+        assert.strictEqual(controller.resolveBelongsTo({ then: () => {} }), null);
+    });
+
+    test('impersonateOwner refuses when the organization has no owner', async function (assert) {
+        const controller = this.build();
+
+        await controller.impersonateOwner({ name: 'Ownerless Co' });
+
+        assert.deepEqual(this.notifications().errors, ['This organization does not have an owner to impersonate.']);
+        assert.deepEqual(this.posted, [], 'nothing is requested');
+    });
+
+    test('impersonateOwner switches into the owner session and reloads', async function (assert) {
+        const controller = this.build();
+
+        await controller.impersonateOwner({ owner: { content: { id: 'user_1', email: 'owner@fleetbase.io' } } });
+
+        assert.deepEqual(this.posted, [{ path: 'auth/impersonate', payload: { user: 'user_1' } }]);
+        assert.deepEqual(this.transitions, [['console']]);
+        assert.deepEqual(this.owner.lookup('service:session').authenticated, ['impersonation-token']);
+        assert.deepEqual(this.notifications().infos, ['Now impersonating owner@fleetbase.io...']);
+        assert.strictEqual(this.reloads, 1, 'the window is reloaded into the new session');
+    });
+
+    test('impersonateOwner falls back to the owner uuid on the organization', async function (assert) {
+        const controller = this.build();
+
+        await controller.impersonateOwner({ owner_uuid: 'user_2' });
+
+        assert.deepEqual(this.posted, [{ path: 'auth/impersonate', payload: { user: 'user_2' } }]);
+        assert.deepEqual(this.notifications().infos, ['Now impersonating organization owner...'], 'with no email it says so generically');
+    });
+
+    test('a failed impersonation is reported and nothing reloads', async function (assert) {
+        const failure = new Error('not permitted');
+        this.postRejectsWith = failure;
+        const controller = this.build();
+
+        await controller.impersonateOwner({ owner_uuid: 'user_2' });
+
+        assert.deepEqual(this.notifications().serverErrors, [failure]);
+        assert.strictEqual(this.reloads, 0);
+    });
+
+    test('copyId writes to the clipboard and reports what was copied', function (assert) {
+        const controller = this.build();
+        const written = [];
+        const original = navigator.clipboard;
+        Object.defineProperty(navigator, 'clipboard', { configurable: true, value: { writeText: (value) => written.push(value) } });
+
+        try {
+            controller.copyId('company_1', 'Public ID');
+            controller.copyId('uuid-1');
+            controller.copyId(null);
+        } finally {
+            Object.defineProperty(navigator, 'clipboard', { configurable: true, value: original });
+        }
+
+        assert.deepEqual(written, ['company_1', 'uuid-1'], 'an empty value is not copied');
+        assert.deepEqual(this.notifications().successes, ['Public ID copied to clipboard.', 'ID copied to clipboard.'], 'the label defaults to ID');
+    });
+
+    test('exportOrganization exports the selected rows, or all of them', function (assert) {
+        const controller = this.build();
+        const crud = this.owner.lookup('service:crud');
+
+        controller.exportOrganization();
+        assert.deepEqual(crud.exported.at(-1), { type: 'companies', options: { params: { selections: [] } } }, 'no table means no selection');
+
+        controller.table = { selectedRows: [{ id: 'a' }, { id: 'b' }] };
+        controller.exportOrganization();
+        assert.deepEqual(crud.exported.at(-1), { type: 'companies', options: { params: { selections: ['a', 'b'] } } });
+    });
+
+    test('each saved view sets its own filter and clears the others', function (assert) {
+        const controller = this.build();
+        controller.page = 3;
+
+        controller.applySavedView('needs_attention');
+        assert.strictEqual(controller.needs_attention, 1);
+        assert.strictEqual(controller.page, 1, 'paging restarts');
+
+        controller.applySavedView('missing_owner');
+        assert.strictEqual(controller.missing_owner, 1);
+        assert.strictEqual(controller.needs_attention, null, 'the previous view is cleared');
+
+        controller.applySavedView('incomplete_onboarding');
+        assert.false(controller.onboarding_completed);
+
+        controller.applySavedView('inactive_status');
+        assert.strictEqual(controller.inactive_status, 1);
+        assert.strictEqual(controller.onboarding_completed, null);
+
+        controller.applySavedView('not-a-view');
+        assert.strictEqual(controller.inactive_status, null, 'an unknown view just clears everything');
+    });
+
+    test('clearSavedView drops every filter and returns to the first page', function (assert) {
+        const controller = this.build();
+        controller.applySavedView('needs_attention');
+        controller.page = 4;
+
+        controller.clearSavedView();
+
+        assert.strictEqual(controller.needs_attention, null);
+        assert.strictEqual(controller.missing_owner, null);
+        assert.strictEqual(controller.inactive_status, null);
+        assert.strictEqual(controller.onboarding_completed, null);
+        assert.strictEqual(controller.page, 1);
+    });
+
+    test('the toolbar offers the saved views and an export action', function (assert) {
+        const controller = this.build();
+        const [views, exportButton] = controller.actionButtons;
+
+        assert.deepEqual(
+            views.items.filter((item) => item.label).map((item) => item.label),
+            ['Needs Attention', 'Missing Owner', 'Incomplete Onboarding', 'Inactive Status', 'Clear View']
+        );
+        assert.strictEqual(exportButton.onClick, controller.exportOrganization);
+        assert.deepEqual(
+            controller.bulkActions.map((action) => action.label),
+            ['Export selected']
+        );
+
+        views.items[0].onClick();
+        assert.strictEqual(controller.needs_attention, 1, 'the menu item applies its view');
+    });
+
+    test('the row dropdown copies the public id and uuid through copyId', function (assert) {
+        const controller = this.build();
+        const written = [];
+        const original = navigator.clipboard;
+        Object.defineProperty(navigator, 'clipboard', { configurable: true, value: { writeText: (value) => written.push(value) } });
+        const actions = controller.columns.at(-1).actions;
+
+        try {
+            actions.find((action) => action.label === 'Copy Public ID').fn({ public_id: 'company_1', uuid: 'uuid-1' });
+            actions.find((action) => action.label === 'Copy UUID').fn({ public_id: 'company_1', uuid: 'uuid-1' });
+        } finally {
+            Object.defineProperty(navigator, 'clipboard', { configurable: true, value: original });
+        }
+
+        assert.deepEqual(written, ['company_1', 'uuid-1']);
+    });
+});
